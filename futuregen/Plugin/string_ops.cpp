@@ -1,6 +1,7 @@
 #pragma warning(disable : 4786)
 
 #include "string_ops.h"
+#include <stdio.h>
 
 bool string_to_int (const string &str, int &result)
 {

@@ -248,7 +248,7 @@ void REI_Plugin::Lock(bool lock)
 ////////////////////////////////////////////////////////////////////
 Interface* REI_Plugin::Pack()
 {
-  string result;
+  //string result;
   
   map<string, long *>::iterator iteri;
   map<string, double *>::iterator iterd;
@@ -283,6 +283,7 @@ Interface* REI_Plugin::Pack()
   //mod_pack.pack(result);
   
   //wxString wxstr = result.c_str();
+ 
   return &mod_pack ;//wxstr;
   
 }

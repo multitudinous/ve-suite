@@ -1,3 +1,4 @@
+#include "wx/image.h"
 #include "Gasifier0D_UI.h"
 
 BEGIN_EVENT_TABLE(GasiTabs, wxNotebook)
