@@ -1,0 +1,80 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<title>Creating a Parameter File for VE-Xplorer</title>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<link href="Ve-Suite.css" rel="stylesheet" type="text/css">
+</head>
+
+<body class="Title1">
+ <p>Creating a parameter file for VE-Xplorer</p>
+ <p class="bodytext">In VE-Xplorer directory, open vrxpr.param. <a href="paramfileex.htm" target="_blank">Here is a sample parameter file.</a></p>
+ <p class="bodytext">The parameter file is divided into blocks. The first line indicates how many blocks are to be loaded. In the sample parameter file, the first line indicates that 7 blocks will be loaded. <span class="bodytextemph">This integer must be included and must be accurate. </span>The 7 blocks in the sample parameter file are currently the only types of blocks that may be defined. No block is required and they may be inserted in any order. The user chooses which blocks to include based on the desired VE-Xplorer display.</p>
+ <p class="bodytext">The first and second blocks (0 and 1) allow the user to tweak the appearance of the display in the virtual environment.</p>
+ <p class="bodytext">Block 0: Must contain 3 lines:<br>
+   --Scale values (must be greater than 0 to be visible)<br>
+   --Translation values<br>
+   --Rotation values</p>
+ <p class="bodytext">Block 1: Must contain 3 lines:<br>
+ --scalarBar Position<br>
+ --
+ scalarBar Z-Rotation<br>
+ --
+ scalarBar Height and Width)</p>
+ <p class="bodytext">The third block (5) contains PIV data. This block is currently being developed and may change. Must contain 3 lines:<br>
+   --Name of image file
+   <br>
+   --Location of lower left corner<br>
+   --Orientation</p>
+ <p class="bodytext">The fourth block (8) contains vtk datasets such as unstructured grids or polydata such as surfaces or particle tracks. Must contain 6 lines:<br>
+   --Scale<br>
+   --Translation<br>
+   --Rotation<br>
+   --flowdata.vtk (vtkDataSet name)<br>
+   --precomputed data slice directory. Insert JUNK or other undefined directory name if not applicable<br>
+ --precomputed surface directory. Insert JUNK or other undefined directory name if not applicable</p>
+ <p class="bodytext">The fifth block (9) contains the geometry file. It can only contain files that can be visualized with perfly (e.g., *.stl, *.iv, *.pfb, *.obj). Must contain 6 lines:<br>
+   --Transparency toggle (1 makes geometry transparent when visualizations are active)<br>
+   -- Color flag (and 3 color values if flag = 1)<br>
+   --Scale values for geometry file<br>
+   --Translation values for geometry file<br>
+   --Rotation values for geometry file<br>
+ --Geometry file name</p>
+ <p class="bodytext">The sixth block (10) is the transient data loader. Must contain 18 lines:<span class="question"><br>
+ </span>--Number of directories containing vtk data to follow<br>
+ --Data dcs scale values<br>
+ --Data dcs translation values<br>
+ --Data dcs rotation values<br>
+ --Directory of vtk files<br>
+ --Button ID: 0 = 3D_mesh, 1 = x-planes, 2 = y-planes, 3 = z-planes, 4 = particle cloud<br>
+ --Directory of vtk files<br>
+--Button ID: 0 = 3D_mesh, 1 = x-planes, 2 = y-planes, 3 = z-planes, 4 = particle cloud<br>
+--Directory of vtk files<br>
+--Button ID: 0 = 3D_mesh, 1 = x-planes, 2 = y-planes, 3 = z-planes, 4 = particle cloud<br>
+--Directory of vtk files<br>
+--Button ID: 0 = 3D_mesh, 1 = x-planes, 2 = y-planes, 3 = z-planes, 4 = particle cloud<br>
+--Transient geometry data directory<br>
+--Transient geometry dcs scale values<br>
+--Transient geometry dcs translation values<br>
+--Transient geometry dcs rotation values<br>
+--Transient geometry transparency setting, color flag (and 3 color values if flag = 1)<br>
+--Duration of the transient sequence in seconds</p>
+ <p class="bodytext">The seventh block (11) contains the sound file. You must have Sound API working (OpenAL is recommended). Must contain 10 lines:<br>
+   --Ambient background noise (0 = off, 1 = on)<br>
+   --Retriggerable, prevents sound from being retriggered in the program (0 = off, 1 = on)<br>
+   --Volume (range is 0 [soft] to 1 [loud])<br>
+   --Cutoff<br>
+   --Sound position x<br>
+   --Sound position y<br>
+   --Sound position z<br>
+   --Sound file name<br>
+--Sound name alias (give a unique name of alphanumeric characters)</p>
+ <p class="bodytext">The final 3 blocks of 1 line each are mandatory:<br>
+--Warped contour scale value<br>
+--Navigation step file (increase to go faster)<br>
+--Streamline diameter, set to 0.0 if auto-value is sufficient (will eventually disappear from the parameter file and be put in the GUI)</p>
+ <p class="bodytext">If steamline diameter is set to 0, the diameter will be auto-scaled by VE-Xplorer. If it is greater than 0, it represents the actual diameter in feet. The relative scale value--bigger/smaller scales.</p>
+ <p class="bodytext"><a href="xplorer.htm">VE-Xplorer/Conductor</a></p>
+</body>
+</html>
