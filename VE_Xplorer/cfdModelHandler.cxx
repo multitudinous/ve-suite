@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdModel.cxx,v $
- * Date modified: $Date: 2004-05-18 13:44:18 -0700 (Tue, 18 May 2004) $
- * Version:       $Rev: 382 $
+ * File:          $RCSfile: cfdModelHandler.cxx,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -55,8 +55,6 @@
 #include <string>
 
 #ifndef _WIN32 // not windows
-//#include <unistd.h>
-//#include <sys/types.h>
 #include <sys/dir.h>
 #else // it is windows
 #include <windows.h>

@@ -140,7 +140,7 @@ SRCS=\
    cfdSteadyStateVizHandler.cxx \
    cfdTransientVizHandler.cxx \
    cfdEnvironmentHandler.cxx \
-   cfdModelHandeler.cxx \
+   cfdModelHandler.cxx \
    cfdSoundHandler.cxx \
    cfdPfSceneManagement.cxx 
 
