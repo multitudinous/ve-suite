@@ -53,7 +53,7 @@ protected:
 
   // For tracking power requirements/generated and plant efficiencies
   std::map<long, double> _module_powers;
-  double _thermal_input;
+  std::map<long, double> _thermal_input;
 
   Types::ArrayLong watch_list_;
 

@@ -365,7 +365,7 @@ void Body_Executive_i::SetModuleResult (
   p.SetSysId("temp.xml");
   p.Load(result, strlen(result));
 
-  // Should only be one item. But, maybe later...
+   // Should only be one item. But, maybe later...
   std::vector<Interface>::iterator iter;
   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
     if(_network->setOutput(module_id, &(*iter))) {
@@ -374,7 +374,8 @@ void Body_Executive_i::SetModuleResult (
       std::string p = iter->getString(std::string("Power (MW)"), &f);
       if(f) _module_powers[module_id] = atof(p.c_str());
       std::string ti = iter->getString(std::string("Thermal Input (MW)"), &f);
-      if(f) _thermal_input = atof(ti.c_str());
+      if(f) _thermal_input[module_id] = atof(ti.c_str()); //changed by yang
+      //original code is  //if(f) _thermal_input = atof(ti.c_str());
     } else {
       msg = "Unable to set mod id# " + to_string(module_id) + "'s Output data\n";
       ClientMessage(msg.c_str());
@@ -397,16 +398,21 @@ char * Body_Executive_i::GetModuleResult (
   _mutex.acquire();
   
   Interface intf;
+  
   if(module_id == -1) {
     // Calculate efficiency
     double tot_power = 0.0;
+    double tot_thermo = 0.0;
+
     std::map<long, double>::iterator iter;
     for(iter=_module_powers.begin(); iter!=_module_powers.end(); iter++)
       tot_power += iter->second;
+    for(iter=_thermal_input.begin(); iter!=_thermal_input.end(); iter++)
+      tot_thermo += iter->second;
     intf.setString("Power (MW)", to_string(tot_power));
-    if(_thermal_input != 0.0) {
-      intf.setString("Thermal Input (MW)", to_string(_thermal_input));
-      intf.setString("Efficiency (%)", to_string(tot_power / _thermal_input * 100));
+    if(tot_thermo != 0.0) {
+      intf.setString("Thermal Input (MW)", to_string(tot_thermo));
+      intf.setString("Efficiency (%)", to_string(tot_power / tot_thermo * 100));
     }
   } else if(!_network->getOutput(module_id, intf)) {
 	  
@@ -451,7 +457,7 @@ void Body_Executive_i::SetNetwork (
   
   // Keep track of power requirements
   _module_powers.clear();
-  _thermal_input = 0.0;
+  _thermal_input.clear();
 
   std::vector<Interface>::iterator iter;
   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
