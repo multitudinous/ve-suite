@@ -1,0 +1,48 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Preprocessor", "Preprocessor.vcproj", "{62B3D30E-0B3D-4348-933D-97E8792ABFDE}"
+	ProjectSection(ProjectDependencies) = postProject
+		{635EA53E-6DA6-47C2-B0B8-37A70E86F8B4} = {635EA53E-6DA6-47C2-B0B8-37A70E86F8B4}
+		{C3C72791-B9FD-4A84-B521-635A82E616AE} = {C3C72791-B9FD-4A84-B521-635A82E616AE}
+		{E96B7BDE-DE8E-4E84-8B7D-35FB21E9EAD0} = {E96B7BDE-DE8E-4E84-8B7D-35FB21E9EAD0}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "readWriteVtkThingslib", "..\readWriteVtkThingsLib\readWriteVtkThingslib.vcproj", "{E96B7BDE-DE8E-4E84-8B7D-35FB21E9EAD0}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "fileIOlib", "..\fileIOlib\fileIOlib.vcproj", "{C3C72791-B9FD-4A84-B521-635A82E616AE}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "setScalarVectorlib", "..\setScalarVectorlib\setScalarVectorlib.vcproj", "{635EA53E-6DA6-47C2-B0B8-37A70E86F8B4}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{62B3D30E-0B3D-4348-933D-97E8792ABFDE}.Debug.ActiveCfg = Debug|Win32
+		{62B3D30E-0B3D-4348-933D-97E8792ABFDE}.Debug.Build.0 = Debug|Win32
+		{62B3D30E-0B3D-4348-933D-97E8792ABFDE}.Release.ActiveCfg = Release|Win32
+		{62B3D30E-0B3D-4348-933D-97E8792ABFDE}.Release.Build.0 = Release|Win32
+		{E96B7BDE-DE8E-4E84-8B7D-35FB21E9EAD0}.Debug.ActiveCfg = Debug|Win32
+		{E96B7BDE-DE8E-4E84-8B7D-35FB21E9EAD0}.Debug.Build.0 = Debug|Win32
+		{E96B7BDE-DE8E-4E84-8B7D-35FB21E9EAD0}.Release.ActiveCfg = Release|Win32
+		{E96B7BDE-DE8E-4E84-8B7D-35FB21E9EAD0}.Release.Build.0 = Release|Win32
+		{C3C72791-B9FD-4A84-B521-635A82E616AE}.Debug.ActiveCfg = Debug|Win32
+		{C3C72791-B9FD-4A84-B521-635A82E616AE}.Debug.Build.0 = Debug|Win32
+		{C3C72791-B9FD-4A84-B521-635A82E616AE}.Release.ActiveCfg = Release|Win32
+		{C3C72791-B9FD-4A84-B521-635A82E616AE}.Release.Build.0 = Release|Win32
+		{635EA53E-6DA6-47C2-B0B8-37A70E86F8B4}.Debug.ActiveCfg = Debug|Win32
+		{635EA53E-6DA6-47C2-B0B8-37A70E86F8B4}.Debug.Build.0 = Debug|Win32
+		{635EA53E-6DA6-47C2-B0B8-37A70E86F8B4}.Release.ActiveCfg = Release|Win32
+		{635EA53E-6DA6-47C2-B0B8-37A70E86F8B4}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
