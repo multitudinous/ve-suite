@@ -48,7 +48,6 @@ OBJECTS = ../string_ops.o \
 	../interface.o \
 	../package.o \
 	./PipeCFD.o \
-	./logfit.o \
 	../V21Helper/V21Helper.o \
 	../V21Helper/SummaryValues/summary_values.o \
 	../V21Helper/SummaryValues/unit_conversion.o \

@@ -24,7 +24,7 @@ void Body_Unit_i::StartCalc (
     , Error::EUnknown
   ))
 {
-  int i;
+  int i, j;
 
   const char* o2gas;
   const char* ogas;
@@ -155,7 +155,7 @@ void Body_Unit_i::StartCalc (
   // Finish
   /////////
 
-  p.intfs.resize(1); //each port has its own package
+  p.intfs.resize(1);
   
   gashelper.GasToInt(gas_out, p.intfs[0]);
  
@@ -169,9 +169,7 @@ void Body_Unit_i::StartCalc (
   gashelper.SumToInt(&summaries, p.intfs[0]);
   result = p.Save(rv);
 
-  executive_->SetModuleResult(id_, result); //marks the end the execution
-
-  // PROFILE
+  // Profile
   Types::Profile prof;
 
   prof.profile_vars.length(10);
@@ -206,6 +204,18 @@ void Body_Unit_i::StartCalc (
   }
 
   executive_->SetProfileData(id_, 0, prof);
+  
+  // Test
+  for(i=0; i<prof.profile_vals.length(); i++) {
+    cout << prof.profile_vars[i] << endl;
+    for(j=0; j<prof.profile_vals[i].length(); i++) {
+      cout << prof.profile_vals[i][j] << endl;
+    }
+  }
+
+
+  // Done
+  executive_->SetModuleResult(id_, result);
 
   // Clean up
   if(gas_out)  delete gas_out;
