@@ -39,11 +39,13 @@ class pfNode;
 class pfGeode;
 class pfDCS;
 class pfGroup;
+#include <Performer/pf/pfSwitch.h>
 #elif _OSG
 #include <osg/Node>
 #include <osg/Geode>
 #include <osg/Group>
 #include <osg/MatrixTransform>
+#include <osg/Switch>
 #elif _OPENSG
 #endif
 
@@ -62,6 +64,7 @@ public:
                   CFD_DCS,
                   CFD_GEODE,
                   CFD_SEQUENCE,
+                  CFD_SWITCH,
                   CFD_OTHER};
 
    cfdSceneNode();
@@ -103,15 +106,16 @@ protected:
    pfGroup* _group;
    pfDCS* _dcs;
    pfGeode* _geode;
-   cfdSequence* _sequence;
+   pfSwitch* _switch;
 #elif _OSG
    osg::Node* _node;
    osg::Group* _group;
    osg::MatrixTransform* _dcs;
    osg::Geode* _geode;
-   osg::Sequence* _sequence;
+   osg::Switch* _switch;
 #elif _OPENSG
 #endif
+   cfdSequence* _sequence;
    int _nodeType;
    int _numParents;
    cfdNodeType _nt;

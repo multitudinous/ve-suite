@@ -35,24 +35,6 @@
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
-//Performer static member for performer compliance
-//it allows performer to determine the class type
-pfType* cfdSequence::_classType = NULL;
-
-#include <Performer/pf/pfSwitch.h>
-#include <Performer/pf/pfTraverser.h>
-
-//initialize our class w/ performer at run time
-void cfdSequence::init(void)
-{
-   if(_classType == 0)
-   {
-      //initialize the parent
-      pfGroup::init();
-      //create the new class type
-      _classType = new pfType(pfGroup::getClassType(),"cfdSequence");
-   }
-}
 #elif _OSG
 #include <osg/Node>
 #include <osg/Group>
@@ -64,14 +46,9 @@ void cfdSequence::init(void)
 //Constructors          //
 //////////////////////////
 cfdSequence::cfdSequence():
-#ifdef _PERFORMER
-pfGroup(),
-#elif _OSG
-osg::Group(),
-#endif
 cfdGroup()
 {
-   _switch = 0;
+   _lSwitch = 0;
    _deltaT = 0.0;
    _duration = 0.0;
    _begin = 0;
@@ -83,27 +60,18 @@ cfdGroup()
    _appFrame = 0;
    _step = -10000;
 #ifdef _PERFORMER
-   setTravFuncs(PFTRAV_APP,switchFrame,0);
-   setTravData(PFTRAV_APP,this);
-
-   //performer stuff
-   init();
-   setType(_classType);
+   _group->setTravFuncs(PFTRAV_APP,switchFrame,0);
+   _group->setTravData(PFTRAV_APP,this);
 #elif _OSG
 #endif
    SetCFDNodeType(CFD_SEQUENCE);
-   _node = this;
+   _sequence = this;
 }
 ///////////////////////////////////////////////////
 cfdSequence::cfdSequence(const cfdSequence& cfdSeq)
-#ifdef _PERFORMER
-:pfGroup(),
-#elif _OSG
-:osg::Group(),
-#endif
-cfdGroup()
+:cfdGroup()
 {
-   _switch = cfdSeq._switch;
+   _lSwitch = cfdSeq._lSwitch;
    _deltaT = cfdSeq._deltaT;
    _duration = cfdSeq._duration;
    _begin = cfdSeq._begin;
@@ -115,16 +83,12 @@ cfdGroup()
    _appFrame = cfdSeq._appFrame;
    _step = cfdSeq._step;
 #ifdef _PERFORMER
-   setTravFuncs(PFTRAV_APP,switchFrame,0);
-   setTravData(PFTRAV_APP,this);
-
-   //performer stuff
-   init();
-   setType(_classType);
+   _group->setTravFuncs(PFTRAV_APP,switchFrame,0);
+   _group->setTravData(PFTRAV_APP,this);
 #elif _OSG
 #endif
    SetCFDNodeType(CFD_SEQUENCE);
-   _node = this;
+   _sequence = this;
 }
    
 ///////////////////////////
@@ -138,18 +102,10 @@ cfdSequence& cfdSequence::operator=(const cfdSequence& rhs)
 {
    if ( this != &rhs){
       //call parents = operator
-      //cfdGroup::operator =(rhs);
-#ifdef _PERFORMER
-      pfGroup::operator =(rhs);
-#elif _OSG
-      //what is going on here
-      //how does this work
-      //osg::Group::operator=(rhs);
-#endif
       cfdGroup::operator =(rhs);
 
       //update everything
-      _switch = rhs._switch;
+      _lSwitch = rhs._lSwitch;
       _deltaT = rhs._deltaT;
       _duration = rhs._duration;
       _begin = rhs._begin;
@@ -161,13 +117,12 @@ cfdSequence& cfdSequence::operator=(const cfdSequence& rhs)
       _appFrame = rhs._appFrame;
       _step = rhs._step;
 #ifdef _PERFORMER
-      setTravFuncs(PFTRAV_APP,switchFrame,0);
-      setTravData(PFTRAV_APP,this);
+      _sequence = rhs._sequence;
+      _group->setTravFuncs(PFTRAV_APP,switchFrame,0);
+      _group->setTravData(PFTRAV_APP,this);
 #elif _OSG
 #endif
       SetCFDNodeType(CFD_SEQUENCE);
- 
-
    }
    return *this;
 }
@@ -195,35 +150,35 @@ void cfdSequence::stepSequence()
 /////////////////////////////////
 int cfdSequence::getNumChildren()
 {
-   if ( _switch )
+   if ( _lSwitch )
    {
-      return _switch->getNumChildren();
+      return _lSwitch->GetNumChildren();
    }
    return -1;
 }
 ////////////////////////////////////////////
 int cfdSequence::removeChild(cfdNode* child)
 {
-   if ( _switch )
+   if ( _lSwitch )
    {
-      //return _switch->removeChild(child);
+      return _lSwitch->RemoveChild(child);
    }
    return -1;
 }
 ////////////////////////////////////////////
 int cfdSequence::searchChild(cfdNode* child)
 {
-   if(_switch){
-      //return _switch->searchChild(child);   
+   if(_lSwitch){
+      return _lSwitch->SearchChild(child);   
    }
    return -1;
 }
 /////////////////////////////////////////
 cfdNode* cfdSequence::getChild(int index)
 {
-   if(_switch){
+   if(_lSwitch){
       //cout<<"getting child: "<<index<<endl;
-      //return _switch->getChild(index);
+      return _lSwitch->GetChild(index);
    }
    return 0;
 }
@@ -239,7 +194,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    cfdSequence* sequence = (cfdSequence*)userData;
    
    //the number of frames
-   int nChildren = sequence->_switch->getNumChildren();
+   int nChildren = sequence->_lSwitch->GetNumChildren();
    //cout<<"Number of frames: "<<nChildren<<endl;
 
    //the sequence interval params
@@ -338,7 +293,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    if ( pMode == CFDSEQ_START ){
       //cout<<"Starting sequence."<<endl;
       sequence->_currentFrame = begin;
-      sequence->_switch->setVal(sequence->_currentFrame);
+      sequence->_lSwitch->setVal(sequence->_currentFrame);
 
       //notify we are that we have started
       sequence->setPlayMode( CFDSEQ_PLAYING );
@@ -346,12 +301,12 @@ int switchFrame(pfTraverser* trav, void* userData)
    }
 
    //depending on cycle type, decide the frame to display
-   if(sequence->_switch){
+   if(sequence->_lSwitch){
       //get the next frame to display
       sequence->_currentFrame = sequence->getNextFrame();
       
       //set the displayed frame on the switch
-      sequence->_switch->setVal(sequence->_currentFrame);
+      sequence->_lSwitch->setVal(sequence->_currentFrame);
 
       //handle swing loop mode by changing directions
       //when we get to the beginning or end of the sequence
@@ -415,7 +370,7 @@ void cfdSequence::setCurrentFrame(int index)
       if(index >= _begin && index <= _end){
          _currentFrame = index;
 #ifdef _PEFORMER
-	      _switch->setVal(_currentFrame);
+	      _lSwitch->setVal(_currentFrame);
 #elif _OSG
 #endif
       }else{
@@ -429,10 +384,7 @@ void cfdSequence::setCurrentFrame(int index)
       //high to low
       if(index >= _end && index < _begin){
          _currentFrame = index;
-#ifdef _PEFORMER
-	      _switch->setVal(_currentFrame);
-#elif _OSG
-#endif
+	 _lSwitch->setVal(_currentFrame);
       }else{
          //invalid index
          std::cout<<"Error: cfdSequence!"<<std::endl;
@@ -450,22 +402,18 @@ void cfdSequence::addChild(cfdNode* child)
 {
    //cout<<"Adding frame to sequence."<<endl;
    //init the switch node
-   if(!_switch){
+   if(!_lSwitch){
+      _lSwitch = new cfdSwitch();
 #ifdef _PERFORMER
-      _switch = new pfSwitch();
-      
-      _switch->setVal(PFSWITCH_OFF);
-      
-      //add the switch node to the tree
-      pfGroup::addChild(_switch);
+      _lSwitch->setVal(PFSWITCH_OFF);
 #elif _OSG
-      _switch = new osg::Switch();
+      _lSwitch->setAllChildrenOff();
+#elif _OPENSG
 #endif
+      _group->addChild(_lSwitch->GetRawNode());
+
    }
-   
-   // Need to fix
-   // fix this by adding virtual GetRaw node to cfdSceneNode
-   //_switch->addChild(child);
+   _lSwitch->AddChild(child);
 
    // force recomputation of time per frame
    this->setDuration( _duration );

@@ -49,6 +49,7 @@ cfdSceneNode::cfdSceneNode( void )
    this->_dcs = NULL;
    this->_geode = NULL;
    this->_sequence = NULL;
+   this->_switch = 0;
 }
 //////////////////////////////////////////
 cfdSceneNode::cfdSceneNode(cfdNodeType nt)
@@ -61,6 +62,7 @@ cfdSceneNode::cfdSceneNode(cfdNodeType nt)
    this->_dcs = NULL;
    this->_geode = NULL;
    this->_sequence = NULL;
+   this->_switch = 0;
 }
 ///////////////////////////////////
 cfdSceneNode::~cfdSceneNode( void )

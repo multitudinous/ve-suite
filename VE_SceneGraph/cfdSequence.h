@@ -48,23 +48,10 @@ enum cfdLoopMode{
 };
 #include "cfdNode.h"
 #include "cfdGroup.h"
+#include "cfdSwitch.h"
 
-#ifdef _PERFORMER
-class pfNode;
-class pfType;
-class pfSwitch;
-class pfTraverser;
-#include <Performer/pf/pfGroup.h>
-class cfdSequence : public pfGroup, public cfdGroup
+class cfdSequence : public cfdGroup{
 
-#elif _OSG
-#include <osg/Group>
-#include <osg/Switch>
-class cfdSequence : public osg::Group, public cfdGroup
-#endif
-
-
-{
 public:
    cfdSequence();
    ~cfdSequence();
@@ -72,17 +59,10 @@ public:
    cfdSequence(const cfdSequence& cfdSeq);
 
    cfdSequence& operator=(const cfdSequence& rhs);
-#ifdef _PERFORMER
-   //to make this a performer class
-   static void init(void);
-
-   static pfType* getClassType( void ){ return _classType; }
-#elif _OSG
-#endif
    // set/get the duration (in seconds) of any particular frame
    void setTime( double time );
    double getTime(){ return _deltaT; }
-
+  
    // set/get the duration (in seconds) of the entire sequence
    void setDuration( double duration );
    double getDuration(){ return _duration; }
@@ -132,19 +112,15 @@ public:
 
    //remove child 
    virtual int removeChild( cfdNode* child );
-   
-  
 #ifdef _PERFORMER
     //the node pre-traverser callback
    friend int switchFrame(pfTraverser* trav, void* userData);
 #elif _OSG
+   //callbacks are defined as classes in OSG!!!
+   //see cfdSwitch for definition!!!!
 #endif
 protected:
-#ifdef _PERFORMER
-   pfSwitch* _switch;
-#elif _OSG
-   osg::Switch* _switch;
-#endif
+   cfdSwitch* _lSwitch;
    int _appFrame;
    int _lMode;
    int _pMode;
@@ -159,9 +135,6 @@ protected:
    
    int _currentFrame;
    int _dir;   //forward(1)/backward(-1)
-#ifdef _PERFORMER
-   static pfType* _classType;
-#endif
 };
 
 #endif //_VRAC_CFD_SEQUENCE_H_

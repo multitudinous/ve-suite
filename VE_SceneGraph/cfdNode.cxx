@@ -158,7 +158,9 @@ osg::Node* cfdNode::GetRawNode(void)
          return _dcs;
          break;
       case CFD_SEQUENCE:
-         return _sequence;
+         std::cout<<"ERROR!!!"<<std::endl;
+         std::cout<<"cfdSequence doesn't contain a raw node!!!"<<std::endl;
+         std::cout<<"cfdNode::GetRawNode()"<<std::endl;
          break;
       case CFD_NODE:
       case CFD_OTHER:
