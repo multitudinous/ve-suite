@@ -24,7 +24,8 @@ enum {
   SHOW_LINK_CONT,
   SHOW_RESULT,
   SHOW_DESC,
-  PARAVIEW
+  PARAVIEW,
+  SHOW_FINANCIAL /* EPRI TAG */
 };
 
 typedef struct {
@@ -90,7 +91,11 @@ class Network : public wxScrolledWindow
   void OnShowLinkContent(wxCommandEvent &event);
   void OnShowResult(wxCommandEvent &event);
   void OnParaView(wxCommandEvent &event);
-  void OnShowDesc(wxCommandEvent &event);	
+  void OnShowDesc(wxCommandEvent &event);
+
+  // EPRI TAG
+  void OnShowFinancial(wxCommandEvent &event);
+
   //Add to network fuctions
   void AddtoNetwork(REI_Plugin *new_mod, string cls_name);
   void AddTag(int x, int y, wxString text);

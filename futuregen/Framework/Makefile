@@ -64,13 +64,14 @@ OBJECTS = StringParse.o \
 	ResultPanel.o \
 	paraThread.o \
 	GlobalParamDialog.o \
-   ../Plugin/string_ops.o \
+	../Plugin/string_ops.o \
 	../Plugin/interface.o \
 	../Plugin/package.o \
 	../Plugin/Plugin_base.o \
 	../Plugin/UIDialog.o \
 	../Plugin/TexTable.o \
 	../Plugin/TextResultDialog.o \
+	../Plugin/FinancialDialog.o \
 	UI_Frame.o \
 	UI_Tabs.o \
 	UI_VisTab.o \

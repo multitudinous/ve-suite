@@ -28,6 +28,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(v21ID_RESUME_CALC, AppFrame::ResumeCalc)
   EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
   EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
+
 //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
 //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
 //  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
@@ -64,12 +65,11 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   SetStatusText("New Vison 21");
   
   pelog = NULL;
-   //  menubar = 
+  //  menubar = 
 }
 
 void AppFrame::CreateVETab()
 {
-  
   //create the image list for the tabs first
   // create a dummy image list with a few icons
 
@@ -113,68 +113,68 @@ void AppFrame::CreateVETab()
    m_frame->Refresh();
 }
 
-wxRect AppFrame::DetermineFrameSize (wxConfig* config) {
-    const int minFrameWidth = 600;
-    const int minFrameHight = 400;
-   
-
-    wxRect rect;
-    wxSize scr = wxGetDisplaySize();
-    wxConfig* cfg = config;
-    if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
-    int i;
-    for (i = 0; i <= m_frameNr; i++) {
-        wxString key = LOCATION + wxString::Format ("%d", m_frameNr - i);
-        if (cfg->Exists (key)) {
-            rect.x = cfg->Read (key + _T("/") + LOCATION_X, rect.x);
-            rect.y = cfg->Read (key + _T("/") + LOCATION_Y, rect.y);
-            rect.width = cfg->Read (key + _T("/") + LOCATION_W, rect.width);
-            rect.height = cfg->Read (key + _T("/") + LOCATION_H, rect.height);
-            break;
-        }
+wxRect AppFrame::DetermineFrameSize (wxConfig* config)
+{
+  const int minFrameWidth = 600;
+  const int minFrameHight = 400;
+  
+  wxRect rect;
+  wxSize scr = wxGetDisplaySize();
+  wxConfig* cfg = config;
+  if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
+  int i;
+  for (i = 0; i <= m_frameNr; i++) {
+    wxString key = LOCATION + wxString::Format ("%d", m_frameNr - i);
+    if (cfg->Exists (key)) {
+      rect.x = cfg->Read (key + _T("/") + LOCATION_X, rect.x);
+      rect.y = cfg->Read (key + _T("/") + LOCATION_Y, rect.y);
+      rect.width = cfg->Read (key + _T("/") + LOCATION_W, rect.width);
+      rect.height = cfg->Read (key + _T("/") + LOCATION_H, rect.height);
+      break;
     }
-    if (!config) delete cfg;
-
-    // check for reasonable values (within screen)
-    rect.x = wxMin (abs (rect.x), (scr.x - minFrameWidth));
-    rect.y = wxMin (abs (rect.y), (scr.y - minFrameHight));
-    rect.width = wxMax (abs (rect.width), (minFrameWidth));
-    rect.width = wxMin (abs (rect.width), (scr.x - rect.x));
-    rect.height = wxMax (abs (rect.height), (minFrameHight));
-    rect.height = wxMin (abs (rect.height), (scr.y - rect.y));
-
-    return rect;
+  }
+  if (!config) delete cfg;
+  
+  // check for reasonable values (within screen)
+  rect.x = wxMin (abs (rect.x), (scr.x - minFrameWidth));
+  rect.y = wxMin (abs (rect.y), (scr.y - minFrameHight));
+  rect.width = wxMax (abs (rect.width), (minFrameWidth));
+  rect.width = wxMin (abs (rect.width), (scr.x - rect.x));
+  rect.height = wxMax (abs (rect.height), (minFrameHight));
+  rect.height = wxMin (abs (rect.height), (scr.y - rect.y));
+  
+  return rect;
 }
 
-void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config) {
-
-    // store size
-    wxConfig* cfg = config;
-    if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
-    wxString key = LOCATION + wxString::Format ("%d", m_frameNr);
-    cfg->Write (key + _T("/") + LOCATION_X, rect.x);
-    cfg->Write (key + _T("/") + LOCATION_Y, rect.y);
-    cfg->Write (key + _T("/") + LOCATION_W, rect.width);
-    cfg->Write (key + _T("/") + LOCATION_H, rect.height);
-    if (!config) delete cfg;
+void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
+{
+  // store size
+  wxConfig* cfg = config;
+  if (!config) cfg = new wxConfig (wxTheApp->GetAppName());
+  wxString key = LOCATION + wxString::Format ("%d", m_frameNr);
+  cfg->Write (key + _T("/") + LOCATION_X, rect.x);
+  cfg->Write (key + _T("/") + LOCATION_Y, rect.y);
+  cfg->Write (key + _T("/") + LOCATION_W, rect.width);
+  cfg->Write (key + _T("/") + LOCATION_H, rect.height);
+  if (!config) delete cfg;
 }
 
 void AppFrame::OnClose(wxCloseEvent &event)
 {
   if (is_orb_init)
-  {
-	CosNaming::Name UIname(1);
-	UIname.length(1);
-	if (p_ui_i!=NULL && p_ui_i->UIName_!="")
-	  {
-	    UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
-	    naming_context->unbind(UIname);
+    {
+      CosNaming::Name UIname(1);
+      UIname.length(1);
+      if (p_ui_i!=NULL && p_ui_i->UIName_!="")
+	{
+	  UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
+	  naming_context->unbind(UIname);
 	  
-	    poa->destroy (1, 1);
-	  }
-    orb->destroy();
-  }
-
+	  poa->destroy (1, 1);
+	}
+      orb->destroy();
+    }
+  
   StoreFrameSize(GetRect(), NULL);
   Destroy();
 }
@@ -225,15 +225,14 @@ void AppFrame::CreateMenu()
   run_menu->Append(v21ID_PAUSE_CALC, _("Pause Simulation"));
   run_menu->Append(v21ID_RESUME_CALC, _("Resume Simulation"));
   run_menu->Append(v21ID_VIEW_RESULT, _("View Results"));
-//  run_menu->Append(v21ID_GLOBAL_PARAM, _("Global Parameters"));
-  //  run_menu->Append(v21ID_VIEW_FINANCIAL, _("View Financial Params"));
-
+  // run_menu->Append(v21ID_GLOBAL_PARAM, _("Global Parameters"));
+  // run_menu->Append(v21ID_VIEW_FINANCIAL, _("View Financial Params"));
+  
   run_menu->Enable(v21ID_START_CALC, false);
   run_menu->Enable(v21ID_STOP_CALC, false);
   run_menu->Enable(v21ID_PAUSE_CALC, false);
   run_menu->Enable(v21ID_RESUME_CALC, false);
-  run_menu->Enable(v21ID_VIEW_RESULT, false);
-  
+  // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
   
   edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
   edit_menu->Append(v21ID_REDO, _("&Redo\tCtrl+R"));
@@ -332,7 +331,6 @@ void AppFrame::Save(wxCommandEvent &event)
 
 void AppFrame::SaveAs(wxCommandEvent &event)
 {
-
   wxFileDialog dialog
     (
      this,
@@ -357,7 +355,6 @@ void AppFrame::SaveAs(wxCommandEvent &event)
 
 void AppFrame::Open(wxCommandEvent &event)
 {
-
   wxFileDialog dialog
     (
      this,
@@ -369,7 +366,7 @@ void AppFrame::Open(wxCommandEvent &event)
   
   if (directory=="")
     dialog.SetDirectory(wxGetHomeDir());
-
+  
   if (dialog.ShowModal() == wxID_OK)
     {
       path=dialog.GetPath();
@@ -381,22 +378,23 @@ void AppFrame::Open(wxCommandEvent &event)
 
 void AppFrame::LoadFromServer(wxCommandEvent &event)
 {
-	char *nw_str;
-	try	{ 
-		nw_str=network->exec->GetNetwork();
+  char *nw_str;
+  try	{ 
+    nw_str=network->exec->GetNetwork();
     
-	}	catch (CORBA::Exception &) {
-		std::cout << "no exec found!" << std::endl;
-	}
-
-	network->LoadS(nw_str);
-	delete nw_str;
+  }	catch (CORBA::Exception &) {
+    std::cout << "no exec found!" << std::endl;
+  }
+  
+  network->LoadS(nw_str);
+  delete nw_str;
 }
 
 void AppFrame::New(wxCommandEvent &event)
 {
   network->New();
 }
+
 void AppFrame::SubmitToServer(wxCommandEvent &event)
 {
   std::string nw_str;
@@ -406,345 +404,348 @@ void AppFrame::SubmitToServer(wxCommandEvent &event)
   }catch (CORBA::Exception &) {
     std::cout << "no exec found!" << std::endl;
   }
-  
-  
 }
 
 void AppFrame::StartCalc(wxCommandEvent &event)
 {
-	try	{ 
-		network->exec->StartCalc();
+  try	{ 
+    network->exec->StartCalc();
     
-	}	catch (CORBA::Exception &) {
-		std::cout << "no exec found!" << std::endl;
-	}
-
+  }	catch (CORBA::Exception &) {
+    std::cout << "no exec found!" << std::endl;
+  }
 }
 
 void AppFrame::StopCalc(wxCommandEvent &event)
 {
-	try	{ 
-		network->exec->StopCalc();
+  try	{ 
+    network->exec->StopCalc();
     
-	}	catch (CORBA::Exception &) {
-		std::cout << "no exec found!" << std::endl;
-	}
-
+  }	catch (CORBA::Exception &) {
+    std::cout << "no exec found!" << std::endl;
+  }
 }
 
 void AppFrame::PauseCalc(wxCommandEvent &event)
 {
-	try	{ 
-		network->exec->PauseCalc();
+  try	{ 
+    network->exec->PauseCalc();
     
-	}	catch (CORBA::Exception &) {
-		std::cout << "no exec found!" << std::endl;
-	}
+  }	catch (CORBA::Exception &) {
+    std::cout << "no exec found!" << std::endl;
+  }
 }
 
 void AppFrame::ResumeCalc(wxCommandEvent &event)
 {
-	try	{ 
-		network->exec->Resume();
+  try	{ 
+    network->exec->Resume();
     
-	}	catch (CORBA::Exception &) {
-		std::cout << "no exec found!" << std::endl;
-	}
-
+  }	catch (CORBA::Exception &) {
+    std::cout << "no exec found!" << std::endl;
+  }
 }
 
 void AppFrame::ViewResult(wxCommandEvent &event)
 {
-	char* result;
-	char buf[80];
-	map<int, MODULE>::iterator iter;
-	unsigned int i;
-	std::vector<wxString> titles;
-	TextResultDialog * result_dlg;
-	std::vector<wxString> v_desc, v_value;
-	std::vector<string> descs;
-
-    if (CORBA::is_nil(network->exec))
-    {
-      cerr<<"Not Connected yet!\n";
+  char* result;
+  char buf[80];
+  map<int, MODULE>::iterator iter;
+  unsigned int i;
+  std::vector<wxString> titles;
+  TextResultDialog * result_dlg;
+  std::vector<wxString> v_desc, v_value;
+  std::vector<string> descs;
+  
+  titles.push_back("Description");
+  titles.push_back("Value");
+  
+  result_dlg = new TextResultDialog(NULL);
+  result_dlg->syngas->Clear();
+  result_dlg->syngas->AddRow(titles);
+  
+  if (!CORBA::is_nil(network->exec)) {
+    
+    try { 
+  
+      for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) {
+	result = network->exec->GetModuleResult(iter->first);
+	
+	if (string(result)!="") {
+	  Package p;
+	  p.SetSysId("linkresult.xml");
+	  p.Load(result, strlen(result));
+	  
+	  
+	  descs = p.intfs[0].getStrings();
+	  v_desc.clear();
+	  v_value.clear();
+	  v_desc.push_back(iter->second.pl_mod->GetName());
+	  sprintf(buf,"   %d", iter->first);
+	  v_value.push_back(buf);
+	  for (i=0; i<descs.size(); i++) {
+	    v_desc.push_back(descs[i].c_str());
+	    v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
+	  }
+	  
+	  result_dlg->syngas->AddSeperator(' ');
+	  result_dlg->syngas->AddSeperator('+');
+	  result_dlg->syngas->AddSeperator(' ');
+	  result_dlg->Set2Cols(v_desc, v_value);
+	  
+	}
+      }
+    
+      result = network->exec->GetModuleResult(-1); //Global result
+      
+      if (string(result)!="") {
+	Package p;
+	p.SetSysId("linkresult.xml");
+	p.Load(result, strlen(result));
+	
+	descs = p.intfs[0].getStrings();
+	v_desc.clear();
+	v_value.clear();
+	v_desc.push_back("Plant Results");
+	sprintf(buf,"   ");
+	v_value.push_back(buf);
+	for (i=0; i<descs.size(); i++) {
+	  v_desc.push_back(descs[i].c_str());
+	  v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
+	}
+	
+	result_dlg->syngas->AddSeperator(' ');
+	result_dlg->syngas->AddSeperator('+');
+	result_dlg->syngas->AddSeperator(' ');
+	result_dlg->Set2Cols(v_desc, v_value);
+	
+      }
+      
+    }
+    catch (CORBA::Exception &) {
+      cerr << "Maybe Computational Engine is down \n";
       return;
     }
-	
-	titles.push_back("Description");
-	titles.push_back("Value");
-
-	result_dlg = new TextResultDialog(NULL);
-	result_dlg->syngas->Clear();
-	result_dlg->syngas->AddRow(titles);
-	
-	try{ 
-		for (iter=network->modules.begin(); iter!=network->modules.end(); iter++)
-		{
-			result = network->exec->GetModuleResult(iter->first);
-				
-			if (string(result)!="")
-			{
-				Package p;
-				p.SetSysId("linkresult.xml");
-				p.Load(result, strlen(result));
-
-				
-				descs = p.intfs[0].getStrings();
-				v_desc.clear();
-				v_value.clear();
-				v_desc.push_back(iter->second.pl_mod->GetName());
-				sprintf(buf,"   %d", iter->first);
-				v_value.push_back(buf);
-				for (i=0; i<descs.size(); i++)
-				{
-					v_desc.push_back(descs[i].c_str());
-					v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
-				}
-
-				result_dlg->syngas->AddSeperator(' ');
-				result_dlg->syngas->AddSeperator('+');
-				result_dlg->syngas->AddSeperator(' ');
-				result_dlg->Set2Cols(v_desc, v_value);
+  }
+  else {
+    titles.clear();
+    titles.push_back("No Plant Results");
+    titles.push_back(" ");
   
-			}
-		}
-			
-		result = network->exec->GetModuleResult(-1); //Global result
-				
-		if (string(result)!="")
-		{
-			Package p;
-			p.SetSysId("linkresult.xml");
-			p.Load(result, strlen(result));
-				
-			descs = p.intfs[0].getStrings();
-			v_desc.clear();
-			v_value.clear();
-			v_desc.push_back("Overal Results");
-			sprintf(buf,"   ");
-			v_value.push_back(buf);
-			for (i=0; i<descs.size(); i++)
-			{
-				v_desc.push_back(descs[i].c_str());
-				v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
-			}
+    result_dlg->syngas->AddSeperator('+');
+    result_dlg->syngas->AddRow(titles);
+  }
+       
+  // EPRI TAG
+  std::vector<wxString> v_desc2, v_value2;
+  double total_cccost = 0;
+  double total_omcost = 0;
+  v_desc.clear();
+  v_value.clear();
+  for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) {
+    if(iter->second.pl_mod->financial_dlg != NULL) {
+      if(iter->second.pl_mod->financial_dlg->_use_data) {
+	
+	double TPC = iter->second.pl_mod->financial_dlg->_cc00_d *
+	  (1 +
+	   iter->second.pl_mod->financial_dlg->_cc01_d / 100 +
+	   iter->second.pl_mod->financial_dlg->_cc02_d / 100 +
+	   iter->second.pl_mod->financial_dlg->_cc03_d / 100 +
+	   iter->second.pl_mod->financial_dlg->_cc04_d / 100 +
+	   iter->second.pl_mod->financial_dlg->_cc05_d / 100);
 
-			result_dlg->syngas->AddSeperator(' ');
-			result_dlg->syngas->AddSeperator('+');
-			result_dlg->syngas->AddSeperator(' ');
-			result_dlg->Set2Cols(v_desc, v_value);
-  
-		}
-		
-		result_dlg->ShowModal();
-		delete result_dlg;
-	}
-	catch (CORBA::Exception &) {
-		cerr << "Maybe Computational Engine is down" << endl;
-		return;
-	}
+	double TPI = TPC + iter->second.pl_mod->financial_dlg->_cc06_d;
+
+	double cccost = TPI + iter->second.pl_mod->financial_dlg->_cc07_d +
+	  iter->second.pl_mod->financial_dlg->_cc08_d;
+
+	total_cccost += cccost;
+
+	v_desc.push_back(wxString(iter->second.pl_mod->GetName()));
+	sprintf(buf,"%.2f", cccost);
+	v_value.push_back(buf);
+
+	double TMC = TPC * iter->second.pl_mod->financial_dlg->_om00_d / 100;
 	
+	double omcost = TMC + 
+	  iter->second.pl_mod->financial_dlg->_om01_d +
+	  iter->second.pl_mod->financial_dlg->_om02_d +
+	  iter->second.pl_mod->financial_dlg->_om02_d * iter->second.pl_mod->financial_dlg->_om03_d / 100;
+
+	total_omcost += omcost;
 	
-}
-/*
-  unsigned int i;
-  long mod, port;
-  int pos;
-  wxString result;
-  Interface resultintf;
-  ResultPanel_Dialog dlg(NULL, -1);
-  long gasi_mod_id=-1, selx_mod_id=-1;
-  map<int, MODULE>::iterator iter;
-  
-  for (iter=network->modules.begin(); iter!=network->modules.end(); iter++)
-    {
-      i=iter->first;
-      if (pos=network->modules[i].cls_name.find("GASI")!=string::npos)
-	gasi_mod_id = network->modules[i].pl_mod->GetID();
-      if (pos=network->modules[i].cls_name.find("REI_Gasi")!=string::npos)
-	gasi_mod_id = network->modules[i].pl_mod->GetID();
-      if (pos=network->modules[i].cls_name.find("SELX")!=string::npos)
-	selx_mod_id = network->modules[i].pl_mod->GetID();
+	v_desc2.push_back(wxString(iter->second.pl_mod->GetName()));
+	sprintf(buf,"%.2f", omcost);
+	v_value2.push_back(buf);
+	  
+      }
     }
-  try {
-    port = 0;
-
-    //Get the overall network data
-    mod = -1;
-    result=network->exec->GetExportData(mod, port);
-    //network->ReadForInterfaceS(result, resultintf);
-    Package p;
-
-    p.SetSysId("temp");
-    p.Load((const char*)result, strlen(result));
-    resultintf = p.intfs[0];
-
-    dlg.mw_gross_ = resultintf.getDouble("MW_GROSS");
-    dlg.mw_net_ = resultintf.getDouble("MW_NET");
-    dlg.net_eff_ = resultintf.getDouble("NET_EFF");
-    dlg.capital_cst_ = resultintf.getDouble("CAPITAL_CST");
-	dlg.elec_cst_ = resultintf.getDouble("ELEC_CST");
-
-    //Get the gasifier stuff
-    if(gasi_mod_id>0) {
-	  mod = gasi_mod_id;
-      result=network->exec->GetExportData(mod, port);
-      p.Load(result, strlen(result));
-      resultintf = p.intfs[0];
-      // network->ReadForInterfaceS(result, resultintf);
-      dlg.coal_in_ = resultintf.getDouble("COAL_IN");
-      dlg.water_in_ = resultintf.getDouble("WATER_IN");
-      dlg.oxid_in_ = resultintf.getDouble("OX_IN");
-	} else {
-      dlg.coal_in_ = 0;
-      dlg.water_in_ = 0;
-      dlg.oxid_in_ = 0;
-	}
-
-    //Get the selx stuff
-    if(selx_mod_id>0) {
-      mod = selx_mod_id;
-      result=network->exec->GetExportData(mod, port);
-      p.Load(result, strlen(result));
-      resultintf = p.intfs[0];
-      //network->ReadForInterfaceS(result, resultintf);
-      dlg.co2_in_ = resultintf.getDouble("CO2_IN");
-      dlg.co2_out_ = resultintf.getDouble("CO2_OUT");
-      dlg.co2_cap_ = resultintf.getDouble("CO2_CAP");
-	} else {
-      dlg.co2_in_ = 0;
-      dlg.co2_out_ = 0;
-      dlg.co2_cap_ = 0;
-	}
-
-  } catch(CORBA::Exception &) {
-    cerr << "ViewResult ????\n";
   }
 
-  dlg.ShowModal();
+  if(v_desc.size()>0) {
+    result_dlg->syngas->AddSeperator(' ');
+    result_dlg->syngas->AddSeperator(' ');
+    
+    titles.clear();
+    titles.push_back("Plant Component");
+    titles.push_back("Capital Required (M$)");
+    
+    result_dlg->syngas->AddRow(titles);
+    result_dlg->syngas->AddSeperator('+');
+    
+    v_desc.push_back("Total");
+    sprintf(buf,"%.2f", total_cccost);
+    v_value.push_back(buf);
+    
+    result_dlg->Set2Cols(v_desc, v_value);
+
+    //
+
+    result_dlg->syngas->AddSeperator(' ');
+    
+    titles.clear();
+    titles.push_back("Plant Component");
+    titles.push_back("Revenue Required (M$)");
+    
+    result_dlg->syngas->AddRow(titles);
+    result_dlg->syngas->AddSeperator('+');
+    
+    v_desc2.push_back("Total");
+    sprintf(buf,"%.2f", total_omcost);
+    v_value2.push_back(buf);
+    
+    result_dlg->Set2Cols(v_desc2, v_value2);
+
+  }
+
+  result_dlg->ShowModal();
+
+  delete result_dlg;
 }
-*/
+
 void AppFrame::GlobalParam(wxCommandEvent &event)
 {
   if (network->globalparam_dlg!=NULL)
     network->globalparam_dlg->Show();
-  //  else
-  //  {
-  //    network->globalparam_dlg=new GlobalParamDialog(this, -1);
-  //    network->globalparam_dlg->Show();
-  //  }
+  else
+    {
+      network->globalparam_dlg=new GlobalParamDialog(this, -1);
+      network->globalparam_dlg->Show();
+    }
   
 }
 
 void AppFrame::ConExeServer(wxCommandEvent &event)
 {
   if (!is_orb_init)
-  {
-    if (init_orb_naming())
-      is_orb_init = true;
-    else
-      return;
+    {
+      if (init_orb_naming())
+	is_orb_init = true;
+      else
+	return;
+    }
+  
+  try{
+    
+    //_mutex.acquire();	  
+    if (pelog==NULL)
+      {
+	pelog = new PEThread(this);
+	pelog->activate();
+      }
+    OrbThread* ot = new OrbThread(this);
+    ot->activate();
+    //ot->Run();
+    //register it to the server
+    //_mutex.acquire();
+    
+    //_mutex.release();
+    //Enalbe Menu items
+    
+    
+  } catch (CORBA::Exception &) {
+    
+    Log("Can't find executive or UI registration error\n");
   }
 
-  try{
-
-		//_mutex.acquire();	  
-    	  if (pelog==NULL)
-		  {
-		    pelog = new PEThread(this);
-		    pelog->activate();
-		  }
-		OrbThread* ot = new OrbThread(this);
-		ot->activate();
-		//ot->Run();
-		//register it to the server
-		//_mutex.acquire();
-
-		//_mutex.release();
-		//Enalbe Menu items
-  
-
-	} catch (CORBA::Exception &) {
-		
-		Log("Can't find executive or UI registration error\n");
-	}
 }
   
 void AppFrame::ConVEServer(wxCommandEvent &event)
 {
-	if (!is_orb_init)
-	{
-		if (init_orb_naming())
-		  is_orb_init=true;
-		else
-		  return;
-	}
+  if (!is_orb_init)
+    {
+      if (init_orb_naming())
+	is_orb_init=true;
+      else
+	return;
+    }
+  
+  try {
+    /*
+      if (pelog==NULL)
+      {
+      pelog = new PEThread(this);
+      pelog->activate();
+      }*/
+    
+    CosNaming::Name name(1);
+    name.length(1);
+    //Now get the reference of the VE server
+    name[0].id   = CORBA::string_dup ("Master");
+    name[0].kind = CORBA::string_dup ("VE_Xplorer");
+    CORBA::Object_var ve_object = naming_context->resolve(name);
+    vjobs = VjObs::_narrow(ve_object.in());
+    if (CORBA::is_nil(vjobs.in()))
+      std::cerr<<"VjObs is Nill"<<std::endl;
+    
+    //Create the VE Tab
+    con_menu->Enable(v21ID_CONNECT_VE, false);
+    con_menu->Enable(v21ID_DISCONNECT_VE, true);
+    //Log("Found VE server\n");
+  } catch (CORBA::Exception &) {
+    
+    Log("Can't find VE server\n");
+    return;
+  }
+  
+  CreateVETab();
+  Log("Connected to VE server.\n");
 
-	try {
-/*
-    	  if (pelog==NULL)
-		  {
-		    pelog = new PEThread(this);
-		    pelog->activate();
-		  }*/
-
-	    CosNaming::Name name(1);
-		name.length(1);
-		//Now get the reference of the VE server
-		name[0].id   = CORBA::string_dup ("Master");
-		name[0].kind = CORBA::string_dup ("VE_Xplorer");
-		CORBA::Object_var ve_object = naming_context->resolve(name);
-		vjobs = VjObs::_narrow(ve_object.in());
-		if (CORBA::is_nil(vjobs.in()))
-			std::cerr<<"VjObs is Nill"<<std::endl;
-		
-		//Create the VE Tab
-		con_menu->Enable(v21ID_CONNECT_VE, false);
-		con_menu->Enable(v21ID_DISCONNECT_VE, true);
-		//Log("Found VE server\n");
-	} catch (CORBA::Exception &) {
-		
-		Log("Can't find VE server\n");
-		return;
-	}
-
-	CreateVETab();
-   Log("Connected to VE server.\n");
 }
 
 bool AppFrame::init_orb_naming()
 {
-//	char *argv[]={""};
-//	int argc = 0;
-cout << " orb init " << endl;
-
-	try {
-		// First initialize the ORB, 
-		orb =
-			CORBA::ORB_init (wxGetApp().argc, wxGetApp().argv,
+  //	char *argv[]={""};
+  //	int argc = 0;
+  cout << " orb init " << endl;
+  
+  try {
+    // First initialize the ORB, 
+    orb =
+      CORBA::ORB_init (wxGetApp().argc, wxGetApp().argv,
                        ""); // the ORB name, it can be anything! 
-        
-		//Here is the part to contact the naming service and get the reference for the executive
-		CORBA::Object_var naming_context_object =
-			orb->resolve_initial_references ("NameService");
-		naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
-		/*if (naming_context==CORBA)
-		  {
-		    poa->destroy (1, 1);
+    
+    //Here is the part to contact the naming service and get the reference for the executive
+    CORBA::Object_var naming_context_object =
+      orb->resolve_initial_references ("NameService");
+    naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
+    /*if (naming_context==CORBA)
+      {
+      poa->destroy (1, 1);
 		    // Finally destroy the ORB
 		    orb->destroy();
 		    cerr << "Naming service not found!" << endl;
 		    return false;
-		  }
-		  */  
-		return true;
-	}  catch (CORBA::Exception &) {
-	//		poa->destroy (1, 1);
-		// Finally destroy the ORB
-		orb->destroy();
-		Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
-		return false;
-	}
+		    }
+    */  
+    return true;
+  }  catch (CORBA::Exception &) {
+    //		poa->destroy (1, 1);
+    // Finally destroy the ORB
+    orb->destroy();
+    Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
+    return false;
+  }
 
 }
 
@@ -769,76 +770,74 @@ void AppFrame::LoadREISour(wxCommandEvent &event)
 
 void AppFrame::Log(const char* msg)
 {
-	
   if (pelog!=NULL)
     pelog->SetMessage(msg);
-    
-	//::wxPostEvent(this, u);
+  
+  //::wxPostEvent(this, u);
 }
 
 void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event)
 {
-	logwindow->AppendText(event.GetText());
+  logwindow->AppendText(event.GetText());
 }
 
 void AppFrame::DisConExeServer(wxCommandEvent &event)
 {
-	try {
-			network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
-			con_menu->Enable(v21ID_SUBMIT,false);
-			con_menu->Enable(v21ID_LOAD, false);
-			con_menu->Enable(v21ID_CONNECT, true);
-			run_menu->Enable(v21ID_START_CALC, false);
-			run_menu->Enable(v21ID_VIEW_RESULT, false);
-			con_menu->Enable(v21ID_DISCONNECT, false);
-			Log("Disconnect suceeded.\n");
-		}catch (CORBA::Exception &) {
-		
-			Log("Disconnect failed.\n");
-		}
+  try {
+    network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
+    con_menu->Enable(v21ID_SUBMIT,false);
+    con_menu->Enable(v21ID_LOAD, false);
+    con_menu->Enable(v21ID_CONNECT, true);
+    run_menu->Enable(v21ID_START_CALC, false);
+    // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
+    con_menu->Enable(v21ID_DISCONNECT, false);
+    
+    Log("Disconnect successful.\n");
+  }catch (CORBA::Exception &) {
+    
+    Log("Disconnect failed.\n");
+  }
 	
-
 }
 
 void AppFrame::DisConVEServer(wxCommandEvent &event)
 {
-      //try {
-      /*CosNaming::Name name(1);
-
-      name.length(1);
-      name[0].id   = (const char*) "Master";
-      name[0].kind = (const char*) "VE_Xplorer";
-   
-      try
-      {
-         //vprDEBUG(vprDBG_ALL,0) 
-         //<< "naming_context->unbind for CORBA Object  " 
-         //<< endl << vprDEBUG_FLUSH;
-         naming_context->unbind( name );
-         //naming_context->destroy();
-      }
-      catch( CosNaming::NamingContext::InvalidName& )
-      {
-         cerr << "Invalid name for CORBA Object  " << endl;
-      }
-      catch(CosNaming::NamingContext::NotFound& ex)
-      {
-         cerr << "Name not found for CORBA Object  " << ex.why << endl;
-      }*/
-         wx_ve_splitter->Unsplit(m_frame);
-         sizerTab->Remove(m_frame);
-         m_frame = NULL;
-         delete m_frame;
-         con_menu->Enable(v21ID_CONNECT_VE, true);
-         con_menu->Enable(v21ID_DISCONNECT_VE, false);
-         	Log("Disconnect VE suceeded.\n");
-		//}catch (CORBA::Exception &) {
-		
-			//Log("Disconnect VE failed.\n");
-		//}
-      
-      //delete vjobs;
-
+  //try {
+  /*CosNaming::Name name(1);
+    
+    name.length(1);
+    name[0].id   = (const char*) "Master";
+    name[0].kind = (const char*) "VE_Xplorer";
+    
+    try
+    {
+    //vprDEBUG(vprDBG_ALL,0) 
+    //<< "naming_context->unbind for CORBA Object  " 
+    //<< endl << vprDEBUG_FLUSH;
+    naming_context->unbind( name );
+    //naming_context->destroy();
+    }
+    catch( CosNaming::NamingContext::InvalidName& )
+    {
+    cerr << "Invalid name for CORBA Object  " << endl;
+    }
+    catch(CosNaming::NamingContext::NotFound& ex)
+    {
+    cerr << "Name not found for CORBA Object  " << ex.why << endl;
+    }*/
+  wx_ve_splitter->Unsplit(m_frame);
+  sizerTab->Remove(m_frame);
+  m_frame = NULL;
+  delete m_frame;
+  con_menu->Enable(v21ID_CONNECT_VE, true);
+  con_menu->Enable(v21ID_DISCONNECT_VE, false);
+  Log("Disconnect VE suceeded.\n");
+  //}catch (CORBA::Exception &) {
+  
+  //Log("Disconnect VE failed.\n");
+  //}
+  
+  //delete vjobs;
 
 }
 

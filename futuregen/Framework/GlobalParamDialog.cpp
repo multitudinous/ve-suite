@@ -94,7 +94,9 @@ GlobalParamDialog::GlobalParamDialog(wxWindow *parent, wxWindowID id)
 
   fin_lbl[0] = new wxStaticText(this, -1, _T("Year Costs Reported"), wxDefaultPosition, tag_size);
   
-  wxString years[]={"1977", "1978", "1979", "1980", "1981","1982","1983","1984","1985","1986","1987","1988","1989","1990","1991","1992","1993","1994","1995","1996","1997","1998","1999", "2000", "2001","2002", "2003"};
+  wxString years[]={"1977", "1978", "1979", "1980", "1981", "1982", "1983", "1984", "1985", "1986", 
+		    "1987", "1988", "1989", "1990", "1991", "1992", "1993", "1994", "1995", "1996", 
+		    "1997", "1998", "1999", "2000", "2001", "2002", "2003"};
   
   year_costs = new wxComboBox(this, YEAR_COSTS, _T("2002"), wxDefaultPosition, entry_size, 27, years, wxCB_DROPDOWN|wxCB_READONLY);
 

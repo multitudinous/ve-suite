@@ -17,7 +17,7 @@ PREFIX = /usr/local
 include Makefile.incl
 
 PLUGIN = libZplugin.so
-OBJECTS = string_ops.o package.o interface.o UIDialog.o Plugin_base.o TexTable.o TextResultDialog.o
+OBJECTS = string_ops.o package.o interface.o UIDialog.o Plugin_base.o TexTable.o TextResultDialog.o FinancialDialog.o
 
 .SUFFIXES : .o .cpp
 

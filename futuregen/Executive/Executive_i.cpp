@@ -224,6 +224,7 @@ void Body_Executive_i::execute_next_mod (long module_id)
   
   if(sm.intfs.size()!=0) {
     int rs = sm.intfs[0].getInt("RETURN_STATE"); // 0:O.K, 1:ERROR, 2:?, 3:FB COMLETE
+    if(rs==-1) rs = sm.intfs[0].getInt("return_state");
     _network->module(_network->moduleIdx(module_id))->_return_state = rs;
     
     if(rs!=1) {

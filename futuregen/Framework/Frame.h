@@ -121,6 +121,7 @@ class AppFrame : public wxFrame
   void ViewResult(wxCommandEvent &event);
   void ViewHelp(wxCommandEvent &event);
   void GlobalParam(wxCommandEvent &event);
+
   void ConExeServer(wxCommandEvent &event);
   void DisConExeServer(wxCommandEvent &event);
   void DisConVEServer(wxCommandEvent &event);

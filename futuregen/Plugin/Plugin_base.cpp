@@ -1,5 +1,5 @@
 
-#pragma warning(disable:4786)
+#pragma warning(disable : 4786)
 #pragma warning(disable : 4101)
 #pragma warning(disable : 4503)
 #pragma warning(disable : 4251)
@@ -7,6 +7,7 @@
 #include "Plugin_base.h"
 #include <iostream>
 #include "string_ops.h"
+
 IMPLEMENT_DYNAMIC_CLASS(REI_Plugin, wxObject)
 
 /////////////////////////////////////////////////////////////////////////////
@@ -15,6 +16,10 @@ REI_Plugin::REI_Plugin()
   dlg=NULL; 
   result_dlg=NULL;
   port_dlg = NULL;
+
+  // EPRI TAG
+  financial_dlg = NULL;
+
   pos = wxPoint(0,0); //default position
   
   //default shape
@@ -36,12 +41,12 @@ REI_Plugin::REI_Plugin()
 REI_Plugin::~REI_Plugin()
 {
   delete [] poly;
-  if (dlg!=NULL)
-    delete dlg;
-  if (result_dlg!=NULL)
-    delete result_dlg;
-  if (port_dlg!=NULL)
-    delete port_dlg;
+  if (dlg!=NULL)        delete dlg;
+  if (result_dlg!=NULL) delete result_dlg;
+  if (port_dlg!=NULL)   delete port_dlg;
+  
+  // EPRI TAG
+  if (financial_dlg!=NULL) delete financial_dlg;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -180,7 +185,7 @@ void REI_Plugin::DrawID(wxDC* dc)
 
   text<<mod_pack._id;
   dc->GetTextExtent(text, &w, &h);
-  dc->DrawText(text, (x-w/2+xoff), (y-h/2+yoff));
+  //dc->DrawText(text, (x-w/2+xoff), (y-h/2+yoff));
   
 }
 
@@ -294,6 +299,27 @@ Interface* REI_Plugin::Pack()
 	y=itervs->second;
     mod_pack.setVal(itervs->first, *(itervs->second));
   }
+
+  // EPRI TAG
+  if(financial_dlg != NULL) {
+    mod_pack.setVal("USE_FINANCIAL", (long)financial_dlg->_use_data);
+
+    mod_pack.setVal("CC00", financial_dlg->_cc00_d);
+    mod_pack.setVal("CC01", financial_dlg->_cc01_d);
+    mod_pack.setVal("CC02", financial_dlg->_cc02_d);
+    mod_pack.setVal("CC03", financial_dlg->_cc03_d);
+    mod_pack.setVal("CC04", financial_dlg->_cc04_d);
+    mod_pack.setVal("CC05", financial_dlg->_cc05_d);
+    mod_pack.setVal("CC06", financial_dlg->_cc06_d);
+    mod_pack.setVal("CC07", financial_dlg->_cc07_d);
+    mod_pack.setVal("CC08", financial_dlg->_cc08_d);
+
+    mod_pack.setVal("OM00", financial_dlg->_om00_d);
+    mod_pack.setVal("OM01", financial_dlg->_om01_d);
+    mod_pack.setVal("OM02", financial_dlg->_om02_d);
+    mod_pack.setVal("OM03", financial_dlg->_om03_d);
+  }
+
   //mod_pack.pack(result);
   
   //wxString wxstr = result.c_str();
@@ -378,7 +404,31 @@ void REI_Plugin::UnPack(Interface * intf)
 	mod_pack.getVal(vars[i], *(itervs->second));
     }
 
+  // EPRI TAG
+  long uf = 0;
+  if(mod_pack.getVal("USE_FINANCIAL", uf)) {
+    
+    if(financial_dlg == NULL)
+      financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
+    
+    financial_dlg->_use_data = uf;
+    
+    financial_dlg->_cc00_d = mod_pack.getDouble("CC00");
+    financial_dlg->_cc01_d = mod_pack.getDouble("CC01");
+    financial_dlg->_cc02_d = mod_pack.getDouble("CC02");
+    financial_dlg->_cc03_d = mod_pack.getDouble("CC03");
+    financial_dlg->_cc04_d = mod_pack.getDouble("CC04");
+    financial_dlg->_cc05_d = mod_pack.getDouble("CC05");
+    financial_dlg->_cc06_d = mod_pack.getDouble("CC06");
+    financial_dlg->_cc07_d = mod_pack.getDouble("CC07");
+    financial_dlg->_cc08_d = mod_pack.getDouble("CC08");
 
+    financial_dlg->_om00_d = mod_pack.getDouble("OM00");
+    financial_dlg->_om01_d = mod_pack.getDouble("OM01");
+    financial_dlg->_om02_d = mod_pack.getDouble("OM02");
+    financial_dlg->_om03_d = mod_pack.getDouble("OM03");
+  }
+  
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -530,4 +580,14 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
   port_dlg->Set2Cols(gas_desc, gas_value);
 
   return port_dlg;
+}
+
+// EPRI TAG
+///////////////////////////////////////////////
+void REI_Plugin::FinancialData ()
+{
+  if(financial_dlg == NULL)
+    financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
+  
+  financial_dlg->Show();
 }

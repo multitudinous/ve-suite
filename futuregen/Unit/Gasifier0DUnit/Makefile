@@ -50,6 +50,7 @@ OBJECTS = ../string_ops.o \
 	./Gasifier0D.o \
 	./sode_rk.o \
 	./part_kinetics.o \
+	./coal_perc_devol.o \
 	./equil.o \
 	./logfit.o \
 	../V21Helper/V21Helper.o \

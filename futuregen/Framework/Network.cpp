@@ -24,6 +24,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
   EVT_MENU(SHOW_RESULT, Network::OnShowResult)
   EVT_MENU(PARAVIEW, Network::OnParaView)
   EVT_MENU(SHOW_DESC, Network::OnShowDesc)
+  EVT_MENU(SHOW_FINANCIAL, Network::OnShowFinancial) /* EPRI TAG */
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -49,7 +50,8 @@ Network::Network(wxWindow* parent, int id)
   xold = yold =0;
   moving = false;
   paraview = false;
-  globalparam_dlg = new GlobalParamDialog(NULL, -1);;
+  globalparam_dlg = new GlobalParamDialog(NULL, -1);
+
   SetBackgroundColour(*wxWHITE);
 }
 
@@ -65,6 +67,7 @@ Network::~Network()
       delete modules[i].pl_mod;
     }
   delete globalparam_dlg;
+
 }
 /////////////////////////////////////////////
 ///////// Event Handlers ////////////////////
@@ -364,6 +367,10 @@ void Network::OnMRightDown(wxMouseEvent &event)
   pop_menu.Append(PARAVIEW, "ParaView 3D Result");
   
   pop_menu.Append(SHOW_LINK_CONT, "Show Link Content");
+
+  // EPRI TAG
+  pop_menu.Append(SHOW_FINANCIAL, "Financial Data");
+  pop_menu.Enable(SHOW_FINANCIAL, true);
 
   pop_menu.Enable(ADD_LINK_CON, false);
   pop_menu.Enable(EDIT_TAG, false);
@@ -2760,7 +2767,7 @@ void  Network::OnShowLinkContent(wxCommandEvent &event)
       p.Load(linkresult, strlen(linkresult));
       port_dlg = modules[mod].pl_mod->PortData(NULL,  &(p.intfs[0]));
       
-      cout<<linkresult<<endl;
+      //cout<<linkresult<<endl;
       if (port_dlg!=NULL)
 	port_dlg->Show();
     }
@@ -2789,7 +2796,6 @@ void  Network::OnShowResult(wxCommandEvent &event)
     return;
   }
 
-  cout<<result<<endl;
   if (string(result)!="")
     {
       Package p;
@@ -2802,6 +2808,14 @@ void  Network::OnShowResult(wxCommandEvent &event)
       if (hello!=NULL)
 	hello->Show();
     }
+}
+
+// EPRI TAG
+//////////////////////////////////////////////////////
+void  Network::OnShowFinancial(wxCommandEvent &event)
+{
+  if (m_selMod<0) return;
+  modules[m_selMod].pl_mod->FinancialData();
 }
 
 //////////////////////////////////////////////////////

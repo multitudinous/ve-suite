@@ -45,7 +45,8 @@ int Execute_Thread::svc (void)
     _mutex.release();
     
     try {
-      _executive->execute_next_mod ((long)_mod->GetID());
+      long id = (long)(_mod->GetID());
+      _executive->execute_next_mod (id);
     }catch (CORBA::Exception &) {
       cout <<"Module GetID Messed up.\n";
     }

@@ -9,6 +9,10 @@
 
 #include "UIDialog.h"
 #include "TextResultDialog.h"
+
+// EPRI TAG
+#include "FinancialDialog.h"
+
 /*
  * If we're using wx in Dynamic Library format do we 
  * want FL to be in DLL form as well?
@@ -76,6 +80,9 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
   virtual UIDialog* PortData(wxWindow* parent,  Interface *intf);
   //This returns the PortData dialog of the module
 
+  virtual void FinancialData();
+  //This returns the FinancialData dialog of the module
+
   virtual unsigned int GetID();
   //This is the ID to identify the module
 
@@ -108,6 +115,9 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
   virtual void SetID(int id);
   virtual bool Has3Ddata();
 
+  // EPRI TAG
+  FinancialDialog* financial_dlg;
+
  protected:
 
   void RegistVar(string vname, long *var);
@@ -120,6 +130,7 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
   UIDialog* dlg;
   TextResultDialog* result_dlg;
   TextResultDialog* port_dlg;
+
   Interface mod_pack;
   wxPoint pos; //The Position to draw Icon;
   std::vector<wxString> v_desc;

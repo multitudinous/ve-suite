@@ -72,25 +72,25 @@ int OrbThread::svc (void)
 			frame_->run_menu->Enable(v21ID_START_CALC, true);
 			frame_->run_menu->Enable(v21ID_VIEW_RESULT, true);
 			frame_->con_menu->Enable(v21ID_DISCONNECT, true);
-
+			
 			frame_->orb->run();
 		}catch (CORBA::Exception &) {
-		
-			frame_->Log("Can't find executive or UI registration error.\n");
+		  
+		  frame_->Log("Can't find executive or UI registration error.\n");
 		}
 	}
 	else
-		try {
-			
-		  frame_->network->exec->RegisterUI(frame_->p_ui_i->UIName_.c_str());
-		  frame_->con_menu->Enable(v21ID_SUBMIT,true);
-		  frame_->con_menu->Enable(v21ID_LOAD, true);
-		  frame_->con_menu->Enable(v21ID_CONNECT, false);
-		  frame_->run_menu->Enable(v21ID_START_CALC, true);
-		  frame_->run_menu->Enable(v21ID_VIEW_RESULT, true);
-		  frame_->con_menu->Enable(v21ID_DISCONNECT, true);
-			
-		}catch (CORBA::Exception &) {
+	  try {
+	    
+	    frame_->network->exec->RegisterUI(frame_->p_ui_i->UIName_.c_str());
+	    frame_->con_menu->Enable(v21ID_SUBMIT,true);
+	    frame_->con_menu->Enable(v21ID_LOAD, true);
+	    frame_->con_menu->Enable(v21ID_CONNECT, false);
+	    frame_->run_menu->Enable(v21ID_START_CALC, true);
+	    frame_->run_menu->Enable(v21ID_VIEW_RESULT, true);
+	    frame_->con_menu->Enable(v21ID_DISCONNECT, true);
+	    
+	}catch (CORBA::Exception &) {
 		
 			frame_->Log("Can't find executive or UI registration error.\n");
 		}
