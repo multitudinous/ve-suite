@@ -46,7 +46,8 @@ protected:
                     char* name,
                     std::vector<double*> cellData,
                     int nComponents,
-                    int nTuples);
+                    int nTuples,
+                    int pointCellGrid = 0);
    void _writeRectilinearCellDataToPointDataFile(vtkRectilinearGrid* cellGrid,
                                                      char* fileName,
                                                      int asciiFile=1);

@@ -674,11 +674,11 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
       delete [] _deltaBZ;
       _deltaBZ = 0;
    }
-   _ax = new double[_dimensions[0]];
-   _ay = new double[_dimensions[1]];
-   _az = new double[_dimensions[2]];
+   _ax = new double[_dimensions[0]+1];
+   _ay = new double[_dimensions[1]+1];
+   _az = new double[_dimensions[2]+1];
 
-   _deltaAX = new double[_dimensions[0]-1];
+ /*  _deltaAX = new double[_dimensions[0]-1];
    _deltaBX = new double[_dimensions[0]-1];
 
    _deltaAY = new double[_dimensions[1]-1];
@@ -686,19 +686,21 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
 
    _deltaAZ = new double[_dimensions[2]-1];
    _deltaBZ = new double[_dimensions[2]-1];
-
+*/
    double xSquared = 0;
    for(int i = 1; i < _dimensions[0] -1;i++){
       xSquared = (_bx[i]-_bx[i-1]) * (_bx[i]-_bx[i-1]);
-      _ax[i] = xSquared/(_bx[i+1]-_bx[i-1]);
+      _ax[i] = _bx[i-1] + xSquared/(_bx[i+1]-_bx[i-1]);
    }
    //need to check the array index conversion here from fortran to C
    _ax[_dimensions[0] -1] = 2.0*_bx[_dimensions[0] -2]
 		        - _ax[_dimensions[0] -2];
+   _ax[_dimensions[0]] = 2.0*_bx[_dimensions[0] -1]
+		        - _ax[_dimensions[0] -1];
    _ax[0] = 2.0*_bx[0] - _ax[1];
 
 
-   for(int i = 0; i < _dimensions[0]-1; i++){
+ /*  for(int i = 0; i < _dimensions[0]-1; i++){
       _deltaAX[i] = _ax[i+1] - _ax[i];
    }
 
@@ -707,19 +709,21 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
    }
    _deltaBX[0] = _deltaAX[0];
    _deltaBX[_dimensions[0]-1] = _deltaAX[_dimensions[0]-1];
-
+*/
    double ySquared = 0;
    for(int i = 1; i < _dimensions[1] -1;i++){
       ySquared = (_by[i]-_by[i-1]) * (_by[i]-_by[i-1]);
-      _ay[i] = ySquared/(_by[i+1]-_by[i-1]);
+      _ay[i] = _by[i-1] +ySquared/(_by[i+1]-_by[i-1]);
    }
    //need to check the array index conversion here from fortran to C
    _ay[_dimensions[1] -1] = 2.0*_by[_dimensions[1] -2]
 		        - _ay[_dimensions[1] -2];
-   _ay[0] = 2.0*_bx[1] - _ay[1];
+   _ay[_dimensions[1]] = 2.0*_by[_dimensions[1] -1]
+		        - _ay[_dimensions[1] -1];
+   _ay[0] = 2.0*_by[0] - _ay[1];
 
 
-   for(int i = 0; i < _dimensions[1]-1; i++){
+ /*  for(int i = 0; i < _dimensions[1]-1; i++){
       _deltaAY[i] = _ay[i+1] - _ay[i];
    }
 
@@ -728,20 +732,23 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
    }
    _deltaBY[0] = _deltaAY[0];
    _deltaBY[_dimensions[1]-1] = _deltaAY[_dimensions[1]-1];
-
+*/
    double zSquared = 0;
    for(int i = 1; i < _dimensions[2] -1;i++){
       zSquared = (_bz[i]-_bz[i-1]) * (_bz[i]-_bz[i-1]);
-      _az[i] = zSquared/(_bz[i+1]-_bz[i-1]);
+      _az[i] = _bz[i-1] + zSquared/(_bz[i+1]-_bz[i-1]);
    }
+
    //need to check the array index conversion here from fortran to C
    _az[_dimensions[2] -1] = 2.0*_bz[_dimensions[2] -2]
 		        - _az[_dimensions[2] -2];
+   _az[_dimensions[2]] = 2.0*_bz[_dimensions[2] -1]
+		        - _az[_dimensions[2] -1];
    
-   _az[0] = 2.0*_bz[1] - _az[1];
+   _az[0] = 2.0*_bz[0] - _az[1];
 
 
-   for(int i = 0; i < _dimensions[2]-1; i++){
+ /*  for(int i = 0; i < _dimensions[2]-1; i++){
       _deltaAZ[i] = _az[i+1] - _az[i];
    }
 
@@ -750,7 +757,7 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
    }
    _deltaBZ[0] = _deltaAZ[0];
    _deltaBZ[_dimensions[2]-1] = _deltaAZ[_dimensions[2]-1];
-
+*/
    if(gridData){
       delete [] gridData;
       gridData = 0;
@@ -766,16 +773,7 @@ int cfdHDFToVTK::_copyData(float32* inData,double* outData, int* dimensions)
    for(int i = 0; i < dataSize; i++){
       outData[i] = inData[i];
    }
-   int index3 = 0;
-   //need to check these w/ data. . .
-   /*for(int rows = 0; rows < _dimensions[0]; rows++){
-      for(int cols = 0; cols < _dimensions[1]; cols++){
-         for(int depth = 0; depth < _dimensions[2]; depth++){
-            //rows*(_dimensions[2]*dimensions[0]) + cols*_dimensions[2] + depth
-            outData[index3] = inData[index3++];
-         }   
-      }   
-   }*/
+  
    return 0;
 }
 //////////////////////////////////////////////
@@ -784,85 +782,52 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
 
    // Create a rectilinear grid by defining three arrays specifying the
    // coordinates in the x-y-z directions.
-   vtkFloatArray* bXCoords = vtkFloatArray::New();
-   bXCoords->SetNumberOfValues(_dimensions[2]);
-   for (int i=0; i<_dimensions[2]; i++){ 
-     bXCoords->SetValue(i,_bz[i]);
+   _numCells = (_dimensions[0])*(_dimensions[1])*(_dimensions[2]);
+   vtkFloatArray* aXCoords = vtkFloatArray::New();
+   aXCoords->SetNumberOfValues(_dimensions[2]+1);
+   for (int i=0; i<_dimensions[2]+1; i++){ 
+     aXCoords->SetValue(i,_az[i]);
    }
-   vtkFloatArray* bYCoords = vtkFloatArray::New();
-   bYCoords->SetNumberOfValues(_dimensions[1]);
-   for (int i=0; i<_dimensions[1]; i++){
-     bYCoords->SetValue(i,_by[i]);
+   vtkFloatArray* aYCoords = vtkFloatArray::New();
+   aYCoords->SetNumberOfValues(_dimensions[1]+1);
+   for (int i=0; i<_dimensions[1]+1; i++){
+     aYCoords->SetValue(i,_ay[i]);
    }  
-   vtkFloatArray* bZCoords = vtkFloatArray::New();
-   bZCoords->SetNumberOfValues(_dimensions[0]);
-   for (int i=0; i<_dimensions[0]; i++){
-     bZCoords->SetValue(i,_bx[i]);
+   vtkFloatArray* aZCoords = vtkFloatArray::New();
+   aZCoords->SetNumberOfValues(_dimensions[0]+1);
+   for (int i=0; i<_dimensions[0]+1; i++){
+     aZCoords->SetValue(i,_ax[i]);
    }  
- 
-   vtkRectilinearGrid* bGrid = vtkRectilinearGrid::New();
-   //bGrid->DebugOn();
-   bGrid->SetDimensions(_dimensions[2],_dimensions[1],_dimensions[0]);
-   bGrid->SetXCoordinates(bXCoords);
-   bGrid->SetYCoordinates(bYCoords);
-   bGrid->SetZCoordinates(bZCoords);
-   //bGrid->Print( cout );
 
-   //add vtk interface--should be easy!!!
+   vtkRectilinearGrid* aGrid = vtkRectilinearGrid::New();
+   aGrid->SetDimensions(_dimensions[2]+1,_dimensions[1]+1,_dimensions[0]+1);
+   aGrid->SetXCoordinates(aXCoords);
+   aGrid->SetYCoordinates(aYCoords);
+   aGrid->SetZCoordinates(aZCoords);
+   //aGrid->Print( std::cout );
    int nScalars = _scalarNames.size();
-   if(!nScalars){
-     std::cout<<"No scalar info found!!"<<std::endl;
-   }
-   _numCells = _dimensions[0]*_dimensions[1]*_dimensions[2];
    std::vector<double*> cellData;
+   
    for(int i = 0; i < nScalars; i++){
-
      if(strstr(_scalarNames.at(i),"pg")){
         cellData.push_back(_pseudoGravPot);
-        _addCellDataToGrid(bGrid,_scalarNames.at(i),cellData,
+        _addCellDataToGrid(aGrid,_scalarNames.at(i),cellData,
                          _numCells,1);
         cellData.clear();
         
      }else if(strstr(_scalarNames.at(i),"density")){
-       // std::cout<<"*****************Adding density to grid***************"<<std::endl;
         cellData.push_back(_density);
-        _addCellDataToGrid(bGrid,_scalarNames.at(i),cellData,
+        _addCellDataToGrid(aGrid,_scalarNames.at(i),cellData,
                          _numCells,1);
-        //std::cout<<"*****************Done density to grid***************"<<std::endl;
         cellData.clear();
         
      }else if(strstr(_scalarNames.at(i),"energy")){
         cellData.push_back(_energyDensity);
-        _addCellDataToGrid(bGrid,_scalarNames.at(i),cellData,
+        _addCellDataToGrid(aGrid,_scalarNames.at(i),cellData,
                          _numCells,1);
         cellData.clear();
-        
      }	
    }
-   vtkFloatArray* aXCoords = vtkFloatArray::New();
-   aXCoords->SetNumberOfValues(_dimensions[2]);
-   for (int i=0; i<_dimensions[2]; i++){ 
-     aXCoords->SetValue(i,_az[i]);
-   }
-   vtkFloatArray* aYCoords = vtkFloatArray::New();
-   aYCoords->SetNumberOfValues(_dimensions[1]);
-   for (int i=0; i<_dimensions[1]; i++){
-     aYCoords->SetValue(i,_ay[i]);
-   }  
-   vtkFloatArray* aZCoords = vtkFloatArray::New();
-   aZCoords->SetNumberOfValues(_dimensions[0]);
-   for (int i=0; i<_dimensions[0]; i++){
-     aZCoords->SetValue(i,_ax[i]);
-   }  
-
-
-   vtkRectilinearGrid* aGrid = vtkRectilinearGrid::New();
-   aGrid->SetDimensions(_dimensions[2],_dimensions[1],_dimensions[0]);
-   aGrid->SetXCoordinates(aXCoords);
-   aGrid->SetYCoordinates(aYCoords);
-   aGrid->SetZCoordinates(aZCoords);
-   aGrid->Print( cout );
-  
    //add vtk interface--should be easy!!!
    int nvectors = _vectorNames.size();
    if(!nvectors){
@@ -914,32 +879,14 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
    strcat(aName,".vtk");
   
    _writeRectilinearCellDataToPointDataFile(aGrid,aName,_asciiOut);
-   bName = new char[1028];
-   strcpy(bName,_outVTKDirectory);
-   if(!_outFile){
-      setVTKOutFileName(0);
-   }
-   strcat(bName,"b");
-   strcat(bName,_outFile);
-   strcat(bName,".vtk");
-   _writeRectilinearCellDataToPointDataFile(bGrid,bName,_asciiOut);
-  
    if(aName){
       delete [] aName;
       aName = 0;
    }
-   if(bName){
-      delete [] bName;
-      bName = 0;
-   }
    aGrid->Delete();
-   bGrid->Delete();
    aXCoords->Delete();
    aYCoords->Delete();
    aZCoords->Delete();
-   bXCoords->Delete();
-   bYCoords->Delete();
-   bZCoords->Delete();
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 void cfdHDFToVTK::_writeRectilinearCellDataToPointDataFile(vtkRectilinearGrid* cellGrid,
@@ -978,7 +925,8 @@ void cfdHDFToVTK::_addCellDataToGrid(vtkDataSet* dSet,
                                   char* name,
                                   std::vector<double*> cellData,
                                   int nTuples,
-                                  int nComponents)
+                                  int nComponents,
+                                  int pointCellGrid)
 {
    vtkFloatArray* data = vtkFloatArray::New();
    data->SetName( name );
@@ -992,7 +940,11 @@ void cfdHDFToVTK::_addCellDataToGrid(vtkDataSet* dSet,
       }
       data->SetTuple(j,tuple);
    }
-   dSet->GetPointData()->AddArray(data);
+   if(pointCellGrid){
+      dSet->GetPointData()->AddArray(data);
+   }else{
+      dSet->GetCellData()->AddArray(data);
+   }
    data->Delete();
    if(tuple){
       delete [] tuple;
