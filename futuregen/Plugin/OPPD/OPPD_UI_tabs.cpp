@@ -28,4 +28,7 @@ void OPPD_UI_tabs::createTabPages()
 	_outputsPage = new OPPD_UI_outputs(this);
 	AddPage( _outputsPage, _T("Outputs"), false);
 
+	_constantsPage = new OPPD_UI_constants(this);
+	AddPage( _constantsPage, _T("Constants"), false);
+
 }

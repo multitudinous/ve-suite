@@ -3,10 +3,12 @@
 
 #include "OPPD_UI_entries.h"
 #include "OPPD_UI_outputs.h"
+#include "OPPD_UI_constants.h"
 
 
 class OPPD_UI_entries;
 class OPPD_UI_outputs;
+class OPPD_UI_constants;
 
 class OPPD_UI_tabs: public wxNotebook{
 public:
@@ -22,6 +24,7 @@ public:
 
    OPPD_UI_entries* _entriesPage;
    OPPD_UI_outputs* _outputsPage;
+   OPPD_UI_constants* _constantsPage;
 
 
 
