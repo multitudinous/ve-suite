@@ -51,7 +51,8 @@ enum cursorTYPE {
 /*!
   Enumerate the pfGeode objects for each cfd visualization.
 */
-enum cfdGeodeEnum {
+enum cfdGeodeEnum 
+{
    // Everything below has to be mirrored exactly in 
    // VE_Suite/VE_Xplorer/UMI/hello/config/mapping.config
    CONTOUR, X_CONTOUR, Y_CONTOUR, Z_CONTOUR,
