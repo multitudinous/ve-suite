@@ -18,7 +18,7 @@ class cfdWebServices : public cfdGlobalBase
    public:
       cfdWebServices();
       ~cfdWebServices();
-      bool initCorba(int, char**);
+      bool initCorba(int&, char**);
    
    private:
 
@@ -39,6 +39,8 @@ class cfdWebServices : public cfdGlobalBase
       // _name_map : maps a module name to its module id.
       std::map<int, cfdVEBaseClass* > _plugins;
       
-         cfdGroup* _masterNode;s
-
+      cfdGroup* _masterNode;s
+      CORBA::ORB-var _orb;           //our CORBA orb.  maybe this can be a
+                                    // temp variable in the initCorba function,
+                                    //but will I know that for sure, it's here
 };
