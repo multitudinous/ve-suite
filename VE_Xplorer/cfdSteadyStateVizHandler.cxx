@@ -69,7 +69,6 @@
 #include <vtkPolyData.h>
 
 using namespace vpr;
-using namespace std;
 
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
 {

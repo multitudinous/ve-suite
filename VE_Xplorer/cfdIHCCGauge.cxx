@@ -46,8 +46,6 @@
 #include <sstream>
 #include <iostream>
 
-using namespace std;
-
 cfdIHCCGauge::cfdIHCCGauge( cfdNode *masterNode )
 {
    _textOutput = std::make_pair( new cfd1DTextInput(), new cfd1DTextInput() );
@@ -108,7 +106,7 @@ void cfdIHCCGauge::SetGaugeName( std::string tagName )
    this->_gaugeName = tagName;
 }
 
-void cfdIHCCGauge::SetDataVector( vector< double > input )
+void cfdIHCCGauge::SetDataVector( std::vector< double > input )
 {
    this->data = input;
 }

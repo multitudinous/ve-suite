@@ -31,8 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdAnimation.h"
 
-using namespace std;
-
 #include <iostream>
 
 #include "cfdTransientFlowManager.h"

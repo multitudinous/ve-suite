@@ -42,8 +42,6 @@
 #include <iostream>
 #include <fstream>
 
-using namespace std;
-
 // Fix need to add the new style read param to this class
 // tak code out of cfdReadPAram to this function
 cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
@@ -134,7 +132,7 @@ bool cfdAnimatedImage::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdAnimatedImage::UpdateCommand()
 {
-   cerr << "doing nothing in cfdAnimatedImage::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdAnimatedImage::UpdateCommand()" << std::endl;
 }
 
 void cfdAnimatedImage::Update( void )

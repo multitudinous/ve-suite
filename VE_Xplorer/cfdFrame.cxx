@@ -50,7 +50,6 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
-using namespace std;
 using namespace gmtl;
 
 cfdFrame::cfdFrame()

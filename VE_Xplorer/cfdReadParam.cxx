@@ -60,8 +60,6 @@
 
 #include <vpr/Util/Debug.h>
 
-using namespace std;
-
 cfdReadParam::cfdReadParam()
 {
    this->changeGeometry = false;
@@ -436,7 +434,7 @@ void cfdReadParam::convertBinaryToArray( int gui, int size )
    for ( int i = 0; i < size; i++ ) 
    {      
       guiVal[ i] = testBin[ i ];
-      vprDEBUG(vprDBG_ALL,2) << "Binary number : " << guiVal[ i] << endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,2) << "Binary number : " << guiVal[ i] << std::endl << vprDEBUG_FLUSH;
    }
 }
 
@@ -507,7 +505,7 @@ bool cfdReadParam::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdReadParam::UpdateCommand()
 {
-   cerr << "doing nothing in cfdReadParam::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdReadParam::UpdateCommand()" << std::endl;
 }
 
 

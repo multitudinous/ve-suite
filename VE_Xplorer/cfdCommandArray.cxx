@@ -33,8 +33,6 @@
 #include "cfdCommandArray.h"
 #include <iostream>
 
-using namespace std;
-
 cfdCommandArray::cfdCommandArray( const cfdCommandArray& input )
 {
    cfdIso_value      = input.cfdIso_value;
@@ -91,8 +89,8 @@ int cfdCommandArray::GetCommandValue( int i )
       return (int)cfdCommandArray::cfdTeacher_state;
    else
    {
-      cerr << "invalid argument(" << i << ") in "
-           << "cfdCommandArray::GetCommandValue()" << endl;
+      std::cerr << "invalid argument(" << i << ") in "
+           << "cfdCommandArray::GetCommandValue()" << std::endl;
       return 0;
    }
 }
@@ -141,8 +139,8 @@ void cfdCommandArray::SetCommandValue( int i, double value)
    }
    else
    {
-      cerr << "invalid argument(" << i << ") in "
-           << "cfdCommandArray::SetCommandValue()" << endl;
+      std::cerr << "invalid argument(" << i << ") in "
+           << "cfdCommandArray::SetCommandValue()" << std::endl;
    }
 
 }

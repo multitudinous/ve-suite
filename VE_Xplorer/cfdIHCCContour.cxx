@@ -46,8 +46,6 @@
 
 #include <vpr/Util/Debug.h>
 
-using namespace std;
-
 cfdIHCCContour::cfdIHCCContour( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdIHCCContour constructor"
@@ -83,17 +81,17 @@ void cfdIHCCContour::UpdateModelVariables( double* input )
    }
 }
 
-void cfdIHCCContour::SetDataVector( vector< double > input, double* x )
+void cfdIHCCContour::SetDataVector( std::vector< double > input, double* x )
 {
    this->solutions = input;
    definedRange[ 0 ] = x[ 0 ];
    definedRange[ 1 ] = x[ 1 ];
-   cout << definedRange[ 0 ] << " : " << definedRange[ 1 ] << endl;
+   std::cout << definedRange[ 0 ] << " : " << definedRange[ 1 ] << std::endl;
 }
 
 void cfdIHCCContour::RunModel( void )
 {
-   vector< double > solutions;
+   std::vector< double > solutions;
    double t;                        //time (in hours)
    int i;                           //looping index
 
@@ -150,7 +148,7 @@ void cfdIHCCContour::RunModel( void )
 
 void cfdIHCCContour::MakeLookupTable( void )
 {
-   cout << "lut range: " << this->definedRange[ 0 ] << " : " << this->definedRange[ 1 ] << endl;
+   std::cout << "lut range: " << this->definedRange[ 0 ] << " : " << this->definedRange[ 1 ] << std::endl;
    if ( lut == NULL )
       lut = vtkLookupTable::New();
 

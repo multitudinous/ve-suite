@@ -49,8 +49,6 @@
 #endif
 
 #include <vpr/Util/Debug.h>
-using namespace std;
-
 cfdModuleGeometry::cfdModuleGeometry( cfdGroup* masterNode )
 {
    this->_masterNode = masterNode;

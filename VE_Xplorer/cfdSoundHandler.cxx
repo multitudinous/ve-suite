@@ -44,8 +44,6 @@
 
 #include <vrj/Util/Debug.h>
 
-using namespace std;
-
 cfdSoundHandler::cfdSoundHandler( char* param )
 {
    _param = NULL;
@@ -142,7 +140,7 @@ bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdSoundHandler::UpdateCommand()
 {
-   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
 
 void cfdSoundHandler::CreateObjects( void )

@@ -35,7 +35,6 @@
 #include "cfdNode.h"
 
 #include <cassert>
-using namespace std;
 
 #include <vpr/Util/Debug.h>
 #ifdef _PERFORMER

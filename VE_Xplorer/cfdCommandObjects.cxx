@@ -33,11 +33,9 @@
 #include "cfdCommandObjects.h"
 #include <iostream>
 
-using namespace std;
-
 cfdCommandObjects::cfdCommandObjects () : cfdGlobalBase ()
 { 
-   cout << "cfdCommandObjects constructor" << endl;
+   std::cout << "cfdCommandObjects constructor" << std::endl;
 }
 
 cfdCommandObjects::~cfdCommandObjects ()

@@ -34,8 +34,6 @@
 
 #include <iostream>
 
-using namespace std;
-
 cfdGlobalBase::cfdGlobalBase()
 { 
    //cout << "cfdGlobalBase constructor" << endl;

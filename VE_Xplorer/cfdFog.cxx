@@ -33,7 +33,6 @@
 
 #include "cfdFog.h"
 #include <iostream>
-using namespace std;
 #include <Performer/pr/pfFog.h>
 
 cfdFog::cfdFog( void )

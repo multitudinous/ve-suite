@@ -46,7 +46,6 @@
 #include <fstream>
 #include <string>
 
-using namespace std;
 using namespace gmtl;
 
 cfdPoints::cfdPoints(double* worldPos, Matrix44f& mat)
@@ -229,7 +228,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdQuatCamHandler::UpdateCommand()
 {
-   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
 
 void cfdQuatCamHandler::CreateObjects( void )
