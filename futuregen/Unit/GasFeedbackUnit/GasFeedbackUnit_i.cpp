@@ -72,7 +72,7 @@ void Body_Unit_i::StartCalc (
     Gas *gas_in = new Gas();
 
     V21Helper gashelper(therm_path.c_str());
-    gashelper.GasToInt(gas_in, p.intfs[0]);
+    gashelper.IntToGas(&(p.intfs[0]), *gas_in);
          
     std::map<std::string, double>::iterator mapiter;
 
