@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdModel.h"
-#include "cfdObjects.h"
-#include "cfdReadParam.h"
 #include "cfdDataSet.h"
 #include "cfdDCS.h"
 #include "cfdNode.h"
@@ -56,19 +54,38 @@ cfdModel::~cfdModel()
    vprDEBUG(vprDBG_ALL,2) << "cfdModel destructor"
                           << std::endl << vprDEBUG_FLUSH;
 /*
-   for(GeometryDataSetList::iterator itr = mGeomDataSets.begin();
-                                     itr != mGeomDataSets.end(); itr++)
+   for ( GeometryDataSetList::iterator itr = mGeomDataSets.begin();
+                                       itr != mGeomDataSets.end(); itr++ )
    {
       delete *itr;
    }
    mGeomDataSets.clear();
 */
-   for(VTKDataSetList::iterator itr = mVTKDataSets.begin();
-                                itr != mVTKDataSets.end(); itr++)
+   // the following block allows the program to get to pfExit
+   for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
+                                  itr != mVTKDataSets.end(); itr++ )
    {
+      vprDEBUG(vprDBG_ALL,2) << "deleting a cfdModel"
+                             << std::endl << vprDEBUG_FLUSH;
       delete *itr;
    }
    mVTKDataSets.clear();
+
+/*
+   // The following block is broken
+   // It loops more than it should (ie, twice for a single dataset)
+   // and seg faults trying to erase something that is not there
+   for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
+                                  itr != mVTKDataSets.end(); )
+   {
+      vprDEBUG(vprDBG_ALL,2) << "erasing a cfdModel"
+                             << std::endl << vprDEBUG_FLUSH;
+      mVTKDataSets.erase( itr++ );
+   }
+*/
+
+   vprDEBUG(vprDBG_ALL,2) << "cfdModel destructor finished"
+                          << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdModel::CreateCfdDataSet( void )
