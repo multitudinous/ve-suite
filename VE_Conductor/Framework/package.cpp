@@ -1,4 +1,5 @@
 #include "package.h"
+#include <xercesc/sax/HandlerBase.hpp>
 
 Package::Package() 
 {
