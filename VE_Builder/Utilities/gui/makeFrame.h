@@ -2,11 +2,16 @@
 #include "readWriteVtkThings.h"
 #include "makePopupDialog.h"
 #include "cfdGrid2Surface.h"
+#include "setScalarAndVector.h"
 #include <vtkPolyData.h>
 #include <vtkTriangleFilter.h>
 #include <vtkSTLWriter.h>
 #include <vtkGeometryFilter.h>
 #include <vtkFloatArray.h>
+#include <vtkPolyDataNormals.h>
+#include <vtkContourFilter.h>
+
+#include <vtkPointData.h>
 
 #ifndef _MAKEFRAME_H
 #define _MAKEFRAME_H
@@ -22,9 +27,10 @@ class makeFrame : public wxFrame
 		wxPanel *panel;		
 		wxStaticBox* stBox;		
 		wxArrayString* filNamesList;		
-		wxTextCtrl* txt;
-		float valu;	//value from the slider
-      
+		wxTextCtrl* txt;         
+      makePopupDialog* popup;
+      float valu;	      //value from the slider
+      double range[2];  //holds the value of the scalar range of data
 		enum{ MENU_OPEN, MENU_CONV_ASCII, MENU_CONV_BINARY, MENU_MAK_VTK_SURF,
 				MENU_DEL, MENU_QT, MENU_ABOUT };
 		enum{ ID_PANEL, ID_TXT_CTRL, ID_STATIC_BOX,ID_STATIC_BOX_SELECTION  };
@@ -34,6 +40,7 @@ class makeFrame : public wxFrame
 		vtkDataSet* dataset;
       vtkPolyData* surface;
       void writeVtkGeomToStl( vtkDataSet * vtkdataset, char filename [] );
+      void writeIsoSurface( vtkDataSet * vtkdataset );
       
 	protected:
 		DECLARE_EVENT_TABLE()
@@ -179,7 +186,7 @@ void makeFrame::onFileConvAscii( wxCommandEvent &event )
 		}
 		delete tempString;
 	}
-	else txt->WriteText( wxString( "Select files to convert \n" ) );
+	else txt->WriteText( wxString( "Select files to convert to ASCII\n" ) );
 }
 
 
@@ -207,7 +214,7 @@ void makeFrame::onFileConvBinary( wxCommandEvent &event )
 		}
 		delete tempString;
 	}
-	else txt->WriteText( wxString( "Select files to convert \n" ) );
+	else txt->WriteText( wxString( "Select files to convert to binary \n" ) );
 }
 
 
@@ -217,49 +224,71 @@ void makeFrame::onFileMakVtkSurf( wxCommandEvent &event )
 {		
 	if ( filNamesList->GetCount() !=0 )
 	{
-		txt->WriteText( wxString("Make VTK Surfaces \n") );
-      makePopupDialog* popup = new makePopupDialog( this, 400, 200 );
-      
-      popup->Center( wxBOTH );
-
-      
-		if ( popup->ShowModal(  ) == wxID_OK ) 
+      wxString* tempString = new wxString();
+      for (int i=0;i<(int)(filNamesList->GetCount()); i++ )
 		{
-			if ( popup->getRadioVal() )   //if Exterior valu radio button is selected
-			{
-            wxFileDialog* saveDialog = new wxFileDialog( popup, wxString("Save As"),
-		         wxString(""), wxString(""), wxString("VTK file (*.vtk)|*.vtk|STL file (*.stl)|*.stl"),                   
-                  wxSAVE|wxOVERWRITE_PROMPT, wxDefaultPosition );
-            
-            if ( saveDialog->ShowModal() == wxID_OK )
-            {
-               surface = cfdGrid2Surface( dataset, popup->getDecimationValu() );
-               if ( saveDialog->GetFilterIndex() == 0 ) //filetype VTK
-               {
-                  writeVtkThing( surface, (char*)(saveDialog->GetFilename()).c_str(), 1 );
-               }
-               else if ( saveDialog->GetFilterIndex() == 1 )    //filetype STL
-               {                  
-                  writeVtkGeomToStl( surface, (char*)(saveDialog->GetFilename()).c_str() );
-               }
-               txt->WriteText( "Saved as " + saveDialog->GetFilename() + "\n" );
-               surface->Delete();
-            }
-
-			}
+         *tempString = filNamesList->Item( i );
+         dataset = readVtkThing( (char*)( tempString->c_str() ), 0 );
+         dataset->GetScalarRange( range );
+		   txt->WriteText( wxString("Make VTK Surfaces \n") );
+         *txt<<range[0]<<" : "<<range[1]<<"\n";
          
-			else           //if Iso valu radio button is selected
-			{      
-				txt->WriteText( wxString( "ISO_VAL_RADIO_BTN " ) );
-			}
-			txt->WriteText( wxString( "OK pressed... \n" ) );
-		}
+         popup = new makePopupDialog( this, 400, 200, 
+               (int)(range[0]*100), (int)(range[1]*100), *tempString );
       
-		else txt->WriteText( wxString( "Cancel pressed... \n" ) );
+         popup->Center( wxBOTH );
+
       
-	}
-	else	txt->WriteText( wxString( "Select files to make surface \n" ) );
+		   if ( popup->ShowModal(  ) == wxID_OK ) 
+		   {
+			   if ( popup->getRadioVal() )   //if Exterior valu radio button is selected
+			   {
+               
+               wxFileDialog* saveDialog = new wxFileDialog( popup, wxString("Save As"),
+		            wxString(""), wxString(""), wxString("VTK file (*.vtk)|*.vtk|STL file (*.stl)|*.stl"),                   
+                     wxSAVE|wxOVERWRITE_PROMPT, wxDefaultPosition );
+            
+               if ( saveDialog->ShowModal() == wxID_OK )
+               {
+                  surface = cfdGrid2Surface( dataset, popup->getDecimationValu() );
+                  if ( saveDialog->GetFilterIndex() == 0 )        //filetype VTK
+                  {
+                     writeVtkThing( surface, (char*)(saveDialog->GetFilename()).c_str(), 1 );
+                  }
+                  else if ( saveDialog->GetFilterIndex() == 1 )    //filetype STL
+                  {                  
+                     writeVtkGeomToStl( surface, (char*)(saveDialog->GetFilename()).c_str() );
+                  }
+                  txt->WriteText( "Saved as " + saveDialog->GetFilename() + "\n" );
+                  surface->Delete();
+               }
+
+			   }
+         
+			   else if ( !popup->getRadioVal() )        //if Iso valu radio button is selected
+			   {               
+               wxFileDialog* saveDialog = new wxFileDialog( popup, wxString("Save As"),
+		            wxString(""), wxString(""), wxString("VTK file (*.vtk)|*.vtk"),                   
+                     wxSAVE|wxOVERWRITE_PROMPT, wxDefaultPosition );      
+
+               if ( saveDialog->ShowModal() == wxID_OK )
+               {
+                  writeIsoSurface( dataset );
+                  writeVtkThing( surface, (char*)(saveDialog->GetFilename()).c_str(), 1 );
+                  surface->Delete();                  
+                  txt->WriteText( "Saved as " + saveDialog->GetFilename() + "\n" );
+               }
+			   }
+
+		   }
+      
+         else if ( wxID_CANCEL )txt->WriteText( wxString( "Cancel pressed... \n" ) );
+         dataset->Delete();   
+      }//for loop
+    }
+	   else	txt->WriteText( wxString( "Select files to make surface \n" ) );
 }
+
 
 void makeFrame::onDel( wxCommandEvent &event )
 {
@@ -269,7 +298,7 @@ void makeFrame::onDel( wxCommandEvent &event )
 		filNamesList->Clear();		
 		txt->WriteText( wxString( "Files removed from list \n" ) );
 	}
-	else txt->WriteText( wxString( "No files to be deleted \n" ) );
+	else if ( filNamesList->GetCount() ==0 ) txt->WriteText( wxString( "No files to be deleted \n" ) );
 }
 
 
@@ -298,26 +327,46 @@ void makeFrame::writeVtkGeomToStl( vtkDataSet * vtkdataset, char filename [] )
       tFilter->SetInput( (vtkPolyData*)vtkdataset );
    else 
    {
-      //cout << "Using vtkGeometryFilter to convert to polydata" << endl;
       gFilter = vtkGeometryFilter::New();
       gFilter->SetInput( vtkdataset );
       tFilter->SetInput( gFilter->GetOutput() );
    }
 
-   //cout << "Writing \"" << filename << "\"... ";
-   //cout.flush();
+   
+   
    vtkSTLWriter *writer = vtkSTLWriter::New();
       writer->SetInput( tFilter->GetOutput() );
       writer->SetFileName( filename );
       writer->SetFileTypeToBinary();
       writer->Write();
       writer->Delete();
-   //cout << "... done\n" << endl;
-
    tFilter->Delete();
+   if ( gFilter )      gFilter->Delete();   
+}
 
-   if ( gFilter ) 
-      gFilter->Delete();
+
+//-------------------------making Iso-Surfaces
+void makeFrame::writeIsoSurface( vtkDataSet * vtkdataset )
+{
+      activateScalar( vtkdataset );
+
+      
+      // Create an isosurace with the specified isosurface value...
+      vtkContourFilter *contour = vtkContourFilter::New();
+         contour->SetInput( vtkdataset );
+         contour->SetValue( 0, popup->getIsoSurfValu() );
+         contour->UseScalarTreeOff();
+         vtkPolyDataNormals *normals = vtkPolyDataNormals::New();
+         normals->SetInput( contour->GetOutput() );
+
+      vtkGeometryFilter *filter = vtkGeometryFilter::New();
+         filter->SetInput( normals->GetOutput() );
+         
+         filter->Update();
+         surface = cfdGrid2Surface( filter->GetOutput(), popup->getDecimationValu() );
+         contour->Delete();
+         normals->Delete();
+         filter->Delete();
 }
 
 

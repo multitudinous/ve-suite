@@ -1,5 +1,3 @@
-//#include "cfdGrid2Surface.h"
-//#include <vtkPolyData.h>
 #ifndef _MAKEPOPUPDIALOG_H
 #define _MAKEPOPUPDIALOG_H
 class makePopupDialog: public wxDialog
@@ -15,32 +13,29 @@ class makePopupDialog: public wxDialog
          
          bool selectedExtVal;
          enum{ RADIO_BOX, SLIDER_SELECTION, SLIDER_ISO };
-         
-         //---------VTK stuff
-         //vtkPolyData* surface;
+         double rangeMin, rangeMax;
          
    protected:
          DECLARE_EVENT_TABLE()
          void onRadioBox( wxCommandEvent &event );
          
    public:
-         makePopupDialog( wxWindow* frm, int w, int h );
+         makePopupDialog( wxWindow* frm, int w, int h, int rngMin, int rngMax, wxString st );
          ~makePopupDialog();
          bool getRadioVal();
          float getDecimationValu();
          float getIsoSurfValu();
-         void makeExtValSurf( vtkDataSet* vtkdataset );
 };
 
 
-makePopupDialog::makePopupDialog( wxWindow* frm, int w, int h)
-      :wxDialog( frm, -1, "Make VTK Surface", 
+makePopupDialog::makePopupDialog( wxWindow* frm, int w, int h, int rngMin, int rngMax, wxString str )
+      :wxDialog( frm, -1, " Save "+str+" As ", 
       wxDefaultPosition, wxSize(w, h) , 
       wxDEFAULT_DIALOG_STYLE, "dlg box" )
 {
    wxString list[] = { "Exterior value", "ISO value" }; 
    okButton = new wxButton( this, wxID_OK, wxString("Ok"), wxPoint(110,150),
-			wxSize(50,27), wxBU_EXACTFIT, wxDefaultValidator, wxString("ok                   Button") );
+			wxSize(50,27), wxBU_EXACTFIT, wxDefaultValidator, wxString("ok Button") );
    cancelButton = new wxButton( this, wxID_CANCEL, wxString("Cancel"), 
          wxPoint(220,150), wxSize(50,27), wxBU_EXACTFIT, 
          wxDefaultValidator, wxString("ok Button") );
@@ -50,19 +45,18 @@ makePopupDialog::makePopupDialog( wxWindow* frm, int w, int h)
          2, list, 1, wxRA_SPECIFY_COLS,	wxDefaultValidator, 
          wxString("radio box") );
   
-   stTxtBox = new wxStaticBox( this, -1, wxString("Decimation Value"), 
-        wxPoint(225,20), wxSize(165,60), 0, wxString("") );
+   stTxtBox = new wxStaticBox( this, -1, wxString("Decimation Value"), wxPoint(225,20), wxSize(165,60), 0, wxString("") );
       
 	
    sliderSelection = new wxSlider( this, SLIDER_SELECTION, 5, 0, 10, wxPoint(240,35), 
 			wxSize(140, 15), wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP,             
 			wxDefaultValidator, wxString("Decimation Val") );
       
-   sliderISO = new wxSlider( this, SLIDER_ISO, 5, 0, 10, wxPoint(40,75), wxSize(140, 10), 
+   sliderISO = new wxSlider( this, SLIDER_ISO, rngMin, rngMin, rngMax, wxPoint(40,75), wxSize(140, 10), 
          wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP, wxDefaultValidator, wxString("Sli2") );
       
  
-   stISOBox = new wxStaticBox( this, -1, wxString("Scalar Range"), wxPoint(35,60), wxSize(155,70), 0, 
+   stISOBox = new wxStaticBox( this, -1, wxString("Iso-surface Value"), wxPoint(35,60), wxSize(155,70), 0, 
          wxString("") );      
    
    
@@ -70,10 +64,7 @@ makePopupDialog::makePopupDialog( wxWindow* frm, int w, int h)
    stISOBox->Disable();
    sliderISO->Disable();
    selectedExtVal = true;
-   //surface = NULL;
 }
-
-
 
 makePopupDialog::~makePopupDialog()
 {
@@ -109,12 +100,7 @@ float makePopupDialog::getDecimationValu()
 
 float makePopupDialog::getIsoSurfValu()
 {
-   return (float)sliderISO->GetValue()/(float)(10);
-}
-
-void makePopupDialog::makeExtValSurf( vtkDataSet* vtkdataset )
-{
-   //surface = cfdGrid2Surface( dataset, deciVal );
+   return (float)sliderISO->GetValue()/(float)(100);
 }
 
 #endif //_MAKEPOPUPDIALOG_H

@@ -14,7 +14,8 @@ srcdir= .
 SRCS=\
 toolBarApp.cpp \
 readWriteVtkThings.cxx\
-cfdGrid2Surface.cpp
+cfdGrid2Surface.cpp\
+setScalarAndVector.cpp
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
 DEPDIR= $(CFDHOSTTYPE)
@@ -31,7 +32,7 @@ EXTRA_CXXFLAGS+=${WX_CXX} -DVTK_USE_ANSI_STDLIB
 
 #EXTRA_DEFS+= -DSJK_TEST
 
-EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer -I${VE_SUITE_HOME}/VE_Builder/Translator
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer -I${VE_SUITE_HOME}/VE_Builder/Translator -I${VE_SUITE_HOME}/VE_Builder/Utilities
 
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG
 #EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
@@ -50,10 +51,13 @@ include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 
-vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer
-vpath %.h    $(VE_SUITE_HOME)/VE_Xplorer
+vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer 
+vpath %.h    $(VE_SUITE_HOME)/VE_Xplorer 
 vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Translator
 vpath %.h    $(VE_SUITE_HOME)/VE_Builder/Translator
+vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Utilities
+vpath %.h    $(VE_SUITE_HOME)/VE_Builder/Utilities
+
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
