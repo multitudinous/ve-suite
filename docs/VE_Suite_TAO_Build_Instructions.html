@@ -27,8 +27,9 @@
       <p class="text"><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71.zip?download">VRJuggler (2.0alpha4.win32-vc71)</a> for management of the virtual environment.</p>
 
       <p class="text"><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71-deps.zip?download">VRJuggler dependencies zip file</a></p>
+      <p class="text"><a href="http://java.sun.com/j2se/1.4.2/download.html">Java 2 SDK</a> needed for juggler's java-based VRJconfig program.</p>
 
-      <p class="text"><a href="http://www.wxwidgets.org/">wxWidgets</a> to compile and run the gui.</p>
+      <p class="text"><a href="http://www.wxwidgets.org/">wxWidgets</a> to compile and run the gui. (Click "download" on the left side menu to get to the files)</p>
 
       <p class="text"><a href="http://archive.apache.org/dist/xml/xerces-c/Xerces-C_2_5_0/">Xerces</a> to read and write XML. (download xerces-c-src_2_5_0.zip)</p>
 
@@ -71,6 +72,24 @@
 
       <li class="bodytext"><p class="bodytext"><span class="text">Return to Visual Studio and left-click on INSTALL, then right-click and select "Build".</span></p>
 
+      <li class="bodytext"><p class="text">For wxWidgets, the .dsw file is in the src directory, and will need to be converted to a .sln file using Visual Studio 7.1.</p>
+
+      <li class="bodytext"><p class="text">For Xerces, the .sln file is in Projects\win32\VS71.  You may be asked to convert file formats, select yes to all.</p>
+
+      <li class="bodytext"><p class="text">When building ACE and TAO:</p>
+
+      <ul>
+	   <li class="bodytext"><p class="text">You need to create a file called "config.h" in the ACE_wrappers\ace directory, with the line '#include "ace/config-win32.h"' in the file.</p>
+         <li class="bodytext"><p class="text">ACE_ROOT and TAO_ROOT must be established and ACE_ROOT\bin placed in your $PATH before building ACE and TAO.  This can be done using a batch file (.BAT) with these lines:</p>
+		<ul>
+	         <li class="bodytext"><p class="text">set ACE_ROOT=C:\ACE_wrappers</p>
+	         <li class="bodytext"><p class="text">set TAO_ROOT=%ACE_ROOT%\TAO</p>
+	         <li class="bodytext"><p class="text">set Path=%Path%;%ACE_ROOT%\bin</p>
+	         <li class="bodytext"><p class="text">"C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.exe" ..\ace.sln</p>
+		</ul>
+
+         <li class="bodytext"><p class="text">The last line is modified for each solution file: ACE.sln, TAO.sln and TAO_idl.sln.</p>
+         <li class="bodytext"><p class="text"></p>
       </ul>
 </dl>
 
@@ -89,7 +108,7 @@
 
          <p class="text">$(VE_SUITE_HOME)\VE_Installer\build.bat</p>
 
-         <p class="text">Currently there are two supported configurations available: Debug_OMNI and Release_OMNI.</p>
+         <p class="text">Currently there are four supported configurations available: Debug_TAO, Release_TAO, Debug_OMNI and Release_OMNI.</p>
 </dl>
 
 <dl>
