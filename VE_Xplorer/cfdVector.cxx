@@ -59,13 +59,13 @@ cfdVector::cfdVector()
    float b[6];
    float c[3];
    int maxPointsInPlanes = 0;
-   this->nData = this->GetActiveMeshedVolume()->GetNoOfDataForProcs();
+   this->nData = this->GetActiveDataSet()->GetNoOfDataForProcs();
    this->append = vtkAppendFilter::New();
 
    for ( int i=0; i<this->nData; i++ )
    {
       // get the center of data set.
-      this->GetActiveMeshedVolume()->GetData(i)->GetBounds( b );
+      this->GetActiveDataSet()->GetData(i)->GetBounds( b );
       c[0] = b[1] - b[0];
       c[1] = b[3] - b[2];
       c[2] = b[5] - b[4];
@@ -77,7 +77,7 @@ cfdVector::cfdVector()
 
       // set the cut function
       this->cutter[i] = vtkCutter::New();
-      this->cutter[i]->SetInput( this->GetActiveMeshedVolume()->GetData(i) );
+      this->cutter[i]->SetInput( this->GetActiveDataSet()->GetData(i) );
       this->cutter[i]->SetCutFunction( this->plane[i] );
 
       if( this->cutter[i]->GetOutput()->GetPointData()->GetNumberOfTuples()
@@ -97,7 +97,7 @@ cfdVector::cfdVector()
       // Using glyph3D to insert arrow to the data sets
       this->glyph[i] = vtkGlyph3D::New(); 
       this->glyph[i]->SetInput( this->cutter[i]->GetOutput() );
-      this->glyph[i]->SetSource( this->GetActiveMeshedVolume()->GetArrow() );
+      this->glyph[i]->SetSource( this->GetActiveDataSet()->GetArrow() );
       this->glyph[i]->SetScaleFactor( GetVectorScaleFactor() );
       this->glyph[i]->SetVectorModeToUseVector();
       this->glyph[i]->SetScaleModeToDataScalingOff();
@@ -113,22 +113,8 @@ cfdVector::cfdVector()
 
    // set the cut function
    this->cutter = vtkCutter::New();
-   this->cutter->SetInput( this->GetActiveMeshedVolume()->GetDataSet() );
    this->cutter->SetCutFunction( this->plane );
 
-   int numPointsInPlanes = 0;
-   numPointsInPlanes = this->cutter->GetOutput()->GetPointData()->GetNumberOfTuples();
-   vprDEBUG(vprDBG_ALL, 3) << "|   Number of points in cutting plane : " << numPointsInPlanes
-                              << std::endl << vprDEBUG_FLUSH;
-
-   // get every nth point from the dataSet data
-   this->ptmask->SetInput( (vtkDataSet *)this->cutter->GetOutput() );
-   this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
-
-   // Using glyph3D to insert arrow to the data sets
-   this->glyph->SetInput( (vtkDataSet *)this->ptmask->GetOutput() );
-   this->glyph->SetScaleFactor( GetVectorScaleFactor() );
-   this->glyph->SetScaleModeToDataScalingOff();
 #endif
 
 #ifdef USE_OMP
@@ -185,15 +171,29 @@ void cfdVector::Update( void )
                               << this->origin[1] << " : " << this->origin[2] 
                               << std::endl << vprDEBUG_FLUSH;
       this->plane->SetNormal( this->normal );
+      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+      int numPointsInPlanes = 0;
+      numPointsInPlanes = this->cutter->GetOutput()->GetPointData()->GetNumberOfTuples();
+      vprDEBUG(vprDBG_ALL, 3) << "|   Number of points in cutting plane : " << numPointsInPlanes
+                              << std::endl << vprDEBUG_FLUSH;
+
+      // get every nth point from the dataSet data
+      this->ptmask->SetInput( (vtkDataSet *)this->cutter->GetOutput() );
+      this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
+
+      // Using glyph3D to insert arrow to the data sets
+      this->glyph->SetInput( (vtkDataSet *)this->ptmask->GetOutput() );
+      this->glyph->SetScaleFactor( GetVectorScaleFactor() );
+      this->glyph->SetScaleModeToDataScalingOff();
       this->cutter->Update();
       this->ptmask->Update();
       this->glyph->Update();
 #endif
       this->filter->Update();
 
-      this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
+      this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
+      this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();
 

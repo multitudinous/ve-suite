@@ -57,18 +57,6 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( float diameter )
    this->glyph    = vtkGlyph3D::New();
    this->sphere   = vtkSphereSource::New();
 
-   if ( diameter == 0.0 )
-   {
-      diameter = this->GetActiveMeshedVolume()->GetLength()*0.001f;
-   }
-   vprDEBUG(vprDBG_ALL,1) << "raw diameter : " << diameter
-                          << std::endl << vprDEBUG_FLUSH;
-
-   this->sphere->SetRadius( 8.0f * diameter);
-   this->sphere->SetThetaResolution( 3 );
-   this->sphere->SetPhiResolution( 3 );
-   this->sphere->Update();
-
    this->_sequence = new cfdTempAnimation();
 }
 
@@ -176,6 +164,19 @@ void cfdAnimatedStreamlineCone::Update( void )
          pointsArray[ ( npts - 1 ) - i + forwardPoints]->InsertNextPoint( x );
       }
    }
+
+   float diameter = 0.0f;
+   if ( diameter == 0.0 )
+   {
+      diameter = this->GetActiveDataSet()->GetLength()*0.001f;
+   }
+   vprDEBUG(vprDBG_ALL,1) << "raw diameter : " << diameter
+                          << std::endl << vprDEBUG_FLUSH;
+
+   this->sphere->SetRadius( 8.0f * diameter);
+   this->sphere->SetThetaResolution( 3 );
+   this->sphere->SetPhiResolution( 3 );
+   this->sphere->Update();
 
    vprDEBUG(vprDBG_ALL, 1) << "maxNpts = " << maxNpts << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, 1) << "minNpts = " << minNpts << std::endl << vprDEBUG_FLUSH;

@@ -67,5 +67,8 @@ int main(int argc, char* argv[])
    cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
    orb->run();
+   delete vjobsWrapper;
+   delete appWrapper;
+
    return 0;
 }

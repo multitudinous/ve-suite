@@ -58,6 +58,7 @@ cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
    vprDEBUG(vprDBG_ALL,2) << "constructing cfdScalarBarActor" 
                           << std::endl << vprDEBUG_FLUSH;
 
+cout << " next 1 " <<endl;
    _param = param;
    _rootNode = rootNode;
    _activeDataSet = NULL;
@@ -476,7 +477,6 @@ bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR_RANGE ) ||
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEADYSTATE_DATASET ) )
    { 
-      cout << " ******************Update Scalar Bar " << endl;
       this->RefreshScalarBar();
       flag = true;
    }
@@ -526,11 +526,11 @@ void cfdScalarBarActor::RefreshScalarBar()
    this->SetLookupTable( this->_activeDataSet->GetLookupTable() );
 
    vprDEBUG(vprDBG_ALL,1) << " RefreshScalarBar: " 
-      << "cfdObjects::GetActiveDataSet()->GetLookupTable() = "
+      << "this->_activeDataSet->GetLookupTable() = "
       << this->_activeDataSet->GetLookupTable()
       << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,1) << "RefreshScalarBar: " 
-      << "cfdObjects::GetActiveDataSet()->GetParent()->GetLookupTable() = "
+      << "this->_activeDataSet->GetParent()->GetLookupTable() = "
       << this->_activeDataSet->GetParent()->GetLookupTable()
       << std::endl << vprDEBUG_FLUSH;
 

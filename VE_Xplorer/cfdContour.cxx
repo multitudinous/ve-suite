@@ -154,7 +154,7 @@ void cfdContour::Update( void )
 
 #else
 
-      this->cutter->SetInput( this->GetActiveMeshedVolume()->GetDataSet() );
+      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
       //this->cutter->SetInput( this->GetActiveMeshedVolume()->getProbe(cursor->getBox())->GetOutput() ); //temp change
       this->plane->SetOrigin( this->origin );
       this->plane->SetNormal( this->normal );
@@ -164,10 +164,10 @@ void cfdContour::Update( void )
 #endif
 
       this->mapper->SetScalarRange( 
-                               this->GetActiveMeshedVolume()->GetUserRange() );
+                               this->GetActiveDataSet()->GetUserRange() );
 
       this->mapper->SetLookupTable( 
-                             this->GetActiveMeshedVolume()->GetLookupTable() );
+                             this->GetActiveDataSet()->GetLookupTable() );
 
       this->updateFlag = true;
    }

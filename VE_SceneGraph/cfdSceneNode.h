@@ -77,9 +77,9 @@ public:
    //retrieve the underlying node depending on
    //scene graph
 #ifdef _PERFORMER
-   virtual pfNode* cfdSceneNode::GetRawNode( void )=0;
+   virtual pfNode* GetRawNode( void )=0;
 #elif _OSG
-   virtual osg::Node* cfdSceneNode::GetRawNode(void)=0;
+   virtual osg::Node* GetRawNode( void )=0;
 #elif _OPENSG
 #endif
 

@@ -262,12 +262,15 @@ void cfdTransientFlowManager::LoadFrames()
       vprDEBUG(vprDBG_ALL,2) << "\tSet Arrow" << std::endl << vprDEBUG_FLUSH;
       this->frames[ i ].SetArrow( this->GetActiveDataSet()->GetArrow() );
       this->frames[ i ].SetArrowSize( this->GetVectorScale() );
-
+// the following code won't work because we removed the static functions from
+// cfdobjects.
+/*
       this->frames[ i ].SetActiveDataSets( this->GetActiveDataSet(),
                                            this->GetActiveMeshedVolume(),
                                            this->GetActiveParticleData(),
                                            this->GetActiveSurfaceData() );
 
+*/
       vprDEBUG(vprDBG_ALL,1) << "\t" << this->frameFileNames[ this->order[ i ] ]
                              << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL,2) << " End Creating Frame"

@@ -110,6 +110,11 @@ ifeq (${CFDUNAME},Linux)
    EXTRA_LIBS+= -m32
 endif
 
+# 64-bit linux needs these flags
+ifeq (${CFDUNAME},IRIX64)
+#   EXTRA_CXXFLAGS+= -m32
+   EXTRA_LIBS+= -L/usr/freeware/lib32
+endif
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\

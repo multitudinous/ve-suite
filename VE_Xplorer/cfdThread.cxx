@@ -30,4 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdThread.h"
-// Do nothing right now
+cfdThread::cfdThread( void )
+{
+   corba_run = NULL;
+   new_thread = NULL;
+}
+
+cfdThread::~cfdThread( void )
+{
+   if ( corba_run != NULL )
+   {
+      delete corba_run;
+   }
+   
+   if ( new_thread != NULL )
+   {
+      delete new_thread;
+   }
+}

@@ -53,7 +53,6 @@
 #include "cfdCommandArray.h"
 #include "cfdGroup.h"
 #include "cfdDCS.h"
-#include "cfdObjects.h"
 #include "cfdTempAnimation.h"
 #include "cfdSequence.h"
 #include "cfdIHCCModel.h"
@@ -227,11 +226,14 @@ inline void cfdApp::initScene( )
                                               this->_sceneManager->GetWorldDCS() );
    this->_modelHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    this->_modelHandler->InitScene();
-
+cout << "here 1" << endl;
    // navigation and cursor 
    this->_environmentHandler = new cfdEnvironmentHandler( this->filein_name );
+cout << "here 2" << endl;
    this->_environmentHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
+cout << "here 3" << endl;
    this->_environmentHandler->SetRootNode( this->_sceneManager->GetRootNode() );
+cout << "here 4" << endl;
    this->_environmentHandler->SetArrow( this->_modelHandler->GetArrow() );
    this->_environmentHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    this->_environmentHandler->InitScene();
@@ -329,9 +331,9 @@ void cfdApp::preFrame( void )
    }
 
 #ifdef _TAO
-   if ( cfdObjects::GetActiveDataSet() != NULL )
+   if ( this->_modelHandler->GetActiveDataSet() != NULL )
    {
-      this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
+      this->executive->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    }
    this->executive->UpdateModules();
    this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );

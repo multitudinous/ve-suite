@@ -53,13 +53,6 @@ cfdVectors::cfdVectors( const int xyz )
 {
    this->xyz = xyz;
 
-   if ( this->GetActiveMeshedVolume()->GetPrecomputedSlices( this->xyz )
-                                     ->GetPlanesData() == NULL )
-   {
-      vprDEBUG(vprDBG_ALL, 0) 
-         << "cfdVectors, planesData == NULL so returning\n" << vprDEBUG_FLUSH;
-      return;
-   }
 }
 
 cfdVectors::~cfdVectors()
@@ -68,10 +61,18 @@ cfdVectors::~cfdVectors()
 
 void cfdVectors::Update( void )
 {
+   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+                                     ->GetPlanesData() == NULL )
+   {
+      vprDEBUG(vprDBG_ALL, 0) 
+         << "cfdVectors, planesData == NULL so returning\n" << vprDEBUG_FLUSH;
+      return;
+   }
+
    if ( this->mapper && this->cursorType == CUBE )
    { 
       double bd[6];
-      this->GetActiveMeshedVolume()->GetDataSet()->GetBounds( bd );
+      this->GetActiveDataSet()->GetDataSet()->GetBounds( bd );
       vprDEBUG(vprDBG_ALL, 0) <<"d1:"<<bd[0]<<"d2:"<<bd[1]<<"d3:"<<bd[2]
           <<"d4:"<<bd[3]<<"d5:"<<bd[4]<<"d6:"<<bd[5]
           << std::endl << vprDEBUG_FLUSH;
@@ -101,9 +102,9 @@ void cfdVectors::Update( void )
 
          this->filter->Update();
       
-         this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
+         this->mapper->SetScalarRange( this->GetActiveDataSet()
                                            ->GetUserRange() );
-         this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
+         this->mapper->SetLookupTable( this->GetActiveDataSet()
                                            ->GetLookupTable() );
          this->mapper->Update();
 
@@ -120,7 +121,7 @@ void cfdVectors::Update( void )
    else if ( this->mapper && this->cursorType == NONE )
    {
       // get every nth point from the dataSet data
-      this->ptmask->SetInput( this->GetActiveMeshedVolume()
+      this->ptmask->SetInput( this->GetActiveDataSet()
                        ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
       this->ptmask->SetOnRatio( this->GetVectorRatioFactor() );
       this->ptmask->Update();
@@ -140,9 +141,9 @@ void cfdVectors::Update( void )
       writer->SetFileName( "teststreamers.vtk" );
       writer->Write();
 */     
-      this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
+      this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
+      this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();
 
