@@ -96,19 +96,20 @@ mFixTranslator::mFixTranslator(wxWindow* parent, int id, const wxString& title, 
 	static_text_a = new wxStaticText(this, -1, wxT("             SPA"), wxDefaultPosition, wxDefaultSize, 0, wxT(""));
 	static_text_a_TS = new wxStaticText(this, -1, wxT("0/0 Timesteps"), wxDefaultPosition, wxDefaultSize, 0, wxT(""));
  
-    static_line_1 = new wxStaticLine(this, -1);
-	statusTitle = new wxStaticText(this, -1, wxT("Information:"));
-    text_ctrl_statusReport = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition, wxSize(300,155), wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxHSCROLL);
-    enableLoggingCheckbox = new wxCheckBox(this, -1, wxT("Enable logging"));
+	static_line_1 = new wxStaticLine(this, -1);
+	statusTitle = new wxStaticText(this, -1, wxT("Status Information:"));
+	text_ctrl_statusReport = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition, wxSize(300,200), wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxHSCROLL);
+	enableLoggingCheckbox = new wxCheckBox(this, -1, wxT("Enable logging"));
 
 	// Output file(s) wxCheckBox group
 	// (these checkbox are contained in checkboxGroupSizer)
 	legacyVTKCheckbox = new wxCheckBox(this, CHECKBOX_VTK, wxT("Legacy VTK"));
-    const wxString legacyVTKRadioBox_choices[] = {
-        wxT("ASCII Ouput"),
-        wxT("Binary Ouput")
-    };
-    legacyVTKRadioBox = new wxRadioBox(this, RADIOBOX_VTK, wxT("Legacy Output Format:"), wxDefaultPosition, wxDefaultSize, 2, 
+	const wxString legacyVTKRadioBox_choices[] = {
+        	wxT("ASCII Ouput"),
+        	wxT("Binary Ouput")
+    	};
+	
+	legacyVTKRadioBox = new wxRadioBox(this, RADIOBOX_VTK, wxT("Legacy Output Format:"), wxDefaultPosition, wxDefaultSize, 2, 
 								legacyVTKRadioBox_choices, 0, wxRA_SPECIFY_COLS);
 	serialXMLCheckbox = new wxCheckBox(this, CHECKBOX_SERIAL_XML, wxT("Serial XML"));
 	parallelXMLCheckbox = new wxCheckBox(this, CHECKBOX_PARALLEL_XML, wxT("Parallel XML"));
@@ -120,6 +121,14 @@ mFixTranslator::mFixTranslator(wxWindow* parent, int id, const wxString& title, 
 	static_line_7 = new wxStaticLine(this, -1, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL);
 	static_line_8 = new wxStaticLine(this, -1, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL);
 	
+	// Options group
+	static_line_11 = new wxStaticLine(this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
+	static_line_options = new wxStaticLine(this, -1, wxDefaultPosition, wxDefaultSize, wxLI_HORIZONTAL);
+	exportGeometry = new wxCheckBox(this, -1, wxT("Export Geometry"));
+	exportBoundingBox = new wxCheckBox(this, -1, wxT("Export Bounding Box"));
+        selectAllOptions = new wxButton(this, BUTTON_SELECTALL_OPTIONS, wxT("Select All"));
+        unselectAllOptions = new wxButton(this, BUTTON_UNSELECTALL_OPTIONS, wxT("Unselect All"));
+
 	// Restart file information wxTextCtrl group
 	// (these objects are containes in ResInfoGridSizer)
 	ST_RunName = new wxStaticText(this, -1, wxT("Run Name:"), wxDefaultPosition, wxDefaultSize, 0);
@@ -253,6 +262,13 @@ void mFixTranslator::set_properties()
 	selectAllButton->Enable(FALSE);
 	unselectAllButton->Enable(FALSE);
 
+	exportGeometry->Enable(FALSE);
+	exportGeometry->SetValue(FALSE);
+	exportBoundingBox->Enable(FALSE);
+	exportBoundingBox->SetValue(FALSE);
+	selectAllOptions->Enable(FALSE);
+	unselectAllOptions->Enable(FALSE);
+
 	VoidFractionVariable->SetValue(FALSE);
 	VoidFractionVariable->Enable(FALSE);
 	VoidFractionVariable->SetToolTip(wxT("Enable output of Void Fraction"));
@@ -305,10 +321,12 @@ void mFixTranslator::set_properties()
 	sp9Active = FALSE;
 	spaActive = FALSE;
 
+	BeginTSLabel->Enable(FALSE);
 	BeginTSBox->Enable(FALSE);
 	BeginTSBox->SetToolTip(wxT("Enter a beginning timestep for output"));
 	EndTSBox->Enable(FALSE);
 	EndTSBox->SetToolTip(wxT("Enter an ending timestep for output"));
+	EndTSLabel->Enable(FALSE);
 	EnableSpecificTSRange->Enable(FALSE);
 	EnableSpecificTSRange->SetToolTip(wxT("Enable a specific range of timesteps for output"));
 
@@ -346,11 +364,17 @@ void mFixTranslator::do_layout()
 	wxBoxSizer* sizer_8 = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* sizer_11 = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* sizer_13 = new wxBoxSizer(wxHORIZONTAL);
-	wxStaticBox* outputVariablesGroup = new wxStaticBox(this, -1, wxT("Variables Selected for Output"), wxDefaultPosition,
-															wxDefaultSize, 0, wxT("Variables Selected for Output"));
+	wxBoxSizer* sizer_select_options = new wxBoxSizer(wxHORIZONTAL);
+	
+	wxStaticBox* outputVariablesGroup = new wxStaticBox(this, -1, wxT("Variables Selected for Output"), wxDefaultPosition,															wxDefaultSize, 0, wxT("Variables Selected for Output"));
 	wxStaticBoxSizer* outputVariablesSizer = new wxStaticBoxSizer(outputVariablesGroup, wxVERTICAL);
+	
+	wxStaticBox* optionsGroup = new wxStaticBox(this, -1, wxT("Miscellaneous Options"), wxDefaultPosition, wxDefaultSize, 0, wxT("Miscellaneous Options"));
+	wxStaticBoxSizer* optionsGroupSizer = new wxStaticBoxSizer(optionsGroup, wxVERTICAL);	
+
 	wxStaticBox* enableSpecificTSRangeGroup = new wxStaticBox(this, -1, wxT(""), wxDefaultPosition, wxDefaultSize, 0, wxT(""));
 	wxStaticBoxSizer* enableSpecificTSRangeSizer = new wxStaticBoxSizer(enableSpecificTSRangeGroup, wxVERTICAL);
+
 	wxBoxSizer* sizer_12 = new wxBoxSizer(wxVERTICAL);
 	wxFlexGridSizer* outputGridSizer = new wxFlexGridSizer(0, 2, 0, 0);
 	wxStaticBox* checkboxGroup = new wxStaticBox(this, -1, wxT("Output file formats"), wxDefaultPosition,
@@ -358,9 +382,12 @@ void mFixTranslator::do_layout()
 	wxStaticBoxSizer* checkboxGroupSizer = new wxStaticBoxSizer(checkboxGroup, wxVERTICAL);
 	wxBoxSizer* sizer_file_dialogs = new wxBoxSizer(wxHORIZONTAL);
 	
+	wxStaticBox* informationGroup = new wxStaticBox(this, -1, wxT("Restart Information"), wxDefaultPosition, wxDefaultSize, 0, wxT("Restart Information"));	
+	wxStaticBoxSizer* informationGroupSizer = new wxStaticBoxSizer(informationGroup, wxVERTICAL);	
 	wxFlexGridSizer* ResInfoGridSizer = new wxFlexGridSizer(0, 2, 0, 0);
 	wxBoxSizer* sizer_mid_horiz = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* sizer_mid_vert = new wxBoxSizer(wxVERTICAL);
+	wxBoxSizer* sizer_mid_vert2 = new wxBoxSizer(wxVERTICAL);
 	
 	wxBoxSizer* dummySizer1 = new wxBoxSizer(wxHORIZONTAL);
 	wxBoxSizer* dummySizer2 = new wxBoxSizer(wxHORIZONTAL);
@@ -371,7 +398,7 @@ void mFixTranslator::do_layout()
 	sizer_file_dialogs->Add(FileOpenBttn, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 4);
 	sizer_file_dialogs->Add(5, 0, 0, 0);
 	sizer_file_dialogs->Add(DestBttn, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 4);
-	sizer_file_dialogs->Add(437, 0, 0, 0);
+	sizer_file_dialogs->Add(449, 0, 0, 0);
 	sizer_file_dialogs->Add(AboutBttn, 0, wxALL|wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL, 4);
 	sizer_7->Add(sizer_8, 0, 0, 0);
 	sizer_7->Add(static_line_4, 0, wxALL|wxEXPAND, 0);
@@ -430,7 +457,7 @@ void mFixTranslator::do_layout()
 	sizer_7->Add(static_line_1, 0, wxALL|wxEXPAND, 3);
 	sizer_7->Add(sizer_mid_horiz, 0, 0, 0);
 	sizer_mid_horiz->Add(sizer_mid_vert, 0, 0, 0);
-	sizer_mid_vert->Add(checkboxGroupSizer, 0, wxALL|wxEXPAND, 3);
+	sizer_mid_vert->Add(checkboxGroupSizer, 0, wxALL|wxEXPAND, 0);
 	checkboxGroupSizer->Add(legacyVTKCheckbox, 0, wxALL, 3);
 	checkboxGroupSizer->Add(legacyVTKRadioBox, 0, wxALL|wxALIGN_CENTER, 3);
 	checkboxGroupSizer->Add(serialXMLCheckbox, 0, wxALL, 3);
@@ -442,7 +469,8 @@ void mFixTranslator::do_layout()
 	sizer_11->Add(10, 5, 0, 0);
 	sizer_11->Add(unselectAllButton, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 3);
 	
-	sizer_mid_vert->Add(static_line_5, 0, wxALL|wxEXPAND, 3);
+	//sizer_mid_vert->Add(static_line_5, 0, wxALL|wxEXPAND, 3);
+	sizer_mid_vert->Add(0,30);
 	sizer_mid_vert->Add(statusTitle, 0, wxALL|wxALIGN_LEFT, 2);
     	sizer_mid_vert->Add(text_ctrl_statusReport, 0, wxALL|wxEXPAND|wxALIGN_BOTTOM, 3);
 	sizer_mid_vert->Add(enableLoggingCheckbox, 0, wxALL|wxALIGN_RIGHT, 2);
@@ -450,7 +478,9 @@ void mFixTranslator::do_layout()
 	sizer_mid_horiz->Add(5, 0);
 	sizer_mid_horiz->Add(static_line_7, 0, wxEXPAND|wxBOTTOM, 2);
 	sizer_mid_horiz->Add(5, 0);
-	sizer_mid_horiz->Add(ResInfoGridSizer, 0, wxTOP, 10);
+	sizer_mid_horiz->Add(sizer_mid_vert2, 0, 0, 0);
+	sizer_mid_vert2->Add(informationGroupSizer, 0, wxTOP, 0);
+	informationGroupSizer->Add(ResInfoGridSizer, 0, wxTOP, 3);
 	ResInfoGridSizer->Add(ST_RunName, 0, wxALL, 3);
 	ResInfoGridSizer->Add(TC_RunName, 0, wxALL, 3);
 	ResInfoGridSizer->Add(ST_RunDate, 0, wxALL, 3);
@@ -475,6 +505,18 @@ void mFixTranslator::do_layout()
 	ResInfoGridSizer->Add(TC_JMax, 0, wxALL, 3);
 	ResInfoGridSizer->Add(ST_KMax, 0, wxALL, 3);
 	ResInfoGridSizer->Add(TC_KMax, 0, wxALL, 3);
+
+	// Options group
+	sizer_mid_vert2->Add(0,25);
+	sizer_mid_vert2->Add(optionsGroupSizer, 0, wxALL|wxEXPAND, 0);
+	optionsGroupSizer->Add(exportGeometry, 0, wxALL, 3);
+	optionsGroupSizer->Add(exportBoundingBox, 0, wxALL, 3);
+	optionsGroupSizer->Add(static_line_options, 0, wxEXPAND, 0);
+	optionsGroupSizer->Add(sizer_select_options, 0, wxALIGN_CENTER_HORIZONTAL, 3);
+	sizer_select_options->Add(selectAllOptions, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 3);
+        sizer_select_options->Add(10, 5, 0, 0);
+        sizer_select_options->Add(unselectAllOptions, 0, wxALL|wxALIGN_CENTER_HORIZONTAL, 3);
+
 	sizer_mid_horiz->Add(5, 0);
 	sizer_mid_horiz->Add(static_line_8, 0, wxEXPAND|wxBOTTOM, 2);
 	sizer_mid_horiz->Add(5, 0);
@@ -546,6 +588,8 @@ BEGIN_EVENT_TABLE(mFixTranslator, wxDialog)
 	EVT_CHECKBOX	(CHECKBOX_CGNS, mFixTranslator::OnCheckboxCGNS)
 	EVT_BUTTON	(BUTTON_SELECTALL, mFixTranslator::OnButtonSelectAll)
 	EVT_BUTTON	(BUTTON_UNSELECTALL, mFixTranslator::OnButtonUnselectAll)
+	EVT_BUTTON	(BUTTON_SELECTALL_OPTIONS, mFixTranslator::OnButtonSelectAllOptions)
+	EVT_BUTTON	(BUTTON_UNSELECTALL_OPTIONS, mFixTranslator::OnButtonUnselectAllOptions)
 	EVT_BUTTON	(BUTTON_SELECTALLOUTPUTVARS, mFixTranslator::OnSelectAllOutputVariablesButton)
 	EVT_BUTTON	(BUTTON_UNSELECTALLOUTPUTVARS, mFixTranslator::OnUnselectAllOutputVariablesButton)
 	EVT_TEXT	(TEXTCTRL_BEGINNINGTS, mFixTranslator::OnTextCtrlBeginningTS)
@@ -735,6 +779,13 @@ void mFixTranslator::FlushGUI(void)
 	cgnsCheckbox->SetValue(FALSE);
 	selectAllButton->Enable(TRUE);
 	unselectAllButton->Enable(TRUE);
+
+	exportGeometry->Enable(TRUE);
+	exportGeometry->SetValue(FALSE);
+	exportBoundingBox->Enable(TRUE);
+	exportBoundingBox->SetValue(FALSE);
+	selectAllOptions->Enable(TRUE);
+	unselectAllOptions->Enable(TRUE);
 
 	VoidFractionVariable->SetValue(FALSE);
 	GasPressureVariable->SetValue(FALSE);
@@ -1301,7 +1352,7 @@ void mFixTranslator::OnFileOpenButton(wxCommandEvent& event)
 
 void mFixTranslator::OnAboutButton(wxCommandEvent& event)
 {		
-	wxMessageBox(wxT("MFIX to VTK Data Translator\nWVVEL - 2004, v1.0.1\n------------------------------------------\nJim Canon <jcanon@csee.wvu.edu>\nTrubie Turner <flexei@hotmail.com\nJeremy Jarrell <jarrell@csee.wvu.edu>"), wxT("About"), wxOK); }
+	wxMessageBox(wxT("MFIX to VTK Data Translator\nWVVEL - 2004, v1.0.3\n------------------------------------------\nJim Canon <jcanon@csee.wvu.edu>\nTrubie Turner <flexei@hotmail.com\nJeremy Jarrell <jarrell@csee.wvu.edu>"), wxT("About"), wxOK); }
 
 void mFixTranslator::OnGoButton(wxCommandEvent& event)
 {
@@ -1415,6 +1466,10 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
 				enableLoggingCheckbox->Enable(FALSE);
 				GoBttn->Enable(FALSE);
 				CancelBttn->Enable(FALSE);
+				exportGeometry->Enable(FALSE);
+				exportBoundingBox->Enable(FALSE);    
+				selectAllOptions->Enable(FALSE);
+				unselectAllOptions->Enable(FALSE);
 
 				// Disable unused progress gauges (whichever files have no associated output variables selected)
 				if(VoidFractionVariable->GetValue() == TRUE)
@@ -2434,6 +2489,13 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
 					statusReportStr.Printf(wxT("sp1 translation to CGNS format complete.\n"));
 					text_ctrl_statusReport->AppendText(statusReportStr);
 				}
+
+				// Export geometry
+				if (exportGeometry->IsChecked()) {
+					wxString statusReportStr;
+					statusReportStr.Printf(wxT("MFIX geometry exported to VTK.\n"));
+					text_ctrl_statusReport->AppendText(statusReportStr);
+				}
 				
 				text_ctrl_statusReport->AppendText(wxT("Translation complete at ") + wxNow() + wxT(".\n"));
 				if(enableLoggingCheckbox->IsChecked())
@@ -2511,6 +2573,18 @@ void mFixTranslator::OnCheckboxCGNS(wxCommandEvent& event)
 	} else {
 		CGNSOutput = TRUE;
 	}
+}
+
+void mFixTranslator::OnButtonSelectAllOptions(wxCommandEvent& event)
+{
+	exportGeometry->SetValue(TRUE);
+	exportBoundingBox->SetValue(TRUE);
+}
+
+void mFixTranslator::OnButtonUnselectAllOptions(wxCommandEvent& event)
+{
+	exportGeometry->SetValue(FALSE);
+	exportBoundingBox->SetValue(FALSE);
 }
 
 void mFixTranslator::OnButtonSelectAll(wxCommandEvent& event)
@@ -2676,6 +2750,7 @@ void mFixTranslator::OnCheckboxEnableSpecificTSRange(wxCommandEvent& event)
 {
 	if(EnableSpecificTSRange->GetValue()==TRUE)
 	{
+		BeginTSLabel->Enable(TRUE);
 		BeginTSBox->Enable(TRUE);
 		EndTSBox->Enable(TRUE);
 		BeginTSBox->SetValue(wxT("0"));
@@ -2683,11 +2758,14 @@ void mFixTranslator::OnCheckboxEnableSpecificTSRange(wxCommandEvent& event)
 		wxString strMaxTS;
 		strMaxTS.Printf(wxT("%i"), MaxTS);
 		EndTSBox->SetValue(strMaxTS);
+		EndTSLabel->Enable(TRUE);
 	} else {
+		BeginTSLabel->Enable(FALSE);
 		BeginTSBox->Enable(FALSE);
 		EndTSBox->Enable(FALSE);
 		BeginTSBox->SetValue(wxT(""));
 		EndTSBox->SetValue(wxT(""));
+		EndTSLabel->Enable(FALSE);
 	}
 }
 

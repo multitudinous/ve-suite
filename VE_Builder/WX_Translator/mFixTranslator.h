@@ -136,6 +136,14 @@ protected:
 	wxStaticLine* static_line_7;	
 	wxStaticLine* static_line_8;
 			
+	// Options group
+	wxStaticLine* static_line_11;
+	wxCheckBox* exportGeometry;
+	wxCheckBox* exportBoundingBox;
+	wxStaticLine* static_line_options;
+	wxButton* selectAllOptions;
+	wxButton* unselectAllOptions;
+
 	// Restart file information wxTextCtrl group
 	wxStaticText* ST_RunName;
 	wxTextCtrl* TC_RunName;
@@ -271,6 +279,8 @@ protected:
 		CHECKBOX_CGNS,			
 		BUTTON_SELECTALL,		
 		BUTTON_UNSELECTALL,	
+		BUTTON_SELECTALL_OPTIONS,
+		BUTTON_UNSELECTALL_OPTIONS,
 		CHECKBOX_VOIDFRACTION,
 		CHECKBOX_GASPRESSURE,
 		CHECKBOX_P_STAR,
@@ -322,6 +332,8 @@ protected:
 	void OnCheckboxCGNS(wxCommandEvent& event);
 	void OnButtonSelectAll(wxCommandEvent& event);
 	void OnButtonUnselectAll(wxCommandEvent& event);
+	void OnButtonSelectAllOptions(wxCommandEvent& event);
+	void OnButtonUnselectAllOptions(wxCommandEvent& event);
 	void OnSelectAllOutputVariablesButton(wxCommandEvent& event);
 	void OnUnselectAllOutputVariablesButton(wxCommandEvent& event);
 	void OnTextCtrlBeginningTS(wxCommandEvent& event);
