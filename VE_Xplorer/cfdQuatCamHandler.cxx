@@ -225,6 +225,12 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    return flag;
 }
 
+// If a quat is active this will move the cam to the next location
+void cfdQuatCamHandler::PreFrameUpdate( void )
+{
+   
+}
+
 void cfdQuatCamHandler::UpdateCommand()
 {
    std::cerr << "doing nothing in cfdQuatCamHandler::UpdateCommand()" << std::endl;

@@ -231,6 +231,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    }
 */
    _camHandler->CheckCommandId( _commandArray );
+   _camHandler->PreFrameUpdate();
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
 }

@@ -73,49 +73,52 @@ private:
 
 class cfdQuatCamHandler : public cfdGlobalBase
 {
-public:
+   public:
 
-   //Constructors
-   cfdQuatCamHandler( cfdDCS*, cfdNavigate*, char* );
+      //Constructors
+      cfdQuatCamHandler( cfdDCS*, cfdNavigate*, char* );
       
-   //Destructor
-   ~cfdQuatCamHandler();
+      //Destructor
+      ~cfdQuatCamHandler();
 
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
 
-   void CreateObjects( void );
+      void CreateObjects( void );
    
-   void LoadData(double*, cfdDCS*);
+      void LoadData(double*, cfdDCS*);
 
-   void WriteToFile(char*);
+      void WriteToFile(char*);
 
-   void LoadFromFile(char*);
+      void LoadFromFile(char*);
 
-   void Relocate(int runSlerp, cfdDCS* worldDCS, int cfdIso_value, cfdNavigate* nav); 
+      void Relocate(int runSlerp, cfdDCS* worldDCS, int cfdIso_value, cfdNavigate* nav); 
 
-   int getNumLocs();
+      int getNumLocs();
 
-   std::vector<cfdPoints*> cfdPointsVec;
-   std::vector<cfdQuatCam*> QuatCams;
-   int run;
-   float rotvec[3];
-   float angle;
-   int numQuatCams;
+      // If a quat is active this will move the cam to the next location
+      void PreFrameUpdate( void );
+   
+      int numQuatCams;
 
-private:
+   private:
 
-   cfdQuatCam* thisQuatCam;
-   cfdPoints*  nextPoint;
-   cfdDCS*     _worldDCS;
-   cfdNavigate* _nav;
-   cfdReadParam* _readParam;
-   char*       _param;
-   float t;
-   char quatCamFileName[ 100 ];
+      cfdQuatCam* thisQuatCam;
+      cfdPoints*  nextPoint;
+      cfdDCS*     _worldDCS;
+      cfdNavigate* _nav;
+      cfdReadParam* _readParam;
+      char*       _param;
+      float t;
+      char quatCamFileName[ 100 ];
+      std::vector<cfdPoints*> cfdPointsVec;
+      std::vector<cfdQuatCam*> QuatCams;
+      int run;
+      float rotvec[3];
+      float angle;
 };
 #endif
 
