@@ -543,20 +543,25 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          }else{
             curColors = dynamic_cast<osg::Vec4Array*>(geoset->asGeometry()->getColorArray());
          }
-         //update the opacity
-         unsigned int nColors = curColors->getNumElements();
-         for(int i = nColors-1; i ==0; i--){
-            //handle stl
-            if(color == 1){
-               (*curColors)[i][0] = stlColor[0];
-				    (*curColors)[i][1] = stlColor[1];
-               (*curColors)[i][2] = stlColor[2];
+         if(curColors){
+            //update the opacity
+            unsigned int nColors = curColors->getNumElements();
+            for(int i = nColors-1; i ==0; i--){
+               //handle stl
+               if(color == 1){
+                  (*curColors)[i][0] = stlColor[0];
+				       (*curColors)[i][1] = stlColor[1];
+                  (*curColors)[i][2] = stlColor[2];
+               }else{
+                  (*curColors)[i][0] = 1.;
+				       (*curColors)[i][1] = 1.;
+                  (*curColors)[i][2] = 1.;
+               }
+               //just update the opacity
+               (*curColors)[i][3] = op;
             }
-            //just update the opacity
-            (*curColors)[i][3] = op;
+            geoset->asGeometry()->setColorArray(curColors);
          }
-         geoset->asGeometry()->setColorArray(curColors);
-
          //set up blending for opacity
          osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
          bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
@@ -566,11 +571,13 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
 			 depth->setWriteMask(true);
              geostate->setRenderingHint(osg::StateSet::OPAQUE_BIN);
              geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::OFF);
+             geostate->setMode(GL_BLEND,osg::StateAttribute::OFF);
          }else{
 			 depth->setWriteMask(false);
 			 //geostate->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
 			 geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
              geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+             geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
          }
 		 geostate->setAttribute(depth.get());
          //reset the state
