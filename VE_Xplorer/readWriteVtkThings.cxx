@@ -36,24 +36,16 @@
 
 #include <vtkDataSet.h>
 #include <vtkDataSetReader.h>
-
-#include <vtkUnstructuredGrid.h>
-#include <vtkUnstructuredGridReader.h>
-#include <vtkUnstructuredGridWriter.h>
-
-#include <vtkStructuredGrid.h>
-#include <vtkStructuredGridReader.h>
-#include <vtkStructuredGridWriter.h>
-
-#include <vtkRectilinearGrid.h>
-#include <vtkRectilinearGridReader.h>
-#include <vtkRectilinearGridWriter.h>
-
+//#include <vtkPointData.h>
 #include <vtkPolyData.h>
-#include <vtkPolyDataReader.h>
 #include <vtkPolyDataWriter.h>
-
-#include <vtkPointData.h>
+#include <vtkRectilinearGrid.h>
+#include <vtkRectilinearGridWriter.h>
+#include <vtkStructuredGrid.h>
+#include <vtkStructuredGridWriter.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkUnstructuredGridWriter.h>
+#include <vtkXMLUnstructuredGridReader.h>
 
 void printWhatItIs( vtkDataSet * dataSet )
 {
@@ -79,7 +71,7 @@ void printWhatItIs( vtkDataSet * dataSet )
 
 void printBounds( double bounds[6] )
 {
-   std::cout << "geometry bounding box information..." << std::endl;
+   std::cout << "Geometry bounding box information..." << std::endl;
    std::cout << "\tx-min = \t" << bounds[0]
              << "\tx-max = \t" << bounds[1] << std::endl;
    std::cout << "\ty-min = \t" << bounds[2] 
@@ -90,179 +82,106 @@ void printBounds( double bounds[6] )
 
 vtkDataSet * readVtkThing( char * vtkFilename, int printFlag )
 {
-   if (printFlag) 
-   {
-      std::cout << "\nin readVtkThing with \"" << vtkFilename
-                << "\"" << std::endl;
-   }
+//std::cout << "\nin readVtkThing with \"" << vtkFilename << "\"" << std::endl;
 
-/*
-   //try to open the file
-   vtkDataReader* fileloader = vtkDataReader::New();
-   fileloader->SetFileName( vtkFilename );
-
-   if( !fileloader->OpenVTKFile() )
-   {
-      std::cout << "Error! Could not open vtk file: "
-                << vtkFilename << std::endl;
-      exit( 1 );
-   }
-   //close the file
-   fileloader->CloseVTKFile();
-   fileloader->Delete();
-*/
+   double bounds[ 6 ];
 
    vtkDataSetReader *genericReader = vtkDataSetReader::New();
    genericReader->SetFileName( vtkFilename );
-
-   if (printFlag) 
+   vtkDataSet * dataset = genericReader->GetOutput();
+   if ( dataset == NULL )
    {
-      printWhatItIs( genericReader->GetOutput() );
+      std::cout << "vtkDataSetReader failed, will try the "
+                << "vtkXMLUnstructuredGridReader" << std::endl;
+      genericReader->Delete();
+
+      // try with the vtkXMLUnstructuredGridReader...
+      vtkXMLUnstructuredGridReader *ugr = vtkXMLUnstructuredGridReader::New();
+      ugr->SetFileName( vtkFilename );
+      ugr->Update();
+      dataset = vtkUnstructuredGrid::New();
+      dataset->DeepCopy( ugr->GetOutput() );
+      ugr->Delete();
+   }
+   else
+   {
+      if (printFlag) 
+         std::cout << "\nReading \"" << vtkFilename << "\"" << std::endl;
+
+      int dataObjectType = genericReader->GetOutput()->GetDataObjectType();
+      //std::cout << "dataObjectType = " << dataObjectType << std::endl;
+      if ( dataObjectType == VTK_UNSTRUCTURED_GRID )
+      {
+         //std::cout << "an unstructuredGrid... " << std::flush;
+
+         dataset = vtkUnstructuredGrid::New();
+         dataset->ShallowCopy( genericReader->GetUnstructuredGridOutput() );
+         genericReader->Delete();
+      }
+      else if ( dataObjectType == VTK_STRUCTURED_GRID )
+      {
+         //std::cout << "a structuredGrid... " << std::flush;
+
+   /*
+         // Because of a vtk BUG involving structured grid deep copy,
+         // the follow code is not working...
+         dataset = vtkStructuredGrid::New();
+         dataset->DeepCopy( genericReader->GetUnstructuredGridOutput() );
+         genericReader->Delete();
+   */
+
+         if (printFlag) 
+         {
+            genericReader->GetStructuredGridOutput()->GetBounds( bounds );
+            printBounds( bounds );
+         }
+
+         return genericReader->GetStructuredGridOutput();
+      }
+      else if ( dataObjectType == VTK_RECTILINEAR_GRID )
+      {
+         //std::cout << "a rectilinearGrid... " << std::flush;
+
+         dataset = vtkRectilinearGrid::New();
+         dataset->ShallowCopy( genericReader->GetRectilinearGridOutput() );
+         genericReader->Delete();
+      }
+      else if ( dataObjectType == VTK_POLY_DATA )
+      {
+         //std::cout << "a polyData... " << std::flush;
+
+         dataset = vtkPolyData::New();
+         dataset->ShallowCopy( genericReader->GetPolyDataOutput() );
+         genericReader->Delete();
+      }
+
+      else
+      {
+         std::cerr <<"\nERROR - Unable to read this vtk file format"
+                   << std::endl;
+         return NULL;
+      }
    }
 
-   int DataObjectType = genericReader->GetOutput()->GetDataObjectType();
-   genericReader->Delete();
-
-   if (printFlag) 
-   {
-      std::cout << "\nReading \"" << vtkFilename << "\", " << std::flush;
-   }
-
-   if ( DataObjectType == VTK_UNSTRUCTURED_GRID )
-   {
-      if (printFlag) 
-      {
-         std::cout << "an unstructuredGrid... " << std::flush;
-      }
-      vtkUnstructuredGridReader *unsReader = vtkUnstructuredGridReader::New();
-      unsReader->SetFileName( vtkFilename );
-      unsReader->Update();
-
-      vtkUnstructuredGrid *unsGrid = vtkUnstructuredGrid::New();
-      unsGrid->ShallowCopy( unsReader->GetOutput() );
-
-      unsReader->Delete();
-
-      if (printFlag) 
-      {
-         std::cout << "... done" << std::endl;
-         std::cout << " getting bounds...";
-         double bounds[ 6 ];
-         unsGrid->GetBounds( bounds );
-         printBounds( bounds );
-      }
 /*
-      std::cout << "\nprinting unsGrid..." << std::endl;
-      unsGrid->Print( cout );
-*/
-      return unsGrid;
-   }
-   else if ( DataObjectType == VTK_STRUCTURED_GRID )
-   {
-      if (printFlag) 
-      {
-         std::cout << "a structuredGrid... " << std::flush;
-      }
-      vtkStructuredGridReader * sGridReader = vtkStructuredGridReader::New();
-      sGridReader->SetFileName( vtkFilename );
-      sGridReader->Update();
-
-/*
-      // Because of a vtk BUG involving structured grid deep copy,
-      // the follow code is not working...
-      vtkStructuredGrid *sGrid = vtkStructuredGrid::New();
-      sGrid->DeepCopy( sGridReader->GetOutput() );
-      sGridReader->Delete();
-*/
-
-      if (printFlag) 
-      {
-         std::cout << "... done" << std::endl;
-         std::cout << " getting bounds...";
-         double bounds[ 6 ];
-         //sGrid->GetBounds( bounds );
-         sGridReader->GetOutput()->GetBounds( bounds );
-         printBounds( bounds );
-      }
-
-/*
-      std::cout << "\nprinting sGrid..." << std::endl;
-      sGrid->Print( cout );
-*/
-      return sGridReader->GetOutput();
-   }
-   else if ( DataObjectType == VTK_RECTILINEAR_GRID )
-   {
-      if (printFlag) 
-      {
-         std::cout << "a rectilinearGrid... " << std::flush;
-      }
-      vtkRectilinearGridReader *recReader = vtkRectilinearGridReader::New();
-      recReader->SetFileName( vtkFilename );
-      recReader->Update();
-
-      vtkRectilinearGrid *rectGrid = vtkRectilinearGrid::New();
-      rectGrid->ShallowCopy( recReader->GetOutput() );
-
-      recReader->Delete();
-
-      if (printFlag) 
-      {
-         std::cout << "... done" << std::endl;
-      }
-
-      return rectGrid;
-   }
-   else if ( DataObjectType == VTK_POLY_DATA )
-   {
-      if (printFlag) 
-      {
-         std::cout << "a polyData... " << std::flush;
-      }
-      vtkPolyDataReader *pdReader = vtkPolyDataReader::New();
-      pdReader->SetFileName( vtkFilename );
-      pdReader->Update();
-
-/*
-      std::cout << "\nprinting pdReader->GetOutput()..." << std::endl;
-      pdReader->GetOutput()->Print( cout );
-*/
-
-      vtkPolyData *polyData = vtkPolyData::New();
-      polyData->ShallowCopy( pdReader->GetOutput() );
-
-      pdReader->Delete();
-
-      if (printFlag) 
-      {
-         std::cout << "... done" << std::endl;
-         std::cout << " getting bounds...";
-         double bounds[ 6 ];
-         polyData->GetBounds( bounds );
-         printBounds( bounds );
-      }
-
-/*
-      if ( polyData->GetPointData()->GetScalars() )
+      if ( dataset->GetPointData()->GetScalars() )
       {
          cout << "polyData->GetPointData()->GetScalars()->GetName() = " 
               << polyData->GetPointData()->GetScalars()->GetName() << endl;          
          cout << "polyData->GetPointData()->GetScalars()->GetLookupTable() = " 
               << polyData->GetPointData()->GetScalars()->GetLookupTable() << endl;          
       }
+      std::cout << "\nprinting dataset..." << std::endl;
+      dataset->Print( cout );
 */
 
-/*
-      std::cout << "\nprinting polyData..." << std::endl;
-      polyData->Print( cout );
-*/
-      return polyData;
+   if (printFlag) 
+   {
+      printWhatItIs( dataset );
+      dataset->GetBounds( bounds );
+      printBounds( bounds );
    }
-
-   //else
-   std::cout <<"\nERROR - Unable to read this unsupported vtk file format"
-             << std::endl;
-   return NULL;
+   return dataset;
 }
 
 void writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag )
