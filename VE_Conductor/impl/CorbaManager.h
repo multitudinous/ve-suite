@@ -51,6 +51,10 @@
 #include <tao/PortableServer/PortableServer.h>
 #include <vpr/Thread/Thread.h>
 class VjObs_i;
+class cfdCommandArray;
+class cfdSteadyStateVizHandler;
+class cfdEnvironmentHandler;
+class cfdModelHandler;
 
 class CorbaManager
 {
@@ -66,10 +70,17 @@ class CorbaManager
       //void activate(PortableServer::ServantBase* myobj);
 	   //void pman_activate();
       VjObs_i* GetVjObs( void );
+      cfdCommandArray* GetCommandArray( void );
+      void GetCfdStateVariables( void );
+      void PreFrameUpdate( void );
+      //void GetUpdateClusterStateVariables( void );
+      double GetShortArray( int );
 
       int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
 	
       CosNaming::NamingContext_var naming_context;
+      void SetHandlers( cfdSteadyStateVizHandler*, 
+                     cfdEnvironmentHandler*, cfdModelHandler* );
    private:
 	   CORBA::ORB_var orb;
       PortableServer::POA_var poa;

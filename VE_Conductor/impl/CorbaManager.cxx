@@ -34,6 +34,11 @@
 #include <cstdlib>
 #include <iostream>
 
+#include "cfdSteadyStateVizHandler.h"
+#include "cfdEnvironmentHandler.h"
+#include "cfdModelHandler.h"
+#include "cfdCommandArray.h"
+
 #include <vpr/Util/Debug.h>
 
 
@@ -87,6 +92,38 @@ CorbaManager::~CorbaManager()
 VjObs_i* CorbaManager::GetVjObs( void )
 {
    return _vjObs;
+}
+
+cfdCommandArray* CorbaManager::GetCommandArray( void )
+{
+   return _vjObs->_cfdArray;
+}
+
+void CorbaManager::GetCfdStateVariables( void )
+{
+   _vjObs->GetCfdStateVariables();
+}
+
+void CorbaManager::PreFrameUpdate( void )
+{
+   _vjObs->PreFrameUpdate();
+}
+
+/*void CorbaManager::GetUpdateClusterStateVariables( void )
+{
+   _vjObs->GetUpdateClusterStateVariables();
+}*/
+
+void CorbaManager::SetHandlers( cfdSteadyStateVizHandler* _steadystateHandler, 
+                           cfdEnvironmentHandler* _environmentHandler, 
+                           cfdModelHandler* _modelHandler )
+{
+   _vjObs->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
+}
+
+double CorbaManager::GetShortArray( int i )
+{
+   return _vjObs->cfdShort_data_array[ i ];
 }
 //init() Get CORBA ready to go
 void CorbaManager::init( void * )
