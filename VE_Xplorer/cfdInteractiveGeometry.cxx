@@ -35,15 +35,10 @@
 #include "cfdModuleGeometry.h"
 #include "cfdExecutive.h"
 #include "cfdReadParam.h"
-#include "cfdDataSet.h"
-#include "cfdNode.h"
-#include "interface.h"
 
-#include <vtkLookupTable.h>
-//#include <sstream>
-//#include <fstream>
-#include <iostream>
 #include <vpr/Util/Debug.h>
+#include <fstream>
+#include <iostream>
 
 cfdInteractiveGeometry::cfdInteractiveGeometry( std::string param, cfdGroup* masterNode)
 {
@@ -300,7 +295,7 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
          if ( flag )
          {
             double* color = executive->_3dMesh->GetLookupTable()->GetColor( data );
-            vprDEBUG(vprDBG_ALL,1) << "SwappableGeom :: Module being modified : "<<this->_swappableGeometry[ i ].first->GetModuleName() << " : " << data << endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,1) << "SwappableGeom :: Module being modified : "<<this->_swappableGeometry[ i ].first->GetModuleName() << " : " << data << std::endl << vprDEBUG_FLUSH;
          
             this->_swappableGeometry[ i ].first->SetRGBAColorArray( color );
             this->_swappableGeometry[ i ].first->Update();
@@ -330,7 +325,7 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
    ////////////////////////////////
    for ( int i = 0; i < this->_numberOfModules; i++ )
    {
-      //cout << (this->_moduleGeometry[ i ]->GetModuleName()).compare( "BUILDING" );
+      //std::cout << (this->_moduleGeometry[ i ]->GetModuleName()).compare( "BUILDING" );
       // If these aren't the active module
       if ( (this->_moduleGeometry[ i ]->GetModuleName()).compare( "BUILDING" ) &&
             (this->_moduleGeometry[ i ]->GetModuleName()).compare( "REI_Gasi" ) &&

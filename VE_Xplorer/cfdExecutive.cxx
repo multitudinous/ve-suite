@@ -31,29 +31,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdExecutive.h"
 #include "VE_i.h"
-//#include "cfdGauges.h"
-//#include "cfdDashboard.h"
-#include "cfdDataSet.h"
-#include "cfdExecutiveConfiguration.h"
 #include "cfdDCS.h"
-#include "cfdInteractiveGeometry.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 #include "cfdVEAvailModules.h"
 #include "cfdVEBaseClass.h"
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
-//#include "cfd1DTextInput.h"
-#include "cfdVjObsWrapper.h"
 
 #include "package.h"
 #include "Network_Exec.h"
 
 #include <iostream>
-#include <sstream>
-
-#include <vtkDataSet.h>
-#include <vtkPointData.h>
 
 #include <vrj/Util/Debug.h>
 #include <orbsvcs/CosNamingC.h>
@@ -69,9 +58,9 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
   
   catch(const XMLException &toCatch)
     {
-      XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+      XERCES_STD_QUALIFIER std::cerr << "Error during Xerces-c Initialization.\n"
 				<< "  Exception message:"
-				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER std::endl;
       //return 1;
     }
 
@@ -138,7 +127,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
 	} 
    catch (CORBA::Exception &) 
    {		
-		cerr << "Can't find executive or UI registration error" << endl;
+		std::cerr << "Can't find executive or UI registration error" << std::endl;
 	}
    
    //_param = new cfdExecutiveConfiguration();
@@ -205,7 +194,7 @@ void cfdExecutive::init_orb_naming()
 		poa->destroy (1, 1);
 		// Finally destroy the ORB
 		//orb->destroy();
-		cerr << "CORBA exception raised!" << endl;
+		std::cerr << "CORBA exception raised!" << std::endl;
 	}*/
 }
 
@@ -303,21 +292,21 @@ void cfdExecutive::GetNetwork ( void )
 	         _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
          }  
          else
-	         cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
+	         std::cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
 
          if ( iter->_id != -1 ) 
          {
-            //cout << iter->_id <<endl; 
-            //cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
+            //std::cout << iter->_id <<std::endl; 
+            //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
             _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
-            //cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
+            //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
             _it_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
          }
       }
    } 
    else 
    {
-      cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << endl;
+      std::cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << std::endl;
    }
 ///////////////////////////
    delete network;
@@ -388,7 +377,7 @@ void cfdExecutive::GetEverything( void )
                _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
                vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
                                       << " ]-> " << iter->second 
-                                      << " is being created." << endl << vprDEBUG_FLUSH;
+                                      << " is being created." << std::endl << vprDEBUG_FLUSH;
             }
          }
          else
@@ -396,7 +385,7 @@ void cfdExecutive::GetEverything( void )
             // plugin already present...
             vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
                                     << " ]-> " << iter->second 
-                                    << " is already on the plugin map." << endl << vprDEBUG_FLUSH;
+                                    << " is already on the plugin map." << std::endl << vprDEBUG_FLUSH;
          }
       }
 
@@ -421,7 +410,7 @@ void cfdExecutive::GetEverything( void )
             // plugin already present...
             vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
                                     << " ]-> " << iter->second 
-                                    << " is already on the plugin and id map." << endl << vprDEBUG_FLUSH;
+                                    << " is already on the plugin and id map." << std::endl << vprDEBUG_FLUSH;
             ++foundPlugin;
          }
          // The above code is from : The C++ Standard Library by:Josuttis pg. 205
@@ -554,7 +543,7 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
       }
       else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ACT_CUSTOM_VIZ )
       {
-         cout << " Custom Viz " << endl;
+         std::cout << " Custom Viz " << std::endl;
          for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
          {  
             int dummyVar = 0;

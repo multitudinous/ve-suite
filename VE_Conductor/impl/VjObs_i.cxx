@@ -29,26 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <VjObs_i.h>
-#include <iostream>
-#include <map>
-
-#ifndef WIN32
-#include <sys/time.h>
-#else
-#include <time.h>
-#endif
-
-#include <vpr/vpr.h>
-#include <vpr/System.h>
-#include <vpr/Sync/Guard.h>
-#include <vpr/Util/Debug.h>
+#include "VjObs_i.h"
 
 #include "cfdTeacher.h"
 #include "cfdDataSet.h"
-#include "cfdObjects.h"
-#include "cfdTempAnimation.h"
-#include "cfdCommandArray.h"
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdSteadyStateVizHandler.h"
@@ -61,10 +45,19 @@
 #include "cfdTextureBasedVizHandler.h"
 #endif
 
-#include <vtkSystemIncludes.h>  // for VTK_POLY_DATA
-#include <vtkDataSet.h>
-#include <vtkPolyData.h>
-#include <vtkCellTypes.h>
+#include <vpr/System.h>
+#include <vpr/Util/Debug.h>
+
+#include <iostream>
+#include <map>
+
+/*
+#ifndef WIN32
+#include <sys/time.h>
+#else
+#include <time.h>
+#endif
+*/
 
 void VjObs_i::InitCluster( void )
 {
@@ -152,7 +145,7 @@ void VjObs_i::CreateDatasetInfo( void )
             CORBA::ULong totalNumberOfVectors = 0;
             for ( CORBA::ULong j=0; j< numDatasets; j++ )
             {
-               //cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << endl;
+               //std::cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << std::endl;
                totalNumberOfScalars += temp->GetCfdDataSet( j )->GetNumberOfScalars();
                totalNumberOfVectors += temp->GetCfdDataSet( j )->GetNumberOfVectors();
             }
@@ -697,7 +690,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
          if ( the_sequence != NULL )
          {
             the_sequence->SetCurrentFrame( (int)this->getTimesteps() );
-            //cout << " cfdTimesteps in preframe : " << cfdTimesteps << endl;
+            //std::cout << " cfdTimesteps in preframe : " << cfdTimesteps << std::endl;
          }
       }
    }
@@ -800,11 +793,11 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
    if ( (value[ 7 ] != -1) && (value [ 8 ] != -1) )
    {
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, value[ 0 ] );
-      //cout<<"update:this->corba_mutex.C_id = "<<this->mId<<endl;
+      //std::cout<<"update:this->corba_mutex.C_id = "<<this->mId<<std::endl;
 
       // get the value of the slider bar, used by many visualizations
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, value[ 1 ] );
-      //cout<<"iso_value"<<this->mIso_value<<endl;
+      //std::cout<<"iso_value"<<this->mIso_value<<std::endl;
 
       //NOTE: Data is oneway transfer from
       //cfdApp -> GUI so we don't need to
@@ -814,21 +807,21 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
       //this->mTimesteps = value[ 2 ];
 
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_SC, value[ 3 ] );
-      //cout<<"select scalar:"<<this->mSc<<endl;
+      //std::cout<<"select scalar:"<<this->mSc<<std::endl;
 
       // change scalar range or cursor settings
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_MIN, value[ 4 ] );
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_MAX, value[ 5 ] );
-      //cout<<"update:min,max values: "<<this->mMin<<"\t"<<this->mMax<<endl;
+      //std::cout<<"update:min,max values: "<<this->mMin<<"\t"<<this->mMax<<std::endl;
 
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, value[ 6 ] );
-      //cout<<"geometry state:"<< this->mGeo_state <<endl;
+      //std::cout<<"geometry state:"<< this->mGeo_state <<std::endl;
 
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, value[ 7 ] );
-      //cout<<"pre_state:"<< this->mPre_state <<endl;
+      //std::cout<<"pre_state:"<< this->mPre_state <<std::endl;
 
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, value[ 8 ] );
-      //cout<<"mTeacher state:"<< this->mTeacher_state <<endl;
+      //std::cout<<"mTeacher state:"<< this->mTeacher_state <<std::endl;
    }
    else
    {
@@ -836,7 +829,7 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
       for ( int i = 0; i < 9; i ++ )
       {
          mShort_data_array[ i ] = value[ i ];
-         cout << value[ i ] << endl;
+         std::cout << value[ i ] << std::endl;
       }
    }
    this->_unusedNewData = true;

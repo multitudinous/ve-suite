@@ -54,10 +54,10 @@ class cfdSteadyStateVizHandler;
 class cfdEnvironmentHandler;
 class cfdModelHandler;
 
-class cfdCommandArray;
 #ifdef _OSG
 class cfdTextureBasedVizHandler;
 #endif
+
 #include <vector>
 
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
