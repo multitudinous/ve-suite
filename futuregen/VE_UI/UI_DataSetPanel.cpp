@@ -27,11 +27,12 @@ UI_DataSets::UI_DataSets()
 
 UI_DataSets::~UI_DataSets()
 {
-   for (int i=0; i<_numOfScalars; i++)
+	int i;
+   for (i=0; i<_numOfScalars; i++)
       delete _Scalars[i];
    _Scalars.clear();
 
-   for (int i=0; i<_numOfVectors; i++)
+   for (i=0; i<_numOfVectors; i++)
       delete _Vectors[i];
    _Vectors.clear();
 }
@@ -406,6 +407,7 @@ void UI_DatasetPanel::_buildPanel()
 
 void UI_DatasetPanel::_buildDataSets( void )
 {
+	int k;
    if ( !_DataSets.empty())
    {
       std::cout<<"DataSets successfully cleared"<<std::endl;
@@ -456,14 +458,14 @@ void UI_DatasetPanel::_buildDataSets( void )
 		   wxString* thisDataVectorNames;
 		   thisDataVectorNames = new wxString[numVectorsPerDataset[i]];
 
-         for (int k=0; k<numScalarsPerDataset[i]; k++)
+         for (k=0; k<numScalarsPerDataset[i]; k++)
          {
             thisDataScalarNames[k] = scalarNames[indexScalar];
             indexScalar++;
          }
 
          // another for loop to construct per dataset vector names
-         for (int k=0; k<numVectorsPerDataset[i]; k++)
+         for (k=0; k<numVectorsPerDataset[i]; k++)
          {
             thisDataVectorNames[k] = vectorNames[indexVector];
             indexVector++;
@@ -530,6 +532,8 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
 
 void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
 {
+	int i;
+
    // This function is guarded above if there are no datasets   
    if(_scalarNames){  
       delete [] _scalarNames;
@@ -544,12 +548,12 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
    _scalarNames = new wxString[activeDataSet->_numOfScalars];
    _vectorNames = new wxString[activeDataSet->_numOfVectors];
    
-   for (int i=0; i<activeDataSet->_numOfScalars; i++)
+   for (i=0; i<activeDataSet->_numOfScalars; i++)
    {
       _scalarNames[i] = activeDataSet->_Scalars[i]->_thisScalarName;
    }
 
-   for (int i=0; i<activeDataSet->_numOfVectors; i++)
+   for (i=0; i<activeDataSet->_numOfVectors; i++)
    {
       _vectorNames[i] = activeDataSet->_Vectors[i]->_thisScalarName;
    }
