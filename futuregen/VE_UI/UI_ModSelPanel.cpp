@@ -20,8 +20,11 @@ UI_ModSelScroll::UI_ModSelScroll(wxWindow* parent)
 
    int _numModels = ((UI_ModSelPanel *)GetParent())->_modelData->GetNumberOfModels();
 
-   wxString _models[_numModels];
-   
+   //wxString _models[_numModels]; //can't pass compile _numModels needs compile time value
+   //begin yang's change
+    wxString *_models;
+   _models = new wxString [_numModels];
+   //finished yang's changes
    for ( int i=0; i<_numModels; i++)
       _models[i] = wxT(((UI_ModSelPanel *)GetParent())->_modelData->GetModelName(i));
    
@@ -33,6 +36,7 @@ UI_ModSelScroll::UI_ModSelScroll(wxWindow* parent)
    wxBoxSizer* _col = new wxBoxSizer(wxVERTICAL);
    _col->Add(_modelSelBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    SetSizer(_col);
+   delete [] _models;
 }
 
 UI_ModSelScroll::~UI_ModSelScroll()
