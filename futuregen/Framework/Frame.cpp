@@ -24,12 +24,12 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(v21ID_STOP_CALC, AppFrame::StopCalc)
   EVT_MENU(v21ID_PAUSE_CALC, AppFrame::PauseCalc)
   EVT_MENU(v21ID_RESUME_CALC, AppFrame::ResumeCalc)
-  EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
-  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
-  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
-  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
-  EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
-  EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
+//  EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
+//  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
+//  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
+//  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
+//  EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
+//  EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
   EVT_UPDATE_UI(7777, AppFrame::OnUpdateUIPop)
 END_EVENT_TABLE()
 
@@ -176,7 +176,7 @@ void AppFrame::CreateMenu()
   run_menu = new wxMenu;
   edit_menu = new wxMenu;
   help_menu = new wxMenu;
-  config_menu = new wxMenu;
+//  config_menu = new wxMenu;
 
   file_menu->Append(wxID_NEW, _("&New\tCtrl+N"));
   file_menu->Append(wxID_OPEN, _("&Open ..\tCtrl+O"));
@@ -211,15 +211,15 @@ void AppFrame::CreateMenu()
   run_menu->Append(v21ID_STOP_CALC, _("Stop Simulation"));
   run_menu->Append(v21ID_PAUSE_CALC, _("Pause Simulation"));
   run_menu->Append(v21ID_RESUME_CALC, _("Resume Simulation"));
-  run_menu->Append(v21ID_VIEW_RESULT, _("View Results"));
-  run_menu->Append(v21ID_GLOBAL_PARAM, _("Global Parameters"));
+//  run_menu->Append(v21ID_VIEW_RESULT, _("View Results"));
+//  run_menu->Append(v21ID_GLOBAL_PARAM, _("Global Parameters"));
   //  run_menu->Append(v21ID_VIEW_FINANCIAL, _("View Financial Params"));
 
   run_menu->Enable(v21ID_START_CALC, false);
   run_menu->Enable(v21ID_STOP_CALC, false);
   run_menu->Enable(v21ID_PAUSE_CALC, false);
   run_menu->Enable(v21ID_RESUME_CALC, false);
-  run_menu->Enable(v21ID_VIEW_RESULT, false);
+ // run_menu->Enable(v21ID_VIEW_RESULT, false);
   
   
   edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
@@ -240,18 +240,18 @@ void AppFrame::CreateMenu()
   help_menu->Enable(wxID_HELP, false);
   help_menu->Enable(wxID_ABOUT, false);
 
-  config_menu->Append(v21ID_BASE,_("Base Quench"));
-  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
-  config_menu->Append(v21ID_REI_BASE, _("Base Quench (REI)"));
-  config_menu->Append(v21ID_REI_SOUR, _("Base Quench & Sour Shift CO2 (REI)"));
-  config_menu->Append(v21ID_SWEET, _("Sweet Shift CO2"));
-  config_menu->Append(v21ID_CO_DISPOSAL, _("Co-Disposal of H2S+CO2"));
+//  config_menu->Append(v21ID_BASE,_("Base Quench"));
+//  config_menu->Append(v21ID_SOUR, _("Base Quench & Sour Shift CO2"));
+//  config_menu->Append(v21ID_REI_BASE, _("Base Quench (REI)"));
+//  config_menu->Append(v21ID_REI_SOUR, _("Base Quench & Sour Shift CO2 (REI)"));
+//  config_menu->Append(v21ID_SWEET, _("Sweet Shift CO2"));
+//  config_menu->Append(v21ID_CO_DISPOSAL, _("Co-Disposal of H2S+CO2"));
   
-  config_menu->Enable(v21ID_SWEET, false);
-  config_menu->Enable(v21ID_CO_DISPOSAL, false);
+//  config_menu->Enable(v21ID_SWEET, false);
+//  config_menu->Enable(v21ID_CO_DISPOSAL, false);
 
   menubar->Append(file_menu, _("&File"));
-  menubar->Append(config_menu, _("&Configurations"));
+//  menubar->Append(config_menu, _("&Configurations"));
   menubar->Append(edit_menu, _("&Edit"));
   menubar->Append(con_menu, _("&Connection"));
   menubar->Append(run_menu, _("&Execution"));
@@ -565,7 +565,7 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
 
 	} catch (CORBA::Exception &) {
 		
-		cerr << "Can't find executive or UI registration error" << endl;
+		Log("Can't find executive or UI registration error\n");
 	}
 
 }
@@ -598,7 +598,7 @@ void AppFrame::ConVEServer(wxCommandEvent &event)
 
 	} catch (CORBA::Exception &) {
 		
-		cerr << "Can't find VE server" << endl;
+		Log("Can't find VE server\n");
 	}
 }
 
@@ -628,10 +628,10 @@ bool AppFrame::init_orb_naming()
 		  */  
 		return true;
 	}  catch (CORBA::Exception &) {
-		poa->destroy (1, 1);
+	//		poa->destroy (1, 1);
 		// Finally destroy the ORB
 		orb->destroy();
-		cerr << "CORBA exception raised!" << endl;
+		Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
 		return false;
 	}
 }
@@ -677,7 +677,7 @@ void AppFrame::DisConExeServer(wxCommandEvent &event)
 			con_menu->Enable(v21ID_LOAD, false);
 			con_menu->Enable(v21ID_CONNECT, true);
 			run_menu->Enable(v21ID_START_CALC, false);
-			run_menu->Enable(v21ID_VIEW_RESULT, false);
+//			run_menu->Enable(v21ID_VIEW_RESULT, false);
 			con_menu->Enable(v21ID_DISCONNECT, false);
 			Log("Disconnect suceeded.\n");
 		}catch (CORBA::Exception &) {

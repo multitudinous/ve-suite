@@ -237,4 +237,32 @@ void Avail_Modules::ShowDesc(wxCommandEvent& event)
 
 void Avail_Modules::ShowHelp(wxCommandEvent& event)
 {
+  char browser[1024];
+  REI_Plugin* pl;
+  wxString help;
+  wxString fgroot;
+  wxString docdir;
+  wxString cmd;
+  ReiTreeItemData* item_data;
+  item_data = (ReiTreeItemData*) GetItemData(selection);
+  if (item_data==NULL)
+    return;
+
+
+  pl = item_data->plugin;
+  pl = item_data->plugin;
+  fgroot = getenv("FGROOT");
+  
+#ifdef WIN32
+  docdir=fgroot+"\\Framework\\doc";
+  help = fgroot+"\\"+pl->GetHelp();
+  FindExecutable("index.html", docdir.c_str(), browser);
+#endif
+  cmd="\"";
+  cmd+=browser;
+  cmd+="\" \"";
+  cmd+=help;
+  cmd+="\"";
+  
+  ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
 }
