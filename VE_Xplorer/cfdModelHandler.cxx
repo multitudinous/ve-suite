@@ -61,7 +61,6 @@
 #include <direct.h>
 #endif
 
-using namespace std;
 
 cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
 {
@@ -203,11 +202,12 @@ void cfdModelHandler::InitScene( void )
 
    // set default active dataset to be the meshed volume
    if ( !_modelList.empty() )
+   {
       if ( _modelList.at( 0 )->GetNumberOfCfdDataSets() > 0 )
       {
          activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
-         cfdObjects::SetActiveDataSet( this->activeDataset );
       }
+   }
 
    if ( activeDataset != NULL )
    {
@@ -215,23 +215,23 @@ void cfdModelHandler::InitScene( void )
       // done in cfdDataSet upon initialization
       // set first scalar active
       activeDataset->SetActiveScalar( 0 );
-      
+   
       strcpy( oldDatasetName, activeDataset->GetFileName() );
       vprDEBUG(vprDBG_ALL,1) << "cfdModelHandler: Setting active dataset to " 
-                  << activeDataset->GetFileName() << " , " 
-                  << oldDatasetName << endl << vprDEBUG_FLUSH;
-      cfdVectorBase::SetThreshHoldPercentages( 0, 100 );
-      cfdVectorBase::UpdateThreshHoldValues();
-      cfdVectorBase::SetVectorRatioFactor( 1 );
+               << activeDataset->GetFileName() << " , " 
+               << oldDatasetName << endl << vprDEBUG_FLUSH;
    }
-
 
    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
    // Create Scalar bar
-   cout << (cfdGroup*)worldNode->GetParent( 0 ) << endl;
+   vprDEBUG(vprDBG_ALL,1) << (cfdGroup*)worldNode->GetParent( 0 ) << std::endl<< vprDEBUG_FLUSH;
+cout << " test 1" <<endl;
    _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
+cout << " test 2" <<endl;
    // Assumes active dataset isn't null
+cout << " test 3" <<endl;
    _scalarBar->SetActiveDataSet( activeDataset );
+cout << " test 4" <<endl;
    _scalarBar->RefreshScalarBar();
    //std::cout << " Done Create scalar bar "  << endl;
 
@@ -305,7 +305,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       }
 
       // Set the curretn active dataset for the scalar bar
-      // so th it know how to update itself
+      // so that it knows how to update itself
       _scalarBar->SetActiveDataSet( activeDataset );
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR )
