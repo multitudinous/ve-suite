@@ -10,12 +10,9 @@
 
 #include <iostream>
 #include <cmath>
-#include <Packages/REI/Core/Datatypes/Gas.h>
+#include <V21Helper/Datatypes/Gas.h>
 
 namespace Vision21 {
-
-using namespace SCIRun;
-using namespace REI;
 
 class Chlorine_Bed {
  public:
