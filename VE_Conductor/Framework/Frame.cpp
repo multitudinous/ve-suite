@@ -169,7 +169,7 @@ void AppFrame::OnClose(wxCloseEvent &event)
 	//{
 	 // UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
 	  //naming_context->unbind(UIname);
-	  
+	  if ( poa != NULL )
 	  poa->destroy (1, 1);
 	//}
       orb->destroy();

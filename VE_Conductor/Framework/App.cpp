@@ -23,7 +23,7 @@ bool REIApp::OnInit()
     }
 
 
-  SetAppName("NewV21");
+  SetAppName("VE-Conductor");
    
   mainFrame= new AppFrame((wxFrame*) NULL, 1023, "VE-Conductor");
  
