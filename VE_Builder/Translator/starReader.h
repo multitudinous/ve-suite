@@ -40,7 +40,6 @@ class starReader
    public:
       starReader( char * paramFile );
       ~starReader( void );
-      //starReader( starReader * );
 
       void SetDebugLevel( int );
 
@@ -51,7 +50,7 @@ class starReader
       char  * GetVTKFileName( void );
 
       void  ReadParameterFile( void );
-      vtkUnstructuredGrid *GetUnsGrid();
+      vtkUnstructuredGrid * GetUnsGrid();
 
    private:
       char  paramFileName[100];
