@@ -47,6 +47,11 @@ bool cfdVEAvail_Modules::LoadModules()
   return true;
 }
 
+cfdVEPluginLoader* cfdVEAvail_Modules::GetLoader( void )
+{
+   return pl_loader;
+}
+
 /*void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
 {
   vector<wxString> lnames;

@@ -366,10 +366,10 @@ bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
          << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
          << std::endl << vprDEBUG_FLUSH;
 
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SPHERE_SIZE )
-   {
+      //return true;
+   //}
+   //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SPHERE_SIZE )
+   //{
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_SPHERE_SIZE, value = " 
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;

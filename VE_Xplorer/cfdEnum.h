@@ -44,8 +44,8 @@ enum cursorTYPE {
     CUBE,
     XLINE,
     YLINE,
-    ZLINE,
-    NONE 
+    ZLINE
+    //NONE 
 };
 //! Enumerator
 /*!
@@ -124,11 +124,12 @@ enum cfdGeodeEnum {
    CHANGE_CONTOUR_FILL,
    UPDATE_SOUNDS,
    CHANGE_PARTICLE_VIEW_OPTION,//140
-   CHANGE_SPHERE_SIZE,
+   //CHANGE_SPHERE_SIZE, //Not used, functionality taken care of with CHANGE_PARTICLE_VIEW_OPTION 
    LOAD_POINT,
    WRITE_POINTS_TO_FILE,
    READ_POINTS_FROM_FILE,
    MOVE_TO_SELECTED_LOCATION,
+   BLUE_MENU_TOGGLE,
    EXIT,//146
    //biv--added these for the navigation page
    GUI_NAV,

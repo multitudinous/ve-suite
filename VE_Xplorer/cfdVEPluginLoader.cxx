@@ -97,3 +97,36 @@ void cfdVEPluginLoader::RegisterPlugin(wxClassInfo* info)
        plugin_cls.push_back(info);
      }
 }
+
+char* cfdVEPluginLoader::GetPluginName( int index )
+{
+   char* _name = plugins.at(index)->GetName();
+   return _name;
+}
+
+int cfdVEPluginLoader::GetNumberOfPlugins( void )
+{
+   return plugins.size();
+}
+
+cfdBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
+{
+   int selectPlugin = -1;
+
+   for (int i=0; i<plugins.size(); i++)
+   {  
+      if ( plugins.at(i)->GetName() == _objname )
+      {
+         selectedPlugin = i;
+         break;
+      }
+   }
+
+   if (selectPlugin == -1)
+   {
+      cerr<<"ERROR: cfdVEPluginLoader::CreateObject : Plugin Not Found!"<<endl;
+      return NULL;
+   }
+
+   return plugin_cls.at( selectedPlugin )->CreateObject();
+}

@@ -47,7 +47,11 @@ class cfdVEPluginLoader : public wxObject
   //Instantiate a instance of the plug_in. This instance is not used for any network composition but for information.
   void RegisterPlugin(wxClassInfo* info);
 
+  char* GetPluginName(int);
 
+  int GetNumberOfPlugins();
+
+  cfdVEBaseClass* CreateObject( char* ); 
   // private:
   vector<cfdVEBaseClass*> plugins;
   //Keep the list of the first intance of each plugin

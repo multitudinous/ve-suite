@@ -47,6 +47,7 @@ class cfdVEAvail_Modules : public wxObject
    cfdVEAvail_Modules( void );
    //~cfdVEAvail_Modules
   bool LoadModules(); //Load all the modules from the dlls 
+  cfdVEPluginLoader* GetLoader( void );
   //void OnItemRightClick(wxTreeEvent& event);
   //void OnSelChanged(wxTreeEvent& event);
   //void ShowMenu(wxTreeItemId id, const wxPoint &pt);

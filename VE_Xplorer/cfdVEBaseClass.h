@@ -44,7 +44,8 @@
 
 class cfdModuleGeometry;
 class cfdGroup;
-//class string;
+class cfdModel;
+class cfdReadParam;
 //class map;
 
 // Need to create or use this in our stuff
@@ -78,9 +79,10 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
 
    public:
       cfdVEBaseClass( void );
-      cfdVEBaseClass( cfdDCS* );
+      //cfdVEBaseClass( cfdDCS* );
       ~cfdVEBaseClass( void );
 
+      virtual void InitializeNode( cfdDCS* );
       // Methods to do scene graph manipulations
       // New methods may have to be added later
       virtual void AddSelfToSG( void );
@@ -113,10 +115,17 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       virtual Interface* Pack();
 
       //This is to unpack the result from the 
-      virtual void UnPackResult(Interface * intf) ;
+      virtual void UnPackResult(Interface * intf);
       //This is the save function of the module. 
 
       virtual void SetID(int id);
+   
+      virtual cfdModel* GetCFDModel( void );
+   
+      virtual void LoadSurfaceFiles( char* );
+
+      bool OnSceneGraph( void ){return _onSceneGraph;}
+      
    
    private:
       // This needs to be vector of geometry nodes
@@ -128,6 +137,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
 
       wxString _objectName;
       wxString _objectDescription;
+
 
    protected:
       long pos_x;
@@ -151,6 +161,15 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       std::map<std::string, std::vector<std::string> * > _string1D;
 
       cfdObjects* dataRepresentation;
+
+      cfdModel* _model;
+      cfdReadParam* _readParam;
+
+      char* _param;
+
+      bool _onSceneGraph;
+
+      int _modID;
 };
 
 #endif
