@@ -366,7 +366,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib omniORB403_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libpf.lib libpfv.lib libpfui.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2D.lib wxmsw24d.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libpf.lib libpfv.lib libpfui.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2D.lib wxmsw24d.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project_taod.exe"
 				LinkIncremental="2"
@@ -1406,10 +1406,10 @@ echo Done.
 				RelativePath="cfdTeacher.h">
 			</File>
 			<File
-				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
+				RelativePath=".\cfdTempAnimation.h">
 			</File>
 			<File
-				RelativePath=".\cfdTempAnimation.h">
+				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
 			</File>
 			<File
 				RelativePath=".\cfdThread.h">

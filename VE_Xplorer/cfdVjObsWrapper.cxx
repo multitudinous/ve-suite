@@ -74,7 +74,11 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    }
 }
 
+#ifdef _TAO
+void cfdVjObsWrapper::init( CosNaming::NamingContext* input  )
+#else
 void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input  )
+#endif
 {
    naming_context = input;
 #ifdef _CLUSTER
@@ -158,7 +162,8 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input  )
       }
    }
 #else // _CLUSTER
-   VjObs_var vjobs = _vjObs->_this();
+   
+   VjObs_var vjobs = this->_vjObs->_this();
    if ( CORBA::is_nil( vjobs.in() ) )
      cout << "is nil " << endl;
 

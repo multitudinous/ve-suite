@@ -39,14 +39,14 @@ class cfdVjObsWrapper;
 class cfdAppWrapper
 {
    public:
-      cfdAppWrapper( int argc,  char* argv[] );
+      cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* );
       ~cfdAppWrapper( void );
       void init( void *);
-      void SetWrapper( cfdVjObsWrapper* );
 
    private:
       cfdApp* _cfdApp;
       cfdThread* _thread;
+      cfdVjObsWrapper* _vjObsWrapper;
       int argc;
       char** argv;
 }; 

@@ -63,10 +63,10 @@ int main(int argc, char* argv[])
    PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
    poa_manager->activate();
 
-   cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv );
    cfdVjObsWrapper* vjobsWrapper = new cfdVjObsWrapper();
    vjobsWrapper->init( naming_context.in() );
-   appWrapper->SetWrapper( vjobsWrapper );
+   cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
+
    orb->run();
    return 0;
 }

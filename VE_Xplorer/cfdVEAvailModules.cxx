@@ -57,8 +57,6 @@ bool cfdVEAvail_Modules::LoadModules()
   
    //for (i=0; i<pl_loader->plugins.size(); i++)
    //AddModule(pl_loader->plugins[i], pl_loader->plugin_cls[i]);
-   delete [] path;
-   delete [] modelPath;
    delete [] file;
 
    return true;

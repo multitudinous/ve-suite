@@ -527,7 +527,7 @@ char * fileIO::GetFile( char fileKeyword[], char fileLocation[] )
    {
       strcpy( file, path );
       strcat( file, fileLocation );
-      delete [] path;
+      //delete [] path;
    }
    else
    {
