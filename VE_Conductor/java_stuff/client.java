@@ -16,7 +16,9 @@ public class client implements ActionListener
    public static my_orb clt = new my_orb();
    static Tabbed_But my_page = new Tabbed_But();
    public static draw_baf drawing_panel;
-   public static send_param send_param_panel;
+   //public static send_param send_param_panel;
+   // IHCC-Code - remove later
+   public static send_operation send_param_panel;
    static short datasetNum;
    static int activeDataSetType;
    static int numScalarsInActiveDataset;
@@ -379,7 +381,9 @@ protected Component makeButtonPanel(int type)
 
    case 8:
 
-      send_param_panel = new send_param();
+      //send_param_panel = new send_param();
+      //changed by angran
+      send_param_panel = new send_operation();
       
       JButton b36 = new JButton("Update");
       b36.setActionCommand("UPDATE_SEND_PARAM");
@@ -387,6 +391,8 @@ protected Component makeButtonPanel(int type)
 
       send_param_panel.add_but(b36);
 
+      //panel.add(send_param_panel);
+	   //changed by angran
       panel.add(send_param_panel);
 
       break;
@@ -2859,8 +2865,27 @@ public void actionPerformed(ActionEvent e)
    else if (e.getActionCommand().equals("UPDATE_SEND_PARAM"))
    {
       System.out.println(e.getActionCommand());
-      clt.recobj[dest_id].set_param(send_param_panel.get_param());
-      clt.recobj[dest_id].id = my_mapper2.get_id(e.getActionCommand());
+      double[] temp = send_param_panel.get_design_param();
+      clt.obsref.design_param_short = new double[ 9 ];
+      clt.obsref.id = my_mapper2.get_id(e.getActionCommand());
+         clt.obsref.design_param_short[ 1 ]  = temp[ 0 ];
+System.out.println(clt.obsref.design_param_short[ 1 ]);
+         clt.obsref.design_param_short[ 2 ] = temp[ 1 ];
+System.out.println(clt.obsref.design_param_short[ 2 ]); 
+        clt.obsref.design_param_short[ 3 ] = temp[ 2 ];
+System.out.println(clt.obsref.design_param_short[ 3 ]);
+         clt.obsref.design_param_short[ 4 ] = temp[ 3 ];
+System.out.println(clt.obsref.design_param_short[ 4 ]);
+         clt.obsref.design_param_short[ 5 ] = temp[ 4 ];
+System.out.println(clt.obsref.design_param_short[ 5 ]);
+         clt.obsref.design_param_short[ 6 ] = temp[ 5 ];
+System.out.println(clt.obsref.design_param_short[ 6 ]);
+         clt.obsref.design_param_short[ 7 ] = -1;
+         clt.obsref.design_param_short[ 8 ] = -1;
+         clt.obsref.design_param_short[ 0 ] = clt.obsref.id;
+System.out.println(clt.obsref.design_param_short[ 0 ]);
+         clt.obj_vis.send_design_params();
+         clt.obsref.id = -1;
    }
    else if (e.getActionCommand().equals("get_perf"))
    {

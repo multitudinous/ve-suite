@@ -122,4 +122,5 @@ class ObserverServant extends _ObserverStub{
    public short timesteps;
    public short teacher_state;
    private short my_param_val[];
+   public double[] design_param_short;
 }

@@ -136,7 +136,7 @@ public class my_orb
       //static int exit_status=0;
 	   //static int counter=0;
 	   //Hello hello;
-      short clientInfoArray[];
+      double clientInfoArray[];
       VjObs testObs;
 	   //static FileInterfaceOperations fileRef;
 	   //static org.omg.CORBA.Object initRef=null;
@@ -157,7 +157,7 @@ public class my_orb
 	      my_dst2 = dst_name2;
 	      no_ns = false;
          // Defined to be the same size as the array in VjObs_i.h
-         clientInfoArray = new short[ 9 ];
+         clientInfoArray = new double[ 9 ];
 	   }
 
 	   anorb(ObserverServant o)
@@ -176,27 +176,53 @@ public class my_orb
          System.out.println("send in orb" );
 		   //this.hello.update();
          //testObs.SetClientInfoFlag( (short)1 );
-         clientInfoArray[ 0 ] = (short)myos.id;
+         clientInfoArray[ 0 ] = (double)myos.id;
          System.out.println(" command id : " + clientInfoArray[ 0 ] );
-         clientInfoArray[ 1 ] = (short)myos.iso_value;
+         clientInfoArray[ 1 ] = (double)myos.iso_value;
          System.out.println(" iso_value  : " + clientInfoArray[ 1 ] );
-         clientInfoArray[ 2 ] = (short)myos.timesteps;
+         clientInfoArray[ 2 ] = (double)myos.timesteps;
          System.out.println(" timesteps  : " + clientInfoArray[ 2 ] );
-         clientInfoArray[ 3 ] = (short)myos.sc;
+         clientInfoArray[ 3 ] = (double)myos.sc;
          System.out.println(" sc         : " + clientInfoArray[ 3 ] );
-         clientInfoArray[ 4 ] = (short)myos.min;
+         clientInfoArray[ 4 ] = (double)myos.min;
          System.out.println(" min        : " + clientInfoArray[ 4 ] );
-         clientInfoArray[ 5 ] = (short)myos.max;
+         clientInfoArray[ 5 ] = (double)myos.max;
          System.out.println(" max        : " + clientInfoArray[ 5 ] );
-         clientInfoArray[ 6 ] = (short)myos.geo_state;
+         clientInfoArray[ 6 ] = (double)myos.geo_state;
          System.out.println(" geo_state  : " + clientInfoArray[ 6 ] );
-         clientInfoArray[ 7 ] = (short)myos.pre_state;
+         clientInfoArray[ 7 ] = (double)myos.pre_state;
          System.out.println(" pre_state  : " + clientInfoArray[ 7 ] );
-         clientInfoArray[ 8 ] = (short)myos.teacher_state;
+         clientInfoArray[ 8 ] = (double)myos.teacher_state;
          System.out.println(" teacher_state : " + clientInfoArray[ 8 ] );
          testObs.SetClientInfoData( clientInfoArray );
       }
 			
+	   public void send_design_params()
+      {
+         System.out.println("send in orb" );
+		   //this.hello.update();
+         //testObs.SetClientInfoFlag( (short)1 );
+         clientInfoArray[ 0 ] = myos.design_param_short[ 0 ];
+         System.out.println(" command id : " + clientInfoArray[ 0 ] );
+         clientInfoArray[ 1 ] = myos.design_param_short[ 1 ];
+         System.out.println(" iso_value  : " + clientInfoArray[ 1 ] );
+         clientInfoArray[ 2 ] = myos.design_param_short[ 2 ];
+         System.out.println(" timesteps  : " + clientInfoArray[ 2 ] );
+         clientInfoArray[ 3 ] = myos.design_param_short[ 3 ];
+         System.out.println(" sc         : " + clientInfoArray[ 3 ] );
+         clientInfoArray[ 4 ] = myos.design_param_short[ 4 ];
+         System.out.println(" min        : " + clientInfoArray[ 4 ] );
+         clientInfoArray[ 5 ] = myos.design_param_short[ 5 ];
+         System.out.println(" max        : " + clientInfoArray[ 5 ] );
+         clientInfoArray[ 6 ] = myos.design_param_short[ 6 ];
+         System.out.println(" geo_state  : " + clientInfoArray[ 6 ] );
+         clientInfoArray[ 7 ] = myos.design_param_short[ 7 ];
+         System.out.println(" pre_state  : " + clientInfoArray[ 7 ] );
+         clientInfoArray[ 8 ] = myos.design_param_short[ 8 ];
+         System.out.println(" teacher_state : " + clientInfoArray[ 8 ] );
+         testObs.SetClientInfoData( myos.design_param_short );
+      }
+
       synchronized public void run()
 	   {
          String[] temp = new String[2];

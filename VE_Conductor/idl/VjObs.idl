@@ -5,6 +5,7 @@ interface VjObs
 {
    typedef sequence< string > scalar_p;
    typedef sequence< short > obj_p;
+   typedef sequence< double > obj_pd;
 
    //void attach(in Observer o);
    //void detach(in Observer o);
@@ -21,7 +22,7 @@ interface VjObs
    //short get_timesteps();
    
    void SetClientInfoFlag( in short value );   
-   void SetClientInfoData( in obj_p o);   
+   void SetClientInfoData( in obj_pd o);   
    obj_p GetClientInfoData();   
 
    // Used For Sound Files
