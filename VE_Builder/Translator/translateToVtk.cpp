@@ -64,8 +64,6 @@ extern vtkUnstructuredGrid * mfixReader( char * mfixFileName,
                   int nx, int ny, int nz, 
                   int retainEveryNthFrame, vtkTransform * transform, int debug );
 
-using namespace std;
-
 int debug = 0;   // 0=no debug output, 1=some debug output, 2=more debug output
 
 char  infilename[100];           // file name for converters requiring a single input file
