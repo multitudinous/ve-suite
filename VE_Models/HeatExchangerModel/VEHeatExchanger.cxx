@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VEDumpCombust.h"
+#include "VEHeatExchanger.h"
 //#include "cfdVEBaseClass.h"
 #include "cfdModuleGeometry.h"
 #include "cfdGroup.h"
@@ -67,27 +67,27 @@
 
 using namespace std;
 
-IMPLEMENT_DYNAMIC_CLASS( VEDumpCombust, cfdVEBaseClass )
+IMPLEMENT_DYNAMIC_CLASS( VEHeatExchanger, cfdVEBaseClass )
 
 // Constructor
-VEDumpCombust::VEDumpCombust( void ) : cfdVEBaseClass()
+VEHeatExchanger::VEHeatExchanger( void ) : cfdVEBaseClass()
 {
-  _objectName ="DumpCombustor"; // Needs to match plugin name
+  _objectName ="HeatExchanger"; // Needs to match plugin name
    //_onSceneGraph = false;
 }
 
 // Destructor
-VEDumpCombust::~VEDumpCombust( void )
+VEHeatExchanger::~VEHeatExchanger( void )
 {
    if ( _param )
       delete [] _param;
 }
 
-void VEDumpCombust::InitializeNode( cfdDCS* veworldDCS )
+void VEHeatExchanger::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/DumpCombustorModel/vrxpr.param.geomorg";
+   this->_param = "/home/vesuite/VE_Suite/VE_Models/HeatExchangerModel/vrxpr.param.geomorg";
    //cout << _param << endl;
    CreateObjects();
 }
