@@ -38,6 +38,7 @@ CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 WX_CXX = $(shell wx-config --cxxflags)
 WX_LIB = $(shell wx-config --libs)
 CFDUNAME = $(shell uname )
+
 # If OMNI_HOME was defined in the script setup.tsh, 
 # then define CORBA_DEFINES, and CORBA_INCLUDES.
 # (To make a non-corba version, don't define OMNI_HOME.)
@@ -160,13 +161,11 @@ NO_DEPEND=	YES
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
 
-
 # One of these must be uncommented.
 DEBUG_APP?=		TRUE
 #OPTIM_APP?=		TRUE
 
-# vtkActorToPF needs VTK4 and VTK44
-EXTRA_CXXFLAGS+= $(WX_CXX) -D WXUSING_PLUGIN_DLL -m32
+EXTRA_CXXFLAGS+= $(WX_CXX) -D WXUSING_PLUGIN_DLL
 #$(EXTRA_FLAGS) 
 
 #EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG -gslim 
@@ -174,11 +173,17 @@ EXTRA_OPTIM_FLAGS+=	-O2 -OPT:Olimit=0 -D_OPT
 
 ifeq ($(TAO_BUILD), TRUE)
    EXTRA_CXXFLAGS+=	-D_TAO ${CPPFLAGS} -I$(BOOST_INCLUDES)
-   EXTRA_LIBS+= ${ACE_LIBS} $(WX_LIB)  -m32
+   EXTRA_LIBS+= ${ACE_LIBS} $(WX_LIB)
    #$(VLDLIBS)
 else
    EXTRA_CXXFLAGS+=	$(TWEEK_CXX_FLAGS) $(CORBA_DEFINES) -I$(BOOST_INCLUDES)
-   EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) $(WX_LIB)  -m32
+   EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) $(WX_LIB)
+endif
+
+# 64-bit linux needs these flags and they don't seem to affect 32-bit linux
+ifeq ($(CFDUNAME),Linux)
+   EXTRA_CXXFLAGS+= -m32
+   EXTRA_LIBS+= -m32
 endif
 
 LINKALL_ON=		-all
