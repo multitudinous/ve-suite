@@ -57,16 +57,13 @@ class ansysReader
       void ReadElementTypeIndexTable();
       void ReadNodalCoordinates();
       void ReadElementDescriptionIndexTable();
-      void ReadSolutionDataHeader();
-      void ReadNodalSolutions();
-      void ReadElementSolutions();
       void ReadHeaderExtension();
 
-      int GetCornerNodeOnElement( int, int );
-      int ElementContainsNode( int elementIndex, int node );
-      int GetCornerNodeIndex( int elementIndex, int node );
-      double * GetNodalComponentStresses( int elementIndex, int nodeIndex );
-      void ComputeNodalStresses();
+      //int GetCornerNodeOnElement( int, int );
+      //int ElementContainsNode( int elementIndex, int node );
+      //int GetCornerNodeIndex( int elementIndex, int node );
+      //double * GetNodalComponentStresses( int elementIndex, int nodeIndex );
+      //void ComputeNodalStresses();
 
       // Functions that get pointers to blocks of data
       //int GetPtrNodalEquivalencyTable();
@@ -88,6 +85,9 @@ class ansysReader
       float ReadNthFloat( int n );
       double ReadNthDouble( int n );
 
+      void ReadSolutionDataHeader( int ptrDataSetSolution );
+      void ReadNodalSolutions( int ptrDataSetSolution );
+      void ReadElementSolutions( int ptrDataSetSolution );
       void ReadElementDescription( int elemIndex, int ptr );
       int * ReadElementTypeDescription( int ptr );
       void ReadGenericBlock( int intPosition );
@@ -96,7 +96,7 @@ class ansysReader
       void VerifyBlock( int blockSize_1, int blockSize_2 );
       void ReadNodalComponentStresses( int );
       double ComputeVonMisesStress( double stresses [ 11 ] );
-      void AttachVonMisesStressToGrid();
+      void AttachStressToGrid();
       void StoreNodalStessesForThisElement( int elemIndex );
 
       char * ansysFileName;
@@ -118,6 +118,7 @@ class ansysReader
       int ptrTIM;
       int ptrLoadStepTable;
       int ptrGEO;
+      int currentDataSetSolution;
 
       int maxety;
       int ptrETY;
@@ -139,9 +140,10 @@ class ansysReader
       int * ptrENS;
       int * numCornerNodesInElement;
       int ** cornerNodeNumbersForElement;
+      double * summedS1Stress;
+      double * summedS3Stress;
       double * summedVonMisesStress;
       int * numContributingElements;
-
       vtkUnstructuredGrid * ugrid;
 };
 #endif

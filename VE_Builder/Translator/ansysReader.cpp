@@ -35,9 +35,10 @@
 #include <iomanip>
 #include <cmath>
 #include "fileIO.h"
-#include "converter.h"      // for "letUsersAddParamsToField"
+#include "converter.h"     // for "letUsersAddParamsToField"
 
 #include <vtkUnstructuredGrid.h>
+#include <vtkGenericCell.h>
 #include <vtkPoints.h>
 #include <vtkFloatArray.h>  // this code requires VTK4
 #include <vtkPointData.h>
@@ -104,6 +105,8 @@ ansysReader::ansysReader( char * input )
    this->ptrENS = NULL;
    this->numCornerNodesInElement = NULL;
    this->cornerNodeNumbersForElement = NULL;
+   this->summedS1Stress = NULL;
+   this->summedS3Stress = NULL;
    this->summedVonMisesStress = NULL;
    this->numContributingElements = NULL;
 
@@ -714,10 +717,14 @@ void ansysReader::ReadNodalEquivalencyTable()
    int blockSize_2 = ReadNthInteger( intPosition++ );
    VerifyBlock( blockSize_1, blockSize_2 );
 
+   this->summedS1Stress = new double [ this->numNodes ];
+   this->summedS3Stress = new double [ this->numNodes ];
    this->summedVonMisesStress = new double [ this->numNodes ];
    this->numContributingElements = new int [ this->numNodes ];
    for ( int i = 0; i < this->numNodes; i++ )
    {
+      this->summedS1Stress [ i ] = 0.0;
+      this->summedS3Stress [ i ] = 0.0;
       this->summedVonMisesStress [ i ] = 0.0;
       this->numContributingElements [ i ] = 0;
    }
@@ -779,10 +786,13 @@ void ansysReader::ReadDataStepsIndexTable()
    {
       this->ptrDataSetSolutions [ i ] = ReadNthInteger( intPosition++ );
 
-#ifdef PRINT_HEADERS
-      std::cout << "\tptrDataSetSolutions[ " << i << " ]: "
-           << this->ptrDataSetSolutions [ i ] << std::endl;
-#endif // PRINT_HEADERS
+//#ifdef PRINT_HEADERS
+      if ( this->ptrDataSetSolutions [ i ] != 0 )
+      {
+         std::cout << "\tptrDataSetSolutions[ " << i << " ]: "
+              << this->ptrDataSetSolutions [ i ] << std::endl;
+      }
+//#endif // PRINT_HEADERS
 
    }
 
@@ -1164,7 +1174,19 @@ void ansysReader::ReadElementDescriptionIndexTable()
    {  
       this->ReadElementDescription( i, this->ptrElemDescriptions[ i ] );
    }
-   //std::cout << "done constructing the mesh" << std::endl;
+
+   this->currentDataSetSolution = 0;
+   for ( int i = 0; i < 2 * this->maxNumberDataSets; i++ )
+   {
+      if ( this->ptrDataSetSolutions[ i ] == 0 )
+         continue;
+      this->currentDataSetSolution = i;
+      std::cout << "\nWorking on Load Case "
+                << this->currentDataSetSolution << std::endl;
+      this->ReadSolutionDataHeader( this->ptrDataSetSolutions[ i ] );
+      this->ReadNodalSolutions( this->ptrDataSetSolutions[ i ] );
+      this->ReadElementSolutions( this->ptrDataSetSolutions[ i ] );
+   }
 }
 
 void ansysReader::ReadElementDescription( int elemIndex, int pointer )
@@ -1282,14 +1304,11 @@ void ansysReader::ReadElementDescription( int elemIndex, int pointer )
    //delete [] nodes;
 }
 
-void ansysReader::ReadSolutionDataHeader()
+void ansysReader::ReadSolutionDataHeader( int ptrDataSetSolution )
 {
-   if ( this->ptrDataSetSolutions[ 0 ] == 0 )
-      return;
+   std::cout << "\tReading Solution Data Header" << std::endl;
 
-   std::cout << "\nReading Solution Data Header" << std::endl;
-
-   int intPosition = this->ptrDataSetSolutions[ 0 ];
+   int intPosition = ptrDataSetSolution;
    int blockSize_1 = ReadNthInteger( intPosition++ );
    
    int numValues = ReadNthInteger( intPosition++ );
@@ -1330,12 +1349,13 @@ void ansysReader::ReadSolutionDataHeader()
 
    int itime = ReadNthInteger( intPosition++ );
    PRINT( itime );
+/*
    if ( itime != 1 ) 
    {
       std::cerr << "itime = " << itime << " != 1" << std::endl;
       exit( 1 );
    }
-
+*/
    int iter = ReadNthInteger( intPosition++ );
    PRINT( iter );
    if ( iter != 1 ) 
@@ -1468,14 +1488,14 @@ void ansysReader::ReadSolutionDataHeader()
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 
-void ansysReader::ReadNodalSolutions()
+void ansysReader::ReadNodalSolutions( int ptrDataSetSolution )
 {
    if ( this->ptrNSL == 0 )
       return;
 
-   std::cout << "\nReading Nodal Solutions" << std::endl;
+   std::cout << "\tReading Nodal Solutions" << std::endl;
 
-   int intPosition = this->ptrDataSetSolutions[ 0 ] + this->ptrNSL;
+   int intPosition = ptrDataSetSolution + this->ptrNSL;
    int blockSize_1 = ReadNthInteger( intPosition++ );
    int reportedNumValues = ReadNthInteger( intPosition++ );
    int numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
@@ -1488,7 +1508,6 @@ void ansysReader::ReadNodalSolutions()
    }
 
    // set up arrays to store scalar and vector data over entire mesh...
-   // TODO: hardcoded for one scalar and one vector
    int numParameters = 2;
    vtkFloatArray ** parameterData = new vtkFloatArray * [ numParameters ];
    for ( int i=0; i < numParameters; i++ )
@@ -1497,12 +1516,14 @@ void ansysReader::ReadNodalSolutions()
    }
 
    // Because the ansys vertices are one-based, increase the arrays by one
-   // TODO: hardcoded for one vector and one scalar
-   parameterData[ 0 ]->SetName( "displacement vector" );
+   char arrayName[ 256 ];
+   sprintf( arrayName, "displacement vector %i", this->currentDataSetSolution );
+   parameterData[ 0 ]->SetName( arrayName );
    parameterData[ 0 ]->SetNumberOfComponents( 3 );
    parameterData[ 0 ]->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
 
-   parameterData[ 1 ]->SetName( "displacement magnitude" );
+   sprintf( arrayName, "displacement magnitude %i", this->currentDataSetSolution );
+   parameterData[ 1 ]->SetName( arrayName );
    parameterData[ 1 ]->SetNumberOfComponents( 1 );
    parameterData[ 1 ]->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
 
@@ -1539,10 +1560,13 @@ void ansysReader::ReadNodalSolutions()
    }
 
    // Set selected scalar and vector quantities to be written to pointdata array
-   letUsersAddParamsToField( numParameters, parameterData,
-                             this->ugrid->GetPointData() );
+   //letUsersAddParamsToField( numParameters, parameterData, this->ugrid->GetPointData() );
+   for ( int i=0; i < numParameters; i++ )
+   {
+      this->ugrid->GetPointData()->AddArray( parameterData [ i ] );
+      parameterData[ i ]->Delete();
+   }
 
-   for (int i=0; i < numParameters; i++) parameterData[i]->Delete();
    delete [] parameterData;
    
    delete [] nodalSolution;
@@ -1554,14 +1578,14 @@ void ansysReader::ReadNodalSolutions()
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 
-void ansysReader::ReadElementSolutions()
+void ansysReader::ReadElementSolutions( int ptrDataSetSolution )
 {
    if ( this->ptrESL == 0 )
       return;
 
-   std::cout << "\nReading Element Solutions" << std::endl;
+   std::cout << "\tReading Element Solutions" << std::endl;
 
-   int intPosition = this->ptrDataSetSolutions[ 0 ] + this->ptrESL;
+   int intPosition = ptrDataSetSolution + this->ptrESL;
 
    int blockSize_1 = ReadNthInteger( intPosition++ );
    int reportedNumValues = ReadNthInteger( intPosition++ );
@@ -1581,7 +1605,7 @@ void ansysReader::ReadElementSolutions()
 
       PRINT( ptrElement_i );
 
-      int ptrPosition = this->ptrDataSetSolutions[ 0 ] + ptrElement_i;
+      int ptrPosition = ptrDataSetSolution + ptrElement_i;
       ReadElementIndexTable( elemIndex, ptrPosition );
    }
 
@@ -1589,41 +1613,67 @@ void ansysReader::ReadElementSolutions()
    int blockSize_2 = ReadNthInteger( intPosition++ );
    VerifyBlock( blockSize_1, blockSize_2 );
 
-   this->AttachVonMisesStressToGrid();
+   this->AttachStressToGrid();
 }
 
-void ansysReader::AttachVonMisesStressToGrid()
+void ansysReader::AttachStressToGrid()
 {
-   vtkFloatArray * parameterData = vtkFloatArray::New();
-   // Because the ansys vertices are one-based, increase the arrays by one
-   parameterData->SetName( "von Mises stress" );
-   parameterData->SetNumberOfComponents( 1 );
-   parameterData->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
+   std::cout << "\tAttaching Stress To Grid for Load Case " << this->currentDataSetSolution << std::endl;
+   // set up arrays to store stresses over entire mesh...
+   int numParameters = 3;
+   vtkFloatArray ** parameterData = new vtkFloatArray * [ numParameters ];
+   for ( int i=0; i < numParameters; i++ )
+   {
+      parameterData[ i ] = vtkFloatArray::New();
+      parameterData[ i ]->SetNumberOfComponents( 1 );
+      // Because the ansys vertices are one-based, increase the arrays by one
+      parameterData[ i ]->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
+   }
+
+   char arrayName[ 256 ];
+   sprintf( arrayName, "min prin stress %i", this->currentDataSetSolution );
+   parameterData[ 0 ]->SetName( arrayName );
+   sprintf( arrayName, "max prin stress %i", this->currentDataSetSolution );
+   parameterData[ 1 ]->SetName( arrayName );
+   sprintf( arrayName, "von Mises stress %i", this->currentDataSetSolution );
+   parameterData[ 2 ]->SetName( arrayName );
 
    for ( int nodeIndex = 0; nodeIndex < this->numNodes; nodeIndex++ )
    {
+      double avgS1Stress = 0.0;
+      double avgS3Stress = 0.0;
       double avgVonMisesStress = 0.0;
       if ( numContributingElements[ this->nodeID[nodeIndex] ] > 0)
       {
+         avgS1Stress = summedS1Stress[ this->nodeID[nodeIndex] ]
+                           / numContributingElements[ this->nodeID[nodeIndex] ];
+         avgS3Stress = summedS3Stress[ this->nodeID[nodeIndex] ]
+                           / numContributingElements[ this->nodeID[nodeIndex] ];
          avgVonMisesStress = summedVonMisesStress[ this->nodeID[nodeIndex] ]
                            / numContributingElements[ this->nodeID[nodeIndex] ];
 
 #ifdef PRINT_HEADERS
-         //if ( nodeIndex == 2108 )
          //if ( this->nodeID[nodeIndex] == 2108 )
          {
             std::cout << "Node " << this->nodeID[nodeIndex]
+                      << " has average S1 Stress = " << avgS1Stress
+                      << " has average S3 Stress = " << avgS3Stress
                       << " has average vonMisesStress = " << avgVonMisesStress
                       << std::endl;
          }
 #endif // PRINT_HEADERS
       }
-      parameterData->SetTuple1( this->nodeID[ nodeIndex ], avgVonMisesStress );
+      parameterData[ 0 ]->SetTuple1( this->nodeID[ nodeIndex ], avgS1Stress );
+      parameterData[ 1 ]->SetTuple1( this->nodeID[ nodeIndex ], avgS3Stress );
+      parameterData[ 2 ]->SetTuple1( this->nodeID[ nodeIndex ], avgVonMisesStress );
    }
 
-   this->ugrid->GetPointData()->AddArray( parameterData );
-
-   parameterData->Delete();
+   for ( int i=0; i < numParameters; i++ )
+   {
+      this->ugrid->GetPointData()->AddArray( parameterData [ i ] );
+      parameterData[ i ]->Delete();
+   }
+   delete [] parameterData;
 }
 
 void ansysReader::ReadElementIndexTable( int elemIndex, int intPosition )
@@ -1678,7 +1728,32 @@ void ansysReader::StoreNodalStessesForThisElement( int elemIndex )
    if ( this->ptrENS[ elemIndex ] == 0 )
       return;
 
-   int intPosition = this->ptrDataSetSolutions[ 0 ] + this->ptrENS[ elemIndex ];
+   // The more accurate and conservative computations use only exterior cells
+   int thisIsExteriorCell = 0;
+   vtkGenericCell *cell = vtkGenericCell::New();
+   vtkIdList *cellIds = vtkIdList::New();
+   this->ugrid->GetCell( elemIndex, cell );
+
+   for ( int j=0; j < cell->GetNumberOfFaces(); j++ )
+   {
+      vtkCell * face = cell->GetFace( j );
+      this->ugrid->GetCellNeighbors( elemIndex, face->PointIds, cellIds );
+
+      if ( cellIds->GetNumberOfIds() == 0 )  // exterior faces have a zero here
+      {
+         thisIsExteriorCell = 1;
+         break;
+      }
+   }
+
+   cell->Delete();
+   cellIds->Delete();
+
+   // comment out next conditional if you want full graphic rather than ansys powergraphic values
+   if ( thisIsExteriorCell )
+   {
+   int intPosition = this->ptrDataSetSolutions[ this->currentDataSetSolution ]
+                     + this->ptrENS[ elemIndex ];
    int blockSize_1 = ReadNthInteger( intPosition++ );
    int reportedNumValues = ReadNthInteger( intPosition++ );
    if ( reportedNumValues != 0 )
@@ -1747,12 +1822,16 @@ void ansysReader::StoreNodalStessesForThisElement( int elemIndex )
          exit( 1 );
       }
 
+      this->summedS1Stress [ node ] += stresses [ 6 ];
+      this->summedS3Stress [ node ] += stresses [ 8 ];
       this->summedVonMisesStress [ node ] += vonMisesStress;
       this->numContributingElements[ node ]++; 
       delete [] stresses;
    }
+   }
 }
 
+/*
 void ansysReader::ReadHeaderExtension()
 {
    if ( this->ptrEXT == 0 )
@@ -1828,6 +1907,7 @@ void ansysReader::ReadHeaderExtension()
    int blockSize_2 = ReadNthInteger( intPosition++ );
    VerifyBlock( blockSize_1, blockSize_2 );
 }
+*/
 
 void ansysReader::ReadGenericBlock( int intPosition )
 {
@@ -2122,6 +2202,7 @@ int ansysReader::ElementContainsNode( int elementIndex, int node )
 }
 */
 
+/*
 int ansysReader::GetCornerNodeIndex( int elementIndex, int node )
 {
    if ( elementIndex < 0 || elementIndex >= this->numElems ) 
@@ -2206,7 +2287,9 @@ int ansysReader::GetCornerNodeIndex( int elementIndex, int node )
 
    return -1;
 }
+*/
 
+/*
 double * ansysReader::GetNodalComponentStresses( int elementIndex, int nodeIndex )
 {
    if ( this->ptrENS[ elementIndex ] == 0 )
@@ -2236,7 +2319,8 @@ double * ansysReader::GetNodalComponentStresses( int elementIndex, int nodeIndex
       std::cout << "\tstresses[ " << i << " ]: " << stresses [ i ] << std::endl;
 #endif // PRINT_HEADERS
    }
-   
+*/
+
 /*
    // if want full error checking then must pass by remainder of stress terms
    // ......
@@ -2244,10 +2328,11 @@ double * ansysReader::GetNodalComponentStresses( int elementIndex, int nodeIndex
    // the last number is blockSize again
    int blockSize_2 = ReadNthInteger( intPosition++ );
    VerifyBlock( blockSize_1, blockSize_2 );
-*/
 
    return stresses;
 }
+*/
+
 /*
 void ansysReader::ComputeNodalStresses()
 {
