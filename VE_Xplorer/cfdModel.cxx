@@ -38,7 +38,9 @@
 #include "cfdSwitch.h"
 #include "cfdFILE.h"
 #include "cfdTextureManager.h"
-
+#ifdef _OSG
+#include "cfdTextureDataSet.h"
+#endif
 
 #include <vpr/Util/Debug.h>
 #include <fstream>
@@ -56,6 +58,10 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
 
    this->animation = 0;
    this->activeDataSet = 0;
+
+#ifdef _OSG
+   _activeTextureDataSet = 0;
+#endif
 }
 
 cfdModel::~cfdModel()
@@ -81,17 +87,14 @@ cfdModel::~cfdModel()
    mVTKDataSets.clear();
 
    //texture data cleanup
-   for ( unsigned int i = 0; i < _vectorDataTextures.size(); ++i )
+#ifdef _OSG
+   TextureDataSetList::iterator tDataSet;
+   for ( tDataSet=mTextureDataSets.begin(); tDataSet!=mTextureDataSets.end(); )
    {
-      delete _vectorDataTextures.at( i );
+         mTextureDataSets.erase( tDataSet++ );
    }
-   _vectorDataTextures.clear();
-
-   for ( unsigned int i = 0; i < _scalarDataTextures.size(); ++i )
-   {
-      delete _scalarDataTextures.at( i );
-   }
-   _scalarDataTextures.clear();
+   mTextureDataSets.clear();
+#endif
  
    std::map<int,cfdDataSet*>::iterator foundPlugin;
    // Remove any plugins that aren't present in the current network
@@ -152,69 +155,24 @@ cfdDataSet* cfdModel::GetActiveDataSet( void )
    return activeDataSet;
 }
 
-///////////////////////////////////////
+////////////////////////////////////////////////////
 void cfdModel::SetActiveDataSet( cfdDataSet* input )
 {
    activeDataSet = input;
 }
-
+#ifdef _OSG
+/////////////////////////////////////
+void cfdModel::CreateTextureDataSet()
+{
+   mTextureDataSets.push_back(new cfdTextureDataSet());
+}
 /////////////////////////////////////////////////////////////////
-void cfdModel::CreateTextureManager(char* textureDescriptionFile)
+void cfdModel::AddDataSetToTextureDataSet(unsigned int index,
+                                     char* textureDescriptionFile)
 {
-   cfdTextureManager* tm = new cfdTextureManager();
-   std::ifstream fin( textureDescriptionFile );   
-   char name[256];
-   
-   if ( fin.is_open() )
-   {       
-      std::cout << "Reading texture description file: " 
-                  << textureDescriptionFile << std::endl;
-      int numFiles = 0;      
-      fin >> numFiles;      
-
-      for(int i = 0; i < numFiles; i++)
-      {         
-         std::cout << "Loading texture time step file: " << i << std::endl;         
-         fin >> name;         
-         tm->addFieldTextureFromFile(name);      
-      }
-
-      std::cout << "Finished reading texture description file." << std::endl;
-      
-      if( tm->GetDataType(0) == cfdTextureManager::SCALAR )
-      {
-         AddScalarTextureManager( tm, textureDescriptionFile );
-      }
-      else
-      {
-         AddVectorTextureManager( tm, textureDescriptionFile );
-      }
-   }
-   else
-   {
-      std::cout << "Couldn't open file in cfd3DTextureBasedModel::CreateTextureManager!" << std::endl;
-      return;
-   }
+   mTextureDataSets.at(index)->CreateTextureManager(textureDescriptionFile);
 }
-///////////////////////////////////////////////////////////
-void cfdModel::AddScalarTextureManager(cfdTextureManager* tm,
-	                                char* scalarName)
-{
-   /*Re implement if needed
-   _scalarNames.push_back(scalarName);*/
-   _scalarDataTextures.push_back(tm);
-   //_activeScalar = &_scalarDataTextures.at(0);
-}
-////////////////////////////////////////////////////////////
-void cfdModel::AddVectorTextureManager(cfdTextureManager* tm,
-	                                char* vectorName)
-{
-   /*Re implement if needed
-   _vectorNames.push_back(vectorName);*/
-   _vectorDataTextures.push_back(tm);
-   
-   //_activeVector = &_vectorDataTextures.at(0);
-}
+#endif
 //////////////////////////////////////////////////
 void cfdModel::CreateGeomDataSet( char* filename )
 {
@@ -386,24 +344,33 @@ cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
    else
       return mVTKDataSets.at( dataset );
 }
-///////////////////////////////////////////////////////////////
-cfdTextureManager* cfdModel::GetVectorTextureManager(unsigned int index)
+#ifdef _OSG
+/////////////////////////////////////////////////////////////////////
+cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int index)
 {
-   unsigned int nVectors = _vectorDataTextures.size();
-   if(index < nVectors){
-      return _vectorDataTextures.at(index);
+   if(mTextureDataSets.empty())
+   {
+      return 0;
+   }else{
+      return mTextureDataSets.at(index);
    }
-   return 0;
 }
 ///////////////////////////////////////////////////////////////
-cfdTextureManager* cfdModel::GetScalarTextureManager(unsigned int index)
+void cfdModel::SetActiveTextureDataSet(cfdTextureDataSet* tDS)
 {
-   unsigned int nScalars =  _scalarDataTextures.size();
-   if(index < nScalars){
-      return _scalarDataTextures.at(index);
-   }
-   return 0;
+   _activeTextureDataSet = tDS;
 }
+//////////////////////////////////////////////////////
+cfdTextureDataSet* cfdModel::GetActiveTextureDataSet()
+{
+   return _activeTextureDataSet;
+}
+///////////////////////////////////////////////////
+unsigned int cfdModel::GetNumberOfTextureDataSets()
+{
+   return mTextureDataSets.size();
+}
+#endif
 ///////////////////////////////////////////////////////
 int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
 {
@@ -423,24 +390,6 @@ int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
 unsigned int cfdModel::GetNumberOfCfdDataSets( void )
 {
    return mVTKDataSets.size();
-}
-/////////////////////////////////////////////////////////
-unsigned int cfdModel::GetNumberOfVectorTextureManagers()
-{
-   if(_vectorDataTextures.empty()){
-      return 0;
-   }else{
-      return _vectorDataTextures.size();
-   }
-}
-/////////////////////////////////////////////////////////
-unsigned int cfdModel::GetNumberOfScalarTextureManagers()
-{
-   if(_scalarDataTextures.empty()){
-      return 0;
-   }else{
-      return _scalarDataTextures.size();
-   }
 }
 ////////////////////////////////////////////////
 cfdFILE* cfdModel::GetGeomDataSet( int dataset )

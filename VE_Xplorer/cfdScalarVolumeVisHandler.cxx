@@ -2,11 +2,13 @@
 
 #include "cfdTextureManager.h"
 #include "cfdScalarVolumeVisHandler.h"
-
+#include "cfdTextureMatrixCallback.h"
 #ifdef CFD_USE_SHADERS
 #include "cfdOSGScalarShaderManager.h"
+
 #endif
 #include <osg/TexGen>
+#include <osg/TexMat>
 #include <osg/Group>
 //////////////////////////////////////////////////////
 //Constructors                                      //
@@ -66,6 +68,22 @@ void cfdScalarVolumeVisHandler::_setUpDecorator()
      _decoratorGroup->setStateSet(_sSM->GetShaderStateSet()); 
    }
 #endif
+}
+/////////////////////////////////////////////////////
+void cfdScalarVolumeVisHandler::_applyTextureMatrix()
+{
+   unsigned int tUnit = 0;
+#ifdef CFD_USE_SHADERS
+   tUnit = _sSM->GetAutoGenTextureUnit();
+#endif
+   osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
+   tMat->setMatrix(osg::Matrix::identity());
+   _decoratorGroup->getStateSet()->setTextureAttributeAndModes(tUnit,tMat.get(),osg::StateAttribute::ON);
+   float trans[3] = {.5,.5,.5};
+   _decoratorGroup->setUpdateCallback(new cfdTextureMatrixCallback(tMat.get(),
+                                                             _center,
+                                                             _scale,
+                                                             trans));
 }
 //////////////////////////////////////////////////////////////////////////
 cfdScalarVolumeVisHandler&

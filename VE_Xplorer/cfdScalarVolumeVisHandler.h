@@ -21,6 +21,7 @@ public:
    cfdScalarVolumeVisHandler& operator=(const cfdScalarVolumeVisHandler& vvnh);
 protected:
    virtual void _setUpDecorator();
+   virtual void _applyTextureMatrix();
 #ifdef CFD_USE_SHADERS
    cfdOSGScalarShaderManager* _sSM;
 #endif

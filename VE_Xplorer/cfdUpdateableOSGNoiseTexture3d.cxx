@@ -13,8 +13,8 @@ cfdUpdateableOSGNoiseTexture3d::cfdUpdateableOSGNoiseTexture3d()
    _textureWidth = 32;
    _textureHeight = 32;
    _textureDepth = 32;
-   _taoH = .9;
-   _taoI = .1;
+   _taoH = .1;
+   _taoI = .9;
    _lastH = -1;
    _lastI = -1;
    _data = 0;
@@ -77,6 +77,7 @@ void cfdUpdateableOSGNoiseTexture3d::_updateData()
          hI[i] = i;
       }
    }
+   srand( (unsigned)time( NULL ) );
 	int phase[32][32][32];
    for(int i = 0; i <32; i++)
       for(int j = 0; j <32; j++)

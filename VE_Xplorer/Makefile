@@ -169,13 +169,14 @@ SRCS=\
    cfdSteadyStateVizHandler.cxx \
    cfdStreamers.cxx \
    cfdSwitch.cxx \
+   cfdPBufferQuad.cxx \
    cfdPfSceneManagement.cxx \
    cfdPolyData.cxx \
    cfdTeacher.cxx \
    cfdTempAnimation.cxx \
    cfdTextOutput.cxx \
-   cfdTextureBasedModel.cxx \
    cfdTextureBasedVizHandler.cxx \
+   cfdTextureDataSet.cxx \
    cfdTextureMatrixCallback.cxx \
    cfdTextureManager.cxx \
    cfdThread.cxx \

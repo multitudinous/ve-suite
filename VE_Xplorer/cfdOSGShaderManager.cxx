@@ -11,6 +11,8 @@
 cfdOSGShaderManager::cfdOSGShaderManager()
 {
    _shaderDirectory = 0;
+   _bounds = 0;
+   _tUnit =0;
 }
 ///////////////////////////////////////////////////////////////////////
 cfdOSGShaderManager::cfdOSGShaderManager(const cfdOSGShaderManager& sm)
@@ -23,6 +25,26 @@ cfdOSGShaderManager::cfdOSGShaderManager(const cfdOSGShaderManager& sm)
 ///////////////////////////////////////////
 cfdOSGShaderManager::~cfdOSGShaderManager()
 {
+   if(_bounds){
+      delete [] _bounds;
+      _bounds = 0;
+   }
+}
+/////////////////////////////////////////////////////////
+osgNVCg::Program* cfdOSGShaderManager::GetVertexProgram()
+{
+   if(_vert.get()){
+      return _vert.get();
+   }
+   return 0;
+}
+///////////////////////////////////////////////////////////
+osgNVCg::Program* cfdOSGShaderManager::GetFragmentProgram()
+{
+   if(_frag.valid()){
+      return _frag.get();
+   }
+   return 0;
 }
 ////////////////////////////////////////////////////////////////////////
 void cfdOSGShaderManager::_setupCGShaderProgram(osg::StateSet *ss, 
@@ -37,10 +59,22 @@ void cfdOSGShaderManager::_setupCGShaderProgram(osg::StateSet *ss,
       fprog->setUseOptimalOptions(true);
 
       //apply the shaders to state set
-      _ss->setAttributeAndModes(fprog,osg::StateAttribute::OVERRIDE);
+      _ss->setAttributeAndModes(fprog,osg::StateAttribute::ON);
    }
 }
+void cfdOSGShaderManager::SetBounds(float* bounds)
+{
+   if(!_bounds){
+      _bounds = new float[6];
+   }
+   _bounds[0] = bounds[0];
+   _bounds[1] = bounds[1];
+   _bounds[2] = bounds[2];
+   _bounds[3] = bounds[3];
+   _bounds[4] = bounds[4];
+   _bounds[5] = bounds[5];
 
+}
 ///////////////////////////////////////////////////////
 osg::StateSet* cfdOSGShaderManager::GetShaderStateSet()
 {
@@ -49,7 +83,7 @@ osg::StateSet* cfdOSGShaderManager::GetShaderStateSet()
    }
    return 0;
 }
-//////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////
 void cfdOSGShaderManager::SetShaderDirectory(char* shadDir)
 {
    if(_shaderDirectory){

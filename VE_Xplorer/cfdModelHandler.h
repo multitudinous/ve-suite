@@ -42,6 +42,9 @@ class cfdReadParam;
 class cfdScalarBarActor;
 class cfdTextureManager;
 
+#ifdef _OSG
+class cfdTextureDataSet;
+#endif
 class vtkPolyData;
 
 #include <vector>
@@ -75,7 +78,9 @@ class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
       void ReadNNumberOfDataSets(  char*, char* );
 
       //texture manager access
-      cfdTextureManager* GetActiveTextureManager( void );
+#ifdef _OSG
+      cfdTextureDataSet* GetActiveTextureDataSet( void );
+#endif
       bool GetVisOption();
    private:
       char* _param;
@@ -85,9 +90,9 @@ class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
       cfdScalarBarActor* _scalarBar;
       cfdModel* _activeModel;
 
-      cfdTextureManager* _activeTextureManager;
-      cfdTextureManager* activeScalarTM;
-      cfdTextureManager* activeVectorTM;
+#ifdef _OSG
+      cfdTextureDataSet* _activeTDSet;
+#endif
       bool tbased;
       vtkPolyData* arrow;
       std::vector< cfdModel* > _modelList;

@@ -5,7 +5,9 @@
 #ifdef CFD_USE_SHADERS
 #include <osg/Texture3D>
 #include <osg/State>
+#include <osg/StateSet>
 #include <osgUtil/RenderStage>
+#include <osg/FrameStamp>
 #include "cfdPBufferManager.h"
 
 
@@ -31,23 +33,25 @@ public:
       _whichSlice = whichSlice;
       _whichDir = whichDir;
    }
-
+   void SetViewDirection(int whichDir=2){_whichDir = whichDir;}
    virtual void reset();
         
    void set3DTexture(osg::Texture3D* texture) { _texture = texture; }
+   void SetShaderStateSet(osg::StateSet* ss);
    osg::Texture3D* getTexture() { return _texture.get(); }
 
    virtual void draw(osg::State& state,osgUtil::RenderLeaf*& previous);
 
 protected:   
   
-        
+    osg::ref_ptr<osg::FrameStamp> _fs;
    osg::ref_ptr<osg::Texture3D> _texture;
    osg::ref_ptr<osg::State> _localState;
+   osg::ref_ptr<osg::StateSet> _shader;
    cfdPBufferManager* _pbuffer;
 
-   int _whichSlice;
-   int _whichDir;
+   unsigned int _whichSlice;
+   unsigned int _whichDir;
    int _width;
    int _height;
    int _nSlices;

@@ -95,10 +95,10 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
 cfdVolumeVisualization::~cfdVolumeVisualization()
 {
    //not sure if I should call release here or not
-   /*if(_tm){
-      delete _tm;
+   if(_tm){
+      delete [] _tm;
       _tm = 0;
-   }*/
+   }
    if(_utCbk){
       delete _utCbk;
       _utCbk = 0;
@@ -130,21 +130,6 @@ void cfdVolumeVisualization::SetShaderDirectory(char* shadDir)
    }
    _shaderDirectory = new char[strlen(shadDir)+1];
    strcpy(_shaderDirectory,shadDir);
-}
-/////////////////////////////////////////////////////////////////
-unsigned int cfdVolumeVisualization::GetCurrentTransientTexture()
-{
-   if(_utCbk){
-      return _utCbk->GetCurrentFrame();
-   }
-   return 0;
-}
-////////////////////////////////////////////////////////////////////////
-void cfdVolumeVisualization::SetCurrentTransientTexture(unsigned int ct)
-{
-   if(_utCbk){
-     _utCbk->SetCurrentFrame(ct);
-   }
 }
 //////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetPlayMode(VisMode mode)
@@ -251,8 +236,8 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
 //////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 {
-   if(tm->GetDataType(0) == cfdTextureManager::VECTOR)
-      return;
+   //if(tm->GetDataType(0) == cfdTextureManager::VECTOR)
+      //return;
 
    _tm = tm;
 
@@ -573,7 +558,7 @@ void cfdVolumeVisualization::_buildSlices()
     geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
 
     osg::Vec4Array* colors = new osg::Vec4Array(1);
-    (*colors)[0].set(1.0f,1.0f,1.0f,.2);
+    (*colors)[0].set(1.0f,0.0f,0.0f,0);
     geom->setColorArray(colors);
     geom->setColorBinding(osg::Geometry::BIND_OVERALL);
 
@@ -610,7 +595,7 @@ void cfdVolumeVisualization::CreateNode()
 //////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()
 {
-if(!_tm){
+   if(!_tm){
       std::cout<<"Texture Manager not set!!!"<<std::endl;
       return;
    }

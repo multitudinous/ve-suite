@@ -21,19 +21,15 @@ class cfd3DTextureCullCallback : public osg::NodeCallback
 {
 public:    
    cfd3DTextureCullCallback(osg::Node* subgraph,
+                         osg::Texture3D* texture,
                          unsigned int width,
-                         unsigned int height);/*,
-		                    osg::Texture3D* updateTexture,
-                         cfdPBufferManager* pbm,
-                         osg::BoundingBox bbox,
-                         float deltaZ,
-                         unsigned int nSlices);*/
+                         unsigned int height);
 
    virtual ~cfd3DTextureCullCallback();
-   //void SetWhichSliceToUpdate(unsigned int sliceNumber);
+   void SetPBuffer(cfdPBufferManager* pbuffer){_pbuffer = pbuffer;}
    virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
 
-   void preRender(osg::Node& node,osgUtil::CullVisitor& cv);//,int whichSlice);
+   void preRender(osg::Node& node,osgUtil::CullVisitor& cv);
         
    osg::Node* subgraph(){return _subgraph.get();}
         
@@ -41,13 +37,9 @@ protected:
    osg::ref_ptr<osg::Node> _subgraph;
    unsigned int _w;
    unsigned int _h;
-   /*osg::ref_ptr<osg::Texture3D> _textureToUpdate;
    cfdPBufferManager* _pbuffer;
-   unsigned int _nSlices;
-   float _deltaZ;
-   osg::ref_ptr<osg::Viewport> _viewport;
-   osg::BoundingBox _bbox;*/
-   //cfdCopyTo3DTextureStage* _update3DTexture;
+   osg::ref_ptr<osg::Texture3D> _textureToUpdate;
+   
    osg::ref_ptr<osg::StateSet> _localState;
    
 };

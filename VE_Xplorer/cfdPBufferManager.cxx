@@ -30,6 +30,8 @@ cfdPBufferManager::cfdPBufferManager()
  _slices(0),
  _numSlices(0),
  _geomRadius(0.0f),
+ _offsetMax(0.0f),
+ _offsetMin(0.f),
  _type(cfdPBufferManager::Perspective)
 {
    _frameBufferDeviceContext = 0;
@@ -119,7 +121,11 @@ void cfdPBufferManager::applyViewMatrix(bool force)
 /////////////////////////////////////////////////////
 void cfdPBufferManager::_ensureViewMatrix(bool force)
 {
-   if(_viewMatrixDirty || force) {
+  
+
+   if(_viewMatrixDirty || force) { 
+      //glGetFloatv(GL_MODELVIEW_MATRIX, (GLfloat *) _viewMatrix);
+      //return;
 
       float n[3];
       float u[3];
@@ -270,6 +276,7 @@ void cfdPBufferManager::beginSlicing(unsigned int nSlices)
    float zInc = (2*_geomRadius+_offsetMax) / (float)(totalSlices-1);
 
    float currentZ = fabs(viewZ)-_geomRadius+_offsetMin;
+   currentZ = (fabs(currentZ) < 1e-6)?0:currentZ;
 
    int z;
    for(z = 0; z < totalSlices; ++z) {
@@ -465,26 +472,34 @@ int cfdPBufferManager::initializePBuffer(int width, int height)
                 WGL_ALPHA_BITS_ARB,             8,
                 WGL_DOUBLE_BUFFER_ARB,         false,
                 WGL_TRANSPARENT_ARB,           true,
-                /*WGL_DEPTH_BITS_ARB,             16,*/
+                WGL_DEPTH_BITS_ARB,             16,
                 WGL_SUPPORT_OPENGL_ARB,        true,
                 WGL_DRAW_TO_PBUFFER_ARB,        true,
-                WGL_PIXEL_TYPE_ARB, WGL_TYPE_RGBA_ARB,
+                WGL_PIXEL_TYPE_ARB,
+                WGL_TYPE_RGBA_ARB,
                 //WGL_BIND_TO_TEXTURE_RGBA_ARB, true,
                 0
             };
    // Now obtain a list of pixel formats that meet these minimum
    // requirements.
-   //#define MAX_PFORMATS 10
+   #define MAX_PFORMATS 10
    int format = 0;
-   unsigned int nformats;
+   int pformat[MAX_PFORMATS];
+   unsigned int nformats=0;
    
-   if ( !wglChoosePixelFormatARB( _frameBufferDeviceContext, attribList, NULL,
-                               1, &format, &nformats ) )
+   if ( !wglChoosePixelFormatARB( _frameBufferDeviceContext, 
+                              attribList, 
+                              NULL,
+                               MAX_PFORMATS,
+                               pformat, 
+                               &nformats ) )
     {
        fprintf( stderr, "pbuffer creation error:  Couldn't find a \
                       suitable pixel format.\n" );
        return( 0 );
     }
+    format = pformat[0];
+
 
    // clear attribute list
    attribList[0] = 0;

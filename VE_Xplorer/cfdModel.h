@@ -59,6 +59,9 @@ class cfdFILE;
 class cfdTempAnimation;
 class cfdTextureManager;
 class cfdGroup;
+#ifdef _OSG
+class cfdTextureDataSet;
+#endif
 
 enum ModelTypeIndex
 {
@@ -118,14 +121,15 @@ public:
 
    //////////////////////////
    //texture based interface
-   void CreateTextureManager(char* textureDescriptionFile);
-   void AddScalarTextureManager( cfdTextureManager*, char* );
-   void AddVectorTextureManager( cfdTextureManager*, char* );
-   unsigned int GetNumberOfScalarTextureManagers();
-   unsigned int GetNumberOfVectorTextureManagers();
-   cfdTextureManager* GetVectorTextureManager(unsigned int index);
-   cfdTextureManager* GetScalarTextureManager(unsigned int index);
-   cfdTextureManager* GetActiveTextureManager();
+#ifdef _OSG
+   void SetActiveTextureDataSet(cfdTextureDataSet* tDS);
+   void CreateTextureDataSet();
+   void AddDataSetToTextureDataSet(unsigned int index,
+                               char* textureDescriptionFile);
+   unsigned int GetNumberOfTextureDataSets();
+   cfdTextureDataSet* GetTextureDataSet(unsigned int index);
+   cfdTextureDataSet* GetActiveTextureDataSet();
+#endif
    ///////////////////////////////////////////////////
       
 
@@ -141,7 +145,13 @@ private:
    GeometoryDataSetList mGeomDataSets;
    typedef std::vector< cfdDataSet* > VTKDataSetList;
    VTKDataSetList mVTKDataSets;
-      
+
+#ifdef _OSG
+   typedef std::vector<cfdTextureDataSet*> TextureDataSetList;
+   TextureDataSetList mTextureDataSets;
+   cfdTextureDataSet* _activeTextureDataSet;
+#endif
+
    cfdDCS* mModelDCS;
    cfdDCS* _worldDCS;
    cfdNode* mModelNode;
@@ -152,15 +162,7 @@ private:
    //the information for following three variables should be transfered from cfdApp
    ModelTypeIndex mModelType;
    Operation2Model mActiveOperation2Model;
-//#ifdef _OSG
-   //this will change once we figure out how to implement in Performer
-   //maybe we need to use Volumizer. . .
-//#endif
-   cfdTextureManager* _activeVector;
-   cfdTextureManager* _activeScalar;
-   std::vector< cfdTextureManager* > _vectorDataTextures;
-   std::vector< cfdTextureManager* > _scalarDataTextures;
-      
+   
    bool mUpdateModelFlag;
    bool mMoveOldGeomDataSets;
    bool mMoveOldVTKDataSets;   

@@ -53,7 +53,9 @@
 #include "cfdTextureManager.h"
 #include "cfdSwitch.h"
 #include "cfdPfSceneManagement.h"
-
+#ifdef _OSG
+#include "cfdTextureDataSet.h"
+#endif
 #include <fstream>
 #include <string>
 #include <sstream>
@@ -72,7 +74,7 @@ cfdModelHandler::cfdModelHandler( void )
    vprDEBUG(vprDBG_ALL,2) << "cfdModelHandler constructor"
                           << std::endl << vprDEBUG_FLUSH;
    _param = 0;
-   _activeTextureManager = 0;
+   
    this->activeDataset  = 0;
    this->_scalarBar     = 0;
    this->arrow          = 0;
@@ -80,8 +82,9 @@ cfdModelHandler::cfdModelHandler( void )
    this->commandArray   = 0;
    this->_activeModel   = 0;
    tbased = false;
-   activeScalarTM = 0;
-   activeVectorTM = 0;
+#ifdef _OSG
+   _activeTDSet = 0;
+#endif
 }
 
 void cfdModelHandler::Initialize( char* param )
@@ -120,11 +123,13 @@ void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
    // Must be set before PreFrameUpdate is called
    commandArray = input;
 }
+#ifdef _OSG
 /////////////////////////////////////////////////////////////
-cfdTextureManager* cfdModelHandler::GetActiveTextureManager()
+cfdTextureDataSet* cfdModelHandler::GetActiveTextureDataSet()
 {
-   return _activeTextureManager;
+   return _activeTDSet;
 }
+#endif
 /////////////////////////////////////////////////////
 cfdDataSet* cfdModelHandler::GetActiveDataSet( void )
 {
@@ -262,13 +267,17 @@ void cfdModelHandler::PreFrameUpdate( void )
          //<< ", max = " << this->cfdMax
          << std::endl << vprDEBUG_FLUSH;
 
-      //update active scalar texture if it exists
-      int nScalarTextures = _activeModel->GetNumberOfScalarTextureManagers();
-      if( (nScalarTextures) && ( (int)i < nScalarTextures ) )
+      //update active texture dataset if it exists
+#ifdef _OSG
+      unsigned int nTextureDataSets = _activeModel->GetNumberOfTextureDataSets();
+      if( (nTextureDataSets) && ( (int)i < nTextureDataSets ) )
       {
-         activeScalarTM = _activeModel->GetScalarTextureManager(i);
+         _activeTDSet = _activeModel->GetTextureDataSet(i);
+         _activeModel->SetActiveTextureDataSet(_activeTDSet);
+      }else{
+         _activeTDSet = 0;
       }
-      
+#endif
       if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
       {
          vprDEBUG(vprDBG_ALL,0) << "\tcfdModelHandler::PreFrameUpdate dataset = "
@@ -326,15 +335,15 @@ void cfdModelHandler::PreFrameUpdate( void )
 
       activeDataset->SetActiveVector( vectorIndex );
       //activeDataset->GetParent()->SetActiveVector( vectorIndex );
-
-      //texture manager stuff
-      if(_activeModel != 0){
-         int nVectorTextures = _activeModel->GetNumberOfVectorTextureManagers();
-         if((nVectorTextures ) && vectorIndex < nVectorTextures ){
-            activeVectorTM = 
-               _activeModel->GetVectorTextureManager(vectorIndex);
+#ifdef _OSG
+      if(_activeModel !=0)
+      {
+         if(_activeTDSet)
+         {
+            _activeTDSet->SetActiveVector(activeDataset->GetVectorName(vectorIndex));
          }
       }
+#endif
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
                == UPDATE_GEOMETRY )
@@ -491,13 +500,15 @@ void cfdModelHandler::PreFrameUpdate( void )
          << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
          << std::endl << vprDEBUG_FLUSH;
       //update active scalar texture if it exists
-      if(_activeModel != 0){
-         int nScalarTextures = _activeModel->GetNumberOfScalarTextureManagers();
-         if((nScalarTextures) && scalarIndex < nScalarTextures){
-            activeScalarTM = 
-               _activeModel->GetScalarTextureManager(scalarIndex);
+#ifdef _OSG
+      if(_activeModel !=0)
+      {
+         if(_activeTDSet)
+         {
+            _activeTDSet->SetActiveScalar(activeDataset->GetScalarName(scalarIndex));
          }
       }
+#endif
 
       activeDataset->SetActiveScalar( scalarIndex );
       activeDataset->GetParent()->SetActiveScalar( scalarIndex );
@@ -509,18 +520,31 @@ void cfdModelHandler::PreFrameUpdate( void )
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
    }
-
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == X_VECTOR||
-      commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == Y_VECTOR||
-      commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == Z_VECTOR){
-         std::cout<<"Vector stuff!!"<<std::endl;
-         _activeTextureManager = activeVectorTM;
-      }else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == X_CONTOUR||
-      commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == Y_CONTOUR||
-      commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == Z_CONTOUR){
-         std::cout<<"Scalar stuff!!"<<std::endl;
-         _activeTextureManager = activeScalarTM;
+#ifdef _OSG   
+   if(commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_VECTOR||
+      commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_VECTOR||
+      commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == Z_VECTOR)
+   {
+      if(_activeModel !=0)
+      {
+         if(_activeTDSet)
+         {
+            _activeTDSet->SetActiveVector(activeDataset->GetVectorName(activeDataset->GetActiveVector()));
+         }
       }
+   }else if(commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_CONTOUR||
+      commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_CONTOUR||
+      commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == Z_CONTOUR)
+   {
+      if(_activeModel !=0)
+      {
+         if(_activeTDSet)
+         {
+            _activeTDSet->SetActiveScalar(activeDataset->GetScalarName(activeDataset->GetActiveScalar()));
+         }
+      }
+   }
+#endif
    // Check and see if we need to refresh the scalar bar
    vprDEBUG(vprDBG_ALL,3) << "cfdModelHandler::_scalarBar->CheckCommandId"
                           << std::endl << vprDEBUG_FLUSH;
@@ -537,6 +561,7 @@ void cfdModelHandler::CreateObjects( void )
    int numObjects;
    char text[ 256 ];
    char textLine[ 256 ];
+   unsigned int nTextureDataSets = 0;
    std::ifstream input;
    input.open( this->_param );
    input >> numObjects; 
@@ -776,6 +801,7 @@ void cfdModelHandler::CreateObjects( void )
       }
       else if ( id == 15 )
       {
+#ifdef _OSG
          if ( _modelList.empty() )
          {
             _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
@@ -787,6 +813,8 @@ void cfdModelHandler::CreateObjects( void )
          input.getline(textLine,256);
          char textureDescriptionFile[256];
 
+         _modelList.at(0)->CreateTextureDataSet();
+
          for ( int i = 0; i < numTextureDescriptionFiles; ++i ) 
          {
              input>>textureDescriptionFile;
@@ -794,14 +822,11 @@ void cfdModelHandler::CreateObjects( void )
              //this isn't right--we should have a pointer to the
              //active/current model in the list. . .leaving for now
              //since we only have one model
-             _modelList.at(0)->CreateTextureManager(textureDescriptionFile);
+             _modelList.at(0)->AddDataSetToTextureDataSet(nTextureDataSets,
+                                                textureDescriptionFile);
          }
-         if(_modelList.at(0)->GetScalarTextureManager(0)){
-            activeScalarTM = _modelList.at(0)->GetScalarTextureManager(0);
-         }
-         if(_modelList.at(0)->GetVectorTextureManager(0)){
-            activeVectorTM = _modelList.at(0)->GetVectorTextureManager(0);
-         }
+         nTextureDataSets++;
+#endif
       }
       else
       {

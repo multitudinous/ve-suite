@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="VE_Xplorer"
+	ProjectGUID="{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}"
 	RootNamespace="VE_Xplorer"
 	SccProjectName=""
 	SccLocalPath="">
@@ -1376,6 +1377,9 @@
 						RelativePath=".\cfdPBufferManager.cxx">
 					</File>
 					<File
+						RelativePath=".\cfdPBufferQuad.cxx">
+					</File>
+					<File
 						RelativePath=".\cfdTextureMatrixCallback.cxx">
 					</File>
 				</Filter>
@@ -1404,6 +1408,9 @@
 						RelativePath=".\cfdPBufferManager.h">
 					</File>
 					<File
+						RelativePath=".\cfdPBufferQuad.h">
+					</File>
+					<File
 						RelativePath=".\cfdTextureMatrixCallback.h">
 					</File>
 				</Filter>
@@ -1418,7 +1425,7 @@
 						RelativePath=".\cfd3DTextureCullCallback.cxx">
 					</File>
 					<File
-						RelativePath=".\cfdCopyTextureCallback.cxx">
+						RelativePath=".\cfdCopyTo3DTextureStage.cxx">
 					</File>
 					<File
 						RelativePath=".\cfdOSGPingPongTexture3d.cxx">
@@ -1428,6 +1435,9 @@
 					</File>
 					<File
 						RelativePath=".\cfdTextureBasedVizHandler.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdTextureDataSet.cxx">
 					</File>
 					<File
 						RelativePath=".\cfdTextureManager.cxx">
@@ -1458,9 +1468,6 @@
 						RelativePath=".\cfd3DTextureCullCallback.h">
 					</File>
 					<File
-						RelativePath=".\cfdCopyTextureCallback.h">
-					</File>
-					<File
 						RelativePath=".\cfdCopyTo3DTextureStage.h">
 					</File>
 					<File
@@ -1471,6 +1478,9 @@
 					</File>
 					<File
 						RelativePath=".\cfdTextureBasedVizHandler.h">
+					</File>
+					<File
+						RelativePath=".\cfdTextureDataSet.h">
 					</File>
 					<File
 						RelativePath=".\cfdTextureManager.h">

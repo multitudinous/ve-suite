@@ -39,8 +39,12 @@ protected:
    void _createVisualBBox();
    //set up the stateset for the decorator
    virtual void _setUpDecorator()=0;
+   virtual void _applyTextureMatrix()=0;
+   virtual void _updateTexGenUnit(unsigned int unit=0);
    void _createTexGenNode();
    unsigned int _whichChildIsThis;
+   unsigned int _whichTexture;
+   bool _autoTexGen;
    cfdTextureManager* _tm;
    osg::ref_ptr<osg::Switch>_bboxSwitch;
    osg::ref_ptr<osg::Group> _visualBoundingBox;

@@ -1,5 +1,6 @@
 
 #ifdef _OSG
+#include <osg/FrameStamp>
 #ifdef CFD_USE_SHADERS
 #include <cassert>
 #include "cfdCopyTo3DTextureStage.h"
@@ -21,6 +22,7 @@ cfdCopyTo3DTextureStage::cfdCopyTo3DTextureStage()
    _nSlices = 0;
    _whichSlice = 0;
    _whichDir = 2;
+
 }
 ///////////////////////////////////////////////////
 cfdCopyTo3DTextureStage::~cfdCopyTo3DTextureStage()
@@ -30,7 +32,12 @@ cfdCopyTo3DTextureStage::~cfdCopyTo3DTextureStage()
       _pbuffer = 0;
    }*/
 }
-///////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+void cfdCopyTo3DTextureStage::SetShaderStateSet(osg::StateSet* ss)
+{
+   _shader = ss;
+}
+//////////////////////////////////////////////////////////////////////////
 void cfdCopyTo3DTextureStage::SetWhichSliceToUpdate(unsigned int nSlices)
 {
    _whichSlice = nSlices;
@@ -43,51 +50,39 @@ void cfdCopyTo3DTextureStage::reset()
        _whichSlice = 0;
     }
 }
-/////////////////////////////////////////////////////////////////////////////////////
-void cfdCopyTo3DTextureStage::draw(osg::State& state, osgUtil::RenderLeaf*& previous)
+//////////////////////////////////////////////////////////////////
+void cfdCopyTo3DTextureStage::draw(osg::State& state, 
+                               osgUtil::RenderLeaf*& previous)
 {
    if (_stageDrawnThisFrame) return;
 
-   if(_pbuffer->isCreated() && _texture.valid()){
+   if(_pbuffer->isCreated()){
+      _texture->getTextureSize(_width,_height,_nSlices);
       _pbuffer->activate();
-      _width = _pbuffer->width();
-      _height= _pbuffer->height();
-
+      
       const unsigned int contextID = state.getContextID();
       osg::Texture::TextureObject* textureObject = _texture->getTextureObject(contextID);
       if (textureObject == 0){
-         // Make sure texture is loaded, subload callback required.
          _texture->apply(state);
       }
-      //draw to the pbuffer
-      RenderStage::draw(*_localState,previous);
+      if(!_fs.valid()){
+         _fs = new osg::FrameStamp();
+      }
+      _fs->setReferenceTime(state.getFrameStamp()->getReferenceTime());
+      _fs->setFrameNumber(state.getFrameStamp()->getFrameNumber());
       
-      //copy into our texture
-      //or should this be the local state?
-      switch(_whichDir){
-         //x slice
-         case 2:
-            _texture->copyTexSubImage3D(state,
-                                     0,0,_whichSlice,
-                                     0,0,_width,_height);
-            break;
-         //y slice
-         case 1:
-            _texture->copyTexSubImage3D(state,
-                                     0,_whichSlice,0,
-                                     0,0,_width,_height);
-            break;
-         //z slice
-         case 0:
-         default:
-            _texture->copyTexSubImage3D(state,
-                                     _whichSlice,0,0,
-                                     0,0,_width,_height);
-            break;
-      };
-      
+      _localState->setFrameStamp(_fs.get());
+      for(unsigned int i = 1; i < _nSlices-1; i++){
+         RenderStage::draw(*_localState.get(),previous);
+         /*_texture->copyTexSubImage3D(state,
+                                  1,1,i,
+                                  1,1,_width-2,_height-2);*/
+
+         //need this to draw multiple slices
+         _stageDrawnThisFrame = false;
+      }
+      _stageDrawnThisFrame =true;
       _pbuffer->deactivate();
-      //_whichSlice++;
    }
 }
 #endif

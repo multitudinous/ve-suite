@@ -21,6 +21,8 @@ namespace osgUtil { class SceneView; }
 class cfdPBufferManager;
 class cfdVolumeVisualization;
 
+class cfdTextureDataSet;
+
 class cfdVolumeVisNodeHandler;
 #ifdef CFD_USE_SHADERS
 class cfdVectorVolumeVisHandler;
@@ -38,7 +40,7 @@ class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandle
       void SetParentNode(cfdGroup* parent);
       void SetNavigate(cfdNavigate* navigate);
       void SetCursor(cfdCursor* cursor);
-      void SetActiveTextureManager(cfdTextureManager* tm);
+      void SetActiveTextureDataSet(cfdTextureDataSet* tdset);
   
       void ViewTextureBasedVis(bool trueFalse);
       //once we get pf side this may need to be ifdef'd
@@ -48,7 +50,7 @@ class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandle
       void PingPongTextures();
 #endif
       cfdPBufferManager* GetPBuffer();
-      bool InitVolumeVizNodes( void );
+      //bool InitVolumeVizNodes( void );
       cfdVolumeVisualization* GetVolumeVizNode(int index);
       cfdVolumeVisualization* GetActiveVolumeVizNode( void );
   
@@ -61,8 +63,10 @@ class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandle
       cfdDCS* _worldDCS;
       cfdNavigate* _nav;
       cfdCursor* _cursor;
+      cfdTextureDataSet* _activeTDSet;
       cfdTextureManager* _activeTM;
-      std::vector<cfdVolumeVisualization*> _volumeVisNodes;
+
+      //std::vector<cfdVolumeVisualization*> _volumeVisNodes;
       cfdVolumeVisualization* _activeVolumeVizNode;
       cfdGroup* _parent;
       cfdPBufferManager* _pbm;

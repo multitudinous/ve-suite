@@ -17,6 +17,7 @@
 cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler()
 {
    _whichChildIsThis = 0;
+   _whichTexture = 0;
    _tm = 0;
    _center[0] = 0;
    _center[1] = 0;
@@ -25,6 +26,7 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler()
    _scale[0] = 1;
    _scale[1] = 1;
    _scale[2] = 1;
+   _autoTexGen = true;
 }
 //////////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
@@ -43,6 +45,7 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
    _scale[1] = vvnh._scale[1];
    _scale[2] = vvnh._scale[2];
    _texGenParams = new osg::TexGenNode(*vvnh._texGenParams);
+   _autoTexGen = vvnh._autoTexGen;
 }
 ///////////////////////////////////////////////////
 //Destructor                                     //
@@ -131,22 +134,14 @@ void cfdVolumeVisNodeHandler::Init()
       _visualBoundingBox->addChild(_decoratorGroup.get());
       _bboxSwitch->addChild(_decoratorGroup.get());
       _bboxSwitch->setSingleChildOn(0);
-      
       _decoratorGroup->addChild(_texGenParams.get());
       _texGenParams->addChild(_byPassNode.get());
-      
+     
       
       //NOTE -- In derived classes, must override this call
       //to setup the stateset for the decorator
       _setUpDecorator();
-      osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
-      tMat->setMatrix(osg::Matrix::identity());
-      _decoratorGroup->getStateSet()->setTextureAttributeAndModes(0,tMat.get(),osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-      float trans[3] = {.5,.5,.5};
-      _decoratorGroup->setUpdateCallback(new cfdTextureMatrixCallback(tMat.get(),
-                                                             _center,
-                                                             _scale,
-                                                             trans));
+      _applyTextureMatrix();
 
       //must do this to make sure switch is initially
       //traversing the "undecorated" node
@@ -172,6 +167,13 @@ void cfdVolumeVisNodeHandler::SetTextureScale(float* scale,bool isInverted)
       _scale[1] = 1.0/scale[1];
       _scale[2] = 1.0/scale[2];
 
+   }
+}
+///////////////////////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::_updateTexGenUnit(unsigned int unit)
+{
+   if(_texGenParams.valid()){
+      _texGenParams->setTextureUnit(unit);
    }
 }
 ////////////////////////////////////////////////

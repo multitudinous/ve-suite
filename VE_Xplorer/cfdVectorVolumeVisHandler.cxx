@@ -12,6 +12,7 @@
 #include "cfdOSGTransferShaderManager.h"
 #include "cfdPBufferManager.h"
 #include "cfdTextureManager.h"
+#include "cfdTextureMatrixCallback.h"
 
 #include "cfdAdvectPropertyCallback.h"
 #include "cfdUpdateTextureCallback.h"
@@ -30,6 +31,8 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler()
    _cullCallback = 0;
    _texturePingPong = 0;
    _transferSM = 0;
+   _autoTexGen = false;
+
 }
 //////////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler(const cfdVectorVolumeVisHandler& vvnh)
@@ -92,8 +95,6 @@ void cfdVectorVolumeVisHandler::_createTransferShader()
       
       _transferSM->Init();
       if(_decoratorGroup.valid()){
-         //_transferSM->GetShaderStateSet()->setTextureAttributeAndModes(0,_texGen.get(),
-          //  osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
          _decoratorGroup->setStateSet(_transferSM->GetShaderStateSet());
       }
    }
@@ -155,32 +156,51 @@ void cfdVectorVolumeVisHandler::_setUpDecorator()
       return;
    }
    int* res = _tm->fieldResolution();
+   
    if(!_aSM){
       _aSM = new cfdOSGAdvectionShaderManager();
       _aSM->SetFieldSize(res[0],res[1],res[2]);
       _aSM->SetVelocityTexture(_velocity.get());
+      //_aSM->SetBounds(_tm->getBoundingBox());
    }
    _aSM->Init();  
+   //_aSM->UpdateBounds(_tm->getBoundingBox());
    _createTransferShader();
    _createTexturePingPong();
 
    float deltaZ = (_bbox.zMax()-_bbox.zMin())/(float)(_tm->fieldResolution()[2]-1);
    //create the advection subgraph
-   /*if(!_advectionSlice.valid()){
-      _advectionSlice = CreateAdvectionSubGraph(_tm,_aSM->GetPropertyTexture(),
+   if(!_advectionSlice.valid()){
+      _advectionSlice = CreateAdvectionSubGraph(_tm,_transferSM->GetPropertyTexture(),
                                            _pbuffer,
                                            _aSM->GetShaderStateSet(),
+                                           _aSM->GetVertexProgram(),
                                            deltaZ).get();   
+      _advectionSlice->setStateSet(_aSM->GetShaderStateSet());
    }
    if(!_cullCallback && _pbuffer ){
       _cullCallback = new cfd3DTextureCullCallback(_advectionSlice.get(),
+                                              _transferSM->GetPropertyTexture(),
                                               _tm->fieldResolution()[0],
                                               _tm->fieldResolution()[1]);
+      _cullCallback->SetPBuffer(_pbuffer);
       _decoratorGroup->setCullCallback(_cullCallback);
-   }*/
-   
-  
+   }
 } 
+/////////////////////////////////////////////////////
+void cfdVectorVolumeVisHandler::_applyTextureMatrix()
+{
+   unsigned int tUnit = _transferSM->GetAutoGenTextureUnit();
+   osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
+   tMat->setMatrix(osg::Matrix::identity());
+   _decoratorGroup->getStateSet()->setTextureAttributeAndModes(tUnit,tMat.get(),osg::StateAttribute::ON);
+   float trans[3] = {.5,.5,.5};
+   _decoratorGroup->setUpdateCallback(new cfdTextureMatrixCallback(tMat.get(),
+                                                             _center,
+                                                             _scale,
+                                                             trans));
+   _updateTexGenUnit(tUnit);
+}
 /////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::SetPBufferManager(cfdPBufferManager* pbm)
 {
@@ -189,12 +209,13 @@ void cfdVectorVolumeVisHandler::SetPBufferManager(cfdPBufferManager* pbm)
 ////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createTexturePingPong()
 {
-   if(!_texturePingPong){
+   if(!_texturePingPong&&
+      _aSM && 
+      _transferSM){
       _texturePingPong = new cfdOSGPingPongTexture3D();
-   }
-   if(_aSM && _transferSM){
       _texturePingPong->SetPingTexture(_aSM->GetPropertyTexture());
       _texturePingPong->SetPongTexture(_transferSM->GetPropertyTexture());
+      _texturePingPong->InitTextures();
    }
 }
 //////////////////////////////////////////////////

@@ -1,2 +1,0 @@
-1
-./simpleScalars/scalars/first-scalar_0.rgb

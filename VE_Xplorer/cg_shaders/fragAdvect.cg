@@ -2,40 +2,41 @@ struct frag2app{
    float4 color : COLOR;
 };
 
-frag2app fp_advectTexture(float4 color : COLOR,
-                    float3 texCoord0: TEXCOORD,
+frag2app fp_advectTexture( float3 tCoords:TEXCOORD0,
+                          float4 color : COLOR,
                     //float3 dyeCoord,
-                    uniform sampler3D property:TEXUNIT0,
-                    uniform sampler3D noiseTexture:TEXUNIT1,
-                    uniform sampler3D velocity:TEXUNIT2,
-                    uniform sampler3D dye:TEXUNIT3,
-                    uniform sampler1D lookUpTexture:TEXUNIT4,
+                    uniform sampler3D noiseTexture:TEXUNIT0,
+                    uniform sampler3D velocity:TEXUNIT1,
+                    uniform sampler3D dye:TEXUNIT2,
+                    uniform sampler1D lookUpTexture:TEXUNIT3,
                     uniform float3 dyeTranslation,
                     uniform float3 dyeScale,
                     uniform float3 texCoordMult,
                     uniform float deltaT,
                     uniform float time,
                     uniform float period,
-                    uniform sampler3D wFunc:TEXUNIT5,
-                    uniform sampler3D vFunc:TEXUNIT6
+                    uniform sampler3D wFunc:TEXUNIT4,
+                    uniform sampler3D vFunc:TEXUNIT5,
+                    uniform sampler3D property:TEXUNIT6
                     //uniform float3 vecMin,
                     //uniform float3 vecMax
                     )
 {
    frag2app retColor;
- 
+
    //look up the velocity in the field
-   float3 v= tex3D(velocity,texCoord0).xyz;
+   float4 v = tex3D(velocity,tCoords);
 
    //get our original values back
-   v.xyz = ((v.xyz)*2.0) - 1.0;
+   //v.xyz = ((v.xyz)*2.0) - 1.0;
 
    //velocity mask to darken slow moving flow
-   float vMask = 1.0 - sqrt(dot(v.xyz,v.xyz));
+   float vMask = 1.0 - v.w;//sqrt(dot(v.xyz,v.xyz));
    
    //Euler integration
    //the old position
-   float3 oldTexCoord = texCoord0.xyz + deltaT*v.xyz;
+   //float3 oldTexCoord = tCoords.xyz + deltaT*v.xyz;
+   float3 oldTexCoord = tCoords.xyz + (.01)*v.xyz;
    
    //fetch the density using the old coord
    //density is our property that we are 
@@ -45,7 +46,8 @@ frag2app fp_advectTexture(float4 color : COLOR,
    //now for our materials
    
    //lookup the noise amplitude/phase
-   float4 n = tex3D(noiseTexture,texCoord0*texCoordMult);
+   float4 n = tex3D(noiseTexture,tCoords*texCoordMult);
+   //float4 n = tex3D(noiseTexture,tCoords);
 
    //dye coordinate
    //fixed3 relFragCoord = dyeCoord-dyeTranslation*dyeScale; 
@@ -55,21 +57,23 @@ frag2app fp_advectTexture(float4 color : COLOR,
 
    //material 1
    //get the local time
-   float localTime = fmod(time + n.y,period);
    //float4 W = tex3D(wFunc,texCoord0);
    //float4 V = tex3D(vFunc,texCoord0);
 
-   float tInject = tex1D(lookUpTexture,localTime).x;
-   retColor.color.x = texCoord0.x;//(1.0 -.2)*prop.x + tInject*.2*n.x;
+   retColor.color.x = 0;
   
-   //material 2
+   //material 1
+   float localTime = fmod(time + n.y,period);
+   float tInject = tex1D(lookUpTexture,localTime).x;
+   retColor.color.y = (1.0-.2)*prop.y + tInject*n.y;
+
+   //material 1
    localTime = fmod(time + n.w,period);
    tInject = tex1D(lookUpTexture,localTime).x;
+   retColor.color.z = (1.0 -.2)*prop.z + tInject*n.w;
 
-   retColor.color.y = (1.0-.2)*prop.y + tInject*.2*n.z;
-   retColor.color.z = 0;
-   retColor.color.w = 0;
- 
-   //this data is quantized!!!
+   retColor.color.xyz = oldTexCoord.xyz;
+   retColor.color.w = v.w;
+
    return retColor;
 }

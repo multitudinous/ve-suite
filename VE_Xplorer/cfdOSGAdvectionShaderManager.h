@@ -31,6 +31,7 @@ public:
    void UpdateNoiseScale(float* scale);
    void UpdateDyeScale(float* scale);
    void UpdateDyeTranslation(float* translation);
+   void UpdateBounds(float* bounds);
    //whichMaterial
    //0,1 ==> noise
    //2 ==>dye
@@ -49,9 +50,13 @@ protected:
    void _initWeightFunctions();
    void _initLookUpFunction();
    void _initFragProgramCallbacks();
+   void _initVertexProgramCallbacks();
+
    virtual void _setupCGShaderProgram(osg::StateSet* ss,
 		                      char* progName, char* funcName);
    unsigned int _fieldSize[3];
+   unsigned int _tUnit;
+   bool _isFrag;
    
    cfdUpdateParameterCallback* _noiseScaleCallback;
    cfdUpdateParameterCallback* _deltaCallback;
@@ -59,6 +64,8 @@ protected:
    cfdUpdateParameterCallback* _periodCallback;
    cfdUpdateParameterCallback* _dyeScaleCallback;
    cfdUpdateParameterCallback* _dyeTransCallback;
+   cfdUpdateParameterCallback* _minBoundsCallback;
+   cfdUpdateParameterCallback* _maxBoundsCallback;
 
    osg::ref_ptr<osg::Texture3D> _velocity;
    osg::ref_ptr<osg::Texture3D> _propertyToAdvect;

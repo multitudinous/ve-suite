@@ -4,6 +4,7 @@
 #elif _OPENSG
 #elif _OSG
 #include "cfdVolumeVisNodeHandler.h"
+#include "cfdTextureDataSet.h"
 #include <osg/State>
 #include <osgUtil/SceneView>
 #endif
@@ -56,12 +57,6 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 ///////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::CleanUp( void )
 {
-   for ( unsigned int i = 0; i < _volumeVisNodes.size(); ++i )
-   {
-      delete _volumeVisNodes.at( i );
-   }
-   _volumeVisNodes.clear();
-
    if ( _paramFile )
    {
       delete [] _paramFile;
@@ -309,8 +304,37 @@ void cfdTextureBasedVizHandler::SetCursor(cfdCursor* cursor)
 {
    _cursor = cursor;
 }
+///////////////////////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
+{
+   if(!tds)
+      return;
+   _activeTDSet = tds;
+   _activeVolumeVizNode =  _activeTDSet->GetVolumeVisNode();
+   _activeTM = _activeTDSet->GetActiveTextureManager();
+   if(_activeVolumeVizNode&&_activeTM){
+     _activeVolumeVizNode->CreateNode();
+     if(!_currentBBox)
+     {
+         _currentBBox = new float[6];
+     }
+     _currentBBox[0] = _activeTM->getBoundingBox()[0];
+     _currentBBox[1] = _activeTM->getBoundingBox()[1];
+     _currentBBox[2] = _activeTM->getBoundingBox()[2];
+     _currentBBox[3] = _activeTM->getBoundingBox()[3];
+     _currentBBox[4] = _activeTM->getBoundingBox()[4];
+     _currentBBox[5] = _activeTM->getBoundingBox()[5];
+#ifdef CFD_USE_SHADERS
+     if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR){
+        _updateScalarVisHandler();
+     }else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
+        _updateVectorVisHandler();
+     }
+#endif
+   }
+}
 //////////////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
+/*void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
 {
    if(!_cleared){
       if((tm != _activeTM)){
@@ -338,7 +362,7 @@ void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
          }
       }
    }
-}
+}*/
 #ifdef CFD_USE_SHADERS
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateScalarVisHandler()
@@ -386,10 +410,10 @@ cfdVolumeVisualization* cfdTextureBasedVizHandler::GetActiveVolumeVizNode()
 /////////////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization* cfdTextureBasedVizHandler::GetVolumeVizNode(int whichModel)
 {
-   return _volumeVisNodes.at(whichModel);
+   return 0;//_volumeVisNodes.at(whichModel);
 }
 ////////////////////////////////////////////////////
-bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
+/*bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
 {
    if ( !_paramFile )
    {
@@ -415,8 +439,8 @@ bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
       if ( id == 15 )
       {
          cfdVolumeVisualization* volVizNode = new cfdVolumeVisualization();
-         volVizNode->SetNumberofSlices(100);
-         volVizNode->SetSliceAlpha(.5);
+         volVizNode->SetNumberofSlices(150);
+         volVizNode->SetSliceAlpha(.2);
          _volumeVisNodes.push_back(volVizNode);
       }
       else
@@ -430,7 +454,7 @@ bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
        _activeVolumeVizNode = _volumeVisNodes.at(0);
    }
    return true;
-}
+}*/
 ///////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::ViewTextureBasedVis(bool trueFalse)
 {

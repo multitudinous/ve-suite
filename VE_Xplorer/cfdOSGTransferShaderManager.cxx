@@ -48,7 +48,9 @@ void cfdOSGTransferShaderManager::SetTextureMatrix(osg::TexMat* tmat)
 {
    _texMat = tmat;
    if(_ss.valid()){
-      _ss->setTextureAttributeAndModes(0,_texMat.get(),osg::StateAttribute::ON);
+      unsigned int ntf = _transferFunctions.size();
+      _ss->setTextureAttributeAndModes(ntf,_texMat.get(),
+                                   osg::StateAttribute::ON);
    }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -67,26 +69,38 @@ void cfdOSGTransferShaderManager::Init()
       _ss->setMode(GL_BLEND,osg::StateAttribute::ON);
 
       osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
-      bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+      bf->setFunction(osg::BlendFunc::SRC_ALPHA, 
+                    osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
 
       _ss->setAttributeAndModes(bf.get());
       _ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
       
-
-      _ss->setTextureAttributeAndModes(0,_property.get(),osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_T,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_R,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-      _ss->setTextureMode(0,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-      
       int nTransferFunctions = _transferFunctions.size();
       for(int i =0; i < nTransferFunctions; i++){
-         _ss->setTextureAttributeAndModes(i+1,_transferFunctions.at(i).get(),osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
-         _ss->setTextureMode(i+1,GL_TEXTURE_1D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-         _ss->setTextureMode(i+1,GL_TEXTURE_GEN_S,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-         _ss->setTextureMode(i+1,GL_TEXTURE_GEN_T,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-         _ss->setTextureMode(i+1,GL_TEXTURE_GEN_R,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+         _ss->setTextureAttributeAndModes(i,_transferFunctions.at(i).get(),
+                                      osg::StateAttribute::ON);
+         _ss->setTextureMode(i,GL_TEXTURE_1D,
+                          osg::StateAttribute::ON);
+         _ss->setTextureMode(i,GL_TEXTURE_GEN_S,
+                           osg::StateAttribute::OFF);
+         _ss->setTextureMode(i,GL_TEXTURE_GEN_T,
+                           osg::StateAttribute::OFF);
+         _ss->setTextureMode(i,GL_TEXTURE_GEN_R,
+                           osg::StateAttribute::OFF);
       }
+      _ss->setTextureAttributeAndModes(nTransferFunctions,_property.get(),
+                                   osg::StateAttribute::ON);
+      _ss->setTextureMode(nTransferFunctions,GL_TEXTURE_GEN_S,
+                        osg::StateAttribute::ON);
+      _ss->setTextureMode(nTransferFunctions,GL_TEXTURE_GEN_T,
+                        osg::StateAttribute::ON);
+      _ss->setTextureMode(nTransferFunctions,GL_TEXTURE_GEN_R,
+                        osg::StateAttribute::ON);
+      _ss->setTextureMode(nTransferFunctions,GL_TEXTURE_3D,
+                        osg::StateAttribute::ON);
+      _ss->setTextureAttributeAndModes(nTransferFunctions,new osg::TexEnv(osg::TexEnv::REPLACE),
+		                                osg::StateAttribute::ON);
+      _tUnit = nTransferFunctions;
       
       //load the shader file 
       char directory[1024];
@@ -137,12 +151,7 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool clearList)
       gTable[i] = (int) floor(255.0 * y + 0.5);  
    }
    for (int i = 0; i < 256; i++){
-     if(!i)
-        lutex[i   ] = (GLubyte)0;
-     else if(i == 255)
-        lutex[i   ] = (GLubyte)0;
-     else
-        lutex[i   ] = (GLubyte)gTable[i];
+     lutex[i   ] = (GLubyte)gTable[i];
      //lutex[i*2 + 1] = (GLubyte)i;
    }
 
@@ -180,12 +189,12 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
    if(_fieldSize[0] &&
       _fieldSize[1] &&
       _fieldSize[2]){ 
-      int dataSize = _fieldSize[0]*_fieldSize[1]*_fieldSize[2];
+      unsigned int dataSize = _fieldSize[0]*_fieldSize[1]*_fieldSize[2];
       unsigned char* data = new unsigned char[dataSize*4];
       unsigned int i=0;
       unsigned int j=0;
       unsigned int k = 0;
-      for(int p = 0; p < dataSize; p++){
+      /*for(int p = 0; p < dataSize; p++){
           if((i == 0 || i == _fieldSize[0] - 1)||
            (j == 0 || j == _fieldSize[1] - 1)||
            (k == 0 || k == _fieldSize[2] - 1)){
@@ -194,10 +203,10 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
             data[p*4 + 2] = (unsigned char)0;
             data[p*4 + 3] = (unsigned char)0; 
         }else{
-           data[p*4   ] = (unsigned char)p%255;
+           data[p*4   ] = (unsigned char)0;
            data[p*4 + 1] = (unsigned char)0;
            data[p*4 + 2] = (unsigned char)0;
-           data[p*4 + 3] = (unsigned char)127;   
+           data[p*4 + 3] = (unsigned char)0;   
         }
         i++;
         if((unsigned int)i > (unsigned int)_fieldSize[0]-1){
@@ -211,6 +220,12 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
                }
            }
         }
+      }*/
+      for(unsigned int p = 0; p < dataSize; p++){
+         data[p*4   ] = (unsigned char)0;
+         data[p*4 + 1] = (unsigned char)0;
+         data[p*4 + 2] = (unsigned char)0;
+         data[p*4 + 3] = (unsigned char)0;      
       }
       osg::ref_ptr<osg::Image> propertyField = new osg::Image();
 

@@ -34,6 +34,7 @@ public:
    cfdVectorVolumeVisHandler& operator=(const cfdVectorVolumeVisHandler& vvnh);
 protected:
    virtual void _setUpDecorator();
+   virtual void _applyTextureMatrix();
    void _createTexturePingPong();
    void _initPropertyTexture();
    void _createVelocityFromTextureManager();

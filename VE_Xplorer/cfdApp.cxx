@@ -47,6 +47,7 @@
 #include "cfdModelHandler.h"
 #include "cfdModel.h"
 #include "cfdSwitch.h"
+#include "cfdDataSet.h"
 
 #include "cfdCommandArray.h"
 #include "cfdNode.h"
@@ -296,12 +297,12 @@ void cfdApp::initScene( )
  
    _tbvHandler = cfdTextureBasedVizHandler::instance();
    _tbvHandler->SetParameterFile(filein_name);
-   _tbvHandler->SetParentNode((cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetSwitchNode()->GetChild(1) );
+   //_tbvHandler->SetParentNode((cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetSwitchNode()->GetChild(1) );
    _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
    _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    //_tbvHandler->SetSceneView(_sceneViewer.get());
-   _tbvHandler->InitVolumeVizNodes();
+   //_tbvHandler->InitVolumeVizNodes();
 #endif
 
 #ifdef _TAO
@@ -341,7 +342,9 @@ void cfdApp::latePreFrame( void )
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
    ///////////////////////
 #ifdef _OSG
-   _tbvHandler->SetActiveTextureManager(cfdModelHandler::instance()->GetActiveTextureManager());
+   //_tbvHandler->SetActiveTextureManager(cfdModelHandler::instance()->GetActiveTextureManager());
+   _tbvHandler->SetParentNode((cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
+   _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
    _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
    _tbvHandler->PreFrameUpdate();
 #endif
