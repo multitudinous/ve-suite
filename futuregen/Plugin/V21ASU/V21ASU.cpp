@@ -84,7 +84,7 @@ int V21ASU::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void V21ASU::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*11/100,icon_h*37/75);
+  iports[0]=wxPoint(icon_w*0/54,icon_h*37/43);
   return;
 }
 
@@ -99,7 +99,7 @@ int V21ASU::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void V21ASU::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*87/100, icon_h*37/75);
+  oports[0]=wxPoint(icon_w*53/54, icon_h*37/43);
 }
 
 /////////////////////////////////////////////////////////////////////////////
