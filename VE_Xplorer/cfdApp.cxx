@@ -182,21 +182,6 @@ inline void cfdApp::init( )
    std::cout << "| ***************************************************************** |" << std::endl;
    std::cout << "|  3. Initializing........................... Parameter File Reader |" << std::endl;
 
-   this->_sceneManager = new cfdPfSceneManagement( this->filein_name );
-std::cout << "|  3a" << std::endl;
-   this->_environmentHandler = new cfdEnvironmentHandler( this->filein_name );
-std::cout << "|  3b" << std::endl;
-
-   this->_steadystateHandler = new cfdSteadyStateVizHandler( this->filein_name );
-std::cout << "|  3c" << std::endl;
-
-   this->_transientHandler = new cfdTransientVizHandler( this->filein_name );
-std::cout << "|  3d" << std::endl;
-
-   this->_modelHandler = new cfdModelHandler( this->filein_name, 
-                                    this->_sceneManager->GetWorldDCS() );
-std::cout << "|  3e" << std::endl;
-
 #ifdef _CLUSTER
   // Cluster Stuff
    vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
@@ -206,7 +191,6 @@ std::cout << "|  3e" << std::endl;
    //hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
 #endif // _CLUSTER
 }
-
 
 inline void cfdApp::apiInit( )
 {
@@ -219,7 +203,6 @@ inline void cfdApp::preForkInit( )
                           << std::endl << vprDEBUG_FLUSH;
    //pfdInitConverter( "air_system.flt" );
 }
-
 
 inline pfGroup* cfdApp::getScene( )
 {
@@ -266,20 +249,27 @@ inline void cfdApp::initScene( )
    std::cout << "|                                                                   |" << std::endl;
 # endif // _OPENMP
 
+   this->_sceneManager = new cfdPfSceneManagement( this->filein_name );
    this->_sceneManager->InitScene();
+std::cout << "|  3a" << std::endl;
+
+   this->_environmentHandler = new cfdEnvironmentHandler( this->filein_name );
+   this->_environmentHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    this->_environmentHandler->InitScene();
+std::cout << "|  3b" << std::endl;
 
-   //this->_steadystateHandler = new cfdSteadyStateVizHandler( this->filein_name );
+   this->_steadystateHandler = new cfdSteadyStateVizHandler( this->filein_name );
    this->_steadystateHandler->InitScene();
-std::cout << "|  3cc" << std::endl;
+std::cout << "|  3c" << std::endl;
 
-   //this->_transientHandler = new cfdTransientVizHandler( this->filein_name );
+   this->_transientHandler = new cfdTransientVizHandler( this->filein_name );
    this->_transientHandler->InitScene();
-std::cout << "|  3dd" << std::endl;
+std::cout << "|  3d" << std::endl;
 
-   //this->_modelHandler = new cfdModelHandler( this->filein_name, this->_sceneManager->GetWorldDCS() );
+   this->_modelHandler = new cfdModelHandler( this->filein_name, 
+                                    this->_sceneManager->GetWorldDCS() );
    this->_modelHandler->InitScene();
-std::cout << "|  3ee" << std::endl;
+std::cout << "|  3e" << std::endl;
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
@@ -415,8 +405,6 @@ void cfdApp::pushDataToStateInfo( void )
    this->setTeacherState( this->cfdTeacher_state );         
 }
 #endif // TABLET
-
-
 
 int main(int argc, char* argv[])
 {

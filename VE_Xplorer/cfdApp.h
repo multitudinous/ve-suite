@@ -272,8 +272,6 @@ class cfdApp : public vrj::PfApp
    // Scalar bar flag
    bool  isTimeToUpdateScalarBar;
    
-   // Menu interaction variables
-   bool  menuB;
    int   cursorId;
    
    // Used to store data for multi-dataset functions

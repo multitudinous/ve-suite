@@ -90,8 +90,6 @@ SRCS=\
    cfdGroup.cxx \
    cfdImage.cxx \
    cfdIsosurface.cxx \
-   cfdLaser.cxx \
-   cfdMenu.cxx \
    cfdModel.cxx \
    cfdMomentum.cxx \
    cfdMomentums.cxx \
@@ -147,6 +145,8 @@ SRCS=\
    cfdPfSceneManagement.cxx 
 
 #   cfdDrawManager.cxx
+#   cfdLaser.cxx
+#   cfdMenu.cxx
 
 ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \

@@ -44,7 +44,7 @@ using namespace gadget;
 cfdNavigate::cfdNavigate( )
 {
   wand.init("VJWand");
-   this->digital[0].init("VJButton0");   // trigger (and top right button) -- menu selection
+   this->digital[0].init("VJButton0");   // trigger (and top right button) TODO: I think this is unused ?
    this->digital[1].init("VJButton1");   // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
    this->digital[2].init("VJButton2");   // 12 o'clock -- forward navigation
    this->digital[3].init("VJButton3");   // 3 o'clock -- not used at present

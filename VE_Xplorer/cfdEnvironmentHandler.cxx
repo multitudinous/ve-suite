@@ -33,16 +33,14 @@
 
 #include "fileIO.h"
 #include "cfdNavigate.h"
-#include "cfdLaser.h"
-#include "cfdMenu.h"
+//#include "cfdLaser.h"
+//#include "cfdMenu.h"
 #include "cfdCursor.h"
 #include "cfdDCS.h"
 #include "cfdGroup.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 #include "cfdReadParam.h"
-
-//#include <vtkPolyData.h>
 
 #include <vrj/Util/Debug.h>
 
@@ -91,49 +89,17 @@ void cfdEnvironmentHandler::InitScene( void )
       this->nav->worldRot[ i ] = this->worldRot[ i ];
    }
    
-   {
-      float tempArray[ 3 ];
-      tempArray[ 0 ] = -this->nav->worldTrans[ 0 ];
-      tempArray[ 1 ] = -this->nav->worldTrans[ 1 ];
-      tempArray[ 2 ] = -this->nav->worldTrans[ 2 ];
-      this->_worldDCS->SetTranslationArray( tempArray );
-   }
+   float tempArray[ 3 ];
+   tempArray[ 0 ] = -this->nav->worldTrans[ 0 ];
+   tempArray[ 1 ] = -this->nav->worldTrans[ 1 ];
+   tempArray[ 2 ] = -this->nav->worldTrans[ 2 ];
+   this->_worldDCS->SetTranslationArray( tempArray );
 
    this->_worldDCS->SetRotationArray( this->nav->worldRot );
-   //
-   // Initiate shell of the data sets.
-   //
-   //
-   // Initiate menu system.
-   //
-   std::cout << "|  6. Initializing..................................... Menu system |" << std::endl;
 
-   char * menuFile = fileIO::GetFile( "menu", "/VE_Xplorer/data/menu.vtk" );
-
-   if ( menuFile == NULL )
-   {
-      exit( 1 );
-   }
-
-   char * menuConfigFile = fileIO::GetFile( "menu configuration", "/VE_Xplorer/config/menu.cfg" );
-
-   if ( menuConfigFile == NULL )
-   {
-      exit( 1 );
-   }
-
-   this->menu = new cfdMenu( menuFile, menuConfigFile, _rootNode );
-   //this->rootNode->AddChild( (cfdSceneNode*) this->menu->GetcfdDCS() );
    // Maybe need to fix this later
-   //this->menuB = true;
    //this->cursorId = NONE;
    //this->cfdId = -1;
-   //
-   // Initiate wand's laser.
-   //
-   std::cout << "|  7. Initializing.................................... Wand's laser |" << std::endl;
-   this->laser = new cfdLaser( this->_rootNode );
-   //this->_rootNode->AddChild( (cfdSceneNode*) this->laser->GetcfdDCS() );
 
    //
    // Initiate cursors.
@@ -157,41 +123,17 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 	
    // Need to get these values from the appropriate classes
    // fix later	
+   // the cursor will be active (based on the cursor id)
 	int cursorId;
-   bool menuB;
-   // Check the menu is toggle on/off
-   if ( menuB && cursorId == NONE )
-   {
-     // if menu is on, laser will detect where it is hitting on the menu's cell
-      if ( this->laser->HitMenu( this->menu->GetBound(), 
-                                 this->nav->GetLocation(), 
-                                 this->nav->GetDirection() ) ) 
-      {
-         this->menu->UpdateHitCell( this->laser->GetHitXYZ() );
-      }
-   } 
-   else 
-   { 
-      // if menu is off, the cursor will be active (based on the cursor id)
-      this->cursor->Update( cursorId, this->nav->GetCursorLocation(),
-                              this->nav->GetDirection(), this->nav->worldTrans );
+   this->cursor->Update( cursorId, this->nav->GetCursorLocation(),
+                           this->nav->GetDirection(), this->nav->worldTrans );
 
-      if ( cursorId == CUBE)
-      {
-          this->cursor->getExtent( this->cur_box );   //record current box cursor position
-      }
+   if ( cursorId == CUBE)
+   {
+       this->cursor->getExtent( this->cur_box );   //record current box cursor position
    }
 
-   if ( this->nav->digital[0]->getData() == gadget::Digital::TOGGLE_ON && 
-        cursorId == NONE )
-   {
-      //the trigger is active and we are selecting something from the menu     
-      //determine which item we are picking on the menu
-      
-      // I think we should get rid of the menu for the time being.
-      //this->setId( this->menu->GetCellId() );
-   }
-   else if ( this->nav->digital[4]->getData() == gadget::Digital::TOGGLE_ON 
+   if ( this->nav->digital[4]->getData() == gadget::Digital::TOGGLE_ON 
                                           || _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
    { 
       // This code will need to be thought about later

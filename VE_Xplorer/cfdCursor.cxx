@@ -807,55 +807,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          //this->SetPlaneSize( commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * 
          //                cfdObjects::GetActiveMeshedVolume()->GetLength() );
       }
-      return true;
    }
-
-/*
-      else  // changed from wand
-      {
-         if ( this->menuB == true )
-         { 
-            // If menu is up, remove menu and laser wand and cycle through cursor modes
-            if ( this->cursorId == NONE )
-            {
-               this->cursorId = XPLANE;
-               this->rootNode->removeChild( this->menu->GetpfDCS() );
-               this->rootNode->removeChild( this->laser->GetpfDCS() );
-               this->rootNode->addChild( this->cursor->GetpfDCS() );
-            }
-            else if ( this->cursorId == XPLANE )
-               this->cursorId = YPLANE;
-            else if ( this->cursorId == YPLANE )
-               this->cursorId = ZPLANE;
-            else if ( this->cursorId == ZPLANE )
-               this->cursorId = SPHERE;
-            else if ( this->cursorId == SPHERE )
-               this->cursorId = ARROW;
-            else if ( this->cursorId == ARROW )
-               this->cursorId = XLINE;
-            else if ( this->cursorId == XLINE )
-               this->cursorId = YLINE;
-            else if ( this->cursorId == YLINE )
-               this->cursorId = ZLINE;
-            else if ( this->cursorId == ZLINE )
-               this->cursorId = CUBE;
-            else if ( this->cursorId == CUBE )
-            {
-               // If on last cursor type, remove menu and reset cursor to off
-               this->cursorId = NONE;
-               this->menuB = false;
-            }
-         }
-         else
-         { 
-            // If menu is down, add menu and laser wand, and keep cursor off
-            this->rootNode->addChild( this->menu->GetpfDCS() );
-            this->rootNode->addChild( this->laser->GetpfDCS() );
-            this->menuB = true;
-            this->rootNode->removeChild( this->cursor->GetpfDCS() );
-         }
-      }
-*/
 
    return true;
 }
