@@ -2603,7 +2603,7 @@ void Network::UnPack(vector<Interface> & intfs)
 
     
   //unpack the Global Param Dialog
-  globalparam_dlg->UnPack(&intfs[intfs.size()-1]);
+  //globalparam_dlg->UnPack(&intfs[intfs.size()-1]);
 
   //Now all the data are read from the file. Let's try to reconstruct the link and the calculate the 
   //first, calculate get the links vector into the modules
