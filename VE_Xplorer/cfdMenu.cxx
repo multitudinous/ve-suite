@@ -256,15 +256,16 @@ pfGeode * cfdMenu::GetLabel( char* menuConfig )
 
    FILE *fp;
    fp = fopen( menuConfig,"r");
-   if (fp)
+   if (fp != NULL )
    {
       fscanf(fp,"%s%d\n",tag,&MAX_MENU_ARRAY);
 
       for ( int i = 0; i < MAX_MENU_ARRAY; i++)
       {
          fscanf(fp,"%s%d%s\n",tag,&menu_item_number,menu_item_text);
-         if (tag == "MENU_ITEM")
-         sprintf(menuText[menu_item_number], menu_item_text);
+         if (!strcmp(tag,"MENU_ITEM")){
+            sprintf(menuText[menu_item_number], menu_item_text);
+         }
       }
    }
    else
