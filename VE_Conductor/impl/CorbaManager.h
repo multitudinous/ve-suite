@@ -29,36 +29,56 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _CORBA_MANAGER_H_
-#define _CORBA_MANAGER_H_
+#ifndef CFD_CORBA_MANAGER_H_
+#define CFD_CORBA_MANAGER_H_
 
-#include <vpr/Thread/Thread.h>
-#include <omnithread.h>
+//using namespace CORBA;
+//{ 
+//class ORB_var; 
+//}
+//namespace PortableServer { class POA; }
+//namespace CosNaming { class NamingContext; }
 
-//#ifdef __OMNIORB4__
+#ifdef _TAO
+#include <orbsvcs/CosNamingC.h>
+#else
 #include <omniORB4/CORBA.h>
-//#endif
+#endif
+
+#include <vector>
+#include <string>
+
+#include <tao/PortableServer/PortableServer.h>
+#include <vpr/Thread/Thread.h>
+class VjObs_i;
 
 class CorbaManager
 {
-public:
-	CorbaManager();		//Constructor
-	void init();		//Gets CORBA ready
-	void start();		//Creates a thread and runs server
-	void bind();
-	void regInterface(CORBA::Object_ptr obj,std::string objectId, std::string objectKind);	//Bind interface object
-	CORBA::Object_var getInterface(std::string objectId, std::string objectKind);		 
-	//CORBA::Object_var obj;
-	void activate(PortableServer::ServantBase* myobj);
-	void pman_activate();
+   public:
+	   CorbaManager();		//Constructor
+	   ~CorbaManager();		//destructor
+	   void init( void * );		//Gets CORBA ready
+	   void start();		//Creates a thread and runs server
+	   //void bind();
+	   //void regInterface(CORBA::Object_ptr obj,std::string objectId, std::string objectKind);	//Bind interface object
+	   //CORBA::Object_var getInterface(std::string objectId, std::string objectKind);		 
+	   //CORBA::Object_var obj;
+      //void activate(PortableServer::ServantBase* myobj);
+	   //void pman_activate();
+      VjObs_i* GetVjObs( void );
 
-	CORBA::ORB_var orb;
+      int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
 	
-private:
-	CosNaming::NamingContext_var testContext;
-	PortableServer::POA_var poa;
-	CORBA::Object_var obj;
-   PortableServer::ServantBase* app;
+      CosNaming::NamingContext_var naming_context;
+   private:
+	   CORBA::ORB_var orb;
+      PortableServer::POA_var poa;
+      VjObs_i* _vjObs;
+      vpr::ThreadMemberFunctor<CorbaManager>* corba_run;
+      vpr::Thread* new_thread;
+	   /*
+	   CORBA::Object_var obj;
+      PortableServer::ServantBase* app;*/
 };
 
 #endif

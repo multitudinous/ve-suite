@@ -166,10 +166,13 @@ public:
    VjObs::obj_p* GetClientInfoData();
 #endif   
 
-protected:
-
    void SetHandlers( cfdSteadyStateVizHandler*, 
                      cfdEnvironmentHandler*, cfdModelHandler* );
+   void GetCfdStateVariables( void );
+   cfdCommandArray* _cfdArray;
+   double cfdShort_data_array[ 9 ];
+protected:
+
 
    cfdSteadyStateVizHandler* _ssHandler;
    cfdEnvironmentHandler*   _envHandler;
@@ -192,7 +195,6 @@ protected:
    VjObs::obj_p_var clientInfoObserverDataArray;
    int numOfClientInfo;
    bool _unusedNewData;
-   void GetCfdStateVariables( void );
 
 #ifdef _CLUSTER
    virtual void GetUpdateClusterStateVariables( void );
@@ -307,9 +309,7 @@ protected:
    bool  cfdPre_state;
    short cfdTimesteps;
    short cfdTeacher_state; */
-   double cfdShort_data_array[ 9 ];
 
-   cfdCommandArray* _cfdArray;
    cfdCommandArray* _bufferArray;
 #ifdef _CLUSTER
    // Cluster Stuff for the above state variables

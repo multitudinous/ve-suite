@@ -34,8 +34,12 @@
 #include <cstdlib>
 #include <iostream>
 
-using std::cout;
-using std::endl;
+#include <vpr/Util/Debug.h>
+
+
+#include <VjObs_i.h>     //added for corba stuff
+
+using namespace std;
 //-------------------------------------------------------------
 //CorbaManager methods.
 //-------------------------------------------------------------
@@ -43,26 +47,191 @@ using std::endl;
 //Constructor
 CorbaManager::CorbaManager()
 {
-	init();
+   _vjObs = new VjObs_i();
+	start();
 }
 
-//init() Get CORBA ready to go
-void CorbaManager::init()
+CorbaManager::~CorbaManager()
 {
-	int temp=0;
-//#ifdef __OMNIORB3__		
-//	orb=CORBA::ORB_init(temp,0,"omniORB3");
-//#endif
+   CosNaming::Name name(1);
 
-//#ifdef __OMNIORB4__		
-	orb=CORBA::ORB_init(temp,0,"omniORB4");
-//#endif
+   name.length(1);
+   name[0].id   = (const char*) "Master";
+   name[0].kind = (const char*) "VE_Xplorer";
+   
+   try
+   {
+      vprDEBUG(vprDBG_ALL,0) 
+         << "naming_context->unbind for CORBA Object  " 
+         << endl << vprDEBUG_FLUSH;
+      naming_context->unbind( name );
+      //naming_context->destroy();
+   }
+   catch( CosNaming::NamingContext::InvalidName& )
+   {
+      cerr << "Invalid name for CORBA Object  " << endl;
+   }
+   catch(CosNaming::NamingContext::NotFound& ex)
+   {
+      cerr << "Name not found for CORBA Object  " << ex.why << endl;
+   }
+   
+   poa->destroy (1, 1);
+   
+   vprDEBUG(vprDBG_ALL,0) 
+     << " destroying orb" << std::endl << vprDEBUG_FLUSH;
 
-	obj = orb->resolve_initial_references("RootPOA");
-	poa = PortableServer::POA::_narrow(obj);
+   orb->destroy();
 }
 
+VjObs_i* CorbaManager::GetVjObs( void )
+{
+   return _vjObs;
+}
+//init() Get CORBA ready to go
+void CorbaManager::init( void * )
+{
+#ifdef _CLUSTER
+   char buffer[1025];
+   int ntoks, i;
+   std::vector<std::string> toks;
+   std::string hostfile;
+   FILE * fhost;
+   bool found=false;
+   std::string masterhost="abbott";
 
+   if (argc>1)
+   {
+      strcpy(buffer, argv[1]);
+      ntoks=getStringTokens(buffer, "/", toks);
+      //Now construct the name for the host file;
+      hostfile="/";
+      for (i=0; i<ntoks-1; i++)
+      hostfile=hostfile+toks[i]+"/";
+      hostfile+="component/host.config";
+      cout<<"Here is the string for the hostfile :"<<hostfile<<endl;
+      //Now we open that file and get the host name
+      fhost=fopen(hostfile.c_str(), "r");
+      if (fhost==NULL)
+      {
+         cout<<"Something bad in the path"<<endl;
+         return -1;
+      }
+
+      while(!feof(fhost)&&!found)
+      {
+         fgets(buffer, 1024, fhost);
+         ntoks=getStringTokens(buffer, "<>/ ", toks);
+         for (i=0; i<ntoks; i++)
+            if (toks[i]=="hostname" && i!=ntoks-1)
+            {
+               masterhost=toks[i+1];
+               found=true;
+               break;
+            }
+      }
+      fclose(fhost);
+   }
+#endif // _CLUSTER
+
+   int temp = 0;
+   char** xargv;
+   xargv = new char*[ temp ];
+   //xargv[ 0 ] = "-ORBInitRef";
+   //xargv[ 1 ] = "NameService=corbaname::cruncher.vrac.iastate.edu:2809";
+
+#ifdef _TAO
+   //xargv[ 0 ] = "-ORBInitRef";
+   //xargv[ 1 ] = "NameService=file:///tmp/ns.ior";
+   orb=CORBA::ORB_init( temp, xargv,"" );
+#else
+   orb=CORBA::ORB_init( temp, xargv );
+   if ( CORBA::is_nil( orb.in() ) )
+      exit(0);
+#endif // _TAO
+   //Here is the part to contact the naming service and get the reference for the executive
+   CORBA::Object_var naming_context_object =
+     orb->resolve_initial_references ("NameService"); 
+   CORBA::String_var sior1(orb->object_to_string(naming_context_object.in ()));
+   cout << "|  IOR of the server side : " << endl << sior1 << endl;
+
+   naming_context =
+       CosNaming::NamingContext::_narrow (naming_context_object.in ());
+   
+   
+    //Here is the code to set up the server
+    CORBA::Object_var poa_object =
+      orb->resolve_initial_references ("RootPOA"); // get the root poa
+
+    poa = PortableServer::POA::_narrow(poa_object.in());
+    PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
+    poa_manager->activate ();
+//   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
+//   cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
+#ifdef _CLUSTER
+   char raw_hostname[256];
+   std::string hostname;
+   
+   gethostname(raw_hostname, 255); //get the host name 
+   hostname=raw_hostname;
+   cout<<"Host name is "<<hostname<<endl;   
+   getStringTokens(raw_hostname,".", toks);
+   //now the toks[0] will be the short host name, which is the one without the domain name
+
+   
+   if (hostname==masterhost||toks[0]==masterhost)
+   {
+      cout<<"This is the master!"<<endl;
+
+      VjObs_var vjobs = application->_this();
+      CORBA::String_var sior(orb->object_to_string(vjobs.in()));
+      cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
+      CosNaming::Name name;
+      name.length(1);
+
+      name[0].id   = (const char*) "Master";
+      name[0].kind = (const char*) "VE_Xplorer";
+      //Bind the object
+      try
+      {
+         naming_context->bind(name, vjobs.in());
+      }
+      catch(CosNaming::NamingContext::AlreadyBound& ex)
+      {
+         naming_context->rebind(name, vjobs.in());
+      }
+   }
+#else // _CLUSTER
+   VjObs_var vjobs = _vjObs->_this();
+   if ( CORBA::is_nil( vjobs.in() ) )
+     cout << "is nil " << endl;
+   CORBA::String_var sior(orb->object_to_string( vjobs.in() ) );
+   cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
+   CosNaming::Name name;
+   name.length(1);
+   
+   name[0].id   = (const char*) "Master";
+   name[0].kind = (const char*) "VE_Xplorer";
+   //Bind the object
+   try
+   {
+      naming_context->bind(name, vjobs.in());
+   }
+   catch(CosNaming::NamingContext::AlreadyBound&)
+   {
+      naming_context->rebind(name, vjobs.in());
+   }
+#endif // _CLUSTER
+   // If this isn't here the app won't work with TAO 
+   cout << " end corba thread " << endl;
+   orb->run();
+   //while( 1 )
+   {
+   }
+   cout << " end corba thread " << endl;
+}
+
+/*
 void CorbaManager::bind()
 {
 	CosNaming::NamingContext_var rootContext;
@@ -123,18 +292,15 @@ void CorbaManager::bind()
 	}
 	//start();
 }
-
+*/
 //start() Create a thread to start the server in
 void CorbaManager::start()
 {
-/*
-   int dummy=0;
-	vjThreadMemberFunctor<CorbaManager>* corba_run=new vjThreadMemberFunctor<CorbaManager>(this, &CorbaManager::run, &dummy);
-	vjThread* new_thread=new vjThread(corba_run);
-*/
+	corba_run=new vpr::ThreadMemberFunctor<CorbaManager>(this, &CorbaManager::init );
+	new_thread=new vpr::Thread(corba_run);
 }
 
-
+/*
 void CorbaManager::activate(PortableServer::ServantBase* myobj)
 {
 	PortableServer::ObjectId_var myid = poa->activate_object(myobj);
@@ -192,4 +358,21 @@ getInterface(std::string objectId, std::string objectKind)
 	obj=objptr;	
 
 	return obj;
+}
+*/
+int CorbaManager::getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
+{
+   char* token;
+   int i=0;
+   token = strtok(buffer, delim);
+
+   toks.clear();
+   while( token )
+   {
+      i++;
+      toks.push_back(std::string(token));
+      token = strtok(NULL, delim);
+   }
+
+   return i;
 }
