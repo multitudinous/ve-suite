@@ -322,7 +322,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       vprDEBUG(vprDBG_ALL,1)
          << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) << std::endl << vprDEBUG_FLUSH;
 
-      long int test = this->_readParam->convertDecimalToBinary( 
+      long int test = this->_readParam->convertDecimalToBinary( (long)
                         commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
       vprDEBUG(vprDBG_ALL,1)
          << " test : " << test << std::endl << vprDEBUG_FLUSH;

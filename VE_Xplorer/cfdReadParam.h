@@ -153,7 +153,7 @@ class cfdReadParam : public cfdGlobalBase
 
    private:
       std::vector< cfdDataSet * > dataSets;
-
+      std::vector< int > testBin;
       //void LoadSurfaceFiles( char * dir );
 };
 

@@ -758,16 +758,16 @@ void cfdReadParam::readScalarBar( std::ifstream &inFile )
 
 int cfdReadParam::convertDecimalToBinary( long number) 
 {
-   long int org_num=0;
+/*   long int org_num=0;
    long org_base=0, pos_org_num;
    long int new_num, base10_num, remainder;
    int new_base=0;
    int pow_limit, pow_test;
    int cur_term=0;
-
+*/
    vprDEBUG(vprDBG_ALL,1) << " Number = " << number
                           << std::endl << vprDEBUG_FLUSH;
-   new_base = 2;
+/*   new_base = 2;
    org_base = 10;
    pos_org_num = number;
    //Start of Conversion to Base Ten
@@ -807,7 +807,20 @@ int cfdReadParam::convertDecimalToBinary( long number)
    //display the user's final, highly desired conversion solution
    vprDEBUG(vprDBG_ALL,1) <<"new_num: "<< new_num 
                            << std::endl << vprDEBUG_FLUSH;
-   return new_num;
+
+*/testBin.clear();
+  
+   long int n = number;
+    while (n > 0) {
+                testBin.push_back( n%2 );
+                n = n/2;
+            }
+   
+for ( unsigned int j = 0; j < testBin.size(); j++ )
+      cout << testBin[ j ];
+
+ cout << " Number is backwards " << endl;
+   return 0;
 }
 
 /*
@@ -849,7 +862,7 @@ void cfdReadParam::convertBinaryToDecimal( int org_num )
 
 void cfdReadParam::convertBinaryToArray( int gui, int size ) 
 {
-   int input;
+/*   int input;
    int i;
    int val;
    
@@ -875,6 +888,19 @@ void cfdReadParam::convertBinaryToArray( int gui, int size )
       val = (int)pow(10.0,(size - 1) - i);
       guiVal[(size - 1) - i] = input/val; 
       input = input%val;
+   }
+   int n;
+   int testbinsize = testBin.size();*/
+   while ( size > (int)testBin.size() )
+   {
+      testBin.push_back( 0 );
+   }
+//cout << size << " : " << testBin.size() << endl;
+   for ( int i = 0; i < size; i++ ) 
+   {
+      
+      guiVal[ i] = testBin[ i ];
+      //cout << guiVal[ i] << endl;
    }
 }
 /*
