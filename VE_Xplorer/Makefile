@@ -110,7 +110,7 @@ ifeq (${CFDUNAME},Linux)
    EXTRA_LIBS+= -m32
 endif
 
-# 64-bit linux needs these flags
+# IRIX needs these flags
 ifeq (${CFDUNAME},IRIX64)
    EXTRA_CXXFLAGS+= -D_IRIX
    EXTRA_LIBS+= -L/usr/freeware/lib32
