@@ -32,13 +32,12 @@ export PFSHAREDSIZE=534773700
 export WX_HOME_DIR=/home/users/mccdo/wxWindows/wxGTK
 export OMNIORB_CONFIG=${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 export OMNINAMES_LOGDIR=${VE_SUITE_HOME}/VE_Installer
-VTK_HOME_DIR=/home/users/mccdo/vtk-builds
 
 case "$CFDHOSTTYPE" in
    IRIX*) 
    #echo "CFDHOSTTYPE contains IRIX"
    export JDK_HOME=/usr/java2
-   export VTK_BASE_DIR=${VTK_HOME_DIR}/IRIX32
+   export VTK_BASE_DIR=/home/users/mccdo/vtk-builds/IRIX32
    export VJ_BASE_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-pthread
    export VJ_DEPS_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-deps
 #   export LD_LIBRARYN32_PATH=/home/users/mccdo/VE_Suite/VE_Installer/arenasize/libs
@@ -64,7 +63,7 @@ case "$CFDHOSTTYPE" in
 ;;
    RedHat*) 
    #echo "CFDHOSTTYPE contains RedHat"
-   export VTK_BASE_DIR=${VTK_HOME_DIR}/Linux-rh
+   export VTK_BASE_DIR=/home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
 
    export JDK_HOME=/usr/java/j2sdk1.4.2_03
    export VJ_BASE_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80
@@ -91,7 +90,7 @@ case "$CFDHOSTTYPE" in
 ;;
    SuSE*) 
    #echo "CFDHOSTTYPE contains SuSE"
-   export VTK_BASE_DIR=${VTK_HOME_DIR}/Linux-rh8
+   export VTK_BASE_DIR=/home/users/mccdo/vtk-builds/Linux-rh
 
    export JDK_HOME=/usr/lib/java2
    export VJ_BASE_DIR=/home/users/mccdo/vrjuggler-builds/Suse-9.1-alpha4
