@@ -1,3 +1,4 @@
+# Create the OS-dependent directory name
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/preprocessor
 
 all:
@@ -25,7 +26,9 @@ NO_DEPEND= YES
 OPTIM_APP?= TRUE
 
 EXTRA_CFLAGS+=
+
 EXTRA_CXXFLAGS+=
+
 EXTRA_DEFS+=
 #_MPI for HPC build
 #SJK_TEST produces ascii output
@@ -47,6 +50,8 @@ EXTRA_LIBS+= -lm
 
 #include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+
+#add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 
 vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer

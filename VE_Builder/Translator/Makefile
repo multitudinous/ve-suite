@@ -28,18 +28,23 @@ SRCS=\
    reiParticles.cpp \
    plot3dReader.cpp \
    jdMAPReader.cpp
-#   vtkEnSightFortranBinaryReader.cxx \
+#   vtkEnSightFortranBinaryReader.cxx
 
+# Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
 DEPDIR= $(CFDHOSTTYPE)
+
 NO_DEPEND= YES
+
 # One of these must be uncommented.
 DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE
 
 EXTRA_CFLAGS+= 
-#EXTRA_CXXFLAGS+= -DSJK_TEST
-EXTRA_DEFS+=
+
+EXTRA_CXXFLAGS+=
+
+#EXTRA_DEFS+= -DSJK_TEST
 
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer
 
@@ -56,6 +61,8 @@ EXTRA_LIBS+= -lm
 
 #vrj.appdefs.mk includes $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+
+#add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 
 vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer

@@ -30,7 +30,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-DIRS=	${VE_SUITE_HOME}/VE_Builder/Translator \
+DIRS= ${VE_SUITE_HOME}/VE_Builder/Translator \
       ${VE_SUITE_HOME}/VE_Builder/WX_Translator \
       ${VE_SUITE_HOME}/VE_Builder/Preprocessor \
       ${VE_SUITE_HOME}/VE_Builder/Utilities \
