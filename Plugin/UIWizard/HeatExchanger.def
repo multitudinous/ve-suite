@@ -1,0 +1,18 @@
+MOD_NAME HeatExchanger #This is the module name
+
+String arrangement
+String tube_config
+Int num_tubeL
+Int num_tubeX
+Double Sl
+Double St
+Double tube_id
+Double tube_od
+Double tube_length
+Double int_press_drop
+Double ext_press_drop
+Int use_fins
+Double fin_effect
+
+
+END
