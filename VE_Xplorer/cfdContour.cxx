@@ -48,6 +48,8 @@
 
 cfdContour::cfdContour()
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdContour constructor"
+                          << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP 
    float b[6];
    float c[3];
@@ -93,6 +95,8 @@ cfdContour::cfdContour()
 
 cfdContour::~cfdContour()
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdContour destructor"
+                          << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP
    for ( int i=0; i<this->nData; i++ )
    {

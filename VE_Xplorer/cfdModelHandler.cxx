@@ -65,10 +65,12 @@ using namespace std;
 
 cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdModelHandler constructor"
+                          << std::endl << vprDEBUG_FLUSH;
    _param = input;
    worldNode = dcs;
    activeDataset = NULL;
-   _scalarBar = NULL;
+   //_scalarBar = NULL;
    _readParam = new cfdReadParam( NULL );
    commandArray = NULL;
    // worldnode getting passed in to model
@@ -84,7 +86,16 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
 
 cfdModelHandler::~cfdModelHandler()
 {
-   delete _scalarBar;
+   vprDEBUG(vprDBG_ALL,2) << "cfdModelHandler destructor"
+                          << std::endl << vprDEBUG_FLUSH;
+
+   for( std::vector< cfdModel* >::iterator itr = _modelList.begin();
+                                           itr != _modelList.end(); itr++)
+   {
+      delete *itr;
+   }
+   _modelList.clear();
+   //delete _scalarBar;
 }
 
 ///////////////////////

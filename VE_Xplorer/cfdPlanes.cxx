@@ -43,11 +43,14 @@
 #include <vtkAppendPolyData.h>
 #include <vtkCutter.h>
 #include <vtkPolyDataReader.h>
+
 #include <vpr/Util/Debug.h>
 
 cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                       const double bounds[ 6 ] )
 {
+   vprDEBUG(vprDBG_ALL,2) << " cfdPlanes constructor" 
+                          << std::endl << vprDEBUG_FLUSH;
    this->numPlanes = 0;
    this->append = NULL;
    this->isPlaneSelected = NULL;
@@ -97,7 +100,7 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
    this->append = new vtkPolyData* [ this->numPlanes ];
    this->sliceLocation = new float [ this->numPlanes ];
    vtkPolyDataReader * planeReader;
-   for ( i=0; i<this->numPlanes; i++ )
+   for ( i = 0; i < this->numPlanes; i++ )
    {
       sprintf( planeFileName, "%s/%c_Cont%d.vtk", directory,
                this->typeLabel, i );
@@ -116,11 +119,6 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
       this->append[ i ] = vtkPolyData::New();
       this->append[ i ]->DeepCopy( planeReader->GetOutput() );
       planeReader->Delete();
-   }
-
-   if ( this->numPlanes == 0 )
-   {
-      return;
    }
 
    // allocate space for the array that keeps track of which planes
@@ -146,12 +144,12 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
 
 cfdPlanes::~cfdPlanes()
 {
-   vprDEBUG(vprDBG_ALL,2) << "CFDPLANES DESTRUCTOR" 
-                           << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,2) << " cfdPlanes destructor" 
+                          << std::endl << vprDEBUG_FLUSH;
 
    if ( this->numPlanes > 0 )
    {
-      for (int i=0; i<this->numPlanes; i++) 
+      for (int i = 0; i  <this->numPlanes; i++) 
       {
          this->append[ i ]->Delete();
       }
@@ -219,7 +217,7 @@ vtkPolyData * cfdPlanes::GetClosestPlane( const int sliderBarPos )
    float leastSquaredDistance = 1e12;
    int index = 0;
 
-   for ( int i=0; i<this->numPlanes; i++)
+   for ( int i = 0; i < this->numPlanes; i++)
    {
       float sqDist = ( coordinate - this->sliceLocation[ i ] ) *
                      ( coordinate - this->sliceLocation[ i ] );
@@ -247,7 +245,7 @@ void cfdPlanes::ConcatenateSelectedPlanes( void )
 
    vtkAppendPolyData * appendPolyData = vtkAppendPolyData::New();
 
-   for ( int i=0; i<this->numPlanes; i++ )
+   for ( int i = 0; i < this->numPlanes; i++ )
    {
       vprDEBUG(vprDBG_ALL,1) 
          << "isPlaneSelected[" << i << "] = " << isPlaneSelected[ i ]

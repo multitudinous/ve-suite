@@ -35,16 +35,14 @@
 #include "cfdDataSet.h"
 #include "cfdDCS.h"
 #include "cfdNode.h"
-//#include "cfdFileInfo.h"
 #include "cfdFILE.h"
 
 #include <vpr/Util/Debug.h>
 
-
 cfdModel::cfdModel( cfdDCS *worldDCS)
 {
-   vprDEBUG(vprDBG_ALL, 1) << " New cfdModel ! " 
-                           << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1) << " New cfdModel ! " 
+                          << std::endl << vprDEBUG_FLUSH;
    this->mModelNode = NULL;
    //this->actor = NULL;
    //ModelIndex = static_cast<ModelTypeIndex>(value);
@@ -53,20 +51,24 @@ cfdModel::cfdModel( cfdDCS *worldDCS)
    _worldDCS = worldDCS;
 }
 
-
 cfdModel::~cfdModel()
 {
-// Need to fix the syntax of these iterators
-/*   for(GeometryDataSetList::iterator itr = mGeomDataSets.begin(); itr != mGeomDataSets.end(); ++itr)
+   vprDEBUG(vprDBG_ALL,2) << "cfdModel destructor"
+                          << std::endl << vprDEBUG_FLUSH;
+/*
+   for(GeometryDataSetList::iterator itr = mGeomDataSets.begin();
+                                     itr != mGeomDataSets.end(); itr++)
    {
       delete *itr;
    }
    mGeomDataSets.clear();
-   for(VTKDataSetList::iterator itr = mVTKDataSets.begin(); itr != mVTKDataSets.end(); ++itr)
+*/
+   for(VTKDataSetList::iterator itr = mVTKDataSets.begin();
+                                itr != mVTKDataSets.end(); itr++)
    {
       delete *itr;
    }
-   mVTKDataSets.clear();*/
+   mVTKDataSets.clear();
 }
 
 void cfdModel::CreateCfdDataSet( void )
@@ -81,7 +83,7 @@ void cfdModel::CreateGeomDataSet( char* filename )
 
 void cfdModel::setModelNode( cfdNode *temp )
 {
-
+   std::cout<<" !!!!! cfdModel::setModelNode is doing nothing"<<std::endl;    
 }
 
 void cfdModel::setModelType( ModelTypeIndex type )
@@ -90,7 +92,6 @@ void cfdModel::setModelType( ModelTypeIndex type )
 }
 
 void cfdModel::setTrans( float t[3] )
-
 {
    this->mModelDCS->SetTranslationArray( t );
    this->setTrans3( t[0], t[1], t[2] );
@@ -98,9 +99,9 @@ void cfdModel::setTrans( float t[3] )
       << t[1] << " z: " << t[2] << std::endl << vprDEBUG_FLUSH;
 }
 
-
 void cfdModel::setTrans3( float x, float y, float z )
 {
+   std::cout<<" !!!!! cfdModel::setTrans3 is doing nothing"<<std::endl;    
    //this->mModelDCS->SetTrans( x, y, z );
    vprDEBUG(vprDBG_ALL,1) << "Trans x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
@@ -131,6 +132,7 @@ void cfdModel::setRot(float h, float p, float r)
 
 void cfdModel::setRotMat(double *rotate)
 {
+   std::cout<<" !!!!! cfdModel::setRotMat is doing nothing"<<std::endl;    
 }
 
 cfdNode* cfdModel::GetCfdNode( )
@@ -181,12 +183,12 @@ std::cout<<"Setting temp to 1 to avoid irix compile warning \'The variable \"tem
 
 void cfdModel::addVTKdataset(const std::string& vtkfilename)
 {
-
+   std::cout<<" !!!!! cfdModel::addVTKdataset is doing nothing"<<std::endl;    
 }
 
 void cfdModel::delVTKdataset()
 {
-
+   std::cout<<" !!!!! cfdModel::delVTKdataset is doing nothing"<<std::endl;    
 }
 
 void cfdModel::addGeomdataset(const std::string& geomfilename)
@@ -224,7 +226,6 @@ void cfdModel::addGeomdataset(const std::string& geomfilename)
      */
       //this->mMoveOldGeomDataSets = false;
       //this->mMoveOldVTKDataSets = false;
-   
 }
 
 void cfdModel::delGeomdataset(int DelIndex)

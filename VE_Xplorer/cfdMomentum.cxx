@@ -46,6 +46,8 @@
 
 cfdMomentum::cfdMomentum( )
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdMomentum constructor"
+                          << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP  
    float b[6];
    float c[3];
@@ -94,12 +96,13 @@ cfdMomentum::cfdMomentum( )
 #endif
 
    this->warper->SetScaleFactor( this->GetActiveMeshedVolume()->GetStepLength() );
-
 }
-
 
 cfdMomentum::~cfdMomentum()
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdMomentum destructor"
+                          << std::endl << vprDEBUG_FLUSH;
+
 #ifdef USE_OMP
    for( int i = 0; i < this->nData; i++ )
    {
@@ -114,7 +117,6 @@ cfdMomentum::~cfdMomentum()
 
    this->warper->Delete();
 }
-
 
 void cfdMomentum::Update( void )
 {    
@@ -161,8 +163,8 @@ void cfdMomentum::Update( void )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, 0) << "cfdMomentum requires cursorType == ARROW"
-                              << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,0) << "cfdMomentum requires cursorType == ARROW"
+                             << std::endl << vprDEBUG_FLUSH;
       this->updateFlag = false;
    }
 }

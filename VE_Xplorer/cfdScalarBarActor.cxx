@@ -62,25 +62,25 @@ cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
    _rootNode = rootNode;
    _activeDataSet = NULL;
    _readParam = new cfdReadParam( NULL );
-  // Initialize the all the variables
-  this->SetPosition( -5.0f, 6.0f, 0.0f );
-  this->zrot = 90;
-  this->height = 3.0f;
-  this->width = 0.5f;
-  this->numColors = 256;
-  this->numPts = 2*(this->numColors + 1);
-  this->numTextLabels = 5;
+   // Initialize the all the variables
+   this->SetPosition( -5.0f, 6.0f, 0.0f );
+   this->zrot = 90;
+   this->height = 3.0f;
+   this->width = 0.5f;
+   this->numColors = 256;
+   this->numPts = 2*(this->numColors + 1);
+   this->numTextLabels = 5;
 
-  this->lut = vtkLookupTable::New();
-  this->lut->SetNumberOfColors(numColors); //default is 256
-  this->lut->SetHueRange(2.0f/3.0f, 0.0f); //a blue-to-red scale
-  //this->lut->Build();// will build in SetRange
+   this->lut = vtkLookupTable::New();
+   this->lut->SetNumberOfColors(numColors); //default is 256
+   this->lut->SetHueRange(2.0f/3.0f, 0.0f); //a blue-to-red scale
+   //this->lut->Build();// will build in SetRange
 
-  this->titleTextScale = 0.2f;
+   this->titleTextScale = 0.2f;
 
-  this->titleScalar = vtkVectorText::New();
+   this->titleScalar = vtkVectorText::New();
 
-  this->scalarBar = new cfdDCS();
+   this->scalarBar = new cfdDCS();
 
    this->CreateObjects();
 }

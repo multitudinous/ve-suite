@@ -34,20 +34,17 @@
 #define CFD_MODEL_H
 
 /*
-
 1.The difference between the concept of multiple models and multiple datasets 
 is that:
 
 A model can contain several vtkDataSets, geometricalDataSets (surface dataset). 
-These datasets have the same operations. For example, for the same shape design, 
+These datasets have the same operations. For example, for the same shape design,
 if we want to see the effects of different boundary condition, we can put two 
 different cases into the same model, so the comparision can be made very 
 easily.But if we want to see the two different shape design or need to see 
 the difference between the experiment results and the simulation results, 
 it is better to treat these two dataset as two different models.
- 
 */
-
 
 #include <string>
 #include <vector>
@@ -124,7 +121,6 @@ class cfdModel
       fileInfo* mGeomFileInfo;
       fileInfo* mVTKFileInfo;
    
-      
       //the information for following three variables should be transfered from cfdApp
       ModelTypeIndex mModelType;
       Operation2Model mActiveOperation2Model;
