@@ -1,0 +1,34 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+
+sources = Split("""
+   translateToVtk.cpp 
+   starReader.cpp 
+   avsReader.cpp 
+   reiReader.cpp 
+   en7Reader.cpp
+   mfixReader.cpp 
+   fileIO.cxx 
+   converter.cpp 
+   gridConversion.cpp 
+   viewCells.cpp 
+   fireReader.cpp 
+   readWriteVtkThings.cxx 
+   cleanVtk.cpp 
+   cfdGrid2Surface.cpp 
+   particle.cpp 
+   fluentParticles.cpp 
+   reiParticles.cpp 
+   plot3dReader.cpp 
+   jdMAPReader.cpp
+   enSightGoldReader.cpp
+""")
+
+sources = map(lambda s: pj('#', 'VE_Xplorer', s), sources)
+
+env = baseEnv.Copy()
+env.Append(CPPPATH = [os.getcwd()])
+env.Program(pj('#','bin',Platform,'Translator'), source = sources)

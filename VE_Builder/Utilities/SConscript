@@ -1,0 +1,151 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+
+addNormals2Poly = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   addNormals2Poly.cpp
+""")
+
+appendVTK = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   appendVTK.cpp
+""")
+
+arrowCreator = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   arrowCreator.cpp
+   cfdArrow.cpp
+""")
+
+combineFluentParticleFile = Split("""
+   CombinePartFiles.cpp
+""")
+
+convertCellDataToPointData = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   convertCellDataToPointData.cpp
+""")
+
+convertSurfaceFileToStl = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   convertSurfaceFileToStl.cpp 
+""")
+
+convertVTK2Ascii = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   convertVTK2Ascii.cpp
+""")
+
+convertVTK2Binary = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   convertVTK2Binary.cpp
+""")
+
+createMiniFlowdata = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/cfdAccessoryFunctions.cxx
+   createMiniFlowdata.cpp 
+""")
+
+makeVtkSurface = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   setScalarAndVector.cpp
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Builder/Translator/viewCells.cpp
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Builder/Translator/cfdGrid2Surface.cpp
+   makeVtkSurface.cpp 
+""")
+
+mergeVertices = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   mergeVertices.cpp
+""")
+
+meshViewer = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   setScalarAndVector.cpp
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Builder/Translator/viewCells.cpp
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Builder/Translator/cfdGrid2Surface.cpp
+   meshViewer.cpp
+   cfdImage.cpp
+""")
+
+moveFieldToPointData = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   moveFieldToPointData.cpp
+""")
+
+removeVtkCellsOutsideBox = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Builder/Translator/cleanVtk.cpp
+   removeVtkCellsOutsideBox.cpp
+""")
+
+removeVtkPointData = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   removeVtkPointData.cpp
+""")
+
+scaleVTK = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   scaleVTK.cpp
+""")
+
+transformVTK = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   transformVTK.cpp 
+""")
+
+whatIsScalarRange = Split("""
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/fileIO.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/readWriteVtkThings.cxx
+   /home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer/cfdAccessoryFunctions.cxx
+   whatIsScalarRange.cpp
+""")
+
+sources = ['addNormals2Poly', 'appendVTK', 'arrowCreator',
+            'combineFluentParticleFile', 'convertCellDataToPointData',
+            'convertSurfaceFileToStl', 'convertVTK2Ascii', 'convertVTK2Binary',
+            'createMiniFlowdata', 'makeVtkSurface', 'mergeVertices',
+            'meshViewer', 'moveFieldToPointData', 'removeVtkCellsOutsideBox',
+            'removeVtkPointData', 'scaleVTK', 'transformVTK', 'whatIsScalarRange']
+
+env = baseEnv.Copy()
+env.Append(CPPPATH = [os.getcwd()])
+env.Append(CPPPATH = ['/home/users/nelsonn/svn_Test/VE_Suite/VE_Builder/Translator'])
+env.Append(CPPPATH = ['/home/users/nelsonn/svn_Test/VE_Suite/VE_Xplorer'])
+env.Program(pj('#','bin',Platform,'vr_addNormals2Poly'), source = addNormals2Poly)
+env.Program(pj('#','bin',Platform,'vr_appendVTK'), source = appendVTK)
+env.Program(pj('#','bin',Platform,'vr_arrowCreator'), source = arrowCreator)
+env.Program(pj('#','bin',Platform,'vr_combineFluentParticleFile'), source = combineFluentParticleFile)
+env.Program(pj('#','bin',Platform,'vr_convertCellDataToPointData'), source = convertCellDataToPointData)
+env.Program(pj('#','bin',Platform,'vr_convertSurfaceFileToStl'), source = convertSurfaceFileToStl)
+env.Program(pj('#','bin',Platform,'vr_convertVTK2Ascii'), source = convertVTK2Ascii)
+env.Program(pj('#','bin',Platform,'vr_convertVTK2Binary'), source = convertVTK2Binary)
+env.Program(pj('#','bin',Platform,'vr_createMiniFlowdata'), source = createMiniFlowdata)
+env.Program(pj('#','bin',Platform,'vr_makeVtkSurface'), source = makeVtkSurface)
+env.Program(pj('#','bin',Platform,'vr_mergeVertices'), source = mergeVertices)
+env.Program(pj('#','bin',Platform,'vr_meshViewer'), source = meshViewer)
+env.Program(pj('#','bin',Platform,'vr_moveFieldToPointData'), source = moveFieldToPointData)
+env.Program(pj('#','bin',Platform,'vr_removeVtkCellsOutsideBox'), source = removeVtkCellsOutsideBox)
+env.Program(pj('#','bin',Platform,'vr_removeVtkPointData'), source = removeVtkPointData)
+env.Program(pj('#','bin',Platform,'vr_scaleVTK'), source = scaleVTK)
+env.Program(pj('#','bin',Platform,'vr_transformVTK'), source = transformVTK)
+env.Program(pj('#','bin',Platform,'vr_whatIsScalarRange'), source = whatIsScalarRange)

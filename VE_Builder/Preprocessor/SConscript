@@ -1,0 +1,19 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+Import('Platform')
+
+sources = Split("""
+   multiPlaneVtkOutput.cxx
+   preprocessor.cxx
+   setScalarAndVector.cpp
+   fileIO.cxx
+   readWriteVtkThings.cxx
+""")
+
+sources = map(lambda s: pj('#', 'VE_Xplorer', s), sources)
+
+env = baseEnv.Copy()
+env.Append(CPPPATH = [os.getcwd()])
+env.Program(pj('#','bin',Platform,'Preprocessor'), source = sources)
