@@ -27,24 +27,13 @@ void tecplotReader::allocateVariables()
    for ( int i=0;i<numOfParameters;i++ )
    {      
       parameterData[ i ] = vtkFloatArray::New();
-      char* ptr = new char[ variablNames[ i+2 ].length() + 1 ];   //+1 for null terminator
-      variablNames[ i+2 ].copy( ptr, variablNames[ i+2 ].length(), 0 );
-      ptr[ variablNames[ i+2 ].length() + 1 ] = '\0';
-      parameterData[ i ]->SetName( ptr );
-      //delete [] ptr; ptr = NULL;
-      if ( i==0 )
-      {
-         parameterData[ i ]->SetNumberOfComponents( 3 ); //velocity vector
-         parameterData[ i ]->SetNumberOfTuples( 2*nX*nY );
-         //parameterData[ i ]->SetName( "Velocity" );
-      }
-      else
-      {
-         parameterData[ i ]->SetNumberOfComponents( 1 ); //scalar data
-         parameterData[ i ]->SetNumberOfTuples( 2*nX*nY );
-      }
-      if ( i==1 ) parameterData[ i ]->SetName( "Measurement" );
-      else if ( i==2 ) parameterData[ i ]->SetName( "Absolute Velocity" );
+      parameterData[ i ]->SetName( variablNames[ i+2 ].c_str() );
+      std::cout<<parameterData[ i ]->GetName()<<std::endl;
+      if ( i != (numOfParameters-1) )
+         parameterData[ i ]->SetNumberOfComponents( 1 );
+      else 
+         parameterData[ i ]->SetNumberOfComponents( 2 ); //this is the velocity vector
+      parameterData[ i ]->SetNumberOfTuples( 2*nX*nY );
    }
 }
 vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
@@ -103,7 +92,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       colsOfData = colsOfData/2;
       std::string varNamString;
       if ( debug ) std::cout<<" Columns of Data :"<<colsOfData<<std::endl;
-      //SEARCH FOR THE VARIABLE NAMES NOW
+      //////////////////////////////////////SEARCH FOR THE VARIABLE NAMES NOW
       for ( vectorIntIterator=locationQuotMarks.begin();vectorIntIterator!=locationQuotMarks.end(); vectorIntIterator+=2 )
       {
          I_Lower = ( *vectorIntIterator ); //std::cout<<"I lower :"<<I_Lower<<std::endl;
@@ -140,8 +129,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       if ( velocityCount < 3 )   //need to calculate absolute velocity
       {
          numOfParameters = velocityCount + otherParameters + 2; //one parameter for absolute velocity and the other for velocity vector
-         variablNames.push_back( "Absolute Velocity" );
-         
+         variablNames.push_back( "Absolute Velocity" );         
          variablNames.push_back( "Velocity vector" );
       }
       if ( velocityCount == 3 )
@@ -149,6 +137,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          numOfParameters = velocityCount + otherParameters + 1;   //one for velocity vector
          variablNames.push_back( "Velocity vector" );
       }
+      //////////////////////COMPLETED SETTING NUMBER OF PARAMETERS IN DATA
       tempString.erase();  //clear the contents of tempString
       char stringData[ 10 ];  //create a new character array
       I_Lower = header.find( "I=" );   //look for I= in the header
@@ -181,8 +170,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
             std::cout<<"nY :"<<nY<<std::endl;
             std::cout<<"nX :"<<nX<<std::endl;
          }
-      } 
-      //std::cout<<variablNames[ 3 ]<<std::endl;  
+      }
       //////////////////////////////////////////////////////////////////////////////////////////////////////
       //END HEADER PARSING SECTION
       /////////////////////////////////////////////////////////////////////////////////////////////////////

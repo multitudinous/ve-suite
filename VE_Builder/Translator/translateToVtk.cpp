@@ -171,6 +171,8 @@ char * preprocess( int argc, char *argv[],
          B_fname = 1; // don't have a default ensight filename
       else if ( type == 12 ) 
          B_fname = 1; // don't have a default ANSYS *.rst filename
+      else if ( type == 13 ) 
+         B_fname = 1; // don't have a default ANSYS *.rst filename
 #endif  //SJK_TEST
 
       if ( B_fname == 0 )
