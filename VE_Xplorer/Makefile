@@ -72,10 +72,11 @@ ifdef OMNI_HOME
 endif
 
 ifeq ($(TAO_BUILD), TRUE)
-   FUTUREGEN_HOME = ${VE_SUITE_HOME}/futuregen
+   FUTUREGEN_HOME = $(VE_SUITE_HOME)/futuregen
 
-   vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl 
-   vpath %.cpp    ${FUTUREGEN_HOME}/IDL ${FUTUREGEN_HOME}/Plugin ${FUTUREGEN_HOME}/Framework ${FUTUREGEN_HOME}/Executive
+   vpath %.cxx    $(CONDUCTOR_BASE_DIR)/impl 
+   vpath %.cpp    $(VE_SUITE_HOME)/VESOpen/skel $(FUTUREGEN_HOME)/Plugin 
+   vpath %.cpp    $(VE_SUITE_HOME)/VE_Conductor/Framework $(VE_SUITE_HOME)/VE_CE
 
    #----------------------------------------------------------------------------
    # Include macros and targets
@@ -99,11 +100,10 @@ ifeq ($(TAO_BUILD), TRUE)
    EXTRA_INCLUDES+= \
                   ${ACE_INCLUDES} \
                   -I${CONDUCTOR_BASE_DIR}/impl \
-                  -I${CONDUCTOR_BASE_DIR}/skel \
-                  -I${FUTUREGEN_HOME}/IDL \
+                  -I$(VE_SUITE_HOME)/VESOpen/skel \
                   -I${FUTUREGEN_HOME}/Plugin \
-                  -I${FUTUREGEN_HOME}/Framework \
-                  -I${FUTUREGEN_HOME}/Executive
+                  -I$(VE_SUITE_HOME)/VE_Conductor/Framework \
+                  -I$(VE_SUITE_HOME)/VE_CE
    EXEC_TAG = _tao
 endif
 
@@ -369,8 +369,8 @@ CXX_GEN_DIR= .
                         ${CONDUCTOR_BASE_DIR}/java_stuff/ObserverPackage \
                         ${CONDUCTOR_BASE_DIR}/java_stuff/VjObsPackage 
 
-vpath %.cpp $(CXX_GEN_DIR) ${CONDUCTOR_BASE_DIR}/skel
-vpath %.cxx ${VE_SUITE_HOME}/VE_SceneGraph
+vpath %.cpp $(CXX_GEN_DIR) $(CONDUCTOR_BASE_DIR)/skel
+vpath %.cxx $(VE_SUITE_HOME)/VE_SceneGraph
 #vpath %.cc ./UMI/skel
 #vpath %.h $(CXX_GEN_DIR)  ${CONDUCTOR_BASE_DIR}/skel
 
@@ -400,9 +400,9 @@ ${APP_NAME}: $(OBJS)
 #NetworkTestBean.jar: $(JAVA_CLASSES)
 #	$(JAR) cvf $@ $(ALL_CLASSES)
 
-install:
-	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
-	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+#install:
+#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
 
 # in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
 CLEAN_FILES+= $(APP_NAME)
