@@ -39,7 +39,7 @@ REI_Plugin::~REI_Plugin()
   if (dlg!=NULL)
     delete dlg;
   if (result_dlg!=NULL)
-    delete dlg;
+    delete result_dlg;
   if (port_dlg!=NULL)
     delete port_dlg;
 }
