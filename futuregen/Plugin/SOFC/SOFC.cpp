@@ -80,7 +80,7 @@ int SOFC::GetNumPoly()
 /////////////////////////////////////////////////////////////////////////////
 int SOFC::GetNumIports()
 {
-  int result=1;
+  int result=2;
 
   return result;
 }
@@ -89,6 +89,7 @@ int SOFC::GetNumIports()
 void SOFC::GetIPorts(POLY &iports)
 {
   iports[0]=wxPoint(0,20);
+  iports[1]=wxPoint(20, 0);
   return;
 }
 

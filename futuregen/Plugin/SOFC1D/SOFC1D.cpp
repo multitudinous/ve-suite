@@ -96,8 +96,13 @@ SOFC1D
   stop_time = 1000.0;
   ax_nodes = 5;
   loadres = 0.006;
-
-  n_pts = 3;
+  
+  n_pts = 4;
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(56,0);
+  poly[2]=wxPoint(56,40);
+  poly[3]=wxPoint(0,40);
+  
 }
 
 
@@ -136,7 +141,7 @@ int SOFC1D::GetNumPoly()
 /////////////////////////////////////////////////////////////////////////////
 int SOFC1D::GetNumIports()
 {
-  int result=1;
+  int result=2;
 
   return result;
 }
@@ -144,14 +149,15 @@ int SOFC1D::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void SOFC1D::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0, 20);
+  iports[0]=wxPoint(0,15);
+  iports[1]=wxPoint(0,25);
   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 int SOFC1D::GetNumOports()
 {
-  int result=1;
+  int result=2;
   //Your code
   return result;
 }
@@ -159,7 +165,8 @@ int SOFC1D::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void SOFC1D::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40, 20);
+  oports[0]=wxPoint(40,15); 
+  oports[1]=wxPoint(40,25);
 }
 
 /////////////////////////////////////////////////////////////////////////////

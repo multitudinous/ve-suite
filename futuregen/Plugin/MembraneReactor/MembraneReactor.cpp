@@ -36,8 +36,13 @@ MembraneReactor
   mr_inlet_temp = 565.0;
   f_H2O_CO = 1;
   H2O_CO = 1.0;
-  
-  n_pts = 3;
+ 
+  n_pts = 4;
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(56,0);
+  poly[2]=wxPoint(56,40);
+  poly[3]=wxPoint(0,40);
+
 }
 
 
@@ -76,7 +81,7 @@ int MembraneReactor::GetNumPoly()
 /////////////////////////////////////////////////////////////////////////////
 int MembraneReactor::GetNumIports()
 {
-  int result=1;
+  int result=2;
 
   return result;
 }
@@ -84,14 +89,15 @@ int MembraneReactor::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void MembraneReactor::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,20);
+  iports[0]=wxPoint(0,15);
+  iports[1]=wxPoint(0,25);
   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 int MembraneReactor::GetNumOports()
 {
-  int result=1;
+  int result=2;
   //Your code
   return result;
 }
@@ -99,7 +105,8 @@ int MembraneReactor::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void MembraneReactor::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40,20); 
+  oports[0]=wxPoint(40,15); 
+  oports[1]=wxPoint(40,25);
 }
 
 /////////////////////////////////////////////////////////////////////////////
