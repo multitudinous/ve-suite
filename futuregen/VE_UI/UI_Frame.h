@@ -24,7 +24,16 @@ public:
              const wxPoint& pos = wxDefaultPosition,
              const wxSize& size = wxDefaultSize,
              long style = wxDEFAULT_FRAME_STYLE);
+
+   UI_Frame(VjObs_ptr ref, wxWindow* parent, wxWindowID =-1, const wxString = "testing",
+            const wxPoint& pos = wxDefaultPosition,
+            const wxSize& size = wxDefaultSize, 
+            long style = 0);
+
    virtual ~UI_Frame();
+
+   void buildCORBA();
+   void buildFrame();
 
    //the events to handle
    void OnTabsEvent(wxNotebookEvent& event);
@@ -33,7 +42,8 @@ public:
 
    //UI_DatasetTab* _datasetPage;
    //UI_ScalarTab* _scalartab;
-   UI_DatasetPanel* _datasetPanel;
+   //UI_DatasetPanel* _datasetPanel;
+   UI_DatasetScrollable* _datasetScrollable;
    VjObs::obj_p_var   datasetTypes;
 
    //the notebook control that has our tabs
@@ -41,8 +51,6 @@ public:
 
 protected:
 
-
-   //UI_DatasetTab* _datasettab;
-
+   VjObs_var vjobs;
 };
 #endif //_VE_UI_FRAME_H_

@@ -17,7 +17,7 @@ enum NAV_TAB_IDS {
   BACKWARD_B,
   CCW_B,
   CW_B,
-  NONE= -1000
+  //NONE= -1000
 };
 //override the buttons
 class UI_NavButton: public wxButton{

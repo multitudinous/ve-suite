@@ -9,10 +9,8 @@ bool UI_App::OnInit()
 {
    //Create the main window
     _uiFrame = new UI_Frame(wxT("WX Client for VE Suite"));
-  
    //What does this do?
    InitObserver();
-
    //biv--This was from original implementation
    //biv--Not sure if it is true or not-- check logic later
 
@@ -23,7 +21,6 @@ bool UI_App::OnInit()
     _uiFrame->GetSize(& width, & height);
     _uiFrame->SetSize(-1, -1, width, height);
 #endif
-   
    //display the UI
    _uiFrame->Show();
    return TRUE;

@@ -1,8 +1,6 @@
 #ifndef _VE_UI_TABS_H_
 #define _VE_UI_TABS_H_
-#ifdef WIN32
-#include <winsock2.h>
-#endif
+
 #include "wx/wx.h"
 #include "wx/notebook.h"
 #include "VjObsC.h"
@@ -20,6 +18,10 @@
 #include "UI_GeometryTab.h"
 #include "UI_ViewLocTab.h"
 #include "UI_DesignParTab.h"
+
+#ifdef WIN32
+#include <winsock2.h>
+#endif
 
 class UI_VertTab;
 class UI_TransTab;

@@ -23,6 +23,12 @@ enum DATASETS_PANEL_IDS{
    VECTOR_RAD_BOX
 };
 
+class UI_Dataset3dScrollable;
+class UI_DatasetVertexScrollable;
+class UI_DatasetPolyScrollable;
+class UI_DatasetPanel;
+
+
 class UI_Scalars{
 public:
    UI_Scalars(wxString);
@@ -48,6 +54,66 @@ public:
 
 };
 
+class UI_DatasetScrollable: public wxScrolledWindow{
+public:
+   UI_DatasetScrollable(wxWindow* parent);
+   ~UI_DatasetScrollable();
+
+   void buildPage( void );
+
+   UI_DatasetPanel* _dataSetPanel;
+   UI_Dataset3dScrollable* _3dScrollable;
+   UI_DatasetVertexScrollable* _vertScrollable;
+   UI_DatasetPolyScrollable* _polyScrollable;
+
+   wxBoxSizer* _col1;
+   wxBoxSizer* _col2;
+   wxBoxSizer* _col3;
+
+   wxStaticBox* _dataHeadingBox;
+   wxBoxSizer* _top;
+   wxBoxSizer* _bottom;
+   DECLARE_EVENT_TABLE()
+
+};
+
+
+class UI_Dataset3dScrollable: public wxScrolledWindow{
+public:
+   UI_Dataset3dScrollable(wxScrolledWindow* parent);
+   ~UI_Dataset3dScrollable();
+
+   wxRadioBox* _3dRBox;
+
+   DECLARE_EVENT_TABLE()
+};
+
+
+
+
+class UI_DatasetVertexScrollable: public wxScrolledWindow{
+public:
+   UI_DatasetVertexScrollable(wxScrolledWindow* parent);
+   ~UI_DatasetVertexScrollable();
+
+   wxRadioBox* _vertexRBox;
+   
+   DECLARE_EVENT_TABLE()
+};
+
+
+
+class UI_DatasetPolyScrollable: public wxScrolledWindow{
+public:
+   UI_DatasetPolyScrollable(wxScrolledWindow* parent);
+   ~UI_DatasetPolyScrollable();
+
+   wxRadioBox* _polydataRBox;
+   DECLARE_EVENT_TABLE()
+};
+
+
+
 class UI_DatasetPanel: public wxPanel{
 public:
    UI_DatasetPanel(wxWindow* tControl);
@@ -59,7 +125,7 @@ public:
 
    vector<UI_DataSets*> _DataSets;
 
-protected:
+
    
    int _maxnoScalars;
    int _noScalars;
@@ -76,11 +142,13 @@ protected:
    //Building the panel
    void _buildPanel();
 
+   wxScrolledWindow* _3dScroll;
+
    //the controls
    wxRadioBox* _activeRBox;
-   wxRadioBox* _3dRBox;
-   wxRadioBox* _vertexRBox;
-   wxRadioBox* _polydataRBox;
+   //wxRadioBox* _3dRBox;
+   //wxRadioBox* _vertexRBox;
+   //wxRadioBox* _polydataRBox;
    wxRadioBox* _scalarRBox;
    wxRadioBox* _vectorRBox;
 
@@ -90,17 +158,22 @@ protected:
    wxSlider* _maxPercentSlider;
    wxSlider* _minPercentSlider;
 
-   wxStaticBox* _dataHeadingBox;
+   //wxStaticBox* _dataHeadingBox;
 
-   wxBoxSizer* _top;
-   wxBoxSizer* _bottom;
+   //wxBoxSizer* _top;
+   //wxBoxSizer* _bottom;
+
+   wxStaticBoxSizer* sRangeBoxSizer;
+
+   wxSizer* _3dSizer;
 
    wxBoxSizer* _col1;
    wxBoxSizer* _col2;
    wxBoxSizer* _col3;
-
-   void _buildDataSets();
    void _setScalars(UI_DataSets*);
+protected:
+   void _buildDataSets();
+   
    void _setScalarsnoDatasets();
    void _organizeRadioBoxInfo();
    void _organizeActiveRBox();

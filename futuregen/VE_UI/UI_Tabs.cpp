@@ -325,7 +325,6 @@ void UI_Tabs::updateScalarPage(char** names, int numNames, int refresh)
 //////////////////////////////
 void UI_Tabs::createTabPages()
 {
-
    //Add the pages to the notebook
 
    //Visualization page

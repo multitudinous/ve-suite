@@ -14,9 +14,24 @@ UI_Frame::UI_Frame(const wxString& title,
              long style)
 : wxFrame((wxWindow *) NULL, -1, title, pos, size, style)
 {
-   _tabs = 0;
-   _datasetPanel = 0;
+   buildCORBA();
+   buildFrame();
+}
 
+UI_Frame::UI_Frame(VjObs_ptr ref,wxWindow* parent, wxWindowID id, const wxString test,
+            const wxPoint& pos ,
+            const wxSize& size ,
+            long style )
+:wxFrame(parent, id, test, pos, size, style)
+{
+   //vjobs = VjObs::_duplicate(ref);
+   buildFrame();
+}
+
+
+void UI_Frame::buildCORBA( )
+{
+     
    //NOTE:New controls that are added to the frame that
    //aren't related(located on) the tabs should be initialized
    //here!!!!Also their sizers should be added here!!!
@@ -29,7 +44,7 @@ UI_Frame::UI_Frame(const wxString& title,
    PortableServer::POA_var poa;
    CORBA::ORB_var orb;
    CosNaming::NamingContext_var naming_context;
-   VjObs_var vjobs;
+   //VjObs_var vjobs;
    
    try 
      {
@@ -92,17 +107,23 @@ UI_Frame::UI_Frame(const wxString& title,
        
        cerr << "Can't find VE server" << endl;
      }
+}    
+ 
+void UI_Frame::buildFrame( )
+{
     
+   _tabs = 0;
+   _datasetScrollable = 0;
    //the tabs of our UI
    _tabs = new UI_Tabs( vjobs.in(), this, ID_UI_TABS);
    //_tabs = new UI_Tabs(this,-1);
-
+   std::cout<<"testing"<<std::endl;
    //set the left side of the gui
-   _datasetPanel = new UI_DatasetPanel(this);
+   _datasetScrollable = new UI_DatasetScrollable(this);
    //_datasetPage = new UI_DatasetTab(this);
-
+   std::cout<<"testing1"<<std::endl;
    //_scalartab = new UI_ScalarTab(this);
-
+   
    //create the individual pages for the tab control
    _tabs->createTabPages();
 
@@ -115,7 +136,7 @@ UI_Frame::UI_Frame(const wxString& title,
    //the panel sizers for datasetPage and scalartab
    wxBoxSizer* _datasetSizer = new wxBoxSizer(wxHORIZONTAL);
    //wxBoxSizer* _scalarSizer = new wxBoxSizer(wxHORIZONTAL);
-   _datasetSizer->Add(_datasetPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _datasetSizer->Add(_datasetScrollable,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //_scalarSizer->Add(_scalartab,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //add the tabs to the frame
