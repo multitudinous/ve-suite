@@ -43,7 +43,7 @@ using namespace gadget;
 
 cfdNavigate::cfdNavigate( )
 {
-  wand.init("VJWand");
+   wand.init("VJWand");
    this->digital[0].init("VJButton0");   // trigger (and top right button) TODO: I think this is unused ?
    this->digital[1].init("VJButton1");   // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
    this->digital[2].init("VJButton2");   // 12 o'clock -- forward navigation
@@ -51,7 +51,6 @@ cfdNavigate::cfdNavigate( )
    this->digital[4].init("VJButton4");   // 6 o'clock -- reset
    this->digital[5].init("VJButton5");   // 9 o'clock -- exit streamer while loop
 
-//#ifdef IHCC_SYS
    this->IHdigital[0].init("VJMovementZ0");  //press "8" for forward navigation
    this->IHdigital[1].init("VJMovementZ1");  //press "2" for backward navigation
    this->IHdigital[2].init("VJMovementX0");  //press "6" for rightward navigation
@@ -62,7 +61,11 @@ cfdNavigate::cfdNavigate( )
    this->IHdigital[7].init("VJRotateY");  //press "left_arrow" for CCW rotation
    //this->IHdigital[8].init("IHVJButton8");  //press "up_arrow" for upward rotation
    //this->IHdigital[9].init("IHVJButton9");  //press "down_arrow" for downward rotation
-//#endif
+   // inputs for flythrough paths
+   flyThrough[0].init("Path_1");
+   flyThrough[1].init("Path_2");
+   flyThrough[2].init("Path_3");
+   flyThrough[3].init("Path_4");
 }
 
 cfdNavigate::~cfdNavigate( )
@@ -389,7 +392,6 @@ void cfdNavigate::updateNavigationFromGUI()
                              << this->currentWandDirection[2]
                              << std::endl << vprDEBUG_FLUSH;
 
-      //yang-REI: the following block are moved from the intraFrame Function
       if ( this->currentWandDirection[ 0 ] > 0.0f )
       {
          this->worldRot[ 0 ] -= 1.0f;
@@ -406,7 +408,6 @@ void cfdNavigate::updateNavigationFromGUI()
       vprDEBUG(vprDBG_ALL,1) << " Navigate" << std::endl << vprDEBUG_FLUSH;
       this->FwdTranslate();
       this->GetWorldLocation( this->worldTrans );
-      //yang-REI: the following block are moved from the intraFrame Function
    }
    else if ( this->cfdId == CHANGE_NAVIGATION_STEP_SIZE )         
    {

@@ -68,12 +68,26 @@ cfdQuatCamHandler::cfdQuatCamHandler( cfdDCS* worldDCS, cfdNavigate* nav, char* 
    numQuatCams = 0;
    activecam = false;
    cam_id = 0;
+   activeFlyThrough = -1;
    
    _worldDCS = worldDCS;
    _nav = nav;
    _param = param;
    _readParam = new cfdReadParam();
    CreateObjects();
+
+   activeFlyThroughArray[ 0 ].push_back( 0 );
+   activeFlyThroughArray[ 0 ].push_back( 1 );
+   activeFlyThroughArray[ 0 ].push_back( 2 );
+   activeFlyThroughArray[ 0 ].push_back( 3 );
+   activeFlyThroughArray[ 0 ].push_back( 4 );
+   activeFlyThroughArray[ 0 ].push_back( 5 );
+   activeFlyThroughArray[ 1 ].push_back( 6 );
+   activeFlyThroughArray[ 1 ].push_back( 7 );
+   activeFlyThroughArray[ 2 ].push_back( 2 );
+   activeFlyThroughArray[ 2 ].push_back( 4 );
+   activeFlyThroughArray[ 3 ].push_back( 4 );
+   activeFlyThroughArray[ 3 ].push_back( 0 );
 }
 
 cfdQuatCamHandler::~cfdQuatCamHandler( void )
@@ -241,6 +255,42 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 // If a quat is active this will move the cam to the next location
 void cfdQuatCamHandler::PreFrameUpdate( void )
 {
+   static int pointCounter = 0;
+       if ( _nav->flyThrough[ 0 ]->getData() == gadget::Digital::ON )
+      {
+         activeFlyThrough = 0;
+         activecam = true;
+		 pointCounter = 0;
+         cam_id = activeFlyThroughArray[ activeFlyThrough ].at( 0 );
+      }
+      else if ( _nav->flyThrough[ 1 ]->getData() == gadget::Digital::ON )
+      {
+         activeFlyThrough = 1;
+         activecam = true;
+		 pointCounter = 0;
+         cam_id = activeFlyThroughArray[ activeFlyThrough ].at( 0 );
+      }
+      else if ( _nav->flyThrough[ 2 ]->getData() == gadget::Digital::ON )
+      {
+         activeFlyThrough = 2;
+         activecam = true;
+		 pointCounter = 0;
+         cam_id = activeFlyThroughArray[ activeFlyThrough ].at( 0 );
+      }
+      else if ( _nav->flyThrough[ 3 ]->getData() == gadget::Digital::ON )
+      {
+         activeFlyThrough = 3;
+         activecam = true;
+		 pointCounter = 0;
+         cam_id = activeFlyThroughArray[ activeFlyThrough ].at( 0 );
+      }
+      else if ( (activeFlyThrough != -1) && (!activecam) )
+      {
+         pointCounter = ( pointCounter == ((int)activeFlyThroughArray[ activeFlyThrough ].size()-1) ) ? 0 : ++pointCounter; 
+         cam_id = activeFlyThroughArray[ activeFlyThrough ].at( pointCounter );
+	     activecam = true;
+      }
+ 
    if ( activecam )
    {
       this->Relocate( _worldDCS, _nav);    

@@ -121,6 +121,8 @@ class cfdQuatCamHandler : public cfdGlobalBase
       float rotvec[3];
       float angle;
       bool activecam;
+      int activeFlyThrough;
+      std::vector<int> activeFlyThroughArray[ 4 ];
 };
 #endif
 
