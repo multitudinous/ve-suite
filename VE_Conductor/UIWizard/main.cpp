@@ -197,8 +197,8 @@ void GenCode()
 
   mod_h = MOD_name+".h";
   mod_cpp = MOD_name+".cpp";
-  mod_ui_h = MOD_name+"_UI.h";
-  mod_ui_cpp = MOD_name+"_UI.cpp";
+  mod_ui_h = MOD_name+"_UI_Dialog.h";
+  mod_ui_cpp = MOD_name+"_UI_Dialog.cpp";
 
   printf("Make new directory %s\n", MOD_name.c_str());
 
@@ -213,8 +213,8 @@ void GenCode()
   //system("cp ../UIDialog.h ./");
   ifstream fh_inp("../TEMPLATE.h");
   ifstream fcpp_inp("../TEMPLATE.cpp");
-  ifstream fuih_inp("../TEMPLATE_UI.h");
-  ifstream fuicpp_inp("../TEMPLATE_UI.cpp");
+  ifstream fuih_inp("../TEMPLATE_UI_Dialog.h");
+  ifstream fuicpp_inp("../TEMPLATE_UI_Dialog.cpp");
   ifstream fmake_inp("../Makefile.TEMPLATE");
   FILE *f_h = fopen(mod_h.c_str(), "w");
   FILE *f_cpp = fopen(mod_cpp.c_str(), "w");
@@ -225,6 +225,7 @@ void GenCode()
   char* if_public;
   char* if_constructor;
   char* if_UIDialog;
+  char* if_UIDialog_include;
   bool already_one_public = false;
   bool end_of_file;
   int len;
@@ -334,9 +335,14 @@ void GenCode()
       }
 
     if_UIDialog = strstr(buffer2, "TEMPLATE_UI_Dialog");
-    if (if_UIDialog)
+    // We needto make sure that we only change the constructor and 
+    // not the include spec at the top of the TEMPPLATE.cpp file
+    if (if_UIDialog && !strstr(buffer2, "TEMPLATE_UI_Dialog.h") )
       {
-	fseek(f_cpp, -2, SEEK_CUR);
+   // This is for the first TEMPLATE_UI_Dialog, which is the include 
+   
+   // This is for the second TEMPLATE_UI_Dialog, line 92 of TEMPLATE.cpp
+	fseek(f_cpp, -2, SEEK_CUR); // wind back 1 space and \n
 	fprintf(f_cpp, "(parent, -1,\n");
 	//Let print out the Register of member variables;
 	for (i=0; i<Double_name.size(); i++)

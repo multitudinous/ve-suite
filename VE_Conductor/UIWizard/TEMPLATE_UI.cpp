@@ -1,4 +1,4 @@
-#include "TEMPLATE_UI.h"
+#include "TEMPLATE_UI_Dialog.h"
 
 IMPLEMENT_DYNAMIC_CLASS(TEMPLATE_UI_Dialog, UIDialog);
 

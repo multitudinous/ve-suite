@@ -1,34 +1,58 @@
-CXX = $(shell wx-config --cxx)
-WX_FLAGS = $(shell wx-config --cxxflags)
-WX_LIBS = $(shell wx-config --libs)
+# Create the OS-dependent directory name
+CFDHOSTTYPE?=	$(DZR_HOSTTYPE)
+PLUGIN = TEMPLATE
+APP_NAME= ../GUIPlugins/$(CFDHOSTTYPE)/lib$(PLUGIN).so
 
-PLATFORM = LINUX
-COMPILER = g++
-GCC = yes
-GXX = yes
-CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  -I../
-CFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
-LDFLAGS =    
-THREADS = none
-EXTRA_LIBS =  
-PREFIX = /usr/local
+VE_CONDUCTOR_HOME = $(VE_SUITE_HOME)/VE_Conductor
 
-include ${XERCESCROOT}/version.incl
-include ../Makefile.incl
+all:
+	mkdir -p ../GUIPlugins/$(CFDHOSTTYPE)
+	$(MAKE) NO_DEPEND=0 cxx
+	$(MAKE) $(APP_NAME)
 
-PLUGIN = libTEMPLATE.so
-OBJECTS = TEMPLATE.o \
-	TEMPLATE_UI.o 
+srcdir= .
 
-.SUFFIXES : .o .cpp
+SRCS=\
+   TEMPLATE.cpp \
+	TEMPLATE_UI_Dialog.cpp 
 
-.cpp.o :
-	$(CXX) -g -c ${INCLUDES} ${CMP} ${WX_FLAGS} -D WXUSING_PLUGIN_DLL -o $@ $<
+# Specify the OS-dependent directory name for object files and depends
+OBJDIR= $(CFDHOSTTYPE)
+DEPDIR= $(CFDHOSTTYPE)
 
-all: $(PLUGIN)
+NO_DEPEND= YES
 
-$(PLUGIN): $(OBJECTS)
-#
-	$(CXX) -g -shared -o $(PLUGIN) $(OBJECTS) 
-clean:
-	rm -rf *.o $(PLUGIN) $(OBJECTS) 
+# One of these must be uncommented.
+#DEBUG_APP?= TRUE
+OPTIM_APP?= TRUE
+
+EXTRA_CFLAGS+=
+
+EXTRA_CXXFLAGS+= -I$(VE_CONDUCTOR_HOME)/Framework 
+
+EXTRA_DEFS+=
+
+EXTRA_LIBS+= -shared
+
+LINKALL_ON= -all
+LINKALL_OFF=
+
+STATIC_ON= @APP_LINK_STATIC_ON@
+STATIC_OFF= @APP_LINK_STATIC_OFF@
+
+include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
+
+include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
+include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
+
+vpath %.cpp $(VE_CONDUCTOR_HOME)/Framework
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+cxx: $(OBJS)
+
+${APP_NAME}: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+
+CLEAN_FILES+= $(APP_NAME)

@@ -1,5 +1,5 @@
-#ifndef TEMPLATE_UI_H
-#define TEMPLATE_UI_H
+#ifndef TEMPLATE_UI_DIALOG_H
+#define TEMPLATE_UI_DIALOG_H
 #include "UIDialog.h"
 #include <vector>
 #include <string>

@@ -1,11 +1,13 @@
 
-#pragma warning(disable:4786)
+#ifdef WIN32
+#pragma warning(disable : 4786)
 #pragma warning(disable : 4101)
 #pragma warning(disable : 4503)
 #pragma warning(disable : 4251)
+#endif
 
 #include "TEMPLATE.h"
-#include "TEMPLATE_UI.h"
+#include "TEMPLATE_UI_Dialog.h"
 
 IMPLEMENT_DYNAMIC_CLASS(TEMPLATE, REI_Plugin)
 
