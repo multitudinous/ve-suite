@@ -92,6 +92,9 @@ public:
 			double *ks, double *kd, double *ha, double *rhos,
 			double *ta1, double *tcv, double *emiss, double *ashcomp);
   void load_scirun_flags (int *lrsrt, int *lprst);
+  void load_oxidant (float *tf0, float *hsub0, float *densf0, float *erf0, float *smf0,
+		     float *cpsf0, float *bf0, float *specfoo, float *spec0, int *nel, int *nsp,
+		     char *spec_name, char *wic_name, unsigned int s1len, unsigned int s2len);
 
   // NOT USED
   void load_scirun_coalMT(float *coal_flows, float *coal_temps) { };

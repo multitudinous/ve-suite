@@ -24,7 +24,6 @@ extern "C"
 					   unsigned int slen);
   typedef gas_send_scirun_specie_f* gas_send_scirun_specie_fp;
 
-  
   void WIN_PREFIX gas_load_scirun_coal_(float *coal_flows);
   typedef void WIN_PREFIX gas_load_scirun_coal_f(float *coal_flows);
   typedef gas_load_scirun_coal_f* gas_load_scirun_coal_fp;	
@@ -151,6 +150,14 @@ extern "C"
   void WIN_PREFIX gas_load_scirun_flags_ (int *lrsrt, int *lprst);
   typedef void WIN_PREFIX gas_load_scirun_flags_f (int *lrsrt, int *lprst);
   typedef gas_load_scirun_flags_f* gas_load_scirun_flags_fp;
+
+  void WIN_PREFIX gas_load_oxidant_ (float *tf0, float *hsub0, float *densf0, float *erf0, float *smf0,
+	  float *cpsf0, float *bf0, float *specfoo, float *spec0, int *nel, int *nsp,
+	  char *spec_name, char *wic_name, unsigned int s1len, unsigned int s2len);
+  typedef void WIN_PREFIX gas_load_oxidant_f (float *tf0, float *hsub0, float *densf0, float *erf0, float *smf0,
+	  float *cpsf0, float *bf0, float *specfoo, float *spec0, int *nel, int *nsp,
+	  char *spec_name, char *wic_name, unsigned int s1len, unsigned int s2len);
+  typedef gas_load_oxidant_f* gas_load_oxidant_fp;
 }
 
 #endif

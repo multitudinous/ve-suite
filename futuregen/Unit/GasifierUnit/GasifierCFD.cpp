@@ -754,7 +754,8 @@ void GasifierCFD::load_and_run_glacier()
 		       gas_load_scirun_pd_fp,
 		       gas_update_dbfile_fp,
 		       gas_load_scirun_slag_fp,
-		       gas_load_scirun_flags_fp);
+		       gas_load_scirun_flags_fp,
+		       gas_load_oxidant_fp);
 
   close_io_func_type * close_io_func;
   glacier_func_type* glacier_func;
@@ -835,7 +836,8 @@ void GasifierCFD::load_and_run_glacier()
 	       gas_load_scirun_pd_,
 	       gas_update_dbfile_,
 	       gas_load_scirun_slag_,
- 	       gas_load_scirun_flags_);
+ 	       gas_load_scirun_flags_,
+	       gas_load_oxidant_);
 
 	cout<<"Done with glacier_func"<<endl;
 
@@ -1480,6 +1482,13 @@ void GasifierCFD::load_scirun_flags (int *lrsrt, int *lprst)
   cerr << "PART RESTART = " << _prt_restart << endl;
 }
 
+void GasifierCFD::load_oxidant (float *tf0, float *hsub0, float *densf0, float *erf0, float *smf0,
+	  float *cpsf0, float *bf0, float *specfoo, float *spec0, int *nel, int *nsp,
+	  char *spec_name, char *wic_name, unsigned int s1len, unsigned int s2len)
+{
+
+}
+
 //******************************************************************************
 //******************************  C Functions **********************************
 //******************************************************************************
@@ -1695,3 +1704,13 @@ void WIN_PREFIX gas_load_scirun_flags_ (int *lrsrt, int *lprst)
   GAS_GLACIER_PTR->load_scirun_flags (lrsrt, lprst);
 }
 
+//\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
+
+void WIN_PREFIX gas_load_oxidant_ (float *tf0, float *hsub0, float *densf0, float *erf0, float *smf0,
+	  float *cpsf0, float *bf0, float *specfoo, float *spec0, int *nel, int *nsp,
+	  char *spec_name, char *wic_name, unsigned int s1len, unsigned int s2len)
+{
+  GAS_GLACIER_PTR->load_oxidant (tf0, hsub0, densf0, erf0, smf0,
+	  cpsf0, bf0, specfoo, spec0, nel, nsp,
+	  spec_name, wic_name, s1len, s2len);
+}
