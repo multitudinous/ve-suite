@@ -46,7 +46,10 @@ Gasifier0D_UI_Dialog
   double* pres_drop,
   long* stage,
   long* spec_geometry,
-  long* des_mode)
+  long* des_mode,
+  string* coal_type,
+  double* size_50,
+  double* size_200)
 : UIDialog((wxWindow *) parent, id, "Gasifier0D"),
   p_steam_temp1(steam_temp1),
   p_steam_flrt1(steam_flrt1),
@@ -79,7 +82,10 @@ Gasifier0D_UI_Dialog
   p_pres_drop(pres_drop),
   p_stage(stage),
   p_spec_geometry(spec_geometry),
-  p_des_mode(des_mode)
+  p_des_mode(des_mode),
+  p_coal_type(coal_type),
+  p_size_50(size_50),
+  p_size_200(size_200)
 {
 
   wxBoxSizer* top_sizer = new wxBoxSizer(wxVERTICAL);
@@ -184,6 +190,11 @@ bool Gasifier0D_UI_Dialog::TransferDataFromWindow()
   (*p_spec_geometry) = m_tabs->cb_spec_geometry->GetValue();
   (*p_des_mode) = m_tabs->cb_des_mode->GetValue();
 
+  (*p_coal_type) = m_tabs->c_coal_type->GetValue();
+  txt = m_tabs->t_size_50->GetValue();
+  (*p_size_50) = atof(txt.c_str());
+  txt = m_tabs->t_size_200->GetValue();
+  (*p_size_200) = atof(txt.c_str());
   return true;
 
 }
@@ -194,7 +205,8 @@ bool Gasifier0D_UI_Dialog::TransferDataToWindow()
 
   wxString txt1, txt2, txt3, txt4, txt5, txt6, txt7, txt8, txt9, txt10;
   wxString txt11, txt12, txt13, txt14, txt15, txt16, txt17, txt18, txt19, txt20;
-  wxString txt21, txt22, txt23, txt24, txt25, txt26, txt27, txt28, txt29;
+  wxString txt21, txt22, txt23, txt24, txt25, txt26, txt27, txt28, txt29, txt30;
+  wxString txt31, txt32;
 
   txt1<<(*p_steam_temp1);
   m_tabs->t_steam_temp1->SetValue(txt1);
@@ -283,6 +295,15 @@ bool Gasifier0D_UI_Dialog::TransferDataToWindow()
   txt29<<(*p_pres_drop);
   m_tabs->t_pres_drop->SetValue(txt29);
 
+  txt30= p_coal_type->c_str();
+  m_tabs->c_coal_type->SetValue(txt30);
+
+  txt31<<(*p_size_50);
+  m_tabs->t_size_50->SetValue(txt31);
+  
+  txt32<<(*p_size_200);
+  m_tabs->t_size_200->SetValue(txt32);
+  
   wxCommandEvent event;
   if (*p_stage)
     {
@@ -548,22 +569,26 @@ wxPanel *GasiTabs::CreateSecondPage()
 
   wxBoxSizer* first_row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* second_row = new wxBoxSizer(wxHORIZONTAL);
-  
+  wxBoxSizer* third_row = new wxBoxSizer(wxHORIZONTAL);
+
   top_sizer->Add(10, 5, 0);
   top_sizer->Add(first_row,0);
   top_sizer->Add(10, 5, 0);
   top_sizer->Add(second_row, 0);
+  top_sizer->Add(10, 5, 0);
+  top_sizer->Add(third_row, 0);
 
   wxStaticBox *geom_box = new wxStaticBox(panel, -1, "Geometry Specified");
   wxStaticBox *burnout_box = new wxStaticBox(panel, -1, "Burnout Specified");
   wxStaticBox *emis_box = new wxStaticBox(panel, -1, "Emis");
   wxStaticBox *misc_box = new wxStaticBox(panel, -1, "Misc");
-
-
+  wxStaticBox *coal_box = new wxStaticBox(panel, -1, "Coal Info");
+   
   wxStaticBoxSizer* geom_row = new wxStaticBoxSizer(geom_box, wxVERTICAL);
   wxStaticBoxSizer* burnout_row = new wxStaticBoxSizer(burnout_box, wxVERTICAL);
   wxStaticBoxSizer* emis_row = new wxStaticBoxSizer(emis_box, wxVERTICAL);
   wxStaticBoxSizer* misc_row = new wxStaticBoxSizer(misc_box, wxVERTICAL);
+  wxStaticBoxSizer* coal_row = new wxStaticBoxSizer(coal_box, wxVERTICAL);
   
   first_row->Add(geom_row, 0);
   first_row->Add(5, 5, 0);
@@ -572,6 +597,8 @@ wxPanel *GasiTabs::CreateSecondPage()
   second_row->Add(emis_row, 0);
   second_row->Add(5, 5, 0);
   second_row->Add(misc_row, 0);
+
+  third_row->Add(coal_row, 0);
 
   wxBoxSizer* geom_1row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* geom_2row = new wxBoxSizer(wxHORIZONTAL);
@@ -593,6 +620,9 @@ wxPanel *GasiTabs::CreateSecondPage()
   wxBoxSizer* misc_1row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* misc_2row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* misc_3row = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer* coal_1row = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer* coal_2row = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer* coal_3row = new wxBoxSizer(wxHORIZONTAL);
 
   geom_row->Add(3, 3, 0);
   geom_row->Add(geom_1row, 0, wxALIGN_CENTER_HORIZONTAL);
@@ -649,6 +679,14 @@ wxPanel *GasiTabs::CreateSecondPage()
   misc_row->Add(3, 3, 0);
   misc_row->Add(misc_3row);
   misc_row->Add(3, 3, 0);
+  
+  coal_row->Add(3, 3, 0);
+  coal_row->Add(coal_1row);
+  coal_row->Add(3, 3, 0);
+  coal_row->Add(coal_2row);
+  coal_row->Add(3, 3, 0);
+  coal_row->Add(coal_3row);
+  coal_row->Add(3, 3, 0);
   
   cb_spec_geometry = new wxCheckBox(panel, SPEC_GEOM, "Specifiy Geometry", wxDefaultPosition, wxSize(150, 17));
   geom_1row->Add(cb_spec_geometry);
@@ -717,6 +755,27 @@ wxPanel *GasiTabs::CreateSecondPage()
   t_pres_drop = new wxTextCtrl(panel, -1, wxT("0"), wxDefaultPosition, wxSize(80, 20));
   misc_3row->Add(label13);
   misc_3row->Add(t_pres_drop);
+
+  wxStaticText * label14 = new wxStaticText(panel, -1, "Coal Type", wxDefaultPosition, wxSize(150, 17));
+
+  wxString coal_type_val[] = {
+	wxT("Pittsburg_#8"), wxT("Illinois_#5"), wxT("Illinois_#6"), wxT("Petcoke"),
+	wxT("Pike_County"), wxT("Pocahantas_#3"), wxT("E-Gas_Illinois_#6"), wxT("E-Gas_Utah"), 
+	wxT("E-Gas_Wyodak"), wxT("E-Gas_Wyoming"), wxT("E-Gas_AppMS"), wxT("E-Gas_AppLS")
+  };
+  
+  c_coal_type = new wxComboBox(panel, -1, wxT("Illinois_#5"), wxDefaultPosition, wxSize(120, 20), 12, coal_type_val, wxCB_DROPDOWN|wxCB_READONLY|wxCB_SORT);
+  coal_1row->Add(label14);
+  coal_1row->Add(c_coal_type);
+  wxStaticText * label15 = new wxStaticText(panel, -1, "Size percent thru 50 ", wxDefaultPosition, wxSize(150, 17));
+  t_size_50 = new wxTextCtrl(panel, -1, wxT("99.9"), wxDefaultPosition, wxSize(120, 20));
+  coal_2row->Add(label15);
+  coal_2row->Add(t_size_50);
+  wxStaticText * label16 = new wxStaticText(panel, -1, "Size percent thru 200 ", wxDefaultPosition, wxSize(150, 17));
+  t_size_200 = new wxTextCtrl(panel, -1, wxT("90"), wxDefaultPosition, wxSize(120, 20));
+  coal_3row->Add(label16);
+  coal_3row->Add(t_size_200);
+  
   //top_sizer->Fit(panel);
   //panel->SetAutoLayout(true);
   panel->SetSizer(top_sizer);

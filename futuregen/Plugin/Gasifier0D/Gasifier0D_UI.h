@@ -59,6 +59,9 @@ class GasiTabs : public wxNotebook
   wxTextCtrl* t_slag_eff;
   wxTextCtrl* t_pres_drop;
 
+  wxComboBox* c_coal_type;
+  wxTextCtrl* t_size_50;
+  wxTextCtrl* t_size_200;
   wxRadioButton* r_stage1;
   wxRadioButton* r_stage2;
 
@@ -111,7 +114,10 @@ class Gasifier0D_UI_Dialog : public UIDialog
 		  double* pres_drop,   		     
           long* stage,
           long* spec_geometry,
-          long* des_mode);
+          long* des_mode,
+		  string* coal_type,
+		  double* size_50,
+		  double* size_200);
 		  
   Gasifier0D_UI_Dialog() {};
   virtual ~Gasifier0D_UI_Dialog();
@@ -156,6 +162,9 @@ class Gasifier0D_UI_Dialog : public UIDialog
   long* p_stage;
   long* p_spec_geometry;
   long* p_des_mode;
+  string* p_coal_type;
+  double* p_size_50;
+  double* p_size_200;
   //GUI Variables
 };
 

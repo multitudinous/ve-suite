@@ -45,7 +45,10 @@ Gasifier0D
   RegistVar("stage", &stage);
   RegistVar("spec_geometry", &spec_geometry);
   RegistVar("des_mode", &des_mode);
-
+  RegistVar("coal_type", &coal_type);
+  RegistVar("size_50", &size_50);
+  RegistVar("size_200", &size_200);
+  
   stage = 1;
   steam_temp1 = steam_temp2 = steam_temp3 = 0.0;
   steam_flrt1 = steam_flrt2 = steam_flrt3 = 0.0;
@@ -69,11 +72,15 @@ Gasifier0D
   slag_eff = 50;
   pres_drop = 524691;
 
+  size_50 = 99.9;
+  size_200 = 90.0;
   wxString icon_file="Icons/gasifier2.gif";
   wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
   icon_w = my_img.GetWidth();
   icon_h = my_img.GetHeight();
   my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  coal_type = "Illinois_#6";
 
   n_pts = 4;
 
@@ -199,7 +206,10 @@ UIDialog* Gasifier0D::UI(wxWindow* parent)
      &pres_drop,				
      &stage,
      &spec_geometry,
-     &des_mode);
+     &des_mode,
+	 &coal_type,
+	 &size_50,
+	 &size_200);
      
   return dlg;
 }

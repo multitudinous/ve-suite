@@ -84,6 +84,9 @@ class Gasifier0D : public REI_Plugin
   long stage;
   long spec_geometry;
   long des_mode;
+  string coal_type;
+  double size_50;
+  double size_200;
   //HERE is the GUI variable passed to the Dialog and Packed
  protected:
   wxBitmap *my_icon;
