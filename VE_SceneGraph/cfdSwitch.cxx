@@ -48,13 +48,16 @@ cfdSwitch::~cfdSwitch()
 //////////////////////////////////////////////
 void cfdSwitch::SetVal(int whichChildIsActive)
 {
-   if(_switch.valid()){
 #ifdef _PERFORMER
+   if ( _switch )
+   {
       if(whichChildIsActive == OFF)
          _switch->setVal(-1);
       else
          _switch->setVal(whichChildIsActive);
 #elif _OSG
+   if ( _switch.valid() )
+   {
       if(whichChildIsActive == OFF)
          _switch->setAllChildrenOff();
       else
