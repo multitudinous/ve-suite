@@ -37,6 +37,7 @@ class cfdObjects;
 class cfdDataSet;
 class cfdModel;
 class cfdCommandArray;
+class cfdReadParam;
 
 class vtkPolyData;
 
@@ -55,6 +56,8 @@ class cfdModelHandler
       cfdObjects* GetActiveSequence( void );
       cfdDataSet* GetActiveDataSet( void );
       void SetCommandArray( cfdCommandArray* );
+      void CreateObjects( void );      
+      void LoadSurfaceFiles( char* );
 
    private:
       char* _param;
@@ -63,6 +66,7 @@ class cfdModelHandler
       cfdObjects* activeSequenceObject;
       cfdDataSet* activeDataset;
       cfdCommandArray* commandArray;
+      cfdReadParam* _readParam;
 
       vtkPolyData* arrow;
       vector< cfdModel* > _modelList;

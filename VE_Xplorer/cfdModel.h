@@ -101,18 +101,23 @@ class cfdModel
       
       cfdDataSet* GetCfdDataSet( int );
       unsigned int GetNumberOfCfdDataSets( void );
+      void CreateCfdDataSet( void );
 
       cfdFILE* GetGeomDataSet( int );
       unsigned int GetNumberOfGeomDataSets( void );
+      void CreateGeomDataSet( char* );
+
       cfdNode* GetCfdNode( void );
       cfdDCS* GetCfdDCS( void );
+
    private:
       typedef std::vector< cfdFILE* > GeometoryDataSetList;
       GeometoryDataSetList mGeomDataSets;
-      typedef std::vector<cfdDataSet* > VTKDataSetList;
+      typedef std::vector< cfdDataSet* > VTKDataSetList;
       VTKDataSetList mVTKDataSets;
       
       cfdDCS* mModelDCS;
+      cfdDCS* _worldDCS;
       cfdNode* mModelNode;
       fileInfo* mGeomFileInfo;
       fileInfo* mVTKFileInfo;

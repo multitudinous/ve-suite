@@ -44,9 +44,10 @@ class cfdNode;
 
 class cfdFILE 
 {
- public:
-  cfdFILE( fileInfo*, cfdDCS* );
-  cfdFILE( float, float [ 3 ], char * );
+   public:
+      cfdFILE( fileInfo*, cfdDCS* );
+      cfdFILE( char*, cfdDCS* );
+      cfdFILE( float, float [ 3 ], char * );
 
   ~cfdFILE();
 
@@ -57,6 +58,7 @@ class cfdFILE
   cfdDCS* getpfDCS( void );
   cfdNode* GetcfdNode( void );
 
+   void SetFILEProperties( int, int, float* );
   void setOpac(float op_val);
   float getOpacity();
 

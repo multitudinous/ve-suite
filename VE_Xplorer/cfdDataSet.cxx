@@ -1192,12 +1192,21 @@ void cfdDataSet::SetDisplayedScalarRange( int index, double * range )
 // get/set this dataset's DCS
 cfdDCS* cfdDataSet::GetDCS()
 {
-   return this->dcs;
+   if ( dcs == NULL )
+   {
+      dcs = new cfdDCS();
+      return this->dcs;
+   }
+   else
+      return this->dcs;
 }
 
 void cfdDataSet::SetDCS( cfdDCS* myDCS )
 {
-   this->dcs = myDCS;
+   if ( dcs == NULL )
+      this->dcs = myDCS;
+   else
+      cerr << " ERROR: DCS is already set for this dataset " << endl;
 }
 
 int cfdDataSet::IsPartOfTransientSeries()

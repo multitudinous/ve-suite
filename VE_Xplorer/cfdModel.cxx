@@ -35,7 +35,7 @@
 #include "cfdDataSet.h"
 #include "cfdDCS.h"
 #include "cfdNode.h"
-#include "cfdFileInfo.h"
+//#include "cfdFileInfo.h"
 #include "cfdFILE.h"
 
 #include <vpr/Util/Debug.h>
@@ -48,9 +48,9 @@ cfdModel::cfdModel( cfdDCS *worldDCS)
    this->mModelNode = NULL;
    //this->actor = NULL;
    //ModelIndex = static_cast<ModelTypeIndex>(value);
-   mModelDCS=new cfdDCS;
-   worldDCS->AddChild(mModelDCS);
-   
+   // Will fix this later so that each model has a dcs
+   //mModelDCS = new cfdDCS();
+   _worldDCS = worldDCS;
 }
 
 
@@ -67,6 +67,16 @@ cfdModel::~cfdModel()
       delete *itr;
    }
    mVTKDataSets.clear();*/
+}
+
+void cfdModel::CreateCfdDataSet( void )
+{
+   mVTKDataSets.push_back( new cfdDataSet() );
+}
+
+void cfdModel::CreateGeomDataSet( char* filename )
+{
+   mGeomDataSets.push_back( new cfdFILE( filename, _worldDCS ) );
 }
 
 void cfdModel::setModelNode( cfdNode *temp )
@@ -182,8 +192,8 @@ void cfdModel::addGeomdataset(const std::string& geomfilename)
 {
       // Need to fix this
       // this->mGeomFileInfo->fileName= (char*)geomfilename.c_str();
-      this->mMoveOldGeomDataSets = true;
-      this->mMoveOldVTKDataSets = true;
+      //this->mMoveOldGeomDataSets = true;
+      //this->mMoveOldVTKDataSets = true;
       char* mGeomFileName;
       std::cout << "[DBG]....Adding Geometry files " << mGeomFileName<<std::endl;
       // Need to fix the iterator stuff
@@ -210,8 +220,8 @@ void cfdModel::addGeomdataset(const std::string& geomfilename)
       this->mGeomDataSets->DCS->setRot( cfdvrxprRot[0], cfdvrxprRot[1],cfdvrxprRot[2] );
       this->mGeometrySets->DCS->setTrans( cfdtranslate );
      */
-      this->mMoveOldGeomDataSets = false;
-      this->mMoveOldVTKDataSets = false;
+      //this->mMoveOldGeomDataSets = false;
+      //this->mMoveOldVTKDataSets = false;
    
 }
 
@@ -223,7 +233,15 @@ void cfdModel::delGeomdataset(int DelIndex)
 
 cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
 {
-   return mVTKDataSets.at( dataset );
+   // Check and see if we have any datasets
+   // if not return null
+   // to get the last added dataset pass in -1
+   if ( mVTKDataSets.empty() )
+      return NULL;
+   else if ( dataset == -1 )
+      return mVTKDataSets.back();
+   else
+      return mVTKDataSets.at( dataset );
 }
 
 unsigned int cfdModel::GetNumberOfCfdDataSets( void )
@@ -233,7 +251,15 @@ unsigned int cfdModel::GetNumberOfCfdDataSets( void )
 
 cfdFILE* cfdModel::GetGeomDataSet( int dataset )
 {
-   return mGeomDataSets.at( dataset );
+   // Check and see if we have any datasets
+   // if not return null
+   // to get the last added dataset pass in -1
+   if ( mGeomDataSets.empty() )
+      return NULL;
+   else if ( dataset == -1 )
+      return mGeomDataSets.back();
+   else
+      return mGeomDataSets.at( dataset );
 }
 
 unsigned int cfdModel::GetNumberOfGeomDataSets( void )

@@ -92,6 +92,38 @@ cfdFILE::cfdFILE( fileInfo *geomFile, cfdDCS *worldDCS  )
    }*/
 }
 
+cfdFILE::cfdFILE( char* geomFile, cfdDCS* worldDCS  )
+{
+/*// this constructor is used by cfdApp
+   vprDEBUG(vprDBG_ALL,1) << " cfdFILE:geomFile->fileName = " 
+                          << geomFile->fileName
+                          << std::endl << vprDEBUG_FLUSH;
+
+   // this->geode = new pfGeode;
+   this->mat0 = new pfMaterial();
+   this->mat1 = new pfMaterial();
+   this->mat_count = 0;
+
+   this->DCS         = geomFile->dcs;
+   this->transparent = geomFile->trans;
+   this->color       = geomFile->color; 
+
+   std::cout << " Load file 1" << std::endl;
+   this->node = pfdLoadFile( geomFile->fileName );  // pfNode
+   std::cout << " Load file 2" << std::endl;
+   //this->node->ref();
+   this->node->flatten( 0 );
+   this->DCS->addChild( this->node );
+   worldDCS->AddChild( this->DCS );
+    
+   if ( this->color == 1 )
+   {
+      for( int i=0; i<3; i++ )
+      {
+         this->stlColor[i] = geomFile->stlColor[i];
+      }
+   }*/
+}
 cfdFILE::cfdFILE( float opVal, float stlColor[3], char *filename  )
 {
 // this constructor is used by cfdFrame
@@ -156,6 +188,14 @@ cfdFILE::~cfdFILE()
 */
 }
 
+void cfdFILE::SetFILEProperties( int color, int trans, float* stlColor )
+{
+   this->color = color;
+   this->transparent = trans;
+   this->stlColor[ 0 ] = stlColor[ 0 ];
+   this->stlColor[ 1 ] = stlColor[ 1 ];
+   this->stlColor[ 2 ] = stlColor[ 2 ];
+}
 
 void cfdFILE::Initialize( float op_val )
 {
