@@ -232,7 +232,7 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
 #ifdef _PERFORMER
    }else if(node->GetRawNode()->isOfType(pfSequence::getClassType())){
 #elif _OSG
-   }else if(node->GetRawNode()->isSameKindAs(new osg::Sequence)){
+   }else if(!strcmp(node->GetRawNode()->className(),"Sequence")){
 #elif _OPENSG
 #endif
       //std::cout<<"\t_swapSequenceNodes: pfSequence"<<std::endl;
