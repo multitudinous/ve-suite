@@ -143,9 +143,7 @@ void cfdApp::exit()
    }
 }
 
-cfdApp::~cfdApp()
-{
-}
+
 
 inline void cfdApp::apiInit( )
 {
@@ -181,7 +179,9 @@ inline void cfdApp::preSync( )
   vprDEBUG(vprDBG_ALL,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
 }
 #endif
-
+cfdApp::~cfdApp()
+{
+}
 #ifdef _OSG
 void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 {

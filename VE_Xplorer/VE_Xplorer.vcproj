@@ -778,6 +778,9 @@ echo Done.
 				RelativePath=".\cfdTransientVizHandler.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdUpdateTextureCallback.cpp">
+			</File>
+			<File
 				RelativePath=".\cfdVEAvailModules.cxx">
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -836,6 +839,12 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdVjObsWrapper.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdVolumeSliceSwitchCallback.cpp">
+			</File>
+			<File
+				RelativePath=".\cfdVolumeVisualization.cpp">
 			</File>
 			<File
 				RelativePath=".\cfdWriteTraverser.cxx">
@@ -1692,6 +1701,9 @@ echo Done.
 				RelativePath=".\cfdTransientVizHandler.h">
 			</File>
 			<File
+				RelativePath=".\cfdUpdateTextureCallback.h">
+			</File>
+			<File
 				RelativePath=".\cfdVEBaseClass.h">
 			</File>
 			<File
@@ -1705,6 +1717,12 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdVjObsWrapper.h">
+			</File>
+			<File
+				RelativePath=".\cfdVolumeSliceSwitchCallback.h">
+			</File>
+			<File
+				RelativePath=".\cfdVolumeVisualization.h">
 			</File>
 			<File
 				RelativePath=".\cfdWriteTraverser.h">

@@ -228,7 +228,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdQuatCamHandler::UpdateCommand()
 {
-   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
+   std::cerr << "doing nothing in cfdQuatCamHandler::UpdateCommand()" << std::endl;
 }
 
 void cfdQuatCamHandler::CreateObjects( void )

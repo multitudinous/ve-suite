@@ -486,7 +486,7 @@ void cfdReadParam::UpdateCommand()
 void cfdReadParam::ContinueRead( std::ifstream &input, unsigned int id )
 {
    unsigned int numLines = 0;
-
+   char text[ 256 ];
    // Set how many lines to skip...
    switch(id)
    {
@@ -542,13 +542,20 @@ void cfdReadParam::ContinueRead( std::ifstream &input, unsigned int id )
          // Quat stuff...
          numLines = 1;
          break;
+      case 15:
+         //texture based model
+         //number of lines is == to number of filenames specified for the
+         //texture based model so read the next param
+         input>>numLines;
+         input.getline( text, 256 );
+         break;
       default:
          std::cerr << "ERROR : ContinueRead Unknown Type: " << id << std::endl;
          exit ( 1 );
    }
 
    // Based on the object type skip the respective object 
-   char text[ 256 ];
+   
    for ( unsigned int i = 0; i < numLines; i++ )
    {
       input.getline( text, 256 );   //skip past line      

@@ -40,6 +40,7 @@
 #elif _OSG
 #include <osg/Group>
 #include <osgDB/WriteFile>
+#include <osg/Sequence>
 #endif
 
 #include "cfdGroup.h"
@@ -179,6 +180,7 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
       osg::Sequence* sequence =  new osg::Sequence();
 #elif _OPENSG
 #endif
+
       //copy the children of the cfdSequence
       for(int i = 0; i < nChildren; i++){
          sequence->addChild(((cfdSequence*)node)->GetChild(i)->GetRawNode());
@@ -189,10 +191,18 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
       double numSeconds = ((cfdSequence*)node)->getTime();
       sequence->setTime(-1,numSeconds);   // display all children for numSeconds
 
+#ifdef _PERFORMER
       sequence->setInterval(((cfdSequence*)node)->getLoopMode(),
                             ((cfdSequence*)node)->getBegin(),
                             ((cfdSequence*)node)->getEnd());
-
+#elif _OSG
+      
+      sequence->setInterval(((((cfdSequence*)node)->getLoopMode()==0)?
+                             osg::Sequence::SWING:osg::Sequence::LOOP),
+                            ((cfdSequence*)node)->getBegin(),
+                            ((cfdSequence*)node)->getEnd());
+#elif _OPENSG
+#endif
 //      std::cout<<"\tnChildren = " << nChildren << std::endl;
 //      std::cout<<"\tnumSeconds = " << numSeconds << std::endl;
 //      std::cout<<"\t((cfdSequence*)curNode)->getLoopMode() = "
@@ -205,8 +215,11 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
 
       //make sure to start the "derned" sequence--otherwise
       //it won't be running in perfly!!!UGGGHHHH!!!!!
+#ifdef _PERFORMER
       sequence->setMode(PFSEQ_START);
-
+#elif _OSG
+      sequence->setMode(osg::Sequence::START);
+#endif
       //replace the node in the graph
 #ifdef _PERFORMER
       ((pfGroup*)parent->GetRawNode())->replaceChild(node->GetRawNode(),sequence);
@@ -219,7 +232,7 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
 #ifdef _PERFORMER
    }else if(node->GetRawNode()->isOfType(pfSequence::getClassType())){
 #elif _OSG
-   }else if(node->GetRawNode()->isOfType(osg::Sequence::getClassType())){
+   }else if(node->GetRawNode()->isSameKindAs(new osg::Sequence)){
 #elif _OPENSG
 #endif
       //std::cout<<"\t_swapSequenceNodes: pfSequence"<<std::endl;

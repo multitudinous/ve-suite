@@ -43,6 +43,8 @@ public:
 
    float* transientRange(){return _transientRange;}
 
+   DataType GetDataType(int whichField){return _types.at(whichField);}
+
    //equal operator
    cfdTextureManager& operator=(const cfdTextureManager& tm); 
 protected:

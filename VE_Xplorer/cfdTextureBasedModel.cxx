@@ -1,5 +1,7 @@
 #include "cfdTextureBasedModel.h"
 #include "cfdTextureManager.h"
+#include <fstream>
+#include <iostream>
 ////////////////////////////////////////////////
 //Constructors                                //
 ////////////////////////////////////////////////
@@ -7,6 +9,7 @@ cfd3DTextureBasedModel::cfd3DTextureBasedModel()
 {
    _activeScalar = 0;
    _activeVector = 0;
+   _paramFileName = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfd3DTextureBasedModel::cfd3DTextureBasedModel(const cfd3DTextureBasedModel& tbm)
@@ -39,6 +42,12 @@ cfd3DTextureBasedModel::cfd3DTextureBasedModel(const cfd3DTextureBasedModel& tbm
    for(int i = 0; i < nVectors; i++){
       _vectorDataTextures.push_back(tbm._vectorDataTextures.at(i));
    } 
+   if(!_paramFileName){
+      delete [] _paramFileName;
+      _paramFileName = 0;
+   }
+   _paramFileName = new char[strlen(tbm._paramFileName)+1];
+   strcpy(_paramFileName,tbm._paramFileName);
 }
 /////////////////////////////////////////////////
 //Destructor                                   //
@@ -50,6 +59,68 @@ cfd3DTextureBasedModel::~cfd3DTextureBasedModel()
    _scalarDataTextures.clear();
    _vectorDataTextures.clear();
 }
+/////////////////////////////////////////////////////////////////
+void cfd3DTextureBasedModel::SetParameterFileName(char* filename)
+{
+   if(!_paramFileName){
+      delete [] _paramFileName;
+      _paramFileName = 0;
+   }
+   _paramFileName = new char[strlen(filename)+1];
+   strcpy(_paramFileName,filename);
+}
+//////////////////////////////////////////////
+void cfd3DTextureBasedModel::InitializeModel()
+{
+   if(!_paramFileName){
+      std::cout<<"Parameter file not set in cfdTextureBasedModel!!"<<std::endl;
+      return;
+   }
+   int numObjects;
+   char textLine[ 256 ];
+   std::ifstream input;
+   input.open( _paramFileName);
+   input >> numObjects; 
+   input.getline( textLine, 256 );   //skip past remainder of line
+
+   //vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   for( int i = 0; i < numObjects; i++ )
+   {
+      int id;
+      input >> id;
+      //vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      input.getline( textLine, 256 );   //skip past remainder of line
+      if ( id == 15 ){
+         int numTextureDescriptionFiles = 0;
+          input >> numTextureDescriptionFiles;
+          input.getline(textLine,256);
+          char textureDescriptionFile[256];
+          for(int i = 0; i < numTextureDescriptionFiles; i++){
+             input>>textureDescriptionFile;
+             input.getline(textLine,256);
+             _createTextureManager(textureDescriptionFile);
+          }
+      
+      }else{
+         _paramReader.ContinueRead(input,id);
+      }
+   }
+}
+/////////////////////////////////////////////////////////////////
+void cfd3DTextureBasedModel::_createTextureManager(char* filename)
+{
+   cfdTextureManager tm;
+   std::ifstream fin(filename);   char name[256];   if(fin.is_open()){       int numFiles = 0;      fin>>numFiles;      for(int i = 0; i < numFiles; i++){         fin>>name;         tm.addFieldTextureFromFile(name);      }
+      if(tm.GetDataType(0)==cfdTextureManager::SCALAR){
+         AddScalarTextureManager(tm,filename);
+      }else{
+         AddVectorTextureManager(tm,filename);
+      }
+   }else{
+      std::cout<<"Couldn't open file in cfd3DTextureBasedModel::CreateTextureManager!"<<std::endl;
+      return;
+   }
+}
 //////////////////////////////////////////////
 float* cfd3DTextureBasedModel::GetScalarBoundingBox()
 {
@@ -58,6 +129,7 @@ float* cfd3DTextureBasedModel::GetScalarBoundingBox()
    }else{
       return 0;
    }
+   return 0;
 }
 ////////////////////////////////////////////////////
 float* cfd3DTextureBasedModel::GetVectorBoundingBox()
@@ -67,11 +139,17 @@ float* cfd3DTextureBasedModel::GetVectorBoundingBox()
    }else{
       return 0;
    }
+   return 0;
 }
 ///////////////////////////////////////////////////////////////////////
 void cfd3DTextureBasedModel::AddVectorTextureManager(cfdTextureManager tm,
-		                                     char* vectorName)
+		                                          char* vectorName)
 {
+   char* ptr = 0;
+   ptr = strrchr(vectorName,'.');
+   if(ptr){
+      ptr = "\0";
+   }
    _vectorNames.push_back(vectorName);
    _vectorDataTextures.push_back(tm);
    _activeVector = &_vectorDataTextures.at(0);
@@ -80,6 +158,11 @@ void cfd3DTextureBasedModel::AddVectorTextureManager(cfdTextureManager tm,
 void cfd3DTextureBasedModel::AddScalarTextureManager(cfdTextureManager tm,
 	                                             char* scalarName)
 {
+   char* ptr = 0;
+   ptr = strrchr(scalarName,'.');
+   if(ptr){
+      ptr = "\0";
+   }
    _scalarNames.push_back(scalarName);
    _scalarDataTextures.push_back(tm);
    _activeScalar = &_scalarDataTextures.at(0);
@@ -161,6 +244,12 @@ cfd3DTextureBasedModel& cfd3DTextureBasedModel::operator=(const
       for(int i = 0; i < nVectors; i++){
          _vectorDataTextures.push_back(tbm._vectorDataTextures.at(i));
       } 
+      if(!_paramFileName){
+         delete [] _paramFileName;
+         _paramFileName = 0;
+      }
+      _paramFileName = new char[strlen(tbm._paramFileName)+1];
+      strcpy(_paramFileName,tbm._paramFileName);
    }
    return *this;
 }
