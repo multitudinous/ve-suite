@@ -318,57 +318,66 @@ void cfdModelHandler::PreFrameUpdate( void )
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
                == UPDATE_GEOMETRY )
    {
-      vprDEBUG(vprDBG_ALL,1)
-         << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) << std::endl << vprDEBUG_FLUSH;
+      if ( commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) )
+      {
+         vprDEBUG(vprDBG_ALL,1)
+            << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) << std::endl << vprDEBUG_FLUSH;
 
-      long int test = this->_readParam->convertDecimalToBinary( (long)
+         long int test = this->_readParam->convertDecimalToBinary( (long)
                         commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
-      vprDEBUG(vprDBG_ALL,1)
-         << " Return from conversion : " << test << " : Active Model Ptr = " << _activeModel << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,1)
+            << " Return from conversion : " << test << " : Active Model Ptr = " << _activeModel << std::endl << vprDEBUG_FLUSH;
 
-      this->_readParam->convertBinaryToArray( test, _activeModel->GetNumberOfGeomDataSets() );
-      // Update Scene Graph with selected or deselected geometry
-      vprDEBUG(vprDBG_ALL,0) << " Change Geometry in Scene Graph."
+         this->_readParam->convertBinaryToArray( test, _activeModel->GetNumberOfGeomDataSets() );
+         // Update Scene Graph with selected or deselected geometry
+         vprDEBUG(vprDBG_ALL,0) << " Change Geometry in Scene Graph."
                           << std::endl << vprDEBUG_FLUSH;
 
-      cfdDCS* parent = NULL;
-      for( unsigned int i = 0; i < _activeModel->GetNumberOfGeomDataSets(); i++ )
-      {
-         int temp = 0;
-         // If it is the dynamic stuff
-         // Remember for the dynamic stuff there is multple layers of nodes
-         // therefore we must find the parent besides worldDCS
-         // because for search child we only search the immediate children
-         // maybe come up with better functionality later
-         if (  !strcmp( _activeModel->GetCfdDCS()->GetName(), "cfdVEBaseClass" ) )
+         cfdDCS* parent = NULL;
+         for( unsigned int i = 0; i < _activeModel->GetNumberOfGeomDataSets(); i++ )
          {
-            parent = _activeModel->GetCfdDCS();
-         }
-         else
-         {
-            parent = worldNode;
-         }
+            int temp = 0;
+            // If it is the dynamic stuff
+            // Remember for the dynamic stuff there is multple layers of nodes
+            // therefore we must find the parent besides worldDCS
+            // because for search child we only search the immediate children
+            // maybe come up with better functionality later
+            if (  !strcmp( _activeModel->GetCfdDCS()->GetName(), "cfdVEBaseClass" ) )
+            {
+               parent = _activeModel->GetCfdDCS();
+            }
+            else
+            {
+               parent = worldNode;
+            }
 
-         vprDEBUG(vprDBG_ALL,2)
-            << "guiVal[ " << i << " ] = " << this->_readParam->guiVal[ i ] << std::endl
-            << " : Active Model index : " << _activeModel << std::endl 
-            << " : SearchChild Result : " << parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) << std::endl 
-            << " : Filename[ " << i << " ] : " << _activeModel->GetGeomDataSet( i )->GetFilename() << std::endl
-            << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,2)
+               << "guiVal[ " << i << " ] = " << this->_readParam->guiVal[ i ] << std::endl
+               << " : Active Model index : " << _activeModel << std::endl 
+               << " : SearchChild Result : " << parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) << std::endl 
+               << " : Filename[ " << i << " ] : " << _activeModel->GetGeomDataSet( i )->GetFilename() << std::endl
+               << vprDEBUG_FLUSH;
 
-
-         if ( ( this->_readParam->guiVal[ i ] == 1 ) && 
-            ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
-         {
-            temp = parent->AddChild( _activeModel->GetGeomDataSet( i )->getpfDCS() );
-         }
-         else if ( ( this->_readParam->guiVal[ i ] == 0 ) &&
-                  ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
-         {
-            temp = parent->RemoveChild( _activeModel->GetGeomDataSet( i )->getpfDCS() );
-         }
-         vprDEBUG(vprDBG_ALL,1) << "|   Add Child Output ( -1 is BAD ) :  " << temp 
+            if ( ( this->_readParam->guiVal[ i ] == 1 ) && 
+               ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
+            {
+               temp = parent->AddChild( _activeModel->GetGeomDataSet( i )->getpfDCS() );
+            }
+            else if ( ( this->_readParam->guiVal[ i ] == 0 ) &&
+                     ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
+            {
+               temp = parent->RemoveChild( _activeModel->GetGeomDataSet( i )->getpfDCS() );
+            }
+            vprDEBUG(vprDBG_ALL,1) << "|   Add Child Output ( -1 is BAD ) :  " << temp 
                            << std::endl << vprDEBUG_FLUSH;
+         }
+      }
+      else
+      {
+         // Change the opacity of a specific piece of geometry
+         int geomFile = this->commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+         float opacity = (float)this->commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )*.01f;
+         this->_activeModel->GetGeomDataSet( geomFile )->setOpac( opacity );
       }
    }
    // This represents all viz options. If more viz options are added these enums probably need to be changed. 

@@ -31,6 +31,7 @@ protected:
    wxSlider* geomLODSlider;
 
    //event handlers
+   void ChangeOpacity( wxScrollEvent& event );
    void _onGeometry( wxScrollEvent& event );
    void _onUpdate(wxCommandEvent& event);
 

@@ -8,7 +8,7 @@ IMPLEMENT_APP(UI_App)
 bool UI_App::OnInit()
 {
    //Create the main window
-    _uiTopFrame = new UI_TopFrame(wxT("WX Client for VE Suite"));
+    _uiTopFrame = new UI_TopFrame(wxT("VE-Conductor"));
    //What does this do?
    InitObserver();
    //biv--This was from original implementation

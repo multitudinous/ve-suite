@@ -318,7 +318,7 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
                {
                   geoset->setDrawBin(PFSORT_TRANSP_BIN);  // draw last
                   geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF); // want to see backside thru
-                  geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
+                  geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA );//| PFTR_NO_OCCLUDE);
                   if( color == 1 )
                   {
                      testMat->setColor( PFMTL_DIFFUSE , 1.0f, 1.0f, 1.0f );
