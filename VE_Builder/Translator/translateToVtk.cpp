@@ -626,6 +626,7 @@ int main( int argc, char *argv[] )
       reader->ReadElementDescriptionIndexTable();
       reader->ReadSolutionDataHeader();
       reader->ReadNodalSolutions();
+      reader->ReadElementSolutions();
       pointset = reader->GetUGrid();
    }
 
