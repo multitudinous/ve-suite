@@ -91,7 +91,10 @@ mFixTranslator::mFixTranslator(wxWindow* parent, int id, const wxString& title, 
    SPGauge_a = new wxGauge(this, GAUGE_SPa, 100, wxDefaultPosition, wxSize(65,20), wxGA_HORIZONTAL);
    static_text_a = new wxStaticText(this, -1, wxT("             SPA"), wxDefaultPosition, wxDefaultSize, 0, wxT(""));
    static_text_a_TS = new wxStaticText(this, -1, wxT("0/0 Timesteps"), wxDefaultPosition, wxDefaultSize, 0, wxT(""));
- 
+   //pan  
+   SPGauge_b = new wxGauge(this, GAUGE_SPb, 100, wxDefaultPosition, wxSize(65,20), wxGA_HORIZONTAL);
+   static_text_b = new wxStaticText(this, -1, wxT("             SPB"), wxDefaultPosition, wxDefaultSize, 0, wxT(""));
+   static_text_b_TS = new wxStaticText(this, -1, wxT("0/0 Timesteps"), wxDefaultPosition, wxDefaultSize, 0, wxT(""));
    static_line_1 = new wxStaticLine(this, -1);
    statusTitle = new wxStaticText(this, -1, wxT("Status Information:"));
    text_ctrl_statusReport = new wxTextCtrl(this, -1, wxT(""), wxDefaultPosition, wxSize(300,200), wxTE_MULTILINE|wxTE_READONLY|wxTE_RICH|wxTE_DONTWRAP|wxHSCROLL);
@@ -165,6 +168,10 @@ mFixTranslator::mFixTranslator(wxWindow* parent, int id, const wxString& title, 
    Theta_MVariable = new wxCheckBox(this, CHECKBOX_THETA_M, wxT("Theta M"));
    ScalarsVariable = new wxCheckBox(this, CHECKBOX_SCALARS, wxT("Scalars"));
    NumReactionRatesVariable = new wxCheckBox(this, CHECKBOX_NUMREACTIONRATES, wxT("Number of Reaction Rates"));
+   // pan
+   KTURBG_Variable = new wxCheckBox(this, CHECKBOX_K_TURB_G, wxT("K_Turb_G"));
+   ETURBG_Variable = new wxCheckBox(this, CHECKBOX_E_TURB_G, wxT("E_Turb_G"));
+
    static_line_9 = new wxStaticLine(this, -1);
    SelectAllOutputVariables = new wxButton(this, BUTTON_SELECTALLOUTPUTVARS, wxT("Select All"));
    UnselectAllOutputVariables = new wxButton(this, BUTTON_UNSELECTALLOUTPUTVARS, wxT("Unselect All"));
@@ -186,7 +193,7 @@ mFixTranslator::mFixTranslator(wxWindow* parent, int id, const wxString& title, 
    CancelBttn = new wxButton(this, BUTTON_CANCEL, wxT("Close"));
 
    // Create array for output variable flags
-   resH.varSelectFlag = new int[12];
+   resH.varSelectFlag = new int[14];	// pan (was [12] , SPB added 2 new variables)
 
    set_properties();
    do_layout();
@@ -219,6 +226,7 @@ void mFixTranslator::set_properties()
    SPGauge_8->SetToolTip(wxT("Number of timesteps remaining to be processed in sp8"));
    SPGauge_9->SetToolTip(wxT("Number of timesteps remaining to be processed in sp9"));
    SPGauge_a->SetToolTip(wxT("Number of timesteps remaining to be processed in spa"));
+   SPGauge_b->SetToolTip(wxT("Number of timesteps remaining to be processed in spb"));  // pan
 
    text_ctrl_statusReport->SetBackgroundColour(wxColour(194, 191, 165));
    text_ctrl_statusReport->SetToolTip(wxT("Status report"));
@@ -301,6 +309,13 @@ void mFixTranslator::set_properties()
    NumReactionRatesVariable->SetValue(FALSE);
    NumReactionRatesVariable->Enable(FALSE);
    NumReactionRatesVariable->SetToolTip(wxT("Enable output of Number of Reaction Rates"));
+   //pan
+   KTURBG_Variable->SetValue(FALSE);
+   KTURBG_Variable->Enable(FALSE);
+   KTURBG_Variable->SetToolTip(wxT("Enable output of K_Turb_G"));
+   ETURBG_Variable->SetValue(FALSE);
+   ETURBG_Variable->Enable(FALSE);
+   ETURBG_Variable->SetToolTip(wxT("Enable output of E_Turb_G"));
    SelectAllOutputVariables->Enable(FALSE);
    SelectAllOutputVariables->SetToolTip(wxT("Select all available variables for output"));
    UnselectAllOutputVariables->Enable(FALSE);
@@ -316,6 +331,7 @@ void mFixTranslator::set_properties()
    sp8Active = FALSE;
    sp9Active = FALSE;
    spaActive = FALSE;
+   spbActive = FALSE;   // pan
 
    BeginTSLabel->Enable(FALSE);
    BeginTSBox->Enable(FALSE);
@@ -435,10 +451,14 @@ void mFixTranslator::do_layout()
    grid_sizer_1->Add(static_text_7, 0, wxALL, 3);
    grid_sizer_1->Add(SPGauge_7, 0, wxALL, 3);
    grid_sizer_1->Add(static_text_7_TS, 0, wxALL, 3);
+   // pan
+   grid_sizer_1->Add(static_text_b, 0, wxALL, 3);
+   grid_sizer_1->Add(SPGauge_b, 0, wxALL, 3);
+   grid_sizer_1->Add(static_text_b_TS, 0, wxALL, 3);
 
-   grid_sizer_1->Add(dummySizer1, 0, wxALL, 3);
-   grid_sizer_1->Add(dummySizer2, 0, wxALL, 3);
-   grid_sizer_1->Add(dummySizer3, 0, wxALL, 3);
+// pan   grid_sizer_1->Add(dummySizer1, 0, wxALL, 3);
+// pan   grid_sizer_1->Add(dummySizer2, 0, wxALL, 3);
+// pan   grid_sizer_1->Add(dummySizer3, 0, wxALL, 3);
 
    grid_sizer_1->Add(10, 0, 0, 0);
    
@@ -531,6 +551,8 @@ void mFixTranslator::do_layout()
    outputVariablesSizer->Add(Theta_MVariable, 0, wxALL, 3);
    outputVariablesSizer->Add(ScalarsVariable, 0, wxALL, 3);
    outputVariablesSizer->Add(NumReactionRatesVariable, 0, wxALL, 3);
+   outputVariablesSizer->Add(KTURBG_Variable, 0, wxALL, 3);	// pan
+   outputVariablesSizer->Add(ETURBG_Variable, 0, wxALL, 3);	// pan
    outputVariablesSizer->Add(static_line_9, 0, wxALL|wxEXPAND, 3);
 
    outputVariablesSizer->Add(sizer_13, 0, wxALIGN_CENTER_HORIZONTAL, 3);
@@ -603,6 +625,8 @@ BEGIN_EVENT_TABLE(mFixTranslator, wxDialog)
    EVT_CHECKBOX   (CHECKBOX_THETA_M, mFixTranslator::UpdateMaxTS)
    EVT_CHECKBOX   (CHECKBOX_SCALARS, mFixTranslator::UpdateMaxTS)
    EVT_CHECKBOX   (CHECKBOX_NUMREACTIONRATES, mFixTranslator::UpdateMaxTS)
+   EVT_CHECKBOX   (CHECKBOX_K_TURB_G, mFixTranslator::UpdateMaxTS)  // pan
+   EVT_CHECKBOX   (CHECKBOX_E_TURB_G, mFixTranslator::UpdateMaxTS)  // pan
 END_EVENT_TABLE()
 
 // Added functions
@@ -750,6 +774,14 @@ void mFixTranslator::FlushGUI(void)
    SPGauge_a->Enable(TRUE);
    SPGauge_a->SetBackgroundColour(wxColour(0, 255, 0));
 
+   // pan
+   static_text_b_TS->Enable(TRUE);
+   static_text_b_TS->SetLabel(wxT("0/0 Timesteps"));
+   static_text_b->Enable(TRUE);
+   SPGauge_b->SetValue(0);
+   SPGauge_b->Enable(TRUE);
+   SPGauge_b->SetBackgroundColour(wxColour(0, 255, 0));
+
    TC_RunName->Clear();
    TC_RunDate->Clear();
    TC_RunTime->Clear();
@@ -771,7 +803,7 @@ void mFixTranslator::FlushGUI(void)
    serialXMLCheckbox->SetValue(FALSE);
    parallelXMLCheckbox->Enable(TRUE);
    parallelXMLCheckbox->SetValue(FALSE);
-   cgnsCheckbox->Enable(TRUE);
+// pan (cgns not implemented)   cgnsCheckbox->Enable(TRUE);
    cgnsCheckbox->SetValue(FALSE);
    selectAllButton->Enable(TRUE);
    unselectAllButton->Enable(TRUE);
@@ -795,6 +827,8 @@ void mFixTranslator::FlushGUI(void)
    Theta_MVariable->SetValue(FALSE);
    ScalarsVariable->SetValue(FALSE);
    NumReactionRatesVariable->SetValue(FALSE);
+   KTURBG_Variable->SetValue(FALSE);		// pan
+   ETURBG_Variable->SetValue(FALSE);		// pan
    SelectAllOutputVariables->Enable(TRUE);
    UnselectAllOutputVariables->Enable(TRUE);
 
@@ -818,6 +852,7 @@ void mFixTranslator::FlushGUI(void)
    sp8Active = FALSE;
    sp9Active = FALSE;
    spaActive = FALSE;
+   spbActive = FALSE;   // pan
 
    GoBttn->Enable(TRUE);
 
@@ -885,6 +920,11 @@ int mFixTranslator::DetermineMaxTimeSteps(void)
    if (NumReactionRatesVariable->GetValue() == TRUE) {
       if(spaTimeSteps > maxTimeSteps)
          maxTimeSteps = spaTimeSteps;
+   }
+   // pan
+   if (KTURBG_Variable->GetValue() == TRUE || ETURBG_Variable->GetValue() == TRUE) {
+      if(spbTimeSteps > maxTimeSteps)
+         maxTimeSteps = spbTimeSteps;
    }
 
    return maxTimeSteps;
@@ -964,6 +1004,19 @@ void mFixTranslator::SetOutputVariableFlags(void)
       resH.varSelectFlag[11] = 1;
    } else {
       resH.varSelectFlag[11] = 0;
+   }
+   // pan
+   if(KTURBG_Variable->GetValue() == TRUE)
+   {   
+      resH.varSelectFlag[12] = 1;
+   } else {
+      resH.varSelectFlag[12] = 0;
+   }
+   if(ETURBG_Variable->GetValue() == TRUE)
+   {   
+      resH.varSelectFlag[13] = 1;
+   } else {
+      resH.varSelectFlag[13] = 0;
    }
 }
 
@@ -1311,6 +1364,31 @@ void mFixTranslator::OnFileOpenButton(wxCommandEvent& event)
          spaTimeSteps = 0;
          spaExists = false;
       }
+      // pan Check for spb
+      OpenFilename = OpenFilename.BeforeLast(wxT('.'));
+      if(wxFileExists(OpenFilename.Append(wxT(".SPB"))))
+      {
+         SPGauge_b->SetBackgroundColour(wxColour(0,255,0));
+         wxString spbTimeStepsNum = wxT("0/"); 
+         memcpy(inFilename, OpenFilename.c_str(), (OpenFilename.length()+1));
+         spbTimeSteps = ReadSPTimesteps(inFilename);
+         if (spbTimeSteps > 0)
+            SPGauge_b->SetRange(spbTimeSteps);
+         else
+            SPGauge_b->SetRange(spbTimeSteps+1);
+         wxString spbStatusOutput;
+         spbStatusOutput.Printf(wxT("spb file is present with %i timesteps\n"), spbTimeSteps);
+         text_ctrl_statusReport->AppendText(spbStatusOutput);
+         KTURBG_Variable->Enable(TRUE);
+         ETURBG_Variable->Enable(TRUE);
+         spbExists = true;
+      } else {
+         SPGauge_b->SetBackgroundColour(wxColour(255,0,0));
+         static_text_b_TS->SetLabel(wxT("0/0 Timesteps"));
+         SPGauge_b->SetToolTip(wxT("No spb file available"));
+         spbTimeSteps = 0;
+         spbExists = false;
+      }
       wxString sp1TimeStepsNum = wxT("0/");
       sp1TimeStepsNum << sp1TimeSteps << wxT(" Timesteps");
       static_text_1_TS->SetLabel(sp1TimeStepsNum);
@@ -1341,6 +1419,10 @@ void mFixTranslator::OnFileOpenButton(wxCommandEvent& event)
       wxString spaTimeStepsNum = wxT("0/");
       spaTimeStepsNum << spaTimeSteps << wxT(" Timesteps");
       static_text_a_TS->SetLabel(spaTimeStepsNum);
+      // pan
+      wxString spbTimeStepsNum = wxT("0/");
+      spbTimeStepsNum << spbTimeSteps << wxT(" Timesteps");
+      static_text_b_TS->SetLabel(spbTimeStepsNum);
    }
    OpenFileDialog->Destroy();
    GoBttn->Enable(TRUE);
@@ -1427,7 +1509,8 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
    else if((!VoidFractionVariable->IsChecked()) && (!GasPressureVariable->IsChecked()) && (!P_StarVariable->IsChecked()) 
          && (!GasVelocityVariable->IsChecked()) && (!SolidPhaseVelocityVariable->IsChecked()) && (!SolidPhaseDensityVariable->IsChecked())
          && (!TemperaturesVariable->IsChecked()) && (!GasSpeciesVariable->IsChecked()) && (!SolidPhaseSpeciesVariable->IsChecked())
-         && (!Theta_MVariable->IsChecked()) && (!ScalarsVariable->IsChecked()) && (!NumReactionRatesVariable->IsChecked()))
+         && (!Theta_MVariable->IsChecked()) && (!ScalarsVariable->IsChecked()) && (!NumReactionRatesVariable->IsChecked())
+         && (!KTURBG_Variable->IsChecked()) && (!ETURBG_Variable->IsChecked())  )  // pan
    {
       wxMessageBox(wxT("Please select at least one variable to output!"));
       wxBell();
@@ -1457,6 +1540,8 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
       Theta_MVariable->Enable(FALSE);
       ScalarsVariable->Enable(FALSE);
       NumReactionRatesVariable->Enable(FALSE);
+      KTURBG_Variable->Enable(FALSE);    // pan
+      ETURBG_Variable->Enable(FALSE);    // pan
       SelectAllOutputVariables->Enable(FALSE);
       UnselectAllOutputVariables->Enable(FALSE);
       BeginTSBox->Enable(FALSE);
@@ -1510,6 +1595,15 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
       if(NumReactionRatesVariable->GetValue() == TRUE)
       {
          spaActive = TRUE;
+      }
+      // pan
+      if(KTURBG_Variable->GetValue() == TRUE)
+      {
+         spbActive = TRUE;
+      }
+      if(ETURBG_Variable->GetValue() == TRUE)
+      {
+         spbActive = TRUE;
       }
 
       if(VoidFractionVariable->GetValue() == FALSE)
@@ -1581,6 +1675,14 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
          SPGauge_a->Enable(FALSE);
          SPGauge_a->SetBackgroundColour(wxColour(194, 191, 165));
          static_text_a->Enable(FALSE);
+      }
+      // pan
+      if( (KTURBG_Variable->GetValue() == FALSE) && (ETURBG_Variable->GetValue()==FALSE) )
+      {
+         static_text_b_TS->Enable(FALSE);
+         SPGauge_b->Enable(FALSE);
+         SPGauge_b->SetBackgroundColour(wxColour(194, 191, 165));
+         static_text_b->Enable(FALSE);
       }
 
       totalTimeStepTally = BeginTSVal;
@@ -1689,6 +1791,11 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
          InitialTSDisplaya.Printf(wxT("0/%i Timesteps"), spaTimeSteps);
          static_text_a_TS->SetLabel(InitialTSDisplaya);
          SPGauge_a->SetValue(0);
+         // pan
+         wxString InitialTSDisplayb;
+         InitialTSDisplayb.Printf(wxT("0/%i Timesteps"), spbTimeSteps);
+         static_text_b_TS->SetLabel(InitialTSDisplayb);
+         SPGauge_b->SetValue(0);
 
          if(legacyVTKRadioBox->GetSelection()==0)
          {
@@ -1888,7 +1995,24 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
                }
             }
 
-            ProgressGauge->SetValue(totalTimeStepTally);
+            // pan SPB timestep gauge
+            if (spbActive == TRUE) {
+               if (spbTimeSteps > 0) {
+                  diffTS = MaxTimeSteps/spbTimeSteps;
+                  actualTS = i/diffTS;
+               }
+               else
+                  actualTS = spbTimeSteps;
+               TSDisplay.Printf(wxT("%i/%i Timesteps"), actualTS, spbTimeSteps);
+               static_text_b_TS->SetLabel(TSDisplay);
+               if (actualTS <= spbTimeSteps) {
+                  if (spbTimeSteps > 0)
+                     SPGauge_b->SetValue(actualTS);
+                  else
+                     SPGauge_b->SetValue(actualTS+1);
+               }
+            }
+	    ProgressGauge->SetValue(totalTimeStepTally);
             wxWindow::Update();
             UnstructuredGridWriter((char *)ProjectName.c_str(), (char *)Dir, i, MaxTimeSteps, GridWriterFormatFlag, &resH, &spH, &mfD); 
             statusReportStr.Printf(wxT("Timestep %i completed in Legacy VTK format.\n"), i);
@@ -1950,6 +2074,11 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
          InitialTSDisplaya.Printf(wxT("0/%i Timesteps"), spaTimeSteps);
          static_text_a_TS->SetLabel(InitialTSDisplaya);
          SPGauge_a->SetValue(0);
+         // pan
+         wxString InitialTSDisplayb;
+         InitialTSDisplayb.Printf(wxT("0/%i Timesteps"), spbTimeSteps);
+         static_text_b_TS->SetLabel(InitialTSDisplayb);
+         SPGauge_b->SetValue(0);
 
          // serial XML translation
          wxString TSDisplay, statusReportStr;
@@ -2142,6 +2271,23 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
                      SPGauge_a->SetValue(actualTS+1);
                }
             }
+            // pan SPB timestep gauge
+            if (spbActive == TRUE) {
+               if (spbTimeSteps > 0) {
+                  diffTS = MaxTimeSteps/spbTimeSteps;
+                  actualTS = i/diffTS;
+               }
+               else
+                  actualTS = spbTimeSteps;
+               TSDisplay.Printf(wxT("%i/%i Timesteps"), actualTS, spbTimeSteps);
+               static_text_b_TS->SetLabel(TSDisplay);
+               if (actualTS <= spbTimeSteps) {
+                  if (spbTimeSteps > 0)
+                     SPGauge_b->SetValue(actualTS);
+                  else
+                     SPGauge_b->SetValue(actualTS+1);
+               }
+            }
 
             ProgressGauge->SetValue(totalTimeStepTally);
             wxWindow::Update();
@@ -2205,6 +2351,11 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
          InitialTSDisplaya.Printf(wxT("0/%i Timesteps"), spaTimeSteps);
          static_text_a_TS->SetLabel(InitialTSDisplaya);
          SPGauge_a->SetValue(0);
+         // pan
+         wxString InitialTSDisplayb;
+         InitialTSDisplayb.Printf(wxT("0/%i Timesteps"), spbTimeSteps);
+         static_text_b_TS->SetLabel(InitialTSDisplayb);
+         SPGauge_b->SetValue(0);
 
          // parallel XML format
          wxString TSDisplay, statusReportStr;
@@ -2397,6 +2548,23 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
                      SPGauge_a->SetValue(actualTS+1);
                }
             }
+            // pan SPB timestep gauge
+            if (spbActive == TRUE) {
+               if (spbTimeSteps > 0) {
+                  diffTS = MaxTimeSteps/spbTimeSteps;
+                  actualTS = i/diffTS;
+               }
+               else
+                  actualTS = spbTimeSteps;
+               TSDisplay.Printf(wxT("%i/%i Timesteps"), actualTS, spbTimeSteps);
+               static_text_b_TS->SetLabel(TSDisplay);
+               if (actualTS <= spbTimeSteps) {
+                  if (spbTimeSteps > 0)
+                     SPGauge_b->SetValue(actualTS);
+                  else
+                     SPGauge_b->SetValue(actualTS+1);
+               }
+            }
 
             ProgressGauge->SetValue(totalTimeStepTally);
             wxWindow::Update();
@@ -2459,6 +2627,11 @@ void mFixTranslator::OnGoButton(wxCommandEvent& event)
          InitialTSDisplaya.Printf(wxT("0/%i Timesteps"), spaTimeSteps);
          static_text_a_TS->SetLabel(InitialTSDisplaya);
          SPGauge_a->SetValue(0);
+         // pan
+         wxString InitialTSDisplayb;
+         InitialTSDisplayb.Printf(wxT("0/%i Timesteps"), spbTimeSteps);
+         static_text_b_TS->SetLabel(InitialTSDisplayb);
+         SPGauge_b->SetValue(0);
 
          // CGNS
          wxString TSDisplay, statusReportStr;
@@ -2565,6 +2738,7 @@ void mFixTranslator::OnCheckboxParallelXML(wxCommandEvent& event)
 
 void mFixTranslator::OnCheckboxCGNS(wxCommandEvent& event)
 {
+   return; // pan (cgns not implemented)
    // Set CGNS output flag here
    if(CGNSOutput)
    {
@@ -2591,11 +2765,11 @@ void mFixTranslator::OnButtonSelectAll(wxCommandEvent& event)
    legacyVTKCheckbox->SetValue(TRUE);
    serialXMLCheckbox->SetValue(TRUE);
    parallelXMLCheckbox->SetValue(TRUE);
-   cgnsCheckbox->SetValue(TRUE);
+// pan (cgns not implemented)   cgnsCheckbox->SetValue(TRUE);
    legacyVTKRadioBox->Enable(TRUE);
    serialXMLOutput = TRUE;
    parallelXMLOutput = TRUE;
-   CGNSOutput = TRUE;
+// pan (cgns not implemented)   CGNSOutput = TRUE;
    legacyVTKOutput = TRUE;
 }
 
@@ -2656,6 +2830,12 @@ void mFixTranslator::OnSelectAllOutputVariablesButton(wxCommandEvent& event)
    {
       NumReactionRatesVariable->SetValue(TRUE);
    }
+   // pan
+   if(spbExists)
+   {
+      KTURBG_Variable->SetValue(TRUE);
+      ETURBG_Variable->SetValue(TRUE);
+   }
    int MaxTS = DetermineMaxTimeSteps();
    wxString strMaxTS;
    strMaxTS.Printf(wxT("%i"), MaxTS);
@@ -2706,6 +2886,12 @@ void mFixTranslator::OnUnselectAllOutputVariablesButton(wxCommandEvent& event)
    if(spaExists)
    {
       NumReactionRatesVariable->SetValue(FALSE);
+   }
+   // pan
+   if(spbExists)
+   {
+      KTURBG_Variable->SetValue(FALSE);
+      ETURBG_Variable->SetValue(FALSE);
    }
    int MaxTS = DetermineMaxTimeSteps();
    wxString strMaxTS;

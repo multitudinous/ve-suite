@@ -195,9 +195,10 @@ void attachDataToCartesianMesh(int numComponents, int numArrays, int varNum, vtk
       cerr << "ERROR: Cannot get memory for scalarData, exiting." << endl;
       exit(1);
    }
-        //cout << "In attach to cart mesh " << endl;
-        //cout << "Number of Arrays " << numArrays << endl;
-
+     //   cout << "In attach to cart mesh " << endl;
+     //   cout << "Number of Arrays " << numArrays << endl;
+     //   cout << "Number of Comp " << numComponents << endl;
+     //   cout << "varnum " << varNum << endl;
    // Strip out the boundry ghost cells (mfD->sp1Array1[index] >= 9.87654e+031)
    // Lets loop for each array
    int counter, index;
@@ -285,6 +286,14 @@ void attachDataToCartesianMesh(int numComponents, int numArrays, int varNum, vtk
                      // Reaction Rates
                      else if (varNum==11) {
                         scalarData[counter++] = mfD->spaArray1[paramIndex][index++];
+                     }
+                     // pan : K_Turb_G
+                     else if (varNum==12) {
+                        scalarData[counter++] = mfD->spbArray1[index++];
+                     }
+                     // pan : E_Turgb_G
+                     else if (varNum==13) {
+                        scalarData[counter++] = mfD->spbArray2[index++];
                      }
                      // Check for ghost cells
                      if (resH->flag[index-1] >= 100)
@@ -425,6 +434,14 @@ void attachDataToCylindricalMesh(int numComponents, int numArrays, int varNum, v
                      // Reaction Rates
                      else if (varNum==11) {
                         scalarData[counter++] = mfD->spaArray1[paramIndex][index++];
+                     }
+                     // pan kepsilon : k_turb_g
+                     else if (varNum==12) {
+                        scalarData[counter++] = mfD->spbArray1[index++];
+                     }
+                     // pan kepsilon : e_turb_g
+                     else if (varNum==13) {
+                        scalarData[counter++] = mfD->spbArray2[index++];
                      }
                      // Check for ghost cells
                      if (resH->flag[index-1] >= 100)
@@ -1403,7 +1420,125 @@ int UnstructuredGridWriter(char *inFile, char *outDir, int tStep, int maxTs, int
 
       cout << "Translation complete." << endl << endl;
    }
+   
+   // pan kepsilon : K_Turb_G (spb)
+   if (resH->varSelectFlag[12] == 1){
+      cout << "Starting K_Turb_G (SPB) translation.. " << endl;
+      strcpy(inFilename, inFile);
+      strcat(inFilename, ".SPB");
 
+      // Read in number of timesteps;
+      cout << "   ";
+      float numTs = ReadSPTimesteps(inFilename);
+      cout << "   Number of time steps: " << numTs+1 << endl;
+      // The TS difference
+      float diffTs = (float)maxTs/(float)numTs;
+      // Actual TS to use
+      float actualTs = tStep/diffTs;
+      // Round the actual TS up
+      float factor = pow(10.0, 0.0);
+      int roundedTs = (int)(floor((actualTs * factor) + 0.5) / factor);
+      cout << "   Rounded time step to use: " << roundedTs << endl;
+
+      // Read in the sp file
+      cout << "   ";
+      ReadSPFile(inFilename, roundedTs, resH, spH, mfD);
+
+      // Set up data arrays
+      numArrays = 1;
+      numComponents = 1;
+      doGhost = 1;
+      dataArray = new vtkFloatArray * [numArrays];
+      for (int i=0; i<numArrays; i++) {
+         dataArray[i] = vtkFloatArray::New();
+         dataArray[i]->SetNumberOfComponents(numComponents);
+      }
+      dataArray[0]->SetName("K_Turb_G");
+ 
+
+      // Attach data to mesh
+      if ((!strncmp(resH->coordinates, "CARTESIAN", 9))|| (resH->kMax2 == 1))
+      {
+         attachDataToCartesianMesh(numComponents, numArrays, 12, dataArray, rGrid, resH, mfD);
+      }
+      else
+      {
+         attachDataToCylindricalMesh(numComponents, numArrays, 12, dataArray, uGrid, resH, mfD);
+      }
+
+      // Cleanup
+      for (int i=0; i<numArrays; i++)
+         dataArray[i]->Delete();
+      delete [] dataArray;
+      dataArray = NULL;
+
+      delete [] mfD->spbArray1;
+      mfD->spbArray1 = NULL;
+
+      delete [] mfD->spbArray2;
+      mfD->spbArray2 = NULL;
+
+      sp_cleanup(spH);
+
+      cout << "Translation complete." << endl << endl;
+   }
+
+   // pan kepsilon : E_TURB_G (spB)
+   if (resH->varSelectFlag[13] == 1){
+      cout << "Starting E_Turb_G (SPB) translation.. " << endl;
+      strcpy(inFilename, inFile);
+      strcat(inFilename, ".SPB");
+
+      // Read in number of timesteps;
+      cout << "   ";
+      float numTs = ReadSPTimesteps(inFilename);
+      cout << "   Number of time steps: " << numTs+1 << endl;
+      // The TS difference
+      float diffTs = (float)maxTs/(float)numTs;
+      // Actual TS to use
+      float actualTs = tStep/diffTs;
+      // Round the actual TS up
+      float factor = pow(10.0, 0.0);
+      int roundedTs = (int)(floor((actualTs * factor) + 0.5) / factor);
+      cout << "   Rounded time step to use: " << roundedTs << endl;
+
+      // Read in the sp file
+      cout << "   ";
+      ReadSPFile(inFilename, roundedTs, resH, spH, mfD);
+
+      // Set up data arrays
+      numArrays = 1;
+      numComponents = 1;
+      doGhost = 1;
+      dataArray = new vtkFloatArray * [numArrays];
+      for (int i=0; i<numArrays; i++) {
+         dataArray[i] = vtkFloatArray::New();
+         dataArray[i]->SetNumberOfComponents(numComponents);
+      }
+      dataArray[0]->SetName("E_Turb_G");
+
+      // Attach data to mesh
+      if ((!strncmp(resH->coordinates, "CARTESIAN", 9))|| (resH->kMax2 == 1))
+         attachDataToCartesianMesh(numComponents, numArrays, 13, dataArray, rGrid, resH, mfD);
+      else
+         attachDataToCylindricalMesh(numComponents, numArrays, 13, dataArray, uGrid, resH, mfD);
+
+      // Cleanup
+      for (int i=0; i<numArrays; i++)
+         dataArray[i]->Delete();
+      delete [] dataArray;
+      dataArray = NULL;
+
+      delete [] mfD->spbArray1;
+      mfD->spbArray1 = NULL;
+
+      delete [] mfD->spbArray2;
+      mfD->spbArray2 = NULL;
+
+      sp_cleanup(spH);
+
+      cout << "Translation complete." << endl << endl;
+   }
 
    // Convert rectilinear grid to unstructured grid (Cartesian coordinates)
    if ((!strncmp(resH->coordinates, "CARTESIAN", 9))|| (resH->kMax2 == 1)){

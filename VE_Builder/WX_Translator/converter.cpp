@@ -214,6 +214,14 @@ int LoadMFIX(const char *projectName, int timestep, resHead *rsH, spHead *spH, m
 	strncpy(filename+strlen(projectName), extension, 5);
 	ReadSPFile(filename, timestep, rsH, spH, mfD);
 
+	// pan
+	strncpy(extension, ".SPB\0", 5);
+	strncpy(filename+strlen(projectName), extension, 5);
+	ReadSPFile(filename, timestep, rsH, spH, mfD);
+
+	// pan
+	free(filename);
+	
   return 0;
   
 }
@@ -983,9 +991,25 @@ int ReadResFile(char *filename, resHead *resInfo)
 		resInfo->nrr = 0;
 	}
 
+	// pan : kepsilon : in Fortran a logical variable (4 bytes) , so I am
+	//			using "int" instead of "bool"
 
-	free(c);
-	free(c_name);
+	byte_offset += 512;
+	if (version_number >= 1.599)
+	{
+		int tmp;
+		fseek(MFIXRESfile, byte_offset, SEEK_SET); 
+		fread(&tmp, sizeof(int), 1, MFIXRESfile); 
+		byte_swap((char *)&tmp, sizeof(int));
+		resInfo->kepsilon = tmp;
+	}
+	else
+	{
+		resInfo->kepsilon = false;
+	}
+
+// pan	free(c);       // commented out ... I do not see a malloc for this variable
+// pan	free(c_name);  // commented out ... I do not see a malloc for this variable
     fclose(MFIXRESfile);
 
    return 0;
@@ -1536,6 +1560,39 @@ int ReadSPFile(char *filename, int timestep, resHead *resInfo, spHead *spInfo, m
             fseek(MFIXfile, timestep_offset, SEEK_SET);
 		}
    }
+   else if(memcmp(filename+(strlen(filename)-4), ".SPB", 4) == 0) // pan
+   {
+
+		data->spbArray1 = new float [resInfo->ijkMax2];
+		data->spbArray2 = new float [resInfo->ijkMax2];
+
+		timestep_offset = byte_offset + (timestep * ((blocks_per_timestep*2) +1) * 512);
+		fseek(MFIXfile, timestep_offset, SEEK_SET); 
+
+		fread(&spInfo->timeNow, sizeof(float), 1, MFIXfile);
+		fread(&spInfo->nStep, sizeof(int), 1, MFIXfile);
+		byte_swap((char *)&spInfo->timeNow, sizeof(float));
+		byte_swap((char *)&spInfo->nStep, sizeof(int));
+
+		
+		timestep_offset += 512;
+		fseek(MFIXfile, timestep_offset, SEEK_SET);
+
+		for(int i = 0; i <resInfo->ijkMax2; i++)
+		{
+		  fread(&data->spbArray1[i], sizeof(float), 1, MFIXfile);
+		  byte_swap((char *)&data->spbArray1[i], sizeof(float));
+		}
+
+		timestep_offset += blocks_per_timestep * 512;
+		fseek(MFIXfile, timestep_offset, SEEK_SET);
+
+		for(int i = 0; i <resInfo->ijkMax2; i++)
+		{
+		  fread(&data->spbArray2[i], sizeof(float), 1, MFIXfile);
+		  byte_swap((char *)&data->spbArray2[i], sizeof(float));
+		}
+   }
   fclose(MFIXfile);
 
   return 0;
@@ -1543,6 +1600,11 @@ int ReadSPFile(char *filename, int timestep, resHead *resInfo, spHead *spInfo, m
 
 
 /* COPY OF INEFFICEINT BLANK MEMORY WRITING SKIP CODE
+	// pan ... I know all this is commented out, but everywhere it
+	//		is using operator new [] and "freeing" the
+	//		memory using free() ... delete [] should
+	//		be used. Using free() results in undefined
+	//		behavior.
 
   	if(version_number >= 1.04)
 	{

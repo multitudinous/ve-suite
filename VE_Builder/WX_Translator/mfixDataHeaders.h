@@ -69,6 +69,7 @@ struct resHead { // Restart File Headers
 	int			mMax;
 	int			nscalar;	//number of scalars
 	int			nrr;		//number of reaction rates
+	bool			kepsilon;	//kepsilon // pan (variable in restart file)
 	int			*nMax;
 	char			*coordinates;
 	char			*description;
@@ -108,6 +109,10 @@ struct mfixData { // Raw MFIX data
 	float		**sp9Array1;
 
 	float		**spaArray1;
+
+	// the SPB file has 2 arrays : K_TURB_G and E_TURB_G
+	float		*spbArray1;	// pan
+	float		*spbArray2;	// pan
 };
 
 #endif

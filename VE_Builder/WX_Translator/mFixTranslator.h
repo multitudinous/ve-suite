@@ -118,6 +118,11 @@ protected:
     wxGauge* SPGauge_a;
 	wxStaticText* static_text_a_TS;
 	
+// pan
+	wxStaticText* static_text_b;
+    wxGauge* SPGauge_b;
+	wxStaticText* static_text_b_TS;
+	
 
     wxStaticLine* static_line_1;
 	wxStaticText* statusTitle;
@@ -183,6 +188,8 @@ protected:
 	wxCheckBox* Theta_MVariable;					// Contained in sp8
 	wxCheckBox* ScalarsVariable;					// Contained in sp9
 	wxCheckBox* NumReactionRatesVariable;			// Contained in spa
+	wxCheckBox* KTURBG_Variable;			// Contained in spb // pan
+	wxCheckBox* ETURBG_Variable;			// Contained in spb // pan
 	wxStaticLine* static_line_9;
 	wxButton* SelectAllOutputVariables;
 	wxButton* UnselectAllOutputVariables;
@@ -197,6 +204,7 @@ protected:
 	bool sp8Active;
 	bool sp9Active;
 	bool spaActive;
+	bool spbActive;  // pan
 
 	wxTextCtrl* BeginTSBox;
 	wxStaticText* BeginTSLabel;
@@ -227,6 +235,7 @@ protected:
 	bool sp8Exists;
 	bool sp9Exists;
 	bool spaExists;
+	bool spbExists;   // pan
 
 	int sp1TimeSteps;
 	int sp2TimeSteps;
@@ -238,6 +247,7 @@ protected:
 	int sp8TimeSteps;
 	int sp9TimeSteps;
 	int spaTimeSteps;
+	int spbTimeSteps;  // pan
 	int diffTS;
 	int actualTS;
 	int maxTS;
@@ -293,6 +303,8 @@ protected:
 		CHECKBOX_THETA_M,
 		CHECKBOX_SCALARS,
 		CHECKBOX_NUMREACTIONRATES,
+		CHECKBOX_K_TURB_G,			// pan ... two new variables in
+		CHECKBOX_E_TURB_G,			// pan     the SPB file
 		BUTTON_SELECTALLOUTPUTVARS,
 		BUTTON_UNSELECTALLOUTPUTVARS,
 		TEXTCTRL_BEGINNINGTS,
@@ -309,6 +321,7 @@ protected:
 		GAUGE_SP9,				
 		GAUGE_SP0,				
 		GAUGE_SPa,				
+		GAUGE_SPb,				// pan				
 		RADIOBOX_SERIAL,		
 		RADIOBOX_PARALLEL,		
 		RADIOBOX_CGNS			
