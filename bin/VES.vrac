@@ -1,9 +1,15 @@
 #!/bin/csh -f
 # 
 # Set environment variables and paths for running the program
-# (after 12/7/04 change VE_SUITE_HOME from VE_Suite_Nightly to VE_Suite and remove this comment)
+#setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
 setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_Nightly
-setenv TAO_BUILD FALSE
+#
+# Set the TAO nameServer properties used by the run scripts
+#setenv TAO_MACHINE lego.vrac.iastate.edu
+setenv TAO_MACHINE localhost
+setenv TAO_PORT 1237
+
+setenv TAO_BUILD TRUE
 setenv CLUSTER_APP FALSE
 source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
 
@@ -12,46 +18,53 @@ set MY_VJCONFIGS=/home/vr/vjconfig/2.0alpha4
 switch ($1)
 
   case -c6:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.config 
   breaksw
   
   case -c4open:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.open.config
   breaksw
   
   case -c4closed:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.config
   breaksw
   
   case -sim:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${VE_SUITE_HOME}/VE_Xplorer/vjconfig/sim.base.jconf \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
   breaksw
   
   case -c6mono:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.mono.config
   breaksw
   
   case -c4mono:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.mono.config
   breaksw
 
   case -nserv:
-    #/usr/java/bin/tnameserv -ORBInitialPort 8088 &
-    killall omniNames
-    rm ${OMNINAMES_LOGDIR}/omninames-${HOST}.log
-    rm ${OMNINAMES_LOGDIR}/omninames-${HOST}.bak
-    omniNames -start &
+    ${TAO_ROOT}/orbsvcs/Naming_Service/Naming_Service \
+       -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
+    sleep 5
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/Exe_server \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &
   breaksw
   
   case -menu:
-    ve_conductor
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/WinClient \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
   breaksw
 
   case -surface:
@@ -121,7 +134,7 @@ switch ($1)
   echo When the viewer has started, start the menu in another shell
   echo "      "-menu = start wxWidgets menu to control viewer
   echo The following utilities might be useful occasionaly
-  echo "     "-nserv = restart omninames server
+  echo "     "-nserv = restart TAO nameserver
   echo "   "-surface = make VTK surface from fluid mesh
   echo "  "-surf2stl = convert surface file to stl
   echo "  "-transVTK = move flowdata to align with geometry
