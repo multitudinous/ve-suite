@@ -17,8 +17,8 @@ else
    setenv CFDHOSTTYPE `uname`
 endif
 
-#setenv TAO_BUILD TRUE
-setenv TAO_BUILD FALSE
+setenv TAO_BUILD TRUE
+#setenv TAO_BUILD FALSE
 
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
