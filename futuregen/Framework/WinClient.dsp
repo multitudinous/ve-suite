@@ -73,7 +73,7 @@ LINK32=link.exe
 # ADD BASE F90 /check:bounds /compile_only /dbglibs /debug:full /nologo /traceback /warn:argument_checking /warn:nofileopt /winapp
 # ADD F90 /browser /check:bounds /compile_only /dbglibs /debug:full /libs:dll /nologo /reentrancy:threaded /threads /traceback /warn:argument_checking /warn:nofileopt /winapp
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /w /W0 /Gm /GX /ZI /Od /I "../Plugin" /I "./" /I "../VE_UI/" /I "../../VE_Xplorer" /I "../../VE_Conductor/idl" /I "../IDL/" /I "$(WX_ROOT)\include" /I "$(TAO_ROOT)" /I "$(ACE_ROOT)" /I "$(TAO_ROOT)\orbsvcs" /I "$(XERCESCROOT)\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MD /w /W0 /Gm /GX /ZI /Od /I "../Plugin" /I "./" /I "../VE_UI/" /I "../../VE_Xplorer" /I "../../VE_Conductor/idl" /I "../IDL/" /I "$(WX_ROOT)\include" /I "$(TAO_ROOT)" /I "$(ACE_ROOT)" /I "$(TAO_ROOT)\orbsvcs" /I "$(XERCESCROOT)\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /D "_TAO" /FR /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -119,6 +119,10 @@ SOURCE=.\Avail_Modules.cpp
 
 !ENDIF 
 
+# End Source File
+# Begin Source File
+
+SOURCE=..\Plugin\FinancialDialog.cpp
 # End Source File
 # Begin Source File
 
@@ -449,6 +453,10 @@ SOURCE=..\Framework\App.h
 # Begin Source File
 
 SOURCE=..\Framework\Avail_Modules.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\Plugin\FinancialDialog.h
 # End Source File
 # Begin Source File
 
