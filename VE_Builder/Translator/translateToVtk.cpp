@@ -614,9 +614,9 @@ int main( int argc, char *argv[] )
 
    if ( debug > 1 ) 
    {
-      std::cout << "pointset = " << pointset << std::endl;
-      pointset->Print( std::cout );
-      aTransform->Print( std::cout );
+      //std::cout << "pointset = " << pointset << std::endl;
+      //pointset->Print( std::cout );
+      //aTransform->Print( std::cout );
    }
    
    if ( pointset == NULL )

@@ -79,7 +79,8 @@ void letUsersAddParamsToField( const int numParams, vtkFloatArray** data,
       pointData->AddArray( data[i] );
    }
 
-   if ( debug > 1 ) 
-      pointData->Print( std::cout );
+   // Breaks Deere's Build
+   //if ( debug > 1 ) 
+   //   pointData->Print( std::cout );
 }
 

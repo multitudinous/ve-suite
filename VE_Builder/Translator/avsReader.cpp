@@ -32,11 +32,11 @@
 #include <iostream>
 #include <fstream>
 
-#include "vtkUnstructuredGrid.h"
-#include "vtkPoints.h"
-#include "vtkFloatArray.h"  // this code requires VTK4
-#include "vtkPointData.h"
-#include "vtkCellType.h"
+#include <vtkUnstructuredGrid.h>
+#include <vtkPoints.h>
+#include <vtkFloatArray.h>  // this code requires VTK4
+#include <vtkPointData.h>
+#include <vtkCellType.h>
 
 #include "converter.h"      // for "letUsersAddParamsToField"
 
@@ -611,7 +611,8 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
 
          if ( debug > 2 )
          {
-            parameterData[ i ]->Print( std::cout );
+            // Breaks Deere's Build
+            //parameterData[ i ]->Print( std::cout );
          }
       }
    }
