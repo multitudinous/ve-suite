@@ -78,7 +78,7 @@ int HeatExchanger::GetNumPoly()
 /////////////////////////////////////////////////////////////////////////////
 int HeatExchanger::GetNumIports()
 {
-  int result=1;
+  int result=2;
 
   return result;
 }
@@ -87,13 +87,14 @@ int HeatExchanger::GetNumIports()
 void HeatExchanger::GetIPorts(POLY &iports)
 {
   iports[0]=wxPoint(0,20);
+  iports[1]=wxPoint(0, 25);
   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 int HeatExchanger::GetNumOports()
 {
-  int result=1;
+  int result=2;
   //Your code
   return result;
 }
@@ -102,6 +103,7 @@ int HeatExchanger::GetNumOports()
 void HeatExchanger::GetOPorts(POLY &oports)
 {
   oports[0]=wxPoint(40,20);
+  oports[1]=wxPoint(40,25);
 }
 
 /////////////////////////////////////////////////////////////////////////////
