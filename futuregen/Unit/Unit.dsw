@@ -15,6 +15,30 @@ Package=<4>
 
 ###############################################################################
 
+Project: "BulkDesulfurizerUnit"=.\BulkDesulfurizerUnit\BulkDesulfurizerUnit.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "CatalyticCombustorUnit"=.\CatalyticCombustorUnit\CatalyticCombustorUnit.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Global:
 
 Package=<5>

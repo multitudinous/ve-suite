@@ -4,7 +4,7 @@
 
 #include "reks_solve.h"
 
-#include <sys/times.h>
+//#include <sys/times.h>
 #include <set>
 
 //////////////////////////////////////////////////////////////////////

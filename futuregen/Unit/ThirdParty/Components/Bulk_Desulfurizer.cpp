@@ -12,6 +12,10 @@ using std::endl;
 
 namespace Vision21 {
 
+#ifndef M_PI
+#define M_PI 3.141592653589793
+#endif 
+
 Bulk_Desulfurizer::Bulk_Desulfurizer()
 {
   Rgas         = 8.31451;                 // J/mol*K
