@@ -20,8 +20,8 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
-#setenv TAO_BUILD TRUE
-setenv TAO_BUILD FALSE
+setenv TAO_BUILD TRUE
+#setenv TAO_BUILD FALSE
 
 set WX_HOME_DIR=/home/users/mccdo/wxWindows/wxGTK
 
@@ -35,8 +35,8 @@ setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 #echo "specifying libraries for" ${CFDHOSTTYPE}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
-   setenv VTK_BASE_DIR /home/users/mccdo/vtk-builds/IRIX32
-   setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-pthread
+   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/IRIX32
+   setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/vrjuggler-2.0-alpha4.irix-n32-pthread
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-deps
 #   setenv LD_LIBRARYN32_PATH /home/users/mccdo/VE_Suite/VE_Installer/arenasize/libs
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
@@ -64,6 +64,8 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ FedoraCore_* ) then
    setenv JDK_HOME /usr/java/j2sdk1.4.2_03
    setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80-deps
+   #setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/Suse-9.1-alpha4
+   #setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
 
    setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
@@ -73,9 +75,10 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ FedoraCore_* ) then
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
 
+      setenv XERCESCROOT /home/users/dmuthjr/xerces
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
    else
       setenv OMNI_HOME /home/vr/Juggler/linux-rh80
       #setenv OMNI_HOME /home/vr/Juggler/linux-fc1
@@ -99,12 +102,13 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
    #setenv WX_HOME /home/users/sjk60/suse_deps/wxWidgets_GTK
 
    if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv MY_ACEDIR /home/users/mccdo/ACE_TAO
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
-
+      setenv XERCESCROOT /home/users/dmuthjr/xerces
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
    else
       #setenv OMNI_HOME /home/vr/Juggler/linux-fc1
       setenv OMNI_HOME /home/users/mccdo/omniORB-4.0.3/omni-Suse-9.1
