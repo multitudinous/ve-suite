@@ -80,14 +80,13 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
 
    if ( ${TAO_BUILD} == "TRUE" ) then
-      setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/IRIX32
       #setenv ACE_ROOT /home/vr/Applications/TSVEG/Libraries/ACE-5.4
       #setenv TAO_ROOT /home/vr/Applications/TSVEG/Libraries/TAO-1.4
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/IRIX32/lib
       #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/IRIX32/lib
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib:${XERCESCROOT}/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL
       setenv PATH ${ACE_ROOT}/bin:${ACE_ROOT}/IRIX32/bin:${TAO_ROOT}/IRIX32/bin:${PATH}
 
@@ -119,11 +118,10 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
       #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/Linux/lib
       #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/Linux/lib
 
-      setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-RH80
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${XERCESCROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
       setenv PATH ${ACE_ROOT}/bin:${ACE_ROOT}/Linux/bin:${TAO_ROOT}/Linux/bin:${PATH}
 
       setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-RH80
