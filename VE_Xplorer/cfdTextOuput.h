@@ -32,44 +32,32 @@
 #ifndef TEXT_PROMPT_H
 #define TEXT_PROMPT_H
 #ifdef _PERFORMER
-#include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfText.h>
 #include <Performer/pr/pfString.h>
-#include <Performer/pfdu.h>
-#include <Performer/pf.h>
-#include <Performer/pf/pfGeode.h>    //for test
-
-//#include <Input/InputManager/vjPosInterface.h>
-//#include <Input/InputManager/vjDigitalInterface.h>
-
-#define TEXT_DIST 1.0
-
-class textPrompt
-{
- public:
-    textPrompt();   //constructor
-    ~textPrompt();  //destructor
-    pfDCS *add_text(char *text_input);
-    
-    void DeleteText();
-   void flush_text(char * t);
-    
-        
- private:
-    pfDCS *text_DCS;
-    pfText *text;
-    pfString *str;
-    pfGeode *test;
-    //pfFont *fnt;
-
-    //vjPosInterface head;
-    //vjMatrix* head_Mat;
-    //pfMatrix *text_nav,*text_rot;
-    //vjVec3 head_Vec;
-    //vjVec3 head_pos;
-};
-
 #elif _OSG
 #elif _OPENSG
 #endif
+
+class cfdGeode;
+class cfdDCS;
+
+class cfdTextOutput
+{
+   public:
+      cfdTextOutput();   //constructor
+      ~cfdTextOutput();  //destructor
+      cfdDCS *add_text(char *text_input);
+    
+   private:
+      cfdDCS*   dcs;
+      cfdGeode* geode;
+#ifdef _PERFORMER
+      //pfFont *fnt;
+      pfText *text;
+      pfString *str;
+#elif _OSG
+#elif _OPENSG
+#endif
+};
+
 #endif // TEXT_PROMPT_H
