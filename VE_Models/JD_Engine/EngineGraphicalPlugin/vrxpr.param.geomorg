@@ -1,50 +1,57 @@
-7
+8
 9                       // Object type 9: Geometry file name
    0                  // transparency toggle
    0                  // color toggle
    .003281 .003281 .003281     // Scale values for geometry file
    -13 2 -2      // Translation values for geometry file
    0 0 0             // Rotation values for geometry file
-   /home/users/sgent/deerework/Deere_Day_models/with_baffle1_good/x85_x88_my03_engine_platform_green.pfb    // Geometry file name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/x85_x88_my03_engine_platform_green.pfb    // Geometry file name
 9                       // Object type 9: Geometry file name
    0                  // transparency toggle
    0                  // color toggle
-   .003281 .003281 .003281     // Scale values for geometry file
-   -13 2 -2      // Translation values for geometry file  //check this particular one
-   0 0 0             // Rotation values for geometry file
-   /home/users/sgent/deerework/Deere_Day_models/sample_baffle/baffle.pfb    // Geometry file name
+   3.281 3.281 3.281     // Scale values for geometry file
+   -1 4 3      // Translation values for geometry file
+   0 0 90             // Rotation values for geometry file
+   /home/vr/Applications/TSVEG/Interactive_Harvester/tall_baffle.pfb    // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                  // transparency toggle
+   0                  // color toggle
+   3.281 3.281 3.281     // Scale values for geometry file
+   -1 4 3      // Translation values for geometry file
+   0 0 90             // Rotation values for geometry file
+   /home/vr/Applications/TSVEG/Interactive_Harvester/wide_baffle.pfb    // Geometry file name
 9                // Object type 9: Geometry file name
    0                  // transparency toggle
    0                  // color toggle
    .003281 .003281 .003281     // Scale values for geometry file
    -13 2 -2      // Translation values for geometry file
    0 0 0             // Rotation values for geometry file
-   /home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/EngineGraphicalPlugin/deflectors.pfb      // Geometry file name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/deflectors.pfb      // Geometry file name
 9                // Object type 9: Geometry file name
    0                  // transparency toggle
    0                  // color toggle
    .003281 .003281 .003281     // Scale values for geometry file
    -13 2 -2      // Translation values for geometry file
    0 0 0             // Rotation values for geometry file
-   /home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/EngineGraphicalPlugin/press_reg_valve.pfb      // Geometry file name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/press_reg_valve.pfb      // Geometry file name
 8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
    1 1 1             // DCS Scale values
    0 0 0             // DCS Translation values (in feet)
    0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
-   /home/users/sgent/deerework/Deere_Day_models/no_baffle/outFile.vtk      // vtkDataSet name
-   JUNK       // precomputed data slice directory (insert JUNK if n/a)
+   /home/vr/Applications/TSVEG/Interactive_Harvester/tallBaffleOutFile.vtk     // vtkDataSet name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/tall_baffle_planes    // vtkDataSet name
    JUNK         // precomputed surface directory    (insert JUNK if n/a)
 8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
    1 1 1             // DCS Scale values
    0 0 0             // DCS Translation values (in feet)
    0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
-   /home/users/sgent/deerework/Deere_Day_models/original/outFile.vtk      // vtkDataSet name
-   /home/users/sgent/deerework/Deere_Day_models/original/new_dir       // precomputed data slice directory (insert JUNK if n/a)
+   /home/vr/Applications/TSVEG/Interactive_Harvester/noBaffleOutFile.vtk      // vtkDataSet name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/no_baffle_planes      // precomputed data slice directory (insert JUNK if n/a)
    JUNK         // precomputed surface directory    (insert JUNK if n/a)
 8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
    1 1 1             // DCS Scale values
    0 0 0             // DCS Translation values (in feet)
    0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
-   /home/users/sgent/deerework/Deere_Day_models/with_baffle1_good/outFile.vtk      // vtkDataSet name
-   /home/users/sgent/deerework/Deere_Day_models/with_baffle1_good/new_dir       // precomputed data slice directory (insert JUNK if n/a)
+   /home/vr/Applications/TSVEG/Interactive_Harvester/originalOutFile.vtk    // vtkDataSet name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/original_planes  // precomputed data slice directory (insert JUNK if n/a)
    JUNK         // precomputed surface directory    (insert JUNK if n/a)

@@ -5,4 +5,4 @@
    .003281 .003281 .003281     // Scale values for geometry file
    -13 2 -2      // Translation values for geometry file
    0 0 0             // Rotation values for geometry file
-   /home/users/sgent/deerework/Deere_Day_models/withBaffle1_good/RotaryScreenLouverDoor.pfb      // Geometry file name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/RotaryScreenLouverDoor.pfb      // Geometry file name
