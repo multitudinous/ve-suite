@@ -105,12 +105,27 @@ ansysReader::ansysReader( char * input )
    this->ptrENS = NULL;
    this->numCornerNodesInElement = NULL;
    this->cornerNodeNumbersForElement = NULL;
-   this->summedS1Stress = NULL;
-   this->summedS3Stress = NULL;
-   this->summedVonMisesStress = NULL;
-   this->numContributingElements = NULL;
+   this->summedFullGraphicsS1Stress = NULL;
+   this->summedFullGraphicsS3Stress = NULL;
+   this->summedFullGraphicsVonMisesStress = NULL;
+   this->summedPowerGraphicsS1Stress = NULL;
+   this->summedPowerGraphicsS3Stress = NULL;
+   this->summedPowerGraphicsVonMisesStress = NULL;
+   this->numContributingFullGraphicsElements = NULL;
+   this->numContributingPowerGraphicsElements = NULL;
 
    this->ugrid = vtkUnstructuredGrid::New();
+  
+   char tempText [ 256 ];
+   std::cout << "\nWhat are the units for displacement (in,mm,m,etc.): " << std::endl;
+   std::cin >> tempText;
+   this->displacementUnits = new char [ strlen(tempText)+1 ];
+   strcpy(this->displacementUnits,tempText);
+
+   std::cout << "\nWhat are the units for stress (MPa,psi,etc): " << std::endl;
+   std::cin >> tempText;
+   this->stressUnits = new char [ strlen(tempText)+1 ];
+   strcpy(this->stressUnits,tempText);
 }
 
 ansysReader::~ansysReader()
@@ -177,14 +192,8 @@ ansysReader::~ansysReader()
       this->ptrENS = NULL;
    }
 
-/*
-   // can't do this with translateToVtk
-   if ( this->ugrid )
-   {
-      this->ugrid->Delete();
-      this->ugrid = NULL;
-   }
-*/
+   delete [] this->displacementUnits;
+   delete [] this->stressUnits;
 }
 
 void ansysReader::FlipEndian()
@@ -716,18 +725,6 @@ void ansysReader::ReadNodalEquivalencyTable()
    // the last number is blockSize again
    int blockSize_2 = ReadNthInteger( intPosition++ );
    VerifyBlock( blockSize_1, blockSize_2 );
-
-   this->summedS1Stress = new double [ this->numNodes ];
-   this->summedS3Stress = new double [ this->numNodes ];
-   this->summedVonMisesStress = new double [ this->numNodes ];
-   this->numContributingElements = new int [ this->numNodes ];
-   for ( int i = 0; i < this->numNodes; i++ )
-   {
-      this->summedS1Stress [ i ] = 0.0;
-      this->summedS3Stress [ i ] = 0.0;
-      this->summedVonMisesStress [ i ] = 0.0;
-      this->numContributingElements [ i ] = 0;
-   }
 }
 
 void ansysReader::ReadElementEquivalencyTable()
@@ -1175,6 +1172,16 @@ void ansysReader::ReadElementDescriptionIndexTable()
       this->ReadElementDescription( i, this->ptrElemDescriptions[ i ] );
    }
 
+   //////////////////////////////////////////////////////
+   this->summedFullGraphicsS1Stress = new double [ this->numNodes ];
+   this->summedFullGraphicsS3Stress = new double [ this->numNodes ];
+   this->summedFullGraphicsVonMisesStress = new double [ this->numNodes ];
+   this->summedPowerGraphicsS1Stress = new double [ this->numNodes ];
+   this->summedPowerGraphicsS3Stress = new double [ this->numNodes ];
+   this->summedPowerGraphicsVonMisesStress = new double [ this->numNodes ];
+   this->numContributingFullGraphicsElements = new int [ this->numNodes ];
+   this->numContributingPowerGraphicsElements = new int [ this->numNodes ];
+
    this->currentDataSetSolution = 0;
    for ( int i = 0; i < 2 * this->maxNumberDataSets; i++ )
    {
@@ -1183,6 +1190,17 @@ void ansysReader::ReadElementDescriptionIndexTable()
       this->currentDataSetSolution = i;
       std::cout << "\nWorking on Load Case "
                 << this->currentDataSetSolution << std::endl;
+      for ( int i = 0; i < this->numNodes; i++ )
+      {
+         this->summedFullGraphicsS1Stress [ i ] = 0.0;
+         this->summedFullGraphicsS3Stress [ i ] = 0.0;
+         this->summedFullGraphicsVonMisesStress [ i ] = 0.0;
+         this->summedPowerGraphicsS1Stress [ i ] = 0.0;
+         this->summedPowerGraphicsS3Stress [ i ] = 0.0;
+         this->summedPowerGraphicsVonMisesStress [ i ] = 0.0;
+         this->numContributingFullGraphicsElements [ i ] = 0;
+         this->numContributingPowerGraphicsElements [ i ] = 0;
+      }
       this->ReadSolutionDataHeader( this->ptrDataSetSolutions[ i ] );
       this->ReadNodalSolutions( this->ptrDataSetSolutions[ i ] );
       this->ReadElementSolutions( this->ptrDataSetSolutions[ i ] );
@@ -1349,13 +1367,7 @@ void ansysReader::ReadSolutionDataHeader( int ptrDataSetSolution )
 
    int itime = ReadNthInteger( intPosition++ );
    PRINT( itime );
-/*
-   if ( itime != 1 ) 
-   {
-      std::cerr << "itime = " << itime << " != 1" << std::endl;
-      exit( 1 );
-   }
-*/
+
    int iter = ReadNthInteger( intPosition++ );
    PRINT( iter );
    if ( iter != 1 ) 
@@ -1517,12 +1529,12 @@ void ansysReader::ReadNodalSolutions( int ptrDataSetSolution )
 
    // Because the ansys vertices are one-based, increase the arrays by one
    char arrayName[ 256 ];
-   sprintf( arrayName, "displacement vector %i", this->currentDataSetSolution );
+   sprintf( arrayName, "displacement %i %s", this->currentDataSetSolution, this->displacementUnits );
    parameterData[ 0 ]->SetName( arrayName );
    parameterData[ 0 ]->SetNumberOfComponents( 3 );
    parameterData[ 0 ]->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
 
-   sprintf( arrayName, "displacement magnitude %i", this->currentDataSetSolution );
+   sprintf( arrayName, "displacement mag %i %s", this->currentDataSetSolution, this->displacementUnits );
    parameterData[ 1 ]->SetName( arrayName );
    parameterData[ 1 ]->SetNumberOfComponents( 1 );
    parameterData[ 1 ]->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
@@ -1543,7 +1555,7 @@ void ansysReader::ReadNodalSolutions( int ptrDataSetSolution )
       parameterData[ 0 ]->SetTuple( this->nodeID[ i ], nodalSolution );
 
 #ifdef PRINT_HEADERS
-      //if ( this->nodeID[ i ] == 2108 ) 
+      //if ( this->nodeID[ i ] == 2108 )    //tets
       {
          std::cout <<  "nodalSolution[ " << this->nodeID[ i ] <<" ] = ";
          for ( int j = 0; j < this->numDOF; j++ )
@@ -1620,7 +1632,7 @@ void ansysReader::AttachStressToGrid()
 {
    std::cout << "\tAttaching Stress To Grid for Load Case " << this->currentDataSetSolution << std::endl;
    // set up arrays to store stresses over entire mesh...
-   int numParameters = 3;
+   int numParameters = 6;
    vtkFloatArray ** parameterData = new vtkFloatArray * [ numParameters ];
    for ( int i=0; i < numParameters; i++ )
    {
@@ -1631,41 +1643,81 @@ void ansysReader::AttachStressToGrid()
    }
 
    char arrayName[ 256 ];
-   sprintf( arrayName, "min prin stress %i", this->currentDataSetSolution );
+   sprintf( arrayName, "fg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
    parameterData[ 0 ]->SetName( arrayName );
-   sprintf( arrayName, "max prin stress %i", this->currentDataSetSolution );
+   sprintf( arrayName, "fg max prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
    parameterData[ 1 ]->SetName( arrayName );
-   sprintf( arrayName, "von Mises stress %i", this->currentDataSetSolution );
+   sprintf( arrayName, "fg von Mises stress %i %s", this->currentDataSetSolution, this->stressUnits );
    parameterData[ 2 ]->SetName( arrayName );
+   sprintf( arrayName, "pg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   parameterData[ 3 ]->SetName( arrayName );
+   sprintf( arrayName, "pg max prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   parameterData[ 4 ]->SetName( arrayName );
+   sprintf( arrayName, "pg von Mises stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   parameterData[ 5 ]->SetName( arrayName );
 
+   // first do full graphics calculations...
    for ( int nodeIndex = 0; nodeIndex < this->numNodes; nodeIndex++ )
    {
-      double avgS1Stress = 0.0;
-      double avgS3Stress = 0.0;
-      double avgVonMisesStress = 0.0;
-      if ( numContributingElements[ this->nodeID[nodeIndex] ] > 0)
+      double avgFullGraphicsS1Stress = 0.0;
+      double avgFullGraphicsS3Stress = 0.0;
+      double avgFullGraphicsVonMisesStress = 0.0;
+      if ( numContributingFullGraphicsElements[ this->nodeID[nodeIndex] ] > 0 )
       {
-         avgS1Stress = summedS1Stress[ this->nodeID[nodeIndex] ]
-                           / numContributingElements[ this->nodeID[nodeIndex] ];
-         avgS3Stress = summedS3Stress[ this->nodeID[nodeIndex] ]
-                           / numContributingElements[ this->nodeID[nodeIndex] ];
-         avgVonMisesStress = summedVonMisesStress[ this->nodeID[nodeIndex] ]
-                           / numContributingElements[ this->nodeID[nodeIndex] ];
+         avgFullGraphicsS1Stress = summedFullGraphicsS1Stress[ this->nodeID[nodeIndex] ]
+            / numContributingFullGraphicsElements[ this->nodeID[nodeIndex] ];
+         avgFullGraphicsS3Stress = summedFullGraphicsS3Stress[ this->nodeID[nodeIndex] ]
+            / numContributingFullGraphicsElements[ this->nodeID[nodeIndex] ];
+         avgFullGraphicsVonMisesStress = summedFullGraphicsVonMisesStress[ this->nodeID[nodeIndex] ]
+            / numContributingFullGraphicsElements[ this->nodeID[nodeIndex] ];
 
 #ifdef PRINT_HEADERS
-         //if ( this->nodeID[nodeIndex] == 2108 )
+         //if ( this->nodeID[nodeIndex] == 2108 )  //tets
+         //if ( this->nodeID[nodeIndex] == 63637 )  //prod
          {
-            std::cout << "Node " << this->nodeID[nodeIndex]
-                      << " has average S1 Stress = " << avgS1Stress
-                      << " has average S3 Stress = " << avgS3Stress
-                      << " has average vonMisesStress = " << avgVonMisesStress
+            std::cout << "FullGraphics: Node " << this->nodeID[nodeIndex]
+                      << " has average S1 Stress = " << avgFullGraphicsS1Stress
+                      << " has average S3 Stress = " << avgFullGraphicsS3Stress
+                      << " has average vonMisesStress = " << avgFullGraphicsVonMisesStress
                       << std::endl;
          }
 #endif // PRINT_HEADERS
       }
-      parameterData[ 0 ]->SetTuple1( this->nodeID[ nodeIndex ], avgS1Stress );
-      parameterData[ 1 ]->SetTuple1( this->nodeID[ nodeIndex ], avgS3Stress );
-      parameterData[ 2 ]->SetTuple1( this->nodeID[ nodeIndex ], avgVonMisesStress );
+      parameterData[ 0 ]->SetTuple1( this->nodeID[ nodeIndex ], avgFullGraphicsS1Stress );
+      parameterData[ 1 ]->SetTuple1( this->nodeID[ nodeIndex ], avgFullGraphicsS3Stress );
+      parameterData[ 2 ]->SetTuple1( this->nodeID[ nodeIndex ], avgFullGraphicsVonMisesStress );
+   }
+
+   // now do power graphics calculations...
+   for ( int nodeIndex = 0; nodeIndex < this->numNodes; nodeIndex++ )
+   {
+      double avgPowerGraphicsS1Stress = 0.0;
+      double avgPowerGraphicsS3Stress = 0.0;
+      double avgPowerGraphicsVonMisesStress = 0.0;
+      if ( numContributingPowerGraphicsElements[ this->nodeID[nodeIndex] ] > 0 )
+      {
+         avgPowerGraphicsS1Stress = summedPowerGraphicsS1Stress[ this->nodeID[nodeIndex] ]
+            / numContributingPowerGraphicsElements[ this->nodeID[nodeIndex] ];
+         avgPowerGraphicsS3Stress = summedPowerGraphicsS3Stress[ this->nodeID[nodeIndex] ]
+            / numContributingPowerGraphicsElements[ this->nodeID[nodeIndex] ];
+         avgPowerGraphicsVonMisesStress = summedPowerGraphicsVonMisesStress[ this->nodeID[nodeIndex] ]
+            / numContributingPowerGraphicsElements[ this->nodeID[nodeIndex] ];
+
+#ifdef PRINT_HEADERS
+         //if ( this->nodeID[nodeIndex] == 2108 )  //tets
+         //if ( this->nodeID[nodeIndex] == 63637 )  //prod
+         {
+            std::cout << "PowerGraphics: Node " << this->nodeID[nodeIndex]
+                      << " has average S1 Stress = " << avgPowerGraphicsS1Stress
+                      << " has average S3 Stress = " << avgPowerGraphicsS3Stress
+                      << " has average vonMisesStress = " << avgPowerGraphicsVonMisesStress
+                      << std::endl;
+         }
+#endif // PRINT_HEADERS
+      }
+      parameterData[ 3 ]->SetTuple1( this->nodeID[ nodeIndex ], avgPowerGraphicsS1Stress );
+      parameterData[ 4 ]->SetTuple1( this->nodeID[ nodeIndex ], avgPowerGraphicsS3Stress );
+      parameterData[ 5 ]->SetTuple1( this->nodeID[ nodeIndex ], avgPowerGraphicsVonMisesStress );
    }
 
    for ( int i=0; i < numParameters; i++ )
@@ -1749,9 +1801,6 @@ void ansysReader::StoreNodalStessesForThisElement( int elemIndex )
    cell->Delete();
    cellIds->Delete();
 
-   // comment out next conditional if you want full graphic rather than ansys powergraphic values
-   if ( thisIsExteriorCell )
-   {
    int intPosition = this->ptrDataSetSolutions[ this->currentDataSetSolution ]
                      + this->ptrENS[ elemIndex ];
    int blockSize_1 = ReadNthInteger( intPosition++ );
@@ -1789,7 +1838,7 @@ void ansysReader::StoreNodalStessesForThisElement( int elemIndex )
       int node = this->cornerNodeNumbersForElement[ elemIndex ][ j ];
 
 #ifdef PRINT_HEADERS
-      //if ( node == 2108 )
+      //if ( node == 2108 )   //tets
       {
          std::cout << "Node " << node
                    << " on element " << this->elemID[ elemIndex ]
@@ -1806,7 +1855,8 @@ void ansysReader::StoreNodalStessesForThisElement( int elemIndex )
       double vonMisesStress = stresses [ 10 ];
 
 #ifdef PRINT_HEADERS
-      //if ( node == 2108 )
+      //if ( node == 2108 )   //tets
+      //if ( node == 63637 )  //prod
       {
          std::cout << "Node " << node
                    << " on element " << this->elemID[ elemIndex ]
@@ -1822,12 +1872,21 @@ void ansysReader::StoreNodalStessesForThisElement( int elemIndex )
          exit( 1 );
       }
 
-      this->summedS1Stress [ node ] += stresses [ 6 ];
-      this->summedS3Stress [ node ] += stresses [ 8 ];
-      this->summedVonMisesStress [ node ] += vonMisesStress;
-      this->numContributingElements[ node ]++; 
+      this->summedFullGraphicsS1Stress [ node ] += stresses [ 6 ];
+      this->summedFullGraphicsS3Stress [ node ] += stresses [ 8 ];
+      this->summedFullGraphicsVonMisesStress [ node ] += vonMisesStress;
+      this->numContributingFullGraphicsElements[ node ]++; 
+
+      // ansys powergraphic values
+      if ( thisIsExteriorCell )
+      {
+         this->summedPowerGraphicsS1Stress [ node ] += stresses [ 6 ];
+         this->summedPowerGraphicsS3Stress [ node ] += stresses [ 8 ];
+         this->summedPowerGraphicsVonMisesStress [ node ] += vonMisesStress;
+         this->numContributingPowerGraphicsElements[ node ]++; 
+      }
+
       delete [] stresses;
-   }
    }
 }
 
@@ -1999,7 +2058,6 @@ int ansysReader::GetPtrNOD()
 
 vtkUnstructuredGrid * ansysReader::GetUGrid()
 {
-   //this->ComputeNodalStresses();
    return this->ugrid;
 }
 

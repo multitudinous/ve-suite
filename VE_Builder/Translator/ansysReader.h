@@ -140,10 +140,16 @@ class ansysReader
       int * ptrENS;
       int * numCornerNodesInElement;
       int ** cornerNodeNumbersForElement;
-      double * summedS1Stress;
-      double * summedS3Stress;
-      double * summedVonMisesStress;
-      int * numContributingElements;
+      double * summedFullGraphicsS1Stress;
+      double * summedFullGraphicsS3Stress;
+      double * summedFullGraphicsVonMisesStress;
+      double * summedPowerGraphicsS1Stress;
+      double * summedPowerGraphicsS3Stress;
+      double * summedPowerGraphicsVonMisesStress;
+      int * numContributingFullGraphicsElements;
+      int * numContributingPowerGraphicsElements;
+      char * displacementUnits;
+      char * stressUnits;
       vtkUnstructuredGrid * ugrid;
 };
 #endif
