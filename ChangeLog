@@ -1,0 +1,13 @@
+------------------------------------------------------------------------
+r1461 | yang | 2004-12-16 18:53:45 -0600 (Thu, 16 Dec 2004) | 1 line
+
+
+------------------------------------------------------------------------
+r1462 | yang | 2004-12-16 18:55:57 -0600 (Thu, 16 Dec 2004) | 1 line
+
+
+------------------------------------------------------------------------
+r1463 | mccdo | 2004-12-17 01:20:53 -0600 (Fri, 17 Dec 2004) | 1 line
+
+ran dos2unix on all .h and .cxx files. there was getting to be a build up of carriage returns in the code from improper commits off win32. i added the initial code for cfdGraphicsObjects. this class is to control the creation of geodes from and actor and the addition of the geode to the graph. it is also to control the scenegraph manipulation for trans and and texture based viz.
+------------------------------------------------------------------------
