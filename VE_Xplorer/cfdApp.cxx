@@ -164,7 +164,6 @@ inline void cfdApp::preForkInit( )
 inline pfGroup* cfdApp::getScene( )
 {
   //vprDEBUG(vprDBG_ALL,1) << "cfdApp::getScene" << std::endl << vprDEBUG_FLUSH;
-   pfdStoreFile(this->_sceneManager->GetRootNode()->GetRawNode(),"C:/test6.pfb");
   return (pfGroup*)(this->_sceneManager->GetRootNode()->GetRawNode());//for test
 }
 inline void cfdApp::preSync( )
