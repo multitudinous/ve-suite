@@ -645,6 +645,7 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterTime_since_start = time_since_start;
       this->mStates->clusterFrameNumber      = frameNumber;   
    }
+   //this->_unusedNewData    = false;
 #else
    this->_unusedNewData    = false;
 #endif
@@ -659,7 +660,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_MIN, this->mStates->clusterMin );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_MAX, this->mStates->clusterMax );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, this->mStates->clusterId );
-   //   std::cout << this->mStates->clusterId << std::endl;
+    //  std::cout << " late preframe : " << this->mStates->clusterId << std::endl;
    //   std::cout << _cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) << std::endl;
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, this->mStates->clusterGeo_state );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, this->mStates->clusterPostdata_state );
