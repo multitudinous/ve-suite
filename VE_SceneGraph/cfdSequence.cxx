@@ -681,7 +681,7 @@ void cfdSequence::setCurrentFrame(int index)
 //////////////////////////////////////////
 int cfdSequence::AddChild(cfdNode* child)
 {
-   std::cout << "Adding frame to sequence." << std::endl;
+   //std::cout << "Adding frame to sequence." << std::endl;
    //init the switch node
    if ( !_lSwitch )
    {

@@ -49,7 +49,6 @@ typedef float vtkReal;
 using namespace std;
 
 pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode, int verbose) {
-
   // performance instrumentation
   float beforeTime = 0.0f;
   if (verbose) {
@@ -179,7 +178,6 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   //Initialize the gset
   pfGeoSet *gset = new pfGeoSet;
   gset->setPrimType(primType);
-
   // get number of indices in the vtk prim array. Each vtkCell has the length
   // (not counted), followed by the indices.
   int primArraySize = primArray->GetNumberOfConnectivityEntries();
@@ -216,10 +214,11 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   }
   pfVec3 *norms = NULL;
   if (normalPerVertex)
-    norms = (pfVec3 *) pfMalloc(numIndices * sizeof(pfVec3), pfArena);
+    norms = (pfVec3 *)pfMalloc(numIndices * sizeof(pfVec3), NULL);
   if (normalPerCell)
-    norms = (pfVec3 *) pfMalloc(numPrimitives * sizeof(pfVec3), pfArena);
-
+    norms =  (pfVec3 *)pfMalloc(numPrimitives * sizeof(pfVec3), NULL);
+//(pfVec3 *)
+//(pfVec3 *)
   // check to see if there is color information
   int colorPerVertex = 0;
   int colorPerCell = 0;
@@ -239,9 +238,9 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   }
   pfVec4 *colors = NULL; 
   if (colorPerVertex)
-    colors = (pfVec4 *) pfMalloc(numIndices * sizeof(pfVec4), pfArena);
+    colors = (pfVec4 *) pfMalloc(numIndices * sizeof(pfVec4), NULL);
   if (colorPerCell)
-    colors = (pfVec4 *) pfMalloc(numPrimitives * sizeof(pfVec4), pfArena);
+    colors = (pfVec4 *) pfMalloc(numPrimitives * sizeof(pfVec4), NULL);
 
   // check to see if there are texture coordinates
 #ifdef VTK4 
@@ -251,7 +250,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
 #endif
   pfVec2 *tcoords = NULL;
   if (texCoords != NULL)
-    tcoords = (pfVec2 *) pfMalloc(numIndices * sizeof(pfVec2), pfArena);
+    tcoords = (pfVec2 *) pfMalloc(numIndices * sizeof(pfVec2), NULL);
 
 
   // copy data from vtk prim array to performer geoset
@@ -330,7 +329,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     vtkReal *actorColor = actor->GetProperty()->GetColor();
     vtkReal opacity = actor->GetProperty()->GetOpacity();
 
-    pfVec4 *color = (pfVec4 *) pfMalloc(sizeof(pfVec4), pfArena);
+    pfVec4 *color = (pfVec4 *) pfMalloc(sizeof(pfVec4), NULL);
     color->set((float)actorColor[0], (float)actorColor[1], (float)actorColor[2], (float)opacity);
     gset->setAttr(PFGS_COLOR4, PFGS_OVERALL, color, NULL);
   }
