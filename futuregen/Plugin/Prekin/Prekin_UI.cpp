@@ -756,19 +756,20 @@ void Prekin_UI_Dialog::WriteProfile(const char* filename)
   {
   case 0:
 	  LPWLAW='T';
+	  IAE = *p_MIR_IAE;
+	  XN = *p_MIR_IRO;
 	  if (*p_MIR)
 	  {
 		LKoSo='T';
 		XKOSO = *p_MIR_koso;
-		RKO = *p_MIR_ko;
-		RSO = *p_MIR_so;
-		IAE = *p_MIR_IAE;
-		XN = *p_MIR_IRO;
-  
 	  }
 	  else
+	  {
 		LKoSo='F';
-	  
+		RKO = *p_MIR_ko;
+		RSO = *p_MIR_so;
+	  }
+
 	  LSEMG='F';
 	  ACO = *p_Aco;
 	  ECO = *p_Eco;	
@@ -930,8 +931,8 @@ void Prekin_UI_Dialog::WriteProfile(const char* filename)
   fprintf(inputf, "%g      	!RCONV:conversion level at which the global rate will be optimized\n", *p_conv_level);
   fprintf(inputf, ">>>>> OPTIMIZATION(SIMPLEX)\n");
   fprintf(inputf, "%g	!TTTAI: initial guess for pre-exp factor, kgC/m2-sec-(Pa)^m\n", *p_optim_kG);
-  fprintf(inputf, "%g		!TTTMI: initial guess or fixed value for global rxn order\n", *p_optim_EG);
-  fprintf(inputf, "%g	!TTTEI: initial guess or fixed value for global activation energy, kcal/mol\n", *p_optim_m);
+  fprintf(inputf, "%g		!TTTMI: initial guess or fixed value for global rxn order\n", *p_optim_m);
+  fprintf(inputf, "%g	!TTTEI: initial guess or fixed value for global activation energy, kcal/mol\n", *p_optim_EG);
   fprintf(inputf, "%g		!OOPTTOL: optimization tolerance\n", *p_tolerance);
   fprintf(inputf, "%d		!NNDIM\n", *p_Schema+1);
   fclose(inputf);
@@ -1924,7 +1925,11 @@ void PrekinTabs::Onoxidation_flag(wxCommandEvent &event)
 		 t_MIR_E3->Enable(false);
 		 t_IRO_Step2->Enable(false);
 		 cbo_MIR->Enable(true);
+		 t_MIR_IAE->Enable(true);
+		 t_MIR_IRO->Enable(true);
 		 OnMIR(event);
+		 t_Aco->Enable(true);
+		 t_Eco->Enable(true);
 		 rb_Gasification_flag3->SetValue(true);
 		 t_FOPL_ko->Enable(false);
 		 t_FOPL_so->Enable(false);
@@ -1957,6 +1962,8 @@ void PrekinTabs::Onoxidation_flag(wxCommandEvent &event)
 		 t_MIR_so->Enable(false);
 		 t_MIR_IAE->Enable(false);
 		 t_MIR_IRO->Enable(false);
+		 t_Aco->Enable(true);
+		 t_Eco->Enable(true);
 		 rb_Gasification_flag3->SetValue(true);
 		 t_FOPL_ko->Enable(false);
 		 t_FOPL_so->Enable(false);
@@ -2048,18 +2055,16 @@ void PrekinTabs::OnMIR(wxCommandEvent &event)
 	if (cbo_MIR->GetValue())
 	{
 		t_MIR_koso->Enable(true);
-		t_MIR_ko->Enable(true);
-		t_MIR_so->Enable(true);
-		t_MIR_IAE->Enable(true);
-		t_MIR_IRO->Enable(true);
+		t_MIR_ko->Enable(false);
+		t_MIR_so->Enable(false);
+		
 	}
 	else
 	{
 		t_MIR_koso->Enable(false);
-		t_MIR_ko->Enable(false);
-		t_MIR_so->Enable(false);
-		t_MIR_IAE->Enable(false);
-		t_MIR_IRO->Enable(false);
+		t_MIR_ko->Enable(true);
+		t_MIR_so->Enable(true);
+		
 	}
 		 
 }
