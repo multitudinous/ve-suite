@@ -154,8 +154,11 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
          {
             char * fileName = new char[strlen(fileData.cFileName)+1];
             strcpy( fileName, fileData.cFileName );
-            this->pfbFileNames.push_back( fileName );
-            vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << fileName
+            std::ostringstream filenameStream;
+            filenameStream <<"./STORED_FILES/"<<fileName;
+            std::string fileString = filenameStream.str();
+            this->pfbFileNames.push_back( fileString );
+            vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << fileString
                                    << std::endl << vprDEBUG_FLUSH;
          }
          if ( !FindNextFile(hList, &fileData) )
@@ -181,9 +184,6 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
       this->node[ i ] = new cfdNode();
       this->node[ i ]->LoadFile( this->pfbFileNames[ i ] );
    }
-
-  
-
    //change back to the original directory
    chdir( cwd );
 }
