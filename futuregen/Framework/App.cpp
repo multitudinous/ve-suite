@@ -6,6 +6,7 @@ IMPLEMENT_APP(REIApp);
 bool REIApp::OnInit()
 {
 
+
   int width, height;
 
   try
