@@ -1,5 +1,4 @@
-IDL_HOME = /home/yang/newVE_Suite/futuregen/IDL
-XERCESCROOT=/home/yang/newinterface/xerces-c-src_2_5_0
+IDL_HOME = ../../IDL
 PLATFORM = LINUX
 COMPILER = g++
 GCC = yes
@@ -50,8 +49,8 @@ OBJECTS = ../string_ops.o \
 	../V21Helper/V21Helper.o \
 	../V21Helper/SummaryValues/summary_values.o \
 	../V21Helper/SummaryValues/unit_conversion.o \
-	../V21Helper/Gas/Gas.o \
-	../V21Helper/Gas/GasCell.o \
+	../V21Helper/Datatypes/Gas.o \
+	../V21Helper/Datatypes/GasCell.o \
 	../V21Helper/Therm/matrix.o \
 	../V21Helper/Therm/stream.o \
 	../V21Helper/Therm/thermo.o 
