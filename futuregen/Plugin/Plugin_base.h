@@ -106,6 +106,7 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
 
   virtual void Lock(bool lock);
   virtual void SetID(int id);
+  virtual bool Has3Ddata();
 
  protected:
 

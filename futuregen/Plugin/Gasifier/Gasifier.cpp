@@ -185,4 +185,8 @@ wxString Gasifier::GetDesc()
   return result;
 }
 
-
+/////////////////////////////////////////////////////////////////////////////
+bool Gasifier::Has3Ddata()
+{
+  return true;
+}

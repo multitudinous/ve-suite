@@ -46,12 +46,16 @@ OBJ26 = GasHeatExchanger/GasHeatExchanger.o GasHeatExchanger/GasHeatExchanger_UI
 OBJ27 = KineticReactor/KineticReactor.o KineticReactor/KineticReactor_UI.o
 OBJ28 = EquilibriumReactor/EquilibriumReactor.o
 OBJ29 = WaterSource/WaterSource.o WaterSource/WaterSource_UI.o
+OBJ30 = AGR/AGR.o AGR/AGR_UI.o 
+OBJ31 = CarbonBed/CarbonBed.o CarbonBed/CarbonBed_UI.o 
+OBJ32 = Gasifier/Gasifier.o Gasifier/Gasifier_UI.o 
+
 .SUFFIXES : .o .cpp
 
 .cpp.o :
 	$(CXX) -g -c ${INCLUDES} ${CMP} ${WX_FLAGS} -D WXUSING_PLUGIN_DLL -o $@ $<
 
-all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s19 s20 s21 s22 s23 s24 s25 s26 s27 s28 s29
+all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s19 s20 s21 s22 s23 s24 s25 s26 s27 s28 s29 s30 s31 s32
 
 s1:	$(OBJ1)
 	$(CXX) -g -shared -o libGasifier0D.so $(OBJ1)
@@ -121,21 +125,35 @@ s23:	$(OBJ23)
 
 s24:	$(OBJ24)
 	$(CXX) -g -shared -o libGasMixer.so $(OBJ24)
+
 s25:	$(OBJ25)
 	$(CXX) -g -shared -o libGasSeparator.so $(OBJ25)
+
 s26:	$(OBJ26)
 	$(CXX) -g -shared -o libGasHeatExchanger.so $(OBJ26)
+
 s27:	$(OBJ27)
 	$(CXX) -g -shared -o libKineticReactor.so $(OBJ27)
+
 s28:	$(OBJ28)
 	$(CXX) -g -shared -o libEquilibriumReactor.so $(OBJ28)
+
 s29:	$(OBJ29)
 	$(CXX) -g -shared -o libWaterSource.so $(OBJ29)
+
+s30:	$(OBJ30)
+	$(CXX) -g -shared -o libAGR.so $(OBJ30)
+
+s31:	$(OBJ31)
+	$(CXX) -g -shared -o libCarbonBed.so $(OBJ31)
+
+s32:	$(OBJ32)
+	$(CXX) -g -shared -o libGasifier.so $(OBJ32)
 
 clean:
 	rm -rf *.so *.o $(PLUGIN) $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) \
 	$(OBJ5) $(OBJ6) $(OBJ7) $(OBJ8) $(OBJ9) $(OBJ10) $(OBJ11) \
 	$(OBJ12) $(OBJ13) $(OBJ14) $(OBJ15) $(OBJ16) $(OBJ17) $(OBJ18) \
 	$(OBJ19) $(OBJ20) $(OBJ21) $(OBJ22) $(OBJ23) $(OBJ24) $(OBJ25) \
-	$(OBJ26) $(OBJ27) $(OBJ28) $(OBJ29)  
+	$(OBJ26) $(OBJ27) $(OBJ28) $(OBJ29) $(OBJ30) $(OBJ31) $(OBJ32)
 

@@ -1,37 +1,31 @@
 MOD_NAME Gasifier #This is the module name
 
 Int stage
+
 Double steam_temp1
 Double steam_flrt1
 Double slurry_temp1
 Double slurry_flrt1
 Double coal_percent1
+Double char_percent1
+
 Double steam_temp2
 Double steam_flrt2
 Double slurry_temp2
 Double slurry_flrt2
 Double coal_percent2
+Double char_percent2
+
 Double steam_temp3
 Double steam_flrt3
 Double slurry_temp3
 Double slurry_flrt3
 Double coal_percent3
+Double char_percent3
 
-Int spec_geometry
-Double geo_diam
-Double geo_stage1_len
-Double geo_stage2_len
-Double geo_stage1_wall
-Double geo_stage2_wall
-Double burn_out
-Double stage1_heatloss
-Double stage2_heatloss
-Int des_mode
-Double LD_ratio
-Double stage1_emis
-Double stage2_emis
-Double backside_temp
-Double slag_eff
+String coal_type
+Double size_50
+Double size_200
 Double pres_drop
 
 END
