@@ -55,10 +55,11 @@ bool Air_separation_unit::Calculate(Gas &AirIn, Gas &O2stream, Gas&N2stream)
 
   /////// Calculate O2 stream  
   double AR_split = 0.75;   //fraction of inlet AR to o2 product.
+  int i;
 
   O2stream.gas_composite.T = T_O2stream;
   O2stream.gas_composite.P = P_O2stream; // * 100000;   // atm to Pa
-  for(int i=0; i<O2stream.gas_composite.comp_specie.size(); i++)
+  for(i=0; i<O2stream.gas_composite.comp_specie.size(); i++)
     O2stream.gas_composite.comp_specie[i]=0;
 
   O2stream.gas_composite.comp_specie[O2stream.specie["O2"]] = O2_purity/100.0;
@@ -77,7 +78,7 @@ bool Air_separation_unit::Calculate(Gas &AirIn, Gas &O2stream, Gas&N2stream)
   
   N2stream.gas_composite.T = T_N2stream;
   N2stream.gas_composite.P = P_N2stream; // * 100000;     // bar to Pa
-  for(int i=0; i<N2stream.gas_composite.comp_specie.size(); i++)
+  for(i=0; i<N2stream.gas_composite.comp_specie.size(); i++)
     N2stream.gas_composite.comp_specie[i]=0;
 
   d3 = AirIn.gas_composite.moles("N2") - d3;
@@ -102,12 +103,12 @@ bool Air_separation_unit::Calculate(Gas &AirIn, Gas &O2stream, Gas&N2stream)
   mains[1] = AirIn.specie["O2"];
   mains[2] = AirIn.specie["AR"];
     
-  map<const string, int>::iterator i;
+  map<const string, int>::iterator iter;
 
-  for(i=AirIn.specie.begin(); i != AirIn.specie.end(); i++)
-    if(i->second != mains[0] && i->second != mains[1] && i->second != mains[2]) 
-      enth4 += AirIn.thermo_database->enthalpy_i(i->second, 298.15) * 
-	AirIn.gas_composite.moles(i->first) / 1000.0;
+  for(iter=AirIn.specie.begin(); iter != AirIn.specie.end(); iter++)
+    if(iter->second != mains[0] && iter->second != mains[1] && iter->second != mains[2]) 
+      enth4 += AirIn.thermo_database->enthalpy_i(iter->second, 298.15) * 
+	AirIn.gas_composite.moles(iter->first) / 1000.0;
 
   energy_requirement = enth2 + enth3 + enth4 - enth1;  
   energy_requirement /= 1000.0;                   // kW  (provided M [=] kg/s)
@@ -119,7 +120,7 @@ bool Air_separation_unit::Calculate(Gas &AirIn, Gas &O2stream, Gas&N2stream)
   asu_stream[1] = &N2stream;
   asu_stream[2] = &AirIn;
 
-  for(int i=0; i<3; i++) {
+  for(i=0; i<3; i++) {
     double TT = asu_stream[i]->gas_composite.T;
     double PP = asu_stream[i]->gas_composite.P;
     if(asu_stream[i]->gas_composite.comp_specie[AirIn.specie["O2"]]*PP > Psat(*asu_stream[i],"O2") ||

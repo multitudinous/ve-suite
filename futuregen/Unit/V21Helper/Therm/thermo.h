@@ -7,7 +7,7 @@
 #include <cstdio>
 #include <cstring>
 #include <iostream>
-
+#pragma warning (disable:4786)
 #include <string>
 #include <vector>
 #include <map>

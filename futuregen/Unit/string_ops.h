@@ -4,7 +4,7 @@
 
 #include <string>
 #include <vector>
-
+#include <stdio.h>
 #ifdef _WIN32
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4101)

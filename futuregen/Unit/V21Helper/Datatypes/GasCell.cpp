@@ -303,6 +303,8 @@ double GasCell::setFrac (std::string specie, double conc)
 
   comp_specie[iter->second] = conc;
   //  std::cout<<"setFrac cp6 "<<std::endl; fflush(NULL);
+	
+  return comp_specie[iter->second];
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////

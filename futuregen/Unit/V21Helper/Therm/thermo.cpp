@@ -12,8 +12,6 @@ using std::endl;
 using std::cerr;
 using std::string;
 
-namespace REI {
-
 //   constructor
 thermo::thermo()
 :mtx()
@@ -953,4 +951,3 @@ void thermo::check_temp_range(const std::vector<REAL>& xspc, const REAL& temp)
    }
 }
 
-} // End namespace vision21_therm

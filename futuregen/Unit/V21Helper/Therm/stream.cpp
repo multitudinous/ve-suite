@@ -9,8 +9,6 @@
 using std::cout;
 using std::endl;
 
-namespace REI {
-
 //   constructor
 stream::stream(const thermo& thm, const string stream_file)
 {
@@ -616,4 +614,3 @@ void stream::speciate(const thermo& thm, int& num, int& errcnt,
    }
 }
 
-} // End namespace REI
