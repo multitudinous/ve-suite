@@ -38,7 +38,6 @@ void Body_Unit_i::StartCalc (
     if (!igas)
       {
 	error("Missing input input.");
-	return_state = 1;
 	return;
       }
 

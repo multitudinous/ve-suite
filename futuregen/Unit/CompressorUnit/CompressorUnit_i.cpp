@@ -39,7 +39,6 @@ void Body_Unit_i::StartCalc (
     if (!igas)
       {
 	error("Missing input input.");
-	return_state = 1;
 	return;
       }
 
@@ -75,7 +74,6 @@ void Body_Unit_i::StartCalc (
 
     if(poutlet<0) {
       error("Pressure drop too large.");
-      return_state = 1;
       return;
     }
 
@@ -108,7 +106,6 @@ void Body_Unit_i::StartCalc (
 	composition[(*iter).second] = gas_in_data->gas_composite.comp_specie[iter2->second];
       } else {
 	error("Species " + iter2->first + " not found - critical error!!!");
-	return_state = 1;
 	return;
       }
     }
@@ -120,7 +117,6 @@ void Body_Unit_i::StartCalc (
   
   if(!thm.find_temperature(ts_exit, total_entropy, composition, poutlet)) {
     error("Convergence problem - finding temp from entropy.");
-    return_state = 1;
     return;
   }
 

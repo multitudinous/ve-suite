@@ -55,7 +55,6 @@ void Body_Unit_i::StartCalc (
     if (!initial_igas)
       {
 	error("Missing initial input.");
-	return_state = 1;
 	return;
       }
 
@@ -63,7 +62,6 @@ void Body_Unit_i::StartCalc (
     if (!feedbck_igas)
       {
 	error("Missing feedback input.");
-	return_state = 1;
 	return;
       }
 
