@@ -8,8 +8,14 @@ if ( -e /etc/redhat-release ) then
    set firstWord=`cat /etc/redhat-release | awk -F" " '{print $1}'`
    #echo "firstWord is" ${firstWord}
    if ( ${firstWord} == "Red" ) then
-      # extract some words from file to create something like RedHat_8.0 or RedHat_9
-      setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
+      set thirdWord=`cat /etc/redhat-release | awk -F" " '{print $3}'`
+      if ( ${thirdWord} == "Enterprise" ) then
+         # extract some words from file to create something like RHEL_3
+         setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print "RHEL_" $7}'`
+      else
+         # extract some words from file to create something like RedHat_8.0 or RedHat_9
+         setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
+      endif
    else if ( ${firstWord} == "Fedora" ) then
       # extract some words from file to create something like Fedora_1
       setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 "_" $4}'`
@@ -26,11 +32,14 @@ endif
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
 # Specify your scene graph: OSG = OpenSceneGraph, PF = OpenGL Performer
-# Specify corba build TAO_BUILD only for right now
-# Specify cluster build CLUSTER_APP
-setenv TAO_BUILD TRUE
-#setenv CLUSTER_APP FALSE
 setenv SCENE_GRAPH OSG 
+#setenv SCENE_GRAPH PF
+
+# Specify corba build TAO_BUILD only for right now
+setenv TAO_BUILD TRUE
+
+# Specify cluster build CLUSTER_APP
+#setenv CLUSTER_APP FALSE
 #setenv VE_PATENTED FALSE
 
 # TAO_BUILD can be set outside this script to override the default of TRUE
@@ -102,10 +111,9 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
       setenv PATH ${OMNI_HOME}/bin:${PATH}
    endif
       
-else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
+else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTTYPE} =~ RHEL_* ) then
    setenv JDK_HOME /usr/java/j2sdk1.4.2_03
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
-   #setenv VTK_BASE_DIR /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-RH80
    setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3-deps
