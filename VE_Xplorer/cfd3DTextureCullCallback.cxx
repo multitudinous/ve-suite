@@ -1,4 +1,6 @@
 #ifdef _OSG
+#include <osg/Geode>
+#include <osg/Geometry>
 #ifdef CFD_USE_SHADERS
 #include "cfdAdvectPropertyCallback.h"
 #include "cfd3DTextureCullCallback.h"
@@ -6,19 +8,36 @@
 ////////////////////////////////////////////////////////////////////////////
 cfd3DTextureCullCallback::cfd3DTextureCullCallback(osg::Node* subgraph,
 		                                       osg::Texture3D* texture,
-						                            cfdPBufferManager* pbm)
+						                            cfdPBufferManager* pbm,
+                                            unsigned int nSlices)
 :_subgraph(subgraph),_textureToUpdate(texture) 
 {
    _pbuffer = pbm;               
+   _nSlices = nSlices;
 }
 ////////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::operator()(osg::Node* node, 
                                      osg::NodeVisitor* nv)
 {
-   cfdSliceNodeVisitor* cullVisitor = dynamic_cast<cfdSliceNodeVisitor*>(nv); 
+    /*float delta = 1.0/(float)_nSlices;
+         osg::ref_ptr<osg::Geode> geode = 
+            dynamic_cast<osg::Geode*>(((osg::Group*)_subgraph.get())->getChild(0));
+            
+         osg::Geometry* geom = dynamic_cast<osg::Geometry*>(geode->getDrawable(0));
+         //set up the current texture coords
+         osg::Vec3Array* texcoords = 
+            dynamic_cast<osg::Vec3Array*>(geom->getTexCoordArray(0));
+      
+         (*texcoords)[0].set(0.0f,0.0f,i*delta); 
+         (*texcoords)[1].set(1.0f,0.0f,i*delta); 
+         (*texcoords)[2].set(1.0f,1.0f,i*delta); 
+         (*texcoords)[3].set(0.0f,1.0f,i*delta);*/
+   osgUtil::CullVisitor* cullVisitor = dynamic_cast<osgUtil::CullVisitor*>(nv); 
    if (cullVisitor && _textureToUpdate.valid()&& _subgraph.valid()){
-      unsigned int sliceNumber = cullVisitor->GetSliceNumber();
-      preRender(*node,*cullVisitor, sliceNumber);
+      unsigned int sliceNumber = 0;
+      for(unsigned int i = 0; i < _nSlices; i++){
+         preRender(*node,*cullVisitor, i);
+      }
       // must traverse the Node's subgraph            
       traverse(node,nv);
    }
@@ -27,7 +46,7 @@ void cfd3DTextureCullCallback::operator()(osg::Node* node,
 ////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::preRender(osg::Node& node,
                                     osgUtil::CullVisitor& cv,
-					 int sliceNumber)
+					                       int sliceNumber)
 {
    cv.getState()->setReportGLErrors(true);
    const osg::BoundingSphere& bs = _subgraph->getBound();
@@ -40,7 +59,7 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
    int width = 0;
    int depth = 0;
 
-   _textureToUpdate->getTextureSize(height,width,depth);
+   _textureToUpdate->getTextureSize(width,height,depth);
 
    // create the copy to 3dtexture stage.
    osg::ref_ptr<cfdCopyTo3DTextureStage> update3DTexture = new cfdCopyTo3DTextureStage;

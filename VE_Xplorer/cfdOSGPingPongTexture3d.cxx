@@ -37,15 +37,16 @@ void cfdOSGPingPongTexture3D::PingPongTextures()
 {
    //this may be more than is needed
    //copy the ping image
-   osg::ref_ptr<osg::Image> tempPing = new osg::Image(*_ping->getImage());
+   osg::ref_ptr<osg::Texture3D> tempPing = new osg::Texture3D(*_ping.get());
+                        
    //copy the pong image
-   osg::ref_ptr<osg::Image> tempPong = new osg::Image(*_pong->getImage());
+   //osg::ref_ptr<osg::Image> tempPong = new osg::Image(*_pong->getImage());
    
    //switch ping image to pong
-   _ping->setImage(tempPong.get());
+   _ping = _pong;
 
    //switch pong image to ping
-   _pong->setImage(tempPing.get());
+   _pong = tempPing;
 }
 /////////////////////////////////////////////////////////////////////   
 //equal operator                                                   //

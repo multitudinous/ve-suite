@@ -166,6 +166,9 @@ void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
      _velocity->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
      _velocity->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
      _velocity->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
+     _velocity->setTextureSize(_tm->fieldResolution()[0],
+                            _tm->fieldResolution()[1],
+                             _tm->fieldResolution()[2]);
      _velocity->setInternalFormat(GL_RGBA);
      _velocity->setImage(image.get());
    } 
@@ -230,17 +233,17 @@ void cfdVectorVolumeVisHandler::_attachVolumeVisNodeToGraph()
 
    //create the advection subgraph
    if(!_advectionSlice.valid()){
-      _advectionSlice = dynamic_cast<osg::Group*>(CreateAdvectionSubGraph(_tm->fieldResolution()[0],
-                                            _tm->fieldResolution()[1]));
+      _advectionSlice = CreateAdvectionSubGraph(_tm).get();
+       
       _advectionSlice->setStateSet(_aSM->GetShaderStateSet());   
    }
-   if(_aSM->GetShaderStateSet()){
-     _advectionSlice->setStateSet(_aSM->GetShaderStateSet()); 
-   }
+   
    if(_pbuffer){
-      _advectionFragGroup->setUpdateCallback(new cfdAdvectPropertyCallback(_advectionSlice.get(),
-			                                                   _tm->fieldResolution()[2]));
-      _cullCallback = new cfd3DTextureCullCallback(_advectionSlice.get(),_property.get(),_pbuffer);
+      _advectionFragGroup->setUpdateCallback(new cfdAdvectPropertyCallback(_advectionSlice.get()));
+      _cullCallback = new cfd3DTextureCullCallback(_advectionSlice.get(),
+                                               _property.get(),
+                                               _pbuffer,
+                                               _tm->fieldResolution()[2]);
       _advectionFragGroup->setCullCallback(_cullCallback);
    }
 }
@@ -252,20 +255,18 @@ void cfdVectorVolumeVisHandler::SetPBufferManager(cfdPBufferManager* pbm)
 ////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createTexturePingPong()
 {
-   if(_texturePingPong){
+   if(!_texturePingPong){
       _texturePingPong = new cfdOSGPingPongTexture3D();
    }
-   if(_aSM){
+   if(_aSM&&_property.valid()){
       _texturePingPong->SetPingTexture(_aSM->GetPropertyTexture());
-   }
-   if(_property.valid()){
       _texturePingPong->SetPongTexture(_property.get());
    }
 }
 //////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::PingPongTextures()
 {
-   if(_texturePingPong){
+   if(_texturePingPong && _property.valid()){
       _texturePingPong->PingPongTextures();
    }
 }

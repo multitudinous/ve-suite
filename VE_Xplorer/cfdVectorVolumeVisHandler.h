@@ -5,6 +5,7 @@
 #ifdef CFD_USE_SHADERS
 #include <osg/Group>
 #include <osg/Texture3D>
+#include <osg/Projection>
 
 #include "cfdOSGAdvectionShaderManager.h"
 #include "cfdTextureManager.h"
