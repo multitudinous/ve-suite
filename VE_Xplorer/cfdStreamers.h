@@ -52,7 +52,7 @@ class cfdStreamers : public cfdObjects
    public:
       /* Initialize the VTK objects and pipeline.
       Glyph(s) are from cfdPlanes's multiple points plane cursor.  */
-      cfdStreamers( float );
+      cfdStreamers( void );
   
       ~cfdStreamers();
    
@@ -86,6 +86,7 @@ class cfdStreamers : public cfdObjects
       float integrationStepLength;
       float stepLength;
       int   integrationDirection;
+      float lineDiameter;
 };
 
 #endif

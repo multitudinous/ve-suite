@@ -38,11 +38,12 @@ class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkGlyph3D;
 class vtkSphereSource;
+class cfdCommandArray;
 
 class cfdAnimatedStreamlineCone : public cfdObjects
 {
    public:
-      cfdAnimatedStreamlineCone( float );
+      cfdAnimatedStreamlineCone( void );
       ~cfdAnimatedStreamlineCone();
 
       //void Initialize();
@@ -51,6 +52,12 @@ class cfdAnimatedStreamlineCone : public cfdObjects
       //void CleanUpSequence( void );
       void SetPolyDataSource( vtkPolyData * );
       
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
+
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
+
       virtual void Update( void );
 
    private:
@@ -60,6 +67,7 @@ class cfdAnimatedStreamlineCone : public cfdObjects
       vtkGlyph3D *glyph;
       vtkSphereSource *sphere;
 
+      float particleDiameter;
       //int nPts, nStr, iPts;
       //float ptData[3], direction[3], center[3];   
 };

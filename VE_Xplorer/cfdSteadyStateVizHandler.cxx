@@ -667,8 +667,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          // Initiate the streamlines.
          //
          std::cout << "| 37. Initializing..................................... Streamlines |" << std::endl;
-         // Needs to be set by the gui, fix this
-         this->streamlines = new cfdStreamers( 0.3f );
+         this->streamlines = new cfdStreamers();
          this->streamlines->SetObjectType( STREAMLINES );
          this->dataList.push_back( this->streamlines );     
          this->commandList.push_back( this->streamlines );
@@ -677,10 +676,10 @@ void cfdSteadyStateVizHandler::InitScene( void )
          // Initiate the animated streamers.
          //
          std::cout << "| 39. Initializing............................. Animated Streamline |" << std::endl;
-         // Needs to be set by the gui, fix this
-         this->animStreamer = new cfdAnimatedStreamlineCone( 0.0f );
+         this->animStreamer = new cfdAnimatedStreamlineCone();
          this->animStreamer->SetObjectType( ANIMATED_STREAMLINES );
          this->dataList.push_back( this->animStreamer );     
+         this->commandList.push_back( this->animStreamer );
 
          //
          // Initiate the animated Images.
@@ -911,6 +910,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             this->dataList[ i ]->GetSequence()->ClearSequence();
          }
          this->dataList[ i ]->SetUpdateFlag( false );
+         this->dataList[ i ]->ClearTransientVector();
       }
       this->useLastSource = 0;
    }

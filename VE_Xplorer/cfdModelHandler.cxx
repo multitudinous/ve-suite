@@ -51,16 +51,27 @@
 #include "cfdTempAnimation.h"
 
 #include <fstream>
-//#include <cstdlib>
+#include <cstdlib>
 #include <string>
 
-#ifdef WIN32 // windows
+#ifndef _WIN32 // not windows
+#include <sys/dir.h>
+#else // it is windows
+#include <windows.h>
 #include <direct.h>
-#else // not windows
+#endif
+
+#ifndef _WIN32
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/dir.h>
-#endif   // WIN32
+#else
+#include <windows.h>
+#include <direct.h>
+#include <wchar.h>
+#include <cstdio>
+#include <cstdlib>
+#endif
 
 cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
 {
@@ -79,8 +90,7 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
    // model will then add its own node to the tree
    if ( worldNode == NULL )
    {
-      std::cerr << "ERROR: Must intialize worldDCS for cfdModelHandler."
-                << std::endl;
+      std::cerr << " ERROR : Must intialize worldDCS for creating cfdModelHandler. " << std::endl;
       exit( 1 );
    }
    this->CreateObjects();
@@ -164,6 +174,8 @@ int cfdModelHandler::GetNumberOfModels( void )
    return (int)_modelList.size(); 
 }
 
+///////////////////////
+
 void cfdModelHandler::InitScene( void )
 {
    // Locate and load the arrow file...
@@ -171,7 +183,7 @@ void cfdModelHandler::InitScene( void )
    if ( arrowFile == NULL )
    {
       std::cout << " ERROR : The vtkPolyData arrow file could not be found "
-                << "         Please create one and put it in the data dir"
+                << "        Please create one and put it in the data dir "
                 << std::endl;
       exit( 1 );
    }
@@ -237,8 +249,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    
    if ( commandArray == NULL )
    {
-      std::cerr << "ERROR: commandArray not set for cfdModelHandler"
-                << std::endl;
+      std::cerr << " ERROR : commandArray not set fot cfdModelHandler " << std::endl;
       exit( 1 );
    }
 
@@ -394,11 +405,21 @@ void cfdModelHandler::PreFrameUpdate( void )
    { 
       // change all transparent geometries back to opaque
       for ( unsigned int j = 0; j < _modelList.size(); j++ )
-         for ( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfGeomDataSets(); i++ )
+      {
+         for( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfGeomDataSets(); i++ )
          {
-            if ( _modelList.at( j )->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
+            if( _modelList.at( j )->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
                _modelList.at( j )->GetGeomDataSet( i )->setOpac( 1.0 );
          }
+         
+         for( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfCfdDataSets(); i++ )
+         {
+            if ( _modelList.at( j )->GetCfdDataSet( i )->IsPartOfTransientSeries() )
+            {
+               _modelList.at( j )->GetCfdDataSet( i )->GetAnimation()->ClearSequence();
+            }
+         }
+      } 
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_ACTIVE_MODEL )
    {
@@ -432,9 +453,9 @@ void cfdModelHandler::PreFrameUpdate( void )
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
    }
 
+
    // Check and see if we need to refresh the scalar bar
-   vprDEBUG(vprDBG_ALL,3) << "cfdModelHandler::_scalarBar->CheckCommandId"
-                          << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,3) << "cfdModelHandler::_scalarBar->CheckCommandId" << std::endl << vprDEBUG_FLUSH;
    _scalarBar->CheckCommandId( commandArray );
    // May use in the future
    //_scalarBar->UpdateCommand();
@@ -487,7 +508,7 @@ void cfdModelHandler::CreateObjects( void )
          input >> vtk_filein;
          input.getline( textLine, 256 );   //skip past remainder of line
 
-         if ( fileIO::isFileReadable( vtk_filein ) ) 
+         if (fileIO::isFileReadable( vtk_filein ) ) 
          {
             vprDEBUG(vprDBG_ALL,0) << " vtk file = " << vtk_filein 
                              << ", dcs = "  << _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()
@@ -497,9 +518,9 @@ void cfdModelHandler::CreateObjects( void )
          else
          {
             std::cerr << "ERROR: unreadable vtk file = " << vtk_filein 
-                      << ".  You may need to correct your param file."
-                      << std::endl;
-            exit( 1 );
+                        << ".  You may need to correct your param file."
+                        << std::endl;
+            exit(1);
          }
 
          char * precomputedDataSliceDir = _readParam->readDirName( input, "precomputedDataSliceDir" );
@@ -553,6 +574,7 @@ void cfdModelHandler::CreateObjects( void )
          float scale[3], trans[3], rotate[3];   // pfDCS stuff
          this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
 
+
          input >> fileName;
          input.getline( textLine, 256 );   //skip past remainder of line
 
@@ -571,7 +593,7 @@ void cfdModelHandler::CreateObjects( void )
             exit(1);
          }
 
-         //std::cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << std::endl;
+         //cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << endl;
          _modelList.at( 0 )->CreateGeomDataSet( fileName );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
@@ -583,6 +605,10 @@ void cfdModelHandler::CreateObjects( void )
       {
          if ( _modelList.empty() )
             _modelList.push_back( new cfdModel( worldNode ) );
+
+         char meshDirName[100];
+         char preComputedDirBaseName[100];
+         char geomDirName[100];
 
          float stlColor[3];
          int color;
@@ -616,7 +642,6 @@ void cfdModelHandler::CreateObjects( void )
          input >> vtkDataDir;
          input.getline( textLine, 256 );   //skip past remainder of line
          
-         // TODO: what is purpose of this line?
          fileIO::isDirWritable( vtkDataDir );
          
          // get vtk data dir name...
@@ -629,7 +654,6 @@ void cfdModelHandler::CreateObjects( void )
          ReadNNumberOfDataSets( vtkDataDir, vtkPreComputeDir );
 
          // For the geometry we need to loop over all the files and set the dcs appropriately
-         char geomDirName[ 100 ];
          input >> geomDirName;
          input.getline( textLine, 256 );   //skip past remainder of line
 
@@ -675,7 +699,7 @@ void cfdModelHandler::CreateObjects( void )
          }
          input.getline( textLine, 256 );   //skip past remainder of line
 
-         //std::cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << std::endl;
+         //cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << endl;
          /*_modelList.at( 0 )->CreateGeomDataSet( geomDirName );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
@@ -696,7 +720,7 @@ void cfdModelHandler::CreateObjects( void )
 
 void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
 {
-   if ( precomputedSurfaceDir == NULL )
+    if ( precomputedSurfaceDir == NULL )
    {
       vprDEBUG(vprDBG_ALL,1) << "precomputedSurfaceDir == NULL" 
                              << std::endl << vprDEBUG_FLUSH;
@@ -763,21 +787,25 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
          }
       }
    };
-   closedir( dir ); //close the directory
+   //close the directory
+   closedir( dir );
    dir = 0;
    file = 0;
 
    //change back to the original directory
    chdir( cwd );
 #else
+   //biv--this code will need testing
+   //BIGTIME!!!!!!!
    char buffer[_MAX_PATH];
+   BOOL finished;
    HANDLE hList;
    TCHAR directory[MAX_PATH+1];
    WIN32_FIND_DATA fileData;
 
+   //windows compatibility
    //get the current working directory
-   if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL)
-   {
+   if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL){
       std::cerr << "Couldn't get the current working directory!" << std::endl;
       return ;
    }
@@ -789,21 +817,19 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
    hList = FindFirstFile(directory, &fileData);
   
    //check to see if directory is valid
-   if ( hList == INVALID_HANDLE_VALUE )
-   { 
-      std::cerr << "No precomputed surface files found in: "
-                << precomputedSurfaceDir << std::endl;
+   if(hList == INVALID_HANDLE_VALUE){ 
+	   std::cerr<<"No precomputed surface files found in: "<<precomputedSurfaceDir<<std::endl;
       return ;
    }
    else
    {
       // Traverse through the directory structure
-      bool finished = FALSE;
-      while ( !finished )
+      finished = FALSE;
+      while (!finished)
       {
          //add the file name to our data list
-         //assume all vtk files in this directory are part of the sequence
-         //assume all vtk files in this directory are to be loaded
+		 //assume all vtk files in this directory are part of the sequence
+		 //assume all vtk files in this directory are to be loaded
          if(strstr(fileData.cFileName, ".vtk"))
          {
             char* pathAndFileName = new char[strlen(precomputedSurfaceDir)+
@@ -830,34 +856,40 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
             // automatically have the same color mapping as the "parent" 
             _modelList.at( 0 )->GetCfdDataSet( -1 )->SetParent( 
                         _modelList.at( 0 )->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
-         }
+			}
          else
          {
                std::cerr << "ERROR: unreadable file = " << pathAndFileName
                          << ".  You may need to correct your param file."
                          << std::endl;
                exit(1);
-         }
-       }
-       //check to see if this is the last file
-       if(!FindNextFile(hList, &fileData))
-       {
-            if(GetLastError() == ERROR_NO_MORE_FILES)
-            {
+			}
+		 }
+		 //check to see if this is the last file
+		 if(!FindNextFile(hList, &fileData)){
+            if(GetLastError() == ERROR_NO_MORE_FILES){
                finished = TRUE;
-            }
-         }
-      }
+			}
+		 }
+	  }
    }
-   FindClose( hList );  // close the handle
-   chdir( cwd );        // make sure we are in the correct directory
+   //close the handle
+   FindClose(hList);
+   //make sure we are in the correct directory
+   chdir(cwd);
 #endif
+
 }
 
 vtkPolyData* cfdModelHandler::GetArrow( void )
 {
    return this->arrow;
 }
+
+
+
+
+
 
 void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputedDir )
 {
@@ -866,6 +898,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    int numFiles = 0;
    // count the files and record the name of each file
    int numDir = 0;
+   // Read Scalar Ranges
    char *cwd;
 #ifndef WIN32
    if ((cwd = getcwd(NULL, 100)) == NULL)
@@ -902,7 +935,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
       }
    };
    //chdir( cwd );
-   closedir( dir ); //close the directory
+   closedir(dir);
    dir = opendir( cwd );
    
    while( (file = readdir(dir)) != NULL )
@@ -922,11 +955,15 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
       }
    };
 #else
+   //biv--this code will need testing
+   //BIGTIME!!!!!!!
    char buffer[_MAX_PATH];
+   BOOL finished;
    HANDLE hList;
    TCHAR directoryPath[MAX_PATH+1];
    WIN32_FIND_DATA fileData;
 
+   //windows compatibility
    //get the current working directory
    if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL){
       std::cerr << "Couldn't get the current working directory!" << std::endl;
@@ -941,21 +978,16 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    hList = FindFirstFile(directoryPath, &fileData);
   
    //check to see if directory is valid
-   if ( hList == INVALID_HANDLE_VALUE )
-   { 
-      std::cerr << "No transient files found in: " << directory << std::endl;
+   if(hList == INVALID_HANDLE_VALUE){ 
+      std::cerr<<"No transient files found in: "<<directory<<std::endl;
       return;
-   }
-   else
-   {
+   }else{
       // Traverse through the directory structure
-      bool finished = FALSE;
-      while ( !finished )
-      {
+      finished = FALSE;
+      while (!finished){
          //add the file name to our data list
-         //assume all vtk files in this directory are part of the sequence
-         if(strstr(fileData.cFileName, ".vtk"))
-         {
+		 //assume all vtk files in this directory are part of the sequence
+		 if(strstr(fileData.cFileName, ".vtk")){
             char* pathAndFileName = new char[
                   strlen(directoryPath) + strlen(fileData.cFileName) + 2 ];
             strcpy(pathAndFileName,directoryPath);
@@ -963,25 +995,25 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
             strcat(pathAndFileName,fileData.cFileName);
 
             frameFileNames.push_back( pathAndFileName );
-            vprDEBUG(vprDBG_ALL,1) << " pathAndFileName : " << pathAndFileName
-                                   << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL, 1) << " pathAndFileName : " 
+                                    << pathAndFileName << std::endl << vprDEBUG_FLUSH;
             //increment the number of frames found
             numFiles++;
-         }
-         //check to see if this is the last file
-         if(!FindNextFile(hList, &fileData))
-         {
-            if(GetLastError() == ERROR_NO_MORE_FILES)
-            {
+		 }
+		 //check to see if this is the last file
+		 if(!FindNextFile(hList, &fileData)){
+            if(GetLastError() == ERROR_NO_MORE_FILES){
                finished = TRUE;
-            }
-         }
-      }
+			}
+		 }
+	  }
    }
-   FindClose( hList );  // close the handle
-   chdir( cwd );        // return to original directory
-#endif
+   //close the handle
+   FindClose(hList);
+   //make sure we are in the correct directory
+   chdir(cwd);
 
+#endif
    vprDEBUG(vprDBG_ALL,0) << " Number of files in directory \"" 
       << directory << "\" = " << numFiles
       << std::endl << vprDEBUG_FLUSH;
@@ -1034,8 +1066,8 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    else
    {
       std::cerr << "ERROR: unreadable vtk file = " << frameFileNames[ order[ 0 ]  ]
-                << ".  You may need to correct your param file."
-                << std::endl;
+                  << ".  You may need to correct your param file."
+                  << std::endl;
       exit(1);
    }
 
@@ -1049,8 +1081,8 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    else
    {
       std::cerr << "ERROR: unreadable vtk file = " << frameDirNames[ dirOrder[ 0 ] ]
-                << ".  You may need to correct your param file."
-                << std::endl;
+                  << ".  You may need to correct your param file."
+                  << std::endl;
       exit(1);
    }
 
@@ -1092,8 +1124,8 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
       else
       {
          std::cerr << "ERROR: unreadable vtk file = " << frameFileNames[ order[ j ]  ] 
-                   << ".  You may need to correct your param file."
-                   << std::endl;
+                     << ".  You may need to correct your param file."
+                     << std::endl;
          exit(1);
       }
 
@@ -1115,11 +1147,11 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    
    frameDirNames.clear();
    frameFileNames.clear();
-
+   //close the directory
 #ifndef WIN32
-   closedir( dir );
+   closedir(dir);
+
    dir = 0;
    file = 0;
 #endif
 }
-

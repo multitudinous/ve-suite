@@ -31,7 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdAnimatedStreamlineCone.h"
 #include "cfdDataSet.h"
-
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
 #include "cfdTempAnimation.h"
 
 #include <vtkPolyData.h>
@@ -45,7 +46,7 @@
 
 #include <vpr/Util/Debug.h>
 
-cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( float diameter )
+cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdAnimatedStreamlineCone constructor"
                           << std::endl << vprDEBUG_FLUSH;
@@ -58,6 +59,7 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( float diameter )
    this->sphere   = vtkSphereSource::New();
 
    this->_sequence = new cfdTempAnimation();
+   this->particleDiameter = 1.0f;
 }
 
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
@@ -99,7 +101,7 @@ void cfdAnimatedStreamlineCone::Update( void )
       << std::endl << vprDEBUG_FLUSH;
 
    numberOfStreamLines = this->polyData->GetNumberOfLines();
- 
+
    if ( numberOfStreamLines == 0 )
    {
       std::cout << "|   cfdAnimatedStreamlineCone::Update : Number of streamlines is 0 " << std::endl;
@@ -165,15 +167,7 @@ void cfdAnimatedStreamlineCone::Update( void )
       }
    }
 
-   float diameter = 0.0f;
-   if ( diameter == 0.0 )
-   {
-      diameter = this->GetActiveDataSet()->GetLength()*0.001f;
-   }
-   vprDEBUG(vprDBG_ALL,1) << "raw diameter : " << diameter
-                          << std::endl << vprDEBUG_FLUSH;
-
-   this->sphere->SetRadius( 8.0f * diameter);
+   this->sphere->SetRadius( this->particleDiameter );
    this->sphere->SetThetaResolution( 3 );
    this->sphere->SetPhiResolution( 3 );
    this->sphere->Update();
@@ -235,4 +229,38 @@ void cfdAnimatedStreamlineCone::Update( void )
    this->updateFlag = true;
    this->addGeode = true;
    vprDEBUG(vprDBG_ALL, 1) << "|   Exiting cfdStreamers Update " << std::endl << vprDEBUG_FLUSH;
+}
+
+bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
+{
+   // This is here because Dr. K. has code in 
+   // cfdObjects that doesn't belong there
+   bool flag = cfdObjects::CheckCommandId( commandArray );
+
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_DIAMETER )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " STREAMLINE_DIAMETER\t" 
+                              << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
+                              << std::endl << vprDEBUG_FLUSH;
+         
+      // diameter is obtained from gui, -100 < vectorScale < 100
+      // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
+      // convert range to -2.5 < x < 2.5, and compute the exponent...
+      float range = 2.5f;
+      int diameter = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      this->particleDiameter = 8.0f * (exp( diameter / ( 100.0 / range ) ) * 
+                       this->GetActiveDataSet()->GetLength()*0.001f);
+
+         vprDEBUG(vprDBG_ALL,1) << "\tNew Particle Diameter : " 
+                             << this->particleDiameter << std::endl << vprDEBUG_FLUSH;
+      return true;
+   }
+
+   return flag;
+}
+
+void cfdAnimatedStreamlineCone::UpdateCommand()
+{
+   cfdObjects::UpdateCommand();
+   cerr << "doing nothing in cfdStreamers::UpdateCommand()" << endl;
 }

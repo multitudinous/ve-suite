@@ -116,6 +116,8 @@ class cfdObjects : public cfdGlobalBase
       void SetActiveDataSet( cfdDataSet * dataset );
       cfdDataSet * GetActiveDataSet( void );
 
+      void ClearTransientVector( void );
+
       static void SetVectorScale( float );
       static float GetVectorScale();
 

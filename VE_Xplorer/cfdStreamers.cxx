@@ -47,14 +47,10 @@
 
 #include <vpr/Util/Debug.h>
 
-cfdStreamers::cfdStreamers( float diameter )
+cfdStreamers::cfdStreamers( void )
 {
    this->stream = vtkStreamLine::New();
    this->integ = vtkRungeKutta4::New();
-
-   vprDEBUG(vprDBG_ALL,1) << " Specified Streamline Diameter : " 
-                          << diameter << std::endl << vprDEBUG_FLUSH;
-
 
    this->tubeFilter = vtkTubeFilter::New();
 
@@ -68,6 +64,7 @@ cfdStreamers::cfdStreamers( float diameter )
    this->propagationTime = -1;
    this->integrationStepLength = -1;
    this->stepLength = -1;
+   this->lineDiameter = 0.0f;
 }
 
 cfdStreamers::~cfdStreamers()
@@ -90,14 +87,7 @@ void cfdStreamers::Update( void )
       << " Integration Direction : " << this->integrationDirection
       << std::endl << vprDEBUG_FLUSH;
 
-   float diameter = 0.0f;
-   if ( ! diameter )
-   {
-      diameter = this->GetActiveDataSet()->GetLength()*0.001f;
-      vprDEBUG(vprDBG_ALL,1) << "       New Streamline Diameter : " 
-                             << diameter << std::endl << vprDEBUG_FLUSH;
-   }
-   this->tubeFilter->SetRadius( diameter );
+   this->tubeFilter->SetRadius( this->lineDiameter );
 
    if ( propagationTime == -1 )
    {
@@ -276,6 +266,24 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
                              << std::endl << vprDEBUG_FLUSH;
          
       this->SetStepLength( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_DIAMETER )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_STEP_LENGTH\t" 
+                              << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
+                              << std::endl << vprDEBUG_FLUSH;
+         
+      // diameter is obtained from gui, -100 < vectorScale < 100
+      // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
+      // convert range to -2.5 < x < 2.5, and compute the exponent...
+      float range = 2.5f;
+      int diameter = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      this->lineDiameter = exp( diameter / ( 100.0 / range ) ) * 
+                       this->GetActiveDataSet()->GetLength()*0.001f;
+
+         vprDEBUG(vprDBG_ALL,1) << "       New Streamline Diameter : " 
+                             << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
       return true;
    }
    return flag;

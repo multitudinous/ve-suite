@@ -176,6 +176,14 @@ void cfdObjects::SetSourcePoints( vtkPolyDataSource* pointSource )
 {
    this->pointSource = pointSource;
 }
+
+void cfdObjects::ClearTransientVector( void )
+{
+   // these geodes are actually deleted in cfdModelHandler
+   // this is a hack an needs to be changed
+   transientGeodes.clear();
+}
+
 void cfdObjects::AddGeodesToSequence()
 {
    int nTransGeodes = 0; 
