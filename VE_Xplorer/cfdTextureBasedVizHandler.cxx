@@ -1,10 +1,11 @@
 #include "cfdTextureBasedVizHandler.h"
+
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-#include <osgUtil/SceneView>
-#include <osg/State>
 #include "cfdVolumeVisNodeHandler.h"
+#include <osg/State>
+#include <osgUtil/SceneView>
 #endif
 #include "cfdVolumeVisualization.h"
 
@@ -21,7 +22,8 @@
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-//#include <osg/Group>
+
+
 #ifdef CFD_USE_SHADERS
 #include "cfdVectorVolumeVisHandler.h"
 #include "cfdScalarVolumeVisHandler.h"

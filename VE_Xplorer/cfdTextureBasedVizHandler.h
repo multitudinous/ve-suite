@@ -1,7 +1,6 @@
 #ifndef CFD_TEXTURE_BASED_MODEL_HANDLER_H
 #define CFD_TEXTURE_BASED_MODEL_HANDLER_H
 
-#include <vpr/Thread/Thread.h>
 #include <vpr/Util/Singleton.h>
 
 class cfdDCS;
