@@ -138,12 +138,12 @@ void cfdApp::exit()
       delete this->_modelHandler;
    }
 
-   if ( this->ihccModel )
+   /*if ( this->ihccModel )
    {
       vprDEBUG(vprDBG_ALL,2)  
         << "deleting this->ihccModel" << std::endl << vprDEBUG_FLUSH;
-      delete this->ihccModel;
-   }
+      //delete this->ihccModel;
+   }*/
 
 #ifdef _TAO
    if ( this->executive ) 
