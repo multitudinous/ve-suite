@@ -18,17 +18,17 @@
 ////////////////////////////////////////////////////
 
 
-class UI_Frame: public wxFrame{
+class UI_Frame: public wxPanel{
 public:
-   UI_Frame (const wxString& title,
+   UI_Frame (wxWindow* parent, wxWindowID id,
              const wxPoint& pos = wxDefaultPosition,
              const wxSize& size = wxDefaultSize,
-             long style = wxDEFAULT_FRAME_STYLE);
+             long style = 0);
 
-   UI_Frame(VjObs_ptr ref, wxWindow* parent, wxWindowID =-1, const wxString = "testing",
+   UI_Frame(VjObs_ptr ref, wxWindow* parent, wxWindowID =-1,
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize, 
-            long style = 0);
+            long style = wxMAXIMIZE_BOX|wxMINIMIZE_BOX);
 
    virtual ~UI_Frame();
 

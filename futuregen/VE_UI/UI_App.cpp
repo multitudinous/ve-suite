@@ -8,7 +8,7 @@ IMPLEMENT_APP(UI_App)
 bool UI_App::OnInit()
 {
    //Create the main window
-    _uiFrame = new UI_Frame(wxT("WX Client for VE Suite"));
+    _uiTopFrame = new UI_TopFrame(wxT("WX Client for VE Suite"));
    //What does this do?
    InitObserver();
    //biv--This was from original implementation
@@ -18,11 +18,11 @@ bool UI_App::OnInit()
    // properly unless you set the size again
 #if defined(__WIN16__) || defined(__WXMOTIF__)
     int width, height;
-    _uiFrame->GetSize(& width, & height);
-    _uiFrame->SetSize(-1, -1, width, height);
+    _uiTopFrame->GetSize(& width, & height);
+    _uiTopFrame->SetSize(-1, -1, width, height);
 #endif
    //display the UI
-   _uiFrame->Show();
+   _uiTopFrame->Show();
    return TRUE;
 
 }

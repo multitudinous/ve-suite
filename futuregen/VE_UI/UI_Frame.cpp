@@ -8,21 +8,21 @@ using namespace std;
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-UI_Frame::UI_Frame(const wxString& title,
+UI_Frame::UI_Frame(wxWindow* parent, wxWindowID id,
              const wxPoint& pos,
              const wxSize& size,
              long style)
-: wxFrame((wxWindow *) NULL, -1, title, pos, size, style)
+: wxPanel(parent, -1, pos, size, style)
 {
    buildCORBA();
    buildFrame();
 }
 
-UI_Frame::UI_Frame(VjObs_ptr ref,wxWindow* parent, wxWindowID id, const wxString test,
+UI_Frame::UI_Frame(VjObs_ptr ref,wxWindow* parent, wxWindowID id, 
             const wxPoint& pos ,
             const wxSize& size ,
             long style )
-:wxFrame(parent, id, test, pos, size, style)
+:wxPanel(parent, id, pos, size, style)
 {
    vjobs = VjObs::_duplicate(ref);
    buildFrame();

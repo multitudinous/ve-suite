@@ -340,6 +340,7 @@ void UI_Tabs::createTabPages()
    _geometryPage = new UI_GeometryTab(this);
    AddPage( _geometryPage, _T("Geometry"), false );
 
+
    //Scalars page
    /*if(numScalarsInActiveDataset){
       //get the names from the server to put in the radio box
@@ -393,8 +394,8 @@ void UI_Tabs::createTabPages()
    AddPage( _vertPage, _T("Vertex"), false );
 
    //Viewing Locations page
-   _viewlocPage = new UI_ViewLocTab(this);
-   AddPage( _viewlocPage, _T("View Points"), false );
+   //_viewlocPage = new UI_ViewLocTab(this);
+   //AddPage( _viewlocPage, _T("View Points"), false );
 
    //Design Parameters page
    _designparPage = new UI_DesignParTab(this);

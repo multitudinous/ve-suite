@@ -5,7 +5,9 @@
 #endif
 
 #include "wx/wx.h"
-#include "UI_Frame.h"
+#include "UI_TopFrame.h"
+
+class UI_TopFrame;
 
 //The main application  
 class UI_App: public wxApp{
@@ -13,7 +15,7 @@ public:
    bool OnInit();
    void InitObserver(){};
 protected:
-   UI_Frame* _uiFrame;
+   UI_TopFrame* _uiTopFrame;
 };
 DECLARE_APP(UI_App)
  

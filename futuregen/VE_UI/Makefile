@@ -5,6 +5,7 @@ WX_LIB = $(shell wx-config --libs)
 APP = app
 
 OBJECTS = UI_App.o \
+            UI_TopFrame.o \
             UI_Frame.o \
             UI_Tabs.o \
             UI_NavTab.o\
