@@ -55,9 +55,11 @@ ifdef ACE_ROOT
    include ${ACE_ROOT}/include/makeinclude/rules.local.GNU
    include ${TAO_ROOT}/taoconfig.mk
 
-   ACE_LIBS = -L${ACE_ROOT}/ace -lACE -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_PortableServer -L${TAO_ROOT}/tao -lTAO 
+   ACE_LIBS = -L${ACE_ROOT}/ace -lACE -lTAO_CosNaming -lTAO_Svc_Utils \
+               -lTAO_IORTable -lTAO_PortableServer \
+               -L${TAO_ROOT}/tao -lTAO -L$(XERCESCROOT)/lib -lxerces-c
 #${LDFLAGS}
-   ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs
+   ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs -I$(XERCESCROOT)/include
    EXTRA_INCLUDES+=	\
                   ${ACE_INCLUDES} \
                   -I${VE_SUITE_HOME}/VE_Xplorer \

@@ -37,21 +37,12 @@
 #include <wx/gdicmn.h>
 
 #include "cfdVEBaseClass.h"
-//#include "cfdDCS.h"
-//#include "cfdObjects.h"
-//#include "interface.h"
-
-//#include <string.h>
 
 class cfdModuleGeometry;
 class cfdGroup;
-//class string;
-//class map;
+class cfdGeode;
 
 // Need to create or use this in our stuff
-//#include "interface.h"
-
-
 class VEOPPDmod: public cfdVEBaseClass 
 {
    DECLARE_DYNAMIC_CLASS( VEOPPDmod )
@@ -62,8 +53,9 @@ class VEOPPDmod: public cfdVEBaseClass
       ~VEOPPDmod( void );
 
       virtual void InitializeNode( cfdDCS* );
-
+      virtual cfdGeode* GetCustomVizFeature( int );
    private:
+      cfdGeode* _geode;
 };
 
 #endif

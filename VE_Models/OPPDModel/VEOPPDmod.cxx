@@ -39,12 +39,21 @@
 #include "fileIO.h"
 #include "cfdFILE.h"
 #include "cfdDataSet.h"
+#include "cfdGeode.h"
+#include "cfdDCS.h"
+
 #include <fstream>
 #include <cstdlib>
 #include <string>
 #include <map>
 
 #include <vrj/Util/Debug.h>
+
+#include <vtkSphereSource.h>
+#include <vtkPolyDataNormals.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkActor.h>
+#include <vtkProperty.h>
 
 #ifndef _WIN32 // not windows
 #include <sys/dir.h>
@@ -62,6 +71,7 @@ VEOPPDmod::VEOPPDmod( void ) : cfdVEBaseClass()
 {
    _objectName ="OPPD";
    //_onSceneGraph = false;
+   _geode = NULL;
 }
 
 // Destructor
@@ -80,3 +90,45 @@ void VEOPPDmod::InitializeNode( cfdDCS* veworldDCS )
    //cout << _param << endl;
    CreateObjects();
 }
+
+cfdGeode* VEOPPDmod::GetCustomVizFeature( int input )
+{
+   // Case 0 -- single point with sphere polygon.
+   //   Building the sphere source.
+   vtkSphereSource*    sphereSrc      = vtkSphereSource::New();
+   vtkPolyDataNormals* sphereNorm     = vtkPolyDataNormals::New();
+   vtkPolyDataMapper*  sphereMapper   = vtkPolyDataMapper::New();
+   vtkActor*           sphereActor    = vtkActor::New();
+
+   sphereSrc->SetRadius( 0.05f );
+   sphereSrc->SetCenter( 0.0f, 0.0f, 0.0f );
+   sphereSrc->Update();
+
+   sphereNorm->SetInput( sphereSrc->GetOutput() );
+   sphereNorm->Update();
+
+   sphereMapper->SetInput( sphereNorm->GetOutput() );
+   sphereMapper->Update();
+
+   sphereActor->SetMapper( sphereMapper );
+   sphereActor->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );
+   // Can also set opacity
+   if ( _geode != NULL )
+   {
+      _dcs->RemoveChild( (cfdSceneNode*)_geode );
+      delete _geode;
+   }
+
+   _geode = new cfdGeode();
+
+   _geode->TranslateTocfdGeode( sphereActor );
+
+   sphereSrc->Delete();
+   sphereNorm->Delete();
+   sphereMapper->Delete();
+   sphereActor->Delete();
+
+   _dcs->AddChild( (cfdSceneNode*)_geode );
+   return NULL;
+}
+
