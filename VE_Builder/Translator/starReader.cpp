@@ -55,7 +55,8 @@ starReader::starReader( char * paramFile )
       this->rotations[ i ] = 0.0f;
       this->translations[ i ] = 0.0f;
    }
-   this->scaleValue = 1.0f;
+   this->scaleIndex = 0;      // scale index default is no scaling
+   this->scaleFactor = 1.0f;  // custom scale default is no scaling
    this->numScalars = 0;
    this->numVectors = 0;
    this->writeOption = 0;  // default is to let vtk write the file
@@ -948,6 +949,7 @@ void starReader::ReadParameterFile( void )
 
    char tagName[ 50 ];
    char tagValue[ 50 ];
+   int  scaleIndexSpecified = 0;
   
    while( 1 )
    {
@@ -1002,11 +1004,24 @@ void starReader::ReadParameterFile( void )
                  << this->scalarName[ this->numScalars ] << endl;
          this->numScalars++;
       }
+      else if ( strcmp("SCALEINDEX", tagName)==0 )
+      {
+         scaleIndexSpecified = 1;
+         // uses the integer indices defined in translateToVtk.cpp
+         // 0 = No scaling, 1 = Custom scaling, 2 = meters to feet, etc.
+         // The use of SCALEINDEX=0 is not necessary as it is the default
+         // The use of SCALEINDEX=1 needs SCALEFACTOR to be set (or
+         // scale factor defaults to 1)
+         this->scaleIndex = atoi( tagValue );
+         if ( this->debug )
+            std::cout << "scale selection = " << this->scaleIndex << std::endl;
+      }
       else if ( strcmp("SCALEFACTOR", tagName)==0 )
       {
-         this->scaleValue = atof( tagValue );            
+         // the use of this option implies that SCALEINDEX=1 (Custom scaling)
+         this->scaleFactor = atof( tagValue );            
          if ( this->debug )
-            std::cout << "scale factor = " << this->scaleValue << std::endl;
+            std::cout << "scale factor = " << this->scaleFactor << std::endl;
       }
       else if ( strcmp("OUTPUTFILENAME", tagName)==0 )
       {
@@ -1046,6 +1061,23 @@ void starReader::ReadParameterFile( void )
       }
    }
    StarParamFile.close();
+
+   // if user failed to set the scaleIndex, but provided a scalefactor
+   // reset scaleIndex to custom scale
+   if ( !scaleIndexSpecified && this->scaleFactor != 1.0)
+   {
+      this->scaleIndex = 1;
+   }
+
+   // check for indeterminate case -- not custom, but scale factor specified
+   if ( this->scaleIndex != 1 && this->scaleFactor != 1.0 )
+   {
+      std::cerr << "\n!!! Indeterminate case -- "
+                << "not custom, but scale factor specified!\n"
+                << "Exiting.\n"
+                << std::endl;
+      exit(1);
+   }
 }
 
 float * starReader::GetRotations( void )
@@ -1063,9 +1095,14 @@ int starReader::GetWriteOption( void )
    return this->writeOption;
 }
 
+int starReader::GetScaleIndex( void )
+{
+   return this->scaleIndex;
+}
+
 float starReader::GetScaleFactor( void )
 {
-   return this->scaleValue;
+   return this->scaleFactor;
 }
 
 char *starReader::GetVTKFileName( void )

@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 #include <cstdlib>
-//#include <cmath>
 
 #include <vtkPointSet.h>
 #include <vtkStructuredGrid.h>
@@ -84,6 +83,12 @@ char * preprocess( int argc, char *argv[],
    {
       strcpy( infilename, argv[2] );
       std::cout << "Will read data from: " << infilename <<std::endl;
+      if (type == 2) 
+      {
+         star = new starReader( infilename );
+         star->ReadParameterFile();
+         star->SetDebugLevel( debug );
+      }
    }
    else
    {
@@ -303,19 +308,24 @@ char * preprocess( int argc, char *argv[],
    }
 #endif  //SJK_TEST
 
-   unsigned int velSCALE = 1;
+   unsigned int scaleIndex;
 
 #ifndef SJK_TEST
+   // read scale index from the command line
    if ( argc > arg )
    {
-      velSCALE = atoi( argv[arg] );
-      std::cout << "\tvelSCALE = " << velSCALE <<std::endl;
+      scaleIndex = atoi( argv[arg] );
+      std::cout << "\tscaleIndex = " << scaleIndex <<std::endl;
       arg++;
    }
    else
 #endif  //SJK_TEST
    {
-      if ( type != 2 )
+      if ( type == 2 )
+      {
+         scaleIndex = star->GetScaleIndex();
+      }
+      else
       {
          // Get factor to scale the geometry (and vectors)
          std::cout << "\nSelect the geometry/vector scaling:" << std::endl;
@@ -325,16 +335,17 @@ char * preprocess( int argc, char *argv[],
          std::cout << "(3) millim to feet" << std::endl;
          std::cout << "(4) inches to feet" << std::endl;
          std::cout << "(5) meters (1:12 scale) to feet" << std::endl;
-         velSCALE = fileIO::getIntegerBetween( 0, 5 );
+         scaleIndex = fileIO::getIntegerBetween( 0, 5 );
       }
    }
    
     float geomScale [3] = {1.0f, 1.0f, 1.0f};    // default
-    if      ( velSCALE == 0 ) {;}
-    else if ( velSCALE == 1 )
+    if      ( scaleIndex == 0 ) { /* do nothing */ }
+    else if ( scaleIndex == 1 )
     {
 
 #ifndef SJK_TEST
+      // read scale factors from the command line
       if ( argc > arg )
       {
          geomScale[0] = atof( argv[arg] );
@@ -369,31 +380,36 @@ char * preprocess( int argc, char *argv[],
          }
       }
    }
-   else if ( velSCALE == 2 )
+   else if ( scaleIndex == 2 )
    {
       geomScale[0] = 3.28083989501f;
       geomScale[1] = 3.28083989501f;
       geomScale[2] = 3.28083989501f;
    }
-   else if ( velSCALE == 3 )
+   else if ( scaleIndex == 3 )
    {
       geomScale[0] = 3.28083989501e-3;
       geomScale[1] = 3.28083989501e-3;
       geomScale[2] = 3.28083989501e-3;
    }
-   else if ( velSCALE == 4 )
+   else if ( scaleIndex == 4 )
    {
       geomScale[0] = 1.0/12.0;
       geomScale[1] = 1.0/12.0;
       geomScale[2] = 1.0/12.0;
    }
-   else if ( velSCALE == 5 )
+   else if ( scaleIndex == 5 )
    {
       geomScale[0] = 12.0*3.28083989501;
       geomScale[1] = 12.0*3.28083989501;
       geomScale[2] = 12.0*3.28083989501;
    }
-   else    std::cout << "Invalid entry: will not scale geometry" <<std::endl;
+   else
+      std::cerr << "\n!!! Invalid scaleIndex = " << scaleIndex 
+                << ": will not scale geometry" << std::endl;
+
+   //if ( debug ) 
+      std::cout << "Using geomScale = " << geomScale[0] << std::endl;
 
    aTransform->Scale( geomScale[0], geomScale[1], geomScale[2] );
 /*    
@@ -403,13 +419,13 @@ char * preprocess( int argc, char *argv[],
    std::cout << "(1) meter/sec to feet/sec" <<std::endl;
    std::cout << "(2) feet/sec to meter/sec" <<std::endl;
    std::cout << "(3) FORD cylinder" <<std::endl;
-   cin >> velSCALE;
+   cin >> scaleIndex;
 
    velConvert = 1.0f;    // default
-   if      (velSCALE==0) velConvert = 1.0f;
-   else if (velSCALE==1) velConvert = 3.28083989501f;
-   else if (velSCALE==2) velConvert = 0.3048f;
-   else if (velSCALE==3) velConvert = 1.0f;
+   if      (scaleIndex==0) velConvert = 1.0f;
+   else if (scaleIndex==1) velConvert = 3.28083989501f;
+   else if (scaleIndex==2) velConvert = 0.3048f;
+   else if (scaleIndex==3) velConvert = 1.0f;
    else    std::cout << "Invalid entry: will not scale the solution" <<std::endl;
 */
 

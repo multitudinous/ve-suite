@@ -45,6 +45,7 @@ class starReader
 
       float * GetRotations( void );
       float * GetTranslations( void );
+      int     GetScaleIndex( void );
       float   GetScaleFactor( void );
       int     GetWriteOption( void );
       char  * GetVTKFileName( void );
@@ -67,6 +68,7 @@ class starReader
       int   writeOption;
       float rotations[ 3 ];
       float translations[ 3 ];
-      float scaleValue;
+      int   scaleIndex;
+      float scaleFactor;
 };
 #endif
