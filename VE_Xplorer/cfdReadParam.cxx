@@ -821,6 +821,11 @@ void cfdReadParam::convertBinaryToArray( int gui, int size )
    // Must add zeros to binary number because binary number 
    // may be less than the num ber of geometries
 
+   if ( guiVal != NULL )
+      delete [] guiVal;
+   
+   guiVal = new int[ size ];
+
    for ( int i = 0; i < size; i++ ) 
    {      
       guiVal[ i] = testBin[ i ];

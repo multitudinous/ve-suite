@@ -325,7 +325,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       long int test = this->_readParam->convertDecimalToBinary( (long)
                         commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
       vprDEBUG(vprDBG_ALL,1)
-         << " test : " << test << std::endl << vprDEBUG_FLUSH;
+         << " Return from conversion : " << test << " : Active Model Ptr = " << _activeModel << std::endl << vprDEBUG_FLUSH;
 
       this->_readParam->convertBinaryToArray( test, _activeModel->GetNumberOfGeomDataSets() );
       // Update Scene Graph with selected or deselected geometry
@@ -343,23 +343,18 @@ void cfdModelHandler::PreFrameUpdate( void )
          // maybe come up with better functionality later
          if (  !strcmp( _activeModel->GetCfdDCS()->GetName(), "cfdVEBaseClass" ) )
          {
-            cout << " Dyanmic stuff 1" << endl;
             parent = _activeModel->GetCfdDCS();
-            
-            cout << " Dyanmic stuff 2" << endl;
          }
          else
          {
-            cout << " static stuff 1" << endl;
             parent = worldNode;
-            cout << " static stuff 2" << endl;
          }
 
          vprDEBUG(vprDBG_ALL,2)
-            << "guiVal[ " << i << " ] = " << this->_readParam->guiVal[ i ] 
-            << " : " << _activeModel << " : " 
-            << parent->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) 
-            << " : " << _activeModel->GetGeomDataSet( i )->GetFilename() << std::endl
+            << "guiVal[ " << i << " ] = " << this->_readParam->guiVal[ i ] << endl
+            << " : Active Model index : " << _activeModel << endl 
+            << " : SearchChild Result : " << parent->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) << endl 
+            << " : Filename[ " << i << " ] : " << _activeModel->GetGeomDataSet( i )->GetFilename() << std::endl
             << vprDEBUG_FLUSH;
 
 
