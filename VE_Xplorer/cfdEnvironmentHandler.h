@@ -54,7 +54,10 @@ class cfdEnvironmentHandler
       void SetRootNode( cfdGroup* );
       void SetWorldDCS( cfdDCS* );
       void SetCommandArray( cfdCommandArray* );
+      void SetArrow( vtkPolyData* );
       void CreateObjects( void );
+      cfdNavigate* GetNavigate( void );
+      cfdCursor* GetCursor( void );
 
    private:
       cfdNavigate* nav;
@@ -62,15 +65,13 @@ class cfdEnvironmentHandler
       //cfdMenu* menu;
       cfdCursor* cursor;
       char* _param;
-      cfdDCS* _worldDCS;
-      cfdGroup* _rootNode;
+      cfdDCS* worldDCS;
+      cfdGroup* rootNode;
       cfdCommandArray* _commandArray;
       cfdReadParam* _readParam;
-      // Stores data from cfdCursor
-      // Variable will eventually be used to define bounding box
+      // cur_box will eventually be used to define bounding box
       // for data interagation
       double cur_box[6];
-      // Used for defining the vectors for data display
       vtkPolyData * arrow;
       float worldScale[ 3 ];
       float worldTrans[ 3 ];

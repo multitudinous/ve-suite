@@ -626,3 +626,8 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
 #endif
 
 }
+
+vtkPolyData* cfdModelHandler::GetArrow( void )
+{
+   return this->arrow;
+}

@@ -35,6 +35,7 @@
 #include <Performer/pf/pfLightSource.h>
 #include <Performer/pr/pfLight.h>
 
+/*
 #ifndef WIN32
 #include <unistd.h>
 #include <sys/types.h>
@@ -43,6 +44,7 @@
 #else
 //#include <windows.h>
 #endif
+*/
 
 #include <iostream>
 
@@ -57,7 +59,7 @@ cfdPfSceneManagement::cfdPfSceneManagement( char* paramfilename )
    this->param = paramfilename;
    this->rootNode = NULL;
    this->worldDCS = NULL;
-   this->gstate = NULL;
+   //this->gstate = NULL;
    this->sunModel = NULL;
    this->sun = NULL;
    this->lit = NULL;
@@ -86,7 +88,7 @@ void cfdPfSceneManagement::InitScene( void )
    this->worldDCS = new cfdDCS();
    this->sun      = new pfLightSource();
    //this->lit      = new pfLightSource();
-   this->gstate   = new pfGeoState();
+   //this->gstate   = new pfGeoState();
    //this->scene    = new pfScene();
 
    // Setup geosets properties

@@ -34,7 +34,7 @@
 
 class cfdDCS;
 class cfdGroup;
-class pfGeoState;
+//class pfGeoState;
 class pfLightModel;
 class pfLightSource;
 
@@ -58,7 +58,7 @@ class cfdPfSceneManagement
       cfdDCS*        worldDCS;
 
       // Performer objects
-      pfGeoState*    gstate;
+      //pfGeoState*    gstate;
       pfLightModel*  sunModel;
       pfLightSource* sun;
       pfLightSource* lit;

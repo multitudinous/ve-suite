@@ -62,12 +62,12 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
 
 void cfdEnvironmentHandler::SetRootNode( cfdGroup* input )
 {
-   _rootNode = input;
+   this->rootNode = input;
 }
 
 void cfdEnvironmentHandler::SetWorldDCS( cfdDCS* input )
 {
-   _worldDCS = input;
+   this->worldDCS = input;
 }
 
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
@@ -75,13 +75,18 @@ void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
    _commandArray = input;
 }
 
+void cfdEnvironmentHandler::SetArrow( vtkPolyData* input )
+{
+   this->arrow = input;
+}
+
 void cfdEnvironmentHandler::InitScene( void )
 {
    std::cout << "| ***************************************************************** |" << std::endl;
    // Needs to be set by the gui fix later
-   this->nav->Initialize( 0.05f , this->_worldDCS );
+   this->nav->Initialize( 0.05f, this->worldDCS );
    this->nav->SetWorldLocation( this->nav->worldTrans );
-   this->_worldDCS->SetScaleArray( this->worldScale );
+   this->worldDCS->SetScaleArray( this->worldScale );
 
    for ( int i = 0; i < 3; i++)
    {
@@ -93,9 +98,9 @@ void cfdEnvironmentHandler::InitScene( void )
    tempArray[ 0 ] = -this->nav->worldTrans[ 0 ];
    tempArray[ 1 ] = -this->nav->worldTrans[ 1 ];
    tempArray[ 2 ] = -this->nav->worldTrans[ 2 ];
-   this->_worldDCS->SetTranslationArray( tempArray );
+   this->worldDCS->SetTranslationArray( tempArray );
 
-   this->_worldDCS->SetRotationArray( this->nav->worldRot );
+   this->worldDCS->SetRotationArray( this->nav->worldRot );
 
    // Maybe need to fix this later
    //this->cursorId = NONE;
@@ -105,7 +110,7 @@ void cfdEnvironmentHandler::InitScene( void )
    // Initiate cursors.
    //
    std::cout << "|  8. Initializing................................. Virtual cursors |" << std::endl;
-   this->cursor = new cfdCursor( this->arrow, this->_worldDCS, _rootNode );
+   this->cursor = new cfdCursor( this->arrow, this->worldDCS, this->rootNode );
    this->cursor->Initialize( this->nav->GetCursorLocation(),this->nav->GetDirection() );
 
    //
@@ -231,4 +236,14 @@ void cfdEnvironmentHandler::CreateObjects( void )
          _readParam->ContinueRead( input, id );
       }
    }
-}  
+}
+
+cfdNavigate* cfdEnvironmentHandler::GetNavigate( void )
+{
+   return this->nav;
+}
+
+cfdCursor* cfdEnvironmentHandler::GetCursor( void )
+{
+   return this->cursor;
+}

@@ -80,7 +80,7 @@ inline cfdApp::cfdApp( )
    this->_sceneManager =         NULL;
    this->_environmentHandler =   NULL;
    this->_steadystateHandler =   NULL;
-   this->_transientHandler =     NULL;
+   //this->_transientHandler =     NULL;
    this->_modelHandler =         NULL;
 }
 
@@ -249,33 +249,44 @@ inline void cfdApp::initScene( )
    std::cout << "|                                                                   |" << std::endl;
 # endif // _OPENMP
 
+   // define the rootNode, worldDCS, and lighting
    this->_sceneManager = new cfdPfSceneManagement( this->filein_name );
    this->_sceneManager->InitScene();
 std::cout << "|  3a" << std::endl;
 
+   // modelHandler stores the arrow and holds all data and geometry
+   this->_modelHandler = new cfdModelHandler( this->filein_name, 
+                                              this->_sceneManager->GetWorldDCS() );
+   this->_modelHandler->InitScene();
+std::cout << "|  3e" << std::endl;
+
+   // navigation and cursor 
    this->_environmentHandler = new cfdEnvironmentHandler( this->filein_name );
    this->_environmentHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
+   this->_environmentHandler->SetRootNode( this->_sceneManager->GetRootNode() );
+   this->_environmentHandler->SetArrow( this->_modelHandler->GetArrow() );
    this->_environmentHandler->InitScene();
 std::cout << "|  3b" << std::endl;
 
+   // create steady state visualization objects
    this->_steadystateHandler = new cfdSteadyStateVizHandler( this->filein_name );
+   this->_steadystateHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
+   this->_steadystateHandler->SetNavigate( this->_environmentHandler->GetNavigate() );
+   this->_steadystateHandler->SetCursor( this->_environmentHandler->GetCursor() );
    this->_steadystateHandler->InitScene();
 std::cout << "|  3c" << std::endl;
 
+/*
+   // TODO fix transient
    this->_transientHandler = new cfdTransientVizHandler( this->filein_name );
    this->_transientHandler->InitScene();
 std::cout << "|  3d" << std::endl;
-
-   this->_modelHandler = new cfdModelHandler( this->filein_name, 
-                                    this->_sceneManager->GetWorldDCS() );
-   this->_modelHandler->InitScene();
-std::cout << "|  3e" << std::endl;
+*/
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
    this->executive = new cfdExecutive( naming_context.in(), this->_sceneManager->GetWorldDCS() );
 #endif // _TAO
-
 
    //
    // Make IHCC Model - should be deleted at a later date
@@ -307,7 +318,7 @@ void cfdApp::preFrame( void )
 
    this->_environmentHandler->PreFrameUpdate();
    this->_steadystateHandler->PreFrameUpdate();
-   this->_transientHandler->PreFrameUpdate();
+   //this->_transientHandler->PreFrameUpdate();
    this->_modelHandler->PreFrameUpdate();
 
 
