@@ -881,8 +881,8 @@ void GasifierCFD::load_geom(int* fni,int* fnj,int* fnk,int* fnx,int* fny,int* fn
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void GasifierCFD::load_scirun_pd(float *pd, float *pmf, int *nps, int *numstr) {
-  int size = 10;
+void GasifierCFD::load_scirun_pd(float *pd, float *pmf, int *np, int *numstr) {
+  int size = *np;
   double pd_local[20];
   double pmf_local[20];
   // last area is calculated by fortran.
@@ -902,10 +902,12 @@ void GasifierCFD::load_scirun_pd(float *pd, float *pmf, int *nps, int *numstr) {
   HISTFIT(pd_local, pmf_local, passed_areas, &size, &pct_thru_50, &pct_thru_200);
 #endif //WIN32
   // Fill pd, convert from microns to meters.
-  // check - pd/pmf(np,numstr) - how to fill?
-  for(int i=0; i<size; i++) {
-    *(pd + i) = pd_local[i] * 1e-06;
-    *(pmf + i) = pmf_local[i];
+  int i, j;
+  for(i=0; i<size; i++) {
+    for(j=0; j<(*numstr); j++) {
+    *(pd + j*size + i) = pd_local[i] * 1e-06;
+    *(pmf + j*size + i) = pmf_local[i];
+  }
   }
 }
 
