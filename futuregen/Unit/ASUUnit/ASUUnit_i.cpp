@@ -75,7 +75,7 @@ void Body_Unit_i::StartCalc (
     summaries.insert_summary_val("Energy Requirement UNITS:kW FORMAT:10.4f",
 				 asu_obj.energy_requirement);
     
-    // gui->eval(id + " module_power " + to_string(asu_obj.energy_requirement/1000), result);
+    summaries.insert_summary_val("Power UNITS:MW FORMAT:12.2f", asu_obj.energy_requirement/1000);
     
     //cout << "\n T O2 stream = " << asu_obj.T_O2stream
     //     << "\n P O2 stream = " << asu_obj.P_O2stream

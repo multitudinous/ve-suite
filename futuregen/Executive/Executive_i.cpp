@@ -139,13 +139,11 @@ char * Body_Executive_i::GetExportData (
   cout << "GetExportData\n";
   
   Interface intf;
-  if(!_network->getPortData(module_id, port_id, intf)) 
-	{
-		msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
-		ClientMessage(msg.c_str());
-	}
-    
-    
+  if(!_network->getPortData(module_id, port_id, intf)) {
+    msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
+    ClientMessage(msg.c_str());
+  }
+       
   bool        rv;
   std::string str;
   
@@ -337,15 +335,20 @@ void Body_Executive_i::SetModuleResult (
   std::vector<Interface>::iterator iter;
   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
     if(_network->setOutput(module_id, &(*iter))) {
-      ; // setOutput O.K.
+      // Keep track of power requirements
+      bool f = false;
+      std::string p = iter->getString(std::string("Power (MW)"), &f);
+      if(f) _module_powers[module_id] = atof(p.c_str());
+      std::string ti = iter->getString(std::string("Thermal Input (MW)"), &f);
+      if(f) _thermal_input = atof(ti.c_str());
     } else {
-		msg = "Unable to set mod id# " + to_string(module_id) + "'s Output data\n";
-		ClientMessage(msg.c_str());
+      msg = "Unable to set mod id# " + to_string(module_id) + "'s Output data\n";
+      ClientMessage(msg.c_str());
     }
-
-	msg = "Mod id# "+ to_string(module_id) + "'s Execution is done\n";
-	ClientMessage(msg.c_str());
-
+  
+  msg = "Mod id# "+ to_string(module_id) + "'s Execution is done\n";
+  ClientMessage(msg.c_str());
+  
   _mutex.release();
 }
 
@@ -360,7 +363,18 @@ char * Body_Executive_i::GetModuleResult (
   _mutex.acquire();
   
   Interface intf;
-  if(!_network->getOutput(module_id, intf)) {
+  if(module_id = -1) {
+    // Calculate efficiency
+    double tot_power = 0.0;
+    std::map<long, double>::iterator iter;
+    for(iter=_module_powers.begin(); iter!=_module_powers.end(); iter++)
+      tot_power += iter->second;
+    intf.setString("Power (MW)", to_string(tot_power));
+    if(_thermal_input != 0.0) {
+      intf.setString("Thermal Input (MW)", to_string(_thermal_input));
+      intf.setString("Efficiency (%)", to_string(tot_power / _thermal_input * 100));
+    }
+  } else if(!_network->getOutput(module_id, intf)) {
 	  
     cerr << "Unable to get mod id# " << module_id 
 	 << "'s ouput data\n";
@@ -401,6 +415,10 @@ void Body_Executive_i::SetNetwork (
   _network->clear();
   _scheduler->clear();
   
+  // Keep track of power requirements
+  _module_powers.clear();
+  _thermal_input = 0.0;
+
   std::vector<Interface>::iterator iter;
   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
     if(iter->_id==-1) break;

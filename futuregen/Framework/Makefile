@@ -51,8 +51,9 @@ CPPFLAGS += -g  ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
 
 OBJECTS = StringParse.o \
 	OrbThread.o \
-	VjObsC.o \
 	Frame.o \
+	../../VE_Conductor/skel/VjObsC.o \
+	../../VE_Conductor/skel/VjObsS.o \
 	App.o \
 	PluginLoader.o \
 	Network.o \
@@ -60,8 +61,8 @@ OBJECTS = StringParse.o \
 	ListTable.o \
 	PortDialog.o \
 	ResultPanel.o \
-	GlobalParamDialog.o \
 	paraThread.o \
+	GlobalParamDialog.o \
 	../Plugin/string_ops.o \
 	../Plugin/interface.o \
 	../Plugin/package.o \
@@ -69,7 +70,7 @@ OBJECTS = StringParse.o \
 	../Plugin/UIDialog.o \
 	../Plugin/TexTable.o \
 	../Plugin/TextResultDialog.o \
-   UI_Frame.o \
+	UI_Frame.o \
 	UI_Tabs.o \
 	UI_VisTab.o \
 	UI_VecTab.o \
@@ -83,8 +84,8 @@ OBJECTS = StringParse.o \
 	UI_VertTab.o \
 	UI_DesignParTab.o \
 	UI_ViewLocTab.o \
-   UI_ModSelPanel.o \
-   UI_ModelData.o
+	UI_ModSelPanel.o \
+	UI_ModelData.o
 
 .SUFFIXES : .o .cc .cpp .cxx
 

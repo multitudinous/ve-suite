@@ -48,7 +48,13 @@ void summary_values::insert_summary_val (char *description, double value)
 
   // Extract description string.
   if((loc_1 != -1) && (loc_2 != -1))
+
+#ifndef WIN32
     description_end = min(loc_1, loc_2);
+#else
+    description_end = __min(loc_1, loc_2);
+#endif
+
   else if(loc_1!=-1) 
     description_end = loc_1;
   else if(loc_2!=-1)

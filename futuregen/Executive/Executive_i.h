@@ -51,6 +51,10 @@ protected:
   Network*   _network;
   Scheduler* _scheduler;
 
+  // For tracking power requirements/generated and plant efficiencies
+  std::map<long, double> _module_powers;
+  double _thermal_input;
+
   Types::ArrayLong watch_list_;
 
   ACE_Thread_Mutex _mutex;

@@ -216,7 +216,7 @@ void Body_Unit_i::StartCalc (
     //summaries.insert_summary_val("Auxiliary Power UNITS:MW FORMAT:12.2f", q_heater);
     //summaries.insert_summary_val("Net Power UNITS:MW FORMAT:12.2f", fc_power/1e6-q_heater);
     
-    //  gui->eval(id + " module_power " + to_string(fc_power/1e6), result);
+    summaries.insert_summary_val("Power UNITS:MW FORMAT:12.2f",fc_power/1e6);
 
     aspen_stream output_stream;
     fc.get_output_stream(output_stream);

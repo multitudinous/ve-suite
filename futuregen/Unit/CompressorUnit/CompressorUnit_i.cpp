@@ -168,7 +168,8 @@ void Body_Unit_i::StartCalc (
     summaries.insert_summary_val("Pressure Change UNITS:Pa FORMAT:10.2f",
 				 poutlet-pinlet);
   }
-  // gui->eval(id + " module_power " + to_string(-total_molar_flow_rate*(h2a-h1)/1e6), result); we'll come back to this later
+  
+  summaries.insert_summary_val("Power UNITS:MW FORMAT:12.2f", -total_molar_flow_rate*(h2a-h1)/1e6);
 
   p.intfs.resize(1);
   
