@@ -37,6 +37,7 @@ public:
    void SetSliceAlpha(float alpha = .5);
    void SetTextureUnit(int tUnit = 0);
    void SetVeboseFlag(bool flag);
+   void SetShaderDirectory(char* shadDir);
 #ifdef _OSG
    void SetStateSet(osg::StateSet* ss);
    void Set3DTextureData(osg::Texture3D* texture);
@@ -50,7 +51,10 @@ public:
    void RemoveClipPlane(ClipPlane direction);
    void UpdateClipPlanePosition(ClipPlane direction,double* newPosition);
    bool isCreated(){return _isCreated;}
-
+#ifdef CFD_USE_SHADERS
+   void EnableVolumeShader();
+   void DisableVolumeShader();
+#endif
    cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk;}
    
    osg::ref_ptr<osg::StateSet> GetStateSet();
@@ -67,6 +71,7 @@ protected:
    Direction _traverseDirection;
    bool _verbose;
    bool _isCreated;
+   bool _useShaders;
    int _nSlices;
    int _tUnit;
    float _alpha;
@@ -75,18 +80,31 @@ protected:
    void _buildGraph();
    void _createClipNode();
    void _createStateSet();
-   void _attachTextureToStateSet();
+   void _attachTextureToStateSet(osg::StateSet* ss);
    void _createTexGenNode();
    void _createVolumeSlices();
    void _buildAxisDependentGeometry();
 
+   char* _shaderDirectory;
    cfdTextureManager* _tm;
 #ifdef _OSG
+#ifdef CFD_USE_SHADERS
+   void _setupCGShaderPrograms(osg::StateSet *ss, 
+                     char* fragProgramFileName,
+                     char* fragFunctionName);
+   void _initVolumeShader();
+   void _initTransferFunctionShader();
+#endif
    osg::ref_ptr<osg::Group>_volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
    osg::BoundingBox _bbox;
    osg::ref_ptr<osg::ClipNode> _clipNode;
    osg::ref_ptr<osg::StateSet> _stateSet;
+
+   osg::ref_ptr<osg::StateSet> _scalarFragSS;
+   osg::ref_ptr<osg::StateSet> _transferFunctionFragSS;
+   osg::ref_ptr<osg::StateSet> _advectionFragSS;
+
    osg::ref_ptr<osg::Material> _material;
    osg::ref_ptr<osg::Texture3D> _texture;
    osg::ref_ptr<osg::Image> _image;

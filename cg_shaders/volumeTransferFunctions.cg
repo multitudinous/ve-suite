@@ -1,0 +1,51 @@
+struct f2app{
+   float4 color : COLOR;
+};
+
+
+ f2app densityTransfer(float4 color : COLOR,
+                float3 texCoord:TEXCOORD0,
+                uniform sampler1D mat1Func:TEXUNIT0,
+                 uniform sampler1D mat2Func:TEXUNIT1,
+                 uniform sampler1D mat3Func:TEXUNIT2,
+                 uniform sampler1D mat4Func:TEXUNIT3,
+                 uniform sampler3D densityTexture:TEXUNIT4
+                 ) 
+{
+   f2app retColor;
+   //fixed vMag = tex3D(velocity,texCoord).w;
+   
+   //get the density for each material
+   fixed4 density = tex3D(densityTexture,texCoord);
+   
+   //look up the opacity for each material using their
+   //current density
+   fixed4 opacity;
+   
+   //now create the colors for each material
+   opacity = tex1D(mat3Func,density.z);
+   //opacity.g = tex1D(mat2Func,density.y).g;
+   //opacity.b = tex1D(mat1Func,density.x).b;
+   //opacity.a = tex1D(mat4Func,density.w).x;
+
+   //fixed4 red = fixed4(density.z,0,0,density.z);
+   fixed4 gray = fixed4(density.x,density.x,density.x,density.x);
+   //multiply the velocity magnitude mask from the opacity here!!!
+   //to modify the rgb channels for each color but not alpha!!!
+   //opacity.r = opacity.r *vMag;
+   //opacity = tex1D(mat1Func,density.x);
+   //float4 green = float4(0,0,0,0);//.5,.5,.5,opacity.g);
+   //float4 blue = float4(0,0,opacity.b,opacity.b);
+   //float4 yellow = float4(0,0,0,0);//opacity.a,opacity.a,0,opacity.a);
+
+
+   //sum up for total frag color
+   retColor.color =gray;/*red;float4(texCoord.x,texCoord.y,texCoord.z,1); float4(density.w,density.y,density.z,.5); + green + blue + yellow*/;
+   //retColor.color.xyz = density.xyz;
+   //retColor.color.w = 1.0;
+ 
+   
+   return retColor;
+}
+
+

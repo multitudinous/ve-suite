@@ -1,0 +1,16 @@
+struct f2app{
+   float4 color : COLOR;
+};
+
+//simple shader to look up texture value in a 3d texture
+f2app fp_volume(float4 color : COLOR,
+                 float3 texCoord:TEXCOORD0,
+                 uniform sampler3D volumeData) 
+{
+   //no blending here just decal mode
+   f2app retColor;
+   retColor.color = tex3D(volumeData,texCoord);
+   return retColor;
+}
+
+

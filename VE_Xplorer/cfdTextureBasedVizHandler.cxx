@@ -28,7 +28,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _activeTM = 0;
    _parent = 0;
    _currentBBox = 0;
-   _cleared = false;
+   _cleared = true;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -195,8 +195,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
             _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ZPLANE);
             _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ARBITRARY);
             //remove the volviz node from the tree. . .
-            osg::ref_ptr<osg::Group> groupPtr = (osg::Group*)_parent->GetRawNode();
-            ((osg::Group*)_parent->GetRawNode())->removeChild(0,1);//_activeVolumeVizNode->GetVolumeVisNode().get());
+            ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
          }
          _activeTM = 0;
          _cleared = true;
@@ -257,10 +256,14 @@ void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetTextureManager(_activeTM);
          _activeVolumeVizNode->CreateNode();
+#ifdef CFD_USE_SHADERS
+         //testing for now
+        _activeVolumeVizNode->EnableVolumeShader();
+#endif
          //need to move/switch
          if(_parent){
             if(!((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get())&&!_cleared){
-             //this may not be right
+               //this may not be right
                ((osg::Group*)_parent->GetRawNode())->addChild(_activeVolumeVizNode->GetVolumeVisNode().get());
                _cleared = false;
             }

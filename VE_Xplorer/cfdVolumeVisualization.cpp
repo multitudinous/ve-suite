@@ -4,6 +4,11 @@
 #elif _OPENSG
 #elif _OSG
 #include <iostream>
+#ifdef CFD_USE_SHADERS
+#include <osgNVCg/Context>
+#include <osgNVCg/Program>
+#include <osgNVCg/CgGeometry>
+#endif
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
 #include <osg/ClipNode>
@@ -40,6 +45,8 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _verbose = 0;
    _tm = 0;
    _isCreated = false;
+   _useShaders = false;
+   _shaderDirectory = 0;
 }
 /////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
@@ -62,6 +69,13 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _tm = rhs._tm;
    _image = rhs._image;
    _isCreated = rhs._isCreated;
+   _scalarFragSS  = rhs._scalarFragSS;
+   _transferFunctionFragSS =  rhs._transferFunctionFragSS;
+   _advectionFragSS =  rhs._advectionFragSS;
+   
+   _shaderDirectory = new char[strlen(rhs._shaderDirectory)+1];
+   strcpy(_shaderDirectory,rhs._shaderDirectory);
+
 }
 //////////////////////////////////////////////////
 cfdVolumeVisualization::~cfdVolumeVisualization()
@@ -75,7 +89,97 @@ cfdVolumeVisualization::~cfdVolumeVisualization()
       delete _utCbk;
       _utCbk = 0;
    }
+   if(_shaderDirectory){
+      delete [] _shaderDirectory;
+      _shaderDirectory = 0;
+   }
 }
+//////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::SetShaderDirectory(char* shadDir)
+{
+   if(_shaderDirectory){
+      delete [] _shaderDirectory;
+      _shaderDirectory = 0;
+   }
+   _shaderDirectory = new char[strlen(shadDir)+1];
+   strcpy(_shaderDirectory,shadDir);
+}
+#ifdef CFD_USE_SHADERS
+/////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::_setupCGShaderPrograms(osg::StateSet *ss, 
+                                              char* fragProgramFileName,
+                                              char* fragFunctionName)
+{
+   // create fragment program
+	osgNVCg::Program *fprog = new osgNVCg::Program(osgNVCg::Program::FP30);
+	fprog->setFileName(fragProgramFileName);
+	fprog->setEntryPoint(fragFunctionName);
+
+	//apply the shaders to state set
+	ss->setAttributeAndModes(fprog);
+}
+///////////////////////////////////////////////
+void cfdVolumeVisualization::_initVolumeShader()
+{
+   //load the shader file 
+   char directory[1024];
+   if(_shaderDirectory){
+      strcpy(directory,_shaderDirectory);
+   }else{
+      strcpy(directory,"../cg_shaders/");
+   }
+   strcat(directory,"fragVol.cg");
+   _scalarFragSS = new osg::StateSet();
+   _scalarFragSS->setTextureAttributeAndModes(0,_texture.get(), 
+                             osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+   _scalarFragSS->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+   _scalarFragSS->setMode(GL_BLEND,osg::StateAttribute::ON);
+
+   osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+   bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+   _scalarFragSS->setAttributeAndModes(bf.get());
+   _scalarFragSS->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+   _setupCGShaderPrograms(_scalarFragSS.get(),directory,"fp_volume");
+
+}
+//////////////////////////////////////////////////////////
+void cfdVolumeVisualization::_initTransferFunctionShader()
+{
+   //load the shader file 
+   char directory[1024];
+   if(_shaderDirectory){
+      strcpy(directory,_shaderDirectory);
+   }else{
+      strcpy(directory,"../cg_shaders/");
+   }
+   /*here we need a class to init/manager the transfer functions
+     should be a simple class!!!
+   */
+   strcat(directory,"volumeTransferFunctions.cg");
+   _transferFunctionFragSS = new osg::StateSet();
+   _transferFunctionFragSS->setTextureAttributeAndModes(0,_texture.get(), 
+                             osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+   _setupCGShaderPrograms(_transferFunctionFragSS.get(),directory,"densityTransfer");
+
+}
+//////////////////////////////////////////////////
+void cfdVolumeVisualization::EnableVolumeShader()
+{
+   _useShaders = true;
+   if(_texGenParams.valid()&&_scalarFragSS.valid()){
+      _attachTextureToStateSet(_scalarFragSS.get());
+      _texGenParams->setStateSet(_scalarFragSS.get());
+   }
+}
+///////////////////////////////////////////////////
+void cfdVolumeVisualization::DisableVolumeShader()
+{
+   _useShaders = false;
+   if(_texGenParams.valid()&&_stateSet.valid()){
+      _attachTextureToStateSet(_stateSet.get());
+   }
+}
+#endif
 //////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetPlayMode(VisMode mode)
 {
@@ -225,28 +329,7 @@ osg::ref_ptr<osg::Texture3D> cfdVolumeVisualization::GetTextureData()
       return 0;
    }
 }
-////////////////////////////////////////////////////////////////////
-cfdVolumeVisualization&
-cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
-{
-   if(&rhs != this){
-      _vSSCbk = rhs._vSSCbk;
-      _utCbk = rhs._utCbk;
-      _volumeVizNode = rhs._volumeVizNode;
-      _texGenParams = rhs._texGenParams;
-      _bbox = rhs._bbox;
-     
-      _stateSet = rhs._stateSet;
-      _material = rhs._material;
-      _texture = rhs._texture;
-      _slices = rhs._slices;
-      _nSlices = rhs._nSlices;
-      _alpha = rhs._alpha;
-      _tUnit = rhs._tUnit;
-      _tm = rhs._tm;
-   }
-   return *this;
-}
+
 /////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetVeboseFlag(bool flag)
 {
@@ -438,7 +521,7 @@ void cfdVolumeVisualization::_createStateSet()
 			 bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
 			 _stateSet->setAttributeAndModes(bf.get());
 			 _stateSet->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-         _attachTextureToStateSet();
+         _attachTextureToStateSet(_stateSet.get());
       }else{
          //state set is already created/set by user
          if(_verbose){
@@ -451,26 +534,27 @@ void cfdVolumeVisualization::_createStateSet()
    }
    
 }
-///////////////////////////////////////////////////////
-void cfdVolumeVisualization::_attachTextureToStateSet()
+////////////////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 {
-   if(_stateSet.valid()){
+   if(ss){
       if(_texture.valid()){
          if(!_utCbk){
             _utCbk =  new cfdUpdateTextureCallback();
-         }
-         _utCbk->SetTextureManager(_tm);
-         _utCbk->SetDelayTime(1.0);
          
-         int* res = _tm->fieldResolution();
-         _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
-         _texture->setSubloadCallback(_utCbk);
-         _stateSet->setTextureAttributeAndModes(_tUnit,_texture.get(),
+            _utCbk->SetTextureManager(_tm);
+            _utCbk->SetDelayTime(1.0);
+         
+            int* res = _tm->fieldResolution();
+            _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
+            _texture->setSubloadCallback(_utCbk);
+         }
+         ss->setTextureAttributeAndModes(_tUnit,_texture.get(),
 			                        osg::StateAttribute::ON);
-         _stateSet->setTextureMode(_tUnit,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
-         _stateSet->setTextureMode(_tUnit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
-         _stateSet->setTextureMode(_tUnit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
-         _stateSet->setTextureAttributeAndModes(_tUnit,new osg::TexEnv(osg::TexEnv::REPLACE),
+         ss->setTextureMode(_tUnit,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
+         ss->setTextureMode(_tUnit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
+         ss->setTextureMode(_tUnit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
+         ss->setTextureAttributeAndModes(_tUnit,new osg::TexEnv(osg::TexEnv::REPLACE),
 		                             osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
       }
    }else{
@@ -624,18 +708,20 @@ void cfdVolumeVisualization::CreateNode()
 //////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()
 {
-   _volumeVizNode = new osg::Group();
+    _volumeVizNode = new osg::Group();
+   _volumeVizNode->setDataVariance(osg::Object::DYNAMIC);
    _createTexGenNode();
    _createStateSet();
    _createVolumeSlices();
    _createVisualBBox();
    _createClipNode();
    _isCreated = true;
+#ifdef CFD_USE_SHADERS
+   _initVolumeShader();
+#endif
    if(_texGenParams.valid()){
       if(_stateSet.valid()){
          _texGenParams->setStateSet(_stateSet.get());
-      }else{
-         _isCreated = false;
       }
       
       _volumeVizNode->addChild(_texGenParams.get());
@@ -664,8 +750,53 @@ void cfdVolumeVisualization::_buildGraph()
       }else{
          _isCreated = false;
       } 
+   }else{
+      _isCreated = false;
    }
    
+}
+////////////////////////////////////////////////////////////////////
+cfdVolumeVisualization&
+cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
+{
+   if(&rhs != this){
+      _vSSCbk = rhs._vSSCbk;
+      _utCbk = rhs._utCbk;
+      _volumeVizNode = rhs._volumeVizNode;
+      _texGenParams = rhs._texGenParams;
+      _bbox = rhs._bbox;
+     
+      _stateSet = rhs._stateSet;
+      _material = rhs._material;
+      _texture = rhs._texture;
+      _slices = rhs._slices;
+      _nSlices = rhs._nSlices;
+      _alpha = rhs._alpha;
+      _tUnit = rhs._tUnit;
+      _tm = rhs._tm;
+      _scalarFragSS  = rhs._scalarFragSS;
+      _transferFunctionFragSS =  rhs._transferFunctionFragSS;
+      _advectionFragSS =  rhs._advectionFragSS;
+
+      
+      _mode = rhs._mode;
+      _traverseDirection = rhs._traverseDirection;
+      _stateSet = rhs._stateSet;
+   
+      _verbose = rhs._verbose;
+   
+      _image = rhs._image;
+      _isCreated = rhs._isCreated;
+      if(_shaderDirectory){
+         delete [] _shaderDirectory;
+         _shaderDirectory = 0;
+      }
+      _shaderDirectory = new char[strlen(rhs._shaderDirectory)+1];
+      strcpy(_shaderDirectory,rhs._shaderDirectory);
+   
+   
+   }
+   return *this;
 }
 #endif
 
