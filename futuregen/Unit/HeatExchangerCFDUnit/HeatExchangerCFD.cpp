@@ -280,13 +280,15 @@ bool HeatExchangerCFD::execute (Gas *gas_in, Gas *gas_out, Types::Profile_var &p
             chi2 = (1.0-yfrac)*prof->profile_vals[ich][ivar1] + yfrac*prof->profile_vals[ich][ivar2];
             tt2 = (1.0-yfrac)*prof->profile_vals[itt][ivar1] + yfrac*prof->profile_vals[itt][ivar2];
             
-            u_vel = (1.0-zfrac)*v_vel1 + zfrac*v_vel2;
-            v_vel = (1.0-zfrac)*u_vel1 + zfrac*u_vel2;
+            u_vel = (1.0-zfrac)*u_vel1 + zfrac*u_vel2; // these were reversed
+            v_vel = (1.0-zfrac)*v_vel1 + zfrac*v_vel2; // these were reversed
             w_vel = -((1.0-zfrac)*w_vel1 + zfrac*w_vel2);
             eff = (1.0-zfrac)*eff1 + zfrac*eff2;
             eta = (1.0-zfrac)*eta1 + zfrac*eta2;
             chi = (1.0-zfrac)*chi1 + zfrac*chi2;
             tt = (1.0-zfrac)*tt1 + zfrac*tt2;
+
+			if(u_vel<0.0) u_vel *= -1.0; //add by maguire
 
             fprintf(inlet,
                "%4d\t%4d\t%4d\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%4d\t%4d\t\n",
