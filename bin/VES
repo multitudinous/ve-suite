@@ -1,78 +1,92 @@
 #!/usr/bin/tcsh -f
 
 # Set environment variables and paths for running the program
-source /isv/VE_Suite/20041118/VE_Installer/setup.deere.tsh
+source /isv/VE_Suite/20050107/VE_Installer/setup.deere.tsh
 # Set additional environment variables
 setenv MY_VJCONFIGS /isv/Juggler/deere.config/vrj2.0a4
 #cp ${VE_SUITE_HOME}/VE_Conductor/class_files/config/${HOST}.comm.config ${VE_SUITE_HOME}/VE_Conductor/class_files/config/comm.config
 setenv OMNIORB_CONFIG ${MY_VJCONFIGS}/${HOST}.omniORB4.cfg
 setenv OMNINAMES_LOGDIR ${OMNI_HOME}/logs
+#setenv PFNFYLEVEL 5
+#setenv VPR_DEBUG_NFY_LEVEL 2
+#setenv VPR_DEBUG_ENABLE 1
+
+# set based on where you are running in deere
+setenv TAO_MACHINE `host ${HOST} | awk '{print $1}'`
+setenv TAO_PORT 1235
 
 # VE_Suite needs vrjuggler to not find these files.
 # The VES start script will rename the files by adding .bak
 # The TApp253 start script will rename the files by removing the .bak
 if ( -e ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc.so ) then
-mv ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc.so ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc.so.bak
+mv ${VJ_BASE_DIR}/lib32/jccl/plugins ${VJ_BASE_DIR}/lib32/jccl/plugins.bak
 echo "Hiding corba_rtrc.so"
 endif
-if ( -e ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc_d.so ) then
-mv ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc_d.so ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc_d.so.bak
-echo "Hiding corba_rtrc_d.so"
+if ( -e ${VJ_BASE_DIR}/lib32/vrjuggler/plugins/corba_perf_mon_d.so ) then
+mv ${VJ_BASE_DIR}/lib32/jccl/plugins ${VJ_BASE_DIR}/lib32/jccl/plugins.bak
+echo "Hiding corba_perf_mon_d.so"
 endif
 
 switch ($1)
 
   case -c:
     sgi_use_anyaddr \
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/icecube.base.jconf \
-    ${MY_VJCONFIGS}/icecube.displays.closed.jconf \
-    ${MY_VJCONFIGS}/icecube.mstar.jconf \
-    ${MY_VJCONFIGS}/icecube.rfwand.jconf 
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    ${MY_VJCONFIGS}/${HOST}.base.jconf \
+    ${MY_VJCONFIGS}/${HOST}.displays.closed.jconf \
+    ${MY_VJCONFIGS}/${HOST}.mstar.jconf \
+    ${MY_VJCONFIGS}/rfwand.jconf 
   breaksw
   
   case -cf:
     sgi_use_anyaddr \
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/icecube.base.jconf \
-    ${MY_VJCONFIGS}/icecube.displays.closed.jconf \
-    ${MY_VJCONFIGS}/icecube.mstar.headless.jconf \
-    ${MY_VJCONFIGS}/icecube.rfwand.jconf 
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    ${MY_VJCONFIGS}/${HOST}.base.jconf \
+    ${MY_VJCONFIGS}/${HOST}.displays.closed.jconf \
+    ${MY_VJCONFIGS}/${HOST}.mstar.headless.jconf \
+    ${MY_VJCONFIGS}/rfwand.jconf 
   breaksw
   
   case -d:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
+    sgi_use_anyaddr \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/sim.base.jconf \
     ${MY_VJCONFIGS}/sim.wand.mixin.jconf 
   breaksw
   
   case -o:
     sgi_use_anyaddr \
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/icecube.base.jconf \
-    ${MY_VJCONFIGS}/icecube.displays.open.jconf \
-    ${MY_VJCONFIGS}/icecube.mstar.jconf \
-    ${MY_VJCONFIGS}/icecube.rfwand.jconf 
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    ${MY_VJCONFIGS}/${HOST}.base.jconf \
+    ${MY_VJCONFIGS}/${HOST}.displays.open.jconf \
+    ${MY_VJCONFIGS}/${HOST}.mstar.jconf \
+    ${MY_VJCONFIGS}/rfwand.jconf 
   breaksw
   
   case -of:
     sgi_use_anyaddr \
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/icecube.base.jconf \
-    ${MY_VJCONFIGS}/icecube.displays.open.jconf \
-    ${MY_VJCONFIGS}/icecube.mstar.headless.jconf \
-    ${MY_VJCONFIGS}/icecube.rfwand.jconf 
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    ${MY_VJCONFIGS}/${HOST}.base.jconf \
+    ${MY_VJCONFIGS}/${HOST}.displays.open.jconf \
+    ${MY_VJCONFIGS}/${HOST}.mstar.headless.jconf \
+    ${MY_VJCONFIGS}/rfwand.jconf 
   breaksw
   
   case -nserv:
-	killall omniNames
-	rm ${OMNINAMES_LOGDIR}/omninames-${HOST}.log
-	rm ${OMNINAMES_LOGDIR}/omninames-${HOST}.bak
-    omniNames -start &
+	killall Naming_Service 
+	killall Exe_server 
+	${TAO_HOME}/IRIX32/bin/Naming_Service -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
+	sleep 5
+	Exe_server -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &
+  breaksw
+  
+  case -shutdown:
+	killall Naming_Service 
+	killall Exe_server 
   breaksw
   
   case -menu:
-    ve_conductor
+    WinClient -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
   breaksw
 
   case -surface:
@@ -151,7 +165,9 @@ switch ($1)
   echo "  "-meshView = view any vtk file
   echo " "-scalRange = view scalar range of any vtk file
   echo "       "-doc = view documentation for setting up a CFD post process case
+  echo "  "-shutdown = shutdown VE-CE and TAO NameService
   echo ""
   
 endsw
+
 
