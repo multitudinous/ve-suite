@@ -690,12 +690,17 @@ void GasifierCFD::load_and_run_glacier()
      using  dlopen()  together with the RTLD_GLOBAL flag.  As the
      latter set of objects can change during  process  execution,
      the set identified by handle can also change dynamically. */
-  
+  //For windows, the counter part of dlopen will be included in the conditional comple part
   // Initialize global glacier pointer to this
+  //LoadDLL, GetSym is the window's version of the dl operation of linux
   GAS_GLACIER_PTR = this;
 
   const char *errmsg;
+#ifndef WIN32
   void *glacier_handle;
+#else
+  HINSTANCE glacier_handle;
+#endif
   
   void (*close_io_func)();
   void (*glacier_func)(gas_abort_status_fp,
@@ -731,12 +736,22 @@ void GasifierCFD::load_and_run_glacier()
   
   std::string glac_lib = "./Glacier/make_glacier/glacier_gasifier.so";
 
+#ifndef WIN32
   glacier_handle = dlopen(glac_lib.c_str(), RTLD_NOW);
-  if(glacier_handle==NULL){
+#else
+  glacier_handle = LoadLibrary(glac_lib.c_str());
+#endif
+
+  if(glacier_handle=='\0'){
+#ifndef WIN32
     cerr<<"Failed to load lib: "<<dlerror()<<endl;
+#else
+    cerr<<"Failed to open dll: "<<glac_lib<<endl;
+#endif
     return;
   }
-  
+
+#ifndef WIN32
   dlerror();  // clear errors
 
   ((void*)glacier_func) = dlsym(glacier_handle,"start_glacier");
@@ -744,6 +759,13 @@ void GasifierCFD::load_and_run_glacier()
     cerr<<"Didn't find glacier in so: "<<errmsg<<endl;
     return;
   }
+#else
+  ((void*)glacier_func) =  GetProcAddress(glacier_handle,"start_glacier");
+  if(glacier_func=='\0'){
+    cerr<<"Didn't find start_glacier in dll: "<<glac_lib<<endl;
+    return;
+  }
+#endif
   
   glacier_func(gas_abort_status_,
 	       gas_load_scirun_groups_,
@@ -769,16 +791,28 @@ void GasifierCFD::load_and_run_glacier()
 	       gas_update_dbfile_,
 	       gas_load_scirun_slag_,
  	       gas_load_scirun_flags_);
-  
+
+#ifndef WIN32  
   dlerror();  // clear errors
   ((void*)close_io_func) = dlsym(glacier_handle,"close_io_");
   if((errmsg=dlerror())!=NULL){
     cerr<<"Didn't find close_io in so: "<<errmsg<<endl;
     return;
   }
+#else
+  ((void*)close_io_func) = GetProcAddress(glacier_handle,"close_io_");
+  if(close_io_func=='\0'){
+    cerr<<"Didn't find close_io_ in dll: "<<glac_lib<<endl;
+    return;
+  }
+#endif
 
   close_io_func();
+#ifndef WIN32
   dlclose(glacier_handle); 
+#else
+  FreeLibrary(glacier_handle);
+#endif
 
   // Back to what?
    if(chdir("../../../../../../../build")) {

@@ -16,6 +16,7 @@ typedef pair<FloatVector, YDataMap> profile_map_pair;
 typedef map<string, profile_map_pair> profile_map;
 typedef map<string, profile_map_pair>::iterator profile_map_iter;
 
+#ifndef WIN32
 extern "C"
 {
   void histfit_ (double *ps, double *pmf, double *passed_areas, int *size,
@@ -23,6 +24,15 @@ extern "C"
   void createbins_(double *ps, double *pmf, double *passed_areas, int *size,
 		   double *m1, double *sg);
 }
+#else 
+extern "C"
+{
+  void __stdcall HISTFIT (double *ps, double *pmf, double *passed_areas, int *size,
+		 double *percent_through_100, double *percent_through_200);
+  void __stdcall CREATEBINS(double *ps, double *pmf, double *passed_areas, int *size,
+		   double *m1, double *sg);
+}
+#endif //ifdef WIN32
 
 class GasifierCFD {
 
