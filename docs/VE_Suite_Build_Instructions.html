@@ -18,11 +18,11 @@
 
       <p class=bodytext><a href="http://msdn.microsoft.com/visualc/productinfo/">Visual Studio 7.1(2003)</a> to compile the C++ code.</p>
 
-      <p class=bodytext><a href="http://sgi.com/software/performer">OpenGL Performer (3.1.1)</a> to manage the scenegraph.</p>
+      <p class=bodytext><a href="http://sgi.com/software/performer/downloads.html">OpenGL Performer (3.1.1)</a> to manage the scenegraph (the demo edition is fine).</p>
 
       <p class=bodytext><a href="http://vtk.org/get-software.php#interim">VTK (4.4)</a> to render the visualization objects.</p>
 
-      <p class=bodytext><a href="http://www.cmake.org/HTML/Download.html">CMake (2.0.3)</a> to build vtk.</p>
+      <p class=bodytext><a href="http://www.cmake.org/files/v2.0/CMSetup202.exe">CMake 2.0.2 Windows (Installer)</a> to install CMake needed to build vtk project files. (We recommend 2.0.2 because we have seen install issues with CMake 2.0.3)</p>
 
       <p class=bodytext><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71.zip?download">VRJuggler (2.0alpha4.win32-vc71)</a> for management of the virtual environment.</p>
 
@@ -41,22 +41,35 @@
 
       <li class=bodytext><p class=bodytext>While the default locations for installations will work, we recommend creating a directory in the root (C:\) directory to minimize the path lengths and the accompanying potential for typos when configuring environment settings.</p>
 
-      <li class=bodytext><p class=bodytext>For windows, VTK must be built using CMake to create the VTK project and .sln files.</p>
+      <li class=bodytext><p class=bodytext>After TortoiseSVN is installed, you can check out the code provided you have an account registered with ISU’s repository. Create a VE_Suite folder. Go to VE_Suite folder and right-mouse click, choose "Checkout...". For URL, enter https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite.</p>
 
-      <li class=bodytext><p class=bodytext>There may be a bug in compiling VTK when using CMake 2.0.3. If errors occur in the compile, we recommend downloading CMake 2.0.2 from the <a href="http://www.cmake.org/files/v2.0/">archive</a> section of the kitware webpage for a work around.</p>
+      <p class=bodytextemph>vtk-specific notes<span class=bodytext>
 
-      <li class=bodytext><p class=bodytext>When configuring CMake to build VTK, we recommend making a separate directory (such as VTK4.4) in the same directory as the VTK folder.&nbsp; Inside this directory, make another directory labeled bin and use this as the install path when configuring CMake to build VTK.</p>
+      <li class=bodytext><p class=bodytext>After downloading the compressed vtk source code and the CMake installer, unzip the vtk source to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease and run CMSetup202.exe to install CMakeSetup.</p>
 
-      <li class=bodytext><p class=bodytext>When building the solution file (VTK.sln), there have been some path problems when the project tries to find the library files that are put in the VTK_HOME\bin\cmake\debug directory. The easiest fix for this is to copy all of the .dll files in this directory to the parent directory (VTK_HOME\bin\cmake).</p>
+      <li class=bodytext><p class=bodytext>Go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease. You will have a "VTK" folder containing the vtk source code. Create two additional folders: "build" and "install".</p>
 
-      <li class=bodytext><p class=bodytext>When configuring CMake for building VTK, there are three flags that need to be changed from their default value (&#8220;off&#8221;) to &#8220;on&#8221;:</p>
+      <li class=bodytext><p class=bodytext>Run CMakeSetup, and enter C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\VTK as source code location and C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\build as the place to build the binaries. Check the box "Show Advanced Values" and press "Configure".</p>
+
+      <li class=bodytext><p class=bodytext>Change some options from their default values:</p>
       <ol>
-      <li class=bodytext><p class=bodytext>shared libs</p>
-      <li class=bodytext><p class=bodytext>hybrid libs</p>
-      <li class=bodytext><p class=bodytext>parallel libs</p>
+      <li class=bodytext><p class=bodytext>BUILD_SHARED_LIBS to ON</p>
+      <li class=bodytext><p class=bodytext>BUILD_TESTING to OFF</p>
+      <li class=bodytext><p class=bodytext>CMAKE_INSTALL_PREFIX to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\install</p>
+      <li class=bodytext><p class=bodytext>VTK_USE_HYBRID to ON</p>
+      <li class=bodytext><p class=bodytext>VTK_USE_PARALLEL to ON</p>
       </ol>
 
-      <li class=bodytext><p class=bodytext>After building VTK, make sure that you build the &#8220;Install&#8221; project.&nbsp; Some users have needed to copy the .dll files from VTK-4.4-LatestRelease\bin\CMake\Debug folder to the VTK-4.4-LatestRelease\bin\CMake folder (copy them up one directory).</p>
+      <li class=bodytext><p class=bodytext>Press "Configure" (possibly need to do it twice), then "OK".</p>
+
+      <li class=bodytext><p class=bodytext>Go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\build. Double click on "VTK.sln"".</p>
+
+      <li class=bodytext><p class=bodytext>Left-click on ALL_BUILD, then right-click and select "Build".</p>
+
+      <li class=bodytext><p class=bodytext>When the build is finished, go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\build\CMake\Debug and move the .dll files up one level.</p>
+
+      <li class=bodytext><p class=bodytext>Return to Visual Studio and left-click on INSTALL, then right-click and select "Build".</p>
+
       </ul>
 </dl>
 
