@@ -138,13 +138,6 @@ void cfdApp::exit()
       delete this->_modelHandler;
    }
 
-   /*if ( this->ihccModel )
-   {
-      vprDEBUG(vprDBG_ALL,2)  
-        << "deleting this->ihccModel" << std::endl << vprDEBUG_FLUSH;
-      //delete this->ihccModel;
-   }*/
-
 #ifdef _TAO
    if ( this->executive ) 
    {
@@ -156,6 +149,8 @@ void cfdApp::exit()
 
    if ( this->_vjobsWrapper != NULL )
    {
+      vprDEBUG(vprDBG_ALL,2)  
+        << "deleting this->_vjobsWrapper" << std::endl << vprDEBUG_FLUSH;
       delete this->_vjobsWrapper;
    }
 }
@@ -194,9 +189,7 @@ inline void cfdApp::preSync( )
   vprDEBUG(vprDBG_ALL,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
 }
 #endif
-cfdApp::~cfdApp()
-{
-}
+
 #ifdef _OSG
 void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 {
@@ -403,7 +396,7 @@ void cfdApp::preFrame( void )
 #ifdef _TAO
       this->executive->UnbindORB();
 #endif // _TAO
-      vrj::Kernel::instance()->stop(); // Stopping kernel using the inherited member variable
+      vrj::Kernel::instance()->stop(); // Stopping kernel 
    }
 
 #ifdef _TAO

@@ -448,7 +448,7 @@ void cfdExecutive::GetEverything( void * )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been intialized! " << std::endl << vprDEBUG_FLUSH;     
+      vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been intialized! " <<  std::endl << vprDEBUG_FLUSH;     
    }
       updateNetworkString = false;
    }
@@ -499,10 +499,10 @@ void cfdExecutive::UpdateModules( void )
    {
       if ( ui_i->GetCalcFlag() )
       {
-         vpr::System::msleep( 500 );  // half-second delay
+         vpr::System::msleep( 50 );  // half-second delay
          while ( updateNetworkString )
          {
-            vpr::System::msleep( 500 );  // half-second delay
+            vpr::System::msleep( 50 );  // half-second delay
          }
 
          this->updateNetworkString = true;
@@ -513,7 +513,7 @@ void cfdExecutive::UpdateModules( void )
             // by the get everythign Thread.
             // We actually need to move that code here so 
             // so that we don't have this while loop
-            vpr::System::msleep( 500 );  // half-second delay
+            vpr::System::msleep( 50 );  // half-second delay
          }
       }
    }

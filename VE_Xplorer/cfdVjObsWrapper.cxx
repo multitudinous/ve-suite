@@ -87,7 +87,11 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
 #ifdef _TAO
    child_poa->destroy(1,1);
 #endif // _TAO
+   this->_orbPtr->shutdown(0);
    this->_orbPtr->destroy();
+   vprDEBUG(vprDBG_ALL,1) 
+      << " End VjObsWraper Destructor  " 
+      << std::endl << vprDEBUG_FLUSH;
 }
 
 #ifdef _TAO

@@ -73,7 +73,7 @@ class cfdApp: public vrj::OsgApp
    public:
       //cfdApp( vrj::Kernel* kern);
       cfdApp( void );//vrj::Kernel* kern );
-      ~cfdApp( void );
+      ~cfdApp( void ) { ; }
      
       // Initialize the scene graph
       virtual void initScene( );
