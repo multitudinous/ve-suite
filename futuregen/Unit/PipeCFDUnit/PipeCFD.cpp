@@ -299,19 +299,22 @@ void PipeCFD::load_geom(int* fni,int* fnj,int* fnk,int* fnx,int* fny,int* fnz,
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void PipeCFD::load_scirun_pd(float *pd, float *pmf, int *nps, int *numstr) {
+void PipeCFD::load_scirun_pd(float *pd, float *pmf, int *nps, int *numstr)
+{
 
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void PipeCFD::load_scirun_wics(float *wic, int *j, int *nlm, int *np, int *nel) {
+void PipeCFD::load_scirun_wics(float *wic, int *j, int *nlm, int *np, int *nel)
+{
 
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void PipeCFD::load_scirun_groups(float *f, float *t, float *p, int *Istage) {
+void PipeCFD::load_scirun_groups(float *f, float *t, float *p, int *Istage)
+{
 
   // *Istage = 1; one stage gasifier
   // *Istage = 2; two stage gasifier
@@ -326,13 +329,15 @@ void PipeCFD::load_scirun_groups(float *f, float *t, float *p, int *Istage) {
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void PipeCFD::load_scirun_hhv(float *omegal, float *yy, float *omegaa, float *hc0) {
+void PipeCFD::load_scirun_hhv(float *omegal, float *yy, float *omegaa, float *hc0)
+{
 
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void PipeCFD::load_scirun_coal(float *coal_flows) {
+void PipeCFD::load_scirun_coal(float *coal_flows)
+{
 
 }
 

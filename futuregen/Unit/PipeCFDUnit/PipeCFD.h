@@ -21,10 +21,8 @@ class PipeCFD {
 public:
   PipeCFD ();
   ~PipeCFD ();
-  
 
   bool execute (Gas *ox_in, Gas *gas_out, summary_values *summaries);
-  void parse_levels (string level_data);
 
   void load_and_run_glacier();
   GasCell outlet_cell(int i, int j, int k, int face,
