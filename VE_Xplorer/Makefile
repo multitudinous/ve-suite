@@ -176,6 +176,7 @@ SRCS=\
    cfdTextOutput.cxx \
    cfdTextureBasedModel.cxx \
    cfdTextureBasedVizHandler.cxx \
+   cfdTextureMatrixCallback.cxx \
    cfdTextureManager.cxx \
    cfdThread.cxx \
    cfdUpdateTextureCallback.cpp \
