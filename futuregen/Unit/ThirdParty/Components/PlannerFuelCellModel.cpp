@@ -6,7 +6,7 @@
 #include "PlannerFuelCellModel.h"
 #include "cmath"
 #include <string>
-
+#include <stdio.h>
 namespace Vision21 {
 
 

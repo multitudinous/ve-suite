@@ -6,6 +6,7 @@
 #include "GasPhaseModel.h"
 #include "SeparatorPlate.h"
 #include "math.h"
+#include <stdio.h>
 
 
 namespace Vision21 {

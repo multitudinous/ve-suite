@@ -213,7 +213,7 @@ char * Body_Unit_i::GetUserData (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" :GetUserData called"<<endl;
+    //std::cout<<UnitName_<<" :GetUserData called"<<endl;
     return CORBA::string_dup(data_.c_str());
   }
   
@@ -229,7 +229,7 @@ void Body_Unit_i::SetParams (
     // Add your implementation here
     if (string(param)=="")
       return;
-    std::cout<<UnitName_<<" :SetParams called"<<endl;
+//    std::cout<<UnitName_<<" :SetParams called"<<endl;
     Package p;
         
     p.SetSysId("gui.xml");
@@ -263,7 +263,7 @@ void Body_Unit_i::SetID (
   {
     // Add your implementation here
     id_=id;
-    std::cout<<UnitName_<<" :SetID called"<<endl;
+//    std::cout<<UnitName_<<" :SetID called"<<endl;
   }
   
 CORBA::Long Body_Unit_i::GetID (
@@ -275,7 +275,7 @@ CORBA::Long Body_Unit_i::GetID (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" :GetID called"<<endl;
+//    std::cout<<UnitName_<<" :GetID called"<<endl;
     return id_;
   }
   
@@ -290,7 +290,7 @@ void Body_Unit_i::SetName (
   {
     // Add your implementation here
     UnitName_ = std::string(name);
-    std::cout<<UnitName_<<" :SetName called"<<endl;
+//    std::cout<<UnitName_<<" :SetName called"<<endl;
   }
   
 char * Body_Unit_i::GetName (
@@ -302,7 +302,7 @@ char * Body_Unit_i::GetName (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" :GetName called"<<endl;
+//    std::cout<<UnitName_<<" :GetName called"<<endl;
     return CORBA::string_dup(UnitName_.c_str());
   }
 

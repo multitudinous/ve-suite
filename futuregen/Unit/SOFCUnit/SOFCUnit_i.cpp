@@ -253,9 +253,9 @@ void Body_Unit_i::StartCalc (
     executive_->SetModuleResult(id_, result); //marks the end the execution
     
     
-    delete igas1;
-    delete igas2;
-    delete ogas;
+    delete gas_in_anode;
+    delete gas_in_cathode;
+    delete gas_out_data;
     
     
     std::cout<<"cp6\n";

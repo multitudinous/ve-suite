@@ -8,6 +8,7 @@
 #include "CathodeGasModel.h"
 #include "cmath"
 #include "cfloat"
+#include <stdio.h>
 
 
 namespace Vision21 {

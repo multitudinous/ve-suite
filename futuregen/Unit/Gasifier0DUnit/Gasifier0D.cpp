@@ -614,9 +614,13 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
   double pct_thru_50  = _size_50;
   double pct_thru_200 = _size_200;
 
+#ifndef WIN32
   histfit_(dpo, modpo, passed_areas, &ndpo, &pct_thru_50, &pct_thru_200);
   createbins_(dpo_c, modpo_c, passed_areas, &ndpo, &_char_size, &_char_sd);
-
+#else
+  HISTFIT(dpo, modpo, passed_areas, &ndpo, &pct_thru_50, &pct_thru_200);
+  CREATEBINS(dpo_c, modpo_c, passed_areas, &ndpo, &_char_size, &_char_sd);
+#endif
   double dp_mean = 0.0;
   double dp_var  = 0.0;
 

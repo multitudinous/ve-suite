@@ -466,7 +466,7 @@ double surface_chem::kfRxnI(const int i, double& Temp) {
 	}
 	else if(rxn.fStick) {
 #if WIN32
-		double gamma = _MIN(1.0, kf);
+		double gamma = min(1.0, kf);
 #else
 		double gamma = min(1.0, kf);
 #endif

@@ -92,8 +92,12 @@ void Body_Unit_i::StartCalc (
     double passed_areas[19] = {0.05, 0.2, 0.5, 0.2, 0.05, 0.0, 0.0,0.00, 0.00,
 			       0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0};
     int n1 = n;
+#ifndef WIN32
     createbins_(diameters_mid, fract_size, passed_areas, &n1, &mean, &sd);
-    
+#else
+    CREATEBINS(diameters_mid, fract_size, passed_areas, &n1, &mean, &sd);
+#endif
+
     double new_part_flow_rate=0.0,collected_flow_rate=0.0;	
     
     std::vector<double> etas(n);

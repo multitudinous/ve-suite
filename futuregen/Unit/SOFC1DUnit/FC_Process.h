@@ -31,8 +31,6 @@ public:
 
 private:
 
-  static const int BUFFER_MAX = 4098;
-
   int get_token(char* current_line, vector<string>& toks);
   int get_token2(char* current_line, vector<string>& toks);
   bool match(const string& s1, const string& s2);
@@ -41,6 +39,8 @@ private:
   vector<string> names;
   vector<double> values;
   char flag;
+
+#define BUFFER_MAX 4096 
 };
 
 } // end namespace Vision21

@@ -1,6 +1,6 @@
 #ifndef UNIT_I_H_
 #define UNIT_I_H_
-
+#include <winsock2.h> //have to include this to prevent the windows.h's mess up with winsock.h
 #include "V21Helper.h"
 #include <ThirdParty/Reks/reks_container.h>
 #include <ThirdParty/Reks/reks.h>

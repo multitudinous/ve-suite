@@ -4,7 +4,7 @@
 #include "Sp_dbase.h"
 #include "cmath"
 #include "cfloat"
-
+#include <stdio.h>
 
 namespace Vision21 {
 
