@@ -706,8 +706,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
    this->runIntraParallelThread = true;
    this->vjTh[0] = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread ) );
 
-   std::cout << "|  9. Initializing..................................... Text Output |" << std::endl;
-   this->textOutput = new cfdTextOutput();
+   //std::cout << "|  9. Initializing..................................... Text Output |" << std::endl;
+   //this->textOutput = new cfdTextOutput();
 }
 
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )
@@ -795,7 +795,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          if ( !computeActorsAndGeodes && !alreadyRemoved )
          {
             alreadyRemoved = true;
-            cfdPfSceneManagement::instance()->GetRootNode()->RemoveChild( textOutput->add_text( "executing..." ) );
+            //cfdPfSceneManagement::instance()->GetRootNode()->RemoveChild( textOutput->add_text( "executing..." ) );
          }
       }
    }
@@ -817,7 +817,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                                    << " to _activeObject"
                                    << std::endl << vprDEBUG_FLUSH;
 
-            cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
+            //cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
             this->_activeObject = this->dataList[ i ];
             
             if ( this->_activeObject->GetObjectType() == IMAGE_EX )

@@ -30,12 +30,17 @@ tecplotReader::~tecplotReader()
    delete [] measurement; measurement = NULL;
    delete [] absVel; absVel = NULL;
 }
-/*vtkUnstructuredGrid**/ void tecplotReader::tecplotToVTK( char* inFileName, char* outFileName, int debug, int nx, int ny )
+vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
 {
    int numChars;
    numChars = 0;
-   nX = nx;
-   nY = ny;
+   std::cout<<"Enter the number of vertices in X"<<std::endl;
+   std::cin>>nX;
+   std::cout<<"Enter the number of vertices in Y"<<std::endl;
+   std::cin>>nY;
+
+   //nX = nx;
+   //nY = ny;
    numCells = (nX-1)*(nY-1);
    numVertices = nX*nY;
    x = new double [nX*nY];
@@ -60,7 +65,6 @@ tecplotReader::~tecplotReader()
    parameterData[ 2 ]->SetNumberOfTuples( 2*nX*nY );   
    parameterData[ 2 ]->SetName( "Absolute Velocity" );
    std::cout<<"Input file        :"<<inFileName<<std::endl
-            <<"Output file       :"<<outFileName<<std::endl
             <<"Number of  cells  :"<<numCells<<std::endl
             <<"Number of Vertices:"<<nX*nY<<std::endl;
    //check existence of file
@@ -135,7 +139,9 @@ tecplotReader::~tecplotReader()
       }
       // Set selected scalar and vector quantities to be written to pointdata array
       letUsersAddParamsToField( 3, parameterData, uGrid->GetPointData() );
-      writeVtkThing( uGrid, outFileName, 0 );
+      vtkUnstructuredGrid* finalUGrid = vtkUnstructuredGrid::New();
+
+      finalUGrid->DeepCopy( uGrid );
       for ( int i=0;i<3;i++ )
       {
          parameterData[ i ]->Delete();
@@ -146,7 +152,9 @@ tecplotReader::~tecplotReader()
       uGrid = NULL;
       pts->Delete();
       pts = NULL;
-      //return uGrid;
+
+
+      return finalUGrid;
    }
 }
 

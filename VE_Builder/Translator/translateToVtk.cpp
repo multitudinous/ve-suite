@@ -75,6 +75,7 @@ int retainEveryNthFrame = 1;
 plot3dReader   *plot3d;
 starReader     *star;
 ansysReader * reader = NULL;
+tecplotReader * _tecPlotReader = NULL;
 
 char * preprocess( int argc, char *argv[], 
                    int type, vtkTransform *aTransform, int & number ) 
@@ -505,7 +506,7 @@ int main( int argc, char *argv[] )
                 << "\t(11)John Deere EnSight Data" << "  " 
                 << "(12)ANSYS rst binary data\n"
                 << "\t(0)exit" <<std::endl;
-      cfdType = fileIO::getIntegerBetween( 0, 12 );
+      cfdType = fileIO::getIntegerBetween( 0, 13 );
    }
    else
    {
@@ -604,6 +605,12 @@ int main( int argc, char *argv[] )
       reader->ReadSolutionDataHeader();
       reader->ReadNodalSolutions();
       pointset = reader->GetUGrid();
+   }
+
+   else if ( cfdType == 13 )
+   {
+      _tecPlotReader = new tecplotReader();
+      pointset = _tecPlotReader->tecplotToVTK( infilename, debug ); 
    }
 /*
    else if (cfdType == 5)        // PIV

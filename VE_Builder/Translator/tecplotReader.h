@@ -37,6 +37,6 @@ class tecplotReader
    public:
          tecplotReader();
          ~tecplotReader();
-         /*vtkUnstructuredGrid**/ void tecplotToVTK( char* inFileName, char* outFileName, int debug, int nx, int ny );
+         vtkUnstructuredGrid* tecplotToVTK( char* inFileName, int debug );
 };
 #endif //TECPLOTREADER_H
