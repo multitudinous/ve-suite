@@ -82,15 +82,17 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    {
       std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }
+   this->_orbPtr->destroy();
 }
 
 #ifdef _TAO
-void cfdVjObsWrapper::init( CosNaming::NamingContext* input, int argc, char* argv[]  )
+void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr, int argc, char* argv[]  )
 #else
-void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, int argc, char* argv[]  )
+void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr orbPtr, int argc, char* argv[]  )
 #endif
 {
    naming_context = input;
+   _orbPtr = orbPtr;
 #ifdef _CLUSTER
    //int argc;
    //char** argv;

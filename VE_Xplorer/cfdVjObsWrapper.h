@@ -42,6 +42,11 @@ namespace CosNaming
 {
    class NamingContext;
 }
+
+namespace CORBA
+{
+   class ORB;
+}
 #else
 #include <omniORB4/CORBA.h>
 #endif
@@ -54,9 +59,9 @@ class cfdVjObsWrapper
       cfdVjObsWrapper( void );
       ~cfdVjObsWrapper( void );
 #ifdef _TAO
-      void init( CosNaming::NamingContext*, int, char** );
+      void init( CosNaming::NamingContext*, CORBA::ORB*, int, char** );
 #else
-      void init( CosNaming::NamingContext_ptr, int, char** );
+      void init( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, int, char** );
 #endif
       cfdCommandArray* GetCommandArray( void );
       double GetShortArray( int );
@@ -71,8 +76,10 @@ class cfdVjObsWrapper
       void GetUpdateClusterStateVariables( void );
 #ifdef _TAO
       CosNaming::NamingContext* naming_context;
+      CORBA::ORB* _orbPtr;
 #else
       CosNaming::NamingContext_ptr naming_context;
+      CORBA::ORB_ptr _orbPtr;
 #endif
       VjObs_i* _vjObs;
 };

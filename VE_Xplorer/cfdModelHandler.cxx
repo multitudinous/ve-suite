@@ -39,7 +39,6 @@
 
 #include "cfdDCS.h"
 #include "cfdGroup.h"
-#include "cfdObjects.h"
 #include "cfdDataSet.h"
 #include "fileIO.h"
 #include "cfdModel.h"
@@ -113,11 +112,6 @@ void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
 {
    // Must be set before PreFrameUpdate is called
    commandArray = input;
-}
-
-cfdObjects* cfdModelHandler::GetActiveSequence( void )
-{
-   return activeSequenceObject;
 }
 
 cfdDataSet* cfdModelHandler::GetActiveDataSet( void )
@@ -220,7 +214,7 @@ void cfdModelHandler::InitScene( void )
       strcpy( oldDatasetName, activeDataset->GetFileName() );
       vprDEBUG(vprDBG_ALL,1) << "cfdModelHandler: Setting active dataset to " 
                << activeDataset->GetFileName() << " , " 
-               << oldDatasetName << endl << vprDEBUG_FLUSH;
+               << oldDatasetName << std::endl << vprDEBUG_FLUSH;
    }
 
    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
@@ -378,7 +372,6 @@ void cfdModelHandler::PreFrameUpdate( void )
    else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) >= CONTOUR ) && 
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) <= PARTICLE_TRANSIENT ) )
    {
-      //cout << _activeModel << endl;
       // for the active model, change opaque geometries to transparent
       if ( _activeModel != NULL )
       {

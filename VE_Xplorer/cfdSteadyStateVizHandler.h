@@ -60,6 +60,7 @@ class cfdDCS;
 class vtkPolyData;
 class cfdNavigate;
 class cfdCursor;
+class cfdTempAnimation;
 
 class cfdSteadyStateVizHandler
 {
@@ -78,6 +79,7 @@ class cfdSteadyStateVizHandler
       void SetWorldDCS( cfdDCS* );
       void SetNavigate( cfdNavigate* );
       void SetCursor( cfdCursor* );
+      cfdTempAnimation* GetActiveAnimation( void );
 
    private:
       cfdPolyData*         surface;
@@ -115,6 +117,7 @@ class cfdSteadyStateVizHandler
       cfdDCS*     _worldDCS;
       cfdDCS*     _activeDataSetDCS;
       cfdObjects* _activeObject;
+      cfdTempAnimation* _activeTempAnimation;
 
       // Classes and variables for multithreading.
       vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler >* vjThFunc[1];

@@ -64,7 +64,7 @@ int main(int argc, char* argv[])
    poa_manager->activate();
 
    cfdVjObsWrapper* vjobsWrapper = new cfdVjObsWrapper();
-   vjobsWrapper->init( naming_context.in(), argc, argv );
+   vjobsWrapper->init( naming_context.in(), orb.in(), argc, argv );
    cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
    orb->run();

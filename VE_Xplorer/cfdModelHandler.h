@@ -33,7 +33,6 @@
 #define CFD_MODELHANDLER_H
 
 class cfdDCS;
-class cfdObjects;
 class cfdDataSet;
 class cfdModel;
 class cfdCommandArray;
@@ -52,8 +51,6 @@ class cfdModelHandler
    
       void InitScene( void );
       void PreFrameUpdate( void );
-      cfdObjects* GetActiveObject( void );
-      cfdObjects* GetActiveSequence( void );
       cfdDataSet* GetActiveDataSet( void );
       void SetCommandArray( cfdCommandArray* );
       void CreateObjects( void );      
@@ -68,8 +65,6 @@ class cfdModelHandler
    private:
       char* _param;
       cfdDCS* worldNode;
-      cfdObjects* activeObject;
-      cfdObjects* activeSequenceObject;
       cfdDataSet* activeDataset;
       cfdCommandArray* commandArray;
       cfdReadParam* _readParam;

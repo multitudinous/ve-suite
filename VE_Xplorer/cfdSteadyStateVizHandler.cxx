@@ -108,6 +108,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
    this->_activeDataSetDCS = NULL;
    this->_activeObject = NULL;
    this->lastSource = NULL;
+   this->_activeTempAnimation = NULL;
 
    this->computeActorsAndGeodes = false;
    this->actorsAreReady = false;
@@ -370,6 +371,10 @@ void cfdSteadyStateVizHandler::SetCursor( cfdCursor* input )
       exit( 1 );
    }
    cursor = input;
+}
+cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
+{
+   return this->_activeTempAnimation;
 }
 ////////////////////
 
