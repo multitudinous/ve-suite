@@ -276,7 +276,11 @@ Matrix44f cfdDCS::GetMat( void )
 #elif _OSG
    osg::Matrixf osgMat= _dcs->getMatrix();
    if(osgMat.valid()){
-      _vjMatrix.set(osgMat.ptr());
+   gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
+   _vjMatrix.set( osgMat.ptr() );
+   gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
+   gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+      //_vjMatrix.set(osgMat.ptr());
    }else{
       std::cout<<"Invalid matrix!!"<<std::endl;
       std::cout<<"cfdDCS::GetMat()"<<std::endl;
