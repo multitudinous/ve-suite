@@ -20,7 +20,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\futuregen\IDL&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Plugin&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\futuregen\IDL&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Plugin&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\skel&quot;"
 				PreprocessorDefinitions="WIN32;_WINDOWS;_DEBUG;WINVER=0x400;_MT;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
@@ -230,13 +230,13 @@
 				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\Plugin\interface.h">
 			</File>
 			<File
-				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\IDL\moduleC.h">
+				RelativePath="..\..\VE_Conductor\skel\moduleC.h">
 			</File>
 			<File
-				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\IDL\moduleS.h">
+				RelativePath="..\..\VE_Conductor\skel\moduleS.h">
 			</File>
 			<File
-				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\IDL\moduleS_T.h">
+				RelativePath="..\..\VE_Conductor\skel\moduleS_T.h">
 			</File>
 			<File
 				RelativePath=".\OPPDUnit.h">
