@@ -3185,7 +3185,6 @@ int main(int argc, char* argv[])
 
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
 
-//#ifdef TABLET
    int temp = 0;
 
 #ifdef _TAO
@@ -3209,12 +3208,9 @@ int main(int argc, char* argv[])
     PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_object.in());
     PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
     poa_manager->activate ();
-//#endif
 
    cfdApp* application = new cfdApp( kernel );  // Delcare an instance of my application
    application->SetCORBAVariables( naming_context.in(), orb.in(), poa.in() );
-
-//#ifdef TABLET
 
 #ifdef _CLUSTER
 
@@ -3270,8 +3266,6 @@ int main(int argc, char* argv[])
      }
 #endif //the _CLUSTER
 
-//#endif //the TABLET
-	
    for ( int i = 1; i < argc; i++ )          // Configure the kernel
      {
        kernel->loadConfigFile( argv[i] );
