@@ -8,14 +8,13 @@
 #include <iostream>
 #include <cmath>
 #include "Sulfur_Polisher.h"
-#include <Packages/REI/Core/Datatypes/Gas.h>
+
 
 using std::cout;
 using std::endl;
 
 namespace Vision21 {
 
-using namespace REI;
 
 Sulfur_Polisher::Sulfur_Polisher() 
 {

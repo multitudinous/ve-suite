@@ -10,14 +10,12 @@
 #ifndef SULFUR_POLISHER_H
 #define SULFUR_POLISHER_H
 
-#include <Packages/REI/Core/Datatypes/Gas.h>
+#include <V21Helper/Datatypes/Gas.h>
 
 using std::cout;
 using std::endl;
 
 namespace Vision21 {
-
-using namespace REI;
 
 class Sulfur_Polisher {
 
