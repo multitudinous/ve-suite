@@ -1,5 +1,6 @@
 #include "UI_ModSelPanel.h"
 #include "UI_Frame.h"
+#include "UI_ModelData.h"
 
 
 BEGIN_EVENT_TABLE(UI_ModSelScroll, wxScrolledWindow)
@@ -17,13 +18,18 @@ UI_ModSelScroll::UI_ModSelScroll(wxWindow* parent)
    int nPixY = 10;
    SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
-   wxString _models[2];
-   _models[0] = wxT("Static App");
-   _models[1] = wxT("OPPD Room 19");
+   int _numModels = ((UI_ModSelPanel *)GetParent())->_modelData->GetNumberOfModels();
+
+   wxString _models[_numModels];
+   
+   for ( int i=0; i<_numModels; i++)
+      _models[i] = wxT(((UI_ModSelPanel *)GetParent())->_modelData->GetModelName(i));
+   
 
    _modelSelBox = new wxRadioBox(this, RBOX_MODEL_SELECT, wxT("VE Models"), 
-                                 wxDefaultPosition, wxDefaultSize, 2, 
+                                 wxDefaultPosition, wxDefaultSize, _numModels, 
                                  _models, 1, wxRA_SPECIFY_COLS);
+
    wxBoxSizer* _col = new wxBoxSizer(wxVERTICAL);
    _col->Add(_modelSelBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    SetSizer(_col);
@@ -41,9 +47,11 @@ END_EVENT_TABLE()
 //////////////////////////////////////////////////
 //Constructor                                   //
 //////////////////////////////////////////////////
-UI_ModSelPanel::UI_ModSelPanel(wxWindow* parent)
+UI_ModSelPanel::UI_ModSelPanel(wxWindow* parent, UI_ModelData* _model)
 :wxPanel(parent)
 {
+   _modelData = _model;
+
    _modselScroll = new UI_ModSelScroll(this);
 
    wxBoxSizer* _col = new wxBoxSizer(wxVERTICAL);
@@ -60,6 +68,6 @@ UI_ModSelPanel::~UI_ModSelPanel()
 void UI_ModSelPanel::_onModSelect()
 {
    ((UI_Frame *)GetParent())->activeModIndex = _modselScroll->_modelSelBox->GetSelection();
-   ((UI_Frame *)GetParent())->Reload();
+   ((UI_Frame *)GetParent())->OnChangeModel();
 }
 

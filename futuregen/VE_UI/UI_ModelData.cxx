@@ -53,6 +53,19 @@ UI_ModelData::~UI_ModelData( void )
 {
 }
 
+wxString UI_ModelData::GetModelName( int input )
+{
+   CORBA::ULong i = input;
+   wxString _modelName = wxT("model_ " + input);
+   return _modelName;
+   //return &(_models[ i ].modelname);
+}
+
+short UI_ModelData::GetNumberOfModels( void )
+{
+   return (*_models).length();
+}
+
 short UI_ModelData::GetNumberOfGeomFiles( int input )
 {
    CORBA::ULong i = input;
@@ -67,7 +80,7 @@ VjObs::scalar_p*  UI_ModelData::GetGeomFilenames( int input)
 
 short UI_ModelData::GetNubmerofDataSets( int input )
 {
-   cout<<input<<" : "<<_models->length();
+   cout<<input<<" : "<<_models->length()<<endl;
    CORBA::ULong i = input;
    return _models[ i ].datasetnames.length();
 }

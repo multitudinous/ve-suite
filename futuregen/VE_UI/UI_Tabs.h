@@ -8,6 +8,7 @@
 #include "wx/notebook.h"
 #ifdef _TAO
 #include "VjObsC.h"
+#include "VjObsS.h"
 #else
 #include "VjObs.h"
 #endif
@@ -60,6 +61,8 @@ public:
 
    //set active dataset
    void setActiveDataset(int whichDataset);
+
+   void rebuildTabPages(int activeModIndex);
 
    UI_ModelData* _modelData;
    int _activeModIndex;

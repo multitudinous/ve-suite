@@ -12,6 +12,7 @@
 #include <vector>
 #ifdef _TAO
 #include "VjObsC.h"
+#include "VjObsS.h"
 #else
 #include "VjObs.h"
 #endif
@@ -153,10 +154,10 @@ public:
    wxBoxSizer* _col3;
    wxBoxSizer* _col4;
 
-   VjObs::scalar_p_var datasetNames;
+   /*VjObs::scalar_p_var datasetNames;
    VjObs::obj_p_var datasetTypes;
    VjObs::obj_p_var numScalarsPerDataset;
-   VjObs::scalar_p_var scalarNames;
+   VjObs::scalar_p_var scalarNames;*/
 
    void _setScalars(UI_DataSets*);
    void _rebuildDataSets(int);

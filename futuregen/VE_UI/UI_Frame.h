@@ -40,7 +40,7 @@ public:
    //the events to handle
    void OnTabsEvent(wxNotebookEvent& event);
    void OnIdleEvent(wxIdleEvent& event);
-   void Reload( void );
+   void OnChangeModel( void );
 
    //UI_DatasetTab* _datasetPage;
    //UI_ScalarTab* _scalartab;

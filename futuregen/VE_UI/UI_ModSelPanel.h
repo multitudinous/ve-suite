@@ -14,6 +14,7 @@
 
 using namespace std;
 class UI_Frame;
+class UI_ModelData;
 
 enum MODSEL_PANEL_IDS{
    RBOX_MODEL_SELECT
@@ -33,10 +34,12 @@ public:
 
 class UI_ModSelPanel: public wxPanel{
 public:
-   UI_ModSelPanel(wxWindow* parent);
+   UI_ModSelPanel(wxWindow* parent, UI_ModelData* _model);
    ~UI_ModSelPanel();
 
    UI_ModSelScroll* _modselScroll;
+
+   UI_ModelData* _modelData;
   
    void _onModSelect();
 

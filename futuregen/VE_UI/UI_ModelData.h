@@ -34,9 +34,12 @@
 
 #ifdef _TAO
 #include "VjObsC.h"
+#include "VjObsS.h"
 #else
 #include "VjObs.h"
 #endif
+#include <wx/wx.h>
+
 
 class UI_ModelData
 {
@@ -45,7 +48,9 @@ class UI_ModelData
       ~UI_ModelData( void );
       //UI_ModelData( const UI_ModelData& );
       //UI_ModelData& operator=( const UI_ModelData& );
-      
+ 
+      wxString GetModelName( int );     
+      short GetNumberOfModels( void );
       short GetNumberOfGeomFiles( int );
       VjObs::scalar_p*  GetGeomFilenames( int );
       short GetNubmerofDataSets( int );

@@ -481,6 +481,108 @@ void UI_Tabs::createTabPages()
    //SetSelection(0);
 }
 
+
+///////////////////////////////////////////
+void UI_Tabs::rebuildTabPages( int activeMod )
+{
+   cGeo_state = 0;
+   cIso_value = 0;
+   cMin = 0;
+   cMax = 0;
+   cSc = 0;
+
+   _activeModIndex = activeMod;
+
+   _visPage = 0;
+   _vectorPage = 0;
+   _streamlinePage = 0;
+   _navPage = 0;
+
+   num_geo = _modelData->GetNumberOfGeomFiles(_activeModIndex);
+   std::cout << "geo number: " << num_geo << std::endl;
+
+   geoNameArray = _modelData->GetGeomFilenames(_activeModIndex);
+
+   // Get Number of Sound Files
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      num_sounds = server_ref->GetNumberOfSounds();
+   }
+   else
+   {
+      num_sounds = 0;
+   }
+
+   std::cout << "number of sound files: " << num_sounds << std::endl;
+   if( num_sounds > 0 ){
+      soundNameArray = server_ref->GetSoundNameArray();
+   }
+
+   // Get Number of Teacher Files
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      num_teacher = server_ref->get_teacher_num();
+   }
+   else
+   {
+      num_teacher = 0;
+   }
+   
+   std::cout << "teacher number: "
+               << num_teacher << std::endl;
+   if( num_teacher > 0 ) 
+   {
+      teacher_attrib = server_ref->get_teacher_name();
+   }
+   cTeacher_state = 0;
+
+   cPre_state = 0;
+   cout<<"here1"<<endl;
+   //Visualization page
+   _visPage = new UI_VisualizationTab(this);
+   AddPage( _visPage, _T("Visualization"), true);
+cout<<"here2"<<endl;
+   //Geometry page
+   _geometryPage = new UI_GeometryTab(this);
+   AddPage( _geometryPage, _T("Geometry"), false );
+cout<<"here2"<<endl;
+   //Sounds page
+   _soundPage = new UI_SoundTab(this);
+   AddPage( _soundPage, _T("Sounds"), false );
+cout<<"here2"<<endl;
+   //Streamlines page
+   _streamlinePage = new UI_StreamlineTab(this);
+   AddPage( _streamlinePage, _T("Streamlines"), false );
+cout<<"here2"<<endl;
+   //Teacher page
+   _teacherPage = new UI_TeacherTab(this);
+   AddPage( _teacherPage, _T("Teacher"), false );
+cout<<"here2"<<endl;
+   //Vectors page
+   _vectorPage = new UI_VectorTab(this);
+   AddPage( _vectorPage, _T("Vectors"), false );
+cout<<"here2"<<endl;
+   //Navigation page
+   _navPage = new UI_NavigationTab(this);
+   AddPage( _navPage, _T("Navigation"), false );
+cout<<"here2"<<endl;  
+   //Navigation page
+   _transPage = new UI_TransTab(this);
+   AddPage( _transPage, _T("Transient"), false );
+   //Navigation page
+   _vertPage = new UI_VertTab(this);
+   AddPage( _vertPage, _T("Vertex"), false );
+
+   //Viewing Locations page
+   //_viewlocPage = new UI_ViewLocTab(this);
+   //AddPage( _viewlocPage, _T("View Points"), false );
+cout<<"here2"<<endl;
+   //Design Parameters page
+   _designparPage = new UI_DesignParTab(this);
+   AddPage( _designparPage, _T("Design Parameters"), false );
+cout<<"here2"<<endl;
+}
+
 ///////////////////////////////////////////
 void UI_Tabs::sendDataArrayToServer( void )
 {

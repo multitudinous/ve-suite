@@ -3,6 +3,7 @@
 using namespace std;
 #ifdef _TAO
 #include "VjObsC.h"
+#include "VjObsS.h"
 #include <orbsvcs/CosNamingC.h>
 #else
 #include "VjObs.h"
@@ -24,7 +25,7 @@ UI_Frame::UI_Frame(wxWindow* parent, wxWindowID id,
    _appParent = wxT( "DirectVE" );
    buildCORBA();
 
-   _modelData = new UI_ModelData(vjobs);
+   _modelData = new UI_ModelData(vjobs.in());
    
    buildFrame();
 
@@ -38,7 +39,7 @@ UI_Frame::UI_Frame(VjObs_ptr ref,wxWindow* parent, wxWindowID id,
 {
    
    vjobs = VjObs::_duplicate(ref);
-   _modelData = new UI_ModelData(vjobs);
+   _modelData = new UI_ModelData(vjobs.in());
    buildFrame();
    //_appParent = new wxString( "Framework" );
    _appParent = wxT( "Framework" );
@@ -157,7 +158,7 @@ void UI_Frame::buildFrame( )
    _datasetSizer->Add(_datasetPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //_scalarSizer->Add(_scalartab,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   _modselPanel = new UI_ModSelPanel(this);
+   _modselPanel = new UI_ModSelPanel(this, _modelData);
    _tabs->cSc = activeModIndex;         // using zero-based scalar counting
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
    _tabs->sendDataArrayToServer();
@@ -206,33 +207,20 @@ UI_Frame::~UI_Frame()
 	
 }
 
-void UI_Frame::Reload( void )
+void UI_Frame::OnChangeModel( void )
 {
-   
-   //_datasetSizer->Remove(_datasetPanel);
-   //_frameSizer->Remove(_datasetSizer);
-   //_datasetPanel = NULL;
-   //delete _datasetPanel;
-
-   
-   //_tabsSizer->Remove(_tabs);
-   //_frameSizer->Remove(_tabsSizer);
-   //_tabs = NULL;
-   //delete _tabs;
-cout<<"test1"<<endl;
-   //_datasetPanel = new UI_DatasetPanel(this, _modelData, activeModIndex);
-   _datasetPanel->_rebuildDataSets(activeModIndex);
-cout<<"test2"<<endl;
-   //_tabs = new UI_Tabs( vjobs.in(), this, _modelData, activeModIndex);
-cout<<"test3"<<endl;
-   //_tabs->createTabPages();
-cout<<"test4"<<endl;
    //_tabs->cSc = activeModIndex;         // using zero-based scalar counting
    //_tabs->cId  = CHANGE_ACTIVE_MODEL;
    //_tabs->sendDataArrayToServer();
+cout<<"test1"<<endl;
+   _datasetPanel->_rebuildDataSets( activeModIndex );
+   _tabs->DeleteAllPages();   
+cout<<"test2"<<endl;
+   _tabs->rebuildTabPages( activeModIndex );
+cout<<"test3"<<endl;
+   
+cout<<"test4"<<endl;
 
-   //_datasetSizer->Prepend(_datasetPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   //_tabsSizer->Prepend(_tabs);
 
    SetSize(GetSize());
 

@@ -186,7 +186,8 @@ UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int a
  
    _buildPanel(); 
 
-   _setScalars(_DataSets[0]);   
+   if ( !_DataSets.empty() )
+	  _setScalars(_DataSets[0]);   
 }
 ///////////////////////////////
 //Destructor                 //
@@ -317,6 +318,18 @@ void UI_DatasetPanel::_buildPanel()
 
    //assign the group to the panel
    SetSizer(datasetPanelGroup);
+
+   _RBoxScroll->_3dRBox->Enable(TRUE);
+   _RBoxScroll->_vertexRBox->Enable(FALSE);
+   _RBoxScroll->_polydataRBox->Enable(FALSE);
+   for (int i=0; i<_numSteadyStateDataSets; i++)
+      if(_DataSets[i]->_dataSetType == 0 && _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
+      {
+         _setScalars(_DataSets[i]);
+         i = _numSteadyStateDataSets;
+      }
+      else
+         _setScalarsnoDatasets();
 }
 
 void UI_DatasetPanel::_buildDataSets( void )
@@ -326,16 +339,16 @@ void UI_DatasetPanel::_buildDataSets( void )
    
    _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex);
 
-   
+   cout<<"numdatasets: "<<_numSteadyStateDataSets<<endl;
 
    CORBA::ULong index = 0;
       
    if (_numSteadyStateDataSets > 0)
    {
-      datasetNames = _modelData->GetDataSetNames(_activeModIndex);
-      datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
-      numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
-      scalarNames = _modelData->GetScalarNames(_activeModIndex);  
+      VjObs::scalar_p_var datasetNames = _modelData->GetDataSetNames(_activeModIndex);
+      VjObs::obj_p_var datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
+      VjObs::obj_p_var numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
+      VjObs::scalar_p_var scalarNames = _modelData->GetScalarNames(_activeModIndex);  
 
       for (CORBA::ULong i = 0; i<_numSteadyStateDataSets; i++)
       {
@@ -368,35 +381,35 @@ void UI_DatasetPanel::_buildDataSets( void )
 void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
 {
    _activeModIndex = _activeMod;
-cout<<"test2"<<endl;
+
+   _DataSets.clear();   
    for (int i=0; i<_numSteadyStateDataSets; i++)
       delete _DataSets[i];
-   _DataSets.clear();
- cout<<"test3"<<endl;  
-   _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex);
-
- cout<<"test4"<<endl;  
-
+   //_DataSets.clear();
+   cout<<"numdatasets: "<<_numSteadyStateDataSets<<endl;
+   _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex); 
+   cout<<"numdatasets: "<<_numSteadyStateDataSets<<endl; 
    CORBA::ULong index = 0;
-      
+     
    if (_numSteadyStateDataSets > 0)
    {
-      datasetNames = _modelData->GetDataSetNames(_activeModIndex);
-      datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
-      numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
-      scalarNames = _modelData->GetScalarNames(_activeModIndex);  
-cout<<"test5"<<endl;
+      VjObs::scalar_p_var datasetNames = _modelData->GetDataSetNames(_activeModIndex);
+      VjObs::obj_p_var datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
+      VjObs::obj_p_var numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
+      VjObs::scalar_p_var scalarNames = _modelData->GetScalarNames(_activeModIndex);  
       for (CORBA::ULong i = 0; i<_numSteadyStateDataSets; i++)
       {
+cout<<"testd1"<<endl; 
          thisDataSet = new UI_DataSets();
+
          //thisDataSet->_dataSetName = tempTabs->datasetNames[i];
          thisDataSet->_dataSetName = datasetNames[i];
-         
+cout<<"testd1"<<endl;        
          thisDataSet->_dataSetType = datasetTypes[i];
-
+cout<<"testd1"<<endl; 
 		   wxString* thisDataScalarNames;
 		   thisDataScalarNames = new wxString[numScalarsPerDataset[i]];
-
+cout<<"testd2"<<endl;
          for (int k=0; k<numScalarsPerDataset[i]; k++)
          {
             thisDataScalarNames[k] = scalarNames[index];
@@ -404,7 +417,7 @@ cout<<"test5"<<endl;
          }
         
          thisDataSet->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
-         
+         cout<<"testd3"<<endl;
          _DataSets.push_back(thisDataSet);
 
          //clean up the names array
@@ -642,9 +655,7 @@ void UI_DatasetPanel::_on3d(wxCommandEvent& event)
          {
             _setScalars(_DataSets[i]);
             ((UI_Frame*)GetParent())->_tabs->setActiveDataset(i);
-         }
-         
-           
+         }           
 }
 
 void UI_DatasetPanel::_onVertex(wxCommandEvent& event)
