@@ -23,7 +23,8 @@ enum {
   DEL_MOD,
   SHOW_LINK_CONT,
   SHOW_RESULT,
-  SHOW_DESC
+  SHOW_DESC,
+  PARAVIEW
 };
 
 typedef struct {
@@ -67,6 +68,9 @@ class Network : public wxScrolledWindow
   GlobalParamDialog * globalparam_dlg;
 
   map<int, MODULE> modules; //The list of modules;
+  
+  bool paraview;
+
   void ReDrawAll();
   
   //Event Handlers
@@ -85,6 +89,7 @@ class Network : public wxScrolledWindow
   void OnDelMod(wxCommandEvent &event);
   void OnShowLinkContent(wxCommandEvent &event);
   void OnShowResult(wxCommandEvent &event);
+  void OnParaView(wxCommandEvent &event);
   void OnShowDesc(wxCommandEvent &event);	
   //Add to network fuctions
   void AddtoNetwork(REI_Plugin *new_mod, string cls_name);

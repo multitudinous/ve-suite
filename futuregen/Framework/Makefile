@@ -15,7 +15,7 @@ THREADS = none
 EXTRA_LIBS =  
 PREFIX = /usr/local
 
-include ${XERCESCROOT}/version.incl
+#include ${XERCESCROOT}/version.incl
 include ../Plugin/Makefile.incl
 
 ifndef TAO_ROOT
@@ -60,6 +60,7 @@ OBJECTS = StringParse.o \
 	PortDialog.o \
 	ResultPanel.o \
 	GlobalParamDialog.o \
+	paraThread.o \
 	../Plugin/string_ops.o \
 	../Plugin/interface.o \
 	../Plugin/package.o \

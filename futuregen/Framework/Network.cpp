@@ -3,6 +3,7 @@
 #include "PortDialog.h"
 #include <math.h>
 #include "package.h"
+#include "paraThread.h"
 
 IMPLEMENT_DYNAMIC_CLASS(Network, wxScrolledWindow);
 BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
@@ -21,6 +22,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
   EVT_MENU(DEL_MOD, Network::OnDelMod)
   EVT_MENU(SHOW_LINK_CONT, Network::OnShowLinkContent)
   EVT_MENU(SHOW_RESULT, Network::OnShowResult)
+  EVT_MENU(PARAVIEW, Network::OnParaView)
   EVT_MENU(SHOW_DESC, Network::OnShowDesc)
 END_EVENT_TABLE()
 
@@ -46,6 +48,7 @@ Network::Network(wxWindow* parent, int id)
   m_selTagCon = -1; 
   xold = yold =0;
   moving = false;
+  paraview = false;
   globalparam_dlg = new GlobalParamDialog(NULL, -1);;
   SetBackgroundColour(*wxWHITE);
 }
@@ -358,6 +361,7 @@ void Network::OnMRightDown(wxMouseEvent &event)
 
   pop_menu.Append(SHOW_DESC, "Show Module Description");	
   pop_menu.Append(SHOW_RESULT, "Show Module Result");
+  pop_menu.Append(PARAVIEW, "ParaView 3D Result");
   
   pop_menu.Append(SHOW_LINK_CONT, "Show Link Content");
 
@@ -368,6 +372,8 @@ void Network::OnMRightDown(wxMouseEvent &event)
   pop_menu.Enable(DEL_TAG, false);
   pop_menu.Enable(DEL_MOD, false);
   pop_menu.Enable(SHOW_RESULT, false);
+  pop_menu.Enable(PARAVIEW, false);
+
   pop_menu.Enable(SHOW_LINK_CONT, false);
 
   if (m_selLink>=0)
@@ -390,6 +396,8 @@ void Network::OnMRightDown(wxMouseEvent &event)
     {
       pop_menu.Enable(DEL_MOD, true);
       pop_menu.Enable(SHOW_RESULT, true);
+      if (modules[m_selMod].pl_mod->Has3Ddata())
+	pop_menu.Enable(PARAVIEW, true);
     };
     
   action_point = event.GetLogicalPosition(dc);
@@ -2797,7 +2805,7 @@ void  Network::OnShowResult(wxCommandEvent &event)
 }
 
 //////////////////////////////////////////////////////
-void  Network::OnShowDesc(wxCommandEvent &event)
+void Network::OnShowDesc(wxCommandEvent &event)
 {
   wxString desc;
   wxString title;
@@ -2813,3 +2821,12 @@ void  Network::OnShowDesc(wxCommandEvent &event)
 
 }
 
+void Network::OnParaView(wxCommandEvent &event)
+{
+  //wxArrayString output;
+  // ::wxExecute("paraview", wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+  //::wxShell("paraview");
+  paraThread* para_t=new paraThread(this);
+  para_t->Create();
+  para_t->Run();
+}

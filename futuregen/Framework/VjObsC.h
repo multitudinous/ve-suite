@@ -28,8 +28,8 @@
 // TAO_IDL - Generated from
 // be/be_codegen.cpp:186
 
-#ifndef _TAO_IDL___SKEL_VJOBSC_H_
-#define _TAO_IDL___SKEL_VJOBSC_H_
+#ifndef _TAO_IDL_VJOBSC_H_
+#define _TAO_IDL_VJOBSC_H_
 
 #include "tao/ORB.h"
 
