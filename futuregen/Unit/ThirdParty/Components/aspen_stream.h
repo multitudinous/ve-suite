@@ -4,12 +4,10 @@
 #ifndef _aspen_stream_h_
 #define _aspen_stream_h_
 
-#include <Packages/REI/Core/ThirdParty/Therm/thermo.h>
+#include <V21Helper/Therm/thermo.h>
 #include <vector>
 
 namespace Vision21 {
-
-using namespace REI;
 
 class aspen_stream
 {

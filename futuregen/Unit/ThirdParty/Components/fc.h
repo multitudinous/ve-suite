@@ -4,13 +4,12 @@
 #ifndef _fc_h_
 #define _fc_h_
 
-#include <Packages/REI/Core/ThirdParty/Therm/thermo.h>
+#include <V21Helper/Therm/thermo.h>
 #include "aspen_stream.h"
 #include <iostream>
 
 namespace Vision21 {
 
-using namespace REI;
 using namespace std;
 
 class fuel_cell
