@@ -1,0 +1,10 @@
+Mon, 14 Jun 2004 11:06:44 -0400 (EDT)
+
+Here is the code for the conversion.  The actual code for the procedure 
+has been taken directly from an example I modified and placed in its 
+own file.  As a result, I have yet to test whether or not this software 
+will compile or run properly, but since it's just a cut and paste, I 
+don't forsee a problem (unless I've neglected some includes).
+
+
+JMC
