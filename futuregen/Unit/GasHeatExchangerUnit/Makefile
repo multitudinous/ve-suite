@@ -57,9 +57,7 @@ OBJECTS = ../string_ops.o \
 	../V21Helper/Therm/matrix.o \
 	../V21Helper/Therm/stream.o \
 	../V21Helper/Therm/thermo.o  \
-	../V21Helper/Steam67/Steam67.o \
-	../ThirdParty/Math/logfit.o \
-	../ThirdParty/Components/cyclone.o
+	../V21Helper/Steam67/Steam67.o 
 
 .SUFFIXES : .o .cpp .cc	
 
