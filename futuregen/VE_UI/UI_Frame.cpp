@@ -205,24 +205,31 @@ UI_Frame::~UI_Frame()
 
 void UI_Frame::Reload( void )
 {
+   
+   //_datasetSizer->Remove(_datasetPanel);
    //_frameSizer->Remove(_datasetSizer);
-   _datasetSizer->Remove(_datasetPanel);
-   delete _datasetPanel;
+   //_datasetPanel = NULL;
+   //delete _datasetPanel;
 
+   
+   //_tabsSizer->Remove(_tabs);
    //_frameSizer->Remove(_tabsSizer);
-   _tabsSizer->Remove(_tabs);
-   delete _tabs;
+   //_tabs = NULL;
+   //delete _tabs;
+cout<<"test1"<<endl;
+   //_datasetPanel = new UI_DatasetPanel(this, _modelData, activeModIndex);
+   _datasetPanel->_rebuildDataSets(activeModIndex);
+cout<<"test2"<<endl;
+   //_tabs = new UI_Tabs( vjobs.in(), this, _modelData, activeModIndex);
+cout<<"test3"<<endl;
+   //_tabs->createTabPages();
+cout<<"test4"<<endl;
+   //_tabs->cSc = activeModIndex;         // using zero-based scalar counting
+   //_tabs->cId  = CHANGE_ACTIVE_MODEL;
+   //_tabs->sendDataArrayToServer();
 
-   _datasetPanel = new UI_DatasetPanel(this, _modelData, activeModIndex);
-
-   _tabs = new UI_Tabs( vjobs.in(), this, _modelData, activeModIndex);
-   _tabs->createTabPages();
-   _tabs->cSc = activeModIndex;         // using zero-based scalar counting
-   _tabs->cId  = CHANGE_ACTIVE_MODEL;
-   _tabs->sendDataArrayToServer();
-
-   _datasetSizer->Prepend(_datasetPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   _tabsSizer->Prepend(_tabs);
+   //_datasetSizer->Prepend(_datasetPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   //_tabsSizer->Prepend(_tabs);
 
    SetSize(GetSize());
 

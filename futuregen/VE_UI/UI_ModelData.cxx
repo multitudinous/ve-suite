@@ -67,6 +67,7 @@ VjObs::scalar_p*  UI_ModelData::GetGeomFilenames( int input)
 
 short UI_ModelData::GetNubmerofDataSets( int input )
 {
+   cout<<input<<" : "<<_models->length();
    CORBA::ULong i = input;
    return _models[ i ].datasetnames.length();
 }

@@ -17,7 +17,7 @@ UI_ModSelScroll::UI_ModSelScroll(wxWindow* parent)
    int nPixY = 10;
    SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
-   wxString _models[1];
+   wxString _models[2];
    _models[0] = wxT("Static App");
    _models[1] = wxT("OPPD Room 19");
 

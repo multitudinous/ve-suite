@@ -155,6 +155,7 @@ public:
    VjObs::scalar_p_var scalarNames;
 
    void _setScalars(UI_DataSets*);
+   void _rebuildDataSets(int);
 protected:
    void _buildDataSets();
    

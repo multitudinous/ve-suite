@@ -28,7 +28,9 @@ UI_DataSets::UI_DataSets()
 
 UI_DataSets::~UI_DataSets()
 {
-
+   for (int i=0; i<_numofScalars; i++)
+      delete _Scalars[i];
+   _Scalars.clear();
 }
 
 void UI_DataSets::_buildScalars(int _numScalars, wxString* scalarNames)
@@ -204,7 +206,7 @@ void UI_DatasetPanel::_buildPanel()
    _RBoxScroll = new UI_DatasetScroll(this);
   
 
-   _organizeActiveRBox();
+   //_organizeActiveRBox();
    
    /*_activeRBox = new wxRadioBox(this, ACTIVE_RBOX, wxT("Select Active Dataset Type"), 
                                 wxDefaultPosition, wxDefaultSize,
@@ -324,15 +326,66 @@ void UI_DatasetPanel::_buildDataSets( void )
    
    _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex);
 
-   datasetNames = _modelData->GetDataSetNames(_activeModIndex);
-   datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
-   numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
-   scalarNames = _modelData->GetScalarNames(_activeModIndex);  
+   
 
    CORBA::ULong index = 0;
       
    if (_numSteadyStateDataSets > 0)
    {
+      datasetNames = _modelData->GetDataSetNames(_activeModIndex);
+      datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
+      numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
+      scalarNames = _modelData->GetScalarNames(_activeModIndex);  
+
+      for (CORBA::ULong i = 0; i<_numSteadyStateDataSets; i++)
+      {
+         thisDataSet = new UI_DataSets();
+         //thisDataSet->_dataSetName = tempTabs->datasetNames[i];
+         thisDataSet->_dataSetName = datasetNames[i];
+         
+         thisDataSet->_dataSetType = datasetTypes[i];
+
+		   wxString* thisDataScalarNames;
+		   thisDataScalarNames = new wxString[numScalarsPerDataset[i]];
+
+         for (int k=0; k<numScalarsPerDataset[i]; k++)
+         {
+            thisDataScalarNames[k] = scalarNames[index];
+            index++;
+         }
+        
+         thisDataSet->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
+         
+         _DataSets.push_back(thisDataSet);
+
+         //clean up the names array
+         delete [] thisDataScalarNames;                     
+      }
+   } 
+}
+
+
+void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
+{
+   _activeModIndex = _activeMod;
+cout<<"test2"<<endl;
+   for (int i=0; i<_numSteadyStateDataSets; i++)
+      delete _DataSets[i];
+   _DataSets.clear();
+ cout<<"test3"<<endl;  
+   _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex);
+
+ cout<<"test4"<<endl;  
+
+   CORBA::ULong index = 0;
+      
+   if (_numSteadyStateDataSets > 0)
+   {
+      datasetNames = _modelData->GetDataSetNames(_activeModIndex);
+      datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
+      numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
+      scalarNames = _modelData->GetScalarNames(_activeModIndex);  
+cout<<"test5"<<endl;
       for (CORBA::ULong i = 0; i<_numSteadyStateDataSets; i++)
       {
          thisDataSet = new UI_DataSets();
@@ -491,7 +544,7 @@ void UI_DatasetPanel::_organizeRadioBoxInfo()
    }
 }
 
-void UI_DatasetPanel::_organizeActiveRBox()
+/*void UI_DatasetPanel::_organizeActiveRBox()
 {
    if (_numSteadyStateDataSets >0)
    {  
@@ -533,7 +586,7 @@ void UI_DatasetPanel::_organizeActiveRBox()
 
    }
 
-}
+}*/
 
 void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
 {
