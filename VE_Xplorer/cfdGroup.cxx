@@ -39,40 +39,50 @@ using namespace std;
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pf/pfNode.h>
 #elif _OSG
+#include <osg/osg::Group>
+#include <osg/osg::Node>
 #elif _OPENSG
 #endif
 
-cfdGroup::cfdGroup( float* scale, float* trans, float* rot ):cfdSceneNode()
+cfdGroup::cfdGroup( float* scale, float* trans, float* rot )
+:cfdNode()
 {
 #ifdef _PERFORMER
-   this->_group = new pfGroup();
+   _group = new pfGroup();
 #elif _OSG
+   _group = new osg::Group();
 #elif _OPENSG
 #endif
+   //_node = _group;
+   SetCFDNodeType(CFD_GROUP);
 }
-
+///////////////////////////////////////////
 cfdGroup::cfdGroup( const cfdGroup& input )
+:cfdNode(input)
 {
-   (*this->_translation) = (*input._translation);
-   (*this->_rotation) = (*input._rotation);
-   (*this->_scale) = (*input._scale);
-   
-   this->childNodes = input.childNodes;
+   int numChildren = input.childNodes.size();
+
+   for(int i = 0; i < numChildren; i++){
+      this->childNodes.push_back(input.childNodes[i]);
+   }
+
 #ifdef _PERFORMER
    this->_group = input._group;
 #elif _OSG
+   _group = new osg::Group(input._group);
 #elif _OPENSG
 #endif
+   SetCFDNodeType(CFD_GROUP);
 }
-
+/////////////////////////////////////////////////////
 cfdGroup& cfdGroup::operator=( const cfdGroup& input)
 {
    if ( this != &input )
    {
-      (*this->_translation) = (*input._translation);
-      (*this->_rotation) = (*input._rotation);
-      (*this->_scale) = (*input._scale);
-   
+      //biv-- make sure to call the parent =
+      cfdNode::operator =(input);
+
+      //biv-- why not just call clear here?
       for ( unsigned int i = 0; i < childNodes.size(); i++ )
       {
          delete childNodes.at( i );
@@ -84,23 +94,32 @@ cfdGroup& cfdGroup::operator=( const cfdGroup& input)
       pfDelete( this->_group );
       this->_group = input._group;
 #elif _OSG
+      if(_group){
+         _group->unref();
+      }
+      _group = new osg::Group(input._group);
 #elif _OPENSG
 #endif
+      
    }
    return *this;
 }
-
-cfdGroup::cfdGroup( void ):cfdSceneNode()
+//////////////////////////
+cfdGroup::cfdGroup( void )
+:cfdNode()
 {
 #ifdef _PERFORMER
    this->_group = new pfGroup();
 #elif _OSG
+   _group = new osg::Group();
 #elif _OPENSG
 #endif
+   SetCFDNodeType(CFD_GROUP);
 }
-
+///////////////////////////
 cfdGroup::~cfdGroup( void )
 {
+   //biv--do we need to delete or can we just call clear
    for ( unsigned int i = 0; i < childNodes.size(); i++ )
    {
       delete childNodes.at( i );
@@ -111,14 +130,18 @@ cfdGroup::~cfdGroup( void )
 #ifdef _PERFORMER
    pfDelete ( this->_group );
 #elif _OSG
+   _group->unref();
 #elif _OPENSG
 #endif
 }
-
-int cfdGroup::RemoveChild( cfdSceneNode* child )
+////////////////////////////////////////////////
+int cfdGroup::RemoveChild( cfdNode* child )
 {
-#ifdef _PERFORMER
-   vector< cfdSceneNode* >::iterator oldChild;
+#ifdef _OPENSG
+   cerr << " ERROR: cfdGroup::RemoveChild is NOT implemented " << endl;
+   exit( 1 );
+#endif
+   vector< cfdNode* >::iterator oldChild;
    oldChild = std::find( childNodes.begin(), childNodes.end(), child );
    
    // Check to make sure he is on this node
@@ -133,144 +156,106 @@ int cfdGroup::RemoveChild( cfdSceneNode* child )
       cout << " Child Not found " << endl;
       return -1;
    }
-#elif _OSG
-   cerr << " ERROR: cfdGroup::RemoveChild is NOT implemented " << endl;
-   exit( 1 );
-#elif _OPENSG
-   cerr << " ERROR: cfdGroup::RemoveChild is NOT implemented " << endl;
-   exit( 1 );
-#endif
 }
-
-int cfdGroup::AddChild( cfdSceneNode* child )
+/////////////////////////////////////////////
+int cfdGroup::AddChild( cfdNode* child )
 {
-#ifdef _PERFORMER
+#ifdef _OPENSG
+   cerr << " ERROR: cfdGroup::AddChild is NOT implemented " << endl;
+   exit( 1 );
+   return -1;
+#endif
+   //add the child to cfdscene
    childNodes.push_back( child );
+
+   //add node to real graph rep
    this->_group->addChild( child->GetRawNode() );
+   
+   //set the parent in the cfdApp side
    child->SetParent( this );
    return 1;
-#elif _OSG
-   cerr << " ERROR: cfdGroup::AddChild is NOT implemented " << endl;
-   exit( 1 );
-   return -1;
-#elif _OPENSG
-   cerr << " ERROR: cfdGroup::AddChild is NOT implemented " << endl;
-   exit( 1 );
-   return -1;
-#endif
 }
-
-void cfdGroup::InsertChild( int position, cfdSceneNode* child )
+///////////////////////////////////////////////////////////////
+void cfdGroup::InsertChild( int position, cfdNode* child )
 {
-#ifdef _PERFORMER
+#ifdef _OPENSG
+   cerr << " ERROR: cfdGroup::InsertChild is NOT implemented " << endl;
+   exit( 1 );
+#endif
+
    this->_group->insertChild( position, child->GetRawNode() );
-   vector< cfdSceneNode* >::iterator newPosition;
+  
+   vector< cfdNode* >::iterator newPosition;
+
    newPosition = std::find( childNodes.begin(), childNodes.end(), childNodes[ position ] );
+
    childNodes.insert( newPosition, child );
    child->SetParent( this );
-#elif _OSG
-   cerr << " ERROR: cfdGroup::InsertChild is NOT implemented " << endl;
-   exit( 1 );
-#elif _OPENSG
-   cerr << " ERROR: cfdGroup::InsertChild is NOT implemented " << endl;
-   exit( 1 );
-#endif
-}
 
-int  cfdGroup::SearchChild( cfdSceneNode* child )
+}
+/////////////////////////////////////////////////
+int  cfdGroup::SearchChild( cfdNode* child )
 {
-#ifdef _PERFORMER
+   //biv--could be replaced w/ getChildIndex(cfdNode*)
+   /* return _group->getChildIndex(child->GetRawNode());*/
+
    for ( unsigned int i = 0; i < childNodes.size(); i++ )
-      if ( childNodes[ i ] == child )
-      {
+      if ( childNodes[ i ] == child ){
          return (int)i;
       }
    // if not found
    return -1;
-#elif _OSG
-   cerr << " ERROR: cfdGroup::SearchChild is NOT implemented " << endl;
-   exit( 1 );
-   return -1;
-#elif _OPENSG
-   cerr << " ERROR: cfdGroup::SearchChild is NOT implemented " << endl;
-   exit( 1 );
-   return -1;
-#endif
-}
 
-cfdSceneNode* cfdGroup::GetChild( int child )
+}
+/////////////////////////////////////////////
+cfdNode* cfdGroup::GetChild( int child )
 {
-#ifdef _PERFORMER
    return childNodes.at( child );
-#elif _OSG
-   cerr << " ERROR: cfdGroup::GetChild is NOT implemented " << endl;
-   exit( 1 );
-   return NULL;
-#elif _OPENSG
-   cerr << " ERROR: cfdGroup::GetChild is NOT implemented " << endl;
-   exit( 1 );
-   return NULL;
-#endif
 }
-
-// Reimplement for other graphs
-#ifdef _PERFORMER
-pfNode* cfdGroup::GetRawNode( void )
-#elif _OSG
-#elif _OPENSG
-#endif
-{
-#ifdef _PERFORMER
-   return _group;
-#elif _OSG
-   cerr << " ERROR: cfdGroup::GetRawNode is NOT implemented " << endl;
-   exit( 1 );
-   return NULL;
-#elif _OPENSG
-   cerr << " ERROR: cfdGroup::GetRawNode is NOT implemented " << endl;
-   exit( 1 );
-   return NULL;
-#endif
-}
-
+/////////////////////////////////////
 int cfdGroup::GetNumChildren( void )
 {
-#ifdef _PERFORMER
-   int numChildren = this->_group->getNumChildren();
-   if ( numChildren != (int) this->childNodes.size() )
-   {
+   
+#ifdef _OPENSG
+   cerr << " ERROR: cfdGroup::GetNumChildren is NOT implemented " << endl;
+   exit( 1 );
+   return -1;
+#endif
+
+   int numChildren = this->_group->getNumChildren(); 
+   if(numChildren!=(int)childNodes.size()){
       cout << " ERROR: Number of children don't equal " << endl;
       exit( 1 );
    }
    return numChildren;
-#elif _OSG
-   cerr << " ERROR: cfdGroup::GetNumChildren is NOT implemented " << endl;
-   exit( 1 );
-   return -1;
-#elif _OPENSG
-   cerr << " ERROR: cfdGroup::GetNumChildren is NOT implemented " << endl;
-   exit( 1 );
-   return -1;
-#endif
 }
-
+////////////////////////////////////
 void cfdGroup::SetName( char* name )
 {
-#ifdef _PERFORMER
-   this->_group->setName( name );
-#elif _OSG
-   cerr << " ERROR: cfdGroup::SetName is NOT implemented " << endl;
-   exit( 1 );
-#elif _OPENSG
+#ifdef _OPENSG
    cerr << " ERROR: cfdGroup::SetName is NOT implemented " << endl;
    exit( 1 );
 #endif
+   _group->setName(name);
 }
-
-int cfdGroup::ReplaceChild( cfdSceneNode* childToBeReplaced, cfdSceneNode* newChild)
+//////////////////////////////////////
+const char* cfdGroup::GetName( void )
 {
-#ifdef _PERFORMER
-   vector< cfdSceneNode* >::iterator oldChild;
+#ifdef _OPENSG
+   return 0;
+#endif
+   return _group->getName();
+}
+////////////////////////////////////////////////////////////
+int cfdGroup::ReplaceChild( cfdNode* childToBeReplaced,
+                         cfdNode* newChild)
+{
+#ifdef _OPENSG
+   cerr << " ERROR: cfdGroup::ReplaceChild is NOT implemented " << endl;
+   exit( 1 );
+   return -1;
+#endif
+   vector< cfdNode* >::iterator oldChild;
    oldChild = find( childNodes.begin(), childNodes.end(), childToBeReplaced );
    
    // Check to make sure he is on this node
@@ -279,7 +264,7 @@ int cfdGroup::ReplaceChild( cfdSceneNode* childToBeReplaced, cfdSceneNode* newCh
       // Just erases from the vector doesn't delete memory
       childNodes.erase( oldChild );
       this->_group->replaceChild( childToBeReplaced->GetRawNode(), 
-                                                newChild->GetRawNode() );
+                                      newChild->GetRawNode() );
 
       // Set new parent for the new child
       newChild->SetParent( this );
@@ -292,18 +277,9 @@ int cfdGroup::ReplaceChild( cfdSceneNode* childToBeReplaced, cfdSceneNode* newCh
       cout << " Error : Child not found " << endl;
       return -1;
    }
-#elif _OSG
-   cerr << " ERROR: cfdGroup::ReplaceChild is NOT implemented " << endl;
-   exit( 1 );
-   return -1;
-#elif _OPENSG
-   cerr << " ERROR: cfdGroup::ReplaceChild is NOT implemented " << endl;
-   exit( 1 );
-   return -1;
-#endif
 }
-
-cfdSceneNode* cfdGroup::Clone( int )
+////////////////////////////////////
+cfdNode* cfdGroup::Clone( int )
 {
    // Need to fix this
 #ifdef _PERFORMER

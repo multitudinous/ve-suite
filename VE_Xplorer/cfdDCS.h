@@ -32,7 +32,8 @@
 #ifndef CFD_DCS_H
 #define CFD_DCS_H
 
-#include "cfdSceneNode.h"
+#include "cfdGroup.h"
+#include "cfdNode.h"
 #include <gmtl/Matrix.h>
 #include <vector>
 
@@ -42,7 +43,7 @@ class pfDCS;
 #elif _OPENSG
 #endif
 
-class cfdDCS: public cfdSceneNode
+class cfdDCS: public cfdGroup
 {
    public:
       cfdDCS( float*, float*, float* );
@@ -63,21 +64,21 @@ class cfdDCS: public cfdSceneNode
       void SetRotationMatrix( gmtl::Matrix44f& );
 
 #ifdef _PERFORMER
-      pfNode* GetRawNode( void );
+      //pfNode* GetRawNode( void );
 #elif _OSG
 #elif _OPENSG
 #endif
 
-      int RemoveChild( cfdSceneNode* );
-      int AddChild( cfdSceneNode* );
+      //int RemoveChild( cfdNode* );
+      //int AddChild( cfdNode* );
       gmtl::Matrix44f GetMat( void );
       void SetMat( gmtl::Matrix44f& );
-      int SearchChild( cfdSceneNode* );
-      int GetNumChildren( void );
-      cfdSceneNode* GetChild( int );
-      int ReplaceChild( cfdSceneNode*, cfdSceneNode* );
-      void SetName( char* );
-      const char* GetName( void );
+      //int SearchChild( cfdNode* );
+      //int GetNumChildren( void );
+      //cfdNode* GetChild( int );
+      //int ReplaceChild( cfdNode*, cfdNode* );
+      //void SetName( char* );
+      //const char* GetName( void );
 
    private:
 
@@ -85,9 +86,9 @@ class cfdDCS: public cfdSceneNode
       float _rotation[ 3 ];
       float _scale[ 3 ];
    
-      std::vector< cfdSceneNode* > childNodes;
+      std::vector< cfdNode* > childNodes;
 #ifdef _PERFORMER
-      pfDCS* _dcs;
+      //pfDCS* _dcs;
 #elif _OSG
 #elif _OPENSG
 #endif

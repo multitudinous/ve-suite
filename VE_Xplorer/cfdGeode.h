@@ -32,11 +32,12 @@
 #ifndef CFD_GEODE_H
 #define CFD_GEODE_H
 
-#include "cfdSceneNode.h"
+#include "cfdNode.h"
 
 #ifdef _PERFORMER
 class pfGeode;
 #elif _OSG
+class osg::Geode;
 #elif _OPENSG
 #endif
 class vtkActor;
@@ -45,7 +46,7 @@ class vtkActor;
 /*!
   Update a modified Performer geometry node.
 */
-class cfdGeode: public cfdSceneNode
+class cfdGeode: public cfdNode
 {
    public:
       cfdGeode( void );
@@ -56,20 +57,15 @@ class cfdGeode: public cfdSceneNode
       // This function will have to reimplmented for each scenegraph
       // Get Geode 
 #ifdef _PERFORMER
-      pfGeode* GetGeode( void );
-      pfNode*  GetRawNode( void );
+      pfGeode* GetGeode( void );    
 #elif _OSG
+      osg::Geode* GetGeod(void);
 #elif _OPENSG
 #endif
       // This function implements the respective translate vtkActorToGeode
       void TranslateTocfdGeode( vtkActor* );
 
-   private:
-#ifdef _PERFORMER
-      pfGeode* _geode;
-#elif _OSG
-#elif _OPENSG
-#endif
-      int _vtkToPFDebug;
+   protected:
+      int _vtkDebugLevel;
 };
 #endif

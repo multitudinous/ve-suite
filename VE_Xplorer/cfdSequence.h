@@ -51,15 +51,20 @@ class pfNode;
 class pfType;
 class pfSwitch;
 class pfTraverser;
-#include "cfdSceneNode.h"
+#include "cfdNode.h"
+#include "cfdGroup.h"
 
 #include <Performer/pf/pfGroup.h>
 
-class cfdSequence : public pfGroup, public cfdSceneNode
+class cfdSequence : public pfGroup, public cfdGroup
 {
 public:
    cfdSequence();
    ~cfdSequence();
+
+   cfdSequence(const cfdSequence& cfdSeq);
+
+   cfdSequence& operator=(const cfdSequence& rhs);
 
    //to make this a performer class
    static void init(void);
@@ -109,22 +114,22 @@ public:
    virtual int getNumChildren();
 
    //add a child node
-   virtual void addChild( cfdSceneNode* child );
+   virtual void addChild( cfdNode* child );
 
    //get the index of a child
-   virtual int searchChild( cfdSceneNode* child );
+   virtual int searchChild( cfdNode* child );
 
    //get the specified child node  
-   virtual cfdSceneNode* getChild( int index );
+   virtual cfdNode* getChild( int index );
 
    //remove child 
-   virtual int removeChild( cfdSceneNode* child );
+   virtual int removeChild( cfdNode* child );
    
    //the node pre-traverser callback
    friend int switchFrame(pfTraverser* trav, void* userData);
-
+#ifdef _PERFORMER
    pfNode* GetRawNode( void );
-
+#endif
 protected:
 
    pfSwitch* _switch;

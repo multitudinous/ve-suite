@@ -60,7 +60,7 @@ void cfdSequence::init(void)
 //Constructors          //
 //////////////////////////
 cfdSequence::cfdSequence()
-:pfGroup()
+:pfGroup(),cfdGroup()
 {
    _switch = 0;
    _deltaT = 0.0;
@@ -80,15 +80,71 @@ cfdSequence::cfdSequence()
    //performer stuff
    init();
    setType(_classType);
+   SetCFDNodeType(CFD_SEQUENCE);
+   _node = this;
 }
+///////////////////////////////////////////////////
+cfdSequence::cfdSequence(const cfdSequence& cfdSeq)
+:pfGroup(),cfdGroup()
+{
+   _switch = cfdSeq._switch;
+   _deltaT = cfdSeq._deltaT;
+   _duration = cfdSeq._duration;
+   _begin = cfdSeq._begin;
+   _end = cfdSeq._end;
+   _dir = cfdSeq._dir;
+   _currentFrame = cfdSeq._currentFrame;
+   _lMode = cfdSeq._lMode;
+   _pMode = cfdSeq._pMode;
+   _appFrame = cfdSeq._appFrame;
+   _step = cfdSeq._step;
 
+   setTravFuncs(PFTRAV_APP,switchFrame,0);
+   setTravData(PFTRAV_APP,this);
+
+   //performer stuff
+   init();
+   setType(_classType);
+   SetCFDNodeType(CFD_SEQUENCE);
+   _node = this;
+}
+   
 ///////////////////////////
 //Destructor             //
 ///////////////////////////
 cfdSequence::~cfdSequence()
 {
 }
+///////////////////////////////////////////////////////////
+cfdSequence& cfdSequence::operator=(const cfdSequence& rhs)
+{
+   if ( this != &rhs){
+      //call parents = operator
+      //cfdGroup::operator =(rhs);
+      pfGroup::operator =(rhs);
+      cfdGroup::operator =(rhs);
 
+      //update everything
+      _switch = rhs._switch;
+      _deltaT = rhs._deltaT;
+      _duration = rhs._duration;
+      _begin = rhs._begin;
+      _end = rhs._end;
+      _dir = rhs._dir;
+      _currentFrame = rhs._currentFrame;
+      _lMode = rhs._lMode;
+      _pMode = rhs._pMode;
+      _appFrame = rhs._appFrame;
+      _step = rhs._step;
+
+      setTravFuncs(PFTRAV_APP,switchFrame,0);
+      setTravData(PFTRAV_APP,this);
+      SetCFDNodeType(CFD_SEQUENCE);
+ 
+
+   }
+   return *this;
+}
 void cfdSequence::setDuration( double duration )
 {
    _duration = duration;
@@ -119,7 +175,7 @@ int cfdSequence::getNumChildren()
    return -1;
 }
 
-int cfdSequence::removeChild(cfdSceneNode* child)
+int cfdSequence::removeChild(cfdNode* child)
 {
    if ( _switch )
    {
@@ -128,7 +184,7 @@ int cfdSequence::removeChild(cfdSceneNode* child)
    return -1;
 }
 
-int cfdSequence::searchChild(cfdSceneNode* child)
+int cfdSequence::searchChild(cfdNode* child)
 {
    if(_switch){
       //return _switch->searchChild(child);   
@@ -136,7 +192,7 @@ int cfdSequence::searchChild(cfdSceneNode* child)
    return -1;
 }
 
-cfdSceneNode* cfdSequence::getChild(int index)
+cfdNode* cfdSequence::getChild(int index)
 {
    if(_switch){
       //cout<<"getting child: "<<index<<endl;
@@ -353,7 +409,7 @@ void cfdSequence::setCurrentFrame(int index)
 }
 
 //add a child
-void cfdSequence::addChild(cfdSceneNode* child)
+void cfdSequence::addChild(cfdNode* child)
 {
    //cout<<"Adding frame to sequence."<<endl;
    //init the switch node

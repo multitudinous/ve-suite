@@ -32,46 +32,44 @@
 #ifndef CFD_GROUP_H
 #define CFD_GROUP_H
 
-#include "cfdSceneNode.h"
+#include "cfdNode.h"
 #include <vector>
- 
+#ifdef _PERFORMER
 class pfGroup;
-
-class cfdGroup: public cfdSceneNode
-{
-   public:
-      cfdGroup( void );
-      cfdGroup( float*, float*, float* );
-      cfdGroup( const cfdGroup& );
-      cfdGroup& operator=( const cfdGroup& );
-      ~cfdGroup( void );
-
-#ifdef _PERFORMER
-		pfNode* GetRawNode( void );
 #elif _OSG
+class osg::Group;
 #elif _OPENSG
 #endif
-      int RemoveChild( cfdSceneNode* );
-      int AddChild( cfdSceneNode* );
 
-      void InsertChild( int, cfdSceneNode* );
-      int  SearchChild( cfdSceneNode* );
-      cfdSceneNode* GetChild( int );
-      int  GetNumChildren( void );
-      void SetName( char* );
-      int ReplaceChild( cfdSceneNode*, cfdSceneNode* );
-      cfdSceneNode* Clone( int );
+class cfdGroup: public cfdNode{
+public:
+   cfdGroup();
+   cfdGroup( const cfdGroup& );
 
-   private:
-      float _translation[ 3 ];
-      float _rotation[ 3 ];
-      float _scale[ 3 ];
-   
-      std::vector< cfdSceneNode* > childNodes;
-#ifdef _PERFORMER
-      pfGroup* _group;
-#elif _OSG
-#elif _OPENSG
-#endif
+   cfdGroup(float*, float*, float*);
+   ~cfdGroup( void );
+
+   //equal operator
+   cfdGroup& operator=( const cfdGroup& );
+
+   //the wrappers for child/scene graph
+   //manipulation
+   virtual int RemoveChild( cfdNode* );
+   virtual int AddChild( cfdNode* );
+
+   virtual void InsertChild( int, cfdNode* );
+   virtual int  SearchChild( cfdNode* );
+
+   virtual cfdNode* GetChild( int );
+   virtual int  GetNumChildren( void );
+
+   virtual void SetName( char* );
+   virtual int ReplaceChild( cfdNode*, cfdNode* );
+
+   virtual cfdNode* Clone( int );
+
+   virtual const char* GetName( void );
+protected:
+   std::vector< cfdNode* > childNodes;
 };
 #endif

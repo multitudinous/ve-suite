@@ -36,6 +36,9 @@
 #include <Performer/pf/pfNode.h>
 #include "vtkActorToPF.h"
 #elif _OSG
+#include <osg/Geode>
+#include <osg/Node>
+#include "vtkActorToOSG.h"
 #elif _OPENSG
 #endif
 
@@ -43,82 +46,73 @@
 
 #include <iostream>
 
-cfdGeode::cfdGeode( void ):cfdSceneNode()
+cfdGeode::cfdGeode( void )
+:cfdNode()
 {
 #ifdef _PERFORMER
    _geode = new pfGeode();
 #elif _OSG
+   _geode = new osg::Geode();
 #elif _OPENSG
 #endif
-   _vtkToPFDebug = 0;
+   _vtkDebugLevel = 0;
+   SetCFDNodeType(CFD_GEODE);
 }
-
+////////////////////////////////////////////
 cfdGeode::cfdGeode( const cfdGeode& input )
+:cfdNode(input)
 {
+#ifdef _PERFORMER
    this->_geode = input._geode;
-   this->_vtkToPFDebug = input._vtkToPFDebug;
+#elif _OSG
+   _geode = new osg::Geode(input._geode);
+#elif _OPENSG
+#endif
+   this->_vtkDebugLevel = input._vtkDebugLevel;
+    
+   SetCFDNodeType(CFD_GEODE);
 }
-
+//////////////////////////////////////////////////////
 cfdGeode& cfdGeode::operator=( const cfdGeode& input )
 {
    if ( this != (&input) )
    {
-#ifdef _PERORMER
+#ifdef _PERFORMER
       pfDelete( _geode );
+      this->_geode = input._geode;
 #elif _OSG
+      if(_geode){
+         _geode->unref();
+      }
+      _geode = new osg::Geode(input._geode);
 #elif _OPENSG
 #endif
-      this->_geode = input._geode;
-      this->_vtkToPFDebug = input._vtkToPFDebug;
+      this->_vtkDebugLevel = input._vtkDebugLevel;
+      SetCFDNodeType(CFD_GEODE);
    }
    return *this;
 }
-
+///////////////////////////
 cfdGeode::~cfdGeode( void )
 {
-#ifdef _PERORMER
+#ifdef _PERFORMER
    // Fix this
    //if ( _geode != NULL )
    //   pfDelete( _geode );
 #elif _OSG
+   if(_geode)_geode->unref();
 #elif _OPENSG
 #endif
 }
 
-// This function must be reimplemented for each scene graph
-/*#ifdef _PERFORMER
-pfGeode* cfdGeode::GetGeode( void )
-#elif _OSG
-#elif _OPENSG
-#endif
-{
-   // Returns low level node for scene graph
-#ifdef _PERFORMER
-   return _geode;
-#elif _OSG
-#elif _OPENSG
-#endif
-}*/
 
-#ifdef _PERFORMER
-pfNode* cfdGeode::GetRawNode( void )
-#elif _OSG
-#elif _OPENSG
-#endif
-{
-   // Returns low level node for scene graph
-#ifdef _PERFORMER
-   return _geode;
-#elif _OSG
-#elif _OPENSG
-#endif
-}
-
+//////////////////////////////////////////////////////
 void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
 {
 #ifdef _PERFORMER
-   vtkActorToPF( actor, this->_geode, _vtkToPFDebug );
+   vtkActorToPF( actor, this->_geode, _vtkDebugLevel );
 #elif _OSG
+   vtkActorToOSG(actor,_geode,_vtkDebugLevel);
 #elif _OPENSG
 #endif
 }

@@ -51,19 +51,24 @@ using namespace vrj;
 using namespace std;
 using namespace gmtl;
 
-cfdDCS::cfdDCS( float* scale, float* trans, float* rot ):cfdSceneNode()
+cfdDCS::cfdDCS( float* scale, float* trans, float* rot )
+:cfdGroup()
 {
 #ifdef _PERFORMER
-   this->_dcs = new pfDCS();
+   _dcs = new pfDCS();
+   _group = dynamic_cast<pfGroup*>(_dcs);
 #elif _OSG
 #elif _OPENSG
 #endif
    this->SetTranslationArray( trans );
    this->SetRotationArray( rot );
    this->SetScaleArray( scale );
+   //_group = _dcs;
+   SetCFDNodeType(CFD_DCS);
 }
 
 cfdDCS::cfdDCS( const cfdDCS& input )
+:cfdGroup(input)
 {
    for ( int i = 0; i < 3; i++ )
    {
@@ -77,15 +82,20 @@ cfdDCS::cfdDCS( const cfdDCS& input )
 
 #ifdef _PERFORMER
    this->_dcs = input._dcs;
+   _group = dynamic_cast<pfGroup*>(_dcs);
 #elif _OSG
 #elif _OPENSG
 #endif
+  
+   SetCFDNodeType(CFD_DCS);
 }
 
 cfdDCS& cfdDCS::operator=( const cfdDCS& input)
 {
    if ( this != &input )
    {
+      //parents input
+      cfdGroup::operator =(input);
       for ( int i = 0; i < 3; i++ )
       {
          this->_translation[ i ] = input._translation[ i ];
@@ -104,17 +114,22 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
 #ifdef _PERFORMER
       pfDelete( this->_dcs );
       this->_dcs = input._dcs;
+      _group = dynamic_cast<pfGroup*>(_dcs);
 #elif _OSG
 #elif _OPENSG
 #endif
+      //_group = _dcs;
+      SetCFDNodeType(CFD_DCS);
    }
    return *this;
 }
 
-cfdDCS::cfdDCS( void ):cfdSceneNode()
+cfdDCS::cfdDCS( void )
+:cfdGroup()
 {
 #ifdef _PERFORMER
-   this->_dcs = new pfDCS();
+   _dcs = new pfDCS();
+   _group = dynamic_cast<pfGroup*>(_dcs);
 #elif _OSG
 #elif _OPENSG
 #endif
@@ -128,8 +143,11 @@ cfdDCS::cfdDCS( void ):cfdSceneNode()
    for ( unsigned int i = 0; i < 3; i++ )
       temp[ i ] = 1.0f;
    SetScaleArray( temp );
+  
+   _group = _dcs;
+   SetCFDNodeType(CFD_DCS);
 }
-
+///////////////////////
 cfdDCS::~cfdDCS( void )
 {
    for ( unsigned int i = 0; i < childNodes.size(); i++ )
@@ -145,22 +163,22 @@ cfdDCS::~cfdDCS( void )
 #elif _OPENSG
 #endif
 }
-
+//////////////////////////////////////////
 float* cfdDCS::GetTranslationArray( void )
 {
    return this->_translation;
 }
-
+///////////////////////////////////////
 float* cfdDCS::GetRotationArray( void )
 {
    return this->_rotation;
 }
-
+////////////////////////////////////
 float* cfdDCS::GetScaleArray( void )
 {
    return this->_scale;
 }
-
+////////////////////////////////////////////////
 void cfdDCS::SetTranslationArray( float* trans )
 {
    int i;
@@ -175,7 +193,7 @@ void cfdDCS::SetTranslationArray( float* trans )
 //std::cout << this->_translation[ 0 ]<< " : " << this->_translation[ 1 ] << " : " <<
 //this->_translation[ 2 ]  << std::endl;
 }
-
+///////////////////////////////////////////
 void cfdDCS::SetRotationArray( float* rot )
 {
    int i;
@@ -191,7 +209,7 @@ void cfdDCS::SetRotationArray( float* rot )
 //                           this->_rotation[ 1 ] << " : " <<
 //                           this->_rotation[ 2 ]  << std::endl;
 }
-
+//////////////////////////////////////////
 void cfdDCS::SetScaleArray( float* scale )
 {
    int i;
@@ -208,26 +226,8 @@ void cfdDCS::SetScaleArray( float* scale )
 //                           this->_scale[ 2 ]  << std::endl;
 }
 
-#ifdef _PERFORMER
-pfNode* cfdDCS::GetRawNode( void )
-#elif _OSG
-#elif _OPENSG
-#endif
-{
-#ifdef _PERFORMER
-   return _dcs;
-#elif _OSG
-   cerr << " ERROR: cfdDCS::GetRawNode is NOT implemented " << endl;
-   exit( 1 );
-   return NULL;
-#elif _OPENSG
-   cerr << " ERROR: cfdDCS::GetRawNode is NOT implemented " << endl;
-   exit( 1 );
-   return NULL;
-#endif
-}
-
-int cfdDCS::RemoveChild( cfdSceneNode* child )
+//////////////////////////////////////////////
+/*int cfdDCS::RemoveChild( cfdNode* child )
 {
 #ifdef _PERFORMER
    vector< cfdSceneNode* >::iterator oldChild;
@@ -256,8 +256,8 @@ int cfdDCS::RemoveChild( cfdSceneNode* child )
    return -1;
 #endif
 }
-
-int cfdDCS::AddChild( cfdSceneNode* child )
+///////////////////////////////////////////
+int cfdDCS::AddChild( cfdNode* child )
 {
 #ifdef _PERFORMER
    childNodes.push_back( child );
@@ -274,8 +274,9 @@ int cfdDCS::AddChild( cfdSceneNode* child )
    return -1;
 #endif
 }
-
-int cfdDCS::ReplaceChild( cfdSceneNode* childToBeReplaced, cfdSceneNode* newChild )
+//////////////////////////////////////////////////////////
+int cfdDCS::ReplaceChild( cfdNode* childToBeReplaced,
+                        cfdNode* newChild )
 {
 #ifdef _PERFORMER
    vector< cfdSceneNode* >::iterator oldChild;
@@ -309,8 +310,8 @@ int cfdDCS::ReplaceChild( cfdSceneNode* childToBeReplaced, cfdSceneNode* newChil
    exit( 1 );
    return -1;
 #endif
-}
-
+}*/
+////////////////////////////////
 Matrix44f cfdDCS::GetMat( void )
 {
 #ifdef _PERFORMER
@@ -328,8 +329,8 @@ Matrix44f cfdDCS::GetMat( void )
 #endif
    return _vjMatrix;
 }
-
-int cfdDCS::SearchChild( cfdSceneNode* child )
+//////////////////////////////////////////////
+/*int cfdDCS::SearchChild( cfdNode* child )
 {
 #ifdef _PERFORMER
    //this->_dcs->searchChild();
@@ -371,7 +372,7 @@ int cfdDCS::GetNumChildren( void )
    exit( 1 );
    return 1;
 #endif
-}
+}*/
 
 void cfdDCS::SetMat( Matrix44f& input )
 {
@@ -387,7 +388,7 @@ void cfdDCS::SetMat( Matrix44f& input )
 #endif
 }
 
-cfdSceneNode* cfdDCS::GetChild( int child )
+/*cfdNode* cfdDCS::GetChild( int child )
 {
 #ifdef _PERFORMER
    // Need to catch the exceptiom
@@ -402,7 +403,7 @@ cfdSceneNode* cfdDCS::GetChild( int child )
    exit( 1 );
    return NULL;
 #endif
-}
+}*/
 
 void cfdDCS::SetRotationMatrix( Matrix44f& input )
 {
@@ -422,7 +423,7 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
 #endif
 }
 
-void cfdDCS::SetName( char* name )
+/*void cfdDCS::SetName( char* name )
 {
 #ifdef _PERFORMER
    this->_dcs->setName( name );
@@ -449,3 +450,4 @@ const char* cfdDCS::GetName( void )
    exit( 1 );
 #endif
 }
+*/

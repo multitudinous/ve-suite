@@ -37,28 +37,38 @@ using namespace std;
 #elif _OSG
 #elif _OPENSG
 #endif
-
+//////////////////////////////////
 cfdSceneNode::cfdSceneNode( void )
 {
    this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
+   _nt = CFD_OTHER;
 }
-
+//////////////////////////////////////////
+cfdSceneNode::cfdSceneNode(cfdNodeType nt)
+{
+   this->_nodeType = -1;
+   this->_numParents = 0;
+   this->_parent = NULL;
+   _nt = nt;
+}
+///////////////////////////////////
 cfdSceneNode::~cfdSceneNode( void )
 {
    this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
 }
-
+////////////////////////////////////////////////////////
 cfdSceneNode::cfdSceneNode( const cfdSceneNode& input )
 {
    this->_nodeType = input._nodeType;
    this->_numParents = input._numParents;
    this->_parent = input._parent;
+   _nt = input._nt;
 }
-
+//////////////////////////////////////////////////////////////////
 cfdSceneNode& cfdSceneNode::operator=( const cfdSceneNode& input )
 {
    if ( this != &input )
@@ -66,16 +76,17 @@ cfdSceneNode& cfdSceneNode::operator=( const cfdSceneNode& input )
       this->_nodeType = input._nodeType;
       this->_numParents = input._numParents;
       this->_parent = input._parent;
+      _nt = input._nt;
    }
    return *this;
 }
-
+//////////////////////////////////////
 int cfdSceneNode::GetNodeType( void )
 {
    return _nodeType;
 }
-
-cfdSceneNode* cfdSceneNode::GetParent( int parent )
+//////////////////////////////////////////////
+cfdNode* cfdSceneNode::GetParent( int parent )
 {
    if ( parent > 0 )
    {
@@ -85,8 +96,8 @@ cfdSceneNode* cfdSceneNode::GetParent( int parent )
 
    return _parent;
 }
-
-void cfdSceneNode::SetParent( cfdSceneNode* parent )
+///////////////////////////////////////////////
+void cfdSceneNode::SetParent( cfdNode* parent )
 {
    if ( parent == NULL )
    {
@@ -106,3 +117,68 @@ void cfdSceneNode::SetParent( cfdSceneNode* parent )
    this->_parent = parent;
 }
 
+
+// Need to fix later
+// Maybe shouldn't even be here
+// seems to be a hack
+/*
+void cfdSceneNode::clearGeodesFromNode( pfNode * node )
+{
+   if ( node == NULL )
+      return;
+
+   const char * name = node->getName();
+
+   if ( name != NULL )
+   {
+      vprDEBUG(vprDBG_ALL,1) << " node name = \"" << name << "\""
+                             << std::endl << vprDEBUG_FLUSH;
+   }
+
+   if ( name != NULL && 
+         (  ( ! strcmp(name, "scalarBar") ) || 
+            ( ! strcmp(name, "cfdExecutive_Node") ) || 
+            ( ! strcmp(name, "geometry") ) 
+         ) 
+      )
+   {
+      vprDEBUG(vprDBG_ALL,1) << "\twon't touch this node"
+                             << std::endl << vprDEBUG_FLUSH;
+      return;
+   }
+
+   if ( node->isOfType( pfGroup::getClassType() ) )
+   {
+      int numChildren = ((pfGroup*)node)->getNumChildren();
+      vprDEBUG(vprDBG_ALL,1) << " group node has numChildren = " << numChildren
+                             << std::endl << vprDEBUG_FLUSH;
+
+      // Iterate backwards for performance
+      for ( int i = numChildren-1; i >= 0; i-- )
+      {
+         pfNode * childNode = ((pfGroup*)node)->getChild( i );
+
+         clearGeodesFromNode( childNode );
+      }
+   }
+   else if ( node->isOfType( pfGeode::getClassType() ) )
+   {
+      vprDEBUG(vprDBG_ALL,1) << "\tremoving this node"
+                             << std::endl << vprDEBUG_FLUSH;
+
+      int numParents = node->getNumParents();
+      if ( numParents != 1 )
+      {
+         vprDEBUG(vprDBG_ALL,1) << "\t!!!!!!!!numParents = " << numParents
+                                << std::endl << vprDEBUG_FLUSH;
+      }
+
+      node->getParent( 0 )->removeChild( node );
+      //pfDelete( node );  // don't do this
+   }
+   else
+   {
+      cout << "\twon't remove this node" << endl;
+   }
+}
+*/
