@@ -141,7 +141,7 @@ void UI_NavigationTab::onMouse(wxMouseEvent& mouse)
 ////////////////////////////////////////////
 UI_NavButton::UI_NavButton(wxWindow* parent,
 wxWindowID id, const wxString& label)
-:wxButton(parent,id,label)
+:wxButton(parent,id,label,wxDefaultPosition,wxDefaultSize,wxBU_EXACTFIT)
 {
   _buttonPushed = 0; 
 }
