@@ -17,11 +17,11 @@ set VJ_DEPS_DIR=C:\vrjuggler-2.0-alpha4.win32-vc71-deps
 
 REM location of VE_Suite directory
 REM example C:\VE_Dev\VE_Suite
-set VE_SUITE_HOME=C:\VE_Suite
+set VE_SUITE_HOME=C:\Documents and Settings\Doug McCorkle\Desktop\VE_Suite
 
 REM location of VTK
-set VTK_HOME=C:\VTK
-
+set VTK_HOME=C:\Documents and Settings\Doug McCorkle\Desktop\VE_Suite_Software\VTK-4.4-LatestRelease\VTK
+set JAVA_HOME=C:\j2sdk1.4.2_04
 REM
 REM Everything below is relative to the above environment so
 REM user shouldn't have to modify UNLESS "local" builds(debug for 
@@ -36,7 +36,7 @@ REM OpenGl performer variable
 set PHSHAREDSIZE=534773700
 
 REM juggler debug output level
-set VPR_DEBUG_NFY_LEVEL=2
+set VPR_DEBUG_NFY_LEVEL=1
 
 REM Juggler dependencies
 set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions
@@ -53,4 +53,5 @@ set PYTHONPATH=%VJ_DEPS_DIR%\lib\python
 set Path=%Path%;%OMNI_HOME%\bin\x86_win32;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib;%VTK_HOME%\bin\debug;%VE_SUITE_HOME%\bin
 
 REM only change this if your Visual Studio .NET is installed somewhere else
-"C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.exe" 
+REM "C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.exe" 
+cmd
