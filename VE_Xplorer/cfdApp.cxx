@@ -252,7 +252,7 @@ void cfdApp::bufferPreDraw()
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
-#endif
+#endif //_OSG
 
 inline void cfdApp::init( )
 {
@@ -281,9 +281,11 @@ inline void cfdApp::init( )
 #endif
 
 #ifdef _WEB_INTERFACE
+	timeOfLastCapture = 0;
 	runWebImageSaveThread = true;
 	readyToWriteWebImage = false;
 	writingWebImageNow = false;
+	captureNextFrameForWeb = false
 #endif   //_WEB_INTERFACE
 }
 
@@ -412,8 +414,16 @@ void cfdApp::postFrame()
 {
 
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
+   	time_since_start = _timer.delta_s(_start_tick,_timer.tick());
 #ifdef _WEB_INTERfACE
-	
+	if(time_since_start - timeOfLastCapture >= 5.0)		//if it's been five seconds since the last image cap
+	{
+		if(!readyToWriteWebImage)
+		{
+			captureNextFrameForWeb = true
+			timeOfLastCapture = time_since_start;
+		}
+	}
 
 
 #endif  //_WEB_INTERFACE
@@ -430,7 +440,6 @@ void cfdApp::postFrame()
    }*/
 
 #ifdef _OSG
-   double time_since_start = _timer.delta_s(_start_tick,_timer.tick());
    this->_vjobsWrapper->GetSetAppTime( time_since_start );
    //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
 #endif
@@ -452,7 +461,7 @@ void cfdApp::captureWebImage()
 	vrj::GlDrawManager::instance()->currentUserData()->getGlWindow()->
 		getOriginSize(dummyOx, dummyOy, webImageWidth, webImageHeight);
 	printf("Copying frame buffer %ix%i.......\n", frameWidth, frameHeight);
-	captureNextFrame=false;		//we're not going to capture next time around
+	captureNextFrameForWeb=false;		//we're not going to capture next time around
 	webImagePixelArray=new char[frameHeight*frameWidth*3];		//create an array to store the data
 	glReadPixels(0, 0, webImageWidth, webImageHeight, GL_RGB, GL_UNSIGNED_BYTE, webImagePixelArray);	//copy from the framebuffer
 	readyToWriteWebImage=true;		
@@ -468,6 +477,7 @@ void cfdApp::writeImageFileForWeb(void*)
 		if(readyToWriteWebImage)
 		{
 			readyToWriteWebImage=false;
+			writingWebImageNow = true;
 			//let's try saving the image with Corona
 			Image* frameCap=CreateImage(frameWidth, frameHeight, PF_R8G8B8, (void*)webImagePixelArray);
 			frameCap=FlipImage(frameCap, CA_X);
@@ -477,9 +487,104 @@ void cfdApp::writeImageFileForWeb(void*)
 			delete frameCap;
 			delete [] webImagePixelArray;										//delete our array
 			printf("All done!\n");
+			writingWebImageNow = false;
 		}
 	}
 
 }
 
+#ifdef _OSG
+void cfdApp::draw()
+   glClear(GL_DEPTH_BUFFER_BIT);
+
+   glPushAttrib(GL_ALL_ATTRIB_BITS);
+   glPushAttrib(GL_TRANSFORM_BIT);
+   glPushAttrib(GL_VIEWPORT_BIT);
+
+   glMatrixMode(GL_MODELVIEW);
+   glPushMatrix();
+
+   glMatrixMode(GL_PROJECTION);
+   glPushMatrix();
+
+   glMatrixMode(GL_TEXTURE);
+   glPushMatrix();
+
+
+   osgUtil::SceneView* sv(NULL);
+   sv = (*sceneViewer);    // Get context specific scene viewer
+   vprASSERT( sv != NULL);
+
+   GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
+   gl_manager = GlDrawManager::instance();
+
+   // Set the up the viewport (since OSG clears it out)
+   float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
+   int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
+   gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
+   gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
+
+   // compute unsigned versions of the viewport info (for passing to glViewport)
+   unsigned ll_x = unsigned(vp_ox*float(w_width));
+   unsigned ll_y = unsigned(vp_oy*float(w_height));
+   unsigned x_size = unsigned(vp_sx*float(w_width));
+   unsigned y_size = unsigned(vp_sy*float(w_height));
+
+   // Add the tree to the scene viewer and set properties
+   sv->setSceneData(getScene());
+   //sv->setCalcNearFar(false);
+   sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
+   sv->setViewport(ll_x, ll_y, x_size, y_size);
+
+   //Get the view matrix and the frustrum form the draw manager
+   GlDrawManager* drawMan = dynamic_cast<GlDrawManager*>(this->getDrawManager());
+   vprASSERT(drawMan != NULL);
+   GlUserData* userData = drawMan->currentUserData();
+
+   // Copy the matrix
+   Projection* project = userData->getProjection();
+   const float* vj_proj_view_mat = project->getViewMatrix().mData;
+   osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
+   osg_proj_xform_mat->set( vj_proj_view_mat );
+
+   //Get the frustrum
+   Frustum frustum = project->getFrustum();
+   sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],
+                                    frustum[Frustum::VJ_RIGHT],
+                                    frustum[Frustum::VJ_BOTTOM],
+                                    frustum[Frustum::VJ_TOP],
+                                    frustum[Frustum::VJ_NEAR],
+                                    frustum[Frustum::VJ_FAR]);
+
+   sv->setViewMatrix(*osg_proj_xform_mat);
+	bool goCapture = false;			//gocapture becomes true if we're going to capture this frame
+	if(userData->getViewport()->isSimulator())	//if this is a sim window context....
+	{
+		//Matrix44f headMat=mHead->getData();		//grab the head matrix
+//		Matrix44f h=headMat;
+//		glMultMatrixf(headMat.mData);			//and multiply to cancel it out of the modelview
+//		gluLookAt(0, 100, 0, 0, 0, 0, 0, 0, -1);	//an overhead view
+		if(captureNextFrameForWeb) goCapture=true;	//now if we're go for capture, we'll know for sure
+	}
+
+   //Draw the scene
+   sv->update();
+   sv->cull();
+   sv->draw();
+	if(goCapture)
+		captureWebImage();
+   glMatrixMode(GL_TEXTURE);
+   glPopMatrix();
+
+   glMatrixMode(GL_PROJECTION);
+   glPopMatrix();
+
+   glMatrixMode(GL_MODELVIEW);
+   glPopMatrix();
+
+   glPopAttrib();
+   glPopAttrib();
+   glPopAttrib();
+}
+#endif //_OSG
 #endif   //_WEB_INTERFACE

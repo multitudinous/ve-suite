@@ -131,6 +131,9 @@ class cfdApp: public vrj::OsgApp
       //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
 #ifdef _OSG
+#ifdef _WEB_INTERFACE
+		void draw();
+#endif	//_WEB_INTERFACE
       cfdTextureBasedVizHandler* _tbvHandler;
       osg::ref_ptr<osgUtil::SceneView> _sceneViewer;
       osg::ref_ptr<osg::FrameStamp> _frameStamp;
@@ -150,19 +153,21 @@ class cfdApp: public vrj::OsgApp
       int   lastFrame;
    private:
       char * filein_name;
-	  
+	  double time_since_start;
 	  //web interface stuff for writing the image file
 	  //to be viewed over the web
 #ifdef _WEB_INTERFACE
 	bool runWebImageSaveThread;
 	bool readyToWriteWebImage;
 	bool writingWebImageNow;
+	bool captureNextFrameForWeb;
 	int webImageWidth;
 	int webImageHeight;
 	vpr::Thread* writeWebImageFileThread;			//thread in which we write to the file
 	char* webImagePixelArray;
 	void writeWebImageFile(void*);
 	void captureWebImage();
+	double timeOfLastCapture;
 #endif 
 };
 
