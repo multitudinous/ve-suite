@@ -1,0 +1,11 @@
+MOD_NAME CatalyticConverter #This is the module name
+
+Int case_type
+Double effect
+Double site_den
+Double hydDiameter
+Double length
+Double conversion
+Double velocity
+
+END

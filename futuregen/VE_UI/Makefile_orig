@@ -1,0 +1,20 @@
+CXX = $(shell wx-config --cxx)
+WX_CXX = $(shell wx-config --cxxflags)
+WX_LIB = $(shell wx-config --libs)
+
+APP = app
+
+OBJECTS = Tabs.o
+
+.SUFFIXES : .o .cpp
+
+.cpp.o :
+	$(CXX) -g -c  $(WX_CXX) -o $@ $<
+
+all: $(APP)
+
+$(APP): $(OBJECTS)
+	$(CXX) -g -o $(APP) $(OBJECTS) $(WX_LIB)
+
+clean:
+	rm -f *.o $(APP)

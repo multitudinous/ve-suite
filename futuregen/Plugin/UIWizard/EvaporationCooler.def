@@ -1,0 +1,8 @@
+MOD_NAME EvaporationCooler #This is the module name
+
+Double desired_temp
+Double air_temp
+Double air_humidity
+Double ambient_pres
+
+END
