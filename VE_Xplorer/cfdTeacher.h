@@ -34,10 +34,9 @@
 
 #include <vector>
 
+class cfdCommandArray;
 class cfdDCS;
 class cfdGroup;
-class cfdNode;
-class cfdCommandArray;
 class cfdNode;
 class cfdWriteTraverser;
 
@@ -76,4 +75,4 @@ class cfdTeacher : public cfdGlobalBase
       cfdWriteTraverser* _cfdWT;
 };
 
-#endif
+#endif   // CFD_TEACHER_H
