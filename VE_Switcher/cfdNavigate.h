@@ -32,27 +32,10 @@
 #ifndef CFD_NAVIGATE_H
 #define CFD_NAVIGATE_H
 
-#include <gmtl/Math.h>//changed by Gengxun
-#include <gmtl/Vec.h>
-#include <gmtl/Point.h>
-#include <gmtl/Xforms.h>
-#include <gmtl/Output.h>
-#include <gmtl/Matrix.h>
-#include <gmtl/Coord.h>
-#include <gmtl/Generate.h>
-    // --- VR Juggler Stuff --- //
-#include <vrj/Kernel/Kernel.h>
-#include <vrj/Draw/Pf/PfApp.h>    // the performer application base type
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Projection.h>  // for setNearFar (for setting clipping planes)
-#include <vrj/Util/FileIO.h>
-
 #include <gadget/Type/PositionInterface.h>
-#include <gadget/Type/DigitalInterface.h>
+#include <gmtl/Matrix.h>
+#include <gmtl/Vec.h>
 
-//#include <Math/vjCoord.h>
-//#include <Input/InputManager/vjPosInterface.h>
-//#include <Input/InputManager/vjDigitalInterface.h>
 //! Navigation tracker
 /*!
   A class to track the wand location, object translation,

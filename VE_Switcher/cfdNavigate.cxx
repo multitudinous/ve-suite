@@ -30,17 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdNavigate.h"
-#include <iostream.h>
-#include <stdlib.h>
-#include <stdio.h>
 
-using namespace gmtl; //added by Gengxun
-using namespace vrj;
+#include <gmtl/Xforms.h>
+#include <gmtl/Generate.h> // for setTrans
+
+using namespace gmtl;
 using namespace gadget;
 
 cfdNavigate::cfdNavigate( )
 {
-  wand.init("VJWand");
+   wand.init("VJWand");
 }
 
 cfdNavigate::~cfdNavigate( )
@@ -52,122 +51,121 @@ void cfdNavigate::ResetCoordsToZero( )
    this->worldLoc[0] = this->worldLoc[1] = this->worldLoc[2] = 0.0f;
 }
 
-
 void cfdNavigate::Initialize( float delta )
 {
-  this->cursorLen = 2.0f;
-  this->dObj = delta;// Default should be 0.05f
-  this->UpdateDir( );
-  this->UpdateLoc( );
+   this->cursorLen = 2.0f;
+   this->dObj = delta;// Default should be 0.05f
+   this->UpdateDir( );
+   this->UpdateLoc( );
 
-  this->worldLoc[0] = this->worldLoc[1] = this->worldLoc[2] = 0.0f;
+   this->worldLoc[0] = this->worldLoc[1] = this->worldLoc[2] = 0.0f;
 
-  for ( int i=0; i<3; i++ )
-  {
-    this->cursorLoc[i] = this->loc[i] + this->dir[i]*this->cursorLen;
-    this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
-  }
+   for ( int i=0; i<3; i++ )
+   {
+      this->cursorLoc[i] = this->loc[i] + this->dir[i]*this->cursorLen;
+      this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
+   }
 }
 
 void cfdNavigate::GetDirection( float xyzV[3] )
 {
-  this->GetDirection( xyzV[0], xyzV[1], xyzV[2] );
+   this->GetDirection( xyzV[0], xyzV[1], xyzV[2] );
 }
 
 void cfdNavigate::GetDirection( float &xV, float &yV, float &zV )
 {
-  this->UpdateDir( );
+   this->UpdateDir( );
 
-  xV = this->dir[0];
-  yV = this->dir[1];
-  zV = this->dir[2];
+   xV = this->dir[0];
+   yV = this->dir[1];
+   zV = this->dir[2];
 }
 
 float * cfdNavigate::GetDirection( )
 {
-  this->UpdateDir( );
+   this->UpdateDir( );
 
-  return this->dir;
+   return this->dir;
 }
 
 void cfdNavigate::GetLocation( float xyzL[3] )
 {
-  this->GetLocation( xyzL[0], xyzL[1], xyzL[2] );
+   this->GetLocation( xyzL[0], xyzL[1], xyzL[2] );
 }
 
 void cfdNavigate::GetLocation( float &xL, float &yL, float &zL )
 {
-  this->UpdateLoc( );
+   this->UpdateLoc( );
 
-  xL = this->loc[0];
-  yL = this->loc[1];
-  zL = this->loc[2];
+   xL = this->loc[0];
+   yL = this->loc[1];
+   zL = this->loc[2];
 }
 
 float * cfdNavigate::GetLocation( )
 {
-  this->UpdateLoc( );
+   this->UpdateLoc( );
 
-  return this->loc;
+   return this->loc;
 }
 
 void cfdNavigate::GetObjLocation( float xyzO[3] )
 {
-  this->GetObjLocation( xyzO[0], xyzO[1], xyzO[2] );
+   this->GetObjLocation( xyzO[0], xyzO[1], xyzO[2] );
 }
 
 void cfdNavigate::GetObjLocation( float &xO, float &yO, float &zO )
 {
-  xO = this->objLoc[0];
-  yO = this->objLoc[1];
-  zO = this->objLoc[2];
+   xO = this->objLoc[0];
+   yO = this->objLoc[1];
+   zO = this->objLoc[2];
 }
 
 float * cfdNavigate::GetObjLocation( )
 {
-  return this->objLoc;
+   return this->objLoc;
 }
 
 float * cfdNavigate::GetCurObjLocation( )
 {
- this->CursorTranslate(); 
- return this->objLoc;
+   this->CursorTranslate(); 
+   return this->objLoc;
 }
 
 void cfdNavigate::GetCursorLocation( float xyzC[3] )
 {
-  this->GetCursorLocation( xyzC[0], xyzC[1], xyzC[2] );
+   this->GetCursorLocation( xyzC[0], xyzC[1], xyzC[2] );
 }
 
 void cfdNavigate::GetCursorLocation( float &xC, float &yC, float &zC )
 {
-  this->CursorTranslate( );
-  xC = this->cursorLoc[0];
-  yC = this->cursorLoc[1];
-  zC = this->cursorLoc[2];
+   this->CursorTranslate( );
+   xC = this->cursorLoc[0];
+   yC = this->cursorLoc[1];
+   zC = this->cursorLoc[2];
 }
 
 float * cfdNavigate::GetCursorLocation( )
 {
-  this->CursorTranslate( );
-  return this->cursorLoc;
+   this->CursorTranslate( );
+   return this->cursorLoc;
 }
 
 void cfdNavigate::GetWorldLocation( float xyzS[3] )
 {
-  this->GetWorldLocation( xyzS[0], xyzS[1], xyzS[2] );
+   this->GetWorldLocation( xyzS[0], xyzS[1], xyzS[2] );
 }
 
 void cfdNavigate::GetWorldLocation( float &xS, float &yS, float &zS )
 {
-  xS = this->worldLoc[0];
-  yS = this->worldLoc[1];
-  zS = this->worldLoc[2];
+   xS = this->worldLoc[0];
+   yS = this->worldLoc[1];
+   zS = this->worldLoc[2];
 }
 
 float * cfdNavigate::GetWorldLocation( )
 {
-  return this->worldLoc;
+   return this->worldLoc;
 }
 
 void cfdNavigate::UpdateDir( )      //Changed by Gengxun
@@ -204,44 +202,44 @@ cfdNavigate::TransformJugglerToPerformer()
 
 void cfdNavigate::FwdTranslate( )
 {
-  this->UpdateDir( );
+   this->UpdateDir( );
 
-  for ( int i=0; i<3; i++ )
-  {
-  // Update the translation movement for the objects
-  // How much object should move
-    this->worldLoc[i] += this->dir[i]*this->dObj;
+   for ( int i=0; i<3; i++ )
+   {
+      // Update the translation movement for the objects
+      // How much object should move
+      this->worldLoc[i] += this->dir[i]*this->dObj;
 
-  // How much the cursor movement are needed to trace back
-  // to the object after each movement of the object
-    this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
-  }
+      // How much the cursor movement are needed to trace back
+      // to the object after each movement of the object
+      this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
+   }
 }
 
 void cfdNavigate::AftTranslate( )
 {
-  this->UpdateDir( );
+   this->UpdateDir( );
 
-  for ( int i=0; i<3; i++ )
-  {
-  // Update the translation movement for the objects
-  // How much object should move
-    this->worldLoc[i] -= this->dir[i]*this->dObj;
+   for ( int i=0; i<3; i++ )
+   {
+      // Update the translation movement for the objects
+      // How much object should move
+      this->worldLoc[i] -= this->dir[i]*this->dObj;
 
-  // How much the cursor movement are needed to trace back
-  // to the object after each movement of the object
-    this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
-  }
+      // How much the cursor movement are needed to trace back
+      // to the object after each movement of the object
+      this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
+   }
 }
 
 void cfdNavigate::CursorTranslate( )
 {
-  this->UpdateDir( );
-  this->UpdateLoc( );
+   this->UpdateDir( );
+   this->UpdateLoc( );
 
-  for ( int i=0; i<3; i++ )
-  {
-    this->cursorLoc[i] = this->loc[i] + this->dir[i]*this->cursorLen;
-    this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
-  }
+   for ( int i=0; i<3; i++ )
+   {
+      this->cursorLoc[i] = this->loc[i] + this->dir[i]*this->cursorLen;
+      this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
+   }
 }
