@@ -2,107 +2,555 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title>VE-Suite Code Guidelines</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-<link href="Ve-Suite.css" rel="stylesheet" type="text/css">
+<title>VE-Suite Developer Information</title>
+<link href="vesuite.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #FFFFFF;
+}
+a {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #0099FF;
+}
+a:link {
+	text-decoration: none;
+	color: #CC6633;
+}
+a:visited {
+	text-decoration: none;
+	color: #CC6633;
+}
+a:hover {
+	text-decoration: underline;
+	color: #CC9900;
+}
+a:active {
+	text-decoration: none;
+	color: #CC6633;
+}
+h1,h2,h3,h4,h5,h6 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+h1 {
+	font-size: x-large;
+	color: #CC9900;
+}
+h2 {
+	font-size: medium;
+	color: #CCCCCC;
+}
+.style6 {font-size: x-small}
+.style8 {color: #FFFFFF}
+.style9 {font-family: "Courier New", Courier, mono}
+body {
+	background-color: #333366;
+	margin-left: 0px;
+	margin-top: 0px;
+}
+-->
+</style>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+//-->
+</script>
 </head>
 
-<p class="Title1">VE-Suite Code Guidelines</p>
-<p class="text">Basic quidelines are needed so that your code looks properly formatted in someone else's editor and is easy to follow.  We modelled these guidelines after those of two open-source projects that we use heavily, 
- <a href="http://www.vtk.org/contribute.php">VTK</a> and
- <a href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/VrJugglerCppCodingStandard">VRJuggler</a> .</p>
-
-<p class="Title2">Class Structure</p>
-<p class="text">We only put one public class per file.</p>
-<p class="text">Every class name, macro, etc. starts with either "cfd" or "CFD" to avoid name clashes with other libraries. Classes should all start with "cfd" and macros or constants can start with either.</p>
-<p class="text">Class names and file names are the same (e.g., cfdContours class is declared in cfdContours.h and implemented in cfdContours.cpp). This makes it easier to find the correct file for a specific class.</p>
-<p class="text">We try to keep all instance variables protected. The user and application developer should access instance variables through Set/Get methods.</p>
-<p class="bodytext"><span class="text">We </span><span class="bodytextemph">always</span> <span class="text">initialize member variables in the constructor. Too many problems are eventually traced back to a pointer or variable left uninitialized.</span></p>
-<p class="text">Classes should implement a destructor, copy constructor, and equals operator.</p>
-
-<p class="Title2">Names</p>
-<p class="bodytext"><span class="text">Make names clear. Try to spell out a name and not use abbreviations. This leads to longer names but it makes using the software easier because you know that the </span><span class="computer">SetRasterFontRange </span><span class="text">method will always be called that, not </span><span class="computer">SetRFRange </span><span class="text">or</span><span class="computer"> SetRFontRange </span><span class="text">or</span><span class="computer"> SetRFR. </span><span class="text">When the name includes a natural abbreviation such as</span><span class="computer"> OpenGL, </span><span class="text">we keep the abbreviation and capitalize the abbreviated letters.</span></p>
-<p class="bodytext"><span class="text">We only use alphanumeric characters in names, [a-zA-z0-9]. We do not use underscores ('_'), so names like</span><span class="computer"> exterior_Surface </span><span class="text">or</span><span class="computer"> _exteriorSurface </span><span class="text">are not welcome.</span></p>
-<p class="bodytext"><span class="text">We use capitalization to indicate words within a name. For example, a class could be called</span> <span class="computer">cfdVectorTopologyFilter</span>.</p>
-<p class="bodytext"><span class="text">Use  </span><span class="computer">"this"</span><span class="text"> inside of methods even though C++ doesn't require you to. This really seems to make the code more readable because it disambiguates between instance variables and local or global variables. It also disambiguates between member functions and other functions.</span></p>
-
-<p class="Title2">Class Names</p>
-<p class="bodytext"><span class="text">Classes names are nouns and usually start with </span><span class="computer">“cfd”.</span></p>
-
-<p class="Title2">Variable Names</p>
-<p class="text">Variable names are nouns and should begin with a lower case character.</p>
-
-<p class="Title2">Function Names</p>
-<p class="bodytext"><span class="text">Function names are verbs (e.g., </span><span class="computer">SetRasterFontRange</span><span class="text">) and start with an upper case letter.</span></p>
-
-<p class="Title2">Functions and Function Arguments</p>
-<p class="text">Use const on any member function that does not change any data. It enforces the purpose of a function and allows for better compiler optimizations.</p>
-
-<p class="Title2">C++ style variable usage</p>
-<p class="text">Declare variables where they're first used. C++ lifted this restriction from C for a reason. It makes code more modular and easier to understand, modify, and debug.</p>
-
-<p class="Title2">Braces</p>
-<p class="text">Place brace under and inline with keywords: 
-<p class="computer">&nbsp;&nbsp;&nbsp; if ( condition ) &nbsp;&nbsp;&nbsp; while ( condition )</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; { &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-<p class="computer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; } &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-
-<p class="bodytext"><span class="text">Justification
-</span>
-<p class="text">If you use an editor that supports brace matching (such as vi or vim), then it is easy to hop around long blocks.</p>
-<p class="bodytext"><span class="text">If you want to comment out the conditional clause, it only takes one “//”
-</span>
-<p class="text">Use braces for all if, while and do statements even if there is only a single statement within the braces. It ensures that when someone adds a line of code later there are already braces and they don't forget. It provides a more consistent look. It doesn't affect execution speed. It's easy to do. It will keep you out of trouble when using vrjDebug print statements.</p>
-
-<p class="Title2">Header Files</p>
-<p class="text">Header files are for declarations only. It is difficult to read code and find code if source is in the declarations.</p>
-<p class="text">The header file of the class should include only the superclass header file. If you need any other includes, include comment at each one describing why it should be included.</p>
-<p class="text">Use forward class declarations to eliminate the other includes that you are tempted to insert.</p>
-<p class="bodytext"><span class="text">Header files should use guards to prevent multiple inclusion. These guards should be defined in the style</span><span class="computer"> FILENAME_H, </span><span class="text">which is the filename written in all upper case with punctuation such as dots ('.') replaced by underscores ('_')</span></p>
-<p class="computer">&nbsp;&nbsp;&nbsp; #ifndef CFDHEADER_H</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; #define CFDHEADER_H</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; ...</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; #endif // CFDHEADER_H</p>
-
-<p class="bodytext"><span class="text">Comment the end of every </span><span class="computer">#endif, </span><span class="text">as shown above. Nested </span><span class="computer">#ifdef's </span><span class="text">can be difficult to follow.</span></p>
-<p class="text">A new line after the last endif if is required by some compilers.</p>
-
-<p class="Title2">Text Formatting </p>
-<p class="text">Limit lines to 80 characters. That allows you to open and see multiple files on a single display and you can better compare two files in xdiff or tkdiff. Set your editor to default to an 80-character wide screen.</p>
-<p class="text">Three (3) space indentation – Set your editor to insert three spaces every time you hit the tab key. True tabs (“\t”) are pretty much just for Makefiles.</p>
-<p class="text">Insert whitespace for readability. This means that one blank line should occur between function definitions or between different blocks of code.</p>
-
-<p class="Title2">Namespaces</p>
-<p class="bodytext"><span class="text">Don't place the </span><span class="computer">"using namespace" </span><span class="text">directive at global scope in a header file. This can cause lots of invisible conflicts that are hard to track. Keep</span><span class="computer"> “using” </span><span class="text">statements to implementation files (if at all).</span></p>
-<p class="bodytext"><span class="text">For standard namespace keywords (cout, cin, cerr, endl, vector, string), You must do </span><span class="computer">“std::cout”,</span> <span class="text">etc.</span></p>
-
-<p class="Title2">Comments</p>
-<p class="text">Comments must tell “why”, not “what is happening”. At every point where you had a choice of what to do, place a comment describing which choice you made and why.</p>
-
-<p class="Title2">Parens () with Key Words and Functions Policy</p>
-<p class="text">Do not put parens next to keywords. Put a space between keywords and parens. </p>
-<p class="text">Do not use parens in return statements when it's not necessary.</p>
-<p class="text">Do put parens next to function names.</p>
-<p class="text">Justification: Keywords are not functions. By putting parens next to keywords keywords and function names are made to look alike.</p>
-<p class="text">Example:</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; if ( condition ) &nbsp;&nbsp;&nbsp; while ( condition )</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; { &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
-<p class="computer">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; } &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
-
-<p class="computer">&nbsp;&nbsp;&nbsp; strcpy( s, s1 ); &nbsp;&nbsp;&nbsp;  return 1;</p>
-
-<p class="Title2">Array Indexing</p>
-<p class="text">Single-character variable names can easily be mistaken for numbers (“i”s can sometimes look a lot like ones). Make the array index stand out with whitespace:</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; array[ i ] = 0.0;</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; array[ 1 ] = 0.0;</p>
-<p class="computer">&nbsp;&nbsp;&nbsp; array[ 2 ] = 0.0;</p>
-
-<p class="Title2">Submit clean code</p>
-<p class="text">Make sure your code compiles without any warnings with -Wall and -O2.</p>
-
+<body>
+<table width="875" height="114" border="0" cellpadding="0" cellspacing="0" bgcolor="#333366">
+  <tr>
+    <td width="576" height="114" rowspan="2" background="homepage/header.gif">&nbsp;</td>
+    <td valign="top"><div align="right">
+        <blockquote>
+          <p><strong><span class="style8"><a href="http://www.vrac.iastate.edu"><br>
+        Virtual Reality Applications Center</a><br>
+          </span></strong><strong><span class="style8"><a href="http://www.vrac.iastate.edu/%7Ekmbryden">Professor Kenneth Mark Bryden</a></span></strong></p>
+        </blockquote>
+    </div></td>
+  </tr>
+  <tr>
+    <td valign="bottom"><div align="right">
+        <p>&nbsp;</p>
+    </div></td>
+  </tr>
+</table>
+<TABLE width="875" border=0 
+cellPadding=5 cellSpacing=0 borderColor=#CCCCCC bgcolor="#333366" style="BORDER-COLLAPSE: collapse">
+  <TBODY>
+    <TR>
+      <TD valign="middle"><p>&nbsp;</p></TD>
+      <TD valign="middle"><p>&nbsp;</p></TD>
+    </TR>
+    <TR>
+      <TD valign="middle"><h1>&nbsp;</h1></TD>
+      <TD valign="middle"><h1>User's Guide </h1></TD>
+    </TR>
+    <TR>
+      <TD width="22%"><P class="paragraph"><strong><a href="/VE_Suite/docs/homepage.htm">Homepage</a></strong></P></TD>
+      <TD width="78%" rowspan="300" valign="top"><h3>VE-Suite Code Guidelines </h3>
+          <p>Basic quidelines are needed so that your code looks properly formatted in someone else's editor and is easy to follow. We modelled these guidelines after those of two open-source projects that we use heavily, <a href="http://www.vtk.org/contribute.php">VTK</a> and <a href="http://www.vrjuggler.org/twiki_public/bin/view/Juggler/VrJugglerCppCodingStandard">VRJuggler</a> .</p>
+          <h2>Class Structure</h2>
+          <blockquote>
+            <p>We only put one public class per file.</p>
+            <p>Every class name, macro, etc. starts with either &quot;<span class="style9">cfd</span>&quot; or &quot;<span class="style9">CFD</span>&quot; to avoid name clashes with other libraries. Classes should all start with &quot;<span class="style9">cfd</span>&quot; and macros or constants can start with either.</p>
+            <p>Class names and file names are the same (e.g., cfdContours class is declared in cfdContours.h and implemented in cfdContours.cpp). This makes it easier to find the correct file for a specific class.</p>
+            <p>We try to keep all instance variables protected. The user and application developer should access instance variables through Set/Get methods.</p>
+            <p>We <strong>always</strong> initialize member variables in the constructor. Too many problems are eventually traced back to a pointer or variable left uninitialized.</p>
+            <p>Classes should implement a destructor, copy constructor, and equals operator.</p>
+          </blockquote>          <h2>Names</h2>
+          <blockquote>
+            <p>Make names clear. Try to spell out a name and not use abbreviations. This leads to longer names but it makes using the software easier because you know that the <span class="style9">SetRasterFontRange</span> method will always be called that, not <span class="style9">SetRFRange</span> or <span class="style9">SetRFontRange</span> or <span class="style9">SetRFR</span>. When the name includes a natural abbreviation such as <span class="style9">OpenGL</span>, we keep the abbreviation and capitalize the abbreviated letters.</p>
+            <p>We only use alphanumeric characters in names, [a-zA-z0-9]. We do not use underscores ('_'), so names like <span class="style9">exterior_Surface</span> or <span class="style9">_exteriorSurface</span> are not welcome.</p>
+            <p>We use capitalization to indicate words within a name. For example, a class could be called <span class="style9">cfdVectorTopologyFilter</span>.</p>
+            <p>Use &quot;<span class="style9">this</span>&quot; inside of methods even though C++ doesn't require you to. This really seems to make the code more readable because it disambiguates between instance variables and local or global variables. It also disambiguates between member functions and other functions.</p>
+          </blockquote>          <h2>Class Names</h2>
+          <blockquote>
+            <p>Classes names are nouns and usually start with &ldquo;<span class="style9">cfd</span>&rdquo;.</p>
+          </blockquote>          <h2>Variable Names</h2>
+          <blockquote>
+            <p>Variable names are nouns and should begin with a lower case character.</p>
+          </blockquote>          <h2>Function Names</h2>
+          <blockquote>
+            <p>Function names are verbs (e.g., <span class="style9">SetRasterFontRange</span>) and start with an upper case letter.</p>
+          </blockquote>          <h2>Functions and Function Arguments</h2>
+          <blockquote>
+            <p>Use const on any member function that does not change any data. It enforces the purpose of a function and allows for better compiler optimizations.</p>
+          </blockquote>          <h2>C++ style variable usage</h2>
+          <blockquote>
+            <p>Declare variables where they're first used. C++ lifted this restriction from C for a reason. It makes code more modular and easier to understand, modify, and debug.</p>
+          </blockquote>          <h2>Braces</h2>
+          <blockquote>
+            <p>Place brace under and inline with keywords: </p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; if ( condition ) &nbsp;&nbsp;&nbsp; while ( condition )</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; { &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; } &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p>Justification </p>
+            <p>If you use an editor that supports brace matching (such as vi or vim), then it is easy to hop around long blocks.</p>
+            <p>If you want to comment out the conditional clause, it only takes one &ldquo;//&rdquo; </p>
+            <p>Use braces for all if, while and do statements even if there is only a single statement within the braces. It ensures that when someone adds a line of code later there are already braces and they don't forget. It provides a more consistent look. It doesn't affect execution speed. It's easy to do. It will keep you out of trouble when using vrjDebug print statements.</p>
+          </blockquote>          <h2>Header Files</h2>
+          <blockquote>
+            <p>Header files are for declarations only. It is difficult to read code and find code if source is in the declarations.</p>
+            <p>The header file of the class should include only the superclass header file. If you need any other includes, include comment at each one describing why it should be included.</p>
+            <p>Use forward class declarations to eliminate the other includes that you are tempted to insert.</p>
+            <p>Header files should use guards to prevent multiple inclusion. These guards should be defined in the style <span class="style9">FILENAME_H</span>, which is the filename written in all upper case with punctuation such as dots ('.') replaced by underscores ('_')</p>
+            <p>&nbsp;<span class="style9">&nbsp;&nbsp; #ifndef CFDHEADER_H</span></p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; #define CFDHEADER_H</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; ...</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; #endif // CFDHEADER_H</p>
+            <p>Comment the end of every <span class="style9">#endif</span>, as shown above. Nested <span class="style9">#ifdef's</span> can be difficult to follow.</p>
+            <p>A new line after the last endif if is required by some compilers.</p>
+          </blockquote>          <h2>Text Formatting </h2>
+          <blockquote>
+            <p>Limit lines to 80 characters. That allows you to open and see multiple files on a single display and you can better compare two files in xdiff or tkdiff. Set your editor to default to an 80-character wide screen.</p>
+            <p>Three (3) space indentation &ndash; Set your editor to insert three spaces every time you hit the tab key. True tabs (&ldquo;\t&rdquo;) are pretty much just for Makefiles.</p>
+            <p>Insert whitespace for readability. This means that one blank line should occur between function definitions or between different blocks of code.</p>
+          </blockquote>          <h2>Namespaces</h2>
+          <blockquote>
+            <p>Don't place the <span class="style9">&quot;using namespace&quot;</span> directive at global scope in a header file. This can cause lots of invisible conflicts that are hard to track. Keep <span class="style9">&ldquo;using&rdquo;</span> statements to implementation files (if at all).</p>
+            <p>For standard namespace keywords (cout, cin, cerr, endl, vector, string), You must do <span class="style9">&ldquo;std::cout&rdquo;</span>, etc.</p>
+          </blockquote>          <h2>Comments</h2>
+          <blockquote>
+            <p>Comments must tell &ldquo;why&rdquo;, not &ldquo;what is happening&rdquo;. At every point where you had a choice of what to do, place a comment describing which choice you made and why.</p>
+          </blockquote>          <h2>Parens () with Key Words and Functions Policy</h2>
+          <blockquote>
+            <p>Do not put parens next to keywords. Put a space between keywords and parens. </p>
+            <p>Do not use parens in return statements when it's not necessary.</p>
+            <p>Do put parens next to function names.</p>
+            <p>Justification: Keywords are not functions. By putting parens next to keywords keywords and function names are made to look alike.</p>
+            <p>Example:</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; if ( condition ) &nbsp;&nbsp;&nbsp; while ( condition )</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; { &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; {</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ... &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ...</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; } &nbsp; &nbsp; &nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; }</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; strcpy( s, s1 ); &nbsp;&nbsp;&nbsp; return 1;</p>
+          </blockquote>          <h2>Array Indexing</h2>
+          <blockquote>
+            <p>Single-character variable names can easily be mistaken for numbers (&ldquo;i&rdquo;s can sometimes look a lot like ones). Make the array index stand out with whitespace:</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; array[ i ] = 0.0;</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; array[ 1 ] = 0.0;</p>
+            <p class="style9">&nbsp;&nbsp;&nbsp; array[ 2 ] = 0.0;</p>
+          </blockquote>          <h2>Submit clean code</h2>
+          <blockquote>
+            <p>Make sure your code compiles without any warnings with -Wall and -O2</p>
+          </blockquote><p>&nbsp;<br><a href="homepage/developinfo.pdf">Printable Version </a></p>          <p>&nbsp;</p></TD>
+    </TR>
+    <TR>
+      <TD><a href="homepage/download.htm"><strong>Download </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="homepage/install.htm"><strong>Installation</strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="homepage/uguide.htm"><strong>User's Guide </strong></a><br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="VE_Suite_Code_Guidelines.html">Code Guidelines</a><br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="VE_Suite_Omni_Build_Instructions.html">Omni Build Instructions</a><br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="VE_Suite_TAO_Build_Instructions.html">TAO Build Instructions</a><br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="homepage/builder.htm">VE-Builder with StarCD</a></TD>
+    </TR>
+<!-- <TR>
+      <TD><a href="doc.htm"><strong>Documentation</strong></a></TD>
+    </TR> -->
+    <TR>
+      <TD><a href="homepage/appgallery.htm"><strong>Application Gallery </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="homepage/research.htm"><strong>Research</strong></a> </TD>
+    </TR>
+    <TR>
+      <TD><a href="homepage/collaborators.htm"><strong>Collaborators</strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="homepage/developinfo.htm"><strong>Developer Information </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="homepage/contact.htm"><strong>Contact</strong></a></TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+  </TBODY>
+</TABLE>
 </body>
-
 </html>
-
