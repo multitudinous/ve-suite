@@ -1,8 +1,4 @@
-# Create the OS-dependent directory name
-UNAME= $(shell uname -s)
-LIBS_DIR= $(UNAME)_LIB
-
-APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/preprocessor
+APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/preprocessor
 
 all:
 	$(MAKE) NO_DEPEND=0 cxx
@@ -18,8 +14,10 @@ SRCS=\
    readWriteVtkThings.cxx \
    setScalarAndVector.cpp
 
-OBJDIR=	$(LIBS_DIR)
-DEPDIR=	$(LIBS_DIR)
+# Specify the OS-dependent directory name for object files and depends
+OBJDIR=	$(CFDHOSTTYPE)
+DEPDIR=	$(CFDHOSTTYPE)
+
 NO_DEPEND= YES
 # One of these must be uncommented.
 #DEBUG_APP?=		TRUE
@@ -61,7 +59,7 @@ cxx: $(OBJS)
 # Create the OS-dependent directory for the executable. If the dir exists, 
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 ${APP_NAME}: $(OBJS)
-	mkdir -p $(VE_SUITE_HOME)/bin/$(UNAME)
+	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
 
 #install:

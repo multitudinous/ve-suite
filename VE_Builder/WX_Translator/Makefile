@@ -5,10 +5,6 @@ CXX = $(shell wx-config --cxx)
 WX_CXX = $(shell wx-config --cxxflags)
 WX_LIB = $(shell wx-config --libs)
 
-# Create the OS-dependent directory name
-UNAME= $(shell uname -s)
-LIBS_DIR= $(UNAME)_LIB
-
 APP_NAME= cfdtrans
 
 all:
@@ -27,8 +23,10 @@ SRCS=\
    FluentTranslator.cpp \
    UnstructuredGridWriter.cpp
 
-OBJDIR=	$(LIBS_DIR)
-DEPDIR=	$(LIBS_DIR)
+# Specify the OS-dependent directory name for object files and depends
+OBJDIR=	$(CFDHOSTTYPE)
+DEPDIR=	$(CFDHOSTTYPE)
+
 NO_DEPEND= YES
 # One of these must be uncommented.
 #DEBUG_APP?=		TRUE
