@@ -23,11 +23,11 @@ export CFDHOSTTYPE=`echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 #echo "CFDHOSTTYPE =" $CFDHOSTTYPE
 
 export TAO_BUILD=TRUE
-export CLUSTER_APP=FALSE
+export CLUSTER_APP=TRUE
 export SCENE_GRAPH=PF
 
 export PFNFYLEVEL=2
-export VPR_DEBUG_NFY_LEVEL=0
+export VPR_DEBUG_NFY_LEVEL=2
 export VPR_DEBUG_ENABLE=1
 export PFSHAREDSIZE=534773700
 export OMNIORB_CONFIG=${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg

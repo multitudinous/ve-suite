@@ -757,7 +757,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
-            //temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
+            temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
             temp->SetWorldNode( cfdPfSceneManagement::instance()->GetWorldDCS() );
             temp->SetGeodes( this->dataList[ i ]->GetGeodes() );

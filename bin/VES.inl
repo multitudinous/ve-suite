@@ -22,9 +22,12 @@ case $1 in
   ;;
 
   -wall)
+    date
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_cluster_tao \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
-    ${MY_VJCONFIGS}bay_5_vr.jconf
+    ${MY_VJCONFIGS}/bay_5_vr.jconf
+    date
+    /usr/share/Performer/bin/rmsem
   ;;
 
   -nserv)
@@ -96,10 +99,6 @@ case $1 in
     mozilla file:///${VE_SUITE_HOME}/docs/starcd/initial.htm &
   ;;
  
-  *)
-   echo Use -h for help
-   ;;
- 
   -h)
   
   echo ""
@@ -112,6 +111,7 @@ case $1 in
   echo "   "-preproc = precompute cutting planes
   echo This will start the viewer using the specified display
   echo "       "-sim = sim mode desktop display
+  echo "      "-wall = run the display wall in Bay 5
   echo When the viewer has started, start the menu in another shell
   echo "      "-menu = start wxWidgets menu to control viewer
   echo The following utilities might be useful occasionaly
@@ -127,4 +127,9 @@ case $1 in
   echo "  "-shutdown = shutdown VE-CE and TAO NameService
   echo ""
   ;;
+
+  *)
+   echo Use -h for help
+   ;;
+ 
 esac
