@@ -6,6 +6,8 @@
 
 #include "GasSource.h"
 #include "GasSource_UI.h"
+#include "thermo.h"
+//extern thermo *GLOBAL_THERMO;
 
 IMPLEMENT_DYNAMIC_CLASS(GasSource, REI_Plugin)
 
@@ -42,40 +44,54 @@ GasSource
   ashcal = 10;
   ashph = 7;
 
-  //Will be replaced by code of reading a thermo file
-  species.push_back("AR");
-  species.push_back("N2");
-  species.push_back("C2H2");
-  species.push_back("CH4");
-  species.push_back("O2");
-  species.push_back("CO2");
-  species.push_back("COS");
-  species.push_back("H20");
-  species.push_back("H2");
-
-  comp.push_back("AR");
-  comp.push_back("O2");
-  comp.push_back("N2");
-
-  spec_frac.push_back("0.001");
-  spec_frac.push_back("0.21");
-  spec_frac.push_back("0.789");
-
+  // available particles
+  particles.clear();
   particles.push_back("ASH");
   particles.push_back("CHAR");
   particles.push_back("COAL");
   particles.push_back("WATER");
 
+  // Default particle composition
   p_comp.push_back("ASH");
-  p_comp.push_back("CHAR");
-  p_comp.push_back("COAL");
-  p_comp.push_back("WATER");
- 
   p_frac.push_back("1.0");
-  p_frac.push_back("0.0");
-  p_frac.push_back("0.0");
-  p_frac.push_back("0.0");
-
+  p_comp.push_back("CHAR");
+  p_frac.push_back("0");
+  p_comp.push_back("COAL");
+  p_frac.push_back("0");
+  p_comp.push_back("WATER");
+  p_frac.push_back("0");
+  
+  // Default gas composition
+  comp.clear();
+  spec_frac.clear();
+  
+  comp.push_back("O2");
+  spec_frac.push_back("0.21");
+  comp.push_back("N2");
+  spec_frac.push_back("0.789");
+  comp.push_back("AR");
+  spec_frac.push_back("0.001");
+  
+  // Available species
+  thermo *thrmo;
+  //  if(GLOBAL_THERMO) thrmo = GLOBAL_THERMO;
+  //else {
+    // std::string scihome = getenv("SCI_WORK");
+  std::string therm_path = "therm";
+  thrmo = new thermo(therm_path);
+  //}
+  
+  const std::map<std::string, int>& name_map = thrmo->get_nam_spec();
+  
+  species.clear();
+  map<std::string, int>::const_iterator iter;
+  for(iter=name_map.begin(); iter!=name_map.end(); iter++)
+    species.push_back(iter->first);
+  
+  //if(GLOBAL_THERMO != thrmo) 
+  delete thrmo;
+  
+  
   n_pts = 4;
   poly[3]= wxPoint(20, 40);
 }

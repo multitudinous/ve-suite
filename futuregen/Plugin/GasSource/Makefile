@@ -19,11 +19,16 @@ include Makefile.incl
 
 PLUGIN = libGasSource.so
 OBJECTS = GasSource.o \
-	GasSource_UI.o 
+	GasSource_UI.o \
+	thermo.o \
+	matrix.o
 
-.SUFFIXES : .o .cpp
+.SUFFIXES : .o .cpp .cc
 
 .cpp.o :
+	$(CXX) -g -c ${INCLUDES} ${CMP} ${WX_FLAGS} -D WXUSING_PLUGIN_DLL -o $@ $<
+
+.cc.o :
 	$(CXX) -g -c ${INCLUDES} ${CMP} ${WX_FLAGS} -D WXUSING_PLUGIN_DLL -o $@ $<
 
 all: $(PLUGIN)
