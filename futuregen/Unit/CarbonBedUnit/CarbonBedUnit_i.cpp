@@ -49,11 +49,19 @@ void Body_Unit_i::StartCalc (
     V21Helper gashelper(therm_path.c_str());
     gashelper.IntToGas(&(p.intfs[0]), *gas_in);
 
+    gas_in->gas_composite.normalize_specie();
     double gas_temp = gas_in->gas_composite.T;
     double gas_density = gas_in->gas_composite.density();
     double gas_viscosity = gas_in->gas_composite.Visc();
     double gas_flow_rate = gas_in->gas_composite.M;
-    double hg_feed_rate = 1.0;
+    double hg_feed_rate = gas_in->gas_composite.moles("HG");
+    double change_by = 0.0;
+    if(hg_feed_rate>0.0){
+       change_by = -0.99*hg_feed_rate;
+       hg_feed_rate *= gas_in->thermo_database->mweight("HG")/1000.0*7936.6;
+    }else{
+       hg_feed_rate=0.0;
+    }
 
     // Fluidization velocity calculation
     
@@ -69,8 +77,8 @@ void Body_Unit_i::StartCalc (
     
     // Bed height
     double tau = 20.0;  // Calgon-Carbon / Eastman (in seconds)
-    if( false /* If tau is different for AGR, make the change here */ )
-      ; // tau = 20.0;
+    //if( false /* If tau is different for AGR, make the change here */ )
+    //  ; // tau = 20.0;
     double bed_height = Uo * tau;  // In meters
     
     // Calculate the mass of coal needed
@@ -104,10 +112,14 @@ void Body_Unit_i::StartCalc (
     
     gas_out->copy(*gas_in);
         
-    gas_out->gas_composite.T = 100000; // example
-    gas_out->gas_composite.P = -99999; // example
-    gas_out->gas_composite.setFrac("HGCL2", 0.0002); // example
-    gas_out->gas_composite.normalize_specie(); // example
+    gas_out->gas_composite.P -= bed_pressure_drop*101325./14.7;
+    gas_out->gas_composite.moles(change_by,"HG");
+    // now do HGCL2
+    change_by = gas_in->gas_composite.moles("HGCL2");
+    if(change_by>0.0){
+       change_by *= -0.99;
+       gas_out->gas_composite.moles(change_by,"HGCL2");
+    }
 
     p.intfs.resize(1);
     gashelper.GasToInt(gas_out, p.intfs[0]);
