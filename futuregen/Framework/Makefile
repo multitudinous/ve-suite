@@ -73,11 +73,12 @@ EXTRA_CFLAGS+=
 EXTRA_CXXFLAGS+=
 
 EXTRA_DEFS+=
-#_MPI for HPC build
-#SJK_TEST produces ascii output
 
-#EXTRA_DEBUG_FLAGS+= -g -D_DEBUG
-#EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
+EXTRA_LIBS+= -lm
+
+ifeq ($(CFDHOSTTYPE),IRIX64)
+   EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include/boost/compatibility/cpp_c_headers
+endif
 
 LINKALL_ON= -all
 LINKALL_OFF=
@@ -87,7 +88,6 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
-#add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
