@@ -32,16 +32,9 @@
 #ifndef CFDANIMATION_H
 #define CFDANIMATION_H
 
-class pfGroup;
-
 class cfdTransientFlowManager;
 class cfdSequence;
-
-#ifndef _USE_CFD_SEQUENCE
-class pfSequence;
-#else
-class cfdSequence;
-#endif
+class pfGroup;
 
 #include <vector>
 
@@ -61,11 +54,7 @@ class cfdAnimation
       void SetpfGroups( void );
       
       //get a pointer to the animation
-#ifndef _USE_CFD_SEQUENCE
-      pfSequence* GetpfSequence( void );
-#else
-      cfdSequence* GetpfSequence( void );
-#endif
+      cfdSequence* GetSequence( void );
       
       pfGroup* GetpfGroup( int i );
 
@@ -75,11 +64,7 @@ class cfdAnimation
       int numFrames;
       double _duration;
 
-#ifndef _USE_CFD_SEQUENCE
-      pfSequence *sequence;
-#else
       cfdSequence* sequence;
-#endif
 
       pfGroup** groups;
 

@@ -38,11 +38,7 @@ class cfdReadParam;
 class pfDCS;
 class pfNode;
 class pfGeode;
-#ifndef _USE_CFD_SEQUENCE
-class pfSequence;
-#else
 class cfdSequence;
-#endif
 
 // VTK Classes
 class vtkPolyData;
@@ -101,24 +97,19 @@ class cfdObjects
       bool GetUpdateFlag( void ) { return ( this->updateFlag ); }
       void DeleteGeode( void );
 
-#ifndef _USE_CFD_SEQUENCE
-      void SetpfSequence( pfSequence * );
-      pfSequence* GetpfSequence( void );
-#else
-      void SetpfSequence( cfdSequence * );
-      cfdSequence* GetpfSequence( void );
-#endif
+      void SetSequence( cfdSequence * );
+      cfdSequence* GetSequence( void );
 
-      //void DeletepfSequence( void );
-      void StoppfSequence( void );
-      void StartpfSequence( void );
-      void PausepfSequence( void );
-      void ResumepfSequence( void );
-      void ClearpfSequence( void );
-      void AddTopfSequence( void );
-      void ReversepfSequence( void );
-      void ForwardpfSequence( void );
-      int  GetFrameOfpfSequence( void );
+      //void DeleteSequence( void );
+      void StopSequence( void );
+      void StartSequence( void );
+      void PauseSequence( void );
+      void ResumeSequence( void );
+      void ClearSequence( void );
+      void AddToSequence( void );
+      void ReverseSequence( void );
+      void ForwardSequence( void );
+      int  GetFrameOfSequence( void );
       
       void SetSourcePoints( vtkPolyDataSource * );
 
@@ -169,11 +160,7 @@ class cfdObjects
       pfGeode *geode;
       pfGeode* tempGeode;
 
-#ifndef _USE_CFD_SEQUENCE
-      pfSequence *sequence;
-#else
       cfdSequence* sequence;
-#endif
 
       pfDCS *dcs;
       std::vector< pfNode * > geodes;

@@ -33,95 +33,127 @@
 #ifndef _VRAC_CFD_SEQUENCE_H_
 #define _VRAC_CFD_SEQUENCE_H_
 
-#include <Performer/pf/pfGroup.h>
-class pfNode;
-class pfSwitch;
-class pfTraverser;
-
 enum cfdPlayMode{
-   CFDSEQ_STOP =  0,
+   CFDSEQ_STOP = 0,
    CFDSEQ_START,
    CFDSEQ_PAUSE,
    CFDSEQ_RESUME,
-   CFDSEQ_PLAYING,
-   CFDSEQ_STEP
+   CFDSEQ_PLAYING,   // not in pfSequence
+   CFDSEQ_STEP       // not in pfSequence
 };
 
 enum cfdLoopMode{
    CFDSEQ_CYCLE = 0,
    CFDSEQ_SWING
-
 };
 
-class cfdSequence : public pfGroup{
+class pfNode;
+class pfType;
+
+#ifndef _USE_CFD_SEQUENCE
+class pfSequence;
+
+class cfdSequence
+{
+public:
+   cfdSequence();
+   ~cfdSequence();
+   pfNode* getParent( int index );
+
+#else // _USE_CFD_SEQUENCE
+
+class pfSwitch;
+class pfTraverser;
+#include <Performer/pf/pfGroup.h>
+
+class cfdSequence : public pfGroup
+{
 public:
    cfdSequence();
    ~cfdSequence();
 
    //to make this a performer class
    static void init(void);
-   static pfType* getClassType(void){return _classType;}
+#endif //_USE_CFD_SEQUENCE
 
-   //set the duration of the sequence
-   void setDuration(double duration){_duration = duration;}
+   static pfType* getClassType( void );
 
-   //set the interval
-   void setInterval(int mode, int beg, int end);
+   //get the sequence node
+   pfNode * getNode();
 
-   //set the loop of the sequence
-   void setLoopMode(int lMode){_lMode = lMode;}
+   // set/get the duration (in seconds) of any particular frame
+   void setTime( double time );
+   double getTime();
 
-   //stop/start/pause/resume 
-   void setPlayMode(int pMode){
-      _pMode = pMode;
-   }
+   // set/get the duration (in seconds) of the entire sequence
+   void setDuration( double duration );
+   double getDuration();
 
-   //set the current frame
-   void setCurrentFrame(int frameIndex);
+   // set/get the interval
+   void setInterval( int loopmode, int begin, int end );
+   int getBegin();
+   int getEnd();
 
-   //step the sequence one frame in a particular direction
-   void stepSequence(){_step = CFDSEQ_STEP;}
+   // set/get the loop mode of the sequence
+   void setLoopMode( int lMode );
+   int getLoopMode();
+
+   // set/get the stop/start/pause/resume 
+   void setPlayMode( int pMode );
+   int getPlayMode();
+
+   // set the current frame
+   void setCurrentFrame( int frameIndex );
+
+   // step the sequence one frame in a particular direction
+   void stepSequence();
+
+   //get the direction of the sequence
+   int getDirection();
 
    //change the direction of the frame viewing
    //if it is currently foward(low->high index)
-   //change to reverse(high->low index) and vice
-   //versa
+   //change to reverse(high->low index) and vice versa
    void changeSequenceDirection();
 
    //get the current frame index
-   int getFrame();//{return _currentFrame ;}
+   int getFrame();
 
    //get the next frame index
    int getNextFrame();
 
    //get number of children
-   virtual int getNumChildren();
+   //virtual 
+   int getNumChildren();
 
    //add a child node
-   virtual void addChild(pfNode* child);
+   //virtual 
+   void addChild( pfNode* child );
 
    //get the index of a child
-   virtual int searchChild(pfNode* child);
+   //virtual 
+   int searchChild( pfNode* child );
 
    //get the specified child node  
-   virtual pfNode* getChild(int index);
+   //virtual 
+   pfNode* getChild( int index );
 
    //remove child 
-   virtual int removeChild(pfNode* child);
+   //virtual 
+   int removeChild( pfNode* child );
    
-   //get the direction of the sequence
-   int direction(){return _dir;}
-
-   //get the properties of the sequence
-   double duration(){return _duration;}
-   int loopMode(){return _lMode;}
-   int playMode(){return _pMode;}
-   int end(){return _end;}
-   int begin(){return _begin;}
+#ifdef _USE_CFD_SEQUENCE
     //the node pre-traverser callback
-  friend  int switchFrame(pfTraverser* trav, void* userData);
+   friend int switchFrame(pfTraverser* trav, void* userData);
+#endif
+
 protected:
+
+#ifdef _USE_CFD_SEQUENCE
    pfSwitch* _switch;
+#else
+   pfSequence * _pfSequence;
+#endif
 
    int _appFrame;
    int _lMode;
@@ -136,11 +168,9 @@ protected:
    int _end;
    
    int _currentFrame;
-   //forward(1)/backward(-1)
-   int _dir;
+   int _dir;   //forward(1)/backward(-1)
 
    static pfType* _classType;
-   
 };
 
 #endif //_VRAC_CFD_SEQUENCE_H_

@@ -30,15 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdAnimation.h"
-#include "cfdTransientFlowManager.h"
+
+using namespace std;
 
 #include <iostream>
 
-#ifndef _USE_CFD_SEQUENCE
-#include <Performer/pf/pfSequence.h>
-#else
+#include "cfdTransientFlowManager.h"
 #include "cfdSequence.h"
-#endif
 
 #include <Performer/pf/pfGroup.h>
 
@@ -46,11 +44,7 @@
 
 cfdAnimation::cfdAnimation()
 {
-#ifndef _USE_CFD_SEQUENCE
-   this->sequence = new pfSequence();
-#else
    this->sequence = new cfdSequence();
-#endif
    this->numFrames = 0;
    this->groups = NULL;
 }
@@ -78,7 +72,7 @@ void cfdAnimation::AddAFlowManager( cfdTransientFlowManager *manager )
    this->flowManagers.push_back( manager );
 }
 
-// create pfGroups and add to the pfSequence node
+// create pfGroups and add to the cfdSequence node
 void cfdAnimation::SetpfGroups( void )
 {
    // This function is called after the various flowManagers
@@ -107,17 +101,9 @@ void cfdAnimation::SetpfGroups( void )
    {
       this->groups[ i ] = new pfGroup();
       this->sequence->addChild( this->groups[ i ] );
-#ifndef _USE_CFD_SEQUENCE
-      this->sequence->setTime( i, this->_duration / this->numFrames );
-#endif
    }
-#ifndef _USE_CFD_SEQUENCE
-   this->sequence->setInterval( PFSEQ_CYCLE, 0 , this->numFrames - 1 );
-   this->sequence->setDuration( 1.0, -1 );
-#else
    this->sequence->setInterval( CFDSEQ_CYCLE, 0 , this->numFrames - 1 );
    this->sequence->setDuration( this->_duration );
-#endif
 }
 
 // set the duration of the sequence (in seconds)
@@ -131,11 +117,7 @@ pfGroup* cfdAnimation::GetpfGroup( int i )
    return this->groups[ i ];
 }
 
-#ifndef _USE_CFD_SEQUENCE
-pfSequence* cfdAnimation::GetpfSequence( void )
-#else
-cfdSequence* cfdAnimation::GetpfSequence( void )
-#endif
+cfdSequence* cfdAnimation::GetSequence( void )
 {
    return this->sequence;
 }

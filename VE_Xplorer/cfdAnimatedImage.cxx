@@ -39,11 +39,7 @@
 
 #include <Performer/pf/pfDCS.h>
 
-#ifndef _USE_CFD_SEQUENCE
-#include <Performer/pf/pfSequence.h>
-#else
 #include "cfdSequence.h"
-#endif
 
 #include <vpr/Util/Debug.h>
 
@@ -68,11 +64,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
       _images.push_back(im);
    }
 
-#ifndef _USE_CFD_SEQUENCE
-   this->sequence = new pfSequence();
-#else
    this->sequence = new cfdSequence();
-#endif
 }
 
 cfdAnimatedImage::cfdAnimatedImage( cfdReadParam* param )
@@ -98,13 +90,9 @@ cfdAnimatedImage::cfdAnimatedImage( cfdReadParam* param )
    this->SetRotationArray( param->imageRot );
    this->SetScaleArray( param->imageScale );
 
-#ifndef _USE_CFD_SEQUENCE
-   this->sequence = new pfSequence();
-#else
    this->sequence = new cfdSequence();
-#endif
 
-   this->GetPfDCS()->addChild( this->sequence );
+   this->GetPfDCS()->addChild( this->sequence->getNode() );
 }
 
 cfdAnimatedImage::~cfdAnimatedImage()
@@ -116,14 +104,8 @@ cfdAnimatedImage::~cfdAnimatedImage()
 
    _images.clear();
 
-   if ( this->sequence ) 
-   {
-#ifndef _USE_CFD_SEQUENCE
-      this->ClearpfSequence();
-#else
-      pfDelete( this->sequence );
-#endif
-   }
+   this->ClearSequence();
+   pfDelete( this->sequence );
 }
 
 #ifdef _CFDCOMMANDARRAY

@@ -38,11 +38,7 @@
 #include <sstream>
 using namespace std;
 
-#ifndef _USE_CFD_SEQUENCE
-#include <Performer/pf/pfSequence.h>
-#else
 #include "cfdSequence.h"
-#endif
 
 #include <vtkGeometryFilter.h>
 #include <vtkPolyDataNormals.h>
@@ -71,16 +67,12 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
 	definedRange[ 0 ] = definedRange[ 1 ] = 0;
 	pData = vtkPolyData::New();
    
-#ifndef _USE_CFD_SEQUENCE
-   sequence = new pfSequence();
-#else
    sequence = new cfdSequence();
-#endif
    ihccModelNode = new pfGroup();
 
-   worldDCS->addChild( this->sequence );
+   worldDCS->addChild( this->sequence->getNode() );
    worldDCS->addChild( ihccModelNode );
-   this->SetpfSequence( sequence );
+   this->SetSequence( sequence );
    float scale_gauge[ 3 ];
    scale_gauge[ 0 ]  = 70;
    scale_gauge[ 1 ]  = 70;
@@ -123,7 +115,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
    // Create two gauges
    // Time Gauge
    gauge_time = new cfdIHCCGauge( ihccModelNode );
-   gauge_time->SetpfSequence( sequence );
+   gauge_time->SetSequence( sequence );
    gauge_time->SetDCS( worldDCS );
    gauge_time->SetTranslationArray( trans_gauge );
    gauge_time->SetScaleArray( scale_gauge );
@@ -141,7 +133,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
    trans_gauge[ 1 ] = -5;
    trans_gauge[ 2 ] = 2;
    gauge_acid = new cfdIHCCGauge( ihccModelNode );
-   gauge_acid->SetpfSequence( sequence );
+   gauge_acid->SetSequence( sequence );
    gauge_acid->SetDCS( worldDCS );
    gauge_acid->SetTranslationArray( trans_gauge );
    gauge_acid->SetScaleArray( scale_gauge );
@@ -156,7 +148,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
    
    // Create Contours
    contours = new cfdIHCCContour();
-   contours->SetpfSequence( sequence );
+   contours->SetSequence( sequence );
    contours->SetDCS( worldDCS );
 }
 
@@ -177,10 +169,10 @@ void cfdIHCCModel::UpdateModelVariables( double* input )
 // Update variables passed in from the gui
 void cfdIHCCModel::RemoveSequence( void )
 {
-   this->StoppfSequence();
-   this->contours->ClearpfSequence(); // Clears Geodes also
-   this->gauge_time->ClearpfSequence(); // Clears Geodes also
-   this->gauge_acid->ClearpfSequence(); // Clears Geodes also
+   this->StopSequence();
+   this->contours->ClearSequence(); // Clears Geodes also
+   this->gauge_time->ClearSequence(); // Clears Geodes also
+   this->gauge_acid->ClearSequence(); // Clears Geodes also
 }
 
 void cfdIHCCModel::RunModel( void )
@@ -272,30 +264,26 @@ void cfdIHCCModel::MakeLookupTable( void )
 
 void cfdIHCCModel::Update( void )
 {
-   this->StoppfSequence();
-   this->contours->ClearpfSequence(); // Clears Geodes also
+   this->StopSequence();
+   this->contours->ClearSequence(); // Clears Geodes also
    this->gauge_time->ClearSequence(); // Clears Geodes also
    this->gauge_acid->ClearSequence(); // Clears Geodes also
    this->RunModel();
 
    this->contours->SetDataVector( this->solutions, definedRange );
    this->contours->Update();
-   this->contours->AddTopfSequence();
+   this->contours->AddToSequence();
 
    this->gauge_time->SetDataVector( this->times );
    this->gauge_time->Update();
-   //this->gauge_time->AddTopfSequence();
+   //this->gauge_time->AddToSequence();
 
    this->gauge_acid->SetDataVector( this->solutions );
    this->gauge_acid->Update();
-   //this->gauge_acid->AddTopfSequence();
+   //this->gauge_acid->AddToSequence();
    
-#ifndef _USE_CFD_SEQUENCE
-   this->sequence->setDuration( 1.0, -1 );
-#else
    this->sequence->setDuration( 1.0);
-#endif
-    this->StartpfSequence();
+   this->StartSequence();
 }
 
 void cfdIHCCModel::MakeSequence( void )

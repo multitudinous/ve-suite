@@ -47,12 +47,7 @@ class pfGroup;
 
 class cfdIHCCGauge;
 class cfdIHCCContour;
-
-#ifndef _USE_CFD_SEQUENCE
-class pfSequence;
-#else
 class cfdSequence;
-#endif
 
 class cfdIHCCModel: public cfdObjects
 {
@@ -78,11 +73,8 @@ class cfdIHCCModel: public cfdObjects
       double definedRange[ 2 ];
 	   vector< double > solutions;
 	   vector< double > times;
-#ifndef _USE_CFD_SEQUENCE
-      pfSequence* sequence;
-#else
       cfdSequence* sequence;
-#endif
+
       cfdIHCCGauge* gauge_acid;
       cfdIHCCGauge* gauge_time;
       cfdIHCCContour* contours;

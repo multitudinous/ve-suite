@@ -35,6 +35,7 @@
 #include "cfdGeode.h"
 #include "cfdEnum.h"
 #include "cfdSequence.h"
+#include "cfdTransientInfo.h"
 
 // Juggler Includes
 #include <vpr/Util/Debug.h>
@@ -43,12 +44,6 @@
 #include <Performer/pf.h>
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfGeode.h>
-
-#ifndef _USE_CFD_SEQUENCE
-#include <Performer/pf/pfSequence.h>
-#else
-#include "cfdSequence.h"
-#endif
 
 // VTK Includes
 #include <vtkPolyData.h>
@@ -180,26 +175,18 @@ void cfdObjects::DeleteGeode( )
    pfDelete( this->geode );
 }
 
-#ifndef _USE_CFD_SEQUENCE
-void cfdObjects::SetpfSequence( pfSequence * x )
-#else
-void cfdObjects::SetpfSequence( cfdSequence * x )
-#endif
+void cfdObjects::SetSequence( cfdSequence * x )
 {
    this->sequence = x;
 }
 
-#ifndef _USE_CFD_SEQUENCE
-pfSequence* cfdObjects::GetpfSequence( )
-#else
-cfdSequence* cfdObjects::GetpfSequence( )
-#endif
+cfdSequence* cfdObjects::GetSequence( )
 {
    return this->sequence;
 }
 
 /*
-void cfdObjects::DeletepfSequence( )
+void cfdObjects::DeleteSequence( )
 {
    pfDelete( this->sequence );
 }
@@ -358,47 +345,34 @@ void cfdObjects::SetcfdReadParam( cfdReadParam *param )
    this->paramFile = param;   
 }
 
-void cfdObjects::StoppfSequence( void )
+void cfdObjects::StopSequence( void )
 {
-#ifndef _USE_CFD_SEQUENCE
-   this->sequence->setMode( PFSEQ_STOP );
-#else
    this->sequence->setPlayMode( CFDSEQ_STOP );
-#endif
 }
 
-void cfdObjects::StartpfSequence( void )
+void cfdObjects::StartSequence( void )
 {
-#ifndef _USE_CFD_SEQUENCE
-   this->sequence->setMode( PFSEQ_START );   
-#else
    this->sequence->setPlayMode( CFDSEQ_START );   
-#endif
 }
 
-void cfdObjects::ResumepfSequence( void )
+void cfdObjects::ResumeSequence( void )
 {
-#ifndef _USE_CFD_SEQUENCE
-   this->sequence->setMode( PFSEQ_RESUME );   
-#else
    this->sequence->setPlayMode( CFDSEQ_RESUME );   
-#endif
 }
 
-void cfdObjects::PausepfSequence( void )
+void cfdObjects::PauseSequence( void )
+{
+   this->sequence->setPlayMode( CFDSEQ_PAUSE );   
+}
+
+void cfdObjects::ClearSequence( void )
 {
 #ifndef _USE_CFD_SEQUENCE
-   this->sequence->setMode( PFSEQ_PAUSE );   
+   pfDelete( this->sequence );
 #else
-   this->sequence->setPlayMode( CFDSEQ_PAUSE );   
-#endif
-}
-
-void cfdObjects::ClearpfSequence( void )
-{
    // This function is called for one particular type of transientFlowManager
    // It removes and deletes geodes and changes the cfdObjects geodes list
-   vprDEBUG(vprDBG_ALL,1) << " ***********************ClearpfSequence"
+   vprDEBUG(vprDBG_ALL,1) << " ***********************ClearSequence"
                           << std::endl << vprDEBUG_FLUSH;
 
    int numSequenceChildren = this->sequence->getNumChildren();
@@ -488,9 +462,10 @@ void cfdObjects::ClearpfSequence( void )
          }
       }
    }
+#endif
 }
 
-void cfdObjects::AddTopfSequence( void )
+void cfdObjects::AddToSequence( void )
 {
    int i;
    int num = this->sequence->getNumChildren();
@@ -502,7 +477,7 @@ void cfdObjects::AddTopfSequence( void )
    {
       vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: Enter Loop" 
                               << std::endl << vprDEBUG_FLUSH;
-      this->StoppfSequence();
+      this->StopSequence();
       // For animated streamlines
       for ( i = 0; i < num; i++ )
       {
@@ -518,21 +493,13 @@ void cfdObjects::AddTopfSequence( void )
       for ( i = 0; i < numPts; i++ )
       {
          this->sequence->addChild( this->geodes[ i ] );
-#ifndef _USE_CFD_SEQUENCE
-         this->sequence->setTime( i, 0.1 );
-#endif
       }      
       vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: Create Sequence" 
                               << std::endl << vprDEBUG_FLUSH;
 
-#ifndef _USE_CFD_SEQUENCE
-      this->sequence->setInterval( PFSEQ_CYCLE, 0 , numPts - 1 );
-      this->sequence->setDuration( 1.0, -1 );
-#else
       this->sequence->setInterval( CFDSEQ_CYCLE, 0 , numPts - 1 );
       this->sequence->setDuration( 0.1 * numPts );
-#endif
-      this->StartpfSequence();
+      this->StartSequence();
       vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: End Loop" 
                               << std::endl << vprDEBUG_FLUSH;
    }
@@ -540,7 +507,7 @@ void cfdObjects::AddTopfSequence( void )
    {
       vprDEBUG(vprDBG_ALL, 2) << " For animated Images: Enter Loop" 
                               << std::endl << vprDEBUG_FLUSH;
-      this->StoppfSequence();
+      this->StopSequence();
       // For animated streamlines
       // If there are already children on the sequence
       for ( i = 0; i < num; i++ )
@@ -557,21 +524,14 @@ void cfdObjects::AddTopfSequence( void )
       for ( i = 0; i < numPts; i++ )
       {
          this->sequence->addChild( this->geodes[ i ] );
-#ifndef _USE_CFD_SEQUENCE
-         this->sequence->setTime( i, 0.1 );
-#endif
       }      
       vprDEBUG(vprDBG_ALL, 2) << " For animated Images: Create Sequence" 
                               << std::endl << vprDEBUG_FLUSH;
 
-#ifndef _USE_CFD_SEQUENCE
-      this->sequence->setInterval( PFSEQ_CYCLE, 0 , numPts - 1 );
-      this->sequence->setDuration( 1.0, -1 );
-#else
       this->sequence->setInterval( CFDSEQ_CYCLE, 0 , numPts - 1 );
       this->sequence->setDuration( 0.1 * numPts );
-#endif
-      this->StartpfSequence();
+
+      this->StartSequence();
       vprDEBUG(vprDBG_ALL, 2) << " For animated Images: End Loop" 
                               << std::endl << vprDEBUG_FLUSH;
    }
@@ -600,11 +560,12 @@ void cfdObjects::AddTopfSequence( void )
             }
          }
       }
-#ifndef _USE_CFD_SEQUENCE
-      this->sequence->setInterval( PFSEQ_CYCLE, 0 , num - 1 );
-#else
       this->sequence->setInterval( CFDSEQ_CYCLE, 0 , num - 1 );
-#endif
+/*
+      this->sequence->setDuration( 
+                       this->paramFile->transientInfo[ 0 ]->GetDuration() );
+      std::cout << "sequence->Duration = " << this->paramFile->transientInfo[ 0 ]->GetDuration() << std::endl;
+*/
    }
    else
    {
@@ -630,113 +591,85 @@ void cfdObjects::AddTopfSequence( void )
       }
       else
       {
-         this->dcs->addChild( this->sequence );
+         this->dcs->addChild( this->sequence->getNode() );
       }
    }
 }
 
-void cfdObjects::ReversepfSequence( void )
+void cfdObjects::ReverseSequence( void )
 {
-   
-
 #ifndef _USE_CFD_SEQUENCE
-   int repeat;
-   int currentFrame = this->sequence->getFrame( &repeat );
+   int currentFrame = this->sequence->getFrame();
    vprDEBUG(vprDBG_ALL,1)
-      << " ReversepfSequence: currentFrame = " << currentFrame
-      //<< ", repeat = " << repeat
+      << " ReverseSequence: currentFrame = " << currentFrame
       << ", numChildren() = " << this->sequence->getNumChildren()
       << std::endl << vprDEBUG_FLUSH;
-   
 
    if ( currentFrame == 0 )
    {
       currentFrame = this->sequence->getNumChildren() - 1;
-      this->sequence->setInterval( PFSEQ_CYCLE, currentFrame, currentFrame );
-      this->StartpfSequence();  
-    
+      this->sequence->setInterval( CFDSEQ_CYCLE, currentFrame, currentFrame );
+      this->StartSequence();  
    }
    else
    {
-      this->sequence->setInterval( PFSEQ_CYCLE, currentFrame - 1, currentFrame - 1 );
-      this->ResumepfSequence();
+      this->sequence->setInterval( CFDSEQ_CYCLE, currentFrame - 1, currentFrame - 1 );
+      this->ResumeSequence();
    }
 #else
-   //biv -- cfd sequence node doesn't work the same as the HACKED up pfSequence
-   //code!!!!!
-
-   //change the direction of the sequence
-   int numFrames = sequence->getNumChildren();
+   //biv: cfdSequence node doesn't work like the HACKED up pfSequence code!!!!!
 
    //check the direction of the sequence
-   if(sequence->direction() == 1){
+   if(sequence->getDirection() == 1){
       //reverse the direction of the interval
       sequence->changeSequenceDirection();
    }
-   //this is added functionality to step through the sequence
-   //correctly
+   //this is added functionality to step through the sequence correctly
    sequence->setPlayMode(CFDSEQ_PLAYING);
    sequence->stepSequence();
 #endif
-      
-   
 }
 
-void cfdObjects::ForwardpfSequence( void )
+void cfdObjects::ForwardSequence( void )
 {
 #ifndef _USE_CFD_SEQUENCE
-   int repeat;
-   int currentFrame = this->sequence->getFrame( &repeat );
+   int currentFrame = this->sequence->getFrame();
 
    vprDEBUG(vprDBG_ALL,1)
-      << " ForwardpfSequence: currentFrame = " << currentFrame
-      //<< ", repeat = " << repeat
+      << " ForwardSequence: currentFrame = " << currentFrame
       << ", numChildren() = " << this->sequence->getNumChildren()
       << std::endl << vprDEBUG_FLUSH;
 
    if ( currentFrame == this->sequence->getNumChildren() - 1 )
    {
-      vprDEBUG(vprDBG_ALL,1) << " ForwardpfSequence: setting currentFrame = -1" 
+      vprDEBUG(vprDBG_ALL,1) << " ForwardSequence: setting currentFrame = -1" 
          << std::endl << vprDEBUG_FLUSH;
       currentFrame = -1;      
    }
 
-   vprDEBUG(vprDBG_ALL,1) << " ForwardpfSequence: setting interval: "
-      << currentFrame + 1
-      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1) << " ForwardSequence: setting interval: "
+      << currentFrame + 1 << std::endl << vprDEBUG_FLUSH;
 
-   this->sequence->setInterval( PFSEQ_CYCLE, currentFrame + 1, currentFrame + 1 );
+   this->sequence->setInterval( CFDSEQ_CYCLE, currentFrame + 1, currentFrame + 1 );
+   this->ResumeSequence(); 
 
-   //biv--this->sequence->setInterval( CFDSEQ_CYCLE, currentFrame + 1, currentFrame + 1 );
 #else
-   //biv -- cfd sequence node doesn't work the same as the HACKED up pfSequence
-   //code!!!!!
-
-   //change the direction of the sequence
-   //int numFrames = sequence->getNumChildren();
+   //biv: cfdSequence node doesn't work like the HACKED up pfSequence code!!!!!
 
    //check the direction of the sequence
-   if(sequence->direction() == -1){
+   if(sequence->getDirection() == -1){
       //reverse the direction of the interval
       sequence->changeSequenceDirection();
    }
-   //this is added functionality to step through the sequence
-   //correctly
+   //this is added functionality to step through the sequence correctly
    sequence->setPlayMode(CFDSEQ_PLAYING);
    sequence->stepSequence();
 #endif
-
-   this->ResumepfSequence(); 
 }
 
-int cfdObjects::GetFrameOfpfSequence( void )
+int cfdObjects::GetFrameOfSequence( void )
 {
-#ifndef _USE_CFD_SEQUENCE
-   int repeat;
-   return ( this->sequence->getFrame( &repeat ) );
-#else
-   return ( this->sequence->getFrame() );
-#endif
+   return this->sequence->getFrame();
 }
 
 void cfdObjects::SetGeodeFlag( bool x ) 

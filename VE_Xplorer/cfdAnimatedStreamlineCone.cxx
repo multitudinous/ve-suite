@@ -32,11 +32,7 @@
 #include "cfdAnimatedStreamlineCone.h"
 #include "cfdDataSet.h"
 
-#ifndef _USE_CFD_SEQUENCE
-#include <Performer/pf/pfSequence.h>
-#else
 #include "cfdSequence.h"
-#endif
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -48,8 +44,6 @@
 #include <vtkGenericCell.h>
 
 #include <vpr/Util/Debug.h>
-
-//#include <cmath>
 
 cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( float diameter )
 {
@@ -72,11 +66,7 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( float diameter )
    this->sphere->SetPhiResolution( 3 );
    this->sphere->Update();
 
-#ifndef _USE_CFD_SEQUENCE
-   this->sequence = new pfSequence();
-#else
    this->sequence = new cfdSequence();
-#endif
 }
 
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
@@ -88,11 +78,8 @@ cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
    this->glyph->Delete();
    this->sphere->Delete();
    
-   if ( this->sequence )
-   {
-      this->ClearpfSequence();
-      pfDelete( this->sequence );
-   }
+   this->ClearSequence();
+   pfDelete( this->sequence );
 }
 
 void cfdAnimatedStreamlineCone::SetPolyDataSource( vtkPolyData *input )

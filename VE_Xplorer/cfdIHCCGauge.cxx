@@ -168,7 +168,7 @@ void cfdIHCCGauge::Update( void )
       dcs->setScale( temp_scale[ 0 ], temp_scale[ 1 ], temp_scale[ 2 ] );
       dcs->setRot( temp_rot[ 0 ], temp_rot[ 1 ], temp_rot[ 2 ] );
       dcs->addChild( output.back()->GetPfDCS() );
-      ((pfGroup*)((pfSequence*)this->GetpfSequence())->getChild( i ))->addChild( dcs );
+      ((pfGroup*)((pfSequence*)this->GetSequence())->getChild( i ))->addChild( dcs );
 
       // Display time and concentration
 		// Create geode
@@ -180,7 +180,7 @@ void cfdIHCCGauge::Update( void )
 
 void cfdIHCCGauge::ClearSequence( void )
 {
-   int numSequenceChildren = ((pfSequence*)this->GetpfSequence())->getNumChildren();
+   int numSequenceChildren = ((pfSequence*)this->GetSequence())->getNumChildren();
    vprDEBUG(vprDBG_ALL,1) << " numSequenceChildren: " << numSequenceChildren
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -193,14 +193,14 @@ void cfdIHCCGauge::ClearSequence( void )
       for ( int i = numSequenceChildren-1; i >= 0; i-- )
       {
          // transient sequences have groups attached directly to sequence nodes
-         if ( ((pfSequence*)this->GetpfSequence())->getChild( i )->getType() 
+         if ( ((pfSequence*)this->GetSequence())->getChild( i )->getType() 
                                                 == pfGroup::getClassType() )
          {
             // Each group in a transient sequence should have the same number of children
             // One particular node (at most) in each group pertains to the TFM
             // We want to remove that node (geode) that pertain to that TFM
 
-            pfGroup * group = (pfGroup *)((pfSequence*)this->GetpfSequence())->getChild( i );
+            pfGroup * group = (pfGroup *)((pfSequence*)this->GetSequence())->getChild( i );
             group->removeChild( output[ i ]->getpfDCS() );
             pfDelete( output[ i ]->getpfDCS() );
          }

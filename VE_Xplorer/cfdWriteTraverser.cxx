@@ -70,7 +70,7 @@ void cfdWriteTraverser::setPreNodeTraverseCallback(
 		preNodeTraverseCallback func)
 {
    std::cout<<"WARNING: cfdWriteTraverser::setPreNodeTraverserCallback"<<std::endl;
-  std::cout<<"Pre-Node callback is pre-defined!!!"<<std::endl;
+   std::cout<<"Pre-Node callback is pre-defined!!!"<<std::endl;
    return;
 }
 ////////////////////////////////////////////////////////
@@ -92,11 +92,15 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
 {
    cfdWriteTraverser* cfdWT = (cfdWriteTraverser*)cfdNT;
    pfGroup* curNode = (pfGroup*)node;
-   
+
+   //std::cout<<"_swapSequenceNodes: curNode->getClassType() = " << curNode->getClassType() << std::endl;
 
    //replace cfdSequence nodes
    if(curNode->isOfType(cfdSequence::getClassType())){
+      //std::cout<<"\t_swapSequenceNodes: cfdSequence"<<std::endl;
+
       int nChildren = ((cfdSequence*)curNode)->getNumChildren();
+      
       //add this node to our list of cfdSequences
       cfdWT->_sequenceList.push_back(curNode);
 
@@ -109,37 +113,44 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
       for(int i = 0; i < nChildren; i++){
          sequence->addChild(((cfdSequence*)curNode)->getChild(i));
       }
-      //TODO:set the properties of the sequence here!!!!
-      sequence->setDuration(1.0,-1);
-      sequence->setTime(-1,1.0);
-      switch (((cfdSequence*)curNode)->loopMode()){
-         case CFDSEQ_CYCLE:
-            sequence->setInterval(PFSEQ_CYCLE,((cfdSequence*)curNode)->begin(),
-                                  ((cfdSequence*)curNode)->end());
-            break;
-         case CFDSEQ_SWING:
-            sequence->setInterval(PFSEQ_SWING,((cfdSequence*)curNode)->begin(),
-                                  ((cfdSequence*)curNode)->end());
-                                            
-            break;
-      };
+
+      sequence->setDuration(1.0,-1);      // regular speed, continue forever
+
+      double numSeconds = ((cfdSequence*)curNode)->getTime();
+      sequence->setTime(-1,numSeconds);   // display all children for numSeconds
+
+      sequence->setInterval(((cfdSequence*)curNode)->getLoopMode(),
+                            ((cfdSequence*)curNode)->getBegin(),
+                            ((cfdSequence*)curNode)->getEnd());
+/*
+      std::cout<<"\tnChildren = " << nChildren << std::endl;
+      std::cout<<"\tnumSeconds = " << numSeconds << std::endl;
+      std::cout<<"\t((cfdSequence*)curNode)->getLoopMode() = "
+               <<((cfdSequence*)curNode)->getLoopMode() << std::endl;
+      std::cout<<"\t((cfdSequence*)curNode)->getBegin() = "
+               <<((cfdSequence*)curNode)->getBegin() << std::endl;
+      std::cout<<"\t((cfdSequence*)curNode)->getEnd() = "
+               <<((cfdSequence*)curNode)->getEnd() << std::endl;
+*/
+
       //make sure to start the "derned" sequence--otherwise
       //it won't be running in perfly!!!UGGGHHHH!!!!!
       sequence->setMode(PFSEQ_START);
+
       //replace the node in the graph
       parent->replaceChild(curNode,sequence);
 
       //don't need to continue down 
       return;
    }else if(curNode->isOfType(pfSequence::getClassType())){
-      //int nChildren = curNode->getNumChildren();
+      //std::cout<<"\t_swapSequenceNodes: pfSequence"<<std::endl;
       //return tree to original state
       //get the parent node
       pfGroup* parent = curNode->getParent(0);
-      
+
       //replace the node in the graph
       parent->replaceChild(curNode,cfdWT->_sequenceList[cfdWT->_sequenceIndex++]);
-     
+
       //pfDelete(curNode);
       //don't need to continue down 
       return;

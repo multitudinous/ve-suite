@@ -32,18 +32,121 @@
 
 #include "cfdSequence.h"
 #include <iostream>
-#include <cmath>
 
 #include <Performer/pf/pfNode.h>
+using namespace std;
+
+//Performer static member for performer compliance
+//it allows performer to determine the class type
+pfType* cfdSequence::_classType = NULL;
+
+#ifndef _USE_CFD_SEQUENCE
+
+#include <Performer/pf/pfSequence.h>
+
+cfdSequence::cfdSequence()
+{
+   _pfSequence = new pfSequence();
+   _deltaT = 0.0;
+   _duration = 0.0;
+   _begin = 0;
+   _end = 1;
+   _dir = 1;
+   _currentFrame = 0;
+   _lMode = CFDSEQ_CYCLE;
+   _pMode = CFDSEQ_START;
+   _appFrame = 0;
+   _step = -10000;
+
+   // update the performer static member class type
+   _classType = pfSequence::getClassType();
+}
+
+cfdSequence::~cfdSequence()
+{
+   pfDelete( _pfSequence );
+}
+
+void cfdSequence::addChild( pfNode* child )
+{
+   _pfSequence->addChild( child );
+
+   // force recomputation of time per frame
+   this->setDuration( _duration );
+}
+
+void cfdSequence::setDuration( double duration )
+{
+   _pfSequence->setDuration( 1.0, -1 );  // regular speed, continue forever
+   _duration = duration;
+   _deltaT = duration / this->getNumChildren();
+
+   // display all children for _deltaT seconds
+   _pfSequence->setTime( -1, _deltaT );
+}
+
+void cfdSequence::setInterval( int loopmode, int begin, int end )
+{
+   _lMode = loopmode;
+   _begin = begin;
+   _end = end;
+   _pfSequence->setInterval( loopmode, begin, end );
+}
+
+void cfdSequence::setPlayMode(int pMode)
+{
+   _pMode = pMode;
+   _pfSequence->setMode( pMode );
+}
+
+void cfdSequence::setLoopMode( int lMode )
+{
+   _lMode = lMode;
+   _pfSequence->setMode( _lMode );
+}
+
+pfNode * cfdSequence::getNode()
+{
+   return (pfNode*)_pfSequence;
+}
+
+int cfdSequence::getNumChildren()
+{
+   return _pfSequence->getNumChildren();
+}
+
+pfNode* cfdSequence::getParent( int index )
+{
+   return _pfSequence->getParent( index );
+}
+
+pfNode* cfdSequence::getChild( int index )
+{
+   return _pfSequence->getChild( index );
+}
+
+int cfdSequence::removeChild( pfNode* child )
+{
+   return _pfSequence->removeChild( child );
+}
+
+int cfdSequence::getFrame()
+{
+   int repeat;
+   return _pfSequence->getFrame( &repeat );
+}
+
+void cfdSequence::setTime( double time )
+{
+   _deltaT = time;
+   _duration = time * this->getNumChildren();
+   _pfSequence->setTime( -1, time );
+}
+
+#else // _USE_CFD_SEQUENCE
+
 #include <Performer/pf/pfSwitch.h>
 #include <Performer/pf/pfTraverser.h>
-
-using namespace std;
-//Performer statics
-//this code is for performer compliance
-//it allows performer to determine the class type
-//
-pfType* cfdSequence::_classType = 0;
 
 //initialize our class w/ performer at run time
 void cfdSequence::init(void)
@@ -65,13 +168,14 @@ cfdSequence::cfdSequence()
 :pfGroup()
 {
    _switch = 0;
-   _duration = 0;
+   _deltaT = 0.0;
+   _duration = 0.0;
    _begin = 0;
    _end = 1;
    _dir = 1;
    _currentFrame = 0;
-   _lMode = 0;
-   _pMode = 1;
+   _lMode = CFDSEQ_CYCLE;
+   _pMode = CFDSEQ_START;
    _appFrame = 0;
    _step = -10000;
 
@@ -82,29 +186,59 @@ cfdSequence::cfdSequence()
    init();
    setType(_classType);
 }
+
 ///////////////////////////
 //Destructor             //
 ///////////////////////////
 cfdSequence::~cfdSequence()
 {
 }
-/////////////////////////////////
+
+void cfdSequence::setDuration( double duration )
+{
+   _duration = duration;
+   _deltaT = duration / this->getNumChildren();
+}
+
+void cfdSequence::setLoopMode( int lMode )
+{
+   _lMode = lMode;
+}
+
+void cfdSequence::setPlayMode(int pMode)
+{
+   _pMode = pMode;
+}
+
+void cfdSequence::stepSequence()
+{
+   _step = CFDSEQ_STEP;
+}
+
+// TODO: getNode will not be needed when pfSequence is removed
+pfNode * cfdSequence::getNode()
+{
+   return this;
+}
+
 int cfdSequence::getNumChildren()
 {
-   if(_switch){
+   if ( _switch )
+   {
       return _switch->getNumChildren();
    }
    return -1;
 }
-///////////////////////////////////////////
+
 int cfdSequence::removeChild(pfNode* child)
 {
-   if(_switch){
+   if ( _switch )
+   {
       return _switch->removeChild(child);
    }
    return -1;
 }
-////////////////////////////////////////////
+
 int cfdSequence::searchChild(pfNode* child)
 {
    if(_switch){
@@ -112,7 +246,7 @@ int cfdSequence::searchChild(pfNode* child)
    }
    return -1;
 }
-////////////////////////////////////////
+
 pfNode* cfdSequence::getChild(int index)
 {
    if(_switch){
@@ -127,24 +261,30 @@ pfNode* cfdSequence::getChild(int index)
 int switchFrame(pfTraverser* trav, void* userData)
 {
    //cout<<"Traversing cfdSequence node."<<endl;
-   //the speed of the sequence(fps)
-   double seqRate = 0;
+   
+   //the sequence node w/ all the desired state info
+   cfdSequence* sequence = (cfdSequence*)userData;
    
    //the number of frames
-   int nChildren = 0;
- 
+   int nChildren = sequence->_switch->getNumChildren();
+   //cout<<"Number of frames: "<<nChildren<<endl;
+
    //the sequence interval params
-   int end = 0;
-   int begin = 0;
+   int begin = sequence->_begin;
+   //cout<<"Beginning :"<<begin<<endl;
+   int end = sequence->_end;
+   //cout<<"End :"<<end<<endl;
 
    //the loop mode
-   int lMode = 0;
+   int lMode = sequence->_lMode;
+   //cout<<"Loop Mode: "<<lMode<<endl;
  
    //the play mode(stop,start,pause,resume,playing)
-   int pMode = 0;
+   int pMode = sequence->_pMode;
+   //cout<<"Play Mode: "<<pMode<<endl;   
 
    //length of sequence (secs)
-   double duration = 0;
+   double duration = sequence->_duration;
 
    //the frame rate the app is running at
    double appFrameRate = pfGetFrameRate();
@@ -156,23 +296,6 @@ int switchFrame(pfTraverser* trav, void* userData)
    //the number of frames to increment 
    int deltaFrame = 1;
 
-   //the sequence node w/ all the desired state info
-   cfdSequence* sequence = (cfdSequence*)userData;
-
-   nChildren = sequence->_switch->getNumChildren();
-
-   duration = sequence->_duration;
-   end = sequence->_end;
-   begin = sequence->_begin;
-   lMode = sequence->_lMode;
-   pMode = sequence->_pMode;
-
-   //cout<<"Number of frames: "<<nChildren<<endl;
-   //cout<<"Beginning :"<<begin<<endl;
-   //cout<<"End :"<<end<<endl;
-   //cout<<"Loop Mode: "<<lMode<<endl;
-   //cout<<"Play Mode: "<<pMode<<endl;   
-   
    //make sure we have a valid interval 
    if(sequence->_dir ==1){
       if(end >  nChildren - 1){
@@ -192,14 +315,11 @@ int switchFrame(pfTraverser* trav, void* userData)
       }
    }
 
-   //check if we need to update the sequence 
-   //node 
+   //check if we need to update the sequence node 
 
-   //the desired rate of the sequence
-   seqRate = fabs((double)(begin - end))/duration;
-
+   //the desired rate of the sequence (fps)
+   double seqRate = fabs((double)(begin - end))/duration;
    //cout<<"Sequence rate: "<<seqRate<<endl;
-   
 
    //if we haven't passed enough frames in 
    //the app we don't need to update yet
@@ -223,8 +343,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    }else if(appFrameRate < seqRate){
       //cout<<"Frame rate is slow."<<endl;
       //app is running slower than the sequence
-      //need to skip some frames in the
-      //sequence 
+      //need to skip some frames in the sequence 
       deltaFrame = (int)( seqRate / appFrameRate );
    }
 
@@ -233,12 +352,9 @@ int switchFrame(pfTraverser* trav, void* userData)
    //we are in stop or pause
    if ( pMode == CFDSEQ_STOP || pMode == CFDSEQ_PAUSE ){
       //don't change the scene graph
-#ifdef _DEBUG
       //cout<<"Stopped or paused!"<<endl;
-#endif
       return PFTRAV_CONT;
    }
-
 
    //if we've made it here, we are either resuming
    //or starting so check the loop mode and direction
@@ -247,9 +363,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    //we're restarting so reset current frame 
    //in the sequence to the beginning
    if ( pMode == CFDSEQ_START ){
-#ifdef _DEBUG
       //cout<<"Starting sequence."<<endl;
-#endif
       sequence->_currentFrame = begin;
       sequence->_switch->setVal(sequence->_currentFrame);
 
@@ -287,18 +401,17 @@ int switchFrame(pfTraverser* trav, void* userData)
       }
    }
    
-
    return PFTRAV_CONT;
 } 
 /////////////////////////////////////////////////////////
-void cfdSequence::setInterval(int mode, int beg, int end)
+void cfdSequence::setInterval( int loopmode, int begin, int end )
 {
    //cout<<"Setting interval."<<endl;
    //loop mode cycle or swing
-   _lMode = mode; 
+   _lMode = loopmode; 
 
    //beginning and ending of sequence interval
-   _begin = beg;
+   _begin = begin;
    _end = end;
 
    //check which direction we are going
@@ -367,16 +480,17 @@ void cfdSequence::addChild(pfNode* child)
    }
   
    _switch->addChild(child);
+
+   // force recomputation of time per frame
+   this->setDuration( _duration );
 }
-///////////////////////////
-//adjusted this to handle//
-//the last frame of the  //
-//sequence in cycle mode //
-///////////////////////////
+
+//adjusted this to handle the last frame of the sequence in cycle mode
 int cfdSequence::getFrame()
 {
    return _currentFrame;
 }
+
 /////////////////////////////////////////
 //get the frame that is currently being// 
 //displayed on the tree                //
@@ -389,5 +503,54 @@ int cfdSequence::getNextFrame()
       //update the frame in the sequence
       return _currentFrame + _dir;
    }
+}
+
+void cfdSequence::setTime( double time )
+{
+   _deltaT = time;
+   _duration = time * this->getNumChildren();
+}
+
+#endif //_USE_CFD_SEQUENCE
+
+double cfdSequence::getDuration()
+{
+   return _duration;
+}
+
+int cfdSequence::getDirection()
+{
+   return _dir;
+}
+
+int cfdSequence::getLoopMode()
+{
+   return _lMode;
+}
+
+int cfdSequence::getPlayMode()
+{
+   return _pMode;
+}
+
+int cfdSequence::getEnd()
+{
+   return _end;
+}
+
+int cfdSequence::getBegin()
+{
+   return _begin;
+}
+
+double cfdSequence::getTime()
+{
+   return _deltaT;
+}
+
+//static
+pfType* cfdSequence::getClassType()
+{
+   return _classType;
 }
 

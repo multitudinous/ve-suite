@@ -12,7 +12,7 @@
 #
 # Uncomment the following line to use cfdSequence instead of pfSequence.
 # (It is automatically turned on for cluster builds.)
-#EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
+EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
 #_______________________________________________________________________________
 
 CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor

@@ -1381,7 +1381,7 @@ inline void cfdApp::initScene( )
                                    << std::endl << vprDEBUG_FLUSH;
             this->dataList.push_back( this->_cfdTFM_X_Contour[ count ] );     
             this->dataList.back()->SetObjectType( X_TRANSIENT_CONTOUR_AND_VECTOR );
-            this->dataList.back()->SetpfSequence( this->transientSequence->GetpfSequence() );
+            this->dataList.back()->SetSequence( this->transientSequence->GetSequence() );
             this->transientSequence->AddAFlowManager( this->_cfdTFM_X_Contour[ count ] );
             count++;
             
@@ -1408,7 +1408,7 @@ inline void cfdApp::initScene( )
                                    << std::endl << vprDEBUG_FLUSH;
             this->dataList.push_back( this->_cfdTFM_Y_Contour );     
             this->dataList.back()->SetObjectType( Y_TRANSIENT_CONTOUR_AND_VECTOR );
-            this->dataList.back()->SetpfSequence( this->transientSequence->GetpfSequence() );
+            this->dataList.back()->SetSequence( this->transientSequence->GetSequence() );
             this->transientSequence->AddAFlowManager( this->_cfdTFM_Y_Contour );
             break;
          }
@@ -1432,7 +1432,7 @@ inline void cfdApp::initScene( )
                                    << std::endl << vprDEBUG_FLUSH;
             this->dataList.push_back( this->_cfdTFM_Z_Contour );     
             this->dataList.back()->SetObjectType( Z_TRANSIENT_CONTOUR_AND_VECTOR );
-            this->dataList.back()->SetpfSequence( this->transientSequence->GetpfSequence() );
+            this->dataList.back()->SetSequence( this->transientSequence->GetSequence() );
             this->transientSequence->AddAFlowManager( this->_cfdTFM_Z_Contour );
             break;
          }
@@ -1456,7 +1456,7 @@ inline void cfdApp::initScene( )
                                    << std::endl << vprDEBUG_FLUSH;
             this->dataList.push_back( this->_cfdTFM_X_Vector );     
             this->dataList.back()->SetObjectType( X_TRANSIENT_CONTOUR_AND_VECTOR );
-            this->dataList.back()->SetpfSequence( this->transientSequence->GetpfSequence() );
+            this->dataList.back()->SetSequence( this->transientSequence->GetSequence() );
             this->transientSequence->AddAFlowManager( this->_cfdTFM_X_Vector );
             break;
          }
@@ -1480,7 +1480,7 @@ inline void cfdApp::initScene( )
                                    << std::endl << vprDEBUG_FLUSH;
             this->dataList.push_back( this->_cfdTFM_Y_Vector );     
             this->dataList.back()->SetObjectType( Y_TRANSIENT_CONTOUR_AND_VECTOR );
-            this->dataList.back()->SetpfSequence( this->transientSequence->GetpfSequence() );
+            this->dataList.back()->SetSequence( this->transientSequence->GetSequence() );
             this->transientSequence->AddAFlowManager( this->_cfdTFM_Y_Vector );
             break;
          }
@@ -1504,7 +1504,7 @@ inline void cfdApp::initScene( )
                                    << std::endl << vprDEBUG_FLUSH;
             this->dataList.push_back( this->_cfdTFM_Z_Vector );     
             this->dataList.back()->SetObjectType( Z_TRANSIENT_CONTOUR_AND_VECTOR );
-            this->dataList.back()->SetpfSequence( this->transientSequence->GetpfSequence() );
+            this->dataList.back()->SetSequence( this->transientSequence->GetSequence() );
             this->transientSequence->AddAFlowManager( this->_cfdTFM_Z_Vector );
             break;
          }
@@ -1528,7 +1528,7 @@ inline void cfdApp::initScene( )
             vprDEBUG(vprDBG_ALL,2) << " transient numFrames " << numFrames
                                    << std::endl << vprDEBUG_FLUSH;
             this->_cfdTFM_Geometry[ count ]->SetObjectType( TRANS_GEOM );
-            this->_cfdTFM_Geometry[ count ]->SetpfSequence( this->transientSequence->GetpfSequence() );
+            this->_cfdTFM_Geometry[ count ]->SetSequence( this->transientSequence->GetSequence() );
             this->transientSequence->AddAFlowManager( this->_cfdTFM_Geometry[ count ] );
             this->dataList.push_back( this->_cfdTFM_Geometry[ count ] ); 
 
@@ -1557,7 +1557,7 @@ inline void cfdApp::initScene( )
                                    << std::endl << vprDEBUG_FLUSH;
             this->dataList.push_back( this->_cfdTFM_Particle ); 
             this->dataList.back()->SetObjectType( PARTICLE_TRANSIENT );
-            this->dataList.back()->SetpfSequence( this->transientSequence->GetpfSequence() );
+            this->dataList.back()->SetSequence( this->transientSequence->GetSequence() );
             this->transientSequence->AddAFlowManager( this->_cfdTFM_Particle );
             break;
          }
@@ -2055,8 +2055,6 @@ void cfdApp::preFrame( void )
       //biv--convert the cfdSequence nodes to pfSequence nodes
       //for proper viewing in perfly
       writePFBFile(worldDCS,pfb_filename);
-      
-
 
       // store the active geometry and viz objects as a pfb
       // (but not the sun, menu, laser, or text)
@@ -2085,14 +2083,14 @@ void cfdApp::preFrame( void )
                                    << std::endl << vprDEBUG_FLUSH;
             this->dataList[ i ]->RemoveGeodeFromDCS();
          }
-         else if ( this->dataList[ i ]->GetpfSequence() != NULL )
+         else if ( this->dataList[ i ]->GetSequence() != NULL )
          {
             vprDEBUG(vprDBG_ALL,2) << "stop the sequence and set to NULL"
                                    << std::endl << vprDEBUG_FLUSH;
             // stop the sequence and set the active sequence to NULL
-            this->dataList[ i ]->StoppfSequence();
+            this->dataList[ i ]->StopSequence();
             // disconnect transient data from the graph
-            this->dataList[ i ]->ClearpfSequence();
+            this->dataList[ i ]->ClearSequence();
             // don't update progress bar any more
             this->activeSequenceObject = NULL;  
          }
@@ -2189,12 +2187,12 @@ void cfdApp::preFrame( void )
       if ( this->activeSequenceObject )
       {
          vprDEBUG(vprDBG_ALL,1) << "Sequence address : " 
-           << this->activeSequenceObject->GetpfSequence()
+           << this->activeSequenceObject->GetSequence()
            << std::endl << vprDEBUG_FLUSH;
 
          // Stop the sequence and set the active sequence to NULL
          // so that the progress bar will not try to update
-         this->activeSequenceObject->StoppfSequence();
+         this->activeSequenceObject->StopSequence();
          this->activeSequenceObject = NULL;  
 
          for ( i = 0; i < (int)this->dataList.size(); i++ )
@@ -2207,7 +2205,7 @@ void cfdApp::preFrame( void )
             {
                if ( tfmTest->GetFrameDataType() != cfdFrame::GEOM )
                {
-                  tfmTest->ClearpfSequence();
+                  tfmTest->ClearSequence();
                   tfmTest->isTimeToUpdateSequence = 1;
                }
             }
@@ -2221,37 +2219,37 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
-   else if ( this->cfdId == TRANSIENT_STOP )   // request to pause the pfSequence
+   else if ( this->cfdId == TRANSIENT_STOP )   // request to pause the sequence
    {
       if ( this->activeSequenceObject )
       {
          vprDEBUG(vprDBG_ALL,1) << "Sequence address : " 
-                   << this->activeSequenceObject->GetpfSequence()
+                   << this->activeSequenceObject->GetSequence()
                    << std::endl << vprDEBUG_FLUSH;
                    
          //pausing the transient flow to the graph
          vprDEBUG(vprDBG_ALL,1) << "pausing active sequence" 
                                 << std::endl << vprDEBUG_FLUSH;
 
-         this->activeSequenceObject->PausepfSequence();         
-         // There is only one pfSequence for all transient 
+         this->activeSequenceObject->PauseSequence();         
+         // There is only one sequence for all transient 
          // models so we can break after one has been found
       }
       this->setId( -1 );
    }
-   else if ( this->cfdId == TRANSIENT_BACKWARD )   // request to step back in the pfSequence
+   else if ( this->cfdId == TRANSIENT_BACKWARD )   // request to step back in the sequence
    {
       if ( this->activeSequenceObject )
       {  
-         this->activeSequenceObject->ReversepfSequence();
+         this->activeSequenceObject->ReverseSequence();
       }
       this->setId( -1 );
    }
-   else if ( this->cfdId == TRANSIENT_FORWARD )   // request to step back in the pfSequence
+   else if ( this->cfdId == TRANSIENT_FORWARD )   // request to step forrward in the sequence
    {
       if ( this->activeSequenceObject )
       {  
-         this->activeSequenceObject->ForwardpfSequence();
+         this->activeSequenceObject->ForwardSequence();
       }
       this->setId( -1 );
    }
@@ -2712,7 +2710,7 @@ void cfdApp::preFrame( void )
                // Add steady state geodes to the scene graph
                this->dataList[ i ]->AddGeodeToDCS();
             }
-            else if ( this->dataList[ i ]->GetpfSequence() != NULL )
+            else if ( this->dataList[ i ]->GetSequence() != NULL )
             {
                vprDEBUG(vprDBG_ALL,1) << " will add viz object "
                                       << i << " to sequence"
@@ -2731,19 +2729,19 @@ void cfdApp::preFrame( void )
                {
                   tfmTest->CreateNodeList();
 
-                  this->dataList[ i ]->AddTopfSequence();
+                  this->dataList[ i ]->AddToSequence();
             
                   if ( this->activeSequenceObject )
                   {
-                     vprDEBUG(vprDBG_ALL,1) << " ResumepfSequence"
+                     vprDEBUG(vprDBG_ALL,1) << " ResumeSequence"
                                             << std::endl << vprDEBUG_FLUSH;
-                     this->dataList[ i ]->ResumepfSequence();
+                     this->dataList[ i ]->ResumeSequence();
                   }
                   else
                   {
-                     vprDEBUG(vprDBG_ALL,1) << " StartpfSequence"
+                     vprDEBUG(vprDBG_ALL,1) << " StartSequence"
                                             << std::endl << vprDEBUG_FLUSH;
-                     this->dataList[ i ]->StartpfSequence();
+                     this->dataList[ i ]->StartSequence();
                   }
 
                   // Set active sequence to current sequence
@@ -2751,7 +2749,7 @@ void cfdApp::preFrame( void )
                }
                else //if ( animTest != NULL )
                {
-                  this->dataList[ i ]->AddTopfSequence();
+                  this->dataList[ i ]->AddToSequence();
                }
             }
             vprDEBUG(vprDBG_ALL,2) << " End Update Loop"
@@ -2765,10 +2763,12 @@ void cfdApp::preFrame( void )
       cfdObjects::SetTimeToUpdateFlag( false );
    }
 
+///////////////////////////
+//biv: move this to start of postframe?
    // if transient data is being displayed, then update gui progress bar
    if (  this->activeSequenceObject )
    {
-      int currentFrame = this->activeSequenceObject->GetFrameOfpfSequence();
+      int currentFrame = this->activeSequenceObject->GetFrameOfSequence();
       //cout << " Current Frame :  " << currentFrame << endl;
       if (this->lastFrame != currentFrame )
       {
@@ -2778,6 +2778,7 @@ void cfdApp::preFrame( void )
          this->lastFrame = currentFrame;
       }
    }
+///////////////////////////
 
 #ifdef _TAO
    if ( cfdObjects::GetActiveDataSet() != NULL )
@@ -2799,6 +2800,7 @@ void cfdApp::intraFrame()
 void cfdApp::postFrame()
 {
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
+
 #ifdef TABLET
    this->GetCfdStateVariables();
 #endif // TABLET
@@ -3282,7 +3284,7 @@ void cfdApp::GetUpdateClusterStateVariables( void )
    {
       if ( this->activeSequenceObject != NULL )
       {
-         cfdSequence* the_sequence = this->activeSequenceObject->GetpfSequence();
+         cfdSequence* the_sequence = this->activeSequenceObject->GetSequence();
          if ( the_sequence != NULL )
          {
             the_sequence->setCurrentFrame( this->cfdTimesteps );
