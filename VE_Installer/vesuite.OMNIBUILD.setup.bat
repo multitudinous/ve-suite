@@ -53,5 +53,5 @@ set PYTHONPATH=%VJ_DEPS_DIR%\lib\python
 set Path=%Path%;%OMNI_HOME%\bin\x86_win32;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib;%VTK_HOME%\bin\debug;%VE_SUITE_HOME%\bin
 
 REM only change this if your Visual Studio .NET is installed somewhere else
-REM "C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.exe" 
+"C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.exe" %VE_SUITE_HOME%\VE_Suite.sln
 cmd
