@@ -31,7 +31,11 @@
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+#ifndef WIN32
 #include <unistd.h>
+#else
+#include <windows.h>
+#endif
 #include <fcntl.h>
 
 // vtkActorToPF - translates vtkActor to pfGeode. If geode is NULL, new one

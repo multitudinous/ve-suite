@@ -29,10 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <sys/time.h>
-
 #ifndef GET_TIME_H
 #define GET_TIME_H
+
+#ifndef WIN32
+#include <sys/time.h>
+#include <time.h>
+#else
+#include <Winsock2.h>
+#endif
 
 double GetTimeClock()
 {

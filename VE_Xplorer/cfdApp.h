@@ -25,14 +25,17 @@
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdApp.h,v $
  * Date modified: $Date$
- * Version:       $Rev$
+ * Version:       $Revision: 1.63 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PF_NAV_H
 #define PF_NAV_H
 
+//biv -- added for non-corba build
+//#ifdef TABLET
 #include <VjObs_i.h>     //added for corba stuff
+//#endif
 
 #ifdef _TAO
 #include <orbsvcs/CosNamingC.h>
@@ -68,10 +71,16 @@
 #include <cstring>
 #include <cmath>
 //#include <omp.h>
+#ifndef WIN32
 #include <sys/time.h>
+#endif
 #include <vector>
-#include <unistd.h>
 
+#ifndef WIN32
+#include <unistd.h>
+#else
+//#include <windows.h>
+#endif
 /// Performer libraries
 #include <Performer/pr/pfGeoState.h>
 #include <Performer/pf/pfChannel.h>
@@ -88,7 +97,10 @@
 #include <Performer/pr/pfMaterial.h>
 #include <Performer/pr.h>
 #include <Performer/pf/pfSwitch.h>
+#ifndef WIN32
+//biv--check here if build/run problems occur
 #include <Performer/pfdb/pfiv.h>
+#endif
 #include <Performer/pr/pfLight.h>
 #include <Performer/pf/pfSequence.h>
 
@@ -148,11 +160,15 @@ using namespace snx;
 const float SAMPLE_TIME = 1.0f;
 
 // Declare my application class
+#ifdef TABLET
 class cfdApp : public vrj::PfApp, public VjObs_i
+#else
+class cfdApp : public vrj::PfApp
+#endif
 {
    public:
       //cfdApp( vrj::Kernel* kern);
-      cfdApp( vrj::Kernel* kern );
+      cfdApp( );//vrj::Kernel* kern );
 
       virtual void init( );
 
@@ -171,7 +187,7 @@ class cfdApp : public vrj::PfApp, public VjObs_i
       // Function called by the DEFAULT drawChan function 
       // before clearing the channel
       // and drawing the next frame (pfFrame( ))
-      virtual void preDrawChan(pfChannel* chan, void* chandata);
+      //virtual void preDrawChan(pfChannel* chan, void* chandata);
 
       // Function called before pfSync
       virtual void preSync( );
@@ -203,8 +219,11 @@ class cfdApp : public vrj::PfApp, public VjObs_i
       void NavigationForIHCC( void );
 
       void pushDataToStateInfo( void );
-
+#ifdef TABLET
       void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
+#else
+	  void setId( int x ){ this->cfdId = x; }
+#endif
 
    //biv-- get inputs for navigation from the GUI
    void updateNavigationFromGUI();
@@ -272,10 +291,11 @@ class cfdApp : public vrj::PfApp, public VjObs_i
 #ifdef _TAO
    cfdExecutive*     executive;
 #endif
+#ifdef TABLET
    CosNaming::NamingContext_var naming_context;
    CORBA::ORB_var orb;
    PortableServer::POA_var poa;
-
+#endif
    std::vector< cfdSound * > sounds;
    std::vector< cfdFILE * > geomL;
    std::vector< cfdObjects * > dataList;
@@ -361,6 +381,21 @@ class cfdApp : public vrj::PfApp, public VjObs_i
    short cfdNumGeoArrays;     // intial stuff
    int   cfdClients;          // intial stuff
    short cfdNumTeacherArrays; // intial stuff
+
+#ifndef TABLET
+  // cfdApp side variables
+   int   cfdIso_value;
+   int   cfdSc;
+   int   cfdMin;
+   int   cfdMax;
+   long  cfdId;
+   long  cfdGeo_state;
+   short cfdPostdata_state;
+   bool  cfdPre_state;
+   short cfdTimesteps;
+   short cfdTeacher_state; 
+#endif
+
 };
 
 #endif

@@ -133,13 +133,13 @@ void cfdGeomDataSet::Initialize(float op_val )
 
 void cfdGeomDataSet::setTrans( float t[3] )
 {
-   this->SetTrans( t[0], t[1], t[2] );
+   this->setTrans3( t[0], t[1], t[2] );
    vprDEBUG(vprDBG_ALL,1) << "Trans x: " << t[0] << " y: "
       << t[1] << " z: " << t[2] << std::endl << vprDEBUG_FLUSH;
 }
 
 
-void cfdGeomDataSet::SetTrans( float x, float y, float z )
+void cfdGeomDataSet::setTrans3( float x, float y, float z )
 {
    this->DCS->setTrans( x, y, z );
    vprDEBUG(vprDBG_ALL,1) << "Trans x: " << x << " y: " 

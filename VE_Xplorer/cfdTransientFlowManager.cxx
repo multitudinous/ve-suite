@@ -34,7 +34,9 @@
 #include <sys/types.h>
 #include <sys/dir.h>
 #else
-#error ("NOT Portable to Windows Yet!!")
+//#error ("NOT Portable to Windows Yet!!")
+#include <windows.h>
+#include <direct.h>
 #endif
 
 #include <iostream>
@@ -86,6 +88,7 @@ int cfdTransientFlowManager::StoreFrameFileNames()
                           << std::endl << vprDEBUG_FLUSH;
 
    char * cwd;
+#ifndef WIN32
    //store the current directory so we can change back to it
    if ( (cwd = getcwd(NULL, 100)) == NULL )
    {
@@ -131,13 +134,77 @@ int cfdTransientFlowManager::StoreFrameFileNames()
             this->numFrames++;
          }
       };
-      vprDEBUG(vprDBG_ALL,1) << " Number of frames: " << this->numFrames
+         vprDEBUG(vprDBG_ALL,1) << " Number of frames: " << this->numFrames
                               << std::endl << vprDEBUG_FLUSH;
-      //close the directory
-      closedir(dir);
-      dir = 0;
-      file = 0;
+         //close the directory
+         closedir(dir);
+         dir = 0;
+         file = 0;
+      }else{
+         std::cerr << "Error!!! Frames directory not specified!!" << std::endl;
+         return 0;
+      }
+#else
+   //biv--this code will need testing
+   //BIGTIME!!!!!!!
+   char buffer[_MAX_PATH];
+   BOOL finished;
+   HANDLE hList;
+   TCHAR directory[MAX_PATH+1];
+   WIN32_FIND_DATA fileData;
 
+   //windows compatibility
+   //get the current working directory
+   if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL){
+      std::cerr << "Couldn't get the current working directory!" << std::endl;
+      return 0;
+   }
+
+   // Get the proper directory path for transient files
+   sprintf(directory, "%s\\*", this->directory);
+
+   //get the first file
+   hList = FindFirstFile(directory, &fileData);
+  
+   //check to see if directory is valid
+   if(hList == INVALID_HANDLE_VALUE){ 
+	   std::cerr<<"No transient files found in: "<<this->directory<<std::endl;
+      return 0;
+   }else{
+      // Traverse through the directory structure
+      finished = FALSE;
+      while (!finished){
+         //add the file name to our data list
+		 //assume all vtk files in this directory are part of the sequence
+		 if(strstr(fileData.cFileName, ".vtk")||
+			strstr(fileData.cFileName, ".iv" ) || 
+            strstr(fileData.cFileName, ".flt") ||
+            strstr(fileData.cFileName, ".stl")){
+            char* pathAndFileName = new char[
+                  strlen(this->directory) + strlen(fileData.cFileName) + 2 ];
+            strcpy(pathAndFileName,this->directory);
+            strcat(pathAndFileName,"/");
+            strcat(pathAndFileName,fileData.cFileName);
+
+            this->frameFileNames.push_back( pathAndFileName );
+            vprDEBUG(vprDBG_ALL, 1) << " pathAndFileName : " 
+                                    << pathAndFileName << std::endl << vprDEBUG_FLUSH;
+            //increment the number of frames found
+            this->numFrames++;
+		 }
+		 //check to see if this is the last file
+		 if(!FindNextFile(hList, &fileData)){
+            if(GetLastError() == ERROR_NO_MORE_FILES){
+               finished = TRUE;
+			}
+		 }
+	  }
+   }
+   //close the handle
+   FindClose(hList);
+   //make sure we are in the correct directory
+   chdir(cwd);
+#endif
       // The directory must contain only transient files of a particular type
       // (ie, y-plane slices)
       // Filenames should be something like:
@@ -159,12 +226,7 @@ int cfdTransientFlowManager::StoreFrameFileNames()
          vprDEBUG(vprDBG_ALL,1) << "\t" << j << "\t" << number << "\t" 
             << this->frameFileNames[ j ] << std::endl << vprDEBUG_FLUSH;
       }
-   }
-   else
-   {
-      std::cerr << "Error!!! Frames directory not specified!!" << std::endl;
-      return 0;
-   }
+   
    //change back to the original directory
    chdir( cwd );
    vprDEBUG(vprDBG_ALL,2) << " finished StoreFrameFileNames"

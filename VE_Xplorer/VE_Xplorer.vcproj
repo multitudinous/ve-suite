@@ -399,6 +399,12 @@
 			</File>
 			<File
 				RelativePath=".\cfdIHCCModel.cxx">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdImage.cxx">
@@ -482,7 +488,7 @@
 				RelativePath=".\cfdTransientInfo.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdTransientParticleActor.cpp">
+				RelativePath=".\cfdTransientParticleActor.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdTransientParticleActor_fluent.cxx">
@@ -529,7 +535,8 @@
 				<File
 					RelativePath=".\cfd1DTextInput.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -563,7 +570,8 @@
 				<File
 					RelativePath=".\cfdDashboard.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -597,7 +605,8 @@
 				<File
 					RelativePath=".\cfdDigitalAnalogGauge.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -631,7 +640,8 @@
 				<File
 					RelativePath=".\cfdExecutive.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -665,7 +675,8 @@
 				<File
 					RelativePath=".\cfdExecutiveConfiguration.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -699,7 +710,8 @@
 				<File
 					RelativePath=".\cfdGauges.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -733,7 +745,8 @@
 				<File
 					RelativePath=".\cfdInteractiveGeometry.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -767,7 +780,8 @@
 				<File
 					RelativePath=".\cfdModuleGeometry.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -801,7 +815,8 @@
 				<File
 					RelativePath=".\cfdSwappableGeometry.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -835,7 +850,8 @@
 				<File
 					RelativePath=".\VE_i.cxx">
 					<FileConfiguration
-						Name="Debug|Win32">
+						Name="Debug|Win32"
+						ExcludedFromBuild="TRUE">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>

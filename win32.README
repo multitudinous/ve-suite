@@ -16,3 +16,8 @@ The project should be ready to build!
 
 Currently the only two configurations are Debug_OMNI and Release_OMNI.
 
+To run the solution from w/in Vis Studio, change the working directory in the 
+Configuration Properties tab to point to the directory
+where your parameter files are. You will also need to pass in
+your config files as command arguments on the configuration
+properties tab.

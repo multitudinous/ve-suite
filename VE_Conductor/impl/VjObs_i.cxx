@@ -31,7 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <VjObs_i.h>
 #include <iostream>
+#ifndef WIN32
 #include <sys/time.h>
+#else
+#include <time.h>
+#endif
 //#include <vpr/vpr.h>
 //#include <vpr/Sync/Mutex.h>
 
@@ -235,7 +239,7 @@ VjObs::obj_p * VjObs_i::get_num_vectors_per_dataset()
    return this->num_vectors_per_dataset._retn();
 }
 
-void VjObs_i::setNumDatasets(const short value)
+void VjObs_i::setNumDatasets(CORBA::Short value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -244,7 +248,7 @@ void VjObs_i::setNumDatasets(const short value)
    mNumScalars = value;
 }
 
-short VjObs_i::getNumDatasets()
+CORBA::Short VjObs_i::getNumDatasets()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL,0) << "Returning '" << mNumScalars << "' to caller\n"
@@ -252,17 +256,17 @@ short VjObs_i::getNumDatasets()
    return mNumScalars;
 }
 
-short VjObs_i::getTotalNumberOfScalars()
+CORBA::Short VjObs_i::getTotalNumberOfScalars()
 {
    return this->totalNumberOfScalars;
 }
 
-short VjObs_i::getTotalNumberOfVectors()
+CORBA::Short VjObs_i::getTotalNumberOfVectors()
 {
    return this->totalNumberOfVectors;
 }
 
-void VjObs_i::setNumVectors(const short value)
+void VjObs_i::setNumVectors(CORBA::Short value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -271,7 +275,7 @@ void VjObs_i::setNumVectors(const short value)
    mNnumVectors = value;
 }
 
-short VjObs_i::getNumVectors()
+CORBA::Short VjObs_i::getNumVectors()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -279,7 +283,7 @@ short VjObs_i::getNumVectors()
    return mNnumVectors;
 }
 
-void VjObs_i::setNumGeoArrays(const short value)
+void VjObs_i::setNumGeoArrays(CORBA::Short value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -288,7 +292,7 @@ void VjObs_i::setNumGeoArrays(const short value)
    mNumGeoArrays = value;
 }
 
-short VjObs_i::getNumGeoArrays()
+CORBA::Short VjObs_i::getNumGeoArrays()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -296,7 +300,7 @@ short VjObs_i::getNumGeoArrays()
    return mNumGeoArrays;
 }
 
-void VjObs_i::setClients(const long value)
+void VjObs_i::setClients(CORBA::Long value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //cout   << "Setting number of Clients to " << value << endl; 
@@ -306,7 +310,7 @@ void VjObs_i::setClients(const long value)
    mClients = value;
 }
 
-long VjObs_i::getClients()
+CORBA::Long VjObs_i::getClients()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -314,7 +318,7 @@ long VjObs_i::getClients()
    return mClients;
 }
 
-void VjObs_i::setIsoValue(const long value)
+void VjObs_i::setIsoValue(CORBA::Long value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -323,7 +327,7 @@ void VjObs_i::setIsoValue(const long value)
    mIso_value = value;
 }
 
-long VjObs_i::getIsoValue()
+CORBA::Long VjObs_i::getIsoValue()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -331,7 +335,7 @@ long VjObs_i::getIsoValue()
    return mIso_value;
 }
 
-void VjObs_i::setSc(const long value)
+void VjObs_i::setSc(CORBA::Long value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -340,7 +344,7 @@ void VjObs_i::setSc(const long value)
    mSc = value;
 }
 
-long VjObs_i::getSc()
+CORBA::Long VjObs_i::getSc()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -348,7 +352,7 @@ long VjObs_i::getSc()
    return mSc;
 }
 
-void VjObs_i::setMin(const long value)
+void VjObs_i::setMin(CORBA::Long value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -357,7 +361,7 @@ void VjObs_i::setMin(const long value)
    mMin = value;
 }
 
-long VjObs_i::getMin()
+CORBA::Long VjObs_i::getMin()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -365,7 +369,7 @@ long VjObs_i::getMin()
    return mMin;
 }
 
-void VjObs_i::setMax(const long value)
+void VjObs_i::setMax(CORBA::Long value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -374,7 +378,7 @@ void VjObs_i::setMax(const long value)
    mMax = value;
 }
 
-long VjObs_i::getMax()
+CORBA::Long VjObs_i::getMax()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -382,7 +386,7 @@ long VjObs_i::getMax()
    return mMax;
 }
 
-void VjObs_i::setId(const long value)
+void VjObs_i::setId(CORBA::Long value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -391,7 +395,7 @@ void VjObs_i::setId(const long value)
    mId = value;
 }
 
-long VjObs_i::getId()
+CORBA::Long VjObs_i::getId()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -399,7 +403,7 @@ long VjObs_i::getId()
    return mId;
 }
 
-void VjObs_i::setGeoState(const long value)
+void VjObs_i::setGeoState(CORBA::Long value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -408,7 +412,7 @@ void VjObs_i::setGeoState(const long value)
    mGeo_state = value;
 }
 
-long VjObs_i::getGeoState()
+CORBA::Long VjObs_i::getGeoState()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -416,7 +420,7 @@ long VjObs_i::getGeoState()
    return mGeo_state;
 }
 
-void VjObs_i::setPostdataState(const short value)
+void VjObs_i::setPostdataState(CORBA::Short value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -425,7 +429,7 @@ void VjObs_i::setPostdataState(const short value)
    mPostdata_state = value;
 }
 
-short VjObs_i::getPostdataState()
+CORBA::Short VjObs_i::getPostdataState()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -433,7 +437,7 @@ short VjObs_i::getPostdataState()
    return mPostdata_state;
 }
 
-void VjObs_i::setPreState(const short value)
+void VjObs_i::setPreState(CORBA::Short value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -442,7 +446,7 @@ void VjObs_i::setPreState(const short value)
    mPre_state = value;
 }
 
-short VjObs_i::getPreState()
+CORBA::Short VjObs_i::getPreState()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -450,7 +454,7 @@ short VjObs_i::getPreState()
    return mPre_state;
 }
 
-void VjObs_i::setTimesteps(const short value)
+void VjObs_i::setTimesteps(CORBA::Short value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -459,7 +463,7 @@ void VjObs_i::setTimesteps(const short value)
    mTimesteps = value;
 }
 
-short VjObs_i::getTimesteps()
+CORBA::Short VjObs_i::getTimesteps()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -467,7 +471,7 @@ short VjObs_i::getTimesteps()
    return mTimesteps;
 }
 
-void VjObs_i::setNumTeacherArrays(const short value)
+void VjObs_i::setNumTeacherArrays(CORBA::Short value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -476,7 +480,7 @@ void VjObs_i::setNumTeacherArrays(const short value)
    mNumTeacherArrays = value;
 }
 
-short VjObs_i::getNumTeacherArrays()
+CORBA::Short VjObs_i::getNumTeacherArrays()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -484,7 +488,7 @@ short VjObs_i::getNumTeacherArrays()
    return mNumTeacherArrays;
 }
 
-void VjObs_i::setTeacherState(const short value)
+void VjObs_i::setTeacherState(CORBA::Short value)
 {
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
@@ -493,7 +497,7 @@ void VjObs_i::setTeacherState(const short value)
    mTeacher_state = value;
 }
 
-short VjObs_i::getTeacherState()
+CORBA::Short VjObs_i::getTeacherState()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
@@ -503,7 +507,7 @@ short VjObs_i::getTeacherState()
 
 // These functions are called from the java side
 // Need to figure out a better notation so that this all makes sense
-short VjObs_i::get_sc_num() 
+CORBA::Short VjObs_i::get_sc_num() 
 {
    int i;
 
@@ -595,7 +599,7 @@ short VjObs_i::get_sc_num()
    return this->getNumDatasets();
 }
 
-short VjObs_i::get_geo_num()
+CORBA::Short VjObs_i::get_geo_num()
 {
    // yang-REI: block lock to protect the cfdApp data since no buffer is used, 
    // and the corba servant side is waiting for the result
@@ -622,9 +626,9 @@ short VjObs_i::get_geo_num()
    return numGeoArrays;
 }
 
-short VjObs_i::get_teacher_num()
+CORBA::Short VjObs_i::get_teacher_num()
 {
-   short numTeacherArrays = this->mTeacher->getNumberOfFiles();
+   CORBA::Short numTeacherArrays = this->mTeacher->getNumberOfFiles();
    vprDEBUG(vprDBG_ALL,0)
       << " Number of performer binary files to be transfered to the client: "
       << numTeacherArrays
@@ -635,7 +639,7 @@ short VjObs_i::get_teacher_num()
    {
       this->teacher_name = new VjObs::scalar_p( numTeacherArrays );
       this->teacher_name->length( numTeacherArrays );
-      for(short i = 0; i < numTeacherArrays; i++)
+      for(CORBA::Short i = 0; i < numTeacherArrays; i++)
       {
          this->teacher_name[ i ] = CORBA::string_dup(
                                         this->mTeacher->getFileName( i ) );
@@ -722,7 +726,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
 }
 #endif
 
-short VjObs_i::GetNumberOfSounds()
+CORBA::Short VjObs_i::GetNumberOfSounds()
 {
    int numberOfSounds = this->mParamReader->soundFile;
    this->sound_names = new VjObs::scalar_p( numberOfSounds );
@@ -747,7 +751,7 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
    return this->sound_names._retn();
 }
 
-void VjObs_i::SetClientInfoFlag( const short value )
+void VjObs_i::SetClientInfoFlag( CORBA::Short value )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    this->mGetClientInfo = value;

@@ -34,7 +34,9 @@
 #include <sys/types.h>
 #include <sys/dir.h>
 #else
-#error ("NOT Portable to Windows Yet!!")
+//#error ("NOT Portable to Windows Yet!!")
+#include <windows.h>
+#include <direct.h>
 #endif
 
 #include "cfdReadParam.h"
@@ -160,13 +162,15 @@ cfdDataSet * cfdReadParam::GetDataSetWithName( const char * vtkFilename )
 
 char * readDirName( std::ifstream &inFile, char * description )
 {
+  char textLine[256];
    char * dirName = new char [256];
    inFile >> dirName;
-
-   char textLine [ 256 ];
+   
    inFile.getline( textLine, 256 );   //skip past remainder of line
-
+#ifndef WIN32  
+   
    //try to open the directory
+
    DIR* dir = opendir( dirName );
    if (dir == NULL) 
    {
@@ -183,6 +187,10 @@ char * readDirName( std::ifstream &inFile, char * description )
                              << std::endl << vprDEBUG_FLUSH;
    }
    closedir( dir );
+#else
+
+
+#endif
    return dirName;
 }
 
@@ -425,7 +433,7 @@ void cfdReadParam::Vtk( std::ifstream &inFile )
 
 void cfdReadParam::LoadSurfaceFiles( char * precomputedSurfaceDir )
 {
-   if ( precomputedSurfaceDir == NULL )
+    if ( precomputedSurfaceDir == NULL )
    {
       vprDEBUG(vprDBG_ALL,1) << "precomputedSurfaceDir == NULL" 
                              << std::endl << vprDEBUG_FLUSH;
@@ -437,6 +445,7 @@ void cfdReadParam::LoadSurfaceFiles( char * precomputedSurfaceDir )
 
    //store the current directory so we can change back to it
    char *cwd;
+#ifndef WIN32
    if ((cwd = getcwd(NULL, 100)) == NULL)
    {
       std::cerr << "Couldn't get the current working directory!" << std::endl;
@@ -444,8 +453,8 @@ void cfdReadParam::LoadSurfaceFiles( char * precomputedSurfaceDir )
    }
 
    //open the directory (we already know that it is valid)
-   DIR* dir = opendir( precomputedSurfaceDir );
 
+   DIR* dir = opendir( precomputedSurfaceDir );
    //change into this directory so that vtk can find the files
    chdir( precomputedSurfaceDir );
    
@@ -488,7 +497,6 @@ void cfdReadParam::LoadSurfaceFiles( char * precomputedSurfaceDir )
          }
       }
    };
-
    //close the directory
    closedir( dir );
    dir = 0;
@@ -496,6 +504,82 @@ void cfdReadParam::LoadSurfaceFiles( char * precomputedSurfaceDir )
 
    //change back to the original directory
    chdir( cwd );
+#else
+   //biv--this code will need testing
+   //BIGTIME!!!!!!!
+   char buffer[_MAX_PATH];
+   BOOL finished;
+   HANDLE hList;
+   TCHAR directory[MAX_PATH+1];
+   WIN32_FIND_DATA fileData;
+
+   //windows compatibility
+   //get the current working directory
+   if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL){
+      std::cerr << "Couldn't get the current working directory!" << std::endl;
+      return ;
+   }
+
+   // Get the proper directory path for transient files
+   sprintf(directory, "%s\\*", precomputedSurfaceDir);
+
+   //get the first file
+   hList = FindFirstFile(directory, &fileData);
+  
+   //check to see if directory is valid
+   if(hList == INVALID_HANDLE_VALUE){ 
+	   std::cerr<<"No precomputed surface files found in: "<<precomputedSurfaceDir<<std::endl;
+      return ;
+   }else{
+      // Traverse through the directory structure
+      finished = FALSE;
+      while (!finished){
+         //add the file name to our data list
+		 //assume all vtk files in this directory are part of the sequence
+		 //assume all vtk files in this directory are to be loaded
+         if(strstr(fileData.cFileName, ".vtk")){
+            char* pathAndFileName = new char[strlen(precomputedSurfaceDir)+
+                                          strlen(fileData.cFileName)+2];
+            strcpy(pathAndFileName,precomputedSurfaceDir);
+            strcat(pathAndFileName,"/");
+            strcat(pathAndFileName,fileData.cFileName);
+
+            if ( fileIO::isFileReadable( pathAndFileName ) ) {
+               vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
+                                      << std::endl << vprDEBUG_FLUSH;
+
+               int ii = dataSets.size();
+               this->dataSets.push_back( new cfdDataSet() );
+               this->dataSets[ ii ]->SetFileName( pathAndFileName );
+
+               // set the dcs matrix the same as the last file
+               this->dataSets[ ii ]->SetDCS( this->dataSets[ ii-1 ]->GetDCS() ); 
+
+               // precomputed data that descends from a flowdata.vtk should
+               // automatically have the same color mapping as the "parent" 
+               this->dataSets[ ii ]->SetParent( 
+                                      this->dataSets[ ii-1 ]->GetParent() );
+			}else{
+               std::cerr << "ERROR: unreadable file = " << pathAndFileName
+                         << ".  You may need to correct your param file."
+                         << std::endl;
+               exit(1);
+			}
+		 }
+		 //check to see if this is the last file
+		 if(!FindNextFile(hList, &fileData)){
+            if(GetLastError() == ERROR_NO_MORE_FILES){
+               finished = TRUE;
+			}
+		 }
+	  }
+   }
+   //close the handle
+   FindClose(hList);
+   //make sure we are in the correct directory
+   chdir(cwd);
+#endif
+
 }
 
 void cfdReadParam::Stl( std::ifstream &inFile )

@@ -25,7 +25,7 @@
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdApp.cxx,v $
  * Date modified: $Date$
- * Version:       $Rev$
+ * Version:       $Revision: 1.153 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -36,7 +36,8 @@
 
 #include "cfdApp.h"
 #include <sys/types.h>
-#include <malloc.h>
+
+//#include <malloc.h>
 #include "fileIO.h"
 #include "get_time.h"
 #include "cfdPlanes.h"
@@ -75,8 +76,8 @@
 int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
 #endif
 
-inline cfdApp::cfdApp( vrj::Kernel* kern ) 
-   : PfApp(kern)//, mMyDrawManager( new cfdDrawManager() )
+inline cfdApp::cfdApp( )//vrj::Kernel* kern ) 
+//   : PfApp(kern)//, mMyDrawManager( new cfdDrawManager() )
 {
    this->surface = NULL;
    this->menu = NULL;
@@ -123,14 +124,14 @@ inline cfdApp::cfdApp( vrj::Kernel* kern )
    this->_cfdTFM_Geometry[1] = NULL;
    this->lastSource = NULL;
 }
-
+#ifdef TABLET
 void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_ptr orb, PortableServer::POA_ptr poa )
 {
    this->naming_context = CosNaming::NamingContext::_duplicate( naming );
    this->orb = CORBA::ORB::_duplicate( orb );
    this->poa = PortableServer::POA::_duplicate( poa );
 }
-
+#endif
 void cfdApp::exit()
 {
    // we don't have a destructor, so delete items here...
@@ -410,7 +411,9 @@ void cfdApp::exit()
       delete this->executive;
    }
 #endif
+#ifdef TABLET
    CosNaming::Name name(1);
+
    name.length(1);
    name[0].id   = (const char*) "Master";
    name[0].kind = (const char*) "VE_Xplorer";
@@ -434,7 +437,7 @@ void cfdApp::exit()
    vprDEBUG(vprDBG_ALL,0) 
      << " destroying orb" << std::endl << vprDEBUG_FLUSH;
    orb->destroy();
-   
+#endif
    vprDEBUG(vprDBG_ALL,0) 
      << " pfExit" << std::endl << vprDEBUG_FLUSH;
    pfExit();
@@ -451,6 +454,7 @@ inline void cfdApp::init( )
    this->digital[4].init("VJButton4");   // 6 o'clock -- reset
    this->digital[5].init("VJButton5");   // 9 o'clock -- exit streamer while loop
 
+//#ifdef IHCC_SYS
    this->IHdigital[0].init("VJMovementZ0");  //press "8" for forward navigation
    this->IHdigital[1].init("VJMovementZ1");  //press "2" for backward navigation
    this->IHdigital[2].init("VJMovementX0");  //press "6" for rightward navigation
@@ -461,9 +465,10 @@ inline void cfdApp::init( )
    this->IHdigital[7].init("VJRotateY");  //press "left_arrow" for CCW rotation
    //this->IHdigital[8].init("IHVJButton8");  //press "up_arrow" for upward rotation
    //this->IHdigital[9].init("IHVJButton9");  //press "down_arrow" for downward rotation
+//#endif
 
 #ifdef _CLUSTER
-   // Cluster Stuff
+  // Cluster Stuff
    vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
    std::string hostname = "abbott";
    mStates.init(new_guid);//,hostname);
@@ -495,21 +500,19 @@ inline void cfdApp::preForkInit( )
 
 inline pfGroup* cfdApp::getScene( )
 {
-  vprDEBUG(vprDBG_ALL,1) << "cfdApp::getScene" << std::endl << vprDEBUG_FLUSH;
+  //vprDEBUG(vprDBG_ALL,1) << "cfdApp::getScene" << std::endl << vprDEBUG_FLUSH;
   return rootNode;//for test
 }
-
-
+/*
 inline void cfdApp::preDrawChan(pfChannel* chan, void* chandata)
 {
   vprDEBUG(vprDBG_ALL,3) << "cfdApp::preDrawChan" 
                          << std::endl << vprDEBUG_FLUSH;
-/*
+
   pfDisable(PFEN_TEXTURE);
   pfOverride(PFSTATE_TEXTURE,PF_ON); // Override texturing to turn it off (test)
-*/
 }
-
+*/
 
 inline void cfdApp::preSync( )
 {
@@ -827,7 +830,7 @@ inline void cfdApp::initScene( )
    }
 */
 
-   for ( int i = 0; i < this->paramReader->GetNumberOfDataSets(); i++)
+   for ( i = 0; i < this->paramReader->GetNumberOfDataSets(); i++)
    {
       std::cout << "|   Loading data for file " 
                 << this->paramReader->GetDataSet( i )->GetFileName()
@@ -836,7 +839,7 @@ inline void cfdApp::initScene( )
       this->paramReader->GetDataSet( i )->SetArrow( this->arrow );
    }
 
-   for ( int i = 0; i < this->paramReader->GetNumberOfDataSets(); i++)
+   for ( i = 0; i < this->paramReader->GetNumberOfDataSets(); i++)
    {
       int cfdType = this->paramReader->GetDataSet( i )->GetType();
       vprDEBUG(vprDBG_ALL,1) << "cfdType: " << cfdType
@@ -891,18 +894,21 @@ inline void cfdApp::initScene( )
    for ( int p = 0; p < this->paramReader->numGeoms; p++)
    {    
       std::cout << "|   Intializing Geometry file " 
-                << this->paramReader->files[p]->fileName << std::endl; 
-      this->geomL.push_back( new cfdFILE( this->paramReader->files[ p ],
-                                          this->worldDCS ) );
+                << this->paramReader->files[p]->fileName << std::endl;
+      //biv --testing for windows
+      cfdFILE* newGeom = 0;
+      newGeom = new cfdFILE( this->paramReader->files[ p ],
+                                          this->worldDCS );
+      this->geomL.push_back( newGeom );
       this->geomL[ p ]->Initialize( 1.0 );
 
       // give the geometry DCS a name so that it can be detected during a CLEAR_ALL
       this->geomL[ p ]->getpfDCS()->setName("geometry");
    }
    this->changeGeometry = false;
-
+#ifdef TABLET
    this->SetCfdReadParam( this->paramReader );
-
+#endif
    std::cout << "| ***************************************************************** |" << std::endl;
    std::cout << "|  4. Initializing.............................. Navigation systems |" << std::endl;
    this->nav = new cfdNavigate();
@@ -921,13 +927,16 @@ inline void cfdApp::initScene( )
    // Initiate menu system.
    //
    std::cout << "|  6. Initializing..................................... Menu system |" << std::endl;
+
    char * menuFile = fileIO::GetFile( "menu", "/VE_Xplorer/data/menu.vtk" );
+
    if ( menuFile == NULL )
    {
       this->exit();
    }
 
    char * menuConfigFile = fileIO::GetFile( "menu configuration", "/VE_Xplorer/config/menu.cfg" );
+
    if ( menuConfigFile == NULL )
    {
       this->exit();
@@ -1536,7 +1545,9 @@ inline void cfdApp::initScene( )
    //
    std::cout << "| 52. Initializing...................................... pfBinaries |" << std::endl;
    this->teacher = new cfdTeacher( "STORED_FILES", this->worldDCS );
+#ifdef TABLET
    this->SetCfdTeacher( this->teacher );
+#endif
    // initalize pfb_count to number of stored binaries in an attempt to prevent
    // overwriting of existing files...
    this->pfb_count = this->teacher->getNumberOfFiles();
@@ -1553,9 +1564,10 @@ inline void cfdApp::initScene( )
    this->CreateTeacherInfo();
 #endif
 
+#ifdef TABLET
    this->pushDataToStateInfo();
    this->GetCfdStateVariables();
-
+#endif
    std::cout << " ******************End of init scene : " << worldDCS << endl;
 }
 
@@ -1864,7 +1876,7 @@ void clearGeodesFromNode( pfNode * node )
 
 void cfdApp::preFrame( void )
 {
-   vprDEBUG(vprDBG_ALL,3) << "app::preFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
 
 #ifdef _CLUSTER
    // CLuster Stuff
@@ -2892,7 +2904,9 @@ void cfdApp::preFrame( void )
       int currentFrame = this->activeSequenceObject->GetFrameOfpfSequence();
       if ( this->lastFrame != currentFrame )
       {
-         this->setTimesteps( currentFrame );
+#ifdef TABLET         
+		 this->setTimesteps( currentFrame );
+#endif
          this->lastFrame = currentFrame;
       }
    }
@@ -2904,7 +2918,7 @@ void cfdApp::preFrame( void )
    }
    this->executive->UpdateModules();
 #endif
-   vprDEBUG(vprDBG_ALL,3) << " End preFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdApp::intraFrame()
@@ -2917,10 +2931,13 @@ void cfdApp::intraFrame()
 void cfdApp::postFrame()
 {
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
+#ifdef TABLET
    this->GetCfdStateVariables();
+#endif
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
+#ifdef TABLET
 void cfdApp::pushDataToStateInfo( void )
 {
    this->setIsoValue( this->cfdIso_value );   
@@ -2934,6 +2951,7 @@ void cfdApp::pushDataToStateInfo( void )
    this->setTimesteps( this->cfdTimesteps );
    this->setTeacherState( this->cfdTeacher_state );         
 }
+#endif
 
 void cfdApp::streamers( void * )
 {
@@ -3183,24 +3201,35 @@ int main(int argc, char* argv[])
     }
 #endif
 
-   vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
-
-   int temp = 0;
-
-#ifdef _TAO
+#ifdef TABLET
+   int temp = 2;
    char** xargv;
    xargv = new char*[ temp ];
+   xargv[ 0 ] = "-ORBInitRef";
+   //xargv[ 1 ] = "NameService=corbaname::cruncher.vrac.iastate.edu:2809";
+   //the above line doesn't work when running from costello!!!
+   //biv -- checking if the name server has been moved
+   xargv[ 1 ] = "NameService=corbaname::vracs001:2810";
+
+#ifdef _TAO
    //xargv[ 0 ] = "-ORBInitRef";
    //xargv[ 1 ] = "NameService=file:///tmp/ns.ior";
    CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv,"" );
 #else
-	CORBA::ORB_var orb=CORBA::ORB_init(temp,0,"omniORB4");
+	CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv );
+	if ( CORBA::is_nil( orb.in() ) )
+		exit(0);
 #endif
    //Here is the part to contact the naming service and get the reference for the executive
    CORBA::Object_var naming_context_object =
-     orb->resolve_initial_references ("NameService");
+     orb->resolve_initial_references ("NameService"); 
+   CORBA::String_var sior1(orb->object_to_string(naming_context_object.in ()));
+	cout << "|  IOR of the server side : " << endl << sior1 << endl;
+
    CosNaming::NamingContext_var naming_context =
-     CosNaming::NamingContext::_narrow (naming_context_object.in ());
+       CosNaming::NamingContext::_narrow (naming_context_object.in ());
+	
+   
     //Here is the code to set up the server
     CORBA::Object_var poa_object =
       orb->resolve_initial_references ("RootPOA"); // get the root poa
@@ -3208,9 +3237,15 @@ int main(int argc, char* argv[])
     PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_object.in());
     PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
     poa_manager->activate ();
+//	CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
+//	cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
+#endif
 
-   cfdApp* application = new cfdApp( kernel );  // Delcare an instance of my application
-   application->SetCORBAVariables( naming_context.in(), orb.in(), poa.in() );
+	   vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
+
+   cfdApp* application = new cfdApp( );//kernel );  // Delcare an instance of my application
+
+ #ifdef TABLET
 
 #ifdef _CLUSTER
 
@@ -3265,11 +3300,15 @@ int main(int argc, char* argv[])
        naming_context->rebind(name, vjobs.in());
      }
 #endif //the _CLUSTER
+   application->SetCORBAVariables( naming_context.in(), orb.in(), poa.in() );
 
+#endif //the TABLET
+
+	
    for ( int i = 1; i < argc; i++ )          // Configure the kernel
      {
-       kernel->loadConfigFile( argv[i] );
-     }
+       kernel->loadConfigFile( argv[i] );   
+	 }
    
    kernel->start();                          // Start the kernel thread
 

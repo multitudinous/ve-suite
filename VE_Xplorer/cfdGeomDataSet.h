@@ -33,12 +33,16 @@
 #define CFD_GEOMDATASET_H
 
 #include <vector>
+#include "cfdFileInfo.h"
 
-class pfNode;
+#include "Performer/pf/pfNode.h"
+#include "Performer/pf/pfDCS.h"
+
+//class pfNode;
 class pfMaterial;
-class pfNode;
+//class pfNode;
 class pfLightModel;
-class pfDCS;
+//class pfDCS;
 
 //! CFD shell model loader
 /*!

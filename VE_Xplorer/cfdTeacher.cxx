@@ -34,7 +34,9 @@
 #include <sys/types.h>
 #include <sys/dir.h>
 #else
-#error ("NOT Portable to Windows Yet!!")
+//#error ("NOT Portable to Windows Yet!!")
+#include <windows.h>
+#include <direct.h>
 #endif
 
 #include "cfdTeacher.h"
@@ -54,6 +56,8 @@ cfdTeacher::cfdTeacher( char specifiedDir[], pfGroup * groupNode )
    // initialize in case the directory is not there...
    this->numFiles = 0;
 
+    char *cwd;
+#ifndef WIN32
    //try to open the directory
    DIR* dir = opendir( this->directory );
    if (dir == NULL) 
@@ -63,7 +67,6 @@ cfdTeacher::cfdTeacher( char specifiedDir[], pfGroup * groupNode )
       return;
    }
 
-   char *cwd;
    if ((cwd = getcwd(NULL, 100)) == NULL)
    {
       std::cerr << "Couldn't get the current working directory!" << std::endl;
@@ -87,14 +90,55 @@ cfdTeacher::cfdTeacher( char specifiedDir[], pfGroup * groupNode )
                                 << std::endl << vprDEBUG_FLUSH;
       }
    }
+   closedir( dir );  //close the directory
+   dir = 0;
+   file = 0;
+
+#else
+   //windows compatibility
+   //biv--this code will need some checking
+   //BIGTIME!!!!!!!
+   BOOL finished;
+   HANDLE hList;
+   TCHAR directory[MAX_PATH+1];
+   WIN32_FIND_DATA fileData;
+   char buffer[MAX_PATH];
+   cwd = _getcwd(buffer,MAX_PATH);
+    // Get the proper directory path
+    sprintf(directory, "%s\\*", this->directory);
+
+   // Get the first file
+    hList = FindFirstFile(directory, &fileData);
+    if (hList == INVALID_HANDLE_VALUE){ 
+        vprDEBUG(vprDBG_ALL,0) <<"Cannot open directory \"" << this->directory 
+                             << "\"" << std::endl << vprDEBUG_FLUSH;
+        return;
+    }else{
+		finished = FALSE;
+	   while(!finished){
+          //assume all pfb files in this directory should be loaded
+          if(strstr(fileData.cFileName, ".pfb")){
+             char * fileName = new char[strlen(fileData.cFileName)+1];
+			 strcpy( fileName, fileData.cFileName );
+             this->pfbFileNames.push_back( fileName );
+             vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << fileName
+                             << std::endl << vprDEBUG_FLUSH;
+
+		  }
+	      if(!FindNextFile(hList, &fileData)){
+             if (GetLastError() == ERROR_NO_MORE_FILES){
+                finished = TRUE;
+			 }
+		  }
+	   }
+   }
+#endif
    // how many performer binaries found ?
    this->numFiles = this->pfbFileNames.size();
    vprDEBUG(vprDBG_ALL,1) << "Number of performer binaries: " << numFiles
                           << std::endl << vprDEBUG_FLUSH;
 
-   closedir( dir );  //close the directory
-   dir = 0;
-   file = 0;
+   
 
    this->DCS = new pfDCS;
    this->node = new pfNode * [ this->numFiles ];

@@ -35,7 +35,12 @@
 #include <sys/types.h>
 #include <sys/dir.h>
 #else
-#error ("NOT Portable to Windows Yet!!")
+//#error ("NOT Portable to Windows Yet!!")
+#include <windows.h>
+#include <direct.h>
+#include <wchar.h>
+#include <stdio.h>
+#include <stdlib.h>
 #endif
 
 #include "cfdTransientSet.h"
@@ -192,6 +197,7 @@ void cfdTransientSet::ReadScalarRanges()
 {
    // Read Scalar Ranges
    char *cwd;
+#ifndef WIN32
    if ((cwd = getcwd(NULL, 100)) == NULL)
    {
       std::cerr << "Couldn't get the current working directory!" << std::endl;
@@ -225,7 +231,65 @@ void cfdTransientSet::ReadScalarRanges()
       }
    };
    chdir( cwd );
+#else
+   //biv--this code will need testing
+   //BIGTIME!!!!!!!
+   char buffer[_MAX_PATH];
+   BOOL finished;
+   HANDLE hList;
+   TCHAR directory[MAX_PATH+1];
+   WIN32_FIND_DATA fileData;
 
+   //windows compatibility
+   //get the current working directory
+   if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL){
+      std::cerr << "Couldn't get the current working directory!" << std::endl;
+      return;
+   }
+
+   // Get the proper directory path for transient files
+   sprintf(directory, "%s\\*", this->directory);
+
+   //get the first file
+   hList = FindFirstFile(directory, &fileData);
+  
+   //check to see if directory is valid
+   if(hList == INVALID_HANDLE_VALUE){ 
+      cerr<<"No transient files found in: "<<this->directory<<endl;
+      return;
+   }else{
+      // Traverse through the directory structure
+      finished = FALSE;
+      while (!finished){
+         //add the file name to our data list
+		 //assume all vtk files in this directory are part of the sequence
+		 if(strstr(fileData.cFileName, ".vtk")){
+            char* pathAndFileName = new char[
+                  strlen(this->directory) + strlen(fileData.cFileName) + 2 ];
+            strcpy(pathAndFileName,this->directory);
+            strcat(pathAndFileName,"/");
+            strcat(pathAndFileName,fileData.cFileName);
+
+            this->frameFileNames.push_back( pathAndFileName );
+            vprDEBUG(vprDBG_ALL, 1) << " pathAndFileName : " 
+                                    << pathAndFileName << std::endl << vprDEBUG_FLUSH;
+            //increment the number of frames found
+            this->numFiles++;
+		 }
+		 //check to see if this is the last file
+		 if(!FindNextFile(hList, &fileData)){
+            if(GetLastError() == ERROR_NO_MORE_FILES){
+               finished = TRUE;
+			}
+		 }
+	  }
+   }
+   //close the handle
+   FindClose(hList);
+   //make sure we are in the correct directory
+   chdir(cwd);
+
+#endif
    vprDEBUG(vprDBG_ALL,0) << " Number of files in directory \"" 
       << this->directory << "\" = " << this->numFiles
       << std::endl << vprDEBUG_FLUSH;
@@ -329,7 +393,9 @@ void cfdTransientSet::ReadScalarRanges()
       vprDEBUG(vprDBG_ALL,0) << " this transient set has no scalar data"
                              << std::endl << vprDEBUG_FLUSH;
       this->frameFileNames.clear();
+#ifndef WIN32
       closedir(dir);
+#endif
       return;
    }
 
@@ -396,10 +462,12 @@ void cfdTransientSet::ReadScalarRanges()
    }
    this->frameFileNames.clear();
    //close the directory
+#ifndef WIN32
    closedir(dir);
+
    dir = 0;
    file = 0;
-
+#endif
    for (int i = 0; i < this->numScalars; i++)
    {
       // overide scalar ranges in the "parent" dataset

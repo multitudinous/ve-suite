@@ -101,12 +101,12 @@ public:
    short get_teacher_num();//{return this->get_teacher_num();}; //*
    char* get_perf();
 
-   short GetNumberOfSounds();
+   CORBA::Short GetNumberOfSounds();
    VjObs::scalar_p* GetSoundNameArray();
    //short get_postdata(){ return NULL; }
    //short get_timesteps(){ return NULL; }
 
-   void SetClientInfoFlag( short );
+   void SetClientInfoFlag( CORBA::Short );
    void SetClientInfoData( const VjObs::obj_p &value );
    VjObs::obj_p* GetClientInfoData();
    VjObs::scalar_p * get_dataset_names();
@@ -154,53 +154,53 @@ protected:
    /**
     * Sets this subject's internal value.
     */
-   void setNumDatasets(const short value);
-   short getNumDatasets();
+   void setNumDatasets(CORBA::Short value);
+   CORBA::Short getNumDatasets();
 
-   short getTotalNumberOfScalars();
-   short getTotalNumberOfVectors();
+   CORBA::Short getTotalNumberOfScalars();
+   CORBA::Short getTotalNumberOfVectors();
 
-   void setNumVectors(const short value);
-   short getNumVectors( void );
+   void setNumVectors(CORBA::Short value);
+   CORBA::Short getNumVectors( void );
 
-   void setNumGeoArrays(const short value);
-   short getNumGeoArrays( void );
+   void setNumGeoArrays(CORBA::Short value);
+   CORBA::Short getNumGeoArrays( void );
 
-   void setClients(const long value);
-   long getClients( void );
+   void setClients(CORBA::Long value);
+   CORBA::Long getClients( void );
 
-   void setIsoValue(const long value);
-   long getIsoValue( void );
+   void setIsoValue(CORBA::Long value);
+   CORBA::Long getIsoValue( void );
 
-   void setSc(const long value);
-   long getSc( void );
+   void setSc(CORBA::Long value);
+   CORBA::Long getSc( void );
 
-   void setMin(const long value);
-   long getMin( void );
+   void setMin(CORBA::Long value);
+   CORBA::Long getMin( void );
 
-   void setMax(const long value);
-   long getMax( void );
+   void setMax(CORBA::Long value);
+   CORBA::Long getMax( void );
 
-   void setId(const long value);
-   long getId( void );
+   void setId(CORBA::Long value);
+   CORBA::Long getId( void );
 
-   void setGeoState(const long value);
-   long getGeoState( void );
+   void setGeoState(CORBA::Long value);
+   CORBA::Long getGeoState( void );
 
-   void setPostdataState(const short value);
-   short getPostdataState( void );
+   void setPostdataState(CORBA::Short value);
+   CORBA::Short getPostdataState( void );
 
-   void setPreState(const short value);
-   short getPreState( void );
+   void setPreState(CORBA::Short value);
+   CORBA::Short getPreState( void );
 
-   void setTimesteps(const short value);
-   short getTimesteps( void );
+   void setTimesteps(CORBA::Short value);
+   CORBA::Short getTimesteps( void );
 
-   void setNumTeacherArrays(const short value);
-   short getNumTeacherArrays( void );
+   void setNumTeacherArrays(CORBA::Short value);
+   CORBA::Short getNumTeacherArrays( void );
 
-   void setTeacherState(const short value);
-   short getTeacherState( void );
+   void setTeacherState(CORBA::Short value);
+   CORBA::Short getTeacherState( void );
 
    vpr::Mutex  mValueLock;  /**< A mutex to protect variables accesses */
 
