@@ -6,11 +6,10 @@
 #include <cmath>
 
 BEGIN_EVENT_TABLE(UI_GeometryTab, wxPanel)
-   EVT_COMMAND_SCROLL(GEOMETRY_OPACITY_SLIDER, UI_GeometryTab::ChangeOpacity)
-   EVT_COMMAND_SCROLL(GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry)
+   EVT_COMMAND_SCROLL_ENDSCROLL(GEOMETRY_OPACITY_SLIDER, UI_GeometryTab::ChangeOpacity)
+   EVT_COMMAND_SCROLL_ENDSCROLL(GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry)
    EVT_CHECKLISTBOX(GEOMETRY_CBOX,UI_GeometryTab::_onUpdate)
    //EVT_RADIOBOX(GEOMETRY_CONFIG_RBOX,UI_GeometryTab::ChangeOpacity)
-   EVT_BUTTON(GEOMETRY_UPDATE_BUTTON,UI_GeometryTab::_onUpdate)
 END_EVENT_TABLE()
 
 ///////////////
@@ -34,7 +33,6 @@ UI_GeometryTab::UI_GeometryTab(wxNotebook* tControl)
 //////////////////////////////
 void UI_GeometryTab::_buildPage()
 {
-
    //the radio box
    int numGeoms = ((UI_Tabs *)_parent)->num_geo;
    wxString* defaultName = 0;
@@ -101,16 +99,15 @@ void UI_GeometryTab::_buildPage()
    //opacity slider
    geomOpacitySlider = new wxSlider(this, GEOMETRY_OPACITY_SLIDER,100,0,100,
                                        wxDefaultPosition, wxDefaultSize,
-                                       wxSL_HORIZONTAL|
-                                       wxSL_AUTOTICKS|
-                                       wxSL_LABELS|wxSL_RIGHT );
+                                       wxSL_HORIZONTAL );
+   geomOpacitySlider->SetThumbLength( 50 );
 
    //lod slider
-   geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,0,0,1000,
+   geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,100,100,1000,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
-                                       wxSL_AUTOTICKS|
-                                       wxSL_LABELS|wxSL_RIGHT );
+                                       wxSL_LABELS );
+   geomLODSlider->SetThumbLength( 50 );
 
    //two sizers to group the sliders and their lables
    wxBoxSizer* opacityGroup = new wxBoxSizer( wxVERTICAL );
@@ -130,9 +127,6 @@ void UI_GeometryTab::_buildPage()
    lodLabelBottom->Add(lodLabelLeft,6,wxALIGN_LEFT);
    lodLabelBottom->Add(lodLabelRight,0,wxALIGN_RIGHT);
    lodGroup->Add(lodLabelBottom,0,wxALIGN_LEFT|wxEXPAND|wxALL);
-
-   //the update button
-   //_updateButton = new wxButton(this,GEOMETRY_UPDATE_BUTTON,wxT("Update"));
 
    wxStaticBox* geomControls = new wxStaticBox(this,-1, wxT("Geometry Controls"));
    wxStaticBoxSizer* geomControlsGroup = new wxStaticBoxSizer(geomControls,wxVERTICAL);
@@ -155,13 +149,6 @@ void UI_GeometryTab::_buildPage()
    ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
-//////////////////
-//event handling//
-///////////////////
-
-//////////////////
-//event handling//
-///////////////////
 
 //////////////////////////////////////////////////
 void UI_GeometryTab::_onGeometry( wxScrollEvent& event )
@@ -196,6 +183,4 @@ void UI_GeometryTab::_onUpdate(wxCommandEvent& event)
    ((UI_Tabs *)_parent)->cId  = UPDATE_GEOMETRY;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
-
-
 
