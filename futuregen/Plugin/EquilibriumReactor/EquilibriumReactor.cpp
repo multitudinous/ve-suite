@@ -4,43 +4,28 @@
 #pragma warning(disable : 4503)
 #pragma warning(disable : 4251)
 
-#include "Condenser.h"
-#include "Condenser_UI.h"
+#include "EquilibriumReactor.h"
 
-IMPLEMENT_DYNAMIC_CLASS(Condenser, REI_Plugin)
+
+IMPLEMENT_DYNAMIC_CLASS(EquilibriumReactor, REI_Plugin)
 
 /////////////////////////////////////////////////////////////////////////////
-Condenser
-::Condenser()
+EquilibriumReactor
+::EquilibriumReactor()
 {
-  RegistVar("tube_id", &tube_id);
-  RegistVar("tube_od", &tube_od);
-  RegistVar("tube_length", &tube_length);
-  RegistVar("int_press_drop", &int_press_drop);
-  RegistVar("ext_press_drop", &ext_press_drop);
-  RegistVar("num_tubeH", &num_tubeH);
-  RegistVar("num_tubeV", &num_tubeV);
-
-  num_tubeH = 142;
-  num_tubeV = 33;
-  tube_id = 0.0381;
-  tube_od = 0.0508;
-  tube_length = 11.948;
-  int_press_drop = 0;
-  ext_press_drop = 0;
 }
 
 
 
 /////////////////////////////////////////////////////////////////////////////
-Condenser
-::~Condenser()
+EquilibriumReactor
+::~EquilibriumReactor()
 {
 
 }
 
 /////////////////////////////////////////////////////////////////////////////
-double Condenser::GetVersion()
+double EquilibriumReactor::GetVersion()
 {
   double result=1.0;
 
@@ -50,7 +35,7 @@ double Condenser::GetVersion()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-int Condenser::GetNumPoly()
+int EquilibriumReactor::GetNumPoly()
 {
   int result=0;
   //Your code
@@ -58,44 +43,42 @@ int Condenser::GetNumPoly()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-//void Condenser::GetPoly(POLY &polygon)
+//void EquilibriumReactor::GetPoly(POLY &polygon)
 //{
 //  return ;//polygon;
 //}
 
 /////////////////////////////////////////////////////////////////////////////
-int Condenser::GetNumIports()
+int EquilibriumReactor::GetNumIports()
 {
-  int result=2;
+  int result=1;
 
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void Condenser::GetIPorts(POLY &iports)
+void EquilibriumReactor::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,20);
-  iports[1]=wxPoint(20, 0);
+  iports[0]=wxPoint(20, 0);
   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-int Condenser::GetNumOports()
+int EquilibriumReactor::GetNumOports()
 {
-  int result=2;
+  int result=1;
   //Your code
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void Condenser::GetOPorts(POLY &oports)
+void EquilibriumReactor::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40,20);
-  oports[0]=wxPoint(30,40);
+  oports[0]=wxPoint(30, 40);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void Condenser::DrawIcon(wxDC* dc)
+void EquilibriumReactor::DrawIcon(wxDC* dc)
 {
   //Your implementation
   wxBrush old_brush=dc->GetBrush();
@@ -107,34 +90,23 @@ void Condenser::DrawIcon(wxDC* dc)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-UIDialog* Condenser::UI(wxWindow* parent)
+UIDialog* EquilibriumReactor::UI(wxWindow* parent)
 {
-  if (dlg!=NULL)
-    return dlg;
-  
-  dlg = new Condenser_UI_Dialog (parent, -1,
-     &tube_id,
-     &tube_od,
-     &tube_length,
-     &int_press_drop,
-     &ext_press_drop,
-     &num_tubeH,
-     &num_tubeV);
       
-  return dlg;
+  return NULL; //EquilibrimReactor does not have a UI
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString Condenser::GetName()
+wxString EquilibriumReactor::GetName()
 {
-  wxString result="REI_LarryRuth_Condenser"; //your name
+  wxString result="REI_LarryRuth_EquilibriumReactor"; //your name
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString Condenser::GetDesc()
+wxString EquilibriumReactor::GetDesc()
 {
-  wxString result="Condenser Module by REI"; //your description
+  wxString result="EquilibriumReactor module by REI"; //your description
 
   return result;
 }
