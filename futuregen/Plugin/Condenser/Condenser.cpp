@@ -87,8 +87,8 @@ int Condenser::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Condenser::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*4/10,icon_h/10);
-  iports[1]=wxPoint(icon_w*6/10, icon_h/10);
+  iports[0]=wxPoint(icon_w/2,icon_h/10);
+  iports[1]=wxPoint(icon_w/6, icon_h/2);
   return;
 }
 
@@ -103,8 +103,8 @@ int Condenser::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Condenser::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*4/10,icon_h*9/10);
-  oports[1]=wxPoint(icon_w*6/10,icon_h*9/10);
+  oports[0]=wxPoint(icon_w/2,icon_h*9/10);
+  oports[1]=wxPoint(icon_w*6/7,icon_h/2);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -119,7 +119,7 @@ int Gasifier0D::GetNumPoly()
 /////////////////////////////////////////////////////////////////////////////
 int Gasifier0D::GetNumIports()
 {
-  int result=1;
+  int result=3;
 
   return result;
 }
@@ -127,7 +127,9 @@ int Gasifier0D::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Gasifier0D::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0, 20);
+  iports[0]=wxPoint(icon_w/5, icon_h*4/5);
+  iports[1]=wxPoint(icon_w/5, icon_h*9/10);
+  iports[2]=wxPoint(icon_w/2, icon_h);
 
   return;
 }
@@ -143,7 +145,7 @@ int Gasifier0D::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Gasifier0D::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40, 20);
+  oports[0]=wxPoint(icon_w/2, 0);
 }
 
 /////////////////////////////////////////////////////////////////////////////

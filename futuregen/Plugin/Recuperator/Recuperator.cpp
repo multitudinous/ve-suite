@@ -99,8 +99,8 @@ int Recuperator::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Recuperator::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,15);
-  iports[1]=wxPoint(0,25);
+  iports[0]=wxPoint(icon_w/2, 0);
+  iports[1]=wxPoint(icon_w*3/5,icon_h);
   return;
 }
 
@@ -115,8 +115,8 @@ int Recuperator::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Recuperator::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40,15);
-  oports[1]=wxPoint(40,25);
+  oports[0]=wxPoint(icon_w*9/10,icon_h/4);
+  oports[1]=wxPoint(0,icon_h*2/3);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -72,7 +72,7 @@ int EquilibriumReactor::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void EquilibriumReactor::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(20, 0);
+  iports[0]=wxPoint(icon_w/5,0);
   return;
 }
 
@@ -87,7 +87,7 @@ int EquilibriumReactor::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void EquilibriumReactor::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(30, 40);
+  oports[0]=wxPoint(6*icon_w/7,icon_h); 
 }
 
 /////////////////////////////////////////////////////////////////////////////

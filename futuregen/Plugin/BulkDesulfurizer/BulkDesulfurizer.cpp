@@ -105,7 +105,7 @@ int BulkDesulfurizer::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void BulkDesulfurizer::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,20);
+  iports[0]=wxPoint(icon_w/2,0);
   return;
 }
 
@@ -120,7 +120,7 @@ int BulkDesulfurizer::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void BulkDesulfurizer::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(56, 20);
+  oports[0]=wxPoint(icon_w/2, icon_h);
 }
 
 /////////////////////////////////////////////////////////////////////////////

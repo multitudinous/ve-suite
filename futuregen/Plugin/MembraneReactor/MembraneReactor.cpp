@@ -96,8 +96,8 @@ int MembraneReactor::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void MembraneReactor::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,15);
-  iports[1]=wxPoint(0,25);
+  iports[0]=wxPoint(0,icon_h/8);
+  iports[1]=wxPoint(0,icon_h*7/8);
   return;
 }
 
@@ -112,8 +112,8 @@ int MembraneReactor::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void MembraneReactor::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40,15); 
-  oports[1]=wxPoint(40,25);
+  oports[0]=wxPoint(icon_w,icon_h/8); 
+  oports[1]=wxPoint(icon_w,icon_h*7/8);
 }
 
 /////////////////////////////////////////////////////////////////////////////
