@@ -1,5 +1,6 @@
 #include <iostream>
 #include "UI_Tabs.h"
+#include "UI_Frame.h"
 #include "UI_DataSetTab.h"
 
 BEGIN_EVENT_TABLE(UI_DatasetTab, wxScrolledWindow)
@@ -157,7 +158,7 @@ const char* UI_DatasetInfo::scalarName(int whichScalar)
 //////////////////////////////////////////////////
 //Constructor                                   //
 //////////////////////////////////////////////////
-UI_DatasetTab::UI_DatasetTab(wxNotebook* tControl)
+UI_DatasetTab::UI_DatasetTab(wxWindow* tControl)
 :wxScrolledWindow(tControl)
 {
    _3dRBox;
@@ -196,6 +197,7 @@ UI_DatasetTab::~UI_DatasetTab()
 void UI_DatasetTab::_buildPage()
 {
 
+
    //create 6(?) radio boxes
    wxString defaultNames[] = {wxT("default")};
    _3dRBox = new wxRadioBox(this, RBOX_3D, wxT("3D mesh"),
@@ -207,7 +209,7 @@ void UI_DatasetTab::_buildPage()
    _polydataRBox = new wxRadioBox(this, POLYDATA_RBOX, wxT("Polydata"),
                                 wxDefaultPosition, wxDefaultSize,
 				1, defaultNames,1, wxRA_SPECIFY_COLS);
-   _scalarVRBox = new wxRadioBox(this, SCALAR_V_RBOX, wxT("Scalars"),
+/*   _scalarVRBox = new wxRadioBox(this, SCALAR_V_RBOX, wxT("Scalars"),
                                 wxDefaultPosition, wxDefaultSize,
 				1, defaultNames,1, wxRA_SPECIFY_COLS);
    _scalarPRBox = new wxRadioBox(this, SCALAR_P_RBOX, wxT("Scalars"),
@@ -215,14 +217,29 @@ void UI_DatasetTab::_buildPage()
 				1, defaultNames,1, wxRA_SPECIFY_COLS);
    _scalarMRBox = new wxRadioBox(this, SCALAR_3D_RBOX, wxT("Scalars"),
                                 wxDefaultPosition, wxDefaultSize,
-				1, defaultNames,1, wxRA_SPECIFY_COLS);
+				1, defaultNames,1, wxRA_SPECIFY_COLS);*/
+
 
    //size these in 3 cols 
-   if(!_col1)_col1 = new wxBoxSizer(wxVERTICAL);
-   if(!_col2)_col2 = new wxBoxSizer(wxVERTICAL);
-   if(!_col3)_col3 = new wxBoxSizer(wxVERTICAL);   
+//   if(!_col1)_col1 = new wxBoxSizer(wxVERTICAL);
+//   if(!_col2)_col2 = new wxBoxSizer(wxVERTICAL);
+   //if(!_col3)_col3 = new wxBoxSizer(wxVERTICAL);  
 
-   //add the 2 boxes to the first col
+   _col1 = new wxBoxSizer(wxVERTICAL);
+   //new layout
+   _col1->Add(_3dRBox,1,wxALIGN_TOP);
+   _col1->Add(_polydataRBox,1,wxALIGN_CENTER_HORIZONTAL);
+   _col1->Add(_vertexRBox,1,wxALIGN_BOTTOM); 
+
+//   _col2->Add(_scalarVRBox,2,wxALIGN_TOP);
+//   _col2->Add(_vectorRBox,1,wxALIGN_BOTTOM);
+
+   wxBoxSizer* datasetPanelGroup = new wxBoxSizer(wxHORIZONTAL);
+   datasetPanelGroup->Add(_col1,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+//   datasetPanelGroup->Add(_col2,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
+
+/*   //add the 2 boxes to the first col
    _col1->Add(_3dRBox,1,wxALIGN_TOP);
    _col1->Add(_scalarMRBox,1,wxALIGN_BOTTOM);
 
@@ -238,7 +255,7 @@ void UI_DatasetTab::_buildPage()
    wxBoxSizer* datasetPanelGroup = new wxBoxSizer(wxHORIZONTAL);
    datasetPanelGroup->Add(_col1,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    datasetPanelGroup->Add(_col2,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   datasetPanelGroup->Add(_col3,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   datasetPanelGroup->Add(_col3,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);*/
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
@@ -414,7 +431,7 @@ void UI_DatasetTab::setCurrentDataset(int index)
    _currentDataSet = index;
 
    //tell the UI_Tabs which dataset is active
-   ((UI_Tabs*)GetParent())->setActiveDataset(_currentDataSet);
+   ((UI_Frame*)GetParent())->_tabs->setActiveDataset(_currentDataSet);
    
 
    //update the radio box for the current data set
@@ -509,8 +526,8 @@ void UI_DatasetTab::updateScalarBoxForDataset(int index)
             _col3->Add(_scalarPRBox,1,wxALIGN_BOTTOM);
 
             //update the scalar page
-            ((UI_Tabs*)GetParent())->updateScalarPage(newNames,nScalars,1);
-            ((UI_Tabs*)GetParent())->setActiveScalar(_scalarPRBox->GetSelection()); 
+            ((UI_Frame*)GetParent())->_tabs->updateScalarPage(newNames,nScalars,1);
+            ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarPRBox->GetSelection()); 
             
             //should be ok to clean up
             if(newNames){
@@ -545,8 +562,8 @@ void UI_DatasetTab::updateScalarBoxForDataset(int index)
             _col2->Add(_scalarVRBox,1,wxALIGN_BOTTOM);
 
             //update the scalar page
-            ((UI_Tabs*)GetParent())->updateScalarPage(newNames,nScalars,1);
-            ((UI_Tabs*)GetParent())->setActiveScalar(_scalarVRBox->GetSelection()); 
+            ((UI_Frame*)GetParent())->_tabs->updateScalarPage(newNames,nScalars,1);
+            ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarVRBox->GetSelection()); 
             
             //should be ok to clean up
             if(newNames){
@@ -581,8 +598,8 @@ void UI_DatasetTab::updateScalarBoxForDataset(int index)
             _col1->Add(_scalarMRBox,1,wxALIGN_BOTTOM);
 
             //update the scalar page
-            ((UI_Tabs*)GetParent())->updateScalarPage(newNames,nScalars,1);
-            ((UI_Tabs*)GetParent())->setActiveScalar(_scalarMRBox->GetSelection()); 
+            ((UI_Frame*)GetParent())->_tabs->updateScalarPage(newNames,nScalars,1);
+            ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarMRBox->GetSelection()); 
             
             //should be ok to clean up
             if(newNames){
@@ -671,7 +688,7 @@ void UI_DatasetTab::_onScalar1(wxCommandEvent& event)
    //((UI_Tabs *)GetParent())->cSc = _scalarPRBox->GetSelection();         // using zero-based scalar counting
    //((UI_Tabs *)GetParent())->cId  = CHANGE_SCALAR;
    //((UI_Tabs *)GetParent())->sendDataArrayToServer();
-  ((UI_Tabs*)GetParent())->setActiveScalar(_scalarPRBox->GetSelection()); 
+  ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarPRBox->GetSelection()); 
 }
 ////////////////////////////////////////////////
 void UI_DatasetTab::_onScalar2(wxCommandEvent& event)
@@ -680,7 +697,7 @@ void UI_DatasetTab::_onScalar2(wxCommandEvent& event)
   // ((UI_Tabs *)GetParent())->cSc = _scalarVRBox->GetSelection();         // using zero-based scalar counting
   // ((UI_Tabs *)GetParent())->cId  = CHANGE_SCALAR;
   // ((UI_Tabs *)GetParent())->sendDataArrayToServer();
-  ((UI_Tabs*)GetParent())->setActiveScalar(_scalarVRBox->GetSelection()); 
+  ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarVRBox->GetSelection()); 
 }
 ////////////////////////////////////////////////
 void UI_DatasetTab::_onScalar3(wxCommandEvent& event)
@@ -690,5 +707,5 @@ void UI_DatasetTab::_onScalar3(wxCommandEvent& event)
   // ((UI_Tabs *)GetParent())->cId  = CHANGE_SCALAR;
   // ((UI_Tabs *)GetParent())->sendDataArrayToServer();
 
-  ((UI_Tabs*)GetParent())->setActiveScalar(_scalarMRBox->GetSelection()); 
+  ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarMRBox->GetSelection()); 
 }

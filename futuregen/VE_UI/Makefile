@@ -15,7 +15,11 @@ OBJECTS = UI_App.o \
             UI_DataSetTab.o \
             UI_SoundsTab.o \
             UI_GeometryTab.o \
-            UI_TeacherTab.o 
+            UI_TeacherTab.o \
+            UI_TransTab.o \
+            UI_VertTab.o \
+            UI_ViewLocTab.o \
+            UI_DesignParTab.o
 
 ifeq (${TAO_BUILD}, TRUE)            
    OBJECTS += VjObsC.o
@@ -55,3 +59,10 @@ $(APP): $(OBJECTS)
 
 clean:
 	rm -rf *.o $(APP) ii_files
+
+# DO NOT DELETE THIS LINE -- g++dep uses it.
+# DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
+
+
+
+# IF YOU PUT ANYTHING HERE IT WILL GO AWAY

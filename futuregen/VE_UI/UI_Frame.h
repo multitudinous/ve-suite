@@ -7,6 +7,8 @@
 #include "wx/wx.h"
 #include "controlIds.h"
 #include "UI_Tabs.h"
+#include "UI_DataSetTab.h"
+#include "UI_ScalarTab.h"
 
 ////////////////////////////////////////////////////
 //This is the class that is the frame.            //
@@ -26,10 +28,19 @@ public:
    //the events to handle
    void OnTabsEvent(wxNotebookEvent& event);
    void OnIdleEvent(wxIdleEvent& event);
+   void changeActiveScalarOnDataset(const char* activeScalarName);
 
-protected:
+   UI_DatasetTab* _datasetPage;
+   UI_ScalarTab* _scalartab;
+   VjObs::obj_p_var   datasetTypes;
 
    //the notebook control that has our tabs
    UI_Tabs* _tabs;
+
+protected:
+
+
+   //UI_DatasetTab* _datasettab;
+
 };
 #endif //_VE_UI_FRAME_H_

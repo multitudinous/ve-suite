@@ -18,7 +18,11 @@
 #include "UI_TeacherTab.h"
 #include "UI_SoundsTab.h"
 #include "UI_GeometryTab.h"
+#include "UI_ViewLocTab.h"
+#include "UI_DesignParTab.h"
 
+class UI_VertTab;
+class UI_TransTab;
 ///copied from original Tabs.h//////
 enum cfdGeodeEnum {
    // Everything below has to be mirrored exactly in 
@@ -88,10 +92,12 @@ enum cfdGeodeEnum {
    UPDATE_SOUNDS,
    CHANGE_PARTICLE_VIEW_OPTION,
    CHANGE_SPHERE_SIZE,
-   LOAD_POINT,
-   WRITE_POINTS_TO_FILE,
-   READ_POINTS_FROM_FILE,
-   MOVE_TO_SELECTED_LOCATION,
+   CURRENT_VIEW_LOC,
+   LOAD_VIEW_LOC,
+   REMOVE_VIEW_LOC,
+   MOVE_TO_VIEW_LOC,
+   DESIGN_PARMS,
+   UPDATE_DESIGNPARMS,
    EXIT,
    //biv--added these for the navigation page
    GUI_NAV,
@@ -136,20 +142,25 @@ public:
 
    //send scalar page selection changes
    //to the dataset tab
-   void changeActiveScalarOnDataset(const char* activeScalarName);
+   //void changeActiveScalarOnDataset(const char* activeScalarName);
 //protected:
-   void _initDatasetPage();
+   void _initDatasetPage(UI_DatasetTab* _datasetPage);
 
    //the tab pages
    UI_VisualizationTab* _visPage;
    UI_ScalarTab* _scalarPage;
    UI_VectorTab* _vectorPage;
    UI_StreamlineTab* _streamlinePage;
-   UI_DatasetTab* _datasetPage;
+   //UI_DatasetTab* _datasetPage;
    UI_SoundTab* _soundPage;
    UI_GeometryTab* _geometryPage;
    UI_TeacherTab* _teacherPage;
    UI_NavigationTab* _navPage;
+   UI_VertTab* _vertPage;
+   UI_TransTab* _transPage;
+   UI_ViewLocTab* _viewlocPage;
+   UI_DesignParTab* _designparPage;
+
 ///////copied from old Tabs.h///////
    //the pointer to the server
    VjObs_var server_ref;
@@ -159,6 +170,7 @@ public:
    short    num_geo;
    short    numSounds;
    short    num_teacher;
+   short    num_locations;
    short    numSteadyStateDataSets;
    bool     hasXPostData;
    bool     hasYPostData;
@@ -170,6 +182,9 @@ public:
    VjObs::scalar_p_var   geoNameArray;
    VjObs::scalar_p_var   soundNameArray;
    VjObs::scalar_p_var   teacher_attrib;
+   VjObs::scalar_p_var   viewlocNameArray;
+   //VjObs::scalar_p_var   viewlocNewPointName;
+   std::string viewlocNewPointName;
    std::string   dest;
    short    dest_num;
    short    dest_id;

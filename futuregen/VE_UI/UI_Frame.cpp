@@ -15,6 +15,7 @@ UI_Frame::UI_Frame(const wxString& title,
 : wxFrame((wxWindow *) NULL, -1, title, pos, size, style)
 {
    _tabs = 0;
+   _datasetPage = 0;
 
    //NOTE:New controls that are added to the frame that
    //aren't related(located on) the tabs should be initialized
@@ -91,10 +92,15 @@ UI_Frame::UI_Frame(const wxString& title,
        
        cerr << "Can't find VE server" << endl;
      }
-   
+    
    //the tabs of our UI
    _tabs = new UI_Tabs( vjobs.in(), this, ID_UI_TABS);
    //_tabs = new UI_Tabs(this,-1);
+
+   //set the left side of the gui
+   _datasetPage = new UI_DatasetTab(this); 
+
+   _scalartab = new UI_ScalarTab(this);
 
    //create the individual pages for the tab control
    _tabs->createTabPages();
@@ -105,10 +111,18 @@ UI_Frame::UI_Frame(const wxString& title,
    //the notebook sizer
    wxNotebookSizer* _tabsSizer = new wxNotebookSizer(_tabs);
 
+   //the panel sizers for datasetPage and scalartab
+   wxBoxSizer* _datasetSizer = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* _scalarSizer = new wxBoxSizer(wxHORIZONTAL);
+   _datasetSizer->Add(_datasetPage,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _scalarSizer->Add(_scalartab,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
    //add the tabs to the frame
    //NOTE: This is where the layout of the UI 
    //should be handled when adding new controls!!
-   _frameSizer->Add(_tabsSizer,1,wxEXPAND|wxALL);
+   _frameSizer->Add(_datasetSizer,3,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _frameSizer->Add(_scalarSizer,8,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _frameSizer->Add(_tabsSizer,22,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //refresh the layout
    _frameSizer->Layout();
@@ -117,11 +131,12 @@ UI_Frame::UI_Frame(const wxString& title,
    SetSizer(_frameSizer);
 
    //Auto"magic" resizing
-   SetAutoLayout(TRUE);
+   //SetAutoLayout(TRUE);
+   SetAutoLayout(true);
 
    //Tell the sizer to resize the window to
    // match the sizer's minimal size
-   _frameSizer->Fit(this);   
+   _frameSizer->Fit(this);  
 }
 /////////////////////
 //Destructor       //
@@ -130,3 +145,11 @@ UI_Frame::~UI_Frame()
 {
 }
 
+void UI_Frame::changeActiveScalarOnDataset(const char* name)
+{
+   if(name){
+      if(_datasetPage){
+         _datasetPage->makeActiveScalarOnDataset(name);
+      } 
+   }
+}

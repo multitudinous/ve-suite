@@ -16,8 +16,8 @@ enum VECTOR_TAB_IDS{
    MIN_THRESH_SLIDER,
    MAX_THRESH_SLIDER,
    RATIO_SLIDER,
-   SCALE_SLIDER,
-   VECTOR_RAD_BOX
+   SCALE_SLIDER
+//   VECTOR_RAD_BOX
 
 };
 
@@ -33,7 +33,7 @@ protected:
    wxSlider* _vThresholdMaxSlider;
    wxSlider* _vRatioSlider;
    wxSlider* _vScaleSlider;
-   wxRadioBox* _vectorRBox;
+//   wxRadioBox* _vectorRBox;
    wxCheckBox* _scaleVecMagChk;
    wxButton* _updateButton;
 

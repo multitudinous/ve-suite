@@ -62,7 +62,7 @@ protected:
 
 class UI_DatasetTab: public wxScrolledWindow{
 public:
-   UI_DatasetTab(wxNotebook* tControl);
+   UI_DatasetTab(wxWindow* tControl);
    ~UI_DatasetTab();
 
    //set the number of datasets
@@ -118,6 +118,7 @@ protected:
    wxRadioBox* _scalarPRBox;
    wxRadioBox* _scalarMRBox;
    wxRadioBox* _scalarVRBox;
+
 
    wxBoxSizer* _col1;
    wxBoxSizer* _col2;

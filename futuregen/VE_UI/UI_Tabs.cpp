@@ -1,4 +1,8 @@
 #include "UI_Tabs.h"
+
+#include "UI_TransTab.h"
+#include "UI_VertTab.h"
+
 #include <iostream>
 //using namespace std;
 
@@ -20,7 +24,7 @@
    _scalarPage = 0;
    _vectorPage = 0;
    _streamlinePage = 0;
-   _datasetPage = 0;
+   //_datasetPage = 0;
    _navPage = 0;
 //   server_ref = VjObs::_duplicate(ref);
 
@@ -31,7 +35,7 @@
 
    //copied code from old Tabs.cpp
    numOfClientInfo = 9;
-/*   clientInfoArray = new VjObs::obj_p(50);
+   clientInfoArray = new VjObs::obj_p(50);
    clientInfoArray->length( numOfClientInfo );
 
    // Get Number of Geometry Files
@@ -177,20 +181,20 @@
    std::cout << "VE_Conductor : timesteps : " << cTimesteps << std::endl;
 
    cPre_state = 0;
-*/
+
 }
 /////////////////////////////////////////////////////
 //update the active scalar on the                  //
 //dataset page                                     //
 /////////////////////////////////////////////////////
-void UI_Tabs::changeActiveScalarOnDataset(const char* name)
+/*void UI_Tabs::changeActiveScalarOnDataset(const char* name)
 {
    if(name){
       if(_datasetPage){
          _datasetPage->makeActiveScalarOnDataset(name);
       } 
    }
-}
+}*/
 ////////////////////////////////////////////////
 //specify the active dataset                  //
 ////////////////////////////////////////////////
@@ -209,7 +213,7 @@ void UI_Tabs::setActiveScalar(int whichScalar)
    }
 }
 ////////////////////////////////
-void UI_Tabs::_initDatasetPage()
+void UI_Tabs::_initDatasetPage(UI_DatasetTab* _datasetPage)
 {
    //set the number of data sets
    if(!_datasetPage){
@@ -328,11 +332,11 @@ void UI_Tabs::createTabPages()
    AddPage( _visPage, _T("Visualization"), true);
 
    //DataSets page
-   _datasetPage = new UI_DatasetTab(this);
-   AddPage( _datasetPage, _T("DataSets"), false );
+   //_datasetPage = new UI_DatasetTab(this);
+   //AddPage( _datasetPage, _T("DataSets"), false );
 
    //set up the dataset tab
-   _initDatasetPage();
+   //_initDatasetPage();
 
    //Geometry page
    _geometryPage = new UI_GeometryTab(this);
@@ -348,7 +352,7 @@ void UI_Tabs::createTabPages()
       }
 
       //the new page w/ the appropriate names in the radio box
-      _scalarPage = new UI_ScalarTab(this,numScalarsInActiveDataset,scalarNames);
+      //_scalarPage = new UI_ScalarTab(this,numScalarsInActiveDataset,scalarNames);
 
       //clean up
       for(int j = numScalarsInActiveDataset - 1; j >= 0; j--){
@@ -359,9 +363,9 @@ void UI_Tabs::createTabPages()
    }else{
       //a default string w/ no scalar names 
       wxString noScalarString[] = {wxT("No Scalars")};
-       _scalarPage = new UI_ScalarTab(this,1,(char**) noScalarString);
+       //_scalarPage = new UI_ScalarTab(this,1,(char**) noScalarString);
    }
-   AddPage( _scalarPage, _T("Scalars"), false );
+   //AddPage( _scalarPage, _T("Scalars"), false );
 
    //Sounds page
    _soundPage = new UI_SoundTab(this);
@@ -383,10 +387,24 @@ void UI_Tabs::createTabPages()
    _navPage = new UI_NavigationTab(this);
    AddPage( _navPage, _T("Navigation"), false );
   
-   //SetSelection(0);
+   //Navigation page
+   _transPage = new UI_TransTab(this);
+   AddPage( _transPage, _T("Transient"), false );
+   //Navigation page
+   _vertPage = new UI_VertTab(this);
+   AddPage( _vertPage, _T("Vertex"), false );
 
- 
+   //Viewing Locations page
+   _viewlocPage = new UI_ViewLocTab(this);
+   AddPage( _viewlocPage, _T("View Points"), false );
+
+   //Design Parameters page
+   _designparPage = new UI_DesignParTab(this);
+   AddPage( _designparPage, _T("Design Parameters"), false );
+
+   //SetSelection(0);
 }
+
 ///////////////////////////////////////////
 void UI_Tabs::sendDataArrayToServer( void )
 {

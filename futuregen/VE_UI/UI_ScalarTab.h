@@ -12,14 +12,15 @@ enum SCALAR_TAB_IDS{
    SCALAR_RAD_BOX,
    SCALAR_UPDATE_BUTTON,
    MIN_PER_SLIDER,
-   MAX_PER_SLIDER
+   MAX_PER_SLIDER,
+   VECTOR_RAD_BOX
 };
 
 
 class UI_ScalarTab: public wxScrolledWindow{
 public:
-   UI_ScalarTab(wxNotebook* tabControl);
-   UI_ScalarTab(wxNotebook* tabControl,int numScalars,char** scalarNames);
+   UI_ScalarTab(wxWindow* tabControl);
+   UI_ScalarTab(wxWindow* tabControl,int numScalars,char** scalarNames);
 
    //set the scalar names and number of scalars
    void updateScalarTabRadioBoxInfo(int numScalars, char** scalarNames, int refresh =0);
@@ -35,12 +36,15 @@ public:
    //set the active scalar to reflect changes on dataset page
    void setActiveScalar(int whichScalar);
 protected:
-   wxNotebook* _parent;
+   wxWindow* _parent;
    //scalar info
    int _nScalars;
 
    //the controls
    wxRadioBox* _scalarRBox;
+//NEW!!!!!!!!!!!!!!!!!! - from VecTab
+   wxRadioBox* _vectorRBox;
+
    wxButton* _visUpdateButton;
 
    wxStaticBox* _scalarRangeBox;

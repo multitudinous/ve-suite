@@ -1,6 +1,7 @@
 #include <iostream>
 #include "UI_ScalarTab.h"
 #include "UI_Tabs.h"
+#include "UI_Frame.h"
 
 BEGIN_EVENT_TABLE(UI_ScalarTab, wxScrolledWindow)
    EVT_RADIOBOX(SCALAR_RAD_BOX, UI_ScalarTab::_onScalars)
@@ -12,7 +13,7 @@ END_EVENT_TABLE()
 /////////////////////////////////////////////////
 //Constructor                                  //
 /////////////////////////////////////////////////
-UI_ScalarTab::UI_ScalarTab( wxNotebook* tControl)
+UI_ScalarTab::UI_ScalarTab( wxWindow* tControl)
 :wxScrolledWindow(tControl)
 {
    _parent = tControl;
@@ -29,7 +30,7 @@ UI_ScalarTab::UI_ScalarTab( wxNotebook* tControl)
    
 }
 ////////////////////////////////////////////////////////////////////////////////
-UI_ScalarTab::UI_ScalarTab( wxNotebook* tControl, int nScalars, char** names)
+UI_ScalarTab::UI_ScalarTab( wxWindow* tControl, int nScalars, char** names)
 :wxScrolledWindow(tControl)
 {
    _parent = tControl;
@@ -50,11 +51,11 @@ void UI_ScalarTab::setActiveScalar(int whichScalar)
 {
    if(_scalarRBox){
       _scalarRBox->SetSelection(whichScalar);
-      ((UI_Tabs *)_parent)->cSc = whichScalar;         // using zero-based scalar counting
-      ((UI_Tabs *)_parent)->cMin = _minPercentSlider->GetValue();
-      ((UI_Tabs *)_parent)->cMax = _maxPercentSlider->GetValue();
-      ((UI_Tabs *)_parent)->cId  = CHANGE_SCALAR;
-      ((UI_Tabs *)_parent)->sendDataArrayToServer();
+      ((UI_Frame *)_parent)->_tabs->cSc = whichScalar;         // using zero-based scalar counting
+      ((UI_Frame *)_parent)->_tabs->cMin = _minPercentSlider->GetValue();
+      ((UI_Frame *)_parent)->_tabs->cMax = _maxPercentSlider->GetValue();
+      ((UI_Frame *)_parent)->_tabs->cId  = CHANGE_SCALAR;
+      ((UI_Frame *)_parent)->_tabs->sendDataArrayToServer();
    }
 }
 ////////////////////////////////////
@@ -154,6 +155,9 @@ void UI_ScalarTab::updateScalarTabRadioBoxInfo(int nScalars, char** scalarNames,
 ///////////////////////////////
 void UI_ScalarTab::_buildPage()
 {
+//NEW!!!!!!!!!!!!!!!!!!!!!!!! - from VecTab
+   wxString vectorName[] = {wxT("default vector")};
+
    //////////////////////////////////
    //Design the "Scalars" radio box//
    //////////////////////////////////
@@ -165,6 +169,12 @@ void UI_ScalarTab::_buildPage()
    _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
                                      wxDefaultPosition, wxDefaultSize,1,
                                      noScalarString,1,wxRA_SPECIFY_COLS);
+
+//NEW!!!!!!!!!!!!!!!!!! - from VecTab
+   _vectorRBox = new wxRadioBox(this, VECTOR_RAD_BOX, wxT("Vectors"),
+                                wxDefaultPosition, wxDefaultSize, 
+            1, vectorName, 1, wxRA_SPECIFY_COLS);
+
 
    //The "Update Visualization" button
    _visUpdateButton = new wxButton(this, SCALAR_UPDATE_BUTTON, wxT("Update"));
@@ -192,6 +202,14 @@ void UI_ScalarTab::_buildPage()
    _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER,100,0,200,wxDefaultPosition, slidesize,
                                   wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
 
+/*  
+   //create the two sliders
+   _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER,0,0,100,wxDefaultPosition, slidesize,
+                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+   _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER,100,0,200,wxDefaultPosition, slidesize,
+                                  wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+
+*/
  
    //two sizers to group the sliders and their lables
    wxBoxSizer* minGroup = new wxBoxSizer(wxVERTICAL); 
@@ -216,6 +234,7 @@ void UI_ScalarTab::_buildPage()
    
    //add the controls to the left group
    _leftSizer->Add(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
+   _leftSizer->Add( _vectorRBox,2,wxALIGN_LEFT|wxEXPAND);
    _leftSizer->Add(_visUpdateButton,0,wxALIGN_CENTER_HORIZONTAL);
    
    //add the static box to the right group
@@ -240,34 +259,34 @@ void UI_ScalarTab::_onUpdate(wxCommandEvent& event)
 {
    // Needs to update the currently selected vis 
    // choice from the vis tab
-   ((UI_Tabs *)_parent)->cSc = _scalarRBox->GetSelection();         // using zero-based scalar counting
-   ((UI_Tabs *)_parent)->cMin = _minPercentSlider->GetValue();
-   ((UI_Tabs *)_parent)->cMax = _maxPercentSlider->GetValue();
-   ((UI_Tabs *)_parent)->cId  = CHANGE_SCALAR;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   ((UI_Frame *)_parent)->_tabs->cSc = _scalarRBox->GetSelection();         // using zero-based scalar counting
+   ((UI_Frame *)_parent)->_tabs->cMin = _minPercentSlider->GetValue();
+   ((UI_Frame *)_parent)->_tabs->cMax = _maxPercentSlider->GetValue();
+   ((UI_Frame *)_parent)->_tabs->cId  = CHANGE_SCALAR;
+   ((UI_Frame *)_parent)->_tabs->sendDataArrayToServer();
 }
 ////////////////////////////////////////////////////
 //Scalar radiobox                                 //
 ////////////////////////////////////////////////////
 void UI_ScalarTab::_onScalars(wxCommandEvent& event)
 {
-   ((UI_Tabs *)_parent)->cSc = _scalarRBox->GetSelection();         // using zero-based scalar counting
-   ((UI_Tabs *)_parent)->cMin = _minPercentSlider->GetValue();
-   ((UI_Tabs *)_parent)->cMax = _maxPercentSlider->GetValue();
-   ((UI_Tabs *)_parent)->cId  = CHANGE_SCALAR;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   ((UI_Frame *)_parent)->_tabs->cSc = _scalarRBox->GetSelection();         // using zero-based scalar counting
+   ((UI_Frame *)_parent)->_tabs->cMin = _minPercentSlider->GetValue();
+   ((UI_Frame *)_parent)->_tabs->cMax = _maxPercentSlider->GetValue();
+   ((UI_Frame *)_parent)->_tabs->cId  = CHANGE_SCALAR;
+   ((UI_Frame *)_parent)->_tabs->sendDataArrayToServer();
 
    //update the scalar tab to correctly display the current scalar  
-   ((UI_Tabs *)_parent)->changeActiveScalarOnDataset(_scalarRBox->GetStringSelection());  
+   ((UI_Frame *)_parent)->changeActiveScalarOnDataset(_scalarRBox->GetStringSelection());  
    
 }
 
 
 void UI_ScalarTab::_onMinMaxSlider(wxScrollEvent& event)
 {
-   ((UI_Tabs *)_parent)->cSc = _scalarRBox->GetSelection();         // using zero-based scalar counting
-   ((UI_Tabs *)_parent)->cMin = _minPercentSlider->GetValue();
-   ((UI_Tabs *)_parent)->cMax = _maxPercentSlider->GetValue();
-   ((UI_Tabs *)_parent)->cId  = CHANGE_SCALAR_RANGE;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   ((UI_Frame *)_parent)->_tabs->cSc = _scalarRBox->GetSelection();         // using zero-based scalar counting
+   ((UI_Frame *)_parent)->_tabs->cMin = _minPercentSlider->GetValue();
+   ((UI_Frame *)_parent)->_tabs->cMax = _maxPercentSlider->GetValue();
+   ((UI_Frame *)_parent)->_tabs->cId  = CHANGE_SCALAR_RANGE;
+   ((UI_Frame *)_parent)->_tabs->sendDataArrayToServer();
 }

@@ -20,7 +20,7 @@ UI_VectorTab::UI_VectorTab(wxNotebook* tControl)
    _vThresholdMaxSlider = 0;
    _vRatioSlider = 0;
    _vScaleSlider = 0;
-   _vectorRBox = 0;
+//   _vectorRBox = 0;
    _scaleVecMagChk = 0;
    _updateButton = 0;
 
@@ -38,13 +38,13 @@ void UI_VectorTab::_buildPage()
    ///////////////////////////////
 
    //The names of the radio box choices
-   wxString vectorName[] = {wxT("default vector")};
+//   wxString vectorName[] = {wxT("default vector")};
 
    //Create the radio box w/ the list of scalars
-   _vectorRBox = new wxRadioBox(this, VECTOR_RAD_BOX, wxT("Vectors"),
-                                wxDefaultPosition, wxDefaultSize, 1,
-                                                     vectorName, 1,
-                                                     wxRA_SPECIFY_COLS);
+//   _vectorRBox = new wxRadioBox(this, VECTOR_RAD_BOX, wxT("Vectors"),
+//                                wxDefaultPosition, wxDefaultSize, 1,
+//                                                     vectorName, 1,
+//                                                     wxRA_SPECIFY_COLS);
    //The "Update Visualization" button
    _updateButton = new wxButton(this, VECTOR_UPDATE_BUTTON, wxT("Update"));
 
@@ -114,7 +114,7 @@ void UI_VectorTab::_buildPage()
    wxStaticBoxSizer* vScaleGroup = new wxStaticBoxSizer(vsGroup,wxVERTICAL);
 
    //first column
-   vListGroup->Add(_vectorRBox,6,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+//   vListGroup->Add(_vectorRBox,6,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    vListGroup->Add(_updateButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
    //second column
