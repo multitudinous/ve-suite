@@ -35,6 +35,7 @@
 #include "cfdGroup.h"
 #include "cfdGeode.h"
 #include "cfdDCS.h"
+#include "cfdSceneNode.h"
 
 #include <iostream>
 
@@ -300,7 +301,7 @@ void cfdTempAnimation::ClearSequence( void )
    vprDEBUG(vprDBG_ALL,1) << " ***********************ClearSequence"
                           << std::endl << vprDEBUG_FLUSH;
 
-   int numSequenceChildren = this->_sequence->getNumChildren();
+   int numSequenceChildren = this->_sequence->GetNumChildren();
    vprDEBUG(vprDBG_ALL,1) << " numSequenceChildren: " << numSequenceChildren
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -313,20 +314,20 @@ void cfdTempAnimation::ClearSequence( void )
       for ( int i = numSequenceChildren-1; i >= 0; i-- )
       {
          // transient sequences have groups attached directly to sequence nodes
-         unsigned int type = this->_sequence->GetChild( i )->GetNodeType();
+         cfdSceneNode::cfdNodeType type = this->_sequence->GetChild( i )->GetCFDNodeType();
 
-         if ( type == 0 )//group )
+         if ( type == cfdSceneNode::CFD_GROUP )//group )
          {
             // Each group in a transient sequence should have the same number of children
             // One particular node (at most) in each group pertains to the TFM
             // We want to remove that node (geode) that pertain to that TFM
-            int numChildrenPerGroup = ((cfdGroup *)this->_sequence->getChild( i ))->GetNumChildren();
+            int numChildrenPerGroup = ((cfdGroup *)this->_sequence->GetChild( i ))->GetNumChildren();
 
             vprDEBUG(vprDBG_ALL,1) << " looking at child " << i << ", a group with "
                                    << numChildrenPerGroup << " children"
                                    << std::endl << vprDEBUG_FLUSH; 
 
-            cfdGroup* group = (cfdGroup *)this->_sequence->getChild( i );
+            cfdGroup* group = (cfdGroup *)this->_sequence->GetChild( i );
 
             std::vector< cfdGeode* >::iterator iter;
             for ( iter = this->_geodes.begin(); iter != this->_geodes.end(); iter++ )
@@ -352,7 +353,7 @@ void cfdTempAnimation::ClearSequence( void )
             } 
          }
          // animated particles have geodes attached directly to sequence nodes
-         else if ( type == 1 )//geode )
+         else if ( type == cfdSceneNode::CFD_GEODE )//geode )
          {
             std::vector< cfdGeode* >::iterator iter;
             for ( iter = this->_geodes.begin(); iter != this->_geodes.end(); iter++ )
@@ -384,7 +385,7 @@ void cfdTempAnimation::ClearSequence( void )
          }
          else
          {
-            std::cerr << "ERROR: Don't know this kind of sequence" << std::endl;
+            std::cerr << "cfdTempAnimation::ERROR: Don't know this kind of sequence" << std::endl;
             exit( 1 );
          }
       }
