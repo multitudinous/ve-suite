@@ -42,18 +42,7 @@
 
 /// VR Juggler Stuff
 #include <vrj/Kernel/Kernel.h>
-//#include <gmtl/Math.h>
-//#include <gmtl/Quat.h>
-//#include <gmtl/Vec.h>
-//#include <gmtl/Matrix.h>
-//#include <gmtl/Coord.h>
-//#include <gmtl/Generate.h>
-#include <gadget/Type/PositionInterface.h>
-#include <gadget/Type/DigitalInterface.h>
-#include <vpr/Thread/Thread.h>
 #include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Projection.h>  /* for setNearFar (for setting clipping planes) */
 
 /// C/C++ libraries
 #include <iostream>
@@ -82,18 +71,12 @@ class cfdIHCCModel;
 class pfGroup;
 
 using namespace vrj;
-using namespace gmtl;
-using namespace gadget;
 
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
 
 // Declare my application class
-#ifdef TABLET
 class cfdApp : public vrj::PfApp, public VjObs_i
-#else
-class cfdApp : public vrj::PfApp
-#endif
 {
    public:
       //cfdApp( vrj::Kernel* kern);
@@ -138,164 +121,44 @@ class cfdApp : public vrj::PfApp
       // Look for a fix in future juggler releases
       //std::vector< int > getFrameBufferAttrs( void );
 
-      // Computes streamlines
-      void streamers( void * ); 
-
-      void intraSerialThread( void * );
-
-      void intraParallelThread( void * );
-
-      void NavigationForIHCC( void );
-
       void pushDataToStateInfo( void );
 
       void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
-   cfdPfSceneManagement*      _sceneManager;
-   cfdEnvironmentHandler*     _environmentHandler;
-   cfdSteadyStateVizHandler*  _steadystateHandler;
-   cfdTransientVizHandler*    _transientHandler;
-   cfdModelHandler*          _modelHandler;
-   // Objects defined in virtual environment space.
-   /*cfdPolyData       *surface;
-   cfdMenu           *menu;
-   cfdLaser          *laser;
-   cfdNavigate       *nav;
-   cfdCursor         *cursor;
-   cfdContour        *contour;
-   cfdPresetContour  *x_contour;
-   cfdPresetContour  *y_contour;
-   cfdPresetContour  *z_contour;
-   cfdContours       *x_contours;
-   cfdContours       *y_contours;
-   cfdContours       *z_contours;
-   cfdMomentum       *momentum;
-   cfdPresetMomentum *x_momentum;
-   cfdPresetMomentum *y_momentum;
-   cfdPresetMomentum *z_momentum;
-   cfdMomentums      *x_momentums;
-   cfdMomentums      *y_momentums;
-   cfdMomentums      *z_momentums;
-   cfdVector         *vector;
-   cfdPresetVector   *x_vector;
-   cfdPresetVector   *y_vector;
-   cfdPresetVector   *z_vector;
-   cfdVectors        *x_vectors;
-   cfdVectors        *y_vectors;
-   cfdVectors        *z_vectors;
-   cfdReadParam      *paramReader;
-   cfdStreamers      *streamlines;
-   cfdPolyData       *particles;
-   cfdImage          *image;  
-   cfdAnimation      *transientSequence;
-   cfdTeacher        *teacher;
-   cfdScalarBarActor *scalarBarActor;
-   cfdAnimatedStreamlineCone  *animStreamer;
-   cfdAnimatedImage           *animImg;
-   cfdIsosurface              *isosurface;
-   cfdQuatCamHandler          *quatcamHandler;
-   textPrompt                 *tPrompt;
-   //cfdDashboard*     dashBoard;*/
-   cfdIHCCModel               *ihccModel;
+      cfdPfSceneManagement*      _sceneManager;
+      cfdEnvironmentHandler*     _environmentHandler;
+      cfdSteadyStateVizHandler*  _steadystateHandler;
+      cfdTransientVizHandler*    _transientHandler;
+      cfdModelHandler*          _modelHandler;
+      cfdIHCCModel               *ihccModel;
 #ifdef _TAO
-   cfdExecutive*     executive;
+      cfdExecutive*     executive;
 #endif
 
-   CosNaming::NamingContext_var naming_context;
-   CORBA::ORB_var orb;
-   PortableServer::POA_var poa;
-   //std::vector< cfdSound * > sounds;
-   //std::vector< cfdFILE * > geomL;
+      CosNaming::NamingContext_var naming_context;
+      CORBA::ORB_var orb;
+      PortableServer::POA_var poa;
 
    
-   //biv -- transient stuff
-   /*cfdTransientFlowManager* _cfdTFM_X_Contour[2];//added for windshield hack
-   cfdTransientFlowManager* _cfdTFM_Y_Contour;
-   cfdTransientFlowManager* _cfdTFM_Z_Contour;
-   cfdTransientFlowManager* _cfdTFM_X_Vector;
-   cfdTransientFlowManager* _cfdTFM_Y_Vector;
-   cfdTransientFlowManager* _cfdTFM_Z_Vector;
-   cfdTransientFlowManager* _cfdTFM_Geometry[2];
-   cfdTransientFlowManager* _cfdTFM_Particle;*/
-
-/*   // Used for defining the vectors for data display
-   vtkPolyData * arrow;
-
-   // Text processing stuff: needs to be reimplemented with a little thought
-   void flush_text(char *);
-
-   time_t my_timer;
-   double time_r;
-   double tt; //for recording time
-   char * prompt_text;
-   pfNode *temp_text;
-   int text_sig;
-
-   // pfb file counter: used to create new pfb names
-   int  pfb_count;
- 
-   // Geometry and opacity controls
-   bool  chgMod;
-   bool  changeGeometry;
-*/   
-   // Stores data from cfdCursor
-   // Variable will eventually be used to define bounding box
-   // for data interagation
-   double cur_box[6];
+      //biv -- transient stuff
+      /*cfdTransientFlowManager* _cfdTFM_X_Contour[2];//added for windshield hack
+      cfdTransientFlowManager* _cfdTFM_Y_Contour;
+      cfdTransientFlowManager* _cfdTFM_Z_Contour;
+      cfdTransientFlowManager* _cfdTFM_X_Vector;
+      cfdTransientFlowManager* _cfdTFM_Y_Vector;
+      cfdTransientFlowManager* _cfdTFM_Z_Vector;
+      cfdTransientFlowManager* _cfdTFM_Geometry[2];
+      cfdTransientFlowManager* _cfdTFM_Particle;*/
 
    // Only used in preframe for transient stuff
    int   lastFrame;
 
-   // A hack for multi - model stuff with streamlines
-   // will probably disappear in the future
-   //int   useLastSource;
-   //vtkPolyData * lastSource;
-
-   // Thread state flags
-   bool  runStreamersThread;
-   bool  runIntraParallelThread;   
-   bool  interactiveObject;
-   bool  computeActorsAndGeodes;
-
-   // Scalar bar flag
-   bool  isTimeToUpdateScalarBar;
-   
-   int   cursorId;
-   
-   // Used to store data for multi-dataset functions
-   char oldDatasetName[256];
-
-   // State Variables
-   short cfdNumScalars;       // intial stuff
-   short cfdNumVectors;       // intial stuff
-   short cfdNumGeoArrays;     // intial stuff
-   int   cfdClients;          // intial stuff
-   short cfdNumTeacherArrays; // intial stuff
-   bool  actorsAreReady;
-
-#ifndef TABLET
-  // cfdApp side variables
-   int   cfdIso_value;
-   int   cfdSc;
-   int   cfdMin;
-   int   cfdMax;
-   long  cfdId;
-   long  cfdGeo_state;
-   short cfdPostdata_state;
-   bool  cfdPre_state;
-   short cfdTimesteps;
-   short cfdTeacher_state; 
-#endif
-
+  
 #ifdef _CLUSTER   
    virtual void GetUpdateClusterStateVariables( void );
 #endif
-   //biv -- the write traverser
-   protected:
-      //cfdWriteTraverser* _cfdWT;
-
    private:
-   char * filein_name;
+      char * filein_name;
 };
 
 #endif

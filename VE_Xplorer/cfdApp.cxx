@@ -54,22 +54,13 @@
 #include "cfdExecutive.h"
 #endif //_TAO
 
-#include <vpr/vpr.h>
-#include <vpr/System.h>
-#include <vpr/Thread/Thread.h>
 #include <vpr/Util/Debug.h>
-#include <snx/sonix.h>
-#include <snx/SoundHandle.h>
-//#include <gmtl/Matrix.h>
-//#include <gmtl/MatrixOps.h>
-//#include <gmtl/Vec.h>
 
 // Scene graph dependant headers
 #include <Performer/pf.h>
 #include <Performer/pf/pfGroup.h>
 
 #include <sys/types.h>
-using namespace snx;
 
 #ifdef _CLUSTER
 int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
@@ -93,6 +84,8 @@ void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_
 
 void cfdApp::exit()
 {
+   delete filein_name;
+
    // we don't have a destructor, so delete items here...
    if ( this->_sceneManager )
    {  
@@ -372,8 +365,6 @@ void cfdApp::preFrame( void )
 #ifdef _TAO
       this->executive->UnbindORB();
 #endif // _TAO
-      this->runStreamersThread = false;
-      this->runIntraParallelThread = false;   
       this->mKernel->stop(); // Stopping kernel using the inherited member variable
    }
 
