@@ -152,7 +152,7 @@ int V21Helper::GasToInt (Gas *gs, Interface &it)
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-int IntToWat (Interface *it, Water &wt)
+int V21Helper::IntToWat (Interface *it, Water &wt)
 {
   bool ok = true;
   
@@ -169,7 +169,7 @@ int IntToWat (Interface *it, Water &wt)
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
-int WatToInt (Water *wt, Interface &it)
+int V21Helper::WatToInt (Water *wt, Interface &it)
 {
   it.clear();
 
