@@ -45,7 +45,7 @@
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 #include "cfdWriteTraverser.h"
-
+#include "cfdPfSceneManagement.h"
 #include <iostream>
 #include <string>
 #include <sstream>
@@ -68,6 +68,12 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    _cfdWT = NULL;
    this->DCS = NULL;
    this->node = NULL;
+   this->_worldDCS = 0;
+   pfb_count = 0;
+   _cfdWT = NULL;
+   this->DCS = new cfdDCS();
+   _worldDCS = worldDCS;
+   _worldDCS->AddChild( this->DCS );
 
    char *cwd;
 
@@ -122,25 +128,29 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    // Get the proper directory path
    //sprintf(directory, "%s\\*", this->directory);
    std::ostringstream dirStringStream;
-   dirStringStream << this->directory << "\\*";
+   dirStringStream <<"./"<<this->directory << "\\*";
    std::string dirString = dirStringStream.str();
    directory = (char*)dirString.c_str();
 
    // Get the first file
    hList = FindFirstFile(directory, &fileData);
-   if (hList == INVALID_HANDLE_VALUE)
-   { 
-      vprDEBUG(vprDBG_ALL,0) << "Cannot open directory \"" << this->directory 
+  // if (hList == INVALID_HANDLE_VALUE)
+  // { 
+   if(_mkdir(this->directory)==0){
+      vprDEBUG(vprDBG_ALL,0) <<"Directory \"" << this->directory 
                              << "\"" << std::endl << vprDEBUG_FLUSH;
-      return;
+      hList = FindFirstFile(directory, &fileData);
+      
    }
-   else
+      //return;
+   //}
+   //else
    {
       finished = FALSE;
       while ( ! finished )
       {
          //assume all pfb files in this directory should be loaded
-         if ( strstr(fileData.cFileName, ".pfb") )
+         if ( strstr(fileData.cFileName, ".pfb")||strstr(fileData.cFileName, ".osg") )
          {
             char * fileName = new char[strlen(fileData.cFileName)+1];
             strcpy( fileName, fileData.cFileName );
@@ -163,9 +173,7 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    vprDEBUG(vprDBG_ALL,1) << "Number of performer binaries: " << numFiles
                           << std::endl << vprDEBUG_FLUSH;
 
-   pfb_count = 0;
-   _cfdWT = NULL;
-   this->DCS = new cfdDCS();
+   
    this->node = new cfdNode * [ this->numFiles ];
    
    for (int i=0; i<this->numFiles; i++)
@@ -174,8 +182,7 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
       this->node[ i ]->LoadFile( this->pfbFileNames[ i ] );
    }
 
-   _worldDCS = worldDCS;
-   _worldDCS->AddChild( this->DCS );
+  
 
    //change back to the original directory
    chdir( cwd );
@@ -299,9 +306,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
    {
       // Needs to be moved to cfdTeacher...soon.
       // Generate a .pfb filename...
-      const char* pfb_filename;//[100];
-      //sprintf( pfb_filename , "%s/stored_scene_%i.pfb",
-      //         this->getDirectory(), this->pfb_count );
+      const char* pfb_filename;
       std::ostringstream dirStringStream;
       dirStringStream << this->getDirectory() << "/stored_scene_" 
 #ifdef _PERFORMER
@@ -317,19 +322,24 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 
       // store the world DCS matrix..
       gmtl::Matrix44f m;
-      m = this->_worldDCS->GetMat();
+      if(_worldDCS){
+         m = this->_worldDCS->GetMat();
 
-      // temporarily reset the world DCS matrix to the identity
-      gmtl::Matrix44f I;
-      // Make an identity matrix
-      gmtl::identity( I );
-      this->_worldDCS->SetMat( I );
+         //temporarily reset the world DCS matrix to the identity
+         gmtl::Matrix44f I;
 
-      //biv--convert the cfdSequence nodes to pfSequence nodes
-      //for proper viewing in perfly
-      writePFBFile(_worldDCS,(char*)pfb_filename);
-      //pfdStoreFile( worldDCS, pfb_filename );
+         // Make an identity matrix
+         gmtl::identity( I );
+         this->_worldDCS->SetMat( I );
+      
+         writePFBFile(this->_worldDCS,(char*)pfb_filename);
 
+         // restore the world DCS matrix...
+         this->_worldDCS->SetMat( m );
+ 
+      }else{
+         writePFBFile(cfdPfSceneManagement::instance()->GetRootNode(),(char*)pfb_filename);
+      }
       // store the active geometry and viz objects as a pfb
       // (but not the sun, menu, laser, or text)
       int store_int = 0;
@@ -337,10 +347,6 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       vprDEBUG(vprDBG_ALL,1) << "|   Stored Scene Output " << store_int
                              << std::endl << vprDEBUG_FLUSH;
       
-      // restore the world DCS matrix...
-      this->_worldDCS->SetMat( m );
-
-
       // increment the counter and reset the id to -1...
       this->pfb_count ++;
       return true;
