@@ -18,14 +18,11 @@ int main( int argc, char *argv[] )
    reader->ReadElementEquivalencyTable();
    reader->ReadDataStepsIndexTable();
    reader->ReadTimeTable();
-   return 0;
+   reader->ReadGeometryTable();
+   reader->ReadElementTypeIndexTable();
+   reader->ReadNodalCoordinates();
+   reader->ReadElementDescriptionIndexTable();
 
-   int counter = 6; // incremented for backward comapatibility
-   while( 1 )
-   {
-      cout << "\nReading block " << ++counter << endl;
-      reader->ReadGenericIntBlock();
-   }
    cout << "\ndone!\n" << endl;
 
    delete reader;

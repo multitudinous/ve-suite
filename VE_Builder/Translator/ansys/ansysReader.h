@@ -47,14 +47,26 @@ class ansysReader
       void ReadDOFBlock();
 
       void ReadNodalEquivalencyTable();
-
       void ReadElementEquivalencyTable();
-
       void ReadDataStepsIndexTable();
-
       void ReadTimeTable();
+      void ReadLoadStepTable();
+      void ReadGeometryTable();
+      void ReadElementTypeIndexTable();
+      void ReadNodalCoordinates();
+      void ReadElementDescriptionIndexTable();
+      //void ReadNodalSolutions();
       
-      void ReadGenericIntBlock();
+      // Functions that get pointers to blocks of data
+      //int GetPtrNodalEquivalencyTable();
+      //int GetPtrElementEquivalencyTable();
+      //int GetPtrDataStepsIndexTable();
+      //int GetPtrTIM();
+      //int GetPtrLoadStepTable();
+      //int GetPtrGEO();
+      //int GetElemTypePtr( int i );
+      //int GetPtrETY();
+      //int GetPtrNOD();
 
    private:
       void FlipEndian();
@@ -63,10 +75,11 @@ class ansysReader
       float ReadNthFloat( int n );
       double ReadNthDouble( int n );
 
+      int * ReadElementTypeDescription( int ptr );
+
       char * ansysFileName;
       FILE *s1;
       bool endian_flip;
-      long position;
       long integerPosition;
 
       int numNodes;
@@ -74,12 +87,28 @@ class ansysReader
       int numElems;
       int numDOF;
       int * dofCode;
-      int ptrNodalEquivalencyTable;
       int * nodeID;
-      int ptrElementEquivalencyTable;
       int * elemID;
+
+      int ptrNodalEquivalencyTable;
+      int ptrElementEquivalencyTable;
       int ptrDataStepsIndexTable;
       int ptrTIM;
+      int ptrLoadStepTable;
+      int ptrGEO;
 
+      int maxety;
+      int ptrETY;
+      int ptrREL;
+      int ptrNOD;
+      int ptrCSY;
+      int ptrELM;
+      int ptrMAS;
+
+      int etysiz;
+      int * ptrToElemType;
+      int ** elemDescriptions;
+      double ** nodalCoordinates;
+      int * ptrElemDescriptions;
 };
 #endif
