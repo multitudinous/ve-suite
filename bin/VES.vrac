@@ -21,37 +21,50 @@ switch ($1)
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.config 
+    /usr/share/Performer/bin/rmsem
   breaksw
   
   case -c4open:
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.open.config
+    /usr/share/Performer/bin/rmsem
   breaksw
   
   case -c4closed:
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.config
+    /usr/share/Performer/bin/rmsem
   breaksw
-  
+
+  case -cluster:  
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_cluster_tao \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    /home/users/mccdo/babycave/vecr.jconf
+    /usr/share/Performer/bin/rmsem      
+  breaksw
+
   case -sim:
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${VE_SUITE_HOME}/VE_Xplorer/vjconfig/sim.base.jconf \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
+    /usr/share/Performer/bin/rmsem
   breaksw
   
   case -c6mono:
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.mono.config
+    /usr/share/Performer/bin/rmsem
   breaksw
   
   case -c4mono:
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.mono.config
+    /usr/share/Performer/bin/rmsem
   breaksw
 
   case -nserv:
