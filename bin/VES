@@ -2,14 +2,13 @@
 
 # Set environment variables and paths for running the program
 source /isv/VE_Suite/VE_Installer/setup.deere.tsh
-setenv VE_LIBS `uname`
 # Set additional environment variables
 setenv MY_VJCONFIGS /isv/Juggler/deere.config/icecube_2.0a2
 
 switch ($1)
 
   case -c:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/icecube.base.config \
     ${MY_VJCONFIGS}/icecube.displays.closed.config \
     ${MY_VJCONFIGS}/icecube.mstar.config \
@@ -17,7 +16,7 @@ switch ($1)
   breaksw
   
   case -cf:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/icecube.base.config \
     ${MY_VJCONFIGS}/icecube.displays.closed.config \
     ${MY_VJCONFIGS}/icecube.mstar.headless.config \
@@ -25,13 +24,13 @@ switch ($1)
   breaksw
   
   case -d:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/sim.base.config \
     ${MY_VJCONFIGS}/sim.wand.mixin.config 
   breaksw
   
   case -o:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/icecube.base.config \
     ${MY_VJCONFIGS}/icecube.displays.open.config \
     ${MY_VJCONFIGS}/icecube.mstar.config \
@@ -39,7 +38,7 @@ switch ($1)
   breaksw
   
   case -of:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/icecube.base.config \
     ${MY_VJCONFIGS}/icecube.displays.open.config \
     ${MY_VJCONFIGS}/icecube.mstar.headless.config \
@@ -56,23 +55,23 @@ switch ($1)
   breaksw
 
   case -surface:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/makeVtkSurface
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/makeVtkSurface
   breaksw
 
   case -preproc:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/preprocessor
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/preprocessor
   breaksw
 
   case -surf2stl:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/convertSurfaceFileToStl
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/convertSurfaceFileToStl
   breaksw
 
   case -transVTK:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/transformVTK
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/transformVTK
   breaksw
 
   case -cfd2VTK:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/translateToVtk
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/translateToVtk
   breaksw
 
   case -make:
@@ -87,7 +86,7 @@ switch ($1)
   breaksw
   
   case -merge:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/mergeVertices
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/mergeVertices
   breaksw
 
   case -h:

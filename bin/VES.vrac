@@ -8,32 +8,32 @@ setenv MY_VJCONFIGS /home/vr/vjconfig/2.0alpha3
 switch ($1)
 
   case -c6:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.config 
   breaksw
   
   case -c4open:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.open.config
   breaksw
   
   case -c4closed:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.config
   breaksw
   
   case -sim:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/sim/sim.config 
   breaksw
   
   case -c6mono:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.mono.config
   breaksw
   
   case -c4mono:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.mono.config
   breaksw
 
@@ -47,23 +47,23 @@ switch ($1)
   breaksw
 
   case -surface:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/makeVtkSurface
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/makeVtkSurface
   breaksw
 
   case -preproc:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/preprocessor
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/preprocessor
   breaksw
 
   case -surf2stl:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/convertSurfaceFileToStl
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/convertSurfaceFileToStl
   breaksw
 
   case -transVTK:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/transformVTK
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/transformVTK
   breaksw
 
   case -cfd2VTK:
-    ${VE_SUITE_HOME}/bin/${VE_LIBS}/translateToVtk
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/translateToVtk
   breaksw
 
   

@@ -1,1 +1,1 @@
-${VE_SUITE_HOME}/bin/${VE_LIBS}/project-${HOSTTYPE} /home/vr/vjconfig/2.0alpha4/c6/C6.lego.6con.1pack.mono.jconf
+${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project /home/vr/vjconfig/2.0alpha4/c6/C6.lego.6con.1pack.mono.jconf
