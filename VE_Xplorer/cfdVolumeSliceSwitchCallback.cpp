@@ -35,7 +35,7 @@ void cfdVolumeSliceSwitchCallback::AddGeometrySlices(SliceDir dir,
    }   
    _switchSlices[dir] = geom;
 }
-//////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////
 void cfdVolumeSliceSwitchCallback::switchSlices(osg::Vec3f* eye)
 {
    osg::Vec3f xAxis(1,0,0);

@@ -45,9 +45,15 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state, osgUtil::RenderLeaf*& prev
       _width = _pbuffer->width();
       _height= _pbuffer->height();
 
+      const unsigned int contextID = state.getContextID();
+      osg::Texture::TextureObject* textureObject = _texture->getTextureObject(contextID);
+      if (textureObject == 0){
+         // Make sure texture is loaded, subload callback required.
+         _texture->apply(state);
+      }
       //draw to the pbuffer
-      RenderStage::draw(state,previous);
-      
+      RenderStage::draw(*_localState,previous);
+      _pbuffer->deactivate();
       //copy into our texture
       //or should this be the local state?
       switch(_whichDir){
@@ -72,7 +78,7 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state, osgUtil::RenderLeaf*& prev
             break;
       };
       
-      _pbuffer->deactivate();
+      
    }
 }
 #endif

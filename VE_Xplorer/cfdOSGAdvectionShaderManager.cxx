@@ -10,6 +10,7 @@
 #include <osgNVCg/CgGeometry>
 #include "cfdOSGAdvectionShaderManager.h"
 #include "cfdUpdateableOSGTexture1d.h"
+#include "cfdCopyTextureCallback.h"
 #define PI  3.1416
 ////////////////////////////////////////////////////////////
 //Constructors                                            //
@@ -345,6 +346,7 @@ void cfdOSGAdvectionShaderManager::_initPropertyTexture()
                                 _fieldSize[1],
                                 _fieldSize[2]);
       _propertyToAdvect->setImage(propertyField);
+      _propertyToAdvect->setSubloadCallback(new cfdCopyTextureCallback());
       if(data){
          delete [] data;
          data = 0;

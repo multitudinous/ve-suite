@@ -125,39 +125,6 @@ void cfdVolumeVisualization::SetShaderDirectory(char* shadDir)
    _shaderDirectory = new char[strlen(shadDir)+1];
    strcpy(_shaderDirectory,shadDir);
 }
-
-#ifdef CFD_USE_SHADERS0
-
-///////////////////////////////////////////////////
-void cfdVolumeVisualization::EnableTransferShader()
-{
-   _useShaders = true;
-   if(_tSM->GetShaderStateSet()&&(!_transferShaderIsActive)){
-      _transferShaderIsActive = true;
-      _volShaderIsActive = false;
-   }
-   _shaderSwitch->setSingleChildOn(2);
-}
-////////////////////////////////////////////////////
-void cfdVolumeVisualization::DisableTransferShader()
-{
-   if(_transferShaderIsActive){
-      _transferShaderIsActive = false;
-      UseNormalGraphicsPipeline();
-   }
-}
-
-////////////////////////////////////////////////////////////////////////////////////////////
-void cfdVolumeVisualization::UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
-                                              float param,int whichFunction)
-{
-   if(_tSM){
-      _tSM->UpdateTransferFunction(type,param,whichFunction);
-   }
-   
-}
-#endif
-
 //////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetPlayMode(VisMode mode)
 {
@@ -296,7 +263,7 @@ osg::ref_ptr<osg::StateSet> cfdVolumeVisualization::GetStateSet()
    }
 }
 ///////////////////////////////////////////////////////////////////
-osg::ref_ptr<osg::Group> cfdVolumeVisualization::GetVolumeVisNode()
+osg::ref_ptr<osg::Switch> cfdVolumeVisualization::GetVolumeVisNode()
 {
    if(!_volumeVizNode.valid()){
       _buildGraph();
@@ -647,8 +614,9 @@ if(!_tm){
       std::cout<<"Texture Manager not set!!!"<<std::endl;
       return;
    }
-   _volumeVizNode = new osg::Group();
+   _volumeVizNode = new osg::Switch();
    _volumeVizNode->setName("Volume Viz Node");
+   _volumeVizNode->setSingleChildOn(0);
    _volumeVizNode->setDataVariance(osg::Object::DYNAMIC);
    
    _createTexGenNode();
@@ -672,8 +640,7 @@ if(!_tm){
       _noShaderGroup->addChild(_texGenParams.get());
 
       if(_slices.valid()){
-         osg::Vec3f temp( _bbox->center() );
-         _vSSCbk =  new cfdVolumeSliceSwitchCallback( (&temp) );
+         _vSSCbk =  new cfdVolumeSliceSwitchCallback( &(osg::Vec3f)_bbox->center() );
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::X_POS,_posXSlices);
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Y_POS,_posYSlices);
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Z_POS,_posZSlices);

@@ -42,21 +42,14 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _currentBBox = 0;
    _cleared = true;
    _pbm = 0;
-   _svvh = 0;
+   
    activeVisNodeHdlr = 0;
    _textureBaseSelected = false;
+
 #ifdef CFD_USE_SHADERS
    _vvvh = 0;
+   _svvh = 0;
 #endif
-   _visOptionSwitch = new cfdSwitch();
-   _visOptionSwitch->SetName("VVis Switch");
-   cfdGroup* scalarGroup = new cfdGroup();
-   scalarGroup->SetName("Scalar Vis");
-   cfdGroup* vectorGroup = new cfdGroup();
-   vectorGroup->SetName("Vector Vis");
-   _visOptionSwitch->AddChild(scalarGroup);
-   _visOptionSwitch->AddChild(vectorGroup);
-   _visOptionSwitch->SetVal(0);
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -88,8 +81,9 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHan
    _currentBBox[4] = tbvh._currentBBox[4];
    _currentBBox[5] = tbvh._currentBBox[5];
    _cleared = tbvh._cleared;
-   _svvh = new cfdScalarVolumeVisHandler(*tbvh._svvh);
+   
 #ifdef CFD_USE_SHADERS
+   _svvh = new cfdScalarVolumeVisHandler(*tbvh._svvh);
    _vvvh = new cfdVectorVolumeVisHandler(*tbvh._vvvh);
 #endif
 }
@@ -153,11 +147,12 @@ cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
       delete  _visOptionSwitch;
        _visOptionSwitch = 0;
    }
+  
+#ifdef CFD_USE_SHADERS
    if(_svvh){
       delete _svvh;
       _svvh = 0;
    }
-#ifdef CFD_USE_SHADERS
    if(_vvvh){
       delete _svvh;
       _vvvh = 0;
@@ -172,8 +167,8 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    }
 #ifdef CFD_USE_SHADERS
    //check if we are viewing vectors
-   if(((osg::Switch*)_visOptionSwitch->GetRawNode())->getValue(1)){
-      if(_vvvh){
+   if(_vvvh){
+      if(_vvvh->IsThisActive()){
          _vvvh->PingPongTextures();
       }
    }
@@ -183,10 +178,10 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE ){
       //set the transient flag in the callback
       if(_activeVolumeVizNode){
-         _visOptionSwitch->SetVal(1);
+         //_visOptionSwitch->SetVal(1);
          //testing switch stuff
          //_activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::PLAY);
-         
+         _vvvh->EnableDecorator();
          //_activeVolumeVizNode->EnableVolumeShader();
          //_activeVolumeVizNode->DeactivateVisualBBox();
          /*if(_svvh){
@@ -196,8 +191,9 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    }
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) != CLEAR_ALL && !_cleared){
       //need to make sure the node is on the graph
-      if(_parent->SearchChild(_visOptionSwitch) < 0){
-         _parent->AddChild(_visOptionSwitch);
+      if((((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get()) == false)){
+         ((osg::Group*)_parent->GetRawNode())->addChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+         _activeVolumeVizNode->GetVolumeVisNode()->setSingleChildOn(0);
          _cleared = false;
       }
    }
@@ -212,8 +208,9 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          xplane[3] = _currentBBox[0] + alpha*(_currentBBox[1] - _currentBBox[0]);
          xplane[3] *=-1.0;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE,xplane);
-         _cleared = false;
+         
       }
+      _cleared = false;
    }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_CONTOUR||
            _cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_VECTOR){
       if(_activeVolumeVizNode&&_currentBBox){
@@ -225,8 +222,9 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          yplane[3] = _currentBBox[2] + alpha*(_currentBBox[3] - _currentBBox[2]);
          yplane[3] *= -1.0;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE,yplane);
-         _cleared = false;
+         
       }
+      _cleared = false;
    }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Z_CONTOUR||
            _cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Z_VECTOR){
       if(_activeVolumeVizNode&&_currentBBox){
@@ -238,8 +236,9 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          zplane[3] = _currentBBox[4] + alpha*(_currentBBox[5] - _currentBBox[4]);
          zplane[3] *= -1.0;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE,zplane);
-         _cleared = false;
+         
       }
+      _cleared = false;
    /*}else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ARBITRARY){
       if(_activeVolumeVizNode&&_currentBBox){
          //create an arbitrary plane
@@ -248,6 +247,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          arbPlane
          _activeVolumeVizNode->AddClipPlane(cfdVolumeVisualization::ARBITRARY,arbPlane);
       }*/
+#ifdef CFD_USE_SHADERS
    }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SHOW_TEXTURE_BBOX){
       //display the bbox
       if(_activeVolumeVizNode){
@@ -258,21 +258,22 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
             activeVisNodeHdlr->TurnOffBBox();
          }
       }
+#endif
    }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_STOP){
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::STOP);
-         _cleared = false;
       }
+      _cleared = false;
    }else if(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_FORWARD){
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetPlayDirection(cfdVolumeVisualization::FORWARD);
-         _cleared = false;
       }
+      _cleared = false;
    }else if(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_BACKWARD){
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetPlayDirection(cfdVolumeVisualization::BACKWARD);
-         _cleared = false;
       }
+      _cleared = false;
    }else if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TEXTURE_BASED_SHADERS){
       if(_activeVolumeVizNode){
          int useShaders = _cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
@@ -287,7 +288,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
             _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ZPLANE);
             _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ARBITRARY);
             //remove the volviz node from the tree. . .
-            _parent->RemoveChild(_visOptionSwitch);
+            ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
          }
          _activeTM = 0;
          _cleared = true;
@@ -295,10 +296,10 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    }
 }
 ////////////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetSceneView(osgUtil::SceneView* sv)
+/*void cfdTextureBasedVizHandler::SetSceneView(osgUtil::SceneView* sv)
 {
-   _sceneView = sv;
-}
+   //_sceneView = sv;
+}*/
 ///////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetParameterFile(char* paramFile)
 {
@@ -343,9 +344,6 @@ void cfdTextureBasedVizHandler::SetWorldDCS(cfdDCS* dcs)
 void cfdTextureBasedVizHandler::SetParentNode(cfdGroup* parent)
 {
    _parent = parent;
-   if(_visOptionSwitch){
-     _parent->AddChild(_visOptionSwitch);
-   }
 }
 ////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetNavigate(cfdNavigate* navigate)
@@ -360,75 +358,65 @@ void cfdTextureBasedVizHandler::SetCursor(cfdCursor* cursor)
 //////////////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
 {
-   if((tm != _activeTM)||!_cleared){
-      _activeTM = tm;
-      if(!_currentBBox){
-         _currentBBox = new float[6];
-      }
-      _currentBBox[0] = _activeTM->getBoundingBox()[0];
-      _currentBBox[1] = _activeTM->getBoundingBox()[1];
-      _currentBBox[2] = _activeTM->getBoundingBox()[2];
-      _currentBBox[3] = _activeTM->getBoundingBox()[3];
-      _currentBBox[4] = _activeTM->getBoundingBox()[4];
-      _currentBBox[5] = _activeTM->getBoundingBox()[5];
+   if(!_cleared){
+      if((tm != _activeTM)){
+         _activeTM = tm;
+         if(!_currentBBox){
+            _currentBBox = new float[6];
+         }
+         _currentBBox[0] = _activeTM->getBoundingBox()[0];
+         _currentBBox[1] = _activeTM->getBoundingBox()[1];
+         _currentBBox[2] = _activeTM->getBoundingBox()[2];
+         _currentBBox[3] = _activeTM->getBoundingBox()[3];
+         _currentBBox[4] = _activeTM->getBoundingBox()[4];
+         _currentBBox[5] = _activeTM->getBoundingBox()[5];
 
-      if(_activeVolumeVizNode){
-         _activeVolumeVizNode->SetTextureManager(_activeTM);
-         _activeVolumeVizNode->CreateNode();
-
-         if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR){
-            _updateScalarVisHandler();
-         }else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
-            _updateVectorVisHandler();
+         if(_activeVolumeVizNode){
+            _activeVolumeVizNode->SetTextureManager(_activeTM);
+            _activeVolumeVizNode->CreateNode();
+#ifdef CFD_USE_SHADERS
+            if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR){
+               _updateScalarVisHandler();
+            }else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
+               _updateVectorVisHandler();
+            }
+#endif
          }
       }
    }
 }
+#ifdef CFD_USE_SHADERS
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateScalarVisHandler()
 {
-   if(_activeTM&&_activeVolumeVizNode&&_visOptionSwitch){
+   if(_activeTM && _activeVolumeVizNode){
       if(!_svvh){
          _svvh = new cfdScalarVolumeVisHandler();
          _svvh->SetBoundingBox(_activeTM->getBoundingBox());
-         _svvh->SetVolumeVizNode(_activeVolumeVizNode->GetVolumeVisNode().get());
+         _svvh->SetSwitchNode(_activeVolumeVizNode->GetVolumeVisNode().get());
       }
       _svvh->SetTextureManager(_activeTM);
       _svvh->Init();
-      
       activeVisNodeHdlr = _svvh;
-      osg::ref_ptr<osg::Group> scalarChild = 
-         dynamic_cast<osg::Group*>(_visOptionSwitch->GetChild(0)->GetRawNode());
-      if(!scalarChild->containsNode(_svvh->GetVisualization())){
-        //this may not be right
-        scalarChild->addChild(_svvh->GetVisualization());
-      }
    }
 }
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateVectorVisHandler()
 {
-#ifdef CFD_USE_SHADERS
+
    if(_activeTM&&_activeVolumeVizNode&&_visOptionSwitch&&_pbm){
       if(!_vvvh){
          _vvvh = new cfdVectorVolumeVisHandler();
          _vvvh->SetBoundingBox(_activeTM->getBoundingBox());
-         _vvvh->SetVolumeVizNode(_activeVolumeVizNode->GetVolumeVisNode().get());
+         _vvvh->SetSwitchNode(_activeVolumeVizNode->GetVolumeVisNode().get());
       }
       _vvvh->SetTextureManager(_activeTM);
       _vvvh->SetPBufferManager(_pbm);
       _vvvh->Init();
-      
       activeVisNodeHdlr = _vvvh;
-      osg::ref_ptr<osg::Group> vectorChild = 
-         dynamic_cast<osg::Group*>(_visOptionSwitch->GetChild(1)->GetRawNode());
-      if(!vectorChild->containsNode(_vvvh->GetVisualization())){
-        //this may not be right
-        vectorChild->addChild(_vvvh->GetVisualization());
-      }
    }
-#endif
 }
+#endif
 /////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization* cfdTextureBasedVizHandler::GetActiveVolumeVizNode()
 {
@@ -468,9 +456,6 @@ bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
          cfdVolumeVisualization* volVizNode = new cfdVolumeVisualization();
          volVizNode->SetNumberofSlices(100);
          volVizNode->SetSliceAlpha(.5);
-         if(_sceneView){
-            volVizNode->SetState(_sceneView->getState());
-         }
          _volumeVisNodes.push_back(volVizNode);
       }
       else
@@ -513,13 +498,13 @@ cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTexture
       if(!_currentBBox){
          _currentBBox = new float[6];
       }
-      _svvh = tbvh._svvh;
+      
       _textureBaseSelected = tbvh._textureBaseSelected;
 #ifdef CFD_USE_SHADERS
+      _svvh = tbvh._svvh;
       _vvvh = tbvh._vvvh;
-#endif
-      
       activeVisNodeHdlr = tbvh.activeVisNodeHdlr;
+#endif
       _currentBBox[0] = tbvh._currentBBox[0];
       _currentBBox[1] = tbvh._currentBBox[1];
       _currentBBox[2] = tbvh._currentBBox[2];

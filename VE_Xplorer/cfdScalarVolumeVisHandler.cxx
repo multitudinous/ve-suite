@@ -1,6 +1,12 @@
 #ifdef _OSG
 
+#include "cfdTextureManager.h"
 #include "cfdScalarVolumeVisHandler.h"
+
+#ifdef CFD_USE_SHADERS
+#include "cfdOSGScalarShaderManager.h"
+#endif
+
 #include <osg/Group>
 //////////////////////////////////////////////////////
 //Constructors                                      //
@@ -11,8 +17,6 @@ cfdScalarVolumeVisHandler::cfdScalarVolumeVisHandler()
 #ifdef CFD_USE_SHADERS
    _sSM = 0;
 #endif
-   _tm = 0;
-   _shaderSwitch = 0;
 }
 //////////////////////////////////////////////////////////
 cfdScalarVolumeVisHandler::cfdScalarVolumeVisHandler(const cfdScalarVolumeVisHandler& vvnh)
@@ -20,10 +24,7 @@ cfdScalarVolumeVisHandler::cfdScalarVolumeVisHandler(const cfdScalarVolumeVisHan
 {
 #ifdef CFD_USE_SHADERS
    _sSM = new cfdOSGScalarShaderManager(*vvnh._sSM);
-   _scalarFragGroup = new osg::Group(*vvnh._scalarFragGroup);
 #endif
-   _shaderSwitch = new cfdSwitch(*vvnh._shaderSwitch);
-   _tm = new cfdTextureManager(*vvnh._tm);
 }
 ///////////////////////////////////////////////////////
 cfdScalarVolumeVisHandler::~cfdScalarVolumeVisHandler()
@@ -34,53 +35,17 @@ cfdScalarVolumeVisHandler::~cfdScalarVolumeVisHandler()
       _sSM = 0;
    }
 #endif
-   if(_shaderSwitch){
-     delete _shaderSwitch;
-     _shaderSwitch = 0;
-   }
-   if(_tm){
-      delete _tm;
-      _tm = 0;
-   }
 }
 //////////////////////////////////////
 void cfdScalarVolumeVisHandler::Init()
 {
-   if(!_bbox.valid()){
-      std::cout<<"Invalid bounding box!!"<<std::endl;
-      std::cout<<"cfdVolumeVizNodeHandler::Init!!"<<std::endl;
-      return;
-   }
-   if(!_vvN.valid()){
-      std::cout<<"Invalid volume viz node!!"<<std::endl;
-      std::cout<<"cfdVolumeVizNodeHandler::Init!!"<<std::endl;
-      return;
-   }
-   if(!_tm){
-      std::cout<<"Invalid TextureManager!!"<<std::endl;
-      std::cout<<"cfdScalarVolumeVisHandler::Init!!"<<std::endl;
-      return;
-   }
-   if(!_topNode.valid()){
-      _createVisualBBox();
-      _topNode = new osg::Group();
-      _topNode->setName("Scalar VolumeVisHandler");
-
-      //be able to turn the bounding box off/on
-      _bboxSwitch = new osg::Switch();
-      _bboxSwitch->setName("BBox Switch");
-      _bboxSwitch->addChild(_visualBoundingBox.get());
-      _topNode->addChild(_bboxSwitch.get());
-      _attachVolumeVisNodeToGraph();
-   }
+   cfdVolumeVisNodeHandler::Init();
+   //set our names for debugging purposes
+   SetBoundingBoxName("Scalar VVNH BBox");
+   SetDecoratorName("Scalar VV Fragment PG");
 }
-////////////////////////////////////////////////////////////////////////
-void cfdScalarVolumeVisHandler::SetTextureManager(cfdTextureManager* tm)
-{
-   _tm = tm;
-}
-/////////////////////////////////////////////////////////////
-void cfdScalarVolumeVisHandler::_attachVolumeVisNodeToGraph()
+/////////////////////////////////////////////////
+void cfdScalarVolumeVisHandler::_setUpDecorator()
 {
    if(!_tm){
       return;
@@ -94,55 +59,12 @@ void cfdScalarVolumeVisHandler::_attachVolumeVisNodeToGraph()
       _sSM->UpdateTextureManager(_tm);
    }
    _sSM->Init();
-#endif
-   if(!_shaderSwitch){
-      _shaderSwitch = new cfdSwitch();
-      _shaderSwitch->SetName("Scalar Volume Switch");
-      _visualBoundingBox->addChild(_shaderSwitch->GetRawNode());
-      _bboxSwitch->addChild(_shaderSwitch->GetRawNode());
-   }
 
-   //0 == plain vis group (doesn't use shaders)
-   //1 == volume shader group (uses scalar texture)
-   ((osg::Group*)_shaderSwitch->GetRawNode())->addChild(_vvN.get());
-
-   //default to the "plain style" ie w/o shaders, viewing
-   _shaderSwitch->SetVal(0);
-#ifdef CFD_USE_SHADERS
-   //set up the shader nodes
-   if(!_scalarFragGroup.valid()){
-      _scalarFragGroup = new osg::Group();
-      _scalarFragGroup->setName("Scalar VV Fragment PG");
+   if(_sSM->GetShaderStateSet() && _decoratorGroup.valid()){
+     _decoratorGroup->setStateSet(_sSM->GetShaderStateSet()); 
    }
-   ((osg::Group*)_shaderSwitch->GetRawNode())->addChild(_scalarFragGroup.get());
-
-   if(_sSM->GetShaderStateSet()){
-     _scalarFragGroup->setStateSet(_sSM->GetShaderStateSet()); 
-   }
-   //attach this node to the switch so we can turn off/on
-   //the fragment shader
-   osg::ref_ptr<osg::Group> attachToGroup = dynamic_cast<osg::Group*>
-	(((osg::Group*)_vvN->getChild(0))->getChild(0));
-   _scalarFragGroup->addChild(attachToGroup.get());
 #endif
-   
 }
-#ifdef CFD_USE_SHADERS
-////////////////////////////////////////////////////
-void cfdScalarVolumeVisHandler::EnableVolumeShader()
-{
-   if(_shaderSwitch){
-      _shaderSwitch->SetVal(1);
-   }
-}
-/////////////////////////////////////////////////////
-void cfdScalarVolumeVisHandler::DisableVolumeShader()
-{
-   if(_shaderSwitch){
-      _shaderSwitch->SetVal(0);
-   }
-}
-#endif
 //////////////////////////////////////////////////////////////////////////
 cfdScalarVolumeVisHandler&
 cfdScalarVolumeVisHandler::operator=(const cfdScalarVolumeVisHandler& vvnh)
@@ -151,10 +73,7 @@ cfdScalarVolumeVisHandler::operator=(const cfdScalarVolumeVisHandler& vvnh)
       cfdVolumeVisNodeHandler::operator=(vvnh);
 #ifdef CFD_USE_SHADERS
       _sSM = vvnh._sSM;
-      _scalarFragGroup = vvnh._scalarFragGroup;
 #endif
-      _shaderSwitch = vvnh._shaderSwitch;
-      _tm = vvnh._tm;
    }
    return *this;
 }

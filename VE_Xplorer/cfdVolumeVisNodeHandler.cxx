@@ -6,11 +6,14 @@
 #include <osg/Switch>
 #include <iostream>
 #include "cfdVolumeVisNodeHandler.h"
+#include "cfdTextureManager.h"
 //////////////////////////////////////////////////
 //Constructors                                  //
 //////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler()
 {
+   _whichChildIsThis = 0;
+   _tm = 0;
 }
 //////////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
@@ -18,14 +21,21 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
 {
    _bbox = vvnh._bbox;
    _bboxSwitch = new osg::Switch(*vvnh._bboxSwitch);
-   _vvN = new osg::Group(*vvnh._vvN);
-   _topNode = new osg::Group(*vvnh._topNode);
+   _byPassNode = new osg::Group(*vvnh._byPassNode);
+   _vvN = new osg::Switch(*vvnh._vvN);
+   _whichChildIsThis = vvnh._whichChildIsThis;
+   _decoratorGroup = new osg::Group(*vvnh._decoratorGroup);
+   _tm = new cfdTextureManager(*vvnh._tm);
 }
 ///////////////////////////////////////////////////
 //Destructor                                     //
 ///////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::~cfdVolumeVisNodeHandler()
 {
+   if(_tm){
+      delete _tm;
+      _tm = 0;
+   }
 }
 ////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetBoundingBox(float* bbox)
@@ -44,17 +54,14 @@ void cfdVolumeVisNodeHandler::SetBoundingBox(float* bbox)
   
 }
 ///////////////////////////////////////////////////////////////
-void cfdVolumeVisNodeHandler::SetVolumeVizNode(osg::Group* vvn)
+void cfdVolumeVisNodeHandler::SetSwitchNode(osg::Switch* vvn)
 {
    _vvN = vvn;
 }
-///////////////////////////////////////////////////////
-osg::Group* cfdVolumeVisNodeHandler::GetVisualization()
+////////////////////////////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::SetTextureManager(cfdTextureManager* tm)
 {
-   if(_topNode.valid()){
-      return _topNode.get();
-   } 
-   return 0;
+   _tm = tm;
 }
 ////////////////////////////////////
 void cfdVolumeVisNodeHandler::Init()
@@ -69,32 +76,77 @@ void cfdVolumeVisNodeHandler::Init()
       std::cout<<"cfdVolumeVizNodeHandler::Init!!"<<std::endl;
       return;
    }
-   if(!_topNode.valid()){
+   if(!_tm){
+      std::cout<<"Invalid TextureManager!!"<<std::endl;
+      std::cout<<"cfdVolumeVisNodeHandler::Init!!"<<std::endl;
+      return;
+   }
+   
+   if(!_bboxSwitch.valid()){
       _createVisualBBox();
-      _topNode = new osg::Group();
-      _topNode->setName("VolumeVisNodeHandler");
-
+      _whichChildIsThis = _vvN->getNumChildren();
       //be able to turn the bounding box off/on
       _bboxSwitch = new osg::Switch();
-      _bboxSwitch->setName("BBox Switch");
+      _bboxSwitch->setName("VVNH BBox Switch");
       _bboxSwitch->addChild(_visualBoundingBox.get());
-      _topNode->addChild(_bboxSwitch.get());
-      _attachVolumeVisNodeToGraph();
-   }
-}
-///////////////////////////////////////////////////////////
-void cfdVolumeVisNodeHandler::_attachVolumeVisNodeToGraph()
-{
-   if(_bboxSwitch.valid()&&
-      _visualBoundingBox.valid()&&
-      _vvN.valid()){
-
-      _visualBoundingBox->addChild(_vvN.get());
-      _bboxSwitch->addChild(_vvN.get());
       _bboxSwitch->setSingleChildOn(0);
+      _vvN->addChild(_bboxSwitch.get());
+
+      //set up the decorator nodes
+      if(!_decoratorGroup.valid()){
+         _decoratorGroup = new osg::Group();
+      }
+
+      _visualBoundingBox->addChild(_decoratorGroup.get());
+      _bboxSwitch->addChild(_decoratorGroup.get());
+      
+      //need to bypass the "decorator" level to attach
+      _byPassNode = dynamic_cast<osg::Group*>
+	                  (((osg::Group*)_vvN->getChild(0))->getChild(0));
+      
+      //hook up the decorator
+      _decoratorGroup->addChild(_byPassNode.get());
+
+      //NOTE -- In derived classes, must override this call
+      //to setup the stateset for the decorator
+      _setUpDecorator();
+
+      //must do this to make sure switch is initially
+      //traversing the "undecorated" node
+      _vvN->setSingleChildOn(0);
    }
 }
-///////////////////////////////////////////
+////////////////////////////////////////////
+bool cfdVolumeVisNodeHandler::IsThisActive()
+{
+   if(_vvN.valid()){
+      int index = _whichChildIsThis - 1;
+      return _vvN->getValue(index);
+   }
+   return false;
+}
+////////////////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::SetBoundingBoxName(char* name)
+{
+   if(name && _bboxSwitch.valid()){
+      _bboxSwitch->setName(name);
+   }
+}
+////////////////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::SetDecoratorName(char* name)
+{
+   if(name && _decoratorGroup.valid()){
+      _decoratorGroup->setName(name);
+   }
+}
+///////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::EnableDecorator()
+{
+   if(_vvN.valid()){
+      _vvN->setSingleChildOn(_whichChildIsThis);
+   }
+}
+//////////////////////////////////////////
 void cfdVolumeVisNodeHandler::TurnOnBBox()
 {
    if(_bboxSwitch.valid()){
@@ -177,9 +229,11 @@ cfdVolumeVisNodeHandler::operator=(const cfdVolumeVisNodeHandler& vvnh)
    if(this != &vvnh){
       _bbox = vvnh._bbox;
       _vvN = vvnh._vvN;
-      _topNode = vvnh._topNode;
+      _decoratorGroup = vvnh._decoratorGroup;
       _visualBoundingBox = vvnh._visualBoundingBox;
       _bboxSwitch = vvnh._bboxSwitch;
+      _tm = vvnh._tm;
+      _byPassNode = vvnh._byPassNode;
    }
    return *this;
 }

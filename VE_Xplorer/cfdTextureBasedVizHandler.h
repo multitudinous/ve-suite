@@ -21,10 +21,11 @@ class cfdTextureManager;
 namespace osgUtil { class SceneView; }
 class cfdPBufferManager;
 class cfdVolumeVisualization;
-class cfdScalarVolumeVisHandler;
+
 class cfdVolumeVisNodeHandler;
 #ifdef CFD_USE_SHADERS
 class cfdVectorVolumeVisHandler;
+class cfdScalarVolumeVisHandler;
 #endif
 class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
 {
@@ -38,11 +39,12 @@ public:
    void SetNavigate(cfdNavigate* navigate);
    void SetCursor(cfdCursor* cursor);
    void SetActiveTextureManager(cfdTextureManager* tm);
-   void SetPBuffer(cfdPBufferManager* pbm);
+  
    void ViewTextureBasedVis(bool trueFalse);
    //once we get pf side this may need to be ifdef'd
-   void SetSceneView(osgUtil::SceneView* sv);
-#ifdef CFD_USE_SHADERS
+   //void SetSceneView(osgUtil::SceneView* sv);
+#ifdef CFD_USE_SHADERS 
+   void SetPBuffer(cfdPBufferManager* pbm);
    void PingPongTextures();
 #endif
    cfdPBufferManager* GetPBuffer();

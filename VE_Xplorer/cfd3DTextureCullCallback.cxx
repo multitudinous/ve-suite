@@ -88,26 +88,17 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
     // set the current renderbin to be the newly created stage.
     cv.setCurrentRenderBin(update3DTexture.get());
 
-    float znear = 1.0f*bs.radius();
-    float zfar  = 3.0f*bs.radius();
-        
-    // 2:1 aspect ratio as per flag geomtry below.
-    float top   = 0.25f*znear;
-    float right = 0.5f*znear;
-
-    znear *= 0.9f;
-    zfar *= 1.1f;
-
     // set up projection.
     osg::RefMatrix* projection = new osg::RefMatrix;
-    //projection->makeFrustum(-right,right,-top,top,znear,zfar);
-    projection->makeFrustum(-right,right,-top,top,znear,zfar);
-    cv.pushProjectionMatrix(projection);
+    
+    projection->makeIdentity();
+    
 
     osg::RefMatrix* matrix = new osg::RefMatrix;
-    matrix->makeLookAt(bs.center()+osg::Vec3(0.0f,2.0f,0.0f)*bs.radius(),bs.center(),osg::Vec3(0.0f,0.0f,1.0f));
+    matrix->makeIdentity();
 
     cv.pushModelViewMatrix(matrix);
+    cv.pushProjectionMatrix(projection);
 
     if (!_localState.valid()){
        _localState = new osg::StateSet;
@@ -122,10 +113,11 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
     cv.popStateSet();
 
     // restore the previous model view matrix.
-    cv.popModelViewMatrix();
+    cv.popProjectionMatrix();
 
     // restore the previous model view matrix.
-    cv.popProjectionMatrix();
+    cv.popModelViewMatrix();
+
 
     // restore the previous renderbin.
     cv.setCurrentRenderBin(previousRenderBin);

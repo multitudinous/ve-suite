@@ -66,7 +66,7 @@ public:
    
    osg::ref_ptr<osg::StateSet> GetStateSet();
    osg::ref_ptr<osg::Texture3D> GetTextureData();
-   osg::ref_ptr<osg::Group> GetVolumeVisNode();
+   osg::ref_ptr<osg::Switch> GetVolumeVisNode();
    
 
    cfdVolumeVisualization& operator=(const cfdVolumeVisualization& rhs);
@@ -98,7 +98,7 @@ protected:
    cfdTextureManager* _tm;
 #ifdef _OSG
 
-   osg::ref_ptr<osg::Group>_volumeVizNode;
+   osg::ref_ptr<osg::Switch>_volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
    osg::BoundingBox* _bbox;
    osg::ref_ptr<osg::ClipNode> _clipNode;

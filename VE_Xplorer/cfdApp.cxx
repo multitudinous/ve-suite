@@ -288,7 +288,7 @@ void cfdApp::initScene( )
    _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
    _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-   _tbvHandler->SetSceneView(_sceneViewer.get());
+   //_tbvHandler->SetSceneView(_sceneViewer.get());
    _tbvHandler->InitVolumeVizNodes();
 #endif
 

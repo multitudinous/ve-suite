@@ -3,18 +3,22 @@
 
 #ifdef _OSG
 #ifdef CFD_USE_SHADERS
-#include <osg/Group>
-#include <osg/Texture3D>
-#include <osg/Projection>
+namespace osg{
+   class Group;
+   class Texture3D;
+}
+class cfdOSGAdvectionShaderManager;
+class cfdOSGTransferShaderManager;
 
-#include "cfdOSGAdvectionShaderManager.h"
-#include "cfdOSGTransferShaderManager.h"
-#include "cfdTextureManager.h"
+class cfdTextureManager;
+class cfdPBufferManager;
+
+
+class cfdUpdateTextureCallback;
+class cfd3DTextureCullCallback;
+class cfdOSGPingPongTexture3D;
+
 #include "cfdVolumeVisNodeHandler.h"
-#include "cfdUpdateTextureCallback.h"
-#include "cfd3DTextureCullCallback.h"
-#include "cfdOSGPingPongTexture3d.h"
-#include "cfdSwitch.h"
 
 class cfdVectorVolumeVisHandler : public cfdVolumeVisNodeHandler{
 public:
@@ -22,17 +26,14 @@ public:
    cfdVectorVolumeVisHandler(const cfdVectorVolumeVisHandler& vvnh);
    virtual ~cfdVectorVolumeVisHandler();
    virtual void Init();
-   void SetTextureManager(cfdTextureManager* tm);
+   virtual void SetTextureManager(cfdTextureManager* tm);
+
    void SetPBufferManager(cfdPBufferManager* pbm);
- 
- 
-   void EnableAdvectionShader();
-   void DisableAdvectionShader();
    void PingPongTextures();
 
    cfdVectorVolumeVisHandler& operator=(const cfdVectorVolumeVisHandler& vvnh);
 protected:
-   virtual void _attachVolumeVisNodeToGraph();
+   virtual void _setUpDecorator();
    void _createTexturePingPong();
    void _initPropertyTexture();
    void _createVelocityFromTextureManager();
@@ -40,18 +41,16 @@ protected:
 
    cfdOSGAdvectionShaderManager* _aSM;
    cfdOSGTransferShaderManager* _transferSM;
-   cfdSwitch* _shaderSwitch;
-   cfdTextureManager* _tm;
+   
+   cfd3DTextureCullCallback* _cullCallback;
    cfdUpdateTextureCallback* _velocityCbk;
    cfdPBufferManager* _pbuffer;
-   cfd3DTextureCullCallback* _cullCallback;
    cfdOSGPingPongTexture3D* _texturePingPong;
-   osg::ref_ptr<osg::Group> _advectionFragGroup;
+
    osg::ref_ptr<osg::Group> _advectionSlice;
    osg::ref_ptr<osg::Texture3D> _property;
    osg::ref_ptr<osg::Texture3D> _velocity;
 
-   
 };
 #endif //
 #endif //_OSG

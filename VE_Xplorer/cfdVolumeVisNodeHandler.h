@@ -9,29 +9,39 @@ namespace osg
    class Group;
    class Switch;
 }
+
+class cfdTextureManager;
 class cfdVolumeVisNodeHandler{
 public:
    cfdVolumeVisNodeHandler();
    cfdVolumeVisNodeHandler(const cfdVolumeVisNodeHandler& vvnh);
    virtual ~cfdVolumeVisNodeHandler();
 
+   void SetSwitchNode(osg::Switch* vvn);
+   void SetTextureManager(cfdTextureManager* tm);
    void SetBoundingBox(float* bbox);
+   void SetBoundingBoxName(char*name);
+   void SetDecoratorName(char* name);
+   bool IsThisActive();
    virtual void Init();
+   
    void TurnOnBBox();
    void TurnOffBBox();
-   void SetVolumeVizNode(osg::Group* vvn);
-   osg::Group* GetVisualization();
 
+   void EnableDecorator();
+   
    cfdVolumeVisNodeHandler& operator=(const cfdVolumeVisNodeHandler& vvnh);
 protected:
    void _createVisualBBox();
-   
-   virtual void _attachVolumeVisNodeToGraph();
-   
+   //set up the stateset for the decorator
+   virtual void _setUpDecorator()=0;
+   unsigned int _whichChildIsThis;
+   cfdTextureManager* _tm;
    osg::ref_ptr<osg::Switch>_bboxSwitch;
    osg::ref_ptr<osg::Group> _visualBoundingBox;
-   osg::ref_ptr<osg::Group> _vvN;
-   osg::ref_ptr<osg::Group> _topNode;
+   osg::ref_ptr<osg::Switch> _vvN;
+   osg::ref_ptr<osg::Group> _decoratorGroup;
+   osg::ref_ptr<osg::Group> _byPassNode;
    osg::BoundingBox _bbox;
 };
 

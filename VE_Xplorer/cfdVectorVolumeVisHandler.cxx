@@ -3,7 +3,18 @@
 #ifdef CFD_USE_SHADERS
 #include "cfdAdvectionSubGraph.h"
 #include "cfdVectorVolumeVisHandler.h"
+
+#include "cfdOSGAdvectionShaderManager.h"
+#include "cfdOSGTransferShaderManager.h"
+#include "cfdPBufferManager.h"
+#include "cfdTextureManager.h"
+
 #include "cfdAdvectPropertyCallback.h"
+#include "cfdUpdateTextureCallback.h"
+#include "cfd3DTextureCullCallback.h"
+
+#include "cfdOSGPingPongTexture3d.h"
+#include "cfdCopyTextureCallback.h"
 //////////////////////////////////////////////////////
 //Constructors                                      //
 //////////////////////////////////////////////////////
@@ -11,9 +22,7 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler()
 :cfdVolumeVisNodeHandler()
 {
    _aSM = 0;
-   _tm = 0;
-   _shaderSwitch = 0;
-    _velocityCbk = 0;
+   _velocityCbk = 0;
    _pbuffer = 0;
    _cullCallback = 0;
    _texturePingPong = 0;
@@ -25,15 +34,12 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler(const cfdVectorVolumeVisHan
 {
 
    _aSM = new cfdOSGAdvectionShaderManager(*vvnh._aSM);
-   _shaderSwitch = new cfdSwitch(*vvnh._shaderSwitch);
-   _tm = new cfdTextureManager(*vvnh._tm);
    _transferSM = new cfdOSGTransferShaderManager(*vvnh._transferSM);
 
    _velocityCbk = new cfdUpdateTextureCallback(*vvnh._velocityCbk);
    _pbuffer = vvnh._pbuffer;
    _cullCallback = new cfd3DTextureCullCallback(*vvnh._cullCallback);
    _texturePingPong = new cfdOSGPingPongTexture3D(*vvnh._texturePingPong);
-   _advectionFragGroup = new osg::Group(*vvnh._advectionFragGroup);
    _advectionSlice = new osg::Group(*vvnh._advectionSlice);
    _property = new osg::Texture3D(*vvnh._property);
    _velocity = new osg::Texture3D(*vvnh._velocity);
@@ -41,73 +47,53 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler(const cfdVectorVolumeVisHan
 ///////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler::~cfdVectorVolumeVisHandler()
 {
-
    if(_aSM){
       delete _aSM;
       _aSM = 0;
    }
-
-   if(_shaderSwitch){
-     delete _shaderSwitch;
-     _shaderSwitch = 0;
+   if(_transferSM){
+      delete _transferSM;
+      _transferSM = 0;
    }
-   if(_tm){
-      delete _tm;
-      _tm = 0;
+   if(_velocityCbk){
+      delete _velocityCbk;
+      _velocityCbk = 0;
+   }
+   if(_cullCallback){
+      delete _cullCallback;
+      _cullCallback = 0;
+   }
+   if(_texturePingPong){
+      delete _texturePingPong;
+      _texturePingPong = 0;
    }
 }
 //////////////////////////////////////
 void cfdVectorVolumeVisHandler::Init()
 {
-   if(!_bbox.valid()){
-      std::cout<<"Invalid bounding box!!"<<std::endl;
-      std::cout<<"cfdVolumeVizNodeHandler::Init!!"<<std::endl;
-      return;
-   }
-   if(!_vvN.valid()){
-      std::cout<<"Invalid volume viz node!!"<<std::endl;
-      std::cout<<"cfdVolumeVizNodeHandler::Init!!"<<std::endl;
-      return;
-   }
-   if(!_tm){
-      std::cout<<"Invalid TextureManager!!"<<std::endl;
-      std::cout<<"cfdScalarVolumeVisHandler::Init!!"<<std::endl;
-      return;
-   }
-   if(!_topNode.valid()){
-      _createVisualBBox();
-      _topNode = new osg::Group();
-      _topNode->setName("Scalar VolumeVisHandler");
-
-      //be able to turn the bounding box off/on
-      _bboxSwitch = new osg::Switch();
-      _bboxSwitch->setName("BBox Switch");
-      _bboxSwitch->addChild(_visualBoundingBox.get());
-      _topNode->addChild(_bboxSwitch.get());
-      _initPropertyTexture();
-      _attachVolumeVisNodeToGraph();
-      _createTexturePingPong();
-      _createTransferShader();
-   }
+   cfdVolumeVisNodeHandler::Init();
+   //be able to turn the bounding box off/on
+   SetBoundingBoxName("Vector VVH BBox");
+   SetDecoratorName("Advection VV Fragment PG");
 }
 ///////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createTransferShader()
 {
-   if(!_transferSM &&_tm&&_property.valid()){
+   if(!_transferSM && _tm && _property.valid()){
       int* fieldSize = _tm->fieldResolution();
       _transferSM = new cfdOSGTransferShaderManager();
       _transferSM->SetFieldSize(fieldSize[0],fieldSize[1],fieldSize[2]);
       _transferSM->SetPropertyTexture(_property.get());
       _transferSM->Init();
-      if(_advectionFragGroup.valid()){
-         _advectionFragGroup->setStateSet(_transferSM->GetShaderStateSet()); 
+      if(_decoratorGroup.valid()){
+         _decoratorGroup->setStateSet(_transferSM->GetShaderStateSet()); 
       }
    }
 }
 /////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_initPropertyTexture()
 {
-   if(_tm){
+   if(_tm && !_property.valid()){
       int* fieldSize = _tm->fieldResolution();
       int dataSize = fieldSize[0]*fieldSize[1]*fieldSize[2];
       unsigned char* data = new unsigned char[dataSize*4];
@@ -149,15 +135,12 @@ void cfdVectorVolumeVisHandler::_initPropertyTexture()
                              fieldSize[1],
                              fieldSize[2]);
       _property->setImage(propertyField);
+      _property->setSubloadCallback(new cfdCopyTextureCallback());
       if(data){
          delete [] data;
          data = 0;
       }
-   }else{
-      std::cout<<"Invalid field size!!"<<std::endl;
-      std::cout<<"cfdOSGTransferShaderManager::_initPropertyTexture"<<std::endl;
    }
-
 }
 ///////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
@@ -193,10 +176,11 @@ void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
       _velocityCbk =  new cfdUpdateTextureCallback();
       int* res = _tm->fieldResolution();
       _velocityCbk->setSubloadTextureSize(res[0],res[1],res[2]);
+      _velocity->setSubloadCallback(_velocityCbk);
    }
    _velocityCbk->SetTextureManager(_tm);
    _velocityCbk->SetDelayTime(1.0);
-   _velocity->setSubloadCallback(_velocityCbk);
+
   
 }
 ////////////////////////////////////////////////////////////////////////
@@ -205,13 +189,12 @@ void cfdVectorVolumeVisHandler::SetTextureManager(cfdTextureManager* tm)
    _tm = tm;
    _createVelocityFromTextureManager();
 }
-/////////////////////////////////////////////////////////////
-void cfdVectorVolumeVisHandler::_attachVolumeVisNodeToGraph()
+/////////////////////////////////////////////////
+void cfdVectorVolumeVisHandler::_setUpDecorator()
 {
    if(!_tm){
       return;
    }
-
    int* res = _tm->fieldResolution();
    if(!_aSM){
       _aSM = new cfdOSGAdvectionShaderManager();
@@ -220,51 +203,38 @@ void cfdVectorVolumeVisHandler::_attachVolumeVisNodeToGraph()
    }
    _aSM->Init();
 
-   if(!_shaderSwitch){
-      _shaderSwitch = new cfdSwitch();
-      _shaderSwitch->SetName("Advection Volume Switch");
-      _visualBoundingBox->addChild(_shaderSwitch->GetRawNode());
-      _bboxSwitch->addChild(_shaderSwitch->GetRawNode());
-   }
-   //0 == plain vis group (doesn't use shaders)
-   //1 == volume shader group (uses scalar texture)
-   ((osg::Group*)_shaderSwitch->GetRawNode())->addChild(_vvN.get());
-
+   _initPropertyTexture();    
    
-
-   //set up the shader nodes
-   if(!_advectionFragGroup.valid()){
-      _advectionFragGroup = new osg::Group();
-      _advectionFragGroup->setName("Advection VV Fragment PG");
-   }
-   ((osg::Group*)_shaderSwitch->GetRawNode())->addChild(_advectionFragGroup.get());
-   
-   //default to the "advection" 
-   _shaderSwitch->SetVal(1);
-   
-   //attach this node to the switch so we can turn off/on
-   //the fragment shader
-   osg::ref_ptr<osg::Group> attachToGroup = dynamic_cast<osg::Group*>
-	(((osg::Group*)_vvN->getChild(0))->getChild(0));
-        _advectionFragGroup->addChild(attachToGroup.get());
-
    //create the advection subgraph
    if(!_advectionSlice.valid()){
-      _advectionSlice = CreateAdvectionSubGraph(_tm).get();
-       
-      _advectionSlice->setStateSet(_aSM->GetShaderStateSet());   
+      _advectionSlice = CreateAdvectionSubGraph(_tm).get();   
    }
-   
-   if(_pbuffer){
-      osg::ref_ptr<osg::TexGenNode> tmpTGN = (osg::TexGenNode*)_advectionFragGroup->getChild(0);
-      _advectionFragGroup->setUpdateCallback(new cfdAdvectPropertyCallback(_advectionSlice.get()));
+   _advectionSlice->setStateSet(_aSM->GetShaderStateSet());
+
+   //set up the pbuffer stuff. . .
+   osg::ref_ptr<osg::TexGenNode> tgNode = 
+      dynamic_cast<osg::TexGenNode*>(_byPassNode.get());
+      
+      
+   if(!_cullCallback && _pbuffer ){
       _cullCallback = new cfd3DTextureCullCallback(_advectionSlice.get(),
                                                _property.get(),
-                                               _pbuffer,tmpTGN->getTexGen(),
+                                               _pbuffer,tgNode->getTexGen(),
                                                _tm->fieldResolution()[2]);
-      _advectionFragGroup->setCullCallback(_cullCallback);
+      _decoratorGroup->setCullCallback(_cullCallback);
    }
-}
+
+   if(!_decoratorGroup->getUpdateCallback()){
+      _decoratorGroup->setUpdateCallback(new cfdAdvectPropertyCallback(_advectionSlice.get()));
+   }
+
+   _createTransferShader();
+   if(_transferSM){
+       _decoratorGroup->setStateSet(_transferSM->GetShaderStateSet());
+   }
+   
+   _createTexturePingPong();
+} 
 /////////////////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::SetPBufferManager(cfdPBufferManager* pbm)
 {
@@ -276,7 +246,8 @@ void cfdVectorVolumeVisHandler::_createTexturePingPong()
    if(!_texturePingPong){
       _texturePingPong = new cfdOSGPingPongTexture3D();
    }
-   if(_aSM&&_property.valid()){
+   if(_aSM && _property.valid()){
+
       _texturePingPong->SetPingTexture(_aSM->GetPropertyTexture());
       _texturePingPong->SetPongTexture(_property.get());
    }
@@ -288,22 +259,6 @@ void cfdVectorVolumeVisHandler::PingPongTextures()
       _texturePingPong->PingPongTextures();
    }
 }
-
-///////////////////////////////////////////////////////
-void cfdVectorVolumeVisHandler::EnableAdvectionShader()
-{
-   if(_shaderSwitch){
-      _shaderSwitch->SetVal(1);
-   }
-}
-////////////////////////////////////////////////////////
-void cfdVectorVolumeVisHandler::DisableAdvectionShader()
-{
-   if(_shaderSwitch){
-      _shaderSwitch->SetVal(0);
-   }
-}
-
 //////////////////////////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler&
 cfdVectorVolumeVisHandler::operator=(const cfdVectorVolumeVisHandler& vvnh)
@@ -311,16 +266,11 @@ cfdVectorVolumeVisHandler::operator=(const cfdVectorVolumeVisHandler& vvnh)
    if(this != &vvnh){
       cfdVolumeVisNodeHandler::operator=(vvnh);
       _aSM = vvnh._aSM;
-      _advectionFragGroup = vvnh._advectionFragGroup;
       _texturePingPong = vvnh._texturePingPong;
-      _shaderSwitch = vvnh._shaderSwitch;
-      _tm = vvnh._tm;
-
       _velocityCbk = vvnh._velocityCbk;
       _pbuffer = vvnh._pbuffer;
       _cullCallback = vvnh._cullCallback;
       _texturePingPong = vvnh._texturePingPong;
-      _advectionFragGroup = vvnh._advectionFragGroup;
       _advectionSlice = vvnh._advectionSlice;
       _property = vvnh._property;
       _velocity = vvnh._velocity;
