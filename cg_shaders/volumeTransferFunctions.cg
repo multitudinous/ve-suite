@@ -5,11 +5,11 @@ struct f2app{
 
  f2app densityTransfer(float4 color : COLOR,
                 float3 texCoord:TEXCOORD0,
-                uniform sampler1D mat1Func:TEXUNIT0,
-                 uniform sampler1D mat2Func:TEXUNIT1,
-                 uniform sampler1D mat3Func:TEXUNIT2,
-                 uniform sampler1D mat4Func:TEXUNIT3,
-                 uniform sampler3D densityTexture:TEXUNIT4
+                 uniform sampler3D densityTexture:TEXUNIT0
+                uniform sampler1D mat1Func:TEXUNIT1,
+                 uniform sampler1D mat2Func:TEXUNIT2,
+                 uniform sampler1D mat3Func:TEXUNIT3,
+                 uniform sampler1D mat4Func:TEXUNIT4,
                  ) 
 {
    f2app retColor;
@@ -40,7 +40,7 @@ struct f2app{
 
 
    //sum up for total frag color
-   retColor.color =gray;/*red;float4(texCoord.x,texCoord.y,texCoord.z,1); float4(density.w,density.y,density.z,.5); + green + blue + yellow*/;
+   retColor.color = gray;/*red;float4(texCoord.x,texCoord.y,texCoord.z,1); float4(density.w,density.y,density.z,.5); + green + blue + yellow*/;
    //retColor.color.xyz = density.xyz;
    //retColor.color.w = 1.0;
  

@@ -19,6 +19,7 @@ public:
    void SetGamma(GLfloat gamma);
    void SetAlphaCutoff(GLfloat aCutoff);
    void SetTransferFunctionType(TransType type);
+   osg::Texture1D* GetTexture();
 
    cfdUpdateableOSGTexture1d& operator=(const cfdUpdateableOSGTexture1d& cb);
 protected:	

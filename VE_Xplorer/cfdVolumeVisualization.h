@@ -24,6 +24,7 @@ namespace osg{
 }
 #ifdef CFD_USE_SHADERS
 #include "cfdOSGScalarShaderManager.h"
+#include "cfdOSGTransferShaderManager.h"
 #endif
 #include <osg/BoundingBox>
 #include "cfdVolumeSliceSwitchCallback.h"
@@ -112,16 +113,7 @@ protected:
 #ifdef _OSG
 #ifdef CFD_USE_SHADERS
    cfdOSGScalarShaderManager* _sSM;
-
-   void _setupCGShaderPrograms(osg::StateSet *ss, 
-                     char* fragProgramFileName,
-                     char* fragFunctionName);
-   void _initTransferFunctionShader();
-   void _initTransferFunctions();  
-   void _initPropertyTexture();
-   void _attachTransferFunctionsToStateSet(osg::StateSet* ss);
-   void _attachPropertyTextureToStateSet(osg::StateSet* ss);
-
+   cfdOSGTransferShaderManager* _tSM;
 #endif
    osg::ref_ptr<osg::Group>_volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
@@ -129,8 +121,6 @@ protected:
    osg::ref_ptr<osg::ClipNode> _clipNode;
    osg::ref_ptr<osg::StateSet> _stateSet;
 
-   osg::ref_ptr<osg::StateSet> _scalarFragSS;
-   osg::ref_ptr<osg::StateSet> _transferFunctionFragSS;
    osg::ref_ptr<osg::StateSet> _advectionFragSS;
 
    osg::ref_ptr<osg::Switch> _bboxSwitch;
@@ -142,13 +132,7 @@ protected:
    osg::ref_ptr<osg::Material> _material;
   
    osg::ref_ptr<osg::Texture3D> _texture;
-   osg::ref_ptr<osg::Texture3D> _property;
-
-   osg::ref_ptr<osg::Texture1D> _trans1;
-   osg::ref_ptr<osg::Texture1D> _trans2;
-   osg::ref_ptr<osg::Texture1D> _trans3;
-   osg::ref_ptr<osg::Texture1D> _trans4;
-
+  
    osg::ref_ptr<osg::Image> _image;
    osg::ref_ptr<osg::Geode> _slices;
    osg::ref_ptr<osg::Group> _visualBoundingBox;
@@ -163,7 +147,6 @@ protected:
 
    cfdVolumeSliceSwitchCallback* _vSSCbk;
    cfdUpdateTextureCallback* _utCbk;
-   std::vector<cfdUpdateableOSGTexture1d> _transferFunctions;
 
 #endif
 

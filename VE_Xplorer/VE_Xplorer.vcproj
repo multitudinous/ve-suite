@@ -666,10 +666,16 @@ echo Done.
 				RelativePath=".\cfdObjects.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdOSGPingPongTexture3d.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdOSGScalarShaderManager.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdOSGShaderManager.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdOSGTransferShaderManager.cxx">
 			</File>
 			<File
 				RelativePath="..\VE_SceneGraph\cfdPfSceneManagement.cxx">
@@ -1813,10 +1819,16 @@ echo Done.
 				RelativePath="cfdObjects.h">
 			</File>
 			<File
+				RelativePath=".\cfdOSGPingPongTexture3d.h">
+			</File>
+			<File
 				RelativePath=".\cfdOSGScalarShaderManager.h">
 			</File>
 			<File
 				RelativePath=".\cfdOSGShaderManager.h">
+			</File>
+			<File
+				RelativePath=".\cfdOSGTransferShaderManager.h">
 			</File>
 			<File
 				RelativePath="..\VE_SceneGraph\cfdPfSceneManagement.h">

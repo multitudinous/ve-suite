@@ -25,10 +25,11 @@ cfdOSGScalarShaderManager::cfdOSGScalarShaderManager(const
 :cfdOSGShaderManager(sm)
 {
    if(this != &sm){
+      //we only want a pointer to the tm!!!!!
       _tm = sm._tm; 
-      _utCbk = sm._utCbk;
-      _scalarProp = sm._scalarProp;
-      _image = sm._image;
+      _utCbk = new cfdUpdateTextureCallback(*sm._utCbk);
+      _scalarProp = new osg::Texture3D(*(sm._scalarProp.get()));
+      _image = new osg::Image(*(sm._image.get()));
    }
 }
 ///////////////////////////////////////////////////////
@@ -110,7 +111,7 @@ void cfdOSGScalarShaderManager::Init()
       strcat(directory,"fragVol.cg");
       _setupCGShaderProgram(_ss.get(),directory,"fp_volume");
    }
-   _reinit = true;
+   _reinit = false;
 }
 
 ////////////////////////////////////////////////////////////////////////
@@ -133,8 +134,12 @@ cfdOSGScalarShaderManager& cfdOSGScalarShaderManager::operator=(const
 {
    if(this != &sm){
       cfdOSGShaderManager::operator=(sm);
-      _tm = sm._tm; 
-      _utCbk = sm._utCbk;
+      _tm = sm._tm;
+      if(_utCbk){
+         delete _utCbk;
+         _utCbk = 0;
+      }
+      _utCbk = new cfdUpdateTextureCallback(*sm._utCbk);
       _scalarProp = sm._scalarProp;
       _reinit = sm._reinit;
    }
