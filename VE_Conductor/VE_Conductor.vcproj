@@ -28,7 +28,20 @@
 				Detect64BitPortabilityProblems="TRUE"
 				DebugInformationFormat="4"/>
 			<Tool
-				Name="VCCustomBuildTool"/>
+				Name="VCCustomBuildTool"
+				Description="Generating stubs. . ."
+				CommandLine="echo C++ stubs. . .
+$(OMNI_HOME)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include  -C./skel  ./idl/Observer.idl
+$(OMNI_HOME)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include  -C./skel   ./idl/VjObs.idl
+echo Done.
+
+echo Java stubs. . .
+$(JAVA_HOME)\bin\idlj -fall -I$(VJ_BASE_DIR)/include -td ./java_stuff -I./idl ./idl/VjObs.idl
+$(JAVA_HOME)\bin\idlj -fall -I$(VJ_BASE_DIR)/include -td ./java_stuff -I./idl ./idl/Observer.idl
+echo Done
+"
+				AdditionalDependencies="VjObs.idl;Obsever.idl"
+				Outputs="VjObs.cpp;Observer.cpp;VjObs.java;Observer.java"/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/VE_Conductor.exe"
@@ -42,7 +55,9 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"/>
+				Name="VCPreBuildEventTool"
+				CommandLine="
+"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -156,14 +171,6 @@
 	<References>
 	</References>
 	<Files>
-		<Filter
-			Name="srcs"
-			Filter="">
-		</Filter>
-		<Filter
-			Name="headers"
-			Filter="">
-		</Filter>
 	</Files>
 	<Globals>
 	</Globals>

@@ -949,7 +949,12 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_p &value )
    this->mIso_value = value[ 1 ];
    cout<<"iso_value"<<this->mIso_value<<endl;
 
-   this->mTimesteps = value[ 2 ];
+   //NOTE: Data is oneway transfer from
+   //cfdApp -> GUI so we don't need to
+   //transfer from the GUI -> cfdApp
+   //DON'T set array index [2]  on the
+   //GUI side
+   //this->mTimesteps = value[ 2 ];
 
    this->mSc = value[ 3 ];
    cout<<"select scalar:"<<this->mSc<<endl;

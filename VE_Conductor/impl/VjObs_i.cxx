@@ -173,22 +173,26 @@ void VjObs_i::update()
 
 VjObs::scalar_p* VjObs_i::update_scalar()
 {
-   return this->scl_name._retn();
+   VjObs::scalar_p_var scl_name_=new VjObs::scalar_p(scl_name);
+  return scl_name_._retn();
 }
 
 VjObs::scalar_p* VjObs_i::update_vector()
 {
-   return this->vec_name._retn();
+    VjObs::scalar_p_var vec_name_=new VjObs::scalar_p(vec_name);
+    return vec_name_._retn();
 }
 
 VjObs::scalar_p* VjObs_i::get_geo_name()
 {
-   return this->geo_name._retn();
+  VjObs::scalar_p_var geo_name_=new VjObs::scalar_p(geo_name);
+  return geo_name_._retn();
 }
 
 VjObs::scalar_p* VjObs_i::get_teacher_name()
 {
-   return this->teacher_name._retn();
+   VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
+   return teacher_name_._retn();
 }
 /*
 void VjObs_i::put_cur_obj(Observer::obj_p_var o)
@@ -221,18 +225,20 @@ short VjObs_i::get_timesteps()
 */
 VjObs::scalar_p * VjObs_i::get_dataset_names()
 {
-   return this->dataset_names._retn();
+   VjObs::scalar_p_var dataset_names_=new VjObs::scalar_p(dataset_names);
+   return dataset_names_._retn();
 }
 
 VjObs::obj_p * VjObs_i::get_dataset_types()
 {
-   return this->dataset_types._retn();
+  VjObs::obj_p_var dataset_types_=new VjObs::obj_p(dataset_types);
+   return dataset_types_._retn();
 }
 
 VjObs::obj_p * VjObs_i::get_num_scalars_per_dataset()
 {
-   return this->num_scalars_per_dataset._retn();
-}
+   VjObs::obj_p_var num_scalars_per_dataset_=new VjObs::obj_p(num_scalars_per_dataset);
+   return num_scalars_per_dataset_._retn();}
 
 VjObs::obj_p * VjObs_i::get_num_vectors_per_dataset()
 {
@@ -433,6 +439,7 @@ CORBA::Short VjObs_i::getPostdataState()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
+
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
    return mPostdata_state;
 }
@@ -456,8 +463,8 @@ CORBA::Short VjObs_i::getPreState()
 
 void VjObs_i::setTimesteps(CORBA::Short value)
 {
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0)
+      << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    mTimesteps = value;
@@ -466,8 +473,8 @@ void VjObs_i::setTimesteps(CORBA::Short value)
 CORBA::Short VjObs_i::getTimesteps()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 0)
+      << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
    return mTimesteps;
 }
 
@@ -619,10 +626,18 @@ CORBA::Short VjObs_i::get_geo_num()
       this->geo_name->length( numGeoArrays );
       for(int i = 0; i < numGeoArrays; i++)
       {
+         vprDEBUG(vprDBG_ALL,0)
+            << " Number of geometries to be transfered to the client: "
+            << numGeoArrays
+            << std::endl << vprDEBUG_FLUSH;
          this->geo_name[ i ] = CORBA::string_dup(
                                   this->mParamReader->files[ i ]->fileName );
       }
    }
+         vprDEBUG(vprDBG_ALL,0)
+            << " Number of geometries to be transfered to the client: "
+            << numGeoArrays
+            << std::endl << vprDEBUG_FLUSH;
    return numGeoArrays;
 }
 
@@ -753,7 +768,8 @@ CORBA::Short VjObs_i::GetNumberOfSounds()
 
 VjObs::scalar_p* VjObs_i::GetSoundNameArray()
 {
-   return this->sound_names._retn();
+   VjObs::scalar_p_var sound_names_=new VjObs::scalar_p(sound_names);
+  return sound_names_._retn();
 }
 
 void VjObs_i::SetClientInfoFlag( CORBA::Short value )
@@ -782,7 +798,12 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
       this->mIso_value = value[ 1 ];
       //cout<<"iso_value"<<this->mIso_value<<endl;
 
-      this->mTimesteps = value[ 2 ];
+      //NOTE: Data is oneway transfer from
+      //cfdApp -> GUI so we don't need to
+      //transfer from the GUI -> cfdApp
+      //DON'T set array index [2]  on the
+      //GUI side
+      //this->mTimesteps = value[ 2 ];
 
       this->mSc = value[ 3 ];
       //cout<<"select scalar:"<<this->mSc<<endl;
