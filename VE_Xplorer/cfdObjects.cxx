@@ -796,22 +796,8 @@ cfdDataSet * cfdObjects::activeMeshedVolume = NULL;
 cfdDataSet * cfdObjects::activeParticleData = NULL;
 cfdDataSet * cfdObjects::activeSurfaceData = NULL;
 float cfdObjects::vectorScale = 0.0;
-bool  cfdObjects::timeToUpdate = false;
 int   cfdObjects::particleOption = 0;
 float cfdObjects::particleScale = 0.0;
-
-bool cfdObjects::GetTimeToUpdateFlag( void )
-{
-   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   return timeToUpdate;
-}
-
-void cfdObjects::SetTimeToUpdateFlag( bool x )
-{
-   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-
-   timeToUpdate = x;
-}
 
 void cfdObjects::SetActiveDataSet( cfdDataSet * dataset )
 {

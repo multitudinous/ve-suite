@@ -1845,11 +1845,7 @@ void cfdApp::preFrame( void )
                cfdTransientFlowManager * tfmTest = 
                   dynamic_cast<cfdTransientFlowManager *>( this->dataList[ i ] );
                
-               //cfdAnimatedImage* animTest = 
-               //   dynamic_cast< cfdAnimatedImage* >( this->dataList[ i ] );
-
-               if ( tfmTest != NULL ) //&&
-               //     tfmTest->GetFrameDataType() != cfdFrame::GEOM )
+               if ( tfmTest != NULL ) 
                {
                   tfmTest->CreateNodeList();
 
@@ -2136,7 +2132,8 @@ void cfdApp::preFrame( void )
 
       //biv--convert the cfdSequence nodes to pfSequence nodes
       //for proper viewing in perfly
-      writePFBFile(worldDCS,pfb_filename);
+      //writePFBFile(worldDCS,pfb_filename);
+      pfdStoreFile( worldDCS, pfb_filename );
 
       // store the active geometry and viz objects as a pfb
       // (but not the sun, menu, laser, or text)
@@ -2285,11 +2282,8 @@ void cfdApp::preFrame( void )
 
             if ( tfmTest != NULL )
             {
-               if ( tfmTest->GetFrameDataType() != cfdFrame::GEOM )
-               {
-                  tfmTest->ClearSequence();
-                  tfmTest->isTimeToUpdateSequence = 1;
-               }
+               tfmTest->ClearSequence();
+               tfmTest->isTimeToUpdateSequence = 1;
             }
          }
       }
@@ -2758,22 +2752,6 @@ void cfdApp::preFrame( void )
       this->chgMod = false;
    }  //change the model's property
 
-///////////////////////////
-//biv: move this to start of postframe?
-   // if transient data is being displayed, then update gui progress bar
-   if (  this->activeSequenceObject )
-   {
-      int currentFrame = this->activeSequenceObject->GetFrameOfSequence();
-      //cout << " Current Frame :  " << currentFrame << endl;
-      if (this->lastFrame != currentFrame )
-      {
-#ifdef TABLET 
-         this->setTimesteps( currentFrame );
-#endif // TABLET
-         this->lastFrame = currentFrame;
-      }
-   }
-///////////////////////////
 
 #ifdef _TAO
    if ( cfdObjects::GetActiveDataSet() != NULL )
@@ -2795,6 +2773,20 @@ void cfdApp::intraFrame()
 void cfdApp::postFrame()
 {
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
+
+   // if transient data is being displayed, then update gui progress bar
+   if (  this->activeSequenceObject )
+   {
+      int currentFrame = this->activeSequenceObject->GetFrameOfSequence();
+      //cout << " Current Frame :  " << currentFrame << endl;
+      if (this->lastFrame != currentFrame )
+      {
+#ifdef TABLET 
+         this->setTimesteps( currentFrame );
+#endif // TABLET
+         this->lastFrame = currentFrame;
+      }
+   }
 
 #ifdef TABLET
    this->GetCfdStateVariables();
@@ -2872,7 +2864,6 @@ void cfdApp::streamers( void * )
          this->interactiveObject = false;
          this->activeObject = NULL;
       }
-      //cfdObjects::SetTimeToUpdateFlag( true );
       this->computeActorsAndGeodes = false;   
    }
 }
@@ -2934,7 +2925,6 @@ void cfdApp::intraParallelThread( void * )
                this->activeObject->Update(); 
                this->activeObject->UpdateGeode();     
                this->activeObject = NULL;
-               //cfdObjects::SetTimeToUpdateFlag( true );
                this->computeActorsAndGeodes = false;
             }
             else if ( tfmTest != NULL )
@@ -2969,7 +2959,6 @@ void cfdApp::intraParallelThread( void * )
                   }
                }
                this->activeObject = NULL;
-               //cfdObjects::SetTimeToUpdateFlag( true );
                this->computeActorsAndGeodes = false;
             }
             else if ( streamersTest != NULL )
@@ -2986,7 +2975,6 @@ void cfdApp::intraParallelThread( void * )
                this->animStreamer->SetPolyDataSource( this->streamlines->GetStreamersOutput() );
                this->animStreamer->Update();
                this->activeObject = NULL;
-               //cfdObjects::SetTimeToUpdateFlag( true );
                this->computeActorsAndGeodes = false;   
             }
             else if ( animImgTest != NULL )
@@ -2994,7 +2982,6 @@ void cfdApp::intraParallelThread( void * )
                // if we are not already computing animatedImages
                this->animImg->Update();
                this->activeObject = NULL;
-               //cfdObjects::SetTimeToUpdateFlag( true );
                this->computeActorsAndGeodes = false;   
             }
 
@@ -3011,7 +2998,8 @@ void cfdApp::intraParallelThread( void * )
       }
    } // End of While loop
 }
-void cfdApp::writePFBFile(pfNode* graph,char* fileName)
+
+/*void cfdApp::writePFBFile(pfNode* graph,char* fileName)
 {
    //make sure we have a writer
    if(!_cfdWT){
@@ -3026,6 +3014,7 @@ void cfdApp::writePFBFile(pfNode* graph,char* fileName)
    _cfdWT->writePfbFile();
 
 }
+*/
 
 int main(int argc, char* argv[])
 {

@@ -141,9 +141,6 @@ class cfdObjects
       static void SetVectorScale( float );
       static float GetVectorScale();
 
-      static bool GetTimeToUpdateFlag( void );
-      static void SetTimeToUpdateFlag( bool );
-
       static void SetParticleOption( int );
       static int GetParticleOption();
 
@@ -163,9 +160,6 @@ class cfdObjects
       // used by cfdPolydata for setting the type and size of particles
       static int particleOption;   // point cloud or variably sized spheres
       static float particleScale;
-
-      static bool timeToUpdate;
-      static vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
 
       pfGeode *geode;
       pfGeode* tempGeode;
