@@ -8,6 +8,9 @@
 #include <vtkUnstructuredGridReader.h>
 #include <vtkRectilinearGrid.h>
 #include <vtkUnstructuredGrid.h>
+#ifdef WIN32
+#include <direct.h>
+#endif
 ////////////////////////////////////
 //Constructor                     // 
 ////////////////////////////////////
@@ -65,6 +68,13 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
   
    setVelocityFileName(v._vFileName);
    setOutputDirectory(v._outputDir);
+   if(_validPt.size()){
+      _validPt.clear();
+   }
+   unsigned int nPts = v._validPt.size();
+   for(unsigned int i = 0; i < nPts; i++){
+      _validPt.push_back(v._validPt.at(i));
+   }
 }
 /////////////////////////////////////
 //Destructor                       //
@@ -99,6 +109,10 @@ VTKDataToTexture::~VTKDataToTexture()
    if(_usgrid){
       _usgrid->Delete();
    }
+   if(_validPt.size()){
+      _validPt.clear();
+   }
+   
 }
 //////////////////////////////
 void VTKDataToTexture::reset()
@@ -129,6 +143,10 @@ void VTKDataToTexture::reset()
    _vectorRanges.clear();
   
    _nPtDataArrays = 0;
+   if(_validPt.size()){
+      _validPt.clear();
+   }
+   
 }
 ///////////////////////////////////////////////////////////
 //set the file name                                      //
@@ -207,7 +225,13 @@ void VTKDataToTexture::createTextures()
       std::cout<<"WARNING: Resolution set to the min!:"<<std::endl;
       std::cout<<" : VTKDataToTexture::createTextures()"<<std::endl;
    }
-
+   //build the octree
+   _cLocator = vtkCellLocator::New();
+   _cLocator->SetDataSet(_dataSet);
+   
+   _cLocator->SetCacheCellBounds(1);
+   //build the octree
+   _cLocator->BuildLocator();
    //get the info about the data in the data set
    _nPtDataArrays = _dataSet->GetPointData()->GetNumberOfArrays();
    _nScalars = countNumberOfParameters(1);
@@ -216,8 +240,10 @@ void VTKDataToTexture::createTextures()
    _vectorNames = getParameterNames(3,_nVectors);
 
    _cleanUpFileNames();
-   
-   
+
+   std::cout<<"Sampling valid domain. . ."<<std::endl;
+   _createValidityTexture();
+
    std::cout<<"Processing scalars:"<<std::endl;;
    for(int i = 0; i < _nScalars; i++){
       double bbox[6] = {0,0,0,0,0,0};
@@ -254,7 +280,125 @@ void VTKDataToTexture::createTextures()
       std::cout<<"      Cleaning up."<<std::endl;
       _velocity.clear();
    }
+   _cLocator->Delete();
    
+}
+///////////////////////////////////////////////
+void VTKDataToTexture::_createValidityTexture()
+{
+    double bbox[6] = {0,0,0,0,0,0};
+   //a bounding box
+   _dataSet->GetBounds(bbox);
+
+   //depending on the resolution we need to resample
+   //the data
+   float delta[3] = {0,0,0};
+   //delta x
+   delta[0] = (bbox[1] - bbox[0])/(_resolution[0]-1);
+   //delta y
+   delta[1] = (bbox[3] - bbox[2])/(_resolution[1]-1);
+   //delta z
+   delta[2] = (bbox[5] - bbox[4])/(_resolution[2]-1);
+
+   double deltaDist = sqrt(delta[0]*delta[0] + delta[1]*delta[1]+delta[2]*delta[2]);
+   //the bottom corner of the bbox/texture
+   double pt[3] ={0,0,0};
+   pt[0] = bbox[0];
+   pt[1] = bbox[2];
+   pt[2] = bbox[4];
+   
+   //we're going to create a cartiesian mesh that fills the
+   //bounding box of the data. This is so that we can represent
+   //the data as a texture
+   //our original cell that contains our cartesian point
+   vtkGenericCell* cell = vtkGenericCell::New();
+   
+   vtkIdType cellId,subId;
+   double dist = 0;
+   double closestPt[3];
+   double pcoords[3];
+   double* weights = 0;
+   unsigned int i=0;
+   unsigned int j=0;
+   unsigned int k = 0;
+
+   unsigned int nX = _resolution[0]-1;
+   unsigned int nY = _resolution[1]-1;
+   unsigned int nZ = _resolution[2]-1;
+
+   unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
+  
+   for(unsigned int l = 0; l < nPixels; l++){
+      pt[2] = bbox[4] + k*delta[2];
+      pt[1] = bbox[2] + j*delta[1];
+      pt[0] = bbox[0] + (i++)*delta[0];
+       _cLocator->FindClosestPoint(pt,closestPt,
+		                          cell,cellId,subId, dist);
+       
+       if(dist < deltaDist){
+          weights = new double[cell->GetNumberOfPoints()];
+          //check to see if this point is in
+	        //the returned cell
+           if(cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights)){
+              _validPt.push_back(true);
+           }else{
+              _validPt.push_back(false);
+           }
+
+           if(weights){
+              delete [] weights;
+              weights = 0;
+           }
+       }else{
+          _validPt.push_back(false);
+       }
+      //check if it is time to reset
+      if((unsigned int)i > (unsigned int)nX){
+         i = 0;
+         j +=1;
+         if((unsigned int)j > (unsigned int)nY){
+            j = 0;
+            k +=1;
+            if((unsigned int)k > (unsigned int)nZ){
+               j = 0;
+               k +=1;
+            }
+         }
+      }
+      
+      
+   }
+   //resample the data into a cartesian grid
+   /*for(int k = 0; k < _resolution[2]; k++){
+      pt[2] = bbox[4] + k*delta[2];
+      for(int j = 0; j < _resolution[1]; j++){
+          pt[1] = bbox[2] +  j*delta[1];
+          for(int i= 0; i < _resolution[0]; i++){
+             pt[0] = bbox[0] + i*delta[0];
+              
+             _cLocator->FindClosestPoint(pt,closestPt,
+		                               cell,cellId,subId, dist);
+             if(dist <= deltaDist){
+                weights = new double[cell->GetNumberOfPoints()];
+                //check to see if this point is in
+	             //the returned cell
+                if(cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights)){
+                 _validPt.push_back(true);
+                }else{
+                    _validPt.push_back(false);
+                }
+                if(weights){
+                  delete [] weights;
+                  weights = 0;
+                }
+             }else{
+                 _validPt.push_back(false);
+             }
+          }
+      }
+   }*/
+   
+   cell->Delete();
 }
 /////////////////////////////////////////////////////////////////////
 void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
@@ -263,13 +407,7 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    //a bounding box
    _dataSet->GetBounds(bbox);
    
-   //create an octree representation of the
-   //dataset
-   vtkCellLocator* cLocator = vtkCellLocator::New();
-   cLocator->SetDataSet(_dataSet);
-
-   //build the octree
-   cLocator->BuildLocator();
+  
 
    //depending on the resolution we need to resample
    //the data
@@ -298,7 +436,7 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    double closestPt[3];
    double pcoords[3];
    double* weights = 0;
-
+   int index = 0;
    //resample the data into a cartesian grid
    for(int k = 0; k < _resolution[2]; k++){
       pt[2] = bbox[4] + k*delta[2];
@@ -306,30 +444,36 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
           pt[1] = bbox[2] +  j*delta[1];
           for(int i= 0; i < _resolution[0]; i++){
              pt[0] = bbox[0] + i*delta[0];
-              
-             cLocator->FindClosestPoint(pt,closestPt,
+             if(_validPt.at(index++)){
+                _cLocator->FindClosestPoint(pt,closestPt,
 		                               cell,cellId,subId, dist);
-              weights = new double[cell->GetNumberOfPoints()];
-	           //check to see if this point is in
-	           //the returned cell
-              if(cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights)){
-                  //use the weights to interpolate a velocity
-		             //at our cell pt
-		             _interpolateDataInCell(cell,weights,dataValueIndex,isScalar); 
-              }else{                     
-                 //point isn't in a cell
-	              //so set the texture data to 0
-                 _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar);
-              }
-              if(weights){
-                 delete [] weights;
-                 weights = 0;
-              }
+                weights = new double[cell->GetNumberOfPoints()];
+	             //check to see if this point is in
+	             //the returned cell
+                cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
+                _interpolateDataInCell(cell,weights,dataValueIndex,isScalar); 
+                /*if(){
+                   //use the weights to interpolate a velocity
+		              //at our cell pt
+		             
+                }else{                     
+                   //point isn't in a cell
+	                //so set the texture data to 0
+                   _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar);
+                }*/
+                if(weights){
+                   delete [] weights;
+                   weights = 0;
+                }
+             }else{
+               //point isn't in a cell
+	            //so set the texture data to 0
+               _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar); 
+             }
           } 
-      } 
+      }
    } 
    //cleanup?
-   cLocator->Delete();
    cell->Delete();
     
 }
@@ -391,11 +535,10 @@ char* VTKDataToTexture::_cleanUpFileNames()
    }
    return ptr;
 }
-///////////////////////////////////////////////////////////////
-void VTKDataToTexture::_addOutSideCellDomainDataToFlowTexture(int index,int isScalar)
+///////////////////////////////////////////////////////////////////////
+void VTKDataToTexture::_addOutSideCellDomainDataToFlowTexture(int index,
+                                                       int isScalar)
 {
-   
-
    if(isScalar){
       FlowPointData data;
       data.setData(0,0,0,0);
@@ -631,6 +774,16 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
       strcpy(posName,"./");
    }
    strcat(posName,"/vectors/");
+#ifdef WIN32
+   //check to see if the directory exists
+   if( _mkdir( posName ) == 0 ){
+      std::cout<<"Created directory: "<<posName<<std::endl;
+      std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
+   }else{
+      std::cout<<"Directory: "<<posName<<" exists."<<std::endl;
+      std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
+   }
+#endif
    strcat(posName,_vectorNames[whichVector]);
    
    if(_vFileName){
@@ -657,6 +810,16 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
       strcpy(name,"./");
    }
    strcat(name,"/scalars/");
+#ifdef WIN32
+   //check to see if the directory exists
+   if( _mkdir( name) == 0 ){
+      std::cout<<"Created directory: "<<name<<std::endl;
+      std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
+   }else{
+      std::cout<<"Directory: "<<name<<" exists."<<std::endl;
+      std::cout<<"VTKDataToTexture::writeVelocityTexture"<<std::endl;
+   }
+#endif
    strcat(name,_scalarNames[whichScalar]);
    
    if(_vFileName){

@@ -4,6 +4,7 @@
 #include <vtkDataSet.h>
 #include <vtkUnstructuredGridReader.h>
 #include <vtkRectilinearGridReader.h>
+#include <vtkCellLocator.h>
 #include "flowtexture.h"
 
 
@@ -82,7 +83,9 @@ protected:
    std::vector<FlowTexture> _velocity;
    std::vector<FlowTexture> _curScalar;
    
-
+   //store the info if sampled pts are 
+   //inside the computational domain
+   void _createValidityTexture();
    //resample the data into a cartesian
    //representation based on the desired
    //resolution and the bbox of the data
@@ -117,10 +120,12 @@ protected:
    int _nPtDataArrays;
    std::vector<double*> _scalarRanges;
    std::vector<double*> _vectorRanges;
+   std::vector<bool> _validPt;
    char** _scalarNames;
    char** _vectorNames;
 
    vtkDataSet* _dataSet;
+   vtkCellLocator* _cLocator;
    vtkUnstructuredGridReader* _usgrid;
    vtkRectilinearGridReader* _rgrid;
 };
