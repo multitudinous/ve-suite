@@ -45,7 +45,8 @@ void tecplotReader::allocateVariables()
    for ( int i=0;i<3;i++ )
    {      
       parameterData[ i ] = vtkFloatArray::New();
-   }   
+   }
+   
    parameterData[ 0 ]->SetNumberOfComponents( 3 ); //velocity vector
    parameterData[ 0 ]->SetNumberOfTuples( 2*nX*nY );
    parameterData[ 0 ]->SetName( "Velocity" );
@@ -95,12 +96,20 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       //search for "I=" in line
       char* pch;
       pch = strstr( line, "I=" ); pch = pch+2; nX = atoi(pch);
-      if ( debug ) 
-         std::cout<<"nX :"<< nX <<std::endl;
       //search for "J=" in line
-      pch = strstr( line, "J=" ); pch = pch+2; nY = atoi(pch);
-      if ( debug ) 
-         std::cout<<"nY :"<< nY <<std::endl;
+      pch = strstr( line, "J=" );
+      if ( pch !=NULL ) //if there is a "J=" then
+      {
+         pch = pch+2;
+         nY = atoi(pch);
+      }
+      else //if there is no "J=", it is a square grid 
+      {
+         nY = (int)(sqrt( nX )); //use the sqrt of current value of nX as nY
+         nX = (int)(sqrt( nX )); //reset nX to its new valu
+      }
+      if ( debug ) std::cout<<"nX :"<< nX <<std::endl<<"nY :"<< nY <<std::endl;
+      
 
       //allocate memory since we know nX and nY now
       allocateVariables();
@@ -133,9 +142,9 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          parameterData[ 0 ]->SetComponent( j+numVertices, 2, w[j] );
          parameterData[ 1 ]->SetComponent( j, 0, measurement[j] );
          parameterData[ 1 ]->SetComponent( j+numVertices, 0, measurement[j] );
-         parameterData[ 2 ]->SetComponent( j, 0, absVel[j] );
-         
+         parameterData[ 2 ]->SetComponent( j, 0, absVel[j] );         
          parameterData[ 2 ]->SetComponent( j+numVertices, 0, absVel[j] );
+         
       }
       pts = vtkPoints::New();
       int* cPt = new int [ 8 ];  //HEX elements assumed, coz data is taken from PIV runs
