@@ -2,6 +2,7 @@
 #define UIDIALOG_H
 
 #include <wx/wx.h>
+#include <wx/notebook.h>
 
 #ifdef WIN32
 #pragma warning(disable : 4786)
