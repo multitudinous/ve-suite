@@ -32,12 +32,12 @@
 
 #include "VE_i.h"
 #include <iostream>
+#include <vpr/Sync/Guard.h>
   
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))
   {
-    calcFlag = false;
     UIName_=name;
   }
   
@@ -46,6 +46,30 @@ Body_UI_i::~Body_UI_i (void)
   {
   }
   
+// This returns the latest network string 
+// This is here so that the drawing sequence in vrjuggler 
+// doesn't thread lock with executive CORBA calls
+std::string Body_UI_i::GetNetworkString( void )
+{
+   vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
+   if ( !networkStringBuffer.empty() )
+   {
+      std::vector< std::string >::iterator iter;
+      iter = networkStringBuffer.begin();
+      std::string temp( (*iter) );
+      networkStringBuffer.erase( iter );
+      return temp;
+   }
+   return 0;
+}
+
+// Complimentary function to the above function
+void Body_UI_i::SetNetworkString( char* temp )
+{
+   vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
+   networkStringBuffer.push_back( std::string( temp ) );
+}
+
 void Body_UI_i::UpdateNetwork (
     const char * network
     ACE_ENV_ARG_DECL
@@ -128,12 +152,17 @@ void Body_UI_i::Raise (
               !temp.compare(0,30,"Successfully Scheduled Network" ) ||
               !temp.compare(0,22,"Connected to Executive") )
          {
-            // we need to buffer the newtork strings here
-            // that way we are not makign calls from juggler 
-            // threads directly to the ce all the time
-            // this would prevent the threads from locking
             std::cout << "|\tGoing To Do Something" << std::endl;
-            calcFlag = true;
+            try 
+            { 
+               char* network = 0;
+               network = executive_->GetNetwork();
+               this->SetNetworkString( network );
+            } 
+            catch (CORBA::Exception &) 
+            {
+               std::cerr << "CFD DEBUG: cfdExecutive : no exec found! " << std::endl;
+            }
          }
          else
          {

@@ -41,6 +41,8 @@
 #include "moduleS.h"
 //#include "moduleC.h"
 #include <string>
+#include <vector>
+#include <vpr/Sync/Mutex.h>
 
 #if !defined (ACE_LACKS_PRAGMA_ONCE)
 #pragma once
@@ -49,32 +51,35 @@
 //Class Body_UI_i
 class  Body_UI_i : public virtual POA_Body::UI
 {
- public:
-  //Constructor 
-  Body_UI_i (Body::Executive_ptr exec, std::string name);
+   public:
+      //Constructor 
+      Body_UI_i (Body::Executive_ptr exec, std::string name);
   
-  //Destructor 
-  virtual ~Body_UI_i (void);
+      //Destructor 
+      virtual ~Body_UI_i (void);
   
-  std::string UIName_;
+      std::string UIName_;
+      std::string GetNetworkString( void );
 
- protected:
-  Body::Executive_var executive_;
-  //cfdExecutive* executive;
-  bool calcFlag;
+   protected:
+      Body::Executive_var executive_;
+      std::vector< std::string > networkStringBuffer;
+      vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
+      void SetNetworkString( char* );
   
- public:
+   public:
 
-  void SetcfdExecutive( bool* x) { 
-	  calcFlag = x; 
-  };
-
-  bool GetCalcFlag( void ) 
-  { 
-     bool temp = calcFlag;
-     calcFlag = false;
-     return temp;
-  };
+      bool GetCalcFlag( void ) 
+      { 
+         if ( !networkStringBuffer.empty() )
+         {
+            return true;
+         }
+         else
+         {
+            return false;
+         }
+      };
 
 virtual void UpdateNetwork (
     const char * network

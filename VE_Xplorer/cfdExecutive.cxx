@@ -69,7 +69,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
 
    this->_doneWithCalculations = true;
    this->runGetEverythingThread = true;
-   this->updateNetworkString = false;
+   //this->updateNetworkString = false;
    //this->thread = 0;
 
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
@@ -266,18 +266,22 @@ void cfdExecutive::init_orb_naming()
 */
 void cfdExecutive::GetNetwork ( void )
 {
+/*  
    char* network = 0;
-  
    try 
    { 
       network = _exec->GetNetwork();
-      vprDEBUG(vprDBG_ALL,2)  << "|\tNetwork String : " << network 
-                              << std::endl << vprDEBUG_FLUSH;
    } 
    catch (CORBA::Exception &) 
    {
       std::cerr << "ERROR: cfdExecutive : no exec found! " << std::endl;
    }
+*/
+   // Get buffer value from Body_UI implementation
+   std::string temp( ui_i->GetNetworkString() );
+   const char* network = temp.c_str();
+   vprDEBUG(vprDBG_ALL,2)  << "|\tNetwork String : " << network 
+                              << std::endl << vprDEBUG_FLUSH;
 
 /////////////////////////////
 // This code taken from Executive_i.cpp
@@ -371,7 +375,7 @@ void cfdExecutive::GetEverything( void )
    //while ( runGetEverythingThread )
    {
       //vpr::System::msleep( 500 );  // half-second delay
-   if ( !CORBA::is_nil( this->_exec) && updateNetworkString )
+   if ( !CORBA::is_nil( this->_exec) )//&& updateNetworkString )
    {
       vprDEBUG(vprDBG_ALL,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
       GetNetwork();
@@ -390,7 +394,7 @@ void cfdExecutive::GetEverything( void )
             if ( temp != NULL )
             {
                _plugins[ iter->first ] = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
-              // When we create the _plugin map here we will do the following
+               // When we create the _plugin map here we will do the following
                _plugins[ iter->first ]->InitializeNode( cfdPfSceneManagement::instance()->GetWorldDCS() );
                _plugins[ iter->first ]->AddSelfToSG();
                cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
@@ -441,7 +445,7 @@ void cfdExecutive::GetEverything( void )
    {
       vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been intialized or not time to update! " <<  std::endl << vprDEBUG_FLUSH;     
    }
-      updateNetworkString = false;
+      //updateNetworkString = false;
    }
 }
 
@@ -486,28 +490,10 @@ void cfdExecutive::InitModules( void )
 
 void cfdExecutive::UpdateModules( void )
 {
-   if ( !CORBA::is_nil( this->_exec ) )
+   if ( !CORBA::is_nil( this->_exec ) && ui_i->GetCalcFlag() )
    {
-      if ( ui_i->GetCalcFlag() )
-      {
-         //vpr::System::msleep( 50 );  // half-second delay
-         while ( updateNetworkString )
-         {
-            vpr::System::msleep( 50 );  // half-second delay
-         }
-
-         this->updateNetworkString = true;
-         GetEverything();
-
-         /*while ( updateNetworkString )
-         {
-            // This holds preframe until all the geom manipulation is complete 
-            // by the get everythign Thread.
-            // We actually need to move that code here so 
-            // so that we don't have this while loop
-            vpr::System::msleep( 50 );  // half-second delay
-         }*/
-      }
+      // Get Network and parse it
+      this->GetEverything();
    }
 }
 
