@@ -48,7 +48,7 @@
 
 using namespace std;
 
-cfdIHCCGauge::cfdIHCCGauge( cfdSceneNode *masterNode )
+cfdIHCCGauge::cfdIHCCGauge( cfdNode *masterNode )
 {
    _textOutput = std::make_pair( new cfd1DTextInput(), new cfd1DTextInput() );
    this->_masterNode = (cfdGroup*)masterNode;
@@ -77,7 +77,10 @@ cfdIHCCGauge::~cfdIHCCGauge( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdDigitalAnalogGauge Destructor" 
                           << std::endl << vprDEBUG_FLUSH;
-
+/*   if ( this->DCS != NULL )
+   {
+      pfDelete( this->DCS );
+   }*/
 }
 
 void cfdIHCCGauge::SetGeometryFilename( std::string filename )

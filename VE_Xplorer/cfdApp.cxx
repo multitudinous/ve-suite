@@ -312,7 +312,8 @@ void cfdApp::preFrame( void )
    if(!_modelHandler)initScene();
 #endif
 #ifdef _CLUSTER
-   this->GetUpdateClusterStateVariables();
+   //call the parent method
+   _vjobsWrapper->GetUpdateClusterStateVariables();
 #endif // _CLUSTER
 
    ///////////////////////
@@ -359,14 +360,15 @@ void cfdApp::preFrame( void )
    }
 
 #ifdef _TAO
-   if ( cfdObjects::GetActiveDataSet() != NULL )
+   if ( this->_modelHandler->GetActiveDataSet() != NULL )
    {
-      this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
+      this->executive->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    }
    this->executive->UpdateModules();
    this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );
 #endif // 
 
+   
    this->_vjobsWrapper->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }
@@ -394,7 +396,7 @@ void cfdApp::postFrame()
       }
    }*/
 
-   this->_corbaManager->GetCfdStateVariables();
+   this->_vjobsWrapper->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 

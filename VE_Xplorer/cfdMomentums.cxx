@@ -45,22 +45,7 @@ cfdMomentums::cfdMomentums( const int xyz, const float scale )
 {
    this->xyz = xyz;
    this->scale = scale;
-
-   this->warper = NULL;
-
-   if ( this->GetActiveMeshedVolume()->GetPrecomputedSlices( this->xyz ) == NULL )
-   {
-      vprDEBUG(vprDBG_ALL, 0) 
-         << "cfdMomentums: planesData == NULL so returning"
-         << std::endl << vprDEBUG_FLUSH;
-
-      return;
-   }
-
    this->warper = vtkWarpVector::New();
-   this->warper->SetInput( this->GetActiveMeshedVolume()
-                        ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
-   this->warper->SetScaleFactor( this->GetScaleFactor() );
 }
 
 
@@ -76,19 +61,28 @@ cfdMomentums::~cfdMomentums()
 
 void cfdMomentums::Update( void )
 {
+   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz ) == NULL )
+   {
+      vprDEBUG(vprDBG_ALL, 0) 
+         << "cfdMomentums: planesData == NULL so returning"
+         << std::endl << vprDEBUG_FLUSH;
+
+      return;
+   }
+
    //make sure that there are planesData and that the cursorType is correct...
    if ( this->mapper && this->cursorType == NONE )
    {
-      this->warper->SetInput( this->GetActiveMeshedVolume()
+      this->warper->SetInput( this->GetActiveDataSet()
                        ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
       this->warper->SetScaleFactor( this->GetScaleFactor() );
       this->warper->Update();//can this go???
 
       this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
 
-      this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
+      this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
+      this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();//can this go???
 
@@ -109,7 +103,7 @@ float cfdMomentums::GetScaleFactor( )
    // the idea here was to properly size the size of the warp based on the data set. Good idea, but this implementation used scalar range when it should use vector magnitude range. This will work if the scalar is velocity magnitude.  
    // If you fix it, then mirror in cfdPresetMomentum.cxx.
    double v[2];
-   this->GetActiveMeshedVolume()->GetUserRange( v );
+   this->GetActiveDataSet()->GetUserRange( v );
 
    float scaleFactor;
    if ( v[0] == v[1] )
@@ -119,7 +113,7 @@ float cfdMomentums::GetScaleFactor( )
    else
    {
       scaleFactor = this->scale * 0.2 
-                    * this->GetActiveMeshedVolume()->GetLength()/(float)(v[1]-v[0]);
+                    * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
    }
 
    vprDEBUG(vprDBG_ALL, 1) << "scaleFactor = " << this->scale

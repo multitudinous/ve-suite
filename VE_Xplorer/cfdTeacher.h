@@ -38,8 +38,8 @@ class cfdDCS;
 class cfdGroup;
 class cfdNode;
 class cfdCommandArray;
-class cfdSceneNode;
-#include "cfdWriteTraverser.h"
+class cfdNode;
+class cfdWriteTraverser;
 
 #include "cfdGlobalBase.h"
 

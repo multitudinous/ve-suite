@@ -72,14 +72,8 @@ cfdGeode * Plot3Dviewer::Init(vtkPLOT3DReader *p )
      cActor->GetProperty( )->SetSpecularPower( 20.0f );
      cActor->GetProperty( )->SetOpacity( 1.0f );
 
-  /*if ( opacity )
-     ( cActor->GetProperty( ) )->SetOpacity( 0.2f );
-     
-  if ( wireframe )    
-     ( cActor->GetProperty( ) )->SetRepresentationToWireframe( );*/
-
-  //pfGeode *cGeode = new pfGeode;
-  //vtkActorToPF( cActor, cGeode );
+ 
+  
   cfdGeode* cGeode = new cfdGeode();
   cGeode->TranslateTocfdGeode(cActor);
 
@@ -89,5 +83,4 @@ cfdGeode * Plot3Dviewer::Init(vtkPLOT3DReader *p )
   cActor->Delete( );
   
   return cGeode;
-  pfDelete(cGeode);
 }

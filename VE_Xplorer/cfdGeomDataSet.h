@@ -63,8 +63,8 @@ have been supported by VTK.
 class cfdGeomDataSet 
 {
  public:
-  //cfdGeomDataSet(fileInfo *geomfile, pfDCS *);
-    cfdGeomDataSet(fileInfo *geomfile, cfdDCS *);
+   cfdGeomDataSet(fileInfo *geomfile, cfdDCS *);
+
   cfdGeomDataSet( float, float [ 3 ], char * );
   ~cfdGeomDataSet( );
 

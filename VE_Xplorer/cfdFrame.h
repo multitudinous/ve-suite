@@ -36,7 +36,7 @@ class cfdTransientVizHandler;
 class cfdDataSet;
 class cfdFILE;
 class cfdTransientActor;
-class cfdSceneNode;
+class cfdNode;
 
 class vtkActor;
 class vtkPolyData;
@@ -69,7 +69,7 @@ class cfdFrame
                               cfdDataSet * activeParticleData,
                               cfdDataSet * activeSurfaceData );
 
-      cfdSceneNode* GetcfdNode( void );
+      cfdNode* GetcfdNode( void );
 
       void SetFrameDataType( int );
       int  GetFrameDataType();

@@ -329,7 +329,6 @@ void cfdSteadyStateVizHandler::SetActiveDataSet( cfdDataSet* input )
                               << std::endl << vprDEBUG_FLUSH;
    }
    _activeDataSet = input;
-   //cfdObjects::SetActiveDataSet( _activeDataSet );
 }
 
 void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
@@ -393,9 +392,6 @@ void cfdSteadyStateVizHandler::InitScene( void )
       
          commandArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, postData );
       }
-
-      // set default active dataset to be the meshed volume
-      cfdObjects::SetActiveDataSet( _activeDataSet );
 
       //
       // Initiate the isosurface.
@@ -718,7 +714,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
    //
    // Initiate the Performer objects.
    //
-   std::cout << "| 51. Initializing........................................ Geodes |" << std::endl;
+   std::cout << "| 51. Initializing........................................ pfGeodes |" << std::endl;
 
    for ( int i = 0; i < (int)this->dataList.size(); i++ )
    {
@@ -838,14 +834,12 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 
             //if ( this->computeActorsAndGeodes == false )
             {
-               // fix this need to set activedataset for active object
-               
                // add active dataset DCS to scene graph if not already there...
                vprDEBUG(vprDBG_ALL,1) << " setting DCS to activeDCS = "
                                    << this->_activeDataSetDCS
                                    << std::endl << vprDEBUG_FLUSH;
                this->_activeObject->SetDCS( this->_activeDataSetDCS );
-
+               this->_activeObject->SetActiveDataSet( this->_activeDataSet );
                this->_activeObject->SetNormal( this->nav->GetDirection() );
                this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 

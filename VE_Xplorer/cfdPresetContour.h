@@ -57,7 +57,7 @@ class cfdPresetContour : public cfdContourBase
 
  private:
    int xyz;
-
+   int numSteps;
    vtkCutter       * cutter;
 
    cfdCuttingPlane * cuttingPlane;

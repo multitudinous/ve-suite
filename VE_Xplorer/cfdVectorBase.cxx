@@ -58,10 +58,6 @@ cfdVectorBase::cfdVectorBase()
 
    // Using glyph3D to insert arrow to the data sets
    this->glyph = vtkGlyph3D::New(); 
-   this->glyph->SetSource( this->GetActiveMeshedVolume()->GetArrow() );
-   this->glyph->SetVectorModeToUseVector();
-   //this->glyph->SetScaleModeToDataScalingOff();
-   //this->glyph->DebugOn();
 
    this->filter = vtkGeometryFilter::New();
    this->filter->SetInput( this->glyph->GetOutput() );
@@ -112,7 +108,7 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
 
       cfdVectorBase::SetThreshHoldPercentages( commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ),
                                                commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
-      cfdVectorBase::UpdateThreshHoldValues();
+      UpdateThreshHoldValues();
 
       return true;
    }
@@ -146,11 +142,17 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
 
       return true;
    }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEADYSTATE_DATASET )
+   { 
+      cfdVectorBase::SetThreshHoldPercentages( 0, 100 );
+      cfdVectorBase::SetVectorRatioFactor( 1 );
+      //this->UpdateThreshHoldValues();
+   }
 
    // when scalar is changed reset vector thresholding to none...
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR  )
    {
-      cfdVectorBase::UpdateThreshHoldValues();
+      //UpdateThreshHoldValues();
    }
    return flag;
 }
@@ -168,7 +170,7 @@ void cfdVectorBase::SetGlyphWithThreshold()
       << vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
 
    double currentScalarRange[ 2 ];
-   this->GetActiveMeshedVolume()->GetRange( currentScalarRange );
+   this->GetActiveDataSet()->GetRange( currentScalarRange );
 
    if ( vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] && 
         vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
@@ -215,6 +217,10 @@ void cfdVectorBase::SetGlyphWithThreshold()
 
 void cfdVectorBase::SetGlyphAttributes()
 {
+   this->glyph->SetSource( this->GetActiveDataSet()->GetArrow() );
+   this->glyph->SetVectorModeToUseVector();
+   //this->glyph->DebugOn();
+
    if ( scaleByVector == 0 )
    {  
       this->glyph->SetScaleFactor( GetVectorScaleFactor() );
@@ -237,7 +243,7 @@ float cfdVectorBase::GetVectorScaleFactor()
    // convert range to -2.5 < x < 2.5, and compute the exponent...
    float range = 2.5;
    float scaleFactor = exp( this->GetVectorScale() / ( 100.0 / range ) ) * 
-                       this->GetActiveMeshedVolume()->GetMeanCellLength();
+                       this->GetActiveDataSet()->GetMeanCellLength();
 
    vprDEBUG(vprDBG_ALL, 1) << " scaleFactor = " << scaleFactor 
                            << std::endl << vprDEBUG_FLUSH;
@@ -299,6 +305,31 @@ int cfdVectors::GetVectorRatioFactor()
 */
 
 
+void cfdVectorBase::UpdateThreshHoldValues()
+{
+   //double currentScalarRange[ 2 ];
+   cfdDataSet* temp = GetActiveDataSet();
+   if ( temp != NULL )
+   {
+      //temp->GetRange( currentScalarRange );
+      double* currentScalarRange = temp->GetRange();
+      vprDEBUG(vprDBG_ALL,1) << " currentScalarRange = " 
+         << currentScalarRange[ 0 ] << " : " <<  currentScalarRange[ 1 ] 
+         << std::endl << vprDEBUG_FLUSH;
+
+      vectorThreshHoldValues[ 0 ] = currentScalarRange[0] +
+                    (double)vectorThreshHoldMinPercentage / 100.0
+                    * ( currentScalarRange[1] - currentScalarRange[0] );
+
+      vectorThreshHoldValues[ 1 ] = currentScalarRange[0] +
+                    (double)vectorThreshHoldMaxPercentage / 100.0
+                    * ( currentScalarRange[1] - currentScalarRange[0] );
+
+      vprDEBUG(vprDBG_ALL, 1) << " Threshold Values = "
+         << vectorThreshHoldValues[ 0 ] << " : "
+         << vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
+   }
+}
 
 
 /////////////////// STATIC member functions follow ///////////////////
@@ -330,27 +361,6 @@ double* cfdVectorBase::GetThreshHoldValues( void )
    return ( vectorThreshHoldValues );
 }
 
-void cfdVectorBase::UpdateThreshHoldValues()
-{
-   double currentScalarRange[ 2 ];
-   cfdObjects::GetActiveDataSet()->GetRange( currentScalarRange );
-
-   vprDEBUG(vprDBG_ALL,1) << " currentScalarRange = " 
-      << currentScalarRange[ 0 ] << " : " <<  currentScalarRange[ 1 ] 
-      << std::endl << vprDEBUG_FLUSH;
-
-   vectorThreshHoldValues[ 0 ] = currentScalarRange[0] +
-                    (double)vectorThreshHoldMinPercentage / 100.0
-                    * ( currentScalarRange[1] - currentScalarRange[0] );
-
-   vectorThreshHoldValues[ 1 ] = currentScalarRange[0] +
-                    (double)vectorThreshHoldMaxPercentage / 100.0
-                    * ( currentScalarRange[1] - currentScalarRange[0] );
-
-   vprDEBUG(vprDBG_ALL, 1) << " Threshold Values = "
-      << vectorThreshHoldValues[ 0 ] << " : "
-      << vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
-}
 
 int cfdVectorBase::vectorRatioFactor = 1;
 

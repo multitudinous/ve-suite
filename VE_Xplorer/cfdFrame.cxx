@@ -74,7 +74,12 @@ cfdFrame::~cfdFrame()
 {
    // this implies that there would also be a node
    // pfDelete will also delete the node as well as the dcs
- 
+
+/*   if ( this->geode != NULL) 
+   {
+      pfDelete( this->geode );
+   }
+*/   
    if ( this->transientActor != NULL) 
    {
       delete this->transientActor;
@@ -247,17 +252,17 @@ void cfdFrame::SetActiveDataSets( cfdDataSet * activeDataSet,
    this->activeSurfaceData = activeSurfaceData;
 }
 
-cfdSceneNode* cfdFrame::GetcfdNode( void )
+cfdNode* cfdFrame::GetcfdNode( void )
 {
    vprDEBUG(vprDBG_ALL,2) << " Using frameDataType = " << this->frameDataType
                           << std::endl << vprDEBUG_FLUSH;
    if ( this->frameDataType == GEOM )
    {
-      return (cfdSceneNode*)this->dcs;
+      return this->dcs;
    }
    else
    {
-      return (cfdSceneNode*)this->geode;
+      return this->geode;
    }
 }
 

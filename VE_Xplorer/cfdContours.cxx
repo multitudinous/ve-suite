@@ -44,15 +44,6 @@
 cfdContours::cfdContours( const int xyz )
 {
    this->xyz = xyz;
-
-   if ( this->GetActiveMeshedVolume()->GetPrecomputedSlices( this->xyz )
-        == NULL )
-   {
-      vprDEBUG(vprDBG_ALL, 0) 
-         << "cfdContours: planesData == NULL so returning" 
-         << std::endl << vprDEBUG_FLUSH;
-      return;
-   }
 }
 
 cfdContours::~cfdContours()
@@ -64,16 +55,25 @@ void cfdContours::Update( void )
    vprDEBUG(vprDBG_ALL,1) << "cfdContours::Update" 
                           << std::endl << vprDEBUG_FLUSH;
 
+   if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
+        == NULL )
+   {
+      vprDEBUG(vprDBG_ALL, 0) 
+         << "cfdContours: planesData == NULL so returning" 
+         << std::endl << vprDEBUG_FLUSH;
+      return;
+   }
+ 
    //make sure that there are planesData and that the cursorType is correct...
    if ( this->mapper && this->cursorType == NONE )
    {   
-    this->SetMapperInput( this->GetActiveMeshedVolume()
+    this->SetMapperInput( this->GetActiveDataSet()
                         ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
 
-      this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
+      this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
 
-      this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
+      this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();
 

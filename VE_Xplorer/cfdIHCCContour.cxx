@@ -196,7 +196,7 @@ void cfdIHCCContour::Update( void )
       cfdGeode* geo = new cfdGeode();
       geo->TranslateTocfdGeode( actor );
       actor->Delete();
-      _geodes.push_back( (cfdSceneNode*)geo );
+      _geodes.push_back( geo );
    }
    this->lut->Delete();
    lut = NULL;

@@ -4,10 +4,11 @@
 
 // this is a workaround for compiling VTK with stlport
 // stlport is required for compiling OSG on MSVS60 - (try .NET?)
+#ifdef _OSG
 #define _INC_STRSTREAM
 //#include <strstream.h>
 // workaround end
-#ifdef _OSG
+
 #include <vtkActorToOSG.h>
 #ifdef VTK4
 #include <vtkDataSet.h>

@@ -377,7 +377,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) >= CONTOUR ) && 
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) <= PARTICLE_TRANSIENT ) )
    {
-      cout << _activeModel << endl;
+      //cout << _activeModel << endl;
       // for the active model, change opaque geometries to transparent
       if ( _activeModel != NULL )
       {

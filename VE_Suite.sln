@@ -1,13 +1,10 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Xplorer", "VE_Xplorer\VE_Xplorer.vcproj", "{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}"
 	ProjectSection(ProjectDependencies) = postProject
+		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D} = {ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Conductor", "VE_Conductor\VE_Conductor.vcproj", "{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}"
-	ProjectSection(ProjectDependencies) = postProject
-	EndProjectSection
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_JavaUI", "VE_Conductor\VE_JavaUI\VE_JavaUI.vcproj", "{073CCC67-7667-476D-A890-03EE6A896F35}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject
@@ -16,6 +13,7 @@ Global
 		Debug = Debug
 		Debug_OMNI = Debug_OMNI
 		Debug_TAO = Debug_TAO
+		OMNI_OSG = OMNI_OSG
 		Release = Release
 		Release_OMNI = Release_OMNI
 	EndGlobalSection
@@ -26,6 +24,8 @@ Global
 		{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}.Debug_OMNI.Build.0 = Debug|Win32
 		{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}.Debug_TAO.ActiveCfg = Debug_TAO|Win32
 		{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}.Debug_TAO.Build.0 = Debug_TAO|Win32
+		{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}.OMNI_OSG.ActiveCfg = OMNI_OSG|Win32
+		{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}.OMNI_OSG.Build.0 = OMNI_OSG|Win32
 		{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}.Release.ActiveCfg = Release|Win32
 		{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}.Release.Build.0 = Release|Win32
 		{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}.Release_OMNI.ActiveCfg = Release_OMNI|Win32
@@ -36,18 +36,12 @@ Global
 		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}.Debug_OMNI.Build.0 = Debug|Win32
 		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}.Debug_TAO.ActiveCfg = Debug_TAO|Win32
 		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}.Debug_TAO.Build.0 = Debug_TAO|Win32
+		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}.OMNI_OSG.ActiveCfg = OMNI_OSG|Win32
+		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}.OMNI_OSG.Build.0 = OMNI_OSG|Win32
 		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}.Release.ActiveCfg = Release|Win32
 		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}.Release.Build.0 = Release|Win32
 		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}.Release_OMNI.ActiveCfg = Release_OMNI|Win32
 		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}.Release_OMNI.Build.0 = Release_OMNI|Win32
-		{073CCC67-7667-476D-A890-03EE6A896F35}.Debug.ActiveCfg = Debug|Win32
-		{073CCC67-7667-476D-A890-03EE6A896F35}.Debug.Build.0 = Debug|Win32
-		{073CCC67-7667-476D-A890-03EE6A896F35}.Debug_OMNI.ActiveCfg = Debug|Win32
-		{073CCC67-7667-476D-A890-03EE6A896F35}.Debug_TAO.ActiveCfg = Debug_TAO|Win32
-		{073CCC67-7667-476D-A890-03EE6A896F35}.Release.ActiveCfg = Release|Win32
-		{073CCC67-7667-476D-A890-03EE6A896F35}.Release.Build.0 = Release|Win32
-		{073CCC67-7667-476D-A890-03EE6A896F35}.Release_OMNI.ActiveCfg = Release|Win32
-		{073CCC67-7667-476D-A890-03EE6A896F35}.Release_OMNI.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection

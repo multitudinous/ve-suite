@@ -37,7 +37,7 @@ class cfdReadParam;
 class cfdGeode;
 class cfdDCS;
 class cfdSequence;
-class cfdSceneNode;
+class cfdNode;
 class cfdTempAnimation;
 
 // VTK Classes
@@ -108,17 +108,8 @@ class cfdObjects : public cfdGlobalBase
       void SetGeodeFlag( bool x );
       bool GetGeodeFlag( void );
 
-      static void SetActiveDataSet( cfdDataSet * dataset );
-      static cfdDataSet * GetActiveDataSet();
-
-      static void SetActiveMeshedVolume( cfdDataSet * dataset );
-      static cfdDataSet * GetActiveMeshedVolume();
-
-      static void SetActiveParticleData( cfdDataSet * dataset );
-      static cfdDataSet * GetActiveParticleData();
-
-      static void SetActiveSurfaceData( cfdDataSet * dataset );
-      static cfdDataSet * GetActiveSurfaceData();
+      void SetActiveDataSet( cfdDataSet * dataset );
+      cfdDataSet * GetActiveDataSet( void );
 
       static void SetVectorScale( float );
       static float GetVectorScale();
@@ -131,10 +122,7 @@ class cfdObjects : public cfdGlobalBase
 
    protected:
 
-      static cfdDataSet *activeDataSet;
-      static cfdDataSet *activeMeshedVolume;
-      static cfdDataSet *activeParticleData;
-      static cfdDataSet *activeSurfaceData;
+      cfdDataSet *activeDataSet;
 
       // used by vectors and intended for warped contours
       static float vectorScale;
@@ -147,7 +135,7 @@ class cfdObjects : public cfdGlobalBase
       cfdTempAnimation* _sequence;
 
       cfdDCS* _dcs;
-      std::vector< cfdSceneNode* > _geodes;
+      std::vector< cfdNode* > _geodes;
 
       vtkActor *actor;
       vtkActor *PDactor;

@@ -47,7 +47,7 @@ class cfdIHCCGauge : public cfdDCS, public cfdObjects
 {
    public:
 
-      cfdIHCCGauge( cfdSceneNode* );
+      cfdIHCCGauge( cfdNode* );
       //cfdDigitalAnalogGauge( cfdDigitalAnalogGauge* );
 
       ~cfdIHCCGauge( void );

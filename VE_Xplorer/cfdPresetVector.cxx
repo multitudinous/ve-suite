@@ -71,14 +71,13 @@ cfdPresetVector::~cfdPresetVector()
 
 void cfdPresetVector::Update( void )
 {
-cout << "cfdPresetVector::ActiveMeshedVolume = " << this->GetActiveMeshedVolume() << endl;
-cout << "cfdPresetVector::ActiveDataSet = " << this->GetActiveDataSet() << endl;
+   vprDEBUG(vprDBG_ALL, 1)  << "cfdPresetVector::ActiveDataSet = " << this->GetActiveDataSet() << endl;
    vprDEBUG(vprDBG_ALL, 1) << this->cursorType << " : " << usePreCalcData
                            << std::endl << vprDEBUG_FLUSH;
 
    if ( this->usePreCalcData )
    {
-      vtkPolyData * preCalcData = this->GetActiveMeshedVolume()
+      vtkPolyData * preCalcData = this->GetActiveDataSet()
                               ->GetPrecomputedSlices( this->xyz )
                               ->GetClosestPlane( this->requestedValue );
 
@@ -101,9 +100,9 @@ cout << "cfdPresetVector::ActiveDataSet = " << this->GetActiveDataSet() << endl;
       this->glyph->Update();
       //this->glyph->DebugOn();
 
-      this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
+      this->mapper->SetScalarRange( this->GetActiveDataSet()
                                           ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
+      this->mapper->SetLookupTable( this->GetActiveDataSet()
                                           ->GetLookupTable() );
       this->mapper->Update();
 
@@ -117,15 +116,15 @@ cout << "cfdPresetVector::ActiveDataSet = " << this->GetActiveDataSet() << endl;
    else
    {
       this->cuttingPlane = new cfdCuttingPlane( 
-                  this->GetActiveMeshedVolume()->GetDataSet()->GetBounds(),
+                  this->GetActiveDataSet()->GetDataSet()->GetBounds(),
                   xyz, numSteps );
 
       // insure that we are using correct bounds for the given data set...
       this->cuttingPlane->SetBounds( 
-            this->GetActiveMeshedVolume()->GetDataSet()->GetBounds() );
+            this->GetActiveDataSet()->GetDataSet()->GetBounds() );
       this->cuttingPlane->Advance( this->requestedValue );
 
-      this->cutter->SetInput( this->GetActiveMeshedVolume()->GetDataSet() );
+      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
       this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
       this->cutter->Update();
 
@@ -144,9 +143,9 @@ cout << "cfdPresetVector::ActiveDataSet = " << this->GetActiveDataSet() << endl;
 
       this->filter->Update();
 
-      this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
+      this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
+      this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();
 
