@@ -89,7 +89,7 @@ void Body_Unit_i::StartCalc (
     double absorber_diam = sqrt( 4 * area / 3.14 ); // Meters
 
     // Bed total pressure drop
-    double bed_pressure_drop = /* Magic Temi constant */ 0.15 * Meters2Feet(absorber_diam);
+    double bed_pressure_drop = pressure_drop*bed_height;
     
     // Mercury leaving absorber (Assuming dry coal) We don't get a feed rate so we'll just use what Temi calc'd
     double coal_feed_rate = 20.531; // kg/s  *** Hardwired for now until we figure out how to get this form the gasifier ***
@@ -112,7 +112,7 @@ void Body_Unit_i::StartCalc (
     
     gas_out->copy(*gas_in);
         
-    gas_out->gas_composite.P -= bed_pressure_drop*101325./14.7;
+    gas_out->gas_composite.P -= bed_pressure_drop;
     gas_out->gas_composite.moles(change_by,"HG");
     // now do HGCL2
     change_by = gas_in->gas_composite.moles("HGCL2");
@@ -137,7 +137,7 @@ void Body_Unit_i::StartCalc (
     
     summaries.insert_summary_val("Min. Fluidization Vel. UNITS:m/sec FORMAT:10.2f", Umf);
     summaries.insert_summary_val("Pressure Drop UNITS:Pa/m FORMAT:10.2f", pressure_drop );
-    summaries.insert_summary_val("Total Bed Pressure Drop UNITS:psi FORMAT:10.2f", bed_pressure_drop);
+    summaries.insert_summary_val("Total Bed Pressure Drop UNITS:Pa FORMAT:10.2f", bed_pressure_drop);
     summaries.insert_summary_val("Superficial Velocity UNITS:m/sec FORMAT:10.2f", Uo);
     summaries.insert_summary_val("Bed Height UNITS:m FORMAT:10.2f", bed_height);
     //summaries.insert_summary_val("Initial Carbon Charge FORMAT:10.2f", carbon_loading); // Temi says that this is the same as loading
