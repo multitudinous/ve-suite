@@ -58,6 +58,31 @@ void Body_Unit_i::StartCalc (
   gas_out_data->copy(*gas_in_data);
   gas_out_data->gas_composite.equilb();
   
+    // get exact mercury
+  double mole_sec = gas_in_data->gas_composite.M/gas_in_data->gas_composite.mw();
+  double mfr = gas_in_data->gas_composite.getFrac("HG");
+  double mole_HG_sec = 0.0;
+  if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
+  mfr = gas_in_data->gas_composite.getFrac("HGCL2");
+  if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
+
+  // split the HG between el HG and HGCL2 per equilibrium result
+  double fracHG = 0.0, totHG = 0.0;
+  mfr = gas_out_data->gas_composite.getFrac("HG");
+  if(mfr>0.0){
+     fracHG += mfr;
+     totHG += mfr;
+  }
+  mfr = gas_out_data->gas_composite.getFrac("HGCL2");
+  if(mfr>0.0) totHG += mfr;
+  if(totHG) fracHG /= totHG;
+  gas_out_data->thermo_database = gashelper.thermo_database;
+  mole_sec = gas_out_data->gas_composite.M/gas_out_data->gas_composite.mw();
+  if(totHG>0.0){
+     if(fracHG>0.0) gas_out_data->gas_composite.setFrac("HG",mole_HG_sec*fracHG/mole_sec);
+     if(fracHG<1.0) gas_out_data->gas_composite.setFrac("HGCL2",mole_HG_sec*(1.0-fracHG)/mole_sec);
+  }
+
   // Check incoming
   if(gas_out_data->gas_composite.T <= 200 || gas_out_data->gas_composite.T >= 3000) {
     warning("Outgoing gas temperature out of range.");
