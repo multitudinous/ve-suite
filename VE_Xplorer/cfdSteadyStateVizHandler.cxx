@@ -844,58 +844,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          }
       }
       //extracting from inside the for loop
-      this->commandArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
    }
-   else if ( this->changeGeometry ) 
-   {
-      // Update Scene Graph with selected or deselected geometry
-      vprDEBUG(vprDBG_ALL,0) << " Change Geometry in Scene Graph."
-                             << std::endl << vprDEBUG_FLUSH;
-      // Maybe fix later
-      //vprDEBUG(vprDBG_ALL,1) << " numGeoms = " << this->paramReader->numGeoms 
-      //                        << std::endl << vprDEBUG_FLUSH;
-      
-      // This data will come from cfdModelHandler
-      // Fix later
-      /*
-      int temp = 0;
-      for( int q = 0; q < this->paramReader->numGeoms; q++)
-      {
-         //vprDEBUG(vprDBG_ALL,1)
-         //   << "guiVal[ " << q << " ] = " << paramReader->guiVal[ q ] 
-         //   << std::endl
-         //   << vprDEBUG_FLUSH;
-
-         if ( paramReader->guiVal[ q ] == 1 && 
-               this->_worldDCS->SearchChild( (cfdSceneNode*)this->geomL[q]->getpfDCS() ) == -1 )
-         {
-            temp = this->_worldDCS->AddChild( (cfdSceneNode*)this->geomL[q]->getpfDCS() );
-         }
-         else if ( paramReader->guiVal[ q ] == 0 && 
-               this->_worldDCS->SearchChild( (cfdSceneNode*)this->geomL[q]->getpfDCS() ) != -1 )
-         {
-            temp = this->_worldDCS->RemoveChild( (cfdSceneNode*)this->geomL[q]->getpfDCS() );
-         }
-         vprDEBUG(vprDBG_ALL,1) << "|   Add Child Error  " << temp 
-                              << std::endl << vprDEBUG_FLUSH;
-      }
-      */
-      this->changeGeometry = false;
-   }
-   else if ( this->chgMod == true)
-   {
-  /*    // for the active model, change opaque geometries to transparent
-      for ( int q = 0; q < this->paramReader->numGeoms; q++)
-      {
-         if ( this->geomL[q]->transparent == 1 )
-         {
-            vprDEBUG(vprDBG_ALL,2) << "Changing Transparency for geom : "
-                                   << q << std::endl << vprDEBUG_FLUSH;
-            this->geomL[q]->setOpac( 0.2 );
-         }
-      }
-      this->chgMod = false;*/
-   }  //change the model's property
 }
 
 

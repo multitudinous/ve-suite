@@ -59,6 +59,7 @@ class cfdFILE
       cfdNode* GetcfdNode( void );
 
       void SetFILEProperties( int, int, float* );
+      int GetTransparentFlag( void );
       void setOpac(float op_val);
       float getOpacity();
 

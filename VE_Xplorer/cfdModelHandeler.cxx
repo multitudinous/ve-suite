@@ -233,6 +233,59 @@ void cfdModelHandler::PreFrameUpdate( void )
       activeDataset->SetActiveVector( vectorIndex );
       activeDataset->GetParent()->SetActiveVector( vectorIndex );
    }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_GEOMETRY )
+   {
+      vprDEBUG(vprDBG_ALL,1)
+         << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) << std::endl << vprDEBUG_FLUSH;
+
+      long int test = this->_readParam->convertDecimalToBinary( 
+                        commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
+      vprDEBUG(vprDBG_ALL,1)
+         << " test : " << test << std::endl << vprDEBUG_FLUSH;
+
+      this->_readParam->convertBinaryToArray( test, _modelList.at( 0 )->GetNumberOfGeomDataSets() );
+      // Update Scene Graph with selected or deselected geometry
+      vprDEBUG(vprDBG_ALL,0) << " Change Geometry in Scene Graph."
+                             << std::endl << vprDEBUG_FLUSH;
+
+      for( unsigned int i = 0; i < _modelList.at( 0 )->GetNumberOfGeomDataSets(); i++ )
+      {
+         int temp = 0;
+         //vprDEBUG(vprDBG_ALL,1)
+         //   << "guiVal[ " << q << " ] = " << this->_readParam->guiVal[ q ] 
+         //   << std::endl
+         //   << vprDEBUG_FLUSH;
+
+         if ( ( this->_readParam->guiVal[ i ] == 1 ) && 
+              ( this->worldNode->SearchChild( (cfdSceneNode*)_modelList.at( 0 )->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
+         {
+            temp = this->worldNode->AddChild( (cfdSceneNode*)_modelList.at( 0 )->GetGeomDataSet( i )->getpfDCS() );
+         }
+         else if ( ( this->_readParam->guiVal[ i ] == 0 ) &&
+                   ( this->worldNode->SearchChild( (cfdSceneNode*)_modelList.at( 0 )->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
+         {
+            temp = this->worldNode->RemoveChild( (cfdSceneNode*)_modelList.at( 0 )->GetGeomDataSet( i )->getpfDCS() );
+         }
+         vprDEBUG(vprDBG_ALL,1) << "|   Add Child Error  " << temp 
+                              << std::endl << vprDEBUG_FLUSH;
+      }
+   }
+   // This represents all viz options. If more viz options are added these enums probably need to be changed. 
+   // We should probably come up with a better way to do this.
+   else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) >= CONTOUR ) && 
+             ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) <= PARTICLE_TRANSIENT ) )
+   {
+      // for the active model, change opaque geometries to transparent
+      for ( unsigned int i = 0; i < _modelList.at( 0 )->GetNumberOfGeomDataSets(); i++ )
+      {
+         if ( _modelList.at( 0 )->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
+         {
+            vprDEBUG(vprDBG_ALL,2) << "Changing Transparency for geom : "
+                                   << i << std::endl << vprDEBUG_FLUSH;
+            _modelList.at( 0 )->GetGeomDataSet( i )->setOpac( 0.2 );
+         }
+      }
+   }  //change the model's property
    
    // Can't be an else if because may have to update if dataset has changed beforehand
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR || 
@@ -259,7 +312,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       // Fix this if we update scalar we need to update the scalar bar
       // very important
    }
-   
+
    // Check and see if we need to refresh the scalar bar
    _scalarBar->CheckCommandId( commandArray );
    // May use in the future
