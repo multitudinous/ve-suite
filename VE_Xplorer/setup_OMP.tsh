@@ -1,9 +1,6 @@
 #!/bin/csh
 # sets up environment to build and/or run VE-Xplorer
 
-#echo "uname is" `uname`
-#echo "uname -n is" `uname -n`
-
 setenv VPR_DEBUG_NFY_LEVEL 0
 #setenv VE_SUITE_HOME /home/users/mccdo
 setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Xplorer/UMI/omniORB.cfg
@@ -15,7 +12,6 @@ rm -f ${VE_SUITE_HOME}/VE_Xplorer/CURRENT_PLATFORM.make
    setenv CXX CC
    setenv VJ_BASE_DIR /home/users/lisong/software/vrjuggler-2.0-alpha1-1.src/build-irix64/instlinks
    setenv VTK_HOME_DIR /home/users/lisong/software/VTK-4.2.2
-#   setenv CFD_LIBS irix_lib32
    setenv OMNI_HOME /home/users/lisong/omni/omni-test
 #  setenv OMNI_HOME /home/users/lisong/software/omniORB-4.0.1/build-IRIX
    setenv OMNILIB	"-L${OMNI_HOME}/lib/mips_irix_6.5_64 -lomniORB3 -lomnithread -lomniGK_stub"
