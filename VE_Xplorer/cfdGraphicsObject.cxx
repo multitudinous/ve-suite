@@ -356,6 +356,7 @@ void cfdGraphicsObject::RemovecfdGeodeFromDCS( void )
       cfdGroup* parent = (cfdGroup*)this->geode->GetParent(0);
       parent->RemoveChild( this->geode);
       delete this->geode;
+	  this->geode = 0;
    } 
 }
 
