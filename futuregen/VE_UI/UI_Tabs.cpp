@@ -51,7 +51,7 @@ void UI_Tabs::getData()
    _vectorPage = 0;
    _streamlinePage = 0;
    _navPage = 0;
-   cout<<"Act Mod Index3: "<<_activeModIndex<<endl;
+   //cout<<"Act Mod Index3: "<<_activeModIndex<<endl;
    num_geo = _modelData->GetNumberOfGeomFiles(_activeModIndex);
    std::cout << "geo number: " << num_geo << std::endl;
 

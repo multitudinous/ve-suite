@@ -19,7 +19,7 @@ UI_ModSelScroll::UI_ModSelScroll(wxWindow* parent)
    SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
    int _numModels = ((UI_ModSelPanel *)GetParent())->_modelData->GetNumberOfModels();
-
+   cout << " Number of Models in System : " << _numModels << endl;
    //wxString _models[_numModels]; //can't pass compile _numModels needs compile time value
    //begin yang's change
     wxString *_models;
