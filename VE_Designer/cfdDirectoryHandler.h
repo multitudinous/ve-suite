@@ -23,3 +23,5 @@ class cfdDirectoryHandler
    char* currentworkingdirectory;
 
 };
+
+#endif

@@ -3,12 +3,18 @@
 
 #include "cfdVeModel.h"
 #include "cfdVeController.h"
-class cfdVeView:public cfdObserver()
+#include "cfdObserverBase.h"
+#include "cfdSubjectBase.h"
+#include "cfdChangeManager.h"
+
+class cfdVeView:public cfdObserverBase
 {
    public:
-      cfdVeView();
+      cfdVeView(cfdVeModel*, cfdVeController*);
       ~cfdVeView();
-      update();
+      void update(cfdSubjectBase*);
+      void updateFromController();
+      void updateFromModel();
    private:
       cfdVeModel* _modelsubject;
       cfdVeController* _controllersubject;

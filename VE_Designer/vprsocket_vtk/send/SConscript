@@ -1,0 +1,11 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv buildDir')
+env = baseEnv.Copy()
+
+sources = Split("""
+	send.cpp
+""")
+
+p = env.Program('send', source = sources)

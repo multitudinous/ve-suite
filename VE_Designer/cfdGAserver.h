@@ -1,7 +1,6 @@
 #ifndef CFDGASERVER_H
 #define CFDGASERVER_H
 
-#include "cfdVeReadParam.h"
 #include "cfdGAManager.h"
 #include "cfdChangeManager.h"
 
@@ -20,7 +19,7 @@ Interactive calculation thread--whenever needed, active it.
 
 */
 
-class cfdGAserver :public cfdObserver
+class cfdGAserver
 {
    public:
       cfdGAserver();
@@ -28,11 +27,10 @@ class cfdGAserver :public cfdObserver
       ~cfdGAserver();
 
           
-      void runInteractiveGAserverThread(void* unused);
-      void update(cfdSubject* );
-      void getInfoFromChangeManager(cfdVeReadParam*);
+      void getInfoFromChangeManager();
       void initialpops();
       void evolve();
+      void singleCase(float*, bool);
            
       void sendVtkFileToVRserver(char* vrservername, char* vtkfilename);
       
@@ -44,7 +42,6 @@ class cfdGAserver :public cfdObserver
       float getCrossoverRate();
 
    public:
-      cfdChangeManager* _GAserversubject;
       cfdVeReadParam* param_file;
       cfdGAManager* genechain;
       
@@ -79,10 +76,10 @@ class cfdGAserver :public cfdObserver
       cfdCalculator* curCalculator;
 
    private:
-      mutationrate;
-      crossoverrate;
-      currentmatingeven;
-      currentrun;
+      float mutationrate;
+      float crossoverrate;
+      int currentmatingeven;
+      int currentrun;
       std::vector<float* > currentfitness;
       
 

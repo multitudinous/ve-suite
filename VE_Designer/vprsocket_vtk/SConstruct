@@ -1,0 +1,48 @@
+import os, sys, string
+pj = os.path.join
+
+if not os.environ.has_key('VJ_BASE_DIR'):
+   print '[ERR] Your VJ_BASE_DIR is unset; please set VJ_BASE_DIR'
+   sys.exit(1)
+vjbasedir = os.environ['VJ_BASE_DIR']
+if not os.environ.has_key('VTK_BASE_DIR'):
+   print '[ERR] Your VTK_BASE_DIR is unset; please set VTK_BASE_DIR'
+   sys.exit(1)
+vtkbasedir = os.environ['VTK_BASE_DIR']
+if not os.environ.has_key('VJ_DEPS_DIR'):
+   print '[ERR] Your VJ_DEPS_DIR is unset; please set VJ_DEPS_DIR'
+   sys.exit(1)
+vjdepsdir = os.environ['VJ_DEPS_DIR']
+baseEnv = Environment(ENV = os.environ,
+	LIBS = ['vtkCommon', 'vtkIO', 'vtkRendering', 'vtkGraphics', 'vtkIO', 'vtkFiltering', 'vtkParallel', 'vtkRendering', 'vpr', 'cppdom'],
+	CPPPATH = ['#', pj(vjbasedir, 'include'), pj(vjdepsdir, 'include')]) 
+if baseEnv['PLATFORM'] == 'irix':
+   baseEnv.Append(LIBPATH = ['/home/users/hgx/software/IRIX/lib/vtk',
+                             pj( vjbasedir, 'lib32'),
+                             pj( vjdepsdir, 'lib32')],
+                  LIBS = ['boost_filesystem-mp-mt', 'pthread'],
+                  CPPPATH = ['/home/users/hgx/software/IRIX/include',
+                             pj( vjdepsdir, 'include', 'boost', 'compatibility', 'cpp_c_headers')],
+                  CXXFLAGS = ['-g'],
+                  LINKFLAGS = ['-LANG:std'],
+                  )
+else:
+   baseEnv.Append(LIBPATH = [pj(vtkbasedir, 'lib', 'vtk'),
+                             pj(vjbasedir, 'lib'),
+                             pj(vjdepsdir, 'lib')],
+                  LIBS = ['boost_filesystem-gcc-mt', 'uuid', 'dl'] ,
+                  LINKFLAGS = ['-pthread'],
+                  CXXFLAGS = ['-g'],
+                  CPPPATH = [pj(vtkbasedir, 'include'),
+                             pj(vjdepsdir, 'include', 'boost-1_31')])
+   
+Export('baseEnv')
+buildDir = 'build.' + baseEnv['PLATFORM']
+BuildDir(buildDir, '.', duplicate = 0)
+Export('buildDir')
+
+subdirs = ['send', 'recv']
+
+for d in subdirs:
+	SConscript(dirs = pj(buildDir, d))
+Default('.')

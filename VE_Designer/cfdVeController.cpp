@@ -2,8 +2,7 @@
 
 cfdVeController::cfdVeController(char* filename)
 {
-    this->changermanager = cfdVeChangerManager::getInstance();
-    this->param_file = (this->changemanager).getParamFile(filename);
+    this->param_file = ( cfdVeChangerManager::getInstance()).getParamFile(filename);
     this->mVjDesigner = new VjDesignObs_i();
 
 }
@@ -11,7 +10,6 @@ cfdVeController::cfdVeController(char* filename)
 cfdVeController::~cfdVeController()
 {
   delete this->mVjDesigner;
-  delete this->changemanager;
   delete this->param_file;
   delete this->mVjDesigner;
 
@@ -132,21 +130,21 @@ void cfdVeController::runControllerThread(void *unused)
       this->opID = this->mVjDesigner->getID();
       if(this->opID == UPDATE_INTERACTIVE_DISPLAY)
       {
-        (this->changemanager).setOPID(this->opID);
+        ( cfdVeChangerManager::getInstance()).setOPID(this->opID);
          this->setInteractiveDisplay();
          notifyObserver();
          this->reSetopID(-1);
       }
       else if (this->opID == UPDATE_INTERACTIVE_DESIGN) //change design variables
       {
-        (this->changemanager).setOPID(this->opID);
+        ( cfdVeChangerManager::getInstance()).setOPID(this->opID);
         this->setInteractiveDesign();
         notifyObserver();
         this->reSetopID(-1);      
       }
       else if (this->opID == UPDATE_INTERACTIVE_GA)
       {
-         (this->changemanager).setOPID(this->opID);
+         ( cfdVeChangerManager::getInstance()).setOPID(this->opID);
          this->setInteractiveGA();
          notifyObserver();
          this->reSetopID(-1);
@@ -183,27 +181,29 @@ void cfdVeController::reset()
 void cfdVeController::setInteractiveDisplay()
 {
    
-   (this->changemanager).setVRserverName(this->mVjDesigner->getVRserverName());
-   (this->changemanager).setModeForOldModel(this->mVjDesigner->getMode_oldModel());
-   if((this->changemanager).getModelForOldModel())
+   ( cfdVeChangerManager::getInstance()).setVRserverName(this->mVjDesigner->getVRserverName());
+   ( cfdVeChangerManager::getInstance()).setModeForOldModel(this->mVjDesigner->getMode_oldModel());
+   if(( cfdVeChangerManager::getInstance()).getModelForOldModel())
    {
-      (this->changemanager).setTransForOldModel(this->mVjDesigner->getTransForOldModel()); 
-      (this->changemanager).setRotForOldModel(this->mVjDesigner->getRotForOldModel());
+      ( cfdVeChangerManager::getInstance()).setTransForOldModel(this->mVjDesigner->getTransForOldModel()); 
+      ( cfdVeChangerManager::getInstance()).setRotForOldModel(this->mVjDesigner->getRotForOldModel());
       
    }
-   (this->changemanager).setNewVtkFileName(this->mVjDesigner->getNewVtkFileName());
+   ( cfdVeChangerManager::getInstance()).setNewVtkFileName(this->mVjDesigner->getNewVtkFileName());
   }
 
 void cfdVeController::setInteractiveDesign()
 {
-   int count;
-   count = this->param_file->getNumDesignParams();
-   (this->changemanager).setActiveDesignParams(this->mVjDesigner->getActiveDesignParams());
-   (this->changemanager).setDesignParams(this->mVjDesigner->getDesignParams());  (this->changemanager).setSaveMode(this->mVjDesigner->getSaveMode());
+   //int count;
+   //count = this->param_file->getNumDesignParams();
    
-   (this->changemanager).setDesignDisplayMode(this->mVjDesigner->getDispalyMode());
+   ( cfdVeChangerManager::getInstance()).setActiveDesignParams(this->mVjDesigner->getActiveDesignParams());
+   ( cfdVeChangerManager::getInstance()).setDesignParams(this->mVjDesigner->getDesignParams());  
+   ( cfdVeChangerManager::getInstance()).setSaveMode(this->mVjDesigner->getSaveMode());
+   
+   ( cfdVeChangerManager::getInstance()).setDesignDisplayMode(this->mVjDesigner->getDispalyMode());
 
-   if((this->changemanager).getDisplayMode())
+   if(( cfdVeChangerManager::getInstance()).getDisplayMode())
    {
       this->setInteractiveDisplay();
    }
@@ -212,11 +212,12 @@ void cfdVeController::setInteractiveDesign()
 
 void cfdVeController::setInteractiveGA()
 {
-   (this->changemanager).setCheckGene(this->mVjDesigner->getCheckGene());
-   (this->changemanager).setCrossoverRate(this->mVjDesigner->getCrossoverRate());
-   (this->changemanager).setMutationRate(this->mVjDesigner->getMutationRate());
-   (this->changemanager).setGADisplayMode(this->mVjDesigner->getGADisplay());
-   if((this->changemanager).getGADisplayMode())
+   ( cfdVeChangerManager::getInstance()).setCheckGene(this->mVjDesigner->getCheckGene());
+   ( cfdVeChangerManager::getInstance()).setCrossoverRate(this->mVjDesigner->getCrossoverRate());
+   ( cfdVeChangerManager::getInstance()).setMutationRate(this->mVjDesigner->getMutationRate());
+   ( cfdVeChangerManager::getInstance()).setGADisplayMode(this->mVjDesigner->getGADisplay());
+   
+   if(( cfdVeChangerManager::getInstance()).getGADisplayMode())
    {
       this->setInteractiveDisplay();
    }

@@ -2,7 +2,6 @@
 
 cfdGAserver::cfdGAserver()
 {
-   this->changemanager = cfdChangeManager::getInstance();
    this->getInfoFromChangeManager();
     
 }
@@ -15,18 +14,18 @@ cfdGAserver::~cfdGAserver()
 
 void cfdGAserver::getInfoFromChangeManager()
 {
-   this->cfdpackage = (this->changemanager).getCFDpackageName();
-   this->newvtkfilename = (this->changemanager).getNewVtkFileName();
+   this->cfdpackage = (cfdChangeManager::getInstance()).getCFDpackageName();
+   this->newvtkfilename = (cfdChangeManager::getInstance()).getNewVtkFileName();
 
-   this->checkedgene = (this->changemanager).getCheckedGene();
-   this->directory = (this->changemanager).getDirectoryName();
+   this->checkedgene = (cfdChangeManager::getInstance()).getCheckedGene();
+   this->directory = (cfdChangeManager::getInstance()).getDirectoryName();
   
-   this->popsize = (this->changemanager).getPopSize();
-   this->totalruns = (this->changemanager).getTotalRuns();
-   this->initialtype = (this->changemanager).getInitialType();
-   this->totalmatingevents = (this->changemanager).getTotalMatingEvents();
-   this->initialpopfilename = (this->changemanager).getInitialPopFileName();
-   this->boundaryfilename = (this->changemanager).getBoundaryFileName();
+   this->popsize = (cfdChangeManager::getInstance()).getPopSize();
+   this->totalruns = (cfdChangeManager::getInstance()).getTotalRuns();
+   this->initialtype = (cfdChangeManager::getInstance()).getInitialType();
+   this->totalmatingevents = (cfdChangeManager::getInstance()).getTotalMatingEvents();
+   this->initialpopfilename = (cfdChangeManager::getInstance()).getInitialPopFileName();
+   this->boundaryfilename = (cfdChangeManager::getInstance()).getBoundaryFileName();
 
 }
 

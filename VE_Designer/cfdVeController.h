@@ -23,12 +23,12 @@ class cfdVeController:public cfdSubjectBase, public VjDesignObs_i
       void setInteractiveGA();
       
    private:
-      cfdChangeManager* changemanager;
       cfdVeReadParam* param_file; 
       bool connectingToNamingService;
       int opID;
+      VjDesignObs_i* mVjDesigner;
 
-   }
+};
 
 
 

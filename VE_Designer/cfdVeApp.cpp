@@ -4,9 +4,9 @@ cfdVeApp::cfdVeApp(char* param_filename)
 {
    this->mController = new cfdVeController(param_filename);
    this->mModel      = new cfdVeModel(mController,param_filename);
-   this->mView       = new cfdVeView(mModel, mController,param_filename);
+   this->mView       = new cfdVeView(mModel, mController);
 
-   this->ControllerFunc = new vpr::ThreadMemberFunctor<cfdController>(mController, cfdController::runControllerThread);
+   this->ControllerFunc = new vpr::ThreadMemberFunctor<cfdVeController>(mController, cfdVeController::runControllerThread);
    this->vjTh[0] = new vpr::Thread(this->ControllerFunc);
  
 }
@@ -26,7 +26,6 @@ void cfdVeApp::run()
 
 void cfdApp::stopModel()
 {
-   this->running = false;
 }
 
 int main(int argc, char* argv[])

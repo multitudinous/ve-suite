@@ -25,9 +25,9 @@ class cfdChangeManager
        *
        * @return     a cfdVEReadParam object associated with filename.
        */
-      cfdVeReadParm* getParamFile(char *);
+      cfdVeReadParam* getParamFile(char *);
       
-      void setInfoFromParamFile();
+      void setInfoFromParamFile(char*);
       void otherOperation();
       int  getOpID();
       bool changeStatus();

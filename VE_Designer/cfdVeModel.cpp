@@ -2,8 +2,7 @@
 
 cfdVeModel::cfdVeModel(cfdVeController* controller, char* filename)
 {
-   this->changemanager = cfdChangeManager::getInstance();
-   this->chanegmanager->setInfoFromParamFile(filename);
+   (cfdChangeManager::getInstance()).setInfoFromParamFile(filename);
     
    this->regularOPFunc = new vpr::ThreadMemberFunctor<cfdVeModel>(this, &cfdVeModel::runRegularOPThread);
    this->OPTh[0] = new vpr::Thread(this->regularOPFunc);
@@ -20,14 +19,6 @@ cfdVeModel::~cfdVeModel()
 }
 
 
-void cfdVeModel::changeChecking()
-{
-   if(this->cfdpackage!=(this->changemanager).getCFDpackageName())
-   {
-      
-   }
-
-}
 
 /*
  * The reason to create a sperated thread for regular OP, is because this operation takes time
@@ -49,7 +40,7 @@ void cfdVeModel::runInteraciveDesignSaveOP(void* unused)
     */
 
    std::ofstream designcandidatesfile;
-   cfdDirectoryHandle* directoryhandler;
+   cfdDirectoryHandler* directoryhandler;
    char* directory;
    
    directoryhandler = new cfdDirectoryHandler();
@@ -60,11 +51,11 @@ void cfdVeModel::runInteraciveDesignSaveOP(void* unused)
    
    float* localdesignparams;
 
-   localdesignparams = new float[(this->changemanager).getNumDesignParams()];
+   localdesignparams = new float[(cfdChangeManager::getInstance()).getNumDesignParams()];
 
-   for(int i=0; i<(this->changemanager).getNumDesignParams();i++)
+   for(int i=0; i<(cfdChangeManager::getInstance()).getNumDesignParams();i++)
    {
-       designcandidatesfile<<((this->changemanager).getCurrentDesignParams())[i];
+       designcandidatesfile<<((cfdChangeManager::getInstance()).getCurrentDesignParams())[i];
        designcandidatesfile<<" ";
       
    }
@@ -79,10 +70,12 @@ void cfdVeModel::runInteraciveDesignSaveOP(void* unused)
 void cfdVeModel::runInteractiveDesignDisplayOP(void* unused)
 {
    float* localdesignparams;
-   localdesignparams = new float[(this->changemanager).getNumDesignParams()];
-   for(int i=0; i<(this->changemanager).getNumDesignParams();i++)
+   int num;
+   num = (cfdChangeManager::getInstance()).getNumDesignParams();
+   localdesignparams = new float[num];
+   for(int i=0; i<num;i++)
    {  
-      localdesignparams[i]= ((this->changemanager).getDesignParams())[i];
+      localdesignparams[i]= ((cfdChangeManager::getInstance()).getCurrentDesignParams())[i];
    }
    
    this->interactiveGAserver = new cfdGAserver();
@@ -99,7 +92,7 @@ void cfdVeModel::runInteractiveGAUpdateOP(void* unused)
    /*
     * send the current GA information back to GUI
     */
-   float mutationrate;
+  /* float mutationrate;
    float crossoverrate;
    float maxfitness;
    float minfitness;
@@ -111,8 +104,9 @@ void cfdVeModel::runInteractiveGAUpdateOP(void* unused)
    maxfitness = this->GAserver->getMaxFitness();
    minfitness = this->GAserver->getMinFitness();
    currentrun = this->GAserver->getCurrentRun();
-   currentmatingevent = this->GAserver->getCurrentMatingEvent();
+   currentmatingevent = this->GAserver->getCurrentMatingEvent();*/
 
+   
    /*
     * need Dr.K 's help, so that VE_Conductor can get these data
     */
@@ -123,11 +117,11 @@ void cfdVeModel::runInteractiveGAUpdateOP(void* unused)
 void cfdVeModel::runInteractiveGAGeneCheckOP(void* unused)
 {
    this->interactiveGAserver = new cfdGAserver();
-   this->checkedgene = (this->changemanager).getCheckedGene();
+   this->checkedgene = (cfdChangeManager::getInstance()).getCheckedGene();
    float* checkeddesignparams;
    int designparanum;
 
-   designparamnum = (this->changemanager).getNumDesignParams();
+   designparanum = (cfdChangeManager::getInstance()).getNumDesignParams();
    
    checkeddesignparams = new float[designparamnum];
    
@@ -135,13 +129,14 @@ void cfdVeModel::runInteractiveGAGeneCheckOP(void* unused)
    {
       for(int i=0; i<designparamnum;i++)
       {
-         checkeddesignparams[i] = this->GAserver->genechain->ga[checkedgene-1]->gaParams[i]; 
+         checkeddesignparams[i] = this->GAserver->genechain->ga[this->checkedgene-1]->gaParams[i]; 
       }
    }
    mValueLock.release();
-   
-   this->interactiveGAserver->singlercase(checkeddesignparams, interactivedisplayactived);
-   notifyObserver();
+   bool interactivedisplayactived = true; 
+   this->interactiveGAserver->singlerCase(checkeddesignparams, interactivedisplayactived);
+   //at this point, the new vtk should be ready. Notify view to connecte with special port number
+   notifyObservers();
    delete checkeddesignparams;
    delete this->interactiveGAserver;
 
@@ -150,9 +145,9 @@ void cfdVeModel::runInteractiveGAGeneCheckOP(void* unused)
 
 void cfdVeModel::update(cfdSubjectBase* theChangedSubject)
 {
-   if(theChangeSubject == (this->_modelsubject))
+   if(theChangedSubject == (this->_modelsubject))
    {
-      this->opID = (this->changemanager).getOpID();
+      this->opID = (cfdChangeManager::getInstance()).getOpID();
 
       switch (this->opID)
       {

@@ -12,8 +12,8 @@ cfdVeView::cfdVeView(cfdVeModel* model, cfdVeController* controller)
 
 cfdVeView::~cfdVeView()
 {
-   delete this->_modelsubject;
-   delete this->_controllersubject;
+   //delete this->_modelsubject;
+   //delete this->_controllersubject;
 
 }
 
@@ -36,7 +36,7 @@ void cfdVeView::updateFromModel()
 {
    // when new vtk file is ready, cfdVeView active an info window, so that user can bring new model up
 
-   if(this->_modelsubject->isVtkReady())
+   if(this->_modelsubject->isVtkDataReady())
    {
       this->sendingvtkready = true;
       //plan to use socket to communicate between cfdVeView and Java GUI in order to active the 

@@ -6,14 +6,14 @@
 #include <iostream>
 #include <vector.h>
 #include <algorithm>
-#include "cfdObserver.h"
+#include "cfdObserverBase.h"
 
 class cfdObserverBase;
 class cfdSubjectBase
 {
    public:
       cfdSubjectBase();
-      ~cfdSubjecBaset();
+      ~cfdSubjectBase();
       void addObserver( cfdObserverBase* );
       void deleteObserver( cfdObserverBase* );
       void notifyObservers();

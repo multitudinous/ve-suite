@@ -1,0 +1,11 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+env = baseEnv.Copy()
+
+sources = Split("""
+	recv.cpp
+""")
+
+env.Program('recv', source = sources)
