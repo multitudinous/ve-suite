@@ -88,7 +88,7 @@ void VEDumpCombust::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "./Plugins/dump_compuster.param";
+   strcpy( this->_param, "./Plugins/dump_compuster.param");
    //cout << _param << endl;
    CreateObjects();
 }

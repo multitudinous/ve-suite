@@ -88,7 +88,7 @@ void VEBulkDesulfurizer::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "./Plugins/bulkdesulfurizer.param";
+   strcpy( this->_param, "./Plugins/bulkdesulfurizer.param");
    //cout << _param << endl;
    CreateObjects();
 }

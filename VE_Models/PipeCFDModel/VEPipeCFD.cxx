@@ -88,7 +88,7 @@ void VEPipeCFD::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "./Plugins/pipecfd.param";
+   strcpy( this->_param, "./Plugins/pipecfd.param");
    //cout << _param << endl;
    CreateObjects();
 }

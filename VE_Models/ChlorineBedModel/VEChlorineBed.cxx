@@ -88,8 +88,7 @@ void VEChlorineBed::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "./Plugins/chlorine.param";
-   //cout << _param << endl;
+   strcpy( this->_param, "./Plugins/chlorine.param");
    CreateObjects();
 }
 

@@ -88,7 +88,7 @@ void VEV21ASU::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "./Plugins/asu.param";
+   strcpy( this->_param, "./Plugins/asu.param");
    //cout << _param << endl;
    CreateObjects();
 }

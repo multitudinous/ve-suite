@@ -88,7 +88,7 @@ void VEGasMixer::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "./Plugins/gasmixer.param";
+   strcpy( this->_param, "./Plugins/gasmixer.param");
    //cout << _param << endl;
    CreateObjects();
 }

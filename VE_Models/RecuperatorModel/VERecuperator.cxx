@@ -88,7 +88,7 @@ void VERecuperator::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "./Plugins/recuperator.param";
+   strcpy( this->_param , "./Plugins/recuperator.param" );
    //cout << _param << endl;
    CreateObjects();
 }

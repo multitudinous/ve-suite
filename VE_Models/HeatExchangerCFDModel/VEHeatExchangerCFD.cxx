@@ -88,7 +88,7 @@ void VEHeatExchangerCFD::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "./Plugins/heatexchangercfd.param";
+   strcpy( this->_param, "./Plugins/heatexchangercfd.param");
    //cout << _param << endl;
    CreateObjects();
 }

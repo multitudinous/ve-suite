@@ -88,7 +88,7 @@ void VECyclone::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "./Plugins/cyclone.param";
+   strcpy( this->_param, "./Plugins/cyclone.param");
    //cout << _param << endl;
    CreateObjects();
 }

@@ -499,6 +499,7 @@ void cfdExecutive::UpdateModules( void )
    {
       if ( ui_i->GetCalcFlag() )
       {
+         vpr::System::msleep( 500 );  // half-second delay
          while ( updateNetworkString )
          {
             vpr::System::msleep( 500 );  // half-second delay
