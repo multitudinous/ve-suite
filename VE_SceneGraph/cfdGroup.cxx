@@ -42,7 +42,7 @@
 #include <osg/Node>
 #elif _OPENSG
 #endif
-
+/*
 cfdGroup::cfdGroup( float* scale, float* trans, float* rot )
 :cfdNode()
 {
@@ -54,7 +54,7 @@ cfdGroup::cfdGroup( float* scale, float* trans, float* rot )
 #endif
    //_node = _group;
    SetCFDNodeType(CFD_GROUP);
-}
+}*/
 ///////////////////////////////////////////
 cfdGroup::cfdGroup( const cfdGroup& input )
 :cfdNode(input)

@@ -43,34 +43,34 @@ namespace osg { class Group; }
 
 class cfdGroup: public cfdNode
 {
-public:
-   cfdGroup();
-   cfdGroup( const cfdGroup& );
+   public:
+      cfdGroup();
+      cfdGroup( const cfdGroup& );
 
-   cfdGroup(float*, float*, float*);
-   virtual ~cfdGroup( void );
+      //cfdGroup(float*, float*, float*);
+      virtual ~cfdGroup( void );
 
-   //equal operator
-   cfdGroup& operator=( const cfdGroup& );
+      //equal operator
+      cfdGroup& operator=( const cfdGroup& );
 
-   //the wrappers for child/scene graph
-   //manipulation
-   virtual int RemoveChild( cfdNode* );
-   virtual int AddChild( cfdNode* );
+      //the wrappers for child/scene graph
+      //manipulation
+      virtual int RemoveChild( cfdNode* );
+      virtual int AddChild( cfdNode* );
 
-   virtual void InsertChild( int, cfdNode* );
-   virtual int  SearchChild( cfdNode* );
+      virtual void InsertChild( int, cfdNode* );
+      virtual int  SearchChild( cfdNode* );
 
-   virtual cfdNode* GetChild( int );
-   virtual int  GetNumChildren( void );
+      virtual cfdNode* GetChild( int );
+      virtual int  GetNumChildren( void );
 
-   virtual void SetName( char* );
-   virtual int ReplaceChild( cfdNode*, cfdNode* );
+      virtual void SetName( char* );
+      virtual int ReplaceChild( cfdNode*, cfdNode* );
 
-   virtual cfdNode* Clone( int );
+      virtual cfdNode* Clone( int );
 
-   virtual const char* GetName( void );
-protected:
-   std::vector< cfdNode* > childNodes;
+      virtual const char* GetName( void );
+   protected:
+      std::vector< cfdNode* > childNodes;
 };
 #endif

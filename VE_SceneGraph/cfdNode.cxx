@@ -271,7 +271,67 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getGState() ;
 
-         if (geostate != NULL){
+/////////////////////////////////////////
+
+
+/*int attr = geoset->getAttrBind( PFGS_COLOR4 );
+if ( attr == PFGS_OFF )
+   std::cout << " attribs are off ";// << std::endl;
+else if ( attr == PFGS_OVERALL )
+   std::cout << " attribs are overall ";// << std::endl;
+else if ( attr == PFGS_PER_PRIM )
+   std::cout << " attribs are prim ";// << std::endl;
+else if ( attr == PFGS_PER_VERTEX )
+   std::cout << " attribs are vert    ";// << std::endl;
+
+void *alist=0; 
+ushort *ilist=0; 
+
+if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_PER_PRIM ))
+{
+   geoset->getAttrLists( PFGS_COLOR4, &alist, &ilist );
+   pfVec4 *colors;
+   colors = (pfVec4 *) alist;
+   int min, max; 
+   int vertcount; 
+   //int numVerts = geoset->getAttrRange( PFGS_COORD3, NULL, &max );
+   //pfVec4* new_colors = new pfVec4[ numVerts ];
+   //std::cout << " New set : " << max << std::endl;
+   vertcount = geoset->getAttrRange( PFGS_COLOR4, &min, &max ); 
+   //std::cout << " New set : " << numVerts << " : " << vertcount << " : " << min << " : " << max << " : " << ilist << std::endl;
+   //float temp[ 4 ];
+   
+
+   for ( int k = 0; k < vertcount; ++k )
+   {
+      colors[ min ][ 3 ] = op;
+       std::cout <<   colors[ k ][ 0 ] << " : " <<
+         colors[ k ][ 1 ] << " : " <<
+         colors[ k ][ 2 ] << " : " <<
+         colors[ k ][ 3 ] << std::endl;
+   }
+   
+   if ( op != 1.0 )
+   {
+      geoset->setDrawBin(PFSORT_TRANSP_BIN);  // draw last
+      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA );//| PFTR_NO_OCCLUDE);
+   }
+   else
+   {
+      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw first
+      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
+   }
+
+   geoset->setAttr( PFGS_COLOR4, PFGS_OVERALL, colors, ilist );
+}
+*/
+
+
+
+///////////////////////////////////////////
+
+         if (geostate != NULL)
+            {
             geostate->setMode( PFSTATE_ANTIALIAS, PFAA_ON );
             geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
             geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
@@ -281,7 +341,8 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
             bmaterial = (pfMaterial*)geostate->getAttr( PFSTATE_BACKMTL );
             vprDEBUG(vprDBG_ALL,3) << "setting alpha to " << op 
                                    << std::endl << vprDEBUG_FLUSH;
-            if ( testMat != NULL ){
+            if ( testMat != NULL )
+            {
                vprDEBUG(vprDBG_ALL,3) << "Setting Front Material : " << op 
                                       << std::endl << vprDEBUG_FLUSH;
                vprDEBUG(vprDBG_ALL,3) << " Color Flag : " << color
@@ -301,24 +362,13 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
 				       	stlColor[2]);
                      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
-                     geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
+                     //geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
                      vprDEBUG(vprDBG_ALL,3) 
                         << " Front Color : " << stlColor[0]<< " : " 
                         <<  stlColor[1]<< " : " << stlColor[2]
                         << std::endl << vprDEBUG_FLUSH;
                      //this->fmaterial->setAlpha( .2 );
-                  }
-                  else
-                  {
-                     // Do NOT turn of transparency here because textured
-                     // objects may have transparent textures
-                     
-                     // This may cause color issues
-                     testMat->setColorMode( PFMTL_FRONT,
-				            PFMTL_CMODE_AMBIENT_AND_DIFFUSE );
-                     vprDEBUG(vprDBG_ALL,3) << "Set color Mode "
-                                         << std::endl << vprDEBUG_FLUSH;
                   }
                }
                else
@@ -334,10 +384,6 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
                         << "Front Color Transparent : " << stlColor[0] << " : " 
                         <<  stlColor[1] << " : " << stlColor[2]
                         << std::endl << vprDEBUG_FLUSH;
-                  }
-                  else
-                  {
-                     testMat->setColorMode( PFMTL_FRONT, PFMTL_CMODE_OFF );
                   }
                }
               geostate->setAttr(PFSTATE_FRONTMTL, testMat);
@@ -378,7 +424,7 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
                {
                   geoset->setDrawBin(PFSORT_TRANSP_BIN);  // draw last
                   geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF); // want to see backside thru
-                  geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
+                  geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA );//| PFTR_NO_OCCLUDE);
                   if( color == 1 )
                   {
                      bmaterial->setColor( PFMTL_DIFFUSE , 1.0f, 1.0f, 1.0f );
@@ -391,7 +437,7 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
                   }
                   else
                   {
-                     bmaterial->setColorMode( PFMTL_BACK,  PFMTL_CMODE_OFF );
+                     //bmaterial->setColorMode( PFMTL_BACK,  PFMTL_CMODE_OFF );
                   }
                }
                geostate->setAttr(PFSTATE_BACKMTL, bmaterial);
