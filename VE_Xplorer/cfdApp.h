@@ -67,14 +67,6 @@
 #endif
 #include <vector>
 
-/*
-#ifndef WIN32
-#include <unistd.h>
-#else
-//#include <windows.h>
-#endif
-*/
-
 #ifdef _TAO
 class cfdExecutive;
 #endif
@@ -156,11 +148,8 @@ class cfdApp : public vrj::PfApp
       void NavigationForIHCC( void );
 
       void pushDataToStateInfo( void );
-#ifdef TABLET
+
       void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
-#else
-	  void setId( int x ){ this->cfdId = x; }
-#endif
 
    cfdPfSceneManagement*      _sceneManager;
    cfdEnvironmentHandler*     _environmentHandler;
@@ -211,11 +200,10 @@ class cfdApp : public vrj::PfApp
 #ifdef _TAO
    cfdExecutive*     executive;
 #endif
-#ifdef TABLET
+
    CosNaming::NamingContext_var naming_context;
    CORBA::ORB_var orb;
    PortableServer::POA_var poa;
-#endif
    //std::vector< cfdSound * > sounds;
    //std::vector< cfdFILE * > geomL;
 

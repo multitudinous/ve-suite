@@ -277,14 +277,6 @@ std::cout << "|  3e" << std::endl;
 #endif // _TAO
 
 
-// This set of thread stuff needs to be fixed and moved to ssvizhandler and transvizhandler
-/*
-   std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
-   this->vjThFunc[0] = new vpr::ThreadMemberFunctor<cfdApp> ( this, &cfdApp::intraParallelThread );
-   this->vjTh[0] = new vpr::Thread( this->vjThFunc[0] );
-   this->vjThFunc[1] = new vpr::ThreadMemberFunctor<cfdApp> ( this, &cfdApp::streamers );
-   this->vjTh[1] = new vpr::Thread( this->vjThFunc[1] );
-*/   
    //
    // Make IHCC Model - should be deleted at a later date
    //

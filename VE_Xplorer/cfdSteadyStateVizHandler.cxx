@@ -68,6 +68,9 @@
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
 
+using namespace vpr;
+using namespace std;
+
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
 {
    this->surface = NULL;
@@ -104,6 +107,10 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
 
 cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 {
+   this->runIntraParallelThread = false;
+   delete this->vjThFunc[0];
+   delete this->vjTh[0];
+
    if ( this->isosurface ) 
    {
       vprDEBUG(vprDBG_ALL,2) 
@@ -302,19 +309,9 @@ void cfdSteadyStateVizHandler::SetActiveDataSet( cfdDataSet* input )
    _activeDataSet = input;
 }
 
-void cfdSteadyStateVizHandler::SetActiveMeshedVolume( cfdDataSet* input )
-{
-   _activeMeshedVolume = input;
-}
-
 void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
 {
    commandArray = input;
-}
-
-void cfdSteadyStateVizHandler::SetParameterFilename( char* param )
-{
-   _param = param;
 }
 
 void cfdSteadyStateVizHandler::SetWorldDCS( cfdDCS* input )
@@ -335,21 +332,21 @@ void cfdSteadyStateVizHandler::SetCursor( cfdCursor* input )
 
 void cfdSteadyStateVizHandler::InitScene( void )
 {
-   if ( _activeMeshedVolume != NULL )
+   if ( _activeDataSet != NULL )
    {
       
       {
          int postData = 0;
-         if ( _activeMeshedVolume->GetPrecomputedXSlices() != NULL &&
-               _activeMeshedVolume->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+         if ( _activeDataSet->GetPrecomputedXSlices() != NULL &&
+               _activeDataSet->GetPrecomputedXSlices()->GetPlanesData() != NULL )
             postData += 1;
 
-         if ( _activeMeshedVolume->GetPrecomputedYSlices() != NULL &&
-               _activeMeshedVolume->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+         if ( _activeDataSet->GetPrecomputedYSlices() != NULL &&
+               _activeDataSet->GetPrecomputedYSlices()->GetPlanesData() != NULL )
             postData += 2;
 
-         if ( _activeMeshedVolume->GetPrecomputedZSlices() != NULL &&
-               _activeMeshedVolume->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+         if ( _activeDataSet->GetPrecomputedZSlices() != NULL &&
+               _activeDataSet->GetPrecomputedZSlices()->GetPlanesData() != NULL )
             postData += 4;
       
          commandArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, postData );
@@ -374,8 +371,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
       this->commandList.push_back( this->contour );
      
       // Make sure that this dataset has a vector and scalar...
-      if ( _activeMeshedVolume->GetDataSet()->GetPointData()->GetVectors() &&
-           _activeMeshedVolume->GetDataSet()->GetPointData()->GetScalars() )
+      if ( _activeDataSet->GetDataSet()->GetPointData()->GetVectors() &&
+           _activeDataSet->GetDataSet()->GetPointData()->GetScalars() )
       {
          //
          // Initiate the interactive momentum.
@@ -396,7 +393,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          this->commandList.push_back( this->vector );
       }
      
-      if ( _activeMeshedVolume->GetDataSet()->GetPointData()->GetScalars() )
+      if ( _activeDataSet->GetDataSet()->GetPointData()->GetScalars() )
       {
          //
          // Initiate the preset x contour.
@@ -427,7 +424,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
       }
      
       // Make sure that this dataset has a vector field...
-      if ( _activeMeshedVolume->GetDataSet()->GetPointData()->GetVectors() )
+      if ( _activeDataSet->GetDataSet()->GetPointData()->GetVectors() )
       {
          //
          // Initiate the preset x momentum.
@@ -490,8 +487,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
       //
       // Initiate the preset x contour lines.
       //
-      if ( _activeMeshedVolume->GetPrecomputedXSlices() != NULL &&
-           _activeMeshedVolume->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+      if ( _activeDataSet->GetPrecomputedXSlices() != NULL &&
+           _activeDataSet->GetPrecomputedXSlices()->GetPlanesData() != NULL )
       {
          std::cout << "| 28. Initializing....................Multiple X-planes of Contours |" << std::endl;
          this->x_contours = new cfdContours( 0 );
@@ -503,8 +500,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
       //
       // Initiate the preset y contour lines.
       //
-      if ( _activeMeshedVolume->GetPrecomputedYSlices() != NULL &&
-           _activeMeshedVolume->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+      if ( _activeDataSet->GetPrecomputedYSlices() != NULL &&
+           _activeDataSet->GetPrecomputedYSlices()->GetPlanesData() != NULL )
       {
          std::cout << "| 29. Initializing....................Multiple Y-planes of Contours |" << std::endl;
          this->y_contours = new cfdContours( 1 );
@@ -516,8 +513,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
       //
       // Initiate the preset z contour lines.
       //
-      if ( _activeMeshedVolume->GetPrecomputedZSlices() != NULL &&
-           _activeMeshedVolume->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+      if ( _activeDataSet->GetPrecomputedZSlices() != NULL &&
+           _activeDataSet->GetPrecomputedZSlices()->GetPlanesData() != NULL )
       {
          std::cout << "| 30. Initializing....................Multiple Z-planes of Contours |" << std::endl;
          this->z_contours = new cfdContours( 2 );
@@ -527,15 +524,15 @@ void cfdSteadyStateVizHandler::InitScene( void )
       }
 
       // Make sure that this dataset has a vector and scalar...
-      if ( _activeMeshedVolume->GetDataSet()->GetPointData()->GetVectors() &&
-           _activeMeshedVolume->GetDataSet()->GetPointData()->GetScalars() )
+      if ( _activeDataSet->GetDataSet()->GetPointData()->GetVectors() &&
+           _activeDataSet->GetDataSet()->GetPointData()->GetScalars() )
 
       {
          //
          // Initiate the preset x momentums.
          //
-         if ( _activeMeshedVolume->GetPrecomputedXSlices() != NULL &&
-              _activeMeshedVolume->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+         if ( _activeDataSet->GetPrecomputedXSlices() != NULL &&
+              _activeDataSet->GetPrecomputedXSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 31. Initializing.......Multiple X-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
@@ -548,8 +545,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset y momentums.
          //
-         if ( _activeMeshedVolume->GetPrecomputedYSlices() != NULL &&
-              _activeMeshedVolume->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+         if ( _activeDataSet->GetPrecomputedYSlices() != NULL &&
+              _activeDataSet->GetPrecomputedYSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 32. Initializing.......Multiple Y-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
@@ -562,8 +559,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset z momentums.
          //
-         if ( _activeMeshedVolume->GetPrecomputedZSlices() != NULL &&
-              _activeMeshedVolume->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+         if ( _activeDataSet->GetPrecomputedZSlices() != NULL &&
+              _activeDataSet->GetPrecomputedZSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 33. Initializing.......Multiple Z-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
@@ -575,13 +572,13 @@ void cfdSteadyStateVizHandler::InitScene( void )
       }
 
       // Make sure that this dataset has a vector and scalar...
-      if ( _activeMeshedVolume->GetDataSet()->GetPointData()->GetVectors() )
+      if ( _activeDataSet->GetDataSet()->GetPointData()->GetVectors() )
       {
          //
          // Initiate the preset x vectors.
          //
-         if ( _activeMeshedVolume->GetPrecomputedXSlices() != NULL &&
-              _activeMeshedVolume->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+         if ( _activeDataSet->GetPrecomputedXSlices() != NULL &&
+              _activeDataSet->GetPrecomputedXSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 34. Initializing.........Multiple X-planes of Precomputed Vectors |" << std::endl;
             this->x_vectors = new cfdVectors( 0 );
@@ -592,8 +589,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset y vectors.
          //
-         if ( _activeMeshedVolume->GetPrecomputedYSlices() != NULL &&
-              _activeMeshedVolume->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+         if ( _activeDataSet->GetPrecomputedYSlices() != NULL &&
+              _activeDataSet->GetPrecomputedYSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 35. Initializing.........Multiple Y-planes of Precomputed Vectors |" << std::endl;
             this->y_vectors = new cfdVectors( 1 );
@@ -604,8 +601,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset z vectors.
          //
-         if ( _activeMeshedVolume->GetPrecomputedZSlices() != NULL &&
-              _activeMeshedVolume->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+         if ( _activeDataSet->GetPrecomputedZSlices() != NULL &&
+              _activeDataSet->GetPrecomputedZSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 36. Initializing.........Multiple Z-planes of Precomputed Vectors |" << std::endl;
             this->z_vectors = new cfdVectors( 2 );
@@ -686,26 +683,19 @@ void cfdSteadyStateVizHandler::InitScene( void )
    //
    std::cout << "| 51. Initializing........................................ pfGeodes |" << std::endl;
 
-   //bool transient_flag = true;
    for ( int i = 0; i < (int)this->dataList.size(); i++ )
    {
-      //this->dataList[ i ]->SetcfdReadParam( this->paramReader );
+      // Initialize all the geode creation flags and dcs flags for all the geodes
       this->dataList[ i ]->SetUpdateFlag( false );
       this->dataList[ i ]->SetGeodeFlag( false );
       this->dataList[ i ]->SetDCS( this->_worldDCS );
-
-      // for the objects in the virtual environment.
-      // Need to rethink this section fix this
-      /*
-      cfdTransientFlowManager * tfmTest = dynamic_cast<cfdTransientFlowManager *>( this->dataList[ i ] );
-      if ( transient_flag && tfmTest != NULL )
-      {
-         this->cfdTimesteps = tfmTest->GetNumberOfFrames();
-         transient_flag = false;
-      }
-      */
-      
    }
+
+   // This set of thread stuff needs to be in ssvizhandler and transvizhandler
+   std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
+   this->runIntraParallelThread = true;
+   this->vjThFunc[0] = new ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread );
+   this->vjTh[0] = new Thread( this->vjThFunc[0] );
 }
 
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )
@@ -724,25 +714,19 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          << std::endl << vprDEBUG_FLUSH;
    }
 
-   int i;
-   for ( i = 0; i < (int)this->commandList.size(); i ++ )
+   for ( unsigned int i = 0; i < this->commandList.size(); i++ )
    {
-      // Fix this
-      // Non of this is implemented 
-      // Need to add command array to VJObs
-      //bool commandApplies = this->commandList[ i ]
-      //                          ->CheckCommandId( this->cfdCommandArray );
-      //if ( commandApplies )
-      //   break;
+      // Check to see if any of the objectss need updated before we 
+      // create actors
+      bool commandApplies = this->commandList[ i ]->CheckCommandId( this->commandArray );
    }
-   this->commandArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
 
    // check any virtual objects need to be updated
    if ( this->actorsAreReady )
    {
       vprDEBUG(vprDBG_ALL,4) << "|   Updating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
-      for ( int i = 0; i < (int)this->dataList.size(); i++ )
+      for ( unsigned int i = 0; i < this->dataList.size(); i++ )
       {
          if ( this->dataList[ i ]->GetGeodeFlag() )
          {
@@ -784,9 +768,13 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          }
       }
    }
+   else if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
+   {
+      this->useLastSource = this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+   }
    else if ( ( ( 0 <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&
-                ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) < 100 ) ) && 
-                  ( this->computeActorsAndGeodes == false ) )
+               ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) < 100 ) ) && 
+               ( this->computeActorsAndGeodes == false ) )
    {
       vprDEBUG(vprDBG_ALL,1) << " selected ID number = " << this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
                              << std::endl << vprDEBUG_FLUSH;
@@ -794,19 +782,6 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       {          
          if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == dataList[ i ]->GetObjectType() )
          {
-            // verify that if a transient sequence is desired, 
-            // an appropriate DCS is active...
-            if ( ( ( X_TRANSIENT_CONTOUR <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&
-                                          ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )<= PARTICLE_TRANSIENT ) ) &&
-                 ! cfdObjects::GetActiveDataSet()->IsPartOfTransientSeries() )
-            {
-               std::cerr << "\nERROR: You must activate an appropriate transient "
-                         << "dataset before proceeding\n" << std::endl;
-               this->_activeObject = NULL;
-               this->computeActorsAndGeodes = false;
-               break;
-            }
-
             vprDEBUG(vprDBG_ALL,1) << " setting viz object " << i 
                                    << " to _activeObject"
                                    << std::endl << vprDEBUG_FLUSH;
@@ -848,7 +823,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 }
 
 
-void cfdSteadyStateVizHandler::CreateActorThread( void )
+void cfdSteadyStateVizHandler::CreateActorThread( void * )
 {
    // DO NOT put scene graph manipulation code in this function
    // This thread is purely for creation of geodes
@@ -880,8 +855,6 @@ void cfdSteadyStateVizHandler::CreateActorThread( void )
             vprDEBUG(vprDBG_ALL,0) << " Updating cfdObject..." 
                << std::endl << vprDEBUG_FLUSH;
 
-            this->chgMod = true;
-
             // May replace later , fix a later date
             //vprDEBUG(vprDBG_ALL,2) << " Memory used before update ( bytes ) : "
             //  << pfMemory::getArenaBytesUsed() << std::endl << vprDEBUG_FLUSH;
@@ -908,8 +881,8 @@ void cfdSteadyStateVizHandler::CreateActorThread( void )
                vprDEBUG(vprDBG_ALL,1) << "interactive object." 
                                        << std::endl << vprDEBUG_FLUSH;
                // if we are not already computing streamlines
-               if ( this->inter_activeObject == false )
-                  this->inter_activeObject = true;
+               this->streamers();  
+               this->computeActorsAndGeodes = false;   
             }
             else if ( animStreamerTest != NULL )
             {
@@ -942,60 +915,46 @@ void cfdSteadyStateVizHandler::CreateActorThread( void )
    } // End of While loop
 }
 
-void cfdSteadyStateVizHandler::streamers( void * )
+void cfdSteadyStateVizHandler::streamers( void )
 {
    vprDEBUG(vprDBG_ALL,1) << "In streamers" << std::endl << vprDEBUG_FLUSH;
-   while ( this->runStreamersThread )
-   { 
-      // Wait for some  work
-      while (   !this->inter_activeObject )
-      {
-         vpr::System::msleep( 500 );  // half-second delay
-      }
+   
+   this->_activeObject->SetCursorType( this->cursorId );
+   this->_activeObject->SetNormal( this->nav->GetDirection() );
+   this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 
-      if ( this->inter_activeObject )
-      {
-         this->_activeObject->SetCursorType( this->cursorId );
-         this->_activeObject->SetNormal( this->nav->GetDirection() );
-         this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
-
-         if ( this->cursorId == CUBE )
-         {
-            this->_activeObject->SetBoxSize( this->cur_box );
-         }
-
-         if ( ! this->useLastSource )
-         {
-            vprDEBUG(vprDBG_ALL,1) <<"creating fresh streamlines"
-                                   << std::endl << vprDEBUG_FLUSH;
-            if ( this->lastSource )
-            {
-               this->lastSource->Delete();
-            }
-
-            this->lastSource = vtkPolyData::New();
-
-            this->lastSource->DeepCopy( 
-               (vtkPolyData*)this->cursor->GetSourcePoints( this->cursorId ) );
-
-            this->_activeObject->SetSourcePoints( 
-                                        (vtkPolyDataSource*)this->lastSource );
-         }
-         else //if ( _activeMeshedVolume->IsNewlyActivated() )// && this->useLastSource
-         {
-            vprDEBUG(vprDBG_ALL,1) << "using transformed last source"
-                                   << std::endl << vprDEBUG_FLUSH;
-
-            this->_activeObject->SetSourcePoints( 
-                                        (vtkPolyDataSource*)this->lastSource );
-         }
-
-         this->_activeObject->Update();
-         this->_activeObject->UpdatecfdGeode();
-         
-         this->inter_activeObject = false;
-         this->_activeObject = NULL;
-      }
-      this->computeActorsAndGeodes = false;   
+   if ( this->cursorId == CUBE )
+   {
+      this->_activeObject->SetBoxSize( this->cur_box );
    }
+
+   if ( ! this->useLastSource )
+   {
+      vprDEBUG(vprDBG_ALL,1) <<"creating fresh streamlines"
+                             << std::endl << vprDEBUG_FLUSH;
+      if ( this->lastSource )
+      {
+         this->lastSource->Delete();
+      }
+
+      this->lastSource = vtkPolyData::New();
+
+      this->lastSource->DeepCopy( 
+         (vtkPolyData*)this->cursor->GetSourcePoints( this->cursorId ) );
+
+      this->_activeObject->SetSourcePoints( 
+                                  (vtkPolyDataSource*)this->lastSource );
+   }
+   else 
+   {
+      vprDEBUG(vprDBG_ALL,1) << "using transformed last source"
+                             << std::endl << vprDEBUG_FLUSH;
+
+      this->_activeObject->SetSourcePoints( 
+                                  (vtkPolyDataSource*)this->lastSource );
+   }
+
+   this->_activeObject->Update();
+   this->_activeObject->UpdatecfdGeode();
+   this->_activeObject = NULL;
 }

@@ -90,6 +90,7 @@ cfdModelHandler::~cfdModelHandler()
 ///////////////////////
 void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
 {
+   // Must be set before PreFrameUpdate is called
    commandArray = input;
 }
 
@@ -157,6 +158,10 @@ void cfdModelHandler::InitScene( void )
    _scalarBar->RefreshScalarBar();
 }
 
+/////////////////////////////////
+// PreFrameUpdate - Be sure to set the commandArray befroe calling this
+// function.
+/////////////////////////////////
 void cfdModelHandler::PreFrameUpdate( void )
 {
    bool updateScalarRange = false;

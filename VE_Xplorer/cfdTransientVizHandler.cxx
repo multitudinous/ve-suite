@@ -434,6 +434,18 @@ void cfdTransientVizHandler::PreFrameUpdate( void )
    // Need to fix this for transient
                //add the transient flow to the graph
 
+/*            // verify that if a transient sequence is desired, 
+            // an appropriate DCS is active...
+            if ( ( ( X_TRANSIENT_CONTOUR <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&
+                                          ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )<= PARTICLE_TRANSIENT ) ) &&
+                 ! cfdObjects::GetActiveDataSet()->IsPartOfTransientSeries() )
+            {
+               std::cerr << "\nERROR: You must activate an appropriate transient "
+                         << "dataset before proceeding\n" << std::endl;
+               this->_activeObject = NULL;
+               this->computeActorsAndGeodes = false;
+               break;
+            }
 
                {
                   int i;
@@ -458,7 +470,7 @@ void cfdTransientVizHandler::PreFrameUpdate( void )
 
                   // Set active sequence to current sequence
                   this->_activeSequenceObject = this->dataList[ i ];
-               }
+               }*/
 }
 
 void cfdTransientVizHandler::CreateActors( void )

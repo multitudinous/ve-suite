@@ -33,7 +33,8 @@
 #define CFD_STEADYSTATEVIZHANDLER_H
 
 #include <vector>
-using namespace std;
+
+#include <vpr/Thread/Thread.h>
 
 class cfdPolyData;      
 class cfdIsosurface;    
@@ -68,14 +69,12 @@ class cfdSteadyStateVizHandler
 
       void InitScene( void );
       void PreFrameUpdate( void );
-      void CreateActorThread( void );
-      void streamers( void * );
+      void CreateActorThread( void * );
+      void streamers( void );
 
       // Helper functions
       void SetActiveDataSet( cfdDataSet* );
-      void SetActiveMeshedVolume( cfdDataSet* );
       void SetCommandArray( cfdCommandArray* );
-      void SetParameterFilename( char* );
       void SetWorldDCS( cfdDCS* );
       void SetNavigate( cfdNavigate* );
       void SetCursor( cfdCursor* );
@@ -112,12 +111,15 @@ class cfdSteadyStateVizHandler
 
       // Common objects for all functions
       cfdDataSet* _activeDataSet;
-      cfdDataSet* _activeMeshedVolume;
       cfdCommandArray*  commandArray;
       cfdDCS*     _worldDCS;
       cfdDCS*     _activeDataSetDCS;
       cfdObjects* _activeObject;
 
+      // Classes and variables for multithreading.
+      vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler >* vjThFunc[1];
+      vpr::Thread* vjTh[1];
+   
       // Vectors that will eventually be stored as maps
       // these hold all the objectsa for easy access and management
       std::vector< cfdObjects * > dataList;
@@ -137,9 +139,9 @@ class cfdSteadyStateVizHandler
       // Fix this need to look at old cfdapp to see how it works
       int cursorId;
       // Need to get rid of this bool fix 
-      bool inter_activeObject;
-      bool chgMod;
-      bool runStreamersThread;
+      //bool inter_activeObject;
+      //bool chgMod;
+      //bool runStreamersThread;
       bool runIntraParallelThread;
       bool useLastSource;
 };
