@@ -188,11 +188,14 @@ void UI_NavButton::onMouse(wxMouseEvent& mouse)
 void UI_NavigationTab::updateParent(int pushed, int id)
 {
    //if we released a button tell cfdApp to stop moving
-   if(!pushed){
+   if ( !pushed )
+   {
       ((UI_Tabs*)GetParent())->cId = -1;
       ((UI_Tabs*)GetParent())->cIso_value = -1;
       ((UI_Tabs*)GetParent())->sendDataArrayToServer();
-   }else{
+   }
+   else
+   {
       //we pushed a button.
       //tell cfdApp to move appropriately
       ((UI_Tabs*)GetParent())->cId = GUI_NAV;
@@ -203,6 +206,7 @@ void UI_NavigationTab::updateParent(int pushed, int id)
 
 void UI_NavigationTab::OnNavigationStepSlider( wxScrollEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_NAVIGATION_STEP_SIZE;
    ((UI_Tabs *)_parent)->cIso_value = navigationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
@@ -210,6 +214,7 @@ void UI_NavigationTab::OnNavigationStepSlider( wxScrollEvent& event)
 
 void UI_NavigationTab::OnResetNavPosition( wxCommandEvent& event )
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = RESET_NAVIGATION_POSITION;
    ((UI_Tabs *)_parent)->cIso_value = navigationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();

@@ -83,9 +83,9 @@ VjObs::scalar_p*  UI_ModelData::GetGeomFilenames( int input)
 short UI_ModelData::GetNubmerofDataSets( int input )
 {
    CORBA::ULong i = input;
-   return _models[ i ].datasetnames.length();
+   return _models[ i ].dataVector.length();
 }
-
+/*
 VjObs::scalar_p*  UI_ModelData::GetScalarNames( int input )
 {
    CORBA::ULong i = input;
@@ -103,7 +103,7 @@ VjObs::scalar_p*  UI_ModelData::GetDataSetNames( int input )
    CORBA::ULong i = input;
    return &(_models[ i ].datasetnames);
 }
-
+*/
 VjObs::obj_p*     UI_ModelData::GetDataSetTypes( int input )
 {
    CORBA::ULong i = input;
@@ -122,3 +122,8 @@ VjObs::obj_p*     UI_ModelData::GetNumberOfVectorsPerDataSet( int input )
    return &(_models[ i ].num_vectors_per_dataset);
 }
 
+VjObs::Datasets*  UI_ModelData::GetDataSets( int input )
+{
+   CORBA::ULong i = input;
+   return &(_models[ i ].dataVector);
+}

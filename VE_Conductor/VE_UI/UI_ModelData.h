@@ -53,12 +53,13 @@ class UI_ModelData
       short GetNumberOfGeomFiles( int );
       VjObs::scalar_p*  GetGeomFilenames( int );
       short GetNubmerofDataSets( int );
-      VjObs::scalar_p*  GetScalarNames( int );
-      VjObs::scalar_p*  GetVectorNames( int );
-      VjObs::scalar_p*  GetDataSetNames( int );
+      //VjObs::scalar_p*  GetScalarNames( int );
+      //VjObs::scalar_p*  GetVectorNames( int );
+      //VjObs::scalar_p*  GetDataSetNames( int );
       VjObs::obj_p*     GetDataSetTypes( int );
       VjObs::obj_p*     GetNumberOfScalarsPerDataSet( int );
       VjObs::obj_p*     GetNumberOfVectorsPerDataSet( int );
+      VjObs::Datasets*  GetDataSets( int );
       
    private:
       VjObs::Models_var _models;

@@ -4,6 +4,7 @@
 #include <winsock2.h>
 #endif
 #include <wx/wx.h>
+#include <vector>
 
 enum GEOMETRY_TAB_IDS
 {
@@ -17,25 +18,29 @@ enum GEOMETRY_TAB_IDS
 
 
 
-class UI_GeometryTab : public wxPanel{
-public:
-   UI_GeometryTab(wxNotebook* tControl);
-protected:
-   void _buildPage();
+class UI_GeometryTab : public wxPanel
+{
+   public:
+      UI_GeometryTab(wxNotebook* tControl);
+   protected:
+      void _buildPage();
    
-   //the controls
-   wxRadioBox* _geometryRBox;
-   wxCheckListBox* _geometryCBox;
-   wxButton*   _updateButton;
-   wxNotebook* _parent;
-   wxSlider*   geomOpacitySlider;
-   wxSlider*   geomLODSlider;
-   wxComboBox* geometryCombo;
+      //the controls
+      wxRadioBox* _geometryRBox;
+      wxCheckListBox* _geometryCBox;
+      wxButton*   _updateButton;
+      wxNotebook* _parent;
+      wxSlider*   geomOpacitySlider;
+      wxSlider*   geomLODSlider;
+      wxComboBox* geometryCombo;
 
-   //event handlers
-   void ChangeOpacity( wxScrollEvent& event );
-   void _onGeometry( wxScrollEvent& event );
-   void _onUpdate( wxCommandEvent& event );
+      //event handlers
+      void ChangeOpacity( wxScrollEvent& event );
+      void _onGeometry( wxScrollEvent& event );
+      void _onUpdate( wxCommandEvent& event );
+      void OpacityFileSelection( wxCommandEvent& event );
+
+      std::vector< int > opacityMemory;
 
    DECLARE_EVENT_TABLE()
 };

@@ -7,6 +7,10 @@
 
 UI_Scalars::UI_Scalars(wxString* scalarName)
 {
+   range[ 0 ] = 0.0f;
+   range[ 1 ] = 0.0f;
+   lastMinSetting = 0.0f;
+   lastMaxSetting = 0.0f;
    _thisScalarName = (*scalarName);
    std::cout << "\tScalar Name : " << _thisScalarName << std::endl;
 }
@@ -15,10 +19,6 @@ UI_Scalars::~UI_Scalars()
 {
 
 }
-
-
-
-
 
 UI_DataSets::UI_DataSets()
 {
@@ -37,7 +37,7 @@ UI_DataSets::~UI_DataSets()
    _Vectors.clear();
 }
 
-void UI_DataSets::_buildScalars(int _numScalars, wxString* scalarNames)
+void UI_DataSets::_buildScalars(int _numScalars, wxString* scalarNames, std::vector< std::pair<double, double> > input )
 {
    _numOfScalars = _numScalars;
 
@@ -45,6 +45,10 @@ void UI_DataSets::_buildScalars(int _numScalars, wxString* scalarNames)
    {
       thisScalar = new UI_Scalars(&scalarNames[i]);
       _Scalars.push_back(thisScalar);
+      _Scalars.back()->range[ 0 ] = input.at( i ).first;
+      _Scalars.back()->range[ 1 ] = input.at( i ).second;
+      _Scalars.back()->lastMinSetting = _Scalars.back()->range[ 0 ]; 
+      _Scalars.back()->lastMaxSetting = _Scalars.back()->range[ 1 ];
    }
 }
 
@@ -173,8 +177,8 @@ UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
                                 1,empty,1,wxRA_SPECIFY_COLS);
 
    _col = new wxBoxSizer(wxVERTICAL);  
-   _col->Add(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
    _col->Add(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   _col->Add(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    SetSizer(_col);
 }
@@ -198,34 +202,6 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    {
       delete _vectorRBox;
       _vectorRBox = 0;
-   }
-
-   // Create radio boxes
-   if ( activeDataSet->_numOfScalars != 0 )
-   {
-      _scalarRBox = new wxRadioBox(this,SCALAR_PANEL_RAD_BOX, wxT("Scalars"),
-                                       wxDefaultPosition, wxDefaultSize,
-                                       activeDataSet->_numOfScalars,
-                                       ((UI_DatasetPanel*)GetParent())->_scalarNames,
-                                       1,wxRA_SPECIFY_COLS);
-   }
-   else
-   {
-      wxString empty[1];
-      empty[0] = wxT("No Scalars");
-      _scalarRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Scalars"),
-                        wxDefaultPosition, wxDefaultSize, 
-                        1, empty, 1, wxRA_SPECIFY_COLS);
-   }
-
-   // Add to the sizer...
-   if ( activeDataSet->_numOfScalars != 0 )
-   {
-      _col->Prepend(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
-   }
-   else
-   {
-      _col->Prepend(_scalarRBox,0,wxALL|wxALIGN_LEFT|wxEXPAND,5);
    }
 
    // Create radio boxes
@@ -254,6 +230,34 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    else
    {
       _col->Prepend(_vectorRBox,0,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   }
+
+   // Create radio boxes
+   if ( activeDataSet->_numOfScalars != 0 )
+   {
+      _scalarRBox = new wxRadioBox(this,SCALAR_PANEL_RAD_BOX, wxT("Scalars"),
+                                       wxDefaultPosition, wxDefaultSize,
+                                       activeDataSet->_numOfScalars,
+                                       ((UI_DatasetPanel*)GetParent())->_scalarNames,
+                                       1,wxRA_SPECIFY_COLS);
+   }
+   else
+   {
+      wxString empty[1];
+      empty[0] = wxT("No Scalars");
+      _scalarRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Scalars"),
+                        wxDefaultPosition, wxDefaultSize, 
+                        1, empty, 1, wxRA_SPECIFY_COLS);
+   }
+
+   // Add to the sizer...
+   if ( activeDataSet->_numOfScalars != 0 )
+   {
+      _col->Prepend(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   }
+   else
+   {
+      _col->Prepend(_scalarRBox,0,wxALL|wxALIGN_LEFT|wxEXPAND,5);
    }
 
    Refresh(); 
@@ -311,8 +315,19 @@ BEGIN_EVENT_TABLE(UI_DatasetPanel, wxPanel)
    EVT_RADIOBOX(SCALAR_PANEL_RAD_BOX, UI_DatasetPanel::_onScalars)
    EVT_RADIOBOX(VECTOR_PANEL_RAD_BOX, UI_DatasetPanel::_onVectors)
    EVT_BUTTON(SCALAR_PANEL_UPDATE_BUTTON, UI_DatasetPanel::_onUpdate)   
+#ifdef WIN32
    EVT_COMMAND_SCROLL_ENDSCROLL(MIN_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
    EVT_COMMAND_SCROLL_ENDSCROLL(MAX_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
+#else
+   EVT_COMMAND_SCROLL(MIN_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
+   EVT_COMMAND_SCROLL(MAX_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
+#endif
+   EVT_COMMAND_SCROLL(MIN_SPIN_CNTL_BOX, UI_DatasetPanel::_onMinSpinCtrl)
+   EVT_TEXT_ENTER(MIN_SPIN_CNTL_BOX, UI_DatasetPanel::_onMinSpinCtrl)
+   EVT_COMMAND_SCROLL(MAX_SPIN_CNTL_BOX, UI_DatasetPanel::_onMaxSpinCtrl)
+   EVT_TEXT_ENTER(MAX_SPIN_CNTL_BOX, UI_DatasetPanel::_onMaxSpinCtrl)
+   //EVT_TEXT(MIN_SPIN_CNTL_BOX, UI_DatasetPanel::_onMinMaxSpinCtrl)
+   //EVT_TEXT(MAX_SPIN_CNTL_BOX, UI_DatasetPanel::_onMinMaxSpinCtrl)
 END_EVENT_TABLE()
 //////////////////////////////////////////////////
 //Constructor                                   //
@@ -391,18 +406,49 @@ void UI_DatasetPanel::_buildPanel()
    _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, wxDefaultSize,
                                   wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
 
+   //create the two spinners
+   _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+                                   _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 0 ],
+                                   _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 1 ],
+                                   _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 0 ], 
+                                   0.25, -1, wxEmptyString);
+
+   _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+                                   _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 0 ],
+                                   _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 1 ],
+                                   _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 1 ], 
+                                   0.25, -1, wxEmptyString);
+
+   //sizers to pull together the scalar adjustment controls
+   scalgroupmin = new wxBoxSizer(wxHORIZONTAL);
+   scalgroupspacer = new wxBoxSizer(wxHORIZONTAL);
+   scalgroupmax = new wxBoxSizer(wxHORIZONTAL);
+
+   minGroupwspin = new wxBoxSizer(wxVERTICAL);
+   maxGroupwspin = new wxBoxSizer(wxVERTICAL);
+
    //two sizers to group the sliders and their lables
    minGroup = new wxBoxSizer(wxHORIZONTAL); 
    maxGroup = new wxBoxSizer(wxHORIZONTAL); 
   
    minGroup->Add(minLabel,0,wxALIGN_LEFT);
-   minGroup->Add(_minPercentSlider,1,wxALIGN_LEFT);
+   minGroup->Add(_minPercentSlider,1,wxALIGN_RIGHT|wxEXPAND);
+
+   minGroupwspin->Add(minGroup,2,wxALIGN_TOP|wxEXPAND);
+   minGroupwspin->Add(_minSpinner,1,wxALIGN_BOTTOM|wxALIGN_CENTER);
 
    maxGroup->Add(maxLabel,0,wxALIGN_LEFT);
-   maxGroup->Add(_maxPercentSlider,1,wxALIGN_LEFT);
+   maxGroup->Add(_maxPercentSlider,1,wxALIGN_RIGHT|wxEXPAND);
 
-   sRangeBoxSizer->Add(minGroup, 1, wxALIGN_LEFT|wxEXPAND); 
-   sRangeBoxSizer->Add(maxGroup, 1, wxALIGN_LEFT|wxEXPAND);
+   maxGroupwspin->Add(maxGroup,2,wxALIGN_TOP|wxEXPAND);
+   maxGroupwspin->Add(_maxSpinner,1,wxALIGN_BOTTOM|wxALIGN_CENTER);
+
+   scalgroupmin->Add(minGroupwspin,1,wxALIGN_LEFT|wxEXPAND);
+   scalgroupmax->Add(maxGroupwspin,1,wxALIGN_LEFT|wxEXPAND);
+
+   sRangeBoxSizer->Add(scalgroupmin, 2, wxALIGN_LEFT|wxEXPAND);
+   sRangeBoxSizer->Add(scalgroupspacer, 1, wxALIGN_LEFT|wxEXPAND);
+   sRangeBoxSizer->Add(scalgroupmax, 2, wxALIGN_LEFT|wxEXPAND);
   
    _colcombine1_2 = new wxBoxSizer(wxHORIZONTAL);
    _mastercol1 = new wxBoxSizer(wxVERTICAL);
@@ -485,14 +531,17 @@ void UI_DatasetPanel::_buildDataSets( void )
 
    std::cout<<"numdatasets: "<<_numSteadyStateDataSets<<std::endl;
 
-   CORBA::ULong indexScalar = 0;
-   CORBA::ULong indexVector = 0;
+   //CORBA::ULong indexScalar = 0;
+   //CORBA::ULong indexVector = 0;
       
    if (_numSteadyStateDataSets > 0)
    {
-      VjObs::scalar_p datasetNames = 
-            VjObs::scalar_p( *_modelData->GetDataSetNames(_activeModIndex) );
+      VjObs::Datasets dataVector = 
+            VjObs::Datasets( *_modelData->GetDataSets(_activeModIndex) );
       
+      /*VjObs::scalar_p datasetNames = 
+            VjObs::scalar_p( *_modelData->GetDataSetNames(_activeModIndex) );*/
+
       VjObs::obj_p   datasetTypes = 
             VjObs::obj_p( *_modelData->GetDataSetTypes(_activeModIndex) );
       
@@ -502,17 +551,17 @@ void UI_DatasetPanel::_buildDataSets( void )
       VjObs::obj_p   numVectorsPerDataset = 
             VjObs::obj_p( *_modelData->GetNumberOfVectorsPerDataSet(_activeModIndex) );
 
-      VjObs::scalar_p scalarNames = 
+      /*VjObs::scalar_p scalarNames = 
             VjObs::scalar_p( *_modelData->GetScalarNames(_activeModIndex) );  
 
       VjObs::scalar_p vectorNames = 
             VjObs::scalar_p( *_modelData->GetVectorNames(_activeModIndex) );  
-
+*/
       for (CORBA::ULong i = 0; i<(unsigned int)_numSteadyStateDataSets; i++)
       {
-          _DataSets.push_back( new UI_DataSets() );
+         _DataSets.push_back( new UI_DataSets() );
          
-         _DataSets.at( i )->_dataSetName = datasetNames[i];
+         _DataSets.at( i )->_dataSetName = dataVector[ i ].datasetname; //datasetNames[i];
          std::cout << " DataSet Name[ " << i << " ] = " 
                      << _DataSets.at( i )->_dataSetName << std::endl;
          _DataSets.at( i )->_dataSetType = datasetTypes[i];
@@ -523,21 +572,28 @@ void UI_DatasetPanel::_buildDataSets( void )
 		   wxString* thisDataVectorNames;
 		   thisDataVectorNames = new wxString[numVectorsPerDataset[i]];
 
+         // another for loop to construct per dataset scalar names
+         std::vector< std::pair< double, double > > ranges;
          for (k=0; k<numScalarsPerDataset[i]; k++)
          {
-            thisDataScalarNames[k] = scalarNames[indexScalar];
-            indexScalar++;
+            CORBA::ULong nameNumber = k;
+            thisDataScalarNames[k] = dataVector[ i ].scalarnames[ nameNumber ];
+            ranges.push_back
+               ( 
+                  std::pair< double, double >
+                  ( (double)dataVector[ i ].scalarrange[ 0 ], (double)dataVector[ i ].scalarrange[ 1 ] ) 
+               );
          }
 
          // another for loop to construct per dataset vector names
          for (k=0; k<numVectorsPerDataset[i]; k++)
          {
-            thisDataVectorNames[k] = vectorNames[indexVector];
-            indexVector++;
+            CORBA::ULong nameNumber = k;
+            thisDataVectorNames[k] = dataVector[ i ].vectornames[ nameNumber ];
          }
         
 
-         _DataSets.at( i )->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
+         _DataSets.at( i )->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames, ranges);
          _DataSets.at( i )->_buildVectors(numVectorsPerDataset[i], thisDataVectorNames);
          
          //clean up the names array
@@ -787,8 +843,85 @@ void UI_DatasetPanel::_organizeRadioBoxInfo()
 
 }*/
 
+void UI_DatasetPanel::_resetScalarAdjustment( int dataSetSelected, int scalarSetSelected )
+{
+   minGroup->Remove( _minPercentSlider );
+   delete _minPercentSlider;
+   _minPercentSlider = 0;
+
+   minGroupwspin->Remove( _minSpinner );
+   delete _minSpinner;
+   _minSpinner = 0;
+
+   maxGroup->Remove( _maxPercentSlider );
+   delete _maxPercentSlider;
+   _maxPercentSlider = 0;
+  
+   maxGroupwspin->Remove( _maxSpinner );
+   delete _maxSpinner;
+   _maxSpinner = 0;
+ 
+   double minScalar = _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->range[ 0 ];
+   double maxScalar = _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->range[ 1 ];
+
+   double tempminslid =  
+            (_DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMinSetting -
+            minScalar ) / ( maxScalar - minScalar ) * 100;  
+
+   double tempmaxslid =
+            ( (maxScalar - minScalar) - ( maxScalar -
+            _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMaxSetting) ) /
+            ( maxScalar - minScalar) * 100; 
+
+   //create the two sliders
+   _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,(int)tempminslid,0,100,wxDefaultPosition, wxDefaultSize,
+                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+   _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,(int)tempmaxslid,0,100,wxDefaultPosition, wxDefaultSize,
+                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+
+   //create the two spinners
+   _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+                                   minScalar, maxScalar,
+                                   _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMinSetting , 
+                                   0.25, -1, wxEmptyString);
+
+   _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+                                   minScalar, maxScalar,
+                                   _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMaxSetting ,
+                                   0.25, -1, wxEmptyString);
+
+   minGroup->Insert(1,_minPercentSlider,1,wxALIGN_RIGHT|wxEXPAND);   
+   minGroupwspin->Insert(1,_minSpinner,1,wxALIGN_BOTTOM|wxALIGN_CENTER);
+
+   maxGroup->Insert(1,_maxPercentSlider,1,wxALIGN_RIGHT|wxEXPAND);
+   maxGroupwspin->Insert(1,_maxSpinner,1,wxALIGN_BOTTOM|wxALIGN_CENTER);
+
+   Refresh(); 
+  
+   //Complete Hack needed to get the page to refresh properly
+	// Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform
+   static bool test = false;
+   int flag = 0;
+   if ( test )
+   {
+      flag = 1;
+	   test = false;
+   }
+   else
+   {
+      flag = -1;
+	   test = true;
+   }
+   
+   wxSize temp = GetSize();
+   temp.SetHeight( temp.GetHeight()+flag );
+   temp.SetWidth( temp.GetWidth()+flag );
+   SetSize( temp );
+}
+
 void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
 {
+   event.GetInt();
    _RBoxScroll->changeActiveDatasetType(_datasetCombo->GetSelection());
 
    for (int i=0; i<_numSteadyStateDataSets; i++)
@@ -879,6 +1012,7 @@ void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
 
 void UI_DatasetPanel::_on3d(wxCommandEvent& event)
 {
+   event.GetInt();
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 0)
          if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
@@ -890,18 +1024,19 @@ void UI_DatasetPanel::_on3d(wxCommandEvent& event)
 
 void UI_DatasetPanel::_onVertex(wxCommandEvent& event)
 {
+   event.GetInt();
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 1)
          if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
          {
             _setScalars(_DataSets[i]);
             ((UI_Frame*)GetParent())->_tabs->setActiveDataset(i);
-         }
-   
+         }  
 }
 
 void UI_DatasetPanel::_onPolyData(wxCommandEvent& event)
 {
+   event.GetInt();
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 2)
          if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
@@ -909,11 +1044,11 @@ void UI_DatasetPanel::_onPolyData(wxCommandEvent& event)
             _setScalars(_DataSets[i]);
             ((UI_Frame*)GetParent())->_tabs->setActiveDataset(i);
          }
-   
 }
 
 void UI_DatasetPanel::_onVectors( wxCommandEvent& event )
 {
+   event.GetInt();
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_vectorRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
@@ -923,6 +1058,9 @@ void UI_DatasetPanel::_onVectors( wxCommandEvent& event )
 
 void UI_DatasetPanel::_onScalars(wxCommandEvent& event)
 {
+   event.GetInt();
+   _resetScalarAdjustment( _RBoxScroll->_3dRBox->GetSelection(), _ScalarScroll->_scalarRBox->GetSelection() );
+
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
@@ -932,6 +1070,7 @@ void UI_DatasetPanel::_onScalars(wxCommandEvent& event)
 
 void UI_DatasetPanel::_onUpdate(wxCommandEvent& event)
 {
+   event.GetInt();
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
@@ -940,6 +1079,82 @@ void UI_DatasetPanel::_onUpdate(wxCommandEvent& event)
 }
 
 void UI_DatasetPanel::_onMinMaxSlider(wxScrollEvent& event)
+{
+   event.GetInt();
+   double minScalar, maxScalar;
+
+   GetMinMaxScalar( minScalar, maxScalar );
+
+   _minSpinner->SetValue( ( maxScalar - minScalar ) * 
+               ( (double)_minPercentSlider->GetValue() / 100) + minScalar );
+
+   _maxSpinner->SetValue( maxScalar - ( ( maxScalar - minScalar ) - 
+               ( ( maxScalar - minScalar ) * 
+               ( (double)_maxPercentSlider->GetValue() / 100) ) ) );
+   
+   _DataSets[_RBoxScroll->_3dRBox->GetSelection()]->
+            _Scalars[ _ScalarScroll->_scalarRBox->GetSelection() ]->lastMinSetting = 
+            _minSpinner->GetValue();
+
+   _DataSets[_RBoxScroll->_3dRBox->GetSelection()]->
+            _Scalars[ _ScalarScroll->_scalarRBox->GetSelection() ]->lastMaxSetting = 
+            _maxSpinner->GetValue();
+
+   ConstructCommandId();
+}
+
+void UI_DatasetPanel::_onMinSpinCtrl(wxScrollEvent& event)
+{
+   event.GetInt();
+   double minScalar, maxScalar;
+
+   GetMinMaxScalar( minScalar, maxScalar );
+
+   int minValue = (int)( ( _minSpinner->GetValue() - 
+                  minScalar ) / ( maxScalar - minScalar ) * 100);
+   _minPercentSlider->SetValue( minValue );
+
+   _DataSets[_RBoxScroll->_3dRBox->GetSelection()]->
+            _Scalars[ _ScalarScroll->_scalarRBox->GetSelection() ]->
+            lastMinSetting = _minSpinner->GetValue();
+
+   ConstructCommandId();
+}
+
+void UI_DatasetPanel::_onMaxSpinCtrl(wxScrollEvent& event)
+{
+   event.GetInt();
+   double minScalar, maxScalar;
+
+   GetMinMaxScalar( minScalar, maxScalar );
+
+   int maxValue = (int)( ( ( maxScalar - minScalar ) -
+                  ( maxScalar - _maxSpinner->GetValue() ) ) /
+                  ( maxScalar - minScalar ) * 100 );
+   _maxPercentSlider->SetValue( maxValue );
+
+   _DataSets[_RBoxScroll->_3dRBox->GetSelection()]->
+            _Scalars[ _ScalarScroll->_scalarRBox->GetSelection() ]->
+            lastMaxSetting = _maxSpinner->GetValue();
+
+   ConstructCommandId();
+}
+
+//////////////
+//Internal Utility Functions
+//////////////
+void UI_DatasetPanel::GetMinMaxScalar( double& min, double& max)
+{
+   max = _DataSets[ _RBoxScroll->_3dRBox->GetSelection() ]->
+                                 _Scalars[ _ScalarScroll->
+                                 _scalarRBox->GetSelection() ]->range[ 1 ];
+
+   min = _DataSets[ _RBoxScroll->_3dRBox->GetSelection() ]->
+                                 _Scalars[ _ScalarScroll->
+                                 _scalarRBox->GetSelection() ]->range[ 0 ];
+}
+
+void UI_DatasetPanel::ConstructCommandId( void )
 {
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();

@@ -56,7 +56,8 @@ SRCS=\
    UI_DesignParTab.cpp \
    UI_ViewLocTab.cpp \
    UI_ModSelPanel.cpp \
-   UI_ModelData.cpp
+   UI_ModelData.cpp \
+   spinctld.cpp
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
@@ -89,8 +90,9 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-EXTRA_PATH_FOR_SOURCES+= $(VE_UI_HOME) $(IDL_HOME)/skel ./Framework
-
+EXTRA_PATH_FOR_SOURCES+= $(VE_UI_HOME) $(IDL_HOME)/skel \
+                        ./Framework \
+                        $(VE_SUITE_HOME)/VE_Builder/Utilities/gui
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
@@ -98,7 +100,8 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 
 EXTRA_INCLUDES+= -I$(VE_UI_HOME) \
-                  -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer
+                  -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer \
+                  -I$(VE_SUITE_HOME)/VE_Builder/Utilities/gui 
 
 # -----------------------------------------------------------------------------
 # Application build targets.

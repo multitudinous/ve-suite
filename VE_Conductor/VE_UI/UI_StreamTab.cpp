@@ -11,10 +11,17 @@ BEGIN_EVENT_TABLE(UI_StreamlineTab, wxPanel)
    EVT_CHECKBOX      (SEED_POINTS_CHK,       UI_StreamlineTab::_onCheck)
    EVT_COMMAND_SCROLL(NUM_PTS_SLIDER,        UI_StreamlineTab::_onnPointsSlider)
    EVT_COMMAND_SCROLL(SIZE_SLIDER,           UI_StreamlineTab::_onnPointsSlider)
+#ifdef WIN32
    EVT_COMMAND_SCROLL_ENDSCROLL(PROP_SLIDER,           UI_StreamlineTab::_onPropSlider)
    EVT_COMMAND_SCROLL_ENDSCROLL(INT_STEP_SLIDER,       UI_StreamlineTab::_oniStepSlider)
    EVT_COMMAND_SCROLL_ENDSCROLL(STEP_SLIDER,           UI_StreamlineTab::_onStepSlider)
    EVT_COMMAND_SCROLL_ENDSCROLL(DIAMETER_SLIDER,       UI_StreamlineTab::_onDiameterSlider)
+#else
+   EVT_COMMAND_SCROLL(PROP_SLIDER,           UI_StreamlineTab::_onPropSlider)
+   EVT_COMMAND_SCROLL(INT_STEP_SLIDER,       UI_StreamlineTab::_oniStepSlider)
+   EVT_COMMAND_SCROLL(STEP_SLIDER,           UI_StreamlineTab::_onStepSlider)
+   EVT_COMMAND_SCROLL(DIAMETER_SLIDER,       UI_StreamlineTab::_onDiameterSlider)
+#endif
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////
@@ -119,7 +126,7 @@ void UI_StreamlineTab::_buildPage()
                                 wxSL_HORIZONTAL|
                                 wxSL_LABELS );
 
-   _nPtsSlider = new wxSlider(this, NUM_PTS_SLIDER,2,1,20,
+   _nPtsSlider = new wxSlider(this, NUM_PTS_SLIDER,2,2,20,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_LABELS );
@@ -295,6 +302,7 @@ void UI_StreamlineTab::_buildPage()
 //////////////////////////////////////////////////////////////
 void UI_StreamlineTab::_oniStepSlider(wxScrollEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_INT_STEP_LENGTH;
    ((UI_Tabs *)_parent)->cIso_value = _iStepSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
@@ -303,6 +311,7 @@ void UI_StreamlineTab::_oniStepSlider(wxScrollEvent& event)
 ///////////////////////////////////////////////////////////
 void  UI_StreamlineTab::_onPropSlider(wxScrollEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_PROPAGATION_TIME;
    ((UI_Tabs *)_parent)->cIso_value = _propSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
@@ -311,6 +320,7 @@ void  UI_StreamlineTab::_onPropSlider(wxScrollEvent& event)
 //////////////////////////////////////////////////////////////
 void UI_StreamlineTab::_onStepSlider(wxScrollEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_STEP_LENGTH;
    ((UI_Tabs *)_parent)->cIso_value = _stepSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
@@ -319,6 +329,7 @@ void UI_StreamlineTab::_onStepSlider(wxScrollEvent& event)
 //////////////////////////////////////////////////////////////
 void  UI_StreamlineTab::_onIntegrateDir(wxCommandEvent& event)
 {
+   event.GetInt();
    if ( _integrationDirRBox->GetSelection() == 0 )
    {
       ((UI_Tabs *)_parent)->cId = BACKWARD_INTEGRATION;
@@ -337,6 +348,7 @@ void  UI_StreamlineTab::_onIntegrateDir(wxCommandEvent& event)
 //////////////////////////////////////////////////////////////
 void  UI_StreamlineTab::_onParticleTrack(wxCommandEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId = ANIMATED_STREAMLINES;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
@@ -344,6 +356,7 @@ void  UI_StreamlineTab::_onParticleTrack(wxCommandEvent& event)
 ////////////////////////////////////////////////////////////////
 void  UI_StreamlineTab::_onCompStreamline(wxCommandEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId = STREAMLINES;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
@@ -351,6 +364,7 @@ void  UI_StreamlineTab::_onCompStreamline(wxCommandEvent& event)
 ///////////////////////////////////////////////////////////
 void  UI_StreamlineTab::_onDiameterSlider(wxScrollEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = STREAMLINE_DIAMETER;
    ((UI_Tabs *)_parent)->cIso_value = _diameterSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
@@ -359,17 +373,20 @@ void  UI_StreamlineTab::_onDiameterSlider(wxScrollEvent& event)
 ///////////////////////////////////////////////////////
 void  UI_StreamlineTab::_onCheck(wxCommandEvent& event)
 {
+   event.GetInt();
 }
 
 ///////////////////////////////////////////////////////
 void  UI_StreamlineTab::_onnPointsSlider(wxScrollEvent& event)
 {
+   event.GetInt();
    ConstructCommandId();
 }
 
 ///////////////////////////////////////////////////////
 void  UI_StreamlineTab::_onDirection( wxCommandEvent& event )
 {
+   event.GetInt();
    ConstructCommandId();
 }
 

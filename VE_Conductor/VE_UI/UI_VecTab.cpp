@@ -5,6 +5,7 @@
 BEGIN_EVENT_TABLE(UI_VectorTab, wxPanel)
    EVT_BUTTON(VECTOR_UPDATE_BUTTON,       UI_VectorTab::_onUpdate)
    EVT_CHECKBOX(SCALE_VEC_MAG_CHK,        UI_VectorTab::_onCheck)
+#ifdef WIN32
    EVT_COMMAND_SCROLL_ENDSCROLL(SCALE_SLIDER,       UI_VectorTab::_onvScaleSlider)
    EVT_COMMAND_SCROLL_ENDSCROLL(RATIO_SLIDER,       UI_VectorTab::_onvRatioSlider)
    EVT_COMMAND_SCROLL_ENDSCROLL(MAX_THRESH_SLIDER,  UI_VectorTab::_onThresholdSlider)
@@ -12,6 +13,15 @@ BEGIN_EVENT_TABLE(UI_VectorTab, wxPanel)
    EVT_COMMAND_SCROLL_ENDSCROLL(WARP_SCALE_SLIDER,  UI_VectorTab::OnContourSliders)
    EVT_COMMAND_SCROLL_ENDSCROLL(CONTOUR_OPACITY_SLIDER,   UI_VectorTab::OnContourSliders)
    EVT_COMMAND_SCROLL_ENDSCROLL(CONTOUR_LOD_SLIDER,       UI_VectorTab::OnContourSliders)
+#else
+   EVT_COMMAND_SCROLL(SCALE_SLIDER,       UI_VectorTab::_onvScaleSlider)
+   EVT_COMMAND_SCROLL(RATIO_SLIDER,       UI_VectorTab::_onvRatioSlider)
+   EVT_COMMAND_SCROLL(MAX_THRESH_SLIDER,  UI_VectorTab::_onThresholdSlider)
+   EVT_COMMAND_SCROLL(MIN_THRESH_SLIDER,  UI_VectorTab::_onThresholdSlider)
+   EVT_COMMAND_SCROLL(WARP_SCALE_SLIDER,  UI_VectorTab::OnContourSliders)
+   EVT_COMMAND_SCROLL(CONTOUR_OPACITY_SLIDER,   UI_VectorTab::OnContourSliders)
+   EVT_COMMAND_SCROLL(CONTOUR_LOD_SLIDER,       UI_VectorTab::OnContourSliders)
+#endif
 END_EVENT_TABLE()
 /////////////////////////////////////////////
 //Constructor                              //
@@ -256,6 +266,7 @@ void UI_VectorTab::_buildPage()
 ///////////////////////////////////////////////////
 void UI_VectorTab::_onUpdate(wxCommandEvent& event)
 {
+   event.GetInt();
    //((UI_Tabs *)_parent)->cId        = Y_VECTOR;
    //((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
@@ -263,6 +274,7 @@ void UI_VectorTab::_onUpdate(wxCommandEvent& event)
 ///////////////////////////////////////////////////
 void UI_VectorTab::_onvRatioSlider(wxScrollEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId        = CHANGE_VECTOR_MASK_RATIO;
    ((UI_Tabs *)_parent)->cIso_value = _vRatioSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
@@ -271,6 +283,7 @@ void UI_VectorTab::_onvRatioSlider(wxScrollEvent& event)
 ///////////////////////////////////////////////////
 void UI_VectorTab::_onvScaleSlider(wxScrollEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId        = CHANGE_VECTOR_SCALE;
    ((UI_Tabs *)_parent)->cIso_value = _vScaleSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
@@ -279,6 +292,7 @@ void UI_VectorTab::_onvScaleSlider(wxScrollEvent& event)
 ///////////////////////////////////////////////////
 void UI_VectorTab::_onThresholdSlider(wxScrollEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId        = CHANGE_VECTOR_THRESHOLD;
    ((UI_Tabs *)_parent)->cMin       = _vThresholdMinSlider->GetValue();
    ((UI_Tabs *)_parent)->cMax       = _vThresholdMaxSlider->GetValue();
@@ -288,6 +302,7 @@ void UI_VectorTab::_onThresholdSlider(wxScrollEvent& event)
 //////////////////////////////////////////////////
 void UI_VectorTab::_onCheck(wxCommandEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId        = SCALE_BY_VECTOR_MAGNITUDE;
    ((UI_Tabs *)_parent)->cIso_value = _scaleVecMagChk->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
@@ -296,6 +311,7 @@ void UI_VectorTab::_onCheck(wxCommandEvent& event)
 //////////////////////////////////////////////////
 void UI_VectorTab::OnContourSliders( wxScrollEvent& event )
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId        = CHANGE_CONTOUR_SETTINGS;
    ((UI_Tabs *)_parent)->cIso_value = contourOpacitySlider->GetValue();
    ((UI_Tabs *)_parent)->cMin       = wrapContourScaleSlider->GetValue();

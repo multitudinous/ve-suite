@@ -5,6 +5,7 @@
 #endif
 
 #include <wx/wx.h>
+#include "spinctld.h"
 
 #include <vector>
 #ifdef _TAO
@@ -27,7 +28,9 @@ enum DATASETS_PANEL_IDS{
    SCALAR_PANEL_UPDATE_BUTTON,
    MIN_PER_SLIDER_PANEL,
    MAX_PER_SLIDER_PANEL,
-   VECTOR_PANEL_RAD_BOX
+   VECTOR_PANEL_RAD_BOX,
+   MIN_SPIN_CNTL_BOX,
+   MAX_SPIN_CNTL_BOX
 };
 
 class UI_Scalars{
@@ -36,7 +39,9 @@ public:
    ~UI_Scalars();
 
    wxString _thisScalarName;
-
+   double range[ 2 ];
+   double lastMinSetting;
+   double lastMaxSetting;
 };
 
 class UI_DataSets{
@@ -49,8 +54,8 @@ public:
    std::vector<UI_Scalars*> _Scalars;
    std::vector<UI_Scalars*> _Vectors;
 
-   void _buildScalars(int, wxString*);
-   void _buildVectors(int, wxString*);
+   void _buildScalars(int, wxString*, std::vector< std::pair<double, double> > );
+   void _buildVectors(int, wxString* );
 
    wxString _dataSetName;
    int _dataSetType;
@@ -144,6 +149,15 @@ public:
    wxStaticBox* _scalarRangeBox;
    wxSlider* _maxPercentSlider;
    wxSlider* _minPercentSlider;
+   wxSpinCtrlDbl* _minSpinner;
+   wxSpinCtrlDbl* _maxSpinner;
+
+   wxBoxSizer* scalgroupmin;
+   wxBoxSizer* scalgroupspacer;
+   wxBoxSizer* scalgroupmax;
+
+   wxBoxSizer* minGroupwspin;
+   wxBoxSizer* maxGroupwspin;
 
    wxStaticBox* _dataHeadingBox;
 
@@ -172,14 +186,15 @@ public:
    VjObs::obj_p_var numScalarsPerDataset;
    VjObs::scalar_p_var scalarNames;*/
 
-   void _setScalars(UI_DataSets*);
-   void _rebuildDataSets(int);
+   void _setScalars( UI_DataSets* );
+   void _rebuildDataSets( int );
 protected:
    void _buildDataSets();
    
    void _setScalarsnoDatasets();
    void _organizeRadioBoxInfo();
    void _organizeActiveRBox();
+   void _resetScalarAdjustment( int, int );
    void _onActiveSelection(wxCommandEvent& event);
    void _on3d(wxCommandEvent& event);
    void _onVertex(wxCommandEvent& event);
@@ -188,7 +203,11 @@ protected:
    void _onVectors(wxCommandEvent& event);
    void _onUpdate(wxCommandEvent& event);
    void _onMinMaxSlider(wxScrollEvent& event);
+   void _onMinSpinCtrl(wxScrollEvent& event);
+   void _onMaxSpinCtrl(wxScrollEvent& event);
 
+   void GetMinMaxScalar( double&, double& );
+   void ConstructCommandId( void );
    DECLARE_EVENT_TABLE()
 };
 #endif //_VE_UI_DATASET_PANEL_H_
