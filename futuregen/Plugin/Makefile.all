@@ -36,7 +36,7 @@ OBJ16 = Compressor/Compressor.o Compressor/Compressor_UI.o
 OBJ17 = MembraneReactor/MembraneReactor.o MembraneReactor/MembraneReactor_UI.o 
 OBJ18 = HeatExchange0D/HeatExchange0D.o HeatExchange0D/HeatExchange0D_UI.o 
 OBJ19 = ChlorineBed/ChlorineBed.o ChlorineBed/ChlorineBed_UI.o 
-OBJ20 = GasFeedback/GasFeedback.o GasFeedback/GasFeedback_UI.o
+OBJ20 = GasFeedback/GasFeedback.o GasFeedback/GasFeedback_UI.o GasFeedback/thermo.o GasFeedback/matrix.o
 OBJ21 = Gasifier/Gasifier.o Gasifier/Gasifier_UI.o 
 OBJ22 = GasSource/GasSource.o GasSource/GasSource_UI.o \
 	GasSource/thermo.o GasSource/matrix.o
