@@ -56,23 +56,21 @@
 #include "cfdTempAnimation.h"
 #include "cfdSequence.h"
 #include "cfdIHCCModel.h"
+#include "CorbaManager.h"
+#include "VjObs_i.h"
 
 #ifdef _TAO
 #include "cfdExecutive.h"
 #endif //_TAO
 
 #include <vpr/Util/Debug.h>
+#include <vpr/System.h>
 
 #include <cstdlib>
-
 using namespace vrj;
 using namespace std;
 
-#ifdef _CLUSTER
-int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
-#endif // _CLUSTER
-
-inline cfdApp::cfdApp( )
+inline cfdApp::cfdApp( CorbaManager* input )
 {
    this->_sceneManager =         NULL;
    this->_environmentHandler =   NULL;
@@ -80,15 +78,16 @@ inline cfdApp::cfdApp( )
    //this->_transientHandler =     NULL;
    this->_modelHandler =         NULL;
    this->ihccModel =             NULL;
+   _corbaManager = input;
 }
-
+/*
 void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_ptr orb, PortableServer::POA_ptr poa )
 {
    this->naming_context = CosNaming::NamingContext::_duplicate( naming );
    this->orb = CORBA::ORB::_duplicate( orb );
    this->poa = PortableServer::POA::_duplicate( poa );
 }
-
+*/
 void cfdApp::exit()
 {
    delete filein_name;
@@ -145,43 +144,15 @@ void cfdApp::exit()
    }
 #endif // _TAO
 
-   CosNaming::Name name(1);
-
-   name.length(1);
-   name[0].id   = (const char*) "Master";
-   name[0].kind = (const char*) "VE_Xplorer";
-   
-   try
-   {
-      vprDEBUG(vprDBG_ALL,0) 
-         << "naming_context->unbind for CORBA Object  " 
-         << endl << vprDEBUG_FLUSH;
-      naming_context->unbind( name );
-      //naming_context->destroy();
-   }
-   catch( CosNaming::NamingContext::InvalidName& )
-   {
-      cerr << "Invalid name for CORBA Object  " << endl;
-   }
-   catch(CosNaming::NamingContext::NotFound& ex)
-   {
-      cerr << "Name not found for CORBA Object  " << ex.why << endl;
-   }
-   
-   poa->destroy (1, 1);
-   
-   vprDEBUG(vprDBG_ALL,0) 
-     << " destroying orb" << std::endl << vprDEBUG_FLUSH;
-
-   orb->destroy();
-
    vprDEBUG(vprDBG_ALL,0) 
      << " pfExit" << std::endl << vprDEBUG_FLUSH;
+   delete _corbaManager;
    pfExit();
 }
 
 inline void cfdApp::init( )
 {
+   //_corbaManager = new CorbaManager();
    vprDEBUG(vprDBG_ALL,0) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
    filein_name = new char [ 256 ];
    do
@@ -275,7 +246,7 @@ inline void cfdApp::initScene( )
    // modelHandler stores the arrow and holds all data and geometry
    this->_modelHandler = new cfdModelHandler( this->filein_name, 
                                               this->_sceneManager->GetWorldDCS() );
-   this->_modelHandler->SetCommandArray( _cfdArray );
+   this->_modelHandler->SetCommandArray( _corbaManager->GetVjObs()->_cfdArray );
    this->_modelHandler->InitScene();
 
    // navigation and cursor 
@@ -283,7 +254,7 @@ inline void cfdApp::initScene( )
    this->_environmentHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    this->_environmentHandler->SetRootNode( this->_sceneManager->GetRootNode() );
    this->_environmentHandler->SetArrow( this->_modelHandler->GetArrow() );
-   this->_environmentHandler->SetCommandArray( _cfdArray );
+   this->_environmentHandler->SetCommandArray( _corbaManager->GetVjObs()->_cfdArray );
    this->_environmentHandler->InitScene();
 
    // create steady state visualization objects
@@ -291,7 +262,7 @@ inline void cfdApp::initScene( )
    this->_steadystateHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    this->_steadystateHandler->SetNavigate( this->_environmentHandler->GetNavigate() );
    this->_steadystateHandler->SetCursor( this->_environmentHandler->GetCursor() );
-   this->_steadystateHandler->SetCommandArray( _cfdArray );
+   this->_steadystateHandler->SetCommandArray( _corbaManager->GetVjObs()->_cfdArray );
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    this->_steadystateHandler->InitScene();
 
@@ -302,11 +273,11 @@ inline void cfdApp::initScene( )
 std::cout << "|  3d" << std::endl;
 */
 
-   this->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
+   this->_corbaManager->GetVjObs()->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-   this->executive = new cfdExecutive( naming_context.in(), this->_sceneManager->GetWorldDCS() );
+   this->executive = new cfdExecutive( _corbaManager->naming_context.in(), this->_sceneManager->GetWorldDCS() );
    this->executive->SetModelHandler( this->_modelHandler, this->_environmentHandler );
 
 #endif // _TAO
@@ -324,7 +295,7 @@ std::cout << "|  3d" << std::endl;
    }
 */
    // This may need to be fixed
-   this->GetCfdStateVariables();
+   this->_corbaManager->GetVjObs()->GetCfdStateVariables();
 }
 
 void cfdApp::preFrame( void )
@@ -332,7 +303,7 @@ void cfdApp::preFrame( void )
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
 
 #ifdef _CLUSTER
-   this->GetUpdateClusterStateVariables();
+   this->_corbaManager->GetVjObs()->GetUpdateClusterStateVariables();
 #endif // _CLUSTER
 
    ///////////////////////
@@ -356,20 +327,20 @@ void cfdApp::preFrame( void )
    // This need to go very soon
    // IHCC hack
    // fix this soon
-   if ( _cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
+   if ( this->_corbaManager->GetVjObs()->_cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
    {
       double data[ 6 ];// = { 0 };
-      data[ 0 ] = cfdShort_data_array[ 1 ]; //200;  //Agitation (rpm)  initial value 200
-      data[ 1 ] = cfdShort_data_array[ 2 ]; //1.25; //Air Concentration initial value 1.25;
-      data[ 2 ] = cfdShort_data_array[ 3 ]; //6;    //Initial pH value    initial value 6
-      data[ 3 ] = cfdShort_data_array[ 4 ]; //0.1;  //Nitrate Concentration     initial value 0.1
-      data[ 4 ] = cfdShort_data_array[ 5 ]; //37;   //Temperate (Celsius)        initial value 37
-      data[ 5 ] = cfdShort_data_array[ 6 ]; //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
+      data[ 0 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 1 ]; //200;  //Agitation (rpm)  initial value 200
+      data[ 1 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 2 ]; //1.25; //Air Concentration initial value 1.25;
+      data[ 2 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 3 ]; //6;    //Initial pH value    initial value 6
+      data[ 3 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 4 ]; //0.1;  //Nitrate Concentration     initial value 0.1
+      data[ 4 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 5 ]; //37;   //Temperate (Celsius)        initial value 37
+      data[ 5 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 6 ]; //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
 
       //this->ihccModel->UpdateModelVariables( data );
       //this->ihccModel->Update();
    }
-   else if ( _cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )   // exit cfdApp was selected
+   else if ( this->_corbaManager->GetVjObs()->_cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )   // exit cfdApp was selected
    {
 #ifdef _TAO
       this->executive->UnbindORB();
@@ -383,10 +354,10 @@ void cfdApp::preFrame( void )
       this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
    }
    this->executive->UpdateModules();
-   this->executive->CheckCommandId( _cfdArray );
+   this->executive->CheckCommandId( _corbaManager->GetVjObs()->_cfdArray );
 #endif // 
 
-   this->PreFrameUpdate();
+   this->_corbaManager->GetVjObs()->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -413,7 +384,7 @@ void cfdApp::postFrame()
       }
    }*/
 
-   this->GetCfdStateVariables();
+   this->_corbaManager->GetVjObs()->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -424,143 +395,14 @@ int main(int argc, char* argv[])
    //pfSharedArenaBase ((void *) 0x20000000);
    //pfInitArenas(); 
 
-#ifdef _CLUSTER
-   char buffer[1025];
-   int ntoks, i;
-   std::vector<std::string> toks;
-   std::string hostfile;
-   FILE * fhost;
-   bool found=false;
-   std::string masterhost="abbott";
-
-   if (argc>1)
-   {
-      strcpy(buffer, argv[1]);
-      ntoks=getStringTokens(buffer, "/", toks);
-      //Now construct the name for the host file;
-      hostfile="/";
-      for (i=0; i<ntoks-1; i++)
-      hostfile=hostfile+toks[i]+"/";
-      hostfile+="component/host.config";
-      cout<<"Here is the string for the hostfile :"<<hostfile<<endl;
-      //Now we open that file and get the host name
-      fhost=fopen(hostfile.c_str(), "r");
-      if (fhost==NULL)
-      {
-         cout<<"Something bad in the path"<<endl;
-         return -1;
-      }
-
-      while(!feof(fhost)&&!found)
-      {
-         fgets(buffer, 1024, fhost);
-         ntoks=getStringTokens(buffer, "<>/ ", toks);
-         for (i=0; i<ntoks; i++)
-            if (toks[i]=="hostname" && i!=ntoks-1)
-            {
-               masterhost=toks[i+1];
-               found=true;
-               break;
-            }
-      }
-      fclose(fhost);
-   }
-#endif // _CLUSTER
-
-   int temp = 0;
-   char** xargv;
-   xargv = new char*[ temp ];
-   //xargv[ 0 ] = "-ORBInitRef";
-   //xargv[ 1 ] = "NameService=corbaname::cruncher.vrac.iastate.edu:2809";
-
-#ifdef _TAO
-   //xargv[ 0 ] = "-ORBInitRef";
-   //xargv[ 1 ] = "NameService=file:///tmp/ns.ior";
-   CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv,"" );
-#else
-   CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv );
-   if ( CORBA::is_nil( orb.in() ) )
-      exit(0);
-#endif // _TAO
-   //Here is the part to contact the naming service and get the reference for the executive
-   CORBA::Object_var naming_context_object =
-     orb->resolve_initial_references ("NameService"); 
-   CORBA::String_var sior1(orb->object_to_string(naming_context_object.in ()));
-   cout << "|  IOR of the server side : " << endl << sior1 << endl;
-
-   CosNaming::NamingContext_var naming_context =
-       CosNaming::NamingContext::_narrow (naming_context_object.in ());
-   
-   
-    //Here is the code to set up the server
-    CORBA::Object_var poa_object =
-      orb->resolve_initial_references ("RootPOA"); // get the root poa
-
-    PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_object.in());
-    PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
-    poa_manager->activate ();
-//   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
-//   cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
+   // cfdApp will call the destructor
+   CorbaManager* manager = new CorbaManager();
+    vpr::System::msleep( 10000 );  // half-second delay
 
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
 
-   cfdApp* application = new cfdApp( );//kernel );  // Delcare an instance of my application
+   cfdApp* application = new cfdApp( manager );//kernel );  // Delcare an instance of my application
 
-#ifdef _CLUSTER
-   char raw_hostname[256];
-   std::string hostname;
-   
-   gethostname(raw_hostname, 255); //get the host name 
-   hostname=raw_hostname;
-   cout<<"Host name is "<<hostname<<endl;   
-   getStringTokens(raw_hostname,".", toks);
-   //now the toks[0] will be the short host name, which is the one without the domain name
-
-   
-   if (hostname==masterhost||toks[0]==masterhost)
-   {
-      cout<<"This is the master!"<<endl;
-
-      VjObs_var vjobs = application->_this();
-      CORBA::String_var sior(orb->object_to_string(vjobs.in()));
-      cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
-      CosNaming::Name name;
-      name.length(1);
-
-      name[0].id   = (const char*) "Master";
-      name[0].kind = (const char*) "VE_Xplorer";
-      //Bind the object
-      try
-      {
-         naming_context->bind(name, vjobs.in());
-      }
-      catch(CosNaming::NamingContext::AlreadyBound& ex)
-      {
-         naming_context->rebind(name, vjobs.in());
-      }
-   }
-#else // _CLUSTER
-   VjObs_var vjobs = application->_this();
-   if ( CORBA::is_nil( vjobs.in() ) )
-     cout << "is nil " << endl;
-   CORBA::String_var sior(orb->object_to_string( vjobs.in() ) );
-   cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
-   CosNaming::Name name;
-   name.length(1);
-   
-   name[0].id   = (const char*) "Master";
-   name[0].kind = (const char*) "VE_Xplorer";
-   //Bind the object
-   try
-   {
-      naming_context->bind(name, vjobs.in());
-   }
-   catch(CosNaming::NamingContext::AlreadyBound&)
-   {
-      naming_context->rebind(name, vjobs.in());
-   }
-#endif // _CLUSTER
-   application->SetCORBAVariables( naming_context.in(), orb.in(), poa.in() );
 
    for ( int i = 1; i < argc; i++ )          // Configure the kernel
    {
@@ -571,10 +413,6 @@ int main(int argc, char* argv[])
 
    kernel->setApplication( application );    // Give application to kernel
    
-#ifdef _TAO
-   // If this isn't here the app won't work with TAO 
-   orb->run();
-#endif // _TAO
    kernel->waitForKernelStop();              // Block until kernel stops
 
    return 0;
@@ -603,21 +441,5 @@ void cfdApp::GetUpdateClusterStateVariables( void )
    }
 }
 
-int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
-{
-   char* token;
-   int i=0;
-   token = strtok(buffer, delim);
-
-   toks.clear();
-   while( token )
-   {
-      i++;
-      toks.push_back(std::string(token));
-      token = strtok(NULL, delim);
-   }
-
-   return i;
-}
 #endif // _CLUSTER
 

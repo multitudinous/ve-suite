@@ -32,14 +32,6 @@
 #ifndef CFD_APP_H
 #define CFD_APP_H
 
-#include <VjObs_i.h>     //added for corba stuff
-
-#ifdef _TAO
-#include <orbsvcs/CosNamingC.h>
-#else
-//#include <CorbaManager.h>
-#endif
-
 /// VR Juggler Stuff
 #include <vrj/Kernel/Kernel.h>
 #include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
@@ -66,6 +58,7 @@ class cfdSteadyStateVizHandler;
 class cfdTransientVizHandler;
 class cfdModelHandler;
 class cfdIHCCModel;
+class CorbaManager;
 
 // Scene graph dependent forward declarations
 class pfGroup;
@@ -74,11 +67,11 @@ class pfGroup;
 const float SAMPLE_TIME = 1.0f;
 
 // Declare my application class
-class cfdApp : public vrj::PfApp, public VjObs_i
+class cfdApp : public vrj::PfApp
 {
    public:
       //cfdApp( vrj::Kernel* kern);
-      cfdApp( );//vrj::Kernel* kern );
+      cfdApp( CorbaManager* );//vrj::Kernel* kern );
 
       virtual void init( );
 
@@ -121,21 +114,22 @@ class cfdApp : public vrj::PfApp, public VjObs_i
 
       void pushDataToStateInfo( void );
 
-      void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
+      //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
       cfdPfSceneManagement*      _sceneManager;
       cfdEnvironmentHandler*     _environmentHandler;
       cfdSteadyStateVizHandler*  _steadystateHandler;
       cfdTransientVizHandler*    _transientHandler;
-      cfdModelHandler*          _modelHandler;
+      cfdModelHandler*           _modelHandler;
       cfdIHCCModel               *ihccModel;
+      CorbaManager*              _corbaManager;
 #ifdef _TAO
       cfdExecutive*     executive;
 #endif
 
-      CosNaming::NamingContext_var naming_context;
-      CORBA::ORB_var orb;
-      PortableServer::POA_var poa;
+      //CosNaming::NamingContext_var naming_context;
+      //CORBA::ORB_var orb;
+      //PortableServer::POA_var poa;
 
    
       //biv -- transient stuff

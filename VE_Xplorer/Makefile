@@ -178,7 +178,8 @@ SRCS=\
    cfdEnvironmentHandler.cxx \
    cfdModelHandler.cxx \
    cfdSoundHandler.cxx \
-   cfdPfSceneManagement.cxx 
+   cfdPfSceneManagement.cxx \
+   CorbaManager.cxx
 
 #   cfdDrawManager.cxx
 
