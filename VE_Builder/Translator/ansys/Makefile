@@ -6,7 +6,8 @@ all:
 
 srcdir= .
 
-SRCS= ansysReader.cpp fileIO.cxx test.cpp
+SRCS= ansysReader.cpp fileIO.cxx converter.cpp \
+      test.cpp readWriteVtkThings.cpp
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
@@ -18,7 +19,8 @@ NO_DEPEND= YES
 DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE
 
-EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer \
+                 -I${VE_SUITE_HOME}/VE_Builder/Translator
 
 LINKALL_ON= -all
 LINKALL_OFF=
@@ -34,7 +36,11 @@ EXTRA_LIBS+= -lm
 #vrj.appdefs.mk includes $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 
+#add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
+include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+
 vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer
+vpath %.cpp ${VE_SUITE_HOME}/VE_Builder/Translator
 
 # -----------------------------------------------------------------------------
 # Application build targets.

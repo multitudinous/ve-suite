@@ -34,6 +34,8 @@
 
 #include <iostream>
 
+class vtkUnstructuredGrid;
+
 class ansysReader
 {
    public:
@@ -55,7 +57,9 @@ class ansysReader
       void ReadElementTypeIndexTable();
       void ReadNodalCoordinates();
       void ReadElementDescriptionIndexTable();
-      //void ReadNodalSolutions();
+      void ReadElementDescription();
+      void ReadSolutionDataHeader();
+      void ReadNodalSolutions();
       
       // Functions that get pointers to blocks of data
       //int GetPtrNodalEquivalencyTable();
@@ -68,6 +72,8 @@ class ansysReader
       //int GetPtrETY();
       //int GetPtrNOD();
 
+      vtkUnstructuredGrid * GetUGrid();
+
    private:
       void FlipEndian();
       int ReadNthInteger( int n );
@@ -75,6 +81,7 @@ class ansysReader
       float ReadNthFloat( int n );
       double ReadNthDouble( int n );
 
+      int * ReadElementDescription( int ptr );
       int * ReadElementTypeDescription( int ptr );
 
       char * ansysFileName;
@@ -110,5 +117,9 @@ class ansysReader
       int ** elemDescriptions;
       double ** nodalCoordinates;
       int * ptrElemDescriptions;
+      int * ptrDataSetSolutions;
+      int ptrNodalSolution;
+
+      vtkUnstructuredGrid * ugrid;
 };
 #endif

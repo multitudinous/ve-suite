@@ -35,6 +35,13 @@
 #include <iomanip>
 #include <cstdio>
 #include "fileIO.h"
+#include "converter.h"      // for "letUsersAddParamsToField"
+
+#include "vtkUnstructuredGrid.h"
+#include "vtkPoints.h"
+#include "vtkFloatArray.h"  // this code requires VTK4
+#include "vtkPointData.h"
+#include "vtkCellType.h"
 
 #define PRINT_WIDTH 36
 
@@ -92,6 +99,9 @@ ansysReader::ansysReader( char * input )
    this->elemDescriptions = NULL;
    this->nodalCoordinates = NULL;
    this->ptrElemDescriptions = NULL;
+   this->ptrDataSetSolutions = NULL;
+
+   this->ugrid = vtkUnstructuredGrid::New();
 }
 
 ansysReader::~ansysReader()
@@ -118,6 +128,18 @@ ansysReader::~ansysReader()
    {
       delete [] this->ptrToElemType;
       this->ptrToElemType = NULL;
+   }
+
+   if ( this->ptrDataSetSolutions )
+   {
+      delete [] this->ptrDataSetSolutions;
+      this->ptrDataSetSolutions = NULL;
+   }
+
+   if ( this->ugrid )
+   {
+      this->ugrid->Delete();
+      this->ugrid = NULL;
    }
 }
 
@@ -657,11 +679,12 @@ void ansysReader::ReadDataStepsIndexTable()
       exit( 1 );
    }
 
+   this->ptrDataSetSolutions = new int [ 2 * this->maxNumberDataSets ];
    // read all integers
    for ( int i = 0; i < 2 * this->maxNumberDataSets; i++ )
    {
-      int integer = ReadNthInteger( intPosition++ );
-      cout << "\tinteger[ " << i << " ]: " << integer << endl;
+      this->ptrDataSetSolutions [ i ] = ReadNthInteger( intPosition++ );
+      cout << "\tptrDataSetSolutions[ " << i << " ]: " << this->ptrDataSetSolutions [ i ] << endl;
    }
 
    // the last number is blockSize again
@@ -952,6 +975,7 @@ void ansysReader::ReadNodalCoordinates()
       exit( 1 );
    }
 
+   vtkPoints *vertex = vtkPoints::New();
    // allocate space for the nodal coordinate arrays
    this->nodalCoordinates = new double * [ this->numNodes ];
    for ( int i = 0; i < this->numNodes; i++ )
@@ -972,7 +996,14 @@ void ansysReader::ReadNodalCoordinates()
       {  
          cout << "\t" << this->nodalCoordinates[ i ][ j ] << endl;
       }
+
+      vertex->InsertPoint( (int)this->nodalCoordinates[ i ][ 0 ],
+                           this->nodalCoordinates[ i ][ 1 ],
+                           this->nodalCoordinates[ i ][ 2 ],
+                           this->nodalCoordinates[ i ][ 3 ] );
    }
+   this->ugrid->SetPoints( vertex );
+   vertex->Delete();
 
    // the last number is blockSize again
    int blockSize_2;
@@ -1031,20 +1062,210 @@ void ansysReader::ReadElementDescriptionIndexTable()
            << " != expected block size" << endl;
       exit( 1 );
    }
+
+   // now we are ready to construct the mesh
+   cout << "\nconstructing the mesh" << endl;
+   this->ugrid->Allocate(this->numElems,this->numElems);
+   for ( int i = 0; i < this->numElems; i++ )
+   {  
+      int * cornerNodes = this->ReadElementDescription( this->ptrElemDescriptions[ i ] );
+      this->ugrid->InsertNextCell( VTK_HEXAHEDRON, 8, cornerNodes );
+      //delete [] cornerNodes;
+   }
+   cout << "done constructing the mesh" << endl;
 }
 
-/*
+int * ansysReader::ReadElementDescription( int pointer )
+{
+   if ( pointer == 0 )
+      return NULL;
+
+   //cout << "\nReading Element Description" << endl;
+
+   int intPosition = pointer;
+   int blockSize_1 = ReadNthInteger( intPosition++ );
+   
+   int numValues = ReadNthInteger( intPosition++ );
+   if ( numValues != 30 ) 
+   {
+      cerr << "numValues = " << numValues << " != 30" << endl;
+      exit( 1 );
+   }
+
+   // allocate space for the node IDs that define the corners of the hex element
+   int junk [ 10 ];
+
+   // read the preface information
+   if ( fileIO::readNByteBlockFromFile( &junk,
+                  sizeof(int), 10, this->s1, this->endian_flip ) )
+   {
+      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
+           << endl;
+      exit(1);
+   }
+
+   cout << "\nReading Element Description for element " << junk[ 8 ] << endl;
+
+   // allocate space for the node IDs that define the corners of the hex element
+   int * cornerNodes = new int [ 8 ];
+
+   // read the node IDs that define the corners of the hex element
+   if ( fileIO::readNByteBlockFromFile( cornerNodes,
+                  sizeof(int), 8, this->s1, this->endian_flip ) )
+   {
+      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
+           << endl;
+      exit(1);
+   }
+
+   for ( int i = 0; i < 8; i++ )
+   {  
+      cout << "\tcornerNodes[ " << i << " ] = " << cornerNodes[ i ] << endl;
+   }
+
+   // allocate space for the other node IDs
+   int nonCornerNodes [ 12 ];
+
+   // read the preface information
+   if ( fileIO::readNByteBlockFromFile( &nonCornerNodes,
+                  sizeof(int), 12, this->s1, this->endian_flip ) )
+   {
+      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
+           << endl;
+      exit(1);
+   }
+
+   // the last number is blockSize again
+   int blockSize_2;
+   fileIO::readNByteBlockFromFile( &blockSize_2, sizeof(int),
+                                   1, this->s1, this->endian_flip );
+   if ( blockSize_2 != blockSize_1 ) 
+   {
+      cerr << "blockSize = " << blockSize_2
+           << " != expected block size" << endl;
+      exit( 1 );
+   }
+   return cornerNodes;
+}
+
+void ansysReader::ReadSolutionDataHeader()
+{
+   if ( this->ptrDataSetSolutions[ 0 ] == 0 )
+      return;
+
+   cout << "\nReading Solution Data Header" << endl;
+
+   int intPosition = this->ptrDataSetSolutions[ 0 ];
+   int blockSize_1 = ReadNthInteger( intPosition++ );
+   
+   int numValues = ReadNthInteger( intPosition++ );
+   if ( numValues != 100 ) 
+   {
+      cerr << "numValues = " << numValues << " != 100" << endl;
+      exit( 1 );
+   }
+
+   int zero = ReadNthInteger( intPosition++ );
+   PRINT( zero );
+   if ( zero != 0 ) 
+   {
+      cerr << "zero = " << zero << " != 0" << endl;
+      exit( 1 );
+   }
+
+   int numberOfElements = ReadNthInteger( intPosition++ );
+   PRINT( numberOfElements );
+   if ( numberOfElements != this->numElems ) 
+   {
+      cerr << "numberOfElements = " << numberOfElements << " != numElems" << endl;
+      exit( 1 );
+   }
+
+   int numberOfNodes = ReadNthInteger( intPosition++ );
+   PRINT( numberOfNodes );
+   if ( numberOfNodes != this->numNodes ) 
+   {
+      cerr << "numberOfNodes = " << numberOfNodes << " != numNodes" << endl;
+      exit( 1 );
+   }
+
+   int bitmask = ReadNthInteger( intPosition++ );
+   PRINT( bitmask );
+
+   int itime = ReadNthInteger( intPosition++ );
+   PRINT( itime );
+   if ( itime != 1 ) 
+   {
+      cerr << "itime = " << itime << " != 1" << endl;
+      exit( 1 );
+   }
+
+   int iter = ReadNthInteger( intPosition++ );
+   PRINT( iter );
+   if ( iter != 1 ) 
+   {
+      cerr << "iter = " << iter << " != 1" << endl;
+      exit( 1 );
+   }
+
+   int ncumit = ReadNthInteger( intPosition++ );
+   PRINT( ncumit );
+   if ( ncumit != 1 ) 
+   {
+      cerr << "ncumit = " << ncumit << " != 1" << endl;
+      exit( 1 );
+   }
+
+   int numReactionForces = ReadNthInteger( intPosition++ );
+   PRINT( numReactionForces );
+
+   int cs_LSC = ReadNthInteger( intPosition++ );
+   PRINT( cs_LSC );
+   if ( cs_LSC != 0 ) 
+   {
+      cerr << "cs_LSC = " << cs_LSC << " != 0" << endl;
+      exit( 1 );
+   }
+
+   int nmast = ReadNthInteger( intPosition++ );
+   PRINT( nmast );
+   if ( nmast != 0 ) 
+   {
+      cerr << "nmast = " << nmast << " != 0" << endl;
+      exit( 1 );
+   }
+
+   this->ptrNodalSolution = ReadNthInteger( intPosition++ );
+   PRINT( this->ptrNodalSolution );
+
+   // TODO: there is more to read....
+   // but return for now
+   return;
+
+   // the last number is blockSize again
+   int blockSize_2;
+   fileIO::readNByteBlockFromFile( &blockSize_2, sizeof(int),
+                                   1, this->s1, this->endian_flip );
+   if ( blockSize_2 != blockSize_1 ) 
+   {
+      cerr << "blockSize = " << blockSize_2
+           << " != expected block size" << endl;
+      exit( 1 );
+   }
+}
+
 void ansysReader::ReadNodalSolutions()
 {
-   if ( this->ptrNOD == 0 )
+   if ( this->ptrNodalSolution == 0 )
       return;
 
    cout << "\nReading Nodal Solutions" << endl;
 
-   int intPosition = this->ptrNOD;
+   int intPosition = this->ptrDataSetSolutions[ 0 ] + this->ptrNodalSolution;
    int blockSize_1 = ReadNthInteger( intPosition++ );
    
    int expectedNumValues = ( blockSize_1 - sizeof(int) ) / sizeof(double);
+   PRINT( expectedNumValues );
    if ( expectedNumValues != this->numDOF * this->numNodes ) 
    {
       cerr << "expectedNumValues = " << expectedNumValues
@@ -1053,27 +1274,67 @@ void ansysReader::ReadNodalSolutions()
    }
 
    int zero = ReadNthInteger( intPosition++ );
+   PRINT( zero );
    if ( zero != 0 ) 
    {
       cerr << "zero = " << zero << " != 0" << endl;
       exit( 1 );
    }
 
-   // allocate space for the nodal solution arrays
-   this->nodalSolution = new double * [ this->numNodes ];
-   for ( int i = 0; i < this->numNodes; i++ )
-      this->nodalSolution[ i ] =  new double [ this->numDOF ];
-
-   // read all values
-   for ( int i = 0; i < this->numNodes; i++ )
+   // set up arrays to store scalar and vector data over entire mesh...
+   // TODO: hardcoded for one scalar and one vector
+   int numParameters = 2;
+   vtkFloatArray ** parameterData = new vtkFloatArray * [ numParameters ];
+   for (int i=0; i < numParameters; i++)
    {
-      this->nodalSolution[ i ][ j ] = ReadNthDouble( intPosition++ );
-      cout << "\tnodalSolution[ " << i << " ][ " << j << " ]: " << this->ptrToElemType[ i ][ j ] << endl;
-      intPosition++; // increment for double
+      parameterData[ i ] = vtkFloatArray::New();
    }
 
+   // Because the ansys vertices are one-based, increase the arrays by one
+   // TODO: hardcoded for one vector and one scalar
+   parameterData[ 0 ]->SetName( "displacement vector" );
+   parameterData[ 0 ]->SetNumberOfComponents( 3 );
+   parameterData[ 0 ]->SetNumberOfTuples( this->numNodes + 1 );   // note +1
+
+   parameterData[ 1 ]->SetName( "displacement magnitude" );
+   parameterData[ 1 ]->SetNumberOfComponents( 1 );
+   parameterData[ 1 ]->SetNumberOfTuples( this->numNodes + 1 );   // note +1
+
+   // Read the solutions and populate the floatArrays.
+   // Because the ansys vertices are one-based, up the loop by one
+   double * nodalSolution = new double [ this->numDOF ];
+   for ( int i = 1; i < this->numNodes + 1; i++ )
+   {
+      if ( fileIO::readNByteBlockFromFile( nodalSolution,
+                 sizeof(double), this->numDOF, this->s1, this->endian_flip ) )
+      {
+         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
+              << endl;
+         exit(1);
+      }
+
+      parameterData[ 0 ]->SetTuple( i, nodalSolution );
+
+      double magnitude = nodalSolution[ 0 ] * nodalSolution[ 0 ] +
+                         nodalSolution[ 1 ] * nodalSolution[ 1 ] +
+                         nodalSolution[ 2 ] * nodalSolution[ 2 ];
+      magnitude = sqrt( magnitude );
+      parameterData[ 1 ]->SetTuple1( i, magnitude );
+   }
+
+   // Set selected scalar and vector quantities to be written to pointdata array
+   letUsersAddParamsToField( numParameters, parameterData,
+                             this->ugrid->GetPointData() );
+
+   for (int i=0; i < numParameters; i++) parameterData[i]->Delete();
+   delete [] parameterData;      parameterData = NULL;
+   
+   delete [] nodalSolution;
+
    // the last number is blockSize again
-   int blockSize_2 = ReadNthInteger( intPosition++ );
+   int blockSize_2;
+   fileIO::readNByteBlockFromFile( &blockSize_2, sizeof(int),
+                                   1, this->s1, this->endian_flip );
    if ( blockSize_2 != blockSize_1 ) 
    {
       cerr << "blockSize = " << blockSize_2
@@ -1081,7 +1342,6 @@ void ansysReader::ReadNodalSolutions()
       exit( 1 );
    }
 }
-*/
 
 /*
 void ansysReader::ReadGenericIntBlock()
@@ -1174,3 +1434,9 @@ int ansysReader::GetPtrNOD()
    return this->ptrNOD;
 }
 */
+
+vtkUnstructuredGrid * ansysReader::GetUGrid()
+{
+   return this->ugrid;
+}
+
