@@ -1,8 +1,5 @@
 #!/bin/csh
 # sets up environment to build and/or run VE-Xplorer
-
-#OMNI_HOME : comment out definitions to make a non-corba version - that's all you have to do
-
 #this is typically defined in your .cshrc file
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
 
@@ -30,8 +27,6 @@ setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 #setenv TAO_BUILD TRUE
 setenv TAO_BUILD FALSE
 
-set WX_HOME_DIR=/home/users/mccdo/wxWindows/wxGTK
-
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
 setenv VPR_DEBUG_ENABLE 1
@@ -43,61 +38,57 @@ setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/IRIX32
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/IRIX32
+   setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/IRIX32
    setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/vrjuggler-2.0-alpha4.irix-n32-pthread
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-deps
-#   setenv LD_LIBRARYN32_PATH /home/users/mccdo/VE_Suite/VE_Installer/arenasize/libs
+
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/mccdo/software/IRIX32/lib
-   setenv WX_HOME ${WX_HOME_DIR}/irix-65
    setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
    else
-#      setenv OMNI_HOME /home/vr/Juggler/irix/mipspro-omniORB-4.0.1
-#      setenv OMNI_HOME /home/users/mccdo/software/IRIX32
-      setenv OMNI_HOME ${VJ_DEPS_DIR}
+      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/IRIX32
       setenv PYTHONPATH ${OMNI_HOME}/lib32/python2.3/site-packages
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib32:${WX_HOME}/lib
    endif
       
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
-   setenv VTK_BASE_DIR /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
-
    setenv JDK_HOME /usr/java/j2sdk1.4.2_03
-   setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80
+   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-RH80
+   setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-RH80
+   setenv VJ_BASE_DIR /home/users/hgx/group_project/vrjuggler-2.0-alpha4.linux-rh80
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80-deps
    #setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/Suse-9.1-alpha4
    #setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
 
    setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
-   setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
-
-      setenv XERCESCROOT /home/users/dmuthjr/xerces
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
    else
-      setenv OMNI_HOME /home/vr/Juggler/linux-rh80
-      #setenv OMNI_HOME /home/vr/Juggler/linux-fc1
+      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Linux-RH80
       setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
    endif
 
 else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
-   setenv VTK_BASE_DIR /home/users/mccdo/vtk-builds/Linux
-   #setenv VTK_BASE_DIR /home/users/sjk60/suse_deps/vtk4.4
-
    setenv JDK_HOME /usr/lib/java2
+   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-SuSE91
+   setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-SuSE91
    setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/Suse-9.1-alpha4
    setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
    #setenv VJ_BASE_DIR /home/users/sjk60/suse_deps/Suse-9.1-alpha4_vrjuggler
@@ -105,20 +96,37 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
 
    setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include/boost-1_31
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
-   setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
-   #setenv WX_HOME /home/users/sjk60/suse_deps/wxWidgets_GTK
-
    if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv MY_ACEDIR /home/users/mccdo/ACE_TAO
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
-      setenv XERCESCROOT /home/users/dmuthjr/xerces
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
    else
-      #setenv OMNI_HOME /home/vr/Juggler/linux-fc1
-      setenv OMNI_HOME /home/users/mccdo/omniORB-4.0.3/omni-Suse-9.1
-      #setenv OMNI_HOME /home/users/sjk60/suse_deps/Suse-9.1-omniORB-4.0.3
+      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Linux-SuSE91
+      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+   endif
+
+else if ( ${CFDHOSTTYPE} == "SunOS" ) then
+   setenv JDK_HOME /usr/java
+   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Solaris
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Solaris
+   setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Solaris
+   #setenv VJ_BASE_DIR ??
+   #setenv VJ_DEPS_DIR ??
+
+   setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include/boost-1_31
+   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
+      #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
+      setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
+   else
+      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Solaris
       setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
    endif
