@@ -259,15 +259,16 @@ void cfdModelHandler::PreFrameUpdate( void )
          //<< ", min = " << this->cfdMin 
          //<< ", max = " << this->cfdMax
          << std::endl << vprDEBUG_FLUSH;
-      if ( _activeModel != NULL )
+
+      //update active scalar texture if it exists
+      int nScalarTextures = _activeModel->GetNumberOfScalarTextureManagers();
+      if( (nScalarTextures) && ( (int)i < nScalarTextures ) )
       {
-         //update active scalar texture if it exists
-         int nScalarTextures = _activeModel->GetNumberOfScalarTextureManagers();
-         if((nScalarTextures) && i < nScalarTextures){
-            _activeTextureManager = _activeModel->GetScalarTextureManager(i);
-         }
-         if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
-         {
+         _activeTextureManager = _activeModel->GetScalarTextureManager(i);
+      }
+      
+      if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
+      {
          vprDEBUG(vprDBG_ALL,0) << "\tcfdModelHandler::PreFrameUpdate dataset = "
                   << _activeModel->GetCfdDataSet( i )->GetFileName()
                   << ", dcs = " << _activeModel->GetCfdDataSet( i )->GetDCS()
@@ -312,10 +313,6 @@ void cfdModelHandler::PreFrameUpdate( void )
                   << _activeModel->GetNumberOfCfdDataSets()
                   << std::endl;
       }
-
-      }
-      else
-         std::cerr << " cfdModelHandler :  ActiveModel handler is null " << std::endl;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
                == CHANGE_VECTOR )
