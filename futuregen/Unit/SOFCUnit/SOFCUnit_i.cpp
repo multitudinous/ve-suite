@@ -230,6 +230,10 @@ void Body_Unit_i::StartCalc (
       gas_out_data->gas_composite.setFrac(*iter2, output_stream.get_mole_fraction(*iter2));
     }
 
+    gas_out_data->gas_composite.T = output_stream.get_temp();
+    gas_out_data->gas_composite.M = output_stream.get_mass_flow_rate();
+    gas_out_data->gas_composite.P = gas_in_anode->gas_composite.P - press_drop;
+    
     // get exact mercury
   double mole_sec = gas_in_anode->gas_composite.M/gas_in_anode->gas_composite.mw();
   double mfr = gas_in_anode->gas_composite.getFrac("HG");
@@ -237,14 +241,12 @@ void Body_Unit_i::StartCalc (
   if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
   mfr = gas_in_anode->gas_composite.getFrac("HGCL2");
   if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
-  double tot_mole_sec = mole_sec;
 
   mole_sec = gas_in_cathode->gas_composite.M/gas_in_cathode->gas_composite.mw();
   mfr = gas_in_cathode->gas_composite.getFrac("HG");
   if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
   mfr = gas_in_cathode->gas_composite.getFrac("HGCL2");
   if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
-  tot_mole_sec += mole_sec;
 
   // split the HG between el HG and HGCL2 per equilibrium result
   double fracHG = 0.0, totHG = 0.0;
@@ -256,15 +258,13 @@ void Body_Unit_i::StartCalc (
   mfr = gas_out_data->gas_composite.getFrac("HGCL2");
   if(mfr>0.0) totHG += mfr;
   if(totHG) fracHG /= totHG;
+  gas_out_data->thermo_database = gashelper.thermo_database;
+  mole_sec = gas_out_data->gas_composite.M/gas_out_data->gas_composite.mw();
   if(totHG>0.0){
-     if(fracHG>0.0) gas_out_data->gas_composite.setFrac("HG",mole_HG_sec*fracHG/tot_mole_sec);
-     if(fracHG<1.0) gas_out_data->gas_composite.setFrac("HGCL2",mole_HG_sec*(1.0-fracHG)/tot_mole_sec);
+     if(fracHG>0.0) gas_out_data->gas_composite.setFrac("HG",mole_HG_sec*fracHG/mole_sec);
+     if(fracHG<1.0) gas_out_data->gas_composite.setFrac("HGCL2",mole_HG_sec*(1.0-fracHG)/mole_sec);
   }
   
-    gas_out_data->gas_composite.T = output_stream.get_temp();
-    gas_out_data->gas_composite.M = output_stream.get_mass_flow_rate();
-    gas_out_data->gas_composite.P = gas_in_anode->gas_composite.P - press_drop;
-    
     gas_out_data->gas_composite.comp_particle.push_back(0.0);
     gas_out_data->particle["ASH"] = 0;
     gas_out_data->gas_composite.comp_particle.push_back(0.0);
