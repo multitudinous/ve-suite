@@ -19,11 +19,11 @@ setenv TAO_PORT 1235
 # The VES start script will rename the files by adding .bak
 # The TApp253 start script will rename the files by removing the .bak
 if ( -e ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc.so ) then
-mv ${VJ_BASE_DIR}/lib32/jccl/plugins ${VJ_BASE_DIR}/lib32/jccl/plugins.bak
+
 echo "Hiding corba_rtrc.so"
 endif
 if ( -e ${VJ_BASE_DIR}/lib32/vrjuggler/plugins/corba_perf_mon_d.so ) then
-mv ${VJ_BASE_DIR}/lib32/vrjuggler/plugins ${VJ_BASE_DIR}/lib32/vrjuggler/plugins.bak
+
 echo "Hiding corba_perf_mon_d.so"
 endif
 

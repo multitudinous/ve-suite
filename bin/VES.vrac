@@ -2,11 +2,11 @@
  
 # Set environment variables and paths for running the program
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
-setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_Nightly
+setenv VE_SUITE_HOME /home/users/sgent/VE_Suite
 
 # Set the TAO nameServer properties used by the run scripts
-#setenv TAO_MACHINE lego.vrac.iastate.edu
-setenv TAO_MACHINE localhost
+setenv TAO_MACHINE lego.vrac.iastate.edu
+#setenv TAO_MACHINE localhost
 setenv TAO_PORT 1237
 
 setenv TAO_BUILD TRUE
