@@ -13,6 +13,3 @@
    vtkPolyData.vtk
    ./JUNK      // precomputed data slice directory
    ./JUNK2     // precomputed surface directory
-1        // Warped Contour Scale Value
-0.5      // Navigation Step Size
-0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient

@@ -60,16 +60,3 @@
    0 0 0             // Transient geometry dcs rotation values
    1  1  1.0 1.0 1.0 // Transient geometry transparency setting, color flag (and 3 color values if flag = 1)
    6                 // Duration of the transient sequence in seconds
-1        // Warped Contour Scale Value
-0.5      // Navigation Step Size
-0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient
-
-
-8                    // Object type 8: data set
-   1 1 1 
-   0 0 0 
-   0 0 0
-   transient_droplets/droplet_00.vtk
-   ./JUNK            // precomputed data slice directory
-   ./JUNK2           // precomputed surface directory
-

@@ -6,6 +6,3 @@
    ./OldStyleNoScalar.vtk   // data set name
    ./POST_DATA1      // precomputed data slice directory
    ./SURFACE1        // precomputed surface directory contains Surface.vtk
-1        // Warped Contour Scale Value
-0.5      // Navigation Step Size
-0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient

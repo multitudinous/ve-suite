@@ -139,9 +139,6 @@
    0 -4 4            // Translation values for geometry file
    0 0 0             // Rotation values (Z-X-Y format)
    ./Surface0.75.stl // Geometry file name
-1        // Warped Contour Scale Value
-0.5      // Navigation Step Size
-0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient
 
 
 
