@@ -35,21 +35,23 @@
 using namespace gmtl;
 using namespace vrj;
 
-cfdQuatCam::cfdQuatCam(pfMatrix m, double* worldTrans, float* rotPts)
+cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans, float* rotPts)
 {
-   NextPosQuat.makeRot(m);
+   
+   set(NextPosQuat,m);
    for (int i=0; i<3; i++)
       vjVecNextTrans[i] = worldTrans[i];
    for (int j=0; j<4; j++)
       rotPoints[j] = rotPts[j];
 }
 
-cfdQuatCam::cfdQuatCam(float angle, float x, float y, float z, float* worldTrans)
+//Currently not used, needs to be fixed using gmtl functionality
+/*cfdQuatCam::cfdQuatCam(float angle, float x, float y, float z, float* worldTrans)
 {
    NextPosQuat.makeRot(angle, x, y, z);
    for (int i=0; i<3; i++)
       vjVecNextTrans[i] = worldTrans[i];
-}
+}*/
 
 
 void cfdQuatCam::SetCamPos(double* worldTrans, pfDCS* worldDCS)
@@ -57,31 +59,36 @@ void cfdQuatCam::SetCamPos(double* worldTrans, pfDCS* worldDCS)
    for (int i=0; i<3; i++)
       vjVecLastTrans[i] = worldTrans[i];
    pfMatrix m;
-   worldDCS->getMat(m);  
-   LastPosQuat.makeRot(m);
+   worldDCS->getMat(m);
+   Matrix44f vjm;  
+   vjm = GetVjMatrix(m);
+   set(LastPosQuat,vjm);
 }
 
 
-pfDCS* cfdQuatCam::MoveCam(double* worldTrans, float t, pfDCS* dummy)
+void cfdQuatCam::MoveCam(double* worldTrans, float t, pfDCS* dummy)
 {
    TransLerp(t);
    RotSlerp(t);
-   dummy->setMat(m2);
-   dummy->setTrans(-vjVecCurrTrans[0], -vjVecCurrTrans[1], -vjVecCurrTrans[2]);
-   return dummy;
+   Matrix44f temp;
+   setRot( temp, CurPosQuat);
+   setTrans( temp, vjVecCurrTrans );
+   
+   pfMatrix pfTemp = GetPfMatrix( temp );
+   dummy->setMat(pfTemp);
+   //dummy->setTrans(-vjVecCurrTrans[0], -vjVecCurrTrans[1], -vjVecCurrTrans[2]);
+   //return dummy;
 }
 
 void cfdQuatCam::RotSlerp(float t)
 {  
-   CurPosQuat = new pfQuat();
-   CurPosQuat->slerp(t, LastPosQuat, NextPosQuat);
-   CurPosQuat->getRot(m2);
+   slerp(CurPosQuat,t,LastPosQuat,NextPosQuat);
 }
 
 
 void cfdQuatCam::TransLerp(float t)
 {
-   gmtl::lerp(vjVecCurrTrans, t, vjVecLastTrans, vjVecNextTrans); 
+   lerp(vjVecCurrTrans, t, vjVecLastTrans, vjVecNextTrans); 
 }
 
 

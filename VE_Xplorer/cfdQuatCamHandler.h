@@ -74,6 +74,7 @@ class cfdCommandArray;
 
 
 using namespace vrj;
+using namespace gmtl;
 
 
 class cfdPoints
@@ -81,14 +82,15 @@ class cfdPoints
 public:
    
    //Constructor
-   cfdPoints(double*, pfMatrix);
+   cfdPoints(double*, Matrix44f&);
 
    //Destructor
    ~cfdPoints();
-    pfMatrix& matrix(){return m;}
-//private:
-   pfMatrix       m;
-   gmtl::Vec3f    ptrans; 
+    Matrix44f& matrix(){return m;}
+    Vec3f& ptrans(){return trans;}
+private:
+    Matrix44f      m;
+    Vec3f    trans; 
 
 };
 
@@ -117,7 +119,7 @@ public:
 
    void LoadFromFile(char*);
 
-   pfDCS* Relocate(int runSlerp, pfDCS* worldDCS, int cfdIso_value, cfdNavigate* nav); 
+   void Relocate(int runSlerp, pfDCS* worldDCS, int cfdIso_value, cfdNavigate* nav); 
 
    std::vector<cfdPoints*> cfdPointsVec;
    std::vector<cfdQuatCam*> QuatCams;
@@ -129,7 +131,6 @@ private:
 
 
    cfdQuatCam* thisQuatCam;
-   pfMatrix m;
    cfdPoints*  nextPoint;
 
    float t;

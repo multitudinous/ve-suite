@@ -47,10 +47,10 @@ using namespace gmtl;
 using namespace vrj;
 
 
-cfdPoints::cfdPoints(double* worldPos, pfMatrix mat)
+cfdPoints::cfdPoints(double* worldPos, Matrix44f& mat)
 {
    for (int i=0; i<3; i++)
-      ptrans[i] = worldPos[i];
+      trans[i] = worldPos[i];
    m = mat;
 }
 
@@ -63,8 +63,12 @@ cfdQuatCamHandler::cfdQuatCamHandler()
 
 void cfdQuatCamHandler::LoadData(double* worldPos, pfDCS* worldDCS)
 {
+   Matrix44f vjm;
+   pfMatrix m;
+
    worldDCS->getMat(m);
-   nextPoint = new cfdPoints(worldPos, m);
+   vjm = GetVjMatrix(m);
+   nextPoint = new cfdPoints(worldPos, vjm);
    cfdPointsVec.push_back(nextPoint);
 }
 
@@ -79,22 +83,21 @@ void cfdQuatCamHandler::WriteToFile(char* fileName)
    fprintf(ptsFile, "%d", cfdPointsVec.size());
    fprintf(ptsFile, "\n");
 
+   Matrix44f temp;
    for (unsigned int i=0; i<cfdPointsVec.size(); i++)
    {
-      cfdPointsVec[i]->m.getCol(0, &matpts[0], &matpts[1], &matpts[2], &matpts[3]);
-      cfdPointsVec[i]->m.getCol(1, &matpts[4], &matpts[5], &matpts[6], &matpts[7]);
-      cfdPointsVec[i]->m.getCol(2, &matpts[8], &matpts[9], &matpts[10], &matpts[11]);
-      cfdPointsVec[i]->m.getCol(3, &matpts[12], &matpts[13], &matpts[14], &matpts[15]);
-      
-      for (int j=0; j<16; j++)
+      temp = cfdPointsVec[i]->matrix();
+      for ( unsigned int j=0; j<4; j++)
       {
-         fprintf(ptsFile, "%f  ", matpts[j]); 
+         for ( unsigned int k=0; k<4; k++)
+            fprintf(ptsFile, "%f  ", temp[ j ][ k ]); 
       }
+
       fprintf(ptsFile, "\n");
 
       for (int k=0; k<3; k++)
       {
-         fprintf(ptsFile, "%f  ", cfdPointsVec[i]->ptrans[k]);
+         fprintf(ptsFile, "%f  ", cfdPointsVec[i]->ptrans()[k]);
       }
       fprintf(ptsFile, "\n");   
    }
@@ -105,9 +108,9 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
 { 
    char textLine [ 256 ];
    int numQuatCams;
-   float matpts[16];
    double transpts[3];
    float recordrot[4];
+   Matrix44f temp;
    pfMatrix mat;
    
    std::ifstream inFile( fileName, std::ios::in ); 
@@ -122,9 +125,10 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
 
       for(int i=0; i<numQuatCams; i++)
       {
-         for (int j=0; j<16; j++)
+         for (int j=0; j<4; j++)
          {
-            inFile >> matpts[j];
+            for ( unsigned int k=0; k<4; k++)
+               inFile >> temp[ j ][ k ];
          }
          inFile.getline( textLine, 256 );   //skip past remainder of line            
 
@@ -134,17 +138,12 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
          }
          inFile.getline( textLine, 256 );   //skip past remainder of line      
 
-         mat.setCol(0, matpts[0], matpts[1], matpts[2], matpts[3]);
-         mat.setCol(1, matpts[4], matpts[5], matpts[6], matpts[7]);
-         mat.setCol(2, matpts[8], matpts[9], matpts[10], matpts[11]);
-         mat.setCol(3, matpts[12], matpts[13], matpts[14], matpts[15]);
-
-         recordrot[0] = matpts[0];
-         recordrot[1] = matpts[1];
-         recordrot[2] = matpts[4];
-         recordrot[3] = matpts[5];
+         recordrot[0] = temp[0][0];
+         recordrot[1] = temp[0][1];
+         recordrot[2] = temp[1][0];
+         recordrot[3] = temp[1][1];
          
-         thisQuatCam = new cfdQuatCam(mat, transpts, recordrot);
+         thisQuatCam = new cfdQuatCam(temp, transpts, recordrot);
          QuatCams.push_back(thisQuatCam);
       } 
    }
@@ -153,7 +152,7 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
           
 }
 
-pfDCS* cfdQuatCamHandler::Relocate(int cfdId, pfDCS* worldDCS, int cfdIso_value, cfdNavigate* nav)
+void cfdQuatCamHandler::Relocate(int cfdId, pfDCS* worldDCS, int cfdIso_value, cfdNavigate* nav)
 {
    pfMatrix pfm;
    Matrix44f vjm;
@@ -168,8 +167,8 @@ pfDCS* cfdQuatCamHandler::Relocate(int cfdId, pfDCS* worldDCS, int cfdIso_value,
       QuatCams[cfdIso_value]->MoveCam(nav->worldTrans, t, worldDCS);
       QuatCams[cfdIso_value]->UpdateTrans(nav);
       QuatCams[cfdIso_value]->UpdateRotation();
-      worldDCS->getMat(pfm);
 
+      worldDCS->getMat(pfm);
 
       vjm = GetVjMatrix(pfm);
       for ( int i=0; i<3; i++)
@@ -185,9 +184,7 @@ pfDCS* cfdQuatCamHandler::Relocate(int cfdId, pfDCS* worldDCS, int cfdIso_value,
    {
       t = 0.0;
       run = -1;
-   } 
-   
-   return worldDCS;      
+   }      
 }
 
 #ifdef _CFDCOMMANDARRAY

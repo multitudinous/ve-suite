@@ -70,14 +70,14 @@
 #include "cfdNavigate.h"
 
 using namespace vrj;
-
+using namespace gmtl;
 
 class cfdQuatCam
 {
 public:
 
    //Constructors
-   cfdQuatCam(pfMatrix, double*, float*);
+   cfdQuatCam(Matrix44f&, double*, float*);
    cfdQuatCam(float, float, float, float, float*);
    
    
@@ -86,7 +86,7 @@ public:
 
    void SetCamPos(double*, pfDCS*);
 
-   pfDCS* MoveCam(double*, float, pfDCS*);
+   void MoveCam(double*, float, pfDCS*);
 
    void RotSlerp(float);
 
@@ -96,20 +96,22 @@ public:
 
    void UpdateRotation();
 
-   gmtl::Vec3f  vjVecCurrTrans;
+   Vec3f  vjVecCurrTrans;
 
-   pfMatrix m2;
+   //Matrix44f m2;
+
+   //pfMatrix m2;
 
    float rotPoints[4];
 
    float angle;
 
 private:
-   pfQuat LastPosQuat;
-   pfQuat NextPosQuat;
-   pfQuat* CurPosQuat;
-   gmtl::Vec3f  vjVecNextTrans;
-   gmtl::Vec3f  vjVecLastTrans;
+   Quatf LastPosQuat;
+   Quatf NextPosQuat;
+   Quatf CurPosQuat;
+   Vec3f  vjVecNextTrans;
+   Vec3f  vjVecLastTrans;
 
 };
 #endif
