@@ -732,7 +732,7 @@ void coal_perc_devol::inverf(REAL y, REAL& x)
 //c  search for range
       int i;
       for(i=16; i>-1; i--){//do 10 i=17,1,-1
-         if(yp<=yy[i+1]){//if(yp.le.yy(i+1))then
+         if(yp<=yy[i]){//if(yp.le.yy(i+1))then
           x = xx[i] + (yp-yy[i])*(xx[i+1]-xx[i])/(yy[i+1]-yy[i]);
           x = fac*x;
           return;
