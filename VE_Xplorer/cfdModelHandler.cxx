@@ -357,7 +357,8 @@ void cfdModelHandler::PreFrameUpdate( void )
    {
       cout << _activeModel << endl;
       // for the active model, change opaque geometries to transparent
-      //for ( unsigned int j = 0; j < _modelList.size(); j++ )
+      if ( _activeModel != NULL )
+      {
          for ( unsigned int i = 0; i < _activeModel->GetNumberOfGeomDataSets(); i++ )
          {
             if ( _activeModel->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
@@ -367,6 +368,7 @@ void cfdModelHandler::PreFrameUpdate( void )
                _activeModel->GetGeomDataSet( i )->setOpac( 0.2 );
             }
          }
+      }
    }  //change the model's property
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
    { 

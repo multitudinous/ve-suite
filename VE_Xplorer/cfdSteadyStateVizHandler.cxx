@@ -107,7 +107,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
    this->_worldDCS = NULL;
    this->_activeDataSetDCS = NULL;
    this->_activeObject = NULL;
-
+   this->lastSource = NULL;
 
    this->computeActorsAndGeodes = false;
    this->actorsAreReady = false;
@@ -997,7 +997,7 @@ void cfdSteadyStateVizHandler::streamers( void )
    {
       vprDEBUG(vprDBG_ALL,1) <<"creating fresh streamlines"
                              << std::endl << vprDEBUG_FLUSH;
-      if ( this->lastSource )
+      if ( this->lastSource != NULL )
       {
          this->lastSource->Delete();
       }

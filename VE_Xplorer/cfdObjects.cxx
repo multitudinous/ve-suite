@@ -240,8 +240,8 @@ void cfdObjects::AddcfdGeodeToDCS( void )
    }
 
    vprDEBUG(vprDBG_ALL, 2) 
-      << "cfdObjects::UpdateGeode... set active geode pointer"
-      << std::endl << vprDEBUG_FLUSH;
+      << "cfdObjects::UpdateGeode... set active geode pointer "
+      << this->GetActiveDataSet()->IsNewlyActivated() << std::endl << vprDEBUG_FLUSH;
    //this->geode = (pfGeode *)this->geodes.back();
    //this->geode = tempGeode;
    //this->updateFlag = true;
