@@ -89,7 +89,7 @@
 #ifdef _WEB_INTERFACE
 #include <corona.h>
 #include <vrj/Draw/OGL/GlApp.h>
-#endif	//_WEB_INTERFACE
+#endif   //_WEB_INTERFACE
 
 cfdApp::cfdApp( void )
 {
@@ -98,8 +98,6 @@ cfdApp::cfdApp( void )
    _frameNumber = 0;
    _pbuffer = 0;
 #endif
-
-
 }
 
 void cfdApp::exit()
@@ -132,11 +130,11 @@ void cfdApp::exit()
    }
    
 #ifdef _WEB_INTERFACE
-	runWebImageSaveThread=false;
-	vpr::System::msleep( 1000 );  // one-second delay
-	delete writeWebImageFileThread;
-	if(readyToWriteWebImage)	//if we've captured the pixels, but didn't write them out
-		delete[] webImagePixelArray;	//delete the pixel array
+   runWebImageSaveThread=false;
+   vpr::System::msleep( 1000 );  // one-second delay
+   delete writeWebImageFileThread;
+   if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
+      delete[] webImagePixelArray;   //delete the pixel array
 #endif  //_WEB_INTERFACE
 }
 
@@ -281,11 +279,11 @@ inline void cfdApp::init( )
 #endif
 
 #ifdef _WEB_INTERFACE
-	timeOfLastCapture = 0;
-	runWebImageSaveThread = true;
-	readyToWriteWebImage = false;
-	writingWebImageNow = false;
-	captureNextFrameForWeb = false
+   timeOfLastCapture = 0;
+   runWebImageSaveThread = true;
+   readyToWriteWebImage = false;
+   writingWebImageNow = false;
+   captureNextFrameForWeb = false
 #endif   //_WEB_INTERFACE
 }
 
@@ -383,7 +381,6 @@ void cfdApp::latePreFrame( void )
    _tbvHandler->PreFrameUpdate();
 #endif
 #endif
-   ///////////////////////
 
    if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )
    {
@@ -412,21 +409,23 @@ void cfdApp::intraFrame()
 
 void cfdApp::postFrame()
 {
-
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
-   	time_since_start = _timer.delta_s(_start_tick,_timer.tick());
+
+#ifdef _OSG
+   time_since_start = _timer.delta_s(_start_tick,_timer.tick());
+
 #ifdef _WEB_INTERfACE
-	if(time_since_start - timeOfLastCapture >= 5.0)		//if it's been five seconds since the last image cap
-	{
-		if(!readyToWriteWebImage)
-		{
-			captureNextFrameForWeb = true
-			timeOfLastCapture = time_since_start;
-		}
-	}
-
-
+   if(time_since_start - timeOfLastCapture >= 5.0)      //if it's been five seconds since the last image cap
+   {
+      if(!readyToWriteWebImage)
+      {
+         captureNextFrameForWeb = true
+         timeOfLastCapture = time_since_start;
+      }
+   }
 #endif  //_WEB_INTERFACE
+#endif  //_OSG
+
    // if transient data is being displayed, then update gui progress bar
   /* if (  this->_modelHandler->GetActiveSequence() )
    {
@@ -442,7 +441,7 @@ void cfdApp::postFrame()
 #ifdef _OSG
    this->_vjobsWrapper->GetSetAppTime( time_since_start );
    //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
-#endif
+#endif   //_OSG
    this->_vjobsWrapper->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
@@ -452,45 +451,42 @@ void cfdApp::postFrame()
 
 void cfdApp::captureWebImage()
 {
-	if(writingWebImageNow || readyToWriteWebImage) return;
-	int dummyOx=0;
-	int dummyOy=0;
+   if(writingWebImageNow || readyToWriteWebImage) return;
+   int dummyOx=0;
+   int dummyOy=0;
 
-	printf("Reading viewport size...\n");
-	//get the viewport height and width
-	vrj::GlDrawManager::instance()->currentUserData()->getGlWindow()->
-		getOriginSize(dummyOx, dummyOy, webImageWidth, webImageHeight);
-	printf("Copying frame buffer %ix%i.......\n", frameWidth, frameHeight);
-	captureNextFrameForWeb=false;		//we're not going to capture next time around
-	webImagePixelArray=new char[frameHeight*frameWidth*3];		//create an array to store the data
-	glReadPixels(0, 0, webImageWidth, webImageHeight, GL_RGB, GL_UNSIGNED_BYTE, webImagePixelArray);	//copy from the framebuffer
-	readyToWriteWebImage=true;		
-
+   printf("Reading viewport size...\n");
+   //get the viewport height and width
+   vrj::GlDrawManager::instance()->currentUserData()->getGlWindow()->
+      getOriginSize(dummyOx, dummyOy, webImageWidth, webImageHeight);
+   printf("Copying frame buffer %ix%i.......\n", frameWidth, frameHeight);
+   captureNextFrameForWeb=false;      //we're not going to capture next time around
+   webImagePixelArray=new char[frameHeight*frameWidth*3];      //create an array to store the data
+   glReadPixels(0, 0, webImageWidth, webImageHeight, GL_RGB, GL_UNSIGNED_BYTE, webImagePixelArray);   //copy from the framebuffer
+   readyToWriteWebImage=true;      
 }
-
 
 void cfdApp::writeImageFileForWeb(void*)
 {
-	while(runImageSaveThread)
-	{
-		vpr::System::msleep( 500 );  // half-second delay
-		if(readyToWriteWebImage)
-		{
-			readyToWriteWebImage=false;
-			writingWebImageNow = true;
-			//let's try saving the image with Corona
-			Image* frameCap=CreateImage(frameWidth, frameHeight, PF_R8G8B8, (void*)webImagePixelArray);
-			frameCap=FlipImage(frameCap, CA_X);
-			if(!SaveImage("../../public_html/PowerPlant/VE/dump.png", FF_PNG, frameCap))
-				printf("error saving image\n");
-			else printf("Image saved successfully.\n");
-			delete frameCap;
-			delete [] webImagePixelArray;										//delete our array
-			printf("All done!\n");
-			writingWebImageNow = false;
-		}
-	}
-
+   while(runImageSaveThread)
+   {
+      vpr::System::msleep( 500 );  // half-second delay
+      if(readyToWriteWebImage)
+      {
+         readyToWriteWebImage=false;
+         writingWebImageNow = true;
+         //let's try saving the image with Corona
+         Image* frameCap=CreateImage(frameWidth, frameHeight, PF_R8G8B8, (void*)webImagePixelArray);
+         frameCap=FlipImage(frameCap, CA_X);
+         if(!SaveImage("../../public_html/PowerPlant/VE/dump.png", FF_PNG, frameCap))
+            printf("error saving image\n");
+         else printf("Image saved successfully.\n");
+         delete frameCap;
+         delete [] webImagePixelArray;                              //delete our array
+         printf("All done!\n");
+         writingWebImageNow = false;
+      }
+   }
 }
 
 #ifdef _OSG
@@ -557,22 +553,22 @@ void cfdApp::draw()
                                     frustum[Frustum::VJ_FAR]);
 
    sv->setViewMatrix(*osg_proj_xform_mat);
-	bool goCapture = false;			//gocapture becomes true if we're going to capture this frame
-	if(userData->getViewport()->isSimulator())	//if this is a sim window context....
-	{
-		//Matrix44f headMat=mHead->getData();		//grab the head matrix
-//		Matrix44f h=headMat;
-//		glMultMatrixf(headMat.mData);			//and multiply to cancel it out of the modelview
-//		gluLookAt(0, 100, 0, 0, 0, 0, 0, 0, -1);	//an overhead view
-		if(captureNextFrameForWeb) goCapture=true;	//now if we're go for capture, we'll know for sure
-	}
+   bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
+   if(userData->getViewport()->isSimulator())   //if this is a sim window context....
+   {
+      //Matrix44f headMat=mHead->getData();      //grab the head matrix
+//      Matrix44f h=headMat;
+//      glMultMatrixf(headMat.mData);         //and multiply to cancel it out of the modelview
+//      gluLookAt(0, 100, 0, 0, 0, 0, 0, 0, -1);   //an overhead view
+      if(captureNextFrameForWeb) goCapture=true;   //now if we're go for capture, we'll know for sure
+   }
 
    //Draw the scene
    sv->update();
    sv->cull();
    sv->draw();
-	if(goCapture)
-		captureWebImage();
+   if(goCapture)
+      captureWebImage();
    glMatrixMode(GL_TEXTURE);
    glPopMatrix();
 
