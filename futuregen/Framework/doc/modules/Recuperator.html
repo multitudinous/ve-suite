@@ -1,0 +1,58 @@
+
+<head>
+ <title>Vision 21 Workbench-Recuperator Module</title>
+ <style type="text/css">
+ <!--
+ body {
+ background-color: #92B5CE;
+ -->
+</style>
+</head>
+<hr align="left" size="4" width="100" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="300" />
+<h1>Recuperator Module</h1>
+<hr align="left" size="4" width="300" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="100" />
+
+
+
+<img src="images/Recuperator_schematic.gif" vspace="20" hspace="20" align="right" />
+<p> The Recuperator Module utilizes the effectiveness-NTU method to calculate the heat transferred between two gas streams.  In order to compute outlet stream properties the NTU method requires only inlet stream properties in addition to unit effectiveness.  The heat transfer rate effectiveness is internally computed from an array of user-specified unit properties.</p>
+<p> Module calculations incorporate the use of a digitized family of curves from <em>&quot;Steam&quot;</em> &sup1; and the module runs an interpolation routine to calculate outlet gas properties.</p>
+<br clear="right" \>
+
+<hr size="4" />
+
+<img src="images/Recuperatormod.gif" vspace="20" hspace="20" align="left" width="135" height="126"/>
+<h3>Connections</h3>
+<ul>
+  <li> <font color="red">Inlet Port 0</font> (left): Inlet gas stream</li>
+  <li> <font color="red">Inlet Port 1</font> (top): Inlet gas stream</li>
+  <li> <font color="#00ffff">Outlet Port 0</font> (right): Outlet gas stream corresponding to Inlet Port 0</li>
+  <li> <font color="#00ffff">Outlet Port 1</font> (bottom): Outlet gas stream corresponding to Inlet Port 1</li>
+</ul>
+<br clear="left" \>
+
+<hr size="4" />
+<h2><a name="ui">Graphical User Interface (UI)</a></h2>
+<table ID="Table1">
+  <tbody>
+    <tr>
+      <td><img src="images/Recuperatorgui01.gif" vspace="20" hspace="20" align="left" /></td>
+      <td> <p> This user interface prompts the user for geometrical properties of the recuperator unit.  These data fields are necessary in order to compute the transfer heat rate effectiveness of the unit.</p>
+      <p>  The <em>Internal Pressure Drop</em> and <em>External Pressure Drop</em> fields allow the user to specify desired pressure drops for the two gas streams.  The <em>Internal</em> field corresponds to the change in pressure for the gas stream that is heated by the recuperator whereas the <em>External</em> field corresponds with the change in pressure of the hot gas stream as it flows through the recuperator.</p>
+      <p>  The user can also toggle whether the unit uses <em>Finned Tubes</em> and (when toggled) the <em>Fin Effectiveness</em> of those tubes. </p></td>
+    </tr>
+  </tbody>
+</table>
+
+<hr size="4" />
+
+<h3>References</h3>
+<ol type="1">
+<li> Kitto, John B and Stutltz, Steven C. <em> Steam: its generation and use</em>,
+     40th ed., The Babcock & Wilcox Company, Barberton, Ohio, USA, &copy;1992. p 4-11.  </li>
+</ol>
+<hr size="4" />

@@ -1,0 +1,47 @@
+<head>
+ <title>Vision 21 Workbench-Bulk Desulurizer Module Buttons</title>
+ <style type="text/css">
+ <!--
+ body {
+ background-color: #92B5CE;
+ -->
+</style>
+</head>
+
+<hr align="left" size="4" width="100" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="300" />
+
+<h1>Bulk Desulfurizer Module Buttons</h1>
+<hr align="left" size="4" width="300" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="100" />
+
+<h2><a name="ui">Graphical User Interface (UI)</a></h2>
+<table>
+  <tbody>
+    <tr>
+      <td><img src="../images/BedDesulfurizergui01.gif" vspace="20" hspace="20" align="left" /></td>
+      <td><p>This user interface first allows the user to specify the change in temperature of the gas through the module--thereby accounting for heat effects.  Positive values represent an increase of temperature in the gas between inlet and outlet ports. (Note that the temperature change is measured in degrees <b>Fahrenheit</b>)</p>
+      <p>H2S and COS removal calculations can be made either by specifying the desired removal efficiencies <u>or</u> by specifying the desired exit concentrations.</p>
+      <p>Pressure drop across the module can either be <em>specified</em> (in <b>psi</b>) or <em>computed</em> within the module.  If the exit concentration is <em>specified</em>, the value should be below that of the inlet.  The <em>calculated</em> pressure drop is based on the Ergun equation, with terms to account for the static head pressure drop (pressure lost in suspending the solid particles,) and the wall friction. <em>Void fraction</em> is defined as 1 - sorbent volume / bed volume.  The <em>particle size</em> can be computed as the diameter of a sphere of the same volume as the particle.  The <em>sphericity</em> is the surface area of the sphere described above divided by the actual particle surface area.</p>
+      <p> Default values are provided for temperature drop, exit acid gas concentrations, specified pressure drop, and particle density and sphericity (for the computed pressure drop option). </p></td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+
+<h2><a name="sum">Summary Data (SUM)</a></h2>
+<table>
+  <tbody>
+    <tr>
+      <td> <img src="../images/BedDesulfurizersum.gif" vspace="20" hspace="20" align="left" /></td>
+      <td> <p>After the module has executed, the <em>Summary Data</em> button provides summary information.  The module outputs exit gas temperature, pressure drop, and reduction efficiencies.</p> </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr size="4" />
+
+
+

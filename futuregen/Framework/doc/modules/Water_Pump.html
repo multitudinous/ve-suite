@@ -1,0 +1,66 @@
+<HEAD><TITLE>Vision 21 Workbench-Water Pump Module</TITLE></HEAD>
+ <style type="text/css"> <!-- body { background-color: #92B5CE; --> 
+	</style>
+&nbsp;
+
+<hr align="left" size="4" width="100" >
+
+<hr align="left" size="4" width="200" >
+
+<hr align="left" size="4" width="300" >
+
+<h1>Water Pump Module</h1>
+<hr align="left" size="4" width="300" >
+
+<hr align="left" size="4" width="200" >
+
+<hr align="left" size="4" width="100" >
+
+<table>
+  <tbody>
+    <tr>
+      <td><p>A water pump model has been added which calculates required power needed to achieve the input pressure rise based on an input isentropic efficiency of the pump.</p></td>
+      <td>     <!--  <img src="images/GasMixer_schematic.gif" align="right" height="400" width="350"> -->
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" >
+
+<img src="images/icon_water_pump.gif" vspace="20" width="100" height="96" hspace="20" align="left" > 
+<div>
+<h3>Connections</h3>
+<ul>
+  <li> <font color="red">Inlet Port 0</font>: Inlet water stream. 
+  <li> <font color="#00ffff">Outlet Port 0</font>: Pressurized outlet water stream.</li>
+</ul>
+</div>
+<br clear="left" \>
+<hr size="4">
+<a name="ui">
+<h2> Graphical User Interface (UI)</a></H2>
+<img src="images/gui_water_pump_01.gif" hspace="20" align="left" >
+      <td><p>The User Interface first allows the user to input an <em>Isentropic Efficiency</em> for the Water Pump (as fraction).
+  <p> When in evaluation mode the&nbsp;user must also specify a desired <em>Pressure Change</em> (outlet pressure - inlet 
+pressure).&nbsp; In design mode, the user specifies the&nbsp;<EM>desired outlet 
+pressure</EM>&nbsp;and the module accordingly calculates the required pressure change.
+  </td>
+
+<br clear="left" \>
+<hr size="4">
+<h2><a name="sum">Summary Data (SUM)</a></h2>
+<table ID="Table2">
+	<tbody>
+		<tr>
+			<td><img src="images/waterpump_sum.gif" hspace="20" align="left">
+			</td>
+			<td>The Summary screen displays the computed 
+      <EM>Power</EM> to coincide with specifications entered in the 
+				UI.&nbsp; Negative values represent&nbsp;the power required.&nbsp; &nbsp;
+			</td>
+		</tr>
+	</tbody>
+</table>
+<hr size="4">
+

@@ -1,0 +1,109 @@
+<html>
+ <head>
+ <title>Vision 21 Workbench-Vtk Viewer</title>
+ <style type="text/css">
+ <!--
+ body {
+
+ background-color: #92B5CE;
+
+}
+-->
+</style>
+</head>
+
+<hr align="left" size="4" width="100" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="300" />
+
+<h1>Using the VTK Viewer for 3D Data Representations</h1>
+<hr align="left" size="4" width="300" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="100" />
+
+<h3><p> To enhance data readability and usefulness, Vision 21 output can be displayed using the <b><em>VTK Viewer</em></b>.  The viewer must first be <u>installed</u>, so for more information on installing the VTK Viewer please refer to <a href="http://www.vtk.org">www.vtk.org</a> and click on the <a href="http://www.vtk.org/get-software.php">Get the Software</a> link.  Once installed, the viewer is then accessible within the SCIRun software through the &quot;3D&quot; Module button on select modules.  The viewer uses stored computational output to produce colored 3-dimensional representations of the results.   </p></h3>
+
+<table>
+  <tbody>
+    <tr>
+      <td>  <p>Before using the VTK Viewer, module data must first be properly stored.  The user can specify a working directory for data storage <em><b>before</b></em> module execution under the execution folder (shown at right) within a compatible module's <b>User Interface</b> (such as within the <em>Gasifier Module</em> shown below).  </p>
+            <div align="center"><img src="../modules/images/Gasifiermod.gif" align="middle"></div>
+      </td>
+      <td>  <img src="../modules/images/Gasifiergui04.gif" ></td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+<table>
+  <tbody>
+    <tr>
+      <td> <img src="../modules/images/datamenu.gif"></td>
+      <td>Once the network has been executed and the module data has been properly stored, the user may then select the &quot;3D&quot; module button to open the VTK Viewer.  A selection screen first prompts the user to select which data should be exported to the viewer for display.  The data catagories shown on the right will later become selectable within the viewer.</p>  </td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+ <a name="slab">
+ <table>
+  <tbody>
+    <tr>
+      <td>
+<img src="../modules/images/vtkslab.gif" align="right" >
+<p>Once the data fields have been exported, the VTK Viewer opens and displays two windows.  The first is a 3D representation of the unit with a grey wire mesh to illustrate the external boundaries.  The display can be rotated by left-clicking on the screen.  Right-clicking allows the user to zoom in and out.  Pressing the letter &quot;T&quot; on the keyboard puts the VTK Viewer into trackball mode.</p>
+<p>The second window is a user interface that allows the user to dictate the methods of data display.  The first folder of the user interface, &quot;slabs&quot;, is shown at the right.</p>
+<p>The first menu, <em>Slab Type</em>, specifies the type of &quot;slab&quot; to be projected.  The <em>Scalars</em> option displays a two-dimensional cross-section using either a graduated scalar, mesh, or contoured display of data along the specified plane.  The <em>vectors</em> option projects a 3D array of vectors, each originiating from a point along the cross-section.</p>
+<p>The <em>Function</em> menu controls the data source.  The <em>scalar</em> option allows the user to select the desired data field to display.</p>
+<p>When the contoured scalar option is selected for the slab type, the <em>Number of Contours</em> option controls the detail of display.  Similarly, the <em>Vector Scale</em> option allows the user to alter the magnitude of each vector in the array when the vector option is selected.</p>
+<img src="../modules/images/vtkslab2.gif" align="left" width="150" height="300">
+<p>The <em>ColorMap</em> field controls the way the slab is colored.  The number on the left represents the data minimum (example shown at right: all gas temperatures less than 452 K will be shaded blue), the number on the right represents a data maximum (example shown at right: all temperatures above 3073 K will be shaded red), and all temperatures within the range will be scaled according to the color scheme shown.</p>
+<p>The <em>Slab</em> field specifies the location of the slab.  The <em>Dimension</em> option controls which Cartesian plane the slab runs through, whereas the <em>Location</em> option determines the slab's location as measured from the outer extremes of the mesh.</p>
+<p>Once the desired slab options are specified, the <em>Add</em> button displays the slab (shown at left) in the display window.  The active slab is then listed in the field on the left of the slab folder until removed by selecting the <em>Remove</em> button.</p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+<a name="particles">
+<table>
+  <tbody>
+    <tr>
+      <td><img src="../modules/images/vtkparticles.gif" align="left" ></td>
+      <td>
+      <p>Within the <em>Particles</em> folder the first menu field controls which particles are displayed.  Two user-defined fields, <em>Size</em> and <em>Location</em>, control the properties of the modeled particles displayed in the display window.  Selected sizes and locations are signified by an &quot;X&quot;.    </p>
+      <p>The manner in which the particle paths are displayed is determined by the <em>Options</em> menu.  Particle paths can either be displayed by a thin line or by a tube of user-specified size.  The difference in appearance is illustrated by the two inset images.</p>
+      <p>The <em>ColorMap</em> field controls the way the particle paths are colored.  Again, the number on the left represents a minimum value, the number on the right a maximum, and the colors of the paths are scaled accordingly.  The <em>Function Type</em> field represents a series of pre-defined ColorMap schemes.</p>
+      <img src="../modules/images/vtkparticles2.gif" align="right" width="150" height="300">
+      <img src="../modules/images/vtkparticles3.gif" align="right" width="150" height="300">
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+<table>
+  <tbody>
+    <tr>
+      <td><img src="../modules/images/vtkisosurfaces.gif" align="right">
+      <p>The next folder, <em>Isosurfaces</em>, allows the user to create 3D contoured surfaces. The <em>Isosurface Function</em> controls how the isosurface is generated.  The <em>Scalar Function</em> is a second data field that is then mapped onto the generated isosurface using the color scheme in MapColor (documented above).  The example shown on the right would generate an isosurface where all temperatures were equal (1520 K) and would then use the color scheme to display CO levels at each point on that surface.</p>
+      <p>The <em>Options</em> field allows the user to specify the desired <em>opacity</em> of the projected isosurface (0 being transparent and 1.00 being opaque.)
+      <p>The <em>Isosurface Value</em> is the value by which the contoured isosurface is created.  For example, the specifications at right would generate an isosurface using all the points in the unit that have a temperature of 1520 K (shown below).</p>
+      <div align="center"><img src="../modules/images/vtkisosurfaces2.gif" height="300" width="150"></div>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+<table>
+  <tbody>
+    <tr>
+      <td><img src="../modules/images/vtkmisc.gif"  align="left">
+      </td>
+      <td>
+      <p>The <em>Miscellaneous</em> folder allows the user to toggle the visibility of the wireframe and whether or not the display uses an orthogonal projection (display does not account for perspective).<p>
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+<h3> <a href="../index.html" target="_top"> Return </a> to main index</h3>
+<hr align="left" size="4" />
+

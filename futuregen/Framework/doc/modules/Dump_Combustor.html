@@ -1,0 +1,63 @@
+<head>
+ <title>Vision 21 Workbench-Dump Combustor Module</title>
+ <style type="text/css">
+ <!--
+ body {
+ background-color: #92B5CE;
+ -->
+</style>
+</head>
+
+<hr align="left" size="4" width="100" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="300" />
+<h1>Dump Combustor Module</h1>
+<hr align="left" size="4" width="300" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="100" />
+
+<p>The Dump Combustor Module is typically placed downstream of solid oxide fuel cells in order to burn out any remaining unreacted fuel.  Though the SOFC exhaust stream is dilute and the energy density is low, use of a dump combustor harnesses a significant amount of energy from the lean gas exhaust of fuel cells, and improves overall plant efficiency.</p>
+<p>Combustion stability and reaction rate are typically of concern in combustion.  Kinetic simulations have shown that combustion occurs over a wide range of temperatures and pressures, with no observed blowout condition for combustion of typical SOFC exhaust.  Increasing pressure affects the reaction by decreasing the required residence time and increasing combustion rates.  High temperatures also increase the required residence time.  Though combustion is possible over a wide range of temperatures, the residence time is so high at low temperatures that a prohibitively large combustion chamber would be required.  For these conditions, an alternate combustion process would be required.  Options for combustion include preheating the inlet gas, or using a catalytic combustion in place of a dump combustor.</p>
+<p>The Vision 21 dump combustor model is based on a plug flow reactor.  These types of reactors describe the time evolution of a well-mixed reacting fluid, such as the flow in a pipe with perfect radial mixing and zero axial mixing.  The model makes use of the GRImech 3.0 kinetic mechanism (Smith et al), and is designed to provide the combustor volume required for a given fuel conversion, or the fuel conversion for a given volume.  The model can be run in one of two modes: (1) Evaluation mode, in which the combustion volume is specified, and the fuel conversion and exit properties are computed, and (2) Design mode, in which the program computes the required volume for a user-specified degree of fuel conversion.  A heat loss and pressure drop over the unit can be specified.  Outputs include heat loss and pressure drop, if any, combustor volume (for design mode), fuel conversion (for evaluation mode), and residence time.  Full error handling is provided to alert the user of error or warning conditions, and to enforce proper input specifications.  For example, an error occurs if the equilibrium fuel conversion is below the specified fuel conversion.</p>
+<hr size="4" />
+
+<img src="images/Dump_Combustormod.gif" align="left" hspace="20" vspace="20" width="100" height="94">
+<div>
+<h3> Connections </h3>
+  <ul>
+  <li><font color="red">Inlet Port 0</font>: Inlet gas stream </li>
+  <li><font color="#00ffff">Outlet Port 0</font>: Outlet gas stream </li>
+  </ul>
+</div>
+<br clear="left">
+<hr size="4" />
+
+<name="ui">
+<h2><a name="ui">Graphical User Interface (UI)</a></h2>
+<table ID="Table1">
+  <tbody>
+    <tr>
+      <td><img src="images/Dump_Combustorgui.gif" hspace="20" align="left" />  </td>
+      <td><p>This User Interface requires the user to first specify the method of module calculation.  <em>Evaluation Mode</em> (shown) allows the user to input the existing <em>Volume</em> of a combustor and the module will thereby calculate the maximum possible conversion.  When <em>Design Mode</em> is specified, the user inputs a <em>Desired Conversion</em>, and the module calculates the necessary combustor geometry to achieve that specified conversion.</p>
+      <p>Additional required user inputs include the <em>Fraction Heatloss</em> and <em>Pressure Drop</em> through the unit. </p>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+<name="sum">
+<h2><a name="sum">Summary Data (SUM)</a></h2>
+<table ID="Table2">
+  <tbody>
+    <tr>
+      <td><img src="../images/Dump_Combustorsum.gif" hspace="20" align="left" />  </td>
+      <td>The Summary screen shows the computed values for the <em>Heatloss</em> and <em>Pressure Drop</em>, as well as the <em>Tau Average</em> from the computations.  When Evaluation Mode is specified in the UI, the <em>Conversion Rate</em> will also be displayed.   When Design Mode is specified in the UI, then the <em>Calculated Volume</em> (as shown) will be displayed.</p>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+<h3>References</h3>
+<ol type="1">
+<li>Gremmen, R.S., &quot;Oxidation of Low Calorific Value Gases--Applying Optimization Techniques to Combustor Design,&quot; U.S. DOE FETC, Presented at the 1998 IJPGC, Baltimore, MD, Aug 23-26.</li>
+<li>Smith, Gregory P., David M. Golden, Michael Frenklach, Nigel W. Moriarty, Boris Eiteneer, Mikhail Goldenberg, C. Thomas Bowman, Ronald K. Hanson, Soonho Song, William C. Gardiner, Jr., Vitali V. Lissianski, and Zhiwei Qin <a href="http://www.me.berkeley.edu/gri_mech/">http://www.me.berkeley.edu/gri_mech/</a></li>
+</ol>
+<hr size="4" />

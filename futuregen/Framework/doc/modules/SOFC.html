@@ -1,0 +1,79 @@
+<HEAD><TITLE>Vision 21 Workbench-SOFC Module</TITLE></HEAD>
+ <style type="text/css"> <!-- body { background-color: #92B5CE; --> 
+	</style>
+
+<hr align="left" size="4" width="100" >
+
+<hr align="left" size="4" width="200" >
+
+<hr align="left" size="4" width="300" >
+
+<h1>SOFC Module (Solid Oxide Fuel Cell)</h1>
+<hr align="left" size="4" width="300" >
+
+<hr align="left" size="4" width="200" >
+
+<hr align="left" size="4" width="100" >
+
+
+<img src="images/SOFC_schematic.gif" align="right" > 
+<p>This module makes use of the Nernst equation and equations for activation, concentration, and ohmic losses to calculate fuel cell electrical output. Thermodynamic calculations are performed using a combination of equilibrium and heat exchanger calculations. The anode temperature is iterated until the thermodynamic output from the fuel cell matches the electrical output. The model obtained from DOE-NETL was developed for use in Aspen-Plus and employed a combination of Aspen-Plus functions and imbedded FORTRAN. The DOE model was subsequently re-implemented using C++ for use in the workbench. Enhancements from the NETL fuel cell model include the ability to use coal derived syngas as the fuel gas, operate at elevated pressure, remove the fuel gas reformer (not needed for IGCC), and use more robust equation solvers.</p>
+<p>This module is coded only to handle CO and H<sub>2</sub> coming into the anode as fuels.  This is 'hardwired' in both the thermal and electrical calculations.
+
+The cathode 'air' stream, however, is <b>not</b> limited to just O<sub>2</sub> and N<sub>2</sub>. The cathode composition is arbritrary - the code just pulls off enough O<sub>2</sub> to react with the CO and H<sub>2</sub> entering in the anode stream at the specified fuel utilization level. </p>
+<hr size="4">
+
+<img src="images/SOFCmod.gif" vspace="20" hspace="20" align="left" width="150" height="135"> 
+<h3>Connections</h3>
+<ul>
+  <li> <font color="red">Inlet Port 0</font> (left): Inlet anode gas stream (rich in CO and H<sub>2</sub>) 
+  <li> <font color="red">Inlet Port 1</font> (top): Inlet cathode gas stream 
+  <li> <font color="#00ffff">Outlet Port 0</font>: Outlet gas stream</li>
+</ul>
+<br clear="left" \>
+<hr size="4">
+
+<h2><a name="ui">Graphical User Interface (UI)</a></h2>
+<table ID="Table1">
+  <tbody>
+    <tr>
+      <td><img src="images/SOFCgui01.gif" vspace="20" hspace="20" align="left" >
+      </td>
+      <td><p> This user interface allows the user to manipulate fuel cell characteristics and perfomance.  The user can input not only fuel cell size and quantity, but also the cell resistance and general construction of the unit.  <p></p>
+     </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr size="4">
+
+<h2><a name="sum">Summary Data (SUM)</a></h2>
+<table ID="Table2">
+  <tbody>
+    <tr>
+      <td><img src="images/SOFCsum.gif" vspace="20" hspace="20" align="left" >  </td>
+      <td><p> This screen shows results after the module is 
+      executed. The first line shows the exiting&nbsp;<EM>Anode Temperature</EM> 
+      (outlet gas) while the second shows the <EM>Fuel Cell Power</EM>                               in MW. <p>  
+      <p></p></td>
+
+    </tr>
+  </tbody>
+</table>
+
+<hr size="4" >
+
+<h3>References</h3>
+<ol type="1">
+<li>Bessette, N.F., "Modeling and simulation for solid 
+  oxide fuel cell power systems," Ph.D. Thesis (1994), Georgia Institute of 
+  Technology. 
+  
+<li>Gemmen, R.S., Liese, E., Rivera, J.G., Faryar J. and 
+  Brouwer, J. "Development of dynamic modeling tools for solid oxide and molten 
+  carbonate hybrid fuel cell gas turbine systems". ASME, May 8-12, 2000. 
+  
+<li>Liese, E. and Gemmen, R.S., "Dynamic modeling results of a 1 MW molten carbonate fuel cell/gas turbine power system."  Proceedings of ASME Turbo Expo 2002, June 3-6, Amsterdam, The Netherlands. GT 2002 30110.</li>
+</ol>
+<hr size="4" >
+

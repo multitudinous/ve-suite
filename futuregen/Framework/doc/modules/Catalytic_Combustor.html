@@ -1,0 +1,60 @@
+
+
+<head>
+ <title>Vision 21 Workbench-Catalytic Combustor Module</title>
+ <style type="text/css">
+ <!--
+ body {
+ background-color: #92B5CE;
+ -->
+</style>
+</head>
+
+<hr align="left" size="4" width="100" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="300" />
+
+<h1>Catalytic Combustor Module</h1>
+<hr align="left" size="4" width="300" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="100" />
+<table>
+    <tr>
+      <td><p>In fuel cell applications, catalytic combustion offers an efficient means of recovering heat from the low heating value fuel cell effluent streams that may otherwise be difficult to burn directly.  This is particularly manifest in molten carbonate fuel cell (MCFC) systems where the cell discharges unreacted fuel at about 600°C.  In these systems, the anode exhaust containing the unreacted fuel is mixed with air and then oxidized completely in a catalytic combustor (Ghezel-Ayagh and Maru, 2002).  At present, solid oxide fuel cell (SOFC) systems operate at temperatures in the window of 800 – 1000°C, because the oxygen ion conduction in yttria stabilized zirconia (YSZ) is best in this temperature window.  However, with the current push for low temperature solid electrolytes for SOFC systems, the operating temperature window is likely to fall in the range 700 – 800°C where catalytic oxidation of the lean fuel/air mixtures is an attractive option.  In addition to the ability to burn lean fuel/air mixtures completely (Tucci, 1982), catalytic combustors operate at low enough temperatures such that NOx emissions are minimized (Kolaczkowski, 1995).
+</p></td>
+      <td>
+    <img src="images/schematic_cat_comb.gif" align="right" height="232" width="563">
+
+      </td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+
+<img src="images/icon_cat_comb.gif" vspace="20" hspace="20" align="left" width="100" height="94"/>
+<div>
+<h3>Connections</h3>
+<ul>
+  <li><font color="red">Inlet Port 0</font>: Inlet gas stream.</li>
+  <li><font color=#00ffff>Outlet Port 0</font>: Outlet gas stream.</li>
+</ul>
+</div>
+<br clear="left" \>
+<hr size="4"/>
+
+<a name="ui">
+<h2> Graphical User Interface (UI)</a></h2>
+<img src="images/gui_cat_comb_01.gif" hspace="20" align="left" />
+<p>This User Interface requires the user to first specify the method of module calculation.  <em>Evaluation Mode</em> (shown) allows the user to input the existing <em>Length</em> of a combustor and the module will thereby calculate the maximum possible conversion.  When <em>Design Mode</em> is specified, the user inputs a <em>Desired Conversion</em>, and the module calculates the necessary combustor geometry to achieve that specified conversion.</p>
+      <p>Additional required user inputs include the <em>Inlet Velocity</em> through the unit. </p>
+
+<br clear="left" \>
+<hr size="4"/>
+
+<a name="sum">
+<h2>Summary Data (SUM)</a></h2>
+<img src="../images/sum_cat_comb.gif" hspace="20"  align="left" />
+      <td>The Summary screen shows the computed values for the <em>Pressure Drop</em>, as well as the <em>Residence Time</em> from the computations.  When Evaluation Mode is specified in the UI, the <em>Conversion Rate</em> will also be displayed.   When Design Mode is specified in the UI, then the <em>Calculated Length</em> will be displayed.</p>
+<br clear="left" \>
+
+<hr size="4" />

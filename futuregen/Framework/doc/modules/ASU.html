@@ -1,0 +1,73 @@
+
+<head>
+ <title>Vision 21 Workbench-ASU Module</title>
+ <style type="text/css">
+ <!--
+ body {
+ background-color: #92B5CE;
+ -->
+</style>
+</head>
+
+<hr align="left" size="4" width="100" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="300" />
+
+<h1>ASU Module (Air Separation Unit) </h1>
+<hr align="left" size="4" width="300" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="100" />
+
+
+
+<img src="images/ASU_schematic.gif" align="right">
+
+<p>
+The ASU module is designed to emulate an air separation unit which separates an incoming air stream into a
+high purity oxygen stream and a nitrogen-rich side stream.  The ASU module is intended to provide
+oxygen to a gasifier, so the products (O<sub>2</sub> and N<sub>2</sub>) exit the module as gases, not as liquids.</p>
+<p>An ASU is based on a cryogenic distillation process--the only economical option at large capacities.  Cryogenic distillation separates a vapor/liquid mixture based on differences in the vapor
+pressures of various components.  The distillation column operates at pressures from 8-20 bar, and at temperatures on the order of 100 K [Seader 1998].
+Air is first compressed, then passed through a molecular sieve bed to filter out any water, CO2, or hydrocarbons that would freeze at the low operating temperatures.
+Cold product streams are used to cool the incoming air stream in the heat exchanger before the inlet air enters the disillation column.
+Upon exiting, the products are at near-ambient temperatures of high pressure.
+Product purities are typically 95% oxygen, and >99% nitrogen.
+If desired, the high pressure gases can be expanded through turbines to produce power.  The primary energy requirements for the ASU are a result of gas compression.</p>
+<p>The ASU model assumes that air is compressed outside the unit in a separate compressor module.  All of the oxygen entering the unit is assumed to exit in the oxygen product stream [Allam 1992].  The inlet argon is assumed to partition 75% to the oxygen stream and 25% to the
+nitrogen stream based on the relative vapor pressure of argon with respect to oxygen and nitrogen [Woodward 1990].  All separation and heat exchange are accounted for internally within the model.
+All components except oxygen, nitrogen, and argon are removed from the unit and are therefore only accounted for in the energy balance.  The model checks the user specified temperature, pressure, and composition to ensure vapor-phase effluents.
+</p>
+
+<br clear="right" \>
+
+<hr size="4" />
+
+<img src="images/ASUmod.gif" vspace="20" hspace="20" height="100" width="133" align="left" />
+<div>
+<h3>Connections</h3>
+<ul>
+  <li> <font color="red">Inlet Port 0 </font>: Inlet gas stream.</li>
+  <li> <font color="16e5de">Outlet Port 0</font>: High purity oxygen outlet gas stream.</li>
+</ul>
+</div>
+<br clear="left" \>
+<hr size="4"/>
+<a name="ui">
+<h2> Graphical User Interface (UI)</a></H2>
+<img src="images/ASUgui01.gif" hspace="20" align="left" > 
+<p> The UI window prompts the user for the desired properties of the two outlet gases: O2 and N2.  These properties act as the
+target values by which the ASU module operates.  Module calculations are governed by the temperature, pressure, and purity of the
+exiting oxygen gas, as well as by the temperature and pressure of the exiting nitrogen gas.</p>
+
+<p>High pressure products at ambiant temperatures represent typical outlet gas properties.</p>
+<br clear="left" \>
+<hr size="4">
+<br clear="left" \>
+<h3>References</h3>
+<ol type="1">
+<li>Allam, R. J., Topham, A.,  &quot;Integrated Air Separation Plant-Integrated Gasification Combined Cycle Power Generator,&quot; U.S. Pat. No. 5081845, Jan. 21, 1992.  </li>
+<li>Seader, J. D. and Henley, E. J., Separation Process Principles, John Wiley & Sons, Inc., New York, 1998, p 776.</li>
+<li>Woodward, D. W.,  Agrawal, R.  &quot;Air Separation Process for the Production of Oxygen-rich and Nitrogen-rich Products,&quot;, U.S. Pat. No. 4936099, June 26, 1990.</li>
+</ol>
+<hr size="4" />
+

@@ -1,0 +1,76 @@
+
+<head>
+ <title>Vision 21 Workbench-Compress/Expand Module</title>
+ <style type="text/css">
+ <!--
+ body {
+ background-color: #92B5CE;
+ -->
+</style>
+</head>
+
+<hr align="left" size="4" width="100" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="300" />
+<h1>Compress/Expand Module</h1>
+<hr align="left" size="4" width="300" />
+<hr align="left" size="4" width="200" />
+<hr align="left" size="4" width="100" />
+
+
+<table>
+  <tbody>
+    <tr>
+      <td><p> This module emulates either a compressor <u>or</u> expander. The thermodynamic calculations involve
+    the assumption of an isentropic compression/expansion process coupled with an isentropic
+    efficiency.  The user specifies the isentropic efficiency and pressure change through the module. </p>
+  </td>
+      <td><img src="images/Compressor_schematic.gif" align="right" >  </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr size="4" />
+
+<img src="images/Compress_Expandmod.gif" vspace="20" hspace="20" align="left" width="78" height="147" />
+<h3>Connections</h3>
+<ul>
+  <li> <font color="red">Inlet Port 0</font>: Inlet gas prior to compression/expansion. </li>
+  <li> <font color="#00ffff">Outlet Port 0</font>: Outlet gas following compression/expansion. </li>
+</ul>
+<br clear="left" \>
+<hr size="4"/>
+<h2><a name="ui">Graphical User Interface (UI)</a></h2>
+
+<table ID="Table1">
+  <tbody>
+    <tr>
+      <td><img src="images/Compress_Expandgui01.gif" hspace="20" align="left" />  </td>
+      <td><p>The User Interface first allows the user to input an <em>Isentropic Efficiency</em> for the Compressor/Expander (as fraction).
+  <p> The user must also specify a desired <em>Pressure Change</em>.  Negative values decrease pressure through the module--modeling an Expander.  Positive values increase pressure--modeling a Compressor.
+  </td>
+    </tr>
+  </tbody>
+</table>
+
+<hr size="4" />
+
+<h2><a name="sum">Summary Data (SUM)</a></h2>
+<table ID="Table2">
+  <tbody>
+    <tr>
+      <td> <img src="images/CompressExpandsum.gif" hspace="20" align="left" /> </td>
+      <td> 
+      <p> The summary table indicates the energy required by the module.  When used to model compressors, the resultant number will be negative and will represent the power required to compress the inlet gas.
+      When the module is used to model expanders, the number will be positive and represents the power generated as a result of the pressure drop.</p>
+       </td>
+    </tr>
+  </tbody>
+</table>
+<hr size="4" />
+<h3>References</h3>
+<ol type="1">
+<li> Schematic modified from <a href="http://www.smud.org/cpp/construc/schemati.pdf">www.smud.org/cpp/construc/schemati.pdf </a> </li>
+</ol>
+<hr size="4" />
+
