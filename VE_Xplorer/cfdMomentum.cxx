@@ -29,6 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include "cfdMomentum.h"
 #include "cfdDataSet.h"
 #include "cfdEnum.h"    // needed for cursorType
@@ -36,7 +37,6 @@
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkPolyData.h>
-//#include <vtkUnstructuredGrid.h>
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
 #include <vtkWarpVector.h>
