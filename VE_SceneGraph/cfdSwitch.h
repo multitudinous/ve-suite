@@ -21,7 +21,7 @@ public:
    //probably need more functions but
    //this is all we need for now
    //the rest are inherited from group
-   void setVal(int whichChildIsActive);
+   void SetVal(int whichChildIsActive);
 
    cfdSwitch& operator=(const cfdSwitch& rhs);
    

@@ -47,7 +47,7 @@ cfdTempAnimation::cfdTempAnimation()
 {
    this->_sequence = new cfdSequence();
    this->numFrames = 0;
-   this->groups = NULL;
+   this->groups = 0;
 }
 
 cfdTempAnimation::~cfdTempAnimation()
@@ -119,6 +119,38 @@ void cfdTempAnimation::CreateGeodeVector( vtkActor* actor )
  
    // Function implements respective vtkActorToGeode function
    ((cfdGeode*)this->_geodes.back())->TranslateTocfdGeode( actor );
+}
+
+void cfdTempAnimation::AddGeodesToSequence( std::vector< cfdGeode* > geodes )
+{
+   this->StopSequence();
+   
+   if ( !groups )
+   {
+      // For animated streamlines
+      unsigned int numPts = geodes.size();
+      for ( unsigned int i = 0; i < numPts; ++i )
+      {
+         this->_sequence->AddChild( geodes.at( i ) );
+      }      
+
+      this->_sequence->setInterval( CFDSEQ_CYCLE, 0 , numPts - 1 );
+      this->_sequence->setDuration( 0.1 * numPts );
+      vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: End Loop" 
+                           << std::endl << vprDEBUG_FLUSH;
+   }
+   else 
+   {
+      for ( int i = 0; i < numFrames; ++i )
+      {
+         cfdGroup* tempGroup = (cfdGroup*)this->_sequence->GetChild(i);
+         // get the DCS that is beneth the group 
+         // child 0 should be the dataset dcs while child 1 should be geom
+         // the DCS should be added at intialization
+         ((cfdDCS*)tempGroup->GetChild( 0 ))->AddChild( geodes.at( i ) );
+      }
+   }
+   this->StartSequence();
 }
 
 void cfdTempAnimation::AddToSequence( int objectType )

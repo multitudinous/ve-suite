@@ -61,6 +61,7 @@
 #include "cfdNavigate.h"
 #include "cfdCursor.h"
 #include "cfdGraphicsObject.h"
+#include "cfdModel.h"
 
 #include <vpr/Util/Debug.h>
 #include <vpr/vpr.h>
@@ -339,6 +340,16 @@ void cfdSteadyStateVizHandler::SetActiveDataSet( cfdDataSet* input )
                               << std::endl << vprDEBUG_FLUSH;
    }
    _activeDataSet = input;
+}
+
+void cfdSteadyStateVizHandler::SetActiveModel( cfdModel* input )
+{
+   if ( input == NULL )
+   {
+      vprDEBUG(vprDBG_ALL,2) << "cfdSteadyStateVizHandler::SetActiveModel input is NULL" 
+                              << std::endl << vprDEBUG_FLUSH;
+   }
+   activeModel = input;
 }
 
 void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
@@ -733,8 +744,6 @@ void cfdSteadyStateVizHandler::InitScene( void )
    {
       // Initialize all the geode creation flags and dcs flags for all the geodes
       this->dataList.at( i )->SetUpdateFlag( false );
-      //this->dataList.at( i )->SetGeodeFlag( false );
-      //this->dataList.at( i )->SetDCS( this->_worldDCS );
       this->dataList.at( i )->SetActiveDataSet( this->_activeDataSet );
    }
 
@@ -791,7 +800,8 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
-            temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
+            //temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
+            temp->SetActiveModel( this->activeModel );
             temp->SetWorldNode( this->_worldDCS );
             temp->SetActor( this->dataList[ i ]->GetActors() );
             temp->AddGraphicsObjectToSceneGraph();
@@ -818,10 +828,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 
             // Resetting these variables is very important
             this->dataList[ i ]->SetUpdateFlag( false );
-            //this->dataList[ i ]->SetGeodeFlag( false );
             this->actorsAreReady = false;
-            //this->dataList.at(i)->SetTransientGeodeFlag(false);
-            //this->dataList.at(i)->SetSequence( 0 );
             this->dataList[ i ]->ClearActors();
          }
       }

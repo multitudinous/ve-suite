@@ -34,6 +34,8 @@
 #include "cfdTempAnimation.h"
 #include "cfdDCS.h"
 #include "cfdNode.h"
+#include "cfdGroup.h"
+#include "cfdSwitch.h"
 #include "cfdFILE.h"
 #include "cfdTextureManager.h"
 
@@ -41,17 +43,26 @@
 #include <vpr/Util/Debug.h>
 #include <fstream>
 
-cfdModel::cfdModel( cfdDCS *worldDCS)
+cfdModel::cfdModel( cfdDCS *worldDCS )
 {
-   vprDEBUG(vprDBG_ALL,1) << " New cfdModel ! " 
+   vprDEBUG(vprDBG_ALL,1) << "|\tNew cfdModel ! " 
                           << std::endl << vprDEBUG_FLUSH;
-   this->mModelNode = NULL;
+   this->mModelNode = 0;
    //this->actor = NULL;
    //ModelIndex = static_cast<ModelTypeIndex>(value);
    // Will fix this later so that each model has a dcs
    //mModelDCS = new cfdDCS();
    _worldDCS = worldDCS;
-   sequence = 0;
+
+   this->switchNode = new cfdSwitch();
+   this->classic = new cfdGroup();
+   this->classic->SetName( "classic" );
+   this->switchNode->AddChild( this->classic );
+   this->textureBased = new cfdGroup();
+   this->textureBased->SetName( "textureBased" );
+   this->switchNode->AddChild( this->textureBased );
+
+   this->animation = 0;
 }
 
 cfdModel::~cfdModel()
@@ -90,9 +101,10 @@ cfdModel::~cfdModel()
    }
    transientDataSets.clear();
 
-   if(sequence){
-      delete [] sequence;
-      sequence = 0;
+   if( animation )
+   {
+      delete animation;
+      animation = 0;
    }
 
 /*
@@ -111,17 +123,41 @@ cfdModel::~cfdModel()
    vprDEBUG(vprDBG_ALL,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
 }
+
 cfdTempAnimation* cfdModel::GetAnimation()
 {
-   if(!sequence){
-      sequence = new cfdTempAnimation();
+   if ( !animation )
+   {
+      animation = new cfdTempAnimation();
    }
-   return sequence;
+   return animation;
 }
+
+cfdSwitch* cfdModel::GetSwitchNode()
+{
+   if ( !switchNode )
+   {
+      switchNode = new cfdSwitch();
+   }
+   return switchNode;
+}
+
 ///////////////////////////////////////
 void cfdModel::CreateCfdDataSet( void )
 {
    mVTKDataSets.push_back( new cfdDataSet() );
+}
+
+///////////////////////////////////////
+cfdDataSet* cfdModel::GetActiveDataSet( void )
+{
+   return activeDataSet;
+}
+
+///////////////////////////////////////
+void cfdModel::SetActiveDataSet( cfdDataSet* input )
+{
+   activeDataSet = input;
 }
 
 /////////////////////////////////////////////////////////////////

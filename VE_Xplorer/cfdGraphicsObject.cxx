@@ -32,6 +32,11 @@
 #include "cfdGraphicsObject.h"
 #include "cfdGeode.h"
 #include "cfdGroup.h"
+#include "cfdDCS.h"
+#include "cfdModel.h"
+#include "cfdDataSet.h"
+#include "cfdSequence.h"
+#include "cfdTempAnimation.h"
 
 #include <vtkActor.h>
 
@@ -40,21 +45,16 @@
 // constructor
 cfdGraphicsObject::cfdGraphicsObject( void )
 {
-   geode = 0;
    parentNode = 0;
    worldNode = 0;
    type = OTHER;
    animation = 0;
+   model = 0;
 }
 
 // destructor
 cfdGraphicsObject::~cfdGraphicsObject( void )
 {
-   if ( geode )
-   {
-      delete geode;
-      geode = 0;
-   }
    type = OTHER;
 }
 
@@ -91,36 +91,60 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
 {
    if ( this->type == CLASSIC )
    {
-      vprDEBUG(vprDBG_ALL,2) << " have geode flag"
-                             << std::endl << vprDEBUG_FLUSH;
-
-      if ( this->worldNode->SearchChild( this->parentNode ) < 0 )
+      // is switch on graph
+      cfdSwitch* temp = this->model->GetSwitchNode();
+      if ( this->worldNode->SearchChild( temp ) < 0 )
       {
-         vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
+         vprDEBUG(vprDBG_ALL,1) << " adding active switch node to worldDCS"
                              << std::endl << vprDEBUG_FLUSH;
-         this->worldNode->AddChild( this->parentNode );
+         this->worldNode->AddChild( temp );
       }
 
-      this->geode = new cfdGeode();
-      this->geode->TranslateTocfdGeode( this->actors.at( 0 ) );
-      this->parentNode->AddChild( this->geode );
-   }
-   else if ( this->type == TRANSIENT )
-   {
-      //this->animation = new cfdTempAnimation();
-      if ( this->worldNode->SearchChild( this->parentNode ) < 0 )
-      {
-         vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
-                             << std::endl << vprDEBUG_FLUSH;
-         this->worldNode->AddChild( this->parentNode );
-      }
-      
+      // create geodes
       for ( unsigned int i = 0; i < this->actors.size(); i++ )
       {
          this->geodes.push_back( new cfdGeode() );
          this->geodes.back()->TranslateTocfdGeode( this->actors.at( i ) );
       }
-   }else if(type == TEXTURE){
+
+      // is it transient, classic, or animated class
+      // add animation or dcs
+      if ( this->geodes.size() == 1 )
+      {
+         // classic ss
+         // we can do this because classic group is always
+         // child 0 see line 58 of cfdModel.cxx
+         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
+         this->model->GetActiveDataSet()->GetDCS()->AddChild( this->geodes.back() );
+      }
+      else if ( this->geodes.size() > 1 && 
+               ( !(model->GetAnimation()) || 
+                 !(model->GetActiveDataSet()->IsPartOfTransientSeries() ) )
+              )
+      {
+         // classic ss animated images, planes, tracked particles
+         // even if model contains transient data
+         this->animation = new cfdTempAnimation();
+         this->animation->AddGeodesToSequence( this->geodes );
+         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
+         this->model->GetActiveDataSet()->GetDCS()->AddChild( this->animation->GetSequence() );
+      }
+      else if ( (this->geodes.size() > 1) && 
+                  model->GetActiveDataSet()->IsPartOfTransientSeries()
+              )
+      {
+         // classic transient data
+         cfdTempAnimation* transAnimation = this->model->GetAnimation();
+         // the following functions should be called upon creation in cfdModel
+         //transAnimation->SetDuration( 10.0f );
+         //transAnimation->SetNumberOfFrames( numFrames );
+         //transAnimation->SetGroups();
+         transAnimation->AddGeodesToSequence( this->geodes );
+         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->animation->GetSequence() );
+      }
+   }
+   else if ( type == TEXTURE )
+   {
       
    }
 }
@@ -142,6 +166,13 @@ cfdGroup* cfdGraphicsObject::GetParentNode( void )
 {
    return this->parentNode;
 }
+
+// Return parent node for a this object
+void cfdGraphicsObject::SetActiveModel( cfdModel* input )
+{
+   model = input;
+}
+
 /*
 void cfdGraphicsObject::AddGeodesToSequence( void )
 {
@@ -342,27 +373,28 @@ void cfdGraphicsObject::AddcfdGeodeToDCS( void )
 */
 void cfdGraphicsObject::RemovecfdGeodeFromDCS( void )
 {
-   if ( this->type == TRANSIENT )
+   if ( this->type == CLASSIC )
    {
-      int num = this->geodes.size();
+      unsigned int num = this->geodes.size();
   
       // Iterate backwards for performance
-      for ( int i = num - 1; i >= 0; i-- )
+      for ( unsigned int i = num - 1; i >= 0; i-- )
       {
          // Need to find tha parent becuase with multiple models
          // Not all geodes are going to be on the same dcs
-         cfdGroup* parent = (cfdGroup*)this->geodes[ i ]->GetParent(0);
-         parent->RemoveChild( this->geodes[ i ] );
-         delete this->geodes[ i ];
+         cfdGroup* parent = (cfdGroup*)this->geodes.at( i )->GetParent(0);
+         parent->RemoveChild( this->geodes.at( i ) );
+         delete this->geodes.at( i );
       }
       this->geodes.clear();
+
+      if ( animation )
+      {
+         cfdGroup* parent = (cfdGroup*)this->animation->GetSequence()->GetParent(0);
+         parent->RemoveChild( this->animation->GetSequence() );
+         delete animation;
+         animation = 0;
+      }
    }
-   else if ( this->type == CLASSIC )
-   {
-      cfdGroup* parent = (cfdGroup*)this->geode->GetParent(0);
-      parent->RemoveChild( this->geode);
-      delete this->geode;
-	  this->geode = 0;
-   } 
 }
 

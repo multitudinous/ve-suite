@@ -79,6 +79,8 @@ class cfdTempAnimation
 
       void AddToSequence( int );
 
+      void AddGeodesToSequence( std::vector< cfdGeode* > );
+
       void ClearSequence( void );
 
       // Helper function to support animations on clusters

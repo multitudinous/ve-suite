@@ -375,6 +375,7 @@ void cfdApp::preFrame( void )
    ///////////////////////
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_steadystateHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
+   this->_steadystateHandler->SetActiveModel( this->_modelHandler->GetActiveModel() );
    this->_steadystateHandler->PreFrameUpdate();
    ///////////////////////
 #ifdef _OSG
@@ -382,9 +383,6 @@ void cfdApp::preFrame( void )
    _tbvHandler->PreFrameUpdate();
 #endif
    ///////////////////////
-
-   //pfdStoreFile( this->_sceneManager->GetRootNode()->GetRawNode(), "test1.pfb" );
-   //this->exit();
 
    if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
    {

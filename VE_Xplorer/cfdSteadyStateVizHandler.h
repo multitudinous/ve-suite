@@ -63,6 +63,8 @@ class cfdNavigate;
 class cfdCursor;
 class cfdTempAnimation;
 class cfdGraphicsObject;
+class cfdModel;
+
 class cfdSteadyStateVizHandler
 {
    public:
@@ -82,7 +84,7 @@ class cfdSteadyStateVizHandler
       void SetCursor( cfdCursor* );
       cfdTempAnimation* GetActiveAnimation( void );
       bool TransientGeodesIsBusy();
- 
+      void SetActiveModel( cfdModel* ); 
 
    private:
       cfdPolyData*         surface;
@@ -116,6 +118,7 @@ class cfdSteadyStateVizHandler
 
       // Common objects for all functions
       cfdDataSet* _activeDataSet;
+      cfdModel* activeModel;
       cfdCommandArray*  commandArray;
       cfdDCS*     _worldDCS;
       cfdDCS*     _activeDataSetDCS;

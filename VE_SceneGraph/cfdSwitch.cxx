@@ -50,7 +50,7 @@ cfdSwitch::~cfdSwitch()
 #endif
 }
 //////////////////////////////////////////////
-void cfdSwitch::setVal(int whichChildIsActive)
+void cfdSwitch::SetVal(int whichChildIsActive)
 {
    if(_switch){
 #ifdef _PERFORMER

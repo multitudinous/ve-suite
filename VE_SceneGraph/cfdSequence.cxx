@@ -342,7 +342,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    if ( pMode == CFDSEQ_START ){
       //cout<<"Starting sequence."<<endl;
       sequence->_currentFrame = begin;
-      sequence->_lSwitch->setVal(sequence->_currentFrame);
+      sequence->_lSwitch->SetVal(sequence->_currentFrame);
 
       //notify we are that we have started
       sequence->setPlayMode( CFDSEQ_PLAYING );
@@ -355,7 +355,7 @@ int switchFrame(pfTraverser* trav, void* userData)
       sequence->_currentFrame = sequence->getNextFrame();
       
       //set the displayed frame on the switch
-      sequence->_lSwitch->setVal(sequence->_currentFrame);
+      sequence->_lSwitch->SetVal(sequence->_currentFrame);
 
       //handle swing loop mode by changing directions
       //when we get to the beginning or end of the sequence
@@ -419,7 +419,7 @@ void cfdSequence::setCurrentFrame(int index)
       if(index >= _begin && index <= _end){
          _currentFrame = index;
 #ifdef _PEFORMER
-	      _lSwitch->setVal(_currentFrame);
+	      _lSwitch->SetVal(_currentFrame);
 #elif _OSG
 #endif
       }else{
@@ -433,7 +433,7 @@ void cfdSequence::setCurrentFrame(int index)
       //high to low
       if(index >= _end && index < _begin){
          _currentFrame = index;
-	 _lSwitch->setVal(_currentFrame);
+	 _lSwitch->SetVal(_currentFrame);
       }else{
          //invalid index
          std::cout<<"Error: cfdSequence!"<<std::endl;
@@ -454,7 +454,7 @@ int cfdSequence::AddChild(cfdNode* child)
    if(!_lSwitch)
    {
       _lSwitch = new cfdSwitch();
-      _lSwitch->setVal(cfdSwitch::OFF);
+      _lSwitch->SetVal(cfdSwitch::OFF);
 
       this->addChild(_lSwitch->GetRawNode());
    }

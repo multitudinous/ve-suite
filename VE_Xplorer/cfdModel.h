@@ -53,10 +53,12 @@ it is better to treat these two dataset as two different models.
 class cfdDataSet;
 class cfdDCS;
 class cfdNode;
+class cfdSwitch;
 class fileInfo;
 class cfdFILE;
 class cfdTempAnimation;
 class cfdTextureManager;
+class cfdGroup;
 
 enum ModelTypeIndex
 {
@@ -103,6 +105,8 @@ public:
    char* GetCfdDataSetFileName( int );
    void CreateCfdDataSet( void );
    int GetKeyForCfdDataSet( cfdDataSet* );
+   cfdDataSet* GetActiveDataSet( void );
+   void SetActiveDataSet( cfdDataSet* );
 
    cfdFILE* GetGeomDataSet( int );
    unsigned int GetNumberOfGeomDataSets( void );
@@ -127,11 +131,15 @@ public:
    ///////////////////////////////////////////////////
       
 
-   cfdTempAnimation* GetAnimation();
+   cfdTempAnimation* GetAnimation( void );
+   cfdSwitch* GetSwitchNode( void );
    std::map<int,cfdDataSet*> transientDataSets;
 
 private:
-   cfdTempAnimation* sequence;
+   cfdTempAnimation* animation;
+   cfdSwitch* switchNode;
+   cfdGroup* classic;
+   cfdGroup* textureBased;
    typedef std::vector< cfdFILE* > GeometoryDataSetList;
    GeometoryDataSetList mGeomDataSets;
    typedef std::vector< cfdDataSet* > VTKDataSetList;
@@ -142,6 +150,7 @@ private:
    cfdNode* mModelNode;
    fileInfo* mGeomFileInfo;
    fileInfo* mVTKFileInfo;
+   cfdDataSet* activeDataSet;
    
    //the information for following three variables should be transfered from cfdApp
    ModelTypeIndex mModelType;

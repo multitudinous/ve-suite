@@ -37,6 +37,7 @@
 class cfdGeode;
 class cfdGroup;
 class cfdTempAnimation;
+class cfdModel;
 
 class vtkActor;
 
@@ -64,6 +65,10 @@ class cfdGraphicsObject
       // node the parent node will be added to
       void SetWorldNode( cfdGroup* );
    
+      // set model pointer to be able to grab
+      // transient info and the switch node
+      void SetActiveModel( cfdModel* );
+   
       // add "child node" to scene graph
       void AddGraphicsObjectToSceneGraph( void );
 
@@ -81,15 +86,15 @@ class cfdGraphicsObject
 
       // need all the scene graph stuff out of cfdObjects
    protected:
-      cfdGeode* geode;
       std::vector< cfdGeode* > geodes;
       cfdGroup* parentNode;
       cfdGroup* worldNode;
       VizType type;
       std::vector< vtkActor* > actors;
+      // used for animated particles and other ss 
+      // animated features
       cfdTempAnimation* animation;
-      // need tempanimation
-      // need texture viz
+      cfdModel* model;
 };
 
 #endif

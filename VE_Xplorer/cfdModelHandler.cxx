@@ -281,6 +281,7 @@ void cfdModelHandler::PreFrameUpdate( void )
          // set the dataset as the appropriate dastaset type
          // (and the active dataset as well)
          activeDataset = _activeModel->GetCfdDataSet( i );         
+         _activeModel->SetActiveDataSet( activeDataset );         
       
          vprDEBUG(vprDBG_ALL,1) << "\tcfdModelHandler::PreFrameUpdate last active dataset name = " 
                              << oldDatasetName
