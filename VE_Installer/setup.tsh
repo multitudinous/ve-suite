@@ -7,7 +7,7 @@
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
 
 if ( -e /etc/redhat-release ) then
-   # extract some words from file to create something like RedHat_8.0
+   # extract some words from file to create something like RedHat_8.0 or RedHat_9
    setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
 else if ( -e /etc/SuSE-release ) then
    # extract first and third words from file to create something like SuSE_9.1
@@ -56,7 +56,7 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
    endif
       
-else if ( ${CFDHOSTTYPE} == "RedHat_8.0" ) then
+else if ( ${CFDHOSTTYPE} =~ RedHat_* ) then
    setenv VTK_BASE_DIR /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
 
    setenv JDK_HOME /usr/java/j2sdk1.4.2_03
