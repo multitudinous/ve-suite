@@ -542,8 +542,10 @@ void reorder_3D( std::vector<FaceThread> face_thread, CellThread &cell)
 {
     const int max_faces = c_facesPerCell[CellThread::HEX];
     const int max_nodes = c_nodesPerFace[FaceThread::QUAD];
-    std::vector<int> face_nodeList[ max_faces ];
-    std::vector<int> face_nNodes( max_faces );
+    //std::vector<int> face_nodeList[ max_faces ];
+	std::vector<int> * face_nodeList;
+	face_nodeList = (std::vector<int> *)malloc(max_faces);
+	std::vector<int> face_nNodes( max_faces );
 
     for (int iface = 0; iface < max_faces; iface++ )
         {

@@ -346,7 +346,9 @@ reads in data of the form
 */
 intArray_2 FluentIO::readIntArray2(int nRecords, int maxRecordSize, int constRecordSize)
 {
-    int temp_array[maxRecordSize];
+    //int temp_array[maxRecordSize];
+    int *temp_array;
+	temp_array = (int *) malloc(maxRecordSize);
     int k,j;
     int record_size;
 
