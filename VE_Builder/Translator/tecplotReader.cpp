@@ -27,11 +27,16 @@ void tecplotReader::allocateVariables()
    for ( int i=0;i<numOfParameters;i++ )
    {      
       parameterData[ i ] = vtkFloatArray::New();
+      char* ptr = new char[ variablNames[ i+2 ].length() + 1 ];   //+1 for null terminator
+      variablNames[ i+2 ].copy( ptr, variablNames[ i+2 ].length(), 0 );
+      ptr[ variablNames[ i+2 ].length() + 1 ] = '\0';
+      parameterData[ i ]->SetName( ptr );
+      //delete [] ptr; ptr = NULL;
       if ( i==0 )
       {
          parameterData[ i ]->SetNumberOfComponents( 3 ); //velocity vector
          parameterData[ i ]->SetNumberOfTuples( 2*nX*nY );
-         parameterData[ i ]->SetName( "Velocity" );
+         //parameterData[ i ]->SetName( "Velocity" );
       }
       else
       {
@@ -114,6 +119,36 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          for ( vectorStringIterator=variablNames.begin();vectorStringIterator!=variablNames.end();++vectorStringIterator ) 
             std::cout<<(*vectorStringIterator)<<std::endl;               
       }
+      ///////////////SEARCH VARIABLE NAMES FOR KEYWORDS
+      int velocityCount;   //the number of times velocity occurs in the variable names
+      velocityCount = 0;   //initialize to zero
+      int coOrdinateCount; //the number of time either x or y occurs in the variables
+      coOrdinateCount = 0; //initialize to zero
+      for ( vectorStringIterator=variablNames.begin();vectorStringIterator!=variablNames.end();++vectorStringIterator )
+      {
+         if ( (*vectorStringIterator).find( "locity" ) != std::string::npos ) velocityCount++;
+         if ( (*vectorStringIterator).find( "osition" ) != std::string::npos ) coOrdinateCount++;
+      }
+      if ( debug ) std::cout<<"Number of times velocity occurs :"<<velocityCount<<std::endl;
+      if ( debug ) std::cout<<"Number of co-ordinates :"<<coOrdinateCount<<std::endl;
+      //////////////////////TO SET THE NUMBER OF PARAMETERS IN THE DATA
+      //check if colsOfData is > velocityCount + coOrdinateCount, if so there are parameters by other names
+      int otherParameters;
+      otherParameters = 0; //initialize to zero
+      otherParameters = colsOfData - ( velocityCount + coOrdinateCount );
+      if ( debug ) std::cout<<"Number of other parameters :"<<otherParameters<<std::endl;
+      if ( velocityCount < 3 )   //need to calculate absolute velocity
+      {
+         numOfParameters = velocityCount + otherParameters + 2; //one parameter for absolute velocity and the other for velocity vector
+         variablNames.push_back( "Absolute Velocity" );
+         
+         variablNames.push_back( "Velocity vector" );
+      }
+      if ( velocityCount == 3 )
+      {
+         numOfParameters = velocityCount + otherParameters + 1;   //one for velocity vector
+         variablNames.push_back( "Velocity vector" );
+      }
       tempString.erase();  //clear the contents of tempString
       char stringData[ 10 ];  //create a new character array
       I_Lower = header.find( "I=" );   //look for I= in the header
@@ -147,13 +182,16 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
             std::cout<<"nX :"<<nX<<std::endl;
          }
       } 
+      //std::cout<<variablNames[ 3 ]<<std::endl;  
       //////////////////////////////////////////////////////////////////////////////////////////////////////
       //END HEADER PARSING SECTION
       /////////////////////////////////////////////////////////////////////////////////////////////////////
       //===========TEH WAY numOfParameters IS SET HAS TO BE CHANGED
-      if ( colsOfData == 4 ) numOfParameters = 1;
+      /*if ( colsOfData == 4 ) numOfParameters = 1;
       else if ( colsOfData == 5 ) numOfParameters = 2;
-      else if ( colsOfData == 6 ) numOfParameters = 3;
+      else if ( colsOfData == 6 ) numOfParameters = 3;*/
+      //numOfParameters = colsOfData + 2 -2;   //+2 for absolute velocity and velocity vector and -2 to accout for x and y, 
+      //not needed as scalar or vector parameters
       //===========
       array = new double [ colsOfData ];
       //allocate memory since we know nX and nY now
