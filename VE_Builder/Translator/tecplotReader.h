@@ -28,13 +28,6 @@ class tecplotReader
          vtkPoints* pts;
          vtkFloatArray** parameterData;
          double* array;
-         double* x;
-         double* y;
-         double* u;
-         double* v;
-         double* w;
-         double* measurement;
-         double* absVel;
          int numCells;
          int numVertices;
          std::vector<double*> data;

@@ -13,37 +13,16 @@ tecplotReader::tecplotReader( )
    
    colsOfData = 0;
    numOfParameters = 0;
-   x = NULL;
-   y = NULL;
-   u = NULL;
-   v = NULL;
-   w = NULL;
-   measurement = NULL;
-   absVel = NULL;
    numVertices = 0;
 }
 tecplotReader::~tecplotReader()
 {
    fileI.close();
-   delete [] x; x = NULL;
-   delete [] y; y = NULL;
-   delete [] u; u = NULL;
-   delete [] v; v = NULL;
-   delete [] w; w = NULL;
-   delete [] measurement; measurement = NULL;
-   delete [] absVel; absVel = NULL;
 }
 void tecplotReader::allocateVariables()
 {
    numCells = (nX-1)*(nY-1);
    numVertices = nX*nY;
-   x = new double [nX*nY];
-   y = new double [nX*nY];
-   u = new double [nX*nY];
-   v = new double [nX*nY];
-   w = new double [nX*nY];
-   measurement = new double [nX*nY];
-   absVel = new double [nX*nY];
    parameterData = new vtkFloatArray* [ numOfParameters ]; //the number of parameters
    for ( int i=0;i<numOfParameters;i++ )
    {      
@@ -122,7 +101,6 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       //SEARCH FOR THE VARIABLE NAMES NOW
       for ( vectorIntIterator=locationQuotMarks.begin();vectorIntIterator!=locationQuotMarks.end(); vectorIntIterator+=2 )
       {
-         //std::cout<<(*vectorIntIterator)<<std::endl;
          I_Lower = ( *vectorIntIterator ); //std::cout<<"I lower :"<<I_Lower<<std::endl;
          I_Upper = *(vectorIntIterator+1); //std::cout<<"I Upper :"<<I_Upper<<std::endl;
          //between I_Lower and I_Upper copy from tempString into varNamString
@@ -136,7 +114,6 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          for ( vectorStringIterator=variablNames.begin();vectorStringIterator!=variablNames.end();++vectorStringIterator ) 
             std::cout<<(*vectorStringIterator)<<std::endl;               
       }
-      
       tempString.erase();  //clear the contents of tempString
       char stringData[ 10 ];  //create a new character array
       I_Lower = header.find( "I=" );   //look for I= in the header
@@ -173,15 +150,6 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       //////////////////////////////////////////////////////////////////////////////////////////////////////
       //END HEADER PARSING SECTION
       /////////////////////////////////////////////////////////////////////////////////////////////////////
-      fileI.seekg( 0, std::ios::beg );      //reset file pointer
-      //read the first 3 lines from the files
-      char line[ 256 ];
-      for ( int i=0;i<3;i++ )
-      {
-         fileI.getline( line, 256 );
-         if ( debug ) 
-            std::cout<<line<<std::endl;
-      }
       //===========TEH WAY numOfParameters IS SET HAS TO BE CHANGED
       if ( colsOfData == 4 ) numOfParameters = 1;
       else if ( colsOfData == 5 ) numOfParameters = 2;
@@ -199,26 +167,19 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       //set points
       pts = vtkPoints::New();
       int* cPt = new int [ 8 ];  //HEX elements assumed, coz data is taken from PIV runs
-      for ( int j=0;j<nX*nY;j++ )
+      for ( int j=0;j<nX*nY;j++ )//loop over the number of vertices
       {
          //std::cout<<j<<"\t";
          for ( int i=0;i<colsOfData;i++ )
          {
-            fileI >>array[ i ];
-            /*x[j] = array[ 0 ];
-            y[j] = array[ 1 ];
-            u[j] = array[ 2 ];
-            v[j] = array[ 3 ];
-            measurement[j] = array[ 4 ];
-            absVel[j] = array[ 5];*/
+            fileI >>array[ i ];  //read from file into array
             //std::cout<<array[ i ]<<"\t";
          }
          //std::cout<<std::endl;
-         data.push_back( array );
+         data.push_back( array );   //push data into vector
          pts->InsertPoint( j, array[0], array[1], 0.0 );
          pts->InsertPoint( j+numVertices, array[0], array[1], -0.1 );
          //std::cout<<data[j][3]<<std::endl;
-         w[j] = 0.0;
          for ( int i=2;i<numOfParameters;i++ )
          {
             parameterData[ i ]->SetComponent( j, 0, data[j][i] );
@@ -254,7 +215,8 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          if ( debug ) std::cout<<"C :"<<c<<"\t"<<"I :"<<alongX<<std::endl;
          c = alongX + 1;
       }
-      writeVtkThing( uGrid, "grid.vtk", 0 );
+      
+      //writeVtkThing( uGrid, "grid.vtk", 0 );
       // Set selected scalar and vector quantities to be written to pointdata array
       std::cout<<"Number of Parameters :"<<numOfParameters<<std::endl;
       letUsersAddParamsToField( numOfParameters, parameterData, uGrid->GetPointData() );
