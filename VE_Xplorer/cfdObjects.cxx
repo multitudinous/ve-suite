@@ -189,7 +189,6 @@ void cfdObjects::UpdatecfdGeode( void )
                            << updateFlag<< std::endl << vprDEBUG_FLUSH;
    
       this->_geode = new cfdGeode();
-      std::cout << this->_geode->GetNode() << std::endl;
       this->addGeode = true;      
    }
    else
@@ -277,17 +276,17 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       vprDEBUG(vprDBG_ALL,1) << " 1. removing child num = " << num << " : " << this->_geodes[ num ] << " : " << _geodes.size()
                              << std::endl << vprDEBUG_FLUSH;
       cfdGroup* parent = (cfdGroup*)this->_geodes[ num ]->GetParent(0);
-      vprDEBUG(vprDBG_ALL,1) << " 1. removing child parent = " << parent 
+      vprDEBUG(vprDBG_ALL,2) << " 1. removing child parent = " << parent 
                              << std::endl << vprDEBUG_FLUSH;
       parent->RemoveChild( this->_geodes[ num ] );
-      vprDEBUG(vprDBG_ALL,1) << " 1. removing child succesful" 
+      vprDEBUG(vprDBG_ALL,2) << " 1. removing child succesful" 
                              << std::endl << vprDEBUG_FLUSH;
       delete this->_geodes[ num ];
-      vprDEBUG(vprDBG_ALL,1) << " 1. delete child sucessful" 
+      vprDEBUG(vprDBG_ALL,2) << " 1. delete child sucessful" 
                              << std::endl << vprDEBUG_FLUSH;
 
       this->_geodes.erase( this->_geodes.end() - 2 );
-      vprDEBUG(vprDBG_ALL,1) << " 1. erase child succesful" 
+      vprDEBUG(vprDBG_ALL,2) << " 1. erase child succesful" 
                              << std::endl << vprDEBUG_FLUSH;
       this->_dcs->AddChild( ((cfdGeode*)this->_geodes[ num ]) );
       vprDEBUG(vprDBG_ALL,1) << " 1. add child succesful " 

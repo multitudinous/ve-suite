@@ -215,14 +215,19 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
    // Update Navigation variables
    
+   vprDEBUG(vprDBG_ALL,3) << "\t 1. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    this->nav->SetDataValues( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
                         _commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
    this->nav->updateNavigationFromGUI();
+   vprDEBUG(vprDBG_ALL,3) << "\t 2. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
 	
    // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
+   vprDEBUG(vprDBG_ALL,3) << "\t 3. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    this->cursor->SetActiveDataSet( _activeDataSet );
+   vprDEBUG(vprDBG_ALL,3) << "\t 4. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    this->cursor->CheckCommandId( _commandArray );
+   vprDEBUG(vprDBG_ALL,3) << "\t 5. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    this->cursor->Update( this->nav->GetCursorLocation(),
                            this->nav->GetDirection(), this->nav->worldTrans );
 
@@ -232,9 +237,13 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
        this->cursor->getExtent( this->cur_box );   //record current box cursor position
    }
 */
+   vprDEBUG(vprDBG_ALL,3) << "\t 6. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    _camHandler->CheckCommandId( _commandArray );
+   vprDEBUG(vprDBG_ALL,3) << "\t 7. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    _soundHandler->CheckCommandId( _commandArray );
+   vprDEBUG(vprDBG_ALL,3) << "\t 8. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    _teacher->CheckCommandId( _commandArray );
+   vprDEBUG(vprDBG_ALL,3) << "\t 9. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
 }
 
 void cfdEnvironmentHandler::CreateObjects( void )

@@ -45,6 +45,7 @@
 #include <vtkActor.h>
 
 #include <iostream>
+#include <vpr/Util/Debug.h>
 
 cfdGeode::cfdGeode( void )
 :cfdNode()
@@ -55,7 +56,7 @@ cfdGeode::cfdGeode( void )
    _geode = new osg::Geode();
 #elif _OPENSG
 #endif
-   _vtkDebugLevel = 1;
+   _vtkDebugLevel = 0;
    SetCFDNodeType(CFD_GEODE);
 }
 ////////////////////////////////////////////
@@ -92,12 +93,14 @@ cfdGeode& cfdGeode::operator=( const cfdGeode& input )
 ///////////////////////////
 cfdGeode::~cfdGeode( void )
 {
-   std::cout << " 1 destructor for cfdGeode " << std::endl;
+   vprDEBUG(vprDBG_ALL,1) << " 1 destructor for cfdGeode " 
+                           << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
    // Fix this
    //if ( _geode != NULL )
    pfDelete( _geode );
-   std::cout << " 2 destructor for cfdGeode " << std::endl;
+   vprDEBUG(vprDBG_ALL,1) << " 2 destructor for cfdGeode " 
+                           << std::endl << vprDEBUG_FLUSH;
 #elif _OSG
    if(_geode)_geode->unref();
 #elif _OPENSG

@@ -52,9 +52,6 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
 
-using namespace std;
-using namespace gmtl;
-
 cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
 {
    this->directory = NULL;
@@ -65,6 +62,10 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
 
    // initialize in case the directory is not there...
    this->numFiles = 0;
+   pfb_count = 0;
+   _cfdWT = NULL;
+   this->DCS = NULL;
+   this->node = NULL;
 
     char *cwd;
 #ifndef WIN32
@@ -274,11 +275,15 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
    else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_PFB_FILE ) ||
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ) )
    {      
-      if ( this->GetcfdDCS()->GetNumChildren() > 0 )
+      vprDEBUG(vprDBG_ALL,2) << " cfdTeacher::CheckCommandId : CLEAR_ALL or CLEAR_PFB_FILE " << std::endl  << vprDEBUG_FLUSH;
+      if ( this->DCS != NULL )
       {
-         this->GetcfdDCS()->RemoveChild( this->GetcfdDCS()->GetChild( 0 ) );
+         if ( this->GetcfdDCS()->GetNumChildren() > 0 )
+         {
+            this->GetcfdDCS()->RemoveChild( this->GetcfdDCS()->GetChild( 0 ) );
+         }
+         return true;
       }
-      return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RECORD_SCENE )
    {
@@ -327,7 +332,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdTeacher::UpdateCommand()
 {
-   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
 // Need to fix later
 

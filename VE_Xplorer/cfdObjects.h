@@ -122,7 +122,7 @@ class cfdObjects : public cfdGlobalBase
 
    protected:
 
-      cfdDataSet *activeDataSet;
+      cfdDataSet* activeDataSet;
 
       // used by vectors and intended for warped contours
       static float vectorScale;

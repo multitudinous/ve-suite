@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdSceneNode.h"
 #include <iostream>
-using namespace std;
+#include <vpr/Util/Debug.h>
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
 #elif _OSG
@@ -65,11 +65,11 @@ cfdSceneNode::cfdSceneNode(cfdNodeType nt)
 ///////////////////////////////////
 cfdSceneNode::~cfdSceneNode( void )
 {
-   std::cout << " 1 destructor for cfdSceneNode " << std::endl;
+   vprDEBUG(vprDBG_ALL,1) << " 1 destructor for cfdSceneNode " <<  std::endl << vprDEBUG_FLUSH;
    this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
-   std::cout << " 2 destructor for cfdSceneNode " << std::endl;
+   vprDEBUG(vprDBG_ALL,1) << " 2 destructor for cfdSceneNode " <<  std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////
 cfdSceneNode::cfdSceneNode( const cfdSceneNode& input )
@@ -101,7 +101,7 @@ cfdNode* cfdSceneNode::GetParent( int parent )
 {
    if ( parent > 0 )
    {
-      cout << " Error: GetParent " << endl;
+      std::cerr << " Error: GetParent " << std::endl;
       exit( 1 );   
    }
 
@@ -121,7 +121,7 @@ void cfdSceneNode::SetParent( cfdNode* parent )
 
    if ( this->_numParents > 1 )
    {
-      cout << "Error : SetParent "<< _numParents << endl;
+      std::cerr << "Error : SetParent "<< _numParents << std::endl;
       exit( 1 );      
    }
    

@@ -720,9 +720,10 @@ void cfdSteadyStateVizHandler::InitScene( void )
    for ( int i = 0; i < (int)this->dataList.size(); i++ )
    {
       // Initialize all the geode creation flags and dcs flags for all the geodes
-      this->dataList[ i ]->SetUpdateFlag( false );
-      this->dataList[ i ]->SetGeodeFlag( false );
-      this->dataList[ i ]->SetDCS( this->_worldDCS );
+      this->dataList.at( i )->SetUpdateFlag( false );
+      this->dataList.at( i )->SetGeodeFlag( false );
+      this->dataList.at( i )->SetDCS( this->_worldDCS );
+      this->dataList.at( i )->SetActiveDataSet( this->_activeDataSet );
    }
 
    // This set of thread stuff needs to be in ssvizhandler and transvizhandler
@@ -858,11 +859,13 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
    { 
+            vprDEBUG(vprDBG_ALL,2) << " cfdSteadyStateVizHandler::RemoveGeodeFromDCS"
+                                   << std::endl << vprDEBUG_FLUSH;
       for ( int i = 0; i < (int)this->dataList.size(); i++ )  
       {
          if ( this->dataList[ i ]->GetcfdGeode() != NULL )
          {
-            vprDEBUG(vprDBG_ALL,2) << "RemoveGeodeFromDCS"
+            vprDEBUG(vprDBG_ALL,2) << " cfdSteadyStateVizHandler::RemoveGeodeFromDCS : " << i
                                    << std::endl << vprDEBUG_FLUSH;
             this->dataList[ i ]->RemovecfdGeodeFromDCS();
          }

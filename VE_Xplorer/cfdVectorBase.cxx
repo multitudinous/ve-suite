@@ -101,7 +101,7 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
    
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR_THRESHOLD )
    { 
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_THRESHOLD" 
+      vprDEBUG(vprDBG_ALL,0) << " cfdVectorBase::CheckCommandId : CHANGE_VECTOR_THRESHOLD" 
          << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
          << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
          << std::endl << vprDEBUG_FLUSH;
@@ -308,7 +308,9 @@ int cfdVectors::GetVectorRatioFactor()
 void cfdVectorBase::UpdateThreshHoldValues()
 {
    //double currentScalarRange[ 2 ];
+std::cout << " UpdateThreshHoldValues " <<  std::endl;
    cfdDataSet* temp = GetActiveDataSet();
+std::cout << " UpdateThreshHoldValues " <<  std::endl;
    if ( temp != NULL )
    {
       //temp->GetRange( currentScalarRange );

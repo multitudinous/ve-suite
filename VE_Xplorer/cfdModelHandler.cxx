@@ -225,17 +225,12 @@ void cfdModelHandler::InitScene( void )
 
    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
    // Create Scalar bar
-   vprDEBUG(vprDBG_ALL,1) << (cfdGroup*)worldNode->GetParent( 0 ) << std::endl<< vprDEBUG_FLUSH;
-cout << " test 1" <<endl;
+   vprDEBUG(vprDBG_ALL,2) << " cfdModelHandler::InitScene = Get root node for scalar bar : " 
+                           << (cfdGroup*)worldNode->GetParent( 0 ) << std::endl<< vprDEBUG_FLUSH;
    _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
-cout << " test 2" <<endl;
    // Assumes active dataset isn't null
-cout << " test 3" <<endl;
    _scalarBar->SetActiveDataSet( activeDataset );
-cout << " test 4" <<endl;
    _scalarBar->RefreshScalarBar();
-   //std::cout << " Done Create scalar bar "  << endl;
-
 }
 
 /////////////////////////////////

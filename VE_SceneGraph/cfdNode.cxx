@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdNode.h"
 #include <iostream>
+#include <vpr/Util/Debug.h>
 #include <cstdlib>
 
 using namespace std;
@@ -124,12 +125,14 @@ cfdNode::cfdNode()
 /////////////////////////
 cfdNode::~cfdNode( void )
 {
-   std::cout << " 1 destructor for cfdNode " << std::endl;
+   vprDEBUG(vprDBG_ALL,1) << " 1 destructor for cfdNode " 
+                           << std::endl << vprDEBUG_FLUSH;
    // If neccesary
 #ifdef _PERFORMER
    if ( this->_node != NULL )
    {
-   std::cout << " 2 destructor for cfdNode " << std::endl;
+      vprDEBUG(vprDBG_ALL,1) << " 2 destructor for cfdNode " 
+                              << std::endl << vprDEBUG_FLUSH;
       pfDelete( this->_node );
    }
 #elif _OSG
