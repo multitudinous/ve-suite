@@ -473,12 +473,12 @@ void cfdVEBaseClass::CreateObjects( void )
          delete [] precomputedSurfaceDir;
          precomputedSurfaceDir = NULL;
 
-         this->LoadSurfaceFiles( _model->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
-
          std::cout << "|   Loading data for file " 
                   << _model->GetCfdDataSet( -1 )->GetFileName()
                   << std::endl;
+
          _model->GetCfdDataSet( -1 )->LoadData();
+         this->LoadSurfaceFiles( _model->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
       }
       else if ( id == 9 ) // if it is an geom file
       {
@@ -610,6 +610,7 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
             // automatically have the same color mapping as the "parent" 
             _model->GetCfdDataSet( -1 )->SetParent( 
                         _model->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
+            _model->GetCfdDataSet( -1 )->LoadData();
          }
          else
          {

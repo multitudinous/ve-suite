@@ -5,18 +5,11 @@
 #endif
 
 #include <wx/wx.h>
-#include <wx/dc.h>
-#include <wx/gdicmn.h>
-
 #include "interface.h"
-
 #include "UIDialog.h"
 #include "TextResultDialog.h"
-
 // EPRI TAG
 #include "FinancialDialog.h"
-//#include <vector>
-//#include <string>
 
 class Geometry;
 /*

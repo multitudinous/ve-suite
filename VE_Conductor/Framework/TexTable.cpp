@@ -86,7 +86,7 @@ void TexTable::AddRow(const std::vector<wxString>& vals)
   SetBackgroundColour(*wxWHITE);
   for (i=0; i<num_cols; i++)
     {
-      if (i<vals.size())
+      if (i<(int)vals.size())
 	AppendText(padding(vals[i], i));
       else
 	AppendText(padding(" ", i));
