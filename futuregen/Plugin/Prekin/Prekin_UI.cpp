@@ -357,6 +357,12 @@ bool Prekin_UI_Dialog::TransferDataFromWindow()
   
   *p_Schema=m_tabs->rb_Schema->GetSelection();
 
+  if ((*p_mod_sel)==0 && (*p_HTVL< 0 || *p_HTVL > 100))
+  {
+	  wxMessageBox("Since you select 'Manual Input of Volatile Yield' in Devolatilization Page, HTVL needs to be 0~100");
+	  return false;
+  }
+	  
   //wxString ofname=wxFileSelector(_T("Profile name"), "", "Profile001", "txt");
   WriteProfile("INPUT");//(ofname.c_str());
   //::wxExecute("PREKIN_new.exe",wxEXEC_ASYNC);
@@ -839,12 +845,12 @@ void Prekin_UI_Dialog::WriteProfile(const char* filename)
 
   if (*p_Pore_Model)
   {
-	  LRANDOMP='T';
+	  LRANDOMP='F';
 	  RADIP1 = *p_pore_radii_macro; RADIP2=*p_pore_radii_micro; EPSM=*p_pore_macroposity; EPS = *p_pore_porosity;
   }
   else
   {
-	  LRANDOMP='F';
+	  LRANDOMP='T';
 	  TAUBYF = *p_T_f;
   }
 
@@ -1187,7 +1193,7 @@ wxPanel* PrekinTabs::CreateSecondPage()
 
   model_row1->Add(rb_mod_sel);
   
-  wxStaticText * labelHTVL = new wxStaticText(panel, -1, "  HTVL", wxDefaultPosition, wxSize(230, 17));
+  wxStaticText * labelHTVL = new wxStaticText(panel, -1, "  HTVL (%) (0~100) ", wxDefaultPosition, wxSize(230, 17));
   t_HTVL = new wxTextCtrl(panel, -1, wxT("0"), wxDefaultPosition, wxSize(130, 20));
   model_row2->Add(labelHTVL);
   model_row2->Add(t_HTVL);
@@ -1635,11 +1641,22 @@ wxPanel* PrekinTabs::CreateFifthPage()
   wxStaticBoxSizer* simcon_row = new wxStaticBoxSizer(simcon_box, wxVERTICAL);
   wxStaticBoxSizer* optim_row = new wxStaticBoxSizer(optim_box, wxVERTICAL);
   
+  wxStaticText * label15 = new wxStaticText(panel, -1, "Recomended Time Interval, sec", wxDefaultPosition, wxSize(260, 17));
+  wxStaticText * label16 = new wxStaticText(panel, -1, "        for oxidation : 0.01 sec", wxDefaultPosition, wxSize(260, 17));
+  wxStaticText * label17 = new wxStaticText(panel, -1, "        for gasification : >=10 sec", wxDefaultPosition, wxSize(260, 17));
+
   top_sizer->Add(10, 5, 0);
   top_sizer->Add(simcon_row, 0, wxALIGN_CENTER_HORIZONTAL); 
   top_sizer->Add(10, 5, 0);
   top_sizer->Add(optim_row, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0);
+  top_sizer->Add(label15, 0, wxALIGN_CENTER_HORIZONTAL);
+  top_sizer->Add(10, 5, 0);
+  top_sizer->Add(label16, 0, wxALIGN_CENTER_HORIZONTAL);
+  top_sizer->Add(10, 5, 0);
+  top_sizer->Add(label17, 0, wxALIGN_CENTER_HORIZONTAL);
+  top_sizer->Add(10, 5, 0);
+  
   
   wxBoxSizer* simcon_row1 = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* simcon_row2 = new wxBoxSizer(wxHORIZONTAL);
