@@ -1,9 +1,13 @@
-#!/usr/bin/tcsh -f
+#!/bin/csh -f
+# 
 # Set environment variables and paths for running the program
-setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
+# (after 12/7/04 change VE_SUITE_HOME from VE_Suite_Nightly to VE_Suite and remove this comment)
+setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_Nightly
+setenv TAO_BUILD FALSE
+setenv CLUSTER_APP FALSE
 source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
-# Set additional environment variables
-setenv MY_VJCONFIGS /home/vr/vjconfig/2.0alpha3
+
+set MY_VJCONFIGS=/home/vr/vjconfig/2.0alpha4
 
 switch ($1)
 
@@ -24,7 +28,8 @@ switch ($1)
   
   case -sim:
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/sim/sim.config 
+    ${VE_SUITE_HOME}/VE_Xplorer/vjconfig/sim.base.jconf \
+    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
   breaksw
   
   case -c6mono:
@@ -38,12 +43,15 @@ switch ($1)
   breaksw
 
   case -nserv:
-    /usr/java/bin/tnameserv -ORBInitialPort 8088 &
+    #/usr/java/bin/tnameserv -ORBInitialPort 8088 &
+    killall omniNames
+    rm ${OMNINAMES_LOGDIR}/omninames-${HOST}.log
+    rm ${OMNINAMES_LOGDIR}/omninames-${HOST}.bak
+    omniNames -start &
   breaksw
   
   case -menu:
-    cd ${VE_SUITE_HOME}/VE_Conductor/class_files
-    java client
+    ve_conductor
   breaksw
 
   case -surface:
@@ -66,30 +74,62 @@ switch ($1)
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/translateToVtk
   breaksw
 
+  case -make:
+    cd ${VE_SUITE_HOME}/VE_Installer
+    gmake
+  breaksw
   
+  case -makeclean:
+    cd ${VE_SUITE_HOME}/VE_Installer
+    gmake clean
+    gmake cleandepend
+  breaksw
+  
+  case -merge:
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/mergeVertices
+  breaksw
+
+  case -meshView:
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/meshViewer
+  breaksw
+
+  case -scalRange:
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/whatIsScalarRange
+  breaksw
+
+  case -doc:
+    mozilla file:///${VE_SUITE_HOME}/docs/starcd/initial.htm &
+  breaksw
+ 
   case -h:
   default:
   echo ""
   echo Usage:
   echo VES.vrac [ options ] 
-  echo "         "-h = usage information
+  echo "         "-h = usage information "(this page)"
   echo The following indicates the workflow of getting the cfd data into the viewer.
   echo "   "-cfd2VTK = translate cfd flowdata to VTK format
+  echo "     "-merge = merge vertices in unstructured grid
   echo "   "-preproc = precompute cutting planes
   echo This will start the viewer using the specified display
   echo "        "-c6 = c6 cave display
   echo "    "-c4open = c4 open cave display
   echo "  "-c4closed = c4 closed cave display
-  echo "       "-sim = sim mode
+  echo "       "-sim = sim mode desktop display
   echo "    "-c6mono = c6 in mono
   echo "    "-c4mono = c4 closed in mono
   echo When the viewer has started, start the menu in another shell
-  echo "      "-menu = start java menu to control viewer
+  echo "      "-menu = start wxWidgets menu to control viewer
   echo The following utilities might be useful occasionaly
-#  echo "     "-nserv = start corba server for menu
+  echo "     "-nserv = restart omninames server
   echo "   "-surface = make VTK surface from fluid mesh
   echo "  "-surf2stl = convert surface file to stl
   echo "  "-transVTK = move flowdata to align with geometry
+  echo "      "-make = make all VE-Suite modules
+  echo " "-makeclean = clean all VE-Suite modules
+  echo "  "-meshView = view any vtk file
+  echo " "-scalRange = view scalar range of any vtk file
+  echo "       "-doc = view documentation for setting up a CFD post process case
   echo ""
   
 endsw
