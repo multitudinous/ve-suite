@@ -91,7 +91,12 @@ void UI_GeometryTab::_buildPage()
    // slider info
    //the labels for the sliders
    wxStaticText* opacityLabel = new wxStaticText(this, -1, wxT("Geometry Opacity"));
+   wxStaticText* opacityLabelLeft = new wxStaticText(this, -1, wxT("Transparent"));
+   wxStaticText* opacityLabelRight = new wxStaticText(this, -1, wxT("Opaque"));
+   
    wxStaticText* lodLabel = new wxStaticText(this, -1, wxT("Geometry LOD Control"));
+   wxStaticText* lodLabelLeft = new wxStaticText(this, -1, wxT("Lower"));
+   wxStaticText* lodLabelRight = new wxStaticText(this, -1, wxT("Higher")); 
 
    //opacity slider
    geomOpacitySlider = new wxSlider(this, GEOMETRY_OPACITY_SLIDER,100,0,100,
@@ -109,13 +114,22 @@ void UI_GeometryTab::_buildPage()
 
    //two sizers to group the sliders and their lables
    wxBoxSizer* opacityGroup = new wxBoxSizer( wxVERTICAL );
+   wxBoxSizer* opacityLabelBottom = new wxBoxSizer( wxHORIZONTAL );
+
    wxBoxSizer* lodGroup = new wxBoxSizer( wxVERTICAL );
+   wxBoxSizer* lodLabelBottom = new wxBoxSizer( wxHORIZONTAL );
 
    opacityGroup->Add(opacityLabel,0,wxALIGN_LEFT|wxEXPAND);
    opacityGroup->Add(geomOpacitySlider,1,wxALIGN_LEFT|wxEXPAND);
+   opacityLabelBottom->Add(opacityLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
+   opacityLabelBottom->Add(opacityLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
+   opacityGroup->Add(opacityLabelBottom,0,wxALIGN_LEFT|wxEXPAND);
 
    lodGroup->Add(lodLabel,0,wxALIGN_LEFT|wxEXPAND);
    lodGroup->Add(geomLODSlider,1,wxALIGN_LEFT|wxEXPAND);
+   lodLabelBottom->Add(lodLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
+   lodLabelBottom->Add(lodLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
+   lodGroup->Add(lodLabelBottom,0,wxALIGN_LEFT|wxEXPAND|wxALL);
 
    //the update button
    //_updateButton = new wxButton(this,GEOMETRY_UPDATE_BUTTON,wxT("Update"));

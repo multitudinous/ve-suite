@@ -123,11 +123,20 @@ void UI_StreamlineTab::_buildPage()
 
    //the labels for the sliders 
    wxStaticText* pLabel = new wxStaticText(this,-1,wxT("Propagation Time"));
+   wxStaticText* pLabelLeft = new wxStaticText(this,-1,wxT("Shorter"));
+   wxStaticText* pLabelRight = new wxStaticText(this,-1,wxT("Longer"));
+
    wxStaticText* iLabel = new wxStaticText(this,-1,wxT("Integration Step"));
+   wxStaticText* iLabelLeft = new wxStaticText(this,-1,wxT("Smaller"));
+   wxStaticText* iLabelRight = new wxStaticText(this,-1,wxT("Larger"));
+
    wxStaticText* sLabel = new wxStaticText(this,-1,wxT("Step"));
    wxStaticText* npLabel         = new wxStaticText(this,-1,wxT("Number of Points"));
    wxStaticText* sizeLabel       = new wxStaticText(this,-1,wxT("Size(%)"));
+
    wxStaticText* diameterLabel   = new wxStaticText(this,-1,wxT("Line Diameter"));
+   wxStaticText* diameterLabelLeft   = new wxStaticText(this,-1,wxT("Decrease Exponentially"));
+   wxStaticText* diameterLabelRight   = new wxStaticText(this,-1,wxT("Increase Exponentially"));
 
    //the two sliders for this group
    _propSlider = new wxSlider(this, PROP_SLIDER,100,1,100,
@@ -168,19 +177,31 @@ void UI_StreamlineTab::_buildPage()
 
    //group the sliders and the labels together
    wxBoxSizer* propGroup      = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* propGroupBottom      = new wxBoxSizer(wxHORIZONTAL);
+
    wxBoxSizer* intGroup       = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* intGroupBottom       = new wxBoxSizer(wxHORIZONTAL);
+
    wxBoxSizer* stepGroup      = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* sizePointsGroup = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* numPointsGroup = new wxBoxSizer(wxVERTICAL);
+
    wxBoxSizer* diameterGroup  = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* diameterGroupBottom  = new wxBoxSizer(wxHORIZONTAL);
 
    //the prop slider
    propGroup->Add(pLabel,0,wxALIGN_LEFT);
    propGroup->Add(_propSlider,1,wxALIGN_LEFT|wxEXPAND);
+   propGroupBottom->Add(pLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
+   propGroupBottom->Add(pLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
+   propGroup->Add(propGroupBottom,1,wxALIGN_LEFT|wxEXPAND);
 
    //the int step slider
    intGroup->Add(iLabel,0,wxALIGN_LEFT);
    intGroup->Add(_iStepSlider,1,wxALIGN_LEFT|wxEXPAND);
+   intGroupBottom->Add(iLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
+   intGroupBottom->Add(iLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
+   intGroup->Add(intGroupBottom,1,wxALIGN_LEFT|wxEXPAND);
 
    //the step slider
    stepGroup->Add(sLabel,0,wxALIGN_LEFT);
@@ -197,6 +218,11 @@ void UI_StreamlineTab::_buildPage()
    // The streamline diameter slider
    diameterGroup->Add(diameterLabel,0,wxALIGN_LEFT);
    diameterGroup->Add(_diameterSlider,1,wxALIGN_LEFT|wxEXPAND);
+   diameterGroupBottom->Add(diameterLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
+   diameterGroupBottom->Add(diameterLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
+   diameterGroup->Add(diameterGroupBottom,1,wxALIGN_LEFT|wxEXPAND);
+
+
 
    //the buttons and check box for the bottom of the UI
    _compStreamButton = new wxButton(this, COMP_STREAMLINE_BUTTON,
