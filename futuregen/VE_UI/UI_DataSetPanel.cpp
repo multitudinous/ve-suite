@@ -277,7 +277,15 @@ UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int a
 ///////////////////////////////
 UI_DatasetPanel::~UI_DatasetPanel()
 {
-
+  if(_scalarNames){  
+      delete [] _scalarNames;
+      _scalarNames = 0;
+   }
+   
+   if(_vectorNames){
+      delete [] _vectorNames;
+      _vectorNames = 0;
+   }
 }
 ////////////////////////////////
 //Build the Dataset page      //
