@@ -96,6 +96,8 @@ class ansysReader
       void VerifyBlock( int blockSize_1, int blockSize_2 );
       void ReadNodalComponentStresses( int );
       double ComputeVonMisesStress( double stresses [ 11 ] );
+      void AttachVonMisesStressToGrid();
+      void StoreNodalStessesForThisElement( int elemIndex );
 
       char * ansysFileName;
       FILE *s1;
