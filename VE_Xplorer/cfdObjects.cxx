@@ -61,7 +61,7 @@ cfdObjects::cfdObjects( cfdGeode* temp, int type )
    this->usePreCalcData = false;
    this->actor = NULL;
    this->PDactor = NULL;
-
+   this->addTransientGeode = 0;
    this->activeDataSet = NULL;
 }
 
@@ -76,12 +76,15 @@ cfdObjects::cfdObjects( void )
    this->usePreCalcData = false;
    this->actor = NULL;
    this->PDactor = NULL;
+   this->addTransientGeode = 0;
+   
 }
 
 cfdObjects::cfdObjects( const cfdObjects& src)
 {
    this->objectType = src.objectType;
    this->pointSource = src.pointSource;
+   this->addTransientGeode = src.addTransientGeode;
 }
 
 cfdObjects::~cfdObjects( void )
@@ -173,7 +176,52 @@ void cfdObjects::SetSourcePoints( vtkPolyDataSource* pointSource )
 {
    this->pointSource = pointSource;
 }
+void cfdObjects::AddGeodesToSequence()
+{
+   int nTransGeodes = 0; 
+   
+   int nGroups = _sequence->GetSequence()->GetNumChildren();
+   int nDCSs = 0;
+   int nGeodes = 0;
+   cfdGroup* tempGroup = 0;
+   cfdDCS* tempDCS = 0;
+   cfdGeode* tempGeode = 0;
+      
+   std::cout<<"removing nodes from the sequence!!"<<std::endl;
+   std::cout<<"cfdObjects::AddGeodesToSequence"<<std::endl;
+   for(int i = 0; i < nGroups; i++){
+      tempGroup = (cfdGroup*)this->_sequence->GetSequence()->GetChild(i);
+      nDCSs = tempGroup->GetNumChildren();
+      std::cout<<"number of dcs: "<< nDCSs<<std::endl;
+      for(int j = 0; j < nDCSs; j++){
+         tempDCS = (cfdDCS*)tempGroup->GetChild(j);
+         nGeodes = tempDCS->GetNumChildren();
+         for(int k = 0; k < nGeodes; k++){
+            std::cout<<"removing geode : "<< k<<std::endl;
+            tempGeode = (cfdGeode*)tempDCS->GetChild(0);
+            tempDCS->RemoveChild(tempGeode);
+            transientGeodes.erase(transientGeodes.begin());
+            delete tempGeode;
+         }
+      }
+   }
+   std::cout<<"adding geodes to sequence!!"<<std::endl;
+   std::cout<<"cfdObjects::AddGeodesToSequence"<<std::endl;
+   nTransGeodes =  transientGeodes.size();
+   for(int g = 0; g < nGroups; g++){
+      tempGroup = this->_sequence->GetGroup(g);
+      nDCSs = tempGroup->GetNumChildren();
+      for(int i = 0; i < nDCSs; i ++){
+         tempDCS->AddChild(this->transientGeodes.at(g));
+      }
+   }
+   this->_sequence->GetSequence()->setInterval( CFDSEQ_CYCLE, 0 , nTransGeodes - 1 );
+   this->_sequence->GetSequence()->setDuration( 0.1 * nTransGeodes );
+   this->GetSequence()->StartSequence();
 
+   std::cout<<"finished adding to the sequence"<<std::endl;
+   std::cout<<"cfdObjects::AddGeodesToSequence"<<std::endl;
+}
 // This function just creates a geode from the actor for a particular
 // visualization feature. It is not responsible for adding the 
 // newly created geode to the scene graph. 
@@ -182,14 +230,20 @@ void cfdObjects::UpdatecfdGeode( void )
    vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::UpdateGeode..."
                            << std::endl << vprDEBUG_FLUSH;
    
-
    if ( this->updateFlag )
    {
-      vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::Allocate Geode..."
+      //check if current data set is transient
+      if(this->activeDataSet->IsPartOfTransientSeries()){
+         this->transientGeodes.push_back(new cfdGeode());
+         //check if this is causing problems 
+         this->addTransientGeode = true;
+      }else{
+         vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::Allocate Geode..."
                            << updateFlag<< std::endl << vprDEBUG_FLUSH;
    
-      this->_geode = new cfdGeode();
-      this->addGeode = true;      
+         this->_geode = new cfdGeode();
+         this->addGeode = true;      
+      }
    }
    else
    {
@@ -348,6 +402,15 @@ void cfdObjects::AddSequenceToTree( void )
    }
 }
 
+void cfdObjects::SetTransientGeodeFlag( bool x ) 
+{ 
+   this->addTransientGeode = x; 
+}
+
+bool cfdObjects::GetTransientGeodeFlag( void ) 
+{ 
+   return this->addTransientGeode; 
+}
 void cfdObjects::SetGeodeFlag( bool x ) 
 { 
    this->addGeode = x; 

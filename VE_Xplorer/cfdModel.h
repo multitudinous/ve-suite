@@ -48,12 +48,14 @@ it is better to treat these two dataset as two different models.
 
 #include <string>
 #include <vector>
+#include <map>
 
 class cfdDataSet;
 class cfdDCS;
 class cfdNode;
 class fileInfo;
 class cfdFILE;
+class cfdTempAnimation;
 
 enum ModelTypeIndex
 {
@@ -93,6 +95,7 @@ class cfdModel
       void delVTKdataset();
       void addGeomdataset(const std::string &filename);
       void delGeomdataset(int);
+
       
       cfdDataSet* GetCfdDataSet( int );
       unsigned int GetNumberOfCfdDataSets( void );
@@ -107,7 +110,10 @@ class cfdModel
       cfdNode* GetCfdNode( void );
       cfdDCS* GetCfdDCS( void );
 
+      std::map<int,cfdDataSet*> transientDataSets;
+
    private:
+      cfdTempAnimation* sequence;
       typedef std::vector< cfdFILE* > GeometoryDataSetList;
       GeometoryDataSetList mGeomDataSets;
       typedef std::vector< cfdDataSet* > VTKDataSetList;

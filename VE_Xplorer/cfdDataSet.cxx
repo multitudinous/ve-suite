@@ -94,6 +94,8 @@ cfdDataSet::cfdDataSet( )
    this->actualScalarRange = NULL;
    this->displayedScalarRange = NULL;
    this->meanCellBBLength = 0.0;
+   this->intRange[0] = 0;
+   this->intRange[1] =1000000;
 }
 
 cfdDataSet::~cfdDataSet()
@@ -956,8 +958,15 @@ void cfdDataSet::AutoComputeUserRange( const double rawRange[2],
 */
 }
 
+void cfdDataSet::GetRange(int* range)
+{
+   range[0] = intRange[0];
+   range[1] = intRange[1];
+}
 void cfdDataSet::ResetScalarBarRange( int min, int max )
 {
+   this->intRange[0] = min;
+   this->intRange[1] = max;
 // converts percentile parameters into decimal values for a particular scalar
    vprDEBUG(vprDBG_ALL,1) << "cfdDataSet::ResetScalarBarRange "
                           << "min = " << min << ", max = " << max

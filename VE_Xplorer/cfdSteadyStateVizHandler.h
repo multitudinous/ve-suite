@@ -80,6 +80,8 @@ class cfdSteadyStateVizHandler
       void SetNavigate( cfdNavigate* );
       void SetCursor( cfdCursor* );
       cfdTempAnimation* GetActiveAnimation( void );
+      bool TransientGeodesIsBusy();
+ 
 
    private:
       cfdPolyData*         surface;
@@ -146,5 +148,6 @@ class cfdSteadyStateVizHandler
       //bool runStreamersThread;
       bool runIntraParallelThread;
       bool useLastSource;
+      bool transientBusy;
 };
 #endif

@@ -99,6 +99,7 @@ class cfdObjects : public cfdGlobalBase
       void UpdatecfdGeode( void );
       void AddcfdGeodeToDCS( void );
       void RemovecfdGeodeFromDCS( void );
+      void AddGeodesToSequence(void);
       //void CreatecfdGeode( void );
 
       void SetDCS( cfdDCS* );
@@ -107,6 +108,10 @@ class cfdObjects : public cfdGlobalBase
 
       void SetGeodeFlag( bool x );
       bool GetGeodeFlag( void );
+
+      bool GetTransientGeodeFlag(void);
+      void SetTransientGeodeFlag(bool x);
+     
 
       void SetActiveDataSet( cfdDataSet * dataset );
       cfdDataSet * GetActiveDataSet( void );
@@ -136,6 +141,7 @@ class cfdObjects : public cfdGlobalBase
 
       cfdDCS* _dcs;
       std::vector< cfdGeode* > _geodes;
+      std::vector<cfdGeode* > transientGeodes;
 
       vtkActor *actor;
       vtkActor *PDactor;
@@ -145,6 +151,7 @@ class cfdObjects : public cfdGlobalBase
    
       bool updateFlag;
       bool addGeode;
+      bool addTransientGeode;
       int vtkToPFDebug;
       int objectType;
       int requestedValue;

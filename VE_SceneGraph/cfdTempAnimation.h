@@ -57,7 +57,7 @@ class cfdTempAnimation
       
       void SetSequence( cfdSequence* );
 
-      cfdGroup* GetpfGroup( int i );
+      cfdGroup* GetGroup( int i );
 
       int GetNumberOfFrames( void ){ return numFrames;}
 

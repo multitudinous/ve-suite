@@ -114,6 +114,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
    this->computeActorsAndGeodes = false;
    this->actorsAreReady = false;
    this->useLastSource = false;
+   this->transientBusy = 0;
    _param = param;
 }
 
@@ -320,7 +321,10 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
       delete this->animStreamer;
    }
 }
-
+bool cfdSteadyStateVizHandler::TransientGeodesIsBusy()
+{
+   return this->transientBusy;
+}
 ////////////////////
 // Helper functions
 ////////////////////
@@ -813,6 +817,16 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             this->dataList[ i ]->SetUpdateFlag( false );
             this->dataList[ i ]->SetGeodeFlag( false );
             this->actorsAreReady = false;
+         }else if(this->dataList.at(i)->GetTransientGeodeFlag()){
+            if ( this->_worldDCS->SearchChild( this->dataList[ i ]->GetSequence()->GetSequence() ) < 0 )
+            {
+               vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
+                                   << std::endl << vprDEBUG_FLUSH;
+               this->_worldDCS->AddChild( this->dataList[ i ]->GetSequence()->GetSequence() );
+            }
+            this->dataList.at(i)->AddGeodesToSequence();
+            this->dataList.at(i)->SetTransientGeodeFlag(false);
+            this->transientBusy = false;
          }
       }
    }
@@ -860,7 +874,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                this->_activeObject->SetRequestedValue( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
                this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
                this->_activeObject->SetPreCalcFlag( this->commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) );
-            
+               this->transientBusy = true;      
                this->computeActorsAndGeodes = true;
                this->actorsAreReady = true;
             }

@@ -68,6 +68,8 @@ class cfdDataSet
   void GetRange( double dataRange[2] );
   void GetRange( double &dataMin, double &dataMax );
   double * GetRange();
+
+  void GetRange(int* range);
   
   // Set/get the min/max velocity, used defined.
   void SetUserRange( double userRange[2] );
@@ -242,6 +244,7 @@ class cfdDataSet
   cfdDCS* dcs;
 
   int partOfTransientSeries;
+   int intRange[2];
 
 #ifdef USE_OMP 
   unsigned int noOfData;   // Total no. of octants.

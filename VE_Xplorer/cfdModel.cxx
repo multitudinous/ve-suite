@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdModel.h"
 #include "cfdDataSet.h"
+#include "cfdTempAnimation.h"
 #include "cfdDCS.h"
 #include "cfdNode.h"
 #include "cfdFILE.h"
@@ -47,6 +48,7 @@ cfdModel::cfdModel( cfdDCS *worldDCS)
    // Will fix this later so that each model has a dcs
    //mModelDCS = new cfdDCS();
    _worldDCS = worldDCS;
+   sequence = 0;
 }
 
 cfdModel::~cfdModel()
@@ -70,6 +72,21 @@ cfdModel::~cfdModel()
       delete *itr;
    }
    mVTKDataSets.clear();
+ 
+   std::map<int,cfdDataSet*>::iterator foundPlugin;
+   // Remove any plugins that aren't present in the current network
+   for ( foundPlugin=transientDataSets.begin(); foundPlugin!=transientDataSets.end(); )
+   {
+         // When we clear the _plugin map will
+         // loop over all plugins
+         transientDataSets.erase( foundPlugin++ );
+   }
+   transientDataSets.clear();
+
+   if(sequence){
+      delete [] sequence;
+      sequence = 0;
+   }
 
 /*
    // The following block is broken

@@ -96,7 +96,7 @@ void cfdTempAnimation::SetDuration( double time )
    this->_duration = time;
 }
 
-cfdGroup* cfdTempAnimation::GetpfGroup( int i )
+cfdGroup* cfdTempAnimation::GetGroup( int i )
 {
    return this->groups[ i ];
 }
@@ -193,36 +193,6 @@ void cfdTempAnimation::AddToSequence( int objectType )
       vprDEBUG(vprDBG_ALL, 2) << " For animated Images: End Loop" 
                               << std::endl << vprDEBUG_FLUSH;
    }
-/*   else if ( type == 0 )
-   {
-      // For transient data
-      for ( i = 0; i < num; i++ )
-      {         
-         if ( this->_geodes[ i ] != NULL )
-         {
-            if ( ((cfdGroup *)this->_sequence->getChild( i ))->SearchChild( this->_geodes[ i ] ) >= 0 )
-            {
-               // This is the check for geometry already on the SG
-               vprDEBUG(vprDBG_ALL, 1) << " geometry already on the SG"
-                                       << std::endl << vprDEBUG_FLUSH;
-               break;
-            }
-            else
-            {
-               vprDEBUG(vprDBG_ALL, 1) << " adding child " << i << " : "
-                                       << this->_geodes[ i ] << " to sequence group"
-                                       << std::endl << vprDEBUG_FLUSH;
-               ((cfdGroup *)this->_sequence->getChild( i ))->AddChild( this->_geodes[ i ] );
-            }
-         }
-      
-      this->_sequence->setInterval( CFDSEQ_CYCLE, 0 , num - 1 );
-
-      //this->_sequence->setDuration( 
-      //                 this->paramFile->transientInfo[ 0 ]->GetDuration() );
-      //std::cout << "sequence->Duration = " << this->paramFile->transientInfo[ 0 ]->GetDuration() << std::endl;
-
-   }*/
    else
    {
       std::cerr << "ERROR: Don't know this kind of sequence" << std::endl;
