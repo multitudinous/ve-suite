@@ -83,24 +83,23 @@ void AppFrame::CreateVETab()
   
   m_imageList->Add(wxArtProvider::GetIcon(wxART_ERROR, wxART_OTHER, imageSize));
   
-  //m_tabs = new UI_Tabs(vjobs, wx_ve_splitter, ID_UI_TABS);
-  m_frame = new UI_Frame(vjobs.in(), wx_ve_splitter, ID_UI_TABS);
-  // Create the notebook's panels
-  //m_tabs->AssignImageList(m_imageList);
-  m_frame->_tabs->AssignImageList(m_imageList);
-  //m_tabs->createTabPages();
-  //wxNotebookSizer *nbs = new wxNotebookSizer(m_tabs);
-   
-  wxBoxSizer *sizerTab = new wxBoxSizer(wxVERTICAL);
-  //sizerTab->Add(nbs, 1, wxEXPAND | wxALL);
-  sizerTab->Add(m_frame, 1, wxEXPAND | wxALL);
-  sizerTab->Layout();
+   //m_tabs = new UI_Tabs(vjobs.in(), wx_ve_splitter, ID_UI_TABS);
+   m_frame = new UI_Frame(vjobs.in(), wx_ve_splitter, ID_UI_TABS);
+   // Create the notebook's panels
+   //m_tabs->AssignImageList(m_imageList);
+   //m_frame->_tabs->AssignImageList(m_imageList);
+   //m_tabs->createTabPages();
+   //wxNotebookSizer *nbs = new wxNotebookSizer(m_tabs);
+   wxBoxSizer *sizerTab = new wxBoxSizer(wxVERTICAL);
+   //sizerTab->Add(nbs, 1, wxEXPAND | wxALL);
+   sizerTab->Add(m_frame, 1, wxEXPAND | wxALL);
+   sizerTab->Layout();
  
-  wx_ve_splitter->SetSizer(sizerTab);
-  wx_ve_splitter->SetAutoLayout(TRUE);
+   wx_ve_splitter->SetSizer(sizerTab);
+   wx_ve_splitter->SetAutoLayout(TRUE);
 
-  //wx_ve_splitter->SplitVertically(wx_nw_splitter, m_tabs, 0);
-  wx_ve_splitter->SplitVertically(wx_nw_splitter, m_frame, 0);
+   //wx_ve_splitter->SplitVertically(wx_nw_splitter, m_tabs, 0);
+   wx_ve_splitter->SplitVertically(wx_nw_splitter, m_frame, 0);
 
    //trying to get the tabs to show up on initialization!!!!!
    //wxSize windowSize = m_tabs->GetSize();
@@ -543,7 +542,6 @@ void AppFrame::GlobalParam(wxCommandEvent &event)
 
 void AppFrame::ConExeServer(wxCommandEvent &event)
 {
- std::cout << "here 1 " <<endl;
   if (!is_orb_init)
   {
     if (init_orb_naming())
@@ -551,12 +549,11 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
     else
       return;
   }
- std::cout << "here 3 " <<endl;
 
   try{
 
 		//_mutex.acquire();	  
-    		if (pelog==NULL)
+    	  if (pelog==NULL)
 		  {
 		    pelog = new PEThread(this);
 		    pelog->activate();
@@ -578,7 +575,6 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
 		
 		Log("Can't find executive or UI registration error\n");
 	}
- std::cout << "here 2 " <<endl;
 }
   
 void AppFrame::ConVEServer(wxCommandEvent &event)
@@ -593,6 +589,12 @@ void AppFrame::ConVEServer(wxCommandEvent &event)
 
 	try {
 
+    	  if (pelog==NULL)
+		  {
+		    pelog = new PEThread(this);
+		    pelog->activate();
+		  }
+
 	    CosNaming::Name name(1);
 		name.length(1);
 		//Now get the reference of the VE server
@@ -600,13 +602,13 @@ void AppFrame::ConVEServer(wxCommandEvent &event)
 		name[0].kind = (const char*) "VE_Xplorer";
 		CORBA::Object_var ve_object = naming_context->resolve(name);
 		vjobs = VjObs::_narrow(ve_object.in());
-		if (CORBA::is_nil(vjobs))
+		if (CORBA::is_nil(vjobs.in()))
 			std::cerr<<"VjObs is Nill"<<std::endl;
 		
 		//Create the VE Tab
 		CreateVETab();
 		con_menu->Enable(v21ID_CONNECT_VE, false);
-
+		Log("Found VE server\n");
 	} catch (CORBA::Exception &) {
 		
 		Log("Can't find VE server\n");
