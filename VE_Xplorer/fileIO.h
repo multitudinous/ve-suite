@@ -41,6 +41,7 @@ class fileIO
       ~fileIO();
       static int isFileReadable( const char * const filename );
       static int isFileWritable( char *filename );
+      static int DirectoryExists( char * dirName );
       static int isDirWritable( char *dirname );
       static char * getWritableDir( );
       static char * getFilenameFromDefault( char* fileContents,

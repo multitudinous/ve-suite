@@ -34,7 +34,15 @@
 #include <iostream>
 #include <fstream>
 #include <stdlib.h>
+
+#ifdef WIN32     // windows
+#include <direct.h>
+#else             // not windows
+#include <unistd.h>
+#include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/dir.h>
+#endif            // WIN32
 
 fileIO::fileIO( )
 {
@@ -67,6 +75,42 @@ int fileIO::isFileWritable( char *filename )
    remove( filename );
 */
    return 1;                   // success
+}
+
+int fileIO::DirectoryExists( char * dirName )
+{
+#ifdef WIN32
+   // Get the current working directory
+   char cwd [ _MAX_PATH ];
+   if( _getcwd( cwd, _MAX_PATH ) == NULL )
+   {
+      std::cerr << "_getcwd error: will exit" << std::endl;
+      exit( 1 );
+   }
+
+   // Try to go to the specified directory: return 0 if not possible
+   if ( _chdir( dirName ) == -1 )
+   {
+      return 0;
+   }
+
+   // Return to the original directory
+   if ( _chdir( cwd ) == -1 )
+   {
+      std::cerr << "Can't return to the original directory: will exit" << std::endl;
+      exit( 1 );
+   }
+#else
+   // Try to open the directory: return 0 if not possible
+   DIR * dir = opendir( dirName );
+   if ( dir == NULL ) 
+   {
+      closedir( dir );
+      return 0;
+   }
+   closedir( dir );
+#endif // WIN32
+   return 1;
 }
 
 int fileIO::isDirWritable( char *dirname )
@@ -209,13 +253,12 @@ char * fileIO::getWritableFile( char* defaultName )
 
 int fileIO::readNByteBlockFromFile(void *ptr, const unsigned int nByte, const unsigned int num, FILE *stream, const bool endian_flip)
 {
-    if ( feof(stream) ) return(1);
+    if ( feof(stream) ) return 1;
     
     // num is the number of nByte byte blocks to be read
-    if (fread(ptr,nByte,num,stream) != num) return(1);
+    if ( fread(ptr,nByte,num,stream) != num ) return 1;
 
-    // do we need to endian flip????
-    if(endian_flip)
+    if ( endian_flip )
     {
         char * buf = new char [nByte];
         for(unsigned int i=0; i < num*nByte; i += nByte)
@@ -224,7 +267,7 @@ int fileIO::readNByteBlockFromFile(void *ptr, const unsigned int nByte, const un
             memcpy(((char*)ptr)+i,buf,nByte);
         }
     }
-    return(0);  //success
+    return 0;  //success
 }
 
 void fileIO::processCommandLineArgs( int argc, char *argv[], char verb[],
@@ -350,6 +393,7 @@ void fileIO::StripTrailingSpaces( char line [] )
       line[i] = '\0';
    }
 }
+
 char * fileIO::StripLeadingSpaces( char line [] )
 { 
    //std::cout << "StripLeadingSpaces has \"" << line << "\"" << std::endl;
@@ -445,6 +489,7 @@ void fileIO::getTagAndValue(char *textline, char *TagName, char *TagValue)
 
    return;
 }
+
 void fileIO::IdentifyTagAssignValue(char *TagName, char *TagValue )
 {
    if (strcmp("STARVRT", TagName)==0)
