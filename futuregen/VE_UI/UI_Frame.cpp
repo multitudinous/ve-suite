@@ -2,7 +2,6 @@
 #include <iostream>
 using namespace std;
 #ifdef _TAO
-#include "VjObsC.h"
 #include "VjObsS.h"
 #include <orbsvcs/CosNamingC.h>
 #else
@@ -58,6 +57,12 @@ void UI_Frame::buildCORBA( )
 
 	char *argv[]={""};
 	int argc = 0;
+   //int argc = 3;
+   //char** argv;
+   //argv = new char*[ argc ];
+   //argv[ 0 ] = "project";
+   //argv[ 1 ] = "-ORBInitRef";
+   //argv[ 2 ] = "NameService=file://ior.txt";
    PortableServer::POA_var poa;
    CORBA::ORB_var orb;
    CosNaming::NamingContext_var naming_context;
