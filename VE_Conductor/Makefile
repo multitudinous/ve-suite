@@ -69,13 +69,15 @@ OPTIM_APP?= TRUE
 
 EXTRA_CFLAGS+=
 
-EXTRA_CXXFLAGS+=
+#EXTRA_CXXFLAGS+= -DAPP_NO_THREADS -DXML_USE_NO_THREADS -D_TAO -w
+EXTRA_CXXFLAGS+= -D_TAO 
 
 EXTRA_DEFS+=
 
-EXTRA_LIBS+= -lm
+EXTRA_LIBS+= -lm -lpthread -Wl,-E #-ldl -lrt -lc 
 
 ifeq ($(CFDHOSTTYPE),IRIX64)
+   # For ANSI std headers
    EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include/boost/compatibility/cpp_c_headers
 endif
 
