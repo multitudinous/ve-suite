@@ -181,7 +181,7 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
 #endif
       //copy the children of the cfdSequence
       for(int i = 0; i < nChildren; i++){
-         sequence->addChild(((cfdSequence*)node)->getChild(i)->GetRawNode());
+         sequence->addChild(((cfdSequence*)node)->GetChild(i)->GetRawNode());
       }
 
       sequence->setDuration(1.0,-1);      // regular speed, continue forever
