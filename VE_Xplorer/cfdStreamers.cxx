@@ -190,18 +190,18 @@ void cfdStreamers::SetIntegrationDirection( int value )
 void cfdStreamers::SetPropagationTime( int value )
 {
    this->propagationTime = (float)value * 
-                  ( 100.0f * this->GetActiveDataSet()->GetMaxTime() / 50.0f );
+                  ( 100.0f * this->GetActiveDataSet()->GetMaxTime() / 20.0f );
 }
 
 void cfdStreamers::SetIntegrationStepLength( int value )
 {
-   this->integrationStepLength = (float)value * ( 0.050f / 50.0f );
+   this->integrationStepLength = (float)value * ( 0.050f / 20.0f );
 }
 
 void cfdStreamers::SetStepLength( int value )
 {
    this->stepLength = (float)value * ((this->GetActiveDataSet()
-                                           ->GetMeanCellLength()/30.0f) / 50.0f);     
+                                           ->GetMeanCellLength()/30.0f) / 20.0f);     
 }
 
 bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )

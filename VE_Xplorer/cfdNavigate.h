@@ -61,7 +61,7 @@ class cfdNavigate
   /*!
     Initialization of navigation objects: VR Juggler, wand, cursor, data set
   */
-  void Initialize( float, cfdDCS* );
+  void Initialize( cfdDCS* );
   void SetDataValues( int, int );
   void updateNavigationFromGUI( void );
   void GetDirection( float xyzV[3] );
@@ -202,7 +202,8 @@ private:
     Displacement of the objects in virtual space.
   */
   float dObj;
-
+   
+   float navigationStepSize;
 };
 
 #endif
