@@ -331,9 +331,10 @@ int switchFrame(pfTraverser* trav, void* userData)
 
       //since we're running slower than the
       //application, we don't need to update yet
-      if(sequence->_appFrame < frameRateRatio){
+      if(sequence->_appFrame < frameRateRatio)
+      {
          vprDEBUG(vprDBG_ALL,3) << "Not time to switch frame yet due to slow frame rate: "<<appFrameRate
-                          << std::endl << vprDEBUG_FLUSH;
+                          << " : " << sequence->_appFrame << std::endl << vprDEBUG_FLUSH;
          //continue in the current state 
          //update the frames the app has processed
          sequence->_appFrame++;
@@ -342,10 +343,9 @@ int switchFrame(pfTraverser* trav, void* userData)
                           << std::endl << vprDEBUG_FLUSH;
          return PFTRAV_CONT;
       }
-       //cout<<"Switching frames!"<<endl;
-       vprDEBUG(vprDBG_ALL,3) << "Switching frames on the sequence! "<<end
-                          << std::endl << vprDEBUG_FLUSH;
-   }else if(appFrameRate < seqRate){
+   }
+   else if(appFrameRate < seqRate)
+   {
       vprDEBUG(vprDBG_ALL,3) << "Slow Performer Frame rate: "<<appFrameRate
                           << std::endl << vprDEBUG_FLUSH;
       //cout<<"Frame rate is slow."<<endl;

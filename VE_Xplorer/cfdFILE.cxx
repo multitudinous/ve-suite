@@ -42,6 +42,7 @@
 #elif _OSG
 #include <osg/Fog>
 #endif
+
 cfdFILE::cfdFILE( fileInfo *geomFile, cfdDCS *worldDCS  )
 {
    // Need to fix this and move some code to cfdNode
@@ -276,10 +277,10 @@ void cfdFILE::SetGeometryFilename( std::string filename )
 
 void cfdFILE::Update( void )
 {
-   std::cout << "Update Filename : " << this->_filename << std::endl;
-   std::cout << "trans : " << this->_transparencyFlag << std::endl;
-   std::cout << "op : " << this->_opacityLevel << std::endl;
-   std::cout << "color : " << this->_colorFlag << std::endl;
+   std::cout << "Update Filename : " << this->_filename << std::endl
+               << "trans : " << this->_transparencyFlag << std::endl
+               << "op : " << this->_opacityLevel << std::endl
+               << "color : " << this->_colorFlag << std::endl;
    // Fix this later to call traverser function
    //this->_node->SetColorOfGeometry( this->_node );
 }
