@@ -25,7 +25,7 @@
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdApp.cxx,v $
  * Date modified: $Date$
- * Version:       $Revision: 1.153 $
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -1557,12 +1557,10 @@ inline void cfdApp::initScene( )
    }
 
    // Create data in memory for transfered data
-#ifdef _TAO
    this->CreateSoundInfo();
    this->CreateGeometryInfo();
    this->CreateDatasetInfo();
    this->CreateTeacherInfo();
-#endif // _TAO
 
 #ifdef TABLET
    this->pushDataToStateInfo();

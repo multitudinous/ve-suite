@@ -25,7 +25,7 @@
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdApp.h,v $
  * Date modified: $Date$
- * Version:       $Revision: 1.63 $
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
