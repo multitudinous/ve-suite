@@ -46,8 +46,8 @@ class cfdDCS;
 class cfdReadParam : public cfdGlobalBase
 {
    public:
-      cfdReadParam( char * );
-      ~cfdReadParam( );
+      cfdReadParam();
+      ~cfdReadParam();
 
       // compare VjObs_i commandArray with its child's value
       virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
@@ -106,19 +106,19 @@ class cfdReadParam : public cfdGlobalBase
        By default, using the octree table.
       */
 
-      void data_read( char * );
+      //void data_read( char * );
      
-      void param_read( std::ifstream & );
+      //void param_read( std::ifstream & );
      
-      void Vtk( std::ifstream & );
+      //void Vtk( std::ifstream & );
      
-      void Stl( std::ifstream & );
+      //void Stl( std::ifstream & );
      
-      void set1DText( std::ifstream & );
+      //void set1DText( std::ifstream & );
      
-      void soundData( std::ifstream & );
+      //void soundData( std::ifstream & );
 
-      void vrxprConfigFiles( std::ifstream & );
+      //void vrxprConfigFiles( std::ifstream & );
 
       //get the transient data params
       void getTransientInfo( std::ifstream& infile );
@@ -126,11 +126,11 @@ class cfdReadParam : public cfdGlobalBase
       int  convertDecimalToBinary( long );
       void convertBinaryToDecimal( int );
       void convertBinaryToArray( int, int );
-      void BMPLoader( std::ifstream &inFile );
-      void readWorldDCS( std::ifstream &inFile );
-      void readScalarBar( std::ifstream &inFile );
-      void IMGReader( std::ifstream &inFile );
-      void quatCamFile( std::ifstream &inFile );
+      //void BMPLoader( std::ifstream &inFile );
+      //void readWorldDCS( std::ifstream &inFile );
+      //void readScalarBar( std::ifstream &inFile );
+      //void IMGReader( std::ifstream &inFile );
+      //void quatCamFile( std::ifstream &inFile );
 
       char * readDirName( std::ifstream &inFile, char * description );
       int readID( std::ifstream &inFile );
@@ -154,7 +154,7 @@ class cfdReadParam : public cfdGlobalBase
    private:
       std::vector< cfdDataSet * > dataSets;
 
-      void LoadSurfaceFiles( char * dir );
+      //void LoadSurfaceFiles( char * dir );
 };
 
 #endif

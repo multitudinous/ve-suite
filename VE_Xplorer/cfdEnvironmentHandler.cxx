@@ -73,7 +73,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    this->nav = new cfdNavigate();
-   _readParam = new cfdReadParam( NULL );
+   _readParam = new cfdReadParam();
    _param = filename;
    CreateObjects();
 }

@@ -51,7 +51,7 @@ cfdSoundHandler::cfdSoundHandler( char* param )
    _param = NULL;
    _readParam = NULL;
    _param = param;
-   _readParam = new cfdReadParam( NULL );
+   _readParam = new cfdReadParam();
    soundFile = 0;
 
    CreateObjects();

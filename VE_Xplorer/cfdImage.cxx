@@ -57,7 +57,7 @@ cfdImage::cfdImage( char* param )
    bmpOrientation = -1;
 
    _param = param;
-   _readParam = new cfdReadParam( NULL );
+   _readParam = new cfdReadParam();
    // Fix this if createobjects is true then continue else return
    CreateObjects();
 

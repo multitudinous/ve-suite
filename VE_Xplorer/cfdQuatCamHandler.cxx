@@ -70,7 +70,7 @@ cfdQuatCamHandler::cfdQuatCamHandler( cfdDCS* worldDCS, cfdNavigate* nav, char* 
    _worldDCS = worldDCS;
    _nav = nav;
    _param = param;
-   _readParam = new cfdReadParam( NULL );
+   _readParam = new cfdReadParam();
    CreateObjects();
 }
 

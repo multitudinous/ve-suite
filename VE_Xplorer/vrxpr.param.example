@@ -1,4 +1,4 @@
-7                    // Number of objects to be loaded
+7                    // Number of blocks to follow
 0                    // OPTIONAL world DCS settings (default values shown)
    1 1 1             // Scale values
    0 0 0             // Translation values (in feet)
@@ -9,7 +9,7 @@
    3.0  0.5          // scalarBar Height and Width (in feet)
 5
    PIV_Image_and_Vectors.BMP  // PIV data
-   11  4.3  5        // Location of lower left corner
+   11  4.3  5        // xyz location of lower left corner
    0                 // Orientation: 0=X-plane, 1=Y-plane, 2=Z-plane
 8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
    1 1 1             // DCS Scale values
@@ -28,8 +28,8 @@
 10                   // Object type 10: Transient data loader
    4                 // Number of directories containing vtk data to follow
    1 1 1             // data dcs scale values
-   0 0 0             // data dcs translation values
-   0 0 0             // data dcs rotation values
+   0 0 0             // data dcs translation values (in feet)
+   0 0 0             // data dcs rotation values (degrees, Z-X-Y format)
    ./transient_flowdata    // directory of vtk files
       0                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
    ./transient_y_planes    // directory of vtk files
@@ -44,7 +44,7 @@
    0 0 0             // Transient geometry dcs rotation values
    1  1  1.0 1.0 1.0 // Transient geometry transparency setting, stl color flag (and 3 color values if flag = 1)
    6                 // Duration of the transient sequence in seconds
-11                   // Object type 11: Sound File object, must have Sound API working, recommend OpenAL
+11                   // Object type 11: Sound File block, must have Sound API working, recommend OpenAL
    0                 // ambient, is played as background noise
    1                 // retriggerable, shuts off sound from being retriggered in program
    1                 // volume, volume range is 0-1, 1 is loud, 0 is soft
@@ -55,7 +55,3 @@
    0.0               // Sound Position Z,  OpenGL Coordinates 0 is center
    /sound.wav        // Sound file name  
    mysound           // Sound Name Alias, give a unique name of alphanumeric characters   
-10       // Warped Contour Scale Value
-0.05     // Navigation Step Size
-0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient 
-

@@ -50,7 +50,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
                                     int ex_x, int ex_y, int dim,
                                     double *origin, double *spacing )
 {
-   _readParam = new cfdReadParam( NULL );
+   _readParam = new cfdReadParam();
    //CreateObjects();
   unsigned int i;
   char filename[250];
@@ -79,7 +79,7 @@ cfdAnimatedImage::cfdAnimatedImage( char* param )
    //frames = param->frames;
    //  _which_frame = 0;
    frames = 0;
-   _readParam = new cfdReadParam( NULL );
+   _readParam = new cfdReadParam();
    _param = param;
    CreateObjects();
 

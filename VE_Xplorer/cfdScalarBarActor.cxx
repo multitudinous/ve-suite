@@ -61,7 +61,7 @@ cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
    _param = param;
    _rootNode = rootNode;
    _activeDataSet = NULL;
-   _readParam = new cfdReadParam( NULL );
+   _readParam = new cfdReadParam();
    // Initialize the all the variables
    this->SetPosition( -5.0f, 6.0f, 0.0f );
    this->zrot = 90;

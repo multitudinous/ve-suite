@@ -62,7 +62,7 @@ cfdTransientVizHandler::cfdTransientVizHandler( char* filename )
    this->_cfdTFM_Geometry[0] = NULL;
    this->_cfdTFM_Geometry[1] = NULL;
    this->lastSource = NULL;
-   _readParam = new cfdReadParam( NULL );
+   _readParam = new cfdReadParam();
    _param = filename;
 }
 

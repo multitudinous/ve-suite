@@ -73,7 +73,7 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
    activeDataset = NULL;
    _scalarBar = NULL;
    this->arrow = NULL;
-   _readParam = new cfdReadParam( NULL );
+   _readParam = new cfdReadParam();
    commandArray = NULL;
    // worldnode getting passed in to model
    // model will then add its own node to the tree

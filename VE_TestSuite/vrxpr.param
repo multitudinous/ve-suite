@@ -63,7 +63,7 @@
    0 0 0             // Transient geometry dcs translation values
    0 0 0             // Transient geometry dcs rotation values
    1  1  1.0 1.0 1.0 // Transient geometry transparency setting, color flag (and 3 color values if flag = 1)
-   6                 // Duration of the transient sequence in seconds
+   18                // Duration of the transient sequence in seconds
 1        // Warped Contour Scale Value
 0.5      // Navigation Step Size
-0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient
+0.05      // Streamline Diameter, set to 0.0 if auto-value is sufficient

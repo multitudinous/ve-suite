@@ -62,7 +62,7 @@
 
 using namespace std;
 
-cfdReadParam::cfdReadParam( char *filein_name )
+cfdReadParam::cfdReadParam()
 {
    this->changeGeometry = false;
 //files.reserve(10);   //added
@@ -80,10 +80,6 @@ cfdReadParam::cfdReadParam( char *filein_name )
    guiVal = NULL;
    // IHCC Model - should be deleted at a later date
    ihccModel = false;
-
-   // MUST BE LAST: do not initialize variables after this function
-   if ( filein_name != NULL )
-      data_read (filein_name);
 }
 
 cfdReadParam::~cfdReadParam()
@@ -214,6 +210,7 @@ int cfdReadParam::readID( std::ifstream &inFile )
    return id;
 }
 
+/*
 void cfdReadParam::data_read ( char * filein_name )
 {
    if ( ! fileIO::isFileReadable( filein_name ) ) 
@@ -299,6 +296,7 @@ void cfdReadParam::param_read( std::ifstream &inFile )
    this->numGeoms = files.size();
    guiVal = NULL;
 }
+*/
 
 //read the user specified params for the transient data 
 void cfdReadParam::getTransientInfo( std::ifstream &inFile )
@@ -397,6 +395,7 @@ void cfdReadParam::getTransientInfo( std::ifstream &inFile )
                           << std::endl << vprDEBUG_FLUSH;
 }
 
+/*
 void cfdReadParam::Vtk( std::ifstream &inFile )
 {  
    int ii = this->dataSets.size();
@@ -661,6 +660,8 @@ void cfdReadParam::Stl( std::ifstream &inFile )
       exit(1);
    }
 }
+*/
+/*
 void cfdReadParam::soundData( std::ifstream &inFile )
 {
    soundFile = soundFile + 1;
@@ -710,7 +711,9 @@ void cfdReadParam::soundData( std::ifstream &inFile )
       exit(1);
    }
 }
+*/
 
+/*
 void cfdReadParam::vrxprConfigFiles( std::ifstream &inFile )
 {
    inFile >> isoScale;
@@ -728,7 +731,8 @@ void cfdReadParam::vrxprConfigFiles( std::ifstream &inFile )
    vprDEBUG(vprDBG_ALL,0) << " Streamline Diameter Value = " << diameter
                           << std::endl << vprDEBUG_FLUSH;
 }
-
+*/
+/*
 void cfdReadParam::readScalarBar( std::ifstream &inFile )
 {
    inFile >> this->scalarBarPos[0]
@@ -750,6 +754,7 @@ void cfdReadParam::readScalarBar( std::ifstream &inFile )
                           << ", scalarBar_Width = " << this->scalarBarW
                           << std::endl << vprDEBUG_FLUSH;
 }
+*/
 
 int cfdReadParam::convertDecimalToBinary( long number) 
 {
@@ -872,7 +877,7 @@ void cfdReadParam::convertBinaryToArray( int gui, int size )
       input = input%val;
    }
 }
-
+/*
 void cfdReadParam::BMPLoader( std::ifstream &inFile )
 {  
    this->bmpFile =1;
@@ -904,6 +909,8 @@ void cfdReadParam::BMPLoader( std::ifstream &inFile )
       << std::endl << vprDEBUG_FLUSH;
 
 }
+*/
+/*
 void cfdReadParam::IMGReader( std::ifstream &inFile )
 {  
    char temp[256];
@@ -935,6 +942,7 @@ void cfdReadParam::readWorldDCS( std::ifstream &inFile )
                         this->worldScale, this->worldTrans, this->worldRot );
 
 }  
+*/
 
 void cfdReadParam::read_pf_DCS_parameters( std::ifstream &inFile,
                              float* scale, float* trans, float* rot )
@@ -981,7 +989,7 @@ void cfdReadParam::SkipModuleBlock( std::ifstream &inFile, int numLines )
       inFile.getline( text, 256 );   //skip past remainder of line      
    }
 }
-
+/*
 void cfdReadParam::quatCamFile( std::ifstream & inFile)
 {
    inFile >> quatCamFileName;
@@ -1000,6 +1008,7 @@ void cfdReadParam::quatCamFile( std::ifstream & inFile)
       exit(1);
    }   
 }
+*/
 
 bool cfdReadParam::CheckCommandId( cfdCommandArray* commandArray )
 {
@@ -1021,7 +1030,7 @@ bool cfdReadParam::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdReadParam::UpdateCommand()
 {
-   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+   cerr << "doing nothing in cfdReadParam::UpdateCommand()" << endl;
 }
 
 
