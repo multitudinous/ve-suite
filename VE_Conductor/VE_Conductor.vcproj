@@ -282,7 +282,7 @@ echo Done.
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\msw&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\futuregen\VE_UI&quot;"
+				AdditionalIncludeDirectories="./;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\msw&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(IDL_HOME)\skel&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WINVER=0x400"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"

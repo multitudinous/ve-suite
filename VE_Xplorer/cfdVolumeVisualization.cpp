@@ -54,6 +54,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _transferShaderIsActive = false;
 #ifdef CFD_USE_SHADERS
    _sSM = 0;
+   _tSM = 0;
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////

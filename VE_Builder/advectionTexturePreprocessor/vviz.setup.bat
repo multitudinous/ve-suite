@@ -1,10 +1,10 @@
 REM edit this file to reflect your local environment for building
 REM
 REM location of VTK
-set VTK_HOME=C:\usr\local
+set VTK_HOME=E:\VTK_Install
 
 REM location of wxWidgets
-set WX_WIDGETS_HOME=C:\wxWidgets-2.5.2
+set WX_WIDGETS_HOME=E:\wxWindows-2.4.2
 
 set Path=%Path%;%WX_WIDGETS_HOME%\bin;%VTK_HOME%\bin;
 

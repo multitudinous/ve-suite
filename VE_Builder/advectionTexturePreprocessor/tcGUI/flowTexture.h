@@ -1,6 +1,6 @@
 #ifndef _BIV_FLOW_TEXTURE_H_
 #define _BIV_FLOW_TEXTURE_H_
-#include <windows.h>
+
 #include <vector>
 #include <ostream>
 

@@ -1034,6 +1034,12 @@
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\Framework\package.cpp">
+				<FileConfiguration
+					Name="OMNI_OSG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\readWriteVtkThings.cxx">
