@@ -115,3 +115,8 @@ wxString PipeCFD::GetHelp()
   wxString result="Framework/doc/modules/PipeCFD.html"; //your description
   return result;
 }
+
+bool PipeCFD::Has3Ddata()
+{
+  return true;
+}

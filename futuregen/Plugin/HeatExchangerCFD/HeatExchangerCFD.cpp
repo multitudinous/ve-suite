@@ -121,3 +121,8 @@ wxString HeatExchangerCFD::GetHelp()
   wxString result="Framework/doc/modules/HeatExchangerCFD.html"; //your description
   return result;
 }
+
+bool HeatExchangerCFD::Has3Ddata()
+{
+  return true;
+}

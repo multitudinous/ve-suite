@@ -50,7 +50,7 @@ class HeatExchangerCFD : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-
+  virtual bool Has3Ddata();
   virtual wxString GetHelp();
  public:
 
