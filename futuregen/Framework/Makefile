@@ -8,8 +8,8 @@ SKEL_HOME = ${VE_SUITE_HOME}/VE_Conductor/skel
 ifeq ($(CFDHOSTTYPE), IRIX64)
    PLATFORM = IRIX
    COMPILER = CC
-   GCC = yes
-   GXX = yes
+   GCC = no
+   GXX = no
 else
    PLATFORM = LINUX
    COMPILER = g++
@@ -56,6 +56,7 @@ CPPFLAGS += -g ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
 
 ifeq ($(PLATFORM), IRIX)
    CPPFLAGS += -n32 -mips3 -LANG:std -I${VJ_DEPS_DIR}/include/boost/compatibility/cpp_c_headers
+   LDFLAGS += -LANG:std 
 endif
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
