@@ -1,6 +1,6 @@
 #!/bin/csh -f
 # -f means fast: don't read .cshrc file for set variables
-setenv TAO_MACHINE abbott.vrac.iastate.edu
+setenv TAO_MACHINE ids7.scilan
 setenv TAO_PORT 1234
 
 # Start the nameserver, wait a few seconds, then start the executive...

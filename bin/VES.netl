@@ -5,13 +5,13 @@ export VE_SUITE_HOME=/nfs/scratch/VE_Suite
 
 # Set the TAO nameServer properties used by the run scripts
 export TAO_MACHINE=ids7.scilan
-export TAO_PORT=1234
+export TAO_PORT=55
 
 export TAO_BUILD=TRUE
 export CLUSTER_APP=TRUE
 source ${VE_SUITE_HOME}/VE_Installer/setup.NETL.sh
 
-export MY_VJCONFIGS=/nfs/scratch/FutureGenPowerPlant/jugglerConfigs
+export MY_VJCONFIGS=/nfs/scratch/FutureGenPowerPlant/jugglerConfigs/Dougs
 
 case $1 in
   

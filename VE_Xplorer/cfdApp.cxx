@@ -420,7 +420,6 @@ void cfdApp::postFrame()
 
 #ifdef _OSG
    time_since_start = _timer.delta_s(_start_tick,_timer.tick());
-
 #ifdef _WEB_INTERfACE
    if(time_since_start - timeOfLastCapture >= 5.0)      //if it's been five seconds since the last image cap
    {
