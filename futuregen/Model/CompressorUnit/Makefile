@@ -43,9 +43,9 @@ CPPFLAGS += -g  ${INCLUDES} ${CMP} -I$(TAO_ROOT) \
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
 
-OBJECTS = ../string_ops.o \
-	../interface.o \
-	../package.o \
+OBJECTS = string_ops.o \
+	interface.o \
+	package.o \
 	../V21Helper/V21Helper.o \
 	../V21Helper/SummaryValues/summary_values.o \
 	../V21Helper/SummaryValues/unit_conversion.o \
