@@ -129,8 +129,7 @@ enum cfdGeodeEnum {
    WRITE_POINTS_TO_FILE,
    READ_POINTS_FROM_FILE,
    MOVE_TO_SELECTED_LOCATION,
-   BLUE_MENU_TOGGLE,
-   EXIT,//146
+   EXIT,//145
    //biv--added these for the navigation page
    GUI_NAV,
    NAV_UP,
