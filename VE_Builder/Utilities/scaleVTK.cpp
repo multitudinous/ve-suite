@@ -145,7 +145,7 @@ int main( int argc, char *argv[] )
          //cout << "\nprinting transFilter->GetUnstructuredGridOutput()..." << endl;
          //transFilter->GetUnstructuredGridOutput()->Update();
          //transFilter->GetUnstructuredGridOutput()->Print( cout );
-         writeVtkThing( transFilter->GetUnstructuredGridOutput(), outFileName );
+         writeVtkThing( transFilter->GetUnstructuredGridOutput(), outFileName, 1 ); // one is for binary
       }
       else if ( dataset->GetDataObjectType() == VTK_STRUCTURED_GRID )
       {
@@ -155,7 +155,7 @@ int main( int argc, char *argv[] )
       {
          //cout << "\nprinting transFilter->GetPolyDataOutput()..." << endl;
          //transFilter->GetPolyDataOutput()->Print( cout );
-         writeVtkThing( transFilter->GetPolyDataOutput(), outFileName );
+         writeVtkThing( transFilter->GetPolyDataOutput(), outFileName, 1 ); // one is for binary
       }
       else
       {
