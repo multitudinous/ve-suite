@@ -68,18 +68,7 @@ class  Body_UI_i : public virtual POA_Body::UI
       void SetNetworkString( char* );
   
    public:
-
-      bool GetCalcFlag( void ) 
-      { 
-         if ( !networkStringBuffer.empty() )
-         {
-            return true;
-         }
-         else
-         {
-            return false;
-         }
-      };
+      bool GetCalcFlag( void );
 
 virtual void UpdateNetwork (
     const char * network

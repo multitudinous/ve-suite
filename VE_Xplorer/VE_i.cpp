@@ -70,6 +70,19 @@ void Body_UI_i::SetNetworkString( char* temp )
    networkStringBuffer.push_back( std::string( temp ) );
 }
 
+bool Body_UI_i::GetCalcFlag( void ) 
+{ 
+   vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
+   if ( !networkStringBuffer.empty() )
+   {
+      return true;
+   }
+   else
+   {
+      return false;
+   }
+}
+
 void Body_UI_i::UpdateNetwork (
     const char * network
     ACE_ENV_ARG_DECL
