@@ -146,6 +146,27 @@ void Body_Unit_i::StartCalc (
     p.intfs.clear();
     result = p.Save(rv);
 
+    // Profile
+    int i;
+    Types::Profile prof;
+    
+    prof.profile_vars.length(2);
+    prof.profile_vals.length(2);
+    
+    for(i=0; i<prof.profile_vals.length(); i++)
+      (prof.profile_vals[i]).length(10);
+    
+    prof.profile_vars[0]  = CORBA::string_dup("MIKE1");
+    prof.profile_vars[1]  = CORBA::string_dup("MIKE2");
+    
+    for(i=0; i<10; i++) {
+      (prof.profile_vals[0])[i] = i;
+      (prof.profile_vals[1])[i] = i;
+    }
+  
+    executive_->SetProfileData(id_, 0, prof);
+
+    // Done
     executive_->SetModuleResult(id_, result); //this marks the end the execution
   }
   

@@ -34,6 +34,7 @@ void Body_Unit_i::StartCalc (
     fflush(NULL);
 
     igas = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
+
     if (string(igas)=="")
       {
 	error("Missing input input.");

@@ -380,11 +380,8 @@ int Module::setPortData (int p, Interface* intf)
 int Module::getPortProfile (int p, Types::Profile_out& prof)
 {
   int fi = oportIdx(p);  
- 
   if(fi<0) return 0; 
-  
   prof = new Types::Profile(*(_oports[fi]->_profile));
- 
   return 1;
 }
 
@@ -540,6 +537,11 @@ int OPort::have_data ()
 	 (_data.getInts1D()).size()    !=0 ||
 	 (_data.getDoubles1D()).size() !=0 ||
 	 (_data.getStrings1D()).size() !=0 );
+}
+
+int OPort::have_profile ()
+{
+  return(_profile != NULL);
 }
 
 ////////////////////////////////////////////////////////////////////////////////

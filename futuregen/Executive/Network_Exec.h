@@ -68,7 +68,8 @@ public:
   
   void copy (const OPort&);
 
-  int have_data ();
+  int have_data    ();
+  int have_profile ();
 
   Interface      _data;
   Types::Profile *_profile;

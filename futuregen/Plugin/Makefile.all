@@ -48,7 +48,7 @@ OBJ28 = EquilibriumReactor/EquilibriumReactor.o
 OBJ29 = WaterSource/WaterSource.o WaterSource/WaterSource_UI.o
 OBJ30 = AGR/AGR.o AGR/AGR_UI.o 
 OBJ31 = CarbonBed/CarbonBed.o CarbonBed/CarbonBed_UI.o 
-OBJ32 = Gasifier/Gasifier.o Gasifier/Gasifier_UI.o 
+OBJ32 = PipeCFD/PipeCFD.o
 
 .SUFFIXES : .o .cpp
 
@@ -148,7 +148,7 @@ s31:	$(OBJ31)
 	$(CXX) -g -shared -o libCarbonBed.so $(OBJ31)
 
 s32:	$(OBJ32)
-	$(CXX) -g -shared -o libGasifier.so $(OBJ32)
+	$(CXX) -g -shared -o libPipeCFD.so $(OBJ32)
 
 clean:
 	rm -rf *.so *.o $(PLUGIN) $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) \

@@ -69,9 +69,9 @@ void Body_Unit_i::StartCalc (
 
   // Test
   for(i=0; i<prof_in->profile_vals.length(); i++) {
-    cout << prof_in->profile_vars[i] << endl;
+    cout << prof_in->profile_vars[i].in() << endl;
     for(j=0; j<prof_in->profile_vals[i].length(); j++) {
-      cout << prof_in->profile_vals[i][j] <<  " ";
+      cout << prof_in->profile_vals[i][j] << " ";
     }
     cout << endl;
   }
@@ -157,8 +157,9 @@ void Body_Unit_i::StartCalc (
   for(i=0; i<prof.profile_vals.length(); i++) {
     cout << "VAR " << i << " " << prof.profile_vars[i].in() << endl;
     for(j=0; j<(prof.profile_vals[i]).length(); j++) {
-      cout << (prof.profile_vals[i])[j] << endl;
+      cout << (prof.profile_vals[i])[j] << " ";
     }
+    cout << endl;
   }
 
   // Done

@@ -107,7 +107,7 @@ void Body_Executive_i::SetExportData (
   string msg;
   _mutex.acquire();
   
-  cout << "SetExportData\n";
+  cout << "SetExportData "<< module_id << " " << port_id << endl;
 
   Package p;
   p.SetSysId("temp.xml");
@@ -136,7 +136,7 @@ char * Body_Executive_i::GetExportData (
 {
   _mutex.acquire();
   string msg;
-  cout << "GetExportData\n";
+  cout << "GetExportData "<< module_id << " " << port_id << endl;
   
   Interface intf;
   if(!_network->getPortData(module_id, port_id, intf)) {
@@ -172,7 +172,7 @@ void Body_Executive_i::SetProfileData (
 {
   _mutex.acquire();
 
-  cout << " in SetProfileData\n";
+  cout << " SetProfileData "<< module_id << " " << port_id << endl;
  
   std::string msg;
   
@@ -180,7 +180,7 @@ void Body_Executive_i::SetProfileData (
     msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port profile\n";
     ClientMessage(msg.c_str());
   } else {
-    cout << "setPortProfile success\n";
+    ; //cout << "SetPortProfile success\n";
   }
  
   _mutex.release();
@@ -197,14 +197,31 @@ void Body_Executive_i::GetProfileData (
   ))
 {
   _mutex.acquire();
+ 
+  cout << "GetProfileData " << module_id << " " << port_id << endl;
 
-  cout << "GetExportData\n";
-
-  string msg;
+  Module *mod = _network->module(_network->moduleIdx(module_id));
+  if(!mod) {
+    cerr << "Cannot find module, id# " << module_id << endl;
+    return;
+  }
+  IPort *iport = mod->getIPort(mod->iportIdx(port_id));
   
-  if(!_network->getPortProfile(module_id, port_id, data)) {
-    msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port profile\n";
-    ClientMessage(msg.c_str());
+  if(iport && iport->nconnections()) {
+    Connection* conn=iport->connection(0); // should only have one connection
+    OPort* oport=conn->get_oport();
+    
+    if(oport->have_profile()) {
+      data = new Types::Profile(*(oport->_profile));
+    } else {
+      string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no Profile\n" ;
+      cerr << msg;
+      ClientMessage(msg.c_str());
+    }
+  } else {
+    string msg = "Unable to get Profile from mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
+    cerr << msg;
+    ClientMessage(msg.c_str());	
   }
   
   _mutex.release();
