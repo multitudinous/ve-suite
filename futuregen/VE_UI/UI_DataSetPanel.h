@@ -186,7 +186,7 @@ protected:
    void _onPolyData(wxCommandEvent& event);
    void _onScalars(wxCommandEvent& event);
    void _onUpdate(wxCommandEvent& event);
-   void _onMinMaxSlider(wxCommandEvent& event);
+   void _onMinMaxSlider(wxScrollEvent& event);
 
    DECLARE_EVENT_TABLE()
 };

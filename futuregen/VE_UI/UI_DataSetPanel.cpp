@@ -789,7 +789,7 @@ void UI_DatasetPanel::_onUpdate(wxCommandEvent& event)
    ((UI_Frame *)GetParent())->_tabs->sendDataArrayToServer();
 }
 
-void UI_DatasetPanel::_onMinMaxSlider(wxCommandEvent& event)
+void UI_DatasetPanel::_onMinMaxSlider(wxScrollEvent& event)
 {
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();

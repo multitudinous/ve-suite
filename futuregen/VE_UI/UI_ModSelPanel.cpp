@@ -69,7 +69,7 @@ UI_ModSelPanel::~UI_ModSelPanel()
    delete _modselScroll;
 }
 
-void UI_ModSelPanel::_onModSelect()
+void UI_ModSelPanel::_onModSelect(wxCommandEvent& event)
 {
    ((UI_Frame *)GetParent())->activeModIndex = _modselScroll->_modelSelBox->GetSelection();
    ((UI_Frame *)GetParent())->OnChangeModel();

@@ -41,7 +41,7 @@ public:
 
    UI_ModelData* _modelData;
   
-   void _onModSelect();
+   void _onModSelect(wxCommandEvent& event);
 
    DECLARE_EVENT_TABLE()
 };
