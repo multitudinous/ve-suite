@@ -82,7 +82,7 @@ int GasSplitter::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSplitter::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*11/100, icon_h*35/75);
+  iports[0]=wxPoint(icon_w*6/60, icon_h*20/45);
 
   return;
 }
@@ -98,10 +98,10 @@ int GasSplitter::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSplitter::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*87/100, icon_h*18/75);
-  oports[1]=wxPoint(icon_w*87/100, icon_h*30/75);
-  oports[2]=wxPoint(icon_w*87/100, icon_h*43/75);
-  oports[3]=wxPoint(icon_w*87/100, icon_h*55/75);
+  oports[0]=wxPoint(icon_w*52/60, icon_h*11/45);
+  oports[1]=wxPoint(icon_w*52/60, icon_h*18/45);
+  oports[2]=wxPoint(icon_w*52/60, icon_h*26/45);
+  oports[3]=wxPoint(icon_w*52/60, icon_h*33/45);
 }
 
 /////////////////////////////////////////////////////////////////////////////
