@@ -22,7 +22,7 @@
 
       <p class="bodytext"><a href="http://vtk.org/get-software.php#interim">VTK (4.4)</a> to render the visualization objects.</p>
 
-      <p class="bodytext"><a href="http://www.cmake.org/files/v2.0/CMSetup202.exe">CMake 2.0.2 Windows (Installer)</a> to install CMake needed to build vtk project files. (We recommend 2.0.2 because we have seen install issues with CMake 2.0.3)</p>
+      <p class="bodytext"><a href="http://www.cmake.org/HTML/Download.html">CMake</a> which is needed to build the vtk project files.</p>
 
       <p class="bodytext"><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71.zip?download">VRJuggler (2.0alpha4.win32-vc71)</a> for management of the virtual environment.</p>
 
@@ -30,7 +30,7 @@
 
       <p class="bodytext"><a href="http://java.sun.com/j2se/1.4.2/download.html">Java 2 SDK</a> needed for juggler's java-based VRJconfig program.</p>
 
-      <p class="bodytext"><a href="http://omniorb.sourceforge.net/">omniORB (4.0.3)</a> for communication between the gui and the app.</p>
+      <p class="bodytext"><a href="http://omniorb.sourceforge.net/">omniORB (4.0.5)</a> for communication between the gui and the app.</p>
 
       <p class="bodytext"><a href="http://www.wxwidgets.org/">wxWidgets</a> to compile and run the gui.</p>
 
@@ -111,9 +111,9 @@
 
       <p class="bodytext">To run the solution from within Visual Studio, change the working directory in the Configuration Properties tab to point to the directory where your VE-Suite parameter file is located (for example, change the working directory to $(VE_SUITE_HOME)\VE_TestSuite)</p>
 
-      <p class="bodytext">You will also need to pass in your juggler config files as command arguments on the configuration properties tab. With the three projects still open, right-click on the VE_Xplorer project file, and select properties. For simulation mode, you add the following to your command arguments section:</p>
+      <p class="bodytext">You will also need to pass in your juggler config files as command arguments on the configuration properties tab. With the two projects still open, right-click on the VE_Xplorer project file, and select properties. For simulation mode, you add the following to your command arguments section:</p>
 
-      <p class="bodytext">&nbsp;&nbsp;&nbsp; $(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</p>
+      <p class="bodytext">&nbsp;&nbsp;&nbsp; ${VE_SUITE_HOME}\VE_Xplorer\vjconfig\sim.base.jconf</p>
 
       <p class="bodytext">&nbsp;&nbsp;&nbsp; $(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.wand.mixin.jconf</p>
 
