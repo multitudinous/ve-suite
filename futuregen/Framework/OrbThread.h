@@ -9,18 +9,23 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <ace/Task.h>
+#ifdef WIN32
+#include <winsock2.h>
+#endif
+#include <wx/wx.h>
+#include <wx/thread.h>
 #include "moduleS.h"
 
 class AppFrame;
 
-class OrbThread : public ACE_Task_Base  
+class OrbThread : public wxThread  
 {
 public:
 	OrbThread(AppFrame* frame);
 	virtual ~OrbThread();
-	virtual int svc (void);
-
+	//virtual int svc (void);
+	bool Do();
+	virtual ExitCode Entry() { return (ExitCode) this->Do(); };
 protected:
 	AppFrame *frame_;
 };

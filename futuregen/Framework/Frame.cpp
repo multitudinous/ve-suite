@@ -544,8 +544,8 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
 
 		//_mutex.acquire();	  
 		OrbThread* ot = new OrbThread(this);
-		ot->activate();
-
+		//ot->activate();
+		ot->Run();
 		//register it to the server
 		//_mutex.acquire();
 

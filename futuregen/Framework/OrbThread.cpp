@@ -1,8 +1,6 @@
 // OrbThread.cpp: implementation of the OrbThread class.
 //
 //////////////////////////////////////////////////////////////////////
-#include <ace/Task.h>
-#include <ace/OS.h>
 #include "OrbThread.h"
 #include "Frame.h"
 //////////////////////////////////////////////////////////////////////
@@ -10,8 +8,10 @@
 //////////////////////////////////////////////////////////////////////
 
 OrbThread::OrbThread(AppFrame* frame)
+: wxThread(wxTHREAD_JOINABLE)
 {
 	frame_ = frame;
+	Create();
 }
 
 OrbThread::~OrbThread()
@@ -19,7 +19,8 @@ OrbThread::~OrbThread()
 
 }
 
-int OrbThread::svc (void)
+bool OrbThread::Do() 
+//int OrbThread::svc (void)
 {
 	long id = time(NULL);
 	char uiname[256];
@@ -61,8 +62,13 @@ int OrbThread::svc (void)
 			frame_->naming_context->rebind(UIname, ui.in());
 		}
 	//(frame_->_mutex).release();
-	
+	try {
 	frame_->network->exec->RegisterUI(frame_->p_ui_i->UIName_.c_str());
 	frame_->orb->run();
-	return 0;
+		}catch (CORBA::Exception &) {
+		
+		frame_->logwindow->AppendText("Can't find executive or UI registration error.\n");
+	}
+
+	return true;
 }
