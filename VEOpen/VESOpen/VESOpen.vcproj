@@ -125,8 +125,8 @@
 				Name="VCCustomBuildTool"
 				Description="IDL Compiler"
 				CommandLine="echo C++ stubs. . .
-$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VESOpen/skel -GI -I./idl   $(VE_SUITE_HOME)/VESOpen/idl/module.idl
-$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VESOpen/skel -GI -I./idl   $(VE_SUITE_HOME)/VESOpen/idl/VjObs.idl
+$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VEOpen/skel -GI -I./idl   $(VE_SUITE_HOME)/VEOpen/idl/module.idl
+$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VEOpen/skel -GI -I./idl   $(VE_SUITE_HOME)/VEOpen/idl/VjObs.idl
 echo Done.
 "
 				AdditionalDependencies="module.idl;VjObs.idl"
@@ -219,8 +219,8 @@ echo Done.
 				Name="VCCustomBuildTool"
 				Description="IDL Compiler"
 				CommandLine="echo C++ stubs. . .
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C../skel ../idl/module.idl
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C../skel ../idl/VjObs.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(VE_SUITE_HOME)/VEOpen/skel $(VE_SUITE_HOME)/VEOpen/idl/module.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(VE_SUITE_HOME)/VEOpen/skel $(VE_SUITE_HOME)/VEOpen/idl/VjObs.idl
 echo Done.
 "
 				AdditionalDependencies="module.idl;VjObs.idl"
@@ -275,8 +275,8 @@ echo Done.
 				Name="VCCustomBuildTool"
 				Description="IDL Compiler"
 				CommandLine="echo C++ stubs. . .
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(IDL_HOME)/skel $(IDL_HOME)/idl/module.idl
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(IDL_HOME)/skel $(IDL_HOME)/idl/VjObs.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(VE_SUITE_HOME)/VEOpen/skel $(VE_SUITE_HOME)/VEOpen/idl/module.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(VE_SUITE_HOME)/VEOpen/skel $(VE_SUITE_HOME)/VEOpen/idl/VjObs.idl
 echo Done.
 "
 				AdditionalDependencies="module.idl;VjObs.idl"
