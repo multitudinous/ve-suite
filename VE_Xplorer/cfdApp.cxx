@@ -65,6 +65,8 @@
 #include <Performer/pf.h>
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pfdb/pfpfb.h>
+#include <Performer/pr.h>
+#include "cfdNotify.h"
 #elif _OSG
 #include <osg/Group>
 #include <osgDB/WriteFile>
@@ -84,6 +86,7 @@ cfdApp::cfdApp( void )
    _frameNumber = 0;
 #endif
 }
+
 #ifdef _PERFORMER
 void cfdApp::exit()
 {
@@ -114,6 +117,7 @@ void cfdApp::exit()
 inline void cfdApp::apiInit( )
 {
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::apiInit" << std::endl << vprDEBUG_FLUSH;
+   pfNotifyHandler( notifyHandler );
 }
 
 inline void cfdApp::preForkInit( )

@@ -189,12 +189,18 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   // set number of primitives and allocate lengths array
   gset->setNumPrims(numPrimitives);
   int *lengths = (int *) pfMalloc(numPrimitives*sizeof(int), pfArena);
+  if ( !lengths )
+    return 0; 
   gset->setPrimLengths(lengths);
 
   // allocate as many verts as there are indices in vtk prim array
   pfVec3 *verts;
   verts = (pfVec3 *) pfMalloc(numIndices * sizeof(pfVec3), pfArena);
-
+  if ( !verts )
+  {
+    pfDelete( lengths );
+    return 0; 
+  }
   // check to see if there are normals
   int normalPerVertex = 0;
   int normalPerCell = 0;
@@ -214,11 +220,25 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   }
   pfVec3 *norms = NULL;
   if (normalPerVertex)
-    norms = (pfVec3 *)pfMalloc(numIndices * sizeof(pfVec3), NULL);
+  {
+    norms = (pfVec3 *)pfMalloc(numIndices * sizeof(pfVec3), pfArena);
+    if ( !norms )
+    {
+      pfDelete( lengths );
+      pfDelete( verts );
+      return 0; 
+    }
+  }
   if (normalPerCell)
-    norms =  (pfVec3 *)pfMalloc(numPrimitives * sizeof(pfVec3), NULL);
-//(pfVec3 *)
-//(pfVec3 *)
+  {
+    norms =  (pfVec3 *)pfMalloc(numPrimitives * sizeof(pfVec3), pfArena);
+    if ( !norms )
+    {
+      pfDelete( lengths );
+      pfDelete( verts );
+      return 0; 
+    }
+  }
   // check to see if there is color information
   int colorPerVertex = 0;
   int colorPerCell = 0;
@@ -238,9 +258,27 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   }
   pfVec4 *colors = NULL; 
   if (colorPerVertex)
-    colors = (pfVec4 *) pfMalloc(numIndices * sizeof(pfVec4), NULL);
+  {
+    colors = (pfVec4 *) pfMalloc(numIndices * sizeof(pfVec4), pfArena);
+    if ( !colors )
+    {
+      pfDelete( lengths );
+      pfDelete( verts );
+      pfDelete( norms );
+      return 0; 
+    }
+  }
   if (colorPerCell)
-    colors = (pfVec4 *) pfMalloc(numPrimitives * sizeof(pfVec4), NULL);
+  {
+    colors = (pfVec4 *) pfMalloc(numPrimitives * sizeof(pfVec4), pfArena);
+    if ( !colors )
+    {
+      pfDelete( lengths );
+      pfDelete( verts );
+      pfDelete( norms );
+      return 0; 
+    }
+  }
 
   // check to see if there are texture coordinates
 #ifdef VTK4 
@@ -250,8 +288,17 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
 #endif
   pfVec2 *tcoords = NULL;
   if (texCoords != NULL)
-    tcoords = (pfVec2 *) pfMalloc(numIndices * sizeof(pfVec2), NULL);
-
+  {
+    tcoords = (pfVec2 *) pfMalloc(numIndices * sizeof(pfVec2), pfArena);
+    if ( !tcoords )
+    {
+      pfDelete( lengths );
+      pfDelete( verts );
+      pfDelete( norms );
+      pfDelete( colors );
+      return 0; 
+    }
+  }
 
   // copy data from vtk prim array to performer geoset
   int prim = 0, vert = 0;
@@ -329,7 +376,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     vtkReal *actorColor = actor->GetProperty()->GetColor();
     vtkReal opacity = actor->GetProperty()->GetOpacity();
 
-    pfVec4 *color = (pfVec4 *) pfMalloc(sizeof(pfVec4), NULL);
+    pfVec4 *color = (pfVec4 *) pfMalloc(sizeof(pfVec4), pfArena);
     color->set((float)actorColor[0], (float)actorColor[1], (float)actorColor[2], (float)opacity);
     gset->setAttr(PFGS_COLOR4, PFGS_OVERALL, color, NULL);
   }

@@ -824,8 +824,8 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 
             vprDEBUG(vprDBG_ALL,2) 
                << "added cursor with cursor->GetpfDCS() = "
-               << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
-            std::cout << this->cursorDCS->GetMat() << std::endl;
+               << this->GetcfdDCS() << std::endl 
+               << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;
          }
       }
       
@@ -835,7 +835,8 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          this->SetPlaneReso( commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) ); 
 
          // convert size percentage (0-100) request to plane size
-         std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << std::endl;
+         //std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() 
+         //            << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << std::endl;
          this->SetPlaneSize( commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
       }
    }
