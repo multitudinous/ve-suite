@@ -36,16 +36,14 @@
 #include <utility>
 #include <cstdio>
 #include <string>
-#include <Packages/REI/Core/Datatypes/Gas.h>
-#include <Packages/REI/Core/Datatypes/GasCell.h>
+#include <V21Helper/Datatypes/Gas.h>
+#include <V21Helper/Datatypes/GasCell.h>
 //#include "InpReader.h"
-#include <Packages/REI/Core/ThirdParty/Reks/reks_container.h>
-#include <Packages/REI/Core/ThirdParty/Reks/reks.h>
-#include <Packages/REI/Core/ThirdParty/Reks/reks_solve.h>
+#include <ThirdParty/Reks/reks_container.h>
+#include <ThirdParty/Reks/reks.h>
+#include <ThirdParty/Reks/reks_solve.h>
 
 namespace Vision21 {
-
-using namespace::REI;
 
 class dump_combustor {
 
@@ -62,13 +60,13 @@ class dump_combustor {
 		double tauAvg;                        // computed average residence time (based on in and out, not integrated)
 
 		dump_combustor();
-		pair<vector<int>, vector<std::string> > calculate(REI::Gas& gasin, REI::Gas& gasw);
+		pair<vector<int>, vector<std::string> > calculate(Gas& gasin, Gas& gasw);
 
 	private:
 
 		void setREKSgasComp(reks_container& reks, Gas& gasw);      // convert V21 to Reks gas
-		void setGasComp(reks_container& reks, REI::Gas& gasw);          // convert reks gas to V21 gas
-		double computeConversion(REI::Gas& gasin, REI::Gas& gasw);   // return fuel conversion
+		void setGasComp(reks_container& reks, Gas& gasw);          // convert reks gas to V21 gas
+		double computeConversion(Gas& gasin, Gas& gasw);   // return fuel conversion
 };
 
 } //# End namespace Vision21
