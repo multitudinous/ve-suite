@@ -1,8 +1,8 @@
 MOD_NAME DumpCombustor #This is the module name
-
-Double desired_temp
-Double air_temp
-Double air_humidity
-Double ambient_pres
+Int case_type
+Double conversion
+Double volume
+Double fracQloss
+Double press_drop
 
 END

@@ -65,21 +65,27 @@ void parse_inp(const char * defname)
 	  break;
 	case 2:
 	  Double_name.push_back(toks[1]);
+	  printf("Read in Double var: %s \n", toks[1].c_str());
 	  break;
 	case 3:
 	  String_name.push_back(toks[1]);
+	  printf("Read in String var: %s \n", toks[1].c_str());
 	  break;
 	case 4:
 	  Int_name.push_back(toks[1]);
+	  printf("Read in Int var: %s \n", toks[1].c_str());
 	  break;
 	case 5:
 	  Double1D_name.push_back(toks[1]);
+	  printf("Read in Double1D var: %s \n", toks[1].c_str());
 	  break;
 	case 6:
 	  String1D_name.push_back(toks[1]);
+	  printf("Read in String1D var: %s \n", toks[1].c_str());
 	  break;
 	case 7:
 	  Int1D_name.push_back(toks[1]);
+	  printf("Read in Int1D var: %s \n", toks[1].c_str());
 	  break;
 	case 8:
 	  inp.close();
@@ -123,7 +129,10 @@ int is_inp_keyw(string oword)
   else if (match(word, "END"))
     return 8;
   else
-    return 0; //not a key word
+    {
+      printf("%s is not a Key word\n");
+      return 0; //not a key word
+    }
 }
 
 //Ignore Comments get delete anything started with !
