@@ -675,7 +675,7 @@ bool GasifierCFD::execute (Gas *ox_in, Gas *gas_out, summary_values *summaries)
      
     set_running(false);
   }
-  
+
   cout<<"execute return"<<endl;
   return true;
 }
@@ -1146,7 +1146,9 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
   // Pressure at inlet is gage.
   _gas_out->pressure_drop = _press_drop;
  
-  printf("send_scirun_data DONE\n"); fflush(NULL);
+  _summaries->insert_summary_val("Soot Mass Fraction", _gas_out->gas_composite.soot);
+  _summaries->insert_summary_val("Tar Mass Fraction", _gas_out->gas_composite.tar);
+  _summaries->insert_summary_val("Soot Part #/Mass Fraction", _gas_out->gas_composite.ynu);
   
   // Heat data
   //heat_data->conv =((double)(*ht_conv));
@@ -1197,9 +1199,9 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
 					  + nx_ny_k + nx_j + i));
   
   // Soot
-  cell.soot = (double)*(ynu + nx_ny_k + nx_j + i);
+  cell.soot = (double)*(yc + nx_ny_k + nx_j + i);
   cell.tar = (double)*(tar + nx_ny_k + nx_j + i);
-  cell.yc  = (double)*(yc + nx_ny_k + nx_j + i);
+  cell.ynu  = (double)*(ynu + nx_ny_k + nx_j + i);
 
   density = (double)*(den + nx_ny_k + nx_j + i);
   cell.eff = (double)*(eff + nx_ny_k + nx_j + i);

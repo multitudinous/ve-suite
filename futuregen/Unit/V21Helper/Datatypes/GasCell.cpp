@@ -49,7 +49,7 @@ void GasCell::zero ()
   M = 0;
   soot = 0;
   tar = 0;
-  yc = 0;
+  ynu = 0;
   mean_size = 0;
   size_variance = 0;
   T_particle = 0;
@@ -105,7 +105,7 @@ void GasCell::copy (const GasCell& p)
   M = p.M;
   soot = p.soot;
   tar = p.tar;
-  yc = p.yc;
+  ynu = p.ynu;
   mean_size = p.mean_size;
   size_variance = p.size_variance;
   T_particle = p.T_particle;
@@ -720,7 +720,7 @@ bool GasCell::dataOut (FILE *stream)
   fprintf(stream, "%12.4E \n", M);
   fprintf(stream, "%12.4E \n", soot);
   fprintf(stream, "%12.4E \n", tar);
-  fprintf(stream, "%12.4E \n", yc);
+  fprintf(stream, "%12.4E \n", ynu);
   fprintf(stream, "%12.4E \n", mean_size);
   fprintf(stream, "%12.4E \n", size_variance);
   fprintf(stream, "%12.4E \n", T_particle);
@@ -770,7 +770,7 @@ bool GasCell::dataIn (FILE *stream)
   fscanf(stream, "%f \n", M);
   fscanf(stream, "%f \n", soot);
   fscanf(stream, "%f \n", tar);
-  fscanf(stream, "%f \n", yc);
+  fscanf(stream, "%f \n", ynu);
   fscanf(stream, "%f \n", mean_size);
   fscanf(stream, "%f \n", size_variance);
   fscanf(stream, "%f \n", T_particle);

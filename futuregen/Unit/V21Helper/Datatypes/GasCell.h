@@ -58,7 +58,7 @@ public:
   // Soot
   double soot; // Soot mass fraction
   double tar; // Tar
-  double yc; // Soot part # / Mass
+  double ynu; // Soot part # / Mass
 
   double area;
   double eff;

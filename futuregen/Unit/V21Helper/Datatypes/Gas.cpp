@@ -94,7 +94,6 @@ void Gas::copy (const Gas& p)
   _comp12 = p._comp12;
   _coal_feedRate = p._coal_feedRate;
 
-
   pressure_drop = p.pressure_drop;
 
   thermo_database = p.thermo_database;
@@ -148,7 +147,7 @@ void Gas::average ()
     gas_composite.M += (*cell).M;
     gas_composite.soot += (*cell).soot*(*cell).M;
     gas_composite.tar += (*cell).tar*(*cell).M;
-    gas_composite.yc += (*cell).yc*(*cell).M;
+    gas_composite.ynu += (*cell).ynu*(*cell).M;
     gas_composite.mean_size += (*cell).mean_size*(*cell).M_particle;
     gas_composite.size_variance += (*cell).size_variance*(*cell).M_particle;
     gas_composite.T_particle += (*cell).T_particle*(*cell).M_particle;
@@ -181,7 +180,7 @@ void Gas::average ()
   // Check on tar, soot------------------------------------------------------------
   gas_composite.soot = gas_composite.soot / gas_composite.M;
   gas_composite.tar = gas_composite.tar / gas_composite.M;
-  gas_composite.yc = gas_composite.yc / gas_composite.M;
+  gas_composite.ynu = gas_composite.ynu / gas_composite.M;
   gas_composite.mean_size = gas_composite.mean_size / gas_composite.M_particle;
   gas_composite.size_variance = gas_composite.size_variance / gas_composite.M_particle;
   gas_composite.T_particle = gas_composite.T_particle / gas_composite.M_particle;
