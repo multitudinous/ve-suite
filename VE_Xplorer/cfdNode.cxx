@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdGroup.cxx,v $
+ * File:          $RCSfile: cfdNode.cxx,v $
  * Date modified: $Date: 2004-06-06 13:49:58 -0700 (Sun, 06 Jun 2004) $
  * Version:       $Rev: 451 $
  * -----------------------------------------------------------------
@@ -414,7 +414,6 @@ void cfdModuleGeometry::SetColorOfGeometry( cfdNode* node_1 )
 // given material.
 void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
 {
-    
    assert( node_1 != NULL && "bad pointer passed in" );
    //assert( mat != NULL && "bad pointer passed in" );
 	int i ;
@@ -604,6 +603,5 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
 	   	}
          //count = 0;
 	   }
-
 }
 
