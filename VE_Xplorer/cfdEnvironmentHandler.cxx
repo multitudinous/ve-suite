@@ -52,17 +52,17 @@
 
 cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
 {
-   nav            = NULL;
-   _teacher       = NULL;
-   _soundHandler  = NULL;
-   _camHandler    = NULL;
-   cursor         = NULL;
-   _param         = NULL;
-   worldDCS       = NULL;
-   rootNode       = NULL;
-   _commandArray  = NULL;
-   _readParam     = NULL;
-   arrow          = NULL;
+   nav            = 0;
+   _teacher       = 0;
+   _soundHandler  = 0;
+   _camHandler    = 0;
+   cursor         = 0;
+   _param         = 0;
+   worldDCS       = 0;
+   rootNode       = 0;
+   _commandArray  = 0;
+   _readParam     = 0;
+   arrow          = 0;
 
    for ( unsigned int i = 0; i < 3; i++ )
    {
@@ -262,13 +262,20 @@ void cfdEnvironmentHandler::CreateObjects( void )
       input >> id;
       vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
       input.getline( text, 256 );   //skip past remainder of line
-      if ( id == 11 )
+      if ( id == 0 )
+      {
+         vprDEBUG(vprDBG_ALL,0) << "|\tWorld DCS parameters : "
+                          << std::endl << vprDEBUG_FLUSH;
+         _readParam->read_pf_DCS_parameters( input, 
+                        this->worldScale, this->worldTrans, this->worldRot );
+      }
+      /*else if ( id == 11 )
       {
          vprDEBUG(vprDBG_ALL,0) << " World DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
          _readParam->read_pf_DCS_parameters( input, 
                         this->worldScale, this->worldTrans, this->worldRot );
-      }
+      }*/
       else
       {
          // Skip past block
