@@ -82,6 +82,7 @@ void cfdVEPluginLoader::RegisterPlugins()
    plugins.clear();
    plugin_cls.clear();
    const wxChar *name = "cfdVEBaseClass";
+   wxClassInfo *lastInfo = NULL;
    for ( wxClassInfo *info = wxClassInfo::sm_first; info; info = info->m_next )
    {
       //cout << info << " : " << info->m_className << endl;
@@ -94,6 +95,10 @@ void cfdVEPluginLoader::RegisterPlugins()
       }
 
       if ( info->m_next == wxClassInfo::sm_first )
+         break;
+      if ( lastInfo != info  )
+         lastInfo = info;
+      else
          break;
    }
 //   wxClassInfo::sm_classTable->BeginFind();
@@ -149,6 +154,7 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
 
    for (unsigned int i=0; i<plugins.size(); i++)
    {  
+      
       if ( plugins.at(i)->GetName() == _objname )
       {
          selectPlugin = i;
@@ -158,7 +164,8 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
 
    if (selectPlugin == -1)
    {
-      cerr<<"ERROR: cfdVEPluginLoader::CreateObject : Plugin Not Found!"<<endl;
+      cerr <<"ERROR: cfdVEPluginLoader::CreateObject : " << _objname 
+            << " : Plugin Not Found!"<<endl;
       return NULL;
    }
 

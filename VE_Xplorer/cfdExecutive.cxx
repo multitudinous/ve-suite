@@ -282,6 +282,7 @@ void cfdExecutive::GetNetwork ( void )
    _id_map.clear();
 
    std::vector<Interface>::iterator iter;
+   // Find network layout chunk in network structure
    for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
       if(iter->_id==-1) break;
   
@@ -297,24 +298,20 @@ void cfdExecutive::GetNetwork ( void )
          }  
          else
 	         cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
-      }
-   
-      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      {
-///////////////////////////
-// FILE IO Testing
+
          if ( iter->_id != -1 ) 
          {
-         //cout << iter->_id <<endl; 
-         //cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
-         _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
-         //cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
+            //cout << iter->_id <<endl; 
+            //cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
+            _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
+            //cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
+            _it_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
          }
       }
    } 
    else 
    {
-      cerr << "Error in GetNetwork in VE_Xplorer" << endl;
+      cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << endl;
    }
 ///////////////////////////
    delete network;
@@ -363,27 +360,53 @@ void cfdExecutive::GetEverything( void )
    {
       GetNetwork();
   
-      std::map< int, std::string>::iterator iter;
+      std::map< int, std::string >::iterator iter;
+      std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+      // Add any plugins that are present in the current network
       for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
       {
+         foundPlugin = _plugins.find( iter->first );
+         if ( (foundPlugin == _plugins.end()) || _plugins.empty() )
          {
-            //GetOutput(iter->first);
-            //GetPort(iter->first);
-   // When we clear the _plugin map will
-   // loop over all plugins
-   // _plugin.at( i )->RemoveChild();
-   // delete [] _plugin.at( i )->second;
-   // _plugin.clear();
-         // Here we need to test to see what has changed i nthe map
-         // not just create new objects.
-       //cout <<  iter->first << " : " << iter->second << endl;
-      //_plugins[ iter->first ] = (cfdVEBaseClass*)av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() );
-
-   // When we create the _plugin map here we will do the following
-   // _plugin.at( i )->InitializeNode( Pass in correct node );
-   // _plugin.at( i )->AddSelfToSG();
-
+            // if a new module is on the id map but not on the plugins map
+            // create it...
+            cfdVEBaseClass* temp = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
+            if ( temp != NULL )
+            {
+               _plugins[ iter->first ] = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
+               // When we create the _plugin map here we will do the following
+               _plugins[ iter->first ]->InitializeNode( worldDCS );
+               _plugins[ iter->first ]->AddSelfToSG();
+               cout << " Plugin [ " << iter->first << " ]-> " << iter->second << " is being created." << endl;
+            }
          }
+         else
+         {
+            // plugin already present...
+            cout << " Plugin [ " << iter->first << " ]-> " << iter->second << " is already on the plugin map." << endl;
+         }
+      }
+
+      // Remove any plugins that aren't present in the current network
+      for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); )
+      {  
+         // When we clear the _plugin map will
+         // loop over all plugins
+         iter = _id_map.find( foundPlugin->first );
+         if ( iter == _id_map.end() )
+         {
+            // if a module is on the pugins map but not on the id map
+            foundPlugin->second->RemoveSelfFromSG();
+            delete foundPlugin->second;
+            _plugins.erase( foundPlugin++ );
+         }
+         else
+         {
+            // plugin already present...
+            cout << " Plugin [ " << iter->first << " ]-> " << iter->second << " is already on the plugin and id map." << endl;
+            ++foundPlugin;
+         }
+         // The above code is from : The C++ Standard Library by:Josuttis
       }
    }
    else
@@ -435,32 +458,31 @@ void cfdExecutive::UpdateModules( void )
 {
    if ( !CORBA::is_nil( this->_exec.in() ) )
    {
-
-   if ( this->GetCalculationsFlag() )
-   {
-      this->GetEverything();
-      //std::cout << " Get Everything " << std::endl;      
-      /*std::map<std::string, int>::iterator iter;
-      for ( iter=_name_map.begin(); iter!=_name_map.end(); iter++ )
+      if ( this->GetCalculationsFlag() )
       {
-         if ( iter->first=="ASU"    || iter->first=="Power"    ||
-               iter->first=="SELX"  || iter->first=="SRS"      ||
-               iter->first=="STACK" || iter->first=="GASI"     ||
-               iter->first=="WGSR"  || iter->first=="REI_Gasi" ||
-               iter->first=="NETWORK") 
+         this->GetEverything();
+         //std::cout << " Get Everything " << std::endl;      
+         /*std::map<std::string, int>::iterator iter;
+         for ( iter=_name_map.begin(); iter!=_name_map.end(); iter++ )
          {
-            //std::string temp = "ASU";
-            this->_gauges->Update( iter->first, this );
-            //this->_gauges->Update( temp, this );
-            // Find each modules scalar info
-            // Pass info all the way to each gauge
-         }
-      }*/
-      //std::cout << " End Gauge Update " << std::endl;
-      //this->_geometry->Update( this->_activeScalarName, this );
-      //std::cout << " End Geometry Update " << std::endl;
-      this->SetCalculationsFlag( false );
-   }
+            if ( iter->first=="ASU"    || iter->first=="Power"    ||
+                  iter->first=="SELX"  || iter->first=="SRS"      ||
+                  iter->first=="STACK" || iter->first=="GASI"     ||
+                  iter->first=="WGSR"  || iter->first=="REI_Gasi" ||
+                  iter->first=="NETWORK") 
+            {
+               //std::string temp = "ASU";
+               this->_gauges->Update( iter->first, this );
+               //this->_gauges->Update( temp, this );
+               // Find each modules scalar info
+               // Pass info all the way to each gauge
+            }
+         }*/
+         //std::cout << " End Gauge Update " << std::endl;
+         //this->_geometry->Update( this->_activeScalarName, this );
+         //std::cout << " End Geometry Update " << std::endl;
+         this->SetCalculationsFlag( false );
+      }
    }
 }
 
