@@ -80,6 +80,45 @@ virtual void cfdVEBaseClass::SetTransforms( float* scale, float* rot, float* tra
 virtual void cfdVEBaseClass::GetDataFromUnit( void )
 {
    // Need to get Gengxun's work
+   std::cout << "this->cfdId = " << geodeEnumToString(this->cfdId) << std::endl;
+   this-> sock = vtkSocketCommunicator::New();
+   this-> sock->WaitForConnection(33000);
+
+   std::cout << "[DBG] VE_Xplorer is connected to the port 33000 "<< std::endl;
+   
+
+   /*vprDEBUG(vprDBG_ALL,1)
+         <<" UPDATE_INTERACTIVE_DESIGN " << this->Interactive_state;*/
+   
+   vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
+   
+   if (!this->sock->Receive(ugrid,1,9))
+   {
+      std::cerr << " cfdCalculator side error :: Error receiving data." << std::endl;
+      if (this->sock)
+      {
+         this->sock->CloseConnection();
+         this->sock->Delete();
+         this->sock = NULL;
+
+      }
+
+      ugrid->Delete();
+
+   }
+
+   std::cout << "[DBG] Receiving ugrid data..." << std::endl;
+   
+   
+   
+   if( this -> sock)
+   {
+      std::cout << "[DBG] testing if the sock is still connected" << std::endl;
+      this->sock->CloseConnection();
+      this->sock->Delete();
+      this->sock = NULL;
+
+   }
 }
 // Basically uses vtkActorToPF to create a geode and 
 // add it to the scene graph. Probably use cfdObject.
