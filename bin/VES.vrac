@@ -13,7 +13,7 @@ setenv TAO_BUILD TRUE
 setenv CLUSTER_APP FALSE
 source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
 
-set MY_VJCONFIGS=/home/vr/vjconfig/2.0alpha4
+set MY_VJCONFIGS=/home/vr/vjconfig/2.0beta2
 
 switch ($1)
 
