@@ -38,6 +38,12 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   vector<double> ambpardbls;
   vector<double> ventpardbls;
   vector<double> detectpardbls;
+  vector<double> fv1thicktime;
+  vector<double> fv1thicktemp;
+  vector<double> fv2thicktime;
+  vector<double> fv2thicktemp;
+  vector<double> nvthicktime;
+  vector<double> nvthicktemp;
   double intlinthickdbl;
   double massfuelburndbl;
   double solidfuelareadbl;
@@ -77,7 +83,11 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   double pltemp;
   double tcltemp;
   double visdist;
+  double fv1thintemp;
+  double fv2thintemp;
+  double nvthintemp;
   
+  char* _paramHack;
  public:
 
 virtual void StartCalc (

@@ -97,6 +97,12 @@ public:
 	string tbldetspace[8];
 	string tblcabletype[20];
 	string tblcabletypebs[20];
+	double fv1thicktime[9];
+	double fv1thicktemp[9];
+	double fv2thicktime[9];
+	double fv2thicktemp[9];
+	double nvthicktime[9];
+	double nvthicktemp[9];
 	int wkshtnum[11];
 	int wrtempmethod;
     int wrtempcalcmethod;
@@ -120,4 +126,7 @@ public:
 	double pltemp;
 	double tcltemp;
 	double visdist;
+	double fv1thintemp;
+	double fv2thintemp;
+	double nvthintemp;
 };

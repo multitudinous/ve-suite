@@ -1,4 +1,5 @@
 #include "OPPDUnit_i.h"
+#include "string_ops.h"
 
 // Implementation skeleton constructor
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
@@ -6,6 +7,7 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
 {
   UnitName_=name;
   return_state = 0;
+  _paramHack = NULL;
   //Wrapper = new OPPDWrapper();
   flag = 0;
 }
@@ -83,11 +85,27 @@ void Body_Unit_i::StartCalc (
 	p.SetPackName("result");
 	p.SetSysId("result.xml");
 	p.intfs.clear();
+	p.intfs.resize(1); //each port has its own package
+	p.intfs[0].setString("tsec",to_string(tsec));
+	p.intfs[0].setString("tmin",to_string(tmin));
+	p.intfs[0].setString("hrrkw",to_string(hrrkw));
+	p.intfs[0].setString("hrrbtu",to_string(hrrbtu));
+	p.intfs[0].setString("detsprinktime",to_string(detsprinktime));
+	p.intfs[0].setString("detsmtime",to_string(detsmtime));
+	p.intfs[0].setString("detfthtime",to_string(detfthtime));
+	p.intfs[0].setString("flwallinehgt",to_string(flwallinehgt)); 
+	p.intfs[0].setString("flcornerhgt",to_string(flcornerhgt));
+	p.intfs[0].setString("flwallhgt",to_string(flwallhgt));
+	p.intfs[0].setString("hrrhrr",to_string(hrrhrr));
+	p.intfs[0].setString("hrrburndur",to_string(hrrburndur));
+	p.intfs[0].setString("hrrhgthesk",to_string(hrrhgthesk));
+	p.intfs[0].setString("hrrhgtthom",to_string(hrrhgtthom));
+	p.intfs[0].setString("pltemp",to_string(pltemp));
+	p.intfs[0].setString("tcltemp",to_string(tcltemp));
+	p.intfs[0].setString("visdist",to_string(visdist));
 	result = p.Save(rv);
 	return_state = 1;
 	executive_->SetModuleResult(id_, result); //this marks the end the execution
-	  
-
   }
   
 void Body_Unit_i::StopCalc (
@@ -178,7 +196,11 @@ void Body_Unit_i::SetParams (
     if (string(param)=="")
       return;
     std::cout<<UnitName_<<" :SetParams called"<<endl;
-    Package p;
+	if ( _paramHack != NULL )
+		delete [] _paramHack;
+	_paramHack = new char[ strlen(param) + 1 ];
+	strcpy(_paramHack, param); 
+	Package p;
         
     p.SetSysId("gui.xml");
     p.Load(param, strlen(param));
@@ -208,26 +230,7 @@ void Body_Unit_i::SetParams (
 	dettempratselindex = p.intfs[0].getInt("dettempratselindex");
 	detspaceselindex = p.intfs[0].getInt("detspaceselindex");
 	cableselindex = p.intfs[0].getInt("cableselindex");
-	killexcel = p.intfs[0].getInt("killexcel");
-	tsec = 5000;
-	p.intfs[0].setDouble("tsec",tsec);
-	p.intfs[0].setDouble("tmin",tmin);
-	p.intfs[0].setDouble("hrrkw",hrrkw);
-	p.intfs[0].setDouble("hrrbtu",hrrbtu);
-	p.intfs[0].setDouble("detsprinktime",detsprinktime);
-	p.intfs[0].setDouble("detsmtime",detsmtime);
-	p.intfs[0].setDouble("detfthtime",detfthtime);
-	p.intfs[0].setDouble("flwallinehgt",flwallinehgt); 
-	p.intfs[0].setDouble("flcornerhgt",flcornerhgt);
-	p.intfs[0].setDouble("flwallhgt",flwallhgt);
-	p.intfs[0].setDouble("hrrhrr",hrrhrr);
-	p.intfs[0].setDouble("hrrburndur",hrrburndur);
-	p.intfs[0].setDouble("hrrhgthesk",hrrhgthesk);
-	p.intfs[0].setDouble("hrrhgtthom",hrrhgtthom);
-	p.intfs[0].setDouble("pltemp",pltemp);
-	p.intfs[0].setDouble("tcltemp",tcltemp);
-	p.intfs[0].setDouble("visdist",visdist);
-	
+	killexcel = p.intfs[0].getInt("killexcel");	
   }
   
 void Body_Unit_i::SetID (

@@ -6,7 +6,7 @@ OPPDWrapper::OPPDWrapper(void)
 
 	for(int i=0;i<11;i++)
 		fileNames[i] = new const char;
-	fileNames[0] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Burning_Duration_Solid.xls";
+	/*fileNames[0] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Burning_Duration_Solid.xls";
 	fileNames[1] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Cable_HRR_Calculations.xls";
 	fileNames[2] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Detector_Activation_Time.xls";
 	fileNames[3] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Flame_Height_Calculations.xls";
@@ -16,7 +16,19 @@ OPPDWrapper::OPPDWrapper(void)
 	fileNames[7] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Temperature_FV1.xls";
 	fileNames[8] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Temperature_FV2.xls";
 	fileNames[9] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Temperature_NV.xls";
-	fileNames[10] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Visibility_Through_Smoke.xls";
+	fileNames[10] = "M:\\VE_Models\\OPPDUnit\\FIVE_SpreadSheets\\Visibility_Through_Smoke.xls";*/
+
+	fileNames[0] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Burning_Duration_Solid.xls";
+	fileNames[1] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Cable_HRR_Calculations.xls";
+	fileNames[2] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Detector_Activation_Time.xls";
+	fileNames[3] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Flame_Height_Calculations.xls";
+	fileNames[4] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\HRR_Flame_Height_Burning_Duration_Calculations.xls";
+	fileNames[5] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Plume_Temperature_Calculations.xls";
+	fileNames[6] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Temperature_Closed_Compartment.xls";
+	fileNames[7] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Temperature_FV1.xls";
+	fileNames[8] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Temperature_FV2.xls";
+	fileNames[9] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Temperature_NV.xls";
+	fileNames[10] = "C:\\OPPD_Demo\\win_dll\\Execution\\FIVE_Spreadsheets\\Visibility_Through_Smoke.xls";
 
 	wrtempmethod = 0;
     wrtempcalcmethod = 0;
@@ -52,7 +64,7 @@ void OPPDWrapper::loadExcel(void)
 			return;
        }
 		// Show Excel to the user.
-	    if(j==0)
+	    if(j==4||j==10)
 			oExcel[j].put_Visible(TRUE);
 
 		oExcel[j].put_UserControl(TRUE);	
@@ -1212,13 +1224,13 @@ void OPPDWrapper::getAnswers(void)
 	lpDisp[1] = oWorkSheet[1].get_Range(COleVariant("C51"),COleVariant("C51"));
 	ASSERT(lpDisp[1]);
 	oRange[1].AttachDispatch(lpDisp[1]);
-	var = oRange[0].get_Value(COleVariant());
+	var = oRange[1].get_Value(COleVariant());
 	hrrkw = V_R8(&var); 
 
 	lpDisp[1] = oWorkSheet[1].get_Range(COleVariant("E51"),COleVariant("E51"));
 	ASSERT(lpDisp[1]);
 	oRange[1].AttachDispatch(lpDisp[1]);
-	var = oRange[0].get_Value(COleVariant());
+	var = oRange[1].get_Value(COleVariant());
 	hrrbtu = V_R8(&var); 
 
 	if (wrdetectortype == 0)
@@ -1226,7 +1238,7 @@ void OPPDWrapper::getAnswers(void)
 		lpDisp[2] = oWorkSheet[2].get_Range(COleVariant("E102"),COleVariant("E102"));
 		ASSERT(lpDisp[2]);
 		oRange[2].AttachDispatch(lpDisp[2]);
-		var = oRange[0].get_Value(COleVariant());
+		var = oRange[2].get_Value(COleVariant());
 		detsprinktime = V_R8(&var); 
 		detsmtime = -1;
 		detfthtime = -1;
@@ -1236,7 +1248,7 @@ void OPPDWrapper::getAnswers(void)
 		lpDisp[2] = oWorkSheet[2].get_Range(COleVariant("E49"),COleVariant("E49"));
 		ASSERT(lpDisp[2]);
 		oRange[2].AttachDispatch(lpDisp[2]);
-		var = oRange[0].get_Value(COleVariant());
+		var = oRange[2].get_Value(COleVariant());
 		detsmtime = V_R8(&var); 
 		detfthtime = -1;
 		detsprinktime = -1;
@@ -1246,7 +1258,7 @@ void OPPDWrapper::getAnswers(void)
 		lpDisp[2] = oWorkSheet[2].get_Range(COleVariant("E138"),COleVariant("E138"));
 		ASSERT(lpDisp[2]);
 		oRange[2].AttachDispatch(lpDisp[2]);
-		var = oRange[0].get_Value(COleVariant());
+		var = oRange[2].get_Value(COleVariant());
 		detfthtime = V_R8(&var); 
 		detsprinktime = -1;
 		detsmtime = -1;
@@ -1257,7 +1269,7 @@ void OPPDWrapper::getAnswers(void)
 		lpDisp[3] = oWorkSheet[3].get_Range(COleVariant("E74"),COleVariant("E74"));
 		ASSERT(lpDisp[3]);
 		oRange[3].AttachDispatch(lpDisp[3]);
-		var = oRange[0].get_Value(COleVariant());
+		var = oRange[3].get_Value(COleVariant());
 		flwallinehgt = V_R8(&var); 
 		flcornerhgt = -1;
 		flwallhgt = -1;
@@ -1267,7 +1279,7 @@ void OPPDWrapper::getAnswers(void)
 		lpDisp[3] = oWorkSheet[3].get_Range(COleVariant("E60"),COleVariant("E60"));
 		ASSERT(lpDisp[3]);
 		oRange[3].AttachDispatch(lpDisp[3]);
-		var = oRange[0].get_Value(COleVariant());
+		var = oRange[3].get_Value(COleVariant());
 		flcornerhgt = V_R8(&var); 
 		flwallinehgt = -1;
 		flwallhgt = -1;
@@ -1277,7 +1289,7 @@ void OPPDWrapper::getAnswers(void)
 		lpDisp[3] = oWorkSheet[3].get_Range(COleVariant("E73"),COleVariant("E73"));
 		ASSERT(lpDisp[3]);
 		oRange[3].AttachDispatch(lpDisp[3]);
-		var = oRange[0].get_Value(COleVariant());
+		var = oRange[3].get_Value(COleVariant());
 		flwallhgt = V_R8(&var); 
 		flwallinehgt = -1;
 		flcornerhgt = -1;
@@ -1286,42 +1298,196 @@ void OPPDWrapper::getAnswers(void)
 	lpDisp[4] = oWorkSheet[4].get_Range(COleVariant("C57"),COleVariant("C57"));
 	ASSERT(lpDisp[4]);
 	oRange[4].AttachDispatch(lpDisp[4]);
-	var = oRange[0].get_Value(COleVariant());
+	var = oRange[4].get_Value(COleVariant());
 	hrrhrr = V_R8(&var); 
 
 	lpDisp[4] = oWorkSheet[4].get_Range(COleVariant("E81"),COleVariant("E81"));
 	ASSERT(lpDisp[4]);
 	oRange[4].AttachDispatch(lpDisp[4]);
-	var = oRange[0].get_Value(COleVariant());
+	var = oRange[4].get_Value(COleVariant());
 	hrrburndur = V_R8(&var); 
 
 	lpDisp[4] = oWorkSheet[4].get_Range(COleVariant("E96"),COleVariant("E96"));
 	ASSERT(lpDisp[4]);
 	oRange[4].AttachDispatch(lpDisp[4]);
-	var = oRange[0].get_Value(COleVariant());
+	var = oRange[4].get_Value(COleVariant());
 	hrrhgthesk = V_R8(&var); 
 
 	lpDisp[4] = oWorkSheet[4].get_Range(COleVariant("E110"),COleVariant("E110"));
 	ASSERT(lpDisp[4]);
 	oRange[4].AttachDispatch(lpDisp[4]);
-	var = oRange[0].get_Value(COleVariant());
+	var = oRange[4].get_Value(COleVariant());
 	hrrhgtthom = V_R8(&var); 
 
 	lpDisp[5] = oWorkSheet[5].get_Range(COleVariant("E63"),COleVariant("E63"));
 	ASSERT(lpDisp[5]);
 	oRange[5].AttachDispatch(lpDisp[5]);
-	var = oRange[0].get_Value(COleVariant());
+	var = oRange[5].get_Value(COleVariant());
 	pltemp = V_R8(&var); 
 
 	lpDisp[6] = oWorkSheet[6].get_Range(COleVariant("E85"),COleVariant("E85"));
 	ASSERT(lpDisp[6]);
 	oRange[6].AttachDispatch(lpDisp[6]);
-	var = oRange[0].get_Value(COleVariant());
+	var = oRange[6].get_Value(COleVariant());
 	tcltemp = V_R8(&var); 
+
+	COleVariant covTrue((short)TRUE),
+			covFalse((short)FALSE),
+			covOptional(DISP_E_PARAMNOTFOUND,VT_ERROR);
+
+	//FV1 Worksheet*******************************************************************
+	if ( wrtempmethod == 1 && wrtempcalcmethod == 1)
+	{
+		lpDisp[7] = oWorkSheet[7].get_Range(COleVariant("B98"),COleVariant("B106"));
+		ASSERT(lpDisp[7]);
+		oRange[7].AttachDispatch(lpDisp[7]);
+		COleSafeArray fv1timearr(oRange[7].get_Value(covOptional));
+
+		long iRows;
+		long index[2];
+
+		fv1timearr.GetUBound(1, &iRows);
+
+		for (int rowCounter = 1; rowCounter <= iRows; rowCounter++) 
+		{
+			index[0] = rowCounter;
+			index[1] = 1;
+			COleVariant fv1timeData;
+			fv1timearr.GetElement(index,fv1timeData);
+			CString tempHold(fv1timeData);
+			fv1thicktime[rowCounter-1] = atof(tempHold);
+			tempHold.Delete;
+		}
+		lpDisp[7] = oWorkSheet[7].get_Range(COleVariant("I98"),COleVariant("I106"));
+		ASSERT(lpDisp[7]);
+		oRange[7].AttachDispatch(lpDisp[7]);
+		COleSafeArray fv1temparr(oRange[7].get_Value(covOptional));
+
+		fv1temparr.GetUBound(1, &iRows);
+
+		for (rowCounter = 1; rowCounter <= iRows; rowCounter++) 
+		{
+			index[0] = rowCounter;
+			index[1] = 1;
+			COleVariant fv1tempData;
+			fv1temparr.GetElement(index,fv1tempData);
+			CString tempHold(fv1tempData);
+			fv1thicktemp[rowCounter-1] = atof(tempHold);
+			tempHold.Delete;
+		}
+	}
+	else if(wrtempmethod == 2 && wrtempcalcmethod == 1)
+	{
+		lpDisp[7] = oWorkSheet[7].get_Range(COleVariant("E97"),COleVariant("E97"));
+		ASSERT(lpDisp[7]);
+		oRange[7].AttachDispatch(lpDisp[7]);
+		var = oRange[7].get_Value(COleVariant());
+		fv1thintemp = V_R8(&var);
+	}
+
+	//FV2 Worksheet*******************************************************************
+	if ( wrtempmethod == 1 && wrtempcalcmethod == 0)
+	{
+		lpDisp[8] = oWorkSheet[8].get_Range(COleVariant("B89"),COleVariant("B97"));
+		ASSERT(lpDisp[8]);
+		oRange[8].AttachDispatch(lpDisp[8]);
+		COleSafeArray fv2timearr(oRange[8].get_Value(covOptional));
+
+		long iRows;
+		long index[2];
+
+		fv2timearr.GetUBound(1, &iRows);
+
+		for (int rowCounter = 1; rowCounter <= iRows; rowCounter++) 
+		{
+			index[0] = rowCounter;
+			index[1] = 1;
+			COleVariant fv2timeData;
+			fv2timearr.GetElement(index,fv2timeData);
+			CString tempHold(fv2timeData);
+			fv2thicktime[rowCounter-1] = atof(tempHold);
+			tempHold.Delete;
+		}
+		lpDisp[8] = oWorkSheet[8].get_Range(COleVariant("H89"),COleVariant("H97"));
+		ASSERT(lpDisp[8]);
+		oRange[8].AttachDispatch(lpDisp[8]);
+		COleSafeArray fv2temparr(oRange[8].get_Value(covOptional));
+
+		fv2temparr.GetUBound(1, &iRows);
+
+		for (rowCounter = 1; rowCounter <= iRows; rowCounter++) 
+		{
+			index[0] = rowCounter;
+			index[1] = 1;
+			COleVariant fv2tempData;
+			fv2temparr.GetElement(index,fv2tempData);
+			CString tempHold(fv2tempData);
+			fv2thicktemp[rowCounter-1] = atof(tempHold);
+			tempHold.Delete;
+		}
+	}
+	else if(wrtempmethod == 2 && wrtempcalcmethod == 0)
+	{
+		lpDisp[8] = oWorkSheet[8].get_Range(COleVariant("E87"),COleVariant("E87"));
+		ASSERT(lpDisp[8]);
+		oRange[8].AttachDispatch(lpDisp[8]);
+		var = oRange[8].get_Value(COleVariant());
+		fv2thintemp = V_R8(&var);
+	}
+
+	//NV Worksheet*******************************************************************
+	if ( wrtempmethod == 3 )
+	{
+		lpDisp[9] = oWorkSheet[9].get_Range(COleVariant("B101"),COleVariant("B109"));
+		ASSERT(lpDisp[9]);
+		oRange[9].AttachDispatch(lpDisp[9]);
+		COleSafeArray nvtimearr(oRange[9].get_Value(covOptional));
+
+		long iRows;
+		long index[2];
+
+		nvtimearr.GetUBound(1, &iRows);
+
+		for (int rowCounter = 1; rowCounter <= iRows; rowCounter++) 
+		{
+			index[0] = rowCounter;
+			index[1] = 1;
+			COleVariant nvtimeData;
+			nvtimearr.GetElement(index,nvtimeData);
+			CString tempHold(nvtimeData);
+			nvthicktime[rowCounter-1] = atof(tempHold);
+			tempHold.Delete;
+		}
+		lpDisp[9] = oWorkSheet[9].get_Range(COleVariant("H101"),COleVariant("H109"));
+		ASSERT(lpDisp[9]);
+		oRange[9].AttachDispatch(lpDisp[9]);
+		COleSafeArray nvtemparr(oRange[9].get_Value(covOptional));
+
+		nvtemparr.GetUBound(1, &iRows);
+
+		for (rowCounter = 1; rowCounter <= iRows; rowCounter++) 
+		{
+			index[0] = rowCounter;
+			index[1] = 1;
+			COleVariant nvtempData;
+			nvtemparr.GetElement(index,nvtempData);
+			CString tempHold(nvtempData);
+			nvthicktemp[rowCounter-1] = atof(tempHold);
+			tempHold.Delete;
+		}
+	}
+	else if(wrtempmethod == 4 )
+	{
+		lpDisp[9] = oWorkSheet[9].get_Range(COleVariant("E98"),COleVariant("E98"));
+		ASSERT(lpDisp[9]);
+		oRange[9].AttachDispatch(lpDisp[9]);
+		var = oRange[9].get_Value(COleVariant());
+		nvthintemp = V_R8(&var);
+	}
 
 	lpDisp[10] = oWorkSheet[10].get_Range(COleVariant("C101"),COleVariant("C101"));
 	ASSERT(lpDisp[10]);
 	oRange[10].AttachDispatch(lpDisp[10]);
-	var = oRange[0].get_Value(COleVariant());
+	var = oRange[10].get_Value(COleVariant());
 	visdist = V_R8(&var); 
 }
