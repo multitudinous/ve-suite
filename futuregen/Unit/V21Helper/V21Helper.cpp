@@ -137,6 +137,8 @@ int V21Helper::GasToInt (Gas *gs, Interface &it)
   it.setDouble("TEMPERATURE", gs->gas_composite.T);
   it.setDouble("PRESSURE",    gs->gas_composite.P);
   it.setDouble("FLOWRATE",    gs->gas_composite.M);
+  //Changed by Yang to put in the MW
+  it.setDouble("MW", gs->gas_composite.mw());
 
   it.setDouble("SOOT", gs->gas_composite.soot);
   it.setDouble("TAR",  gs->gas_composite.tar);
