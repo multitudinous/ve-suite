@@ -1855,6 +1855,33 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
 #endif //SJK_USE_QUADS
 
    }
+   else if ( numNodesInElement == 1 && numCornerNodes == 1 )
+   {
+      std::cout << "Note: Inserting VERTEX for non-implemented element type "
+                << elementRoutineNumber
+                << ", numNodesInElement = " << numNodesInElement
+                << ", numCornerNodes = " << numCornerNodes
+                << std::endl;
+      this->ugrid->InsertNextCell( VTK_VERTEX, numCornerNodes, nodes );
+   }
+   else if ( numNodesInElement == 3 && numCornerNodes == 2 )
+   {
+      std::cout << "Note: Inserting LINE for non-implemented element type "
+                << elementRoutineNumber
+                << ", numNodesInElement = " << numNodesInElement
+                << ", numCornerNodes = " << numCornerNodes
+                << std::endl;
+      this->ugrid->InsertNextCell( VTK_LINE, numCornerNodes, nodes );
+   }
+   else if ( numNodesInElement == 8 && numCornerNodes == 4 )
+   {
+      std::cout << "Note: Inserting QUAD for non-implemented element type "
+                << elementRoutineNumber
+                << ", numNodesInElement = " << numNodesInElement
+                << ", numCornerNodes = " << numCornerNodes
+                << std::endl;
+      this->ugrid->InsertNextCell( VTK_QUAD, numCornerNodes, nodes );
+   }
    else
    {
       std::cerr << "Warning: Can not yet handle an element with "
