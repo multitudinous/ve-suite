@@ -181,14 +181,26 @@ void Gas::average ()
   gas_composite.soot = gas_composite.soot / gas_composite.M;
   gas_composite.tar = gas_composite.tar / gas_composite.M;
   gas_composite.ynu = gas_composite.ynu / gas_composite.M;
-  gas_composite.mean_size = gas_composite.mean_size / gas_composite.M_particle;
-  gas_composite.size_variance = gas_composite.size_variance / gas_composite.M_particle;
-  gas_composite.T_particle = gas_composite.T_particle / gas_composite.M_particle;
- 
+  if (gas_composite.M_particle>0.0)
+  {
+	gas_composite.mean_size = gas_composite.mean_size / gas_composite.M_particle;
+	gas_composite.size_variance = gas_composite.size_variance / gas_composite.M_particle;
+	gas_composite.T_particle = gas_composite.T_particle / gas_composite.M_particle;
+  }
+  else
+  {
+	gas_composite.mean_size = 0.0;
+	gas_composite.size_variance = 0.0;
+	gas_composite.T_particle = 298.0;
+  }
   for(i=0; i<gas_composite.comp_particle.size(); i++) 
-    gas_composite.comp_particle[i] = gas_composite.comp_particle[i]
-      / gas_composite.M_particle;
-  
+  {
+	  if (gas_composite.M_particle>0.0)
+		gas_composite.comp_particle[i] = gas_composite.comp_particle[i]
+		/ gas_composite.M_particle;
+	  else
+		gas_composite.comp_particle[i] = 0.0;
+  }
   gas_composite.velocity[0] = gas_composite.M/(gas_composite.density()*gas_composite.area);
   for(i=1; i<3; i++) 
     gas_composite.velocity[i] = 0.0;
