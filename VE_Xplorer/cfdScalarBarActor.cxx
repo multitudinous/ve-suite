@@ -92,22 +92,23 @@ cfdScalarBarActor::~cfdScalarBarActor()
 
    /*for ( int i=0; i<this->numTextLabels; i++ )
    {
-      this->scalarBar->RemoveChild( (cfdSceneNode*)this->pfLabelActor[i] );
-      delete this->pfLabelActor[i];
+      // Fix this
+      //this->scalarBar->RemoveChild( (cfdSceneNode*)this->pfLabelActor[i] );
+      //delete this->pfLabelActor[i];
    }
    vprDEBUG(vprDBG_ALL,2) << "   scalarBar->getNumChildren() = " 
       << this->scalarBar->GetNumChildren() 
       << std::endl << vprDEBUG_FLUSH;
 
-   this->scalarBar->RemoveChild( this->pfaPolyActor );
-   delete this->pfaPolyActor;
+   //this->scalarBar->RemoveChild( this->pfaPolyActor );
+   //delete this->pfaPolyActor;
 
    vprDEBUG(vprDBG_ALL,2) << "   scalarBar->getNumChildren() = " 
       << this->scalarBar->GetNumChildren() 
       << std::endl << vprDEBUG_FLUSH;
 
-   this->scalarBar->RemoveChild( this->pftitleActor );
-   delete this->pftitleActor;
+   //this->scalarBar->RemoveChild( this->pftitleActor );
+   //delete this->pftitleActor;
 
    vprDEBUG(vprDBG_ALL,2) << "   scalarBar->getNumChildren() = " 
       << this->scalarBar->GetNumChildren() 

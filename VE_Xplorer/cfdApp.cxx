@@ -79,6 +79,7 @@ inline cfdApp::cfdApp( )
    this->_steadystateHandler =   NULL;
    //this->_transientHandler =     NULL;
    this->_modelHandler =         NULL;
+   this->ihccModel =             NULL;
 }
 
 void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_ptr orb, PortableServer::POA_ptr poa )
