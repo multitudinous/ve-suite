@@ -81,9 +81,9 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b1/IRIX32-pthread
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b1-deps/IRIX32
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/IRIX32
-   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk
+   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VJ_DEPS_DIR}/lib32
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VTK_BASE_DIR}/lib/vtk
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
-   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OSG_HOME}/lib32:${OSG_HOME}/lib32/osgPlugins
 
@@ -121,8 +121,8 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
       setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/TAO-1.4
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_HOME}/Linux/lib
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_HOME}/Linux/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
 
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
@@ -157,8 +157,8 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
       setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/TAO-1.4
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_HOME}/Linux/lib
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_HOME}/Linux/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
       setenv PATH ${ACE_ROOT}/bin:${PATH}
@@ -210,7 +210,9 @@ setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
 setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
 setenv PATH ${WX_HOME}/bin:${PATH}
 setenv PATH ${JDK_HOME}/bin:${PATH}
-setenv PATH ${OSG_HOME}/OpenSceneGraph/bin:${PATH}
+if ( $?OSG_HOME ) then
+   setenv PATH ${OSG_HOME}/OpenSceneGraph/bin:${PATH}
+endif
 
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
