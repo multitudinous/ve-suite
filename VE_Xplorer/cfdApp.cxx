@@ -203,6 +203,13 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    newSceneViewer->getLight()->setDiffuse(osg::Vec4(0.9f,0.9f,0.9f,1.0f));
    newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
    newSceneViewer->setClearColor(osg::Vec4(0,0,0,1));
+   //account for 90 rotation of the model
+   //default light is at (0,0,1,0) so change this to
+   //so move to (0,0,1,0) to ligth down on the team
+   //might not be the correct solution for this but
+   //this is what we'll do for now. ..
+   osg::Vec4 lPos = osg::Vec4(0,1,0,0); 
+   newSceneViewer->getLight()->setPosition(lPos);
    _sceneViewer = newSceneViewer;
    _frameStamp = new osg::FrameStamp;
    _start_tick = _timer.tick();
