@@ -173,3 +173,10 @@ wxString HeatExchanger::GetDesc()
 }
 
 
+wxString HeatExchanger::GetHelp()
+{
+  wxString result="Framework/doc/modules/HeatExchanger.html"; //your description
+
+  return result;
+}
+

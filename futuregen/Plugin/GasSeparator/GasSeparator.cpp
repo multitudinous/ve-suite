@@ -138,4 +138,10 @@ wxString GasSeparator::GetDesc()
   return result;
 }
 
+wxString GasSeparator::GetHelp()
+{
+  wxString result="Framework/doc/modules/GasSeparator.html"; //your description
+
+  return result;
+}
 

@@ -142,4 +142,11 @@ wxString EvaporationCooler::GetDesc()
   return result;
 }
 
+wxString EvaporationCooler::GetHelp()
+{
+  wxString result="Framework/doc/modules/Evap_Cooler.html"; //your description
+
+  return result;
+}
+
 

@@ -174,3 +174,9 @@ wxString SulfurPolisher::GetDesc()
 }
 
 
+wxString SulfurPolisher::GetHelp()
+{
+  wxString result="Framework/doc/modules/SulfurPolisher.html"; //your description
+
+  return result;
+}

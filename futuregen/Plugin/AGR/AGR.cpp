@@ -123,4 +123,9 @@ wxString AGR::GetDesc()
   return result;
 }
 
+wxString AGR::GetHelp()
+{
+  wxString result="Framework/doc/modules/AGR.html"; //your description
 
+  return result;
+}

@@ -145,4 +145,10 @@ wxString WaterSource::GetDesc()
   return result;
 }
 
+wxString WaterSource::GetHelp()
+{
+  wxString result="Framework/doc/modules/WaterSource.html"; //your description
+
+  return result;
+}
 

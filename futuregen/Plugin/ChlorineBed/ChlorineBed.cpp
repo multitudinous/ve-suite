@@ -165,4 +165,10 @@ wxString ChlorineBed::GetDesc()
   return result;
 }
 
+wxString ChlorineBed::GetHelp()
+{
+  wxString result="Framework/doc/modules/ChlorineBed.html"; //your description
+
+  return result;
+}
 

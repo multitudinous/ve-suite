@@ -142,4 +142,11 @@ wxString WaterPump::GetDesc()
   return result;
 }
 
+wxString WaterPump::GetHelp()
+{
+  wxString result="Framework/doc/modules/Water_Pump.html"; //your description
+
+  return result;
+}
+
 

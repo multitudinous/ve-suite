@@ -50,7 +50,7 @@ class EvaporationCooler : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-
+  virtual wxString GetHelp();
  public:
   double desired_temp;
   double air_temp;

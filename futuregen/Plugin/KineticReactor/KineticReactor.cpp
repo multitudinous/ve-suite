@@ -144,3 +144,10 @@ wxString KineticReactor::GetDesc()
 }
 
 
+
+wxString KineticReactor::GetHelp()
+{
+  wxString result="Framework/doc/modules/Kinetic_Reactor.html"; //your description
+
+  return result;
+}

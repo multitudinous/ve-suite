@@ -50,7 +50,7 @@ class GasMixer : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-
+  virtual wxString GetHelp();
  public:
   //HERE is the GUI variable passed to the Dialog and Packed
  protected:

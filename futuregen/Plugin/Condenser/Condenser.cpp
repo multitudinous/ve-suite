@@ -87,8 +87,8 @@ int Condenser::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Condenser::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*12/80,icon_h*40/75);
-  iports[1]=wxPoint(icon_w*41/80, icon_h*8/75);
+  iports[0]=wxPoint(icon_w*41/80, icon_h*8/75);
+  iports[1]=wxPoint(icon_w*12/80,icon_h*40/75);
   return;
 }
 
@@ -103,8 +103,8 @@ int Condenser::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Condenser::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*70/80,icon_h*40/75);
-  oports[1]=wxPoint(icon_w*41/80,icon_h*70/75);
+  oports[0]=wxPoint(icon_w*41/80,icon_h*70/75);
+  oports[1]=wxPoint(icon_w*70/80,icon_h*40/75);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -154,4 +154,10 @@ wxString Condenser::GetDesc()
   return result;
 }
 
+wxString Condenser::GetHelp()
+{
+  wxString result="Framework/doc/modules/Condenser.html"; //your description
+
+  return result;
+}
 

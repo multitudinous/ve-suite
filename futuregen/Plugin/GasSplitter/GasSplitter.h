@@ -50,7 +50,7 @@ class GasSplitter : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-
+  virtual wxString GetHelp();
  public:
   double percent_port1;
   double percent_port2;

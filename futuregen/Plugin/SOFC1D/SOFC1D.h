@@ -50,7 +50,7 @@ class SOFC1D : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-
+  virtual wxString GetHelp();
  public:
   double a_height;
   double a_width;

@@ -132,4 +132,10 @@ wxString GasHeatExchanger::GetDesc()
   return result;
 }
 
+wxString GasHeatExchanger::GetHelp()
+{
+  wxString result="Framework/doc/modules/GasHeatExchanger.html"; //your description
+
+  return result;
+}
 

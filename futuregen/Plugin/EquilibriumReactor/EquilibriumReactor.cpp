@@ -126,3 +126,10 @@ wxString EquilibriumReactor::GetDesc()
 }
 
 
+wxString EquilibriumReactor::GetHelp()
+{
+  wxString result="Framework/doc/modules/EquilibriumReactor.html"; //your description
+
+  return result;
+}
+

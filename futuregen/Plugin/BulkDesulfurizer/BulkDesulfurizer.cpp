@@ -180,4 +180,9 @@ wxString BulkDesulfurizer::GetDesc()
   return result;
 }
 
+wxString BulkDesulfurizer::GetHelp()
+{
+  wxString result="Framework/doc/modules/BulkDesulfurizer.html"; //your description
 
+  return result;
+}

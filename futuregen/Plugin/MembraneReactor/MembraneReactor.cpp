@@ -166,4 +166,10 @@ wxString MembraneReactor::GetDesc()
   return result;
 }
 
+wxString MembraneReactor::GetHelp()
+{
+  wxString result="Framework/doc/modules/Membrane_Reactor.html"; //your description
+
+  return result;
+}
 

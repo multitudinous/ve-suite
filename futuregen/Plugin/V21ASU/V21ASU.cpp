@@ -149,4 +149,10 @@ wxString V21ASU::GetDesc()
   return result;
 }
 
+wxString V21ASU::GetHelp()
+{
+  wxString result="Framework/doc/modules/ASU.html"; //your description
+
+  return result;
+}
 

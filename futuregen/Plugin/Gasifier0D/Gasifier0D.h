@@ -50,7 +50,7 @@ class Gasifier0D : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-
+  virtual wxString GetHelp();
  public:
   double steam_temp1;
   double steam_flrt1;

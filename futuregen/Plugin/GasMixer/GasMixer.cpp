@@ -124,4 +124,9 @@ wxString GasMixer::GetDesc()
   return result;
 }
 
-
+/////////////////////////////////////////////////////////////////////////////
+wxString GasMixer::GetHelp()
+{
+	wxString result="Framework/doc/modules/GasMixer.html";
+	return result;
+}

@@ -138,4 +138,10 @@ wxString CarbonBed::GetDesc()
   return result;
 }
 
+wxString CarbonBed::GetHelp()
+{
+  wxString result="Framework/doc/modules/CarbonBed.html"; //your description
+
+  return result;
+}
 

@@ -171,4 +171,11 @@ wxString Recuperator::GetDesc()
   return result;
 }
 
+wxString Recuperator::GetHelp()
+{
+  wxString result="Framework/doc/modules/Recuperator.html"; //your description
+
+  return result;
+}
+
 

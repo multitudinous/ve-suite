@@ -137,3 +137,9 @@ wxString SteamTurbine::GetDesc()
 }
 
 
+wxString SteamTurbine::GetHelp()
+{
+  wxString result="Framework/doc/modules/SteamTurbine.html"; //your description
+
+  return result;
+}

@@ -189,3 +189,11 @@ bool Gasifier::Has3Ddata()
 {
   return true;
 }
+
+wxString Gasifier::GetHelp()
+{
+  wxString result="Framework/doc/modules/Gasifier.html"; //your description
+
+  return result;
+}
+

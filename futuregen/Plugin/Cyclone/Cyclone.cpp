@@ -140,4 +140,9 @@ wxString Cyclone::GetDesc()
   return result;
 }
 
+wxString Cyclone::GetHelp()
+{
+  wxString result="Framework/doc/modules/Cyclone.html"; //your description
 
+  return result;
+}

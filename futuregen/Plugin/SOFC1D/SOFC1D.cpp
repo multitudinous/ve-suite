@@ -253,4 +253,9 @@ wxString SOFC1D::GetDesc()
   return result;
 }
 
+wxString SOFC1D::GetHelp()
+{
+  wxString result="Framework/doc/modules/SOFC_1D.html"; //your description
 
+  return result;
+}

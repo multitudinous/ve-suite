@@ -50,7 +50,7 @@ class V21ASU : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-
+  virtual wxString GetHelp();
  public:
   double o2_temp;
   double o2_pres;

@@ -171,4 +171,10 @@ wxString SOFC::GetDesc()
   return result;
 }
 
+wxString SOFC::GetHelp()
+{
+  wxString result="Framework/doc/modules/SOFC.html"; //your description
+
+  return result;
+}
 

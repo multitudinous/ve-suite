@@ -50,7 +50,7 @@ class Cyclone : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-
+  virtual wxString GetHelp();
  public:
   double diameter;
   double particle_turn_count;

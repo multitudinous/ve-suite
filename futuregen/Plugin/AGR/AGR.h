@@ -51,6 +51,7 @@ class AGR : public REI_Plugin
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
 
+  virtual wxString GetHelp();
  public:
   double solv_mw;
   double solv_den;

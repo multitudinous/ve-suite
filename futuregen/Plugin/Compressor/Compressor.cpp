@@ -144,4 +144,11 @@ wxString Compressor::GetDesc()
   return result;
 }
 
+wxString Compressor::GetHelp()
+{
+  wxString result="Framework/doc/modules/Compressor_Expand.html"; //your description
+
+  return result;
+}
+
 

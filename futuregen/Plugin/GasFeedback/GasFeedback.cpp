@@ -163,4 +163,10 @@ wxString GasFeedback::GetDesc()
   return result;
 }
 
+wxString GasFeedback::GetHelp()
+{
+  wxString result="Framework/doc/modules/GasFeedback.html"; //your description
+
+  return result;
+}
 

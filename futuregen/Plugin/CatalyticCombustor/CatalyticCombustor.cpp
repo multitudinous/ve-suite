@@ -155,3 +155,9 @@ wxString CatalyticCombustor::GetDesc()
 }
 
 
+wxString CatalyticCombustor::GetHelp()
+{
+  wxString result="Framework/doc/modules/Catalytic_Combustor.html"; //your description
+
+  return result;
+}

@@ -50,7 +50,7 @@ class DumpCombustor : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-
+  virtual wxString GetHelp();
  public:
   double conversion;
   double volume;

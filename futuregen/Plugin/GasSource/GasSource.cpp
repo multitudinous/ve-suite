@@ -224,3 +224,9 @@ wxString GasSource::GetDesc()
 }
 
 
+wxString GasSource::GetHelp()
+{
+  wxString result="Framework/doc/modules/GasSource.html"; //your description
+
+  return result;
+}

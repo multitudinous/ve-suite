@@ -145,4 +145,10 @@ wxString DumpCombustor::GetDesc()
   return result;
 }
 
+wxString DumpCombustor::GetHelp()
+{
+  wxString result="Framework/doc/modules/Dump_Combustor.html"; //your description
+
+  return result;
+}
 

@@ -147,4 +147,10 @@ wxString GasSplitter::GetDesc()
   return result;
 }
 
+wxString GasSplitter::GetHelp()
+{
+  wxString result="Framework/doc/modules/GasSplitter.html"; //your description
+
+  return result;
+}
 

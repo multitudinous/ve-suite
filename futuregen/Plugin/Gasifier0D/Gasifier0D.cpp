@@ -229,4 +229,11 @@ wxString Gasifier0D::GetDesc()
   return result;
 }
 
+wxString Gasifier0D::GetHelp()
+{
+  wxString result="Framework/doc/modules/Gasifier_0D.html"; //your description
+
+  return result;
+}
+
 
