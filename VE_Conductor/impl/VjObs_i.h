@@ -50,8 +50,6 @@
 #include "cfdStateInfo.h"
 #endif
 
-class cfdSteadyStateVizHandler;
-class cfdEnvironmentHandler;
 class cfdModelHandler;
 
 #ifdef _OSG
@@ -173,14 +171,6 @@ public:
    VjObs::obj_p* GetClientInfoData();
 #endif   
 
-#ifdef _OSG
-     void SetHandlers( cfdSteadyStateVizHandler*, 
-                     cfdEnvironmentHandler*, cfdModelHandler*);//,
-                     //      cfdTextureBasedVizHandler* _tbvHandler );
-#else
-   void SetHandlers( cfdSteadyStateVizHandler*, 
-                     cfdEnvironmentHandler*, cfdModelHandler*);
-#endif
    void GetCfdStateVariables( void );
    cfdCommandArray* _cfdArray;
    double cfdShort_data_array[ 9 ];
@@ -189,9 +179,6 @@ public:
 protected:
    void CreateCommandQueue( void );
 
-   cfdSteadyStateVizHandler* _ssHandler;
-   cfdEnvironmentHandler*   _envHandler;
-   cfdModelHandler*       _modelHandler;
 #ifdef _OSG
    //cfdTextureBasedVizHandler* _tbvHandler;
 #endif

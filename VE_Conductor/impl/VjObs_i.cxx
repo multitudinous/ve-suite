@@ -71,27 +71,6 @@ void VjObs_i::InitCluster( void )
    //hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
 #endif // _CLUSTER
 }
-#ifdef _OSG
-void VjObs_i::SetHandlers( cfdSteadyStateVizHandler* ssHandler, 
-                     cfdEnvironmentHandler* envHandler, 
-                     cfdModelHandler* modelHandler)//,
-//                     cfdTextureBasedVizHandler* tbvHandler)
-{
-   _ssHandler = ssHandler;
-   _envHandler = envHandler;
-   _modelHandler = modelHandler;
-//   _tbvHandler = tbvHandler;
-}
-#else
-void VjObs_i::SetHandlers( cfdSteadyStateVizHandler* ssHandler, 
-                     cfdEnvironmentHandler* envHandler, 
-                     cfdModelHandler* modelHandler)
-{
-   _ssHandler = ssHandler;
-   _envHandler = envHandler;
-   _modelHandler = modelHandler;
-}
-#endif
 
 #ifdef _TAO
 VjObs::Models* VjObs_i::GetModels()
@@ -110,7 +89,7 @@ VjObs::Models* VjObs_i::GetModels()
 /////////////////////////////////////////////////////////////
 void VjObs_i::CreateDatasetInfo( void )
 {   
-   CORBA::ULong numberOfModels = this->_modelHandler->GetNumberOfModels();
+   CORBA::ULong numberOfModels = cfdModelHandler::instance()->GetNumberOfModels();
    if ( numberOfModels > 0 )
    {
       if ( _models != NULL )
@@ -124,7 +103,7 @@ void VjObs_i::CreateDatasetInfo( void )
                           << std::endl << vprDEBUG_FLUSH;
       for ( CORBA::ULong i = 0; i < numberOfModels; i++ )
       {
-         cfdModel* temp = this->_modelHandler->GetModel( i );
+         cfdModel* temp = cfdModelHandler::instance()->GetModel( i );
          CORBA::ULong numDatasets = temp->GetNumberOfCfdDataSets();
          vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
                           << std::endl << vprDEBUG_FLUSH;
@@ -233,7 +212,7 @@ void VjObs_i::CreateDatasetInfo( void )
 /////////////////////////////////////////////////////////////
 void VjObs_i::CreateTeacherInfo( void )
 {   
-   CORBA::Short numTeacherArrays = this->_envHandler->GetTeacher()->getNumberOfFiles();
+   CORBA::Short numTeacherArrays = cfdEnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
    vprDEBUG(vprDBG_ALL,0)
       << " Number of performer binary files to be transfered to the client: "
       << numTeacherArrays
@@ -246,7 +225,7 @@ void VjObs_i::CreateTeacherInfo( void )
       for(CORBA::ULong i = 0; i < (unsigned int)numTeacherArrays; i++)
       {
          this->teacher_name[ i ] = CORBA::string_dup(
-                                        this->_envHandler->GetTeacher()->getFileName( i ) );
+                                        cfdEnvironmentHandler::instance()->GetTeacher()->getFileName( i ) );
       }
    }
 }
@@ -585,7 +564,7 @@ CORBA::Short VjObs_i::getNumTeacherArrays()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return this->_envHandler->GetTeacher()->getNumberOfFiles();
+   return cfdEnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
 }
 
 #ifdef _TAO
@@ -633,7 +612,7 @@ CORBA::Short VjObs_i::get_teacher_num()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL,0) << "Returning num teacher'" << this->mTeacher->getNumberOfFiles()<< "' to caller\n"
    //     << vprDEBUG_FLUSH;
-   return this->_envHandler->GetTeacher()->getNumberOfFiles();
+   return cfdEnvironmentHandler::instance()->GetTeacher()->getNumberOfFiles();
 }
 
 void VjObs_i::GetCfdStateVariables( void )
@@ -688,9 +667,9 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    //cluster
    if ( !mStates.isLocal() )
    {
-      if ( this->_ssHandler->GetActiveAnimation() != NULL )
+      if ( cfdSteadyStateVizHandler::instance()->GetActiveAnimation() != NULL )
       {
-         cfdTempAnimation* the_sequence = this->_ssHandler->GetActiveAnimation();
+         cfdTempAnimation* the_sequence = cfdSteadyStateVizHandler::instance()->GetActiveAnimation();
          if ( the_sequence != NULL )
          {
             the_sequence->SetCurrentFrame( (int)this->getTimesteps() );
@@ -711,7 +690,7 @@ short VjObs_i::GetNumberOfSounds()
 CORBA::Short VjObs_i::GetNumberOfSounds()
 #endif
 {
-   return this->_envHandler->GetSoundHandler()->GetNumberOfSounds();
+   return cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
 }
 
 #ifdef _TAO
@@ -723,7 +702,7 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
 VjObs::scalar_p* VjObs_i::GetSoundNameArray()
 #endif
 {
-   int numberOfSounds = this->_envHandler->GetSoundHandler()->GetNumberOfSounds();
+   int numberOfSounds = cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
 
    vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
                           << numberOfSounds << std::endl << vprDEBUG_FLUSH;
@@ -740,7 +719,7 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
       for(CORBA::ULong i = 0; i < (unsigned int)numberOfSounds; i++)
       {
          this->sound_names[ i ] = CORBA::string_dup( 
-                     this->_envHandler->GetSoundHandler()->GetSoundFilename( i ) );
+                     cfdEnvironmentHandler::instance()->GetSoundHandler()->GetSoundFilename( i ) );
       }
    }
    else
@@ -852,7 +831,7 @@ void VjObs_i::PreFrameUpdate( void )
    if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) != GUI_NAV )
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
 
-   if ( !commandQueue.empty() && !_ssHandler->TransientGeodesIsBusy() )
+   if ( !commandQueue.empty() && !cfdSteadyStateVizHandler::instance()->TransientGeodesIsBusy() )
    {
       std::vector< cfdCommandArray* >::iterator iter;
       iter = commandQueue.begin();
@@ -868,11 +847,11 @@ void VjObs_i::CreateCommandQueue( void )
    int newPreState = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
    int newIsoValue = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
    
-   int activeVector = _modelHandler->GetActiveDataSet()->GetActiveVector();
-   int activeScalar = _modelHandler->GetActiveDataSet()->GetActiveScalar();
+   int activeVector = cfdModelHandler::instance()->GetActiveDataSet()->GetActiveVector();
+   int activeScalar = cfdModelHandler::instance()->GetActiveDataSet()->GetActiveScalar();
 
    int activeMinMax[ 2 ];
-   _modelHandler->GetActiveDataSet()->GetRange( activeMinMax );
+   cfdModelHandler::instance()->GetActiveDataSet()->GetRange( activeMinMax );
 
    std::map< int, cfdDataSet* >::iterator iter;
    
@@ -880,8 +859,8 @@ void VjObs_i::CreateCommandQueue( void )
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 0 );
 
-   for ( iter = _modelHandler->GetActiveModel()->transientDataSets.begin(); 
-         iter != _modelHandler->GetActiveModel()->transientDataSets.end(); ++iter)
+   for ( iter = cfdModelHandler::instance()->GetActiveModel()->transientDataSets.begin(); 
+         iter != cfdModelHandler::instance()->GetActiveModel()->transientDataSets.end(); ++iter)
    { 
       // Set the active datasets
       commandQueue.push_back( new cfdCommandArray() );
