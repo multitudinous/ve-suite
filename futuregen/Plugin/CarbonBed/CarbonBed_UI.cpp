@@ -84,12 +84,12 @@ CarbonBed_UI_Dialog
   ok_row->Add(new wxButton(this, wxID_OK, "OK"), 0, wxALIGN_CENTER_HORIZONTAL);
   ok_row->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALIGN_CENTER_HORIZONTAL);
   
-  wxStaticText * label0 = new wxStaticText(this, -1, " Carbon Type ", wxDefaultPosition, wxSize(100, 17));
-  wxString carbon_val[] = {wxT("Bituminous Derived Carbon"), wxT("Lignite Derived Carbon")};
+  //wxStaticText * label0 = new wxStaticText(this, -1, " Carbon Type ", wxDefaultPosition, wxSize(100, 17));
+  //wxString carbon_val[] = {wxT("Bituminous Derived Carbon"), wxT("Lignite Derived Carbon")};
 
-  cb_carbon_type = new wxComboBox(this, -1, wxT("Bituminous Derived Carbon"), wxDefaultPosition, wxSize(180, 20), 2, carbon_val, wxCB_DROPDOWN|wxCB_READONLY|wxCB_SORT);
-  data_first_row->Add(label0);
-  data_first_row->Add(cb_carbon_type);
+  //cb_carbon_type = new wxComboBox(this, -1, wxT("Bituminous Derived Carbon"), wxDefaultPosition, wxSize(180, 20), 2, carbon_val, wxCB_DROPDOWN|wxCB_READONLY|wxCB_SORT);
+  //data_first_row->Add(label0);
+  //data_first_row->Add(cb_carbon_type);
 
   wxStaticText * label1 = new wxStaticText(this, -1, "Allowable Pressure Drop (psi/ft)", wxDefaultPosition, wxSize(200, 17));
   t_press_drop = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80, 20));
@@ -174,7 +174,7 @@ bool CarbonBed_UI_Dialog::TransferDataFromWindow()
   (*p_res_time) = atof(txt.c_str());
 
 
-  (*p_carbon_type) = cb_carbon_type->GetSelection();
+  //(*p_carbon_type) = cb_carbon_type->GetSelection();
   return true;
 }
 
@@ -207,7 +207,7 @@ bool CarbonBed_UI_Dialog::TransferDataToWindow()
   txt8<<(*p_res_time);
   t_res_time->SetValue(txt8);
     
-  cb_carbon_type->SetSelection(*p_carbon_type);
+  //cb_carbon_type->SetSelection(*p_carbon_type);
   
   return true;
 }

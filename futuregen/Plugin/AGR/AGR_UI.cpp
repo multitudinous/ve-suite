@@ -66,11 +66,11 @@ AGR_UI_Dialog
   data_first_row->Add(label0);
   data_first_row->Add(cb_tray_type);
 
-  wxStaticText * label1 = new wxStaticText(this, -1, " Solvent Type", wxDefaultPosition, wxSize(140, 17));
-  wxString solv_val[] = {wxT("MDEA"), wxT("Selexol"), wxT("Rectisol")};
-  cb_solv_type = new wxComboBox(this, -1, wxT("MDEA"), wxDefaultPosition, wxSize(140, 20), 3, solv_val, wxCB_DROPDOWN|wxCB_READONLY|wxCB_SORT);
-  data_second_row->Add(label1);
-  data_second_row->Add(cb_solv_type);
+  //wxStaticText * label1 = new wxStaticText(this, -1, " Solvent Type", wxDefaultPosition, wxSize(140, 17));
+  //wxString solv_val[] = {wxT("MDEA"), wxT("Selexol"), wxT("Rectisol")};
+  //cb_solv_type = new wxComboBox(this, -1, wxT("MDEA"), wxDefaultPosition, wxSize(140, 20), 3, solv_val, wxCB_DROPDOWN|wxCB_READONLY|wxCB_SORT);
+  //data_second_row->Add(label1);
+  //data_second_row->Add(cb_solv_type);
 
   wxStaticText * label2 = new wxStaticText(this, -1, " Molecular Weight (kg/kmol) ", wxDefaultPosition, wxSize(200, 17));
   t_solv_mw = new wxTextCtrl(this, -1, wxT("15.70"), wxDefaultPosition, wxSize(80, 20));
@@ -105,7 +105,7 @@ bool AGR_UI_Dialog::TransferDataFromWindow()
   txt = t_solv_den->GetValue();
   (*p_solv_den) = atof(txt.c_str());
 
-  (*p_solv_type) = cb_solv_type->GetSelection();
+  //(*p_solv_type) = cb_solv_type->GetSelection();
   (*p_tray_type) = cb_tray_type->GetSelection();
 
   return true;
@@ -123,7 +123,7 @@ bool AGR_UI_Dialog::TransferDataToWindow()
   txt2<<(*p_solv_den);
   t_solv_den->SetValue(txt2);
   
-  cb_solv_type->SetSelection(*p_solv_type);
+  //cb_solv_type->SetSelection(*p_solv_type);
 
   cb_tray_type->SetSelection(*p_tray_type);
   
