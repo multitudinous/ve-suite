@@ -34,7 +34,8 @@ EXTRA_DEFS+=
 #SJK_TEST produces ascii output
 
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer \
-                 -I$(VE_SUITE_HOME)/VE_Builder/Utilities
+                 -I$(VE_SUITE_HOME)/VE_Builder/Utilities 
+                 
 
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG
 #EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
@@ -45,7 +46,7 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-EXTRA_LIBS+= -lm
+EXTRA_LIBS+= -lm -L$(VJ_DEPS_DIR)/lib
 
 #include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
