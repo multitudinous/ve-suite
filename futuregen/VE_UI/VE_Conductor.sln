@@ -1,5 +1,5 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinClient", "WinClient.vcproj", "{E18B55CA-745E-4EBC-9056-85CA897EE690}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Conductor", "VE_Conductor.vcproj", "{E18B55CA-745E-4EBC-9056-85CA897EE690}"
 	ProjectSection(ProjectDependencies) = postProject
 	EndProjectSection
 EndProject

@@ -1,5 +1,8 @@
 #ifndef _VE_UI_FRAME_H_
 #define _VE_UI_FRAME_H_
+#ifdef WIN32
+#include <winsock2.h>
+#endif
 
 #include "wx/wx.h"
 #include "controlIds.h"

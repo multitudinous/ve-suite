@@ -68,10 +68,22 @@ UI_Frame::UI_Frame(const wxString& title,
        //Now get the reference of the VE server
        name[0].id   = (const char*) "Master";
        name[0].kind = (const char*) "VE_Xplorer";
-       CORBA::Object_var ve_object = naming_context->resolve(name);
-       vjobs = VjObs::_narrow(ve_object.in());
-       if (CORBA::is_nil(vjobs))
-	 std::cerr<<"VjObs is Nill"<<std::endl;
+	   CORBA::Object_var ve_object;
+	   try
+	   { 
+		   if ( !CORBA::is_nil( naming_context ) )
+		      ve_object = naming_context->resolve(name);
+	   }
+	   catch ( CORBA::Exception & )
+	   {
+	      cout << " Can't resolve name " <<endl;
+	   }
+
+	   if ( !CORBA::is_nil( ve_object ) )
+          vjobs = VjObs::_narrow(ve_object.in());
+       
+	   if (CORBA::is_nil(vjobs))
+	      std::cerr<<"VjObs is Nill"<<std::endl;
        
      } 
    catch (CORBA::Exception &) 
