@@ -4,9 +4,8 @@ VE_SUITE_HOME?= ../../
 
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WinClient
 
-VE_UI_HOME = ${VE_SUITE_HOME}/futuregen/VE_UI
-IDL_HOME = ${VE_SUITE_HOME}/futuregen/IDL
-SKEL_HOME = ${VE_SUITE_HOME}/VE_Conductor/skel
+VE_UI_HOME = ${VE_SUITE_HOME}/VE_Conductor/VE_UI
+IDL_HOME = ${VE_SUITE_HOME}/VESOpen
 
 all:
 	$(MAKE) NO_DEPEND=0 cxx
@@ -92,11 +91,11 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 
-vpath %.cpp ${VE_UI_HOME} ${IDL_HOME} 
-vpath %.cpp ${SKEL_HOME} ${VE_SUITE_HOME}/futuregen/Plugin
+vpath %.cpp $(VE_UI_HOME) $(IDL_HOME)/skel ./Framework
+vpath %.cpp $(VE_SUITE_HOME)/futuregen/Plugin
 
-EXTRA_CXXFLAGS += -I${VE_SUITE_HOME}/futuregen/Plugin -I${VE_UI_HOME} \
-                  -I${IDL_HOME} -I${VE_SUITE_HOME}/VE_Xplorer -I${SKEL_HOME}
+EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/futuregen/Plugin -I$(VE_UI_HOME) \
+                  -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
