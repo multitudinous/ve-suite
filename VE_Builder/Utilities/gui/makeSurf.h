@@ -1,6 +1,6 @@
 //#include "readWriteVtkThings.h"
 //#include "viewCells.h"
-#include "cfdGrid2Surface.h"
+//#include "cfdGrid2Surface.h"
 //#include "setScalarAndVector.h"
 
 #include <vtkDataSet.h>
@@ -21,8 +21,8 @@ class makeSurf
 	
 			
 	public:
-		void writeSurface(  );
-		void writePolyDataSurface(  );
+		void writeIsoSurface(  );
+		void writeExtValuSurface(  );
 			
 			
 };
@@ -60,12 +60,12 @@ void makeSurf::writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
 }
 
 
-void makeSurf::writeSurface(  )
+void makeSurf::writeIsoSurface(  )
 {
 	
 }
 
-void makeSurf::writePolyDataSurface(  )
+void makeSurf::writeExtValuSurface(  )
 {
 	
 }

@@ -1,6 +1,13 @@
 #include "vtkDataSet.h"
 #include "readWriteVtkThings.h"
-//#include "makeSurf.h"
+#include "makePopupDialog.h"
+#include "cfdGrid2Surface.h"
+#include <vtkPolyData.h>
+#include <vtkTriangleFilter.h>
+#include <vtkSTLWriter.h>
+#include <vtkGeometryFilter.h>
+#include <vtkFloatArray.h>
+
 #ifndef _MAKEFRAME_H
 #define _MAKEFRAME_H
 
@@ -9,55 +16,45 @@ class makeFrame : public wxFrame
 {
 	private:
 		wxMenuBar *mBar;
+   
 		wxMenu *fileMenu;
 		wxMenu *aboutMenu;
-		wxPanel *panel;
-		
-		wxStaticBox* stBox;
-		
-		wxArrayString* filNamesList;
-		
+		wxPanel *panel;		
+		wxStaticBox* stBox;		
+		wxArrayString* filNamesList;		
 		wxTextCtrl* txt;
-		wxButton* okButton;
-		wxButton* cancelButton;
-		wxRadioButton* extValRadioButton;
-		wxRadioButton* isoValRadioButton;
-		wxStaticBox* stBox_Selection;
-		wxSlider* sliderSelection;
-      wxSlider* sliderISO;
-		wxStaticBox* stTxtBox;
-      wxStaticBox* stISOBox;
-		wxDialog* dlg;
 		float valu;	//value from the slider
+      
 		enum{ MENU_OPEN, MENU_CONV_ASCII, MENU_CONV_BINARY, MENU_MAK_VTK_SURF,
 				MENU_DEL, MENU_QT, MENU_ABOUT };
 		enum{ ID_PANEL, ID_TXT_CTRL, ID_STATIC_BOX,ID_STATIC_BOX_SELECTION  };
 		enum{ BTN_OPEN_ID, BTN_ID_ASCII, BTN_ID_BINARY, BTN_ID_SURF, DEL_ICON };
-		enum{ EXT_VAL_RADIO_BTN, ISO_VAL_RADIO_BTN, SLIDER_SELECTION, SLIDER_ISO };
 		
 		//----------VTK stuff
 		vtkDataSet* dataset;
-
+      vtkPolyData* surface;
+      void writeVtkGeomToStl( vtkDataSet * vtkdataset, char filename [] );
+      
 	protected:
 		DECLARE_EVENT_TABLE()
-	public:
-		makeFrame( const wxString title, int x, int y, int w, int h );
-		~makeFrame( );
-		bool InitToolbar(wxToolBar* toolBar);
-		void onFileOpen( wxCommandEvent &event );
+      void onFileOpen( wxCommandEvent &event );
 		void onFileConvAscii( wxCommandEvent &event );
 		void onFileConvBinary( wxCommandEvent &event );
 		void onFileMakVtkSurf( wxCommandEvent &event );
 		void onDel( wxCommandEvent &event );
-		void onFileQuit( wxCommandEvent &event );
+		void onFileQuit( wxCommandEvent &event );      
 		void onAbout( wxCommandEvent &event );
-      void onExtValRadioButton( wxCommandEvent &event );
+      
+	public:
+		makeFrame( const wxString title, int x, int y, int w, int h );
+		~makeFrame( );
+		bool InitToolbar(wxToolBar* toolBar);
 };
 
 makeFrame::makeFrame(const wxString title, int x, int y, int w, int h)
        : wxFrame((wxFrame *) NULL, -1, title, wxPoint(x, y), wxSize(w, h))
-		
 {
+   
 	panel = new wxPanel( this, ID_PANEL, wxDefaultPosition,
 			wxDefaultSize,wxTAB_TRAVERSAL, wxString( " panel " ) );
 	
@@ -94,6 +91,7 @@ makeFrame::makeFrame(const wxString title, int x, int y, int w, int h)
 	SetMenuBar( mBar );			               //add menu bar to frame
 	filNamesList = new wxArrayString();	      //creat array list to store filenames
 	dataset = NULL;
+   surface = NULL;
 }
 
 makeFrame::~makeFrame()
@@ -216,76 +214,50 @@ void makeFrame::onFileConvBinary( wxCommandEvent &event )
 
 
 void makeFrame::onFileMakVtkSurf( wxCommandEvent &event )
-{
+{		
 	if ( filNamesList->GetCount() !=0 )
 	{
 		txt->WriteText( wxString("Make VTK Surfaces \n") );
-		dlg = new wxDialog( this, -1, wxString("Make VTK Surface"), 
-			wxDefaultPosition,wxSize(400,220), wxDEFAULT_DIALOG_STYLE, wxString("dlg box") );
+      makePopupDialog* popup = new makePopupDialog( this, 400, 200 );
+      
+      popup->Center( wxBOTH );
 
-		stBox_Selection = new wxStaticBox( dlg, ID_STATIC_BOX_SELECTION, 
-			wxString("Select Exterior/ISO Value"), wxPoint(2,2), wxSize(395,215), 0, 
-			wxString("Static Box Selection") );
-	
-		okButton = new wxButton( dlg, wxID_OK, wxString("Ok"), wxPoint(110,170),
-			wxSize(50,27), wxBU_EXACTFIT, wxDefaultValidator, wxString("ok Button") );
-		cancelButton = new wxButton( dlg, wxID_CANCEL, wxString("Cancel"), wxPoint(220,170),
-			wxSize(50,27), wxBU_EXACTFIT, wxDefaultValidator, wxString("ok Button") );
-	
-		extValRadioButton = new wxRadioButton( dlg, EXT_VAL_RADIO_BTN, wxString("Exterior Value"), 
-		wxPoint(10,20),	wxDefaultSize, wxRB_SINGLE, wxDefaultValidator, wxString("ext val") );
-		isoValRadioButton = new wxRadioButton( dlg, ISO_VAL_RADIO_BTN, wxString("ISO Value"), 
-			wxPoint(10,80),	wxDefaultSize, wxRB_SINGLE, wxDefaultValidator, wxString("iso val") );
       
-      stTxtBox = new wxStaticBox( dlg, -1, wxString("Decimation Value"), wxPoint(225,20), wxSize(165,60), 0, wxString("") );
-            
-		sliderSelection = new wxSlider( dlg, SLIDER_SELECTION, 5, 0, 10, wxPoint(240,35), 
-			wxSize(140, 15), wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP,             
-			wxDefaultValidator, wxString("Slider") );
-      
-      sliderISO = new wxSlider( dlg, SLIDER_ISO, 5, 0, 10, wxPoint(80,115), 
-			wxSize(140, 10), wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_TOP, wxDefaultValidator, wxString("Slider 2") );
-      
-      stISOBox = new wxStaticBox( dlg, -1, wxString("Scalar Range"), wxPoint(74,100), wxSize(155,60), 0, wxString("") );
-      /*if ( extValRadioButton->GetValue() )
-      {
-         sliderISO->Disable();
-         stISOBox->Disable();
-      }
-      else if ( isoValRadioButton->GetValue() )
-      {
-         
-         sliderISO->Disable();
-         stISOBox->Disable();
-      }*/
-		dlg->Center( wxBOTH );
-      
-		if ( dlg->ShowModal(  ) == wxID_OK )
+		if ( popup->ShowModal(  ) == wxID_OK ) 
 		{
-			if ( extValRadioButton->GetValue() )
+			if ( popup->getRadioVal() )   //if Exterior valu radio button is selected
 			{
-            wxFileDialog* saveDialog = new wxFileDialog( dlg, wxString("Save As"),
+            wxFileDialog* saveDialog = new wxFileDialog( popup, wxString("Save As"),
 		         wxString(""), wxString(""), wxString("VTK file (*.vtk)|*.vtk|STL file (*.stl)|*.stl"),                   
                   wxSAVE|wxOVERWRITE_PROMPT, wxDefaultPosition );
             
-            saveDialog->ShowModal();
-				txt->WriteText( wxString( "EXT_VAL_RADIO_BTN " ) );
+            if ( saveDialog->ShowModal() == wxID_OK )
+            {
+               surface = cfdGrid2Surface( dataset, popup->getDecimationValu() );
+               if ( saveDialog->GetFilterIndex() == 0 ) //filetype VTK
+               {
+                  writeVtkThing( surface, (char*)(saveDialog->GetFilename()).c_str(), 1 );
+               }
+               else if ( saveDialog->GetFilterIndex() == 1 )    //filetype STL
+               {                  
+                  writeVtkGeomToStl( surface, (char*)(saveDialog->GetFilename()).c_str() );
+               }
+               txt->WriteText( "Saved as " + saveDialog->GetFilename() + "\n" );
+               surface->Delete();
+            }
+
 			}
          
-			else if ( isoValRadioButton->GetValue() )
+			else           //if Iso valu radio button is selected
 			{      
-				txt->WriteText( wxString( "ISO_VAL_RADIO_BTN " ) );			
+				txt->WriteText( wxString( "ISO_VAL_RADIO_BTN " ) );
 			}
-			//txt->WriteText( wxString( "OK pressed... \n" ) );
-			valu = sliderSelection->GetValue();
-			valu = (float)(valu)/(float)(10);         
-			*txt<<valu<<"\n";
-         
+			txt->WriteText( wxString( "OK pressed... \n" ) );
 		}
       
 		else txt->WriteText( wxString( "Cancel pressed... \n" ) );
       
-	}	
+	}
 	else	txt->WriteText( wxString( "Select files to make surface \n" ) );
 }
 
@@ -315,11 +287,37 @@ void makeFrame::onAbout( wxCommandEvent &event )
 			_T("About Convert"));	
 }
 
-
-
-void makeFrame::onExtValRadioButton( wxCommandEvent &event )
+//-------------------------VTK geometry to STL
+void makeFrame::writeVtkGeomToStl( vtkDataSet * vtkdataset, char filename [] )
 {
-   sliderISO->Disable();
+   vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
+   vtkGeometryFilter *gFilter = NULL;
+
+   // convert dataset to vtkPolyData 
+   if ( vtkdataset->IsA("vtkPolyData") )
+      tFilter->SetInput( (vtkPolyData*)vtkdataset );
+   else 
+   {
+      //cout << "Using vtkGeometryFilter to convert to polydata" << endl;
+      gFilter = vtkGeometryFilter::New();
+      gFilter->SetInput( vtkdataset );
+      tFilter->SetInput( gFilter->GetOutput() );
+   }
+
+   //cout << "Writing \"" << filename << "\"... ";
+   //cout.flush();
+   vtkSTLWriter *writer = vtkSTLWriter::New();
+      writer->SetInput( tFilter->GetOutput() );
+      writer->SetFileName( filename );
+      writer->SetFileTypeToBinary();
+      writer->Write();
+      writer->Delete();
+   //cout << "... done\n" << endl;
+
+   tFilter->Delete();
+
+   if ( gFilter ) 
+      gFilter->Delete();
 }
 
 

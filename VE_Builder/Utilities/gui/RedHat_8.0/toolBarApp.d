@@ -259,4 +259,28 @@ $(OBJDIR)/toolBarApp.o RedHat_8.0/toolBarApp.d: toolBarApp.cpp \
   /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkOStrStreamWrapper.h \
   /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkSetGet.h \
   /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkTimeStamp.h \
-  /home/vr/Applications/TSVEG/VE_Suite/VE_Xplorer/readWriteVtkThings.h
+  /home/vr/Applications/TSVEG/VE_Suite/VE_Xplorer/readWriteVtkThings.h \
+  makePopupDialog.h \
+  /home/vr/Applications/TSVEG/VE_Suite/VE_Builder/Translator/cfdGrid2Surface.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkPolyData.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkPointSet.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkPoints.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkDataArray.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkCellTypes.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkIntArray.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkDataArrayTemplate.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkUnsignedCharArray.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkCellType.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkCellLinks.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkTriangleFilter.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkPolyDataToPolyDataFilter.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkPolyDataSource.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkSource.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkProcessObject.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkSTLWriter.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkPolyDataWriter.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkDataWriter.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkWriter.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkGeometryFilter.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkDataSetToPolyDataFilter.h \
+  /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0/include/vtk/vtkFloatArray.h
