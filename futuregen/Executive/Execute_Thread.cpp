@@ -35,14 +35,22 @@ int Execute_Thread::svc (void)
     }
     
     _mutex.release();
-    _mod->StartCalc();
-
+	try {
+		_mod->StartCalc();
+	} catch (CORBA::Exception &) {
+		
+		cout <<"Module Execution Messed up.\n";
+	}
     _mutex.acquire();
     _is_exec = false;
     _mutex.release();
     
-    _executive->execute_next_mod ((long)_mod->GetID());
-
+	try {
+		_executive->execute_next_mod ((long)_mod->GetID());
+	}catch (CORBA::Exception &) {
+		
+		cout <<"Module GetID Messed up.\n";
+	}
   }
 
 }

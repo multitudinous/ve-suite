@@ -1,3 +1,4 @@
+#include "string_ops.h"
 #include "Executive_i.h"
 
 #include <iostream>
@@ -47,7 +48,10 @@ char * Body_Executive_i::GetImportData (
     
     str = p.Save(rv);
   } else {
-    cerr << "Unable to get mod #" << module_id << " IPort, id #" << port_id << endl;
+	string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
+    cerr << msg;
+	ClientMessage(msg.c_str());
+	
   }
   
   _mutex.release();
@@ -59,11 +63,24 @@ char * Body_Executive_i::GetImportData (
 
 void Body_Executive_i::execute (std::string mn)
 {
-  if(_exec_thread.find(mn)==_exec_thread.end()) {
+  string msg;
+  if(_exec_thread.find(mn)==_exec_thread.end()) 
+  {
     cerr << "Cannot find execution thread for " << mn << endl;
-  } else {
-    if(!_exec_thread[mn]->needexecute()) cerr << "Failed to execute " << mn << endl;
-    else cout << "Executing " << mn << endl;
+  } 
+  else {
+    if(!_exec_thread[mn]->needexecute()) 
+	{
+		msg = "Failed to execute " + mn +"\n";
+		cerr << msg;
+		ClientMessage(msg.c_str());
+	}
+    else 
+	{
+		msg = "Executing " + mn +"\n";
+		cout<<msg;
+		ClientMessage(msg.c_str());
+	}
   }
 }
 
@@ -78,6 +95,7 @@ void Body_Executive_i::SetExportData (
     , Error::EUnknown
   ))
 {
+	string msg;
   _mutex.acquire();
   
   cout << "SetExportData\n";
@@ -90,9 +108,11 @@ void Body_Executive_i::SetExportData (
   std::vector<Interface>::iterator iter;
   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
     if(!_network->setPortData(module_id, port_id, &(*iter)))
-      cerr << "Unable to set mod id# " << module_id 
-	   << ", port id# " << port_id << "'s port data\n";
-  
+	{
+		msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
+		cerr<<msg;
+		ClientMessage(msg.c_str());
+	}
   _mutex.release();
 }
   
@@ -107,15 +127,18 @@ char * Body_Executive_i::GetExportData (
   ))
 {
   _mutex.acquire();
-
+  string msg;
   cout << "GetExportData\n";
   
   Interface intf;
-  if(!_network->getPortData(module_id, port_id, intf)) {
-    cerr << "Unable to get mod id# " << module_id 
-	 << ", port id# " << port_id << "'s port data\n";
-  }
-  
+  if(!_network->getPortData(module_id, port_id, intf)) 
+	{
+		msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
+		cerr<<msg;
+		ClientMessage(msg.c_str());
+	}
+    
+    
   bool        rv;
   std::string str;
   
@@ -169,15 +192,15 @@ void Body_Executive_i::GetProfileData (
 void Body_Executive_i::execute_next_mod (long module_id)
 {
   char *msg;
-  
+
   try {
     std::string mod_type = _network->module(_network->moduleIdx(module_id))->_name;
     if(_mod_units.find(mod_type)!=_mod_units.end()) {
       try {
-	msg = _mod_units[mod_type]->GetStatusMessage();
+		msg = _mod_units[mod_type]->GetStatusMessage();
       }
       catch(CORBA::Exception &) {
-	cerr << "Cannot contact Module " << module_id << endl;
+		cerr << "Cannot contact Module " << module_id << endl;
       }
     }
     else {
@@ -255,7 +278,13 @@ void Body_Executive_i::SetModuleMessage (
   std::map<std::string, Body::UI_var>::iterator iter;
   for(iter=uis_.begin(); iter!=uis_.end(); iter++) {
     cout << msg << " :TO: " << iter->first << endl;
-    iter->second->Raise(msg);
+	try {
+		iter->second->Raise(msg);
+	}catch (CORBA::Exception &) {
+		
+		cout <<iter->first<<" is obselete.\n";
+		uis_.erase(iter);
+	}
   }
 
   // THIS EXPECTS AN INTERFACE - NOT A STRING
@@ -285,6 +314,7 @@ void Body_Executive_i::SetModuleResult (
 {
   _mutex.acquire();
 
+  string msg;
   Package p;
   p.SetSysId("temp.xml");
   p.Load(result, strlen(result));
@@ -295,8 +325,13 @@ void Body_Executive_i::SetModuleResult (
     if(_network->setOutput(module_id, &(*iter))) {
       ; // setOutput O.K.
     } else {
-      cerr << "Unable to set mod id# " << module_id << "'s Output data\n";
+		msg = "Unable to set mod id# " + to_string(module_id) + "'s Output data\n";
+		cerr<<msg;
+		ClientMessage(msg.c_str());
     }
+
+	msg = "Mod id# "+ to_string(module_id) + "'s Excution is done\n";
+	ClientMessage(msg.c_str());
 
   _mutex.release();
 }
@@ -313,6 +348,7 @@ char * Body_Executive_i::GetModuleResult (
   
   Interface intf;
   if(!_network->getOutput(module_id, intf)) {
+	  
     cerr << "Unable to get mod id# " << module_id 
 	 << "'s ouput data\n";
   }
@@ -613,6 +649,7 @@ void Body_Executive_i::RegisterUI (
   catch (CORBA::Exception &ex) {
     //std::cerr << "CORBA exception raised! : " <<ex._name<< std::endl;
     //std::cerr << ex._info<<std::endl;
+	  std::cerr<<"Can't call be UI "<<UIName<<"\n";
   }
   
   _mutex.release();
@@ -663,10 +700,17 @@ void Body_Executive_i::UnRegisterUI (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
+	std::map<std::string, Body::UI_var>::iterator iter;
+	_mutex.acquire();
 
-  // Add your implementation here
-
+  
+	// Add your implementation here
+	iter = uis_.find(std::string(UIName));
+	if (iter!= uis_.end())
+	{
+		uis_.erase(iter);
+		cout<<UIName<<" Unregisted!\n";
+	}
   _mutex.release();
 }
 
@@ -700,4 +744,20 @@ CORBA::Long Body_Executive_i::GetGlobalMod (
   _mutex.release();
   
   return CORBA::Long(0);
+}
+
+void Body_Executive_i::ClientMessage(const char *msg)
+{
+	std::map<std::string, Body::UI_var>::iterator iter;
+	for(iter=uis_.begin(); iter!=uis_.end(); iter++) 
+	{
+		cout << msg << " :TO: " << iter->first << endl;
+	try {
+		iter->second->Raise(msg);
+	}catch (CORBA::Exception &) {
+		
+		cout <<iter->first<<" is obselete.\n";
+		uis_.erase(iter);
+	}
+ }
 }

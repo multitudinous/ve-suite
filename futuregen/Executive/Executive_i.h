@@ -268,6 +268,8 @@ virtual CORBA::Long GetGlobalMod (
     , Error::EUnknown
   ));
 
+void Body_Executive_i::ClientMessage(const char *msg);
+
 };
 
 #endif
