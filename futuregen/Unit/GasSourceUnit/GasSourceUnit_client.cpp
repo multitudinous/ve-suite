@@ -1,7 +1,7 @@
 #include "moduleC.h"
 #include "orbsvcs/CosNamingC.h"
 #include "GasSourceUnit_i.h"
- 
+#include "tao/BiDir_GIOP/BiDirGIOP.h" 
 //This Unit_client act as the executive's client 
 //This Unit is also the Unit servant for the executive' Unit client
 
@@ -28,9 +28,9 @@ int main (int argc, char* argv[])
 
     //Here is the part to contact the naming service and get the reference for the executive
     CORBA::Object_var naming_context_object =
-      orb->resolve_initial_references ("NameService");
+    orb->resolve_initial_references ("NameService");
     CosNaming::NamingContext_var naming_context =
-      CosNaming::NamingContext::_narrow (naming_context_object.in ());
+     CosNaming::NamingContext::_narrow (naming_context_object.in ());
     
     CosNaming::Name name(1);
     name.length(1);
@@ -50,27 +50,69 @@ int main (int argc, char* argv[])
     CORBA::Object_var poa_object = orb->resolve_initial_references ("RootPOA"); // get the root poa
     PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_object.in());
     PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
-    poa_manager->activate ();
-    
+	CORBA::PolicyList policies (1);
+    policies.length (1);
+
+    CORBA::Any pol;
+    pol <<= BiDirPolicy::BOTH;
+    policies[0] =
+        orb->create_policy (BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE,
+                            pol
+                            ACE_ENV_ARG_PARAMETER);
+    ACE_TRY_CHECK;
+
+    // Create POA as child of RootPOA with the above policies.  This POA
+    // will receive request in the same connection in which it sent
+    // the request
+    PortableServer::POA_var child_poa =
+             poa->create_POA ("childPOA",
+                              poa_manager.in (),
+                              policies
+                              ACE_ENV_ARG_PARAMETER);
+    ACE_TRY_CHECK;
+
+    // Creation of childPOA is over. Destroy the Policy objects.
+    for (CORBA::ULong i = 0; i < policies.length (); ++i)
+	{
+       policies[i]->destroy (ACE_ENV_SINGLE_ARG_PARAMETER);
+       ACE_TRY_CHECK;
+    }
+
+    poa_manager->activate (ACE_ENV_SINGLE_ARG_PARAMETER);
+    ACE_TRY_CHECK;
+	  
     //Create the Servant
     Body_Unit_i unit_i(exec.in(), UNITNAME);
+    
+	PortableServer::ObjectId_var id =
+        PortableServer::string_to_ObjectId (CORBA::string_dup(UNITNAME.c_str()));
+
+    child_poa->activate_object_with_id (id.in (),
+                                          &unit_i
+                                          ACE_ENV_ARG_PARAMETER);
+
     //Activate it to obtain the object reference
-    Body::Unit_var unit = unit_i._this();
+    Body::Unit_var unit =  Body::Unit::_narrow(child_poa->id_to_reference (id.in ()
+                                    ACE_ENV_ARG_PARAMETER));
+    ACE_TRY_CHECK;
+            
      
-    CosNaming::Name Unitname(1);
-    Unitname.length(1);
-    Unitname[0].id = CORBA::string_dup (UNITNAME.c_str());
+//    CosNaming::Name Unitname(1);
+//    Unitname.length(1);
+//    Unitname[0].id = CORBA::string_dup (UNITNAME.c_str());
     //Bind the object
-    try	{
-      naming_context->bind(Unitname, unit.in());
-    }catch(CosNaming::NamingContext::AlreadyBound& ex){
-      naming_context->rebind(Unitname, unit.in());
-    }
+
+//	try	{
+//      naming_context->bind(Unitname, unit.in());
+//    }catch(CosNaming::NamingContext::AlreadyBound& ex){
+//      naming_context->rebind(Unitname, unit.in());
+//    }
 
     
     //Call the Executive CORBA call to register it to the Executive
-    exec->RegisterUnit(unit_i.UnitName_.c_str(), 0); //0 means a normal module
-    
+    exec->RegisterUnit(unit_i.UnitName_.c_str(), unit.in(), 0); //0 means a normal module
+
+ 
     orb->run();
 
     // Destroy the POA, waiting until the destruction terminates
