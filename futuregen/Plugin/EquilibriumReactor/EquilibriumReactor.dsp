@@ -100,6 +100,10 @@ SOURCE=.\EquilibriumReactor.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\FinancialDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\interface.cpp
 # End Source File
 # Begin Source File
@@ -133,6 +137,10 @@ SOURCE=..\UIDialog.cpp
 # Begin Source File
 
 SOURCE=.\EquilibriumReactor.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\FinancialDialog.h
 # End Source File
 # Begin Source File
 

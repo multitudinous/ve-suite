@@ -104,6 +104,10 @@ SOURCE=.\Condenser_UI.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\FinancialDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\interface.cpp
 # End Source File
 # Begin Source File
@@ -141,6 +145,10 @@ SOURCE=.\Condenser.h
 # Begin Source File
 
 SOURCE=.\Condenser_UI.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\FinancialDialog.h
 # End Source File
 # Begin Source File
 

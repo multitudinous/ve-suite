@@ -243,6 +243,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "HeatExchangerCFD"=.\HeatExchangerCFD\HeatExchangerCFD.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "KineticReactor"=.\KineticReactor\KineticReactor.dsp - Package Owner=<4>
 
 Package=<5>
@@ -256,6 +268,18 @@ Package=<4>
 ###############################################################################
 
 Project: "MembraneReactor"=.\MembraneReactor\MembraneReactor.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "PipeCFD"=.\PipeCFD\PipeCFD.dsp - Package Owner=<4>
 
 Package=<5>
 {{{

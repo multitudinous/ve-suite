@@ -105,6 +105,10 @@ SOURCE=.\BulkDesulfurizer_UI.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\FinancialDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\interface.cpp
 # End Source File
 # Begin Source File
@@ -142,6 +146,10 @@ SOURCE=.\BulkDesulfurizer.h
 # Begin Source File
 
 SOURCE=.\BulkDesulfurizer_UI.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\FinancialDialog.h
 # End Source File
 # Begin Source File
 

@@ -104,6 +104,10 @@ SOURCE=.\Cyclone_UI.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\FinancialDialog.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\interface.cpp
 # End Source File
 # Begin Source File
@@ -141,6 +145,10 @@ SOURCE=.\Cyclone.h
 # Begin Source File
 
 SOURCE=.\Cyclone_UI.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\FinancialDialog.h
 # End Source File
 # Begin Source File
 
