@@ -2496,6 +2496,7 @@ void cfdApp::preFrame( void )
                              << std::endl << vprDEBUG_FLUSH;
       for ( int i = 0; i < (int)this->dataList.size(); i ++ )
       {
+          
          if ( this->cfdId == dataList[ i ]->GetObjectType() )
          {
             // verify that if a transient sequence is desired, 
@@ -2507,7 +2508,6 @@ void cfdApp::preFrame( void )
                          << "dataset before proceeding\n" << std::endl;
                this->activeObject = NULL;
                this->computeActorsAndGeodes = false;
-               this->setId( -1 );
                break;
             }
 
@@ -2539,11 +2539,13 @@ void cfdApp::preFrame( void )
             this->activeObject->SetCursorType( this->cursorId );
             this->activeObject->SetPreCalcFlag( this->cfdPre_state );
 
-            this->setId( -1 );
             this->computeActorsAndGeodes = true;
             break;
          }
       }
+
+      //extracting from inside the for loop
+      this->setId( -1 );
    }
 
    // Update Scalar Bar on the scene graph
