@@ -44,7 +44,6 @@
 
 #include "cfdTeacher.h"
 #include "cfdDataSet.h"
-#include "cfdSequence.h"
 #include "cfdObjects.h"
 #include "cfdTempAnimation.h"
 #include "cfdCommandArray.h"
@@ -56,17 +55,10 @@
 #include "cfdFILE.h"
 #include "cfdEnum.h"
 
-
-
-#ifdef _CLUSTER
-#include "cfdSequence.h"
-#endif
-
 #include <vtkSystemIncludes.h>  // for VTK_POLY_DATA
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
 #include <vtkCellTypes.h>
-
 
 void VjObs_i::InitCluster( void )
 {
@@ -680,12 +672,12 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    //cluster
    if ( !mStates.isLocal() )
    {
-      if ( this->_modelHandler->GetActiveSequence() != NULL )
+      if ( this->_ssHandler->GetActiveAnimation() != NULL )
       {
-         cfdSequence* the_sequence = this->_modelHandler->GetActiveSequence()->GetSequence()->GetSequence();
+         cfdTempAnimation* the_sequence = this->_ssHandler->GetActiveAnimation();
          if ( the_sequence != NULL )
          {
-            the_sequence->setCurrentFrame( this->getTimesteps() );
+            the_sequence->SetCurrentFrame( (int)this->getTimesteps() );
             //cout << " cfdTimesteps in preframe : " << cfdTimesteps << endl;
          }
       }
