@@ -89,7 +89,8 @@ class cfdWebServices
       Network* network;
    private:
       
-      void insertItemIntoSQL(Interface &interface);
+      void insertItemIntoSQL(Interface &interface);   //insert the data for a
+                                       //particular interface into MYSQL
       cfdExecutiveConfiguration* param;
       std::string activeScalarName;
       cfdGauges* gauges;

@@ -257,28 +257,102 @@ void cfdExecutive::GetNetwork ( void )
    }
 }
 
-void cfdWebServices::insertItemIntoSQL(Interface& &interface)
+void cfdWebServices::insertItemIntoSQL(Interface &interface)
 {
-   std::string intString;                 //the string we'll pass to the database
-   std::map<std::string, long> ints;      //grab a copy of the interface's int map
-   ints = interface.getIntMap();
-   std::map<std::string, long>::iter intsIter;  //and make an iter
-   for(intsIter = ints.begin(); intsIter != ints.end(); intsIter++)  //iterate through the map
-   {  
-      intString += intsIter->first + "|" + intsIter->second + "||";         //and tack the name and number into our string, separated by pipes
-      
+   std::vector<std::string> names;              //vector to hold all the names we get
+   std::string SQLString;                       //the string we'll pass to the database
+   std::vector<std::string>::iter stringIter;   //an interator to go through the strings
+   
+   names = interface.getInts();           //grab the names of the ints from this interface
+   SQLString = "";                        //clear the SQL string
+   for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
+   {
+      SQLString += *stringIter + "|" + interface.getInt(*stringIter) + "||";  //tack the name and number into our string, seperated by pipes
+   
+   }
+
+   names = interface.getDoubles();        //repeat with other data types
+   SQLString = "";                        //clear the SQL string
+   for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
+   {
+      SQLString += *stringIter + "|" + interface.getDouble(*stringIter) + "||";  //tack the name and number into our string, seperated by pipes
+   
    }
    
-   //repeat with doubles
-   std::string doubleString;                
-   std::map<std::string, long> ints;     
-   ints = interface.getIntMap();
-   std::map<std::string, long>::iter intsIter;  
-   for(doublesIter = ints.begin(); doublesIter != ints.end(); doublesIter++) 
-   {  
-      intString += doublesIter->first + "|" + doublesIter->second + "||";    
-      
+   
+   names = interface.getStrings();        //repeat with other data types
+   SQLString = "";                        //clear the SQL string
+   for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
+   {
+      SQLString += *stringIter + "|" + interface.getString(*stringIter) + "||";  //tack the name and value into our string, seperated by pipes
+   
    }
+
+   names = interface.getInts1D();        //repeat with other data types
+   SQLString = "";                        //clear the SQL string
+   for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
+   {
+      std::vector<long> vals = interface.getInt1D(*stringIter);                      //this time we have to get vectors and iterate through those
+      SQLString += *stringIter;
+      std::vector<long>::iterator valIter;
+      for(valIter = vals.begin(); valIter != vals.end(); valIter++)
+      {
+         SQLString += "|" + *valIter;
+      }
+      SQLSTring += "||";
+   
+   }
+
+   names = interface.getDoubles1D();        //repeat with other data types
+   SQLString = "";                        //clear the SQL string
+   for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
+   {
+      std::vector<double> vals = interface.getDouble1D(*stringIter);                      //this time we have to get vectors and iterate through those
+      SQLString += *stringIter;
+      std::vector<double>::iterator valIter;
+      for(valIter = vals.begin(); valIter != vals.end(); valIter++)
+      {
+         SQLString += "|" + *valIter;
+      }
+      SQLSTring += "||";
+   
+   }
+   
+   names = interface.getStrings1D();        //repeat with other data types
+   SQLString = "";                        //clear the SQL string
+   for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
+   {
+      std::vector<std::string> vals = interface.getString1D(*stringIter);                      //this time we have to get vectors and iterate through those
+      SQLString += *stringIter;
+      std::vector<std::string>::iterator valIter;
+      for(valIter = vals.begin(); valIter != vals.end(); valIter++)
+      {
+         SQLString += "|" + *valIter;
+      }
+      SQLSTring += "||";
+   
+   }
+   
+//the old way of doing it
+//   std::map<std::string, long> ints;      //grab a copy of the interface's int map
+//   ints = interface.getIntMap();
+//   std::map<std::string, long>::iter intsIter;  //and make an iter
+//   for(intsIter = ints.begin(); intsIter != ints.end(); intsIter++)  //iterate through the map
+//   {  
+//      intString += intsIter->first + "|" + intsIter->second + "||";         //and tack the name and number into our string, separated by pipes
+//      
+//   }
+//   
+//   //repeat with doubles
+//   std::string doubleString;                
+//   std::map<std::string, long> ints;     
+//   ints = interface.getIntMap();
+//   std::map<std::string, long>::iter intsIter;  
+//   for(doublesIter = ints.begin(); doublesIter != ints.end(); doublesIter++) 
+//   {  
+//      intString += doublesIter->first + "|" + doublesIter->second + "||";    
+//      
+//   }
 
 }
 
