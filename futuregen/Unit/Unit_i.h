@@ -2,7 +2,7 @@
 #define UNIT_I_H_
 
 #include "moduleS.h"
-
+#include "package.h" //so it can use the xerces stuff
 #if !defined (ACE_LACKS_PRAGMA_ONCE)
 #pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */

@@ -1,13 +1,25 @@
 #include "moduleC.h"
 #include "orbsvcs/CosNamingC.h"
 #include "Unit_i.h"
-
+ 
 //This Unit_client act as the executive's client 
 //This Unit is also the Unit servant for the executive' Unit client
 
 int main (int argc, char* argv[])
 {
-  std::string UNITNAME = "unityang";
+  try
+    {
+      XMLPlatformUtils::Initialize();
+    }
+  
+  catch(const XMLException &toCatch)
+    {
+      XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+				<< "  Exception message:"
+				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+      return 1;
+    }
+  std::string UNITNAME = "TEMPLATE";
   try {
     // First initialize the ORB, 
     CORBA::ORB_var orb =
@@ -41,29 +53,21 @@ int main (int argc, char* argv[])
     PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
     poa_manager->activate ();
     
-    std::cout<<"CP2"<<std::endl;
     //Create the Servant
     Body_Unit_i unit_i(exec.in(), UNITNAME);
-    std::cout<<"CP3"<<std::endl;
     //Activate it to obtain the object reference
     Body::Unit_var unit = unit_i._this();
      
     CosNaming::Name Unitname(1);
     Unitname.length(1);
     Unitname[0].id = CORBA::string_dup (UNITNAME.c_str());
-    std::cout<<"CP3.4"<<std::endl;
     //Bind the object
     naming_context->bind(Unitname, unit.in());
     
-    std::cout<<"CP3.5"<<std::endl;
-
     //Call the Executive CORBA call to register it to the Executive
-    exec->RegisterUnit(unit_i.UnitName_.c_str());
+    exec->RegisterUnit(unit_i.UnitName_.c_str(), 0); //0 means a normal module
     
-    std::cout<<"CP4"<<std::endl;
     orb->run();
-
-    std::cout<<"CP5"<<std::endl;
 
     // Destroy the POA, waiting until the destruction terminates
     poa->destroy (1, 1);

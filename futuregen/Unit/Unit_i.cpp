@@ -21,8 +21,28 @@ void Body_Unit_i::StartCalc (
   ))
   {
     // Add your implementation here
+    const char* import;
+    const char* outport;
+    const char* result;
+    bool rv;
+    Package p;
+    
     std::cout<<UnitName_<<" :StartCalc called"<<endl;
-    executive_->GetImportData(id_, -1);
+    import=executive_->GetImportData(id_, -1);
+    p.SetSysId("temp.xml");
+    p.Load(import, strlen(import));
+   
+   //Your code of using the import data in the p.intfs
+    
+    
+    //set p.intf to be something containing the export data
+    p.SetPackName("ExportData");
+    p.SetSysId("test.xml");
+    outport = p.Save(rv);
+    //set p.intf to be someting containing the results
+    result = p.Save(rv);
+    executive_->SetExportData(id_, 0, outport);
+    executive_->SetExportData(id_, 0, result);
   }
   
 void Body_Unit_i::StopCalc (
@@ -100,6 +120,13 @@ void Body_Unit_i::SetParams (
     if (param!=NULL)
       std::cout<<param<<std::endl;
     std::cout<<UnitName_<<" :SetParams called"<<endl;
+    Package p;
+        
+    p.SetSysId("temp.xml");
+    p.Load(param, strlen(param));
+    //Now make use of p.intfs to get your GUI vars out
+
+    
   }
   
 void Body_Unit_i::SetID (
