@@ -73,6 +73,7 @@
 #include <osg/ShadeModel>
 #include <osg/Geometry>
 #include <osg/BlendFunc>
+#include <osg/Array>
 #elif _OPENSG
 #endif
 
@@ -534,73 +535,43 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getOrCreateStateSet();
-
-         if (geostate.valid()){
-            //lighting
-            geostate->setMode(GL_LIGHTING,osg::StateAttribute::ON);
-            geostate->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
-            //culling
-            geostate->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
-            geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
-
-            osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
-			    bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-			    geostate->setAttributeAndModes(bf.get());
-            
-            //gourand shading
-            osg::ref_ptr<osg::ShadeModel> sModel = new osg::ShadeModel;
-            sModel->setMode(osg::ShadeModel::SMOOTH);
-
-            vprDEBUG(vprDBG_ALL,3) << "Done setting Transparency "
-                                   << std::endl << vprDEBUG_FLUSH;
-
-            vprDEBUG(vprDBG_ALL,2) << "setting alpha to " << op 
-                                   << std::endl << vprDEBUG_FLUSH;
-            //if ( ssattrib != NULL ){
-               vprDEBUG(vprDBG_ALL,2) << "Setting Material : " << op 
-                                      << std::endl << vprDEBUG_FLUSH;
-               vprDEBUG(vprDBG_ALL,2) << " Color Flag : " << color
-                                      << std::endl << vprDEBUG_FLUSH;
-               //create the material
-               material = new osg::Material();
-               material->setColorMode(osg::Material::AMBIENT_AND_DIFFUSE );
-               //set the opacity
-               material->setAlpha(osg::Material::FRONT_AND_BACK,
-                                op);
-               //Turn colors on
-               if( color == 1 ){
-                  osg::Vec4f lColor(stlColor[0],
-				       	               stlColor[1],
-				       	               stlColor[2],
-                                         op);
-                  //set up the material properties
-                  material->setDiffuse(osg::Material::FRONT_AND_BACK ,
-				                            lColor);
-                  
-                  vprDEBUG(vprDBG_ALL,2) 
-                         << " Front Color : " << stlColor[0]<< " : " 
-                         <<  stlColor[1]<< " : " << stlColor[2]
-                        << std::endl << vprDEBUG_FLUSH;
-               }
-               //put in the appropriate bin
-               if ( op == 1 ) {
-                  geostate->setRenderingHint(osg::StateSet::OPAQUE_BIN);
-               }else{
-                  geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-               }
-               geostate->setAttribute(material.get(),osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);            
-               geostate->setAttribute(sModel.get(),osg::StateAttribute::ON);
-               
-               geoset->setStateSet(geostate.get());
-               //geoset->asGeometry()->setColorBinding(osg::Geometry::BIND_OVERALL);
-
+         osg::Vec4Array* curColors = 0;
+         if(color == 1){
+            curColors = new osg::Vec4Array(1);
+            geoset->asGeometry()->setColorBinding(osg::Geometry::BIND_OVERALL);
          }else{
-            vprDEBUG(vprDBG_ALL,0) 
-               << "ERROR: Tried to set transparency, but this pfGeoSet"
-               << " has no pfGeoState." << std::endl << vprDEBUG_FLUSH;
+            curColors = dynamic_cast<osg::Vec4Array*>(geoset->asGeometry()->getColorArray());
          }
+         //update the opacity
+         unsigned int nColors = curColors->getNumElements();
+         for(int i = nColors-1; i ==0; i--){
+            //handle stl
+            if(color == 1){
+               (*curColors)[i][0] = stlColor[0];
+				    (*curColors)[i][1] = stlColor[1];
+               (*curColors)[i][2] = stlColor[2];
+            }
+            //just update the opacity
+            (*curColors)[i][3] = op;
+         }
+         geoset->asGeometry()->setColorArray(curColors);
+
+         //set up blending for opacity
+         osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+         bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+			 
+         //put in the appropriate bin
+         if ( op == 1 ) {
+             geostate->setRenderingHint(osg::StateSet::OPAQUE_BIN);
+             geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::OFF);
+         }else{
+			     geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+             geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+         }
+         //reset the state
+         geoset->setStateSet(geostate.get());
       }
-	
+
    }else  if(node->isSameKindAs(tempGroup.get())){
       num = ((osg::Group*)node)->getNumChildren();
       vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "

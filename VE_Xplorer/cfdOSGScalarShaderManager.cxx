@@ -106,7 +106,7 @@ void cfdOSGScalarShaderManager::Init()
       if(_shaderDirectory){
          strcpy(directory,_shaderDirectory);
       }else{
-        strcpy(directory,"../cg_shaders/");
+        strcpy(directory,"./cg_shaders/");
       }
       strcat(directory,"fragVol.cg");
       _setupCGShaderProgram(_ss.get(),directory,"fp_volume");

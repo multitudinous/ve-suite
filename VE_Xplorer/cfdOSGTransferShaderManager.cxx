@@ -74,7 +74,7 @@ void cfdOSGTransferShaderManager::Init()
       if(_shaderDirectory){
          strcpy(directory,_shaderDirectory);
       }else{
-        strcpy(directory,"../cg_shaders/");
+        strcpy(directory,"./cg_shaders/");
       }
       strcat(directory,"volumeTransferFunctions.cg");
       _setupCGShaderProgram(_ss.get(),directory,"densityTransfer");
