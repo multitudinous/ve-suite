@@ -430,6 +430,23 @@ void cfdTransientVizHandler::PreFrameUpdate( void )
       _commandArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
    }
 
+   if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_VIS_ACTIVE ) 
+   {
+      // Get dataset name from modelHandler as to which trans model is active
+      // create list of names of datasets that are to be used
+      // for the number of datasets
+         // set dataset active
+         // after the dataset is active set viz feature active
+      // end for
+      // Need to do frame counting above because can only set viz feature after dataset is active
+      // once geode is created we need to copy geode into holder for tempanimation
+   }
+
+   //if ( command map vector is not empty )
+   {
+      // set vjobs command array accordingly
+   }
+
    // Scene update stuff for transient
    // Need to fix this for transient
                //add the transient flow to the graph

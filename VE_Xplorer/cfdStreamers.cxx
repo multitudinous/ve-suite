@@ -159,10 +159,10 @@ void cfdStreamers::Update( void )
    //   this->stream->Print( cout );
    
    // Good Test code to see if you are actually getting streamlines
-   vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
-   writer->SetInput( ( vtkPolyData * ) stream->GetOutput() );
-   writer->SetFileName( "teststreamers.vtk" );
-   writer->Write();
+   //vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
+   //writer->SetInput( ( vtkPolyData * ) stream->GetOutput() );
+   //writer->SetFileName( "teststreamers.vtk" );
+   //writer->Write();
 
    //this->tubeFilter->DebugOn();
    this->tubeFilter->SetInput( this->stream->GetOutput() );
