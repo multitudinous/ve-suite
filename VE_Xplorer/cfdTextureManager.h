@@ -36,7 +36,7 @@ public:
    
    //get the next vector field
    unsigned char* getNextField(/*int plusNeg*/);
-
+   unsigned int getNextFrame();
    //get the number of vector fields
    int numberOfFields(){return _dataFields.size();}
 

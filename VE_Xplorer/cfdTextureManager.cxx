@@ -76,6 +76,32 @@ unsigned int cfdTextureManager::GetCurrentFrame()
 {
    return _curField;
 }
+//////////////////////////////////////////////
+unsigned int cfdTextureManager::getNextFrame()
+{
+   int numFields = _dataFields.size();
+   //now update the current field
+   if(_direction == 1){
+      //haven't reached the end yet
+      //so return the next field 
+      if(_curField < numFields-1){
+         _curField += _direction;
+      }else if(_curField == numFields-1){
+         //we're at the end so we need to
+         //return the beginning
+         _curField = 0;
+      }
+   }else{
+      if(_curField > 0){
+         _curField += _direction;
+      }else if(_curField == 0){
+         //we're at the end so we need to
+         //return the beginning
+         _curField = numFields-1;
+      }
+   }
+   return _curField;
+}
 /////////////////////////////////////////////////////////////////////
 //add a vector field from a file                                   //
 /////////////////////////////////////////////////////////////////////

@@ -91,6 +91,7 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
    if(state.getFrameStamp()){
      double currTime = state.getFrameStamp()->getReferenceTime();
      if(_tm){  
+
         if(!_isSlave){
            //master node in the cluster
            if(_tm->timeToUpdate(currTime,_delay)){

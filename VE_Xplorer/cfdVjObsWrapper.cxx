@@ -115,9 +115,9 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
    std::string hostfile;
    FILE * fhost;
    bool found=false;
-   std::string masterhost="abbott";
+   std::string masterhost="ids7";
 
-   if (argc>1)
+/*   if (argc>1)
    {
       strcpy(buffer, argv[1]);
       ntoks=getStringTokens(buffer, "/", toks);
@@ -148,7 +148,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
             }
       }
       fclose(fhost);
-   }
+   }*/
 #endif // _CLUSTER
   
 //   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
