@@ -2,6 +2,9 @@
 #include "cfdTextureManager.h"
 #include <fstream>
 #include <iostream>
+#ifdef _PERFORMER
+#elif _OPENSG
+#elif _OSG
 ////////////////////////////////////////////////
 //Constructors                                //
 ////////////////////////////////////////////////
@@ -333,3 +336,4 @@ cfd3DTextureBasedModel& cfd3DTextureBasedModel::operator=(const
    }
    return *this;
 }
+#endif

@@ -454,12 +454,8 @@ int cfdSequence::AddChild(cfdNode* child)
    if(!_lSwitch)
    {
       _lSwitch = new cfdSwitch();
-#ifdef _PERFORMER
-      _lSwitch->setVal(PFSWITCH_OFF);
-#elif _OSG
-      _lSwitch->setAllChildrenOff();
-#elif _OPENSG
-#endif
+      _lSwitch->setVal(cfdSwitch::OFF);
+
       this->addChild(_lSwitch->GetRawNode());
    }
    _lSwitch->AddChild(child);

@@ -16,6 +16,8 @@ public:
    cfdSwitch(const cfdSwitch& cSwitch);
    virtual ~cfdSwitch();
 
+   enum Value{OFF,ON};
+
    //probably need more functions but
    //this is all we need for now
    //the rest are inherited from group

@@ -1,6 +1,8 @@
 #ifndef CFD_TEXTURE_BASED_MODEL_H
 #define CFD_TEXTURE_BASED_MODEL_H
-
+#ifdef _PERFORMER
+#elif _OPENSG
+#elif _OSG
 #include "cfdReadParam.h"
 
 #include "cfdTextureManager.h"
@@ -52,6 +54,6 @@ protected:
    char* _paramFileName;
    
 };
-
+#endif
 #endif// CFD_TEXTURE_BASED_MODEL_H
 

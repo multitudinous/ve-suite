@@ -44,7 +44,6 @@ cfdSwitch::~cfdSwitch()
      pfDelete(_switch);
    }
 #elif _OSG
-   _switch->Delete();
 #elif _OPENSG
 #endif
 }
@@ -53,9 +52,15 @@ void cfdSwitch::setVal(int whichChildIsActive)
 {
    if(_switch){
 #ifdef _PERFORMER
-      _switch->setVal(whichChildIsActive);
+      if(whichChildIsActive == OFF)
+         _switch->setVal(-1);
+      else
+         _switch->setVal(whichChildIsActive);
 #elif _OSG
-      _switch->setSingleChildOn(whichChildIsActive);
+      if(whichChildIsActive == OFF)
+         _switch->setAllChildrenOff();
+      else
+         _switch->setSingleChildOn(whichChildIsActive);
 #elif _OPENSG
 #endif
    }

@@ -1,10 +1,14 @@
 #include "cfdTextureBasedModelHandler.h"
+
 #include "cfdCommandArray.h"
 #include "cfdReadParam.h"
 #include "cfdDCS.h"
 #include "cfdCursor.h"
 #include "cfdNavigate.h"
 #include <fstream>
+#ifdef _PERFORMER
+#elif _OPENSG
+#elif _OSG
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////
@@ -167,3 +171,4 @@ cfdTextureBasedModelHandler& cfdTextureBasedModelHandler::operator=(const cfdTex
    }
    return *this;
 }
+#endif

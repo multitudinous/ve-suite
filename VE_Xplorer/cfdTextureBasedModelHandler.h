@@ -7,7 +7,9 @@ class cfdNavigate;
 class cfdCommandArray;
 class cfdSwitch;
 #include "cfdTextureBasedModel.h"
-
+#ifdef _PERFORMER
+#elif _OPENSG
+#elif _OSG
 class cfdTextureBasedModelHandler{
 public:
    cfdTextureBasedModelHandler();
@@ -36,5 +38,5 @@ protected:
    cfd3DTextureBasedModel* _activeTextureModel;
    std::vector<cfd3DTextureBasedModel> _textureModels;
 };
-
+#endif //OSG
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H
