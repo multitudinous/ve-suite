@@ -8,13 +8,13 @@ END_EVENT_TABLE()
 TextResultDialog::TextResultDialog(wxWindow * parent, const wxString& title, wxSize tabsize)
     : UIDialog((wxWindow *)parent, -1, title)
 {
-  wxSize sz1, syn;
+  wxSize syn;
   wxBoxSizer* toptop= new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* left_margin = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* top_sizer = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer* right_margin = new wxBoxSizer(wxHORIZONTAL);
 
-  sz1.Set(80, 17);
+  
   //sz2.Set(250, 300);
 
   left_margin->Add(10, 10);

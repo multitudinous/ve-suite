@@ -5,7 +5,11 @@ TexTable::TexTable(wxWindow* parent,wxWindowID id, const wxPoint& pos, const wxS
   : wxTextCtrl(parent, id, "x", pos, size, wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL|wxTE_DONTWRAP)
 {
   SetNumofCols(2);
+#ifndef WIN32
   ChooseFixedFont(12);
+#else
+  ChooseFixedFont(8);
+#endif
 }
 
 void TexTable::SetNumofCols(int num)
@@ -48,7 +52,11 @@ bool TexTable::ChooseFixedFont(int size)
 {
   wxFontEnumerator fontEnumerator;
   wxArrayString * faces;
+#ifndef WIN32
   fontEnumerator.EnumerateFacenames(wxFONTENCODING_KOI8, TRUE);
+#else
+  fontEnumerator.EnumerateFacenames(wxFONTENCODING_CP1250, TRUE);
+#endif
   wxString facename;
   // choose the first
   faces = fontEnumerator.GetFacenames();
