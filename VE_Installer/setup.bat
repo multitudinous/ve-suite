@@ -14,8 +14,8 @@ set WX_ROOT=C:\wxWindows-2.4.2
 set OSGHOME=C:\OSG_OP_OT-0.9.8-2\OpenSceneGraph
 
 REM set TAO_MACHINE=lego.vrac.iastate.edu
-set TAO_MACHINE=127.0.0.1
-set TAO_PORT=1234
+set TAO_MACHINE=localhost
+set TAO_PORT=1237
 
 REM NOTE: On Windows the juggler location must point to a Windows
 REM (local or on network) machine, otherwise user may run into runtime
@@ -33,9 +33,10 @@ REM set PHSHAREDSIZE=534773700
 
 REM juggler debug output level
 set VPR_DEBUG_ENABLE=1
-set VPR_DEBUG_NFY_LEVEL=2
+set VPR_DEBUG_NFY_LEVEL=1
 set NO_PERF_PLUGIN=TRUE
 set NO_RTRC_PLUGIN=TRUE
+set PFNFYLEVEL=0
 
 REM Juggler dependencies
 set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions

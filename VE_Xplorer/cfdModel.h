@@ -130,7 +130,6 @@ public:
       
 
    cfdTempAnimation* GetAnimation( void );
-   cfdSwitch* GetSwitchNode( void );
    std::map<int,cfdDataSet*> transientDataSets;
 
 private:

@@ -261,7 +261,7 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
    bool flag = cfdObjects::CheckCommandId( commandArray );
    
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) == 1 &&
-         commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) == POLYDATA)
+         commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == POLYDATA)
    {
       warpSurface = true;
       return true;
@@ -271,10 +271,10 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
    {  
       // warped contour settings
       double v[2];
-      this->GetActiveDataSet()->GetUserRange( v );
+	  this->GetActiveDataSet()->GetParent()->GetUserRange( v );
       int scale = commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
       this->warpedContourScale = (scale/50.0) * 0.2 
-                    * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
+                    * this->GetActiveDataSet()->GetParent()->GetLength()/(float)(v[1]-v[0]);
 
       // contour lod control
       /*int lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );

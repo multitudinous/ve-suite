@@ -71,7 +71,7 @@ void UI_VisualizationTab::_buildPage()
 
    //Create the 3x2 box
    _categoryRBox = new wxRadioBox(this, CATEGORY_RAD_BOX, wxT("Category"),
-                                  wxDefaultPosition, wxDefaultSize, 7,
+                                  wxDefaultPosition, wxDefaultSize, 8,
                                   category, 3, wxRA_SPECIFY_COLS);
 
    /////////////////////////////////////

@@ -59,7 +59,7 @@ class cfdPolyData : public cfdObjects
 
       vtkPolyDataMapper *map;
       vtkWarpVector* warper;
-	  cfdCommandArray* commandArray;
+	  //cfdCommandArray* commandArray;
       bool warpSurface;
       double warpedContourScale;
 };

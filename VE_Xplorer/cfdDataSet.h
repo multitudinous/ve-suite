@@ -43,6 +43,8 @@ class vtkUnstructuredGridReader;
 class vtkDataSet;
 class cfdPlanes;
 class cfdDCS;
+class cfdGroup;
+class cfdSwitch;
 class cfdTempAnimation;
 class cfdVTKFileHandler;
 
@@ -182,83 +184,86 @@ class cfdDataSet
 
   double * GetVectorMagRange();
 
-  // get/set this dataset's DCS
-  cfdDCS * GetDCS();
-  void SetDCS( cfdDCS * );
+      // get/set this dataset's DCS
+      cfdDCS * GetDCS();
+      void SetDCS( cfdDCS * );
 
-   cfdTempAnimation* GetAnimation( void );
-   void SetAnimation( cfdTempAnimation* );
+      cfdSwitch* GetSwitchNode( void );
 
-  int IsPartOfTransientSeries();
-  void SetAsPartOfTransientSeries();
+      cfdTempAnimation* GetAnimation( void );
+      void SetAnimation( cfdTempAnimation* );
 
-  void Print();
+      int IsPartOfTransientSeries();
+      void SetAsPartOfTransientSeries();
 
- private:
+      void Print();
 
-  double ** actualScalarRange;
-  double ** displayedScalarRange;
+   private:
+      double** actualScalarRange;
+      double** displayedScalarRange;
 
-  cfdDataSet * parent;
+      cfdDataSet* parent;
 
-  int isNewlyActivated;
+      int isNewlyActivated;
 
-  int CountNumberOfParameters( const int numComponents );
-  char ** GetParameterNames( const int numComponents, const int numParameters );
+      int CountNumberOfParameters( const int numComponents );
+      char** GetParameterNames( const int numComponents, const int numParameters );
 
-  double * range;          // Range of scalar.
+      double* range;          // Range of scalar.
+   
+      double* definedRange;   // 'prettied' range of scalar that is automatically computed or user-defined.
 
-  double * definedRange;   // 'prettied' range of scalar that is automatically computed or user-defined.
+      double* vectorMagRange; // assumes just one vector
 
-  double * vectorMagRange; // assumes just one vector
+      float bbDiagonal;        // length of the diagonal of the bounding box.
 
-  float bbDiagonal;        // length of the diagonal of the bounding box.
-
-  double meanCellBBLength; // length of diagonal of average cell bounding box. 
+      double meanCellBBLength; // length of diagonal of average cell bounding box. 
   
-  float stepLength;        // Step length for streamline integration.
+      float stepLength;        // Step length for streamline integration.
 
-  float maxTime;           // Maximum time of integration for streamline.
+      float maxTime;           // Maximum time of integration for streamline.
 
-  float timeStep;          // Time step for streamline integration.
+      float timeStep;          // Time step for streamline integration.
 
-  vtkLookupTable * lut;    // Lookup table.
+      vtkLookupTable* lut;    // Lookup table.
 
-  vtkDataSet * dataSet;    // Original piece of vtk data.
-  int datasetType;         // used by gui to place in appropriate column
+      vtkDataSet* dataSet;    // Original piece of vtk data.
+      int datasetType;         // used by gui to place in appropriate column
 
-  int activeScalar;
-  int activeVector;
+      int activeScalar;
+      int activeVector;
 
-  char * fileName;
-  char * precomputedDataSliceDir;
-  char * precomputedSurfaceDir;
+      char* fileName;
+      char* precomputedDataSliceDir;
+      char* precomputedSurfaceDir;
 
-  cfdPlanes *x_planes;
-  cfdPlanes *y_planes;
-  cfdPlanes *z_planes;
+      cfdPlanes* x_planes;
+      cfdPlanes* y_planes;
+      cfdPlanes* z_planes;
 
-  vtkPolyData * arrow;
+      vtkPolyData* arrow;
 
-  int numPtDataArrays;
-  int numScalars;
-  int numVectors;
-  char ** scalarName;
-  char ** vectorName;
+      int numPtDataArrays;
+      int numScalars;
+      int numVectors;
+      char** scalarName;
+      char** vectorName;
 
-  cfdDCS* dcs;
-   cfdTempAnimation* animation;
+      cfdDCS* dcs;
+      cfdTempAnimation* animation;
+      cfdSwitch* switchNode;
+      cfdGroup* classic;
+      cfdGroup* textureBased; 
 
-   cfdVTKFileHandler* _vtkFHndlr;
-  int partOfTransientSeries;
-   int intRange[2];
+      cfdVTKFileHandler* _vtkFHndlr;
+      int partOfTransientSeries;
+      int intRange[2];
 
 #ifdef USE_OMP 
-  unsigned int noOfData;   // Total no. of octants.
-  vtkUnstructuredGridReader *dataReader[MAX_DATA];
-  vtkUnstructuredGrid *data[MAX_DATA];
+      unsigned int noOfData;   // Total no. of octants.
+      vtkUnstructuredGridReader *dataReader[MAX_DATA];
+      vtkUnstructuredGrid *data[MAX_DATA];
 #endif
-
 };
 
 #endif

@@ -42,6 +42,8 @@
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
 #include "cfdDCS.h"
+#include "cfdGroup.h"
+#include "cfdSwitch.h"
 #include "cfdTempAnimation.h"
 #include "cfdVTKFileHandler.h"
 
@@ -90,6 +92,15 @@ cfdDataSet::cfdDataSet( )
    // use its own range to determine color mapping.
    this->parent = this;
    this->dcs = NULL;
+   this->switchNode = new cfdSwitch();
+   this->classic = new cfdGroup();
+   this->classic->SetName( "classic" );
+   this->switchNode->AddChild( this->classic );
+   this->textureBased = new cfdGroup();
+   this->textureBased->SetName( "textureBased" );
+   this->switchNode->AddChild( this->textureBased );
+   this->switchNode->SetVal(0);
+
    this->partOfTransientSeries = 0;
    this->datasetType = -1;
    this->vectorMagRange = NULL;
@@ -1237,6 +1248,15 @@ void cfdDataSet::SetDisplayedScalarRange( int index, double * range )
    this->displayedScalarRange[ index ][ 1 ] = range[ 1 ];
    //this->definedRange[ 0 ] = range[ 0 ];
    //this->definedRange[ 1 ] = range[ 1 ];
+}
+
+cfdSwitch* cfdDataSet::GetSwitchNode()
+{
+   if ( !switchNode )
+   {
+      switchNode = new cfdSwitch();
+   }
+   return switchNode;
 }
 
 // get/set this dataset's DCS

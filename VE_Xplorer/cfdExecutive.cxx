@@ -370,7 +370,7 @@ void cfdExecutive::GetEverything( void * )
 {
    while ( runGetEverythingThread )
    {
-      vpr::System::msleep( 500 );  // half-second delay
+      //vpr::System::msleep( 500 );  // half-second delay
    if ( !CORBA::is_nil( this->_exec) && updateNetworkString )
    {
       vprDEBUG(vprDBG_ALL,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      

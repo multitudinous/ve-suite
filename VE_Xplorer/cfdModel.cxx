@@ -53,14 +53,6 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
    // Will fix this later so that each model has a dcs
    //mModelDCS = new cfdDCS();
    _worldDCS = worldDCS;
-   this->switchNode = new cfdSwitch();
-   this->classic = new cfdGroup();
-   this->classic->SetName( "classic" );
-   this->switchNode->AddChild( this->classic );
-   this->textureBased = new cfdGroup();
-   this->textureBased->SetName( "textureBased" );
-   this->switchNode->AddChild( this->textureBased );
-   this->switchNode->SetVal(0);
 
    this->animation = 0;
    this->activeDataSet = 0;
@@ -146,15 +138,6 @@ cfdTempAnimation* cfdModel::GetAnimation()
       animation = new cfdTempAnimation();
    }
    return animation;
-}
-
-cfdSwitch* cfdModel::GetSwitchNode()
-{
-   if ( !switchNode )
-   {
-      switchNode = new cfdSwitch();
-   }
-   return switchNode;
 }
 
 ///////////////////////////////////////

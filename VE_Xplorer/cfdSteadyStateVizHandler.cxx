@@ -676,11 +676,13 @@ void cfdSteadyStateVizHandler::InitScene( void )
    this->particles = new cfdPolyData();
    this->particles->SetObjectType( PARTICLES );
    this->dataList.push_back( this->particles );     
+   this->commandList.push_back( this->particles );
 
    std::cout << "|  5. Initializing................................. Dataset surface |" << std::endl;
    this->surface = new cfdPolyData( 1.0 );
    this->surface->SetObjectType( POLYDATA );
    this->dataList.push_back( this->surface );
+   this->commandList.push_back( this->surface );
 
    //
    // Initiate PIV data from INEL

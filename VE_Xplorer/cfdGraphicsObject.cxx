@@ -108,7 +108,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
 
       // is it transient, classic, or animated class
       // add animation or dcs
-      cfdSwitch* temp = this->model->GetSwitchNode();
+      cfdSwitch* temp = this->model->GetActiveDataSet()->GetSwitchNode();
       if ( this->geodes.size() == 1 )
       {
          // classic ss

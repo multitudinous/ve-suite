@@ -326,7 +326,7 @@ void cfdModelHandler::PreFrameUpdate( void )
                              << std::endl << vprDEBUG_FLUSH;
 
       activeDataset->SetActiveVector( vectorIndex );
-      activeDataset->GetParent()->SetActiveVector( vectorIndex );
+      //activeDataset->GetParent()->SetActiveVector( vectorIndex );
 
       //texture manager stuff
       if(_activeModel != 0){
@@ -458,20 +458,25 @@ void cfdModelHandler::PreFrameUpdate( void )
       double realOpacity = (double)opacity/100.0f;
       if ( this->activeDataset != NULL )
          this->activeDataset->GetLookupTable()->SetAlphaRange(realOpacity, realOpacity);
-   }else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION){
-      if(_activeModel){
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION )
+   {
+      if ( _activeModel )
+      {
          //cfd visualization options
          int visOpt = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
 
-         if(visOpt == TEXTURE_BASED_VISUALIZATION){
-            _activeModel->GetSwitchNode()->SetVal(1);
+         if ( visOpt == TEXTURE_BASED_VISUALIZATION )
+         {
+			   _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(1);
             tbased = true;
-         }else if(visOpt == CLASSIC_VISUALIZATION){
-            _activeModel->GetSwitchNode()->SetVal(0);
+         }
+         else if ( visOpt == CLASSIC_VISUALIZATION )
+         {
+            _activeModel->GetActiveDataSet()->GetSwitchNode()->SetVal(0);
             tbased = false;
          }
-      }
-       
+      }       
    }
 
    // Can't be an else if because may have to update if dataset has changed beforehand
