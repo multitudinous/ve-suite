@@ -38,19 +38,20 @@ class vtkPolyDataMapper;
 
 class cfdPolyData : public cfdObjects
 {
- public:
+   public:
 
-  cfdPolyData( float op_val = 1.0 );
+      cfdPolyData( float op_val = 1.0 );
 
-  ~cfdPolyData();
+      ~cfdPolyData();
 
-  virtual void Update( void );
+      virtual void Update( void );
 
- private:
+   private:
 
-  float GetSphereScaleFactor();
+      float GetSphereScaleFactor();
 
-  vtkPolyDataMapper *map;
+      vtkPolyDataMapper *map;
+      bool warpSurface;
 };
 
 #endif

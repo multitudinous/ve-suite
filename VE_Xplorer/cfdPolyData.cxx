@@ -55,6 +55,7 @@ cfdPolyData::cfdPolyData( float op_val )
 
    this->map = vtkPolyDataMapper::New();
    this->map->SetColorModeToMapScalars();
+   warpSurface = false;
    //this->map->ScalarVisibilityOff();
 /*
    this->actor->GetProperty()->SetColor( 1.0f, 1.0f, 1.0f );
@@ -193,7 +194,16 @@ void cfdPolyData::Update()
    {
       vprDEBUG(vprDBG_ALL,1) << " IS POLYDATA SURFACE"
                              << std::endl << vprDEBUG_FLUSH;
-      this->map->SetInput( pd );
+      if ( warpSurface )
+      {
+         //this->warper->SetInput( this->cutter->GetOutput() );
+         //this->warper->SetScaleFactor( this->warpedContourScale );
+         //this->warper->Update();//can this go???
+      }
+      else
+      {
+         this->map->SetInput( pd );
+      }
       temp->GetProperty()->SetRepresentationToSurface();
    }
 
