@@ -57,7 +57,7 @@ class GasSeparator : public REI_Plugin
  public:
   double purity;
   double remain;
-  string specie;
+  std::string specie;
   //HERE is the GUI variable passed to the Dialog and Packed
  protected:
   wxBitmap *my_icon;

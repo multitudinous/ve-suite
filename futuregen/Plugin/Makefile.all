@@ -85,10 +85,10 @@ s9:	$(OBJ9)
 	$(CXX) -g -shared -o libHeatExchanger.so $(OBJ9)
 
 s10:	$(OBJ10)
-	$(CXX) -g -shared -o libCondenser.so $(OBJ10)
+	$(CXX) -g -shared -o libSOFC1D.so $(OBJ10)
 
 s11:	$(OBJ11)
-	$(CXX) -g -shared -o libSOFC1D.so $(OBJ11)
+	$(CXX) -g -shared -o libCondenser.so $(OBJ11)
 
 s12:	$(OBJ12)
 	$(CXX) -g -shared -o libV21ASU.so $(OBJ12)

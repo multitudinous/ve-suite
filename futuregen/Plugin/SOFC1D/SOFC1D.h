@@ -88,7 +88,7 @@ class SOFC1D : public REI_Plugin
   double l_width;
   double stop_time;
   double loadres;
-  string work_dir;
+  std::string work_dir;
   long l_numCells;
   long ax_nodes;
   //HERE is the GUI variable passed to the Dialog and Packed

@@ -62,8 +62,8 @@ class Recuperator : public REI_Plugin
   double int_press_drop;
   double ext_press_drop;
   double fin_effect;
-  string arrangement;
-  string tube_config;
+  std::string arrangement;
+  std::string tube_config;
   long num_tubeL;
   long num_tubeX;
   long use_fins;

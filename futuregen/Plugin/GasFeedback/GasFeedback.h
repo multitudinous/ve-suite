@@ -57,9 +57,9 @@ class GasFeedback : public REI_Plugin
  public:
   long iterations;
   long FEEDBACK;
-  vector<string> species;
-  vector<string> sel_species;
-  vector<string> max_error;
+  std::vector<std::string> species;
+  std::vector<std::string> sel_species;
+  std::vector<std::string> max_error;
   //HERE is the GUI variable passed to the Dialog and Packed
  protected:
   wxBitmap *my_icon;

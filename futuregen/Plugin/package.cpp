@@ -26,7 +26,7 @@ bool Package::Load()
   errHandler = (ErrorHandler*) new HandlerBase();
  
   if (parser==NULL)
-    cout<<"NULL parser"<<endl;
+    std::cout<<"NULL parser"<<std::endl;
   parser->setValidationScheme(XercesDOMParser::Val_Always);    // optional.
   parser->setDoNamespaces(true);    // optional
   
@@ -36,7 +36,7 @@ bool Package::Load()
   }
   catch (const XMLException& toCatch) {
     message = XMLString::transcode(toCatch.getMessage());
-    cout << "Exception message is: \n"
+    std::cout << "Exception message is: \n"
 	 << message << "\n";
     XMLString::release(&message);
     delete parser;
@@ -46,7 +46,7 @@ bool Package::Load()
   }
   catch (const DOMException& toCatch) {
     message = XMLString::transcode(toCatch.msg);
-    cout << "Exception message is: \n"
+    std::cout << "Exception message is: \n"
 	 << message << "\n";
     XMLString::release(&message);
     delete parser;
@@ -55,7 +55,7 @@ bool Package::Load()
     return false;
   }
   catch (...) {
-    cout << "Unexpected Exception \n" ;
+    std::cout << "Unexpected Exception \n" ;
     delete parser;
     delete errHandler;
 
@@ -66,7 +66,7 @@ bool Package::Load()
   DOMDocument *doc = parser->getDocument(); //This is the rootNode;
   
   if (doc == NULL)
-    cout<<"NULL document!"<<endl;
+    std::cout<<"NULL document!"<<std::endl;
   else
     FillIntfs(doc);
 
@@ -96,7 +96,7 @@ bool Package::Load(const char *mem, int len)
   }
   catch (const XMLException& toCatch) {
     message = XMLString::transcode(toCatch.getMessage());
-    cout << "Exception message is: \n"
+    std::cout << "Exception message is: \n"
 	 << message << "\n";
     XMLString::release(&message);
     delete parser;
@@ -106,7 +106,7 @@ bool Package::Load(const char *mem, int len)
   }
   catch (const DOMException& toCatch) {
     message = XMLString::transcode(toCatch.msg);
-    cout << "Exception message is: \n"
+    std::cout << "Exception message is: \n"
 	 << message << "\n";
     XMLString::release(&message);
     delete parser;
@@ -115,7 +115,7 @@ bool Package::Load(const char *mem, int len)
     return false;
   }
   catch (...) {
-    cout << "Unexpected Exception \n" ;
+    std::cout << "Unexpected Exception \n" ;
     delete parser;
     delete errHandler;
 
@@ -155,20 +155,20 @@ bool Package::Save()
   }
   catch (const XMLException& toCatch) {
     message = XMLString::transcode(toCatch.getMessage());
-    cout << "Exception message is: \n"
+    std::cout << "Exception message is: \n"
 	 << message << "\n";
     XMLString::release(&message);
     return false;
   }
   catch (const DOMException& toCatch) {
     message = XMLString::transcode(toCatch.msg);
-    cout << "Exception message is: \n"
+    std::cout << "Exception message is: \n"
 	 << message << "\n";
     XMLString::release(&message);
     return false;
   }
   catch (...) {
-    cout << "Unexpected Exception \n" ;
+    std::cout << "Unexpected Exception \n" ;
     return false;
   }
 
@@ -198,7 +198,7 @@ const char* Package::Save(bool &rv )
   }
   catch (const XMLException& toCatch) {
     message = XMLString::transcode(toCatch.getMessage());
-    cout << "Exception message is: \n"
+    std::cout << "Exception message is: \n"
 	 << message << "\n";
     XMLString::release(&message);
     rv=false;
@@ -206,14 +206,14 @@ const char* Package::Save(bool &rv )
   }
   catch (const DOMException& toCatch) {
     message = XMLString::transcode(toCatch.msg);
-    cout << "Exception message is: \n"
+    std::cout << "Exception message is: \n"
 	 << message << "\n";
     XMLString::release(&message);
     rv=false;
     return NULL;
   }
   catch (...) {
-    cout << "Unexpected Exception \n" ;
+    std::cout << "Unexpected Exception \n" ;
     rv=false;
     return NULL;
   }
@@ -238,13 +238,13 @@ void Package::FillIntfs(DOMDocument *doc)
   DOMNodeList* cur_list;
   DOMNodeList* sub_list;
   DOMElement *tmp_elem;
-  string elem_name;
+  std::string elem_name;
   double dval;
   long lval;
-  string sval;
-  vector<double> dvals;
-  vector<long> lvals;
-  vector<string> svals;
+  std::string sval;
+  std::vector<double> dvals;
+  std::vector<long> lvals;
+  std::vector<std::string> svals;
   DOMText *domt;
 
   intfs.clear();
@@ -291,7 +291,7 @@ void Package::FillIntfs(DOMDocument *doc)
 	{
 	  tmp_elem = (DOMElement *)cur_list->item(j);
 	  elem_name = XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("name")));
-	  sval = string(XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("val"))));
+	  sval = std::string(XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("val"))));
 	  intfs[i].setString(elem_name, sval);
        	}
        
@@ -387,17 +387,17 @@ DOMDocument * Package::BuildFromIntfs()
   //Now start to create the interfaces
 
   unsigned int i, j, k;
-  vector<string> var_names;
+  std::vector<std::string> var_names;
   DOMElement* cur_intf;
   DOMElement* cur_elem;
   DOMElement* tmp_elem;
   char tmp[80];
   double dval;
   long lval;
-  string sval;
-  vector<double> dvals;
-  vector<long> lvals;
-  vector<string> svals;
+  std::string sval;
+  std::vector<double> dvals;
+  std::vector<long> lvals;
+  std::vector<std::string> svals;
 
   for (i=0; i<intfs.size(); i++)
     {

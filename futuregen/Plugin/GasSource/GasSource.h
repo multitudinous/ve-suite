@@ -65,12 +65,12 @@ class GasSource : public REI_Plugin
   double coalcal;
   double ashcal;
   double ashph;
-  vector<string> species;
-  vector<string> comp;
-  vector<string> spec_frac;
-  vector<string> particles;
-  vector<string> p_comp;
-  vector<string> p_frac;
+  std::vector<std::string> species;
+  std::vector<std::string> comp;
+  std::vector<std::string> spec_frac;
+  std::vector<std::string> particles;
+  std::vector<std::string> p_comp;
+  std::vector<std::string> p_frac;
   //HERE is the GUI variable passed to the Dialog and Packed
  protected:
   wxBitmap *my_icon;

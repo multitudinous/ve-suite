@@ -9,6 +9,7 @@ all:
 	chmod +x end.sh
 
 clean:
+	find . -name "*.o" -exec rm {} \;
 	find . -name "*Unit" -exec echo "cd {}; make clean; cd .." > cleaning.sh \;
 	chmod +x cleaning.sh
 	./cleaning.sh

@@ -58,7 +58,7 @@ class KineticReactor : public REI_Plugin
   double res_time;
   double qloss;
   double quench_rate;
-  string work_dir;
+  std::string work_dir;
   long case_type;
   //HERE is the GUI variable passed to the Dialog and Packed
  protected:

@@ -361,9 +361,9 @@ class Prekin_UI_Dialog : public UIDialog
   double* p_optim_EG;
   double* p_optim_m;
   double* p_tolerance;
-  string* p_coal_name;
-  string* p_FORL;
-  string* p_LHK;
+  std::string* p_coal_name;
+  std::string* p_FORL;
+  std::string* p_LHK;
   long* p_Pore_Model;
   long* p_mod_sel;
   long* p_manual_input;

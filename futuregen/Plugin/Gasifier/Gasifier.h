@@ -77,7 +77,7 @@ class Gasifier : public REI_Plugin
   double size_50;
   double size_200;
   double pres_drop;
-  string coal_type;
+  std::string coal_type;
   long stage;
 
   //HERE is the GUI variable passed to the Dialog and Packed
