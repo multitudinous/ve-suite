@@ -4,12 +4,12 @@
 #include <Datatypes/Gas.h>
 #include <Therm/thermo.h>
 
-//#include <Datatypes/Water.h>
-//#include <Steam67/Steam67.h>
+#include <Datatypes/Water.h>
+#include <Steam67/Steam67.h>
 
 #include <interface.h>
 #include <SummaryValues/summary_values.h>
-class Water;
+
 class V21Helper {
 
 public:
@@ -27,7 +27,7 @@ public:
   int SumToInt (summary_values* sv, Interface &it);
 
   thermo  *thermo_database;
-  //steam67 *steam67_database;
+  Steam67 *steam67_database;
  
 private:
 

@@ -51,9 +51,11 @@ OBJECTS = ../string_ops.o \
 	../V21Helper/SummaryValues/unit_conversion.o \
 	../V21Helper/Datatypes/Gas.o \
 	../V21Helper/Datatypes/GasCell.o \
+	../V21Helper/Datatypes/Water.o \
 	../V21Helper/Therm/matrix.o \
 	../V21Helper/Therm/stream.o \
-	../V21Helper/Therm/thermo.o 
+	../V21Helper/Therm/thermo.o \
+	../V21Helper/Steam67/Steam67.o 
 
 .SUFFIXES : .o .cpp .cc	
 

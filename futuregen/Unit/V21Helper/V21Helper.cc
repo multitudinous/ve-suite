@@ -5,8 +5,8 @@
 
 V21Helper::V21Helper (const char* therm_path)  
 {
-  //  std::string therm_path = "/home/maguire/futuregen/V21Helper/Therm/therm";
-  thermo_database = new thermo(therm_path);
+  thermo_database  = new thermo(therm_path);
+  steam67_database = new Steam67();
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
@@ -14,6 +14,7 @@ V21Helper::V21Helper (const char* therm_path)
 V21Helper::~V21Helper ()
 {
   delete thermo_database;
+  delete steam67_database;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
