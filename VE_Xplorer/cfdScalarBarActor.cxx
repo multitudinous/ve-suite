@@ -90,7 +90,7 @@ cfdScalarBarActor::~cfdScalarBarActor()
    vprDEBUG(vprDBG_ALL,2) << "deconstructing cfdScalarBarActor"
                           << std::endl << vprDEBUG_FLUSH;
 
-   for ( int i=0; i<this->numTextLabels; i++ )
+   /*for ( int i=0; i<this->numTextLabels; i++ )
    {
       this->scalarBar->RemoveChild( (cfdSceneNode*)this->pfLabelActor[i] );
       delete this->pfLabelActor[i];
@@ -112,7 +112,7 @@ cfdScalarBarActor::~cfdScalarBarActor()
    vprDEBUG(vprDBG_ALL,2) << "   scalarBar->getNumChildren() = " 
       << this->scalarBar->GetNumChildren() 
       << std::endl << vprDEBUG_FLUSH;
-
+*/
    vprDEBUG(vprDBG_ALL,2) << "   titleScalar->Delete()"
                           << std::endl << vprDEBUG_FLUSH;
    this->titleScalar->Delete();
@@ -124,7 +124,7 @@ cfdScalarBarActor::~cfdScalarBarActor()
 
    vprDEBUG(vprDBG_ALL,2) << "   pfDelete( scalarBar )"
                           << std::endl << vprDEBUG_FLUSH;
-   delete this->scalarBar;
+   //delete this->scalarBar;
 
    vprDEBUG(vprDBG_ALL,2) << "   finished deconstructing cfdScalarBarActor"
                           << std::endl << vprDEBUG_FLUSH;
