@@ -16,6 +16,7 @@
 #include <vtkStructuredGridWriter.h>
 #include <vtkRectilinearGridWriter.h>
 #include <vtkPolyDataWriter.h>
+#include <iostream>
 
 //////////////////////////////////////
 //Constructors                      //

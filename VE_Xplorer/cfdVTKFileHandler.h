@@ -2,7 +2,8 @@
 #define CFD_VTK_FILE_HANDLER_H
 class vtkXMLFileReadTester;
 class vtkDataSet;
-class cfdVTKFileHandler{
+class cfdVTKFileHandler
+{
 public:
    cfdVTKFileHandler();
    cfdVTKFileHandler(const cfdVTKFileHandler& fh);
