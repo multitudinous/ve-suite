@@ -1,8 +1,0 @@
-MOD_NAME Compressor #This is the module name
-
-Int case_type
-Double eff
-Double pressure_out
-Double pressure_change
-
-END
