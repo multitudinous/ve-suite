@@ -137,8 +137,8 @@ void VjObs_i::CreateSoundInfo( void )
    int numberOfSounds = this->_envHandler->GetSoundHandler()->GetNumberOfSounds();
    this->sound_names->length( numberOfSounds );
 
-   //vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
-   //                       << numberOfSounds << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
+                          << numberOfSounds << std::endl << vprDEBUG_FLUSH;
 
    if( numberOfSounds > 0 )
    {
@@ -159,8 +159,8 @@ void VjObs_i::CreateGeometryInfo( void )
    int numGeoArrays = this->_modelHandler->GetModel( 0 )->GetNumberOfGeomDataSets();
    vprDEBUG(vprDBG_ALL,0)
       << " Number of geometries to be transfered to the client: "
-      << numGeoArrays << vprDEBUG_FLUSH;
-      //<< std::endl << vprDEBUG_FLUSH;
+      << numGeoArrays 
+      << std::endl << vprDEBUG_FLUSH;
 
    this->setNumGeoArrays( numGeoArrays );
 
@@ -170,18 +170,13 @@ void VjObs_i::CreateGeometryInfo( void )
       for(CORBA::ULong i = 0; i < (unsigned int)numGeoArrays; i++)
       {
          vprDEBUG(vprDBG_ALL,0)
-            << " Number of geometries to be transfered to the client: "
-            << numGeoArrays
+            << " Geometry file ( "
+            << i << " ) = " << this->_modelHandler->GetModel( 0 )->GetGeomDataSet( i )->GetFilename() 
             << std::endl << vprDEBUG_FLUSH;
          this->geo_name[ i ] = CORBA::string_dup(
                                   this->_modelHandler->GetModel( 0 )->GetGeomDataSet( i )->GetFilename() );
       }
    }
-   
-   vprDEBUG(vprDBG_ALL,0)
-            << " Number of geometries to be transfered to the client: "
-            << numGeoArrays
-            << std::endl << vprDEBUG_FLUSH;
 }
 
 /////////////////////////////////////////////////////////////
@@ -190,8 +185,8 @@ void VjObs_i::CreateDatasetInfo( void )
    CORBA::ULong i;
 
    int numDatasets = this->_modelHandler->GetModel( 0 )->GetNumberOfCfdDataSets();
-   //vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
-   //                       << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
+                          << std::endl << vprDEBUG_FLUSH;
    
    this->setNumDatasets( numDatasets );
 
@@ -280,10 +275,10 @@ void VjObs_i::CreateDatasetInfo( void )
 void VjObs_i::CreateTeacherInfo( void )
 {   
    CORBA::Short numTeacherArrays = this->_envHandler->GetTeacher()->getNumberOfFiles();
-   //vprDEBUG(vprDBG_ALL,0)
-   //   << " Number of performer binary files to be transfered to the client: "
-   //   << numTeacherArrays
-   //   << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0)
+      << " Number of performer binary files to be transfered to the client: "
+      << numTeacherArrays
+      << std::endl << vprDEBUG_FLUSH;
 
    this->setNumTeacherArrays( numTeacherArrays );
    if( numTeacherArrays > 0 )
@@ -345,7 +340,6 @@ VjObs::scalar_p* VjObs_i::get_teacher_name()
 VjObs::scalar_p* VjObs_i::get_teacher_name()
 #endif
 {
-   cout << "get teachername"<<endl;
    VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
    return teacher_name_._retn();
 }
@@ -867,7 +861,6 @@ short VjObs_i::getTeacherState()
 CORBA::Short VjObs_i::getTeacherState()
 #endif
 {
-   cout << "getTeacherState" << endl;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
@@ -885,7 +878,6 @@ short VjObs_i::get_sc_num()
 CORBA::Short VjObs_i::get_sc_num() 
 #endif
 {
-   std::cout << "num scalars " << endl;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL,0) << "Returning num scalars'" << mNumScalars << "' to caller\n"
    //     << vprDEBUG_FLUSH;
@@ -904,7 +896,6 @@ CORBA::Short VjObs_i::get_geo_num()
 {
    //vprDEBUG(vprDBG_ALL,0) << "Returning num geos'" << this->mParamReader->numGeoms << "' to caller\n"
    //     << vprDEBUG_FLUSH;
-   std::cout << this->_modelHandler->GetModel( 0 )->GetNumberOfGeomDataSets() << std::endl;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    return this->_modelHandler->GetModel( 0 )->GetNumberOfGeomDataSets();
 }
@@ -928,7 +919,7 @@ void VjObs_i::GetCfdStateVariables( void )
 {
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _cfdArray = _bufferArray;
+   (*_cfdArray) = (*_bufferArray);
    
    for ( int i = 0; i < 9; i++ )
    {
@@ -979,7 +970,6 @@ short VjObs_i::GetNumberOfSounds()
 CORBA::Short VjObs_i::GetNumberOfSounds()
 #endif
 {
-   std::cout << this->_envHandler->GetSoundHandler()->GetNumberOfSounds() << endl;
    return this->_envHandler->GetSoundHandler()->GetNumberOfSounds();
 }
 
@@ -1018,7 +1008,6 @@ VjObs::obj_p* VjObs_i::GetClientInfoData()
 VjObs::obj_p* VjObs_i::GetClientInfoData()
 #endif
 {
-   cout << "GetClientInfoData" << endl;
    return clientInfoObserverDataArray._retn();
 }
 
@@ -1084,4 +1073,10 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
       }
    }
    this->_unusedNewData = true;
+}
+
+void VjObs_i::PreFrameUpdate( void )
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
 }

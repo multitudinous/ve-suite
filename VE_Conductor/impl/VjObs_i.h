@@ -114,6 +114,7 @@ public:
    void CreateDatasetInfo( void );
    void CreateTeacherInfo( void );
 
+   void PreFrameUpdate( void );
 #ifdef _TAO   
    void update() throw (CORBA::SystemException);
    //Observer::baf_p_slice* baf_param;
