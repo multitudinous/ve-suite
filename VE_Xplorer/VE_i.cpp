@@ -25,7 +25,7 @@
  * -----------------------------------------------------------------
  * File:          $RCSfile: VE_i.cpp,v $
  * Date modified: $Date$
- * Version:       $Revision: 1.153 $
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
