@@ -97,7 +97,7 @@ public:
    short    num_geo;
    short    num_sounds;
    short    num_teacher;
-   short    num_locations;
+   short    num_viewlocs;
    //short    numSteadyStateDataSets;
    //bool     hasXPostData;
    //bool     hasYPostData;

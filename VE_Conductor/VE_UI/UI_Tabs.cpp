@@ -99,6 +99,12 @@ void UI_Tabs::getData()
    cTeacher_state = 0;
 
    cPre_state = 0;
+
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      num_viewlocs = server_ref->getIsoValue();
+   }
+   std::cout << "number of viewing locations: "<< num_viewlocs << std::endl;
   /* server_ref = VjObs::_duplicate(ref);
 
    cGeo_state = 0;
@@ -488,8 +494,8 @@ void UI_Tabs::createTabPages()
    AddPage( _vertPage, _T("Vertex"), false );
 
    //Viewing Locations page
-   //_viewlocPage = new UI_ViewLocTab(this);
-   //AddPage( _viewlocPage, _T("View Points"), false );
+   _viewlocPage = new UI_ViewLocTab(this);
+   AddPage( _viewlocPage, _T("View Points"), false );
 
    //SetSelection(0);
 }

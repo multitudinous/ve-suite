@@ -34,13 +34,15 @@ UI_ViewLocTab::~UI_ViewLocTab( void )
 void UI_ViewLocTab::_buildPage()
 {
    //the radio box
-   int numStoredLocations = ((UI_Tabs *)_parent)->num_locations;
+   int numStoredLocations = ((UI_Tabs *)_parent)->num_viewlocs;
+   std::cout<<"# locs"<<numStoredLocations<<std::endl;
+   char viewpt_name[30];
    _defaultName = new wxString[ numStoredLocations ];
 
    for( unsigned int i=0; i<numStoredLocations; i++)
    {
-      char no = i;
-      _defaultName[i] = "View Location " + no;
+      sprintf(viewpt_name,"View Location %i",i);
+      _defaultName[i] = viewpt_name;
    }
    
    /*if ( numStoredLocations > 0 )
@@ -60,10 +62,10 @@ void UI_ViewLocTab::_buildPage()
    }*/
 
    _locationsRBox = new wxRadioBox(this, VIEWLOC_RBOX, wxT("Stored View Points"),
-                                wxDefaultPosition, wxDefaultSize, 1,
+                                wxDefaultPosition, wxDefaultSize, numStoredLocations,
                                 _defaultName,1 , wxRA_SPECIFY_COLS);
 
-   if ( ((UI_Tabs *)_parent)->num_locations == 0 )
+   if ( ((UI_Tabs *)_parent)->num_viewlocs == 0 )
    {
       _locationsRBox->Enable( false );
    }
@@ -189,9 +191,9 @@ void UI_ViewLocTab::_onRead(wxCommandEvent& event)
 
 void UI_ViewLocTab::_onMove(wxCommandEvent& event)
 {
-   if ( ((UI_Tabs *)_parent)->num_locations > 0 )
+   if ( ((UI_Tabs *)_parent)->num_viewlocs > 0 )
    {
-      for( int i = 0; i < ((UI_Tabs *)_parent)->num_locations; i++)
+      for( int i = 0; i < ((UI_Tabs *)_parent)->num_viewlocs; i++)
       {  
          // _teacherRBox->GetSelection();
          // This code is not correct

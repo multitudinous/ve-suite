@@ -32,6 +32,7 @@
 #include "VjObs_i.h"
 
 #include "cfdTeacher.h"
+#include "cfdQuatCamHandler.h"
 #include "cfdDataSet.h"
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
@@ -284,7 +285,8 @@ CORBA::Long VjObs_i::getIsoValue()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+   //return _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+   return cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getNumLocs();
 }
 
 #ifdef _TAO
