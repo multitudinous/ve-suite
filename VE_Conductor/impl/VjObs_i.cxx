@@ -770,23 +770,24 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
 void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
 #endif
 {
-   do
-   {
-      vpr::System::msleep( 50 );  // 50 milli-second delay
-   }
-   while ( this->_unusedNewData );
-   this->_unusedNewData = true;
+   //do
+   //{
+   //   vpr::System::msleep( 50 );  // 50 milli-second delay
+   //}
+   //while ( this->_unusedNewData );
+   //this->_unusedNewData = true;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    // The order of setting these values
    // MUST MATCH the order in which they are set in 
    // my_orb.java
+   commandQueue.push_back( new cfdCommandArray() );
    if ( (value[ 7 ] != -1) && (value [ 8 ] != -1) )
    {
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, value[ 0 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, value[ 0 ] );
       //std::cout<<"update:this->corba_mutex.C_id = "<<this->mId<<std::endl;
 
       // get the value of the slider bar, used by many visualizations
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, value[ 1 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, value[ 1 ] );
       //std::cout<<"iso_value"<<this->mIso_value<<std::endl;
 
       //NOTE: Data is oneway transfer from
@@ -796,26 +797,26 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
       //GUI side
       //this->mTimesteps = value[ 2 ];
 
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_SC, value[ 3 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_SC, value[ 3 ] );
       //std::cout<<"select scalar:"<<this->mSc<<std::endl;
 
       // change scalar range or cursor settings
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_MIN, value[ 4 ] );
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_MAX, value[ 5 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MIN, value[ 4 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MAX, value[ 5 ] );
       //std::cout<<"update:min,max values: "<<this->mMin<<"\t"<<this->mMax<<std::endl;
 
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, value[ 6 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, value[ 6 ] );
       //std::cout<<"geometry state:"<< this->mGeo_state <<std::endl;
 
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, value[ 7 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, value[ 7 ] );
       //std::cout<<"pre_state:"<< this->mPre_state <<std::endl;
 
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, value[ 8 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, value[ 8 ] );
       //std::cout<<"mTeacher state:"<< this->mTeacher_state <<std::endl;
    }
    else
    {
-      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, value[ 0 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, value[ 0 ] );
       for ( int i = 0; i < 9; i ++ )
       {
          mShort_data_array[ i ] = value[ i ];
