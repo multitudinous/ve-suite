@@ -44,7 +44,6 @@
 #include "cfdPfSceneManagement.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdSteadyStateVizHandler.h"
-//#include "cfdTransientVizHandler.h"
 #include "cfdModelHandler.h"
 #include "cfdModel.h"
 #include "cfdSwitch.h"
@@ -55,7 +54,6 @@
 #include "cfdDCS.h"
 #include "cfdObjects.h"
 #include "cfdTempAnimation.h"
-//#include "cfdIHCCModel.h"
 #include "cfdVjObsWrapper.h"
 
 #ifdef _TAO
@@ -81,7 +79,6 @@
 
 cfdApp::cfdApp( void )
 {
-   this->_sceneManager =         NULL;
 #ifdef _OSG
    _tbvHandler = 0;
    _frameNumber = 0;
@@ -92,18 +89,11 @@ void cfdApp::exit()
 {
    delete filein_name;
 #ifdef _OSG
-   if(_tbvHandler){
+   if ( _tbvHandler )
+   {
       delete _tbvHandler;
    }
 #endif
-   // we don't have a destructor, so delete items here...
-   if ( this->_sceneManager )
-   {  
-      vprDEBUG(vprDBG_ALL,2)  
-        << "deleting this->_sceneManager" << std::endl << vprDEBUG_FLUSH;
-      delete this->_sceneManager;
-   }
-
 #ifdef _TAO
    if ( this->executive ) 
    {
@@ -133,12 +123,6 @@ inline void cfdApp::preForkInit( )
    //pfdInitConverter( "air_system.flt" );
 }
 
-inline pfGroup* cfdApp::getScene( )
-{
-  //vprDEBUG(vprDBG_ALL,1) << "cfdApp::getScene" << std::endl << vprDEBUG_FLUSH;
-  return (pfGroup*)(this->_sceneManager->GetRootNode()->GetRawNode());//for test
-}
-
 void cfdApp::appChanFunc( pfChannel* chan )
 {
    // used to adjust lod scaling
@@ -155,6 +139,21 @@ inline void cfdApp::preSync( )
   vprDEBUG(vprDBG_ALL,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
 }
 #endif
+
+#ifdef _PERFORMER
+inline pfGroup* cfdApp::getScene()
+#elif _OSG
+inline osg::Group* cfdApp::getScene()
+#endif
+{
+   //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
+   //   "C:/test.osg");
+#ifdef _PERFORMER
+   return (pfGroup*)(cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode());
+#elif _OSG
+   return (osg::Group*)cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode();
+#endif
+}
 
 #ifdef _OSG
 void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
@@ -176,12 +175,6 @@ void cfdApp::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-}
-inline osg::Group* cfdApp::getScene()
-{
-   //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
-   //   "C:/test.osg");
-   return (osg::Group*)this->_sceneManager->GetRootNode()->GetRawNode();
 }
 #endif
 
@@ -227,30 +220,28 @@ inline void cfdApp::initScene( )
 # endif // _OPENMP
 
    // define the rootNode, worldDCS, and lighting
-   this->_sceneManager = new cfdPfSceneManagement( this->filein_name );
-   this->_sceneManager->InitScene();
+   cfdPfSceneManagement::instance()->Initialize( this->filein_name );
+   cfdPfSceneManagement::instance()->InitScene();
 
    // modelHandler stores the arrow and holds all data and geometry
-   cfdModelHandler::instance()->Initialize( this->filein_name, this->_sceneManager->GetWorldDCS() );
+   cfdModelHandler::instance()->Initialize( this->filein_name );
    cfdModelHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    cfdModelHandler::instance()->InitScene();
 
    // navigation and cursor 
    cfdEnvironmentHandler::instance()->Initialize( this->filein_name );
-   cfdEnvironmentHandler::instance()->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
-   cfdEnvironmentHandler::instance()->SetRootNode( this->_sceneManager->GetRootNode() );
    cfdEnvironmentHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    cfdEnvironmentHandler::instance()->InitScene();
 
    // create steady state visualization objects
    cfdSteadyStateVizHandler::instance()->Initialize( this->filein_name );
-   cfdSteadyStateVizHandler::instance()->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    cfdSteadyStateVizHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    cfdSteadyStateVizHandler::instance()->InitScene();
 
    //create the volume viz handler
 #ifdef _OSG
-   if(!_tbvHandler){
+   if ( !_tbvHandler )
+   {
       _tbvHandler = new cfdTextureBasedVizHandler();
    }
    _tbvHandler->SetParameterFile(filein_name);
@@ -265,7 +256,7 @@ inline void cfdApp::initScene( )
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-   this->executive = new cfdExecutive( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa, this->_sceneManager->GetWorldDCS() );
+   this->executive = new cfdExecutive( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa );
 #endif // _TAO
 
    // This may need to be fixed
@@ -305,23 +296,7 @@ void cfdApp::preFrame( void )
 #endif
    ///////////////////////
 
-   if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
-   {
-      // This IHCC hack needs to go very soon
-/*   
-      double data[ 6 ];// = { 0 };
-      data[ 0 ] = _vjobsWrapper->GetShortArray( 1 ); //200;  //Agitation (rpm)  initial value 200
-      data[ 1 ] = _vjobsWrapper->GetShortArray( 2 ); //1.25; //Air Concentration initial value 1.25;
-      data[ 2 ] = _vjobsWrapper->GetShortArray( 3 ); //6;    //Initial pH value    initial value 6
-      data[ 3 ] = _vjobsWrapper->GetShortArray( 4 ); //0.1;  //Nitrate Concentration     initial value 0.1
-      data[ 4 ] = _vjobsWrapper->GetShortArray( 5 ); //37;   //Temperate (Celsius)        initial value 37
-      data[ 5 ] = _vjobsWrapper->GetShortArray( 6 ); //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
-
-      this->ihccModel->UpdateModelVariables( data );
-      this->ihccModel->Update();
-*/
-   }
-   else if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )
+   if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )
    {
       // exit cfdApp was selected
 #ifdef _TAO

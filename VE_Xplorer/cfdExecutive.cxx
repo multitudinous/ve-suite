@@ -39,7 +39,7 @@
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdThread.h"
-
+#include "cfdPfSceneManagement.h"
 #include "package.h"
 #include "Network_Exec.h"
 
@@ -49,12 +49,10 @@
 
 #include <vrj/Util/Debug.h>
 #include <vpr/System.h>
-//#include <vpr/Thread/Thread.h>
 
 #include <orbsvcs/CosNamingC.h>
-//#include <tao/BiDir_GIOP/BiDirGIOP.h>
 
-cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, PortableServer::POA* child_poa, cfdDCS* worldDCS )
+cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, PortableServer::POA* child_poa )
 {
    this->naming_context = inputNameContext;
    try
@@ -76,23 +74,18 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
 
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
-   this->worldDCS = worldDCS;
    this->_masterNode = new cfdGroup();
    this->_masterNode->SetName( "cfdExecutive_Node" );
-   this->worldDCS->AddChild( this->_masterNode );
+   cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->_masterNode );
 
    av_modules = new cfdVEAvail_Modules();
    _network = new Network();
 
    //time_t* timeVal;
    long id = (long)time( NULL );
-   //char uiname[256];
-   //sprintf(uiname, "VEClient%ld", id);
    std::ostringstream dirStringStream;
    dirStringStream << "VEClient" << id;
    std::string UINAME = dirStringStream.str();
-   std::cout << UINAME << std::endl;
-   //std::string UINAME = uiname;
    bool is_orb_init = false;
 
    _exec = NULL;
@@ -398,7 +391,7 @@ void cfdExecutive::GetEverything( void * )
             {
                _plugins[ iter->first ] = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
               // When we create the _plugin map here we will do the following
-               _plugins[ iter->first ]->InitializeNode( worldDCS );
+               _plugins[ iter->first ]->InitializeNode( cfdPfSceneManagement::instance()->GetWorldDCS() );
                _plugins[ iter->first ]->AddSelfToSG();
                cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
                _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );

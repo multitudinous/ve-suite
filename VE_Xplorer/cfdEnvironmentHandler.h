@@ -61,8 +61,6 @@ class cfdEnvironmentHandler : public vpr::Singleton< cfdEnvironmentHandler >
       void Initialize( char * );
       void InitScene( void );
       void PreFrameUpdate( void );
-      void SetRootNode( cfdGroup* );
-      void SetWorldDCS( cfdDCS* );
       void SetCommandArray( cfdCommandArray* );
       void CreateObjects( void );
 
@@ -78,8 +76,6 @@ class cfdEnvironmentHandler : public vpr::Singleton< cfdEnvironmentHandler >
       cfdQuatCamHandler* _camHandler;
       cfdCursor* cursor;
       char* _param;
-      cfdDCS* worldDCS;
-      cfdGroup* rootNode;
       cfdCommandArray* _commandArray;
       cfdReadParam* _readParam;
       // cur_box will eventually be used to define bounding box

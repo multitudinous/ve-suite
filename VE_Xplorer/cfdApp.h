@@ -36,7 +36,6 @@
 class cfdExecutive;
 #endif
 
-class cfdPfSceneManagement;
 class cfdVjObsWrapper;
 
 // Scene graph dependent forward declarations
@@ -125,7 +124,6 @@ class cfdApp: public vrj::OsgApp
       void SetWrapper( cfdVjObsWrapper* );
       //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
-      cfdPfSceneManagement*      _sceneManager;
 #ifdef _OSG
       cfdTextureBasedVizHandler* _tbvHandler;
       osg::ref_ptr<osgUtil::SceneView> _sceneViewer;

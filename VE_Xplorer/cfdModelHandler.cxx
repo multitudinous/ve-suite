@@ -52,6 +52,7 @@
 #include "cfdTempAnimation.h"
 #include "cfdTextureManager.h"
 #include "cfdSwitch.h"
+#include "cfdPfSceneManagement.h"
 
 #include <fstream>
 #include <string>
@@ -71,7 +72,6 @@ cfdModelHandler::cfdModelHandler( void )
    vprDEBUG(vprDBG_ALL,2) << "cfdModelHandler constructor"
                           << std::endl << vprDEBUG_FLUSH;
    _param = 0;
-   worldNode = 0;
    _activeTextureManager = 0;
    this->activeDataset  = 0;
    this->_scalarBar     = 0;
@@ -81,18 +81,9 @@ cfdModelHandler::cfdModelHandler( void )
    this->_activeModel   = 0;
 }
 
-void cfdModelHandler::Initialize( char* param, cfdDCS* dcs )
+void cfdModelHandler::Initialize( char* param )
 {
    _param = param;
-   worldNode = dcs;
-   // worldnode getting passed in to model
-   // model will then add its own node to the tree
-   if ( worldNode == NULL )
-   {
-      std::cerr << "ERROR: Must intialize worldDCS for cfdModelHandler."
-                << std::endl;
-      exit( 1 );
-   }
    _readParam = new cfdReadParam();
    CreateObjects();
 }
@@ -237,7 +228,7 @@ void cfdModelHandler::InitScene( void )
 
    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
    // Create Scalar bar
-   _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
+   _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)cfdPfSceneManagement::instance()->GetWorldDCS()->GetParent( 0 ) );
    // Assumes active dataset isn't null
    _scalarBar->SetActiveDataSet( activeDataset );
    _scalarBar->RefreshScalarBar();
@@ -377,7 +368,7 @@ void cfdModelHandler::PreFrameUpdate( void )
             }
             else
             {
-               parent = worldNode;
+               parent = cfdPfSceneManagement::instance()->GetWorldDCS();
             }
 
             vprDEBUG(vprDBG_ALL,2)
@@ -541,7 +532,7 @@ void cfdModelHandler::CreateObjects( void )
       if ( id == 8 )
       {
          if ( _modelList.empty() )
-            _modelList.push_back( new cfdModel( worldNode ) );
+            _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
          // Assume only one model for now
          // Flexibilty to have multiply models
          _modelList.at( 0 )->CreateCfdDataSet();
@@ -595,7 +586,7 @@ void cfdModelHandler::CreateObjects( void )
       else if ( id == 9 ) // if it is an geom file
       {
          if ( _modelList.empty() )
-            _modelList.push_back( new cfdModel( worldNode ) );
+            _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
 
          char fileName[100];
          float stlColor[3];
@@ -660,7 +651,7 @@ void cfdModelHandler::CreateObjects( void )
       else if ( id == 10 )
       {
          if ( _modelList.empty() )
-            _modelList.push_back( new cfdModel( worldNode ) );
+            _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
 
          float stlColor[3];
          int color;
@@ -767,7 +758,7 @@ void cfdModelHandler::CreateObjects( void )
       {
          if ( _modelList.empty() )
          {
-            _modelList.push_back( new cfdModel( worldNode ) );
+            _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
          }
    
          //read the number of files that describe the texture

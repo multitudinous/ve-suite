@@ -57,7 +57,7 @@ class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
       ~cfdModelHandler();
    
    public:
-      void Initialize( char*, cfdDCS* );
+      void Initialize( char* );
       void InitScene( void );
       void PreFrameUpdate( void );
       cfdDataSet* GetActiveDataSet( void );
@@ -77,7 +77,6 @@ class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
       cfdTextureManager* GetActiveTextureManager( void );
    private:
       char* _param;
-      cfdDCS* worldNode;
       cfdDataSet* activeDataset;
       cfdCommandArray* commandArray;
       cfdReadParam* _readParam;

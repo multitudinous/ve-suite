@@ -45,6 +45,7 @@
 #include "cfdQuatCamHandler.h"
 #include "cfdDataSet.h"
 #include "cfdModelHandler.h"
+#include "cfdPfSceneManagement.h"
 
 #include <vrj/Util/Debug.h>
 
@@ -59,8 +60,6 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    _camHandler    = 0;
    cursor         = 0;
    _param         = 0;
-   worldDCS       = 0;
-   rootNode       = 0;
    _commandArray  = 0;
    _readParam     = 0;
    arrow          = 0;
@@ -133,16 +132,6 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
    }
 }
 /////////////////////////////////////////
-void cfdEnvironmentHandler::SetRootNode( cfdGroup* input )
-{
-   this->rootNode = input;
-}
-
-void cfdEnvironmentHandler::SetWorldDCS( cfdDCS* input )
-{
-   this->worldDCS = input;
-}
-
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 {
    _commandArray = input;
@@ -163,9 +152,9 @@ void cfdEnvironmentHandler::InitScene( void )
 {
    std::cout << "| ***************************************************************** |" << std::endl;
    // Needs to be set by the gui fix later
-   this->nav->Initialize( this->worldDCS );
+   this->nav->Initialize( cfdPfSceneManagement::instance()->GetWorldDCS() );
    //this->nav->SetWorldLocation( this->nav->worldTrans );
-   this->worldDCS->SetScaleArray( this->worldScale );
+   cfdPfSceneManagement::instance()->GetWorldDCS()->SetScaleArray( this->worldScale );
 
    for ( int i = 0; i < 3; i++)
    {
@@ -177,9 +166,9 @@ void cfdEnvironmentHandler::InitScene( void )
    tempArray[ 0 ] = -this->nav->worldTrans[ 0 ];
    tempArray[ 1 ] = -this->nav->worldTrans[ 1 ];
    tempArray[ 2 ] = -this->nav->worldTrans[ 2 ];
-   this->worldDCS->SetTranslationArray( tempArray );
+   cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray( tempArray );
 
-   this->worldDCS->SetRotationArray( this->nav->worldRot );
+   cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationArray( this->nav->worldRot );
 
    // Maybe need to fix this later
    //this->cursorId = NONE;
@@ -188,14 +177,14 @@ void cfdEnvironmentHandler::InitScene( void )
    // Initiate cursors.
    //
    std::cout << "|  8. Initializing................................. Virtual cursors |" << std::endl;
-   this->cursor = new cfdCursor( this->arrow, this->worldDCS, this->rootNode );
+   this->cursor = new cfdCursor( this->arrow, cfdPfSceneManagement::instance()->GetWorldDCS(), cfdPfSceneManagement::instance()->GetRootNode() );
    this->cursor->Initialize( this->nav->GetCursorLocation(),this->nav->GetDirection() );
 
    //
    // Initiate quatcam
    //
    std::cout << "|  9. Initializing..................................... cfdQuatCams |" << std::endl;
-   this->_camHandler = new cfdQuatCamHandler( this->worldDCS, this->nav, _param );
+   this->_camHandler = new cfdQuatCamHandler( cfdPfSceneManagement::instance()->GetWorldDCS(), this->nav, _param );
 
    //
    // Initiate quatcam
@@ -207,7 +196,7 @@ void cfdEnvironmentHandler::InitScene( void )
    // Initiate the Performer Stored Binary objects.
    //
    std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
-   this->_teacher = new cfdTeacher( "STORED_FILES", this->worldDCS );
+   this->_teacher = new cfdTeacher( "STORED_FILES", cfdPfSceneManagement::instance()->GetWorldDCS() );
 }
 
 void cfdEnvironmentHandler::PreFrameUpdate( void )

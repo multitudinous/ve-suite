@@ -84,7 +84,6 @@ class cfdSteadyStateVizHandler : public vpr::Singleton< cfdSteadyStateVizHandler
 
       // Helper functions
       void SetCommandArray( cfdCommandArray* );
-      void SetWorldDCS( cfdDCS* );
       cfdTempAnimation* GetActiveAnimation( void );
       bool TransientGeodesIsBusy();
 
@@ -120,7 +119,6 @@ class cfdSteadyStateVizHandler : public vpr::Singleton< cfdSteadyStateVizHandler
 
       // Common objects for all functions
       cfdCommandArray*  commandArray;
-      cfdDCS*     _worldDCS;
       cfdDCS*     _activeDataSetDCS;
       cfdObjects* _activeObject;
       cfdTempAnimation* _activeTempAnimation;

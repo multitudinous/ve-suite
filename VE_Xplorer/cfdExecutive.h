@@ -60,7 +60,7 @@ namespace PortableServer { class POA; }
 class cfdExecutive : public cfdGlobalBase
 {
    public:
-      cfdExecutive( CosNaming::NamingContext*, PortableServer::POA*, cfdDCS*  );
+      cfdExecutive( CosNaming::NamingContext*, PortableServer::POA* );
 
       ~cfdExecutive( void );
 
@@ -127,7 +127,6 @@ class cfdExecutive : public cfdGlobalBase
       cfdDashboard* _dashBoard;
       cfdInteractiveGeometry* _geometry;
       Body_UI_i* ui_i;
-      cfdDCS* worldDCS;
       cfdGroup* _masterNode;
 
       bool _doneWithCalculations;

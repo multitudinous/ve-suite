@@ -65,6 +65,7 @@
 #include "cfdModel.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdModelHandler.h"
+#include "cfdPfSceneManagement.h"
 
 #include <vpr/Util/Debug.h>
 #include <vpr/vpr.h>
@@ -109,7 +110,6 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
    this->animImg = NULL;
    
    this->commandArray = NULL;
-   this->_worldDCS = NULL;
    this->_activeDataSetDCS = NULL;
    this->_activeObject = NULL;
    this->lastSource = NULL;
@@ -134,7 +134,6 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 {
    this->runIntraParallelThread = false;
    vpr::System::msleep( 1000 );  // half-second delay
-   //delete this->vjThFunc[0];
    delete this->vjTh[0];
 
    if ( this->isosurface ) 
@@ -349,16 +348,6 @@ void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
       exit( 1 );
    }
    commandArray = input;
-}
-
-void cfdSteadyStateVizHandler::SetWorldDCS( cfdDCS* input )
-{
-   if ( input == NULL )
-   {
-      std::cerr << "cfdSteadyStateVizHandler::SetWorldDCS input is NULL" << std::endl;
-      exit( 1 );
-   }
-   _worldDCS = input;
 }
 
 cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
@@ -771,7 +760,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             //temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
-            temp->SetWorldNode( this->_worldDCS );
+            temp->SetWorldNode( cfdPfSceneManagement::instance()->GetWorldDCS() );
             temp->SetGeodes( this->dataList[ i ]->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
             
@@ -826,7 +815,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             
             if ( this->_activeObject->GetObjectType() == IMAGE_EX )
             {
-               this->_activeDataSetDCS = _worldDCS;
+               this->_activeDataSetDCS = cfdPfSceneManagement::instance()->GetWorldDCS();
             }
             else
             {
