@@ -67,6 +67,7 @@ public:
   void setVal (std::string var, std::vector<double> val)      { setDouble1D(var, val); }
   void setVal (std::string var, std::vector<std::string> val) { setString1D(var, val); }
 
+
   std::vector<std::string> getInts      ();
   std::vector<std::string> getDoubles   ();
   std::vector<std::string> getStrings   ();

@@ -39,7 +39,7 @@
 #include <iostream>
 
 int main(int argc, char* argv[])
-{
+{I kno
 #ifdef _TAO
    CORBA::ORB_var orb = CORBA::ORB_init( argc, argv,"VE_Suite_ORB" );
 #else

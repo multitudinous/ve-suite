@@ -196,17 +196,6 @@ void cfdExecutive::GetEverything( void )
 
 void cfdExecutive::GetNetwork ( void )
 {
-/*  
-   char* network = 0;
-   try 
-   { 
-      network = _exec->GetNetwork();
-   } 
-   catch (CORBA::Exception &) 
-   {
-      std::cerr << "ERROR: cfdExecutive : no exec found! " << std::endl;
-   }
-*/
    // Get buffer value from Body_UI implementation
    std::string temp( uii->GetNetworkString() );
    const char* networkString = temp.c_str();
@@ -222,49 +211,76 @@ void cfdExecutive::GetNetwork ( void )
    network->clear();
    IDMap.clear();
 
-   std::vector<Interface>::iterator iter;
+   std::vector<Interface>::iterator thisInterface;
    // Find network layout chunk in network structure
-   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+   for(thisInterface=p.intfs.begin(); thisInterface!=p.intfs.end(); thisInterface++)
    {
-      if ( iter->_id == -1 ) 
+      if ( thisInterface->_id == -1 )  //find the interface with ID = -1
       {
          break;
       }
    }
-
-   if(iter!=p.intfs.end() && network->parse(&(*iter))) 
+   //if we did find the layout interface and were able to parse it....
+   if(thisInterface!=p.intfs.end() && network->parse(&(*thisInterface))) 
    {
-      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+      //loop through the interfaces again
+      for(thisInterface=p.intfs.begin(); thisInterface!=p.intfs.end(); thisInterface++)
       {
-         if(network->setInput(iter->_id, &(*iter))) 
+      
+         //try to set this interface's inputs
+         if(network->setInput(thisInterface->_id, &(*thisInterface))) 
          {
-            network->module(network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-            network->module(network->moduleIdx(iter->_id))->_need_execute = 1;
-            network->module(network->moduleIdx(iter->_id))->_return_state = 0;
+            network->module(network->moduleIdx(thisInterface->_id))->_is_feedback  = thisInterface->getInt("FEEDBACK");
+            network->module(network->moduleIdx(thisInterface->_id))->_need_execute = 1;
+            network->module(network->moduleIdx(thisInterface->_id))->_return_state = 0;
          }  
          else
          {
-            std::cerr << "|\tUnable to set id# " << iter->_id << "'s inputs" << std::endl;
+            std::cerr << "|\tUnable to set id# " << thisInterface->_id << "'s inputs" << std::endl;
          }
-
-         if ( iter->_id != -1 ) 
+         //if this is not the layout interface...
+         if ( thisInterface->_id != -1 ) 
          {
-            //std::cout <<  network->module( network->moduleIdx(iter->_id) )->get_id() << " : " << network->module( network->moduleIdx(iter->_id) )->_name <<std::endl;
-            IDMap[ network->module( network->moduleIdx(iter->_id) )->get_id() ] = network->module( network->moduleIdx(iter->_id) )->_name;
-            //std::cout <<  network->module( network->moduleIdx(iter->_id) )->get_id() << " : " << network->module( network->moduleIdx(iter->_id) )->_name <<std::endl;
-            _it_map[ network->module( network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
+            int thisInterfaceID = 
+               this->network->module( network->moduleIdx(thisInterface->_id) )->get_id();
+            //std::cout <<  network->module( network->moduleIdx(thisInterface->_id) )->get_id() << " : " << network->module( network->moduleIdx(thisInterface->_id) )->_name <<std::endl;
+            this->IDMap[ thisInterfaceID ] = 
+              this->network->module( network->moduleIdx(thisInterface->_id) )->_name;
+            //std::cout <<  network->module( network->moduleIdx(thisInterface->_id) )->get_id() << " : " << network->module( network->moduleIdx(thisInterface->_id) )->_name <<std::endl;
+            this->interfaceMap[ thisInterfaceID ] = (*thisInterface);
          }
       }
    } 
-   else 
+   else     //this is probably bad
    {
       std::cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << std::endl;
    }
-///////////////////////////
-   /*if ( network )
-      delete [] network;*/
 }
 
+void cfdWebServices::insertItemIntoSQL(Interface& &interface)
+{
+   std::string intString;                 //the string we'll pass to the database
+   std::map<std::string, long> ints;      //grab a copy of the interface's int map
+   ints = interface.getIntMap();
+   std::map<std::string, long>::iter intsIter;  //and make an iter
+   for(intsIter = ints.begin(); intsIter != ints.end(); intsIter++)  //iterate through the map
+   {  
+      intString += intsIter->first + "|" + intsIter->second + "||";         //and tack the name and number into our string, separated by pipes
+      
+   }
+   
+   //repeat with doubles
+   std::string doubleString;                
+   std::map<std::string, long> ints;     
+   ints = interface.getIntMap();
+   std::map<std::string, long>::iter intsIter;  
+   for(doublesIter = ints.begin(); doublesIter != ints.end(); doublesIter++) 
+   {  
+      intString += doublesIter->first + "|" + doublesIter->second + "||";    
+      
+   }
+
+}
 
 cfdWebServices::~cfdWebServices()
 {

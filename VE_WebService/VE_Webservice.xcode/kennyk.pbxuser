@@ -12,9 +12,9 @@
 				PBXFileTableDataSourceColumnSortingKey = PBXFileDataSource_Filename_ColumnID;
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
-					484,
+					731,
 					20,
-					88,
+					130,
 					43,
 					43,
 					20,
@@ -53,7 +53,7 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 133997318;
+			PBXPerProjectTemplateStateSaveDate = 134443405;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -230,26 +230,21 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 133997318;
+			PBXWorkspaceStateSaveDate = 134443405;
 		};
 		perUserProjectItems = {
 			AD0E510407FB6E57005196A0 = AD0E510407FB6E57005196A0;
 			AD0E510507FB6E57005196A0 = AD0E510507FB6E57005196A0;
-			AD0E515B07FB7460005196A0 = AD0E515B07FB7460005196A0;
-			AD0E515E07FB7460005196A0 = AD0E515E07FB7460005196A0;
 			AD585E3A07F4CC070030C9C2 = AD585E3A07F4CC070030C9C2;
 			AD585E4107F4DE790030C9C2 = AD585E4107F4DE790030C9C2;
-			ADCC8E7707FC9C8A005D8201 = ADCC8E7707FC9C8A005D8201;
-			ADCC8E7807FC9C8A005D8201 = ADCC8E7807FC9C8A005D8201;
+			ADC162CA0803205900797D5F = ADC162CA0803205900797D5F;
 			ADCC8E7B07FCA35B005D8201 = ADCC8E7B07FCA35B005D8201;
-			ADCC8E7C07FCA35B005D8201 = ADCC8E7C07FCA35B005D8201;
-			ADCC8E7D07FCA35B005D8201 = ADCC8E7D07FCA35B005D8201;
-			ADCC8E7E07FCA35B005D8201 = ADCC8E7E07FCA35B005D8201;
-			ADCC8E7F07FCA35B005D8201 = ADCC8E7F07FCA35B005D8201;
-			ADCC8E8207FCA35B005D8201 = ADCC8E8207FCA35B005D8201;
-			ADD7658207F9D68A00D35CAD = ADD7658207F9D68A00D35CAD;
-			ADD7658707F9D75B00D35CAD = ADD7658707F9D75B00D35CAD;
-			ADD7659907F9D83C00D35CAD = ADD7659907F9D83C00D35CAD;
+			ADDBE73C08032F3B00145123 = ADDBE73C08032F3B00145123;
+			ADDBE7AD080336AA00145123 = ADDBE7AD080336AA00145123;
+			ADDBE7F30803593800145123 = ADDBE7F30803593800145123;
+			ADDBE7F40803593800145123 = ADDBE7F40803593800145123;
+			ADDFB29D080375C0007F4CB5 = ADDFB29D080375C0007F4CB5;
+			ADDFB29E080375C0007F4CB5 = ADDFB29E080375C0007F4CB5;
 		};
 		sourceControlManager = AD585E2107F4A39E0030C9C2;
 		userBuildSettings = {
@@ -283,34 +278,6 @@
 		vrLen = 755;
 		vrLoc = 0;
 	};
-	AD0E515B07FB7460005196A0 = {
-		fRef = AD585E3607F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = GetCalculations;
-		rLen = 15;
-		rLoc = 2077;
-		rType = 0;
-		vrLen = 1276;
-		vrLoc = 947;
-	};
-	AD0E515E07FB7460005196A0 = {
-		fRef = AD0E515F07FB7460005196A0;
-		isa = PBXTextBookmark;
-		name = "(null): 103";
-		rLen = 0;
-		rLoc = 3470;
-		rType = 0;
-		vrLen = 952;
-		vrLoc = 3004;
-	};
-	AD0E515F07FB7460005196A0 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = cfdExecutive.h;
-		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/cfdExecutive.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
 	AD585E2107F4A39E0030C9C2 = {
 		fallbackIsa = XCSourceControlManager;
 		isSCMEnabled = 0;
@@ -335,24 +302,25 @@
 	};
 	AD585E3507F4CB640030C9C2 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {804, 1484}}";
-			sepNavSelRange = "{1664, 0}";
-			sepNavVisRect = "{{0, 457}, {716, 531}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 1484}}";
+			sepNavSelRange = "{1704, 0}";
+			sepNavVisRect = "{{0, 0}, {1005, 768}}";
 		};
 	};
 	AD585E3607F4CB640030C9C2 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {716, 1634}}";
-			sepNavSelRange = "{769, 0}";
-			sepNavVisRect = "{{0, 240}, {716, 531}}";
+			sepNavIntBoundsRect = "{{0, 0}, {705, 1634}}";
+			sepNavSelRange = "{2538, 0}";
+			sepNavVisRect = "{{0, 1181}, {705, 428}}";
+			sepNavWindowFrame = "{{-800, 266}, {750, 502}}";
 		};
 	};
 	AD585E3707F4CB640030C9C2 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {944, 1664}}";
-			sepNavSelRange = "{43, 14}";
-			sepNavVisRect = "{{0, 0}, {716, 531}}";
-			sepNavWindowFrame = "{{-862, 277}, {866, 737}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1315, 4409}}";
+			sepNavSelRange = "{10444, 0}";
+			sepNavVisRect = "{{0, 3476}, {1005, 768}}";
+			sepNavWindowFrame = "{{30, 88}, {1224, 914}}";
 		};
 	};
 	AD585E3A07F4CC070030C9C2 = {
@@ -370,43 +338,28 @@
 		isa = PBXTextBookmark;
 		name = "cfdWebServicesMain.cxx: 3";
 		rLen = 0;
-		rLoc = 3667;
+		rLoc = 3672;
 		rType = 0;
 		vrLen = 31;
 		vrLoc = 0;
 	};
-	ADCC8E7707FC9C8A005D8201 = {
-		fRef = AD585E3607F4CB640030C9C2;
+	ADC162CA0803205900797D5F = {
+		fRef = ADC162CB0803205900797D5F;
 		isa = PBXTextBookmark;
-		name = "cfdWebServices.h: 39";
-		rLen = 0;
-		rLoc = 769;
+		name = GetNetw;
+		rLen = 7;
+		rLoc = 8186;
 		rType = 0;
-		vrLen = 1077;
-		vrLoc = 279;
+		vrLen = 2009;
+		vrLoc = 8460;
 	};
-	ADCC8E7807FC9C8A005D8201 = {
-		fRef = ADCC8E7907FC9C8A005D8201;
-		isa = PBXTextBookmark;
-		name = "(null): 103";
-		rLen = 0;
-		rLoc = 3470;
-		rType = 0;
-		vrLen = 913;
-		vrLoc = 3004;
-	};
-	ADCC8E7907FC9C8A005D8201 = {
+	ADC162CB0803205900797D5F = {
 		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = cfdExecutive.h;
-		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/cfdExecutive.h;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = cfdExecutive.cxx;
+		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/cfdExecutive.cxx;
 		refType = 0;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {705, 2099}}";
-			sepNavSelRange = "{3470, 0}";
-			sepNavVisRect = "{{0, 1320}, {705, 428}}";
-		};
 	};
 	ADCC8E7B07FCA35B005D8201 = {
 		fRef = AD585E3607F4CB640030C9C2;
@@ -418,85 +371,86 @@
 		vrLen = 1033;
 		vrLoc = 279;
 	};
-	ADCC8E7C07FCA35B005D8201 = {
+	ADDBE73C08032F3B00145123 = {
 		fRef = AD585E3707F4CB640030C9C2;
 		isa = PBXTextBookmark;
-		name = cfdWebServices;
-		rLen = 14;
-		rLoc = 43;
-		rType = 0;
-		vrLen = 857;
-		vrLoc = 0;
-	};
-	ADCC8E7D07FCA35B005D8201 = {
-		fRef = AD585E3607F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.h: 39";
+		name = "cfdWebServices.cxx: 239";
 		rLen = 0;
-		rLoc = 769;
+		rLoc = 8790;
 		rType = 0;
-		vrLen = 1033;
-		vrLoc = 279;
+		vrLen = 2263;
+		vrLoc = 7623;
 	};
-	ADCC8E7E07FCA35B005D8201 = {
-		fRef = AD585E3707F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = cfdWebServices;
-		rLen = 14;
-		rLoc = 43;
-		rType = 0;
-		vrLen = 857;
-		vrLoc = 0;
-	};
-	ADCC8E7F07FCA35B005D8201 = {
+	ADDBE7AD080336AA00145123 = {
 		fRef = AD585E3507F4CB640030C9C2;
 		isa = PBXTextBookmark;
-		name = "cfdWebServicesMain.cxx: 40";
+		name = "cfdWebServicesMain.cxx: 42";
 		rLen = 0;
-		rLoc = 1664;
+		rLoc = 1704;
 		rType = 0;
-		vrLen = 1389;
-		vrLoc = 1416;
-	};
-	ADCC8E8207FCA35B005D8201 = {
-		fRef = ADCC8E7907FC9C8A005D8201;
-		isa = PBXTextBookmark;
-		name = "cfdExecutive.h: 103";
-		rLen = 0;
-		rLoc = 3470;
-		rType = 0;
-		vrLen = 913;
-		vrLoc = 3004;
-	};
-	ADD7658207F9D68A00D35CAD = {
-		fRef = AD585E3707F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.cxx: 1";
-		rLen = 0;
-		rLoc = 0;
-		rType = 0;
-		vrLen = 62;
+		vrLen = 2066;
 		vrLoc = 0;
 	};
-	ADD7658707F9D75B00D35CAD = {
-		fRef = AD585E3507F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServicesMain.cxx: 91";
-		rLen = 0;
-		rLoc = 3554;
-		rType = 0;
-		vrLen = 980;
-		vrLoc = 2701;
-	};
-	ADD7659907F9D83C00D35CAD = {
+	ADDBE7F30803593800145123 = {
 		fRef = AD585E3707F4CB640030C9C2;
 		isa = PBXTextBookmark;
-		name = cfdWebServices;
-		rLen = 14;
-		rLoc = 43;
+		name = "cfdWebServices.cxx: 262";
+		rLen = 0;
+		rLoc = 10139;
 		rType = 0;
-		vrLen = 62;
-		vrLoc = 0;
+		vrLen = 2043;
+		vrLoc = 7933;
+	};
+	ADDBE7F40803593800145123 = {
+		fRef = ADDBE7F50803593800145123;
+		isa = PBXTextBookmark;
+		name = "(null): 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1244;
+		vrLoc = 2656;
+	};
+	ADDBE7F50803593800145123 = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = interface.h;
+		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_Conductor/Framework/interface.h;
+		refType = 0;
+		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {705, 1454}}";
+			sepNavSelRange = "{2743, 0}";
+			sepNavVisRect = "{{0, 1016}, {705, 428}}";
+			sepNavWindowFrame = "{{-760, 383}, {750, 502}}";
+		};
+	};
+	ADDFB29D080375C0007F4CB5 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 273";
+		rLen = 0;
+		rLoc = 10444;
+		rType = 0;
+		vrLen = 2391;
+		vrLoc = 8382;
+	};
+	ADDFB29E080375C0007F4CB5 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "(null): 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1245;
+		vrLoc = 2655;
+	};
+	ADDFB29F080375C0007F4CB5 = {
+		isa = PBXFileReference;
+		name = interface.h;
+		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_Conductor/Framework/interface.h;
+		refType = 0;
+		sourceTree = "<absolute>";
 	};
 	D28A88AD04BDD90700651E21 = {
 		activeExec = 0;

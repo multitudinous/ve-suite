@@ -89,6 +89,7 @@ class cfdWebServices
       Network* network;
    private:
       
+      void insertItemIntoSQL(Interface &interface);
       cfdExecutiveConfiguration* param;
       std::string activeScalarName;
       cfdGauges* gauges;
@@ -100,7 +101,7 @@ class cfdWebServices
       bool doneWithCalculations;
       bool updateNetworkString;
       bool runGetEverythingThread;
-
+      
 };
 
 #endif
