@@ -97,7 +97,7 @@ int WaterSource::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void WaterSource::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*88/100, icon_h*37/75);
+  oports[0]=wxPoint(icon_w*50/60, icon_h*21/45);
   return ;
 }
 

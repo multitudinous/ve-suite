@@ -79,7 +79,7 @@ int Cyclone::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Cyclone::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*6/57,icon_h*22/102);
+  iports[0]=wxPoint(icon_w*1/27,icon_h*10/50);
   return;
 }
 
@@ -94,8 +94,8 @@ int Cyclone::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Cyclone::GetOPorts(POLY &oports)
 {
-  oports[1]=wxPoint(icon_w*26/57, icon_h*99/102); 
-  oports[0]=wxPoint(icon_w*52/57, icon_h*22/102); 
+  oports[0]=wxPoint(icon_w*26/27, icon_h*10/50); 
+  oports[1]=wxPoint(icon_w*12/27, icon_h*50/50); 
 }
 
 /////////////////////////////////////////////////////////////////////////////
