@@ -41,6 +41,8 @@
 #include "cfdDataSet.h"
 #include "cfdGeode.h"
 #include "cfdDCS.h"
+#include "string_ops.h"
+#include "cfdCursor.h"
 
 #include <fstream>
 #include <cstdlib>
@@ -80,6 +82,8 @@ VEOPPDmod::~VEOPPDmod( void )
    if ( _param )
       delete [] _param;
    //delete this->dataRepresentation;
+   if ( _geode != NULL )
+      delete _geode;
 }
 
 void VEOPPDmod::InitializeNode( cfdDCS* veworldDCS )
@@ -91,17 +95,33 @@ void VEOPPDmod::InitializeNode( cfdDCS* veworldDCS )
    CreateObjects();
 }
 
-cfdGeode* VEOPPDmod::GetCustomVizFeature( int input )
+void VEOPPDmod::CreateCustomVizFeature( int input )
 {
+   if ( v_value.empty() )
+      return;
+   ////////////////////////////////////////////
    // Case 0 -- single point with sphere polygon.
-   //   Building the sphere source.
+   //           Building the sphere source.  
    vtkSphereSource*    sphereSrc      = vtkSphereSource::New();
    vtkPolyDataNormals* sphereNorm     = vtkPolyDataNormals::New();
    vtkPolyDataMapper*  sphereMapper   = vtkPolyDataMapper::New();
    vtkActor*           sphereActor    = vtkActor::New();
+   double radius = 0;
+   // Find radius result
+   for ( unsigned int i = 0; i < v_desc.size(); i++ )
+   {
+      if( v_desc[ i ].Cmp( "Put variable name here" ) )
+      {
+         const string var( v_value[ i ].c_str() );
+         cout << var << endl;
+         string_to_double( var, radius );
+         break;
+      }
+   }
 
-   sphereSrc->SetRadius( 0.05f );
-   sphereSrc->SetCenter( 0.0f, 0.0f, 0.0f );
+   sphereSrc->SetRadius( radius );
+   double* cursorLoc = _cursor->GetCursorLocation();
+   sphereSrc->SetCenter( cursorLoc[ 0 ], cursorLoc[ 1 ], cursorLoc[ 2 ] );
    sphereSrc->Update();
 
    sphereNorm->SetInput( sphereSrc->GetOutput() );
@@ -129,6 +149,6 @@ cfdGeode* VEOPPDmod::GetCustomVizFeature( int input )
    sphereActor->Delete();
 
    _dcs->AddChild( (cfdSceneNode*)_geode );
-   return NULL;
+   ///////////////////////////////////////////////
 }
 

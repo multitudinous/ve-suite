@@ -250,9 +250,10 @@ void cfdVEBaseClass::SetModuleResults( const char* network )
 
 // Viz feature for the devloper to define
 // Can be anything that creates a geode
-cfdGeode* cfdVEBaseClass::GetCustomVizFeature( int input )
+void cfdVEBaseClass::CreateCustomVizFeature( int input )
 {
-   return NULL;
+   // Do nothing
+   // Implement for each module
 }
 //This is the load function of the module, unpack the input string and fill up the UI according to this
 void cfdVEBaseClass::UnPack(Interface* intf)

@@ -53,7 +53,7 @@ class VEOPPDmod: public cfdVEBaseClass
       ~VEOPPDmod( void );
 
       virtual void InitializeNode( cfdDCS* );
-      virtual cfdGeode* GetCustomVizFeature( int );
+      virtual void CreateCustomVizFeature( int );
    private:
       cfdGeode* _geode;
 };

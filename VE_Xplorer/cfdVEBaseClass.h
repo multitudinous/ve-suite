@@ -130,7 +130,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
 
       void SetModuleResults( const char* );
 
-      virtual cfdGeode* GetCustomVizFeature( int );
+      virtual void CreateCustomVizFeature( int );
    private:
       // This needs to be vector of geometry nodes
       cfdModuleGeometry*  geometryNode;
@@ -140,11 +140,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
 
       wxString _objectDescription;
 
-      cfdCursor* _cursor;
-
       char* _network;
-      std::vector<wxString> v_desc;
-      std::vector<wxString> v_value;
 
    protected:
       void CreateObjects( void );
@@ -180,6 +176,10 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       int _modID;
       wxString _objectName;
       cfdDCS* _dcs;
+      cfdCursor* _cursor;
+
+      std::vector<wxString> v_desc;
+      std::vector<wxString> v_value;
 };
 
 #endif

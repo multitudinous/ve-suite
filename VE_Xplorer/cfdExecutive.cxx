@@ -387,6 +387,8 @@ void cfdExecutive::GetEverything( void )
                _modelHandler->AddModel( _plugins[ iter->first ]->GetCFDModel() );
                _plugins[ iter->first ]->SetCursor( _envHandler->GetCursor() );
                _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
+               int dummyVar = 0;
+               _plugins[ iter->first ]->CreateCustomVizFeature( dummyVar );
                vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
                                       << " ]-> " << iter->second 
                                       << " is being created." << endl << vprDEBUG_FLUSH;
