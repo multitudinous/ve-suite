@@ -115,7 +115,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDC
 		cerr << "Can't find executive or UI registration error" << endl;
 	}
    
-   _param = new cfdExecutiveConfiguration();
+   //_param = new cfdExecutiveConfiguration();
 
    InitModules();
 }

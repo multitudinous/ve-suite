@@ -34,9 +34,14 @@
 // A class to execute an CFD application in the virtual environment.
 // It is derived by using the VTK and VRJuggler classes.
 
-#include <Performer/pfdu.h>
-#include <Performer/pf/pfNode.h>
 #include "cfdApp.h"
+//#include <Performer/pfdu.h>
+//#include <Performer/pf/pfNode.h>
+// Scene graph dependant headers
+#include <Performer/pf.h>
+#include <Performer/pf/pfGroup.h>
+#include <sys/types.h>
+
 #include "cfdEnum.h"
 #include "fileIO.h"
 #include "cfdPfSceneManagement.h"
@@ -58,12 +63,7 @@
 
 #include <vpr/Util/Debug.h>
 
-// Scene graph dependant headers
-#include <Performer/pf.h>
-#include <Performer/pf/pfGroup.h>
 #include <cstdlib>
-
-#include <sys/types.h>
 
 #ifdef _CLUSTER
 int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
@@ -464,7 +464,7 @@ int main(int argc, char* argv[])
 
    int temp = 0;
    char** xargv;
-   xargv = NULL;//new char*[ temp ];
+   xargv = new char*[ temp ];
    //xargv[ 0 ] = "-ORBInitRef";
    //xargv[ 1 ] = "NameService=corbaname::cruncher.vrac.iastate.edu:2809";
 
@@ -536,7 +536,9 @@ int main(int argc, char* argv[])
    }
 #else // _CLUSTER
    VjObs_var vjobs = application->_this();
-   CORBA::String_var sior(orb->object_to_string(vjobs.in()));
+   if ( CORBA::is_nil( vjobs.in() ) )
+     cout << "is nil " << endl;
+   CORBA::String_var sior(orb->object_to_string( vjobs.in() ) );
    cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
    CosNaming::Name name;
    name.length(1);
