@@ -5,7 +5,7 @@ struct f2app{
 
  f2app densityTransfer(float4 color : COLOR,
                 float3 texCoord:TEXCOORD0,
-                 uniform sampler3D densityTexture:TEXUNIT0
+                 uniform sampler3D densityTexture:TEXUNIT0,
                 uniform sampler1D mat1Func:TEXUNIT1,
                  uniform sampler1D mat2Func:TEXUNIT2,
                  uniform sampler1D mat3Func:TEXUNIT3,

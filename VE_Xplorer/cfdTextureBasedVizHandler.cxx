@@ -126,7 +126,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          //testing switch stuff
          //_activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::PLAY);
          
-         //_activeVolumeVizNode->EnableVolumeShader();
+         _activeVolumeVizNode->EnableVolumeShader();
          //_activeVolumeVizNode->DeactivateVisualBBox();
       }
    }

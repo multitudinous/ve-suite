@@ -195,6 +195,7 @@ void cfdVolumeVisualization::DisableVolumeShader()
       UseNormalGraphicsPipeline();
       _volShaderIsActive = false;
    }   
+   _shaderSwitch->setSingleChildOn(0);
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
@@ -555,6 +556,7 @@ void cfdVolumeVisualization::_createVisualBBox()
       
       osg::Geode* geode = new osg::Geode;
       geode->addDrawable(bboxCube);
+      geode->setName("Visual BBox");
       _visualBoundingBox->addChild(geode);
       
    }else{
@@ -766,6 +768,7 @@ if(!_tm){
       return;
    }
    _volumeVizNode = new osg::Group();
+   _volumeVizNode->setName("Volume Viz Node");
    _volumeVizNode->setDataVariance(osg::Object::DYNAMIC);
    
    _createTexGenNode();
@@ -782,6 +785,7 @@ if(!_tm){
    //our switch node for the bbox
    if(!_bboxSwitch.valid()){
       _bboxSwitch = new osg::Switch();
+      _bboxSwitch->setName("BBox Switch");
    }
    //build the _bboxSwitch structure
    _volumeVizNode->addChild(_bboxSwitch.get());
@@ -792,8 +796,10 @@ if(!_tm){
      //the switch for controlling shaders
      if(!_shaderSwitch.valid()){
         _shaderSwitch = new osg::Switch();
+        _shaderSwitch->setName("Shader Switch");
      }
      _bboxSwitch->addChild(_shaderSwitch.get());
+     _visualBoundingBox->addChild(_shaderSwitch.get());
    }else{
      _isCreated = false;
      std::cout<<"Error creating the bbox hierarchy!!"<<std::endl;
@@ -808,6 +814,7 @@ if(!_tm){
    //2 == advection shader group (uses vector texture)
    if(!_noShaderGroup.valid()){
       _noShaderGroup = new osg::Group();
+      _noShaderGroup->setName("VViz Node:R");
    }
    _shaderSwitch->addChild(_noShaderGroup.get());
 
@@ -820,10 +827,12 @@ if(!_tm){
    //set up the shader nodes
    if(!_scalarFragGroup.valid()){
       _scalarFragGroup = new osg::Group();
+      _scalarFragGroup->setName("Scalar VV Fragment PG");
    }
 
    if(!_advectionVectorGroup.valid()){
       _advectionVectorGroup = new osg::Group();
+      _advectionVectorGroup->setName("Advection Vector Frag PG");
    }
 
    _shaderSwitch->addChild(_scalarFragGroup.get());
@@ -845,7 +854,7 @@ if(!_tm){
       _advectionVectorGroup->addChild(_texGenParams.get());
 #endif
       
-      _volumeVizNode->addChild(_texGenParams.get());
+      //_volumeVizNode->addChild(_texGenParams.get());
       if(_slices.valid()){
          _vSSCbk =  new cfdVolumeSliceSwitchCallback(_bbox.center());
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::X_POS,_posXSlices);

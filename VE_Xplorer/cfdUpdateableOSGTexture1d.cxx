@@ -16,10 +16,10 @@ cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d()
    _type = GAMMA_CORRECTION;
    _textureWidth = 0;
    _oWidth = -1;
-   _data = new unsigned char[256];
+   _data = 0;/*new unsigned char[256];
    for(int i = 0; i < 256; i++){
       _data[i] = 0;
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d(const
@@ -33,23 +33,23 @@ cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d(const
    _textureWidth = cb._textureWidth;
    _oWidth = cb._oWidth;
    _data = 0;
-   _data = new unsigned char[_textureWidth];
+   /*new unsigned char[_textureWidth];
    for(int i = 0; i < _textureWidth; i++){
       _data[i] = cb._data[i];
-   }
+   }*/
    _texture1d = cb._texture1d;
-   
+   _data = _texture1d->getImage()->data();
 }
 //////////////////////////////////////////////////////////
 //Destructor                                            //
 //////////////////////////////////////////////////////////
 cfdUpdateableOSGTexture1d::~cfdUpdateableOSGTexture1d()
 {
-   if(_data){
+   /*if(_data){
       delete [] _data;
       _data = 0;
    }
-   /*if(_texture1d.valid()){
+   if(_texture1d.valid()){
       _texture1d.release();
    }*/
 }
@@ -105,7 +105,7 @@ bool cfdUpdateableOSGTexture1d::_needsUpdate()
 void cfdUpdateableOSGTexture1d::_updateData()
 {
    if(_texture1d.valid()){
-      if(_data){
+      /*if(_data){
          if(_textureWidth != _oWidth){
             delete [] _data;
            _data = 0;
@@ -114,8 +114,10 @@ void cfdUpdateableOSGTexture1d::_updateData()
          }
       }else{
          _data = new unsigned char[_textureWidth];
-      }
-      
+      }*/
+      _data = _texture1d->getImage()->data();
+      //should be able to copy tex subimage. . .where is that at?
+      _texture1d->getImage()->dirty();
       if(_type == GAMMA_CORRECTION){
          int* gTable = new int[_textureWidth];
          for (int i=0; i<_textureWidth; i++) {       
@@ -141,12 +143,23 @@ void cfdUpdateableOSGTexture1d::_updateData()
             }
          }
       }
+      /*osg::ref_ptr<osg::Image> copyImage = new osg::Image();
+      copyImage->allocateImage(_tm->fieldResolution()[0],
+                     _tm->fieldResolution()[1],
+                     _tm->fieldResolution()[2],
+                     GL_RGBA,GL_UNSIGNED_BYTE);
+
+      copyImage->setImage(_tm->fieldResolution()[0],_tm->fieldResolution()[1],
+                     _tm->fieldResolution()[2],GL_RGBA,GL_RGBA, 
+                     GL_UNSIGNED_BYTE,
+                     _tm->dataField(0),
+                     osg::Image::USE_NEW_DELETE,1);
       //update the texture
       _texture1d->getImage()->setImage(_textureWidth,0,0,
                                    GL_RGBA,GL_RGBA, 
                                    GL_UNSIGNED_BYTE,
                                    _data,
-                                   osg::Image::USE_NEW_DELETE,1);
+                                   osg::Image::USE_NEW_DELETE,1);*/
    }else{
       std::cout<<"Invalid 1d texture!!"<<std::endl;
       std::cout<<"cfdUpdateableOSGTexture1d::_updateData()"<<std::endl;
@@ -173,20 +186,21 @@ cfdUpdateableOSGTexture1d& cfdUpdateableOSGTexture1d::operator=(const cfdUpdatea
       _gamma = cb._gamma;
       _type = cb._type;
       _textureWidth = cb._textureWidth;
-      if(_data){
+      /*if(_data){
          if(_textureWidth != _oWidth){
             delete [] _data;
            _data = 0;
          }
       }else{
          _data = new unsigned char[_textureWidth];
-      }
+      }*/
       
       _oWidth = cb._oWidth;
-      for(int i = 0; i < _textureWidth; i++){
+      /*for(int i = 0; i < _textureWidth; i++){
          _data[i] = cb._data[i];
-      }
+      }*/
       _texture1d = cb._texture1d;
+      _data = _texture1d->getImage()->data();
    }
    return *this;
 }
