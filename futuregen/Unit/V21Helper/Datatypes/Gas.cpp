@@ -146,8 +146,9 @@ void Gas::average ()
     gas_composite.P += (*cell).P*(*cell).area;
     //gas_composite.H += (*cell).H*(*cell).M;
     gas_composite.M += (*cell).M;
-    gas_composite.tar += (*cell).tar*(*cell).M;
     gas_composite.soot += (*cell).soot*(*cell).M;
+    gas_composite.tar += (*cell).tar*(*cell).M;
+    gas_composite.yc += (*cell).yc*(*cell).M;
     gas_composite.mean_size += (*cell).mean_size*(*cell).M_particle;
     gas_composite.size_variance += (*cell).size_variance*(*cell).M_particle;
     gas_composite.T_particle += (*cell).T_particle*(*cell).M_particle;
@@ -178,8 +179,9 @@ void Gas::average ()
   gas_composite.P = gas_composite.P / gas_composite.area;
   //gas_composite.H = gas_composite.H() / gas_composite.M;
   // Check on tar, soot------------------------------------------------------------
-  gas_composite.tar = gas_composite.tar / gas_composite.M;
   gas_composite.soot = gas_composite.soot / gas_composite.M;
+  gas_composite.tar = gas_composite.tar / gas_composite.M;
+  gas_composite.yc = gas_composite.yc / gas_composite.M;
   gas_composite.mean_size = gas_composite.mean_size / gas_composite.M_particle;
   gas_composite.size_variance = gas_composite.size_variance / gas_composite.M_particle;
   gas_composite.T_particle = gas_composite.T_particle / gas_composite.M_particle;

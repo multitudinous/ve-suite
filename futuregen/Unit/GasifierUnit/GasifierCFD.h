@@ -57,7 +57,8 @@ public:
 		      float *t, float *p, float *h, float *den,
 		      float *spec_val,
 		      float *part_char, float *part_ash, float *part_water, float *part_coal,
-		      float *hco, float *hwo, float *hao, float *hho);
+		      float *hco, float *hwo, float *hao, float *hho,
+		      float *ynu, float *tar, float *yc);
 
   //* From fortran --
   void load_geom(int* ni,int* nj,int* nk,int* nx,int* ny,int* nz,
@@ -79,6 +80,7 @@ public:
 			char *spec_name, char *wic_name, char *part_name,
 			float *press_in,
 			float *ht_conv, float *ht_netwall, float *ht_netexit,
+			float *ynu, float *tar, float *yc,
 			unsigned int s1len, unsigned int s2len, unsigned int s3len);
   void send_scirun_specie(int *ns, float *spec_val, char *spec_name, unsigned int slen);
   void insert_summary_val(char *description, float *value, unsigned int slen);

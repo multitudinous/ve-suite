@@ -1023,6 +1023,7 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 				char *spec_name, char *wic_name, char *part_name,
 				float *press_in,
 				float *ht_conv, float *ht_netwall, float *ht_netexit,
+			        float *ynu, float *tar, float *yc,
 				unsigned int s1len, unsigned int s2len, unsigned int s3len)
 {
   int i, j, k;
@@ -1032,11 +1033,9 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 
   for(k=0; k<nk; k++)
     for(j=0; j<nj; j++) {
-		
+      
       if((pcell[0][j][k] == FF) &&
 	 (pcell[1][j][k] == FF))
-	  {
-		  
 	_gas_out->gas_cell.push_back(outlet_cell(1, j, k, 0,
 						 ns_val, nlm_val,
 						 sns, stb, sew,
@@ -1046,11 +1045,10 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 t, p, h, den,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
-						 hco, hwo, hao, hho));
-	  }
+						 hco, hwo, hao, hho,
+						 ynu, tar, yc));
       else if((pcell[ni-1][j][k] == FF) &&
 	      (pcell[ni-2][j][k] == FF))
-	  {
 	_gas_out->gas_cell.push_back(outlet_cell(ni-2, j, k, 1,
 						 ns_val, nlm_val,
 						 sns, stb, sew,
@@ -1060,10 +1058,10 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 t, p, h, den,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
-						 hco, hwo, hao, hho));	
-	  }
-	}
-
+						 hco, hwo, hao, hho,
+						 ynu, tar, yc));
+    }
+  
   fflush(NULL);
   for(k=1; k<nk-1; k++)
     for(i=1; i<ni-1; i++) {
@@ -1078,7 +1076,8 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 t, p, h, den,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
-						 hco, hwo, hao, hho));	
+						 hco, hwo, hao, hho,
+						 ynu, tar, yc));	
       else if((pcell[i][nj-1][k] == FF) &&
 	      (pcell[i][nj-2][k] == FF))
 	_gas_out->gas_cell.push_back(outlet_cell(i, nj-2, k, 3,
@@ -1090,8 +1089,10 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 t, p, h, den,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
-						 hco, hwo, hao, hho));
-  }
+						 hco, hwo, hao, hho,
+						 ynu, tar, yc));
+    }
+  
   for(j=1; j<nj-1; j++)
     for(i=1; i<ni-1; i++) {
       if((pcell[i][j][0] == FF) &&
@@ -1105,7 +1106,8 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 t, p, h, den,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
-						 hco, hwo, hao, hho));
+						 hco, hwo, hao, hho,
+						 ynu, tar, yc));
       else if((pcell[i][j][nk-1] == FF) &&
 	      (pcell[i][j][nk-2] == FF))
 	_gas_out->gas_cell.push_back(outlet_cell(i, j, nk-2, 5,
@@ -1117,10 +1119,11 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 t, p, h, den,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
-						 hco, hwo, hao, hho));
-	}
+						 hco, hwo, hao, hho,
+						 ynu, tar, yc));
+    }
   
-
+  
   for(i=0; i<nlm_val; i++) {
     _gas_out->comp_wics.push_back((double)*(wic_val + i));
     _gas_out->wics[string(wic_name + i*9)] = i;
@@ -1163,7 +1166,8 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
 			      float *t, float *p, float *h, float *den,
 			      float *spec_val,
 			      float *part_char, float *part_ash, float *part_water, float *part_coal,
-			      float *hco, float *hwo, float *hao, float *hho)
+			      float *hco, float *hwo, float *hao, float *hho,
+			      float *ynu, float *tar, float *yc)
 {
   GasCell cell(_gas_out);
   int sp;
@@ -1177,11 +1181,8 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
   cell.icell.push_back(k);
 
   // One of these is incorrect, see switch below for correction.
-  //cell.node_location.push_back((double)*(x + nx_ny_k + nx_j + i));
   cell.node_location.push_back((double)*(x + i));
-  //cell.node_location.push_back((double)*(y + nx_ny_k + nx_j + i));
   cell.node_location.push_back((double)*(y + j));
-  //cell.node_location.push_back((double)*(z + nx_ny_k + nx_j + i));
   cell.node_location.push_back((double)*(z + k));
 
   // If outlet cell is on a lower face (i,j or k=1), then
@@ -1194,6 +1195,11 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
   for(sp=0; sp<ns_val; sp++)
     cell.comp_specie.push_back((double)*(spec_val + nx*ny*nz*sp
 					  + nx_ny_k + nx_j + i));
+  
+  // Soot
+  cell.soot = (double)*(ynu + nx_ny_k + nx_j + i);
+  cell.tar = (double)*(tar + nx_ny_k + nx_j + i);
+  cell.yc  = (double)*(yc + nx_ny_k + nx_j + i);
 
   density = (double)*(den + nx_ny_k + nx_j + i);
   cell.eff = (double)*(eff + nx_ny_k + nx_j + i);
@@ -1223,16 +1229,14 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
   switch (face) {
   case 0: // i=1 face
     // velocity is correct from above calculation.
-    //cell.node_location[0]=(double)*(x + nx_ny_k + nx_j + (i-1));
-	  cell.node_location[0]=(double)*(x + (i-1));
+    cell.node_location[0]=(double)*(x + (i-1));
     cell.area = (*(sns + j)) * (*(stb + k));
     cell.M = ((density + (double)*(den + nx_ny_k + nx_j + (i-1))) / 2)
       * cell.velocity[0] * cell.area;
     break;
   case 1: // i=ni face
     cell.velocity[0]=(double)*(u + nx_ny_k + nx_j + (i+1));
-//    cell.node_location[0]=(double)*(x + nx_ny_k + nx_j + (i+1));
-	    cell.node_location[0]=(double)*(x + (i+1));
+    cell.node_location[0]=(double)*(x + (i+1));
     cell.area = (*(sns + j)) * (*(stb + k));
     cell.M = ((density + (double)*(den + nx_ny_k + nx_j + (i+1))) / 2)
       * cell.velocity[0] * cell.area;
@@ -1245,32 +1249,28 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
     break;
   case 2: // j=1 face
     // velocity is correct from above calculation.
-    //cell.node_location[1]=(double)*(x + nx_ny_k + nx*(j-1) + i);
-	  cell.node_location[1]=(double)*(x + i);
+    cell.node_location[1]=(double)*(x + i);
     cell.area = (*(sew + i)) * (*(stb + k));
     cell.M = ((density + (double)*(den + nx_ny_k + nx_j + i)) / 2)
       * cell.velocity[1] * cell.area;
     break;
   case 3: // j=nj face
     cell.velocity[1]=(double)*(v + nx_ny_k + nx*(j+1) + i);   
-    //cell.node_location[1]=(double)*(x + nx_ny_k + nx*(j+1) + i);
-	cell.node_location[1]=(double)*(x + i);
+    cell.node_location[1]=(double)*(x + i);
     cell.area = (*(sew + i)) * (*(stb + k));
     cell.M = ((density + (double)*(den + nx_ny_k + nx*(j+1) + i)) / 2)
       * cell.velocity[1] * cell.area;
     break;
   case 4: // k=1 face
     // velocity is correct from above calculation.
-    //cell.node_location[2]=(double)*(x + nx*ny*(k-1) + nx_j + i);
-	cell.node_location[2]=(double)*(x + i);
+    cell.node_location[2]=(double)*(x + i);
     cell.area = (*(sew + i)) * (*(sns + j));
     cell.M = ((density + (double)*(den + nx*ny*(k-1) + nx_j + i)) / 2)
       * cell.velocity[2] * cell.area;
     break;
   case 5: // k=nk face 
     cell.velocity[2]=(double)*(w + nx*ny*(k+1) + nx_j + i);
-    //cell.node_location[2]=(double)*(x + nx*ny*(k+1) + nx_j + i);
-	cell.node_location[2]=(double)*(x + i);
+    cell.node_location[2]=(double)*(x + i);
     cell.area = (*(sew + i)) * (*(sns + j));
     cell.M = ((density + (double)*(den + nx*ny*(k+1) + nx_j + i)) / 2)
       * cell.velocity[2] * cell.area;
@@ -1587,6 +1587,7 @@ void WIN_PREFIX gas_send_scirun_data_(int *ns, int *nlm,
 			   char *spec_name, char *wic_name, char *part_name,
 			   float *press_in,
 			   float *ht_conv, float *ht_netwall, float *ht_netexit,
+			   float *ynu, float *tar, float *yc,
 			   unsigned int s1len, unsigned int s2len, unsigned int s3len)
 {
   GAS_GLACIER_PTR->send_scirun_data(ns, nlm,
@@ -1601,6 +1602,7 @@ void WIN_PREFIX gas_send_scirun_data_(int *ns, int *nlm,
 				    spec_name, wic_name, part_name,
 				    press_in,
 				    ht_conv, ht_netwall, ht_netexit,
+			            ynu, tar, yc,
 				    s1len, s2len, s3len);
 }
 

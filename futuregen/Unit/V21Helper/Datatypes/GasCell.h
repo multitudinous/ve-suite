@@ -55,6 +55,11 @@ public:
 
   std::vector<double> comp_specie; // Map (gas_parent) specie gives ordering.
 
+  // Soot
+  double soot; // Soot mass fraction
+  double tar; // Tar
+  double yc; // Soot part # / Mass
+
   double area;
   double eff;
   double eta;
@@ -63,9 +68,6 @@ public:
   double T; // Temperature
   double P; // Pressure
   double M; // Mass flowrate
-
-  double tar; // Aiolos generated
-  double soot; // Aiolos generated
 
   // PARTICLE INFORMATION
   double mean_size;

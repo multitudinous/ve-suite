@@ -99,6 +99,7 @@ extern "C"
 			     char *spec_name, char *wic_name, char *part_name,
 			     float *press_in,
 			     float *ht_conv, float *ht_netwall, float *ht_netexit,
+			     float *ynu, float *tar, float *yc,
 			     unsigned int s1len, unsigned int s2len, unsigned int s3len);
   typedef void WIN_PREFIX gas_send_scirun_data_f(int *ns, int *nlm,
 					 float *sns, float *stb, float *sew,
@@ -112,6 +113,7 @@ extern "C"
 					 char *spec_name, char *wic_name, char *part_name,
 					 float *press_in,
 					 float *ht_conv, float *ht_netwall, float *ht_netexit,
+			                 float *ynu, float *tar, float *yc,
 					 unsigned int s1len, unsigned int s2len, unsigned int s3len);
   typedef gas_send_scirun_data_f* gas_send_scirun_data_fp;
 
