@@ -119,19 +119,19 @@ public:
    int getNextFrame();
 
    //get number of children
-   virtual int getNumChildren();
+   virtual int GetNumChildren();
 
    //add a child node
-   virtual void addChild( cfdNode* child );
+   virtual int AddChild( cfdNode* child );
 
    //get the index of a child
-   virtual int searchChild( cfdNode* child );
+   virtual int SearchChild( cfdNode* child );
 
    //get the specified child node  
-   virtual cfdNode* getChild( int index );
+   virtual cfdNode* GetChild( int index );
 
    //remove child 
-   virtual int removeChild( cfdNode* child );
+   virtual int RemoveChild( cfdNode* child );
 #ifdef _PERFORMER
     //the node pre-traverser callback
    friend int switchFrame(pfTraverser* trav, void* userData);

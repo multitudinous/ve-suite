@@ -194,7 +194,7 @@ void cfdSequence::stepSequence()
    _step = CFDSEQ_STEP;
 }
 /////////////////////////////////
-int cfdSequence::getNumChildren()
+int cfdSequence::GetNumChildren()
 {
    if ( _lSwitch )
    {
@@ -203,7 +203,7 @@ int cfdSequence::getNumChildren()
    return -1;
 }
 ////////////////////////////////////////////
-int cfdSequence::removeChild(cfdNode* child)
+int cfdSequence::RemoveChild(cfdNode* child)
 {
    if ( _lSwitch )
    {
@@ -212,7 +212,7 @@ int cfdSequence::removeChild(cfdNode* child)
    return -1;
 }
 ////////////////////////////////////////////
-int cfdSequence::searchChild(cfdNode* child)
+int cfdSequence::SearchChild(cfdNode* child)
 {
    if(_lSwitch){
       return _lSwitch->SearchChild(child);   
@@ -220,7 +220,7 @@ int cfdSequence::searchChild(cfdNode* child)
    return -1;
 }
 /////////////////////////////////////////
-cfdNode* cfdSequence::getChild(int index)
+cfdNode* cfdSequence::GetChild(int index)
 {
    if(_lSwitch){
       //cout<<"getting child: "<<index<<endl;
@@ -444,7 +444,7 @@ void cfdSequence::setCurrentFrame(int index)
 //////////////////////////////////////////
 //add a child                           //
 //////////////////////////////////////////
-void cfdSequence::addChild(cfdNode* child)
+int cfdSequence::AddChild(cfdNode* child)
 {
    //cout<<"Adding frame to sequence."<<endl;
    //init the switch node
