@@ -163,15 +163,15 @@ void AppFrame::OnClose(wxCloseEvent &event)
 {
   if (is_orb_init)
     {
-      CosNaming::Name UIname(1);
-      UIname.length(1);
-      if (p_ui_i!=NULL && p_ui_i->UIName_!="")
-	{
-	  UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
-	  naming_context->unbind(UIname);
+      //CosNaming::Name UIname(1);
+      //UIname.length(1);
+      //if (p_ui_i!=NULL && p_ui_i->UIName_!="")
+	//{
+	 // UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
+	  //naming_context->unbind(UIname);
 	  
 	  poa->destroy (1, 1);
-	}
+	//}
       orb->destroy();
     }
   
