@@ -51,7 +51,7 @@
 #include "jdMAPReader.h"
 #include "enSightGoldReader.h"
 #include "ansysReader.h"
-
+#include "tecplotReader.h"
 // function declarations
 extern vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug );
 extern vtkStructuredGrid * reiReader( char * reiFileName, int debug );

@@ -518,7 +518,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
       for ( k=0; k < parameterData[ i ]->GetNumberOfComponents(); k++ )
       {
          parameterData[ i ]->FillComponent( k, 0.0 );
-      } 
+      }
    }
 
    // create an array to store scalar and vector data at a single vertex

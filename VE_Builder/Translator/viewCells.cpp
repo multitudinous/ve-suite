@@ -563,10 +563,12 @@ void AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFa
       actor->GetProperty()->SetColor( 1, 0, 0 );
 
    actor->SetMapper( map );
-   map->Delete();
+   actor->GetProperty()->SetRepresentationToWireframe();
+   actor->GetProperty()->EdgeVisibilityOn();
 
    //Add the actors to the renderer, set the viewport and background
    ren1->AddActor( actor );
+   map->Delete();
    actor->Delete();
 
    return;
