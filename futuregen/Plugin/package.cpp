@@ -20,14 +20,16 @@ bool Package::Load()
   char * message;
 
   //  cout<<system_id<<endl;
-  XercesDOMParser* parser = new XercesDOMParser();
-  ErrorHandler* errHandler;
+  XercesDOMParser* parser = new XercesDOMParser;
+  ErrorHandler* errHandler ;
   
+  errHandler = (ErrorHandler*) new HandlerBase();
+ 
   if (parser==NULL)
     cout<<"NULL parser"<<endl;
   parser->setValidationScheme(XercesDOMParser::Val_Always);    // optional.
   parser->setDoNamespaces(true);    // optional
-  errHandler = (ErrorHandler*) new HandlerBase();
+  
   parser->setErrorHandler(errHandler);
   try {
     parser->parse(XMLString::transcode(system_id.c_str()));
@@ -59,8 +61,10 @@ bool Package::Load()
 
     return false;
   }
- 
+
+
   DOMDocument *doc = parser->getDocument(); //This is the rootNode;
+  
   if (doc == NULL)
     cout<<"NULL document!"<<endl;
   else
@@ -322,7 +326,18 @@ void Package::FillIntfs(DOMDocument *doc)
 	  len3=sub_list->getLength();
 	  lvals.clear();
 	  for(k=0; k<len3; k++)
-	    lvals.push_back(atoi(XMLString::transcode(sub_list->item(k)->getNodeValue())));
+	    {
+	      domt = (DOMText*) sub_list->item(k)->getFirstChild();
+	      lvals.push_back(atoi(XMLString::transcode(domt->getData())));
+	    }
+	  /*
+	  for(k=0; k<len3; k++)
+	  { 
+	    const XMLCh * x = sub_list->item(k)->getNodeValue();
+		  //lvals.push_back(atoi(XMLString::transcode(sub_list->item(k)->getNodeValue())));
+
+	  }
+	  */
 	  intfs[i].setInt1D(elem_name, lvals);
        	}
 
@@ -338,10 +353,20 @@ void Package::FillIntfs(DOMDocument *doc)
 	  len3=sub_list->getLength();
 	  svals.clear();
 	  for(k=0; k<len3; k++)
+	    {
+	      domt = (DOMText*) sub_list->item(k)->getFirstChild();
+	      svals.push_back(XMLString::transcode(domt->getData()));
+	    }
+	  /*
+	  for(k=0; k<len3; k++)
 	    svals.push_back(XMLString::transcode(sub_list->item(k)->getNodeValue()));
+		*/
 	  intfs[i].setString1D(elem_name, svals);
        	}
     }  
+
+  cout<<"xxx\n";
+  return ;
 }
 
 DOMDocument * Package::BuildFromIntfs()
