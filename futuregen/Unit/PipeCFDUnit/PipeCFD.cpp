@@ -70,6 +70,9 @@ bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, Types::Profile_var &prof,
   string path = _work_dir;
   if(restart) {
 
+     _gas_restart = 1;
+     _prt_restart = 1;
+
   } else {
     string basepath = "./Glacier/Cases/Pipe2/";
 
