@@ -34,6 +34,8 @@
 /// Performer libraries
 #include <Performer/pf/pfLightSource.h>
 #include <Performer/pr/pfLight.h>
+#include <Performer/pf/pfGroup.h>
+#include <Performer/pf/pfNode.h>
 
 /*
 #ifndef WIN32
@@ -126,7 +128,7 @@ void cfdPfSceneManagement::InitScene( void )
    // Add pfDCS and sun for the world
    this->rootNode->AddChild( (cfdSceneNode*)this->worldDCS );
    // TODO: Might need to add this back in
-   //this->rootNode->addChild( this->sun );
+   ((pfGroup*)this->rootNode->GetRawNode())->addChild( (pfNode*)this->sun );
 
    //this->rootNode->setGState( this->gstate );
    //this->rootNode->addChild( this->lit );

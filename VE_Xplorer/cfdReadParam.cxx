@@ -934,7 +934,7 @@ void cfdReadParam::readWorldDCS( std::ifstream &inFile )
 }  
 
 void cfdReadParam::read_pf_DCS_parameters( std::ifstream &inFile,
-                             float scale[3], float trans[3], float rot[3] )
+                             float* scale, float* trans, float* rot )
 {  
    int i;
    char  text[ 256 ];

@@ -346,7 +346,7 @@ void cfdApp::preFrame( void )
    ///////////////////////
 
    pfdStoreFile( this->_sceneManager->GetRootNode()->GetRawNode(), "test1.pfb" );
-   std::exit( 1 );
+   this->exit();
    // This need to go very soon
    // IHCC hack
    // fix this soon

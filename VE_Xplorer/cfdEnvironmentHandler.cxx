@@ -53,6 +53,25 @@
 
 cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
 {
+   nav            = NULL;
+   _teacher       = NULL;
+   _soundHandler  = NULL;
+   _camHandler    = NULL;
+   cursor         = NULL;
+   _param         = NULL;
+   worldDCS       = NULL;
+   rootNode       = NULL;
+   _commandArray  = NULL;
+   _readParam     = NULL;
+   arrow          = NULL;
+
+   for ( unsigned int i = 0; i < 3; i++ )
+   {
+      worldScale[ i ] = 1.0f;
+      worldTrans[ i ] = 0.0f;
+      worldRot[ i ] = 0.0f;
+   }
+
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    this->nav = new cfdNavigate();

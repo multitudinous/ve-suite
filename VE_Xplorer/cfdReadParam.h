@@ -147,7 +147,7 @@ class cfdReadParam : public cfdGlobalBase
       std::string dashboardFilename;
 
       static void read_pf_DCS_parameters( std::ifstream &inFile,
-                     float scale[3], float trans[3], float rot[3] );
+                     float*, float*, float* );
 
       static void SkipModuleBlock( std::ifstream &inFile, int );
 

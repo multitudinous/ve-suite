@@ -470,6 +470,8 @@ void cfdModelHandler::CreateObjects( void )
                         << ".  You may need to correct your param file." << std::endl;
             exit(1);
          }
+
+         cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << endl;
          _modelList.at( 0 )->CreateGeomDataSet( fileName );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
