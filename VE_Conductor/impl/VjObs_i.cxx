@@ -45,7 +45,7 @@
 #include "cfdTeacher.h"
 #include "cfdDataSet.h"
 #include "cfdCommandArray.h"
-#include "cfdModelHandeler.h"
+#include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdSteadyStateVizHandler.h"
 #include "cfdSoundHandler.h"
