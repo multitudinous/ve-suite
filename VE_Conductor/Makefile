@@ -18,7 +18,7 @@ default: all
 all:
 	$(MAKE) cxx_idl
 	$(MAKE) java_idl
-	$(MAKE) java
+#	$(MAKE) java
 
 srcdir=		.
 
