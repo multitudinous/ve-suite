@@ -138,6 +138,7 @@
 #include "cfdFILE.h"
 
 #include "cfdSound.h"
+#include "cfdQuatCamHandler.h"
 
 #include "cfdIHCCModel.h"
 
@@ -288,7 +289,8 @@ class cfdApp : public vrj::PfApp
    cfdAnimatedStreamlineCone  *animStreamer;
    cfdAnimatedImage           *animImg;
    cfdIsosurface              *isosurface;
-   cfdIHCCModel      *ihccModel;
+   cfdQuatCamHandler          *quatcamHandler;
+   cfdIHCCModel               *ihccModel;
    textPrompt                 *tPrompt;
    //cfdDashboard*     dashBoard;
 #ifdef _TAO

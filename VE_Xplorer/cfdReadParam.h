@@ -49,6 +49,7 @@ class cfdReadParam{
       int   numGeoms;
       int   bmpFile;
       char  bmpFileName[ 100 ];
+      char  quatCamFileName[ 100 ];
       double bmpPosition[ 3 ];
       int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
       int   soundFile;
@@ -117,6 +118,7 @@ class cfdReadParam{
       void readWorldDCS( std::ifstream &inFile );
       void readScalarBar( std::ifstream &inFile );
       void IMGReader( std::ifstream &inFile );
+      void quatCamFile( std::ifstream &inFile );
 
       float worldScale[ 3 ];
       float worldTrans[ 3 ];

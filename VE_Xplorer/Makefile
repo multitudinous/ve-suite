@@ -128,6 +128,8 @@ SRCS=\
    cfdTransientParticleActor_fluent.cxx \
    VjObs_i.cxx \
    cfdDCS.cxx \
+   cfdQuatCamHandler.cxx \
+   cfdQuatCam.cxx \
    cfdSequence.cxx \
    cfdIHCCModel.cxx \
    cfdIHCCGauge.cxx \

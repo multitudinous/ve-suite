@@ -277,6 +277,9 @@ void cfdReadParam::param_read( std::ifstream &inFile )
          case 13:
 	         ihccModel = true;
             break;
+         case 14:
+            quatCamFile( inFile);
+            break;
          default:
             std::cerr << "ERROR : Unknown Type: " << id << std::endl;
             exit ( 1 );
@@ -967,6 +970,25 @@ void cfdReadParam::SkipModuleBlock( std::ifstream &inFile, int numLines )
    {
       inFile.getline( text, 256 );   //skip past remainder of line      
    }
+}
+
+void cfdReadParam::quatCamFile( std::ifstream & inFile)
+{
+   inFile >> quatCamFileName;
+   inFile.getline( textLine, 256 );   //skip past remainder of line
+
+   if (fileIO::isFileReadable( quatCamFileName ) ) 
+   {
+      vprDEBUG(vprDBG_ALL,0) << " QuatCam file = " << quatCamFileName 
+                             << std::endl << vprDEBUG_FLUSH;
+   }
+   else
+   {
+      std::cerr << "ERROR: unreadable QuatCam file = " << quatCamFileName 
+           << ".  You may need to correct your param file."
+           << std::endl;
+      exit(1);
+   }   
 }
 /*
 void cfdReadParam::set1DText( std::ifstream &inFile )

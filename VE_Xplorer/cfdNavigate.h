@@ -116,13 +116,19 @@ class cfdNavigate
     Cursor tracker.
   */
   void CursorTranslate( );
+   
+
+  void UpdateLoc( double* );
+
+  void UpdateDir( );
+
 
  private:
   //! Wand object
   /*!
     Update wand direction.
   */
-  void UpdateDir( );
+  //void UpdateDir( );
   //! Wand object
   /*!
     Update wand location.

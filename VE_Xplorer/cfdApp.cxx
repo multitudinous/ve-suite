@@ -1532,6 +1532,11 @@ inline void cfdApp::initScene( )
    //
    std::cout << "| 52. Initializing...................................... pfBinaries |" << std::endl;
    this->teacher = new cfdTeacher( "STORED_FILES", this->worldDCS );
+
+   std::cout << "| 53. Initializing..................................... cfdQuatCams |" << std::endl;
+   this->quatcamHandler = new cfdQuatCamHandler();
+   if ( this->paramReader->quatCamFileName != NULL )
+      this->quatcamHandler->LoadFromFile(this->paramReader->quatCamFileName);
 #ifdef TABLET
    this->SetCfdTeacher( this->teacher );
 #endif
@@ -1544,7 +1549,7 @@ inline void cfdApp::initScene( )
    //
    if ( this->paramReader->ihccModel )
    {
-      std::cout << "| 52. Initializing...................................... IHCC Model |" << std::endl;
+      std::cout << "| 54. Initializing...................................... IHCC Model |" << std::endl;
       this->ihccModel = new cfdIHCCModel( NULL, this->worldDCS );
    }
 
@@ -2462,6 +2467,26 @@ void cfdApp::preFrame( void )
       }      
 
       this->setId( -1 );
+   }
+   else if ( this->cfdId == LOAD_POINT )
+   {
+      this->quatcamHandler->LoadData( this->nav->worldTrans, worldDCS );
+      this->setId( -1 );
+   }
+   else if ( this->cfdId == WRITE_POINTS_TO_FILE )
+   {
+      this->quatcamHandler->WriteToFile( this->paramReader->quatCamFileName ); 
+      this->setId( -1 ); 
+   }
+   else if ( this->cfdId == READ_POINTS_FROM_FILE )
+   {
+      this->quatcamHandler->LoadFromFile( this->paramReader->quatCamFileName );
+      this->setId( -1 );
+   }
+   else if ( this->cfdId == MOVE_TO_SELECTED_LOCATION )
+   {
+      this->quatcamHandler->Relocate(cfdId, worldDCS, cfdIso_value, nav);
+      this->setId( this->quatcamHandler->run );
    }
    else if ( this->cfdId == UPDATE_SEND_PARAM )
    {
