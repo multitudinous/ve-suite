@@ -40,7 +40,6 @@
 #include <sstream>
 #include <iostream>
 #include <map>
-//#include <stdio.h>
 
 cfdGauges::cfdGauges( std::string param, cfdGroup* masterNode )
 {

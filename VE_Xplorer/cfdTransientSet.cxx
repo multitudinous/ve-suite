@@ -35,12 +35,11 @@
 #include <sys/types.h>
 #include <sys/dir.h>
 #else
-//#error ("NOT Portable to Windows Yet!!")
 #include <windows.h>
 #include <direct.h>
 #include <wchar.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include <cstdio>
+#include <cstdlib>
 #endif
 
 #include "cfdTransientSet.h"

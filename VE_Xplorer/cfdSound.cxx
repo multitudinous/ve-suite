@@ -31,10 +31,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdSound.h"
-#include <string.h>
+#include <string>
 #include <iostream>
-#include <stdlib.h>
-#include <stdio.h>
+#include <cstdlib>
+#include <cstdio>
 #include <snx/sonix.h>
 #include <snx/SoundHandle.h>
 //using namespace sonix;
