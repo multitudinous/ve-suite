@@ -59,6 +59,7 @@ void cfdSequence::init(void)
 #include <osg/Node>
 #include <osg/Group>
 #include <osg/Switch>
+#include <osg/FrameStamp>
 #endif
 
 ////////////////////////////////////////
@@ -97,6 +98,7 @@ cfdGroup()
       _group = NULL;
    }
 #elif _OSG
+   setUpdateCallback(new cfdSequence::cfdSequenceCallback(this));
 #endif
    SetCFDNodeType(CFD_SEQUENCE);
    _sequence = this;
@@ -383,6 +385,176 @@ int switchFrame(pfTraverser* trav, void* userData)
    return PFTRAV_CONT;
 } 
 #elif _OSG
+//////////////////////////////////////////////////////////
+cfdSequence::cfdSequenceCallback::cfdSequenceCallback(cfdSequence* seq)
+{
+   _sequence = seq;
+   _prevTime = 0;
+}
+///////////////////////////////////////////////////////////////////////////
+void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node, 
+                                             osg::NodeVisitor* nv)
+{
+   //the number of frames
+   int nChildren = _sequence->_lSwitch->GetNumChildren();
+   //cout<<"Number of frames: "<<nChildren<<endl;
+
+   //the _sequence interval params
+   int begin = _sequence->_begin;
+   //cout<<"Beginning :"<<begin<<endl;
+   int end = _sequence->_end;
+   //cout<<"End :"<<end<<endl;
+
+   //the loop mode
+   int lMode = _sequence->_lMode;
+   //cout<<"Loop Mode: "<<lMode<<endl;
+ 
+   //the play mode(stop,start,pause,resume,playing)
+   int pMode = _sequence->_pMode;
+   //cout<<"Play Mode: "<<pMode<<endl;   
+
+   //length of _sequence (secs)
+   double duration = _sequence->_duration;
+
+   //the frame rate the app is running at
+   double currTime =0;
+   int frameNumber = 0;
+   double appFrameRate = 0;
+   if(nv->getFrameStamp()){
+     currTime = nv->getFrameStamp()->getReferenceTime();
+     if((currTime - _prevTime) >= 1.0){
+        frameNumber = nv->getTraversalNumber();
+        appFrameRate = (double)frameNumber/(currTime-_prevTime);
+        _prevTime = currTime;
+        
+     }
+   }else{
+      std::cout<<"If u see this, we need to set the framestamp on the callback"<<std::endl;
+      std::cout<<"at init time in the constructor. . ."<<std::endl;
+   }
+
+   //the ratio of application frame rate 
+   //to the desired _sequence rate
+   double frameRateRatio = 0;
+   
+   //make sure we have a valid interval 
+   if(_sequence->_dir ==1){
+      if(end >  nChildren - 1){
+         end = nChildren -1;
+      }
+
+      if(begin < 0){
+        begin = 0;
+      }
+   }else if(_sequence->_dir == -1){
+      if(begin >  nChildren - 1){
+         begin = nChildren -1;
+      }
+
+      if(end < 0){
+        end = 0;
+      }
+   }
+
+   //check if we need to update the _sequence node 
+
+   //the desired rate of the _sequence (fps)
+   double seqRate = fabs((double)(begin - end))/duration;
+   //cout<<"Sequence rate: "<<seqRate<<endl;
+
+   //if we haven't passed enough frames in 
+   //the app we don't need to update yet
+
+   //the app is processing faster than _sequence
+   if(appFrameRate >= seqRate && pMode != CFDSEQ_START){
+      //cout<<"Frame Rate: "<<appFrameRate<<endl;
+      //calculate frame rate ratio
+      frameRateRatio = appFrameRate/seqRate;
+
+      //since we're running slower than the
+      //application, we don't need to update yet
+      if(_sequence->_appFrame < frameRateRatio){
+         //continue in the current state 
+         //update the frames the app has processed
+         _sequence->_appFrame++;
+         //cout<<"App frames: "<<_sequence->_appFrame<<endl;
+         
+         //traverse the switch
+         traverse(node,nv);
+         return;
+      }
+       //cout<<"Switching frames!"<<endl;
+   }else if(appFrameRate < seqRate){
+      //cout<<"Frame rate is slow."<<endl;
+      //app is running slower than the _sequence
+      //need to skip some frames in the _sequence
+      //deltaFrame is the number of frames to increment
+      //sjk commented out following code line to avoid irix warning,
+      //The variable "deltaFrame" is set but never used.
+      //int deltaFrame = (int)( seqRate / appFrameRate );
+   }
+
+   //now check the states and do the updates
+
+   //we are in stop or pause
+   if ( pMode == CFDSEQ_STOP || pMode == CFDSEQ_PAUSE ){
+      //don't change the scene graph
+      //cout<<"Stopped or paused!"<<endl;
+
+      //traverse the swtich
+      traverse(node,nv);
+      return;
+   }
+
+   //if we've made it here, we are either resuming
+   //or starting so check the loop mode and direction
+   //to update the graph accordingly
+
+   //we're restarting so reset current frame 
+   //in the _sequence to the beginning
+   if ( pMode == CFDSEQ_START ){
+      //cout<<"Starting _sequence."<<endl;
+      _sequence->_currentFrame = begin;
+      _sequence->_lSwitch->SetVal(_sequence->_currentFrame);
+
+      //notify we are that we have started
+      _sequence->setPlayMode( CFDSEQ_PLAYING );
+      //traverse the node
+      traverse(node,nv);
+      return;
+   }
+
+   //depending on cycle type, decide the frame to display
+   if(_sequence->_lSwitch){
+      //get the next frame to display
+      _sequence->_currentFrame = _sequence->getNextFrame();
+      
+      //set the displayed frame on the switch
+      _sequence->_lSwitch->SetVal(_sequence->_currentFrame);
+
+      //handle swing loop mode by changing directions
+      //when we get to the beginning or end of the _sequence
+      if(lMode == CFDSEQ_SWING){
+         //(swing) so go back and forth through frames 
+         if(_sequence->_currentFrame == end|| 
+            _sequence->_currentFrame == begin){
+	         //switch the direction of the _sequence
+            _sequence->_dir *= -1;
+         }
+      }
+      //reset the appFrame counter for synchronization
+      _sequence->_appFrame = 0;
+
+      //if we are stepping, pause the _sequence
+      if(_sequence->_step == CFDSEQ_STEP){
+         _sequence->_pMode = CFDSEQ_PAUSE;
+         _sequence->_step = 0;
+      }
+   }
+   
+   //traverse the node
+   traverse(node,nv);
+} 
 #endif
 /////////////////////////////////////////////////////////
 void cfdSequence::setInterval( int loopmode, int begin, int end )

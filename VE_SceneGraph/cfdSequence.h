@@ -137,7 +137,17 @@ public:
    friend int switchFrame(pfTraverser* trav, void* userData);
 #elif _OSG
    //callbacks are defined as classes in OSG!!!
-   //see cfdSwitch for definition!!!!
+   class cfdSequenceCallback : public osg::NodeCallback{
+      public:
+         cfdSequenceCallback(cfdSequence* seq);
+         virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
+        
+      protected:
+         virtual ~cfdSequenceCallback(){}
+         cfdSequence* _sequence;
+         double _prevTime;
+   
+   };
 #endif
 protected:
    cfdSwitch* _lSwitch;
