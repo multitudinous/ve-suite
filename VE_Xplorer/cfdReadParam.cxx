@@ -31,9 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdReadParam.h"
-#include "cfdTransientInfo.h"
-//#include "cfd1DTextInput.h"
-#include "cfdTransientSet.h"
 #include "cfdDataSet.h"
 #include "cfdFileInfo.h"
 #include "fileIO.h"

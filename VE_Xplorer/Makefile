@@ -126,11 +126,14 @@ endif
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   Plot3Dviewer.cxx \
+   cfd1DTextInput.cxx \
    cfdAnimatedStreamlineCone.cxx \
    cfdAnimatedImage.cxx \
-   cfdAnimation.cxx \
    cfdApp.cxx \
+   cfdAppWrapper.cxx \
+   cfdAccessoryFunctions.cxx \
+   cfdCommandObjects.cxx \
+   cfdCommandArray.cxx \
    cfdContour.cxx \
    cfdContourBase.cxx \
    cfdContours.cxx \
@@ -138,15 +141,17 @@ SRCS=\
    cfdCuttingPlane.cxx \
    cfdDCS.cxx \
    cfdDataSet.cxx \
+   cfdEnvironmentHandler.cxx \
    cfdFILE.cxx \
    cfdFileInfo.cxx \
-   cfdFrame.cxx \
    cfdGeode.cxx \
+   cfdGlobalBase.cxx \
    cfdGraphicsObject.cxx \
    cfdGroup.cxx \
    cfdImage.cxx \
    cfdIsosurface.cxx \
    cfdModel.cxx \
+   cfdModelHandler.cxx \
    cfdMomentum.cxx \
    cfdMomentums.cxx \
    cfdNavigate.cxx \
@@ -157,70 +162,44 @@ SRCS=\
    cfdPresetContour.cxx \
    cfdPresetMomentum.cxx \
    cfdPresetVector.cxx \
+   cfdQuatCamHandler.cxx \
+   cfdQuatCam.cxx \
    cfdReadParam.cxx \
    cfdScalarBarActor.cxx \
    cfdSceneNode.cxx \
+   cfdSequence.cxx \
+   cfdSound.cxx \
+   cfdSoundHandler.cxx \
+   cfdSteadyStateVizHandler.cxx \
    cfdStreamers.cxx \
    cfdSwitch.cxx \
+   cfdPfSceneManagement.cxx \
    cfdPolyData.cxx \
    cfdTeacher.cxx \
+   cfdTempAnimation.cxx \
    cfdTextureBasedModel.cxx \
    cfdTextureBasedVizHandler.cxx \
    cfdTextureManager.cxx \
    cfdThread.cxx \
-   cfdTransientInfo.cxx \
-   cfdTransientSet.cxx \
-   cfdTransientFlowManager.cxx \
-   cfdTransientActor.cxx \
-   cfdTransientParticleActor.cxx \
-   cfdTransientScalarActor.cxx \
-   cfdTransientVectorActor.cxx \
    cfdUpdateTextureCallback.cpp \
    cfdVectorBase.cxx \
    cfdVector.cxx \
    cfdVectors.cxx \
+   cfdVjObsWrapper.cxx \
    cfdVolumeSliceSwitchCallback.cpp \
    cfdVolumeVisualization.cpp \
    cfdVEXplorer.cxx \
    cfdWriteTraverser.cxx \
    fileIO.cxx \
    readWriteVtkThings.cxx \
-   cfdAccessoryFunctions.cxx \
    textPrompt.cxx \
-   cfdSound.cxx \
-   cfdTransientParticleActor_fluent.cxx \
-   VjObs_i.cxx \
-   cfdQuatCamHandler.cxx \
-   cfdQuatCam.cxx \
-   cfdSequence.cxx \
-   cfdIHCCModel.cxx \
-   cfdIHCCGauge.cxx \
-   cfdIHCCContour.cxx \
-   cfd1DTextInput.cxx \
-   cfdTempAnimation.cxx \
-   cfdGlobalBase.cxx \
-   cfdCommandObjects.cxx \
-   cfdCommandArray.cxx \
-   cfdSteadyStateVizHandler.cxx \
-   cfdTransientVizHandler.cxx \
-   cfdEnvironmentHandler.cxx \
-   cfdModelHandler.cxx \
-   cfdSoundHandler.cxx \
-   cfdPfSceneManagement.cxx \
-   cfdAppWrapper.cxx \
-   cfdVjObsWrapper.cxx 
+   VjObs_i.cxx 
 
 ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \
    VjObsS.cpp \
    VjObsC.cpp \
    cfdExecutiveConfiguration.cxx \
-   cfdGauges.cxx \
-   cfdDigitalAnalogGauge.cxx \
-   cfdDashboard.cxx \
-   cfdSwappableGeometry.cxx \
-   cfdInteractiveGeometry.cxx \
-   cfdModuleGeometry.cxx \
    VE_i.cpp \
    moduleC.cpp \
    moduleS.cpp \
@@ -236,11 +215,6 @@ else
 SRCS+= \
    VjObs.cpp 
 endif
-
-#   Observer.cpp \
-#   CorbaManager.cxx \
-#   Conductor.cpp \
-#   veConductorImpl.cpp
 
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_SceneGraph
 

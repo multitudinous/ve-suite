@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdVEBaseClass.h"
-#include "cfdModuleGeometry.h"
+//#include "cfdModuleGeometry.h"
 #include "cfdGroup.h"
 #include "cfdModel.h"
 #include "cfdReadParam.h"
@@ -118,14 +118,14 @@ void cfdVEBaseClass::RemoveSelfFromSG( void )
 // Change state information for geometric representation
 void cfdVEBaseClass::MakeTransparent( void )
 {
-   this->geometryNode->SetOpacity( 0.7 );
-   this->geometryNode->Update();
+/*   this->geometryNode->SetOpacity( 0.7 );
+   this->geometryNode->Update();*/
 }
 
 void cfdVEBaseClass::SetColor( double* color )
 {
-   this->geometryNode->SetRGBAColorArray( color );
-   this->geometryNode->Update();
+/*   this->geometryNode->SetRGBAColorArray( color );
+   this->geometryNode->Update();*/
 }
       
 // transform object based 

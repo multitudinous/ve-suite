@@ -36,7 +36,7 @@
 #include <string>
 #include <map>
 
-class cfdModuleGeometry;
+//class cfdModuleGeometry;
 class cfdGroup;
 class cfdModel;
 class cfdReadParam;
@@ -125,7 +125,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       virtual void CreateCustomVizFeature( int );
    private:
       // This needs to be vector of geometry nodes
-      cfdModuleGeometry*  geometryNode;
+      //cfdModuleGeometry*  geometryNode;
       cfdGroup* groupNode;
 
       cfdDCS*   worldDCS;

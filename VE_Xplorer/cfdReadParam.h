@@ -37,7 +37,6 @@
 #include "cfdGlobalBase.h"
 
 class fileInfo;
-class cfdTransientInfo;
 class cfdDataSet;
 class vtkDataSet;
 class cfdCommandArray;

@@ -260,7 +260,7 @@ void cfdExecutive::init_orb_naming()
 */
 void cfdExecutive::GetNetwork ( void )
 {
-   char *network;
+   char* network = 0;
   
    try 
    { 

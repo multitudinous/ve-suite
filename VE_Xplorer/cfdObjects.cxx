@@ -36,7 +36,6 @@
 #include "cfdDCS.h"
 #include "cfdEnum.h"
 #include "cfdTempAnimation.h"
-#include "cfdTransientInfo.h"
 #include "cfdSequence.h"
 #include "cfdCommandArray.h"
 
@@ -48,9 +47,6 @@
 #include <vtkPolyData.h>
 #include <vtkPolyDataSource.h>
 #include <vtkActor.h>
-
- // C++ Libs
-#include <vector>
 
 cfdObjects::cfdObjects( void )
 {
