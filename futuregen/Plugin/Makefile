@@ -1,7 +1,6 @@
 CXX = $(shell wx-config --cxx)
 WX_FLAGS = $(shell wx-config --cxxflags)
 WX_LIBS = $(shell wx-config --libs)
-XERCESCROOT=/usr/local/xerces-c-src_2_5_0
 
 PLATFORM = LINUX
 COMPILER = g++
