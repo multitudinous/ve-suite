@@ -75,13 +75,14 @@ VEOPPDmod::VEOPPDmod( void ) : cfdVEBaseClass()
    _objectName ="OPPD";
    //_onSceneGraph = false;
    _geode = NULL;
+   this->_param = NULL;
    //_fog = new cfdFog();
 }
 
 // Destructor
 VEOPPDmod::~VEOPPDmod( void )
 {
-   if ( _param )
+   if ( _param != NULL )
       delete [] _param;
    //delete this->dataRepresentation;
    if ( _geode != NULL )
@@ -92,8 +93,7 @@ void VEOPPDmod::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vr/Applications/TSVEG/OPPD_Work/PROE_Redraw/vrxpr.param.geomorg";
-   //cout << _param << endl;
+   strcpy( this->_param, "/home/vr/Applications/TSVEG/OPPD_Work/PROE_Redraw/vrxpr.param.geomorg");
    CreateObjects();
 }
 
