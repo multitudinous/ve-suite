@@ -30,10 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "fileIO.h"
+#include "boost/filesystem/operations.hpp"
+#include "boost/filesystem/path.hpp"
 #include <string>
 #include <iostream>
 #include <fstream>
 
+namespace fs = boost::filesystem;
+
+/*
 #ifdef WIN32     // windows
 #include <direct.h>
 #else             // not windows
@@ -41,6 +46,7 @@
 #include <sys/stat.h>
 #include <sys/dir.h>
 #endif            // WIN32
+*/
 
 fileIO::fileIO( )
 {
@@ -77,6 +83,14 @@ int fileIO::isFileWritable( char *filename )
 
 int fileIO::DirectoryExists( char * dirName )
 {
+   fs::path pathName( dirName, fs::native );
+   if ( ! fs::exists( pathName ) )
+   {
+      std::cout << "\nDirectory not found: "
+                << pathName.native_file_string() << std::endl;
+      return 0;
+   }
+/*
 #ifdef WIN32
    // Get the current working directory
    char cwd [ _MAX_PATH ];
@@ -108,6 +122,7 @@ int fileIO::DirectoryExists( char * dirName )
    }
    closedir( dir );
 #endif // WIN32
+*/
    return 1;
 }
 
