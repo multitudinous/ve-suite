@@ -112,6 +112,9 @@ public:
    void CreateTeacherInfo( void );
 
    void PreFrameUpdate( void );
+   void InitCluster( void );
+   void GetUpdateClusterStateVariables( void );
+
 #ifdef _TAO   
    //VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
@@ -194,10 +197,6 @@ protected:
    VjObs::obj_p_var clientInfoObserverDataArray;
    int numOfClientInfo;
    bool _unusedNewData;
-
-#ifdef _CLUSTER
-   virtual void GetUpdateClusterStateVariables( void );
-#endif
 
 #ifdef _TAO   
    //void setNumGeoArrays(const short value) throw (CORBA::SystemException);

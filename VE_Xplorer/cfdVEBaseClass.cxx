@@ -84,6 +84,7 @@ cfdVEBaseClass::cfdVEBaseClass( void )
 // Destructor
 cfdVEBaseClass::~cfdVEBaseClass( void )
 {
+   //cout << "deleteing VE base class " << endl;
    //delete this->dataRepresentation;
 }
 
@@ -415,15 +416,16 @@ void cfdVEBaseClass::CreateObjects( void )
 
    std::ifstream input;
    input.open( this->_param );
-   input >> numObjects; 
+   input >> numObjects;
+   cout <<  numObjects << endl;
    input.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1) << " cfdVEBaseClass :: Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
    for( int i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,1) << " cfdVEBaseClass :: Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
       input.getline( text, 256 );   //skip past remainder of line
       if ( id == 8 )
       {

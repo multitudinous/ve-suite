@@ -41,6 +41,8 @@
 #include <Performer/pf/pfGroup.h>
 #include <sys/types.h>
 
+#include <vrj/Kernel/Kernel.h>
+
 #include "cfdEnum.h"
 #include "fileIO.h"
 #include "cfdPfSceneManagement.h"
@@ -163,15 +165,7 @@ inline void cfdApp::init( )
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
    std::cout << "|  3. Initializing........................... Parameter File Reader |" << std::endl;
-
-#ifdef _CLUSTER
-  // Cluster Stuff
-   vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
-   std::string hostname = "abbott.vrac.iastate.edu";
-   mStates.init(new_guid,hostname);
-   //cluster::ApplicationData* hack = dynamic_cast<cluster::ApplicationData*>(&(*this->mStates));
-   //hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
-#endif // _CLUSTER
+   _vjobsWrapper->InitCluster();
 }
 
 inline void cfdApp::apiInit( )
@@ -288,7 +282,8 @@ void cfdApp::preFrame( void )
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
 
 #ifdef _CLUSTER
-   this->GetUpdateClusterStateVariables();
+   //call the parent method
+   _vjobsWrapper->GetUpdateClusterStateVariables();
 #endif // _CLUSTER
 
    ///////////////////////
@@ -330,8 +325,7 @@ void cfdApp::preFrame( void )
 #ifdef _TAO
       this->executive->UnbindORB();
 #endif // _TAO
-      // need to fix with instance command
-      //this->mKernel->stop(); // Stopping kernel using the inherited member variable
+      vrj::Kernel::instance()->stop(); // Stopping kernel using the inherited member variable
    }
 
 #ifdef _TAO
@@ -343,6 +337,7 @@ void cfdApp::preFrame( void )
    this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );
 #endif // 
 
+   
    this->_vjobsWrapper->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }
@@ -373,28 +368,3 @@ void cfdApp::postFrame()
    this->_vjobsWrapper->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
-
-#ifdef _CLUSTER
-void cfdApp::GetUpdateClusterStateVariables( void )
-{
-   //call the parent method
-   VjObs_i::GetUpdateClusterStateVariables();
-
-   //sync up the frames on all nodes in the
-   //cluster
-   if ( !mStates.isLocal() )
-   {
-      if ( this->_modelHandler->GetActiveSequence() != NULL )
-      {
-         cfdSequence* the_sequence = this->_modelHandler->GetActiveSequence()->GetSequence()->GetSequence();
-         if ( the_sequence != NULL )
-         {
-            the_sequence->setCurrentFrame( this->getTimesteps() );
-            //cout << " cfdTimesteps in preframe : " << cfdTimesteps << endl;
-         }
-      }
-   }
-}
-
-#endif // _CLUSTER
-

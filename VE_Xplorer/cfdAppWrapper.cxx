@@ -72,3 +72,8 @@ void cfdAppWrapper::init( void * )
    
    kernel->waitForKernelStop();              // Block until kernel stops
 }
+
+/*void cfdAppWrapper::exit( void )
+{
+   vrj::Kernel::instance()->stop(); // Stopping kernel using the inherited member variable
+}*/

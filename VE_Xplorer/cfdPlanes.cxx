@@ -212,7 +212,7 @@ vtkPolyData * cfdPlanes::GetClosestPlane( const int sliderBarPos )
 
    vprDEBUG(vprDBG_ALL,1) 
       << "activating precomputed plane corresponding to requested coordinate: " 
-      << coordinate << std::endl << vprDEBUG_FLUSH;
+      << coordinate << " : Slider Bar Position : " << sliderBarPos << std::endl << vprDEBUG_FLUSH;
 
    float leastSquaredDistance = 1e12;
    int index = 0;

@@ -67,6 +67,8 @@ class cfdVjObsWrapper
                            cfdModelHandler* );
       int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
       //cfdCosNaming* GetCosNaming( void );
+      void InitCluster( void );
+      void GetUpdateClusterStateVariables( void );
 #ifdef _TAO
       CosNaming::NamingContext* naming_context;
 #else

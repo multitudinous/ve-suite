@@ -44,6 +44,9 @@
 
 #include "cfdTeacher.h"
 #include "cfdDataSet.h"
+#include "cfdSequence.h"
+#include "cfdObjects.h"
+#include "cfdTempAnimation.h"
 #include "cfdCommandArray.h"
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
@@ -64,6 +67,18 @@
 #include <vtkPolyData.h>
 #include <vtkCellTypes.h>
 
+
+void VjObs_i::InitCluster( void )
+{
+#ifdef _CLUSTER
+  // Cluster Stuff
+   vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
+   std::string hostname = "abbott.vrac.iastate.edu";
+   this->mStates.init(new_guid,hostname);
+   //cluster::ApplicationData* hack = dynamic_cast<cluster::ApplicationData*>(&(*this->mStates));
+   //hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
+#endif // _CLUSTER
+}
 
 void VjObs_i::SetHandlers( cfdSteadyStateVizHandler* ssHandler, 
                      cfdEnvironmentHandler* envHandler, cfdModelHandler* modelHandler)
@@ -100,6 +115,8 @@ void VjObs_i::CreateDatasetInfo( void )
 
       _models = new VjObs::Models( numberOfModels );
       _models->length( numberOfModels );
+         vprDEBUG(vprDBG_ALL,0) << " Number of Models = " << numberOfModels
+                          << std::endl << vprDEBUG_FLUSH;
       for ( CORBA::ULong i = 0; i < numberOfModels; i++ )
       {
          cfdModel* temp = this->_modelHandler->GetModel( i );
@@ -108,78 +125,78 @@ void VjObs_i::CreateDatasetInfo( void )
                           << std::endl << vprDEBUG_FLUSH;
          if ( numDatasets > 0 )
          {
-         (*_models)[ i ].datasetnames = VjObs::scalar_p( numDatasets ); 
-         (*_models)[ i ].datasetnames.length( numDatasets );
+            (*_models)[ i ].datasetnames = VjObs::scalar_p( numDatasets ); 
+            (*_models)[ i ].datasetnames.length( numDatasets );
 
-         (*_models)[ i ].datasettypes  = VjObs::obj_p( numDatasets );
-         (*_models)[ i ].datasettypes.length( numDatasets );
+            (*_models)[ i ].datasettypes  = VjObs::obj_p( numDatasets );
+            (*_models)[ i ].datasettypes.length( numDatasets );
 
-         (*_models)[ i ].num_scalars_per_dataset = VjObs::obj_p( numDatasets );
-         (*_models)[ i ].num_scalars_per_dataset.length( numDatasets );
+            (*_models)[ i ].num_scalars_per_dataset = VjObs::obj_p( numDatasets );
+            (*_models)[ i ].num_scalars_per_dataset.length( numDatasets );
 
-         (*_models)[ i ].num_vectors_per_dataset = VjObs::obj_p( numDatasets );
-         (*_models)[ i ].num_vectors_per_dataset.length( numDatasets );
+            (*_models)[ i ].num_vectors_per_dataset = VjObs::obj_p( numDatasets );
+            (*_models)[ i ].num_vectors_per_dataset.length( numDatasets );
 
-         CORBA::ULong totalNumberOfScalars = 0;
-         CORBA::ULong totalNumberOfVectors = 0;
-         for ( CORBA::ULong j=0; j< numDatasets; j++ )
-         {
-            //cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << endl;
-            totalNumberOfScalars += temp->GetCfdDataSet( j )->GetNumberOfScalars();
-            totalNumberOfVectors += temp->GetCfdDataSet( j )->GetNumberOfVectors();
-         }
-         vprDEBUG(vprDBG_ALL,0)
+            CORBA::ULong totalNumberOfScalars = 0;
+            CORBA::ULong totalNumberOfVectors = 0;
+            for ( CORBA::ULong j=0; j< numDatasets; j++ )
+            {
+               //cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << endl;
+               totalNumberOfScalars += temp->GetCfdDataSet( j )->GetNumberOfScalars();
+               totalNumberOfVectors += temp->GetCfdDataSet( j )->GetNumberOfVectors();
+            }
+            vprDEBUG(vprDBG_ALL,0)
                << " totalNumberOfScalars: " << totalNumberOfScalars
                << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL,0)
+            vprDEBUG(vprDBG_ALL,0)
                << " totalNumberOfVectors: " << totalNumberOfVectors
                << std::endl << vprDEBUG_FLUSH;
 
-         (*_models)[ i ].scalarnames = VjObs::scalar_p( totalNumberOfScalars );
-         (*_models)[ i ].scalarnames.length( totalNumberOfScalars );
+            (*_models)[ i ].scalarnames = VjObs::scalar_p( totalNumberOfScalars );
+            (*_models)[ i ].scalarnames.length( totalNumberOfScalars );
 
-         (*_models)[ i ].vectornames = VjObs::scalar_p( totalNumberOfVectors );
-         (*_models)[ i ].vectornames.length( totalNumberOfVectors );
+            (*_models)[ i ].vectornames = VjObs::scalar_p( totalNumberOfVectors );
+            (*_models)[ i ].vectornames.length( totalNumberOfVectors );
 
-         CORBA::ULong sIndex = 0;
-         CORBA::ULong vIndex = 0;
-         for ( CORBA::ULong j=0; j < numDatasets; j++ )
-         {
-            (*_models)[ i ].datasetnames[ j ] = CORBA::string_dup( 
+            CORBA::ULong sIndex = 0;
+            CORBA::ULong vIndex = 0;
+            for ( CORBA::ULong j=0; j < numDatasets; j++ )
+            {
+               (*_models)[ i ].datasetnames[ j ] = CORBA::string_dup( 
                           temp->GetCfdDataSet( j )->GetFileName() );
-            vprDEBUG(vprDBG_ALL,1) << " dataset_name:   " << (*_models)[ i ].datasetnames[ j ]
+               vprDEBUG(vprDBG_ALL,1) << " dataset_name:   " << (*_models)[ i ].datasetnames[ j ]
                              << std::endl << vprDEBUG_FLUSH;
 
-            (*_models)[ i ].datasettypes[ j ] = temp->GetCfdDataSet( j )->GetType();
+               (*_models)[ i ].datasettypes[ j ] = temp->GetCfdDataSet( j )->GetType();
+   
+               CORBA::Short num_scalars = temp->GetCfdDataSet( j )->GetNumberOfScalars();
+               (*_models)[ i ].num_scalars_per_dataset[ j ] = num_scalars;
 
-            CORBA::Short num_scalars = temp->GetCfdDataSet( j )->GetNumberOfScalars();
-            (*_models)[ i ].num_scalars_per_dataset[ j ] = num_scalars;
-
-            for (CORBA::ULong k=0; k < (unsigned int)num_scalars; k++ )
-            {
-               (*_models)[ i ].scalarnames[ sIndex ] = CORBA::string_dup(
+               for (CORBA::ULong k=0; k < (unsigned int)num_scalars; k++ )
+               {
+                  (*_models)[ i ].scalarnames[ sIndex ] = CORBA::string_dup(
                     temp->GetCfdDataSet( j )->GetScalarName( k ) );
-               vprDEBUG(vprDBG_ALL,1) << "\tscl_name " 
+                  vprDEBUG(vprDBG_ALL,1) << "\tscl_name " 
                                 << sIndex << " : " << (*_models)[ i ].scalarnames[ sIndex ]
                                 << std::endl << vprDEBUG_FLUSH;
-               sIndex++;
-            }
+                  sIndex++;
+               }
 
-            CORBA::Short num_vectors = temp->GetCfdDataSet( j )
+               CORBA::Short num_vectors = temp->GetCfdDataSet( j )
                                           ->GetNumberOfVectors();
-            (*_models)[ i ].num_vectors_per_dataset[ j ] = num_vectors;
+               (*_models)[ i ].num_vectors_per_dataset[ j ] = num_vectors;
 
-            for (CORBA::ULong k=0; k < (unsigned int)num_vectors; k++ )
-            {
-               (*_models)[ i ].vectornames[ vIndex ] = CORBA::string_dup(
+               for (CORBA::ULong k=0; k < (unsigned int)num_vectors; k++ )
+               {
+                  (*_models)[ i ].vectornames[ vIndex ] = CORBA::string_dup(
                     temp->GetCfdDataSet( j )->GetVectorName( k ) );
-               vprDEBUG(vprDBG_ALL,1) << "\tvec_name " 
+                  vprDEBUG(vprDBG_ALL,1) << "\tvec_name " 
                                 << vIndex << " : " << (*_models)[ i ].vectornames[ vIndex ]
                                 << std::endl << vprDEBUG_FLUSH;
-               vIndex++;
+                  vIndex++;
+               }
             }
-         }
          }
          CORBA::ULong numGeoArrays = temp->GetNumberOfGeomDataSets();
          vprDEBUG(vprDBG_ALL,0)
@@ -643,9 +660,9 @@ void VjObs_i::GetCfdStateVariables( void )
    this->_unusedNewData    = false;
 }
 
-#ifdef _CLUSTER
 void VjObs_i::GetUpdateClusterStateVariables( void )
 {
+#ifdef _CLUSTER
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_SC, this->mStates->clusterSc );
@@ -657,8 +674,23 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, this->mStates->clusterTimesteps );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
-}
+
+   //sync up the frames on all nodes in the
+   //cluster
+   if ( !mStates.isLocal() )
+   {
+      if ( this->_modelHandler->GetActiveSequence() != NULL )
+      {
+         cfdSequence* the_sequence = this->_modelHandler->GetActiveSequence()->GetSequence()->GetSequence();
+         if ( the_sequence != NULL )
+         {
+            the_sequence->setCurrentFrame( this->getTimesteps() );
+            //cout << " cfdTimesteps in preframe : " << cfdTimesteps << endl;
+         }
+      }
+   }
 #endif
+}
 
 #ifdef _TAO
 short VjObs_i::GetNumberOfSounds()

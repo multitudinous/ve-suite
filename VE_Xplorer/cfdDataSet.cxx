@@ -184,10 +184,12 @@ cfdDataSet::~cfdDataSet()
 
    if ( this->fileName != NULL )
    {
-      vprDEBUG(vprDBG_ALL,2) << "deleting filename " << this->fileName
+      vprDEBUG(vprDBG_ALL,2) << " cfdDataSet :  deleting filename " << this->fileName
                              << std::endl << vprDEBUG_FLUSH;
       delete [] this->fileName;
       this->fileName = NULL;
+      vprDEBUG(vprDBG_ALL,2) << " cfdDataSet : done deleting filename " 
+                             << std::endl << vprDEBUG_FLUSH;
    }
  /*   
    if ( this->dcs != NULL )
