@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: VE_i.h,v $
- * Date modified: $Date: 2004/05/08 01:24:12 $
- * Version:       $Revision: 1.153 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdPolyData.cxx,v $
- * Date modified: $Date: 2004/04/30 13:00:45 $
- * Version:       $Revision: 1.10 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

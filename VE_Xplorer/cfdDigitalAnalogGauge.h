@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdDigitalAnalogGauge.h,v $
- * Date modified: $Date: 2004/04/03 20:40:09 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

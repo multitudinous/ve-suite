@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdMomentums.cxx,v $
- * Date modified: $Date: 2004/03/23 16:29:16 $
- * Version:       $Revision: 1.14 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

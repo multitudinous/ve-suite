@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdInteractiveGeometry.cxx,v $
- * Date modified: $Date: 2004/04/04 18:07:26 $
- * Version:       $Revision: 1.12 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: fileIO.cxx,v $
- * Date modified: $Date: 2004/04/22 15:58:41 $
- * Version:       $Revision: 1.20 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

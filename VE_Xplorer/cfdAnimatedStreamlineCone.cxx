@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdAnimatedStreamlineCone.cxx,v $
- * Date modified: $Date: 2004/04/24 21:24:37 $
- * Version:       $Revision: 1.28 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdTransientScalarActor.cxx,v $
- * Date modified: $Date: 2004/03/23 16:29:19 $
- * Version:       $Revision: 1.15 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdTransientVectorActor.cxx,v $
- * Date modified: $Date: 2004/04/26 07:21:38 $
- * Version:       $Revision: 1.13 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

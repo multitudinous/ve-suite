@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdPresetContour.cxx,v $
- * Date modified: $Date: 2004/04/30 19:30:49 $
- * Version:       $Revision: 1.20 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdExecutiveConfiguration.h,v $
- * Date modified: $Date: 2004/03/23 16:29:15 $
- * Version:       $Revision: 1.2 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
