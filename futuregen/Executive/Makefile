@@ -45,7 +45,6 @@ include $(TAO_ROOT)/taoconfig.mk
 #${LDFLAGS}
 CPPFLAGS += -I${TAO_ROOT}/include -I${ACE_ROOT}/include 
                   
-
 #   EXTRA_CXXFLAGS+= -D_TAO -D_REENTRANT -DACE_HAS_AIO_CALLS -D_GNU_SOURCE -DACE_HAS_EXCEPTIONS -D__ACE_INLINE__
 #   CPPFLAGS+=  -DACE_HAS_EXCEPTIONS -DACE_IRIX_VERS=65 -D_SGI_MP_SOURCE -DACE_HAS_XT  -D__ACE_INLINE__
 
@@ -61,8 +60,6 @@ CPPFLAGS += -I$(TAO_ROOT) -I$(TAO_ROOT)/orbsvcs -I${IDL_HOME}\
 #----------------------------------------------------------------------------
 #       Include macros and targets
 #----------------------------------------------------------------------------
-
-
 
 #ifeq (cxvx,$(findstring cxvx,$(CXX)))
 
