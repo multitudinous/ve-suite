@@ -26,51 +26,54 @@ enum VIS_TAB_IDS{
    TRANSIENT_CHECK_BOX
 };
 
-class UI_VisualizationTab : public wxPanel {
-public:
+class UI_VisualizationTab : public wxPanel 
+{
+   public:
 
-   UI_VisualizationTab(wxNotebook* tControl);
-   ~UI_VisualizationTab(){};
+      UI_VisualizationTab(wxNotebook* tControl);
+      ~UI_VisualizationTab(){};
 
-   void _onExit(wxCommandEvent& event);
+      void _onExit(wxCommandEvent& event);
 
-protected:
-   wxNotebook* _parent;
+   protected:
+      wxNotebook* _parent;
 
-   //the controls
-   wxRadioBox* _categoryRBox;
-   wxRadioBox* _contourRBox;
-   wxRadioBox* _directionRBox;
-   wxRadioButton* _pcsButton;
-   wxRadioButton* _spButton;
-   wxCheckBox* _cycleCBox;
-   wxCheckBox* _nearestCBox;
-   wxSlider* _slider;
-   wxButton* _sliderUpdate;
-   wxCheckBox* _scalarBarCBox;
-   wxCheckBox* _transientCheckBox;
-   wxButton* _recordButton;
-   wxButton* _clearButton;
-   wxButton* _exitButton;
-   wxButton* _customVisButton;
+      //the controls
+      wxRadioBox* _categoryRBox;
+      wxRadioBox* _contourRBox;
+      wxRadioBox* _directionRBox;
+      wxRadioButton* _pcsButton;
+      wxRadioButton* _spButton;
+      wxCheckBox* _cycleCBox;
+      wxCheckBox* _nearestCBox;
+      wxSlider* _slider;
+      wxButton* _sliderUpdate;
+      wxCheckBox* _scalarBarCBox;
+      wxCheckBox* _transientCheckBox;
+      wxButton* _recordButton;
+      wxButton* _clearButton;
+      wxButton* _exitButton;
+      wxButton* _customVisButton;
 
-   //create this page
-   void _buildPage();
-   void createCommandId();
-   //vispage control event callbacks
-   void _onCategory(wxCommandEvent& event);
-   void _onContour(wxCommandEvent& event);
-   void _onDirection(wxCommandEvent& event);
-   void _onPreComp(wxCommandEvent& event);
-   void _onSingle(wxCommandEvent& event);
-   void _onNearest(wxCommandEvent& event);
-   void _onUpdate(wxCommandEvent& event);
-   void _onScalarBar(wxCommandEvent& event);
-   void _onRecord(wxCommandEvent& event);
+      //create this page
+      void _buildPage( void );
+      void createCommandId( void );
+      void createTransientCommandId( void );
+      //vispage control event callbacks
+      void _onCategory(wxCommandEvent& event);
+      void _onContour(wxCommandEvent& event);
+      void _onDirection(wxCommandEvent& event);
+      void _onPreComp(wxCommandEvent& event);
+      void _onSingle(wxCommandEvent& event);
+      void _onNearest(wxCommandEvent& event);
+      void _onUpdate(wxCommandEvent& event);
+      void _onScalarBar(wxCommandEvent& event);
+      void _onRecord(wxCommandEvent& event);
    
-   void _onSlider(wxCommandEvent& event);
-   void _onClear(wxCommandEvent& event);
-   void _onCustomVis(wxCommandEvent& event);
-  DECLARE_EVENT_TABLE()
+      void _onSlider(wxCommandEvent& event);
+      void _onClear(wxCommandEvent& event);
+      void _onCustomVis(wxCommandEvent& event);
+  
+   DECLARE_EVENT_TABLE()
 };
 #endif //_VE_UI_VISUALIZATION_TAB_H_

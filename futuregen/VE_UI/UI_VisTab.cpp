@@ -316,7 +316,8 @@ void UI_VisualizationTab::_onNearest(wxCommandEvent& event)
 void UI_VisualizationTab::_onUpdate(wxCommandEvent& event)
 {
    char s[256];
-   createCommandId();
+   this->createCommandId();
+   this->createTransientCommandId();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
    std::cout << "Current Slider value: " << _slider->GetValue() << std::endl;
 }
@@ -374,6 +375,22 @@ void UI_VisualizationTab::_onClear(wxCommandEvent& event)
 }
 
 /////////////////////////////////////
+void UI_VisualizationTab::createTransientCommandId( void )
+{
+   if ( _transientCheckBox->GetValue() )
+   {
+      // Move steady state vis request to sc var
+      ((UI_Tabs *)_parent)->cSc = ((UI_Tabs *)_parent)->cId;
+
+      // Set id to represent transient request
+      ((UI_Tabs *)_parent)->cId = TRANSIENT_VIS_ACTIVE;
+      // This are listed for reference only. Do NOT uncomment.
+      // ((UI_Tabs *)_parent)->cPre_state = _nearestCBox->GetValue();
+      // ((UI_Tabs *)_parent)->cIso_value = _slider->GetValue();
+   }
+}
+
+/////////////////////////////////////
 void UI_VisualizationTab::createCommandId( void )
 {
    if ( _categoryRBox->GetSelection() == 0 ) // Contour 
@@ -424,7 +441,7 @@ void UI_VisualizationTab::createCommandId( void )
       ((UI_Tabs *)_parent)->cIso_value = _slider->GetValue();
    } 
    else if ( _categoryRBox->GetSelection() == 1 ) // Warped Contour 
-   {  std::cout << _spButton->GetValue() << std::endl;
+   {
       if ( _spButton->GetValue() ) 
       {
          if ( _directionRBox->GetSelection() == 0 ) // X Plane 
