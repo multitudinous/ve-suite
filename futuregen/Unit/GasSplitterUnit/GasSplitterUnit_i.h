@@ -26,6 +26,7 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   Body::Executive_var executive_;
 
   double pct[4];
+  int return_state;
  public:
 
 virtual void StartCalc (

@@ -7,6 +7,7 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
 {
   UnitName_=name;
   iter_counter=0;
+  return_state = 0;
 }
   
 // Implementation skeleton destructor

@@ -6,6 +6,7 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))
 {
   UnitName_=name;
+  return_state = 0;
 }
   
 // Implementation skeleton destructor
@@ -28,18 +29,23 @@ void Body_Unit_i::StartCalc (
     Package p;
     string therm_path="thermo";
     int i;
+    const char* result;
 
+    fflush(NULL);
+    std::cout<<"cp1\n";
     igas = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
-    
+    std::cout<<"cp2\n";
     if (!igas)
       {
-	cerr<<"Missing initial input."<<endl;
+	executive_->SetModuleMessage(id_, "Missing input input.\n");
+	return_state = 1;
 	return;
       }
 
     p.SetSysId("gas_in.xml");
     p.Load(igas, strlen(igas)); 
 
+    std::cout<<"cp2\n";
     Gas *gas_in = new Gas();
 
     V21Helper gashelper(therm_path.c_str());
@@ -50,9 +56,10 @@ void Body_Unit_i::StartCalc (
 
     for(i=0; i<4; i++)
       gas_out[i] = new Gas(*gas_in);
-   
+    std::cout<<"cp3\n";
     for(i=0; i<4; i++) 
       {
+	std::cout<<"cp1\4-"<<i<<std::endl;;
 	if(pct[i] > 1e-6) 
 	  {
 	    gas_out[i]->gas_composite.M = gas_in->gas_composite.M * pct[i] / 100;
@@ -67,6 +74,11 @@ void Body_Unit_i::StartCalc (
 	else 
 	  ;
       }
+    p.intfs.clear();
+    result = p.Save(rv);
+    std::cout<<"cp5\n";
+    executive_->SetModuleResult(id_, result); //marks the end the execution
+    std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (
@@ -78,7 +90,9 @@ void Body_Unit_i::StopCalc (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" : Instant calculation, already finished"<<endl;
+    string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    executive_->SetModuleMessage(id_,msg.c_str());
   }
   
 void Body_Unit_i::PauseCalc (
@@ -90,7 +104,9 @@ void Body_Unit_i::PauseCalc (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" : Instant calculation, already finished"<<endl;
+    string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    executive_->SetModuleMessage(id_,msg.c_str());
   }
   
 void Body_Unit_i::Resume (
@@ -102,7 +118,9 @@ void Body_Unit_i::Resume (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" : Instant calculation, already finished"<<endl;
+    string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    executive_->SetModuleMessage(id_,msg.c_str());
   }
   
 char * Body_Unit_i::GetStatusMessage (
@@ -114,8 +132,15 @@ char * Body_Unit_i::GetStatusMessage (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" :GetStatusMessage called"<<endl;
-    return CORBA::string_dup(status_.c_str());
+    const char *status;
+    bool rv;
+    Package p;
+    p.SetPackName("Status");
+    p.SetSysId("status.xml");
+    p.intfs.resize(1);
+    p.intfs[0].setInt("return_state", return_state);
+    status = p.Save(rv);
+    return CORBA::string_dup(status);
   }
   
 char * Body_Unit_i::GetUserData (

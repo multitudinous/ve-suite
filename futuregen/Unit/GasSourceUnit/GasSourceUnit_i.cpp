@@ -80,7 +80,6 @@ void Body_Unit_i::StartCalc (
 	  gas_data->gas_composite.comp_specie.push_back(atof(spec_frac[i].c_str()));
 	  gas_data->specie[comp[i].c_str()] = i;
 	}
-    
     vector<string> particles; // available particles
     // available particles
     particles.clear();
@@ -111,10 +110,12 @@ void Body_Unit_i::StartCalc (
     p.SetSysId("test.xml");
     outport = p.Save(rv);
     //set p.intf to be someting containing the results
-    
     //    result = p.Save(rv);
     executive_->SetExportData(id_, 0, outport);
-    executive_->SetModuleResult(id_, NULL); //this marks the end the execution
+
+    p.intfs.clear();
+    result = p.Save(rv);
+    executive_->SetModuleResult(id_, result); //this marks the end the execution
   }
   
 void Body_Unit_i::StopCalc (
@@ -218,7 +219,7 @@ void Body_Unit_i::SetParams (
     p_comp = p.intfs[0].getString1D("p_comp");
     p_frac = p.intfs[0].getString1D("p_frac");
    
-    
+    std::cout<<"Set Params done"<<std::endl;
   }
   
 void Body_Unit_i::SetID (

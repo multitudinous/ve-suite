@@ -62,7 +62,12 @@ int main (int argc, char* argv[])
     Unitname.length(1);
     Unitname[0].id = CORBA::string_dup (UNITNAME.c_str());
     //Bind the object
-    naming_context->bind(Unitname, unit.in());
+    try	{
+      naming_context->bind(Unitname, unit.in());
+    }catch(CosNaming::NamingContext::AlreadyBound& ex){
+      naming_context->rebind(Unitname, unit.in());
+    }
+    
     
     //Call the Executive CORBA call to register it to the Executive
     exec->RegisterUnit(unit_i.UnitName_.c_str(), 0); //0 means a normal module
