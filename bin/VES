@@ -3,7 +3,7 @@
 # Set environment variables and paths for running the program
 source /isv/VE_Suite/20050107/VE_Installer/setup.deere.tsh
 # Set additional environment variables
-setenv MY_VJCONFIGS /isv/Juggler/deere.config/vrj2.0a4
+setenv MY_VJCONFIGS /isv/Juggler/deere.config/vrj2.0b1
 #cp ${VE_SUITE_HOME}/VE_Conductor/class_files/config/${HOST}.comm.config ${VE_SUITE_HOME}/VE_Conductor/class_files/config/comm.config
 setenv OMNIORB_CONFIG ${MY_VJCONFIGS}/${HOST}.omniORB4.cfg
 setenv OMNINAMES_LOGDIR ${OMNI_HOME}/logs
@@ -23,7 +23,7 @@ mv ${VJ_BASE_DIR}/lib32/jccl/plugins ${VJ_BASE_DIR}/lib32/jccl/plugins.bak
 echo "Hiding corba_rtrc.so"
 endif
 if ( -e ${VJ_BASE_DIR}/lib32/vrjuggler/plugins/corba_perf_mon_d.so ) then
-mv ${VJ_BASE_DIR}/lib32/jccl/plugins ${VJ_BASE_DIR}/lib32/jccl/plugins.bak
+mv ${VJ_BASE_DIR}/lib32/vrjuggler/plugins ${VJ_BASE_DIR}/lib32/vrjuggler/plugins.bak
 echo "Hiding corba_perf_mon_d.so"
 endif
 
