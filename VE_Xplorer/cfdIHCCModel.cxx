@@ -143,7 +143,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
    gauge_time->SetGeometryFilename( std::string("dash_digital.flt") );
 
    // Acid Gauge
-   trans_gauge[ 0 ] = -0.5;
+   trans_gauge[ 0 ] = 0.5;
    trans_gauge[ 1 ] = -5;
    trans_gauge[ 2 ] = 2;
    gauge_acid = new cfdIHCCGauge( ihccModelNode );
