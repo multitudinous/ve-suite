@@ -148,6 +148,7 @@ int cfdGroup::RemoveChild( cfdNode* child )
    if ( oldChild != childNodes.end() )
    {
       this->_group->removeChild( (*oldChild)->GetRawNode() );
+      childNodes.erase( oldChild );
       child->SetParent( NULL );
       return 1;  
    }
