@@ -35,6 +35,7 @@
 class cfdSequence;
 class cfdGroup;
 class cfdGeode;
+class vtkActor;
 
 #include <vector>
 
@@ -82,6 +83,8 @@ class cfdTempAnimation
 
       // Helper function to support animations on clusters
       void SetCurrentFrame( int );
+
+      void CreateGeodeVector( vtkActor* );
 
    private:
       int numFrames;

@@ -163,6 +163,9 @@ osg::Node* cfdNode::GetRawNode(void)
          //std::cout<<"cfdNode::GetRawNode()"<<std::endl;
 	      return _sequence;
          break;
+      case CFD_SWITCH:
+         return _switch;
+         break;
       case CFD_NODE:
       case CFD_OTHER:
       default:

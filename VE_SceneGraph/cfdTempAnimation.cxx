@@ -34,10 +34,13 @@
 #include "cfdEnum.h"
 #include "cfdGroup.h"
 #include "cfdGeode.h"
+#include "cfdDCS.h"
 
 #include <iostream>
 
 #include <vpr/Util/Debug.h>
+
+#include <vtkActor.h>
 
 cfdTempAnimation::cfdTempAnimation()
 {
@@ -108,15 +111,24 @@ void cfdTempAnimation::SetNumberOfFrames( int i )
    numFrames = i;
 }
 
+void cfdTempAnimation::CreateGeodeVector( vtkActor* actor )
+{
+   // used by cfdAnimatedStreamlineCone
+   this->_geodes.push_back( new cfdGeode() );
+ 
+   // Function implements respective vtkActorToGeode function
+   ((cfdGeode*)this->_geodes.back())->TranslateTocfdGeode( actor );
+}
+
 void cfdTempAnimation::AddToSequence( int objectType )
 {
    int i;
-   int num = this->_sequence->getNumChildren();
+   int num = this->_sequence->GetNumChildren();
    vprDEBUG(vprDBG_ALL, 2) << " Number of children in sequence: " << num
                            << std::endl << vprDEBUG_FLUSH;
-
-   cfdGeode* temp;
-   unsigned int type = this->_sequence->GetChild( 0 )->GetNodeType();
+   
+   cfdGeode* temp = NULL;
+   //unsigned int type = this->_sequence->getChild( 0 )->GetNodeType();
    
    if ( objectType == ANIMATED_STREAMLINES )
    {
@@ -126,7 +138,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
       // For animated streamlines
       for ( i = 0; i < num; i++ )
       {
-         temp = ( cfdGeode* )this->_sequence->getChild( 0 );
+         temp = ( cfdGeode* )this->_sequence->GetChild( 0 );
          this->_sequence->RemoveChild( temp );
          _geodes.erase( _geodes.begin() );
          delete temp;
@@ -139,7 +151,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
       {
          this->_sequence->AddChild( this->_geodes[ i ] );
       }      
-      vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: Create Sequence" 
+      vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: Create Sequence : " << numPts
                               << std::endl << vprDEBUG_FLUSH;
 
       this->_sequence->setInterval( CFDSEQ_CYCLE, 0 , numPts - 1 );
@@ -157,7 +169,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
       // If there are already children on the sequence
       for ( i = 0; i < num; i++ )
       {
-         temp = (cfdGeode *)this->_sequence->getChild( 0 );
+         temp = (cfdGeode *)this->_sequence->GetChild( 0 );
          this->_sequence->RemoveChild( temp );
          _geodes.erase( _geodes.begin() );
          delete temp;
@@ -180,7 +192,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
       vprDEBUG(vprDBG_ALL, 2) << " For animated Images: End Loop" 
                               << std::endl << vprDEBUG_FLUSH;
    }
-   else if ( type == 0 )
+/*   else if ( type == 0 )
    {
       // For transient data
       for ( i = 0; i < num; i++ )
@@ -202,19 +214,27 @@ void cfdTempAnimation::AddToSequence( int objectType )
                ((cfdGroup *)this->_sequence->getChild( i ))->AddChild( this->_geodes[ i ] );
             }
          }
-      }
+      
       this->_sequence->setInterval( CFDSEQ_CYCLE, 0 , num - 1 );
-/*
-      this->_sequence->setDuration( 
-                       this->paramFile->transientInfo[ 0 ]->GetDuration() );
-      std::cout << "sequence->Duration = " << this->paramFile->transientInfo[ 0 ]->GetDuration() << std::endl;
-*/
-   }
+
+      //this->_sequence->setDuration( 
+      //                 this->paramFile->transientInfo[ 0 ]->GetDuration() );
+      //std::cout << "sequence->Duration = " << this->paramFile->transientInfo[ 0 ]->GetDuration() << std::endl;
+
+   }*/
    else
    {
       std::cerr << "ERROR: Don't know this kind of sequence" << std::endl;
       exit( 1 );
    }
+   
+   // This is necessary because cfdNodes can't have multiple parents
+   if ( this->_sequence->GetParent( 0 ) != NULL )
+   {
+      ((cfdDCS*)this->_sequence->GetParent( 0 ))->RemoveChild( 
+                                       (cfdNode*)this->_sequence );
+   }
+
    vprDEBUG(vprDBG_ALL, 2) << " done with add to sequence"
                            << std::endl << vprDEBUG_FLUSH;
 }

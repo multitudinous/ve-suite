@@ -1,4 +1,5 @@
 #include "cfdSwitch.h"
+#include  <iostream>
 
 //////////////////////////////////
 //Constructors                  //
@@ -8,6 +9,11 @@ cfdSwitch::cfdSwitch()
 {
 #ifdef _PERFORMER
    _switch = new pfSwitch();
+   if ( _group != NULL )
+   {
+      pfDelete( _group );
+      _group = NULL;
+   }
    _group = dynamic_cast<pfSwitch*>(_switch);
 #elif _OSG
    _switch = new osg::Switch();

@@ -82,19 +82,22 @@ cfdGroup()
    _pMode = CFDSEQ_START;
    _appFrame = 0;
    _step = -10000;
-   _sequence = this;
 #ifdef _PERFORMER
    setTravFuncs(PFTRAV_APP,switchFrame,0);
    setTravData(PFTRAV_APP,this);
    //performer stuff
    init();
    setType(_classType);
-   _group = dynamic_cast<cfdSequence*>(_sequence);
-
+   if ( _group != NULL )
+   {
+      pfDelete( _group );
+      _group = NULL;
+   }
 #elif _OSG
 #endif
    SetCFDNodeType(CFD_SEQUENCE);
-   
+   _sequence = this;
+   _group = dynamic_cast<cfdSequence*>(_sequence);
 }
 ///////////////////////////////////////////////////
 cfdSequence::cfdSequence(const cfdSequence& cfdSeq)
@@ -448,7 +451,8 @@ int cfdSequence::AddChild(cfdNode* child)
 {
    //cout<<"Adding frame to sequence."<<endl;
    //init the switch node
-   if(!_lSwitch){
+   if(!_lSwitch)
+   {
       _lSwitch = new cfdSwitch();
 #ifdef _PERFORMER
       _lSwitch->setVal(PFSWITCH_OFF);
@@ -456,13 +460,12 @@ int cfdSequence::AddChild(cfdNode* child)
       _lSwitch->setAllChildrenOff();
 #elif _OPENSG
 #endif
-      _group->addChild(_lSwitch->GetRawNode());
-
+      this->addChild(_lSwitch->GetRawNode());
    }
    _lSwitch->AddChild(child);
 
    // force recomputation of time per frame
-   this->setDuration( _duration );
+   //this->setDuration( _duration );
    return 1;
 }
 ///////////////////////////////
