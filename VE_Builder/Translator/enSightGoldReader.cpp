@@ -53,7 +53,7 @@ enSightGoldReader::~enSightGoldReader( void )
 vtkUnstructuredGrid* enSightGoldReader::GetUnstructuredGrid( char* caseFileName, int debug )
 {
    reader = vtkEnSightGoldReader::New();
-   reader->DebugOn();
+   //reader->DebugOn();
    reader->SetCaseFileName( caseFileName );
    reader->Update();
    
@@ -64,8 +64,8 @@ vtkUnstructuredGrid* enSightGoldReader::GetUnstructuredGrid( char* caseFileName,
    cell2point->Update();
    
    // Must do this so that we can clean up properly in the destructor
-   //vtkUnstructuredGrid *finalUGrid = vtkUnstructuredGrid::New();
-   //finalUGrid->DeepCopy( cell2point->GetUnstructuredGridOutput() );
-   return cell2point->GetUnstructuredGridOutput();
-   //return finalUGrid;
+   vtkUnstructuredGrid *finalUGrid = vtkUnstructuredGrid::New();
+   finalUGrid->ShallowCopy( cell2point->GetUnstructuredGridOutput() );
+
+   return finalUGrid;
 }

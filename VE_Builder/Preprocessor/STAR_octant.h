@@ -32,7 +32,7 @@
 #ifndef OCTANT
 #define OCTANT
 #include <iostream>
-using namespace std;
+
 class Octant
 {
 public:
@@ -171,7 +171,7 @@ void Octant::GetSiblingBound( int siblingID, float xout[], float yout[], float z
       bound[4] = (double)zout[13];
       bound[5] = (double)zout[26];
     break;
-    default: cout << "Error no selection" << endl;
+    default: std::cout << "Error no selection" << std::endl;
     break;
     }
 }

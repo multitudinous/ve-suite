@@ -332,14 +332,14 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid )
       if ( grid->IsA("vtkUnstructuredGrid") )
       {
          //grid->Delete();
-         //grid->ShallowCopy( (vtkUnstructuredGrid*)smallGrid );
-         grid->DeepCopy( (vtkUnstructuredGrid*)smallGrid );
+         grid->ShallowCopy( (vtkUnstructuredGrid*)smallGrid );
+         //grid->DeepCopy( (vtkUnstructuredGrid*)smallGrid );
       }
       else if ( grid->IsA("vtkPolyData") )
       {
          //grid->Delete();
-         //grid->ShallowCopy( (vtkPolyData*)smallGrid );
-         grid->DeepCopy( (vtkPolyData*)smallGrid );
+         grid->ShallowCopy( (vtkPolyData*)smallGrid );
+         //grid->DeepCopy( (vtkPolyData*)smallGrid );
       }
 
       grid->Squeeze();
