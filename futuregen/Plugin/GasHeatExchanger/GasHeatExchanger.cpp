@@ -75,7 +75,7 @@ int GasHeatExchanger::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void GasHeatExchanger::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*11/100, icon_h*37/75);
+  iports[0]=wxPoint(icon_w*6/35, icon_h*18/34);
   return;
 }
 
@@ -90,7 +90,7 @@ int GasHeatExchanger::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasHeatExchanger::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*87/100, icon_h*37/75);
+  oports[0]=wxPoint(icon_w*28/35, icon_h*18/34);
 }
 
 /////////////////////////////////////////////////////////////////////////////
