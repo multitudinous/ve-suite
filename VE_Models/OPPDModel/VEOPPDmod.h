@@ -63,44 +63,7 @@ class VEOPPDmod: public cfdVEBaseClass
 
       virtual void InitializeNode( cfdDCS* );
 
-      // Methods to do scene graph manipulations
-      // New methods may have to be added later
-      virtual void AddSelfToSG( void );
-      virtual void RemoveSelfFromSG( void );
-
-      // Change state information for geometric representation
-      virtual void MakeTransparent( void );
-      virtual void SetColor( double* );
-      
-      // transform object based 
-      virtual void SetTransforms( float*, float*, float* );
-
-      // Implement Gengxun's work by using socket
-      // stuff from vtk. This will be used in parallel
-      // with implementation of a unit connected to the 
-      // computational engine.
-      virtual void GetDataFromUnit( void );
-      // Basically uses vtkActorToPF to create a geode and 
-      // add it to the scene graph. Probably use cfdObject.
-      virtual void MakeGeodeByUserRequest( int );
-
-      virtual wxString GetName();
-      //This returns the name of the module
-
-      virtual wxString GetDesc();
-      //This returns the description of the module, This should be a short description
-
-      virtual void SetID(int id);
-
-      virtual cfdModel* GetCFDModel( void );
-   
-      virtual void LoadSurfaceFiles( char* );
-
-      bool OnSceneGraph( void ){return _onSceneGraph;}
-   
-   
    private:
-      virtual void CreateObjects( void );
 };
 
 #endif

@@ -74,7 +74,7 @@ VEOPPDmod::~VEOPPDmod( void )
 
 void VEOPPDmod::InitializeNode( cfdDCS* veworldDCS )
 {
-   cfdVEBaseClass::InitializeNode();
+   cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
    this->_param = "/home/vr/Applications/TSVEG/Test_Pit/OPPD/Current_Demo/vrxpr.param.geomorg.useonwall";
    //cout << _param << endl;
