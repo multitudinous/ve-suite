@@ -381,7 +381,7 @@ void GenCode()
 	for (i=0; i<Double1D_name.size(); i++)
 	  fprintf(f_ui_h, "  vector<double>* p_%s;\n", Double1D_name[i].c_str());
 	for (i=0; i<String1D_name.size(); i++)
-	  fprintf(f_ui_h, "  vector<string> p_%s;\n", String1D_name[i].c_str());
+	  fprintf(f_ui_h, "  vector<string>* p_%s;\n", String1D_name[i].c_str());
 	for (i=0; i<Int1D_name.size(); i++)
 	  fprintf(f_ui_h, "  vector<long>* p_%s;\n", Int1D_name[i].c_str());
 	
