@@ -2826,7 +2826,12 @@ void Network::OnParaView(wxCommandEvent &event)
   //wxArrayString output;
   // ::wxExecute("paraview", wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
   //::wxShell("paraview");
+#ifndef WIN32
   paraThread* para_t=new paraThread(this);
   para_t->Create();
   para_t->Run();
+#else
+  ::wxExecute("paraview", wxEXEC_ASYNC);
+#endif
+
 }
