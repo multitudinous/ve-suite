@@ -356,8 +356,7 @@ int cfdDCS::AddChild( cfdNode* child )
 #endif
 
    //add node to real graph rep
-   osg::Node* temp = child->GetRawNode();
-   int good = this->_dcs->addChild( temp );
+   int good = this->_dcs->addChild( child->GetRawNode() );
    if ( good )
    {
       //add the child to cfdscene
