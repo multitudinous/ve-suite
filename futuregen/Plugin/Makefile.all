@@ -17,7 +17,7 @@ PREFIX = /usr/local
 include ${XERCESCROOT}/version.incl
 include Makefile.incl
 
-OBJ1 = BulkDesulfurizer/BulkDesulfurizer.o BulkDesulfurizer/BulkDesulfurizer_UI.o 
+OBJ1 = Gasifier0D/Gasifier0D.o Gasifier0D/Gasifier0D_UI.o 
 OBJ2 = WaterPump/WaterPump.o WaterPump/WaterPump_UI.o 
 OBJ3 = SulfurPolisher/SulfurPolisher.o SulfurPolisher/SulfurPolisher_UI.o
 OBJ4 = SOFC/SOFC.o SOFC/SOFC_UI.o 
@@ -45,7 +45,7 @@ OBJ24 = GasMixer/GasMixer.o
 OBJ25 = GasSeparator/GasSeparator.o GasSeparator/GasSeparator_UI.o GasSeoarator/thermo.o GasSeparator/matrix.o
 OBJ26 = GasHeatExchanger/GasHeatExchanger.o GasHeatExchanger/GasHeatExchanger_UI.o 
 OBJ27 = KineticReactor/KineticReactor.o KineticReactor/KinecticReactor_UI.o
-OBJ28 = EuilibriumReactor/EuilibriumReactor.o
+OBJ28 = EquilibriumReactor/EquilibriumReactor.o
 OBJ29 = WaterSource/WaterSource.o WaterSource/WaterSource_UI.o
 .SUFFIXES : .o .cpp
 
@@ -55,7 +55,7 @@ OBJ29 = WaterSource/WaterSource.o WaterSource/WaterSource_UI.o
 all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 s21 s22 s23 s24
 
 s1:	$(OBJ1)
-	$(CXX) -g -shared -o libBulkDesulfurizer.so $(OBJ1)
+	$(CXX) -g -shared -o libGasifier0D.so $(OBJ1)
 
 s2:	$(OBJ2)
 	$(CXX) -g -shared -o libWaterPump.so $(OBJ2)
@@ -132,7 +132,7 @@ s26:	$(OBJ26)
 s27:	$(OBJ27)
 	$(CXX) -g -shared -o libKineticReactor.so $(OBJ27)
 s28:	$(OBJ28)
-	$(CXX) -g -shared -o libEuilibriumReactor.so $(OBJ28)
+	$(CXX) -g -shared -o libEquilibriumReactor.so $(OBJ28)
 s29:	$(OBJ29)
 	$(CXX) -g -shared -o libWaterSource.so $(OBJ29)
 
