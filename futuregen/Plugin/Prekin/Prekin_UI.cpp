@@ -359,7 +359,7 @@ bool Prekin_UI_Dialog::TransferDataFromWindow()
 
   //wxString ofname=wxFileSelector(_T("Profile name"), "", "Profile001", "txt");
   WriteProfile("INPUT");//(ofname.c_str());
-  ::wxExecute("PREKIN_new.exe",wxEXEC_ASYNC);
+  //::wxExecute("PREKIN_new.exe",wxEXEC_ASYNC);
   return true; 
 }
 
