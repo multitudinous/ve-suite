@@ -672,7 +672,12 @@ void VjObs_i::GetCfdStateVariables( void )
    this->cfdPostdata_state = this->mPostdata_state;
    this->cfdPre_state      = this->mPre_state;
    this->cfdTimesteps      = this->mTimesteps;
-   this->cfdTeacher_state    = this->mTeacher_state;
+   this->cfdTeacher_state  = this->mTeacher_state;
+   
+   for ( int i = 0; i < 9; i++ )
+   {
+      cfdShort_data_array[ i ] = mShort_data_array[ i ];
+   } 
 
 #ifdef _CLUSTER
    if ( mStates.isLocal() )
@@ -762,35 +767,47 @@ VjObs::obj_p* VjObs_i::GetClientInfoData()
    return clientInfoObserverDataArray._retn();
 }
 
-void VjObs_i::SetClientInfoData( const VjObs::obj_p &value )
+void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    // The order of setting these values
    // MUST MATCH the order in which they are set in 
    // my_orb.java
-   this->mId = value[ 0 ];
-   //cout<<"update:this->corba_mutex.C_id = "<<this->mId<<endl;
+   if ( (value[ 7 ] != -1) && (value [ 8 ] != -1) )
+   {
+      this->mId = value[ 0 ];
+      //cout<<"update:this->corba_mutex.C_id = "<<this->mId<<endl;
 
-   // get the value of the slider bar, used by many visualizations
-   this->mIso_value = value[ 1 ];
-   //cout<<"iso_value"<<this->mIso_value<<endl;
+      // get the value of the slider bar, used by many visualizations
+      this->mIso_value = value[ 1 ];
+      //cout<<"iso_value"<<this->mIso_value<<endl;
 
-   this->mTimesteps = value[ 2 ];
+      this->mTimesteps = value[ 2 ];
 
-   this->mSc = value[ 3 ];
-   //cout<<"select scalar:"<<this->mSc<<endl;
+      this->mSc = value[ 3 ];
+      //cout<<"select scalar:"<<this->mSc<<endl;
 
-   // change scalar range or cursor settings
-   this->mMin = value[ 4 ];
-   this->mMax = value[ 5 ];
-   //cout<<"update:min,max values: "<<this->mMin<<"\t"<<this->mMax<<endl;
+      // change scalar range or cursor settings
+      this->mMin = value[ 4 ];
+      this->mMax = value[ 5 ];
+      //cout<<"update:min,max values: "<<this->mMin<<"\t"<<this->mMax<<endl;
 
-   this->mGeo_state = value[ 6 ];
-   //cout<<"geometry state:"<< this->mGeo_state <<endl;
+      this->mGeo_state = value[ 6 ];
+      //cout<<"geometry state:"<< this->mGeo_state <<endl;
 
    this->mPre_state = (bool)value[ 7 ];
    //cout<<"pre_state:"<< this->mPre_state <<endl;
 
-   this->mTeacher_state = value[ 8 ];
-   //cout<<"mTeacher state:"<< this->mTeacher_state <<endl;
+      this->mTeacher_state = value[ 8 ];
+      //cout<<"mTeacher state:"<< this->mTeacher_state <<endl;
+   }
+   else
+   {
+      this->mId = value[ 0 ];
+      for ( int i = 0; i < 9; i ++ )
+      {
+         mShort_data_array[ i ] = value[ i ];
+         cout << value[ i ] << endl;
+      }
+   }
 }

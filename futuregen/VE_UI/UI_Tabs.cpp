@@ -22,7 +22,7 @@
    _streamlinePage = 0;
    _datasetPage = 0;
    _navPage = 0;
-   server_ref = VjObs::_duplicate(ref);
+//   server_ref = VjObs::_duplicate(ref);
 
    cGeo_state = 0;
    cIso_value = 0;
@@ -31,7 +31,7 @@
 
    //copied code from old Tabs.cpp
    numOfClientInfo = 9;
-   clientInfoArray = new VjObs::obj_p(50);
+/*   clientInfoArray = new VjObs::obj_p(50);
    clientInfoArray->length( numOfClientInfo );
 
    // Get Number of Geometry Files
@@ -177,7 +177,7 @@
    std::cout << "VE_Conductor : timesteps : " << cTimesteps << std::endl;
 
    cPre_state = 0;
-
+*/
 }
 /////////////////////////////////////////////////////
 //update the active scalar on the                  //

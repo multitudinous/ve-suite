@@ -46,7 +46,7 @@
 // Cluster Stuff
 #include <vpr/IO/SerializableObject.h>
 #include <cluster/ClusterManager.h>
-#include <cluster/Plugins/ApplicationDataManager/UserData.h>
+#include <plugins/ApplicationDataManager/UserData.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include "cfdStateInfo.h"
@@ -107,7 +107,7 @@ public:
    //short get_timesteps(){ return NULL; }
 
    void SetClientInfoFlag( CORBA::Short );
-   void SetClientInfoData( const VjObs::obj_p &value );
+   void SetClientInfoData( const VjObs::obj_pd &value );
    VjObs::obj_p* GetClientInfoData();
    VjObs::scalar_p * get_dataset_names();
    VjObs::obj_p * get_dataset_types();
@@ -221,6 +221,7 @@ protected:
    short mNumTeacherArrays;
    short mTeacher_state;
    short mGetClientInfo;
+   double mShort_data_array[ 9 ];
 
    // cfdApp side variables
    int   cfdIso_value;
@@ -233,7 +234,7 @@ protected:
    bool  cfdPre_state;
    short cfdTimesteps;
    short cfdTeacher_state; 
-
+   double cfdShort_data_array[ 9 ];
 
 #ifdef _CLUSTER
    // Cluster Stuff for the above state variables

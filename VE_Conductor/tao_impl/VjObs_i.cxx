@@ -47,6 +47,7 @@
 
 #include <vpr/vpr.h>
 #include <vpr/System.h>
+//#include <ClusterNetwork.h>
 /*
 void VjObs_i::attach(Observer_ptr o)
 {
@@ -850,16 +851,19 @@ void VjObs_i::GetCfdStateVariables( void )
    this->cfdPre_state      = this->mPre_state;
    this->cfdTimesteps      = this->mTimesteps;
    this->cfdTeacher_state  = this->mTeacher_state;
-   this->_unusedNewData    = false;
 
+//cout <<  "************** 1" << this->mStates->clusterId <<endl;
 #ifdef _CLUSTER
+//cout <<  "************** 2" << this->mStates->clusterId << " : " <<  mStates.isLocal() << " : " << cluster::ClusterNetwork::instance()->isLocalHost( "abbott" ) << endl;
    if ( mStates.isLocal() )
+   //if ( cluster::ClusterNetwork::instance()->isLocalHost( "abbott" ) )
    {
       this->mStates->clusterIso_value        = this->mIso_value;
       this->mStates->clusterSc               = this->mSc;
       this->mStates->clusterMin              = this->mMin;
       this->mStates->clusterMax              = this->mMax;
-      this->mStates->clusterId               = this->mId;
+      this->mStates->clusterId               = (float)this->mId;
+//cout <<  "************** 3 " << this->mStates->clusterId << " : " << cluster::ClusterNetwork::instance()->getNumClusterNodes()<<endl;
       this->mStates->clusterGeo_state        = this->mGeo_state;
       this->mStates->clusterPostdata_state   = this->mPostdata_state;
       this->mStates->clusterPre_state        = this->mPre_state;
@@ -867,6 +871,7 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterTeacher_state    = this->mTeacher_state;
    }
 #endif
+   this->_unusedNewData    = false;
 }
 
 #ifdef _CLUSTER
@@ -877,7 +882,8 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    this->cfdSc             = this->mStates->clusterSc;            
    this->cfdMin            = this->mStates->clusterMin;
    this->cfdMax            = this->mStates->clusterMax;          
-   this->cfdId             = this->mStates->clusterId;            
+   this->cfdId             = (long)this->mStates->clusterId;            
+//cout <<  "************** 3 " << this->mStates->clusterId << " : " << this->cfdId << endl;
    this->cfdGeo_state      = this->mStates->clusterGeo_state;     
    this->cfdPostdata_state = this->mStates->clusterPostdata_state;
    this->cfdPre_state      = this->mStates->clusterPre_state;     

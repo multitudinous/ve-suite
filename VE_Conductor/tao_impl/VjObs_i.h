@@ -68,6 +68,7 @@ public:
       this->numOfClientInfo = 9;
       //int temp=0;
       this->setClients( 0 );
+      this->mId = -1;
 
       //orb=CORBA::ORB_init(temp,0,"omniORB4");
 
