@@ -24,35 +24,18 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdFILE.cxx,v $
- * Date modified: $Date: 2004/04/30 13:00:44 $
- * Version:       $Revision: 1.27 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdIHCCContour.h"
-#include "readWriteVtkThings.h"
-#include "cfdFileInfo.h"
+#include "readWriteVtkThings.h"  // for readVtkThing
 #include <vtkActorToPF.h>
-//#include <assert.h>
-#include <vector>
 
 using namespace std;
 
-#include <Performer/pfdu.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pf/pfGeode.h>
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pr/pfMaterial.h>
-#include <Performer/pr/pfLight.h>
-#include <Performer/pr.h>
-#include <Performer/pfutil.h>
-#include <Performer/pr/pfTexture.h>
-#include <Performer/pr/pfLPointState.h>
-#include <Performer/pf/pfTraverser.h>
-
-#include <vtkGeometryFilter.h>
-#include <vtkPolyDataNormals.h>
 #include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
@@ -60,6 +43,7 @@ using namespace std;
 #include <vtkTransformFilter.h>
 #include <vtkTransform.h>
 #include <vtkProperty.h>
+
 #include <vpr/Util/Debug.h>
 
 cfdIHCCContour::cfdIHCCContour( void )

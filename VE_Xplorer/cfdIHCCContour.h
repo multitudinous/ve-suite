@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdFILE.h,v $
- * Date modified: $Date: 2004/03/23 16:29:15 $
- * Version:       $Revision: 1.9 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -39,13 +39,6 @@ class vtkPolyData;
 class vtkPolyDataMapper;
 class vtkActor;
 using namespace std;
-
-class fileInfo;
-class pfNode;
-class pfMaterial;
-class pfNode;
-class pfDCS;
-//class pfLightModel;
 
 class cfdIHCCContour: public cfdObjects
 {
