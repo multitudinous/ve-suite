@@ -19,7 +19,7 @@ void TexTable::SetNumofCols(int num)
   cols_width.resize(num);
   
   for (i=0; i<num; i++)
-    cols_width[i]=17; //default width
+    cols_width[i]=30; //default width
 }
 
 void TexTable::SetColWidth(int Col_id, int width)
