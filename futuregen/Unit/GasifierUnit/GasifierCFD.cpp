@@ -26,7 +26,7 @@ GasifierCFD::GasifierCFD ()
   abort_glacier = false;
   running = false;
 
-  _work_dir = "/home/maguire/tmp";
+  _work_dir = "./case";
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -634,7 +634,7 @@ bool GasifierCFD::execute (Gas *ox_in, Gas *gas_out, summary_values *summaries)
     }
   } else {
     string path = _work_dir;
-    string basepath = "../src/Packages/Vision21/Dataflow/Modules/Gasifier/Cases";
+    string basepath = "./Glacier/Cases";
     if(_stage == 0) basepath += "/base_twostage/";
     else               basepath += "/base_onestage/";
     system(("cp " + basepath + "DATA " + path + "/DATA").c_str());
@@ -729,7 +729,7 @@ void GasifierCFD::load_and_run_glacier()
     return ;
   }
   
-  std::string glac_lib = "../src/Packages/Vision21/Dataflow/Modules/GasifierCFD/make_glacier/glacier_gasifier.so";
+  std::string glac_lib = "./Glacier/make_glacier/glacier_gasifier.so";
 
   glacier_handle = dlopen(glac_lib.c_str(), RTLD_NOW);
   if(glacier_handle==NULL){
