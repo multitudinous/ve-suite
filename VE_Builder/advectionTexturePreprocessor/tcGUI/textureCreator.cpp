@@ -9,6 +9,8 @@
 #include <vtkRectilinearGrid.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkCellDataToPointData.h>
+#include <iostream>
+
 #ifdef WIN32
 #include <direct.h>
 #endif
@@ -23,7 +25,7 @@ VTKDataToTexture::VTKDataToTexture()
    _resolution[0] = 2;
    _resolution[0] = 2;
 
-   _maxDistFromCenter = 0;
+   //_maxDistFromCenter = 0;
    _nScalars = 0;
    _nVectors = 0;
    _scalarNames = 0;
@@ -32,7 +34,7 @@ VTKDataToTexture::VTKDataToTexture()
    _vFileName = 0;
    _outputDir = 0;
  
-   _dataConvertCellToPoint = 0 
+   _dataConvertCellToPoint = 0;
    _usgrid = 0;
    _rgrid = 0;
 
@@ -70,7 +72,7 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
    _vectorNames = 0;
    _vectorNames = getParameterNames(3,_nVectors);
 
-   _maxDistFromCenter = v._maxDistFromCenter;
+   //_maxDistFromCenter = v._maxDistFromCenter;
    setVelocityFileName(v._vFileName);
    setOutputDirectory(v._outputDir);
    if(_validPt.size()){
@@ -80,10 +82,10 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
    for(unsigned int i = 0; i < nPts; i++){
       _validPt.push_back(v._validPt.at(i));
    }
-    nPts = v._distance.size();
+   /* nPts = v._distance.size();
    for(unsigned int i = 0; i < nPts; i++){
       _distance.push_back(v._distance.at(i));
-   }
+   }*/
 
 }
 /////////////////////////////////////
@@ -123,9 +125,9 @@ VTKDataToTexture::~VTKDataToTexture()
    if(_validPt.size()){
       _validPt.clear();
    }
-   if(_distance.size()){
+   /*if(_distance.size()){
       _distance.clear();
-   }
+   }*/
    
 }
 //////////////////////////////

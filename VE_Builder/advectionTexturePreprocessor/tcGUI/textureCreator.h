@@ -118,6 +118,7 @@ protected:
    int _nScalars;
    int _nVectors;
    int _nPtDataArrays;
+   unsigned int _curPt;
    std::vector<double*> _scalarRanges;
    std::vector<double*> _vectorRanges;
    std::vector<bool> _validPt;
