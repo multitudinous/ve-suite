@@ -34,14 +34,12 @@
 
 #ifdef _TAO
 #include "VjObsS.h"
-#include <orbsvcs/CosNamingC.h>
-
-//#include "VjObsC.h"
 #else
 #include "VjObs.h"
 #endif
 
 #include <vpr/Sync/Mutex.h>
+#include "cfdCommandArray.h"
 
 #ifdef _CLUSTER
 #include <cluster/ClusterManager.h>
@@ -55,9 +53,6 @@
 class cfdSteadyStateVizHandler;
 class cfdEnvironmentHandler;
 class cfdModelHandler;
-
-#include "cfdCommandArray.h"
-//#include <iostream>
 
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
                 public PortableServer::RefCountServantBase
@@ -174,9 +169,7 @@ public:
    void GetCfdStateVariables( void );
    cfdCommandArray* _cfdArray;
    double cfdShort_data_array[ 9 ];
-   CosNaming::NamingContext_var naming_context;
-	   CORBA::ORB_var orb;
-      PortableServer::POA_var poa;
+   
 protected:
 
 

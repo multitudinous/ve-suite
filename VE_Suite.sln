@@ -1,7 +1,6 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Xplorer", "VE_Xplorer\VE_Xplorer.vcproj", "{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}"
 	ProjectSection(ProjectDependencies) = postProject
-		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D} = {ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Conductor", "VE_Conductor\VE_Conductor.vcproj", "{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}"
@@ -10,7 +9,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Conductor", "VE_Conducto
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_JavaUI", "VE_Conductor\VE_JavaUI\VE_JavaUI.vcproj", "{073CCC67-7667-476D-A890-03EE6A896F35}"
 	ProjectSection(ProjectDependencies) = postProject
-		{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D} = {ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}
 	EndProjectSection
 EndProject
 Global
@@ -47,7 +45,6 @@ Global
 		{073CCC67-7667-476D-A890-03EE6A896F35}.Debug_OMNI.ActiveCfg = Debug|Win32
 		{073CCC67-7667-476D-A890-03EE6A896F35}.Debug_OMNI.Build.0 = Debug|Win32
 		{073CCC67-7667-476D-A890-03EE6A896F35}.Debug_TAO.ActiveCfg = Debug_TAO|Win32
-		{073CCC67-7667-476D-A890-03EE6A896F35}.Debug_TAO.Build.0 = Debug_TAO|Win32
 		{073CCC67-7667-476D-A890-03EE6A896F35}.Release.ActiveCfg = Release|Win32
 		{073CCC67-7667-476D-A890-03EE6A896F35}.Release.Build.0 = Release|Win32
 		{073CCC67-7667-476D-A890-03EE6A896F35}.Release_OMNI.ActiveCfg = Release|Win32

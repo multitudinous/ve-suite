@@ -32,30 +32,14 @@
 #ifndef CFD_CORBA_MANAGER_H_
 #define CFD_CORBA_MANAGER_H_
 
-//using namespace CORBA;
-//{ 
-//class ORB_var; 
-//}
-//namespace PortableServer { class POA; }
-//namespace CosNaming { class NamingContext; }
-
-/*#ifdef _TAO
-//#include <orbsvcs/CosNamingC.h>
-#else
-#include <omniORB4/CORBA.h>
-#endif
-*/
-//#include <vector>
-//#include <string>
-
-//#include <tao/PortableServer/PortableServer.h>
-
-class VjObs_i;
+class cfdVjObsWrapper;
 class cfdCommandArray;
 class cfdSteadyStateVizHandler;
 class cfdEnvironmentHandler;
 class cfdModelHandler;
-#include <vpr/Thread/Thread.h>
+class cfdThread;
+//class cfdCosNaming;
+
 class CorbaManager
 {
    public:
@@ -69,24 +53,21 @@ class CorbaManager
 	   //CORBA::Object_var obj;
       //void activate(PortableServer::ServantBase* myobj);
 	   //void pman_activate();
-      VjObs_i* GetVjObs( void );
+      //VjObs_i* GetVjObs( void );
       cfdCommandArray* GetCommandArray( void );
       void GetCfdStateVariables( void );
       void PreFrameUpdate( void );
       //void GetUpdateClusterStateVariables( void );
       double GetShortArray( int );
-
-      int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
 	
-      //CosNaming::NamingContext_var naming_context;
+      //cfdCosNaming* naming_context;
       void SetHandlers( cfdSteadyStateVizHandler*, 
                      cfdEnvironmentHandler*, cfdModelHandler* );
+     cfdVjObsWrapper* _vjObs;
    private:
 	   //CORBA::ORB_var orb;
       //PortableServer::POA_var poa;
-      //VjObs_i* _vjObsi;
-      vpr::ThreadMemberFunctor<CorbaManager>* corba_run;
-      vpr::Thread* new_thread;
+       cfdThread* _thread;
 	   /*
 	   CORBA::Object_var obj;
       PortableServer::ServantBase* app;*/

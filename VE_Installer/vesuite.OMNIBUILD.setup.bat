@@ -32,6 +32,7 @@ set TAO_ROOT=%ACE_ROOT%\TAO
 
 REM Location for xerces
 set XERCESCROOT=C:\xerces-c-src_2_5_0
+set WX_ROOT=C:\wxWindows-2.4.2
 
 REM
 REM Everything below is relative to the above environment so
