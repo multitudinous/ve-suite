@@ -18,6 +18,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(v21ID_LOAD, AppFrame::LoadFromServer)
   EVT_MENU(v21ID_SUBMIT, AppFrame::SubmitToServer)
   EVT_MENU(v21ID_CONNECT, AppFrame::ConExeServer)
+  EVT_MENU(v21ID_DISCONNECT, AppFrame::DisConExeServer)
   EVT_MENU(v21ID_CONNECT_VE, AppFrame::ConVEServer)
   EVT_MENU(v21ID_START_CALC, AppFrame::StartCalc)
   EVT_MENU(v21ID_STOP_CALC, AppFrame::StopCalc)
@@ -29,7 +30,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
   EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
   EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
-  EVT_UPDATE_UI(-1, AppFrame::OnUpdateUIPop)
+  EVT_UPDATE_UI(7777, AppFrame::OnUpdateUIPop)
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -650,6 +651,7 @@ void AppFrame::LoadREISour(wxCommandEvent &event)
 void AppFrame::Log(const char* msg)
 {
 	wxUpdateUIEvent u;
+	u.SetId(7777);
 	u.SetText(msg);
 	::wxPostEvent(this, u);
 }
@@ -657,4 +659,23 @@ void AppFrame::Log(const char* msg)
 void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event)
 {
 	logwindow->AppendText(event.GetText());
+}
+
+void AppFrame::DisConExeServer(wxCommandEvent &event)
+{
+	try {
+			network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
+			con_menu->Enable(v21ID_SUBMIT,false);
+			con_menu->Enable(v21ID_LOAD, false);
+			con_menu->Enable(v21ID_CONNECT, true);
+			run_menu->Enable(v21ID_START_CALC, false);
+			run_menu->Enable(v21ID_VIEW_RESULT, false);
+			con_menu->Enable(v21ID_DISCONNECT, false);
+			Log("Disconnect suceeded.\n");
+		}catch (CORBA::Exception &) {
+		
+			Log("Disconnect failed.\n");
+		}
+	
+
 }

@@ -21,6 +21,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
   EVT_MENU(DEL_MOD, Network::OnDelMod)
   EVT_MENU(SHOW_LINK_CONT, Network::OnShowLinkContent)
   EVT_MENU(SHOW_RESULT, Network::OnShowResult)
+  EVT_MENU(SHOW_DESC, Network::OnShowDesc)
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -355,8 +356,9 @@ void Network::OnMRightDown(wxMouseEvent &event)
   pop_menu.Append(DEL_TAG, _T("Delete Tag"));
   pop_menu.Append(DEL_MOD, "Del Module");
 
+  pop_menu.Append(SHOW_DESC, "Show Module Description");	
   pop_menu.Append(SHOW_RESULT, "Show Module Result");
-
+  
   pop_menu.Append(SHOW_LINK_CONT, "Show Link Content");
 
   pop_menu.Enable(ADD_LINK_CON, false);
@@ -2792,5 +2794,22 @@ void  Network::OnShowResult(wxCommandEvent &event)
       if (hello!=NULL)
 	hello->Show();
     }
+}
+
+//////////////////////////////////////////////////////
+void  Network::OnShowDesc(wxCommandEvent &event)
+{
+  wxString desc;
+  wxString title;
+ 
+  title << wxT("Description");
+  
+  if (m_selMod<0)
+    return;
+  
+  desc = modules[m_selMod].pl_mod->GetDesc();
+  
+  wxMessageDialog(this, desc, title).ShowModal();
+
 }
 

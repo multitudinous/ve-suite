@@ -45,6 +45,8 @@ enum {
   MYLOG
 };
 
+class OrbThread;
+
 class AppFrame : public wxFrame
 {
  public:
@@ -90,8 +92,7 @@ class AppFrame : public wxFrame
   
  private:
   bool is_orb_init;
- 
-  
+
  protected:
   wxRect DetermineFrameSize (wxConfig* config);
   void StoreFrameSize (wxRect rect, wxConfig* config);
@@ -111,6 +112,7 @@ class AppFrame : public wxFrame
   void ViewResult(wxCommandEvent &event);
   void GlobalParam(wxCommandEvent &event);
   void ConExeServer(wxCommandEvent &event);
+  void DisConExeServer(wxCommandEvent &event);
   void ConVEServer(wxCommandEvent &event);
   void LoadBase(wxCommandEvent &event);
   void LoadSour(wxCommandEvent &event);
