@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdDigitalAnalogGauge.cxx,v $
- * Date modified: $Date: 2004-05-18 13:44:18 -0700 (Tue, 18 May 2004) $
- * Version:       $Rev: 382 $
+ * File:          $RCSfile: cfdIHCCGauge.cxx,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -38,7 +38,6 @@
 #include "cfdNode.h"
 #include "cfdSequence.h"
 #include "cfdTempAnimation.h"
-
 
 #include <vpr/Util/Debug.h>
 

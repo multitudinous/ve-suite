@@ -24,9 +24,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdSound.cxx,v $
- * Date modified: $Date: 2004-05-18 13:44:18 -0700 (Tue, 18 May 2004) $
- * Version:       $Rev: 382 $
+ * File:          $RCSfile: cfdSoundHandler.cxx,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -201,8 +201,8 @@ void cfdSoundHandler::CreateObjects( void )
          else
          {
             std::cerr << "ERROR: unreadable sound file = " 
-                        << soundFiles[ size ]->fileName 
-                        << ".  You may need to correct your param file." << std::endl;
+                      << soundFiles[ size ]->fileName 
+                      << ".  You may need to correct your param file." << std::endl;
             exit(1);
          }
       }
@@ -213,5 +213,4 @@ void cfdSoundHandler::CreateObjects( void )
       }
    }
 }
-
 

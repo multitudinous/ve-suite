@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdCommandArray.h,v $
- * Date modified: $Date: 2004-05-18 15:44:18 -0500 (Tue, 18 May 2004) $
- * Version:       $Rev: 382 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdTempAnimation.h,v $
- * Date modified: $Date: 2004-07-26 16:27:49 -0500 (Mon, 26 Jul 2004) $
- * Version:       $Rev: 719 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

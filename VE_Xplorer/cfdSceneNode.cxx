@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdSceneNode.cxx,v $
- * Date modified: $Date: 2004-06-06 13:49:58 -0700 (Sun, 06 Jun 2004) $
- * Version:       $Rev: 451 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdSteadyStateVizHandler.cxx,v $
- * Date modified: $Date: 2004-05-18 13:44:18 -0700 (Tue, 18 May 2004) $
- * Version:       $Rev: 382 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -301,6 +301,7 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
    }
    
 }
+
 ////////////////////
 // Helper functions
 ////////////////////
@@ -334,7 +335,6 @@ void cfdSteadyStateVizHandler::InitScene( void )
 {
    if ( _activeDataSet != NULL )
    {
-      
       {
          int postData = 0;
          if ( _activeDataSet->GetPrecomputedXSlices() != NULL &&
@@ -853,7 +853,6 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       this->useLastSource = 0;
    }
 }
-
 
 void cfdSteadyStateVizHandler::CreateActorThread( void * )
 {
