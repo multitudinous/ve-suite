@@ -34,6 +34,7 @@
 #ifdef _PERFORMER
 #include <Performer/pf/pfGeode.h>
 #include <Performer/pf/pfNode.h>
+#include "vtkActorToPF.h"
 #elif _OSG
 #elif _OPENSG
 #endif
@@ -41,14 +42,6 @@
 #include <vtkActor.h>
 
 #include <iostream>
-
-#ifdef _PERFORMER
-// vtkActorToPF
-#include "vtkActorToPF.h"
-#elif _OSG
-#elif _OPENSG
-#endif
-
 
 cfdGeode::cfdGeode( void ):cfdSceneNode()
 {
