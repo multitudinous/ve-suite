@@ -238,7 +238,7 @@ void cfdDCS::SetRotationArray( float* rot )
 #elif _OSG
   
    if(_udcb){
-      _udcb->setRotationDegreeAngles(_rotation);
+      _udcb->setRotationDegreeAngles(_rotation[0],_rotation[1],_rotation[2]);
    }
 #elif _OPENSG
 #endif
@@ -322,11 +322,7 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
 #elif _OSG
    osg::Matrix rot;
    rot.set(input.getData());
-
    _dcs->setMatrix(rot);
-   //std::cerr <<"Check to make sure rotation is working!!"<<std::endl;
-   //std::cerr <<"OSG cfdDCS::SetRotationMatrix."<<std::endl;
-   
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;
    exit( 1 );
@@ -503,19 +499,19 @@ cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback()
    _trans[0] = 0;
    _trans[1] = 0;
    _trans[2] = 0;
-   _rotAngles[0] = 0;
-   _rotAngles[1] = 0;
-   _rotAngles[2] = 0;
+   _h = 0;
+   _p = 0;
+   _r = 0;
 
 }
-//////////////////////////////////////////////////////////////
-void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float* rot)
+//////////////////////////////////////////////////////////////////
+void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,
+                                                     float p,
+                                                     float r)
 {
-   if(rot){
-      _rotAngles[0] = osg::DegreesToRadians(rot[0]);
-      _rotAngles[1] = osg::DegreesToRadians(rot[1]);
-      _rotAngles[2] = osg::DegreesToRadians(rot[2]);
-   }
+   _h = osg::DegreesToRadians(h);
+   _p = osg::DegreesToRadians(p);
+   _r = osg::DegreesToRadians(r);
 }
 ///////////////////////////////////////////////////////////////
 void cfdDCS::cfdUpdateDCSCallback::setTranslation(float* trans)
@@ -540,18 +536,21 @@ void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor*
 {
    osg::ref_ptr<osg::MatrixTransform> dcs = dynamic_cast<osg::MatrixTransform*>(node);
    if(dcs.valid()){
-      osg::Vec3f xAxis(1,0,0);
-      osg::Vec3f yAxis(0,1,0);
-      osg::Vec3f zAxis(0,0,1);
+      osg::Vec3f pitch(1,0,0);
+      osg::Vec3f yaw(0,0,1);
+      osg::Vec3f roll(0,1,0);
       osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
 
-      osg::Matrixd rotateMat;  
-      rotateMat.makeRotate(_rotAngles[0],xAxis,_rotAngles[1],yAxis,_rotAngles[2],zAxis);
+      osg::Matrixd rotateMat;
+      //rph              
+      rotateMat.makeRotate(_r,roll,
+                         _p,pitch,
+                         _h,yaw);
 
       osg::Vec3f transMat(osg::Vec3f(_trans[0],_trans[1],_trans[2]));
       scale.setTrans(transMat);
 
-      dcs->setMatrix(scale*rotateMat);
+      dcs->setMatrix(rotateMat*scale);
       traverse(node,nv);
    }
  }

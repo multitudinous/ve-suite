@@ -172,7 +172,13 @@ void cfdNode::LoadFile( char* filename )
    std::cout << " Error:LoadFile !!! " << std::endl;
    exit( 1 );
 #endif
-   _node->setName(filename);
+#ifdef _PERFORMER
+   if(_node){
+#elif _OSG
+   if(_node.valid()){
+#endif
+      _node->setName(filename);
+   }
 }
 ////////////////////////////////////
 cfdNode* cfdNode::Clone( int level )

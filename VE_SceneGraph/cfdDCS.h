@@ -89,14 +89,16 @@ class cfdDCS: public cfdGroup
       public:
          cfdUpdateDCSCallback();
          virtual ~cfdUpdateDCSCallback(){}
-         void setRotationDegreeAngles(float* rot);
+         void setRotationDegreeAngles(float h,float p,float r);
          void setTranslation(float* trans);
          void setScaleValues(float* scale);
          virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
       protected:
          float _scale[3];
          float _trans[3];
-         float _rotAngles[3];
+         float _h;
+         float _p;
+         float _r;
    };
 #elif _OPENSG
 #endif
