@@ -643,8 +643,7 @@ if(!_tm){
 
       if ( _slices.valid() )
       {
-         osg::Vec3f temp( _bbox->center() );
-         _vSSCbk =  new cfdVolumeSliceSwitchCallback( &temp );
+         _vSSCbk =  new cfdVolumeSliceSwitchCallback( &(osg::Vec3f)_bbox->center() );
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::X_POS,_posXSlices);
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Y_POS,_posYSlices);
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Z_POS,_posZSlices);
