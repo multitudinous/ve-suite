@@ -11,6 +11,10 @@ set ACE_ROOT=C:\ACE_wrappers
 set TAO_ROOT=%ACE_ROOT%\TAO
 set XERCESCROOT=C:\xerces-c-src_2_5_0
 
+REM set TAO_MACHINE=lego.vrac.iastate.edu
+set TAO_MACHINE=localhost
+set TAO_PORT=1234
+
 REM NOTE: On Windows the juggler location must point to a Windows
 REM (local or on network) machine, otherwise user may run into runtime
 REM problems when loading config files across the network
