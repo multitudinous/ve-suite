@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#ifdef _PERFORMER
 #include <vpr/Util/Debug.h>
 #include <cstdio>
 #include <cstdlib>
@@ -186,3 +187,6 @@ void textPrompt::flush_text(char * t)
    }
 */
 }
+#elif _OSG
+#elif _OPENSG
+#endif

@@ -32,13 +32,6 @@
 #ifndef CFD_APP_H
 #define CFD_APP_H
 
-/// VR Juggler Stuff
-
-#ifndef WIN32
-//#include <sys/time.h>
-#endif
-//#include <vector>
-
 #ifdef _TAO
 class cfdExecutive;
 #endif
@@ -64,21 +57,14 @@ class pfGroup;
 // Declare my application class
 class cfdApp : public vrj::PfApp
 #elif _OSG
-
-
-#include <vrj/Draw/OSG/osgApp.h>
 #include <osg/Timer>
+#include <vrj/Draw/OSG/OsgApp.h>
 namespace osg
-{
-   
+{   
    class Group;
    class FrameStamp;
-  
 } 
-namespace osgUtil
-{
-   class SceneView;
-}
+namespace osgUtil { class SceneView; }
 class cfdTextureBasedVizHandler;
 class cfdApp: public vrj::OsgApp
 #elif _OPENSG

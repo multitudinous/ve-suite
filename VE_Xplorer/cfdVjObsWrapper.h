@@ -77,8 +77,8 @@ class cfdVjObsWrapper
 #ifdef _OSG
       void SetHandlers( cfdSteadyStateVizHandler*, 
                            cfdEnvironmentHandler*, 
-                           cfdModelHandler*,
-                           cfdTextureBasedVizHandler* tbvh);
+                           cfdModelHandler*);//,
+                           //cfdTextureBasedVizHandler* tbvh);
 #else
       void SetHandlers( cfdSteadyStateVizHandler*, 
                            cfdEnvironmentHandler*, 

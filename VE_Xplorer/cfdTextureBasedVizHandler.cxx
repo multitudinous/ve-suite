@@ -59,36 +59,56 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHan
 ///////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
 {
+   for ( unsigned int i = 0; i < _volumeVisNodes.size(); ++i )
+   {
+      delete _volumeVisNodes.at( 0 );
+   }
    _volumeVisNodes.clear();
-   if(_paramFile){
+
+   if ( _paramFile )
+   {
       delete [] _paramFile;
       _paramFile = 0;
    }
-   if(_cmdArray){
+
+   if ( _cmdArray )
+   {
       delete  _cmdArray;
       _cmdArray = 0;
    }
-   if(_worldDCS){
+
+   if ( _worldDCS )
+   {
       delete  _worldDCS;
       _worldDCS = 0;
    }
-   if(_nav){
+
+   if ( _nav ) 
+   {
       delete  _nav;
       _nav = 0;
    }
-   if(_cursor){
+
+   if ( _cursor )
+   {
       delete  _cursor;
       _cursor = 0;
    }
-   if(_activeVolumeVizNode){
+   
+   if ( _activeVolumeVizNode )
+   {
       delete _activeVolumeVizNode;
       _activeVolumeVizNode = 0;
    }
-   if(_parent){
+
+   if ( _parent )
+   {
       delete _parent;
       _parent = 0;
    }
-   if(_currentBBox){
+
+   if ( _currentBBox )
+   {
       delete [] _currentBBox;
       _currentBBox = 0;
    }
@@ -257,7 +277,7 @@ cfdVolumeVisualization* cfdTextureBasedVizHandler::GetActiveVolumeVizNode()
 cfdVolumeVisualization* cfdTextureBasedVizHandler::GetVolumeVizNode(int whichModel)
 {
    
-   return &_volumeVisNodes.at(whichModel);
+   return _volumeVisNodes.at(whichModel);
 }
 ////////////////////////////////////////////////////
 bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
@@ -277,24 +297,29 @@ bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-    for( int i = 0; i < numObjects; i++ ){
+   for( int i = 0; i < numObjects; i++ )
+   {
       int id;
       input >> id;
       input.getline( text, 256 );   //skip past remainder of line
-      if ( id == 15 ){
-         cfdVolumeVisualization volVizNode;
-         volVizNode.SetNumberofSlices(100);
-         volVizNode.SetSliceAlpha(.5);
+      if ( id == 15 )
+      {
+         cfdVolumeVisualization* volVizNode = new cfdVolumeVisualization();
+         volVizNode->SetNumberofSlices(100);
+         volVizNode->SetSliceAlpha(.5);
          _volumeVisNodes.push_back(volVizNode);
-         
-      }else{
+      }
+      else
+      {
          readParam.ContinueRead(input,id);
       }
-    }
-    if(_volumeVisNodes.size()){
-       _activeVolumeVizNode = &_volumeVisNodes.at(0);
-    }
-    return true;
+   }
+   
+   if ( _volumeVisNodes.size() > 0 )
+   {
+       _activeVolumeVizNode = _volumeVisNodes.at(0);
+   }
+   return true;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTextureBasedVizHandler& tbvh)

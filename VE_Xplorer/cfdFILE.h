@@ -41,7 +41,7 @@ class cfdNode;
 #ifdef _PERFORMER
 class pfFog;
 #elif _OSG
-#include <osg/Fog>
+namespace osg { class Fog; }
 #endif
 
 // Need to fix this class

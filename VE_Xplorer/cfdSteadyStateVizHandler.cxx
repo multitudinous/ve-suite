@@ -56,8 +56,9 @@
 #include "cfdPlanes.h"
 #include "cfdDCS.h"
 #include "cfdGroup.h"
-#include "cfdSequence.h"
+/*#include "cfdSequence.h"
 #include "cfdTempAnimation.h"
+*/
 #include "cfdNavigate.h"
 #include "cfdCursor.h"
 #include "cfdGraphicsObject.h"

@@ -34,7 +34,7 @@ public:
         
    /** Set the texture subload width. If width or height are zero then
    * the repsective size value is calculated from the source image sizes. */
-   inline void setSubloadTextureSize(const int width, const int height, const depth)
+   inline void setSubloadTextureSize(const int width, const int height, const int depth)
    {
       _textureWidth = width;
       _textureHeight = height;

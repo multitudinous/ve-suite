@@ -89,7 +89,16 @@ cfdModel::~cfdModel()
    mVTKDataSets.clear();
 
    //texture data cleanup
+   for ( unsigned int i = 0; i < _vectorDataTextures.size(); ++i )
+   {
+      delete _vectorDataTextures.at( 0 );
+   }
    _vectorDataTextures.clear();
+
+   for ( unsigned int i = 0; i < _scalarDataTextures.size(); ++i )
+   {
+      delete _scalarDataTextures.at( 0 );
+   }
    _scalarDataTextures.clear();
  
    std::map<int,cfdDataSet*>::iterator foundPlugin;
@@ -164,7 +173,7 @@ void cfdModel::SetActiveDataSet( cfdDataSet* input )
 /////////////////////////////////////////////////////////////////
 void cfdModel::CreateTextureManager(char* textureDescriptionFile)
 {
-   cfdTextureManager tm;
+   cfdTextureManager* tm = new cfdTextureManager();
    std::ifstream fin( textureDescriptionFile );   
    char name[256];
    
@@ -179,12 +188,12 @@ void cfdModel::CreateTextureManager(char* textureDescriptionFile)
       {         
          std::cout << "Loading texture file: " << i << std::endl;         
          fin >> name;         
-         tm.addFieldTextureFromFile(name);      
+         tm->addFieldTextureFromFile(name);      
       }
 
       std::cout << "Finished reading texture description file." << std::endl;
       
-      if( tm.GetDataType(0) == cfdTextureManager::SCALAR )
+      if( tm->GetDataType(0) == cfdTextureManager::SCALAR )
       {
          AddScalarTextureManager( tm, textureDescriptionFile );
       }
@@ -200,7 +209,7 @@ void cfdModel::CreateTextureManager(char* textureDescriptionFile)
    }
 }
 ///////////////////////////////////////////////////////////
-void cfdModel::AddScalarTextureManager(cfdTextureManager tm,
+void cfdModel::AddScalarTextureManager(cfdTextureManager* tm,
 	                                char* scalarName)
 {
    /*Re implement if needed
@@ -209,7 +218,7 @@ void cfdModel::AddScalarTextureManager(cfdTextureManager tm,
    //_activeScalar = &_scalarDataTextures.at(0);
 }
 ////////////////////////////////////////////////////////////
-void cfdModel::AddVectorTextureManager(cfdTextureManager tm,
+void cfdModel::AddVectorTextureManager(cfdTextureManager* tm,
 	                                char* vectorName)
 {
    /*Re implement if needed
@@ -392,12 +401,12 @@ cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
 ///////////////////////////////////////////////////////////////
 cfdTextureManager* cfdModel::GetVectorTextureManager(int index)
 {
-   return &_vectorDataTextures.at(index);
+   return _vectorDataTextures.at(index);
 }
 ///////////////////////////////////////////////////////////////
 cfdTextureManager* cfdModel::GetScalarTextureManager(int index)
 {
-   return &_scalarDataTextures.at(index);
+   return _scalarDataTextures.at(index);
 }
 ///////////////////////////////////////////////////////
 int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )

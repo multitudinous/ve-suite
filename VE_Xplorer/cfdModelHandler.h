@@ -66,7 +66,7 @@ class cfdModelHandler
       void ReadNNumberOfDataSets(  char*, char* );
 
       //texture manager access
-      cfdTextureManager* GetActiveTextureManager();
+      cfdTextureManager* GetActiveTextureManager( void );
    private:
       char* _param;
       cfdDCS* worldNode;

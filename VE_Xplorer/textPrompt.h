@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXT_PROMPT_H
 #define TEXT_PROMPT_H
-
+#ifdef _PERFORMER
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfText.h>
 #include <Performer/pr/pfString.h>
@@ -69,4 +69,7 @@ class textPrompt
     //vjVec3 head_pos;
 };
 
+#elif _OSG
+#elif _OPENSG
 #endif
+#endif // TEXT_PROMPT_H

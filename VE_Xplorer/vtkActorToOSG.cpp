@@ -26,6 +26,7 @@ typedef float vtkReal;
 #endif
 
 #include <osg/Vec3>
+#include <iostream>
 
 osg::Geode* vtkActorToOSG(vtkActor *actor, osg::Geode *geode, int verbose) {
 
@@ -56,7 +57,7 @@ osg::Geode* vtkActorToOSG(vtkActor *actor, osg::Geode *geode, int verbose) {
 	strips = processPrimitive(actor, polyData->GetStrips(), osg::PrimitiveSet::TRIANGLE_STRIP, verbose);
 
 	// remove old gsets and delete them
-   while( geode->getNumDrawables() ) geode->removeDrawable(unsigned int(0));//removeDrawable(0);
+   while( geode->getNumDrawables() ) geode->removeDrawable((unsigned int)0);//removeDrawable(0);
 
 	if( points ) geode->addDrawable( points );
 	if( lines ) geode->addDrawable( lines );

@@ -35,29 +35,16 @@
 // It is derived by using the VTK and VRJuggler classes.
 
 #include "cfdApp.h"
-
-// Scene graph dependant headers
-#ifdef _PERFORMER
-#include <Performer/pf.h>
-#include <Performer/pf/pfGroup.h>
-#include <Performer/pfdb/pfpfb.h>
-#elif _OSG
-#include <osg/Group>
-#include <osgDB/WriteFile>
-#include <osg/FrameStamp>
- 
-
-#include <osgUtil/SceneView>
+#ifdef _OSG
+#include "cfdTextureBasedVizHandler.h"
 #endif
-
-#include <vrj/Kernel/Kernel.h>
 
 #include "cfdEnum.h"
 #include "fileIO.h"
 #include "cfdPfSceneManagement.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdSteadyStateVizHandler.h"
-#include "cfdTransientVizHandler.h"
+//#include "cfdTransientVizHandler.h"
 #include "cfdModelHandler.h"
 #include "cfdModel.h"
 #include "cfdSwitch.h"
@@ -68,20 +55,30 @@
 #include "cfdDCS.h"
 #include "cfdObjects.h"
 #include "cfdTempAnimation.h"
-#include "cfdIHCCModel.h"
+//#include "cfdIHCCModel.h"
 #include "cfdVjObsWrapper.h"
-
-#ifdef _OSG
-#include "cfdTextureBasedVizHandler.h"
-#endif
 
 #ifdef _TAO
 #include "cfdExecutive.h"
 #endif //_TAO
 
+// Scene graph dependant headers
+#ifdef _PERFORMER
+#include <Performer/pf.h>
+#include <Performer/pf/pfGroup.h>
+#include <Performer/pfdb/pfpfb.h>
+#elif _OSG
+#include <osg/Group>
+#include <osgDB/WriteFile>
+#include <osg/FrameStamp>
+#include <osgUtil/SceneView>
+#endif
+
 /// C/C++ libraries
 #include <iostream>
 //#include <omp.h>
+#include <vrj/Kernel/Kernel.h>
+
 
 cfdApp::cfdApp( void )
 {
@@ -322,7 +319,7 @@ std::cout << "|  3d" << std::endl;
 */
 #ifdef _OSG
    this->_vjobsWrapper->SetHandlers( _steadystateHandler, _environmentHandler, 
-                                 _modelHandler, _tbvHandler );
+                                 _modelHandler);//, _tbvHandler );
 #else
     this->_vjobsWrapper->SetHandlers( _steadystateHandler, _environmentHandler, 
                                  _modelHandler);

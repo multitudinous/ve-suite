@@ -119,10 +119,8 @@ public:
    //////////////////////////
    //texture based interface
    void CreateTextureManager(char* textureDescriptionFile);
-   void AddScalarTextureManager(cfdTextureManager tm,
-	                                char* scalarName);
-   void AddVectorTextureManager(cfdTextureManager tm,
-	                                char* vectorName);
+   void AddScalarTextureManager( cfdTextureManager*, char* );
+   void AddVectorTextureManager( cfdTextureManager*, char* );
    unsigned int GetNumberOfScalarTextureManagers();
    unsigned int GetNumberOfVectorTextureManagers();
    cfdTextureManager* GetVectorTextureManager(int index);
@@ -161,8 +159,8 @@ private:
 #endif
    cfdTextureManager* _activeVector;
    cfdTextureManager* _activeScalar;
-   std::vector<cfdTextureManager> _vectorDataTextures;
-   std::vector<cfdTextureManager> _scalarDataTextures;
+   std::vector< cfdTextureManager* > _vectorDataTextures;
+   std::vector< cfdTextureManager* > _scalarDataTextures;
       
    bool mUpdateModelFlag;
    bool mMoveOldGeomDataSets;

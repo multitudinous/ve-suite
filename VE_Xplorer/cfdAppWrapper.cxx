@@ -30,13 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdAppWrapper.h"
+
+#include "cfdApp.h"
+#include "cfdThread.h"
+#include "cfdVjObsWrapper.h"
+
 #include <vrj/Kernel/Kernel.h>
 #include <vpr/System.h>
-#include "cfdApp.h"
 #include <iostream>
-#include "cfdThread.h"
-
-#include "cfdVjObsWrapper.h"
 
 cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 {

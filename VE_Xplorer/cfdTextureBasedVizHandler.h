@@ -15,36 +15,38 @@ class cfdTextureManager;
 #elif _OPENSG
 #elif _OSG
 class cfdVolumeVisualization;
-class cfdTextureBasedVizHandler{
-public:
-  cfdTextureBasedVizHandler();
-   cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh);
-   ~cfdTextureBasedVizHandler();
+class cfdTextureBasedVizHandler
+{
+   public:
+      cfdTextureBasedVizHandler( void );
+      cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh);
+      ~cfdTextureBasedVizHandler( void );
 
-   void PreFrameUpdate();
-   void SetParameterFile(char* paramFile);
-   void SetCommandArray(cfdCommandArray* cmdArray);
-   void SetWorldDCS(cfdDCS* dcs);
-   void SetParentNode(cfdGroup* parent);
-   void SetNavigate(cfdNavigate* navigate);
-   void SetCursor(cfdCursor* cursor);
-   void SetActiveTextureManager(cfdTextureManager* tm);
-   bool InitVolumeVizNodes();
-   cfdVolumeVisualization* GetVolumeVizNode(int index);
-   cfdVolumeVisualization* GetActiveVolumeVizNode();
-   cfdTextureBasedVizHandler& operator=(const cfdTextureBasedVizHandler& tbvh);
-protected:	
-   char* _paramFile;
-   cfdCommandArray* _cmdArray;
-   cfdDCS* _worldDCS;
-   cfdNavigate* _nav;
-   cfdCursor* _cursor;
-   cfdTextureManager* _activeTM;
-   std::vector<cfdVolumeVisualization> _volumeVisNodes;
-   cfdVolumeVisualization* _activeVolumeVizNode;
-   cfdGroup* _parent;
-   float* _currentBBox;
-   bool _cleared;
+      void PreFrameUpdate( void );
+      void SetParameterFile(char* paramFile);
+      void SetCommandArray(cfdCommandArray* cmdArray);
+      void SetWorldDCS(cfdDCS* dcs);
+      void SetParentNode(cfdGroup* parent);
+      void SetNavigate(cfdNavigate* navigate);
+      void SetCursor(cfdCursor* cursor);
+      void SetActiveTextureManager(cfdTextureManager* tm);
+      bool InitVolumeVizNodes( void );
+      cfdVolumeVisualization* GetVolumeVizNode(int index);
+      cfdVolumeVisualization* GetActiveVolumeVizNode( void );
+      cfdTextureBasedVizHandler& operator=(const cfdTextureBasedVizHandler& tbvh);
+
+   protected:	
+      char* _paramFile;
+      cfdCommandArray* _cmdArray;
+      cfdDCS* _worldDCS;
+      cfdNavigate* _nav;
+      cfdCursor* _cursor;
+      cfdTextureManager* _activeTM;
+      std::vector<cfdVolumeVisualization*> _volumeVisNodes;
+      cfdVolumeVisualization* _activeVolumeVizNode;
+      cfdGroup* _parent;
+      float* _currentBBox;
+      bool _cleared;
 };
 #endif //OSG
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

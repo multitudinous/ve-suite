@@ -161,7 +161,7 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
                      _tm->fieldResolution()[2],
                      GL_RGBA,GL_UNSIGNED_BYTE);
 
-      _image->setImage(_tm->fieldResolution()[0],                  _tm->fieldResolution()[1],                  _tm->fieldResolution()[2],GL_RGBA,                  GL_RGBA, GL_UNSIGNED_BYTE,                 _tm->dataField(0),                 osg::Image::USE_NEW_DELETE,1);
+      _image->setImage(_tm->fieldResolution()[0],                  _tm->fieldResolution()[1],                  _tm->fieldResolution()[2],GL_RGBA,                  GL_RGBA, GL_UNSIGNED_BYTE,                 _tm->dataField(0),                 osg::Image::USE_NEW_DELETE,1);
       _image->setDataVariance(osg::Object::DYNAMIC);
    }
    if(!_texture.valid()){

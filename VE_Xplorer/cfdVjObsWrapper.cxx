@@ -226,11 +226,11 @@ void cfdVjObsWrapper::PreFrameUpdate( void )
 #ifdef _OSG
 void cfdVjObsWrapper::SetHandlers( cfdSteadyStateVizHandler* _steadystateHandler, 
                            cfdEnvironmentHandler* _environmentHandler, 
-                           cfdModelHandler* _modelHandler,
-                           cfdTextureBasedVizHandler* _tbvHandler)
+                           cfdModelHandler* _modelHandler)//,
+                           //cfdTextureBasedVizHandler* _tbvHandler)
 {
    _vjObs->SetHandlers( _steadystateHandler, _environmentHandler, 
-                      _modelHandler,_tbvHandler );
+                      _modelHandler);//,_tbvHandler );
 }
 #else
 void cfdVjObsWrapper::SetHandlers( cfdSteadyStateVizHandler* _steadystateHandler, 

@@ -41,6 +41,7 @@ CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 WX_CXX = $(shell wx-config --cxxflags)
 WX_LIB = $(shell wx-config --libs)
 CFDUNAME = $(shell uname)
+OSG =
 
 # If OMNI_HOME was defined in the script setup.tsh, 
 # then define CORBA_DEFINES, and CORBA_INCLUDES.
@@ -247,26 +248,26 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
 ifeq ($(CLUSTER_APP), TRUE)
-   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project_cluster$(EXEC_TAG)
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project_cluster$(EXEC_TAG)$(OSG)
    EXTRA_CXXFLAGS+= -D_CLUSTER
    # object files are being stored in a system-dependent directory so that
    # builds for multiple platforms may be maintained simultaneously.
 
    #OBJDIR is the place that the object files are stored.
-   OBJDIR= $(CFDHOSTTYPE)_cluster$(EXEC_TAG)
+   OBJDIR= $(CFDHOSTTYPE)_cluster$(EXEC_TAG)$(OSG)
 
    #DEPDIR is the place that the dependency files are stored.
-   DEPDIR= $(CFDHOSTTYPE)_cluster$(EXEC_TAG)
+   DEPDIR= $(CFDHOSTTYPE)_cluster$(EXEC_TAG)$(OSG)
 else
-   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project$(EXEC_TAG)
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project$(EXEC_TAG)$(OSG)
    # object files are being stored in a system-dependent directory so that builds
    # for multiple platforms may be maintained simultaneously.
 
    #OBJDIR is the place that the object files are stored.
-   OBJDIR= $(CFDHOSTTYPE)$(EXEC_TAG)
+   OBJDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)
 
    #DEPDIR is the place that the dependency files are stored.
-   DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)
+   DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)
 endif
 
 default: all
@@ -289,7 +290,6 @@ srcdir= .
 NO_DEPEND= YES
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
 
 # list the cpp and h files here
 #IDL_CXX_FILES= ${CONDUCTOR_BASE_DIR}/Observer.cpp \
@@ -337,6 +337,16 @@ DEBUG_APP?= TRUE
 #Can be: _PERFORMER, _OPENSG, _OSG
 EXTRA_CXXFLAGS+= -D_PERFORMER
 SRCS+= vtkActorToPF.cxx
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
+#EXTRA_CXXFLAGS+= -D_OSG -DUSE_DEPRECATED_API
+#SRCS+= vtkActorToOSG.cpp
+#include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
+#EXTRA_INCLUDES+= -I$(OSG_HOME)/include
+#EXTRA_LIBS+= -L$(OSG_HOME)/lib32 -losg -losgDB -losgGA -losgUtil -lOpenThreads -losgFX
+#SRCS+=\
+   cfdTextureBasedVizHandler.cxx \
+   cfdVolumeVisualization.cpp \
+   cfdUpdateTextureCallback.cpp
 
 EXTRA_CXXFLAGS+= $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
 
