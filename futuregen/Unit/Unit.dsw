@@ -3,6 +3,18 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
+Project: "AGRUnit"=.\AGRUnit\AGRUnit.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "ASUUnit"=.\ASUUnit\ASUUnit.dsp - Package Owner=<4>
 
 Package=<5>
@@ -16,6 +28,18 @@ Package=<4>
 ###############################################################################
 
 Project: "BulkDesulfurizerUnit"=.\BulkDesulfurizerUnit\BulkDesulfurizerUnit.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "CarbonBedUnit"=.\CarbonBedUnit\CarbonBedUnit.dsp - Package Owner=<4>
 
 Package=<5>
 {{{

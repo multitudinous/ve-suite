@@ -839,7 +839,12 @@ void GasifierCFD::load_and_run_glacier()
   FreeLibrary(glacier_handle);
 #endif
 
+	
   // Back to what?
+   if(_chdir("../")) {
+    cerr << "bad directory path\n";
+    return ;
+   }  //work_dir is ./case
 //   if(chdir("../../../../../../../build")) {
 //    cerr << "bad directory path\n";
 //    return ;
@@ -1054,7 +1059,7 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 part_char, part_ash, part_water, part_coal,
 						 hco, hwo, hao, hho));	
     }
-	printf("cp1\n"); fflush(NULL);
+//	printf("cp1\n"); fflush(NULL);
   for(k=1; k<nk-1; k++)
     for(i=1; i<ni-1; i++) {
       if((pcell[i][0][k] == FF) &&
@@ -1082,7 +1087,7 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 part_char, part_ash, part_water, part_coal,
 						 hco, hwo, hao, hho));
     }
-	printf("cp2\n"); fflush(NULL);
+//	printf("cp2\n"); fflush(NULL);
   for(j=1; j<nj-1; j++)
     for(i=1; i<ni-1; i++) {
       if((pcell[i][j][0] == FF) &&
@@ -1157,17 +1162,17 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
   _gas_out->hh0.push_back((double)(*hwo));
   _gas_out->hh0.push_back((double)(*hco));
 
-  printf("cp4\n"); fflush(NULL);
+ // printf("cp4\n"); fflush(NULL);
   _gas_out->average();
-  printf("cp5\n"); fflush(NULL);
+ // printf("cp5\n"); fflush(NULL);
   // Pressure at inlet is gage.
   _gas_out->pressure_drop = _press_drop;
-  printf("cp6\n"); fflush(NULL);
+ // printf("cp6\n"); fflush(NULL);
   // Heat data
   //heat_data->conv =((double)(*ht_conv));
   //heat_data->net = ((double)(*ht_netwall));
   //heat_data->inc = (-1)*((double)(*ht_netexit));
-  printf("end call send_scirun_data\n"); fflush(NULL);
+ // printf("end call send_scirun_data\n"); fflush(NULL);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
