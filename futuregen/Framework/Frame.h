@@ -1,7 +1,7 @@
 #ifndef APP_FRAME_H
 #define APP_FRAME_H
 #ifdef WIN32
-#include <winsock2.h>
+ #include <winsock2.h>
 #endif
 #include <wx/wx.h>
 #include <wx/config.h> 
@@ -9,6 +9,7 @@
 #include "Avail_Modules.h"
 #include "Network.h"
 #include "UI_Tabs.h"
+#include "UI_Frame.h"
 #include "moduleC.h"
 #include <orbsvcs/CosNamingC.h>
 #include "UI_i.h"
@@ -68,7 +69,8 @@ class AppFrame : public wxFrame
   Avail_Modules* av_modules;
   Network* network;
   
-  UI_Tabs *m_tabs;
+  UI_Tabs *m_tabs; 
+  UI_Frame *m_frame;
   	
   wxImageList *m_imageList;
   CORBA::ORB_var orb;

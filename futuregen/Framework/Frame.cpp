@@ -45,7 +45,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
 
   // VE Tabs
-  m_tabs = ( UI_Tabs*) NULL;
+  //m_tabs = ( UI_Tabs*) NULL;
+  m_frame = ( UI_Frame*) NULL;
   is_orb_init= false;
   p_ui_i=NULL;	
   av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
@@ -82,25 +83,33 @@ void AppFrame::CreateVETab()
   
   m_imageList->Add(wxArtProvider::GetIcon(wxART_ERROR, wxART_OTHER, imageSize));
   
-  m_tabs = new UI_Tabs(vjobs, wx_ve_splitter, ID_UI_TABS);
+  //m_tabs = new UI_Tabs(vjobs, wx_ve_splitter, ID_UI_TABS);
+  m_frame = new UI_Frame(vjobs, wx_ve_splitter, ID_UI_TABS);
   // Create the notebook's panels
-  m_tabs->AssignImageList(m_imageList);
-  m_tabs->createTabPages();
-  wxNotebookSizer *nbs = new wxNotebookSizer(m_tabs);
+  //m_tabs->AssignImageList(m_imageList);
+  m_frame->_tabs->AssignImageList(m_imageList);
+  //m_tabs->createTabPages();
+  //wxNotebookSizer *nbs = new wxNotebookSizer(m_tabs);
    
   wxBoxSizer *sizerTab = new wxBoxSizer(wxVERTICAL);
-  sizerTab->Add(nbs, 1, wxEXPAND | wxALL);
+  //sizerTab->Add(nbs, 1, wxEXPAND | wxALL);
+  sizerTab->Add(m_frame, 1, wxEXPAND | wxALL);
   sizerTab->Layout();
  
   wx_ve_splitter->SetSizer(sizerTab);
   wx_ve_splitter->SetAutoLayout(TRUE);
 
-  wx_ve_splitter->SplitVertically(wx_nw_splitter, m_tabs, 0);
+  //wx_ve_splitter->SplitVertically(wx_nw_splitter, m_tabs, 0);
+  wx_ve_splitter->SplitVertically(wx_nw_splitter, m_frame, 0);
 
    //trying to get the tabs to show up on initialization!!!!!
-   wxSize windowSize = m_tabs->GetSize();
-   m_tabs->SetSize(windowSize.GetWidth()+1,windowSize.GetHeight()+1);
-   m_tabs->Refresh();
+   //wxSize windowSize = m_tabs->GetSize();
+   //m_tabs->SetSize(windowSize.GetWidth()+1,windowSize.GetHeight()+1);
+   //m_tabs->Refresh();
+
+   wxSize windowSize = m_frame->GetSize();
+   m_frame->SetSize(windowSize.GetWidth()+1,windowSize.GetHeight()+1);
+   m_frame->Refresh();
 }
 
 wxRect AppFrame::DetermineFrameSize (wxConfig* config) {

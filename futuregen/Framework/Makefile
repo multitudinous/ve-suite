@@ -1,8 +1,10 @@
 CXX = $(shell wx-config --cxx)
 WX_CXX = $(shell wx-config --cxxflags)
 WX_LIBS = $(shell wx-config --libs)
+XERCES_LIBS = ${XERCESCROOT}/lib
 VE_UI_HOME = ./../VE_UI
 IDL_HOME = ./../IDL
+SKEL_HOME = ${VE_SUITE_HOME}/VE_Conductor/skel
 
 PLATFORM = LINUX
 COMPILER = g++
@@ -24,10 +26,12 @@ endif # ! TAO_ROOT
 
 APP = app
 
-LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO
+LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO -lxerces-c
 
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(TAO_ROOT)/rules.tao.GNU
+
+include $(XERCESCROOT)/version.incl
 
 FILE_UI_CLT_OBJS = moduleC.o moduleS.o UI_i.o 
 
@@ -37,12 +41,12 @@ include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
 include $(TAO_ROOT)/taoconfig.mk
 
-vpath %.cpp ${VE_UI_HOME} ${IDL_HOME}
+vpath %.cpp ${VE_UI_HOME} ${IDL_HOME} ${VE_SUITE_HOME}/VE_Xplorer ${SKEL_HOME}
 
-LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs
+LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs -L$(XERCESROOT)/lib
 
 CPPFLAGS += -g  ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
-		-I$(TAO_ROOT)/orbsvcs -I${VE_UI_HOME} -I${IDL_HOME} \
+		-I$(TAO_ROOT)/orbsvcs -I${VE_UI_HOME} -I${IDL_HOME} -I${VE_SUITE_HOME}/VE_Xplorer -I${SKEL_HOME} -I${XERCESCROOT}/include \
 		-I./. #-LANG:std 
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
@@ -68,12 +72,12 @@ OBJECTS = StringParse.o \
 	../Plugin/UIDialog.o \
 	../Plugin/TexTable.o \
 	../Plugin/TextResultDialog.o \
+   UI_Frame.o \
 	UI_Tabs.o \
 	UI_VisTab.o \
-	UI_ScalarTab.o \
 	UI_VecTab.o \
 	UI_StreamTab.o \
-	UI_DataSetTab.o \
+	UI_DataSetPanel.o \
 	UI_SoundsTab.o \
 	UI_GeometryTab.o \
 	UI_TeacherTab.o \
@@ -94,7 +98,7 @@ OBJECTS = StringParse.o \
 all: $(APP)
 
 $(APP): $(OBJECTS) $(addprefix $(VDIR),$(FILE_UI_CLT_OBJS))
-	g++ ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ ${WX_LIBS} $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK)
+	g++ ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ ${WX_LIBS} $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK) ${XERCES_LIBS}/libxerces-c.so.25
 
 clean:
 	rm -rf *.o $(APP) ./.obj ./ii_files ./Debug

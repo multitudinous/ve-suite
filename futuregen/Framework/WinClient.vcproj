@@ -83,8 +83,9 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Plugin,./,../VE_UI/,$(WX_WIDGETS)\include,$(WX_WIDGETS)\lib\msw,$(TAO_ROOT),$(ACE_ROOT),$(TAO_ROOT)\orbsvcs"
+				AdditionalIncludeDirectories="../Plugin;./;../VE_UI/;&quot;$(WX_WIDGETS)\include&quot;;&quot;$(WX_WIDGETS)\lib\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL"
+				IgnoreStandardIncludePath="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -97,16 +98,18 @@
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
 				CompileAs="0"
-				DisableSpecificWarnings="4541"/>
+				DisableSpecificWarnings="4541"
+				ForcedIncludeFiles="$(XERCESCROOT)\src\xercesc\dom\DOM.hpp;$(XERCESCROOT)\src\xercesc\dom\DOMDocument.hpp"
+				ShowIncludes="FALSE"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw24d.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw24d.lib xerces-c_2.lib"
 				OutputFile=".\WinClient.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="$(TAO_ROOT)\tao,$(TAO_ROOT)\orbsvcs\orbsvcs,$(TAO_ROOT)\tao\PortableServer,$(WX_WIDGETS)\lib,$(ACE_ROOT)\bin,$(ACE_ROOT)\ace"
+				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_WIDGETS)\lib&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Release&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/WinClient.pdb"
 				SubSystem="2"
@@ -161,7 +164,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -181,7 +184,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -201,7 +204,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -241,7 +244,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -261,71 +264,20 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\IDL.old\moduleC.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\Idl\moduleC.cpp">
 			</File>
 			<File
-				RelativePath="..\IDL.old\moduleS.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\Idl\moduleS.cpp">
 			</File>
 			<File
-				RelativePath="..\IDL.old\moduleS_T.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\Idl\moduleS_T.cpp">
 			</File>
 			<File
 				RelativePath="Network.cpp">
@@ -341,11 +293,20 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\OrbThread.cpp">
+			</File>
+			<File
+				RelativePath="..\Plugin\package.cpp">
+			</File>
+			<File
+				RelativePath=".\paraThread.cpp">
 			</File>
 			<File
 				RelativePath="..\Plugin\Plugin_base.cpp">
@@ -361,7 +322,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -381,7 +342,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -401,7 +362,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -421,7 +382,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -441,7 +402,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -461,11 +422,17 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\Plugin\TexTable.cpp">
+			</File>
+			<File
+				RelativePath="..\Plugin\TextResultDialog.cpp">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_DataSetTab.cpp">
@@ -481,11 +448,14 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_DesignParTab.cpp">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_GeometryTab.cpp">
@@ -501,7 +471,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -521,7 +491,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -561,7 +531,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -581,7 +551,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -601,7 +571,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -621,7 +591,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -641,11 +611,14 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_TransTab.cpp">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_VecTab.cpp">
@@ -661,11 +634,17 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_VertTab.cpp">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_ViewLocTab.cpp">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_VisTab.cpp">
@@ -681,7 +660,7 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -701,31 +680,14 @@
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
+						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="VjObsC.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\..\VE_Conductor\skel\VjObsC.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -750,19 +712,28 @@
 				RelativePath="ListTable.h">
 			</File>
 			<File
-				RelativePath="moduleC.h">
+				RelativePath="..\Idl\moduleC.h">
 			</File>
 			<File
-				RelativePath="moduleS.h">
+				RelativePath="..\Idl\moduleS.h">
 			</File>
 			<File
-				RelativePath="moduleS_T.h">
+				RelativePath="..\Idl\moduleS_T.h">
 			</File>
 			<File
 				RelativePath="Network.h">
 			</File>
 			<File
+				RelativePath=".\OrbThread.h">
+			</File>
+			<File
 				RelativePath="..\Plugin\packable.h">
+			</File>
+			<File
+				RelativePath="..\Plugin\package.h">
+			</File>
+			<File
+				RelativePath=".\paraThread.h">
 			</File>
 			<File
 				RelativePath="..\Plugin\Plugin_base.h">
@@ -783,7 +754,16 @@
 				RelativePath="StringParse.h">
 			</File>
 			<File
+				RelativePath="..\Plugin\TexTable.h">
+			</File>
+			<File
+				RelativePath="..\Plugin\TextResultDialog.h">
+			</File>
+			<File
 				RelativePath="..\VE_UI\UI_DataSetTab.h">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_DesignParTab.h">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_GeometryTab.h">
@@ -810,7 +790,16 @@
 				RelativePath="..\VE_UI\UI_TeacherTab.h">
 			</File>
 			<File
+				RelativePath="..\Ve_ui\UI_TransTab.h">
+			</File>
+			<File
 				RelativePath="..\VE_UI\UI_VecTab.h">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_VertTab.h">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_ViewLocTab.h">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_VisTab.h">
@@ -819,7 +808,7 @@
 				RelativePath="..\Plugin\UIDialog.h">
 			</File>
 			<File
-				RelativePath="VjObsC.h">
+				RelativePath="..\..\VE_Conductor\skel\VjObsC.h">
 			</File>
 		</Filter>
 		<Filter
