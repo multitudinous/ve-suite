@@ -35,7 +35,7 @@
 #include <string>
 
 class cfdGeode;
-
+class  vtkActor;
 #include "cfdDCS.h"
 
 class cfd1DTextInput : public cfdDCS
@@ -54,10 +54,13 @@ class cfd1DTextInput : public cfdDCS
 
       void Update( void );
    
+      void UpdateTextColor( double , double , double );
+
    private:
    
       std::string text;
-
+      vtkActor*   actor;
+      //cfdDCS*      DCS;
       cfdGeode*   geode;  
 };
 

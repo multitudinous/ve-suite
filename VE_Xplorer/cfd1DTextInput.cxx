@@ -76,6 +76,29 @@ void cfd1DTextInput::SetTransforms( float scale[ 3 ],
    this->SetRotationArray( rot );
 }
 
+void cfd1DTextInput::UpdateTextColor( double redColor, double greenColor, double blueColor)
+{
+  vtkVectorText* labelScalar       = vtkVectorText::New();
+  vtkPolyDataMapper *labelMapper   = vtkPolyDataMapper::New();
+  actor                            = vtkActor::New();
+
+  labelScalar->SetText( text.c_str() );
+  labelMapper->SetInput( labelScalar->GetOutput() );
+  actor->SetMapper( labelMapper );
+  this->actor->GetProperty()->SetSpecularPower( 20.0f );
+  double color[ 3 ];
+  color[ 0 ] = redColor;
+  color[ 1 ] = greenColor;
+  color[ 2 ] = blueColor;
+  this->actor->GetProperty()->SetColor( color );
+
+  this->geode->TranslateTocfdGeode( actor );
+
+  actor->Delete();
+  labelMapper->Delete();
+  labelScalar->Delete();
+}
+
 void cfd1DTextInput::Update( void )
 {
    vtkVectorText* labelScalar = vtkVectorText::New();   
