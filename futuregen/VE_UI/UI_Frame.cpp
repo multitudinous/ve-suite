@@ -88,14 +88,12 @@ void UI_Frame::buildCORBA( )
    //contol, otherwise it will be under the control of the
    //tabs panel(not recommened, resizing issues may arise).
 
-   //char *argv[]={""};
-   int argc = 0;
-   //int argc = 3;
+   int argc = 1;
    char** argv = NULL;
-   //argv = new char*[ argc ];
-   //argv[ 0 ] = "project";
+   argv = new char*[ argc ];
+   argv[ 0 ] = "project";
    //argv[ 1 ] = "-ORBInitRef";
-   //argv[ 2 ] = "NameService=file://ior.txt";
+   //argv[ 2 ] = "NameService=corbaloc:iiop:abbott.vrac.iastate.edu:1234/NameService";
    PortableServer::POA_var poa;
    CORBA::ORB_var orb;
    CosNaming::NamingContext_var naming_context;

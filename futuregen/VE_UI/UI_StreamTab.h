@@ -16,7 +16,8 @@ enum STREAMLINE_TAB_IDS{
    SIZE_SLIDER,
    PROP_SLIDER,
    INT_STEP_SLIDER,
-   STEP_SLIDER
+   STEP_SLIDER,
+   DIAMETER_SLIDER
 };
 
 
@@ -33,6 +34,7 @@ protected:
    wxSlider* _stepSlider;
    wxSlider* _nPtsSlider;
    wxSlider* _sizePerSlider;
+   wxSlider* _diameterSlider;
    wxRadioBox* _cursorRBox;
    wxRadioBox* _directionRBox;
    wxRadioBox* _integrationDirRBox;
@@ -51,6 +53,7 @@ protected:
    void _onPropSlider(wxScrollEvent& event);
    void _onStepSlider(wxScrollEvent& event);
    void _onnPointsSlider(wxScrollEvent& event);
+   void _onDiameterSlider(wxScrollEvent& event);
 
    void ConstructCommandId( void );
 

@@ -163,6 +163,14 @@ UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
 
    SetSizer(_col);
 
+  // Update VE-Xplorer with new data
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
+
+   // Need to add vector support Update VE-Xplorer with new data
 }
 
 UI_ScalarScroll::~UI_ScalarScroll()
@@ -196,6 +204,14 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    //Complete Hack needed to get the page to refresh properly
    SetSize(GetSize());
 
+   // Update VE-Xplorer with new data
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
+
+   // Need to add vector support Update VE-Xplorer with new data
 }
 
 
@@ -267,7 +283,7 @@ void UI_DatasetPanel::_buildPanel()
                                     wxDefaultPosition, wxDefaultSize,3,_datasetTypesel, wxCB_DROPDOWN);
    
    //The "Update Visualization" button
-   _visUpdateButton = new wxButton(this, SCALAR_PANEL_UPDATE_BUTTON, wxT("Update"),wxDefaultPosition,wxDefaultSize,wxBU_EXACTFIT);
+   //_visUpdateButton = new wxButton(this, SCALAR_PANEL_UPDATE_BUTTON, wxT("Update"),wxDefaultPosition,wxDefaultSize,wxBU_EXACTFIT);
 
    
    //The static box for the scalar range sliders
@@ -326,7 +342,7 @@ void UI_DatasetPanel::_buildPanel()
 
    _col3->Add(sRangeBoxSizer,1,wxALIGN_LEFT|wxEXPAND);
 
-   _col4->Add(_visUpdateButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   //_col4->Add(_visUpdateButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
   
    _dataHeadingBox = new wxStaticBox(this, -1, wxT("Data and Scalar Set Selection"));
@@ -444,7 +460,7 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    _mastercol1->Remove(_datasetCombo);
    _mastercol1->Remove(_colcombine1_2);
    _col3->Remove(sRangeBoxSizer);
-   _col4->Remove(_visUpdateButton);
+   //_col4->Remove(_visUpdateButton);
    dHeadingBoxSizer->Remove(_mastercol1);
    dHeadingBoxSizer->Remove(_col3);
    dHeadingBoxSizer->Remove(_col4);
@@ -453,7 +469,7 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    delete [] _scalarNames;
    delete _ScalarScroll;
    delete _datasetCombo;
-   delete _visUpdateButton;
+   //delete _visUpdateButton;
    delete _scalarRangeBox;
    delete minLabel;
    delete maxLabel;
@@ -663,8 +679,9 @@ void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
 	  }
 	  else if( _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName )
       {
+         ((UI_Frame*)GetParent())->_tabs->setActiveDataset(i);
          _setScalars(_DataSets[i]);
-         i = _numSteadyStateDataSets;
+         break;
       }
       else
 	  {

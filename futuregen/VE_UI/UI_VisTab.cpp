@@ -186,17 +186,17 @@ void UI_VisualizationTab::_buildPage()
    //This is the fourth row of buttons
    wxBoxSizer* forthRow = new wxBoxSizer(wxHORIZONTAL);
 
-   _scalarBarCBox = new wxCheckBox(this, SCALAR_BAR_CHECK_BOX, wxT("scalar bar"));
+   _scalarBarCBox = new wxCheckBox(this, SCALAR_BAR_CHECK_BOX, wxT("Scalar Bar"));
    _scalarBarCBox->SetValue(true);
    forthRow->Add(_scalarBarCBox, 1, wxALIGN_CENTER_HORIZONTAL);
 
-   _recordButton = new wxButton(this, RECORD_BUTTON, wxT("record scene"));
+   _recordButton = new wxButton(this, RECORD_BUTTON, wxT("Record Scene"));
    forthRow->Add(_recordButton, 1, wxALIGN_CENTER_HORIZONTAL);
 
-   _clearButton = new wxButton(this, CLEAR_BUTTON, wxT("clear all"));
+   _clearButton = new wxButton(this, CLEAR_BUTTON, wxT("Clear All"));
    forthRow->Add(_clearButton, 1, wxALIGN_CENTER_HORIZONTAL);
 
-   _exitButton = new wxButton(this, EXIT_BUTTON, wxT("exit"));
+   _exitButton = new wxButton(this, EXIT_BUTTON, wxT("Exit"));
    forthRow->Add(_exitButton, 1, wxALIGN_CENTER_HORIZONTAL);
 
    //Here is a new 5th row added for a custom visualization button
