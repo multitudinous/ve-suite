@@ -243,6 +243,18 @@ Package=<4>
 
 ###############################################################################
 
+Project: "HeatExchangerCFDUnit"=.\HeatExchangerCFDUnit\HeatExchangerCFDUnit.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "HeatExchangerUnit"=.\HeatExchangerUnit\HeatExchangerUnit.dsp - Package Owner=<4>
 
 Package=<5>
@@ -268,6 +280,18 @@ Package=<4>
 ###############################################################################
 
 Project: "MembraneReactorUnit"=.\MembraneReactorUnit\MembraneReactorUnit.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "PipeCFDUnit"=.\PipeCFDUnit\PipeCFDUnit.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
