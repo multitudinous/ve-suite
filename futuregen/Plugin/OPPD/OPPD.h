@@ -3,11 +3,13 @@
 
 #include "Plugin_base.h"
 #include "wx/image.h"
+#include <vector>
 
 #pragma warning(disable:4786)
 #pragma warning(disable : 4101)
 #pragma warning(disable : 4503)
 
+using namespace std;
 
 class OPPD : public REI_Plugin
 {
