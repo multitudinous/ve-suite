@@ -55,6 +55,7 @@
 
 #include <fstream>
 #include <string>
+#include <sstream>
 
 #ifdef WIN32   // windows
 #include <direct.h>
@@ -858,7 +859,7 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
 #else
    char buffer[_MAX_PATH];
    HANDLE hList;
-   TCHAR directory[MAX_PATH+1];
+   TCHAR* directory;//[MAX_PATH+1];
    WIN32_FIND_DATA fileData;
 
    //get the current working directory
@@ -869,7 +870,11 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
    }
 
    // Get the proper directory path for transient files
-   sprintf(directory, "%s\\*", precomputedSurfaceDir);
+   //sprintf(directory, "%s\\*", precomputedSurfaceDir);
+   std::ostringstream dirStringStream;
+   dirStringStream << precomputedSurfaceDir << "\\*";
+   std::string dirString = dirStringStream.str();
+   directory = (char*)dirString.c_str();
 
    //get the first file
    hList = FindFirstFile(directory, &fileData);

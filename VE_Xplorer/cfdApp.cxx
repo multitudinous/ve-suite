@@ -160,8 +160,6 @@ void cfdApp::exit()
    }
 }
 
-
-
 inline void cfdApp::apiInit( )
 {
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::apiInit" << std::endl << vprDEBUG_FLUSH;

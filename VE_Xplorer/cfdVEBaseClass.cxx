@@ -45,6 +45,8 @@
 #include "package.h"
 
 #include <fstream>
+#include <string>
+#include <sstream>
 
 #include <vrj/Util/Debug.h>
 
@@ -274,50 +276,48 @@ void cfdVEBaseClass::UnPack(Interface* intf)
 
   mod_pack = *intf;
   vars = mod_pack.getInts();
-  for (i=0; i<vars.size(); i++)
-    {
+   for (i=0; i<vars.size(); i++)
+   {
       iteri =_int.find(vars[i]);
       if (iteri!=_int.end())
-	mod_pack.getVal(vars[i], *(iteri->second));
+	      mod_pack.getVal(vars[i], *(iteri->second));
       else if (vars[i]=="XPOS")
-	{
-	  mod_pack.getVal("XPOS", temp);
-	  //	  printf("xpos %ld\n", temp);
-	  //pos.x = temp;
-     pos_x = temp;
-	}
+	   {
+	      mod_pack.getVal("XPOS", temp);
+	      //pos.x = temp;
+         pos_x = temp;
+	   }
       else if (vars[i]=="YPOS")
-	{
-	  //	  printf("ypos %ld\n", temp);
-	  mod_pack.getVal("YPOS", temp);
-	  //pos.y = temp;
-     pos_y = temp;
-	}
-    }
+	   {
+	      mod_pack.getVal("YPOS", temp);
+	      //pos.y = temp;
+         pos_y = temp;
+	   }
+   }
 
-  vars = mod_pack.getDoubles();
-  for (i=0; i<vars.size(); i++)
-    {
+   vars = mod_pack.getDoubles();
+   for (i=0; i<vars.size(); i++)
+   {
       iterd =_double.find(vars[i]);
       if (iterd!=_double.end())
-	mod_pack.getVal(vars[i], *(iterd->second));
-    }  
+	      mod_pack.getVal(vars[i], *(iterd->second));
+   }  
   
-  vars = mod_pack.getStrings();
-  for (i=0; i<vars.size(); i++)
-    {
+   vars = mod_pack.getStrings();
+   for (i=0; i<vars.size(); i++)
+   {
       iters =_string.find(vars[i]);
       if (iters!=_string.end())
-	mod_pack.getVal(vars[i], *(iters->second));
-    }
+	      mod_pack.getVal(vars[i], *(iters->second));
+   }
 
-  vars = mod_pack.getInts1D();
-  for (i=0; i<vars.size(); i++)
-    {
+   vars = mod_pack.getInts1D();
+   for (i=0; i<vars.size(); i++)
+   {
       itervi =_int1D.find(vars[i]);
       if (itervi!=_int1D.end())
-	mod_pack.getVal(vars[i], *(itervi->second));
-    }
+	      mod_pack.getVal(vars[i], *(itervi->second));
+   }
 
    vars = mod_pack.getDoubles1D();
    for (i=0; i<vars.size(); i++)
@@ -347,8 +347,6 @@ Interface* cfdVEBaseClass::Pack()
    std::map<std::string, std::vector<double> *>::iterator itervd;
    std::map<std::string, std::vector<std::string> *>::iterator itervs;
 
-
-   //printf("mod id : %d\n", mod_pack._id);
    //mod_pack.setVal("XPOS",long (pos.x));
    //mod_pack.setVal("YPOS",long (pos.y));
    mod_pack.setVal("XPOS",long (pos_x));
@@ -635,7 +633,7 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
    char buffer[_MAX_PATH];
    BOOL finished;
    HANDLE hList;
-   TCHAR directory[MAX_PATH+1];
+   TCHAR* directory;//[MAX_PATH+1];
    WIN32_FIND_DATA fileData;
 
    //windows compatibility
@@ -646,7 +644,11 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
    }
 
    // Get the proper directory path for transient files
-   sprintf(directory, "%s\\*", precomputedSurfaceDir);
+   //sprintf(directory, "%s\\*", precomputedSurfaceDir);
+   std::ostringstream dirStringStream;
+   dirStringStream << precomputedSurfaceDir << "\\*";
+   std::string dirString = dirStringStream.str();
+   directory = (char*)dirString.c_str();
 
    //get the first file
    hList = FindFirstFile(directory, &fileData);

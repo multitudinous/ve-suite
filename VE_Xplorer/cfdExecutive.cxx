@@ -43,6 +43,8 @@
 #include "Network_Exec.h"
 
 #include <iostream>
+#include <string>
+#include <sstream>
 
 #include <vrj/Util/Debug.h>
 #include <orbsvcs/CosNamingC.h>
@@ -77,13 +79,17 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
 
    //time_t* timeVal;
    long id = (long)time( NULL );
-   char uiname[256];
-   sprintf(uiname, "VEClient%ld", id);
-   std::string UINAME = uiname;
+   //char uiname[256];
+   //sprintf(uiname, "VEClient%ld", id);
+   std::ostringstream dirStringStream;
+   dirStringStream << "VEClient" << id;
+   std::string UINAME = dirStringStream.str();
+   std::cout << UINAME << std::endl;
+   //std::string UINAME = uiname;
    bool is_orb_init = false;
 
    _exec = NULL;
-
+   ui_i = 0;
    if (!is_orb_init)
    {
       //init_orb_naming();
@@ -140,10 +146,11 @@ cfdExecutive::~cfdExecutive( void )
 
 void cfdExecutive::UnbindORB()
 {
-   CosNaming::Name UIname(1);
-   UIname.length(1);
-   UIname[0].id =  (ui_i->UIName_).c_str();// CORBA::string_dup();
-
+   if ( ui_i )
+   {
+	CosNaming::Name UIname(1);
+	UIname.length(1);
+	UIname[0].id = CORBA::string_dup((ui_i->UIName_).c_str());
    std::cout<< " Executive Destructor " << UIname[0].id << std::endl;
 
    try
@@ -161,6 +168,7 @@ void cfdExecutive::UnbindORB()
    catch ( CosNaming::NamingContext::CannotProceed& ex )
    {
       std::cout << " cfdExecutive : Cannot Proceed! " << std::endl;
+   }
    }
 }
 

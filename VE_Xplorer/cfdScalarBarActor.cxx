@@ -54,6 +54,8 @@
 #include <vpr/Util/Debug.h>
 
 #include <fstream>
+#include <sstream>
+#include <string>
 
 cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
 {
@@ -367,12 +369,12 @@ void cfdScalarBarActor::Execute()
    }
    
    // creating the numerical labels on the scalar bar legend
-   char ** labelText = new char * [ this->numTextLabels ];
-   for ( i = 0; i < this->numTextLabels; i ++ )
+   char** labelText = new char * [ this->numTextLabels ];
+   /*for ( i = 0; i < this->numTextLabels; i ++ )
    {
       labelText[i] = new char[20];  // enough space for a formatted number
    }
-
+*/
    float labelIncrement = (this->range[1] - this->range[0]) / 
                           (float)(this->numTextLabels - 1);
 
@@ -383,7 +385,8 @@ void cfdScalarBarActor::Execute()
 
    for ( i=0; i<this->numTextLabels; i++ )
    {
-      if      ( range[1]-range[0] < 0.0016 )  
+      std::ostringstream dirStringStream;
+      /*if      ( range[1]-range[0] < 0.0016 )  
          sprintf( labelText[i], "%8.3e", this->range[0] + (float)i*labelIncrement );
       else if ( range[1]-range[0] < 0.016 )  
          sprintf( labelText[i], "%8.4f", this->range[0] + (float)i*labelIncrement );
@@ -394,7 +397,22 @@ void cfdScalarBarActor::Execute()
       else if ( range[1]-range[0] < 16 ) 
          sprintf( labelText[i], "%8.2f", this->range[0] + (float)i*labelIncrement );
       else                       
-         sprintf( labelText[i], "%8.0f", this->range[0] + (float)i*labelIncrement );
+         sprintf( labelText[i], "%8.0f", this->range[0] + (float)i*labelIncrement );*/
+      if      ( range[1]-range[0] < 0.0016 )  
+         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+      else if ( range[1]-range[0] < 0.016 )  
+         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+      else if ( range[1]-range[0] < 0.16 ) 
+         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+      else if ( range[1]-range[0] < 1.6 ) 
+         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+      else if ( range[1]-range[0] < 16 ) 
+         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+      else                       
+         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+
+      std::string dirString = dirStringStream.str();
+      labelText[i] = (char*)dirString.c_str();
 
       labelTransform->Identity();
       labelTransform->RotateZ( this->zrot );
@@ -416,11 +434,11 @@ void cfdScalarBarActor::Execute()
       this->scalarBar->AddChild( this->pfLabelActor[i] );
    }
 
-   for ( i = 0; i < this->numTextLabels; i ++ )
+   /*for ( i = 0; i < this->numTextLabels; i ++ )
    {
       delete [] labelText[i];
    }
-   delete [] labelText;
+   delete [] labelText;*/
 
    this->pfaPolyActor = new cfdGeode();
    this->pfaPolyActor->TranslateTocfdGeode(aPolyActor);

@@ -519,7 +519,12 @@ void cfdDataSet::LoadData( )
    for ( int i=0; i<noOfData; i++ ) 
    {
       this->dataReader[i] = vtkUnstructuredGridReader::New();
-      sprintf( label, "./POST_DATA/octant%d.vtk", i);
+      //sprintf( label, "./POST_DATA/octant%d.vtk", i);
+      std::ostringstream dirStringStream;
+      dirStringStream << "./POST_DATA/octant" << i << ".vtk";
+      std::string dirString = dirStringStream.str();
+      label = dirString.c_str();
+
       this->dataReader[i]->SetFileName( label );
       this->dataReader[i]->Update();
       this->data[i] = ( vtkUnstructuredGrid * ) this->dataReader[i]->GetOutput();

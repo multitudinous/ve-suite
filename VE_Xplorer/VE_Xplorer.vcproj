@@ -352,7 +352,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Executive&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Unit&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\src&quot;"
-				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_WINDOWS;WINVER=0x400;_MT;_STLP_USE_OWN_NAMESPACE"
+				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_WINDOWS;WINVER=0x400;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -564,9 +564,6 @@ echo Done.
 				RelativePath=".\cfdAnimatedStreamlineCone.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdAnimation.cxx">
-			</File>
-			<File
 				RelativePath=".\cfdApp.cxx">
 			</File>
 			<File
@@ -607,9 +604,6 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdFileInfo.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdFrame.cxx">
 			</File>
 			<File
 				RelativePath="..\VE_SceneGraph\cfdGeode.cxx">
@@ -835,33 +829,6 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdThread.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientActor.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientFlowManager.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientInfo.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientParticleActor.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientParticleActor_fluent.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientScalarActor.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientSet.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientVectorActor.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientVizHandler.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdUpdateTextureCallback.cpp">
@@ -1894,10 +1861,10 @@ echo Done.
 				RelativePath="cfdTeacher.h">
 			</File>
 			<File
-				RelativePath=".\cfdTempAnimation.h">
+				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
 			</File>
 			<File
-				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
+				RelativePath=".\cfdTempAnimation.h">
 			</File>
 			<File
 				RelativePath=".\cfdTextureBasedModel.h">
@@ -1910,30 +1877,6 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdThread.h">
-			</File>
-			<File
-				RelativePath="cfdTransientActor.h">
-			</File>
-			<File
-				RelativePath="cfdTransientFlowManager.h">
-			</File>
-			<File
-				RelativePath="cfdTransientInfo.h">
-			</File>
-			<File
-				RelativePath="cfdTransientParticleActor.h">
-			</File>
-			<File
-				RelativePath="cfdTransientParticleActor_fluent.h">
-			</File>
-			<File
-				RelativePath="cfdTransientScalarActor.h">
-			</File>
-			<File
-				RelativePath="cfdTransientSet.h">
-			</File>
-			<File
-				RelativePath="cfdTransientVectorActor.h">
 			</File>
 			<File
 				RelativePath=".\cfdTransientVizHandler.h">

@@ -42,10 +42,10 @@
 #include "cfdGlobalBase.h"
 #include "cfdCommandArray.h"
 
-#include <cstdio>
+//#include <cstdio>
 #include <iostream>
 #include <fstream>
-#include <cstdlib>
+//#include <cstdlib>
 #include <cmath>
 //#include <istream>
 
@@ -103,7 +103,7 @@ cfdReadParam::~cfdReadParam()
       this->dataSets.clear();
    }
 
-   temp = (int)this->transientInfo.size();
+/*   temp = (int)this->transientInfo.size();
    // If we have any transient data
    if ( temp > 0 )
    {
@@ -118,7 +118,7 @@ cfdReadParam::~cfdReadParam()
                              << std::endl << vprDEBUG_FLUSH;
       this->transientInfo.clear();
    }
-
+*/
    if ( guiVal != NULL )
       delete [] guiVal;
 }
@@ -278,7 +278,7 @@ void cfdReadParam::param_read( std::ifstream &inFile )
 */
 
 //read the user specified params for the transient data 
-void cfdReadParam::getTransientInfo( std::ifstream &inFile )
+/*void cfdReadParam::getTransientInfo( std::ifstream &inFile )
 {
    // how many directories contain transient vtk data?
    int numTransientSets;
@@ -373,7 +373,7 @@ void cfdReadParam::getTransientInfo( std::ifstream &inFile )
    vprDEBUG(vprDBG_ALL,0) << " duration = " << dur
                           << std::endl << vprDEBUG_FLUSH;
 }
-
+*/
 int cfdReadParam::convertDecimalToBinary( long number) 
 {
    vprDEBUG(vprDBG_ALL,1) << " Number = " << number

@@ -39,6 +39,7 @@
 #include "UI_ModSelPanel.h"
 #include "UI_ModelData.h"
 #include "controlIds.h"
+#include "UI_App.h"
 
 #ifdef _TAO
 #include "VjObsS.h"
@@ -88,12 +89,6 @@ void UI_Frame::buildCORBA( )
    //contol, otherwise it will be under the control of the
    //tabs panel(not recommened, resizing issues may arise).
 
-   int argc = 1;
-   char** argv = NULL;
-   argv = new char*[ argc ];
-   argv[ 0 ] = "project";
-   //argv[ 1 ] = "-ORBInitRef";
-   //argv[ 2 ] = "NameService=corbaloc:iiop:localhost:1234/NameService";
    PortableServer::POA_var poa;
    CORBA::ORB_var orb;
    CosNaming::NamingContext_var naming_context;
@@ -102,7 +97,7 @@ void UI_Frame::buildCORBA( )
    try 
    {
       // First initialize the ORB, 
-      orb = CORBA::ORB_init (argc, argv, ""); // the ORB name can be anything! 
+      orb = CORBA::ORB_init( wxGetApp().argc, wxGetApp().argv, ""); // the ORB name can be anything! 
 
       //Here is the code to set up the ROOT POA
       CORBA::Object_var poa_object =

@@ -47,6 +47,9 @@
 #include "cfdWriteTraverser.h"
 
 #include <iostream>
+#include <string>
+#include <sstream>
+
 #include <vpr/Util/Debug.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
@@ -111,13 +114,17 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    //BIGTIME!!!!!!!
    BOOL finished;
    HANDLE hList;
-   TCHAR directory[MAX_PATH+1];
+   TCHAR* directory;//[MAX_PATH+1];
    WIN32_FIND_DATA fileData;
    char buffer[MAX_PATH];
    cwd = _getcwd(buffer,MAX_PATH);
 
    // Get the proper directory path
-   sprintf(directory, "%s\\*", this->directory);
+   //sprintf(directory, "%s\\*", this->directory);
+   std::ostringstream dirStringStream;
+   dirStringStream << this->directory << "\\*";
+   std::string dirString = dirStringStream.str();
+   directory = (char*)dirString.c_str();
 
    // Get the first file
    hList = FindFirstFile(directory, &fileData);
@@ -295,9 +302,14 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
    {
       // Needs to be moved to cfdTeacher...soon.
       // Generate a .pfb filename...
-      char pfb_filename[100];
-      sprintf( pfb_filename , "%s/stored_scene_%i.pfb",
-               this->getDirectory(), this->pfb_count );
+      const char* pfb_filename;//[100];
+      //sprintf( pfb_filename , "%s/stored_scene_%i.pfb",
+      //         this->getDirectory(), this->pfb_count );
+      std::ostringstream dirStringStream;
+      dirStringStream << this->getDirectory() << "/stored_scene_" 
+                        << this->pfb_count << ".pfb";
+      std::string dirString = dirStringStream.str();
+      pfb_filename = dirString.c_str();
 
       vprDEBUG(vprDBG_ALL,0) << "scene stored as " << pfb_filename
                              << std::endl << vprDEBUG_FLUSH;
@@ -314,7 +326,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 
       //biv--convert the cfdSequence nodes to pfSequence nodes
       //for proper viewing in perfly
-      writePFBFile(_worldDCS,pfb_filename);
+      writePFBFile(_worldDCS,(char*)pfb_filename);
       //pfdStoreFile( worldDCS, pfb_filename );
 
       // store the active geometry and viz objects as a pfb

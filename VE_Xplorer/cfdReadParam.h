@@ -97,7 +97,7 @@ class cfdReadParam : public cfdGlobalBase
       cfdDataSet * GetDataSet( int i );
       cfdDataSet * GetDataSetWithName( const char * );
 
-      std::vector< cfdTransientInfo * > transientInfo;
+      //std::vector< cfdTransientInfo * > transientInfo;
       //std::vector< cfd1DTextInput * > textInput;
    
       //!
@@ -121,7 +121,7 @@ class cfdReadParam : public cfdGlobalBase
       //void vrxprConfigFiles( std::ifstream & );
 
       //get the transient data params
-      void getTransientInfo( std::ifstream& infile );
+      //void getTransientInfo( std::ifstream& infile );
 
       int  convertDecimalToBinary( long );
       void convertBinaryToDecimal( int );

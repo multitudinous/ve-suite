@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <string.h>
+#include <string>
 #include "cfdPlanes.h"
 #include "cfdCuttingPlane.h"
 #include "fileIO.h"
@@ -45,6 +45,8 @@
 #include <vtkPolyDataReader.h>
 
 #include <vpr/Util/Debug.h>
+
+#include <sstream>
 
 cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                       const double bounds[ 6 ] )
@@ -75,13 +77,17 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                            << std::endl << vprDEBUG_FLUSH;
 
    int i;
-   char planeFileName[100];
+   char* planeFileName;
 
    // count the total number of cut planes
    for ( i=0; 1; i++ )
    {
-       sprintf( planeFileName, "%s/%c_Cont%d.vtk", directory, 
-                this->typeLabel, i );
+      //sprintf( planeFileName, "%s/%c_Cont%d.vtk", directory, 
+      //          this->typeLabel, i );
+      std::ostringstream dirStringStream;
+      dirStringStream << directory << "/" << this->typeLabel << "_Cont" << i << ".vtk";
+      std::string dirString = dirStringStream.str();
+      planeFileName = (char*)dirString.c_str();
        if ( ! fileIO::isFileReadable( planeFileName ) )
        {
            this->numPlanes = i;
@@ -102,8 +108,13 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
    vtkPolyDataReader * planeReader;
    for ( i = 0; i < this->numPlanes; i++ )
    {
-      sprintf( planeFileName, "%s/%c_Cont%d.vtk", directory,
-               this->typeLabel, i );
+      //sprintf( planeFileName, "%s/%c_Cont%d.vtk", directory,
+      //         this->typeLabel, i );
+      std::ostringstream dirStringStream;
+      dirStringStream << directory << "/" << this->typeLabel << "_Cont" << i << ".vtk";
+      std::string dirString = dirStringStream.str();
+      planeFileName = (char*)dirString.c_str();
+
       planeReader = vtkPolyDataReader::New();
       planeReader->SetFileName( planeFileName );
       planeReader->Update();

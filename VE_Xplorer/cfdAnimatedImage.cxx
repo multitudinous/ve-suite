@@ -41,6 +41,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 // Fix need to add the new style read param to this class
 // tak code out of cfdReadPAram to this function
@@ -51,7 +52,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
    _readParam = new cfdReadParam();
    //CreateObjects();
   unsigned int i;
-  char filename[250];
+  char* filename;//[250];
   frames = frames;
   //  _which_frame = 0;
 
@@ -59,7 +60,11 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
 
    for(i=0; i<(unsigned)frames; i++) 
    {
-      sprintf(filename, "%s%02d.lic", basename, i);
+      //sprintf(filename, "%s%02d.lic", basename, i);
+      std::ostringstream dirStringStream;
+      dirStringStream << basename << i << ".lic";
+      std::string dirString = dirStringStream.str();
+      filename = (char*)dirString.c_str();
 
       cfdImage* im = new cfdImage(filename, ex_x, ex_y, dim, origin, spacing);
 
@@ -73,7 +78,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
 cfdAnimatedImage::cfdAnimatedImage( char* param )
 {
    unsigned int i;
-   char filename[250];
+   char* filename;//[250];
    //frames = param->frames;
    //  _which_frame = 0;
    frames = 0;
@@ -90,7 +95,11 @@ cfdAnimatedImage::cfdAnimatedImage( char* param )
    // probably create new function
    for(i=0; i<(unsigned)frames; i++) 
    {
-      sprintf(filename, "%s%02d.lic", basename, i);
+      //sprintf(filename, "%s%02d.lic", basename, i);
+      std::ostringstream dirStringStream;
+      dirStringStream << basename << i << ".lic";
+      std::string dirString = dirStringStream.str();
+      filename = (char*)dirString.c_str();
 
       cfdImage* im = new cfdImage(filename, ex_x,ex_y, dim, origin, spacing);
 
