@@ -52,7 +52,7 @@ class map;
     (defined(WXMAKING_PLUGIN_DLL) || defined(WXUSING_PLUGIN_DLL))
 
 #if defined(WXMAKING_PLUGIN_DLL)
-    // When building the DLL WXPLUGINDECLSPEC exports classes
+    // When building the DLL WXPLUGINDECLSPEC exports classes`
 #   define WXPLUGIN_DECLSPEC            WXEXPORT
 #elif defined(WXUSING_PLUGIN_DLL)
     // When building the DLL WXPLUGINDECLSPEC imports classes

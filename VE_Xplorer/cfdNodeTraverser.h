@@ -5,7 +5,7 @@ class cfdNodeTraverser{
 public:
    cfdNodeTraverser();
    cfdNodeTraverser(const cfdNodeTraverser& cfdNT);
-   ~cfdNodeTraverser();
+   virtual ~cfdNodeTraverser();
    
    //the pre and post node callbacks
    typedef void (*preNodeTraverseCallback)(cfdNodeTraverser*,pfNode*);

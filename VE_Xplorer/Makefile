@@ -5,7 +5,7 @@
 #_______________________________CUSTOM OPTIONS__________________________________
 #
 # Uncomment this line if you want to build a cluster juggler app
-CLUSTER_APP = TRUE
+#CLUSTER_APP = TRUE
 #
 # Uncomment the following line to use cfdSequence instead of pfSequence.
 # (It is automatically turned on for cluster builds.)
@@ -118,7 +118,7 @@ SRCS=\
    cfdVectorBase.cxx \
    cfdVector.cxx \
    cfdVectors.cxx \
-   cfdWriteTraverser\
+   cfdWriteTraverser.cxx \
    fileIO.cxx \
    readWriteVtkThings.cxx \
    cfdAccessoryFunctions.cxx \

@@ -397,6 +397,10 @@ class cfdApp : public vrj::PfApp
    short cfdTimesteps;
    short cfdTeacher_state; 
 #endif
+
+#ifdef _CLUSTER   
+   virtual void GetUpdateClusterStateVariables( void );
+#endif
    //biv -- the write traverser
    protected:
       cfdWriteTraverser* _cfdWT;

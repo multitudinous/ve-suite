@@ -31,12 +31,18 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdVEBaseClass.h"
+#include "cfdModuleGeometry"
+#include <string>
+#include <map>
+
 IMPLEMENT_DYNAMIC_CLASS( cfdVEBaseClass, wxObject )
 
 // Constructor
 cfdVEBaseClass::cfdVEBaseClass( void )
 {
    this->dataRepresentation = new cfdObjects();
+   this->geometryNode = new cfdModuleGeometry( /*Need to pass a group in here*/ );
+   this->worldDCS->addChild( this->geometryNode->GetPfDCS() );
 }
 
 // Destructor
@@ -49,20 +55,25 @@ cfdVEBaseClass::~cfdVEBaseClass( void )
 // New methods may have to be added later
 void cfdVEBaseClass::AddSelfToSG( void )
 {
-
+   this->worldDCS->addChild( this->GetPfDCS() );
 }
 
 virtual void cfdVEBaseClass::RemoveSelfFromSG( void )
 {
+   this->worldDCS->removeChild( this->GetPfDCS() );
 }
 
 // Change state information for geometric representation
 virtual void cfdVEBaseClass::MakeTransparent( void )
 {
+   this->geometryNode->SetOpacity( 0.7 );
+   this->geometryNode->Update();
 }
 
-virtual void cfdVEBaseClass::SetColor( float* )
+virtual void cfdVEBaseClass::SetColor( double* color )
 {
+   this->geometryNode->SetRGBAColorArray( color );
+   this->geometryNode->Update();
 }
       
 // transform object based 
@@ -200,60 +211,61 @@ virtual void cfdVEBaseClass::UnPack(Interface* intf)
 	mod_pack.getVal(vars[i], *(itervi->second));
     }
 
-  vars = mod_pack.getDoubles1D();
-  for (i=0; i<vars.size(); i++)
-    {
+   vars = mod_pack.getDoubles1D();
+   for (i=0; i<vars.size(); i++)
+   {
       itervd =_double1D.find(vars[i]);
       if (itervd!=_double1D.end())
-	mod_pack.getVal(vars[i], *(itervd->second));
-    }
+	      mod_pack.getVal(vars[i], *(itervd->second));
+   }
 
-  vars = mod_pack.getStrings1D();
-  for (i=0; i<vars.size(); i++)
-    {
+   vars = mod_pack.getStrings1D();
+   for (i=0; i<vars.size(); i++)
+   {
       itervs =_string1D.find(vars[i]);
       if (itervs!=_string1D.end())
-	mod_pack.getVal(vars[i], *(itervs->second));
-    }
+         mod_pack.getVal(vars[i], *(itervs->second));
+   }
 }
 
 virtual Interface* cfdVEBaseClass::Pack()
-{  string result;
+{  
+   string result;
   
-  map<string, long *>::iterator iteri;
-  map<string, double *>::iterator iterd;
-  map<string, string *>::iterator iters;
-  map<string, vector<long> *>::iterator itervi;
-  map<string, vector<double> *>::iterator itervd;
-  map<string, vector<string> *>::iterator itervs;
+   map<string, long *>::iterator iteri;
+   map<string, double *>::iterator iterd;
+   map<string, string *>::iterator iters;
+   map<string, vector<long> *>::iterator itervi;
+   map<string, vector<double> *>::iterator itervd;
+   map<string, vector<string> *>::iterator itervs;
 
 
-  //printf("mod id : %d\n", mod_pack._id);
-  mod_pack.setVal("XPOS",long (pos.x));
-  mod_pack.setVal("YPOS",long (pos.y));
+   //printf("mod id : %d\n", mod_pack._id);
+   mod_pack.setVal("XPOS",long (pos.x));
+   mod_pack.setVal("YPOS",long (pos.y));
   
-  for(iteri=_int.begin(); iteri!=_int.end(); iteri++)
-    mod_pack.setVal(iteri->first, *(iteri->second));
+   for(iteri=_int.begin(); iteri!=_int.end(); iteri++)
+      mod_pack.setVal(iteri->first, *(iteri->second));
 
-  for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
-    mod_pack.setVal(iterd->first, *(iterd->second));
+   for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
+      mod_pack.setVal(iterd->first, *(iterd->second));
 
-  for(iters=_string.begin(); iters!=_string.end(); iters++)
-    mod_pack.setVal(iters->first, *(iters->second));
+   for(iters=_string.begin(); iters!=_string.end(); iters++)
+      mod_pack.setVal(iters->first, *(iters->second));
 
-  for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
-    mod_pack.setVal(itervi->first, *(itervi->second));
+   for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
+      mod_pack.setVal(itervi->first, *(itervi->second));
 
-  for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
-    mod_pack.setVal(itervd->first, *(itervd->second));
+   for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
+      mod_pack.setVal(itervd->first, *(itervd->second));
 
-  for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
-    mod_pack.setVal(itervs->first, *(itervs->second));
+   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
+      mod_pack.setVal(itervs->first, *(itervs->second));
 
-  //mod_pack.pack(result);
+   //mod_pack.pack(result);
   
-  //wxString wxstr = result.c_str();
-  return &mod_pack ;//wxstr;
+   //wxString wxstr = result.c_str();
+   return &mod_pack ;//wxstr;
 }
 
 //This is to unpack the result from the 

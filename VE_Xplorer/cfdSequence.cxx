@@ -234,7 +234,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    if ( pMode == CFDSEQ_STOP || pMode == CFDSEQ_PAUSE ){
       //don't change the scene graph
 #ifdef _DEBUG
-      cout<<"Stopped or paused!"<<endl;
+      //cout<<"Stopped or paused!"<<endl;
 #endif
       return PFTRAV_CONT;
    }
@@ -248,7 +248,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    //in the sequence to the beginning
    if ( pMode == CFDSEQ_START ){
 #ifdef _DEBUG
-      cout<<"Starting sequence."<<endl;
+      //cout<<"Starting sequence."<<endl;
 #endif
       sequence->_currentFrame = begin;
       sequence->_switch->setVal(sequence->_currentFrame);
@@ -326,7 +326,7 @@ void cfdSequence::setCurrentFrame(int index)
    //is valid
    if(_dir == 1){
       //low to high
-      if(index >= _begin && index < _end){
+      if(index >= _begin && index <= _end){
          _currentFrame = index;
 	      _switch->setVal(_currentFrame);
       }else{

@@ -2686,6 +2686,7 @@ void cfdApp::preFrame( void )
    if (  this->activeSequenceObject )
    {
       int currentFrame = this->activeSequenceObject->GetFrameOfpfSequence();
+      //cout << " Current Frame :  " << currentFrame << endl;
       if (this->lastFrame != currentFrame )
       {
 #ifdef TABLET 
@@ -3187,8 +3188,28 @@ void cfdApp::RefreshScalarBar()
    //this->worldDCS->addChild( this->scalarBarActor->getpfDCS() );
 }
 
-
 #ifdef _CLUSTER
+void cfdApp::GetUpdateClusterStateVariables( void )
+{
+   //call the parent method
+   VjObs_i::GetUpdateClusterStateVariables();
+
+   //sync up the frames on all nodes in the
+   //cluster
+   if ( !mStates.isLocal() )
+   {
+      if ( this->activeSequenceObject != NULL )
+      {
+         cfdSequence* the_sequence = this->activeSequenceObject->GetpfSequence();
+         if ( the_sequence != NULL )
+         {
+            the_sequence->setCurrentFrame( this->cfdTimesteps );
+            //cout << " cfdTimesteps in preframe : " << cfdTimesteps << endl;
+         }
+      }
+   }
+}
+
 int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
 {
   
