@@ -363,66 +363,89 @@ void cfdVolumeVisualization::AddClipPlane(ClipPlane direction,double* position)
 /////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::RemoveClipPlane(ClipPlane direction)
 {
-   if(_clipNode.valid()){
-      osg::ref_ptr<osg::ClipPlane> plane = 0;
-      unsigned int planeIndex = -1;
-      if(_clipNode->getNumClipPlanes()){
-         for(unsigned int i = 0; i<_clipNode->getNumClipPlanes();i++){
+   if ( _clipNode.valid() )
+   {
+      osg::ref_ptr< osg::ClipPlane > plane = 0;
+      unsigned int planeIndex = 0;
+      if ( _clipNode->getNumClipPlanes() )
+      {
+         for(unsigned int i = 0; i< (unsigned int)_clipNode->getNumClipPlanes();i++)
+         {
             plane = _clipNode->getClipPlane(i);
-            if(plane->getClipPlaneNum() == direction){
+            if ( plane->getClipPlaneNum() == (unsigned int)direction )
+            {
                planeIndex = i;
                break;
-            }else{
+            }
+            else
+            {
                plane = 0;
             }
          }
-         if(plane.valid()){
+         
+         if ( plane.valid() )
+         {
             _clipNode->removeClipPlane(planeIndex);
-         }else{
+         }
+         else
+         {
             std::cout<<"Plane not found!"<<std::endl;
             std::cout<<"cfdVolumeVisualization::RemoveClipPlanePosition."<<std::endl;
          }
-      }else{
+      }
+      else
+      {
          std::cout<<"No planes on clip node!"<<std::endl;
          std::cout<<"cfdVolumeVisualization::RemoveClipPlanePosition."<<std::endl;
       }
       plane = 0;
-   }
-   
-      
-   
+   }  
 }
 /////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::UpdateClipPlanePosition(ClipPlane direction,
                                                double* newPosition)
 {
    osg::ref_ptr<osg::ClipPlane> plane =0;
-   if(_clipNode.valid()){
-      if(_clipNode->getNumClipPlanes()){
-         for(unsigned int i = 0; i<_clipNode->getNumClipPlanes();i++){
+   if ( _clipNode.valid() )
+   {
+      if ( _clipNode->getNumClipPlanes() )
+      {
+         for(unsigned int i = 0; i < (unsigned int)_clipNode->getNumClipPlanes();i++)
+         {
             plane = _clipNode->getClipPlane(i);
-            if(plane->getClipPlaneNum() == direction){
+            if ( plane->getClipPlaneNum() == (unsigned int)direction )
+            {
                break;
-            }else{
+            }
+            else
+            {
                plane = 0;
             }
          }
          //plane = _clipNode->getClipPlane(direction);
-         if(plane.valid()){
-            if(newPosition){
+         if ( plane.valid() )
+         {
+            if ( newPosition )
+            {
                plane->setClipPlane(newPosition);
-            }else{
+            }
+            else
+            {
                std::cout<<"Invalid plane position!"<<std::endl;
                std::cout<<"cfdVolumeVisualization::UpdateClipPlanePosition."<<std::endl;
             }
-         }else{
+         }
+         else
+         {
             
             std::cout<<"Invalid plane!"<<std::endl;
             std::cout<<"cfdVolumeVisualization::UpdateClipPlanePosition."<<std::endl;
             std::cout<<"Adding new clip plane via::AddClipPlane."<<std::endl;
             AddClipPlane(direction,newPosition);
          }
-      }else{
+      }
+      else
+      {
          std::cout<<"Invalid plane!"<<std::endl;
          std::cout<<"cfdVolumeVisualization::UpdateClipPlanePosition."<<std::endl;
          std::cout<<"Adding new clip plane via::AddClipPlane."<<std::endl;
