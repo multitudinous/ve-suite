@@ -37,8 +37,11 @@
 #include "cfdGroup.h"
 #include "cfdSwitch.h"
 #include "cfdFILE.h"
+
 #ifdef _OSG
+#ifdef VE_PATENTED
 #include "cfdTextureDataSet.h"
+#endif
 #endif
 
 #include <vpr/Util/Debug.h>
