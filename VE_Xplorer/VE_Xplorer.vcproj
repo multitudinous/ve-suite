@@ -621,15 +621,6 @@ echo Done.
 				RelativePath="..\VE_SceneGraph\cfdGroup.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdIHCCContour.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdIHCCGauge.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdIHCCModel.cxx">
-			</File>
-			<File
 				RelativePath=".\cfdImage.cxx">
 			</File>
 			<File
@@ -667,9 +658,6 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdOSGAdvectionShaderManager.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdOSGPingPongTexture3d.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdOSGScalarShaderManager.cxx">
@@ -1048,9 +1036,6 @@ echo Done.
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Plot3Dviewer.cxx">
 			</File>
 			<File
 				RelativePath=".\readWriteVtkThings.cxx">
