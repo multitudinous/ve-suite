@@ -123,7 +123,22 @@ void Body_UI_i::Raise (
       {
          std::cout << "|\tNotification Message : " << notification << " : Raise called " << std::endl
                      << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
-         calcFlag = true;
+         std::string temp(notification);
+         if ( !temp.compare(0,26,"Network execution complete") ||
+              !temp.compare(0,30,"Successfully Scheduled Network" ) ||
+              !temp.compare(0,22,"Connected to Executive") )
+         {
+            // we need to buffer the newtork strings here
+            // that way we are not makign calls from juggler 
+            // threads directly to the ce all the time
+            // this would prevent the threads from locking
+            std::cout << "|\tGoing To Do Something" << std::endl;
+            calcFlag = true;
+         }
+         else
+         {
+            std::cout << "|\tNot Going To Do Anything" << std::endl;
+         }
          std::cout << "|\tEnd Raise " << std::endl;  
       }
    }

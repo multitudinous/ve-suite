@@ -144,7 +144,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
 cfdExecutive::~cfdExecutive( void )
 {
    this->runGetEverythingThread = false;
-   vpr::System::msleep( 500 );  // half-second delay
+   //vpr::System::msleep( 500 );  // half-second delay
    /*if ( thread )
       delete thread;*/
    delete av_modules;
@@ -490,11 +490,11 @@ void cfdExecutive::UpdateModules( void )
    {
       if ( ui_i->GetCalcFlag() )
       {
-         /*vpr::System::msleep( 50 );  // half-second delay
+         //vpr::System::msleep( 50 );  // half-second delay
          while ( updateNetworkString )
          {
             vpr::System::msleep( 50 );  // half-second delay
-         }*/
+         }
 
          this->updateNetworkString = true;
          GetEverything();

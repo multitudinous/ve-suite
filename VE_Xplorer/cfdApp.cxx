@@ -56,6 +56,7 @@
 #include "cfdObjects.h"
 #include "cfdTempAnimation.h"
 #include "cfdVjObsWrapper.h"
+#include "cfdDataSet.h"
 
 #ifdef _TAO
 #include "cfdExecutive.h"
@@ -129,6 +130,7 @@ inline void cfdApp::preForkInit( )
    vrj::PfApp::preForkInit();
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::preForkInit"
                           << std::endl << vprDEBUG_FLUSH;
+   pfdInitConverter("./NewComponents/Terrain_all.obj");
    //pfdInitConverter( "air_system.flt" );
 }
 
@@ -297,7 +299,6 @@ void cfdApp::initScene( )
  
    _tbvHandler = cfdTextureBasedVizHandler::instance();
    _tbvHandler->SetParameterFile(filein_name);
-   //_tbvHandler->SetParentNode((cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetSwitchNode()->GetChild(1) );
    _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
    _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
