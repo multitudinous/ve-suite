@@ -31,12 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "transient.h"
-#include <iostream.h>                 
+#include <iostream>                 
 
 int main ( int argc, char* argv[] ) {
    Transient *transient = new Transient();
    transient->writeScript();
    delete transient;
-   cout << "Done!"<< endl;
+   std::cout << "Done!"<< std::endl;
    return 1;
 }

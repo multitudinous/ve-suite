@@ -30,46 +30,48 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <vector.h>                 
-#include <stdlib.h>                 
-#include <iostream.h>                 
-#include <fstream.h>                 
-#include "transient.h"               
+#include "transient.h"
 
-Transient::Transient( void ){
-   cout << "Enter number of time steps: " << endl;
-   cin >> num_time_steps;
+#include <cstdlib>
+#include <iostream>
+#include <fstream>
 
-   cout << "Enter the time step to begin at: " << endl;
-   cin >> begin_step;
+using namespace std;
 
-   cout << "Enter the Post Frequency: " << endl;
-   cin >> post_frequency;
-   }
+Transient::Transient( void )
+{
+   std::cout << "Enter number of time steps: " << std::endl;
+   std::cin >> num_time_steps;
 
-Transient::~Transient( void ){
+   std::cout << "Enter the time step to begin at: " << std::endl;
+   std::cin >> begin_step;
 
+   std::cout << "Enter the Post Frequency: " << std::endl;
+   std::cin >> post_frequency;
 }
 
-Transient::Transient( Transient *copy ){
-
+Transient::~Transient( void )
+{
 }
 
-void Transient::writeScript( void ){
-   int i;
-   fstream outFile;
+Transient::Transient( Transient *copy )
+{
+}
 
-   outFile.open("transient", ios::out);
+void Transient::writeScript( void )
+{
+   ofstream outFile("transient");
    outFile << "#! /bin/tcsh\n" 
-            << "\n"
-            << "proam << EOF\n"
-            << "x\n"
-            << "star\n"
-            << "n\n"
-            << "y\n\n"
-            << "evfi conn\n"
-            << "trload,star.pstt,mvgr\n"
-            << "c\n";
+           << "\n"
+           << "proam << EOF\n"
+           << "x\n"
+           << "star\n"
+           << "n\n"
+           << "y\n\n"
+           << "evfi conn\n"
+           << "trload,star.pstt,mvgr\n"
+           << "c\n";
+   int i;
    for ( i = 0; i < num_time_steps; i++ ) {
       outFile << "store iter " << begin_step + (i+1)*post_frequency << "\n"
             << "getv all vmag\n"
@@ -82,8 +84,7 @@ void Transient::writeScript( void ){
             << "cwrite,star_" << i << ".cel,all,coded,all\n"
             << "close star_" << i << ".cel\n";
    }
-   outFile << "quit,nosave\n"
-            << "/\n\n";
+   outFile << "quit,nosave\n" << "/\n\n";
             
    outFile.close();
 	system( "chmod 770 ./transient" );
