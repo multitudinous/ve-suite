@@ -529,26 +529,24 @@ void stream::speciate(const thermo& thm, int& num, int& errcnt,
    } // if(id_S>-1
    if(id_C>-1){
       if(id_O>-1){
-         if(mol_el[id_O]>0.0){
-            name = "CO";
-            iter = nam_spec.find(name);
-            if(iter!=nam_spec.end()){
-               isp++;
-               i_sp[isp] = (*iter).second;
-            }else{
-               errcnt++;
-               //cout << "species " << name << " not found" << endl;
-            }
-         } // if(mol_el[id_O]>0
-         if(mol_el[id_O] >= mol_el[id_C]){
-            mol_sp[isp] = mol_el[id_C];
-            mol_el[id_O] -= mol_el[id_C];
-            mol_el[id_C] = 0.0;
-         }else{
-            mol_sp[isp] = mol_el[id_O];
-            mol_el[id_C] -= mol_el[id_O];
-            mol_el[id_O] = 0.0;
-         }
+	name = "CO";
+	iter = nam_spec.find(name);
+	if(iter!=nam_spec.end()){
+	  isp++;
+	  i_sp[isp] = (*iter).second;
+	}else{
+	  errcnt++;
+	  //cout << "species " << name << " not found" << endl;
+	}
+	if(mol_el[id_O] >= mol_el[id_C]){
+	  mol_sp[isp] = mol_el[id_C];
+	  mol_el[id_O] -= mol_el[id_C];
+	  mol_el[id_C] = 0.0;
+	}else{
+	  mol_sp[isp] = mol_el[id_O];
+	  mol_el[id_C] -= mol_el[id_O];
+	  mol_el[id_O] = 0.0;
+	}
       } // if(id_O>-1
       if(mol_el[id_C]>0.0){
          name = "C(GR)";
