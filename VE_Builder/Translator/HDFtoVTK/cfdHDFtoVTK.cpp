@@ -18,9 +18,9 @@ cfdHDFToVTK::cfdHDFToVTK()
    _outFile = 0;
    _viewGridBeforeWriting = 1;
    _numCells = 0;
-   _inHDFFile;
-   _outVTKDirectory;
-   _verbose;
+   _inHDFFile = 0;
+   _outVTKDirectory = 0;
+   _verbose = 0;;
    _dimensions[0] = 0;
    _dimensions[1] = 0;
    _dimensions[2] = 0;
@@ -444,7 +444,7 @@ void cfdHDFToVTK::_extractDatasetInfo(int groupID,
    H5Dclose(datasetID);
    if(dims){
       delete [] dims;
-      dims;
+      dims = 0;
    }
 
 }
@@ -783,24 +783,29 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
 
    // Create a rectilinear grid by defining three arrays specifying the
    // coordinates in the x-y-z directions.
-   vtkFloatArray *xCoords = vtkFloatArray::New();
+   vtkFloatArray* aXCoords = vtkFloatArray::New();
+   aXCoords->SetNumberOfValues(_dimensions[2]);
    for (int i=0; i<_dimensions[2]; i++){ 
-     xCoords->InsertNextValue(_bz[i]);
+     aXCoords->SetValue(i,_bz[i]);
    }
-   vtkFloatArray *yCoords = vtkFloatArray::New();
+   vtkFloatArray* aYCoords = vtkFloatArray::New();
+   aYCoords->SetNumberOfValues(_dimensions[1]);
    for (int i=0; i<_dimensions[1]; i++){
-     yCoords->InsertNextValue(_by[i]);
+     aYCoords->SetValue(i,_by[i]);
    }  
-   vtkFloatArray *zCoords = vtkFloatArray::New();
+   vtkFloatArray* aZCoords = vtkFloatArray::New();
+   aZCoords->SetNumberOfValues(_dimensions[0]);
    for (int i=0; i<_dimensions[0]; i++){
-     zCoords->InsertNextValue(_bx[i]);
+     aZCoords->SetValue(i,_bx[i]);
    }  
  
    vtkRectilinearGrid* bGrid = vtkRectilinearGrid::New();
+   //bGrid->DebugOn();
    bGrid->SetDimensions(_dimensions[2],_dimensions[1],_dimensions[0]);
-   bGrid->SetXCoordinates(xCoords);
-   bGrid->SetYCoordinates(yCoords);
-   bGrid->SetZCoordinates(zCoords);
+   bGrid->SetXCoordinates(aXCoords);
+   bGrid->SetYCoordinates(aYCoords);
+   bGrid->SetZCoordinates(aZCoords);
+   bGrid->Print( cout );
 
    //add vtk interface--should be easy!!!
    int nScalars = _scalarNames.size();
@@ -818,9 +823,11 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
         cellData.clear();
         
      }else if(strstr(_scalarNames.at(i),"density")){
+        std::cout<<"*****************Adding density to grid***************"<<std::endl;
         cellData.push_back(_density);
         _addCellDataToGrid(bGrid,_scalarNames.at(i),cellData,
                          _numCells,1);
+        std::cout<<"*****************Done density to grid***************"<<std::endl;
         cellData.clear();
         
      }else if(strstr(_scalarNames.at(i),"energy")){
@@ -831,24 +838,28 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
         
      }	
    }
-
+   vtkFloatArray* bXCoords = vtkFloatArray::New();
+   bXCoords->SetNumberOfValues(_dimensions[2]);
    for (int i=0; i<_dimensions[2]; i++){ 
-     xCoords->InsertNextValue(_az[i]);
+     bXCoords->SetValue(i,_az[i]);
    }
-
+   vtkFloatArray* bYCoords = vtkFloatArray::New();
+   bYCoords->SetNumberOfValues(_dimensions[2]);
    for (int i=0; i<_dimensions[1]; i++){
-     yCoords->InsertNextValue(_ay[i]);
-   }
-
+     bYCoords->SetValue(i,_ay[i]);
+   }  
+   vtkFloatArray* bZCoords = vtkFloatArray::New();
+   bZCoords->SetNumberOfValues(_dimensions[0]);
    for (int i=0; i<_dimensions[0]; i++){
-     zCoords->InsertNextValue(_ax[i]);
-   }
+     bZCoords->SetValue(i,_ax[i]);
+   }  
+
 
    vtkRectilinearGrid* aGrid = vtkRectilinearGrid::New();
    aGrid->SetDimensions(_dimensions[2],_dimensions[1],_dimensions[0]);
-   aGrid->SetXCoordinates(xCoords);
-   aGrid->SetYCoordinates(yCoords);
-   aGrid->SetZCoordinates(zCoords);
+   aGrid->SetXCoordinates(bXCoords);
+   aGrid->SetYCoordinates(bYCoords);
+   aGrid->SetZCoordinates(bZCoords);
   
    //add vtk interface--should be easy!!!
    int nvectors = _vectorNames.size();
@@ -921,9 +932,12 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
    }
    aGrid->Delete();
    bGrid->Delete();
-   xCoords->Delete();
-   yCoords->Delete();
-   zCoords->Delete();
+   aXCoords->Delete();
+   aYCoords->Delete();
+   aZCoords->Delete();
+   bXCoords->Delete();
+   bYCoords->Delete();
+   bZCoords->Delete();
 }
 /////////////////////////////////////////////////////////////////////////////////////////
 void cfdHDFToVTK::_writeRectilinearCellDataToPointDataFile(vtkRectilinearGrid* cellGrid,
@@ -935,7 +949,7 @@ void cfdHDFToVTK::_writeRectilinearCellDataToPointDataFile(vtkRectilinearGrid* c
    dataConvertCellToPoint->PassCellDataOff();
    dataConvertCellToPoint->Update();
 
-   rGridPt->DeepCopy(dataConvertCellToPoint->GetRectilinearGridOutput());
+   rGridPt->ShallowCopy(dataConvertCellToPoint->GetRectilinearGridOutput());
    
    if(_viewGridBeforeWriting){
      viewCells(rGridPt,0);
@@ -970,12 +984,16 @@ void cfdHDFToVTK::_addCellDataToGrid(vtkDataSet* dSet,
    data->SetNumberOfTuples( nTuples );
    double* tuple = new double[nComponents];
    for( int j = 0; j < nTuples; j++ ){
-      //double* tuple = 0;
       for(int i = 0; i < nComponents; i++){
          tuple[i] = cellData.at(i)[j];      
       }
       data->SetTuple(j,tuple);
-     
+      if(j == 0|| j == 200 || j == 400 || j == 600){
+         std::cout<<"density: "<<tuple[0]<<" "<<j<<std::endl;
+      }
+      if(j == 24000|| j == 24200 || j == 24400 || j == 24600){
+         std::cout<<"density: "<<tuple[0]<<" "<<j<<std::endl;
+      }
    }
    dSet->GetCellData()->AddArray(data);
    data->Delete();
