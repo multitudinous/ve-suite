@@ -33,6 +33,7 @@
 #define CFD_TEACHER_H
 
 #include <vector>
+#include <string>
 
 class cfdCommandArray;
 class cfdDCS;
@@ -69,7 +70,7 @@ class cfdTeacher : public cfdGlobalBase
       cfdDCS*     _worldDCS;
       cfdNode**   node;  // array of nodes
       int numFiles;
-      std::vector<char*> pfbFileNames;
+	  std::vector<std::string> pfbFileNames;
       char * directory;
       int pfb_count;
       cfdWriteTraverser* _cfdWT;
