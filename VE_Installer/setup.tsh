@@ -24,6 +24,8 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
+setenv TAO_BUILD FALSE
+#setenv TAO_BUILD FALSE
 # TAO_BUILD can be set from outside this script to override the default of FALSE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
 if ( ! $?TAO_BUILD ) then
@@ -38,6 +40,7 @@ else if ( $TAO_BUILD != "TRUE" && $TAO_BUILD != "FALSE" ) then
    echo ""
 endif
 
+setenv CLUSTER_APP FALSE
 # CLUSTER_APP can be set from outside this script to override the default of FALSE
 # Make sure that CLUSTER_APP is set to either TRUE or FALSE...
 if ( ! $?CLUSTER_APP ) then
@@ -65,6 +68,7 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/IRIX32
    setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/vrjuggler-2.0-alpha4.irix-n32-pthread
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-deps
+   #setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha3.irix-n32-pthread
 
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
