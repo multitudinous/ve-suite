@@ -339,20 +339,20 @@ void cfdNavigate::updateNavigationFromGUI()
                this->IHdigital[6]->getData() == gadget::Digital::ON )        
    //CW rotation
    {
-      this->currentWandDirection = this->GetDirection();
+      //this->currentWandDirection = this->GetDirection();
 
       vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
          << this->currentWandDirection[1] << " : " 
          << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
       //yang-REI: the following block are moved from the intraFrame Function
-      if ( this->currentWandDirection[ 0 ] > 0.0f )
-      {
+      //if ( this->currentWandDirection[ 0 ] > 0.0f )
+      //{
          this->worldRot[ 0 ] -= 1.0f;
-      }
-      else 
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
+      //}
+      //else 
+      //{
+      //   this->worldRot[ 0 ] -= 1.0f;
+      //}
       this->worldDCS->setRot( this->worldRot[ 0 ], 
                               this->worldRot[ 1 ], 
                               this->worldRot[ 2 ] );   
@@ -361,19 +361,19 @@ void cfdNavigate::updateNavigationFromGUI()
                this->IHdigital[7]->getData() == gadget::Digital::ON )         
    //CCWrotation
    {
-      this->currentWandDirection = this->GetDirection();
+      //this->currentWandDirection = this->GetDirection();
       vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
          << this->currentWandDirection[1] << " : " 
          << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
       //yang-REI: the following block are moved from the intraFrame Function
-      if ( this->currentWandDirection[ 0 ] > 0.0f )
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      else 
-      {
+      //if ( this->currentWandDirection[ 0 ] > 0.0f )
+      //{
+      //   this->worldRot[ 0 ] -= 1.0f;
+      //}
+      //else 
+      //{
          this->worldRot[ 0 ] += 1.0f;
-      }
+      //}
       this->worldDCS->setRot( this->worldRot[ 0 ], 
                               this->worldRot[ 1 ], 
                               this->worldRot[ 2 ] );   
