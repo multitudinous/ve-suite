@@ -164,7 +164,7 @@ int GasSource::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSource::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*88/100, icon_h*37/75);
+  oports[0]=wxPoint(icon_w*54/60, icon_h*22/45);
   return ;
 }
 
