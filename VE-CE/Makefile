@@ -1,0 +1,74 @@
+# Create the OS-dependent directory name
+CFDHOSTTYPE?=	$(DZR_HOSTTYPE)
+VE_SUITE_HOME?= ../
+
+APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/Exe_server
+
+PLUGIN_HOME = $(VE_SUITE_HOME)/futuregen/Plugin
+IDL_HOME = $(VE_SUITE_HOME)/VESOpen
+
+all:
+	$(MAKE) NO_DEPEND=0 cxx
+	$(MAKE) $(APP_NAME)
+
+SRCS=\
+   moduleC.cpp \
+   moduleS.cpp \
+   Exe_server.cpp \
+   Executive_i.cpp \
+	interface.cpp \
+   package.cpp \
+   Network_Exec.cpp \
+   Scheduler.cpp \
+   string_ops.cpp \
+	Execute_Thread.cpp
+
+# Specify the OS-dependent directory name for object files and depends
+OBJDIR= $(CFDHOSTTYPE)
+DEPDIR= $(CFDHOSTTYPE)
+
+NO_DEPEND= YES
+
+# One of these must be uncommented.
+#DEBUG_APP?= TRUE
+OPTIM_APP?= TRUE
+
+EXTRA_CFLAGS+=
+
+EXTRA_CXXFLAGS+=
+
+EXTRA_DEFS+=
+
+EXTRA_LIBS+=
+
+LINKALL_ON= -all
+LINKALL_OFF=
+
+STATIC_ON= @APP_LINK_STATIC_ON@
+STATIC_OFF= @APP_LINK_STATIC_OFF@
+
+include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
+
+include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
+include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
+include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
+
+vpath %.cpp $(PLUGIN_HOME) $(IDL_HOME)/skel 
+
+EXTRA_CXXFLAGS += -I$(PLUGIN_HOME) -I$(IDL_HOME)/skel 
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+cxx: $(OBJS)
+
+# Create the OS-dependent directory for the executable. If the dir exists, 
+# 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
+${APP_NAME}: $(OBJS)
+	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+
+#install:
+#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+
+CLEAN_FILES+= $(APP_NAME)

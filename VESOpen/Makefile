@@ -12,8 +12,6 @@ srcdir= .
 # turn off dependencies for idl stuff, make clean
 NO_DEPEND= YES
 
-CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
-
 # list the cpp and h files here
 IDL_CXX_FILES= module.h \
                module.cpp \
