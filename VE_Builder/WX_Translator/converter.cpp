@@ -224,7 +224,7 @@ int ReadResFile(char *filename, resHead *resInfo)
   int next_reca_inc = 0;
   
   int byte_offset = 0;
-  int temp_int = 10;
+  //int temp_int = 10;
   int n_spx = 0;
   //float n_spx = 0;
 
@@ -996,7 +996,7 @@ int ReadSPTimesteps(char *filename)
 	FILE *MFIXfile;
 	int byte_offset = 0;
 	int next_rec, num_rec, timesteps;
-	int nstep = 0;
+	//int nstep = 0;
 
 
   if((MFIXfile = fopen(filename, "rb")) ==NULL)
@@ -1031,10 +1031,8 @@ int ReadSPFile(char *filename, int timestep, resHead *resInfo, spHead *spInfo, m
 {
 	FILE *MFIXfile;
 	int byte_offset = 0, timestep_offset = 0;
-	int timesteps;
-	int float_count = 0, blocks_per_timestep = 0;
-
-
+	int blocks_per_timestep = 0;
+	//int float_count = 0;
 
   if((MFIXfile = fopen(filename, "rb")) ==NULL)
   {
@@ -1074,7 +1072,7 @@ int ReadSPFile(char *filename, int timestep, resHead *resInfo, spHead *spInfo, m
   byte_offset += 512;
   fseek(MFIXfile, byte_offset, SEEK_SET);
 
-  timesteps = (spInfo->nextRec - 4)/spInfo->numRec;
+  //int timesteps = (spInfo->nextRec - 4)/spInfo->numRec;
 	
   if(resInfo->ijkMax2 % 128 == 0)
   {
@@ -1085,7 +1083,7 @@ int ReadSPFile(char *filename, int timestep, resHead *resInfo, spHead *spInfo, m
 	  blocks_per_timestep = (resInfo->ijkMax2 / 128) + 1;
   }
  
-
+   //cout << " Blocks per timestep = " << blocks_per_timestep << endl;
  
    if(memcmp(filename+(strlen(filename)-4), ".SP1", 4) == 0)
    {
@@ -1104,12 +1102,20 @@ int ReadSPFile(char *filename, int timestep, resHead *resInfo, spHead *spInfo, m
 		timestep_offset += 512;
 		fseek(MFIXfile, timestep_offset, SEEK_SET);
 
+		//cout << "Timestep offset = " << timestep_offset << endl;
 
 		for(int i = 0; i <resInfo->ijkMax2; i++)
 		{
 		  fread(&data->sp1Array1[i], sizeof(float), 1, MFIXfile);
 		  byte_swap((char *)&data->sp1Array1[i], sizeof(float));
 		}
+
+		//if(timestep == 0){
+		//  for(int i = 0; i <resInfo->ijkMax2; i++)
+		//  {
+		//    cout << "Index = " << i << "  Data = " << data->sp1Array1[i] << endl;
+		//  }
+		//}
    }
    else if(memcmp(filename+(strlen(filename)-4), ".SP2", 4) == 0)
    {

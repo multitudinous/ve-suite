@@ -40,10 +40,10 @@
 #define FORMATSELECTOR_H
 
 #include <wx/wx.h>
-#include <wx/image.h>
+//#include <wx/image.h>
 #include <wx/string.h>
 
-#include <wx/splash.h>
+//#include <wx/splash.h>
 
 // Other dialogs
 #include "mFixTranslator.h"

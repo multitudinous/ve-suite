@@ -1,15 +1,17 @@
-VTK_HOME = ../VTK/
+#VTK_HOME = ../VTK/
+VTK_HOME = /.nfs/tera/modeling/bdotson/install_tests/version1.0.3/test1/VTK/
 
 VTK_INCLUDES =  -I$(VTK_HOME)Common -I$(VTK_HOME)Graphics \
 		-I$(VTK_HOME)Filtering -I$(VTK_HOME) \
                 -I$(VTK_HOME)Rendering  -I$(VTK_HOME)IO \
 		-I$(VTK_HOME)Parallel
 
-INCLUDE_FLAGS = $(VTK_INCLUDES) 
- 
+INCLUDE_FLAGS = $(VTK_INCLUDES)
+
 LINK_FLAGS = -L$(VTK_HOME)bin
 
-OBJECTS = FormatSelector.o converter.o FluentTranslator.o mFixTranslator.o UnstructuredGridWriter.o
+OBJECTS = FormatSelector.o converter.o FluentTranslator.o \
+	   mFixTranslator.o UnstructuredGridWriter.o
 
 LIBS = -lvtkParallel  -lvtkexpat \
 	 -lvtkfreetype -lvtkftgl -lvtkRendering \
@@ -35,6 +37,7 @@ mFixTranslator.o: mFixTranslator.cpp mFixTranslator.h
 
 UnstructuredGridWriter.o: UnstructuredGridWriter.cpp UnstructuredGridWriter.h
 	c++ -c `wx-config --cxxflags` -Wno-deprecated UnstructuredGridWriter.cpp $(INCLUDE_FLAGS)
+
 
 clean:
 	rm *.o  cfdtrans

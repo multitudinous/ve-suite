@@ -14,7 +14,7 @@ all:
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 
-srcdir=		.
+srcdir= .
 
 SRCS=\
    converter.cpp \
@@ -24,25 +24,25 @@ SRCS=\
    UnstructuredGridWriter.cpp
 
 # Specify the OS-dependent directory name for object files and depends
-OBJDIR=	$(CFDHOSTTYPE)
-DEPDIR=	$(CFDHOSTTYPE)
+OBJDIR= $(CFDHOSTTYPE)
+DEPDIR= $(CFDHOSTTYPE)
 
 NO_DEPEND= YES
 # One of these must be uncommented.
-#DEBUG_APP?=		TRUE
-OPTIM_APP?=		TRUE
+#DEBUG_APP?=TRUE
+OPTIM_APP?=TRUE
 
-EXTRA_CFLAGS+=		 
+EXTRA_CFLAGS+=  
 EXTRA_CXXFLAGS+= ${WX_CXX}
 EXTRA_DEFS+=
-#EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG
-#EXTRA_OPTIM_FLAGS+=	-O2 -OPT:Olimit=0 -D_OPT
+#EXTRA_DEBUG_FLAGS+= -g -D_DEBUG
+#EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
-LINKALL_ON=		-all
-LINKALL_OFF=		
+LINKALL_ON= -all
+LINKALL_OFF=
 
-STATIC_ON=		@APP_LINK_STATIC_ON@
-STATIC_OFF=		@APP_LINK_STATIC_OFF@
+STATIC_ON= @APP_LINK_STATIC_ON@
+STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk

@@ -332,8 +332,8 @@ protected:
 	void OnCheckboxCGNS(wxCommandEvent& event);
 	void OnButtonSelectAll(wxCommandEvent& event);
 	void OnButtonUnselectAll(wxCommandEvent& event);
-	void OnButtonSelectAllOptions(wxCommandEvent& event);
-	void OnButtonUnselectAllOptions(wxCommandEvent& event);
+	//void OnButtonSelectAllOptions(wxCommandEvent& event);
+	//void OnButtonUnselectAllOptions(wxCommandEvent& event);
 	void OnSelectAllOutputVariablesButton(wxCommandEvent& event);
 	void OnUnselectAllOutputVariablesButton(wxCommandEvent& event);
 	void OnTextCtrlBeginningTS(wxCommandEvent& event);
