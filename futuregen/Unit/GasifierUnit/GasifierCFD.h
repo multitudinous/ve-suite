@@ -201,6 +201,9 @@ public:
   double _pressure;
   double _press_drop;
 
+  // Oxidant Stream
+  Gas *_ox_in;
+
   // Misc
   std::string _work_dir;
   int _prt_restart;

@@ -679,6 +679,8 @@ bool GasifierCFD::execute (Gas *ox_in, Gas *gas_out, summary_values *summaries)
     fclose(stream);
   }
 
+  _ox_in = ox_in;
+
   _pressure = ox_in->gas_composite.P - _press_drop;
   
   if(!get_running()) {
@@ -1486,7 +1488,7 @@ void GasifierCFD::load_oxidant (float *tf0, float *hsub0, float *densf0, float *
 	  float *cpsf0, float *bf0, float *specfoo, float *spec0, int *nel, int *nsp,
 	  char *spec_name, char *wic_name, unsigned int s1len, unsigned int s2len)
 {
-
+  // Gas *_ox_in is oxidant
 }
 
 //******************************************************************************
