@@ -30,7 +30,7 @@ void Body_UI_i::UpdateNetwork (
     std::cout<<UIName_<<" :UpdateNetwork called"<<std::endl;
     
     ui_network_->LoadS(network);
-    
+     
   }
   
 void Body_UI_i::UpdateModuleUI (
@@ -100,10 +100,10 @@ void Body_UI_i::Raise (
     , Error::EUnknown
   ))
   {
-    cout << "MESSAGE: " << notification << endl;
+    // Add your implementation here
 	
     if (string(notification)!="")
-      ;//frame_->logwindow->AppendText(notification);
+      frame_->logwindow->AppendText(notification);
   }
   
 void Body_UI_i::SetUIFrame(AppFrame* frame)
