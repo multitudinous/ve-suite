@@ -6,12 +6,16 @@
 #this is typically defined in your .cshrc file
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
 
-#echo "uname is" `uname`
-#echo "uname -n is" `uname -n`
-setenv CFD_LIBS `uname`_LIB
-setenv VE_LIBS `uname`
-#echo "CFD_LIBS" ${CFD_LIBS}
-setenv CFDHOSTTYPE ${HOSTTYPE}
+if ( -e /etc/redhat-release ) then
+   # extract some words from file to create something like RedHat_8.0
+   setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
+else if ( -e /etc/SuSE-release ) then
+   # extract first and third words from file to create something like SuSE_9.1
+   setenv CFDHOSTTYPE `head -1 /etc/SuSE-release | awk -F" " '{print $1 "_" $3}'`
+else
+   #echo "uname is" `uname`
+   setenv CFDHOSTTYPE `uname`
+endif
 
 #setenv TAO_BUILD TRUE
 setenv TAO_BUILD FALSE
@@ -25,8 +29,8 @@ setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 set VTK_HOME_DIR=/home/users/mccdo/vtk-builds
 
-if ( `uname` == "IRIX64" ) then
-   #echo "specifying libraries for irix"
+#echo "specifying libraries for" ${CFDHOSTTYPE}
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR ${VTK_HOME_DIR}/IRIX32
    setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-pthread
@@ -52,19 +56,38 @@ if ( `uname` == "IRIX64" ) then
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
    endif
       
-else if ( `uname` == "Linux" ) then
-   #echo "specifying libraries for linux"
+else if ( ${CFDHOSTTYPE} == "RedHat_8.0" ) then
    setenv VTK_BASE_DIR ${VTK_HOME_DIR}/Linux-rh8
 
-   if ( ${HOSTTYPE} == "i386-linux" ) then
-      setenv JDK_HOME /usr/java/j2sdk1.4.2_03
-      setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80
-      setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80-deps
+   setenv JDK_HOME /usr/java/j2sdk1.4.2_03
+   setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80
+   setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80-deps
+
+   setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include/boost-1_31
+   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
+
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
+      setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
+      #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
+
+      setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
    else
-      setenv JDK_HOME /usr/lib/java2
-      setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/Suse-9.1-alpha4
-      setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
+      setenv OMNI_HOME /home/vr/Juggler/linux-rh80
+      #setenv OMNI_HOME /home/vr/Juggler/linux-fc1
+      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
    endif
+
+else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
+   setenv VTK_BASE_DIR ${VTK_HOME_DIR}/Linux-rh8
+
+   setenv JDK_HOME /usr/lib/java2
+   setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/Suse-9.1-alpha4
+   setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
 
    setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include/boost-1_31
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
@@ -87,13 +110,13 @@ else if ( `uname` == "Linux" ) then
 
 else
    echo "ERROR: Unsupported operating system"
-   echo "       CFD_LIBS and OMNI_HOME are undefined"
+   echo "       OMNI_HOME, etc. are undefined"
 endif
 
 setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
 setenv DZR_BASE_DIR   ${VJ_BASE_DIR}/share/Doozer
 setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
-setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${VE_LIBS}:${VJ_DEPS_DIR}/bin
+setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
 setenv PATH ${WX_HOME}/bin:${PATH}
 setenv PATH ${JDK_HOME}/bin:${PATH}
 if ( ${TAO_BUILD} == "TRUE" ) then

@@ -1,7 +1,4 @@
-UNAME= $(shell uname -s)
-LIBS_DIR= $(VE_SUITE_HOME)/VE_Builder/Utilities/$(UNAME)_LIB
-
-APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/makeVtkSurface
+APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/makeVtkSurface
 
 all:
 	$(MAKE) NO_DEPEND=0 cxx
@@ -9,7 +6,6 @@ all:
 #	-$(MAKE) install
 
 srcdir=		../../.
-
 
 SRCS=\
    makeVtkSurface.cpp \
@@ -19,8 +15,8 @@ SRCS=\
    viewCells.cpp \
    cfdGrid2Surface.cpp
 
-OBJDIR=	$(LIBS_DIR)
-DEPDIR=	$(LIBS_DIR)
+OBJDIR=../../$(CFDHOSTTYPE)
+DEPDIR=../../$(CFDHOSTTYPE)
 NO_DEPEND= YES
 # One of these must be uncommented.
 DEBUG_APP?=		TRUE
@@ -50,7 +46,6 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer $(VE_SUITE_HOME)/VE_Builder/Translator
 vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Translator
 #vpath %.h   $(VE_SUITE_HOME)/VE_Xplorer $(VE_SUITE_HOME)/VE_Builder/Translator
-
 
 # -----------------------------------------------------------------------------
 # Application build targets.

@@ -6,13 +6,6 @@
 #this is typically defined in your .cshrc file
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
 
-echo "uname is" `uname`
-echo "uname -n is" `uname -n`
-
-export CFD_LIBS=`uname`_LIB
-export VE_LIBS=`uname`
-echo "CFD_LIBS" ${CFD_LIBS}
-
 export PFNFYLEVEL=2
 export VPR_DEBUG_NFY_LEVEL=0
 export VPR_DEBUG_ENABLE=1
@@ -30,8 +23,7 @@ export LD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:/usr/lib/debug:${VTK_HOME_DIR}/bin:/us
 
 export TWEEK_BASE_DIR=${VJ_BASE_DIR}
 export DZR_BASE_DIR=${VJ_BASE_DIR}/share/Doozer
-export PATH=${PATH}:${VE_SUITE_HOME}/VE_Xplorer:${VE_SUITE_HOME}/VE_Builder/bin
-export PATH=${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/VE_Builder/bin/${VE_LIBS}
+export PATH=${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}
 
 echo ""
 echo "Now you may type 'gmake' to build the application"

@@ -1,6 +1,3 @@
-# Create the OS-dependent directory name
-UNAME= $(shell uname -s)
-
 # -----------------------------------------------------------------------------
 # Build targets.
 # -----------------------------------------------------------------------------
@@ -23,7 +20,7 @@ makeVtkSurface meshViewer convertVTK2Binary \
       moveFieldToPointData whatIsScalarRange \
       combineFluentParticleFile mergeVertices appendVTK \
       createMiniFlowdata convertCellDataToPointData ::
-	mkdir -p $(VE_SUITE_HOME)/bin/$(UNAME)
+	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
 	cd ./mk/$@ && $(MAKE) all
 
 # -----------------------------------------------------------------------------

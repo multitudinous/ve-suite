@@ -22,7 +22,7 @@ ifdef OMNI_HOME
 
    CORBA_DEFINES = -D__OSVERSION__=6 
 
-   ifeq ($(CFD_LIBS), Linux_LIB)
+   ifeq (`uname`, Linux)
       CORBA_DEFINES += -D__x86__ -D__linux__
       OMNI_LIB = ${OMNI_HOME}/lib
    else
@@ -69,8 +69,7 @@ endif
 
 #__________________________________________________________
 # Operating System Specific stuff
-# CFD_LIBS is defined in setup.tsh
-ifeq ($(CFD_LIBS), Linux_LIB)
+ifeq (`uname`, Linux)
  #  EXTRA_FLAGS = -O2 -DHAVE_CONFIG_H
 endif
 
@@ -177,10 +176,10 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 # for multiple platforms may be maintained simultaneously.
 
 #OBJDIR is the place that the object files are stored.
-#OBJDIR=	$(CFD_LIBS)
+OBJDIR=	$(CFDHOSTTYPE)
 
 #DEPDIR is the place that the dependency files are stored.
-#DEPDIR=	$(CFD_LIBS)
+DEPDIR=	$(CFDHOSTTYPE)
 
 #__________________________________________________________
 # Where is Paul Rajlich's vtkActorToPF directory?
@@ -190,29 +189,12 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-# Create the OS-dependent directory name
-UNAME= $(shell uname -s)
-
 ifeq ($(CLUSTER_APP), TRUE)
-   APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/project_cluster-$(CFDHOSTTYPE)
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project_cluster
    EXTRA_CXXFLAGS+= -D_CLUSTER
    EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
-   #OBJDIR is the place that the object files are stored.
-   #OBJDIR=	$(SYS_SETTING)
-   OBJDIR=	$(CFD_LIBS)-$(CFDHOSTTYPE)-Cluster
-
-   #DEPDIR is the place that the dependency files are stored.
-   #DEPDIR=	$(SYS_SETTING)
-   DEPDIR=	$(CFD_LIBS)-$(CFDHOSTTYPE)-Cluster
 else
-   APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/project-$(CFDHOSTTYPE)
-   #OBJDIR is the place that the object files are stored.
-   #OBJDIR=	$(SYS_SETTING)
-   OBJDIR=	$(CFD_LIBS)-$(CFDHOSTTYPE)
-
-   #DEPDIR is the place that the dependency files are stored.
-   #DEPDIR=	$(SYS_SETTING)
-   DEPDIR=	$(CFD_LIBS)-$(CFDHOSTTYPE)
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project
 endif
 
 default: all
@@ -220,7 +202,7 @@ default: all
 # Create the OS-dependent directory for the executable. If the dir exists, 
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 all:
-	mkdir -p $(VE_SUITE_HOME)/bin/$(UNAME)
+	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
 #	$(MAKE) cxx_idl
 #	$(MAKE) java_idl
 	$(MAKE) NO_DEPEND=0 cxx
