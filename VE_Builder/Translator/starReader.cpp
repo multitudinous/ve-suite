@@ -950,6 +950,7 @@ void starReader::ReadParameterFile( void )
    char tagName[ 50 ];
    char tagValue[ 50 ];
    int  scaleIndexSpecified = 0;
+   int  scaleFactorSpecified = 0;
   
    while( 1 )
    {
@@ -1018,6 +1019,7 @@ void starReader::ReadParameterFile( void )
       }
       else if ( strcmp("SCALEFACTOR", tagName)==0 )
       {
+         scaleFactorSpecified = 1;
          // the use of this option implies that SCALEINDEX=1 (Custom scaling)
          this->scaleFactor = atof( tagValue );            
          if ( this->debug )
@@ -1069,8 +1071,16 @@ void starReader::ReadParameterFile( void )
       this->scaleIndex = 1;
    }
 
+   if ( this->scaleIndex == 1 && !scaleFactorSpecified )
+   {
+      std::cerr << "\n!!! Custom scale factor requested but not provided!\n"
+                << "Exiting.\n"
+                << std::endl;
+      exit(1);
+   }
+
    // check for indeterminate case -- not custom, but scale factor specified
-   if ( this->scaleIndex != 1 && this->scaleFactor != 1.0 )
+   if ( this->scaleIndex != 1 && scaleFactorSpecified )
    {
       std::cerr << "\n!!! Indeterminate case -- "
                 << "not custom, but scale factor specified!\n"
