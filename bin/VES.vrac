@@ -1,9 +1,9 @@
 #!/bin/csh -f
-# 
+ 
 # Set environment variables and paths for running the program
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
 setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_Nightly
-#
+
 # Set the TAO nameServer properties used by the run scripts
 #setenv TAO_MACHINE lego.vrac.iastate.edu
 setenv TAO_MACHINE localhost
@@ -55,13 +55,23 @@ switch ($1)
   breaksw
 
   case -nserv:
+    killall Naming_Service 
+    killall Exe_server 
+    echo Starting TAO Naming Service...
     ${TAO_ROOT}/orbsvcs/Naming_Service/Naming_Service \
-       -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
+    -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
     sleep 5
+    echo TAO Naming Service Started
+    echo Starting VE-CE...
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/Exe_server \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &
   breaksw
   
+  case -shutdown:
+    killall Naming_Service 
+    killall Exe_server 
+  breaksw
+
   case -menu:
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/WinClient \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
@@ -143,6 +153,7 @@ switch ($1)
   echo "  "-meshView = view any vtk file
   echo " "-scalRange = view scalar range of any vtk file
   echo "       "-doc = view documentation for setting up a CFD post process case
+  echo "  "-shutdown = shutdown VE-CE and TAO NameService
   echo ""
   
 endsw
