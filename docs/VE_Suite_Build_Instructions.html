@@ -7,114 +7,121 @@
 <link href="Ve-Suite.css" rel="stylesheet" type="text/css">
 </head>
 
-<p class=Title1>Building VE-Suite for Windows</p>
+<p class="Title1">Building VE-Suite for Windows</p>
 
-<p class=bodytext>This is our initial port of VE-Suite to windows. It must be built in Visual Studio 7.1(2003). Visual Studio 7.0 has many known issues and we can not provide support for it.</p>
+<p class="bodytext">This is our initial port of VE-Suite to windows. It must be built in Visual Studio 7.1(2003). Visual Studio 7.0 has many known issues and we can not provide support for it.</p>
 
 <dl>
-   <p class=Title2>Dependencies</p>
+   <p class="Title2">Dependencies</p>
       <dd>
-      <p class=bodytext><a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a> to check out and update VE_Suite from ISU's code repository.</p>
+      <p class="bodytext"><a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a> to check out and update VE_Suite from ISU's code repository.</p>
 
-      <p class=bodytext><a href="http://msdn.microsoft.com/visualc/productinfo/">Visual Studio 7.1(2003)</a> to compile the C++ code.</p>
+      <p class="bodytext"><a href="http://msdn.microsoft.com/visualc/productinfo/">Visual Studio 7.1(2003)</a> to compile the C++ code.</p>
 
-      <p class=bodytext><a href="http://sgi.com/software/performer/downloads.html">OpenGL Performer (3.1.1)</a> to manage the scenegraph (the demo edition is fine).</p>
+      <p class="bodytext"><a href="http://sgi.com/software/performer/downloads.html">OpenGL Performer (3.1.1)</a> to manage the scenegraph (the demo edition is fine).</p>
 
-      <p class=bodytext><a href="http://vtk.org/get-software.php#interim">VTK (4.4)</a> to render the visualization objects.</p>
+      <p class="bodytext"><a href="http://vtk.org/get-software.php#interim">VTK (4.4)</a> to render the visualization objects.</p>
 
-      <p class=bodytext><a href="http://www.cmake.org/files/v2.0/CMSetup202.exe">CMake 2.0.2 Windows (Installer)</a> to install CMake needed to build vtk project files. (We recommend 2.0.2 because we have seen install issues with CMake 2.0.3)</p>
+      <p class="bodytext"><a href="http://www.cmake.org/files/v2.0/CMSetup202.exe">CMake 2.0.2 Windows (Installer)</a> to install CMake needed to build vtk project files. (We recommend 2.0.2 because we have seen install issues with CMake 2.0.3)</p>
 
-      <p class=bodytext><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71.zip?download">VRJuggler (2.0alpha4.win32-vc71)</a> for management of the virtual environment.</p>
+      <p class="bodytext"><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71.zip?download">VRJuggler (2.0alpha4.win32-vc71)</a> for management of the virtual environment.</p>
 
-      <p class=bodytext><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71-deps.zip?download">VRJuggler dependencies zip file</a></p>
+      <p class="bodytext"><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71-deps.zip?download">VRJuggler dependencies zip file</a></p>
 
-      <p class=bodytext><a href="http://java.sun.com/j2se/1.4.2/download.html">Java 2 SDK</a> needed for juggler's java-based VRJconfig program.</p>
+      <p class="bodytext"><a href="http://java.sun.com/j2se/1.4.2/download.html">Java 2 SDK</a> needed for juggler's java-based VRJconfig program.</p>
 
-      <p class=bodytext><a href="http://omniorb.sourceforge.net/">omniORB (4.0.3)</a> for communication between the gui and the app.</p>
+      <p class="bodytext"><a href="http://omniorb.sourceforge.net/">omniORB (4.0.3)</a> for communication between the gui and the app.</p>
 
-      <p class=bodytext><a href="http://www.wxwidgets.org/">wxWidgets</a> to compile and run the gui.</p>
+      <p class="bodytext"><a href="http://www.wxwidgets.org/">wxWidgets</a> to compile and run the gui.</p>
 
-      <p class=Title2>Notes on installation of dependencies</p>
+      <p class="Title2">Notes on installation of dependencies</p>
 
       <ul>
-      <li class=bodytext><p class=bodytext>After TortoiseSVN is installed, you can check out the code provided you have an account registered with ISU’s repository. Create a VE_Suite folder. Go to VE_Suite folder and right-mouse click, choose "Checkout...". For URL, enter https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite.</p>
+      <li class="bodytext"><p class="bodytext">After TortoiseSVN is installed, you can check out the code provided you have an account registered with ISU’s repository. Create a VE_Suite folder. Go to VE_Suite folder and right-mouse click, choose "Checkout...". For URL, enter https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite.</p>
 
-      <li class=bodytext><p><span class=bodytext>Alternatively, if you get the VE-Suite source code as a compressed tarball, some unzip utilities may not maintain the correct directory structure.&nbsp; This can be fixed by unzipping the files on a Unix-based system and then moving the files to the windows machine.<o:p></o:p></span></p>
+      <li class="bodytext"><p><span class="bodytext">Alternatively, if you get the VE-Suite source code as a compressed tarball, some unzip utilities may not maintain the correct directory structure.&nbsp; This can be fixed by unzipping the files on a Unix-based system and then moving the files to the windows machine.<o:p></o:p></span></p>
 
-      <li class=bodytext><p class=bodytext>While the default locations for installations will work, we recommend creating a directory in the root (C:\) directory to minimize the path lengths and the accompanying potential for typos when configuring environment settings.</p>
+      <li class="bodytext"><p class="bodytext">While the default locations for installations will work, we recommend creating a directory in the root (C:\) directory to minimize the path lengths and the accompanying potential for typos when configuring environment settings.</p>
+      </ul>
 
-      <p class=bodytextemph>vtk-specific notes<span class=bodytext>
+      <p class="bodytextemph">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vtk-specific notes</p>
+      <ul>
+      <li class="bodytext"><p class="bodytext">After downloading the compressed vtk source code and the CMake installer, unzip the vtk source to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease and run CMSetup202.exe to install CMakeSetup.</p>
 
-      <li class=bodytext><p class=bodytext>After downloading the compressed vtk source code and the CMake installer, unzip the vtk source to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease and run CMSetup202.exe to install CMakeSetup.</p>
+      <li class="bodytext"><p class="bodytext">Go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease. You will have a "VTK" folder containing the vtk source code. Create two additional folders: "build" and "install".</p>
 
-      <li class=bodytext><p class=bodytext>Go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease. You will have a "VTK" folder containing the vtk source code. Create two additional folders: "build" and "install".</p>
+      <li class="bodytext"><p class="bodytext">Run CMakeSetup, and enter C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\VTK as source code location and C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\build as the place to build the binaries. Check the box "Show Advanced Values" and press "Configure".</p>
 
-      <li class=bodytext><p class=bodytext>Run CMakeSetup, and enter C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\VTK as source code location and C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\build as the place to build the binaries. Check the box "Show Advanced Values" and press "Configure".</p>
-
-      <li class=bodytext><p class=bodytext>Change some options from their default values:</p>
+      <li class="bodytext"><p class="bodytext">Change some options from their default values:</p>
       <ol>
-      <li class=bodytext><p class=bodytext>BUILD_SHARED_LIBS to ON</p>
-      <li class=bodytext><p class=bodytext>BUILD_TESTING to OFF</p>
-      <li class=bodytext><p class=bodytext>CMAKE_INSTALL_PREFIX to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\install</p>
-      <li class=bodytext><p class=bodytext>VTK_USE_HYBRID to ON</p>
-      <li class=bodytext><p class=bodytext>VTK_USE_PARALLEL to ON</p>
+      <li class="bodytext"><p class="bodytext">BUILD_SHARED_LIBS to ON</p>
+      <li class="bodytext"><p class="bodytext">BUILD_TESTING to OFF</p>
+      <li class="bodytext"><p class="bodytext">CMAKE_INSTALL_PREFIX to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\install</p>
+      <li class="bodytext"><p class="bodytext">VTK_USE_HYBRID to ON</p>
+      <li class="bodytext"><p class="bodytext">VTK_USE_PARALLEL to ON</p>
       </ol>
 
-      <li class=bodytext><p class=bodytext>Press "Configure" (possibly need to do it twice), then "OK".</p>
+      <li class="bodytext"><p class="bodytext">Press "Configure" (possibly need to do it twice), then "OK".</p>
 
-      <li class=bodytext><p class=bodytext>Go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\build. Double click on "VTK.sln"".</p>
+      <li class="bodytext"><p class="bodytext">Go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\build. Double click on "VTK.sln".</p>
 
-      <li class=bodytext><p class=bodytext>Left-click on ALL_BUILD, then right-click and select "Build".</p>
+      <li class="bodytext"><p class="bodytext">Left-click on ALL_BUILD, then right-click and select "Build".</p>
 
-      <li class=bodytext><p class=bodytext>When the build is finished, go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\build\CMake\Debug and move the .dll files up one level.</p>
+      <li class="bodytext"><p class="bodytext"><span class="bodytextemph">Required "hack": </span>When the build is finished, go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\build\CMake\Debug and move the .dll files up one level.</p>
 
-      <li class=bodytext><p class=bodytext>Return to Visual Studio and left-click on INSTALL, then right-click and select "Build".</p>
+      <li class="bodytext"><p class="bodytext">Return to Visual Studio and left-click on INSTALL, then right-click and select "Build".</p>
 
       </ul>
 </dl>
 
 <dl>
-   <p class=Title2>Environment Settings</p>
+   <p class="Title2">Environment Settings</p>
       <dd>
-      <p class=bodytext>To set up the build environment:</p>
+      <p class="bodytext">To set up the build environment:</p>
 
       <ol>
-      <li class=bodytext><p class=bodytext>Perform a one-time edit of the environment variables that are defined in the setup batch file (./VE_Installer/vesuite.OMNIBUILD.setup.bat). If the paths of your environment variables contain spaces, you need to put the directory containing the spaces in quotation marks.</p>
+      <li class="bodytext"><p class="bodytext">Perform a one-time edit of the environment variables that are defined in the setup batch file (./VE_Installer/vesuite.OMNIBUILD.setup.bat). If the paths of your environment variables contain spaces, you need to put the directory containing the spaces in quotation marks.</p>
 
-      <p class=bodytextemph>Example: <span class=bodytext>set VTK_HOME=C:\&#8221;Documents and Settings&#8221;\user\Desktop\vtk<o:p></o:p></span></p>
+      <p class="bodytext"><span class="bodytextemph">Example: </span>set VTK_HOME=C:\&#8221;Documents and Settings&#8221;\user\Desktop\vtk</p>
 
-      <li class=bodytext><p class=bodytext>Run the batch file:</p>
+      <li class="bodytext"><p class="bodytext">Run the batch file:</p>
 
-      <p class=bodytext>./VE_Installer/vesuite.OMNIBUILD.setup.bat</p>
+      <p class="bodytext">./VE_Installer/vesuite.OMNIBUILD.setup.bat</p>
 
-      <p class=bodytext>This will set the defined environment variables and launch a session of Visual Studio with the VE-Suite project loaded. The project should be ready to build.</p>
+      <p class="bodytext">This will set the defined environment variables and launch a session of Visual Studio with the VE-Suite project loaded. The project should be ready to build.</p>
       </ol>
 </dl>
 
 <dl>
-   <p class=Title2>VE-Suite Project File Options</p>
+   <p class="Title2">VE-Suite Project File Options</p>
    <dd>
-      <p class=bodytext>Currently there are two configurations available: Debug_OMNI and Release_OMNI.</p>
+      <p class="bodytext">Currently there are two configurations available: Debug_OMNI and Release_OMNI.</p>
 </dl>
 
 <dl>
-   <p class=Title2>Running VE_Xplorer</p>
+   <p class="Title2">Running VE_Xplorer</p>
    <dd>
-      <p class=bodytext>Edit the line in your $(VE_SUITE_HOME)\VE_Installer\omniOrb4.cfg that contains "InitRef" to be:</p>
+      <p class="bodytext">Edit the line in your $(VE_SUITE_HOME)\VE_Installer\omniOrb4.cfg that contains "InitRef" to be:</p>
 
-      <p class=computer>InitRef = NameService=corbaname::localhost:2809</p>
+      <p class="computer">&nbsp;&nbsp;&nbsp; InitRef = NameService=corbaname::localhost:2809</p>
 
-      <p class=bodytext>You need to have omniNames started to run VE_Xplorer. If omniNames is not running, double click on $(VE_SUITE_HOME)\VE_Installer\omninamesStart.bat, or type in a command window, </p>
+      <p class="bodytext">You need to have omniNames started to run VE_Xplorer. If omniNames is not running, double click on $(VE_SUITE_HOME)\VE_Installer\omninamesStart.bat, or type in a command window, </p>
 
-      <span class=computer>omniNames -start 2809</span></p>
+      <p class="computer">omniNames -start 2809</span></p>
 
       <p class=bodytext>To run the solution from within Visual Studio, change the working directory in the Configuration Properties tab to point to the directory where your VE-Suite parameter file is located (for example, change the working directory to $(VE_SUITE_HOME)\VE_TestSuite)</p>
 
-      <p class=bodytext>You will also need to pass in your juggler config files as command arguments on the configuration properties tab. With the three projects still open, right-click on the VE_Xplorer project file, and select properties. For simulation mode, you add the following to your command arguments section:</p>
+      <p class="computer">&nbsp;&nbsp;&nbsp; omniNames -start 2809</p>
 
-      <p class=bodytext>$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</p>
+      <p class="bodytext">To run the solution from within Visual Studio, change the working directory in the Configuration Properties tab to point to the directory where your VE-Suite parameter file is located (for example, change the working directory to $(VE_SUITE_HOME)\VE_TestSuite)</p>
 
-      <p class=bodytext>$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.wand.mixin.jconf</p>
+      <p class="bodytext">You will also need to pass in your juggler config files as command arguments on the configuration properties tab. With the three projects still open, right-click on the VE_Xplorer project file, and select properties. For simulation mode, you add the following to your command arguments section:</p>
+
+      <p class="bodytext">$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</p>
+
+      <p class="bodytext">$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.wand.mixin.jconf</p>
+
+      <p class="bodytext">After you enter a parameter file name and the scene loads, double click on <span class="computer">$(VE_SUITE_HOME)\bin\ve_conductor.bat</span> to bring up the gui.</p>
 </dl>
 
 </body>
