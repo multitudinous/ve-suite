@@ -208,7 +208,7 @@ void VtkFactory::addScalar(int var_id, std::string name)
     m_grid->GetCellData()->AddArray(scalar);
 }
 
-void VtkFactory::addVector(vector<int> var_ids, std::string name )
+void VtkFactory::addVector(std::vector<int> var_ids, std::string name )
 {
     vtkDoubleArray *vector = vtkDoubleArray::New();
     int nVars = var_ids.size();
@@ -246,7 +246,7 @@ void VtkFactory::addVector(vector<int> var_ids, std::string name )
     m_grid->GetCellData()->SetActiveVectors(name.c_str() );
 }
 
-void VtkFactory::addVectorAsScalar(vector<int> var_ids, std::string name )
+void VtkFactory::addVectorAsScalar(std::vector<int> var_ids, std::string name )
 {
     vtkDoubleArray *vector = vtkDoubleArray::New();
     int nVars = var_ids.size();
@@ -307,7 +307,8 @@ void VtkFactory::addParentFlag()
     m_grid->GetCellData()->AddArray(scalar);
 }
 
-void VtkFactory::toFile( std::string filename, bool isXML = false, bool isBinary = true )
+//void VtkFactory::toFile( std::string filename, bool isXML = false, bool isBinary = true )
+void VtkFactory::toFile( std::string filename, bool isXML, bool isBinary )
 {
 
     /* xml writer does not seem to read into paraview because the number of points 

@@ -1,6 +1,9 @@
 #VTK_HOME = ../VTK/
 VTK_HOME = /.nfs/tera/modeling/bdotson/install_tests/version1.0.3/test1/VTK/
 
+#Blitz Home directory
+BLITZ_HOME = /.nfs/tera/modeling/bdotson/cfd_translator/fluent_reader.1.0.0/Blitz++-0.7
+
 VTK_INCLUDES =  -I$(VTK_HOME)Common -I$(VTK_HOME)Graphics \
 		-I$(VTK_HOME)Filtering -I$(VTK_HOME) \
                 -I$(VTK_HOME)Rendering  -I$(VTK_HOME)IO \
@@ -8,13 +11,15 @@ VTK_INCLUDES =  -I$(VTK_HOME)Common -I$(VTK_HOME)Graphics \
 
 CXX = c++
 
-INCLUDE_FLAGS = $(VTK_INCLUDES)
+INCLUDE_FLAGS = $(VTK_INCLUDES) -I$(BLITZ_HOME)
 
-LINK_FLAGS = -L$(VTK_HOME)bin
+LINK_FLAGS = -L$(VTK_HOME)bin -L $(BLITZ_HOME)/lib/.libs -lblitz
 
 OBJECTS = FormatSelector.o converter.o FluentTranslator.o \
 	   mFixTranslator.o UnstructuredGridWriter.o \
-	   toVTK.o
+	   toVTK.o dump.o fluentCase.o \
+	   fluentIO.o fluentObjects.o fluentVtkFactory.o \
+	   reorder.o setOperators.o
 
 LIBS = -lvtkParallel  -lvtkexpat \
 	 -lvtkfreetype -lvtkftgl -lvtkRendering \
@@ -32,17 +37,38 @@ FormatSelector.o: FormatSelector.cpp FormatSelector.h
 converter.o: converter.cpp converter.h
 	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated converter.cpp $(INCLUDE_FLAGS)
 
-FluentTranslator.o: FluentTranslator.cpp FluentTranslator.h
-	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated FluentTranslator.cpp $(INCLUDE_FLAGS)
-
 mFixTranslator.o: mFixTranslator.cpp mFixTranslator.h
 	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated mFixTranslator.cpp $(INCLUDE_FLAGS)
 
 UnstructuredGridWriter.o: UnstructuredGridWriter.cpp UnstructuredGridWriter.h
 	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated UnstructuredGridWriter.cpp $(INCLUDE_FLAGS)
 
-toVTK.o: toVTK.cpp 
+FluentTranslator.o: FluentTranslator.cpp FluentTranslator.h
+	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated FluentTranslator.cpp $(INCLUDE_FLAGS)
+
+toVTK.o: toVTK.cpp fluentObjects.h fluentCase.h fluentIO.h var_defs.h
 	$(CXX) -c -Wno-deprecated toVTK.cpp $(INCLUDE_FLAGS)
+
+dump.o: dump.cpp fluentObjects.h fluentCase.h fluentIO.h var_defs.h
+	$(CXX) -c -Wno-deprecated dump.cpp $(INCLUDE_FLAGS)
+
+fluentCase.o: fluentCase.cpp fluentIO.h fluentObjects.h fluentCase.h setOperators.hpp var_defs.h
+	$(CXX) -c -Wno-deprecated fluentCase.cpp $(INCLUDE_FLAGS)
+
+fluentIO.o: fluentIO.cpp fluentIO.h var_defs.h
+	$(CXX) -c -Wno-deprecated fluentIO.cpp $(INCLUDE_FLAGS)
+
+fluentObjects.o: fluentObjects.cpp fluentObjects.h setOperators.hpp reorder.h setOperators.hpp var_defs.h
+	$(CXX) -c -Wno-deprecated fluentObjects.cpp $(INCLUDE_FLAGS)
+
+fluentVtkFactory.o: fluentVtkFactory.cpp fluentVtkFactory.h fluentObjects.h fluentCase.h fluentIO.h var_defs.h
+	$(CXX) -c -Wno-deprecated fluentVtkFactory.cpp $(INCLUDE_FLAGS)
+
+reorder.o: reorder.cpp 
+	$(CXX) -c -Wno-deprecated reorder.cpp $(INCLUDE_FLAGS)
+
+setOperators.o: setOperators.cpp 
+	$(CXX) -c -Wno-deprecated setOperators.cpp $(INCLUDE_FLAGS)
 
 
 clean:

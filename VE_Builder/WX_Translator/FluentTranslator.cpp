@@ -247,7 +247,7 @@ void FluentTranslator::OnLoadCaseAndDataButton(wxCommandEvent& event)
     		status_text.Printf(wxT("Both Files Selected.\nStart Reading Files.\n"));
     		StatusTextCntrl->AppendText(status_text);
 
-		parseSet( (std::string)CaseFilename, (std::string)DataFilename, 1, 0, 200 );
+		//parseSet( (std::string)CaseFilename, (std::string)DataFilename, 1, 0, 200 );
 
 	}
 	else if(CaseFileSelected_Flag && !DataFileSelected_Flag){

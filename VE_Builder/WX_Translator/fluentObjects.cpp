@@ -814,7 +814,7 @@ void fixHangingNodes(ElementTree face_tree, FaceThread face, intArray_2 inverse,
 
 
 
-void faceToCell(FaceThread *face, CellThread *cell, vector<ElementTree> face_tree)
+void faceToCell(FaceThread *face, CellThread *cell, std::vector<ElementTree> face_tree)
 {
     blitz::Array<int,2> inverse;
     blitz::Array<int,1> inverse_count;
@@ -841,11 +841,11 @@ void faceToCell(FaceThread *face, CellThread *cell, vector<ElementTree> face_tre
     /* account for hanging node grid */
     for (int i = 0; i < cell->nCells(); i++) {
         int need_to_find = inverse_count(i) - cell->nFaces(i);
-        vector<int> face_list( inverse_count(i) );                          
+        std::vector<int> face_list( inverse_count(i) );                          
         for (int j = 0; j < inverse_count(i); j++)
                 face_list[j] = inverse(i,j);         
         if ( need_to_find > 0 ) { 
-            vector<int> kid_list;
+            std::vector<int> kid_list;
             for (int k = 0; k < face_tree.size(); k ++ ){
                 ElementTree sub_tree = face_tree[k];
                 for (int j = 0; j < sub_tree.nParents(); j++) {
