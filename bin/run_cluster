@@ -1,1 +1,1 @@
-${VE_SUITE_HOME}/bin/${VE_LIBS}/project_cluster /home/users/mccdo/babycave/babycave.tracked.ptah-4.stereo.config
+${VE_SUITE_HOME}/bin/${VE_LIBS}/project_cluster-${HOSTTYPE} /home/users/mccdo/babycave/babycave.tracked.ptah-4.stereo.config.jconf

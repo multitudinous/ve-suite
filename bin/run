@@ -1,1 +1,1 @@
-${VE_SUITE_HOME}/bin/${VE_LIBS}/project ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.config ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.config
+${VE_SUITE_HOME}/bin/${VE_LIBS}/project-${HOSTTYPE} ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.jconf ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf

@@ -46,7 +46,7 @@
 // Cluster Stuff
 #include <vpr/IO/SerializableObject.h>
 #include <cluster/ClusterManager.h>
-#include <cluster/Plugins/ApplicationDataManager/UserData.h>
+#include <plugins/ApplicationDataManager/UserData.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
 #include "cfdStateInfo.h"
