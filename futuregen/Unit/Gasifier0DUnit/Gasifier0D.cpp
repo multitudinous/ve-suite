@@ -1594,6 +1594,105 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
   summaries->insert_summary_val("Slag Flow UNITS:kg/sec FORMAT:12.2f", tot_ash_flow*_slag_eff/100.0);
 }
 
+////////////////////////////////////////////////////////////////////////////////////
+
+void Gasifier0D::print_inputs ()
+{
+  int i;
+
+  for(i=0; i<3; i++) {
+    cout << "O2 Temp [" << i << "]   " << _ox_temp[i] << endl;
+    cout << "O2 Flow [" << i << "]   " << _ox_flow[i] << endl;
+    cout << "Stm Temp [" << i << "]  " << _stm_temp[i] << endl;
+    cout << "Stm Flow [" << i << "]  " << _stm_flow[i] << endl;
+    cout << "Slur Temp [" << i << "] " << _slur_temp[i] << endl;
+    cout << "Slur Flow [" << i << "] " << _slur_flow[i] << endl;
+    cout << "Coal Pct [" << i << "]  " << _coal_pct[i] << endl;
+    cout << "Char Pct [" << i << "]  " << _char_pct[i] << endl;
+    cout << "Char Flow [" << i << "] " << _char_flow[i] << endl;
+  }
+  
+  cout << "char_size      " << _char_size << endl;
+  cout << "char_sd       " << _char_sd << endl;
+  cout << "ash_in_char   " << _ash_in_char << endl;
+
+  cout << "wic_C         " << _wic_C << endl;
+  cout << "wic_H         " << _wic_H << endl;
+  cout << "wic_O         " << _wic_O << endl;
+  cout << "wic_N         " << _wic_N << endl;
+  cout << "wic_S         " << _wic_S << endl;
+  cout << "wic_CL        " << _wic_CL << endl;
+  cout << "ash_ult       " << _ash_ult << endl;
+  cout << "ash_prox      " << _ash_prox << endl;
+  cout << "proxH2O       " << _proxH2O << endl;
+  cout << "proxVM        " << _proxVM << endl;
+  cout << "proxFC        " << _proxFC << endl;
+  cout << "hhv           " << _hhv << endl;
+
+  cout << "comp1         " << _comp1 << endl;
+  cout << "comp2         " << _comp2 << endl;
+  cout << "comp3         " << _comp3 << endl;
+  cout << "comp4         " << _comp4 << endl;
+  cout << "comp5         " << _comp5 << endl;
+  cout << "comp6         " << _comp6 << endl;
+  cout << "comp7         " << _comp7 << endl;
+  cout << "comp8         " << _comp8 << endl;
+  cout << "comp9         " << _comp9 << endl;
+  cout << "comp10        " << _comp10 << endl;
+  cout << "comp11        " << _comp11 << endl;
+  cout << "comp12        " << _comp12 << endl;
+
+  cout << "devol_a1      " << _devol_a1 << endl;
+  cout << "devol_a2      " << _devol_a2 << endl;
+  cout << "devol_e1      " << _devol_e1 << endl;
+
+  cout << "devol_e2      " << _devol_e2 << endl;
+  cout << "devol_y1      " << _devol_y1 << endl;
+  cout << "devol_y2      " << _devol_y2 << endl;
+
+  cout << "oxid_a        " << _oxid_a << endl;
+  cout << "oxid_n        " << _oxid_n << endl;
+  cout << "oxid_e        " << _oxid_e << endl;
+
+  cout << "co2gas_a      " << _co2gas_a << endl;
+  cout << "co2gas_n      " << _co2gas_n << endl;
+  cout << "co2gas_e      " << _co2gas_e << endl;
+
+  cout << "h2ogas_a      " << _h2ogas_a << endl;
+  cout << "h2ogas_n      " << _h2ogas_n << endl;
+  cout << "h2ogas_e      " << _h2ogas_e << endl;
+
+  cout << "size_50       " << _size_50 << endl;
+  cout << "size_200      " << _size_200 << endl;
+
+  cout << "stage         " << _stage << endl;
+
+  cout << "press_drop    " << _press_drop << endl;
+
+  cout << "LD            " << _LD << endl;
+  cout << "diameter      " << _diameter << endl;
+  cout << "length1       " << _length1 << endl;
+  cout << "length2       " << _length2 << endl;
+
+  cout << "rwall1        " << _rwall1 << endl;
+  cout << "rwall2        " << _rwall2 << endl;
+  cout << "emis1         " << _emis1 << endl;
+  cout << "emis2         " << _emis2 << endl;
+  
+  cout << "back_temp     " << _back_temp << endl;
+  cout << "slag_eff      " << _slag_eff << endl;
+
+  cout << "heatloss_gui1 " << _heatloss_gui1 << endl;
+  cout << "heatloss_gui2 " << _heatloss_gui2 << endl;
+  cout << "burnout_gui   " << _burnout_gui << endl;
+
+  cout << "specify_geom  " <<  _specify_geom << endl;
+  cout << "design_mode   " <<  _design_mode << endl;
+
+}
+
+////////////////////////////////////////////////////////////////////////////////////
+
 //c-------------------------------------------------------------------------------
 //      subroutine slagvis(ashcomp,CoeffA,CoeffB)
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/

@@ -130,6 +130,7 @@ void Body_Unit_i::StartCalc (
 
     if(++iter_counter >= iterations) 
       {
+	cout << iter_counter << " " << iterations << endl;
 	warning("Max iterations reached, items not converged: " + notconv);
 	done = true;
       }
@@ -213,7 +214,7 @@ char * Body_Unit_i::GetStatusMessage (
     p.SetPackName("Status");
     p.SetSysId("status.xml");
     p.intfs.resize(1);
-    p.intfs[0].setInt("return_state", return_state);
+    p.intfs[0].setInt("RETURN_STATE", return_state);
     status = p.Save(rv);
     return CORBA::string_dup(status);
   }
@@ -249,7 +250,7 @@ void Body_Unit_i::SetParams (
     p.Load(param, strlen(param));
     
     //Now make use of p.intfs to get your GUI vars out
-    iterations = p.intfs[0].getDouble("iterations");
+    iterations = p.intfs[0].getInt("iterations");
 
     species = p.intfs[0].getString1D("species");
     sel_species = p.intfs[0].getString1D("sel_species");

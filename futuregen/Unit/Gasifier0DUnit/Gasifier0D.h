@@ -32,6 +32,8 @@ public:
   void execute (Gas *ox_in, Gas *stage2in,
 		Gas *gas_out, summary_values *summaries);
 
+  void print_inputs ();
+
   void slagvis (double temp, double* ashcomp, double& CoeffA, double& CoeffB, double& visc);
   void viscosity (double* ashcomp, double& temp, double& visc, int& flag,
 		  double& CoeffA, double& CoeffB);

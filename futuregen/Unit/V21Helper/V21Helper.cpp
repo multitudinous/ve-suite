@@ -197,12 +197,12 @@ int V21Helper::IntToSum (Interface *it, summary_values &sv)
 
 int V21Helper::SumToInt (summary_values* sv, Interface &it)
 {
-  unsigned int i, num_sum;
+  unsigned int i;
   std::string desc,val;
 
   it.clear();
 
-  for(i=0; i<num_sum; i++)
+  for(i=0; i<sv->size(); i++)
     it.setString(sv->get_description(i), sv->get_value(i));
 
   return 0;

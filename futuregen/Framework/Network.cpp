@@ -2739,13 +2739,16 @@ void  Network::OnShowLinkContent(wxCommandEvent &event)
     cerr << "Maybe Engine is down" << endl;
     return;
   }
-  if (linkresult!=NULL)
+  
+  if (string(linkresult)!=string(""))
     {
       Package p;
       p.SetSysId("linkresult.xml");
+
       p.Load(linkresult, strlen(linkresult));
       port_dlg = modules[mod].pl_mod->PortData(NULL,  &(p.intfs[0]));
       
+      cout<<linkresult<<endl;
       if (port_dlg!=NULL)
 	port_dlg->Show();
     }
@@ -2774,7 +2777,8 @@ void  Network::OnShowResult(wxCommandEvent &event)
     return;
   }
 
-  if (result!=NULL)
+  cout<<result<<endl;
+  if (string(result)!="")
     {
       Package p;
       p.SetSysId("linkresult.xml");

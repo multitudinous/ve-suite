@@ -26,6 +26,8 @@ void Body_Unit_i::StartCalc (
     , Error::EUnknown
   ))
   {
+    cout << "StartCalc\n";
+
     // Add your implementation here
     const char* igas;
     const char* ogas[2];

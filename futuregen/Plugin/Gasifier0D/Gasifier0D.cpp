@@ -41,7 +41,7 @@ Gasifier0D
   RegistVar("stage2_emis", &stage2_emis);
   RegistVar("backside_temp", &backside_temp);
   RegistVar("slag_eff", &slag_eff);
-  RegistVar("pres_drop", &slag_eff);
+  RegistVar("pres_drop", &pres_drop);
   RegistVar("stage", &stage);
   RegistVar("spec_geometry", &spec_geometry);
   RegistVar("des_mode", &des_mode);
@@ -70,7 +70,7 @@ Gasifier0D
   stage2_emis = 0.75;
   backside_temp = 300;
   slag_eff = 50;
-  pres_drop = 524691;
+  pres_drop = 0.0;
 
   size_50 = 99.9;
   size_200 = 90.0;

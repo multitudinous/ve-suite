@@ -107,6 +107,8 @@ char * Body_Executive_i::GetExportData (
   ))
 {
   _mutex.acquire();
+
+  cout << "GetExportData\n";
   
   Interface intf;
   if(!_network->getPortData(module_id, port_id, intf)) {

@@ -14,6 +14,7 @@ REI_Plugin::REI_Plugin()
 { 
   dlg=NULL; 
   result_dlg=NULL;
+  port_dlg = NULL;
   pos = wxPoint(0,0); //default position
   
   //default shape
@@ -39,6 +40,8 @@ REI_Plugin::~REI_Plugin()
     delete dlg;
   if (result_dlg!=NULL)
     delete dlg;
+  if (port_dlg!=NULL)
+    delete port_dlg;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -378,7 +381,7 @@ void REI_Plugin::UnPackResult(Interface* intf)
   //This will be module dependent. here is the Default implementation when using the summary table to pack things up in the module end
   unsigned int i;
   std::vector<string> descs;
-  descs = mod_pack.getStrings();
+  descs = intf->getStrings();
   v_desc.clear();
   v_value.clear();
   for (i=0; i<descs.size(); i++)
@@ -520,5 +523,5 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
   port_dlg->syngas->AddSeperator(' ');
   port_dlg->Set2Cols(gas_desc, gas_value);
 
-  return result_dlg;
+  return port_dlg;
 }

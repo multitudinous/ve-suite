@@ -49,7 +49,6 @@ void Body_Unit_i::StartCalc (
   // OXIDANT stream
   /////////////////
 
-  cout << "getting o2\n";
   o2gas = executive_->GetImportData(id_, 0); //port 0 will be the o2 input port;
 
   if (std::string(o2gas)=="")
@@ -69,7 +68,6 @@ void Body_Unit_i::StartCalc (
   // PARTICLE stream
   //////////////////
 
-  cout << "getting part\n";
   ipart = executive_->GetImportData(id_, 1); //port 1 will be the paricle input port;
 
   double ash_in_char = 0.0, char_size=100.0;
@@ -93,17 +91,16 @@ void Body_Unit_i::StartCalc (
   // SECOND STAGE GAS stream
   //////////////////////////
   
-  cout << "getting 2ndstage\n";
   stage2gas = executive_->GetImportData(id_, 2); //port 2 will be the stage 2 input port;
 
   if (std::string(stage2gas)=="")
     {
-      if (_stage)
+      if (_stage!=1)
 	warning("No 2nd stage gas stream.");
     }
   else
     {
-      p.SetSysId("part_in.xml");
+      p.SetSysId("stage2gas_in.xml");
       p.Load(stage2gas, strlen(stage2gas)); 
       
       stage2in = new Gas();
@@ -254,6 +251,8 @@ void Body_Unit_i::StartCalc (
   //////////
   // Execute
   //////////
+
+  //gas_model.print_inputs();
 
   Gas *gas_out = new Gas;
 
@@ -420,7 +419,7 @@ void Body_Unit_i::SetParams (
 
     _burnout_gui   = p.intfs[0].getDouble ("burn_out");
     _heatloss_gui1 = p.intfs[0].getDouble ("stage1_heatloss");
-    _heatloss_gui1 = p.intfs[0].getDouble ("stage2_heatloss");
+    _heatloss_gui2 = p.intfs[0].getDouble ("stage2_heatloss");
 
     _back_temp     = p.intfs[0].getDouble ("backside_temp");
     _slag_eff      = p.intfs[0].getDouble ("slag_eff");
