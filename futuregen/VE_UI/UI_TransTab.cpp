@@ -13,7 +13,6 @@ BEGIN_EVENT_TABLE(UI_TransTab, wxPanel)
   EVT_BUTTON      (PAUSE_BUTTON,             UI_TransTab::_onPause)
 END_EVENT_TABLE()
 
-
 /////////////////////////////////////////////////////////////
 //Constructor                                              //
 /////////////////////////////////////////////////////////////
@@ -49,15 +48,15 @@ void UI_TransTab::_buildPage()
    //////////////////////////////////
 
    //The names of the radio box choices
-    wxString category[] = { wxT("Contours on a Plane"),
-                            wxT("Contours and Vectors on a Plane"),
-                            wxT("Vectors on a Plane"),
-                            wxT("Droplets"),
+   wxString category[] = { wxT("Contours on a Plane"),
+                           wxT("Contours and Vectors on a Plane"),
+                           wxT("Vectors on a Plane"),
+                           wxT("Droplets"),
                           };
    //Create the 2x2 box
-    _categoryRBox = new wxRadioBox(this, CATEGORY_RAD_BOX, wxT("Category"),
-                                                  wxDefaultPosition, wxDefaultSize, 4,
-                                                     category, 2, wxRA_SPECIFY_COLS);
+   _categoryRBox = new wxRadioBox(this, CATEGORY_RAD_BOX, wxT("Category"),
+                                  wxDefaultPosition, wxDefaultSize, 4,
+                                  category, 2, wxRA_SPECIFY_COLS);
 
    //////////////////////////////////
    //Design the Direction radio box//
@@ -67,9 +66,9 @@ void UI_TransTab::_buildPage()
    wxString direction[] = {wxT("X"), wxT("Y"), wxT("Z")};
 
    //Create a vertical radio box
-  _directionRBox = new wxRadioBox(this, DIRECTION_RBOX, wxT("Direction"),
-                                         wxDefaultPosition, wxDefaultSize, 3, direction,1,
-                                         wxRA_SPECIFY_COLS);
+   _directionRBox = new wxRadioBox(this, DIRECTION_RBOX, wxT("Direction"),
+                                   wxDefaultPosition, wxDefaultSize, 3,
+                                   direction,1, wxRA_SPECIFY_COLS);
 
    //////////////////////////////////////
    //Now design the time progress gauge//
@@ -84,20 +83,21 @@ void UI_TransTab::_buildPage()
 
 */
 
-   _timeProgressGauge = new wxGauge(this, TIMEPROGRESS_GAUGE, 100, wxDefaultPosition, wxDefaultSize, wxGA_HORIZONTAL, wxDefaultValidator, wxT("Time Progress Gauge"));
+   _timeProgressGauge = new wxGauge(this, TIMEPROGRESS_GAUGE, 100, 
+                                    wxDefaultPosition, wxDefaultSize,
+                                    wxGA_HORIZONTAL, wxDefaultValidator,
+                                    wxT("Time Progress Gauge"));
 
 //   gaugeLabel = new wxStaticText(this,-1,wxT("Sphere/Point Size")
    
    //"VCR" buttons at the bottom of the UI   
-    _resetButton = new wxButton(this, RESET_BUTTON, wxT("Reset"));
-    _backwardButton = new wxButton(this, BACKWARD_BUTTON, wxT("Backward"));
-    _startButton = new wxButton(this, START_BUTTON, wxT("Start"));
-    _forwardButton = new wxButton(this, FORWARD_BUTTON, wxT("Forward"));
-    _pauseButton = new wxButton(this, PAUSE_BUTTON, wxT("Pause"));
+   _resetButton = new wxButton(this, RESET_BUTTON, wxT("Reset"));
+   _backwardButton = new wxButton(this, BACKWARD_BUTTON, wxT("Backward"));
+   _startButton = new wxButton(this, START_BUTTON, wxT("Start"));
+   _forwardButton = new wxButton(this, FORWARD_BUTTON, wxT("Forward"));
+   _pauseButton = new wxButton(this, PAUSE_BUTTON, wxT("Pause"));
 
-
-   //Now layout the UI. 
-   //There are basically 4 rows of controls.
+   //Now layout the UI. There are basically 4 rows of controls.
 
    //The grouping for all controls
    wxSizer* visPanelGroup = new wxBoxSizer(wxVERTICAL);
@@ -228,14 +228,6 @@ void UI_TransTab::_onStart(wxCommandEvent& event)
 //////////////////////////////////////////////////////////
 void UI_TransTab::_onForward(wxCommandEvent& event)
 {
-/*
-   ((UI_Tabs *)_parent)->cId = BLUE_MENU_TOGGLE;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
-/*  if (_bMenuCBox->GetValue())
-    wxMessageBox(_T("blue menu box checked!"), _T("CheckBox!"));
-  else
-    wxMessageBox(_T("blue menu box unchecked!"), _T("CheckBox!"));*/
 }
 
 //////////////////////////////////////////////////////////

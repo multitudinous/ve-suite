@@ -11,14 +11,12 @@ BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_RADIOBUTTON (SINGLE_PLANE_BUTTON,      UI_VisualizationTab::_onSingle)
   EVT_CHECKBOX    (NEAREST_PLANE_CHECK_BOX,  UI_VisualizationTab::_onNearest)
   EVT_BUTTON      (UPDATE_BUTTON,            UI_VisualizationTab::_onUpdate)
-  EVT_CHECKBOX    (BLUE_MENU_CHECK_BOX,      UI_VisualizationTab::_onBlueMenu)
   EVT_CHECKBOX    (SCALAR_BAR_CHECK_BOX,     UI_VisualizationTab::_onScalarBar)
   EVT_BUTTON      (RECORD_BUTTON,            UI_VisualizationTab::_onRecord)
   EVT_BUTTON      (EXIT_BUTTON,              UI_VisualizationTab::_onExit)
   EVT_BUTTON      (CLEAR_BUTTON,             UI_VisualizationTab::_onClear)
   EVT_BUTTON      (CUSTOM_VIS_BUTTON,        UI_VisualizationTab::_onCustomVis)
 END_EVENT_TABLE()
-
 
 /////////////////////////////////////////////////////////////
 //Constructor                                              //
@@ -36,7 +34,6 @@ UI_VisualizationTab::UI_VisualizationTab(wxNotebook* tControl)
    _nearestCBox = 0;
    _slider = 0;
    _sliderUpdate = 0;
-   _bMenuCBox = 0;
    _scalarBarCBox = 0;
    _recordButton = 0;
    _clearButton = 0;
@@ -60,17 +57,18 @@ void UI_VisualizationTab::_buildPage()
    //////////////////////////////////
 
    //The names of the radio box choices
-    wxString category[] = { wxT("Contour"),
-                            wxT("Warped Contour"),
-                            wxT("Vector"),
-                            wxT("Isosurface"),
-                            wxT("PIV_Image"),
-                            wxT("Animated Contours"),
-                            wxT("Polydata")};
+   wxString category[] = { wxT("Contour"),
+                           wxT("Warped Contour"),
+                           wxT("Vector"),
+                           wxT("Isosurface"),
+                           wxT("PIV_Image"),
+                           wxT("Animated Contours"),
+                           wxT("Polydata") };
+
    //Create the 3x2 box
-    _categoryRBox = new wxRadioBox(this, CATEGORY_RAD_BOX, wxT("Category"),
-                                                  wxDefaultPosition, wxDefaultSize, 7,
-                                                     category, 3, wxRA_SPECIFY_COLS);
+   _categoryRBox = new wxRadioBox(this, CATEGORY_RAD_BOX, wxT("Category"),
+                                  wxDefaultPosition, wxDefaultSize, 7,
+                                  category, 3, wxRA_SPECIFY_COLS);
 
    /////////////////////////////////////
    //Design the Contour Type radio box//
@@ -81,8 +79,8 @@ void UI_VisualizationTab::_buildPage()
 
    //Create a vertical radio box
    _contourRBox = new wxRadioBox(this, CONTOUR_RAD_BOX, wxT("Contour Type"),
-                                            wxDefaultPosition, wxDefaultSize,3, conType, 1,
-                                            wxRA_SPECIFY_COLS);
+                                 wxDefaultPosition, wxDefaultSize,3,
+                                 conType, 1, wxRA_SPECIFY_COLS);
 
    // Initialize parameters on cfdApp side
    ((UI_Tabs *)_parent)->cId = CHANGE_CONTOUR_FILL;
@@ -97,9 +95,9 @@ void UI_VisualizationTab::_buildPage()
    wxString direction[] = {wxT("X"), wxT("Y"), wxT("Z"), wxT("By wand")};
 
    //Create a vertical radio box
-  _directionRBox = new wxRadioBox(this, DIRECTION_RBOX, wxT("Direction"),
-                                         wxDefaultPosition, wxDefaultSize, 4, direction,1,
-                                         wxRA_SPECIFY_COLS);
+   _directionRBox = new wxRadioBox(this, DIRECTION_RBOX, wxT("Direction"),
+                                   wxDefaultPosition, wxDefaultSize, 4,
+                                   direction, 1, wxRA_SPECIFY_COLS);
 
    /////////////////////////////
    //Design the type Static box//
@@ -114,24 +112,24 @@ void UI_VisualizationTab::_buildPage()
 
    //Precomputed surfaces button
    _pcsButton = new wxRadioButton(this, PRE_COMP_SURF_BUTTON,
-                                                 wxT("All precomputed surfaces"),
-                                                 wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
-
+                                  wxT("All precomputed surfaces"),
+                                  wxDefaultPosition, wxDefaultSize, wxRB_GROUP);
   
    //Single plane radio button
-   _spButton = new wxRadioButton(this, SINGLE_PLANE_BUTTON, wxT("Specify a single plane"));
+   _spButton = new wxRadioButton(this, SINGLE_PLANE_BUTTON,
+                                 wxT("Specify a single plane"));
 
    //Cycle precomputed surfaces check box
-   _cycleCBox = new wxCheckBox(this, CYCLE_CHECK_BOX, wxT("Cycle precomputed surfaces"));
+   _cycleCBox = new wxCheckBox(this, CYCLE_CHECK_BOX,
+                               wxT("Cycle precomputed surfaces"));
 
    //Only enable if precomputed surfaces radio box is chosen
    //This is handled in the event callback for the cycleCBox
    _cycleCBox->Enable(false);
-
     
    //Nearest precompute plane check box
    _nearestCBox = new wxCheckBox(this, NEAREST_PLANE_CHECK_BOX,
-                                           wxT("Use nearest precomputed plane"));
+                                 wxT("Use nearest precomputed plane"));
    _nearestCBox->Enable(false);
 
    //Place the buttons in our static box
@@ -149,30 +147,19 @@ void UI_VisualizationTab::_buildPage()
 
    //The horizontal slider
    _slider = new wxSlider(this, VIS_SLIDER, 0, 0, 100,
-                                  wxDefaultPosition, slidesize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
+                          wxDefaultPosition, slidesize,
+                          wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
 
    //A button to update info after UI input changes have been made
    _sliderUpdate = new wxButton(this, UPDATE_BUTTON, wxT("Update"));
 
-   //More options at the bottom of the UI
-   _bMenuCBox = new wxCheckBox(this, BLUE_MENU_CHECK_BOX, wxT("blue menu"));
-   _scalarBarCBox = new wxCheckBox(this, SCALAR_BAR_CHECK_BOX, wxT("scalar bar"));
-   _recordButton = new wxButton(this, RECORD_BUTTON, wxT("record scene"));
-    _clearButton = new wxButton(this, CLEAR_BUTTON, wxT("clear all"));
-    _exitButton = new wxButton(this, EXIT_BUTTON, wxT("exit"));
-	_customVisButton = new wxButton(this, CUSTOM_VIS_BUTTON, wxT("Activate Custom Visualization"));
-
-   //Now layout the UI.
-   //There are basically 5 rows of controls.
+   //Now layout the UI. There are basically 5 rows of controls.
 
    //The grouping for all controls
    wxSizer* visPanelGroup = new wxBoxSizer(wxVERTICAL);
 
-   //The first row of controls
+   //The first row of controls contains two radio boxes
    wxBoxSizer* firstRow = new wxBoxSizer(wxHORIZONTAL);
-
-   //Now add the specific controls(2 radio boxes) for this group
 
    //catergory radio box
    firstRow->Add(_categoryRBox, 3, wxALIGN_LEFT);
@@ -180,10 +167,8 @@ void UI_VisualizationTab::_buildPage()
    //contour type radio box
    firstRow->Add(_contourRBox, 1, wxALIGN_RIGHT);
 
-   //The second row of controls
+   //The second row of controls contains the direction and type boxes
    wxBoxSizer* secondRow = new wxBoxSizer(wxHORIZONTAL);
-
-   //Add the direction and type boxes to this group
 
    //direction box
    secondRow->Add(_directionRBox, 1, wxALIGN_LEFT);
@@ -191,27 +176,34 @@ void UI_VisualizationTab::_buildPage()
    //The static box group we created ("Type")
    secondRow->Add(typebox_sizer,2,wxALIGN_RIGHT);
 
-   //The slider and the update button belong in the
-   //third group
+   //The slider and the update button belong in the third row
    wxBoxSizer* thirdRow = new wxBoxSizer(wxHORIZONTAL);
 
    thirdRow->Add(_slider,5, wxALIGN_LEFT);
    thirdRow->Add(_sliderUpdate,0,wxALIGN_RIGHT);
 
-   //This is the bottom row of buttons
+   //This is the fourth row of buttons
    wxBoxSizer* forthRow = new wxBoxSizer(wxHORIZONTAL);
 
-   forthRow->Add(_bMenuCBox, 1, wxALIGN_CENTER_HORIZONTAL);
+   _scalarBarCBox = new wxCheckBox(this, SCALAR_BAR_CHECK_BOX, wxT("scalar bar"));
+   _scalarBarCBox->SetValue(true);
    forthRow->Add(_scalarBarCBox, 1, wxALIGN_CENTER_HORIZONTAL);
+
+   _recordButton = new wxButton(this, RECORD_BUTTON, wxT("record scene"));
    forthRow->Add(_recordButton, 1, wxALIGN_CENTER_HORIZONTAL);
+
+   _clearButton = new wxButton(this, CLEAR_BUTTON, wxT("clear all"));
    forthRow->Add(_clearButton, 1, wxALIGN_CENTER_HORIZONTAL);
+
+   _exitButton = new wxButton(this, EXIT_BUTTON, wxT("exit"));
    forthRow->Add(_exitButton, 1, wxALIGN_CENTER_HORIZONTAL);
 
    //Here is a new 5th row added for a custom visualization button
    wxBoxSizer* fifthRow = new wxBoxSizer(wxHORIZONTAL);
 
+	_customVisButton = new wxButton(this, CUSTOM_VIS_BUTTON,
+                                   wxT("Activate Custom Visualization"));
    fifthRow ->Add(_customVisButton, 0, wxALIGN_CENTER_HORIZONTAL);
-
 
    //Add the rows to the main grouping
    visPanelGroup->Add(firstRow, 1, wxALIGN_LEFT|wxEXPAND); //
@@ -334,26 +326,19 @@ void UI_VisualizationTab::_onSlider(wxCommandEvent& event)
    ((UI_Tabs *)_parent)->cMax = _slider->GetMax();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
-//////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onBlueMenu(wxCommandEvent& event)
-{
-   ((UI_Tabs *)_parent)->cId = BLUE_MENU_TOGGLE;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-/*  if (_bMenuCBox->GetValue())
-    wxMessageBox(_T("blue menu box checked!"), _T("CheckBox!"));
-  else
-    wxMessageBox(_T("blue menu box unchecked!"), _T("CheckBox!"));*/
-}
 
 //////////////////////////////////////////////////////////
 void UI_VisualizationTab::_onScalarBar(wxCommandEvent& event)
 {
    ((UI_Tabs *)_parent)->cId = SCALAR_BAR_TOGGLE;
+   ((UI_Tabs *)_parent)->cIso_value = _scalarBarCBox->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
-/*  if (_scalarBarCBox->GetValue())
-    wxMessageBox(_T("scalar bar box checked!"), _T("CheckBox!"));
-  else
-    wxMessageBox(_T("scalar bar box unchecked!"), _T("CheckBox!"));*/
+/*
+   if (_scalarBarCBox->GetValue())
+      wxMessageBox(_T("scalar bar box checked!"), _T("CheckBox!"));
+   else
+      wxMessageBox(_T("scalar bar box unchecked!"), _T("CheckBox!"));
+*/
 }
 
 //////////////////////////////////////////////////////////

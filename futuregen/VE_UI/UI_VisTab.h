@@ -8,10 +8,7 @@
 #include "wx/notebook.h"
 #include <iostream>
 
-
-
 using namespace std;
-
 
 //#include "controlIds.h"
 //Visualizaton tab control ids
@@ -25,14 +22,12 @@ enum VIS_TAB_IDS{
    NEAREST_PLANE_CHECK_BOX,
    VIS_SLIDER,
    UPDATE_BUTTON,
-   BLUE_MENU_CHECK_BOX,
    SCALAR_BAR_CHECK_BOX,
    RECORD_BUTTON,
    CLEAR_BUTTON,
    EXIT_BUTTON,
    CUSTOM_VIS_BUTTON
 };
-
 
 class UI_VisualizationTab : public wxPanel {
 public:
@@ -55,7 +50,6 @@ protected:
    wxCheckBox* _nearestCBox;
    wxSlider* _slider;
    wxButton* _sliderUpdate;
-   wxCheckBox* _bMenuCBox;
    wxCheckBox* _scalarBarCBox;
    wxButton* _recordButton;
    wxButton* _clearButton;
@@ -73,7 +67,6 @@ protected:
    void _onSingle(wxCommandEvent& event);
    void _onNearest(wxCommandEvent& event);
    void _onUpdate(wxCommandEvent& event);
-   void _onBlueMenu(wxCommandEvent& event);
    void _onScalarBar(wxCommandEvent& event);
    void _onRecord(wxCommandEvent& event);
    
