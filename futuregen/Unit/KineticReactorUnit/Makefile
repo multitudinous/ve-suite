@@ -4,6 +4,7 @@ COMPILER = g++
 GCC = yes
 GXX = yes
 F77 = g77
+C = gcc
 CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
 CFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
 
@@ -90,7 +91,7 @@ OBJECTS = ../string_ops.o				\
 	../ThirdParty/Cvode/nvector.o			\
 	../ThirdParty/Cvode/spgmr.o		
 
-.SUFFIXES : .o .cpp .cc	
+.SUFFIXES : .o .cpp .cc	.c .f
 
 .cpp.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -o $@ $<
@@ -98,8 +99,12 @@ OBJECTS = ../string_ops.o				\
 .cc.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -o $@ $<
 
+.c.o :
+	$(C) -g -c -w -o $@ $<
+
 .f.o : 
 	$(F77) -g -c -w -o $@ $<
+
 all: $(APP)
 
 $(APP): $(OBJECTS) $(addprefix $(VDIR),$(FILE_UNIT_CLT_OBJS))

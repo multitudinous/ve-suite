@@ -29,7 +29,11 @@
 			V21 outgoing gas
 
 */
+
+#ifdef WIN32
 #include <winsock2.h> //have to include this to prevent the windows.h's mess up with winsock.h
+#endif
+
 #include <iostream>
 #include <fstream>
 #include <vector>
