@@ -40,10 +40,11 @@ class cfdModel;
 class cfdCommandArray;
 class cfdReadParam;
 class cfdScalarBarActor;
-class cfdTextureManager;
 
 #ifdef _OSG
+#ifdef VE_PATENTED
 class cfdTextureDataSet;
+#endif
 #endif
 class vtkPolyData;
 
@@ -79,7 +80,9 @@ class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
 
       //texture manager access
 #ifdef _OSG
+#ifdef VE_PATENTED
       cfdTextureDataSet* GetActiveTextureDataSet( void );
+#endif
 #endif
       bool GetVisOption();
    private:
@@ -91,7 +94,9 @@ class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
       cfdModel* _activeModel;
 
 #ifdef _OSG
+#ifdef VE_PATENTED
       cfdTextureDataSet* _activeTDSet;
+#endif
 #endif
       bool tbased;
       vtkPolyData* arrow;

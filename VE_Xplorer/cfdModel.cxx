@@ -37,7 +37,6 @@
 #include "cfdGroup.h"
 #include "cfdSwitch.h"
 #include "cfdFILE.h"
-#include "cfdTextureManager.h"
 #ifdef _OSG
 #include "cfdTextureDataSet.h"
 #endif

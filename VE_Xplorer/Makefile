@@ -71,9 +71,10 @@ ifdef OMNI_HOME
 endif
 
 ifeq ($(TAO_BUILD), TRUE)
-   vpath %.cxx    $(CONDUCTOR_BASE_DIR)/impl 
-   vpath %.cpp    $(VE_SUITE_HOME)/VESOpen/skel
-   vpath %.cpp    $(VE_SUITE_HOME)/VE_Conductor/Framework $(VE_SUITE_HOME)/VE_CE
+   EXTRA_PATH_FOR_SOURCES+= $(CONDUCTOR_BASE_DIR)/impl \
+                           $(VE_SUITE_HOME)/VEOpen/skel \
+                           $(VE_SUITE_HOME)/VE_Conductor/Framework \
+                           $(VE_SUITE_HOME)/VE_CE
 
    #----------------------------------------------------------------------------
    # Include macros and targets
@@ -96,7 +97,7 @@ ifeq ($(TAO_BUILD), TRUE)
 
    EXTRA_INCLUDES+= \
                   -I${CONDUCTOR_BASE_DIR}/impl \
-                  -I$(VE_SUITE_HOME)/VESOpen/skel \
+                  -I$(VE_SUITE_HOME)/VEOpen/skel \
                   -I$(VE_SUITE_HOME)/VE_Conductor/Framework \
                   -I$(VE_SUITE_HOME)/VE_CE
    EXEC_TAG = _tao
@@ -161,7 +162,6 @@ SRCS=\
    cfdQuatCam.cxx \
    cfdReadParam.cxx \
    cfdScalarBarActor.cxx \
-   cfdScalarVolumeVisHandler.cxx \
    cfdSceneNode.cxx \
    cfdSequence.cxx \
    cfdSound.cxx \
@@ -169,53 +169,59 @@ SRCS=\
    cfdSteadyStateVizHandler.cxx \
    cfdStreamers.cxx \
    cfdSwitch.cxx \
-   cfdPBufferQuad.cxx \
    cfdPfSceneManagement.cxx \
    cfdPolyData.cxx \
    cfdTeacher.cxx \
    cfdTempAnimation.cxx \
    cfdTextOutput.cxx \
-   cfdTextureBasedVizHandler.cxx \
-   cfdTextureDataSet.cxx \
-   cfdTextureMatrixCallback.cxx \
-   cfdTextureManager.cxx \
    cfdThread.cxx \
-   cfdUpdateTextureCallback.cpp \
    cfdVTKFileHandler.cxx \
    cfdVectorBase.cxx \
    cfdVector.cxx \
    cfdVectors.cxx \
    cfdVjObsWrapper.cxx \
-   cfdVolumeVisualization.cpp \
-   cfdVolumeVisNodeHandler.cxx \
    cfdVEXplorer.cxx \
    cfdWriteTraverser.cxx \
    fileIO.cxx \
    readWriteVtkThings.cxx \
    VjObs_i.cxx 
 
+ifeq ($(VE_PATENTED), TRUE)
+SRCS+= \
+   cfdPBufferQuad.cxx \
+   cfdScalarVolumeVisHandler.cxx \
+   cfdTextureBasedVizHandler.cxx \
+   cfdTextureDataSet.cxx \
+   cfdTextureMatrixCallback.cxx \
+   cfdTextureManager.cxx \
+   cfdUpdateTextureCallback.cpp \
+   cfdVolumeVisualization.cpp \
+   cfdVolumeVisNodeHandler.cxx 
+endif
+
 ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \
-   VjObsS.cpp \
-   VjObsC.cpp \
+   cfdExecutive.cxx \
    cfdExecutiveConfiguration.cxx \
-   VE_i.cpp \
-   moduleC.cpp \
-   moduleS.cpp \
-   interface.cpp \
-   string_ops.cpp \
    cfdVEPluginLoader.cxx \
    cfdVEAvailModules.cxx \
    cfdVEBaseClass.cxx \
-   cfdExecutive.cxx \
+   interface.cpp \
+   moduleC.cpp \
+   moduleS.cpp \
    Network_Exec.cpp \
-   package.cpp
+   package.cpp \
+   string_ops.cpp \
+   VE_i.cpp \
+   VjObsS.cpp \
+   VjObsC.cpp
 else
 SRCS+= \
    VjObs.cpp 
 endif
 
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_SceneGraph
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_SceneGraph
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
@@ -291,37 +297,6 @@ endif
                ${CONDUCTOR_BASE_DIR}/Observer.h \
                ${CONDUCTOR_BASE_DIR}/VjObs.h 
 
-# list the cpp and h files here
-#IDL_CXX_FILES= SliderSubject.cpp SliderSubject.h \
-                WhiteboardSubject.cpp WhiteboardSubject.h
-
-# list the corresponding java files that are in directory "networktest"
-#IDL_JAVA_FILES= SliderSubject.java \
-                 WhiteboardSubject.java
-
-#JAVA_SRCS=  ObserverHolder.java \
-            VjObsHolder.java \
-            ObserverServant.java \
-            send_param.java \
-            ack_win.java \
-            attrib.java \
-            draw_baf.java \
-            id_mapper.java \
-            WholeNumberField.java \
-            client.java \
-            my_orb.java 
-#            FileInterfaceHolder.java \
-#            HelloHolder.java \
-# list the corresponding java files that are in directory "networktest"
-# These files correspond to the IDL_CXX_FILES listed above
-#IDL_JAVA_FILES= Observer.java \
-               VjObs.java 
-
-# all class files are used in creating the jar files
-#ALL_CLASSES= *.class
-#EXTRA_SOURCEPATH_DIRS= ${CONDUCTOR_BASE_DIR}/java_stuff
-#CLASSPATH= ${CONDUCTOR_BASE_DIR}/java_stuff
-#CLASSPATH_ARG= -classpath "${CONDUCTOR_BASE_DIR}/java_stuff"
 
 # One of these must be uncommented.
 DEBUG_APP?= TRUE
@@ -352,29 +327,6 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 #CLASSPATH= $(TWEEK_JARS)
 
 CXX_GEN_DIR= .
-#CXX_IDL= $(TWEEK_IDL_CXX)
-#CXX_IDL_OPTS= $(TWEEK_IDLFLAGS_CXX) \
-               $(TWEEK_IDL_GENDIR_CXX)$(CXX_GEN_DIR)
-#CXX_IDL_INCLUDES=
-
-#JAVA_GEN_DIR= $(CONDUCTOR_BASE_DIR)/java_stuff
-#JAVA_IDL= $(TWEEK_IDL_JAVA)
-#JAVA_IDL_OPTS= $(TWEEK_IDLFLAGS_JAVA) \
-                $(TWEEK_IDL_GENDIR_JAVA)$(JAVA_GEN_DIR)
-#JAVA_IDL_INCLUDES=
-
-#WARN_MSG= I_AM_HERE
-#EXTRA_PATH_FOR_SOURCES= ${CONDUCTOR_BASE_DIR} \
-                        ${CONDUCTOR_BASE_DIR}/java_stuff \
-                        ${CONDUCTOR_BASE_DIR}/java_stuff/ObserverPackage \
-                        ${CONDUCTOR_BASE_DIR}/java_stuff/VjObsPackage 
-
-vpath %.cxx $(VE_SUITE_HOME)/VE_SceneGraph
-#vpath %.cc ./UMI/skel
-#vpath %.h $(CXX_GEN_DIR)  ${CONDUCTOR_BASE_DIR}/skel
-
-#vpath %.idl $(CONDUCTOR_BASE_DIR)
-#vpath %.java $(JAVA_GEN_DIR)
 
 # -----------------------------------------------------------------------------
 # Application build targets.
@@ -405,20 +357,3 @@ ${APP_NAME}: $(OBJS)
 
 # in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
 CLEAN_FILES+= $(APP_NAME)
-#CLEAN_FILES+= CorbaManager.o \
-      $(addprefix $(srcdir)/, $(IDL_CXX_FILES)) \
-      $(addprefix $(srcdir)/networktest/, $(IDL_JAVA_FILES)) \
-      $(CONDUCTOR_BASE_DIR)/*.d \
-      $(CLASSES) tweek/*.class
-
-#  in addition to the "ii_files" directory, the following directories will be removed during "gmake clean"
-#CLEAN_DIRS+= $(srcdir)/tweek
-
-#CLOBBER_FILES+= NetworkTestBean.jar
-
-# DO NOT DELETE THIS LINE -- g++dep uses it.
-# DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
-
-
-
-# IF YOU PUT ANYTHING HERE IT WILL GO AWAY

@@ -38,7 +38,7 @@
 #include "cfdCommandArray.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdModelHandler.h"
-#include "cfdTextureBasedVizHandler.h"
+
 #include <vpr/Util/Debug.h>
 #include <iostream>
 

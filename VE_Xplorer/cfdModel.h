@@ -57,7 +57,6 @@ class cfdSwitch;
 class fileInfo;
 class cfdFILE;
 class cfdTempAnimation;
-class cfdTextureManager;
 class cfdGroup;
 #ifdef _OSG
 class cfdTextureDataSet;

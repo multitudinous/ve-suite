@@ -5,7 +5,7 @@ VE_SUITE_HOME?= ../
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WinClient
 
 VE_UI_HOME = ${VE_SUITE_HOME}/VE_Conductor/VE_UI
-IDL_HOME = ${VE_SUITE_HOME}/VESOpen
+IDL_HOME = ${VE_SUITE_HOME}/VEOpen
 
 all:
 	$(MAKE) NO_DEPEND=0 cxx
@@ -89,15 +89,15 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
+EXTRA_PATH_FOR_SOURCES+= $(VE_UI_HOME) $(IDL_HOME)/skel ./Framework
+
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 
-vpath %.cpp $(VE_UI_HOME) $(IDL_HOME)/skel ./Framework
-
-EXTRA_CXXFLAGS += -I$(VE_UI_HOME) \
+EXTRA_INCLUDES+= -I$(VE_UI_HOME) \
                   -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer
 
 # -----------------------------------------------------------------------------

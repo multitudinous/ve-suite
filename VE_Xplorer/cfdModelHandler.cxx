@@ -50,11 +50,13 @@
 #include "cfdFILE.h"
 #include "cfdScalarBarActor.h"
 #include "cfdTempAnimation.h"
-#include "cfdTextureManager.h"
 #include "cfdSwitch.h"
 #include "cfdPfSceneManagement.h"
 #ifdef _OSG
+#ifdef VE_PATENTED
 #include "cfdTextureDataSet.h"
+#include "cfdTextureManager.h"
+#endif
 #endif
 #include <fstream>
 #include <string>
@@ -83,7 +85,9 @@ cfdModelHandler::cfdModelHandler( void )
    this->_activeModel   = 0;
    tbased = false;
 #ifdef _OSG
+#ifdef VE_PATENTED
    _activeTDSet = 0;
+#endif
 #endif
 }
 
@@ -124,11 +128,13 @@ void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
    commandArray = input;
 }
 #ifdef _OSG
+#ifdef VE_PATENTED
 /////////////////////////////////////////////////////////////
 cfdTextureDataSet* cfdModelHandler::GetActiveTextureDataSet()
 {
    return _activeTDSet;
 }
+#endif
 #endif
 /////////////////////////////////////////////////////
 cfdDataSet* cfdModelHandler::GetActiveDataSet( void )
@@ -219,11 +225,13 @@ void cfdModelHandler::InitScene( void )
          _activeModel->SetActiveDataSet( activeDataset );
       }
 #ifdef _OSG
+#ifdef VE_PATENTED
       if(_modelList.at(0)->GetNumberOfTextureDataSets()>0)
       {
          _activeTDSet = _modelList.at(0)->GetTextureDataSet(0);
          _activeModel->SetActiveTextureDataSet(_activeTDSet);
       }
+#endif
 #endif
    }
 
@@ -276,6 +284,7 @@ void cfdModelHandler::PreFrameUpdate( void )
 
       //update active texture dataset if it exists
 #ifdef _OSG
+#ifdef VE_PATENTED
       unsigned int nTextureDataSets = _activeModel->GetNumberOfTextureDataSets();
       if( (nTextureDataSets) && ( (int)i < nTextureDataSets ) )
       {
@@ -284,6 +293,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       }else{
          _activeTDSet = 0;
       }
+#endif
 #endif
       if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
       {

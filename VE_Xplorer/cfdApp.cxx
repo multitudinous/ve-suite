@@ -74,7 +74,11 @@
 #include <osg/FrameStamp>
 #include <osgUtil/SceneView>
 #endif
+#ifdef _OSG
+#ifdef VE_PATENTED
 #include "cfdPBufferManager.h"
+#endif
+#endif
 /// C/C++ libraries
 #include <iostream>
 //#include <omp.h>

@@ -34,9 +34,6 @@
 
 class VjObs_i;
 class cfdCommandArray;
-#ifdef _OSG
-class cfdTextureBasedVizHandler;
-#endif
 #ifdef _TAO
 namespace CosNaming{ class NamingContext; }
 namespace CORBA{ class ORB; }

@@ -4,7 +4,7 @@ VE_SUITE_HOME?= ../
 
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/Exe_server
 
-IDL_HOME = $(VE_SUITE_HOME)/VESOpen
+IDL_HOME = $(VE_SUITE_HOME)/VEOpen
 
 srcdir= .
 
