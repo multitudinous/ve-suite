@@ -113,14 +113,14 @@ void UI_Frame::buildFrame( )
 {
     
    _tabs = 0;
-   _datasetScrollable = 0;
+   _datasetPanel = 0;
    //the tabs of our UI
    _tabs = new UI_Tabs( vjobs.in(), this, ID_UI_TABS);
    //_tabs = new UI_Tabs(this,-1);
    std::cout<<"testing"<<std::endl;
    //set the left side of the gui
-   _datasetScrollable = new UI_DatasetScrollable(this);
-   //_datasetPage = new UI_DatasetTab(this);
+   //_datasetScrollable = new UI_DatasetScrollable(this);
+   _datasetPanel = new UI_DatasetPanel(this);
    std::cout<<"testing1"<<std::endl;
    //_scalartab = new UI_ScalarTab(this);
    
@@ -136,7 +136,7 @@ void UI_Frame::buildFrame( )
    //the panel sizers for datasetPage and scalartab
    wxBoxSizer* _datasetSizer = new wxBoxSizer(wxHORIZONTAL);
    //wxBoxSizer* _scalarSizer = new wxBoxSizer(wxHORIZONTAL);
-   _datasetSizer->Add(_datasetScrollable,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _datasetSizer->Add(_datasetPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //_scalarSizer->Add(_scalartab,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //add the tabs to the frame

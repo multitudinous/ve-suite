@@ -42,8 +42,8 @@ public:
 
    //UI_DatasetTab* _datasetPage;
    //UI_ScalarTab* _scalartab;
-   //UI_DatasetPanel* _datasetPanel;
-   UI_DatasetScrollable* _datasetScrollable;
+   UI_DatasetPanel* _datasetPanel;
+   //UI_DatasetScrollable* _datasetScrollable;
    VjObs::obj_p_var   datasetTypes;
 
    //the notebook control that has our tabs

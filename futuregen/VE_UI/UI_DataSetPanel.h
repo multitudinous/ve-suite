@@ -54,61 +54,17 @@ public:
 
 };
 
-class UI_DatasetScrollable: public wxScrolledWindow{
+
+
+class UI_DatasetScroll: public wxScrolledWindow{
 public:
-   UI_DatasetScrollable(wxWindow* parent);
-   ~UI_DatasetScrollable();
-
-   void buildPage( void );
-
-   UI_DatasetPanel* _dataSetPanel;
-   UI_Dataset3dScrollable* _3dScrollable;
-   UI_DatasetVertexScrollable* _vertScrollable;
-   UI_DatasetPolyScrollable* _polyScrollable;
-
-   wxBoxSizer* _col1;
-   wxBoxSizer* _col2;
-   wxBoxSizer* _col3;
-
-   wxStaticBox* _dataHeadingBox;
-   wxBoxSizer* _top;
-   wxBoxSizer* _bottom;
-   DECLARE_EVENT_TABLE()
-
-};
-
-
-class UI_Dataset3dScrollable: public wxScrolledWindow{
-public:
-   UI_Dataset3dScrollable(wxScrolledWindow* parent);
-   ~UI_Dataset3dScrollable();
+   UI_DatasetScroll(wxWindow* parent);
+   ~UI_DatasetScroll();
 
    wxRadioBox* _3dRBox;
-
-   DECLARE_EVENT_TABLE()
-};
-
-
-
-
-class UI_DatasetVertexScrollable: public wxScrolledWindow{
-public:
-   UI_DatasetVertexScrollable(wxScrolledWindow* parent);
-   ~UI_DatasetVertexScrollable();
-
    wxRadioBox* _vertexRBox;
-   
-   DECLARE_EVENT_TABLE()
-};
-
-
-
-class UI_DatasetPolyScrollable: public wxScrolledWindow{
-public:
-   UI_DatasetPolyScrollable(wxScrolledWindow* parent);
-   ~UI_DatasetPolyScrollable();
-
    wxRadioBox* _polydataRBox;
+
    DECLARE_EVENT_TABLE()
 };
 
@@ -125,8 +81,9 @@ public:
 
    vector<UI_DataSets*> _DataSets;
 
-
+   UI_DatasetScroll* _RBoxScroll;
    
+  
    int _maxnoScalars;
    int _noScalars;
    wxString* _scalarNames;
@@ -146,9 +103,6 @@ public:
 
    //the controls
    wxRadioBox* _activeRBox;
-   //wxRadioBox* _3dRBox;
-   //wxRadioBox* _vertexRBox;
-   //wxRadioBox* _polydataRBox;
    wxRadioBox* _scalarRBox;
    wxRadioBox* _vectorRBox;
 
@@ -158,10 +112,10 @@ public:
    wxSlider* _maxPercentSlider;
    wxSlider* _minPercentSlider;
 
-   //wxStaticBox* _dataHeadingBox;
+   wxStaticBox* _dataHeadingBox;
 
-   //wxBoxSizer* _top;
-   //wxBoxSizer* _bottom;
+   wxBoxSizer* _top;
+   wxBoxSizer* _bottom;
 
    wxStaticBoxSizer* sRangeBoxSizer;
 
