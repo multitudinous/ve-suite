@@ -33,9 +33,13 @@ END_EVENT_TABLE()
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   :wxFrame(parent, id, title)
 {
-  wx_ve_splitter = new wxSplitterWindow(this, -1);
+  wx_log_splitter = new wxSplitterWindow(this, -1);
+  wx_ve_splitter = new wxSplitterWindow(wx_log_splitter, -1);
   wx_nw_splitter = new wxSplitterWindow(wx_ve_splitter, -1);
   
+  //LogWindow
+  logwindow = new wxTextCtrl(wx_log_splitter, -1, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+
   // VE Tabs
   m_tabs = ( UI_Tabs*) NULL;
   is_orb_init= false;
@@ -43,7 +47,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
   network = new Network(wx_nw_splitter, -1 );
   av_modules->SetNetwork(network);
-
+	
+  wx_log_splitter->SplitHorizontally(wx_ve_splitter, logwindow, -200);
   wx_nw_splitter->SplitVertically(av_modules, network, 200);  
   wx_ve_splitter->Initialize(wx_nw_splitter);
   SetSize(DetermineFrameSize(NULL));
@@ -552,8 +557,8 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
 		else
 			UINAME=p_ui_i->UIName_.c_str();
     
-		//pass the network's pointer to the UI corba implementation
-		p_ui_i->SetUINetwork(network);
+		//pass the Frame's pointer to the UI corba implementation
+		p_ui_i->SetUIFrame(this);
 
 		//Activate it to obtain the object reference
 		Body::UI_var ui = (*p_ui_i)._this();

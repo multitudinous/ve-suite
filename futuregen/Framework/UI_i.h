@@ -4,7 +4,8 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include "Network.h"
+
+//#include "Frame.h"
 #include "moduleS.h"
 #include <iostream>
 #include <string>
@@ -13,6 +14,8 @@
 #pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
+class AppFrame;
+class Network;
 
 //Class Body_UI_i
 class  Body_UI_i : public virtual POA_Body::UI
@@ -28,14 +31,13 @@ class  Body_UI_i : public virtual POA_Body::UI
 
  protected:
   Body::Executive_var executive_;
+  AppFrame * frame_;
   Network* ui_network_;
   
  public:
 
-  void SetUINetwork(Network * nw) { 
-	  ui_network_=nw; 
-  };
-
+  void SetUIFrame(AppFrame* frame);
+  
 virtual void UpdateNetwork (
     const char * network
     ACE_ENV_ARG_DECL

@@ -1,5 +1,7 @@
+#include "Frame.h"
 #include "UI_i.h"
 #include "package.h"
+
   
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
@@ -99,8 +101,13 @@ void Body_UI_i::Raise (
   ))
   {
     // Add your implementation here
-    if (string(notification)=="Hello from exec!")
-      wxMessageBox(notification, "Information");
-    std::cout<<UIName_<<" :Raise called"<<std::endl;
+	
+    if (string(notification)!="")
+      frame_->logwindow->AppendText(notification);
   }
   
+void Body_UI_i::SetUIFrame(AppFrame* frame)
+ { 
+	  frame_ = frame;
+	  ui_network_=frame_->network; 
+  }

@@ -51,15 +51,19 @@ class AppFrame : public wxFrame
   AppFrame(wxWindow* parent, wxWindowID id, const wxString& title);
   void OnClose (wxCloseEvent &event);
 
-
+  wxSplitterWindow * wx_log_splitter;
   wxSplitterWindow * wx_ve_splitter;
   wxSplitterWindow * wx_nw_splitter;
   wxMenuBar* menubar;
   wxToolBar* toolbar;
   wxIcon* icon;
+  
+  wxTextCtrl *logwindow;
   Avail_Modules* av_modules;
   Network* network;
+  
   UI_Tabs *m_tabs;
+  	
   wxImageList *m_imageList;
 
  protected:
