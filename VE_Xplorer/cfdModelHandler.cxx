@@ -218,11 +218,13 @@ void cfdModelHandler::InitScene( void )
          activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
          _activeModel->SetActiveDataSet( activeDataset );
       }
+#ifdef _OSG
       if(_modelList.at(0)->GetNumberOfTextureDataSets()>0)
       {
          _activeTDSet = _modelList.at(0)->GetTextureDataSet(0);
          _activeModel->SetActiveTextureDataSet(_activeTDSet);
       }
+#endif
    }
 
    if ( activeDataset != NULL )

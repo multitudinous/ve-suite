@@ -189,7 +189,7 @@ void cfdQuatCamHandler::Relocate( cfdDCS* worldDCS,  cfdNavigate* nav )
 
    if ( t < 1.0f )
    {
-      t += 0.0010f;
+      t += 0.10f;
       QuatCams[cam_id]->MoveCam( nav->worldTrans, t, worldDCS );
       QuatCams[cam_id]->UpdateTrans( nav );
       QuatCams[cam_id]->UpdateRotation( nav );
