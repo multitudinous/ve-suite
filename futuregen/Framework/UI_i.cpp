@@ -103,7 +103,7 @@ void Body_UI_i::Raise (
     // Add your implementation here
 	
     if (string(notification)!="")
-      frame_->logwindow->AppendText(notification);
+      frame_->Log(notification);
   }
   
 void Body_UI_i::SetUIFrame(AppFrame* frame)

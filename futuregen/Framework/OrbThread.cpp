@@ -8,10 +8,10 @@
 //////////////////////////////////////////////////////////////////////
 
 OrbThread::OrbThread(AppFrame* frame)
-: wxThread(wxTHREAD_JOINABLE)
+//: wxThread(wxTHREAD_JOINABLE)
 {
 	frame_ = frame;
-	Create();
+	//Create();
 }
 
 OrbThread::~OrbThread()
@@ -19,8 +19,8 @@ OrbThread::~OrbThread()
 
 }
 
-bool OrbThread::Do() 
-//int OrbThread::svc (void)
+//bool OrbThread::Do() 
+int OrbThread::svc (void)
 {
 	long id = time(NULL);
 	char uiname[256];
@@ -67,7 +67,7 @@ bool OrbThread::Do()
 	frame_->orb->run();
 		}catch (CORBA::Exception &) {
 		
-		frame_->logwindow->AppendText("Can't find executive or UI registration error.\n");
+		frame_->Log("Can't find executive or UI registration error.\n");
 	}
 
 	return true;

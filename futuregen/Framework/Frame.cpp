@@ -29,6 +29,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
   EVT_MENU(v21ID_REI_BASE, AppFrame::LoadREIBase)
   EVT_MENU(v21ID_REI_SOUR, AppFrame::LoadREISour)
+  EVT_UPDATE_UI(-1, AppFrame::OnUpdateUIPop)
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
@@ -39,7 +40,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   wx_nw_splitter = new wxSplitterWindow(wx_ve_splitter, -1);
   
   //LogWindow
-  logwindow = new wxTextCtrl(wx_log_splitter, -1, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
+  logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
 
   // VE Tabs
   m_tabs = ( UI_Tabs*) NULL;
@@ -544,8 +545,8 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
 
 		//_mutex.acquire();	  
 		OrbThread* ot = new OrbThread(this);
-		//ot->activate();
-		ot->Run();
+		ot->activate();
+		//ot->Run();
 		//register it to the server
 		//_mutex.acquire();
 
@@ -648,4 +649,16 @@ void AppFrame::LoadREIBase(wxCommandEvent &event)
 void AppFrame::LoadREISour(wxCommandEvent &event)
 {
   network->Load("REISour.nt");
+}
+
+void AppFrame::Log(const char* msg)
+{
+	wxUpdateUIEvent u;
+	u.SetText(msg);
+	::wxPostEvent(this, u);
+}
+
+void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event)
+{
+	logwindow->AppendText(event.GetText());
 }

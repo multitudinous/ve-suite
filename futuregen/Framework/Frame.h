@@ -41,7 +41,8 @@ enum {
   v21ID_REI_BASE,
   v21ID_REI_SOUR,
   v21ID_SWEET,
-  v21ID_CO_DISPOSAL
+  v21ID_CO_DISPOSAL,
+  MYLOG
 };
 
 class AppFrame : public wxFrame
@@ -71,6 +72,7 @@ class AppFrame : public wxFrame
   CosNaming::NamingContext_var naming_context;
   Body_UI_i* p_ui_i;
 
+  void Log(const char* msg);
   //ACE_Thread_Mutex _mutex; //public mutex for the execution order
  protected:
   int m_frameNr;
@@ -116,7 +118,7 @@ class AppFrame : public wxFrame
   void New(wxCommandEvent &event);
   bool init_orb_naming();
   void CreateVETab();
-
+  void OnUpdateUIPop(wxUpdateUIEvent& event);
 
   DECLARE_EVENT_TABLE()
 };
