@@ -4,20 +4,20 @@ class cfdGroup;
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-
-#include <osg/Node>
-#include <osg/Geometry>
-#include <osg/Texture3D>
-#include <osg/TexGen>
-#include <osg/TexEnv>
-#include <osg/Geode>
-#include <osg/Billboard>
-#include <osg/ClipNode>
-#include <osg/TexGenNode>
-#include <osg/Material>
-#include <osg/Shape>
-#include <osg/Image>
-
+namespace osg{
+   class Node;
+   class Geometry;
+   class Texture3D;
+   class TexGen;
+   class TexEnv;
+   class Geode;
+   class Billboard;
+   class ClipNode;
+   class TexGenNode;
+   class Material;
+   class Shape;
+   class Image;
+}
 #include "cfdVolumeSliceSwitchCallback.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfdTextureManager.h"
@@ -29,7 +29,10 @@ public:
    virtual ~cfdVolumeVisualization();
 
    enum VisMode{PLAY,STOP};
+   enum Direction{FORWARD,BACKWARD};
+   enum ClipPlane{XPLANE=0,YPLANE,ZPLANE,ARBITRARY};
 
+   void SetPlayDirection(Direction dir);
    void SetPlayMode(VisMode mode);
    void SetSliceAlpha(float alpha = .5);
    void SetTextureUnit(int tUnit = 0);
@@ -43,12 +46,17 @@ public:
    void SetTextureManager(cfdTextureManager* tm);
    void UpdateStateSet(osg::StateSet* ss);
    void CreateNode();
+   void AddClipPlane(ClipPlane direction,float* position);
+   void RemoveClipPlane(ClipPlane direction);
+   void UpdateClipPlanePosition(ClipPlane direction,double* newPosition);
    bool isCreated(){return _isCreated;}
+
    cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk;}
    
    osg::ref_ptr<osg::StateSet> GetStateSet();
    osg::ref_ptr<osg::Texture3D> GetTextureData();
    osg::ref_ptr<osg::Group> GetVolumeVisNode();
+   
 
    cfdVolumeVisualization& operator=(const cfdVolumeVisualization& rhs);
 #endif
@@ -56,11 +64,13 @@ public:
 
 protected:
    VisMode _mode;
+   Direction _traverseDirection;
    bool _verbose;
    bool _isCreated;
    int _nSlices;
    int _tUnit;
    float _alpha;
+   void _createVisualBBox();
    void _createClipCube();
    void _buildGraph();
    void _createClipNode();
@@ -75,6 +85,7 @@ protected:
    osg::ref_ptr<osg::Group>_volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
    osg::BoundingBox _bbox;
+   osg::ref_ptr<osg::ClipNode> _clipNode;
    osg::ref_ptr<osg::StateSet> _stateSet;
    osg::ref_ptr<osg::Material> _material;
    osg::ref_ptr<osg::Texture3D> _texture;

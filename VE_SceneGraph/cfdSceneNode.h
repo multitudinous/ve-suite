@@ -41,11 +41,13 @@ class pfDCS;
 class pfGroup;
 class pfSwitch;
 #elif _OSG
-#include <osg/Node>
-#include <osg/Geode>
-#include <osg/Group>
-#include <osg/MatrixTransform>
-#include <osg/Switch>
+namespace osg{
+class Node;
+class Geode;
+class Group;
+class MatrixTransform;
+class Switch;
+}
 #elif _OPENSG
 #endif
 

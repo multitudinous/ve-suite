@@ -53,6 +53,7 @@
 #elif _OSG
 #include <osgDB/ReadFile>
 #include <osg/Node>
+#include <osg/Fog>
 #include <osg/Group>
 #include <osg/MatrixTransform>
 #include <osg/Geode>

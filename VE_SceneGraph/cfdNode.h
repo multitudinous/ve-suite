@@ -38,8 +38,10 @@
 class pfNode;
 class pfFog;
 #elif _OSG
-#include <osg/Node>
-#include <osg/Fog>
+namespace osg{
+   class Node;
+   class Fog;
+}
 #elif _OPENSG
 #endif
 

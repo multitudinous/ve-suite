@@ -37,7 +37,9 @@
 #ifdef _PERFORMER
 class pfGeode;
 #elif _OSG
-class osg::Geode;
+namespace osg{
+   class Geode;
+}
 #elif _OPENSG
 #endif
 class vtkActor;

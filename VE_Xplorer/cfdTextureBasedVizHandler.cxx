@@ -7,10 +7,13 @@
 #include "cfdNavigate.h"
 #include "cfdVolumeVisualization.h"
 #include "cfdTextureManager.h"
+#include "cfdGraphicsObject.h"
+#include "cfdEnum.h"
 #include <fstream>
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
+#include <osg/Group>
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////
@@ -23,6 +26,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _cursor  = 0;
    _activeVolumeVizNode = 0;
    _activeTM = 0;
+   _parent = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -40,6 +44,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHan
    _cursor = tbvh._cursor;
    _activeVolumeVizNode = tbvh._activeVolumeVizNode;
    _activeTM = tbvh._activeTM;
+   _parent = tbvh._parent;
 }
 ///////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
@@ -69,10 +74,10 @@ cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
       delete _activeVolumeVizNode;
       _activeVolumeVizNode = 0;
    }
-}
-/////////////////////////////////////////////
-void cfdTextureBasedVizHandler::InitScene()
-{
+   if(_parent){
+      delete _parent;
+      _parent = 0;
+   }
 }
 //////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::PreFrameUpdate()
@@ -88,6 +93,31 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          << ", pre_state = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE )
          << ", teacher_state = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE )
          << std::endl << vprDEBUG_FLUSH;
+   }
+
+   if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE ){
+      //set the transient flag in the callback
+      if(_activeVolumeVizNode){
+         _activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::PLAY);
+      }
+   }
+   if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_STOP){
+      if(_activeVolumeVizNode){
+         _activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::STOP);
+      }
+   }else if(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_FORWARD){
+      if(_activeVolumeVizNode){
+         _activeVolumeVizNode->SetPlayDirection(cfdVolumeVisualization::FORWARD);
+      }
+   }else if(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_BACKWARD){
+      if(_activeVolumeVizNode){
+         _activeVolumeVizNode->SetPlayDirection(cfdVolumeVisualization::BACKWARD);
+      }
+   }else if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ){ 
+      if(_parent){
+         ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+      }
+      
    }
 }
 ///////////////////////////////////////////////////////////////////
@@ -110,6 +140,11 @@ void cfdTextureBasedVizHandler::SetWorldDCS(cfdDCS* dcs)
 {
    _worldDCS = dcs;
 }
+///////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::SetParentNode(cfdGroup* parent)
+{
+   _parent = parent;
+}
 ////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetNavigate(cfdNavigate* navigate)
 {
@@ -129,10 +164,12 @@ void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
          _activeVolumeVizNode->SetTextureManager(_activeTM);
          _activeVolumeVizNode->CreateNode();
          //need to move/switch
-         if(_worldDCS){
+         if(_parent){
+            if(!((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get())){
              //this may not be right
-             ((osg::Group*)_worldDCS->GetRawNode())->addChild(_activeVolumeVizNode->GetVolumeVisNode().get());
-          }
+               ((osg::Group*)_parent->GetRawNode())->addChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+            }
+         }
       }
    }
 }
@@ -200,6 +237,7 @@ cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTexture
       _cursor = tbvh._cursor;
       _activeVolumeVizNode = tbvh._activeVolumeVizNode;
       _activeTM = tbvh._activeTM;
+      _parent = tbvh._parent;
    }
    return *this;
 }

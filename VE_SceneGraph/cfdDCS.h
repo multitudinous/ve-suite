@@ -41,7 +41,9 @@ class cfdNode;
 #ifdef _PERFORMER
 class pfDCS;
 #elif _OSG
-class osg::MatrixTransform;
+namespace osg{
+   class MatrixTransform;
+}
 #elif _OPENSG
 #endif
 

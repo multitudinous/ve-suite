@@ -64,9 +64,13 @@ class pfGroup;
 // Declare my application class
 class cfdApp : public vrj::PfApp
 #elif _OSG
-#include <osg/Timer>
+
+
+#include <vrj/Draw/OSG/osgApp.h>
+#include <osg/Timer>;
 namespace osg
 {
+   
    class Group;
    class FrameStamp;
   
@@ -75,8 +79,6 @@ namespace osgUtil
 {
    class SceneView;
 }
-
-#include <vrj/Draw/OSG/osgApp.h>
 class cfdTextureBasedVizHandler;
 class cfdApp: public vrj::OsgApp
 #elif _OPENSG

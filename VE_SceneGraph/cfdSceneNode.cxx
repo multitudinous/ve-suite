@@ -35,6 +35,11 @@
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
 #elif _OSG
+#include <osg/Node>
+#include <osg/Geode>
+#include <osg/Group>
+#include <osg/MatrixTransform>
+#include <osg/Switch>
 #elif _OPENSG
 #endif
 //////////////////////////////////

@@ -45,6 +45,7 @@
 #include <osg/Group>
 #include <osgDB/WriteFile>
 #include <osg/FrameStamp>
+ 
 
 #include <osgUtil/SceneView>
 #endif
@@ -299,14 +300,16 @@ inline void cfdApp::initScene( )
 
    //create the volume viz handler
 #ifdef _OSG
-   _tbvHandler = new cfdTextureBasedVizHandler();
+   if(!_tbvHandler){
+      _tbvHandler = new cfdTextureBasedVizHandler();
+   }
    _tbvHandler->SetParameterFile(filein_name);
-   _tbvHandler->SetWorldDCS( _sceneManager->GetWorldDCS() );
+   //_tbvHandler->SetWorldDCS( _sceneManager->GetWorldDCS() );
+   _tbvHandler->SetParentNode(_sceneManager->GetWorldDCS() );
    _tbvHandler->SetNavigate( _environmentHandler->GetNavigate() );
    _tbvHandler->SetCursor( _environmentHandler->GetCursor() );
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    _tbvHandler->InitVolumeVizNodes();
-   //_tbvhManager->SetContainerClass();
 #endif
 /*
    // TODO fix transient

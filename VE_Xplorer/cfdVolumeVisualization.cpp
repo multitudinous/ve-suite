@@ -1,9 +1,24 @@
 #include "cfdVolumeVisualization.h"
+
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
 #include <iostream>
 #include <osg/BlendFunc>
+#include <osg/ClipPlane>
+#include <osg/ClipNode>
+#include <osg/Node>
+#include <osg/Geometry>
+#include <osg/Texture3D>
+#include <osg/TexGen>
+#include <osg/TexEnv>
+#include <osg/Geode>
+#include <osg/Billboard>
+#include <osg/ClipNode>
+#include <osg/TexGenNode>
+#include <osg/Material>
+#include <osg/Shape>
+#include <osg/Image>
 ////////////////////////////////////////////////
 //Constructor                                 //
 ////////////////////////////////////////////////
@@ -14,6 +29,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _vSSCbk = 0;
    _utCbk = 0;
    _mode = PLAY;
+   _traverseDirection = FORWARD;
    _stateSet  = 0;
    _material  = 0;
    _texture  = 0;
@@ -34,6 +50,7 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _texGenParams = rhs._texGenParams;
    _bbox = rhs._bbox;
    _mode = rhs._mode;
+   _traverseDirection = rhs._traverseDirection;
    _stateSet = rhs._stateSet;
    _material = rhs._material;
    _texture = rhs._texture;
@@ -78,6 +95,27 @@ void cfdVolumeVisualization::SetPlayMode(VisMode mode)
       std::cout<<"Invalid cfdTextureManager!"<<std::endl;
       std::cout<<"Cannot set viz mode of texture manager in:"<<std::endl;
       std::cout<<"cfdVolumeVisualization::SetPlayMode()"<<std::endl;
+   }
+}
+////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::SetPlayDirection(Direction dir)
+{
+   _traverseDirection = dir;
+   if(_tm){
+      switch(_traverseDirection){
+         case FORWARD:       
+            _tm->setDirection(1);
+            break;
+         case BACKWARD:
+         default:
+            _tm->setDirection(-1);
+            break;
+      };
+   }else{
+      std::cout<<"Warning!!!!"<<std::endl;
+      std::cout<<"Invalid cfdTextureManager!"<<std::endl;
+      std::cout<<"Cannot set direction of texture manager in:"<<std::endl;
+      std::cout<<"cfdVolumeVisualization::SetPlayDirection()"<<std::endl;
    }
 }
 //////////////////////////////////////////////////////////////////////
@@ -216,6 +254,54 @@ void cfdVolumeVisualization::SetVeboseFlag(bool flag)
 }
 //////////////////////////////////////////////
 void cfdVolumeVisualization::_createClipNode()
+{
+   if(!_clipNode.valid()){
+      _clipNode = new osg::ClipNode();
+   }
+}
+//////////////////////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::AddClipPlane(ClipPlane direction,float* position)
+{
+   if(_clipNode.valid()){
+      _clipNode->addClipPlane(new osg::ClipPlane(direction,
+                                            position[0],
+                                            position[1],
+                                            position[2],
+                                            position[3]));
+   }else{
+      std::cout<<"Error!!!"<<std::endl;
+      std::cout<<"Invalid osg::ClipNode in cfdVolumeVisualization::AddClipPlane!!"<<std::endl;
+   }
+}
+/////////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::RemoveClipPlane(ClipPlane direction)
+{
+   if(_clipNode.valid()){
+      _clipNode->removeClipPlane(direction);
+   }
+}
+/////////////////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::UpdateClipPlanePosition(ClipPlane direction,
+                                               double* newPosition)
+{
+   osg::ClipPlane* plane = 0;
+   if(_clipNode.valid()){
+      plane = _clipNode->getClipPlane(direction);
+      if(plane){
+         if(newPosition){
+            plane->setClipPlane(newPosition);
+         }else{
+            std::cout<<"Invalid plane position!"<<std::endl;
+            std::cout<<"cfdVolumeVisualization::UpdateClipPlanePosition."<<std::endl;
+         }
+      }else{
+         std::cout<<"Invalid plane!"<<std::endl;
+         std::cout<<"cfdVolumeVisualization::UpdateClipPlanePosition."<<std::endl;
+      }
+   }
+}
+//////////////////////////////////////////////
+void cfdVolumeVisualization::_createVisualBBox()
 {
    if(_bbox.valid()){
       _visualBoundingBox = new osg::Group();
@@ -493,6 +579,7 @@ void cfdVolumeVisualization::_buildGraph()
    _createTexGenNode();
    _createStateSet();
    _createVolumeBillboardSlices();
+   _createVisualBBox();
    _createClipNode();
    _isCreated = true;
    if(_texGenParams.valid()){
@@ -500,6 +587,9 @@ void cfdVolumeVisualization::_buildGraph()
          _texGenParams->setStateSet(_stateSet.get());
       }else{
          _isCreated = false;
+      }
+      if(_clipNode.valid()){
+         _texGenParams->addChild(_clipNode.get());
       }
       _volumeVizNode->addChild(_texGenParams.get());
       if(_slices.valid()){
@@ -516,11 +606,9 @@ void cfdVolumeVisualization::_buildGraph()
       }else{
          _isCreated = false;
       }
+      
       if(_visualBoundingBox.valid()){
          _volumeVizNode->addChild(_visualBoundingBox.get());
-        
-         
-         //_volumeVizNode->setUpdateCallback(_utCbk);
       }else{
          _isCreated = false;
       } 

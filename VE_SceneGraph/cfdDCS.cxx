@@ -128,7 +128,7 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
       this->_dcs = input._dcs;
       _group = dynamic_cast<pfGroup*>(_dcs);
 #elif _OSG
-      _dcs->unref();
+      //_dcs->unref();
       _dcs = input._dcs;
       _group = dynamic_cast<osg::Group*>(_dcs);
 #elif _OPENSG

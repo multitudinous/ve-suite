@@ -120,6 +120,8 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          this->geodes.push_back( new cfdGeode() );
          this->geodes.back()->TranslateTocfdGeode( this->actors.at( i ) );
       }
+   }else if(type == TEXTURE){
+      
    }
 }
 

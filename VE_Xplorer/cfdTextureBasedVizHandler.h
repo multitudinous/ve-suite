@@ -2,10 +2,12 @@
 #define CFD_TEXTURE_BASED_MODEL_HANDLER_H
 
 class cfdDCS;
+class cfdGroup;
 class cfdCursor;
 class cfdNavigate;
 class cfdCommandArray;
 class cfdSwitch;
+class cfdGraphicsObject;
 
 class cfdTextureManager;
 #include <vector>
@@ -19,11 +21,11 @@ public:
    cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh);
    ~cfdTextureBasedVizHandler();
 
-   void InitScene();
    void PreFrameUpdate();
    void SetParameterFile(char* paramFile);
    void SetCommandArray(cfdCommandArray* cmdArray);
    void SetWorldDCS(cfdDCS* dcs);
+   void SetParentNode(cfdGroup* parent);
    void SetNavigate(cfdNavigate* navigate);
    void SetCursor(cfdCursor* cursor);
    void SetActiveTextureManager(cfdTextureManager* tm);
@@ -40,6 +42,7 @@ protected:
    cfdTextureManager* _activeTM;
    std::vector<cfdVolumeVisualization> _volumeVisNodes;
    cfdVolumeVisualization* _activeVolumeVizNode;
+   cfdGroup* _parent;
 };
 #endif //OSG
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H
