@@ -165,20 +165,20 @@ inline osg::Group* cfdApp::getScene()
 void cfdApp::contextInit()
 {
    OsgApp::contextInit();
-#ifdef USE_CG_SHADERS
+#ifdef CFD_USE_SHADERS
    if (!_pbuffer){
       _pbuffer = new cfdPBufferManager();
       _pbuffer->isSupported();
    } 
-   if(_tbvh){
-      _tbvh->SetPBuffer(_pbuffer);
+   if(_tbvHandler){
+      _tbvHandler->SetPBuffer(_pbuffer);
    }
 #endif
 }
 ///////////////////////////
 void cfdApp::contextClose()
 {
-#ifdef USE_CG_SHADERS
+#ifdef CFD_USE_SHADERS
    if(!_pbuffer){
       delete _pbuffer;
       _pbuffer = 0;
@@ -188,7 +188,7 @@ void cfdApp::contextClose()
 ////////////////////////////////////////
 cfdPBufferManager* cfdApp::GetPBuffer()
 {
-#ifdef USE_CG_SHADERS
+#ifdef CFD_USE_SHADERS
    if(_pbuffer){
       return _pbuffer;
    }

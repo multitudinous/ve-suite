@@ -1,4 +1,5 @@
 #ifdef _OSG
+#ifdef CFD_USE_SHADERS
 #include "cfdPBufferManager.h"
 
 // WGL_ARB_pbuffer
@@ -245,7 +246,7 @@ int cfdPBufferManager::isSupported()
    initializePBufferEntryFunctions();
    return _isSupported;
 }
-
+#endif
 #endif
 
    

@@ -550,7 +550,13 @@
 				RelativePath=".\cfd1DTextInput.cxx">
 			</File>
 			<File
+				RelativePath=".\cfd3DTextureCullCallback.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdAccessoryFunctions.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdAdvectPropertyCallback.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdAnimatedImage.cxx">
@@ -578,6 +584,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdContours.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdCopyTo3DTextureStage.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdCursor.cxx">
@@ -1262,16 +1271,19 @@
 				RelativePath="cfd1DTextInput.h">
 			</File>
 			<File
+				RelativePath=".\cfd3DTextureCullCallback.h">
+			</File>
+			<File
 				RelativePath="VE_Xplorer\cfdAccessoryFunctions.h">
+			</File>
+			<File
+				RelativePath=".\cfdAdvectPropertyCallback.h">
 			</File>
 			<File
 				RelativePath="cfdAnimatedImage.h">
 			</File>
 			<File
 				RelativePath="cfdAnimatedStreamlineCone.h">
-			</File>
-			<File
-				RelativePath="cfdAnimation.h">
 			</File>
 			<File
 				RelativePath="cfdApp.h">
@@ -1293,6 +1305,9 @@
 			</File>
 			<File
 				RelativePath="cfdContours.h">
+			</File>
+			<File
+				RelativePath=".\cfdCopyTo3DTextureStage.h">
 			</File>
 			<File
 				RelativePath=".\cfdCosNaming.h">
