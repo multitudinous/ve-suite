@@ -1,1 +1,1 @@
-${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project /home/users/mccdo/svn_VE_Suite/VE_Suite/bin/sim.base.jconf /home/users/mccdo/svn_VE_Suite/VE_Suite/bin/sim.wand.mixin.jconf
+${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.jconf ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
