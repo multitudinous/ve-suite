@@ -90,7 +90,7 @@ void VEOPPDmod::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vr/Applications/TSVEG/Test_Pit/OPPD/Current_Demo/vrxpr.param.geomorg.useonwall";
+   this->_param = "/home/vr/Applications/TSVEG/OPPD_Work/PROE_Redraw/vrxpr.param.geomorg";
    //cout << _param << endl;
    CreateObjects();
 }
@@ -110,7 +110,7 @@ void VEOPPDmod::CreateCustomVizFeature( int input )
    // Find radius result
    for ( unsigned int i = 0; i < v_desc.size(); i++ )
    {
-      if( v_desc[ i ].Cmp( "Put variable name here" ) )
+      if( v_desc[ i ].Cmp( "hrrhgthesk" ) )
       {
          const string var( v_value[ i ].c_str() );
          cout << var << endl;
