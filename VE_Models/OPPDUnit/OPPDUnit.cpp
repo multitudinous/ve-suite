@@ -130,9 +130,8 @@ try
 		naming_context->rebind(Unitname, unit.in());
     }
 	    
-	    
 		//Call the Executive CORBA call to register it to the Executive
-		exec->RegisterUnit(unit_i.UnitName_.c_str(), 0); //0 means a normal module
+		exec->RegisterUnit(unit_i.UnitName_.c_str(), unit.in(), 0); //0 means a normal module
 	    
 		orb->run();
 		// Destroy the POA, waiting until the destruction terminates
