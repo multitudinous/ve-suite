@@ -95,8 +95,8 @@ void UI_GeometryTab::_buildPage()
    wxStaticText* opacityLabelRight = new wxStaticText(this, -1, wxT("Opaque"));
    
    wxStaticText* lodLabel = new wxStaticText(this, -1, wxT("Geometry LOD Control"));
-   wxStaticText* lodLabelLeft = new wxStaticText(this, -1, wxT("Lower"));
-   wxStaticText* lodLabelRight = new wxStaticText(this, -1, wxT("Higher")); 
+   wxStaticText* lodLabelLeft = new wxStaticText(this, -1, wxT("Higher"));
+   wxStaticText* lodLabelRight = new wxStaticText(this, -1, wxT("Lower")); 
 
    //opacity slider
    geomOpacitySlider = new wxSlider(this, GEOMETRY_OPACITY_SLIDER,100,0,100,

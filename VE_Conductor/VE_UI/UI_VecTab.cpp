@@ -170,8 +170,8 @@ void UI_VectorTab::_buildPage()
    
    // second row
    wxStaticText* warpScaleText = new wxStaticText(this,-1, wxT("Warped Contour Scale"));
-   wxStaticText* warpScaleTextLeft = new wxStaticText(this,-1, wxT("Lower"));
-   wxStaticText* warpScaleTextRight = new wxStaticText(this,-1, wxT("Higher"));
+   wxStaticText* warpScaleTextLeft = new wxStaticText(this,-1, wxT("Higher"));
+   wxStaticText* warpScaleTextRight = new wxStaticText(this,-1, wxT("Lower"));
 
    wrapContourScaleSlider = new wxSlider(this, WARP_SCALE_SLIDER,50,1,100,
                                 wxDefaultPosition,wxDefaultSize,/* slidesize,*/
