@@ -80,6 +80,8 @@ void Body_Unit_i::StartCalc (
       p.Load(feedbck_igas, strlen(feedbck_igas));
     }
 
+    summary_values summaries;
+
     Gas *gas_in = new Gas;
 
     gashelper.IntToGas(&(p.intfs[0]), *gas_in);
@@ -93,6 +95,8 @@ void Body_Unit_i::StartCalc (
     double pchg;
     std::string msg;
 
+    char s[150];
+    
     for(int i=0; i<(int)sel_species.size(); i++) 
       {
 	if(sel_species[i] == "Temperature")            
@@ -120,6 +124,9 @@ void Body_Unit_i::StartCalc (
 	      sp = 1e-08;
 	    
 	    pchg = fabs(mapiter->second - sp) / sp;
+
+	    sprintf(s, "%s  UNITS:% FORMAT:10.2f", sel_species[i].c_str());
+	    summaries.insert_summary_val(s, pchg);
 	    
 	    if(pchg <= atof(max_error[i].c_str())) 
 	      done = true;
@@ -131,7 +138,8 @@ void Body_Unit_i::StartCalc (
       
 	  } 
 	else {
-	  //done = false;
+	    sprintf(s, "%s  UNITS:% FORMAT:10.2f", sel_species[i].c_str());
+	    summaries.insert_summary_val(s, 100);
 	}
 	
 	last_values[(int)id_][sel_species[i]] = sp;
@@ -161,8 +169,10 @@ void Body_Unit_i::StartCalc (
     executive_->SetExportData(id_, 0, result);
    
     p.intfs.clear();
+    p.intfs.resize(1);
+    gashelper.SumToInt(&summaries, p.intfs[0]);
     result = p.Save(rv);
-
+    
     executive_->SetModuleResult(id_, result);  
 
     if(gas_in) delete gas_in;

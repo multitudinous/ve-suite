@@ -659,8 +659,10 @@ void Body_Executive_i::RegisterUI (
     
     if (CORBA::is_nil(ui))
       cerr << "NULL UI\n";
+
     //uis_.insert(std::pair<std::string, Body::UI_var>(std::string(UIName), ui));
     uis_[std::string(UIName)] = ui;
+
     ui->Raise("Connected to Executive\n");
     cerr << UIName << " : registered a UI\n";
   }
@@ -684,8 +686,8 @@ void Body_Executive_i::RegisterUnit (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
-  
+  //_mutex.acquire();
+
   static long unit_id;
   
   // When this is called, a unit is already binded to the name service, 
@@ -699,15 +701,16 @@ void Body_Executive_i::RegisterUnit (
 
   _mod_units[std::string(UnitName)] = Body::Unit::_narrow(unit_object.in());
   _mod_units[std::string(UnitName)]->SetID(unit_id++);
-  
+
   if(_exec_thread.find(std::string(UnitName))==_exec_thread.end()) {
     // CLEAN THIS UP IN UNREGISTER UNIT !
     Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
     ex->activate();
+
     _exec_thread[std::string(UnitName)] = ex;
   }
 
-  _mutex.release();
+  //_mutex.release();
 }
   
 void Body_Executive_i::UnRegisterUI (
