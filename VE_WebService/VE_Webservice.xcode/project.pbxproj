@@ -1,0 +1,157 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 39;
+	objects = {
+		014CEA520018CE5811CA2923 = {
+			buildSettings = {
+				COPY_PHASE_STRIP = NO;
+				DEBUGGING_SYMBOLS = YES;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_ENABLE_FIX_AND_CONTINUE = YES;
+				GCC_GENERATE_DEBUGGING_SYMBOLS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				OPTIMIZATION_CFLAGS = "-O0";
+				ZERO_LINK = YES;
+			};
+			isa = PBXBuildStyle;
+			name = Development;
+		};
+		014CEA530018CE5811CA2923 = {
+			buildSettings = {
+				COPY_PHASE_STRIP = YES;
+				GCC_ENABLE_FIX_AND_CONTINUE = NO;
+				ZERO_LINK = NO;
+			};
+			isa = PBXBuildStyle;
+			name = Deployment;
+		};
+//010
+//011
+//012
+//013
+//014
+//080
+//081
+//082
+//083
+//084
+		08FB7793FE84155DC02AAC07 = {
+			buildSettings = {
+			};
+			buildStyles = (
+				014CEA520018CE5811CA2923,
+				014CEA530018CE5811CA2923,
+			);
+			hasScannedForEncodings = 1;
+			isa = PBXProject;
+			mainGroup = 08FB7794FE84155DC02AAC07;
+			projectDirPath = "";
+			targets = (
+				D28A88AD04BDD90700651E21,
+			);
+		};
+		08FB7794FE84155DC02AAC07 = {
+			children = (
+				AD585E3507F4CB640030C9C2,
+				AD585E3607F4CB640030C9C2,
+				AD585E3707F4CB640030C9C2,
+				AD585E2A07F4A4560030C9C2,
+			);
+			isa = PBXGroup;
+			name = VE_Webservice;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+//080
+//081
+//082
+//083
+//084
+//AD0
+//AD1
+//AD2
+//AD3
+//AD4
+		AD585E2A07F4A4560030C9C2 = {
+			children = (
+			);
+			indentWidth = 6;
+			isa = PBXGroup;
+			path = src;
+			refType = 4;
+			sourceTree = "<group>";
+			tabWidth = 6;
+			usesTabs = 0;
+		};
+		AD585E3507F4CB640030C9C2 = {
+			fileEncoding = 30;
+			indentWidth = 3;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = cfdWebServicesMain.cxx;
+			path = src/cfdWebServicesMain.cxx;
+			refType = 4;
+			sourceTree = "<group>";
+			tabWidth = 3;
+			usesTabs = 0;
+		};
+		AD585E3607F4CB640030C9C2 = {
+			fileEncoding = 30;
+			indentWidth = 3;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			name = cfdWebServices.h;
+			path = src/cfdWebServices.h;
+			refType = 4;
+			sourceTree = "<group>";
+			tabWidth = 3;
+			usesTabs = 0;
+		};
+		AD585E3707F4CB640030C9C2 = {
+			fileEncoding = 30;
+			indentWidth = 3;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			name = cfdWebServices.cxx;
+			path = src/cfdWebServices.cxx;
+			refType = 4;
+			sourceTree = "<group>";
+			tabWidth = 3;
+			usesTabs = 0;
+		};
+//AD0
+//AD1
+//AD2
+//AD3
+//AD4
+//D20
+//D21
+//D22
+//D23
+//D24
+		D28A88AD04BDD90700651E21 = {
+			buildArgumentsString = "$(ACTION)";
+			buildPhases = (
+			);
+			buildSettings = {
+				OTHER_CFLAGS = "";
+				OTHER_LDFLAGS = "";
+				OTHER_REZFLAGS = "";
+				PRODUCT_NAME = VE_Webservice;
+				SECTORDER_FLAGS = "";
+				WARNING_CFLAGS = "-Wmost -Wno-four-char-constants -Wno-unknown-pragmas";
+			};
+			buildToolPath = /usr/bin/make;
+			dependencies = (
+			);
+			isa = PBXLegacyTarget;
+			name = VE_Webservice;
+			passBuildSettingsInEnvironment = 1;
+			productName = VE_Webservice;
+		};
+	};
+	rootObject = 08FB7793FE84155DC02AAC07;
+}
