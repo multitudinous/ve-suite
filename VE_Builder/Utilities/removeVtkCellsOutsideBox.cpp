@@ -369,7 +369,7 @@ int main( int argc, char *argv[] )
 
    delete [] inFileName;   inFileName = NULL;
    delete [] outFileName;  outFileName = NULL;
-   cout << "now to delete dataset..." << endl;
+   //cout << "now to delete dataset..." << endl;
    dataset->Delete();
    return 0;
 }
