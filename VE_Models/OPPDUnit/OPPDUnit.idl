@@ -1,0 +1,29 @@
+// OPPDUnit.idl : type library source for OPPDUnit.exe
+
+// This file will be processed by the MIDL compiler to produce the
+// type library (OPPDUnit.tlb).
+
+[ uuid(58F4E9D3-5693-42A1-A4E9-3D206ED1010F), version(1.0) ]
+library OPPDUnit
+{
+	importlib("stdole32.tlb");
+	importlib("stdole2.tlb");
+
+	//  Primary dispatch interface for COPPDUnitDoc
+	
+	[ uuid(395E090F-393C-4AF9-91CA-8EC8EAF660C0) ]
+	dispinterface IOPPDUnit
+	{
+		properties:
+			
+		methods:
+	};
+
+	//  Class information for COPPDUnitDoc
+	
+	[ uuid(458DEF56-B4F7-4F57-838E-7E40C7D9C6BE) ]
+	coclass OPPDUnit
+	{
+		[default] dispinterface IOPPDUnit;
+	};
+};

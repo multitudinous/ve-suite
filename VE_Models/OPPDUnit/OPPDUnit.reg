@@ -1,0 +1,14 @@
+REGEDIT
+; This .REG file may be used by your SETUP program.
+;   If a SETUP program is not available, the entries below will be
+;   registered in your InitInstance automatically with a call to
+;   CWinApp::RegisterShellFileTypes and COleObjectFactory::UpdateRegistryAll.
+
+HKEY_CLASSES_ROOT\OPPDUnit.Application = OPPDUnit Application
+HKEY_CLASSES_ROOT\OPPDUnit.Application\CLSID = {458DEF56-B4F7-4F57-838E-7E40C7D9C6BE}
+
+HKEY_CLASSES_ROOT\CLSID\{458DEF56-B4F7-4F57-838E-7E40C7D9C6BE} = OPPDUnit Application
+HKEY_CLASSES_ROOT\CLSID\{458DEF56-B4F7-4F57-838E-7E40C7D9C6BE}\ProgId = OPPDUnit.Application
+
+
+HKEY_CLASSES_ROOT\CLSID\{458DEF56-B4F7-4F57-838E-7E40C7D9C6BE}\LocalServer32 = OPPDUnit.EXE
