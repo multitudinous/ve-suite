@@ -290,7 +290,7 @@ void multiPlaneVtkOutput::readParamFileandWriteMultiPlanes( vtkDataSet *unsGrid,
    float Cut;
    int   numCut;
 
-   ifstream inFile( paramFile, ios::in );
+   std::ifstream inFile( paramFile, std::ios::in );
 
    this->unsData = unsGrid;
 
