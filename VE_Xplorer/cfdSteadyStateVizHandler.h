@@ -137,6 +137,7 @@ class cfdSteadyStateVizHandler : public vpr::Singleton< cfdSteadyStateVizHandler
       bool actorsAreReady;
       bool computeActorsAndGeodes;
       bool changeGeometry;
+      bool texturesActive;
       vtkPolyData*   lastSource;
       cfdNavigate*   nav;
       cfdCursor*     cursor;

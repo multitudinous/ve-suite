@@ -810,7 +810,8 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    }
    else if (   ( 0 <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&
                ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) < 100 )  && 
-               ( this->computeActorsAndGeodes == false ) )
+               ( !this->computeActorsAndGeodes ) &&
+               ( !this->texturesActive ) )
    {
       vprDEBUG(vprDBG_ALL,1) << " selected ID number = " << this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
                              << std::endl << vprDEBUG_FLUSH;
@@ -865,6 +866,19 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          pos->second->RemovecfdGeodeFromDCS();
          delete pos->second;
          graphicsObjects.erase( pos++ );
+      }
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION )
+   {
+      int visOpt = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+
+      if ( visOpt == TEXTURE_BASED_VISUALIZATION )
+      {
+         texturesActive = true;
+      }
+      else if ( visOpt == CLASSIC_VISUALIZATION )
+      {
+         texturesActive = false;
       }
    }
 }
