@@ -1,8 +1,6 @@
 #ifndef GASIFIER0D_H
 #define GASIFIER0D_H
 
-#include "V21Helper.h"
-
 #include <iostream>
 #include <fstream>
 #include <string>
