@@ -89,11 +89,12 @@ cfdDCS::cfdDCS( const cfdDCS& input )
 
    this->childNodes = input.childNodes;
    this->_vjMatrix = input._vjMatrix;
-   this->_dcs = new osg::MatrixTransform(*input._dcs);
+   
 #ifdef _PERFORMER
    
    _group = dynamic_cast<pfGroup*>(_dcs);
 #elif _OSG 
+   this->_dcs = new osg::MatrixTransform(*input._dcs);
    //_dcs->getMatrix()->makeIdentity();
 #elif _OPENSG
 #endif
