@@ -66,6 +66,8 @@ class cfdVjObsWrapper
       //cfdCosNaming* GetCosNaming( void );
       void InitCluster( void );
       void GetUpdateClusterStateVariables( void );
+      float GetSetAppTime( float );
+      long GetSetFrameNumber( long );
 #ifdef _TAO
       CosNaming::NamingContext* naming_context;
       CORBA::ORB* _orbPtr;

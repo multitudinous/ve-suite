@@ -108,6 +108,8 @@ public:
 	   clientInfoObserverDataArray->length(50);
       this->_unusedNewData = false;
       _models = NULL;
+      time_since_start = 0.0f;
+      frameNumber = 0;
    }
    virtual ~VjObs_i(){}
    
@@ -119,6 +121,9 @@ public:
    void InitCluster( void );
    void GetUpdateClusterStateVariables( void );
 
+   // Frame sync variables used by osg only at this point
+   float GetSetAppTime( float );
+   long GetSetFrameNumber( long );
 #ifdef _TAO   
    //VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
@@ -199,7 +204,8 @@ protected:
    VjObs::obj_p_var clientInfoObserverDataArray;
    int numOfClientInfo;
    bool _unusedNewData;
-
+   float time_since_start;
+   long frameNumber;
 #ifdef _TAO   
    //void setNumGeoArrays(const short value) throw (CORBA::SystemException);
    //short getNumGeoArrays( void ) throw (CORBA::SystemException);

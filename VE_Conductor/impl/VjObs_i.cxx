@@ -642,6 +642,8 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterPre_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
       this->mStates->clusterTimesteps        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
       this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
+      this->mStates->clusterTime_since_start = time_since_start;
+      this->mStates->clusterFrameNumber      = frameNumber;   
    }
 #else
    this->_unusedNewData    = false;
@@ -678,6 +680,8 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
             //std::cout << " cfdTimesteps in preframe : " << cfdTimesteps << std::endl;
          }
       }
+      time_since_start = this->mStates->clusterTime_since_start;
+      frameNumber      = this->mStates->clusterFrameNumber;     
    }
    this->_unusedNewData    = false;
 #endif
@@ -886,3 +890,32 @@ void VjObs_i::CreateCommandQueue( void )
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 1 );
 }
+
+
+// Frame sync variables used by osg only at this point
+float VjObs_i::GetSetAppTime( float x )
+{
+   if ( x == -1 )
+   {
+      return time_since_start;
+   }
+   else
+   {
+      time_since_start = x;
+      return -1;
+   }
+}
+
+long VjObs_i::GetSetFrameNumber( long x )
+{
+   if ( x == -1 )
+   {
+      return frameNumber;
+   }
+   else
+   {
+      frameNumber = x;
+      return -1;
+   }
+}
+

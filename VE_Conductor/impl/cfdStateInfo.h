@@ -35,18 +35,20 @@ namespace ClusterVariables
 {
 struct StateVariables
 {
-  int   clusterIso_value;
-  int   clusterSc;
-  int   clusterMin;
-  int   clusterMax;
-  long  clusterId;
-  long  clusterGeo_state;
-  short clusterPostdata_state;
-  bool  clusterPre_state;
-  short clusterTimesteps;
-  short clusterTeacher_state; 
-  short clusterClientInfoFlag; 
-  int currentFrame; // the index of the current frame
+   int   clusterIso_value;
+   int   clusterSc;
+   int   clusterMin;
+   int   clusterMax;
+   long  clusterId;
+   long  clusterGeo_state;
+   short clusterPostdata_state;
+   bool  clusterPre_state;
+   short clusterTimesteps;
+   short clusterTeacher_state; 
+   short clusterClientInfoFlag; 
+   int currentFrame; // the index of the current frame
+   float clusterTime_since_start;
+   long clusterFrameNumber;
 };
 }
 
@@ -66,6 +68,8 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    writer->writeUint8( clusterTimesteps );
    writer->writeUint8( clusterTeacher_state ); 
    writer->writeUint16( currentFrame );
+   writer->writeFloat( clusterTime_since_start );
+   writer->writeUint32( clusterFrameNumber );
    return vpr::ReturnStatus::Succeed;
 }
 
@@ -83,6 +87,8 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    clusterTimesteps        = reader->readUint8();
    clusterTeacher_state    = reader->readUint8(); 
    currentFrame            = reader->readUint16(); 
+   clusterTime_since_start = reader->readFloat();
+   clusterFrameNumber      = reader->readUint32();
    return vpr::ReturnStatus::Succeed;
 }
 }

@@ -304,19 +304,19 @@ void cfdApp::initScene( )
 void cfdApp::preFrame( void )
 {
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
-#ifdef _OSG
-   //if(!cfdModelHandler::instance())initScene();
-    double time_since_start = _timer.delta_s(_start_tick,_timer.tick());
-    if(_frameStamp.valid()){
-       _frameStamp->setFrameNumber(_frameNumber++);
-       _frameStamp->setReferenceTime(time_since_start);
-    }
-   
-#endif
 #ifdef _CLUSTER
    //call the parent method
    _vjobsWrapper->GetUpdateClusterStateVariables();
 #endif // _CLUSTER
+#ifdef _OSG
+   // This is order dependent
+   // don't move above function call
+   if ( _frameStamp.valid() )
+   {
+      _frameStamp->setFrameNumber( this->_vjobsWrapper->GetSetFrameNumber(-1) );
+      _frameStamp->setReferenceTime( this->_vjobsWrapper->GetSetAppTime(-1) );
+   }
+#endif
 
    ///////////////////////
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_modelHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
@@ -377,6 +377,11 @@ void cfdApp::postFrame()
       }
    }*/
 
+#ifdef _OSG
+   double time_since_start = _timer.delta_s(_start_tick,_timer.tick());
+   this->_vjobsWrapper->GetSetAppTime( time_since_start );
+   this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
+#endif
    this->_vjobsWrapper->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }

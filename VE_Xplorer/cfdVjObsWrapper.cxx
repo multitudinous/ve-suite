@@ -228,6 +228,17 @@ void cfdVjObsWrapper::PreFrameUpdate( void )
    _vjObs->PreFrameUpdate();
 }
 
+// Frame sync variables used by osg only at this point
+float cfdVjObsWrapper::GetSetAppTime( float x )
+{
+   return _vjObs->GetSetAppTime( x );
+}
+
+long cfdVjObsWrapper::GetSetFrameNumber( long x )
+{
+   return _vjObs->GetSetFrameNumber( x );
+}
+
 int cfdVjObsWrapper::getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
 {
    char* token;
