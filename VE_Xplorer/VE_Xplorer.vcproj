@@ -524,9 +524,6 @@
 				RelativePath=".\fileIO.cxx">
 			</File>
 			<File
-				RelativePath=".\pfNaver.cxx">
-			</File>
-			<File
 				RelativePath=".\Plot3Dviewer.cxx">
 			</File>
 			<File
@@ -1131,9 +1128,6 @@
 			</File>
 			<File
 				RelativePath="MutexInterface.h">
-			</File>
-			<File
-				RelativePath="pfNaver.h">
 			</File>
 			<File
 				RelativePath="Plot3Dviewer.h">

@@ -119,7 +119,6 @@ SRCS=\
    cfdVector.cxx \
    cfdVectors.cxx \
    fileIO.cxx \
-   pfNaver.cxx \
    readWriteVtkThings.cxx \
    cfdAccessoryFunctions.cxx \
    textPrompt.cxx \

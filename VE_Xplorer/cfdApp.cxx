@@ -479,12 +479,6 @@ inline void cfdApp::preForkInit( )
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::preForkInit"
                           << std::endl << vprDEBUG_FLUSH;
    //pfdInitConverter( "air_system.flt" );
-/*
-   // Initialize type system
-   // Initialize Performer
-   // Initialize loaders
-   pfNaver::init();  //for test 
-*/
 }
 
 
@@ -635,7 +629,6 @@ inline void cfdApp::initScene( )
    // Setup performer pipeline
    this->sunModel = new pfLightModel();
    this->rootNode = new pfGroup();
-   //this->naver1 = new pfNaver();
    this->worldDCS = new pfDCS();
    this->sun      = new pfLightSource();
    //this->lit      = new pfLightSource();
