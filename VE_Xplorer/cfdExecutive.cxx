@@ -42,6 +42,7 @@
 #include "cfdCommandArray.h"
 #include "cfdVEAvailModules.h"
 #include "cfdVEBaseClass.h"
+#include "cfdModelHandler.h"
 
 #include "package.h"
 #include "interface.h"
@@ -50,9 +51,10 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <time.h>
+
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
-#include <time.h>
 
 using namespace std;
 

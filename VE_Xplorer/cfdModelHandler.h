@@ -60,6 +60,7 @@ class cfdModelHandler
       void LoadSurfaceFiles( char* );
       vtkPolyData* GetArrow( void );
       cfdModel* GetModel( int );
+      void AddModel( cfdModel* );
 
    private:
       char* _param;

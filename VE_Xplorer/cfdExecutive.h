@@ -59,6 +59,7 @@ class Interface;
 class cfdVEAvailModules;
 class cfdVEBaseClass;
 class cfdVEAvail_Modules;
+class cfdModelHandler;
 
 class cfdExecutive : public cfdGlobalBase
 {
@@ -107,6 +108,7 @@ class cfdExecutive : public cfdGlobalBase
       // Function called within preFrame to allow cfdExecutive
       // to have access to scalar information
       void SetActiveDataSet( cfdDataSet* );
+      void SetModelHandler( cfdModelHandler* );
 
       void UnbindORB( void );
 

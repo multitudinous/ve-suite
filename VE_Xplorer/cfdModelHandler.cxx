@@ -82,7 +82,6 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
       cerr << " ERROR : Must intialize worldDCS for creating cfdModelHandler. " << endl;
       exit( 1 );
    }
-   _modelList.push_back( new cfdModel( worldNode ) );
    this->CreateObjects();
 }
 
@@ -95,6 +94,8 @@ cfdModelHandler::~cfdModelHandler()
                                            itr != _modelList.end(); itr++)
    {
       delete *itr;
+      // This code probably doesn't work
+      // Please see code in cfdExecutive dealing with maps
    }
    _modelList.clear();
 
@@ -126,9 +127,16 @@ cfdDataSet* cfdModelHandler::GetActiveDataSet( void )
 
 cfdModel* cfdModelHandler::GetModel( int i )
 {
-   return _modelList.at( i );
+   if ( _modelList.empty() )
+      return NULL;
+   else
+      return _modelList.at( i );
 }
 
+void cfdModelHandler::AddModel( cfdModel* input );
+{
+   return _modelList.push_back( input );
+}
 ///////////////////////
 
 void cfdModelHandler::InitScene( void )
@@ -163,11 +171,12 @@ void cfdModelHandler::InitScene( void )
       }
 
    // set default active dataset to be the meshed volume
-   if ( _modelList.at( 0 )->GetNumberOfCfdDataSets() > 0 )
-   {
-      activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
-      cfdObjects::SetActiveDataSet( this->activeDataset );
-   }
+   if ( !_modelList.empty() )
+      if ( _modelList.at( 0 )->GetNumberOfCfdDataSets() > 0 )
+      {
+         activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
+         cfdObjects::SetActiveDataSet( this->activeDataset );
+      }
 
    if ( activeDataset != NULL )
    {
@@ -194,7 +203,7 @@ void cfdModelHandler::InitScene( void )
 }
 
 /////////////////////////////////
-// PreFrameUpdate - Be sure to set the commandArray befroe calling this
+// PreFrameUpdate - Be sure to set the commandArray before calling this
 // function.
 /////////////////////////////////
 void cfdModelHandler::PreFrameUpdate( void )
@@ -393,6 +402,8 @@ void cfdModelHandler::CreateObjects( void )
       input.getline( text, 256 );   //skip past remainder of line
       if ( id == 8 )
       {
+         if ( _modelList.empty() )
+            _modelList.push_back( new cfdModel( worldNode ) );
          // Assume only one model for now
          // Flexibilty to have multiply models
          _modelList.at( 0 )->CreateCfdDataSet();
@@ -445,6 +456,9 @@ void cfdModelHandler::CreateObjects( void )
       }
       else if ( id == 9 ) // if it is an geom file
       {
+         if ( _modelList.empty() )
+            _modelList.push_back( new cfdModel( worldNode ) );
+
          char fileName[100];
          float stlColor[3];
          int color;

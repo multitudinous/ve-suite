@@ -327,7 +327,12 @@ void cfdVEBaseClass::SetID(int id)
    _modID = id;
 }
 
-cfdModel* cfdVEBaseClass::GetCFDModel( void )
+cfdModel* VEOPPDmod::GetCFDModel( void )
+{
+   return _model;
+}
+
+void VEOPPDmod::CreateObjects( void )
 {
    int numObjects;
    char text[ 256 ];
@@ -465,7 +470,6 @@ cfdModel* cfdVEBaseClass::GetCFDModel( void )
          _readParam->ContinueRead( input, id );
       }
    }
-   return _model;
 }
 
 void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )

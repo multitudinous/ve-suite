@@ -100,32 +100,7 @@ class VEOPPDmod: public cfdVEBaseClass
    
    
    private:
-      void CreateObjects( void );
-      // This needs to be vector of geometry nodes
-      cfdModuleGeometry*  geometryNode;
-      cfdGroup* groupNode;
-
-      cfdDCS*   worldDCS;
-      cfdDCS* _dcs;
-
-      wxString _objectName;
-      wxString _objectDescription;
-
-   protected:
-      long pos_x;
-      long pos_y;
-
-      cfdObjects* dataRepresentation;
-
-      cfdModel* _model;
-      cfdReadParam* _readParam;
-
-      char* _param;
-
-      bool _onSceneGraph;
-
-      int _modID;
-
+      virtual void CreateObjects( void );
 };
 
 #endif

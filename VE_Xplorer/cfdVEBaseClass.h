@@ -128,6 +128,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       
    
    private:
+      virtual void CreateObjects( void );
       // This needs to be vector of geometry nodes
       cfdModuleGeometry*  geometryNode;
       cfdGroup* groupNode;

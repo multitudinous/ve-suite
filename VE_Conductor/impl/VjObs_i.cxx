@@ -157,26 +157,39 @@ void VjObs_i::CreateGeometryInfo( void )
 {
    this->setPreState( 1 );
 
-   int numGeoArrays = this->_modelHandler->GetModel( 0 )->GetNumberOfGeomDataSets();
-   vprDEBUG(vprDBG_ALL,0)
-      << " Number of geometries to be transfered to the client: "
-      << numGeoArrays 
-      << std::endl << vprDEBUG_FLUSH;
-
-   this->setNumGeoArrays( numGeoArrays );
-
-   if( numGeoArrays > 0 )
+   cfdModel* temp = this->_modelHandler->GetModel( 0 );
+   if ( temp != NULL )
    {
-      this->geo_name->length( numGeoArrays );
-      for(CORBA::ULong i = 0; i < (unsigned int)numGeoArrays; i++)
+      int numGeoArrays = temp->GetNumberOfGeomDataSets();
+      vprDEBUG(vprDBG_ALL,0)
+         << " Number of geometries to be transfered to the client: "
+         << numGeoArrays 
+         << std::endl << vprDEBUG_FLUSH;
+
+      this->setNumGeoArrays( numGeoArrays );
+
+      if( numGeoArrays > 0 )
       {
-         vprDEBUG(vprDBG_ALL,0)
-            << " Geometry file ( "
-            << i << " ) = " << this->_modelHandler->GetModel( 0 )->GetGeomDataSet( i )->GetFilename() 
-            << std::endl << vprDEBUG_FLUSH;
-         this->geo_name[ i ] = CORBA::string_dup(
-                                  this->_modelHandler->GetModel( 0 )->GetGeomDataSet( i )->GetFilename() );
+         this->geo_name->length( numGeoArrays );
+         for(CORBA::ULong i = 0; i < (unsigned int)numGeoArrays; i++)
+         {
+            vprDEBUG(vprDBG_ALL,0)
+               << " Geometry file ( "
+               << i << " ) = " << temp->GetGeomDataSet( i )->GetFilename() 
+               << std::endl << vprDEBUG_FLUSH;
+            this->geo_name[ i ] = CORBA::string_dup(
+                                  temp->GetGeomDataSet( i )->GetFilename() );
+         }
       }
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL,0)
+         << " Number of geometries to be transfered to the client: "
+         << 0 
+         << std::endl << vprDEBUG_FLUSH;
+
+      this->setNumGeoArrays( 0 );
    }
 }
 
@@ -185,86 +198,94 @@ void VjObs_i::CreateDatasetInfo( void )
 {   
    CORBA::ULong i;
 
-   int numDatasets = this->_modelHandler->GetModel( 0 )->GetNumberOfCfdDataSets();
-   vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
+   cfdModel* temp = this->_modelHandler->GetModel( 0 );
+   if ( temp != NULL )
+   {
+      int numDatasets = temp->GetNumberOfCfdDataSets();
+      vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
                           << std::endl << vprDEBUG_FLUSH;
    
-   this->setNumDatasets( numDatasets );
+      this->setNumDatasets( numDatasets );
 
-   //this->dataset_names  = new VjObs::scalar_p( numDatasets );
-   this->dataset_names->length( numDatasets );
+      //this->dataset_names  = new VjObs::scalar_p( numDatasets );
+      this->dataset_names->length( numDatasets );
 
-   //this->dataset_types  = new VjObs::obj_p( numDatasets );
-   this->dataset_types->length( numDatasets );
+      //this->dataset_types  = new VjObs::obj_p( numDatasets );
+      this->dataset_types->length( numDatasets );
 
-   //this->num_scalars_per_dataset = new VjObs::obj_p( numDatasets );
-   this->num_scalars_per_dataset->length( numDatasets );
+      //this->num_scalars_per_dataset = new VjObs::obj_p( numDatasets );
+      this->num_scalars_per_dataset->length( numDatasets );
 
-   //this->num_vectors_per_dataset = new VjObs::obj_p( numDatasets );
-   this->num_vectors_per_dataset->length( numDatasets );
+      //this->num_vectors_per_dataset = new VjObs::obj_p( numDatasets );
+      this->num_vectors_per_dataset->length( numDatasets );
 
-   this->totalNumberOfScalars = 0;
-   this->totalNumberOfVectors = 0;
-   for ( i=0; i<(unsigned int)numDatasets; i++ )
-   {
-      //cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << endl;
-      this->totalNumberOfScalars += this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )
-                                                      ->GetNumberOfScalars();
-      this->totalNumberOfVectors += this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )
-                                                      ->GetNumberOfVectors();
-   }
-   vprDEBUG(vprDBG_ALL,0)
-      << " totalNumberOfScalars: " << this->totalNumberOfScalars
-      << std::endl << vprDEBUG_FLUSH;
+      this->totalNumberOfScalars = 0;
+      this->totalNumberOfVectors = 0;
+      for ( i=0; i<(unsigned int)numDatasets; i++ )
+      {
+         //cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << endl;
+         this->totalNumberOfScalars += temp->GetCfdDataSet( i )->GetNumberOfScalars();
+         this->totalNumberOfVectors += temp->GetCfdDataSet( i )->GetNumberOfVectors();
+      }
+      vprDEBUG(vprDBG_ALL,0)
+         << " totalNumberOfScalars: " << this->totalNumberOfScalars
+         << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,0)
-      << " totalNumberOfVectors: " << this->totalNumberOfVectors
-      << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,0)
+         << " totalNumberOfVectors: " << this->totalNumberOfVectors
+         << std::endl << vprDEBUG_FLUSH;
 
-   //this->scl_name = new VjObs::scalar_p( this->totalNumberOfScalars );
-   this->scl_name->length( this->totalNumberOfScalars );
+      //this->scl_name = new VjObs::scalar_p( this->totalNumberOfScalars );
+      this->scl_name->length( this->totalNumberOfScalars );
 
-   //this->vec_name = new VjObs::scalar_p( this->totalNumberOfVectors );
-   this->vec_name->length( this->totalNumberOfVectors );
+      //this->vec_name = new VjObs::scalar_p( this->totalNumberOfVectors );
+      this->vec_name->length( this->totalNumberOfVectors );
 
-   CORBA::ULong sIndex = 0;
-   CORBA::ULong vIndex = 0;
-   for ( i=0; i < (unsigned int)numDatasets; i++ )
-   {
-      this->dataset_names[ i ] = CORBA::string_dup( 
-                          this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )->GetFileName() );
-      vprDEBUG(vprDBG_ALL,1) << " dataset_name:   " << this->dataset_names[ i ]
+      CORBA::ULong sIndex = 0;
+      CORBA::ULong vIndex = 0;
+      for ( i=0; i < (unsigned int)numDatasets; i++ )
+      {
+         this->dataset_names[ i ] = CORBA::string_dup( 
+                          temp->GetCfdDataSet( i )->GetFileName() );
+         vprDEBUG(vprDBG_ALL,1) << " dataset_name:   " << this->dataset_names[ i ]
                              << std::endl << vprDEBUG_FLUSH;
 
-      this->dataset_types[ i ] = this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )->GetType();
+         this->dataset_types[ i ] = temp->GetCfdDataSet( i )->GetType();
 
-      int num_scalars = this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )
+         int num_scalars = temp->GetCfdDataSet( i )
                                           ->GetNumberOfScalars();
-      this->num_scalars_per_dataset[ i ] = num_scalars;
+         this->num_scalars_per_dataset[ i ] = num_scalars;
 
-      for (CORBA::ULong ii=0; ii < (unsigned int)num_scalars; ii++ )
-      {
-         this->scl_name[ sIndex ] = CORBA::string_dup( 
-                    this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )->GetScalarName( ii ) );
-         vprDEBUG(vprDBG_ALL,1) << "\tscl_name " 
+         for (CORBA::ULong ii=0; ii < (unsigned int)num_scalars; ii++ )
+         {
+            this->scl_name[ sIndex ] = CORBA::string_dup( 
+                    temp->GetCfdDataSet( i )->GetScalarName( ii ) );
+            vprDEBUG(vprDBG_ALL,1) << "\tscl_name " 
                                 << sIndex << " : " << this->scl_name[ sIndex ]
                                 << std::endl << vprDEBUG_FLUSH;
-         sIndex++;
-      }
+            sIndex++;
+         }
 
-      int num_vectors = this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )
+         int num_vectors = temp->GetCfdDataSet( i )
                                           ->GetNumberOfVectors();
-      this->num_vectors_per_dataset[ i ] = num_vectors;
+         this->num_vectors_per_dataset[ i ] = num_vectors;
 
-      for (CORBA::ULong ii=0; ii < (unsigned int)num_vectors; ii++ )
-      {
-         this->vec_name[ vIndex ] = CORBA::string_dup( 
-                    this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )->GetVectorName( ii ) );
-         vprDEBUG(vprDBG_ALL,1) << "\tvec_name " 
+         for (CORBA::ULong ii=0; ii < (unsigned int)num_vectors; ii++ )
+         {
+            this->vec_name[ vIndex ] = CORBA::string_dup( 
+                    temp->GetCfdDataSet( i )->GetVectorName( ii ) );
+            vprDEBUG(vprDBG_ALL,1) << "\tvec_name " 
                                 << vIndex << " : " << this->vec_name[ vIndex ]
                                 << std::endl << vprDEBUG_FLUSH;
-         vIndex++;
+            vIndex++;
+         }
       }
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << 0
+                          << std::endl << vprDEBUG_FLUSH;
+      this->setNumDatasets( 0 );
    }
 
    vprDEBUG(vprDBG_ALL,1) << "leaving VjObs_i::CreateDatasetInfo()"
@@ -898,7 +919,15 @@ CORBA::Short VjObs_i::get_geo_num()
    //vprDEBUG(vprDBG_ALL,0) << "Returning num geos'" << this->mParamReader->numGeoms << "' to caller\n"
    //     << vprDEBUG_FLUSH;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   return this->_modelHandler->GetModel( 0 )->GetNumberOfGeomDataSets();
+   cfdModel* temp = this->_modelHandler->GetModel( 0 );
+   if ( temp != NULL )
+   {
+      return temp->GetNumberOfGeomDataSets();
+   }
+   else
+   {
+      return (unsigned int)0;
+   }
 }
 
 #ifdef _TAO

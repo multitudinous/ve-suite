@@ -110,7 +110,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
 
 
    this->computeActorsAndGeodes = false;
-   this->actorsAreReady = false;   
+   this->actorsAreReady = false;
    _param = param;
 }
 
@@ -324,8 +324,8 @@ void cfdSteadyStateVizHandler::SetActiveDataSet( cfdDataSet* input )
 {
    if ( input == NULL )
    {
-      std::cerr << "cfdSteadyStateVizHandler::SetActiveDataSet input is NULL" << std::endl;
-      //exit( 1 );
+      vprDEBUG(vprDBG_ALL,2) << "cfdSteadyStateVizHandler::SetActiveDataSet input is NULL" 
+                              << std::endl << vprDEBUG_FLUSH;
    }
    _activeDataSet = input;
 }

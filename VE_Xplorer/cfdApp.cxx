@@ -307,9 +307,10 @@ std::cout << "|  3d" << std::endl;
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
    this->executive = new cfdExecutive( naming_context.in(), this->_sceneManager->GetWorldDCS() );
+   this->executive->SetModelHandler( this->_modelHandler );
 #endif // _TAO
 
-      this->ihccModel = NULL;
+    this->ihccModel = NULL;
 /*
    //
    // Make IHCC Model - should be deleted at a later date
