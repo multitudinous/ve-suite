@@ -182,9 +182,6 @@ int switchFrame(pfTraverser* trav, void* userData)
    //to the desired sequence rate
    double frameRateRatio = 0;
    
-   //the number of frames to increment 
-   int deltaFrame = 1;
-
    //make sure we have a valid interval 
    if(sequence->_dir ==1){
       if(end >  nChildren - 1){
@@ -232,8 +229,11 @@ int switchFrame(pfTraverser* trav, void* userData)
    }else if(appFrameRate < seqRate){
       //cout<<"Frame rate is slow."<<endl;
       //app is running slower than the sequence
-      //need to skip some frames in the sequence 
-      deltaFrame = (int)( seqRate / appFrameRate );
+      //need to skip some frames in the sequence
+      //deltaFrame is the number of frames to increment
+      //sjk commented out following code line to avoid irix warning,
+      //The variable "deltaFrame" is set but never used.
+      //int deltaFrame = (int)( seqRate / appFrameRate );
    }
 
    //now check the states and do the updates
@@ -261,8 +261,7 @@ int switchFrame(pfTraverser* trav, void* userData)
       return PFTRAV_CONT;
    }
 
-   //depending on cycle type, decide the frame
-   //to display
+   //depending on cycle type, decide the frame to display
    if(sequence->_switch){
       //get the next frame to display
       sequence->_currentFrame = sequence->getNextFrame();
