@@ -6,7 +6,7 @@ all:
 
 srcdir= .
 
-SRCS= ansysReader.cpp fileIO.cxx
+SRCS= ansysReader.cpp fileIO.cxx test.cpp
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)

@@ -41,7 +41,7 @@ using namespace std;
 ansysReader::ansysReader( char * input )
 {
    ansysFileName = input;
-   cout << "\nReading file \"" << ansysFileName << "\"" << endl;
+   cout << "\nOpening file \"" << ansysFileName << "\"" << endl;
 
    // open file
    if((this->s1=fopen(ansysFileName,"r"))==NULL)
@@ -56,6 +56,14 @@ ansysReader::ansysReader( char * input )
 
 ansysReader::~ansysReader()
 {
+}
+
+void ansysReader::FlipEndian()
+{
+   if ( this->endian_flip == true )
+      this->endian_flip = false;
+   else
+      this->endian_flip = true;
 }
 
 int ansysReader::ReadNthInteger( int n )
@@ -73,6 +81,8 @@ int ansysReader::ReadNthInteger( int n )
 
 void ansysReader::ReadHeader()
 {
+   cout << "Reading header" << endl;
+
 /*
    // read all integers
    int intArray[ 100 ];
@@ -87,8 +97,14 @@ void ansysReader::ReadHeader()
    int headerSize = ReadNthInteger( 0 );
    if ( headerSize != 404 ) 
    {
-      cerr << "headerSize = " << headerSize << " != 404" << endl;
-      exit( 1 );
+      cerr << "headerSize = " << headerSize << " != 404, will flip endian flag" << endl;
+      this->FlipEndian();
+      headerSize = ReadNthInteger( 0 );
+      if ( headerSize != 404 ) 
+      {
+         cerr << "headerSize = " << headerSize << " != 404, will exit" << endl;
+         exit( 1 );
+      }
    }
 
    // the ANSYS header is 100 ints long
@@ -362,14 +378,4 @@ void ansysReader::ReadThirdBlock()
       cerr << "blockSize = " << blockSize << " != 164" << endl;
       exit( 1 );
    }
-}
-
-int main()
-{
-   ansysReader * reader = new ansysReader( "test_case.rst" );
-   reader->ReadHeader();
-   reader->ReadSecondBlock();
-   reader->ReadThirdBlock();
-   cout << "\ndone!\n" << endl;
-   return 0;
 }

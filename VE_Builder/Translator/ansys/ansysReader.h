@@ -44,10 +44,8 @@ class ansysReader
       void ReadSecondBlock();
       void ReadThirdBlock();
 
-      void SetEndian( bool );
-      bool GetEndian();
-
    private:
+      void FlipEndian();
       int ReadNthInteger( int n );
 
       char * ansysFileName;
