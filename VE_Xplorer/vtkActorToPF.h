@@ -25,9 +25,7 @@
 
 // VTK44 is a subset of VTK4, so turn VTK4 flag on if not already
 #ifdef VTK44
-#ifndef VTK4
 #define VTK4
-#endif //VTK4
 #endif //VTK44
 
 #ifdef VTK4
