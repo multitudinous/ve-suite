@@ -19,11 +19,11 @@ class cfdVolumeSliceSwitchCallback : public osg::NodeCallback
       virtual ~cfdVolumeSliceSwitchCallback();
       enum SliceDir{X_POS=0,Y_POS, Z_POS,X_NEG,Y_NEG ,Z_NEG};
       void AddGeometrySlices(SliceDir direction,osg::ref_ptr<osg::Geometry> geom);
-      void switchSlices(osg::Vec3f* eye);
+      void switchSlices(osg::Vec3f eye);
       virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
         
    protected:
-      osg::Vec3f* _center;
+      osg::Vec3f _center;
       float _maximal(float a,float b);
       osg::ref_ptr<osg::Geometry> _switchSlices[ 6 ];
       SliceDir _whichSlices;
