@@ -6,33 +6,47 @@
 #this is typically defined in your .cshrc file
 setenv VE_SUITE_HOME /isv/VE_Suite
 
-if ( -e /etc/redhat-release ) then
-   # extract some words from file to create something like RedHat_8.0
-   setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
-else if ( -e /etc/SuSE-release ) then
-   # extract first and third words from file to create something like SuSE_9.1
-   setenv CFDHOSTTYPE `head -1 /etc/SuSE-release | awk -F" " '{print $1 "_" $3}'`
-else
+3if ( -e /etc/redhat-release ) then
+#   # extract some words from file to create something like RedHat_8.0
+#   setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
+#else if ( -e /etc/SuSE-release ) then
+#   # extract first and third words from file to create something like SuSE_9.1
+#   setenv CFDHOSTTYPE `head -1 /etc/SuSE-release | awk -F" " '{print $1 "_" $3}'`
+#else
    setenv CFDHOSTTYPE `uname`
-endif
+#endif
 
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
 setenv VPR_DEBUG_ENABLE 0
 setenv PFSHAREDSIZE 534773700
 setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
-setenv VTK_HOME_DIR /isv/VTK-4.3.0
+setenv VTK_HOME_DIR /isv/VTK-builds
+setenv WX_HOME_DIR /isv/Juggler/wxGTK
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
+setenv TAO_BUILD FALSE
 
 #echo "specifying libraries for" ${CFDHOSTTYPE}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VJ_BASE_DIR /isv/Juggler/vrjuggler-2.0-alpha3.irix-n32-pthread
-   setenv OMNI_HOME /isv/corba/omni3.0
-   setenv PYTHONPATH ${OMNI_HOME}/lib/python1.5/site-packages
+#   setenv PYTHONPATH ${OMNI_HOME}/lib/python1.5/site-packages
+   setenv VTK_BASE_DIR ${VTK_HOME_DIR}/IRIX32
 #   setenv LD_LIBRARYN32_PATH /home/users/mccdo/VE_Suite/VE_Installer/arenasize/libs
-   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${OMNI_HOME}/lib
-   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
+   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/isv/Juggler/openal
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv WX_HOME ${WX_HOME_DIR}
+      setenv ACE_ROOT /isv/Juggler/ACE_wrappers
+      setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib:${WX_HOME}/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:/usr/freeware/lib32
+   else
+      setenv WX_HOME ${WX_HOME_DIR}
+   	setenv OMNI_HOME /isv/Juggler/omniORB-4.0.1
+      setenv PYTHONPATH ${OMNI_HOME}/lib/python1.5/site-packages
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib
+   endif
 else if ( ${CFDHOSTTYPE} == "RedHat_8.0" ) then
    setenv JDK_HOME /usr/java/j2sdk1.4.1_02
    setenv VJ_BASE_DIR  /home/vr/Juggler/2.0/vrjuggler-2.0-alpha2.linux-rh80
@@ -47,7 +61,12 @@ setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
 setenv DZR_BASE_DIR   ${VJ_BASE_DIR}/share/Doozer
 setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
 setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}
-setenv PATH ${OMNI_HOME}/bin:${JDK_HOME}/bin:${PATH}
+setenv PATH ${JDK_HOME}/bin:${PATH}
+if ( ${TAO_BUILD} == "TRUE" ) then
+   setenv PATH ${ACE_ROOT}/bin:${WX_HOME}/bin:${PATH}
+else
+   setenv PATH ${OMNI_HOME}/bin:${WX_HOME}/bin:${PATH}
+endif
 
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
