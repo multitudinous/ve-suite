@@ -82,7 +82,7 @@ class ansysReader
       float ReadNthFloat( int n );
       double ReadNthDouble( int n );
 
-      int * ReadElementDescription( int ptr );
+      void ReadElementDescription( int ptr );
       int * ReadElementTypeDescription( int ptr );
 
       char * ansysFileName;

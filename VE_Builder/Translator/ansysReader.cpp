@@ -1006,6 +1006,12 @@ int * ansysReader::ReadElementTypeDescription( int pointer )
 {
    cout << "\nReading Element Type Description" << endl;
 
+   if ( pointer == 0 ) 
+   {
+      cout << "\treturning NULL because pointer == 0" << endl;
+      return NULL;
+   }
+
    int intPosition = pointer;
    int blockSize_1 = ReadNthInteger( intPosition++ );
    
@@ -1182,10 +1188,10 @@ void ansysReader::ReadElementDescriptionIndexTable()
    //cout << "done constructing the mesh" << endl;
 }
 
-int * ansysReader::ReadElementDescription( int pointer )
+void ansysReader::ReadElementDescription( int pointer )
 {
    if ( pointer == 0 )
-      return NULL;
+      return;
 
    //cout << "\nReading Element Description" << endl;
 
@@ -1230,9 +1236,11 @@ int * ansysReader::ReadElementDescription( int pointer )
       exit( 1 );
    }
 
-   //TODO: this is hardcoded for a single element type
-   int numNodesInElement = this->elemDescriptions[ 0 ][ 61-1 ];
-   int numCornerNodes = this->elemDescriptions[ 0 ][ 94-1 ];
+   int numNodesInElement = this->elemDescriptions[ type - 1 ][ 61-1 ];
+   PRINT( numNodesInElement );
+
+   int numCornerNodes = this->elemDescriptions[ type - 1 ][ 94-1 ];
+   PRINT( numCornerNodes );
 
    // allocate space for the node IDs that define the corners of the hex element
    int * nodes = new int [ numNodesInElement ];
@@ -1253,6 +1261,19 @@ int * ansysReader::ReadElementDescription( int pointer )
    }
 #endif // PRINT_HEADERS
 
+   // read rest of values: usually but not always zero
+   intPosition += numNodesInElement;
+   for ( int i = 0; i < numValues - (10 + numNodesInElement); i++ )
+   {  
+      int zero = ReadNthInteger( intPosition++ );
+      /*PRINT( zero );
+      if ( zero != 0 )
+      {
+         cerr << "ERROR: zero != 0" << endl;
+         exit( 1 );
+      }*/
+   }
+
    // the last number is blockSize again
    int blockSize_2;
    fileIO::readNByteBlockFromFile( &blockSize_2, sizeof(int),
@@ -1266,8 +1287,14 @@ int * ansysReader::ReadElementDescription( int pointer )
 
    if ( numCornerNodes == 8 )
       this->ugrid->InsertNextCell( VTK_HEXAHEDRON, numCornerNodes, nodes );
-   if ( numCornerNodes == 4 )
+   else if ( numCornerNodes == 4 )
       this->ugrid->InsertNextCell( VTK_TETRA, numCornerNodes, nodes );
+   else
+   {
+      cerr << "Error: Can not yet handle an element with numCornerNodes = "
+           << numCornerNodes << endl;
+      exit( 1 );
+   }
 
    delete [] nodes;
 }
@@ -1289,11 +1316,11 @@ void ansysReader::ReadSolutionDataHeader()
       exit( 1 );
    }
 
-   int zero = ReadNthInteger( intPosition++ );
-   PRINT( zero );
-   if ( zero != 0 ) 
+   int solnSetNumber = ReadNthInteger( intPosition++ );
+   PRINT( solnSetNumber );
+   if ( solnSetNumber != 0 ) 
    {
-      cerr << "zero = " << zero << " != 0" << endl;
+      cerr << "solnSetNumber = " << solnSetNumber << " != 0" << endl;
       exit( 1 );
    }
 
@@ -1335,11 +1362,6 @@ void ansysReader::ReadSolutionDataHeader()
 
    int ncumit = ReadNthInteger( intPosition++ );
    PRINT( ncumit );
-   if ( ncumit != 1 ) 
-   {
-      cerr << "ncumit = " << ncumit << " != 1" << endl;
-      exit( 1 );
-   }
 
    int numReactionForces = ReadNthInteger( intPosition++ );
    PRINT( numReactionForces );
