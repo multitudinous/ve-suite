@@ -36,6 +36,7 @@ protected:
    void _buildGUI();
    int _numFiles;
    int _resolution[3];
+   std::vector<char*> _inputFiles;
    wxString _inputDir;
    wxString _outputDir;
 

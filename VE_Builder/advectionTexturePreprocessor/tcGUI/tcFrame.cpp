@@ -1,6 +1,8 @@
 
 #include "tcFrame.h"
 #include "wx/string.h"
+#include <iostream>
+#include <cmath>
 BEGIN_EVENT_TABLE(TCFrame,wxFrame)
    EVT_BUTTON(TRANSLATE_BUTTON,TCFrame::_onTranslateCallback)
    EVT_BUTTON(INPUT_BROWSE,TCFrame::_onBrowseCallback)
@@ -94,7 +96,7 @@ TCFrame::~TCFrame()
    }
    if(_outputDirBox){
       delete _outputDirBox;
-      _outputDirBox; 
+      _outputDirBox = 0; 
    }
    if(_quitButton){
       delete _quitButton;
@@ -116,6 +118,9 @@ TCFrame::~TCFrame()
    if(_numFilesBox){
       delete _numFilesBox;
       _numFilesBox = 0;
+   }
+   if(_inputFiles.size()){
+      _inputFiles.clear();
    }
 }
 /////////////////////////
@@ -172,8 +177,8 @@ void TCFrame::_buildGUI()
                        wxDefaultPosition, 
                        wxDefaultSize, 
                        wxSP_ARROW_KEYS, 
-                       2, 512, 
-                       2, 
+                       1, 9, 
+                       1, 
                        wxT("X Res"));
    
    _yResBox = new wxSpinCtrl(panel, 
@@ -182,8 +187,8 @@ void TCFrame::_buildGUI()
                        wxDefaultPosition, 
                        wxDefaultSize, 
                        wxSP_ARROW_KEYS, 
-                       2, 512, 
-                       2, 
+                       1, 9, 
+                       1, 
                        wxT("Y Res"));
    
    _zResBox = new wxSpinCtrl(panel, 
@@ -192,8 +197,8 @@ void TCFrame::_buildGUI()
                        wxDefaultPosition, 
                        wxDefaultSize, 
                        wxSP_ARROW_KEYS, 
-                       2, 512, 
-                       2, 
+                       1, 9, 
+                       1, 
                        wxT("Z Res"));
 
    
@@ -262,22 +267,36 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
    char oname[256];
    char fileName[256];
    _fileProgress->SetRange(_numFiles);
-   for(int i = 0; i < _numFiles; i++){
-      _fileProgress->SetValue(i);
-      _translator->reset();
+
+   //read in the file names,breaking out for parallel junk -- still need to fix this to 
+   //find files in the dir but w/ the new format may be
+   //much trickerier than before
+   for(unsigned int i = 0; i < _numFiles; i++){
       strcpy(iname,_inputDir);
-      _translator->setOutputDirectory((char*)_outputDir.c_str());
-      //biv--FIXME:this filename should be selectable from the gui as well!!!
-      
       strcpy(fileName,"/picker.vtk");
       //sprintf(fileName,"/picker.vtk",i);
       //sprintf(fileName,"/zhto0%dad.vtk",i);
       //sprintf(fileName,"/flowdata_%d.vtk",i);
       strcat(iname,fileName);
+      _inputFiles.push_back(iname);
+   }
+
+   //process the files
+   for(int i = 0; i < _numFiles; i++){
+      _fileProgress->SetValue(i);
+      _translator->reset();
+      _translator->setOutputDirectory((char*)_outputDir.c_str());
+      //biv--FIXME:this filename should be selectable from the gui as well!!!
+      
+      /*strcpy(fileName,"/picker.vtk");
+      //sprintf(fileName,"/picker.vtk",i);
+      //sprintf(fileName,"/zhto0%dad.vtk",i);
+      //sprintf(fileName,"/flowdata_%d.vtk",i);
+      strcat(iname,fileName);*/
 
       sprintf(oname,"_%d",i);
 
-      _translator->createDataSetFromFile(iname);
+      _translator->createDataSetFromFile(_inputFiles.at(i));
       _translator->setOutputResolution(_resolution[0],
                                    _resolution[1],
                                    _resolution[2]);
@@ -295,37 +314,20 @@ void TCFrame::_onResolutionCallback(wxSpinEvent& event)
    float factorOfTwo = 2;
    int value = event.GetPosition();
    int id = event.GetId();
+   std::cout<<"The value: "<<value<<std::endl;
 
    switch (id){
       case XRES_BOX:
-         //decrease
-         if(value < _resolution[0]){
-            factorOfTwo = .5;
-         }
-         _resolution[0] = factorOfTwo*_resolution[0];
-         if(_resolution[0] >= 512)_resolution[0] = 512;
-         else if(_resolution[0] <=2)_resolution[0] = 2;
-         _xResBox->SetValue(_resolution[0]);
+         _resolution[0] = pow(2,value);
+         std::cout<<"The X resolution: "<<_resolution[0]<<std::endl;
          break;
       case YRES_BOX:
-         //decrease
-         if(value < _resolution[1]){
-            factorOfTwo = .5;
-         }
-         _resolution[1] = factorOfTwo*_resolution[1];
-         if(_resolution[1] >= 512)_resolution[1] = 512;
-         else if(_resolution[1] <=2)_resolution[1] = 2;
-         _yResBox->SetValue(_resolution[1]);
+         _resolution[1] = pow(2,value);
+         std::cout<<"The Y resolution: "<<_resolution[1]<<std::endl;
          break;
       case ZRES_BOX:
-         //decrease
-         if(value < _resolution[2]){
-            factorOfTwo = .5;
-         }
-         _resolution[2] = factorOfTwo*_resolution[2];
-         if(_resolution[2] >= 512)_resolution[2] = 512;
-         else if(_resolution[2] <=2)_resolution[2] = 2;
-         _zResBox->SetValue(_resolution[2]);
+         _resolution[2] = pow(2,value);
+         std::cout<<"The Z resolution: "<<_resolution[1]<<std::endl;
          
          break;
       default:
