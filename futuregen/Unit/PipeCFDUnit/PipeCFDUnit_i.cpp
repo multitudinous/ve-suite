@@ -96,7 +96,7 @@ void Body_Unit_i::StartCalc (
 
   summary_values summaries;
 
-  gas_model.execute(gas_in, gas_out, &summaries);
+  gas_model.execute(gas_in, gas_out, prof_in, &summaries);
 
 
   /////////

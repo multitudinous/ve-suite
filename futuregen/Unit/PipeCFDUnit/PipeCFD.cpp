@@ -48,7 +48,8 @@ PipeCFD::~PipeCFD ()
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summaries)
+bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, Types::Profile_var &prof,
+                       summary_values *summaries)
 {  
   _gas_out = gas_out;
   _summaries = summaries;
@@ -66,36 +67,171 @@ bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summaries)
       restart = true;
     }
 
+  string path = _work_dir;
   if(restart) {
 
   } else {
-    string path = _work_dir;
     string basepath = "./Glacier/Cases/Pipe2/";
 
     system(("cp " + basepath + "DATA " + path + "/DATA").c_str());
     system(("cp " + basepath + "THERMO " + path + "/THERMO").c_str());
     system(("cp " + basepath + "GRID " + path + "/GRID").c_str());
     system(("cp " + basepath + "CPD_DATA " + path + "/CPD_DATA").c_str());
-    system(("cp " + basepath + "CPD_DATA " + path + "/CPD_DATA").c_str());
-
-    // Create INLET
-    grid *grd = new grid((path+"/GRID").c_str());
-    grd->read_rei_grid();
-    // grd->size(0)
-    // grd->size(1)
-    // grd->size(2)
-    // grd->celltype(i,j,k)
-    // grd->x(i)
-    // grd->y(j)
-    // grd->z(k)
-    delete grd;
-
   }
 
+  int i, j, iy, iz, iu, iv, iw, ief, iet, ich, itt;
+  iy = iz = iu = iv = iw = ief = iet = ich = itt = -1;
+  for(i=0; i<prof->profile_vals.length(); i++) {
+    std::string var = prof->profile_vars[i].in();
+    if(var=="Y_LOC") iy = i;
+    else if(var=="Z_LOC") iz = i;
+    else if(var=="U_VEL") iu = i;
+    else if(var=="V_VEL") iv = i;
+    else if(var=="W_VEL") iw = i;
+    else if(var=="EFF") ief = i;
+    else if(var=="ETA") iet = i;
+    else if(var=="CHI") ich = i;
+    else if(var=="TEMPERATURE") itt = i;
+  }
+  if(iy==-1) cout << "Profile variable Y_LOC not found" << endl;
+  if(iz==-1) cout << "Profile variable Z_LOC not found" << endl;
+  if(iu==-1) cout << "Profile variable U_VEL not found" << endl;
+  if(iv==-1) cout << "Profile variable V_VEL not found" << endl;
+  if(iw==-1) cout << "Profile variable W_VEL not found" << endl;
+  if(ief==-1) cout << "Profile variable EFF not found" << endl;
+  if(iet==-1) cout << "Profile variable ETA not found" << endl;
+  if(ich==-1) cout << "Profile variable CHI not found" << endl;
+  if(itt==-1) cout << "Profile variable TEMPERATURE not found" << endl;
+
+  std::vector<std::vector<double> > yprof;
+  std::vector<double> zprof;
+  double zz = 1.0e10, yy;
+  std::vector<std::vector<int> > prof_index;
+
+  std::vector<double> yyy;
+  std::vector<int> iii;
+  for(j=0; j<prof->profile_vals[iy].length(); j++) {
+     if(fabs(prof->profile_vals[iz][j]-zz)>1.0e-4){
+        if(j){
+           yprof.push_back(yyy);
+           yyy.clear();
+           prof_index.push_back(iii);
+           iii.clear();
+        }
+        zz = prof->profile_vals[iz][j];
+        zprof.push_back(zz);
+        yy = prof->profile_vals[iy][j];
+        yyy.push_back(yy);
+        iii.push_back(j);
+     }else{
+        yy = prof->profile_vals[iy][j];
+        yyy.push_back(yy);
+        iii.push_back(j);
+     }
+  }
+  yprof.push_back(yyy);
+  prof_index.push_back(iii);
+  
+  // Create INLET
+  grid grd((path+"/GRID").c_str());
+  grd.read_rei_grid();
+  int ni = grd.size(0);
+  int nj = grd.size(1);
+  int nk = grd.size(2);
+  int k;
+  // grd.celltype(i,j,k)
+  // grd.x(i)
+  // grd.y(j)
+  // grd.z(k)
+
+  //# open new INLET file
+  FILE* inlet;
+  std::string inlet_name = path + "/INLET";
+  if((inlet = fopen(inlet_name.c_str(), "wt"))==NULL){
+     fprintf(stderr, "Fail to open %s\n", inlet_name.c_str());
+     return false;
+  }
+
+  fprintf(inlet, "1\n      ******** BANFF ********\n");
+
+  //# Scan through grid, looking for inlet cells and walls.
+  //# When one is found, determine which zone it's in,
+  //# and which wall it's on.  Write out zone info to INLET file.
+  //# Write out wall into to WBCRD file.
+  int zone, nfwall;
+  
+  for(i=0; i<ni; i++)
+    for(j=0; j<nj; j++)
+      for(k=0; k<nk; k++) {
+	
+         if(grd.celltype(i,j,k)==7){
+
+            double u_vel, v_vel, w_vel, eff, eta, chi, tt, ivar = -1;
+            int k1 = 0, k2 = zprof.size()-1, k3, j1, j2, j3;
+            if(-grd.z(k)<zprof[0]){
+               j1 = 0; j2 = yprof[k1].size()-1;
+               if(grd.x(i)<=yprof[k1][0]){
+                  ivar = prof_index[k1][0];
+                  u_vel = prof->profile_vals[iu][ivar];
+                  v_vel = prof->profile_vals[iv][ivar];
+                  w_vel = prof->profile_vals[iw][ivar];
+                  eff = prof->profile_vals[ief][ivar];
+                  eta = prof->profile_vals[iet][ivar];
+                  chi = prof->profile_vals[ich][ivar];
+                  tt = prof->profile_vals[itt][ivar];
+               }else if(grd.x(i)>yprof[k1][j2]){
+                  ivar = prof_index[k1][j2];
+                  u_vel = prof->profile_vals[iu][ivar];
+                  v_vel = prof->profile_vals[iv][ivar];
+                  w_vel = prof->profile_vals[iw][ivar];
+                  eff = prof->profile_vals[ief][ivar];
+                  eta = prof->profile_vals[iet][ivar];
+                  chi = prof->profile_vals[ich][ivar];
+                  tt = prof->profile_vals[itt][ivar];
+               }else{
+                  while(j2-j1>1){
+                     j3 = (j1 + j2)/2;
+                     if(yprof[k1][j3]<grd.x(i)) j1 = j3;
+                     else j2 = j3;
+                  }
+                  double yfrac = (grd.x(i)-yprof[k1][j1])/(yprof[k1][j2] - yprof[k1][j1]);
+                  int ivar1 = prof_index[k1][j1], ivar2 = prof_index[k1][j2];
+                  u_vel = (1.0-yfrac)*prof->profile_vals[iu][ivar1] + yfrac*prof->profile_vals[iu][ivar2];
+                  v_vel = (1.0-yfrac)*prof->profile_vals[iv][ivar1] + yfrac*prof->profile_vals[iv][ivar2];
+                  w_vel = (1.0-yfrac)*prof->profile_vals[iw][ivar1] + yfrac*prof->profile_vals[iw][ivar2];
+                  eff = (1.0-yfrac)*prof->profile_vals[ief][ivar1] + yfrac*prof->profile_vals[ief][ivar2];
+                  eta = (1.0-yfrac)*prof->profile_vals[iet][ivar1] + yfrac*prof->profile_vals[iet][ivar2];
+                  chi = (1.0-yfrac)*prof->profile_vals[ich][ivar1] + yfrac*prof->profile_vals[ich][ivar2];
+                  tt = (1.0-yfrac)*prof->profile_vals[itt][ivar1] + yfrac*prof->profile_vals[itt][ivar2];
+               }
+            }else if(-grd.z(k)>zprof[k2]){
+               k1 = k2;
+            }else{
+            }
+            
+/*            fprintf(inlet,
+               "%4d\t%4d\t%4d\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%4d\t%4d\t\n",
+               i+1, j+1, k+1, //# i, j, k : index 1-based
+               0.0, //# u_vel
+               0.0, //# v_vel
+               z_flow[zone-1][0] * nfwall, //# w_vel
+               //(z_flow[zone-1][0] + z_flow[zone-1][2]) * nfwall, //# w_vel
+               z_flow[zone-1][0] / (z_flow[zone-1][0] + z_flow[zone-1][2]), //# fmean
+               0.0, //# eta
+               0.0, //# chi
+               -1.0, //# temperature,
+               0.0, // f var
+               0.0, // eta var
+               cell_type[i][j][k], //# cell type
+               zone1); //# group
+            // cout <<i+1<<" "<<j+1<<" "<<k+1<<" "<<z_flow[zone-1][0]<<" "<<nfwall<<" "<<z_flow[zone-1][1]<<" "<<z_flow[zone-1][2]<< endl;*/
+         }
+      }
   _gas_in = gas_in;
 
   _pressure = gas_in->gas_composite.P;
   
+
   if(!get_running()) {
     set_running(true);
     if(!get_abort_glacier()) {

@@ -7,7 +7,7 @@
 
 int main (int argc, char* argv[])
 {
-  try
+  try 
     {
       XMLPlatformUtils::Initialize();
     }
@@ -24,7 +24,7 @@ int main (int argc, char* argv[])
     // First initialize the ORB, 
     CORBA::ORB_var orb =
       CORBA::ORB_init (argc, argv,
-                       "" /* the ORB name, it can be anything! */);
+                       "" );
 
     //Here is the part to contact the naming service and get the reference for the executive
     CORBA::Object_var naming_context_object =
