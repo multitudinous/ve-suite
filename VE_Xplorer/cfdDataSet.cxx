@@ -209,8 +209,10 @@ cfdDataSet::~cfdDataSet()
       this->fileName = NULL;
    }
  
-   if(_vtkFHndlr){
-      delete [] _vtkFHndlr;
+   if ( _vtkFHndlr )
+   {
+      vprDEBUG(vprDBG_ALL,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
+      delete _vtkFHndlr;
       _vtkFHndlr = 0;
    }
 }

@@ -147,7 +147,6 @@ void cfdModelHandler::AddModel( cfdModel* input )
 void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )
 {
    std::vector< cfdModel* >::iterator iter;
-
    for ( iter=_modelList.begin(); iter!=_modelList.end(); )
    {  
       if ( (*iter) == modelToBeRemoved )

@@ -313,7 +313,6 @@ void cfdExecutive::GetNetwork ( void )
 
          if ( iter->_id != -1 ) 
          {
-            //std::cout << iter->_id <<std::endl; 
             //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
             _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
             //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
@@ -395,7 +394,7 @@ void cfdExecutive::GetEverything( void )
                cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
                _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
                _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
-               vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
+               vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
                                       << " ]-> " << iter->second 
                                       << " is being created." << std::endl << vprDEBUG_FLUSH;
             }
@@ -403,7 +402,7 @@ void cfdExecutive::GetEverything( void )
          else
          {
             // plugin already present...
-            vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
+            vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
                                     << " ]-> " << iter->second 
                                     << " is already on the plugin map." << std::endl << vprDEBUG_FLUSH;
          }
@@ -428,7 +427,7 @@ void cfdExecutive::GetEverything( void )
          else
          {
             // plugin already present...
-            vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
+            vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
                                     << " ]-> " << iter->second 
                                     << " is already on the plugin and id map." << std::endl << vprDEBUG_FLUSH;
             ++foundPlugin;
