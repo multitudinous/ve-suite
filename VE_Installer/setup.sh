@@ -46,7 +46,7 @@ case "$CFDHOSTTYPE" in
    export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
    export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:/home/users/mccdo/software/IRIX32/lib
    export WX_HOME=${WX_HOME_DIR}/irix-65
-   export BOOST_INCLUDES=${VJ_DEPS_DIR}
+   export BOOST_INCLUDES=${VJ_DEPS_DIR}/include
 
    if [ ${TAO_BUILD} = "TRUE" ]; then
       export ACE_ROOT=/home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
@@ -64,13 +64,13 @@ case "$CFDHOSTTYPE" in
 ;;
    RedHat*) 
    #echo "CFDHOSTTYPE contains RedHat"
-   export VTK_BASE_DIR=${VTK_HOME_DIR}/Linux-rh8
+   export VTK_BASE_DIR=${VTK_HOME_DIR}/Linux-rh
 
    export JDK_HOME=/usr/java/j2sdk1.4.2_03
    export VJ_BASE_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80
    export VJ_DEPS_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80-deps
 
-   export BOOST_INCLUDES=${VJ_DEPS_DIR}/include/boost-1_31
+   export BOOST_INCLUDES=${VJ_DEPS_DIR}/include
    export LD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    export WX_HOME=${WX_HOME_DIR}/linux-rh80
 
