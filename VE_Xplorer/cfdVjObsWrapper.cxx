@@ -34,7 +34,7 @@
 #include <orbsvcs/CosNamingC.h>
 #endif
 #include "VjObs_i.h"     //added for corba stuff
-#include "cfdcommandArray.h"
+#include "cfdCommandArray.h"
 #include "cfdSteadyStateVizHandler.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdModelHandler.h"
