@@ -51,19 +51,17 @@
 cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, PortableServer::POA* child_poa, cfdDCS* worldDCS )
 {
    this->naming_context = inputNameContext;
-  try
-    {
+   try
+   {
       XMLPlatformUtils::Initialize();
-    }
-  
-  catch(const XMLException &toCatch)
-    {
-      XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
-				<< "  Exception message:"
-				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+   }
+   catch(const XMLException &toCatch)
+   {
+      XERCES_STD_QUALIFIER std::cerr << "Error during Xerces-c Initialization.\n"
+            << "  Exception message:"
+            << XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER std::endl;
       //return 1;
-    }
-
+   }
 
    this->_doneWithCalculations = true;
 
@@ -88,22 +86,22 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
 
    if (!is_orb_init)
    {
-		//init_orb_naming();
-		is_orb_init = true;
+      //init_orb_naming();
+      is_orb_init = true;
    }
 
    try
    {
-		CosNaming::Name name(1);
-		name.length(1);
-		name[0].id = CORBA::string_dup ("Executive");
+      CosNaming::Name name(1);
+      name.length(1);
+      name[0].id = CORBA::string_dup ("Executive");
     
-		CORBA::Object_var exec_object = this->naming_context->resolve(name);
-		_exec = Body::Executive::_narrow(exec_object.in());
+      CORBA::Object_var exec_object = this->naming_context->resolve(name);
+      _exec = Body::Executive::_narrow(exec_object.in());
 
-		//Create the Servant
-		ui_i = new Body_UI_i(_exec, UINAME);
-		//Body_UI_i ui_i( UINAME);
+      //Create the Servant
+      ui_i = new Body_UI_i(_exec, UINAME);
+      //Body_UI_i ui_i( UINAME);
 
       PortableServer::ObjectId_var id = 
          PortableServer::string_to_ObjectId( CORBA::string_dup( "cfdExecutive" ) ); 
@@ -124,11 +122,11 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
       //Call the Executive CORBA call to register it to the Executive
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
       std::cout << " Connected to the Executive " << std::endl;   
-	} 
+   } 
    catch (CORBA::Exception &) 
-   {		
-		std::cerr << "Can't find executive or UI registration error" << std::endl;
-	}
+   {      
+      std::cerr << "Can't find executive or UI registration error" << std::endl;
+   }
    
    //_param = new cfdExecutiveConfiguration();
 
@@ -142,13 +140,13 @@ cfdExecutive::~cfdExecutive( void )
 
 void cfdExecutive::UnbindORB()
 {
-	CosNaming::Name UIname(1);
-	UIname.length(1);
-	UIname[0].id =  (ui_i->UIName_).c_str();// CORBA::string_dup();
+   CosNaming::Name UIname(1);
+   UIname.length(1);
+   UIname[0].id =  (ui_i->UIName_).c_str();// CORBA::string_dup();
 
    std::cout<< " Executive Destructor " << UIname[0].id << std::endl;
 
-	try
+   try
    {
       this->naming_context->unbind(UIname);
    }
@@ -168,34 +166,34 @@ void cfdExecutive::UnbindORB()
 
 void cfdExecutive::init_orb_naming()
 {
-	//char *argv[2]={"-ORBInitRef", "NameService=file://ns.ior"};
-//	char **argv;
+   //char *argv[2]={"-ORBInitRef", "NameService=file://ns.ior"};
+//   char **argv;
 //   argv = new char*[ 0 ];
-//	int argc = 0;
-/*	try {
-		// First initialize the ORB, 
-		//orb =
-			//CORBA::ORB_init (argc, argv,
+//   int argc = 0;
+/*   try {
+      // First initialize the ORB, 
+      //orb =
+         //CORBA::ORB_init (argc, argv,
          //              ""); // the ORB name, it can be anything! 
         
-		//Here is the code to set up the ROOT POA
-		CORBA::Object_var poa_object =
-			orb->resolve_initial_references ("RootPOA"); // get the root poa
+      //Here is the code to set up the ROOT POA
+      CORBA::Object_var poa_object =
+         orb->resolve_initial_references ("RootPOA"); // get the root poa
     
-		poa = PortableServer::POA::_narrow(poa_object.in());
-		PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
-		poa_manager->activate ();
-	
-		//Here is the part to contact the naming service and get the reference for the executive
-		CORBA::Object_var naming_context_object =
-			orb->resolve_initial_references ("NameService");
-		naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
-	}  catch (CORBA::Exception &) {
-		poa->destroy (1, 1);
-		// Finally destroy the ORB
-		//orb->destroy();
-		std::cerr << "CORBA exception raised!" << std::endl;
-	}*/
+      poa = PortableServer::POA::_narrow(poa_object.in());
+      PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
+      poa_manager->activate ();
+   
+      //Here is the part to contact the naming service and get the reference for the executive
+      CORBA::Object_var naming_context_object =
+         orb->resolve_initial_references ("NameService");
+      naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
+   }  catch (CORBA::Exception &) {
+      poa->destroy (1, 1);
+      // Finally destroy the ORB
+      //orb->destroy();
+      std::cerr << "CORBA exception raised!" << std::endl;
+   }*/
 }
 
 /*void cfdExecutive::GetNetwork ( void )
@@ -287,12 +285,12 @@ void cfdExecutive::GetNetwork ( void )
       {
          if(_network->setInput(iter->_id, &(*iter))) 
          {
-	         _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-	         _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-	         _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+            _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+            _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+            _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
          }  
          else
-	         std::cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
+            std::cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
 
          if ( iter->_id != -1 ) 
          {
@@ -558,5 +556,5 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdExecutive::UpdateCommand()
 {
-   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
+   std::cerr << "doing nothing in cfdExecutive::UpdateCommand()" << std::endl;
 }
