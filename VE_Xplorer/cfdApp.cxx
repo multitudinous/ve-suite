@@ -202,6 +202,7 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    newSceneViewer->getLight()->setAmbient(osg::Vec4(0.3f,0.3f,0.3f,1.0f));
    newSceneViewer->getLight()->setDiffuse(osg::Vec4(0.9f,0.9f,0.9f,1.0f));
    newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+   newSceneViewer->setClearColor(osg::Vec4(0,0,0,1));
    _sceneViewer = newSceneViewer;
    _frameStamp = new osg::FrameStamp;
    _start_tick = _timer.tick();
