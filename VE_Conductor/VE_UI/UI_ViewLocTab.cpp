@@ -35,10 +35,20 @@ void UI_ViewLocTab::_buildPage()
 {
    //the radio box
    int numStoredLocations = ((UI_Tabs *)_parent)->num_viewlocs;
+   
+   if(numStoredLocations < 0)
+   {
+      numStoredLocations = 0;
+   }
+
    std::cout<<"# locs"<<numStoredLocations<<std::endl;
    char viewpt_name[30];
-   _defaultName = new wxString[ numStoredLocations ];
-
+   if(numStoredLocations){
+      _defaultName = new wxString[ numStoredLocations ];
+   }else{
+      _defaultName = new wxString[1];
+      _defaultName[0] = wxT("Default");
+   }
    for( unsigned int i=0; i<numStoredLocations; i++)
    {
       sprintf(viewpt_name,"View Location %i",i);
@@ -60,11 +70,18 @@ void UI_ViewLocTab::_buildPage()
       defaultName = new wxString[ numStoredLocations ];
       defaultName[ 0 ] = wxT("No Stored View Points");
    }*/
-
-   _locationsRBox = new wxRadioBox(this, VIEWLOC_RBOX, wxT("Stored View Points"),
+   if(numStoredLocations)
+   {
+      _locationsRBox = new wxRadioBox(this, VIEWLOC_RBOX, wxT("Stored View Points"),
                                 wxDefaultPosition, wxDefaultSize, numStoredLocations,
                                 _defaultName,1 , wxRA_SPECIFY_COLS);
-
+   }
+   else
+   {
+      _locationsRBox = new wxRadioBox(this, VIEWLOC_RBOX, wxT("Stored View Points"),
+                                wxDefaultPosition, wxDefaultSize, 1,
+                                _defaultName,1 , wxRA_SPECIFY_COLS);
+   }
    if ( ((UI_Tabs *)_parent)->num_viewlocs == 0 )
    {
       _locationsRBox->Enable( false );
