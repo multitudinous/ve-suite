@@ -1,31 +1,43 @@
 #!/usr/bin/tcsh -f
 
 # Set environment variables and paths for running the program
-source /isv/VE_Suite_20041012/VE_Installer/setup.deere.tsh
+source /isv/VE_Suite/20041118/VE_Installer/setup.deere.tsh
 # Set additional environment variables
-setenv MY_VJCONFIGS /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-posix/share/vrjuggler/data/configFiles
+setenv MY_VJCONFIGS /isv/Juggler/deere.config/vrj2.0a4
 #cp ${VE_SUITE_HOME}/VE_Conductor/class_files/config/${HOST}.comm.config ${VE_SUITE_HOME}/VE_Conductor/class_files/config/comm.config
-setenv OMNIORB_CONFIG /export/isv/Juggler/deere.config/vrj2.0a3/${HOST}.omniORB4.cfg
-setenv OMNINAMES_LOGDIR /export/isv/Juggler/deere.config/vrj2.0a3/logs
+setenv OMNIORB_CONFIG ${MY_VJCONFIGS}/${HOST}.omniORB4.cfg
+setenv OMNINAMES_LOGDIR ${OMNI_HOME}/logs
+
+# VE_Suite needs vrjuggler to not find these files.
+# The VES start script will rename the files by adding .bak
+# The TApp253 start script will rename the files by removing the .bak
+if ( -e ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc.so ) then
+mv ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc.so ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc.so.bak
+echo "Hiding corba_rtrc.so"
+endif
+if ( -e ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc_d.so ) then
+mv ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc_d.so ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc_d.so.bak
+echo "Hiding corba_rtrc_d.so"
+endif
 
 switch ($1)
 
   case -c:
     sgi_use_anyaddr \
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/icecube.base.config \
-    ${MY_VJCONFIGS}/icecube.displays.closed.config \
-    ${MY_VJCONFIGS}/icecube.mstar.config \
-    ${MY_VJCONFIGS}/icecube.rfwand.config 
+    ${MY_VJCONFIGS}/icecube.base.jconf \
+    ${MY_VJCONFIGS}/icecube.displays.closed.jconf \
+    ${MY_VJCONFIGS}/icecube.mstar.jconf \
+    ${MY_VJCONFIGS}/icecube.rfwand.jconf 
   breaksw
   
   case -cf:
     sgi_use_anyaddr \
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/icecube.base.config \
-    ${MY_VJCONFIGS}/icecube.displays.closed.config \
-    ${MY_VJCONFIGS}/icecube.mstar.headless.config \
-    ${MY_VJCONFIGS}/icecube.rfwand.config 
+    ${MY_VJCONFIGS}/icecube.base.jconf \
+    ${MY_VJCONFIGS}/icecube.displays.closed.jconf \
+    ${MY_VJCONFIGS}/icecube.mstar.headless.jconf \
+    ${MY_VJCONFIGS}/icecube.rfwand.jconf 
   breaksw
   
   case -d:
@@ -37,19 +49,19 @@ switch ($1)
   case -o:
     sgi_use_anyaddr \
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/icecube.base.config \
-    ${MY_VJCONFIGS}/icecube.displays.open.config \
-    ${MY_VJCONFIGS}/icecube.mstar.config \
-    ${MY_VJCONFIGS}/icecube.rfwand.config 
+    ${MY_VJCONFIGS}/icecube.base.jconf \
+    ${MY_VJCONFIGS}/icecube.displays.open.jconf \
+    ${MY_VJCONFIGS}/icecube.mstar.jconf \
+    ${MY_VJCONFIGS}/icecube.rfwand.jconf 
   breaksw
   
   case -of:
     sgi_use_anyaddr \
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/icecube.base.config \
-    ${MY_VJCONFIGS}/icecube.displays.open.config \
-    ${MY_VJCONFIGS}/icecube.mstar.headless.config \
-    ${MY_VJCONFIGS}/icecube.rfwand.config 
+    ${MY_VJCONFIGS}/icecube.base.jconf \
+    ${MY_VJCONFIGS}/icecube.displays.open.jconf \
+    ${MY_VJCONFIGS}/icecube.mstar.headless.jconf \
+    ${MY_VJCONFIGS}/icecube.rfwand.jconf 
   breaksw
   
   case -nserv:
@@ -107,7 +119,7 @@ switch ($1)
   breaksw
 
   case -doc:
-        netscape file:///isv/VE_Suite_20041012/docs/starcd/initial.htm &
+        netscape file://${VE_SUITE_HOME}/docs/starcd/initial.htm &
   breaksw
 
   case -h:
@@ -135,6 +147,7 @@ switch ($1)
   echo "  "-transVTK = move flowdata to align with geometry
   echo "      "-make = make all VE-Suite modules
   echo " "-makeclean = clean all VE-Suite modules
+  echo "     "-merge = merge vertices of vtk dataset
   echo "  "-meshView = view any vtk file
   echo " "-scalRange = view scalar range of any vtk file
   echo "       "-doc = view documentation for setting up a CFD post process case
