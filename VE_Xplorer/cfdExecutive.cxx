@@ -49,6 +49,7 @@
 
 #include <vrj/Util/Debug.h>
 #include <vpr/System.h>
+//#include <vpr/Thread/Thread.h>
 
 #include <orbsvcs/CosNamingC.h>
 //#include <tao/BiDir_GIOP/BiDirGIOP.h>
@@ -134,9 +135,9 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
       //Call the Executive CORBA call to register it to the Executive
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
       std::cout << " Connected to the Executive " << std::endl;   
-	  this->thread = new cfdThread();
-      thread->executive_run = new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything );
-      thread->new_thread = new vpr::Thread( thread->executive_run );
+	   this->thread = new cfdThread();
+      //thread->executive_run = new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything );
+      thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
    } 
    catch (CORBA::Exception &) 
    {      

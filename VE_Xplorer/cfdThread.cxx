@@ -32,16 +32,16 @@
 #include "cfdThread.h"
 cfdThread::cfdThread( void )
 {
-   corba_run = NULL;
+   //corba_run = NULL;
    new_thread = NULL;
 }
 
 cfdThread::~cfdThread( void )
 {
-   if ( corba_run != NULL )
+   /*if ( corba_run != NULL )
    {
       delete corba_run;
-   }
+   }*/
    
    if ( new_thread != NULL )
    {

@@ -262,7 +262,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       vprDEBUG(vprDBG_ALL,1) << "LOAD_PFB_FILE: numChildren = " 
          << this->GetcfdDCS()->GetNumChildren()
          << ", cfdTeacher_state = "
-         << commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE )
+         << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
       if ( this->GetcfdDCS()->GetNumChildren() == 0 )
@@ -271,13 +271,13 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
                                 << std::endl << vprDEBUG_FLUSH;
             
          this->GetcfdDCS()->AddChild( 
-            this->getpfNode( commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE ) ) );
+            this->getpfNode( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) ) );
       }
       else
       {
          vprDEBUG(vprDBG_ALL,2) << "LOAD_PFB_FILE: replaceChild" 
                                 << std::endl << vprDEBUG_FLUSH;
-         int child = commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
+         int child = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          this->GetcfdDCS()->ReplaceChild( this->GetcfdDCS()->GetChild( 0 ), this->getpfNode( child ) );
       }
       return true;

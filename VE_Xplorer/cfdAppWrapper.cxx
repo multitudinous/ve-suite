@@ -45,8 +45,8 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
    this->argv = argv;
    cfdThread* _thread = new cfdThread();
    _vjObsWrapper = input;
-   _thread->corba_run=new vpr::ThreadMemberFunctor<cfdAppWrapper>(this, &cfdAppWrapper::init );
-   _thread->new_thread=new vpr::Thread(_thread->corba_run);
+   //_thread->corba_run=new vpr::ThreadMemberFunctor<cfdAppWrapper>(this, &cfdAppWrapper::init );
+   _thread->new_thread=new vpr::Thread(new vpr::ThreadMemberFunctor<cfdAppWrapper>(this, &cfdAppWrapper::init ) );
 }
 
 cfdAppWrapper::~cfdAppWrapper( void )
