@@ -184,8 +184,6 @@ void UI_GeometryTab::_onUpdate(wxCommandEvent& event)
       if ( _geometryCBox->IsChecked( i ) )
          ((UI_Tabs *)_parent)->cGeo_state += (int)pow( 2.0f, (float)i );
    }
-   std::cout << " UI_GeometryTab::_onUpdate : " << 
-         ((UI_Tabs *)_parent)->cGeo_state << std::endl;
    ((UI_Tabs *)_parent)->cId  = UPDATE_GEOMETRY;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }

@@ -16,11 +16,6 @@
 //using namespace std;
 
 class UI_ModelData;
-/*class wxNotebook;
-class wxString;
-class wxComboBox;
-class wxStaticBoxSizer;
-class wxBoxSizer;*/
 
 enum DATASETS_PANEL_IDS{
    DATA_SET_SELECT_COMBO,

@@ -311,8 +311,8 @@ BEGIN_EVENT_TABLE(UI_DatasetPanel, wxPanel)
    EVT_RADIOBOX(SCALAR_PANEL_RAD_BOX, UI_DatasetPanel::_onScalars)
    EVT_RADIOBOX(VECTOR_PANEL_RAD_BOX, UI_DatasetPanel::_onVectors)
    EVT_BUTTON(SCALAR_PANEL_UPDATE_BUTTON, UI_DatasetPanel::_onUpdate)   
-   EVT_COMMAND_SCROLL(MIN_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
-   EVT_COMMAND_SCROLL(MAX_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(MIN_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(MAX_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
 END_EVENT_TABLE()
 //////////////////////////////////////////////////
 //Constructor                                   //
