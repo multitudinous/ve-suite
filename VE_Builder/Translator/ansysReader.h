@@ -57,7 +57,6 @@ class ansysReader
       void ReadElementTypeIndexTable();
       void ReadNodalCoordinates();
       void ReadElementDescriptionIndexTable();
-      void ReadElementDescription();
       void ReadSolutionDataHeader();
       void ReadNodalSolutions();
       void ReadElementSolutions();
@@ -89,13 +88,14 @@ class ansysReader
       float ReadNthFloat( int n );
       double ReadNthDouble( int n );
 
-      void ReadElementDescription( int ptr );
+      void ReadElementDescription( int elemIndex, int ptr );
       int * ReadElementTypeDescription( int ptr );
       void ReadGenericBlock( int intPosition );
       void ReadElementIndexTable( int, int );
       int VerifyNumberOfValues( int reportedNumValues, int blockSize_1 );
       void VerifyBlock( int blockSize_1, int blockSize_2 );
       void ReadNodalComponentStresses( int );
+      double ComputeVonMisesStress( double stresses [ 11 ] );
 
       char * ansysFileName;
       FILE *s1;
@@ -135,6 +135,10 @@ class ansysReader
       int ptrESL; // Element solutions
       int ptrEXT;
       int * ptrENS;
+      int * numCornerNodesInElement;
+      int ** cornerNodeNumbersForElement;
+      double * summedVonMisesStress;
+      int * numContributingElements;
 
       vtkUnstructuredGrid * ugrid;
 };
