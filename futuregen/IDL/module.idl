@@ -108,7 +108,24 @@ module Body{
     string GetName() raises(Error::EUnknown);
     
   };
-  
+
+ interface UI { //This is the UI;
+    
+    //This is to update the network, called by the Executive
+    void UpdateNetwork(in string network) raises(Error::EUnknown);
+
+    //This is to update the module UI, called by the Executive
+    void UpdateModuleUI(in long module_id, in string msg) raises(Error::EUnknown);
+    
+    //This is to update the Result UI, called by the Executive
+    void UpdateModuleResult(in long module_id, in string msg) raises(Error::EUnknown);
+
+    //This is to update the Link content UI, called by the Executive
+    void UpdateLinkContent(in long id, in string msg) raises(Error::EUnknown);
+    //This is to Raise the Notification or waring or error message
+    void Raise(in string notification) raises(Error::EUnknown);
+  };
+
   interface Executive { // This is the Excutive Engine;
     
     //This is to Get the Flow in Data for Module module_id, port port_id, Called by the Unit and/or UI to display the port data
@@ -166,7 +183,7 @@ module Body{
     void Resume() raises(Error::EUnknown);
     
     //This is to Register a UI to the Executive, make it aware that this UI is connected in
-    void RegisterUI(in string UIName) raises(Error::EUnknown);
+    void RegisterUI(in string UIName, in Body::UI ui) raises(Error::EUnknown);
 
     //This is to disconnect the UI to the Executive,
     void UnRegisterUI(in string UIName) raises(Error::EUnknown);
@@ -175,27 +192,11 @@ module Body{
     void UnRegisterUnit(in string UnitName) raises(Error::EUnknown);
 
     //This is to Register a Unit to the Executive, flag=0 is normal module, flag=1 will be the global module
-    void RegisterUnit(in string UnitName, in long flag) raises(Error::EUnknown);
+    void RegisterUnit(in string UnitName, in Body::Unit unit, in long flag) raises(Error::EUnknown);
 
     //This is to Get the global modules's ID, so the output of the global module can be used by all modules (for example, coal module), return value is the number of the global modules, the output parameter is the ids fo the global modules. So the Unit can call the  GetExportData(id) to the get the global data
     long GetGlobalMod(out Types::ArrayLong ids) raises(Error::EUnknown);
 
   };
 		
-  interface UI { //This is the UI;
-    
-    //This is to update the network, called by the Executive
-    void UpdateNetwork(in string network) raises(Error::EUnknown);
-
-    //This is to update the module UI, called by the Executive
-    void UpdateModuleUI(in long module_id, in string msg) raises(Error::EUnknown);
-    
-    //This is to update the Result UI, called by the Executive
-    void UpdateModuleResult(in long module_id, in string msg) raises(Error::EUnknown);
-
-    //This is to update the Link content UI, called by the Executive
-    void UpdateLinkContent(in long id, in string msg) raises(Error::EUnknown);
-    //This is to Raise the Notification or waring or error message
-    void Raise(in string notification) raises(Error::EUnknown);
-  };
 };
