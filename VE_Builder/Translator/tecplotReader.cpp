@@ -105,8 +105,8 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       }
       else //if there is no "J=", it is a square grid 
       {
-         nY = (int)(sqrt( nX )); //use the sqrt of current value of nX as nY
-         nX = (int)(sqrt( nX )); //reset nX to its new valu
+         nY = (int)(sqrt( (double) nX )); //use the sqrt of current value of nX as nY
+         nX = (int)(sqrt( (double) nX )); //reset nX to its new valu
       }
       if ( debug ) std::cout<<"nX :"<< nX <<std::endl<<"nY :"<< nY <<std::endl;
       
