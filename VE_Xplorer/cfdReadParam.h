@@ -49,7 +49,6 @@ class cfdReadParam : public cfdGlobalBase
       cfdReadParam( char * );
       ~cfdReadParam( );
 
-
       // compare VjObs_i commandArray with its child's value
       virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 

@@ -40,12 +40,6 @@
 //#include <CorbaManager.h>
 #endif
 
-//#include <vtkTimerLog.h>
-//#include <vtkPolyData.h>
-//#include <vtkPointData.h>
-//#include <vtkUnstructuredGrid.h>
-//#include <vtkFieldData.h>
-
 /// VR Juggler Stuff
 #include <vrj/Kernel/Kernel.h>
 //#include <gmtl/Math.h>
@@ -73,12 +67,13 @@
 #endif
 #include <vector>
 
+/*
 #ifndef WIN32
 #include <unistd.h>
 #else
 //#include <windows.h>
 #endif
-
+*/
 
 #ifdef _TAO
 class cfdExecutive;
@@ -90,9 +85,6 @@ class cfdSteadyStateVizHandler;
 class cfdTransientVizHandler;
 class cfdModelHandler;
 class cfdIHCCModel;
-//class vtkTransform;
-//class vtkTransformFilter;
-
 
 // Scene graph dependent forward declarations
 class pfGroup;
@@ -316,6 +308,8 @@ class cfdApp : public vrj::PfApp
    protected:
       //cfdWriteTraverser* _cfdWT;
 
+   private:
+   char * filein_name;
 };
 
 #endif

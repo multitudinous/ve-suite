@@ -223,6 +223,7 @@ void cfdReadParam::data_read ( char * filein_name )
       }
    }
 */
+   std::cout << "in cfdReadParam::data_read with " << filein_name << std::endl;
    std::ifstream inFile( filein_name, std::ios::in ); 
 
    // Read the information in the file.
@@ -285,7 +286,7 @@ void cfdReadParam::param_read( std::ifstream &inFile )
             quatCamFile( inFile);
             break;
          default:
-            std::cerr << "ERROR : Unknown Type: " << id << std::endl;
+            std::cerr << "ERROR : param_read Unknown Type: " << id << std::endl;
             exit ( 1 );
       }
    }
@@ -1127,7 +1128,7 @@ void cfdReadParam::ContinueRead( std::ifstream &input, unsigned int id )
 	      numLines = 1;
          break;
       default:
-         std::cerr << "ERROR : Unknown Type: " << id << std::endl;
+         std::cerr << "ERROR : ContinueRead Unknown Type: " << id << std::endl;
          exit ( 1 );
    }
 

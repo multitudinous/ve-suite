@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdPfSceneManagement.cxx,v $
- * Date modified: $Date: 2004-08-02 12:13:03 -0500 (Mon, 02 Aug 2004) $
- * Version:       $Rev: 734 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

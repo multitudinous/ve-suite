@@ -118,7 +118,6 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDC
    InitModules();
 }
 
-
 cfdExecutive::~cfdExecutive( void )
 {
 }

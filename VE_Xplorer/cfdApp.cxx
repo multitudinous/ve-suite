@@ -164,30 +164,38 @@ void cfdApp::exit()
 inline void cfdApp::init( )
 {
    vprDEBUG(vprDBG_ALL,0) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
-   char * filein_name = new char [ 256 ];
+   filein_name = new char [ 256 ];
    do
    {
       std::cout << "|   Enter VE_Xplorer parameter filename: ";
       std::cin >> filein_name;
-      if ( ! fileIO::isFileReadable( filein_name ) )
+      if ( ! fileIO::isFileReadable( this->filein_name ) )
       {
-         std::cerr << "\n\"" << filein_name << "\" is not readable." << std::endl;
+         std::cerr << "\n\"" << this->filein_name << "\" is not readable." << std::endl;
       }
    }
-   while ( ! fileIO::isFileReadable( filein_name ) );
+   while ( ! fileIO::isFileReadable( this->filein_name ) );
 
-   std::cout << "filein_name: " << filein_name << std::endl;
+   //std::cout << "filein_name: " << this->filein_name << std::endl;
 
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
    std::cout << "|  3. Initializing........................... Parameter File Reader |" << std::endl;
 
-   this->_sceneManager = new cfdPfSceneManagement( filein_name );
-   this->_environmentHandler = new cfdEnvironmentHandler( filein_name );
-   this->_steadystateHandler = new cfdSteadyStateVizHandler( filein_name );
-   this->_transientHandler = new cfdTransientVizHandler( filein_name );
-   this->_modelHandler = new cfdModelHandler( filein_name, 
+   this->_sceneManager = new cfdPfSceneManagement( this->filein_name );
+std::cout << "|  3a" << std::endl;
+   this->_environmentHandler = new cfdEnvironmentHandler( this->filein_name );
+std::cout << "|  3b" << std::endl;
+
+   this->_steadystateHandler = new cfdSteadyStateVizHandler( this->filein_name );
+std::cout << "|  3c" << std::endl;
+
+   this->_transientHandler = new cfdTransientVizHandler( this->filein_name );
+std::cout << "|  3d" << std::endl;
+
+   this->_modelHandler = new cfdModelHandler( this->filein_name, 
                                     this->_sceneManager->GetWorldDCS() );
+std::cout << "|  3e" << std::endl;
 
 #ifdef _CLUSTER
   // Cluster Stuff
@@ -246,7 +254,6 @@ std::vector< int > cfdApp::getFrameBufferAttrs( void )
 }
 */
 
-
 inline void cfdApp::initScene( )
 {
    vprDEBUG(vprDBG_ALL,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
@@ -261,9 +268,18 @@ inline void cfdApp::initScene( )
 
    this->_sceneManager->InitScene();
    this->_environmentHandler->InitScene();
+
+   //this->_steadystateHandler = new cfdSteadyStateVizHandler( this->filein_name );
    this->_steadystateHandler->InitScene();
+std::cout << "|  3cc" << std::endl;
+
+   //this->_transientHandler = new cfdTransientVizHandler( this->filein_name );
    this->_transientHandler->InitScene();
+std::cout << "|  3dd" << std::endl;
+
+   //this->_modelHandler = new cfdModelHandler( this->filein_name, this->_sceneManager->GetWorldDCS() );
    this->_modelHandler->InitScene();
+std::cout << "|  3ee" << std::endl;
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
