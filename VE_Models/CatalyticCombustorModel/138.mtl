@@ -1,0 +1,368 @@
+newmtl OFMaterial1SG1
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl OFMaterial14SG1
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+map_Kd table_brushed_metal.rgb
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl OFMaterial33SG1
+illum 4
+Kd 0.00 0.00 0.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+map_Kd CWS.rgb
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl initialShadingGroup
+illum 4
+Kd 0.50 0.50 0.50
+Ka 0.00 0.00 0.00
+Tf 1.00 1.00 1.00
+Ni 1.00
+newmtl parts2_OFMaterial2SG1
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__OFMaterial1SG2
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__OFMaterial1SG3
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__OFMaterial1SG4
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__OFMaterial1SG5
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__OFMaterial1SG6
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__OFMaterial2SG1
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__OFMaterial2SG2
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__OFMaterial2SG3
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__OFMaterial2SG4
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__OFMaterial2SG5
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__OFMaterial22SG1
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__OFMaterial1SG2
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__OFMaterial1SG3
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__OFMaterial1SG5
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__OFMaterial1SG6
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__OFMaterial1SG7
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__OFMaterial1SG8
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__OFMaterial22SG1
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__OFMaterial22SG2
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__OFMaterial22SG3
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__OFMaterial22SG4
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__pasted__OFMaterial1SG3
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__OFMaterial1SG6
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__OFMaterial1SG7
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__OFMaterial1SG8
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__OFMaterial1SG10
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__OFMaterial22SG1
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__pasted__OFMaterial22SG2
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__pasted__OFMaterial22SG3
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__pasted__OFMaterial22SG4
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__OFMaterial1SG3
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__OFMaterial1SG6
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__OFMaterial1SG8
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__OFMaterial1SG9
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__OFMaterial1SG10
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__OFMaterial22SG3
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__OFMaterial22SG4
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__OFMaterial22SG5
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__pasted__OFMaterial1SG6
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__pasted__OFMaterial1SG9
+illum 4
+Kd 0.92 0.92 0.92
+Ka 0.72 0.72 0.73
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.14 0.14 0.14
+Ns 18.00
+newmtl pasted__pasted__pasted__pasted__pasted__OFMaterial22SG4
+illum 4
+Kd 1.00 1.00 1.00
+Ka 0.20 0.20 0.20
+Tf 1.00 1.00 1.00
+Ni 1.00
+Ks 0.00 0.00 0.00
+Ns 18.00
