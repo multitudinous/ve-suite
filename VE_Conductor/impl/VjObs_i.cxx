@@ -463,7 +463,7 @@ CORBA::Short VjObs_i::getPreState()
 
 void VjObs_i::setTimesteps(CORBA::Short value)
 {
-   vprDEBUG(vprDBG_ALL, 0)
+   vprDEBUG(vprDBG_ALL, 2)
       << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
@@ -473,7 +473,7 @@ void VjObs_i::setTimesteps(CORBA::Short value)
 CORBA::Short VjObs_i::getTimesteps()
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   vprDEBUG(vprDBG_ALL, 0)
+   vprDEBUG(vprDBG_ALL, 2)
       << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
    return mTimesteps;
 }
@@ -707,16 +707,18 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterPre_state        = this->mPre_state;
       this->mStates->clusterTimesteps        = this->mTimesteps;
       this->mStates->clusterTeacher_state    = this->mTeacher_state;
+
+//cout << this->mTimesteps << endl;
       //This value only matters to the cluster setting;
       //if this is master, get the value from the sequence node
-      /*if ( this->activeSequenceObject != NULL )
+      //if ( this->activeSequenceObject != NULL )
       {
-         cfdSequence* the_sequence = this->activeSequenceObject->GetpfSequence();
-         if ( the_sequence != NULL )
+         //cfdSequence* the_sequence = this->activeSequenceObject->GetpfSequence();
+         //if ( the_sequence != NULL )
          {
-            this->mStates->currentFrame = the_sequence->getFrame(); 
+            //this->mStates->currentFrame = this->mTimesteps;//the_sequence->getFrame(); 
          }
-      }*/
+      }
    }
 #endif
 }
@@ -734,14 +736,16 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    this->cfdPostdata_state = this->mStates->clusterPostdata_state;
    this->cfdPre_state      = this->mStates->clusterPre_state;     
    this->cfdTimesteps      = this->mStates->clusterTimesteps;     
-   this->cfdTeacher_state  = this->mStates->clusterTeacher_state; 
+   this->cfdTeacher_state  = this->mStates->clusterTeacher_state;
+//cout << " GetUpdateClusterStateVariables : " << this->cfdTimesteps << endl;
+
    //This value only matters to the cluster setting;
    //if this is master, get the value from the sequence node
    /*if ( this->activeSequenceObject != NULL )
    {
       cfdSequence* the_sequence = this->activeSequenceObject->GetpfSequence();
       if ( the_sequence != NULL )
-         the_sequence->setCurrentFrame( this->mStates->currentFrame );
+         the_sequence->setCurrentFrame( this->cfdTimesteps );
    }*/
 }
 #endif
@@ -816,8 +820,8 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
       this->mGeo_state = value[ 6 ];
       //cout<<"geometry state:"<< this->mGeo_state <<endl;
 
-   this->mPre_state = (bool)value[ 7 ];
-   //cout<<"pre_state:"<< this->mPre_state <<endl;
+      this->mPre_state = (bool)value[ 7 ];
+      //cout<<"pre_state:"<< this->mPre_state <<endl;
 
       this->mTeacher_state = value[ 8 ];
       //cout<<"mTeacher state:"<< this->mTeacher_state <<endl;
