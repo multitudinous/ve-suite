@@ -40,111 +40,6 @@ using namespace std;
 //it allows performer to determine the class type
 pfType* cfdSequence::_classType = NULL;
 
-#ifndef _USE_CFD_SEQUENCE
-
-#include <Performer/pf/pfSequence.h>
-
-cfdSequence::cfdSequence()
-{
-   _pfSequence = new pfSequence();
-   _deltaT = 0.0;
-   _duration = 0.0;
-   _begin = 0;
-   _end = 1;
-   _dir = 1;
-   _currentFrame = 0;
-   _lMode = CFDSEQ_CYCLE;
-   _pMode = CFDSEQ_START;
-   _appFrame = 0;
-   _step = -10000;
-
-   // update the performer static member class type
-   _classType = pfSequence::getClassType();
-}
-
-cfdSequence::~cfdSequence()
-{
-   pfDelete( _pfSequence );
-}
-
-void cfdSequence::addChild( pfNode* child )
-{
-   _pfSequence->addChild( child );
-
-   // force recomputation of time per frame
-   this->setDuration( _duration );
-}
-
-void cfdSequence::setDuration( double duration )
-{
-   _pfSequence->setDuration( 1.0, -1 );  // regular speed, continue forever
-   _duration = duration;
-   _deltaT = duration / this->getNumChildren();
-
-   // display all children for _deltaT seconds
-   _pfSequence->setTime( -1, _deltaT );
-}
-
-void cfdSequence::setInterval( int loopmode, int begin, int end )
-{
-   _lMode = loopmode;
-   _begin = begin;
-   _end = end;
-   _pfSequence->setInterval( loopmode, begin, end );
-}
-
-void cfdSequence::setPlayMode(int pMode)
-{
-   _pMode = pMode;
-   _pfSequence->setMode( pMode );
-}
-
-void cfdSequence::setLoopMode( int lMode )
-{
-   _lMode = lMode;
-   _pfSequence->setMode( _lMode );
-}
-
-pfNode * cfdSequence::getNode()
-{
-   return (pfNode*)_pfSequence;
-}
-
-int cfdSequence::getNumChildren()
-{
-   return _pfSequence->getNumChildren();
-}
-
-pfNode* cfdSequence::getParent( int index )
-{
-   return _pfSequence->getParent( index );
-}
-
-pfNode* cfdSequence::getChild( int index )
-{
-   return _pfSequence->getChild( index );
-}
-
-int cfdSequence::removeChild( pfNode* child )
-{
-   return _pfSequence->removeChild( child );
-}
-
-int cfdSequence::getFrame()
-{
-   int repeat;
-   return _pfSequence->getFrame( &repeat );
-}
-
-void cfdSequence::setTime( double time )
-{
-   _deltaT = time;
-   _duration = time * this->getNumChildren();
-   _pfSequence->setTime( -1, time );
-}
-
-#else // _USE_CFD_SEQUENCE
-
 #include <Performer/pf/pfSwitch.h>
 #include <Performer/pf/pfTraverser.h>
 
@@ -213,12 +108,6 @@ void cfdSequence::setPlayMode(int pMode)
 void cfdSequence::stepSequence()
 {
    _step = CFDSEQ_STEP;
-}
-
-// TODO: getNode will not be needed when pfSequence is removed
-pfNode * cfdSequence::getNode()
-{
-   return this;
 }
 
 int cfdSequence::getNumChildren()
@@ -426,10 +315,9 @@ void cfdSequence::changeSequenceDirection()
    //update the direction
    setInterval(_lMode,_end,_begin);
 }
-////////////////////////////////////////////
-//set the current frame for cluster       // 
-//implementation                          // 
-////////////////////////////////////////////
+////////////////////////////////////////////////////
+//set the current frame for cluster implementation//
+////////////////////////////////////////////////////
 void cfdSequence::setCurrentFrame(int index)
 {
    //no need to update yet
@@ -464,9 +352,8 @@ void cfdSequence::setCurrentFrame(int index)
    }
    return; 
 }
-/////////////////////////////////////////
-//add a child                          //
-/////////////////////////////////////////
+
+//add a child
 void cfdSequence::addChild(pfNode* child)
 {
    //cout<<"Adding frame to sequence."<<endl;
@@ -485,16 +372,7 @@ void cfdSequence::addChild(pfNode* child)
    this->setDuration( _duration );
 }
 
-//adjusted this to handle the last frame of the sequence in cycle mode
-int cfdSequence::getFrame()
-{
-   return _currentFrame;
-}
-
-/////////////////////////////////////////
-//get the frame that is currently being// 
-//displayed on the tree                //
-/////////////////////////////////////////
+//get the frame that is currently being displayed on the tree
 int cfdSequence::getNextFrame()
 { 
    if(_currentFrame == _end && _lMode == CFDSEQ_CYCLE){
@@ -509,48 +387,5 @@ void cfdSequence::setTime( double time )
 {
    _deltaT = time;
    _duration = time * this->getNumChildren();
-}
-
-#endif //_USE_CFD_SEQUENCE
-
-double cfdSequence::getDuration()
-{
-   return _duration;
-}
-
-int cfdSequence::getDirection()
-{
-   return _dir;
-}
-
-int cfdSequence::getLoopMode()
-{
-   return _lMode;
-}
-
-int cfdSequence::getPlayMode()
-{
-   return _pMode;
-}
-
-int cfdSequence::getEnd()
-{
-   return _end;
-}
-
-int cfdSequence::getBegin()
-{
-   return _begin;
-}
-
-double cfdSequence::getTime()
-{
-   return _deltaT;
-}
-
-//static
-pfType* cfdSequence::getClassType()
-{
-   return _classType;
 }
 

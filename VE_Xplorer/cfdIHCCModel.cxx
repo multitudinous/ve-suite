@@ -70,7 +70,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
    sequence = new cfdSequence();
    ihccModelNode = new pfGroup();
 
-   worldDCS->addChild( this->sequence->getNode() );
+   worldDCS->addChild( (pfNode*)this->sequence );
    worldDCS->addChild( ihccModelNode );
    this->SetSequence( sequence );
    float scale_gauge[ 3 ];

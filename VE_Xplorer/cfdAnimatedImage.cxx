@@ -92,7 +92,7 @@ cfdAnimatedImage::cfdAnimatedImage( cfdReadParam* param )
 
    this->sequence = new cfdSequence();
 
-   this->GetPfDCS()->addChild( this->sequence->getNode() );
+   this->GetPfDCS()->addChild( (pfNode*)this->sequence );
 }
 
 cfdAnimatedImage::~cfdAnimatedImage()

@@ -367,9 +367,6 @@ void cfdObjects::PauseSequence( void )
 
 void cfdObjects::ClearSequence( void )
 {
-#ifndef _USE_CFD_SEQUENCE
-   pfDelete( this->sequence );
-#else
    // This function is called for one particular type of transientFlowManager
    // It removes and deletes geodes and changes the cfdObjects geodes list
    vprDEBUG(vprDBG_ALL,1) << " ***********************ClearSequence"
@@ -462,7 +459,6 @@ void cfdObjects::ClearSequence( void )
          }
       }
    }
-#endif
 }
 
 void cfdObjects::AddToSequence( void )
@@ -591,34 +587,13 @@ void cfdObjects::AddToSequence( void )
       }
       else
       {
-         this->dcs->addChild( this->sequence->getNode() );
+         this->dcs->addChild( (pfNode*)this->sequence );
       }
    }
 }
 
 void cfdObjects::ReverseSequence( void )
 {
-#ifndef _USE_CFD_SEQUENCE
-   int currentFrame = this->sequence->getFrame();
-   vprDEBUG(vprDBG_ALL,1)
-      << " ReverseSequence: currentFrame = " << currentFrame
-      << ", numChildren() = " << this->sequence->getNumChildren()
-      << std::endl << vprDEBUG_FLUSH;
-
-   if ( currentFrame == 0 )
-   {
-      currentFrame = this->sequence->getNumChildren() - 1;
-      this->sequence->setInterval( CFDSEQ_CYCLE, currentFrame, currentFrame );
-      this->StartSequence();  
-   }
-   else
-   {
-      this->sequence->setInterval( CFDSEQ_CYCLE, currentFrame - 1, currentFrame - 1 );
-      this->ResumeSequence();
-   }
-#else
-   //biv: cfdSequence node doesn't work like the HACKED up pfSequence code!!!!!
-
    //check the direction of the sequence
    if(sequence->getDirection() == 1){
       //reverse the direction of the interval
@@ -627,35 +602,10 @@ void cfdObjects::ReverseSequence( void )
    //this is added functionality to step through the sequence correctly
    sequence->setPlayMode(CFDSEQ_PLAYING);
    sequence->stepSequence();
-#endif
 }
 
 void cfdObjects::ForwardSequence( void )
 {
-#ifndef _USE_CFD_SEQUENCE
-   int currentFrame = this->sequence->getFrame();
-
-   vprDEBUG(vprDBG_ALL,1)
-      << " ForwardSequence: currentFrame = " << currentFrame
-      << ", numChildren() = " << this->sequence->getNumChildren()
-      << std::endl << vprDEBUG_FLUSH;
-
-   if ( currentFrame == this->sequence->getNumChildren() - 1 )
-   {
-      vprDEBUG(vprDBG_ALL,1) << " ForwardSequence: setting currentFrame = -1" 
-         << std::endl << vprDEBUG_FLUSH;
-      currentFrame = -1;      
-   }
-
-   vprDEBUG(vprDBG_ALL,1) << " ForwardSequence: setting interval: "
-      << currentFrame + 1 << std::endl << vprDEBUG_FLUSH;
-
-   this->sequence->setInterval( CFDSEQ_CYCLE, currentFrame + 1, currentFrame + 1 );
-   this->ResumeSequence(); 
-
-#else
-   //biv: cfdSequence node doesn't work like the HACKED up pfSequence code!!!!!
-
    //check the direction of the sequence
    if(sequence->getDirection() == -1){
       //reverse the direction of the interval
@@ -664,12 +614,11 @@ void cfdObjects::ForwardSequence( void )
    //this is added functionality to step through the sequence correctly
    sequence->setPlayMode(CFDSEQ_PLAYING);
    sequence->stepSequence();
-#endif
 }
 
 int cfdObjects::GetFrameOfSequence( void )
 {
-   return this->sequence->getFrame();
+   return this->sequence->getCurrentFrame();
 }
 
 void cfdObjects::SetGeodeFlag( bool x ) 

@@ -49,19 +49,6 @@ enum cfdLoopMode{
 
 class pfNode;
 class pfType;
-
-#ifndef _USE_CFD_SEQUENCE
-class pfSequence;
-
-class cfdSequence
-{
-public:
-   cfdSequence();
-   ~cfdSequence();
-   pfNode* getParent( int index );
-
-#else // _USE_CFD_SEQUENCE
-
 class pfSwitch;
 class pfTraverser;
 #include <Performer/pf/pfGroup.h>
@@ -74,86 +61,69 @@ public:
 
    //to make this a performer class
    static void init(void);
-#endif //_USE_CFD_SEQUENCE
 
-   static pfType* getClassType( void );
-
-   //get the sequence node
-   pfNode * getNode();
+   static pfType* getClassType( void ){ return _classType; }
 
    // set/get the duration (in seconds) of any particular frame
    void setTime( double time );
-   double getTime();
+   double getTime(){ return _deltaT; }
 
    // set/get the duration (in seconds) of the entire sequence
    void setDuration( double duration );
-   double getDuration();
+   double getDuration(){ return _duration; }
 
    // set/get the interval
    void setInterval( int loopmode, int begin, int end );
-   int getBegin();
-   int getEnd();
+   int getBegin(){ return _begin; }
+   int getEnd(){ return _end; }
 
    // set/get the loop mode of the sequence
    void setLoopMode( int lMode );
-   int getLoopMode();
+   int getLoopMode(){ return _lMode; }
 
    // set/get the stop/start/pause/resume 
    void setPlayMode( int pMode );
-   int getPlayMode();
+   int getPlayMode(){ return _pMode; }
 
-   // set the current frame
+   // set/get the current frame
    void setCurrentFrame( int frameIndex );
+   int getCurrentFrame(){ return _currentFrame; }
 
    // step the sequence one frame in a particular direction
    void stepSequence();
 
    //get the direction of the sequence
-   int getDirection();
+   int getDirection(){ return _dir; }
 
    //change the direction of the frame viewing
    //if it is currently foward(low->high index)
    //change to reverse(high->low index) and vice versa
    void changeSequenceDirection();
 
-   //get the current frame index
-   int getFrame();
-
    //get the next frame index
    int getNextFrame();
 
    //get number of children
-   //virtual 
-   int getNumChildren();
+   virtual int getNumChildren();
 
    //add a child node
-   //virtual 
-   void addChild( pfNode* child );
+   virtual void addChild( pfNode* child );
 
    //get the index of a child
-   //virtual 
-   int searchChild( pfNode* child );
+   virtual int searchChild( pfNode* child );
 
    //get the specified child node  
-   //virtual 
-   pfNode* getChild( int index );
+   virtual pfNode* getChild( int index );
 
    //remove child 
-   //virtual 
-   int removeChild( pfNode* child );
+   virtual int removeChild( pfNode* child );
    
-#ifdef _USE_CFD_SEQUENCE
-    //the node pre-traverser callback
+   //the node pre-traverser callback
    friend int switchFrame(pfTraverser* trav, void* userData);
-#endif
 
 protected:
 
-#ifdef _USE_CFD_SEQUENCE
    pfSwitch* _switch;
-#else
-   pfSequence * _pfSequence;
-#endif
 
    int _appFrame;
    int _lMode;

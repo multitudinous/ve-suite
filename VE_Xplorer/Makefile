@@ -9,10 +9,6 @@
 #
 # Uncomment this line if you want to build a cluster juggler app
 #CLUSTER_APP = TRUE
-#
-# Uncomment the following line to use cfdSequence instead of pfSequence.
-# (It is automatically turned on for cluster builds.)
-EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
 #_______________________________________________________________________________
 
 CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
@@ -195,7 +191,6 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 ifeq ($(CLUSTER_APP), TRUE)
    APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project_cluster
    EXTRA_CXXFLAGS+= -D_CLUSTER
-   EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
    # object files are being stored in a system-dependent directory so that builds
    # for multiple platforms may be maintained simultaneously.
 

@@ -24,7 +24,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\Filtering&quot;;&quot;$(VTK_HOME)\bin&quot;;&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)&quot;;&quot;$(VTK_HOME)\Common&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(VTK_HOME)\Graphics&quot;;&quot;$(VTK_HOME)\IO&quot;;&quot;$(VTK_HOME)\Imaging&quot;;&quot;$(VTK_HOME)\Rendering&quot;;&quot;$(VTK_HOME)\Hybrid&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;"
-				PreprocessorDefinitions="_USE_CFD_SEQUENCE,_DEBUG;VTK4;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32"
+				PreprocessorDefinitions="_DEBUG;VTK4;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
