@@ -45,6 +45,7 @@
 
 #ifdef _OSG
 #include "cfdTextureBasedVizHandler.h"
+#include "cfdVolumeVisualization.h"
 #endif
 
 #include <vpr/System.h>
@@ -660,8 +661,6 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_MIN, this->mStates->clusterMin );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_MAX, this->mStates->clusterMax );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, this->mStates->clusterId );
-    //  std::cout << " late preframe : " << this->mStates->clusterId << std::endl;
-   //   std::cout << _cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) << std::endl;
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, this->mStates->clusterGeo_state );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, this->mStates->clusterPostdata_state );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );
@@ -682,7 +681,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
          }
       }
       time_since_start = this->mStates->clusterTime_since_start;
-	  cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);     
+	   cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
    }
    this->_unusedNewData    = false;
 #endif
