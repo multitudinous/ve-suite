@@ -323,9 +323,9 @@ void UI_DatasetPanel::_buildDataSets( void )
          _DataSets.push_back(thisDataSet);
 
          //clean up the names array
-         for(int p = tempTabs->numScalarsPerDataset[i] -1; p >= 0; p--)
+         //for(int p = tempTabs->numScalarsPerDataset[i] -1; p >= 0; p--)
          {
-            delete [] scalarNames[p];   
+            delete [] scalarNames;   
          }                  
       }
    }  
@@ -336,8 +336,8 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
    //activeDataSet = thisactiveDataSet;
 
    //_noScalars = activeDataSet->_numofScalars;
-   for (int p=0; p<_ScalarScroll->_scalarRBox->GetCount(); p++)
-      delete [] _scalarNames[p];
+   //for (int p=0; p<_ScalarScroll->_scalarRBox->GetCount(); p++)
+      delete [] _scalarNames;
    
    _scalarNames = new wxString[activeDataSet->_numofScalars];
    

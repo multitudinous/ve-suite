@@ -83,7 +83,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="..\..\VE_Conductor\skel;../Plugin;./;../VE_UI/;&quot;$(WX_WIDGETS)\include&quot;;&quot;$(WX_WIDGETS)\lib\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;"
+				AdditionalIncludeDirectories="..\..\VE_Conductor\skel;../Plugin;./;../VE_UI/;&quot;$(WX_WIDGETS)\include&quot;;&quot;$(WX_WIDGETS)\lib\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -150,24 +150,7 @@
 				RelativePath=".\UI_App.cpp">
 			</File>
 			<File
-				RelativePath="..\VE_UI\UI_DataSetTab.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath=".\UI_DataSetPanel.cpp">
 			</File>
 			<File
 				RelativePath=".\UI_Frame.cpp">
@@ -207,26 +190,6 @@
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\VE_UI\UI_ScalarTab.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL.old"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -313,6 +276,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\UI_TopFrame.cpp">
+			</File>
+			<File
 				RelativePath="..\VE_UI\UI_VecTab.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -375,6 +341,9 @@
 				RelativePath=".\UI_App.h">
 			</File>
 			<File
+				RelativePath=".\UI_DataSetPanel.h">
+			</File>
+			<File
 				RelativePath="..\VE_UI\UI_DataSetTab.h">
 			</File>
 			<File
@@ -387,9 +356,6 @@
 				RelativePath="..\VE_UI\UI_NavTab.h">
 			</File>
 			<File
-				RelativePath="..\VE_UI\UI_ScalarTab.h">
-			</File>
-			<File
 				RelativePath="..\VE_UI\UI_SoundsTab.h">
 			</File>
 			<File
@@ -400,6 +366,9 @@
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_TeacherTab.h">
+			</File>
+			<File
+				RelativePath=".\UI_TopFrame.h">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_VecTab.h">

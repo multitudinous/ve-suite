@@ -111,23 +111,23 @@ OPPD_UI_Dialog
    (*p_flametype) = 0;
    (*p_killexcel) = 0;
    (*p_tsec) = 0;
-	(*p_tmin) = 0;
-	(*p_hrrkw) = 0;
-	(*p_hrrbtu) = 0;
-	(*p_detsprinktime) = 0;
-	(*p_detsmtime) = 0;
-	(*p_detfthtime) = 0;
-	(*p_flwallinehgt) = 0;
-	(*p_flcornerhgt) = 0;
-	(*p_flwallhgt) = 0;
-	(*p_hrrhrr) = 0;
-	(*p_hrrburndur) = 0;
-	(*p_hrrhgthesk) = 0;
-	(*p_hrrhgtthom) = 0;
-	(*p_pltemp) = 0;
-	(*p_tcltemp) = 0;
-	(*p_visdist) = 0;
-   //txt1=txt2=txt3=txt4=txt5=txt6=txt7=txt8=txt9=txt10=txt11=txt12=txt13=txt14=txt15=txt16=txt17="no data";
+   (*p_tmin) = 0;
+   (*p_hrrkw) = 0;
+   (*p_hrrbtu) = 0;
+   (*p_detsprinktime) = 0;
+   (*p_detsmtime) = 0;
+   (*p_detfthtime) = 0;
+   (*p_flwallinehgt) = 0;
+   (*p_flcornerhgt) = 0;
+   (*p_flwallhgt) = 0;
+   (*p_hrrhrr) = 0;
+   (*p_hrrburndur) = 0;
+   (*p_hrrhgthesk) = 0;
+   (*p_hrrhgtthom) = 0;
+   (*p_pltemp) = 0;
+   (*p_tcltemp) = 0;
+   (*p_visdist) = 0;
+   times = 0;
 
    _buildPage();
 }
@@ -224,10 +224,21 @@ bool OPPD_UI_Dialog::TransferDataFromWindow()
 ////////////////////////////////////////////////////
 bool OPPD_UI_Dialog::TransferDataToWindow()
 {
-	wxString txt1,txt2,txt3,txt4,txt5,txt6,txt7,txt8,txt9,txt10,txt11,txt12,txt13,txt14,txt15,txt16,txt17;
 	
-	txt1<<(*p_tsec); 
-	//txt1<<"just testing"; 
+	/*wxString txt1,txt2,txt3,txt4,txt5,txt6,txt7,txt8,txt9,txt10,txt11,txt12,txt13,txt14,txt15,txt16,txt17;
+	
+	//txt1<<(*p_tsec);
+	if (times == 0)
+	{
+		txt1<<"just testing"; 
+		times = 1;
+	}
+	else 
+	{
+		txt1<<"2nd time"; 
+		times = 0;
+	}
+
 	_tabs->_outputsPage->_tsec->Clear();
 	_tabs->_outputsPage->_tsec->SetValue(txt1);
 
@@ -294,7 +305,7 @@ bool OPPD_UI_Dialog::TransferDataToWindow()
 	txt17<<(*p_visdist); 
 	_tabs->_outputsPage->_visdist->Clear();
 	_tabs->_outputsPage->_visdist->SetValue(txt17);
-
+*/
     return true;
 }
 

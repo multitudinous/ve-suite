@@ -123,35 +123,35 @@ void OPPD_UI_entries::_buildPage()
    
    //build the labels
    wxStaticText* fuelselLabel       = new wxStaticText(this, -1, wxT("Fuel Selection "));
-   wxStaticText* spillvolLabel      = new wxStaticText(this, -1, wxT("Fuel Spill Volume "));
-   wxStaticText* spillareaLabel     = new wxStaticText(this, -1, wxT("Fuel Spill Area "));
-   wxStaticText* comwidthLabel      = new wxStaticText(this, -1, wxT("Compartment Width "));
-   wxStaticText* comlengthLabel     = new wxStaticText(this, -1, wxT("Compartment Length "));
-   wxStaticText* comheightLabel     = new wxStaticText(this, -1, wxT("Compartment Height "));
-   wxStaticText* matselLabel        = new wxStaticText(this, -1, wxT("Material Selection "));
-   wxStaticText* intlinthickLabel   = new wxStaticText(this, -1, wxT("Interior Lining Thickness "));
-   wxStaticText* airtempLabel       = new wxStaticText(this, -1, wxT("Air Temperature "));
-   wxStaticText* spheatairLabel     = new wxStaticText(this, -1, wxT("Specific Heat Air "));
-   wxStaticText* airdensityLabel    = new wxStaticText(this, -1, wxT("Air Density "));
+   wxStaticText* spillvolLabel      = new wxStaticText(this, -1, wxT("Fuel Spill Volume (gal)"));
+   wxStaticText* spillareaLabel     = new wxStaticText(this, -1, wxT("Fuel Spill Area (ft2)"));
+   wxStaticText* comwidthLabel      = new wxStaticText(this, -1, wxT("Compartment Width (ft)"));
+   wxStaticText* comlengthLabel     = new wxStaticText(this, -1, wxT("Compartment Length (ft)"));
+   wxStaticText* comheightLabel     = new wxStaticText(this, -1, wxT("Compartment Height (ft)"));
+   wxStaticText* matselLabel        = new wxStaticText(this, -1, wxT("Material Selection (ft)"));
+   wxStaticText* intlinthickLabel   = new wxStaticText(this, -1, wxT("Interior Lining Thickness (in)"));
+   wxStaticText* airtempLabel       = new wxStaticText(this, -1, wxT("Air Temperature (F)"));
+   wxStaticText* spheatairLabel     = new wxStaticText(this, -1, wxT("Specific Heat Air (kJ/kg*K)"));
+   wxStaticText* airdensityLabel    = new wxStaticText(this, -1, wxT("Air Density kg/m3"));
    wxStaticText* massfuelburnLabel  = new wxStaticText(this, -1, wxT("Mass of Solid Fuel Burn (lb) "));
    wxStaticText* solidfuelareaLabel = new wxStaticText(this, -1, wxT("Surface Area of Solid Fuel (sq ft) "));
    wxStaticText* vismatselLabel     = new wxStaticText(this, -1, wxT("Solid Fuel Selection(Particulate Yield Table) "));
    wxStaticText* durmatselLabel     = new wxStaticText(this, -1, wxT("Solid Fuel Selection(HRR,Heat of Comb. Table) "));
    wxStaticText* vispropselLabel    = new wxStaticText(this, -1, wxT("Light Situation Selection "));
    wxStaticText* viscombselLabel    = new wxStaticText(this, -1, wxT("Combustion Mode Selection "));
-   wxStaticText* evalabovefireLabel = new wxStaticText(this, -1, wxT("Evaluation Above Fire Source "));
-   wxStaticText* ventwidthLabel     = new wxStaticText(this, -1, wxT("Vent Width(if natural ventilation) "));
-   wxStaticText* ventheightLabel    = new wxStaticText(this, -1, wxT("Vent Height(if natural ventilation) "));
-   wxStaticText* ventdisfloorLabel  = new wxStaticText(this, -1, wxT("Top of Vent from Floor "));
-   wxStaticText* frcvntflwrtLabel   = new wxStaticText(this, -1, wxT("Forced Ventilation Flow Rate(if used) "));
-   wxStaticText* timeaftignLabel    = new wxStaticText(this, -1, wxT("Time After Ignition "));
+   wxStaticText* evalabovefireLabel = new wxStaticText(this, -1, wxT("Evaluation Above Fire Source (ft)"));
+   wxStaticText* ventwidthLabel     = new wxStaticText(this, -1, wxT("Vent Width(if natural ventilation) (ft)"));
+   wxStaticText* ventheightLabel    = new wxStaticText(this, -1, wxT("Vent Height(if natural ventilation) (ft)"));
+   wxStaticText* ventdisfloorLabel  = new wxStaticText(this, -1, wxT("Top of Vent from Floor (ft)"));
+   wxStaticText* frcvntflwrtLabel   = new wxStaticText(this, -1, wxT("Forced Ventilation Flow Rate(if used)(cfm)"));
+   wxStaticText* timeaftignLabel    = new wxStaticText(this, -1, wxT("Time After Ignition (sec)"));
    wxStaticText* detrtiselLabel     = new wxStaticText(this, -1, wxT("Sprinkler Type Selection "));
    wxStaticText* dettempratselLabel = new wxStaticText(this, -1, wxT("Temperature Classification Selection "));
-   wxStaticText* dtdstoceilLabel    = new wxStaticText(this, -1, wxT("Dist from Top of Fuel Package to Ceiling "));
-   wxStaticText* dtrdsttosprLabel   = new wxStaticText(this, -1, wxT("Radial Dist from Plume Centerline to Sprinkler/Detector "));
-   wxStaticText* detceilheightLabel = new wxStaticText(this, -1, wxT("Ceiling Height "));
+   wxStaticText* dtdstoceilLabel    = new wxStaticText(this, -1, wxT("Dist from Top of Fuel Package to Ceiling (ft)"));
+   wxStaticText* dtrdsttosprLabel   = new wxStaticText(this, -1, wxT("Radial Dist from Plume Centerline to Sprinkler/Detector (ft)"));
+   wxStaticText* detceilheightLabel = new wxStaticText(this, -1, wxT("Ceiling Height (ft)"));
    wxStaticText* detspaceselLabel   = new wxStaticText(this, -1, wxT("Detector Spacing Selection "));
-   wxStaticText* cblburnareaLabel   = new wxStaticText(this, -1, wxT("Exposed Cable Tray Burning Area "));
+   wxStaticText* cblburnareaLabel   = new wxStaticText(this, -1, wxT("Exposed Cable Tray Burning Area (ft2)"));
    wxStaticText* cableselLabel      = new wxStaticText(this, -1, wxT("Cable Type Selection "));
 
    //attach the labels to the boxes
@@ -286,6 +286,7 @@ void OPPD_UI_entries::_buildPage()
    _resetsheetButton		= new wxButton(this,FUEL_RESETSHEET_BUTTON,wxT("Reset Spreadsheets"));
    //_updateButton		    = new wxButton(this,FUEL_UPDATE_BUTTON,wxT("Update Fire Scenario Data"));
    _updateButton		    = new wxButton(this,wxID_OK,wxT("Update Fire Scenario Data"));
+   
 
    //the panel sizer
    wxStaticBox* fuelBox = new wxStaticBox(this, -1, "FUEL/COMPARTMENT PARAMETERS");
