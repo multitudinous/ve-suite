@@ -62,7 +62,7 @@ set OMNINAMES_LOGDIR=%VE_SUITE_HOME%\VE_Installer
 
 REM Python build environment variables
 set PYTHONPATH=%VJ_DEPS_DIR%\lib\python
-set Path=%Path%;%OMNI_HOME%\bin\x86_win32;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib;%VTK_HOME%\bin\debug;%VE_SUITE_HOME%\bin;%VTK_HOME%\bin
+set Path=%Path%;%OMNI_HOME%\bin\x86_win32;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib;%VE_SUITE_HOME%\bin;%VTK_HOME%\bin
 set Path=%Path%;%ACE_ROOT%\bin;%XERCESCROOT%\Build\Win32\VC7\Debug;
 
 REM only change this if your Visual Studio .NET is installed somewhere else
