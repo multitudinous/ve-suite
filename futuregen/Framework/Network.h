@@ -21,7 +21,8 @@ enum {
   DEL_LINK,
   DEL_LINK_CON,
   DEL_MOD,
-  SHOW_LINK_CONT
+  SHOW_LINK_CONT,
+  SHOW_RESULT
 };
 
 typedef struct {
@@ -82,6 +83,7 @@ class Network : public wxScrolledWindow
   void OnDelLinkCon(wxCommandEvent &event);
   void OnDelMod(wxCommandEvent &event);
   void OnShowLinkContent(wxCommandEvent &event);
+  void OnShowResult(wxCommandEvent &event);
 
   //Add to network fuctions
   void AddtoNetwork(REI_Plugin *new_mod, string cls_name);

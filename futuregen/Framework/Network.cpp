@@ -20,6 +20,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
   EVT_MENU(DEL_LINK_CON, Network::OnDelLinkCon)
   EVT_MENU(DEL_MOD, Network::OnDelMod)
   EVT_MENU(SHOW_LINK_CONT, Network::OnShowLinkContent)
+  EVT_MENU(SHOW_RESULT, Network::OnShowResult)
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -354,6 +355,8 @@ void Network::OnMRightDown(wxMouseEvent &event)
   pop_menu.Append(DEL_TAG, _T("Delete Tag"));
   pop_menu.Append(DEL_MOD, "Del Module");
 
+  pop_menu.Append(SHOW_RESULT, "Show Module Result");
+
   pop_menu.Append(SHOW_LINK_CONT, "Show Link Content");
 
   pop_menu.Enable(ADD_LINK_CON, false);
@@ -362,6 +365,7 @@ void Network::OnMRightDown(wxMouseEvent &event)
   pop_menu.Enable(DEL_LINK, false);
   pop_menu.Enable(DEL_TAG, false);
   pop_menu.Enable(DEL_MOD, false);
+  pop_menu.Enable(SHOW_RESULT, false);
   pop_menu.Enable(SHOW_LINK_CONT, false);
 
   if (m_selLink>=0)
@@ -383,6 +387,7 @@ void Network::OnMRightDown(wxMouseEvent &event)
   if (m_selMod>=0)
     {
       pop_menu.Enable(DEL_MOD, true);
+      pop_menu.Enable(SHOW_RESULT, true);
     };
     
   action_point = event.GetLogicalPosition(dc);
@@ -2773,6 +2778,12 @@ void  Network::OnShowLinkContent(wxCommandEvent &event)
   pd->ShowModal();
 
   delete pd;
+  
+}
+
+//////////////////////////////////////////////////////
+void  Network::OnShowResult(wxCommandEvent &event)
+{
   
 }
 
