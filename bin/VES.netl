@@ -1,96 +1,132 @@
-#!/usr/bin/tcsh -f
-
+#!/bin/sh -f
+ 
 # Set environment variables and paths for running the program
-setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
-source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
-# Set additional environment variables
-setenv MY_VJCONFIGS /home/vr/vjconfig/2.0alpha3
+export VE_SUITE_HOME=/nfs/scratch/VE_Suite
 
-switch ($1)
+# Set the TAO nameServer properties used by the run scripts
+export TAO_MACHINE=ids7.scilan
+export TAO_PORT=1234
 
-  case -c6:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.config 
-  breaksw
-  
-  case -c4open:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.open.config
-  breaksw
-  
-  case -c4closed:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.config
-  breaksw
-  
-  case -sim:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/sim/sim.config 
-  breaksw
-  
-  case -c6mono:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.mono.config
-  breaksw
-  
-  case -c4mono:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.mono.config
-  breaksw
+export TAO_BUILD=TRUE
+export CLUSTER_APP=TRUE
+source ${VE_SUITE_HOME}/VE_Installer/setup.NETL.sh
 
-  case -nserv:
-    /usr/java/bin/tnameserv -ORBInitialPort 8088 &
-  breaksw
-  
-  case -menu:
-    cd ${VE_SUITE_HOME}/VE_Conductor/class_files
-    java client
-  breaksw
+export MY_VJCONFIGS=/nfs/scratch/FutureGenPowerPlant/jugglerConfigs
 
-  case -surface:
+case $1 in
+  
+  -sim)
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao_osg \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/simstandalone.jconf
+  ;;
+
+  -wall)
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_cluster_tao_osg \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
+    ${MY_VJCONFIGS}/ids.jconf
+  ;;
+
+  -nserv)
+    killall -q Naming_Service 
+    killall -q Exe_server 
+    echo Starting TAO Naming Service on $TAO_MACHINE, port $TAO_PORT
+    Naming_Service -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
+    sleep 5
+    echo TAO Naming Service Started
+    echo Starting VE-CE...
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/Exe_server \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &
+  ;;
+  
+  -shutdown)
+    killall -q Naming_Service 
+    killall -q Exe_server 
+  ;;
+
+  -menu)
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/WinClient \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
+  ;;
+
+  -surface)
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/makeVtkSurface
-  breaksw
+  ;;
 
-  case -preproc:
+  -preproc)
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/preprocessor
-  breaksw
+  ;;
 
-  case -surf2stl:
+  -surf2stl)
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/convertSurfaceFileToStl
-  breaksw
+  ;;
 
-  case -transVTK:
+  -transVTK)
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/transformVTK
-  breaksw
+  ;;
 
-  case -cfd2VTK:
+  -cfd2VTK)
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/translateToVtk
-  breaksw
+  ;;
 
+  -make)
+    cd ${VE_SUITE_HOME}/VE_Installer
+    gmake
+  ;;
   
-  case -h:
-  default:
+  -makeclean)
+    cd ${VE_SUITE_HOME}/VE_Installer
+    gmake clean
+    gmake cleandepend
+  ;;
+  
+  -merge)
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/mergeVertices
+  ;;
+
+  -meshView)
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/meshViewer
+  ;;
+
+  -scalRange)
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/whatIsScalarRange
+  ;;
+
+  -doc)
+    mozilla file:///${VE_SUITE_HOME}/docs/starcd/initial.htm &
+  ;;
+ 
+  -h)
+  
   echo ""
   echo Usage:
-  echo VES.netl [ options ] 
-  echo "         "-h = usage information
+  echo VES.inl [ options ] 
+  echo "         "-h = usage information "(this page)"
   echo The following indicates the workflow of getting the cfd data into the viewer.
   echo "   "-cfd2VTK = translate cfd flowdata to VTK format
+  echo "     "-merge = merge vertices in unstructured grid
   echo "   "-preproc = precompute cutting planes
   echo This will start the viewer using the specified display
-  echo "        "-c6 = c6 cave display
-  echo "    "-c4open = c4 open cave display
-  echo "  "-c4closed = c4 closed cave display
-  echo "       "-sim = sim mode
-  echo "    "-c6mono = c6 in mono
-  echo "    "-c4mono = c4 closed in mono
+  echo "       "-sim = sim mode desktop display
+  echo "      "-wall = run the display wall in Bay 5
   echo When the viewer has started, start the menu in another shell
-  echo "      "-menu = start java menu to control viewer
+  echo "      "-menu = start wxWidgets menu to control viewer
   echo The following utilities might be useful occasionaly
-#  echo "     "-nserv = start corba server for menu
+  echo "     "-nserv = restart TAO nameserver and VE-CE
   echo "   "-surface = make VTK surface from fluid mesh
   echo "  "-surf2stl = convert surface file to stl
   echo "  "-transVTK = move flowdata to align with geometry
+  echo "      "-make = make all VE-Suite modules
+  echo " "-makeclean = clean all VE-Suite modules
+  echo "  "-meshView = view any vtk file
+  echo " "-scalRange = view scalar range of any vtk file
+  echo "       "-doc = view documentation for setting up a CFD post process case
+  echo "  "-shutdown = shutdown VE-CE and TAO NameService
   echo ""
-  
-endsw
+  ;;
+
+  *)
+   echo Use -h for help
+   ;;
+ 
+esac
