@@ -37,7 +37,7 @@ include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
 include $(TAO_ROOT)/taoconfig.mk
-include ${VE_SUITE_HOME}/VE_Installer/dzr.ace_tao.mk
+#include ${VE_SUITE_HOME}/VE_Installer/dzr.ace_tao.mk
 #CXX=CC
 
 #TAO_SRVR_LIBS = -L${ACE_ROOT}/TAO-1.4/IRIX32/lib -L${ACE_ROOT}/ACE-5.4/IRIX32/lib -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO -lTAO_BiDirGIOP -lxerces-c
