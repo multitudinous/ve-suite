@@ -332,6 +332,7 @@ Matrix44f cfdDCS::GetMat( void )
 int cfdDCS::SearchChild( cfdSceneNode* child )
 {
 #ifdef _PERFORMER
+   //this->_dcs->searchChild();
    for ( unsigned int i = 0; i < childNodes.size(); i++ )
       if ( childNodes[ i ] == child )
       {
@@ -426,6 +427,20 @@ void cfdDCS::SetName( char* name )
 #ifdef _PERFORMER
    this->_dcs->setName( name );
    cout << "*****************DCS Name : " << name << endl;
+#elif _OSG
+   cerr << " ERROR: cfdDCS::SetName is NOT implemented " << endl;
+   exit( 1 );
+#elif _OPENSG
+   cerr << " ERROR: cfdDCS::SetName is NOT implemented " << endl;
+   exit( 1 );
+#endif
+}
+
+const char* cfdDCS::GetName( void )
+{
+#ifdef _PERFORMER
+   return _dcs->getName();
+   //cout << "*****************DCS Name : " << name << endl;
 #elif _OSG
    cerr << " ERROR: cfdDCS::SetName is NOT implemented " << endl;
    exit( 1 );

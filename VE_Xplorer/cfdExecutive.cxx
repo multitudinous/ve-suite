@@ -381,12 +381,12 @@ void cfdExecutive::GetEverything( void )
             if ( temp != NULL )
             {
                _plugins[ iter->first ] = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
-               // When we create the _plugin map here we will do the following
+              // When we create the _plugin map here we will do the following
                _plugins[ iter->first ]->InitializeNode( worldDCS );
                _plugins[ iter->first ]->AddSelfToSG();
                _modelHandler->AddModel( _plugins[ iter->first ]->GetCFDModel() );
                _plugins[ iter->first ]->SetCursor( _envHandler->GetCursor() );
-               _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
+               //_plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
                int dummyVar = 0;
                _plugins[ iter->first ]->CreateCustomVizFeature( dummyVar );
                vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
@@ -480,7 +480,7 @@ void cfdExecutive::UpdateModules( void )
       if ( this->GetCalculationsFlag() )
       {
          this->GetEverything();
-         //std::cout << " Get Everything " << std::endl;      
+         std::cout << " Get Everything " << std::endl;      
          /*std::map<std::string, int>::iterator iter;
          for ( iter=_name_map.begin(); iter!=_name_map.end(); iter++ )
          {

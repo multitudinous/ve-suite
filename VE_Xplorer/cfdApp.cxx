@@ -377,13 +377,13 @@ void cfdApp::preFrame( void )
       this->mKernel->stop(); // Stopping kernel using the inherited member variable
    }
 
-/*#ifdef _TAO
+#ifdef _TAO
    if ( cfdObjects::GetActiveDataSet() != NULL )
    {
       this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
    }
    this->executive->UpdateModules();
-#endif // _TAO*/
+#endif // 
 
    this->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;

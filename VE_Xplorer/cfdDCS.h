@@ -77,6 +77,7 @@ class cfdDCS: public cfdSceneNode
       cfdSceneNode* GetChild( int );
       int ReplaceChild( cfdSceneNode*, cfdSceneNode* );
       void SetName( char* );
+      const char* GetName( void );
 
    private:
 

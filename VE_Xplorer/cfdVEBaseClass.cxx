@@ -88,10 +88,11 @@ cfdVEBaseClass::~cfdVEBaseClass( void )
 
 void cfdVEBaseClass::InitializeNode( cfdDCS* veworldDCS )
 {
-   this->groupNode = new cfdGroup();
-   this->_dcs = new cfdDCS();
+   //this->groupNode = new cfdGroup();
+   this->_dcs = new cfdDCS(); 
+   this->_dcs->SetName("cfdVEBaseClass");
    //this->dataRepresentation = new cfdObjects();
-   this->geometryNode = new cfdModuleGeometry( groupNode );
+   //this->geometryNode = new cfdModuleGeometry( groupNode );
    this->worldDCS = veworldDCS;
    this->_model = new cfdModel( _dcs );
    this->_readParam = new cfdReadParam();

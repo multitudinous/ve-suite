@@ -142,7 +142,7 @@ cfdNode* cfdModel::GetCfdNode( )
 
 cfdDCS* cfdModel::GetCfdDCS( )
 {
-   return this->mModelDCS;
+   return this->_worldDCS;
 }
 
 void cfdModel::updateCurModel()

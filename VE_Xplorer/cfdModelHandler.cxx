@@ -332,23 +332,46 @@ void cfdModelHandler::PreFrameUpdate( void )
       vprDEBUG(vprDBG_ALL,0) << " Change Geometry in Scene Graph."
                           << std::endl << vprDEBUG_FLUSH;
 
+      cfdDCS* parent = NULL;
       for( unsigned int i = 0; i < _activeModel->GetNumberOfGeomDataSets(); i++ )
       {
          int temp = 0;
-         //vprDEBUG(vprDBG_ALL,1)
-         //   << "guiVal[ " << q << " ] = " << this->_readParam->guiVal[ q ] 
-         //   << std::endl
-         //   << vprDEBUG_FLUSH;
+         // If it is the dynamic stuff
+         // Remember for the dynamic stuff there is multple layers of nodes
+         // therefore we must find the parent besides worldDCS
+         // because for search child we only search the immediate children
+         // maybe come up with better functionality later
+         if (  !strcmp( _activeModel->GetCfdDCS()->GetName(), "cfdVEBaseClass" ) )
+         {
+            cout << " Dyanmic stuff 1" << endl;
+            parent = _activeModel->GetCfdDCS();
+            
+            cout << " Dyanmic stuff 2" << endl;
+         }
+         else
+         {
+            cout << " static stuff 1" << endl;
+            parent = worldNode;
+            cout << " static stuff 2" << endl;
+         }
+
+         vprDEBUG(vprDBG_ALL,2)
+            << "guiVal[ " << i << " ] = " << this->_readParam->guiVal[ i ] 
+            << " : " << _activeModel << " : " 
+            << parent->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) 
+            << " : " << _activeModel->GetGeomDataSet( i )->GetFilename() << std::endl
+            << vprDEBUG_FLUSH;
+
 
          if ( ( this->_readParam->guiVal[ i ] == 1 ) && 
-            ( this->worldNode->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
+            ( parent->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
          {
-            temp = this->worldNode->AddChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() );
+            temp = parent->AddChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() );
          }
          else if ( ( this->_readParam->guiVal[ i ] == 0 ) &&
-                  ( this->worldNode->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
+                  ( parent->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
          {
-            temp = this->worldNode->RemoveChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() );
+            temp = parent->RemoveChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() );
          }
          vprDEBUG(vprDBG_ALL,1) << "|   Add Child Output ( -1 is BAD ) :  " << temp 
                            << std::endl << vprDEBUG_FLUSH;
