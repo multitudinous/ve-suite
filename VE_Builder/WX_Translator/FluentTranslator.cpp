@@ -51,6 +51,7 @@
 #include <wx/txtstrm.h>
 #include <wx/event.h>
 #include <wx/utils.h>
+#include <wx/string.h>
 //
 
 void parseSet( std::string casefile, std::string datafile, bool isBinary, bool isGzip, int var_id );
@@ -255,50 +256,69 @@ void FluentTranslator::OnLoadCaseAndDataButton(wxCommandEvent& event)
     		status_text.Printf(wxT("Both Files Selected.\nStart Reading Files.\n"));
     		StatusTextCntrl->AppendText(status_text);
 
-		//parseSet( (std::string)CaseFilename, (std::string)DataFilename, 1, 0, 200 );
-		//Added by Alberto Jove
-		//executes the parser
-		wxString cmd = "perl parser_file/another_file.pl ";
-		cmd+=DataFilename;
-		
-		if (!cmd)
-			return;
-		wxLogStatus( _T("'%s' is running please wait..."), cmd.c_str() );
-		int code = wxExecute(cmd, wxEXEC_SYNC);
-		 wxLogStatus( _T("Process '%s' terminated with exit code %d."), cmd.c_str() );
-		
-		//reads the file created by the parser with the variable names and indexes
-		wxString filename = "parser_file/varNamesandIndex.txt";
-		wxString tempLine;
-	
-		wxFile loadfile;
-		loadfile.Open(filename,wxFile::read);
-		if(!loadfile.IsOpened())
-			std::cout<<"File did not open!\n";
-	
-		wxFileInputStream fileStream(loadfile);
-		if(!fileStream.Ok())
+		if(getFilename(CaseFilename) == getFilename(DataFilename))
 		{
-			std::cout<<"Error reading the file!"<<endl;
-		}
-		wxTextInputStream textStream (fileStream);
-	
-		while(!fileStream.Eof())
-		{
-			tempLine = textStream.ReadLine();
-			PossibleVariableListBox->Append(tempLine);
-		}
-		loadfile.Close();
+			//parseSet( (std::string)CaseFilename, (std::string)DataFilename, 1, 0, 200 );
+			//Added by Alberto Jove
+			//executes the parser
+			wxString cmd = "perl parser_file/another_file.pl ";
+			cmd+=DataFilename;
 		
-		//removing the file created by perl
-		wxString cmd_rm = "rm parser_file/varNamesandIndex.txt";
-		if(!cmd_rm)
-		{
-			return;
+			if (!cmd)
+				return;
+			wxLogStatus( _T("'%s' is running please wait..."), cmd.c_str() );
+			int code = wxExecute(cmd, wxEXEC_SYNC);
+			 wxLogStatus( _T("Process '%s' terminated with exit code %d."), cmd.c_str() );
+		
+			//reads the file created by the parser with the variable names and indexes
+			wxString filename = "parser_file/varNamesandIndex.txt";
+			wxString tempLine;
+		
+			wxFile loadfile;
+			loadfile.Open(filename,wxFile::read);
+			if(!loadfile.IsOpened())
+				std::cout<<"File did not open!\n";
+	
+			wxFileInputStream fileStream(loadfile);
+			if(!fileStream.Ok())
+			{
+				std::cout<<"Error reading the file!"<<endl;
+			}
+			wxTextInputStream textStream (fileStream);
+	
+			while(!fileStream.Eof())
+			{
+				tempLine = textStream.ReadLine();
+				if(!tempLine.IsEmpty())
+				{
+					PossibleVariableListBox->Append(tempLine);
+				}
+			}
+			loadfile.Close();
+		
+			//removing the file created by perl
+			wxString cmd_rm = "rm parser_file/varNamesandIndex.txt";
+			if(!cmd_rm)
+			{
+				return;
+			}
+			wxLogStatus( _T("'%s' is running please wait..."), cmd_rm.c_str() );
+			code = wxExecute(cmd_rm, wxEXEC_SYNC);
+			wxLogStatus(  _T("Process '%s' terminated with exit code %d."), cmd_rm.c_str() );
 		}
-		wxLogStatus( _T("'%s' is running please wait..."), cmd_rm.c_str() );
-		code = wxExecute(cmd_rm, wxEXEC_SYNC);
-		wxLogStatus(  _T("Process '%s' terminated with exit code %d."), cmd_rm.c_str() );
+		else
+		{
+			wxMessageBox(wxT("Filenames are not the same make sure you have selected the correct files."), wxT("Problem!"), wxOK);
+		}
+		/*if(getFilename(CaseFilename) == getFilename(DataFilename))
+		{
+			std::cout<<"The value of the function getFilename is :\t"<<getFilename(CaseFilename)<<std::endl;
+			std::cout<<"The value of the function getFilename is :\t"<<getFilename(DataFilename)<<std::endl;
+		}
+		else
+		{
+			std::cout<<"Not working!\n";
+		}*/
 		//
 	}
 	else if(CaseFileSelected_Flag && !DataFileSelected_Flag){
@@ -310,8 +330,6 @@ void FluentTranslator::OnLoadCaseAndDataButton(wxCommandEvent& event)
 	else {
 		wxMessageBox(wxT("You forgot to select the case and data files."), wxT("Problem!"), wxOK);
 	}
-	
-	
 }
 
 void FluentTranslator::OnAboutButton(wxCommandEvent& event)
@@ -406,16 +424,43 @@ void FluentTranslator::OnDeleteAllButton(wxCommandEvent& event)
 void FluentTranslator::OnGoButton(wxCommandEvent& event)
 {
 	// Added by Alberto Jove
-	//wxMessageBox(wxT("Here we'll get the indexes and pass them to the command line translator!"), wxT("Go"), wxOK);
-	/*wxArrayInt selectionsToUse;
-	SelectedVariableListBox->GetSelections(selectionsToUse);
-	int amountIndexes = selectionsToUse.Count();
-	std::cout<<"Got something: "<<amountIndexes<<std::endl;
-	for(int m=0; m<amountIndexes; m++)
+	wxArrayInt selectionsToUse;
+	int amountIndex = SelectedVariableListBox->GetCount();
+	if(amountIndex != 0)
 	{
-		std::cout<<"Selected indexes: "<<SelectedVariableListBox->GetString(selectionsToUse[m])<<std::endl;
-	}*/
-	//still need to add the execution of testVtkFactory
+		for(int j=0; j<amountIndex; j++)
+		{
+			SelectedVariableListBox->SetSelection(j, TRUE);
+		}
+		SelectedVariableListBox->GetSelections(selectionsToUse);
+		int amountIndexes = selectionsToUse.Count();
+		//std::cout<<"Got something: "<<amountIndexes<<std::endl;
+		//create a file to be read by the command line translator
+		wxString out_filename = "parser_file/cmdLineFile.txt";
+		wxFile writeFile;
+		writeFile.Create(out_filename, TRUE);
+
+		for(int m=0; m<amountIndexes; m++)
+		{
+			//std::cout<<"Selected indexes: "<<SelectedVariableListBox->GetString(selectionsToUse[m])<<std::endl;
+			writeFile.Write(SelectedVariableListBox->GetString(selectionsToUse[m]));
+			writeFile.Write("\n");
+		}
+		//still need to add the execution of testVtkFactory
+		wxString cmd = "testVtkFactory ";
+		DataFilename = DataFilename.BeforeFirst('.');
+		cmd+=DataFilename;
+		//std::cout<<"The value of DataFilename: "<<DataFilename<<std::endl;
+		if (!cmd)
+			return;
+		wxLogStatus( _T("'%s' is running please wait..."), cmd.c_str() );
+		int code = wxExecute(cmd, wxEXEC_SYNC);
+		 wxLogStatus( _T("Process '%s' terminated with exit code %d."), cmd.c_str() );
+	}
+	else
+	{
+		wxMessageBox(wxT("You have not selected any variables."), wxT("Problem!"), wxOK);
+	}
 	//
 }
 
@@ -428,4 +473,13 @@ void FluentTranslator::OnCancelButton(wxCommandEvent& event)
 {
 	OnCancel(event);
 	Destroy();
+}
+
+wxString FluentTranslator::getFilename(wxString name)
+{
+	wxString tempName;
+	
+	tempName = name.AfterLast('/');
+	tempName = tempName.BeforeFirst('.');
+	return tempName;
 }

@@ -22,6 +22,7 @@ void writeFile(std::string casefile, std::string datafile,
         std::vector<int> vector_ids, std::string vector_name,
         bool isBinary = true, bool isGzip = false )
 {   
+    
     std::string info = casefile + ".info";
     std::string check; // = casefile + ".check";
     //check = "";    
@@ -64,6 +65,17 @@ void writeFile(std::string casefile, std::string datafile,
     //vtk_factory->addVector( vector_ids, vector_name ); 
     
     std::string outfile = datafile + "_2.vtk";
+
+    //Added by Alberto Jove 12/06/2004
+	std::string tempName;
+	int pos;
+
+	pos=outfile.find_last_of("/",1000);
+	tempName.assign(outfile);
+	tempName = outfile.substr(pos,100);
+	outfile.assign("converted_files");
+	outfile.append(tempName);
+    //
     vtk_factory->addParentFlag();
     vtk_factory->toFile( outfile );
 }
@@ -169,7 +181,7 @@ int main(int argc, char* argv[])
 	strcat(casFile, ".cas");
 	strcpy(datFile, argv[1]);
 	strcat(datFile, ".dat");   
-
+	//std::cout<<"The value of argv[1]: "<<argv[1]<<std::endl;
 	////FLUENT PARSER - RETRIEVES SCALARS FROM FLUENT FILE
 	char buffer[100000];
 	char tempBuffer[100000];
@@ -186,13 +198,41 @@ int main(int argc, char* argv[])
 	bool foundFlag = false;
 	
 	//parse entire dat file
-	while(!OpenFile.eof())
+	//Added by Alberto Jove - 22/11/2004
+	std::string line, name;
+	ifstream readFile;
+	name = "parser_file/cmdLineFile.txt";
+	readFile.open(name.data());
+	assert(readFile.is_open());
+	while(!readFile.eof())
+	{
+		readFile.getline(buffer, 100000);
+		line.assign(buffer);
+		if(!line.empty())
+		{
+			//std::cout<<"The value of line is: "<<buffer<<std::endl;
+			theName.assign(strtok(buffer, " "));
+			theValue.assign(strtok(NULL,"\n"));
+			scalar_names.push_back(theName);
+			scalar_ids.push_back(atoi(theValue.c_str()));
+			//std::cout<<"The value var: "<<var<<std::endl;
+			//std::cout<<"The value id: "<<id<<std::endl;
+		}
+	}
+	readFile.close();
+	
+	//
+	
+	/*while(!OpenFile.eof())
 	{
 		OpenFile.getline(buffer, 100000);
 
 		//look for a valid value
-		if(strncmp(buffer, "(2300 (",7)==0)
+		//std::cout<<"Going to look for a valid value!"<<std::endl;
+		
+		if(strncmp(buffer, "(3300 (",7)==0)
 		{	
+			
 			//get variable name
 			strtok(tempBuffer, "\"");
 			theName.assign(strtok(NULL, ","));
@@ -225,7 +265,7 @@ int main(int argc, char* argv[])
 		
 		//used to obtain prior line	
 		strcpy(tempBuffer, buffer);
-	}
+	}*/
 	//write out param files
 	//ofstream SaveFile(argv[2]);
 	//for(int i = 0; i < scalar_names.size(); i++)

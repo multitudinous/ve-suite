@@ -141,6 +141,9 @@ protected:
 	void OnGoButton(wxCommandEvent& event);
 	void OnCloseButton(wxCommandEvent& event);
 	void OnCancelButton(wxCommandEvent& event);
+	//Added by Alberto Jove 11/19/2004
+	wxString getFilename(wxString name); //helps to verify the root of the filenames
+	//
 };
 
 #endif // FLUENTTRANSLATOR_H
