@@ -46,6 +46,9 @@ void Body_Unit_i::StartCalc (
 	    gas_in[i] = new Gas;
 	    gashelper.IntToGas(&(p.intfs[0]), *(gas_in[i]));
 	  }
+	else {
+	  gas_in[i] = NULL;
+	}
       }
 
     if (count==0)
@@ -168,8 +171,8 @@ void Body_Unit_i::StartCalc (
     executive_->SetExportData(id_, 0, ogas);
 
     for (i=0; i<4; i++)
-      delete gas_in[i];
-    delete gas_out;
+      if(gas_in[i]) delete gas_in[i];
+    if(gas_out) delete gas_out;
   }
   
 void Body_Unit_i::StopCalc (

@@ -49,6 +49,7 @@ CPPFLAGS += -g  ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
 
 
 OBJECTS = StringParse.o \
+	OrbThread.o \
 	VjObsC.o \
 	Frame.o \
 	App.o \

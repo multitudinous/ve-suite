@@ -253,14 +253,10 @@ void Body_Executive_i::SetModuleMessage (
   cout << "SetModuleMessage " << msg << endl;
 
   std::map<std::string, Body::UI_var>::iterator iter;
-
-  //if(uis_.find("UIclientYang")!=uis_.end())
-  //  uis_["UIclientYang"]->Raise(msg);
-
-  // for(iter=uis_.begin(); iter!=uis_.end(); iter++) {
-   // cout << msg << " :TO: " << iter->first << endl;
-  // iter->second->Raise(msg);
-  // }
+  for(iter=uis_.begin(); iter!=uis_.end(); iter++) {
+    cout << msg << " :TO: " << iter->first << endl;
+    iter->second->Raise(msg);
+  }
 
   // THIS EXPECTS AN INTERFACE - NOT A STRING
 
@@ -611,7 +607,7 @@ void Body_Executive_i::RegisterUI (
       cerr << "NULL UI\n";
     //uis_.insert(std::pair<std::string, Body::UI_var>(std::string(UIName), ui));
     uis_[std::string(UIName)] = ui;
-    ui->Raise("Connected to Executive");
+    ui->Raise("Connected to Executive\n");
     cerr << UIName << " : registered a UI\n";
   }
   catch (CORBA::Exception &ex) {
