@@ -44,7 +44,7 @@ void tecplotReader::allocateVariables()
    w = new double [nX*nY];
    measurement = new double [nX*nY];
    absVel = new double [nX*nY];
-   parameterData = new vtkFloatArray* [ numOfParameters ]; //the number of parameters is 3 ( <U>, m, |U| )
+   parameterData = new vtkFloatArray* [ numOfParameters ]; //the number of parameters
    for ( int i=0;i<numOfParameters;i++ )
    {      
       parameterData[ i ] = vtkFloatArray::New();
@@ -85,7 +85,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          //if ( debug ) 
             //std::cout<<;
          fileI.get();
-      } 
+      }
       while ( (fileI.peek()!=0) && ((char)fileI.peek() != ')') );
       
       std::cout<<std::endl;
@@ -94,24 +94,59 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          std::cout<<"Number of characters :"<<numChars<<std::endl;
          std::cout<<header<<std::endl; //print header to screen
       }
-      //search for "VARIABLES="
+      //search for "VARIABLES" in the header
       I_Lower = header.find( "VARIABLES" );
       if ( debug ) std::cout<<"VARIABLES found at :"<<I_Lower<<std::endl;
-      //search for "ZONE"
+      //search for "ZONE" in the header
       I_Upper = header.find( "ZONE" );
       if ( debug ) std::cout<<"ZONE found at :"<<I_Upper<<std::endl;
+      //assign that portion of the header to tempString
       for ( int i=I_Lower;i<I_Upper;i++ ) tempString+=header[ i ];
       //std::cout<<tempString<<std::endl;
       //parse through tempString to find all the "," their count+1 = number of columns of data
       I = tempString.begin();
       for ( I=tempString.begin(); I!=tempString.end(); ++I )
       {
-         if ( (*I) == ',' ) colsOfData++;
+         if ( (*I) == '"' ) colsOfData++;//search for the quotation marks "
       }
-      colsOfData = colsOfData + 1;
+      //the number of quotation marks is twice the number of variables in the data
+      colsOfData = colsOfData/2;
       if ( debug ) std::cout<<" Columns of Data :"<<colsOfData<<std::endl;
-      fileI.seekg( 0, std::ios::beg );      //reset file pointer
+      tempString.empty();  //clear the contents of tempString
+      char stringData[ 10 ];  //create a new character array
+      I_Lower = header.find( "I=" );   //look for I= in the header
+      I_Upper = header.find( "J=" );   //look for J= in the header
+      if ( ( I_Upper == std::string::npos ) && ( I_Lower == std::string::npos ) ) //if both I= and J= are not found
+         std::cout<<"Wrong Tecplot file.!!!! Please check :"<<std::endl;
+      if ( I_Lower != std::string::npos ) //make sure if I= is found
+      {
+         I_Lower = I_Lower + 2;
+         if ( debug ) std::cout<<" Location of I= :"<<I_Lower<<std::endl;
+         for ( int i=0;i<10; i++ ) stringData[ i ] = header[ I_Lower + i ];
+         nX = atoi( stringData );
+         if ( debug ) std::cout<<" nX :"<<nX<<std::endl;
+      }
+      if ( I_Upper != std::string::npos ) //see if J= was found
+      {
+         I_Upper = I_Upper + 2;
+         if ( debug ) std::cout<<" Location of J= :"<<I_Upper<<std::endl;
+         for ( int i=0;i<10; i++ ) stringData[ i ] = header[ I_Upper + i ];
+         nY = atoi( stringData );
+         if ( debug ) std::cout<<" nY :"<<nY<<std::endl;
+      }
+      if (  I_Upper == std::string::npos ) //if J= was not found after finding I=
+      {
+         
+         nY = ( int ) sqrt( (double) nX );
+         nX = nY;    //square grid
+         if ( debug )
+         {
+            std::cout<<"nY :"<<nY<<std::endl;
+            std::cout<<"nX :"<<nX<<std::endl;
+         }
+      }      
 
+      fileI.seekg( 0, std::ios::beg );      //reset file pointer
       //read the first 3 lines from the files
       char line[ 256 ];
       for ( int i=0;i<3;i++ )
@@ -120,35 +155,6 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          if ( debug ) 
             std::cout<<line<<std::endl;
       }
-
-      //search for "I=" in line
-      char* pch;
-      pch = strstr( line, "I=" ); pch = pch+2; nX = atoi(pch);
-      //search for "J=" in line
-      pch = strstr( line, "J=" );
-      if ( pch !=NULL ) //if there is a "J=" then
-      {
-         pch = pch+2;
-         nY = atoi(pch);
-      }
-      else //if there is no "J=", it is a square grid 
-      {
-         nY = (int)(sqrt( (double)(nX) )); //use the sqrt of current value of nX as nY
-         nX = (int)(sqrt( (double)(nX) )); //reset nX to its new valu
-      }
-      if ( debug ) 
-         std::cout<<"nX :"<< nX <<std::endl<<"nY :"<< nY <<std::endl;
-      fileI.getline( line, 256 ); //file pointer gets 4th line now
-      pch = strchr( line, ',' );
-      //search for all the ","
-      /*while ( pch != NULL )
-      {
-         if ( debug )
-            std::cout<<" Location at :"<<pch-line+1<<std::endl;
-         pch = strchr ( pch+1, ',' );
-         colsOfData++;
-      }
-      colsOfData = colsOfData+1;*/
       //===========TEH WAY numOfParameters IS SET HAS TO BE CHANGED
       if ( colsOfData == 4 ) numOfParameters = 1;
       else if ( colsOfData == 5 ) numOfParameters = 2;
@@ -178,9 +184,9 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
             v[j] = array[ 3 ];
             measurement[j] = array[ 4 ];
             absVel[j] = array[ 5];*/
-            //std::cout<<array[ i ]<<"\t";
+            std::cout<<array[ i ]<<"\t";
          }
-         
+         std::cout<<std::endl;
          data.push_back( array );
          pts->InsertPoint( j, array[0], array[1], 0.0 );
          pts->InsertPoint( j+numVertices, array[0], array[1], -100.0 );

@@ -43,8 +43,8 @@ class tecplotReader
          std::string header;    //store the header string in this string var
          std::string tempString; //temporary storage for strings
          std::string::iterator I;   //an iterator to parse through strings
-         int I_Lower;  //lower location for the header
-         int I_Upper;  //another upper location for the header
+         unsigned int I_Lower;  //lower location for the header
+         unsigned int I_Upper;  //another upper location for the header
    
    public:
          tecplotReader();
