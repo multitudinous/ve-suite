@@ -254,11 +254,6 @@ class cfdApp : public vrj::PfApp
    // Classes and variables for multithreading.
    vpr::ThreadMemberFunctor<cfdApp> *vjThFunc[2];
    vpr::Thread *vjTh[2];
-   //yang-REI, change the interface implementation
-   
-   //this is the mutex to prevent the preframe, 
-   //intra_frame and intra_parallel to intervene each other
-   vpr::Mutex inner_mutex;    
    
    // Objects defined in virtual environment space.
    cfdPolyData       *surface;
@@ -367,8 +362,6 @@ class cfdApp : public vrj::PfApp
    bool  runStreamersThread;
    bool  runIntraParallelThread;   
    bool  interactiveObject;
-   bool  animatedStreamlines;
-   bool  animatedImages;
    bool  computeActorsAndGeodes;
 
    // Scalar bar flag
@@ -387,6 +380,7 @@ class cfdApp : public vrj::PfApp
    short cfdNumGeoArrays;     // intial stuff
    int   cfdClients;          // intial stuff
    short cfdNumTeacherArrays; // intial stuff
+   bool  actorsAreReady;
 
 #ifndef TABLET
   // cfdApp side variables

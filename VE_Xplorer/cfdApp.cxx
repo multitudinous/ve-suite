@@ -48,6 +48,7 @@
 #include "cfdFileInfo.h"
 #include "cfdTransientInfo.h"
 #include "cfdTransientSet.h"
+#include "cfdSequence.h"
 //#include "cfdDrawManager.h"
 //#include "cfdDashboard.h"
 //
@@ -435,6 +436,9 @@ void cfdApp::exit()
    
    try
    {
+      vprDEBUG(vprDBG_ALL,0) 
+         << "naming_context->unbind for CORBA Object  " 
+         << endl << vprDEBUG_FLUSH;
       naming_context->unbind( name );
       //naming_context->destroy();
    }
@@ -682,14 +686,13 @@ inline void cfdApp::initScene( )
 
    this->pfb_count = 0;
    this->interactiveObject = false;
-   this->animatedStreamlines = false;
-   this->animatedImages = false;
    this->runStreamersThread = true;
    this->runIntraParallelThread = true;   
    this->activeSequenceObject = NULL;
    this->activeDataSetDCS = NULL;
    this->useLastSource= 0;
    this->computeActorsAndGeodes = false;
+   this->actorsAreReady = false;
    // Initialize pointer to the active transient sequence
    this->lastFrame = -1;
 
@@ -1805,6 +1808,85 @@ void cfdApp::preFrame( void )
                              << std::endl << vprDEBUG_FLUSH;
    }
 
+   // check any virtual objects need to be updated
+   if ( this->actorsAreReady )
+   {
+      vprDEBUG(vprDBG_ALL,4) << "|   Updating Objects"
+                                   << std::endl << vprDEBUG_FLUSH;
+      for ( int i = 0; i < (int)this->dataList.size(); i++ )
+      {
+         if ( this->dataList[ i ]->GetGeodeFlag() )
+         {
+            vprDEBUG(vprDBG_ALL,2) << " have geode flag"
+                                   << std::endl << vprDEBUG_FLUSH;
+
+            if ( this->worldDCS->searchChild( this->dataList[ i ]->GetDCS() ) < 0 )
+            {
+               vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
+                                   << std::endl << vprDEBUG_FLUSH;
+               this->worldDCS->addChild( this->dataList[ i ]->GetDCS() );
+            }
+
+            if ( this->dataList[ i ]->GetGeode() != NULL )
+            {
+               vprDEBUG(vprDBG_ALL,1) << " will add geode to sg"
+                                      << std::endl << vprDEBUG_FLUSH;
+               // Add steady state geodes to the scene graph
+               this->dataList[ i ]->AddGeodeToDCS();
+            }
+            else if ( this->dataList[ i ]->GetSequence() != NULL )
+            {
+               vprDEBUG(vprDBG_ALL,1) << " will add viz object "
+                                      << i << " to sequence"
+                                      << std::endl << vprDEBUG_FLUSH;
+
+               //add the transient flow to the graph
+               // Hack for now
+               cfdTransientFlowManager * tfmTest = 
+                  dynamic_cast<cfdTransientFlowManager *>( this->dataList[ i ] );
+               
+               //cfdAnimatedImage* animTest = 
+               //   dynamic_cast< cfdAnimatedImage* >( this->dataList[ i ] );
+
+               if ( tfmTest != NULL ) //&&
+               //     tfmTest->GetFrameDataType() != cfdFrame::GEOM )
+               {
+                  tfmTest->CreateNodeList();
+
+                  this->dataList[ i ]->AddToSequence();
+            
+                  if ( this->activeSequenceObject )
+                  {
+                     vprDEBUG(vprDBG_ALL,1) << " ResumeSequence"
+                                            << std::endl << vprDEBUG_FLUSH;
+                     this->dataList[ i ]->ResumeSequence();
+                  }
+                  else
+                  {
+                     vprDEBUG(vprDBG_ALL,1) << " StartSequence"
+                                            << std::endl << vprDEBUG_FLUSH;
+                     this->dataList[ i ]->StartSequence();
+                  }
+
+                  // Set active sequence to current sequence
+                  this->activeSequenceObject = this->dataList[ i ];
+               }
+               else //if ( animTest != NULL )
+               {
+                  this->dataList[ i ]->AddToSequence();
+               }
+            }
+            vprDEBUG(vprDBG_ALL,2) << " End Update Loop"
+                                   << std::endl << vprDEBUG_FLUSH;
+
+            // Resetting these variables is very important
+            this->dataList[ i ]->SetUpdateFlag( false );
+            this->dataList[ i ]->SetGeodeFlag( false );
+            this->actorsAreReady = false;
+         }
+      }
+   }
+
    int i;
 #ifdef _CFDCOMMANDARRAY
    for ( i = 0; i < (int)this->commandList.size(); i ++ )
@@ -2557,13 +2639,13 @@ void cfdApp::preFrame( void )
       this->runIntraParallelThread = false;   
       this->mKernel->stop(); // Stopping kernel using the inherited member variable
    }
-   else if ( 0 <= this->cfdId && this->cfdId < 100 )
+   else if ( ( ( 0 <= this->cfdId ) && ( this->cfdId < 100 ) ) && 
+               ( this->computeActorsAndGeodes == false ))
    {
       vprDEBUG(vprDBG_ALL,1) << " selected ID number = " << this->cfdId
                              << std::endl << vprDEBUG_FLUSH;
       for ( int i = 0; i < (int)this->dataList.size(); i ++ )
-      {
-          
+      {          
          if ( this->cfdId == dataList[ i ]->GetObjectType() )
          {
             // verify that if a transient sequence is desired, 
@@ -2594,24 +2676,27 @@ void cfdApp::preFrame( void )
                this->activeDataSetDCS = cfdObjects::GetActiveDataSet()->GetDCS();               
             }
 
-            // add active dataset DCS to scene graph if not already there...
-            vprDEBUG(vprDBG_ALL,1) << " setting DCS to activeDCS = "
+            //if ( this->computeActorsAndGeodes == false )
+            {
+               // add active dataset DCS to scene graph if not already there...
+               vprDEBUG(vprDBG_ALL,1) << " setting DCS to activeDCS = "
                                    << this->activeDataSetDCS
                                    << std::endl << vprDEBUG_FLUSH;
-            this->activeObject->SetDCS( this->activeDataSetDCS );
+               this->activeObject->SetDCS( this->activeDataSetDCS );
 
-            this->activeObject->SetNormal( this->nav->GetDirection() );
-            this->activeObject->SetOrigin( this->nav->GetObjLocation() );
+               this->activeObject->SetNormal( this->nav->GetDirection() );
+               this->activeObject->SetOrigin( this->nav->GetObjLocation() );
 
-            this->activeObject->SetRequestedValue( this->cfdIso_value );
-            this->activeObject->SetCursorType( this->cursorId );
-            this->activeObject->SetPreCalcFlag( this->cfdPre_state );
-
-            this->computeActorsAndGeodes = true;
+               this->activeObject->SetRequestedValue( this->cfdIso_value );
+               this->activeObject->SetCursorType( this->cursorId );
+               this->activeObject->SetPreCalcFlag( this->cfdPre_state );
+            
+               this->computeActorsAndGeodes = true;
+               this->actorsAreReady = true;
+            }
             break;
          }
       }
-
       //extracting from inside the for loop
       this->setId( -1 );
    }
@@ -2672,83 +2757,6 @@ void cfdApp::preFrame( void )
       }
       this->chgMod = false;
    }  //change the model's property
-
-   // check any virtual objects need to be updated
-   if ( cfdObjects::GetTimeToUpdateFlag() )
-   {
-      for ( int i = 0; i < (int)this->dataList.size(); i++ )
-      {
-         if ( this->dataList[ i ]->GetGeodeFlag() )
-         {
-            vprDEBUG(vprDBG_ALL,2) << " have geode flag"
-                                   << std::endl << vprDEBUG_FLUSH;
-
-            if ( this->worldDCS->searchChild( this->dataList[ i ]->GetDCS() ) < 0 )
-            {
-               vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
-                                   << std::endl << vprDEBUG_FLUSH;
-               this->worldDCS->addChild( this->dataList[ i ]->GetDCS() );
-            }
-
-            if ( this->dataList[ i ]->GetGeode() != NULL )
-            {
-               vprDEBUG(vprDBG_ALL,1) << " will add geode to sg"
-                                      << std::endl << vprDEBUG_FLUSH;
-               // Add steady state geodes to the scene graph
-               this->dataList[ i ]->AddGeodeToDCS();
-            }
-            else if ( this->dataList[ i ]->GetSequence() != NULL )
-            {
-               vprDEBUG(vprDBG_ALL,1) << " will add viz object "
-                                      << i << " to sequence"
-                                      << std::endl << vprDEBUG_FLUSH;
-
-               //add the transient flow to the graph
-               // Hack for now
-               cfdTransientFlowManager * tfmTest = 
-                  dynamic_cast<cfdTransientFlowManager *>( this->dataList[ i ] );
-               
-               //cfdAnimatedImage* animTest = 
-               //   dynamic_cast< cfdAnimatedImage* >( this->dataList[ i ] );
-
-               if ( tfmTest != NULL ) //&&
-               //     tfmTest->GetFrameDataType() != cfdFrame::GEOM )
-               {
-                  tfmTest->CreateNodeList();
-
-                  this->dataList[ i ]->AddToSequence();
-            
-                  if ( this->activeSequenceObject )
-                  {
-                     vprDEBUG(vprDBG_ALL,1) << " ResumeSequence"
-                                            << std::endl << vprDEBUG_FLUSH;
-                     this->dataList[ i ]->ResumeSequence();
-                  }
-                  else
-                  {
-                     vprDEBUG(vprDBG_ALL,1) << " StartSequence"
-                                            << std::endl << vprDEBUG_FLUSH;
-                     this->dataList[ i ]->StartSequence();
-                  }
-
-                  // Set active sequence to current sequence
-                  this->activeSequenceObject = this->dataList[ i ];
-               }
-               else //if ( animTest != NULL )
-               {
-                  this->dataList[ i ]->AddToSequence();
-               }
-            }
-            vprDEBUG(vprDBG_ALL,2) << " End Update Loop"
-                                   << std::endl << vprDEBUG_FLUSH;
-
-            // Resetting these variables is very important
-            this->dataList[ i ]->SetUpdateFlag( false );
-            this->dataList[ i ]->SetGeodeFlag( false );
-         }
-      }
-      cfdObjects::SetTimeToUpdateFlag( false );
-   }
 
 ///////////////////////////
 //biv: move this to start of postframe?
@@ -2816,9 +2824,7 @@ void cfdApp::streamers( void * )
    while ( this->runStreamersThread )
    { 
       // Wait for some  work
-     while (   !this->interactiveObject && 
-               !this->animatedStreamlines &&
-               !this->animatedImages)
+      while (   !this->interactiveObject )
       {
          vpr::System::msleep( 500 );  // half-second delay
       }
@@ -2866,20 +2872,8 @@ void cfdApp::streamers( void * )
          this->interactiveObject = false;
          this->activeObject = NULL;
       }
-
-      if ( this->animatedStreamlines )
-      {                  
-         this->animStreamer->SetPolyDataSource( this->streamlines->GetStreamersOutput() );
-         this->animStreamer->Update();
-         this->animatedStreamlines = false;
-      }
-      
-      if (this->animatedImages)
-      {
-         this->animImg->Update();
-         this->animatedImages = false;
-      }
-      cfdObjects::SetTimeToUpdateFlag( true );
+      //cfdObjects::SetTimeToUpdateFlag( true );
+      this->computeActorsAndGeodes = false;   
    }
 }
 
@@ -2940,6 +2934,8 @@ void cfdApp::intraParallelThread( void * )
                this->activeObject->Update(); 
                this->activeObject->UpdateGeode();     
                this->activeObject = NULL;
+               //cfdObjects::SetTimeToUpdateFlag( true );
+               this->computeActorsAndGeodes = false;
             }
             else if ( tfmTest != NULL )
             {
@@ -2973,23 +2969,33 @@ void cfdApp::intraParallelThread( void * )
                   }
                }
                this->activeObject = NULL;
+               //cfdObjects::SetTimeToUpdateFlag( true );
+               this->computeActorsAndGeodes = false;
             }
             else if ( streamersTest != NULL )
             {
                vprDEBUG(vprDBG_ALL,1) << "interactive object." 
                                        << std::endl << vprDEBUG_FLUSH;
-
-               this->interactiveObject = true;
+               // if we are not already computing streamlines
+               if ( this->interactiveObject == false )
+                  this->interactiveObject = true;
             }
             else if ( animStreamerTest != NULL )
             {
-               this->animatedStreamlines = true;
+               // if we are not already computing animatedStreamlines
+               this->animStreamer->SetPolyDataSource( this->streamlines->GetStreamersOutput() );
+               this->animStreamer->Update();
                this->activeObject = NULL;
+               //cfdObjects::SetTimeToUpdateFlag( true );
+               this->computeActorsAndGeodes = false;   
             }
             else if ( animImgTest != NULL )
             {
-               this->animatedImages = true;
+               // if we are not already computing animatedImages
+               this->animImg->Update();
                this->activeObject = NULL;
+               //cfdObjects::SetTimeToUpdateFlag( true );
+               this->computeActorsAndGeodes = false;   
             }
 
             vprDEBUG(vprDBG_ALL,1) << " Time: " << GetTimeClock()-tt
@@ -3002,8 +3008,6 @@ void cfdApp::intraParallelThread( void * )
                << std::endl << std::endl << vprDEBUG_FLUSH; 
             
          }
-         this->computeActorsAndGeodes = false;
-         cfdObjects::SetTimeToUpdateFlag( true );
       }
    } // End of While loop
 }

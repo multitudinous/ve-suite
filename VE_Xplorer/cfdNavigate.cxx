@@ -300,55 +300,44 @@ void cfdNavigate::updateNavigationFromGUI()
    this->buttonData[ 2 ] = this->digital[ 2 ]->getData();
 
    if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_FWD) ||
-         this->IHdigital[0]->getData() == gadget::Digital::ON ) //forward translate
+         this->IHdigital[0]->getData() == gadget::Digital::ON ) 
+   //forward translate
    { 
-        this->worldTrans[1] += 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
+      this->worldTrans[1] += 0.25f;
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_BKWD) ||
-               this->IHdigital[1]->getData() == gadget::Digital::ON ) //backward translate
+               this->IHdigital[1]->getData() == gadget::Digital::ON ) 
+   //backward translate
    { 
         this->worldTrans[1] -= 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_RIGHT) || 
-      this->IHdigital[2]->getData() == gadget::Digital::ON ) //right translate
+      this->IHdigital[2]->getData() == gadget::Digital::ON ) 
+   //right translate
    { 
         this->worldTrans[0] += 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_LEFT) || 
-               this->IHdigital[3]->getData() == gadget::Digital::ON ) //left translate
+               this->IHdigital[3]->getData() == gadget::Digital::ON ) 
+   //left translate
    { 
         this->worldTrans[0] -= 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_UP) ||
-               this->IHdigital[4]->getData() == gadget::Digital::ON ) //upward translate
+               this->IHdigital[4]->getData() == gadget::Digital::ON ) 
+   //upward translate
    { 
         this->worldTrans[2] += 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_DOWN) ||
-               this->IHdigital[5]->getData() == gadget::Digital::ON ) //downward translate
+               this->IHdigital[5]->getData() == gadget::Digital::ON ) 
+   //downward translate
    { 
         this->worldTrans[2] -= 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
    } 
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_CW) ||
-               this->IHdigital[6]->getData() == gadget::Digital::ON )        //CW rotation
+               this->IHdigital[6]->getData() == gadget::Digital::ON )        
+   //CW rotation
    {
       this->currentWandDirection = this->GetDirection();
 
@@ -369,7 +358,8 @@ void cfdNavigate::updateNavigationFromGUI()
                               this->worldRot[ 2 ] );   
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_CCW) ||
-               this->IHdigital[7]->getData() == gadget::Digital::ON )         //CCWrotation
+               this->IHdigital[7]->getData() == gadget::Digital::ON )         
+   //CCWrotation
    {
       this->currentWandDirection = this->GetDirection();
       vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
@@ -390,7 +380,7 @@ void cfdNavigate::updateNavigationFromGUI()
    }
 
 
-      if ( this->buttonData[1] == gadget::Digital::TOGGLE_ON ||
+   if ( this->buttonData[1] == gadget::Digital::TOGGLE_ON ||
         this->buttonData[1] == gadget::Digital::ON )
    {
       this->currentWandDirection = this->GetDirection();
@@ -416,17 +406,19 @@ void cfdNavigate::updateNavigationFromGUI()
    }
    else if ( this->buttonData[2] == gadget::Digital::TOGGLE_ON ||
              this->buttonData[2] == gadget::Digital::ON )
+   // Navigation based on current wand direction
    { 
       vprDEBUG(vprDBG_ALL,1) << " Navigate" << std::endl << vprDEBUG_FLUSH;
       this->FwdTranslate();
       this->GetWorldLocation( this->worldTrans );
-      //yang-REI: the following block are moved from the intraFrame Function
-      this->worldDCS->setTrans( -this->worldTrans[0], 
-                                 -this->worldTrans[1], 
-                                 -this->worldTrans[2] );
    }
-
    
+   // Set the DCS postion based off of previous 
+   // manipulation of the worldTrans array
+   this->worldDCS->setTrans( -this->worldTrans[0],
+                               -this->worldTrans[1],
+                               -this->worldTrans[2] );
+   this->UpdateLoc( this->worldTrans );
 }
 /*
 inline void cfdApp::NavigationForIHCC( void )

@@ -100,7 +100,7 @@ void cfdGauges::Update( std::string activeModule, cfdExecutive* executive )
 
 // Update Function Specfic to IHCC demo for Angran
 // Code needs to be deleted as soon as dc trip is over 06-24-2004
-void cfdGauges::Update( cfdExecutive* executive )
+/*void cfdGauges::Update( cfdExecutive* executive )
 {
    for ( int i = 0; i < this->_numberOfGauges; i++ )
    {
@@ -132,7 +132,7 @@ void cfdGauges::Update( cfdExecutive* executive )
       }
    }
 }
-
+*/
 
 void cfdGauges::SetNumberOfGauges( int x )
 {

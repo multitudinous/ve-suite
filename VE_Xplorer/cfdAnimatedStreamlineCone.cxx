@@ -106,6 +106,12 @@ void cfdAnimatedStreamlineCone::Update( void )
 
    numberOfStreamLines = this->polyData->GetNumberOfLines();
  
+   if ( numberOfStreamLines == 0 )
+   {
+      cout << "|   cfdAnimatedStreamlineCone::Update : Number of streamlines is 0 " << endl;
+      return;
+   }
+
    // Find the maximum number of points in one streamline
    int maxNpts = 0;
    int minNpts = 1000000;
@@ -146,7 +152,7 @@ void cfdAnimatedStreamlineCone::Update( void )
       for ( i = 0; i < forwardPoints; i++ )
       {
          x = points->GetPoint( i );
-         vprDEBUG(vprDBG_ALL, 1) 
+         vprDEBUG(vprDBG_ALL, 3) 
             << "x[ " << i << " ] = " << x[ 0 ] << " : " 
             << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
          pointsArray[ i ]->InsertNextPoint( x );        
@@ -161,7 +167,7 @@ void cfdAnimatedStreamlineCone::Update( void )
       for ( i = npts - 1; i >= 0; i-- )
       {
          x = points->GetPoint( i );
-         vprDEBUG(vprDBG_ALL, 2)
+         vprDEBUG(vprDBG_ALL, 3)
             << " x[ " << i << " ] = " << x[ 0 ] << " : " 
             << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
          pointsArray[ ( npts - 1 ) - i + forwardPoints]->InsertNextPoint( x );
@@ -223,5 +229,6 @@ void cfdAnimatedStreamlineCone::Update( void )
    vprDEBUG(vprDBG_ALL, 1) << "Deleting Point Array" << std::endl << vprDEBUG_FLUSH;
 
    this->updateFlag = true;
-   this->addGeode = true;      
+   this->addGeode = true;
+   vprDEBUG(vprDBG_ALL, 1) << "|   Exiting cfdStreamers Update " << std::endl << vprDEBUG_FLUSH;
 }

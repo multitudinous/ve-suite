@@ -39,6 +39,7 @@
 
 // Juggler Includes
 #include <vpr/Util/Debug.h>
+#include <vpr/Sync/Guard.h>
 
 // Performer Includes
 #include <Performer/pf.h>
@@ -801,11 +802,14 @@ float cfdObjects::particleScale = 0.0;
 
 bool cfdObjects::GetTimeToUpdateFlag( void )
 {
+   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    return timeToUpdate;
 }
 
 void cfdObjects::SetTimeToUpdateFlag( bool x )
 {
+   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+
    timeToUpdate = x;
 }
 

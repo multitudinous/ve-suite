@@ -48,6 +48,7 @@ class vtkGlyph3D;
 class vtkMaskPoints;
 
 #include <vector>
+#include <vpr/Sync/Mutex.h>
 
 #ifdef _CFDCOMMANDARRAY
 class cfdApp;
@@ -164,6 +165,7 @@ class cfdObjects
       static float particleScale;
 
       static bool timeToUpdate;
+      static vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
 
       pfGeode *geode;
       pfGeode* tempGeode;

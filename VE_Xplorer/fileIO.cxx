@@ -543,7 +543,7 @@ char * fileIO::GetFile( char fileKeyword[], char fileLocation[] )
    }
    else
    {
-      std::cout << "Found " << fileKeyword << " file" << std::endl;
+      std::cout << "|   Found " << fileKeyword << " file" << std::endl;
    }
    
    return file;

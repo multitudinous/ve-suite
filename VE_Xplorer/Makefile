@@ -35,14 +35,14 @@ ifdef OMNI_HOME
    EXTRA_INCLUDES+=	-I${CONDUCTOR_BASE_DIR}/impl \
                      -I${CONDUCTOR_BASE_DIR}/skel \
                      ${CORBA_INCLUDES}
+   EXEC_TAG =
 endif
 
 ifdef ACE_ROOT
    FUTUREGEN_HOME = /home/users/mccdo/REI/futuregen
 
-   vpath %.cxx    ${CONDUCTOR_BASE_DIR}/tao_impl 
+   vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl 
    vpath %.cpp    ${FUTUREGEN_HOME}/IDL.old ${FUTUREGEN_HOME}/Plugin
-   vpath %.h      ${CONDUCTOR_BASE_DIR}/tao_impl ${FUTUREGEN_HOME}/IDL.old
    #----------------------------------------------------------------------------
    # Include macros and targets
    #----------------------------------------------------------------------------
@@ -60,18 +60,14 @@ ifdef ACE_ROOT
    ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs
    EXTRA_INCLUDES+=	\
                   ${ACE_INCLUDES} \
+                  -I${CONDUCTOR_BASE_DIR}/impl \
                   -I${CONDUCTOR_BASE_DIR}/skel \
-                  -I${CONDUCTOR_BASE_DIR}/tao_impl \
                   -I${FUTUREGEN_HOME}/IDL.old \
                   -I${FUTUREGEN_HOME}/Plugin
+   EXEC_TAG = _tao
 endif
 
 #__________________________________________________________
-# Operating System Specific stuff
-ifeq (`uname`, Linux)
- #  EXTRA_FLAGS = -O2 -DHAVE_CONFIG_H
-endif
-
 # list the source files that are in current directory
 SRCS=\
    Plot3Dviewer.cxx \
@@ -189,26 +185,26 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
 ifeq ($(CLUSTER_APP), TRUE)
-   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project_cluster
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project_cluster$(EXEC_TAG)
    EXTRA_CXXFLAGS+= -D_CLUSTER
    # object files are being stored in a system-dependent directory so that
    # builds for multiple platforms may be maintained simultaneously.
 
    #OBJDIR is the place that the object files are stored.
-   OBJDIR=	$(CFDHOSTTYPE)_cluster
+   OBJDIR=	$(CFDHOSTTYPE)_cluster$(EXEC_TAG)
 
    #DEPDIR is the place that the dependency files are stored.
-   DEPDIR=	$(CFDHOSTTYPE)_cluster
+   DEPDIR=	$(CFDHOSTTYPE)_cluster$(EXEC_TAG)
 else
-   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project$(EXEC_TAG)
    # object files are being stored in a system-dependent directory so that builds
    # for multiple platforms may be maintained simultaneously.
 
    #OBJDIR is the place that the object files are stored.
-   OBJDIR=	$(CFDHOSTTYPE)
+   OBJDIR=	$(CFDHOSTTYPE)$(EXEC_TAG)
 
    #DEPDIR is the place that the dependency files are stored.
-   DEPDIR=	$(CFDHOSTTYPE)
+   DEPDIR=	$(CFDHOSTTYPE)$(EXEC_TAG)
 endif
 
 default: all
