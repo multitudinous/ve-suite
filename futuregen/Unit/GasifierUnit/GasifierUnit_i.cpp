@@ -216,7 +216,7 @@ void Body_Unit_i::StartCalc (
   cout << "profile vals length " << prof.profile_vals.length() << endl;
   for(i=0; i<prof.profile_vals.length(); i++) {
     cout << "VAR " << i << " " << prof.profile_vars[i] << endl;
-    for(j=0; j<(prof.profile_vals[i]).length(); i++) {
+    for(j=0; j<(prof.profile_vals[i]).length(); j++) {
       cout << (prof.profile_vals[i])[j] << endl;
     }
   }

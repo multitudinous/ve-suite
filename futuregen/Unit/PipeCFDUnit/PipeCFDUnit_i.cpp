@@ -70,7 +70,7 @@ void Body_Unit_i::StartCalc (
   // Test
   for(i=0; i<prof_in->profile_vals.length(); i++) {
     cout << prof_in->profile_vars[i] << endl;
-    for(j=0; j<prof_in->profile_vals[i].length(); i++) {
+    for(j=0; j<prof_in->profile_vals[i].length(); j++) {
       cout << prof_in->profile_vals[i][j] << endl;
     }
   }
