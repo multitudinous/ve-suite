@@ -59,6 +59,9 @@ void Body_Unit_i::StartCalc (
     
     summaries.insert_summary_val("Temperature Change UNITS:K FORMAT:10.2f",
 				 d_temp - gas_in->gas_composite.T);
+    if(Q>0.0)
+    summaries.insert_summary_val("Thermal Input UNITS:MW FORMAT:10.2f", Q/1e6);
+    else
     summaries.insert_summary_val("Q UNITS:MW FORMAT:10.2f", Q/1e6);
 
     p.intfs.resize(1); //each port has its own package
