@@ -30,11 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "enSightGoldReader.h"
-
+#include <iostream>
+#include <string>
+#include <sstream>
 #include <vtkGenericEnSightReader.h>          // will open any ensight file
 #include <vtkCellDataToPointData.h>
 #include <vtkUnstructuredGrid.h>
-
+#include <vtkPointData.h>
+#include <vtkFloatArray.h>
+#include "converter.h"
 enSightGoldReader::enSightGoldReader( void )
 {
    reader = NULL;
@@ -66,6 +70,80 @@ vtkUnstructuredGrid* enSightGoldReader::GetUnstructuredGrid( char* caseFileName,
    // Must do this so that we can clean up properly in the destructor
    vtkUnstructuredGrid *finalUGrid = vtkUnstructuredGrid::New();
    finalUGrid->ShallowCopy( cell2point->GetUnstructuredGridOutput() );
-
+   //this portion is to grab scalar data out of the vectors and rewrite it back
+   //into the VTK file
+   int numArrays = finalUGrid->GetPointData()->GetNumberOfArrays();
+   if ( debug )
+      std::cout << " Number of arrays is :" << numArrays <<std::endl;
+   int numComponents;
+   int numOfTuples;
+   std::string name;
+   std::string scalName;
+   double component;
+   double velMag;
+   for ( int i=0;i<numArrays; i++ ) //loop pver number of arrays
+   {
+      numComponents = finalUGrid->GetPointData()->GetArray(i)->GetNumberOfComponents();
+      if ( numComponents > 1 ) //it is a vector
+      {
+         vtkFloatArray** scalarsFromVector;
+         
+         scalarsFromVector = new vtkFloatArray* [ numComponents+1 ];
+         name = (char*) finalUGrid->GetPointData()->GetArray(i)->GetName();
+         numOfTuples = finalUGrid->GetPointData()->GetArray(i)->GetNumberOfTuples();
+         if ( debug ) std::cout<<" Name :" << name <<std::endl
+                               <<" Number of Tuples :"<< numOfTuples <<std::endl;
+         for ( int compLoop=0;compLoop<numComponents; compLoop++ )
+         {
+            scalName = name;
+            if ( compLoop == 0 ) scalName.append("_u");
+            else if ( compLoop == 1 ) scalName.append("_v");
+            else if ( compLoop == 2 ) scalName.append("_w");            
+            scalarsFromVector[ compLoop ] = vtkFloatArray::New();
+            scalarsFromVector[ compLoop ]->SetNumberOfComponents( 1 );
+            scalarsFromVector[ compLoop ]->SetNumberOfTuples( numOfTuples );
+            if ( debug ) 
+               std::cout << "Scalar name " <<scalName <<std::endl;
+            scalarsFromVector[ compLoop ]->SetName( scalName.c_str() );
+            scalName.clear();
+            for ( int tupLoop=0;tupLoop<numOfTuples; tupLoop++ )
+            {
+               //get the component data
+               component = finalUGrid->GetPointData()->GetArray(i)
+                           ->GetComponent( tupLoop, compLoop );
+               scalarsFromVector[ compLoop ] ->SetComponent( tupLoop, 0, component ); 
+            }
+         }
+         //now calculate magnitude of the vector
+         scalName = name;
+         scalarsFromVector[ numComponents ] = vtkFloatArray::New();
+         scalName.append("_magnitude");
+         scalarsFromVector[ numComponents ]->SetNumberOfComponents( 1 );
+         scalarsFromVector[ numComponents ]->SetNumberOfTuples( numOfTuples );
+         if ( debug ) 
+            std::cout << "Scalar name " <<scalName <<std::endl;
+         scalarsFromVector[ numComponents ]->SetName( scalName.c_str() );
+         for ( int tupLoop=0;tupLoop<numOfTuples; tupLoop++ )
+         {
+            velMag = (double)(0);
+            for ( int compLoop=0;compLoop<numComponents; compLoop++ )
+            {
+               component = finalUGrid->GetPointData()->GetArray(i)
+                           ->GetComponent( tupLoop, compLoop );
+               velMag = velMag + component*component;
+            }
+            velMag = sqrt( velMag );
+            scalarsFromVector[ numComponents ]->SetComponent( tupLoop, 0, velMag );
+         }
+         letUsersAddParamsToField( numComponents+1, scalarsFromVector, finalUGrid->GetPointData() );
+         // deleting the allocated memory
+         for ( int c=0;c<numComponents+1;c++ )
+         {
+            scalarsFromVector[ c ]->Delete();
+         }
+         delete [] scalarsFromVector;
+         scalarsFromVector = NULL;
+      }  //end if loop
+   }
    return finalUGrid;
 }

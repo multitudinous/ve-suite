@@ -35,7 +35,8 @@
 class vtkGenericEnSightReader;
 class vtkCellDataToPointData;
 class vtkUnstructuredGrid;
-
+class vtkPointData;
+class vtkFloatArray;
 class enSightGoldReader
 {
    public:
