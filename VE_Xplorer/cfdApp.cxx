@@ -73,7 +73,7 @@
 #include <osg/FrameStamp>
 #include <osgUtil/SceneView>
 #endif
-
+#include "cfdPBufferManager.h"
 /// C/C++ libraries
 #include <iostream>
 //#include <omp.h>
@@ -84,6 +84,7 @@ cfdApp::cfdApp( void )
 #ifdef _OSG
    _tbvHandler = 0;
    _frameNumber = 0;
+   _pbuffer = 0;
 #endif
 }
 
@@ -160,6 +161,31 @@ inline osg::Group* cfdApp::getScene()
 }
 
 #ifdef _OSG
+//////////////////////////
+void cfdApp::contextInit()
+{
+   OsgApp::contextInit();
+   if (!_pbuffer){
+      _pbuffer = new cfdPBufferManager();
+      _pbuffer->isSupported();
+   }      
+}
+///////////////////////////
+void cfdApp::contextClose()
+{
+   if(!_pbuffer){
+      delete _pbuffer;
+      _pbuffer = 0;
+   }
+}
+////////////////////////////////////////
+cfdPBufferManager* cfdApp::GetPBuffer()
+{
+   if(_pbuffer){
+      return _pbuffer;
+   }
+   return 0;
+}
 void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 {
    //testing--move to cfdApp.cxx

@@ -56,6 +56,7 @@ namespace osg
    class FrameStamp;
 } 
 namespace osgUtil { class SceneView; }
+class cfdPBufferManager;
 class cfdTextureBasedVizHandler;
 class cfdApp: public vrj::OsgApp
 #elif _OPENSG
@@ -91,7 +92,9 @@ class cfdApp: public vrj::OsgApp
 #elif _OSG
       osg::Group* getScene();
       void bufferPreDraw();
-      
+      void contextInit();
+      virtual void contextClose();
+      cfdPBufferManager* cfdApp::GetPBuffer();
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
 #elif _OPENSG
 #endif
@@ -131,6 +134,8 @@ class cfdApp: public vrj::OsgApp
       osg::Timer _timer;
       osg::Timer_t _start_tick;
       unsigned int _frameNumber;
+      //biv --may convert this to a singleton later
+      cfdPBufferManager* _pbuffer;
 #endif
       cfdVjObsWrapper*              _vjobsWrapper;
 #ifdef _TAO
