@@ -20,6 +20,8 @@ enum VIEWLOC_TAB_IDS{
 class UI_ViewLocTab : public wxPanel{
 public:
    UI_ViewLocTab(wxNotebook* tControl);
+   ~UI_ViewLocTab( void );
+
 protected:
    void _buildPage();
    
@@ -40,6 +42,8 @@ protected:
    void _onRead(wxCommandEvent& event);
    //void _onRemove(wxCommandEvent& event);
    void _onMove(wxCommandEvent& event);
+
+   wxString* _defaultName;
 
    DECLARE_EVENT_TABLE()
 };

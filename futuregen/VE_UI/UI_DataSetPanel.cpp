@@ -7,9 +7,9 @@
 
 
 
-UI_Scalars::UI_Scalars(wxString scalarName)
+UI_Scalars::UI_Scalars(wxString* scalarName)
 {
-   _thisScalarName = scalarName;
+   _thisScalarName = (*scalarName);
 }
 
 UI_Scalars::~UI_Scalars()
@@ -37,7 +37,7 @@ void UI_DataSets::_buildScalars(int _numScalars, wxString* scalarNames)
 
    for (int i=0; i<_numScalars; i++)
    {
-      thisScalar = new UI_Scalars(scalarNames[i]);
+      thisScalar = new UI_Scalars(&scalarNames[i]);
       _Scalars.push_back(thisScalar);
    }
 }
@@ -309,8 +309,8 @@ void UI_DatasetPanel::_buildDataSets( void )
          
          thisDataSet->_dataSetType = tempTabs->datasetTypes[i];
 
-		 wxString* scalarNames;
-		 scalarNames = new wxString[tempTabs->numScalarsPerDataset[i]];
+		   wxString* scalarNames;
+		   scalarNames = new wxString[tempTabs->numScalarsPerDataset[i]];
 
          for (int k=0; k<tempTabs->numScalarsPerDataset[i]; k++)
          {

@@ -23,6 +23,11 @@ UI_ViewLocTab::UI_ViewLocTab(wxNotebook* tControl)
 
    _buildPage();
 }
+
+UI_ViewLocTab::~UI_ViewLocTab( void )
+{
+   delete [] _defaultName;
+}
 //////////////////////////////
 //build the sound tab       //
 //////////////////////////////
@@ -30,12 +35,12 @@ void UI_ViewLocTab::_buildPage()
 {
    //the radio box
    int numStoredLocations = ((UI_Tabs *)_parent)->num_locations;
-   wxString* defaultName;
+   _defaultName = new wxString[ numStoredLocations ];
 
    for( unsigned int i=0; i<numStoredLocations; i++)
    {
       char no = i;
-      defaultName[i] = "View Location " + no;
+      _defaultName[i] = "View Location " + no;
    }
    
    /*if ( numStoredLocations > 0 )
@@ -56,7 +61,7 @@ void UI_ViewLocTab::_buildPage()
 
    _locationsRBox = new wxRadioBox(this, VIEWLOC_RBOX, wxT("Stored View Points"),
                                 wxDefaultPosition, wxDefaultSize, 1,
-                                defaultName,1 , wxRA_SPECIFY_COLS);
+                                _defaultName,1 , wxRA_SPECIFY_COLS);
 
    if ( ((UI_Tabs *)_parent)->num_locations == 0 )
    {

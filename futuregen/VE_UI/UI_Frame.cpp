@@ -24,7 +24,7 @@ UI_Frame::UI_Frame(VjObs_ptr ref,wxWindow* parent, wxWindowID id, const wxString
             long style )
 :wxFrame(parent, id, test, pos, size, style)
 {
-   //vjobs = VjObs::_duplicate(ref);
+   vjobs = VjObs::_duplicate(ref);
    buildFrame();
 }
 
@@ -117,11 +117,9 @@ void UI_Frame::buildFrame( )
    //the tabs of our UI
    _tabs = new UI_Tabs( vjobs.in(), this, ID_UI_TABS);
    //_tabs = new UI_Tabs(this,-1);
-   std::cout<<"testing"<<std::endl;
    //set the left side of the gui
    //_datasetScrollable = new UI_DatasetScrollable(this);
    _datasetPanel = new UI_DatasetPanel(this);
-   std::cout<<"testing1"<<std::endl;
    //_scalartab = new UI_ScalarTab(this);
    
    //create the individual pages for the tab control

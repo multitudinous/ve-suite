@@ -30,7 +30,7 @@ enum DATASETS_PANEL_IDS{
 
 class UI_Scalars{
 public:
-   UI_Scalars(wxString);
+   UI_Scalars(wxString*);
    ~UI_Scalars();
 
    wxString _thisScalarName;
