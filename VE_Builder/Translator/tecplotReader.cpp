@@ -126,14 +126,17 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          I_Lower = ( *vectorIntIterator ); //std::cout<<"I lower :"<<I_Lower<<std::endl;
          I_Upper = *(vectorIntIterator+1); //std::cout<<"I Upper :"<<I_Upper<<std::endl;
          //between I_Lower and I_Upper copy from tempString into varNamString
-         varNamString.erase();   //empty string before next iteration so that it does not hold all the values
+         varNamString.erase();   //empty string before next iteration so that it does not hold cumulative values 
          for ( unsigned int c=I_Lower;c<I_Upper-1; c++ ) varNamString+=tempString[c];
          variablNames.push_back( varNamString );
       }
-      for ( vectorStringIterator=variablNames.begin();vectorStringIterator!=variablNames.end(); ++vectorStringIterator )
+      if ( debug )
       {
-         std::cout<<(*vectorStringIterator)<<std::endl;
+         std::cout<<"Variable names are :"<<std::endl;
+         for ( vectorStringIterator=variablNames.begin();vectorStringIterator!=variablNames.end();++vectorStringIterator ) 
+            std::cout<<(*vectorStringIterator)<<std::endl;               
       }
+      
       tempString.erase();  //clear the contents of tempString
       char stringData[ 10 ];  //create a new character array
       I_Lower = header.find( "I=" );   //look for I= in the header
