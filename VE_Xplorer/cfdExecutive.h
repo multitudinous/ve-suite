@@ -60,6 +60,7 @@ class cfdVEAvailModules;
 class cfdVEBaseClass;
 class cfdVEAvail_Modules;
 class cfdModelHandler;
+class cfdEnvironmentHandler;
 
 class cfdExecutive : public cfdGlobalBase
 {
@@ -108,7 +109,7 @@ class cfdExecutive : public cfdGlobalBase
       // Function called within preFrame to allow cfdExecutive
       // to have access to scalar information
       void SetActiveDataSet( cfdDataSet* );
-      void SetModelHandler( cfdModelHandler* );
+      void SetModelHandler( cfdModelHandler*, cfdEnvironmentHandler* );
 
       void UnbindORB( void );
 
@@ -140,6 +141,7 @@ class cfdExecutive : public cfdGlobalBase
       cfdDCS* worldDCS;
       cfdGroup* _masterNode;
       cfdModelHandler* _modelHandler;
+      cfdEnvironmentHandler* _envHandler;
 
       vpr::Mutex  mValueLock;  /**< A mutex to protect variables accesses */
       bool _doneWithCalculations;

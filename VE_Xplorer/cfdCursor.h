@@ -110,6 +110,7 @@ class cfdCursor : public cfdGlobalBase
       void SetActiveDataSet( cfdDataSet* input );
 
       int GetCursorID( void );
+      double* GetCursorLocation( void );
    private:
 
       // Move the cursor methods

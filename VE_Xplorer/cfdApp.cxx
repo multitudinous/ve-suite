@@ -307,7 +307,7 @@ std::cout << "|  3d" << std::endl;
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
    this->executive = new cfdExecutive( naming_context.in(), this->_sceneManager->GetWorldDCS() );
-   this->executive->SetModelHandler( this->_modelHandler );
+   this->executive->SetModelHandler( this->_modelHandler, this->_environmentHandler );
 
 #endif // _TAO
 

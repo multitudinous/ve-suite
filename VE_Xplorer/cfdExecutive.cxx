@@ -43,10 +43,12 @@
 #include "cfdVEAvailModules.h"
 #include "cfdVEBaseClass.h"
 #include "cfdModelHandler.h"
+#include "cfdEnvironmentHandler.h"
 
 #include "package.h"
 #include "interface.h"
 #include "Network_Exec.h"
+//#include "Executive_i.h"
 
 #include <iostream>
 #include <sstream>
@@ -383,6 +385,8 @@ void cfdExecutive::GetEverything( void )
                _plugins[ iter->first ]->InitializeNode( worldDCS );
                _plugins[ iter->first ]->AddSelfToSG();
                _modelHandler->AddModel( _plugins[ iter->first ]->GetCFDModel() );
+               _plugins[ iter->first ]->SetCursor( _envHandler->GetCursor() );
+               _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
                vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
                                       << " ]-> " << iter->second 
                                       << " is being created." << endl << vprDEBUG_FLUSH;
@@ -529,9 +533,10 @@ bool cfdExecutive::GetCalculationsFlag( void )
    return this->_doneWithCalculations;
 }
 
-void cfdExecutive::SetModelHandler( cfdModelHandler* input )
+void cfdExecutive::SetModelHandler( cfdModelHandler* input, cfdEnvironmentHandler* env )
 {
    _modelHandler = input;
+   _envHandler = env;
 }
 bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 {

@@ -38,6 +38,10 @@
 #include "fileIO.h"
 #include "cfdFILE.h"
 #include "cfdDataSet.h"
+#include "cfdNavigate.h"
+
+#include "package.h"
+
 #include <fstream>
 #include <cstdlib>
 #include <string>
@@ -194,21 +198,76 @@ wxString cfdVEBaseClass::GetDesc( void )
    return this->_objectDescription;
 }
 
+// Set the pointer to the navigate class so that dynamic
+// objects can do custom features with the wand input
+// and navigation input
+void cfdVEBaseClass::SetCursor( cfdCursor* input )
+{
+   if ( input != NULL )
+   {
+      _cursor = input;
+   }
+   else
+   {
+      cerr << " ERROR : cfdVEBaseClass::SetNavigationObject cursor input is NULL " << endl;
+   }
+}
 
+// Set the results for a particluar module so that we can use them for custom 
+// viz features
+void cfdVEBaseClass::SetModuleResults( const char* network )
+{
+   if ( network == NULL )
+   {
+      cout << " No results for " << _objectName << endl;
+   }
+   else
+   {
+      if ( _network != NULL )
+         delete _network;
+      _network = new char[ strlen( network ) + 1 ];
+      strcpy( _network, network );
+   }
+  
+   /*try {
+      char* result;
+      result = exec->GetModuleResult(m_selMod);
+   }
+   catch (CORBA::Exception &) {
+		
+      cerr << "Maybe Computational Engine is down" << endl;
+      return;
+   }*/
+
+   cout<<_network<<endl;
+   Package p;
+   p.SetSysId("veresult.xml");
+   p.Load(_network, strlen(_network));
+
+   this->UnPackResult(&p.intfs[0]);
+   delete _network;
+}
+
+// Viz feature for the devloper to define
+// Can be anything that creates a geode
+cfdGeode* cfdVEBaseClass::GetCustomVizFeature( int input )
+{
+   return NULL;
+}
 //This is the load function of the module, unpack the input string and fill up the UI according to this
 void cfdVEBaseClass::UnPack(Interface* intf)
 {
    vector<string> vars;
   
-  map<string, long *>::iterator iteri;
-  map<string, double *>::iterator iterd;
-  map<string, string *>::iterator iters;
-  map<string, vector<long> *>::iterator itervi;
-  map<string, vector<double> *>::iterator itervd;
-  map<string, vector<string> *>::iterator itervs;
+   map<string, long *>::iterator iteri;
+   map<string, double *>::iterator iterd;
+   map<string, string *>::iterator iters;
+   map<string, vector<long> *>::iterator itervi;
+   map<string, vector<double> *>::iterator itervd;
+   map<string, vector<string> *>::iterator itervs;
   
-  unsigned int i;
-  long temp;
+   unsigned int i;
+   long temp;
 
   mod_pack = *intf;
   vars = mod_pack.getInts();
@@ -319,6 +378,19 @@ Interface* cfdVEBaseClass::Pack()
 //This is to unpack the result from the 
 void cfdVEBaseClass::UnPackResult(Interface * intf)
 {
+   // This will be module dependent. here is the Default 
+   // implementation when using the summary table to pack 
+   // things up in the module end
+   unsigned int i;
+   std::vector<string> descs;
+   descs = intf->getStrings();
+   v_desc.clear();
+   v_value.clear();
+   for (i=0; i<descs.size(); i++)
+   {
+      v_desc.push_back(descs[i].c_str());
+      v_value.push_back((intf->getString(descs[i])).c_str());
+   }
 }
 
 // Set the id for a particular module
@@ -666,3 +738,5 @@ void cfdVEBaseClass::RegistVar(string vname, vector<string> *var)
 {
   _string1D[vname]=var;
 }
+//////////////////////////////////
+
