@@ -28,7 +28,7 @@ setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 # Some like to hardcode the following variables for custom setups.
 # The checked in version of this file should have the settings commented out
 # to allow developers to set them from outside this script (see below).
-#setenv TAO_BUILD FALSE
+#setenv TAO_BUILD TRUE
 #setenv CLUSTER_APP FALSE
 
 # TAO_BUILD can be set outside this script to override the default of FALSE
@@ -155,6 +155,7 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
       #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/Linux/lib:${WX_HOME}/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
+      setenv PATH ${ACE_ROOT}/bin:${PATH}
    else
       setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.5/Linux-SuSE91
       setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
@@ -179,6 +180,7 @@ else if ( ${CFDHOSTTYPE} == "SunOS" ) then
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
+      setenv PATH ${ACE_ROOT}/bin:${PATH}
    else
       setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Solaris
       setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages

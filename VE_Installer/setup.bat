@@ -19,6 +19,8 @@ REM Everything below is relative to the above environment so user
 REM shouldn't have to modify UNLESS "local" builds (debug for example)
 REM are desired. In this case modify the appropriate variables accordingly.
 
+set CFDHOSTTYPE=WIN32
+
 set CONDUCTOR_BASE_DIR=%VE_SUITE_HOME%\VE_Conductor
 
 set PHSHAREDSIZE=534773700
