@@ -39,7 +39,7 @@ int Execute_Thread::svc (void)
       _mod->StartCalc();
     } catch (CORBA::Exception &) {
       cout <<"Module Execution Messed up.\n";
-    }
+   }
     _mutex.acquire();
     _is_exec = false;
     _mutex.release();
