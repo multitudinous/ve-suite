@@ -38,8 +38,6 @@
 
 CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 
-#WX_CXX = $(shell wx-config --cxxflags)
-#WX_LIB = $(shell wx-config --libs)
 CFDUNAME = $(shell uname)
 ifeq ($(SCENE_GRAPH), OSG)
    OSG = _osg
@@ -103,6 +101,14 @@ ifeq ($(TAO_BUILD), TRUE)
    EXEC_TAG = _tao
 endif
 
+# for osg and patented stuff
+ifeq ($(VE_PATENTED), TRUE)
+   EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_VolumeVis
+   EXTRA_CXXFLAGS+= -D_OSG -DVE_PATENTED
+   EXTRA_PATH_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_VolumeVis
+endif
+
+# for xercese includes
 ifdef XERCESCROOT
    EXTRA_INCLUDES+= -I${XERCESCROOT}/include
    EXTRA_LIBS+= -L${XERCESCROOT}/lib -lxerces-c

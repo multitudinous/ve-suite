@@ -47,7 +47,7 @@ class cfdWriteTraverser;
 class cfdTeacher : public cfdGlobalBase
 {
    public:
-      cfdTeacher( char directory[], cfdDCS* );
+      cfdTeacher( std::string, cfdDCS* );
 
       ~cfdTeacher( );
 
@@ -62,16 +62,14 @@ class cfdTeacher : public cfdGlobalBase
       cfdNode* getpfNode( int );
       int getNumberOfFiles();
       char * getFileName( int i );
-      char * getDirectory();
-      void setDirectory( char * );
 
    private:
       cfdDCS*     DCS;
       cfdDCS*     _worldDCS;
       cfdNode**   node;  // array of nodes
       int numFiles;
-	  std::vector<std::string> pfbFileNames;
-      char * directory;
+	   std::vector<std::string> pfbFileNames;
+      std::string directory;
       int pfb_count;
       cfdWriteTraverser* _cfdWT;
 };

@@ -201,7 +201,8 @@ void cfdEnvironmentHandler::InitScene( void )
    // Initiate the Performer Stored Binary objects.
    //
    std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
-   this->_teacher = new cfdTeacher( "STORED_FILES", cfdPfSceneManagement::instance()->GetWorldDCS() );
+   this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
+                                    cfdPfSceneManagement::instance()->GetWorldDCS() );
 }
 
 void cfdEnvironmentHandler::PreFrameUpdate( void )

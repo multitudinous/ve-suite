@@ -54,10 +54,9 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
 
-cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
+cfdTeacher::cfdTeacher( std::string specifiedDir, cfdDCS* worldDCS )
 {
-   this->directory = NULL;
-   this->setDirectory( specifiedDir );
+   this->directory = specifiedDir;
 
    vprDEBUG(vprDBG_ALL,1) << "PFB directory : \"" << this->directory << "\""
                           << std::endl << vprDEBUG_FLUSH;
@@ -79,7 +78,7 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
 
 #ifndef WIN32
    //try to open the directory
-   DIR* dir = opendir( this->directory );
+   DIR* dir = opendir( this->directory.c_str() );
    if (dir == NULL) 
    {
       vprDEBUG(vprDBG_ALL,0) <<"Cannot open directory \"" << this->directory 
@@ -94,7 +93,7 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    }
 
    //change into this directory so that we can find the files
-   chdir( this->directory );
+   chdir( this->directory.c_str() );
 
    //get the name of each file
    direct* file = 0;
@@ -103,11 +102,11 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
       //assume all pfb files in this directory should be loaded
       if(strstr(file->d_name, ".pfb")) 
       {
-         char * fileName = new char[strlen(file->d_name)+1];
-         strcpy( fileName, file->d_name );
-         this->pfbFileNames.push_back( std::string(fileName) );
-         delete [] fileName;
-         vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << fileName
+         //char * fileName = new char[strlen(file->d_name)+1];
+         //strcpy( fileName, file->d_name );
+         this->pfbFileNames.push_back( std::string(file->d_name) );
+         //delete [] fileName;
+         vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << this->pfbFileNames.back()
                                 << std::endl << vprDEBUG_FLUSH;
       }
    }
@@ -121,7 +120,7 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    //BIGTIME!!!!!!!
    BOOL finished;
    HANDLE hList;
-   TCHAR* directory;//[MAX_PATH+1];
+   TCHAR* tdirectory;//[MAX_PATH+1];
    WIN32_FIND_DATA fileData;
    char buffer[MAX_PATH];
    cwd = _getcwd(buffer,MAX_PATH);
@@ -131,13 +130,14 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    std::ostringstream dirStringStream;
    dirStringStream <<"./"<<this->directory << "\\*";
    std::string dirString = dirStringStream.str();
-   directory = (char*)dirString.c_str();
+   tdirectory = (char*)dirString.c_str();
 
    // Get the first file
-   hList = FindFirstFile(directory, &fileData);
+   hList = FindFirstFile(tdirectory, &fileData);
   // if (hList == INVALID_HANDLE_VALUE)
   // { 
-   if(_mkdir(this->directory)==0){
+   if ( _mkdir(this->directory) == 0 )
+   {
       vprDEBUG(vprDBG_ALL,0) <<"Directory \"" << this->directory 
                              << "\"" << std::endl << vprDEBUG_FLUSH;
       hList = FindFirstFile(directory, &fileData);
@@ -153,14 +153,14 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
          //assume all pfb files in this directory should be loaded
          if ( strstr(fileData.cFileName, ".pfb")||strstr(fileData.cFileName, ".osg") )
          {
-            char * fileName = new char[strlen(fileData.cFileName)+1];
-            strcpy( fileName, fileData.cFileName );
+            //char * fileName = new char[strlen(fileData.cFileName)+1];
+            //strcpy( fileName, fileData.cFileName );
             std::ostringstream filenameStream;
-            filenameStream <<"./STORED_FILES/"<<fileName;
-            std::string fileString = filenameStream.str();
-			   this->pfbFileNames.push_back( fileString );
-            delete [] fileName;
-            vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << fileString
+            filenameStream <<"./STORED_FILES/"<<fileData.cFileName;
+            //std::string fileString = filenameStream.str();
+			   this->pfbFileNames.push_back( filenameStream.str() );
+            //delete [] fileName;
+            vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << this->pfbFileNames.back()
                                    << std::endl << vprDEBUG_FLUSH;
          }
          if ( !FindNextFile(hList, &fileData) )
@@ -200,9 +200,6 @@ cfdTeacher::~cfdTeacher( )
    }
    delete this->DCS;
 
-   delete [] this->directory;
-   this->directory = NULL;
-
    vprDEBUG(vprDBG_ALL,1) << "exiting cfdTeacher destructor"
                           << std::endl << vprDEBUG_FLUSH;
 }
@@ -232,27 +229,6 @@ char * cfdTeacher::getFileName( int i )
    {
       return NULL;
    }
-}
-char * cfdTeacher::getDirectory()
-{
-   return this->directory;
-}
-
-void cfdTeacher::setDirectory( char * dir )
-{
-   if ( this->directory )
-   {
-      delete [] this->directory;
-   }
-
-   if ( dir == NULL )
-   {
-      this->directory = NULL;
-      return;
-   }
-
-   this->directory = new char [ strlen(dir) + 1 ];
-   strcpy( this->directory, dir );
 }
 
 bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
@@ -302,7 +278,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       // Generate a .pfb filename...
       const char* pfb_filename;
       std::ostringstream dirStringStream;
-      dirStringStream << this->getDirectory() << "/stored_scene_" 
+      dirStringStream << this->directory << "/stored_scene_" 
 #ifdef _PERFORMER
                         << this->pfb_count << ".pfb";
 #elif _OSG
