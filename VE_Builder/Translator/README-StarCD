@@ -1,0 +1,48 @@
+VE-Builder
+
+	The data translator that is contained in VE-Builder has now been 
+upgraded to support multiple scalars for Star-CD™ data. This capability 
+allows the Deere analyst to utilize all six registers of Star-CD’s data 
+storage. To use this new functionality of the translator a brief description 
+of the Translator process will follow.
+	To begin, data needs to be obtained from Star-CD™. To accomplish 
+this, a *.vrt and *.cel file, written in ASCII, need to be written from 
+Star-CD™ of the region of interest. This region can either be the complete 
+CFD model or a subsection of the model. (Note: The Translator is now capable 
+of sorting out shell cells therefore care does not need to be taken to only 
+write cells that are fluid or solid cells to the *.cel file.) Now data needs 
+to be written in a *.usr file from Star-CD™. This file also needs to be 
+written in ASCII. The user can either choose to write only one vector, one 
+vector and a scalar, one vector and two scalars or one vector and three scalars. 
+The Translator doesn’t need a fixed number of scalars. It also does not mater 
+whether all six registers or four registers are written to the *.usr file. 
+The Translator will only read what the user tells it to 
+read. (Note: The Translator now calculates the velocity magnitude from 
+the velocity vector field therefore it is suggested that the velocity 
+magnitude not be written out in the *.usr file from Star-CD™ as the field 
+will be created automatically in the Translator.) Once the data is obtained 
+from Star-CD™ a parameter file needs to be created for the Translator to read. 
+A sample parameter file can be found in the Translator directory contained in 
+the VE-Builder directory. In this parameter file the path to the *.usr, *.vrt, 
+and *.cel file need to be specified. The next fields defined are the vector 
+name and scalar names. The scalar names need to be in the same order as listed 
+in the *.usr file. For example the first scalar name should match the fifth 
+column of the *.usr, and the second name should match the sixth column. The 
+following fields pertain to the transformations that need to be applied to 
+the dataset. These fields are the rotations and translations for each coordinate 
+direction. (Note: The rotations are not eulerian.) The scale field requires an 
+integer that refers to the following list: 0-(No Scale), 1-(Custom Scale), 
+2-(Meters to Feet), 3-(Millimeters to Feet), 4-(Inches to Feet), 
+5-(Meters (1:12) scale to Feet). The output filename needs to be specified 
+as listed in the example parameter file. The last flag specific refers to the 
+manner in which the data is written to disk. It is recommended that the user 
+use the write to disk option (1). This will create an ASCII file but should be 
+efficient at creating the file. The file can then be converted to binary if 
+desired by using the convertVTK2Binary tool.
+	Now it is time to run the Translator. The user will first be prompted to 
+enter what type of data is to be translated. For Star-CD™ the user will 
+then be prompted to enter the parameter file name. This then concludes 
+the translation of data. To check the data file after the translation 
+process has completed, the scalar range tool can then be used to verify 
+that each scalar is in the data file as well as each scalar’s range is 
+as anticipated.
