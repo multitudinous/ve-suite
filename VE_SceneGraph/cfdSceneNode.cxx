@@ -45,7 +45,7 @@
 //////////////////////////////////
 cfdSceneNode::cfdSceneNode( void )
 {
-   this->_nodeType = -1;
+   //this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
    this->_nt = CFD_OTHER;
@@ -60,7 +60,7 @@ cfdSceneNode::cfdSceneNode( void )
 cfdSceneNode::cfdSceneNode(cfdNodeType nt)
 {
    this->_nt = nt;
-   this->_nodeType = -1;
+   //this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
    /*this->_node = NULL;
@@ -73,14 +73,14 @@ cfdSceneNode::cfdSceneNode(cfdNodeType nt)
 ///////////////////////////////////
 cfdSceneNode::~cfdSceneNode( void )
 {
-   this->_nodeType = -1;
+   //this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
 }
 ////////////////////////////////////////////////////////
 cfdSceneNode::cfdSceneNode( const cfdSceneNode& input )
 {
-   this->_nodeType = input._nodeType;
+   //this->_nodeType = input._nodeType;
    this->_numParents = input._numParents;
    this->_parent = input._parent;
    _nt = input._nt;
@@ -90,7 +90,7 @@ cfdSceneNode& cfdSceneNode::operator=( const cfdSceneNode& input )
 {
    if ( this != &input )
    {
-      this->_nodeType = input._nodeType;
+      //this->_nodeType = input._nodeType;
       this->_numParents = input._numParents;
       this->_parent = input._parent;
       _nt = input._nt;
@@ -98,10 +98,10 @@ cfdSceneNode& cfdSceneNode::operator=( const cfdSceneNode& input )
    return *this;
 }
 //////////////////////////////////////
-int cfdSceneNode::GetNodeType( void )
+/*int cfdSceneNode::GetNodeType( void )
 {
    return _nodeType;
-}
+}*/
 //////////////////////////////////////////////
 cfdNode* cfdSceneNode::GetParent( int parent )
 {

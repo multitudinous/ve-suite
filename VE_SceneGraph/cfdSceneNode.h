@@ -93,7 +93,7 @@ class cfdSceneNode
 #elif _OPENSG
 #endif
       //??
-      int GetNodeType( void );
+      //int GetNodeType( void );
 
       //the parent node    
       cfdNode* GetParent( int );
@@ -101,14 +101,14 @@ class cfdSceneNode
       //set the parent
       void SetParent( cfdNode* );
       //??
-      void SetNodeType(int);
+      //void SetNodeType(int);
 
       //set internal cfd node type
       virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
 
    protected:
       //our scene graph specific nodes
-      int _nodeType;
+      //int _nodeType;
       int _numParents;
       cfdNodeType _nt;
       cfdNode* _parent;

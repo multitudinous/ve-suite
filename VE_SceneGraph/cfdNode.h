@@ -51,7 +51,7 @@ class cfdNode: public cfdSceneNode
 {
    public:   
       cfdNode( void );
-      cfdNode(cfdSceneNode::cfdNodeType nt);
+      //cfdNode(cfdSceneNode::cfdNodeType nt);
 
       //copy constructor
       cfdNode( const cfdNode& );
