@@ -291,7 +291,7 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 {
    _tm = tm;
 #ifdef CFD_USE_SHADERS
-   
+   int* res = _tm->fieldResolution();
    if(!_sSM){
       _sSM = new cfdOSGScalarShaderManager();
       _sSM->InitTextureManager(_tm);
@@ -301,8 +301,11 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
    _sSM->Init();
    if(!_tSM){
       _tSM = new cfdOSGTransferShaderManager();
+      _tSM->SetFieldSize(res[0],res[1],res[2]);
       _tSM->Init();
    }
+   
+   
 #endif
    if(!_image.valid()){
       _image = new osg::Image();

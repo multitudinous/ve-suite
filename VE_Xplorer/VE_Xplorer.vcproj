@@ -666,6 +666,9 @@ echo Done.
 				RelativePath=".\cfdObjects.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdOSGAdvectionShaderManager.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdOSGPingPongTexture3d.cxx">
 			</File>
 			<File
@@ -844,6 +847,9 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdUpdateableOSGTexture1d.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdUpdateParameterCallback.cpp">
 			</File>
 			<File
 				RelativePath=".\cfdUpdateTextureCallback.cpp">
@@ -1819,6 +1825,9 @@ echo Done.
 				RelativePath="cfdObjects.h">
 			</File>
 			<File
+				RelativePath=".\cfdOSGAdvectionShaderManager.h">
+			</File>
+			<File
 				RelativePath=".\cfdOSGPingPongTexture3d.h">
 			</File>
 			<File
@@ -1907,6 +1916,9 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdUpdateableOSGTexture1d.h">
+			</File>
+			<File
+				RelativePath=".\cfdUpdateParameterCallback.h">
 			</File>
 			<File
 				RelativePath=".\cfdUpdateTextureCallback.h">

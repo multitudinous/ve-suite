@@ -11,6 +11,7 @@
 //Constructors                                          //
 //////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
+:cfdOSGShaderManager()
 {
    _reinit = true;
    _fieldSize[0] = 0;
@@ -20,6 +21,7 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
 //////////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::cfdOSGTransferShaderManager(const
                                cfdOSGTransferShaderManager& sm)
+:cfdOSGShaderManager(sm)
 {
    _property = new osg::Texture3D(*(sm._property.get()));
    int nTransferFuncts = sm._transferFunctions.size();
@@ -102,10 +104,27 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool clearList)
 {
    if(clearList){
       if(_transferFunctions.size())
-	 _transferFunctions.clear();
+	       _transferFunctions.clear();
    }
+   GLubyte lutex[256*2];
+   //gamma table
+   GLubyte gTable[256];
+   double gamma = 2.5;
+   double y = 0;
+   for (int i=0; i<256; i++) {       
+      double y = (double)(i)/255.0;   
+      y = pow(y, 1.0/gamma);     
+      gTable[i] = (int) floor(255.0 * y + 0.5);  
+   }
+   for (int i = 0; i < 256; i++){
+     lutex[i*2    ] = (GLubyte)gTable[i];
+     lutex[i*2 + 1] = (GLubyte)i;
+   }
+
    osg::ref_ptr<osg::Image> data = new osg::Image();
-   data->allocateImage(256,1,1,GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   data->allocateImage(256,1,1,GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE);
+   data->setImage(256,1,1,GL_LUMINANCE_ALPHA,GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,lutex,
+                osg::Image::USE_NEW_DELETE);
 
    osg::ref_ptr<osg::Texture1D>trans = new osg::Texture1D;
    trans->setTextureSize(256);
@@ -219,10 +238,11 @@ void cfdOSGTransferShaderManager::SetFieldSize(unsigned int x,unsigned int y,uns
    _fieldSize[2] = z;
 }
 /////////////////////////////////////////////////////////////////////////
-cfdOSGTransferShaderManager& cfdOSGTransferShaderManager::operator=(const 
-		                               cfdOSGTransferShaderManager& sm)
+cfdOSGTransferShaderManager& cfdOSGTransferShaderManager::operator=(const cfdOSGTransferShaderManager& sm)
+
 {
    if(this != &sm){
+      cfdOSGShaderManager::operator =(sm);
       _property = sm._property;
       int nTransferFuncts = sm._transferFunctions.size();
       for(int i = 0; i < nTransferFuncts; i++){

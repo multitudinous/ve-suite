@@ -17,7 +17,7 @@ public:
    osg::StateSet* GetShaderStateSet();
    virtual cfdOSGShaderManager& operator=(const cfdOSGShaderManager& sm);
 protected:
-   void _setupCGShaderProgram(osg::StateSet* ss,
+   virtual void _setupCGShaderProgram(osg::StateSet* ss,
 		                      char* progName,
 			                     char* funcName);
    osg::ref_ptr<osg::StateSet> _ss;
