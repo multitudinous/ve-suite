@@ -45,8 +45,9 @@ cfdVEAvail_Modules::~cfdVEAvail_Modules( void )
 bool cfdVEAvail_Modules::LoadModules()
 {
    //int i;
-   char* path = ".";
-   char* modelPath = "/Plugins";
+//   char* path = ".";
+   char* path = "Plugins/";
+   char* modelPath =  getenv("CFDHOSTTYPE");
    char* file = new char[100];
    
    strcpy( file, path );
