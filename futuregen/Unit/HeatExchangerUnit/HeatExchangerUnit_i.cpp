@@ -313,10 +313,10 @@ void Body_Unit_i::StartCalc (
 
     executive_->SetModuleResult(id_, result); //marks the end the execution
     
-    delete gas_in_data;
-    delete water_in_data;
-    delete gas_out_data;
-    delete water_out_data;
+    if(gas_in_data)    delete gas_in_data;
+    if(water_in_data)  delete water_in_data;
+    if(gas_out_data)   delete gas_out_data;
+    if(water_out_data) delete water_out_data;
   }
   
 void Body_Unit_i::StopCalc (

@@ -30,29 +30,27 @@ int Execute_Thread::svc (void)
       if(_is_exec) break;
       
       _mutex.release();
-
-	  ACE_OS::sleep(2); 	    
+      
+      ACE_OS::sleep(2); 	    
     }
     
     _mutex.release();
-	try {
-		_mod->StartCalc();
-	} catch (CORBA::Exception &) {
-		
-		cout <<"Module Execution Messed up.\n";
-	}
+    try {
+      _mod->StartCalc();
+    } catch (CORBA::Exception &) {
+      cout <<"Module Execution Messed up.\n";
+    }
     _mutex.acquire();
     _is_exec = false;
     _mutex.release();
     
-	try {
-		_executive->execute_next_mod ((long)_mod->GetID());
-	}catch (CORBA::Exception &) {
-		
-		cout <<"Module GetID Messed up.\n";
-	}
+    try {
+      _executive->execute_next_mod ((long)_mod->GetID());
+    }catch (CORBA::Exception &) {
+      cout <<"Module GetID Messed up.\n";
+    }
   }
-
+  
 }
 
 int Execute_Thread::lock ()

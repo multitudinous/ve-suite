@@ -43,7 +43,7 @@ void Body_Unit_i::StartCalc (
     p.SetSysId("gas_in.xml");
     p.Load(igas, strlen(igas)); 
 
-    Gas *gas_in = new Gas();
+    Gas *gas_in = new Gas;
 
     V21Helper gashelper(therm_path.c_str());
     gashelper.IntToGas(&(p.intfs[0]), *gas_in);
@@ -61,7 +61,7 @@ void Body_Unit_i::StartCalc (
 	    gas_out[i]->gas_composite.M = gas_in->gas_composite.M * pct[i] / 100;
 	    gas_out[i]->gas_composite.M_particle = gas_in->gas_composite.M_particle * pct[i] / 100;
 	    gashelper.GasToInt(gas_out[i], p.intfs[0]);
-	    delete gas_out[i];
+	    
 	    p.SetPackName("ExportData");
 	    p.SetSysId("test.xml");
 	    ogas[i] = p.Save(rv);
@@ -70,10 +70,13 @@ void Body_Unit_i::StartCalc (
 	else 
 	  ;
       }
-    delete gas_in;
+    if(gas_in) delete gas_in;
     p.intfs.clear();
     result = p.Save(rv);
     executive_->SetModuleResult(id_, result); //marks the end the execution
+
+    for(i=0; i<4; i++)
+      if(gas_out[i]) delete gas_out[i];
   }
   
 void Body_Unit_i::StopCalc (

@@ -44,8 +44,8 @@ void Body_Unit_i::StartCalc (
 
     p.SetSysId("gas_in.xml");
         
-    Gas *gas_in_data1 = new Gas();
-    Gas *gas_in_data2 = new Gas();
+    Gas *gas_in_data1 = new Gas;
+    Gas *gas_in_data2 = new Gas;
 
     V21Helper gashelper(therm_path.c_str());
     p.Load(igas[0], strlen(igas[0])); 
@@ -204,10 +204,11 @@ void Body_Unit_i::StartCalc (
     result = p.Save(rv); 
 
     executive_->SetModuleResult(id_, result); //marks the end the execution
-    delete gas_out_data1;
-    delete gas_out_data2;
-    delete gas_in_data1;
-    delete gas_in_data2;
+   
+    if(gas_out_data1) delete gas_out_data1;
+    if(gas_out_data2) delete gas_out_data2;
+    if(gas_in_data1)  delete gas_in_data1;
+    if(gas_in_data2)  delete gas_in_data2;
   }
   
 void Body_Unit_i::StopCalc (

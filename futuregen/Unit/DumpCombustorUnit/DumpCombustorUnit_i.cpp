@@ -45,7 +45,7 @@ void Body_Unit_i::StartCalc (
 
     p.SetSysId("gas_in.xml");
         
-    Gas *gasin = new Gas();
+    Gas *gasin = new Gas;
     V21Helper gashelper(therm_path.c_str());
     
     p.Load(igas, strlen(igas)); 
@@ -110,8 +110,9 @@ void Body_Unit_i::StartCalc (
     result = p.Save(rv); 
 
     executive_->SetModuleResult(id_, result); //marks the end the execution
-    delete gasw;
-    delete gasin;
+    
+    if(gasw)  delete gasw;
+    if(gasin) delete gasin;
   }
   
 void Body_Unit_i::StopCalc (

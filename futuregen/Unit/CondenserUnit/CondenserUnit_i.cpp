@@ -289,10 +289,10 @@ void Body_Unit_i::StartCalc (
 
     executive_->SetModuleResult(id_, result); //marks the end the execution
     
-    delete water_in_data1;
-    delete water_in_data2;
-    delete water_out_data1;
-    delete water_out_data2;
+    if(water_in_data1)  delete water_in_data1;
+    if(water_in_data2)  delete water_in_data2;
+    if(water_out_data1) delete water_out_data1;
+    if(water_out_data2) delete water_out_data2;
   }
   
 void Body_Unit_i::StopCalc (

@@ -49,8 +49,8 @@ void Body_Unit_i::StartCalc (
 
     p.SetSysId("gas_in.xml");
         
-    Gas *gas_in_anode = new Gas();
-    Gas *gas_in_cathode = new Gas();
+    Gas *gas_in_anode = new Gas;
+    Gas *gas_in_cathode = new Gas;
     V21Helper gashelper(therm_path.c_str());
     
     p.Load(igas1, strlen(igas1)); 
@@ -284,10 +284,10 @@ void Body_Unit_i::StartCalc (
 
     executive_->SetModuleResult(id_, result); //marks the end the execution
     
-    delete gas_in_anode;
-    delete gas_in_cathode;
-    delete gas_out_anode;
-    delete gas_out_cathode;
+    if(gas_in_anode)    delete gas_in_anode;
+    if(gas_in_cathode)  delete gas_in_cathode;
+    if(gas_out_anode)   delete gas_out_anode;
+    if(gas_out_cathode) delete gas_out_cathode;
   }
   
 void Body_Unit_i::StopCalc (

@@ -60,7 +60,7 @@ void Body_Unit_i::StartCalc (
   p.SetSysId("o2_in.xml");
   p.Load(o2gas, strlen(o2gas)); 
     
-  ox_in = new Gas();
+  ox_in = new Gas;
   
   gashelper.IntToGas(&(p.intfs[0]), *ox_in);
 
@@ -82,7 +82,7 @@ void Body_Unit_i::StartCalc (
       p.SetSysId("part_in.xml");
       p.Load(ipart, strlen(ipart)); 
        
-      part_in = new Gas();
+      part_in = new Gas;
   
       gashelper.IntToGas(&(p.intfs[0]), *part_in);
     }
@@ -103,7 +103,7 @@ void Body_Unit_i::StartCalc (
       p.SetSysId("stage2gas_in.xml");
       p.Load(stage2gas, strlen(stage2gas)); 
       
-      stage2in = new Gas();
+      stage2in = new Gas;
       
       gashelper.IntToGas(&(p.intfs[0]), *stage2in);
     }

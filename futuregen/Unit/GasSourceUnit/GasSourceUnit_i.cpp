@@ -131,7 +131,8 @@ void Body_Unit_i::StartCalc (
     V21Helper gashelper(therm_path.c_str());
     p.intfs.resize(1);
     gashelper.GasToInt(gas_data, p.intfs[0]);
-    delete gas_data;
+    
+    if(gas_data) delete gas_data;
 
     //set p.intf to be something containing the export data
     p.SetPackName("ExportData");

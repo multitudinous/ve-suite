@@ -106,9 +106,10 @@ void Body_Unit_i::StartCalc (
     result = p.Save(rv); 
 
     executive_->SetModuleResult(id_, result); //marks the end the execution
-    delete gas_pure;
-    delete gas_out;
-    delete gas_in;
+    
+    if(gas_pure) delete gas_pure;
+    if(gas_out)  delete gas_out;
+    if(gas_in)   delete gas_in;
   }
   
 void Body_Unit_i::StopCalc (

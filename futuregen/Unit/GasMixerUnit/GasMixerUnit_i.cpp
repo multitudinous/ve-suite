@@ -128,8 +128,7 @@ void Body_Unit_i::StartCalc (
     h_out /= sumn;
     
     // Need a THERMO
-    thermo *thm;
-    thm = new thermo(therm_path);
+    thermo *thm = new thermo(therm_path);
       
     if(sum_M_particle){
       gas_out->gas_composite.T_particle /= sum_M_particle;

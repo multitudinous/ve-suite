@@ -189,15 +189,15 @@ void Body_Executive_i::GetProfileData (
 void Body_Executive_i::execute_next_mod (long module_id)
 {
   char *msg;
-
+  
   try {
     std::string mod_type = _network->module(_network->moduleIdx(module_id))->_name;
     if(_mod_units.find(mod_type)!=_mod_units.end()) {
       try {
-		msg = _mod_units[mod_type]->GetStatusMessage();
+	msg = _mod_units[mod_type]->GetStatusMessage();
       }
       catch(CORBA::Exception &) {
-		cerr << "Cannot contact Module " << module_id << endl;
+	cerr << "Cannot contact Module " << module_id << endl;
       }
     }
     else {
@@ -207,7 +207,7 @@ void Body_Executive_i::execute_next_mod (long module_id)
   catch (CORBA::Exception &) {
     cerr << "Cannot contact Module " << module_id << endl;
   }
-
+  
   Package sm;
   sm.SetSysId("temp.xml");
   sm.Load(msg, strlen(msg));

@@ -74,7 +74,7 @@ void Body_Unit_i::StartCalc (
     else
       p.Load(feedbck_igas, strlen(feedbck_igas));
 
-    Gas *gas_in = new Gas();
+    Gas *gas_in = new Gas;
 
     V21Helper gashelper(therm_path.c_str());
     gashelper.IntToGas(&(p.intfs[0]), *gas_in);
@@ -155,9 +155,10 @@ void Body_Unit_i::StartCalc (
     else
       executive_->SetExportData(id_, 0, feedbck_igas);
     
-    delete gas_in;
     executive_->SetModuleResult(id_, NULL); //marks the end the execution
-  }
+ 
+    if(gas_in) delete gas_in;
+ }
   
 void Body_Unit_i::StopCalc (
     ACE_ENV_SINGLE_ARG_DECL

@@ -88,6 +88,8 @@ void Body_Unit_i::StartCalc (
     p.intfs.clear();
     result = p.Save(rv);
     executive_->SetModuleResult(id_, result); //this marks the end the execution
+
+    if(water_data) delete water_data;
   }
   
 void Body_Unit_i::StopCalc (

@@ -112,9 +112,9 @@ void Body_Unit_i::StartCalc (
 
     executive_->SetModuleResult(id_, result); //marks the end the execution
     
-    delete AirIn;
-    delete O2stream;
-    delete N2stream;
+    if(AirIn)    delete AirIn;
+    if(O2stream) delete O2stream;
+    if(N2stream) delete N2stream;
   }
 
 void Body_Unit_i::StopCalc (
