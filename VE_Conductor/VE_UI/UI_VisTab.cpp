@@ -189,31 +189,33 @@ void UI_VisualizationTab::_buildPage()
    wxBoxSizer* forthRow = new wxBoxSizer(wxHORIZONTAL);
    _visOptionCheckBox = new wxCheckBox(this,CFD_VIS_OPTION,wxT("Texture Based Visualization"));
    _visOptionCheckBox->SetValue(false);
-   forthRow->Add(_visOptionCheckBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
+   forthRow->Add(_visOptionCheckBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,8);
 
    _transientCheckBox = new wxCheckBox(this, TRANSIENT_CHECK_BOX, wxT("Transient"));
    _transientCheckBox->SetValue(false);
-   forthRow->Add(_transientCheckBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
+   forthRow->Add(_transientCheckBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
 
    _scalarBarCBox = new wxCheckBox(this, SCALAR_BAR_CHECK_BOX, wxT("Scalar Bar"));
    _scalarBarCBox->SetValue(true);
-   forthRow->Add(_scalarBarCBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
+   forthRow->Add(_scalarBarCBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+
+   wxBoxSizer* fifthRow = new wxBoxSizer(wxHORIZONTAL);
 
    _recordButton = new wxButton(this, RECORD_BUTTON, wxT("Record Scene"));
-   forthRow->Add(_recordButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
+   fifthRow->Add(_recordButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
 
    _clearButton = new wxButton(this, CLEAR_BUTTON, wxT("Clear All"));
-   forthRow->Add(_clearButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
+   fifthRow->Add(_clearButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
 
    _exitButton = new wxButton(this, EXIT_BUTTON, wxT("Exit"));
-   forthRow->Add(_exitButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
+   fifthRow->Add(_exitButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
 
-   //Here is a new 5th row added for a custom visualization button
-   wxBoxSizer* fifthRow = new wxBoxSizer(wxHORIZONTAL);
+   //Here is a new 6th row added for a custom visualization button
+   wxBoxSizer* sixthRow = new wxBoxSizer(wxHORIZONTAL);
 
 	_customVisButton = new wxButton(this, CUSTOM_VIS_BUTTON,
                                    wxT("Activate Custom Visualization"));
-   fifthRow ->Add(_customVisButton, 0, wxALIGN_CENTER_HORIZONTAL);
+   sixthRow ->Add(_customVisButton, 0, wxALIGN_CENTER_HORIZONTAL);
 
    //Add the rows to the main grouping
    visPanelGroup->Add(firstRow, 1, wxALIGN_LEFT|wxEXPAND); //
@@ -221,6 +223,7 @@ void UI_VisualizationTab::_buildPage()
    visPanelGroup->Add(thirdRow, 1, wxALIGN_LEFT|wxEXPAND);
    visPanelGroup->Add(forthRow, 1, wxALIGN_LEFT|wxEXPAND);
    visPanelGroup->Add(fifthRow, 1, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(sixthRow, 1, wxALIGN_LEFT|wxEXPAND);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
