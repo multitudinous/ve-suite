@@ -55,7 +55,7 @@ class cfdEnvironmentHandler;
 class cfdModelHandler;
 
 #ifdef _OSG
-class cfdTextureBasedVizHandler;
+//class cfdTextureBasedVizHandler;
 #endif
 
 #include <vector>
@@ -175,8 +175,8 @@ public:
 
 #ifdef _OSG
      void SetHandlers( cfdSteadyStateVizHandler*, 
-                     cfdEnvironmentHandler*, cfdModelHandler*,
-                           cfdTextureBasedVizHandler* _tbvHandler );
+                     cfdEnvironmentHandler*, cfdModelHandler*);//,
+                     //      cfdTextureBasedVizHandler* _tbvHandler );
 #else
    void SetHandlers( cfdSteadyStateVizHandler*, 
                      cfdEnvironmentHandler*, cfdModelHandler*);
@@ -193,7 +193,7 @@ protected:
    cfdEnvironmentHandler*   _envHandler;
    cfdModelHandler*       _modelHandler;
 #ifdef _OSG
-   cfdTextureBasedVizHandler* _tbvHandler;
+   //cfdTextureBasedVizHandler* _tbvHandler;
 #endif
    //VjObs::scalar_p_var scl_name;
    //VjObs::scalar_p_var vec_name;

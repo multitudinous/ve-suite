@@ -42,7 +42,7 @@
 #include "cfdEnum.h"
 
 #ifdef _OSG
-#include "cfdTextureBasedVizHandler.h"
+//#include "cfdTextureBasedVizHandler.h"
 #endif
 
 #include <vpr/System.h>
@@ -73,13 +73,13 @@ void VjObs_i::InitCluster( void )
 #ifdef _OSG
 void VjObs_i::SetHandlers( cfdSteadyStateVizHandler* ssHandler, 
                      cfdEnvironmentHandler* envHandler, 
-                     cfdModelHandler* modelHandler,
-                     cfdTextureBasedVizHandler* tbvHandler)
+                     cfdModelHandler* modelHandler)//,
+//                     cfdTextureBasedVizHandler* tbvHandler)
 {
    _ssHandler = ssHandler;
    _envHandler = envHandler;
    _modelHandler = modelHandler;
-   _tbvHandler = tbvHandler;
+//   _tbvHandler = tbvHandler;
 }
 #else
 void VjObs_i::SetHandlers( cfdSteadyStateVizHandler* ssHandler, 
