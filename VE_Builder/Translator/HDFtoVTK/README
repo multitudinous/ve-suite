@@ -1,0 +1,7 @@
+This project shows how to use the HDFToVTK class.
+Currently it only supports David Clarke's data files, but
+can easily be extended to read general HDF4 and HDF5 files.
+To build the project, hdf2vtk.build.bat must be editted to
+match the local build environment. HDF libraries require
+zlib,szip, and jpeglib so these must also be downloaded locally.
+

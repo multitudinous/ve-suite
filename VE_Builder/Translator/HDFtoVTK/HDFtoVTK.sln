@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "HDFtoVTK", "HDFtoVTK.vcproj", "{645187F8-94C7-4337-A0C4-E38F848C6D0F}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{645187F8-94C7-4337-A0C4-E38F848C6D0F}.Debug.ActiveCfg = Debug|Win32
+		{645187F8-94C7-4337-A0C4-E38F848C6D0F}.Debug.Build.0 = Debug|Win32
+		{645187F8-94C7-4337-A0C4-E38F848C6D0F}.Release.ActiveCfg = Release|Win32
+		{645187F8-94C7-4337-A0C4-E38F848C6D0F}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
