@@ -52,6 +52,7 @@ ansysReader::ansysReader( char * input )
    }
    
    this->endian_flip = 1;
+
    this->numNodes = 0;
    this->numElems = 0;
 }
@@ -118,23 +119,17 @@ void ansysReader::ReadHeader()
       exit( 1 );
    }
 
-   int itemNumber;
-
    //create and null terminate end of 4 character buffer
    char buffer4[ 5 ];
    buffer4[ 4 ] = '\0';
    long position;
 
-   itemNumber = 1;      // file number (12 for results files)
-   int fileNumber = ReadNthInteger( itemNumber+1 );
-   //cout << "fileNumber = " << fileNumber << endl;
-   if ( fileNumber != 12 ) 
-   {
-      cerr << "fileNumber = " << fileNumber << " != 12" << endl;
-      exit( 1 );
-   }
-
    int width = 30;
+
+   int itemNumber = 1;   // get ready to get the first item: fileNumber
+   this->fileNumber = ReadNthInteger( itemNumber+1 );
+   cout << setw(width) << "fileNumber = " << fileNumber 
+        << " where 12 = results files, 16 = db files" << endl;
 
    itemNumber = 2;      // file format
    int fileFormat = ReadNthInteger( itemNumber+1 );
@@ -335,22 +330,47 @@ void ansysReader::ReadSecondBlock()
       intArray[ i ] = ReadNthInteger( position++ );
       cout << "\tintArray[ " << i << " ]: " << intArray[ i ] << endl;
    }
+   cout << endl;
 
-   if ( intArray[ 1 ] == intArray[ 2 ] )
-      this->numNodes = intArray[ 1 ];
+   if ( intArray[ 0 ] != this->fileNumber )
+   {
+      cerr << "ERROR: intArray[ 0 ] != fileNumber" << endl;
+      exit( 1 );
+   }
 
+   if ( this->fileNumber == 12 )
+   {
+      if ( intArray[ 1 ] == intArray[ 2 ] )
+         this->numNodes = intArray[ 2 ];
+   }
+   else if ( this->fileNumber == 16 )
+   {  
+      this->numNodes = intArray[ 2 ];
+   }
+   else
+   {
+      cerr << "can't yet handle fileNumber = " << this->fileNumber << endl;
+      exit( 1 );
+   }
    cout << "\tnumNodes = " << this->numNodes << endl;
 
-   if ( intArray[ 5 ] == intArray[ 6 ] )
-      this->numElems = intArray[ 5 ];
-
+   if ( this->fileNumber == 12 )
+   {
+      if ( intArray[ 5 ] == intArray[ 6 ] )
+         this->numElems = intArray[ 5 ];
+   }
+   else if ( this->fileNumber == 16 )
+   {
+      this->numElems = intArray[ 3 ];
+   }
    cout << "\tnumElems = " << this->numElems << endl;
 
    // the last number is blockSize again
    int blockSize_2 = ReadNthInteger( position++ );
    if ( blockSize_2 != blockSize_1 ) 
    {
-      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
+      cerr << "blockSize = " << blockSize_2
+           << " != expected block size" << endl;
       exit( 1 );
    }
 }
@@ -389,7 +409,8 @@ void ansysReader::ReadThirdBlock()
    int blockSize_2 = ReadNthInteger( position++ );
    if ( blockSize_2 != blockSize_1 ) 
    {
-      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
+      cerr << "blockSize = " << blockSize_2
+           << " != expected block size" << endl;
       exit( 1 );
    }
 }
@@ -425,7 +446,8 @@ void ansysReader::ReadFourthBlock()
    int blockSize_2 = ReadNthInteger( position++ );
    if ( blockSize_2 != blockSize_1 ) 
    {
-      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
+      cerr << "blockSize = " << blockSize_2
+           << " != expected block size" << endl;
       exit( 1 );
    }
 }
@@ -462,7 +484,8 @@ void ansysReader::ReadFifthBlock()
    int blockSize_2 = ReadNthInteger( position++ );
    if ( blockSize_2 != blockSize_1 ) 
    {
-      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
+      cerr << "blockSize = " << blockSize_2
+           << " != expected block size" << endl;
       exit( 1 );
    }
 }
@@ -501,7 +524,8 @@ void ansysReader::ReadSixthBlock()
    int blockSize_2 = ReadNthInteger( position++ );
    if ( blockSize_2 != blockSize_1 ) 
    {
-      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
+      cerr << "blockSize = " << blockSize_2
+           << " != expected block size" << endl;
       exit( 1 );
    }
 
@@ -510,7 +534,8 @@ void ansysReader::ReadSixthBlock()
    int blockSize_3 = ReadNthInteger( position++ );
    if ( blockSize_3 != blockSize_1 ) 
    {
-      cerr << "blockSize = " << blockSize_3 << " != expected block size" << endl;
+      cerr << "blockSize = " << blockSize_3
+           << " != expected block size" << endl;
       exit( 1 );
    }
 
@@ -528,7 +553,8 @@ void ansysReader::ReadSixthBlock()
    int blockSize_4 = ReadNthInteger( position++ );
    if ( blockSize_4 != blockSize_1 ) 
    {
-      cerr << "blockSize = " << blockSize_4 << " != expected block size" << endl;
+      cerr << "blockSize = " << blockSize_4
+           << " != expected block size" << endl;
       exit( 1 );
    }
 }

@@ -41,13 +41,14 @@ class ansysReader
       ~ansysReader();
 
       void ReadHeader();
+
       void ReadSecondBlock();
       void ReadThirdBlock();
       void ReadFourthBlock();
       void ReadFifthBlock();
       void ReadSixthBlock();
 
-   private:
+   protected:
       void FlipEndian();
       int ReadNthInteger( int n );
 
@@ -55,13 +56,15 @@ class ansysReader
       FILE *s1;
       bool endian_flip;
       int headerBlockSize;
+      int fileNumber;   // 12 for results files, 16 for db files
+      int numNodes;
+      int numElems;
+
       int secondBlockSize;
       int thirdBlockSize;
       int fourthBlockSize;
       int fifthBlockSize;
       int sixthBlockSize;
 
-      int numNodes;
-      int numElems;
 };
 #endif
