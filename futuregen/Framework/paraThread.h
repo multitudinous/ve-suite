@@ -2,7 +2,7 @@
 #define PARATHREAD
 
 #include <wx/thread.h>
-#include <string>
+
 
 class Network;
 

@@ -1,5 +1,6 @@
-#include "paraThread.h"
 #include "Network.h"
+#include "paraThread.h"
+
 
 paraThread::paraThread(Network* network) : wxThread(wxTHREAD_JOINABLE)
 {
@@ -15,7 +16,11 @@ bool paraThread::Do()
     return false;
   //cout<<"starting paraview"<<endl;
   nw->paraview = true;
-  system("paraview");
+  //system("paraview");
+  //::wxShell("paraview");
+  wxArrayString output;
+  ::wxExecute("paraview", output);
+
   nw->paraview = false;
   return true;
 }

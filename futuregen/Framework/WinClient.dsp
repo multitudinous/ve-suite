@@ -198,6 +198,10 @@ SOURCE=..\Plugin\package.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\paraThread.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\Plugin\Plugin_base.cpp
 
 !IF  "$(CFG)" == "WinClient - Win32 Release"
@@ -513,6 +517,10 @@ SOURCE=..\Plugin\packable.h
 # Begin Source File
 
 SOURCE=..\Plugin\package.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\paraThread.h
 # End Source File
 # Begin Source File
 
