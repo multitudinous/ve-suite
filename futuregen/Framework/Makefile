@@ -75,7 +75,11 @@ OBJECTS = StringParse.o \
 	UI_SoundsTab.o \
 	UI_GeometryTab.o \
 	UI_TeacherTab.o \
-	UI_NavTab.o    
+	UI_NavTab.o  \
+	UI_TransTab.o \
+	UI_VertTab.o \
+	UI_DesignParTab.o \
+	UI_ViewLocTab.o
 
 .SUFFIXES : .o .cc .cpp
 
