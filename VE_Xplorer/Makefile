@@ -68,7 +68,7 @@ ifdef OMNI_HOME
 endif
 
 ifdef ACE_ROOT
-   FUTUREGEN_HOME = /home/users/dmuthjr/RProj/VE_Suite/futuregen
+   FUTUREGEN_HOME = ${VE_SUITE_HOME}/futuregen
 
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl 
    vpath %.cpp    ${FUTUREGEN_HOME}/IDL ${FUTUREGEN_HOME}/Plugin ${FUTUREGEN_HOME}/Framework

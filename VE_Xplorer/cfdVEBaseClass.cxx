@@ -46,7 +46,7 @@ cfdVEBaseClass::cfdVEBaseClass( cfdDCS* veworldDCS )
 {
    this->groupNode = new cfdGroup();
    this->_dcs = new cfdDCS();
-   this->dataRepresentation = new cfdObjects();
+   //this->dataRepresentation = new cfdObjects();
    this->geometryNode = new cfdModuleGeometry( groupNode );
    this->worldDCS = veworldDCS;
    //this->worldDCS->addChild( this->geometryNode->GetPfDCS() );
@@ -55,7 +55,7 @@ cfdVEBaseClass::cfdVEBaseClass( cfdDCS* veworldDCS )
 // Destructor
 cfdVEBaseClass::~cfdVEBaseClass( void )
 {
-   delete this->dataRepresentation;
+   //delete this->dataRepresentation;
 }
 
 // Methods to do scene graph manipulations
@@ -142,7 +142,7 @@ void cfdVEBaseClass::GetDataFromUnit( void )
 // add it to the scene graph. Probably use cfdObject.
 void cfdVEBaseClass::MakeGeodeByUserRequest( int )
 {
-   this->dataRepresentation->UpdatecfdGeode();
+   //this->dataRepresentation->UpdatecfdGeode();
 }
 
 //This returns the name of the module

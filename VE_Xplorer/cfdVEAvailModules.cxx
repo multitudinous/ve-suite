@@ -8,6 +8,7 @@
   EVT_MENU(Module_Help, Avail_Modules::ShowHelp)
   EVT_TREE_ITEM_ACTIVATED(TREE_CTRL, Avail_Modules::Instantiate)
 END_EVENT_TABLE()*/
+//using namespace std;
    
 //IMPLEMENT_DYNAMIC_CLASS(Avail_Modules, wxTreeCtrl)
 IMPLEMENT_DYNAMIC_CLASS(cfdVEAvail_Modules, wxObject)
@@ -28,7 +29,7 @@ IMPLEMENT_DYNAMIC_CLASS(cfdVEAvail_Modules, wxObject)
   LoadModules();
 }*/
 
-cfdVEAvail_Modules::cfdVEAvail_Modules()
+cfdVEAvail_Modules::cfdVEAvail_Modules( void )
 {
   pl_loader = new cfdVEPluginLoader();
   LoadModules();

@@ -74,15 +74,15 @@ void cfdVEPluginLoader::RegisterPlugins()
     This is a real rip off from the wxModule initialisation code
   */
   
-  while ( node = wxClassInfo::sm_classTable->Next() )
+  while ( (node = wxClassInfo::sm_classTable->Next()) )
     {
       wxClassInfo *classInfo = (wxClassInfo *)node->Data();
       
       if ( classInfo->IsKindOf(CLASSINFO(cfdVEBaseClass)) &&
 	   (classInfo != (& (cfdVEBaseClass::sm_classcfdVEBaseClass))) )
-	{
-	  RegisterPlugin(classInfo);
-	}
+	   {
+	      RegisterPlugin(classInfo);
+	   }
     }
 }
 

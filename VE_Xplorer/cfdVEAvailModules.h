@@ -4,7 +4,7 @@
 #include <winsock2.h>
 #endif
 #include <wx/wx.h>
-#include <vector>
+//#include <vector>
 //#include "wx/image.h"
 //#include "wx/imaglist.h"
 //#include "wx/treectrl.h"
@@ -18,7 +18,6 @@
 //#include "icon4.xpm"
 //#include "icon5.xpm"
 
-using namespace std;
 
 /*enum {
   
@@ -45,7 +44,7 @@ class cfdVEAvail_Modules : public wxObject
   //Avail_Modules() {};
   //Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style);
 
-   cfdVEAvail_Modules();
+   cfdVEAvail_Modules( void );
    //~cfdVEAvail_Modules
   bool LoadModules(); //Load all the modules from the dlls 
   //void OnItemRightClick(wxTreeEvent& event);
@@ -70,9 +69,7 @@ class cfdVEAvail_Modules : public wxObject
   //wxTreeItemId selection;
   //Network* network;
 
-  DECLARE_EVENT_TABLE();
-
-
+  //DECLARE_EVENT_TABLE();
 };
 
 /*class ReiTreeItemData : public wxTreeItemData
