@@ -44,7 +44,7 @@ class pfGeode;
 class pfDCS;
 
 #ifdef _CFDCOMMANDARRAY
-class cfdApp;
+class cfdCommandObjects;
 
 #include "cfdCommandObjects.h"
 #endif //_CFDCOMMANDARRAY
@@ -76,7 +76,7 @@ class cfdMenu
 
 #ifdef _CFDCOMMANDARRAY
    // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdApp * _cfdApp );
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray  );
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();

@@ -37,6 +37,10 @@ class pfGeode;
 class vtkLookupTable;
 class vtkVectorText;
 
+#ifdef _CFDCOMMANDARRAY
+class cfdCommandArray;
+#endif //_CFDCOMMANDARRAY
+
 //! VTK scalar bar render
 /*!
   A rebuilt class from vtkScalarBarActor(2-D) for use in the
@@ -45,34 +49,42 @@ class vtkVectorText;
 class cfdScalarBarActor
 {
 public:
-  cfdScalarBarActor();
-  ~cfdScalarBarActor();
+   cfdScalarBarActor();
+   ~cfdScalarBarActor();
 
-  // Set/Get the position of the scalar bar in 3D space
-  void SetPosition(float x, float y, float z);
-  void SetPosition(float x[3]);
-  void GetPosition(float x[3]);
-  void GetPosition(float &x, float &y, float &z);
+#ifdef _CFDCOMMANDARRAY
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-  void SetZRotation( float );
-
-  // Set/Get the width of the scalar bar
-  void SetWidth(float w);
-  float GetWidth() const;
-
-  // Set/Get the height of the scalar bar
-  void SetHeight(float h);
-  float GetHeight() const;
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
+#endif //_CFDCOMMANDARRAY
   
-  // Set/Get the number of colors for the scalar bar
-  void SetMaximumNumberOfColors(int nC);
-  int GetMaximumNumberOfColors() const;
+   // Set/Get the position of the scalar bar in 3D space
+   void SetPosition(float x, float y, float z);
+   void SetPosition(float x[3]);
+   void GetPosition(float x[3]);
+   void GetPosition(float &x, float &y, float &z);
 
-  // Set/Get the range of the scalar bar
-  void SetRange(double r0, double r1);
-  void SetRange(double r[2]);
-  void GetRange(double r[2]);
-  void GetRange(double &r0, double &r1);
+   void SetZRotation( float );
+
+   // Set/Get the width of the scalar bar
+   void SetWidth(float w);
+   float GetWidth() const;
+
+   // Set/Get the height of the scalar bar
+   void SetHeight(float h);
+   float GetHeight() const;
+  
+   // Set/Get the number of colors for the scalar bar
+   void SetMaximumNumberOfColors(int nC);
+   int GetMaximumNumberOfColors() const;
+
+   // Set/Get the range of the scalar bar
+   void SetRange(double r0, double r1);
+   void SetRange(double r[2]);
+   void GetRange(double r[2]);
+   void GetRange(double &r0, double &r1);
 
   // Set/Get the lookup table of the scalar bar
   void SetLookupTable( vtkLookupTable * );

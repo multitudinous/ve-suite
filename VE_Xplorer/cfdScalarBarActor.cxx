@@ -30,6 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdScalarBarActor.h"
+#ifdef _CFDCOMMANDARRAY
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+#endif //_CFDCOMMANDARRAY
+
 
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf.h>
@@ -434,3 +439,99 @@ pfDCS * cfdScalarBarActor::getpfDCS(void )
 {
    return this->scalarBar;
 }
+
+
+#ifdef _CFDCOMMANDARRAY
+bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
+{
+   if ( commandArray->GetCommandValue( CFD_ID ) == SCALAR_BAR_TOGGLE )
+   {
+      if ( this->scalarBarActor )
+      { 
+          this->rootNode->removeChild( this->scalarBarActor->getpfDCS() );
+          //this->worldDCS->removeChild( this->scalarBarActor->getpfDCS() );
+          delete this->scalarBarActor;
+          this->scalarBarActor = NULL;
+      }
+      else
+      { 
+          RefreshScalarBar();
+      }
+
+      this->setId( -1 );
+   }
+   return flag;
+}
+
+void cfdScalarBarActor::UpdateCommand()
+{
+   cfdObjects::UpdateCommand();
+   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+}
+
+void cfdScalarBarActor::RefreshScalarBar()
+{
+   if ( this->scalarBarActor )
+   {
+      this->rootNode->removeChild( this->scalarBarActor->getpfDCS() );
+      //this->worldDCS->removeChild( this->scalarBarActor->getpfDCS() );
+      delete this->scalarBarActor;
+      this->scalarBarActor = NULL;
+   }
+
+   if ( cfdObjects::GetActiveDataSet() == NULL ||
+        cfdObjects::GetActiveDataSet()->GetNumberOfScalars() == 0 )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " RefreshScalarBar: no data" 
+                             << std::endl << vprDEBUG_FLUSH;
+      return;
+   }
+
+   this->scalarBarActor = new cfdScalarBarActor();
+
+   // if the param file specified scalarBar settings, apply them here...
+   if ( this->paramReader->scalarBarH != 0.0 )
+   {
+      this->scalarBarActor->SetPosition( this->paramReader->scalarBarPos );
+      this->scalarBarActor->SetZRotation( this->paramReader->scalarBarZRot );
+      this->scalarBarActor->SetHeight( this->paramReader->scalarBarH );
+      this->scalarBarActor->SetWidth( this->paramReader->scalarBarW );
+      this->scalarBarActor->SetTitleTextScale( 
+                                     this->paramReader->scalarBarH / 15.0 );
+   }
+
+   this->scalarBarActor->SetRange( 
+                  cfdObjects::GetActiveDataSet()->GetDisplayedScalarRange() );
+
+   this->scalarBarActor->SetLookupTable( 
+                  cfdObjects::GetActiveDataSet()->GetLookupTable() );
+
+   vprDEBUG(vprDBG_ALL,1) << " RefreshScalarBar: " 
+      << "cfdObjects::GetActiveDataSet()->GetLookupTable() = "
+      << cfdObjects::GetActiveDataSet()->GetLookupTable()
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1) << "RefreshScalarBar: " 
+      << "cfdObjects::GetActiveDataSet()->GetParent()->GetLookupTable() = "
+      << cfdObjects::GetActiveDataSet()->GetParent()->GetLookupTable()
+      << std::endl << vprDEBUG_FLUSH;
+
+   // give a name to display over the scalarBar
+   static char legend[50];
+   strcpy( legend, cfdObjects::GetActiveDataSet()->GetDataSet()
+                       ->GetPointData()->GetScalars()->GetName() );
+
+   vprDEBUG(vprDBG_ALL,1) << "RefreshScalarBar: " 
+                          << "desired scalar bar name: " << legend 
+                          << std::endl << vprDEBUG_FLUSH;
+
+   this->scalarBarActor->SetVtkVectorText( legend );
+
+   this->scalarBarActor->Execute();
+
+   // give the scalarBar DCS a name so that it can be detected during a CLEAR_ALL
+   this->scalarBarActor->getpfDCS()->setName("scalarBar");
+   this->rootNode->addChild( this->scalarBarActor->getpfDCS() );
+   //this->worldDCS->addChild( this->scalarBarActor->getpfDCS() );
+}
+
+#endif //_CFDCOMMANDARRAY

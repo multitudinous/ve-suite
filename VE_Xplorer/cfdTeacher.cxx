@@ -40,6 +40,11 @@
 #endif
 
 #include "cfdTeacher.h"
+#ifdef _CFDCOMMANDARRAY
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+#endif //_CFDCOMMANDARRAY
+
 #include <iostream>
 #include <vpr/Util/Debug.h>
 #include <Performer/pfdu.h>
@@ -229,3 +234,49 @@ void cfdTeacher::setDirectory( char * dir )
    strcpy( this->directory, dir );
 }
 
+#ifdef _CFDCOMMANDARRAY
+bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
+{
+   if ( commandArray->GetCommandValue( CFD_ID ) == LOAD_PFB_FILE )
+   {
+      vprDEBUG(vprDBG_ALL,1) << "LOAD_PFB_FILE: numChildren = " 
+         << this->getpfDCS()->getNumChildren()
+         << ", cfdTeacher_state = " << commandArray->GetCommandValue( CFD_TEACHERSTATE )
+         << std::endl << vprDEBUG_FLUSH;
+
+      if ( this->getpfDCS()->getNumChildren() == 0 )
+      {
+         vprDEBUG(vprDBG_ALL,2) << "LOAD_PFB_FILE: addChild" 
+                                << std::endl << vprDEBUG_FLUSH;
+            
+         this->getpfDCS()->addChild( 
+            this->getpfNode( commandArray->GetCommandValue( CFD_TEACHERSTATE ) ) );
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL,2) << "LOAD_PFB_FILE: replaceChild" 
+                                << std::endl << vprDEBUG_FLUSH;
+
+         this->getpfDCS()->replaceChild( 
+            this->getpfDCS()->getChild( 0 ), 
+            this->getpfNode( this->cfdTeacher_state ) );
+      }
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CLEAR_PFB_FILE )
+   {      
+      if ( this->getpfDCS()->getNumChildren() > 0 )
+      {
+         this->getpfDCS()->removeChild( this->getpfDCS()->getChild( 0 ) );
+      }
+      return true;
+   }
+
+   return false;
+}
+
+void cfdTeacher::UpdateCommand()
+{
+   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+}
+#endif //_CFDCOMMANDARRAY

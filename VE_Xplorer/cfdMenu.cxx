@@ -54,7 +54,7 @@
 #include <vtkPolyData.h>
 
 #ifdef _CFDCOMMANDARRAY
-#include "cfdApp.h"
+#include "cfdCommandObjects.h"
 #endif //_CFDCOMMANDARRAY
 
 #include <vpr/Util/Debug.h>
@@ -64,9 +64,7 @@ cfdMenu::cfdMenu( char *menuFile, char *menuConfig )
                                                     : cfdCommandObjects ()
 #endif //_CFDCOMMANDARRAY
 {
-#ifdef _CFDCOMMANDARRAY
    cout << "cfdMenu constructor" << endl;
-#endif //_CFDCOMMANDARRAY
 
    this->id = 0;
 
@@ -114,8 +112,26 @@ cfdMenu::~cfdMenu()
 }
 
 #ifdef _CFDCOMMANDARRAY
-bool cfdMenu::CheckCommandId( cfdApp * _cfdApp )
+bool cfdMenu::CheckCommandId( cfdCommandArray* commandArray  )
 {
+   if ( commandArray->GetCommandValue( CFD_ID ) == BLUE_MENU_TOGGLE )
+   {
+      if ( this->menuB == true )
+      { 
+         this->rootNode->removeChild( this->GetpfDCS() );
+         this->rootNode->removeChild( this->laser->GetpfDCS() );
+         this->menuB = false;
+      }
+      else
+      { 
+         // If menu is down, add menu and laser wand, and keep cursor off
+         this->rootNode->addChild( this->GetpfDCS() );
+         this->rootNode->addChild( this->laser->GetpfDCS() );
+         this->menuB = true;
+      }
+
+      return true;
+   }
    return false;
 }
 

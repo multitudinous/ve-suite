@@ -721,6 +721,7 @@ inline void cfdApp::initScene( )
    std::cout << "|  3. Initializing........................... Parameter File Reader |" << std::endl;
    this->paramReader = new cfdReadParam( filein_name );
 
+#ifndef _CFDCOMMANDARRAY
    if ( this->paramReader->soundFile ) 
    {
       std::cout << "| Special: Initializing................................... cfdSound |" << std::endl;
@@ -749,6 +750,7 @@ inline void cfdApp::initScene( )
          std::cout << "Success soundName: " << this->sounds[i]->soundName << std::endl;
       }
    }
+#endif
 
    this->worldDCS->setScale( this->paramReader->worldScale[ 0 ],
                              this->paramReader->worldScale[ 1 ],
@@ -997,6 +999,9 @@ inline void cfdApp::initScene( )
       this->isosurface = new cfdIsosurface( 10 );
       this->isosurface->SetObjectType( ISOSURFACE );
       this->dataList.push_back( this->isosurface );
+#ifdef _CFDCOMMANDARRAY
+      this->commandList.push_back( this->isosurface );
+#endif //_CFDCOMMANDARRAY
      
       //
       // Initiate the interactive contour.
@@ -1005,6 +1010,9 @@ inline void cfdApp::initScene( )
       this->contour = new cfdContour();
       this->contour->SetObjectType( CONTOUR );
       this->dataList.push_back( this->contour ); 
+#ifdef _CFDCOMMANDARRAY
+      this->commandList.push_back( this->contour );
+#endif //_CFDCOMMANDARRAY
      
       // Make sure that this dataset has a vector and scalar...
       if ( cfdObjects::GetActiveMeshedVolume()->GetDataSet()
@@ -1019,6 +1027,9 @@ inline void cfdApp::initScene( )
          this->momentum = new cfdMomentum();
          this->momentum->SetObjectType( MOMENTUM );
          this->dataList.push_back( this->momentum );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->momentum );
+#endif //_CFDCOMMANDARRAY
      
          //
          // Initiate the interactive vector.
@@ -1027,6 +1038,9 @@ inline void cfdApp::initScene( )
          this->vector = new cfdVector();
          this->vector->SetObjectType( VECTOR );
          this->dataList.push_back( this->vector );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->vector );
+#endif //_CFDCOMMANDARRAY
       }
      
       if ( cfdObjects::GetActiveMeshedVolume()->GetDataSet()->GetPointData()->GetScalars() )
@@ -1038,6 +1052,9 @@ inline void cfdApp::initScene( )
          this->x_contour = new cfdPresetContour( 0, 10 );
          this->x_contour->SetObjectType( X_CONTOUR );
          this->dataList.push_back( this->x_contour );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->x_contour );
+#endif //_CFDCOMMANDARRAY
         
          //
          // Initiate the preset y contour.
@@ -1046,6 +1063,9 @@ inline void cfdApp::initScene( )
          this->y_contour = new cfdPresetContour( 1, 10 );
          this->y_contour->SetObjectType( Y_CONTOUR );
          this->dataList.push_back( this->y_contour );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->y_contour );
+#endif //_CFDCOMMANDARRAY
         
          //
          // Initiate the preset z contour.
@@ -1054,6 +1074,9 @@ inline void cfdApp::initScene( )
          this->z_contour = new cfdPresetContour( 2, 10 );
          this->z_contour->SetObjectType( Z_CONTOUR );
          this->dataList.push_back( this->z_contour );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->z_contour );
+#endif //_CFDCOMMANDARRAY
       }
      
       // Make sure that this dataset has a vector field...
@@ -1066,6 +1089,9 @@ inline void cfdApp::initScene( )
          this->x_momentum = new cfdPresetMomentum( 0, paramReader->isoScale, 10 );
          this->x_momentum->SetObjectType( X_MOMENTUM );
          this->dataList.push_back( this->x_momentum );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->x_momentum );
+#endif //_CFDCOMMANDARRAY
         
          //
          // Initiate the preset y momentum.
@@ -1074,6 +1100,9 @@ inline void cfdApp::initScene( )
          this->y_momentum = new cfdPresetMomentum( 1, paramReader->isoScale, 10 );
          this->y_momentum->SetObjectType( Y_MOMENTUM );
          this->dataList.push_back( this->y_momentum );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->y_momentum );
+#endif //_CFDCOMMANDARRAY
         
          //
          // Initiate the preset z momentum.
@@ -1082,6 +1111,9 @@ inline void cfdApp::initScene( )
          this->z_momentum = new cfdPresetMomentum( 2, paramReader->isoScale, 10 );
          this->z_momentum->SetObjectType( Z_MOMENTUM );
          this->dataList.push_back( this->z_momentum );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->z_momentum );
+#endif //_CFDCOMMANDARRAY
         
          //
          // Initiate the preset x vector.
@@ -1090,6 +1122,9 @@ inline void cfdApp::initScene( )
          this->x_vector = new cfdPresetVector( 0, 10 );
          this->x_vector->SetObjectType( X_VECTOR );
          this->dataList.push_back( this->x_vector );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->x_vector );
+#endif //_CFDCOMMANDARRAY
         
          //
          // Initiate the preset y vector.
@@ -1098,6 +1133,9 @@ inline void cfdApp::initScene( )
          this->y_vector = new cfdPresetVector( 1, 10 );
          this->y_vector->SetObjectType( Y_VECTOR );
          this->dataList.push_back( this->y_vector );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->y_vector );
+#endif //_CFDCOMMANDARRAY
 
          //
          // Initiate the preset z vector.
@@ -1106,6 +1144,9 @@ inline void cfdApp::initScene( )
          this->z_vector = new cfdPresetVector( 2, 10 );
          this->z_vector->SetObjectType( Z_VECTOR );
          this->dataList.push_back( this->z_vector );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->z_vector );
+#endif //_CFDCOMMANDARRAY
       }
 
       //
@@ -1118,6 +1159,9 @@ inline void cfdApp::initScene( )
          this->x_contours = new cfdContours( 0 );
          this->x_contours->SetObjectType( X_CONTOURS );
          this->dataList.push_back( this->x_contours );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->x_contours );
+#endif //_CFDCOMMANDARRAY
       }
 
       //
@@ -1130,6 +1174,9 @@ inline void cfdApp::initScene( )
          this->y_contours = new cfdContours( 1 );
          this->y_contours->SetObjectType( Y_CONTOURS );
          this->dataList.push_back( this->y_contours );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->y_contours );
+#endif //_CFDCOMMANDARRAY
       }
 
       //
@@ -1142,6 +1189,9 @@ inline void cfdApp::initScene( )
          this->z_contours = new cfdContours( 2 );
          this->z_contours->SetObjectType( Z_CONTOURS );
          this->dataList.push_back( this->z_contours );
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->z_contours );
+#endif //_CFDCOMMANDARRAY
       }
 
       // Make sure that this dataset has a vector and scalar...
@@ -1161,6 +1211,9 @@ inline void cfdApp::initScene( )
             this->x_momentums = new cfdMomentums( 0, paramReader->isoScale );
             this->x_momentums->SetObjectType( X_MOMENTUMS );
             this->dataList.push_back( this->x_momentums );
+#ifdef _CFDCOMMANDARRAY
+            this->commandList.push_back( this->x_momentums );
+#endif //_CFDCOMMANDARRAY
          }
 
          //
@@ -1173,6 +1226,9 @@ inline void cfdApp::initScene( )
             this->y_momentums = new cfdMomentums( 1, paramReader->isoScale );
             this->y_momentums->SetObjectType( Y_MOMENTUMS );
             this->dataList.push_back( this->y_momentums );
+#ifdef _CFDCOMMANDARRAY
+            this->commandList.push_back( this->y_momentums );
+#endif //_CFDCOMMANDARRAY
          }
 
          //
@@ -1185,6 +1241,9 @@ inline void cfdApp::initScene( )
             this->z_momentums = new cfdMomentums( 2, paramReader->isoScale );
             this->z_momentums->SetObjectType( Z_MOMENTUMS );
             this->dataList.push_back( this->z_momentums );
+#ifdef _CFDCOMMANDARRAY
+            this->commandList.push_back( this->z_momentums );
+#endif //_CFDCOMMANDARRAY
          }
       }
 
@@ -1765,6 +1824,7 @@ void cfdApp::preFrame( void )
       //determine which item we are picking on the menu
       this->setId( this->menu->GetCellId() );;
    }
+#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == BLUE_MENU_TOGGLE )
    {
       if ( this->menuB == true )
@@ -1799,7 +1859,6 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
-#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == USE_LAST_STREAMLINE_SEEDPOINTS )
    {
       this->useLastSource = this->cfdIso_value;
@@ -1975,6 +2034,7 @@ void cfdApp::preFrame( void )
 #endif //_CFDCOMMANDARRAY
    else if ( this->cfdId == RECORD_SCENE )
    {
+      // Needs to be moved to cfdTeacher...soon.
       // Generate a .pfb filename...
       char pfb_filename[100];
       sprintf( pfb_filename , "%s/stored_scene_%i.pfb",
@@ -2195,6 +2255,7 @@ void cfdApp::preFrame( void )
       }
       this->setId( -1 );
    }
+#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == LOAD_PFB_FILE )
    {
       vprDEBUG(vprDBG_ALL,1) << "LOAD_PFB_FILE: numChildren = " 
@@ -2230,7 +2291,6 @@ void cfdApp::preFrame( void )
       }
       this->setId( -1 );
    }
-#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == CHANGE_STEADYSTATE_DATASET )
    {
       vprDEBUG(vprDBG_ALL,1) 
@@ -2445,7 +2505,6 @@ void cfdApp::preFrame( void )
       cfdContourBase::SetFillType( this->cfdIso_value );
       this->setId( -1 );
    }
-#endif //_CFDCOMMANDARRAY
    else if ( this->cfdId == UPDATE_SOUNDS )
    {
       long int test = this->paramReader->convertDecimalToBinary( this->cfdIso_value );
@@ -2469,7 +2528,6 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
-#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == LOAD_POINT )
    {
       this->quatcamHandler->LoadData( this->nav->worldTrans, worldDCS );
@@ -3145,6 +3203,7 @@ int main(int argc, char* argv[])
    return 0;
 }
 
+#ifndef _CFDCOMMANDARRAY
 void cfdApp::RefreshScalarBar()
 {
    if ( this->scalarBarActor )
@@ -3209,6 +3268,7 @@ void cfdApp::RefreshScalarBar()
    this->rootNode->addChild( this->scalarBarActor->getpfDCS() );
    //this->worldDCS->addChild( this->scalarBarActor->getpfDCS() );
 }
+#endif
 
 #ifdef _CLUSTER
 void cfdApp::GetUpdateClusterStateVariables( void )

@@ -37,6 +37,10 @@
 class pfDCS;
 class pfGroup;
 class pfNode;
+#ifdef _CFDCOMMANDARRAY
+class cfdCommandArray;
+#endif //_CFDCOMMANDARRAY
+
 
 //A reader that reads performer binary files
 class cfdTeacher
@@ -45,6 +49,13 @@ class cfdTeacher
   cfdTeacher( char directory[], pfGroup * );
 
   ~cfdTeacher( );
+#ifdef _CFDCOMMANDARRAY
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
+#endif //_CFDCOMMANDARRAY
 
   pfDCS * getpfDCS( );
   pfNode * getpfNode( int );
