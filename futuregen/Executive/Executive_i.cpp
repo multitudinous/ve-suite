@@ -298,6 +298,12 @@ void Body_Executive_i::SetModuleMessage (
       // cerr << "Unable to set mod id# " << module_id 
 	//    << "'s Message data\n";
   
+  std::vector<Interface>::iterator iter;
+  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+    if(!_network->setMessage(module_id, &(*iter)))
+      cerr << "Unable to set mdo id# " << module_id
+	   << "'s Message data\n";
+
   _mutex.release();
 }
   
