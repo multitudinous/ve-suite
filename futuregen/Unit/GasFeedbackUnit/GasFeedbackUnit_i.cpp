@@ -52,14 +52,16 @@ void Body_Unit_i::StartCalc (
     
     if (!initial_igas)
       {
-	cerr<<"Missing initial input."<<endl;
+	executive_->SetModuleMessage(id_, "Missing initial input.\n");
+	return_state = 1;
 	return;
       }
 
     feedbck_igas = executive_->GetImportData(id_, 1); //port 1 will be the feedback input port;
     if (!feedbck_igas)
       {
-	cerr<<"Missing feedback input."<<endl;
+	executive_->SetModuleMessage(id_, "Missing feedback input.\n");
+	return_state = 1;
 	return;
       }
 
@@ -81,6 +83,7 @@ void Body_Unit_i::StartCalc (
     std::string notconv;
     double sp;
     double pchg;
+    std::string msg;
 
     for(int i=0; i<(int)sel_species.size(); i++) 
       {
@@ -95,8 +98,11 @@ void Body_Unit_i::StartCalc (
 	else 
 	  {
 	    sp = gas_in->gas_composite.getFrac(sel_species[i]);
-	    if(sp < 0) 
-	      cout<<sel_species[i] << " not in stream."<<endl;
+	    if(sp < 0)
+	      { 
+		msg = sel_species[i]+ " not in stream.\n";
+		executive_->SetModuleMessage(id_,msg.c_str());
+	      }
 	  }
 	
 	mapiter = last_values.find(sel_species[i]);
@@ -125,7 +131,8 @@ void Body_Unit_i::StartCalc (
 
     if(++iter_counter >= iterations) 
       {
-	cout<<"Max iterations reached, items not converged: " << notconv;
+	msg = "Max iterations reached, items not converged: " + notconv;
+	executive_->SetModuleMessage(id_,msg.c_str());
 	done = true;
       }
 
@@ -145,6 +152,8 @@ void Body_Unit_i::StartCalc (
       executive_->SetExportData(id_, 0, initial_igas);
     else
       executive_->SetExportData(id_, 0, feedbck_igas);
+    
+    executive_->SetModuleResult(id_, NULL); //marks the end the execution
   }
   
 void Body_Unit_i::StopCalc (
@@ -156,7 +165,9 @@ void Body_Unit_i::StopCalc (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" : Instant calculation, already finished"<<endl;
+    string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    executive_->SetModuleMessage(id_,msg.c_str());
   }
   
 void Body_Unit_i::PauseCalc (
@@ -168,7 +179,9 @@ void Body_Unit_i::PauseCalc (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" : Instant calculation, already finished"<<endl;
+    string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    executive_->SetModuleMessage(id_,msg.c_str());
   }
   
 void Body_Unit_i::Resume (
@@ -180,7 +193,9 @@ void Body_Unit_i::Resume (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" : Instant calculation, already finished"<<endl;
+    string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    executive_->SetModuleMessage(id_,msg.c_str());
   }
   
 char * Body_Unit_i::GetStatusMessage (
@@ -255,7 +270,6 @@ void Body_Unit_i::SetID (
   {
     // Add your implementation here
     id_=id;
-    std::cout<<UnitName_<<" :SetID called"<<endl;
   }
   
 CORBA::Long Body_Unit_i::GetID (
@@ -267,7 +281,6 @@ CORBA::Long Body_Unit_i::GetID (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" :GetID called"<<endl;
     return id_;
   }
   
@@ -282,7 +295,6 @@ void Body_Unit_i::SetName (
   {
     // Add your implementation here
     UnitName_ = std::string(name);
-    std::cout<<UnitName_<<" :SetName called"<<endl;
   }
   
 char * Body_Unit_i::GetName (
@@ -294,6 +306,5 @@ char * Body_Unit_i::GetName (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" :GetName called"<<endl;
     return CORBA::string_dup(UnitName_.c_str());
   }
