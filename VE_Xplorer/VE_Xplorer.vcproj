@@ -451,7 +451,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\cfdModelHandeler.cxx">
+				RelativePath=".\cfdModelHandler.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdMomentum.cxx">
@@ -1108,7 +1108,7 @@
 				RelativePath="cfdModel.h">
 			</File>
 			<File
-				RelativePath=".\cfdModelHandeler.h">
+				RelativePath=".\cfdModelHandler.h">
 			</File>
 			<File
 				RelativePath="cfdModuleGeometry.h">

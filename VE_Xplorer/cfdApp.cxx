@@ -41,7 +41,7 @@
 #include "cfdEnvironmentHandler.h"
 #include "cfdSteadyStateVizHandler.h"
 #include "cfdTransientVizHandler.h"
-#include "cfdModelHandeler.h"
+#include "cfdModelHandler.h"
 #include "cfdCommandArray.h"
 #include "cfdGroup.h"
 #include "cfdDCS.h"
