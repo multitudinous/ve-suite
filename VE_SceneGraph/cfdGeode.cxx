@@ -66,7 +66,7 @@ cfdGeode::cfdGeode( const cfdGeode& input )
 #ifdef _PERFORMER
    this->_geode = input._geode;
 #elif _OSG
-   _geode = input._geode;
+   _geode = new osg::Geode(*input._geode);
 #elif _OPENSG
 #endif
    this->_vtkDebugLevel = input._vtkDebugLevel;

@@ -51,7 +51,7 @@ class cfdGroup: public cfdNode
       virtual ~cfdGroup( void );
 
       //equal operator
-      cfdGroup& operator=( const cfdGroup& );
+      virtual cfdGroup& operator=( const cfdGroup& );
 
       //the wrappers for child/scene graph
       //manipulation

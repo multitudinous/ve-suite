@@ -53,7 +53,7 @@ class cfdDCS: public cfdGroup
       cfdDCS( float*, float*, float* );
       
       cfdDCS( const cfdDCS& );
-      cfdDCS& operator=( const cfdDCS& );
+      virtual cfdDCS& operator=( const cfdDCS& );
 
       cfdDCS( void );
       ~cfdDCS( void );
@@ -69,7 +69,16 @@ class cfdDCS: public cfdGroup
 
       gmtl::Matrix44f GetMat( void );
       void SetMat( gmtl::Matrix44f& );
-    
+
+      //need to override these!!!!
+      int RemoveChild(cfdNode* child);
+      int AddChild(cfdNode* child);
+      void InsertChild(int index,cfdNode* child);
+      int GetNumChildren();
+      const char* GetName();
+      void SetName(char* name);
+      int ReplaceChild(cfdNode* oldChild, cfdNode* newChild);
+
    private:
 
       float _translation[ 3 ];

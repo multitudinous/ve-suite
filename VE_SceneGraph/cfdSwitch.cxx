@@ -20,7 +20,6 @@ cfdSwitch::cfdSwitch()
 #elif _OSG
    _switch = new osg::Switch();
    _switch->setAllChildrenOff();
-   _group = dynamic_cast<osg::Switch*>(_switch);
 #elif _OPENSG
 #endif
    SetCFDNodeType(CFD_SWITCH);
@@ -30,12 +29,12 @@ cfdSwitch::cfdSwitch()
 cfdSwitch::cfdSwitch(const cfdSwitch& rhs)
 :cfdGroup(rhs)
 {
-   _switch = rhs._switch;
+   
 #ifdef _PERFORMER
+   _switch = rhs._switch;
    _group = dynamic_cast<pfGroup*>(_switch);
 #elif _OSG
-   _group = dynamic_cast<osg::Group*>(_switch);
-
+   _switch = new osg::Switch(*rhs._switch);
 #elif _OPENSG
 #endif
    SetCFDNodeType(CFD_SWITCH);
@@ -79,7 +78,6 @@ cfdSwitch& cfdSwitch::operator=(const cfdSwitch& rhs)
       _group = dynamic_cast<pfSwitch*>(_switch);
 #elif _OSG
       _switch = rhs._switch;
-      _group = dynamic_cast<osg::Switch*>(_switch);
 #elif _OPENSG
 #endif
      

@@ -68,7 +68,7 @@ cfdGroup::cfdGroup( const cfdGroup& input )
 #ifdef _PERFORMER
    this->_group = input._group;
 #elif _OSG
-   _group = input._group;
+   _group = new osg::Group(*input._group);
 #elif _OPENSG
 #endif
    SetCFDNodeType(CFD_GROUP);

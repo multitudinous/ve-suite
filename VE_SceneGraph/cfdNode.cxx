@@ -30,6 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdNode.h"
+#include "cfdGroup.h"
+#include "cfdSwitch.h"
+#include "cfdGeode.h"
 #include <iostream>
 #include <vpr/Util/Debug.h>
 //#include <cstdlib>
@@ -65,6 +68,11 @@
 #include <osg/ShadeModel>
 #include <osgDB/Registry>
 #include <osgDB/FileUtils>
+#include <osg/Switch>
+#include <osg/Group>
+#include <osg/ShadeModel>
+#include <osg/Geometry>
+#include <osg/BlendFunc>
 #elif _OPENSG
 #endif
 
@@ -91,7 +99,7 @@ cfdNode::cfdNode( const cfdNode& input )
 #ifdef _PERFORMER
    this->_node = input._node;
 #elif _OSG
-   _node = input._node;
+   _node = new osg::Node(*input._node);
 #elif _OPENSG
 #endif
 }
@@ -193,12 +201,31 @@ void cfdNode::LoadFile( char* filename )
    this->_node = pfdLoadFile( filename );  
 #elif _OSG
    std::cout<< filename<<std::endl;
-
-   //osgDB::RegisterReaderWriterProxy<ReaderWriterPFB> rw;
-  
-   //osgDB::Registry::instance()->addReaderWriter(rw);
-   //osgDB::setLibraryFilePathList("C:/OSG_OP_OT-0.9.7-3/OpenSceneGraph/bin");
-   _node = osgDB::readNodeFile(filename);
+   //this just returns a node so we need to 
+   //init the correct type of underlying "raw node"
+   osg::ref_ptr<osg::Node> tmpNode = osgDB::readNodeFile(filename);
+   if(tmpNode.valid()){
+   const char* nType = tmpNode->className();
+   if(!strcmp(nType,"Node")){
+      _node = new osg::Node(*tmpNode.get());
+      SetCFDNodeType(CFD_NODE);
+   }else if(!strcmp(nType,"Switch")){
+      osg::ref_ptr<osg::Switch> switchNode  = dynamic_cast<osg::Switch*>(tmpNode.get());
+      _switch = new osg::Switch(*switchNode.get());
+      SetCFDNodeType(CFD_SWITCH);
+   }else if(!strcmp(nType,"Group")){
+      osg::ref_ptr<osg::Group> group = dynamic_cast<osg::Group*>(tmpNode.get());
+      _group = new osg::Group(*group.get());
+      SetCFDNodeType(CFD_GROUP);
+   }else if(!strcmp(nType,"Geode")){
+      osg::ref_ptr<osg::Geode> geode  = dynamic_cast<osg::Geode*>(tmpNode.get());
+      _geode = new osg::Geode(*geode.get());
+      SetCFDNodeType(CFD_GEODE);
+   }
+   }else{
+      std::cout << " Error:LoadFile !!! " << std::endl;
+   }
+   //may need to add other cases. . .
 #elif _OPENSG
    std::cout << " Error:LoadFile !!! " << std::endl;
    exit( 1 );
@@ -530,21 +557,23 @@ void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
 }
 #elif _OSG
 ///////////////////////////////////////////////
-void cfdNode::TravNodeMaterial(cfdNode* node)
+void cfdNode::TravNodeMaterial(osg::Node* node)
 {
-   
+   if(!node)return;
 	int i  = 0;
 	int num = 0;
 
  	// If the node is a geode...
-   if (node->GetCFDNodeType()== cfdNode::CFD_GEODE){
-      osg::Drawable* geoset = NULL;
-      osg::Geode* geode = (osg::Geode*)node->GetRawNode();
-      osg::StateSet* geostate = NULL;
+   if(!strcmp(node->className(),"Geode")){
+   //if (node->GetCFDNodeType() == cfdNode::CFD_GEODE){
+      osg::ref_ptr<osg::Drawable> geoset = NULL;
+      osg::ref_ptr<osg::Geode> geode = dynamic_cast<osg::Geode*>(node);
+      //geode->setDataVariance(osg::Object::DYNAMIC);
+      osg::ref_ptr<osg::StateSet> geostate = NULL;
       
-      osg::Material* material = NULL;
-      osg::Material* front = NULL;
-      osg::Material* back = NULL;
+      osg::ref_ptr<osg::Material> material = NULL;
+      osg::ref_ptr<osg::Material> front = NULL;
+      osg::ref_ptr<osg::Material> back = NULL;
 
       // Grab each of its geosets
       num = geode->getNumDrawables();
@@ -552,21 +581,27 @@ void cfdNode::TravNodeMaterial(cfdNode* node)
       //std::cout << "HERE IT IS " << num << std::endl;
       for (i=0; i < num; i++){
          geoset = geode->getDrawable(i) ;
-         assert( geoset != NULL && "geoset is null" );
+         assert( geoset.get() != NULL && "geoset is null" );
 
+         
          // Apply the material to the geostate and disable texturing
-         geostate = geoset->getStateSet();
+         geostate = geoset->getOrCreateStateSet();
 
-         if (geostate != NULL){
+         if (geostate.valid()){
             //lighting
             geostate->setMode(GL_LIGHTING,osg::StateAttribute::ON);
             
             //culling
             geostate->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
+            geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
+
+            osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+			    bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
+			    geostate->setAttributeAndModes(bf.get());
             
             //gourand shading
-            geostate->setMode(osg::StateAttribute::SHADEMODEL,
-                            osg::ShadeModel::SMOOTH);
+            osg::ref_ptr<osg::ShadeModel> sModel = new osg::ShadeModel;
+            sModel->setMode(osg::ShadeModel::SMOOTH);
 
             vprDEBUG(vprDBG_ALL,3) << "Done setting Transparency "
                                    << std::endl << vprDEBUG_FLUSH;
@@ -580,7 +615,7 @@ void cfdNode::TravNodeMaterial(cfdNode* node)
                                       << std::endl << vprDEBUG_FLUSH;
                //create the material
                material = new osg::Material();
-               
+               material->setColorMode(osg::Material::AMBIENT_AND_DIFFUSE );
                //set the opacity
                material->setAlpha(osg::Material::FRONT_AND_BACK,
                                 op);
@@ -593,19 +628,13 @@ void cfdNode::TravNodeMaterial(cfdNode* node)
                   //set up the material properties
                   material->setDiffuse(osg::Material::FRONT_AND_BACK ,
 				                            lColor);
-                  material->setAmbient( osg::Material::FRONT_AND_BACK ,
+                  /*material->setAmbient( osg::Material::FRONT_AND_BACK ,
 				                            lColor);
-                   
+                   */
                   vprDEBUG(vprDBG_ALL,2) 
                          << " Front Color : " << stlColor[0]<< " : " 
                          <<  stlColor[1]<< " : " << stlColor[2]
                         << std::endl << vprDEBUG_FLUSH;
-               }else{
-                  // Do NOT turn of transparency here because textured
-                  // objects may have transparent textures
-                  material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
-                  vprDEBUG(vprDBG_ALL,3) << "Set color Mode "
-                                         << std::endl << vprDEBUG_FLUSH;
                }
                //put in the appropriate bin
                if ( op == 1 ) {
@@ -613,8 +642,11 @@ void cfdNode::TravNodeMaterial(cfdNode* node)
                }else{
                   geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
                }
-               geostate->setAttribute(material,osg::StateAttribute::ON);            
-               geoset->setStateSet(geostate);
+               geostate->setAttribute(material.get(),osg::StateAttribute::ON);            
+               geostate->setAttribute(sModel.get(),osg::StateAttribute::ON);
+               
+               geoset->setStateSet(geostate.get());
+               geoset->asGeometry()->setColorBinding(osg::Geometry::BIND_OVERALL);
 
          }else{
             vprDEBUG(vprDBG_ALL,0) 
@@ -623,16 +655,19 @@ void cfdNode::TravNodeMaterial(cfdNode* node)
          }
       }
 	
-   }else if (node->GetCFDNodeType()== cfdNode::CFD_GROUP){
+   }else  if(!strcmp(node->className(),"Group")){
+   //}else if (node->GetCFDNodeType()== cfdNode::CFD_GROUP){
 	   	// Run this traverser on each of its children (recursive)
-	   	num = ((cfdGroup*)node)->GetNumChildren();
-
-	   	vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+	   	//num = ((cfdGroup*)node)->GetNumChildren();
+      num = ((osg::Group*)node)->getNumChildren();
+      //osg::ref_ptr<osg::Group> geode = dynamic_cast<osg::Group*>(node->GetRawNode());
+      //cfdGroup* group = static_cast<cfdGroup*>(node); 	   
+      vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
 
-         for (i=0; i < num; i++){
-	   		
-            TravNodeMaterial( ((cfdGroup*)node)->GetChild(i) ) ;
+         for (i = 0; i < num; i++){
+           this->TravNodeMaterial(((osg::Group*)node)->getChild(i)) ;
+           
          }
          //count = 0;
 	   }

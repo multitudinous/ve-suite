@@ -47,7 +47,7 @@ class Geode;
 class Group;
 class MatrixTransform;
 class Switch;
-}
+};
 #elif _OPENSG
 #endif
 

@@ -115,7 +115,7 @@ cfdSequence::cfdSequence(const cfdSequence& cfdSeq)
 #endif
 cfdGroup()
 {
-   _lSwitch = cfdSeq._lSwitch;
+   _lSwitch = new cfdSwitch(*cfdSeq._lSwitch);
    _deltaT = cfdSeq._deltaT;
    _duration = cfdSeq._duration;
    _begin = cfdSeq._begin;

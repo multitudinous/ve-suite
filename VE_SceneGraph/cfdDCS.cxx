@@ -48,6 +48,8 @@
 #elif _OSG
 #include <osg/MatrixTransform>
 #include <osg/Matrix>
+#include <osg/Vec3f>
+#include <osgUtil/TransformCallback>
 #elif _OPENSG
 #endif
 
@@ -67,8 +69,6 @@ cfdDCS::cfdDCS( float* scale, float* trans, float* rot )
 #elif _OSG
    _dcs = new osg::MatrixTransform();
    _dcs->setMatrix(osg::Matrix::identity());
-   
-   _group = dynamic_cast<osg::Group*>(_dcs);
 #elif _OPENSG
 #endif
    this->SetTranslationArray( trans );
@@ -89,12 +89,11 @@ cfdDCS::cfdDCS( const cfdDCS& input )
 
    this->childNodes = input.childNodes;
    this->_vjMatrix = input._vjMatrix;
-   this->_dcs = input._dcs;
+   this->_dcs = new osg::MatrixTransform(*input._dcs);
 #ifdef _PERFORMER
    
    _group = dynamic_cast<pfGroup*>(_dcs);
-#elif _OSG
-   _group = dynamic_cast<osg::Group*>(_dcs); 
+#elif _OSG 
    //_dcs->getMatrix()->makeIdentity();
 #elif _OPENSG
 #endif
@@ -128,9 +127,7 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
       this->_dcs = input._dcs;
       _group = dynamic_cast<pfGroup*>(_dcs);
 #elif _OSG
-      //_dcs->unref();
       _dcs = input._dcs;
-      _group = dynamic_cast<osg::Group*>(_dcs);
 #elif _OPENSG
 #endif
       //_group = _dcs;
@@ -151,8 +148,6 @@ cfdDCS::cfdDCS( void )
    _group = dynamic_cast<pfGroup*>(_dcs);
 #elif _OSG
    _dcs = new osg::MatrixTransform();
-   
-   _group = dynamic_cast<osg::Group*>(_dcs);
    _dcs->setMatrix(osg::Matrix::identity());
 #elif _OPENSG
 #endif
@@ -213,9 +208,15 @@ void cfdDCS::SetTranslationArray( float* trans )
                            this->_translation[ 1 ],
                            this->_translation[ 2 ] );
 #elif _OSG
-   _dcs->getMatrix().translate( this->_translation[ 0 ],
-                           this->_translation[ 1 ],
-                           this->_translation[ 2 ] );
+   osg::Matrix transMat;
+   transMat.set(osg::Matrix::identity());
+   transMat=osg::Matrix::translate(this->_translation[ 0 ],
+                    this->_translation[ 1 ],
+                    this->_translation[ 2 ] );
+                              
+   // update the specified transform
+   _dcs->preMult(transMat);
+
 #elif _OPENSG
 #endif
    //std::cout << this->_translation[ 0 ]<< " : " << this->_translation[ 1 ] << " : " <<
@@ -234,7 +235,16 @@ void cfdDCS::SetRotationArray( float* rot )
                     this->_rotation[ 1 ],
                     this->_rotation[ 2 ]);
 #elif _OSG
-   //_dcs->getMatrix()->rotate();
+   osg::Matrix rotMat;
+   osg::Vec3f xAxis(1,0,0);
+   osg::Vec3f yAxis(0,1,0);
+   osg::Vec3f zAxis(0,0,1);
+   rotMat.set(osg::Matrix::identity());
+   rotMat = osg::Matrix::rotate(rot[0],xAxis,
+                             rot[1],yAxis,
+                             rot[2],zAxis);
+   //rotate about the cartesian axes
+   _dcs->preMult(rotMat);
 
 #elif _OPENSG
 #endif
@@ -255,9 +265,12 @@ void cfdDCS::SetScaleArray( float* scale )
                            this->_scale[ 1 ],
                            this->_scale[ 2 ] );
 #elif _OSG
-   _dcs->getMatrix().scale(this->_scale[ 0 ],
-                           this->_scale[ 1 ],
-                           this->_scale[ 2 ] );
+   osg::Matrix scaleMat;
+   scaleMat.set(osg::Matrix::identity());
+   scaleMat = osg::Matrix::scale(this->_scale[ 0 ],
+                        this->_scale[ 1 ],
+                        this->_scale[ 2 ] );
+    _dcs->preMult(scaleMat);
 #elif _OPENSG
 #endif
    //std::cout << this->_scale[ 0 ]<< " : " <<   
@@ -272,7 +285,13 @@ Matrix44f cfdDCS::GetMat( void )
    this->_dcs->getMat( temp );
    _vjMatrix = vrj::GetVjMatrix( temp );
 #elif _OSG
-   _vjMatrix.set((float*)_dcs->getMatrix().ptr()); 
+   osg::Matrixf osgMat= _dcs->getMatrix();
+   if(osgMat.valid()){
+      _vjMatrix.set(osgMat.ptr());
+   }else{
+      std::cout<<"Invalid matrix!!"<<std::endl;
+      std::cout<<"cfdDCS::GetMat()"<<std::endl;
+   }
 #elif _OPENSG
    // GetVjMatrix
    cerr << " ERROR: cfdDCS::GetMat is NOT implemented " << endl;
@@ -311,14 +330,9 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
    delete coord;
 #elif _OSG
    osg::Matrix rot;
-   rot.set(osg::Matrix::identity());;
-   osg::Matrix orig;
-   orig.set(osg::Matrix::identity());
-
-   orig.set(_dcs->getMatrix());
    rot.set(input.getData());
-   
-   _dcs->setMatrix(rot* orig);
+
+   _dcs->preMult(rot);
    //std::cerr <<"Check to make sure rotation is working!!"<<std::endl;
    //std::cerr <<"OSG cfdDCS::SetRotationMatrix."<<std::endl;
    
@@ -326,5 +340,145 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
    std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;
    exit( 1 );
 #endif
+}
+////////////////////////////////////////////////
+int cfdDCS::RemoveChild( cfdNode* child )
+{
+#ifdef _OPENSG
+   std::cerr << " ERROR: cfdGroup::RemoveChild is NOT implemented " << std::endl;
+   exit( 1 );
+#endif
+   std::vector< cfdNode* >::iterator oldChild;
+   oldChild = std::find( childNodes.begin(), childNodes.end(), child );
+   
+   // Check to make sure he is on this node
+   if ( oldChild != childNodes.end() )
+   {
+      this->_dcs->removeChild( (*oldChild)->GetRawNode() );
+      childNodes.erase( oldChild );
+      child->SetParent( NULL );
+      return 1;  
+   }
+   else
+   {
+      std::cout << " Child Not found " << std::endl;
+      return -1;
+   }
+}
+/////////////////////////////////////////////
+int cfdDCS::AddChild( cfdNode* child )
+{
+#ifdef _OPENSG
+   std::cerr << " ERROR: cfdGroup::AddChild is NOT implemented " << std::endl;
+   exit( 1 );
+   return -1;
+#endif
+   //add the child to cfdscene
+   childNodes.push_back( child );
+
+   //add node to real graph rep
+   this->_dcs->addChild( child->GetRawNode() );
+   
+   //set the parent in the cfdApp side
+   child->SetParent( this );
+   return 1;
+}
+///////////////////////////////////////////////////////////////
+void cfdDCS::InsertChild( int position, cfdNode* child )
+{
+#ifdef _OPENSG
+   std::cerr << " ERROR: cfdGroup::InsertChild is NOT implemented " << std::endl;
+   exit( 1 );
+#endif
+
+   this->_dcs->insertChild( position, child->GetRawNode() );
+  
+   std::vector< cfdNode* >::iterator newPosition;
+
+   newPosition = std::find( childNodes.begin(), childNodes.end(), childNodes[ position ] );
+
+   childNodes.insert( newPosition, child );
+   child->SetParent( this );
+
+}
+
+/////////////////////////////////////
+int cfdDCS::GetNumChildren( void )
+{
+   
+#ifdef _OPENSG
+   std::cerr << " ERROR: cfdGroup::GetNumChildren is NOT implemented " << std::endl;
+   exit( 1 );
+   return -1;
+#endif
+
+   int numChildren = this->_dcs->getNumChildren(); 
+   if ( numChildren!=(int)childNodes.size() )
+   {
+      std::cout << " ERROR: Number of children don't equal " 
+               << numChildren << " : " << childNodes.size() << std::endl;
+      exit( 1 );
+   }
+   return numChildren;
+}
+//////////////////////////////////////
+const char* cfdDCS::GetName( void )
+{
+#ifdef _OPENSG
+   return 0;
+#endif
+#ifdef _PERFORMER
+   return _group->getName();
+#elif _OSG
+    return _group->getName().data() ;
+#endif
+}
+////////////////////////////////////
+void cfdDCS::SetName( char* name )
+{
+   const std::string test(name);
+#ifdef _OPENSG
+   std::cerr << " ERROR: cfdGroup::SetName is NOT implemented " << std::endl;
+   exit( 1 );
+#endif
+#ifdef _PERFORMER
+   _dcs->setName( test.c_str() );
+#elif _OSG
+   _dcs->setName( test );
+#endif
+}
+////////////////////////////////////////////////////////////
+int cfdDCS::ReplaceChild( cfdNode* childToBeReplaced,
+                         cfdNode* newChild)
+{
+#ifdef _OPENSG
+   cerr << " ERROR: cfdGroup::ReplaceChild is NOT implemented " << endl;
+   exit( 1 );
+   return -1;
+#endif
+   std::vector< cfdNode* >::iterator oldChild;
+   oldChild = std::find( childNodes.begin(), childNodes.end(), childToBeReplaced );
+   
+   // Check to make sure he is on this node
+   if ( oldChild != childNodes.end() )
+   {
+      // Just erases from the vector doesn't delete memory
+      childNodes.erase( oldChild );
+      this->_dcs->replaceChild( childToBeReplaced->GetRawNode(), 
+                                      newChild->GetRawNode() );
+
+      //add the child to cfdscene
+      childNodes.push_back( newChild );
+      // Set new parent for the new child
+      newChild->SetParent( this );
+      // Show that he no longer has a parent
+      childToBeReplaced->SetParent( NULL );
+      return 1;
+   }
+   else
+   {
+      std::cout << " Error : Child not found " << std::endl;
+      return -1;
+   }
 }
 

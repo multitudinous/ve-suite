@@ -197,7 +197,7 @@ void cfdFILE::setOpac(float op_val)
 #ifdef _PERFORMER
    this->node->pfTravNodeMaterial( this->node->GetRawNode() );
 #elif _OSG
-   node->TravNodeMaterial(node);
+   node->TravNodeMaterial(node->GetRawNode());
 #endif
 }
 /////////////////////////////////

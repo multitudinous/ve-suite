@@ -59,7 +59,7 @@ public:
    virtual ~cfdNode( void );
 
    //equal operator
-   cfdNode& operator=( const cfdNode& );
+   virtual cfdNode& operator=( const cfdNode& );
    
 
 #ifdef _PERFORMER
@@ -71,15 +71,11 @@ public:
 #elif _OPENSG
 #endif
 
-   //biv--why is this stuff in this class?
-   //should change to take a cfdNode and 
-   //let internals call get raw node and then
-   //traverse. . .
 #ifdef _PERFORMER
    void pfTravNodeMaterial( pfNode* );
    void pfTravNodeFog( pfNode* node_1, pfFog* fog );
 #elif _OSG
-   void TravNodeMaterial(cfdNode*);
+   void TravNodeMaterial(osg::Node*);
    void TravNodeFog(osg::Node* node_1, osg::Fog* fog);
 #elif _OPENSG
 #endif
