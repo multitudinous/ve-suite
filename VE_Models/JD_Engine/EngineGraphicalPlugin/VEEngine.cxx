@@ -74,6 +74,7 @@ VEEngine::VEEngine( void ) : cfdVEBaseClass()
 {
    _objectName ="Baffle";
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor

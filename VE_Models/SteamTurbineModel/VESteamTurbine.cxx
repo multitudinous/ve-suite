@@ -74,6 +74,7 @@ VESteamTurbine::VESteamTurbine( void ) : cfdVEBaseClass()
 {
   _objectName ="SteamTurbine"; // Needs to match plugin name
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor
@@ -87,7 +88,7 @@ void VESteamTurbine::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/SteamTurbineModel/vrxpr.param.geomorg";
+   this->_param = "./Plugins/steamturbine.param";
    //cout << _param << endl;
    CreateObjects();
 }

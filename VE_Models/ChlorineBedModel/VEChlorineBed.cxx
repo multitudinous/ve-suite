@@ -74,6 +74,7 @@ VEChlorineBed::VEChlorineBed( void ) : cfdVEBaseClass()
 {
    _objectName ="ChlorineBed";
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor
@@ -87,7 +88,7 @@ void VEChlorineBed::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/CatalyticCombustorModel/vrxpr.param.geomorg";
+   this->_param = "./Plugins/chlorine.param";
    //cout << _param << endl;
    CreateObjects();
 }

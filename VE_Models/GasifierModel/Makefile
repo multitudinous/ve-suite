@@ -63,6 +63,7 @@ ifdef ACE_ROOT
    EXTRA_INCLUDES+=	\
                   ${ACE_INCLUDES} \
                   -I${VE_SUITE_HOME}/VE_Xplorer \
+                  -I${VE_SUITE_HOME}/VE_SceneGraph \
                   -I${FUTUREGEN_HOME}/IDL \
                   -I${FUTUREGEN_HOME}/Plugin
    EXEC_TAG = _tao

@@ -74,6 +74,7 @@ VECompressor::VECompressor( void ) : cfdVEBaseClass()
 {
   _objectName ="Compressor"; // Needs to match plugin name
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor
@@ -87,7 +88,7 @@ void VECompressor::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/CompressorModel/vrxpr.param.geomorg";
+   this->_param = "./Plugins/compressor.param";
    //cout << _param << endl;
    CreateObjects();
 }

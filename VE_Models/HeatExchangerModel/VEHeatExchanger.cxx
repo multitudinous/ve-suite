@@ -74,6 +74,7 @@ VEHeatExchanger::VEHeatExchanger( void ) : cfdVEBaseClass()
 {
   _objectName ="HeatExchanger"; // Needs to match plugin name
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor
@@ -87,7 +88,7 @@ void VEHeatExchanger::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/HeatExchangerModel/vrxpr.param.geomorg";
+   this->_param = "./Plugins/heat_exchanger.param";
    //cout << _param << endl;
    CreateObjects();
 }

@@ -74,6 +74,7 @@ VEGasifier0D::VEGasifier0D( void ) : cfdVEBaseClass()
 {
   _objectName ="Gasifier0D"; // Needs to match plugin name
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor
@@ -87,7 +88,7 @@ void VEGasifier0D::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/Gasifier0DModel/vrxpr.param.geomorg";
+   this->_param = "./Plugins/gasifier0.param";
    //cout << _param << endl;
    CreateObjects();
 }

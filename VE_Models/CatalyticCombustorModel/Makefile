@@ -62,6 +62,7 @@ ifdef ACE_ROOT
    ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs -I$(XERCESCROOT)/include
    EXTRA_INCLUDES+=	\
                   ${ACE_INCLUDES} \
+                  -I${VE_SUITE_HOME}/VE_SceneGraph \
                   -I${VE_SUITE_HOME}/VE_Xplorer \
                   -I${FUTUREGEN_HOME}/IDL \
                   -I${FUTUREGEN_HOME}/Plugin

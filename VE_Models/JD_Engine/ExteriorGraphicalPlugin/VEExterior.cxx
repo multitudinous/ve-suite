@@ -74,6 +74,7 @@ VEExterior::VEExterior( void ) : cfdVEBaseClass()
 {
    _objectName ="Exterior";
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor

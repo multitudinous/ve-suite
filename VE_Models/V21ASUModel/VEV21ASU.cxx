@@ -74,6 +74,7 @@ VEV21ASU::VEV21ASU( void ) : cfdVEBaseClass()
 {
   _objectName ="V21ASU"; // Needs to match plugin name
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor
@@ -87,7 +88,7 @@ void VEV21ASU::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/V21ASUModel/vrxpr.param.geomorg";
+   this->_param = "./Plugins/asu.param";
    //cout << _param << endl;
    CreateObjects();
 }

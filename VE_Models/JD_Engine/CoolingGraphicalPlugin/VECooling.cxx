@@ -75,6 +75,7 @@ VECooling::VECooling( void ) : cfdVEBaseClass()
 {
    _objectName ="Cooling";
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor

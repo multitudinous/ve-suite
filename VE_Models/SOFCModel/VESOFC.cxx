@@ -74,6 +74,7 @@ VESOFC::VESOFC( void ) : cfdVEBaseClass()
 {
   _objectName ="SOFC"; // Needs to match plugin name
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor
@@ -87,7 +88,7 @@ void VESOFC::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/SOFCModel/vrxpr.param.geomorg";
+   this->_param = "./Plugins/sofc.param";
    //cout << _param << endl;
    CreateObjects();
 }

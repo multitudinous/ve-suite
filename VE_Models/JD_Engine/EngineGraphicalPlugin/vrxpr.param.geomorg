@@ -36,29 +36,29 @@
    /home/vr/Applications/TSVEG/Interactive_Harvester/press_reg_valve.pfb      // Geometry file name
 8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
    1 1 1             // DCS Scale values
-   0 0 0             // DCS Translation values (in feet)
+   -13 2 -2      // Translation values for geometry file
    0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
-   /home/vr/Applications/TSVEG/Interactive_Harvester/wideBaffleOutFileMINI.vtk     // vtkDataSet name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/wideBaffleOutFile.vtk     // vtkDataSet name
    /home/vr/Applications/TSVEG/Interactive_Harvester/wide_baffle_planes    // vtkDataSet name
    JUNK         // precomputed surface directory    (insert JUNK if n/a)
 8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
    1 1 1             // DCS Scale values
-   0 0 0             // DCS Translation values (in feet)
+   -13 2 -2      // Translation values for geometry file
    0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
-   /home/vr/Applications/TSVEG/Interactive_Harvester/tallBaffleOutFileMINI.vtk     // vtkDataSet name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/tallBaffleOutFile.vtk     // vtkDataSet name
    /home/vr/Applications/TSVEG/Interactive_Harvester/tall_baffle_planes    // vtkDataSet name
    JUNK         // precomputed surface directory    (insert JUNK if n/a)
 8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
    1 1 1             // DCS Scale values
-   0 0 0             // DCS Translation values (in feet)
+   -13 2 -2      // Translation values for geometry file
    0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
-   /home/vr/Applications/TSVEG/Interactive_Harvester/noBaffleOutFileMINI.vtk      // vtkDataSet name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/noBaffleOutFile.vtk      // vtkDataSet name
    /home/vr/Applications/TSVEG/Interactive_Harvester/no_baffle_planes      // precomputed data slice directory (insert JUNK if n/a)
    JUNK         // precomputed surface directory    (insert JUNK if n/a)
 8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
    1 1 1             // DCS Scale values
-   0 0 0             // DCS Translation values (in feet)
+   -13 2 -2      // Translation values for geometry file
    0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
-   /home/vr/Applications/TSVEG/Interactive_Harvester/originalOutFileMINI.vtk    // vtkDataSet name
+   /home/vr/Applications/TSVEG/Interactive_Harvester/originalOutFile.vtk    // vtkDataSet name
    /home/vr/Applications/TSVEG/Interactive_Harvester/original_planes  // precomputed data slice directory (insert JUNK if n/a)
    JUNK         // precomputed surface directory    (insert JUNK if n/a)

@@ -74,6 +74,7 @@ VECyclone::VECyclone( void ) : cfdVEBaseClass()
 {
   _objectName ="Cyclone"; // Needs to match plugin name
    //_onSceneGraph = false;
+   _param = NULL;
 }
 
 // Destructor
@@ -87,7 +88,7 @@ void VECyclone::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/CycloneModel/vrxpr.param.geomorg";
+   this->_param = "./Plugins/cyclone.param";
    //cout << _param << endl;
    CreateObjects();
 }
