@@ -61,6 +61,7 @@ class cfdModelHandler
       void RemoveModel( cfdModel* );
       cfdModel* GetActiveModel( void );
       int GetNumberOfModels( void );
+      void ReadNNumberOfDataSets(  char*, char* );
 
    private:
       char* _param;

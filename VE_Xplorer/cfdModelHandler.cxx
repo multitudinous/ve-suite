@@ -60,6 +60,17 @@
 #include <direct.h>
 #endif
 
+#ifndef _WIN32
+#include <unistd.h>
+#include <sys/types.h>
+#include <sys/dir.h>
+#else
+#include <windows.h>
+#include <direct.h>
+#include <wchar.h>
+#include <cstdio>
+#include <cstdlib>
+#endif
 
 cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
 {
@@ -449,7 +460,7 @@ void cfdModelHandler::CreateObjects( void )
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1) << " cfdModelHandler::Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
    for( int i = 0; i < numObjects; i++ )
    {
       int id;
@@ -568,13 +579,112 @@ void cfdModelHandler::CreateObjects( void )
             exit(1);
          }
 
-         cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << endl;
+         //cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << endl;
          _modelList.at( 0 )->CreateGeomDataSet( fileName );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetRotationArray( rotate );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );
+      }
+      else if ( id == 10 )
+      {
+         if ( _modelList.empty() )
+            _modelList.push_back( new cfdModel( worldNode ) );
+
+         char meshDirName[100];
+         char preComputedDirBaseName[100];
+         char geomDirName[100];
+
+         float stlColor[3];
+         int color;
+         int transFlag;
+         // For the data we need to loop over all the datasets and set the appropriate data dir
+         _modelList.at( 0 )->CreateCfdDataSet();
+
+         vprDEBUG(vprDBG_ALL,0) << " ************************************* "
+                          << std::endl << vprDEBUG_FLUSH;
+
+         vprDEBUG(vprDBG_ALL,0) << " vtk DCS parameters:"
+                          << std::endl << vprDEBUG_FLUSH;
+
+         float scale[3], trans[3], rotate[3];   // pfDCS stuff
+         this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
+
+         // Pass in -1 to GetCfdDataSet to get the last dataset added
+         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
+         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
+         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
+
+         // get vtk data dir name...
+         char vtkDataDir[ 256 ];
+         input >> vtkDataDir;
+         input.getline( textLine, 256 );   //skip past remainder of line
+         
+         fileIO::isDirWritable( vtkDataDir );
+         
+         // get vtk data dir name...
+         char vtkPreComputeDir[ 256 ];
+         input >> vtkPreComputeDir;
+         input.getline( textLine, 256 );   //skip past remainder of line
+         
+         // Now we need to loop over all the files in the vtk dataset dir
+         // and create n number of cfdDataSets
+         ReadNNumberOfDataSets( vtkDataDir, vtkPreComputeDir );
+
+         // For the geometry we need to loop over all the files and set the dcs appropriately
+         input >> geomDirName;
+         input.getline( textLine, 256 );   //skip past remainder of line
+
+         /*int test1 = fileIO::isFileReadable( geomDirName );
+         if ( test1 == 1 )
+         { 
+            vprDEBUG(vprDBG_ALL,0) << " geometry fileName = "
+                                    << geomDirName
+                                    << std::endl << vprDEBUG_FLUSH;
+         }
+         else
+         {
+            std::cerr << "ERROR: unreadable geometry file = " 
+                        << geomDirName 
+                        << ".  You may need to correct your param file." << std::endl;
+            exit(1);
+         }*/
+
+         vprDEBUG(vprDBG_ALL,0) << " geometry DCS parameters:" 
+                          << std::endl << vprDEBUG_FLUSH;
+         this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
+
+         input >> transFlag;
+         vprDEBUG(vprDBG_ALL,0) << " geometry transparency flag = "
+                                 << transFlag
+                                 << std::endl << vprDEBUG_FLUSH;
+
+         // read color flag
+         input >> color;
+         vprDEBUG(vprDBG_ALL,0) << " stl color flag = " << color
+                          << std::endl << vprDEBUG_FLUSH;
+
+         // read color if color flag = 1
+         if( color == 1)
+         {
+            for(int i=0;i<3;i++)
+            {
+               input >> stlColor[ i ];
+            }
+            vprDEBUG(vprDBG_ALL,0) << "\tcolor: " << stlColor[ 0 ] << " : " << stlColor[ 1 ] << " : "
+                                    << stlColor[ 2 ]
+                                    << std::endl << vprDEBUG_FLUSH;
+         }
+         input.getline( textLine, 256 );   //skip past remainder of line
+
+         //cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << endl;
+         /*_modelList.at( 0 )->CreateGeomDataSet( geomDirName );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetRotationArray( rotate );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );*/
       }
       else
       {
@@ -750,4 +860,257 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
 vtkPolyData* cfdModelHandler::GetArrow( void )
 {
    return this->arrow;
+}
+
+
+
+
+
+
+void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputedDir )
+{
+   std::vector< char* > frameFileNames;
+   std::vector< char* > frameDirNames;
+   int numFiles = 0;
+   // Read Scalar Ranges
+   char *cwd;
+#ifndef WIN32
+   if ((cwd = getcwd(NULL, 100)) == NULL)
+   {
+      std::cerr << "Couldn't get the current working directory!" << std::endl;
+      exit(1);
+   }
+
+   // open the directory
+   DIR* dir = opendir( directory );
+   direct* file = 0;
+
+   // change into this directory so that vtk can find the files
+   //chdir( directory );
+   
+   // count the files and record the name of each file
+   while( (file = readdir(dir)) != NULL )
+   {
+      //std::cout << file->d_name << " : " << /*file->ino_t << " : " << file->off_t << */std::endl;
+      //assume all vtk files in this directory are part of the sequence
+      if(strstr(file->d_name, ".vtk"))
+      {
+         char * pathAndFileName = new char[
+                     strlen(directory) + strlen(file->d_name) + 2 ];
+         strcpy( pathAndFileName, directory);
+         strcat(pathAndFileName, "/");
+         strcat(pathAndFileName, file->d_name);
+ 
+         frameFileNames.push_back( pathAndFileName );
+         vprDEBUG(vprDBG_ALL, 1) << " pathAndFileName : " 
+            << pathAndFileName << std::endl << vprDEBUG_FLUSH;
+         //increment the number of frames found
+         numFiles++;
+      }
+   };
+   //chdir( cwd );
+   closedir(dir);
+   dir = opendir( cwd );
+   // count the files and record the name of each file
+   int numDir = 0;
+   while( (file = readdir(dir)) != NULL )
+   {
+      //std::cout << file->d_name << " : " << preComputedDir<< " : " << /*file->ino_t << " : " << file->off_t << */std::endl;
+      //assume all vtk files in this directory are part of the sequence
+      if(strstr(file->d_name, preComputedDir))
+      {
+         char * pathAndFileName = new char[ strlen(file->d_name) + 1 ];
+         strcpy( pathAndFileName, file->d_name);
+ 
+         frameDirNames.push_back( pathAndFileName );
+         vprDEBUG(vprDBG_ALL, 1) << " pathAndFileName : " 
+            << pathAndFileName << std::endl << vprDEBUG_FLUSH;
+         //increment the number of frames found
+         numDir++;
+      }
+   };
+#else
+   //biv--this code will need testing
+   //BIGTIME!!!!!!!
+   char buffer[_MAX_PATH];
+   BOOL finished;
+   HANDLE hList;
+   TCHAR directory[MAX_PATH+1];
+   WIN32_FIND_DATA fileData;
+
+   //windows compatibility
+   //get the current working directory
+   if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL){
+      std::cerr << "Couldn't get the current working directory!" << std::endl;
+      return;
+   }
+
+   // Get the proper directory path for transient files
+   sprintf(directory, "%s\\*", this->directory);
+
+   //get the first file
+   hList = FindFirstFile(directory, &fileData);
+  
+   //check to see if directory is valid
+   if(hList == INVALID_HANDLE_VALUE){ 
+      cerr<<"No transient files found in: "<<this->directory<<endl;
+      return;
+   }else{
+      // Traverse through the directory structure
+      finished = FALSE;
+      while (!finished){
+         //add the file name to our data list
+		 //assume all vtk files in this directory are part of the sequence
+		 if(strstr(fileData.cFileName, ".vtk")){
+            char* pathAndFileName = new char[
+                  strlen(this->directory) + strlen(fileData.cFileName) + 2 ];
+            strcpy(pathAndFileName,this->directory);
+            strcat(pathAndFileName,"/");
+            strcat(pathAndFileName,fileData.cFileName);
+
+            frameFileNames.push_back( pathAndFileName );
+            vprDEBUG(vprDBG_ALL, 1) << " pathAndFileName : " 
+                                    << pathAndFileName << std::endl << vprDEBUG_FLUSH;
+            //increment the number of frames found
+            this->numFiles++;
+		 }
+		 //check to see if this is the last file
+		 if(!FindNextFile(hList, &fileData)){
+            if(GetLastError() == ERROR_NO_MORE_FILES){
+               finished = TRUE;
+			}
+		 }
+	  }
+   }
+   //close the handle
+   FindClose(hList);
+   //make sure we are in the correct directory
+   chdir(cwd);
+
+#endif
+   vprDEBUG(vprDBG_ALL,0) << " Number of files in directory \"" 
+      << directory << "\" = " << numFiles
+      << std::endl << vprDEBUG_FLUSH;
+
+   vprDEBUG(vprDBG_ALL,0) << " Number of precomputes directorys \"" 
+      << preComputedDir << "\" = " << numDir
+      << std::endl << vprDEBUG_FLUSH;
+   // The directory must contain only transient files of a particular type
+   // (ie, y-plane slices)
+   // Filenames should be something like:
+   //   grid_0.vtk ==> time step 0
+   //      . . .
+   //   grid_21.vtk==> time step 21
+   // The important components of the filename are the underscore before
+   // the integer, the integer, the period, and the extension. 
+   // The extension must be "vtk" for data files
+   // or "iv", "flt", or "stl" for geometry files.  
+   // The integer may be zero-padded (grid_0021.vtk is OK). 
+
+   //Now numerically order the list of names because readdir doesn't
+   int* order = NULL;
+   order = new int [ numFiles ];
+   for (int j = 0; j < numFiles; j++)
+   {
+      int number = fileIO::extractIntegerBeforeExtension( frameFileNames[ j ] );
+      order[ number ] = j;
+      vprDEBUG(vprDBG_ALL,2) << "\t" << j << "\t" << number << "\t" 
+         << frameFileNames[ j ] << std::endl << vprDEBUG_FLUSH;
+   }
+
+   // Numerically order the dir name list 
+   int* dirOrder = NULL;
+   dirOrder = new int [ numDir ];
+   for (int j = 0; j < numDir; j++)
+   {
+      int number = fileIO::ExtractIntegerFromString( frameDirNames[ j ] );
+      dirOrder[ number ] = j;
+      vprDEBUG(vprDBG_ALL,2) << "\t" << j << "\t" << number << "\t" 
+         << frameDirNames[ j ] << std::endl << vprDEBUG_FLUSH;
+   }
+
+   // Set initial data file name 
+   if (fileIO::isFileReadable( frameFileNames[ order[ 0 ] ] ) ) 
+   {
+      vprDEBUG(vprDBG_ALL,0) << " vtk file = " << frameFileNames[ order[ 0 ]  ]
+                       << ", dcs = "  << _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()
+                       << std::endl << vprDEBUG_FLUSH;
+      _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( frameFileNames[ order[ 0 ]  ] );
+   }
+   else
+   {
+      std::cerr << "ERROR: unreadable vtk file = " << frameFileNames[ order[ 0 ]  ]
+                  << ".  You may need to correct your param file."
+                  << std::endl;
+      exit(1);
+   }
+
+   // Set initial precomputed data dir file name 
+   if ( fileIO::isDirWritable( frameDirNames[ dirOrder[ 0 ] ] ) )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " vtk data dir = " << frameDirNames[ dirOrder[ 0 ] ]
+                      << std::endl << vprDEBUG_FLUSH;
+      _modelList.at( 0 )->GetCfdDataSet( -1 )->SetPrecomputedDataSliceDir( frameDirNames[ dirOrder[ 0 ] ] );
+   }
+   else
+   {
+      std::cerr << "ERROR: unreadable vtk file = " << frameDirNames[ dirOrder[ 0 ] ]
+                  << ".  You may need to correct your param file."
+                  << std::endl;
+      exit(1);
+   }
+
+   cfdDCS* baseTransientDCS = _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS();
+
+   for ( int j = 1; j < numFiles; j++ )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " For \"" << frameFileNames[ order[ j ]  ]
+                             << "\"..." << std::endl << vprDEBUG_FLUSH;
+
+      _modelList.at( 0 )->CreateCfdDataSet();
+
+      // Pass in -1 to GetCfdDataSet to get the last dataset added
+      _modelList.at( 0 )->GetCfdDataSet( -1 )->SetDCS( baseTransientDCS );
+      _modelList.at( 0 )->GetCfdDataSet( -1 )->SetAsPartOfTransientSeries();
+
+      if (fileIO::isFileReadable( frameFileNames[ order[ j ]  ] ) ) 
+      {
+         vprDEBUG(vprDBG_ALL,0) << " vtk file = " << frameFileNames[ order[ j ]  ] 
+                          << ", dcs = "  << _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()
+                          << std::endl << vprDEBUG_FLUSH;
+         _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( frameFileNames[ order[ j ]  ] );
+      }
+      else
+      {
+         std::cerr << "ERROR: unreadable vtk file = " << frameFileNames[ order[ j ]  ] 
+                     << ".  You may need to correct your param file."
+                     << std::endl;
+         exit(1);
+      }
+
+      // Set initial precomputed data dir file name 
+      if ( fileIO::isDirWritable( frameDirNames[ dirOrder[ j ] ] ) )
+      {
+         vprDEBUG(vprDBG_ALL,0) << " vtk data dir = " << frameDirNames[ dirOrder[ j ] ]
+                      << std::endl << vprDEBUG_FLUSH;
+         _modelList.at( 0 )->GetCfdDataSet( -1 )->SetPrecomputedDataSliceDir( frameDirNames[ dirOrder[ j ] ] );
+      }
+      else
+      {
+         std::cerr << "ERROR: unreadable vtk file = " << frameDirNames[ dirOrder[ j ] ]
+                     << ".  You may need to correct your param file."
+                     << std::endl;
+         exit(1);
+      }
+   }
+
+   frameDirNames.clear();
+   frameFileNames.clear();
+   //close the directory
+#ifndef WIN32
+   closedir(dir);
+
+   dir = 0;
+   file = 0;
+#endif
 }

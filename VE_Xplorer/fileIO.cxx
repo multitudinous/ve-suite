@@ -384,16 +384,40 @@ int fileIO::extractIntegerBeforeExtension( char filename [] )
 
    char excludes[] = "-_.";   // define the allowable separators 
    char * pch = strtok( changeable_filename, excludes );
+
    while ( pch != NULL )
    {
-      //printf ("%s\n",pch);
       strcpy( secondLastToken, lastToken );
       strcpy( lastToken, pch );
       pch = strtok( NULL, excludes );
    }
-   //std::cout << "secondLastToken = " << secondLastToken << std::endl;
+
    delete [] changeable_filename;
    return atoi(secondLastToken);
+}
+
+int fileIO::ExtractIntegerFromString( char filename [] )
+{
+   char * changeable_filename = new char [ strlen(filename)+1 ];
+   strcpy( changeable_filename, filename );
+
+   // last token will be the extension
+   // secondLastToken will be the integer counter
+   char lastToken[100], secondLastToken[100];
+   lastToken[0] = '\0';
+   secondLastToken[0] = '\0';
+
+   char excludes[] = "-_.";   // define the allowable separators 
+   char * pch = strtok( changeable_filename, excludes );
+
+   while ( pch != NULL )
+   {
+      strcpy( secondLastToken, lastToken );
+      strcpy( lastToken, pch );
+      pch = strtok( NULL, excludes );
+   }
+   delete [] changeable_filename;
+   return atoi(lastToken);
 }
 
 void fileIO::getTagAndValue(char *textline, char *TagName, char *TagValue)

@@ -194,7 +194,7 @@ char * cfdReadParam::readDirName( std::ifstream &inFile, char * description )
    closedir( dir );
 #else
 
-
+exit( 1 );
 #endif
    return dirName;
 }
@@ -552,7 +552,7 @@ void cfdReadParam::ContinueRead( std::ifstream &input, unsigned int id )
          numLines = 6;
          break;
       case 10:
-         //getTransientInfo( inFile );
+         numLines = 11;
          break;
       case 11:
          // Sound loader

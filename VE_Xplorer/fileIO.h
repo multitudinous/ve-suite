@@ -65,6 +65,7 @@ class fileIO
       static int getIntegerBetween( const int min, const int max );
 
       static char * GetFile( char [], char [] );
-
+      static int ExtractIntegerFromString( char filename [] );
+      static int ExtractIntegerBeforeExtension( char filename [] );
 };
 #endif

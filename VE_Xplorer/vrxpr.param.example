@@ -26,18 +26,11 @@
    90 0 0            // Rotation values for geometry file
    air_system.iv     // Geometry file name
 10                   // Object type 10: Transient data loader
-   4                 // Number of directories containing vtk data to follow
    1 1 1             // data dcs scale values
    0 0 0             // data dcs translation values (in feet)
    0 0 0             // data dcs rotation values (degrees, Z-X-Y format)
-   ./transient_flowdata    // directory of vtk files
-      0                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
-   ./transient_y_planes    // directory of vtk files
-      2                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
-   ./transient_z_planes    // directory of vtk files
-      3                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
-   ./transient_droplets    // directory of vtk files
-      4                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
+   ./transient_flowdata    // directory of vtk files 3D Mesh
+   ./transient    // directory of vtk files
    ./trans_geometry  // Transient geometry data directory
    1 1 1             // Transient geometry dcs scale values
    0 0 0             // Transient geometry dcs translation values
