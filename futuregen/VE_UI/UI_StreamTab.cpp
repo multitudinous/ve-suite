@@ -111,6 +111,14 @@ void UI_StreamlineTab::_buildPage()
                                 3, dirIntegrateName, 1,
                                 wxRA_SPECIFY_COLS);
    
+   //The static box for the sliders
+   wxStaticBox* sGroupLabel = new wxStaticBox(this, -1, wxT("Streamline Controls"));
+
+   //need a sizer for this box
+   //The items will be placed  next (vertically) to other 
+   //rather than on top of each other(horizontally)
+   wxStaticBoxSizer* streamControllerBoxSizer = new wxStaticBoxSizer(sGroupLabel,wxVERTICAL);
+
    //the other three sliders
 
    //the labels for the sliders 
@@ -122,19 +130,19 @@ void UI_StreamlineTab::_buildPage()
    wxStaticText* diameterLabel   = new wxStaticText(this,-1,wxT("Line Diameter"));
 
    //the two sliders for this group
-   _propSlider = new wxSlider(this, PROP_SLIDER,50,1,100,
+   _propSlider = new wxSlider(this, PROP_SLIDER,100,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
                                 wxSL_LABELS|wxSL_RIGHT );
 
-   _iStepSlider = new wxSlider(this, INT_STEP_SLIDER,50,1,100,
+   _iStepSlider = new wxSlider(this, INT_STEP_SLIDER,100,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
                                 wxSL_LABELS|wxSL_RIGHT );
 
-   _stepSlider = new wxSlider(this, STEP_SLIDER,50,1,100,
+   _stepSlider = new wxSlider(this, STEP_SLIDER,1,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
@@ -213,21 +221,18 @@ void UI_StreamlineTab::_buildPage()
    wxBoxSizer* row2 = new wxBoxSizer(wxHORIZONTAL);
 
    //we can add the buttons to the last row now 
-   row2->Add(_compStreamButton,1,wxALIGN_CENTER_HORIZONTAL);
-   row2->Add(_parTrackingButton,1,wxALIGN_CENTER_HORIZONTAL);
-   row2->Add(_lastSeedPtChk,1,wxALIGN_CENTER_HORIZONTAL);
+   row2->Add(_compStreamButton,1,wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+   row2->Add(_parTrackingButton,1,wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+   row2->Add(_lastSeedPtChk,1,wxALL|wxALIGN_CENTER_HORIZONTAL,5);
 
    //the radio box group
    wxBoxSizer* radioBoxGroup = new wxBoxSizer(wxVERTICAL); 
-   radioBoxGroup->Add(_cursorRBox,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   radioBoxGroup->Add(_directionRBox,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   radioBoxGroup->Add(_integrationDirRBox,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   radioBoxGroup->Add(_cursorRBox,1,wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND,5);
+   radioBoxGroup->Add(_directionRBox,1,wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND,5);
+   radioBoxGroup->Add(_integrationDirRBox,1,wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND,5);
 
    //the group boxes for the other sliders
    wxBoxSizer* sGroup = new wxBoxSizer(wxVERTICAL);
-   wxStaticText* sGroupLabel = new wxStaticText(this,-1,wxT("Streamline Controls"));
-   sGroup->Add(sGroupLabel,0,wxALL|wxALIGN_LEFT, 5);
-
    sGroup->Add(propGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
    sGroup->Add(intGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
    sGroup->Add(stepGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
@@ -235,21 +240,57 @@ void UI_StreamlineTab::_buildPage()
    sGroup->Add(numPointsGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
    sGroup->Add(diameterGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
 
+   // Add to the static box sizer
+   streamControllerBoxSizer->Add(sGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
+
    //now add the groups to the first row
    //row1->Add(sliderGroup,1,wxEXPAND|wxALIGN_RIGHT);
-   row1->Add(radioBoxGroup,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   row1->Add(sGroup,1,wxEXPAND|wxALIGN_RIGHT);
+   row1->Add(radioBoxGroup,1,wxEXPAND|wxALIGN_LEFT,5);
+   row1->Add(streamControllerBoxSizer,2,wxALL|wxEXPAND|wxALIGN_RIGHT,5);
 
   
    //add the rows to the main panel
-   streamPanelGroup->Add(row1,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND); 
-   streamPanelGroup->Add(row2,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND); 
+   streamPanelGroup->Add(row1,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND,5); 
+   streamPanelGroup->Add(row2,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND,5); 
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
 
    //assign the group to the panel
    SetSizer(streamPanelGroup);   
+   
+   // Send intial data to VE-Xplorer
+   this->ConstructCommandId();
+   
+   ((UI_Tabs *)_parent)->cId  = CHANGE_INT_STEP_LENGTH;
+   ((UI_Tabs *)_parent)->cIso_value = _iStepSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+
+   ((UI_Tabs *)_parent)->cId  = CHANGE_PROPAGATION_TIME;
+   ((UI_Tabs *)_parent)->cIso_value = _propSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+
+   ((UI_Tabs *)_parent)->cId  = CHANGE_STEP_LENGTH;
+   ((UI_Tabs *)_parent)->cIso_value = _stepSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+
+   if ( _integrationDirRBox->GetSelection() == 0 )
+   {
+      ((UI_Tabs *)_parent)->cId = BACKWARD_INTEGRATION;
+   }
+   else if ( _integrationDirRBox->GetSelection() == 1 )
+   {
+      ((UI_Tabs *)_parent)->cId = FORWARD_INTEGRATION;
+   }
+   else if ( _integrationDirRBox->GetSelection() == 2 )
+   {
+      ((UI_Tabs *)_parent)->cId = TWO_DIRECTION_INTEGRATION;
+   }
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
+
+   ((UI_Tabs *)_parent)->cId  = STREAMLINE_DIAMETER;
+   ((UI_Tabs *)_parent)->cIso_value = _diameterSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 //////////////////////
 //Event handling    //

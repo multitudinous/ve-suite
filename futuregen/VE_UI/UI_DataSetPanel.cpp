@@ -59,7 +59,7 @@ UI_DatasetScroll::UI_DatasetScroll(wxWindow* parent)
 {
   int nUnitX=20;
   int nUnitY=10;
-  int nPixX = 10;
+  int nPixX = 5;
   int nPixY = 10;
   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
@@ -119,6 +119,7 @@ void UI_DatasetScroll::changeActiveDatasetType(int index)
 
    _col->Add(_3dRBox,1,wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL,5);
 
+
    Refresh(); 
    //Complete Hack needed to get the page to refresh properly
    SetSize(GetSize());
@@ -158,7 +159,7 @@ UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
                                 1,empty,1,wxRA_SPECIFY_COLS);
 
    _col = new wxBoxSizer(wxVERTICAL);  
-   _col->Add(_scalarRBox,6,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   _col->Add(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
    _col->Add(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    SetSizer(_col);
@@ -198,7 +199,7 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
             1, wxRA_SPECIFY_COLS);
 // Get number of vectors and scalar names
    _col->Prepend(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
-   _col->Prepend(_scalarRBox,6,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   _col->Prepend(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    Refresh(); 
    //Complete Hack needed to get the page to refresh properly
@@ -527,7 +528,7 @@ void UI_DatasetPanel::_setScalarsnoDatasets()
    delete _ScalarScroll;
    _ScalarScroll = new UI_ScalarScroll(this);
 
-   _col2->Prepend(_ScalarScroll,6,wxALIGN_LEFT|wxEXPAND);
+   _col2->Prepend(_ScalarScroll,2,wxALIGN_LEFT|wxEXPAND);
 
    Refresh(); 
    //Complete Hack needed to get the page to refresh properly
