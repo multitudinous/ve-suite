@@ -443,7 +443,7 @@ void VjObs_i::setPreState(CORBA::Short value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mPre_state = value;
+   mPre_state = (bool)value;
 }
 
 CORBA::Short VjObs_i::getPreState()
@@ -788,7 +788,7 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_p &value )
    this->mGeo_state = value[ 6 ];
    //cout<<"geometry state:"<< this->mGeo_state <<endl;
 
-   this->mPre_state = value[ 7 ];
+   this->mPre_state = (bool)value[ 7 ];
    //cout<<"pre_state:"<< this->mPre_state <<endl;
 
    this->mTeacher_state = value[ 8 ];

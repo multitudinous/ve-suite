@@ -423,13 +423,13 @@ void cfdApp::exit()
       naming_context->unbind( name );
       //naming_context->destroy();
    }
-   catch(CosNaming::NamingContext::InvalidName& ex)
+   catch( CosNaming::NamingContext::InvalidName& )
    {
-      cerr << "Invalid name for CORBA Object" << endl;
+      cerr << "Invalid name for CORBA Object  " << endl;
    }
    catch(CosNaming::NamingContext::NotFound& ex)
    {
-      cerr << "Name not found for CORBA Object" << endl;
+      cerr << "Name not found for CORBA Object  " << ex.why << endl;
    }
    
    poa->destroy (1, 1);
@@ -3202,14 +3202,14 @@ int main(int argc, char* argv[])
 #endif
 
 #ifdef TABLET
-   int temp = 2;
+   int temp = 0;
    char** xargv;
    xargv = new char*[ temp ];
-   xargv[ 0 ] = "-ORBInitRef";
+   //xargv[ 0 ] = "-ORBInitRef";
    //xargv[ 1 ] = "NameService=corbaname::cruncher.vrac.iastate.edu:2809";
    //the above line doesn't work when running from costello!!!
    //biv -- checking if the name server has been moved
-   xargv[ 1 ] = "NameService=corbaname::vracs001:2810";
+   //xargv[ 1 ] = "NameService=corbaname::cruncher.vrac.iastate.edu:2809";
 
 #ifdef _TAO
    //xargv[ 0 ] = "-ORBInitRef";
@@ -3295,7 +3295,7 @@ int main(int argc, char* argv[])
      {
        naming_context->bind(name, vjobs.in());
      }
-   catch(CosNaming::NamingContext::AlreadyBound& ex)
+   catch(CosNaming::NamingContext::AlreadyBound&)
      {
        naming_context->rebind(name, vjobs.in());
      }

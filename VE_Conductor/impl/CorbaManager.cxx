@@ -78,9 +78,9 @@ void CorbaManager::bind()
 			std::cerr<<"Failed to narrow. CorbaManager::init"<<std::endl;
 		}
 	}
-   catch(CORBA::ORB::InvalidName& ex)
+   catch(CORBA::ORB::InvalidName& )
    {
-		std::cerr<<"Service required invalid.  CorbaManager::init"<<std::endl;
+		std::cerr<<"Service required invalid.  CorbaManager::init " << std::endl;
 	}
 
    cout << "|   IOR of the omni nameserver : " << endl << 
@@ -98,7 +98,7 @@ void CorbaManager::bind()
          //cout << contextName[0].id << " : " << contextName[0].kind << endl;
 			testContext=rootContext->bind_new_context(contextName);
 		}
-      catch(CosNaming::NamingContext::AlreadyBound& ex)
+      catch(CosNaming::NamingContext::AlreadyBound&)
       {
 			CORBA::Object_var tmpobj;
 			tmpobj=rootContext->resolve(contextName);
@@ -110,12 +110,13 @@ void CorbaManager::bind()
 		}
       //cout << " testcontext : " << orb->object_to_string( testContext ) << endl;
 	}
-   catch(CORBA::COMM_FAILURE& ex)
+   catch(CORBA::COMM_FAILURE&)
    {
 		std::cerr<<"COMM_FAILURE: no NameService found.  CorbaManager::init"<<std::endl;
 	}
    catch(omniORB::fatalException& ex)
    {
+	   cout << ex.errmsg() << endl;
 		throw;
 	}catch(...)
    {
@@ -165,7 +166,7 @@ regInterface(CORBA::Object_ptr obj, std::string objectId, std::string objectKind
    //cout << objectId.c_str() << " : " << objectKind.c_str() << endl;
 	try{
 		testContext->bind(objectName,obj);
-	}catch(CosNaming::NamingContext::AlreadyBound& ex){
+	}catch(CosNaming::NamingContext::AlreadyBound&){
 		testContext->rebind(objectName,obj);
 	}
 }
