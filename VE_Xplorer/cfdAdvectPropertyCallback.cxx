@@ -30,8 +30,8 @@ unsigned int cfdAdvectPropertyCallback::GetCurrentSlice()
 void cfdAdvectPropertyCallback::operator()(osg::Node* node,
                                       osg::NodeVisitor* nv)
 {
-   osgUtil::CullVisitor* cullVisitor = dynamic_cast<osgUtil::CullVisitor*>(nv);
-   if (cullVisitor && _subgraph.valid()){
+   cfdSliceNodeVisitor* myCullVisitor = dynamic_cast<cfdSliceNodeVisitor*>(nv);
+   if (myCullVisitor && _subgraph.valid()){
       float delta = 1.0/(float)_nSlices;
       osg::Geode* geode = dynamic_cast<osg::Geode*>(_subgraph.get());
       osg::Geometry* geom = dynamic_cast<osg::Geometry*>(geode->getDrawable(0));
@@ -39,11 +39,12 @@ void cfdAdvectPropertyCallback::operator()(osg::Node* node,
       osg::Vec3Array* texcoords = 
             dynamic_cast<osg::Vec3Array*>(geom->getTexCoordArray(0));
          
-      for(_currentSlice = 0; _currentSlice < _nSlices; _currentSlice++){
-         (*texcoords)[0].set(0.0f,0.0f,_currentSlice*delta); 
-         (*texcoords)[1].set(1.0f,0.0f,_currentSlice*delta); 
-         (*texcoords)[2].set(1.0f,1.0f,_currentSlice*delta); 
-         (*texcoords)[3].set(0.0f,1.0f,_currentSlice*delta); 
+      for(unsigned int i = 0; i < _nSlices; i++){
+         (*texcoords)[0].set(0.0f,0.0f,i*delta); 
+         (*texcoords)[1].set(1.0f,0.0f,i*delta); 
+         (*texcoords)[2].set(1.0f,1.0f,i*delta); 
+         (*texcoords)[3].set(0.0f,1.0f,i*delta);
+         myCullVisitor->SetSliceNumber(i);
 
           _subgraph->accept(*nv);
 

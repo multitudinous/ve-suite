@@ -244,8 +244,8 @@ void cfdOSGAdvectionShaderManager::UpdateDyeTranslation(float* translation )
 }
 ///////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::SetFieldSize(unsigned int x,
-		                                unsigned int y,
-						unsigned int z)
+		                                     unsigned int y,
+						                          unsigned int z)
 {
    _fieldSize[0] = x;
    _fieldSize[1] = y;

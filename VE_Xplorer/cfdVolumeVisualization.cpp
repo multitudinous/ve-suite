@@ -8,6 +8,7 @@
 #include <osgNVCg/Context>
 #include <osgNVCg/Program>
 #include <osgNVCg/CgGeometry>
+#include "cfdAdvectionSubGraph.h"
 #endif
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
@@ -55,6 +56,8 @@ cfdVolumeVisualization::cfdVolumeVisualization()
 #ifdef CFD_USE_SHADERS
    _sSM = 0;
    _tSM = 0;
+   _advectSM = 0;
+   _velocityCbk = 0;
 #endif
 }
 /////////////////////////////////////////////////////////////////////////////
@@ -98,6 +101,9 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
 #ifdef CFD_USE_SHADERS
    _sSM = new cfdOSGScalarShaderManager(*rhs._sSM);
    _tSM = new cfdOSGTransferShaderManager(*rhs._tSM);
+   _advectSM = new cfdOSGAdvectionShaderManager(*rhs._advectSM);
+   _velocityCbk = new cfdUpdateTextureCallback(*rhs._velocityCbk);
+   _advectionSlice =  new osg::Node(*rhs._advectionSlice);
 #endif
 
 }
@@ -293,6 +299,7 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 {
    _tm = tm;
 #ifdef CFD_USE_SHADERS
+
    int* res = _tm->fieldResolution();
    if(!_sSM){
       _sSM = new cfdOSGScalarShaderManager();
@@ -306,7 +313,9 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
       _tSM->SetFieldSize(res[0],res[1],res[2]);
       _tSM->Init();
    }
-   
+   if(_tm->GetDataType(0)==cfdTextureManager::VECTOR){
+      _createVelocityAdvectionGraph();
+   }
    
 #endif
    if(!_image.valid()){
@@ -344,6 +353,68 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
       _utCbk->SetTextureManager(_tm);
    }
 }
+#ifdef CFD_USE_SHADERS
+///////////////////////////////////////////////////////////
+void cfdVolumeVisualization::_createVelocityAdvectionGraph()
+{
+   if(_tm){
+      if(!_velocity.valid()){
+         _velocity = new osg::Texture3D;
+         osg::ref_ptr<osg::Image> image = new osg::Image();
+   
+
+         image->allocateImage(_tm->fieldResolution()[0],
+                            _tm->fieldResolution()[1],
+                           _tm->fieldResolution()[2],
+                           GL_RGBA,GL_UNSIGNED_BYTE);
+
+         image->setImage(_tm->fieldResolution()[0],_tm->fieldResolution()[1],
+                       _tm->fieldResolution()[2],GL_RGBA,GL_RGBA, 
+                       GL_UNSIGNED_BYTE,
+                       _tm->dataField(0),
+                       osg::Image::USE_NEW_DELETE,1);
+         image->setDataVariance(osg::Object::DYNAMIC);
+
+         _velocity->setFilter(osg::Texture3D::MIN_FILTER,osg::Texture3D::LINEAR);
+         _velocity->setFilter(osg::Texture3D::MAG_FILTER,osg::Texture3D::LINEAR);
+         _velocity->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
+         _velocity->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
+         _velocity->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
+         _velocity->setInternalFormat(GL_RGBA);
+         _velocity->setImage(image.get());
+      } 
+      if(!_velocityCbk){
+         _velocityCbk =  new cfdUpdateTextureCallback();
+         int* res = _tm->fieldResolution();
+         _velocityCbk->setSubloadTextureSize(res[0],res[1],res[2]);
+      }
+      _velocityCbk->SetTextureManager(_tm);
+      _velocityCbk->SetDelayTime(1.0);
+      _velocity->setSubloadCallback(_velocityCbk);
+      //create the advection subgraph
+      if(!_advectionSlice.valid()){
+         _advectionSlice = CreateAdvectionSubGraph(_tm->fieldResolution()[0],
+                                               _tm->fieldResolution()[1]);
+      
+         if(!_advectSM){
+            _advectSM = new cfdOSGAdvectionShaderManager();
+            _advectSM->SetFieldSize(_tm->fieldResolution()[0],
+                           _tm->fieldResolution()[1],
+                           _tm->fieldResolution()[2]);
+            _advectSM->SetVelocityTexture(_velocity.get());
+            _advectSM->Init();
+            _advectionSlice->setStateSet(_advectSM->GetShaderStateSet());
+
+            /*if(_pbuffer){
+               _advectionSlice->setUpdateCallback(new cfdAdvectPropertyCallback(subgraph,
+                                              _tm->fieldResolution()[2]));
+            }*/
+         }
+      }
+   }
+   
+}
+#endif
 ///////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetNumberofSlices(int nSlices)
 {
@@ -509,6 +580,7 @@ void cfdVolumeVisualization::UpdateClipPlanePosition(ClipPlane direction,
    }
    plane = 0;
 }
+
 //////////////////////////////////////////////
 void cfdVolumeVisualization::_createVisualBBox()
 {
@@ -923,6 +995,18 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
       _transferShaderIsActive = rhs._transferShaderIsActive;
 
 #ifdef CFD_USE_SHADERS
+      if(_advectSM){
+         delete _advectSM;
+         _advectSM = 0;
+      }
+      _advectSM = new cfdOSGAdvectionShaderManager(*rhs._advectSM);
+      if(_velocityCbk){
+         delete _velocityCbk;
+         _velocityCbk;
+      }
+      _velocityCbk = new cfdUpdateTextureCallback(*rhs._velocityCbk);
+      
+      _advectionSlice =  rhs._advectionSlice;
       if(_sSM){
          delete _sSM;
          _sSM = 0;

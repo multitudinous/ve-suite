@@ -24,6 +24,7 @@ namespace osg{
 #ifdef CFD_USE_SHADERS
 #include "cfdOSGScalarShaderManager.h"
 #include "cfdOSGTransferShaderManager.h"
+#include "cfdOSGAdvectionShaderManager.h"
 #endif
 #include <osg/BoundingBox>
 #include "cfdVolumeSliceSwitchCallback.h"
@@ -105,13 +106,18 @@ protected:
    void _createTexGenNode();
    void _createVolumeSlices();
    void _buildAxisDependentGeometry();
-
+#ifdef CFD_USE_SHADERS
+   void _createVelocityAdvectionGraph();
+#endif
    char* _shaderDirectory;
    cfdTextureManager* _tm;
 #ifdef _OSG
 #ifdef CFD_USE_SHADERS
    cfdOSGScalarShaderManager* _sSM;
    cfdOSGTransferShaderManager* _tSM;
+   cfdOSGAdvectionShaderManager* _advectSM;
+   cfdUpdateTextureCallback* _velocityCbk;
+   osg::ref_ptr<osg::Node> _advectionSlice;
 #endif
    osg::ref_ptr<osg::Group>_volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
@@ -128,6 +134,7 @@ protected:
    osg::ref_ptr<osg::Material> _material;
   
    osg::ref_ptr<osg::Texture3D> _texture;
+   osg::ref_ptr<osg::Texture3D> _velocity;
   
    osg::ref_ptr<osg::Image> _image;
    osg::ref_ptr<osg::Geode> _slices;
@@ -143,6 +150,7 @@ protected:
 
    cfdVolumeSliceSwitchCallback* _vSSCbk;
    cfdUpdateTextureCallback* _utCbk;
+   
 
 #endif
 

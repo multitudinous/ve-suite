@@ -13,13 +13,11 @@ cfd3DTextureCullCallback::cfd3DTextureCullCallback(osg::Node* subgraph,
 }
 ////////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::operator()(osg::Node* node, 
-                                       osg::NodeVisitor* nv)
+                                     osg::NodeVisitor* nv)
 {
-   unsigned int sliceNumber =
-	   ((cfdAdvectPropertyCallback*)node->getUpdateCallback())->GetCurrentSlice();
-   osgUtil::CullVisitor* cullVisitor = dynamic_cast<osgUtil::CullVisitor*>(nv); 
+   cfdSliceNodeVisitor* cullVisitor = dynamic_cast<cfdSliceNodeVisitor*>(nv); 
    if (cullVisitor && _textureToUpdate.valid()&& _subgraph.valid()){
-
+      unsigned int sliceNumber = cullVisitor->GetSliceNumber();
       preRender(*node,*cullVisitor, sliceNumber);
       // must traverse the Node's subgraph            
       traverse(node,nv);
