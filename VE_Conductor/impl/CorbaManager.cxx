@@ -50,13 +50,13 @@ CorbaManager::CorbaManager()
 void CorbaManager::init()
 {
 	int temp=0;
-#ifdef __OMNIORB3__		
-	orb=CORBA::ORB_init(temp,0,"omniORB3");
-#endif
+//#ifdef __OMNIORB3__		
+//	orb=CORBA::ORB_init(temp,0,"omniORB3");
+//#endif
 
-#ifdef __OMNIORB4__		
+//#ifdef __OMNIORB4__		
 	orb=CORBA::ORB_init(temp,0,"omniORB4");
-#endif
+//#endif
 
 	obj = orb->resolve_initial_references("RootPOA");
 	poa = PortableServer::POA::_narrow(obj);

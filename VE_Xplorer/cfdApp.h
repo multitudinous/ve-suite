@@ -148,11 +148,11 @@ using namespace snx;
 const float SAMPLE_TIME = 1.0f;
 
 // Declare my application class
-#ifdef TABLET
+//#ifdef TABLET
 class cfdApp : public vrj::PfApp, public VjObs_i
-#else
-class cfdApp : public vrj::PfApp
-#endif
+//#else
+//class cfdApp : public vrj::PfApp
+//#endif
 {
    public:
       //cfdApp( vrj::Kernel* kern);

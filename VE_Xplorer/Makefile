@@ -15,9 +15,9 @@ CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 ifdef OMNI_HOME
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl
 
-   TABLET = -DTABLET
+   #TABLET = -DTABLET
 
-   CORBA_DEFINES = -D__OMNIORB4__ -D__REENTRANT -D__OSVERSION__=6 #-DNO_NS
+   CORBA_DEFINES = -D__OSVERSION__=6 
 
    ifeq ($(CFD_LIBS), Linux_LIB)
       CORBA_DEFINES += -D__x86__ -D__linux__
@@ -37,7 +37,7 @@ endif
 
 ifdef ACE_ROOT
    FUTUREGEN_HOME = /home/users/mccdo/REI/futuregen
-   TABLET = -DTABLET
+   #TABLET = -DTABLET
 
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/tao_impl 
    vpath %.cpp    ${FUTUREGEN_HOME}/IDL.old ${FUTUREGEN_HOME}/Plugin
@@ -268,7 +268,7 @@ DEBUG_APP?=		TRUE
 #OPTIM_APP?=		TRUE
 
 # vtkActorToPF needs VTK4
-EXTRA_CXXFLAGS+=	-DVTK4 ${TABLET} 
+EXTRA_CXXFLAGS+=	-DVTK4 #${TABLET} 
 #$(EXTRA_FLAGS) 
 
 #EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG -gslim 

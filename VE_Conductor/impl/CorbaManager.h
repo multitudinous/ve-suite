@@ -35,9 +35,9 @@
 #include <vpr/Thread/Thread.h>
 #include <omnithread.h>
 
-#ifdef __OMNIORB4__
+//#ifdef __OMNIORB4__
 #include <omniORB4/CORBA.h>
-#endif
+//#endif
 
 class CorbaManager
 {
