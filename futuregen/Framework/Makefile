@@ -1,120 +1,115 @@
-CXX = $(shell wx-config --cxx)
-WX_CXX = $(shell wx-config --cxxflags)
-WX_LIBS = $(shell wx-config --libs)
+# Create the OS-dependent directory name
+CFDHOSTTYPE?=	$(DZR_HOSTTYPE)
+VE_SUITE_HOME?= ../../
+
+APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WinClient
+
 VE_UI_HOME = ${VE_SUITE_HOME}/futuregen/VE_UI
 IDL_HOME = ${VE_SUITE_HOME}/futuregen/IDL
 SKEL_HOME = ${VE_SUITE_HOME}/VE_Conductor/skel
 
-ifeq ($(CFDHOSTTYPE), IRIX64)
-   PLATFORM = IRIX
-   COMPILER = CC
-   GCC = no
-   GXX = no
-else
-   PLATFORM = LINUX
-   COMPILER = g++
-   GCC = yes
-   GXX = yes
-endif
+all:
+	$(MAKE) NO_DEPEND=0 cxx
+	$(MAKE) $(APP_NAME)
+#	-$(MAKE) install
 
-CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS -D_TAO
-CFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS
-LDFLAGS =    
-THREADS = none
-EXTRA_LIBS =  
-PREFIX = /usr/local
+srcdir= .
 
-include ../Plugin/Makefile.incl
+SRCS=\
+   moduleC.cpp \
+   moduleS.cpp \
+   StringParse.cpp \
+   OrbThread.cpp \
+   Frame.cpp \
+   VjObsC.cpp \
+   VjObsS.cpp \
+   App.cpp \
+   PluginLoader.cpp \
+   Network.cpp \
+   Avail_Modules.cpp \
+   ListTable.cpp \
+   PortDialog.cpp \
+   ResultPanel.cpp \
+   paraThread.cpp \
+   GlobalParamDialog.cpp \
+   string_ops.cpp \
+   interface.cpp \
+   package.cpp \
+   Plugin_base.cpp \
+   UIDialog.cpp \
+   TexTable.cpp \
+   TextResultDialog.cpp \
+   FinancialDialog.cpp \
+   UI_i.cpp \
+   UI_Frame.cpp \
+   UI_Tabs.cpp \
+   UI_VisTab.cpp \
+   UI_VecTab.cpp \
+   UI_StreamTab.cpp \
+   UI_DataSetPanel.cpp \
+   UI_SoundsTab.cpp \
+   UI_GeometryTab.cpp \
+   UI_TeacherTab.cpp \
+   UI_NavTab.cpp  \
+   UI_TransTab.cpp \
+   UI_VertTab.cpp \
+   UI_DesignParTab.cpp \
+   UI_ViewLocTab.cpp \
+   UI_ModSelPanel.cpp \
+   UI_ModelData.cpp
 
-ifndef TAO_ROOT
-  TAO_ROOT = $(ACE_ROOT)/TAO
-endif # ! TAO_ROOT
+# Specify the OS-dependent directory name for object files and depends
+OBJDIR= $(CFDHOSTTYPE)
+DEPDIR= $(CFDHOSTTYPE)
 
-APP = app
+NO_DEPEND= YES
 
-LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO -lTAO_BiDirGIOP -lxerces-c
+# One of these must be uncommented.
+#DEBUG_APP?= TRUE
+OPTIM_APP?= TRUE
 
-include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
-include $(TAO_ROOT)/rules.tao.GNU
+EXTRA_CFLAGS+=
 
-FILE_UI_CLT_OBJS = moduleC.o moduleS.o UI_i.o 
+EXTRA_CXXFLAGS+=
 
-include $(ACE_ROOT)/include/makeinclude/macros.GNU
-include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
-include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
-include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
-include $(TAO_ROOT)/taoconfig.mk
+EXTRA_DEFS+=
+#_MPI for HPC build
+#SJK_TEST produces ascii output
 
-vpath %.cpp ${VE_UI_HOME} ${IDL_HOME} ${VE_SUITE_HOME}/VE_Xplorer ${SKEL_HOME} ../Plugin
-vpath %.cxx ${VE_UI_HOME}
+#EXTRA_DEBUG_FLAGS+= -g -D_DEBUG
+#EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
-LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs
+LINKALL_ON= -all
+LINKALL_OFF=
 
-CPPFLAGS += -g ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
-            -I$(TAO_ROOT)/orbsvcs -I${VE_UI_HOME} -I${IDL_HOME} \
-            -I${VE_SUITE_HOME}/VE_Xplorer -I${SKEL_HOME} -I./.
+STATIC_ON= @APP_LINK_STATIC_ON@
+STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-ifeq ($(PLATFORM), IRIX)
-   CPPFLAGS += -n32 -mips3 -LANG:std -I${VJ_DEPS_DIR}/include/boost/compatibility/cpp_c_headers
-   LDFLAGS += -LANG:std 
-endif
+include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
-.PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
+#add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
+include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
+include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
+include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 
-OBJECTS = StringParse.o \
-          OrbThread.o \
-          Frame.o \
-          VjObsC.o \
-          VjObsS.o \
-          App.o \
-          PluginLoader.o \
-          Network.o \
-          Avail_Modules.o \
-          ListTable.o \
-          PortDialog.o \
-          ResultPanel.o \
-          paraThread.o \
-          GlobalParamDialog.o \
-          string_ops.o \
-          interface.o \
-          package.o \
-          Plugin_base.o \
-          UIDialog.o \
-          TexTable.o \
-          TextResultDialog.o \
-          FinancialDialog.o \
-          UI_Frame.o \
-          UI_Tabs.o \
-          UI_VisTab.o \
-          UI_VecTab.o \
-          UI_StreamTab.o \
-          UI_DataSetPanel.o \
-          UI_SoundsTab.o \
-          UI_GeometryTab.o \
-          UI_TeacherTab.o \
-          UI_NavTab.o  \
-          UI_TransTab.o \
-          UI_VertTab.o \
-          UI_DesignParTab.o \
-          UI_ViewLocTab.o \
-          UI_ModSelPanel.o \
-          UI_ModelData.o
+vpath %.cpp ${VE_UI_HOME} ${IDL_HOME} 
+vpath %.cpp ${SKEL_HOME} ${VE_SUITE_HOME}/futuregen/Plugin
 
-.SUFFIXES : .o .cc .cpp .cxx
+EXTRA_CXXFLAGS += -I${VE_SUITE_HOME}/futuregen/Plugin -I${VE_UI_HOME} \
+                  -I${IDL_HOME} -I${VE_SUITE_HOME}/VE_Xplorer -I${SKEL_HOME}
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+cxx: $(OBJS)
 
-.cc.o :
-	$(CXX) -g -c $(CPPFLAGS) -w -D WXUSING_PLUGIN_DLL -o $@ $<
+# Create the OS-dependent directory for the executable. If the dir exists, 
+# 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
+${APP_NAME}: $(OBJS)
+	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
 
-.cpp.o :
-	$(CXX) -g -c $(CPPFLAGS) -w -D WXUSING_PLUGIN_DLL -o $@ $<
+#install:
+#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
 
-.cxx.o :
-	$(CXX) -g -c $(CPPFLAGS) -w -D WXUSING_PLUGIN_DLL -o $@ $<
-
-all: $(APP)
-
-$(APP): $(OBJECTS) $(addprefix $(VDIR),$(FILE_UI_CLT_OBJS))
-	$(CXX) ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ ${WX_LIBS} $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK) 
-
-clean:
-	rm -rf *.o $(APP) ./.obj ./ii_files ./Debug
+CLEAN_FILES+= $(APP_NAME)
