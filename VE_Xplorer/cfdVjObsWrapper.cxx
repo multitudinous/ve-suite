@@ -33,7 +33,7 @@
 #ifdef _TAO
 #include <orbsvcs/CosNamingC.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
-#endif
+#endif // _TAO
 #include "VjObs_i.h"     //added for corba stuff
 #include "cfdCommandArray.h"
 #include "cfdSteadyStateVizHandler.h"
@@ -83,7 +83,9 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    {
       std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }
+#ifdef _TAO
    child_poa->destroy(1,1);
+#endif // _TAO
    this->_orbPtr->destroy();
 }
 
@@ -91,11 +93,11 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
 void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr, PortableServer::POA* poa, int argc, char* argv[]  )
 #else
 void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr orbPtr, int argc, char* argv[]  )
-#endif
+#endif // _TAO
 {
 #ifdef _TAO
    child_poa = poa;
-#endif
+#endif // _TAO
    naming_context = input;
    _orbPtr = orbPtr;
 #ifdef _CLUSTER
@@ -142,8 +144,6 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
       fclose(fhost);
    }
 #endif // _CLUSTER
- 
-
   
 //   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
 //   cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
@@ -155,8 +155,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
    hostname=raw_hostname;
    std::cout<<"Host name is "<<hostname<<std::endl;   
    getStringTokens(raw_hostname,".", toks);
-   //now the toks[0] will be the short host name, which is the one without the domain name
-
+   //now toks[0] will be the short host name: the one without the domain name
    
    if (hostname==masterhost||toks[0]==masterhost)
    {
