@@ -79,7 +79,7 @@ void Cyclone::GetIPorts(POLY &iports)
 /////////////////////////////////////////////////////////////////////////////
 int Cyclone::GetNumOports()
 {
-  int result=1;
+  int result=2;
   //Your code
   return result;
 }
@@ -87,7 +87,8 @@ int Cyclone::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Cyclone::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(56, 20); 
+  oports[0]=wxPoint(56, 15); 
+  oports[1]=wxPoint(56, 25); 
 }
 
 /////////////////////////////////////////////////////////////////////////////

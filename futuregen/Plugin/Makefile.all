@@ -24,7 +24,7 @@ OBJ4 = SOFC/SOFC.o SOFC/SOFC_UI.o
 OBJ5 = BulkDesulfurizer/BulkDesulfurizer.o BulkDesulfurizer/BulkDesulfurizer_UI.o 
 OBJ6 = SteamTurbine/SteamTurbine.o SteamTurbine/SteamTurbine_UI.o 
 OBJ7 = DumpCombustor/DumpCombustor.o DumpCombustor/DumpCombustor_UI.o 
-OBJ8 = CatalyticConverter/CatalyticConverter.o CatalyticConverter/CatalyticConverter_UI.o 
+OBJ8 = CatalyticCombustor/CatalyticCombustor.o CatalyticCombustor/CatalyticCombustor_UI.o 
 OBJ9 = HeatExchanger/HeatExchanger.o HeatExchanger/HeatExchanger_UI.o 
 OBJ10 = SOFC1D/SOFC1D.o SOFC1D/SOFC1D_UI.o 
 OBJ11 = Condenser/Condenser.o Condenser/Condenser_UI.o 
@@ -72,7 +72,7 @@ s7:	$(OBJ7)
 	$(CXX) -g -shared -o libDumpCombustor.so $(OBJ7)
 
 s8:	$(OBJ8)
-	$(CXX) -g -shared -o libCatalyticConverter.so $(OBJ8)
+	$(CXX) -g -shared -o libCatalyticCombustor.so $(OBJ8)
 
 s9:	$(OBJ9)
 	$(CXX) -g -shared -o libHeatExchanger.so $(OBJ9)

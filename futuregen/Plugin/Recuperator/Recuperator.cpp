@@ -41,7 +41,11 @@ Recuperator
   use_fins = 1;
   fin_effect = 2.0;
 
-  n_pts=3;
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(40,15);
+  poly[2]=wxPoint(40,25);
+  poly[3]=wxPoint(0, 40);
+  n_pts=4;
 }
 
 
@@ -80,7 +84,7 @@ int Recuperator::GetNumPoly()
 /////////////////////////////////////////////////////////////////////////////
 int Recuperator::GetNumIports()
 {
-  int result=1;
+  int result=2;
 
   return result;
 }
@@ -88,14 +92,15 @@ int Recuperator::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Recuperator::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,20);
+  iports[0]=wxPoint(0,15);
+  iports[1]=wxPoint(0,25);
   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 int Recuperator::GetNumOports()
 {
-  int result=1;
+  int result=2;
   //Your code
   return result;
 }
@@ -103,7 +108,8 @@ int Recuperator::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Recuperator::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40,20);
+  oports[0]=wxPoint(40,15);
+  oports[1]=wxPoint(40,25);
 }
 
 /////////////////////////////////////////////////////////////////////////////
