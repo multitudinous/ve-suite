@@ -446,7 +446,7 @@ void stream::speciate(const thermo& thm, int& num, int& errcnt,
    mol_el.resize(3*num); mol_sp.resize(3*num);
    int isp;
    int id_C = -1, id_H = -1, id_O = -1, id_N = -1, id_S = -1;
-   int id_CL = -1;
+   int id_CL = -1, id_HG = -1;
    for(isp=0; isp<num; isp++) {
       mol_el[isp] = frc[isp]/thm.get_atwt()[iel[isp]];
    }
@@ -457,6 +457,7 @@ void stream::speciate(const thermo& thm, int& num, int& errcnt,
       if(thm.get_el_nam()[iel[isp]]=="N") id_N = isp;
       if(thm.get_el_nam()[iel[isp]]=="S") id_S = isp;
       if(thm.get_el_nam()[iel[isp]]=="CL") id_CL = isp;
+      if(thm.get_el_nam()[iel[isp]]=="HG") id_HG = isp;
    }
    isp = -1;
    if(id_CL>-1){
@@ -601,6 +602,19 @@ void stream::speciate(const thermo& thm, int& num, int& errcnt,
          //cout << "species " << name << " not found" << endl;
       }
       mol_sp[isp] = mol_el[id_N]*0.5;
+      mol_el[id_N] = 0.0;
+   }
+   if(id_HG>-1){
+      name = "HG";
+      iter = nam_spec.find(name);
+      if(iter!=nam_spec.end()){
+         isp++;
+         i_sp[isp] = (*iter).second;
+      }else{
+         errcnt++;
+         //cout << "species " << name << " not found" << endl;
+      }
+      mol_sp[isp] = mol_el[id_N];
       mol_el[id_N] = 0.0;
    }
    num = isp+1;
