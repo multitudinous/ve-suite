@@ -43,12 +43,14 @@ enum cfdPlayMode{
    CFDSEQ_START,
    CFDSEQ_PAUSE,
    CFDSEQ_RESUME,
-   CFDSEQ_PLAYING 
+   CFDSEQ_PLAYING,
+   CFDSEQ_STEP
 };
 
 enum cfdLoopMode{
-CFDSEQ_CYCLE = 0,
-CFDSEQ_SWING 
+   CFDSEQ_CYCLE = 0,
+   CFDSEQ_SWING
+
 };
 
 class cfdSequence : public pfGroup{
@@ -66,13 +68,27 @@ public:
    void setLoopMode(int lMode){_lMode = lMode;}
 
    //stop/start/pause/resume 
-   void setPlayMode(int pMode){_pMode = pMode;}
+   void setPlayMode(int pMode){
+      _pMode = pMode;
+   }
 
    //set the current frame
    void setCurrentFrame(int frameIndex);
 
+   //step the sequence one frame in a particular direction
+   void stepSequence(){_step = CFDSEQ_STEP;}
+
+   //change the direction of the frame viewing
+   //if it is currently foward(low->high index)
+   //change to reverse(high->low index) and vice
+   //versa
+   void changeSequenceDirection();
+
    //get the current frame index
-   int getFrame(){return _currentFrame;}
+   int getFrame();//{return _currentFrame ;}
+
+   //get the next frame index
+   int getNextFrame();
 
    //get number of children
    virtual int getNumChildren();
@@ -89,19 +105,22 @@ public:
    //remove child 
    virtual int removeChild(pfNode* child);
    
+   //get the direction of the sequence
+   int direction(){return _dir;}
+
    //get the duration of the sequence
    double duration(){return _duration;}
    
-   
+    //the node pre-traverser callback
   friend  int switchFrame(pfTraverser* trav, void* userData);
 protected:
-   //the node pre-traverser callback
-
    pfSwitch* _switch;
 
    int _appFrame;
    int _lMode;
    int _pMode;
+   int _step;
+   int _changedDirection;
 
    double _deltaT;
    double _duration;

@@ -80,8 +80,11 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
 	definedRange[ 0 ] = definedRange[ 1 ] = 0;
 	pData = vtkPolyData::New();
    
-
+#ifndef _USE_CFD_SEQUENCE
    sequence = new pfSequence();
+#else
+   sequence = new cfdSequence();
+#endif
    ihccModelNode = new pfGroup();
 
    worldDCS->addChild( this->sequence );
@@ -298,9 +301,13 @@ void cfdIHCCModel::Update( void )
    this->gauge_acid->SetDataVector( this->solutions );
    this->gauge_acid->Update();
    //this->gauge_acid->AddTopfSequence();
-
+   
+#ifndef _USE_CFD_SEQUENCE
    this->sequence->setDuration( 1.0, -1 );
-   this->StartpfSequence();
+#else
+   this->sequence->setDuration( 1.0);
+#endif
+    this->StartpfSequence();
 }
 
 void cfdIHCCModel::MakeSequence( void )

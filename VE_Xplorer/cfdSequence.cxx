@@ -55,8 +55,8 @@ cfdSequence::cfdSequence()
    _lMode = 0;
    _pMode = 1;
    _appFrame = 0;
+   _step = -10000;
 
-   //_func = cfdSequence::_switchFrame;
    setTravFuncs(PFTRAV_APP,switchFrame,0);
    setTravData(PFTRAV_APP,this);
 }
@@ -132,13 +132,10 @@ int switchFrame(pfTraverser* trav, void* userData)
    double frameRateRatio = 0;
    
    //the number of frames to increment 
-   int deltaFrame =1;
+   int deltaFrame = 1;
 
    //the sequence node w/ all the desired state info
    cfdSequence* sequence = (cfdSequence*)userData;
-
-   //sequence->_switch->setVal(PFSWITCH_ON);
-   //return PFTRAV_CONT;
 
    nChildren = sequence->_switch->getNumChildren();
 
@@ -186,7 +183,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    //the app we don't need to update yet
 
    //the app is processing faster than sequence
-   if(appFrameRate >= seqRate){
+   if(appFrameRate >= seqRate && pMode != CFDSEQ_START){
       //cout<<"Frame Rate: "<<appFrameRate<<endl;
       //calculate frame rate ratio
       frameRateRatio = appFrameRate/seqRate;
@@ -212,12 +209,14 @@ int switchFrame(pfTraverser* trav, void* userData)
    //now check the states and do the updates
 
    //we are in stop or pause
-   if ( pMode == CFDSEQ_STOP || pMode == CFDSEQ_PAUSE )
-   {
+   if ( pMode == CFDSEQ_STOP || pMode == CFDSEQ_PAUSE ){
       //don't change the scene graph
+#ifdef _DEBUG
       cout<<"Stopped or paused!"<<endl;
+#endif
       return PFTRAV_CONT;
    }
+
 
    //if we've made it here, we are either resuming
    //or starting so check the loop mode and direction
@@ -225,9 +224,10 @@ int switchFrame(pfTraverser* trav, void* userData)
 
    //we're restarting so reset current frame 
    //in the sequence to the beginning
-   if ( pMode == CFDSEQ_START )
-   {
+   if ( pMode == CFDSEQ_START ){
+#ifdef _DEBUG
       cout<<"Starting sequence."<<endl;
+#endif
       sequence->_currentFrame = begin;
       sequence->_switch->setVal(sequence->_currentFrame);
 
@@ -236,96 +236,38 @@ int switchFrame(pfTraverser* trav, void* userData)
       return PFTRAV_CONT;
    }
 
-   //////////////////////////////////////////////////////////////////
-   //reverseForward: relative direction
-   //
-   //1 == forward through frames in the same direction as _dir
-   //-1 == backward through frames in the opposite direction as _dir
-   //
-   //if sequence->_dir is 1(forward)
-   //we are displaying frames from low to high index.
-   //
-   //if sequence->_dir is -1(backward)
-   //we are displaying frames from high to low index.
-   //
-   //reverseForward is used to increment correctly
-   //depending on _dir and loop mode(cycle or swing) 
-   //////////////////////////////////////////////////////////////////
-
-   int reverseForward = 1;
-
    //depending on cycle type, decide the frame
    //to display
    if(sequence->_switch){
-      //display the frame 
+      //get the next frame to display
+      sequence->_currentFrame = sequence->getNextFrame();
+      
+      //set the displayed frame on the switch
       sequence->_switch->setVal(sequence->_currentFrame);
 
-      //update the next frame to display
-      switch (lMode){
-         case 1:
-            //cout<<"Swing mode"<<endl;
-            if(sequence->_dir ==1){
+      //handle swing loop mode by changing directions
+      //when we get to the beginning or end of the sequence
+      if(lMode == CFDSEQ_SWING){
+         //(swing) so go back and forth through frames 
+         if(sequence->_currentFrame == end|| 
+            sequence->_currentFrame == begin){
+	         //switch the direction of the sequence
+            sequence->_dir *= -1;
+         }
+      }
+      //reset the appFrame counter for synchronization
+      sequence->_appFrame = 0;
 
-               //(swing) so go back and forth through frames 
-               if(sequence->_currentFrame == end  ){
-
-                  //reverse through sequence 
-                  //from the last frame
-                  reverseForward = -1;
-
-               }else if(sequence->_currentFrame == begin){
-                  //proceed forward through sequence 
-                  //from the first frame
-                  reverseForward =1;
-               }
-            }else if(sequence->_dir ==-1){
-               //(swing) so go back and forth 
-               if(sequence->_currentFrame == begin  ){
-
-                  //reverse through sequence 
-                  //from the last frame
-                  reverseForward = 1;
-
-               }else if(sequence->_currentFrame == end){
-                  //proceed forward through sequence 
-                  //from the first frame
-                  reverseForward = -1;
-               }
-            }
-            break;
-
-         case 0:
-         default:
-            //cout<<"Cycle mode"<<endl;
-            //we're at the end so start over(cycle)
-            if(sequence->_dir == 1){
-               if(sequence->_currentFrame == end ){
-                  sequence->_currentFrame = begin;
-               }
-            }else if(sequence->_dir == -1){
-               if(sequence->_currentFrame == begin ){
-                  sequence->_currentFrame = end;
-               }
-            }
-            //always going forward through frames
-            reverseForward = 1;
-            break;
-         };
-
-
-         //reset the application's Frame counter
-         sequence->_appFrame = 0;
-
-         //update the frame in the sequence
-         sequence->_currentFrame += (deltaFrame*reverseForward*sequence->_dir);
-            
+      //if we are stepping, pause the sequence
+      if(sequence->_step == CFDSEQ_STEP){
+         sequence->_pMode = CFDSEQ_PAUSE;
+         sequence->_step = 0;
+      }
+   }
    
-    }
 
    return PFTRAV_CONT;
 } 
-   
-
 /////////////////////////////////////////////////////////
 void cfdSequence::setInterval(int mode, int beg, int end)
 {
@@ -341,10 +283,18 @@ void cfdSequence::setInterval(int mode, int beg, int end)
    if(_begin > _end)_dir = -1;
    else if(_end > _begin) _dir = 1;
 }
-/////////////////////////////////////
-//set the current frame for cluster// 
-//implementation                   // 
-/////////////////////////////////////
+////////////////////////////////////////////////
+//change the direction of the frame sequencing//
+////////////////////////////////////////////////
+void cfdSequence::changeSequenceDirection()
+{
+   //update the direction
+   setInterval(_lMode,_end,_begin);
+}
+////////////////////////////////////////////
+//set the current frame for cluster       // 
+//implementation                          // 
+////////////////////////////////////////////
 void cfdSequence::setCurrentFrame(int index)
 {
    //no need to update yet
@@ -356,6 +306,7 @@ void cfdSequence::setCurrentFrame(int index)
       //low to high
       if(index >= _begin && index < _end){
          _currentFrame = index;
+	 _switch->setVal(_currentFrame);
       }else{
          //invalid index
          cout<<"Error: cfdSequence!"<<endl;
@@ -367,6 +318,7 @@ void cfdSequence::setCurrentFrame(int index)
       //high to low
       if(index >= _end && index < _begin){
          _currentFrame = index;
+	 _switch->setVal(_currentFrame);
       }else{
          //invalid index
          cout<<"Error: cfdSequence!"<<endl;
@@ -383,15 +335,37 @@ void cfdSequence::setCurrentFrame(int index)
 void cfdSequence::addChild(pfNode* child)
 {
    //cout<<"Adding frame to sequence."<<endl;
-
    //init the switch node
    if(!_switch){
       _switch = new pfSwitch();
-
+      _switch->setVal(PFSWITCH_OFF);
+      
       //add the switch node to the tree
       pfGroup::addChild(_switch);
    }
   
    _switch->addChild(child);
+}
+///////////////////////////
+//adjusted this to handle//
+//the last frame of the  //
+//sequence in cycle mode //
+///////////////////////////
+int cfdSequence::getFrame()
+{
+   return _currentFrame;
+}
+/////////////////////////////////////////
+//get the frame that is currently being// 
+//displayed on the tree                //
+/////////////////////////////////////////
+int cfdSequence::getNextFrame()
+{ 
+   if(_currentFrame == _end && _lMode == CFDSEQ_CYCLE){
+      return _begin;
+   }else{
+      //update the frame in the sequence
+      return _currentFrame + _dir;
+   }
 }
 

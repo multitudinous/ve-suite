@@ -123,6 +123,7 @@ inline cfdApp::cfdApp( )//vrj::Kernel* kern )
    this->_cfdTFM_Geometry[0] = NULL;
    this->_cfdTFM_Geometry[1] = NULL;
    this->lastSource = NULL;
+   this->ihccModel = NULL;
 }
 #ifdef TABLET
 void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_ptr orb, PortableServer::POA_ptr poa )
@@ -2699,10 +2700,10 @@ void cfdApp::preFrame( void )
    if (  this->activeSequenceObject )
    {
       int currentFrame = this->activeSequenceObject->GetFrameOfpfSequence();
-      if ( this->lastFrame != currentFrame )
+      if (this->lastFrame != currentFrame )
       {
-#ifdef TABLET         
-		 this->setTimesteps( currentFrame );
+#ifdef TABLET 
+         this->setTimesteps( currentFrame );
 #endif
          this->lastFrame = currentFrame;
       }

@@ -33,7 +33,9 @@
 #define CFD_IHCCMODEL_H
 
 #include "cfdObjects.h"
+#include "cfdSequence.h"
 #include <vector>
+
 using namespace std;
 class vtkLookupTable;
 class vtkPolyData;
@@ -75,8 +77,11 @@ class cfdIHCCModel: public cfdObjects
       double definedRange[ 2 ];
 	   vector< double > solutions;
 	   vector< double > times;
-
+#ifndef _USE_CFD_SEQUENCE
       pfSequence* sequence;
+#else
+      cfdSequence* sequence;
+#endif
       cfdIHCCGauge* gauge_acid;
       cfdIHCCGauge* gauge_time;
       cfdIHCCContour* contours;
