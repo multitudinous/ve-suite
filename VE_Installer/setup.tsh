@@ -24,7 +24,6 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
-setenv TAO_BUILD FALSE
 # TAO_BUILD can be set from outside this script to override the default of FALSE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
 if ( ! $?TAO_BUILD ) then
@@ -39,7 +38,6 @@ else if ( $TAO_BUILD != "TRUE" && $TAO_BUILD != "FALSE" ) then
    echo ""
 endif
 
-setenv CLUSTER_APP FALSE
 # CLUSTER_APP can be set from outside this script to override the default of FALSE
 # Make sure that CLUSTER_APP is set to either TRUE or FALSE...
 if ( ! $?CLUSTER_APP ) then
@@ -51,6 +49,9 @@ else if ( $CLUSTER_APP != "TRUE" && $CLUSTER_APP != "FALSE" ) then
    echo "   Because it was not defined properly, setting CLUSTER_APP to" ${CLUSTER_APP}
    echo "   If you want otherwise, redefine CLUSTER_APP"
 endif
+
+#echo "TAO_BUILD =" ${TAO_BUILD}
+#echo "CLUSTER_APP =" ${CLUSTER_APP}
 
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
@@ -94,6 +95,7 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
    setenv JDK_HOME /usr/java/j2sdk1.4.2_03
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
+   #setenv VTK_BASE_DIR /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-RH80
    setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-RH80
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/Linux_rh8
