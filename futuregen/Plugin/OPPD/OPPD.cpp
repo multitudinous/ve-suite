@@ -39,6 +39,23 @@ OPPD
   RegistVar("ventpardbls", &ventpardbls);
   RegistVar("detectpardbls", &detectpardbls);
   RegistVar("killexcel", &killexcel);
+  RegistVar("tsec", &tsec);
+  RegistVar("tmin", &tmin);
+  RegistVar("hrrkw", &hrrkw);
+  RegistVar("hrrbtu", &hrrbtu);
+  RegistVar("detsprinktime", &detsprinktime);
+  RegistVar("detsmtime", &detsmtime);
+  RegistVar("detfthtime", &detfthtime);
+  RegistVar("flwallinehgt", &flwallinehgt);
+  RegistVar("flcornerhgt", &flcornerhgt);
+  RegistVar("flwallhgt", &flwallhgt);
+  RegistVar("hrrhrr", &hrrhrr);
+  RegistVar("hrrburndur", &hrrburndur);
+  RegistVar("hrrhgthesk", &hrrhgthesk);
+  RegistVar("hrrhgtthom", &hrrhgtthom);
+  RegistVar("pltemp", &pltemp);
+  RegistVar("tcltemp", &tcltemp);
+  RegistVar("visdist", &visdist);
 
   wxString icon_file="Icons/bonfire.gif";
   wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
@@ -155,7 +172,24 @@ UIDialog* OPPD::UI(wxWindow* parent)
      &compardbls,
      &ambpardbls,
      &ventpardbls,
-     &detectpardbls);
+     &detectpardbls, 
+	 &tsec,
+     &tmin,
+     &hrrkw,
+     &hrrbtu,
+     &detsprinktime,
+     &detsmtime,
+     &detfthtime,
+     &flwallinehgt,
+     &flcornerhgt,
+     &flwallhgt,
+     &hrrhrr,
+     &hrrburndur,
+	 &hrrhgthesk,
+     &hrrhgtthom,
+     &pltemp,
+     &tcltemp,
+     &visdist);
       
   return dlg;
 }

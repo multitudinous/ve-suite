@@ -39,7 +39,24 @@ class OPPD_UI_Dialog : public UIDialog
           vector<double>* compardbls,
           vector<double>* ambpardbls,
           vector<double>* ventpardbls,
-          vector<double>* detectpardbls);
+          vector<double>* detectpardbls,
+		  double* tsec,
+		  double* tmin,
+		  double* hrrkw,
+		  double* hrrbtu,
+		  double* detsprinktime,
+		  double* detsmtime,
+		  double* detfthtime,
+		  double* flwallinehgt,
+		  double* flcornerhgt,
+		  double* flwallhgt,
+		  double* hrrhrr,
+		  double* hrrburndur,
+		  double* hrrhgthesk,
+		  double* hrrhgtthom,
+		  double* pltemp,
+		  double* tcltemp,
+		  double* visdist);
   OPPD_UI_Dialog() {};
   
   virtual ~OPPD_UI_Dialog();
@@ -77,6 +94,25 @@ class OPPD_UI_Dialog : public UIDialog
   vector<double>* p_ambpardbls;
   vector<double>* p_ventpardbls;
   vector<double>* p_detectpardbls;
+  double* p_tsec;
+  double* p_tmin;
+  double* p_hrrkw;
+  double* p_hrrbtu;
+  double* p_detsprinktime;
+  double* p_detsmtime;
+  double* p_detfthtime;
+  double* p_flwallinehgt;
+  double* p_flcornerhgt;
+  double* p_flwallhgt;
+  double* p_hrrhrr;
+  double* p_hrrburndur;
+  double* p_hrrhgthesk;
+  double* p_hrrhgtthom;
+  double* p_pltemp;
+  double* p_tcltemp;
+  double* p_visdist;
+
+  //wxString txt1,txt2,txt3,txt4,txt5,txt6,txt7,txt8,txt9,txt10,txt11,txt12,txt13,txt14,txt15,txt16,txt17;
 
   void _buildPage();
 };

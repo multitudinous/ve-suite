@@ -78,6 +78,23 @@ class OPPD : public REI_Plugin
   vector<double> ambpardbls;
   vector<double> ventpardbls;
   vector<double> detectpardbls;
+  double tsec;
+  double tmin;
+  double hrrkw;
+  double hrrbtu;
+  double detsprinktime;
+  double detsmtime;
+  double detfthtime;
+  double flwallinehgt;
+  double flcornerhgt;
+  double flwallhgt;
+  double hrrhrr;
+  double hrrburndur;
+  double hrrhgthesk;
+  double hrrhgtthom;
+  double pltemp;
+  double tcltemp;
+  double visdist;
   //HERE is the GUI variable passed to the Dialog and Packed
   protected:
   wxBitmap *my_icon;
