@@ -41,8 +41,11 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   :wxFrame(parent, id, title)
 {
   wx_log_splitter = new wxSplitterWindow(this, -1);
+  wx_log_splitter->SetMinimumPaneSize( 40 );
   wx_ve_splitter = new wxSplitterWindow(wx_log_splitter, -1);
+  wx_ve_splitter->SetMinimumPaneSize( 20 );
   wx_nw_splitter = new wxSplitterWindow(wx_ve_splitter, -1);
+  wx_nw_splitter->SetMinimumPaneSize( 20 );
   
   //LogWindow
   logwindow = new wxTextCtrl(wx_log_splitter, MYLOG, "", wxDefaultPosition, wxDefaultSize, wxTE_MULTILINE|wxTE_READONLY);
@@ -56,8 +59,8 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   network = new Network(wx_nw_splitter, -1 );
   av_modules->SetNetwork(network);
 	
-  wx_log_splitter->SplitHorizontally(wx_ve_splitter, logwindow, -200);
-  wx_nw_splitter->SplitVertically(av_modules, network, 200);  
+  wx_log_splitter->SplitHorizontally(wx_ve_splitter, logwindow, -100);
+  wx_nw_splitter->SplitVertically(av_modules, network, 140);
   wx_ve_splitter->Initialize(wx_nw_splitter);
   SetSize(DetermineFrameSize(NULL));
   CreateMenu();
