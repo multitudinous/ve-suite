@@ -73,7 +73,14 @@ ansysReader::ansysReader( char * input )
            << "\", so exiting" << std::endl;
       exit( 1 );
    }
-   
+/* 
+   double n1[3] = {0,1,0};
+   double n2[3] = {1,0,0};
+   double p1[3] = {1,2,0};
+   double p2[3] = {2,1,0};
+   double * junk = this->GetIntersectionPoint( n1, n2, p1, p2 );
+   exit( 1 );
+*/
    this->endian_flip = 1;
 
    this->integerPosition = 0;
@@ -552,6 +559,7 @@ void ansysReader::ReadHeader()
    // maximum file length
    int32 maximumFileLength = ReadNthInteger( itemNumber );
    PRINT( maximumFileLength );
+   //std::cout << std::setw( PRINT_WIDTH ) << "int34 maximumFileLength = " << maximumFileLength << std::endl;
 
    // maximum record size
    int32 maximumRecordSize = ReadNthInteger( itemNumber );
@@ -619,7 +627,7 @@ void ansysReader::ReadHeader()
    itemNumber = 98;
    int64 filesize = ReadNthDoubleLong( itemNumber );
 #ifdef PRINT_HEADERS
-   std::cout << std::setw( PRINT_WIDTH ) << "filesize at write = " << filesize << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "int64 filesize at write = " << filesize << std::endl;
 #endif // PRINT_HEADERS
 
    // the number at integer position 102 is 404
@@ -677,6 +685,7 @@ void ansysReader::ReadRSTHeader()
 
    this->numDOF = ReadNthInteger( this->integerPosition );
    PRINT( this->numDOF );
+   //std::cout << "\tnumDOF = " << this->numDOF << std::endl;
 
    int32 maxElemNumber = ReadNthInteger( this->integerPosition );
    PRINT( maxElemNumber );
@@ -1359,8 +1368,8 @@ void ansysReader::ReadNodalCoordinates()
    
    if ( numValues != 7 * this->numNodes ) 
    {
-      std::cerr << "numValues = " << numValues
-                << " != 7 * numNodes" << std::endl;
+      std::cout << "Note: numValues = " << numValues
+                << " != 7 * numNodes = " << 7 * this->numNodes<< std::endl;
       exit( 1 );
    }
 
@@ -1644,10 +1653,15 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
    this->cornerNodeNumbersForElement[ elemIndex ] = nodes;
 
 #ifdef PRINT_HEADERS
-   for ( int32 i = 0; i < numCornerNodes; i++ )
-   {  
-      //std::cout << "\tcornerNodes[ " << i << " ] = " << nodes[ i ] << std::endl;
-   }
+      if ( elemIndex == 35893 )
+      {
+         std::cout << "elemIndex " << elemIndex << ", nodes: ";
+         for ( int i = 0; i < numCornerNodes; i++ )
+         {
+            std::cout << "\t" << nodes[ i ];
+         }
+         std::cout << std::endl;
+      }
 #endif // PRINT_HEADERS
 
    // read rest of values: usually but not always zero
@@ -1716,27 +1730,17 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
    {
 //#define SJK_USE_QUADS
 #ifdef SJK_USE_QUADS
-/*
-      if ( elemIndex == 35893 )
-      {
-         std::cout << "elemIndex " << elemIndex << ", nodes: ";
-         for ( int i = 0; i < numCornerNodes; i++ )
-         {
-            std::cout << "\t" << nodes[ i ];
-         }
-         std::cout << std::endl;
-      }
-*/
-      
+
       this->ugrid->InsertNextCell( VTK_QUAD, numCornerNodes, nodes );
 #else
       //std::cout << "Inserting shell element (" << elementRoutineNumber << ") for elemIndex " << elemIndex << std::endl;
+
       double iNode[ 3 ], jNode[ 3 ], kNode[ 3 ];
       this->ugrid->GetPoints()->GetPoint( nodes[ 0 ], iNode );
       this->ugrid->GetPoints()->GetPoint( nodes[ 1 ], jNode );
       this->ugrid->GetPoints()->GetPoint( nodes[ 2 ], kNode );
 
-      double x[ 3 ], y[ 3 ], z[ 3 ];
+      double x[ 3 ], y[ 3 ];
       for ( int i = 0; i < 3; i++ )
       {
          x[ i ] = jNode[ i ] - iNode[ i ];
@@ -1744,13 +1748,18 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
          y[ i ] = kNode[ i ] - jNode[ i ];
       }
 
+      double z[ 3 ];
       vtkMath::Cross( x, y, z );
       vtkMath::Normalize( z );
 
       //std::cout << "z = " << z[0] << "\t" << z[1] << "\t" << z[2] << std::endl;
-      //std::cout << "! = " << this->coordinateSystemDescriptions[ this->coordSystemforElement[ elemIndex ] ][ 6+0] << "\t"
-      //                    << this->coordinateSystemDescriptions[ this->coordSystemforElement[ elemIndex ] ][ 6+1] << "\t"
-      //                    << this->coordinateSystemDescriptions[ this->coordSystemforElement[ elemIndex ] ][ 6+2] << std::endl;
+
+      //int coordSystem = this->coordSystemforElement[ elemIndex ];
+
+      //std::cout << "coordSystem[ " << coordSystem << " ] = "
+      //          << this->coordinateSystemDescriptions[ coordSystem ][ 6+0 ] << "\t"
+      //          << this->coordinateSystemDescriptions[ coordSystem ][ 6+1 ] << "\t"
+      //          << this->coordinateSystemDescriptions[ coordSystem ][ 6+2 ] << std::endl;
 
       double thickness[ 4 ];
       int realSet = this->realConstantsForElement[ elemIndex ];
@@ -1780,12 +1789,16 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
          thickness[ 3 ] = this->elemRealConstants[ realSet ][ 3 ];
       }
 
+#ifdef PRINT_HEADERS
       if ( thickness[ 0 ] != thickness[ 1 ] ||
            thickness[ 0 ] != thickness[ 2 ] ||
            thickness[ 0 ] != thickness[ 3 ] )
       {
-         std::cout << "thickness = " << thickness[ 0 ] << "\t" << thickness[ 1 ] << "\t" << thickness[ 2 ] << "\t" << thickness[ 3 ] << std::endl;
+         std::cout << "thickness = " << thickness[ 0 ] << "\t"
+                   << thickness[ 1 ] << "\t" << thickness[ 2 ] << "\t"
+                   << thickness[ 3 ] << std::endl;
       }
+#endif // PRINT_HEADERS
 
       int * expandedNodes = new int [ 2 * numCornerNodes ];
       for ( int i = 0; i < numCornerNodes; i++ )
@@ -1797,7 +1810,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
          {
             //if ( elemIndex == 0 ) std::cout << "midPlaneCoordinates[ " << j << " ] = " << midPlaneCoordinates[ j ] << std::endl;
             topPlaneCoordinates[ j ] = midPlaneCoordinates[ j ] + 0.5 * thickness[ i ] * z[ j ];
-                  //this->coordinateSystemDescriptions[ this->coordSystemforElement[ elemIndex ] ][ 6+j ];
+                  //this->coordinateSystemDescriptions[ coordSystem ][ 6+j ];
             //if ( elemIndex == 0 ) std::cout << "topPlaneCoordinates[ " << j << " ] = " << topPlaneCoordinates[ j ] << std::endl;
          }
          expandedNodes[ i ] = vertices->InsertNextPoint( topPlaneCoordinates );
@@ -1818,8 +1831,8 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
          for ( int j = 0; j < 3; j++ )
          {
             //if ( elemIndex == 0 ) std::cout << "midPlaneCoordinates[ " << j << " ] = " << midPlaneCoordinates[ j ] << std::endl;
-            bottomPlaneCoordinates[ j ] = midPlaneCoordinates[ j ] - 0.5 * thickness[ i ] *  z[ j ];
-                  //this->coordinateSystemDescriptions[ this->coordSystemforElement[ elemIndex ] ][ 6+j ];
+            bottomPlaneCoordinates[ j ] = midPlaneCoordinates[ j ] - 0.5 * thickness[ i ] * z[ j ];
+                  //this->coordinateSystemDescriptions[ coordSystem ][ 6+j ];
             //if ( elemIndex == 0 ) std::cout << "bottomPlaneCoordinates[ " << j << " ] = " << bottomPlaneCoordinates[ j ] << std::endl;
          }
          expandedNodes[ numCornerNodes+i ] = vertices->InsertNextPoint( bottomPlaneCoordinates );
@@ -1831,7 +1844,8 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
 
          this->pointerToMidPlaneNode->InsertNextTuple1( nodes[ i ] );
       }
-/*
+
+#ifdef PRINT_HEADERS
       if ( elemIndex == 0 )
       {
          std::cout << "elemIndex " << elemIndex << ", expandedNodes: ";
@@ -1841,7 +1855,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
          }
          std::cout << std::endl;
       }
-*/
+#endif // PRINT_HEADERS
 
       this->ugrid->InsertNextCell( VTK_HEXAHEDRON, 2*numCornerNodes, expandedNodes );
 
@@ -1855,6 +1869,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
 #endif //SJK_USE_QUADS
 
    }
+/*
    else if ( numNodesInElement == 1 && numCornerNodes == 1 )
    {
       std::cout << "Note: Inserting VERTEX for non-implemented element type "
@@ -1882,14 +1897,14 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
                 << std::endl;
       this->ugrid->InsertNextCell( VTK_QUAD, numCornerNodes, nodes );
    }
+*/
    else
    {
-      std::cerr << "Warning: Can not yet handle an element with "
-                << "elementRoutineNumber = " << elementRoutineNumber
+      std::cout << "Note: Can not yet handle element type "
+                << elementRoutineNumber
                 << ", numNodesInElement = " << numNodesInElement
-                << ", numCornerNodes = " << numCornerNodes
-                << std::endl;
-      exit( 1 );
+                << ", numCornerNodes = " << numCornerNodes << std::endl;
+      this->ugrid->InsertNextCell( VTK_EMPTY_CELL, 0, NULL );
    }
 
    //delete [] nodes;
@@ -2721,5 +2736,31 @@ void ansysReader::VerifyBlock( int32 blockSize_1, int32 blockSize_2 )
                 << " != expected block size = " << blockSize_1 << std::endl;
       exit( 1 );
    }
+}
+
+double * ansysReader::GetIntersectionPoint( double n1[ 3 ], double n2[ 3 ],
+                                            double p1[ 3 ], double p2[ 3 ] )
+{
+   double d[ 3 ];
+   vtkMath::Cross( n1, n2, d );
+
+   double ** A = new double * [ 3 ];
+   /*for ( int i = 0; i < 3; i++ )
+      double * A[ i ] = new double [ 3 ];*/
+
+   A[ 0 ] = n1;
+   A[ 1 ] = n2;
+   A[ 2 ] = d;
+
+   double x[ 3 ];
+   x[ 0 ] = p1[ 0 ]*n1[ 0 ] +  p1[ 1 ]*n1[ 1 ] + p1[ 2 ]*n1[ 2 ];
+   x[ 1 ] = p2[ 0 ]*n2[ 0 ] +  p2[ 1 ]*n2[ 1 ] + p2[ 2 ]*n2[ 2 ];
+   x[ 2 ] = p1[ 0 ]*d[ 0 ] +  p1[ 1 ]*d[ 1 ] + p1[ 2 ]*d[ 2 ];
+
+   int error = vtkMath::SolveLinearSystem( A, x, 3 );
+   std::cout << "intersection point = " << x[ 0 ] << "\t" << x[ 1 ] << "\t"
+             << x[ 2 ] << std::endl;
+   
+   return x;
 }
 

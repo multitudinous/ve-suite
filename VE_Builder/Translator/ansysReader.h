@@ -85,7 +85,8 @@ class ansysReader
       void ReadNodalComponentStresses( int32 );
       void AttachStressToGrid();
       void StoreNodalStessesForThisElement( int32 elemIndex );
-
+      double * GetIntersectionPoint( double n1[ 3 ], double n2[ 3 ],
+                                     double p1[ 3 ], double p2[ 3 ] );
       char * ansysFileName;
       FILE *s1;
       bool endian_flip;
