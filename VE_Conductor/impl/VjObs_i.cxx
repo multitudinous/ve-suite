@@ -644,7 +644,9 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterTimesteps        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
       this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
       this->mStates->clusterTime_since_start = time_since_start;
+#ifdef _OSG
       this->mStates->clusterFrameNumber      = cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->GetCurrentTransientTexture();   
+#endif
    }
    //this->_unusedNewData    = false;
 #else
@@ -681,7 +683,9 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
          }
       }
       time_since_start = this->mStates->clusterTime_since_start;
+#ifdef _OSG
 	   cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
+#endif
    }
    this->_unusedNewData    = false;
 #endif
