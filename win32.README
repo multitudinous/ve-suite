@@ -1,0 +1,18 @@
+This is our initial port of our app (VE_Suite) to windows.
+Currently it must be built in Visual Studio 7.1(2003).
+
+To set up the build environment:
+1) edit the batch filerun the batch file to reflect your
+   environment:
+   ./VE_Installer/vesuite.OMNIBUILD.setup.bat
+
+2) run the batch file:
+   ./VE_Installer/vesuite.OMNIBUILD.setup.bat
+
+This will set the proper environment variables and launch a session of
+Visual Studio w/ the VE_Suite project loaded. 
+
+The project should be ready to build!
+
+Currently the only two configurations are Debug_OMNI and Release_OMNI.
+
