@@ -198,6 +198,14 @@ void cfdPolyData::Update()
       this->actor->GetProperty()->SetRepresentationToPoints();
       this->actor->GetProperty()->SetPointSize(4*this->GetSphereScaleFactor());
    }
+   else
+   {
+      vprDEBUG(vprDBG_ALL,1) << " IS POLYDATA SURFACE"
+                             << std::endl << vprDEBUG_FLUSH;
+      this->map->SetInput( pd );
+      this->actor->GetProperty()->SetRepresentationToSurface();
+   }
+
    types->Delete();
 
    if ( pd->GetPointData()->GetScalars()->GetLookupTable() != NULL )
