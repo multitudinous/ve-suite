@@ -383,7 +383,7 @@ int Module::getPortProfile (int p, Types::Profile_out& prof)
  
   if(fi<0) return 0; 
   
-  prof = new Types::Profile(_oports[fi]->_profile);
+  prof = new Types::Profile(*(_oports[fi]->_profile));
  
   return 1;
 }
@@ -392,7 +392,10 @@ int Module::setPortProfile (int p, const Types::Profile* prof)
 {
   int fi = oportIdx(p);
   if(fi<0) return 0;
-  _oports[fi]->_profile = (*prof);
+  cout << "setPortProfile\n";
+  if(_oports[fi]->_profile) delete _oports[fi]->_profile;
+  _oports[fi]->_profile = new Types::Profile(*prof);
+  cout << "setPortProfile success\n";
   return 1;
 }
 
@@ -523,7 +526,8 @@ void OPort::copy (const OPort& p)
   if(this==&p) return;
   
   _data    = p._data;
-  _profile = p._profile;
+  if(_profile) delete _profile;
+  _profile = new Types::Profile(*(p._profile));
 }
 
 int OPort::have_data ()

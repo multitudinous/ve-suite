@@ -71,7 +71,7 @@ public:
   int have_data ();
 
   Interface      _data;
-  Types::Profile _profile;
+  Types::Profile *_profile;
 
 protected:
   
