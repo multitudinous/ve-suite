@@ -24,9 +24,7 @@
 #include "vtkPolyDataMapper.h"
 
 #ifdef VTK44
-#ifndef VTK4
 #define VTK4
-#endif //VTK4
 #endif //VTK44
 
 #ifdef VTK4
