@@ -54,8 +54,17 @@ class cfdNode: public cfdSceneNode
 #elif _OSG
 #elif _OPENSG
 #endif
+
+#ifdef _PERFORMER
+      void pfTravNodeMaterial( pfNode* );
+#elif _OSG
+#elif _OPENSG
+#endif
+
       void     LoadFile( char* );
       cfdSceneNode* Clone( int );
+
+      void SetNodeProperties( int, float, float* );
       
    private:
 #ifdef _PERFORMER
@@ -63,5 +72,9 @@ class cfdNode: public cfdSceneNode
 #elif _OSG
 #elif _OPENSG
 #endif
+   
+      float op;
+      float stlColor[ 3 ];
+      int color;
 };
 #endif

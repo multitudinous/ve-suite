@@ -33,6 +33,7 @@
 #define CFD_FILE_H
 
 #include <vector>
+#include <string>
 
 class fileInfo;
 class cfdDCS;
@@ -75,8 +76,34 @@ class cfdFILE
       int transparent;
       float stlColor [ 3 ];
 
+
+//////
+      void SetRGBAColorArray( double* );
+      void GetColorArray( void );
+      void SetGeometryFilename( std::string );
+      void SetModuleName( std::string );
+      void SetTransparencyFlag( bool );
+      void SetColorFlag( int );
+      int GetColorFlag( void );
+      std::string GetModuleName( void );
+      void SetColorOfGeometry( cfdNode* );
+      void Update( void );
+      void SetOpacity( float );
+
+//////
    private:
       float op;
+
+
+
+      double _rgba[ 4 ];
+      bool _transparencyFlag;
+      float _opacityLevel;
+      int _colorFlag;
+      cfdNode* _node;
+      //cfdGroup* _masterNode;
+      std::string _filename;
+      std::string _moduleName;
 };
 
 #endif

@@ -64,10 +64,13 @@ cfdDCS::cfdDCS( float* scale, float* trans, float* rot ):cfdSceneNode()
 
 cfdDCS::cfdDCS( const cfdDCS& input )
 {
-   (*this->_translation) = (*input._translation);
-   (*this->_rotation) = (*input._rotation);
-   (*this->_scale) = (*input._scale);
-   
+   for ( int i = 0; i < 3; i++ )
+   {
+      this->_translation[ i ] = input._translation[ i ];
+      this->_rotation[ i ] = input._rotation[ i ];
+      this->_scale[ i ] = input._scale[ i ];
+   }
+
    this->childNodes = input.childNodes;
    this->_vjMatrix = input._vjMatrix;
 
@@ -82,9 +85,12 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
 {
    if ( this != &input )
    {
-      (*this->_translation) = (*input._translation);
-      (*this->_rotation) = (*input._rotation);
-      (*this->_scale) = (*input._scale);
+      for ( int i = 0; i < 3; i++ )
+      {
+         this->_translation[ i ] = input._translation[ i ];
+         this->_rotation[ i ] = input._rotation[ i ];
+         this->_scale[ i ] = input._scale[ i ];
+      }
    
       for ( unsigned int i = 0; i < childNodes.size(); i++ )
       {
