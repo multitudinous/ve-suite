@@ -71,7 +71,7 @@ vtkUnstructuredGrid *filterMeshByCellData(vtkUnstructuredGrid *unsGrid) {
 					cerr << "ERROR: unexpected ptId, exiting." << endl;
 					exit(1);
 				}
-				x = (double *)unsGrid->GetPoint(ptId);
+				x = unsGrid->GetPoint(ptId);
 				// Insert point into next slot (returns slot id (pt))
 				nonGhostCellPoints->InsertPoint(ptId, x);
 				pts->InsertId(i, ptId);
@@ -122,7 +122,7 @@ vtkUnstructuredGrid * convertToUnstructuredGrid(vtkDataSet *rGrid) {
 
 	// For all points
 	vtkPoints *vertices = vtkPoints::New();
-	float x[3];
+	double x[3];
 	for (int ptId=0; ptId<numPts; ptId++) {
 		rGrid->GetPoint(ptId, x);
 		vertices->InsertPoint(ptId, x);
