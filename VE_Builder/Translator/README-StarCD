@@ -1,28 +1,69 @@
 VE-Builder
 
-The data translator that is contained in VE-Builder has now been upgraded to support multiple scalars with Star-CD data.  This capability allows the analyst to utilize all six registers of Star-CD's data storage.  A brief description of the translator process will follow.
+The data translator that is contained in VE-Builder has now been upgraded to
+support multiple scalars with Star-CD data.  This capability allows the analyst
+to utilize all six registers of Star-CD's data storage.  A brief description of
+the translator process will follow.
 
-To begin, data needs to be exported from Star-CD.  To accomplish this, a *.vrt and *.cel file, written in ASCII, need to be written from Star-CD of the region of interest. This region can either be the complete CFD model or a subsection of the model.  (Note: The Translator is now capable of sorting out shell cells therefore care does not need to be taken to only write cells that are fluid or solid cells to the *.cel file.)  Solution data needs to be written in a *.usr file from Star-CD.  This file also needs to be written in ASCII.  The Translator doesn't require a fixed number of scalars: The user can either choose to write only one vector, one vector and a scalar, one vector and two scalars or one vector and three scalars.  It also does not matter whether all six registers are written to the *.usr file: The Translator will only read what the user tells it to read.  (Note: The Translator now calculates the velocity magnitude from the velocity vector field, therefore it is suggested that the velocity magnitude not be written out in the *.usr file from Star-CD as the field will be created automatically in the Translator.) Once the data is obtained from Star-CD, a parameter file needs to be created for the Translator to read.  
+To begin, data needs to be exported from Star-CD.  To accomplish this, a *.vrt
+and *.cel file, written in ASCII, need to be written from Star-CD of the region
+of interest. This region can either be the complete CFD model or a subsection of
+the model.  (Note: The Translator is now capable of sorting out shell cells
+therefore care does not need to be taken to only write cells that are fluid or
+solid cells to the *.cel file.)  Solution data needs to be written in a *.usr
+file from Star-CD.  This file also needs to be written in ASCII.  The Translator
+doesn't require a fixed number of scalars: The user can either choose to write
+only one vector, one vector and a scalar, one vector and two scalars or
+one vector and three scalars.  It also does not matter whether all six registers
+are written to the *.usr file: The Translator will only read what the user tells
+it to read.  (Note: The Translator now calculates the velocity magnitude from
+the velocity vector field, therefore it is suggested that the velocity magnitude
+not be written out in the *.usr file from Star-CD as the field will be created
+automatically in the Translator.) Once the data is obtained from Star-CD, a
+parameter file needs to be created for the Translator to read.  
 
-A sample parameter file (star.param) can be found in the Translator directory contained in the VE-Builder directory.  In this parameter file, the path to the *.usr, *.vrt, and *.cel file are specified.  The next fields defined are the vector name and scalar names. The scalar names need to be specified in the same order as listed in the *.usr file.  For example the first scalar name should match the fifth column of the *.usr, and the second name should match the sixth column.
+A sample parameter file (star.param) can be found in the Translator directory
+contained in the VE-Builder directory.  In this parameter file, the path to the
+*.usr, *.vrt, and *.cel file are specified.  The next fields defined are the
+vector name and scalar names. The scalar names need to be specified in the same
+order as listed in the *.usr file.  For example the first scalar name should
+match the fifth column of the *.usr, and the second name should match the sixth
+column.
 
-The ROTATE and TRANSLATE tags are optional and pertain to the transformations that are to be applied to the dataset.  These fields specify the rotations (in degrees) and translations (in feet) for each coordinate direction.  (Note: The rotations are not eulerian.)  
+The ROTATE and TRANSLATE tags are optional and pertain to the transformations
+that are to be applied to the dataset.  These fields specify the rotations (in
+degrees) and translations (in feet) for each coordinate direction.  (Note: The
+rotations are not eulerian.)  
  
-SCALEINDEX is an optional specification and allows the scale factor to be set using the integer indices defined in translateToVtk.cpp.  
+SCALEINDEX is an optional specification and allows the scale factor to be set
+using the integer indices defined in translateToVtk.cpp.  
+
 That is, 0 = No Scale, corresponding to a scale factor of 1.0; 
-         1 = Custom Scale, indicating that the SCALEFACTOR tag will be used to specify a scale factor; 
+         1 = Custom Scale, indicating that the SCALEFACTOR tag will be used to
+             specify a scale factor; 
          2 = Meters to Feet, corresponding to a scale factor of 3.28; 
          3 = Millimeters to Feet, corresponding to a scale factor of 3.28e-3; 
          4 = Inches to Feet, corresponding to a scale factor of 1.0/12.0; 
-         5 = Meters (1:12) scale to Feet, corresponding to a scale factor of 12.0*3.28.  
+         5 = Meters (1:12) scale to Feet, corresponding to a scale factor of
+             12.0*3.28.  
 
-SCALEFACTOR is an optional tag (unless SCALEINDEX = 1 was specified). It allows the user to specify a custom scale factor.
+SCALEFACTOR is an optional tag (unless SCALEINDEX = 1 was specified). It allows
+the user to specify a custom scale factor.
 
-The OUTPUTFILENAME tag is optional and allows the user to override the default output filename 'flowdata.vtk'.  
+The OUTPUTFILENAME tag is optional and allows the user to override the default
+output filename 'flowdata.vtk'.  
 
-The WRITEOPTION tag is optional and allows for control over the manner in which data is written to disk.  It is recommended that the user set WRITEOPTION=1 and create an ASCII output file.  The file can then be converted to binary if desired by using the convertVTK2Binary tool.
+The WRITEOPTION tag is optional and allows for control over the manner in which
+data is written to disk.  It is recommended that the user set WRITEOPTION=1 and
+create an ASCII output file.  The file can then be converted to binary if
+desired by using the convertVTK2Binary tool.
 
-The user can start the translator by typing 'translateToVtk' from the command line.  The user will first be prompted to enter what type of data is to be translated.  For Star-CD, the user will then be prompted to enter the parameter file name.  Alternatively, this can be performed in a single step by typing something like, 'translateToVtk 2 your.star.param'. 
+The user can start the translator by typing 'translateToVtk' from the command
+line.  The user will first be prompted to enter what type of data is to be
+translated.  For Star-CD, the user will then be prompted to enter the parameter
+file name.  Alternatively, this can be performed in a single step by typing
+something like, 'translateToVtk 2 your.star.param'. 
 
-This concludes the translation of data.  To check the translation, the scalar range tool can be used to verify the presence of each scalar and its range.
+This concludes the translation of data.  To check the translation, the scalar
+range tool can be used to verify the presence of each scalar and its range.
 
