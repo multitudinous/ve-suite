@@ -40,7 +40,7 @@ PLUGIN = OPPD_Fire
 ifdef ACE_ROOT
    FUTUREGEN_HOME = ${VE_SUITE_HOME}/futuregen
 
-   vpath %.cxx    ${VE_SUITE_HOME}/VE_Xplorer 
+   vpath %.cxx    ${VE_SUITE_HOME}/VE_Xplorer ${VE_SUITE_HOME}/VE_SceneGraph
    vpath %.cpp    ${FUTUREGEN_HOME}/IDL ${FUTUREGEN_HOME}/Plugin
 
    #----------------------------------------------------------------------------
@@ -119,11 +119,11 @@ DEBUG_APP?=		TRUE
 #OPTIM_APP?=		TRUE
 
 # vtkActorToPF needs VTK4
-EXTRA_CXXFLAGS+=	$(WX_CXX) -D WXUSING_PLUGIN_DLL -D_PERFORMER -DVTK4
+EXTRA_CXXFLAGS+=	$(WX_CXX) -D WXUSING_PLUGIN_DLL -D_PERFORMER -DVTK4 -m32
 #$(EXTRA_FLAGS) 
 
-EXTRA_CXXFLAGS+=	-D_TAO ${CPPFLAGS} -I$(BOOST_INCLUDES)
-EXTRA_LIBS+= -shared ${ACE_LIBS} $(WX_LIB)
+EXTRA_CXXFLAGS+=	-D_TAO ${CPPFLAGS} -I$(BOOST_INCLUDES) -I${VE_SUITE_HOME}/VE_SceneGraph
+EXTRA_LIBS+= -shared ${ACE_LIBS} $(WX_LIB) -m32
 
 LINKALL_ON=		-all
 LINKALL_OFF=		

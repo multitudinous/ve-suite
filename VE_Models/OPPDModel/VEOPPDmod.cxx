@@ -147,7 +147,7 @@ cout << " sphere stuff " << endl;
    // Can also set opacity
    if ( _geode != NULL )
    {
-      _dcs->RemoveChild( (cfdSceneNode*)_geode );
+      _dcs->RemoveChild( _geode );
       delete _geode;
    }
 
@@ -160,7 +160,7 @@ cout << " sphere stuff " << endl;
    sphereMapper->Delete();
    sphereActor->Delete();
 
-   _dcs->AddChild( (cfdSceneNode*)_geode );
+   _dcs->AddChild( _geode );
    ///////////////////////////////////////////////
    ///////////////////////////////////////////////
    cout << " Turn on fog " << endl;
