@@ -13,9 +13,9 @@ EXTRA_LIBS+=  -L${TAO_HOME}/IRIX32/lib -L${ACE_HOME}/IRIX32/lib
 EXTRA_INCLUDES+= -I${TAO_HOME}/IRIX32/include -I${ACE_HOME}/IRIX32/include 
 endif
 
-EXTRA_LIBS+= -lTAO_PortableServer -lTAO_IORInterceptor -lTAO_ObjRefTemplate -lTAO_Valuetype \
+EXTRA_LIBS+= -lTAO_IORInterceptor -lTAO_ObjRefTemplate -lTAO_Valuetype \
                -lTAO -lACE -lpthread -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable \
-               -lTAO_Messaging -lTAO_PortableServer -lpthread -lTAO_BiDirGIOP
+               -lTAO_Messaging -lTAO_PortableServer -lTAO_BiDirGIOP
 
 EXTRA_INCLUDES+= -I${TAO_HOME}/include -I${ACE_HOME}/include 
 
