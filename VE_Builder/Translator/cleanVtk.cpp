@@ -150,7 +150,8 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid )
          for(int cellId=0; cellId < numCells; cellId++)
          {      
             ((vtkUnstructuredGrid *)grid)->GetCell( cellId, cell );
-            if ( debug > 1 ) cout << "\tcellType = " << cell->GetCellType() << endl;
+            if ( debug > 1 )
+               cout << "\tcellType = " << cell->GetCellType() << endl;
 
             npts = cell->GetNumberOfPoints();
             ptIdList->Reset();
@@ -159,7 +160,8 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid )
                ptId = cell->GetPointId( i );
                ptIdList->InsertId( i, old2NewVertexMapper[ptId] );
             }
-            ((vtkUnstructuredGrid *)smallGrid)->InsertNextCell( cell->GetCellType(), ptIdList );
+            ((vtkUnstructuredGrid *)smallGrid)->InsertNextCell(
+                                                cell->GetCellType(), ptIdList );
          }//for all cells
          ptIdList->Delete();
          cell->Delete();
@@ -183,7 +185,8 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid )
          for(int cellId=0; cellId < numCells; cellId++)
          {      
             ((vtkPolyData*)grid)->GetCell( cellId, cell );
-            if ( debug > 1 ) cout << "\tcellType = " << cell->GetCellType() << endl;
+            if ( debug > 1 )
+               cout << "\tcellType = " << cell->GetCellType() << endl;
 
             npts = cell->GetNumberOfPoints();
             ptIdList->Reset();
@@ -192,7 +195,8 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid )
                ptId = cell->GetPointId( i );
                ptIdList->InsertId( i, old2NewVertexMapper[ptId] );
             }
-            ((vtkPolyData*)smallGrid)->InsertNextCell( cell->GetCellType(), ptIdList );
+            ((vtkPolyData*)smallGrid)->InsertNextCell(
+                                       cell->GetCellType(), ptIdList );
          }//for all cells
          ptIdList->Delete();
          cell->Delete();
@@ -219,7 +223,10 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid )
          smallVectorSet->Delete();
       }
 
-      //cout << "grid->GetPointData()->GetScalars() = " << grid->GetPointData()->GetScalars() << endl;
+/*
+      cout << "grid->GetPointData()->GetScalars() = "
+           << grid->GetPointData()->GetScalars() << endl;
+*/
       // if the data set has SCALARS data, then move over appropriate data...
       if ( grid->GetPointData()->GetScalars() )
       {
@@ -240,7 +247,10 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid )
          smallScalarSet->Delete();
       }
 
-      //cout << "grid->GetPointData()->GetNormals() = " << grid->GetPointData()->GetNormals() << endl;
+/*
+      cout << "grid->GetPointData()->GetNormals() = "
+           << grid->GetPointData()->GetNormals() << endl;
+*/
       // if the data set has Normals data, then move over appropriate data...
       if ( grid->GetPointData()->GetNormals() )
       {
@@ -261,60 +271,45 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid )
          smallVectorSet->Delete();
       }
 
-      // if the data set has FIELD data, then move over appropriate data...
-      vtkFieldData * field = NULL;
-      vtkFloatArray * tempArray = NULL;
-      double * tuple = NULL;
+      // if the data set has FIELD data, then move over all data...
       int numFieldArrays = grid->GetFieldData()->GetNumberOfArrays();
       if ( debug ) cout << "numFieldArrays = " << numFieldArrays << endl;
       if ( numFieldArrays )
       {
-         field = vtkFieldData::New();
-         field->AllocateArrays( numFieldArrays );
-      
-         for (int i=0; i<numFieldArrays; i++ )
+         //smallGrid->SetFieldData( grid->GetFieldData() ); //does not work: vtkFloatArray memory leak
+         for ( int i=0; i < numFieldArrays; i++ )
          {
-            int numComponents = grid->GetFieldData()->GetArray(i)->GetNumberOfComponents();
-            tempArray = vtkFloatArray::New();
-            tempArray->SetNumberOfComponents( numComponents );
-            tempArray->SetName( grid->GetFieldData()->GetArray(i)->GetName() );
-            tuple = new double [numComponents];
-            for (j=0; j< grid->GetFieldData()->GetArray(i)->GetNumberOfTuples(); j++)
-            {
-               if ( isNeededPoint[j] ) 
-               {
-                  grid->GetFieldData()->GetArray(i)->GetTuple( j, tuple );
-                  tempArray->InsertTuple( old2NewVertexMapper[j], tuple );
-               }
-            }
-            field->AddArray( tempArray );
-            tempArray->Delete();
-            delete [] tuple;
-            tuple = NULL;
+            smallGrid->GetFieldData()->AddArray( 
+                                         grid->GetFieldData()->GetArray( i ) ); 
          }
-         smallGrid->SetFieldData( field ); 
-         field->Delete(); 
       }
 
-      // if the data set has FIELD data connected to the point data, then move over appropriate data...
-      numFieldArrays = grid->GetPointData()->GetNumberOfArrays();
-      if ( debug ) cout << "numFieldArrays connected to the point data = " << numFieldArrays << endl;
-      if ( numFieldArrays )
+      // if the data set has FIELD data connected to the point data,
+      // then move over appropriate data...
+      int numPointDataFieldArrays = grid->GetPointData()->GetNumberOfArrays();
+      if ( debug )
       {
-         smallGrid->GetPointData()->AllocateArrays( numFieldArrays ); 
+         cout << "numPointDataFieldArrays connected to the point data = "
+              << numPointDataFieldArrays << endl;
+      }
+
+      if ( numPointDataFieldArrays )
+      {
+         smallGrid->GetPointData()->AllocateArrays( numPointDataFieldArrays ); 
       
-         for (int i=0; i<numFieldArrays; i++ )
+         for ( int i=0; i < numPointDataFieldArrays; i++ )
          {
-            int numComponents = grid->GetPointData()->GetArray(i)->GetNumberOfComponents();
-            tempArray = vtkFloatArray::New();
+            vtkDataArray * dataArray = grid->GetPointData()->GetArray( i );
+            int numComponents = dataArray->GetNumberOfComponents();
+            vtkFloatArray * tempArray = vtkFloatArray::New();
             tempArray->SetNumberOfComponents( numComponents );
-            tempArray->SetName( grid->GetPointData()->GetArray(i)->GetName() );
-            tuple = new double [numComponents];
-            for (j=0; j< grid->GetPointData()->GetArray(i)->GetNumberOfTuples(); j++)
+            tempArray->SetName( dataArray->GetName() );
+            double * tuple = new double [ numComponents ];
+            for (j=0; j< dataArray->GetNumberOfTuples(); j++)
             {
                if ( isNeededPoint[j] ) 
                {
-                  grid->GetPointData()->GetArray(i)->GetTuple( j, tuple );
+                  dataArray->GetTuple( j, tuple );
                   tempArray->InsertTuple( old2NewVertexMapper[j], tuple );
                }
             }
@@ -440,8 +435,41 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName )
    rpt << "vtk output" << endl;
    rpt << "ASCII" << endl;
    rpt << "DATASET UNSTRUCTURED_GRID" << endl;
-   rpt << "POINTS " << numNeededVertices << " float" << endl;
+
    char str[1024];
+
+   // if the data set has FIELD data, then output that...
+   int numFieldArrays = grid->GetFieldData()->GetNumberOfArrays();
+   if ( debug ) cout << "numFieldArrays = " << numFieldArrays << endl;
+   if ( numFieldArrays )
+   {
+      rpt << "FIELD FieldData " << numFieldArrays << endl;
+   
+      for ( int i=0; i < numFieldArrays; i++ )
+      {
+         vtkDataArray * dataArray = grid->GetFieldData()->GetArray( i );
+         int numTuples = dataArray->GetNumberOfTuples();
+         int numComponents = dataArray->GetNumberOfComponents();
+         rpt << dataArray->GetName() << " " << numTuples
+             << " " << numComponents << " float" << endl;
+         int counter = 0;
+         for ( int j=0; j < numTuples; j++ )
+         {
+            for ( int k=0; k < numComponents; k++ )
+            {
+               double value = dataArray->GetComponent( j, k );
+               sprintf ( str, "%g ", value );
+               rpt << str; 
+               counter++;
+               if ( counter % 9 == 0 )
+                  rpt << "\n";
+            }
+            rpt << "\n";
+         }
+      }
+   }
+
+   rpt << "POINTS " << numNeededVertices << " float" << endl;
    int counter = 0;
    for (j=0; j<numVertices; j++)
    {
@@ -494,36 +522,37 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName )
    rpt << "CELL_DATA " << numCells << endl;
    rpt << "POINT_DATA " << numNeededVertices << endl;
 
-   int numFieldArrays = grid->GetPointData()->GetNumberOfArrays();
+   int numPointDataFieldArrays = grid->GetPointData()->GetNumberOfArrays();
 
-   if ( numFieldArrays )
+   if ( numPointDataFieldArrays )
    {
-      for (int i=0; i<numFieldArrays; i++ )
+      for ( int i=0; i < numPointDataFieldArrays; i++ )
       {
-         int numComponents = grid->GetPointData()->GetArray(i)->GetNumberOfComponents();
+         vtkDataArray * dataArray = grid->GetPointData()->GetArray( i );
+         int numComponents = dataArray->GetNumberOfComponents();
          if ( numComponents > 1 )
          {
-            const char * name = grid->GetPointData()->GetArray(i)->GetName();
+            const char * name = dataArray->GetName();
 
             // only NORMALS won't be written in field data
             if ( strcmp(name,"NORMALS") )
                continue;
    /* 
             //in vtk, transforming can cause loss of name...
-            const char * name = grid->GetPointData()->GetArray(i)->GetName();
+            const char * name = dataArray->GetName();
             if ( ! strcmp(name,"") )
                rpt << "VECTORS vectors float" << endl;
             else
                rpt << "VECTORS " << name << " float" << endl;
    */
             rpt << "VECTORS " << name << " float" << endl;
-            double * tuple = new double [numComponents];
+            double * tuple = new double [ numComponents ];
             counter = 0;
-            for (j=0; j< grid->GetPointData()->GetArray(i)->GetNumberOfTuples(); j++)
+            for ( j=0; j< dataArray->GetNumberOfTuples(); j++ )
             {
                if ( isNeededPoint[j] ) 
                {
-                  grid->GetPointData()->GetArray(i)->GetTuple( j, tuple );
+                  dataArray->GetTuple( j, tuple );
                   for (int k=0; k<numComponents; k++)
                   {
                      rpt << tuple[ k ] << " ";
@@ -535,16 +564,17 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName )
             }
             delete [] tuple;
             rpt << "\n";
-            numFieldArrays--;
+            numPointDataFieldArrays--;
          }
       }
 
-      rpt << "FIELD FieldData " << numFieldArrays << endl;
-      for (int i=0; i<numFieldArrays; i++ )
+      rpt << "FIELD FieldData " << numPointDataFieldArrays << endl;
+      for ( int i=0; i < numPointDataFieldArrays; i++ )
       {
          counter = 0;
-         const char * name = grid->GetPointData()->GetArray(i)->GetName();
-         int numComponents = grid->GetPointData()->GetArray(i)->GetNumberOfComponents();
+         vtkDataArray * dataArray = grid->GetPointData()->GetArray( i );
+         const char * name = dataArray->GetName();
+         int numComponents = dataArray->GetNumberOfComponents();
 
          // NORMALS won't be written in field data
          if ( ! strcmp(name,"NORMALS") )
@@ -552,17 +582,23 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName )
 
          //in vtk, transforming can cause loss of name...
          if ( ! strcmp(name,"") )
-            rpt << "lost_name "  << numComponents << " " << numNeededVertices << " float" << endl;
+         {
+            rpt << "lost_name "  << numComponents
+                << " " << numNeededVertices << " float" << endl;
+         }
          else
-            rpt << name << " "  << numComponents << " " << numNeededVertices << " float" << endl;
+         {
+            rpt << name << " "  << numComponents << " "
+                << numNeededVertices << " float" << endl;
+         }
 
          double * tuple = new double [numComponents];
-         for (j=0; j< grid->GetPointData()->GetArray(i)->GetNumberOfTuples(); j++)
+         for ( j=0; j < dataArray->GetNumberOfTuples(); j++ )
          {
             if ( isNeededPoint[j] ) 
             {
-               grid->GetPointData()->GetArray(i)->GetTuple( j, tuple );
-               for (int k=0; k<numComponents; k++)
+               dataArray->GetTuple( j, tuple );
+               for ( int k=0; k < numComponents; k++ )
                {
                   rpt << tuple[ k ] << " ";
                   counter++;

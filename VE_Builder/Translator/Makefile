@@ -29,7 +29,8 @@ SRCS=\
    plot3dReader.cpp \
    jdMAPReader.cpp \
    enSightGoldReader.cpp \
-   ansysReader.cpp
+   ansysReader.cpp \
+   cfdAccessoryFunctions.cpp
 #   vtkEnSightFortranBinaryReader.cxx
 
 # Specify the OS-dependent directory name for object files and depends

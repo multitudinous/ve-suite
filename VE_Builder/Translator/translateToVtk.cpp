@@ -42,6 +42,7 @@
 #include "viewCells.h"
 #include "cleanVtk.h"
 #include "readWriteVtkThings.h"
+#include "cfdAccessoryFunctions.h"
 
 #include "fluentParticles.h"
 #include "reiParticles.h"
@@ -447,131 +448,12 @@ char * preprocess( int argc, char *argv[],
       std::cout << "Using geomScale = " << geomScale[0] << std::endl;
 
    aTransform->Scale( geomScale[0], geomScale[1], geomScale[2] );
-/*    
-   // Get factor to scale the solution (i.e., velocity)
-   std::cout << "\nSelect the solution conversion:" <<std::endl;
-   std::cout << "(0) No convert" <<std::endl;
-   std::cout << "(1) meter/sec to feet/sec" <<std::endl;
-   std::cout << "(2) feet/sec to meter/sec" <<std::endl;
-   std::cout << "(3) FORD cylinder" <<std::endl;
-   cin >> scaleIndex;
 
-   velConvert = 1.0f;    // default
-   if      (scaleIndex==0) velConvert = 1.0f;
-   else if (scaleIndex==1) velConvert = 3.28083989501f;
-   else if (scaleIndex==2) velConvert = 0.3048f;
-   else if (scaleIndex==3) velConvert = 1.0f;
-   else    std::cout << "Invalid entry: will not scale the solution" <<std::endl;
-*/
-
-   // Transform the geometry 
-   int B_trans;
-   float rotX, rotY, rotZ;
-   float transX, transY, transZ;
-
-#ifndef SJK_TEST
-   if ( argc > arg )
-   {
-      B_trans = atoi( argv[arg] );
-      std::cout << "\tB_trans = " << B_trans <<std::endl;
-      arg++;
-      if ( B_trans )
-      {
-         rotX = atoi( argv[arg] );
-         std::cout << "\trotX = " << rotX <<std::endl;
-         arg++;
-         rotY = atoi( argv[arg] );
-         std::cout << "\trotY = " << rotY <<std::endl;
-         arg++;
-         rotZ = atoi( argv[arg] );
-         std::cout << "\trotZ = " << rotZ <<std::endl;
-         arg++;
-         transX = atoi( argv[arg] );
-         std::cout << "\ttransX = " << transX <<std::endl;
-         arg++;
-         transY = atoi( argv[arg] );
-         std::cout << "\ttransY = " << transY <<std::endl;
-         arg++;
-         transZ = atoi( argv[arg] );
-         std::cout << "\ttransZ = " << transZ <<std::endl;
-         arg++;
-      }
-   }
-   else
-#endif  //SJK_TEST
-   {
-      if ( type != 2 )
-      {
-         std::cout << "\nTransform (translate/rotate) the geometry? (0) No (1) Yes " << std::endl;
-         B_trans = fileIO::getIntegerBetween( 0, 1 );
-
-         if ( B_trans )
-         {  
-            std::cout << "\nTo rotate X (degrees) : ";
-            std::cout.flush();
-            cin >> rotX;
-            cin.ignore();
-
-            std::cout << "To rotate Y (degrees) : ";
-            std::cout.flush();
-            cin >> rotY;
-            cin.ignore();
-
-            std::cout << "To rotate Z (degrees) : ";
-            std::cout.flush();
-            cin >> rotZ;
-            cin.ignore();
-
-            std::cout << "\nTo translate X value : ";
-            std::cout.flush();
-            cin >> transX;
-            cin.ignore();
-
-            std::cout << "To translate Y value : ";
-            std::cout.flush();
-            cin >> transY;
-            cin.ignore();
-
-            std::cout << "To translate Z value : ";
-            std::cout.flush();
-            cin >> transZ;
-            cin.ignore();
-
-            std::cout << std::endl;
-         }
-      }
-      else if ( type == 2 )
-      {
-         float * rotations = star->GetRotations();
-         float * translations = star->GetTranslations();
-
-         rotX = rotations[ 0 ];
-         rotY = rotations[ 1 ];
-         rotZ = rotations[ 2 ];
-
-         transX = translations[ 0 ];
-         transY = translations[ 1 ];
-         transZ = translations[ 2 ];
-      }
-   }
-
-   if ( B_trans )
-   {
-      aTransform->RotateX( rotX );
-      aTransform->RotateY( rotY );
-      aTransform->RotateZ( rotZ );
-      // Create a translation matrix and concatenate it with the current
-      // transformation according to PreMultiply or PostMultiply semantics
-      // aTransform->Translate( 0.0f, 0.0f, 5.5f ); // for FORD MODEL
-      aTransform->Translate( transX / geomScale[ 0 ], 
-                             transY / geomScale[ 1 ], 
-                             transZ / geomScale[ 2 ] );
-   }
-   else 
-   {
-      aTransform->RotateX( 0.0f );
-   }
-
+// We no longer allow transforming of datasets as vectors stored in general
+// purpose point data field did not get transformed.  A BIG problem during
+// rotations.  Solution: use the rotation/translation settings in the
+// VE_Suite parameter file.
+   
    char * vtkFileName = NULL;
 
 #ifndef SJK_TEST
@@ -601,7 +483,6 @@ char * preprocess( int argc, char *argv[],
 
    return vtkFileName;    //successfully executed
 }
-
 
 int main( int argc, char *argv[] )
 {
@@ -786,16 +667,16 @@ int main( int argc, char *argv[] )
       transFilter->SetTransform( aTransform );
       transFilter->Update();
 
+      // Originally, we used DeepCopy instead of ShallowCopy in the code below.
+      // It greatly increased memory requirements and delivered same results.
       if ( pointset->IsA("vtkUnstructuredGrid") )
       {
          transformedPointset = vtkUnstructuredGrid::New();
-         //transformedPointset->DeepCopy( transFilter->GetOutput() );
          transformedPointset->ShallowCopy( transFilter->GetOutput() );
       }
       else if ( pointset->IsA("vtkStructuredGrid") )
       {
          transformedPointset = vtkStructuredGrid::New();
-         //transformedPointset->DeepCopy( transFilter->GetOutput() );
          transformedPointset->ShallowCopy( transFilter->GetOutput() );
       }
       else
@@ -818,6 +699,19 @@ int main( int argc, char *argv[] )
 
    aTransform->Delete();
 
+   // The following is a time extensive computation that is better done here
+   // rather than at runtime in the virtual environment
+   double meanCellBBLength = cfdAccessoryFunctions::
+                            ComputeMeanCellBBLength( transformedPointset );
+
+   vtkFloatArray * array = vtkFloatArray::New();
+   array->SetName( "meanCellBBLength" );
+   array->SetNumberOfComponents( 1 );
+   array->SetNumberOfTuples( 1 );
+   array->SetTuple1( 0, meanCellBBLength );
+   transformedPointset->GetFieldData()->AddArray( array );
+   array->Delete();
+
    int answer;
    if ( cfdType == 2 )
    {
@@ -831,14 +725,18 @@ int main( int argc, char *argv[] )
                 << "(Recommended only for troublesome large files)"
                 << std::endl;
       answer = fileIO::getIntegerBetween( 0, 1 );
+      std::cout << std::endl;
    }
    else
+   {
       answer = 0;
+   }
    
    if ( answer == 0 )
    {
       if ( cfdType != 5 ) // NOT sure if it will work on cell centered data
       {
+         // Clean up...
          dumpVerticesNotUsedByCells( transformedPointset );
       }
 
@@ -847,6 +745,7 @@ int main( int argc, char *argv[] )
    }
    else
    {
+      // Clean up and directly write to vtk ascii format...
       dumpVerticesNotUsedByCells( transformedPointset, vtkFileName );
    }
 
@@ -870,9 +769,10 @@ int main( int argc, char *argv[] )
       delete reader;
    }
 
-   std::cout << "NOTE : It is suggested that for all StarCD, PLOT3D, and REI" << std::endl;
-   std::cout << "       data that you follow up this translation process with" << std::endl;
-   std::cout << "       the mergeVertices utility in the VE-Builder bin directory.\n" << std::endl;
+   std::cout << "NOTE:\tIt is suggested that for all StarCD, PLOT3D, and REI"
+             << "\n\tdata that you follow up this translation process with"
+             << "\n\tthe mergeVertices utility in the VE-Builder bin directory."
+             << "\n" << std::endl;
 
    return 0;
 }

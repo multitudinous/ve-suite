@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 #include <cstdio>
-#include <cstdlib>
 
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
@@ -68,6 +67,44 @@ int main( int argc, char *argv[] )
       return 1;
    }
 
+   vtkUnstructuredGrid * uGrid = vtkUnstructuredGrid::New();
+
+   // Read or compute the length of the diagonal of the bounding box
+   // of the average cell. 
+   // First set it to zero as the default:
+   double meanCellBBLength = 0.0;
+
+   // Read the dataset fields and see if any match with member variable names
+   vtkFieldData * field = dataset->GetFieldData();
+   int numFieldArrays = field->GetNumberOfArrays();
+   cout << " numFieldArrays = " << numFieldArrays << endl ;
+
+   // add all arrays to the new dataset:
+   for ( int i = 0; i < numFieldArrays; i++ )
+   {
+      uGrid->GetFieldData()->AddArray( field->GetArray( i ) );
+      // If any field names match with member variable names, use them:
+      if ( !strcmp(field->GetArray( i )->GetName(),"meanCellBBLength") )
+      {
+         meanCellBBLength = field->GetArray( i )->GetComponent( 0, 0 );
+      }
+   }
+
+   // If not provided in the dataset field, compute :
+   if ( meanCellBBLength == 0.0 )
+   {
+      meanCellBBLength = cfdAccessoryFunctions::
+                               ComputeMeanCellBBLength( dataset );
+      vtkFloatArray * array = vtkFloatArray::New();
+      array->SetName( "meanCellBBLength" );
+      array->SetNumberOfComponents( 1 );
+      array->SetNumberOfTuples( 1 );
+      array->SetTuple1( 0, meanCellBBLength );
+      uGrid->GetFieldData()->AddArray( array );
+      array->Delete();
+   }
+   cout << " meanCellBBLength = " << meanCellBBLength << endl;
+
 /*
    // Get the bounds of the data set, where ...
    bounds[ 0 ] = x-min 
@@ -93,7 +130,6 @@ int main( int argc, char *argv[] )
    vertices->InsertPoint( 6, bounds[ 1 ], bounds[ 3 ], bounds[ 5 ] );
    vertices->InsertPoint( 7, bounds[ 0 ], bounds[ 3 ], bounds[ 5 ] );
 
-   vtkUnstructuredGrid * uGrid = vtkUnstructuredGrid::New();
    uGrid->SetPoints( vertices );
 
    int temp [ 8 ] = {0,1,2,3,4,5,6,7};
