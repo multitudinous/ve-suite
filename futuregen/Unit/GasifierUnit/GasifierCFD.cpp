@@ -1245,8 +1245,11 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
   cell.P = (double)*(p + nx_ny_k + nx_j + i) + _pressure; // p is relative to mean
   //cell.H = (double)*(h + nx_ny_k + nx_j + i);
   cell.mean_size = (double)*(part_size + nx_ny_k + nx_j + i);
+  if(cell.mean_size<0.0) cell.mean_size = 0.0;
   cell.size_variance = (double)*(part_var + nx_ny_k + nx_j + i);
+  if(cell.size_variance<0.0) cell.size_variance = 0.0;
   cell.T_particle = (double)*(t + nx_ny_k + nx_j + i);
+  if(cell.T_particle<298.0) cell.T_particle = 298.0;
  
   // Outlet cells are on a face (ie. i-face has i=1 or i=ni).  But we
   // passed in the i,j,k for the adjacent interior cell (ie. i=2 or i=ni-1).
