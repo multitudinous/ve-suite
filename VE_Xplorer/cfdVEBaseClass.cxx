@@ -477,8 +477,8 @@ void cfdVEBaseClass::CreateObjects( void )
                   << _model->GetCfdDataSet( -1 )->GetFileName()
                   << std::endl;
 
-         _model->GetCfdDataSet( -1 )->LoadData();
          this->LoadSurfaceFiles( _model->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
+         _model->GetCfdDataSet( -1 )->LoadData();
       }
       else if ( id == 9 ) // if it is an geom file
       {

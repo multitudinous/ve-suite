@@ -826,6 +826,8 @@ void cfdModelHandler::CreateObjects( void )
       {
 #ifdef _OSG
 #ifdef VE_PATENTED
+         vprDEBUG(vprDBG_ALL,0) << "Creating texture dataset." << std::endl << vprDEBUG_FLUSH;
+
          if ( _modelList.empty() )
          {
             _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );

@@ -78,7 +78,9 @@
 #endif
 #ifdef _OSG
 #ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
 #include "cfdPBufferManager.h"
+#endif
 #endif
 #endif
 /// C/C++ libraries
@@ -98,7 +100,9 @@ cfdApp::cfdApp( void )
 #ifdef _OSG
 #ifdef VE_PATENTED
    _tbvHandler = 0;
+#ifdef CFD_USE_SHADERS
    _pbuffer = 0;
+#endif
 #endif
    _frameNumber = 0;
 #endif

@@ -56,8 +56,10 @@ namespace osg
    class FrameStamp;
 } 
 namespace osgUtil { class SceneView; }
-#ifdef VE_PATENED
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
 class cfdPBufferManager;
+#endif
 class cfdTextureBasedVizHandler;
 #endif
 class cfdApp: public vrj::OsgApp
@@ -94,9 +96,11 @@ class cfdApp: public vrj::OsgApp
       osg::Group* getScene( void );
       void bufferPreDraw( void );
 #ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
       void contextInit( void );
       virtual void contextClose( void );
       cfdPBufferManager* GetPBuffer( void );
+#endif
 #endif
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
 #elif _OPENSG
@@ -138,10 +142,12 @@ class cfdApp: public vrj::OsgApp
 #ifdef _WEB_INTERFACE
 		void draw();
 #endif	//_WEB_INTERFACE
-#ifdef VE_PATENED
+#ifdef VE_PATENTED
       cfdTextureBasedVizHandler* _tbvHandler;
+#ifdef CFD_USE_SHADERS
       //biv --may convert this to a singleton later
       cfdPBufferManager* _pbuffer;
+#endif
 #endif
       osg::ref_ptr<osgUtil::SceneView> _sceneViewer;
       osg::ref_ptr<osg::FrameStamp> _frameStamp;
