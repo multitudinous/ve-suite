@@ -9,75 +9,58 @@
 
 <body class="Title1">
 <p>Building VE-Suite for Windows</p>
-<p class="bodytext"><span class="bodytextemph">1.</span> Open user information file (.cshrc)</p>
 
-Dependencies
-OpenGL Performer (3.1.1) - http://sgi.com/software/performer/ VTK (4.4)
-- http://vtk.org/get-software.php#interim
-VRJuggler (2.0alpha4) - vrjuggler.org
-VRJuggler dependences zip file
-Java 2 SDK
-omniORB (4.0.4) - http://omniorb.sourceforge.net/
-cmake (2.0.2) (used to build vtk) -
-http://www.cmake.org/HTML/Download.html
-This is our initial port of our app (VE_Suite) to windows.
-Currently it must be built in Visual Studio 7.1(2003).
-To set up the build environment:
-1) edit the batch file to reflect your environment:
-./VE_Installer/vesuite.OMNIBUILD.setup.bat
-2) run the batch file: ./VE_Installer/vesuite.OMNIBUILD.setup.bat
-This will set the proper environment variables and launch a session of
-Visual Studio w/ the VE_Suite project loaded. The project should be
-ready to build!
+<p class="bodytext">This is our initial port of our app (VE_Suite) to windows.  Currently it must be built in Visual Studio 7.1(2003)</p>
+Dependencies<br>
+<p class="bodytext"><a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a> to checkout and update VE_Suite from ISU's code repository</p>
+<p class="bodytext">If you instead get the VE_Suite code as a compressed tarball, note that some have found that a free unzip utility did not maintain the correct directory structure. Workaround: Unzip the files on Irix/linux and move the files to the Windows machine.</p>
+<p class="bodytext"><a href="http://msdn.microsoft.com/visualc/productinfo/">Visual Studio 7.1(2003)</a> to compile the C++ code</p>
+<p class="bodytext"><a href="http://sgi.com/software/performer">OpenGL Performer (3.1.1)</a> to manage the scenegraph</p>
+<p class="bodytext"><a href="http://vtk.org/get-software.php#interim">VTK (4.4)</a> to render the visualization objects</p>
+<p class="bodytext"><a href="http://www.cmake.org/HTML/Download.html">CMake (2.0.3)</a> to build vtk</p>
+<p class="bodytext">VTK installation Notes: For windows, we currently do not 'install' VTK.  The project files are set up to find the correct vtk include files and libs (i.e., they are NOT in an include or lib dir). Basically one needs to set the correct flags in CMake, use the correct compiler option, and use CMake to generate the VTK project and sln file.</p>
+<p class="bodytext"><span class="bodytextemph">Critical CMake flags</span></p>
+
+<UL>
+<LI><p class="bodytext">yes: shared libs</p>
+<LI><p class="bodytext">yes: hybrid libs</p>
+<LI><p class="bodytext">yes: parallel libs</p>
+<LI><p class="bodytext">no: MPI</p>
+</UL>
+
+<p class="bodytext"><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71.zip?download">VRJuggler (2.0alpha4.win32-vc71)</a> for management of the virtual environment</p>
+<p class="bodytext"><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71-deps.zip?download">VRJuggler dependencies zip file</a></p>
+<p class="bodytext"><a href="http://omniorb.sourceforge.net/">omniORB (4.0.3)</a> for communication between the gui and the app</p>
+<p class="bodytext"><a href="http://java.sun.com/j2se/1.4.2/download.html">Java 2 SDK</a> to compile and run the java-based gui</p>
+
+<p>Environment Settings</p>
+<p class="bodytext"><span class="bodytextemph">To set up the build environment:</span></p>
+<p class="bodytext"><span class="bodytextemph">1.</span>edit the batch file (./VE_Installer/vesuite.OMNIBUILD.setup.bat) to reflect your environment</p>
+
+<p class="bodytext"><span class="bodytextemph">Note: </span>Paths of environment variables on windows SHOULD NOT contain spaces!!</p>
+<p class="bodytext">Example:</p>
+<p class="bodytext"><span class="bodytextemph">BAD!!</span> set VTK_HOME=C:\Documents and Settings\user\Desktop\vtk</p>
+<p class="bodytext"><span class="bodytextemph">GOOD!</span> set VTK_HOME=C:\vtk</p>
+<p class="bodytext"><span class="bodytextemph">2.</span>run the batch file:</p>
+<p class="bodytext"><span class="bodytextemph">./VE_Installer/vesuite.OMNIBUILD.setup.bat</span></p>
+<p class="bodytext">This will set the defined environment variables and launch a session of Visual Studio with the VE_Suite project loaded. The project should be ready to build!</p>
+
+<p>Running VE_Suite</p>
+<p class="bodytext">To run the solution from within Visual Studio, change the working directory in the Configuration Properties tab to point to the directory where your VE_Suite parameter file is located (for example, change the working directory to $(VE_SUITE_HOME)\VE_TestSuite</p>
+
+<p class="bodytext">You will also need to pass in your juggler config files as command arguments on the configuration properties tab. With the three projects still open, I right-clicked on the VE_Xplorer project file, and selected properties. In the command arguments section, I added:</p>
+<p class="bodytext"><span class="bodytextemph">$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</span></p>
+<p class="bodytext"><span class="bodytextemph">$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.wand.mixin.jconf</span></p>
+<p class="bodytext">This allows the program to run while I am local (connected through the VRAC fileservers.)</p>
+
+<p>Miscellaneous Corns notes follow</p>
+<p class="bodytext">The file &#8220;vtkConfigure.h&#8221; had to be moved from $(VTK_HOME) to $(VTK_HOME)/common.<br><br>
+
+When I installed VTK, the directions tell you to put the files created into a directory, and suggest calling it VTKbin. To get VE_Suite to compile, I had to move the &#8220;bin&#8221; directory from this VTKbin directory to the main VTK directory (the directory VTK unzipped itself into.) Talking to Dr.  K, he seems to think that the best way to have handled that was to put those files in the main VTK directory. <br><br>
+
+For some reason, the nightly tar ball was missing some of the .java files from $(VE_SUITE_HOME)/VE_Conductor/java_stuff. To compile this, I copied the contents of the TSVEG/VE_Suite_Nightly/VE_Conductor/java_stuff directory (on VRACS001) into $(VE_SUITE_HOME)/VE_Conductor/java_stuff, and it worked.<br><br>
+
 Currently the only two configurations are Debug_OMNI and Release_OMNI.
-To run the solution from w/in Vis Studio, change the working directory
-in the Configuration Properties tab to point to the directory where
-your parameter files are. You will also need to pass in your config
-files as command arguments on the configuration properties tab.
-NOTE: Paths on windows SHOULD NOT contain spaces!!!!
-Example:
-BAD!!!!!
-set VTK_HOME=C:\Documents and Settings\user\Desktop\vtk
-GOOD!
-set VTK_HOME=C:\vtk
-Things needed:
-OpenGL Performer version 3.1.1 VTK version 4.4
-Cmake version 2.0.2
-Omni-Orb version 4.0.3
-Java2 version j2sdk1.4.2_04
-Juggler 2.0 alpha4.win32-vc71
-Juggler 2.0 alpha4.win32-vc71-deps
-Here is a list of things that I had to do to get the program to
-compile: The file &#8220;vtkConfigure.h&#8221; had to be moved from $(VTK_HOME) to
-$(VTK_HOME)/common. I had to upgrade from my version of OpenGL
-Performer 3.1 to the current Performer version (OpenGL Performer
-3.1.1). The free unzip utility I have did unzip the nightly tar ball (a
-zipped collection of all the VE_Suite files necessary to install), but
-didn&#8217;t make the correct directory structure for them to be compiled. I
-unzipped the files on Irix and moved them onto my laptop. When I
-installed VTK, the directions tell you to put the files created into a
-directory, and suggest calling it VTKbin. To get VE_Suite to compile, I
-had to move the &#8220;bin&#8221; directory from this VTKbin directory to the main
-VTK directory (the directory VTK unzipped itself into.) Talking to Dr.
-K, he seems to think that the best way to have handled that was to put
-those files in the main VTK directory. For some reason, the nightly tar
-ball was missing some of the .java files from
-$(VE_SUITE_HOME)/VE_Conductor/java_stuff. To compile this, I copied the
-contents of the TSVEG/VE_Suite_Nightly/VE_Conductor/java_stuff
-directory (on VRACS001) into $(VE_SUITE_HOME)/VE_Conductor/java_stuff,
-and it worked. All of this got the programs to compile. To get them to
-run, I did this: With the three projects still open, I right-clicked on
-the VE_Xplorer project file, and selected properties. In the command
-arguments section, I added:
-$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf
-$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.wand.mixin.jconf
-and I changed the working directory to $(VE_SUITE_HOME)\VE_TestSuite.
-This allows the program to run while I am local (connected through the
-VRAC fileservers.) When I try to run the code at home, it doesn&#8217;t work
-(I think I&#8217;m having the same problems as you were at home, Gerrick.)
-Anyway, hopefully this will help with the instructions. I&#8217;m going to
-clean out my VE_Suite stuff again and try to build it again, trying to
-keep better track of what I had to do step by step later.
-<br>
+</p>
 </body>
 </html>
