@@ -324,12 +324,16 @@ int switchFrame(pfTraverser* trav, void* userData)
    //the app is processing faster than sequence
    if(appFrameRate >= seqRate && pMode != CFDSEQ_START){
       //cout<<"Frame Rate: "<<appFrameRate<<endl;
+      vprDEBUG(vprDBG_ALL,3) << "Performer Frame rate: "<<appFrameRate
+                          << std::endl << vprDEBUG_FLUSH;
       //calculate frame rate ratio
       frameRateRatio = appFrameRate/seqRate;
 
       //since we're running slower than the
       //application, we don't need to update yet
       if(sequence->_appFrame < frameRateRatio){
+         vprDEBUG(vprDBG_ALL,3) << "Not time to switch frame yet due to slow frame rate: "<<appFrameRate
+                          << std::endl << vprDEBUG_FLUSH;
          //continue in the current state 
          //update the frames the app has processed
          sequence->_appFrame++;
@@ -340,6 +344,8 @@ int switchFrame(pfTraverser* trav, void* userData)
        vprDEBUG(vprDBG_ALL,3) << "Switching frames on the sequence! "<<end
                           << std::endl << vprDEBUG_FLUSH;
    }else if(appFrameRate < seqRate){
+      vprDEBUG(vprDBG_ALL,3) << "Slow Performer Frame rate: "<<appFrameRate
+                          << std::endl << vprDEBUG_FLUSH;
       //cout<<"Frame rate is slow."<<endl;
       //app is running slower than the sequence
       //need to skip some frames in the sequence
