@@ -157,14 +157,14 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _devol_a2 = 1.5e13;
     _devol_e2 = 2.51e8;
     _devol_y2 = 0.6;
-    _oxid_a   = 0.013856;//0.1152e-2;//1.1144e-4;//0.49701e-3;
-    _oxid_n   = 1.0;//0.819;//0.9085145;
+    _oxid_a   = 0.49701e-3; //0.013856;//0.1152e-2;//1.1144e-4;//0.49701e-3;
+    _oxid_n   = 0.9085145; //1.0;//0.819;//0.9085145;
     _oxid_e   = 1.00416e8;//0.73269e8;//7.5058e7;//1.00416e8;
-    _co2gas_a = 0.024377;//7.4273e-6;//0.68243e-4;
-    _co2gas_n = 1.0;//0.77032804;//0.7589587;
+    _co2gas_a = 0.68243e-4; //0.024377;//7.4273e-6;//0.68243e-4;
+    _co2gas_n = 0.7589587; //1.0;//0.77032804;//0.7589587;
     _co2gas_e = 1.7522e8;//1.3898e8;//1.7522e8;
-    _h2ogas_a = 0.024377;//3.6751e-5;//0.5465e-3;
-    _h2ogas_n = 1.0;//0.5;
+    _h2ogas_a = 0.5465e-3; //0.024377;//3.6751e-5;//0.5465e-3;
+    _h2ogas_n = 0.5;  //1.0;//0.5;
     _h2ogas_e = 1.7522e8;//1.2767e8;//1.7522e8;
   }
   else if (coaltype == "Petcoke") {
@@ -508,14 +508,14 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _devol_a2 = 1.5e13;
     _devol_e2 = 2.51e8;
     _devol_y2 = 0.6;
-    _oxid_a   = 0.013856;
-    _oxid_n   = 1.0;
+    _oxid_a   = 1.0e2*0.3052e-3;//0.013856;
+    _oxid_n   = 0.8687; //1.0;
     _oxid_e   = 1.00416e8;
-    _co2gas_a = 0.024377;
+    _co2gas_a = 1.0e2*0.30428e-5; //0.024377;
     _co2gas_n = 1.0;
     _co2gas_e = 1.7522e8;
-    _h2ogas_a = 0.024377;
-    _h2ogas_n = 1.0;
+    _h2ogas_a = 1.0e2*0.59533e-2; //0.024377;
+    _h2ogas_n = 0.5; //1.0;
     _h2ogas_e = 1.7522e8;
   }
   else if (coaltype == "E-Gas_AppLS") {
@@ -1156,7 +1156,7 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
       p_kin.reset_burnedout();
       srk.integrate(x1, x2, eps, h1, hmin, yscal, p_kin);
       burnout = p_kin.get_burnout();
-      //burnout = urf*burnout + (1.-urf)*burnout0;
+      burnout = urf*burnout + (1.-urf)*burnout0;
       cout << "BURNOUT " << burnout << " BURNOUT0 " << burnout0
  << " ytd " << srk.get_yp()[nvar-3][srk.get_xp().size()-1]
  << " ysoot " << srk.get_yp()[nvar-2][srk.get_xp().size()-1]
@@ -1164,6 +1164,7 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
  << endl;
       
       if(fabs(temp-tempold)<1.0) break;
+      temp = 0.5*temp+0.5*tempold;
     }  // for(iter
   }else{ // if(geom_input
     if(second_stage)
@@ -1328,7 +1329,7 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
 	p_kin.reset_burnedout();
 	srk.integrate(x1, x3, eps, h1, hmin, yscal, p_kin);
 	burnout = p_kin.get_burnout();
-	//burnout = urf*burnout + (1.-urf)*burnout0;
+	burnout = urf*burnout + (1.-urf)*burnout0;
 	if(fabs(temp-tempold)<1.0) break;
       }
       
