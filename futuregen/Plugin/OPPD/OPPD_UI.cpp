@@ -32,6 +32,12 @@ OPPD_UI_Dialog
   vector<double>* ambpardbls,
   vector<double>* ventpardbls,
   vector<double>* detectpardbls,
+  vector<double>* fv1thicktime,
+  vector<double>* fv1thicktemp,
+  vector<double>* fv2thicktime,
+  vector<double>* fv2thicktemp,
+  vector<double>* nvthicktime,
+  vector<double>* nvthicktemp,
   double* tsec,
   double* tmin,
   double* hrrkw,
@@ -48,7 +54,10 @@ OPPD_UI_Dialog
   double* hrrhgtthom,
   double* pltemp,
   double* tcltemp,
-  double* visdist)
+  double* visdist,
+  double* fv1thintemp,
+  double* fv2thintemp,
+  double* nvthintemp)
 : UIDialog((wxWindow *) parent, id, "OPPD"),
   p_intlinthickdbl(intlinthickdbl),
   p_massfuelburndbl(massfuelburndbl),
@@ -76,6 +85,12 @@ OPPD_UI_Dialog
   p_ambpardbls(ambpardbls),
   p_ventpardbls(ventpardbls),
   p_detectpardbls(detectpardbls),
+  p_fv1thicktime(fv1thicktime),
+  p_fv1thicktemp(fv1thicktemp),
+  p_fv2thicktime(fv2thicktime),
+  p_fv2thicktemp(fv2thicktemp),
+  p_nvthicktime(nvthicktime),
+  p_nvthicktemp(nvthicktemp),
   p_tsec(tsec),
   p_tmin(tmin),
   p_hrrkw(hrrkw),
@@ -92,7 +107,10 @@ OPPD_UI_Dialog
   p_hrrhgtthom(hrrhgtthom),
   p_pltemp(pltemp),
   p_tcltemp(tcltemp),
-  p_visdist(visdist)
+  p_visdist(visdist),
+  p_fv1thintemp(fv1thintemp),
+  p_fv2thintemp(fv2thintemp),
+  p_nvthintemp(nvthintemp)
 {
    (*p_fuelselindex) = 1;
    (*p_matselindex) = 1;
@@ -110,7 +128,7 @@ OPPD_UI_Dialog
    (*p_detacttemp) = 0;
    (*p_flametype) = 0;
    (*p_killexcel) = 0;
-   (*p_tsec) = 0;
+   //(*p_tsec) = 0;
    (*p_tmin) = 0;
    (*p_hrrkw) = 0;
    (*p_hrrbtu) = 0;
@@ -162,11 +180,13 @@ bool OPPD_UI_Dialog::TransferDataFromWindow()
 {
 	wxString txt;
 
+	(*p_fuelpardbls).clear();
 	txt = _tabs->_entriesPage->_spillvol->GetValue();
 	(*p_fuelpardbls).push_back(atof(txt.c_str()));
 	txt = _tabs->_entriesPage->_spillarea->GetValue();
 	(*p_fuelpardbls).push_back(atof(txt.c_str()));
 
+	(*p_compardbls).clear();
 	txt = _tabs->_entriesPage->_comwidth->GetValue();
 	(*p_compardbls).push_back(atof(txt.c_str()));
 	txt = _tabs->_entriesPage->_comlength->GetValue();
@@ -182,6 +202,7 @@ bool OPPD_UI_Dialog::TransferDataFromWindow()
 	txt = _tabs->_entriesPage->_solidfuelarea->GetValue();
 	(*p_solidfuelareadbl) = atof(txt.c_str());
 	
+	(*p_ambpardbls).clear();
 	txt = _tabs->_entriesPage->_airtemp->GetValue();
 	(*p_ambpardbls).push_back(atof(txt.c_str()));
 	txt = _tabs->_entriesPage->_spheatair->GetValue();
@@ -192,6 +213,7 @@ bool OPPD_UI_Dialog::TransferDataFromWindow()
 	txt = _tabs->_entriesPage->_evalabovefire->GetValue();
 	(*p_evalabvfiredbl) = atof(txt);
 
+	(*p_ventpardbls).clear();
 	txt = _tabs->_entriesPage->_ventwidth->GetValue();
 	(*p_ventpardbls).push_back(atof(txt.c_str()));
 	txt = _tabs->_entriesPage->_ventheight->GetValue();
@@ -203,6 +225,7 @@ bool OPPD_UI_Dialog::TransferDataFromWindow()
 	txt = _tabs->_entriesPage->_forcvntflowrt->GetValue();
 	(*p_ventpardbls).push_back(atof(txt.c_str()));
 
+	(*p_detectpardbls).clear();
 	txt = _tabs->_entriesPage->_detdistoceil->GetValue();
 	(*p_detectpardbls).push_back(atof(txt.c_str()));
 	txt = _tabs->_entriesPage->_detraddistospr->GetValue();

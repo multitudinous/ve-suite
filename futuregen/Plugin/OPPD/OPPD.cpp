@@ -6,6 +6,8 @@
 
 #include "OPPD.h"
 #include "OPPD_UI.h"
+#include <iostream>
+#include "string_ops.h"
 
 IMPLEMENT_DYNAMIC_CLASS(OPPD, REI_Plugin)
 
@@ -38,24 +40,33 @@ OPPD
   RegistVar("ambpardbls", &ambpardbls);
   RegistVar("ventpardbls", &ventpardbls);
   RegistVar("detectpardbls", &detectpardbls);
+  RegistVar("fv1thicktime", &fv1thicktime);
+  RegistVar("fv1thicktemp", &fv1thicktemp);
+  RegistVar("fv2thicktime", &fv2thicktime);
+  RegistVar("fv2thicktemp", &fv2thicktemp);
+  RegistVar("nvthicktime", &nvthicktime);
+  RegistVar("nvthicktemp", &nvthicktemp);
   RegistVar("killexcel", &killexcel);
-  RegistVar("Burning Duration Calculation(seconds)", &tsec);
-  RegistVar("Burning Duration Calculation(minutes)", &tmin);
-  RegistVar("HRR Calculation (kW)", &hrrkw);
-  RegistVar("HRR Calculation (BTU/sec)", &hrrbtu);
-  RegistVar("Sprinkler Response Time Calculation (min)", &detsprinktime);
-  RegistVar("Smoke Detector Response Time Calculation (min)", &detsmtime);
-  RegistVar("Detector Response Time Calculation (min)", &detfthtime);
-  RegistVar("Estimated Wall Line Flame Height (ft)", &flwallinehgt);
-  RegistVar("Estimated Corner Fire Flame Height (ft)", &flcornerhgt);
-  RegistVar("Estimated Wall Fire Flame Height (ft)", &flwallhgt);
-  RegistVar("Estimated Pool Fire HRR (kW)", &hrrhrr);
-  RegistVar("Estimated Pool Fire Burning Duration (min)", &hrrburndur);
-  RegistVar("Estimated Pool Fire Flame Height:Heskestad (ft)", &hrrhgthesk);
-  RegistVar("Estimated Pool Fire Flame Height:Thomas (ft)", &hrrhgtthom);
-  RegistVar("Estimated Plume Centerline Temp (F)", &pltemp);
-  RegistVar("Compartment Hot Gas Layer Temp: Closed Door (F)", &tcltemp);
-  RegistVar("Visibility Through Smoke Calculation (ft)", &visdist);
+  RegistVar("tsec", &tsec);
+  RegistVar("tmin", &tmin);
+  RegistVar("hrrkw", &hrrkw);
+  RegistVar("hrrbtu", &hrrbtu);
+  RegistVar("detsprinktime", &detsprinktime);
+  RegistVar("detsmtime", &detsmtime);
+  RegistVar("detfthtime", &detfthtime);
+  RegistVar("flwallinehgt", &flwallinehgt);
+  RegistVar("flcornerhgt", &flcornerhgt);
+  RegistVar("flwallhgt", &flwallhgt);
+  RegistVar("hrrhrr", &hrrhrr);
+  RegistVar("hrrburndur", &hrrburndur);
+  RegistVar("hrrhgthesk", &hrrhgthesk);
+  RegistVar("hrrhgtthom", &hrrhgtthom);
+  RegistVar("pltemp", &pltemp);
+  RegistVar("tcltemp", &tcltemp);
+  RegistVar("visdist", &visdist);
+  RegistVar("fv1thintemp", &fv1thintemp);
+  RegistVar("fv2thintemp", &fv2thintemp);
+  RegistVar("nvthintemp", &nvthintemp);
 
   wxString icon_file="Icons/bonfire.gif";
   wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
@@ -172,7 +183,13 @@ UIDialog* OPPD::UI(wxWindow* parent)
      &compardbls,
      &ambpardbls,
      &ventpardbls,
-     &detectpardbls, 
+     &detectpardbls,
+	 &fv1thicktime,
+	 &fv1thicktemp,
+	 &fv2thicktime,
+	 &fv2thicktemp,
+	 &nvthicktime,
+	 &nvthicktemp,
 	 &tsec,
      &tmin,
      &hrrkw,
@@ -189,7 +206,10 @@ UIDialog* OPPD::UI(wxWindow* parent)
      &hrrhgtthom,
      &pltemp,
      &tcltemp,
-     &visdist);
+     &visdist,
+	 &fv1thintemp,
+     &fv2thintemp,
+     &nvthintemp);
       
   return dlg;
 }
@@ -209,4 +229,134 @@ wxString OPPD::GetDesc()
   return result;
 }
 
+UIDialog* OPPD::Result(wxWindow* parent)
+{
+	if ( v_value.empty() )
+      return NULL;
+	for ( unsigned int i = 0; i < v_desc.size(); i++ )
+    {
+      if( !v_desc[ i ].Cmp( "tsec" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_tsec->SetValue(v_value[ i ]);
+         
+      }
+	  else if( !v_desc[ i ].Cmp( "tmin" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_tmin->SetValue(v_value[ i ]);
+      }
+	  else if( !v_desc[ i ].Cmp( "hrrkw" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_hrrkw->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "hrrbtu" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_hrrbtu->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "detsprinktime" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_detsprinktime->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "detsmtime" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_detsmtime->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "detfthtime" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_detfthtime->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "flwallinehgt" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_flwallinehgt->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "flcornerhgt" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_flcornerhgt->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "flwallhgt" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_flwallhgt->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "hrrhrr" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_hrrhrr->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "hrrburndur" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_hrrburndur->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "hrrhgthesk" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_hrrhgthesk->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "hrrhgtthom" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_hrrhgtthom->SetValue(v_value[ i ]);
+
+      }
+	  else if( !v_desc[ i ].Cmp( "pltemp" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_pltemp->SetValue(v_value[ i ]);
+
+	  }
+	  else if( !v_desc[ i ].Cmp( "tcltemp" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_tcltemp->SetValue(v_value[ i ]);
+
+      }
+	   else if( !v_desc[ i ].Cmp( "visdist" ) )
+      {
+         //const string var( v_value[ i ].c_str() );
+		 //std::cout << var << std::endl;
+		 ((OPPD_UI_Dialog*)dlg)->_tabs->_outputsPage->_visdist->SetValue(v_value[ i ]);
+
+      }
+      
+
+   }
+
+	return NULL;
+}
 

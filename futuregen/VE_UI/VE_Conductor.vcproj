@@ -153,6 +153,9 @@
 				RelativePath=".\UI_DataSetPanel.cpp">
 			</File>
 			<File
+				RelativePath=".\UI_DesignParTab.cpp">
+			</File>
+			<File
 				RelativePath=".\UI_Frame.cpp">
 			</File>
 			<File
@@ -174,6 +177,12 @@
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\UI_ModelData.cxx">
+			</File>
+			<File
+				RelativePath=".\UI_ModSelPanel.cpp">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_NavTab.cpp">
@@ -279,6 +288,9 @@
 				RelativePath=".\UI_TopFrame.cpp">
 			</File>
 			<File
+				RelativePath=".\UI_TransTab.cpp">
+			</File>
+			<File
 				RelativePath="..\VE_UI\UI_VecTab.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -297,6 +309,9 @@
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\UI_VertTab.cpp">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_VisTab.cpp">
@@ -347,10 +362,19 @@
 				RelativePath="..\VE_UI\UI_DataSetTab.h">
 			</File>
 			<File
+				RelativePath=".\UI_DesignParTab.h">
+			</File>
+			<File
 				RelativePath=".\UI_Frame.h">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_GeometryTab.h">
+			</File>
+			<File
+				RelativePath=".\UI_ModelData.h">
+			</File>
+			<File
+				RelativePath=".\UI_ModSelPanel.h">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_NavTab.h">
@@ -371,7 +395,13 @@
 				RelativePath=".\UI_TopFrame.h">
 			</File>
 			<File
+				RelativePath=".\UI_TransTab.h">
+			</File>
+			<File
 				RelativePath="..\VE_UI\UI_VecTab.h">
+			</File>
+			<File
+				RelativePath=".\UI_VertTab.h">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_VisTab.h">

@@ -29,7 +29,8 @@ enum VIS_TAB_IDS{
    SCALAR_BAR_CHECK_BOX,
    RECORD_BUTTON,
    CLEAR_BUTTON,
-   EXIT_BUTTON
+   EXIT_BUTTON,
+   CUSTOM_VIS_BUTTON
 };
 
 
@@ -59,6 +60,7 @@ protected:
    wxButton* _recordButton;
    wxButton* _clearButton;
    wxButton* _exitButton;
+   wxButton* _customVisButton;
 
    //create this page
    void _buildPage();
@@ -77,6 +79,7 @@ protected:
    
    void _onSlider(wxCommandEvent& event);
    void _onClear(wxCommandEvent& event);
+   void _onCustomVis(wxCommandEvent& event);
   DECLARE_EVENT_TABLE()
 };
 #endif //_VE_UI_VISUALIZATION_TAB_H_

@@ -18,10 +18,11 @@ UI_ModSelScroll::UI_ModSelScroll(wxWindow* parent)
    SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
    wxString _models[1];
-   _models[0] = wxT("No Models just testing scroll bar");
+   _models[0] = wxT("Static App");
+   _models[1] = wxT("OPPD Room 19");
 
    _modelSelBox = new wxRadioBox(this, RBOX_MODEL_SELECT, wxT("VE Models"), 
-                                 wxDefaultPosition, wxDefaultSize, 1, 
+                                 wxDefaultPosition, wxDefaultSize, 2, 
                                  _models, 1, wxRA_SPECIFY_COLS);
    wxBoxSizer* _col = new wxBoxSizer(wxVERTICAL);
    _col->Add(_modelSelBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);

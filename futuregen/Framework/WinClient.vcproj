@@ -496,6 +496,12 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\Ve_ui\UI_ModelData.cxx">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_ModSelPanel.cpp">
+			</File>
+			<File
 				RelativePath="..\VE_UI\UI_NavTab.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -751,6 +757,12 @@
 			</File>
 			<File
 				RelativePath="UI_i.h">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_ModelData.h">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_ModSelPanel.h">
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_NavTab.h">

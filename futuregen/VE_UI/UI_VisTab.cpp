@@ -16,6 +16,7 @@ BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_BUTTON      (RECORD_BUTTON,            UI_VisualizationTab::_onRecord)
   EVT_BUTTON      (EXIT_BUTTON,              UI_VisualizationTab::_onExit)
   EVT_BUTTON      (CLEAR_BUTTON,             UI_VisualizationTab::_onClear)
+  EVT_BUTTON      (CUSTOM_VIS_BUTTON,        UI_VisualizationTab::_onCustomVis)
 END_EVENT_TABLE()
 
 
@@ -160,9 +161,10 @@ void UI_VisualizationTab::_buildPage()
    _recordButton = new wxButton(this, RECORD_BUTTON, wxT("record scene"));
     _clearButton = new wxButton(this, CLEAR_BUTTON, wxT("clear all"));
     _exitButton = new wxButton(this, EXIT_BUTTON, wxT("exit"));
+	_customVisButton = new wxButton(this, CUSTOM_VIS_BUTTON, wxT("Activate Custom Visualization"));
 
    //Now layout the UI.
-   //There are basically 4 rows of controls.
+   //There are basically 5 rows of controls.
 
    //The grouping for all controls
    wxSizer* visPanelGroup = new wxBoxSizer(wxVERTICAL);
@@ -204,11 +206,19 @@ void UI_VisualizationTab::_buildPage()
    forthRow->Add(_recordButton, 1, wxALIGN_CENTER_HORIZONTAL);
    forthRow->Add(_clearButton, 1, wxALIGN_CENTER_HORIZONTAL);
    forthRow->Add(_exitButton, 1, wxALIGN_CENTER_HORIZONTAL);
+
+   //Here is a new 5th row added for a custom visualization button
+   wxBoxSizer* fifthRow = new wxBoxSizer(wxHORIZONTAL);
+
+   fifthRow ->Add(_customVisButton, 0, wxALIGN_CENTER_HORIZONTAL);
+
+
    //Add the rows to the main grouping
    visPanelGroup->Add(firstRow, 1, wxALIGN_LEFT|wxEXPAND); //
    visPanelGroup->Add(secondRow, 1, wxALIGN_LEFT|wxEXPAND);
    visPanelGroup->Add(thirdRow, 1, wxALIGN_LEFT|wxEXPAND);
    visPanelGroup->Add(forthRow, 1, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(fifthRow, 1, wxALIGN_LEFT|wxEXPAND);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
@@ -542,3 +552,6 @@ void UI_VisualizationTab::createCommandId( void )
    }
 }
 
+void UI_VisualizationTab::_onCustomVis(wxCommandEvent& event)
+{
+}

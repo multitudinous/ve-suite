@@ -51,6 +51,8 @@ class OPPD : public REI_Plugin
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
 
+  virtual UIDialog* Result(wxWindow* parent);
+
  public:
   double intlinthickdbl;
   double massfuelburndbl;
@@ -78,6 +80,12 @@ class OPPD : public REI_Plugin
   vector<double> ambpardbls;
   vector<double> ventpardbls;
   vector<double> detectpardbls;
+  vector<double> fv1thicktime;
+  vector<double> fv1thicktemp;
+  vector<double> fv2thicktime;
+  vector<double> fv2thicktemp;
+  vector<double> nvthicktime;
+  vector<double> nvthicktemp;
   double tsec;
   double tmin;
   double hrrkw;
@@ -95,6 +103,9 @@ class OPPD : public REI_Plugin
   double pltemp;
   double tcltemp;
   double visdist;
+  double fv1thintemp;
+  double fv2thintemp;
+  double nvthintemp;
   //HERE is the GUI variable passed to the Dialog and Packed
   protected:
   wxBitmap *my_icon;

@@ -40,6 +40,12 @@ class OPPD_UI_Dialog : public UIDialog
           vector<double>* ambpardbls,
           vector<double>* ventpardbls,
           vector<double>* detectpardbls,
+		  vector<double>* fv1thicktime,
+		  vector<double>* fv1thicktemp,
+		  vector<double>* fv2thicktime,
+		  vector<double>* fv2thicktemp,
+		  vector<double>* nvthicktime,
+		  vector<double>* nvthicktemp,
 		  double* tsec,
 		  double* tmin,
 		  double* hrrkw,
@@ -56,7 +62,10 @@ class OPPD_UI_Dialog : public UIDialog
 		  double* hrrhgtthom,
 		  double* pltemp,
 		  double* tcltemp,
-		  double* visdist);
+		  double* visdist,
+		  double* fv1thintemp,
+		  double* fv2thintemp,
+		  double* nvthintemp);
   OPPD_UI_Dialog() {};
   
   virtual ~OPPD_UI_Dialog();
@@ -94,6 +103,12 @@ class OPPD_UI_Dialog : public UIDialog
   vector<double>* p_ambpardbls;
   vector<double>* p_ventpardbls;
   vector<double>* p_detectpardbls;
+  vector<double>* p_fv1thicktime;
+  vector<double>* p_fv1thicktemp;
+  vector<double>* p_fv2thicktime;
+  vector<double>* p_fv2thicktemp;
+  vector<double>* p_nvthicktime;
+  vector<double>* p_nvthicktemp;
   double* p_tsec;
   double* p_tmin;
   double* p_hrrkw;
@@ -111,6 +126,9 @@ class OPPD_UI_Dialog : public UIDialog
   double* p_pltemp;
   double* p_tcltemp;
   double* p_visdist;
+  double* p_fv1thintemp;
+  double* p_fv2thintemp;
+  double* p_nvthintemp;
 
   int times;
 

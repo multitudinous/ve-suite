@@ -246,7 +246,7 @@ UI_Tabs::UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model,
 UI_Tabs::~UI_Tabs()
 {
 	//delete clientInfoArray;
-	 delete sc_min;
+	/* delete sc_min;
     delete sc_max;
 	 delete _visPage;
     delete _geometryPage;
@@ -257,7 +257,7 @@ UI_Tabs::~UI_Tabs()
     delete _navPage;
     delete _transPage;
     delete _vertPage;
-    delete _designparPage;
+    delete _designparPage;*/
 }
 /////////////////////////////////////////////////////
 //update the active scalar on the                  //
