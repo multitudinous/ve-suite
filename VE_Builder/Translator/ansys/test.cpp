@@ -12,14 +12,15 @@ int main( int argc, char *argv[] )
       reader = new ansysReader( argv[ 1 ] );
 
    reader->ReadHeader();
-/*
-   reader->ReadSecondBlock();
-   reader->ReadThirdBlock();
-   reader->ReadFourthBlock();
-   reader->ReadFifthBlock();
-   reader->ReadSixthBlock();
-*/
-   int counter = 0;
+   reader->ReadRSTHeader();
+   reader->ReadDOFBlock();
+   reader->ReadNodalEquivalencyTable();
+   reader->ReadElementEquivalencyTable();
+   reader->ReadDataStepsIndexTable();
+   reader->ReadTimeTable();
+   return 0;
+
+   int counter = 6; // incremented for backward comapatibility
    while( 1 )
    {
       cout << "\nReading block " << ++counter << endl;

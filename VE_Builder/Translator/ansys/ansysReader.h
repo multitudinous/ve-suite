@@ -42,16 +42,24 @@ class ansysReader
 
       void ReadHeader();
 
-      void ReadSecondBlock();
-      void ReadThirdBlock();
-      void ReadFourthBlock();
-      void ReadFifthBlock();
-      void ReadSixthBlock();
+      void ReadRSTHeader();
+
+      void ReadDOFBlock();
+
+      void ReadNodalEquivalencyTable();
+
+      void ReadElementEquivalencyTable();
+
+      void ReadDataStepsIndexTable();
+
+      void ReadTimeTable();
+      
       void ReadGenericIntBlock();
 
    private:
       void FlipEndian();
       int ReadNthInteger( int n );
+      long ReadNthLong( int n );
       float ReadNthFloat( int n );
       double ReadNthDouble( int n );
 
@@ -61,8 +69,17 @@ class ansysReader
       long position;
       long integerPosition;
 
-      int fileNumber;   // 12 for results files, 16 for db files
       int numNodes;
+      int maxNumberDataSets;
       int numElems;
+      int numDOF;
+      int * dofCode;
+      int ptrNodalEquivalencyTable;
+      int * nodeID;
+      int ptrElementEquivalencyTable;
+      int * elemID;
+      int ptrDataStepsIndexTable;
+      int ptrTIM;
+
 };
 #endif
