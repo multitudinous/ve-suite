@@ -24,13 +24,14 @@
 #
 # -----------------------------------------------------------------
 # File:          Makefile,v
-# Date modified: 2003/03/06 17:08:34
-# Version:       1.22
+# Date modified: $Date$
+# Version:       $Rev$
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
 DIRS=	${VE_SUITE_HOME}/VE_Builder/Translator \
+      ${VE_SUITE_HOME}/VE_Builder/WX_Translator \
       ${VE_SUITE_HOME}/VE_Builder/Preprocessor \
       ${VE_SUITE_HOME}/VE_Builder/Utilities \
       ${VE_SUITE_HOME}/VE_Conductor \
@@ -44,6 +45,7 @@ default: all
 all: $(DIRS)
 
 ${VE_SUITE_HOME}/VE_Builder/Translator \
+${VE_SUITE_HOME}/VE_Builder/WX_Translator \
 ${VE_SUITE_HOME}/VE_Builder/Preprocessor \
 ${VE_SUITE_HOME}/VE_Xplorer::
 	cd $@ && $(MAKE) -j
