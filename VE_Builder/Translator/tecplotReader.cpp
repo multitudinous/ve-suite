@@ -80,7 +80,7 @@ tecplotReader::~tecplotReader()
       } while ( (fileI.peek()!=0) && ((char)fileI.peek() != ')') );
       std::cout<<std::endl;
       if ( debug )std::cout<<"Number of characters :"<<numChars<<std::endl;
-      fileI.seekg( 0, ios::beg );      //reset file pointer
+      fileI.seekg( 0, std::ios::beg );      //reset file pointer
       fileI.ignore(numChars+1);        //ignore all characters from beginning until ")"
       for ( int j=0;j<nX*nY;j++ )
       {

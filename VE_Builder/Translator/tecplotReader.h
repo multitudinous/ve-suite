@@ -17,7 +17,7 @@ class tecplotReader
    private:
          //char* inputTecplotFile;
          //char* outputVTKFile;
-         ifstream fileI;      //input files
+         std::ifstream fileI; //input files
          int nX;              //number of x coordinated
          int nY;              //number of y coordinates
          vtkUnstructuredGrid* uGrid;
