@@ -1,109 +1,458 @@
-<html>
- <head>
- <title>Vision 21 Workbench-Vtk Viewer</title>
- <style type="text/css">
- <!--
- body {
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns="http://www.w3.org/TR/REC-html40">
 
- background-color: #92B5CE;
-
-}
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=us-ascii">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<link rel=File-List href="vtkviewer_files/filelist.xml">
+<link rel=Edit-Time-Data href="vtkviewer_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Vision 21 Workbench-Vtk Viewer</title>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>yang</o:Author>
+  <o:LastAuthor>yang</o:LastAuthor>
+  <o:Revision>2</o:Revision>
+  <o:TotalTime>4</o:TotalTime>
+  <o:Created>2004-12-09T18:37:00Z</o:Created>
+  <o:LastSaved>2004-12-09T18:41:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>781</o:Words>
+  <o:Characters>4452</o:Characters>
+  <o:Company>REI</o:Company>
+  <o:Lines>37</o:Lines>
+  <o:Paragraphs>10</o:Paragraphs>
+  <o:CharactersWithSpaces>5223</o:CharactersWithSpaces>
+  <o:Version>10.4219</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Compatibility>
+   <w:UseFELayout/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-alt:\5B8B\4F53;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:SimSun;}
+h1
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+h3
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:13.5pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:SimSun;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
 -->
 </style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="2050"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
 </head>
 
-<hr align="left" size="4" width="100" />
-<hr align="left" size="4" width="200" />
-<hr align="left" size="4" width="300" />
+<body bgcolor="#92B5CE" lang=EN-US link=blue vlink=blue style='tab-interval:
+.5in'>
+
+<div class=Section1>
+
+<div class=MsoNormal>
+
+<hr size=4 width=100 style='width:75.0pt' align=left>
+
+</div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=200 style='width:150.0pt' align=left>
+
+</div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=300 style='width:225.0pt' align=left>
+
+</div>
 
 <h1>Using the VTK Viewer for 3D Data Representations</h1>
-<hr align="left" size="4" width="300" />
-<hr align="left" size="4" width="200" />
-<hr align="left" size="4" width="100" />
 
-<h3><p> To enhance data readability and usefulness, Vision 21 output can be displayed using the <b><em>VTK Viewer</em></b>.  The viewer must first be <u>installed</u>, so for more information on installing the VTK Viewer please refer to <a href="http://www.vtk.org">www.vtk.org</a> and click on the <a href="http://www.vtk.org/get-software.php">Get the Software</a> link.  Once installed, the viewer is then accessible within the SCIRun software through the &quot;3D&quot; Module button on select modules.  The viewer uses stored computational output to produce colored 3-dimensional representations of the results.   </p></h3>
+<div class=MsoNormal>
 
-<table>
-  <tbody>
-    <tr>
-      <td>  <p>Before using the VTK Viewer, module data must first be properly stored.  The user can specify a working directory for data storage <em><b>before</b></em> module execution under the execution folder (shown at right) within a compatible module's <b>User Interface</b> (such as within the <em>Gasifier Module</em> shown below).  </p>
-            <div align="center"><img src="../modules/images/Gasifiermod.gif" align="middle"></div>
-      </td>
-      <td>  <img src="../modules/images/Gasifiergui04.gif" ></td>
-    </tr>
-  </tbody>
-</table>
-<hr size="4" />
-<table>
-  <tbody>
-    <tr>
-      <td> <img src="../modules/images/datamenu.gif"></td>
-      <td>Once the network has been executed and the module data has been properly stored, the user may then select the &quot;3D&quot; module button to open the VTK Viewer.  A selection screen first prompts the user to select which data should be exported to the viewer for display.  The data catagories shown on the right will later become selectable within the viewer.</p>  </td>
-    </tr>
-  </tbody>
-</table>
-<hr size="4" />
- <a name="slab">
- <table>
-  <tbody>
-    <tr>
-      <td>
-<img src="../modules/images/vtkslab.gif" align="right" >
-<p>Once the data fields have been exported, the VTK Viewer opens and displays two windows.  The first is a 3D representation of the unit with a grey wire mesh to illustrate the external boundaries.  The display can be rotated by left-clicking on the screen.  Right-clicking allows the user to zoom in and out.  Pressing the letter &quot;T&quot; on the keyboard puts the VTK Viewer into trackball mode.</p>
-<p>The second window is a user interface that allows the user to dictate the methods of data display.  The first folder of the user interface, &quot;slabs&quot;, is shown at the right.</p>
-<p>The first menu, <em>Slab Type</em>, specifies the type of &quot;slab&quot; to be projected.  The <em>Scalars</em> option displays a two-dimensional cross-section using either a graduated scalar, mesh, or contoured display of data along the specified plane.  The <em>vectors</em> option projects a 3D array of vectors, each originiating from a point along the cross-section.</p>
-<p>The <em>Function</em> menu controls the data source.  The <em>scalar</em> option allows the user to select the desired data field to display.</p>
-<p>When the contoured scalar option is selected for the slab type, the <em>Number of Contours</em> option controls the detail of display.  Similarly, the <em>Vector Scale</em> option allows the user to alter the magnitude of each vector in the array when the vector option is selected.</p>
-<img src="../modules/images/vtkslab2.gif" align="left" width="150" height="300">
-<p>The <em>ColorMap</em> field controls the way the slab is colored.  The number on the left represents the data minimum (example shown at right: all gas temperatures less than 452 K will be shaded blue), the number on the right represents a data maximum (example shown at right: all temperatures above 3073 K will be shaded red), and all temperatures within the range will be scaled according to the color scheme shown.</p>
-<p>The <em>Slab</em> field specifies the location of the slab.  The <em>Dimension</em> option controls which Cartesian plane the slab runs through, whereas the <em>Location</em> option determines the slab's location as measured from the outer extremes of the mesh.</p>
-<p>Once the desired slab options are specified, the <em>Add</em> button displays the slab (shown at left) in the display window.  The active slab is then listed in the field on the left of the slab folder until removed by selecting the <em>Remove</em> button.</p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<hr size="4" />
-<a name="particles">
-<table>
-  <tbody>
-    <tr>
-      <td><img src="../modules/images/vtkparticles.gif" align="left" ></td>
-      <td>
-      <p>Within the <em>Particles</em> folder the first menu field controls which particles are displayed.  Two user-defined fields, <em>Size</em> and <em>Location</em>, control the properties of the modeled particles displayed in the display window.  Selected sizes and locations are signified by an &quot;X&quot;.    </p>
-      <p>The manner in which the particle paths are displayed is determined by the <em>Options</em> menu.  Particle paths can either be displayed by a thin line or by a tube of user-specified size.  The difference in appearance is illustrated by the two inset images.</p>
-      <p>The <em>ColorMap</em> field controls the way the particle paths are colored.  Again, the number on the left represents a minimum value, the number on the right a maximum, and the colors of the paths are scaled accordingly.  The <em>Function Type</em> field represents a series of pre-defined ColorMap schemes.</p>
-      <img src="../modules/images/vtkparticles2.gif" align="right" width="150" height="300">
-      <img src="../modules/images/vtkparticles3.gif" align="right" width="150" height="300">
-      </td>
-    </tr>
-  </tbody>
-</table>
-<hr size="4" />
-<table>
-  <tbody>
-    <tr>
-      <td><img src="../modules/images/vtkisosurfaces.gif" align="right">
-      <p>The next folder, <em>Isosurfaces</em>, allows the user to create 3D contoured surfaces. The <em>Isosurface Function</em> controls how the isosurface is generated.  The <em>Scalar Function</em> is a second data field that is then mapped onto the generated isosurface using the color scheme in MapColor (documented above).  The example shown on the right would generate an isosurface where all temperatures were equal (1520 K) and would then use the color scheme to display CO levels at each point on that surface.</p>
-      <p>The <em>Options</em> field allows the user to specify the desired <em>opacity</em> of the projected isosurface (0 being transparent and 1.00 being opaque.)
-      <p>The <em>Isosurface Value</em> is the value by which the contoured isosurface is created.  For example, the specifications at right would generate an isosurface using all the points in the unit that have a temperature of 1520 K (shown below).</p>
-      <div align="center"><img src="../modules/images/vtkisosurfaces2.gif" height="300" width="150"></div>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<hr size="4" />
-<table>
-  <tbody>
-    <tr>
-      <td><img src="../modules/images/vtkmisc.gif"  align="left">
-      </td>
-      <td>
-      <p>The <em>Miscellaneous</em> folder allows the user to toggle the visibility of the wireframe and whether or not the display uses an orthogonal projection (display does not account for perspective).<p>
-      </td>
-    </tr>
-  </tbody>
-</table>
-<hr size="4" />
-<h3> <a href="../index.html" target="_top"> Return </a> to main index</h3>
-<hr align="left" size="4" />
+<hr size=4 width=300 style='width:225.0pt' align=left>
 
+</div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=200 style='width:150.0pt' align=left>
+
+</div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=100 style='width:75.0pt' align=left>
+
+</div>
+
+<p style='mso-outline-level:4'><b><span style='font-size:13.5pt'>To enhance
+data readability and usefulness, Vision 21 output can be displayed using the <em>VTK
+Viewer</em>. The viewer must first be <u>installed</u>, so for more information
+on installing the VTK Viewer please refer to <a href="http://www.vtk.org">www.vtk.org</a>
+and click on the <a href="http://www.vtk.org/get-software.php">Get the Software</a>
+link. The viewer uses stored computational output to produce colored
+3-dimensional representations of the results. <o:p></o:p></span></b></p>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=4 width="100%" align=center>
+
+</div>
+
+<table class=MsoNormalTable border=0 cellpadding=0 style='mso-cellspacing:1.5pt'>
+ <tr style='mso-yfti-irow:0;mso-yfti-lastrow:yes'>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal><img border=0 width=421 height=292 id="_x0000_i1032" src="../modules/images/datamenu.gif"></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal>Once the network has been executed and the module data has
+  been properly stored, the user may then launch the DBconverter program to
+  convert the simulation data. A selection screen first prompts the user to
+  select which data should be exported to the viewer for display. The data categories
+  shown on the right will later become selectable within the viewer.</p>
+  </td>
+ </tr>
+</table>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=4 width="100%" align=center>
+
+</div>
+
+<table class=MsoNormalTable border=0 cellpadding=0 style='mso-cellspacing:1.5pt'>
+ <tr style='mso-yfti-irow:0;mso-yfti-lastrow:yes'>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p><!--[if gte vml 1]><v:shapetype id="_x0000_t75" coordsize="21600,21600"
+   o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f"
+   stroked="f">
+   <v:stroke joinstyle="miter"/>
+   <v:formulas>
+    <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+    <v:f eqn="sum @0 1 0"/>
+    <v:f eqn="sum 0 0 @1"/>
+    <v:f eqn="prod @2 1 2"/>
+    <v:f eqn="prod @3 21600 pixelWidth"/>
+    <v:f eqn="prod @3 21600 pixelHeight"/>
+    <v:f eqn="sum @0 0 1"/>
+    <v:f eqn="prod @6 1 2"/>
+    <v:f eqn="prod @7 21600 pixelWidth"/>
+    <v:f eqn="sum @8 21600 0"/>
+    <v:f eqn="prod @7 21600 pixelHeight"/>
+    <v:f eqn="sum @10 21600 0"/>
+   </v:formulas>
+   <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+   <o:lock v:ext="edit" aspectratio="t"/>
+  </v:shapetype><v:shape id="_x0000_s1026" type="#_x0000_t75" alt="" style='position:absolute;
+   margin-left:374pt;margin-top:0;width:414pt;height:393.75pt;z-index:1;
+   mso-wrap-distance-left:0;mso-wrap-distance-right:0;
+   mso-position-horizontal:right;mso-position-vertical-relative:line'
+   o:allowoverlap="f">
+   <v:imagedata src="../modules/images/vtkslab.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><![if !vml]><img width=552 height=525
+  src="../modules/images/vtkslab.gif" align=right v:shapes="_x0000_s1026"><![endif]><a
+  name=slab>Once the data fields have been exported, the user can launch VTK
+  Viewer. It opens and displays two windows. The first is a 3D representation
+  of the unit with a grey wire mesh to illustrate the external boundaries. The
+  display can be rotated by left-clicking on the screen. Right-clicking allows
+  the user to zoom in and out. Pressing the letter &quot;T&quot; on the
+  keyboard puts the VTK Viewer into trackball mode.</a></p>
+  <p><span style='mso-bookmark:slab'>The second window is a user interface that
+  allows the user to dictate the methods of data display. The first folder of
+  the user interface, &quot;slabs&quot;, is shown at the right.</span></p>
+  <p><span style='mso-bookmark:slab'>The first menu, <em>Slab Type</em>,
+  specifies the type of &quot;slab&quot; to be projected. The <em>Scalars</em>
+  option displays a two-dimensional cross-section using either a graduated
+  scalar, mesh, or contoured display of data along the specified plane. The <em>vectors</em>
+  option projects a 3D array of vectors, each originiating from a point along
+  the cross-section.</span></p>
+  <p><span style='mso-bookmark:slab'>The <em>Function</em> menu controls the
+  data source. The <em>scalar</em> option allows the user to select the desired
+  data field to display.</span></p>
+  <p><span style='mso-bookmark:slab'>When the contoured scalar option is
+  selected for the slab type, the <em>Number of Contours</em> option controls
+  the detail of display. Similarly, the <em>Vector Scale</em> option allows the
+  user to alter the magnitude of each vector in the array when the vector
+  option is selected.</span></p>
+  <p><!--[if gte vml 1]><v:shape id="_x0000_s1027" type="#_x0000_t75" alt=""
+   style='position:absolute;margin-left:0;margin-top:0;width:112.5pt;height:225pt;
+   z-index:2;mso-wrap-distance-left:0;mso-wrap-distance-right:0;
+   mso-position-horizontal:left;mso-position-vertical-relative:line'
+   o:allowoverlap="f">
+   <v:imagedata src="../modules/images/vtkslab2.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><![if !vml]><img width=150 height=300
+  src="../modules/images/vtkslab2.gif" align=left v:shapes="_x0000_s1027"><![endif]><span
+  style='mso-bookmark:slab'>The <em>ColorMap</em> field controls the way the
+  slab is colored. The number on the left represents the data minimum (example
+  shown at right: all gas temperatures less than 452 K will be shaded blue),
+  the number on the right represents a data maximum (example shown at right:
+  all temperatures above 3073 K will be shaded red), and all temperatures
+  within the range will be scaled according to the color scheme shown.</span></p>
+  <p><span style='mso-bookmark:slab'>The <em>Slab</em> field specifies the
+  location of the slab. The <em>Dimension</em> option controls which Cartesian
+  plane the slab runs through, whereas the <em>Location</em> option determines
+  the slab's location as measured from the outer extremes of the mesh.</span></p>
+  <p><span style='mso-bookmark:slab'>Once the desired slab options are
+  specified, the <em>Add</em> button displays the slab (shown at left) in the
+  display window. The active slab is then listed in the field on the left of
+  the slab folder until removed by selecting the <em>Remove</em> button.</span></p>
+  </td>
+  <span style='mso-bookmark:slab'></span>
+ </tr>
+</table>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='mso-bookmark:slab'>
+
+<hr size=4 width="100%" align=center>
+
+</span></div>
+
+<span style='font-size:12.0pt;font-family:"Times New Roman";mso-fareast-font-family:
+SimSun;mso-ansi-language:EN-US;mso-fareast-language:ZH-CN;mso-bidi-language:
+AR-SA'><span style='mso-bookmark:slab'></span></span>
+
+<table class=MsoNormalTable border=0 cellpadding=0 style='mso-cellspacing:1.5pt'>
+ <tr style='mso-yfti-irow:0;mso-yfti-lastrow:yes'>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal><!--[if gte vml 1]><v:shape id="_x0000_s1028" type="#_x0000_t75"
+   alt="" style='position:absolute;margin-left:0;margin-top:0;width:390pt;
+   height:371.25pt;z-index:3;mso-wrap-distance-left:0;
+   mso-wrap-distance-right:0;mso-position-horizontal:left;
+   mso-position-vertical-relative:line' o:allowoverlap="f">
+   <v:imagedata src="../modules/images/vtkparticles.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><![if !vml]><img width=520 height=495
+  src="../modules/images/vtkparticles.gif" align=left v:shapes="_x0000_s1028"><![endif]><a
+  name=particles></a></p>
+  </td>
+  <span style='mso-bookmark:particles'></span>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p><span style='mso-bookmark:particles'>Within the <em>Particles</em> folder
+  the first menu field controls which particles are displayed. Two user-defined
+  fields, <em>Size</em> and <em>Location</em>, control the properties of the
+  modeled particles displayed in the display window. Selected sizes and
+  locations are signified by an &quot;X&quot;. </span></p>
+  <p><span style='mso-bookmark:particles'>The manner in which the particle
+  paths are displayed is determined by the <em>Options</em> menu. Particle
+  paths can either be displayed by a thin line or by a tube of user-specified
+  size. The difference in appearance is illustrated by the two inset images.</span></p>
+  <p><span style='mso-bookmark:particles'>The <em>ColorMap</em> field controls
+  the way the particle paths are colored. Again, the number on the left
+  represents a minimum value, the number on the right a maximum, and the colors
+  of the paths are scaled accordingly. The <em>Function Type</em> field
+  represents a series of pre-defined ColorMap schemes.</span></p>
+  <p class=MsoNormal><!--[if gte vml 1]><v:shape id="_x0000_s1029" type="#_x0000_t75"
+   alt="" style='position:absolute;margin-left:72.5pt;margin-top:0;width:112.5pt;
+   height:225pt;z-index:4;mso-wrap-distance-left:0;mso-wrap-distance-right:0;
+   mso-position-horizontal:right;mso-position-vertical-relative:line'
+   o:allowoverlap="f">
+   <v:imagedata src="../modules/images/vtkparticles2.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><![if !vml]><img width=150 height=300
+  src="../modules/images/vtkparticles2.gif" align=right v:shapes="_x0000_s1029"><![endif]><span
+  style='mso-bookmark:particles'></span><!--[if gte vml 1]><v:shape id="_x0000_s1030"
+   type="#_x0000_t75" alt="" style='position:absolute;margin-left:72.5pt;
+   margin-top:0;width:112.5pt;height:225pt;z-index:5;mso-wrap-distance-left:0;
+   mso-wrap-distance-right:0;mso-position-horizontal:right;
+   mso-position-vertical-relative:line' o:allowoverlap="f">
+   <v:imagedata src="../modules/images/vtkparticles3.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><![if !vml]><img width=150 height=300
+  src="../modules/images/vtkparticles3.gif" align=right v:shapes="_x0000_s1030"><![endif]><span
+  style='mso-bookmark:particles'></span></p>
+  </td>
+  <span style='mso-bookmark:particles'></span>
+ </tr>
+</table>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='mso-bookmark:particles'>
+
+<hr size=4 width="100%" align=center>
+
+</span></div>
+
+<table class=MsoNormalTable border=0 cellpadding=0 style='mso-cellspacing:1.5pt'>
+ <tr style='mso-yfti-irow:0;mso-yfti-lastrow:yes'>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p><!--[if gte vml 1]><v:shape id="_x0000_s1031" type="#_x0000_t75" alt=""
+   style='position:absolute;margin-left:335pt;margin-top:0;width:375pt;
+   height:357pt;z-index:6;mso-wrap-distance-left:0;mso-wrap-distance-right:0;
+   mso-position-horizontal:right;mso-position-vertical-relative:line'
+   o:allowoverlap="f">
+   <v:imagedata src="../modules/images/vtkisosurfaces.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><![if !vml]><img width=500 height=476
+  src="../modules/images/vtkisosurfaces.gif" align=right v:shapes="_x0000_s1031"><![endif]><span
+  style='mso-bookmark:particles'>The next folder, <em>Isosurfaces</em>, allows
+  the user to create 3D contoured surfaces. The <em>Isosurface Function</em>
+  controls how the isosurface is generated. The <em>Scalar Function</em> is a
+  second data field that is then mapped onto the generated isosurface using the
+  color scheme in MapColor (documented above). The example shown on the right
+  would generate an isosurface where all temperatures were equal (1520 K) and
+  would then use the color scheme to display CO levels at each point on that
+  surface.</span></p>
+  <p><span style='mso-bookmark:particles'>The <em>Options</em> field allows the
+  user to specify the desired <em>opacity</em> of the projected isosurface (0
+  being transparent and 1.00 being opaque.) </span></p>
+  <p><span style='mso-bookmark:particles'>The <em>Isosurface Value</em> is the
+  value by which the contoured isosurface is created. For example, the
+  specifications at right would generate an isosurface using all the points in
+  the unit that have a temperature of 1520 K (shown below).</span></p>
+  <p class=MsoNormal align=center style='text-align:center'><span
+  style='mso-bookmark:particles'><img border=0 width=150 height=300
+  id="_x0000_i1036" src="../modules/images/vtkisosurfaces2.gif"></span></p>
+  </td>
+  <span style='mso-bookmark:particles'></span>
+ </tr>
+</table>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='mso-bookmark:particles'>
+
+<hr size=4 width="100%" align=center>
+
+</span></div>
+
+<table class=MsoNormalTable border=0 cellpadding=0 style='mso-cellspacing:1.5pt'>
+ <tr style='mso-yfti-irow:0;mso-yfti-lastrow:yes'>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal><!--[if gte vml 1]><v:shape id="_x0000_s1032" type="#_x0000_t75"
+   alt="" style='position:absolute;margin-left:0;margin-top:0;width:414pt;
+   height:393.75pt;z-index:7;mso-wrap-distance-left:0;
+   mso-wrap-distance-right:0;mso-position-horizontal:left;
+   mso-position-vertical-relative:line' o:allowoverlap="f">
+   <v:imagedata src="../modules/images/vtkmisc.gif"/>
+   <w:wrap type="square"/>
+  </v:shape><![endif]--><![if !vml]><img width=552 height=525
+  src="../modules/images/vtkmisc.gif" align=left v:shapes="_x0000_s1032"><![endif]><span
+  style='mso-bookmark:particles'></span></p>
+  </td>
+  <span style='mso-bookmark:particles'></span>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p><span style='mso-bookmark:particles'>The <em>Miscellaneous</em> folder
+  allows the user to toggle the visibility of the wireframe and whether or not
+  the display uses an orthogonal projection (display does not account for
+  perspective).</span></p>
+  </td>
+  <span style='mso-bookmark:particles'></span>
+ </tr>
+</table>
+
+<div class=MsoNormal align=center style='text-align:center'><span
+style='mso-bookmark:particles'>
+
+<hr size=4 width="100%" align=center>
+
+</span></div>
+
+<span style='mso-bookmark:particles'></span>
+
+<h3><a href="../index.html" target="_top">Return </a>to main index</h3>
+
+<div class=MsoNormal>
+
+<hr size=4 width="100%" align=left>
+
+</div>
+
+</div>
+
+</body>
+
+</html>
