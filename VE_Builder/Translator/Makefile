@@ -28,7 +28,8 @@ SRCS=\
    reiParticles.cpp \
    plot3dReader.cpp \
    jdMAPReader.cpp \
-   enSightGoldReader.cpp
+   enSightGoldReader.cpp \
+   ansysReader.cpp
 #   vtkEnSightFortranBinaryReader.cxx
 
 # Specify the OS-dependent directory name for object files and depends
@@ -43,7 +44,8 @@ DEBUG_APP?= TRUE
 
 EXTRA_CFLAGS+= 
 
-EXTRA_CXXFLAGS+=
+#for some debug print information in the ansys translator...
+#EXTRA_CXXFLAGS+= -DPRINT_HEADERS
 
 #EXTRA_DEFS+= -DSJK_TEST
 

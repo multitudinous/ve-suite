@@ -162,11 +162,14 @@ ansysReader::~ansysReader()
       this->ptrElemDescriptions = NULL;
    }
 
+/*
+   // can't do this with translateToVtk
    if ( this->ugrid )
    {
       this->ugrid->Delete();
       this->ugrid = NULL;
    }
+*/
 }
 
 void ansysReader::FlipEndian()

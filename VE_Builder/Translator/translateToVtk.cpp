@@ -75,6 +75,7 @@ int nx = 1, ny = 1, nz = 1;
 int retainEveryNthFrame = 1;
 plot3dReader   *plot3d;
 starReader     *star;
+ansysReader * reader = NULL;
 
 char * preprocess( int argc, char *argv[], 
                    int type, vtkTransform *aTransform, int & number ) 
@@ -168,6 +169,8 @@ char * preprocess( int argc, char *argv[],
          B_fname = 1; // don't have a default plot3d input file, set flag to ask for filename
       else if ( type == 11 ) 
          B_fname = 1; // don't have a default ensight filename
+      else if ( type == 12 ) 
+         B_fname = 1; // don't have a default ANSYS *.rst filename
 #endif  //SJK_TEST
 
       if ( B_fname == 0 )
@@ -200,6 +203,9 @@ char * preprocess( int argc, char *argv[],
             std::cout << "By default vertex, cell, and solution data read from " << infilename <<std::endl;
          }
          else if (type == 9)  // REI_Particles
+         {
+         }
+         else if (type == 12)  // ANSYS *.rst file
          {
          }
          else
@@ -322,7 +328,18 @@ char * preprocess( int argc, char *argv[],
                 cin.ignore();
             }
             while ( !fileIO::isFileReadable( infilename ) );
-        }
+         }
+         else if (type == 12)    // ANSYS *.rst file
+         {
+            do
+            {
+                std::cout << "\nANSYS *.rst file: \t";
+                std::cout.flush();
+                cin >> infilename;
+                cin.ignore();
+            }
+            while ( ! fileIO::isFileReadable( infilename ) );
+         }
       }
 #ifndef SJK_TEST
    }
@@ -605,9 +622,9 @@ int main( int argc, char *argv[] )
                 << "\t(1)Fluent (2)Star-CD (3)REI (4)EnSight (5)FIRE/SWIFT "
                 << "(6)REI Particle\n"
                 << "\t(7)mfix (8)Fluent Particle Data "
-                << "(9)PLOT3D (10)John Deere MAP Data "
-                << "(11) John Deere EnSight Data\n"
-                << "(12) ANSYS rst binary data\n"
+                << "(9)PLOT3D (10)John Deere MAP Data\n"
+                << "\t(11)John Deere EnSight Data" << "  " 
+                << "(12)ANSYS rst binary data\n"
                 << "\t(0)exit" <<std::endl;
       cfdType = fileIO::getIntegerBetween( 0, 12 );
    }
@@ -847,6 +864,10 @@ int main( int argc, char *argv[] )
    else if ( _enSightReader != NULL )
    {
       delete _enSightReader;
+   }
+   else if ( reader != NULL  )
+   {
+      delete reader;
    }
 
    std::cout << "NOTE : It is suggested that for all StarCD, PLOT3D, and REI" << std::endl;
