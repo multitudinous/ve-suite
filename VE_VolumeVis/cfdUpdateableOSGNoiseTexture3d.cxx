@@ -2,7 +2,7 @@
 #include <iostream>
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG 
+#elif _OSG
 
 #include <osg/State>
 #include "cfdUpdateableOSGNoiseTexture3d.h" 
@@ -14,8 +14,9 @@ cfdUpdateableOSGNoiseTexture3d::cfdUpdateableOSGNoiseTexture3d()
    _textureWidth = 32;
    _textureHeight = 32;
    _textureDepth = 32;
-   _taoH = .1;
-   _taoI = .9;
+   _taoH = .01;
+   _taoI = .1;
+   _taoA = .9;
    _lastH = -1;
    _lastI = -1;
    _data = 0;
@@ -62,6 +63,7 @@ void cfdUpdateableOSGNoiseTexture3d::_updateData()
       _data = new unsigned char[nPixels*4];
 	GLint hI[256];
    GLint gI[256];
+   GLint ga[256];
    for(int i = 0; i < 256; i++){
       if(i < _taoI*255){
          gI[i] = 0;
@@ -69,6 +71,15 @@ void cfdUpdateableOSGNoiseTexture3d::_updateData()
          gI[i] = 255;
       }
    }
+   float taoAlpha = .9;
+   //build ga
+  for(unsigned int i = 0; i < 256; i++){
+     if(i < _taoA*255){
+        ga[i] = 0;
+     }else{
+        ga[i] = 255.0*(i-/*255  */_taoA*255)/(255.0-_taoA*255);
+     }
+  }
 
    //build hI transfer
    for(unsigned int i = 0; i < 256; i++){
@@ -79,27 +90,29 @@ void cfdUpdateableOSGNoiseTexture3d::_updateData()
       }
    }
    srand( (unsigned)time( NULL ) );
-	int phase[32][32][32];
+	int phase[32*32*32];
+   int index = 0;
    for(int i = 0; i <32; i++)
       for(int j = 0; j <32; j++)
          for(int k = 0; k <32; k++)
-            phase[i][j][k] = rand()%256;
+            phase[index++] = rand()%256;
+
+   unsigned int w[256];
+   for (int i = 0; i < 256; i++) 
+      w[i] = i < 127 ? 0 : 255;
 
    GLint t = 0;
+
    int pCount = 0;
    for(int i = 0; i < 32; i++){
       t = i*256/32;
       for(int j = 0; j < 32; j++){
          for(int k = 0; k < 32; k++){
-                  _data[pCount*4    ] = (GLubyte)((hI[(phase[i][j][k]+t) % 255])*
-                                           (gI[(phase[k][j][i]+t) % 255])/*
-                                           (ga[(phase[k][j][i]+t) % 255])*/);          
-                  _data[pCount*4 + 1] = (GLubyte)phase[i][j][k];
-
-                  _data[pCount*4 + 2] = (GLubyte) ((gI[(phase[i][j][k] + t) % 255])*
-			                                       (hI[(phase[k][j][i] + t) % 255]));
-                  _data[pCount*4 + 3] = (GLubyte)phase[k][j][i];
-                  pCount++;
+            _data[pCount*4    ] = (unsigned char)((w[(phase[rand()%index]) ]));                          
+            _data[pCount*4 + 1] = (unsigned char)(phase[rand()%index]);
+            _data[pCount*4  +2] = (unsigned char)(w[(phase[rand()%index])]);
+            _data[pCount*4  +3] = (unsigned char)(phase[rand()%index]);//(ga[(phase[k][i][j]+t) % 255]);
+            pCount++;
 	       }
 	    }
    } 

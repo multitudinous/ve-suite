@@ -1,10 +1,11 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #include <osg/TexEnv>
 #include <osg/Geode>
 #include <osg/TexMat>
 #include <osg/StateSet>
 #include <osg/Switch>
+#include <osg/Node>
 #ifdef CFD_USE_SHADERS
 #include "cfdAdvectionSubGraph.h"
 #include "cfdVectorVolumeVisHandler.h"
@@ -15,7 +16,6 @@
 #include "cfdTextureManager.h"
 #include "cfdTextureMatrixCallback.h"
 
-#include "cfdAdvectPropertyCallback.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfd3DTextureCullCallback.h"
 
@@ -33,6 +33,7 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler()
    _texturePingPong = 0;
    _transferSM = 0;
    _autoTexGen = false;
+   _ssIsSet = false;
 
 }
 //////////////////////////////////////////////////////////
@@ -49,6 +50,7 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler(const cfdVectorVolumeVisHan
    _advectionSlice = new osg::Group(*vvnh._advectionSlice);
    _property = new osg::Texture3D(*vvnh._property);
    _velocity = new osg::Texture3D(*vvnh._velocity);
+   _propertyTextureGroup = new osg::Group(*vvnh._propertyTextureGroup);
 }
 ///////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler::~cfdVectorVolumeVisHandler()
@@ -156,47 +158,97 @@ void cfdVectorVolumeVisHandler::_setUpDecorator()
    if(!_tm){
       return;
    }
+   
+   if(!_propertyTextureGroup.valid())
+   {
+      _propertyTextureGroup = new osg::Group();
+      _propertyTextureGroup->setName("Property Texture");
+      _visualBoundingBox->removeChild(_decoratorGroup.get());
+      _visualBoundingBox->addChild(_propertyTextureGroup.get());
+      _propertyTextureGroup->addChild(_decoratorGroup.get());
+   }
    int* res = _tm->fieldResolution();
    
    if(!_aSM){
       _aSM = new cfdOSGAdvectionShaderManager();
-      _aSM->SetFieldSize(res[0],res[1],res[2]);
-      _aSM->SetVelocityTexture(_velocity.get());
-      //_aSM->SetBounds(_tm->getBoundingBox());
-   }
+     
+   } 
+   _aSM->SetFieldSize(res[0],res[1],res[2]);
+   _aSM->SetVelocityTexture(_velocity.get());
+   _aSM->SetCenter(_bbox.center());
    _aSM->Init();  
-   //_aSM->UpdateBounds(_tm->getBoundingBox());
    _createTransferShader();
-   _createTexturePingPong();
 
    float deltaZ = (_bbox.zMax()-_bbox.zMin())/(float)(_tm->fieldResolution()[2]-1);
    //create the advection subgraph
    if(!_advectionSlice.valid()){
-      _advectionSlice = CreateAdvectionSubGraph(_tm,_transferSM->GetPropertyTexture(),
+      _advectionSlice = new osg::Group();
+      _advectionSlice->setName("AdvectionSlice");
+
+      osg::ref_ptr<osg::Group>shaderGroup = CreateAdvectionSubGraph(_tm,
                                            _pbuffer,
-                                           _aSM->GetShaderStateSet(),
-                                           _aSM->GetVertexProgram(),
                                            deltaZ).get();   
-      _advectionSlice->setStateSet(_aSM->GetShaderStateSet());
+      shaderGroup->setStateSet(_aSM->GetShaderStateSet());
+      _advectionSlice->addChild(shaderGroup.get());
    }
    if(!_cullCallback && _pbuffer ){
       _cullCallback = new cfd3DTextureCullCallback(_advectionSlice.get(),
-                                              _transferSM->GetPropertyTexture(),
                                               _tm->fieldResolution()[0],
                                               _tm->fieldResolution()[1]);
       _cullCallback->SetPBuffer(_pbuffer);
-      _decoratorGroup->setCullCallback(_cullCallback);
+      _propertyTextureGroup->setCullCallback(_cullCallback);
    }
+   _setupAdvectionPropertyStateSet();
+   _setupTransferPropertyStateSet();
+   _createTexturePingPong();
 } 
+////////////////////////////////////////////////////////////////
+void cfdVectorVolumeVisHandler::_setupTransferPropertyStateSet()
+{
+   if(!_ssIsSet){
+      unsigned int tunit = _transferSM->GetAutoGenTextureUnit();
+      osg::ref_ptr<osg::StateSet> ss = _propertyTextureGroup->getOrCreateStateSet();
+      ss->setTextureAttributeAndModes(tunit,
+                                  _transferSM->GetPropertyTexture(),
+                                  osg::StateAttribute::ON);
+      ss->setTextureMode(tunit,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      ss->setTextureMode(tunit,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
+      ss->setTextureMode(tunit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
+      ss->setTextureMode(tunit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
+      ss->setTextureAttributeAndModes(tunit,
+                                  new osg::TexEnv(osg::TexEnv::MODULATE),
+		                             osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+      ss->setDataVariance(osg::Object::DYNAMIC);
+      _ssIsSet = true;
+   }
+}
+/////////////////////////////////////////////////////////////////
+void cfdVectorVolumeVisHandler::_setupAdvectionPropertyStateSet()
+{
+   if(!_ssIsSet){
+      unsigned int tunit = _aSM->GetAutoGenTextureUnit();
+      osg::ref_ptr<osg::StateSet> ss = _advectionSlice->getOrCreateStateSet();
+      ss->setTextureAttributeAndModes(tunit,
+                                  _aSM->GetPropertyTexture(),
+                                  osg::StateAttribute::ON);
+                                 
+      ss->setTextureMode(tunit,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      ss->setTextureMode(tunit,GL_TEXTURE_GEN_S,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      ss->setTextureMode(tunit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      ss->setTextureMode(tunit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      ss->setTextureAttributeAndModes(tunit,
+                                  new osg::TexEnv(osg::TexEnv::MODULATE),
+		                             osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+      ss->setDataVariance(osg::Object::DYNAMIC);
+   }
+}
 /////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_applyTextureMatrix()
 {
    unsigned int tUnit = _transferSM->GetAutoGenTextureUnit();
    osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
    tMat->setMatrix(osg::Matrix::identity());
-   _decoratorGroup->getStateSet()->setTextureAttributeAndModes(tUnit,
-                                                        tMat.get(),
-                                                        osg::StateAttribute::ON);
+   _decoratorGroup->getStateSet()->setTextureAttributeAndModes(tUnit,tMat.get(),osg::StateAttribute::ON);
    float trans[3] = {.5,.5,.5};
    _decoratorGroup->setUpdateCallback(new cfdTextureMatrixCallback(tMat.get(),
                                                              _center,
@@ -212,20 +264,19 @@ void cfdVectorVolumeVisHandler::SetPBufferManager(cfdPBufferManager* pbm)
 ////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createTexturePingPong()
 {
-   if(!_texturePingPong&&
-      _aSM && 
-      _transferSM){
-      _texturePingPong = new cfdOSGPingPongTexture3D();
-      _texturePingPong->SetPingTexture(_aSM->GetPropertyTexture());
-      _texturePingPong->SetPongTexture(_transferSM->GetPropertyTexture());
-      _texturePingPong->InitTextures();
+   if(_cullCallback)
+   {
+      unsigned int current = _transferSM->GetAutoGenTextureUnit();
+      unsigned int previous = _aSM->GetAutoGenTextureUnit();
+      _cullCallback->SetPingPongTextures(previous,_advectionSlice.get(),
+                                     current,_propertyTextureGroup.get());
    }
 }
 //////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::PingPongTextures()
 {
-   if(_texturePingPong){
-      _texturePingPong->PingPongTextures();
+   if(_cullCallback){
+      _cullCallback->GetPingPonger()->PingPongTextures();
    }
 }
 //////////////////////////////////////////////////////////////////////////
@@ -250,4 +301,3 @@ cfdVectorVolumeVisHandler::operator=(const cfdVectorVolumeVisHandler& vvnh)
 #endif //CFD_USE_SHADERS
 #endif //_OSG
 #endif
-

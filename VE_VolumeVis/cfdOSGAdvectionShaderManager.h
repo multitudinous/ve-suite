@@ -1,7 +1,7 @@
 #ifndef CFD_OSG_ADVECTION_SHADER_MANAGER_H
 #define CFD_OSG_ADVECTION_SHADER_MANAGER_H
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 namespace osg{
    class Texture3D;
    class Texture1D;
@@ -12,6 +12,7 @@ namespace osg{
 #include "cfdOSGShaderManager.h"
 #include "cfdUpdateableOSGNoiseTexture3d.h"
 #include "cfdUpdateParameterCallback.h"
+//class cfdUpdateMatrixParameterCallback;
 
 class cfdOSGAdvectionShaderManager: public cfdOSGShaderManager{
 public:
@@ -37,6 +38,7 @@ public:
    //2 ==>dye
    void UpdateWeight(GLfloat param, int whichMaterial = 0);
    void SetState(osg::State* state);
+   void SetCenter(osg::Vec3 center);
 
    //need to add the dye interface also
    osg::Texture3D* GetPropertyTexture();
@@ -50,12 +52,12 @@ protected:
    void _initWeightFunctions();
    void _initLookUpFunction();
    void _initFragProgramCallbacks();
-   void _initVertexProgramCallbacks();
 
    virtual void _setupCGShaderProgram(osg::StateSet* ss,
-		                      char* progName, char* funcName);
+		                             char* progName, 
+                                   char* funcName);
    unsigned int _fieldSize[3];
-   unsigned int _tUnit;
+
    bool _isFrag;
    
    cfdUpdateParameterCallback* _noiseScaleCallback;
@@ -66,6 +68,8 @@ protected:
    cfdUpdateParameterCallback* _dyeTransCallback;
    cfdUpdateParameterCallback* _minBoundsCallback;
    cfdUpdateParameterCallback* _maxBoundsCallback;
+   cfdUpdateParameterCallback* _dyeCoordCallback;
+   //cfdUpdateMatrixParameterCallback* _dyeMatCallback;
 
    osg::ref_ptr<osg::Texture3D> _velocity;
    osg::ref_ptr<osg::Texture3D> _propertyToAdvect;
@@ -76,6 +80,7 @@ protected:
    osg::ref_ptr<osg::Texture1D> _lookUpFunction;
    cfdUpdateableOSGNoiseTexture3d* _noiseCbk;
    bool _reinit;
+   osg::Vec3 _center;
 };
 #endif// _CFD_USE_SHADERS
 #endif//_OSG

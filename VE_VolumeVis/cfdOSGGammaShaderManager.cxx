@@ -1,6 +1,6 @@
 #ifdef VE_PATENTED
 #include <iostream>
-#ifdef _OSG 
+#ifdef _OSG
 #include <osg/Texture3D>
 #include <osg/Texture1D>
 #include <osg/BlendFunc>
@@ -40,7 +40,7 @@ void cfdOSGGammaShaderManager::Init()
       _ss->setTextureMode(0,GL_TEXTURE_3D,
                         osg::StateAttribute::ON);
       _ss->setTextureAttributeAndModes(0,
-                                   new osg::TexEnv(osg::TexEnv::MODULATE),
+                                   new osg::TexEnv(osg::TexEnv::REPLACE),
 		                              osg::StateAttribute::ON);
       int nTransferFunctions = _transferFunctions.size();
       for(int i =0; i < nTransferFunctions; i++){
@@ -65,7 +65,7 @@ void cfdOSGGammaShaderManager::Init()
       }else{
          char* vesuitehome = getenv("VE_SUITE_HOME");
          strcpy(directory,vesuitehome);
-        strcat(directory,"/VE_Xplorer/cg_shaders/");
+        strcat(directory,"/VE_VolumeVis/cg_shaders/");
       }
       strcat(directory,"gammaCorrection.cg");
       _setupCGShaderProgram(_ss.get(),directory,"gammaCorrection");

@@ -1,7 +1,7 @@
 #ifndef CFD_UPDATE_PARAMETER_CALLBACK_H
 #define CFD_UPDATE_PARAMETER_CALLBACK_H
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #ifdef CFD_USE_SHADERS
 #include <osgNV/Version>
 #include <osgNV/VectorParameterValue>
@@ -17,18 +17,26 @@ public:
 
 	META_Object(test, cfdUpdateParameterCallback);
 
+   enum cfdParameterType{VECTOR,MATRIX};
+   enum cfdParameterSize{ONE=0,TWO,THREE,FOUR};
 	void operator()(osgNV::ParameterValue *param, osg::State &state) const;
 	
-   void setType(int type){_type = type;}
+   void setTypeAndSize(cfdParameterType type,
+                     cfdParameterSize size)
+   {
+      _type = type;
+      _size = size;
+   }
 
    void updateParameter(float* value);
    
 protected:
    float _value[4];
-   int _type;
+   cfdParameterType _type;
+   cfdParameterSize _size;
 
 };
 #endif //CFD_USE_SHADERS
 #endif //_OSG
-#endif
 #endif //CFD_UPDATE_PARAMETER_CALLBACK_H
+#endif

@@ -1,8 +1,9 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #ifdef CFD_USE_SHADERS
 #include <cmath>
 #include "cfdAdvectionSubGraph.h"
+#include "cfdOSGAdvectionShaderManager.h"
 #include "cfdTextureManager.h"
 #include "cfdPBufferManager.h"
 #include "cfdVolumeVisualization.h"
@@ -20,18 +21,10 @@
 #include <osg/TexEnv>
 #include <osg/StateSet>
 
-#include <osgNV/VectorParameterValue>
-#include <osgNV/VectorArrayParameterValue>
 #include <osg/TexGenNode>
-#include <osg/Billboard>
-#include <osgNVCg/Program>
-
 
 osg::ref_ptr<osg::Group> CreateAdvectionSubGraph(cfdTextureManager* tm,
-                                            osg::Texture3D* updateTexture,
                                             cfdPBufferManager* pbm,
-                                            osg::StateSet* stateset,
-                                            osgNVCg::Program* vertpg,
                                             float deltaZ)
 {
    if(!tm) 
@@ -79,7 +72,7 @@ osg::ref_ptr<osg::Group> CreateAdvectionSubGraph(cfdTextureManager* tm,
    tm->fieldResolution()[1],
    tm->fieldResolution()[2]);
 
-   pbSlice->SetTextureToUpdate(updateTexture);
+   //pbSlice->SetTextureToUpdate(updateTexture);
    pbSlice->CalculateSlices();
    pbSlice->setUseDisplayList(false);
 

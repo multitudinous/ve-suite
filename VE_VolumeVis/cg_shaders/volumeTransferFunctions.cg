@@ -16,16 +16,16 @@ f2app densityTransfer(float4 color:COLOR0,
    //get the density for each material
    float4 density = tex3D(densityTexture,texCoord);
    
-   float red = tex1D(mat1Func,density.x);
-   float4 dye = float4(red,0,0,red);
+   float2 red = tex1D(mat4Func,density.x).ba;
+   float4 dye = float4(red.x,0,0,red.y);
 
-   float green = tex1D(mat2Func,density.y);
-   float4 mat1 = float4(0,green,0,green);
+   float2 green = tex1D(mat1Func,density.y).ba;
+   float4 mat1 = float4(0,green.y,0,green.y);
 
-   float blue = tex1D(mat3Func,density.z);
-   float4 mat2 = float4(0,0,blue,blue);
+   float2 blue = tex1D(mat2Func,density.z).ba;
+   float4 mat2 = float4(0,0,blue.y,blue.y);
 
-   retColor.color = mat1+mat2+dye;
+   retColor.color = clamp(mat1 + mat2 +dye,float4(0,0,0,0),float4(1,1,1,1));
    retColor.color.w *= color.a;
 
    return retColor;

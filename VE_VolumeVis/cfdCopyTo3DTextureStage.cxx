@@ -1,5 +1,5 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #include <osg/FrameStamp>
 #ifdef CFD_USE_SHADERS
 #include <cassert>
@@ -74,9 +74,9 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
       _localState->setFrameStamp(_fs.get());
       for(unsigned int i = 1; i < _nSlices-1; i++){
          RenderStage::draw(*_localState.get(),previous);
-         /*_texture->copyTexSubImage3D(state,
+         _texture->copyTexSubImage3D(state,
                                   1,1,i,
-                                  1,1,_width-2,_height-2);*/
+                                  1,1,_width-2,_height-2);
 
          //need this to draw multiple slices
          _stageDrawnThisFrame = false;

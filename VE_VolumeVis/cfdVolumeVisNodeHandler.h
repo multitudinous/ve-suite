@@ -1,7 +1,7 @@
 #ifndef CFD_VOLUME_VIZ_NODE_HANDLER_H
 #define CFD_VOLUME_VIZ_NODE_HANDLER_H
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #include <osg/BoundingBox>
 #include <osg/ref_ptr>
 namespace osg
@@ -58,5 +58,5 @@ protected:
 };
 
 #endif //_OSG
-#endif
 #endif// CFD_VOLUME_VIZ_NODE_HANDLER_H
+#endif

@@ -1,5 +1,5 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #include <osg/Texture3D>
 #include <osg/Image>
 #include <osg/BlendFunc>
@@ -36,15 +36,10 @@ cfdOSGScalarShaderManager::cfdOSGScalarShaderManager(const
 ///////////////////////////////////////////////////////
 cfdOSGScalarShaderManager::~cfdOSGScalarShaderManager()
 {
-   
-}
-///////////////////////////////////////////////////////////////
-osg::Texture3D* cfdOSGScalarShaderManager::GetPropertyTexture()
-{
-   if(_scalarProp.valid()){
-      return _scalarProp.get();
+   if(_tm){
+      delete _tm;
+      _tm = 0;
    }
-   return 0;
 }
 //////////////////////////////////////
 void cfdOSGScalarShaderManager::Init()
@@ -105,7 +100,7 @@ void cfdOSGScalarShaderManager::Init()
       _ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_T,osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_R,osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
-      _ss->setTextureAttributeAndModes(0,new osg::TexEnv(osg::TexEnv::MODULATE),
+      _ss->setTextureAttributeAndModes(0,new osg::TexEnv(osg::TexEnv::REPLACE),
 		                    osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
       //load the shader file 
       char directory[1024];
@@ -114,7 +109,7 @@ void cfdOSGScalarShaderManager::Init()
       }else{
          char* vesuitehome = getenv("VE_SUITE_HOME");
          strcpy(directory,vesuitehome);
-        strcat(directory,"/VE-VolumeVis/cg_shaders/");
+        strcat(directory,"/VE_VolumeVis/cg_shaders/");
       }
       strcat(directory,"fragVol.cg");
       _setupCGShaderProgram(_ss.get(),directory,"fp_volume");

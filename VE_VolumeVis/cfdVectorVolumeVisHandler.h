@@ -1,7 +1,7 @@
 #ifndef CFD_VECTOR_VOLUME_VIS_HANDLER_H
 #define CFD_VECTOR_VOLUME_VIS_HANDLER_H
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #ifdef CFD_USE_SHADERS
 namespace osg{
    class Group;
@@ -30,7 +30,7 @@ public:
 
    void SetPBufferManager(cfdPBufferManager* pbm);
    void PingPongTextures();
-
+   cfdOSGAdvectionShaderManager* GetAdvectionShaderManager(){return _aSM;}
    cfdVectorVolumeVisHandler& operator=(const cfdVectorVolumeVisHandler& vvnh);
 protected:
    virtual void _setUpDecorator();
@@ -39,6 +39,10 @@ protected:
    void _initPropertyTexture();
    void _createVelocityFromTextureManager();
    void _createTransferShader();
+   void _setupTransferPropertyStateSet();
+   void _setupAdvectionPropertyStateSet();
+
+   bool _ssIsSet;
 
    cfdOSGAdvectionShaderManager* _aSM;
    cfdOSGTransferShaderManager* _transferSM;
@@ -49,11 +53,12 @@ protected:
    cfdOSGPingPongTexture3D* _texturePingPong;
 
    osg::ref_ptr<osg::Group> _advectionSlice;
+   osg::ref_ptr<osg::Group> _propertyTextureGroup;
    osg::ref_ptr<osg::Texture3D> _property;
    osg::ref_ptr<osg::Texture3D> _velocity;
 
 };
 #endif //
 #endif //_OSG
-#endif
 #endif// CFD_SCALAR_VOLUME_VIS_HANDLER_H
+#endif

@@ -192,7 +192,9 @@ inline osg::Group* cfdApp::getScene()
 void cfdApp::contextInit()
 {
    vrj::OsgApp::contextInit();
+#ifdef VE_PATENTED
 #ifdef CFD_USE_SHADERS
+
    if (!_pbuffer){
       _pbuffer = new cfdPBufferManager();
       _pbuffer->isSupported();
@@ -200,6 +202,7 @@ void cfdApp::contextInit()
    if(_tbvHandler){
       _tbvHandler->SetPBuffer(_pbuffer);
    }
+#endif
 #endif
 }
 ///////////////////////////

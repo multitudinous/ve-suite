@@ -1,5 +1,5 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #include <osg/StateSet>
 #ifdef CFD_USE_SHADERS
 #include <osgNVCg/Context>
@@ -60,9 +60,10 @@ void cfdOSGShaderManager::_setupCGShaderProgram(osg::StateSet *ss,
       fprog->setUseOptimalOptions(true);
 
       //apply the shaders to state set
-      _ss->setAttributeAndModes(fprog,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      _ss->setAttributeAndModes(fprog,osg::StateAttribute::ON/*|osg::StateAttribute::OVERRIDE*/);
    }
 }
+//////////////////////////////////////////////////
 void cfdOSGShaderManager::SetBounds(float* bounds)
 {
    if(!_bounds){
@@ -109,4 +110,4 @@ cfdOSGShaderManager& cfdOSGShaderManager::operator=(const
 }
 #endif //CFD_USE_SHADERS
 #endif //_OSG
-#endif 
+#endif

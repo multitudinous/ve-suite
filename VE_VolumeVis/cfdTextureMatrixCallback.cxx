@@ -1,6 +1,6 @@
 //class to update the texture matrix appropriately
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #include "cfdTextureMatrixCallback.h"
 #include <osg/TexMat>
 #include <osg/Matrix>
@@ -35,4 +35,4 @@ void cfdTextureMatrixCallback::operator()(osg::Node* node,osg::NodeVisitor* nv)
    traverse(node,nv);
 }
 #endif //_OSG
-#endif //VE_PATENTED
+#endif

@@ -1,5 +1,5 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #include <osg/Texture1D>
 #include <osg/Image>
 #include <osg/State>

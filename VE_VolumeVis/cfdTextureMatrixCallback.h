@@ -2,7 +2,7 @@
 #ifndef CFD_TEXTURE_MATRIX_CALLBACK_H 
 #define CFD_TEXTURE_MATRIX_CALLBACK_H 
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 
 namespace osg{
    class TexMat;

@@ -1,5 +1,5 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #include <osg/Texture3D>
 #include <osg/Texture1D>
 #include <osg/TexEnv>
@@ -12,9 +12,12 @@
 #include <osgNVCg/Program>
 #include <osgNVCg/CgGeometry>
 #include <osgNV/VectorArrayParameterValue>
+#include <osgNV/MatrixParameterValue>
 #include <osg/Array>
 #include "cfdOSGAdvectionShaderManager.h"
 #include "cfdUpdateableOSGTexture1d.h"
+#include "cfdSimpleTextureCallback.h"
+#include "cfdUpdateMatrixParameterCallback.h"
 #define PI  3.1416
 ////////////////////////////////////////////////////////////
 //Constructors                                            //
@@ -28,32 +31,26 @@ cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager()
   // _time = 0;
    _isFrag =  true;
    _noiseScaleCallback =0 ;
+   _dyeCoordCallback = 0;
    _deltaCallback = 0 ;
    _timeCallback =0 ;
    _periodCallback = 0;
    _dyeScaleCallback =0 ;
    _dyeTransCallback = 0;
    _noiseCbk = 0;
+   //_dyeMatCallback = 0;
    _fieldSize[0] = 0;
    _fieldSize[1] = 0;
    _fieldSize[2] = 0;
 
-   /*_dyeScale[0] = 1;
-   _dyeScale[1] = 1;
-   _dyeScale[2] = 1;
-   _noiseScale[0] = 1;
-   _noiseScale[1] = 1;
-   _noiseScale[2] = 1;
-
-   _dyeTranslation[0] = 0;
-   _dyeTranslation[1] = 0;
-   _dyeTranslation[2] = 0;*/
+   _center.set(0,0,0);
 }
 ////////////////////////////////////////////////////////////////
 cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager(const
      	                cfdOSGAdvectionShaderManager& sm)
 :cfdOSGShaderManager(sm)
 {
+   _center = sm._center;
    //_period = sm._period;
    //_time = sm._time;
    //only want a pointer here
@@ -76,20 +73,7 @@ cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager(const
    _deltaCallback = new cfdUpdateParameterCallback(*sm._deltaCallback);
    _timeCallback = new cfdUpdateParameterCallback(*sm._timeCallback);
    _periodCallback = new cfdUpdateParameterCallback(*sm._periodCallback);
-   _dyeScaleCallback = new cfdUpdateParameterCallback(*sm._dyeScaleCallback);
-   _dyeTransCallback = new cfdUpdateParameterCallback(*sm._dyeTransCallback);
-
-   /*_dyeScale[0] = sm._dyeScale[0];
-   _dyeScale[1] = sm._dyeScale[1];
-   _dyeScale[2] = sm._dyeScale[2];
-
-   _dyeTranslation[0] = sm._dyeTranslation[0];
-   _dyeTranslation[1] = sm._dyeTranslation[1];
-   _dyeTranslation[2] = sm._dyeTranslation[2];
-
-   _noiseScale[0] = sm._noiseScale[0];
-   _noiseScale[1] = sm._noiseScale[1];
-   _noiseScale[2] = sm._noiseScale[2];*/
+   //_dyeMatCallback = new cfdUpdateMatrixParameterCallback(*sm._dyeMatCallback);
 }
 
 /////////////////////////////////////////////////////////////
@@ -117,23 +101,19 @@ cfdOSGAdvectionShaderManager::~cfdOSGAdvectionShaderManager()
       delete _periodCallback;
       _periodCallback = 0;
    }
-   if(_dyeTransCallback){
-      delete _dyeTransCallback;
-      _dyeTransCallback = 0;
-   }
    if(_dyeScaleCallback){
       delete _dyeScaleCallback;
       _dyeScaleCallback = 0;
    }
-   if(_minBoundsCallback){
-      delete _minBoundsCallback;
-      _minBoundsCallback = 0;
+   if(_dyeTransCallback){
+      delete _dyeTransCallback;
+      _dyeTransCallback = 0;
    }
-   if(_maxBoundsCallback){
-      delete _maxBoundsCallback;
-      _maxBoundsCallback = 0;
-   
-   }
+   /*
+   if(_dyeMatCallback){
+      delete _dyeMatCallback;
+      _dyeMatCallback = 0;
+   }*/
 }
 /////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::Init()
@@ -144,22 +124,15 @@ void cfdOSGAdvectionShaderManager::Init()
    _initLookUpFunction();
    _initWeightFunctions();
    _initFragProgramCallbacks();
-   //_initVertexProgramCallbacks();
 
    if(_velocity.valid()){
      //set up the state for textures
       _ss = new osg::StateSet();
       _ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-      _ss->setMode(GL_BLEND,osg::StateAttribute::ON);
       
-      osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
-      bf->setFunction(osg::BlendFunc::SRC_ALPHA, 
-                    osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-      _ss->setAttributeAndModes(bf.get());
-      _ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
       _ss->setTextureAttributeAndModes(0,_noiseTexture.get(), 
                                    osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_3D,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      _ss->setTextureMode(0,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_T,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_R,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
@@ -185,29 +158,21 @@ void cfdOSGAdvectionShaderManager::Init()
       _ss->setTextureMode(3,GL_TEXTURE_GEN_T,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(3,GL_TEXTURE_GEN_R,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       
-      _ss->setTextureAttributeAndModes(4,_weightW.get(), 
-                                   osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
-      _ss->setTextureMode(4,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-      _ss->setTextureMode(4,GL_TEXTURE_GEN_S,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-      _ss->setTextureMode(4,GL_TEXTURE_GEN_T,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-      _ss->setTextureMode(4,GL_TEXTURE_GEN_R,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-      
-      _ss->setTextureAttributeAndModes(5,_weightV.get(), 
+      _ss->setTextureAttributeAndModes(5,_weightW.get(), 
                                    osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
       _ss->setTextureMode(5,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(5,GL_TEXTURE_GEN_S,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(5,GL_TEXTURE_GEN_T,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(5,GL_TEXTURE_GEN_R,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       
-      _ss->setTextureAttributeAndModes(6,_propertyToAdvect.get(), 
+      _ss->setTextureAttributeAndModes(6,_weightV.get(), 
                                    osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
       _ss->setTextureMode(6,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(6,GL_TEXTURE_GEN_S,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(6,GL_TEXTURE_GEN_T,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(6,GL_TEXTURE_GEN_R,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-      _ss->setTextureAttributeAndModes(6,new osg::TexEnv(osg::TexEnv::MODULATE),
-		                                osg::StateAttribute::ON);
-      _tUnit = 6;
+      
+      _tUnit = 4;
       {
          //load the shader file 
          char directory[1024];
@@ -216,15 +181,13 @@ void cfdOSGAdvectionShaderManager::Init()
          }else{
             char* vesuitehome = getenv("VE_SUITE_HOME");
             strcpy(directory,vesuitehome);
-            strcat(directory,"/VE_Xplorer/cg_shaders/");
+            strcat(directory,"/VE_VolumeVis/cg_shaders/");
          }
          strcat(directory,"fragAdvect.cg");
       
          //set up our shader params
          _setupCGShaderProgram(_ss.get(),directory,"fp_advectTexture");
       }
-
-      
    }else{
       std::cout<<"Invalid velocity field!!"<<std::endl;
       std::cout<<"cfdOSGAdvectionShaderManager::Init()"<<std::endl;
@@ -239,38 +202,55 @@ void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
    _deltaCallback = new cfdUpdateParameterCallback();
    _timeCallback = new cfdUpdateParameterCallback();
    _periodCallback = new cfdUpdateParameterCallback();
-   _dyeScaleCallback = new cfdUpdateParameterCallback();
    _dyeTransCallback = new cfdUpdateParameterCallback();
+   _dyeScaleCallback = new cfdUpdateParameterCallback();
 
    float period = 1.0;
-   float delta = .01;
+   float delta[3];
+   delta[0] = 3.0/_fieldSize[0];
+   delta[1] = 3.0/_fieldSize[1];
+   delta[2] = 3.0/_fieldSize[2];
+
+   float dyeCoord[3] = {0,0,0};
    float dyeScale[3] = {1,1,1};
-   float dyeTrans[3] = {0,0,0};
-   float noiseScale[3] = {0,0,0};
+   float dyeTrans[3] = {.7,.35,.7};
+   float noiseScale[3] = {1,1,1};
+
    noiseScale[0] = _fieldSize[0]/32.0;
    noiseScale[1] = _fieldSize[1]/32.0;
    noiseScale[2] = _fieldSize[2]/32.0;
-   _noiseScaleCallback->setType(2);
-   _noiseScaleCallback->updateParameter(noiseScale);
-   _deltaCallback->setType(0);
-   _deltaCallback->updateParameter(&delta);
-   _timeCallback->setType(0);
-   _periodCallback->setType(0);
-   _periodCallback->updateParameter(&period);
-   _dyeScaleCallback->setType(2);
-   _dyeScaleCallback->updateParameter(dyeScale);
-   _dyeTransCallback->setType(2);
-   _dyeTransCallback->updateParameter(dyeTrans);
-}
-////////////////////////////////////////////////////////////////
-void cfdOSGAdvectionShaderManager::_initVertexProgramCallbacks()
-{
-   _minBoundsCallback = new cfdUpdateParameterCallback();
-   _maxBoundsCallback = new cfdUpdateParameterCallback();
-   _minBoundsCallback->setType(2);
-   _maxBoundsCallback->setType(2);
-}
 
+   dyeScale[0] = .5*_fieldSize[0]/4.0;
+   dyeScale[1] = .5*_fieldSize[1]/4.0;
+   dyeScale[2] = .5*_fieldSize[2]/4.0;
+
+   _dyeScaleCallback->setTypeAndSize(cfdUpdateParameterCallback::VECTOR,
+                                   cfdUpdateParameterCallback::THREE);
+   _dyeScaleCallback->updateParameter(dyeScale);
+  
+   _dyeTransCallback->setTypeAndSize(cfdUpdateParameterCallback::VECTOR,
+                                   cfdUpdateParameterCallback::THREE);
+   _dyeTransCallback->updateParameter(dyeTrans);
+
+   _noiseScaleCallback->setTypeAndSize(cfdUpdateParameterCallback::VECTOR,
+                                   cfdUpdateParameterCallback::THREE);
+   _noiseScaleCallback->updateParameter(noiseScale);
+
+   _deltaCallback->setTypeAndSize(cfdUpdateParameterCallback::VECTOR,
+                                   cfdUpdateParameterCallback::THREE);
+   _deltaCallback->updateParameter(delta);
+
+   _periodCallback->setTypeAndSize(cfdUpdateParameterCallback::VECTOR,
+                                   cfdUpdateParameterCallback::ONE);
+   _periodCallback->updateParameter(&period);
+
+   
+}
+//////////////////////////////////////////////////////////////
+void cfdOSGAdvectionShaderManager::SetCenter(osg::Vec3 center)
+{
+   _center = center;
+}
 //////////////////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_setupCGShaderProgram(osg::StateSet* ss,
                                                    char* progName,
@@ -284,8 +264,8 @@ void cfdOSGAdvectionShaderManager::_setupCGShaderProgram(osg::StateSet* ss,
       fprog->setUseOptimalOptions(true);
 
       //set up the "updateable" parameters
-      fprog->addVectorParameter("dyeTranslation")->setCallback(_dyeTransCallback);
       fprog->addVectorParameter("dyeScale")->setCallback(_dyeScaleCallback);
+      fprog->addVectorParameter("dyeTranslation")->setCallback(_dyeTransCallback);
       fprog->addVectorParameter("texCoordMult")->setCallback(_noiseScaleCallback);
       fprog->addVectorParameter("deltaT")->setCallback(_deltaCallback);
       fprog->addVectorParameter("time")->setCallback(new osgNV::TimePicker);
@@ -394,33 +374,6 @@ void cfdOSGAdvectionShaderManager::_initPropertyTexture()
       unsigned int i=0;
       unsigned int j=0;
       unsigned int k = 0;
-      /*for(int p = 0; p < dataSize; p++){
-          if((i == 0 || i == _fieldSize[0] - 1)||
-           (j == 0 || j == _fieldSize[1] - 1)||
-           (k == 0 || k == _fieldSize[2] - 1)){
-            data[p*4   ] = (unsigned char)0;
-            data[p*4 + 1] = (unsigned char)0;
-            data[p*4 + 2] = (unsigned char)0;
-            data[p*4 + 3] = (unsigned char)0; 
-        }else{
-           data[p*4   ] = (unsigned char)(((float)i/(_fieldSize[0]-1))*255);
-           data[p*4 + 1] = (unsigned char)(((float)j/(_fieldSize[1]-1))*255);
-           data[p*4 + 2] = (unsigned char)(((float)k/(_fieldSize[2]-1))*255);
-           data[p*4 + 3] = (unsigned char)0;   
-        }
-        i++;
-        if((unsigned int)i > (unsigned int)_fieldSize[0]-1){
-            i = 0;
-            j ++;
-           if((unsigned int)j > (unsigned int)_fieldSize[1]-1){
-               j = 0;
-               k ++;
-               if((unsigned int)k > (unsigned int)_fieldSize[2]-1){
-                  k = 0;
-               }
-           }
-        }
-      }*/
       for(int p = 0; p < dataSize; p++){
          data[p*4   ] = (unsigned char)0;
          data[p*4 + 1] = (unsigned char)0;
@@ -455,6 +408,11 @@ void cfdOSGAdvectionShaderManager::_initPropertyTexture()
                                 _fieldSize[1],
                                 _fieldSize[2]);
      _propertyToAdvect->setImage(propertyField.get());
+     osg::ref_ptr<cfdSimpleTextureCallback> sCallback = new cfdSimpleTextureCallback();
+     sCallback->setTextureSize(_fieldSize[0],
+                                _fieldSize[1],
+                                _fieldSize[2]);
+     _propertyToAdvect->setSubloadCallback(sCallback.get());
      
    }else{
       std::cout<<"Invalid field size!!"<<std::endl;
@@ -479,7 +437,7 @@ void cfdOSGAdvectionShaderManager::_initDyeTexture()
                ||k ==0 || k== 3){
                dyeTex[index] = (GLubyte)0;
             }else{
-               dyeTex[index    ] = (GLubyte)255;
+               dyeTex[index] = (GLubyte)255;
             }
             index++;
          }
@@ -487,11 +445,11 @@ void cfdOSGAdvectionShaderManager::_initDyeTexture()
    }
    osg::ref_ptr<osg::Image> dyeImage = new osg::Image();
    dyeImage->allocateImage(4, 4,4,
-                        GL_LUMINANCE,GL_UNSIGNED_BYTE);
+                        GL_ALPHA,GL_UNSIGNED_BYTE);
 
    dyeImage->setImage(4, 4, 4,
-		      GL_LUMINANCE,
-		      GL_LUMINANCE,
+		      GL_ALPHA,
+		      GL_ALPHA,
 		      GL_UNSIGNED_BYTE,
 		      dyeTex,
 		      osg::Image::USE_NEW_DELETE,1);
@@ -510,7 +468,7 @@ void cfdOSGAdvectionShaderManager::_initDyeTexture()
                            osg::Texture3D::CLAMP);
 
       _dye->setTextureSize(4,4,4);
-      _dye->setInternalFormat(GL_LUMINANCE);
+      _dye->setInternalFormat(GL_ALPHA);
       _dye->setDataVariance(osg::Object::DYNAMIC);
    }
    _dye->setImage(dyeImage.get());
@@ -526,13 +484,13 @@ void cfdOSGAdvectionShaderManager::_initNoiseTexture()
    GLuint gI[256];
    GLfloat taoAlpha = .1;
    GLfloat taoI  = .1;
-   GLfloat taoH = .1;
+   GLfloat taoH = .9;
   //build ga
   for(unsigned int i = 0; i < 256; i++){
      if(i < taoAlpha*255){
         ga[i] = 0;
      }else{
-        ga[i] = 255.0*(255 - i/*taoAlpha*255*/)/(255.0-taoAlpha*255);
+        ga[i] = 255.0*(i-/*255  */taoAlpha*255)/(255.0-taoAlpha*255);
      }
   }
 
@@ -560,7 +518,7 @@ void cfdOSGAdvectionShaderManager::_initNoiseTexture()
             phase[i][j][k] = rand()%256;
 
    unsigned char noiseTex[32*32*32*4] ;
-   unsigned int nData = 32*32*32;
+   //unsigned int nData = 32*32*32;
    unsigned int t = 0;
    unsigned int index = 0;
    //for (int i = 0; i < nData; i++) {
@@ -568,12 +526,17 @@ void cfdOSGAdvectionShaderManager::_initNoiseTexture()
       t = i*256/32;
       for(unsigned int j = 0; j < 32; j++){
          for(unsigned int k = 0; k < 32; k++){
-      noiseTex[index*4    ] = (unsigned char)((hI[(phase[i][j][k]+t) % 255])*(gI[(phase[k][j][i]+t) % 255]));
+      /*noiseTex[index*4    ] = (unsigned char)((hI[(phase[i][j][k]+t) % 255])*(ga[(phase[k][j][i]+t) % 255]));
                                            
       noiseTex[index*4 + 1] = (unsigned char)phase[i][j][k];
-      noiseTex[index*4  +2] = (unsigned char)(gI[(phase[i][j][k] + t) % 255])*
+      noiseTex[index*4  +2] = (unsigned char)(ga[(phase[i][j][k] + t) % 255])*
                                            (hI[(phase[k][j][i] + t) % 255]);
-      noiseTex[index*4  +3] = (unsigned char)phase[k][j][i];
+      noiseTex[index*4  +3] = (unsigned char)phase[k][j][i];*/
+     noiseTex[index*4    ] = (unsigned char)((hI[(phase[i][j][k]) % 255]));
+                                           
+      noiseTex[index*4 + 1] = (unsigned char)(phase[i][j][k]);
+      noiseTex[index*4  +2] = (unsigned char)(hI[(phase[k][j][i]) % 255]);
+      noiseTex[index*4  +3] = (unsigned char)(ga[(phase[k][j][i]+t) % 255]);
       index++;
          }
       }
@@ -582,9 +545,9 @@ void cfdOSGAdvectionShaderManager::_initNoiseTexture()
    _noiseTexture = new osg::Texture3D();
    _noiseTexture->setDataVariance(osg::Object::DYNAMIC);
    _noiseTexture->setFilter(osg::Texture3D::MIN_FILTER,
-                                   osg::Texture3D::NEAREST);
+                                   osg::Texture3D::LINEAR);
    _noiseTexture->setFilter(osg::Texture3D::MAG_FILTER,
-                                   osg::Texture3D::NEAREST);
+                                   osg::Texture3D::LINEAR);
    _noiseTexture->setWrap(osg::Texture3D::WRAP_S,
                           osg::Texture3D::REPEAT);
    _noiseTexture->setWrap(osg::Texture3D::WRAP_T,
@@ -683,20 +646,48 @@ void cfdOSGAdvectionShaderManager::_initWeightFunctions()
 ////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initLookUpFunction()
 {
-   if(_lookUpFunction.valid())return;
+   if(_lookUpFunction.valid())
+      return;
    GLfloat theta = 0;
-   GLfloat value = 0;
-   unsigned char* lutex= new unsigned char[256];
+   GLfloat value = -1;
+   GLfloat dI = 1.0/255.0;
+   GLint hI[256];
+   GLint gI[256];
+   GLint ga[256];
    for(int i = 0; i < 256; i++){
-      theta = i*(PI/255.0);
-      value = sin(theta); 
-      lutex[i] = (GLubyte)(255.0*value);
+      if(i < .9*255){
+         gI[i] = 0;
+      }else{
+         gI[i] = 255;
+      }
+   }
+
+   //build hI transfer
+   for(unsigned int i = 0; i < 256; i++){
+      if(i > .1*255){
+         hI[i] = 0;
+      }else{
+         hI[i] = 255-i;
+      }
+   }
+
+   unsigned char* lutex = new unsigned char[256];
+   GLfloat deltaH = 1.0/255.0;
+   
+   for(int i = 0; i < 256; i++){
+      if(i<256 ){
+         theta = i*(PI/255.0);
+         value = 255*sin(theta);
+      }else{
+         value = 0;//255-i;
+      }
+      lutex[i] = (GLubyte)(value);//hI[i];
    } 
 
    _lookUpFunction = new osg::Texture1D();
    osg::ref_ptr<osg::Image> data = new osg::Image();
-   data->allocateImage(256,1,1,GL_LUMINANCE,GL_UNSIGNED_BYTE);
-   data->setImage(256,1,1,GL_LUMINANCE,GL_LUMINANCE,GL_UNSIGNED_BYTE,lutex,
+   data->allocateImage(256,1,1,GL_ALPHA,GL_UNSIGNED_BYTE);
+   data->setImage(256,1,1,GL_ALPHA,GL_ALPHA,GL_UNSIGNED_BYTE,lutex,
                 osg::Image::USE_NEW_DELETE);
    data->setDataVariance(osg::Object::DYNAMIC);
    
@@ -709,7 +700,7 @@ void cfdOSGAdvectionShaderManager::_initLookUpFunction()
                     osg::Texture1D::LINEAR);
    _lookUpFunction->setWrap(osg::Texture1D::WRAP_S,
                   osg::Texture3D::CLAMP);
-   _lookUpFunction->setInternalFormat(GL_LUMINANCE);
+   _lookUpFunction->setInternalFormat(GL_ALPHA);
    _lookUpFunction->setDataVariance(osg::Object::DYNAMIC);
    _lookUpFunction->setImage(data.get());
 }

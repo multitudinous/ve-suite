@@ -1,5 +1,5 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #ifdef CFD_USE_SHADERS
 #include <iostream>
 #include <osg/BoundingBox>
@@ -295,9 +295,9 @@ void cfdPBufferQuad::_drawHardCodedTCoords(osg::State& state)const
       glTexCoord3f(0.0,1.0,_slices[curSlice]);
       glVertex3f (-1.0, 1.0,-1);
    glEnd ();
-   texture->copyTexSubImage3D(state,
+   /*texture->copyTexSubImage3D(state,
                            1,1,curSlice,
-                           1,1,_w-2,_h-2);
+                           1,1,_w-2,_h-2);*/
    
    glPopMatrix ();
    glMatrixMode (GL_MODELVIEW);
@@ -315,18 +315,17 @@ void cfdPBufferQuad::drawImplementation(osg::State& state)const
       std::cout<<"Slice count not set for cfdPBufferQuad!!"<<std::endl;
       return;
    }
-   if(!_texture.valid()){
+   /*if(!_texture.valid()){
       std::cout<<"Texture not set for cfdPBufferQuad!!"<<std::endl;
       return;
-   }
-   glClearColor(0,0,0,0);
+   }*/
+   glClearColor(0,0,0,1);
    if(curSlice == _nSlices-1){
       //reset the current slice
       curSlice = 1;
-      glColor4f(0,0,0,0);
+      glColor4f(1,1,1,1);
        
    }
-   //Parameter_set_type::apply(state);
    
    glClear( GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
    glDisable(GL_BLEND);

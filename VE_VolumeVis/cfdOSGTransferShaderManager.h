@@ -35,7 +35,8 @@ public:
 		                               cfdOSGTransferShaderManager& sm);
 protected:
    void _initTransferFunctions();
-   void _createTransferFunction(bool clearList = true);
+   void _createTransferFunction(bool gamma = false,
+                             bool clearList = false);
    virtual void _initPropertyTexture();
    unsigned int _fieldSize[3];
    osg::ref_ptr<osg::TexMat> _texMat;
@@ -49,5 +50,5 @@ protected:
 };
 #endif// _CFD_USE_SHADERS
 #endif//_OSG
-#endif //
+#endif
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H

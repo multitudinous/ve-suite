@@ -1,8 +1,9 @@
-#include "cfdVolumeVisualization.h"
 #ifdef VE_PATENTED
+#include "cfdVolumeVisualization.h"
+
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG 
+#elif _OSG
 #include <iostream>
 #ifdef CFD_USE_SHADERS
 #include <osgNVCg/Context>
@@ -471,7 +472,7 @@ void cfdVolumeVisualization::_createStateSet()
    if(_noShaderGroup.valid()){
       if(!_stateSet.valid()){
          _stateSet = _noShaderGroup->getOrCreateStateSet();;
-         _stateSet->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+         _stateSet->setMode(GL_LIGHTING,osg::StateAttribute::ON);
          _stateSet->setMode(GL_BLEND,osg::StateAttribute::ON);
          
          osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
@@ -552,8 +553,8 @@ void cfdVolumeVisualization::_buildSlices()
     // set up the slices.
     osg::Geometry* geom = new osg::Geometry;
 
-    //the slices are z slices because the camera is looking
-    //down the z axis in eye space
+    //the slices are y slices because the camera is looking
+    //down the y axis in eye space
     float halfSize = _diagonal*0.5f;
     float y = halfSize;
     float dy =-_diagonal/(float)(_nSlices-1);
@@ -563,12 +564,6 @@ void cfdVolumeVisualization::_buildSlices()
     
     for(unsigned int i = 0; i< _nSlices; ++i, y+=dy)
     {
-       //testing
-       /*(*ycoords)[i*4+0].set(-halfSize,halfSize,y);
-        (*ycoords)[i*4+1].set(-halfSize,-halfSize,y);
-        (*ycoords)[i*4+2].set(halfSize,-halfSize,y);
-        (*ycoords)[i*4+3].set(halfSize,halfSize,y);*/
-       
         (*ycoords)[i*4+0].set(-halfSize,y,halfSize);
         (*ycoords)[i*4+1].set(-halfSize,y,-halfSize);
         (*ycoords)[i*4+2].set(halfSize,y,-halfSize);
@@ -582,20 +577,18 @@ void cfdVolumeVisualization::_buildSlices()
     geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
 
     osg::Vec4Array* colors = new osg::Vec4Array(1);
-    (*colors)[0].set(1.0f,1.0f,1.0f,_alpha);
+    (*colors)[0].set(1.0f,1.0f,1.0f,.2);
     geom->setColorArray(colors);
     geom->setColorBinding(osg::Geometry::BIND_OVERALL);
 
     geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,ycoords->size()));
     
     _billboard = new osg::Billboard;
-    //testing
     _billboard->setMode(osg::Billboard::POINT_ROT_WORLD);
-    _billboard->addDrawable(geom,osg::Vec3(_center[0],_center[1],_center[2]));
-    //testing
+    _billboard->addDrawable(geom);
 
     //position the slices in the scene
-    //_billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
+    _billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
 
 }
 ///////////////////////////////////////////////////////////
@@ -636,8 +629,6 @@ void cfdVolumeVisualization::_buildGraph()
       _volumeVizNode->addChild(_noShaderGroup.get());
       
    }
-   
-
    _createTexGenNode();
    _createStateSet();
    _createVolumeSlices();
@@ -724,6 +715,6 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
    return *this;
 }
 
-#endif
-#endif
 
+#endif
+#endif

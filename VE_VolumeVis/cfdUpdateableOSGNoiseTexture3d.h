@@ -3,7 +3,7 @@
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG 
+#elif _OSG
 namespace osg{
    class State;
 };
@@ -17,6 +17,7 @@ public:
 
    void UpdateTaoH(GLfloat taoH);
    void UpdateTaoI(GLfloat taoI);
+   void UpdateTaoA(GLfloat taoA);
 
    void subload(const osg::Texture3D& texture,osg::State& state) const;
    void load(const osg::Texture3D& texture,osg::State&) const;
@@ -29,6 +30,7 @@ protected:
 
    GLfloat _taoH;
    GLfloat _taoI;
+   GLfloat _taoA;
    GLfloat _lastH;
    GLfloat _lastI;
 

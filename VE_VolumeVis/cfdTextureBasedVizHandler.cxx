@@ -134,7 +134,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    }else{
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->DisableShaders();
-          _svvh->EnableDecorator();
+          //_svvh->EnableDecorator();
       }
    }
 #endif
@@ -326,41 +326,11 @@ void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
      if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR){
         _updateScalarVisHandler();
      }else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
-        //_updateVectorVisHandler();
+        _updateVectorVisHandler();
      }
 #endif
    }
 }
-//////////////////////////////////////////////////////////////////////////////
-/*void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
-{
-   if(!_cleared){
-      if((tm != _activeTM)){
-         _activeTM = tm;
-         if(!_currentBBox){
-            _currentBBox = new float[6];
-         }
-         _currentBBox[0] = _activeTM->getBoundingBox()[0];
-         _currentBBox[1] = _activeTM->getBoundingBox()[1];
-         _currentBBox[2] = _activeTM->getBoundingBox()[2];
-         _currentBBox[3] = _activeTM->getBoundingBox()[3];
-         _currentBBox[4] = _activeTM->getBoundingBox()[4];
-         _currentBBox[5] = _activeTM->getBoundingBox()[5];
-
-         if(_activeVolumeVizNode){
-            _activeVolumeVizNode->SetTextureManager(_activeTM);
-            _activeVolumeVizNode->CreateNode();
-#ifdef CFD_USE_SHADERS
-            if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR){
-               _updateScalarVisHandler();
-            }else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
-               _updateVectorVisHandler();
-            }
-#endif
-         }
-      }
-   }
-}*/
 #ifdef CFD_USE_SHADERS
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateScalarVisHandler()
@@ -377,7 +347,6 @@ void cfdTextureBasedVizHandler::_updateScalarVisHandler()
       _svvh->SetAttachNode(_activeVolumeVizNode->GetDecoratorAttachNode().get());
       _svvh->SetTextureManager(_activeTM);
       _svvh->Init();
-      //activeVisNodeHdlr = _svvh;
    }
 }
 /////////////////////////////////////////////////////////
@@ -396,7 +365,6 @@ void cfdTextureBasedVizHandler::_updateVectorVisHandler()
       _vvvh->SetTextureManager(_activeTM);
       _vvvh->SetPBufferManager(_pbm);
       _vvvh->Init();
-      //activeVisNodeHdlr = _vvvh;
    }
 }
 #endif
@@ -408,51 +376,8 @@ cfdVolumeVisualization* cfdTextureBasedVizHandler::GetActiveVolumeVizNode()
 /////////////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization* cfdTextureBasedVizHandler::GetVolumeVizNode(int whichModel)
 {
-   return 0;//_volumeVisNodes.at(whichModel);
+   return 0;
 }
-////////////////////////////////////////////////////
-/*bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
-{
-   if ( !_paramFile )
-   {
-      std::cout<<"Invalid parameter file!"<<std::endl;
-      std::cout<<"Cannot initialize texture based models!!"<<std::endl;
-      std::cout<<"cfdTextureBasedVizHandler::InitTextureBasedModels()"<<std::endl;
-      return false;
-   }
-   cfdReadParam readParam;
-   int numObjects;
-   char text[ 256 ];
-   //char textLine[ 256 ];
-   std::ifstream input;
-   input.open( _paramFile);
-   input >> numObjects; 
-   input.getline( text, 256 );   //skip past remainder of line
-
-   for( int i = 0; i < numObjects; i++ )
-   {
-      int id;
-      input >> id;
-      input.getline( text, 256 );   //skip past remainder of line
-      if ( id == 15 )
-      {
-         cfdVolumeVisualization* volVizNode = new cfdVolumeVisualization();
-         volVizNode->SetNumberofSlices(150);
-         volVizNode->SetSliceAlpha(.2);
-         _volumeVisNodes.push_back(volVizNode);
-      }
-      else
-      {
-         readParam.ContinueRead(input,id);
-      }
-   }
-   
-   if ( _volumeVisNodes.size() > 0 )
-   {
-       _activeVolumeVizNode = _volumeVisNodes.at(0);
-   }
-   return true;
-}*/
 ///////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::ViewTextureBasedVis(bool trueFalse)
 {

@@ -1,24 +1,29 @@
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
-#elif _OSG 
+#elif _OSG
 #ifdef CFD_USE_SHADERS
 #include "cfdOSGPingPongTexture3D.h"
 #include <osg/Image>
 #include <osg/State>
-
+#include <osg/Texture3D>
+#include <osg/StateAttribute>
+static bool start = false;
 //////////////////////////////////////////////////
 //Constructors                                  //
 //////////////////////////////////////////////////
 cfdOSGPingPongTexture3D::cfdOSGPingPongTexture3D()
 {
-   
+    _pingUnit = 0;
+    _pongUnit = 0;
 }
 //////////////////////////////////////////////////////
 cfdOSGPingPongTexture3D::cfdOSGPingPongTexture3D(const
                            cfdOSGPingPongTexture3D& pp)
 {
-   _ping = pp._ping;
-   _pong = pp._pong;
+   _previous = pp._previous;
+   _current = pp._current;
+   _pingUnit = pp._pingUnit;
+   _pongUnit = pp._pongUnit;
 }
 ///////////////////////////////////////////////////
 //Destructor                                     //
@@ -27,49 +32,38 @@ cfdOSGPingPongTexture3D::~cfdOSGPingPongTexture3D()
 {
 }
 //////////////////////////////////////////////////////////////////
-void cfdOSGPingPongTexture3D::SetPingTexture(osg::Texture3D* ping)
+void cfdOSGPingPongTexture3D::SetPingTexture(unsigned int unit,
+                                        osg::Node* ping)
 {
-   _ping = ping;
+   _pingUnit = unit;
+   _previous = ping;
 }
 //////////////////////////////////////////////////////////////////
-void cfdOSGPingPongTexture3D::SetPongTexture(osg::Texture3D* pong)
+void cfdOSGPingPongTexture3D::SetPongTexture(unsigned int unit,
+                                        osg::Node* pong)
 {
-   _pong = pong;
+   _pongUnit = unit;
+   _current = pong;
 }
-////////////////////////////////////////////
-void cfdOSGPingPongTexture3D::InitTextures()
+/////////////////////////////////////////////////////////////
+osg::Texture3D* cfdOSGPingPongTexture3D::GetCurrentTexture()
 {
-   if(_ping.valid()&&_pong.valid()){
-      int w = 0;
-      int h = 0;
-      int d = 0;
-      _ping->getTextureSize(w,h,d);
-
-      osg::ref_ptr<cfdPingPongSubload> pong = new cfdPingPongSubload(w,h,d);
-      pong->SetPingPongTexture(_pong.get());
-
-      _ping->setSubloadCallback(pong.get());
-      
+   if(_current.valid()){
+      osg::ref_ptr<osg::Texture3D> texture = 
+         dynamic_cast<osg::Texture3D*>(_current->getStateSet()->getTextureAttribute(_pongUnit,
+                                                          osg::StateAttribute::TEXTURE));
+      return texture.get();
    }
+   return 0;
 }
 ////////////////////////////////////////////////
 void cfdOSGPingPongTexture3D::PingPongTextures()
 {
+   osg::ref_ptr<osg::StateSet> tmpStateSet = _previous->getStateSet();
+   _previous->setStateSet(_current->getStateSet());
+   _current->setStateSet(tmpStateSet.get());
    return;
-   //this may be more than is needed
-   //copy the ping image
-   osg::ref_ptr<osg::Image> tempPing = new osg::Image(*_ping->getImage());
-                        
-   //copy the pong image
-   osg::ref_ptr<osg::Image> tempPong = new osg::Image(*_pong->getImage());
-   
-   //switch ping image to pong
-   _ping->setImage(_pong->getImage());
-
-   //switch pong image to ping
-   _pong->setImage(tempPing.get());
 }
-
 /////////////////////////////////////////////////////////////////////   
 //equal operator                                                   //
 /////////////////////////////////////////////////////////////////////   
@@ -77,62 +71,10 @@ cfdOSGPingPongTexture3D&
 cfdOSGPingPongTexture3D::operator=(const cfdOSGPingPongTexture3D& pp)
 {
    if(this != &pp){
-      _ping = pp._ping;
-      _pong = pp._pong;
+      _previous = pp._previous;
+      _current = pp._current;
    }
    return *this;
-}
-////////////////////////////////////////
-//Constructors                        //
-////////////////////////////////////////
-cfdOSGPingPongTexture3D::cfdPingPongSubload::cfdPingPongSubload(unsigned int w,
-                                   unsigned int h,
-                                   unsigned int d)
-{
-   SetSubloadTextureSize(w,h,d);
-}   
-////////////////////////////////////////////////////////////////////
-void cfdOSGPingPongTexture3D::cfdPingPongSubload::SetPingPongTexture(osg::Texture3D* texture)
-{
-   _swapTexture = texture;
-}
-///////////////////////////////////////////////////////////////
-void cfdOSGPingPongTexture3D::cfdPingPongSubload::subload(const osg::Texture3D& texture,
-                                 osg::State& state) const
-{
-   if(_swapTexture.valid()){
-      texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
-                             0,
-                             0,0,0, 
-                             _textureWidth,
-                             _textureHeight,
-                             _textureDepth, 
-                             GL_RGBA, 
-                             GL_UNSIGNED_BYTE,
-                             (unsigned char*)_swapTexture->getImage()->data());
-   }
-}
-///////////////////////////////////////////////////////////////////////////////
-void cfdOSGPingPongTexture3D::cfdPingPongSubload::load(const osg::Texture3D& texture,
-                                                 osg::State& state) const
-{
-   texture.getExtensions(state.getContextID(),true)->glTexImage3D(GL_TEXTURE_3D, 0, 
-                                          GL_RGBA, 
-                                          _textureWidth,
-                                          _textureHeight,
-                                          _textureDepth,
-                                          0, GL_RGBA, 
-                                          GL_UNSIGNED_BYTE, 
-                                          0);
-}
-////////////////////////////////////////////////////////////////
-void cfdOSGPingPongTexture3D::cfdPingPongSubload::SetSubloadTextureSize(const int width, 
-                                          const int height,
-                                          const depth)
-{
-   _textureWidth = width;
-   _textureHeight = height;
-   _textureDepth= depth;
 }
 #endif //
 #endif //_OSG

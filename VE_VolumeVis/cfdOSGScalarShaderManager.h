@@ -1,7 +1,7 @@
 #ifndef CFD_OSG_SCALAR_SHADER_MANAGER_H
 #define CFD_OSG_SCALAR_SHADER_MANAGER_H
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 namespace osg{
    class Texture3D;
 };
@@ -20,7 +20,7 @@ public:
    virtual void Init();
    void InitTextureManager(cfdTextureManager* tm);
    void UpdateTextureManager(cfdTextureManager* tm);
-   osg::Texture3D* GetPropertyTexture();
+
    virtual cfdOSGScalarShaderManager& operator=(const 
 		                               cfdOSGScalarShaderManager& sm);
 protected:

@@ -2,9 +2,8 @@ struct frag2app{
    float4 color : COLOR;
 };
 
-frag2app fp_advectTexture( float3 tCoords:TEXCOORD0,
+frag2app fp_advectTexture(float4 tCoords:TEXCOORD0,
                           float4 color : COLOR,
-                    //float3 dyeCoord,
                     uniform sampler3D noiseTexture:TEXUNIT0,
                     uniform sampler3D velocity:TEXUNIT1,
                     uniform sampler3D dye:TEXUNIT2,
@@ -13,13 +12,9 @@ frag2app fp_advectTexture( float3 tCoords:TEXCOORD0,
                     uniform float3 dyeTranslation,
                     uniform float3 dyeScale,
                     uniform float3 texCoordMult,
-                    uniform float deltaT,
+                    uniform float3 deltaT,
                     uniform float time,
-                    uniform float period,
-                    uniform sampler3D wFunc:TEXUNIT5,
-                    uniform sampler3D vFunc:TEXUNIT6
-                    //uniform float3 vecMin,
-                    //uniform float3 vecMax
+                    uniform float period
                     )
 {
    frag2app retColor;
@@ -27,15 +22,15 @@ frag2app fp_advectTexture( float3 tCoords:TEXCOORD0,
    //look up the velocity in the field
    float4 v = tex3D(velocity,tCoords);
 
-   //get our original values back
+   //get our original values 5ack
    v.xyz = ((v.xyz)*2.0) - 1.0;
 
    //velocity mask to darken slow moving flow
    float vMask = 1.0 - v.w;//sqrt(dot(v.xyz,v.xyz));
-   
+
    //Euler integration
    //the old position
-   float3 oldTexCoord = tCoords.xyz + deltaT*v.xyz;
+   float3 oldTexCoord = tCoords.xyz - deltaT*v.xyz;
    
    //fetch the density using the old coord
    //density is our property that we are 
@@ -45,33 +40,28 @@ frag2app fp_advectTexture( float3 tCoords:TEXCOORD0,
    //now for our materials
    
    //lookup the noise amplitude/phase
-   float4 n = tex3D(noiseTexture,tCoords*texCoordMult);
-   //float4 n = tex3D(noiseTexture,tCoords);
+   float4 n = tex3D(noiseTexture,tCoords.xyz*texCoordMult);
 
    //dye coordinate
    float3 relFragCoord = (tCoords-dyeTranslation)*dyeScale; 
-   float4 dyeAmp = tex3D(dye,relFragCoord);
+   float dyeAmp = tex3D(dye,relFragCoord).a;
 
    //now do the alpha blending for each material
 
    //material 1
    //get the local time
-   //float4 W = tex3D(wFunc,texCoord0);
-   //float4 V = tex3D(vFunc,texCoord0);
+   retColor.color.x = (1.0 -.01)*prop.x + dyeAmp;
 
-   retColor.color.x = (1.0-.2)*prop.x + dyeAmp;
-  
    //material 1
    float localTime = fmod(time + n.y,period);
-   float tInject = tex1D(lookUpTexture,localTime).x;
-   retColor.color.y = (1.0-.2)*prop.y + .2*tInject*n.y;
+   float tInject = tex1D(lookUpTexture,localTime).a;
+   retColor.color.y = (1.0 -.2)*prop.y + .2*tInject*n.x;
 
-   //material 1
+   //material 2
    localTime = fmod(time + n.w,period);
-   tInject = tex1D(lookUpTexture,localTime).x;
-   retColor.color.z = (1.0 -.2)*prop.z + .2*tInject*n.w;
-
-   retColor.color.w = v.w;
+   tInject = tex1D(lookUpTexture,localTime).a;
+   retColor.color.z = (1.0 -.2)*prop.z + .2*tInject*n.z;
+   retColor.color.a = color.a;
 
    return retColor;
 }

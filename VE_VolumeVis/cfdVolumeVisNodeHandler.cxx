@@ -1,5 +1,5 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 
 #include <osg/Geometry>
 #include <osg/Geode>
@@ -189,7 +189,6 @@ void cfdVolumeVisNodeHandler::_createTexGenNode()
             
       _texGenParams = new osg::TexGenNode();
       _texGenParams->setTextureUnit(0);
-      _texGenParams->setName("Shader tex params");
       _texGenParams->getTexGen()->setMode(osg::TexGen::EYE_LINEAR);
       _texGenParams->getTexGen()->setPlane(osg::TexGen::S,sPlane); 
       _texGenParams->getTexGen()->setPlane(osg::TexGen::T,tPlane);

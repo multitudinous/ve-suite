@@ -2,7 +2,7 @@
 #define CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
-#elif _OSG 
+#elif _OSG
 #include <osg/Texture1D>
 
 class cfdUpdateableOSGTexture1d: public  osg::Texture1D::SubloadCallback{
@@ -36,5 +36,5 @@ protected:
    mutable GLsizei _textureWidth,_oWidth;
 };
 #endif //_OSG
-#endif
 #endif //CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
+#endif
