@@ -168,7 +168,7 @@ void UI_Frame::buildFrame( )
    _tabs->cSc = activeModIndex;         // using zero-based scalar counting
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
    _tabs->sendDataArrayToServer();
-cout << "here 4"<<endl;
+
    _modselSizer = new wxBoxSizer(wxHORIZONTAL);
    _modselSizer->Add(_modselPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
@@ -189,7 +189,7 @@ cout << "here 4"<<endl;
 
    //set the sizer of this frame
    SetSizer(_frameSizer);
-cout << "here 5"<<endl;
+
    //Auto"magic" resizing
    //SetAutoLayout(TRUE);
    SetAutoLayout(true);
@@ -247,3 +247,4 @@ void UI_Frame::OnChangeModel( void )
    SetSize( temp );
    //((wxWindow*)GetParent())->SetSize( ((wxWindow*)GetParent())->GetSize() );  
 }
+
