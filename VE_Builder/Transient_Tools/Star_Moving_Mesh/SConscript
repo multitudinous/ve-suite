@@ -1,0 +1,12 @@
+import os, sys, string
+pj = os.path.join
+
+Import('baseEnv')
+
+sources = Split("""
+   main.cpp
+   transient.cpp
+""")
+env = baseEnv.Copy()
+env.Append(CPPPATH = [os.getcwd()])
+env.Program('vexplorer', source = sources)

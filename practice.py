@@ -81,8 +81,6 @@ if "IRIX64" in os.uname():
    print "LD_LIBRARYN32_PATH = " , os.getenv('LD_LIBRARYN32_PATH','')
    os.environ['WX_HOME'] = os.path.join(os.getenv('WX_HOME_DIR','') , 'irix-65')
    print "WX_HOME = " , os.getenv('WX_HOME','')
-   os.environ['BOOST_INCLUDES'] = os.getenv('VJ_DEPS_DIR','')
-   print "BOOST_INCLUDES = " + os.getenv('BOOST_INCLUDES','')
 
    if os.getenv('TAO_BUILD') == "TRUE":
       os.environ['ACE_ROOT'] = '/home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers'
@@ -105,8 +103,8 @@ if "IRIX64" in os.uname():
       #print "OMNI_HOME = " , os.getenv('OMNI_HOME','')
       os.environ['OMNI_HOME'] = os.getenv('VJ_DEPS_DIR','')
       print "OMNI_HOME = " , os.getenv('OMNI_HOME','')
-#/home/vr/Juggler/irix/mipspro
-      os.environ['PYTHONPATH'] = os.getenv('OMNI_HOME,','') + '/lib/python1.5/site-packages'
+#/jhome/vr/Juggler/irix/mipspro
+      os.environ['PYTHONPATH'] = os.getenv('OMNI_HOME,','') + '/lib32/python2.3/site-packages'
       print "PYTHONPATH = " , os.getenv('PYTHONPATH','')
       os.environ['LD_LIBRARYN32_PATH'] = os.getenv('LD_LIBRARYN32_PATH','') \
                                           + os.path.join(os.getenv('OMNI_HOME','') , 'lib') \

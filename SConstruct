@@ -105,79 +105,21 @@ def BuildLinuxEnvironment():
 
 def BuildIRIXEnvironment():
    "Builds a base environment for other modules to build on set up for IRIX"
-   global optimize, profile, builders
-   profile = 'no'
-   optimize = 'no'
+   import vtk2
    env = Environment(ENV = os.environ,
-                     CXX = 'CC',
-                     LINK = 'CC')
-   CXXFLAGS = ['-n32', '-mips4', '-LANG:std']
-   CPPDEFINES = ['HAVE_CONFIG_H', '_IRIX']
-   LINKFLAGS = CXXFLAGS
-   libpath = ['/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-pthread/lib32',
-              '/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-deps/lib32',
-              '/home/users/mccdo/vtk-builds/IRIX32/lib/vtk']
-   env.Append(CXXFLAGS = CXXFLAGS,
-              LINKFLAGS = LINKFLAGS,
-              CPPDEFINES = CPPDEFINES)
-   #SetupVRJuggler(env)
-   #SetupVTK(env)
-   #SetupOmniORB(env)
-   
-   CXXFLAGS.append('-J6')
-   CXXFLAGS.append('-all')
-   CXXFLAGS.append('-w2')
-   CXXFLAGS.append('-B dymanic')
-
-   # Reinitialize to avoid duplication
-   CXXFLAGS = []
-   CPPDEFINES = CPPDEFINES
-   LINKFLAGS = []
-   LIBPATH = []
-   LIBS = ['m', 'vrj', 'sonix', 'gadget', 'jccl', 'vpr', 'X11',
-             'cppdom', 'boost_filesystem-mp-mt', 'pthread', 'vtkImaging',
-             'vtkGraphics', 'vtkCommon', 'vtkHybrid', 'vtkIO', 'vtkFiltering',
-             'vtkRendering', 'vtkParallel']
-   # Enable profiling?
-   if profile != 'no':
-      CXXFLAGS.extend([])
-      LINKFLAGS.extend([])
-
-   # Debug or optimize build?
-   if optimize != 'no':
-      CPPDEFINES.append('NDEBUG')
-      CXXFLAGS.extend(['-O2'])
-   else:
-      CPPDEFINES.append('_DEBUG')
-      CXXFLAGS.extend(['-g', '-gslim'])
-   # IRIX sucks; no environment variable to specify additional header paths
-   CPPPATH = []
-   os.environ['NEW_ENVIRON'] = '/home/users/mccdo/svn_VE_Suite/VE_Suite'
-   newenviron = os.environ['NEW_ENVIRON']
-   CPPPATH.append(newenviron)
-   vtkbasedir = os.environ['VTK_BASE_DIR']
-   CPPPATH.append(os.path.join(vtkbasedir, 'include', 'vtk'))
-   vjbasedir = os.environ['VJ_BASE_DIR']
-   CPPPATH.append(os.path.join(vjbasedir, 'include'))
-   vjdepsdir2 = os.environ['VJ_DEPS_DIR']
-   CPPPATH.append(os.path.join(vjdepsdir2, 'include'))
-   
-   #if os.environ.has_key('CPLUS_INCLUDE_PATH'):
-   #   path = os.environ['CPLUS_INCLUDE_PATH']
-   #   CPPPATH = string.split(path, ':')
-   vjdepsdir1 = os.environ['VJ_DEPS_DIR']
-   # This is required so you can build std C++ headers with MipsPro
-   CPPPATH.append(os.path.join(vjdepsdir1, 'include', 'boost', 'compatibility', 'cpp_c_headers'))
-   CPPPATH.append(os.path.join(newenviron, 'VE_Xplorer'))
-   CPPPATH.append(os.path.join(newenviron, 'VE_Builder', 'Utilities'))
-   env.Append(CXXFLAGS    = CXXFLAGS,
-              CPPDEFINES = CPPDEFINES,
-              LINKFLAGS   = LINKFLAGS,
-              CPPPATH = CPPPATH,
-              LIBPATH = libpath,
-              LIBS = LIBS)
+                  CPPPATH = [],
+                  LIBPATH = [],
+                  LIBS = [])
+   cc = Configure(env)
+   o = Options(['unix.cache', 'vtk2.py'])
+   vtk2.Options(o)
+   Help(o.GenerateHelpText(env))
+   o.Update(env)
+   vtk2.Update(env)
+   vtk2.Config(cc, env)
+   o.Update(env)
+   o.Save('unix.cache',env)
    return env
-
 
 def BuildBaseEnvironment():
    "Builds a base environment for other modules to build on."

@@ -5,7 +5,8 @@ Import('baseEnv')
 Import('Platform')
 
 srcs = Split("""
-   translateToVtk.cpp 
+   translateToVtk.cpp
+   ansysReader.cpp 
    starReader.cpp 
    avsReader.cpp 
    reiReader.cpp 
