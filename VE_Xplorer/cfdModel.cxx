@@ -53,7 +53,6 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
    // Will fix this later so that each model has a dcs
    //mModelDCS = new cfdDCS();
    _worldDCS = worldDCS;
-
    this->switchNode = new cfdSwitch();
    this->classic = new cfdGroup();
    this->classic->SetName( "classic" );
@@ -130,7 +129,12 @@ cfdModel::~cfdModel()
       mVTKDataSets.erase( itr++ );
    }
 */
-
+   // Do we need to delete these
+   // it should be tested  
+ /*this->switchNode = new cfdSwitch();
+   this->classic = new cfdGroup();
+   this->textureBased = new cfdGroup();
+*/
    vprDEBUG(vprDBG_ALL,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
 }

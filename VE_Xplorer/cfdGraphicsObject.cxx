@@ -98,34 +98,34 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
 {
    if ( this->type == CLASSIC )
    {
-      // is switch on graph
-      cfdSwitch* temp = this->model->GetSwitchNode();
-      if ( this->worldNode->SearchChild( temp ) < 0 )
+      // is parent on graph
+      if ( this->worldNode->SearchChild( parentNode ) < 0 )
       {
          vprDEBUG(vprDBG_ALL,1) << " adding active switch node to worldDCS"
                              << std::endl << vprDEBUG_FLUSH;
-         this->worldNode->AddChild( temp );
+         this->worldNode->AddChild( parentNode );
       }
 
       // is it transient, classic, or animated class
       // add animation or dcs
+      cfdSwitch* temp = this->model->GetSwitchNode();
       if ( this->geodes.size() == 1 )
       {
          // classic ss
-         // we can do this because classic group is always
-         // child 0 see line 58 of cfdModel.cxx
-         if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( this->model->GetActiveDataSet()->GetDCS() ) < 0 )
+         if ( parentNode->SearchChild( temp ) < 0 )
          {
             vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic ss "
                              << std::endl << vprDEBUG_FLUSH;
-            ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
+            parentNode->AddChild( temp );
          }
          vprDEBUG(vprDBG_ALL,1) << "|\t\t adding geode to active dataset dcs "
                              << std::endl << vprDEBUG_FLUSH;
-          this->model->GetActiveDataSet()->GetDCS()->AddChild( this->geodes.back() );
+         // we can do this because classic group is always
+         // child 0 see line 58 of cfdModel.cxx
+         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->geodes.back() );
          vprDEBUG(vprDBG_ALL,1) << "|\tFinished classic ss add to graph"
                              << std::endl << vprDEBUG_FLUSH;
-          }
+      }
       else if ( this->geodes.size() > 1 && 
                ( !(model->GetAnimation()) || 
                  !(model->GetActiveDataSet()->IsPartOfTransientSeries() ) )
@@ -135,18 +135,25 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          // even if model contains transient data
          this->animation = new cfdTempAnimation();
          this->animation->AddGeodesToSequence( this->geodes );
-         if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( this->model->GetActiveDataSet()->GetDCS() ) < 0 )
+         if ( parentNode->SearchChild( temp ) < 0 )
          {
             vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic ss animation"
                              << std::endl << vprDEBUG_FLUSH;
-            ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
+            parentNode->AddChild( temp );
          }
-         this->model->GetActiveDataSet()->GetDCS()->AddChild( this->animation->GetSequence() );
+         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->animation->GetSequence() );
       }
       else if ( (this->geodes.size() > 1) && 
                   model->GetActiveDataSet()->IsPartOfTransientSeries()
               )
       {
+         if ( this->worldNode->SearchChild( temp ) < 0 )
+         {
+            vprDEBUG(vprDBG_ALL,1) << " adding active switch node to worldDCS"
+                             << std::endl << vprDEBUG_FLUSH;
+            this->worldNode->AddChild( temp );
+         }
+
          // classic transient data
          cfdTempAnimation* transAnimation = this->model->GetAnimation();
          // the following functions should be called upon creation in cfdModel

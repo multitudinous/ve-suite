@@ -1211,7 +1211,6 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
                        << ", dcs = "  << _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()
                        << std::endl << vprDEBUG_FLUSH;
       _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( frameFileNames[ order[ 0 ]  ] );
-std::cout << " here 2 " << std::endl;
    }
    else
    {
