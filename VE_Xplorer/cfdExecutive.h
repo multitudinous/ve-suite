@@ -35,7 +35,7 @@
 #include "moduleC.h"
 #include "moduleS.h"
 //#include "interface.h"
-#include "cfd1DTextInput.h"
+//#include "cfd1DTextInput.h"
 #include "cfdGlobalBase.h"
 
 #include <orbsvcs/CosNamingC.h>
@@ -84,7 +84,7 @@ class cfdExecutive : public cfdGlobalBase
       std::map<int, Interface>   _pt_map;
   
       // _ot_map : maps a module id to an interface object for a modules's outputs.
-      std::map<int, Interface>   _ot_map;
+      //std::map<int, Interface>   _ot_map;
   
       // _name_map : maps a module id to it's module name.
       std::map< int, std::string> _id_map;

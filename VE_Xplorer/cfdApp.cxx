@@ -203,7 +203,7 @@ inline void cfdApp::init( )
 
 #ifdef _CLUSTER
   // Cluster Stuff
-   vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
+   vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
    std::string hostname = "abbott.vrac.iastate.edu";
    mStates.init(new_guid,hostname);
    //cluster::ApplicationData* hack = dynamic_cast<cluster::ApplicationData*>(&(*this->mStates));

@@ -483,7 +483,7 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
                      //std::cout << " Alpha value : " << testMat->getAlpha() << std::endl;
                      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
                      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
-                     geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
+                     //geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
                      vprDEBUG(vprDBG_ALL,2) 
                         << " Front Color : " << stlColor[0]<< " : " 
                         <<  stlColor[1]<< " : " << stlColor[2]
@@ -494,7 +494,8 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
                   {
                      // Do NOT turn of transparency here because textured
                      // objects may have transparent textures
-                     //geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
+                     geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
+                     geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
                      testMat->setColorMode( PFMTL_FRONT, PFMTL_CMODE_AMBIENT_AND_DIFFUSE );
                      //this->fmaterial->setColorMode( PFMTL_FRONT, PFMTL_CMODE_EMISSION );
                      //this->fmaterial->setColorMode( PFMTL_FRONT, PFMTL_CMODE_SPECULAR );

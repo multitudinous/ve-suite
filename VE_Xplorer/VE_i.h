@@ -37,10 +37,9 @@
 #include <winsock2.h>
 #endif
 //#include "Network.h"
-#include "moduleS.h"
 #include "cfdExecutive.h"
+#include "moduleS.h"
 //#include "moduleC.h"
-#include <iostream>
 #include <string>
 
 #if !defined (ACE_LACKS_PRAGMA_ONCE)

@@ -44,6 +44,7 @@
 #include "cfdVEBaseClass.h"
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
+#include "cfd1DTextInput.h"
 
 #include "package.h"
 #include "interface.h"
