@@ -10,6 +10,9 @@ tecplotReader::tecplotReader( )
    pts = NULL;
    parameterData = NULL;
    numCells = 0;
+   
+   colsOfData = 0;
+   numOfParameters = 0;
    x = NULL;
    y = NULL;
    u = NULL;
@@ -41,26 +44,30 @@ void tecplotReader::allocateVariables()
    w = new double [nX*nY];
    measurement = new double [nX*nY];
    absVel = new double [nX*nY];
-   parameterData = new vtkFloatArray* [ 3 ]; //the number of parameters is 3 ( <U>, m, |U| )
-   for ( int i=0;i<3;i++ )
+   parameterData = new vtkFloatArray* [ numOfParameters ]; //the number of parameters is 3 ( <U>, m, |U| )
+   for ( int i=0;i<numOfParameters;i++ )
    {      
       parameterData[ i ] = vtkFloatArray::New();
+      if ( i==0 )
+      {
+         parameterData[ i ]->SetNumberOfComponents( 3 ); //velocity vector
+         parameterData[ i ]->SetNumberOfTuples( 2*nX*nY );
+         parameterData[ i ]->SetName( "Velocity" );
+      }
+      else
+      {
+         parameterData[ i ]->SetNumberOfComponents( 1 ); //scalar data
+         parameterData[ i ]->SetNumberOfTuples( 2*nX*nY );
+      }
+      if ( i==1 ) parameterData[ i ]->SetName( "Measurement" );
+      else if ( i==2 ) parameterData[ i ]->SetName( "Absolute Velocity" );
    }
-   
-   parameterData[ 0 ]->SetNumberOfComponents( 3 ); //velocity vector
-   parameterData[ 0 ]->SetNumberOfTuples( 2*nX*nY );
-   parameterData[ 0 ]->SetName( "Velocity" );
-   parameterData[ 1 ]->SetNumberOfComponents( 1 ); //measurement scalar
-   parameterData[ 1 ]->SetNumberOfTuples( 2*nX*nY );
-   parameterData[ 1 ]->SetName( "Measurement" );
-   parameterData[ 2 ]->SetNumberOfComponents( 1 ); //absolute velocity scalar
-   parameterData[ 2 ]->SetNumberOfTuples( 2*nX*nY );   
-   parameterData[ 2 ]->SetName( "Absolute Velocity" );
 }
 vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
 {
    int numChars;
    numChars = 0;
+   char tempChar; //temporary storage for character data
    //check existence of file
    fileI.open( inFileName );
    if ( fileI == NULL )
@@ -73,15 +80,36 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       do
       {
          numChars++;
-         if ( debug ) 
-            std::cout<<(char)fileI.peek();
+         tempChar = (char)fileI.peek();
+         header+=tempChar;//update the header
+         //if ( debug ) 
+            //std::cout<<;
          fileI.get();
       } 
       while ( (fileI.peek()!=0) && ((char)fileI.peek() != ')') );
       
       std::cout<<std::endl;
-      if ( debug ) 
+      if ( debug )
+      {
          std::cout<<"Number of characters :"<<numChars<<std::endl;
+         std::cout<<header<<std::endl; //print header to screen
+      }
+      //search for "VARIABLES="
+      I_Lower = header.find( "VARIABLES" );
+      if ( debug ) std::cout<<"VARIABLES found at :"<<I_Lower<<std::endl;
+      //search for "ZONE"
+      I_Upper = header.find( "ZONE" );
+      if ( debug ) std::cout<<"ZONE found at :"<<I_Upper<<std::endl;
+      for ( int i=I_Lower;i<I_Upper;i++ ) tempString+=header[ i ];
+      //std::cout<<tempString<<std::endl;
+      //parse through tempString to find all the "," their count+1 = number of columns of data
+      I = tempString.begin();
+      for ( I=tempString.begin(); I!=tempString.end(); ++I )
+      {
+         if ( (*I) == ',' ) colsOfData++;
+      }
+      colsOfData = colsOfData + 1;
+      if ( debug ) std::cout<<" Columns of Data :"<<colsOfData<<std::endl;
       fileI.seekg( 0, std::ios::beg );      //reset file pointer
 
       //read the first 3 lines from the files
@@ -105,12 +133,28 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       }
       else //if there is no "J=", it is a square grid 
       {
-         nY = (int)(sqrt( (double) nX )); //use the sqrt of current value of nX as nY
-         nX = (int)(sqrt( (double) nX )); //reset nX to its new valu
+         nY = (int)(sqrt( (double)(nX) )); //use the sqrt of current value of nX as nY
+         nX = (int)(sqrt( (double)(nX) )); //reset nX to its new valu
       }
-      if ( debug ) std::cout<<"nX :"<< nX <<std::endl<<"nY :"<< nY <<std::endl;
-      
-
+      if ( debug ) 
+         std::cout<<"nX :"<< nX <<std::endl<<"nY :"<< nY <<std::endl;
+      fileI.getline( line, 256 ); //file pointer gets 4th line now
+      pch = strchr( line, ',' );
+      //search for all the ","
+      /*while ( pch != NULL )
+      {
+         if ( debug )
+            std::cout<<" Location at :"<<pch-line+1<<std::endl;
+         pch = strchr ( pch+1, ',' );
+         colsOfData++;
+      }
+      colsOfData = colsOfData+1;*/
+      //===========TEH WAY numOfParameters IS SET HAS TO BE CHANGED
+      if ( colsOfData == 4 ) numOfParameters = 1;
+      else if ( colsOfData == 5 ) numOfParameters = 2;
+      else if ( colsOfData == 6 ) numOfParameters = 3;
+      //===========
+      array = new double [ colsOfData ];
       //allocate memory since we know nX and nY now
       allocateVariables();
       std::cout<<"Input file        :"<<inFileName<<std::endl
@@ -119,22 +163,37 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       //reset file pointer to beginning to read in numbers
       fileI.seekg( 0, std::ios::beg );
       fileI.ignore( numChars+1 );        //ignore all characters from beginning until ")"
+      //set points
+      pts = vtkPoints::New();
+      int* cPt = new int [ 8 ];  //HEX elements assumed, coz data is taken from PIV runs
       for ( int j=0;j<nX*nY;j++ )
       {
          //std::cout<<j<<"\t";
-         for ( int i=0;i<6;i++ )
+         for ( int i=0;i<colsOfData;i++ )
          {
             fileI >>array[ i ];
-            x[j] = array[ 0 ];
+            /*x[j] = array[ 0 ];
             y[j] = array[ 1 ];
             u[j] = array[ 2 ];
             v[j] = array[ 3 ];
             measurement[j] = array[ 4 ];
-            absVel[j] = array[ 5] ;
+            absVel[j] = array[ 5];*/
             //std::cout<<array[ i ]<<"\t";
          }
+         
+         data.push_back( array );
+         pts->InsertPoint( j, array[0], array[1], 0.0 );
+         pts->InsertPoint( j+numVertices, array[0], array[1], -100.0 );
+         //std::cout<<data[j][3]<<std::endl;
          w[j] = 0.0;
-         parameterData[ 0 ]->SetComponent( j, 0, u[j] );
+         for ( int i=2;i<numOfParameters;i++ )
+         {
+            parameterData[ i ]->SetComponent( j, 0, data[j][i] );
+            parameterData[ i ]->SetComponent( j+numVertices, 0, data[j][i] );
+         }
+         //parameterData[ 0 ]->
+      }
+         /*parameterData[ 0 ]->SetComponent( j, 0, u[j] );
          parameterData[ 0 ]->SetComponent( j+numVertices, 0, u[j] );
          parameterData[ 0 ]->SetComponent( j, 1, v[j] );
          parameterData[ 0 ]->SetComponent( j+numVertices, 1, v[j] );
@@ -143,16 +202,8 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          parameterData[ 1 ]->SetComponent( j, 0, measurement[j] );
          parameterData[ 1 ]->SetComponent( j+numVertices, 0, measurement[j] );
          parameterData[ 2 ]->SetComponent( j, 0, absVel[j] );         
-         parameterData[ 2 ]->SetComponent( j+numVertices, 0, absVel[j] );
-         
-      }
-      pts = vtkPoints::New();
-      int* cPt = new int [ 8 ];  //HEX elements assumed, coz data is taken from PIV runs
-      for ( int i=0;i<nX*nY;i++ )
-      {
-         pts->InsertPoint( i, x[i], y[i], 0.0 );
-         pts->InsertPoint( i+numVertices, x[i], y[i], -100.0 );
-      }
+         parameterData[ 2 ]->SetComponent( j+numVertices, 0, absVel[j] );         
+      }*/
       uGrid = vtkUnstructuredGrid::New();
       uGrid->SetPoints( pts );
       int c=0;
@@ -171,10 +222,10 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          c = alongX + 1;
       }
       // Set selected scalar and vector quantities to be written to pointdata array
-      letUsersAddParamsToField( 3, parameterData, uGrid->GetPointData() );
+      letUsersAddParamsToField( numOfParameters, parameterData, uGrid->GetPointData() );
       vtkUnstructuredGrid *finalUGrid = vtkUnstructuredGrid::New();
       finalUGrid->DeepCopy( uGrid );
-      for ( int i=0;i<3;i++ )
+      for ( int i=0;i<numOfParameters;i++ )
       {
          parameterData[ i ]->Delete();
       }
@@ -184,7 +235,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       uGrid = NULL;
       pts->Delete();      
       pts = NULL;
-      
+      data.clear();
       return finalUGrid;
    }
 }

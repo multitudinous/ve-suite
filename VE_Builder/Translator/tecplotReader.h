@@ -1,8 +1,10 @@
 #ifndef TECPLOTREADER_H
 #define TECPLOTREADER_H
+#include <math.h>
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <vector>
 //VTK includes
 #include "vtkPoints.h"
 #include "vtkUnstructuredGrid.h"
@@ -20,10 +22,12 @@ class tecplotReader
          std::ifstream fileI; //input files
          int nX;              //number of x coordinated
          int nY;              //number of y coordinates
+         int colsOfData;      //number of columns of data
+         int numOfParameters;   //number of parameters 
          vtkUnstructuredGrid* uGrid;
          vtkPoints* pts;
          vtkFloatArray** parameterData;
-         double array [ 6 ];   //there are 6 kinds of data in the INEL tecplot files
+         double* array;
          double* x;
          double* y;
          double* u;
@@ -33,8 +37,14 @@ class tecplotReader
          double* absVel;
          int numCells;
          int numVertices;
+         std::vector<double*> data;
          //allocate memory once we know the file exists and nX and nY are known
          void allocateVariables();
+         std::string header;    //store the header string in this string var
+         std::string tempString; //temporary storage for strings
+         std::string::iterator I;   //an iterator to parse through strings
+         int I_Lower;  //lower location for the header
+         int I_Upper;  //another upper location for the header
    
    public:
          tecplotReader();
