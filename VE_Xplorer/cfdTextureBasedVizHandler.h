@@ -52,7 +52,6 @@ public:
    cfdVolumeVisualization* GetVolumeVizNode(int index);
    cfdVolumeVisualization* GetActiveVolumeVizNode( void );
   
-   cfdTextureBasedVizHandler& operator=(const cfdTextureBasedVizHandler& tbvh);
 
 protected:	
    void _updateScalarVisHandler();
@@ -70,9 +69,9 @@ protected:
    cfdPBufferManager* _pbm;
    osgUtil::SceneView* _sceneView;
    cfdVolumeVisNodeHandler* activeVisNodeHdlr;
-   cfdScalarVolumeVisHandler* _svvh;
 #ifdef CFD_USE_SHADERS
    cfdVectorVolumeVisHandler* _vvvh;
+   cfdScalarVolumeVisHandler* _svvh;
 #endif
    cfdSwitch* _visOptionSwitch;
    float* _currentBBox;
@@ -82,7 +81,8 @@ private:
    // Required so that vpr::Singleton can instantiate this class.
    friend class vpr::Singleton< cfdTextureBasedVizHandler >;
    cfdTextureBasedVizHandler( void );
-   cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh);
+   //cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh);
+   //cfdTextureBasedVizHandler& operator=(const cfdTextureBasedVizHandler& tbvh);
    ~cfdTextureBasedVizHandler( void );
 
 

@@ -5,7 +5,6 @@
 #include <osgUtil/SceneView>
 #include <osg/State>
 #include "cfdVolumeVisNodeHandler.h"
-#include "cfdScalarVolumeVisHandler.h"
 #endif
 #include "cfdVolumeVisualization.h"
 
@@ -25,6 +24,7 @@
 //#include <osg/Group>
 #ifdef CFD_USE_SHADERS
 #include "cfdVectorVolumeVisHandler.h"
+#include "cfdScalarVolumeVisHandler.h"
 #endif
 //////////////////////////////////////////////////////////
 //Constructors                                          //
@@ -53,7 +53,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
-cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh)
+/*cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh)
 {
    int nNodes = tbvh._volumeVisNodes.size();
    for(int i = 0; i < nNodes; i++) {
@@ -86,7 +86,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHan
    _svvh = new cfdScalarVolumeVisHandler(*tbvh._svvh);
    _vvvh = new cfdVectorVolumeVisHandler(*tbvh._vvvh);
 #endif
-}
+}*/
 ///////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
 {
@@ -172,7 +172,6 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          _vvvh->PingPongTextures();
       }
    }
-#endif
    
    //this may need to change 
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE ){
@@ -189,6 +188,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          }*/
       }
    }
+#endif
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) != CLEAR_ALL && !_cleared){
       //need to make sure the node is on the graph
       if((((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get()) == false)){
@@ -324,12 +324,12 @@ void cfdTextureBasedVizHandler::PingPongTextures()
 {
   //don't need this, i think
 }
-#endif
 //////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetPBuffer(cfdPBufferManager* pbm)
 {
    _pbm = pbm;
 }
+#endif
 ////////////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetCommandArray(cfdCommandArray* cmdArray)
 {
@@ -476,7 +476,7 @@ void cfdTextureBasedVizHandler::ViewTextureBasedVis(bool trueFalse)
    _textureBaseSelected = trueFalse;
 }
 /////////////////////////////////////////////////////////////////////////////////////////////////
-cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTextureBasedVizHandler& tbvh)
+/*cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTextureBasedVizHandler& tbvh)
 {
    if(&tbvh != this){
       int nModels = tbvh._volumeVisNodes.size();
@@ -513,5 +513,5 @@ cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTexture
       _currentBBox[5] = tbvh._currentBBox[5];
    }
    return *this;
-}
+}*/
 #endif
