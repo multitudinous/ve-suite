@@ -57,7 +57,6 @@
 #include "cfdSequence.h"
 #include "cfdIHCCModel.h"
 #include "CorbaManager.h"
-#include "VjObs_i.h"
 
 #ifdef _TAO
 #include "cfdExecutive.h"
@@ -246,7 +245,7 @@ inline void cfdApp::initScene( )
    // modelHandler stores the arrow and holds all data and geometry
    this->_modelHandler = new cfdModelHandler( this->filein_name, 
                                               this->_sceneManager->GetWorldDCS() );
-   this->_modelHandler->SetCommandArray( _corbaManager->GetVjObs()->_cfdArray );
+   this->_modelHandler->SetCommandArray( _corbaManager->GetCommandArray() );
    this->_modelHandler->InitScene();
 
    // navigation and cursor 
@@ -254,7 +253,7 @@ inline void cfdApp::initScene( )
    this->_environmentHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    this->_environmentHandler->SetRootNode( this->_sceneManager->GetRootNode() );
    this->_environmentHandler->SetArrow( this->_modelHandler->GetArrow() );
-   this->_environmentHandler->SetCommandArray( _corbaManager->GetVjObs()->_cfdArray );
+   this->_environmentHandler->SetCommandArray( _corbaManager->GetCommandArray() );
    this->_environmentHandler->InitScene();
 
    // create steady state visualization objects
@@ -262,7 +261,7 @@ inline void cfdApp::initScene( )
    this->_steadystateHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    this->_steadystateHandler->SetNavigate( this->_environmentHandler->GetNavigate() );
    this->_steadystateHandler->SetCursor( this->_environmentHandler->GetCursor() );
-   this->_steadystateHandler->SetCommandArray( _corbaManager->GetVjObs()->_cfdArray );
+   this->_steadystateHandler->SetCommandArray( _corbaManager->GetCommandArray() );
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    this->_steadystateHandler->InitScene();
 
@@ -273,7 +272,7 @@ inline void cfdApp::initScene( )
 std::cout << "|  3d" << std::endl;
 */
 
-   this->_corbaManager->GetVjObs()->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
+   this->_corbaManager->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
@@ -295,7 +294,7 @@ std::cout << "|  3d" << std::endl;
    }
 */
    // This may need to be fixed
-   this->_corbaManager->GetVjObs()->GetCfdStateVariables();
+   this->_corbaManager->GetCfdStateVariables();
 }
 
 void cfdApp::preFrame( void )
@@ -303,7 +302,7 @@ void cfdApp::preFrame( void )
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
 
 #ifdef _CLUSTER
-   this->_corbaManager->GetVjObs()->GetUpdateClusterStateVariables();
+   this->GetUpdateClusterStateVariables();
 #endif // _CLUSTER
 
    ///////////////////////
@@ -327,20 +326,20 @@ void cfdApp::preFrame( void )
    // This need to go very soon
    // IHCC hack
    // fix this soon
-   if ( this->_corbaManager->GetVjObs()->_cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
+   if ( _corbaManager->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
    {
       double data[ 6 ];// = { 0 };
-      data[ 0 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 1 ]; //200;  //Agitation (rpm)  initial value 200
-      data[ 1 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 2 ]; //1.25; //Air Concentration initial value 1.25;
-      data[ 2 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 3 ]; //6;    //Initial pH value    initial value 6
-      data[ 3 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 4 ]; //0.1;  //Nitrate Concentration     initial value 0.1
-      data[ 4 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 5 ]; //37;   //Temperate (Celsius)        initial value 37
-      data[ 5 ] = _corbaManager->GetVjObs()->cfdShort_data_array[ 6 ]; //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
+      data[ 0 ] = _corbaManager->GetShortArray( 1 ); //200;  //Agitation (rpm)  initial value 200
+      data[ 1 ] = _corbaManager->GetShortArray( 2 ); //1.25; //Air Concentration initial value 1.25;
+      data[ 2 ] = _corbaManager->GetShortArray( 3 ); //6;    //Initial pH value    initial value 6
+      data[ 3 ] = _corbaManager->GetShortArray( 4 ); //0.1;  //Nitrate Concentration     initial value 0.1
+      data[ 4 ] = _corbaManager->GetShortArray( 5 ); //37;   //Temperate (Celsius)        initial value 37
+      data[ 5 ] = _corbaManager->GetShortArray( 6 ); //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
 
       //this->ihccModel->UpdateModelVariables( data );
       //this->ihccModel->Update();
    }
-   else if ( this->_corbaManager->GetVjObs()->_cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )   // exit cfdApp was selected
+   else if ( _corbaManager->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )   // exit cfdApp was selected
    {
 #ifdef _TAO
       this->executive->UnbindORB();
@@ -354,10 +353,10 @@ void cfdApp::preFrame( void )
       this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
    }
    this->executive->UpdateModules();
-   this->executive->CheckCommandId( _corbaManager->GetVjObs()->_cfdArray );
+   this->executive->CheckCommandId( _corbaManager->GetCommandArray() );
 #endif // 
 
-   this->_corbaManager->GetVjObs()->PreFrameUpdate();
+   this->_corbaManager->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -384,7 +383,7 @@ void cfdApp::postFrame()
       }
    }*/
 
-   this->_corbaManager->GetVjObs()->GetCfdStateVariables();
+   this->_corbaManager->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
