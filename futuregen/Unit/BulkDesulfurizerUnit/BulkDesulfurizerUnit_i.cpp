@@ -67,7 +67,7 @@ void Body_Unit_i::StartCalc (
     Bulk_Desulfurizer Bulk_Desulf;
     Bulk_Desulf.Toperating = Temp;
     
-    if (H2Sradio == 1) {
+    if (H2Sradio == 0) {
       Bulk_Desulf.H2Sflag = 0;
       Bulk_Desulf.H2Seff = effentry;
     } else {
@@ -75,7 +75,7 @@ void Body_Unit_i::StartCalc (
       Bulk_Desulf.H2Sppm = ppmentry;
     }
     
-    if (COSradio == 1) {
+    if (COSradio == 0) {
       Bulk_Desulf.COSflag = 0;
       Bulk_Desulf.COSeff = COSeffi;
     } else {
@@ -83,7 +83,7 @@ void Body_Unit_i::StartCalc (
       Bulk_Desulf.COSppm = COSppm;
     }
     
-    if (pdrop==1) {
+    if (pdrop==0) {
       Bulk_Desulf.Pdrop  =pdropentry;
     } else {
       Bulk_Desulf.calcDp = pdrop;
@@ -233,7 +233,7 @@ void Body_Unit_i::SetParams (
     //Now make use of p.intfs to get your GUI vars out
     Temp = p.intfs[0].getDouble("Temp_change");
     effentry = p.intfs[0].getDouble("H2S_eff");
-    ppmentry = p.intfs[0].getDouble("H2s_ppm");
+    ppmentry = p.intfs[0].getDouble("H2S_ppm");
     COSeffi = p.intfs[0].getDouble("COS_eff");
     COSppm = p.intfs[0].getDouble("COS_ppm");
     pdropentry = p.intfs[0].getDouble("Pres_drop");
@@ -245,7 +245,7 @@ void Body_Unit_i::SetParams (
     density = p.intfs[0].getDouble("Particle_density");
     solidFlow = p.intfs[0].getDouble("Solid_mass_flow");
     H2Sradio = p.intfs[0].getInt("rH2S_eff_ppm");
-    pdrop = p.intfs[0].getInt("PresDrop_spec_calc");
+    pdrop = p.intfs[0].getInt("rPresDrop_spec_calc");
     COSradio = p.intfs[0].getInt("rCOS_eff_ppm");
     
   }

@@ -63,6 +63,9 @@ void Body_Unit_i::StartCalc (
     
     Chlorine_Guard.Toperating = Temp;
     
+    HCLradio++;
+    pdrop++;
+
     if (HCLradio == 1) {
       Chlorine_Guard.HCLflag = 0;
       Chlorine_Guard.HCleff = effentry;
@@ -97,7 +100,7 @@ void Body_Unit_i::StartCalc (
 				 (gas_in_data->gas_composite.moles("HCL") -
 				  gas_out_data->gas_composite.moles("HCL")) /
 				 gas_in_data->gas_composite.moles("HCL") * 100);
-    
+
     p.intfs.resize(1); //each port has its own package
     p.SetPackName("ExportData");
     p.SetSysId("test.xml");
@@ -113,12 +116,10 @@ void Body_Unit_i::StartCalc (
     p.intfs.resize(1);
     gashelper.SumToInt(&summaries, p.intfs[0]);
     result = p.Save(rv); 
-    std::cout<<"cp5\n";
+
     executive_->SetModuleResult(id_, result); //marks the end the execution
     delete gas_out_data;
     delete gas_in_data;
-
-    std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (
@@ -224,7 +225,7 @@ void Body_Unit_i::SetParams (
     particleSize = p.intfs[0].getDouble("Particle_size");
     sphericity = p.intfs[0].getDouble("Particle_sphericity");
     HCLradio = p.intfs[0].getInt("rHCL_eff_ppm");
-    pdrop = p.intfs[0].getInt("PresDrop_spec_calc");
+    pdrop = p.intfs[0].getInt("rPresDrop_spec_calc");
     
   }
   

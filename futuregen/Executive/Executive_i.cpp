@@ -129,7 +129,7 @@ char * Body_Executive_i::GetExportData (
   
   if(rv) return CORBA::string_dup(str.c_str());
 
-  return 0;
+  return CORBA::string_dup("");//str.c_str());//"yang";//0;
 }
 
 void Body_Executive_i::SetProfileData (
@@ -180,16 +180,18 @@ void Body_Executive_i::SetModuleMessage (
   
   cout << "SetModuleMessage " << msg << endl;
 
-  Package p;
-  p.SetSysId("temp.xml");
-  p.Load(msg, strlen(msg));
+  // THIS EXPECTS AN INTERFACE - NOT A STRING
+
+  // Package p;
+  // p.SetSysId("temp.xml");
+  // p.Load(msg, strlen(msg));
   
   // Should only be one item. But, maybe later...
-  std::vector<Interface>::iterator iter;
-  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-    if(!_network->setMessage(module_id, &(*iter)))
-      cerr << "Unable to set mod id# " << module_id 
-	   << "'s Message data\n";
+  // std::vector<Interface>::iterator iter;
+  // for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+    // if(!_network->setMessage(module_id, &(*iter)))
+      // cerr << "Unable to set mod id# " << module_id 
+	//    << "'s Message data\n";
   
   _mutex.release();
 }
@@ -316,7 +318,7 @@ char * Body_Executive_i::GetModuleResult (
 
   if(rv) return CORBA::string_dup(str.c_str());
 
-  return 0;
+  return CORBA::string_dup("");//str.c_str());//"yang";//0;
 }
 
 void Body_Executive_i::SetNetwork (
@@ -389,7 +391,7 @@ char * Body_Executive_i::GetNetwork (
   
   if(rv) return CORBA::string_dup(str.c_str());
 
-  return 0;
+  return CORBA::string_dup("");//str.c_str());//"yang";//0;
 }
 
 void Body_Executive_i::SetModuleUI (
@@ -468,7 +470,7 @@ char * Body_Executive_i::GetStatus (
   
   _mutex.release();
   
-  return 0;
+  return CORBA::string_dup("");//str.c_str());//"yang";//0;
 }
   
 void Body_Executive_i::StartCalc (
@@ -500,6 +502,7 @@ void Body_Executive_i::StartCalc (
     str2 = p2.Save(rv2);
     
     if(rv2) {
+
       //cout << _network->module(rt)->_name << "\n" << str2 << endl;
       
       try {
