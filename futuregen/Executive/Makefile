@@ -30,7 +30,7 @@ FILE_Exe_SVR_OBJS = moduleC.o moduleS.o Exe_server.o Executive_i.o \
 	interface.o package.o Network_Exec.o Scheduler.o string_ops.o \
 	Execute_Thread.o
 
-BIN_UNCHECKED = Exe_server
+BIN_UNCHECKED = ${VE_SUITE_HOME}/bin/Exe_server
 
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
@@ -98,7 +98,7 @@ CPPFLAGS += -I$(TAO_ROOT) -I$(TAO_ROOT)/orbsvcs -I${IDL_HOME}\
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
 
-all: Exe_server
+all: ${VE_SUITE_HOME}/bin/Exe_server
 
 .cpp.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -o $@ $<
@@ -106,11 +106,11 @@ all: Exe_server
 .cc.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -o $@ $<
 
-Exe_server: $(addprefix $(VDIR),$(FILE_Exe_SVR_OBJS))
+${VE_SUITE_HOME}/bin/Exe_server: $(addprefix $(VDIR),$(FILE_Exe_SVR_OBJS))
 	$(LINK.cc) $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) $(POSTLINK)
 
 realclean: 
-	rm -rf *.o ./.obj Exe_server
+	rm -rf *.o ./.obj ${VE_SUITE_HOME}/bin/Exe_server
 
 #endif # ! ghs/Solaris
 #endif # ! ghs/VxWorks

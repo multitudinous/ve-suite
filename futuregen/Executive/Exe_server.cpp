@@ -4,7 +4,6 @@
 #include "Executive_i.h"
 #include <iostream>
 #include "tao/BiDir_GIOP/BiDirGIOP.h"
-using namespace std;
 
 //This Exe_server act as the servant of the Executive
 //This Exe_server is also the Unit's client and the UI's client.
@@ -46,30 +45,21 @@ int main (int argc, char* argv[])
     CORBA::Any pol;
     pol <<= BiDirPolicy::BOTH;
     policies[0] =
-        orb->create_policy (BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE,
-                            pol
-                            ACE_ENV_ARG_PARAMETER);
-    ACE_TRY_CHECK;
+        orb->create_policy (BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE, pol);
 
     // Create POA as child of RootPOA with the above policies.  This POA
     // will receive request in the same connection in which it sent
     // the request
     PortableServer::POA_var child_poa =
-             poa->create_POA ("childPOA",
-                              poa_manager.in (),
-                              policies
-                              ACE_ENV_ARG_PARAMETER);
-    ACE_TRY_CHECK;
+             poa->create_POA ("childPOA", poa_manager.in (), policies);
 
     // Creation of childPOA is over. Destroy the Policy objects.
     for (CORBA::ULong i = 0; i < policies.length (); ++i)
 	{
-       policies[i]->destroy (ACE_ENV_SINGLE_ARG_PARAMETER);
-       ACE_TRY_CHECK;
+       policies[i]->destroy ();
     }
 
-    poa_manager->activate (ACE_ENV_SINGLE_ARG_PARAMETER);
-    ACE_TRY_CHECK;
+    poa_manager->activate ();
 	  
     //Create the Servant, pass in the pointer of the naming context
     Body_Executive_i exec_i(naming_context.in());
@@ -77,14 +67,10 @@ int main (int argc, char* argv[])
 	PortableServer::ObjectId_var id =
         PortableServer::string_to_ObjectId ("Executive");
 
-    child_poa->activate_object_with_id (id.in (),
-                                          &exec_i
-                                          ACE_ENV_ARG_PARAMETER);
+    child_poa->activate_object_with_id (id.in (), &exec_i);
 
     //Activate it to obtain the object reference
-    Body::Executive_var exec =  Body::Executive::_narrow(child_poa->id_to_reference (id.in ()
-                                    ACE_ENV_ARG_PARAMETER));
-    ACE_TRY_CHECK;
+    Body::Executive_var exec =  Body::Executive::_narrow(child_poa->id_to_reference (id.in () ));
      
     CosNaming::Name name(1);
     name.length(1);
