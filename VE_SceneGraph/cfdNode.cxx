@@ -39,6 +39,7 @@
 #include <Performer/pfdu.h>
 #include <Performer/pfutil.h>
 #include <Performer/pf/pfNode.h>
+#include <Performer/pf/pfSwitch.h>
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfGeode.h>
 #include <Performer/pr/pfGeoSet.h>

@@ -30,21 +30,20 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdExecutive.h"
-#include "cfdGauges.h"
-#include "cfdDashboard.h"
+#include "VE_i.h"
+//#include "cfdGauges.h"
+//#include "cfdDashboard.h"
 #include "cfdDataSet.h"
 #include "cfdExecutiveConfiguration.h"
 #include "cfdDCS.h"
-#include "cfdGroup.h"
 #include "cfdInteractiveGeometry.h"
-#include "VE_i.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 #include "cfdVEAvailModules.h"
 #include "cfdVEBaseClass.h"
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
-#include "cfd1DTextInput.h"
+//#include "cfd1DTextInput.h"
 #include "cfdVjObsWrapper.h"
 
 #include "package.h"
@@ -57,9 +56,8 @@
 #include <vtkPointData.h>
 
 #include <vrj/Util/Debug.h>
-#include <vpr/System.h>
 #include <orbsvcs/CosNamingC.h>
-#include <tao/BiDir_GIOP/BiDirGIOP.h>
+//#include <tao/BiDir_GIOP/BiDirGIOP.h>
 
 cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, PortableServer::POA* child_poa, cfdDCS* worldDCS )
 {

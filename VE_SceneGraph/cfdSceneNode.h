@@ -39,7 +39,7 @@ class pfNode;
 class pfGeode;
 class pfDCS;
 class pfGroup;
-#include <Performer/pf/pfSwitch.h>
+class pfSwitch;
 #elif _OSG
 #include <osg/Node>
 #include <osg/Geode>

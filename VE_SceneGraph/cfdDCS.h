@@ -33,9 +33,10 @@
 #define CFD_DCS_H
 
 #include "cfdGroup.h"
-#include "cfdNode.h"
+//#include "cfdNode.h"
 #include <gmtl/Matrix.h>
 #include <vector>
+class cfdNode;
 
 #ifdef _PERFORMER
 class pfDCS;

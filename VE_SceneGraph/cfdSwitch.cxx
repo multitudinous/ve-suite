@@ -1,6 +1,8 @@
 #include "cfdSwitch.h"
 #include  <iostream>
-
+#ifdef _PERFORMER
+#include <Performer/pf/pfSwitch.h>
+#endif
 //////////////////////////////////
 //Constructors                  //
 //////////////////////////////////

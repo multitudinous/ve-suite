@@ -41,7 +41,8 @@ class osg::Group;
 #elif _OPENSG
 #endif
 
-class cfdGroup: public cfdNode{
+class cfdGroup: public cfdNode
+{
 public:
    cfdGroup();
    cfdGroup( const cfdGroup& );

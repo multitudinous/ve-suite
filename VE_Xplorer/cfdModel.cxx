@@ -366,7 +366,7 @@ cfdTextureManager* cfdModel::GetScalarTextureManager(int index)
 int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
 {
    int key = -1;
-   for ( int i = 0; i < mVTKDataSets.size(); ++i )
+   for ( unsigned int i = 0; i < mVTKDataSets.size(); ++i )
    {
       if ( mVTKDataSets.at( i ) == input )
       {
