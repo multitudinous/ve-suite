@@ -152,7 +152,7 @@ void UI_VisualizationTab::_buildPage()
    //The horizontal slider
    _slider = new wxSlider(this, VIS_SLIDER, 0, 0, 100,
                           wxDefaultPosition, slidesize,
-                          wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS);
+                          wxSL_HORIZONTAL|wxSL_LABELS);
 
    //A button to update info after UI input changes have been made
    _sliderUpdate = new wxButton(this, UPDATE_BUTTON, wxT("Update"));
@@ -166,25 +166,25 @@ void UI_VisualizationTab::_buildPage()
    wxBoxSizer* firstRow = new wxBoxSizer(wxHORIZONTAL);
 
    //catergory radio box
-   firstRow->Add(_categoryRBox, 3, wxALIGN_LEFT);
+   firstRow->Add(_categoryRBox, 3, wxALIGN_LEFT|wxEXPAND);
 
    //contour type radio box
-   firstRow->Add(_contourRBox, 1, wxALIGN_RIGHT);
+   firstRow->Add(_contourRBox, 1, wxALIGN_RIGHT|wxEXPAND);
 
    //The second row of controls contains the direction and type boxes
    wxBoxSizer* secondRow = new wxBoxSizer(wxHORIZONTAL);
 
    //direction box
-   secondRow->Add(_directionRBox, 1, wxALIGN_LEFT);
+   secondRow->Add(_directionRBox, 1, wxALIGN_LEFT|wxEXPAND);
 
    //The static box group we created ("Type")
-   secondRow->Add(typebox_sizer,2,wxALIGN_RIGHT);
+   secondRow->Add(typebox_sizer, 4 ,wxALIGN_RIGHT|wxEXPAND);
 
    //The slider and the update button belong in the third row
    wxBoxSizer* thirdRow = new wxBoxSizer(wxHORIZONTAL);
 
-   thirdRow->Add(_slider,5, wxALIGN_LEFT);
-   thirdRow->Add(_sliderUpdate,0,wxALIGN_RIGHT);
+   thirdRow->Add(_slider,5, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL);
+   thirdRow->Add(_sliderUpdate,0,wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
 
    //This is the fourth row of buttons
    wxBoxSizer* forthRow = new wxBoxSizer(wxHORIZONTAL);
@@ -214,17 +214,17 @@ void UI_VisualizationTab::_buildPage()
    //Here is a new 6th row added for a custom visualization button
    wxBoxSizer* sixthRow = new wxBoxSizer(wxHORIZONTAL);
 
-	_customVisButton = new wxButton(this, CUSTOM_VIS_BUTTON,
+   _customVisButton = new wxButton(this, CUSTOM_VIS_BUTTON,
                                    wxT("Activate Custom Visualization"));
-   sixthRow ->Add(_customVisButton, 0, wxALIGN_CENTER_HORIZONTAL);
+   sixthRow ->Add(_customVisButton, 1, wxALIGN_CENTER_HORIZONTAL);
 
    //Add the rows to the main grouping
-   visPanelGroup->Add(firstRow, 1, wxALIGN_LEFT|wxEXPAND); //
-   visPanelGroup->Add(secondRow, 1, wxALIGN_LEFT|wxEXPAND);
-   visPanelGroup->Add(thirdRow, 1, wxALIGN_LEFT|wxEXPAND);
-   visPanelGroup->Add(forthRow, 1, wxALIGN_LEFT|wxEXPAND);
-   visPanelGroup->Add(fifthRow, 1, wxALIGN_LEFT|wxEXPAND);
-   visPanelGroup->Add(sixthRow, 1, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(firstRow,  3.0, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(secondRow, 4.0, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(thirdRow,  2.0, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(forthRow,  1.0, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(fifthRow,  1.0, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(sixthRow,  1.5, wxALIGN_LEFT|wxEXPAND);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
@@ -422,42 +422,42 @@ void UI_VisualizationTab::createCommandId( void )
       if ( _spButton->GetValue() ) 
       {
          if ( _directionRBox->GetSelection() == 0 ) // X Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = X_CONTOUR;
          }
-	      else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
-	      {
+         else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
+         {
             ((UI_Tabs *)_parent)->cId = Y_CONTOUR;
          } 
-	      else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
-	      {
+         else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
+         {
             ((UI_Tabs *)_parent)->cId = Z_CONTOUR;
          } 
-	      else if ( _directionRBox->GetSelection() == 3 ) // By wand 
-	      {
+         else if ( _directionRBox->GetSelection() == 3 ) // By wand 
+         {
             ((UI_Tabs *)_parent)->cId = CONTOUR;
          } 
-	      else 
-	      {
+         else 
+         {
             std::cout << "ERROR:There is something way wrong with the gui" << std::endl;
          }
       } 
       else // Means use all precomputed data 
       {
          if ( _directionRBox->GetSelection() == 0 ) // X Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = X_CONTOURS;
          } 
-	      else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
-	      {
+         else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
+         {
             ((UI_Tabs *)_parent)->cId = Y_CONTOURS;
          } 
-	      else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
-	      {
+         else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
+         {
             ((UI_Tabs *)_parent)->cId = Z_CONTOURS;
          } 
-	      else 
-	      {
+         else 
+         {
             std::cout << "ERROR:There is something way wrong with the gui" << std::endl;
          }
       }
@@ -469,42 +469,42 @@ void UI_VisualizationTab::createCommandId( void )
       if ( _spButton->GetValue() ) 
       {
          if ( _directionRBox->GetSelection() == 0 ) // X Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = X_MOMENTUM;
          } 
-	      else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
-	      {
+         else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
+         {
             ((UI_Tabs *)_parent)->cId = Y_MOMENTUM;
          } 
-	      else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
-	      {
+         else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
+         {
             ((UI_Tabs *)_parent)->cId = Z_MOMENTUM;
          } 
-	      else if ( _directionRBox->GetSelection() == 3 ) // By wand 
-	      {
+         else if ( _directionRBox->GetSelection() == 3 ) // By wand 
+         {
             ((UI_Tabs *)_parent)->cId = MOMENTUM;
          } 
-	      else 
-	      {
+         else 
+         {
             std::cout << "ERROR:There is something way wrong with the gui" << std::endl;
          }
       } 
       else // Means use all precomputed data 
       {
          if ( _directionRBox->GetSelection() == 0 ) // X Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = X_MOMENTUMS;
          } 
-	      else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
-	      {
+         else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
+         {
             ((UI_Tabs *)_parent)->cId = Y_MOMENTUMS;
          } 
-	      else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
-	      {
+         else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
+         {
             ((UI_Tabs *)_parent)->cId = Z_MOMENTUMS;
          } 
-	      else 
-	      {
+         else 
+         {
             std::cout << "ERROR:There is something way wrong with the gui" << std::endl;
          }
       }
@@ -516,19 +516,19 @@ void UI_VisualizationTab::createCommandId( void )
       if ( _spButton->GetValue() ) 
       {
          if ( _directionRBox->GetSelection() == 0 ) // X Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = X_VECTOR;
          } 
          else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = Y_VECTOR;
          } 
          else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = Z_VECTOR;
          } 
          else if ( _directionRBox->GetSelection() == 3 ) // By wand 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = VECTOR;
          } 
          else 
@@ -539,15 +539,15 @@ void UI_VisualizationTab::createCommandId( void )
       else // Means use all precomputed data 
       {
          if ( _directionRBox->GetSelection() == 0 ) // X Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = X_VECTORS;
          } 
          else if ( _directionRBox->GetSelection() == 1 ) // Y Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = Y_VECTORS;
          } 
          else if ( _directionRBox->GetSelection() == 2 ) // Z Plane 
-	      {
+         {
             ((UI_Tabs *)_parent)->cId = Z_VECTORS;
          } 
          else 
