@@ -149,7 +149,7 @@ protected:
    void GetCfdStateVariables( void );
 #ifdef _CLUSTER
    // Cluster Stuff
-   void GetUpdateClusterStateVariables( void );
+   virtual void GetUpdateClusterStateVariables( void );
 #endif
    /**
     * Sets this subject's internal value.
