@@ -745,6 +745,9 @@ echo Done.
 				RelativePath=".\cfdTextureBasedModel.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdTextureBasedModelHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdTextureManager.cxx">
 			</File>
 			<File
@@ -1666,6 +1669,9 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdTextureBasedModel.h">
+			</File>
+			<File
+				RelativePath=".\cfdTextureBasedModelHandler.h">
 			</File>
 			<File
 				RelativePath=".\cfdTextureManager.h">

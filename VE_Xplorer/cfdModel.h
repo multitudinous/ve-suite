@@ -56,6 +56,7 @@ class cfdNode;
 class fileInfo;
 class cfdFILE;
 class cfdTempAnimation;
+class cfdTextureManager;
 
 enum ModelTypeIndex
 {
@@ -77,65 +78,85 @@ enum Operation2Model
 
 class cfdModel
 {
-   public:
-      cfdModel(cfdDCS *);
-      ~cfdModel();
+public:
+   cfdModel(cfdDCS *);
+   ~cfdModel();
       
-      void setModelNode( cfdNode * );
-      void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
+   void setModelNode( cfdNode * );
+   void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
             
-      void setTrans3( float x, float y, float z );
-      void setTrans( float trans[3] );
-      void setScale( float x,float y, float z );
-      void setRot(float,float,float);
-      void setRotMat(double *);
+   void setTrans3( float x, float y, float z );
+   void setTrans( float trans[3] );
+   void setScale( float x,float y, float z );
+   void setRot(float,float,float);
+   void setRotMat(double *);
 
-      void updateCurModel();//handling the add or delete the vtkdateset or geomdataset
-      void addVTKdataset(const std::string&);
-      void delVTKdataset();
-      void addGeomdataset(const std::string &filename);
-      void delGeomdataset(int);
+   void updateCurModel();//handling the add or delete the vtkdateset or geomdataset
+   void addVTKdataset(const std::string&);
+   void delVTKdataset();
+   void addGeomdataset(const std::string &filename);
+   void delGeomdataset(int);
 
       
-      cfdDataSet* GetCfdDataSet( int );
-      unsigned int GetNumberOfCfdDataSets( void );
-      char* GetCfdDataSetFileName( int );
-      void CreateCfdDataSet( void );
-      int GetKeyForCfdDataSet( cfdDataSet* );
+   cfdDataSet* GetCfdDataSet( int );
+   unsigned int GetNumberOfCfdDataSets( void );
+   char* GetCfdDataSetFileName( int );
+   void CreateCfdDataSet( void );
+   int GetKeyForCfdDataSet( cfdDataSet* );
 
-      cfdFILE* GetGeomDataSet( int );
-      unsigned int GetNumberOfGeomDataSets( void );
-      char* GetGeomFileName( int );
-      void CreateGeomDataSet( char* );
+   cfdFILE* GetGeomDataSet( int );
+   unsigned int GetNumberOfGeomDataSets( void );
+   char* GetGeomFileName( int );
+   void CreateGeomDataSet( char* );
 
-      cfdNode* GetCfdNode( void );
-      cfdDCS* GetCfdDCS( void );
+   cfdNode* GetCfdNode( void );
+   cfdDCS* GetCfdDCS( void );
 
-      cfdTempAnimation* GetAnimation();
-
-      std::map<int,cfdDataSet*> transientDataSets;
-
-   private:
-      cfdTempAnimation* sequence;
-      typedef std::vector< cfdFILE* > GeometoryDataSetList;
-      GeometoryDataSetList mGeomDataSets;
-      typedef std::vector< cfdDataSet* > VTKDataSetList;
-      VTKDataSetList mVTKDataSets;
+   /////////////////////////
+   //texture based interface
+   void CreateTextureManager(char* textureDescriptionFile);
+   void AddScalarTextureManager(cfdTextureManager tm,
+	                                char* scalarName);
+   void AddVectorTextureManager(cfdTextureManager tm,
+	                                char* vectorName);
+   unsigned int GetNumberOfScalarTextureManagers();
+   unsigned int GetNumberOfVectorTextureManagers();
+   cfdTextureManager* GetVectorTextureManager(int index);
+   cfdTextureManager* GetScalarTextureManager(int index);
+   ///////////////////////////////////////////////////
       
-      cfdDCS* mModelDCS;
-      cfdDCS* _worldDCS;
-      cfdNode* mModelNode;
-      fileInfo* mGeomFileInfo;
-      fileInfo* mVTKFileInfo;
-      cfdModel* _activeModel;
+
+   cfdTempAnimation* GetAnimation();
+   std::map<int,cfdDataSet*> transientDataSets;
+
+private:
+   cfdTempAnimation* sequence;
+   typedef std::vector< cfdFILE* > GeometoryDataSetList;
+   GeometoryDataSetList mGeomDataSets;
+   typedef std::vector< cfdDataSet* > VTKDataSetList;
+   VTKDataSetList mVTKDataSets;
+      
+   cfdDCS* mModelDCS;
+   cfdDCS* _worldDCS;
+   cfdNode* mModelNode;
+   fileInfo* mGeomFileInfo;
+   fileInfo* mVTKFileInfo;
    
-      //the information for following three variables should be transfered from cfdApp
-      ModelTypeIndex mModelType;
-      Operation2Model mActiveOperation2Model;
+   //the information for following three variables should be transfered from cfdApp
+   ModelTypeIndex mModelType;
+   Operation2Model mActiveOperation2Model;
+#ifdef _OSG
+   //this will change once we figure out how to implement in Performer
+   //maybe we need to use Volumizer. . .
+#endif
+   cfdTextureManager* _activeVector;
+   cfdTextureManager* _activeScalar;
+   std::vector<cfdTextureManager> _vectorDataTextures;
+   std::vector<cfdTextureManager> _scalarDataTextures;
       
-      bool mUpdateModelFlag;
-      bool mMoveOldGeomDataSets;
-      bool mMoveOldVTKDataSets;   
+   bool mUpdateModelFlag;
+   bool mMoveOldGeomDataSets;
+   bool mMoveOldVTKDataSets;   
 };
 
 #endif

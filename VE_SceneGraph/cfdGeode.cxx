@@ -102,7 +102,7 @@ cfdGeode::~cfdGeode( void )
    vprDEBUG(vprDBG_ALL,1) << " 2 destructor for cfdGeode " 
                            << std::endl << vprDEBUG_FLUSH;
 #elif _OSG
-   if(_geode)_geode->unref();
+   //if(_geode)_geode->unref();
 #elif _OPENSG
 #endif
 }

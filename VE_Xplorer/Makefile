@@ -168,6 +168,7 @@ SRCS=\
    cfdVectorBase.cxx \
    cfdVector.cxx \
    cfdVectors.cxx \
+   cfdVolumeSliceSwitchCallback.cpp \
    cfdWriteTraverser.cxx \
    fileIO.cxx \
    readWriteVtkThings.cxx \

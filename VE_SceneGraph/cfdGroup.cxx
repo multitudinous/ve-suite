@@ -94,9 +94,7 @@ cfdGroup& cfdGroup::operator=( const cfdGroup& input)
       pfDelete( this->_group );
       this->_group = input._group;
 #elif _OSG
-      if(_group){
-         _group->unref();
-      }
+      
       _group = input._group;
 #elif _OPENSG
 #endif
@@ -133,7 +131,7 @@ cfdGroup::~cfdGroup( void )
       pfDelete ( this->_group );
    }
 #elif _OSG
-   _group->unref();
+  // _group->unref();
 #elif _OPENSG
 #endif
 }

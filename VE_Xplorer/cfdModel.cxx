@@ -35,8 +35,11 @@
 #include "cfdDCS.h"
 #include "cfdNode.h"
 #include "cfdFILE.h"
+#include "cfdTextureManager.h"
+
 
 #include <vpr/Util/Debug.h>
+#include <fstream>
 
 cfdModel::cfdModel( cfdDCS *worldDCS)
 {
@@ -72,6 +75,10 @@ cfdModel::~cfdModel()
       delete *itr;
    }
    mVTKDataSets.clear();
+
+   //texture data cleanup
+   _vectorDataTextures.clear();
+   _scalarDataTextures.clear();
  
    std::map<int,cfdDataSet*>::iterator foundPlugin;
    // Remove any plugins that aren't present in the current network
@@ -111,11 +118,47 @@ cfdTempAnimation* cfdModel::GetAnimation()
    }
    return sequence;
 }
+///////////////////////////////////////
 void cfdModel::CreateCfdDataSet( void )
 {
    mVTKDataSets.push_back( new cfdDataSet() );
 }
-
+/////////////////////////////////////////////////////////////////
+void cfdModel::CreateTextureManager(char* textureDescriptionFile)
+{
+   cfdTextureManager tm;
+   std::ifstream fin(textureDescriptionFile);   char name[256];   if(fin.is_open()){       std::cout<<"Reading texture description file: "<<textureDescriptionFile<<std::endl;      int numFiles = 0;      fin>>numFiles;      for(int i = 0; i < numFiles; i++){         std::cout<<"Loading texture file: "<<i<<std::endl;         fin>>name;         tm.addFieldTextureFromFile(name);      }
+      std::cout<<"Finished reading texture description file."<<std::endl;
+      if(tm.GetDataType(0) == cfdTextureManager::SCALAR){
+         AddScalarTextureManager(tm,textureDescriptionFile);
+      }else{
+         AddVectorTextureManager(tm,textureDescriptionFile);
+      }
+   }else{
+      std::cout<<"Couldn't open file in cfd3DTextureBasedModel::CreateTextureManager!"<<std::endl;
+      return;
+   }
+}
+///////////////////////////////////////////////////////////
+void cfdModel::AddScalarTextureManager(cfdTextureManager tm,
+	                                char* scalarName)
+{
+   /*Re implement if needed
+   _scalarNames.push_back(scalarName);*/
+   _scalarDataTextures.push_back(tm);
+   //_activeScalar = &_scalarDataTextures.at(0);
+}
+////////////////////////////////////////////////////////////
+void cfdModel::AddVectorTextureManager(cfdTextureManager tm,
+	                                char* vectorName)
+{
+   /*Re implement if needed
+   _vectorNames.push_back(vectorName);*/
+   _vectorDataTextures.push_back(tm);
+   
+   //_activeVector = &_vectorDataTextures.at(0);
+}
+//////////////////////////////////////////////////
 void cfdModel::CreateGeomDataSet( char* filename )
 {
    mGeomDataSets.push_back( new cfdFILE( filename, _worldDCS ) );
@@ -138,7 +181,7 @@ void cfdModel::setTrans( float t[3] )
    vprDEBUG(vprDBG_ALL,1) << "Trans x: " << t[0] << " y: "
       << t[1] << " z: " << t[2] << std::endl << vprDEBUG_FLUSH;
 }
-
+//////////////////////////////////////////////////////
 void cfdModel::setTrans3( float x, float y, float z )
 {
    std::cout<<" !!!!! cfdModel::setTrans3 is doing nothing"<<std::endl;    
@@ -146,7 +189,7 @@ void cfdModel::setTrans3( float x, float y, float z )
    vprDEBUG(vprDBG_ALL,1) << "Trans x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
-
+//////////////////////////////////////////////////////
 void cfdModel::setScale( float x, float y, float z )
 {
    float temp[ 3 ];
@@ -158,7 +201,7 @@ void cfdModel::setScale( float x, float y, float z )
    vprDEBUG(vprDBG_ALL,1) << "Scale x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
-
+/////////////////////////////////////////////////
 void cfdModel::setRot(float h, float p, float r)
 {
    float temp[ 3 ];
@@ -169,22 +212,22 @@ void cfdModel::setRot(float h, float p, float r)
    vprDEBUG(vprDBG_ALL,1) << "Rot h: " << h << " p: " 
       << p << " r: " << r << std::endl << vprDEBUG_FLUSH;
 }
-
+////////////////////////////////////////
 void cfdModel::setRotMat(double *rotate)
 {
    std::cout<<" !!!!! cfdModel::setRotMat is doing nothing"<<std::endl;    
 }
-
+////////////////////////////////
 cfdNode* cfdModel::GetCfdNode( )
 {
    return this->mModelNode;
 }
-
+//////////////////////////////
 cfdDCS* cfdModel::GetCfdDCS( )
 {
    return this->_worldDCS;
 }
-
+///////////////////////////////
 void cfdModel::updateCurModel()
 {
    vprDEBUG(vprDBG_ALL, 1) << "cfdModel::UpdateCurModel..."
@@ -192,8 +235,8 @@ void cfdModel::updateCurModel()
    // Need to fix this 
    std::string tempstring;
    int temp;
-temp = 1;
-std::cout<<"Setting temp to 1 to avoid irix compile warning \'The variable \"temp\" is used before its value is set\'"<<std::endl;    
+   temp = 1;
+   std::cout<<"Setting temp to 1 to avoid irix compile warning \'The variable \"temp\" is used before its value is set\'"<<std::endl;    
   if( this->mUpdateModelFlag )
   {
       switch(this->mActiveOperation2Model)
@@ -220,17 +263,17 @@ std::cout<<"Setting temp to 1 to avoid irix compile warning \'The variable \"tem
       }
    }
 }
-
+////////////////////////////////////////////////////////////
 void cfdModel::addVTKdataset(const std::string& vtkfilename)
 {
    std::cout<<" !!!!! cfdModel::addVTKdataset is doing nothing"<<std::endl;    
 }
-
+//////////////////////////////
 void cfdModel::delVTKdataset()
 {
    std::cout<<" !!!!! cfdModel::delVTKdataset is doing nothing"<<std::endl;    
 }
-
+//////////////////////////////////////////////////////////////
 void cfdModel::addGeomdataset(const std::string& geomfilename)
 {
    std::cout << "WARNING: doing nothing in cfdModel::addGeomdataset with \"" << geomfilename << "\""<< std::endl;
@@ -267,13 +310,13 @@ void cfdModel::addGeomdataset(const std::string& geomfilename)
       //this->mMoveOldGeomDataSets = false;
       //this->mMoveOldVTKDataSets = false;
 }
-
+///////////////////////////////////////////
 void cfdModel::delGeomdataset(int DelIndex)
 {
    delete (mGeomDataSets[DelIndex]);
    this->mGeomDataSets.erase(this->mGeomDataSets.begin() + DelIndex);
 }
-
+///////////////////////////////////////////////////
 cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
 {
    // Check and see if we have any datasets
@@ -286,7 +329,17 @@ cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
    else
       return mVTKDataSets.at( dataset );
 }
-
+///////////////////////////////////////////////////////////////
+cfdTextureManager* cfdModel::GetVectorTextureManager(int index)
+{
+   return &_vectorDataTextures.at(index);
+}
+///////////////////////////////////////////////////////////////
+cfdTextureManager* cfdModel::GetScalarTextureManager(int index)
+{
+   return &_scalarDataTextures.at(index);
+}
+///////////////////////////////////////////////////////
 int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
 {
    int key = -1;
@@ -301,12 +354,22 @@ int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
    
    return key;
 }
-
+/////////////////////////////////////////////////////
 unsigned int cfdModel::GetNumberOfCfdDataSets( void )
 {
    return mVTKDataSets.size();
 }
-
+/////////////////////////////////////////////////////////
+unsigned int cfdModel::GetNumberOfVectorTextureManagers()
+{
+   return _vectorDataTextures.size();
+}
+/////////////////////////////////////////////////////////
+unsigned int cfdModel::GetNumberOfScalarTextureManagers()
+{
+   return _scalarDataTextures.size();
+}
+////////////////////////////////////////////////
 cfdFILE* cfdModel::GetGeomDataSet( int dataset )
 {
    // Check and see if we have any datasets
@@ -319,7 +382,7 @@ cfdFILE* cfdModel::GetGeomDataSet( int dataset )
    else
       return mGeomDataSets.at( dataset );
 }
-
+//////////////////////////////////////////////////////
 unsigned int cfdModel::GetNumberOfGeomDataSets( void )
 {
    return mGeomDataSets.size();

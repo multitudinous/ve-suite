@@ -713,9 +713,25 @@ void cfdModelHandler::CreateObjects( void )
 
          // For the geometry we need to loop over all the files and set the dcs appropriately
 
-      }
-      else
-      {
+      }else if(id ==15){
+         if ( _modelList.empty() )
+            _modelList.push_back( new cfdModel( worldNode ) );
+         
+         //read the number of files that describe the texture
+         int numTextureDescriptionFiles = 0;
+         input >> numTextureDescriptionFiles;
+         input.getline(textLine,256);
+         char textureDescriptionFile[256];
+         for(int i = 0; i < numTextureDescriptionFiles; i++){
+             input>>textureDescriptionFile;
+             input.getline(textLine,256);
+             //this isn't right--we should have a pointer to the
+             //active/current model in the list. . .leaving for now
+             //since we only have one model
+             _modelList.at(0)->CreateTextureManager(textureDescriptionFile);
+         }
+
+      }else{
          // Skip past block
          _readParam->ContinueRead( input, id );
       }
