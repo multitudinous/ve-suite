@@ -1,13 +1,14 @@
 #ifndef _VE_UI_VISUALIZATION_TAB_H_
 #define _VE_UI_VISUALIZATION_TAB_H_
+#ifdef WIN32
+#include <winsock2.h>
+#endif
 
 #include "wx/wx.h"
 #include "wx/notebook.h"
 #include <iostream>
 
-#ifdef WIN32
-#include <winsock2.h>
-#endif
+
 
 using namespace std;
 

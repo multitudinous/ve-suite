@@ -4,12 +4,15 @@
 #include <winsock2.h>
 #endif
 
-#include <stdlib.h>
-#include <vector>
+
+
 #include <wx/wx.h>
 #include <wx/notebook.h>
-#include "VjObsC.h"
+#include <stdlib.h>
+#include <vector>
 
+
+using namespace std;
 
 enum DATASETS_PANEL_IDS{
    ACTIVE_RBOX,
@@ -23,10 +26,6 @@ enum DATASETS_PANEL_IDS{
    VECTOR_RAD_BOX
 };
 
-class UI_Dataset3dScrollable;
-class UI_DatasetVertexScrollable;
-class UI_DatasetPolyScrollable;
-class UI_DatasetPanel;
 
 
 class UI_Scalars{

@@ -1,8 +1,9 @@
-#include <iostream>
+#include "UI_DataSetPanel.h"
 #include "UI_Tabs.h"
 #include "cfdEnum.h"
+#include <iostream>
 #include "UI_Frame.h"
-#include "UI_DataSetPanel.h"
+#include "VjObsC.h"
 
 
 
@@ -307,9 +308,10 @@ void UI_DatasetPanel::_buildDataSets( void )
          thisDataSet->_dataSetName = tempTabs->datasetNames[i];
          
          thisDataSet->_dataSetType = tempTabs->datasetTypes[i];
-         
-         wxString scalarNames[tempTabs->numScalarsPerDataset[i]];
-         
+
+		 wxString* scalarNames;
+		 scalarNames = new wxString[tempTabs->numScalarsPerDataset[i]];
+
          for (int k=0; k<tempTabs->numScalarsPerDataset[i]; k++)
          {
             scalarNames[k] = tempTabs->sc_attrib[index];

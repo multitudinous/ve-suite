@@ -21,10 +21,8 @@
 :wxNotebook(parent, id, pos, size, style)
 {
    _visPage = 0;
-   //_scalarPage = 0;
    _vectorPage = 0;
    _streamlinePage = 0;
-   //_datasetPage = 0;
    _navPage = 0;
    server_ref = VjObs::_duplicate(ref);
 

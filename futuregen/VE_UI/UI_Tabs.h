@@ -1,5 +1,8 @@
 #ifndef _VE_UI_TABS_H_
 #define _VE_UI_TABS_H_
+#ifdef WIN32
+#include <winsock2.h>
+#endif
 
 #include "wx/wx.h"
 #include "wx/notebook.h"
@@ -8,20 +11,14 @@
 #include <string>
 
 #include "UI_NavTab.h"
-//#include "UI_ScalarTab.h"
 #include "UI_VisTab.h"
 #include "UI_VecTab.h"
 #include "UI_StreamTab.h"
-//#include "UI_DataSetTab.h"
 #include "UI_TeacherTab.h"
 #include "UI_SoundsTab.h"
 #include "UI_GeometryTab.h"
 #include "UI_ViewLocTab.h"
 #include "UI_DesignParTab.h"
-
-#ifdef WIN32
-#include <winsock2.h>
-#endif
 
 class UI_VertTab;
 class UI_TransTab;
