@@ -100,7 +100,7 @@ void cfdVEPluginLoader::RegisterPlugin(wxClassInfo* info)
 
 char* cfdVEPluginLoader::GetPluginName( int index )
 {
-   char* _name = plugins.at(index)->GetName();
+   char* _name;// = plugins.at(index)->GetName();
    return _name;
 }
 
@@ -109,7 +109,7 @@ int cfdVEPluginLoader::GetNumberOfPlugins( void )
    return plugins.size();
 }
 
-cfdBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
+cfdVEBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
 {
    int selectPlugin = -1;
 
@@ -117,7 +117,7 @@ cfdBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
    {  
       if ( plugins.at(i)->GetName() == _objname )
       {
-         selectedPlugin = i;
+         selectPlugin = i;
          break;
       }
    }
@@ -128,5 +128,5 @@ cfdBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
       return NULL;
    }
 
-   return plugin_cls.at( selectedPlugin )->CreateObject();
+   return (cfdVEBaseClass*)plugin_cls.at( selectPlugin )->CreateObject();
 }

@@ -37,6 +37,7 @@
 #include "cfdReadParam.h"
 #include "cfdDataSet.h"
 #include "cfdNode.h"
+#include "interface.h"
 
 #include <vtkLookupTable.h>
 //#include <sstream>
@@ -60,6 +61,29 @@ cfdInteractiveGeometry::~cfdInteractiveGeometry( void )
 
 void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* executive )
 {
+   // Loop over all of cfdEexcutives plugins
+   // We need an iterator here
+   //for ( unsigned int i = 0; i < /*number of modules*/; i++ )
+   /*{
+      // check to see if current plugin is on the graph and in the plugin list
+      if ( executive->GetPlugin( i )->OnSceneGraph() )
+      {
+         // then do nothing
+      }
+      // check to see if current plugin is NOT on the graph and in the plugin list
+      else if ( !executive->GetPlugin( i )->OnSceneGraph() )
+      {
+         executive->GetPlugin( i )->AddSelfToSG();
+      }
+      // check if plugin is on the graph but not in the plugin list
+      else if ( executive->GetPlugin( i )->GetID
+      // check and see if 
+      if ( executive-> == mapsomething )
+      {
+         // Need to find what needs to be removed or added to the scene graph
+         
+      }
+   }*/
    // get some input data for module
    CORBA::Long mod_id = (CORBA::Long)executive->_name_map["GASI"];
    long numberOfTrains, numberOfSpares;

@@ -40,6 +40,12 @@
 #include "VE_i.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
+#include "cfdVEAvailModules.h"
+#include "cfdVEBaseClass.h"
+
+#include "package.h"
+#include "interface.h"
+#include "Network_Exec.h"
 
 #include <iostream>
 #include <sstream>
@@ -52,6 +58,20 @@ using namespace std;
 
 cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDCS )
 {
+  try
+    {
+      XMLPlatformUtils::Initialize();
+    }
+  
+  catch(const XMLException &toCatch)
+    {
+      XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+				<< "  Exception message:"
+				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+      //return 1;
+    }
+
+
    this->_doneWithCalculations = true;
    //this->orb->_duplicate( orb );
    this->naming_context = CosNaming::NamingContext::_duplicate( naming );
@@ -61,6 +81,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDC
    this->worldDCS->AddChild( (cfdSceneNode*)this->_masterNode );
 
    av_modules = new cfdVEAvail_Modules();
+   _network = new Network();
 
    //time_t* timeVal;
    long id = (long)time( NULL );
@@ -182,7 +203,7 @@ void cfdExecutive::init_orb_naming()
 	}*/
 }
 
-void cfdExecutive::GetNetwork ( void )
+/*void cfdExecutive::GetNetwork ( void )
 {
    char *nw_str;
   
@@ -205,7 +226,7 @@ void cfdExecutive::GetNetwork ( void )
   
    _it_map.clear();
    _name_map.clear();
-  
+
    // Unpack incoming network string into individual interfaces,
    // and place them into the _it_map and _name_map structures.
   
@@ -235,7 +256,53 @@ void cfdExecutive::GetNetwork ( void )
   
    delete nw_str;
 }
+*/
+void cfdExecutive::GetNetwork ( void )
+{
+   char *network;
+  
+   try 
+   { 
+      network = _exec->GetNetwork();
+      std::cout << "| Network String : " << network << std::endl;
+   } 
+   catch (CORBA::Exception &) 
+   {
+      std::cout << "ERROR: cfdExecutive : no exec found! " << std::endl;
+   }
 
+/////////////////////////////
+// This code taken from Executive_i.cpp
+   Package p;
+   p.SetSysId("temp.xml");
+   p.Load(network, strlen(network));
+  
+   _network->clear();
+   //_scheduler->clear();
+  
+   std::vector<Interface>::iterator iter;
+   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+      if(iter->_id==-1) break;
+  
+   if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
+   {
+      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+         if(_network->setInput(iter->_id, &(*iter))) 
+         {
+	         _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+	         _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+	         _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+         }  
+         else
+	         cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
+   } 
+   else 
+   {
+      cerr << "Error in GetNetwork in VE_Xplorer" << endl;
+   }
+///////////////////////////
+   delete network;
+}
 ///////////////////////////////////////////////////////////////////
 
 void cfdExecutive::GetOutput (std::string name)
@@ -282,14 +349,27 @@ void cfdExecutive::GetEverything( void )
       std::map<std::string, int>::iterator iter;
       for ( iter=_name_map.begin(); iter!=_name_map.end(); iter++ )
       {
-         if ( iter->first=="ASU"    || iter->first=="Power"    ||
+         /*if ( iter->first=="ASU"    || iter->first=="Power"    ||
                iter->first=="SELX"  || iter->first=="SRS"      ||
                iter->first=="STACK" || iter->first=="GASI"     ||
                iter->first=="WGSR"  || iter->first=="REI_Gasi" ||
-               iter->first=="NETWORK") 
+               iter->first=="NETWORK") */
          {
-            GetOutput(iter->first);
-            GetPort(iter->first);
+            //GetOutput(iter->first);
+            //GetPort(iter->first);
+   // When we clear the _plugin map will
+   // loop over all plugins
+   // _plugin.at( i )->RemoveChild();
+   // delete [] _plugin.at( i )->second;
+   // _plugin.clear();
+         // Here we need to test to see what has changed i nthe map
+         // not just create new objects.
+            _plugins[ iter->second ] = (cfdVEBaseClass*)av_modules->GetLoader()->CreateObject( (char*)iter->first.c_str() );
+
+   // When we create the _plugin map here we will do the following
+   // _plugin.at( i )->InitializeNode( Pass in correct node );
+   // _plugin.at( i )->AddSelfToSG();
+
          }
       }
    }
@@ -340,11 +420,14 @@ void cfdExecutive::InitModules( void )
 
 void cfdExecutive::UpdateModules( void )
 {
+   if ( !CORBA::is_nil( this->_exec.in() ) )
+   {
+
    if ( this->GetCalculationsFlag() )
    {
       this->GetEverything();
       //std::cout << " Get Everything " << std::endl;      
-      std::map<std::string, int>::iterator iter;
+      /*std::map<std::string, int>::iterator iter;
       for ( iter=_name_map.begin(); iter!=_name_map.end(); iter++ )
       {
          if ( iter->first=="ASU"    || iter->first=="Power"    ||
@@ -359,12 +442,13 @@ void cfdExecutive::UpdateModules( void )
             // Find each modules scalar info
             // Pass info all the way to each gauge
          }
-      }
+      }*/
       //std::cout << " End Gauge Update " << std::endl;
       this->_geometry->Update( this->_activeScalarName, this );
       //std::cout << " End Geometry Update " << std::endl;
       this->SetCalculationsFlag( false );
-   }   
+   }
+   }
 }
 
 void cfdExecutive::SetActiveDataSet( cfdDataSet* dataSet )

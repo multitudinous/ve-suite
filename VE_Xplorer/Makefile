@@ -71,7 +71,7 @@ ifdef ACE_ROOT
    FUTUREGEN_HOME = ${VE_SUITE_HOME}/futuregen
 
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl 
-   vpath %.cpp    ${FUTUREGEN_HOME}/IDL ${FUTUREGEN_HOME}/Plugin ${FUTUREGEN_HOME}/Framework
+   vpath %.cpp    ${FUTUREGEN_HOME}/IDL ${FUTUREGEN_HOME}/Plugin ${FUTUREGEN_HOME}/Framework ${FUTUREGEN_HOME}/Executive
 
    #----------------------------------------------------------------------------
    # Include macros and targets
@@ -94,8 +94,14 @@ ifdef ACE_ROOT
                   -I${CONDUCTOR_BASE_DIR}/skel \
                   -I${FUTUREGEN_HOME}/IDL \
                   -I${FUTUREGEN_HOME}/Plugin \
-                  -I${FUTUREGEN_HOME}/Framework
+                  -I${FUTUREGEN_HOME}/Framework \
+                  -I${FUTUREGEN_HOME}/Executive
    EXEC_TAG = _tao
+endif
+
+ifdef XERCESCROOT
+   EXTRA_INCLUDES+=	-I${XERCESCROOT}/include
+   EXTRA_LIBS+= -L${XERCESCROOT}/lib -lxerces-c
 endif
 
 #__________________________________________________________
@@ -195,7 +201,9 @@ SRCS+= \
    cfdVEPluginLoader.cxx \
    cfdVEAvailModules.cxx \
    cfdVEBaseClass.cxx \
-   cfdExecutive.cxx
+   cfdExecutive.cxx \
+   Network_Exec.cpp \
+   package.cpp
 else
 SRCS+= \
    VjObs.cpp 

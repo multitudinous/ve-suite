@@ -35,6 +35,7 @@
 #include "cfdReadParam.h"
 #include "cfdExecutive.h"
 #include "cfdGroup.h"
+#include "interface.h"
 
 #include <fstream>
 #include <sstream>

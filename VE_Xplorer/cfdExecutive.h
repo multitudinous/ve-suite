@@ -34,10 +34,9 @@
 
 #include "moduleC.h"
 #include "moduleS.h"
-#include "interface.h"
+//#include "interface.h"
 #include "cfd1DTextInput.h"
 #include "cfdGlobalBase.h"
-#include "cfdVEAvailModules.h"
 
 #include <orbsvcs/CosNamingC.h>
 #include <map>
@@ -55,6 +54,11 @@ class cfdInteractiveGeometry;
 class Body_UI_i;
 class cfdDataSet;
 class cfdCommandArray;
+class Network;
+class Interface;
+class cfdVEAvailModules;
+class cfdVEBaseClass;
+class cfdVEAvail_Modules;
 
 class cfdExecutive : public cfdGlobalBase
 {
@@ -83,6 +87,9 @@ class cfdExecutive : public cfdGlobalBase
       // _name_map : maps a module name to it's module id.
       std::map<std::string, int> _name_map;
   
+      // _name_map : maps a module name to it's module id.
+      std::map<int, cfdVEBaseClass* > _plugins;
+
       // Functions that operate on the Executive
       void GetNetwork( void );
       void GetOutput( std::string name);
@@ -117,6 +124,8 @@ class cfdExecutive : public cfdGlobalBase
       //Loading the Available Modules
       cfdVEAvail_Modules* av_modules; 
 
+      // Network class to decode network string
+      Network* _network;
    private:
       
       cfdExecutiveConfiguration* _param;
