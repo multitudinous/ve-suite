@@ -523,7 +523,9 @@ void UI_Tabs::sendDataArrayToServer( void )
 
    if ( !CORBA::is_nil( server_ref ) )
    {
+      cout << " Setting client data " << endl;
       server_ref->SetClientInfoData( clientInfoArray );
+      cout << " Done Setting client data " << endl;
    }
    else
    {
