@@ -46,21 +46,14 @@
    ./JUNK            // precomputed data slice directory
    ./JUNK2           // precomputed surface directory
 10                   // Object type 10: Transient data loader
-   4                 // Number of directories containing vtk data to follow
+   6                 // Duration of the transient sequence in seconds
    1 1 1             // data dcs scale values
-   0 0 0             // data dcs translation values
-   0 0 0             // data dcs rotation values
-   ./transient_flowdata    // directory of vtk files
-      0                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
-   ./transient_y_planes    // directory of vtk files
-      2                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
-   ./transient_z_planes    // directory of vtk files
-      3                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
-   ./transient_droplets    // directory of vtk files
-      4                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
-   ./trans_geometry  // Transient geometry data directory
+   0 0 0             // data dcs translation values (in feet)
+   0 0 0             // data dcs rotation values (degrees, Z-X-Y format)
+   trans_flowdata    // directory containing indexed 3D meshed vtk files
+   trans_flowdata/trans   // start of name of indexed directories of precomputed plane/surface vtk files
+   trans_geometry    // Transient geometry data directory
    1 1 1             // Transient geometry dcs scale values
    0 0 0             // Transient geometry dcs translation values
    0 0 0             // Transient geometry dcs rotation values
-   1  1  1.0 1.0 1.0 // Transient geometry transparency setting, color flag (and 3 color values if flag = 1)
-   18                // Duration of the transient sequence in seconds
+   1  1  1.0 1.0 1.0 // Transient geometry transparency setting, stl color flag (and 3 color values if flag = 1)
