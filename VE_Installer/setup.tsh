@@ -30,7 +30,7 @@ setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 # Specify cluster build CLUSTER_APP
 setenv TAO_BUILD TRUE
 #setenv CLUSTER_APP FALSE
-setenv SCENE_GRAPH PF 
+setenv SCENE_GRAPH OSG 
 #setenv VE_PATENTED FALSE
 
 # TAO_BUILD can be set outside this script to override the default of TRUE
@@ -134,7 +134,7 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
       setenv PATH ${OMNI_HOME}/bin:${PATH}
    endif
 
-else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
+else if ( ${CFDHOSTTYPE} == "SuSE_9.1" || ${CFDHOSTTYPE} == "SuSE_9.2" ) then
    setenv JDK_HOME /usr/lib/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-SuSE91
