@@ -61,6 +61,7 @@ class cfdModelHandler
       vtkPolyData* GetArrow( void );
       cfdModel* GetModel( int );
       void AddModel( cfdModel* );
+      void RemoveModel( cfdModel* );
 
    private:
       char* _param;

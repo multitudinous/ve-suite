@@ -139,6 +139,7 @@ class cfdExecutive : public cfdGlobalBase
       Body_UI_i* ui_i;
       cfdDCS* worldDCS;
       cfdGroup* _masterNode;
+      cfdModelHandler* _modelHandler;
 
       vpr::Mutex  mValueLock;  /**< A mutex to protect variables accesses */
       bool _doneWithCalculations;

@@ -133,9 +133,29 @@ cfdModel* cfdModelHandler::GetModel( int i )
       return _modelList.at( i );
 }
 
-void cfdModelHandler::AddModel( cfdModel* input );
+void cfdModelHandler::AddModel( cfdModel* input )
 {
    return _modelList.push_back( input );
+}
+
+void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )
+{
+   std::vector< cfdModel* >::iterator iter;
+
+   for ( iter=_modelList.begin(); iter!=_modelList.end(); )
+   {  
+      if ( (*iter) == modelToBeRemoved )
+      {
+         delete (*iter);
+         _modelList.erase( iter++ ); 
+         break;     
+      }
+      else
+      {
+         ++iter;
+      }
+      // The above code is from : The C++ Standard Library by:Josuttis
+   }
 }
 ///////////////////////
 

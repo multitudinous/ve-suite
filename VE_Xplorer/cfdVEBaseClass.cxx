@@ -327,12 +327,12 @@ void cfdVEBaseClass::SetID(int id)
    _modID = id;
 }
 
-cfdModel* VEOPPDmod::GetCFDModel( void )
+cfdModel* cfdVEBaseClass::GetCFDModel( void )
 {
    return _model;
 }
 
-void VEOPPDmod::CreateObjects( void )
+void cfdVEBaseClass::CreateObjects( void )
 {
    int numObjects;
    char text[ 256 ];

@@ -56,6 +56,8 @@
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 
+#include <vrj/Util/Debug.h>
+
 using namespace std;
 
 cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDCS )
@@ -267,11 +269,12 @@ void cfdExecutive::GetNetwork ( void )
    try 
    { 
       network = _exec->GetNetwork();
-      std::cout << "| Network String : " << network << std::endl;
+      vprDEBUG(vprDBG_ALL,2)  << "| Network String : " << network 
+                              << std::endl << vprDEBUG_FLUSH;
    } 
    catch (CORBA::Exception &) 
    {
-      std::cout << "ERROR: cfdExecutive : no exec found! " << std::endl;
+      std::cerr << "ERROR: cfdExecutive : no exec found! " << std::endl;
    }
 
 /////////////////////////////
@@ -341,7 +344,7 @@ void cfdExecutive::GetPort (std::string name)
    } 
    catch (CORBA::Exception &) 
    {
-      std::cout << "no exec found!" << std::endl;
+      std::cerr << "no exec found!" << std::endl;
    }
   
    Interface intf;
@@ -379,13 +382,18 @@ void cfdExecutive::GetEverything( void )
                // When we create the _plugin map here we will do the following
                _plugins[ iter->first ]->InitializeNode( worldDCS );
                _plugins[ iter->first ]->AddSelfToSG();
-               cout << " Plugin [ " << iter->first << " ]-> " << iter->second << " is being created." << endl;
+               _modelHandler->AddModel( _plugins[ iter->first ]->GetCFDModel() );
+               vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
+                                      << " ]-> " << iter->second 
+                                      << " is being created." << endl << vprDEBUG_FLUSH;
             }
          }
          else
          {
             // plugin already present...
-            cout << " Plugin [ " << iter->first << " ]-> " << iter->second << " is already on the plugin map." << endl;
+            vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
+                                    << " ]-> " << iter->second 
+                                    << " is already on the plugin map." << endl << vprDEBUG_FLUSH;
          }
       }
 
@@ -399,13 +407,16 @@ void cfdExecutive::GetEverything( void )
          {
             // if a module is on the pugins map but not on the id map
             foundPlugin->second->RemoveSelfFromSG();
+            _modelHandler->RemoveModel( foundPlugin->second->GetCFDModel() );
             delete foundPlugin->second;
             _plugins.erase( foundPlugin++ );
          }
          else
          {
             // plugin already present...
-            cout << " Plugin [ " << iter->first << " ]-> " << iter->second << " is already on the plugin and id map." << endl;
+            vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
+                                    << " ]-> " << iter->second 
+                                    << " is already on the plugin and id map." << endl << vprDEBUG_FLUSH;
             ++foundPlugin;
          }
          // The above code is from : The C++ Standard Library by:Josuttis
@@ -518,6 +529,10 @@ bool cfdExecutive::GetCalculationsFlag( void )
    return this->_doneWithCalculations;
 }
 
+void cfdExecutive::SetModelHandler( cfdModelHandler* input )
+{
+   _modelHandler = input;
+}
 bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 {
 // Add in cfdCommandArray stuff

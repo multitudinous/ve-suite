@@ -80,7 +80,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
    public:
       cfdVEBaseClass( void );
       //cfdVEBaseClass( cfdDCS* );
-      ~cfdVEBaseClass( void );
+      virtual ~cfdVEBaseClass( void );
 
       virtual void InitializeNode( cfdDCS* );
       // Methods to do scene graph manipulations
@@ -89,11 +89,11 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       virtual void RemoveSelfFromSG( void );
 
       // Change state information for geometric representation
-      virtual void MakeTransparent( void );
-      virtual void SetColor( double* );
+      void MakeTransparent( void );
+      void SetColor( double* );
       
       // transform object based 
-      virtual void SetTransforms( float*, float*, float* );
+      void SetTransforms( float*, float*, float* );
 
       // Implement Gengxun's work by using socket
       // stuff from vtk. This will be used in parallel
@@ -104,10 +104,10 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       // add it to the scene graph. Probably use cfdObject.
       virtual void MakeGeodeByUserRequest( int );
 
-      virtual wxString GetName();
+      wxString GetName();
       //This returns the name of the module
 
-      virtual wxString GetDesc();
+      wxString GetDesc();
       //This returns the description of the module, This should be a short description
 
       virtual void UnPack(Interface* intf);
@@ -115,20 +115,19 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       virtual Interface* Pack();
 
       //This is to unpack the result from the 
-      virtual void UnPackResult(Interface * intf);
+      void UnPackResult(Interface * intf);
       //This is the save function of the module. 
 
-      virtual void SetID(int id);
+      void SetID(int id);
    
-      virtual cfdModel* GetCFDModel( void );
+      cfdModel* GetCFDModel( void );
    
-      virtual void LoadSurfaceFiles( char* );
+      void LoadSurfaceFiles( char* );
 
       bool OnSceneGraph( void ){return _onSceneGraph;}
       
    
    private:
-      virtual void CreateObjects( void );
       // This needs to be vector of geometry nodes
       cfdModuleGeometry*  geometryNode;
       cfdGroup* groupNode;
@@ -136,11 +135,11 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       cfdDCS*   worldDCS;
       cfdDCS* _dcs;
 
-      wxString _objectName;
       wxString _objectDescription;
 
 
    protected:
+      void CreateObjects( void );
       long pos_x;
       long pos_y;
       // Stuff taken from Plugin_base.h
@@ -171,6 +170,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       bool _onSceneGraph;
 
       int _modID;
+      wxString _objectName;
 };
 
 #endif
