@@ -1,8 +1,0 @@
-1
-9                       // Object type 9: Geometry file name
-   0                             // transparency toggle (1=make geom transparent when visualizations are active)
-   0                             // color flag (and 3 color values if flag = 1)
-   1 1 1                    // Scale values for geometry file
-   0 0 0             // Translation valuGasHeatExchangerModeles for geometry file
-   0 0 0                       // Rotation values for geometry file
-   /home/vesuite/VE_Suite/VE_Models/GasHeatExchangerModel/113.obj      // Geometry file name
