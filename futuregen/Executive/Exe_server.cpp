@@ -12,6 +12,19 @@ int main (int argc, char* argv[])
 { 
   try
     {
+      XMLPlatformUtils::Initialize();
+    }
+  
+  catch(const XMLException &toCatch)
+    {
+      XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+				<< "  Exception message:"
+				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+      return 1;
+    }
+
+  try
+    {
       
     // First initialize the ORB, 
     CORBA::ORB_var orb = CORBA::ORB_init (argc, argv, "Yang");

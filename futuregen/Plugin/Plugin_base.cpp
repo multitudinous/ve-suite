@@ -157,7 +157,7 @@ void REI_Plugin::DrawIcon(wxDC* dc)
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::DrawID(wxDC* dc)
 {
-	return; // no module id
+  //return; // no module id
   int i;
   int x, y;
   int w, h;

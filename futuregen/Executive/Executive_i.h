@@ -1,8 +1,11 @@
 #ifndef EXECUTIVE_I_H_
 #define EXECUTIVE_I_H_
 
+#include "Network_Exec.h"
+#include "Scheduler.h"
+
 #include "moduleS.h"
-#include "interface.h"
+#include "package.h"
 #include <string>
 #include <vector>
 #include <map>
@@ -31,13 +34,15 @@ public:
 protected:
 
   CosNaming::NamingContext_var naming_context_;
-  Body::Unit_var cmu_unit_;
   std::map<std::string, Body::UI_var> uis_;
 
   std::map<int, MODULE_DATA> msg_data_;
   std::map<int, Interface> network_;
   std::map<int, Interface> port_data_;
   std::map<int, Interface> output_data_;
+
+  Network*   _network;
+  Scheduler* _scheduler;
 
   Types::ArrayLong watch_list_;
   std::string status_;
@@ -76,6 +81,28 @@ virtual char * GetExportData (
     , Error::EUnknown
   ));
 
+virtual void SetProfileData (
+    CORBA::Long module_id,
+    CORBA::Long port_id,
+    const Types::Profile & data
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));// TAO_IDL - Generated from
+// be/be_visitor_operation/operation_ih.cpp:43
+
+virtual void GetProfileData (
+    CORBA::Long module_id,
+    CORBA::Long port_id,
+    Types::Profile_out data
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));// TAO_IDL - Generated from
+// be/be_visitor_operation/operation_ih.cpp:43
+
 virtual void SetModuleMessage (
     CORBA::Long module_id,
     const char * msg
@@ -85,6 +112,25 @@ virtual void SetModuleMessage (
     CORBA::SystemException
     , Error::EUnknown
   ));
+
+virtual void SetModuleResult (
+    CORBA::Long module_id,
+    const char * result
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));// TAO_IDL - Generated from
+// be/be_visitor_operation/operation_ih.cpp:43
+
+virtual char * GetModuleResult (
+    CORBA::Long module_id
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));// TAO_IDL - Generated from
+// be/be_visitor_operation/operation_ih.cpp:43
 
 virtual void SetNetwork (
     const char * network
@@ -103,6 +149,16 @@ virtual char * GetNetwork (
     , Error::EUnknown
   ));
 
+virtual void SetModuleUI (
+    CORBA::Long module_id,
+    const char * ui
+    ACE_ENV_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));
+ 
 virtual void SetWatchList (
     const Types::ArrayLong & id
     ACE_ENV_ARG_DECL
@@ -170,8 +226,35 @@ virtual void RegisterUI (
   ));
 
 virtual void RegisterUnit (
-    const char * UnitName
+    const char * UnitName,
+    CORBA::Long module_id
     ACE_ENV_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));
+
+virtual void UnRegisterUI (
+    const char * UIName
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));// TAO_IDL - Generated from
+// be/be_visitor_operation/operation_ih.cpp:43
+
+virtual void UnRegisterUnit (
+    const char * UnitName
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ));// TAO_IDL - Generated from
+// be/be_visitor_operation/operation_ih.cpp:43
+
+virtual CORBA::Long GetGlobalMod (
+    Types::ArrayLong_out ids
   )
   ACE_THROW_SPEC ((
     CORBA::SystemException

@@ -430,27 +430,27 @@ void Network::OnAddLinkCon(wxCommandEvent &event)
   n = links[m_selLink]->cons.size()+2;
   linkline.resize(n);
 
-  bbox = modules[links[m_selLink]->To_mod].pl_mod->GetBBox();
+  bbox = modules[links[m_selLink]->Fr_mod].pl_mod->GetBBox();
   
-  num = modules[links[m_selLink]->To_mod].pl_mod->GetNumOports();
+  num = modules[links[m_selLink]->Fr_mod].pl_mod->GetNumOports();
   ports.resize(num);
-  modules[links[m_selLink]->To_mod].pl_mod->GetOPorts(ports);
+  modules[links[m_selLink]->Fr_mod].pl_mod->GetOPorts(ports);
 
-  linkline[0].x = bbox.x+ports[links[m_selLink]->To_port].x;
-  linkline[0].y = bbox.y+ports[links[m_selLink]->To_port].y;
+  linkline[0].x = bbox.x+ports[links[m_selLink]->Fr_port].x;
+  linkline[0].y = bbox.y+ports[links[m_selLink]->Fr_port].y;
 
   for (i=0; i<links[m_selLink]->cons.size(); i++)
     linkline[i+1]=links[m_selLink]->cons[i];
 
-  bbox = modules[links[m_selLink]->Fr_mod].pl_mod->GetBBox();
+  bbox = modules[links[m_selLink]->To_mod].pl_mod->GetBBox();
 
-  num = modules[links[m_selLink]->Fr_mod].pl_mod->GetNumIports();	
+  num = modules[links[m_selLink]->To_mod].pl_mod->GetNumIports();	
   ports.resize(num);
-  modules[links[m_selLink]->Fr_mod].pl_mod->GetIPorts(ports);
+  modules[links[m_selLink]->To_mod].pl_mod->GetIPorts(ports);
   int tempi;
-  tempi = links[m_selLink]->Fr_port;
+  tempi = links[m_selLink]->To_port;
   linkline[n-1].x = bbox.x+ports[tempi].x;
-  tempi = links[m_selLink]->Fr_port;
+  tempi = links[m_selLink]->To_port;
   linkline[n-1].y = bbox.y+ports[tempi].y;
   
   nearpnt(action_point, linkline, Near);
@@ -832,25 +832,25 @@ POLY Network::CalcLinkPoly(LINK l)
   int i, num;
 
 
-  bbox = modules[l.To_mod].pl_mod->GetBBox();
-  num = modules[l.To_mod].pl_mod->GetNumOports();
+  bbox = modules[l.Fr_mod].pl_mod->GetBBox();
+  num = modules[l.Fr_mod].pl_mod->GetNumOports();
   ports.resize(num);
-  modules[l.To_mod].pl_mod->GetOPorts(ports);
+  modules[l.Fr_mod].pl_mod->GetOPorts(ports);
 
-  pos.x = bbox.x+ports[l.To_port].x;
-  pos.y = bbox.y+ports[l.To_port].y;
+  pos.x = bbox.x+ports[l.Fr_port].x;
+  pos.y = bbox.y+ports[l.Fr_port].y;
 
   points.push_back(pos);
   for (i=0; i<l.cons.size(); i++)
     points.push_back(l.cons[i]);
 
-  bbox = modules[l.Fr_mod].pl_mod->GetBBox();
+  bbox = modules[l.To_mod].pl_mod->GetBBox();
   
-  num = modules[l.Fr_mod].pl_mod->GetNumIports();
+  num = modules[l.To_mod].pl_mod->GetNumIports();
   ports.resize(num);
-  modules[l.Fr_mod].pl_mod->GetIPorts(ports);
-  pos.x = bbox.x+ports[l.Fr_port].x;
-  pos.y = bbox.y+ports[l.Fr_port].y;
+  modules[l.To_mod].pl_mod->GetIPorts(ports);
+  pos.x = bbox.x+ports[l.To_port].x;
+  pos.y = bbox.y+ports[l.To_port].y;
 
   points.push_back(pos);
 
@@ -1247,27 +1247,27 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
       ln = new LINK;
       if (flag)
 	{
-	  ln->Fr_mod = mod;
-	  ln->Fr_port = pt;
-	  ln->To_mod = dest_mod;
-	  ln->To_port = dest_port;
+	  ln->To_mod = mod;
+	  ln->To_port = pt;
+	  ln->Fr_mod = dest_mod;
+	  ln->Fr_port = dest_port;
 	  ln->poly = CalcLinkPoly(*ln);
 	}
       else
 	{
-	  ln->Fr_mod = dest_mod;
-	  ln->Fr_port = dest_port;
-	  ln->To_mod = mod;
-	  ln->To_port = pt;
+	  ln->To_mod = dest_mod;
+	  ln->To_port = dest_port;
+	  ln->Fr_mod = mod;
+	  ln->Fr_port = pt;
 	  ln->poly = CalcLinkPoly(*ln);
 	}
       found = false;
       for (i=0; i<modules[mod].links.size(); i++)
 	{
-	  if (modules[mod].links[i]->Fr_mod == ln->Fr_mod
-	      &&modules[mod].links[i]->Fr_port == ln->Fr_port
-	      &&modules[mod].links[i]->To_mod == ln->To_mod
-	      &&modules[mod].links[i]->To_port == ln->To_port)
+	  if (modules[mod].links[i]->To_mod == ln->To_mod
+	      &&modules[mod].links[i]->To_port == ln->To_port
+	      &&modules[mod].links[i]->Fr_mod == ln->Fr_mod
+	      &&modules[mod].links[i]->Fr_port == ln->Fr_port)
 	    {
 	      found = true;
 	      delete ln;
@@ -1785,26 +1785,26 @@ void Network::DrawLink(LINK *ln, bool flag)
   n = ln->cons.size()+2;
   points = new wxPoint[n];
 
-  bbox = modules[ln->Fr_mod].pl_mod->GetBBox();
+  bbox = modules[ln->To_mod].pl_mod->GetBBox();
   
-  num = modules[ln->Fr_mod].pl_mod->GetNumIports();
+  num = modules[ln->To_mod].pl_mod->GetNumIports();
   ports.resize(num);
-  modules[ln->Fr_mod].pl_mod->GetIPorts(ports);
+  modules[ln->To_mod].pl_mod->GetIPorts(ports);
 
-  points[0].x = bbox.x+ports[ln->Fr_port].x;
-  points[0].y = bbox.y+ports[ln->Fr_port].y;
+  points[0].x = bbox.x+ports[ln->To_port].x;
+  points[0].y = bbox.y+ports[ln->To_port].y;
 
   j=1;
   for (i=ln->cons.size()-1;i>=0; i--, j++)
     points[j]=ln->cons[i];
 
-  bbox = modules[ln->To_mod].pl_mod->GetBBox();
-  num = modules[ln->To_mod].pl_mod->GetNumOports();
+  bbox = modules[ln->Fr_mod].pl_mod->GetBBox();
+  num = modules[ln->Fr_mod].pl_mod->GetNumOports();
   ports.resize(num);
-  modules[ln->To_mod].pl_mod->GetOPorts(ports);
+  modules[ln->Fr_mod].pl_mod->GetOPorts(ports);
 
-  points[n-1].x = bbox.x+ports[ln->To_port].x;
-  points[n-1].y = bbox.y+ports[ln->To_port].y;
+  points[n-1].x = bbox.x+ports[ln->Fr_port].x;
+  points[n-1].y = bbox.y+ports[ln->Fr_port].y;
   
   if (!flag)
     {
@@ -2083,25 +2083,25 @@ void Network::DrawLinkCon(LINK l, bool flag)
   n = links[m_selLink]->cons.size()+2;
   linkline.resize(n);
 
-  bbox = modules[links[m_selLink]->To_mod].pl_mod->GetBBox();
+  bbox = modules[links[m_selLink]->Fr_mod].pl_mod->GetBBox();
   
-  num= modules[links[m_selLink]->To_mod].pl_mod->GetNumOports();
+  num= modules[links[m_selLink]->Fr_mod].pl_mod->GetNumOports();
   ports.resize(num);
-  modules[links[m_selLink]->To_mod].pl_mod->GetOPorts(ports);
+  modules[links[m_selLink]->Fr_mod].pl_mod->GetOPorts(ports);
 
-  linkline[0].x = bbox.x+ports[links[m_selLink]->To_port].x;
-  linkline[0].y = bbox.y+ports[links[m_selLink]->To_port].y;
+  linkline[0].x = bbox.x+ports[links[m_selLink]->Fr_port].x;
+  linkline[0].y = bbox.y+ports[links[m_selLink]->Fr_port].y;
 
   for (i=0; i<links[m_selLink]->cons.size(); i++)
     linkline[i+1]=links[m_selLink]->cons[i];
 
-  bbox = modules[links[m_selLink]->Fr_mod].pl_mod->GetBBox();
+  bbox = modules[links[m_selLink]->To_mod].pl_mod->GetBBox();
 
-  num = modules[links[m_selLink]->Fr_mod].pl_mod->GetNumIports();
+  num = modules[links[m_selLink]->To_mod].pl_mod->GetNumIports();
   ports.resize(num);
-  modules[links[m_selLink]->Fr_mod].pl_mod->GetIPorts(ports);
-  linkline[n-1].x = bbox.x+ports[links[m_selLink]->Fr_port].x;
-  linkline[n-1].y = bbox.y+ports[links[m_selLink]->Fr_port].y;
+  modules[links[m_selLink]->To_mod].pl_mod->GetIPorts(ports);
+  linkline[n-1].x = bbox.x+ports[links[m_selLink]->To_port].x;
+  linkline[n-1].y = bbox.y+ports[links[m_selLink]->To_port].y;
 
   for (i=0; i<linkline.size(); i++)
     { 
@@ -2309,7 +2309,7 @@ void Network::Pack(vector<Interface> & UIs)
 
   ntpk._type=0;
   ntpk._category=0;
-  ntpk._id=0;
+  ntpk._id=-1;
   ntpk.setVal("m_xUserScale", m_xUserScale);
   ntpk.setVal("m_yUserScale", m_yUserScale);
   ntpk.setVal("nPixX", long(nPixX));
@@ -2609,8 +2609,8 @@ void Network::UnPack(vector<Interface> & intfs)
   //first, calculate get the links vector into the modules
   for (i=0; i<links.size(); i++)
     {
-      modules[links[i]->Fr_mod].links.push_back(links[i]);
       modules[links[i]->To_mod].links.push_back(links[i]);
+      modules[links[i]->Fr_mod].links.push_back(links[i]);
     }
 
   //Second, calculate the polyes
@@ -2751,8 +2751,8 @@ void  Network::OnShowLinkContent(wxCommandEvent &event)
   col1.push_back("NO");  col2.push_back("");
   col1.push_back("NO2"); col2.push_back("");
 
-  mod = links[m_selLink]->To_mod; //The to Mod are actually the from module for the data flow
-  port = links[m_selLink]->To_port;
+  mod = links[m_selLink]->Fr_mod; //The to Mod are actually the from module for the data flow
+  port = links[m_selLink]->Fr_port;
   try {
     linkresult = exec->GetExportData(mod, port);
   }

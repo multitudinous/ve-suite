@@ -25,8 +25,8 @@ include $(TAO_ROOT)/rules.tao.GNU
 include $(XERCESCROOT)/version.incl
 include ../Plugin/Makefile.incl
 
-IDL_FILES = module
-IDL_SRC = moduleC.cpp moduleS.cpp
+IDL_FILES = ../IDL/module
+IDL_SRC = ../IDL/moduleC.cpp ../IDL/moduleS.cpp
 
 PROG_SRCS = $(IDL_SRC) \
             interface.cpp \
@@ -34,10 +34,6 @@ PROG_SRCS = $(IDL_SRC) \
             Network_Exec.cpp \
             Scheduler.cpp \
             Exe_server.cpp \
-            UI_client.cpp \
-            Unit_client.cpp \
-            UI_i.cpp \
-            Unit_i.cpp \
             Executive_i.cpp \
             string_ops.cpp
 
@@ -45,11 +41,7 @@ LSRC = $(PROG_SRCS)
 
 FILE_Exe_SVR_OBJS = moduleC.o moduleS.o Exe_server.o Executive_i.o interface.o package.o Network_Exec.o Scheduler.o string_ops.o
 
-FILE_UI_CLT_OBJS = moduleC.o moduleS.o UI_client.o UI_i.o 
-
-FILE_Unit_CLT_OBJS = moduleC.o moduleS.o Unit_client.o Unit_i.o
-
-BIN_UNCHECKED = Exe_server UI_client Unit_client
+BIN_UNCHECKED = Exe_server
 
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
@@ -107,19 +99,13 @@ CPPFLAGS += -I$(TAO_ROOT) -I$(TAO_ROOT)/orbsvcs \
 
 .PRECIOUS: moduleC.h moduleC.i moduleC.cpp moduleS.h moduleS.i moduleS.cpp
 
-all: Exe_server UI_client Unit_client
+all: Exe_server
 
 Exe_server: $(addprefix $(VDIR),$(FILE_Exe_SVR_OBJS))
 	$(LINK.cc) $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) $(POSTLINK)
 
-UI_client: $(addprefix $(VDIR),$(FILE_UI_CLT_OBJS))
-	$(LINK.cc) $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) $(POSTLINK)
-
-Unit_client: $(addprefix $(VDIR),$(FILE_Unit_CLT_OBJS))
-	$(LINK.cc) $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) $(POSTLINK)
-
 realclean: clean
-	-$(RM) -r moduleC.* moduleS.* mdule_T.* ./.obj Exe_server UI_client Unit_client
+	-$(RM) -r moduleC.* moduleS.* mdule_T.* ./.obj Exe_server
 
 #endif # ! ghs/Solaris
 #endif # ! ghs/VxWorks
