@@ -74,6 +74,7 @@
 #include <osg/Geometry>
 #include <osg/BlendFunc>
 #include <osg/Array>
+#include <osg/Depth>
 #elif _OPENSG
 #endif
 
@@ -559,15 +560,19 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          //set up blending for opacity
          osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
          bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-			 
+		 osg::ref_ptr<osg::Depth> depth = new osg::Depth;	 
          //put in the appropriate bin
          if ( op == 1 ) {
+			 depth->setWriteMask(true);
              geostate->setRenderingHint(osg::StateSet::OPAQUE_BIN);
              geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::OFF);
          }else{
-			     geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+			 depth->setWriteMask(false);
+			 //geostate->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
+			 geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
              geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
          }
+		 geostate->setAttribute(depth.get());
          //reset the state
          geoset->setStateSet(geostate.get());
       }
