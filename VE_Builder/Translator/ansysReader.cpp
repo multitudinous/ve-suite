@@ -1044,12 +1044,6 @@ int * ansysReader::ReadElementTypeDescription( int pointer )
    cout << setw( PRINT_WIDTH ) << "number of corner nodes = " << numCornerNodes << endl;
 #endif // PRINT_HEADERS
 
-   if ( numNodesInElement != 20 && numCornerNodes != 8 )
-   {
-      cerr << "Currently, this translator can only accomodate 20-node, 8-corner elements" << endl;
-      exit( 1 );
-   }
-
    // the last number is blockSize again
    int blockSize_2 = ReadNthInteger( intPosition++ );
    if ( blockSize_2 != blockSize_1 ) 
@@ -1183,9 +1177,7 @@ void ansysReader::ReadElementDescriptionIndexTable()
    this->ugrid->Allocate(this->numElems,this->numElems);
    for ( int i = 0; i < this->numElems; i++ )
    {  
-      int * cornerNodes = this->ReadElementDescription( this->ptrElemDescriptions[ i ] );
-      this->ugrid->InsertNextCell( VTK_HEXAHEDRON, 8, cornerNodes );
-      delete [] cornerNodes;
+      this->ReadElementDescription( this->ptrElemDescriptions[ i ] );
    }
    //cout << "done constructing the mesh" << endl;
 }
@@ -1201,18 +1193,53 @@ int * ansysReader::ReadElementDescription( int pointer )
    int blockSize_1 = ReadNthInteger( intPosition++ );
    
    int numValues = ReadNthInteger( intPosition++ );
-   if ( numValues != 30 ) 
+   PRINT( numValues );
+
+   int mat = ReadNthInteger( intPosition++ );
+   PRINT( mat );
+
+   int type = ReadNthInteger( intPosition++ );  //important
+   PRINT( type );
+
+   int real = ReadNthInteger( intPosition++ );
+   PRINT( real );
+
+   int secnum = ReadNthInteger( intPosition++ );
+   PRINT( secnum );
+
+   int esys = ReadNthInteger( intPosition++ );
+   PRINT( esys );
+
+   int death = ReadNthInteger( intPosition++ );
+   PRINT( death );
+
+   int solidm = ReadNthInteger( intPosition++ );
+   PRINT( solidm );
+
+   int shape = ReadNthInteger( intPosition++ );
+   PRINT( shape );
+
+   int elnum = ReadNthInteger( intPosition++ );
+   PRINT( elnum );
+
+   int zero = ReadNthInteger( intPosition++ );
+   PRINT( zero );
+   if ( zero != 0 )
    {
-      cerr << "numValues = " << numValues << " != 30" << endl;
+      cerr << "ERROR: zero != 0" << endl;
       exit( 1 );
    }
 
-   // allocate space for the node IDs that define the corners of the hex element
-   int junk [ 10 ];
+   //TODO: this is hardcoded for a single element type
+   int numNodesInElement = this->elemDescriptions[ 0 ][ 61-1 ];
+   int numCornerNodes = this->elemDescriptions[ 0 ][ 94-1 ];
 
-   // read the preface information
-   if ( fileIO::readNByteBlockFromFile( &junk,
-                  sizeof(int), 10, this->s1, this->endian_flip ) )
+   // allocate space for the node IDs that define the corners of the hex element
+   int * nodes = new int [ numNodesInElement ];
+
+   // read the node IDs that define the element
+   if ( fileIO::readNByteBlockFromFile( nodes,
+                  sizeof(int), numNodesInElement, this->s1, this->endian_flip ) )
    {
       cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
            << endl;
@@ -1220,39 +1247,11 @@ int * ansysReader::ReadElementDescription( int pointer )
    }
 
 #ifdef PRINT_HEADERS
-   cout << "\nReading Element Description for element " << junk[ 8 ] << endl;
-#endif // PRINT_HEADERS
-
-   // allocate space for the node IDs that define the corners of the hex element
-   int * cornerNodes = new int [ 8 ];
-
-   // read the node IDs that define the corners of the hex element
-   if ( fileIO::readNByteBlockFromFile( cornerNodes,
-                  sizeof(int), 8, this->s1, this->endian_flip ) )
-   {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
-           << endl;
-      exit(1);
-   }
-
-#ifdef PRINT_HEADERS
-   for ( int i = 0; i < 8; i++ )
+   for ( int i = 0; i < numCornerNodes; i++ )
    {  
-      cout << "\tcornerNodes[ " << i << " ] = " << cornerNodes[ i ] << endl;
+      cout << "\tcornerNodes[ " << i << " ] = " << nodes[ i ] << endl;
    }
 #endif // PRINT_HEADERS
-
-   // allocate space for the other node IDs
-   int nonCornerNodes [ 12 ];
-
-   // read the preface information
-   if ( fileIO::readNByteBlockFromFile( &nonCornerNodes,
-                  sizeof(int), 12, this->s1, this->endian_flip ) )
-   {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
-           << endl;
-      exit(1);
-   }
 
    // the last number is blockSize again
    int blockSize_2;
@@ -1264,7 +1263,13 @@ int * ansysReader::ReadElementDescription( int pointer )
            << " != expected block size" << endl;
       exit( 1 );
    }
-   return cornerNodes;
+
+   if ( numCornerNodes == 8 )
+      this->ugrid->InsertNextCell( VTK_HEXAHEDRON, numCornerNodes, nodes );
+   if ( numCornerNodes == 4 )
+      this->ugrid->InsertNextCell( VTK_TETRA, numCornerNodes, nodes );
+
+   delete [] nodes;
 }
 
 void ansysReader::ReadSolutionDataHeader()
@@ -1596,8 +1601,8 @@ void ansysReader::ReadHeaderExtension()
       PRINT( dofLabel[ i ] );
    }
 
-   if ( strcmp(dofLabel[ 0 ],"UX  ") &&
-        strcmp(dofLabel[ 1 ],"UY  ") &&
+   if ( strcmp(dofLabel[ 0 ],"UX  ") ||
+        strcmp(dofLabel[ 1 ],"UY  ") ||
         strcmp(dofLabel[ 2 ],"UZ  ") )
    {
       cerr << "ERROR: unexpected dofLabels" << endl;
