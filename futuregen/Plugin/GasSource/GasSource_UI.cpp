@@ -577,7 +577,7 @@ wxString GasSourceTabs::ToString(const wxString inp, const wxString val)
 }
 
 EditDialog::EditDialog(wxWindow *parent, wxWindowID id)
-  :wxDialog(parent, id, _T("Edit"))
+  :wxDialog(parent, id, _T("Edit"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, "dialogBox")
 {
   wxBoxSizer* toptop= new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* left_margin = new wxBoxSizer(wxHORIZONTAL);
