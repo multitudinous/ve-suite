@@ -1,0 +1,494 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>VE-Suite User's Guide: Desktop</title>
+<link href="../vesuite.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #FFFFFF;
+}
+a {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #0099FF;
+}
+a:link {
+	text-decoration: none;
+	color: #CC6633;
+}
+a:visited {
+	text-decoration: none;
+	color: #CC6633;
+}
+a:hover {
+	text-decoration: underline;
+	color: #CC9900;
+}
+a:active {
+	text-decoration: none;
+	color: #CC6633;
+}
+h1,h2,h3,h4,h5,h6 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+h1 {
+	font-size: x-large;
+	color: #CC9900;
+}
+h2 {
+	font-size: medium;
+	color: #CCCCCC;
+}
+.style6 {font-size: x-small}
+.style8 {color: #FFFFFF}
+.style9 {font-family: "Courier New", Courier, mono}
+-->
+</style>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+//-->
+</script>
+</head>
+
+<body>
+<table width="875" height="114" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#333366">
+  <tr>
+    <td width="576" height="114" rowspan="2" background="header.gif">&nbsp;</td>
+    <td valign="top"><div align="right"></div></td>
+  </tr>
+  <tr>
+    <td valign="bottom"><strong><span class="style8"><a href="http://www.vrac.iastate.edu">VRAC</a> | <a href="http://www.vrac.iastate.edu/%7Ekmbryden">Professor Bryden Home</a> | <a href="http://www.vrjuggler.org/">VR Juggler</a></span></strong></td>
+  </tr>
+</table>
+<TABLE width="875" border=0 align="center" 
+cellPadding=5 cellSpacing=0 borderColor=#CCCCCC bgcolor="#333366" style="BORDER-COLLAPSE: collapse">
+  <TBODY>
+    <TR>
+      <TD valign="middle"><p>&nbsp;</p></TD>
+      <TD valign="middle"><p>&nbsp;</p></TD>
+    </TR>
+    <TR>
+      <TD valign="middle"><h1>&nbsp;</h1></TD>
+      <TD valign="middle"><h1>User's Guide: Desktop </h1></TD>
+    </TR>
+    <TR>
+      <TD width="22%"><P class="paragraph"><strong><a href="about.htm">About</a></strong></P>
+      </TD>
+      <TD width="78%" rowspan="108" valign="top"><h3>VE-Suite Desktop </h3>        
+        <p>Using the Virtual Engineering Suite within a Desktop Environment</p>
+        <p>1. Before using VE-Xplorer, you must properly store the module data.</p>
+        <p>2. Specify a working directory for data storage under the execution folder (below) of a compatible module's User Interface.</p>
+        <p>&nbsp;</p>
+        <p>3. Once a network has been executed and the module data has been properly stored, the user may then select the &quot;VE&quot; module button (example below) to open VE-Suite.</p>
+        <p>&nbsp;</p>
+        <p>4. The VE-Suite title page is displayed. When the user selects &quot;Launch,&quot; the viewer converts the stored CFD data files in the working directory into VE-compatible VTK files. Several minutes are required to complete the conversion process.</p>
+        <p>&nbsp;</p>
+        <p>Note: The title page remains dormant in the background while using the VE viewer. Selecting the &quot;End&quot; button will close the viewer and end the VE-Suite session.</p>
+        <p>5. Once the data files have been converted, VR-Xplorer displays three screens: Sim Input, Sim Window, and JavaClient. The principal SimWindow screen contains the images that are displayed onto the walls of the cave. The SimInput screen functions only to aid in SimWindow navigation and is only visible when operating on a desktop. The JavaClient user interface allows the user to control data display.</p>
+        <p>&nbsp;</p>
+        <p>The SimWindow Display Screen</p>
+        <p>On the left side of the SimWindow display screen, a color scheme legend is provided. This color gradient is used to display varying values of a given datatype. The top number represents a maximum value while the bottom number represents a minimum value. All data above the maximum value will be shaded red and, likewise, all data below the minimum value will be shaded blue. Data falling between these values is shaded according to the color scheme.</p>
+        <p>&nbsp;</p>
+        <p>The distant table (projected on the rear wall) displays user options normally selectable with the wand within a cave. The same user options are accessible to a desktop user within the JavaClient user interface screen.</p>
+        <p>Navigation within the SimWindow Display Screen</p>
+        <p>The SimInput screen serves as the input device for navigation and must be active. Navigation within the SimWindow display screen is purely translational (no rotation), and is supported by the following keys on the keyboard.<br>
+          7<br>
+          slide down<br>
+  8<br>
+  zoom<br>
+  in<br>
+  <br>
+  9<br>
+  slide <br>
+  up</p>
+        <p>4<br>
+          slide<br>
+          left<br>
+  5<br>
+  6<br>
+  slide right</p>
+        <p>1<br>
+            <br>
+            2<br>
+            zoom<br>
+            out<br>
+  3</p>
+        <p>The JavaClient User Interface Screen</p>
+        <p>Scalars Folder<br>
+          The VE viewer can be used to trace a variety of data including gas direction, velocity, pressure, temperature, density, and specie concentration. The Scalars folder governs which datatypes are displayed. From the data field on the left, the user can select on datatype for display.</p>
+        <p>The Scalars folder also controls the method by which data is shaded in the SimWindow screen. The sliding bars on the right regulate the data maximum and minimum based on percentages of the absolute maximum and minimum. For example, in the color scheme illustrated in the above SimWindow snap, the default maximum is 3200 and the minimum is 400. This means that the highest computed gas temperature for the module was 3200 K and the lowest computed temperature was 400 K. By moving the minimum sliding bar up towards 50, the data range narrows and provides a more detailed representation of temperature values in the upper half of the absolute temperature range. The SimWindow screen is not updated until Update is selected.</p>
+        <p>&nbsp;</p>
+        <p>Design Folder<br>
+          The Design folder is still in development and is not yet functional. It will potentially allow the user to utilize visualization capabilities of the VE Suite in order to manipulate unit geometry and specifications before initializing CFD calculations. This would allow the user to fully parametrize a problem by working from a config-type file.</p>
+        <p>Geometry Folder<br>
+          The Geometry folder allows the user to toggle the display of unit geometry. When selected, the viewer displays a simplified representation of the unit itself (gasifier shown at left) inside the SimWindow screen. Unit geometry will not obstruct data--it becomes nearly transparent when data is displayed. Again, the SimWindow will not be updated until the &quot;Update&quot; button is selected.</p>
+        <p>Visualization Folder<br>
+          Category<br>
+          The VE-Suite offers several methods of data display. The user may choose one of the following categories:</p>
+        <p>--Contour<br>
+          --Warped Contour<br>
+          --Vector<br>
+          --Streamline (requires use of wand)<br>
+          --Isosurface<br>
+          --Transient<br>
+          --PIV Image<br>
+          --Polydata-REI Particle (change links to show place in document)</p>
+        <p>Direction<br>
+          For those categories that display data along a unit cross-section (i.e., contour, warped contour, transient, vector, PIV_Image), the direction field regulates the method by which the two-dimensional plane is generated. The Cartesian axes listed represent normals to the planes displayed. For example, when the Y axis is selected, the planes will run perpendicular to the Y axis (parallel to the monitor's screen).</p>
+        <p>The user may also generate cross-sectional planes that are not orthagonal to the defined axes using the wand (By wand option). When selected, the viewer generates a plane normal to the direction of the pointed wand.</p>
+        <p>Sliding Bar<br>
+          The values beneath the sliding bar represent percentages. This bar is used to control data display by regulating the position of cross-sectional planes or the value by which isosurfaces are generated.</p>
+        <p>Contour<br>
+          The Contour category generates a cross-sectional plane running through the unit. Data is then projected onto this plane using the color-shading scheme to represent varying values. The sliding bar regulates the position of the cross-sectional plane. For example, planes run from left (value=0) to right (value=100) along the X-axis. The value of 50 (displayed at right) creates a plane centered in the middle of the unit. Similarly, planes run from base to top along the Z-axis, and from front to back along the Y-axis.</p>
+        <p>Warped Contour<br>
+          The Warped Contour category works similarly to the Contour category. In contrast, however, the Warped Contour warps the contour according to the local velocity vector. Instead of simply shading data along the two-dimensional cross-section, data is extruded to its respective value on the contour.</p>
+        <p>Transient, Vector, and PIV_Image<br>
+          The Transient, Vector, and PIV_Image categories all operate similarly to the Contour category when calculations include the appropriate datatypes. Data is projected onto a two-dimensional cross-sectional plane and shaded according to the illustrated color scheme when any of these categories are selected.</p>
+        <p>Isosurface<br>
+          The Isosurface category generates three-dimensional surfaces using locations where values of a given datatype are equal. Numbers beneath the sliding bar in the JavaClient screen represent percentages between the maximum and minimum data value. For example, using gas_temp as the datatype, the number 50 represents a temperature of 1800 K--the value halfway between the minimum (400 K) and maximum (3200 K) value. Therefore, when 50 is selected the viewer generates a continuous surface (shown at left) from all the individual points within the unit having a temperature of 1800 K.</p>
+        <p>Polydata<br>
+          The Polydata category displays individual particle paths through the unit. The particle positions are predefined and originate from the file: $[VE_SUITE]/REI/particle.param</p>
+        <p>(polydata image?) </p>
+        <p><a href="vesuite_desktop.PDF">Printable Version </a></p></TD>
+    </TR>
+    <TR>
+      <TD><a href="download.htm"><strong>Download </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="install.htm"><strong>Installation</strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="uguide.htm"><strong>User's Guide </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="doc.htm"><strong>Documentation</strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="appgallery.htm"><strong>Application Gallery </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="research.htm"><strong>Research</strong></a> </TD>
+    </TR>
+    <TR>
+      <TD><a href="collaborators.htm"><strong>Collaborators</strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="developinfo.htm"><strong>Developer Information </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="contact.htm"><strong>Contact</strong></a></TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD colspan="2"><p align="center" class="style6"><a href="research.htm">Contact Information<br>
+      Program Developed by Virtual Reality Applications Center, Ames, IA </a></p>      </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</body>
+</html>

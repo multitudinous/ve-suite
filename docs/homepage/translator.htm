@@ -1,0 +1,319 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>VE-Suite User's Guide: Translator</title>
+<link href="../vesuite.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #FFFFFF;
+}
+a {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #0099FF;
+}
+a:link {
+	text-decoration: none;
+	color: #CC6633;
+}
+a:visited {
+	text-decoration: none;
+	color: #CC6633;
+}
+a:hover {
+	text-decoration: underline;
+	color: #CC9900;
+}
+a:active {
+	text-decoration: none;
+	color: #CC6633;
+}
+h1,h2,h3,h4,h5,h6 {
+	font-family: Arial, Helvetica, sans-serif;
+	font-weight: bold;
+}
+h1 {
+	font-size: x-large;
+	color: #CC9900;
+}
+h2 {
+	font-size: medium;
+	color: #CCCCCC;
+}
+.style6 {font-size: x-small}
+.style8 {color: #FFFFFF}
+.style9 {font-family: "Courier New", Courier, mono}
+-->
+</style>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+//-->
+</script>
+</head>
+
+<body>
+<table width="875" height="114" border="0" align="center" cellpadding="0" cellspacing="0" bgcolor="#333366">
+  <tr>
+    <td width="576" height="114" rowspan="2" background="header.gif">&nbsp;</td>
+    <td valign="top"><div align="right"></div></td>
+  </tr>
+  <tr>
+    <td valign="bottom"><strong><span class="style8"><a href="http://www.vrac.iastate.edu">VRAC</a> | <a href="http://www.vrac.iastate.edu/%7Ekmbryden">Professor Bryden Home</a> | <a href="http://www.vrjuggler.org/">VR Juggler</a></span></strong></td>
+  </tr>
+</table>
+<TABLE width="875" border=0 align="center" 
+cellPadding=5 cellSpacing=0 borderColor=#CCCCCC bgcolor="#333366" style="BORDER-COLLAPSE: collapse">
+  <TBODY>
+    <TR>
+      <TD valign="middle"><p>&nbsp;</p></TD>
+      <TD valign="middle"><p>&nbsp;</p></TD>
+    </TR>
+    <TR>
+      <TD valign="middle"><h1>&nbsp;</h1></TD>
+      <TD valign="middle"><h1>User's Guide: Translator </h1></TD>
+    </TR>
+    <TR>
+      <TD width="22%"><P class="paragraph"><strong><a href="about.htm">About</a></strong></P>
+      </TD>
+      <TD width="78%" rowspan="60" valign="top"><h3><br>
+        Creating a parameter file for Translator</h3>        
+        <p>1. Copy star.param file from Builder/translator directory to work area</p>
+        <p>2. Open star.param</p>
+        <p>2.1 Edit Star.cel, Star.vrt, and Star.usr to show where they are located</p>
+        <p>2.2 Change scalarname lines to respective scalars</p>
+        <p>2.3 For StarCD, &quot;writeoption&quot; should be Option 1</p>
+        <p>2.4 Enter one of the following on the scale index line:<br>
+          Enter: For scale factor of: </p>
+        <p>0 No scale, corresponding to a scale factor of 1.0 </p>
+        <p>1 Custom scale, indicating that the SCALEFACTOR tag will be used to specify a scale factor </p>
+        <p>2 Meters to feet, corresponding to a scale factor of 3.28 </p>
+        <p>3 Millimeters to feet, corresponding to a scale factor of 3.28e-3 </p>
+        <p>4 Inches to feet, corresponding to a scale factor of 1.0/12.0 </p>
+        <p>5 Meters (1:12) scale to feet, corresponding to a scale factor of 12.0*3.28 </p>
+        <p>2.5 VR space is always in feet, so the scale factor tag must be in feet.</p>
+        <p>&nbsp;</p>
+        <p>3. Save and close</p>
+        <p>4. Enter &quot;vedemo&quot;</p>
+        <p>5. Enter &quot;translateToVtk&quot; in your shell</p>
+        <p>6. Select data type to convert</p>
+        <p>7. Name the file</p>
+        <p>8. Enter &quot;mergeVertices&quot;</p>
+        <p>8.1 Enter file name for input</p>
+        <p>8.2 Enter file name for output</p>
+        <p>Note: After the mergeVertices step, you may get the following error message: &quot;vtkDebugLeaks has detected LEAKS!&quot; This is normal.</p>
+        <p>Note: take note of orientation (size, etc.) and correct in VE-Xplorer parameter file if necessary*</p>
+        <p>9. Run meshViewer for visual verification of the location of the converted data</p>
+        <p>10. Run WhatIsScalarRange for information on data set type, bounding box, and scalar and vector**</p>
+        <p>10.1 Enter file name for input</p>
+        <p>10.2 Input shrink factor</p>
+        <p>11. Enter the integer corresponding to the scalar you want to activate</p>
+        <p>12. Pick an option for displaying cells</p>
+        <p>13. Manipulate the display views with the mouse:</p>
+        <p>--left: rotate</p>
+        <p>--right: zoom out</p>
+        <p>--middle: translate</p>
+        <p>14. Keyboard shortcuts:</p>
+        <p>--T: toggles mouse between joystick and trackball modes </p>
+        <p>--E: exit </p>
+        <p>*optional<br>
+          **optional but recommended<br>
+        </p>
+        <p><a href="preprocessor.htm">Preprocessor</a></p>
+        <p><a href="translator.PDF">Printable Version </a></p></TD>
+    </TR>
+    <TR>
+      <TD><a href="download.htm"><strong>Download </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="install.htm"><strong>Installation</strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="uguide.htm"><strong>User's Guide </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="doc.htm"><strong>Documentation</strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="appgallery.htm"><strong>Application Gallery </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="research.htm"><strong>Research</strong></a> </TD>
+    </TR>
+    <TR>
+      <TD><a href="collaborators.htm"><strong>Collaborators</strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="developinfo.htm"><strong>Developer Information </strong></a></TD>
+    </TR>
+    <TR>
+      <TD><a href="contact.htm"><strong>Contact</strong></a></TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD colspan="2"><p align="center" class="style6"><a href="research.htm">Contact Information<br>
+      Program Developed by Virtual Reality Applications Center, Ames, IA </a></p>      </TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</body>
+</html>
