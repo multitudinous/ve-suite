@@ -1030,11 +1030,13 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
   int nlm_val = (*nlm);
   int FF = 7;
 
-  printf("start call send_scirun_data\n");
   for(k=0; k<nk; k++)
     for(j=0; j<nj; j++) {
+		
       if((pcell[0][j][k] == FF) &&
-	 (pcell[1][j][k] == FF)) 
+	 (pcell[1][j][k] == FF))
+	  {
+		  
 	_gas_out->gas_cell.push_back(outlet_cell(1, j, k, 0,
 						 ns_val, nlm_val,
 						 sns, stb, sew,
@@ -1045,8 +1047,10 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
 						 hco, hwo, hao, hho));
+	  }
       else if((pcell[ni-1][j][k] == FF) &&
 	      (pcell[ni-2][j][k] == FF))
+	  {
 	_gas_out->gas_cell.push_back(outlet_cell(ni-2, j, k, 1,
 						 ns_val, nlm_val,
 						 sns, stb, sew,
@@ -1057,8 +1061,10 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
 						 hco, hwo, hao, hho));	
-    }
+	  }
+	}
 
+  fflush(NULL);
   for(k=1; k<nk-1; k++)
     for(i=1; i<ni-1; i++) {
       if((pcell[i][0][k] == FF) &&
@@ -1085,8 +1091,7 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
 						 hco, hwo, hao, hho));
-    }
-
+  }
   for(j=1; j<nj-1; j++)
     for(i=1; i<ni-1; i++) {
       if((pcell[i][j][0] == FF) &&
@@ -1113,7 +1118,7 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 spec_val,
 						 part_char, part_ash, part_water, part_coal,
 						 hco, hwo, hao, hho));
-    }
+	}
   
 
   for(i=0; i<nlm_val; i++) {
@@ -1121,7 +1126,6 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
     _gas_out->wics[string(wic_name + i*9)] = i;
   }
 
-  printf("cp3\n"); fflush(NULL);
   
   for(i=0; i<ns_val; i++)
     _gas_out->specie[string(spec_name + i*9)] = i;
@@ -1173,9 +1177,12 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
   cell.icell.push_back(k);
 
   // One of these is incorrect, see switch below for correction.
-  cell.node_location.push_back((double)*(x + nx_ny_k + nx_j + i));
-  cell.node_location.push_back((double)*(y + nx_ny_k + nx_j + i));
-  cell.node_location.push_back((double)*(z + nx_ny_k + nx_j + i));
+  //cell.node_location.push_back((double)*(x + nx_ny_k + nx_j + i));
+  cell.node_location.push_back((double)*(x + i));
+  //cell.node_location.push_back((double)*(y + nx_ny_k + nx_j + i));
+  cell.node_location.push_back((double)*(y + j));
+  //cell.node_location.push_back((double)*(z + nx_ny_k + nx_j + i));
+  cell.node_location.push_back((double)*(z + k));
 
   // If outlet cell is on a lower face (i,j or k=1), then
   // one of these is incorrect, see switch below for correction.
@@ -1216,14 +1223,16 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
   switch (face) {
   case 0: // i=1 face
     // velocity is correct from above calculation.
-    cell.node_location[0]=(double)*(x + nx_ny_k + nx_j + (i-1));
+    //cell.node_location[0]=(double)*(x + nx_ny_k + nx_j + (i-1));
+	  cell.node_location[0]=(double)*(x + (i-1));
     cell.area = (*(sns + j)) * (*(stb + k));
     cell.M = ((density + (double)*(den + nx_ny_k + nx_j + (i-1))) / 2)
       * cell.velocity[0] * cell.area;
     break;
   case 1: // i=ni face
     cell.velocity[0]=(double)*(u + nx_ny_k + nx_j + (i+1));
-    cell.node_location[0]=(double)*(x + nx_ny_k + nx_j + (i+1));
+//    cell.node_location[0]=(double)*(x + nx_ny_k + nx_j + (i+1));
+	    cell.node_location[0]=(double)*(x + (i+1));
     cell.area = (*(sns + j)) * (*(stb + k));
     cell.M = ((density + (double)*(den + nx_ny_k + nx_j + (i+1))) / 2)
       * cell.velocity[0] * cell.area;
@@ -1236,28 +1245,32 @@ GasCell GasifierCFD::outlet_cell(int i, int j, int k, int face,
     break;
   case 2: // j=1 face
     // velocity is correct from above calculation.
-    cell.node_location[1]=(double)*(x + nx_ny_k + nx*(j-1) + i);
+    //cell.node_location[1]=(double)*(x + nx_ny_k + nx*(j-1) + i);
+	  cell.node_location[1]=(double)*(x + i);
     cell.area = (*(sew + i)) * (*(stb + k));
     cell.M = ((density + (double)*(den + nx_ny_k + nx_j + i)) / 2)
       * cell.velocity[1] * cell.area;
     break;
   case 3: // j=nj face
     cell.velocity[1]=(double)*(v + nx_ny_k + nx*(j+1) + i);   
-    cell.node_location[1]=(double)*(x + nx_ny_k + nx*(j+1) + i);
+    //cell.node_location[1]=(double)*(x + nx_ny_k + nx*(j+1) + i);
+	cell.node_location[1]=(double)*(x + i);
     cell.area = (*(sew + i)) * (*(stb + k));
     cell.M = ((density + (double)*(den + nx_ny_k + nx*(j+1) + i)) / 2)
       * cell.velocity[1] * cell.area;
     break;
   case 4: // k=1 face
     // velocity is correct from above calculation.
-    cell.node_location[2]=(double)*(x + nx*ny*(k-1) + nx_j + i);
+    //cell.node_location[2]=(double)*(x + nx*ny*(k-1) + nx_j + i);
+	cell.node_location[2]=(double)*(x + i);
     cell.area = (*(sew + i)) * (*(sns + j));
     cell.M = ((density + (double)*(den + nx*ny*(k-1) + nx_j + i)) / 2)
       * cell.velocity[2] * cell.area;
     break;
   case 5: // k=nk face 
     cell.velocity[2]=(double)*(w + nx*ny*(k+1) + nx_j + i);
-    cell.node_location[2]=(double)*(x + nx*ny*(k+1) + nx_j + i);
+    //cell.node_location[2]=(double)*(x + nx*ny*(k+1) + nx_j + i);
+	cell.node_location[2]=(double)*(x + i);
     cell.area = (*(sew + i)) * (*(sns + j));
     cell.M = ((density + (double)*(den + nx*ny*(k+1) + nx_j + i)) / 2)
       * cell.velocity[2] * cell.area;
