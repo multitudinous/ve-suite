@@ -8,7 +8,9 @@
 #pragma warning(disable : 4101)
 #pragma warning(disable : 4503)
 
-
+#include <vector>
+#include <string>
+using namespace std;
 class SOFC1D : public REI_Plugin
 {
   DECLARE_DYNAMIC_CLASS(SOFC1D)

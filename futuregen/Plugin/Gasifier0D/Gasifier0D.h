@@ -8,6 +8,9 @@
 #pragma warning(disable : 4101)
 #pragma warning(disable : 4503)
 
+#include <vector>
+#include <string>
+using namespace std;
 
 class Gasifier0D : public REI_Plugin
 {

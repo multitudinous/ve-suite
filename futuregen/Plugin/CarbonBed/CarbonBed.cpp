@@ -33,6 +33,19 @@ CarbonBed
   porosity = 0.7;
   res_time = 20.0;
 
+  wxString icon_file="Icons/iconCarbonBed.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  n_pts = 4;
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
+
 }
 
 
@@ -79,7 +92,7 @@ int CarbonBed::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void CarbonBed::GetIPorts(POLY &iports)
 {
-  iports[0] = poly[0];
+  iports[0] = wxPoint(icon_w*4/93,icon_h*25/54);
   return;
 }
 
@@ -94,14 +107,15 @@ int CarbonBed::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void CarbonBed::GetOPorts(POLY &oports)
 {
-  oports[0]=poly[1];
+  oports[0]=wxPoint(icon_w*91/93,icon_h*26/54);
 }
 
 /////////////////////////////////////////////////////////////////////////////
-//void CarbonBed::DrawIcon(wxDC* dc)
-//{
+void CarbonBed::DrawIcon(wxDC* dc)
+{
   //Your implementation
-//}
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
+}
 
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* CarbonBed::UI(wxWindow* parent)

@@ -21,7 +21,7 @@ class HeatExchangerCFD : public REI_Plugin
   virtual double GetVersion();
   //Return the version number of the module
 
-  //  virtual void DrawIcon(wxDC* dc);
+  virtual void DrawIcon(wxDC* dc);
   //This call return a window to be displayed on the framework
   
   //To Get around the Memory allocation problem of windows dll
@@ -55,7 +55,9 @@ class HeatExchangerCFD : public REI_Plugin
  public:
 
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;       
 };
 
 #endif

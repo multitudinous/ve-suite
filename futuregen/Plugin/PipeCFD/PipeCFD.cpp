@@ -13,6 +13,12 @@ PipeCFD
 ::PipeCFD()
 {
 
+  n_pts=4;
+  poly[0]=wxPoint(0,6);
+  poly[1]=wxPoint(80,6);
+  poly[2]=wxPoint(80,0);
+  poly[3]=wxPoint(0, 0);
+  
 }
 
 
@@ -59,7 +65,7 @@ int PipeCFD::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void PipeCFD::GetIPorts(POLY &iports)
 {
-  iports[0]=poly[0];
+  iports[0]=wxPoint(0,3);
   return;
 }
 
@@ -74,7 +80,7 @@ int PipeCFD::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void PipeCFD::GetOPorts(POLY &oports)
 {
-  oports[0]=poly[3];
+  oports[0]=wxPoint(80,3);
 }
 
 /////////////////////////////////////////////////////////////////////////////

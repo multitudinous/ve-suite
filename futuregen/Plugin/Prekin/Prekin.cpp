@@ -201,7 +201,7 @@ Prekin
   LHK_CH = 0;
   Schema = 0;
 
-  wxString icon_file="Icons/recuperator.gif";
+  wxString icon_file="Icons/iconPrekin.gif";
   wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
   icon_w = my_img.GetWidth();
   icon_h = my_img.GetHeight();
