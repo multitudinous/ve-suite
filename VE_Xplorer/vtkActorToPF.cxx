@@ -37,6 +37,12 @@
 #endif
 #include <Performer/pr/pfTexture.h>
 
+#ifdef VTK44
+typedef double vtkReal;
+#else
+typedef float vtkReal;
+#endif
+
 pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode, int verbose) {
 
   // performance instrumentation
@@ -261,7 +267,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     }
     if (normalPerCell) {
 #ifdef VTK4
-      double *aNormal = normals->GetTuple(prim);
+      vtkReal *aNormal = normals->GetTuple(prim);
 #else
       float *aNormal = normals->GetNormal(prim);
 #endif
@@ -269,11 +275,11 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     }
     // go through points in cell (verts)
     for (i=0; i < npts; i++) {
-      double *aVertex = polyData->GetPoint(pts[i]);
+      vtkReal *aVertex = polyData->GetPoint(pts[i]);
       verts[vert].set((float)aVertex[0], (float)aVertex[1], (float)aVertex[2]);
       if (normalPerVertex) {
 #ifdef VTK4
-        double *aNormal = normals->GetTuple(pts[i]);
+        vtkReal *aNormal = normals->GetTuple(pts[i]);
 #else
         float *aNormal = normals->GetNormal(pts[i]);
 #endif
@@ -292,7 +298,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
       }
       if (texCoords != NULL) {
 #ifdef VTK4
-        double *aTCoord = texCoords->GetTuple(pts[i]);
+        vtkReal *aTCoord = texCoords->GetTuple(pts[i]);
 #else
         float *aTCoord = texCoords->GetTCoord(pts[i]);
 #endif
@@ -315,7 +321,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     gset->setAttr(PFGS_COLOR4, PFGS_PER_PRIM, colors, NULL);
   else { 
     // use overall color (get from Actor)
-    double *actorColor = actor->GetProperty()->GetColor();
+    vtkReal *actorColor = actor->GetProperty()->GetColor();
     float opacity = actor->GetProperty()->GetOpacity();
 
     pfVec4 *color = (pfVec4 *) pfMalloc(sizeof(pfVec4), pfArena);
@@ -325,7 +331,6 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   
   if (texCoords != NULL)
     gset->setAttr(PFGS_TEXCOORD2, PFGS_PER_VERTEX, tcoords, NULL);
-
 
   // create a geostate for this geoset
   pfGeoState *gstate = new pfGeoState;

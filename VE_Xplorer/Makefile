@@ -215,11 +215,6 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 #include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
 #include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
 
-#__________________________________________________________
-# Where is Paul Rajlich's vtkActorToPF directory?
-
-#VTK_TO_PF    = ${VE_SUITE_HOME}/VE_XPlorer/vtkActorToPF
-
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
@@ -314,8 +309,8 @@ DEBUG_APP?=		TRUE
 #Can be: _PERFORMER, _OPENSG, _OSG
 EXTRA_CXXFLAGS+=	-D_PERFORMER
 
-# vtkActorToPF needs VTK4
-EXTRA_CXXFLAGS+=	-DVTK4 $(WX_CXX) -D WXUSING_PLUGIN_DLL
+# vtkActorToPF needs VTK4 and VTK44
+EXTRA_CXXFLAGS+= -DVTK4 -DVTK44 $(WX_CXX) -D WXUSING_PLUGIN_DLL
 #$(EXTRA_FLAGS) 
 
 #EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG -gslim 

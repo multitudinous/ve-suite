@@ -25,10 +25,10 @@
 #ifdef VTK4
 #include "vtkCellArray.h"
 #endif
-#include <cstdio>    //sjk
-#include <cstdlib>   //sjk
-#include <string>    //sjk
-#include <cmath>     //sjk
+#include <cstdio>
+#include <cstdlib>
+#include <string>
+#include <cmath>
 #ifndef WIN32
 #include <unistd.h>
 #else
