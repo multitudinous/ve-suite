@@ -96,6 +96,9 @@ case $1 in
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/whatIsScalarRange
   ;;
 
+  -appendVTK)
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/appendVTK
+  ;;
   -doc)
     mozilla file:///${VE_SUITE_HOME}/docs/starcd/initial.htm &
   ;;
@@ -124,6 +127,7 @@ case $1 in
   echo " "-makeclean = clean all VE-Suite modules
   echo "  "-meshView = view any vtk file
   echo " "-scalRange = view scalar range of any vtk file
+  echo " "-appendVTK = append any two VTK files
   echo "       "-doc = view documentation for setting up a CFD post process case
   echo "  "-shutdown = shutdown VE-CE and TAO NameService
   echo ""
