@@ -24,7 +24,7 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
-setenv TAO_BUILD FALSE
+setenv TAO_BUILD TRUE
 # TAO_BUILD can be set from outside this script to override the default of FALSE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
 if ( ! $?TAO_BUILD ) then
