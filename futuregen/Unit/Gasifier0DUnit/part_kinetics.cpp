@@ -149,13 +149,13 @@ void part_kinetics::initialize(REAL x, std::vector<REAL>& y0, std::vector<REAL>&
       ns = part_dia[it].size();
       for(is=0; is<ns; is++){
          y0.push_back(solid_raw_fuel[it][is]);
-         yscal.push_back(solid_raw_fuel[it][is]);
+         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is]+liq[it][is])*10000.01);
          iy0++;
          y0.push_back(Char[it][is]);
-         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is])*10000.01);
+         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is]+liq[it][is])*10000.01);
          iy0++;
          y0.push_back(liq[it][is]);
-         yscal.push_back(liq[it][is]*10000.01);
+         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is]+liq[it][is])*10000.01);
          iy0++;
          y0.push_back(temp_init);
          yscal.push_back(temp_init*10000.00);
