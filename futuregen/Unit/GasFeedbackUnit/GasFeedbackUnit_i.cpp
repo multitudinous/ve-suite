@@ -7,7 +7,6 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))
 {
   UnitName_=name;
-  iter_counter=0;
   return_state = 0;
 }
   
@@ -24,6 +23,10 @@ void Body_Unit_i::StartCalc (
     , Error::EUnknown
   ))
   {
+    
+    if(iter_counter.find((int)id_)==iter_counter.end())
+      iter_counter[(int)id_] = 0;
+
     // Add your implementation here
     const char* initial_igas;
     const char* feedbck_igas;
@@ -66,7 +69,7 @@ void Body_Unit_i::StartCalc (
       }
 
     p.SetSysId("gas_in.xml");
-    if (iter_counter ==0)
+    if (iter_counter[(int)id_] ==0)
       p.Load(initial_igas, strlen(initial_igas));
     else
       p.Load(feedbck_igas, strlen(feedbck_igas));
@@ -128,9 +131,9 @@ void Body_Unit_i::StartCalc (
 	last_values[sel_species[i]] = sp;
       }
 
-    if(++iter_counter >= iterations) 
+    if(++iter_counter[(int)id_] >= iterations) 
       {
-	cout << iter_counter << " " << iterations << endl;
+	cout << iter_counter[(int)id_] << " " << iterations << endl;
 	warning("Max iterations reached, items not converged: " + notconv);
 	done = true;
       }
@@ -138,7 +141,7 @@ void Body_Unit_i::StartCalc (
     if(done) 
       {
 	last_values.clear();
-	iter_counter = 0;
+	iter_counter[(int)id_] = 0;
 	return_state = 3;
       }
 
@@ -147,7 +150,7 @@ void Body_Unit_i::StartCalc (
     //set p.intf to be someting containing the results
     
     //    result = p.Save(rv);
-    if (iter_counter==1)
+    if (iter_counter[(int)id_]==1)
       executive_->SetExportData(id_, 0, initial_igas);
     else
       executive_->SetExportData(id_, 0, feedbck_igas);

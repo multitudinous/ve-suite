@@ -29,7 +29,7 @@ char * Body_Executive_i::GetImportData (
 {
   _mutex.acquire();
  
-  cout << "GetImportData\n";
+  cout << "GetImportData " << module_id << " " << port_id << endl;
 
   Module *mod = _network->module(_network->moduleIdx(module_id));
   IPort *iport = mod->getIPort(mod->iportIdx(port_id));
@@ -47,7 +47,7 @@ char * Body_Executive_i::GetImportData (
     
     str = p.Save(rv);
   } else {
-    cerr << "Unable to get IPort, id #" << port_id << endl;
+    cerr << "Unable to get mod #" << module_id << " IPort, id #" << port_id << endl;
   }
   
   _mutex.release();
@@ -179,6 +179,15 @@ void Body_Executive_i::SetModuleMessage (
   _mutex.acquire();
   
   cout << "SetModuleMessage " << msg << endl;
+
+  std::map<std::string, Body::UI_var>::iterator iter;
+
+  for(iter=uis_.begin(); iter!=uis_.end(); iter++) {
+    cout << msg << " :TO: " << iter->first << endl;
+    //iter->second->Raise("MESSAGE");//msg);
+  }
+  
+  cout << "BACK\n";
 
   // THIS EXPECTS AN INTERFACE - NOT A STRING
 
@@ -593,8 +602,8 @@ void Body_Executive_i::RegisterUI (
     if (CORBA::is_nil(ui))
       cerr << "NULL UI\n";
     //uis_.insert(std::pair<std::string, Body::UI_var>(std::string(UIName), ui));
-    uis_[std::string(UIName)]=ui;
-    ui->Raise("Hello from exec!");
+    uis_[std::string(UIName)] = ui;
+    ui->Raise("Connected to Executive");
     cerr << UIName << " : registered a UI\n";
   }
   catch (CORBA::Exception &ex) {

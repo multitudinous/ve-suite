@@ -286,15 +286,13 @@ void Body_Unit_i::StartCalc (
     
     pack.intfs.clear();
     result = pack.Save(rv); 
-    std::cout<<"cp5\n";
+
     executive_->SetModuleResult(id_, result); //marks the end the execution
     
     delete water_in_data1;
     delete water_in_data2;
     delete water_out_data1;
     delete water_out_data2;
-
-    std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (

@@ -35,9 +35,9 @@ void Body_Unit_i::StartCalc (
     summary_values summaries;
 
     fflush(NULL);
-    std::cout<<"cp1\n";
+
     igas = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
-    std::cout<<"cp2\n";
+
     if (string(igas)=="")
       {
 	error("Missing input input.");
@@ -47,7 +47,6 @@ void Body_Unit_i::StartCalc (
     p.SetSysId("gas_in.xml");
     p.Load(igas, strlen(igas)); 
 
-    std::cout<<"cp2\n";
     Gas *AirIn = new Gas;
     Gas *O2stream = new Gas;
     Gas *N2stream = new Gas;
@@ -110,14 +109,12 @@ void Body_Unit_i::StartCalc (
 
     gashelper.SumToInt(&summaries, p.intfs[0]);
     result = p.Save(rv);
-    std::cout<<"cp5\n";
+
     executive_->SetModuleResult(id_, result); //marks the end the execution
     
     delete AirIn;
     delete O2stream;
     delete N2stream;
-
-    std::cout<<"cp6\n";
   }
 
 void Body_Unit_i::StopCalc (

@@ -165,16 +165,13 @@ void Body_Unit_i::StartCalc (
     p.intfs.resize(1);
     gashelper.SumToInt(&summaries, p.intfs[0]);
     result = p.Save(rv); 
-    std::cout<<"cp5\n";
-    executive_->SetModuleResult(id_, result); //marks the end the execution
 
+    executive_->SetModuleResult(id_, result); //marks the end the execution
     
     delete gasw;
     delete sweepout;
     delete gasin;
     delete sweepin;
-
-    std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (

@@ -32,9 +32,8 @@ void Body_Unit_i::StartCalc (
     const char* result;
 
     fflush(NULL);
-    std::cout<<"cp1\n";
+
     igas = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
-    std::cout<<"cp2\n";
     if (string(igas)=="")
       {
 	error("Missing input input.");
@@ -44,7 +43,6 @@ void Body_Unit_i::StartCalc (
     p.SetSysId("gas_in.xml");
     p.Load(igas, strlen(igas)); 
 
-    std::cout<<"cp2\n";
     Gas *gas_in = new Gas();
 
     V21Helper gashelper(therm_path.c_str());
@@ -55,10 +53,9 @@ void Body_Unit_i::StartCalc (
 
     for(i=0; i<4; i++)
       gas_out[i] = new Gas(*gas_in);
-    std::cout<<"cp3\n";
+
     for(i=0; i<4; i++) 
       {
-	std::cout<<"cp1\4-"<<i<<std::endl;;
 	if(pct[i] > 1e-6) 
 	  {
 	    gas_out[i]->gas_composite.M = gas_in->gas_composite.M * pct[i] / 100;
@@ -76,9 +73,7 @@ void Body_Unit_i::StartCalc (
     delete gas_in;
     p.intfs.clear();
     result = p.Save(rv);
-    std::cout<<"cp5\n";
     executive_->SetModuleResult(id_, result); //marks the end the execution
-    std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (

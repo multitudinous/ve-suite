@@ -41,7 +41,7 @@ void Body_Unit_i::StartCalc (
     p.SetSysId("gas_in.xml");
     p.Load(igas, strlen(igas)); 
     
-    Gas *gas_in = new Gas();
+    Gas *gas_in = new Gas;
     Gas *gas_out = new Gas;
     V21Helper gashelper(therm_path.c_str());
     gashelper.IntToGas(&(p.intfs[0]), *gas_in);
@@ -72,12 +72,10 @@ void Body_Unit_i::StartCalc (
     p.intfs.resize(1);
     gashelper.SumToInt(&summaries, p.intfs[0]);
     result = p.Save(rv);
-    std::cout<<"cp5\n";
+
     executive_->SetModuleResult(id_, result); //marks the end the execution
     delete gas_out;
     delete gas_in;
-
-    std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (
@@ -176,7 +174,7 @@ void Body_Unit_i::SetParams (
     desired_temp = p.intfs[0].getDouble("desired_temp");
     
   }
-  
+
 void Body_Unit_i::SetID (
     CORBA::Long id
     ACE_ENV_ARG_DECL
@@ -186,9 +184,9 @@ void Body_Unit_i::SetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    id_=id;
-    std::cout<<UnitName_<<" :SetID called"<<endl;
+    std::cout << UnitName_ <<" :SetID called = " << id << endl;
+
+    id_ = id;
   }
   
 CORBA::Long Body_Unit_i::GetID (
@@ -200,7 +198,7 @@ CORBA::Long Body_Unit_i::GetID (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" :GetID called"<<endl;
+    std::cout << UnitName_ << " :GetID called " << endl;
     return id_;
   }
   
@@ -213,9 +211,9 @@ void Body_Unit_i::SetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
+    std::cout << UnitName_ << " :SetName called " << name << endl;
+
     UnitName_ = std::string(name);
-    std::cout<<UnitName_<<" :SetName called"<<endl;
   }
   
 char * Body_Unit_i::GetName (

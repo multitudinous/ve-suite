@@ -113,12 +113,10 @@ void Body_Unit_i::StartCalc (
     
     p.intfs.clear();
     result = p.Save(rv); 
-    std::cout<<"cp5\n";
+
     executive_->SetModuleResult(id_, result); //marks the end the execution
     delete gas_in;
     delete gas_out;
-
-    std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (

@@ -31,8 +31,6 @@ void Body_Unit_i::StartCalc (
     int i, count;
     const char* result;
 
-    std::cout<<"cp1\n";
-
     Gas *gas_in[4];
 
     count = 0;
@@ -55,8 +53,6 @@ void Body_Unit_i::StartCalc (
 	error("Missing input input.");
 	return;
       }
-
-    std::cout<<"cp2\n";
 
     Gas *gas_out = new Gas; 
     gas_out->gas_composite.M = 0;

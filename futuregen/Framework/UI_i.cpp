@@ -100,10 +100,10 @@ void Body_UI_i::Raise (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
+    cout << "MESSAGE: " << notification << endl;
 	
     if (string(notification)!="")
-      frame_->logwindow->AppendText(notification);
+      ;//frame_->logwindow->AppendText(notification);
   }
   
 void Body_UI_i::SetUIFrame(AppFrame* frame)

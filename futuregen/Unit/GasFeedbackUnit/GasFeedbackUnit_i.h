@@ -28,7 +28,7 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   void error(std::string msg);
   void warning(std::string msg);
 
-  int iter_counter;
+  std::map<int, int> iter_counter;
   long iterations;
   std::vector<std::string> species;
   std::vector<std::string> sel_species;

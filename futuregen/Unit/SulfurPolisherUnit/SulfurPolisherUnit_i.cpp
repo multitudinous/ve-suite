@@ -138,12 +138,10 @@ void Body_Unit_i::StartCalc (
     p.intfs.resize(1);
     gashelper.SumToInt(&summaries, p.intfs[0]);
     result = p.Save(rv); 
-    std::cout<<"cp5\n";
+
     executive_->SetModuleResult(id_, result); //marks the end the execution
     delete gas_out_data;
     delete gas_in_data;
-
-    std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (
@@ -216,8 +214,8 @@ char * Body_Unit_i::GetUserData (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    //std::cout<<UnitName_<<" :GetUserData called"<<endl;
+    std::cout << UnitName_ << " :GetUserData called\n";
+    
     return CORBA::string_dup(data_.c_str());
   }
   
@@ -230,10 +228,10 @@ void Body_Unit_i::SetParams (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    if (string(param)=="")
-      return;
-//    std::cout<<UnitName_<<" :SetParams called"<<endl;
+    if (string(param)=="")  return;
+
+    std::cout << UnitName_ << " :SetParams called\n";
+
     Package p;
         
     p.SetSysId("gui.xml");
@@ -265,9 +263,9 @@ void Body_Unit_i::SetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
+    std::cout << UnitName_ << " :SetID called\n";
+    
     id_=id;
-//    std::cout<<UnitName_<<" :SetID called"<<endl;
   }
   
 CORBA::Long Body_Unit_i::GetID (
@@ -278,8 +276,8 @@ CORBA::Long Body_Unit_i::GetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-//    std::cout<<UnitName_<<" :GetID called"<<endl;
+    std::cout<<UnitName_<<" :GetID called"<<endl;
+    
     return id_;
   }
   
@@ -292,9 +290,9 @@ void Body_Unit_i::SetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
+    std::cout << UnitName_ << " :SetName called\n";
+
     UnitName_ = std::string(name);
-//    std::cout<<UnitName_<<" :SetName called"<<endl;
   }
   
 char * Body_Unit_i::GetName (
@@ -305,8 +303,8 @@ char * Body_Unit_i::GetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-//    std::cout<<UnitName_<<" :GetName called"<<endl;
+    std::cout << UnitName_ << " :GetName called\n";
+    
     return CORBA::string_dup(UnitName_.c_str());
   }
 
