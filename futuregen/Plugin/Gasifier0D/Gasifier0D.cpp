@@ -135,9 +135,9 @@ int Gasifier0D::GetNumIports()
 void Gasifier0D::GetIPorts(POLY &iports)
 {
   iports[0]=wxPoint(icon_w*26/63, icon_h*86/123);
-  iports[1]=wxPoint(icon_w*20/63, icon_h*105/123);
-  iports[2]=wxPoint(icon_w*36/63, icon_h*118/123);
-
+  iports[1]=wxPoint(icon_w*36/63, icon_h*118/123);
+  iports[2]=wxPoint(icon_w*20/63, icon_h*105/123);
+  
   return;
 }
 

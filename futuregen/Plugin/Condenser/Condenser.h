@@ -50,7 +50,7 @@ class Condenser : public REI_Plugin
 
   virtual int GetNumOports();
   virtual void GetOPorts(POLY& ports);
-  virtual wxString GetHelp()
+  virtual wxString GetHelp();
 
  public:
   double tube_id;
