@@ -35,6 +35,7 @@
 #include <vrj/Util/Debug.h>
 
 #include <vtkPolyDataReader.h>
+#include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 
 #include "cfdDCS.h"
