@@ -112,7 +112,7 @@ public:
    cfdNode* GetCfdNode( void );
    cfdDCS* GetCfdDCS( void );
 
-   /////////////////////////
+   //////////////////////////
    //texture based interface
    void CreateTextureManager(char* textureDescriptionFile);
    void AddScalarTextureManager(cfdTextureManager tm,

@@ -50,6 +50,7 @@
 #include "cfdFILE.h"
 #include "cfdScalarBarActor.h"
 #include "cfdTempAnimation.h"
+#include "cfdTextureManager.h"
 
 #include <fstream>
 #include <string>
@@ -68,7 +69,7 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
                           << std::endl << vprDEBUG_FLUSH;
    _param = input;
    worldNode = dcs;
-
+   _activeTextureManager = 0;
    activeDataset = NULL;
    _scalarBar = NULL;
    this->arrow = NULL;
@@ -115,12 +116,17 @@ void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
    // Must be set before PreFrameUpdate is called
    commandArray = input;
 }
-
+/////////////////////////////////////////////////////////////
+cfdTextureManager* cfdModelHandler::GetActiveTextureManager()
+{
+   return _activeTextureManager;
+}
+/////////////////////////////////////////////////////
 cfdDataSet* cfdModelHandler::GetActiveDataSet( void )
 {
    return activeDataset;
 }
-
+/////////////////////////////////////////////
 cfdModel* cfdModelHandler::GetModel( int i )
 {
    if ( _modelList.empty() )
@@ -128,12 +134,12 @@ cfdModel* cfdModelHandler::GetModel( int i )
    else
       return _modelList.at( i );
 }
-
+/////////////////////////////////////////////////
 void cfdModelHandler::AddModel( cfdModel* input )
 {
    _modelList.push_back( input );
 }
-
+///////////////////////////////////////////////////////////////
 void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )
 {
    std::vector< cfdModel* >::iterator iter;
@@ -153,17 +159,17 @@ void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )
       // The above code is from : The C++ Standard Library by:Josuttis
    }
 }
-
+/////////////////////////////////////////////////
 cfdModel* cfdModelHandler::GetActiveModel( void )
 {
    return _activeModel;
 }
-
+//////////////////////////////////////////////
 int cfdModelHandler::GetNumberOfModels( void )
 {
    return (int)_modelList.size(); 
 }
-
+///////////////////////////////////////
 void cfdModelHandler::InitScene( void )
 {
    // Locate and load the arrow file...
@@ -198,6 +204,7 @@ void cfdModelHandler::InitScene( void )
    // set default active dataset to be the meshed volume
    if ( !_modelList.empty() )
    {
+      _activeModel = _modelList.at(0);
       if ( _modelList.at( 0 )->GetNumberOfCfdDataSets() > 0 )
       {
          activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
@@ -254,6 +261,11 @@ void cfdModelHandler::PreFrameUpdate( void )
          << std::endl << vprDEBUG_FLUSH;
       if ( _activeModel != NULL )
       {
+         //update active scalar texture if it exists
+         int nScalarTextures = _activeModel->GetNumberOfScalarTextureManagers();
+         if((nScalarTextures) && i < nScalarTextures){
+            _activeTextureManager = _activeModel->GetScalarTextureManager(i);
+         }
          if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
          {
          vprDEBUG(vprDBG_ALL,0) << "\tcfdModelHandler::PreFrameUpdate dataset = "
@@ -314,6 +326,15 @@ void cfdModelHandler::PreFrameUpdate( void )
 
       activeDataset->SetActiveVector( vectorIndex );
       activeDataset->GetParent()->SetActiveVector( vectorIndex );
+
+      //texture manager stuff
+      if(_activeModel != 0){
+         int nVectorTextures = _activeModel->GetNumberOfVectorTextureManagers();
+         if((nVectorTextures ) && vectorIndex < nVectorTextures ){
+            _activeTextureManager = 
+               _activeModel->GetVectorTextureManager(vectorIndex);
+         }
+      }
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
                == UPDATE_GEOMETRY )
@@ -417,6 +438,7 @@ void cfdModelHandler::PreFrameUpdate( void )
                _modelList.at( j )->GetCfdDataSet( i )->GetAnimation()->ClearSequence();
             }
          }
+         //may need to add the handling of texture data stuff here
       } 
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_ACTIVE_MODEL )
@@ -448,6 +470,14 @@ void cfdModelHandler::PreFrameUpdate( void )
          << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
          << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
          << std::endl << vprDEBUG_FLUSH;
+      //update active scalar texture if it exists
+      if(_activeModel != 0){
+         int nScalarTextures = _activeModel->GetNumberOfScalarTextureManagers();
+         if((nScalarTextures) && scalarIndex < nScalarTextures){
+            _activeTextureManager = 
+               _activeModel->GetScalarTextureManager(scalarIndex);
+         }
+      }
 
       activeDataset->SetActiveScalar( scalarIndex );
       activeDataset->GetParent()->SetActiveScalar( scalarIndex );
@@ -713,7 +743,7 @@ void cfdModelHandler::CreateObjects( void )
 
          // For the geometry we need to loop over all the files and set the dcs appropriately
 
-      }else if(id ==15){
+      }else if(id == 15){
          if ( _modelList.empty() )
             _modelList.push_back( new cfdModel( worldNode ) );
          
@@ -736,6 +766,7 @@ void cfdModelHandler::CreateObjects( void )
          _readParam->ContinueRead( input, id );
       }
    }
+   
 }  
 
 void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )

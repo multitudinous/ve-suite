@@ -362,12 +362,20 @@ unsigned int cfdModel::GetNumberOfCfdDataSets( void )
 /////////////////////////////////////////////////////////
 unsigned int cfdModel::GetNumberOfVectorTextureManagers()
 {
-   return _vectorDataTextures.size();
+   if(_vectorDataTextures.empty()){
+      return 0;
+   }else{
+      return _vectorDataTextures.size();
+   }
 }
 /////////////////////////////////////////////////////////
 unsigned int cfdModel::GetNumberOfScalarTextureManagers()
 {
-   return _scalarDataTextures.size();
+   if(_scalarDataTextures.empty()){
+      return 0;
+   }else{
+      return _scalarDataTextures.size();
+   }
 }
 ////////////////////////////////////////////////
 cfdFILE* cfdModel::GetGeomDataSet( int dataset )

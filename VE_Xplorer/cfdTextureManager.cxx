@@ -39,6 +39,13 @@ cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
    _resolution[1] = tm._resolution[1];
    _resolution[2] = tm._resolution[2];
 
+   _bbox[0] = tm._bbox[0];
+   _bbox[1] = tm._bbox[1];
+   _bbox[2] = tm._bbox[2];
+   _bbox[3] = tm._bbox[3];
+   _bbox[4] = tm._bbox[4];
+   _bbox[5] = tm._bbox[5];
+
    _transientRange[0] = tm._transientRange[0];
    _transientRange[1] = tm._transientRange[1];
    _range[0] = tm._range[0];
@@ -231,6 +238,12 @@ cfdTextureManager& cfdTextureManager::operator=(const cfdTextureManager& tm)
       _resolution[0] = tm._resolution[0];
       _resolution[1] = tm._resolution[1];
       _resolution[2] = tm._resolution[2];
+      _bbox[0] = tm._bbox[0];
+      _bbox[1] = tm._bbox[1];
+      _bbox[2] = tm._bbox[2];
+      _bbox[3] = tm._bbox[3];
+      _bbox[4] = tm._bbox[4];
+      _bbox[5] = tm._bbox[5];
 
       _prevTime = tm._prevTime;
       _range[0] = tm._range[0];

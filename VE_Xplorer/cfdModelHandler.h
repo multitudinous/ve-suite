@@ -38,6 +38,7 @@ class cfdModel;
 class cfdCommandArray;
 class cfdReadParam;
 class cfdScalarBarActor;
+class cfdTextureManager;
 
 class vtkPolyData;
 
@@ -52,6 +53,7 @@ class cfdModelHandler
       void InitScene( void );
       void PreFrameUpdate( void );
       cfdDataSet* GetActiveDataSet( void );
+
       void SetCommandArray( cfdCommandArray* );
       void CreateObjects( void );      
       void LoadSurfaceFiles( char* );
@@ -63,6 +65,8 @@ class cfdModelHandler
       int GetNumberOfModels( void );
       void ReadNNumberOfDataSets(  char*, char* );
 
+      //texture manager access
+      cfdTextureManager* GetActiveTextureManager();
    private:
       char* _param;
       cfdDCS* worldNode;
@@ -71,6 +75,8 @@ class cfdModelHandler
       cfdReadParam* _readParam;
       cfdScalarBarActor* _scalarBar;
       cfdModel* _activeModel;
+
+      cfdTextureManager* _activeTextureManager;
 
       vtkPolyData* arrow;
       std::vector< cfdModel* > _modelList;

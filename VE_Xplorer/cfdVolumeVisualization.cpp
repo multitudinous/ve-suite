@@ -107,7 +107,7 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
                 osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
 
 }
-//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 {
    _tm = tm;
