@@ -1,0 +1,127 @@
+CXX = $(shell wx-config --cxx)
+WX_FLAGS = $(shell wx-config --cxxflags)
+WX_LIBS = $(shell wx-config --libs)
+#XERCESCROOT=/home/yang/newinterface/xerces-c-src_2_5_0
+
+PLATFORM = LINUX
+COMPILER = g++
+GCC = yes
+GXX = yes
+CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
+CFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
+LDFLAGS =    
+THREADS = none
+EXTRA_LIBS =  
+PREFIX = /usr/local
+
+include ${XERCESCROOT}/version.incl
+include Makefile.incl
+
+OBJ1 = BulkDesulfurizer/BulkDesulfurizer.o BulkDesulfurizer/BulkDesulfurizer_UI.o 
+OBJ2 = WaterPump/WaterPump.o WaterPump/WaterPump_UI.o 
+OBJ3 = SulfurPolisher/SulfurPolisher.o SulfurPolisher/SulfurPolisher_UI.o
+OBJ4 = SOFC/SOFC.o SOFC/SOFC_UI.o 
+OBJ5 = BulkDesulfurizer/BulkDesulfurizer.o BulkDesulfurizer/BulkDesulfurizer_UI.o 
+OBJ6 = SteamTurbine/SteamTurbine.o SteamTurbine/SteamTurbine_UI.o 
+OBJ7 = DumpCombustor/DumpCombustor.o DumpCombustor/DumpCombustor_UI.o 
+OBJ8 = CatalyticConverter/CatalyticConverter.o CatalyticConverter/CatalyticConverter_UI.o 
+OBJ9 = HeatExchanger/HeatExchanger.o HeatExchanger/HeatExchanger_UI.o 
+OBJ10 = SOFC1D/SOFC1D.o SOFC1D/SOFC1D_UI.o 
+OBJ11 = Condenser/Condenser.o Condenser/Condenser_UI.o 
+OBJ12 = V21ASU/V21ASU.o V21ASU/V21ASU_UI.o 
+OBJ13 = Recuperator/Recuperator.o Recuperator/Recuperator_UI.o 
+OBJ14 = EvaporationCooler/EvaporationCooler.o EvaporationCooler/EvaporationCooler_UI.o 
+OBJ15 = Cyclone/Cyclone.o Cyclone/Cyclone_UI.o 
+OBJ16 = Compressor/Compressor.o Compressor/Compressor_UI.o 
+OBJ17 = MembraneReactor/MembraneReactor.o MembraneReactor/MembraneReactor_UI.o 
+OBJ18 = HeatExchange0D/HeatExchange0D.o HeatExchange0D/HeatExchange0D_UI.o 
+OBJ19 = ChlorineBed/ChlorineBed.o ChlorineBed/ChlorineBed_UI.o 
+OBJ20 = GasFeedback/GasFeedback.o GasFeedback/GasFeedback_UI.o
+OBJ21 = Gasifier/Gasifier.o Gasifier/Gasifier_UI.o 
+OBJ22 = GasSource/GasSource.o GasSource/GasSource_UI.o \
+	GasSource/thermo.o GasSource/matrix.o
+OBJ23 = GasSplitter/GasSplitter.o GasSplitter/GasSplitter_UI.o 
+
+
+.SUFFIXES : .o .cpp
+
+.cpp.o :
+	$(CXX) -g -c ${INCLUDES} ${CMP} ${WX_FLAGS} -D WXUSING_PLUGIN_DLL -o $@ $<
+
+all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 s21 s22 s23
+
+s1:	$(OBJ1)
+	$(CXX) -g -shared -o libBulkDesulfurizer.so $(OBJ1)
+
+s2:	$(OBJ2)
+	$(CXX) -g -shared -o libWaterPump.so $(OBJ2)
+
+s3:	$(OBJ3)
+	$(CXX) -g -shared -o libSulfurPolisher.so $(OBJ3)
+
+s4:	$(OBJ4)
+	$(CXX) -g -shared -o libSOFC.so $(OBJ4)
+
+s5:	$(OBJ5)
+	$(CXX) -g -shared -o libBulkDesulfurizer.so $(OBJ5)
+
+s6:	$(OBJ6)
+	$(CXX) -g -shared -o libSteamTurbine.so $(OBJ6)
+
+s7:	$(OBJ7)
+	$(CXX) -g -shared -o libDumpCombustor.so $(OBJ7)
+
+s8:	$(OBJ8)
+	$(CXX) -g -shared -o libCatalyticConverter.so $(OBJ8)
+
+s9:	$(OBJ9)
+	$(CXX) -g -shared -o libHeatExchanger.so $(OBJ9)
+
+s10:	$(OBJ10)
+	$(CXX) -g -shared -o libCondenser.so $(OBJ10)
+
+s11:	$(OBJ11)
+	$(CXX) -g -shared -o libSOFC1D.so $(OBJ11)
+
+s12:	$(OBJ12)
+	$(CXX) -g -shared -o libV21ASU.so $(OBJ12)
+
+s13:	$(OBJ13)
+	$(CXX) -g -shared -o libRecuperator.so $(OBJ13)
+
+s14:	$(OBJ14)
+	$(CXX) -g -shared -o libEvaporationCooler.so $(OBJ14)
+
+s15:	$(OBJ15)
+	$(CXX) -g -shared -o libCyclone.so $(OBJ15)
+
+s16:	$(OBJ16)
+	$(CXX) -g -shared -o libCompressor.so $(OBJ16)
+
+s17:	$(OBJ17)
+	$(CXX) -g -shared -o libMembraneReactor.so $(OBJ17)
+
+s18:	$(OBJ18)
+	$(CXX) -g -shared -o libHeatExchange0D.so $(OBJ18)
+
+s19:	$(OBJ19)
+	$(CXX) -g -shared -o libChlorineBed.so $(OBJ19)
+
+s20:	$(OBJ20)
+	$(CXX) -g -shared -o libGasFeedback.so $(OBJ20)
+
+s21:	$(OBJ21)
+	$(CXX) -g -shared -o libGasifier.so $(OBJ21)
+
+s22:	$(OBJ22)
+	$(CXX) -g -shared -o libGasSource.so $(OBJ22)
+
+s23:	$(OBJ23)
+	$(CXX) -g -shared -o libGasSplitter.so $(OBJ23)
+
+clean:
+	rm -rf *.o $(PLUGIN) $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) \
+	$(OBJ5) $(OBJ6) $(OBJ7) $(OBJ8) $(OBJ9) $(OBJ10) $(OBJ11) \
+	$(OBJ12) $(OBJ13) $(OBJ14) $(OBJ15) $(OBJ16) $(OBJ17) $(OBJ18) \
+	$(OBJ19) $(OBJ20) $(OBJ21) $(OBJ22) $(OBJ23)
+
