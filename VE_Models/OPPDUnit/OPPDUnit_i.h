@@ -60,6 +60,23 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   long cableselindex;
   long killexcel;
   int flag;
+  double tsec;
+  double tmin;
+  double hrrkw;
+  double hrrbtu;
+  double detsprinktime;
+  double detsmtime;
+  double detfthtime;
+  double flwallinehgt;
+  double flcornerhgt;
+  double flwallhgt;
+  double hrrhrr;
+  double hrrburndur;
+  double hrrhgthesk;
+  double hrrhgtthom;
+  double pltemp;
+  double tcltemp;
+  double visdist;
   
  public:
 

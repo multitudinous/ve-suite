@@ -1186,3 +1186,142 @@ void OPPDWrapper::updateCable(double cblburnareadbl, int cableselindex)
 		setCableProps(cableselindex);
 
 }
+
+void OPPDWrapper::reCalculate( void )
+{
+	for(int i=0;i<11;i++)
+		oWorkSheet[i].Calculate();
+}
+
+void OPPDWrapper::getAnswers(void)
+{
+	COleVariant var;
+	lpDisp[0] = oWorkSheet[0].get_Range(COleVariant("C61"),COleVariant("C61"));
+	ASSERT(lpDisp[0]);
+	oRange[0].AttachDispatch(lpDisp[0]);
+	var = oRange[0].get_Value(COleVariant());
+	tsec = V_R8(&var); 
+	//tsec = oRange[0].get_Value2();
+
+	lpDisp[0] = oWorkSheet[0].get_Range(COleVariant("E61"),COleVariant("E61"));
+	ASSERT(lpDisp[0]);
+	oRange[0].AttachDispatch(lpDisp[0]);
+	var = oRange[0].get_Value(COleVariant());
+	tmin = V_R8(&var); 
+	
+	lpDisp[1] = oWorkSheet[1].get_Range(COleVariant("C51"),COleVariant("C51"));
+	ASSERT(lpDisp[1]);
+	oRange[1].AttachDispatch(lpDisp[1]);
+	var = oRange[0].get_Value(COleVariant());
+	hrrkw = V_R8(&var); 
+
+	lpDisp[1] = oWorkSheet[1].get_Range(COleVariant("E51"),COleVariant("E51"));
+	ASSERT(lpDisp[1]);
+	oRange[1].AttachDispatch(lpDisp[1]);
+	var = oRange[0].get_Value(COleVariant());
+	hrrbtu = V_R8(&var); 
+
+	if (wrdetectortype == 0)
+	{
+		lpDisp[2] = oWorkSheet[2].get_Range(COleVariant("E102"),COleVariant("E102"));
+		ASSERT(lpDisp[2]);
+		oRange[2].AttachDispatch(lpDisp[2]);
+		var = oRange[0].get_Value(COleVariant());
+		detsprinktime = V_R8(&var); 
+		detsmtime = -1;
+		detfthtime = -1;
+	}
+	else if (wrdetectortype == 1)
+	{
+		lpDisp[2] = oWorkSheet[2].get_Range(COleVariant("E49"),COleVariant("E49"));
+		ASSERT(lpDisp[2]);
+		oRange[2].AttachDispatch(lpDisp[2]);
+		var = oRange[0].get_Value(COleVariant());
+		detsmtime = V_R8(&var); 
+		detfthtime = -1;
+		detsprinktime = -1;
+	}
+	else if (wrdetectortype == 2)
+	{
+		lpDisp[2] = oWorkSheet[2].get_Range(COleVariant("E138"),COleVariant("E138"));
+		ASSERT(lpDisp[2]);
+		oRange[2].AttachDispatch(lpDisp[2]);
+		var = oRange[0].get_Value(COleVariant());
+		detfthtime = V_R8(&var); 
+		detsprinktime = -1;
+		detsmtime = -1;
+	}
+
+	if (wrflametype == 0)
+	{
+		lpDisp[3] = oWorkSheet[3].get_Range(COleVariant("E74"),COleVariant("E74"));
+		ASSERT(lpDisp[3]);
+		oRange[3].AttachDispatch(lpDisp[3]);
+		var = oRange[0].get_Value(COleVariant());
+		flwallinehgt = V_R8(&var); 
+		flcornerhgt = -1;
+		flwallhgt = -1;
+	}
+	else if (wrflametype == 1)
+	{
+		lpDisp[3] = oWorkSheet[3].get_Range(COleVariant("E60"),COleVariant("E60"));
+		ASSERT(lpDisp[3]);
+		oRange[3].AttachDispatch(lpDisp[3]);
+		var = oRange[0].get_Value(COleVariant());
+		flcornerhgt = V_R8(&var); 
+		flwallinehgt = -1;
+		flwallhgt = -1;
+	}
+	else if (wrflametype == 2)
+	{
+		lpDisp[3] = oWorkSheet[3].get_Range(COleVariant("E73"),COleVariant("E73"));
+		ASSERT(lpDisp[3]);
+		oRange[3].AttachDispatch(lpDisp[3]);
+		var = oRange[0].get_Value(COleVariant());
+		flwallhgt = V_R8(&var); 
+		flwallinehgt = -1;
+		flcornerhgt = -1;
+	}
+
+	lpDisp[4] = oWorkSheet[4].get_Range(COleVariant("C57"),COleVariant("C57"));
+	ASSERT(lpDisp[4]);
+	oRange[4].AttachDispatch(lpDisp[4]);
+	var = oRange[0].get_Value(COleVariant());
+	hrrhrr = V_R8(&var); 
+
+	lpDisp[4] = oWorkSheet[4].get_Range(COleVariant("E81"),COleVariant("E81"));
+	ASSERT(lpDisp[4]);
+	oRange[4].AttachDispatch(lpDisp[4]);
+	var = oRange[0].get_Value(COleVariant());
+	hrrburndur = V_R8(&var); 
+
+	lpDisp[4] = oWorkSheet[4].get_Range(COleVariant("E96"),COleVariant("E96"));
+	ASSERT(lpDisp[4]);
+	oRange[4].AttachDispatch(lpDisp[4]);
+	var = oRange[0].get_Value(COleVariant());
+	hrrhgthesk = V_R8(&var); 
+
+	lpDisp[4] = oWorkSheet[4].get_Range(COleVariant("E110"),COleVariant("E110"));
+	ASSERT(lpDisp[4]);
+	oRange[4].AttachDispatch(lpDisp[4]);
+	var = oRange[0].get_Value(COleVariant());
+	hrrhgtthom = V_R8(&var); 
+
+	lpDisp[5] = oWorkSheet[5].get_Range(COleVariant("E63"),COleVariant("E63"));
+	ASSERT(lpDisp[5]);
+	oRange[5].AttachDispatch(lpDisp[5]);
+	var = oRange[0].get_Value(COleVariant());
+	pltemp = V_R8(&var); 
+
+	lpDisp[6] = oWorkSheet[6].get_Range(COleVariant("E85"),COleVariant("E85"));
+	ASSERT(lpDisp[6]);
+	oRange[6].AttachDispatch(lpDisp[6]);
+	var = oRange[0].get_Value(COleVariant());
+	tcltemp = V_R8(&var); 
+
+	lpDisp[10] = oWorkSheet[10].get_Range(COleVariant("C101"),COleVariant("C101"));
+	ASSERT(lpDisp[10]);
+	oRange[10].AttachDispatch(lpDisp[10]);
+	var = oRange[0].get_Value(COleVariant());
+	visdist = V_R8(&var); 
+}

@@ -8,8 +8,6 @@ Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   return_state = 0;
   //Wrapper = new OPPDWrapper();
   flag = 0;
-  
-     	//Wrapper->loadExcel();
 }
   
 // Implementation skeleton destructor
@@ -25,6 +23,7 @@ void Body_Unit_i::StartCalc (
     , Error::EUnknown
   ))
   {
+    
     // Add your implementation here
     if (flag == 0)
 	{
@@ -52,9 +51,27 @@ void Body_Unit_i::StartCalc (
 	Wrapper->setDetTempProps(dettempratselindex);
 	Wrapper->setDetSpaceProps(detspaceselindex);
 	Wrapper->setCableProps(cableselindex);
+	Wrapper->reCalculate();
+	Wrapper->getAnswers();
+	tsec = Wrapper->tsec;
+	tmin = Wrapper->tmin;
+	hrrkw = Wrapper->hrrkw;
+	hrrbtu = Wrapper->hrrbtu;
+	detsprinktime = Wrapper->detsprinktime;
+	detsmtime = Wrapper->detsmtime;
+	detfthtime = Wrapper->detfthtime;
+	flwallinehgt = Wrapper->flwallinehgt;
+	flcornerhgt = Wrapper->flcornerhgt;
+	flwallhgt = Wrapper->flwallhgt;
+	hrrhrr = Wrapper->hrrhrr;
+	hrrburndur = Wrapper->hrrburndur;
+	hrrhgthesk = Wrapper->hrrhgthesk;
+	hrrhgtthom = Wrapper->hrrhgtthom;
+	pltemp = Wrapper->pltemp;
+	tcltemp = Wrapper->tcltemp;
+	visdist = Wrapper->visdist;
 	if (killexcel == 1)
 	{
-		//Wrapper->killExcel();
 		delete Wrapper;
 		flag = 0;
 		killexcel = 0;
@@ -192,6 +209,25 @@ void Body_Unit_i::SetParams (
 	detspaceselindex = p.intfs[0].getInt("detspaceselindex");
 	cableselindex = p.intfs[0].getInt("cableselindex");
 	killexcel = p.intfs[0].getInt("killexcel");
+	tsec = 5000;
+	p.intfs[0].setDouble("tsec",tsec);
+	p.intfs[0].setDouble("tmin",tmin);
+	p.intfs[0].setDouble("hrrkw",hrrkw);
+	p.intfs[0].setDouble("hrrbtu",hrrbtu);
+	p.intfs[0].setDouble("detsprinktime",detsprinktime);
+	p.intfs[0].setDouble("detsmtime",detsmtime);
+	p.intfs[0].setDouble("detfthtime",detfthtime);
+	p.intfs[0].setDouble("flwallinehgt",flwallinehgt); 
+	p.intfs[0].setDouble("flcornerhgt",flcornerhgt);
+	p.intfs[0].setDouble("flwallhgt",flwallhgt);
+	p.intfs[0].setDouble("hrrhrr",hrrhrr);
+	p.intfs[0].setDouble("hrrburndur",hrrburndur);
+	p.intfs[0].setDouble("hrrhgthesk",hrrhgthesk);
+	p.intfs[0].setDouble("hrrhgtthom",hrrhgtthom);
+	p.intfs[0].setDouble("pltemp",pltemp);
+	p.intfs[0].setDouble("tcltemp",tcltemp);
+	p.intfs[0].setDouble("visdist",visdist);
+	
   }
   
 void Body_Unit_i::SetID (

@@ -53,6 +53,8 @@ public:
 	void setDetTempProps(int);
 	void setDetSpaceProps(int);
 	void setCableProps(int);
+	void reCalculate(void);
+	void getAnswers(void);
 	
 	
 	CApplication oExcel[11];
@@ -101,5 +103,21 @@ public:
     int wrdetectortype;
     int wrflametype; 
 	int wrdetacttemp;
-	
+	double tsec;
+	double tmin;
+	double hrrkw;
+	double hrrbtu;
+	double detsprinktime;
+	double detsmtime;
+	double detfthtime;
+	double flwallinehgt;
+	double flcornerhgt;
+	double flwallhgt;
+	double hrrhrr;
+	double hrrburndur;
+	double hrrhgthesk;
+	double hrrhgtthom;
+	double pltemp;
+	double tcltemp;
+	double visdist;
 };
