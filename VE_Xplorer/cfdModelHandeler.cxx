@@ -63,9 +63,16 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
 {
    _param = input;
    worldNode = dcs;
+   activeDataset = NULL;
    _readParam = new cfdReadParam( NULL );
+   commandArray = NULL;
    // worldnode getting passed in to model
    // model will then add its own node to the tree
+   if ( worldNode == NULL )
+   {
+      cerr << " ERROR : Must intialize worldDCS for creating cfdModelHandler. " << endl;
+      exit( 1 );
+   }
    _modelList.push_back( new cfdModel( worldNode ) );
    this->CreateObjects();
 }
@@ -85,6 +92,11 @@ void cfdModelHandler::SetCommandArray( cfdCommandArray* input )
 cfdObjects* cfdModelHandler::GetActiveSequence( void )
 {
    return activeSequenceObject;
+}
+
+cfdDataSet* cfdModelHandler::GetActiveDataSet( void )
+{
+   return activeDataset;
 }
 ///////////////////////
 
@@ -119,91 +131,34 @@ void cfdModelHandler::InitScene( void )
          _modelList.at( j )->GetCfdDataSet( i )->SetArrow( this->arrow );
       }
 
-   for ( unsigned int j = 0; j < _modelList.size(); j++ )
-      for ( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfCfdDataSets(); i++)
-      {
-         int cfdType = _modelList.at( j )->GetCfdDataSet( i )->GetType();
-         vprDEBUG(vprDBG_ALL,1) << "cfdType: " << cfdType
-                             << std::endl << vprDEBUG_FLUSH;
-// I think this functionality will disappear. I think the active dataset should be set by the gui 
-// and that indvidula viz routines should check to make sure that it is the appropriate data set 
-// for the viz routine. This should be fixed very soon.
-/*
-         // Initialize active meshed volume and polydata when suitable
-         // datasets exist
-         if ( cfdObjects::GetActiveMeshedVolume() == NULL && cfdType == 0 )
-         {
-            cfdObjects::SetActiveMeshedVolume( modelList.at( j )->GetCfdDataSet( i ) );
-
-            vprDEBUG(vprDBG_ALL,1) << "Setting " 
-               << cfdObjects::GetActiveMeshedVolume()->GetFileName()
-               << " as active meshed volume"
-               << std::endl << vprDEBUG_FLUSH;
-         }
-         else if ( cfdObjects::GetActiveParticleData() == NULL && cfdType == 1 )
-         {
-            cfdObjects::SetActiveParticleData( modelList.at( j )->GetCfdDataSet( i ) );
-
-            vprDEBUG(vprDBG_ALL,1) << "Setting " 
-               << cfdObjects::GetActiveParticleData()->GetFileName()
-               << " as active particle set"
-               << std::endl << vprDEBUG_FLUSH;
-         }
-         else if ( cfdObjects::GetActiveSurfaceData() == NULL && cfdType == 2 )
-         {
-            cfdObjects::SetActiveSurfaceData( modelList.at( j )->GetCfdDataSet( i ) );
-
-            vprDEBUG(vprDBG_ALL,1) << "Setting " 
-               << cfdObjects::GetActiveSurfaceData()->GetFileName()
-               << " as active surface"
-               << std::endl << vprDEBUG_FLUSH;
-         }*/
-      }
    // set default active dataset to be the meshed volume
-   if ( cfdObjects::GetActiveMeshedVolume() )
-      cfdObjects::SetActiveDataSet( cfdObjects::GetActiveMeshedVolume() );
+   if ( _modelList.at( 0 )->GetNumberOfCfdDataSets() > 0 )
+      activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
 
-   if ( cfdObjects::GetActiveDataSet() != NULL )
+   if ( activeDataset != NULL )
    {
+      // Fix this later - we need to check and see if this is already 
+      // done in cfdDataSet upon initialization
       // set first scalar active
-      cfdObjects::GetActiveDataSet()->SetActiveScalar( 0 );
-      strcpy( oldDatasetName, cfdObjects::GetActiveDataSet()->GetFileName() );
+      activeDataset->SetActiveScalar( 0 );
+      strcpy( oldDatasetName, activeDataset->GetFileName() );
 
       cfdVectorBase::SetThreshHoldPercentages( 0, 100 );
       cfdVectorBase::UpdateThreshHoldValues();
       cfdVectorBase::SetVectorRatioFactor( 1 );
    }
-
-// Fix this
-// Need to configure this to work with Gengxuns functionality in cfdModel.
-   // Process any geometry files listed in the parameter file...
-/*   for ( unsigned int j = 0; j < _modelList.size(); j++ )
-      for ( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfCfdDataSets(); i++)
-      {    
-         std::cout << "|   Intializing Geometry file " 
-                << this->paramReader->files[p]->fileName << std::endl;
-         //biv --testing for windows
-         cfdFILE* newGeom = 0;
-         newGeom = new cfdFILE( this->paramReader->files[ p ],
-                                          this->worldDCS );
-         this->geomL.push_back( newGeom );
-         this->geomL[ p ]->Initialize( 1.0 );
-
-         // give the geometry DCS a name so that it can be detected during a CLEAR_ALL
-         this->geomL[ p ]->getpfDCS()->SetName("geometry");
-      }*/
-
-      //this->changeGeometry = false;
-   #ifdef TABLET
-   // Don't know what this is used for fix this 
-   //  this->SetCfdReadParam( this->paramReader );
-   #endif // TABLET
 }
 
 void cfdModelHandler::PreFrameUpdate( void )
 {
-// code for cfdCommandArray stuff
-// Fix this 
+   bool updateScalarRange = false;
+   
+   if ( commandArray == NULL )
+   {
+      cerr << " ERROR : commandArray not set fot cfdModelHandler " << endl;
+      exit( 1 );
+   }
+
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEADYSTATE_DATASET )
    {
       unsigned int i = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
@@ -228,50 +183,30 @@ void cfdModelHandler::PreFrameUpdate( void )
          vprDEBUG(vprDBG_ALL,1) << " cfdType: " << cfdType
                                 << std::endl << vprDEBUG_FLUSH;
 
-// This is bad need to get rid of this
-// Fix this
-/*         // set the dataset as the appropriate dastaset type
+         // set the dataset as the appropriate dastaset type
          // (and the active dataset as well)
-         if ( cfdType == 0 )
-         {
-            cfdObjects::SetActiveMeshedVolume( _modelList.at( j )->GetCfdDataSet( i ) );
-         }
-         else if ( cfdType == 1 )
-         {
-            cfdObjects::SetActiveParticleData( _modelList.at( j )->GetCfdDataSet( i ) );
-         }
-         else if ( cfdType == 2 )
-         {
-            cfdObjects::SetActiveSurfaceData( _modelList.at( j )->GetCfdDataSet( i ) );
-         }
-         else
-         {
-            std::cerr << "Unsupported cfdType: " << cfdType << std::endl;
-         }
-*/
+         activeDataset = _modelList.at( j )->GetCfdDataSet( i );         
+         
          vprDEBUG(vprDBG_ALL,1) << "last active dataset name = " 
                                 << oldDatasetName
                                 << std::endl << vprDEBUG_FLUSH;
 
          vprDEBUG(vprDBG_ALL,1) << "Activating steady state file " 
-                   << cfdObjects::GetActiveDataSet()->GetFileName()
+                   << activeDataset->GetFileName()
                    << std::endl << vprDEBUG_FLUSH;
 
          // make sure that the user did not just hit same dataset button
          // (or change scalar since that is routed through here too)
-         if ( strcmp( oldDatasetName, 
-                      cfdObjects::GetActiveDataSet()->GetFileName() ) )
+         if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
          {
             vprDEBUG(vprDBG_ALL,1) << " setting dataset as newly activated" 
                                    << std::endl << vprDEBUG_FLUSH;
-            cfdObjects::GetActiveDataSet()->SetNewlyActivated();
-            strcpy( oldDatasetName, 
-                    cfdObjects::GetActiveDataSet()->GetFileName() );
+            activeDataset->SetNewlyActivated();
+            strcpy( oldDatasetName, activeDataset->GetFileName() );
          }
 
          // update scalar bar for possible new scalar name
-         // Need to fix this or have different gui logic
-         //this->setId( CHANGE_SCALAR );
+         updateScalarRange = true;
       }
       else
       {
@@ -279,12 +214,23 @@ void cfdModelHandler::PreFrameUpdate( void )
                    << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
                    << _modelList.at( j )->GetNumberOfCfdDataSets()
                    << std::endl;
-         // Need to add these in later
-         //return true;
       }
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR || 
-             commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR_RANGE )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR )
+   { 
+      int vectorIndex = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
+                             << std::endl << vprDEBUG_FLUSH;
+
+      activeDataset->SetActiveVector( vectorIndex );
+      activeDataset->GetParent()->SetActiveVector( vectorIndex );
+   }
+   
+   // Can't be an else if because may have to update if dataset has changed beforehand
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR || 
+        commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR_RANGE ||
+        updateScalarRange
+      )
    { 
       int scalarIndex = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
       vprDEBUG(vprDBG_ALL,1) << "CHANGE_SCALAR || CHANGE_SCALAR_RANGE"
@@ -293,19 +239,21 @@ void cfdModelHandler::PreFrameUpdate( void )
          << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdObjects::GetActiveDataSet()->SetActiveScalar( scalarIndex );
-      cfdObjects::GetActiveDataSet()->GetParent()
-                                    ->SetActiveScalar( scalarIndex );
+      activeDataset->SetActiveScalar( scalarIndex );
+      activeDataset->GetParent()->SetActiveScalar( scalarIndex );
 
-      cfdObjects::GetActiveDataSet()->ResetScalarBarRange( 
-                           commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
-      cfdObjects::GetActiveDataSet()->GetParent()->ResetScalarBarRange( 
-                           commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
-      //return true;
+      activeDataset->ResetScalarBarRange( 
+                           commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
+                           commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
+      activeDataset->GetParent()->ResetScalarBarRange( 
+                           commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
+                           commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
    }
 }
 
-
+///////////////////////////////////////////////
+// Used to initialize data for the simulation
+///////////////////////////////////////////////
 void cfdModelHandler::CreateObjects( void )
 {  
    int numObjects;
@@ -339,10 +287,9 @@ void cfdModelHandler::CreateObjects( void )
          this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
 
          // Pass in -1 to GetCfdDataSet to get the last dataset added
-         cfdDCS* dcs = _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS();
-         dcs->SetScaleArray( scale );
-         dcs->SetTranslationArray( trans );
-         dcs->SetRotationArray( rotate );
+         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
+         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
+         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
 
          // get vtk data set name...
          char vtk_filein[ 256 ];
@@ -401,9 +348,7 @@ void cfdModelHandler::CreateObjects( void )
             {
                input >> stlColor[ i ];
             }
-            vprDEBUG(vprDBG_ALL,0) << "\tcolor: " 
-                                    << stlColor[ 0 ] << " : "
-                                    << stlColor[ 1 ] << " : "
+            vprDEBUG(vprDBG_ALL,0) << "\tcolor: " << stlColor[ 0 ] << " : " << stlColor[ 1 ] << " : "
                                     << stlColor[ 2 ]
                                     << std::endl << vprDEBUG_FLUSH;
          }
@@ -493,7 +438,8 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
 
             _modelList.at( 0 )->CreateCfdDataSet();
             unsigned int numDataSets = _modelList.at( 0 )->GetNumberOfCfdDataSets();
-            
+            // subtract 1 because this number was 1 base not 0 base
+            numDataSets -= 1;
             _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
 
             // set the dcs matrix the same as the last file

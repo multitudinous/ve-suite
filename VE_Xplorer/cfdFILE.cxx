@@ -61,6 +61,8 @@ using namespace std;
 
 cfdFILE::cfdFILE( fileInfo *geomFile, cfdDCS *worldDCS  )
 {
+   // Need to fix this and move some code to cfdNode
+   // Leave some code here no more cfdFileInfo
 /*// this constructor is used by cfdApp
    vprDEBUG(vprDBG_ALL,1) << " cfdFILE:geomFile->fileName = " 
                           << geomFile->fileName
@@ -94,6 +96,8 @@ cfdFILE::cfdFILE( fileInfo *geomFile, cfdDCS *worldDCS  )
 
 cfdFILE::cfdFILE( char* geomFile, cfdDCS* worldDCS  )
 {
+   // Need to fix this and move some code to cfdNode
+   // Leave some code here no more cfdFileInfo
 /*// this constructor is used by cfdApp
    vprDEBUG(vprDBG_ALL,1) << " cfdFILE:geomFile->fileName = " 
                           << geomFile->fileName

@@ -383,18 +383,6 @@ bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
 
       return true;
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR )
-   { 
-      int vectorIndex = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
-                             << std::endl << vprDEBUG_FLUSH;
-
-      cfdObjects::GetActiveDataSet()->SetActiveVector( vectorIndex );
-      cfdObjects::GetActiveDataSet()->GetParent()
-                                    ->SetActiveVector( vectorIndex );
-
-      return true;
-   }
    return false;
 }
 

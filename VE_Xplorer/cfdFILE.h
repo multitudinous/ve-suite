@@ -49,33 +49,33 @@ class cfdFILE
       cfdFILE( char*, cfdDCS* );
       cfdFILE( float, float [ 3 ], char * );
 
-  ~cfdFILE();
+      ~cfdFILE();
 
-  void Initialize(float);
+      void Initialize(float);
 
-  //void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
+      //void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
 
-  cfdDCS* getpfDCS( void );
-  cfdNode* GetcfdNode( void );
+      cfdDCS* getpfDCS( void );
+      cfdNode* GetcfdNode( void );
 
-   void SetFILEProperties( int, int, float* );
-  void setOpac(float op_val);
-  float getOpacity();
+      void SetFILEProperties( int, int, float* );
+      void setOpac(float op_val);
+      float getOpacity();
 
-  //pfLightModel *matLight;
-  //pfMaterial *fmaterial;
-  //pfMaterial *bmaterial;
-  //std::vector< pfMaterial *> matList;
-  cfdNode* node;
-  cfdDCS*  DCS;
-  //pfMaterial *mat1, *mat0;
-  int mat_count;
-  int color;
-  int transparent;
-  float stlColor [ 3 ];
+      //pfLightModel *matLight;
+      //pfMaterial *fmaterial;
+      //pfMaterial *bmaterial;
+      //std::vector< pfMaterial *> matList;
+      cfdNode* node;
+      cfdDCS*  DCS;
+      //pfMaterial *mat1, *mat0;
+      int mat_count;
+      int color;
+      int transparent;
+      float stlColor [ 3 ];
 
- private:
-  float op;
+   private:
+      float op;
 };
 
 #endif
