@@ -23,27 +23,22 @@
 # Boston, MA 02111-1307, USA.
 #
 # -----------------------------------------------------------------
-# File:          Makefile,v
-# Date modified: 2003/03/06 17:09:53
-# Version:       1.16
+# File:          $RCSfile: Makefile,v $
+# Date modified: $Date$
+# Version:       $Rev$
 # -----------------------------------------------------------------
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-# -----------------------------------------------------------------------------
-# This requires GNU make.
-# -----------------------------------------------------------------------------
-
 APP_NAME=TSVEGpfSwitcher
 
 # where is StopWatch.h ?
-EXTRA_INCLUDES+= -I$(VJ_BASE_DIR)/../vrjuggler-2.0-alpha3.src/modules/vrjuggler/samples/Pf/advanced/pfNav
+EXTRA_INCLUDES+= -I$(VJ_BASE_DIR)/../vrjuggler-2.0-alpha4.src/modules/vrjuggler/samples/Pf/advanced/pfNav
 
 default: all
 
 all: $(APP_NAME)
 
-# Basic options.
 srcdir=	.
 SRCS=		TSVEGpfswitchermain.cpp \
          TSVEGpfswitcher.cpp \
