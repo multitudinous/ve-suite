@@ -39,7 +39,6 @@
 
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
-//#include <vtkUnstructuredGrid.h>
 #include <vtkDataSet.h>
 #include <vtkRungeKutta4.h>
 #include <vtkStreamLine.h>
@@ -47,10 +46,8 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
-#include <vtkPolyDataWriter.h>
-#include <vtkStructuredGridReader.h>
-#include <vtkStructuredGrid.h>
-#include <vtkStructuredGridWriter.h>
+//#include <vtkPolyDataWriter.h>
+
 #include <vpr/Util/Debug.h>
 
 cfdStreamers::cfdStreamers( float diameter )
@@ -58,17 +55,17 @@ cfdStreamers::cfdStreamers( float diameter )
    this->stream = vtkStreamLine::New();
    this->integ = vtkRungeKutta4::New();
 
-
-   this->tubeFilter = vtkTubeFilter::New();
-
-   vprDEBUG(vprDBG_ALL,1) << "Default Streamline Diameter : " 
-      << this->GetActiveMeshedVolume()->GetLength()*0.001f 
-      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1) << " Specified Streamline Diameter : " 
+                          << diameter << std::endl << vprDEBUG_FLUSH;
 
    if ( ! diameter )
    {
       diameter = this->GetActiveMeshedVolume()->GetLength()*0.001f;
+      vprDEBUG(vprDBG_ALL,1) << "       New Streamline Diameter : " 
+                             << diameter << std::endl << vprDEBUG_FLUSH;
    }
+
+   this->tubeFilter = vtkTubeFilter::New();
    this->tubeFilter->SetRadius( diameter );
 
    this->mapper = vtkPolyDataMapper::New();
@@ -83,19 +80,17 @@ cfdStreamers::cfdStreamers( float diameter )
    this->stepLength = this->GetActiveMeshedVolume()->GetMeanCellLength()/30.0f;
 }
 
-
 cfdStreamers::~cfdStreamers()
 {
    this->stream->Delete();
+   this->integ->Delete();
    this->tubeFilter->Delete();
    this->mapper->Delete();
    this->actor->Delete();
-   this->integ->Delete();
 }
 
 void cfdStreamers::Update( void )
 {
-    
    vprDEBUG(vprDBG_ALL,0) << "|   cfdStreamers::Update, origin = "
       << this->origin[0] << " : " << this->origin[1] << " : " 
       << this->origin[2] << std::endl 
@@ -103,8 +98,8 @@ void cfdStreamers::Update( void )
       << " Integration Step Length : " << this->integrationStepLength 
       << " Step Length : " << this->stepLength 
       << " Integration Direction : " << this->integrationDirection
-      << std::endl <<
-   vprDEBUG_FLUSH;
+      << std::endl << vprDEBUG_FLUSH;
+
    //The Block below is a test by Yang
    this->stream->SetInput( (vtkDataSet*)this->GetActiveMeshedVolume()->GetDataSet() );
 
@@ -141,7 +136,6 @@ void cfdStreamers::Update( void )
    }
    this->stream->SetNumberOfThreads( 1 );
 
-
    this->stream->SetSource( (vtkDataSet*)this->pointSource );
    this->stream->SetIntegrator( this->integ );
    
@@ -150,21 +144,17 @@ void cfdStreamers::Update( void )
    //this->stream->DebugOn();
    //   this->stream->Print( cout );
    
-   
    // Good Test code to see if you are actually getting streamlines
    //vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
    //writer->SetInput( ( vtkPolyData * ) stream->GetOutput() );
    //writer->SetFileName( "teststreamers.vtk" );
    //writer->Write();
-   
-
 
    //this->tubeFilter->DebugOn();
    this->tubeFilter->SetInput( this->stream->GetOutput() );
    //   this->tubeFilter->Print( cout );
    this->tubeFilter->Update();
    //this->tubeFilter->DebugOn();
-
 
    //this->filter = vtkGeometryFilter::New();
    //this->filter->SetInput( this->tubeFilter->GetOutput() );
@@ -207,9 +197,8 @@ void cfdStreamers::SetIntegrationStepLength( int value )
 void cfdStreamers::SetStepLength( int value )
 {
    this->stepLength = (float)value * ((this->GetActiveMeshedVolume()
-                                             ->GetMeanCellLength()/30.0f) / 50.0f);     
+                                           ->GetMeanCellLength()/30.0f) / 50.0f);     
 }
-
 
 #ifdef _CFDCOMMANDARRAY
 bool cfdStreamers::CheckCommandId( cfdCommandArray* cfdCommandArray )
