@@ -40,10 +40,10 @@ class Package
   std::string packname; //The package name, goes to the name attrib of the element package
   std::string system_id; //The file name of the xml file or a fake filename used for parsing the memory buffer input source
 
-   //void FillIntfs(xercesc_2_5::DOMDocument *doc);
-   void FillIntfs( DOMDocument *doc);
-   //xercesc_2_5::DOMDocument* BuildFromIntfs();
-   DOMDocument* BuildFromIntfs();
+   void FillIntfs(xercesc_2_5::DOMDocument *doc);
+   //void FillIntfs( DOMDocument *doc);
+   xercesc_2_5::DOMDocument* BuildFromIntfs();
+   //DOMDocument* BuildFromIntfs();
 };
 
 #endif
