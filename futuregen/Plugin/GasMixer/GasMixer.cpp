@@ -70,10 +70,10 @@ int GasMixer::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void GasMixer::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*12/100, icon_h*19/75);
-  iports[1]=wxPoint(icon_w*12/100, icon_h*31/75);
-  iports[2]=wxPoint(icon_w*12/100, icon_h*44/75);
-  iports[3]=wxPoint(icon_w*12/100, icon_h*56/75);
+  iports[0]=wxPoint(icon_w*7/60, icon_h*12/45);
+  iports[1]=wxPoint(icon_w*7/60, icon_h*19/45);
+  iports[2]=wxPoint(icon_w*7/60, icon_h*27/45);
+  iports[3]=wxPoint(icon_w*7/60, icon_h*34/45);
   return;
 }
 
@@ -88,7 +88,7 @@ int GasMixer::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasMixer::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*88/100, icon_h*39/75);
+  oports[0]=wxPoint(icon_w*53/60, icon_h*24/45);
 }
 
 /////////////////////////////////////////////////////////////////////////////
