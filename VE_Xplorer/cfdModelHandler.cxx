@@ -135,7 +135,7 @@ cfdModel* cfdModelHandler::GetModel( int i )
 
 void cfdModelHandler::AddModel( cfdModel* input )
 {
-   return _modelList.push_back( input );
+   _modelList.push_back( input );
 }
 
 void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )

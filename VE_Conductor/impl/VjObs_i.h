@@ -180,7 +180,7 @@ protected:
    //VjObs::scalar_p_var geo_name;
    VjObs::scalar_p_var sound_names;
    VjObs::scalar_p_var teacher_name;
-   VjObs::Models_var _models;
+   VjObs::Models* _models;
 
    //int totalNumberOfScalars;
    //int totalNumberOfVectors;
