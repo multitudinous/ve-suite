@@ -1,0 +1,438 @@
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:st1="urn:schemas-microsoft-com:office:smarttags"
+xmlns="http://www.w3.org/TR/REC-html40">
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=us-ascii">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<link rel=File-List href="HeatExchangerCFD_files/filelist.xml">
+<link rel=Edit-Time-Data href="HeatExchangerCFD_files/editdata.mso">
+<!--[if !mso]>
+<style>
+v\:* {behavior:url(#default#VML);}
+o\:* {behavior:url(#default#VML);}
+w\:* {behavior:url(#default#VML);}
+.shape {behavior:url(#default#VML);}
+</style>
+<![endif]-->
+<title>Vision 21 Workbench-Heat Exchanger Module</title>
+<o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
+ name="PlaceName"/>
+<o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
+ name="PlaceType"/>
+<o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
+ name="place" downloadurl="http://www.5iantlavalamp.com/"/>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>yang</o:Author>
+  <o:LastAuthor>yang</o:LastAuthor>
+  <o:Revision>7</o:Revision>
+  <o:TotalTime>16</o:TotalTime>
+  <o:Created>2004-12-10T23:45:00Z</o:Created>
+  <o:LastSaved>2004-12-13T23:56:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>87</o:Words>
+  <o:Characters>501</o:Characters>
+  <o:Company>REI</o:Company>
+  <o:Lines>4</o:Lines>
+  <o:Paragraphs>1</o:Paragraphs>
+  <o:CharactersWithSpaces>587</o:CharactersWithSpaces>
+  <o:Version>10.4219</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:Compatibility>
+   <w:UseFELayout/>
+  </w:Compatibility>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if !mso]><object
+ classid="clsid:38481807-CA0E-42D2-BF39-B33AF135CC4D" id=ieooui></object>
+<style>
+st1\:*{behavior:url(#ieooui) }
+</style>
+<![endif]-->
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:SimSun;
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-alt:\5B8B\4F53;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+@font-face
+	{font-family:"\@SimSun";
+	panose-1:2 1 6 0 3 1 1 1 1 1;
+	mso-font-charset:134;
+	mso-generic-font-family:auto;
+	mso-font-pitch:variable;
+	mso-font-signature:3 135135232 16 0 262145 0;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:SimSun;}
+h1
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:1;
+	font-size:24.0pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+h2
+	{mso-style-next:Normal;
+	margin-top:12.0pt;
+	margin-right:0in;
+	margin-bottom:3.0pt;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	page-break-after:avoid;
+	mso-outline-level:2;
+	font-size:14.0pt;
+	font-family:Arial;
+	font-weight:bold;
+	font-style:italic;}
+h3
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:3;
+	font-size:13.5pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:SimSun;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+ /* List Definitions */
+ @list l0
+	{mso-list-id:1053624680;
+	mso-list-template-ids:-1703619756;}
+@list l0:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+@list l0:level2
+	{mso-level-tab-stop:1.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1
+	{mso-list-id:1665545988;
+	mso-list-template-ids:-929406868;}
+@list l1:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
+ol
+	{margin-bottom:0in;}
+ul
+	{margin-bottom:0in;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="5122"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
+
+<body bgcolor="#92B5CE" lang=EN-US style='tab-interval:.5in'>
+
+<div class=Section1>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=100 style='width:75.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=200 style='width:150.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=300 style='width:225.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<h1>Heat Exchanger CFD Module</h1>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=300 style='width:225.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=200 style='width:150.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=100 style='width:75.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<p>The Heat Exchanger CFD Module utilizes the Glacier CFD code. It is an experiment
+module. It is use to demonstrate the CFD to CFD coupling capability of the
+framework. Do not use this module to replace Heat Exchanger Module in ordinary
+simulation.<o:p></o:p></p>
+
+<p class=MsoNormal><br clear=right style='mso-special-character:line-break' \>
+</p>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=4 width="100%" align=center>
+
+</div>
+
+<h3><!--[if gte vml 1]><v:shapetype id="_x0000_t75" coordsize="21600,21600"
+ o:spt="75" o:preferrelative="t" path="m@4@5l@4@11@9@11@9@5xe" filled="f"
+ stroked="f">
+ <v:stroke joinstyle="miter"/>
+ <v:formulas>
+  <v:f eqn="if lineDrawn pixelLineWidth 0"/>
+  <v:f eqn="sum @0 1 0"/>
+  <v:f eqn="sum 0 0 @1"/>
+  <v:f eqn="prod @2 1 2"/>
+  <v:f eqn="prod @3 21600 pixelWidth"/>
+  <v:f eqn="prod @3 21600 pixelHeight"/>
+  <v:f eqn="sum @0 0 1"/>
+  <v:f eqn="prod @6 1 2"/>
+  <v:f eqn="prod @7 21600 pixelWidth"/>
+  <v:f eqn="sum @8 21600 0"/>
+  <v:f eqn="prod @7 21600 pixelHeight"/>
+  <v:f eqn="sum @10 21600 0"/>
+ </v:formulas>
+ <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
+ <o:lock v:ext="edit" aspectratio="t"/>
+</v:shapetype><v:shape id="_x0000_s1027" type="#_x0000_t75" alt="" style='position:absolute;
+ margin-left:0;margin-top:0;width:135pt;height:101.25pt;z-index:1;
+ mso-wrap-distance-left:15pt;mso-wrap-distance-top:15pt;
+ mso-wrap-distance-right:15pt;mso-wrap-distance-bottom:15pt;
+ mso-position-horizontal:left;mso-position-vertical-relative:line'
+ o:allowoverlap="f">
+ <v:imagedata src="images/HeatExchangerCFDmod.gif"/>
+ <w:wrap type="square"/>
+</v:shape><![endif]--><![if !vml]><img width=180 height=135
+src="images/HeatExchangerCFDmod.gif" align=left hspace=20 vspace=20 v:shapes="_x0000_s1027"><![endif]>Connections</h3>
+
+<ul type=disc>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l0 level1 lfo3;tab-stops:list .5in'><st1:place><st1:PlaceType><span
+       style='color:red'>Inlet</span></st1:PlaceType><span style='color:red'> </span><st1:PlaceType><span
+       style='color:red'>Port</span></st1:PlaceType></st1:place><span
+     style='color:red'> 0 </span>: Inlet gas stream</li>
+ <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
+     mso-list:l0 level1 lfo3;tab-stops:list .5in'><st1:place><st1:PlaceName><span
+       style='color:aqua'>Outlet</span></st1:PlaceName><span style='color:aqua'>
+      </span><st1:PlaceType><span style='color:aqua'>Port</span></st1:PlaceType></st1:place><span
+     style='color:aqua'> 0 </span>: Outlet gas stream</li>
+</ul>
+
+<p class=MsoNormal><br clear=left style='mso-special-character:line-break'>
+</p>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=4 width="100%" align=center>
+
+</div>
+
+<h2><br clear=left>
+<a name=sum>Summary Data (SUM)</a><o:p></o:p></h2>
+
+<table class=MsoNormalTable border=0 cellpadding=0 style='mso-cellspacing:1.5pt;
+ mso-padding-alt:0in 5.4pt 0in 5.4pt' id=Table2>
+ <tr style='mso-yfti-irow:0;mso-yfti-lastrow:yes'>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p class=MsoNormal><!--[if gte vml 1]><v:shape id="_x0000_i1033" type="#_x0000_t75"
+   style='width:363pt;height:282pt'>
+   <v:imagedata src="HeatExchangerCFD_files/image001.jpg" o:title="HeatExchangerCFDsummary"/>
+  </v:shape><![endif]--><![if !vml]><img width=484 height=376
+  src="HeatExchangerCFD_files/image001.jpg" v:shapes="_x0000_i1033"><![endif]></p>
+  </td>
+  <td style='padding:.75pt .75pt .75pt .75pt'>
+  <p><span style='mso-spacerun:yes'>&nbsp;</span>After the module has executed,
+  the <em>Summary Data</em> button provides summary information. The module
+  outputs calculated soot mass fraction, soot particle #/mass fraction and tar
+  mass fraction. </p>
+  </td>
+ </tr>
+</table>
+
+<div class=MsoNormal align=center style='text-align:center'>
+
+<hr size=4 width="100%" align=center>
+
+</div>
+
+<p class=MsoNormal align=center style='text-align:center'><o:p>&nbsp;</o:p></p>
+
+</div>
+
+</body>
+
+</html>
