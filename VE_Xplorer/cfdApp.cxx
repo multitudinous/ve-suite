@@ -464,11 +464,8 @@ int main(int argc, char* argv[])
 
    int temp = 0;
    char** xargv;
-   xargv = new char*[ temp ];
+   xargv = NULL;//new char*[ temp ];
    //xargv[ 0 ] = "-ORBInitRef";
-   //xargv[ 1 ] = "NameService=corbaname::cruncher.vrac.iastate.edu:2809";
-   //the above line doesn't work when running from costello!!!
-   //biv -- checking if the name server has been moved
    //xargv[ 1 ] = "NameService=corbaname::cruncher.vrac.iastate.edu:2809";
 
 #ifdef _TAO

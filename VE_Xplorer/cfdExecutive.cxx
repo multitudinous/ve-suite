@@ -327,15 +327,15 @@ void cfdExecutive::InitModules( void )
 {
    // Initiallize the dashboard
    std::cout << "|  4. Initializing.............................. Dashboard Display |" << std::endl;
-   this->_dashBoard = new cfdDashboard( this->_param->GetParameterFilename(), this->_masterNode );
+   //this->_dashBoard = new cfdDashboard( this->_param->GetParameterFilename(), this->_masterNode );
 
    // Initiallize all the Digital Text gauges
    std::cout << "|  4. Initializing.............................. Gauges Display |" << std::endl;
-   this->_gauges = new cfdGauges( this->_param->GetParameterFilename(), this->_masterNode );
+   //this->_gauges = new cfdGauges( this->_param->GetParameterFilename(), this->_masterNode );
    
    // Initiallize each piece of geometry   
    std::cout << "|  4. Initializing.............................. Interactive Geometry |" << std::endl;
-   this->_geometry = new cfdInteractiveGeometry( this->_param->GetParameterFilename(), this->_masterNode );
+   //this->_geometry = new cfdInteractiveGeometry( this->_param->GetParameterFilename(), this->_masterNode );
 }
 
 void cfdExecutive::UpdateModules( void )
