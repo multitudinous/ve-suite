@@ -302,8 +302,10 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
                   {
                      // Do NOT turn of transparency here because textured
                      // objects may have transparent textures
-                     testMat->setColorMode( PFMTL_FRONT,
-				            PFMTL_CMODE_AMBIENT_AND_DIFFUSE );
+                     
+                     // This may cause color issues
+                     //testMat->setColorMode( PFMTL_FRONT,
+				         //   PFMTL_CMODE_AMBIENT_AND_DIFFUSE );
                      vprDEBUG(vprDBG_ALL,3) << "Set color Mode "
                                          << std::endl << vprDEBUG_FLUSH;
                   }
