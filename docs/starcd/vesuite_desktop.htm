@@ -2,9 +2,16 @@
 "http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
-<title>Untitled Document</title>
+<title>VE-Suite Desktop</title>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="../Ve-Suite.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+.style1 {color: #FF0000}
+.style2 {color: #006633}
+.style3 {color: #FF9933}
+-->
+</style>
 </head>
 
 <body>
@@ -18,20 +25,54 @@
 <p class="bodytext"><img src="pics/launch.gif" width="407" height="288"></p>
 <p class="bodytext"><span class="bodytextemph">Note:</span> The title page remains dormant in the background while using the VE viewer. Selecting the &quot;End&quot; button will close the viewer and end the VE-Suite session.</p>
 <p class="bodytext">5. Once the data files have been converted, VR-Xplorer displays three screens: Sim Input, Sim Window, and JavaClient. The principal SimWindow screen contains the images that are displayed onto the walls of the cave. The SimInput screen functions only to aid in SimWindow navigation and is only visible when operating on a desktop. The JavaClient user interface allows the user to control data display.</p>
-<p class="bodytext"><img src="pics/threescreens.gif" width="946" height="420"><span class="question">(re-insert text here) </span></p>
+<p class="bodytext"><img src="pics/threescreens.gif" width="532" height="420"></p>
 <p class="Title2">The SimWindow Display Screen</p>
 <p class="bodytext">On the left side of the SimWindow display screen, a color scheme legend is provided. This color gradient is used to display varying values of a given datatype. The top number represents a maximum value while the bottom number represents a minimum value. All data above the maximum value will be shaded red and, likewise, all data below the minimum value will be shaded blue. Data falling between these values is shaded according to the color scheme.</p>
+<p class="bodytext"><img src="pics/left1.gif" width="379" height="385"></p>
 <p class="bodytext">The distant table (projected on the rear wall) displays user options normally selectable with the wand within a cave. The same user options are accessible to a desktop user within the <em>JavaClient </em>user interface screen.</p>
 <p class="Title2">Navigation within the SimWindow Display Screen</p>
-<p class="bodytext">The SimInput screen serves as the input device for navigation and must be <span class="bodytextemph">active</span>. Navigation within the SimWindow display screen is purely translational (no rotation), and is supported by teh folowing keys on the keyboard.</p>
-<p class="question">KEY CHART</p>
+<p class="bodytext">The SimInput screen serves as the input device for navigation and must be <span class="bodytextemph">active</span>. Navigation within the SimWindow display screen is purely translational (no rotation), and is supported by the following keys on the keyboard.</p>
+<table width="217" height="205" border="1" bgcolor="#FFFFFF">
+  <tr valign="top" class="paramfile">
+    <td width="59" height="65"><div align="center">
+      <p>7<br>
+        <span class="style1">slide down</span></p>
+    </div></td>
+    <td width="69"><div align="center">8<br>
+        <span class="style2">zoom<br>
+        in</span></div></td>
+    <td width="67"><div align="center">
+      <p>9<br>
+        <span class="style1">slide <br>
+        up</span></p>
+    </div></td>
+  </tr>
+  <tr valign="top" class="paramfile">
+    <td height="57"><div align="center">
+      <p>4<br>
+        <span class="style3">slide<br>
+        </span><span class="style3">left</span></p>
+      </div></td>
+    <td><div align="center">5</div></td>
+    <td><div align="center">6<br>
+      <span class="style3">slide right</span></div></td>
+  </tr>
+  <tr class="paramfile">
+    <td valign="top"><div align="center">1</div></td>
+    <td valign="top"><div align="center">2<br>
+        <span class="style2">zoom<br>
+        out</span> </div></td>
+    <td valign="top"><div align="center">3</div></td>
+  </tr>
+</table>
 <p class="Title2">The JavaClient User Interface Screen</p>
 <p class="bodytextemph">Scalars Folder<br>
   <span class="bodytext">The VE viewer can be used to trace a variety of data including gas direction, velocity, pressure, temperature, density, and specie concentration. The Scalars folder governs which datatypes are displayed. From the data field on the left, the user can select on datatype for display.</span></p>
-<p class="bodytext">The Scalars folder also controls the method by which data is shaded in the SimWindow screen. The sliding bars on the right regulate the data maximum and minimum based on percentages of the absolute maximum and minimum. For example, <span class="question">in the color scheme illustrated in the above SimWindow snap</span>, the default maximum is 3200 and the minimum is 400. 
+<p class="bodytext">The Scalars folder also controls the method by which data is shaded in the SimWindow screen. The sliding bars on the right regulate the data maximum and minimum based on percentages of the absolute maximum and minimum. For example, in the color scheme illustrated in the above SimWindow snap, the default maximum is 3200 and the minimum is 400. 
 
 
  This means that the highest computed gas temperature for the module was 3200 K and the lowest computed temperature was 400 K. By moving the minimum sliding bar up towards 50, the data range narrows and provides a more detailed representation of temperature values in the upper half of the absolute temperature range. The SimWindow screen is not updated until Update is selected.</p>
+<p class="bodytext"><img src="pics/scalars.gif" width="640" height="480"></p>
 <p class="bodytext"><span class="bodytextemph">Design Folder</span><br>
   The Design folder 
 
@@ -42,14 +83,14 @@
 <p class="bodytext"><span class="bodytextemph">Visualization Folder</span><br>
   <span class="ital">Category</span><br>
 The VE-Suite offers several methods of data display. The user may choose one of the following categories:</p>
-<p class="bodytext">--Contour<br>
-  --Warped Contour<br>
-  --Vector<br>
-  --Streamline (requires use of wand)<br>
-  --Isosurface<br>
-  --Transient<br>
-  --PIV Image<br>
-  --Polydata-REI Particle <span class="question">(add links)</span></p>
+<p class="bodytext">--<a href="xplorer.htm#contour">Contour</a><br>
+  --<a href="xplorer.htm">Warped Contour</a><br>
+  --<a href="xplorer.htm">Vector</a><br>
+  --<a href="xplorer.htm">Streamline (requires use of wand)</a><br>
+  --<a href="xplorer.htm">Isosurface</a><br>
+  --<a href="xplorer.htm">Transient</a><br>
+  --<a href="xplorer.htm">PIV Image</a><br>
+--<a href="xplorer.htm">Polydata-REI Particle</a> <span class="question">(change links to show place in document)</span></p>
 <p class="bodytext"><span class="ital">Direction</span><br>
   For those categories that display data along a unit cross-section (i.e., contour, warped contour, transient, vector, PIV_Image), the direction field regulates the method by which the two-dimensional plane is generated. The Cartesian axes listed represent <span class="ital">normals</span> to the planes displayed. For example, when the Y axis is selected, the planes will run perpendicular to the Y axis (parallel to the monitor's screen).</p>
 <p class="bodytext">The user may also generate cross-sectional planes that are not orthagonal to the defined axes using the wand (<span class="ital">By wand</span> option). When selected, the viewer generates a plane normal to the direction of the pointed wand.</p>
@@ -61,12 +102,13 @@ The VE-Suite offers several methods of data display. The user may choose one of 
   The Warped Contour   category 
 
 
- works similarly to the Contour category. In contrast, however, the Warped Contour warps the contour according to the local velocity vector. Instead of simply shading data along the 2D cross-section, data is extruded to its respective value on the contour.</p>
+ works similarly to the Contour category. In contrast, however, the Warped Contour warps the contour according to the local velocity vector. Instead of simply shading data along the two-dimensional cross-section, data is extruded to its respective value on the contour.</p>
 <p class="bodytext"><span class="ital">Transient, Vector, and PIV_Image</span><br>
-The Transient, Vector, and PIV_Image categories all operate similarly to the Contour category when calculations include the appropriate datatypes. Data is projected onto a 2D cross-sectional plane and shaded according to the illustrated color scheme when any of these categories are selected.</p>
+The Transient, Vector, and PIV_Image categories all operate similarly to the Contour category when calculations include the appropriate datatypes. Data is projected onto a two-dimensional cross-sectional plane and shaded according to the illustrated color scheme when any of these categories are selected.</p>
 <p class="bodytext"><span class="ital">Isosurface</span><br>
-The Isosurface category generates <span class="question">3-dimensional (check consistency) </span>surfaces using locations where values of a given datatype are equal. Numbers beneath the sliding bar in the JavaClient screen represent percentages between the maximum and minimum data value. For example, using <span class="ital">gas_temp</span> as the datatype, the number 50 represents a temperature of 1800 K--the value halfway between the minimum (400 K) and maximum (3200 K) value. Therefore, when 50 is selected the viewer generates a continuous surface (shown at left) from all the individual points within the unit having a temperature of 1800 K.</p>
+The Isosurface category generates three-dimensional surfaces using locations where values of a given datatype are equal. Numbers beneath the sliding bar in the JavaClient screen represent percentages between the maximum and minimum data value. For example, using <span class="ital">gas_temp</span> as the datatype, the number 50 represents a temperature of 1800 K--the value halfway between the minimum (400 K) and maximum (3200 K) value. Therefore, when 50 is selected the viewer generates a continuous surface (shown at left) from all the individual points within the unit having a temperature of 1800 K.</p>
 <p class="bodytext"><span class="ital">Polydata</span><br>
   The Polydata category displays individual particle paths through the unit. The particle positions are predefined and originate from the file: $[VE_SUITE]/REI/particle.param</p>
+<p class="question">(polydata image?) </p>
 </body>
 </html>
