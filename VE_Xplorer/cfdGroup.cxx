@@ -165,7 +165,8 @@ void cfdGroup::InsertChild( int position, cfdSceneNode* child )
 #ifdef _PERFORMER
    this->_group->insertChild( position, child->GetRawNode() );
    vector< cfdSceneNode* >::iterator newPosition;
-   // Nedd to fix this
+   // Need to fix this
+cout << " WARNING: newPosition is NOT defined" << endl;
    //newPosition = childNodes[ position ];
    childNodes.insert( newPosition, child );
    child->SetParent( this );

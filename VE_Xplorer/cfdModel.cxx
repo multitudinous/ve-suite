@@ -145,13 +145,14 @@ cfdDCS* cfdModel::GetCfdDCS( )
 
 void cfdModel::updateCurModel()
 {
-  
    vprDEBUG(vprDBG_ALL, 1) << "cfdModel::UpdateCurModel..."
                            << std::endl << vprDEBUG_FLUSH;
-  // Need to fix this 
-  std::string tempstring;
-  int temp;
-  if(this->mUpdateModelFlag)
+   // Need to fix this 
+   std::string tempstring;
+   int temp;
+temp = 1;
+std::cout<<"Setting temp to 1 to avoid irix compile warning \'The variable \"temp\" is used before its value is set\'"<<std::endl;    
+  if( this->mUpdateModelFlag )
   {
       switch(this->mActiveOperation2Model)
       {
@@ -190,12 +191,13 @@ void cfdModel::delVTKdataset()
 
 void cfdModel::addGeomdataset(const std::string& geomfilename)
 {
+   std::cout << "WARNING: doing nothing in cfdModel::addGeomdataset with \"" << geomfilename << "\""<< std::endl;
       // Need to fix this
       // this->mGeomFileInfo->fileName= (char*)geomfilename.c_str();
       //this->mMoveOldGeomDataSets = true;
       //this->mMoveOldVTKDataSets = true;
-      char* mGeomFileName;
-      std::cout << "[DBG]....Adding Geometry files " << mGeomFileName<<std::endl;
+      //char* mGeomFileName;
+      //std::cout << "[DBG]....Adding Geometry files " << mGeomFileName<<std::endl;
       // Need to fix the iterator stuff
       //for(GeometryDataSetList::iterator itr = mGeomDataSets.begin(); itr != mGeomDataSets.end(); ++itr)
 

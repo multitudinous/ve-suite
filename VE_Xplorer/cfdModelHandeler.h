@@ -43,7 +43,6 @@ class cfdScalarBarActor;
 class vtkPolyData;
 
 #include <vector>
-using namespace std;
 
 class cfdModelHandler
 {
@@ -73,7 +72,7 @@ class cfdModelHandler
       cfdScalarBarActor* _scalarBar;
 
       vtkPolyData* arrow;
-      vector< cfdModel* > _modelList;
+      std::vector< cfdModel* > _modelList;
       // Used to store data for multi-dataset functions
       char oldDatasetName[256];
 };

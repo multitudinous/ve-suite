@@ -29,7 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+
 #include "cfdModelHandeler.h"
+
+#include <vrj/Util/Debug.h>
+
+#include <vtkPolyDataReader.h>
+#include <vtkPolyData.h>
 
 #include "cfdDCS.h"
 #include "cfdGroup.h"
@@ -44,22 +50,20 @@
 #include "cfdFILE.h"
 #include "cfdScalarBarActor.h"
 
+#include <fstream>
+#include <cstdlib>
+#include <string>
+
 #ifndef _WIN32 // not windows
-#include <unistd.h>
-#include <sys/types.h>
+//#include <unistd.h>
+//#include <sys/types.h>
 #include <sys/dir.h>
 #else // it is windows
 #include <windows.h>
 #include <direct.h>
 #endif
 
-#include <string>
-#include <cstdio>
-
-#include <vtkPolyDataReader.h>
-#include <vtkPolyData.h>
-
-#include <vrj/Util/Debug.h>
+//using namespace std;
 
 cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
 {
