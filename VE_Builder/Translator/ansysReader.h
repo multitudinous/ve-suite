@@ -63,6 +63,8 @@ class ansysReader
       void ReadElementSolutions();
       void ReadHeaderExtension();
 
+      int GetCornerNodeOnElement( int, int );
+
       // Functions that get pointers to blocks of data
       //int GetPtrNodalEquivalencyTable();
       //int GetPtrElementEquivalencyTable();
@@ -86,7 +88,7 @@ class ansysReader
       void ReadElementDescription( int ptr );
       int * ReadElementTypeDescription( int ptr );
       void ReadGenericBlock( int intPosition );
-      void ReadElementIndexTable( int );
+      void ReadElementIndexTable( int, int );
       int VerifyNumberOfValues( int reportedNumValues, int blockSize_1 );
       void VerifyBlock( int blockSize_1, int blockSize_2 );
 
@@ -127,6 +129,7 @@ class ansysReader
       int ptrNSL; // Nodal solutions
       int ptrESL; // Element solutions
       int ptrEXT;
+      int * ptrENS;
 
       vtkUnstructuredGrid * ugrid;
 };
