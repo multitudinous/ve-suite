@@ -1,6 +1,6 @@
 # Create the OS-dependent directory name
-#APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/translateToVtk
-APP_NAME= $(VE_SUITE_HOME)/VE_Builder/Translator/main
+APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/translateToVtk
+
 all:
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
@@ -9,7 +9,7 @@ all:
 srcdir= .
 
 SRCS=\
-   main.cpp\
+	translateToVtk.cpp \
    starReader.cpp \
    avsReader.cpp \
    reiReader.cpp \
@@ -33,7 +33,6 @@ SRCS=\
    cfdAccessoryFunctions.cpp\
    tecplotReader.cpp
 #   vtkEnSightFortranBinaryReader.cxx
-#translateToVtk.cpp
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
 DEPDIR= $(CFDHOSTTYPE)
