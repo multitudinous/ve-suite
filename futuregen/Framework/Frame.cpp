@@ -693,7 +693,10 @@ void AppFrame::ConVEServer(wxCommandEvent &event)
     //Now get the reference of the VE server
     name[0].id   = CORBA::string_dup ("Master");
     name[0].kind = CORBA::string_dup ("VE_Xplorer");
-    CORBA::Object_var ve_object = naming_context->resolve(name);
+    CORBA::Object_var naming_context_object =
+    orb->resolve_initial_references ("NameService");
+    CosNaming::NamingContext_var naming_context1 = CosNaming::NamingContext::_narrow (naming_context_object.in ());
+    CORBA::Object_var ve_object = naming_context1->resolve(name);
     vjobs = VjObs::_narrow(ve_object.in());
     if (CORBA::is_nil(vjobs.in()))
       std::cerr<<"VjObs is Nill"<<std::endl;
@@ -783,21 +786,25 @@ void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event)
 
 void AppFrame::DisConExeServer(wxCommandEvent &event)
 {
-  try {
-    network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
-    con_menu->Enable(v21ID_SUBMIT,false);
-    con_menu->Enable(v21ID_LOAD, false);
-    con_menu->Enable(v21ID_CONNECT, true);
-    run_menu->Enable(v21ID_START_CALC, false);
-    // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
-    con_menu->Enable(v21ID_DISCONNECT, false);
+   try
+   {
+      network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
+      delete p_ui_i;
+      p_ui_i = NULL;
+
+      con_menu->Enable(v21ID_SUBMIT,false);
+      con_menu->Enable(v21ID_LOAD, false);
+      con_menu->Enable(v21ID_CONNECT, true);
+      run_menu->Enable(v21ID_START_CALC, false);
+      // EPRI TAG run_menu->Enable(v21ID_VIEW_RESULT, false);
+      con_menu->Enable(v21ID_DISCONNECT, false);
     
-    Log("Disconnect successful.\n");
-  }catch (CORBA::Exception &) {
-    
-    Log("Disconnect failed.\n");
-  }
-	
+      Log("Disconnect successful.\n");
+   }
+   catch (CORBA::Exception &) 
+   {
+      Log("Disconnect failed.\n");
+   }
 }
 
 void AppFrame::DisConVEServer(wxCommandEvent &event)
