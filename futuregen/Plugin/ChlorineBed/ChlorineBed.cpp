@@ -153,7 +153,7 @@ UIDialog* ChlorineBed::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString ChlorineBed::GetName()
 {
-  wxString result="REI_LarryRuth_ChlorineBed"; //your name
+  wxString result="REI_Components_ChlorineBed"; //your name
   return result;
 }
 

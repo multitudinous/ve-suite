@@ -128,7 +128,7 @@ UIDialog* Cyclone::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString Cyclone::GetName()
 {
-  wxString result="REI_LarryRuth_Cyclone"; //your name
+  wxString result="REI_Components_Cyclone"; //your name
   return result;
 }
 

@@ -137,7 +137,7 @@ UIDialog* V21ASU::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString V21ASU::GetName()
 {
-  wxString result=_T("REI_LarryRuth_ASU"); //your name
+  wxString result=_T("REI_Components_ASU"); //your name
   return result;
 }
 

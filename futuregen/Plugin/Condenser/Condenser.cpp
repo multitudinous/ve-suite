@@ -142,7 +142,7 @@ UIDialog* Condenser::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString Condenser::GetName()
 {
-  wxString result="REI_LarryRuth_Condenser"; //your name
+  wxString result="REI_Components_Condenser"; //your name
   return result;
 }
 

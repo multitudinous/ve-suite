@@ -119,7 +119,7 @@ UIDialog* HeatExchange0D::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString HeatExchange0D::GetName()
 {
-  wxString result="REI_LarryRuth_HeatExchange0D"; //your name
+  wxString result="REI_Components_HeatExchange0D"; //your name
   return result;
 }
 

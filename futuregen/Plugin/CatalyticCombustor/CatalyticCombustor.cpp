@@ -142,7 +142,7 @@ UIDialog* CatalyticCombustor::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString CatalyticCombustor::GetName()
 {
-  wxString result="REI_LarryRuth_CatalyticCombustor"; //your name
+  wxString result="REI_Components_CatalyticCombustor"; //your name
   return result;
 }
 

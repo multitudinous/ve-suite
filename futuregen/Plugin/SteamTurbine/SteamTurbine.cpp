@@ -124,7 +124,7 @@ UIDialog* SteamTurbine::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString SteamTurbine::GetName()
 {
-  wxString result="REI_LarryRuth_SteamTurbine"; //your name
+  wxString result="REI_Components_SteamTurbine"; //your name
   return result;
 }
 

@@ -113,7 +113,7 @@ UIDialog* EquilibriumReactor::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString EquilibriumReactor::GetName()
 {
-  wxString result="REI_LarryRuth_EquilibriumReactor"; //your name
+  wxString result="REI_Components_EquilibriumReactor"; //your name
   return result;
 }
 

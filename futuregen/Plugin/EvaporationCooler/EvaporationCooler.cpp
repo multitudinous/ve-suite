@@ -130,7 +130,7 @@ UIDialog* EvaporationCooler::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString EvaporationCooler::GetName()
 {
-  wxString result="REI_LarryRuth_EvaporationCooler"; //your name
+  wxString result="REI_Components_EvaporationCooler"; //your name
   return result;
 }
 

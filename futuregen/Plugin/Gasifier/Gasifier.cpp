@@ -194,7 +194,7 @@ UIDialog* Gasifier::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString Gasifier::GetName()
 {
-  wxString result="REI_LarryRuth_Gasifier"; //your name
+  wxString result="REI_Components_Gasifier"; //your name
   return result;
 }
 

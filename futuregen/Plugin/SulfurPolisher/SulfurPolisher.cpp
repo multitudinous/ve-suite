@@ -161,7 +161,7 @@ UIDialog* SulfurPolisher::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString SulfurPolisher::GetName()
 {
-  wxString result="REI_LarryRuth_SulfurPolisher"; //your name
+  wxString result="REI_Components_SulfurPolisher"; //your name
   return result;
 }
 

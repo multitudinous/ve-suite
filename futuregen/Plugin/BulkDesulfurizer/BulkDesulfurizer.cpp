@@ -168,7 +168,7 @@ UIDialog* BulkDesulfurizer::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString BulkDesulfurizer::GetName()
 {
-  wxString result="REI_LarryRuth_BulkDesulfurizer"; //your name
+  wxString result="REI_Components_BulkDesulfurizer"; //your name
   return result;
 }
 

@@ -130,7 +130,7 @@ UIDialog* WaterPump::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString WaterPump::GetName()
 {
-  wxString result="REI_LarryRuth_WaterPump"; //your name
+  wxString result="REI_Components_WaterPump"; //your name
   return result;
 }
 

@@ -159,7 +159,7 @@ UIDialog* Recuperator::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString Recuperator::GetName()
 {
-  wxString result="REI_LarryRuth_Recuperator"; //your name
+  wxString result="REI_Components_Recuperator"; //your name
   return result;
 }
 

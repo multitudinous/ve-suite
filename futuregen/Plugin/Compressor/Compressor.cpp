@@ -132,7 +132,7 @@ UIDialog* Compressor::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString Compressor::GetName()
 {
-  wxString result="REI_LarryRuth_Compressor"; //your name
+  wxString result="REI_Components_Compressor"; //your name
   return result;
 }
 

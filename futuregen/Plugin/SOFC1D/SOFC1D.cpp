@@ -241,7 +241,7 @@ UIDialog* SOFC1D::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString SOFC1D::GetName()
 {
-  wxString result="REI_LarryRuth_SOFC1D"; //your name
+  wxString result="REI_Components_SOFC1D"; //your name
   return result;
 }
 

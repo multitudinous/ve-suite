@@ -133,7 +133,7 @@ UIDialog* DumpCombustor::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString DumpCombustor::GetName()
 {
-  wxString result="REI_LarryRuth_DumpCombustor"; //your name
+  wxString result="REI_Components_DumpCombustor"; //your name
   return result;
 }
 

@@ -154,7 +154,7 @@ UIDialog* MembraneReactor::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString MembraneReactor::GetName()
 {
-  wxString result="REI_LarryRuth_MembraneReactor"; //your name
+  wxString result="REI_Components_MembraneReactor"; //your name
   return result;
 }
 
