@@ -80,43 +80,42 @@ int main( int argc, char *argv[] )
       cout << "\ttransZ: " << transZ << endl;
    }
    else
-    {
-       cout << "\nTo rotate X (degrees) : ";
-        cin >> rotX;
+   {
+      cout << "\nTo rotate X (degrees) : ";
+      cin >> rotX;
 
-        cout << "To rotate Y (degrees) : ";
-        cin >> rotY;
+      cout << "To rotate Y (degrees) : ";
+      cin >> rotY;
 
-        cout << "To rotate Z (degrees) : ";
-        cin >> rotZ;
- 
-        cout << "\nTo translate X value : ";
-        cin >> transX;
-        cout << "To translate Y value : ";
-        cin >> transY;
-        cout << "To translate Z value : ";
-        cin >> transZ;
+      cout << "To rotate Z (degrees) : ";
+      cin >> rotZ;
 
-    }
+      cout << "\nTo translate X value : ";
+      cin >> transX;
+      cout << "To translate Y value : ";
+      cin >> transY;
+      cout << "To translate Z value : ";
+      cin >> transZ;
+   }
 
-    // Transform the geometry 
-    vtkTransform * aTransform = vtkTransform::New();
-    aTransform->RotateX( rotX );
-    aTransform->RotateY( rotY );
-    aTransform->RotateZ( rotZ );
+   // Transform the geometry 
+   vtkTransform * aTransform = vtkTransform::New();
+   aTransform->RotateX( rotX );
+   aTransform->RotateY( rotY );
+   aTransform->RotateZ( rotZ );
 
-    // Create a translation matrix and concatenate it with the current transformation
-    // according to PreMultiply or PostMultiply semantics
-    aTransform->Translate( transX, transY, transZ );
+   // Create a translation matrix and concatenate it with the current
+   // transformation according to PreMultiply or PostMultiply semantics
+   aTransform->Translate( transX, transY, transZ );
 
-    // Transformation 
-    vtkTransformFilter *transFilter = vtkTransformFilter::New();
-//        vtkPointSet* ptSet = vtkPointSet::SafeDownCast( dataset );
-//        if ( ptSet == NULL ) cout << "SafeDownCast to a vtkPointSet failed";
-        transFilter->SetInput( (vtkPointSet *)dataset );
-        transFilter->SetTransform( aTransform );
-     
-    writeVtkThing( transFilter->GetOutput(), outFileName, 1 ); // one is for binary
+   // Transformation 
+   vtkTransformFilter *transFilter = vtkTransformFilter::New();
+   //        vtkPointSet* ptSet = vtkPointSet::SafeDownCast( dataset );
+   //        if ( ptSet == NULL ) cout << "SafeDownCast to a vtkPointSet failed";
+   transFilter->SetInput( (vtkPointSet *)dataset );
+   transFilter->SetTransform( aTransform );
+
+   writeVtkThing( transFilter->GetOutput(), outFileName, 1 ); // one is for binary
 
    transFilter->Delete();
    aTransform->Delete();
