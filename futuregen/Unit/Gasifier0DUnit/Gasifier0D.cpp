@@ -1,4 +1,5 @@
 
+
 #include "V21Helper.h"
 
 #include "part_kinetics.h"
@@ -972,7 +973,9 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
 		      adev, edev, ydev, ahet, nhet, ehet, nuhet, oxyd, 
 		      part_den, part_dia, size_frac, 
 		      omega_srf, omega_char, omega_liq, omega_ash, 
-		      _slur_temp[0], *thm, stm);
+		      _slur_temp[0], *thm, stm, wic_c/(1.0-wicAsh/100.), 
+                      wic_h/(1.0-wicAsh/100.), wic_o/(1.0-wicAsh/100.), 
+                      _proxVM, pres0);
   
   std::vector<double> y0;
   std::vector<double> yscal;
@@ -983,7 +986,7 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
   p_kin.initialize(x1, y0, yscal);
   sode_rk srk(y0, (double)0.0001);
 
-  double eps  = (double)1.0e-6;
+  double eps  = (double)1.0e-4;
   double h1   = (double)1.0;
   double hmin = (double)1.0e-20;
   
@@ -1056,13 +1059,16 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
       mdot = 0.0;
       for(i=0; i<nstr; i++) mdot += str_frac1[i];
 
+      p_kin.set_mdot(mdot);
+
       stream strm((const thermo)(*thm), pres0, istream0, frac_typ, fuel0, spc_nam, 
 		  frac, hform, istream1, str_frac1, temp0);
 
       tempold = temp;
-      
+
       equil::equilibrium(*thm, strm, qht, burnout, mdot, temp, comp, mol);
-      
+      cout << "1 stage iter " << iter << " temp " << temp << endl;
+
       int is;
       double mwt = 0.0;
       for(is=0; is<nspc; is++) mwt += mol[is]*thm->get_mwt()[is];
@@ -1075,12 +1081,23 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
       else
 	x2 = vol1 * rho / (coal_m_daf[0] + h2o_m_liq[0] + _ox_flow[0]);
       
+      cout << "1st Stage res time " << x2 << endl;
       for(it=0; it<ntyp; it++)
 	if(start_time[it]>0.0)
 	  p_kin.get_start_time()[it] = x2;
      
       p_kin.get_res_time1() = x2;
-      
+
+      // cpd part of soot model
+      if(iter==0){
+	p_kin.init_yield(x2);
+      }else{
+	p_kin.yield(srk.get_xp(),srk.get_yp(),5.0e-4,5.0e-3,2,10);
+      }
+      srk.get_xp().clear();
+      int nvar = srk.get_yp().size(), iv;
+      for(iv=0; iv<nvar; iv++) srk.get_yp()[iv].clear();
+
       // calculate wall temp and wall heat transfer
       
       emis    = _emis1;
@@ -1125,6 +1142,11 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
       srk.integrate(x1, x2, eps, h1, hmin, yscal, p_kin);
       burnout = p_kin.get_burnout();
       //burnout = urf*burnout + (1.-urf)*burnout0;
+      cout << "BURNOUT " << burnout << " BURNOUT0 " << burnout0
+ << " ytd " << srk.get_yp()[nvar-3][srk.get_xp().size()-1]
+ << " ysoot " << srk.get_yp()[nvar-2][srk.get_xp().size()-1]
+ << " Nc " << srk.get_yp()[nvar-1][srk.get_xp().size()-1]
+ << endl;
       
       if(fabs(temp-tempold)<1.0) break;
     }  // for(iter
@@ -1144,10 +1166,20 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
     qht = 0.0;
     equil::equilibrium(*thm, strm, qht, burnout, mdot, temp, comp, mol);
     double enth_ad = thm->enthalpy_mix(comp,temp);
-    double temp_st = 298.0;
+    double temp_st = 500.0;
+    std::map< int, bool >& bc_const_temp = strm.get_bc_const_temp_eql_m();
+    std::map< int, bool >::iterator itconst;
+    for(itconst=bc_const_temp.begin(); itconst!=bc_const_temp.end(); itconst++){
+      itconst->second = true;
+    }
+    equil::equilibrium(*thm, strm, qht, burnout, mdot, temp_st, comp, mol);
+    temp_st = 298.0;
     double enth_st = thm->enthalpy_mix(comp,temp_st);
     double heat_loss = _heatloss_gui1 / 100; // gui input
     qht = mdot*(enth_ad - enth_st)*heat_loss;
+    for(itconst=bc_const_temp.begin(); itconst!=bc_const_temp.end(); itconst++){
+      itconst->second = false;
+    }
     equil::equilibrium(*thm, strm, qht, burnout, mdot, temp, comp, mol);
     cout << " temp " << temp << endl;
     
@@ -1241,6 +1273,16 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
 	//cout << "2nd Stage res time " << x3-x2 << endl;
 	p_kin.get_res_time2() = x3;
 
+	// cpd part of soot model
+	if(iter==0){
+	  p_kin.init_yield(x2);
+	}else{
+	  p_kin.yield(srk.get_xp(),srk.get_yp(),5.0e-4,5.0e-3,2,10);
+	}
+	srk.get_xp().clear();
+	int nvar = srk.get_yp().size(), iv;
+	for(iv=0; iv<nvar; iv++) srk.get_yp()[iv].clear();
+
 	// calculate wall temp and wall heat transfer
 
 	emis = _emis2;
@@ -1271,7 +1313,7 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
 	p_kin.reset_burnedout();
 	srk.integrate(x1, x3, eps, h1, hmin, yscal, p_kin);
 	burnout = p_kin.get_burnout();
-	burnout = urf*burnout + (1.-urf)*burnout0;
+	//burnout = urf*burnout + (1.-urf)*burnout0;
 	if(fabs(temp-tempold)<1.0) break;
       }
       
@@ -1294,11 +1336,21 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
       equil::equilibrium(*thm, strm, qht, burnout, mdot, temp, comp, mol);
       //cout << " temp 1st " << temp << endl;
       double enth_ad = thm->enthalpy_mix(comp,temp);
-      double temp_st = 298.0;
+      double temp_st = 500.0;
+      std::map< int, bool >& bc_const_temp = strm.get_bc_const_temp_eql_m();
+      std::map< int, bool >::iterator itconst;
+      for(itconst=bc_const_temp.begin(); itconst!=bc_const_temp.end(); itconst++){
+	itconst->second = true;
+      }
+      equil::equilibrium(*thm, strm, qht, burnout, mdot, temp_st, comp, mol);
+      temp_st = 298.0;
       double enth_st = thm->enthalpy_mix(comp,temp_st);
       double heat_loss = _heatloss_gui2 / 100; // gui input
       qht = mdot*(enth_ad - enth_st)*heat_loss;
       //cout << "QHT " << qht << endl;
+      for(itconst=bc_const_temp.begin(); itconst!=bc_const_temp.end(); itconst++){
+	itconst->second = false;
+      }
       equil::equilibrium(*thm, strm, qht, burnout, mdot, temp, comp, mol);
       cout << " temp " << temp << endl;
     
@@ -1568,9 +1620,9 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
   summaries->insert_summary_val("Cold gas efficiency UNITS:%(LHV) FORMAT:12.2f", geffi_lhv);
   summaries->insert_summary_val("Burnout UNITS:% FORMAT:12.2f", burnout*100);
   summaries->insert_summary_val("Output Temperature UNITS:K FORMAT:12.2f", temp);
-  summaries->insert_summary_val("Thermal Output UNITS:MW FORMAT:12.2f", 
+  summaries->insert_summary_val("Thermal Output UNITS:MW FORMAT:12.2e", 
 			       (f33-h43)*4.184/mwt*mdot);
-  summaries->insert_summary_val("Thermal Input UNITS:MW FORMAT:12.2f", _thermal_input);
+  summaries->insert_summary_val("Thermal Input UNITS:MW FORMAT:12.2e", _thermal_input);
   if(do_design)
     summaries->insert_summary_val("Calculated Diameter UNITS:m FORMAT:12.4f",diam);
   if(!second_stage){
@@ -1579,28 +1631,33 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
       summaries->insert_summary_val("Calculated Wall Thermal Resistance UNITS:m^2-K/W FORMAT:12.4f",rwall_1);
     }
 
-    summaries->insert_summary_val("Wall Heat Transfer UNITS:W FORMAT:12.2f",qht1);
+    summaries->insert_summary_val("Wall Heat Transfer UNITS:W FORMAT:12.2e",qht1);
     //if(geom_input) summaries->insert_summary_val("Ash Heat Transfer UNITS:W FORMAT:12.2f",qht_ash1);
   }else{
     if(do_design) {
       summaries->insert_summary_val("Calculated 1st Stage Length UNITS:m FORMAT:12.4f",leng1);
-      summaries->insert_summary_val("Calculated 1st Stage Wall Thermal Resistance UNITS:m^2-K/W FORMAT:12.4f",rwall_1);
+      summaries->insert_summary_val("Calculated 1st Stage Wall Thermal Resistance UNITS:m^2-K/W FORMAT:12.4e",rwall_1);
       summaries->insert_summary_val("Calculated 2nd Stage Length UNITS:m FORMAT:12.4f",leng2);
-      summaries->insert_summary_val("Calculated 2nd Stage Wall Thermal Resistance UNITS:m^2-K/W FORMAT:12.4f",rwall_2);
+      summaries->insert_summary_val("Calculated 2nd Stage Wall Thermal Resistance UNITS:m^2-K/W FORMAT:12.4e",rwall_2);
     }
-    summaries->insert_summary_val("1st Stage Wall Heat Transfer UNITS:W FORMAT:12.2f",qht1);
+    summaries->insert_summary_val("1st Stage Wall Heat Transfer UNITS:W FORMAT:12.2e",qht1);
     //if(geom_input) summaries->insert_summary_val("1st Stage Ash Heat Transfer UNITS:W FORMAT:12.2f",qht_ash1);
-    summaries->insert_summary_val("2nd Stage Wall Heat Transfer UNITS:W FORMAT:12.2f",qht2);
+    summaries->insert_summary_val("2nd Stage Wall Heat Transfer UNITS:W FORMAT:12.2e",qht2);
     //if(geom_input) summaries->insert_summary_val("2nd Stage Ash Heat Transfer UNITS:W FORMAT:12.2f",qht_ash2);
   } 
   summaries->insert_summary_val("HHV UNITS:BTU/lb FORMAT:12.2f", (f33-h43)*3.96832/mwt/0.0022046226);
   summaries->insert_summary_val("LHV UNITS:BTU/lb FORMAT:12.2f", (f33-h42)*3.96832/mwt/0.0022046226);
   summaries->insert_summary_val("Slag Surface Temperature UNITS:K FORMAT:12.2f", temp_slag);
-  summaries->insert_summary_val("Slag Viscosity UNITS:Pa-s FORMAT:12.2f", visc);
+  summaries->insert_summary_val("Slag Viscosity UNITS:Pa-s FORMAT:12.2e", visc);
   summaries->insert_summary_val("Slag Critical Viscosity Temperature UNITS:K FORMAT:12.2f", tcr);
   summaries->insert_summary_val("Slag Flow UNITS:kg/sec FORMAT:12.2f", tot_ash_flow*_slag_eff/100.0);
+  if(geom_input){
+    int nvar = srk.get_yp().size();
+    int ntm = srk.get_yp()[nvar-1].size();
+    summaries->insert_summary_val("Soot mass fraction UNITS:kg/kg FORMAT:12.3e", srk.get_yp()[nvar-2][ntm-1]);
+    summaries->insert_summary_val("Soot particle number UNITS:#/kg FORMAT:12.3e", srk.get_yp()[nvar-1][ntm-1]);
+  }
 }
-
 ////////////////////////////////////////////////////////////////////////////////////
 
 void Gasifier0D::print_inputs ()

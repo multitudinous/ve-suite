@@ -1,5 +1,4 @@
 #pragma warning(disable: 4786)
-
 #include "part_kinetics.h"
 #include <iostream>
 #include <fstream>
@@ -22,7 +21,8 @@ part_kinetics::part_kinetics(std::vector<REAL>& typ_frac, std::vector< std::vect
       std::vector< std::vector<REAL> >& part_dia0,
       std::vector< std::vector<REAL> >& size_frac0, std::vector<REAL>& omega_srf0,
       std::vector<REAL>& omega_char0, std::vector<REAL>& omega_liq0, 
-      std::vector<REAL>& omega_ash0, REAL& temp_init, thermo& thm, stream& stm)
+      std::vector<REAL>& omega_ash0, REAL& temp_init, thermo& thm, stream& stm,
+      REAL carbon, REAL hydrogen, REAL oxygen, REAL volm, REAL pressure)
   : model     (),
     thm       (&thm),
     stm       (&stm),
@@ -40,7 +40,16 @@ part_kinetics::part_kinetics(std::vector<REAL>& typ_frac, std::vector< std::vect
     type_frac (typ_frac),
     temp_init (temp_init),
     burnedout (false),
-    desired_burnout (-1.0)
+    desired_burnout (-1.0),
+    cpd(carbon, hydrogen, oxygen, volm, pressure),
+    aot(1870508.),
+    eot(52.3),
+    agt(9.77e10),
+    egt(286.9),
+    afc(5.02e8),
+    efc(198.9),
+    aoc(1.085e5),
+    eoc(164.5)
 {
    REAL frac_daf=0, frac_water=0;
    int ibc = 1, istr;
@@ -139,6 +148,11 @@ part_kinetics::part_kinetics(std::vector<REAL>& typ_frac, std::vector< std::vect
      }
    }
    ash_enth = ash_enth_init_1;
+
+   // size vectors for cpd model for use in soot model
+   ytime.resize(ntyp*ns);
+   ytar.resize(ntyp*ns);
+   ygas.resize(ntyp*ns);
 }
 ////////////////////////
 void part_kinetics::initialize(REAL x, std::vector<REAL>& y0, std::vector<REAL>& yscal)
@@ -149,19 +163,31 @@ void part_kinetics::initialize(REAL x, std::vector<REAL>& y0, std::vector<REAL>&
       ns = part_dia[it].size();
       for(is=0; is<ns; is++){
          y0.push_back(solid_raw_fuel[it][is]);
-         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is]+liq[it][is])*10000.01);
+         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is]+liq[it][is]+ash[it][is])*1000.0);
          iy0++;
          y0.push_back(Char[it][is]);
-         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is]+liq[it][is])*10000.01);
+         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is]+liq[it][is]+ash[it][is])*1000.01);
          iy0++;
          y0.push_back(liq[it][is]);
-         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is]+liq[it][is])*10000.01);
+         yscal.push_back((solid_raw_fuel[it][is]+Char[it][is]+liq[it][is]+ash[it][is])*1000.01);
          iy0++;
          y0.push_back(temp_init);
-         yscal.push_back(temp_init*10000.00);
+         yscal.push_back(temp_init*1.00);
          iy0++;
       }
    }
+   // destroyed tar
+   y0.push_back(0.0);
+   yscal.push_back(1.0);
+   iy0++;
+   // soot mass fraction
+   y0.push_back(0.0);
+   yscal.push_back(1.0);
+   iy0++;
+   // soot particle number per unit mass
+   y0.push_back(0.0);
+   yscal.push_back(1.e26);
+   iy0++;
 }
 ////////////////////////
 void part_kinetics::derivs(REAL& x, std::vector<REAL>& y, std::vector<REAL>& dydx)
@@ -295,6 +321,60 @@ void part_kinetics::derivs(REAL& x, std::vector<REAL>& y, std::vector<REAL>& dyd
       } // for(is
    } // for(it
    if(x<res_time1) ash_enth_init_2 = ash_enth;
+
+   //soot integration
+   itspc = thm->get_nam_spec().find("O2");
+   int itm1, itm2, itm, its, npts, id_o2 = itspc->second;
+   REAL ftar, frac, ytc = 0.0;
+   for(it=0; it<ntyp; it++){
+     ns = part_dia[it].size();
+     for(is=0; is<ns; is++){
+       its = it*ns+is;
+       npts = ytime[its].size();
+       if(x<ytime[its][0]){
+	 ftar = ytar[its][0];
+       }else if(x>ytime[its][npts-1]){
+	 ftar = ytar[its][npts-1];
+       }else{
+	 itm1 = 0;
+	 itm2 = npts-1;
+	 while(itm2-itm1>1){
+	   itm = (itm1 + itm2)/2;
+	   if(ytime[its][itm]<x) itm1 = itm;
+	   else itm2 = itm;
+	 }
+	 frac = (x - ytime[its][itm1])/(ytime[its][itm2] - ytime[its][itm1]);
+	 ftar = ytar[its][itm1]*(1.0 - frac) + ytar[its][itm2]*frac;
+       } // if(x<ytim
+       ytc += num_flow[it][is]*solid_raw_fuel[it][is]*ftar;
+     } // for(is
+   } // for(it
+   ytc /= mdot;
+   // tar
+   REAL yt = ytc - y[cnt];
+   if(yt<0.0) yt = 0.0;
+
+   // destroyed tar
+   REAL den = cg*mwg;
+   REAL rfc = yt*afc*exp(-efc/(0.008314*temp_gas)); // soot formation
+   dydx[cnt] = yt*(agt*exp(-egt/(0.008314*temp_gas)) 
+	 + cg*mol[id_o2]*16.0*aot*exp(-eot/(0.008314*temp_gas))) + rfc; // gasification and oxidation
+
+   // soot mass fraction
+   REAL rhoc = 1950.0;
+   if(y[cnt+1]<0.0) y[cnt+1] = 0.0;
+   if(y[cnt+2]<0.0) y[cnt+2] = 0.0;
+   dydx[cnt+1] = rfc - pow(6.0*y[cnt+1]/rhoc,0.666667)*pow(3.14159265*y[cnt+2],0.333333)
+     *aoc*exp(-eoc/(0.008314*temp_gas))/sqrt(temp_gas); // second is term oxidation
+   if(dydx[cnt+1]<0.0) dydx[cnt+1] = 0.0;
+
+   // soot number of particles per unit mass
+   REAL cpip = 9.0e4, cmwc = 12.011, zna = 6.022e26, cacoll = 3.0, boltzk = 1.381e-23;
+   REAL cterm = 1.0/(cpip*cmwc/zna);
+   REAL snuterm = 2.0*cacoll*pow(6.0*cmwc/3.141592654/rhoc,0.1666667)*sqrt(6.0*boltzk*temp_gas/rhoc)
+     *den*pow(y[cnt+1]/cmwc,0.1666667)*pow(y[cnt+2],0.8333333);
+   dydx[cnt+2] = rfc*cterm - snuterm*y[cnt+2];
+   if(dydx[cnt+2]<0.0) dydx[cnt+2] = 0.0;
 }
 ////////////////////////
 void part_kinetics::update(REAL& x, REAL& x2, REAL& x0, std::vector<REAL>& y, std::vector<REAL>& dydx)
@@ -406,12 +486,13 @@ void part_kinetics::update(REAL& x, REAL& x2, REAL& x0, std::vector<REAL>& y, st
 	 cnt += 4;
       }
    }
+   //cout << x << " " << y[cnt] << " " << y[cnt+1] << " " << y[cnt+2] << endl;
 }
 //////////////////////////
 void part_kinetics::push_back(REAL& x, std::vector<REAL>& y,
       std::vector<REAL>& dydx)
 {
-   //cout << x << " " << dydx[0] << endl;
+    //cout << x << " " << dydx[0] << endl;
 }
 //////////////////////////
 void part_kinetics::output(std::vector<REAL>& xp, std::vector< std::vector<REAL> >& yp, char* dir)
@@ -428,4 +509,43 @@ void part_kinetics::output(std::vector<REAL>& xp, std::vector< std::vector<REAL>
    } // for(i
    cout << "burnout " << burnout << endl;
    df.close();
+}
+////////////////////////
+void part_kinetics::yield(std::vector<REAL>& tim, std::vector<std::vector<REAL> >& tem,
+      REAL dt0, REAL dtmax, int iprint, int nmax0)
+{
+  int ntyp = part_dia.size(), it, ns, is, cnt = 3, its;
+  REAL timax = tim[tim.size()-1];
+  for(it=0; it<ntyp; it++){
+    ns = part_dia[it].size();
+    for(is=0; is<ns; is++){
+      its = it*ns+is;
+      ytar[its].clear();
+      ygas[its].clear();
+      ytime[its].clear();
+      cpd.yield(tim,tem[cnt],NULL,NULL,dt0,dtmax,iprint,timax,nmax0,ytar[its],ygas[its],ytime[its]);
+      cnt += 4;
+      //int i, n = ytar[its].size();
+      //for(i=0; i<n; i++) cout << its << " ytime " << ytime[its][i] << " ytar " << ytar[its][i] << " ygas " << ygas[its][i] << endl;
+    }
+  }
+}
+////////////////////////
+void part_kinetics::init_yield(REAL timax)
+{
+  int nt = 40, it, np = ytime.size(), ip;
+  REAL dt = timax/REAL(nt-1), time;
+  for(ip=0; ip<np; ip++){
+    ytime[ip].clear();
+    ytar[ip].clear();
+    ygas[ip].clear();
+  }
+  for(it=0; it<nt; it++){
+    time = dt*REAL(it);
+    for(ip=0; ip<np; ip++){
+      ytime[ip].push_back(time);
+      ytar[ip].push_back(0.0);
+      ygas[ip].push_back(0.0);
+    }
+  }
 }

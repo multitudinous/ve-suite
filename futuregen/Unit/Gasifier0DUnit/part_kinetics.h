@@ -8,6 +8,7 @@
 #include <V21Helper/Therm/REAL.h>
 //#include "REAL.h"
 #include "equil.h"
+#include "coal_perc_devol.h"
 #include <vector>
 #include <cstdio>
 #include <string>
@@ -49,7 +50,8 @@ public:
       std::vector< std::vector<REAL> >& part_dia0,
       std::vector< std::vector<REAL> >& size_frac0, std::vector<REAL>& omega_srf0,
       std::vector<REAL>& omega_char0, std::vector<REAL>& omega_liq0, 
-      std::vector<REAL>& omega_ash0, REAL& temp_init, thermo& thm, stream& stm);
+      std::vector<REAL>& omega_ash0, REAL& temp_init, thermo& thm, stream& stm,
+      REAL carbon, REAL hydrogen, REAL oxygen, REAL volm, REAL pressure);
    virtual ~part_kinetics(){};
    virtual void initialize(REAL x, std::vector<REAL>& y0, std::vector<REAL>& yscal);
    virtual void derivs(REAL& x, std::vector<REAL>& y, std::vector<REAL>& dydx);
@@ -57,6 +59,9 @@ public:
    virtual void push_back(REAL& x, std::vector<REAL>& y,
       std::vector<REAL>& dydx);
    virtual void output(std::vector<REAL>& xp, std::vector< std::vector<REAL> >& yp, char* dir);
+   void yield(std::vector<REAL>& tim, std::vector<std::vector<REAL> >& tem,
+	      REAL dt0, REAL dtmax, int iprint, int nmax0);
+   void init_yield(REAL timax);
 
    // accessors
    REAL& get_temp_gas() {return(temp_gas);}
@@ -73,6 +78,7 @@ public:
    REAL& get_dp_var() {return dp_var;}
    void reset_burnedout() {burnedout = false;}
    void set_desired_burnout(REAL burnout) {desired_burnout = burnout;}
+   void set_mdot(REAL mdot0) {mdot = mdot0;}
 
 protected:
 
@@ -95,6 +101,9 @@ protected:
    REAL res_time1, res_time2, desired_burnout;
    REAL ash_enth_init_1, ash_enth_init_2, ash_enth, dp_mean, dp_var;
    bool burnedout;
+   coal_perc_devol cpd;
+   std::vector<std::vector<REAL> > ytime, ytar, ygas;
+   REAL mdot, aot, eot, agt, egt, afc, efc, aoc, eoc;
 };
 
 #endif

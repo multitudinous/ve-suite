@@ -6,7 +6,7 @@
     
 #include <V21Helper/Therm/REAL.h>
 //#include "REAL.h"
-#include "part_kinetics.h"
+#include "Gasifier0DUnit/part_kinetics.h"
 #include <vector>
 #include <cstdio>
 

@@ -114,13 +114,13 @@ void equil::equilibrium(thermo& thm, stream& strm, REAL qht, REAL burnout, REAL 
 #ifdef PRINT
       cout << "temperature " << temp << endl;
 #endif
-      REAL cp_mix;
+      /*REAL cp_mix;
       if(!const_temp){
          thm.find_temperature(temp,cp_mix,enth,mol);
 #ifdef PRINT
          cout << "temperature " << temp << endl;
 #endif
-      }
+}*/
       REAL mwt = 0.0;
       for(is=0; is<nspc; is++){
 	 comp[is] = mol[is];
@@ -142,7 +142,7 @@ void equil::equilibrium(thermo& thm, stream& strm, REAL qht, REAL burnout, REAL 
 #ifdef PRINT
       cout << sum << endl;
 #endif
-      thm.check_temp_range(mol,temp);
+      thm.check_temp_range(mol,temp1);
    }
 }
 ///////////////
