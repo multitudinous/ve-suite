@@ -515,6 +515,15 @@
 				RelativePath=".\cfdTransientVectorActor.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdVEBaseClass.cxx">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\cfdVector.cxx">
 			</File>
 			<File
@@ -1128,6 +1137,9 @@
 			</File>
 			<File
 				RelativePath="cfdTransientVectorActor.h">
+			</File>
+			<File
+				RelativePath=".\cfdVEBaseClass.h">
 			</File>
 			<File
 				RelativePath="cfdVector.h">
