@@ -17,7 +17,8 @@ default: all
 
 all:
 	$(MAKE) cxx_idl
-	$(MAKE) java_idl
+	cd ${VE_SUITE_HOME}/futuregen/VE_UI && $(MAKE)
+#	$(MAKE) java_idl
 #	$(MAKE) java
 
 srcdir=		.
@@ -117,7 +118,10 @@ java: $(JAVA_CLASSES)
 CLEAN_FILES+=	\
       $(addprefix $(CXX_GEN_DIR)/, $(IDL_CXX_FILES)) \
 		$(addprefix $(JAVA_GEN_DIR)/, $(IDL_JAVA_FILES))	\
-		${JAVA_CLASSDIR}/*.class ${CXX_GEN_DIR}/*.cpp ${CXX_GEN_DIR}/*.h
+		${JAVA_CLASSDIR}/*.class ${CXX_GEN_DIR}/*.cpp ${CXX_GEN_DIR}/*.h \
+      ${CXX_GEN_DIR}/*.i ${CXX_GEN_DIR}/*.o \
+      && cd ${VE_SUITE_HOME}/futuregen/VE_UI && $(MAKE) clean \
+      && cd ${VE_SUITE_HOME}/futuregen/VE_UI && $(MAKE) cleandepend
 
 #  in addition to the "ii_files" directory, the following directories will be removed during "gmake clean"
 CLEAN_DIRS+=	$(JAVA_GEN_DIR)/VjObsPackage $(JAVA_GEN_DIR)/ObserverPackage \

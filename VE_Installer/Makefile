@@ -34,7 +34,6 @@ DIRS= ${VE_SUITE_HOME}/VE_Builder/Translator \
       ${VE_SUITE_HOME}/VE_Builder/Preprocessor \
       ${VE_SUITE_HOME}/VE_Builder/Utilities \
       ${VE_SUITE_HOME}/VE_Conductor \
-      ${VE_SUITE_HOME}/futuregen/VE_UI \
       ${VE_SUITE_HOME}/VE_Xplorer
 #      ${VE_SUITE_HOME}/VE_Builder/WX_Translator
 
@@ -52,7 +51,6 @@ ${VE_SUITE_HOME}/VE_Xplorer::
 #${VE_SUITE_HOME}/VE_Builder/WX_Translator
 
 ${VE_SUITE_HOME}/VE_Conductor \
-${VE_SUITE_HOME}/futuregen/VE_UI \
 ${VE_SUITE_HOME}/VE_Builder/Utilities::
 	cd $@ && $(MAKE)
 
