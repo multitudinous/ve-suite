@@ -59,8 +59,11 @@
 #include "cfdSteadyStateVizHandler.h"
 #include "cfdTransientVizHandler.h"
 #include "cfdModelHandler.h"
+#include "cfdModel.h"
+#include "cfdSwitch.h"
 
 #include "cfdCommandArray.h"
+#include "cfdNode.h"
 #include "cfdGroup.h"
 #include "cfdDCS.h"
 #include "cfdObjects.h"
@@ -305,7 +308,7 @@ inline void cfdApp::initScene( )
    }
    _tbvHandler->SetParameterFile(filein_name);
    //_tbvHandler->SetWorldDCS( _sceneManager->GetWorldDCS() );
-   _tbvHandler->SetParentNode(_sceneManager->GetWorldDCS() );
+   _tbvHandler->SetParentNode((cfdGroup*)_modelHandler->GetActiveModel()->GetSwitchNode()->GetChild(1) );
    _tbvHandler->SetNavigate( _environmentHandler->GetNavigate() );
    _tbvHandler->SetCursor( _environmentHandler->GetCursor() );
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );

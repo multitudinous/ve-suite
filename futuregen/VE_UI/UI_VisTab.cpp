@@ -17,6 +17,7 @@ BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_BUTTON      (EXIT_BUTTON,              UI_VisualizationTab::_onExit)
   EVT_BUTTON      (CLEAR_BUTTON,             UI_VisualizationTab::_onClear)
   EVT_BUTTON      (CUSTOM_VIS_BUTTON,        UI_VisualizationTab::_onCustomVis)
+  EVT_CHECKBOX (CFD_VIS_OPTION,UI_VisualizationTab::_onTextureBasedVisual)
 END_EVENT_TABLE()
 
 /////////////////////////////////////////////////////////////
@@ -40,6 +41,7 @@ UI_VisualizationTab::UI_VisualizationTab(wxNotebook* tControl)
    _clearButton = 0;
    _exitButton = 0;
    _transientCheckBox = NULL;
+   _visOptionCheckBox = 0;
 
    _parent = tControl;
 
@@ -185,23 +187,26 @@ void UI_VisualizationTab::_buildPage()
 
    //This is the fourth row of buttons
    wxBoxSizer* forthRow = new wxBoxSizer(wxHORIZONTAL);
+   _visOptionCheckBox = new wxCheckBox(this,CFD_VIS_OPTION,wxT("Texture Based Visualization"));
+   _visOptionCheckBox->SetValue(false);
+   forthRow->Add(_visOptionCheckBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
 
    _transientCheckBox = new wxCheckBox(this, TRANSIENT_CHECK_BOX, wxT("Transient"));
    _transientCheckBox->SetValue(false);
-   forthRow->Add(_transientCheckBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+   forthRow->Add(_transientCheckBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
 
    _scalarBarCBox = new wxCheckBox(this, SCALAR_BAR_CHECK_BOX, wxT("Scalar Bar"));
    _scalarBarCBox->SetValue(true);
-   forthRow->Add(_scalarBarCBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+   forthRow->Add(_scalarBarCBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
 
    _recordButton = new wxButton(this, RECORD_BUTTON, wxT("Record Scene"));
-   forthRow->Add(_recordButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+   forthRow->Add(_recordButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
 
    _clearButton = new wxButton(this, CLEAR_BUTTON, wxT("Clear All"));
-   forthRow->Add(_clearButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+   forthRow->Add(_clearButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
 
    _exitButton = new wxButton(this, EXIT_BUTTON, wxT("Exit"));
-   forthRow->Add(_exitButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+   forthRow->Add(_exitButton, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,6);
 
    //Here is a new 5th row added for a custom visualization button
    wxBoxSizer* fifthRow = new wxBoxSizer(wxHORIZONTAL);
@@ -303,7 +308,22 @@ void UI_VisualizationTab::_onSingle(wxCommandEvent& event)
   else
     wxMessageBox(_T("single plane unselected!"), _T("RadioButton!"));*/
 }
-  
+//////////////////////////////////////////////////////////////////////
+void UI_VisualizationTab::_onTextureBasedVisual(wxCommandEvent& event)
+{
+   if(_visOptionCheckBox){
+      ((UI_Tabs *)_parent)->cId = VIS_OPTION;
+      if(_visOptionCheckBox->GetValue() == true){
+         //wxMessageBox(_T("texture based vis"), _T("CheckBox!"));
+         ((UI_Tabs *)_parent)->cIso_value = TEXTURE_BASED_VISUALIZATION;;
+      }else{
+         //wxMessageBox(_T("Classic vis"), _T("CheckBox!"));
+         ((UI_Tabs *)_parent)->cIso_value = CLASSIC_VISUALIZATION;
+         
+      }
+      ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   }
+}
 /////////////////////////////////////////////////////////
 void UI_VisualizationTab::_onNearest(wxCommandEvent& event)
 {

@@ -16,7 +16,7 @@ public:
    cfdSwitch(const cfdSwitch& cSwitch);
    virtual ~cfdSwitch();
 
-   enum Value{OFF,ON};
+   enum Value{OFF=-1,ON};
 
    //probably need more functions but
    //this is all we need for now

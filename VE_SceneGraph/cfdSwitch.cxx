@@ -19,6 +19,7 @@ cfdSwitch::cfdSwitch()
    _group = dynamic_cast<pfSwitch*>(_switch);
 #elif _OSG
    _switch = new osg::Switch();
+   _switch->setAllChildrenOff();
    _group = dynamic_cast<osg::Switch*>(_switch);
 #elif _OPENSG
 #endif
@@ -34,6 +35,7 @@ cfdSwitch::cfdSwitch(const cfdSwitch& rhs)
    _group = dynamic_cast<pfSwitch*>(_switch);
 #elif _OSG
    _group = dynamic_cast<osg::Switch*>(_switch);
+
 #elif _OPENSG
 #endif
    SetCFDNodeType(CFD_SWITCH);

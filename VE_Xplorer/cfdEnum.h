@@ -148,6 +148,10 @@ enum cfdGeodeEnum {
    RESET_NAVIGATION_POSITION,//160
    CHANGE_CONTOUR_SETTINGS,
    CHANGE_LOD_SCALE,
-   TRANSIENT_ACTIVE
+   TRANSIENT_ACTIVE,
+   //biv -- these are for texture based visualization
+   VIS_OPTION,
+   TEXTURE_BASED_VISUALIZATION,
+   CLASSIC_VISUALIZATION
 };
 #endif

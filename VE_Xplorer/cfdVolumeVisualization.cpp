@@ -28,7 +28,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _texGenParams  = 0;
    _vSSCbk = 0;
    _utCbk = 0;
-   _mode = PLAY;
+   _mode = STOP;
    _traverseDirection = FORWARD;
    _stateSet  = 0;
    _material  = 0;
@@ -281,8 +281,33 @@ void cfdVolumeVisualization::AddClipPlane(ClipPlane direction,double* position)
 void cfdVolumeVisualization::RemoveClipPlane(ClipPlane direction)
 {
    if(_clipNode.valid()){
-      _clipNode->removeClipPlane(direction);
+      osg::ref_ptr<osg::ClipPlane> plane = 0;
+      unsigned int planeIndex = -1;
+      if(_clipNode->getNumClipPlanes()){
+         for(unsigned int i = 0; i<_clipNode->getNumClipPlanes();i++){
+            plane = _clipNode->getClipPlane(i);
+            if(plane->getClipPlaneNum() == direction){
+               planeIndex = i;
+               break;
+            }else{
+               plane = 0;
+            }
+         }
+         if(plane.valid()){
+            _clipNode->removeClipPlane(planeIndex);
+         }else{
+            std::cout<<"Plane not found!"<<std::endl;
+            std::cout<<"cfdVolumeVisualization::RemoveClipPlanePosition."<<std::endl;
+         }
+      }else{
+         std::cout<<"No planes on clip node!"<<std::endl;
+         std::cout<<"cfdVolumeVisualization::RemoveClipPlanePosition."<<std::endl;
+      }
+      plane = 0;
    }
+   
+      
+   
 }
 /////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::UpdateClipPlanePosition(ClipPlane direction,

@@ -67,7 +67,7 @@ class cfdApp : public vrj::PfApp
 
 
 #include <vrj/Draw/OSG/osgApp.h>
-#include <osg/Timer>;
+#include <osg/Timer>
 namespace osg
 {
    

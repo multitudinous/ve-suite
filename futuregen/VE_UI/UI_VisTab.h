@@ -23,7 +23,8 @@ enum VIS_TAB_IDS{
    CLEAR_BUTTON,
    EXIT_BUTTON,
    CUSTOM_VIS_BUTTON,
-   TRANSIENT_CHECK_BOX
+   TRANSIENT_CHECK_BOX,
+   CFD_VIS_OPTION
 };
 
 class UI_VisualizationTab : public wxPanel 
@@ -50,6 +51,7 @@ class UI_VisualizationTab : public wxPanel
       wxButton* _sliderUpdate;
       wxCheckBox* _scalarBarCBox;
       wxCheckBox* _transientCheckBox;
+      wxCheckBox* _visOptionCheckBox;
       wxButton* _recordButton;
       wxButton* _clearButton;
       wxButton* _exitButton;
@@ -73,6 +75,7 @@ class UI_VisualizationTab : public wxPanel
       void _onSlider(wxCommandEvent& event);
       void _onClear(wxCommandEvent& event);
       void _onCustomVis(wxCommandEvent& event);
+      void _onTextureBasedVisual(wxCommandEvent& event);
   
    DECLARE_EVENT_TABLE()
 };
