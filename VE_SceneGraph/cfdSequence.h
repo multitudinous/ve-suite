@@ -46,10 +46,10 @@ enum cfdLoopMode{
    CFDSEQ_CYCLE = 0,
    CFDSEQ_SWING
 };
-#include "cfdNode.h"
-#include "cfdGroup.h"
-#include "cfdSwitch.h"
 
+#include "cfdGroup.h"
+class cfdNode;
+class cfdSwitch;
 
 #ifdef _PERFORMER
 class pfNode;
@@ -61,7 +61,7 @@ class cfdSequence : public pfGroup, public cfdGroup
 
 #elif _OSG
 #include <osg/Group>
-#include <osg/Switch>
+namespace { class Switch; }
 class cfdSequence : public osg::Group, public cfdGroup
 #endif
 {

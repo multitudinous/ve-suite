@@ -32,6 +32,8 @@
 
 #include "cfdSequence.h"
 #include <iostream>
+#include "cfdNode.h"
+#include "cfdSwitch.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
@@ -56,6 +58,7 @@ void cfdSequence::init(void)
 #elif _OSG
 #include <osg/Node>
 #include <osg/Group>
+#include <osg/Switch>
 #endif
 
 ////////////////////////////////////////
