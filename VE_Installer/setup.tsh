@@ -25,12 +25,13 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
-# Some like to hardcode the following variables for custom setups.
-# The checked in version of this file should have the settings commented out
-# to allow developers to set them from outside this script (see below).
+# Specify your scene graph: OSG = OpenSceneGraph, PF = OpenGL Performer
+# Specify corba build TAO_BUILD only for right now
+# Specify cluster build CLUSTER_APP
 setenv TAO_BUILD TRUE
 #setenv CLUSTER_APP FALSE
 setenv SCENE_GRAPH PF 
+#setenv VE_PATENTED FALSE
 
 # TAO_BUILD can be set outside this script to override the default of TRUE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -57,9 +58,6 @@ else if ( $CLUSTER_APP != "TRUE" && $CLUSTER_APP != "FALSE" ) then
    echo "   Because it was not defined properly, setting CLUSTER_APP to" ${CLUSTER_APP}
    echo "   If you want otherwise, redefine CLUSTER_APP and resource the setup file"
 endif
-
-# Specify your scene graph: OSG = OpenSceneGraph, PF = OpenGL Performer
-#setenv SCENE_GRAPH PF
 
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
@@ -109,8 +107,8 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
    #setenv VTK_BASE_DIR /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-RH80
-   setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rh80
-   setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rh80-deps
+   setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3
+   setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3-deps
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
