@@ -225,7 +225,7 @@ int switchFrame(pfTraverser* trav, void* userData)
       //app is running slower than the sequence
       //need to skip some frames in the
       //sequence 
-      deltaFrame = seqRate/appFrameRate;
+      deltaFrame = (int)( seqRate / appFrameRate );
    }
 
    //now check the states and do the updates

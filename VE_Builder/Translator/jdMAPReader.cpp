@@ -37,8 +37,6 @@
 #include <sstream>
 
 #include "converter.h"
-//#include <cmath>
-//#include <ifstream>
 
 #include <vtkPolyDataWriter.h>
 #include <vtkPolyData.h>      
@@ -80,8 +78,6 @@ jdMAPReader::~jdMAPReader( void )
    //transFilter->Delete();
 }
 
-
-
 void jdMAPReader::translateFluentPartToVTK( void ) 
 {
    std::cout << "[DBG] Translating Fluent Part To VTK" << std::endl;   
@@ -89,7 +85,6 @@ void jdMAPReader::translateFluentPartToVTK( void )
    numParameters = 1;
    vtkIdType id;
    int IDinVTKFile = 0;
-   int value;
    int position[ 3 ];
    int rgb[ 3 ];
    double normRGB[ 3 ];
@@ -136,7 +131,6 @@ void jdMAPReader::translateFluentPartToVTK( void )
    vtkDoubleArray** lutData = new vtkDoubleArray* [ 1 ];
    lutData[ 0 ] = vtkDoubleArray::New();
    lutData[ 0 ]->SetNumberOfComponents( 3 );
-
    
    while( !inFile.eof() )
    {
@@ -149,10 +143,14 @@ void jdMAPReader::translateFluentPartToVTK( void )
       }
       std::istringstream input( line );
       IDinVTKFile++;
-      //input >> value >> comma[ 0 ];
-      //std::cout << value << " " << comma[ 0 ];
-      //input >> value >> comma[ 0 ];
-      //std::cout << value << " " << comma[ 0 ];
+
+/*
+      int value;
+      input >> value >> comma[ 0 ];
+      std::cout << value << " " << comma[ 0 ];
+      input >> value >> comma[ 0 ];
+      std::cout << value << " " << comma[ 0 ];
+*/
 
       input >> position[ 0 ] >> comma[ 0 ] >> position[ 1 ] >> comma[ 0 ] >> position[ 2 ] >> comma[ 0 ]
             >> rgb[ 0 ] >> comma[ 0 ] >> rgb[ 1 ] >> comma[ 0 ] >> rgb[ 2 ];
@@ -169,8 +167,8 @@ void jdMAPReader::translateFluentPartToVTK( void )
       normRGB[ 2 ] = (double)rgb[ 2 ] / (double)255;
 
       lutData[ 0 ]->InsertTuple3( id, (double)normRGB[ 0 ], 
-                                       (double)normRGB[ 1 ], 
-                                       (double)normRGB[ 2 ] );
+                                      (double)normRGB[ 1 ], 
+                                      (double)normRGB[ 2 ] );
 
       polydata->InsertNextCell( VTK_VERTEX, 1, (vtkIdType *)&id);
       //if ( line != NULL )
@@ -262,7 +260,4 @@ std::cout << "here 2 " << std::endl;
    writer->Write();
    //outVtkfile.close();
 }
-
-
-
 

@@ -52,6 +52,7 @@ using std::string;
 
 enum DataTypes
 {
+   DATA_TYPE_ERROR,
    GLOBAL_DATA,
    VECTOR_DATA,
    SCALAR_DATA,
@@ -498,7 +499,8 @@ int TestString( std::string &line, std::string &temp, int &numVal)
    std::string::size_type begIdx[4];//, endIdx;
    std::string iteration ( "GlobalData:Iteration" );
    if ( line.find( colon ) == string::npos )
-      return NULL;
+      return DATA_TYPE_ERROR;
+
    begIdx[0] = line.find( space );
    begIdx[1] = line.find_first_of( space, begIdx[0] + 1 );
    names = line.substr( begIdx[0] + 1, begIdx[1] - begIdx[0] -1);
@@ -509,7 +511,7 @@ int TestString( std::string &line, std::string &temp, int &numVal)
    if ( !names.compare( "GlobalData:Iteration" ) )
    {
      std::cout << " Iteration Data : " <<std::endl;
-      return ( ITERATION );
+      return ITERATION;
    }
    else if ( !abs(names4.compare( "GlobalData" )) )
    {
@@ -520,7 +522,7 @@ int TestString( std::string &line, std::string &temp, int &numVal)
       std::istringstream numCellsString( names2 );
    
       numCellsString >> numVal;
-      return ( GLOBAL_DATA );
+      return GLOBAL_DATA;
    }
    else 
    {       
@@ -532,18 +534,18 @@ int TestString( std::string &line, std::string &temp, int &numVal)
             !names2.compare( 0, 9,"Vorticity" ) )
       {
          std::cout << " Vector Data : " << names2 << std::endl;
-         return ( VECTOR_DATA );
+         return VECTOR_DATA;
       }
       else if ( names.find( "ElementData:Flow" ) != string::npos )
       {
          std::cout << " Scalar Data : " << names2 << std::endl;
-         return ( SCALAR_DATA );
+         return SCALAR_DATA;
       }
       else
       {
-        std::cout << "Error Data Not Found Contact TSVEG " <<std::endl;
+         std::cerr << "Error Data Not Found Contact TSVEG " << std::endl;
          exit( 1 );
-         return (NULL);
+         return DATA_TYPE_ERROR;
       }
    }
 }
