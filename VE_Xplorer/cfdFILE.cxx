@@ -85,11 +85,7 @@ cfdFILE::cfdFILE( char* geomFile, cfdDCS* worldDCS  )
    this->DCS = new cfdDCS();
    this->node = new cfdNode();  
    this->node->LoadFile( geomFile );
-   std::cout << " Load file 2" << geomFile << std::endl;
    strcpy( fileName, geomFile );
-   vprDEBUG(vprDBG_ALL,1) << fileName << std::endl << vprDEBUG_FLUSH;
-   // Maybe fix this functionality later
-   //this->node->flatten( 0 );
    this->DCS->AddChild( this->node );
    worldDCS->AddChild( this->DCS );
 #ifdef _PERFORMER

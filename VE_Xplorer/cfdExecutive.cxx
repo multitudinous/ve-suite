@@ -480,7 +480,7 @@ void cfdExecutive::UpdateModules( void )
    {
       if ( ui_i->GetCalcFlag() )
       {
-         vpr::System::msleep( 1000 );  // half-second delay
+         //vpr::System::msleep( 1000 );  // half-second delay
 
          this->GetEverything();
          std::cout << " Get Everything End" << std::endl;      

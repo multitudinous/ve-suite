@@ -119,6 +119,14 @@ cfdNode& cfdNode::operator=( const cfdNode& input )
 cfdNode::cfdNode()
 :cfdSceneNode(CFD_NODE)
 {
+   //biv--do we need to set type for scene node in here?
+   //this->_group = new pfNode();
+#ifdef _PERFORMER
+   this->_node = 0;
+#elif _OSG
+   _node = 0;
+#elif _OPENSG
+#endif
 }
 /////////////////////////
 cfdNode::~cfdNode( void )
@@ -181,7 +189,6 @@ osg::Node* cfdNode::GetRawNode(void)
 void cfdNode::LoadFile( char* filename )
 {
 #ifdef _PERFORMER
-   std::cout << filename << std::endl;
    this->_node = pfdLoadFile( filename );  
 #elif _OSG
    std::cout<< filename<<std::endl;

@@ -84,7 +84,7 @@ class cfdFILE
       int transparent;
       float stlColor [ 3 ];
       //char* fileName;
-      char fileName[100];
+      char fileName[512];
 //////
       void SetRGBAColorArray( double* );
       void GetColorArray( void );

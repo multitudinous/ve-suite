@@ -54,6 +54,7 @@ cfdSceneNode::cfdSceneNode( void )
 //////////////////////////////////////////
 cfdSceneNode::cfdSceneNode(cfdNodeType nt)
 {
+   this->_nt = nt;
    this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
