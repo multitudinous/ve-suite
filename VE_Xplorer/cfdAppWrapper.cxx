@@ -50,12 +50,12 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 
 cfdAppWrapper::~cfdAppWrapper( void )
 {
-   delete this->_cfdApp;
-   this->_cfdApp = NULL;
-   vpr::System::msleep( 1000 );  // half-second delay
+   vpr::System::msleep( 5000 );  // half-second delay
    //delete this->_thread->corba_run;
    //this->_thread->corba_run = NULL;
    delete _thread->new_thread;
+   delete this->_cfdApp;
+   this->_cfdApp = NULL;
 }
 
 void cfdAppWrapper::init( void * )
@@ -73,4 +73,6 @@ void cfdAppWrapper::init( void * )
    kernel->setApplication( _cfdApp );    // Give application to kernel
    
    kernel->waitForKernelStop();              // Block until kernel stops
+
+   kernel->stop();              // stop kernel
 }

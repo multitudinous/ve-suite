@@ -83,6 +83,7 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    {
       std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }
+   child_poa->destroy(1,1);
    this->_orbPtr->destroy();
 }
 

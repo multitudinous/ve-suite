@@ -99,9 +99,11 @@ int main(int argc, char* argv[])
    cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
    orb->run();
+std::cout << " ORB DEAD " << std::endl;
    // VjObsWrapper is now deleted in cfdApp on exit
    //delete vjobsWrapper;
    delete appWrapper;
+std::cout << " ORB DEAD 2" << std::endl;
 
    return 0;
 }
