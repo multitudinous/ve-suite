@@ -197,14 +197,33 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
             ((UI_DatasetPanel*)GetParent())->_scalarNames,
             1,wxRA_SPECIFY_COLS);
 
-   _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
+   if ( activeDataSet->_numOfVectors != 0 )
+   {
+      _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
                                 wxDefaultPosition, wxDefaultSize, 
             activeDataSet->_numOfVectors,
             ((UI_DatasetPanel*)GetParent())->_vectorNames,
             1, wxRA_SPECIFY_COLS);
-   
+   }
+   else
+   {
+      wxString empty[1];
+      empty[0] = wxT("No Vectors");
+      _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
+                        wxDefaultPosition, wxDefaultSize, 
+                        1, empty, 1, wxRA_SPECIFY_COLS);
+   }
+ 
    // Get number of vectors and scalar names
-   _col->Prepend(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   if ( activeDataSet->_numOfVectors != 0 )
+   {
+      _col->Prepend(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   }
+   else
+   {
+      _col->Prepend(_vectorRBox,0,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   }
+
    _col->Prepend(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    Refresh(); 
@@ -221,13 +240,16 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 
    // Need to add vector support Update VE-Xplorer with new data
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
+   if ( activeDataSet->_numOfVectors != 0 )
+   {
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
                      ((UI_DatasetPanel*)GetParent())->_minPercentSlider->GetValue();
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
                      ((UI_DatasetPanel*)GetParent())->_maxPercentSlider->GetValue();
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_VECTOR;
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_VECTOR;
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
+   }
 }
 
 
@@ -721,21 +743,22 @@ void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
 
    for (int i=0; i<_numSteadyStateDataSets; i++)
    {
+      std::cout << _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) << " : " << _DataSets[i]->_dataSetName<<std::endl;
       if ( _DataSets.empty() )
-	  {
+	   {
          _setScalarsnoDatasets();
-	  }
-	  else if( _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName )
+	   }
+	   else if( _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName )
       {
          ((UI_Frame*)GetParent())->_tabs->setActiveDataset(i);
          _setScalars(_DataSets[i]);
          break;
       }
       else
-	  {
-        std::cerr << " ERROR : Problem with UI_DatasetPanel::_buildPanel " << std::endl;
-		_setScalarsnoDatasets();
-	  }
+	   {
+         std::cerr << " ERROR : Problem with UI_DatasetPanel::_buildPanel " << std::endl;
+		   _setScalarsnoDatasets();
+	   }
    }
 
 	// Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform
