@@ -4,6 +4,7 @@
 #include <iostream>
 #include "UI_Frame.h"
 #include "UI_ModelData.h"
+#include "spinctld.h"
 
 UI_Scalars::UI_Scalars(wxString* scalarName)
 {
@@ -177,8 +178,8 @@ UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
                                 1,empty,1,wxRA_SPECIFY_COLS);
 
    _col = new wxBoxSizer(wxVERTICAL);  
-   _col->Add(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
    _col->Add(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   _col->Add(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    SetSizer(_col);
 }
@@ -202,34 +203,6 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    {
       delete _vectorRBox;
       _vectorRBox = 0;
-   }
-
-   // Create radio boxes
-   if ( activeDataSet->_numOfVectors != 0 )
-   {
-      _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
-                                wxDefaultPosition, wxDefaultSize, 
-            activeDataSet->_numOfVectors,
-            ((UI_DatasetPanel*)GetParent())->_vectorNames,
-            1, wxRA_SPECIFY_COLS);
-   }
-   else
-   {
-      wxString empty[1];
-      empty[0] = wxT("No Vectors");
-      _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
-                        wxDefaultPosition, wxDefaultSize, 
-                        1, empty, 1, wxRA_SPECIFY_COLS);
-   }
- 
-   // Add to the sizer...
-   if ( activeDataSet->_numOfVectors != 0 )
-   {
-      _col->Prepend(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
-   }
-   else
-   {
-      _col->Prepend(_vectorRBox,0,wxALL|wxALIGN_LEFT|wxEXPAND,5);
    }
 
    // Create radio boxes
@@ -258,6 +231,34 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    else
    {
       _col->Prepend(_scalarRBox,0,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   }
+
+   // Create radio boxes
+   if ( activeDataSet->_numOfVectors != 0 )
+   {
+      _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
+                                wxDefaultPosition, wxDefaultSize, 
+            activeDataSet->_numOfVectors,
+            ((UI_DatasetPanel*)GetParent())->_vectorNames,
+            1, wxRA_SPECIFY_COLS);
+   }
+   else
+   {
+      wxString empty[1];
+      empty[0] = wxT("No Vectors");
+      _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
+                        wxDefaultPosition, wxDefaultSize, 
+                        1, empty, 1, wxRA_SPECIFY_COLS);
+   }
+ 
+   // Add to the sizer...
+   if ( activeDataSet->_numOfVectors != 0 )
+   {
+      _col->Prepend(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   }
+   else
+   {
+      _col->Prepend(_vectorRBox,0,wxALL|wxALIGN_LEFT|wxEXPAND,5);
    }
 
    Refresh(); 
@@ -406,19 +407,34 @@ void UI_DatasetPanel::_buildPanel()
    _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, wxDefaultSize,
                                   wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
 
-   //create the two spinners
-   _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+   if ( !_DataSets.empty() )
+   {
+      //create the two spinners
+      _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
                                    _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 0 ],
                                    _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 1 ],
                                    _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 0 ], 
                                    0.25, -1, wxEmptyString);
 
-   _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+      _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
                                    _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 0 ],
                                    _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 1 ],
                                    _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 1 ], 
                                    0.25, -1, wxEmptyString);
+   }
+   else
+   {
+      //create the two spinners
+      _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+                                   0, 1, 1, 0.25, -1, wxEmptyString);
 
+      _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+                                   0,1,1, 0.25, -1, wxEmptyString);
+      _minPercentSlider->Enable( false );
+      _maxPercentSlider->Enable( false );
+      _minSpinner->Enable( false );
+      _maxSpinner->Enable( false );
+   }
    //sizers to pull together the scalar adjustment controls
    scalgroupmin = new wxBoxSizer(wxHORIZONTAL);
    scalgroupspacer = new wxBoxSizer(wxHORIZONTAL);
@@ -861,34 +877,60 @@ void UI_DatasetPanel::_resetScalarAdjustment( int dataSetSelected, int scalarSet
    delete _maxSpinner;
    _maxSpinner = 0;
  
-   double minScalar = _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->range[ 0 ];
-   double maxScalar = _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->range[ 1 ];
+   if ( !_DataSets.empty() )
+   {
+      double minScalar = _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->range[ 0 ];
+      double maxScalar = _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->range[ 1 ];
 
-   double tempminslid =  
+      double tempminslid =  
             (_DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMinSetting -
             minScalar ) / ( maxScalar - minScalar ) * 100;  
 
-   double tempmaxslid =
+      double tempmaxslid =
             ( (maxScalar - minScalar) - ( maxScalar -
             _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMaxSetting) ) /
             ( maxScalar - minScalar) * 100; 
 
-   //create the two sliders
-   _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,(int)tempminslid,0,100,wxDefaultPosition, wxDefaultSize,
+      //create the two sliders
+      _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,(int)tempminslid,0,100,wxDefaultPosition, wxDefaultSize,
                                   wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
-   _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,(int)tempmaxslid,0,100,wxDefaultPosition, wxDefaultSize,
+      _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,(int)tempmaxslid,0,100,wxDefaultPosition, wxDefaultSize,
                                   wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
 
-   //create the two spinners
-   _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+      //create the two spinners
+      _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
                                    minScalar, maxScalar,
                                    _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMinSetting , 
                                    0.25, -1, wxEmptyString);
 
-   _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+      _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
                                    minScalar, maxScalar,
                                    _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMaxSetting ,
                                    0.25, -1, wxEmptyString);
+   }
+   else
+   {
+      //create the two sliders
+      _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,0,0,100,wxDefaultPosition, wxDefaultSize,
+                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+      _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, wxDefaultSize,
+                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+
+      //create the two spinners
+      _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+                                   0, 1,
+                                   1 , 
+                                   0.25, -1, wxEmptyString);
+
+      _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
+                                   0, 1,
+                                   1 ,
+                                   0.25, -1, wxEmptyString);
+      _minPercentSlider->Enable( false );
+      _maxPercentSlider->Enable( false );
+      _minSpinner->Enable( false );
+      _maxSpinner->Enable( false );
+   }
 
    minGroup->Insert(1,_minPercentSlider,1,wxALIGN_RIGHT|wxEXPAND);   
    minGroupwspin->Insert(1,_minSpinner,1,wxALIGN_BOTTOM|wxALIGN_CENTER);
@@ -1145,13 +1187,21 @@ void UI_DatasetPanel::_onMaxSpinCtrl(wxScrollEvent& event)
 //////////////
 void UI_DatasetPanel::GetMinMaxScalar( double& min, double& max)
 {
-   max = _DataSets[ _RBoxScroll->_3dRBox->GetSelection() ]->
+   if ( !_DataSets.empty() )
+   {
+      max = _DataSets[ _RBoxScroll->_3dRBox->GetSelection() ]->
                                  _Scalars[ _ScalarScroll->
                                  _scalarRBox->GetSelection() ]->range[ 1 ];
 
-   min = _DataSets[ _RBoxScroll->_3dRBox->GetSelection() ]->
+      min = _DataSets[ _RBoxScroll->_3dRBox->GetSelection() ]->
                                  _Scalars[ _ScalarScroll->
                                  _scalarRBox->GetSelection() ]->range[ 0 ];
+   }
+   else
+   {
+      max = 1;
+      min = 0;
+   }
 }
 
 void UI_DatasetPanel::ConstructCommandId( void )

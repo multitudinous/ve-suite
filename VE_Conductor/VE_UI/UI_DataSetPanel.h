@@ -5,7 +5,6 @@
 #endif
 
 #include <wx/wx.h>
-#include "spinctld.h"
 
 #include <vector>
 #ifdef _TAO
@@ -15,7 +14,7 @@
 #endif
 
 //using namespace std;
-
+class wxSpinCtrlDbl;
 class UI_ModelData;
 
 enum DATASETS_PANEL_IDS{
