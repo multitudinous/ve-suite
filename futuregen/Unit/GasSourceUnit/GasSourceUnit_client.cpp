@@ -1,6 +1,6 @@
 #include "moduleC.h"
 #include "orbsvcs/CosNamingC.h"
-#include "Unit_i.h"
+#include "GasSourceUnit_i.h"
  
 //This Unit_client act as the executive's client 
 //This Unit is also the Unit servant for the executive' Unit client
