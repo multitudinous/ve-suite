@@ -107,19 +107,15 @@
 
       <p class="bodytext">You need to have omniNames started to run VE_Xplorer. If omniNames is not running, double click on $(VE_SUITE_HOME)\VE_Installer\omninamesStart.bat, or type in a command window, </p>
 
-      <p class="computer">omniNames -start 2809</span></p>
-
-      <p class=bodytext>To run the solution from within Visual Studio, change the working directory in the Configuration Properties tab to point to the directory where your VE-Suite parameter file is located (for example, change the working directory to $(VE_SUITE_HOME)\VE_TestSuite)</p>
-
       <p class="computer">&nbsp;&nbsp;&nbsp; omniNames -start 2809</p>
 
       <p class="bodytext">To run the solution from within Visual Studio, change the working directory in the Configuration Properties tab to point to the directory where your VE-Suite parameter file is located (for example, change the working directory to $(VE_SUITE_HOME)\VE_TestSuite)</p>
 
       <p class="bodytext">You will also need to pass in your juggler config files as command arguments on the configuration properties tab. With the three projects still open, right-click on the VE_Xplorer project file, and select properties. For simulation mode, you add the following to your command arguments section:</p>
 
-      <p class="bodytext">$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</p>
+      <p class="bodytext">&nbsp;&nbsp;&nbsp; $(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</p>
 
-      <p class="bodytext">$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.wand.mixin.jconf</p>
+      <p class="bodytext">&nbsp;&nbsp;&nbsp; $(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.wand.mixin.jconf</p>
 
       <p class="bodytext">After you enter a parameter file name and the scene loads, double click on <span class="computer">$(VE_SUITE_HOME)\bin\ve_conductor.bat</span> to bring up the gui.</p>
 </dl>
