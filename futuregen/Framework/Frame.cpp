@@ -509,6 +509,33 @@ void AppFrame::ViewResult(wxCommandEvent &event)
 			}
 		}
 			
+		result = network->exec->GetModuleResult(-1); //Global result
+				
+		if (string(result)!="")
+		{
+			Package p;
+			p.SetSysId("linkresult.xml");
+			p.Load(result, strlen(result));
+				
+			descs = p.intfs[0].getStrings();
+			v_desc.clear();
+			v_value.clear();
+			v_desc.push_back("Overal Results");
+			sprintf(buf,"   ");
+			v_value.push_back(buf);
+			for (i=0; i<descs.size(); i++)
+			{
+				v_desc.push_back(descs[i].c_str());
+				v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
+			}
+
+			result_dlg->syngas->AddSeperator(' ');
+			result_dlg->syngas->AddSeperator('+');
+			result_dlg->syngas->AddSeperator(' ');
+			result_dlg->Set2Cols(v_desc, v_value);
+  
+		}
+		
 		result_dlg->ShowModal();
 		delete result_dlg;
 	}

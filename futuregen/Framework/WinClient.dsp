@@ -326,6 +326,14 @@ SOURCE=..\Framework\UI_i.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\VE_UI\UI_ModelData.cxx
+# End Source File
+# Begin Source File
+
+SOURCE=..\VE_UI\UI_ModSelPanel.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\VE_UI\UI_NavTab.cpp
 # End Source File
 # Begin Source File
@@ -537,6 +545,14 @@ SOURCE=..\VE_UI\UI_GeometryTab.h
 # Begin Source File
 
 SOURCE=..\Framework\UI_i.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\VE_UI\UI_ModelData.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\VE_UI\UI_ModSelPanel.h
 # End Source File
 # Begin Source File
 
