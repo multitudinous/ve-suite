@@ -566,6 +566,7 @@ void cfdScalarBarActor::CreateObjects( void )
    std::ifstream input;
    input.open( _param );
    input >> numObjects; 
+   cout << numObjects << endl;
    input.getline( text, 256 );   //skip past remainder of line
 
    vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;

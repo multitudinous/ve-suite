@@ -55,10 +55,10 @@ void UI_Frame::buildCORBA( )
    //contol, otherwise it will be under the control of the
    //tabs panel(not recommened, resizing issues may arise).
 
-	char *argv[]={""};
+	//char *argv[]={""};
 	int argc = 0;
    //int argc = 3;
-   //char** argv;
+   char** argv = NULL;
    //argv = new char*[ argc ];
    //argv[ 0 ] = "project";
    //argv[ 1 ] = "-ORBInitRef";
@@ -98,15 +98,15 @@ void UI_Frame::buildCORBA( )
        cerr << "CORBA exception raised!" << endl;
      }
    
-   try 
-     {
-       
-       CosNaming::Name name(1);
+        CosNaming::Name name;
        name.length(1);
        //Now get the reference of the VE server
-       name[0].id   = CORBA::string_dup("Master");
-       name[0].kind = CORBA::string_dup("VE_Xplorer");
-	   CORBA::Object_var ve_object;
+       name[0].id   = (const char*) "Master";
+       name[0].kind = (const char*)"VE_Xplorer";
+    try 
+     {
+       
+ 	   CORBA::Object_var ve_object;
 	   try
 	   { 
 		   if ( !CORBA::is_nil( naming_context.in() ) )

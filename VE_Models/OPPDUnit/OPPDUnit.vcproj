@@ -39,10 +39,10 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="ws2_32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2.lib rpcrt4.lib odbc32.lib odbccp32.lib comctl32.lib wsock32.lib ole32.lib oleaut32.lib"
+				AdditionalDependencies="ws2_32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2D.lib rpcrt4.lib odbc32.lib odbccp32.lib comctl32.lib wsock32.lib ole32.lib oleaut32.lib"
 				OutputFile=".\Debug/OPPDUnit.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Release&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\bin&quot;"
+				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(ACE_ROOT)\lib&quot;;&quot;$(ACE_ROOT)\bin&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/OPPDUnit.pdb"
 				SubSystem="2"
@@ -144,16 +144,28 @@
 				RelativePath=".\DialogDlg.cpp">
 			</File>
 			<File
-				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\Plugin\interface.cpp">
+				RelativePath="..\..\futuregen\Unit\interface.cpp">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\IDL\moduleC.cpp">
+				RelativePath="..\..\VE_Conductor\skel\moduleC.cpp">
 			</File>
 			<File
-				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\IDL\moduleS.cpp">
+				RelativePath="..\..\VE_Conductor\skel\moduleS.cpp">
 			</File>
 			<File
-				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\IDL\moduleS_T.cpp">
+				RelativePath="..\..\VE_Conductor\skel\moduleS_T.cpp">
 			</File>
 			<File
 				RelativePath=".\OPPDUnit.cpp">
@@ -168,7 +180,7 @@
 				RelativePath=".\OrbThread.cpp">
 			</File>
 			<File
-				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\Plugin\package.cpp">
+				RelativePath="..\..\futuregen\Plugin\package.cpp">
 			</File>
 			<File
 				RelativePath=".\stdafx.cpp">
@@ -186,7 +198,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="\\Vracs001\dmuthjr\RProj\VE_Suite\futuregen\Plugin\string_ops.cpp">
+				RelativePath="..\..\futuregen\Plugin\string_ops.cpp">
 			</File>
 		</Filter>
 		<Filter

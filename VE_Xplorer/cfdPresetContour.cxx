@@ -62,7 +62,7 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
 
 cfdPresetContour::~cfdPresetContour()
 {
-   delete this->cuttingPlane;
+//   delete this->cuttingPlane;
    this->cuttingPlane = NULL;
 
    this->cutter->Delete();

@@ -75,9 +75,12 @@ try
 
 // Initialize OLE libraries
 	
-	int argc = 0;
-	char** argv;
-	argv = NULL;//new char*[ argc ];
+  int argc = 3;
+   char** argv;
+   argv = new char*[ argc ];
+   argv[ 0 ] = "project";
+   argv[ 1 ] = "-ORBInitRef";
+   argv[ 2 ] = "NameService=file://ior.txt";
 
 	std::string UNITNAME = "OPPD";
 	try {

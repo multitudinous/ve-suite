@@ -74,7 +74,7 @@ cfdPresetMomentum::cfdPresetMomentum( const int xyz, const float scale,
 
 cfdPresetMomentum::~cfdPresetMomentum()
 {
-   delete this->cuttingPlane;
+   //delete this->cuttingPlane;
    this->cuttingPlane = NULL;
 
    this->cutter->Delete();

@@ -146,13 +146,13 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
    { 
       cfdVectorBase::SetThreshHoldPercentages( 0, 100 );
       cfdVectorBase::SetVectorRatioFactor( 1 );
-      this->UpdateThreshHoldValues();
+      //this->UpdateThreshHoldValues();
    }
 
    // when scalar is changed reset vector thresholding to none...
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR  )
    {
-      UpdateThreshHoldValues();
+      //UpdateThreshHoldValues();
    }
    return flag;
 }
@@ -307,12 +307,12 @@ int cfdVectors::GetVectorRatioFactor()
 
 void cfdVectorBase::UpdateThreshHoldValues()
 {
-   double currentScalarRange[ 2 ];
+   //double currentScalarRange[ 2 ];
    cfdDataSet* temp = GetActiveDataSet();
    if ( temp != NULL )
    {
-      temp->GetRange( currentScalarRange );
-
+      //temp->GetRange( currentScalarRange );
+      double* currentScalarRange = temp->GetRange();
       vprDEBUG(vprDBG_ALL,1) << " currentScalarRange = " 
          << currentScalarRange[ 0 ] << " : " <<  currentScalarRange[ 1 ] 
          << std::endl << vprDEBUG_FLUSH;

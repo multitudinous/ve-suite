@@ -141,6 +141,7 @@ void cfdApp::exit()
      << " pfExit" << std::endl << vprDEBUG_FLUSH;
    //delete _corbaManager;
    pfExit();
+   cout << " end " << endl;
 }
 
 inline void cfdApp::init( )
