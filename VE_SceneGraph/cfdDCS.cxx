@@ -44,14 +44,13 @@
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfNode.h>
 #include <Performer/pr/pfLinMath.h>
-using namespace vrj;
+
 #elif _OSG
 #include <osg/MatrixTransform>
 #include <osg/Matrix>
 #elif _OPENSG
 #endif
 
-using namespace std;
 using namespace gmtl;
 
 cfdDCS::cfdDCS( float* scale, float* trans, float* rot )
@@ -260,7 +259,7 @@ Matrix44f cfdDCS::GetMat( void )
 #ifdef _PERFORMER
    pfMatrix temp;
    this->_dcs->getMat( temp );
-   _vjMatrix = GetVjMatrix( temp );
+   _vjMatrix = vrj::GetVjMatrix( temp );
 #elif _OSG
    _vjMatrix.set((float*)_dcs->getMatrix().ptr()); 
 #elif _OPENSG
@@ -274,7 +273,7 @@ Matrix44f cfdDCS::GetMat( void )
 void cfdDCS::SetMat( Matrix44f& input )
 {
 #ifdef _PERFORMER
-   pfMatrix temp = GetPfMatrix( input );
+   pfMatrix temp = vrj::GetPfMatrix( input );
    this->_dcs->setMat( temp );
 #elif _OSG
    if(_dcs){
@@ -285,7 +284,7 @@ void cfdDCS::SetMat( Matrix44f& input )
       
    }
 #elif _OPENSG
-   cerr << " ERROR: cfdDCS::SetMat is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdDCS::SetMat is NOT implemented " << std::endl;
    exit( 1 );
 #endif
 }
@@ -294,7 +293,7 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
 {
    // Need to set rotation to this matrix
 #ifdef _PERFORMER
-   pfMatrix temp = GetPfMatrix( input );
+   pfMatrix temp = vrj::GetPfMatrix( input );
    pfCoord* coord = new pfCoord();
    temp.getOrthoCoord( coord );
    _dcs->setRot( coord->hpr[ 0 ], coord->hpr[ 1 ], coord->hpr[ 2 ] );
@@ -309,11 +308,11 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
    rot.set(input.getData());
    
    _dcs->setMatrix(rot* orig);
-   cerr <<"Check to make sure rotation is working!!"<<endl;
-   cerr <<"OSG cfdDCS::SetRotationMatrix."<<endl;
+   std::cerr <<"Check to make sure rotation is working!!"<<std::endl;
+   std::cerr <<"OSG cfdDCS::SetRotationMatrix."<<std::endl;
    
 #elif _OPENSG
-   cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;
    exit( 1 );
 #endif
 }

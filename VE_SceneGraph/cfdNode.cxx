@@ -34,8 +34,6 @@
 #include <vpr/Util/Debug.h>
 #include <cstdlib>
 
-using namespace std;
-
 #ifdef _PERFORMER
 #include <Performer/pf.h>
 #include <Performer/pfdu.h>
@@ -177,10 +175,10 @@ osg::Node* cfdNode::GetRawNode(void)
 void cfdNode::LoadFile( char* filename )
 {
 #ifdef _PERFORMER
-   cout << filename << endl;
+   std::cout << filename << std::endl;
    this->_node = pfdLoadFile( filename );  
 #elif _OSG
-   cout<< filename<<endl;
+   std::cout<< filename<<std::endl;
 
    //osgDB::RegisterReaderWriterProxy<ReaderWriterPFB> rw;
   
@@ -188,7 +186,7 @@ void cfdNode::LoadFile( char* filename )
    //osgDB::setLibraryFilePathList("C:/OSG_OP_OT-0.9.7-3/OpenSceneGraph/bin");
    _node = osgDB::readNodeFile(filename);
 #elif _OPENSG
-   cout << " Error:LoadFile !!! " << endl;
+   std::cout << " Error:LoadFile !!! " << std::endl;
    exit( 1 );
 #endif
 }
@@ -200,11 +198,11 @@ cfdNode* cfdNode::Clone( int level )
    exit( 1 );
    return NULL;
 #elif _OSG
-   cout << " Error:Clone !!! " << endl;
+   std::cout << " Error:Clone !!! " << std::endl;
    exit( 1 );
    return NULL;
 #elif _OPENSG
-   cout << " Error:Clone !!! " << endl;
+   std::cout << " Error:Clone !!! " << std::endl;
    exit( 1 );
    return NULL;
 #endif
@@ -444,7 +442,7 @@ void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
             geostate->setAttr( PFSTATE_FOG, fog );
                         
             geoset->setGState( geostate );
-            cout << "draw " << endl;
+            std::cout << "draw " << std::endl;
             //geoset->draw();
          }
          else

@@ -35,8 +35,6 @@
 #include "cfdGroup.h"
 #include "cfdGeode.h"
 
-using namespace std;
-
 #include <iostream>
 
 #include <vpr/Util/Debug.h>

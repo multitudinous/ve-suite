@@ -57,8 +57,6 @@ void cfdSequence::init(void)
 #include <osg/Node>
 #include <osg/Group>
 #endif
-using namespace std;
-
 
 ////////////////////////////////////////
 //our class implementation
@@ -422,9 +420,9 @@ void cfdSequence::setCurrentFrame(int index)
 #endif
       }else{
          //invalid index
-         cout<<"Error: cfdSequence!"<<endl;
-         cout<<"Frame index: "<<index
-             <<" is outside of range of valid frames!"<<endl;
+         std::cout<<"Error: cfdSequence!"<<std::endl;
+         std::cout<<"Frame index: "<<index
+             <<" is outside of range of valid frames!"<<std::endl;
          return;
       }
    }else if(_dir == -1){
@@ -437,9 +435,9 @@ void cfdSequence::setCurrentFrame(int index)
 #endif
       }else{
          //invalid index
-         cout<<"Error: cfdSequence!"<<endl;
-         cout<<"Frame index: "<<index
-             <<" is outside of range of valid frames!"<<endl;
+         std::cout<<"Error: cfdSequence!"<<std::endl;
+         std::cout<<"Frame index: "<<index
+             <<" is outside of range of valid frames!"<<std::endl;
          return;
       }
    }

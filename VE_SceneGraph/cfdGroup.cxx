@@ -34,7 +34,6 @@
 #include <algorithm>
 #include <cstdlib>
 #include <string>
-using namespace std;
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
@@ -142,10 +141,10 @@ cfdGroup::~cfdGroup( void )
 int cfdGroup::RemoveChild( cfdNode* child )
 {
 #ifdef _OPENSG
-   cerr << " ERROR: cfdGroup::RemoveChild is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdGroup::RemoveChild is NOT implemented " << std::endl;
    exit( 1 );
 #endif
-   vector< cfdNode* >::iterator oldChild;
+   std::vector< cfdNode* >::iterator oldChild;
    oldChild = std::find( childNodes.begin(), childNodes.end(), child );
    
    // Check to make sure he is on this node
@@ -158,7 +157,7 @@ int cfdGroup::RemoveChild( cfdNode* child )
    }
    else
    {
-      cout << " Child Not found " << endl;
+      std::cout << " Child Not found " << std::endl;
       return -1;
    }
 }
@@ -166,7 +165,7 @@ int cfdGroup::RemoveChild( cfdNode* child )
 int cfdGroup::AddChild( cfdNode* child )
 {
 #ifdef _OPENSG
-   cerr << " ERROR: cfdGroup::AddChild is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdGroup::AddChild is NOT implemented " << std::endl;
    exit( 1 );
    return -1;
 #endif
@@ -184,13 +183,13 @@ int cfdGroup::AddChild( cfdNode* child )
 void cfdGroup::InsertChild( int position, cfdNode* child )
 {
 #ifdef _OPENSG
-   cerr << " ERROR: cfdGroup::InsertChild is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdGroup::InsertChild is NOT implemented " << std::endl;
    exit( 1 );
 #endif
 
    this->_group->insertChild( position, child->GetRawNode() );
   
-   vector< cfdNode* >::iterator newPosition;
+   std::vector< cfdNode* >::iterator newPosition;
 
    newPosition = std::find( childNodes.begin(), childNodes.end(), childNodes[ position ] );
 
@@ -222,14 +221,14 @@ int cfdGroup::GetNumChildren( void )
 {
    
 #ifdef _OPENSG
-   cerr << " ERROR: cfdGroup::GetNumChildren is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdGroup::GetNumChildren is NOT implemented " << std::endl;
    exit( 1 );
    return -1;
 #endif
 
    int numChildren = this->_group->getNumChildren(); 
    if(numChildren!=(int)childNodes.size()){
-      cout << " ERROR: Number of children don't equal " << endl;
+      std::cout << " ERROR: Number of children don't equal " << std::endl;
       exit( 1 );
    }
    return numChildren;
@@ -264,8 +263,8 @@ int cfdGroup::ReplaceChild( cfdNode* childToBeReplaced,
    exit( 1 );
    return -1;
 #endif
-   vector< cfdNode* >::iterator oldChild;
-   oldChild = find( childNodes.begin(), childNodes.end(), childToBeReplaced );
+   std::vector< cfdNode* >::iterator oldChild;
+   oldChild = std::find( childNodes.begin(), childNodes.end(), childToBeReplaced );
    
    // Check to make sure he is on this node
    if ( oldChild != childNodes.end() )
@@ -283,7 +282,7 @@ int cfdGroup::ReplaceChild( cfdNode* childToBeReplaced,
    }
    else
    {
-      cout << " Error : Child not found " << endl;
+      std::cout << " Error : Child not found " << std::endl;
       return -1;
    }
 }
@@ -292,15 +291,15 @@ cfdNode* cfdGroup::Clone( int )
 {
    // Need to fix this
 #ifdef _PERFORMER
-   cerr << " ERROR: cfdGroup::Clone is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdGroup::Clone is NOT implemented " << std::endl;
    exit( 1 );
    return NULL;
 #elif _OSG
-   cerr << " ERROR: cfdGroup::Clone is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdGroup::Clone is NOT implemented " << std::endl;
    exit( 1 );
    return NULL;
 #elif _OPENSG
-   cerr << " ERROR: cfdGroup::Clone is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdGroup::Clone is NOT implemented " << std::endl;
    exit( 1 );
    return NULL;
 #endif

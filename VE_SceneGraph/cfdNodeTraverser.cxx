@@ -32,7 +32,6 @@
 
 #include "cfdNodeTraverser.h"
 #include <iostream>
-using namespace std;
 #include "cfdGroup.h"
 
 #ifdef _PERFORMER
@@ -93,8 +92,8 @@ void cfdNodeTraverser::traverse()
          _postFunc(this,_root);
       }
    }else{
-      cout<<"Error: cfdNodeTraverser::traverse()!"<<endl;
-      cout<<"Root node not set!"<<endl;
+      std::cout<<"Error: cfdNodeTraverser::traverse()!"<<std::endl;
+      std::cout<<"Root node not set!"<<std::endl;
       return; 
    }
 }
