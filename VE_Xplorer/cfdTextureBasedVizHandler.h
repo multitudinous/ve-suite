@@ -12,6 +12,7 @@ class cfdCommandArray;
 class cfdSwitch;
 class cfdGraphicsObject;
 
+
 class cfdTextureManager;
 #include <vector>
 #ifdef _PERFORMER
@@ -20,6 +21,7 @@ class cfdTextureManager;
 namespace osgUtil{
    class SceneView;
 };
+class cfdPBufferManager;
 class cfdVolumeVisualization;
 class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
 {
@@ -33,12 +35,15 @@ public:
    void SetNavigate(cfdNavigate* navigate);
    void SetCursor(cfdCursor* cursor);
    void SetActiveTextureManager(cfdTextureManager* tm);
+   void SetPBuffer(cfdPBufferManager* pbm);
    //once we get pf side this may need to be ifdef'd
    void SetSceneView(osgUtil::SceneView* sv);
+
 
    bool InitVolumeVizNodes( void );
    cfdVolumeVisualization* GetVolumeVizNode(int index);
    cfdVolumeVisualization* GetActiveVolumeVizNode( void );
+   cfdPBufferManager* GetPBuffer();  
    cfdTextureBasedVizHandler& operator=(const cfdTextureBasedVizHandler& tbvh);
 
 protected:	
@@ -51,6 +56,7 @@ protected:
    std::vector<cfdVolumeVisualization*> _volumeVisNodes;
    cfdVolumeVisualization* _activeVolumeVizNode;
    cfdGroup* _parent;
+   cfdPBufferManager* _pbm;
    osgUtil::SceneView* _sceneView;
    float* _currentBBox;
    bool _cleared;

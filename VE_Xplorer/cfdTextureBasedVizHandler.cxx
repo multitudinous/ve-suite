@@ -31,6 +31,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _parent = 0;
    _currentBBox = 0;
    _cleared = true;
+   _pbm = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -50,6 +51,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHan
    _activeTM = tbvh._activeTM;
    _parent = tbvh._parent;
    _sceneView = tbvh._sceneView;
+   _pbm = tbvh._pbm;
    _currentBBox = new float[6];
    _currentBBox[0] = tbvh._currentBBox[0];
    _currentBBox[1] = tbvh._currentBBox[1];
@@ -250,6 +252,19 @@ void cfdTextureBasedVizHandler::SetParameterFile(char* paramFile)
    _paramFile = new char[strlen(paramFile)+1];
    strcpy(_paramFile,paramFile);
 }
+//////////////////////////////////////////////////////////
+cfdPBufferManager* cfdTextureBasedVizHandler::GetPBuffer()
+{
+   if(_pbm){
+      return _pbm;
+   }
+   return 0;
+}
+//////////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::SetPBuffer(cfdPBufferManager* pbm)
+{
+   _pbm = pbm;
+}
 ////////////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetCommandArray(cfdCommandArray* cmdArray)
 {
@@ -379,6 +394,7 @@ cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTexture
       _activeTM = tbvh._activeTM;
       _parent = tbvh._parent;
       _sceneView = tbvh._sceneView;
+      _pbm = tbvh._pbm;
       if(!_currentBBox){
          _currentBBox = new float[6];
       }
