@@ -78,23 +78,23 @@ public:
       // allocate enough space
 	   geo_name       = new VjObs::scalar_p(50);
 	   geo_name->length(50);
-	   scl_name       = new VjObs::scalar_p(50);
-	   scl_name->length(50);
+	   //scl_name       = new VjObs::scalar_p(50);
+	   //scl_name->length(50);
 	   teacher_name   = new VjObs::scalar_p(50);
 	   teacher_name->length(50);
-	   dataset_names  = new VjObs::scalar_p(50);
-	   dataset_names->length(50);
+	   //dataset_names  = new VjObs::scalar_p(50);
+	   //dataset_names->length(50);
 	   sound_names    = new VjObs::scalar_p(50);
 	   sound_names->length(50);
 
-	   dataset_types  = new VjObs::obj_p(50);
-	   dataset_types->length(50);
-	   num_scalars_per_dataset = new VjObs::obj_p(50);
-	   num_scalars_per_dataset->length(50);
-	   num_vectors_per_dataset = new VjObs::obj_p( 50 );
-	   num_vectors_per_dataset->length(50);
-	   vec_name = new VjObs::scalar_p( 50 );
-	   vec_name->length( 50 );
+	   //dataset_types  = new VjObs::obj_p(50);
+	   //dataset_types->length(50);
+	   //num_scalars_per_dataset = new VjObs::obj_p(50);
+	   //num_scalars_per_dataset->length(50);
+	   //num_vectors_per_dataset = new VjObs::obj_p( 50 );
+	   //num_vectors_per_dataset->length(50);
+	   //vec_name = new VjObs::scalar_p( 50 );
+	   //vec_name->length( 50 );
       // This array is used in place of the call backs
       // to the client because the communication didn't
       // seem to work. There are 9 entries becuase that
@@ -105,25 +105,19 @@ public:
 	   clientInfoObserverDataArray->length( this->numOfClientInfo );
 	   clientInfoObserverDataArray->length(50);
       this->_unusedNewData = false;
-
+      _models = NULL;
    }
    virtual ~VjObs_i(){}
    
-   // Only Call these functions once in the constructor
-   // These initialize and populate all the passed arrays
-   void CreateSoundInfo( void );
    void CreateGeometryInfo( void );
    void CreateDatasetInfo( void );
    void CreateTeacherInfo( void );
 
    void PreFrameUpdate( void );
 #ifdef _TAO   
-   void update() throw (CORBA::SystemException);
-   //Observer::baf_p_slice* baf_param;
-   VjObs::scalar_p* update_scalar() throw (CORBA::SystemException);
-   VjObs::scalar_p* update_vector() throw (CORBA::SystemException);
    VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
+   VjObs::Models* GetModels() throw (CORBA::SystemException);
    //yang-REI : Change the design a little here
    //The original code's idea to set shared flag. Using that flag to wait for
    //the excution of the cfd::get_geo() and the cfd::get_scalar() to finish
@@ -134,32 +128,18 @@ public:
    //wait for it return, which is the basic behavior of function calls.  I
    //reimplemented it with virtual functions, which will be overided in
    //cfdApp. So they are actually direct function calls to the cfdApp.
-   short get_sc_num() throw (CORBA::SystemException);//{return this->get_sc_num();}; //*
    short get_teacher_num() throw (CORBA::SystemException);//{return this->get_teacher_num();}; //*
    short get_geo_num() throw (CORBA::SystemException);//{return this->get_geo_num();}; //*
    char* get_perf() throw (CORBA::SystemException);
 
    short GetNumberOfSounds() throw (CORBA::SystemException);
    VjObs::scalar_p* GetSoundNameArray() throw (CORBA::SystemException);
-   //short get_postdata(){ return NULL; }
-   //short get_timesteps(){ return NULL; }
 
    void SetClientInfoFlag( short ) throw (CORBA::SystemException);
    void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
    VjObs::obj_p* GetClientInfoData() throw (CORBA::SystemException);
-   VjObs::scalar_p * get_dataset_names() throw (CORBA::SystemException);
-   VjObs::obj_p * get_dataset_types() throw (CORBA::SystemException);
-   VjObs::obj_p * get_num_scalars_per_dataset() throw (CORBA::SystemException);
-   VjObs::obj_p * get_num_vectors_per_dataset() throw (CORBA::SystemException);
 #else   
-   //void SetApplicationPointer( cfdApp * );
-
-   //void attach(Observer_ptr o);
-   //void detach(Observer_ptr o);
-   void update();
-   //Observer::baf_p_slice* baf_param;
-   VjObs::scalar_p* update_scalar();
-   VjObs::scalar_p* update_vector();
+   VjObs::Models* GetModels();
    VjObs::scalar_p* get_geo_name();
    VjObs::scalar_p* get_teacher_name();
    //yang-REI : Change the design a little here
@@ -172,7 +152,6 @@ public:
    //wait for it return, which is the basic behavior of function calls.  I
    //reimplemented it with virtual functions, which will be overided in
    //cfdApp. So they are actually direct function calls to the cfdApp.
-   short get_sc_num();//{return this->get_sc_num();}; //*
    short get_geo_num();//{return this->get_geo_num();}; //*
    short get_teacher_num();//{return this->get_teacher_num();}; //*
    char* get_perf();
@@ -185,27 +164,9 @@ public:
    void SetClientInfoFlag( CORBA::Short );
    void SetClientInfoData( const VjObs::obj_pd &value );
    VjObs::obj_p* GetClientInfoData();
-   VjObs::scalar_p * get_dataset_names();
-   VjObs::obj_p * get_dataset_types();
-   VjObs::obj_p * get_num_scalars_per_dataset();
-   VjObs::obj_p * get_num_vectors_per_dataset();
 #endif   
 
-private:
-   //CORBA::Object_var obj;
-   //Observer_ptr client_list[25];
-   //Observer_var client_list[25];
-   //CORBA::ORB_ptr orb;
-   //Observer_ptr test_ptr;
-
 protected:
-   //void SetCfdReadParam( cfdReadParam * );
-   //void SetCfdTeacher( cfdTeacher * );
-
-   //cfdReadParam *mParamReader;
-   //cfdTeacher  *mTeacher;
-
-   //void put_cur_obj(Observer::obj_p_var o);
 
    void SetHandlers( cfdSteadyStateVizHandler*, 
                      cfdEnvironmentHandler*, cfdModelHandler* );
@@ -214,19 +175,20 @@ protected:
    cfdEnvironmentHandler*   _envHandler;
    cfdModelHandler*       _modelHandler;
 
-   VjObs::scalar_p_var scl_name;
-   VjObs::scalar_p_var vec_name;
+   //VjObs::scalar_p_var scl_name;
+   //VjObs::scalar_p_var vec_name;
    VjObs::scalar_p_var geo_name;
    VjObs::scalar_p_var sound_names;
    VjObs::scalar_p_var teacher_name;
-   //Observer::obj_p_var cur_obj;
-   int totalNumberOfScalars;
-   int totalNumberOfVectors;
+   VjObs::Models_var _models;
 
-   VjObs::scalar_p_var dataset_names;
-   VjObs::obj_p_var dataset_types;
-   VjObs::obj_p_var num_scalars_per_dataset;
-   VjObs::obj_p_var num_vectors_per_dataset;
+   //int totalNumberOfScalars;
+   //int totalNumberOfVectors;
+
+   //VjObs::scalar_p_var dataset_names;
+   //VjObs::obj_p_var dataset_types;
+   //VjObs::obj_p_var num_scalars_per_dataset;
+   //VjObs::obj_p_var num_vectors_per_dataset;
    VjObs::obj_p_var clientInfoObserverDataArray;
    int numOfClientInfo;
    bool _unusedNewData;
@@ -237,15 +199,6 @@ protected:
 #endif
 
 #ifdef _TAO   
-   void setNumDatasets(const short value) throw (CORBA::SystemException);
-   short getNumDatasets( void ) throw (CORBA::SystemException);
-
-   short getTotalNumberOfScalars( void ) throw (CORBA::SystemException);
-   CORBA::Short getTotalNumberOfVectors() throw (CORBA::SystemException);
-
-   void setNumVectors(const short value) throw (CORBA::SystemException);
-   short getNumVectors( void ) throw (CORBA::SystemException);
-
    void setNumGeoArrays(const short value) throw (CORBA::SystemException);
    short getNumGeoArrays( void ) throw (CORBA::SystemException);
 
@@ -285,15 +238,6 @@ protected:
    /**
     * Sets this subject's internal value.
     */
-   void setNumDatasets(CORBA::Short value);
-   CORBA::Short getNumDatasets();
-
-   CORBA::Short getTotalNumberOfScalars();
-   CORBA::Short getTotalNumberOfVectors();
-
-   void setNumVectors(CORBA::Short value);
-   CORBA::Short getNumVectors( void );
-
    void setNumGeoArrays(CORBA::Short value);
    CORBA::Short getNumGeoArrays( void );
 

@@ -74,90 +74,158 @@ void VjObs_i::SetHandlers( cfdSteadyStateVizHandler* ssHandler,
 }
 
 #ifdef _TAO
-void VjObs_i::update()
+VjObs::Models* VjObs_i::GetModels()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
 #else
-void VjObs_i::update()
+VjObs::Models* VjObs_i::GetModels()
 #endif
 {
-/*   int clients = this->getClients();
-   cout<<"update:clients = "<<clients<<endl;
-
-   if(clients != 0)
-   {
-      vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-      for(int i=0;i<clients;i++)
-      {
-         cout << client_list[ i ] << endl;
-         //this->setId( client_list[ i ]->update() );
-         this->mId = client_list[ i ]->update();
-         cout<<"update:this->corba_mutex.C_id = "<<this->mId<<endl;
-
-         // get the value of the slider bar, used by many visualizations
-         //this->setIsoValue( client_list[ i ]->get_iso_value() );
-         this->mIso_value = client_list[ i ]->get_iso_value();
-         cout<<"iso_value"<<this->mIso_value<<endl;
-
-         //this->setTimesteps( client_list[ i ]->get_timesteps() );
-         this->mTimesteps = client_list[ i ]->get_timesteps();
-         //this->setSc( client_list[ i ]->get_sc() );
-         this->mSc = client_list[ i ]->get_sc();
-         cout<<"select scalar:"<<this->mSc<<endl;
-         // change scalar range or cursor settings
-         //this->setMin( client_list[ i ]->get_min() );
-         this->mMin = client_list[ i ]->get_min();
-         //this->setMax( client_list[ i ]->get_max() );
-         this->mMax = client_list[ i ]->get_max();
-         cout<<"update:min,max values: "<<this->mMin<<"\t"<<this->mMax<<endl;
-         //this->setGeoState( client_list[ i ]->get_geo_state() );
-         this->mGeo_state = client_list[ i ]->get_geo_state();
-         //cout<<"geometry state:"<<geo_state<<endl;
-         //this->setPreState( client_list[ i ]->get_pre_state() );
-         this->mPre_state = client_list[ i ]->get_pre_state();
-         //cout<<"pre_state:"<<pre_state<<endl;
-         //baf_param = client_list[ i ]->get_baf_param();
-         //for(int j = 0; j < 15; j++)
-         //{
-            //cout<<"param "<<j<<":"<<baf_param[j]<<endl;
-         //}
-         //this->setTeacherState( client_list[ i ]->get_teacher_state() );
-         this->mTeacher_state = client_list[ i ]->get_teacher_state();
-         //cout<<"mTeacher state:"<<mTeacher_state<<endl;
-      }
-   }
-   else
-   {
-      std::cout<<"No clients connected!\n"<<std::endl;
-   }*/
+   this->CreateDatasetInfo();
+   VjObs::Models_var models_= new VjObs::Models(_models);
+   return models_._retn();
 }
+
 /////////////////////////////////////////////////////////////
-void VjObs_i::CreateSoundInfo( void )
+void VjObs_i::CreateDatasetInfo( void )
 {   
-   int numberOfSounds = this->_envHandler->GetSoundHandler()->GetNumberOfSounds();
-   this->sound_names->length( numberOfSounds );
-
-   vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
-                          << numberOfSounds << std::endl << vprDEBUG_FLUSH;
-
-   if( numberOfSounds > 0 )
+   CORBA::ULong numberOfModels = this->_modelHandler->GetNumberOfModels();
+   if ( numberOfModels > 0 )
    {
-      for(CORBA::ULong i = 0; i < (unsigned int)numberOfSounds; i++)
+      if ( _models != NULL )
       {
-         this->sound_names[ i ] = CORBA::string_dup( 
-                     this->_envHandler->GetSoundHandler()->GetSoundFilename( i ) );
+         delete _models;
+      }
+
+      _models = new VjObs::Models( numberOfModels );
+      _models->length( numberOfModels );
+      for ( CORBA::ULong i = 0; i < numberOfModels; i++ )
+      {
+         _models[ i ] = VjObs::Model();
+         cfdModel* temp = this->_modelHandler->GetModel( i );
+         CORBA::ULong numDatasets = temp->GetNumberOfCfdDataSets();
+         vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
+                          << std::endl << vprDEBUG_FLUSH;
+   
+         this->_models[ i ].datasetnames = VjObs::scalar_p( numDatasets ); 
+         this->_models[ i ].datasetnames.length( numDatasets );
+
+         this->_models[ i ].datasettypes  = VjObs::obj_p( numDatasets );
+         this->_models[ i ].datasettypes.length( numDatasets );
+
+         this->_models[ i ].num_scalars_per_dataset = VjObs::obj_p( numDatasets );
+         this->_models[ i ].num_scalars_per_dataset.length( numDatasets );
+
+         this->_models[ i ].num_vectors_per_dataset = VjObs::obj_p( numDatasets );
+         this->_models[ i ].num_vectors_per_dataset.length( numDatasets );
+
+         CORBA::ULong totalNumberOfScalars = 0;
+         CORBA::ULong totalNumberOfVectors = 0;
+         for ( CORBA::ULong j=0; j< numDatasets; j++ )
+         {
+            //cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << endl;
+            totalNumberOfScalars += temp->GetCfdDataSet( j )->GetNumberOfScalars();
+            totalNumberOfVectors += temp->GetCfdDataSet( j )->GetNumberOfVectors();
+         }
+         vprDEBUG(vprDBG_ALL,0)
+               << " totalNumberOfScalars: " << totalNumberOfScalars
+               << std::endl << vprDEBUG_FLUSH;
+
+         vprDEBUG(vprDBG_ALL,0)
+               << " totalNumberOfVectors: " << totalNumberOfVectors
+               << std::endl << vprDEBUG_FLUSH;
+
+         this->_models[ i ].scalarnames = VjObs::scalar_p( totalNumberOfScalars );
+         this->_models[ i ].scalarnames.length( totalNumberOfScalars );
+
+         this->_models[ i ].vectornames = VjObs::scalar_p( totalNumberOfVectors );
+         this->_models[ i ].vectornames.length( totalNumberOfVectors );
+
+         CORBA::ULong sIndex = 0;
+         CORBA::ULong vIndex = 0;
+         for ( CORBA::ULong j=0; j < numDatasets; j++ )
+         {
+            this->_models[ i ].datasetnames[ j ] = CORBA::string_dup( 
+                          temp->GetCfdDataSet( j )->GetFileName() );
+            vprDEBUG(vprDBG_ALL,1) << " dataset_name:   " << this->_models[ i ].datasetnames[ j ]
+                             << std::endl << vprDEBUG_FLUSH;
+
+            this->_models[ i ].datasettypes[ j ] = temp->GetCfdDataSet( j )->GetType();
+
+            CORBA::Short num_scalars = temp->GetCfdDataSet( j )->GetNumberOfScalars();
+            this->_models[ i ].num_scalars_per_dataset[ j ] = num_scalars;
+
+            for (CORBA::ULong k=0; k < (unsigned int)num_scalars; k++ )
+            {
+               this->_models[ i ].scalarnames[ sIndex ] = CORBA::string_dup(
+                    temp->GetCfdDataSet( j )->GetScalarName( k ) );
+               vprDEBUG(vprDBG_ALL,1) << "\tscl_name " 
+                                << sIndex << " : " << this->_models[ i ].scalarnames[ sIndex ]
+                                << std::endl << vprDEBUG_FLUSH;
+               sIndex++;
+            }
+
+            CORBA::Short num_vectors = temp->GetCfdDataSet( j )
+                                          ->GetNumberOfVectors();
+            this->_models[ i ].num_vectors_per_dataset[ j ] = num_vectors;
+
+            for (CORBA::ULong k=0; k < (unsigned int)num_vectors; k++ )
+            {
+               this->_models[ i ].vectornames[ vIndex ] = CORBA::string_dup(
+                    temp->GetCfdDataSet( j )->GetVectorName( k ) );
+               vprDEBUG(vprDBG_ALL,1) << "\tvec_name " 
+                                << vIndex << " : " << this->_models[ i ].vectornames[ vIndex ]
+                                << std::endl << vprDEBUG_FLUSH;
+               vIndex++;
+            }
+         }
       }
    }
+
+   vprDEBUG(vprDBG_ALL,1) << "leaving VjObs_i::CreateDatasetInfo()"
+                          << std::endl << vprDEBUG_FLUSH;
 
 }
 
 /////////////////////////////////////////////////////////////
-void VjObs_i::CreateGeometryInfo( void )
+void VjObs_i::CreateTeacherInfo( void )
+{   
+   CORBA::Short numTeacherArrays = this->_envHandler->GetTeacher()->getNumberOfFiles();
+   vprDEBUG(vprDBG_ALL,0)
+      << " Number of performer binary files to be transfered to the client: "
+      << numTeacherArrays
+      << std::endl << vprDEBUG_FLUSH;
+
+   //this->setNumTeacherArrays( numTeacherArrays );
+   if( numTeacherArrays > 0 )
+   {
+      this->teacher_name->length( numTeacherArrays );
+      for(CORBA::ULong i = 0; i < (unsigned int)numTeacherArrays; i++)
+      {
+         this->teacher_name[ i ] = CORBA::string_dup(
+                                        this->_envHandler->GetTeacher()->getFileName( i ) );
+      }
+   }
+}
+
+#ifdef _TAO
+VjObs::scalar_p* VjObs_i::get_geo_name()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::scalar_p* VjObs_i::get_geo_name()
+#endif
 {
+   if ( geo_name != NULL )
+   {
+      delete geo_name;
+   }
+
    this->setPreState( 1 );
 
-   cfdModel* temp = this->_modelHandler->GetModel( 0 );
+   cfdModel* temp = this->_modelHandler->GetActiveModel();
    if ( temp != NULL )
    {
       int numGeoArrays = temp->GetNumberOfGeomDataSets();
@@ -170,6 +238,7 @@ void VjObs_i::CreateGeometryInfo( void )
 
       if( numGeoArrays > 0 )
       {
+         geo_name = new VjObs::scalar_p(50);
          this->geo_name->length( numGeoArrays );
          for(CORBA::ULong i = 0; i < (unsigned int)numGeoArrays; i++)
          {
@@ -188,167 +257,10 @@ void VjObs_i::CreateGeometryInfo( void )
          << " Number of geometries to be transfered to the client: "
          << 0 
          << std::endl << vprDEBUG_FLUSH;
-
+      geo_name = NULL;
       this->setNumGeoArrays( 0 );
    }
-}
 
-/////////////////////////////////////////////////////////////
-void VjObs_i::CreateDatasetInfo( void )
-{   
-   CORBA::ULong i;
-
-   cfdModel* temp = this->_modelHandler->GetModel( 0 );
-   if ( temp != NULL )
-   {
-      int numDatasets = temp->GetNumberOfCfdDataSets();
-      vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
-                          << std::endl << vprDEBUG_FLUSH;
-   
-      this->setNumDatasets( numDatasets );
-
-      //this->dataset_names  = new VjObs::scalar_p( numDatasets );
-      this->dataset_names->length( numDatasets );
-
-      //this->dataset_types  = new VjObs::obj_p( numDatasets );
-      this->dataset_types->length( numDatasets );
-
-      //this->num_scalars_per_dataset = new VjObs::obj_p( numDatasets );
-      this->num_scalars_per_dataset->length( numDatasets );
-
-      //this->num_vectors_per_dataset = new VjObs::obj_p( numDatasets );
-      this->num_vectors_per_dataset->length( numDatasets );
-
-      this->totalNumberOfScalars = 0;
-      this->totalNumberOfVectors = 0;
-      for ( i=0; i<(unsigned int)numDatasets; i++ )
-      {
-         //cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << endl;
-         this->totalNumberOfScalars += temp->GetCfdDataSet( i )->GetNumberOfScalars();
-         this->totalNumberOfVectors += temp->GetCfdDataSet( i )->GetNumberOfVectors();
-      }
-      vprDEBUG(vprDBG_ALL,0)
-         << " totalNumberOfScalars: " << this->totalNumberOfScalars
-         << std::endl << vprDEBUG_FLUSH;
-
-      vprDEBUG(vprDBG_ALL,0)
-         << " totalNumberOfVectors: " << this->totalNumberOfVectors
-         << std::endl << vprDEBUG_FLUSH;
-
-      //this->scl_name = new VjObs::scalar_p( this->totalNumberOfScalars );
-      this->scl_name->length( this->totalNumberOfScalars );
-
-      //this->vec_name = new VjObs::scalar_p( this->totalNumberOfVectors );
-      this->vec_name->length( this->totalNumberOfVectors );
-
-      CORBA::ULong sIndex = 0;
-      CORBA::ULong vIndex = 0;
-      for ( i=0; i < (unsigned int)numDatasets; i++ )
-      {
-         this->dataset_names[ i ] = CORBA::string_dup( 
-                          temp->GetCfdDataSet( i )->GetFileName() );
-         vprDEBUG(vprDBG_ALL,1) << " dataset_name:   " << this->dataset_names[ i ]
-                             << std::endl << vprDEBUG_FLUSH;
-
-         this->dataset_types[ i ] = temp->GetCfdDataSet( i )->GetType();
-
-         int num_scalars = temp->GetCfdDataSet( i )
-                                          ->GetNumberOfScalars();
-         this->num_scalars_per_dataset[ i ] = num_scalars;
-
-         for (CORBA::ULong ii=0; ii < (unsigned int)num_scalars; ii++ )
-         {
-            this->scl_name[ sIndex ] = CORBA::string_dup( 
-                    temp->GetCfdDataSet( i )->GetScalarName( ii ) );
-            vprDEBUG(vprDBG_ALL,1) << "\tscl_name " 
-                                << sIndex << " : " << this->scl_name[ sIndex ]
-                                << std::endl << vprDEBUG_FLUSH;
-            sIndex++;
-         }
-
-         int num_vectors = temp->GetCfdDataSet( i )
-                                          ->GetNumberOfVectors();
-         this->num_vectors_per_dataset[ i ] = num_vectors;
-
-         for (CORBA::ULong ii=0; ii < (unsigned int)num_vectors; ii++ )
-         {
-            this->vec_name[ vIndex ] = CORBA::string_dup( 
-                    temp->GetCfdDataSet( i )->GetVectorName( ii ) );
-            vprDEBUG(vprDBG_ALL,1) << "\tvec_name " 
-                                << vIndex << " : " << this->vec_name[ vIndex ]
-                                << std::endl << vprDEBUG_FLUSH;
-            vIndex++;
-         }
-      }
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << 0
-                          << std::endl << vprDEBUG_FLUSH;
-      this->setNumDatasets( 0 );
-   }
-
-   vprDEBUG(vprDBG_ALL,1) << "leaving VjObs_i::CreateDatasetInfo()"
-                          << std::endl << vprDEBUG_FLUSH;
-
-}
-
-/////////////////////////////////////////////////////////////
-void VjObs_i::CreateTeacherInfo( void )
-{   
-   CORBA::Short numTeacherArrays = this->_envHandler->GetTeacher()->getNumberOfFiles();
-   vprDEBUG(vprDBG_ALL,0)
-      << " Number of performer binary files to be transfered to the client: "
-      << numTeacherArrays
-      << std::endl << vprDEBUG_FLUSH;
-
-   this->setNumTeacherArrays( numTeacherArrays );
-   if( numTeacherArrays > 0 )
-   {
-      this->teacher_name->length( numTeacherArrays );
-      for(CORBA::ULong i = 0; i < (unsigned int)numTeacherArrays; i++)
-      {
-         this->teacher_name[ i ] = CORBA::string_dup(
-                                        this->_envHandler->GetTeacher()->getFileName( i ) );
-      }
-   }
-}
-
-#ifdef _TAO
-VjObs::scalar_p* VjObs_i::update_scalar()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-VjObs::scalar_p* VjObs_i::update_scalar()
-#endif
-{
-   VjObs::scalar_p_var scl_name_=new VjObs::scalar_p(scl_name);
-  return scl_name_._retn();
-}
-
-#ifdef _TAO
-VjObs::scalar_p* VjObs_i::update_vector()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-VjObs::scalar_p* VjObs_i::update_vector()
-#endif
-{
-    VjObs::scalar_p_var vec_name_=new VjObs::scalar_p(vec_name);
-    return vec_name_._retn();
-}
-
-#ifdef _TAO
-VjObs::scalar_p* VjObs_i::get_geo_name()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-VjObs::scalar_p* VjObs_i::get_geo_name()
-#endif
-{
   VjObs::scalar_p_var geo_name_=new VjObs::scalar_p(geo_name);
   return geo_name_._retn();
 }
@@ -378,143 +290,6 @@ char* VjObs_i::get_perf()
    return CORBA::string_dup("abc");
 }
 
-#ifdef _TAO
-VjObs::scalar_p * VjObs_i::get_dataset_names()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-VjObs::scalar_p * VjObs_i::get_dataset_names()
-#endif
-{
-   VjObs::scalar_p_var dataset_names_=new VjObs::scalar_p(dataset_names);
-   return dataset_names_._retn();
-}
-
-#ifdef _TAO
-VjObs::obj_p * VjObs_i::get_dataset_types()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-VjObs::obj_p * VjObs_i::get_dataset_types()
-#endif
-{
-  VjObs::obj_p_var dataset_types_=new VjObs::obj_p(dataset_types);
-   return dataset_types_._retn();
-}
-
-#ifdef _TAO
-VjObs::obj_p * VjObs_i::get_num_scalars_per_dataset()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-VjObs::obj_p * VjObs_i::get_num_scalars_per_dataset()
-#endif
-{
-   VjObs::obj_p_var num_scalars_per_dataset_=new VjObs::obj_p(num_scalars_per_dataset);
-   return num_scalars_per_dataset_._retn();
-}
-
-#ifdef _TAO
-VjObs::obj_p * VjObs_i::get_num_vectors_per_dataset()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-VjObs::obj_p * VjObs_i::get_num_vectors_per_dataset()
-#endif
-{
-   VjObs::obj_p_var num_vectors_per_dataset_=new VjObs::obj_p(num_vectors_per_dataset);
-   return num_vectors_per_dataset_._retn();
-}
-
-#ifdef _TAO
-void VjObs_i::setNumDatasets(const short value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setNumDatasets(CORBA::Short value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mNumScalars = value;
-}
-
-#ifdef _TAO
-short VjObs_i::getNumDatasets()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::getNumDatasets()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL,0) << "Returning num, datasets'" << mNumScalars << "' to caller\n"
-   //     << vprDEBUG_FLUSH;
-   return mNumScalars;
-}
-
-#ifdef _TAO
-short VjObs_i::getTotalNumberOfScalars()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::getTotalNumberOfScalars()
-#endif
-{
-   return this->totalNumberOfScalars;
-}
-
-#ifdef _TAO
-short VjObs_i::getTotalNumberOfVectors()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::getTotalNumberOfVectors()
-#endif
-{
-   return this->totalNumberOfVectors;
-}
-
-#ifdef _TAO
-void VjObs_i::setNumVectors(const short value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setNumVectors(CORBA::Short value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mNnumVectors = value;
-}
-
-#ifdef _TAO
-short VjObs_i::getNumVectors()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::getNumVectors()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mNnumVectors;
-}
 
 #ifdef _TAO
 void VjObs_i::setNumGeoArrays(const short value)
@@ -855,7 +630,7 @@ CORBA::Short VjObs_i::getNumTeacherArrays()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mNumTeacherArrays;
+   return this->_envHandler->GetTeacher()->getNumberOfFiles();
 }
 
 #ifdef _TAO
@@ -892,22 +667,6 @@ CORBA::Short VjObs_i::getTeacherState()
 // These functions are called from the java side
 // Need to figure out a better notation so that this all makes sense
 #ifdef _TAO
-short VjObs_i::get_sc_num() 
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::get_sc_num() 
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL,0) << "Returning num scalars'" << mNumScalars << "' to caller\n"
-   //     << vprDEBUG_FLUSH;
-   return mNumScalars;
-}
-
-
-#ifdef _TAO
 short VjObs_i::get_geo_num()
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -919,7 +678,7 @@ CORBA::Short VjObs_i::get_geo_num()
    //vprDEBUG(vprDBG_ALL,0) << "Returning num geos'" << this->mParamReader->numGeoms << "' to caller\n"
    //     << vprDEBUG_FLUSH;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   cfdModel* temp = this->_modelHandler->GetModel( 0 );
+   cfdModel* temp = this->_modelHandler->GetActiveModel();
    if ( temp != NULL )
    {
       return temp->GetNumberOfGeomDataSets();
@@ -1012,8 +771,31 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
 VjObs::scalar_p* VjObs_i::GetSoundNameArray()
 #endif
 {
+   int numberOfSounds = this->_envHandler->GetSoundHandler()->GetNumberOfSounds();
+
+   vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
+                          << numberOfSounds << std::endl << vprDEBUG_FLUSH;
+
+   if ( sound_names != NULL )
+   {
+      delete sound_names;
+   }
+
+   if( numberOfSounds > 0 )
+   {
+      sound_names = new VjObs::scalar_p(50);
+      this->sound_names->length( numberOfSounds );
+      for(CORBA::ULong i = 0; i < (unsigned int)numberOfSounds; i++)
+      {
+         this->sound_names[ i ] = CORBA::string_dup( 
+                     this->_envHandler->GetSoundHandler()->GetSoundFilename( i ) );
+      }
+   }
+   else
+      sound_names = NULL;
+
    VjObs::scalar_p_var sound_names_=new VjObs::scalar_p(sound_names);
-  return sound_names_._retn();
+   return sound_names_._retn();
 }
 
 #ifdef _TAO

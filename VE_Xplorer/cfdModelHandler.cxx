@@ -157,6 +157,17 @@ void cfdModelHandler::RemoveModel( cfdModel* modelToBeRemoved )
       // The above code is from : The C++ Standard Library by:Josuttis
    }
 }
+
+cfdModel* cfdModelHandler::GetActiveModel( void )
+{
+   return _activeModel;
+}
+
+int cfdModelHandler::GetNumberOfModels( void )
+{
+   return (int)_modelList.size(); 
+}
+
 ///////////////////////
 
 void cfdModelHandler::InitScene( void )
@@ -245,39 +256,35 @@ void cfdModelHandler::PreFrameUpdate( void )
          //<< ", min = " << this->cfdMin 
          //<< ", max = " << this->cfdMax
          << std::endl << vprDEBUG_FLUSH;
-   // Need to add some sort of model reference in later fix later
-   //for ( unsigned int j = 0; j < _modelList.size(); j++ )
-      unsigned int j = 0;
-      
-      if ( i < _modelList.at( j )->GetNumberOfCfdDataSets() )
+      if ( i < _activeModel->GetNumberOfCfdDataSets() )
       {
          vprDEBUG(vprDBG_ALL,0) << " dataset = "
-            << _modelList.at( j )->GetCfdDataSet( i )->GetFileName()
-            << ", dcs = " << _modelList.at( j )->GetCfdDataSet( i )->GetDCS()
-            << std::endl << vprDEBUG_FLUSH;
+                  << _activeModel->GetCfdDataSet( i )->GetFileName()
+                  << ", dcs = " << _activeModel->GetCfdDataSet( i )->GetDCS()
+                  << std::endl << vprDEBUG_FLUSH;
 
-         int cfdType = _modelList.at( j )->GetCfdDataSet( i )->GetType();
+         int cfdType = _activeModel->GetCfdDataSet( i )->GetType();
          vprDEBUG(vprDBG_ALL,1) << " cfdType: " << cfdType
-                                << std::endl << vprDEBUG_FLUSH;
+                             << std::endl << vprDEBUG_FLUSH;
 
          // set the dataset as the appropriate dastaset type
          // (and the active dataset as well)
-         activeDataset = _modelList.at( j )->GetCfdDataSet( i );         
-         
+         activeDataset = _activeModel->GetCfdDataSet( i );         
+      
          vprDEBUG(vprDBG_ALL,1) << "last active dataset name = " 
-                                << oldDatasetName
-                                << std::endl << vprDEBUG_FLUSH;
+                             << oldDatasetName
+                             << std::endl << vprDEBUG_FLUSH;
 
          vprDEBUG(vprDBG_ALL,1) << "Activating steady state file " 
-                   << activeDataset->GetFileName()
-                   << std::endl << vprDEBUG_FLUSH;
+                << activeDataset->GetFileName()
+                << std::endl << vprDEBUG_FLUSH;
 
          // make sure that the user did not just hit same dataset button
          // (or change scalar since that is routed through here too)
          if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
          {
             vprDEBUG(vprDBG_ALL,1) << " setting dataset as newly activated" 
-                                   << std::endl << vprDEBUG_FLUSH;
+                                << std::endl << vprDEBUG_FLUSH;
             activeDataset->SetNewlyActivated();
             strcpy( oldDatasetName, activeDataset->GetFileName() );
          }
@@ -288,9 +295,9 @@ void cfdModelHandler::PreFrameUpdate( void )
       else
       {
          std::cerr << "ERROR: requested steady state dataset " 
-                   << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
-                   << _modelList.at( j )->GetNumberOfCfdDataSets()
-                   << std::endl;
+                  << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
+                  << _activeModel->GetNumberOfCfdDataSets()
+                  << std::endl;
       }
 
       // Set the curretn active dataset for the scalar bar
@@ -316,12 +323,12 @@ void cfdModelHandler::PreFrameUpdate( void )
       vprDEBUG(vprDBG_ALL,1)
          << " test : " << test << std::endl << vprDEBUG_FLUSH;
 
-      this->_readParam->convertBinaryToArray( test, _modelList.at( 0 )->GetNumberOfGeomDataSets() );
+      this->_readParam->convertBinaryToArray( test, _activeModel->GetNumberOfGeomDataSets() );
       // Update Scene Graph with selected or deselected geometry
       vprDEBUG(vprDBG_ALL,0) << " Change Geometry in Scene Graph."
-                             << std::endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
 
-      for( unsigned int i = 0; i < _modelList.at( 0 )->GetNumberOfGeomDataSets(); i++ )
+      for( unsigned int i = 0; i < _activeModel->GetNumberOfGeomDataSets(); i++ )
       {
          int temp = 0;
          //vprDEBUG(vprDBG_ALL,1)
@@ -330,17 +337,17 @@ void cfdModelHandler::PreFrameUpdate( void )
          //   << vprDEBUG_FLUSH;
 
          if ( ( this->_readParam->guiVal[ i ] == 1 ) && 
-              ( this->worldNode->SearchChild( (cfdSceneNode*)_modelList.at( 0 )->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
+            ( this->worldNode->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
          {
-            temp = this->worldNode->AddChild( (cfdSceneNode*)_modelList.at( 0 )->GetGeomDataSet( i )->getpfDCS() );
+            temp = this->worldNode->AddChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() );
          }
          else if ( ( this->_readParam->guiVal[ i ] == 0 ) &&
-                   ( this->worldNode->SearchChild( (cfdSceneNode*)_modelList.at( 0 )->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
+                  ( this->worldNode->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
          {
-            temp = this->worldNode->RemoveChild( (cfdSceneNode*)_modelList.at( 0 )->GetGeomDataSet( i )->getpfDCS() );
+            temp = this->worldNode->RemoveChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() );
          }
          vprDEBUG(vprDBG_ALL,1) << "|   Add Child Output ( -1 is BAD ) :  " << temp 
-                              << std::endl << vprDEBUG_FLUSH;
+                           << std::endl << vprDEBUG_FLUSH;
       }
    }
    // This represents all viz options. If more viz options are added these enums probably need to be changed. 
@@ -349,26 +356,32 @@ void cfdModelHandler::PreFrameUpdate( void )
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) <= PARTICLE_TRANSIENT ) )
    {
       // for the active model, change opaque geometries to transparent
-      for ( unsigned int i = 0; i < _modelList.at( 0 )->GetNumberOfGeomDataSets(); i++ )
-      {
-         if ( _modelList.at( 0 )->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
+      //for ( unsigned int j = 0; j < _modelList.size(); j++ )
+         for ( unsigned int i = 0; i < _activeModel->GetNumberOfGeomDataSets(); i++ )
          {
-            vprDEBUG(vprDBG_ALL,2) << "Changing Transparency for geom : "
+            if ( _activeModel->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
+            {
+               vprDEBUG(vprDBG_ALL,2) << "Changing Transparency for geom : "
                                    << i << std::endl << vprDEBUG_FLUSH;
-            _modelList.at( 0 )->GetGeomDataSet( i )->setOpac( 0.2 );
+               _activeModel->GetGeomDataSet( i )->setOpac( 0.2 );
+            }
          }
-      }
    }  //change the model's property
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
    { 
       // change all transparent geometries back to opaque
-      for( unsigned int i = 0; i < _modelList.at( 0 )->GetNumberOfGeomDataSets(); i++ )
-      {
-         if( _modelList.at( 0 )->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
-            _modelList.at( 0 )->GetGeomDataSet( i )->setOpac( 1.0 );
-      }
+      for ( unsigned int j = 0; j < _modelList.size(); j++ )
+         for( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfGeomDataSets(); i++ )
+         {
+            if( _modelList.at( j )->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
+               _modelList.at( j )->GetGeomDataSet( i )->setOpac( 1.0 );
+         }
    }
-   
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_ACTIVE_MODEL )
+   {
+      _activeModel = _modelList.at( commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
+   }
+
    // Can't be an else if because may have to update if dataset has changed beforehand
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR || 
         commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR_RANGE ||

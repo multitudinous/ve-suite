@@ -118,6 +118,7 @@ class cfdModel
       cfdNode* mModelNode;
       fileInfo* mGeomFileInfo;
       fileInfo* mVTKFileInfo;
+      cfdModel* _activeModel;
    
       //the information for following three variables should be transfered from cfdApp
       ModelTypeIndex mModelType;

@@ -62,6 +62,8 @@ class cfdModelHandler
       cfdModel* GetModel( int );
       void AddModel( cfdModel* );
       void RemoveModel( cfdModel* );
+      cfdModel* GetActiveModel( void );
+      int GetNumberOfModels( void );
 
    private:
       char* _param;
@@ -72,6 +74,7 @@ class cfdModelHandler
       cfdCommandArray* commandArray;
       cfdReadParam* _readParam;
       cfdScalarBarActor* _scalarBar;
+      cfdModel* _activeModel;
 
       vtkPolyData* arrow;
       std::vector< cfdModel* > _modelList;

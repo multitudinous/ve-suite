@@ -1,4 +1,3 @@
-//The base interface common to all VJ apps
 //#include "Observer.idl"
 
 interface VjObs
@@ -7,14 +6,28 @@ interface VjObs
    typedef sequence< short > obj_p;
    typedef sequence< double > obj_pd;
 
+   struct Model
+   {
+      scalar_p datasetnames;
+      scalar_p scalarnames;
+      scalar_p vectornames;
+
+      obj_p datasettypes;
+      obj_p num_scalars_per_dataset;
+      obj_p num_vectors_per_dataset;
+   };
+
+   typedef sequence< Model > Models;
+   Models GetModels();
+
    //void attach(in Observer o);
    //void detach(in Observer o);
-   void update();
-   scalar_p update_scalar();
-   scalar_p update_vector();
+   //void update();
+   //scalar_p update_scalar();
+   //scalar_p update_vector();
    scalar_p get_geo_name();
    scalar_p get_teacher_name();
-   short get_sc_num();
+   //short get_sc_num();
    short get_geo_num();
    short get_teacher_num();
    //short get_postdata();
@@ -29,20 +42,7 @@ interface VjObs
    short GetNumberOfSounds();
    scalar_p GetSoundNameArray();
 
-   scalar_p get_dataset_names();
-   obj_p get_dataset_types();
-   obj_p get_num_scalars_per_dataset();
-   obj_p get_num_vectors_per_dataset();
-
    // New Stuff
-
-   void setNumDatasets(in short value);
-   short getNumDatasets();
-
-   short getTotalNumberOfScalars();
-
-   void setNumVectors(in short value);
-   short getNumVectors();
 
    void setNumGeoArrays(in short value);
    short getNumGeoArrays();

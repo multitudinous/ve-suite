@@ -322,13 +322,6 @@ std::cout << "|  3d" << std::endl;
       this->ihccModel = new cfdIHCCModel( NULL, this->_sceneManager->GetWorldDCS() );
    }
 */
-
-   // Create data in memory for transfered data
-   this->CreateSoundInfo();
-   this->CreateGeometryInfo();
-   this->CreateDatasetInfo();
-   this->CreateTeacherInfo();
-
    // This may need to be fixed
    this->GetCfdStateVariables();
 }
