@@ -354,15 +354,20 @@ int cfdDCS::AddChild( cfdNode* child )
    exit( 1 );
    return -1;
 #endif
-   //add the child to cfdscene
-   childNodes.push_back( child );
 
    //add node to real graph rep
-   this->_dcs->addChild( child->GetRawNode() );
+   osg::Node* temp = child->GetRawNode();
+   int good = this->_dcs->addChild( temp );
+   if ( good )
+   {
+      //add the child to cfdscene
+      childNodes.push_back( child );
+      //set the parent in the cfdApp side
+      child->SetParent( this );
+      return 1;
+   }
    
-   //set the parent in the cfdApp side
-   child->SetParent( this );
-   return 1;
+   return -1;
 }
 ///////////////////////////////////////////////////////////////
 void cfdDCS::InsertChild( int position, cfdNode* child )
@@ -411,7 +416,7 @@ const char* cfdDCS::GetName( void )
 #ifdef _PERFORMER
    return _dcs->getName();
 #elif _OSG
-    return _dcs->getName().data() ;
+    return _dcs->getName().data();
 #endif
 }
 ////////////////////////////////////
@@ -471,6 +476,5 @@ osg::Node* cfdDCS::GetRawNode(void)
 #endif
 {
    return _dcs.get();
-   
 }
 

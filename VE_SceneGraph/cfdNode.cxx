@@ -151,7 +151,6 @@ osg::Node* cfdNode::GetRawNode(void)
 #endif
 {
    return _node.get();
-   
 }
 /////////////////////////////////////////
 //load scene from file                 //

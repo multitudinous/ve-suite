@@ -39,9 +39,9 @@ class cfdExecutive;
 class cfdPfSceneManagement;
 class cfdEnvironmentHandler;
 class cfdSteadyStateVizHandler;
-class cfdTransientVizHandler;
+//class cfdTransientVizHandler;
 class cfdModelHandler;
-class cfdIHCCModel;
+//class cfdIHCCModel;
 
 //class CorbaManager;
 class cfdVjObsWrapper;
@@ -144,9 +144,9 @@ class cfdApp: public vrj::OsgApp
 #endif
       cfdEnvironmentHandler*     _environmentHandler;
       cfdSteadyStateVizHandler*  _steadystateHandler;
-      cfdTransientVizHandler*    _transientHandler;
+      //cfdTransientVizHandler*    _transientHandler;
       cfdModelHandler*           _modelHandler;
-      cfdIHCCModel               *ihccModel;
+      //cfdIHCCModel               *ihccModel;
       cfdVjObsWrapper*              _vjobsWrapper;
 #ifdef _TAO
       cfdExecutive*     executive;

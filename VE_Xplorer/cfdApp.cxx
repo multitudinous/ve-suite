@@ -79,7 +79,6 @@
 //#include <omp.h>
 #include <vrj/Kernel/Kernel.h>
 
-
 cfdApp::cfdApp( void )
 {
    this->_sceneManager =         NULL;
@@ -87,7 +86,7 @@ cfdApp::cfdApp( void )
    this->_steadystateHandler =   NULL;
    //this->_transientHandler =     NULL;
    this->_modelHandler =         NULL;
-   this->ihccModel =             NULL;
+   //this->ihccModel =             NULL;
 #ifdef _OSG
    _tbvHandler = 0;
    _frameNumber = 0;
@@ -322,7 +321,7 @@ std::cout << "|  3d" << std::endl;
 
 #endif // _TAO
 
-    this->ihccModel = NULL;
+    //this->ihccModel = NULL;
 /*
    //
    // Make IHCC Model - should be deleted at a later date

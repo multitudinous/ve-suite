@@ -786,7 +786,7 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
       vpr::System::msleep( 50 );  // 50 milli-second delay
    }
    while ( this->_unusedNewData );
-
+   this->_unusedNewData = true;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    // The order of setting these values
    // MUST MATCH the order in which they are set in 
@@ -833,7 +833,6 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
          std::cout << value[ i ] << std::endl;
       }
    }
-   this->_unusedNewData = true;
 }
 
 void VjObs_i::PreFrameUpdate( void )

@@ -165,7 +165,7 @@ void cfdEnvironmentHandler::InitScene( void )
    std::cout << "| ***************************************************************** |" << std::endl;
    // Needs to be set by the gui fix later
    this->nav->Initialize( this->worldDCS );
-   this->nav->SetWorldLocation( this->nav->worldTrans );
+   //this->nav->SetWorldLocation( this->nav->worldTrans );
    this->worldDCS->SetScaleArray( this->worldScale );
 
    for ( int i = 0; i < 3; i++)

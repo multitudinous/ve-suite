@@ -172,7 +172,6 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    {
       this->node[ i ] = new cfdNode();
       this->node[ i ]->LoadFile( this->pfbFileNames[ i ] );
-      //this->DCS->addChild( this->node[i] );
    }
 
    _worldDCS = worldDCS;
