@@ -136,8 +136,7 @@ class cfdSteadyStateVizHandler
       // Variable will eventually be used to define bounding box
       // for data interagation
       double cur_box[6];
-      // Fix this need to look at old cfdapp to see how it works
-      int cursorId;
+
       // Need to get rid of this bool fix 
       //bool inter_activeObject;
       //bool chgMod;

@@ -83,9 +83,9 @@ class cfdCursor : public cfdGlobalBase
       /* Update the position and direction of the virtual cursor
       based on the output from cfdNavigate::GetCursorLocation(location) 
       and cfdNavigate::GetDirection(direction).  */
-      void Update( int t, double x[3], double v[3], double wx[3] );
+      void Update( double x[3], double v[3], double wx[3] );
 
-      vtkPolyDataSource * GetSourcePoints( int );
+      vtkPolyDataSource * GetSourcePoints( void );
 
       // Return the dynamic coordinate system with pfGeode objects.
       cfdDCS * GetcfdDCS();
@@ -109,6 +109,7 @@ class cfdCursor : public cfdGlobalBase
       void SetActiveDataSetDCS( cfdDCS* myDCS );
       void SetActiveDataSet( cfdDataSet* input );
 
+      int GetCursorID( void );
    private:
 
       // Move the cursor methods

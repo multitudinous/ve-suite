@@ -213,17 +213,16 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    this->nav->updateNavigationFromGUI();
 	
    // Need to get these values from the appropriate classes
-   // fix later	
    // the cursor will be active (based on the cursor id)
-	int cursorId = 0;
-   this->cursor->Update( cursorId, this->nav->GetCursorLocation(),
+   this->cursor->Update( this->nav->GetCursorLocation(),
                            this->nav->GetDirection(), this->nav->worldTrans );
 
-   if ( cursorId == CUBE)
+   // fix later	
+   /*if ( cursorId == CUBE)
    {
        this->cursor->getExtent( this->cur_box );   //record current box cursor position
    }
-
+*/
    _camHandler->CheckCommandId( _commandArray );
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );

@@ -64,6 +64,7 @@ using namespace gmtl; //added by Gengxun
 
 cfdCursor::cfdCursor( vtkPolyData * arrow, cfdDCS *worldDCS, cfdGroup* rootNode )
 {
+   cursorId = NONE;
    this->arrow = arrow;
    this->worldDCS = worldDCS;
    this->activeDataSetDCS = NULL;
@@ -196,6 +197,10 @@ void cfdCursor::Initialize( double x[3], double v[3] )
    this->cursorDCS->AddChild( (cfdSceneNode*) this->cursorGeode );
 }
 
+int cfdCursor::GetCursorID( void )
+{
+   return cursorId;
+}
 
 void cfdCursor::BuildSphere()
 {
@@ -410,7 +415,7 @@ void cfdCursor::UpdatePlaneSource( int i )
    this->cursorGeode->TranslateTocfdGeode( this->planeActorS );
 }
 
-void cfdCursor::Update( int t, double x[3], double v[3], double wx[3] )
+void cfdCursor::Update( double x[3], double v[3], double wx[3] )
 {
    int i;
 
@@ -427,18 +432,18 @@ void cfdCursor::Update( int t, double x[3], double v[3], double wx[3] )
                            << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, 3) <<"pos_c:"<<pos_c[0]<<","<<pos_c[1]<<","<<pos_c[2]
                            << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 3) << this->last_cursor_type << " : " << t
+   vprDEBUG(vprDBG_ALL, 3) << this->last_cursor_type << " : " << this->cursorId
                            << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, 3) << this->last_pReso << " : " << this->pReso
                            << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL, 3) << this->last_pSize << " : " << this->pSize
                            << std::endl << vprDEBUG_FLUSH;
 
-   if ( this->last_cursor_type != t ||
+   if ( this->last_cursor_type != this->cursorId ||
          this->last_pReso != this->pReso ||
          this->last_pSize != this->pSize )
    {
-      switch( t )
+      switch( this->cursorId )
       {
          case XPLANE:
             this->UpdatePlaneSource( XPLANE );
@@ -479,7 +484,7 @@ void cfdCursor::Update( int t, double x[3], double v[3], double wx[3] )
          default:
             break;
       }
-      this->last_cursor_type = t;
+      this->last_cursor_type = this->cursorId;
       this->last_pReso = this->pReso;
       this->last_pSize = this->pSize;
    }
@@ -551,11 +556,11 @@ int cfdCursor::GetPlaneReso()
    return this->pReso;
 }
 
-vtkPolyDataSource * cfdCursor::GetSourcePoints( int cursorId )
+vtkPolyDataSource * cfdCursor::GetSourcePoints( void )
 {
    this->GetLocalLocationVector();
 
-   switch( cursorId )
+   switch( this->cursorId )
    {
       case XPLANE:
          this->planeSrc->SetCenter( this->localLocation );

@@ -848,7 +848,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 
                this->_activeObject->SetRequestedValue( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-               this->_activeObject->SetCursorType( this->cursorId );
+               this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
                this->_activeObject->SetPreCalcFlag( this->commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) );
             
                this->computeActorsAndGeodes = true;
@@ -984,11 +984,11 @@ void cfdSteadyStateVizHandler::streamers( void )
 {
    vprDEBUG(vprDBG_ALL,1) << "In streamers" << std::endl << vprDEBUG_FLUSH;
    
-   this->_activeObject->SetCursorType( this->cursorId );
+   this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
    this->_activeObject->SetNormal( this->nav->GetDirection() );
    this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 
-   if ( this->cursorId == CUBE )
+   if ( this->cursor->GetCursorID() == CUBE )
    {
       this->_activeObject->SetBoxSize( this->cur_box );
    }
@@ -1005,7 +1005,7 @@ void cfdSteadyStateVizHandler::streamers( void )
       this->lastSource = vtkPolyData::New();
 
       this->lastSource->DeepCopy( 
-         (vtkPolyData*)this->cursor->GetSourcePoints( this->cursorId ) );
+         (vtkPolyData*)this->cursor->GetSourcePoints() );
 
       this->_activeObject->SetSourcePoints( 
                                   (vtkPolyDataSource*)this->lastSource );
