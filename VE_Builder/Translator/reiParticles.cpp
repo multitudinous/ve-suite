@@ -72,7 +72,7 @@ reiParticles::~reiParticles( void ) {
 reiParticles::reiParticles( reiParticles * ) {}
 
 void reiParticles::readPPLOT1( void ) {
-   ifstream inPPLOT1file( "PPLOT1", ios::in );
+   std::ifstream inPPLOT1file( "PPLOT1", std::ios::in );
    float trash;
    int i;
 
@@ -101,7 +101,7 @@ void reiParticles::readPPLOT3( void ) {
    float px, py, pz;
    int counter;
    
-   ifstream inPPLOT3file( "PPLOT3", ios::in );
+   std::ifstream inPPLOT3file( "PPLOT3", std::ios::in );
    inPPLOT3file >> lineNumber >> title;
    
    for ( i = 0; i < nsl * nps; i++ ) {
@@ -198,7 +198,7 @@ void reiParticles::writeParticlePolyData( void ){
    k = 0;
    counter = 0;
 
-   ifstream paramFile( "./particle.param", ios::in );
+   std::ifstream paramFile( "./particle.param", std::ios::in );
    int particleNumber;
    typedef std::vector< int > IntList;
    IntList whichParticles;

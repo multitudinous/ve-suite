@@ -32,8 +32,6 @@
 #include "starReader.h"
 
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 #include <fstream>
 
 #include <vtkUnstructuredGrid.h>
@@ -767,7 +765,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
    float * data = new float [ numColumns ];
    
-   ifstream fsolns( this->starUsrFileName, ios::in );
+   std::ifstream fsolns( this->starUsrFileName, std::ios::in );
    if ( fsolns == NULL )
    {
        std::cerr <<"\nError - Cannot open the designated solution file: " 

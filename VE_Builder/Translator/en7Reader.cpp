@@ -30,7 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
 #include <cmath>
 
 #include <vtkActor.h>

@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>

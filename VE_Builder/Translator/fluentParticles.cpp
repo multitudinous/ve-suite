@@ -260,21 +260,13 @@ void fluentParticles::addToPolydata( int timestep)
       
                      break;
                   }
-               
-
-            }
-            
-          
-              
-        }
-           
-     }
+         }        
+      }
+   }
    std::cout<<std::endl;
    //writeVtkThing( transFilter->GetOutput(), currentFilename, 1 ); //0=ascii
    writePolydata( timestep);
    std::cout<<"end of addToPolydaat"<<std::endl;
-      
-
 }
 
 void fluentParticles::writePolydata( int timestep )
@@ -288,7 +280,7 @@ void fluentParticles::writePolydata( int timestep )
    float xScale, yScale, zScale;
    // char textLine[ 256 ];
    
-   ifstream paramFile( "./particle.param", ios::in );
+   std::ifstream paramFile( "./particle.param", std::ios::in );
    std::ostringstream file_name;
    std::string outVtkFileName="finalVtkFile_000.vtk";
    file_name<<"finalVtkFile_0"<<timestep<<".vtk";

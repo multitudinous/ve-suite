@@ -30,7 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
 
 #include <vtkRectilinearGrid.h>
 #include <vtkStructuredGrid.h>   // s-grids allow blanking - rect grids don't

@@ -30,7 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkRectilinearGrid.h>

@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 #include <fstream>
-#include <cstdio>
 
 #include "vtkUnstructuredGrid.h"
 #include "vtkPoints.h"
@@ -137,7 +136,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
    // ifstream doesn't have a rewind function,
    // but this takes it back to the beginning...
    fvert.clear();                // forget if we hit the end of file
-   fvert.seekg( 0, ios::beg );   // move to the start of the file
+   fvert.seekg( 0, std::ios::beg );   // move to the start of the file
    
    fvert >> sjunk;               // skip over # sign
    fvert >> numOrigVertices;     // read in number of vertices

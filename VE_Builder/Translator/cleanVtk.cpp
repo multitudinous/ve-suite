@@ -32,14 +32,14 @@
 #include <iostream>
 #include <fstream>
 
-#include "vtkPoints.h"
-#include "vtkUnstructuredGrid.h"
-#include "vtkFieldData.h"
-#include "vtkFloatArray.h"  // this code requires VTK4
-#include "vtkGenericCell.h"
-#include "vtkCellArray.h"
-#include "vtkPointData.h"
-#include "vtkPolyData.h"
+#include <vtkPoints.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkFieldData.h>
+#include <vtkFloatArray.h>  // this code requires VTK4
+#include <vtkGenericCell.h>
+#include <vtkCellArray.h>
+#include <vtkPointData.h>
+#include <vtkPolyData.h>
 
 void dumpVerticesNotUsedByCells( vtkPointSet * grid )
 {
@@ -358,8 +358,8 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName )
    }
 
    int debug = 0;   // 0=no debug output, 1=some debug output, 2=more debug output
-   fstream rpt;
-   rpt.open( vtkFileName, ios::out ); 
+   std::fstream rpt;
+   rpt.open( vtkFileName, std::ios::out ); 
 
    std::cout << "Writing to " << vtkFileName << "..." << std::endl;
 

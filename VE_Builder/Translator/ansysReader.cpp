@@ -33,15 +33,14 @@
 #include "ansysReader.h"
 #include <iostream>
 #include <iomanip>
-#include <cstdio>
 #include "fileIO.h"
 #include "converter.h"      // for "letUsersAddParamsToField"
 
-#include "vtkUnstructuredGrid.h"
-#include "vtkPoints.h"
-#include "vtkFloatArray.h"  // this code requires VTK4
-#include "vtkPointData.h"
-#include "vtkCellType.h"
+#include <vtkUnstructuredGrid.h>
+#include <vtkPoints.h>
+#include <vtkFloatArray.h>  // this code requires VTK4
+#include <vtkPointData.h>
+#include <vtkCellType.h>
 
 #define PRINT_WIDTH 36
 
