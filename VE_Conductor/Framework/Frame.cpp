@@ -62,7 +62,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   SetSize(DetermineFrameSize(NULL));
   CreateMenu();
   CreateStatusBar();
-  SetStatusText("New Vison 21");
+  SetStatusText("VE-Conductor Status");
   
   pelog = NULL;
   //  menubar = 

@@ -1,5 +1,9 @@
 #ifndef PLUGINLOADER_H
 #define PLUGINLOADER_H
+#ifdef WIN32
+#include <winsock2.h>
+#endif
+
 #include <wx/wx.h>
 #include <wx/log.h>
 #include <wx/dynlib.h>

@@ -1,23 +1,25 @@
-#include "UI_GeometryTab.h"
-#include "UI_Tabs.h"
+#include "Geometry.h"
+//#include "UI_Tabs.h"
 #include "cfdEnum.h"
+#include "interface.h"
+
 #include <iostream>
 #include <string>
 #include <cmath>
 
-BEGIN_EVENT_TABLE(UI_GeometryTab, wxPanel)
-   EVT_COMMAND_SCROLL(GEOMETRY_OPACITY_SLIDER, UI_GeometryTab::ChangeOpacity)
-   EVT_COMMAND_SCROLL(GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry)
-   EVT_CHECKLISTBOX(GEOMETRY_CBOX,UI_GeometryTab::_onUpdate)
-   //EVT_RADIOBOX(GEOMETRY_CONFIG_RBOX,UI_GeometryTab::ChangeOpacity)
-   EVT_BUTTON(GEOMETRY_UPDATE_BUTTON,UI_GeometryTab::_onUpdate)
+BEGIN_EVENT_TABLE(Geometry, wxDialog)
+   EVT_COMMAND_SCROLL(GEOMETRY_CONFIG_OPACITY_SLIDER, Geometry::ChangeOpacity)
+   EVT_COMMAND_SCROLL(GEOMETRY_CONFIG_LOD_SLIDER, Geometry::_onGeometry)
+   EVT_CHECKLISTBOX(GEOMETRY_CONFIG_CBOX,Geometry::_onUpdate)
+   //EVT_RADIOBOX(GEOMETRY_CONFIG_RBOX,Geometry::ChangeOpacity)
+   EVT_BUTTON(GEOMETRY_CONFIG_UPDATE_BUTTON,Geometry::_onUpdate)
 END_EVENT_TABLE()
 
 ///////////////
 //Constructor//
 ///////////////
-UI_GeometryTab::UI_GeometryTab(wxNotebook* tControl)
-:wxPanel(tControl)
+Geometry::Geometry(wxWindow *parent, wxWindowID id)
+:wxDialog(parent, id, wxString("Geometry"))//, wxDefaultPosition,wxDefaultSize)
 {
    
    _geometryRBox = 0;
@@ -25,31 +27,31 @@ UI_GeometryTab::UI_GeometryTab(wxNotebook* tControl)
    _updateButton = 0;
    geomOpacitySlider = 0;
    geomLODSlider = 0;
-   _parent = tControl;
+   _parent = parent;
 
    _buildPage();
 }
 //////////////////////////////
 //build the geometry tab    //
 //////////////////////////////
-void UI_GeometryTab::_buildPage()
+void Geometry::_buildPage()
 {
 
    //the radio box
-   int numGeoms = ((UI_Tabs *)_parent)->num_geo;
+   int numGeoms = 0;//((UI_Tabs *)_parent)->num_geo;
    wxString* defaultName = 0;
    wxString* opacitytName = 0;
 
    if ( numGeoms > 0 )
    {  
-      defaultName = new wxString[ numGeoms ];
+  /*    defaultName = new wxString[ numGeoms ];
       opacitytName = new wxString[ numGeoms ];
       for(CORBA::ULong i = 0; i < (unsigned int)numGeoms; i++)
       {  
          defaultName[ i ] = ((UI_Tabs*)_parent)->geoNameArray[ i ];
          std::cout << "Geometry Name " << i << " : " << defaultName[ i ] << std::endl;
          opacitytName[ i ] = wxString::Format("%s %i", "File", (int)(i+1) );
-      }
+      }*/
    }
    else
    {
@@ -60,14 +62,14 @@ void UI_GeometryTab::_buildPage()
       opacitytName[ 0 ] = wxT( "0" );
    }
 
-   _geometryRBox = new wxRadioBox(  this, GEOMETRY_RBOX, wxT("Opacity Control"),
+   _geometryRBox = new wxRadioBox(  this, GEOMETRY_CONFIG_RBOX, wxT("Opacity Control"),
                                     wxDefaultPosition, wxDefaultSize, 
                                     numGeoms, opacitytName,
                                     1, wxRA_SPECIFY_COLS);
 
    wxStaticBox* geomFiles = new wxStaticBox(this,-1, wxT("Geometry Files"));
    wxStaticBoxSizer* geomFilesGroup = new wxStaticBoxSizer(geomFiles,wxVERTICAL);   
-   _geometryCBox = new wxCheckListBox( this, GEOMETRY_CBOX,  
+   _geometryCBox = new wxCheckListBox( this, GEOMETRY_CONFIG_CBOX,  
                                     wxDefaultPosition, wxDefaultSize, 
                                     numGeoms, defaultName );
    geomFilesGroup->Add(_geometryCBox,1,wxALIGN_LEFT|wxEXPAND);
@@ -83,11 +85,11 @@ void UI_GeometryTab::_buildPage()
       _geometryCBox->Check( j );
    }
 
-   if ( ((UI_Tabs *)_parent)->num_geo == 0 )
+   /*if ( ((UI_Tabs *)_parent)->num_geo == 0 )
    {
       _geometryCBox->Enable( false );
    }
-
+*/
    // slider info
    //the labels for the sliders
    wxStaticText* opacityLabel = new wxStaticText(this, -1, wxT("Geometry Opacity"));
@@ -95,18 +97,18 @@ void UI_GeometryTab::_buildPage()
    wxStaticText* opacityLabelRight = new wxStaticText(this, -1, wxT("Opaque"));
    
    wxStaticText* lodLabel = new wxStaticText(this, -1, wxT("Geometry LOD Control"));
-   wxStaticText* lodLabelLeft = new wxStaticText(this, -1, wxT("Higher"));
-   wxStaticText* lodLabelRight = new wxStaticText(this, -1, wxT("Lower")); 
+   wxStaticText* lodLabelLeft = new wxStaticText(this, -1, wxT("Lower"));
+   wxStaticText* lodLabelRight = new wxStaticText(this, -1, wxT("Higher")); 
 
    //opacity slider
-   geomOpacitySlider = new wxSlider(this, GEOMETRY_OPACITY_SLIDER,100,0,100,
+   geomOpacitySlider = new wxSlider(this, GEOMETRY_CONFIG_OPACITY_SLIDER,100,0,100,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_AUTOTICKS|
                                        wxSL_LABELS|wxSL_RIGHT );
 
    //lod slider
-   geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,1000,0,1000,
+   geomLODSlider = new wxSlider(this, GEOMETRY_CONFIG_LOD_SLIDER,1000,0,1000,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_AUTOTICKS|
@@ -144,6 +146,12 @@ void UI_GeometryTab::_buildPage()
 
    wxBoxSizer* geometryPanelGroup = new wxBoxSizer(wxVERTICAL);
    geometryPanelGroup->Add(geomControlsGroup,1,wxEXPAND|wxALL, 5);
+   // Calculate row
+   wxBoxSizer* ok_row = new wxBoxSizer(wxHORIZONTAL);
+   ok_row->Add(new wxButton(this, wxID_OK, "OK"), 0, wxALIGN_CENTER_HORIZONTAL);
+   ok_row->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALIGN_CENTER_HORIZONTAL);
+   
+   geometryPanelGroup->Add(ok_row, 0, wxALIGN_CENTER_HORIZONTAL);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
@@ -151,9 +159,9 @@ void UI_GeometryTab::_buildPage()
    SetSizer(geometryPanelGroup);
 
    // Send lod info back to ve-xplorer
-   ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
+   /*((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
    ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();*/
 }
 //////////////////
 //event handling//
@@ -164,38 +172,36 @@ void UI_GeometryTab::_buildPage()
 ///////////////////
 
 //////////////////////////////////////////////////
-void UI_GeometryTab::_onGeometry( wxScrollEvent& event )
+void Geometry::_onGeometry( wxScrollEvent& event )
 {
-   ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
+/*   ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
    ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();*/
 }
 
 //////////////////////////////////////////////////
-void UI_GeometryTab::ChangeOpacity( wxScrollEvent& event )
+void Geometry::ChangeOpacity( wxScrollEvent& event )
 {
-   ((UI_Tabs *)_parent)->cPre_state = 0;
+/*   ((UI_Tabs *)_parent)->cPre_state = 0;
    ((UI_Tabs *)_parent)->cSc = _geometryRBox->GetSelection();
    ((UI_Tabs *)_parent)->cMin = geomOpacitySlider->GetValue();
    ((UI_Tabs *)_parent)->cId = UPDATE_GEOMETRY;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();*/
 }
 
 //////////////////////////////////////////////////
-void UI_GeometryTab::_onUpdate(wxCommandEvent& event)
+void Geometry::_onUpdate(wxCommandEvent& event)
 {
-   ((UI_Tabs *)_parent)->cGeo_state = 0;
+/*   ((UI_Tabs *)_parent)->cGeo_state = 0;
    ((UI_Tabs *)_parent)->cPre_state = 1;
    for(int i = 0; i < ((UI_Tabs *)_parent)->num_geo; i++)
    {
       if ( _geometryCBox->IsChecked( i ) )
          ((UI_Tabs *)_parent)->cGeo_state += (int)pow( 2.0f, (float)i );
    }
-   std::cout << " UI_GeometryTab::_onUpdate : " << 
+   std::cout << " Geometry::_onUpdate : " << 
          ((UI_Tabs *)_parent)->cGeo_state << std::endl;
    ((UI_Tabs *)_parent)->cId  = UPDATE_GEOMETRY;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();*/
 }
-
-
 

@@ -7,46 +7,73 @@
 #include "Plugin_base.h"
 #include <iostream>
 #include "string_ops.h"
+#include "Geometry.h"
 
 IMPLEMENT_DYNAMIC_CLASS(REI_Plugin, wxObject)
 
 /////////////////////////////////////////////////////////////////////////////
 REI_Plugin::REI_Plugin()
 { 
-  dlg=NULL; 
-  result_dlg=NULL;
-  port_dlg = NULL;
+   dlg         = 0; 
+   result_dlg  = 0;
+   port_dlg    = 0;
+   geomDlg     = 0;
+   // EPRI TAG
+   financial_dlg = 0;
 
-  // EPRI TAG
-  financial_dlg = NULL;
-
-  pos = wxPoint(0,0); //default position
+   pos = wxPoint(0,0); //default position
   
-  //default shape
-  n_pts=5;
-  poly = new wxPoint[n_pts];
+   //default shape
+   n_pts=5;
+   poly = new wxPoint[n_pts];
   
-  poly[0]=wxPoint(0,20);
-  poly[1]=wxPoint(20,0);
-  poly[2]=wxPoint(40,20);
-  poly[3]=wxPoint(30, 40);
-  poly[4]=wxPoint(10,40);
+   poly[0]=wxPoint(0,20);
+   poly[1]=wxPoint(20,0);
+   poly[2]=wxPoint(40,20);
+   poly[3]=wxPoint(30, 40);
+   poly[4]=wxPoint(10,40);
   
-  mod_pack._type = 1 ; //Module
-  mod_pack._category = 1; // normal modules
-  mod_pack._id = -1;
+   mod_pack._type = 1 ; //Module
+   mod_pack._category = 1; // normal modules
+   mod_pack._id = -1;
 }
 
 /////////////////////////////////////////////////////////////////////////////
 REI_Plugin::~REI_Plugin()
 {
-  delete [] poly;
-  if (dlg!=NULL)        delete dlg;
-  if (result_dlg!=NULL) delete result_dlg;
-  if (port_dlg!=NULL)   delete port_dlg;
-  
-  // EPRI TAG
-  if (financial_dlg!=NULL) delete financial_dlg;
+   delete [] poly;
+   poly = 0;
+
+   if (dlg!=NULL)
+   {       
+      delete dlg;
+      dlg = 0;
+   }
+   
+   if (result_dlg!=NULL)
+   {
+      delete result_dlg;
+      result_dlg = 0;
+   }
+   
+   if (port_dlg!=NULL)   
+   {
+      delete port_dlg;
+      port_dlg = 0;
+   }
+
+   if ( geomDlg )
+   {
+      delete geomDlg;
+      geomDlg = 0;
+   }
+
+   // EPRI TAG
+   if (financial_dlg!=NULL) 
+   {
+      delete financial_dlg;
+      financial_dlg = 0;
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -434,18 +461,19 @@ void REI_Plugin::UnPack(Interface * intf)
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::UnPackResult(Interface* intf)
 {
-  //This will be module dependent. here is the Default implementation when using the summary table to pack things up in the module end
-  unsigned int i;
-  std::vector<string> descs;
-  descs = intf->getStrings();
-  v_desc.clear();
-  v_value.clear();
-  for (i=0; i<descs.size(); i++)
-    {
-      v_desc.push_back(descs[i].c_str());
-      v_value.push_back((intf->getString(descs[i])).c_str());
-    }
+   //This will be module dependent. 
+   //here is the Default implementation when using the 
+   //summary table to pack things up in the module end
   
+   std::vector<string> descs;
+   descs = intf->getStrings();
+   v_desc.clear();
+   v_value.clear();
+   for ( unsigned int i=0; i<descs.size(); ++i )
+   {
+      v_desc.push_back( descs[i].c_str() );
+      v_value.push_back( (intf->getString(descs[i])).c_str() );
+   }
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -493,10 +521,10 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
   unsigned int i;
   //first, to decide if it is water or gas
 
-  bool ok = true;
-  it->getDouble("ENTHALPY",    &ok);
-  if (!ok)
-    { //gas
+   bool ok = true;
+   it->getDouble("ENTHALPY",    &ok);
+   if (!ok)
+   { //gas
       gas_desc.push_back("COALCAL");
       gas_value.push_back(to_string(it->getDouble("COALCAL")).c_str());
       gas_desc.push_back("ASHCAL");
@@ -507,7 +535,7 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
       gas_value.push_back(to_string(it->getDouble("PRESSURE_DROP")).c_str());
       gas_desc.push_back("TEMPERATURE");
       gas_value.push_back(to_string(it->getDouble("TEMPERATURE")).c_str());
-	  gas_desc.push_back("MW");
+	   gas_desc.push_back("MW");
       gas_value.push_back(to_string(it->getDouble("MW")).c_str());
       gas_desc.push_back("PRESSURE");
       gas_value.push_back(to_string(it->getDouble("PRESSURE")).c_str());
@@ -531,10 +559,10 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
       std::vector<std::string> comp_name = it->getString1D("COMP_NAME");
       std::vector<double>      comp_conc = it->getDouble1D("COMP_CONC");
       for (i=0; i<comp_name.size(); i++)
-	{
-	  gas_desc.push_back(comp_name[i].c_str());
-	  gas_value.push_back(to_string(comp_conc[i]).c_str());
-	}
+	   {
+	      gas_desc.push_back(comp_name[i].c_str());
+	      gas_value.push_back(to_string(comp_conc[i]).c_str());
+	   }
       
       gas_desc.push_back("PART NAME");
       gas_value.push_back("PART CONC");
@@ -542,22 +570,23 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
       std::vector<std::string> part_name = it->getString1D("PART_NAME");
       std::vector<double>      part_conc = it->getDouble1D("PART_CONC");
       for (i=0; i<part_name.size(); i++)
-	{
-	  gas_desc.push_back(part_name[i].c_str());
-	  gas_value.push_back(to_string(part_conc[i]).c_str());
-	}
+	   {
+	      gas_desc.push_back(part_name[i].c_str());
+	      gas_value.push_back(to_string(part_conc[i]).c_str());
+	   }
+      
       gas_desc.push_back("WIC NAME");
       gas_value.push_back("WIC CONC");
       std::vector<std::string> wic_name = it->getString1D("WIC_NAME", &ok);
       std::vector<double>      wic_conc = it->getDouble1D("WIC_CONC", &ok);
       for (i=0; i<wic_name.size(); i++)
-	{
-	  gas_desc.push_back(wic_name[i].c_str());
-	  gas_value.push_back(to_string(wic_conc[i]).c_str());
-	}
-    }
-  else
-    { //water
+	   {
+	      gas_desc.push_back(wic_name[i].c_str());
+	      gas_value.push_back(to_string(wic_conc[i]).c_str());
+	   }
+   }
+   else
+   { //water
       gas_desc.push_back("TEMPERATURE");
       gas_value.push_back(to_string(it->getDouble("TEMPERATURE")).c_str());
       gas_desc.push_back("PRESSURE");
@@ -569,19 +598,19 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
       gas_desc.push_back("FLOWRATE");
       gas_value.push_back(to_string(it->getDouble("FLOWRATE")).c_str());
     
-    }
+   }
 
-  if (port_dlg==NULL)
-    port_dlg = new TextResultDialog(parent);
+   if (port_dlg==NULL)
+      port_dlg = new TextResultDialog(parent);
   
-  port_dlg->syngas->Clear();
-  port_dlg->syngas->AddRow(titles);
-  port_dlg->syngas->AddSeperator(' ');
-  port_dlg->syngas->AddSeperator('+');
-  port_dlg->syngas->AddSeperator(' ');
-  port_dlg->Set2Cols(gas_desc, gas_value);
+   port_dlg->syngas->Clear();
+   port_dlg->syngas->AddRow(titles);
+   port_dlg->syngas->AddSeperator(' ');
+   port_dlg->syngas->AddSeperator('+');
+   port_dlg->syngas->AddSeperator(' ');
+   port_dlg->Set2Cols(gas_desc, gas_value);
 
-  return port_dlg;
+   return port_dlg;
 }
 
 // EPRI TAG
@@ -592,4 +621,15 @@ void REI_Plugin::FinancialData ()
     financial_dlg = new FinancialDialog (NULL, (wxWindowID)-1);
   
   financial_dlg->Show();
+}
+
+// Gui to input geometry data
+void REI_Plugin::GeometryDialog( void )
+{
+   if ( !geomDlg )
+   {
+      geomDlg = new Geometry( NULL, wxNewId() );
+   }
+
+   geomDlg->Show();
 }

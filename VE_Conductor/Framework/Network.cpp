@@ -4,6 +4,7 @@
 #include <math.h>
 #include "package.h"
 #include "paraThread.h"
+#include "Geometry.h"
 
 IMPLEMENT_DYNAMIC_CLASS(Network, wxScrolledWindow);
 BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
@@ -25,6 +26,7 @@ BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
   EVT_MENU(PARAVIEW, Network::OnParaView)
   EVT_MENU(SHOW_DESC, Network::OnShowDesc)
   EVT_MENU(SHOW_FINANCIAL, Network::OnShowFinancial) /* EPRI TAG */
+  EVT_MENU(GEOMETRY, Network::OnGeometry) /* EPRI TAG */
 END_EVENT_TABLE()
 
 Network::Network(wxWindow* parent, int id)
@@ -371,6 +373,10 @@ void Network::OnMRightDown(wxMouseEvent &event)
   // EPRI TAG
   pop_menu.Append(SHOW_FINANCIAL, "Financial Data");
   pop_menu.Enable(SHOW_FINANCIAL, true);
+
+   // GUI to configure geometry for graphical env
+  pop_menu.Append(GEOMETRY, "Geometry Config");
+  pop_menu.Enable(GEOMETRY, true);
 
   pop_menu.Enable(ADD_LINK_CON, false);
   pop_menu.Enable(EDIT_TAG, false);
@@ -2407,21 +2413,22 @@ void Network::Pack(vector<Interface> & UIs)
       ntpk.setVal(vname, tagBoxX);
       sprintf(vname, "tag_BoxY_%.4d", i);
       ntpk.setVal(vname, tagBoxY);
-     }
+   }
 
-  UIs.clear();
-  UIs.push_back(ntpk);
+   UIs.clear();
+   UIs.push_back(ntpk);
 
-  for (iter=modules.begin(); iter!=modules.end(); iter++)
-    {
+   for (iter=modules.begin(); iter!=modules.end(); iter++)
+   {
       i=iter->first;
       modules[i].pl_mod->SetID(i);
       UIs.push_back(*(modules[i].pl_mod->Pack()));
-    }
+      //if module has geometry data
+      // then grab geometry interface
+      // call spcific modules geom pack
+   }
 
-  UIs.push_back(*(globalparam_dlg->Pack()));
-
-
+   UIs.push_back(*(globalparam_dlg->Pack()));
 }
 
 void Network::UnPack(vector<Interface> & intfs)
@@ -2548,117 +2555,121 @@ void Network::UnPack(vector<Interface> & intfs)
  	m_yUserScale = tempd;
     }
 
-  vars = ntpk.getStrings();
-  for (i=0; i<vars.size(); i++)
-    {
+   vars = ntpk.getStrings();
+   for (i=0; i<vars.size(); i++)
+   {
       ntpk.getVal(vars[i], temps);
       if ((pos=vars[i].find("modCls_"))!=string::npos)
-	{
-	  num =atoi(vars[i].substr(pos+7, 4).c_str());
-	  cls = wxClassInfo::FindClass(temps.c_str());
-	  if (cls==NULL)
-	    {
-	      // wxMessageBox("Load failed : You don't have that class in your Plugin DLL!", temps.c_str());
-	      for (ii=0; ii< links.size(); ii++)
-		if (links[ii]!=NULL)
-		  delete links[ii];
-	      links.clear();
+	   {
+	      num =atoi(vars[i].substr(pos+7, 4).c_str());
+	      cls = wxClassInfo::FindClass(temps.c_str());
+	      if (cls==NULL)
+	      {
+	         // wxMessageBox("Load failed : You don't have that class in your Plugin DLL!", temps.c_str());
+	         for (ii=0; ii< links.size(); ii++)
+		         if (links[ii]!=NULL)
+		            delete links[ii];
+	         links.clear();
 	      
-	      for (iter=modules.begin(); iter!=modules.end(); iter++)
-		{
-		  ii = iter->first;
-		  if (modules[ii].pl_mod!=NULL)
-		    delete modules[ii].pl_mod;
-		}
-	      modules.clear();
+	         for (iter=modules.begin(); iter!=modules.end(); iter++)
+		      {
+		         ii = iter->first;
+		         if (modules[ii].pl_mod!=NULL)
+		            delete modules[ii].pl_mod;
+		      }
+	         modules.clear();
 	      
-	      tags.clear();
-	      while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
-	      return;
-	    }
+	         tags.clear();
+	         while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+	            return;
+	      }
 
-	  modules[num]=temp_mod;
-	  modules[num].pl_mod = (REI_Plugin *) cls->CreateObject();
-	  modules[num].cls_name = temps;
-	}
+	      modules[num]=temp_mod;
+	      modules[num].pl_mod = (REI_Plugin *) cls->CreateObject();
+	      modules[num].cls_name = temps;
+	   }
+   
       if ((pos=vars[i].find("tag_Txt_"))!=string::npos)
-	{
-	  num = atoi(vars[i].substr(pos+8, 4).c_str());
-	  tags[num].text = wxString(temps.c_str());
-	}
-    }
-  vars = ntpk.getInts1D();
-  for (i=0; i<vars.size(); i++)
-    {
+	   {
+	      num = atoi(vars[i].substr(pos+8, 4).c_str());
+	      tags[num].text = wxString(temps.c_str());
+	   }
+   }
+   
+   vars = ntpk.getInts1D();
+   for (i=0; i<vars.size(); i++)
+   {
       ntpk.getVal(vars[i],templ1d);
       if ((pos=vars[i].find("ln_ConX_"))!=string::npos)
-	{
-	  num = atoi(vars[i].substr(pos+8, 4).c_str());
+	   {
+	      num = atoi(vars[i].substr(pos+8, 4).c_str());
 
-	  if (links[num]->cons.size()==0)
-	    links[num]->cons.resize(templ1d.size());
+	      if (links[num]->cons.size()==0)
+	         links[num]->cons.resize(templ1d.size());
 
-	  for (j=0; j<templ1d.size(); j++)
-	    links[num]->cons[j].x = templ1d[j];
-	}
+	      for (j=0; j<templ1d.size(); j++)
+	         links[num]->cons[j].x = templ1d[j];
+	   }
       else if ((pos=vars[i].find("ln_ConY_"))!=string::npos)
-	{
-	  num = atoi(vars[i].substr(pos+8, 4).c_str());
-	  for (j=0; j<templ1d.size(); j++)
-	    links[num]->cons[j].y = templ1d[j];
-	}
-    }
-  // unpack the modules' UIs
+	   {
+	      num = atoi(vars[i].substr(pos+8, 4).c_str());
+	      for (j=0; j<templ1d.size(); j++)
+	         links[num]->cons[j].y = templ1d[j];
+	   }
+   }
 
-
-  for (i=0; i<modsize; i++)
-    {
+   // unpack the modules' UIs
+   for ( i=0; i<modsize; ++i )
+   {
       _id = intfs[i+1]._id;
       modules[_id].pl_mod->SetID(_id);
       modules[_id].pl_mod->UnPack(&intfs[i+1]);
-    };
-
+      //if module has geometry data
+      // then grab geometry interface
+      // call spcific modules geom unpack
+   }
     
-  //unpack the Global Param Dialog
-  //globalparam_dlg->UnPack(&intfs[intfs.size()-1]);
+   //unpack the Global Param Dialog
+   //globalparam_dlg->UnPack(&intfs[intfs.size()-1]);
 
-  //Now all the data are read from the file. Let's try to reconstruct the link and the calculate the 
-  //first, calculate get the links vector into the modules
-  for (i=0; i<links.size(); i++)
-    {
+   //Now all the data are read from the file. 
+   //Let's try to reconstruct the link and the calculate the 
+   //first, calculate get the links vector into the modules
+   for (i=0; i<links.size(); i++)
+   {
       modules[links[i]->To_mod].links.push_back(links[i]);
       modules[links[i]->Fr_mod].links.push_back(links[i]);
-    }
+   }
 
-  //Second, calculate the polyes
-  for (iter=modules.begin(); iter!=modules.end(); iter++)//=0; i<modules.size(); i++)
-    {
+   //Second, calculate the polyes
+   for (iter=modules.begin(); iter!=modules.end(); iter++)//=0; i<modules.size(); i++)
+   {
       i=iter->first;
       bbox = modules[i].pl_mod->GetBBox();
       polynum = modules[i].pl_mod->GetNumPoly();
       tmpPoly.resize(polynum);
       modules[i].pl_mod->GetPoly(tmpPoly);
       TransPoly(tmpPoly, bbox.x, bbox.y, modules[i].poly); //Make the network recognize its polygon 
-    }
+   }
   
-  for (i=0; i<links.size(); i++)
-    links[i]->poly = CalcLinkPoly(*(links[i]));
+   for (i=0; i<links.size(); i++)
+      links[i]->poly = CalcLinkPoly(*(links[i]));
 
-  for (i=0; i<tags.size(); i++)
-    tags[i].poly = CalcTagPoly(tags[i]);
+   for (i=0; i<tags.size(); i++)
+      tags[i].poly = CalcTagPoly(tags[i]);
   
-  m_selMod = -1;
-  m_selFrPort = -1; 
-  m_selToPort = -1; 
-  m_selLink = -1; 
-  m_selLinkCon = -1; 
-  m_selTag = -1; 
-  m_selTagCon = -1; 
-  xold = yold =0;
+   m_selMod = -1;
+   m_selFrPort = -1; 
+   m_selToPort = -1; 
+   m_selLink = -1; 
+   m_selLinkCon = -1; 
+   m_selTag = -1; 
+   m_selTagCon = -1; 
+   xold = yold =0;
   
-  while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR);
+   while(s_mutexProtect.Unlock()!=wxMUTEX_NO_ERROR){ ; }
 
-  Refresh();
+   Refresh();
 }
 
 void Network::Save(wxString filename)
@@ -2848,4 +2859,10 @@ void Network::OnParaView(wxCommandEvent &event)
   ::wxExecute("paraview", wxEXEC_ASYNC);
 #endif
 
+}
+
+void Network::OnGeometry(wxCommandEvent &event)
+{
+  if (m_selMod<0) return;
+  modules[m_selMod].pl_mod->GeometryDialog();
 }

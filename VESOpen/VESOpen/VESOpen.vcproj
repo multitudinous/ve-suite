@@ -127,7 +127,8 @@
 				CommandLine="echo C++ stubs. . .
 $(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VESOpen/skel -GI -I./idl   $(VE_SUITE_HOME)/VESOpen/idl/module.idl
 $(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VESOpen/skel -GI -I./idl   $(VE_SUITE_HOME)/VESOpen/idl/VjObs.idl
-echo Done."
+echo Done.
+"
 				AdditionalDependencies="module.idl;VjObs.idl"
 				Outputs="moduleC.h;moduleC.cpp;moduleS.cpp;moduleS.h;VjObsC.h;VjObsS.h;VjObsC.cpp;VjObsS.cpp"/>
 			<Tool
@@ -218,8 +219,8 @@ echo Done.
 				Name="VCCustomBuildTool"
 				Description="IDL Compiler"
 				CommandLine="echo C++ stubs. . .
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(IDL_HOME)/skel $(IDL_HOME)/idl/module.idl
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(IDL_HOME)/skel $(IDL_HOME)/idl/VjObs.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C../skel ../idl/module.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C../skel ../idl/VjObs.idl
 echo Done.
 "
 				AdditionalDependencies="module.idl;VjObs.idl"

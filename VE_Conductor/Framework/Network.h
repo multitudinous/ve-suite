@@ -11,21 +11,25 @@
 #include "moduleC.h"
 #include "GlobalParamDialog.h"
 
+class Geometry;
+
 using namespace std;
 
-enum {
-  ADD_TAG,
-  ADD_LINK_CON,
-  EDIT_TAG,
-  DEL_TAG,
-  DEL_LINK,
-  DEL_LINK_CON,
-  DEL_MOD,
-  SHOW_LINK_CONT,
-  SHOW_RESULT,
-  SHOW_DESC,
-  PARAVIEW,
-  SHOW_FINANCIAL /* EPRI TAG */
+enum 
+{
+   ADD_TAG,
+   ADD_LINK_CON,
+   EDIT_TAG,
+   DEL_TAG,
+   DEL_LINK,
+   DEL_LINK_CON,
+   DEL_MOD,
+   SHOW_LINK_CONT,
+   SHOW_RESULT,
+   SHOW_DESC,
+   PARAVIEW,
+   SHOW_FINANCIAL, /* EPRI TAG */
+   GEOMETRY
 };
 
 typedef struct {
@@ -92,6 +96,7 @@ class Network : public wxScrolledWindow
   void OnShowResult(wxCommandEvent &event);
   void OnParaView(wxCommandEvent &event);
   void OnShowDesc(wxCommandEvent &event);
+  void OnGeometry(wxCommandEvent &event);
 
   // EPRI TAG
   void OnShowFinancial(wxCommandEvent &event);
