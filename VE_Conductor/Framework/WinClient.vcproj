@@ -818,7 +818,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Ve_ui\UI_ModelData.cxx">
+				RelativePath="..\Ve_ui\UI_ModelData.cpp">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_ModSelPanel.cpp">

@@ -459,7 +459,8 @@ void Network::OnAddLinkCon(wxCommandEvent &event)
   linkline[0].x = bbox.x+ports[links[m_selLink]->Fr_port].x;
   linkline[0].y = bbox.y+ports[links[m_selLink]->Fr_port].y;
 
-  for ( unsigned int i=0; i<links[m_selLink]->cons.size(); i++)
+  unsigned int i ,j;
+  for ( i=0; i<links[m_selLink]->cons.size(); i++)
     linkline[i+1]=links[m_selLink]->cons[i];
 
   bbox = modules[links[m_selLink]->To_mod].pl_mod->GetBBox();
@@ -475,7 +476,6 @@ void Network::OnAddLinkCon(wxCommandEvent &event)
   
   nearpnt(action_point, linkline, Near);
 
-   unsigned int i ,j;
    for ( i=0; i<linkline.size()-1; i++)
       if(  (linkline[i].x <= Near[0].x && linkline[i+1].x>=Near[0].x)
 	         ||(linkline[i].x>=Near[0].x && linkline[i+1].x<=Near[0].x))

@@ -76,12 +76,12 @@ public:
   int _type;
   int _category;
   int _id;
-  std::map<std::string, long>                      getIntMap()          { return _Int; }
+/*  std::map<std::string, long>                      getIntMap()          { return _Int; }
   std::map<std::string, double>                    getDoubleMap()       { return _Double; }
   std::map<std::string, std::string>               getStringMap()       { return _String; }
   std::map<std::string, std::vector<long> >        getIntArrayMap()     { return _Int1D;  }
   std::map<std::string, std::vector<double> >      getDoubleArrayMap()  { return _Double1D;  }
-  std::map<std::string, std::vector<std::string> > getStringArrayMap()  { return _String1D; }
+  std::map<std::string, std::vector<std::string> > getStringArrayMap()  { return _String1D; }*/
 protected:
 
   std::map<std::string, long>                      _Int;
