@@ -1629,7 +1629,10 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
 
   double hhv_daf = _hhv / (1 - (_ash_prox + _proxH2O) / 100);
   
-  _thermal_input = fuel_flow*hhv_daf*.00232587;
+  double fuel_flow_nochar = fuel_flow;
+  fuel_flow_nochar -= _char_flow[0]*omegah[0];
+  if(second_stage) fuel_flow_nochar -= _char_flow[1]*omegah[1] + _char_flow[2]*omegah[2];
+  _thermal_input = fuel_flow_nochar*hhv_daf*.00232587;
 
   summaries->insert_summary_val("Cold gas efficiency UNITS:%(HHV) FORMAT:12.2f", geffi);
   summaries->insert_summary_val("Cold gas efficiency UNITS:%(LHV) FORMAT:12.2f", geffi_lhv);
