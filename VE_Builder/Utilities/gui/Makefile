@@ -15,7 +15,8 @@ SRCS=\
 toolBarApp.cpp \
 readWriteVtkThings.cxx\
 cfdGrid2Surface.cpp\
-setScalarAndVector.cpp
+setScalarAndVector.cpp\
+spinctld.cpp
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
 DEPDIR= $(CFDHOSTTYPE)
@@ -57,7 +58,8 @@ vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Translator
 vpath %.h    $(VE_SUITE_HOME)/VE_Builder/Translator
 vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Utilities
 vpath %.h    $(VE_SUITE_HOME)/VE_Builder/Utilities
-
+vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Utilities/gui
+vpath %.h    $(VE_SUITE_HOME)/VE_Builder/Utilities/gui
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
