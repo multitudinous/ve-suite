@@ -658,6 +658,9 @@ bool GasifierCFD::execute (Gas *ox_in, Gas *gas_out, summary_values *summaries)
   } else {
     string path = _work_dir;
     string basepath = "./Glacier/Cases";
+
+    system(("cp " + basepath + "/CPD_DATA " + path + "/CPD_DATA").c_str());
+
     if(_stage == 0) basepath += "/base_twostage/";
     else               basepath += "/base_onestage/";
     system(("cp " + basepath + "DATA " + path + "/DATA").c_str());
