@@ -45,14 +45,14 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
 
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
-   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/mccdo/software/IRIX32/lib
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/mccdo/software/IRIX32/lib:${XERCESCROOT}/lib
    setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
    else
       setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/IRIX32
       setenv PYTHONPATH ${OMNI_HOME}/lib32/python2.3/site-packages
@@ -70,14 +70,14 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
    #setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
 
    setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include
-   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib:${XERCESCROOT}/lib
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
    else
       setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Linux-RH80
       setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
@@ -95,14 +95,14 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
    #setenv VJ_DEPS_DIR /home/users/sjk60/suse_deps/Suse-9.1-alpha4_vrjuggler-deps
 
    setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include/boost-1_31
-   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib:${XERCESCROOT}/lib
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv MY_ACEDIR /home/users/mccdo/ACE_TAO
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
    else
       setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Linux-SuSE91
       setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
@@ -118,13 +118,13 @@ else if ( ${CFDHOSTTYPE} == "SunOS" ) then
    #setenv VJ_DEPS_DIR ??
 
    setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include/boost-1_31
-   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib:${XERCESCROOT}/lib
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib:${XERCESCROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
    else
       setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Solaris
       setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages

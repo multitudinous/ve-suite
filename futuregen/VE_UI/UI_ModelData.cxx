@@ -65,7 +65,7 @@ wxString UI_ModelData::GetModelName( int input )
 
 short UI_ModelData::GetNumberOfModels( void )
 {
-   return (*_models).length();
+   return (_models)->length();
 }
 
 short UI_ModelData::GetNumberOfGeomFiles( int input )

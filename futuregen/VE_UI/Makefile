@@ -37,20 +37,18 @@ CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 
 WX_CXX = $(shell wx-config --cxxflags)
 WX_LIB = $(shell wx-config --libs)
-
+CFDUNAME = $(shell uname )
 # If OMNI_HOME was defined in the script setup.tsh, 
 # then define CORBA_DEFINES, and CORBA_INCLUDES.
 # (To make a non-corba version, don't define OMNI_HOME.)
 ifdef OMNI_HOME
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl
 
-   CORBA_DEFINES = -D__OSVERSION__=6 
-
-   ifeq (`uname`, Linux)
-      CORBA_DEFINES += -D__x86__ -D__linux__
+   ifeq ($(CFDUNAME),Linux)
+      CORBA_DEFINES += -D__x86__ -D__linux__ -D__OSVERSION__=2
       OMNI_LIB = ${OMNI_HOME}/lib
    else
-      CORBA_DEFINES += -D__mips__ -D__irix__
+      CORBA_DEFINES += -D__mips__ -D__irix__ -D__OSVERSION__=6 
       OMNI_LIB = ${OMNI_HOME}/lib
    endif
 
