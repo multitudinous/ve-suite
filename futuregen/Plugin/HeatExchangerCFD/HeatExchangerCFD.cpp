@@ -1,0 +1,111 @@
+
+#pragma warning(disable:4786)
+#pragma warning(disable : 4101)
+#pragma warning(disable : 4503)
+#pragma warning(disable : 4251)
+
+#include "HeatExchangerCFD.h"
+
+IMPLEMENT_DYNAMIC_CLASS(HeatExchangerCFD, REI_Plugin)
+
+/////////////////////////////////////////////////////////////////////////////
+HeatExchangerCFD
+::HeatExchangerCFD()
+{
+
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+HeatExchangerCFD
+::~HeatExchangerCFD()
+{
+
+}
+
+/////////////////////////////////////////////////////////////////////////////
+double HeatExchangerCFD::GetVersion()
+{
+  double result=1.0;
+
+  //Your code
+
+  return result;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+int HeatExchangerCFD::GetNumPoly()
+{
+  int result=0;
+  //Your code
+  return n_pts;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//void HeatExchangerCFD::GetPoly(POLY &polygon)
+//{
+//  return ;//polygon;
+//}
+
+/////////////////////////////////////////////////////////////////////////////
+int HeatExchangerCFD::GetNumIports()
+{
+  int result=1;
+
+  return result;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+void HeatExchangerCFD::GetIPorts(POLY &iports)
+{
+  iports[0]=poly[0];
+  return;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+int HeatExchangerCFD::GetNumOports()
+{
+  int result=1;
+  //Your code
+  return result;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+void HeatExchangerCFD::GetOPorts(POLY &oports)
+{
+  oports[0]=poly[3];
+}
+
+/////////////////////////////////////////////////////////////////////////////
+//void HeatExchangerCFD::DrawIcon(wxDC* dc)
+//{
+  //Your implementation
+//}
+
+/////////////////////////////////////////////////////////////////////////////
+UIDialog* HeatExchangerCFD::UI(wxWindow* parent)
+{
+  return NULL;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+wxString HeatExchangerCFD::GetName()
+{
+  wxString result="REI_Components_HeatExchangerCFD"; //your name
+  return result;
+}
+
+/////////////////////////////////////////////////////////////////////////////
+wxString HeatExchangerCFD::GetDesc()
+{
+  wxString result="HeatExchangerCFD Module by REI"; //your description
+
+  return result;
+}
+
+wxString HeatExchangerCFD::GetHelp()
+{
+  wxString result="Framework/doc/modules/HeatExchangerCFD.html"; //your description
+  return result;
+}
