@@ -210,13 +210,7 @@ void UI_ViewLocTab::_onMove(wxCommandEvent& event)
 {
    if ( ((UI_Tabs *)_parent)->num_viewlocs > 0 )
    {
-      for( int i = 0; i < ((UI_Tabs *)_parent)->num_viewlocs; i++)
-      {  
-         // _teacherRBox->GetSelection();
-         // This code is not correct
-         // Need to fix this 
-         ((UI_Tabs *)_parent)->cIso_value = i;
-      }
+      ((UI_Tabs *)_parent)->cIso_value = _locationsRBox->GetSelection();
       ((UI_Tabs *)_parent)->cId = MOVE_TO_SELECTED_LOCATION;
       ((UI_Tabs *)_parent)->sendDataArrayToServer();
    }
