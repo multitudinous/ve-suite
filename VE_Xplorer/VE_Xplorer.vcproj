@@ -819,9 +819,6 @@ echo Done.
 				RelativePath="..\VE_SceneGraph\cfdTempAnimation.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdTextureBasedModel.cxx">
-			</File>
-			<File
 				RelativePath=".\cfdTextureBasedVizHandler.cxx">
 			</File>
 			<File
@@ -829,6 +826,9 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdThread.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdUpdateableOSGTexture1d.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdUpdateTextureCallback.cpp">
@@ -1864,9 +1864,6 @@ echo Done.
 				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
 			</File>
 			<File
-				RelativePath=".\cfdTextureBasedModel.h">
-			</File>
-			<File
 				RelativePath=".\cfdTextureBasedVizHandler.h">
 			</File>
 			<File
@@ -1877,6 +1874,9 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdTransientVizHandler.h">
+			</File>
+			<File
+				RelativePath=".\cfdUpdateableOSGTexture1d.h">
 			</File>
 			<File
 				RelativePath=".\cfdUpdateTextureCallback.h">

@@ -3,10 +3,13 @@
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
+namespace osg{
+   class Node;
+   class NodeVisitor;
+   class State;
+}
+class cfdTextureManager;
 #include <osg/Texture3D>
-#include <osg/Node>
-#include <osg/NodeVisitor>
-#include "cfdTextureManager.h"
 
 class cfdUpdateTextureCallback : public  osg::Texture3D::SubloadCallback{
 public:

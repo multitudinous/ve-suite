@@ -43,8 +43,10 @@
 #include "cfdSceneNode.h"
 
 #include <vpr/Util/Debug.h>
+#ifdef _PERFORMER
 #include <Performer/pfdb/pfpfb.h>
-
+#elif _OSG
+#endif
 // constructor
 cfdGraphicsObject::cfdGraphicsObject( void )
 {

@@ -4,12 +4,15 @@
 #elif _OSG
 #include <osg/Geode>
 
+#include <osg/Node>
+
+#include <osg/Vec3>
 #include <osgUtil/CullVisitor>
 ////////////////////////////////////////////////////////////
 //Constructor
 ////////////////////////////////////////////////////////////
 cfdVolumeSliceSwitchCallback::cfdVolumeSliceSwitchCallback(
-osg::Vec3 center)
+osg::Vec3f center)
 :_center(center)
 {
    _whichSlices = Z_POS;
@@ -25,7 +28,7 @@ void cfdVolumeSliceSwitchCallback::AddGeometrySlices(SliceDir dir,
    _switchSlices[dir] = geom;
 }
 //////////////////////////////////////////////////////////////
-void cfdVolumeSliceSwitchCallback::switchSlices(osg::Vec3 eye)
+void cfdVolumeSliceSwitchCallback::switchSlices(osg::Vec3f eye)
 {
    osg::Vec3 xAxis(1,0,0);
    osg::Vec3 yAxis(0,1,0);

@@ -3,6 +3,10 @@
 #elif _OPENSG
 #elif _OSG
 #include <osg/State>
+
+#include <osg/Node>
+#include <osg/NodeVisitor>
+#include "cfdTextureManager.h"
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////

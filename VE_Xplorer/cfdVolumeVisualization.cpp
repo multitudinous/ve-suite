@@ -26,6 +26,7 @@
 #include <osg/Shape>
 #include <osg/Image>
 #include <osg/Switch>
+
 ////////////////////////////////////////////////
 //Constructor                                 //
 ////////////////////////////////////////////////
@@ -95,12 +96,17 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _trans4 = rhs._trans4;
    _volShaderIsActive =  rhs._volShaderIsActive;
    _transferShaderIsActive = rhs._transferShaderIsActive;
+   _transferFunctions.clear();
+
+   for(int i = 0; i < 2; i++){
+      _transferFunctions.push_back(rhs._transferFunctions.at(i));
+   }
 
 }
 //////////////////////////////////////////////////
 cfdVolumeVisualization::~cfdVolumeVisualization()
 {
-   //not sure if I should call unref here or not
+   //not sure if I should call release here or not
    if(_tm){
       delete [] _tm;
       _tm = 0;
@@ -113,6 +119,11 @@ cfdVolumeVisualization::~cfdVolumeVisualization()
       delete [] _shaderDirectory;
       _shaderDirectory = 0;
    }
+   if(_transferFunctions.size()){
+     _transferFunctions.clear();
+   }
+
+   
 }
 //////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetShaderDirectory(char* shadDir)
@@ -236,7 +247,93 @@ void cfdVolumeVisualization::DisableVolumeShader()
       _volShaderIsActive = false;
    }   
 }
+////////////////////////////////////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
+                                              float param,int whichFunction)
+{
+   cfdUpdateableOSGTexture1d temp;
+   if(!_transferFunctions.size()){
+      std::cout<<"Transfer functions not initialized!!!"<<std::endl;
+      return;
+   }
+   switch(whichFunction){
+      case 0:
+         temp = _transferFunctions.at(0);
+         break;
+      case 1:
+         temp = _transferFunctions.at(1);
+         break;
+      case 2:
+         temp = _transferFunctions.at(2);
+         break;
+      case 3:
+      default:
+         temp = _transferFunctions.at(3);
+         break;
+   };
+   temp.UpdateParam(type,param);
+}
+/////////////////////////////////////////////////////
+void cfdVolumeVisualization::_initTransferFunctions()
+{ 
+   osg::ref_ptr<osg::Image> data1 = new osg::Image();
+   osg::ref_ptr<osg::Image> data2 = new osg::Image();
+   osg::ref_ptr<osg::Image> data3 = new osg::Image();
+   osg::ref_ptr<osg::Image> data4 = new osg::Image();
+   
+   data1->allocateImage(256,1,1,
+                            GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   data2->allocateImage(256,1,1,
+                            GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   data3->allocateImage(256,1,1,
+                            GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   data4->allocateImage(256,1,1,
+                            GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   
+   _trans1 = new osg::Texture1D;
+   _trans1->setImage(data1.get());
+
+   _trans2 = new osg::Texture1D;
+   _trans2->setImage(data2.get());
+  
+   _trans3 = new osg::Texture1D;
+   _trans3->setImage(data3.get());
+
+   _trans4 = new osg::Texture1D;
+   _trans4->setImage(data4.get());
+
+   cfdUpdateableOSGTexture1d t1;
+   t1.SetTransferFunctionType(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION);
+   _trans1->setTextureSize(256);
+   t1.SetTexture1D(_trans1.get());
+
+   cfdUpdateableOSGTexture1d t2;
+   t2.SetTransferFunctionType(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION);
+   _trans2->setTextureSize(256);
+   t2.SetTexture1D(_trans2.get());
+
+   cfdUpdateableOSGTexture1d t3;
+   t3.SetTransferFunctionType(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION);
+   _trans3->setTextureSize(256);
+   t3.SetTexture1D(_trans3.get());
+
+   cfdUpdateableOSGTexture1d t4;
+   t4.SetTransferFunctionType(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION);
+   _trans4->setTextureSize(256);
+   t4.SetTexture1D(_trans4.get());
+
+   _transferFunctions.push_back(t1);
+   _transferFunctions.push_back(t2);
+   _transferFunctions.push_back(t3);
+   _transferFunctions.push_back(t4);
+
+   for(int i = 0; i < 4; i++){
+      _transferFunctions.at(i).UpdateParam(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION,1.39);
+   }
+
+}
 #endif
+
 ////////////////////////////////////////////////////////
 void cfdVolumeVisualization::UseNormalGraphicsPipeline()
 {
@@ -840,6 +937,7 @@ void cfdVolumeVisualization::_buildGraph()
    _isCreated = true;
 #ifdef CFD_USE_SHADERS
    _initVolumeShader();
+   _initTransferFunctions();
 #endif
    //build our funky graph
 
@@ -988,6 +1086,10 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
 
       _volShaderIsActive =  rhs._volShaderIsActive;
       _transferShaderIsActive = rhs._transferShaderIsActive;
+      _transferFunctions.clear();
+      for(int i = 0; i < 2; i++){
+         _transferFunctions.push_back(rhs._transferFunctions.at(i));
+      }
    
    }
    return *this;

@@ -19,10 +19,14 @@ namespace osg{
    class Shape;
    class Image;
    class Switch;
+   class StateSet;
+   class Group;
 }
+#include <osg/BoundingBox>
 #include "cfdVolumeSliceSwitchCallback.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfdTextureManager.h"
+#include "cfdUpdateableOSGTexture1d.h"
 
 class cfdVolumeVisualization{
 public:
@@ -55,6 +59,8 @@ public:
    void ActivateVisualBBox();  
    void DeactivateVisualBBox();
    void UseNormalGraphicsPipeline();
+   void UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
+                            float param,int whichFunction);
 
    bool isCreated(){return _isCreated;}
 #ifdef CFD_USE_SHADERS
@@ -105,9 +111,10 @@ protected:
                      char* fragFunctionName);
    void _initVolumeShader();
    void _initTransferFunctionShader();
-   
+   void _initTransferFunctions();   
    void _attachTransferFunctionsToStateSet(osg::StateSet* ss);
    void _attachPropertyTextureToStateSet(osg::StateSet* ss);
+
 #endif
    osg::ref_ptr<osg::Group>_volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
@@ -146,6 +153,7 @@ protected:
    osg::ref_ptr<osg::Geometry> _negZSlices;
    cfdVolumeSliceSwitchCallback* _vSSCbk;
    cfdUpdateTextureCallback* _utCbk;
+   std::vector<cfdUpdateableOSGTexture1d> _transferFunctions;
 #endif
 
 };
