@@ -319,7 +319,7 @@ void VjObs_i::CreateDatasetInfo( void )
       }
    }
 
-   vprDEBUG(vprDBG_ALL,1) << "leaving VjObs_i::get_sc_num()"
+   vprDEBUG(vprDBG_ALL,1) << "leaving VjObs_i::CreateDatasetInfo()"
                           << std::endl << vprDEBUG_FLUSH;
 
 }
