@@ -131,12 +131,15 @@ void UI_StreamlineTab::_buildPage()
    wxStaticText* iLabelRight = new wxStaticText(this,-1,wxT("Larger"));
 
    wxStaticText* sLabel = new wxStaticText(this,-1,wxT("Step"));
+   wxStaticText* sLabelLeft = new wxStaticText(this,-1,wxT("Finer"));
+   wxStaticText* sLabelRight = new wxStaticText(this,-1,wxT("Coarser"));
+
    wxStaticText* npLabel         = new wxStaticText(this,-1,wxT("Number of Points"));
    wxStaticText* sizeLabel       = new wxStaticText(this,-1,wxT("Size(%)"));
 
    wxStaticText* diameterLabel   = new wxStaticText(this,-1,wxT("Line Diameter"));
-   wxStaticText* diameterLabelLeft   = new wxStaticText(this,-1,wxT("Decrease Exponentially"));
-   wxStaticText* diameterLabelRight   = new wxStaticText(this,-1,wxT("Increase Exponentially"));
+   wxStaticText* diameterLabelLeft   = new wxStaticText(this,-1,wxT("Decrease"));
+   wxStaticText* diameterLabelRight   = new wxStaticText(this,-1,wxT("Increase"));
 
    //the two sliders for this group
    _propSlider = new wxSlider(this, PROP_SLIDER,100,1,100,
@@ -183,6 +186,8 @@ void UI_StreamlineTab::_buildPage()
    wxBoxSizer* intGroupBottom       = new wxBoxSizer(wxHORIZONTAL);
 
    wxBoxSizer* stepGroup      = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* stepGroupBottom       = new wxBoxSizer(wxHORIZONTAL);
+
    wxBoxSizer* sizePointsGroup = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* numPointsGroup = new wxBoxSizer(wxVERTICAL);
 
@@ -206,6 +211,9 @@ void UI_StreamlineTab::_buildPage()
    //the step slider
    stepGroup->Add(sLabel,0,wxALIGN_LEFT);
    stepGroup->Add(_stepSlider,1,wxALIGN_LEFT|wxEXPAND);
+   stepGroupBottom->Add(sLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
+   stepGroupBottom->Add(sLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
+   stepGroup->Add(stepGroupBottom,1,wxALIGN_LEFT|wxEXPAND);
 
    //the numPoints Slider
    numPointsGroup->Add(npLabel,0,wxALIGN_LEFT);
