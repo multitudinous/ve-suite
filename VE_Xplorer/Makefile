@@ -5,7 +5,7 @@
 #_______________________________CUSTOM OPTIONS__________________________________
 #
 # Uncomment this line if you want to build a cluster juggler app
-#CLUSTER_APP = TRUE
+CLUSTER_APP = TRUE
 #
 # Uncomment the following line to use cfdSequence instead of pfSequence.
 # (It is automatically turned on for cluster builds.)
@@ -172,15 +172,6 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 #include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
 #include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
 
-# object files are being stored in a system-dependent directory so that builds
-# for multiple platforms may be maintained simultaneously.
-
-#OBJDIR is the place that the object files are stored.
-OBJDIR=	$(CFDHOSTTYPE)
-
-#DEPDIR is the place that the dependency files are stored.
-DEPDIR=	$(CFDHOSTTYPE)
-
 #__________________________________________________________
 # Where is Paul Rajlich's vtkActorToPF directory?
 
@@ -193,8 +184,24 @@ ifeq ($(CLUSTER_APP), TRUE)
    APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project_cluster
    EXTRA_CXXFLAGS+= -D_CLUSTER
    EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
+   # object files are being stored in a system-dependent directory so that builds
+   # for multiple platforms may be maintained simultaneously.
+
+   #OBJDIR is the place that the object files are stored.
+   OBJDIR=	$(CFDHOSTTYPE)_cluster
+
+   #DEPDIR is the place that the dependency files are stored.
+   DEPDIR=	$(CFDHOSTTYPE)_cluster
 else
    APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project
+   # object files are being stored in a system-dependent directory so that builds
+   # for multiple platforms may be maintained simultaneously.
+
+   #OBJDIR is the place that the object files are stored.
+   OBJDIR=	$(CFDHOSTTYPE)
+
+   #DEPDIR is the place that the dependency files are stored.
+   DEPDIR=	$(CFDHOSTTYPE)
 endif
 
 default: all
