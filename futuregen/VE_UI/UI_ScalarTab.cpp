@@ -111,6 +111,9 @@ void UI_ScalarTab::updateScalarTabRadioBoxInfo(int nScalars, wxString* scalarNam
    //ridiculous hack to get the display
    //to refresh!!!!!!!!
    SetSize(GetSize());
+
+   // Send initial data to VE-Xplorer
+   this->setActiveScalar( 0 );
 }
 ////////////////////////////////////////////////////////////////////////////////////////////
 void UI_ScalarTab::updateScalarTabRadioBoxInfo(int nScalars, char** scalarNames,int refresh)
@@ -149,7 +152,12 @@ void UI_ScalarTab::updateScalarTabRadioBoxInfo(int nScalars, char** scalarNames,
          delete [] newNames;
       }
    }
-   if(refresh)_scalarRBox->Refresh();
+
+   if(refresh)
+      _scalarRBox->Refresh();
+
+   // Send initial data to VE-Xplorer
+   this->setActiveScalar( 0 );
 }
 ///////////////////////////////
 //build the scalars page     //
@@ -178,7 +186,7 @@ void UI_ScalarTab::_buildPage()
 
 
    //The "Update Visualization" button
-   _visUpdateButton = new wxButton(this, SCALAR_UPDATE_BUTTON, wxT("Update"));
+   //_visUpdateButton = new wxButton(this, SCALAR_UPDATE_BUTTON, wxT("Update"));
 
   
    //The static box for the scalar range sliders
@@ -236,7 +244,7 @@ void UI_ScalarTab::_buildPage()
    //add the controls to the left group
    _leftSizer->Add(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
    _leftSizer->Add( _vectorRBox,2,wxALIGN_LEFT|wxEXPAND);
-   _leftSizer->Add(_visUpdateButton,0,wxALIGN_CENTER_HORIZONTAL);
+   //_leftSizer->Add(_visUpdateButton,0,wxALIGN_CENTER_HORIZONTAL);
    
    //add the static box to the right group
    rightSizer->Add(sRangeBoxSizer,1,wxALIGN_LEFT|wxEXPAND);
@@ -249,6 +257,9 @@ void UI_ScalarTab::_buildPage()
 
    //assign the group to the panel
    SetSizer(scalarPanelGroup);
+
+   // Send initial data to VE-Xplorer
+   this->setActiveScalar( 0 );
 }
 ////////////////////////////
 //Event handling functions//
