@@ -70,7 +70,7 @@ LINK32=link.exe
 # ADD BASE F90 /check:bounds /compile_only /dbglibs /debug:full /nologo /traceback /warn:argument_checking /warn:nofileopt
 # ADD F90 /browser /check:bounds /compile_only /dbglibs /debug:full /nologo /traceback /warn:argument_checking /warn:nofileopt
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "C:\PROGRAM FILES\MICROSOFT VISUAL STUDIO\VC98\INCLUDE\STLPORT" /I "$(TAO_ROOT)" /I "$(ACE_ROOT)" /I "$(TAO_ROOT)\orbsvcs" /I "$(XERCESCROOT)\include" /I "..\IDL" /I "..\Plugin" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "$(TAO_ROOT)" /I "$(ACE_ROOT)" /I "$(TAO_ROOT)\orbsvcs" /I "$(XERCESCROOT)\include" /I "..\IDL" /I "..\Plugin" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
