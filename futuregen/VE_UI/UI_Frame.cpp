@@ -4,6 +4,8 @@
 using namespace std;
 #include "VjObsC.h"
 #include "VjObsS.h"
+#include "cfdEnum.h"
+
 
 ////////////////////////////////////////////////////
 //Constructor                                     //
@@ -14,7 +16,7 @@ UI_Frame::UI_Frame(wxWindow* parent, wxWindowID id,
              long style)
 : wxPanel(parent, -1, pos, size, style)
 {
-
+  
    _appParent = new wxString( "DirectVE" );
    buildCORBA();
 
@@ -124,15 +126,16 @@ void UI_Frame::buildFrame( )
    _tabs = 0;
    _datasetPanel = 0;
    _modselPanel = 0;
+   activeModIndex = 0;
    //the tabs of our UI
 
    //_tabs = new UI_Tabs( vjobs.in(), this, ID_UI_TABS);
-   _tabs = new UI_Tabs( vjobs.in(), this, _modelData, 0);
+   _tabs = new UI_Tabs( vjobs.in(), this, _modelData, activeModIndex);
 
    //set the left side of the gui
-
-   _datasetPanel = new UI_DatasetPanel(this, _modelData, 0);
-
+   
+   _datasetPanel = new UI_DatasetPanel(this, _modelData, activeModIndex);
+   
    
    //create the individual pages for the tab control
    _tabs->createTabPages();
@@ -150,6 +153,9 @@ void UI_Frame::buildFrame( )
    //_scalarSizer->Add(_scalartab,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    _modselPanel = new UI_ModSelPanel(this);
+   _tabs->cSc = activeModIndex;         // using zero-based scalar counting
+   _tabs->cId  = CHANGE_ACTIVE_MODEL;
+   _tabs->sendDataArrayToServer();
 
    _modselSizer = new wxBoxSizer(wxHORIZONTAL);
    _modselSizer->Add(_modselPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
@@ -209,6 +215,9 @@ void UI_Frame::Reload( void )
 
    _tabs = new UI_Tabs( vjobs.in(), this, _modelData, activeModIndex);
    _tabs->createTabPages();
+   _tabs->cSc = activeModIndex;         // using zero-based scalar counting
+   _tabs->cId  = CHANGE_ACTIVE_MODEL;
+   _tabs->sendDataArrayToServer();
 
    _datasetSizer->Prepend(_datasetPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    _tabsSizer->Prepend(_tabs);

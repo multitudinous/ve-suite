@@ -355,6 +355,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) >= CONTOUR ) && 
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) <= PARTICLE_TRANSIENT ) )
    {
+      cout << _activeModel << endl;
       // for the active model, change opaque geometries to transparent
       //for ( unsigned int j = 0; j < _modelList.size(); j++ )
          for ( unsigned int i = 0; i < _activeModel->GetNumberOfGeomDataSets(); i++ )
@@ -408,6 +409,7 @@ void cfdModelHandler::PreFrameUpdate( void )
 
 
    // Check and see if we need to refresh the scalar bar
+   vprDEBUG(vprDBG_ALL,3) << "cfdModelHandler::_scalarBar->CheckCommandId" << std::endl << vprDEBUG_FLUSH;
    _scalarBar->CheckCommandId( commandArray );
    // May use in the future
    //_scalarBar->UpdateCommand();

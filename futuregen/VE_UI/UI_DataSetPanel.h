@@ -10,7 +10,7 @@
 #include <wx/notebook.h>
 #include <stdlib.h>
 #include <vector>
-
+#include "VjObsC.h"
 
 using namespace std;
 
@@ -141,6 +141,12 @@ public:
    wxBoxSizer* _col2;
    wxBoxSizer* _col3;
    wxBoxSizer* _col4;
+
+   VjObs::scalar_p_var datasetNames;
+   VjObs::obj_p_var datasetTypes;
+   VjObs::obj_p_var numScalarsPerDataset;
+   VjObs::scalar_p_var scalarNames;
+
    void _setScalars(UI_DataSets*);
 protected:
    void _buildDataSets();

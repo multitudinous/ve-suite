@@ -30,6 +30,12 @@ UI_Tabs::UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model,
    cMin = 0;
    cMax = 0;
 
+   //copied code from old Tabs.cpp
+   numOfClientInfo = 9;
+   clientInfoArray = new VjObs::obj_pd(50);
+   //clientInfoArray->length( numOfClientInfo );
+   clientInfoArray->length( 50 );
+
    _modelData = _model;
    _activeModIndex = activeMod;
 
@@ -70,12 +76,13 @@ UI_Tabs::UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model,
    
    std::cout << "teacher number: "
                << num_teacher << std::endl;
-   if( num_teacher > 0 ) {
+   if( num_teacher > 0 ) 
+   {
       teacher_attrib = server_ref->get_teacher_name();
    }
    cTeacher_state = 0;
 
-
+   cPre_state = 0;
   /* server_ref = VjObs::_duplicate(ref);
 
    cGeo_state = 0;
@@ -393,11 +400,11 @@ void UI_Tabs::updateScalarPage(char** names, int numNames, int refresh)
 void UI_Tabs::createTabPages()
 {
    //Add the pages to the notebook
-
+   
    //Visualization page
    _visPage = new UI_VisualizationTab(this);
    AddPage( _visPage, _T("Visualization"), true);
-
+   
    //DataSets page
    //_datasetPage = new UI_DatasetTab(this);
    //AddPage( _datasetPage, _T("DataSets"), false );
@@ -477,6 +484,7 @@ void UI_Tabs::createTabPages()
 void UI_Tabs::sendDataArrayToServer( void )
 {
    std::cout << " Construct data array to send to server side : " << std::endl;
+
    clientInfoArray[ 0 ] = (short)cId;
    std::cout << "    command id     : " << clientInfoArray[ 0 ] << std::endl;
    clientInfoArray[ 1 ] = (short)cIso_value;

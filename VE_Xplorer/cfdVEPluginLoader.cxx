@@ -139,7 +139,9 @@ void cfdVEPluginLoader::RegisterPlugin(wxClassInfo* info)
 
 char* cfdVEPluginLoader::GetPluginName( int index )
 {
+
    char* _name;// = plugins.at(index)->GetName();
+
    return _name;
 }
 

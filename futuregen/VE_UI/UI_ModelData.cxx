@@ -40,16 +40,13 @@ UI_ModelData::UI_ModelData( VjObs_ptr ref )
    
    if ( !CORBA::is_nil( server_ref.in() ) )
    {
-cout<<"test1"<<endl;
       _models = server_ref->GetModels();
-cout<<"test2"<<endl;
    }
    else
    {
       cerr << " ERROR : App won't run " << endl;
       return;
    }
-   cout<<"test3"<<endl;
 }
 
 UI_ModelData::~UI_ModelData( void )
@@ -59,8 +56,7 @@ UI_ModelData::~UI_ModelData( void )
 short UI_ModelData::GetNumberOfGeomFiles( int input )
 {
    CORBA::ULong i = input;
-   _models[ i ].geometrynames.length();
-   return 0;
+   return _models[ i ].geometrynames.length();
 }
 
 VjObs::scalar_p*  UI_ModelData::GetGeomFilenames( int input)

@@ -308,6 +308,7 @@ std::cout << "|  3d" << std::endl;
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
    this->executive = new cfdExecutive( naming_context.in(), this->_sceneManager->GetWorldDCS() );
    this->executive->SetModelHandler( this->_modelHandler );
+
 #endif // _TAO
 
     this->ihccModel = NULL;
@@ -335,10 +336,13 @@ void cfdApp::preFrame( void )
 #endif // _CLUSTER
 
    ///////////////////////
+   vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_environmentHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
    this->_environmentHandler->PreFrameUpdate();
    ///////////////////////
+   vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_modelHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
    this->_modelHandler->PreFrameUpdate();
    ///////////////////////
+   vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_steadystateHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    this->_steadystateHandler->PreFrameUpdate();
    ///////////////////////
@@ -372,13 +376,13 @@ void cfdApp::preFrame( void )
       this->mKernel->stop(); // Stopping kernel using the inherited member variable
    }
 
-#ifdef _TAO
+/*#ifdef _TAO
    if ( cfdObjects::GetActiveDataSet() != NULL )
    {
       this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
    }
    this->executive->UpdateModules();
-#endif // _TAO
+#endif // _TAO*/
 
    this->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;

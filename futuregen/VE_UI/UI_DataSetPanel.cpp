@@ -3,7 +3,6 @@
 #include "cfdEnum.h"
 #include <iostream>
 #include "UI_Frame.h"
-#include "VjObsC.h"
 #include "UI_ModelData.h"
 
 
@@ -180,9 +179,9 @@ UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int a
    _activeModIndex = activeMod;
 
    _activeRBox;
-      
-   _buildDataSets();
    
+   _buildDataSets();
+ 
    _buildPanel(); 
 
    _setScalars(_DataSets[0]);   
@@ -302,12 +301,13 @@ void UI_DatasetPanel::_buildDataSets( void )
 {
    //UI_Tabs* tempTabs = ((UI_Frame*)GetParent())->_tabs;
    //_numSteadyStateDataSets = tempTabs->datasetNum;
+   
    _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex);
 
-   VjObs::scalar_p_var datasetNames = _modelData->GetDataSetNames(_activeModIndex);
-   VjObs::obj_p_var datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
-   VjObs::obj_p_var numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
-   VjObs::scalar_p_var scalarNames = _modelData->GetScalarNames(_activeModIndex);  
+   datasetNames = _modelData->GetDataSetNames(_activeModIndex);
+   datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
+   numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
+   scalarNames = _modelData->GetScalarNames(_activeModIndex);  
 
    CORBA::ULong index = 0;
       
@@ -329,18 +329,15 @@ void UI_DatasetPanel::_buildDataSets( void )
             thisDataScalarNames[k] = scalarNames[index];
             index++;
          }
-         
+        
          thisDataSet->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
          
          _DataSets.push_back(thisDataSet);
 
          //clean up the names array
-         //for(int p = tempTabs->numScalarsPerDataset[i] -1; p >= 0; p--)
-         {
-            delete [] thisDataScalarNames;   
-         }                  
+         delete [] thisDataScalarNames;                     
       }
-   }  
+   } 
 }
 
 void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
