@@ -567,48 +567,60 @@ void Body_Executive_i::StartCalc (
     , Error::EUnknown
   ))
 {
-  //_scheduler->reset();
+   //_scheduler->reset();
 
-  if(_scheduler->snodes_size()==0) return;
+   if(_scheduler->snodes_size()==0) return;
 
-  _mutex.acquire();
+   _mutex.acquire();
   
-  int rt = _scheduler->execute(0)-1;
-  int module_id = _network->module(rt)->_inputs._id;
+   int rt = _scheduler->execute(0)-1;
+   int module_id = _network->module(rt)->_inputs._id;
   
-  if(rt<0) {
-    cerr << "Network execution complete\n";
-  }
-  else {
-    bool        rv2;
-    std::string str2;
+   if(rt<0) 
+   {
+      cerr << "Network execution complete\n";
+   }
+   else 
+   {
+      bool        rv2;
+      std::string str2;
     
-    Package p2;
-    p2.SetSysId("temp.xml");
-    //p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
-    p2.intfs.push_back(_network->module(rt)->_inputs);
-    str2 = p2.Save(rv2);
+      Package p2;
+      p2.SetSysId("temp.xml");
+      //p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
+      p2.intfs.push_back(_network->module(rt)->_inputs);
+      str2 = p2.Save(rv2);
     
-    if(rv2) {
-
-      //cout << _network->module(rt)->_name << "\n" << str2 << endl;
+      if(rv2) 
+      {
+         //cout << _network->module(rt)->_name << "\n" << str2 << endl;
       
-      try {
-	cerr << "Initial Execute\n";
-	_mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
-	_mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
-	execute(_network->module(rt)->_name);
+         try 
+         {
+	         cerr << "Initial Execute\n";
+	         if ( !_mod_units.empty() )
+            {
+               _mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
+	            _mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
+	            execute(_network->module(rt)->_name);
+            }
+            else
+            {
+               cerr << " No Module Units connected to the VE-CE, skipping execution " << endl;
+            }
+         }
+         catch(CORBA::Exception &) 
+         {
+	         cerr << "Initial Execute, cannot contact Module " << module_id << endl;
+         }
       }
-      catch(CORBA::Exception &) {
-	cerr << "Initial Execute, cannot contact Module " << module_id << endl;
+      else 
+      {
+         cerr << "Initial Execute, error packing " << module_id << "'s Inputs\n";
       }
-    }
-    else {
-      cerr << "Initial Execute, error packing " << module_id << "'s Inputs\n";
-    }
-  }
+   }
   
-  _mutex.release();
+   _mutex.release();
 }
   
 void Body_Executive_i::StopCalc (
