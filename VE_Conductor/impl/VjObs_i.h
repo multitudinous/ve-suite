@@ -31,8 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VJOBS_I_H_
 #define _VJOBS_I_H_
-
+#ifdef _TAO
+#include "VjObsS.h"
+#else
 #include "VjObs.h"
+#endif
 //#include "CorbaManager.h"
 //#include "omniORB4/CORBA.h"
 //#include "Observer.h"
@@ -74,16 +77,90 @@ public:
    VjObs_i()
    {
       this->numOfClientInfo = 9;
-      int temp=0;
+      //int temp=0;
       this->setClients( 0 );
-      orb=CORBA::ORB_init(temp,0,"omniORB4");
+            this->mId = -1;
+      //orb=CORBA::ORB_init(temp,0,"omniORB4");
       /*for(temp=0;temp<25;temp++)
       {
          client_list[temp]=0;
       }*/
+         // allocate enough space
+	   geo_name       = new VjObs::scalar_p(50);
+	   geo_name->length(50);
+	   scl_name       = new VjObs::scalar_p(50);
+	   scl_name->length(50);
+	   teacher_name   = new VjObs::scalar_p(50);
+	   teacher_name->length(50);
+	   dataset_names  = new VjObs::scalar_p(50);
+	   dataset_names->length(50);
+	   sound_names    = new VjObs::scalar_p(50);
+	   sound_names->length(50);
+
+	   dataset_types  = new VjObs::obj_p(50);
+	   dataset_types->length(50);
+	   num_scalars_per_dataset = new VjObs::obj_p(50);
+	   num_scalars_per_dataset->length(50);
+	   num_vectors_per_dataset = new VjObs::obj_p( 50 );
+	   num_vectors_per_dataset->length(50);
+	   vec_name = new VjObs::scalar_p( 50 );
+	   vec_name->length( 50 );
+      // This array is used in place of the call backs
+      // to the client because the communication didn't
+      // seem to work. There are 9 entries becuase that
+      // how many variables are synchronized during an
+      // update call in VjObs_i
+	   clientInfoObserverDataArray = new VjObs::obj_p(50);
+	   clientInfoObserverDataArray->length(50);
+	   clientInfoObserverDataArray->length( this->numOfClientInfo );
+	   clientInfoObserverDataArray->length(50);
+      this->_unusedNewData = false;
+
    }
    virtual ~VjObs_i(){}
    
+   // Only Call these functions once in the constructor
+   // These initialize and populate all the passed arrays
+   void CreateSoundInfo( void );
+   void CreateGeometryInfo( void );
+   void CreateDatasetInfo( void );
+   void CreateTeacherInfo( void );
+
+#ifdef _TAO   
+   void update() throw (CORBA::SystemException);
+   //Observer::baf_p_slice* baf_param;
+   VjObs::scalar_p* update_scalar() throw (CORBA::SystemException);
+   VjObs::scalar_p* update_vector() throw (CORBA::SystemException);
+   VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
+   VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
+   //yang-REI : Change the design a little here
+   //The original code's idea to set shared flag. Using that flag to wait for
+   //the excution of the cfd::get_geo() and the cfd::get_scalar() to finish
+   //the cfd::get_geo() and the cfd::get_scalar() will set the flag to be
+   //false to break the while loop here.  This is unnecessary and caused
+   //synchronization problem.  Since the corba servant and the cfdApp are 
+   //the same object, this is equivalent to call a cfdApp member function and
+   //wait for it return, which is the basic behavior of function calls.  I
+   //reimplemented it with virtual functions, which will be overided in
+   //cfdApp. So they are actually direct function calls to the cfdApp.
+   short get_sc_num() throw (CORBA::SystemException);//{return this->get_sc_num();}; //*
+   short get_geo_num() throw (CORBA::SystemException);//{return this->get_geo_num();}; //*
+   short get_teacher_num() throw (CORBA::SystemException);//{return this->get_teacher_num();}; //*
+   char* get_perf() throw (CORBA::SystemException);
+
+   short GetNumberOfSounds() throw (CORBA::SystemException);
+   VjObs::scalar_p* GetSoundNameArray() throw (CORBA::SystemException);
+   //short get_postdata(){ return NULL; }
+   //short get_timesteps(){ return NULL; }
+
+   void SetClientInfoFlag( short ) throw (CORBA::SystemException);
+   void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
+   VjObs::obj_p* GetClientInfoData() throw (CORBA::SystemException);
+   VjObs::scalar_p * get_dataset_names() throw (CORBA::SystemException);
+   VjObs::obj_p * get_dataset_types() throw (CORBA::SystemException);
+   VjObs::obj_p * get_num_scalars_per_dataset() throw (CORBA::SystemException);
+   VjObs::obj_p * get_num_vectors_per_dataset() throw (CORBA::SystemException);
+#else   
    //void SetApplicationPointer( cfdApp * );
 
    //void attach(Observer_ptr o);
@@ -121,12 +198,13 @@ public:
    VjObs::obj_p * get_dataset_types();
    VjObs::obj_p * get_num_scalars_per_dataset();
    VjObs::obj_p * get_num_vectors_per_dataset();
+#endif   
 
 private:
-   CORBA::Object_var obj;
+   //CORBA::Object_var obj;
    //Observer_ptr client_list[25];
    //Observer_var client_list[25];
-   CORBA::ORB_ptr orb;
+   //CORBA::ORB_ptr orb;
    //Observer_ptr test_ptr;
 
 protected:
@@ -153,12 +231,62 @@ protected:
    VjObs::obj_p_var num_vectors_per_dataset;
    VjObs::obj_p_var clientInfoObserverDataArray;
    int numOfClientInfo;
+   bool _unusedNewData;
    //MutexInterface corba_mutex;   //yang-REI, list of things replaced with the mutex interface version
    void GetCfdStateVariables( void );
 #ifdef _CLUSTER
    // Cluster Stuff
    virtual void GetUpdateClusterStateVariables( void );
 #endif
+#ifdef _TAO   
+   void setNumDatasets(const short value) throw (CORBA::SystemException);
+   short getNumDatasets( void ) throw (CORBA::SystemException);
+
+   short getTotalNumberOfScalars( void ) throw (CORBA::SystemException);
+   CORBA::Short getTotalNumberOfVectors() throw (CORBA::SystemException);
+
+   void setNumVectors(const short value) throw (CORBA::SystemException);
+   short getNumVectors( void ) throw (CORBA::SystemException);
+
+   void setNumGeoArrays(const short value) throw (CORBA::SystemException);
+   short getNumGeoArrays( void ) throw (CORBA::SystemException);
+
+   void setClients(const CORBA::Long value) throw (CORBA::SystemException);
+   CORBA::Long getClients( void ) throw (CORBA::SystemException);
+
+   void setIsoValue(const CORBA::Long value) throw (CORBA::SystemException);
+   CORBA::Long getIsoValue( void ) throw (CORBA::SystemException);
+
+   void setSc(const CORBA::Long value) throw (CORBA::SystemException);
+   CORBA::Long getSc( void ) throw (CORBA::SystemException);
+
+   void setMin(const CORBA::Long value) throw (CORBA::SystemException);
+   CORBA::Long getMin( void ) throw (CORBA::SystemException);
+
+   void setMax(const CORBA::Long value) throw (CORBA::SystemException);
+   CORBA::Long getMax( void ) throw (CORBA::SystemException);
+
+   void setId(const CORBA::Long value) throw (CORBA::SystemException);
+   CORBA::Long getId( void ) throw (CORBA::SystemException);
+
+   void setGeoState(const CORBA::Long value) throw (CORBA::SystemException);
+   CORBA::Long getGeoState( void ) throw (CORBA::SystemException);
+
+   void setPostdataState(const short value) throw (CORBA::SystemException);
+   short getPostdataState( void ) throw (CORBA::SystemException);
+
+   void setPreState(const short value) throw (CORBA::SystemException);
+   short getPreState( void ) throw (CORBA::SystemException);
+
+   void setTimesteps(const short value) throw (CORBA::SystemException);
+   short getTimesteps( void ) throw (CORBA::SystemException);
+
+   void setNumTeacherArrays(const short value) throw (CORBA::SystemException);
+   short getNumTeacherArrays( void ) throw (CORBA::SystemException);
+
+   void setTeacherState(const short value) throw (CORBA::SystemException);
+   short getTeacherState( void ) throw (CORBA::SystemException);
+#else   
    /**
     * Sets this subject's internal value.
     */
@@ -209,7 +337,7 @@ protected:
 
    void setTeacherState(CORBA::Short value);
    CORBA::Short getTeacherState( void );
-
+#endif
    vpr::Mutex  mValueLock;  /**< A mutex to protect variables accesses */
 
    // Buffer variables...always right

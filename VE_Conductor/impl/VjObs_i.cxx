@@ -118,7 +118,14 @@ void VjObs_i::detach(Observer_ptr o)
    this->setClients( clients );
 }
 */
+#ifdef _TAO
 void VjObs_i::update()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::update()
+#endif
 {
 /*   int clients = this->getClients();
    cout<<"update:clients = "<<clients<<endl;
@@ -170,353 +177,62 @@ void VjObs_i::update()
       std::cout<<"No clients connected!\n"<<std::endl;
    }*/
 }
+/////////////////////////////////////////////////////////////
+void VjObs_i::CreateSoundInfo( void )
+{   
+   int numberOfSounds = this->mParamReader->soundFile;
+   this->sound_names->length( numberOfSounds );
 
-VjObs::scalar_p* VjObs_i::update_scalar()
-{
-   VjObs::scalar_p_var scl_name_=new VjObs::scalar_p(scl_name);
-  return scl_name_._retn();
-}
+   vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
+                          << numberOfSounds << std::endl << vprDEBUG_FLUSH;
 
-VjObs::scalar_p* VjObs_i::update_vector()
-{
-    VjObs::scalar_p_var vec_name_=new VjObs::scalar_p(vec_name);
-    return vec_name_._retn();
-}
-
-VjObs::scalar_p* VjObs_i::get_geo_name()
-{
-  VjObs::scalar_p_var geo_name_=new VjObs::scalar_p(geo_name);
-  return geo_name_._retn();
-}
-
-VjObs::scalar_p* VjObs_i::get_teacher_name()
-{
-   VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
-   return teacher_name_._retn();
-}
-/*
-void VjObs_i::put_cur_obj(Observer::obj_p_var o)
-{
-   int clients = mClients;
-
-   if(clients!=0)
+   if( numberOfSounds > 0 )
    {
-      for(int i=0;i<clients;i++)
-         client_list[ i ]->put_cur_obj(o);
+      for(CORBA::ULong i = 0; i < (unsigned int)numberOfSounds; i++)
+      {
+         this->sound_names[ i ] = CORBA::string_dup(this->mParamReader->soundFiles[i]->fileName);
+      }
    }
-}
-*/    
-char* VjObs_i::get_perf()
-{
-   return CORBA::string_dup("abc");
-}
-/*
-short VjObs_i::get_postdata()
-{
-   corba_mutex.snapShot2(false);
-   return corba_mutex.C_postdata_state;
+
 }
 
-short VjObs_i::get_timesteps()
+/////////////////////////////////////////////////////////////
+void VjObs_i::CreateGeometryInfo( void )
 {
-   corba_mutex.snapShot2(false);
-   return corba_mutex.C_timesteps;
-}
-*/
-VjObs::scalar_p * VjObs_i::get_dataset_names()
-{
-   VjObs::scalar_p_var dataset_names_=new VjObs::scalar_p(dataset_names);
-   return dataset_names_._retn();
-}
+   this->setPreState( 1 );
 
-VjObs::obj_p * VjObs_i::get_dataset_types()
-{
-  VjObs::obj_p_var dataset_types_=new VjObs::obj_p(dataset_types);
-   return dataset_types_._retn();
-}
+   int numGeoArrays = this->mParamReader->numGeoms;
+   vprDEBUG(vprDBG_ALL,0)
+      << " Number of geometries to be transfered to the client: "
+      << numGeoArrays
+      << std::endl << vprDEBUG_FLUSH;
 
-VjObs::obj_p * VjObs_i::get_num_scalars_per_dataset()
-{
-   VjObs::obj_p_var num_scalars_per_dataset_=new VjObs::obj_p(num_scalars_per_dataset);
-   return num_scalars_per_dataset_._retn();}
+   this->setNumGeoArrays( numGeoArrays );
 
-VjObs::obj_p * VjObs_i::get_num_vectors_per_dataset()
-{
-   return this->num_vectors_per_dataset._retn();
-}
-
-void VjObs_i::setNumDatasets(CORBA::Short value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mNumScalars = value;
+   if( numGeoArrays > 0 )
+   {
+      this->geo_name->length( numGeoArrays );
+      for(CORBA::ULong i = 0; i < (unsigned int)numGeoArrays; i++)
+      {
+         vprDEBUG(vprDBG_ALL,0)
+            << " Number of geometries to be transfered to the client: "
+            << numGeoArrays
+            << std::endl << vprDEBUG_FLUSH;
+         this->geo_name[ i ] = CORBA::string_dup(
+                                  this->mParamReader->files[ i ]->fileName );
+      }
+   }
+   
+   vprDEBUG(vprDBG_ALL,0)
+            << " Number of geometries to be transfered to the client: "
+            << numGeoArrays
+            << std::endl << vprDEBUG_FLUSH;
 }
 
-CORBA::Short VjObs_i::getNumDatasets()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL,0) << "Returning '" << mNumScalars << "' to caller\n"
-   //     << vprDEBUG_FLUSH;
-   return mNumScalars;
-}
-
-CORBA::Short VjObs_i::getTotalNumberOfScalars()
-{
-   return this->totalNumberOfScalars;
-}
-
-CORBA::Short VjObs_i::getTotalNumberOfVectors()
-{
-   return this->totalNumberOfVectors;
-}
-
-void VjObs_i::setNumVectors(CORBA::Short value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mNnumVectors = value;
-}
-
-CORBA::Short VjObs_i::getNumVectors()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mNnumVectors;
-}
-
-void VjObs_i::setNumGeoArrays(CORBA::Short value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mNumGeoArrays = value;
-}
-
-CORBA::Short VjObs_i::getNumGeoArrays()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mNumGeoArrays;
-}
-
-void VjObs_i::setClients(CORBA::Long value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //cout   << "Setting number of Clients to " << value << endl; 
-   //<< vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mClients = value;
-}
-
-CORBA::Long VjObs_i::getClients()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mClients;
-}
-
-void VjObs_i::setIsoValue(CORBA::Long value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mIso_value = value;
-}
-
-CORBA::Long VjObs_i::getIsoValue()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mIso_value;
-}
-
-void VjObs_i::setSc(CORBA::Long value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mSc = value;
-}
-
-CORBA::Long VjObs_i::getSc()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mSc;
-}
-
-void VjObs_i::setMin(CORBA::Long value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mMin = value;
-}
-
-CORBA::Long VjObs_i::getMin()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mMin;
-}
-
-void VjObs_i::setMax(CORBA::Long value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mMax = value;
-}
-
-CORBA::Long VjObs_i::getMax()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mMax;
-}
-
-void VjObs_i::setId(CORBA::Long value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mId = value;
-}
-
-CORBA::Long VjObs_i::getId()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mId;
-}
-
-void VjObs_i::setGeoState(CORBA::Long value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mGeo_state = value;
-}
-
-CORBA::Long VjObs_i::getGeoState()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mGeo_state;
-}
-
-void VjObs_i::setPostdataState(CORBA::Short value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mPostdata_state = value;
-}
-
-CORBA::Short VjObs_i::getPostdataState()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mPostdata_state;
-}
-
-void VjObs_i::setPreState(CORBA::Short value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mPre_state = (bool)value;
-}
-
-CORBA::Short VjObs_i::getPreState()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mPre_state;
-}
-
-void VjObs_i::setTimesteps(CORBA::Short value)
-{
-   vprDEBUG(vprDBG_ALL, 2)
-      << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mTimesteps = value;
-}
-
-CORBA::Short VjObs_i::getTimesteps()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   vprDEBUG(vprDBG_ALL, 2)
-      << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
-   return mTimesteps;
-}
-
-void VjObs_i::setNumTeacherArrays(CORBA::Short value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mNumTeacherArrays = value;
-}
-
-CORBA::Short VjObs_i::getNumTeacherArrays()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mNumTeacherArrays;
-}
-
-void VjObs_i::setTeacherState(CORBA::Short value)
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mTeacher_state = value;
-}
-
-CORBA::Short VjObs_i::getTeacherState()
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mTeacher_state;
-}
-
-// These functions are called from the java side
-// Need to figure out a better notation so that this all makes sense
-CORBA::Short VjObs_i::get_sc_num() 
-{
-   int i;
+/////////////////////////////////////////////////////////////
+void VjObs_i::CreateDatasetInfo( void )
+{   
+   CORBA::ULong i;
 
    int numDatasets = this->mParamReader->GetNumberOfDataSets();
    vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
@@ -524,21 +240,21 @@ CORBA::Short VjObs_i::get_sc_num()
    
    this->setNumDatasets( numDatasets );
 
-   this->dataset_names  = new VjObs::scalar_p( numDatasets );
+   //this->dataset_names  = new VjObs::scalar_p( numDatasets );
    this->dataset_names->length( numDatasets );
 
-   this->dataset_types  = new VjObs::obj_p( numDatasets );
+   //this->dataset_types  = new VjObs::obj_p( numDatasets );
    this->dataset_types->length( numDatasets );
 
-   this->num_scalars_per_dataset = new VjObs::obj_p( numDatasets );
+   //this->num_scalars_per_dataset = new VjObs::obj_p( numDatasets );
    this->num_scalars_per_dataset->length( numDatasets );
 
-   this->num_vectors_per_dataset = new VjObs::obj_p( numDatasets );
+   //this->num_vectors_per_dataset = new VjObs::obj_p( numDatasets );
    this->num_vectors_per_dataset->length( numDatasets );
 
    this->totalNumberOfScalars = 0;
    this->totalNumberOfVectors = 0;
-   for ( i=0; i<numDatasets; i++ )
+   for ( i=0; i<(unsigned int)numDatasets; i++ )
    {
       //cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << endl;
       this->totalNumberOfScalars += this->mParamReader->GetDataSet( i )
@@ -554,15 +270,15 @@ CORBA::Short VjObs_i::get_sc_num()
       << " totalNumberOfVectors: " << this->totalNumberOfVectors
       << std::endl << vprDEBUG_FLUSH;
 
-   this->scl_name = new VjObs::scalar_p( this->totalNumberOfScalars );
+   //this->scl_name = new VjObs::scalar_p( this->totalNumberOfScalars );
    this->scl_name->length( this->totalNumberOfScalars );
 
-   this->vec_name = new VjObs::scalar_p( this->totalNumberOfVectors );
+   //this->vec_name = new VjObs::scalar_p( this->totalNumberOfVectors );
    this->vec_name->length( this->totalNumberOfVectors );
 
-   int sIndex = 0;
-   int vIndex = 0;
-   for ( i=0; i < numDatasets; i++ )
+   CORBA::ULong sIndex = 0;
+   CORBA::ULong vIndex = 0;
+   for ( i=0; i < (unsigned int)numDatasets; i++ )
    {
       this->dataset_names[ i ] = CORBA::string_dup( 
                           this->mParamReader->GetDataSet( i )->GetFileName() );
@@ -575,7 +291,7 @@ CORBA::Short VjObs_i::get_sc_num()
                                           ->GetNumberOfScalars();
       this->num_scalars_per_dataset[ i ] = num_scalars;
 
-      for (int ii=0; ii < num_scalars; ii++ )
+      for (CORBA::ULong ii=0; ii < (unsigned int)num_scalars; ii++ )
       {
          this->scl_name[ sIndex ] = CORBA::string_dup( 
                     this->mParamReader->GetDataSet( i )->GetScalarName( ii ) );
@@ -589,7 +305,7 @@ CORBA::Short VjObs_i::get_sc_num()
                                           ->GetNumberOfVectors();
       this->num_vectors_per_dataset[ i ] = num_vectors;
 
-      for (int ii=0; ii < num_vectors; ii++ )
+      for (CORBA::ULong ii=0; ii < (unsigned int)num_vectors; ii++ )
       {
          this->vec_name[ vIndex ] = CORBA::string_dup( 
                     this->mParamReader->GetDataSet( i )->GetVectorName( ii ) );
@@ -603,46 +319,11 @@ CORBA::Short VjObs_i::get_sc_num()
    vprDEBUG(vprDBG_ALL,1) << "leaving VjObs_i::get_sc_num()"
                           << std::endl << vprDEBUG_FLUSH;
 
-   return this->getNumDatasets();
 }
 
-CORBA::Short VjObs_i::get_geo_num()
-{
-   // yang-REI: block lock to protect the cfdApp data since no buffer is used, 
-   // and the corba servant side is waiting for the result
-   this->setPreState( 1 );
-
-   int numGeoArrays = this->mParamReader->numGeoms;
-   vprDEBUG(vprDBG_ALL,0)
-      << " Number of geometries to be transfered to the client: "
-      << numGeoArrays
-      << std::endl << vprDEBUG_FLUSH;
-
-   this->setNumGeoArrays( numGeoArrays );
-
-   if( numGeoArrays > 0 )
-   {
-      this->geo_name = new VjObs::scalar_p( numGeoArrays );
-      this->geo_name->length( numGeoArrays );
-      for(int i = 0; i < numGeoArrays; i++)
-      {
-         vprDEBUG(vprDBG_ALL,0)
-            << " Number of geometries to be transfered to the client: "
-            << numGeoArrays
-            << std::endl << vprDEBUG_FLUSH;
-         this->geo_name[ i ] = CORBA::string_dup(
-                                  this->mParamReader->files[ i ]->fileName );
-      }
-   }
-         vprDEBUG(vprDBG_ALL,0)
-            << " Number of geometries to be transfered to the client: "
-            << numGeoArrays
-            << std::endl << vprDEBUG_FLUSH;
-   return numGeoArrays;
-}
-
-CORBA::Short VjObs_i::get_teacher_num()
-{
+/////////////////////////////////////////////////////////////
+void VjObs_i::CreateTeacherInfo( void )
+{   
    CORBA::Short numTeacherArrays = this->mTeacher->getNumberOfFiles();
    vprDEBUG(vprDBG_ALL,0)
       << " Number of performer binary files to be transfered to the client: "
@@ -652,16 +333,682 @@ CORBA::Short VjObs_i::get_teacher_num()
    this->setNumTeacherArrays( numTeacherArrays );
    if( numTeacherArrays > 0 )
    {
-      this->teacher_name = new VjObs::scalar_p( numTeacherArrays );
       this->teacher_name->length( numTeacherArrays );
-      for(CORBA::Short i = 0; i < numTeacherArrays; i++)
+      for(CORBA::ULong i = 0; i < (unsigned int)numTeacherArrays; i++)
       {
          this->teacher_name[ i ] = CORBA::string_dup(
                                         this->mTeacher->getFileName( i ) );
       }
    }
+}
 
-   return numTeacherArrays;
+#ifdef _TAO
+VjObs::scalar_p* VjObs_i::update_scalar()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::scalar_p* VjObs_i::update_scalar()
+#endif
+{
+   VjObs::scalar_p_var scl_name_=new VjObs::scalar_p(scl_name);
+  return scl_name_._retn();
+}
+
+#ifdef _TAO
+VjObs::scalar_p* VjObs_i::update_vector()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::scalar_p* VjObs_i::update_vector()
+#endif
+{
+    VjObs::scalar_p_var vec_name_=new VjObs::scalar_p(vec_name);
+    return vec_name_._retn();
+}
+
+#ifdef _TAO
+VjObs::scalar_p* VjObs_i::get_geo_name()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::scalar_p* VjObs_i::get_geo_name()
+#endif
+{
+  VjObs::scalar_p_var geo_name_=new VjObs::scalar_p(geo_name);
+  return geo_name_._retn();
+}
+
+#ifdef _TAO
+VjObs::scalar_p* VjObs_i::get_teacher_name()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::scalar_p* VjObs_i::get_teacher_name()
+#endif
+{
+   VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
+   return teacher_name_._retn();
+}
+/*
+void VjObs_i::put_cur_obj(Observer::obj_p_var o)
+{
+   int clients = mClients;
+
+   if(clients!=0)
+   {
+      for(int i=0;i<clients;i++)
+         client_list[ i ]->put_cur_obj(o);
+   }
+}
+*/
+#ifdef _TAO
+char* VjObs_i::get_perf()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else    
+char* VjObs_i::get_perf()
+#endif
+{
+   return CORBA::string_dup("abc");
+}
+/*
+short VjObs_i::get_postdata()
+{
+   corba_mutex.snapShot2(false);
+   return corba_mutex.C_postdata_state;
+}
+
+short VjObs_i::get_timesteps()
+{
+   corba_mutex.snapShot2(false);
+   return corba_mutex.C_timesteps;(unsigned int)
+}
+*/
+#ifdef _TAO
+VjObs::scalar_p * VjObs_i::get_dataset_names()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::scalar_p * VjObs_i::get_dataset_names()
+#endif
+{
+   VjObs::scalar_p_var dataset_names_=new VjObs::scalar_p(dataset_names);
+   return dataset_names_._retn();
+}
+
+#ifdef _TAO
+VjObs::obj_p * VjObs_i::get_dataset_types()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::obj_p * VjObs_i::get_dataset_types()
+#endif
+{
+  VjObs::obj_p_var dataset_types_=new VjObs::obj_p(dataset_types);
+   return dataset_types_._retn();
+}
+
+#ifdef _TAO
+VjObs::obj_p * VjObs_i::get_num_scalars_per_dataset()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::obj_p * VjObs_i::get_num_scalars_per_dataset()
+#endif
+{
+   VjObs::obj_p_var num_scalars_per_dataset_=new VjObs::obj_p(num_scalars_per_dataset);
+   return num_scalars_per_dataset_._retn();
+}
+
+#ifdef _TAO
+VjObs::obj_p * VjObs_i::get_num_vectors_per_dataset()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::obj_p * VjObs_i::get_num_vectors_per_dataset()
+#endif
+{
+   return this->num_vectors_per_dataset._retn();
+}
+
+#ifdef _TAO
+void VjObs_i::setNumDatasets(const short value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setNumDatasets(CORBA::Short value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mNumScalars = value;
+}
+
+#ifdef _TAO
+short VjObs_i::getNumDatasets()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getNumDatasets()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL,0) << "Returning '" << mNumScalars << "' to caller\n"
+   //     << vprDEBUG_FLUSH;
+   return mNumScalars;
+}
+
+#ifdef _TAO
+short VjObs_i::getTotalNumberOfScalars()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getTotalNumberOfScalars()
+#endif
+{
+   return this->totalNumberOfScalars;
+}
+
+#ifdef _TAO
+short VjObs_i::getTotalNumberOfVectors()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getTotalNumberOfVectors()
+#endif
+{
+   return this->totalNumberOfVectors;
+}
+
+#ifdef _TAO
+void VjObs_i::setNumVectors(const short value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setNumVectors(CORBA::Short value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mNnumVectors = value;
+}
+
+#ifdef _TAO
+short VjObs_i::getNumVectors()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getNumVectors()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mNnumVectors;
+}
+
+#ifdef _TAO
+void VjObs_i::setNumGeoArrays(const short value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setNumGeoArrays(CORBA::Short value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mNumGeoArrays = value;
+}
+
+#ifdef _TAO
+short VjObs_i::getNumGeoArrays()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getNumGeoArrays()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mNumGeoArrays;
+}
+
+#ifdef _TAO
+void VjObs_i::setClients(const CORBA::Long value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setClients(CORBA::Long value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //cout   << "Setting number of Clients to " << value << endl; 
+   //<< vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mClients = value;
+}
+
+#ifdef _TAO
+CORBA::Long VjObs_i::getClients()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Long VjObs_i::getClients()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mClients;
+}
+
+#ifdef _TAO
+void VjObs_i::setIsoValue(const CORBA::Long value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setIsoValue(CORBA::Long value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mIso_value = value;
+}
+
+#ifdef _TAO
+CORBA::Long VjObs_i::getIsoValue()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Long VjObs_i::getIsoValue()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mIso_value;
+}
+
+#ifdef _TAO
+void VjObs_i::setSc(const CORBA::Long value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setSc(CORBA::Long value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mSc = value;
+}
+
+#ifdef _TAO
+CORBA::Long VjObs_i::getSc()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Long VjObs_i::getSc()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mSc;
+}
+
+#ifdef _TAO
+void VjObs_i::setMin(const CORBA::Long value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setMin(CORBA::Long value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mMin = value;
+}
+
+#ifdef _TAO
+CORBA::Long VjObs_i::getMin()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Long VjObs_i::getMin()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mMin;
+}
+
+#ifdef _TAO
+void VjObs_i::setMax(const CORBA::Long value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setMax(CORBA::Long value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mMax = value;
+}
+
+#ifdef _TAO
+CORBA::Long VjObs_i::getMax()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Long VjObs_i::getMax()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mMax;
+}
+
+#ifdef _TAO
+void VjObs_i::setId(const CORBA::Long value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setId(CORBA::Long value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mId = value;
+}
+
+#ifdef _TAO
+CORBA::Long VjObs_i::getId()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Long VjObs_i::getId()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mId;
+}
+
+#ifdef _TAO
+void VjObs_i::setGeoState(const CORBA::Long value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setGeoState(CORBA::Long value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mGeo_state = value;
+}
+
+#ifdef _TAO
+CORBA::Long VjObs_i::getGeoState()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Long VjObs_i::getGeoState()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mGeo_state;
+}
+
+#ifdef _TAO
+void VjObs_i::setPostdataState(const short value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setPostdataState(CORBA::Short value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mPostdata_state = value;
+}
+
+#ifdef _TAO
+short VjObs_i::getPostdataState()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getPostdataState()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mPostdata_state;
+}
+
+#ifdef _TAO
+void VjObs_i::setPreState(const short value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setPreState(CORBA::Short value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mPre_state = (bool)value;
+}
+
+#ifdef _TAO
+short VjObs_i::getPreState()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getPreState()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mPre_state;
+}
+
+#ifdef _TAO
+void VjObs_i::setTimesteps(const short value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setTimesteps(CORBA::Short value)
+#endif
+{
+   vprDEBUG(vprDBG_ALL, 2)
+      << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mTimesteps = value;
+}
+
+#ifdef _TAO
+short VjObs_i::getTimesteps()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getTimesteps()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   vprDEBUG(vprDBG_ALL, 2)
+      << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
+   return mTimesteps;
+}
+
+#ifdef _TAO
+void VjObs_i::setNumTeacherArrays(const short value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setNumTeacherArrays(CORBA::Short value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mNumTeacherArrays = value;
+}
+
+#ifdef _TAO
+short VjObs_i::getNumTeacherArrays()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getNumTeacherArrays()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mNumTeacherArrays;
+}
+
+#ifdef _TAO
+void VjObs_i::setTeacherState(const short value)
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::setTeacherState(CORBA::Short value)
+#endif
+{
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
+
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   mTeacher_state = value;
+}
+
+#ifdef _TAO
+short VjObs_i::getTeacherState()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::getTeacherState()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL, 0)
+   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
+   return mTeacher_state;
+}
+
+// These functions are called from the java side
+// Need to figure out a better notation so that this all makes sense
+#ifdef _TAO
+short VjObs_i::get_sc_num() 
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::get_sc_num() 
+#endif
+{
+   return this->getNumDatasets();
+}
+
+#ifdef _TAO
+short VjObs_i::get_geo_num()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::get_geo_num()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   return this->mParamReader->numGeoms;
+}
+
+#ifdef _TAO
+short VjObs_i::get_teacher_num()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+CORBA::Short VjObs_i::get_teacher_num()
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   return this->mTeacher->getNumberOfFiles();
 }
 
 void VjObs_i::SetCfdReadParam( cfdReadParam *value )
@@ -721,6 +1068,7 @@ void VjObs_i::GetCfdStateVariables( void )
       }
    }
 #endif
+   this->_unusedNewData    = false;
 }
 
 #ifdef _CLUSTER
@@ -750,45 +1098,71 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
 }
 #endif
 
+#ifdef _TAO
+short VjObs_i::GetNumberOfSounds()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
 CORBA::Short VjObs_i::GetNumberOfSounds()
+#endif
 {
-   int numberOfSounds = this->mParamReader->soundFile;
-   this->sound_names = new VjObs::scalar_p( numberOfSounds );
-   this->sound_names->length( numberOfSounds );
-
-   vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
-                          << numberOfSounds << std::endl << vprDEBUG_FLUSH;
-
-   if( numberOfSounds > 0 )
-   {
-      for(int i = 0; i < numberOfSounds; i++)
-      {
-         this->sound_names[ i ] = CORBA::string_dup(this->mParamReader->soundFiles[i]->fileName);
-      }
-   }
-
-   return numberOfSounds;
+   return this->mParamReader->soundFile;
 }
 
+#ifdef _TAO
 VjObs::scalar_p* VjObs_i::GetSoundNameArray()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::scalar_p* VjObs_i::GetSoundNameArray()
+#endif
 {
    VjObs::scalar_p_var sound_names_=new VjObs::scalar_p(sound_names);
   return sound_names_._retn();
 }
 
+#ifdef _TAO
+void VjObs_i::SetClientInfoFlag( const short value )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
 void VjObs_i::SetClientInfoFlag( CORBA::Short value )
+#endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    this->mGetClientInfo = value;
 }
 
+#ifdef _TAO
 VjObs::obj_p* VjObs_i::GetClientInfoData()
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::obj_p* VjObs_i::GetClientInfoData()
+#endif
 {
    return clientInfoObserverDataArray._retn();
 }
 
+#ifdef _TAO
 void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
+#endif
 {
+   do
+   {
+      vpr::System::msleep( 50 );  // 50 milli-second delay
+   }
+   while ( this->_unusedNewData );
+   
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    // The order of setting these values
    // MUST MATCH the order in which they are set in 
@@ -835,4 +1209,5 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
          cout << value[ i ] << endl;
       }
    }
+   this->_unusedNewData = true;
 }
