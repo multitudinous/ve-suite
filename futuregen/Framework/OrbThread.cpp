@@ -3,6 +3,8 @@
 //////////////////////////////////////////////////////////////////////
 #include "OrbThread.h"
 #include "Frame.h"
+#include <ace/Task.h>
+#include <ace/OS.h>
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -80,13 +82,13 @@ int OrbThread::svc (void)
 	else
 		try {
 			
-			frame_->network->exec->RegisterUI(frame_->p_ui_i->UIName_.c_str());
-			frame_->con_menu->Enable(v21ID_SUBMIT,true);
-			frame_->con_menu->Enable(v21ID_LOAD, true);
-			frame_->con_menu->Enable(v21ID_CONNECT, false);
-			frame_->run_menu->Enable(v21ID_START_CALC, true);
-			frame_->run_menu->Enable(v21ID_VIEW_RESULT, true);
-			frame_->con_menu->Enable(v21ID_DISCONNECT, true);
+		  frame_->network->exec->RegisterUI(frame_->p_ui_i->UIName_.c_str());
+		  frame_->con_menu->Enable(v21ID_SUBMIT,true);
+		  frame_->con_menu->Enable(v21ID_LOAD, true);
+		  frame_->con_menu->Enable(v21ID_CONNECT, false);
+		  frame_->run_menu->Enable(v21ID_START_CALC, true);
+		  frame_->run_menu->Enable(v21ID_VIEW_RESULT, true);
+		  frame_->con_menu->Enable(v21ID_DISCONNECT, true);
 			
 		}catch (CORBA::Exception &) {
 		
@@ -94,4 +96,43 @@ int OrbThread::svc (void)
 		}
    
 	return true;
+}
+
+PEThread::PEThread(AppFrame* frame)
+//: wxThread(wxTHREAD_JOINABLE)
+{
+	frame_ = frame;
+	//Create();
+}
+
+PEThread::~PEThread()
+{
+
+}
+
+//bool PEThread::Do() 
+int PEThread::svc (void)
+{
+  while(1)
+    {
+       _mutex.acquire();
+       if (message!="")
+	 {
+	   wxUpdateUIEvent u;
+	   u.SetId(7777);
+	   u.SetText(message.c_str());
+	   std::cout<<"LOG: "<<message<<std::endl;
+	   ::wxPostEvent(frame_, u);
+	   message="";
+	 }
+       _mutex.release();
+       ACE_OS::sleep(1); 
+    }
+}
+
+void PEThread::SetMessage(const char* msg)
+{
+  _mutex.acquire();
+  message+=msg;
+  _mutex.release();
 }

@@ -46,6 +46,7 @@ enum {
 };
 
 class OrbThread;
+class PEThread;
 
 class AppFrame : public wxFrame
 {
@@ -79,6 +80,8 @@ class AppFrame : public wxFrame
   wxMenu *edit_menu;
   wxMenu *help_menu;
   wxMenu *config_menu;
+  
+  PEThread* pelog;
 
   void Log(const char* msg);
   //ACE_Thread_Mutex _mutex; //public mutex for the execution order

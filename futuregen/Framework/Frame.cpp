@@ -59,6 +59,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
   CreateStatusBar();
   SetStatusText("New Vison 21");
   
+  pelog = NULL;
    //  menubar = 
 }
 
@@ -386,9 +387,8 @@ void AppFrame::New(wxCommandEvent &event)
 void AppFrame::SubmitToServer(wxCommandEvent &event)
 {
   std::string nw_str;
-
+  network->SaveS(nw_str);
   try {
-    network->SaveS(nw_str);
     network->exec->SetNetwork(nw_str.c_str());
   }catch (CORBA::Exception &) {
     std::cout << "no exec found!" << std::endl;
@@ -545,8 +545,15 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
   try{
 
 		//_mutex.acquire();	  
+    		if (pelog==NULL)
+		  {
+		    pelog = new PEThread(this);
+		    pelog->activate();
+		  }
+
 		OrbThread* ot = new OrbThread(this);
 		ot->activate();
+
 		//ot->Run();
 		//register it to the server
 		//_mutex.acquire();
@@ -650,10 +657,11 @@ void AppFrame::LoadREISour(wxCommandEvent &event)
 
 void AppFrame::Log(const char* msg)
 {
-	wxUpdateUIEvent u;
-	u.SetId(7777);
-	u.SetText(msg);
-	::wxPostEvent(this, u);
+	
+  if (pelog!=NULL)
+    pelog->SetMessage(msg);
+    
+	//::wxPostEvent(this, u);
 }
 
 void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event)
