@@ -58,9 +58,9 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
   
   catch(const XMLException &toCatch)
     {
-      XERCES_STD_QUALIFIER std::cerr << "Error during Xerces-c Initialization.\n"
+      XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
 				<< "  Exception message:"
-				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER std::endl;
+				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
       //return 1;
     }
 
