@@ -119,7 +119,9 @@ TCFrame::~TCFrame()
       delete _numFilesBox;
       _numFilesBox = 0;
    }
-   if(_inputFiles.size()){
+   if(!_inputFiles.empty()){
+      for ( unsigned int i = 0; i < _inputFiles.size(); ++i )
+         delete [] _inputFiles.at( i );
       _inputFiles.clear();
    }
 }
@@ -260,10 +262,9 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
    if(!_translator){
       _translator = new VTKDataToTexture();
       ////biv--FIXME:need to fix this to be selectable from the GUI
-      //_translator->setRectilinearGrid();
+      _translator->setRectilinearGrid();
    }
    //vtkUnstructuredGridReader* usgrid = vtkUnstructuredGridReader::New();
-   char iname[1024];
    char oname[256];
    char fileName[256];
    _fileProgress->SetRange(_numFiles);
@@ -272,10 +273,15 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
    //find files in the dir but w/ the new format may be
    //much trickerier than before
    for(unsigned int i = 0; i < _numFiles; i++){
+      char* iname = new char[1024];
       strcpy(iname,_inputDir);
-      strcpy(fileName,"/picker.vtk");
+      //strcpy(fileName,"/picker.vtk");
       //sprintf(fileName,"/picker.vtk",i);
-      //sprintf(fileName,"/zhto0%dad.vtk",i);
+      if ( i < 10 )
+      sprintf(fileName,"/zhto_00%d.vtk",i);
+      else
+      sprintf(fileName,"/zhto_0%d.vtk",i);
+      
       //sprintf(fileName,"/flowdata_%d.vtk",i);
       strcat(iname,fileName);
       _inputFiles.push_back(iname);
