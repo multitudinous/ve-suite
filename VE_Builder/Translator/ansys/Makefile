@@ -8,8 +8,9 @@ srcdir= .
 
 SRCS= ansysReader.cpp fileIO.cxx
 
-OBJDIR= .
-DEPDIR= .
+# Specify the OS-dependent directory name for object files and depends
+OBJDIR= $(CFDHOSTTYPE)
+DEPDIR= $(CFDHOSTTYPE)
 
 NO_DEPEND= YES
 

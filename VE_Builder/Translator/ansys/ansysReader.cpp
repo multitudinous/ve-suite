@@ -30,18 +30,40 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include "ansysReader.h"
 #include <iostream>
+#include <iomanip>
 #include <cstdio>
 #include "fileIO.h"
 
 using namespace std;
 
-int ReadNthInteger( int n, FILE *s1, bool endian_flip )
+ansysReader::ansysReader( char * input )
+{
+   ansysFileName = input;
+   cout << "\nReading file \"" << ansysFileName << "\"" << endl;
+
+   // open file
+   if((this->s1=fopen(ansysFileName,"r"))==NULL)
+   {
+      cerr << "ERROR: can't open file \"" << ansysFileName
+           << "\", so exiting" << endl;
+      exit( 1 );
+   }
+   
+   this->endian_flip = 1;
+}
+
+ansysReader::~ansysReader()
+{
+}
+
+int ansysReader::ReadNthInteger( int n )
 {
    long position = n * sizeof(int);
-   fseek(s1,position,SEEK_SET);
+   fseek(this->s1,position,SEEK_SET);
    int integer;
-   if (fileIO::readNByteBlockFromFile( &integer, sizeof(int), 1, s1, endian_flip ))
+   if (fileIO::readNByteBlockFromFile( &integer, sizeof(int), 1, this->s1, this->endian_flip ))
    {
       cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile" << endl;
       exit( 1 );
@@ -49,56 +71,44 @@ int ReadNthInteger( int n, FILE *s1, bool endian_flip )
    return integer;
 }
 
-void ReadHeader( char * ansysFileName, int debug )
+void ansysReader::ReadHeader()
 {
-   // open file
-   FILE *s1;
-   if((s1=fopen(ansysFileName,"r"))==NULL)
-   {
-      cerr << "ERROR: can't open file \"" << ansysFileName
-           << "\", so exiting" << endl;
-   }
-   
-   bool endian_flip = 1;
-
-   cout << "\nReading data file \"" << ansysFileName << "\"" << endl;
-
 /*
    // read all integers
    int intArray[ 100 ];
    for ( int i=0; i < 100; i++ )
    {
-      intArray[ i ] = ReadNthInteger( i, s1, endian_flip );
+      intArray[ i ] = ReadNthInteger( i );
       cout << "\tintArray[ " << i << " ]: " << intArray[ i ] << endl;
    }
 */
 
    // the very first number is the integer 404
-   int headerSize = ReadNthInteger( 0, s1, endian_flip );
-   cout << "headerSize = " << headerSize << endl;
+   int headerSize = ReadNthInteger( 0 );
    if ( headerSize != 404 ) 
    {
       cerr << "headerSize = " << headerSize << " != 404" << endl;
       exit( 1 );
    }
 
-   // the ansys header is 100 ints long
-   int numInts = ReadNthInteger( 1, s1, endian_flip );
-   if ( numInts != 100 ) 
+   // the ANSYS header is 100 ints long
+   this->headerBlockSize = ReadNthInteger( 1 );
+   if ( this->headerBlockSize != 100 ) 
    {
-      cerr << "numInts = " << numInts << " != 100" << endl;
+      cerr << "headerBlockSize = " << this->headerBlockSize
+           << " != 100" << endl;
       exit( 1 );
    }
 
    int itemNumber;
+
    //create and null terminate end of 4 character buffer
    char buffer4[ 5 ];
    buffer4[ 4 ] = '\0';
    long position;
 
-   // item number 1 is file number (12 for results files)
-   itemNumber = 1;
-   int fileNumber = ReadNthInteger( itemNumber+1, s1, endian_flip );
+   itemNumber = 1;      // file number (12 for results files)
+   int fileNumber = ReadNthInteger( itemNumber+1 );
    //cout << "fileNumber = " << fileNumber << endl;
    if ( fileNumber != 12 ) 
    {
@@ -106,69 +116,69 @@ void ReadHeader( char * ansysFileName, int debug )
       exit( 1 );
    }
 
-   // item number 2 is file format
-   itemNumber = 2;
-   int fileFormat = ReadNthInteger( itemNumber+1, s1, endian_flip );
-   cout << "fileFormat = " << fileFormat << " (0=internal,1=external)" << endl;
+   int width = 30;
 
-   // item number 3 is time
-   itemNumber = 3;
-   int time = ReadNthInteger( itemNumber+1, s1, endian_flip );
-   cout << "time = " << time << endl;
+   itemNumber = 2;      // file format
+   int fileFormat = ReadNthInteger( itemNumber+1 );
+   cout << setw(width) << "fileFormat = " << fileFormat
+        << " (0=internal, 1=external)" << endl;
 
-   // item number 4 is date
-   itemNumber = 4;
-   int date = ReadNthInteger( itemNumber+1, s1, endian_flip );
-   cout << "date = " << date << endl;
+   itemNumber = 3;      // time
+   int time = ReadNthInteger( itemNumber+1 );
+   cout << setw(width) << "time = " << time << endl;
 
-   // item number 5 is units
-   itemNumber = 5;
-   int units = ReadNthInteger( itemNumber+1, s1, endian_flip );
-   cout << "units = " << units << " (0=user-defined,1=SI,2=CSG,3=feet,4=inches)"<< endl;
+   itemNumber = 4;      // date
+   int date = ReadNthInteger( itemNumber+1 );
+   cout << setw(width) << "date = " << date << endl;
 
-   // item number 10 is ansys release level
-   itemNumber = 10;
+   itemNumber = 5;      // units
+   int units = ReadNthInteger( itemNumber+1 );
+   cout << setw(width) << "units = " << units 
+        << " (0=user-defined, 1=SI, 2=CSG, 3=feet, 4=inches)" << endl;
+
+   itemNumber = 10;     // ANSYS release level
    position = (itemNumber+1) * sizeof(int);
-   fseek(s1,position,SEEK_SET);
-   fread(buffer4, sizeof(char), 4, s1);
-   cout << "ansys release level: \"" << buffer4 << "\"" << endl;
+   fseek(this->s1,position,SEEK_SET);
+   fread(buffer4, sizeof(char), 4, this->s1);
+   cout << setw(width) << "ANSYS release level = " << "\""
+        << buffer4 << "\"" << endl;
 
-   // item number 11 is date of ansys release
-   itemNumber = 11;
+   itemNumber = 11;     // date of ANSYS release
    position = (itemNumber+1) * sizeof(int);
-   fseek(s1,position,SEEK_SET);
-   fread(buffer4, sizeof(char), 4, s1);
-   cout << "date of ansys release: \"" << buffer4 << "\"" << endl;
+   fseek(this->s1,position,SEEK_SET);
+   fread(buffer4, sizeof(char), 4, this->s1);
+   cout << setw(width) << "date of ANSYS release = " << "\""
+        << buffer4 << "\"" << endl;
 
    // item number 12-14 is machine identifier
-   cout << "machine identifier: \"";
+   cout << setw(width) << "machine identifier = " << "\"";
    for ( itemNumber = 12; itemNumber <= 14; itemNumber++ )
    {
       position = (itemNumber+1) * sizeof(int);
-      fseek(s1,position,SEEK_SET);
-      fread(buffer4, sizeof(char), 4, s1);
+      fseek(this->s1,position,SEEK_SET);
+      fread(buffer4, sizeof(char), 4, this->s1);
       cout << buffer4;
    }
    cout << "\"" << endl;
 
    // item number 15-16 is jobname
-   cout << "jobname: \"";
+   cout << setw(width) << "short form of jobname = " << "\"";
    for ( itemNumber = 15; itemNumber <= 16; itemNumber++ )
    {
       position = (itemNumber+1) * sizeof(int);
-      fseek(s1,position,SEEK_SET);
-      fread(buffer4, sizeof(char), 4, s1);
+      fseek(this->s1,position,SEEK_SET);
+      fread(buffer4, sizeof(char), 4, this->s1);
       cout << buffer4;
    }
    cout << "\"" << endl;
 
    // item number 17-18 is ANSYS product name
-   cout << "ANSYS product name: \"";
+   cout << setw(width) << "ANSYS product name = " << "\"";
    for ( itemNumber = 17; itemNumber <= 18; itemNumber++ )
    {
       position = (itemNumber+1) * sizeof(int);
-      fseek(s1,position,SEEK_SET);
-      fread(buffer4, sizeof(char), 4, s1);
+      fseek(this->s1,position,SEEK_SET);
+      fread(buffer4, sizeof(char), 4, this->s1);
       cout << buffer4;
    }
    cout << "\"" << endl;
@@ -176,101 +186,99 @@ void ReadHeader( char * ansysFileName, int debug )
    // item number 19 is ANSYS special version label
    itemNumber = 19;
    position = (itemNumber+1) * sizeof(int);
-   fseek(s1,position,SEEK_SET);
-   fread(buffer4, sizeof(char), 4, s1);
-   cout << "ANSYS special version label: \"" << buffer4 << "\"" << endl;
+   fseek(this->s1,position,SEEK_SET);
+   fread(buffer4, sizeof(char), 4, this->s1);
+   cout << setw(width) << "ANSYS special version label = " << "\""
+        << buffer4 << "\"" << endl;
 
    // item number 20-22 is username
-   cout << "username: \"";
+   cout << setw(width) << "username = " << "\"";
    for ( itemNumber = 20; itemNumber <= 22; itemNumber++ )
    {
       position = (itemNumber+1) * sizeof(int);
-      fseek(s1,position,SEEK_SET);
-      fread(buffer4, sizeof(char), 4, s1);
+      fseek(this->s1,position,SEEK_SET);
+      fread(buffer4, sizeof(char), 4, this->s1);
       cout << buffer4;
    }
    cout << "\"" << endl;
 
    // item number 23-25 is machine identifier
-   cout << "machine identifier: \"";
+   cout << setw(width) << "machine identifier = " << "\"";
    for ( itemNumber = 23; itemNumber <= 25; itemNumber++ )
    {
       position = (itemNumber+1) * sizeof(int);
-      fseek(s1,position,SEEK_SET);
-      fread(buffer4, sizeof(char), 4, s1);
+      fseek(this->s1,position,SEEK_SET);
+      fread(buffer4, sizeof(char), 4, this->s1);
       cout << buffer4;
    }
    cout << "\"" << endl;
 
-   // item number 26 is system record size
-   itemNumber = 26;
-   int systemRecordSize = ReadNthInteger( itemNumber+1, s1, endian_flip );
-   cout << "system record size = " << systemRecordSize << endl;
+   itemNumber = 26;     // system record size
+   int systemRecordSize = ReadNthInteger( itemNumber+1 );
+   cout << setw(width) << "system record size = " << systemRecordSize << endl;
 
-   // item number 27 is maximum file length
-   itemNumber = 27;
-   int maximumFileLength = ReadNthInteger( itemNumber+1, s1, endian_flip );
-   cout << "maximum file length = " << maximumFileLength << endl;
+   itemNumber = 27;     // maximum file length
+   int maximumFileLength = ReadNthInteger( itemNumber+1 );
+   cout << setw(width) << "maximum file length = " << maximumFileLength << endl;
 
-   // item number 28 is maximum record size
-   itemNumber = 28;
-   int maximumRecordSize = ReadNthInteger( itemNumber+1, s1, endian_flip );
-   cout << "maximum record size = " << maximumRecordSize << endl;
+   itemNumber = 28;     // maximum record size
+   int maximumRecordSize = ReadNthInteger( itemNumber+1 );
+   cout << setw(width) << "maximum record size = " << maximumRecordSize << endl;
 
    // item number 31-38 is jobname
-   cout << "jobname: \"";
+   cout << setw(width) << "long form of jobname = " << "\"";
    for ( itemNumber = 31; itemNumber <= 38; itemNumber++ )
    {
       position = (itemNumber+1) * sizeof(int);
-      fseek(s1,position,SEEK_SET);
-      fread(buffer4, sizeof(char), 4, s1);
+      fseek(this->s1,position,SEEK_SET);
+      fread(buffer4, sizeof(char), 4, this->s1);
       cout << buffer4;
    }
    cout << "\"" << endl;
 
    // item number 41-60 is main analysis title 
-   cout << "main analysis title: \"";
+   cout << setw(width) << "main analysis title = " << "\"";
    for ( itemNumber = 41; itemNumber <= 60; itemNumber++ )
    {
       position = (itemNumber+1) * sizeof(int);
-      fseek(s1,position,SEEK_SET);
-      fread(buffer4, sizeof(char), 4, s1);
+      fseek(this->s1,position,SEEK_SET);
+      fread(buffer4, sizeof(char), 4, this->s1);
       cout << buffer4;
    }
    cout << "\"" << endl;
 
    // item number 61-80 is first subtitle
-   cout << "first subtitle: \"";
+   cout << setw(width) << "first subtitle = " << "\"";
    for ( itemNumber = 61; itemNumber <= 80; itemNumber++ )
    {
       position = (itemNumber+1) * sizeof(int);
-      fseek(s1,position,SEEK_SET);
-      fread(buffer4, sizeof(char), 4, s1);
+      fseek(this->s1,position,SEEK_SET);
+      fread(buffer4, sizeof(char), 4, this->s1);
       cout << buffer4;
    }
    cout << "\"" << endl;
 
    // item number 95 is split point of the file
    itemNumber = 95;
-   int splitPoint = ReadNthInteger( itemNumber+1, s1, endian_flip );
-   cout << "split point of the file = " << splitPoint << endl;
+   int splitPoint = ReadNthInteger( itemNumber+1 );
+   cout << setw(width) << "split point of the file = " << splitPoint << endl;
 
    // item number 97-98 is filesize at write
    itemNumber = 97;
    position = (itemNumber+1) * sizeof(int);
-   fseek(s1,position,SEEK_SET);
+   fseek(this->s1,position,SEEK_SET);
    long filesize;
-   if (fileIO::readNByteBlockFromFile( &filesize, sizeof(long), 1, s1, endian_flip ))
+   if (fileIO::readNByteBlockFromFile( &filesize, sizeof(long), 1,
+                                       this->s1, this->endian_flip ))
    {
       cerr << "Error reading \'filesize at write\', so exiting" << endl;
       exit( 1 );
    }
    else
-      cout << "filesize at write = " << filesize << endl;
+      cout << setw(width) << "filesize at write = " << filesize << endl;
 
    // the number at integer position 102 is 404
-   headerSize = ReadNthInteger( 102, s1, endian_flip );
-   //cout << "headerSize = " << headerSize << endl;
+   headerSize = ReadNthInteger( 102 );
    if ( headerSize != 404 ) 
    {
       cerr << "headerSize = " << headerSize << " != 404" << endl;
@@ -278,8 +286,90 @@ void ReadHeader( char * ansysFileName, int debug )
    }
 }
 
+void ansysReader::ReadSecondBlock()
+{
+   cout << "Reading second block" << endl;
+
+   // we have now read headerSize, headerBlockSize, headerSize
+   int position = this->headerBlockSize + 3;
+
+   // the number at the next integer position 164
+   int blockSize = ReadNthInteger( position++ );
+   if ( blockSize != 164 ) 
+   {
+      cerr << "blockSize = " << blockSize << " != 16" << endl;
+      exit( 1 );
+   }
+   
+   // this block is 40 ints long
+   this->secondBlockSize = ReadNthInteger( position++ );
+   if ( this->secondBlockSize != 40 ) 
+   {
+      cerr << "secondBlockSize= " << this->secondBlockSize << " != 40" << endl;
+      exit( 1 );
+   }
+
+   // read all integers
+   for ( int i=0; i < this->secondBlockSize; i++ )
+   {
+      int integer = ReadNthInteger( position++ );
+      cout << "\tinteger[ " << i << " ]: " << integer << endl;
+   }
+
+   // the last number is blockSize again
+   blockSize = ReadNthInteger( position++ );
+   if ( blockSize != 164 ) 
+   {
+      cerr << "blockSize = " << blockSize << " != 164" << endl;
+      exit( 1 );
+   }
+}
+
+void ansysReader::ReadThirdBlock()
+{
+   cout << "Reading third block" << endl;
+
+   // we have now read headerSize, headerBlockSize, headerSize
+   int position = this->headerBlockSize + 3 + this->secondBlockSize + 3;
+
+   // the number at the next integer position 16 
+   int blockSize = ReadNthInteger( position++ );
+   if ( blockSize != 16 ) 
+   {
+      cerr << "blockSize = " << blockSize << " != 16" << endl;
+      exit( 1 );
+   }
+   
+   // this block is 3 ints long
+   this->thirdBlockSize = ReadNthInteger( position++ );
+   if ( this->thirdBlockSize != 3 ) 
+   {
+      cerr << "thirdBlockSize = " << this->thirdBlockSize << " != 3" << endl;
+      exit( 1 );
+   }
+
+   // read all integers
+   for ( int i=0; i < this->thirdBlockSize; i++ )
+   {
+      int integer = ReadNthInteger( position++ );
+      cout << "\tinteger[ " << i << " ]: " << integer << endl;
+   }
+
+   // the last number is blockSize again
+   blockSize = ReadNthInteger( position++ );
+   if ( blockSize != 16 ) 
+   {
+      cerr << "blockSize = " << blockSize << " != 164" << endl;
+      exit( 1 );
+   }
+}
+
 int main()
 {
-   ReadHeader( "test_case.rst", 1 );
+   ansysReader * reader = new ansysReader( "test_case.rst" );
+   reader->ReadHeader();
+   reader->ReadSecondBlock();
+   reader->ReadThirdBlock();
+   cout << "\ndone!\n" << endl;
    return 0;
 }
