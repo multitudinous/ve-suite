@@ -1,12 +1,12 @@
 #ifndef CAT_COMB_H
 #define CAT_COMB_H
 
-#include <Packages/REI/Core/ThirdParty/Reks/surface_chem.h>
-#include <Packages/REI/Core/Datatypes/Gas.h>
-#include <Packages/REI/Core/Datatypes/GasCell.h>
-#include <Packages/REI/Core/ThirdParty/Reks/reks_container.h>
-#include <Packages/REI/Core/ThirdParty/Reks/reks.h>
-#include <Packages/REI/Core/ThirdParty/Reks/reks_solve.h>
+#include <ThirdParty/Reks/surface_chem.h>
+#include <V21Helper/Datatypes/Gas.h>
+#include <V21Helper/Datatypes/GasCell.h>
+#include <ThirdParty/Reks/reks_container.h>
+#include <ThirdParty/Reks/reks.h>
+#include <ThirdParty/Reks/reks_solve.h>
 #include <cmath>
 #include <utility>
 
@@ -15,8 +15,6 @@ using std::vector;
 using std::string;
 
 namespace Vision21 {
-
-using namespace REI;
 
 class cat_comb {
 
