@@ -100,6 +100,7 @@ class VEOPPDmod: public cfdVEBaseClass
    
    
    private:
+      void CreateObjects( void );
       // This needs to be vector of geometry nodes
       cfdModuleGeometry*  geometryNode;
       cfdGroup* groupNode;

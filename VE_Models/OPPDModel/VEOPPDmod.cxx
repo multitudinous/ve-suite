@@ -60,12 +60,15 @@ IMPLEMENT_DYNAMIC_CLASS( VEOPPDmod, cfdVEBaseClass )
 // Constructor
 VEOPPDmod::VEOPPDmod( void ) 
 {
+   _objectName ="OPPD";
    _onSceneGraph = false;
 }
 
 // Destructor
 VEOPPDmod::~VEOPPDmod( void )
 {
+   if ( _param )
+      delete [] _param;
    //delete this->dataRepresentation;
 }
 
@@ -78,7 +81,10 @@ void VEOPPDmod::InitializeNode( cfdDCS* veworldDCS )
    this->worldDCS = veworldDCS;
    this->_model = new cfdModel( _dcs );
    this->_readParam = new cfdReadParam();
-   this->_param = "/mnt/vracs001/home7/vr/Applications/TSVEG/Test_Pit/OPPD/Current_Demo/vrxpr.param.geomorg.useonwall";
+   this->_param = new char[100];
+   this->_param = "/home/vr/Applications/TSVEG/Test_Pit/OPPD/Current_Demo/vrxpr.param.geomorg.useonwall";
+   //cout << _param << endl;
+   CreateObjects();
 }
 // Methods to do scene graph manipulations
 // New methods may have to be added later
@@ -187,6 +193,11 @@ void VEOPPDmod::SetID(int id)
 }
 
 cfdModel* VEOPPDmod::GetCFDModel( void )
+{
+   return _model;
+}
+
+void VEOPPDmod::CreateObjects( void )
 {
    int numObjects;
    char text[ 256 ];
@@ -324,7 +335,6 @@ cfdModel* VEOPPDmod::GetCFDModel( void )
          _readParam->ContinueRead( input, id );
       }
    }
-   return _model;
 }
 
 void VEOPPDmod::LoadSurfaceFiles( char * precomputedSurfaceDir )
