@@ -11,17 +11,18 @@
 #ifdef WIN32
 #include <direct.h>
 #endif
-#include <iostream>
 ////////////////////////////////////
 //Constructor                     // 
 ////////////////////////////////////
 VTKDataToTexture::VTKDataToTexture()
 {
+   _curPt = 0;
    _nPtDataArrays = 0;
    _resolution[0] = 2;
    _resolution[0] = 2;
    _resolution[0] = 2;
 
+   _maxDistFromCenter = 0;
    _nScalars = 0;
    _nVectors = 0;
    _scalarNames = 0;
@@ -39,6 +40,7 @@ VTKDataToTexture::VTKDataToTexture()
 /////////////////////////////////////////////////////////////
 VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
 {
+   _curPt = v._curPt;
    _isRGrid = v._isRGrid;
    _rgrid = v._rgrid;
    _resolution[0] = v._resolution[0];
@@ -66,7 +68,7 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
    _vectorNames = 0;
    _vectorNames = getParameterNames(3,_nVectors);
 
-  
+   _maxDistFromCenter = v._maxDistFromCenter;
    setVelocityFileName(v._vFileName);
    setOutputDirectory(v._outputDir);
    if(_validPt.size()){
@@ -76,6 +78,11 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
    for(unsigned int i = 0; i < nPts; i++){
       _validPt.push_back(v._validPt.at(i));
    }
+    nPts = v._distance.size();
+   for(unsigned int i = 0; i < nPts; i++){
+      _distance.push_back(v._distance.at(i));
+   }
+
 }
 /////////////////////////////////////
 //Destructor                       //
@@ -112,6 +119,9 @@ VTKDataToTexture::~VTKDataToTexture()
    }
    if(_validPt.size()){
       _validPt.clear();
+   }
+   if(_distance.size()){
+      _distance.clear();
    }
    
 }
@@ -291,8 +301,7 @@ void VTKDataToTexture::_createValidityTexture()
    //a bounding box
    _dataSet->GetBounds(bbox);
 
-   //depending on the resolution we need to resample
-   //the data
+   //now create the black/white validity data
    float delta[3] = {0,0,0};
    //delta x
    delta[0] = (bbox[1] - bbox[0])/(_resolution[0]-1);
@@ -328,76 +337,52 @@ void VTKDataToTexture::_createValidityTexture()
    unsigned int nZ = _resolution[2]-1;
 
    unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
-  
    for(unsigned int l = 0; l < nPixels; l++){
-      pt[2] = bbox[4] + k*delta[2];
-      pt[1] = bbox[2] + j*delta[1];
-      pt[0] = bbox[0] + (i++)*delta[0];
-       _cLocator->FindClosestPoint(pt,closestPt,
+      if((i == 0 || i == _resolution[0] - 1)||
+        (j == 0 || j == _resolution[1] - 1)||
+        (k == 0 || k == _resolution[2] - 1)){
+        _validPt.push_back(false);
+        i++;
+     }else{
+         pt[2] = bbox[4] + k*delta[2];
+         pt[1] = bbox[2] + j*delta[1];
+         pt[0] = bbox[0] + (i++)*delta[0];
+         
+         _cLocator->FindClosestPoint(pt,closestPt,
 		                          cell,cellId,subId, dist);
        
-       if(dist < deltaDist){
-          weights = new double[cell->GetNumberOfPoints()];
-          //check to see if this point is in
-	        //the returned cell
+         if(dist < deltaDist){
+            weights = new double[cell->GetNumberOfPoints()];
+            //check to see if this point is in
+	         //the returned cell
            if(cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights)){
               _validPt.push_back(true);
            }else{
               _validPt.push_back(false);
            }
-
            if(weights){
               delete [] weights;
               weights = 0;
            }
-       }else{
-          _validPt.push_back(false);
-       }
-      //check if it is time to reset
-      if((unsigned int)i > (unsigned int)nX){
-         i = 0;
-         j +=1;
-         if((unsigned int)j > (unsigned int)nY){
-            j = 0;
-            k +=1;
-            if((unsigned int)k > (unsigned int)nZ){
-               j = 0;
-               k +=1;
-            }
+         }else{
+            _validPt.push_back(false);
          }
-      }
-      
-      
+         //check if it is time to reset
+        
+     }
+     if((unsigned int)i > (unsigned int)nX){
+            i = 0;
+            j ++;
+           if((unsigned int)j > (unsigned int)nY){
+               j = 0;
+               k ++;
+               if((unsigned int)k > (unsigned int)nZ){
+                  k = 0;
+               }
+           }
+        }
    }
-   //resample the data into a cartesian grid
-   /*for(int k = 0; k < _resolution[2]; k++){
-      pt[2] = bbox[4] + k*delta[2];
-      for(int j = 0; j < _resolution[1]; j++){
-          pt[1] = bbox[2] +  j*delta[1];
-          for(int i= 0; i < _resolution[0]; i++){
-             pt[0] = bbox[0] + i*delta[0];
-              
-             _cLocator->FindClosestPoint(pt,closestPt,
-		                               cell,cellId,subId, dist);
-             if(dist <= deltaDist){
-                weights = new double[cell->GetNumberOfPoints()];
-                //check to see if this point is in
-	             //the returned cell
-                if(cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights)){
-                 _validPt.push_back(true);
-                }else{
-                    _validPt.push_back(false);
-                }
-                if(weights){
-                  delete [] weights;
-                  weights = 0;
-                }
-             }else{
-                 _validPt.push_back(false);
-             }
-          }
-      }
-   }*/
+   
    
    cell->Delete();
 }
@@ -438,6 +423,7 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    double pcoords[3];
    double* weights = 0;
    int index = 0;
+   _curPt = 0;
    //resample the data into a cartesian grid
    for(int k = 0; k < _resolution[2]; k++){
       pt[2] = bbox[4] + k*delta[2];
@@ -471,6 +457,7 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
 	            //so set the texture data to 0
                _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar); 
              }
+             _curPt++;
           } 
       }
    } 
@@ -542,7 +529,8 @@ void VTKDataToTexture::_addOutSideCellDomainDataToFlowTexture(int index,
 {
    if(isScalar){
       FlowPointData data;
-      data.setData(0,0,0,0);
+      
+      data.setData(_scalarRanges.at(index)[0],0,0,0);
       data.setDataType(FlowPointData::SCALAR);
       _curScalar.at(0).addPixelData(data);
    }else{
@@ -627,6 +615,7 @@ void VTKDataToTexture::_interpolatePixelData(FlowPointData& data,
       }else{
          iMag = 0;
       }
+      
       //normalize data
       vector[0] *= iMag;
       vector[1] *= iMag;
@@ -646,6 +635,8 @@ void VTKDataToTexture::_interpolatePixelData(FlowPointData& data,
          array->GetTuple(j,&scalarData);
          scalar += scalarData*weights[j];
       }
+      //double distFactor = 0;
+      //distFactor = (_distance.at(_curPt)==_maxDistFromCenter)?0:_maxDistFromCenter/(_maxDistFromCenter-_distance.at(_curPt));
       data.setData(scalar,0,0,0);
    }
 }
