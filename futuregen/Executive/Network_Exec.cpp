@@ -226,16 +226,30 @@ int Network::setPortData (int m, int p, Interface* intf)
   return _module_ptrs[fi]->setPortData(p, intf);
 }
 
+int Network::getPortProfile (int m, int p, Types::Profile_out& prof)
+{
+  int fi = moduleIdx(m);
+  if(fi<0) return 0;
+  return _module_ptrs[fi]->getPortProfile(p, prof);
+}
+
+int Network::setPortProfile (int m, int p, const Types::Profile* prof)
+{
+  int fi = moduleIdx(m);
+  if(fi<0) return 0;
+  return _module_ptrs[fi]->setPortProfile(p, prof);
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 Module::Module (int id, Network* net)
   : _need_execute (true),
     _return_state (0),
     _is_feedback  (0),
-    _net          (net),
-    _id           (id),
     _type         (-1),
-    _category     (-1)
+    _category     (-1),
+    _net          (net),
+    _id           (id)
 {
 }
 
@@ -367,6 +381,25 @@ int Module::setPortData (int p, Interface* intf)
   return 1;
 }
 
+int Module::getPortProfile (int p, Types::Profile_out& prof)
+{
+  int fi = oportIdx(p);  
+ 
+  if(fi<0) return 0; 
+  
+  prof = new Types::Profile(_oports[fi]->_profile);
+ 
+  return 1;
+}
+
+int Module::setPortProfile (int p, const Types::Profile* prof)
+{
+  int fi = oportIdx(p);
+  if(fi<0) return 0;
+  _oports[fi]->_profile = (*prof);
+  return 1;
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 
 Connection::Connection (int id)
@@ -492,7 +525,9 @@ OPort::~OPort ()
 void OPort::copy (const OPort& p)
 {
   if(this==&p) return;
-  _data = p._data;
+  
+  _data    = p._data;
+  _profile = p._profile;
 }
 
 int OPort::have_data ()

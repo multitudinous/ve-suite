@@ -4,6 +4,7 @@
 
 #include "interface.h"
 #include <vector>
+#include "moduleS.h"
 
 using namespace std;
 
@@ -69,7 +70,8 @@ public:
 
   int have_data ();
 
-  Interface _data;
+  Interface      _data;
+  Types::Profile _profile;
 
 protected:
   
@@ -132,6 +134,9 @@ public:
   int getPortData (int, Interface&);
   int setPortData (int, Interface*);
 
+  int getPortProfile (int, Types::Profile_out&);
+  int setPortProfile (int, const Types::Profile*);
+
   int get_id ();
 
   std::string _name;
@@ -189,6 +194,9 @@ public:
 
   int getPortData (int, int, Interface&);
   int setPortData (int, int, Interface*);
+
+  int getPortProfile (int, int, Types::Profile_out&);
+  int setPortProfile (int, int, const Types::Profile*);
 
   std::vector<Connection*> _connections;
 

@@ -55,10 +55,9 @@ module Types{
   typedef sequence<ArrayDouble3D>    ArrayDouble4D;
   
   struct Profile {
-      ArrayDouble4D	RealData3Ds;
-      ArrayDouble3D	RealData2Ds;
-      ArrayDouble2D     RealData1Ds;
-    };
+    ArrayString   profile_vars;
+    ArrayDouble2D profile_vals;
+  };
 };
 
 

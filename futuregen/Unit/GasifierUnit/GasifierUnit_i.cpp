@@ -171,6 +171,41 @@ void Body_Unit_i::StartCalc (
 
   executive_->SetModuleResult(id_, result); //marks the end the execution
 
+  // PROFILE
+  Types::Profile prof;
+
+  prof.profile_vars.length(10);
+  prof.profile_vals.length(10);
+
+  for(i=0; i<prof.profile_vals.length(); i++)
+    prof.profile_vals[i].length(gas_out->gas_cell.size());
+
+  prof.profile_vars[0] = "I";
+  prof.profile_vars[1] = "J";
+  prof.profile_vars[2] = "K";
+  prof.profile_vars[3] = "U";
+  prof.profile_vars[4] = "V";
+  prof.profile_vars[5] = "W";
+  prof.profile_vars[6] = "F";
+  prof.profile_vars[7] = "ETA";
+  prof.profile_vars[8] = "CHI";
+  prof.profile_vars[9] = "TEMPERATURE";
+
+  std::vector<GasCell>::iterator iter;
+  for(iter=gas_out->gas_cell.begin(), i=0; iter!=gas_out->gas_cell.end(); iter++, i++) {
+    prof.profile_vals[0][i] = iter->icell[0];
+    prof.profile_vals[1][i] = iter->icell[1];
+    prof.profile_vals[2][i] = iter->icell[2];
+    prof.profile_vals[3][i] = iter->velocity[0];
+    prof.profile_vals[4][i] = iter->velocity[1];
+    prof.profile_vals[5][i] = iter->velocity[2];
+    prof.profile_vals[6][i] = iter->eff;
+    prof.profile_vals[7][i] = iter->eta;
+    prof.profile_vals[8][i] = iter->chi;
+    prof.profile_vals[9][i] = iter->T;
+  }
+
+  // Clean up
   if(gas_out)  delete gas_out;
   if(ox_in)    delete ox_in;
 

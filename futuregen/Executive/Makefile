@@ -98,7 +98,7 @@ all: Exe_server
 Exe_server: $(addprefix $(VDIR),$(FILE_Exe_SVR_OBJS))
 	$(LINK.cc) $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) $(POSTLINK)
 
-realclean: clean
+clean: clean
 	-$(RM) -r moduleC.* moduleS.* mdule_T.* ./.obj Exe_server
 
 #endif # ! ghs/Solaris

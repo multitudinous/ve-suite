@@ -104,7 +104,7 @@ void Body_Executive_i::SetExportData (
     , Error::EUnknown
   ))
 {
-	string msg;
+  string msg;
   _mutex.acquire();
   
   cout << "SetExportData\n";
@@ -171,8 +171,15 @@ void Body_Executive_i::SetProfileData (
   ))
 {
   _mutex.acquire();
+
+  cout << "SetProfileData\n";
  
-  // Stuff here
+  std::string msg;
+ 
+  if(!_network->setPortProfile(module_id, port_id, &data)) {
+    msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port profile\n";
+    ClientMessage(msg.c_str());
+  }
 
   _mutex.release();
 }
@@ -189,8 +196,15 @@ void Body_Executive_i::GetProfileData (
 {
   _mutex.acquire();
 
-  // Stuff here
+  cout << "GetExportData\n";
 
+  string msg;
+  
+  if(!_network->getPortProfile(module_id, port_id, data)) {
+    msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port profile\n";
+    ClientMessage(msg.c_str());
+  }
+  
   _mutex.release();
 }
 
