@@ -4,7 +4,7 @@
 #OMNI_HOME: comment out definitions to make a non-corba version - that's all you have to do
 
 #this is typically defined in your .cshrc file
-setenv VE_SUITE_HOME /isv/VE_Suite_20041012
+setenv VE_SUITE_HOME /isv/VE_Suite/20050107
 
 if ( -e /etc/redhat-release ) then
    set firstWord=`cat /etc/redhat-release | awk -F" " '{print $1}'`
@@ -27,7 +27,7 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
-setenv TAO_BUILD FALSE
+setenv TAO_BUILD TRUE
 #setenv TAO_BUILD FALSE
 # TAO_BUILD can be set from outside this script to override the default of FALSE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -68,8 +68,8 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR /isv/VE_Suite/VTK-4.4.0/IRIX32
    setenv WX_HOME /isv/Juggler/wxGTK-2.4.2/IRIX32
-   setenv VJ_BASE_DIR /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-posix
-   setenv VJ_DEPS_DIR /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-deps
+   setenv VJ_BASE_DIR /isv/Juggler/vrjuggler-2.0-beta1.irix-n32-posix
+   setenv VJ_DEPS_DIR /isv/Juggler/vrjuggler-2.0-beta1.irix-n32-deps
 
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/isv/Juggler/openal
@@ -78,14 +78,18 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_ROOT /isv/Juggler/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv ACE_HOME /isv/VE_Suite/ACE-5.4
+      setenv TAO_HOME /isv/VE_Suite/TAO-1.4
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_HOME}/IRIX32/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_HOME}/IRIX32/lib
       setenv XERCESCROOT /isv/Juggler/xerces-2.5/IRIX32
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib:${WX_HOME}/lib
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:/usr/freeware/lib32:${XERCESCROOT}/lib
       setenv PATH ${ACE_ROOT}/bin:${ACE_ROOT}/IRIX32/bin:${TAO_ROOT}/IRIX32/bin:${PATH}
    else
    	setenv OMNI_HOME /isv/Juggler/omniORB-4.0.4
-      setenv PYTHONPATH ${OMNI_HOME}/lib/python1.5/site-packages
-      setenv LD_LIBRARYN32_PATH ${OMNI_HOME}/lib:${LD_LIBRARYN32_PATH}
+      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
+      setenv LD_LIBRARYN32_PATH ${OMNI_HOME}/lib:${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
       setenv PATH ${OMNI_HOME}/bin:${PATH}
    endif
 
