@@ -50,6 +50,7 @@ void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
       id = GetFirstChild(id, cookie);
       while (1)
 	{
+	  
 	  if (id<=0)
 	    {
 	      id=AppendItem(lastid,lnames[i],
@@ -59,9 +60,11 @@ void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
 	      SetItemFont(id, *wxITALIC_FONT);
 	      break;
 	    }
+	  	  
 	  if (GetItemText(id)==lnames[i])
 	    break;
-	  id= GetNextChild(id, cookie);
+	  
+	  id= GetNextChild(lastid, cookie);
 	}
     }
    
