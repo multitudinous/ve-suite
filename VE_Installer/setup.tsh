@@ -24,8 +24,6 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
-setenv TAO_BUILD FALSE
-#setenv TAO_BUILD FALSE
 # TAO_BUILD can be set from outside this script to override the default of FALSE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
 if ( ! $?TAO_BUILD ) then
@@ -40,7 +38,6 @@ else if ( $TAO_BUILD != "TRUE" && $TAO_BUILD != "FALSE" ) then
    echo ""
 endif
 
-setenv CLUSTER_APP FALSE
 # CLUSTER_APP can be set from outside this script to override the default of FALSE
 # Make sure that CLUSTER_APP is set to either TRUE or FALSE...
 if ( ! $?CLUSTER_APP ) then
@@ -72,16 +69,18 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${XERCESCROOT}/lib
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
+
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL
    else
       setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/IRIX32
       setenv PYTHONPATH ${OMNI_HOME}/lib32/python2.3/site-packages
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib32:${WX_HOME}/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib32
    endif
       
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
@@ -110,11 +109,13 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
 
 else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
    setenv JDK_HOME /usr/lib/java2
-   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
+   setenv VTK_BASE_DIR /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
+   #setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-SuSE91
    setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-SuSE91
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/Linux_SuSE91
-   setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/Linux-SuSE91
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrj-deps/Linux-SuSE91
+   #setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib:${XERCESCROOT}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
@@ -122,12 +123,11 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv MY_ACEDIR /home/users/mccdo/ACE_TAO
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
-      #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
    else
-      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Linux-SuSE91
+      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.5/Linux-SuSE91
       setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib
    endif
