@@ -217,7 +217,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    // Need to get these values from the appropriate classes
    // fix later	
    // the cursor will be active (based on the cursor id)
-	int cursorId;
+	int cursorId = 0;
    this->cursor->Update( cursorId, this->nav->GetCursorLocation(),
                            this->nav->GetDirection(), this->nav->worldTrans );
 

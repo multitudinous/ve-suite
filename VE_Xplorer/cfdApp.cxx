@@ -129,7 +129,8 @@ void cfdApp::exit()
    {
       vprDEBUG(vprDBG_ALL,2)  
         << "deleting this->ihccModel" << std::endl << vprDEBUG_FLUSH;
-      delete this->ihccModel;
+      //This destructor needs fixed
+      //delete this->ihccModel;
    }
 
 #ifdef _TAO
@@ -396,7 +397,7 @@ void cfdApp::postFrame()
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
 
    // if transient data is being displayed, then update gui progress bar
-   if (  this->_modelHandler->GetActiveSequence() )
+  /* if (  this->_modelHandler->GetActiveSequence() )
    {
       int currentFrame = this->_modelHandler->GetActiveSequence()->GetSequence()->GetFrameOfSequence();
       //cout << " Current Frame :  " << currentFrame << endl;
@@ -405,7 +406,7 @@ void cfdApp::postFrame()
          this->setTimesteps( currentFrame );
          this->lastFrame = currentFrame;
       }
-   }
+   }*/
 
    this->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
