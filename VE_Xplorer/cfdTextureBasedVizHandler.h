@@ -28,62 +28,60 @@ class cfdScalarVolumeVisHandler;
 #endif
 class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
 {
-public:
+   public:
    
-   void PreFrameUpdate( void );
-   void SetParameterFile(char* paramFile);
-   void SetCommandArray(cfdCommandArray* cmdArray);
-   void SetWorldDCS(cfdDCS* dcs);
-   void SetParentNode(cfdGroup* parent);
-   void SetNavigate(cfdNavigate* navigate);
-   void SetCursor(cfdCursor* cursor);
-   void SetActiveTextureManager(cfdTextureManager* tm);
+      void PreFrameUpdate( void );
+      void CleanUp( void );
+      void SetParameterFile(char* paramFile);
+      void SetCommandArray(cfdCommandArray* cmdArray);
+      void SetWorldDCS(cfdDCS* dcs);
+      void SetParentNode(cfdGroup* parent);
+      void SetNavigate(cfdNavigate* navigate);
+      void SetCursor(cfdCursor* cursor);
+      void SetActiveTextureManager(cfdTextureManager* tm);
   
-   void ViewTextureBasedVis(bool trueFalse);
-   //once we get pf side this may need to be ifdef'd
-   //void SetSceneView(osgUtil::SceneView* sv);
+      void ViewTextureBasedVis(bool trueFalse);
+      //once we get pf side this may need to be ifdef'd
+      //void SetSceneView(osgUtil::SceneView* sv);
 #ifdef CFD_USE_SHADERS 
-   void SetPBuffer(cfdPBufferManager* pbm);
-   void PingPongTextures();
+      void SetPBuffer(cfdPBufferManager* pbm);
+      void PingPongTextures();
 #endif
-   cfdPBufferManager* GetPBuffer();
-   bool InitVolumeVizNodes( void );
-   cfdVolumeVisualization* GetVolumeVizNode(int index);
-   cfdVolumeVisualization* GetActiveVolumeVizNode( void );
+      cfdPBufferManager* GetPBuffer();
+      bool InitVolumeVizNodes( void );
+      cfdVolumeVisualization* GetVolumeVizNode(int index);
+      cfdVolumeVisualization* GetActiveVolumeVizNode( void );
   
+   protected:	
+      void _updateScalarVisHandler();
+      void _updateVectorVisHandler();
 
-protected:	
-   void _updateScalarVisHandler();
-   void _updateVectorVisHandler();
-
-   char* _paramFile;
-   cfdCommandArray* _cmdArray;
-   cfdDCS* _worldDCS;
-   cfdNavigate* _nav;
-   cfdCursor* _cursor;
-   cfdTextureManager* _activeTM;
-   std::vector<cfdVolumeVisualization*> _volumeVisNodes;
-   cfdVolumeVisualization* _activeVolumeVizNode;
-   cfdGroup* _parent;
-   cfdPBufferManager* _pbm;
-   osgUtil::SceneView* _sceneView;
-   cfdVolumeVisNodeHandler* activeVisNodeHdlr;
+      char* _paramFile;
+      cfdCommandArray* _cmdArray;
+      cfdDCS* _worldDCS;
+      cfdNavigate* _nav;
+      cfdCursor* _cursor;
+      cfdTextureManager* _activeTM;
+      std::vector<cfdVolumeVisualization*> _volumeVisNodes;
+      cfdVolumeVisualization* _activeVolumeVizNode;
+      cfdGroup* _parent;
+      cfdPBufferManager* _pbm;
+      osgUtil::SceneView* _sceneView;
+      cfdVolumeVisNodeHandler* activeVisNodeHdlr;
 #ifdef CFD_USE_SHADERS
-   cfdVectorVolumeVisHandler* _vvvh;
-   cfdScalarVolumeVisHandler* _svvh;
+      cfdVectorVolumeVisHandler* _vvvh;
+      cfdScalarVolumeVisHandler* _svvh;
 #endif
-   cfdSwitch* _visOptionSwitch;
-   float* _currentBBox;
-   bool _cleared;
-   bool _textureBaseSelected;
+      cfdSwitch* _visOptionSwitch;
+      float* _currentBBox;
+      bool _cleared;
+      bool _textureBaseSelected;
 private:
-   // Required so that vpr::Singleton can instantiate this class.
-   friend class vpr::Singleton< cfdTextureBasedVizHandler >;
-   cfdTextureBasedVizHandler( void );
+      // Required so that vpr::Singleton can instantiate this class.
+      friend class vpr::Singleton< cfdTextureBasedVizHandler >;
+      cfdTextureBasedVizHandler( void );
   
-   ~cfdTextureBasedVizHandler( void );
-
-
+      ~cfdTextureBasedVizHandler( void ){ ; }// Never gets called, don't implement
 };
 #endif //OSG
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

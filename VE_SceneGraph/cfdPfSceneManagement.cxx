@@ -84,9 +84,9 @@ void cfdPfSceneManagement::Initialize( char* param )
 }
 
 ///////////////////////////////////////////////////
-cfdPfSceneManagement::~cfdPfSceneManagement( void )
+void cfdPfSceneManagement::CleanUp( void )
 {
-   
+   // Do nothing right now
 }
 
 void cfdPfSceneManagement::InitScene( void )

@@ -87,16 +87,17 @@ cfdApp::cfdApp( void )
 #endif
 }
 
-#ifdef _PERFORMER
 void cfdApp::exit()
 {
    delete filein_name;
+   cfdPfSceneManagement::instance()->CleanUp();
+   cfdModelHandler::instance()->CleanUp();
+   cfdEnvironmentHandler::instance()->CleanUp();
+   cfdSteadyStateVizHandler::instance()->CleanUp();
 #ifdef _OSG
-   if ( _tbvHandler )
-   {
-      delete _tbvHandler;
-   }
+   cfdTextureBasedVizHandler::instance()->CleanUp();
 #endif
+
 #ifdef _TAO
    if ( this->executive ) 
    {
@@ -112,8 +113,10 @@ void cfdApp::exit()
         << "deleting this->_vjobsWrapper" << std::endl << vprDEBUG_FLUSH;
       delete this->_vjobsWrapper;
    }
+std::cout << " done exit " << std::endl;
 }
 
+#ifdef _PERFORMER
 inline void cfdApp::apiInit( )
 {
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::apiInit" << std::endl << vprDEBUG_FLUSH;
@@ -349,7 +352,7 @@ void cfdApp::latePreFrame( void )
 #ifdef _TAO
       this->executive->UnbindORB();
 #endif // _TAO
-      vrj::Kernel::instance()->stop(); // Stopping kernel 
+      vrj::Kernel::instance()->setApplication( NULL ); // Stopping kernel 
    }
 
 #ifdef _TAO

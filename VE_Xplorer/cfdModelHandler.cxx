@@ -91,7 +91,7 @@ void cfdModelHandler::Initialize( char* param )
    CreateObjects();
 }
 
-cfdModelHandler::~cfdModelHandler()
+void cfdModelHandler::CleanUp( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdModelHandler destructor"
                           << std::endl << vprDEBUG_FLUSH;

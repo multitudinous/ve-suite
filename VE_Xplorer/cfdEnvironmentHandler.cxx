@@ -87,7 +87,7 @@ void cfdEnvironmentHandler::Initialize( char* param )
    CreateObjects();
 }
 
-cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
+void cfdEnvironmentHandler::CleanUp( void )
 {
    if ( this->nav )
    {  

@@ -54,10 +54,11 @@ class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
       //cfdModelHandler(const cfdModelHandler& o) { ; }
       //cfdModelHandler& operator=(const cfdModelHandler& o) { ; }
       cfdModelHandler( void );
-      ~cfdModelHandler();
+      ~cfdModelHandler( void ){ ; }// Never gets called, don't implement
    
    public:
       void Initialize( char* );
+      void CleanUp( void );
       void InitScene( void );
       void PreFrameUpdate( void );
       cfdDataSet* GetActiveDataSet( void );

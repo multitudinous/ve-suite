@@ -50,7 +50,7 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 
 cfdAppWrapper::~cfdAppWrapper( void )
 {
-   //vpr::System::msleep( 5000 );  // half-second delay
+   vpr::System::msleep( 10000 );  // half-second delay
    delete _thread->new_thread;
    delete this->_cfdApp;
    this->_cfdApp = NULL;

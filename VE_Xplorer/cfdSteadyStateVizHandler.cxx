@@ -129,7 +129,7 @@ void cfdSteadyStateVizHandler::Initialize( char* param )
    cursor = cfdEnvironmentHandler::instance()->GetCursor();
 }
 
-cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
+void cfdSteadyStateVizHandler::CleanUp( void )
 {
    this->runIntraParallelThread = false;
    vpr::System::msleep( 1000 );  // half-second delay

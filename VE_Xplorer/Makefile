@@ -38,8 +38,8 @@
 
 CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 
-WX_CXX = $(shell wx-config --cxxflags)
-WX_LIB = $(shell wx-config --libs)
+#WX_CXX = $(shell wx-config --cxxflags)
+#WX_LIB = $(shell wx-config --libs)
 CFDUNAME = $(shell uname)
 ifeq ($(SCENE_GRAPH), OSG)
    OSG = _osg
@@ -216,6 +216,7 @@ endif
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_SceneGraph
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
 #Scene Graph Specific flags
 #Can be: _PERFORMER, _OPENSG, _OSG
 ifeq ($(SCENE_GRAPH), OSG)
@@ -325,8 +326,8 @@ DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE
 
 
-EXTRA_CXXFLAGS+= $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
-EXTRA_LIBS+= $(WX_LIB) -L$(VJ_DEPS_DIR)/lib
+#EXTRA_CXXFLAGS+= $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
+#EXTRA_LIBS+= $(WX_LIB) -L$(VJ_DEPS_DIR)/lib
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
 EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 

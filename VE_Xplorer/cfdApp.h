@@ -71,8 +71,10 @@ class cfdApp: public vrj::OsgApp
       virtual void initScene( void );
 
       virtual void init( void );
-#ifdef _PERFORMER
+      // Juggler calls before exiting
+      virtual void exit( void );
 
+#ifdef _PERFORMER
       virtual void apiInit( void );
 
       // Called After pfInit()
@@ -86,9 +88,6 @@ class cfdApp: public vrj::OsgApp
       
       // Function called before pfSync
       virtual void preSync( void );
-
-      // Performer calls before exiting
-      virtual void exit( void );
 #elif _OSG
       osg::Group* getScene( void );
       void bufferPreDraw( void );

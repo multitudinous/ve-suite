@@ -74,10 +74,11 @@ class cfdSteadyStateVizHandler : public vpr::Singleton< cfdSteadyStateVizHandler
       cfdSteadyStateVizHandler( void );
       //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
       //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
-      ~cfdSteadyStateVizHandler( void );
+      ~cfdSteadyStateVizHandler( void ){ ; }// Never gets called, don't implement
    
    public:
       void Initialize( char * );
+      void CleanUp( void );
       void InitScene( void );
       void PreFrameUpdate( void );
       void CreateActorThread( void * );

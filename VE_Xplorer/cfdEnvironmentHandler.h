@@ -55,10 +55,11 @@ class cfdEnvironmentHandler : public vpr::Singleton< cfdEnvironmentHandler >
       //cfdEnvironmentHandler(const cfdEnvironmentHandler& o) { ; }
       //cfdEnvironmentHandler& operator=(const cfdEnvironmentHandler& o) { ; }
       cfdEnvironmentHandler( void );
-      ~cfdEnvironmentHandler( void );
+      ~cfdEnvironmentHandler( void ){ ; }// Never gets called, don't implement
 
    public:
       void Initialize( char * );
+      void CleanUp( void );
       void InitScene( void );
       void PreFrameUpdate( void );
       void SetCommandArray( cfdCommandArray* );

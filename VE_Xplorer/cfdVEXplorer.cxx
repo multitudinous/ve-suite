@@ -99,8 +99,17 @@ int main(int argc, char* argv[])
    cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
    orb->run();
+   int i = 0;
+   do
+   {
+      ++i;
+   }
+   while( i < 100000000 );
    // VjObsWrapper is now deleted in cfdApp on exit
+std::cout << " here 1 " << std::endl;
    // delete vjobsWrapper;
+std::cout << " here 2 " << std::endl;
    delete appWrapper;
+std::cout << " here 1 " << std::endl;
    return 0;
 }

@@ -50,10 +50,11 @@ class cfdPfSceneManagement : public vpr::Singleton< cfdPfSceneManagement >
       //cfdPfSceneManagement(const cfdPfSceneManagement& o) { ; }
       //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
       cfdPfSceneManagement( void );
-      ~cfdPfSceneManagement();
+      ~cfdPfSceneManagement(){ ; } // Never gets called, don't implement
       
    public:
       void Initialize( char * );
+      void CleanUp( void );
       void InitScene( void );
       
       cfdGroup* GetRootNode( void );

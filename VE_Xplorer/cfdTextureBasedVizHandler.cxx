@@ -54,7 +54,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
 #endif
 }
 ///////////////////////////////////////////////////////////
-cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
+void cfdTextureBasedVizHandler::CleanUp( void )
 {
    for ( unsigned int i = 0; i < _volumeVisNodes.size(); ++i )
    {
