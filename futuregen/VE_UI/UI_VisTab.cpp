@@ -352,7 +352,8 @@ void UI_VisualizationTab::_onExit(wxCommandEvent& event)
    ((UI_Tabs *)_parent)->cId = EXIT;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
    //wxMessageBox(_T("Exit button clicked!"), _T("Button!"));
-   return exit(0);
+   //return 
+	exit(0);
 }
 
 //////////////////////////////////////////////////////////
