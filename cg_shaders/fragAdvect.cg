@@ -1,0 +1,74 @@
+struct frag2app{
+   float4 color : COLOR;
+};
+
+frag2app fp_advectTexture(float4 color : COLOR,
+                    float3 texCoord0: TEXCOORD,
+                    //float3 dyeCoord,
+                    uniform sampler3D property:TEXUNIT0,
+                    uniform sampler3D noiseTexture:TEXUNIT1,
+                    uniform sampler3D velocity:TEXUNIT2,
+                    uniform sampler3D dye:TEXUNIT3,
+                    uniform sampler1D lookUpTexture:TEXUNIT4,
+                    uniform float3 dyeTranslation,
+                    uniform float3 dyeScale,
+                    uniform float3 texCoordMult,
+                    uniform float deltaT,
+                    uniform float time,
+                    uniform float period,
+                    uniform sampler3D wFunc:TEXUNIT5,
+                    uniform sampler3D vFunc:TEXUNIT6,
+                    uniform float3 vecMin,
+                    uniform float3 vecMax)
+{
+   frag2app retColor;
+ 
+   //look up the velocity in the field
+   float3 v= tex3D(velocity,texCoord0).xyz;
+
+   //get our original values back
+   v.xyz = ((v.xyz)*2.0) - 1.0;
+
+   //velocity mask to darken slow moving flow
+   float vMask = 1.0 - sqrt(dot(v.xyz,v.xyz));
+   
+   //Euler integration
+   //the old position
+   float3 oldTexCoord = texCoord0.xyz + deltaT*v.xyz;
+   
+   //fetch the density using the old coord
+   //density is our property that we are 
+   //advecting
+   float4 prop = tex3D(property,oldTexCoord);
+ 
+   //now for our materials
+   
+   //lookup the noise amplitude/phase
+   float4 n = tex3D(noiseTexture,texCoord0*texCoordMult);
+
+   //dye coordinate
+   //fixed3 relFragCoord = dyeCoord-dyeTranslation*dyeScale; 
+   float4 dyeAmp = 0;//tex3D(dye,relFragCoord);
+
+   //now do the alpha blending for each material
+
+   //material 1
+   //get the local time
+   float localTime = fmod(time + n.y,period);
+   float4 W = tex3D(wFunc,texCoord0);
+   float4 V = tex3D(vFunc,texCoord0);
+
+   float tInject = tex1D(lookUpTexture,localTime).x;
+   retColor.color.x = (1.0 -.2)*prop.x + tInject*.2*n.x;
+  
+   //material 2
+   localTime = fmod(time + n.w,period);
+   tInject = tex1D(lookUpTexture,localTime).x;
+
+   retColor.color.y = (1.0-.2)*prop.y + tInject*.2*n.z;
+   retColor.color.z = 0;
+   retColor.color.w = 0;
+ 
+   //this data is quantized!!!
+   return retColor;
+}
