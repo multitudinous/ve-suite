@@ -1,0 +1,127 @@
+#ifndef _BIV_VTK_TO_TEXTURE_H_
+#define _BIV_VTK_TO_TEXTURE_H_
+
+#include <vtkDataSet.h>
+#include <vtkUnstructuredGridReader.h>
+#include <vtkRectilinearGridReader.h>
+#include "flowtexture.h"
+
+
+//////////////////////////////////////////////
+//This class takes a vtkdataset and creates //
+//an rgba file representing the velocity    //
+//field (+/-) and the active scalar         //
+//Basically, you give it a dataset          //
+//it pumps out rgba files.                  //
+//NOTE: The files contain the dimension     //
+//as the first line so to read in a normal  //
+//reader the first line can be ignored      //
+//////////////////////////////////////////////
+class VTKDataToTexture{
+public:
+   VTKDataToTexture();
+   VTKDataToTexture(const VTKDataToTexture& v);
+   ~VTKDataToTexture();
+ 
+   ////////////////////////////////////////////
+   //set the desired resolution of the       //    
+   //ouput textures                          //
+   //these need to be 2^n compliant for      //
+   //textures                                //
+   ////////////////////////////////////////////
+   void setOutputResolution(int x,int y, int z)
+   {
+      _resolution[0] = x;
+      _resolution[1] = y;
+      _resolution[2] = z;
+   }
+
+   ///////////////////////////////////////////////////
+   //set the file name                              //
+   //example:                                       //
+   //if vFileName == "vectors"
+   //and outDir == "./"
+   //output will be "./vectors_p.rgba"     //
+   //               "./vectors_n.rgba"     // 
+   //representing the positive and negative textures//
+   ///////////////////////////////////////////////////
+   void setVelocityFileName(char* vFileName);
+
+   //set the output directory
+   void setOutputDirectory(char* outDir);
+
+   //set the dataset for this converter
+   void setDataset(vtkDataSet* dSet){_dataSet = dSet;}
+
+   //create a dataset from a file
+   void createDataSetFromFile(char* filename);
+  
+   //create the textures for this data set
+   void createTextures();
+
+   //write out the textures
+   //files will be in ./textures
+   void writeVelocityTexture(int index);
+   void writeScalarTexture(int index);
+
+   void setRectilinearGrid(){_isRGrid = true;}
+
+   //reset the translators internal data
+   void reset();
+
+   //get the min and max of the velocity magnitude
+   //float minVelocityMagnitude(){return _minMagVel;}
+   //float maxVelocityMagnitude(){return _maxMagVel;}
+   char** getParameterNames( const int numComponents, 
+                    const int numParameters );
+   int countNumberOfParameters(const int numComponents);
+   //equal operator
+   VTKDataToTexture& operator=(const VTKDataToTexture& rhs);
+protected:
+   bool _isRGrid;
+   std::vector<FlowTexture> _velocity;
+   std::vector<FlowTexture> _curScalar;
+   
+
+   //resample the data into a cartesian
+   //representation based on the desired
+   //resolution and the bbox of the data
+   void _resampleData(int dataValueIndex,int isScalar);
+   //interpolate the data from the weights
+   //returned by vtkCellLocator(Octtree)
+   void _interpolateData(vtkGenericCell* cell,
+		      double* weights,
+		      float* vec,
+		      float& scal);
+
+   void _addOutSideCellDomainDataToFlowTexture(int index,int isScalar);
+   void _interpolateDataInCell(vtkGenericCell* cell,
+		                                    double* weights,
+                                          int component,
+                                          int scalar);
+   void _interpolatePixelData(FlowPointData& data,
+                      vtkDataArray* array,
+                      double* weights, 
+                      int npts);
+   void _extractTuplesForVector(vtkIdList* ptIds,vtkDataArray* vector,
+                                          int whichVector);
+   void _extractTuplesForScalar(vtkIdList* ptIds,vtkDataArray* scalar,
+                                          int whichScalar);
+   char* _cleanUpFileNames();
+   
+   char* _vFileName;
+   char* _outputDir;
+   int _resolution[3];
+   int _nScalars;
+   int _nVectors;
+   int _nPtDataArrays;
+   std::vector<double*> _scalarRanges;
+   std::vector<double*> _vectorRanges;
+   char** _scalarNames;
+   char** _vectorNames;
+
+   vtkDataSet* _dataSet;
+   vtkUnstructuredGridReader* _usgrid;
+   vtkRectilinearGridReader* _rgrid;
+};
+#endif// _BIV_VTK_TO_TEXTURE_H_
