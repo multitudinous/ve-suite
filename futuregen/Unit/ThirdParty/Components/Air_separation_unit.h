@@ -12,12 +12,11 @@
 #ifndef AIR_SEPARATION_UNIT
 #define AIR_SEPARATION_UNIT
 
-#include <Packages/REI/Core/Datatypes/Gas.h>
-#include <Packages/REI/Core/Datatypes/GasCell.h>
+#include <V21Helper/Datatypes/Gas.h>
+#include <V21Helper/Datatypes/GasCell.h>
 #include <cmath>
 #include <iostream>
 
-using namespace REI;
 using namespace std;
 
 namespace Vision21 {

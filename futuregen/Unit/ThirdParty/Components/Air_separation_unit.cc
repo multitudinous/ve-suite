@@ -1,6 +1,5 @@
 #include "Air_separation_unit.h"
 
-using namespace REI;
 
 namespace Vision21 {
 
