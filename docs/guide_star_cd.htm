@@ -1,0 +1,169 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>VE-Suite - User's Guide</title>
+	<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<table width="826" border="0" cellspacing="" cellpadding="0">
+  <tr>
+  	<td width="826" colspan="2">
+	
+		<table width="826" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td width="551"><img src="graphics/header.gif" width="576" height="114"></td>
+			<td width="225" valign="top" align="right"><b>&nbsp;<br><a href="http://www.vrac.iastate.edu">Virtual Reality Applications Center</a><br><a href="http://www.vrac.iastate.edu/~kmbryden">Dr. Kenneth Mark Bryden</a></b></td>
+		  </tr>
+		</table>
+	
+	</td>
+  </tr>
+  <tr>
+    <td width="181">&nbsp;</td>
+    <td width="645">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="826" colspan="2">
+	
+		<table width="826" border="0" cellspacing="0" cellpadding="5">
+		  <tr>
+		    <td width="181">&nbsp;</td>
+		    <td width="645"><h1>User's Guide</h1></td>
+		  </tr>
+		  <tr>
+		    <td width="181" valign="top" align="left">
+
+				<table width="100%" border="0" cellspacing="0" cellpadding="3">
+				  <tr>
+				    <td><a href="homepage.htm"><b>Homepage</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="download.htm"><b>Download</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="intallation.htm"><b>Installation</b></a></td>
+				  </tr>
+				  <tr>
+				    <td>
+					
+						<a href="guide.htm"><b>User's Guide</b></a>
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="guide_code_guidelines.htm">Code Guidelines</a>
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="guide_omni_build_instructions.htm">Omni Build Instructions</a>
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="guide_tao_build_instructions.htm">TAO Build Instructions</a>
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="guide_star_cd.htm">VE-Builder with StarCD</a>
+						
+					</td>
+				  </tr>
+				  <!--
+				  <tr>
+				    <td><a href="documentation.htm"><b>Documentation</b></a></td>
+				  </tr>
+				  -->
+				  <tr>
+				    <td><a href="gallery.htm"><b>Application Gallery</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="research.htm"><b>Research</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="collaborators.htm"><b>Collaborators</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="developer.htm"><b>Developer Information</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="contact.htm"><b>Contact</b></a></td>
+				  </tr>
+				</table>
+
+			</td>
+		    <td width="645" align="left" valign="top">
+			
+				<h3>Using VE-Builder with StarCD</h3>
+				 
+				<ol>
+        		  <li><p>Launch StarCD</p></li>
+        		  <li><p>Ensure that a *.vrt and *.cel file is written of the region of interest. This region can either be a complete CFD model or a subsection of the model.</p></li>
+        		  <li><p>Analyze data</p></li>
+        		  <li><p>Post-processing &gt; Load data</p>
+          		    <ol>
+            		  <li><p>In &quot;File(s)&quot; tab, click &quot;open post file&quot;</p></li>
+            		  <li><p>In &quot;Data&quot; tab:</p>
+					    <blockquote>
+                		  <p>Scalar Data &gt; Turb Kinetic Energy</p>
+                    	  <p>Vector Data &gt; Velocity Components UVW</p>
+                    	  <p><a href="graphics/load_data.jpg" target="_blank"><img src="graphics/load_data.gif" width="86" height="126" border="0"></a><br>&nbsp;</p>
+                		</blockquote>
+             		  </li>
+          		    </ol>
+        		  </li>
+        		  <li><p>Click &quot;Get Data&quot;</p></li>
+        		  <li><p>Click &quot;View Post Registers&quot;</p></li>
+        		  <li><p>To add scalars:</p>
+          		    <ol>
+            		  <li><p>Click &quot;Operate&quot;
+              		    <blockquote>
+              		      <p><a href="graphics/post_regis_data.jpg" target="_blank"><img src="graphics/post_regis_data.gif" width="90" height="81" border="0"></a></p>
+              		    </blockquote>
+              		  </li>
+           		      <li><p>Function &gt; Load vertex data &gt; turbulent energy (Registers 1-3 must contain vector data. Registers 4-6 must contain vertex data.)</p></li>
+            		  <li><p>Select register</p></li>
+            		  <li><p>Note: Although it is necessary to use vertex data rather than cell data, using vertex data might return an error. To solve this problem, copy the previous command line and add the register number, e.g. &quot;enter oper, getv, te, 5, &quot; </p></li>
+            		  <li><p>Ensure that &quot;using relative values&quot; is selected</p>
+             		    <blockquote>
+             		      <p><a href="graphics/post_register_oper.jpg" target="_blank"><img src="graphics/post_register_oper.gif" width="116" height="25" border="0"></a></p>
+              		    </blockquote>
+              		  </li>
+              		  <li><p>Click &quot;Apply&quot; to put data in an empty register</p></li>
+            		  <li><p>Click &quot;Update list&quot;</p></li>
+            		  <li><p>Repeat steps 7.1-7.6 to add data to registers 5 and 6 (pressure and viscosity)</p></li>
+            		</ol>
+          		  </li>
+        		  <li>The data is now stored.</li>
+          			<blockquote>
+          			  <p><a href="graphics/post_regis_data.jpg" target="_blank"><img src="graphics/post_regis_data.gif" width="90" height="81" border="0"></a></p>
+          			</blockquote>
+         		  <li><p>In pro-STAR window:</p>
+          		    <ol>
+            		  <li><p>Post &gt; save user data</p></li>
+            		  <li><p>Registers: all</p></li>
+            		  <li><p>File type: coded</p></li>
+            		  <li><p>Range: all vertices</p>
+            		    <blockquote>
+            		      <p><a href="graphics/save_usr_pst.jpg" target="_blank"><img src="graphics/save_usr_pst.gif" width="46" height="63" border="0"></a></p>
+            		    </blockquote>
+           			  </li>
+             		  <li><p>Click &quot;Apply&quot;</p></li>
+            		  <li><p>Click &quot;Close&quot;</p></li>
+          			</ol>
+          		  </li>
+       			  <li><p>Manually close file (enter &quot;close *.usr&quot;)</p></li>
+          		  <li><p>File &gt; save as coded</p></li>
+        		  <li>Unclick boundary file</li>
+        		    <blockquote>
+        		      <p><a href="graphics/CDSave.jpg" target="_blank"><img src="graphics/CDSave.gif" width="60" height="48" border="0"></a></p>
+       			    </blockquote>
+      		      <li><p>Click &quot;Apply&quot;</p></li>
+        		  <li><p>Note: Checked files are written out</p></li>
+        		  <li><p>Enter &quot;close all&quot;</p></li>
+        		</ol>        
+        
+				<p>&nbsp;</p>
+        		<p>You now have the geometry information and data. It is time to translate.</p>
+        		<p>Creating a parameter file for <a href="guide_translator.htm">translator</a>.</p>
+
+			    <p>&nbsp;</p>
+				<p>Printable Version</p>
+			
+			</td>
+		  </tr>
+		</table>
+	
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>

@@ -94,11 +94,11 @@ cellPadding=5 cellSpacing=0 borderColor=#CCCCCC bgcolor="#333366" style="BORDER-
       </TD>
       <TD width="78%" rowspan="180" valign="top"><h3> Using VE-Xplorer and VE-Conductor</h3>        
         <p>1. Ensure that module data is properly stored before using VE-Xplorer. You must specify a working directory for data storage under the execution folder (below) of a compatible module's User Interface (UI module button).</p>
-        <p><img src="pics/datastorage.gif" width="567" height="194"></p>
+        <p><img src="graphics/datastorage.gif" width="567" height="194"></p>
         <p>2. When a network has been executed and the module data is properly stored, select the &quot;VE&quot; module button (below) to open VE-Suite. The VE-Suite title page is then displayed.</p>
-        <p><img src="pics/button.gif" width="181" height="184"></p>
+        <p><img src="graphics/button.gif" width="181" height="184"></p>
         <p>3. Select &quot;Launch&quot; to convert the stored CFD data files in the working directory into VE-compatible VTK files. The conversion process may take several minutes.</p>
-        <p><img src="pics/launch.gif" width="377" height="267"></p>
+        <p><img src="graphics/launch.gif" width="377" height="267"></p>
         <p>Note: The title page remains dormant in the background while using VE-Xplorer. Selecting the &quot;End&quot; button wil close the viewer and end the VE-Suite session.</p>
         <p>The SimWindow Display Screen</p>
         <p>The SimWindow provides a color scheme on the left wall of the cave. This color gradient is used to display varying values of a given datatype. The top number represents a maximum value while the bottom number represents a minimum value. All data above the maximum value will be shaded red. Likewise. all data below the minimum value will be shaded blue. Data falling between these values is shaded according to the color scheme.</p>
@@ -111,12 +111,12 @@ cellPadding=5 cellSpacing=0 borderColor=#CCCCCC bgcolor="#333366" style="BORDER-
         <p><strong>Scalars folder </strong><br>
         VE-Xplorer can be used to trace a variety of data isncluding gas direction, velocity, pressure, temperature, density, and specie concentration. The user controls the method of data display using the JavaClient user interface on the tablet. The first folder, &quot;Scalars,&quot; governs which datatypes are displayed. From teh data field on the left, the user can select on datatype for display.</p>
         <p>The Scalars folder also controls the method by which data is shaded in the cave. The sliding bars on the right regulate the data maximum and minimum based on percentages of the absolute maximum and minimum. For example, in the color scheme illustrated in the above SimWindow snap, the <strong>default</strong> maximum is 3200 and the minimum is 400. This means that the highest computed gas temperature for the module was 3200 K and the lowest computed temperature was 400 K. By moving the minimum sliding bar up towards 50, the data range narrows and provides a more detailed representation of temperature values in the upper half of the absolute temperature range. The SimWindow screen is not updated until <em>Update</em> is selected.</p>
-        <p><img src="pics/scalars.gif" width="640" height="480"></p>
+        <p><img src="graphics/scalars.gif" width="640" height="480"></p>
         <p><strong>Design folder</strong><br>
         The Design folder is still in development and is not yet functional. It will potentially allow the user to utilize visualization capabilities of the VE Suite in order to manipulate unit geometry and specifications before initializing CFD calculations. This would allow the user to fully parametrize a problem by working from a config-type file.</p>
         <p><strong>Geometry folder</strong><br>
           The Geometry folder allows the user to toggle the display of unit geometry. When selected, the viewer displays a simplified representation of the unit itself (gasifier shown below) inside the SimWindow screen. Unit geometry will not obstruct data--it becomes nearly transparent when data is displayed. Again, the SimWindow will not be updated until the Update button is selected.</p>
-        <p><img src="pics/geometry.gif" width="472" height="332"></p>
+        <p><img src="graphics/geometry.gif" width="472" height="332"></p>
         <p>Visualization folder<br>
           Category<br>
           The VE Suite offers several methods of data display. The user may choose one of the following categories: </p>
@@ -131,17 +131,17 @@ cellPadding=5 cellSpacing=0 borderColor=#CCCCCC bgcolor="#333366" style="BORDER-
         </p>
         <p><strong>Direction</strong><br>
           For those categories that display data along a unit cross-section (i.e. contour, warped contour, transient, vector, PIV_Image), the direction field regulates the method by which the two-dimensional plane is generated. The Cartesian axes listed represent normals to the planes displayed. For example, when the Y axis is selected, the planes will run perpendicular to the Y axis (parallel to the monitor's screen).</p>
-        <p><img src="pics/visualization.gif" width="451" height="337">&nbsp; <img src="pics/xyz.gif" width="150" height="150"><br>
+        <p><img src="graphics/visualization.gif" width="451" height="337">&nbsp; <img src="graphics/xyz.gif" width="150" height="150"><br>
           The user may also generate cross-sectional planes that are not orthogonal to the defined axes using the wand (By wand option). When selected, the viewer generates a plane normal to the direction of the pointed wand.<br>
         </p>
         <p><strong>Sliding Bar</strong><br>
           The values beneath the sliding bar represent percentages. This bar is used to control data display by regulating the position of cross-sectional planes or the value by which isosurfaces are generated.</p>
         <p>Contour<br>
           The Contour category generates a cross-sectional plane running through the unit. Data is then projected onto this plane using the color-shading scheme to represent varying values. The sliding bar regulates the position of the cross-sectional plane. For example, planes run from left (value=0) to right (value=100) along the X-axis. The value of 50 (displayed at right) creates a plane centered in the middle of the unit. Similarly, planes run from base to top along the Z-axis, and from front to back along the Y-axis.</p>
-        <p><img src="pics/contour.gif" width="249" height="253"></p>
+        <p><img src="graphics/contour.gif" width="249" height="253"></p>
         <p>Warped Contour<br>
           The Warped Contour category works similarly to the Contour category. In contrast, however, the Warped Contour warps the contour according to the local velocity vector. Instead of simply shading data along the two-dimensional cross-section, data is extruded to its respective value on the contour.</p>
-        <p><img src="pics/warpedcontour.gif" width="372" height="378"></p>
+        <p><img src="graphics/warpedcontour.gif" width="372" height="378"></p>
         <p>Transient, Vector, and PIV_Image<br>
           The Transient, Vector, and PIV_Image categories all operate similarly to the Contour category when calculations include the appropriate datatypes. Data is projected onto a two-dimensional cross-sectional plane and shaded according to the illustrated color scheme when any of these categories are selected.</p>
         <p>Streamline<br>

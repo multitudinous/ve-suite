@@ -1,0 +1,157 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+	<title>VE-Suite - User's Guide</title>
+	<link href="style.css" rel="stylesheet" type="text/css">
+</head>
+<body>
+
+<table width="826" border="0" cellspacing="" cellpadding="0">
+  <tr>
+  	<td width="826" colspan="2">
+	
+		<table width="826" border="0" cellspacing="0" cellpadding="0">
+		  <tr>
+			<td width="551"><img src="graphics/header.gif" width="576" height="114"></td>
+			<td width="225" valign="top" align="right"><b>&nbsp;<br><a href="http://www.vrac.iastate.edu">Virtual Reality Applications Center</a><br><a href="http://www.vrac.iastate.edu/~kmbryden">Dr. Kenneth Mark Bryden</a></b></td>
+		  </tr>
+		</table>
+	
+	</td>
+  </tr>
+  <tr>
+    <td width="181">&nbsp;</td>
+    <td width="645">&nbsp;</td>
+  </tr>
+  <tr>
+    <td width="826" colspan="2">
+	
+		<table width="826" border="0" cellspacing="0" cellpadding="5">
+		  <tr>
+		    <td width="181">&nbsp;</td>
+		    <td width="645"><h1>User's Guide</h1></td>
+		  </tr>
+		  <tr>
+		    <td width="181" valign="top" align="left">
+
+				<table width="100%" border="0" cellspacing="0" cellpadding="3">
+				  <tr>
+				    <td><a href="homepage.htm"><b>Homepage</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="download.htm"><b>Download</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="intallation.htm"><b>Installation</b></a></td>
+				  </tr>
+				  <tr>
+				    <td>
+					
+						<a href="guide.htm"><b>User's Guide</b></a>
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="guide_code_guidelines.htm">Code Guidelines</a>
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="guide_omni_build_instructions.htm">Omni Build Instructions</a>
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="guide_tao_build_instructions.htm">TAO Build Instructions</a>
+						<br>&nbsp;&nbsp;&nbsp;&nbsp;<a href="guide_star_cd.htm">VE-Builder with StarCD</a>
+						
+					</td>
+				  </tr>
+				  <!--
+				  <tr>
+				    <td><a href="documentation.htm"><b>Documentation</b></a></td>
+				  </tr>
+				  -->
+				  <tr>
+				    <td><a href="gallery.htm"><b>Application Gallery</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="research.htm"><b>Research</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="collaborators.htm"><b>Collaborators</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="developer.htm"><b>Developer Information</b></a></td>
+				  </tr>
+				  <tr>
+				    <td><a href="contact.htm"><b>Contact</b></a></td>
+				  </tr>
+				</table>
+
+			</td>
+		    <td width="645" align="left" valign="top">
+			
+				<h3>Using VE-Xplorer and VE-Conductor</h3>
+				
+				<ol>
+				  <li><p>Ensure that module data is properly stored before using VE-Xplorer. You must specify a working directory for data storage under the execution folder (below) of a compatible module's User Interface (UI module button).</p></li>
+				    <blockquote><img src="graphics/datastorage.gif" width="500"></blockquote>
+				  <li><p>When a network has been executed and the module data is properly stored, select the &quot;VE&quot; module button (below) to open VE-Suite. The VE-Suite title page is then displayed.</p></li>
+				    <blockquote><img src="graphics/button.gif" width="181"></blockquote>
+				  <li><p>Select &quot;Launch&quot; to convert the stored CFD data files in the working directory into VE-compatible VTK files. The conversion process may take several minutes.</p></li>
+				    <blockquote><img src="graphics/launch.gif" width="500"></blockquote>
+				  <p>Note: The title page remains dormant in the background while using VE-Xplorer. Selecting the &quot;End&quot; button wil close the viewer and end the VE-Suite session.</p>
+				  <p><b>The SimWindow Display Screen</b><br>The SimWindow provides a color scheme on the left wall of the cave. This color gradient is used to display varying values of a given datatype. The top number represents a maximum value while the bottom number represents a minimum value. All data above the maximum value will be shaded red. Likewise. all data below the minimum value will be shaded blue. Data falling between these values is shaded according to the color scheme.</p>
+				  <p>The distant table (projected on the rear wall) displays user options selectable with the wand. These user options are also accessible within the JavaClient user interface screen using the tablet.</p>
+				  <p>Navigating within the SimWindow Display Screen</p>
+				  <p>Navigation in relation to three-dimensional images within the cave is supplemented by the hand-held wand and tablet. The cave operates within a zero-gravity environment and navigation is purely translational.</p>
+				  <p>The user can simply point the wand in the desired direction of movement and when the button is selected, the images change to simulate movement.</p>
+				  <p>In addition to navigation with the wand, the tablet provides options to slide up, down, to the left, to the right, away from the unit, or toward the unit.</p>
+				</ol>
+
+				<p><h2>The JavaClient User Interface Screen</h2></p>
+				
+				<p><b>Scalars folder</b><br>VE-Xplorer can be used to trace a variety of data isncluding gas direction, velocity, pressure, temperature, density, and specie concentration. The user controls the method of data display using the JavaClient user interface on the tablet. The first folder, &quot;Scalars,&quot; governs which datatypes are displayed. From teh data field on the left, the user can select on datatype for display.</p>
+				<p>The Scalars folder also controls the method by which data is shaded in the cave. The sliding bars on the right regulate the data maximum and minimum based on percentages of the absolute maximum and minimum. For example, in the color scheme illustrated in the above SimWindow snap, the <strong>default</strong> maximum is 3200 and the minimum is 400. This means that the highest computed gas temperature for the module was 3200 K and the lowest computed temperature was 400 K. By moving the minimum sliding bar up towards 50, the data range narrows and provides a more detailed representation of temperature values in the upper half of the absolute temperature range. The SimWindow screen is not updated until <em>Update</em> is selected.</p>
+				  <blockquote><img src="graphics/scalars.gif" width="500"></blockquote>
+        
+				<p><b>Design folder</b><br>The Design folder is still in development and is not yet functional. It will potentially allow the user to utilize visualization capabilities of the VE Suite in order to manipulate unit geometry and specifications before initializing CFD calculations. This would allow the user to fully parametrize a problem by working from a config-type file.</p>
+
+				<p><b>Geometry folder</b><br>The Geometry folder allows the user to toggle the display of unit geometry. When selected, the viewer displays a simplified representation of the unit itself (gasifier shown below) inside the SimWindow screen. Unit geometry will not obstruct data--it becomes nearly transparent when data is displayed. Again, the SimWindow will not be updated until the Update button is selected.</p>
+				  <blockquote><img src="graphics/geometry.gif" width="500"></blockquote>
+
+				<p><b>Category</b><br>The VE Suite offers several methods of data display. The user may choose one of the following categories:</p>
+				  <ul>
+				    <li>Contour</li>
+				    <li>Warped Contour</li>
+				    <li>Vector</li>
+				    <li>Streamline</li>
+				    <li>Isosurface</li>
+				    <li>Transient</li>
+				    <li>PIV_Image</li>
+				    <li>Polydata-REI Particle (fix links)</li>
+				  </ul>
+
+				<p><strong>Direction</strong><br>For those categories that display data along a unit cross-section (i.e. contour, warped contour, transient, vector, PIV_Image), the direction field regulates the method by which the two-dimensional plane is generated. The Cartesian axes listed represent normals to the planes displayed. For example, when the Y axis is selected, the planes will run perpendicular to the Y axis (parallel to the monitor's screen).</p>
+        		  <blockquote><img src="graphics/visualization.gif" width="500"><br>&nbsp;<br><img src="graphics/xyz.gif" width="150" height="150"></blockquote>
+				<p>The user may also generate cross-sectional planes that are not orthogonal to the defined axes using the wand (By wand option). When selected, the viewer generates a plane normal to the direction of the pointed wand.</p>
+
+				<p><b>Sliding Bar</b><br>The values beneath the sliding bar represent percentages. This bar is used to control data display by regulating the position of cross-sectional planes or the value by which isosurfaces are generated.</p>
+
+				<p><b>Contour</b><br>The Contour category generates a cross-sectional plane running through the unit. Data is then projected onto this plane using the color-shading scheme to represent varying values. The sliding bar regulates the position of the cross-sectional plane. For example, planes run from left (value=0) to right (value=100) along the X-axis. The value of 50 (displayed at right) creates a plane centered in the middle of the unit. Similarly, planes run from base to top along the Z-axis, and from front to back along the Y-axis.</p>
+					<blockquote><img src="graphics/contour.gif" width="249"></blockquote>
+
+				<p><b>Warped Contour</b><br>The Warped Contour category works similarly to the Contour category. In contrast, however, the Warped Contour warps the contour according to the local velocity vector. Instead of simply shading data along the two-dimensional cross-section, data is extruded to its respective value on the contour.</p>
+				  <blockquote><img src="graphics/warpedcontour.gif" width="500"></blockquote>
+
+				<p><b>Transient, Vector, and PIV_Image</b><br>The Transient, Vector, and PIV_Image categories all operate similarly to the Contour category when calculations include the appropriate datatypes. Data is projected onto a two-dimensional cross-sectional plane and shaded according to the illustrated color scheme when any of these categories are selected.</p>
+
+				<p><b>Streamline</b><br>The streamlines category creates three-dimensionalimages of streamlines with user-specified seed points. When selected, the user utilizes the wand to specify the position of seed points from which the viewer generates streamlines.</p>
+
+				<p><b>Isosurface</b><br>The Isosurface category generates three-dimensional surfaces using locations where values of a given datatype are equal. Numbers beneath the sliding bar in the JavaClient screen represent percentages between the maximum and minimum data value. For example, using gas_temp as the datatype, the number 50 represents a temperature of 1800 K--the value half-way between the minimum (400 K) and maximum (3200 K) value. Therefore, when 50 is selected the viewer generates a continuous surface (shown at left) from all the individual points within the unit having a temperature of 1800 K.</p>
+        		
+				<p><b>Polydata</b><br>The Polydata category displays individual particle paths through the unit. The particle positions are predefined and originate from the file: $[VE_SUITE]/REI/particle.param</p>
+        
+			    <p>&nbsp;</p>
+				<p>Printable Version</p>
+			
+			</td>
+		  </tr>
+		</table>
+	
+	</td>
+  </tr>
+</table>
+
+</body>
+</html>
