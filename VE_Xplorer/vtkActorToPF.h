@@ -24,8 +24,10 @@
 #include "vtkPolyDataMapper.h"
 
 #ifdef VTK44
+#ifndef VTK4
 #define VTK4
-#endif
+#endif //VTK4
+#endif //VTK44
 
 #ifdef VTK4
 #include "vtkCellArray.h"
@@ -51,5 +53,5 @@ void vtkActorToGeoSets(vtkActor *actor, pfGeoSet *gsets[], int verbose);
 pfGeoSet *processPrimitive(vtkActor *a, vtkCellArray *prims, int pType, int v);
 void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int v);
 
-#endif
-#endif
+#endif //_PERFORMER
+#endif //VTK_ACTOR_TO_PF_H
