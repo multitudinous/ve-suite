@@ -23,6 +23,7 @@ namespace osgUtil{
 };
 class cfdPBufferManager;
 class cfdVolumeVisualization;
+class cfdScalarVolumeVisHandler;
 class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
 {
 public:
@@ -47,6 +48,9 @@ public:
    cfdTextureBasedVizHandler& operator=(const cfdTextureBasedVizHandler& tbvh);
 
 protected:	
+   void _updateScalarVisHandler();
+   void _updateVectorVisHandler();
+
    char* _paramFile;
    cfdCommandArray* _cmdArray;
    cfdDCS* _worldDCS;
@@ -58,6 +62,8 @@ protected:
    cfdGroup* _parent;
    cfdPBufferManager* _pbm;
    osgUtil::SceneView* _sceneView;
+   cfdScalarVolumeVisHandler* _svvh;
+   cfdSwitch* _visOptionSwitch;
    float* _currentBBox;
    bool _cleared;
 private:

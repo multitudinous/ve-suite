@@ -21,12 +21,8 @@ namespace osg{
    class StateSet;
    class Group;
 }
-#ifdef CFD_USE_SHADERS
-#include "cfdOSGScalarShaderManager.h"
-#include "cfdOSGTransferShaderManager.h"
-#include "cfdOSGAdvectionShaderManager.h"
-#endif
-#include <osg/BoundingBox>
+
+
 #include "cfdVolumeSliceSwitchCallback.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfdTextureManager.h"
@@ -61,20 +57,10 @@ public:
    void AddClipPlane(ClipPlane direction,double* position);
    void RemoveClipPlane(ClipPlane direction);
    void UpdateClipPlanePosition(ClipPlane direction,double* newPosition);
-   void ActivateVisualBBox();  
-   void DeactivateVisualBBox();
-   void UseNormalGraphicsPipeline();
    
 
    bool isCreated(){return _isCreated;}
-#ifdef CFD_USE_SHADERS
-   void UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
-                            float param,int whichFunction);
-   void EnableVolumeShader();
-   void DisableVolumeShader();
-   void EnableTransferShader();
-   void DisableTransferShader();
-#endif
+
    cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk;}
    
    osg::ref_ptr<osg::StateSet> GetStateSet();
@@ -106,39 +92,28 @@ protected:
    void _createTexGenNode();
    void _createVolumeSlices();
    void _buildAxisDependentGeometry();
-#ifdef CFD_USE_SHADERS
-   void _createVelocityAdvectionGraph();
-#endif
+
    char* _shaderDirectory;
    cfdTextureManager* _tm;
 #ifdef _OSG
-#ifdef CFD_USE_SHADERS
-   cfdOSGScalarShaderManager* _sSM;
-   cfdOSGTransferShaderManager* _tSM;
-   cfdOSGAdvectionShaderManager* _advectSM;
-   cfdUpdateTextureCallback* _velocityCbk;
-   osg::ref_ptr<osg::Node> _advectionSlice;
-#endif
+
    osg::ref_ptr<osg::Group>_volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
    osg::BoundingBox _bbox;
    osg::ref_ptr<osg::ClipNode> _clipNode;
    osg::ref_ptr<osg::StateSet> _stateSet;
 
-   osg::ref_ptr<osg::Switch> _bboxSwitch;
-   osg::ref_ptr<osg::Switch> _shaderSwitch;
+   
    osg::ref_ptr<osg::Group> _noShaderGroup;
-   osg::ref_ptr<osg::Group> _scalarFragGroup;
-   osg::ref_ptr<osg::Group> _advectionVectorGroup;
 
    osg::ref_ptr<osg::Material> _material;
   
    osg::ref_ptr<osg::Texture3D> _texture;
-   osg::ref_ptr<osg::Texture3D> _velocity;
+
   
    osg::ref_ptr<osg::Image> _image;
    osg::ref_ptr<osg::Geode> _slices;
-   osg::ref_ptr<osg::Group> _visualBoundingBox;
+
    osg::ref_ptr<osg::Geometry> _posXSlices;
    osg::ref_ptr<osg::Geometry> _negXSlices;
    osg::ref_ptr<osg::Geometry> _posYSlices;

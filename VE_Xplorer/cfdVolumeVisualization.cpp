@@ -53,12 +53,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _shaderDirectory = 0;
    _volShaderIsActive =  false;
    _transferShaderIsActive = false;
-#ifdef CFD_USE_SHADERS
-   _sSM = 0;
-   _tSM = 0;
-   _advectSM = 0;
-   _velocityCbk = 0;
-#endif
+
 }
 /////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
@@ -82,29 +77,11 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _image = rhs._image;
    _isCreated = rhs._isCreated;
 
-
-   _bboxSwitch = rhs._bboxSwitch;
-   _shaderSwitch = rhs._shaderSwitch;
    
    _noShaderGroup =  rhs._noShaderGroup;
-   _scalarFragGroup =  rhs._scalarFragGroup;
-   _advectionVectorGroup = rhs._advectionVectorGroup;
    
    _shaderDirectory = new char[strlen(rhs._shaderDirectory)+1];
    strcpy(_shaderDirectory,rhs._shaderDirectory);
-
-  
-   _volShaderIsActive =  rhs._volShaderIsActive;
-   _transferShaderIsActive = rhs._transferShaderIsActive;
-   
-   
-#ifdef CFD_USE_SHADERS
-   _sSM = new cfdOSGScalarShaderManager(*rhs._sSM);
-   _tSM = new cfdOSGTransferShaderManager(*rhs._tSM);
-   _advectSM = new cfdOSGAdvectionShaderManager(*rhs._advectSM);
-   _velocityCbk = new cfdUpdateTextureCallback(*rhs._velocityCbk);
-   _advectionSlice =  new osg::Node(*rhs._advectionSlice);
-#endif
 
 }
 //////////////////////////////////////////////////
@@ -124,16 +101,7 @@ cfdVolumeVisualization::~cfdVolumeVisualization()
       _shaderDirectory = 0;
    }
    
-#ifdef CFD_USE_SHADERS
-   if(_sSM){
-      delete _sSM;
-      _sSM = 0;
-   }
-   if(_tSM){
-      delete _tSM;
-      _tSM = 0;
-   }
-#endif
+
 }
 ////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetState(osg::State* state)
@@ -150,21 +118,8 @@ void cfdVolumeVisualization::SetShaderDirectory(char* shadDir)
    _shaderDirectory = new char[strlen(shadDir)+1];
    strcpy(_shaderDirectory,shadDir);
 }
-/////////////////////////////////////////////////
-void cfdVolumeVisualization::ActivateVisualBBox()
-{
-   if(_bboxSwitch.valid()){
-      _bboxSwitch->setSingleChildOn(0);
-   }
-}
-///////////////////////////////////////////////////
-void cfdVolumeVisualization::DeactivateVisualBBox()
-{
-   if(_bboxSwitch.valid()){
-      _bboxSwitch->setSingleChildOn(1);
-   }
-}
-#ifdef CFD_USE_SHADERS
+
+#ifdef CFD_USE_SHADERS0
 
 ///////////////////////////////////////////////////
 void cfdVolumeVisualization::EnableTransferShader()
@@ -184,25 +139,7 @@ void cfdVolumeVisualization::DisableTransferShader()
       UseNormalGraphicsPipeline();
    }
 }
-//////////////////////////////////////////////////
-void cfdVolumeVisualization::EnableVolumeShader()
-{
-   _useShaders = true;
-   if(_sSM->GetShaderStateSet()&&(!_volShaderIsActive)){
-      _volShaderIsActive = true;
-      _transferShaderIsActive = false;
-   }
-   _shaderSwitch->setSingleChildOn(1);
-}
-///////////////////////////////////////////////////
-void cfdVolumeVisualization::DisableVolumeShader()
-{
-   if(_volShaderIsActive){
-      UseNormalGraphicsPipeline();
-      _volShaderIsActive = false;
-   }   
-   _shaderSwitch->setSingleChildOn(0);
-}
+
 ////////////////////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
                                               float param,int whichFunction)
@@ -214,15 +151,6 @@ void cfdVolumeVisualization::UpdateTransferFunction(cfdUpdateableOSGTexture1d::T
 }
 #endif
 
-////////////////////////////////////////////////////////
-void cfdVolumeVisualization::UseNormalGraphicsPipeline()
-{
-   if(_stateSet.valid() && (_volShaderIsActive)){
-      _attachTextureToStateSet(_stateSet.get());
-      _volShaderIsActive = false;
-   }
-   _shaderSwitch->setSingleChildOn(0);
-}
 //////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetPlayMode(VisMode mode)
 {
@@ -298,26 +226,7 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
 void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 {
    _tm = tm;
-#ifdef CFD_USE_SHADERS
 
-   int* res = _tm->fieldResolution();
-   if(!_sSM){
-      _sSM = new cfdOSGScalarShaderManager();
-      _sSM->InitTextureManager(_tm);
-   }else{
-      _sSM->UpdateTextureManager(_tm);
-   }
-   _sSM->Init();
-   if(!_tSM){
-      _tSM = new cfdOSGTransferShaderManager();
-      _tSM->SetFieldSize(res[0],res[1],res[2]);
-      _tSM->Init();
-   }
-   if(_tm->GetDataType(0)==cfdTextureManager::VECTOR){
-      _createVelocityAdvectionGraph();
-   }
-   
-#endif
    if(!_image.valid()){
       _image = new osg::Image();
    
@@ -353,7 +262,7 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
       _utCbk->SetTextureManager(_tm);
    }
 }
-#ifdef CFD_USE_SHADERS
+#ifdef CFD_USE_SHADERS0
 ///////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_createVelocityAdvectionGraph()
 {
@@ -581,61 +490,7 @@ void cfdVolumeVisualization::UpdateClipPlanePosition(ClipPlane direction,
    plane = 0;
 }
 
-//////////////////////////////////////////////
-void cfdVolumeVisualization::_createVisualBBox()
-{
-   if(_bbox.valid()){
-      _visualBoundingBox = new osg::Group();
-      
-      osg::Geometry* bboxCube = new osg::Geometry;
 
-      osg::Vec3Array* coords = new osg::Vec3Array();
-      coords->push_back(_bbox.corner(0));
-      coords->push_back(_bbox.corner(1));
-      coords->push_back(_bbox.corner(2));
-      coords->push_back(_bbox.corner(3));
-      coords->push_back(_bbox.corner(4));
-      coords->push_back(_bbox.corner(5));
-      coords->push_back(_bbox.corner(6));
-      coords->push_back(_bbox.corner(7));
-
-      coords->push_back(_bbox.corner(0));
-      coords->push_back(_bbox.corner(2));
-      coords->push_back(_bbox.corner(4));
-      coords->push_back(_bbox.corner(6));
-      coords->push_back(_bbox.corner(1));
-      coords->push_back(_bbox.corner(3));
-      coords->push_back(_bbox.corner(5));
-      coords->push_back(_bbox.corner(7));
-
-      coords->push_back(_bbox.corner(0));
-      coords->push_back(_bbox.corner(4));
-      coords->push_back(_bbox.corner(1));
-      coords->push_back(_bbox.corner(5));
-      coords->push_back(_bbox.corner(2));
-      coords->push_back(_bbox.corner(6));
-      coords->push_back(_bbox.corner(3));
-      coords->push_back(_bbox.corner(7));
-
-      bboxCube->setVertexArray(coords);
-
-      osg::Vec4Array* colors = new osg::Vec4Array(1);
-      (*colors)[0].set(1.0f,1.0f,0.0f,1.0f);
-      bboxCube->setColorArray(colors);
-      bboxCube->setColorBinding(osg::Geometry::BIND_OVERALL);
-      bboxCube->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::LINES,
-			       0,coords->size()));
-      
-      osg::Geode* geode = new osg::Geode;
-      geode->addDrawable(bboxCube);
-      geode->setName("Visual BBox");
-      _visualBoundingBox->addChild(geode);
-      
-   }else{
-      if(_verbose)
-         std::cout<<"Invalid bbox in cfdVolumeVisualization::_createClipNode!"<<std::endl;
-   }
-}
 ////////////////////////////////////////////////
 void cfdVolumeVisualization::_createStateSet()
 {
@@ -846,87 +701,23 @@ if(!_tm){
    _createTexGenNode();
    _createStateSet();
    _createVolumeSlices();
-   _createVisualBBox();
    _createClipNode();
    _isCreated = true;
-#ifdef CFD_USE_SHADERS
-   //_initTransferFunctionShader();
-#endif
-   //build our funky graph
 
-   //our switch node for the bbox
-   if(!_bboxSwitch.valid()){
-      _bboxSwitch = new osg::Switch();
-      _bboxSwitch->setName("BBox Switch");
-   }
-   //build the _bboxSwitch structure
-   _volumeVizNode->addChild(_bboxSwitch.get());
-   
-   if(_visualBoundingBox.valid()){
-     _bboxSwitch->addChild(_visualBoundingBox.get());
-
-     //the switch for controlling shaders
-     if(!_shaderSwitch.valid()){
-        _shaderSwitch = new osg::Switch();
-        _shaderSwitch->setName("Shader Switch");
-     }
-     _bboxSwitch->addChild(_shaderSwitch.get());
-     _visualBoundingBox->addChild(_shaderSwitch.get());
-   }else{
-     _isCreated = false;
-     std::cout<<"Error creating the bbox hierarchy!!"<<std::endl;
-     std::cout<<"cfdVolumeVisualization::_buildGraph!!"<<std::endl;
-     return;
-   }
-   _bboxSwitch->setSingleChildOn(0);
-
-   //now we need three groups
-   //0 == plain vis group (doesn't use shaders)
-   //1 == volume shader group (uses scalar texture)
-   //2 == advection shader group (uses vector texture)
    if(!_noShaderGroup.valid()){
       _noShaderGroup = new osg::Group();
       _noShaderGroup->setName("VViz Node:R");
+      _volumeVizNode->addChild(_noShaderGroup.get());
    }
-   _shaderSwitch->addChild(_noShaderGroup.get());
-
-   //default to the "plain style" ie w/o shaders, viewing
-   _shaderSwitch->setSingleChildOn(0);
+   
    if(_stateSet.valid()){
       _noShaderGroup->setStateSet(_stateSet.get());
    }
-#ifdef CFD_USE_SHADERS
-   //set up the shader nodes
-   if(!_scalarFragGroup.valid()){
-      _scalarFragGroup = new osg::Group();
-      _scalarFragGroup->setName("Scalar VV Fragment PG");
-   }
 
-   if(!_advectionVectorGroup.valid()){
-      _advectionVectorGroup = new osg::Group();
-      _advectionVectorGroup->setName("Advection Vector Frag PG");
-   }
-
-   _shaderSwitch->addChild(_scalarFragGroup.get());
-   _shaderSwitch->addChild(_advectionVectorGroup.get());
-
-   if(_sSM->GetShaderStateSet()){
-     _scalarFragGroup->setStateSet(_sSM->GetShaderStateSet()); 
-   }
-   if(_tSM->GetShaderStateSet()){
-      _advectionVectorGroup->setStateSet(_tSM->GetShaderStateSet());
-   }
-
-#endif
 
    if(_texGenParams.valid()){
       _noShaderGroup->addChild(_texGenParams.get());
-#ifdef CFD_USE_SHADERS
-      _scalarFragGroup->addChild(_texGenParams.get());
-      _advectionVectorGroup->addChild(_texGenParams.get());
-#endif
-      
-      //_volumeVizNode->addChild(_texGenParams.get());
+
       if(_slices.valid()){
          _vSSCbk =  new cfdVolumeSliceSwitchCallback(_bbox.center());
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::X_POS,_posXSlices);
@@ -959,7 +750,7 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
       _utCbk = rhs._utCbk;
       _volumeVizNode = rhs._volumeVizNode;
       _texGenParams = rhs._texGenParams;
-      _bbox = rhs._bbox;
+     
 
       _stateSet = rhs._stateSet;
       _material = rhs._material;
@@ -986,38 +777,9 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
       _shaderDirectory = new char[strlen(rhs._shaderDirectory)+1];
       strcpy(_shaderDirectory,rhs._shaderDirectory);
 
-      _bboxSwitch = rhs._bboxSwitch;
-      _shaderSwitch = rhs._shaderSwitch;
-      _noShaderGroup =  rhs._noShaderGroup;
-      _scalarFragGroup =  rhs._scalarFragGroup;
-      _advectionVectorGroup = rhs._advectionVectorGroup;
-      _volShaderIsActive =  rhs._volShaderIsActive;
-      _transferShaderIsActive = rhs._transferShaderIsActive;
-
-#ifdef CFD_USE_SHADERS
-      if(_advectSM){
-         delete _advectSM;
-         _advectSM = 0;
-      }
-      _advectSM = new cfdOSGAdvectionShaderManager(*rhs._advectSM);
-      if(_velocityCbk){
-         delete _velocityCbk;
-         _velocityCbk;
-      }
-      _velocityCbk = new cfdUpdateTextureCallback(*rhs._velocityCbk);
       
-      _advectionSlice =  rhs._advectionSlice;
-      if(_sSM){
-         delete _sSM;
-         _sSM = 0;
-      }
-      _sSM = new cfdOSGScalarShaderManager(*rhs._sSM);
-      if(_tSM){
-         delete _tSM;
-         _tSM = 0;
-      }
-      _tSM = new cfdOSGTransferShaderManager(*rhs._tSM);
-#endif
+      _noShaderGroup =  rhs._noShaderGroup;
+
    }
    return *this;
 }

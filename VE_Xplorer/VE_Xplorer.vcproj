@@ -589,9 +589,6 @@
 				RelativePath=".\cfdDataSet.cxx">
 			</File>
 			<File
-				RelativePath="..\VE_SceneGraph\cfdDCS.cxx">
-			</File>
-			<File
 				RelativePath=".\cfdEnvironmentHandler.cxx">
 			</File>
 			<File
@@ -628,9 +625,6 @@
 				RelativePath=".\cfdFileInfo.cxx">
 			</File>
 			<File
-				RelativePath="..\VE_SceneGraph\cfdGeode.cxx">
-			</File>
-			<File
 				RelativePath=".\cfdGeomDataSet.cxx">
 			</File>
 			<File
@@ -638,9 +632,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdGraphicsObject.cxx">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdGroup.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdImage.cxx">
@@ -668,9 +659,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdNavigate.cxx">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdNode.cxx">
 			</File>
 			<File
 				RelativePath="..\VE_SceneGraph\cfdNodeTraverser.cxx">
@@ -709,108 +697,6 @@
 				RelativePath=".\cfdScalarBarActor.cxx">
 			</File>
 			<File
-				RelativePath="..\VE_SceneGraph\cfdSceneNode.cxx">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_BUILD|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="TAO_BUILD|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_OMNI|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdSequence.cxx">
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_BUILD|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="TAO_BUILD|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Release_OMNI|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\cfdSound.cxx">
 			</File>
 			<File
@@ -821,9 +707,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdStreamers.cxx">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdSwitch.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdTeacher.cxx">
@@ -1274,9 +1157,6 @@
 				RelativePath="cfdDataSet.h">
 			</File>
 			<File
-				RelativePath="..\VE_SceneGraph\cfdDCS.h">
-			</File>
-			<File
 				RelativePath="cfdDigitalAnalogGauge.h">
 			</File>
 			<File
@@ -1304,9 +1184,6 @@
 				RelativePath="cfdGauges.h">
 			</File>
 			<File
-				RelativePath="..\VE_SceneGraph\cfdGeode.h">
-			</File>
-			<File
 				RelativePath="cfdGeomDataSet.h">
 			</File>
 			<File
@@ -1314,9 +1191,6 @@
 			</File>
 			<File
 				RelativePath=".\cfdGraphicsObject.h">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdGroup.h">
 			</File>
 			<File
 				RelativePath=".\cfdIHCCGauge.h">
@@ -1350,9 +1224,6 @@
 			</File>
 			<File
 				RelativePath="cfdNavigate.h">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdNode.h">
 			</File>
 			<File
 				RelativePath="..\VE_SceneGraph\cfdNodeTraverser.h">
@@ -1391,12 +1262,6 @@
 				RelativePath="cfdScalarBarActor.h">
 			</File>
 			<File
-				RelativePath="..\VE_SceneGraph\cfdSceneNode.h">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdSequence.h">
-			</File>
-			<File
 				RelativePath="cfdSound.h">
 			</File>
 			<File
@@ -1410,9 +1275,6 @@
 			</File>
 			<File
 				RelativePath="cfdSwappableGeometry.h">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdSwitch.h">
 			</File>
 			<File
 				RelativePath="cfdTeacher.h">
@@ -1511,114 +1373,288 @@
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 		</Filter>
 		<Filter
-			Name="texture_src"
+			Name="Texture Classes"
 			Filter="">
-			<File
-				RelativePath=".\cfd3DTextureCullCallback.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdCopyTo3DTextureStage.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdOSGPingPongTexture3d.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTextureBasedVizHandler.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTextureManager.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdUpdateableOSGNoiseTexture3d.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdUpdateableOSGTexture1d.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdUpdateParameterCallback.cpp">
-			</File>
-			<File
-				RelativePath=".\cfdUpdateTextureCallback.cpp">
-			</File>
 			<Filter
-				Name="shader_src"
+				Name="Shader Helper Classes"
 				Filter="">
-				<File
-					RelativePath=".\cfdAdvectionSubGraph.cxx">
-				</File>
-				<File
-					RelativePath=".\cfdAdvectPropertyCallback.cxx">
-				</File>
-				<File
-					RelativePath=".\cfdOSGAdvectionShaderManager.cxx">
-				</File>
-				<File
-					RelativePath=".\cfdOSGScalarShaderManager.cxx">
-				</File>
-				<File
-					RelativePath=".\cfdOSGShaderManager.cxx">
-				</File>
-				<File
-					RelativePath=".\cfdOSGTransferShaderManager.cxx">
-				</File>
-				<File
-					RelativePath=".\cfdPBufferManager.cxx">
-				</File>
+				<Filter
+					Name="src"
+					Filter="">
+					<File
+						RelativePath=".\cfdAdvectionSubGraph.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdAdvectPropertyCallback.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdOSGAdvectionShaderManager.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdOSGScalarShaderManager.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdOSGShaderManager.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdOSGTransferShaderManager.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdPBufferManager.cxx">
+					</File>
+				</Filter>
+				<Filter
+					Name="headers"
+					Filter="">
+					<File
+						RelativePath=".\cfdAdvectionSubGraph.h">
+					</File>
+					<File
+						RelativePath=".\cfdAdvectPropertyCallback.h">
+					</File>
+					<File
+						RelativePath=".\cfdOSGAdvectionShaderManager.h">
+					</File>
+					<File
+						RelativePath=".\cfdOSGScalarShaderManager.h">
+					</File>
+					<File
+						RelativePath=".\cfdOSGShaderManager.h">
+					</File>
+					<File
+						RelativePath=".\cfdOSGTransferShaderManager.h">
+					</File>
+					<File
+						RelativePath=".\cfdPBufferManager.h">
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Texture Helper Clasess"
+				Filter="">
+				<Filter
+					Name="src"
+					Filter="">
+					<File
+						RelativePath=".\cfd3DTextureCullCallback.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdCopyTo3DTextureStage.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdOSGPingPongTexture3d.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdScalarVolumeVisHandler.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdTextureBasedVizHandler.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdTextureManager.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdUpdateableOSGNoiseTexture3d.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdUpdateableOSGTexture1d.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdUpdateParameterCallback.cpp">
+					</File>
+					<File
+						RelativePath=".\cfdUpdateTextureCallback.cpp">
+					</File>
+					<File
+						RelativePath=".\cfdVolumeVisNodeHandler.cxx">
+					</File>
+				</Filter>
+				<Filter
+					Name="headers"
+					Filter="">
+					<File
+						RelativePath=".\cfd3DTextureCullCallback.h">
+					</File>
+					<File
+						RelativePath=".\cfdCopyTo3DTextureStage.h">
+					</File>
+					<File
+						RelativePath=".\cfdOSGPingPongTexture3d.h">
+					</File>
+					<File
+						RelativePath=".\cfdScalarVolumeVisHandler.h">
+					</File>
+					<File
+						RelativePath=".\cfdTextureBasedVizHandler.h">
+					</File>
+					<File
+						RelativePath=".\cfdTextureManager.h">
+					</File>
+					<File
+						RelativePath=".\cfdUpdateableOSGNoiseTexture3d.h">
+					</File>
+					<File
+						RelativePath=".\cfdUpdateableOSGTexture1d.h">
+					</File>
+					<File
+						RelativePath=".\cfdUpdateParameterCallback.h">
+					</File>
+					<File
+						RelativePath=".\cfdUpdateTextureCallback.h">
+					</File>
+					<File
+						RelativePath=".\cfdVolumeVisNodeHandler.h">
+					</File>
+				</Filter>
 			</Filter>
 		</Filter>
 		<Filter
-			Name="texture_headers"
+			Name="Scene Graph Classes"
 			Filter="">
-			<File
-				RelativePath=".\cfd3DTextureCullCallback.h">
-			</File>
-			<File
-				RelativePath=".\cfdCopyTo3DTextureStage.h">
-			</File>
-			<File
-				RelativePath=".\cfdOSGPingPongTexture3d.h">
-			</File>
-			<File
-				RelativePath=".\cfdTextureBasedVizHandler.h">
-			</File>
-			<File
-				RelativePath=".\cfdTextureManager.h">
-			</File>
-			<File
-				RelativePath=".\cfdUpdateableOSGNoiseTexture3d.h">
-			</File>
-			<File
-				RelativePath=".\cfdUpdateableOSGTexture1d.h">
-			</File>
-			<File
-				RelativePath=".\cfdUpdateParameterCallback.h">
-			</File>
-			<File
-				RelativePath=".\cfdUpdateTextureCallback.h">
-			</File>
 			<Filter
-				Name="shader_headers"
+				Name="src"
 				Filter="">
 				<File
-					RelativePath=".\cfdAdvectionSubGraph.h">
+					RelativePath="..\VE_SceneGraph\cfdDCS.cxx">
 				</File>
 				<File
-					RelativePath=".\cfdAdvectPropertyCallback.h">
+					RelativePath="..\VE_SceneGraph\cfdGeode.cxx">
 				</File>
 				<File
-					RelativePath=".\cfdOSGAdvectionShaderManager.h">
+					RelativePath="..\VE_SceneGraph\cfdGroup.cxx">
 				</File>
 				<File
-					RelativePath=".\cfdOSGScalarShaderManager.h">
+					RelativePath="..\VE_SceneGraph\cfdNode.cxx">
 				</File>
 				<File
-					RelativePath=".\cfdOSGShaderManager.h">
+					RelativePath="..\VE_SceneGraph\cfdSceneNode.cxx">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="OMNI_BUILD|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="TAO_BUILD|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release_OMNI|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug_TAO|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="OMNI_OSG|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="OMNI_OSG_CG_DBG|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\cfdOSGTransferShaderManager.h">
+					RelativePath="..\VE_SceneGraph\cfdSequence.cxx">
+					<FileConfiguration
+						Name="Debug|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="OMNI_BUILD|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="TAO_BUILD|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Release_OMNI|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="Debug_TAO|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="OMNI_OSG|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="OMNI_OSG_CG_DBG|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\cfdPBufferManager.h">
+					RelativePath="..\VE_SceneGraph\cfdSwitch.cxx">
+				</File>
+			</Filter>
+			<Filter
+				Name="headers"
+				Filter="">
+				<File
+					RelativePath="..\VE_SceneGraph\cfdDCS.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdGeode.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdGroup.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdNode.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdSceneNode.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdSequence.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdSwitch.h">
 				</File>
 			</Filter>
 		</Filter>
