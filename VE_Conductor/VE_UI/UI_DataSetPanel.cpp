@@ -189,17 +189,25 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    _col->Remove(_vectorRBox);
 
    if ( _scalarRBox )
-   delete _scalarRBox;
+   {
+      delete _scalarRBox;
+      _scalarRBox = 0;
+   }
+   
    if ( _vectorRBox )
-   delete _vectorRBox;
+   {
+      delete _vectorRBox;
+      _vectorRBox = 0;
+   }
 
+   // Create radio boxes
    if ( activeDataSet->_numOfScalars != 0 )
    {
-   _scalarRBox = new wxRadioBox(this,SCALAR_PANEL_RAD_BOX, wxT("Scalars"),
-                                     wxDefaultPosition, wxDefaultSize,
-            activeDataSet->_numOfScalars,
-            ((UI_DatasetPanel*)GetParent())->_scalarNames,
-            1,wxRA_SPECIFY_COLS);
+      _scalarRBox = new wxRadioBox(this,SCALAR_PANEL_RAD_BOX, wxT("Scalars"),
+                                       wxDefaultPosition, wxDefaultSize,
+                                       activeDataSet->_numOfScalars,
+                                       ((UI_DatasetPanel*)GetParent())->_scalarNames,
+                                       1,wxRA_SPECIFY_COLS);
    }
    else
    {
@@ -208,8 +216,19 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
       _scalarRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Scalars"),
                         wxDefaultPosition, wxDefaultSize, 
                         1, empty, 1, wxRA_SPECIFY_COLS);
-  }
+   }
 
+   // Add to the sizer...
+   if ( activeDataSet->_numOfScalars != 0 )
+   {
+      _col->Prepend(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   }
+   else
+   {
+      _col->Prepend(_scalarRBox,0,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   }
+
+   // Create radio boxes
    if ( activeDataSet->_numOfVectors != 0 )
    {
       _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
@@ -227,7 +246,7 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
                         1, empty, 1, wxRA_SPECIFY_COLS);
    }
  
-   // Get number of vectors and scalar names
+   // Add to the sizer...
    if ( activeDataSet->_numOfVectors != 0 )
    {
       _col->Prepend(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
@@ -237,21 +256,38 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
       _col->Prepend(_vectorRBox,0,wxALL|wxALIGN_LEFT|wxEXPAND,5);
    }
 
-   _col->Prepend(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
-
    Refresh(); 
    //Complete Hack needed to get the page to refresh properly
-   SetSize(GetSize());
+	// Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform
+   static bool test = false;
+   int flag = 0;
+   if ( test )
+   {
+      flag = 1;
+	   test = false;
+   }
+   else
+   {
+      flag = -1;
+	   test = true;
+   }
+   
+   wxSize temp = GetSize();
+   temp.SetHeight( temp.GetHeight()+flag );
+   temp.SetWidth( temp.GetWidth()+flag );
+   SetSize( temp );
+   //SetSize(GetSize());
 
    // Update VE-Xplorer with new data
-    if ( activeDataSet->_numOfScalars != 0 )
-   {  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
+   if ( activeDataSet->_numOfScalars != 0 )
+   {  
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
                      ((UI_DatasetPanel*)GetParent())->_minPercentSlider->GetValue();
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
                      ((UI_DatasetPanel*)GetParent())->_maxPercentSlider->GetValue();
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
+      ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
    }
    // Need to add vector support Update VE-Xplorer with new data
    if ( activeDataSet->_numOfVectors != 0 )
