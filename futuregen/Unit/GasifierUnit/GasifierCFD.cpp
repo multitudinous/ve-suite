@@ -1177,7 +1177,7 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
   _summaries->insert_summary_val("Soot Mass Fraction", _gas_out->gas_composite.soot);
   _summaries->insert_summary_val("Tar Mass Fraction", _gas_out->gas_composite.tar);
   _summaries->insert_summary_val("Soot Part #/Mass Fraction", _gas_out->gas_composite.ynu);
-  
+
   double fuel_flow_nochar = 0.0;
   int nlev = 3;
   if(_stage==1) nlev = 1; 
@@ -1514,7 +1514,7 @@ void GasifierCFD::load_oxidant (float *tf0, float *hsub0, float *densf0, float *
       itc = _ox_in->thermo_database->get_nam_spec().find(it->first);
       if(itc!=_ox_in->thermo_database->get_nam_spec().end()){
          len = itc->first.length();
-         if(len>8) len = 8; 
+         if(len>8) len = 8;
          for(isp=0; isp<*nsp; isp++){
             if(!strncmp(spec_name+isp*9,itc->first.c_str(),len)) break;
          }

@@ -180,13 +180,13 @@ void Body_Unit_i::StartCalc (
   for(i=0; i<prof.profile_vals.length(); i++)
     prof.profile_vals[i].length(gas_out->gas_cell.size());
 
-  prof.profile_vars[0] = "I";
-  prof.profile_vars[1] = "J";
-  prof.profile_vars[2] = "K";
-  prof.profile_vars[3] = "U";
-  prof.profile_vars[4] = "V";
-  prof.profile_vars[5] = "W";
-  prof.profile_vars[6] = "F";
+  prof.profile_vars[0] = "I_LOC";
+  prof.profile_vars[1] = "J_LOC";
+  prof.profile_vars[2] = "K_LOC";
+  prof.profile_vars[3] = "U_VEL";
+  prof.profile_vars[4] = "V_VEL";
+  prof.profile_vars[5] = "W_VEL";
+  prof.profile_vars[6] = "EFF";
   prof.profile_vars[7] = "ETA";
   prof.profile_vars[8] = "CHI";
   prof.profile_vars[9] = "TEMPERATURE";
@@ -204,6 +204,8 @@ void Body_Unit_i::StartCalc (
     prof.profile_vals[8][i] = iter->chi;
     prof.profile_vals[9][i] = iter->T;
   }
+
+  executive_->SetProfileData(id_, 0, prof);
 
   // Clean up
   if(gas_out)  delete gas_out;
