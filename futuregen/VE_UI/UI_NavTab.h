@@ -7,17 +7,22 @@
 
 #include <wx/wx.h>
 
-enum NAV_TAB_IDS {
-  LEFT_B,
-  RIGHT_B,
-  UP_B,
-  DOWN_B,
-  FORWARD_B,
-  BACKWARD_B,
-  CCW_B,
-  CW_B,
-  //NONE= -1000
+enum NAV_TAB_IDS 
+{
+   LEFT_B,
+   RIGHT_B,
+   UP_B,
+   DOWN_B,
+   FORWARD_B,
+   BACKWARD_B,
+   CCW_B,
+   CW_B,
+   NAV_STEP_SLIDER,
+   HEAD_ROTATE_CHK,
+   RESET_NAV_POSITION
+   //NONE= -1000
 };
+
 //override the buttons
 class UI_NavButton: public wxButton{
 public:
@@ -53,8 +58,11 @@ class UI_NavigationTab : public wxPanel {
    void setActiveButton(int id){_activeButton = id;}
    int getActiveButton(){return _activeButton;}
    
+   void OnNavigationStepSlider( wxScrollEvent& event);
+   void OnResetNavPosition( wxCommandEvent& event );
  protected:
    int _activeButton;
+   wxNotebook* _parent;
 
    UI_NavButton* _leftButton;
    UI_NavButton* _rightButton;
@@ -64,6 +72,10 @@ class UI_NavigationTab : public wxPanel {
    UI_NavButton* _backButton;
    UI_NavButton* _ccwButton;
    UI_NavButton* _cwButton;
+
+   wxSlider*   navigationStepSize;
+   wxCheckBox* headRotationChk;
+   wxButton*   resetNavPosition;
    DECLARE_EVENT_TABLE()
 };
 #endif  //_VE_UI_NAV_H_

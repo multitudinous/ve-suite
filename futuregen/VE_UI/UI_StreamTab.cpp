@@ -160,7 +160,7 @@ void UI_StreamlineTab::_buildPage()
                                 wxSL_AUTOTICKS|
                                 wxSL_LABELS|wxSL_RIGHT );
 
-   _diameterSlider = new wxSlider(this, DIAMETER_SLIDER,50,1,100,
+   _diameterSlider = new wxSlider(this, DIAMETER_SLIDER,0,-100,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|

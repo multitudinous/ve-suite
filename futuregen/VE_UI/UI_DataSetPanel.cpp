@@ -176,24 +176,6 @@ UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
    _col->Add(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    SetSizer(_col);
-
-  // Update VE-Xplorer with new data
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
-                     ((UI_DatasetPanel*)GetParent())->_minPercentSlider->GetValue();
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
-                     ((UI_DatasetPanel*)GetParent())->_maxPercentSlider->GetValue();
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
-
-   // Need to add vector support Update VE-Xplorer with new data
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
-                     ((UI_DatasetPanel*)GetParent())->_minPercentSlider->GetValue();
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
-                     ((UI_DatasetPanel*)GetParent())->_maxPercentSlider->GetValue();
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_VECTOR;
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 }
 
 UI_ScalarScroll::~UI_ScalarScroll()
@@ -548,10 +530,7 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
 
 void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
 {
-   //activeDataSet = thisactiveDataSet;
-
-   //_noScalars = activeDataSet->_numofScalars;
-   //for (int p=0; p<_ScalarScroll->_scalarRBox->GetCount(); p++)
+   // This function is guarded above if there are no datasets   
    if(_scalarNames){  
       delete [] _scalarNames;
       _scalarNames = 0;
@@ -579,18 +558,6 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
 
    Refresh();
    SetSize(GetSize());
-
-   /*_col2->Remove(_ScalarScroll);
-
-   delete _ScalarScroll;
-   _ScalarScroll = new UI_ScalarScroll(this);
-   _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
-                                     wxDefaultPosition, wxDefaultSize,activeDataSet->_numofScalars,
-                                     _scalarNames,1,wxRA_SPECIFY_COLS);
-   _col2->Prepend(_ScalarScroll,6,wxALIGN_LEFT|wxEXPAND);
-   
-   //Complete Hack needed to get the page to refresh properly
-   SetSize(GetSize());*/
 }
 
 void UI_DatasetPanel::_setScalarsnoDatasets()
