@@ -43,6 +43,8 @@
 #include "cfdCommandArray.h"
 #include "cfdReadParam.h"
 #include "cfdTeacher.h"
+#include "cfdSoundHandler.h"
+#include "cfdQuatCamHandler.h"
 
 #include <vrj/Util/Debug.h>
 
@@ -52,10 +54,11 @@
 cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
 {
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
-   std::cout << "|  4. Initializing.............................. Navigation systems |" << std::endl;
+   std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    this->nav = new cfdNavigate();
-   _param = filename;
    _readParam = new cfdReadParam( NULL );
+   _param = filename;
+   CreateObjects();
 }
 
 cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
@@ -116,7 +119,6 @@ void cfdEnvironmentHandler::InitScene( void )
 
    // Maybe need to fix this later
    //this->cursorId = NONE;
-   //this->cfdId = -1;
 
    //
    // Initiate cursors.
@@ -126,8 +128,22 @@ void cfdEnvironmentHandler::InitScene( void )
    this->cursor->Initialize( this->nav->GetCursorLocation(),this->nav->GetDirection() );
 
    //
-   // Initiate the threads.
+   // Initiate quatcam
    //
+   std::cout << "|  9. Initializing..................................... cfdQuatCams |" << std::endl;
+   this->_camHandler = new cfdQuatCamHandler( this->worldDCS, this->nav, _param );
+
+   //
+   // Initiate quatcam
+   //
+   std::cout << "| 10. Initializing................................... Sound Handler |" << std::endl;
+   this->_soundHandler = new cfdSoundHandler( _param );
+
+   //
+   // Initiate the Performer Stored Binary objects.
+   //
+   std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
+   this->_teacher = new cfdTeacher( "STORED_FILES", this->worldDCS );
 }
 
 void cfdEnvironmentHandler::PreFrameUpdate( void )
@@ -150,8 +166,8 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
        this->cursor->getExtent( this->cur_box );   //record current box cursor position
    }
 
-   if ( this->nav->digital[4]->getData() == gadget::Digital::TOGGLE_ON 
-                                          || _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
+   if ( ( this->nav->digital[4]->getData() == gadget::Digital::TOGGLE_ON ) || 
+        ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ) )
    { 
       // This code will need to be thought about later
       // Must fix this to clear the tree appropriately
@@ -206,17 +222,10 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
     
       this->setId( -1 );*/
    }
-   // Update Scalar Bar on the scene graph
-   // PLEASE NOTE !!!!!!!!!!!!!!!!
-   // Only update the scene graph in pre or post frame 
-   // not in intraParallelThread or in intraFrame
-   /*if ( this->isTimeToUpdateScalarBar ) 
-   {
-      // probably need to move the scalar bar class into this handler 
-      // must fix this soon
-      RefreshScalarBar();
-      this->isTimeToUpdateScalarBar = false;
-   }   */
+
+   _camHandler->CheckCommandId( _commandArray );
+   _soundHandler->CheckCommandId( _commandArray );
+   _teacher->CheckCommandId( _commandArray );
 }
 
 void cfdEnvironmentHandler::CreateObjects( void )

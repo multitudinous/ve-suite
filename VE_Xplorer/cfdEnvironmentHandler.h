@@ -42,6 +42,8 @@ class cfdCommandArray;
 class cfdReadParam;
 class cfdSoundHandler;
 class cfdTeacher;
+class cfdSoundHandler;
+class cfdQuatCamHandler;
 
 class vtkPolyData;
 
@@ -58,15 +60,17 @@ class cfdEnvironmentHandler
       void SetCommandArray( cfdCommandArray* );
       void SetArrow( vtkPolyData* );
       void CreateObjects( void );
+
       cfdNavigate* GetNavigate( void );
       cfdCursor* GetCursor( void );
-
       cfdSoundHandler* GetSoundHandler( void );
-
       cfdTeacher* GetTeacher( void );
+
    private:
       cfdNavigate* nav;
+      cfdTeacher* _teacher;
       cfdSoundHandler* _soundHandler;
+      cfdQuatCamHandler* _camHandler;
       //cfdLaser* laser;
       //cfdMenu* menu;
       cfdCursor* cursor;
@@ -75,7 +79,7 @@ class cfdEnvironmentHandler
       cfdGroup* rootNode;
       cfdCommandArray* _commandArray;
       cfdReadParam* _readParam;
-      cfdTeacher* _teacher;
+
       // cur_box will eventually be used to define bounding box
       // for data interagation
       double cur_box[6];
