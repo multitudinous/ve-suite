@@ -48,8 +48,10 @@
 #include "cfdStateInfo.h"
 #endif
 
-class cfdTeacher;
-class cfdReadParam;
+class cfdSteadyStateVizHandler;
+class cfdEnvironmentHandler;
+class cfdModelHandler;
+
 #include "cfdCommandArray.h"
 
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
@@ -194,13 +196,20 @@ private:
    //Observer_ptr test_ptr;
 
 protected:
-   void SetCfdReadParam( cfdReadParam * );
-   void SetCfdTeacher( cfdTeacher * );
+   //void SetCfdReadParam( cfdReadParam * );
+   //void SetCfdTeacher( cfdTeacher * );
 
-   cfdReadParam *mParamReader;
-   cfdTeacher  *mTeacher;
+   //cfdReadParam *mParamReader;
+   //cfdTeacher  *mTeacher;
 
    //void put_cur_obj(Observer::obj_p_var o);
+
+   void SetHandlers( cfdSteadyStateVizHandler*, 
+                     cfdEnvironmentHandler*, cfdModelHandler* );
+
+   cfdSteadyStateVizHandler* _ssHandler;
+   cfdEnvironmentHandler*   _envHandler;
+   cfdModelHandler*       _modelHandler;
 
    VjObs::scalar_p_var scl_name;
    VjObs::scalar_p_var vec_name;

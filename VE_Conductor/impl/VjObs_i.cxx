@@ -42,11 +42,17 @@
 #include <vpr/Sync/Guard.h>
 #include <vpr/Util/Debug.h>
 
-#include "cfdReadParam.h"
 #include "cfdTeacher.h"
 #include "cfdDataSet.h"
-#include "cfdFileInfo.h"
 #include "cfdCommandArray.h"
+#include "cfdModelHandeler.h"
+#include "cfdEnvironmentHandler.h"
+#include "cfdSteadyStateVizHandler.h"
+#include "cfdSoundHandler.h"
+#include "cfdModel.h"
+#include "cfdFILE.h"
+
+
 
 #ifdef _CLUSTER
 #include "cfdSequence.h"
@@ -58,72 +64,14 @@
 #include <vtkCellTypes.h>
 
 
-/*
-void VjObs_i::attach(Observer_ptr o)
+void VjObs_i::SetHandlers( cfdSteadyStateVizHandler* ssHandler, 
+                     cfdEnvironmentHandler* envHandler, cfdModelHandler* modelHandler)
 {
-   static int clients = 0;
-   //corba_mutex.vjObsFpull();  //yang-REI: you want to get the new value by force
-   CORBA::String_var p=orb->object_to_string(o);
-   std::cout << "|   IOR of the client : " << std::endl << p << std::endl;
-   CORBA::Object_var obj=orb->string_to_object(p);
-   Observer_var obsvar=Observer::_narrow(obj);
-   //Observer_ptr obsvar=Observer::_narrow(o);
-   if(CORBA::is_nil(obsvar))
-   {
-      std::cerr<<"Can't invoke on nil object reference\n"<<std::endl;
-   }
-   
-   std::cout << "|   Client " << clients <<" connected!" << std::endl;
-   client_list[ clients ] = obsvar;
-   
-   clients++;
-
-   // This array is used in place of the call backs
-   // to the client because the communication didn't
-   // seem to work. There are 9 entries becuase that 
-   // how many variables are synchronized during an
-   // update call in VjObs_i
-   clientInfoObserverDataArray = new VjObs::obj_p(50);
-   clientInfoObserverDataArray->length( this->numOfClientInfo );
-
-   baf_param = Observer::baf_p_alloc();
-   this->setClients( clients );
-   //corba_mutex.vjObsFpush();  //yang-REI, be sure the number of clients is pushed
+   _ssHandler = ssHandler;
+   _envHandler = envHandler;
+   _modelHandler = modelHandler;
 }
 
-void VjObs_i::detach(Observer_ptr o)
-{
-   int i,j;
-   //corba_mutex.snapShot2(false); //yang-REI: Get the updated value
-   Observer::baf_p_free(baf_param);
-
-   CORBA::String_var p=orb->object_to_string(o);
-
-   CORBA::Object_var obj=orb->string_to_object(p);
-   Observer_var obsvar=Observer::_narrow(obj);
-   if(CORBA::is_nil(obsvar))
-   {
-      std::cerr<<"Can't invoke on nil object reference\n"<<std::endl;
-   }
-   int clients = this->getClients();
-
-   for( i=0; i < clients; i++ )
-   {   
-      if(obsvar->_is_equivalent(client_list[ i ]))
-      {
-         for(j=i; j < clients-1;j++)
-         {
-            client_list[j]=client_list[j+1];      
-         }
-         client_list[j]=0;
-         clients--;   
-         //this decrement should be reflected in next attach. --changed by Song Li
-         std::cerr<<"Client "<<i<<" disconnected!\n"<<std::endl;
-      }
-   }
-   this->setClients( clients );
-}
-*/
 #ifdef _TAO
 void VjObs_i::update()
   ACE_THROW_SPEC ((
@@ -186,7 +134,7 @@ void VjObs_i::update()
 /////////////////////////////////////////////////////////////
 void VjObs_i::CreateSoundInfo( void )
 {   
-   int numberOfSounds = this->mParamReader->soundFile;
+   int numberOfSounds = this->_envHandler->GetSoundHandler()->GetNumberOfSounds();
    this->sound_names->length( numberOfSounds );
 
    vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
@@ -196,7 +144,8 @@ void VjObs_i::CreateSoundInfo( void )
    {
       for(CORBA::ULong i = 0; i < (unsigned int)numberOfSounds; i++)
       {
-         this->sound_names[ i ] = CORBA::string_dup(this->mParamReader->soundFiles[i]->fileName);
+         this->sound_names[ i ] = CORBA::string_dup( 
+                     this->_envHandler->GetSoundHandler()->GetSoundFilename( i ) );
       }
    }
 
@@ -207,7 +156,7 @@ void VjObs_i::CreateGeometryInfo( void )
 {
    this->setPreState( 1 );
 
-   int numGeoArrays = this->mParamReader->numGeoms;
+   int numGeoArrays = this->_modelHandler->GetModel( 0 )->GetNumberOfGeomDataSets();
    vprDEBUG(vprDBG_ALL,0)
       << " Number of geometries to be transfered to the client: "
       << numGeoArrays
@@ -225,7 +174,7 @@ void VjObs_i::CreateGeometryInfo( void )
             << numGeoArrays
             << std::endl << vprDEBUG_FLUSH;
          this->geo_name[ i ] = CORBA::string_dup(
-                                  this->mParamReader->files[ i ]->fileName );
+                                  this->_modelHandler->GetModel( 0 )->GetGeomDataSet( i )->GetFilename() );
       }
    }
    
@@ -240,7 +189,7 @@ void VjObs_i::CreateDatasetInfo( void )
 {   
    CORBA::ULong i;
 
-   int numDatasets = this->mParamReader->GetNumberOfDataSets();
+   int numDatasets = this->_modelHandler->GetModel( 0 )->GetNumberOfCfdDataSets();
    vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
                           << std::endl << vprDEBUG_FLUSH;
    
@@ -263,9 +212,9 @@ void VjObs_i::CreateDatasetInfo( void )
    for ( i=0; i<(unsigned int)numDatasets; i++ )
    {
       //cout << i << "\t" << this->mParamReader->GetDataSet( i )->GetNumberOfScalars() << endl;
-      this->totalNumberOfScalars += this->mParamReader->GetDataSet( i )
+      this->totalNumberOfScalars += this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )
                                                       ->GetNumberOfScalars();
-      this->totalNumberOfVectors += this->mParamReader->GetDataSet( i )
+      this->totalNumberOfVectors += this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )
                                                       ->GetNumberOfVectors();
    }
    vprDEBUG(vprDBG_ALL,0)
@@ -287,34 +236,34 @@ void VjObs_i::CreateDatasetInfo( void )
    for ( i=0; i < (unsigned int)numDatasets; i++ )
    {
       this->dataset_names[ i ] = CORBA::string_dup( 
-                          this->mParamReader->GetDataSet( i )->GetFileName() );
+                          this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )->GetFileName() );
       vprDEBUG(vprDBG_ALL,1) << " dataset_name:   " << this->dataset_names[ i ]
                              << std::endl << vprDEBUG_FLUSH;
 
-      this->dataset_types[ i ] = this->mParamReader->GetDataSet( i )->GetType();
+      this->dataset_types[ i ] = this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )->GetType();
 
-      int num_scalars = this->mParamReader->GetDataSet( i )
+      int num_scalars = this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )
                                           ->GetNumberOfScalars();
       this->num_scalars_per_dataset[ i ] = num_scalars;
 
       for (CORBA::ULong ii=0; ii < (unsigned int)num_scalars; ii++ )
       {
          this->scl_name[ sIndex ] = CORBA::string_dup( 
-                    this->mParamReader->GetDataSet( i )->GetScalarName( ii ) );
+                    this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )->GetScalarName( ii ) );
          vprDEBUG(vprDBG_ALL,1) << "\tscl_name " 
                                 << sIndex << " : " << this->scl_name[ sIndex ]
                                 << std::endl << vprDEBUG_FLUSH;
          sIndex++;
       }
 
-      int num_vectors = this->mParamReader->GetDataSet( i )
+      int num_vectors = this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )
                                           ->GetNumberOfVectors();
       this->num_vectors_per_dataset[ i ] = num_vectors;
 
       for (CORBA::ULong ii=0; ii < (unsigned int)num_vectors; ii++ )
       {
          this->vec_name[ vIndex ] = CORBA::string_dup( 
-                    this->mParamReader->GetDataSet( i )->GetVectorName( ii ) );
+                    this->_modelHandler->GetModel( 0 )->GetCfdDataSet( i )->GetVectorName( ii ) );
          vprDEBUG(vprDBG_ALL,1) << "\tvec_name " 
                                 << vIndex << " : " << this->vec_name[ vIndex ]
                                 << std::endl << vprDEBUG_FLUSH;
@@ -330,7 +279,7 @@ void VjObs_i::CreateDatasetInfo( void )
 /////////////////////////////////////////////////////////////
 void VjObs_i::CreateTeacherInfo( void )
 {   
-   CORBA::Short numTeacherArrays = this->mTeacher->getNumberOfFiles();
+   CORBA::Short numTeacherArrays = this->_envHandler->GetTeacher()->getNumberOfFiles();
    vprDEBUG(vprDBG_ALL,0)
       << " Number of performer binary files to be transfered to the client: "
       << numTeacherArrays
@@ -343,7 +292,7 @@ void VjObs_i::CreateTeacherInfo( void )
       for(CORBA::ULong i = 0; i < (unsigned int)numTeacherArrays; i++)
       {
          this->teacher_name[ i ] = CORBA::string_dup(
-                                        this->mTeacher->getFileName( i ) );
+                                        this->_envHandler->GetTeacher()->getFileName( i ) );
       }
    }
 }
@@ -955,9 +904,9 @@ CORBA::Short VjObs_i::get_geo_num()
 {
    //vprDEBUG(vprDBG_ALL,0) << "Returning num geos'" << this->mParamReader->numGeoms << "' to caller\n"
    //     << vprDEBUG_FLUSH;
-   std::cout << this->mParamReader->numGeoms << std::endl;
+   std::cout << this->_modelHandler->GetModel( 0 )->GetNumberOfGeomDataSets() << std::endl;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   return this->mParamReader->numGeoms;
+   return this->_modelHandler->GetModel( 0 )->GetNumberOfGeomDataSets();
 }
 
 #ifdef _TAO
@@ -972,17 +921,7 @@ CORBA::Short VjObs_i::get_teacher_num()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL,0) << "Returning num teacher'" << this->mTeacher->getNumberOfFiles()<< "' to caller\n"
    //     << vprDEBUG_FLUSH;
-   return this->mTeacher->getNumberOfFiles();
-}
-
-void VjObs_i::SetCfdReadParam( cfdReadParam *value )
-{
-   this->mParamReader = value;
-}
-
-void VjObs_i::SetCfdTeacher( cfdTeacher *value )
-{
-   this->mTeacher = value;
+   return this->_envHandler->GetTeacher()->getNumberOfFiles();
 }
 
 void VjObs_i::GetCfdStateVariables( void )
@@ -1040,8 +979,8 @@ short VjObs_i::GetNumberOfSounds()
 CORBA::Short VjObs_i::GetNumberOfSounds()
 #endif
 {
-   std::cout << this->mParamReader->soundFile << endl;
-   return this->mParamReader->soundFile;
+   std::cout << this->_envHandler->GetSoundHandler()->GetNumberOfSounds() << endl;
+   return this->_envHandler->GetSoundHandler()->GetNumberOfSounds();
 }
 
 #ifdef _TAO
