@@ -543,7 +543,8 @@ void GasSourceTabs::OnEditPart(wxCommandEvent& event)
   EditDialog* e_dlg = new EditDialog(this, -1);
 
   val = ToValue(lb_p_comp_frac->GetStringSelection(), var);
-
+  
+  
   e_dlg->m_var->SetLabel(var);
   e_dlg->m_val->SetValue(val);
 
@@ -552,8 +553,8 @@ void GasSourceTabs::OnEditPart(wxCommandEvent& event)
   val = e_dlg->m_val->GetValue();
 
   result = ToString(var, val);
-  sel = lb_comp_frac->GetSelection();
-  lb_comp_frac->SetString(sel, result);
+  sel = lb_p_comp_frac->GetSelection();
+  lb_p_comp_frac->SetString(sel, result);
 
   e_dlg->Close(); //Value will be passed back by the OnOK calls of the EditDialog
 }
