@@ -77,7 +77,7 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _tm = rhs._tm;
    _image = rhs._image;
    _isCreated = rhs._isCreated;
-   
+
 
    _bboxSwitch = rhs._bboxSwitch;
    _shaderSwitch = rhs._shaderSwitch;
@@ -831,10 +831,10 @@ if(!_tm){
    if(_sSM->GetShaderStateSet()){
      _scalarFragGroup->setStateSet(_sSM->GetShaderStateSet()); 
    }
-
-   if(_advectionFragSS.valid()){
+   if(_tSM->GetShaderStateSet()){
       _advectionVectorGroup->setStateSet(_tSM->GetShaderStateSet());
    }
+
 #endif
 
    if(_texGenParams.valid()){
@@ -879,7 +879,6 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
       _texGenParams = rhs._texGenParams;
       _bbox = rhs._bbox;
 
-     
       _stateSet = rhs._stateSet;
       _material = rhs._material;
       _texture = rhs._texture;
@@ -889,6 +888,7 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
       _tUnit = rhs._tUnit;
       _tm = rhs._tm;
       
+
       _mode = rhs._mode;
       _traverseDirection = rhs._traverseDirection;
       _stateSet = rhs._stateSet;

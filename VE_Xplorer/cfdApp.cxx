@@ -200,6 +200,9 @@ inline void cfdApp::init( )
    std::cout << "| ***************************************************************** |" << std::endl;
    std::cout << "|  3. Initializing........................... Parameter File Reader |" << std::endl;
    _vjobsWrapper->InitCluster();
+#ifdef _OSG
+   initScene();
+#endif
 }
 
 void cfdApp::SetWrapper( cfdVjObsWrapper* input )
@@ -240,15 +243,12 @@ inline void cfdApp::initScene( )
 
    //create the volume viz handler
 #ifdef _OSG
-   if ( !_tbvHandler )
-   {
-      _tbvHandler = new cfdTextureBasedVizHandler();
-   }
+ 
+   _tbvHandler = cfdTextureBasedVizHandler::instance();
    _tbvHandler->SetParameterFile(filein_name);
-   //_tbvHandler->SetWorldDCS( _sceneManager->GetWorldDCS() );
-   _tbvHandler->SetParentNode((cfdGroup*)_modelHandler->GetActiveModel()->GetSwitchNode()->GetChild(1) );
-   _tbvHandler->SetNavigate( _environmentHandler->GetNavigate() );
-   _tbvHandler->SetCursor( _environmentHandler->GetCursor() );
+   _tbvHandler->SetParentNode((cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetSwitchNode()->GetChild(1) );
+   _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
+   _tbvHandler->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    _tbvHandler->SetSceneView(_sceneViewer.get());
    _tbvHandler->InitVolumeVizNodes();
@@ -267,7 +267,7 @@ void cfdApp::preFrame( void )
 {
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _OSG
-   if(!_modelHandler)initScene();
+   //if(!cfdModelHandler::instance())initScene();
     double time_since_start = _timer.delta_s(_start_tick,_timer.tick());
     if(_frameStamp.valid()){
        _frameStamp->setFrameNumber(_frameNumber++);
@@ -291,7 +291,7 @@ void cfdApp::preFrame( void )
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
    ///////////////////////
 #ifdef _OSG
-   _tbvHandler->SetActiveTextureManager(_modelHandler->GetActiveTextureManager());
+   _tbvHandler->SetActiveTextureManager(cfdModelHandler::instance()->GetActiveTextureManager());
    _tbvHandler->PreFrameUpdate();
 #endif
    ///////////////////////

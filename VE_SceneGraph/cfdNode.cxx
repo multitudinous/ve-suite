@@ -538,7 +538,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          if (geostate.valid()){
             //lighting
             geostate->setMode(GL_LIGHTING,osg::StateAttribute::ON);
-            
+            geostate->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
             //culling
             geostate->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
             geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
@@ -588,7 +588,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
                }else{
                   geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
                }
-               geostate->setAttribute(material.get(),osg::StateAttribute::ON);            
+               geostate->setAttribute(material.get(),osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);            
                geostate->setAttribute(sModel.get(),osg::StateAttribute::ON);
                
                geoset->setStateSet(geostate.get());
@@ -610,11 +610,11 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
            
       }
    }else if(!strcmp(node->className(),"MatrixTransform")){
-       num = ((osg::Group*)node)->getNumChildren();
+       num = ((osg::MatrixTransform*)node)->getNumChildren();
       vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
       for (i = 0; i < num; i++){
-         this->TravNodeMaterial(((osg::Group*)node)->getChild(i)) ;
+         this->TravNodeMaterial(((osg::MatrixTransform*)node)->getChild(i)) ;
            
       }
    }

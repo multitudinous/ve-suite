@@ -537,11 +537,12 @@ void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor*
    osg::ref_ptr<osg::MatrixTransform> dcs = dynamic_cast<osg::MatrixTransform*>(node);
    if(dcs.valid()){
       osg::Vec3f pitch(1,0,0);
-      osg::Vec3f yaw(0,0,1);
       osg::Vec3f roll(0,1,0);
+      osg::Vec3f yaw(0,0,1);
+      
       osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
-
       osg::Matrixd rotateMat;
+
       //rph              
       rotateMat.makeRotate(_r,roll,
                          _p,pitch,
