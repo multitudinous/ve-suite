@@ -55,6 +55,8 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
    this->numSteps = numSteps;
    // set the cut function
    this->cutter = vtkCutter::New();
+   vtkActor* temp = 0;
+   actors.assign(10,temp);
 }
 
 cfdPresetContour::~cfdPresetContour()
@@ -119,6 +121,7 @@ void cfdPresetContour::Update( void )
                                         ->GetLookupTable() );
       this->mapper->Update();
    }
+   
    this->actors.push_back( vtkActor::New() );
    this->actors.back()->SetMapper( this->mapper );
    this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );

@@ -45,6 +45,9 @@
 #include <vtkActor.h>
 
 #include <vpr/Util/Debug.h>
+#include <Performer/pfdb/pfpfb.h>
+
+#include <vtkPropCollection.h>
 
 // constructor
 cfdGraphicsObject::cfdGraphicsObject( void )
@@ -109,8 +112,9 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
                              << std::endl << vprDEBUG_FLUSH;
       for ( unsigned int i = 0; i < this->actors.size(); ++i )
       {
-         vprDEBUG(vprDBG_ALL,2) << "|\t\tGraphicsObject Creating Geode = " << i
+         vprDEBUG(vprDBG_ALL,2) << "|\t\tGraphicsObject Creating Geode = " << i << " : " << this->actors.at( i )
                              << std::endl << vprDEBUG_FLUSH;
+
          this->geodes.push_back( new cfdGeode() );
          this->geodes.back()->TranslateTocfdGeode( this->actors.at( i ) );
       }

@@ -40,6 +40,7 @@ class cfdTempAnimation;
 class cfdModel;
 
 class vtkActor;
+class vtkPropCollection;
 
 class cfdGraphicsObject
 {
@@ -84,7 +85,6 @@ class cfdGraphicsObject
       // clear geodes vector and geode from memory and the graph
       void RemovecfdGeodeFromDCS( void );
 
-      // need all the scene graph stuff out of cfdObjects
    protected:
       std::vector< cfdGeode* > geodes;
       cfdGroup* parentNode;
