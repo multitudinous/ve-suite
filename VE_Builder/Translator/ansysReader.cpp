@@ -828,12 +828,15 @@ void ansysReader::ReadNodalEquivalencyTable()
       exit( 1 );
    }
 
-   // read all integers
    this->nodeID = vtkIntArray::New();
    this->nodeID->SetName( "nodeIDs" );
    this->nodeID->SetNumberOfComponents( 1 );
    this->nodeID->SetNumberOfTuples( this->numNodes );
 
+   // read all integers
+#ifdef PRINT_HEADERS
+   std::cout << "Reading " << this->numNodes << " values..." << std::endl;
+#endif // PRINT_HEADERS
    for ( int32 i = 0; i < this->numNodes; i++ )
    {
       this->nodeID->SetTuple1( i, ReadNthInteger( intPosition ) );
@@ -841,8 +844,12 @@ void ansysReader::ReadNodalEquivalencyTable()
       if ( i < 10 || i > (this->numNodes-10) )
       {
          std::cout << "\tnodeID[ " << i << " ]: "
-                   //<< this->nodeID[ i ] << std::endl;
                    << this->nodeID->GetTuple1( i ) << std::endl;
+      }
+      if ( this->nodeID->GetTuple1( i ) > this->numNodes )
+      {
+         std::cout << "\tnodeID[ " << i << " ]: "
+                   << this->nodeID->GetTuple1( i ) << " > numNodes (" << this->numNodes << ")" << std::endl;
       }
 #endif // PRINT_HEADERS
    }
@@ -1760,6 +1767,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
       vtkMath::Cross( x, y, z );
       vtkMath::Normalize( z );
 
+#ifdef PRINT_HEADERS
       //std::cout << "z = " << z[0] << "\t" << z[1] << "\t" << z[2] << std::endl;
 
       //int coordSystem = this->coordSystemforElement[ elemIndex ];
@@ -1768,6 +1776,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
       //          << this->coordinateSystemDescriptions[ coordSystem ][ 6+0 ] << "\t"
       //          << this->coordinateSystemDescriptions[ coordSystem ][ 6+1 ] << "\t"
       //          << this->coordinateSystemDescriptions[ coordSystem ][ 6+2 ] << std::endl;
+#endif // PRINT_HEADERS
 
       double thickness[ 4 ];
       int realSet = this->realConstantsForElement[ elemIndex ];
@@ -1822,12 +1831,18 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
             //if ( elemIndex == 0 ) std::cout << "topPlaneCoordinates[ " << j << " ] = " << topPlaneCoordinates[ j ] << std::endl;
          }
          expandedNodes[ i ] = vertices->InsertNextPoint( topPlaneCoordinates );
-         //if ( elemIndex == 0 ) std::cout << "new vertex = " << expandedNodes[ i ] << std::endl;
 
-         this->nodeID->InsertNextTuple1( expandedNodes[ i ] );
-         //this->nodeID->InsertTuple1( expandedNodes[ i ], expandedNodes[ i ] );
+#ifdef PRINT_HEADERS
+         //if ( elemIndex == 0 ) 
+std::cout << "new vertex = " << expandedNodes[ i ] << std::endl;
+std::cout << "vertices follow..." << std::endl;
+vertices->Print(std::cout);
+exit(1);
+#endif // PRINT_HEADERS
 
-         this->pointerToMidPlaneNode->InsertNextTuple1( nodes[ i ] );
+         this->nodeID->InsertTuple1( expandedNodes[ i ], expandedNodes[ i ] );
+
+         this->pointerToMidPlaneNode->InsertTuple1( expandedNodes[ i ], nodes[ i ] );
       }
 
       for ( int i = 0; i < numCornerNodes; i++ )
@@ -1845,10 +1860,9 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
          expandedNodes[ numCornerNodes+i ] = vertices->InsertNextPoint( bottomPlaneCoordinates );
          //if ( elemIndex == 0 ) std::cout << "new vertex = " << expandedNodes[ numCornerNodes+i ] << std::endl;
 
-         this->nodeID->InsertNextTuple1( expandedNodes[ numCornerNodes+i ] );
-         //this->nodeID->InsertTuple1( expandedNodes[ numCornerNodes+i ], expandedNodes[ numCornerNodes+i ] );
+         this->nodeID->InsertTuple1( expandedNodes[ numCornerNodes+i ], expandedNodes[ numCornerNodes+i ] );
 
-         this->pointerToMidPlaneNode->InsertNextTuple1( nodes[ i ] );
+         this->pointerToMidPlaneNode->InsertTuple1( expandedNodes[ numCornerNodes+i ], nodes[ i ] );
       }
 
 #ifdef PRINT_HEADERS
@@ -2126,15 +2140,16 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
    sprintf( arrayName, "displacement %i %s", this->currentDataSetSolution, this->displacementUnits );
    parameterData[ 0 ]->SetName( arrayName );
    parameterData[ 0 ]->SetNumberOfComponents( 3 );
-   parameterData[ 0 ]->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
+   parameterData[ 0 ]->SetNumberOfTuples( this->ndnod + 1 );   // note: +1
 
    sprintf( arrayName, "displacement mag %i %s", this->currentDataSetSolution, this->displacementUnits );
    parameterData[ 1 ]->SetName( arrayName );
    parameterData[ 1 ]->SetNumberOfComponents( 1 );
-   parameterData[ 1 ]->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
+   parameterData[ 1 ]->SetNumberOfTuples( this->ndnod + 1 );   // note: +1
 
    // Read the solutions and populate the floatArrays.
    // Because the ansys vertices are one-based, up the loop by one
+   //std::cout << "this->numNodes = " << this->numNodes << std::endl;
    double * nodalSolution = new double [ this->numDOF ];
    for ( int32 i = 0; i < this->numNodes; i++ )
    {
@@ -2147,10 +2162,15 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
       }
 
       int ansysNode = this->nodeID->GetTuple1( i );
+#ifdef PRINT_HEADERS
+if ( i >  22797 )
+std::cout << "i = " << i << ", ansysNode = " << ansysNode << std::endl;
+#endif // PRINT_HEADERS
       parameterData[ 0 ]->SetTuple( ansysNode, nodalSolution );
 
 #ifdef PRINT_HEADERS
       //if ( ansysNode == 2108 )    //tets
+if ( i >  22797 )
       {
          std::cout <<  "nodalSolution[ " << ansysNode <<" ] = ";
          for ( int32 j = 0; j < this->numDOF; j++ )
@@ -2171,10 +2191,13 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
 #endif // PRINT_HEADERS
    }
 
+#ifdef PRINT_HEADERS
+   std::cout << "this->numNodes+1 = " << this->numNodes+1 << std::endl;
    std::cout << "this->ndnod+1 = " << this->ndnod+1 << std::endl;
    std::cout << "this->numExpandedNodes+1 = " << this->numExpandedNodes+1 << std::endl;
    std::cout << "pointerToMidPlaneNode->GetNumberOfTuples = "
              << this->pointerToMidPlaneNode->GetNumberOfTuples() << std::endl;
+#endif // PRINT_HEADERS
 
    // Now take care of shell elements
    for ( int32 i = this->ndnod+1; i < this->numExpandedNodes+1; i++ )
@@ -2188,7 +2211,6 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
          parameterData[ j ]->InsertNextTuple( parameterData[ j ]->GetTuple( midPlaneNode ) );
       }
    }
-   std::cout << "here sjk 2" << std::endl;
 
    for ( int32 i=0; i < numParameters; i++ )
    {
@@ -2275,15 +2297,22 @@ void ansysReader::AttachStressToGrid()
    parameterData[ 5 ]->SetName( arrayName );
 
    // first do full graphics calculations...
-   //for ( int32 nodeIndex = 0; nodeIndex < this->numNodes; nodeIndex++ )
+#ifdef PRINT_HEADERS
+   std::cout << "this->numNodes = " << this->numNodes << std::endl;
+   std::cout << "this->ndnod = " << this->ndnod << std::endl;
+   std::cout << "this->numExpandedNodes = " << this->numExpandedNodes << std::endl;
+#endif // PRINT_HEADERS
    for ( int32 nodeIndex = 0; nodeIndex < this->numExpandedNodes; nodeIndex++ )
    {
       int ansysNode = this->nodeID->GetTuple1( nodeIndex );
 
       if ( ansysNode < 1 || ansysNode > this->numExpandedNodes ) 
       {
-         std::cerr << "AttachStressToGrid: ansysNode = " << ansysNode << " is out of range" << std::endl;
-         exit( 1 );
+#ifdef PRINT_HEADERS
+         std::cerr << "AttachStressToGrid: fg: ansysNode = "
+                   << ansysNode << " is out of range" << std::endl;
+#endif // PRINT_HEADERS
+         continue;
       }
 
       double avgFullGraphicsS1Stress = 0.0;
@@ -2346,8 +2375,6 @@ void ansysReader::AttachStressToGrid()
          if ( vtkMath::Norm( diff ) > 1e-5 )
          {
          }
-
-
       }
 
       double avgFullGraphicsS1Stress = 0.0;
@@ -2376,8 +2403,11 @@ void ansysReader::AttachStressToGrid()
 
       if ( ansysNode < 1 || ansysNode > this->numExpandedNodes ) 
       {
-         std::cerr << "AttachStressToGrid: ansysNode = " << ansysNode << " is out of range" << std::endl;
-         exit( 1 );
+#ifdef PRINT_HEADERS
+         std::cerr << "AttachStressToGrid: pg: ansysNode = "
+                   << ansysNode << " is out of range" << std::endl;
+#endif // PRINT_HEADERS
+         continue;
       }
 
       double avgPowerGraphicsS1Stress = 0.0;
@@ -2567,7 +2597,8 @@ void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex )
       // ansys node numbering goes from 1 to numNodes
       if ( node < 1 || node > this->numExpandedNodes ) 
       {
-         std::cerr << "StoreNodalStessesForThisElement: node = " << node << " is out of range" << std::endl;
+         std::cerr << "StoreNodalStessesForThisElement: node = "
+                   << node << " is out of range" << std::endl;
          exit( 1 );
       }
 
