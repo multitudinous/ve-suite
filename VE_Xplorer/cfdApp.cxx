@@ -144,6 +144,11 @@ void cfdApp::exit()
    }
 #endif // _TAO
 
+   if ( this->_vjobsWrapper != NULL )
+   {
+      delete this->_vjobsWrapper;
+   }
+
    vprDEBUG(vprDBG_ALL,0) 
      << " pfExit" << std::endl << vprDEBUG_FLUSH;
    pfExit();

@@ -31,12 +31,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdAppWrapper.h"
 #include <vrj/Kernel/Kernel.h>
+#include <vpr/System.h>
 #include "cfdApp.h"
 #include <iostream>
 #include "cfdThread.h"
 
 #include "cfdVjObsWrapper.h"
-using namespace std;
+
 cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 {
    this->argc = argc;
@@ -49,8 +50,12 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 
 cfdAppWrapper::~cfdAppWrapper( void )
 {
-   delete _thread;
-   delete _cfdApp;
+   delete this->_cfdApp;
+   this->_cfdApp = NULL;
+   vpr::System::msleep( 1000 );  // half-second delay
+   //delete this->_thread->corba_run;
+   //this->_thread->corba_run = NULL;
+   delete _thread->new_thread;
 }
 
 void cfdAppWrapper::init( void * )
