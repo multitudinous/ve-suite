@@ -63,7 +63,7 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/IRIX32
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/IRIX32
    setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/IRIX32
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/IRIX32
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/IRIX32-pthread
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrj-deps/IRIX32
 
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
