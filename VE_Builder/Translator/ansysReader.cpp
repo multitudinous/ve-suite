@@ -1290,9 +1290,8 @@ void ansysReader::ReadElementDescription( int pointer )
       this->ugrid->InsertNextCell( VTK_TETRA, numCornerNodes, nodes );
    else
    {
-      std::cerr << "Error: Can not yet handle an element with numCornerNodes = "
+      std::cerr << "Warning: Can not yet handle an element with numCornerNodes = "
            << numCornerNodes << std::endl;
-      exit( 1 );
    }
 
    delete [] nodes;
