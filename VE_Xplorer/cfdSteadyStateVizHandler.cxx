@@ -686,7 +686,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
    //
    std::cout << "| 51. Initializing........................................ pfGeodes |" << std::endl;
 
-   bool transient_flag = true;
+   //bool transient_flag = true;
    for ( int i = 0; i < (int)this->dataList.size(); i++ )
    {
       //this->dataList[ i ]->SetcfdReadParam( this->paramReader );
@@ -854,12 +854,12 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       // Maybe fix later
       //vprDEBUG(vprDBG_ALL,1) << " numGeoms = " << this->paramReader->numGeoms 
       //                        << std::endl << vprDEBUG_FLUSH;
-      int temp, q;
-      temp = 0;
       
       // This data will come from cfdModelHandler
       // Fix later
-      /*for( q = 0; q < this->paramReader->numGeoms; q++)
+      /*
+      int temp = 0;
+      for( int q = 0; q < this->paramReader->numGeoms; q++)
       {
          //vprDEBUG(vprDBG_ALL,1)
          //   << "guiVal[ " << q << " ] = " << paramReader->guiVal[ q ] 
@@ -878,7 +878,8 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          }
          vprDEBUG(vprDBG_ALL,1) << "|   Add Child Error  " << temp 
                               << std::endl << vprDEBUG_FLUSH;
-      }*/
+      }
+      */
       this->changeGeometry = false;
    }
    else if ( this->chgMod == true)
@@ -902,7 +903,6 @@ void cfdSteadyStateVizHandler::CreateActorThread( void )
 {
    // DO NOT put scene graph manipulation code in this function
    // This thread is purely for creation of geodes
-   int i;
 
    while ( this->runIntraParallelThread )
    {

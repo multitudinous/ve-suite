@@ -857,6 +857,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
       }
 */
 
+   return true;
 }
 
 // in future, multi-threaded apps will make a copy of VjObs_i commandArray

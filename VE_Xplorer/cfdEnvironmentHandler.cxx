@@ -263,7 +263,6 @@ void cfdEnvironmentHandler::CreateObjects( void )
 {  
    int numObjects;
    char text[ 256 ];
-   char textLine[ 256 ];
    std::ifstream input;
    input.open( this->_param );
    input >> numObjects; 

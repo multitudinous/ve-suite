@@ -247,7 +247,6 @@ std::vector< int > cfdApp::getFrameBufferAttrs( void )
 inline void cfdApp::initScene( )
 {
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
-   int i;
 
 # ifdef _OPENMP
    std::cout << "\n\n\n";
