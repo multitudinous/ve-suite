@@ -261,7 +261,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
    char iname[1024];
    char oname[256];
    char fileName[256];
-   _fileProgress->SetRange(_numFiles+1);
+   _fileProgress->SetRange(_numFiles);
    for(int i = 0; i < _numFiles; i++){
       _fileProgress->SetValue(i);
       _translator->reset();

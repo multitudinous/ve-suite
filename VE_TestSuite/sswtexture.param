@@ -1,0 +1,53 @@
+8                    // the number of objects to follow
+0                    // OPTIONAL world DCS settings
+   1 1 1             // Scale values
+   0 0 0             // Translation values
+   30 0 0            // Rotation values (Z-X-Y format)
+9                    // Object type 9: Geometry
+   0                 // transparency toggle
+   1   1.0 0.0 0.0   // color flag ( and 3 color values if flag = 1)
+   1 1 1             // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0             // Rotation values (Z-X-Y format)
+   ./eightCorners.stl   // Geometry file name
+8                    // Object type 8: data set
+   1 1 1             // Scale values
+   0 0 0             // Translation values
+   0 0 0             // Rotation values (Z-X-Y format)
+   ./3scl.vtk        // data set name
+   ./POST_DATA1      // precomputed data slice directory
+   ./SURFACE1        // precomputed surface directory
+9                    // Object type 9: Geometry
+   1                 // transparency toggle
+   1 1 0.7 1         // color flag ( and 3 color values if flag = 1)
+   1 1 1             // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0             // Rotation values (Z-X-Y format)
+   ./Surface0.75.stl // Geometry file name
+8                    // Object type 8: data set
+   1 1 1             // Scale values
+   -4 0 0            // Translation values
+   40 40 0           // Rotation values (Z-X-Y format)
+   ./2scl.vtk        // data set name
+   ./POST_DATA2      // precomputed data slice directory
+   ./SURFACE2        // precomputed surface directory
+9                    // Object type 9: Geometry
+   1                 // transparency toggle
+   1  1 1 1          // color flag (and 3 color values if flag = 1)
+   1 1 1             // Scale values for geometry file
+   -4 0 0            // Translation values for geometry file
+   40 40 0           // Rotation values (Z-X-Y format)
+   ./Surface0.75.stl // Geometry file name
+8                    // Object type 8: data set
+   1 1 1 
+   0 0 0 
+   0 0 0
+   vtkPolyData.vtk
+   ./JUNK            // precomputed data slice directory
+   ./JUNK2           // precomputed surface directory
+15                   //volumetric texture data
+  4                  //number of texture description files
+  ./first_scalar_0.txt      //the texture description file
+  ./200_to_1000_0.txt      //the texture description file
+  ./fourth_param_is_a_scalar_0.txt      //the texture description file
+  ./simple_vectors.txt      //the texture description file
