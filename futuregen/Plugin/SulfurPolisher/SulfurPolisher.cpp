@@ -101,7 +101,7 @@ int SulfurPolisher::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void SulfurPolisher::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*26/50,icon_h*17/66);
+  iports[0]=wxPoint(icon_w*24/48,icon_h*23/96);
   return;
 }
 
@@ -116,7 +116,7 @@ int SulfurPolisher::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void SulfurPolisher::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*26/50, icon_h*48/66); 
+  oports[0]=wxPoint(icon_w*24/48, icon_h*78/96); 
 }
 
 /////////////////////////////////////////////////////////////////////////////
