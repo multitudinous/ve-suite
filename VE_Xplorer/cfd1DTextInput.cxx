@@ -40,6 +40,7 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkVectorText.h>
+#include <vtkProperty.h>
 
 #include <vpr/Util/Debug.h>
 

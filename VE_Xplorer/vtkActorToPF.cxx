@@ -245,6 +245,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   // copy data from vtk prim array to performer geoset
   int prim = 0, vert = 0;
   int i, npts, *pts;
+  int transparentFlag = 0;
   // go through cells (primitives)
   for (primArray->InitTraversal(); primArray->GetNextCell(npts, pts); prim++) { 
     lengths[prim] = npts;
@@ -259,23 +260,23 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     }
     if (normalPerCell) {
 #ifdef VTK4
-      float *aNormal = normals->GetTuple(prim);
+      double *aNormal = normals->GetTuple(prim);
 #else
       float *aNormal = normals->GetNormal(prim);
 #endif
-      norms[prim].set(aNormal[0], aNormal[1], aNormal[2]);
+      norms[prim].set((float)aNormal[0], (float)aNormal[1], (float)aNormal[2]);
     }
     // go through points in cell (verts)
     for (i=0; i < npts; i++) {
-      float *aVertex = polyData->GetPoint(pts[i]);
-      verts[vert].set(aVertex[0], aVertex[1], aVertex[2]);
+      double *aVertex = polyData->GetPoint(pts[i]);
+      verts[vert].set((float)aVertex[0], (float)aVertex[1], (float)aVertex[2]);
       if (normalPerVertex) {
 #ifdef VTK4
-        float *aNormal = normals->GetTuple(pts[i]);
+        double *aNormal = normals->GetTuple(pts[i]);
 #else
         float *aNormal = normals->GetNormal(pts[i]);
 #endif
-        norms[vert].set(aNormal[0], aNormal[1], aNormal[2]);
+        norms[vert].set((float)aNormal[0], (float)aNormal[1], (float)aNormal[2]);
       }
       if (colorPerVertex) {  
 #ifdef VTK4
@@ -290,11 +291,11 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
 	  }
       if (texCoords != NULL) {
 #ifdef VTK4
-        float *aTCoord = texCoords->GetTuple(pts[i]);
+        double *aTCoord = texCoords->GetTuple(pts[i]);
 #else
         float *aTCoord = texCoords->GetTCoord(pts[i]);
 #endif
-        tcoords[vert].set(aTCoord[0], aTCoord[1]);
+        tcoords[vert].set((float)aTCoord[0], (float)aTCoord[1]);
       }
       vert++;
     }
@@ -313,11 +314,11 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     gset->setAttr(PFGS_COLOR4, PFGS_PER_PRIM, colors, NULL);
   else { 
     // use overall color (get from Actor)
-    float *actorColor = actor->GetProperty()->GetColor();
+    double *actorColor = actor->GetProperty()->GetColor();
     float opacity = actor->GetProperty()->GetOpacity();
 
     pfVec4 *color = (pfVec4 *) pfMalloc(sizeof(pfVec4), pfArena);
-    color->set(actorColor[0], actorColor[1], actorColor[2], opacity);
+    color->set((float)actorColor[0], (float)actorColor[1], (float)actorColor[2], opacity);
     gset->setAttr(PFGS_COLOR4, PFGS_OVERALL, color, NULL);
   }
   

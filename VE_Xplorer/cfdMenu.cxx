@@ -51,6 +51,8 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+//#include <vtkPointSet.h>
+#include <vtkPolyData.h>
 
 #include <vpr/Util/Debug.h>
 
@@ -289,7 +291,7 @@ pfGeode * cfdMenu::GetLabel( char* menuConfig )
    {
       if ( i < maxNoOfCell )
       {
-         centers->GetOutput()->GetPoint( i, menuPos );
+         ((vtkPolyData*)centers->GetOutput())->GetPoint( i, menuPos );
          vtkPolyData * pData = this->GetText( menuText[i], menuPos );
          textAppend->AddInput( pData );
          pData->Delete();
