@@ -451,7 +451,6 @@ inline void cfdApp::init( )
    this->digital[4].init("VJButton4");   // 6 o'clock -- reset
    this->digital[5].init("VJButton5");   // 9 o'clock -- exit streamer while loop
 
-//#ifdef IHCC_SYS
    this->IHdigital[0].init("VJMovementZ0");  //press "8" for forward navigation
    this->IHdigital[1].init("VJMovementZ1");  //press "2" for backward navigation
    this->IHdigital[2].init("VJMovementX0");  //press "6" for rightward navigation
@@ -462,7 +461,6 @@ inline void cfdApp::init( )
    this->IHdigital[7].init("VJRotateY");  //press "left_arrow" for CCW rotation
    //this->IHdigital[8].init("IHVJButton8");  //press "up_arrow" for upward rotation
    //this->IHdigital[9].init("IHVJButton9");  //press "down_arrow" for downward rotation
-//#endif
 
 #ifdef _CLUSTER
    // Cluster Stuff
