@@ -47,7 +47,7 @@ echo Done
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxmsw24d.lib omniORB403_rtd.lib omnithread30_rtd.lib omniDynamic403_rtd.lib"
-				OutputFile="$(OutDir)/VE_Conductor.exe"
+				OutputFile="$(VE_SUITE_HOME)/bin/win32/VE_Conductor.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(WX_WIDGETS)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
@@ -198,7 +198,7 @@ echo Done
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw24d.lib"
-				OutputFile="./VE_Conductor.exe"
+				OutputFile="$(VE_SUITE_HOME)/bin/win32/VE_Conductor_taod.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
 				AdditionalLibraryDirectories="$(TAO_ROOT)\tao,$(TAO_ROOT)\orbsvcs\orbsvcs,$(TAO_ROOT)\tao\PortableServer,$(WX_WIDGETS)\lib,$(ACE_ROOT)\bin,$(ACE_ROOT)\ace"
