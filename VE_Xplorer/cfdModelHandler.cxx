@@ -284,7 +284,7 @@ void cfdModelHandler::PreFrameUpdate( void )
          {
             temp = this->worldNode->RemoveChild( (cfdSceneNode*)_modelList.at( 0 )->GetGeomDataSet( i )->getpfDCS() );
          }
-         vprDEBUG(vprDBG_ALL,1) << "|   Add Child Error  " << temp 
+         vprDEBUG(vprDBG_ALL,1) << "|   Add Child Output ( -1 is BAD ) :  " << temp 
                               << std::endl << vprDEBUG_FLUSH;
       }
    }

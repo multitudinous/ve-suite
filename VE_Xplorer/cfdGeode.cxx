@@ -77,7 +77,9 @@ cfdGeode& cfdGeode::operator=( const cfdGeode& input )
 cfdGeode::~cfdGeode( void )
 {
 #ifdef _PERORMER
-   pfDelete( _geode );
+   // Fix this
+   //if ( _geode != NULL )
+   //   pfDelete( _geode );
 #elif _OSG
 #elif _OPENSG
 #endif

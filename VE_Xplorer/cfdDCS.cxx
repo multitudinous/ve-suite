@@ -123,12 +123,13 @@ cfdDCS::~cfdDCS( void )
 {
    for ( unsigned int i = 0; i < childNodes.size(); i++ )
    {
-      delete childNodes.at( i );
+      if ( childNodes.at( i ) )
+         delete childNodes.at( i );
    }   
    childNodes.clear();
    // If neccesary
 #ifdef _PERFORMER
-   pfDelete ( this->_dcs );
+   //pfDelete ( this->_dcs );
 #elif _OSG
 #elif _OPENSG
 #endif

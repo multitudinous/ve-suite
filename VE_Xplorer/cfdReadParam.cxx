@@ -75,7 +75,7 @@ cfdReadParam::cfdReadParam( char *filein_name )
    this->scalarBarZRot = 0.0;
    this->scalarBarH = this->scalarBarW = 0.0;
    this->frames = 0;
-
+   guiVal = NULL;
    // IHCC Model - should be deleted at a later date
    ihccModel = false;
 
@@ -132,7 +132,8 @@ cfdReadParam::~cfdReadParam()
       this->transientInfo.clear();
    }
 
-   delete [] guiVal;
+   if ( guiVal != NULL )
+      delete [] guiVal;
 }
 
 void cfdReadParam::CreateNewDataSet()

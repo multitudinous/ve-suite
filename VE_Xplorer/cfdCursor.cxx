@@ -120,6 +120,7 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, cfdDCS *worldDCS, cfdGroup* rootNode 
 
    this->cursorGeode = new cfdGeode;
    this->cursorDCS = new cfdDCS;
+   cursorDCS->SetName( "cfdCursor" );
    float tempArray[ 3 ];
    tempArray[ 0 ] = xscale;
    tempArray[ 1 ] = yscale;
@@ -165,8 +166,12 @@ cfdCursor::~cfdCursor()
    this->arrowActorS->Delete();
    this->arrowGlyphS->Delete();
 
-   delete this->cursorGeode;
-   delete this->cursorDCS;
+   // His parent deletes him
+   //if ( this->cursorGeode != NULL )
+   //   delete this->cursorGeode;
+   
+   if ( cursorDCS != NULL )
+      delete this->cursorDCS;
 }
 
 void cfdCursor::Initialize( double x[3], double v[3] )

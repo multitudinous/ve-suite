@@ -345,8 +345,8 @@ void cfdApp::preFrame( void )
    //this->_transientHandler->PreFrameUpdate();
    ///////////////////////
 
-   pfdStoreFile( this->_sceneManager->GetRootNode()->GetRawNode(), "test1.pfb" );
-   this->exit();
+   //pfdStoreFile( this->_sceneManager->GetRootNode()->GetRawNode(), "test1.pfb" );
+   //this->exit();
    // This need to go very soon
    // IHCC hack
    // fix this soon
@@ -379,6 +379,8 @@ void cfdApp::preFrame( void )
    }
    this->executive->UpdateModules();
 #endif // _TAO
+
+   this->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -473,12 +475,12 @@ int main(int argc, char* argv[])
    //xargv[ 1 ] = "NameService=file:///tmp/ns.ior";
    CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv,"" );
 #else
-   /*CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv );
+   CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv );
    if ( CORBA::is_nil( orb.in() ) )
-      exit(0);*/
+      exit(0);
 #endif // _TAO
    //Here is the part to contact the naming service and get the reference for the executive
- /*  CORBA::Object_var naming_context_object =
+   CORBA::Object_var naming_context_object =
      orb->resolve_initial_references ("NameService"); 
    CORBA::String_var sior1(orb->object_to_string(naming_context_object.in ()));
    cout << "|  IOR of the server side : " << endl << sior1 << endl;
@@ -496,7 +498,7 @@ int main(int argc, char* argv[])
     poa_manager->activate ();
 //   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
 //   cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
-*/
+
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
 
    cfdApp* application = new cfdApp( );//kernel );  // Delcare an instance of my application
@@ -535,7 +537,7 @@ int main(int argc, char* argv[])
       }
    }
 #else // _CLUSTER
- /*  VjObs_var vjobs = application->_this();
+   VjObs_var vjobs = application->_this();
    CORBA::String_var sior(orb->object_to_string(vjobs.in()));
    cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
    CosNaming::Name name;
@@ -551,9 +553,9 @@ int main(int argc, char* argv[])
    catch(CosNaming::NamingContext::AlreadyBound&)
    {
       naming_context->rebind(name, vjobs.in());
-   }*/
+   }
 #endif // _CLUSTER
-   //application->SetCORBAVariables( naming_context.in(), orb.in(), poa.in() );
+   application->SetCORBAVariables( naming_context.in(), orb.in(), poa.in() );
 
    for ( int i = 1; i < argc; i++ )          // Configure the kernel
    {

@@ -82,12 +82,47 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
 
 cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
 {
-   delete nav;
-   delete _readParam;
-   delete cursor;
-   delete _camHandler;
-   delete _soundHandler;
-   delete _teacher;
+   if ( this->nav )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "|       deleting this->nav" << std::endl << vprDEBUG_FLUSH;
+      delete nav;
+   }
+   
+   if ( this->_readParam )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "|       deleting this->_readParam" << std::endl << vprDEBUG_FLUSH;
+      delete this->_readParam;
+   }
+
+   if ( this->cursor )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "|       deleting this->cursor" << std::endl << vprDEBUG_FLUSH;
+      delete this->cursor;
+   }
+
+   if ( this->_camHandler )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "|       deleting this->_camHandler" << std::endl << vprDEBUG_FLUSH;
+      delete this->_camHandler;
+   }
+
+   if ( this->_soundHandler )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "|       deleting this->_soundHandler" << std::endl << vprDEBUG_FLUSH;
+      delete this->_soundHandler;
+   }
+
+   if ( this->_teacher )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
+      delete this->_teacher;
+   }
 }
 
 void cfdEnvironmentHandler::SetRootNode( cfdGroup* input )
