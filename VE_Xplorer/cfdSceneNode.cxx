@@ -99,7 +99,7 @@ void cfdSceneNode::SetParent( cfdSceneNode* parent )
 
    if ( this->_numParents > 1 )
    {
-      cout << "Error : SetParent "<< endl;
+      cout << "Error : SetParent "<< _numParents << endl;
       exit( 1 );      
    }
    

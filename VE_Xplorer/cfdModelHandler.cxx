@@ -161,9 +161,11 @@ void cfdModelHandler::InitScene( void )
       cfdVectorBase::SetVectorRatioFactor( 1 );
    }
 
+   std::cout << " Create scalar bar "  << endl;
    // Create Scalar bar
-   _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
-   _scalarBar->RefreshScalarBar();
+   //_scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
+   //_scalarBar->RefreshScalarBar();
+   std::cout << " Done Create scalar bar "  << endl;
 }
 
 /////////////////////////////////
@@ -334,7 +336,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    }
 
    // Check and see if we need to refresh the scalar bar
-   _scalarBar->CheckCommandId( commandArray );
+   //_scalarBar->CheckCommandId( commandArray );
    // May use in the future
    //_scalarBar->UpdateCommand();
 }

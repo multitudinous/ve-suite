@@ -118,6 +118,7 @@ pfNode* cfdNode::GetRawNode( void )
 void cfdNode::LoadFile( char* filename )
 {
 #ifdef _PERFORMER
+   cout << filename << endl;
    this->_node = pfdLoadFile( filename );  // pfNode
 #elif _OSG
    cout << " Error:LoadFile !!! " << endl;

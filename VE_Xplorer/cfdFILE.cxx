@@ -80,7 +80,7 @@ cfdFILE::cfdFILE( char* geomFile, cfdDCS* worldDCS  )
    // Need to fix this and move some code to cfdNode
    // Leave some code here no more cfdFileInfo
 
-   this->DCS = worldDCS;
+   this->DCS = new cfdDCS();
    std::cout << " Load file 1" << std::endl;
    this->node = new cfdNode();  
    this->node->LoadFile( geomFile );
@@ -139,6 +139,7 @@ cfdFILE::~cfdFILE()
    vprDEBUG(vprDBG_ALL,2) << "cfdFILE Destructor" 
                           << std::endl << vprDEBUG_FLUSH;
 
+   delete this->DCS;
    delete this->node;
 }
 

@@ -85,7 +85,9 @@ void cfdPfSceneManagement::InitScene( void )
    // Setup performer pipeline
    this->sunModel = new pfLightModel();
    this->rootNode = new cfdGroup();
+   this->rootNode->SetName( "group node" );
    this->worldDCS = new cfdDCS();
+   this->worldDCS->SetName( "worlddcs" );
    this->sun      = new pfLightSource();
    //this->lit      = new pfLightSource();
    //this->gstate   = new pfGeoState();

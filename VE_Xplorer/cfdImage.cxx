@@ -53,9 +53,16 @@ cfdImage::cfdImage( char* param )
    this->mapper = NULL;
    this->texture = NULL;
    this->actor = NULL;
-   
+   bmpOrientation = -1;
+
    _param = param;
    _readParam = new cfdReadParam( NULL );
+   // Fix this if createobjects is true then continue else return
+   CreateObjects();
+
+   if ( bmpOrientation == -1 )
+      return;
+
    char * extension = fileIO::getExtension( bmpFileName );
    vprDEBUG(vprDBG_ALL, 1) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
 

@@ -4,9 +4,6 @@
 #
 #_______________________________CUSTOM OPTIONS__________________________________
 #
-# Uncomment the following line to use CFDCOMMANDARRAY.
-EXTRA_CXXFLAGS+= -D_CFDCOMMANDARRAY
-#
 # Uncomment this line if you want to build a cluster juggler app
 #CLUSTER_APP = TRUE
 #_______________________________________________________________________________
@@ -284,7 +281,7 @@ DEBUG_APP?=		TRUE
 EXTRA_CXXFLAGS+=	-D_PERFORMER
 
 # vtkActorToPF needs VTK4
-EXTRA_CXXFLAGS+=	-DVTK4 -DTABLET
+EXTRA_CXXFLAGS+=	-DVTK4
 #$(EXTRA_FLAGS) 
 
 #EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG -gslim 

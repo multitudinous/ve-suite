@@ -352,6 +352,9 @@ void cfdSteadyStateVizHandler::InitScene( void )
          commandArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, postData );
       }
 
+      // set default active dataset to be the meshed volume
+      cfdObjects::SetActiveDataSet( _activeDataSet );
+
       //
       // Initiate the isosurface.
       //
@@ -799,6 +802,8 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 
             //if ( this->computeActorsAndGeodes == false )
             {
+               // fix this need to set activedataset for active object
+               
                // add active dataset DCS to scene graph if not already there...
                vprDEBUG(vprDBG_ALL,1) << " setting DCS to activeDCS = "
                                    << this->_activeDataSetDCS

@@ -428,7 +428,7 @@ void cfdObjects::SetActiveMeshedVolume( cfdDataSet * dataset )
 
 cfdDataSet * cfdObjects::GetActiveMeshedVolume()
 {
-   return activeMeshedVolume;
+   return activeDataSet;
 }
 
 void cfdObjects::SetActiveParticleData( cfdDataSet * dataset )

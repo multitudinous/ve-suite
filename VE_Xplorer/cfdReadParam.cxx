@@ -1103,7 +1103,7 @@ void cfdReadParam::ContinueRead( std::ifstream &input, unsigned int id )
          break;
       case 8:
          // VTK File
-         numLines = 4;
+         numLines = 6;
          break;
       case 9:
          // Geometry File

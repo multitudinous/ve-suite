@@ -59,6 +59,9 @@ using namespace std;
 
 cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
 {
+
+   if ( paramFile == NULL )
+      return;
 	variables[ 0 ] = 200;  //Agitation (rpm)  initial value 200
 	variables[ 1 ] = 1.25; //Air Concentration initial value 1.25;
 	variables[ 2 ] = 6;    //Initial pH value    initial value 6

@@ -49,10 +49,10 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
                                     double *origin, double *spacing )
 {
    _readParam = new cfdReadParam( NULL );
+   //CreateObjects();
   unsigned int i;
   char filename[250];
-  cfdImage* im;
-  _frames = frames;
+  frames = frames;
   //  _which_frame = 0;
 
   _images.clear();
@@ -61,7 +61,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
    {
       sprintf(filename, "%s%02d.lic", basename, i);
 
-      im = new cfdImage(filename, ex_x, ex_y, dim, origin, spacing);
+      cfdImage* im = new cfdImage(filename, ex_x, ex_y, dim, origin, spacing);
 
       _images.push_back(im);
    }
@@ -74,21 +74,24 @@ cfdAnimatedImage::cfdAnimatedImage( char* param )
 {
    unsigned int i;
    char filename[250];
-   cfdImage* im;
-   //_frames = param->frames;
+   //frames = param->frames;
    //  _which_frame = 0;
    _readParam = new cfdReadParam( NULL );
    _param = param;
+   CreateObjects();
+
+   if ( frames == 0 )
+      return;
 
    _images.clear();
    
    // Nedd to fix this
    // probably create new function
-   for(i=0; i<(unsigned)_frames; i++) 
+   for(i=0; i<(unsigned)frames; i++) 
    {
       sprintf(filename, "%s%02d.lic", basename, i);
 
-      im = new cfdImage(filename, ex_x,ex_y, dim, origin, spacing);
+      cfdImage* im = new cfdImage(filename, ex_x,ex_y, dim, origin, spacing);
 
       _images.push_back(im);
    }
@@ -113,9 +116,12 @@ cfdAnimatedImage::~cfdAnimatedImage()
 
    _images.clear();
 
-   this->_sequence->ClearSequence();
-   delete this->_sequence;
-   delete this->_dcs;
+   if ( frames != 0 )
+   {
+      this->_sequence->ClearSequence();
+      delete this->_sequence;
+      delete this->_dcs;
+   }
 }
 
 bool cfdAnimatedImage::CheckCommandId( cfdCommandArray* commandArray )
@@ -131,7 +137,7 @@ void cfdAnimatedImage::UpdateCommand()
 void cfdAnimatedImage::Update( void )
 {
    int i;
-   for (i=0; i<_frames; i++)
+   for (i=0; i<frames; i++)
    {
       this->actor = _images[i]->GetActor();
   

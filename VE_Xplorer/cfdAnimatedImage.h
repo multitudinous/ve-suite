@@ -68,7 +68,6 @@ class cfdAnimatedImage : public cfdObjects
       std::vector< cfdImage* > _images;
 
    private:
-      int _frames;
       cfdDCS* _dcs;
       char basename[256];
       int frames;

@@ -34,6 +34,8 @@
 // A class to execute an CFD application in the virtual environment.
 // It is derived by using the VTK and VRJuggler classes.
 
+#include <Performer/pfdu.h>
+#include <Performer/pf/pfNode.h>
 #include "cfdApp.h"
 #include "cfdEnum.h"
 #include "fileIO.h"
@@ -59,6 +61,7 @@
 // Scene graph dependant headers
 #include <Performer/pf.h>
 #include <Performer/pf/pfGroup.h>
+#include <cstdlib>
 
 #include <sys/types.h>
 
@@ -264,14 +267,12 @@ inline void cfdApp::initScene( )
    // define the rootNode, worldDCS, and lighting
    this->_sceneManager = new cfdPfSceneManagement( this->filein_name );
    this->_sceneManager->InitScene();
-std::cout << "|  3a" << std::endl;
 
    // modelHandler stores the arrow and holds all data and geometry
    this->_modelHandler = new cfdModelHandler( this->filein_name, 
                                               this->_sceneManager->GetWorldDCS() );
    this->_modelHandler->SetCommandArray( _cfdArray );
    this->_modelHandler->InitScene();
-std::cout << "|  3e" << std::endl;
 
    // navigation and cursor 
    this->_environmentHandler = new cfdEnvironmentHandler( this->filein_name );
@@ -280,7 +281,6 @@ std::cout << "|  3e" << std::endl;
    this->_environmentHandler->SetArrow( this->_modelHandler->GetArrow() );
    this->_environmentHandler->SetCommandArray( _cfdArray );
    this->_environmentHandler->InitScene();
-std::cout << "|  3b" << std::endl;
 
    // create steady state visualization objects
    this->_steadystateHandler = new cfdSteadyStateVizHandler( this->filein_name );
@@ -290,7 +290,6 @@ std::cout << "|  3b" << std::endl;
    this->_steadystateHandler->SetCommandArray( _cfdArray );
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    this->_steadystateHandler->InitScene();
-std::cout << "|  3c" << std::endl;
 
 /*
    // TODO fix transient
@@ -346,7 +345,8 @@ void cfdApp::preFrame( void )
    //this->_transientHandler->PreFrameUpdate();
    ///////////////////////
 
-
+   pfdStoreFile( this->_sceneManager->GetRootNode()->GetRawNode(), "test1.pfb" );
+   std::exit( 1 );
    // This need to go very soon
    // IHCC hack
    // fix this soon
@@ -405,9 +405,7 @@ void cfdApp::postFrame()
       }
    }
 
-#ifdef TABLET
    this->GetCfdStateVariables();
-#endif // TABLET
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
