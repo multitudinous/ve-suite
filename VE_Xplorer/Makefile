@@ -180,6 +180,7 @@ SRCS=\
    cfdTextureManager.cxx \
    cfdThread.cxx \
    cfdUpdateTextureCallback.cpp \
+   cfdVTKFileHandler.cxx \
    cfdVectorBase.cxx \
    cfdVector.cxx \
    cfdVectors.cxx \
