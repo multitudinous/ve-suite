@@ -6,4 +6,4 @@ setenv TAO_MACHINE localhost
 setenv TAO_PORT 1234
 ${TAO_ROOT}/orbsvcs/Naming_Service/Naming_Service -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
 sleep 5
-Exe_server -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
+Exe_server -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &
