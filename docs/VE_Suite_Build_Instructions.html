@@ -45,7 +45,7 @@
 
       <li class=bodytext><p class=bodytext>There may be a bug in compiling VTK when using CMake 2.0.3. If errors occur in the compile, we recommend downloading CMake 2.0.2 from the <a href="http://www.cmake.org/files/v2.0/">archive</a> section of the kitware webpage for a work around.</p>
 
-      <li class=bodytext><p class=bodytext>When configuring CMake to build VTK, we recommend making a separate directory (such as VTK4.4) in the same directory as the VTK source code.&nbsp; Inside this directory, make another directory labeled bin and use this as the install path when configuring CMake to build VTK.</p>
+      <li class=bodytext><p class=bodytext>When configuring CMake to build VTK, we recommend making a separate directory (such as VTK4.4) in the same directory as the VTK folder.&nbsp; Inside this directory, make another directory labeled bin and use this as the install path when configuring CMake to build VTK.</p>
 
       <li class=bodytext><p class=bodytext>When building the solution file (VTK.sln), there have been some path problems when the project tries to find the library files that are put in the VTK_HOME\bin\cmake\debug directory. The easiest fix for this is to copy all of the .dll files in this directory to the parent directory (VTK_HOME\bin\cmake).</p>
 
