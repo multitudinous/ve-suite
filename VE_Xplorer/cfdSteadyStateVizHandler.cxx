@@ -777,7 +777,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                                    << std::endl << vprDEBUG_FLUSH;
       for ( unsigned int i = 0; i < this->dataList.size(); i++ )
       {
-         if ( this->dataList.at( i )->GetGeodeFlag() || 
+         if ( this->dataList.at( i )->GetUpdateFlag() || 
                this->dataList.at( i )->GetTransientGeodeFlag() )
          {
             // if object needs updated then already have a graphics object
