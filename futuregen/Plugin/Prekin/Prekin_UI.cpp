@@ -2,6 +2,10 @@
 
 IMPLEMENT_DYNAMIC_CLASS(Prekin_UI_Dialog, UIDialog);
 
+BEGIN_EVENT_TABLE(Prekin_UI_Dialog, UIDialog)
+	EVT_BUTTON(PREKIN_CONFIG, Prekin_UI_Dialog::OnConfig)
+END_EVENT_TABLE()
+
 BEGIN_EVENT_TABLE(PrekinTabs, wxNotebook)
   EVT_RADIOBUTTON(PORE_MODEL1, PrekinTabs::OnPoreModel)
   EVT_RADIOBUTTON(PORE_MODEL2, PrekinTabs::OnPoreModel)
@@ -224,7 +228,8 @@ Prekin_UI_Dialog
   top_sizer->Add(ok_row, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0); //the bottom margin
 
-  ok_row->Add(new wxButton(this, wxID_OK, "Generate Profile"), 0, wxALIGN_CENTER_HORIZONTAL);
+  ok_row->Add(new wxButton(this, wxID_OK, "OK"), 0, wxALIGN_CENTER_HORIZONTAL);
+  ok_row->Add(new wxButton(this, PREKIN_CONFIG, "Gen Profile"), 0, wxALIGN_CENTER_HORIZONTAL);
   ok_row->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALIGN_CENTER_HORIZONTAL);
   SetSizer(top_sizer);
   top_sizer->Layout();
@@ -364,11 +369,18 @@ bool Prekin_UI_Dialog::TransferDataFromWindow()
   }
 	  
   //wxString ofname=wxFileSelector(_T("Profile name"), "", "Profile001", "txt");
-  WriteProfile("INPUT");//(ofname.c_str());
-  //::wxExecute("PREKIN_new.exe",wxEXEC_ASYNC);
+  WriteProfile("INPUT");
   return true; 
 }
-
+ 
+void Prekin_UI_Dialog::OnConfig(wxCommandEvent &event)
+{
+	if (TransferDataFromWindow())
+	{
+		//WriteProfile("INPUT");//(ofname.c_str());
+		::wxExecute("PREKIN_new.exe",wxEXEC_ASYNC);
+	}
+}
 ////////////////////////////////////////////////////
 bool Prekin_UI_Dialog::TransferDataToWindow()
 {

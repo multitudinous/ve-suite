@@ -8,7 +8,7 @@
 using namespace std;
 
 enum {
-	
+  PREKIN_CONFIG,	
   PORE_MODEL1,
   PORE_MODEL2,
   MOD_SEL,
@@ -376,9 +376,13 @@ class Prekin_UI_Dialog : public UIDialog
 
   void double2entry(wxTextCtrl* entry, double * value);
   void entry2double(wxTextCtrl* entry, double * value);
+  
+  void OnConfig(wxCommandEvent &event);
   //GUI Variables
   
   void WriteProfile(const char* filename);
+
+  DECLARE_EVENT_TABLE()
 };
 
 #endif
