@@ -38,6 +38,13 @@
 
 #include "FluentTranslator.h"
 
+#include <iostream> 
+
+#include <wx/statline.h>
+#include <wx/wx.h>
+#include <wx/image.h>
+#include <wx/progdlg.h>
+
 void parseSet( std::string casefile, std::string datafile, bool isBinary, bool isGzip, int var_id );
 
 
@@ -84,9 +91,7 @@ FluentTranslator::FluentTranslator(wxWindow* parent, int id, const wxString& tit
 
     set_properties();
     do_layout();
-
 }
-
 
 void FluentTranslator::set_properties()
 {
@@ -163,7 +168,6 @@ void FluentTranslator::do_layout()
 }
 
 
-
 BEGIN_EVENT_TABLE(FluentTranslator, wxDialog)
 	EVT_BUTTON	(BUTTON_CASE, FluentTranslator::OnCaseButton)
 	EVT_BUTTON	(BUTTON_DATA, FluentTranslator::OnDataButton)
@@ -208,7 +212,6 @@ void FluentTranslator::OnCaseButton(wxCommandEvent& event)
 	}
 
 	OpenFileDialog->Destroy();
-
 }
 
 void FluentTranslator::OnDataButton(wxCommandEvent& event)
@@ -233,7 +236,6 @@ void FluentTranslator::OnDataButton(wxCommandEvent& event)
 	}
 
 	OpenFileDialog->Destroy();
-
 }
 
 void FluentTranslator::OnLoadCaseAndDataButton(wxCommandEvent& event)
@@ -325,10 +327,12 @@ void FluentTranslator::OnDeleteAllButton(wxCommandEvent& event)
 void FluentTranslator::OnGoButton(wxCommandEvent& event)
 {
 }
+
 void FluentTranslator::OnCloseButton(wxCommandEvent& event)
 {
 	Destroy();
 }
+
 void FluentTranslator::OnCancelButton(wxCommandEvent& event)
 {
 	OnCancel(event);

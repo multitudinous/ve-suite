@@ -7,6 +7,7 @@
     Makes x,y,z integrals of the data in the data set
     
 */
+
 #include "fluentIO.h"
 #include "fluentCase.h"
 #include "fluentObjects.h"
@@ -14,13 +15,14 @@
 #include <string>
 #include <vector>
 
+using namespace FluentReader;
 
 /* should be a member of cell Thread */
 
 /*
     calculate the cell centroid and change (max - min) for each direction
 */
-void cell_calcCentroids( CellThread *cell, NodeThread *node,  doubleArray_2 &xbar, doubleArray_2 &delx)
+void cell_calcCentroids( CellThread *cell, NodeThread *node, doubleArray_2 &xbar, doubleArray_2 &delx)
 {
     xbar = 0.0;    
     double x[3];
@@ -55,7 +57,7 @@ void cell_calcCentroids( CellThread *cell, NodeThread *node,  doubleArray_2 &xba
 
 void avgVariables(
     FluentReader::Case *case1,
-    FluentReader::Data *data1,
+    FluentReader::SegData *data1,
     std::string avg_file )
 {
     /* all nodes are stored in the first thread */
@@ -77,8 +79,6 @@ void avgVariables(
     bool isBinary, 
     bool isGzip )
 {
-
-
     check = casefile + ".check";
     info = casefile + ".info";
     FluentReader::FluentIO * infile1 = new FluentReader::FluentIO(
@@ -96,8 +96,6 @@ void avgVariables(
    
     data1->read();
     delete(infile2);
- 
     
     avgVariables( case1, data1, "datafile_avg.dat" );
-
 }

@@ -41,6 +41,15 @@
 // on contract from DOE-NETL.
 
 #include "mFixTranslator.h"
+#include "mfixDataHeaders.h"
+
+#include <wx/wx.h>
+#include <wx/statline.h>
+
+// writing dependencies
+#include "UnstructuredGridWriter.h"
+#include "mfixDataHeaders.h"
+#include "converter.h"
 
 mFixTranslator::mFixTranslator(wxWindow* parent, int id, const wxString& title, const wxPoint& pos, const wxSize& size, long style):
     wxDialog(parent, id, title, pos, size, wxDEFAULT_DIALOG_STYLE)

@@ -75,17 +75,18 @@ void parse()
     return;    
 }
 
+/*
 int main()
 {
     parse();
-    /* the varid has been set to 200 which is the mass fraction of 
-    methane (the first species variable) at the current time step, if 
-    you look at the .info file you will be able to generate files for
-    other variables.  Also the files contain a blanking variable to
-    tunoff parent cells on hierachical grids */
-    /* it is unadvisable to do a textDump on the following datasets particularly
-    the 3D file */
+    // the varid has been set to 200 which is the mass fraction of 
+    // methane (the first species variable) at the current time step, if 
+    // you look at the .info file you will be able to generate files for
+    // other variables.  Also the files contain a blanking variable to
+    // tunoff parent cells on hierachical grids.
+    // it is unadvisable to do a textDump on the following datasets particularly
+    // the 3D file
     parseSet("combustor2D.cas","combustor2D.dat", true, false, 200);
     parseSet("combustor3D.cas","combustor3D.dat", true, false, 200);
 }
-
+*/

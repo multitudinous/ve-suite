@@ -15,7 +15,6 @@ namespace FluentReader {
 
 class Case
 {
-
     public:
 
         Case(FluentIO *file) { m_isConnectFace = true; m_isConnectLocal = true;                        
@@ -48,8 +47,6 @@ class Case
         void switchCellToFace();
         void switchFaceToCell();
 
-     
-
         int nCells(){ return m_nCells; }
         int nFaces(){ return m_nFaces; }
         int nNodes(){ return m_nNodes; }
@@ -59,7 +56,7 @@ class Case
         CellThread *cellThread(int i){ return &m_cellThread[i]; }
         NodeThread *nodeThread(int i){ return &m_nodeThread[i]; }
         SegData *dataThread(int i){ return &m_segData[i]; }
-	ElementTree *cellTree(int i){ return &m_cellTree[i]; } 
+	     ElementTree *cellTree(int i){ return &m_cellTree[i]; } 
 
         FaceThread *face(){ return m_globalFace; }
         CellThread *cell(){ return m_globalCell; }
@@ -69,7 +66,6 @@ class Case
         int nFaceThreads(){ return m_faceThread.size(); }
         int nNodeThreads(){ return m_nodeThread.size(); }
         int nDataThreads(){ return m_segData.size(); }
-
 
         void Case::findGlobalThreads();
       

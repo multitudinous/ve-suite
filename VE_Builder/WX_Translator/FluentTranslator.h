@@ -36,13 +36,21 @@
 //
 // This is a portion of the GUI written for the CFD Translator developed on contract from DOE-NETL.
 
-#include <wx/wx.h>
-#include <wx/image.h>
-
-#include <wx/progdlg.h>
 #ifndef FLUENTTRANSLATOR_H
 #define FLUENTTRANSLATOR_H
 
+class wxButton;
+class wxCheckBox;
+class wxCommandEvent;
+class wxFileDialog;
+class wxListBox;
+class wxPanel;
+class wxStaticLine;
+class wxStaticText;
+class wxString;
+class wxTextCtrl;
+
+#include <wx/dialog.h>
 
 class FluentTranslator: public wxDialog {
 public:
@@ -131,9 +139,6 @@ protected:
 	void OnGoButton(wxCommandEvent& event);
 	void OnCloseButton(wxCommandEvent& event);
 	void OnCancelButton(wxCommandEvent& event);
-
-	
 };
-
 
 #endif // FLUENTTRANSLATOR_H

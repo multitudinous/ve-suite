@@ -279,9 +279,7 @@ class PeriodicFace
 
 
 class CellThread
-{                                                                                                                           
-
- 
+{
     public:
 
         enum elementTypes {MIXED,TRI,TET,QUAD,HEX,PYRAMID,WEDGE};
@@ -480,7 +478,7 @@ class ElementTree
         int nParents() { return m_nParents; }
         int nKids(int i){ return m_kidsPerParent(i); }
         int parentID(int i){ return m_first + i; }
-        void getKidList( int id, vector<int> &kid_list ){
+        void getKidList( int id, std::vector<int> &kid_list ){
 			kid_list.resize( this->nKids(id) );
             for (int i = 0; i < this->nKids(id); i++)
                 kid_list[i] = m_kid(id,i);
@@ -583,7 +581,7 @@ class SegResiduals
 };
 
 /* conversion */
-void faceToCell(FaceThread *face, CellThread *cell, vector<ElementTree> face_tree);
+void faceToCell(FaceThread *face, CellThread *cell, std::vector<ElementTree> face_tree);
 void cellToFace(CellThread *cell, FaceThread *face);
 
 }

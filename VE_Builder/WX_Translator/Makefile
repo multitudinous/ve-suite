@@ -18,7 +18,12 @@ SRCS=\
    converter.cpp \
    FormatSelector.cpp \
    mFixTranslator.cpp \
+   fluentCase.cpp \
+   fluentIO.cpp \
+   avgVariables.cpp \
    FluentTranslator.cpp \
+   fluentVtkFactory.cpp \
+   parseFluent.cpp \
    UnstructuredGridWriter.cpp
 
 # Specify the OS-dependent directory name for object files and depends
@@ -51,6 +56,9 @@ include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 
 EXTRA_LIBS+= -lm ${WX_LIB}
+
+EXTRA_INCLUDES+= -I/home/users/sjk60/blitz-0.6
+#EXTRA_LIBS+= -l/home/users/sjk60/blitz-0.6/lib/blitz
 
 help:
 	@echo "The valid targets for this Makefile:"

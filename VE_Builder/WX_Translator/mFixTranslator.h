@@ -39,22 +39,24 @@
 // Date: Spring 2004
 //
 // This is a portion of the GUI written for the CFD Translator developed on contract from DOE-NETL.
-//
-
-#include <wx/wx.h>
-#include <wx/image.h>
-
-// :dependencies
-#include <wx/statline.h>
-
-// writing dependencies
-#include "UnstructuredGridWriter.h"
-#include "mfixDataHeaders.h"
-#include "converter.h"
 
 #ifndef MFIXTRANSLATOR_H
 #define MFIXTRANSLATOR_H
 
+class wxButton;
+class wxCheckBox;
+class wxCommandEvent;
+class wxFileDialog;
+class wxStaticLine;
+class wxStaticText;
+class wxString;
+class wxTextCtrl;
+class wxGauge;
+class wxRadioBox;
+
+#include "mfixDataHeaders.h"  // for spHead, resHead, mfixData
+
+#include <wx/dialog.h>
 
 class mFixTranslator: public wxDialog {
 public:
@@ -354,6 +356,5 @@ protected:
 	void OnCheckboxEnableSpecificTSRange(wxCommandEvent& event);
 	void UpdateMaxTS(wxCommandEvent& event);
 };
-
 
 #endif // CODE_H
