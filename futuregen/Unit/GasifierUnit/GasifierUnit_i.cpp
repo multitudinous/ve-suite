@@ -175,22 +175,19 @@ void Body_Unit_i::StartCalc (
   prof.profile_vars.length(10);
   prof.profile_vals.length(10);
 
-  cout << "profile length " << prof.profile_vals.length() << endl;
-   cout << "gas cell size " << gas_out->gas_cell.size() << endl;
-
   for(i=0; i<prof.profile_vals.length(); i++)
     (prof.profile_vals[i]).length(gas_out->gas_cell.size());
 
-  prof.profile_vars[0]  = "X_LOC";
-  prof.profile_vars[1]  = "Y_LOC";
-  prof.profile_vars[2]  = "Z_LOC";
-  prof.profile_vars[3]  = "U_VEL";
-  prof.profile_vars[4]  = "V_VEL";
-  prof.profile_vars[5]  = "W_VEL";
-  prof.profile_vars[6]  = "EFF";
-  prof.profile_vars[7] = "ETA";
-  prof.profile_vars[8] = "CHI";
-  prof.profile_vars[9] = "TEMPERATURE";
+  prof.profile_vars[0]  = CORBA::string_dup("X_LOC");
+  prof.profile_vars[1]  = CORBA::string_dup("Y_LOC");
+  prof.profile_vars[2]  = CORBA::string_dup("Z_LOC");
+  prof.profile_vars[3]  = CORBA::string_dup("U_VEL");
+  prof.profile_vars[4]  = CORBA::string_dup("V_VEL");
+  prof.profile_vars[5]  = CORBA::string_dup("W_VEL");
+  prof.profile_vars[6]  = CORBA::string_dup("EFF");
+  prof.profile_vars[7] = CORBA::string_dup("ETA");
+  prof.profile_vars[8] = CORBA::string_dup("CHI");
+  prof.profile_vars[9] = CORBA::string_dup("TEMPERATURE");
 
   std::vector<GasCell>::iterator iter;
   for(iter=gas_out->gas_cell.begin(), i=0; iter!=gas_out->gas_cell.end(); iter++, i++) {
@@ -204,18 +201,13 @@ void Body_Unit_i::StartCalc (
     (prof.profile_vals[7])[i] = iter->eta;
     (prof.profile_vals[8])[i] = iter->chi;
     (prof.profile_vals[9])[i] = iter->T;
-     cout << i << " ";
   }
-   cout << endl;
-
+  
   executive_->SetProfileData(id_, 0, prof);
   
-   cout << "back from set profile data\n";
-
   // Test
-  cout << "profile vals length " << prof.profile_vals.length() << endl;
   for(i=0; i<prof.profile_vals.length(); i++) {
-    cout << "VAR " << i << " " << prof.profile_vars[i] << endl;
+    cout << "VAR " << i << " " << prof.profile_vars[i].in() << endl;
     for(j=0; j<(prof.profile_vals[i]).length(); j++) {
       cout << (prof.profile_vals[i])[j] << endl;
     }

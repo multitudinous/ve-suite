@@ -71,8 +71,9 @@ void Body_Unit_i::StartCalc (
   for(i=0; i<prof_in->profile_vals.length(); i++) {
     cout << prof_in->profile_vars[i] << endl;
     for(j=0; j<prof_in->profile_vals[i].length(); j++) {
-      cout << prof_in->profile_vals[i][j] << endl;
+      cout << prof_in->profile_vals[i][j] <<  " ";
     }
+    cout << endl;
   }
 
   ////////
@@ -117,40 +118,48 @@ void Body_Unit_i::StartCalc (
   result = p.Save(rv);
 
   // Profile
-  Types::Profile prof_out;
+  Types::Profile prof;
 
-  prof_out.profile_vars.length(10);
-  prof_out.profile_vals.length(10);
+  prof.profile_vars.length(10);
+  prof.profile_vals.length(10);
 
-  for(i=0; i<prof_out.profile_vals.length(); i++)
-    prof_out.profile_vals[i].length(gas_out->gas_cell.size());
+  for(i=0; i<prof.profile_vals.length(); i++)
+    (prof.profile_vals[i]).length(gas_out->gas_cell.size());
 
-  prof_out.profile_vars[0] = "X_LOC";
-  prof_out.profile_vars[1] = "Y_LOC";
-  prof_out.profile_vars[2] = "Z_LOC";
-  prof_out.profile_vars[3] = "U_VEL";
-  prof_out.profile_vars[4] = "V_VEL";
-  prof_out.profile_vars[5] = "W_VEL";
-  prof_out.profile_vars[6] = "EFF";
-  prof_out.profile_vars[7] = "ETA";
-  prof_out.profile_vars[8] = "CHI";
-  prof_out.profile_vars[9] = "TEMPERATURE";
+  prof.profile_vars[0]  = CORBA::string_dup("X_LOC");
+  prof.profile_vars[1]  = CORBA::string_dup("Y_LOC");
+  prof.profile_vars[2]  = CORBA::string_dup("Z_LOC");
+  prof.profile_vars[3]  = CORBA::string_dup("U_VEL");
+  prof.profile_vars[4]  = CORBA::string_dup("V_VEL");
+  prof.profile_vars[5]  = CORBA::string_dup("W_VEL");
+  prof.profile_vars[6]  = CORBA::string_dup("EFF");
+  prof.profile_vars[7] = CORBA::string_dup("ETA");
+  prof.profile_vars[8] = CORBA::string_dup("CHI");
+  prof.profile_vars[9] = CORBA::string_dup("TEMPERATURE");
 
   std::vector<GasCell>::iterator iter;
   for(iter=gas_out->gas_cell.begin(), i=0; iter!=gas_out->gas_cell.end(); iter++, i++) {
-    prof_out.profile_vals[0][i] = iter->node_location[0];
-    prof_out.profile_vals[1][i] = iter->node_location[1];
-    prof_out.profile_vals[2][i] = iter->node_location[2];
-    prof_out.profile_vals[3][i] = iter->velocity[0];
-    prof_out.profile_vals[4][i] = iter->velocity[1];
-    prof_out.profile_vals[5][i] = iter->velocity[2];
-    prof_out.profile_vals[6][i] = iter->eff;
-    prof_out.profile_vals[7][i] = iter->eta;
-    prof_out.profile_vals[8][i] = iter->chi;
-    prof_out.profile_vals[9][i] = iter->T;
+    (prof.profile_vals[0])[i] = iter->node_location[0];
+    (prof.profile_vals[1])[i] = iter->node_location[1];
+    (prof.profile_vals[2])[i] = iter->node_location[2];
+    (prof.profile_vals[3])[i] = iter->velocity[0];
+    (prof.profile_vals[4])[i] = iter->velocity[1];
+    (prof.profile_vals[5])[i] = iter->velocity[2];
+    (prof.profile_vals[6])[i] = iter->eff;
+    (prof.profile_vals[7])[i] = iter->eta;
+    (prof.profile_vals[8])[i] = iter->chi;
+    (prof.profile_vals[9])[i] = iter->T;
   }
-
-  executive_->SetProfileData(id_, 0, prof_out);
+  
+  executive_->SetProfileData(id_, 0, prof);
+  
+  // Test
+  for(i=0; i<prof.profile_vals.length(); i++) {
+    cout << "VAR " << i << " " << prof.profile_vars[i].in() << endl;
+    for(j=0; j<(prof.profile_vals[i]).length(); j++) {
+      cout << (prof.profile_vals[i])[j] << endl;
+    }
+  }
 
   // Done
   executive_->SetModuleResult(id_, result);
