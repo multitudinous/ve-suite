@@ -10,7 +10,7 @@ THREADS = none
 EXTRA_LIBS =  
 PREFIX = /usr/local
 
-include ${XERCESCROOT}/version.incl
+#include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
 ifndef TAO_ROOT
@@ -19,7 +19,7 @@ endif # ! TAO_ROOT
 
 APP = CompressorUnitApp
 
-LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO
+LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO -lTAO_BiDirGIOP
 
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(TAO_ROOT)/rules.tao.GNU
