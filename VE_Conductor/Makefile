@@ -1,6 +1,6 @@
 # Create the OS-dependent directory name
 CFDHOSTTYPE?=	$(DZR_HOSTTYPE)
-VE_SUITE_HOME?= ../../
+VE_SUITE_HOME?= ../
 
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WinClient
 
