@@ -40,11 +40,16 @@ cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
       _transferFunctions.clear();
    }
 }
+///////////////////////////////////////////////////////////////////////////////
+void cfdOSGTransferShaderManager::SetPropertyTexture(osg::Texture3D* property)
+{
+   _property = property;
+}
 ////////////////////////////////////////
 void cfdOSGTransferShaderManager::Init()
 {
    _initTransferFunctions();
-   _initPropertyTexture();
+   //_initPropertyTexture();
    if(!_ss.valid()){
       _ss = new osg::StateSet();
       _ss->setDataVariance(osg::Object::DYNAMIC);
@@ -57,7 +62,7 @@ void cfdOSGTransferShaderManager::Init()
       _ss->setAttributeAndModes(bf.get());
       _ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
    }
-   if(_reinit){
+   if(_reinit&& _property.valid()){
       _ss->setTextureAttributeAndModes(0,_property.get(),osg::StateAttribute::ON);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);

@@ -24,6 +24,7 @@ namespace osgUtil{
 class cfdPBufferManager;
 class cfdVolumeVisualization;
 class cfdScalarVolumeVisHandler;
+class cfdVolumeVisNodeHandler;
 #ifdef CFD_USE_SHADERS
 class cfdVectorVolumeVisHandler;
 #endif
@@ -40,6 +41,7 @@ public:
    void SetCursor(cfdCursor* cursor);
    void SetActiveTextureManager(cfdTextureManager* tm);
    void SetPBuffer(cfdPBufferManager* pbm);
+   void ViewTextureBasedVis(bool trueFalse);
    //once we get pf side this may need to be ifdef'd
    void SetSceneView(osgUtil::SceneView* sv);
 #ifdef CFD_USE_SHADERS
@@ -67,6 +69,7 @@ protected:
    cfdGroup* _parent;
    cfdPBufferManager* _pbm;
    osgUtil::SceneView* _sceneView;
+   cfdVolumeVisNodeHandler* activeVisNodeHdlr;
    cfdScalarVolumeVisHandler* _svvh;
 #ifdef CFD_USE_SHADERS
    cfdVectorVolumeVisHandler* _vvvh;
@@ -74,6 +77,7 @@ protected:
    cfdSwitch* _visOptionSwitch;
    float* _currentBBox;
    bool _cleared;
+   bool _textureBaseSelected;
 private:
    // Required so that vpr::Singleton can instantiate this class.
    friend class vpr::Singleton< cfdTextureBasedVizHandler >;

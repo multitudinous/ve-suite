@@ -400,14 +400,22 @@ cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
       return mVTKDataSets.at( dataset );
 }
 ///////////////////////////////////////////////////////////////
-cfdTextureManager* cfdModel::GetVectorTextureManager(int index)
+cfdTextureManager* cfdModel::GetVectorTextureManager(unsigned int index)
 {
-   return _vectorDataTextures.at(index);
+   unsigned int nVectors = _vectorDataTextures.size();
+   if(index < nVectors){
+      return _vectorDataTextures.at(index);
+   }
+   return 0;
 }
 ///////////////////////////////////////////////////////////////
-cfdTextureManager* cfdModel::GetScalarTextureManager(int index)
+cfdTextureManager* cfdModel::GetScalarTextureManager(unsigned int index)
 {
-   return _scalarDataTextures.at(index);
+   unsigned int nScalars =  _scalarDataTextures.size();
+   if(index < nScalars){
+      return _scalarDataTextures.at(index);
+   }
+   return 0;
 }
 ///////////////////////////////////////////////////////
 int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )

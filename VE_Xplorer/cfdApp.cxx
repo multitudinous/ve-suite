@@ -330,6 +330,7 @@ void cfdApp::preFrame( void )
    ///////////////////////
 #ifdef _OSG
    _tbvHandler->SetActiveTextureManager(cfdModelHandler::instance()->GetActiveTextureManager());
+   _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
    _tbvHandler->PreFrameUpdate();
 #endif
    ///////////////////////
@@ -363,7 +364,7 @@ void cfdApp::postFrame()
 {
 
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
-
+   
    // if transient data is being displayed, then update gui progress bar
   /* if (  this->_modelHandler->GetActiveSequence() )
    {

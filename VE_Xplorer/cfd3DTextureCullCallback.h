@@ -6,6 +6,7 @@
 #include <osg/NodeVisitor>
 #include <osg/Texture3D>
 #include <osgUtil/CullVisitor>
+#include <osg/TexGen>
 #include "cfdPBufferManager.h"
 class cfdSliceNodeVisitor;
 class cfd3DTextureCullCallback : public osg::NodeCallback
@@ -13,7 +14,7 @@ class cfd3DTextureCullCallback : public osg::NodeCallback
 public:    
    cfd3DTextureCullCallback(osg::Node* subgraph,
 		              osg::Texture3D* updateTexture,
-			           cfdPBufferManager* pbm,
+                    cfdPBufferManager* pbm,osg::TexGen* tgn,
                    unsigned int nSlices);
 
    virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
@@ -24,6 +25,7 @@ public:
 protected:
    osg::ref_ptr<osg::Node> _subgraph;
    osg::ref_ptr<osg::Texture3D> _textureToUpdate;
+   osg::ref_ptr<osg::TexGen> _texGen;
    cfdPBufferManager* _pbuffer;
    osg::ref_ptr<osg::StateSet> _localState;
    unsigned int _nSlices;

@@ -41,13 +41,13 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state, osgUtil::RenderLeaf*& prev
    if (_stageDrawnThisFrame) return;
 
    if(_pbuffer->isCreated() && _texture.valid()){
-      
+      _pbuffer->activate();
       _width = _pbuffer->width();
       _height= _pbuffer->height();
 
       //draw to the pbuffer
-      RenderStage::draw(*_localState,previous);
-
+      RenderStage::draw(state,previous);
+      
       //copy into our texture
       //or should this be the local state?
       switch(_whichDir){
@@ -72,7 +72,7 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state, osgUtil::RenderLeaf*& prev
             break;
       };
       
-   
+      _pbuffer->deactivate();
    }
 }
 #endif

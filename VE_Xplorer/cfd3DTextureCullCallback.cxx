@@ -1,6 +1,8 @@
 #ifdef _OSG
 #include <osg/Geode>
 #include <osg/Geometry>
+#include <osg/Plane>
+
 #ifdef CFD_USE_SHADERS
 #include "cfdAdvectPropertyCallback.h"
 #include "cfd3DTextureCullCallback.h"
@@ -9,8 +11,9 @@
 cfd3DTextureCullCallback::cfd3DTextureCullCallback(osg::Node* subgraph,
 		                                       osg::Texture3D* texture,
 						                            cfdPBufferManager* pbm,
+                                              osg::TexGen* tgn,
                                             unsigned int nSlices)
-:_subgraph(subgraph),_textureToUpdate(texture) 
+:_subgraph(subgraph),_textureToUpdate(texture),_texGen(tgn)
 {
    _pbuffer = pbm;               
    _nSlices = nSlices;
@@ -19,25 +22,20 @@ cfd3DTextureCullCallback::cfd3DTextureCullCallback(osg::Node* subgraph,
 void cfd3DTextureCullCallback::operator()(osg::Node* node, 
                                      osg::NodeVisitor* nv)
 {
-    /*float delta = 1.0/(float)_nSlices;
-         osg::ref_ptr<osg::Geode> geode = 
-            dynamic_cast<osg::Geode*>(((osg::Group*)_subgraph.get())->getChild(0));
-            
-         osg::Geometry* geom = dynamic_cast<osg::Geometry*>(geode->getDrawable(0));
-         //set up the current texture coords
-         osg::Vec3Array* texcoords = 
-            dynamic_cast<osg::Vec3Array*>(geom->getTexCoordArray(0));
-      
-         (*texcoords)[0].set(0.0f,0.0f,i*delta); 
-         (*texcoords)[1].set(1.0f,0.0f,i*delta); 
-         (*texcoords)[2].set(1.0f,1.0f,i*delta); 
-         (*texcoords)[3].set(0.0f,1.0f,i*delta);*/
    osgUtil::CullVisitor* cullVisitor = dynamic_cast<osgUtil::CullVisitor*>(nv); 
-   if (cullVisitor && _textureToUpdate.valid()&& _subgraph.valid()){
-      unsigned int sliceNumber = 0;
+   if (cullVisitor && 
+      _textureToUpdate.valid()&&
+      _texGen.valid()&&
+      _subgraph.valid()){
+      //unsigned int sliceNumber = 0;
+      float delta = 1.0/(float)_nSlices;
+      osg::Plane tmpPlane = _texGen->getPlane(osg::TexGen::R);
+      float origZcoord = tmpPlane[2];
       for(unsigned int i = 0; i < _nSlices; i++){
+         tmpPlane[2] = origZcoord + i*delta;
          preRender(*node,*cullVisitor, i);
       }
+      tmpPlane[2] = origZcoord;
       // must traverse the Node's subgraph            
       traverse(node,nv);
    }
@@ -102,8 +100,8 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
 
     // set up projection.
     osg::RefMatrix* projection = new osg::RefMatrix;
+    //projection->makeFrustum(-right,right,-top,top,znear,zfar);
     projection->makeFrustum(-right,right,-top,top,znear,zfar);
-
     cv.pushProjectionMatrix(projection);
 
     osg::RefMatrix* matrix = new osg::RefMatrix;

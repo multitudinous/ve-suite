@@ -75,6 +75,7 @@ class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
 
       //texture manager access
       cfdTextureManager* GetActiveTextureManager( void );
+      bool GetVisOption();
    private:
       char* _param;
       cfdDataSet* activeDataset;
@@ -84,7 +85,9 @@ class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
       cfdModel* _activeModel;
 
       cfdTextureManager* _activeTextureManager;
-
+      cfdTextureManager* activeScalarTM;
+      cfdTextureManager* activeVectorTM;
+      bool tbased;
       vtkPolyData* arrow;
       std::vector< cfdModel* > _modelList;
       // Used to store data for multi-dataset functions

@@ -17,6 +17,7 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler()
    _pbuffer = 0;
    _cullCallback = 0;
    _texturePingPong = 0;
+   _transferSM = 0;
 }
 //////////////////////////////////////////////////////////
 cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler(const cfdVectorVolumeVisHandler& vvnh)
@@ -26,6 +27,7 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler(const cfdVectorVolumeVisHan
    _aSM = new cfdOSGAdvectionShaderManager(*vvnh._aSM);
    _shaderSwitch = new cfdSwitch(*vvnh._shaderSwitch);
    _tm = new cfdTextureManager(*vvnh._tm);
+   _transferSM = new cfdOSGTransferShaderManager(*vvnh._transferSM);
 
    _velocityCbk = new cfdUpdateTextureCallback(*vvnh._velocityCbk);
    _pbuffer = vvnh._pbuffer;
@@ -85,6 +87,21 @@ void cfdVectorVolumeVisHandler::Init()
       _initPropertyTexture();
       _attachVolumeVisNodeToGraph();
       _createTexturePingPong();
+      _createTransferShader();
+   }
+}
+///////////////////////////////////////////////////////
+void cfdVectorVolumeVisHandler::_createTransferShader()
+{
+   if(!_transferSM &&_tm&&_property.valid()){
+      int* fieldSize = _tm->fieldResolution();
+      _transferSM = new cfdOSGTransferShaderManager();
+      _transferSM->SetFieldSize(fieldSize[0],fieldSize[1],fieldSize[2]);
+      _transferSM->SetPropertyTexture(_property.get());
+      _transferSM->Init();
+      if(_advectionFragGroup.valid()){
+         _advectionFragGroup->setStateSet(_transferSM->GetShaderStateSet()); 
+      }
    }
 }
 /////////////////////////////////////////////////////////
@@ -239,10 +256,11 @@ void cfdVectorVolumeVisHandler::_attachVolumeVisNodeToGraph()
    }
    
    if(_pbuffer){
+      osg::ref_ptr<osg::TexGenNode> tmpTGN = (osg::TexGenNode*)_advectionFragGroup->getChild(0);
       _advectionFragGroup->setUpdateCallback(new cfdAdvectPropertyCallback(_advectionSlice.get()));
       _cullCallback = new cfd3DTextureCullCallback(_advectionSlice.get(),
                                                _property.get(),
-                                               _pbuffer,
+                                               _pbuffer,tmpTGN->getTexGen(),
                                                _tm->fieldResolution()[2]);
       _advectionFragGroup->setCullCallback(_cullCallback);
    }
@@ -306,6 +324,7 @@ cfdVectorVolumeVisHandler::operator=(const cfdVectorVolumeVisHandler& vvnh)
       _advectionSlice = vvnh._advectionSlice;
       _property = vvnh._property;
       _velocity = vvnh._velocity;
+      _transferSM =  vvnh._transferSM;
    }
    return *this;
 }

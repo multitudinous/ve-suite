@@ -20,6 +20,7 @@ public:
    void SetFieldSize(unsigned int x,unsigned int y,unsigned int z);
    void UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
                                               float param,int whichFunction);
+   void SetPropertyTexture(osg::Texture3D* property);
    osg::Texture3D* GetPropertyTexture();
 
    virtual cfdOSGTransferShaderManager& operator=(const 

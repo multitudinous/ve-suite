@@ -79,6 +79,9 @@ cfdModelHandler::cfdModelHandler( void )
    this->_readParam     = 0;
    this->commandArray   = 0;
    this->_activeModel   = 0;
+   tbased = false;
+   activeScalarTM = 0;
+   activeVectorTM = 0;
 }
 
 void cfdModelHandler::Initialize( char* param )
@@ -264,7 +267,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       int nScalarTextures = _activeModel->GetNumberOfScalarTextureManagers();
       if( (nScalarTextures) && ( (int)i < nScalarTextures ) )
       {
-         _activeTextureManager = _activeModel->GetScalarTextureManager(i);
+         activeScalarTM = _activeModel->GetScalarTextureManager(i);
       }
       
       if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
@@ -329,7 +332,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       if(_activeModel != 0){
          int nVectorTextures = _activeModel->GetNumberOfVectorTextureManagers();
          if((nVectorTextures ) && vectorIndex < nVectorTextures ){
-            _activeTextureManager = 
+            activeVectorTM = 
                _activeModel->GetVectorTextureManager(vectorIndex);
          }
       }
@@ -462,8 +465,10 @@ void cfdModelHandler::PreFrameUpdate( void )
 
          if(visOpt == TEXTURE_BASED_VISUALIZATION){
             _activeModel->GetSwitchNode()->SetVal(1);
+            tbased = true;
          }else if(visOpt == CLASSIC_VISUALIZATION){
             _activeModel->GetSwitchNode()->SetVal(0);
+            tbased = false;
          }
       }
        
@@ -485,7 +490,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       if(_activeModel != 0){
          int nScalarTextures = _activeModel->GetNumberOfScalarTextureManagers();
          if((nScalarTextures) && scalarIndex < nScalarTextures){
-            _activeTextureManager = 
+            activeScalarTM = 
                _activeModel->GetScalarTextureManager(scalarIndex);
          }
       }
@@ -501,6 +506,17 @@ void cfdModelHandler::PreFrameUpdate( void )
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
    }
 
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == X_VECTOR||
+      commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == Y_VECTOR||
+      commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == Z_VECTOR){
+         std::cout<<"Vector stuff!!"<<std::endl;
+         _activeTextureManager = activeVectorTM;
+      }else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == X_CONTOUR||
+      commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == Y_CONTOUR||
+      commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == Z_CONTOUR){
+         std::cout<<"Scalar stuff!!"<<std::endl;
+         _activeTextureManager = activeScalarTM;
+      }
    // Check and see if we need to refresh the scalar bar
    vprDEBUG(vprDBG_ALL,3) << "cfdModelHandler::_scalarBar->CheckCommandId"
                           << std::endl << vprDEBUG_FLUSH;
@@ -776,6 +792,12 @@ void cfdModelHandler::CreateObjects( void )
              //since we only have one model
              _modelList.at(0)->CreateTextureManager(textureDescriptionFile);
          }
+         if(_modelList.at(0)->GetScalarTextureManager(0)){
+            activeScalarTM = _modelList.at(0)->GetScalarTextureManager(0);
+         }
+         if(_modelList.at(0)->GetVectorTextureManager(0)){
+            activeVectorTM = _modelList.at(0)->GetVectorTextureManager(0);
+         }
       }
       else
       {
@@ -948,7 +970,11 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
    chdir( cwd );        // return to original directory
 #endif
 }
-
+////////////////////////////////////
+bool cfdModelHandler::GetVisOption()
+{
+   return tbased;
+}
 vtkPolyData* cfdModelHandler::GetArrow( void )
 {
    return this->arrow;

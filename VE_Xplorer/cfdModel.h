@@ -123,8 +123,8 @@ public:
    void AddVectorTextureManager( cfdTextureManager*, char* );
    unsigned int GetNumberOfScalarTextureManagers();
    unsigned int GetNumberOfVectorTextureManagers();
-   cfdTextureManager* GetVectorTextureManager(int index);
-   cfdTextureManager* GetScalarTextureManager(int index);
+   cfdTextureManager* GetVectorTextureManager(unsigned int index);
+   cfdTextureManager* GetScalarTextureManager(unsigned int index);
    cfdTextureManager* GetActiveTextureManager();
    ///////////////////////////////////////////////////
       

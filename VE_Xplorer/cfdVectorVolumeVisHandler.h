@@ -8,6 +8,7 @@
 #include <osg/Projection>
 
 #include "cfdOSGAdvectionShaderManager.h"
+#include "cfdOSGTransferShaderManager.h"
 #include "cfdTextureManager.h"
 #include "cfdVolumeVisNodeHandler.h"
 #include "cfdUpdateTextureCallback.h"
@@ -35,8 +36,10 @@ protected:
    void _createTexturePingPong();
    void _initPropertyTexture();
    void _createVelocityFromTextureManager();
+   void _createTransferShader();
 
    cfdOSGAdvectionShaderManager* _aSM;
+   cfdOSGTransferShaderManager* _transferSM;
    cfdSwitch* _shaderSwitch;
    cfdTextureManager* _tm;
    cfdUpdateTextureCallback* _velocityCbk;
