@@ -157,6 +157,8 @@ void Geometry::_buildPage()
    SetAutoLayout(true);
    //assign the group to the panel
    SetSizer(geometryPanelGroup);
+  
+   geometryPanelGroup->Fit(this);
 
    // Send lod info back to ve-xplorer
    /*((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();

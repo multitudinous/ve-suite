@@ -81,7 +81,7 @@ bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
    {
       // deal with the error here - wxDir would already log an 
       // error message explaining the exact reason of the failure
-      std::cerr << " ERROR : Can't find plugin dir! " << std::endl;
+      std::cerr << "|\tCan't find plugin dir. " << std::endl;
       return FALSE;
    }
 
@@ -147,7 +147,7 @@ void cfdVEPluginLoader::RegisterPlugins()
          cfdVEBaseClass* object = (cfdVEBaseClass *) classInfo->CreateObject();
          plugins.push_back(object);
          plugin_cls.push_back(classInfo);
-         std::cout << "|     Register plugins : " << classInfo->GetClassName() << std::endl;
+         std::cout << "|\tRegister plugins : " << classInfo->GetClassName() << std::endl;
       }
    }
 }

@@ -121,11 +121,10 @@ void Body_UI_i::Raise (
       // Add your implementation here
       if (notification!=NULL)
       {
-         std::cout<<notification<<" :Raise called"<<std::endl;
-         std::cout<<UIName_<<" :Raise called"<<std::endl;
+         std::cout << "|\tNotification Message : " << notification << " : Raise called " << std::endl
+                     << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
          calcFlag = true;
-         std::cout<< " End Raise " << std::endl;  
+         std::cout << "|\tEnd Raise " << std::endl;  
       }
-         std::cout<< " End Raise " << std::endl;  
    }
   

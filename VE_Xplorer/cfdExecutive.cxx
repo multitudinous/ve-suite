@@ -127,13 +127,13 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
 
       //Call the Executive CORBA call to register it to the Executive
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
-      std::cout << " Connected to the Executive " << std::endl;   
+      std::cout << "|\tConnected to the Executive " << std::endl;   
 	   //this->thread = new cfdThread();
       //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
    } 
    catch (CORBA::Exception &) 
    {      
-      std::cerr << "Can't find executive or UI registration error" << std::endl;
+      std::cerr << "|\tExecutive not present or VEClient registration error" << std::endl;
    }
    
    //_param = new cfdExecutiveConfiguration();
@@ -271,7 +271,7 @@ void cfdExecutive::GetNetwork ( void )
    try 
    { 
       network = _exec->GetNetwork();
-      vprDEBUG(vprDBG_ALL,2)  << "| Network String : " << network 
+      vprDEBUG(vprDBG_ALL,2)  << "|\tNetwork String : " << network 
                               << std::endl << vprDEBUG_FLUSH;
    } 
    catch (CORBA::Exception &) 
@@ -309,7 +309,9 @@ void cfdExecutive::GetNetwork ( void )
             _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
          }  
          else
-            std::cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
+         {
+            std::cerr << "|\tUnable to set id# " << iter->_id << "'s inputs" << std::endl;
+         }
 
          if ( iter->_id != -1 ) 
          {
@@ -419,9 +421,8 @@ void cfdExecutive::GetEverything( void )
             // if a module is on the pugins map but not on the id map
             foundPlugin->second->RemoveSelfFromSG();
             cfdModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
-            // Must FIX this this is a huge memory leak
-            //delete ((cfdVEBaseClass*)(foundPlugin->second));
-            //delete _plugins[ foundPlugin->first ];
+            // Must delete current instance of vebaseclass object
+            delete _plugins[ foundPlugin->first ];
             _plugins.erase( foundPlugin++ );
          }
          else
@@ -438,7 +439,7 @@ void cfdExecutive::GetEverything( void )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been intialized! " <<  std::endl << vprDEBUG_FLUSH;     
+      vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been intialized or not time to update! " <<  std::endl << vprDEBUG_FLUSH;     
    }
       updateNetworkString = false;
    }
