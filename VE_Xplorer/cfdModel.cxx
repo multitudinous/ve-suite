@@ -67,7 +67,6 @@ cfdModel::~cfdModel()
                                 itr != mVTKDataSets.end(); itr++)
    {
       delete *itr;
-      itr++;
    }
    mVTKDataSets.clear();
 }
