@@ -83,7 +83,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../Plugin;./;../VE_UI/;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\skel&quot;;&quot;$(VE_SUITE_HOME)\futurgen\IDL&quot;;&quot;$VE_SUITE_HOME)\futuregen\Framework&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)/futuregen/Plugin&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Framework&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_TAO"
 				IgnoreStandardIncludePath="FALSE"
 				BasicRuntimeChecks="3"
@@ -191,7 +191,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\FinancialDialog.cpp">
+				RelativePath="..\..\futuregen\Plugin\FinancialDialog.cpp">
 			</File>
 			<File
 				RelativePath="Frame.cpp">
@@ -234,24 +234,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\interface.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\..\futuregen\Plugin\interface.cpp">
 			</File>
 			<File
 				RelativePath="ListTable.cpp">
@@ -312,7 +295,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\package.cpp">
+				RelativePath="..\..\futuregen\Plugin\package.cpp">
 			</File>
 			<File
 				RelativePath=".\paraThread.cpp">
@@ -324,24 +307,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\Plugin_base.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\..\futuregen\Plugin\Plugin_base.cpp">
 			</File>
 			<File
 				RelativePath="PluginLoader.cpp">
@@ -404,23 +370,18 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\string_ops.cpp">
+				RelativePath="..\..\futuregen\Plugin\string_ops.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 				</FileConfiguration>
 			</File>
 			<File
@@ -444,10 +405,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\TexTable.cpp">
+				RelativePath="..\..\futuregen\Plugin\TexTable.cpp">
 			</File>
 			<File
-				RelativePath="..\Plugin\TextResultDialog.cpp">
+				RelativePath="..\..\futuregen\Plugin\TextResultDialog.cpp">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_DataSetPanel.cpp">
@@ -654,24 +615,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\UIDialog.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\..\futuregen\Plugin\UIDialog.cpp">
 			</File>
 			<File
 				RelativePath="..\..\VE_Conductor\skel\VjObsC.cpp">
@@ -694,9 +638,6 @@
 			</File>
 			<File
 				RelativePath="GlobalParamDialog.h">
-			</File>
-			<File
-				RelativePath="..\Plugin\interface.h">
 			</File>
 			<File
 				RelativePath="ListTable.h">

@@ -98,7 +98,7 @@ void UI_Frame::buildCORBA( )
    try 
    {
       // First initialize the ORB, 
-      orb = CORBA::ORB_init( wxGetApp().argc, wxGetApp().argv, ""); // the ORB name can be anything! 
+      //orb = CORBA::ORB_init( wxGetApp().argc, wxGetApp().argv, ""); // the ORB name can be anything! 
 
       //Here is the code to set up the ROOT POA
       CORBA::Object_var poa_object =
