@@ -58,7 +58,7 @@ cfdTempAnimation::~cfdTempAnimation()
 }
 
 // create pfGroups and add to the cfdSequence node
-void cfdTempAnimation::SetpfGroups( void )
+void cfdTempAnimation::SetGroups( void )
 {
    // This function is called after the various flowManagers
    // are added to the vector of flowManagers.

@@ -50,7 +50,7 @@ class cfdTempAnimation
       void SetDuration( double time = 1.0 );
 
       // add pfGroups to the sequence node 
-      void SetpfGroups( void );
+      void SetGroups( void );
       
       //get a pointer to the animation
       cfdSequence* GetSequence( void );
