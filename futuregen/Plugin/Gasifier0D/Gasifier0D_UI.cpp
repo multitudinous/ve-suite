@@ -654,7 +654,7 @@ wxPanel *GasiTabs::CreateSecondPage()
   geom_1row->Add(cb_spec_geometry);
   geom_2row->Add(new wxStaticText(panel, -1, "Dimensions", wxDefaultPosition, wxSize(150, 17)), 0, wxALIGN_CENTER_HORIZONTAL);
   wxStaticText * label0 = new wxStaticText(panel, -1, "Diameter (m)", wxDefaultPosition, wxSize(150, 17));
-  t_geo_diam = new wxTextCtrl(this, -1, wxT("0"), wxDefaultPosition, wxSize(80, 20));
+  t_geo_diam = new wxTextCtrl(panel, -1, wxT("0"), wxDefaultPosition, wxSize(80, 20));
   geom_3row->Add(label0);
   geom_3row->Add(t_geo_diam);
   geom_4row->Add(new wxStaticText(panel, -1, "Length (m)", wxDefaultPosition, wxSize(150, 17)), 0, wxALIGN_CENTER_HORIZONTAL);

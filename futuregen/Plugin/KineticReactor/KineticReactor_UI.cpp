@@ -36,7 +36,7 @@ KineticReactor_UI_Dialog
   wxBoxSizer* data_row = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer* ok_row = new wxBoxSizer(wxHORIZONTAL);
 
-  top_sizer->Add(10, 10, 0); //the top margin
+  top_sizer->Add(10, 5, 0); //the top margin
   top_sizer->Add(data_row, 0); 
   top_sizer->Add(10, 5, 0);
   top_sizer->Add(ok_row, 0, wxALIGN_CENTER_HORIZONTAL);
@@ -47,9 +47,9 @@ KineticReactor_UI_Dialog
   wxBoxSizer *data_third_row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer *data_forth_row = new wxBoxSizer(wxHORIZONTAL);
 
-  data_row->Add(10, 5, 0);
+  //data_row->Add(10, 5, 0);
   data_row->Add(data_first_row, 0);
-  data_row->Add(10, 3, 0);
+  data_row->Add(10, 6, 0);
   data_row->Add(data_second_row, 0);
   data_row->Add(10, 3, 0);
   data_row->Add(data_third_row, 0);
@@ -61,7 +61,7 @@ KineticReactor_UI_Dialog
   ok_row->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALIGN_CENTER_HORIZONTAL);
   
   wxString temp[]={_T("PFR CONP"), _T("PFR TTIM"), _T("PSR")};
-  r_case_type = new wxRadioBox(this, R_CASETYPE, _T(" Case Type "), wxDefaultPosition, wxDefaultSize, 3, temp);
+  r_case_type = new wxRadioBox(this, R_CASETYPE, _T(" Case Type "), wxDefaultPosition, wxSize(280, 45), 3, temp);
   data_first_row->Add(r_case_type);
 
   wxStaticText * label1 = new wxStaticText(this, -1, " Residence Time (s) ", wxDefaultPosition, wxSize(200, 17));

@@ -75,7 +75,7 @@ GasSplitter_UI_Dialog
   wxStaticText * label4 = new wxStaticText(this, -1, " Gas Port 3", wxDefaultPosition, wxSize(200, 17));
   t_percent_port4 = new wxTextCtrl(this, -1, wxT("15.70"), wxDefaultPosition, wxSize(80, 20));
   data1_forth_row->Add(label4);
-  data1_forth_row->Add(t_percent_port3);
+  data1_forth_row->Add(t_percent_port4);
 
   SetSizer(toptop);
   SetAutoLayout(TRUE);

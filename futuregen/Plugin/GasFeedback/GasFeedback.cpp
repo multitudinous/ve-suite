@@ -6,6 +6,7 @@
 
 #include "GasFeedback.h"
 #include "GasFeedback_UI.h"
+#include "thermo.h"
 
 IMPLEMENT_DYNAMIC_CLASS(GasFeedback, REI_Plugin)
 
@@ -26,6 +27,18 @@ GasFeedback
 
   n_pts = 4;
   poly[3]= wxPoint(20, 40);
+
+  thermo *thrmo;
+  std::string therm_path = "therm";
+  thrmo = new thermo(therm_path);
+    
+  const std::map<std::string, int>& name_map = thrmo->get_nam_spec();
+  
+  map<std::string, int>::const_iterator iter;
+  for(iter=name_map.begin(); iter!=name_map.end(); iter++)
+    species.push_back((iter->first).c_str());
+
+  delete thrmo;
 }
 
 

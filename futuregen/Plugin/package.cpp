@@ -365,8 +365,6 @@ void Package::FillIntfs(DOMDocument *doc)
        	}
     }  
 
-  cout<<"xxx\n";
-  return ;
 }
 
 DOMDocument * Package::BuildFromIntfs()
