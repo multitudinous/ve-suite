@@ -1,12 +1,6 @@
 #!/bin/csh
 # sets up environment to build and/or run VE-Xplorer
 
-# The following allows you to control the TAO nameServer properties,
-# used by runTAONameService.sh and the run scripts
-#setenv TAO_MACHINE lego.vrac.iastate.edu
-setenv TAO_MACHINE localhost
-setenv TAO_PORT 1234
-
 #this is typically defined in your .cshrc file
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
 
