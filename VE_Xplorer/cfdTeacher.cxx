@@ -34,10 +34,9 @@
 #include <sys/types.h>
 #include <sys/dir.h>
 #else
-//#error ("NOT Portable to Windows Yet!!")
 #include <windows.h>
 #include <direct.h>
-#endif
+#endif   // _WIN32
 
 #include "cfdTeacher.h"
 #include "cfdGroup.h"
@@ -67,7 +66,8 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    this->DCS = NULL;
    this->node = NULL;
 
-    char *cwd;
+   char *cwd;
+
 #ifndef WIN32
    //try to open the directory
    DIR* dir = opendir( this->directory );
@@ -89,7 +89,7 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
 
    //get the name of each file
    direct* file = 0;
-   while((file = readdir(dir)) != NULL) 
+   while ( (file = readdir(dir)) != NULL ) 
    {
       //assume all pfb files in this directory should be loaded
       if(strstr(file->d_name, ".pfb")) 
@@ -115,33 +115,40 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    WIN32_FIND_DATA fileData;
    char buffer[MAX_PATH];
    cwd = _getcwd(buffer,MAX_PATH);
-    // Get the proper directory path
-    sprintf(directory, "%s\\*", this->directory);
+
+   // Get the proper directory path
+   sprintf(directory, "%s\\*", this->directory);
 
    // Get the first file
-    hList = FindFirstFile(directory, &fileData);
-    if (hList == INVALID_HANDLE_VALUE){ 
-        vprDEBUG(vprDBG_ALL,0) <<"Cannot open directory \"" << this->directory 
+   hList = FindFirstFile(directory, &fileData);
+   if (hList == INVALID_HANDLE_VALUE)
+   { 
+      vprDEBUG(vprDBG_ALL,0) << "Cannot open directory \"" << this->directory 
                              << "\"" << std::endl << vprDEBUG_FLUSH;
-        return;
-    }else{
-		finished = FALSE;
-	   while(!finished){
-          //assume all pfb files in this directory should be loaded
-          if(strstr(fileData.cFileName, ".pfb")){
-             char * fileName = new char[strlen(fileData.cFileName)+1];
-			 strcpy( fileName, fileData.cFileName );
-             this->pfbFileNames.push_back( fileName );
-             vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << fileName
-                             << std::endl << vprDEBUG_FLUSH;
-
-		  }
-	      if(!FindNextFile(hList, &fileData)){
-             if (GetLastError() == ERROR_NO_MORE_FILES){
-                finished = TRUE;
-			 }
-		  }
-	   }
+      return;
+   }
+   else
+   {
+      finished = FALSE;
+      while ( ! finished )
+      {
+         //assume all pfb files in this directory should be loaded
+         if ( strstr(fileData.cFileName, ".pfb") )
+         {
+            char * fileName = new char[strlen(fileData.cFileName)+1];
+            strcpy( fileName, fileData.cFileName );
+            this->pfbFileNames.push_back( fileName );
+            vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << fileName
+                                   << std::endl << vprDEBUG_FLUSH;
+         }
+         if ( !FindNextFile(hList, &fileData) )
+         {
+            if ( GetLastError() == ERROR_NO_MORE_FILES )
+            {
+               finished = TRUE;
+            }
+         }
+      }
    }
 #endif
    // how many performer binaries found ?
@@ -149,7 +156,6 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    vprDEBUG(vprDBG_ALL,1) << "Number of performer binaries: " << numFiles
                           << std::endl << vprDEBUG_FLUSH;
 
-   
    pfb_count = 0;
    _cfdWT = NULL;
    this->DCS = new cfdDCS();
@@ -161,7 +167,6 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
       this->node[ i ]->LoadFile( this->pfbFileNames[ i ] );
       //this->DCS->addChild( this->node[i] );
    }
-
 
    // Fix this
    // is this correct
@@ -175,7 +180,6 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
 cfdTeacher::~cfdTeacher( )
 {
    int i;
-
    for ( i = 0; i < this->numFiles; i++)
    {  
       this->DCS->RemoveChild( this->node[i] );
@@ -252,7 +256,8 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
    {
       vprDEBUG(vprDBG_ALL,1) << "LOAD_PFB_FILE: numChildren = " 
          << this->GetcfdDCS()->GetNumChildren()
-         << ", cfdTeacher_state = " << commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE )
+         << ", cfdTeacher_state = "
+         << commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE )
          << std::endl << vprDEBUG_FLUSH;
 
       if ( this->GetcfdDCS()->GetNumChildren() == 0 )
@@ -275,7 +280,8 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
    else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_PFB_FILE ) ||
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ) )
    {      
-      vprDEBUG(vprDBG_ALL,2) << " cfdTeacher::CheckCommandId : CLEAR_ALL or CLEAR_PFB_FILE " << std::endl  << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,2) << " cfdTeacher::CheckCommandId : CLEAR_ALL or CLEAR_PFB_FILE "
+                             << std::endl  << vprDEBUG_FLUSH;
       if ( this->DCS != NULL )
       {
          if ( this->GetcfdDCS()->GetNumChildren() > 0 )
@@ -353,5 +359,5 @@ void cfdTeacher::writePFBFile( cfdNode* graph,char* fileName)
    //write out the file
    //_cfdWT->activateSequenceNodes();
    _cfdWT->writePfbFile();
-
 }
+
