@@ -98,7 +98,15 @@ void cfdTempAnimation::SetDuration( double time )
 
 cfdGroup* cfdTempAnimation::GetGroup( int i )
 {
-   return this->groups[ i ];
+   if ( groups )
+   {
+      return this->groups[ i ];
+   }
+   else
+   {
+      std::cerr << "\tThe User must first call SetGroups or create the groups before asking for a group." << std::endl;
+      return 0;
+   }   
 }
 
 cfdSequence* cfdTempAnimation::GetSequence( void )
