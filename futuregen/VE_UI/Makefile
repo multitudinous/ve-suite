@@ -37,7 +37,7 @@ CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 
 WX_CXX = $(shell wx-config --cxxflags)
 WX_LIB = $(shell wx-config --libs)
-CFDUNAME = $(shell uname )
+CFDUNAME = $(shell uname)
 
 # If OMNI_HOME was defined in the script setup.tsh, 
 # then define CORBA_DEFINES, and CORBA_INCLUDES.
@@ -56,7 +56,7 @@ ifdef OMNI_HOME
    OMNILIB = -L${OMNI_LIB} -lomniORB4 -lomnithread -lomniDynamic4
    
    CORBA_INCLUDES = -I${OMNI_HOME}/include 
-   EXTRA_INCLUDES+=	-I${CONDUCTOR_BASE_DIR}/impl \
+   EXTRA_INCLUDES+= -I${CONDUCTOR_BASE_DIR}/impl \
                      -I${CONDUCTOR_BASE_DIR}/skel \
                      ${CORBA_INCLUDES}
    EXEC_TAG =
@@ -83,7 +83,7 @@ ifdef ACE_ROOT
    ACE_LIBS = -L${ACE_ROOT}/ace -lACE -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_PortableServer -L${TAO_ROOT}/tao -lTAO 
 #${LDFLAGS}
    ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs
-   EXTRA_INCLUDES+=	\
+   EXTRA_INCLUDES+= \
                   ${ACE_INCLUDES} \
                   -I${CONDUCTOR_BASE_DIR}/impl \
                   -I${CONDUCTOR_BASE_DIR}/skel \
@@ -95,11 +95,11 @@ ifdef ACE_ROOT
 endif
 
 ifdef XERCESCROOT
-   EXTRA_INCLUDES+=	-I${XERCESCROOT}/include
+   EXTRA_INCLUDES+= -I${XERCESCROOT}/include
    EXTRA_LIBS+= -L${XERCESCROOT}/lib -lxerces-c
 endif
 
-EXTRA_INCLUDES+=	-I${VE_SUITE_HOME}/VE_Xplorer 
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer 
 
 #__________________________________________________________
 # list the source files that are in current directory
@@ -139,10 +139,10 @@ APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/ve_conductor$(EXEC_TAG)
 # for multiple platforms may be maintained simultaneously.
 
 #OBJDIR is the place that the object files are stored.
-OBJDIR=	$(CFDHOSTTYPE)$(EXEC_TAG)
+OBJDIR= $(CFDHOSTTYPE)$(EXEC_TAG)
 
 #DEPDIR is the place that the dependency files are stored.
-DEPDIR=	$(CFDHOSTTYPE)$(EXEC_TAG)
+DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)
 
 default: all
 
@@ -153,51 +153,50 @@ all:
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
 
-srcdir=		.
+srcdir= .
 
 # turn off dependencies for idl stuff, make clean
-NO_DEPEND=	YES
+NO_DEPEND= YES
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
 
 # One of these must be uncommented.
-DEBUG_APP?=		TRUE
-#OPTIM_APP?=		TRUE
+DEBUG_APP?= TRUE
+#OPTIM_APP?= TRUE
 
 EXTRA_CXXFLAGS+= $(WX_CXX) -D WXUSING_PLUGIN_DLL
 #$(EXTRA_FLAGS) 
 
-#EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG -gslim 
-EXTRA_OPTIM_FLAGS+=	-O2 -OPT:Olimit=0 -D_OPT
+#EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
+EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
 ifeq ($(TAO_BUILD), TRUE)
-   EXTRA_CXXFLAGS+=	-D_TAO ${CPPFLAGS} -I$(BOOST_INCLUDES)
+   EXTRA_CXXFLAGS+= -D_TAO ${CPPFLAGS} -I$(BOOST_INCLUDES)
    EXTRA_LIBS+= ${ACE_LIBS} $(WX_LIB)
    #$(VLDLIBS)
 else
-   EXTRA_CXXFLAGS+=	$(TWEEK_CXX_FLAGS) $(CORBA_DEFINES) -I$(BOOST_INCLUDES)
+   EXTRA_CXXFLAGS+= $(TWEEK_CXX_FLAGS) $(CORBA_DEFINES) -I$(BOOST_INCLUDES)
    EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) $(WX_LIB)
 endif
 
-# 64-bit linux needs these flags and they don't seem to affect 32-bit linux
-ifeq ($(CFDUNAME),Linux)
+# 64-bit linux needs these flags
+ifeq (${CFDUNAME},Linux)
    EXTRA_CXXFLAGS+= -m32
    EXTRA_LIBS+= -m32
 endif
 
-LINKALL_ON=		-all
-LINKALL_OFF=		
+LINKALL_ON= -all
+LINKALL_OFF=
 
-STATIC_ON=		@APP_LINK_STATIC_ON@
-STATIC_OFF=		@APP_LINK_STATIC_OFF@
+STATIC_ON= @APP_LINK_STATIC_ON@
+STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-#CLASSPATH=		$(TWEEK_JARS)
+#CLASSPATH= $(TWEEK_JARS)
 
-CXX_GEN_DIR=		.
+CXX_GEN_DIR= .
 
 vpath %.cpp $(CXX_GEN_DIR) ${CONDUCTOR_BASE_DIR}/skel
-
 
 cxx: $(OBJS)
 
