@@ -1,0 +1,32 @@
+struct f2app{
+   float4 color : COLOR;
+};
+
+//simple shader to look up texture value in a 3d texture
+f2app fp_volume(float4 color : COLOR,
+                 float3 texCoord:TEXCOORD0,
+                 uniform sampler3D volumeData) 
+{
+   //no blending here just decal mode
+   f2app retColor;
+   retColor.color = tex3D(volumeData,texCoord);
+   //the following is just to show that we can adjust the
+   //properties in a shader. Technically this should be done
+   //by user adjustable textures.
+
+   //double the red brightness
+   clamp(retColor.color.r*2.0,0.0,1.0);
+
+   //multiply the green by 1.2
+   clamp(retColor.color.g*2.0,0.0,1.0);
+
+   //tone down the blue components
+   retColor.color.b *= retColor.color.b;
+
+   //set the opacity to .2 for all fragments
+   retColor.color.a = .2;
+
+   return retColor;
+}
+
+

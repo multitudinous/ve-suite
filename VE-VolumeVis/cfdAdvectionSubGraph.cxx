@@ -1,0 +1,95 @@
+#ifdef _OSG
+#ifdef CFD_USE_SHADERS
+#include <cmath>
+#include "cfdAdvectionSubGraph.h"
+#include "cfdTextureManager.h"
+#include "cfdPBufferManager.h"
+#include "cfdVolumeVisualization.h"
+#include "cfdTextureMatrixCallback.h"
+#include "cfdPBufferQuad.h"
+
+#include <osg/Group>
+#include <osg/Geode>
+#include <osg/BoundingBox>
+#include <osg/Projection>
+#include <osg/MatrixTransform>
+#include <osg/Geometry>
+#include <osg/Texture3D>
+#include <osg/TexMat>
+#include <osg/TexEnv>
+#include <osg/StateSet>
+
+#include <osgNV/VectorParameterValue>
+#include <osgNV/VectorArrayParameterValue>
+#include <osg/TexGenNode>
+#include <osg/Billboard>
+#include <osgNVCg/Program>
+
+
+osg::ref_ptr<osg::Group> CreateAdvectionSubGraph(cfdTextureManager* tm,
+                                            osg::Texture3D* updateTexture,
+                                            cfdPBufferManager* pbm,
+                                            osg::StateSet* stateset,
+                                            osgNVCg::Program* vertpg,
+                                            float deltaZ)
+{
+   if(!tm) 
+      return 0;
+   
+   osg::ref_ptr<osg::Geode> geode = new osg::Geode();
+
+   float* BBOX = tm->getBoundingBox();
+   osg::BoundingBox bbox;
+   float minBBox[3];
+   float maxBBox[3];
+
+   //this is because vtk gives mnx,mxx,mny,mxy,mnz,mxz
+   minBBox[0] = BBOX[0]; 
+   minBBox[1] = BBOX[2]; 
+   minBBox[2] = BBOX[4]; 
+   maxBBox[0] = BBOX[1]; 
+   maxBBox[1] = BBOX[3]; 
+   maxBBox[2] = BBOX[5]; 
+
+   bbox.set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
+                osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
+
+   float radius = bbox.radius();
+   float center[3] = {0,0,0};
+
+   center[0] = bbox.center()[0];
+   center[1] = bbox.center()[1];
+   center[2] = bbox.center()[2];
+   float scale[3] = {1,1,1};
+
+   scale[0] = fabs(maxBBox[0] - minBBox[0]);
+   scale[1] = fabs(maxBBox[1] - minBBox[1]);
+   scale[2] = fabs(maxBBox[2] - minBBox[2]);
+
+   scale[0] = 1.0/scale[0];
+   scale[1] = 1.0/scale[1];
+   scale[2] = 1.0/scale[2];
+
+   osg::ref_ptr<cfdPBufferQuad> pbSlice = new cfdPBufferQuad;
+   pbSlice->SetBBox(BBOX);
+   pbSlice->SetNumberOfSlices(tm->fieldResolution()[2]);
+   pbSlice->SetUseAutoTexCoords(false);
+   pbSlice->SetTextureDimensions(tm->fieldResolution()[0],
+   tm->fieldResolution()[1],
+   tm->fieldResolution()[2]);
+
+   pbSlice->SetTextureToUpdate(updateTexture);
+   pbSlice->CalculateSlices();
+   pbSlice->setUseDisplayList(false);
+
+   geode->addDrawable(pbSlice.get());
+
+   osg::ref_ptr<osg::Group> group = new osg::Group;
+   group->setName("Advection Slice");
+   group->addChild(geode.get());
+   return group;
+   
+}
+
+#endif// CFD_USE_SHADERS
+#endif// _OSG
