@@ -36,11 +36,10 @@ USAGE:
 #define MEMB_RXR_H
 
 #include "rxrgas.h"
-#include <Packages/REI/Core/ThirdParty/Therm/thermo.h>
+#include <V21Helper/Therm/thermo.h>
 #include <utility>
 
 using namespace std;
-using namespace REI;
 
 class memb_rxr {
 

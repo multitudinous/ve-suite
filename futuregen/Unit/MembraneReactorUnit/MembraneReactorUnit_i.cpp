@@ -1,9 +1,7 @@
 #include "V21Helper.h"
-#include <ThirdParty/Components/dump_combustor.h>
-#include "DumpCombustorUnit_i.h"
+#include <ThirdParty/Components/memb_rxr.h>
+#include "MembraneReactorUnit_i.h"
 
-
-using namespace Vision21;
 // Implementation skeleton constructor
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))
@@ -27,7 +25,9 @@ void Body_Unit_i::StartCalc (
   {
     // Add your implementation here
     const char* igas;
+    const char* isweep;
     const char* ogas;
+    const char* osweep;
     bool rv;
     Package p;
     string therm_path="thermo";
@@ -36,8 +36,9 @@ void Body_Unit_i::StartCalc (
     summary_values summaries;
 
     igas = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
-
-    if (!igas)
+    isweep = executive_->GetImportData(id_, 1); //port 1 will be the sweep input port;
+    
+    if (!igas || !isweep)
       {
 	error("Missing input input.");
 	return;
@@ -46,34 +47,60 @@ void Body_Unit_i::StartCalc (
     p.SetSysId("gas_in.xml");
         
     Gas *gasin = new Gas();
+    Gas *sweepin = new Gas();
     V21Helper gashelper(therm_path.c_str());
     
     p.Load(igas, strlen(igas)); 
     gashelper.IntToGas(&(p.intfs[0]), *gasin);
+    gasin->gas_composite.normalize_specie();
+    p.Load(isweep, strlen(isweep)); 
+    gashelper.IntToGas(&(p.intfs[0]), *sweepin);
+    sweepin->gas_composite.normalize_specie();
+
     // Check incoming
-    if(gasin->gas_composite.T <= 750 || gasin->gas_composite.T >= 1600) {
-      warning("Incoming Gas temperature out of range.");
+    if(gasin->gas_composite.T <= 500 || gasin->gas_composite.T >= 900) {
+      warning("Incoming gas temperature out of range.");
     }
-
-    summaries.clear();
-
-    dump_combustor dumpComb;
-  
-    Gas *gasw = new Gas;
-    pair<vector<int>, vector<string> > exit_condition;
-
-    int ii = 0;
-
-    gasw->copy(*gasin);
-
-    dumpComb.caseType          = case_type;  // 0 evaluation; 1 design
-    dumpComb.volume            = volume;     // m3/s
-    dumpComb.desiredConversion = conversion; // caseType = 2       
-    dumpComb.fHeatLoss         = fracQloss;  // fraction of inlet sensible energy relative to 298 K
-    dumpComb.deltaP            = press_drop; // psi  (should be positive)
-  
-    exit_condition = dumpComb.calculate(*gasin, *gasw);
     
+    summaries.clear();
+    
+    std::pair<std::vector<int>, std::vector<string> > exit_condition;
+    
+    Gas *gasw = new Gas;
+    Gas *sweepout = new Gas;
+    gasw->copy(*gasin);
+    sweepout->copy(*sweepin);
+    sweepout->addSpecie("H2");
+ 
+    //double d1 = 0.0; // dummy variable
+    //int ii = 0;
+    
+    memb_rxr memb_shft_rxr;
+    memb_shft_rxr.memb_diameter  = memb_diameter;
+    memb_shft_rxr.Pd_thickness   = Pd_thickness;
+    memb_shft_rxr.L_rxr          = L_rxr;
+    memb_shft_rxr. fheat_loss    = 0.0;
+    memb_shft_rxr.case_type      = case_type;
+    memb_shft_rxr.CO_conv_want   = CO_conv_want;
+    memb_shft_rxr.shell_diameter = shell_diameter;
+    memb_shft_rxr.f_pre_mr       = f_pre_mr;
+    memb_shft_rxr.mr_inlet_temp  = mr_inlet_temp;
+    memb_shft_rxr.f_H2O_CO       = f_H2O_CO;
+    memb_shft_rxr.H2O_CO         = H2O_CO;
+    memb_shft_rxr.n_modules      = n_modules;
+
+    //memb_shft_rxr.n_modules = gasin->gas_composite.moles() 
+    //  * 8.314 * gasin->gas_composite.T / gasin->gas_composite.P /
+    //  (3.14159/4.0 * (memb_shft_rxr.shell_diameter*memb_shft_rxr.shell_diameter - 
+    //	    memb_shft_rxr.memb_diameter*memb_shft_rxr.memb_diameter)) 
+    // / 20 / memb_shft_rxr.memb_diameter / 0.969 * 2.0;
+    
+    exit_condition = memb_shft_rxr.calculate(*gasin, *gasw, *sweepin, *sweepout);
+  
+    if(exit_condition.first.size() != exit_condition.second.size()) {
+      error("ERROR EXIT CONDITION PAIR SIZES NOT THE SAME");
+      return;
+    }
     if(exit_condition.first.size() != 0) {
       unsigned int i;
       string s1;
@@ -82,21 +109,43 @@ void Body_Unit_i::StartCalc (
 	  warning(exit_condition.second[i]);
 	else {
 	  error(exit_condition.second[i]);
+	  return;
 	}
     }
-
-    summaries.insert_summary_val("HeatLoss UNITS:MW FORMAT:10.2f", dumpComb.heatLoss/1000);
-    summaries.insert_summary_val("Pressure Drop UNITS:psi FORMAT:10.2f", dumpComb.deltaP);
-    summaries.insert_summary_val("Tau Average UNITS:sec FORMAT:10.2f", dumpComb.tauAvg);
     
-    if(!case_type) {
-      summaries.insert_summary_val("Calculated Conversion UNITS:frac FORMAT:10.2f",
-				   dumpComb.conversion); 
-    } else {
-      summaries.insert_summary_val("Calculated Volume UNITS:m^3 FORMAT:10.2f",
-				   dumpComb.volume); 
+    summaries.insert_summary_val("Footprint UNITS:m2 FORMAT:10.2f",
+				 memb_shft_rxr.footprint);
+    summaries.insert_summary_val("CO Conversion UNITS:frac FORMAT:10.2f",
+				 memb_shft_rxr.CO_conv);
+    summaries.insert_summary_val("H2 Recovery UNITS:frac FORMAT:10.2f",
+				 memb_shft_rxr.H2_recovery);
+    summaries.insert_summary_val("Sweep H2 Concentration UNITS:frac FORMAT:10.2f",
+				 gasw->gas_composite.getFrac("H2"));
+    summaries.insert_summary_val("Exit Gas Temp UNITS:K FORMAT:10.2f",
+				 gasw->gas_composite.T);
+    summaries.insert_summary_val("Catalyst Space Velocity UNITS:frac FORMAT:10.2f",
+				 memb_shft_rxr.space_velocity);
+    summaries.insert_summary_val("Pre-Shift Heat Duty UNITS:MW FORMAT:10.2f",
+				 memb_shft_rxr.pre_mr_heatex/1000);
+    if(case_type) {
+      summaries.insert_summary_val("Sweep Flow UNITS:kg/sec FORMAT:10.2f",
+				   sweepin->gas_composite.M);
+      summaries.insert_summary_val("Length UNITS:m FORMAT:10.2f",
+				   memb_shft_rxr.L_rxr);
+      summaries.insert_summary_val("Catalyst Space Velocity UNITS:(1/h) FORMAT:10.2f",
+				   memb_shft_rxr.space_velocity);
     }
-        
+    
+    if(f_pre_mr) {
+      summaries.insert_summary_val("Pre- MR CO Conversion UNITS:frac FORMAT:10.2f",
+				   memb_shft_rxr.pre_mr_conv);
+    }
+    
+    if(f_H2O_CO) {
+      summaries.insert_summary_val("Steam Required UNITS:kg/sec FORMAT:10.4f",
+				   memb_shft_rxr.steam_injection_flow);
+    }
+    
     p.intfs.resize(1); //each port has its own package
     p.SetPackName("ExportData");
     p.SetSysId("test.xml");
@@ -104,14 +153,26 @@ void Body_Unit_i::StartCalc (
     gashelper.GasToInt(gasw, p.intfs[0]);
     ogas = p.Save(rv);
     executive_->SetExportData(id_, 0, ogas);
-    
+    gashelper.GasToInt(sweepout, p.intfs[0]);
+    osweep = p.Save(rv);
+    executive_->SetExportData(id_, 1, osweep);
+
+    // Check incoming
+    if(gasw->gas_composite.T <= 500 || gasw->gas_composite.T >= 900) {
+      warning("Outgoing Gas temperature out of range.");
+    }
+
     p.intfs.resize(1);
     gashelper.SumToInt(&summaries, p.intfs[0]);
     result = p.Save(rv); 
     std::cout<<"cp5\n";
     executive_->SetModuleResult(id_, result); //marks the end the execution
+
+    
     delete gasw;
+    delete sweepout;
     delete gasin;
+    delete sweepin;
 
     std::cout<<"cp6\n";
   }
@@ -210,10 +271,16 @@ void Body_Unit_i::SetParams (
     p.Load(param, strlen(param));
     //Now make use of p.intfs to get your GUI vars out
     case_type = p.intfs[0].getInt("case_type");
-    conversion = p.intfs[0].getDouble("conversion");
-    volume = p.intfs[0].getDouble("volume");
-    fracQloss = p.intfs[0].getDouble("fracQloss");
-    press_drop = p.intfs[0].getDouble("press_drop");
+    n_modules = p.intfs[0].getInt("n_modules");
+    f_pre_mr = p.intfs[0].getInt("f_pre_mr");
+    f_H2O_CO = p.intfs[0].getInt("f_H2O_CO");
+    memb_diameter = p.intfs[0].getDouble("memb_diameter");
+    Pd_thickness = p.intfs[0].getDouble("Pd_thickness");
+    L_rxr = p.intfs[0].getDouble("L_rxr");
+    CO_conv_want = p.intfs[0].getDouble("CO_conv_want");
+    shell_diameter = p.intfs[0].getDouble("shell_diameter");
+    mr_inlet_temp = p.intfs[0].getDouble("mr_inlet_temp");
+    H2O_CO = p.intfs[0].getDouble("H2O_CO");
     
   }
   

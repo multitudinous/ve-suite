@@ -1,7 +1,7 @@
 // Gas class for Arsenic partitioning model 7-8/02
 
 #include "rxrgas.h"
-#include <Packages/REI/Core/ThirdParty/Therm/thermo.h>
+#include <V21Helper/Therm/thermo.h>
 #include <string>
 #include <map>
 #include <vector>
@@ -12,7 +12,6 @@
 #endif
 
 using namespace std;
-using namespace REI;
 
 //**********************************************************************
 rxrgas::rxrgas() : thermo_data("therm.dat")

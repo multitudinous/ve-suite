@@ -6,11 +6,10 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <Packages/REI/Core/ThirdParty/Therm/thermo.h>
-#include <Packages/REI/Core/Datatypes/Gas.h>
+#include <V21Helper/Therm/thermo.h>
+#include <V21Helper/Datatypes/Gas.h>
 
 using namespace std;
-using namespace REI;
 
 class rxrgas{
 
