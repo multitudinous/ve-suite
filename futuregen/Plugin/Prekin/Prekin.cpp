@@ -406,7 +406,7 @@ wxString Prekin::GetDesc()
 /////////////////////////////////////////////////////////////////////////////
 wxString Prekin::GetHelp()
 {
-  wxString result="Framework/index.html"; //your description
+  wxString result="Framework/doc/modules/Prekin.html"; //your description
 
   return result;
 }
