@@ -35,7 +35,9 @@
 #include <gmtl/Vec.h>
 #include <gmtl/Matrix.h>
 #include <gadget/Type/PositionInterface.h>
+#include <gadget/Type/DigitalInterface.h>
 
+class pfDCS;
 //! Navigation tracker
 /*!
   A class to track the wand location, object translation,
@@ -59,7 +61,9 @@ class cfdNavigate
   /*!
     Initialization of navigation objects: VR Juggler, wand, cursor, data set
   */
-  void Initialize( float );
+  void Initialize( float, pfDCS* );
+  void SetDataValues( int, int );
+  void updateNavigationFromGUI( void );
   void GetDirection( float xyzV[3] );
   void GetDirection( float &xV, float &yV, float &zV );
   //! Wand object
@@ -96,6 +100,7 @@ class cfdNavigate
   double * GetWorldLocation( );
   void GetWorldLocation( double xyzW[3] );
   void GetWorldLocation( double &xW, double &yW, double &zW );
+  void SetWorldLocation( double xyzW[ 3 ] );
   //! Wand object
   /*!
     Forward translation.
@@ -129,7 +134,22 @@ class cfdNavigate
   */
   //vjPosInterface wand;
     gadget::PositionInterface  wand;
-  //! VR Juggler
+ 
+    // VR Juggler's wand digital interface.
+public:
+    gadget::DigitalInterface digital[6];
+   gadget::DigitalInterface IHdigital[10];
+   int buttonData[ 6 ];
+      // x, y, and z translation of objects in world coordinates.
+   // Variables only used in preFrame
+   double * currentWandDirection;
+  int cfdId;
+  int cfdIso_value;
+  double worldTrans[ 3 ];
+  float worldRot[ 3 ];
+  pfDCS* worldDCS;
+private:
+ //! VR Juggler
   /*!
     VR Juggler's vector math function.
   */
@@ -176,6 +196,7 @@ class cfdNavigate
     Displacement of the objects in virtual space.
   */
   float dObj;
+
 };
 
 #endif

@@ -316,17 +316,6 @@ class cfdApp : public vrj::PfApp
    // Used for defining the vectors for data display
    vtkPolyData * arrow;
 
-   // VR Juggler's wand digital interface.
-   gadget::DigitalInterface digital[6];
-   gadget::DigitalInterface IHdigital[10];
-   int buttonData[ 6 ];
-
-   // x, y, and z translation of objects in world coordinates.
-   // Variables only used in preFrame
-   double worldTrans[3];
-   float worldRot[3];
-   double * currentWandDirection;
-
    // Text processing stuff: needs to be reimplemented with a little thought
    void flush_text(char *);
 

@@ -447,25 +447,8 @@ void cfdApp::exit()
 inline void cfdApp::init( )
 {
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
-   this->digital[0].init("VJButton0");   // trigger (and top right button) -- menu selection
-   this->digital[1].init("VJButton1");   // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
-   this->digital[2].init("VJButton2");   // 12 o'clock -- forward navigation
-   this->digital[3].init("VJButton3");   // 3 o'clock -- not used at present
-   this->digital[4].init("VJButton4");   // 6 o'clock -- reset
-   this->digital[5].init("VJButton5");   // 9 o'clock -- exit streamer while loop
-
-//#ifdef IHCC_SYS
-   this->IHdigital[0].init("VJMovementZ0");  //press "8" for forward navigation
-   this->IHdigital[1].init("VJMovementZ1");  //press "2" for backward navigation
-   this->IHdigital[2].init("VJMovementX0");  //press "6" for rightward navigation
-   this->IHdigital[3].init("VJMovementX1");  //press "4" for leftward navigation
-   this->IHdigital[4].init("VJMovementY0");  //press "9" for upward navigation
-   this->IHdigital[5].init("VJMovementY1");  //press "7" for downward navigation
-   this->IHdigital[6].init("VJRotateX");  //press "right_arrow" for CW rotation
-   this->IHdigital[7].init("VJRotateY");  //press "left_arrow" for CCW rotation
-   //this->IHdigital[8].init("IHVJButton8");  //press "up_arrow" for upward rotation
-   //this->IHdigital[9].init("IHVJButton9");  //press "down_arrow" for downward rotation
-//#endif
+   std::cout << "|  4. Initializing.............................. Navigation systems |" << std::endl;
+   this->nav = new cfdNavigate();
 
 #ifdef _CLUSTER
   // Cluster Stuff
@@ -765,17 +748,17 @@ inline void cfdApp::initScene( )
 
    for ( i = 0; i < 3; i++)
    {
-      this->worldTrans[ i ] = this->paramReader->worldTrans[ i ];
-      this->worldRot[ i ] = this->paramReader->worldRot[ i ];
+      this->nav->worldTrans[ i ] = this->paramReader->worldTrans[ i ];
+      this->nav->worldRot[ i ] = this->paramReader->worldRot[ i ];
    }
 
-   this->worldDCS->setTrans( -this->worldTrans[ 0 ],
-                             -this->worldTrans[ 1 ],
-                             -this->worldTrans[ 2 ] );
+   this->worldDCS->setTrans( -this->nav->worldTrans[ 0 ],
+                             -this->nav->worldTrans[ 1 ],
+                             -this->nav->worldTrans[ 2 ] );
 
-   this->worldDCS->setRot( this->worldRot[ 0 ],
-                           this->worldRot[ 1 ],
-                           this->worldRot[ 2 ] );
+   this->worldDCS->setRot( this->nav->worldRot[ 0 ],
+                           this->nav->worldRot[ 1 ],
+                           this->nav->worldRot[ 2 ] );
 
    // Locate and load the arrow file...
    char * arrowFile = fileIO::GetFile( "arrow", "/VE_Xplorer/data/arrow.vtk" );
@@ -910,10 +893,8 @@ inline void cfdApp::initScene( )
    this->SetCfdReadParam( this->paramReader );
 #endif
    std::cout << "| ***************************************************************** |" << std::endl;
-   std::cout << "|  4. Initializing.............................. Navigation systems |" << std::endl;
-   this->nav = new cfdNavigate();
-   this->nav->Initialize( this->paramReader->delta );
-
+   this->nav->Initialize( this->paramReader->delta, this->worldDCS );
+   this->nav->SetWorldLocation( this->nav->worldTrans );
    //
    // Initiate shell of the data sets.
    //
@@ -1637,182 +1618,6 @@ inline void cfdApp::flush_text(char * t)
       text_sig = 9;
    }
 }
-//////////////////////////////////////
-//this is a straight copy of the    //
-//indian hills nav stuff because    //
-//we are doing the same thing only  //
-//the input is from the UI_Nav page //
-//in the gui                        //
-//////////////////////////////////////
-void cfdApp::updateNavigationFromGUI()
-{
-   if ( this->cfdIso_value == NAV_FWD ) //forward translate
-   { 
-        this->worldTrans[1] += 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                   this->worldTrans[2] );
-   }
-   else if ( this->cfdIso_value == NAV_BKWD ) //backward translate
-   { 
-        this->worldTrans[1] -= 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                   this->worldTrans[2] );
-   }
-   else if ( this->cfdIso_value == NAV_RIGHT) //right translate
-   { 
-        this->worldTrans[0] += 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                   this->worldTrans[2] );
-   }
-   else if ( this->cfdIso_value == NAV_LEFT) //left translate
-   { 
-        this->worldTrans[0] -= 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                   this->worldTrans[2] );
-   }
-   else if ( this->cfdIso_value == NAV_UP ) //upward translate
-   { 
-        this->worldTrans[2] += 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                   this->worldTrans[2] );
-   }
-   else if ( this->cfdIso_value == NAV_DOWN ) //downward translate
-   { 
-        this->worldTrans[2] -= 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                   this->worldTrans[2] );
-   } 
-   else if ( this->cfdIso_value == NAV_CW  )        //CW rotation
-   {
-      this->currentWandDirection = this->nav->GetDirection();
-
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
-         << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
-      //yang-REI: the following block are moved from the intraFrame Function
-      if ( this->currentWandDirection[ 0 ] > 0.0f )
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      else 
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      this->worldDCS->setRot( this->worldRot[ 0 ], 
-                              this->worldRot[ 1 ], 
-                              this->worldRot[ 2 ] );   
-   }
-   else if ( this->cfdIso_value == NAV_CCW )         //CCWrotation
-   {
-      this->currentWandDirection = this->nav->GetDirection();
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
-         << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
-      //yang-REI: the following block are moved from the intraFrame Function
-      if ( this->currentWandDirection[ 0 ] > 0.0f )
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      else 
-      {
-         this->worldRot[ 0 ] += 1.0f;
-      }
-      this->worldDCS->setRot( this->worldRot[ 0 ], 
-                              this->worldRot[ 1 ], 
-                              this->worldRot[ 2 ] );   
-   }
-   
-}
-inline void cfdApp::NavigationForIHCC( void )
-{
-   if ( this->IHdigital[0]->getData() == gadget::Digital::ON ) //forward translate
-   { 
-        this->worldTrans[1] += 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[1]->getData() == gadget::Digital::ON ) //backward translate
-   { 
-        this->worldTrans[1] -= 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[2]->getData() == gadget::Digital::ON ) //right translate
-   { 
-        this->worldTrans[0] += 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[3]->getData() == gadget::Digital::ON ) //left translate
-   { 
-        this->worldTrans[0] -= 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[4]->getData() == gadget::Digital::ON ) //upward translate
-   { 
-        this->worldTrans[2] += 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[5]->getData() == gadget::Digital::ON ) //downward translate
-   { 
-        this->worldTrans[2] -= 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[6]->getData() == gadget::Digital::ON )        //CW rotation
-   {
-      this->currentWandDirection = this->nav->GetDirection();
-
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
-         << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
-      //yang-REI: the following block are moved from the intraFrame Function
-      if ( this->currentWandDirection[ 0 ] > 0.0f )
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      else 
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      this->worldDCS->setRot( this->worldRot[ 0 ], 
-                              this->worldRot[ 1 ], 
-                              this->worldRot[ 2 ] );   
-   }
-   else if ( this->IHdigital[7]->getData() == gadget::Digital::ON )         //CCWrotation
-   {
-      this->currentWandDirection = this->nav->GetDirection();
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
-         << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
-      //yang-REI: the following block are moved from the intraFrame Function
-      if ( this->currentWandDirection[ 0 ] > 0.0f )
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      else 
-      {
-         this->worldRot[ 0 ] += 1.0f;
-      }
-      this->worldDCS->setRot( this->worldRot[ 0 ], 
-                              this->worldRot[ 1 ], 
-                              this->worldRot[ 2 ] );   
-   }
-}
 
 void clearGeodesFromNode( pfNode * node )
 {
@@ -1882,63 +1687,12 @@ void cfdApp::preFrame( void )
    // CLuster Stuff
    this->GetUpdateClusterStateVariables();
 #endif
-   this->buttonData[ 1 ] = this->digital[ 1 ]->getData();
-   this->buttonData[ 2 ] = this->digital[ 2 ]->getData();
-//std::cout << this->buttonData[ 1 ] << " : " << this->buttonData[ 2 ] <<std::endl;
-   //indian hills navigation
-   NavigationForIHCC();
 
-   //biv--wasn't sure where to connect this. . .correct later
-   //this is the input from the GUI navigation page
-   if(this->cfdId == GUI_NAV){
-      updateNavigationFromGUI();
-   }
+   // Update Navigation variables
+   this->nav->SetDataValues(this->cfdId, this->cfdIso_value);
+   this->nav->updateNavigationFromGUI();
 
-   //wand input
-   if ( this->buttonData[1] == gadget::Digital::TOGGLE_ON ||
-        this->buttonData[1] == gadget::Digital::ON )
-   {
-      this->currentWandDirection = this->nav->GetDirection();
-
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
-                             << this->currentWandDirection[1] << " : "
-                             << this->currentWandDirection[2]
-                             << std::endl << vprDEBUG_FLUSH;
-
-      //yang-REI: the following block are moved from the intraFrame Function
-      if ( this->currentWandDirection[ 0 ] > 0.0f )
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      else 
-      {
-         this->worldRot[ 0 ] += 1.0f;
-      }
-      this->worldDCS->setRot( this->worldRot[ 0 ], 
-                              this->worldRot[ 1 ], 
-                              this->worldRot[ 2 ] );   
-   
-   }
-   else if ( this->buttonData[2] == gadget::Digital::TOGGLE_ON ||
-             this->buttonData[2] == gadget::Digital::ON )
-   { 
-      vprDEBUG(vprDBG_ALL,1) << " Navigate" << std::endl << vprDEBUG_FLUSH;
-      this->nav->FwdTranslate();
-      this->nav->GetWorldLocation( this->worldTrans );
-      //yang-REI: the following block are moved from the intraFrame Function
-      this->worldDCS->setTrans( -this->worldTrans[0], 
-                                 -this->worldTrans[1], 
-                                 -this->worldTrans[2] );
-   }
-
-   // yang-REI: since preFrame and other threads's 
-   // data are so heavily crossed, I have to lock the 
-   // whole function up tryAcquire is used to avoid 
-   // block, which will lower the frame rates
-   // if other threads got the lock, preFrame 
-   // just do nothing, which will stay on the last state
    // Check the menu is toggle on/off
-
    if ( this->menuB && cursorId == NONE )
    {
      // if menu is on, laser will detect where it is hitting on the menu's cell
@@ -1953,7 +1707,7 @@ void cfdApp::preFrame( void )
    { 
       // if menu is off, the cursor will be active (based on the cursor id)
       this->cursor->Update( cursorId, this->nav->GetCursorLocation(),
-                              this->nav->GetDirection(), this->worldTrans );
+                              this->nav->GetDirection(), this->nav->worldTrans );
 
       if ( this->cursorId == CUBE)
       {
@@ -1976,7 +1730,7 @@ void cfdApp::preFrame( void )
 
    int i;
 
-   if ( this->digital[0]->getData() == gadget::Digital::TOGGLE_ON && 
+   if ( this->nav->digital[0]->getData() == gadget::Digital::TOGGLE_ON && 
         this->cursorId == NONE )
    {
       //the trigger is active and we are selecting something from the menu     
@@ -2245,7 +1999,7 @@ void cfdApp::preFrame( void )
       this->pfb_count ++;
       this->setId( -1 );
    }
-   else if ( this->digital[4]->getData( ) == gadget::Digital::TOGGLE_ON 
+   else if ( this->nav->digital[4]->getData() == gadget::Digital::TOGGLE_ON 
                                           || this->cfdId == CLEAR_ALL )
    { 
       //reset button is triggered so delete all the objects in the scene
