@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: TSVEGpfswitcher.cpp,v $
- * Date modified: $Date: 2004/03/23 17:20:55 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
