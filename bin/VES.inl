@@ -28,8 +28,8 @@ case $1 in
   ;;
 
   -nserv)
-    killall Naming_Service 
-    killall Exe_server 
+    killall -q Naming_Service 
+    killall -q Exe_server 
     echo Starting TAO Naming Service on $TAO_MACHINE, port $TAO_PORT
     Naming_Service -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
     sleep 5
@@ -40,8 +40,8 @@ case $1 in
   ;;
   
   -shutdown)
-    killall Naming_Service 
-    killall Exe_server 
+    killall -q Naming_Service 
+    killall -q Exe_server 
   ;;
 
   -menu)
