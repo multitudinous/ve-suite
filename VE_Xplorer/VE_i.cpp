@@ -162,8 +162,8 @@ void Body_UI_i::Raise (
                      << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
          std::string temp(notification);
          if ( !temp.compare(0,26,"Network execution complete") ||
-              !temp.compare(0,30,"Successfully Scheduled Network" ) ) /*||
-              !temp.compare(0,22,"Connected to Executive") )*/
+              !temp.compare(0,30,"Successfully Scheduled Network" ) ||
+              !temp.compare(0,22,"Connected to Executive") )
          {
             std::cout << "|\tGoing To Do Something" << std::endl;
             try 
