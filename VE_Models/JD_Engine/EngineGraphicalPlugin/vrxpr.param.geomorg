@@ -1,4 +1,4 @@
-3
+6
 9                       // Object type 9: Geometry file name
    0                  // transparency toggle
    0                  // color toggle
@@ -20,3 +20,24 @@
    -13 2 -2      // Translation values for geometry file
    0 0 0             // Rotation values for geometry file
    /home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/EngineGraphicalPlugin/press_reg_valve.pfb      // Geometry file name
+8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
+   1 1 1             // DCS Scale values
+   0 0 0             // DCS Translation values (in feet)
+   0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
+   /home/users/sgent/deerework/Deere_Day_models/no_baffle/outFile.vtk      // vtkDataSet name
+   JUNK       // precomputed data slice directory (insert JUNK if n/a)
+   JUNK         // precomputed surface directory    (insert JUNK if n/a)
+8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
+   1 1 1             // DCS Scale values
+   0 0 0             // DCS Translation values (in feet)
+   0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
+   /home/users/sgent/deerework/Deere_Day_models/original/outFile.vtk      // vtkDataSet name
+   /home/users/sgent/deerework/Deere_Day_models/original/new_dir       // precomputed data slice directory (insert JUNK if n/a)
+   JUNK         // precomputed surface directory    (insert JUNK if n/a)
+8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
+   1 1 1             // DCS Scale values
+   0 0 0             // DCS Translation values (in feet)
+   0 0 0             // DCS Rotation values (degrees, Z-X-Y format)
+   /home/users/sgent/deerework/Deere_Day_models/with_baffle1_good/outFile.vtk      // vtkDataSet name
+   /home/users/sgent/deerework/Deere_Day_models/with_baffle1_good/new_dir       // precomputed data slice directory (insert JUNK if n/a)
+   JUNK         // precomputed surface directory    (insert JUNK if n/a)

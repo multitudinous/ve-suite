@@ -239,17 +239,15 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
             geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
             geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
             geostate->setMode( PFSTATE_SHADEMODEL, PFSM_GOURAUD );
-            vprDEBUG(vprDBG_ALL,3) << "Done setting Transparency "
-                                   << std::endl << vprDEBUG_FLUSH;
 
             testMat = (pfMaterial*)geostate->getAttr( PFSTATE_FRONTMTL );
             bmaterial = (pfMaterial*)geostate->getAttr( PFSTATE_BACKMTL );
-            vprDEBUG(vprDBG_ALL,2) << "setting alpha to " << op 
+            vprDEBUG(vprDBG_ALL,3) << "setting alpha to " << op 
                                    << std::endl << vprDEBUG_FLUSH;
             if ( testMat != NULL ){
-               vprDEBUG(vprDBG_ALL,2) << "Setting Front Material : " << op 
+               vprDEBUG(vprDBG_ALL,3) << "Setting Front Material : " << op 
                                       << std::endl << vprDEBUG_FLUSH;
-               vprDEBUG(vprDBG_ALL,2) << " Color Flag : " << color
+               vprDEBUG(vprDBG_ALL,3) << " Color Flag : " << color
                                       << std::endl << vprDEBUG_FLUSH;
 
                testMat->setAlpha( op );
@@ -268,7 +266,7 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
                      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
                      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
-                     vprDEBUG(vprDBG_ALL,2) 
+                     vprDEBUG(vprDBG_ALL,3) 
                         << " Front Color : " << stlColor[0]<< " : " 
                         <<  stlColor[1]<< " : " << stlColor[2]
                         << std::endl << vprDEBUG_FLUSH;
@@ -293,7 +291,7 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
                   {
                      testMat->setColor( PFMTL_DIFFUSE , 1.0f, 1.0f, 1.0f );
                      testMat->setColor( PFMTL_AMBIENT , 1.0f, 1.0f, 1.0f );
-                     vprDEBUG(vprDBG_ALL,2)
+                     vprDEBUG(vprDBG_ALL,3)
                         << "Front Color Transparent : " << stlColor[0] << " : " 
                         <<  stlColor[1] << " : " << stlColor[2]
                         << std::endl << vprDEBUG_FLUSH;
@@ -308,9 +306,6 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
             
             if ( bmaterial != NULL )
             {
-               vprDEBUG(vprDBG_ALL, 2) << "Setting Back Material "
-                                      << std::endl << vprDEBUG_FLUSH;
-
                bmaterial->setAlpha (op );
                if ( op == 1 ) 
                {
@@ -378,7 +373,7 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
 	   	// Run this traverser on each of its children (recursive)
 	   	num = ((pfGroup*)node_1)->getNumChildren();
 
-	   	vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+	   	vprDEBUG(vprDBG_ALL,2) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
 
          for (i=0; i < num; i++)

@@ -79,16 +79,17 @@ VEExterior::VEExterior( void ) : cfdVEBaseClass()
 // Destructor
 VEExterior::~VEExterior( void )
 {
-   if ( _param )
+   //cout << "deleteing VE Exterior " << endl;
+   if ( _param != NULL )
       delete [] _param;
 }
 
 void VEExterior::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
-   this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/CatalyticCombustorModel/vrxpr.param.geomorg";
-   //cout << _param << endl;
+   this->_param = new char[256];
+   this->_param = "/home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/ExteriorGraphicalPlugin/vrxpr.param.geomorg";
+   cout << _objectName << " : Param File : " << _param << endl;
    CreateObjects();
 }
 
