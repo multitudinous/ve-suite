@@ -1,6 +1,7 @@
 #ifndef HEATEXCHANGERCFD_H
 #define HEATEXCHANGERCFD_H
 
+#include "moduleS.h"
 #include <iostream>
 #include <fstream>
 #include <string>
@@ -22,7 +23,8 @@ public:
   HeatExchangerCFD ();
   ~HeatExchangerCFD ();
 
-  bool execute (Gas *ox_in, Gas *gas_out, summary_values *summaries);
+  bool execute (Gas *ox_in, Gas *gas_out, Types::Profile_var &prof,
+     summary_values *summaries);
 
   void load_and_run_glacier();
   GasCell outlet_cell(int i, int j, int k, int face,

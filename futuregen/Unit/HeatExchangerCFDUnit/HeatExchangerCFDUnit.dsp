@@ -91,11 +91,23 @@ LINK32=link.exe
 # PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp"
 # Begin Source File
 
+SOURCE=..\ThirdParty\rei_lib\cell.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\db_file.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\V21Helper\Datatypes\Gas.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\V21Helper\Datatypes\GasCell.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\grid.cpp
 # End Source File
 # Begin Source File
 
@@ -111,7 +123,19 @@ SOURCE=.\HeatExchangerCFDUnit_i.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\ThirdParty\rei_lib\inl.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\inlet.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\interface.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\interp.cpp
 # End Source File
 # Begin Source File
 
@@ -132,6 +156,14 @@ SOURCE=..\..\IDL\moduleS_T.cpp
 # Begin Source File
 
 SOURCE=..\package.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\scalar.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\search.cpp
 # End Source File
 # Begin Source File
 
@@ -163,12 +195,28 @@ SOURCE=..\V21Helper\V21Helper.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\ThirdParty\rei_lib\vector.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\V21Helper\Datatypes\Water.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
 
 # PROP Default_Filter "h;hpp;hxx;hm;inl;fi;fd"
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\cell.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\cell_types.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\db_file.h
+# End Source File
 # Begin Source File
 
 SOURCE=.\externc.h
@@ -183,6 +231,10 @@ SOURCE=..\V21Helper\Datatypes\GasCell.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\ThirdParty\rei_lib\grid.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\HeatExchangerCFD.h
 # End Source File
 # Begin Source File
@@ -191,7 +243,19 @@ SOURCE=.\HeatExchangerCFDUnit_i.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\ThirdParty\rei_lib\inl.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\inlet.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\interface.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\interp.h
 # End Source File
 # Begin Source File
 
@@ -216,6 +280,18 @@ SOURCE=..\package.h
 # Begin Source File
 
 SOURCE=..\V21Helper\Therm\REAL.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\reilib.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\scalar.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\search.h
 # End Source File
 # Begin Source File
 
@@ -244,6 +320,10 @@ SOURCE=..\V21Helper\SummaryValues\unit_conversion.h
 # Begin Source File
 
 SOURCE=..\V21Helper\V21Helper.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\ThirdParty\rei_lib\vector.h
 # End Source File
 # Begin Source File
 

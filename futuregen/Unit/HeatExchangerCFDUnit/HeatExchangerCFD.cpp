@@ -19,6 +19,8 @@
 #include <cstdio>
 #include <cmath>
 
+#include <ThirdParty/rei_lib/grid.h>
+
 class HeatExchangerCFD* HX_GLACIER_PTR;
 
 #include "externc.h"   // callback prototypes
@@ -34,7 +36,7 @@ HeatExchangerCFD::HeatExchangerCFD ()
   running = false;
   _summaries = NULL;
 
-  _work_dir = "./case";
+  _work_dir = "./case3";
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -46,7 +48,8 @@ HeatExchangerCFD::~HeatExchangerCFD ()
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-bool HeatExchangerCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summaries)
+bool HeatExchangerCFD::execute (Gas *gas_in, Gas *gas_out, Types::Profile_var &prof,
+     summary_values *summaries)
 {  
   _gas_out = gas_out;
   _summaries = summaries;
@@ -64,11 +67,14 @@ bool HeatExchangerCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summa
       restart = true;
     }
 
+  string path = _work_dir;
   if(restart) {
 
+     _gas_restart = 1;
+     _prt_restart = 1;
+
   } else {
-    string path = _work_dir;
-    string basepath = "./Glacier/Cases/Hx2/";
+    string basepath = "./Glacier/Cases/Hx3/";
 
     system(("cp " + basepath + "DATA " + path + "/DATA").c_str());
     system(("cp " + basepath + "THERMO " + path + "/THERMO").c_str());
@@ -76,6 +82,228 @@ bool HeatExchangerCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summa
     system(("cp " + basepath + "CPD_DATA " + path + "/CFP_DATA").c_str());
 
   }
+
+  int i, j, iy, iz, iu, iv, iw, ief, iet, ich, itt;
+  iy = iz = iu = iv = iw = ief = iet = ich = itt = -1;
+  for(i=0; i<prof->profile_vals.length(); i++) {
+    std::string var = prof->profile_vars[i].in();
+    if(var=="Y_LOC") iy = i;
+    else if(var=="Z_LOC") iz = i;
+    else if(var=="U_VEL") iu = i;
+    else if(var=="V_VEL") iv = i;
+    else if(var=="W_VEL") iw = i;
+    else if(var=="EFF") ief = i;
+    else if(var=="ETA") iet = i;
+    else if(var=="CHI") ich = i;
+    else if(var=="TEMPERATURE") itt = i;
+  }
+  if(iy==-1) cout << "Profile variable Y_LOC not found" << endl;
+  if(iz==-1) cout << "Profile variable Z_LOC not found" << endl;
+  if(iu==-1) cout << "Profile variable U_VEL not found" << endl;
+  if(iv==-1) cout << "Profile variable V_VEL not found" << endl;
+  if(iw==-1) cout << "Profile variable W_VEL not found" << endl;
+  if(ief==-1) cout << "Profile variable EFF not found" << endl;
+  if(iet==-1) cout << "Profile variable ETA not found" << endl;
+  if(ich==-1) cout << "Profile variable CHI not found" << endl;
+  if(itt==-1) cout << "Profile variable TEMPERATURE not found" << endl;
+
+  double zz = prof->profile_vals[iz][0], yy;
+  std::vector<double> yyy;
+  std::vector<std::vector<double> > yprof;
+  std::vector<double> zprof;
+  std::vector<int> iii;
+  std::vector<std::vector<int> > prof_index;
+
+  // for interpolation purposes for points outside the profile range
+  // add two extra rows beyond the profile at zz=-1.0e10 and zz=1.0e10
+  // and for each row add two extra points at yy=-1.0e10 and yy=1.0e10
+
+  // add row for zz = -1.0e10
+  // add point at yy = -1.0e10
+  yy = -1.0e10;
+  yyy.push_back(yy);
+  iii.push_back(0);
+  zprof.push_back(-1.0e10);
+  for(j=0; j<prof->profile_vals[iy].length(); j++) {
+     if(fabs(prof->profile_vals[iz][j]-zz)>1.0e-4){
+        // added point at yy=1.0e10
+        yyy.push_back(1.0e10);
+        iii.push_back(j-1);
+        yprof.push_back(yyy);
+        prof_index.push_back(iii);
+        break;
+     }else{
+        yy = prof->profile_vals[iy][j];
+        yyy.push_back(yy);
+        iii.push_back(j);
+        zz = prof->profile_vals[iz][j];
+     }
+  }
+
+
+  yyy.clear();
+  // added point at yy=-1.0e10 for first zz in profile
+  yyy.push_back(-1.0e10);
+  iii.clear();
+  iii.push_back(0);
+  zz = prof->profile_vals[iz][0];
+  zprof.push_back(zz);
+  for(j=0; j<prof->profile_vals[iy].length(); j++) {
+     if(fabs(prof->profile_vals[iz][j]-zz)>1.0e-4){
+        // added point at yy=1.0e10 for subsequent zz's
+        yyy.push_back(1.0e10);
+        yprof.push_back(yyy);
+        yyy.clear();
+        iii.push_back(j-1);
+        prof_index.push_back(iii);
+        iii.clear();
+        // added point at yy=1.0e10
+        yyy.push_back(-1.0e10);
+        iii.push_back(j);
+        zz = prof->profile_vals[iz][j];
+        zprof.push_back(zz);
+        yy = prof->profile_vals[iy][j];
+        yyy.push_back(yy);
+        iii.push_back(j);
+     }else{
+        yy = prof->profile_vals[iy][j];
+        yyy.push_back(yy);
+        iii.push_back(j);
+        zz = prof->profile_vals[iz][j];
+     }
+  }
+  //add point at yy=1.0e10 on last row
+  yyy.push_back(1.0e10);
+  yprof.push_back(yyy);
+  iii.push_back(j-1);
+  prof_index.push_back(iii);
+  
+  // add row for zz = 1.0e10
+  // add point at yy = -1.0e10
+  yyy.clear();
+  yy = -1.0e10;
+  yyy.push_back(yy);
+  zprof.push_back(1.0e10);
+  int nv = prof->profile_vals[iz].length();
+  zz = prof->profile_vals[iz][nv-1];
+  int jbeg;
+  for(jbeg=nv-1; jbeg!=-1; jbeg--){
+     if(fabs(prof->profile_vals[iz][j]-zz)>1.0e-4) break;
+  }
+  jbeg++;
+  iii.clear();
+  iii.push_back(jbeg);
+  for(j=jbeg; j<prof->profile_vals[iy].length(); j++) {
+     yy = prof->profile_vals[iy][j];
+     yyy.push_back(yy);
+     iii.push_back(j);
+  }
+  //add point at yy=1.0e10
+  yyy.push_back(1.0e10);
+  iii.push_back(j-1);
+  yprof.push_back(yyy);
+  prof_index.push_back(iii);
+
+  // Create INLET
+  grid grd((path+"/GRID").c_str());
+  grd.read_rei_grid();
+  int ni = grd.size(0);
+  int nj = grd.size(1);
+  int nk = grd.size(2);
+  int k;
+  // grd.celltype(i,j,k)
+  // grd.x(i)
+  // grd.y(j)
+  // grd.z(k)
+
+  //# open new INLET file
+  FILE* inlet;
+  std::string inlet_name = path + "/INLET";
+  if((inlet = fopen(inlet_name.c_str(), "wt"))==NULL){
+     fprintf(stderr, "Fail to open %s\n", inlet_name.c_str());
+     return false;
+  }
+
+  fprintf(inlet, "1\n      ******** BANFF ********\n");
+
+  //# Scan through grid, looking for inlet cells and walls.
+  //# When one is found, determine which zone it's in,
+  //# and which wall it's on.  Write out zone info to INLET file.
+  //# Write out wall into to WBCRD file.
+  int zone, nfwall;
+  
+  for(i=0; i<ni; i++)
+    for(j=0; j<nj; j++)
+      for(k=0; k<nk; k++) {
+	
+         if(grd.celltype(i,j,k)==1){
+
+            double u_vel, v_vel, w_vel, eff, eta, chi, tt, ivar = -1;
+            double u_vel1, v_vel1, w_vel1, eff1, eta1, chi1, tt1;
+            double u_vel2, v_vel2, w_vel2, eff2, eta2, chi2, tt2;
+            int k1 = 0, k2 = zprof.size()-1, k3, j1, j2, j3;
+            while(k2-k1>1){
+               k3 = (k1 + k2)/2;
+               if(zprof[k3]<-grd.z(k)) k1 = k3;
+               else k2 = k3;
+            }
+            double zfrac = (-grd.z(k)-zprof[k1])/(zprof[k2] - zprof[k1]);
+            j1 = 0; j2 = yprof[k1].size()-1;
+            while(j2-j1>1){
+               j3 = (j1 + j2)/2;
+               if(yprof[k1][j3]<grd.y(j)) j1 = j3;
+               else j2 = j3;
+            }
+            double yfrac = (grd.y(j)-yprof[k1][j1])/(yprof[k1][j2] - yprof[k1][j1]);
+            int ivar1 = prof_index[k1][j1], ivar2 = prof_index[k1][j2];
+            u_vel1 = (1.0-yfrac)*prof->profile_vals[iu][ivar1] + yfrac*prof->profile_vals[iu][ivar2];
+            v_vel1 = (1.0-yfrac)*prof->profile_vals[iv][ivar1] + yfrac*prof->profile_vals[iv][ivar2];
+            w_vel1 = (1.0-yfrac)*prof->profile_vals[iw][ivar1] + yfrac*prof->profile_vals[iw][ivar2];
+            eff1 = (1.0-yfrac)*prof->profile_vals[ief][ivar1] + yfrac*prof->profile_vals[ief][ivar2];
+            eta1 = (1.0-yfrac)*prof->profile_vals[iet][ivar1] + yfrac*prof->profile_vals[iet][ivar2];
+            chi1 = (1.0-yfrac)*prof->profile_vals[ich][ivar1] + yfrac*prof->profile_vals[ich][ivar2];
+            tt1 = (1.0-yfrac)*prof->profile_vals[itt][ivar1] + yfrac*prof->profile_vals[itt][ivar2];
+            j1 = 0; j2 = yprof[k2].size()-1;
+            while(j2-j1>1){
+               j3 = (j1 + j2)/2;
+               if(yprof[k2][j3]<grd.y(j)) j1 = j3;
+               else j2 = j3;
+            }
+            yfrac = (grd.y(j)-yprof[k2][j1])/(yprof[k2][j2] - yprof[k2][j1]);
+            ivar1 = prof_index[k2][j1];
+            ivar2 = prof_index[k2][j2];
+            u_vel2 = (1.0-yfrac)*prof->profile_vals[iu][ivar1] + yfrac*prof->profile_vals[iu][ivar2];
+            v_vel2 = (1.0-yfrac)*prof->profile_vals[iv][ivar1] + yfrac*prof->profile_vals[iv][ivar2];
+            w_vel2 = (1.0-yfrac)*prof->profile_vals[iw][ivar1] + yfrac*prof->profile_vals[iw][ivar2];
+            eff2 = (1.0-yfrac)*prof->profile_vals[ief][ivar1] + yfrac*prof->profile_vals[ief][ivar2];
+            eta2 = (1.0-yfrac)*prof->profile_vals[iet][ivar1] + yfrac*prof->profile_vals[iet][ivar2];
+            chi2 = (1.0-yfrac)*prof->profile_vals[ich][ivar1] + yfrac*prof->profile_vals[ich][ivar2];
+            tt2 = (1.0-yfrac)*prof->profile_vals[itt][ivar1] + yfrac*prof->profile_vals[itt][ivar2];
+            
+            u_vel = (1.0-zfrac)*v_vel1 + zfrac*v_vel2;
+            v_vel = (1.0-zfrac)*u_vel1 + zfrac*u_vel2;
+            w_vel = -((1.0-zfrac)*w_vel1 + zfrac*w_vel2);
+            eff = (1.0-zfrac)*eff1 + zfrac*eff2;
+            eta = (1.0-zfrac)*eta1 + zfrac*eta2;
+            chi = (1.0-zfrac)*chi1 + zfrac*chi2;
+            tt = (1.0-zfrac)*tt1 + zfrac*tt2;
+
+            fprintf(inlet,
+               "%4d\t%4d\t%4d\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%4d\t%4d\t\n",
+               i+1, j+1, k+1, //# i, j, k : index 1-based
+               u_vel,
+               v_vel,
+               w_vel,
+               eff,
+               eta,
+               chi,
+               tt,
+               grd.celltype(i,j,k), //# cell type
+               1); //# group
+         } //if(celltype==1
+      }
+
+      fclose(inlet);
 
   _gas_in = gas_in;
 
@@ -320,12 +548,21 @@ void HeatExchangerCFD::load_scirun_groups(float *f, float *t, float *p, int *Ist
   // *Istage = 1; one stage gasifier
   // *Istage = 2; two stage gasifier
   // *Istage = 3; pipe
+  // *Istage = 4; heat exchanger
 
   *Istage = 4;
 
   // Pressure
   *p = _pressure;
   
+  // flow
+  f[0] = _gas_in->gas_composite.M;
+  f[1] = 0.0;
+
+  //temperature (is not used in profin.f)
+  t[0] = 300.0;
+  t[1] = 300.0;
+
   return;
 }
 
@@ -623,7 +860,25 @@ GasCell HeatExchangerCFD::outlet_cell(int i, int j, int k, int face,
 void HeatExchangerCFD::send_scirun_specie(int *ns, float *spec_val, char *spec_name,
 				  unsigned int slen)
 {
-
+  int i, j, k, sp;
+  int ns_val = (*ns);
+  vector<GasCell>::iterator cell;
+  
+  for (cell=_gas_out->gas_cell.begin(); cell!=_gas_out->gas_cell.end(); cell++) {
+    (*cell).comp_specie.clear();
+    for(sp=0; sp<ns_val; sp++) {
+      i = (*cell).icell[0];
+      j = (*cell).icell[1];
+      k = (*cell).icell[2];
+      (*cell).comp_specie.push_back
+	((double)*(spec_val + nx*ny*nz*sp + nx*ny*k + nx*j + i)); 
+    }
+  }
+  _gas_out->specie.clear();
+  for(i=0; i<ns_val; i++)
+    _gas_out->specie[string(spec_name + i*9)] = i;
+  
+  _gas_out->average();
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
