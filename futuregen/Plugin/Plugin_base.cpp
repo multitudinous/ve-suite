@@ -507,6 +507,8 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
       gas_value.push_back(to_string(it->getDouble("PRESSURE_DROP")).c_str());
       gas_desc.push_back("TEMPERATURE");
       gas_value.push_back(to_string(it->getDouble("TEMPERATURE")).c_str());
+	  gas_desc.push_back("MW");
+      gas_value.push_back(to_string(it->getDouble("MW")).c_str());
       gas_desc.push_back("PRESSURE");
       gas_value.push_back(to_string(it->getDouble("PRESSURE")).c_str());
       gas_desc.push_back("FLOWRATE");
