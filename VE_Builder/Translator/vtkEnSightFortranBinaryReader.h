@@ -3,7 +3,7 @@
   Program:   Visualization Toolkit
   Module:    $RCSfile: vtkEnSightFortranBinaryReader.h,v $
   Language:  C++
-  Date:      $Date: 2003/12/13 21:26:08 $
+  Date:      $Date$
   Version:   $Revision: 1.4 $
 
   Copyright (c) 1993-2002 Ken Martin, Will Schroeder, Bill Lorensen 

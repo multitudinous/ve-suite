@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: translateToVtk.cpp,v $
- * Date modified: $Date: 2004/04/04 18:07:02 $
- * Version:       $Revision: 1.28 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

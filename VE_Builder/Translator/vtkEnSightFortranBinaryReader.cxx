@@ -3,7 +3,7 @@
   Program:   Visualization Toolkit
   Module:    $RCSfile: vtkEnSightFortranBinaryReader.cxx,v $
   Language:  C++
-  Date:      $Date: 2003/12/13 21:26:08 $
+  Date:      $Date$
   Version:   $Revision: 1.6 $
 
 
