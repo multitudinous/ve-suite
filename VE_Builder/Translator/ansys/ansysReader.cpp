@@ -100,6 +100,20 @@ float ansysReader::ReadNthFloat( int n )
    return value;
 }
 
+double ansysReader::ReadNthDouble( int n )
+{
+   long currentPosition = n * sizeof(int);
+   fseek(this->s1,currentPosition,SEEK_SET);
+   double value;
+   if (fileIO::readNByteBlockFromFile( &value, sizeof(double), 1,
+                                       this->s1, this->endian_flip ))
+   {
+      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile" << endl;
+      exit( 1 );
+   }
+   return value;
+}
+
 void ansysReader::ReadHeader()
 {
    cout << "\nReading header" << endl;
@@ -550,19 +564,25 @@ void ansysReader::ReadGenericIntBlock()
    //cout << "\nReading another block" << endl;
 
    int blockSize_1 = ReadNthInteger( this->integerPosition++ );
-   
-   int expectedNumValues = ( blockSize_1 - sizeof(int) ) / sizeof(int);
    int reportedNumValues = ReadNthInteger( this->integerPosition++ );
-   cout << "expectedNumValues = " << expectedNumValues << endl;
-   cout << "reportedNumValues = " << reportedNumValues << endl;
 
-   // read  the data
+   int expectedNumValues;
+   if ( reportedNumValues == 0 )
+      expectedNumValues = ( blockSize_1 - sizeof(int) ) / sizeof(double);
+   else
+      expectedNumValues = ( blockSize_1 - sizeof(int) ) / sizeof(int);
+   cout << "reportedNumValues = " << reportedNumValues << endl;
+   cout << "expectedNumValues = " << expectedNumValues << endl;
+
+   // read the data
    for ( int i = 0; i < expectedNumValues; i++ )
    {
       if ( reportedNumValues == 0 )
       {
-         float value = ReadNthFloat( this->integerPosition++ );
+         //float value = ReadNthFloat( this->integerPosition++ );
+         double value = ReadNthDouble( this->integerPosition++ );
          cout << "\tvalue[ " << i << " ]: " << value << endl;
+         this->integerPosition++;   // increase again for doubles only
       }
       else
       {

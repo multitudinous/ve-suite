@@ -53,6 +53,7 @@ class ansysReader
       void FlipEndian();
       int ReadNthInteger( int n );
       float ReadNthFloat( int n );
+      double ReadNthDouble( int n );
 
       char * ansysFileName;
       FILE *s1;
