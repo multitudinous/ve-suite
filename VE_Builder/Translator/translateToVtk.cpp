@@ -208,6 +208,9 @@ char * preprocess( int argc, char *argv[],
          else if (type == 12)  // ANSYS *.rst file
          {
          }
+         else if (type == 13)  // tec plot ascii
+         {
+         }
          else
          {
             std::cout << "Invalid type=" << type <<std::endl <<std::endl;
@@ -334,6 +337,17 @@ char * preprocess( int argc, char *argv[],
             do
             {
                 std::cout << "\nANSYS *.rst file: \t";
+                std::cout.flush();
+                std::cin >> infilename;
+                std::cin.ignore();
+            }
+            while ( ! fileIO::isFileReadable( infilename ) );
+         }
+         else if (type == 13)    // tec plot file
+         {
+            do
+            {
+                std::cout << "\nTecPlot ASCII file: \t";
                 std::cout.flush();
                 std::cin >> infilename;
                 std::cin.ignore();
