@@ -171,6 +171,15 @@ char * Body_Unit_i::GetStatusMessage (
   ))
   {
     // Add your implementation here
+    const char *status;
+    bool rv;
+    Package p;
+    p.SetPackName("Status");
+    p.SetSysId("status.xml");
+    p.intfs.resize(1);
+    p.intfs[0].setInt("return_state", return_state);
+    status = p.Save(rv);
+    return CORBA::string_dup(status);    
     return NULL;
   }
   
