@@ -244,8 +244,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
 
   // copy data from vtk prim array to performer geoset
   int prim = 0, vert = 0;
-  int i, npts, *pts;
-  int transparentFlag = 0;
+  int i, npts, *pts, transparentFlag = 0;
   // go through cells (primitives)
   for (primArray->InitTraversal(); primArray->GetNextCell(npts, pts); prim++) { 
     lengths[prim] = npts;
@@ -257,6 +256,8 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
 #endif
       colors[prim].set(aColor[0]/255.0f, aColor[1]/255.0f,
                        aColor[2]/255.0f, aColor[3]/255.0f);
+      if (aColor[3]/255.0f < 1)
+        transparentFlag = 1; 
     }
     if (normalPerCell) {
 #ifdef VTK4
@@ -286,9 +287,9 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
 #endif
         colors[vert].set(aColor[0]/255.0f, aColor[1]/255.0f,
                                 aColor[2]/255.0f, aColor[3]/255.0f);
-        if ( aColor[3]/255.0f < 1 )
-           transparentFlag = 1; 
-	  }
+        if (aColor[3]/255.0f < 1)
+          transparentFlag = 1; 
+      }
       if (texCoords != NULL) {
 #ifdef VTK4
         double *aTCoord = texCoords->GetTuple(pts[i]);
@@ -334,7 +335,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     updateTexture(actor, gset, gstate, verbose);
 
   // if not opaque
-  if (actor->GetProperty()->GetOpacity() < 1.0 || transparentFlag ) {
+  if (actor->GetProperty()->GetOpacity() < 1.0 || transparentFlag) {
     gset->setDrawBin(PFSORT_TRANSP_BIN); // draw last
     gstate->setMode(PFSTATE_CULLFACE, PFCF_OFF); // want to see backside thru
     gstate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA);//| PFTR_NO_OCCLUDE
@@ -347,7 +348,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   // points - NOTE: you can modify properties of points through lpState
   if (actor->GetProperty()->GetRepresentation() == VTK_POINTS) {
     gset->setPrimType(PFGS_POINTS);
-	gset->setPntSize( actor->GetProperty()->GetPointSize() );
+    gset->setPntSize(actor->GetProperty()->GetPointSize());
     pfLPointState *lpState = new pfLPointState; 
     gstate->setMode(PFSTATE_ENLPOINTSTATE, PF_ON);
     gstate->setAttr(PFSTATE_LPOINTSTATE, lpState);
