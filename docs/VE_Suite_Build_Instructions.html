@@ -100,9 +100,13 @@
 <dl>
    <p class=Title2>Running VE_Xplorer</p>
    <dd>
-      <p class=bodytext>You need to have omniNames started to run VE_Xplorer. If omniNames is not running, type in a command window,</p>
+      <p class=bodytext>Edit the line in your $(VE_SUITE_HOME)\VE_Installer\omniOrb4.cfg that contains "InitRef" to be:</p>
 
-      <p class=bodytext>omniNames -start 2809</p>
+      <p class=computer>InitRef = NameService=corbaname::localhost:2809</p>
+
+      <p class=bodytext>You need to have omniNames started to run VE_Xplorer. If omniNames is not running, double click on $(VE_SUITE_HOME)\VE_Installer\omninamesStart.bat, or type in a command window, </p>
+
+      <span class=computer>omniNames -start 2809</span></p>
 
       <p class=bodytext>To run the solution from within Visual Studio, change the working directory in the Configuration Properties tab to point to the directory where your VE-Suite parameter file is located (for example, change the working directory to $(VE_SUITE_HOME)\VE_TestSuite)</p>
 
