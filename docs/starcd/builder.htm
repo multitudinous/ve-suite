@@ -9,45 +9,70 @@
 
 <body class="Title1">
 <p>Using VE-Builder with StarCD</p>
-<p class="bodytext"><span class="bodytextemph">1.</span> Launch StarCD</p>
+<p><font size="3">This section will instruct the user how to store certain 
+datasets from a StarCD *.pst file for use later.</font></p>
+<p class="bodytext"><span class="bodytextemph">1.</span> Launch StarCD.</p>
 <p class="bodytext"><span class="bodytextemph">2.</span> Ensure that a *.vrt and *.cel file is written of the region of interest. This region can either be a complete CFD model or a subsection of the model.</p>
-<p class="bodytext"><span class="bodytextemph">3.</span> Analyze data</p>
-<p class="bodytext"><span class="bodytextemph">4.</span> Post-processing &gt; Load data</p>
-<p class="bodytext"><span class="bodytextemph">4.1</span> In &quot;File(s)&quot; tab, click &quot;open post file&quot;</p>
-<p class="bodytext"><span class="bodytextemph">4.2</span> In &quot;Data&quot; tab:</p>
-<p class="bodytext">--Scalar Data &gt; Turb Kinetic Energy</p>
-<p class="bodytext">--Vector Data &gt; Velocity Components UVW</p>
+<p class="bodytext"><span class="bodytextemph">3.</span>&nbsp; Ensure there is a 
+*.pst file with all the data.</p>
+<p class="bodytext">Have the Star GUIde panel open.</p>
+<p class="bodytext"><span class="bodytextemph">4.</span> In the Star GUIde, 
+click on the folder &quot;Post-processing&nbsp; &gt; Load data&quot;.</p>
+<p class="bodytext"><span class="bodytextemph">4.1</span> In the blue &quot;File(s)&quot; tab, click &quot;Open 
+Post File&quot;.</p>
+<p class="bodytext">Initially, the velocity components and the Turbulent Kinetic 
+Energy will be stored in the Post Registers.&nbsp; This is done by the 
+following.</p>
+<p class="bodytext"><span class="bodytextemph">4.2</span> In the blue &quot;Data&quot; tab:</p>
+<p class="bodytext">--Scalar Data &gt; Turb Kinetic Energy.</p>
+<p class="bodytext">--Vector Data &gt; Velocity Components UVW.</p>
 <p class="bodytext"><a href="pics/load_data.jpg" target="_blank"><img src="pics/load_data.gif" width="86" height="126" border="0"></a></p>
-<p class="bodytext"><span class="bodytextemph">5.</span> Click &quot;Get Data&quot;</p>
-<p class="bodytext"><span class="bodytextemph">6.</span> Click &quot;View Post Registers&quot;</p>
-<p class="bodytext"><span class="bodytextemph">7.</span> To add scalars:</p>
-<p class="bodytext"><span class="bodytextemph">7.1</span> Click &quot;Operate&quot;</p>
+<p class="bodytext"><span class="bodytextemph">5.</span> Click &quot;Get Data&quot;.</p>
+<p class="bodytext">This data is now stored in the Post Registers.</p>
+<p class="bodytext"><span class="bodytextemph">6.</span> To view currently 
+stored data, Click &quot;View Post Registers&quot;.</p>
+<p class="bodytext">The left column lists the vertex number and the subsequent 
+columns list the specified data for the respective vertices. </p>
+<p class="bodytext">Please note: The Post Register stores the VERTEX data that 
+was selected from the &quot;Data&quot; tab, the Turbulent Kinetic Energy, and the three 
+components of the Velocity.</p>
+<p class="bodytext">Up to six parameters of&nbsp; vertex information can be 
+stored in the post registers. The added data used for this example is Pressure 
+and Viscosity.</p>
+<p class="bodytext">&nbsp;</p>
+<p class="bodytext">To add other scalar data:</p>
+<p class="bodytext"><span class="bodytextemph">7.1</span> Click &quot;Operate&quot;.</p>
 <p class="bodytext"><a href="pics/post_register_data.jpg" target="_blank"><img src="pics/post_register_data.gif" width="90" height="81" border="0"></a></p>
-<p class="bodytext"><span class="bodytextemph">7.2</span> Function &gt; Load vertex data &gt; turbulent  energy (Registers 1-3 must contain vector data. Registers 4-6 must contain vertex data.) </p>
-<p class="bodytext"><span class="bodytextemph">7.3</span> Select register</p>
-<p class="bodytext"><span class="bodytextemph">Note:</span> Although it is necessary to use vertex data rather than cell data, using vertex data might return an error. To solve this problem, copy the previous command line and add the register number, e.g. &quot;enter oper, getv, te, 5, &quot; </p>
-<p class="bodytext"><span class="bodytextemph">7.4</span> Ensure that &quot;using relative values&quot; is selected</p>
+<p class="bodytext"><span class="bodytextemph">7.2</span> Function &gt; Load vertex 
+data &gt; turbulent energy (Registers 1-3 must contain vector data. Registers 4-6 
+must contain scalar data.) </p>
+<p class="bodytext"><span class="bodytextemph">7.3</span> Select register.</p>
+<p class="bodytext"><span class="bodytextemph">Note:</span> Although it is necessary to use vertex data rather than cell data, using vertex data might return an error. To solve this problem, copy the previous command line and add the register number, e.g. &quot;enter oper, getv, 
+p, 5,relative &quot; </p>
+<p class="bodytext"><span class="bodytextemph">7.4</span> Ensure that &quot;using relative values&quot; is selected.</p>
 <p class="bodytext"><a href="pics/post_register_oper.jpg" target="_blank"><img src="pics/post_register_oper.gif" width="116" height="25" border="0"></a></p>
-<p class="bodytext"><span class="bodytextemph">7.5</span> Click &quot;Apply&quot; to put data in an empty register</p>
-<p class="bodytext"><span class="bodytextemph">7.6</span> Click &quot;Update list&quot;</p>
-<p class="bodytext"><span class="bodytextemph">7.7</span> Repeat steps 7.1-7.6 to add data to registers 5 and 6 (pressure and viscosity)</p>
+<p class="bodytext"><span class="bodytextemph">7.5</span> Click &quot;Apply&quot; to put data in an empty register.</p>
+<p class="bodytext"><span class="bodytextemph">7.6</span> Click &quot;Update list&quot;.</p>
+<p class="bodytext"><span class="bodytextemph">7.7</span> Repeat steps 7.1-7.6 
+to add data to register 6 (viscosity).</p>
 <p class="bodytext"><span class="bodytextemph">8.</span> The data is now stored.</p>
 <p class="bodytext"><a href="pics/post_regis_data.jpg" target="_blank"><img src="pics/post_regis_data.gif" width="90" height="81" border="0"></a></p>
-<p class="bodytext">In pro-STAR window:</p>
-<p class="bodytext"><span class="bodytextemph">9.</span> Post &gt; save user data</p>
-<p class="bodytext">--Registers: all</p>
-<p class="bodytext">--File type: coded</p>
-<p class="bodytext">--Range: all vertices</p>
+<p class="bodytext">Now the data should be saved. In pro-STAR window:</p>
+<p class="bodytext"><span class="bodytextemph">9.</span> On the main menu bar, 
+click &quot;Post &gt; save user data&quot;.</p>
+<p class="bodytext">--Registers: all.</p>
+<p class="bodytext">--File type: coded.</p>
+<p class="bodytext">--Range: all vertices.</p>
 <p class="bodytext"><a href="pics/save_usr_pst.jpg" target="_blank"><img src="pics/save_usr_pst.gif" width="46" height="63" border="0" lowsrc="pics/save_usr_pst.jpg"></a></p>
-<p class="bodytext"><span class="bodytextemph">13.</span> Click &quot;Apply&quot;</p>
-<p class="bodytext"><span class="bodytextemph">14.</span> Click &quot;Close&quot;</p>
-<p class="bodytext"><span class="bodytextemph">15.</span> Manually close file (enter &quot;close *.usr&quot;)</p>
-<p class="bodytext"><span class="bodytextemph">16.</span> File &gt; save as coded</p>
-<p class="bodytext"><span class="bodytextemph">17.</span> Unclick boundary file</p>
+<p class="bodytext"><span class="bodytextemph">13.</span> Click &quot;Apply&quot;.</p>
+<p class="bodytext"><span class="bodytextemph">14.</span> Click &quot;Close&quot;.</p>
+<p class="bodytext"><span class="bodytextemph">15.</span> Manually close file (enter &quot;close *.usr&quot;).</p>
+<p class="bodytext"><span class="bodytextemph">16.</span> File &gt; save as coded.</p>
+<p class="bodytext"><span class="bodytextemph">17.</span> Unclick boundary file.</p>
 <p class="bodytext"><a href="pics/CDSave.jpg" target="_blank"><img src="pics/CDSave.gif" width="60" height="48" border="0"></a></p>
-<p class="bodytext"><span class="bodytextemph">18.</span> Click &quot;Apply&quot;</p>
-<p class="bodytext"> <span class="bodytextemph">Note:</span> Checked files are written out</p>
-<p class="bodytext"><span class="bodytextemph">19.</span> Enter &quot;close all&quot;</p>
+<p class="bodytext"><span class="bodytextemph">18.</span> Click &quot;Apply&quot;.</p>
+<p class="bodytext"> <span class="bodytextemph">Note:</span> Checked files are written out.</p>
+<p class="bodytext"><span class="bodytextemph">19.</span> Enter &quot;close all&quot;.</p>
 <p class="bodytext">&nbsp;</p>
 <p class="bodytext">You now have the geometry information and data. It is time to translate.</p>
 <p class="bodytext"><a href="translator.htm">Creating a parameter file for translator</a></p>
