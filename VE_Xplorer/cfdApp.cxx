@@ -316,20 +316,16 @@ void cfdApp::latePreFrame( void )
    // don't move above function call
    if ( _frameStamp.valid() )
    {
-//std::cout << this->_vjobsWrapper->GetSetFrameNumber(-1) << " : "<< this->_vjobsWrapper->GetSetAppTime(-1) << std::endl;
       _frameStamp->setFrameNumber( this->_vjobsWrapper->GetSetFrameNumber(-1) );
       _frameStamp->setReferenceTime( this->_vjobsWrapper->GetSetAppTime(-1) );
    }
 #endif
 
    ///////////////////////
-   vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_modelHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
    cfdModelHandler::instance()->PreFrameUpdate();
    ///////////////////////
-   vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_environmentHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
    cfdEnvironmentHandler::instance()->PreFrameUpdate();
    ///////////////////////
-   vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_steadystateHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
    ///////////////////////
 #ifdef _OSG

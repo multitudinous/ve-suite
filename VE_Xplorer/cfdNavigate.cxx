@@ -308,22 +308,13 @@ void cfdNavigate::updateNavigationFromGUI()
          this->IHdigital[0]->getData() == gadget::Digital::ON ) 
    //forward translate
    { 
-#ifdef _PERFORMER
       this->worldTrans[1] += navigationStepSize;
-#elif _OSG
-      this->worldTrans[2] -= navigationStepSize;
-#endif
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_BKWD) ||
                this->IHdigital[1]->getData() == gadget::Digital::ON ) 
    //backward translate
    { 
-#ifdef _PERFORMER
       this->worldTrans[1] -= navigationStepSize;
-#elif _OSG
-      this->worldTrans[2] += navigationStepSize;
-#endif
-     
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_RIGHT) || 
       this->IHdigital[2]->getData() == gadget::Digital::ON ) 
@@ -341,23 +332,13 @@ void cfdNavigate::updateNavigationFromGUI()
                this->IHdigital[4]->getData() == gadget::Digital::ON ) 
    //upward translate
    { 
-   
-#ifdef _PERFORMER
       this->worldTrans[2] += navigationStepSize;  
-#elif _OSG
-      this->worldTrans[1] += navigationStepSize;
-#endif
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_DOWN) ||
                this->IHdigital[5]->getData() == gadget::Digital::ON ) 
    //downward translate
    { 
-   
-#ifdef _PERFORMER
       this->worldTrans[2] -= navigationStepSize;  
-#elif _OSG
-      this->worldTrans[1] -= navigationStepSize;
-#endif
    } 
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_CW) ||
                this->IHdigital[6]->getData() == gadget::Digital::ON )        
