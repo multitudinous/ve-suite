@@ -57,22 +57,82 @@ private:
 
 protected:
     // FluentTranslator::attributes
+    wxButton* CaseButton;
+    wxButton* DataButton;
+    wxButton* LoadCaseAndData;
+    wxPanel* panel_1;
+    wxButton* AboutButton;
+    wxStaticLine* static_line_1;
+    wxCheckBox* ASCIICheckbox;
+    wxCheckBox* BinaryCheckbox;
+    wxCheckBox* SerialXMLCheckbox;
+    wxCheckBox* ParallelXMLCheckbox;
+    wxCheckBox* CGNSCheckbox;
+    wxStaticLine* static_line_2;
+    wxButton* SelectAllButton;
+    wxButton* UnSelectAllButton;
+    wxStaticLine* static_line_3;
+    wxTextCtrl* StatusTextCntrl;
+    wxStaticText* label_1;
+    wxPanel* panel_4;
     wxStaticText* label_2;
+    wxListBox* PossibleVariableListBox;
+    wxStaticLine* static_line_4;
+    wxListBox* SelectedVariableListBox;
+    wxButton* AddButton;
+    wxButton* AddAllButton;
+    wxButton* DeleteAllButton;
+    wxButton* GoButton;
+    wxButton* CloseButton;
 
-	wxButton* OKButton;
+    wxFileDialog* OpenFileDialog;
 
+    int CaseFileSelected_Flag;
+    int DataFileSelected_Flag;
+    wxString  CaseFilename;
+    wxString  DataFilename;
 
 	DECLARE_EVENT_TABLE()
 
 	enum EVENTS
 	{
-		BUTTON_OK
+		BUTTON_CASE,
+		BUTTON_DATA,
+		BUTTON_LOAD_CASE_AND_DATA,
+		BUTTON_ABOUT,
+		CHECKBOX_ASCII,
+		CHECKBOX_BINARY,
+		CHECKBOX_SERIAL_XML,
+		CHECKBOX_PARALLEL_XML,
+		CHECKBOX_CGNS,
+		BUTTON_SELECT_ALL,
+		BUTTON_UNSELECT_ALL,
+		BUTTON_ADD,
+		BUTTON_ADD_ALL,
+		BUTTON_DELETE_ALL,
+		BUTTON_GO,
+		BUTTON_CLOSE
 	};
 
-	
-	void OnOKButton(wxCommandEvent& event);
+	void OnCaseButton(wxCommandEvent& event);
+	void OnDataButton(wxCommandEvent& event);
+	void OnLoadCaseAndDataButton(wxCommandEvent& event);
+	void OnAboutButton(wxCommandEvent& event);
+	void OnASCIICheckBox(wxCommandEvent& event);
+	void OnBinaryCheckBox(wxCommandEvent& event);
+	void OnSerialXMLCheckBox(wxCommandEvent& event);
+	void OnParallelXMLCheckBox(wxCommandEvent& event);
+	void OnCGNSCheckBox(wxCommandEvent& event);
+	void OnSelectAllButton(wxCommandEvent& event);
+	void OnUnSelectAllButton(wxCommandEvent& event);
+	void OnAddButton(wxCommandEvent& event);
+	void OnAddAllButton(wxCommandEvent& event);
+	void OnDeleteAllButton(wxCommandEvent& event);
+	void OnGoButton(wxCommandEvent& event);
+	void OnCloseButton(wxCommandEvent& event);
 	void OnCancelButton(wxCommandEvent& event);
-	void OnCloseWindow(wxCommandEvent& event);
+
+	
 };
 
 
