@@ -1,0 +1,131 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2004 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile: cfdVEBaseClass.h,v $
+ * Date modified: $Date: 2004-08-28 09:40:47 -0700 (Sat, 28 Aug 2004) $
+ * Version:       $Rev: 854 $
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+#ifndef VE_OPPD_MOD_H
+#define VE_OPPD_MOD_H
+
+#include <wx/wx.h>
+#include <wx/dc.h>
+#include <wx/gdicmn.h>
+
+#include "cfdVEBaseClass.h"
+//#include "cfdDCS.h"
+//#include "cfdObjects.h"
+//#include "interface.h"
+
+//#include <string.h>
+
+class cfdModuleGeometry;
+class cfdGroup;
+//class string;
+//class map;
+
+// Need to create or use this in our stuff
+//#include "interface.h"
+
+
+class VEOPPDmod: public cfdVEBaseClass 
+{
+   DECLARE_DYNAMIC_CLASS( VEOPPDmod )
+
+   public:
+      VEOPPDmod( void );
+      //VEOPPDmod( cfdDCS* );
+      ~VEOPPDmod( void );
+
+      virtual void InitializeNode( cfdDCS* );
+
+      // Methods to do scene graph manipulations
+      // New methods may have to be added later
+      virtual void AddSelfToSG( void );
+      virtual void RemoveSelfFromSG( void );
+
+      // Change state information for geometric representation
+      virtual void MakeTransparent( void );
+      virtual void SetColor( double* );
+      
+      // transform object based 
+      virtual void SetTransforms( float*, float*, float* );
+
+      // Implement Gengxun's work by using socket
+      // stuff from vtk. This will be used in parallel
+      // with implementation of a unit connected to the 
+      // computational engine.
+      virtual void GetDataFromUnit( void );
+      // Basically uses vtkActorToPF to create a geode and 
+      // add it to the scene graph. Probably use cfdObject.
+      virtual void MakeGeodeByUserRequest( int );
+
+      virtual wxString GetName();
+      //This returns the name of the module
+
+      virtual wxString GetDesc();
+      //This returns the description of the module, This should be a short description
+
+      virtual void SetID(int id);
+
+      virtual cfdModel* GetCFDModel( void );
+   
+      virtual void LoadSurfaceFiles( char* );
+
+      bool OnSceneGraph( void ){return _onSceneGraph;}
+   
+   
+   private:
+      // This needs to be vector of geometry nodes
+      cfdModuleGeometry*  geometryNode;
+      cfdGroup* groupNode;
+
+      cfdDCS*   worldDCS;
+      cfdDCS* _dcs;
+
+      wxString _objectName;
+      wxString _objectDescription;
+
+   protected:
+      long pos_x;
+      long pos_y;
+
+      cfdObjects* dataRepresentation;
+
+      cfdModel* _model;
+      cfdReadParam* _readParam;
+
+      char* _param;
+
+      bool _onSceneGraph;
+
+      int _modID;
+
+};
+
+#endif
+   
