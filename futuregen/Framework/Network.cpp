@@ -1771,6 +1771,7 @@ void Network::DrawLink(LINK *ln, bool flag)
   wxRect bbox;
   POLY ports;
   wxPoint * points;
+  wxPoint arrow[3];
   int n;
   int i, j, num;
   
@@ -1816,6 +1817,40 @@ void Network::DrawLink(LINK *ln, bool flag)
       dc.SetBrush(*wxWHITE_BRUSH);
     }
   dc.DrawLines(n, points);
+
+  //Now draw the arrow head
+  if (!flag)
+    {
+      dc.SetPen(*wxWHITE_PEN);
+      dc.SetBrush(*wxWHITE_BRUSH);
+    }
+  else
+    {
+      dc.SetPen(*wxBLACK_PEN);
+      dc.SetBrush(*wxBLACK_BRUSH);
+    }
+  
+  arrow[0]=points[0];
+  
+  
+  double a = atan(3.0/10.0);
+  double b = -a;
+  double sinb=sin(b); double cosb = cos(b);
+  double sina=sin(a); double cosa = cos(a);
+  double dist=sqrt(double((points[1].y-points[0].y)*(points[1].y-points[0].y)
+		   +(points[1].x-points[0].x)*(points[1].x-points[0].x)));
+
+  arrow[1].x=cosa*12.0/dist*(points[1].x-points[0].x)
+    -sina*12.0/dist*(points[1].y-points[0].y)+points[0].x;
+  arrow[1].y=sina*12.0/dist*(points[1].x-points[0].x)
+    +cosa*12.0/dist*(points[1].y-points[0].y)+points[0].y;
+
+  arrow[2].x=cosb*12.0/dist*(points[1].x-points[0].x)
+    -sinb*12.0/dist*(points[1].y-points[0].y)+points[0].x;
+  arrow[2].y=sinb*12.0/dist*(points[1].x-points[0].x)
+    +cosb*12.0/dist*(points[1].y-points[0].y)+points[0].y;
+  
+  dc.DrawPolygon(3, arrow);
   dc.SetPen(old_pen);
   dc.SetBrush(old_brush);
   delete [] points; 
