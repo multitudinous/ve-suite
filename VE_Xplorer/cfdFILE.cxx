@@ -238,27 +238,11 @@ void cfdFILE::pfTravNodeMaterial( pfNode* node_1, pfMaterial* mat, int list_num 
 
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getGState() ;
-         //geoset->setDrawBin(PFSORT_TRANSP_BIN); // draw last
-//std::cout << geoset->getAttrBind( PFGS_COLOR4 ) << std::endl;
-int attr = geoset->getAttrBind( PFGS_COLOR4 );
-//pfVec4 **colors = NULL;
-//geoset->getAttrLists( PFGS_COLOR4, colors, NULL );
-
-if ( attr == PFGS_OFF )
-   std::cout << " attribs are off ";// << std::endl;
-else if ( attr == PFGS_OVERALL )
-   std::cout << " attribs are overall ";// << std::endl;
-else if ( attr == PFGS_PER_PRIM )
-   std::cout << " attribs are prim ";// << std::endl;
-else if ( attr == PFGS_PER_VERTEX )
-   std::cout << " attribs are vert ";// << std::endl;
 
          if (geostate != NULL)
          {
-            //geostate->setMode( PFSTATE_ANTIALIAS, PFAA_ON );
-            //geostate->setMode( PFSTATE_TRANSPARENCY, PFTR_ON );
+            geostate->setMode( PFSTATE_ANTIALIAS, PFAA_ON );
             geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
-            //geostate->setMode( PFSTATE_ENHIGHLIGHTING, PF_ON );
             geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
             geostate->setMode( PFSTATE_SHADEMODEL, PFSM_GOURAUD );
             //geostate->setAttr( PFSTATE_LIGHTMODEL, matLight );
@@ -282,8 +266,6 @@ else if ( attr == PFGS_PER_VERTEX )
                {
                   //Turn colors on
                      //std::cout << " Alpha value : " << testMat->getAlpha() << std::endl;
-                     geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
-                     geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                    if( color == 1 )
                   {
                      //this->fmaterial->getColor( PFMTL_AMBIENT, &colorone[0], &colorone[1], &colorone[2] );
@@ -296,6 +278,7 @@ else if ( attr == PFGS_PER_VERTEX )
                      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      //std::cout << " Alpha value : " << testMat->getAlpha() << std::endl;
                      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
+                     geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      vprDEBUG(vprDBG_ALL,2) 
                         << " Front Color : " << stlColor[0]<< " : " 
                         <<  stlColor[1]<< " : " << stlColor[2]
@@ -304,6 +287,9 @@ else if ( attr == PFGS_PER_VERTEX )
                   }
                   else
                   {
+                     // Do NOT turn of transparency here because textured
+                     // objects may have transparent textures
+                     //geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      testMat->setColorMode( PFMTL_FRONT, PFMTL_CMODE_AMBIENT_AND_DIFFUSE );
                      //this->fmaterial->setColorMode( PFMTL_FRONT, PFMTL_CMODE_EMISSION );
                      //this->fmaterial->setColorMode( PFMTL_FRONT, PFMTL_CMODE_SPECULAR );

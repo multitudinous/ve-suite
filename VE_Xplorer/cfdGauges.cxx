@@ -98,6 +98,42 @@ void cfdGauges::Update( std::string activeModule, cfdExecutive* executive )
    }
 }
 
+// Update Function Specfic to IHCC demo for Angran
+// Code needs to be deleted as soon as dc trip is over 06-24-2004
+void cfdGauges::Update( cfdExecutive* executive )
+{
+   for ( int i = 0; i < this->_numberOfGauges; i++ )
+   {
+         CORBA::Long mod_id = (CORBA::Long)executive->_name_map[activeModule];
+         // get some port data for module
+         std::ostringstream dataStream;
+         std::string dataString;
+         //100.0;//
+         double data;
+         if ( !(this->_gaugesList[ i ]->GetDataTag()).compare( "NO_EMMISION" ) )
+         {
+            data = executive->_pt_map[mod_id].getDouble( (char*)(this->_gaugesList[ i ]->GetDataTag().c_str()) );
+            data += executive->_pt_map[mod_id].getDouble( "NO2_EMMISION" );
+         }
+         else
+         {
+            data = executive->_pt_map[mod_id].getDouble( (char*)(this->_gaugesList[ i ]->GetDataTag().c_str()) );
+         }
+         
+         std::cout << " |\t Active Module Name : " << this->_gaugesList[ i ]->GetModuleName() 
+                     << "  Active Tag Name : " << this->_gaugesList[ i ]->GetDataTag()
+                     << "  Data Value : " << data << std::endl;
+
+         dataStream << data;
+         dataString = dataStream.str();
+         
+         this->_gaugesList[ i ]->SetDataValue( dataString );
+         this->_gaugesList[ i ]->Update();
+      }
+   }
+}
+
+
 void cfdGauges::SetNumberOfGauges( int x )
 {
    this->_numberOfGauges = x;

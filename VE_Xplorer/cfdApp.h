@@ -139,6 +139,8 @@
 
 #include "cfdSound.h"
 
+#include "cfdIHCCModel.h"
+
 class cfdScalarBarActor;
 //class cfdDashboard;
 #ifdef _TAO
@@ -286,6 +288,7 @@ class cfdApp : public vrj::PfApp
    cfdAnimatedStreamlineCone  *animStreamer;
    cfdAnimatedImage           *animImg;
    cfdIsosurface              *isosurface;
+   cfdIHCCModel      *ihccModel;
    textPrompt                 *tPrompt;
    //cfdDashboard*     dashBoard;
 #ifdef _TAO

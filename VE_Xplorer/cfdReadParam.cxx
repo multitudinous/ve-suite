@@ -72,6 +72,9 @@ cfdReadParam::cfdReadParam( char *filein_name )
    this->scalarBarZRot = 0.0;
    this->scalarBarH = this->scalarBarW = 0.0;
    this->frames = 0;
+
+   // IHCC Model - should be deleted at a later date
+   ihccModel = false;
    // MUST BE LAST: do not initialize variables after this function
    data_read (filein_name);
 }
@@ -270,6 +273,9 @@ void cfdReadParam::param_read( std::ifstream &inFile )
             break;
          case 12:
 	         IMGReader(inFile);
+            break;
+         case 13:
+	         ihccModel = true;
             break;
          default:
             std::cerr << "ERROR : Unknown Type: " << id << std::endl;

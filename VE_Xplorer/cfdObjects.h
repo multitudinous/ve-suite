@@ -87,7 +87,7 @@ class cfdObjects
       cfdSequence* GetpfSequence( void );
 #endif
 
-      void DeletepfSequence( void );
+      //void DeletepfSequence( void );
       void StoppfSequence( void );
       void StartpfSequence( void );
       void PausepfSequence( void );

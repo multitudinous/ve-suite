@@ -79,7 +79,7 @@ cfd1DTextInput::~cfd1DTextInput( void )
 
 pfDCS* cfd1DTextInput::getpfDCS( void )
 {
-   ((pfDCS*)this->GetPfDCS())->addChild( geode );
+   //((pfDCS*)this->GetPfDCS())->addChild( geode );
    //DCS->setScale( scale[0], scale[1], scale[2] );
    //DCS->setTrans( trans[0], trans[1], trans[2] );
    //DCS->setRot( rot[0], rot[1], rot[2] );
@@ -91,6 +91,8 @@ void cfd1DTextInput::SetFilename( std::string text )
    this->text = text;
    vprDEBUG(vprDBG_ALL,1) << "\tcfd1DTextInput : " << this->text
                           << std::endl << vprDEBUG_FLUSH;
+   //cout << "\tcfd1DTextInput : " << this->text
+   //                       << std::endl;
 }
 
 void cfd1DTextInput::SetTransforms( float scale[ 3 ], float trans[ 3 ], float rot[ 3 ] )

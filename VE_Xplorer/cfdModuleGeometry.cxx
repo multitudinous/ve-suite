@@ -150,7 +150,7 @@ void cfdModuleGeometry::SetColorOfGeometry( pfNode* node_1 )
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getGState() ;
          //geoset->setDrawBin(PFSORT_TRANSP_BIN); // draw last
-int attr = geoset->getAttrBind( PFGS_COLOR4 );
+/*int attr = geoset->getAttrBind( PFGS_COLOR4 );
 if ( attr == PFGS_OFF )
    std::cout << " attribs are off ";// << std::endl;
 else if ( attr == PFGS_OVERALL )
@@ -158,14 +158,50 @@ else if ( attr == PFGS_OVERALL )
 else if ( attr == PFGS_PER_PRIM )
    std::cout << " attribs are prim ";// << std::endl;
 else if ( attr == PFGS_PER_VERTEX )
-   std::cout << " attribs are vert ";// << std::endl;
-
-         if (geostate != NULL)
-         {
-            //geostate->setMode( PFSTATE_ANTIALIAS, PFAA_ON );
-            //geostate->setMode( PFSTATE_TRANSPARENCY, PFTR_ON );
+   std::cout << " attribs are vert    ";// << std::endl;
+ void *alist=0; 
+   ushort *ilist=0; 
+//  geoset->getAttrLists(PFGS_COORD3, &alist, &ilist); 
+//   verts = (pfVec3 *) alist; 
+//std::cout << geoset->getAttrBind( PFGS_COLOR4 ) << std::endl;
+//int attr = geoset->getAttrBind( PFGS_COLOR4 );
+//pfVec4 **colors = NULL;
+ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_PER_PRIM ))
+{
+geoset->getAttrLists( PFGS_COLOR4, &alist, &ilist );
+pfVec4 *colors;
+colors = (pfVec4 *) alist;
+ int min, max; 
+   int vertcount; 
+vertcount = geoset->getAttrRange(PFGS_COLOR4, &min, &max); 
+std::cout << " New set : " << vertcount << " : " << min << " : " << max << std::endl;
+bool alphaFlag = false;
+for ( int k = 0; k < vertcount; k++ )
+{
+if ( colors[k][3] != 1.0 )
+{
+std::cout << " alist value " <<  colors[k][0] << " : " 
+                              << colors[k][1] << " : " 
+                              << colors[k][2] << " : " 
+                              << colors[k][3] << std::endl;
+                  geoset->setDrawBin(PFSORT_TRANSP_BIN);  // draw last
+                  //geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF); // want to see backside thru
             geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
             //geostate->setMode( PFSTATE_ENHIGHLIGHTING, PF_ON );
+            geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
+                  geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
+   alphaFlag = true;
+   break;
+}
+}
+if ( alphaFlag )
+   continue;
+}
+*/
+         if (geostate != NULL)
+         {
+            geostate->setMode( PFSTATE_ANTIALIAS, PFAA_ON );
+            geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
             geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
             geostate->setMode( PFSTATE_SHADEMODEL, PFSM_GOURAUD );
             //geostate->setAttr( PFSTATE_LIGHTMODEL, matLight );
@@ -219,6 +255,8 @@ else if ( attr == PFGS_PER_VERTEX )
                   else
                   {
                      testMat->setColorMode( PFMTL_FRONT, PFMTL_CMODE_AMBIENT_AND_DIFFUSE );
+                     //geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
+                     //geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
                      //testMat->setColorMode( PFMTL_FRONT, PFMTL_CMODE_EMISSION );
                      //testMat->setColorMode( PFMTL_FRONT, PFMTL_CMODE_SPECULAR );
                      vprDEBUG(vprDBG_ALL,3) << "Set color Mode "

@@ -72,6 +72,10 @@ class cfdReadParam{
       double spacing[3];
       
       //END of YANG
+
+      // IHCC Model - should be deleted at a later date
+      bool ihccModel;
+
       std::vector< fileInfo * > files;
       std::vector< fileInfo * > soundFiles;
 

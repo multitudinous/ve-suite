@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdDCS.h"
+#include <iostream>
 
 #include <Performer/pf/pfDCS.h>
 
@@ -86,6 +87,8 @@ void cfdDCS::SetTranslationArray( float* trans )
    this->_dcs->setTrans( this->_translation[ 0 ],
                            this->_translation[ 1 ],
                            this->_translation[ 2 ] );
+//std::cout << this->_translation[ 0 ]<< " : " << this->_translation[ 1 ] << " : " <<
+//this->_translation[ 2 ]  << std::endl;
 }
 
 void cfdDCS::SetRotationArray( float* rot )
@@ -97,8 +100,11 @@ void cfdDCS::SetRotationArray( float* rot )
    }
 
    this->_dcs->setRot( this->_rotation[ 0 ],
-                           this->_rotation[ 1 ],
+                          this->_rotation[ 1 ],
                            this->_rotation[ 2 ] );
+//std::cout << this->_rotation[ 0 ]<< " : " <<   
+//                           this->_rotation[ 1 ] << " : " <<
+//                           this->_rotation[ 2 ]  << std::endl;
 }
 
 void cfdDCS::SetScaleArray( float* scale )
@@ -112,6 +118,9 @@ void cfdDCS::SetScaleArray( float* scale )
    this->_dcs->setScale( this->_scale[ 0 ],
                            this->_scale[ 1 ],
                            this->_scale[ 2 ] );
+//std::cout << this->_scale[ 0 ]<< " : " <<   
+//                           this->_scale[ 1 ] << " : " <<
+//                           this->_scale[ 2 ]  << std::endl;
 }
 
 pfDCS* cfdDCS::GetPfDCS( void )

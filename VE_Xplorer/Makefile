@@ -128,7 +128,11 @@ SRCS=\
    cfdTransientParticleActor_fluent.cxx \
    VjObs_i.cxx \
    cfdDCS.cxx \
-   cfdSequence.cxx
+   cfdSequence.cxx \
+   cfdIHCCModel.cxx \
+   cfdIHCCGauge.cxx \
+   cfdIHCCContour.cxx \
+   cfd1DTextInput.cxx
 
 #   cfdDrawManager.cxx
 
@@ -140,7 +144,6 @@ SRCS+= \
    cfdExecutiveConfiguration.cxx \
    cfdGauges.cxx \
    cfdDigitalAnalogGauge.cxx \
-   cfd1DTextInput.cxx \
    cfdDashboard.cxx \
    cfdSwappableGeometry.cxx \
    cfdInteractiveGeometry.cxx \
@@ -276,7 +279,7 @@ DEBUG_APP?=		TRUE
 #OPTIM_APP?=		TRUE
 
 # vtkActorToPF needs VTK4
-EXTRA_CXXFLAGS+=	-DVTK4
+EXTRA_CXXFLAGS+=	-DVTK4 -DTABLET
 #$(EXTRA_FLAGS) 
 
 #EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG -gslim 

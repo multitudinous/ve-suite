@@ -23,28 +23,64 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: get_time.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: cfdFILE.h,v $
+ * Date modified: $Date: 2004/03/23 16:29:15 $
+ * Version:       $Revision: 1.9 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef GET_TIME_H
-#define GET_TIME_H
+#ifndef CFD_IHCCMODEL_H
+#define CFD_IHCCMODEL_H
 
-#ifndef WIN32
-#include <sys/time.h>
-#include <time.h>
-#else
-#include <Winsock2.h>
-#endif
+#include "cfdObjects.h"
+#include <vector>
+using namespace std;
+class vtkLookupTable;
+class vtkPolyData;
+class vtkPolyDataMapper;
+class vtkActor;
 
-double GetTimeClock()
+class fileInfo;
+class pfNode;
+class pfMaterial;
+class pfNode;
+class pfDCS;
+class pfGroup;
+
+class cfdIHCCGauge;
+class cfdIHCCContour;
+class pfSequence;
+
+class cfdIHCCModel: public cfdObjects
 {
-    double v;
-    struct timeval tv;
-    gettimeofday(&tv, 0);
-    v = (double) tv.tv_sec + (double) tv.tv_usec / 1000000.0;
-    return v;
-}
+   public:
+      cfdIHCCModel( fileInfo *, pfDCS * );
+
+      ~cfdIHCCModel( void );
+
+      void RunModel( void );
+      void UpdateModelVariables( double* );
+      void MakeLookupTable( void );
+      void MakeSequence( void );
+      void RemoveSequence( void );
+      void Update( void );
+
+      double variables[ 6 ];
+
+      double min, max;
+      vtkLookupTable* lut;
+      vtkPolyData* pData;
+      vtkPolyDataMapper* mapper;
+      vtkActor* actor;
+      double definedRange[ 2 ];
+	   vector< double > solutions;
+	   vector< double > times;
+
+      pfSequence* sequence;
+      cfdIHCCGauge* gauge_acid;
+      cfdIHCCGauge* gauge_time;
+      cfdIHCCContour* contours;
+      pfGroup* ihccModelNode;
+};
+
 #endif

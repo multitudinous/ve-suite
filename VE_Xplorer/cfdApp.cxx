@@ -403,6 +403,13 @@ void cfdApp::exit()
       delete this->animImg;
    }
 
+   if ( this->ihccModel )
+   {
+      vprDEBUG(vprDBG_ALL,2)  
+        << "deleting this->ihccModel" << std::endl << vprDEBUG_FLUSH;
+      delete this->ihccModel;
+   }
+
 #ifdef _TAO
    if ( this->executive ) 
    {
@@ -453,8 +460,8 @@ inline void cfdApp::init( )
 #ifdef _CLUSTER
   // Cluster Stuff
    vpr::GUID new_guid("d6be4359-e8cf-41fc-a72b-a5b4f3f29aa2");
-   std::string hostname = "abbott";
-   mStates.init(new_guid);//,hostname);
+   std::string hostname = "abbott.vrac.iastate.edu";
+   mStates.init(new_guid,hostname);
   
    //cluster::ApplicationData* hack = dynamic_cast<cluster::ApplicationData*>(&(*this->mStates));
    //hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
@@ -1520,7 +1527,6 @@ inline void cfdApp::initScene( )
    std::cout << "|   Maximum animated transient frame number = "
              << this->cfdTimesteps << std::endl;
 
-   std::cout << " ******************int scene 9 : " << worldDCS << endl;
    //
    // Initiate the Performer Stored Binary objects.
    //
@@ -1533,11 +1539,16 @@ inline void cfdApp::initScene( )
    // overwriting of existing files...
    this->pfb_count = this->teacher->getNumberOfFiles();
 
-   // yang-REI: set the initialized value to the internal buffer
-   // And you want be sure the initial data is pushed
-   // These functions are implemented in VjObs_i
+   //
+   // Make IHCC Model - should be deleted at a later date
+   //
+   if ( this->paramReader->ihccModel )
+   {
+      std::cout << "| 52. Initializing...................................... IHCC Model |" << std::endl;
+      this->ihccModel = new cfdIHCCModel( NULL, this->worldDCS );
+   }
 
-   std::cout << " ****************** int scene 10-: " << worldDCS << endl;
+   // Create data in memory for transfered data
 #ifdef _TAO
    this->CreateSoundInfo();
    this->CreateGeometryInfo();
@@ -1549,7 +1560,6 @@ inline void cfdApp::initScene( )
    this->pushDataToStateInfo();
    this->GetCfdStateVariables();
 #endif
-   std::cout << " ******************End of init scene : " << worldDCS << endl;
 }
 
 inline void cfdApp::flush_text(char * t)
@@ -2451,6 +2461,20 @@ void cfdApp::preFrame( void )
          } 
       }      
 
+      this->setId( -1 );
+   }
+   else if ( this->cfdId == UPDATE_SEND_PARAM )
+   {
+      double data[ 6 ];// = { 0 };
+      data[ 0 ] = cfdShort_data_array[ 1 ]; //200;  //Agitation (rpm)  initial value 200
+      data[ 1 ] = cfdShort_data_array[ 2 ]; //1.25; //Air Concentration initial value 1.25;
+      data[ 2 ] = cfdShort_data_array[ 3 ]; //6;    //Initial pH value    initial value 6
+      data[ 3 ] = cfdShort_data_array[ 4 ]; //0.1;  //Nitrate Concentration     initial value 0.1
+      data[ 4 ] = cfdShort_data_array[ 5 ]; //37;   //Temperate (Celsius)        initial value 37
+      data[ 5 ] = cfdShort_data_array[ 6 ]; //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
+
+      this->ihccModel->UpdateModelVariables( data );
+      this->ihccModel->Update();
       this->setId( -1 );
    }
    else if ( this->cfdId == EXIT )   // exit cfdApp was selected
