@@ -90,6 +90,7 @@ ansysReader::ansysReader( char * input )
    this->maxNumberDataSets = 0;
    this->numElems = 0;
    this->numDOF = 0;
+   this->ndnod = 0;
    this->dofCode = NULL;
    this->nodeID = NULL;
    this->elemID = NULL;
@@ -233,7 +234,7 @@ ansysReader::~ansysReader()
 
    if ( this->nodalCoordinates )
    {
-      for ( int32 i = 0; i < this->numNodes; i++ )
+      for ( int32 i = 0; i < this->ndnod; i++ )
          delete [] this->nodalCoordinates[ i ];
 
       delete [] this->nodalCoordinates;
@@ -993,8 +994,9 @@ void ansysReader::ReadGeometryTable()
    this->maxrl = ReadNthInteger( intPosition );
    PRINT( this->maxrl );
 
-   int32 ndnod = ReadNthInteger( intPosition );
-   PRINT( ndnod );
+   this->ndnod = ReadNthInteger( intPosition );
+   PRINT( this->ndnod );
+   std::cout << "\tndnod = " << this->ndnod << std::endl;
 
    int32 nelm = ReadNthInteger( intPosition );
    PRINT( nelm );
@@ -1366,17 +1368,17 @@ void ansysReader::ReadNodalCoordinates()
    int32 reportedNumValues = ReadNthInteger( intPosition );
    int32 numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
    
-   if ( numValues != 7 * this->numNodes ) 
+   if ( numValues != 7 * this->ndnod ) 
    {
       std::cout << "Note: numValues = " << numValues
-                << " != 7 * numNodes = " << 7 * this->numNodes<< std::endl;
+                << " != 7 * ndnod = " << 7 * this->ndnod << std::endl;
       exit( 1 );
    }
 
    vtkPoints *vertex = vtkPoints::New();
    // allocate space for the nodal coordinate arrays
-   this->nodalCoordinates = new double * [ this->numNodes ];
-   for ( int32 i = 0; i < this->numNodes; i++ )
+   this->nodalCoordinates = new double * [ this->ndnod ];
+   for ( int32 i = 0; i < this->ndnod; i++ )
    {
       this->nodalCoordinates[ i ] =  new double [ 7 ];
 
@@ -1390,7 +1392,7 @@ void ansysReader::ReadNodalCoordinates()
       }
 
 #ifdef PRINT_HEADERS
-      if ( i < 10 || i > (this->numNodes-10) )
+      if ( i < 10 || i > (this->ndnod-10) )
       {
          std::cout << "for i = " << i << std::endl;
          for ( int32 j = 0; j < 7; j++ )
@@ -1428,8 +1430,8 @@ void ansysReader::ReadNodalCoordinates()
    // Because the ansys vertices are one-based, increase the array size by one
    this->pointerToMidPlaneNode->SetName( "pointerToMidPlaneNode" );
    this->pointerToMidPlaneNode->SetNumberOfComponents( 1 );
-   this->pointerToMidPlaneNode->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
-   for ( int32 i = 0; i < this->numNodes+1; i++ )
+   this->pointerToMidPlaneNode->SetNumberOfTuples( this->ndnod+ 1 );   // note: +1
+   for ( int32 i = 0; i < this->ndnod+1; i++ )
       this->pointerToMidPlaneNode->SetTuple1( i, i );
 }
 
@@ -1725,6 +1727,12 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
       //std::cout << "Inserting LINE for elementRoutineNumber = " << elementRoutineNumber << std::endl;
       this->ugrid->InsertNextCell( VTK_LINE, numCornerNodes, nodes );
    }
+   else if ( elementRoutineNumber == 188 &&
+             numNodesInElement == 3 && numCornerNodes == 2 )
+   {
+      //std::cout << "Inserting LINE for elementRoutineNumber = " << elementRoutineNumber << std::endl;
+      this->ugrid->InsertNextCell( VTK_LINE, numCornerNodes, nodes );
+   }
    else if ( elementRoutineNumber == 181 &&
              numNodesInElement == 4 && numCornerNodes == 4 )
    {
@@ -1816,8 +1824,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
          expandedNodes[ i ] = vertices->InsertNextPoint( topPlaneCoordinates );
          //if ( elemIndex == 0 ) std::cout << "new vertex = " << expandedNodes[ i ] << std::endl;
 
-         this->nodeID->InsertNextTuple1( expandedNodes[ i ] ); //+ 1 );//sjk nope
-         //this->nodeID->InsertTuple1( expandedNodes[ i ]-1, expandedNodes[ i ] );//nope
+         this->nodeID->InsertNextTuple1( expandedNodes[ i ] );
          //this->nodeID->InsertTuple1( expandedNodes[ i ], expandedNodes[ i ] );
 
          this->pointerToMidPlaneNode->InsertNextTuple1( nodes[ i ] );
@@ -1838,8 +1845,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
          expandedNodes[ numCornerNodes+i ] = vertices->InsertNextPoint( bottomPlaneCoordinates );
          //if ( elemIndex == 0 ) std::cout << "new vertex = " << expandedNodes[ numCornerNodes+i ] << std::endl;
 
-         this->nodeID->InsertNextTuple1( expandedNodes[ numCornerNodes+i ] );//- 1 );//nope
-         //this->nodeID->InsertTuple1( expandedNodes[ numCornerNodes+i ]+1, expandedNodes[ numCornerNodes+i ] );//nope
+         this->nodeID->InsertNextTuple1( expandedNodes[ numCornerNodes+i ] );
          //this->nodeID->InsertTuple1( expandedNodes[ numCornerNodes+i ], expandedNodes[ numCornerNodes+i ] );
 
          this->pointerToMidPlaneNode->InsertNextTuple1( nodes[ i ] );
@@ -2142,9 +2148,9 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
 
       int ansysNode = this->nodeID->GetTuple1( i );
       parameterData[ 0 ]->SetTuple( ansysNode, nodalSolution );
-/*
+
 #ifdef PRINT_HEADERS
-      if ( ansysNode == 2108 )    //tets
+      //if ( ansysNode == 2108 )    //tets
       {
          std::cout <<  "nodalSolution[ " << ansysNode <<" ] = ";
          for ( int32 j = 0; j < this->numDOF; j++ )
@@ -2152,28 +2158,37 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
          std::cout << std::endl;
       }
 #endif // PRINT_HEADERS
-*/
+
       // parameterData[ 1 ] is displacement magnitude scalar
       parameterData[ 1 ]->SetTuple1( ansysNode, vtkMath::Norm(nodalSolution) );
 
 #ifdef PRINT_HEADERS
       if ( vtkMath::Norm(nodalSolution) > 1e+10 )
       {
-         std::cout <<  "nodalSolution[ " << ansysNode <<" ] = "
+         std::cout << "nodalSolution[ " << ansysNode <<" ] = "
                    << vtkMath::Norm(nodalSolution) << std::endl;
       }
 #endif // PRINT_HEADERS
    }
 
+   std::cout << "this->ndnod+1 = " << this->ndnod+1 << std::endl;
+   std::cout << "this->numExpandedNodes+1 = " << this->numExpandedNodes+1 << std::endl;
+   std::cout << "pointerToMidPlaneNode->GetNumberOfTuples = "
+             << this->pointerToMidPlaneNode->GetNumberOfTuples() << std::endl;
+
    // Now take care of shell elements
-   for ( int32 i = this->numNodes+1; i < this->numExpandedNodes+1; i++ )
+   for ( int32 i = this->ndnod+1; i < this->numExpandedNodes+1; i++ )
    {
       int32 midPlaneNode = this->pointerToMidPlaneNode->GetTuple1( i );
+      //std::cout << "i = " << i << ", midPlaneNode = " << midPlaneNode << std::endl;
       for ( int32 j = 0; j < numParameters; j++ )
       {
+         if ( parameterData[ j ]->GetTuple( midPlaneNode ) == NULL )
+            std::cout << "parameterData[ " << j << " ]->GetTuple( midPlaneNode ) == NULL" << std::endl;
          parameterData[ j ]->InsertNextTuple( parameterData[ j ]->GetTuple( midPlaneNode ) );
       }
    }
+   std::cout << "here sjk 2" << std::endl;
 
    for ( int32 i=0; i < numParameters; i++ )
    {

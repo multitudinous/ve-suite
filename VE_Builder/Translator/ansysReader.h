@@ -112,6 +112,7 @@ class ansysReader
 
       int32 maxety;
       int32 maxrl;
+      int32 ndnod;
       int32 maxcsy;
       int32 ptrETY;
       int32 ptrREL;
