@@ -10,14 +10,14 @@
    0                  // transparency toggle
    0                  // color toggle
    3.281 3.281 3.281     // Scale values for geometry file
-   -1 4 3      // Translation values for geometry file
+   -1 4 5      // Translation values for geometry file
    0 0 90             // Rotation values for geometry file
    /home/vr/Applications/TSVEG/Interactive_Harvester/tall_baffle.pfb    // Geometry file name
 9                       // Object type 9: Geometry file name
    0                  // transparency toggle
    0                  // color toggle
    3.281 3.281 3.281     // Scale values for geometry file
-   -1 4 3      // Translation values for geometry file
+   -1 4 4      // Translation values for geometry file
    0 0 90             // Rotation values for geometry file
    /home/vr/Applications/TSVEG/Interactive_Harvester/wide_baffle.pfb    // Geometry file name
 9                // Object type 9: Geometry file name
