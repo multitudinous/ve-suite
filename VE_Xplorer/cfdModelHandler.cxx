@@ -423,7 +423,8 @@ void cfdModelHandler::PreFrameUpdate( void )
       // opacity settings
       int opacity = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       double realOpacity = (double)opacity/100.0f;
-      this->activeDataset->GetLookupTable()->SetAlphaRange(realOpacity, realOpacity);
+      if ( this->activeDataset != NULL )
+         this->activeDataset->GetLookupTable()->SetAlphaRange(realOpacity, realOpacity);
    }
 
    // Can't be an else if because may have to update if dataset has changed beforehand
