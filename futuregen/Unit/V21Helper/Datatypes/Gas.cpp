@@ -68,6 +68,33 @@ void Gas::copy (const Gas& p)
   AshCal = p.AshCal;
   AshpH = p.AshpH;
   
+  _wic_C = p._wic_C;
+  _wic_H = p._wic_H;
+  _wic_O = p._wic_O;
+  _wic_N = p._wic_N;
+  _wic_S = p._wic_S;
+  _wic_CL = p._wic_CL;
+  _ash_ult = p._ash_ult;
+  _ash_prox = p._ash_prox;
+  _proxH2O = p._proxH2O;
+  _proxVM = p._proxVM;
+  _proxFC = p._proxFC;
+  _hhv = p._hhv;
+  _comp1 = p._comp1;
+  _comp2 = p._comp2;
+  _comp3 = p._comp3;
+  _comp4 = p._comp4;
+  _comp5 = p._comp5;
+  _comp6 = p._comp6;
+  _comp7 = p._comp7;
+  _comp8 = p._comp8;
+  _comp9 = p._comp9;
+  _comp10 = p._comp10;
+  _comp11 = p._comp11;
+  _comp12 = p._comp12;
+  _coal_feedRate = p._coal_feedRate;
+
+
   pressure_drop = p.pressure_drop;
 
   thermo_database = p.thermo_database;

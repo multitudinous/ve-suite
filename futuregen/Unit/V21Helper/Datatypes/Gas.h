@@ -44,6 +44,33 @@ public:
   double AshCal;
   double AshpH;
 
+  // Temporarily add coal data
+  double _wic_C;
+  double _wic_H;
+  double _wic_O;
+  double _wic_N;
+  double _wic_S;
+  double _wic_CL;
+  double _ash_ult;
+  double _ash_prox;
+  double _proxH2O;
+  double _proxVM;
+  double _proxFC;
+  double _hhv;
+  double _comp1;
+  double _comp2;
+  double _comp3;
+  double _comp4;
+  double _comp5;
+  double _comp6;
+  double _comp7;
+  double _comp8;
+  double _comp9;
+  double _comp10;
+  double _comp11;
+  double _comp12;
+  double _coal_feedRate;
+
   // This keeps a running tally of pressure drop.
   double pressure_drop;
 

@@ -8,7 +8,7 @@ using namespace Vision21;
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))
 {
-  UnitName_=name;
+  UnitName_= name;
   return_state = 0;
 }
   
@@ -39,21 +39,21 @@ void Body_Unit_i::StartCalc (
     igas1 = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
     igas2 = executive_->GetImportData(id_, 1); //port 1 will be the second gas input port;
     
-    if (string(igas1)=="" || string(igas2)=="")
-      {
-	error("Missing input input.");
-	return;
-      }
+    if (string(igas1)=="" || string(igas2)=="") {
+      error("Missing input input.");
+      return;
+    }
 
     p.SetSysId("gas_in.xml");
         
-    Gas *gas_in_anode = new Gas();
-    Gas *gas_in_cathode = new Gas();
+    Gas *gas_in_anode = new Gas;
+    Gas *gas_in_cathode = new Gas;
+
     V21Helper gashelper(therm_path.c_str());
     
     p.Load(igas1, strlen(igas1)); 
     gashelper.IntToGas(&(p.intfs[0]), *gas_in_anode);
-    
+  
     p.Load(igas2, strlen(igas2)); 
     gashelper.IntToGas(&(p.intfs[0]), *gas_in_cathode);
     
@@ -63,8 +63,7 @@ void Body_Unit_i::StartCalc (
       warning("Incoming gas temperature out of range.");
     }
     
-    if(gas_in_cathode->gas_composite.T <= 200 || gas_in_cathode->gas_composite.T >= 3000) 
-      {
+    if(gas_in_cathode->gas_composite.T <= 200 || gas_in_cathode->gas_composite.T >= 3000)  {
       warning("Incoming gas temperature out of range.");
     }
     
@@ -97,8 +96,9 @@ void Body_Unit_i::StartCalc (
     aspen_stream cathin,anodein;
     
     // heat up streams to reaction temperatures
-    double tin_anode = gas_in_anode->gas_composite.T;
-    double tin_cathode =gas_in_cathode->gas_composite.T;
+    double tin_anode   = gas_in_anode->gas_composite.T;
+    double tin_cathode = gas_in_cathode->gas_composite.T;
+
     /*
       double q_heater = 0;
       if(tin_anode < 750) {
@@ -176,6 +176,7 @@ void Body_Unit_i::StartCalc (
       * (h2 - h1) / 1e6;
       }
     */
+
     anodein.set_thermo(&thm);
     anodein.set_temp(tin_anode);
     anodein.set_mass_flow_rate(gas_in_anode->gas_composite.M);
@@ -343,14 +344,16 @@ void Body_Unit_i::SetParams (
   ))
   {
     // Add your implementation here
-    if (string(param)=="")
+    if (string(param)=="") 
       return;
+    
     std::cout<<UnitName_<<" :SetParams called"<<endl;
+    
     Package p;
         
     p.SetSysId("gui.xml");
     p.Load(param, strlen(param));
-    //Now make use of p.intfs to get your GUI vars out
+
     a_thickness = p.intfs[0].getDouble("a_thickness");
     c_thickness = p.intfs[0].getDouble("c_thickness");
     e_thickness = p.intfs[0].getDouble("e_thickness"); 

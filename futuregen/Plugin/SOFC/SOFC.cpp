@@ -37,7 +37,7 @@ SOFC
   c_E = 600.0;
   e_A = 0.00294;
   e_E = 10350.0;
-  cell_area = 304.0;
+  cell_area = 305.0;
   num_cell = 1658260;
   fuel_util = 85.0;
 

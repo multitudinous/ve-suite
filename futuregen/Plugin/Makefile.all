@@ -34,7 +34,6 @@ OBJ14 = EvaporationCooler/EvaporationCooler.o EvaporationCooler/EvaporationCoole
 OBJ15 = Cyclone/Cyclone.o Cyclone/Cyclone_UI.o 
 OBJ16 = Compressor/Compressor.o Compressor/Compressor_UI.o 
 OBJ17 = MembraneReactor/MembraneReactor.o MembraneReactor/MembraneReactor_UI.o 
-OBJ18 = HeatExchange0D/HeatExchange0D.o HeatExchange0D/HeatExchange0D_UI.o 
 OBJ19 = ChlorineBed/ChlorineBed.o ChlorineBed/ChlorineBed_UI.o 
 OBJ20 = GasFeedback/GasFeedback.o GasFeedback/GasFeedback_UI.o GasFeedback/thermo.o GasFeedback/matrix.o
 OBJ21 = Gasifier/Gasifier.o Gasifier/Gasifier_UI.o 
@@ -52,7 +51,7 @@ OBJ29 = WaterSource/WaterSource.o WaterSource/WaterSource_UI.o
 .cpp.o :
 	$(CXX) -g -c ${INCLUDES} ${CMP} ${WX_FLAGS} -D WXUSING_PLUGIN_DLL -o $@ $<
 
-all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 s21 s22 s23 s24 s25 s26 s27 s28 s29
+all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s19 s20 s21 s22 s23 s24 s25 s26 s27 s28 s29
 
 s1:	$(OBJ1)
 	$(CXX) -g -shared -o libGasifier0D.so $(OBJ1)
@@ -104,9 +103,6 @@ s16:	$(OBJ16)
 
 s17:	$(OBJ17)
 	$(CXX) -g -shared -o libMembraneReactor.so $(OBJ17)
-
-s18:	$(OBJ18)
-	$(CXX) -g -shared -o libHeatExchange0D.so $(OBJ18)
 
 s19:	$(OBJ19)
 	$(CXX) -g -shared -o libChlorineBed.so $(OBJ19)

@@ -258,6 +258,35 @@ void Body_Unit_i::StartCalc (
 
   gas_model.execute(ox_in, stage2in, gas_out, &summaries);
 
+  // TEMPORARY COAL
+  gas_out->_wic_C = gas_model._wic_C;
+  gas_out->_wic_H = gas_model._wic_H;
+  gas_out->_wic_O = gas_model._wic_O;
+  gas_out->_wic_N = gas_model._wic_N;
+  gas_out->_wic_S = gas_model._wic_S;
+  gas_out->_wic_CL = gas_model._wic_CL;
+  gas_out->_ash_ult = gas_model._ash_ult;
+  gas_out->_ash_prox = gas_model._ash_prox;
+  gas_out->_proxH2O = gas_model._proxH2O;
+  gas_out->_proxVM = gas_model._proxVM;
+  gas_out->_proxFC = gas_model._proxFC;
+  gas_out->_hhv = gas_model._hhv;
+  gas_out->_comp1 = gas_model._comp1;
+  gas_out->_comp2 = gas_model._comp2;
+  gas_out->_comp3 = gas_model._comp3;
+  gas_out->_comp4 = gas_model._comp4;
+  gas_out->_comp5 = gas_model._comp5;
+  gas_out->_comp6 = gas_model._comp6;
+  gas_out->_comp7 = gas_model._comp7;
+  gas_out->_comp8 = gas_model._comp8;
+  gas_out->_comp9 = gas_model._comp9;
+  gas_out->_comp10 = gas_model._comp10;
+  gas_out->_comp11 = gas_model._comp11;
+  gas_out->_comp12 = gas_model._comp12;
+  if(_stage==1) gas_out->_coal_feedRate = _slur_flow[0] * _coal_pct[0];
+  else          gas_out->_coal_feedRate = _slur_flow[0] * _coal_pct[0] +
+		  _slur_flow[1] * _coal_pct[1] + _slur_flow[2] * _coal_pct[2];
+
   /////////
   // Finish
   /////////

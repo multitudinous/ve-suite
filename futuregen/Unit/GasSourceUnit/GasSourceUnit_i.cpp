@@ -45,6 +45,33 @@ void Body_Unit_i::StartCalc (
     gas_data->gas_composite.M_particle = 0;
     gas_data->pressure_drop = 0;
     
+    // TEMPORARY COAL
+    gas_data->_wic_C = 0.0;
+    gas_data->_wic_H = 0.0;
+    gas_data->_wic_O = 0.0;
+    gas_data->_wic_N = 0.0;
+    gas_data->_wic_S = 0.0;
+    gas_data->_wic_CL = 0.0;
+    gas_data->_ash_ult = 0.0;
+    gas_data->_ash_prox = 0.0;
+    gas_data->_proxH2O = 0.0;
+    gas_data->_proxVM = 0.0;
+    gas_data->_proxFC = 0.0;
+    gas_data->_hhv = 0.0;
+    gas_data->_comp1 = 0.0;
+    gas_data->_comp2 = 0.0;
+    gas_data->_comp3 = 0.0;
+    gas_data->_comp4 = 0.0;
+    gas_data->_comp5 = 0.0;
+    gas_data->_comp6 = 0.0;
+    gas_data->_comp7 = 0.0;
+    gas_data->_comp8 = 0.0;
+    gas_data->_comp9 = 0.0;
+    gas_data->_comp10 = 0.0;
+    gas_data->_comp11 = 0.0;
+    gas_data->_comp12 = 0.0;
+    gas_data->_coal_feedRate = 0.0;
+
     // Set things in GUI
     gas_data->gas_composite.T = temp;
     gas_data->gas_composite.P = pres;

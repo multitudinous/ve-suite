@@ -50,7 +50,7 @@ char * Body_Executive_i::GetImportData (
   } else {
 	string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
     cerr << msg;
-    //ClientMessage(msg.c_str());
+    ClientMessage(msg.c_str());
 	
   }
   
@@ -73,12 +73,12 @@ void Body_Executive_i::execute (std::string mn)
 	{
 		msg = "Failed to execute " + mn +"\n";
 		cerr << msg;
-		//ClientMessage(msg.c_str());
+		ClientMessage(msg.c_str());
 	}
     else 
 	{
 		msg = "Executing " + mn +"\n";
-		//ClientMessage(msg.c_str());
+		ClientMessage(msg.c_str());
 	}
   }
 }
@@ -109,7 +109,7 @@ void Body_Executive_i::SetExportData (
     if(!_network->setPortData(module_id, port_id, &(*iter)))
 	{
 		msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
-		//ClientMessage(msg.c_str());
+		ClientMessage(msg.c_str());
 	}
   _mutex.release();
 }
@@ -132,7 +132,7 @@ char * Body_Executive_i::GetExportData (
   if(!_network->getPortData(module_id, port_id, intf)) 
 	{
 		msg = "Unable to get mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
-		//ClientMessage(msg.c_str());
+		ClientMessage(msg.c_str());
 	}
     
     
@@ -221,7 +221,7 @@ void Body_Executive_i::execute_next_mod (long module_id)
     if(rs!=1) {
       int rt = _scheduler->execute(_network->module(_network->moduleIdx(module_id)))-1;
       if(rt<0) {
-	//ClientMessage("Network execution complete\n");
+	ClientMessage("Network execution complete\n");
 	
       }
       else if(_mod_units.find(_network->module(rt)->_name)==_mod_units.end()) {
@@ -324,11 +324,11 @@ void Body_Executive_i::SetModuleResult (
       ; // setOutput O.K.
     } else {
 		msg = "Unable to set mod id# " + to_string(module_id) + "'s Output data\n";
-		//ClientMessage(msg.c_str());
+		ClientMessage(msg.c_str());
     }
 
 	msg = "Mod id# "+ to_string(module_id) + "'s Execution is done\n";
-	//ClientMessage(msg.c_str());
+	ClientMessage(msg.c_str());
 
   _mutex.release();
 }
@@ -400,13 +400,13 @@ void Body_Executive_i::SetNetwork (
       else
 	cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
     if(!_scheduler->schedule(0))
-      ;//ClientMessage("Error in Schedule\n");
+      ClientMessage("Error in Schedule\n");
     else {
-      //ClientMessage("Successfully Scheduled Network\n");
+      ClientMessage("Successfully Scheduled Network\n");
       _scheduler->print_schedule();
     }
   } else {
-    ;//ClientMessage("Error in SetNetwork\n");
+    ClientMessage("Error in SetNetwork\n");
   }
   
   _mutex.release();

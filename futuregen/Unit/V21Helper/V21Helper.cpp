@@ -51,6 +51,34 @@ int V21Helper::IntToGas (Interface *it, Gas &gs)
   gs.gas_composite.tar  = it->getDouble("TAR", &ok);
   gs.gas_composite.soot = it->getDouble("SOOT", &ok);
 
+  // TEMPORARY COAL
+  gs._wic_C         = it->getDouble("WIC_C", &ok);
+  gs._wic_H         = it->getDouble("WIC_H", &ok);
+  gs._wic_O         = it->getDouble("WIC_O", &ok);
+  gs._wic_N         = it->getDouble("WIC_N", &ok);
+  gs._wic_S         = it->getDouble("WIC_S", &ok);
+  gs._wic_CL        = it->getDouble("WIC_CL", &ok);
+  gs._ash_ult       = it->getDouble("ASH_ULT", &ok);
+  gs._ash_prox      = it->getDouble("ASH_PROX", &ok);
+  gs._proxH2O       = it->getDouble("PROXH2O", &ok);
+  gs._proxVM        = it->getDouble("PROXVM", &ok);
+  gs._proxFC        = it->getDouble("PROXFC", &ok);
+  gs._hhv           = it->getDouble("HHV", &ok);
+  gs._comp1         = it->getDouble("COMP1", &ok);
+  gs._comp2         = it->getDouble("COMP2", &ok);
+  gs._comp3         = it->getDouble("COMP3", &ok);
+  gs._comp4         = it->getDouble("COMP4", &ok);
+  gs._comp5         = it->getDouble("COMP5", &ok);
+  gs._comp6         = it->getDouble("COMP6", &ok);
+  gs._comp7         = it->getDouble("COMP7", &ok);
+  gs._comp8         = it->getDouble("COMP8", &ok);
+  gs._comp9         = it->getDouble("COMP9", &ok);
+  gs._comp10        = it->getDouble("COMP10", &ok);
+  gs._comp11        = it->getDouble("COMP11", &ok);
+  gs._comp12        = it->getDouble("COMP12", &ok);
+  gs._coal_feedRate = it->getDouble("COALFEEDRATE", &ok);
+
+  // Particle
   gs.gas_composite.mean_size     = it->getDouble("MEAN_SIZE",     &ok);
   gs.gas_composite.size_variance = it->getDouble("SIZE_VARIANCE", &ok);
   gs.gas_composite.T_particle    = it->getDouble("T_PARTICLE",    &ok);
@@ -145,9 +173,35 @@ int V21Helper::GasToInt (Gas *gs, Interface &it)
   it.setString1D ("WIC_NAME", name); name.clear();
   it.setDouble1D ("WIC_CONC", conc); conc.clear();
 
-  // Done
+  // TEMPORARY COAL
+  it.setDouble("WIC_C"       , gs->_wic_C);
+  it.setDouble("WIC_H"       , gs->_wic_H);
+  it.setDouble("WIC_O"       , gs->_wic_O);
+  it.setDouble("WIC_N"       , gs->_wic_N);
+  it.setDouble("WIC_S"       , gs->_wic_S);
+  it.setDouble("WIC_CL"      , gs->_wic_CL);
+  it.setDouble("ASH_ULT"     , gs->_ash_ult);
+  it.setDouble("ASH_PROX"    , gs->_ash_prox);
+  it.setDouble("PROXH2O"     , gs->_proxH2O);
+  it.setDouble("PROXVM"      , gs->_proxVM);
+  it.setDouble("PROXFC"      , gs->_proxFC);
+  it.setDouble("HHV"         , gs->_hhv);
+  it.setDouble("COMP1"       , gs->_comp1);
+  it.setDouble("COMP2"       , gs->_comp2);
+  it.setDouble("COMP3"       , gs->_comp3);
+  it.setDouble("COMP4"       , gs->_comp4);
+  it.setDouble("COMP5"       , gs->_comp5);
+  it.setDouble("COMP6"       , gs->_comp6);
+  it.setDouble("COMP7"       , gs->_comp7);
+  it.setDouble("COMP8"       , gs->_comp8);
+  it.setDouble("COMP9"       , gs->_comp9);
+  it.setDouble("COMP10"      , gs->_comp10);
+  it.setDouble("COMP11"      , gs->_comp11);
+  it.setDouble("COMP12"      , gs->_comp12);
+  it.setDouble("COALFEEDRATE", gs->_coal_feedRate);
 
-  return 0;
+  // Done
+   return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
