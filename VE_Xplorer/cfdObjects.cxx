@@ -89,11 +89,11 @@ std::vector< vtkActor* > cfdObjects::GetActors( void )
 
 void cfdObjects::ClearActors( void )
 {
-/*   for ( unsigned int i = 0; i < actors.size(); ++i )
+   for ( unsigned int i = 0; i < actors.size(); ++i )
    {
       actors.at( i )->Delete();
    }
-   actors.clear();*/
+   actors.clear();
 
 }
 

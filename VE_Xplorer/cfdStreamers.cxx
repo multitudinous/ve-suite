@@ -167,10 +167,11 @@ void cfdStreamers::Update( void )
    this->mapper->Update();
    //this->mapper->Print( cout );
  
+   vtkActor* temp = vtkActor::New();
+   temp->SetMapper( this->mapper );
+   temp->GetProperty()->SetSpecularPower( 20.0f );
    this->actors.push_back( vtkActor::New() );
-   this->actors.back()->SetMapper( this->mapper );
-   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
-
+   this->actors.back()->ShallowCopy( temp );
    this->updateFlag = true;
    
    vprDEBUG(vprDBG_ALL,0) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;

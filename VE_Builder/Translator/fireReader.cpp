@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <unistd.h>
+//#include <unistd.h>
 #include <fstream>
 //#include <istream>
 #include <sstream>

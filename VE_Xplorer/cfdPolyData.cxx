@@ -97,7 +97,7 @@ void cfdPolyData::Update()
          << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
    }
 
-   this->actors.push_back( vtkActor::New() );
+   vtkActor* temp = vtkActor::New();
    vtkPolyData * pd = this->GetActiveDataSet()->GetPolyData();   
    vtkCellTypes *types = vtkCellTypes::New();
    pd->GetCellTypes( types );   
@@ -114,7 +114,7 @@ void cfdPolyData::Update()
       polyTubes->Update();
       this->map->SetInput( polyTubes->GetOutput() );
       polyTubes->Delete();
-	  this->actors.back()->GetProperty()->SetRepresentationToSurface();
+	   temp->GetProperty()->SetRepresentationToSurface();
    }
    else if ( pd->GetCellType( 0 ) == VTK_VERTEX &&
              types->GetNumberOfTypes() == 1 &&
@@ -175,7 +175,7 @@ void cfdPolyData::Update()
       this->map->SetInput( sphereGlyph->GetOutput() );
       sphereSrc->Delete();
       sphereGlyph->Delete();
-      this->actors.back()->GetProperty()->SetRepresentationToSurface();
+      temp->GetProperty()->SetRepresentationToSurface();
    }
    else if ( pd->GetCellType( 0 ) == VTK_VERTEX &&
              types->GetNumberOfTypes() == 1 &&
@@ -185,15 +185,15 @@ void cfdPolyData::Update()
                              << std::endl << vprDEBUG_FLUSH;
       this->map->SetColorModeToMapScalars();
       this->map->SetInput( pd );
-      this->actors.back()->GetProperty()->SetRepresentationToPoints();
-      this->actors.back()->GetProperty()->SetPointSize(4*this->GetSphereScaleFactor());
+      temp->GetProperty()->SetRepresentationToPoints();
+      temp->GetProperty()->SetPointSize(4*this->GetSphereScaleFactor());
    }
    else
    {
       vprDEBUG(vprDBG_ALL,1) << " IS POLYDATA SURFACE"
                              << std::endl << vprDEBUG_FLUSH;
       this->map->SetInput( pd );
-      this->actors.back()->GetProperty()->SetRepresentationToSurface();
+      temp->GetProperty()->SetRepresentationToSurface();
    }
 
    types->Delete();
@@ -225,8 +225,10 @@ void cfdPolyData::Update()
 
    this->map->Update();
 
-   this->actors.back()->SetMapper( this->map );
-   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
+   temp->SetMapper( this->map );
+   temp->GetProperty()->SetSpecularPower( 20.0f );
+   this->actors.push_back( vtkActor::New() );
+   this->actors.back()->ShallowCopy( temp );
    this->updateFlag = true;
 }
 

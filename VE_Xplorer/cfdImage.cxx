@@ -112,10 +112,12 @@ cfdImage::cfdImage( char* param )
       this->texture->SetInput( this->bmpReader->GetOutput() );
       this->texture->InterpolateOff();
 
-	this->actors.push_back( vtkActor::New() );
-	this->actors.back()->SetMapper( this->mapper );
-	this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
-      this->actors.back()->SetTexture( this->texture );        
+      vtkActor* temp = vtkActor::New();
+      temp->SetMapper( this->mapper );
+      temp->GetProperty()->SetSpecularPower( 20.0f );
+      temp->SetTexture( this->texture ); 
+      this->actors.push_back( vtkActor::New() );
+      this->actors.back()->ShallowCopy( temp );       
 
       this->type = bmpOrientation;
       if      (this->type==0)  this->typeLabel = 'X';

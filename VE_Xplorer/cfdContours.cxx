@@ -78,9 +78,11 @@ void cfdContours::Update( void )
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();
-	this->actors.push_back( vtkActor::New() );
-	this->actors.back()->SetMapper( this->mapper );
-	this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
+      vtkActor* temp = vtkActor::New();
+      temp->SetMapper( this->mapper );
+      temp->GetProperty()->SetSpecularPower( 20.0f );
+      this->actors.push_back( vtkActor::New() );
+      this->actors.back()->ShallowCopy( temp );
       this->updateFlag = true;
    }
    else

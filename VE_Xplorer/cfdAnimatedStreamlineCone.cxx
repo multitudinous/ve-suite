@@ -203,9 +203,12 @@ void cfdAnimatedStreamlineCone::Update( void )
 
 
       vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop3" << std::endl << vprDEBUG_FLUSH;
+      vtkActor* temp = vtkActor::New();
+      temp->SetMapper( this->mapper );
+      temp->GetProperty()->SetSpecularPower( 20.0f );
+      temp->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
       this->actors.push_back( vtkActor::New() );
-      this->actors.back()->SetMapper( this->mapper );
-      this->actors.back()->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
+      this->actors.back()->ShallowCopy( temp );
      
       //Make geodes from each polydata
       vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop4" << std::endl << vprDEBUG_FLUSH;

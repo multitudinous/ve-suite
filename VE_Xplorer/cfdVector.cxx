@@ -197,17 +197,18 @@ void cfdVector::Update( void )
                                         ->GetLookupTable() );
       this->mapper->Update();
 
-      this->updateFlag = true;
    }
    else if ( this->cursorType == CUBE )
    {
       vprDEBUG(vprDBG_ALL, 0) << "cfdVector not implemented for cube cursor"
                               << std::endl << vprDEBUG_FLUSH;
-      this->updateFlag = false;
    }
    
+   vtkActor* temp = vtkActor::New();
+   temp->SetMapper( this->mapper );
+   temp->GetProperty()->SetSpecularPower( 20.0f );
    this->actors.push_back( vtkActor::New() );
-   this->actors.back()->SetMapper( this->mapper );
-   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
+   this->actors.back()->ShallowCopy( temp );
+   this->updateFlag = true;
 }
 
