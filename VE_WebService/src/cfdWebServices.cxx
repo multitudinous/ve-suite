@@ -99,6 +99,173 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
 
 }
 
+///////////////////////////////////////////////////////////////////
+
+void cfdExecutive::UpdateModules( void )
+{
+   if ( !CORBA::is_nil( this->_exec ) && ui_i->GetCalcFlag() )
+   {
+      // Get Network and parse it
+      this->GetEverything();
+   }
+}
+
+///////////////////////////////////////////////////////////////////
+
+void cfdExecutive::GetEverything( void )
+{
+   //while ( runGetEverythingThread )
+   {
+      //vpr::System::msleep( 500 );  // half-second delay
+   if ( !CORBA::is_nil( this->_exec) )//&& updateNetworkString )
+   {
+      vprDEBUG(vprDBG_ALL,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
+      GetNetwork();
+  
+      std::map< int, std::string >::iterator iter;
+      std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+      // Add any plugins that are present in the current network
+      for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
+      {
+         foundPlugin = _plugins.find( iter->first );
+         if ( (foundPlugin == _plugins.end()) || _plugins.empty() )
+         {
+            // if a new module is on the id map but not on the plugins map
+            // create it...
+            cfdVEBaseClass* temp = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
+            if ( temp != NULL )
+            {
+               _plugins[ iter->first ] = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
+               // When we create the _plugin map here we will do the following
+               _plugins[ iter->first ]->InitializeNode( cfdPfSceneManagement::instance()->GetWorldDCS() );
+               _plugins[ iter->first ]->AddSelfToSG();
+               cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
+               _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
+               _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
+               vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
+                                      << " ]-> " << iter->second 
+                                      << " is being created." << std::endl << vprDEBUG_FLUSH;
+            }
+         }
+         else
+         {
+            // plugin already present...
+            vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
+                                    << " ]-> " << iter->second 
+                                    << " is already on the plugin map." << std::endl << vprDEBUG_FLUSH;
+         }
+      }
+
+      // Remove any plugins that aren't present in the current network
+      for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); )
+      {  
+         // When we clear the _plugin map will
+         // loop over all plugins
+         iter = _id_map.find( foundPlugin->first );
+         if ( iter == _id_map.end() )
+         {
+            // if a module is on the pugins map but not on the id map
+            foundPlugin->second->RemoveSelfFromSG();
+            cfdModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
+            // Must delete current instance of vebaseclass object
+            delete _plugins[ foundPlugin->first ];
+            _plugins.erase( foundPlugin++ );
+         }
+         else
+         {
+            // plugin already present...
+            vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
+                                    << " ]-> " << iter->second 
+                                    << " is already on the plugin and id map." << std::endl << vprDEBUG_FLUSH;
+            ++foundPlugin;
+         }
+         // The above code is from : The C++ Standard Library by:Josuttis pg. 205
+      }
+      vprDEBUG(vprDBG_ALL,0) << "|\tDone Getting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been intialized or not time to update! " <<  std::endl << vprDEBUG_FLUSH;     
+   }
+      //updateNetworkString = false;
+   }
+}
+
+///////////////////////////////////////////////////////////////////
+
+
+void cfdExecutive::GetNetwork ( void )
+{
+/*  
+   char* network = 0;
+   try 
+   { 
+      network = _exec->GetNetwork();
+   } 
+   catch (CORBA::Exception &) 
+   {
+      std::cerr << "ERROR: cfdExecutive : no exec found! " << std::endl;
+   }
+*/
+   // Get buffer value from Body_UI implementation
+   std::string temp( ui_i->GetNetworkString() );
+   const char* network = temp.c_str();
+   vprDEBUG(vprDBG_ALL,2)  << "|\tNetwork String : " << network 
+                              << std::endl << vprDEBUG_FLUSH;
+
+/////////////////////////////
+// This code taken from Executive_i.cpp
+   Package p;
+   p.SetSysId("temp.xml");
+   p.Load(network, strlen(network));
+  
+   _network->clear();
+   _id_map.clear();
+
+   std::vector<Interface>::iterator iter;
+   // Find network layout chunk in network structure
+   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+   {
+      if ( iter->_id == -1 ) 
+      {
+         break;
+      }
+   }
+
+   if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
+   {
+      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+      {
+         if(_network->setInput(iter->_id, &(*iter))) 
+         {
+            _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+            _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+            _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+         }  
+         else
+         {
+            std::cerr << "|\tUnable to set id# " << iter->_id << "'s inputs" << std::endl;
+         }
+
+         if ( iter->_id != -1 ) 
+         {
+            //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
+            _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
+            //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
+            _it_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
+         }
+      }
+   } 
+   else 
+   {
+      std::cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << std::endl;
+   }
+///////////////////////////
+   /*if ( network )
+      delete [] network;*/
+}
+
+
 cfdWebServices::~cfdWebServices()
 {
    delete uii;
