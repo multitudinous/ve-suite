@@ -60,7 +60,7 @@ char * Body_Executive_i::GetImportData (
 void Body_Executive_i::execute (std::string mn)
 {
   if(_exec_thread.find(mn)==_exec_thread.end()) {
-    cerr << "Failed to execute " << mn << endl;
+    cerr << "Cannot find execution thread for " << mn << endl;
   } else {
     if(!_exec_thread[mn]->needexecute()) cerr << "Failed to execute " << mn << endl;
     else cout << "Executing " << mn << endl;
@@ -166,69 +166,8 @@ void Body_Executive_i::GetProfileData (
   _mutex.release();
 }
 
-void Body_Executive_i::SetModuleMessage (
-    CORBA::Long module_id,
-    const char * msg
-    ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
+void Body_Executive_i::execute_next_mod (long module_id)
 {
-  _mutex.acquire();
-  
-  cout << "SetModuleMessage " << msg << endl;
-
-  std::map<std::string, Body::UI_var>::iterator iter;
-
-  for(iter=uis_.begin(); iter!=uis_.end(); iter++) {
-    cout << msg << " :TO: " << iter->first << endl;
-    //iter->second->Raise("MESSAGE");//msg);
-  }
-  
-  cout << "BACK\n";
-
-  // THIS EXPECTS AN INTERFACE - NOT A STRING
-
-  // Package p;
-  // p.SetSysId("temp.xml");
-  // p.Load(msg, strlen(msg));
-  
-  // Should only be one item. But, maybe later...
-  // std::vector<Interface>::iterator iter;
-  // for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-    // if(!_network->setMessage(module_id, &(*iter)))
-      // cerr << "Unable to set mod id# " << module_id 
-	//    << "'s Message data\n";
-  
-  _mutex.release();
-}
-  
-void Body_Executive_i::SetModuleResult (
-    CORBA::Long module_id,
-    const char * result
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ))
-{
-  _mutex.acquire();
-
-  Package p;
-  p.SetSysId("temp.xml");
-  p.Load(result, strlen(result));
-
-  // Should only be one item. But, maybe later...
-  std::vector<Interface>::iterator iter;
-  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-    if(_network->setOutput(module_id, &(*iter))) {
-    } else {
-      cerr << "Unable to set mod id# " << module_id << "'s Output data\n";
-    }
- 
-      
   char *msg;
   
   try {
@@ -297,7 +236,72 @@ void Body_Executive_i::SetModuleResult (
       }
     }
   }
-   
+}
+
+void Body_Executive_i::SetModuleMessage (
+    CORBA::Long module_id,
+    const char * msg
+    ACE_ENV_ARG_DECL
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ))
+{
+  _mutex.acquire();
+  
+  cout << "SetModuleMessage " << msg << endl;
+
+  std::map<std::string, Body::UI_var>::iterator iter;
+
+  //if(uis_.find("UIclientYang")!=uis_.end())
+  //  uis_["UIclientYang"]->Raise(msg);
+
+  // for(iter=uis_.begin(); iter!=uis_.end(); iter++) {
+   // cout << msg << " :TO: " << iter->first << endl;
+  // iter->second->Raise(msg);
+  // }
+
+  // THIS EXPECTS AN INTERFACE - NOT A STRING
+
+  // Package p;
+  // p.SetSysId("temp.xml");
+  // p.Load(msg, strlen(msg));
+  
+  // Should only be one item. But, maybe later...
+  // std::vector<Interface>::iterator iter;
+  // for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+    // if(!_network->setMessage(module_id, &(*iter)))
+      // cerr << "Unable to set mod id# " << module_id 
+	//    << "'s Message data\n";
+  
+  _mutex.release();
+}
+  
+void Body_Executive_i::SetModuleResult (
+    CORBA::Long module_id,
+    const char * result
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+    , Error::EUnknown
+  ))
+{
+  _mutex.acquire();
+
+  Package p;
+  p.SetSysId("temp.xml");
+  p.Load(result, strlen(result));
+
+  // Should only be one item. But, maybe later...
+  std::vector<Interface>::iterator iter;
+  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+    if(_network->setOutput(module_id, &(*iter))) {
+      ; // setOutput O.K.
+    } else {
+      cerr << "Unable to set mod id# " << module_id << "'s Output data\n";
+    }
+
   _mutex.release();
 }
 
@@ -647,7 +651,7 @@ void Body_Executive_i::RegisterUnit (
   
   if(_exec_thread.find(std::string(UnitName))==_exec_thread.end()) {
     // CLEAN THIS UP IN UNREGISTER UNIT !
-    Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)]);
+    Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
     ex->activate();
     _exec_thread[std::string(UnitName)] = ex;
   }

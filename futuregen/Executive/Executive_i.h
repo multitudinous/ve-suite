@@ -32,7 +32,9 @@ public:
   
   //Destructor 
   virtual ~Body_Executive_i (void);
-  
+   
+  void execute_next_mod (long module_id);
+ 
 protected:
 
   void execute (std::string);

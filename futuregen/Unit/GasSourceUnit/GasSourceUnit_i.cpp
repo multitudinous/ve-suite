@@ -245,7 +245,7 @@ void Body_Unit_i::SetID (
     , Error::EUnknown
   ))
   {
-    std::cout<<UnitName_<<" :SetID called"<<endl;
+    std::cout<<UnitName_<<" :SetID called\n";
 
     id_=id;
   }
@@ -258,7 +258,7 @@ CORBA::Long Body_Unit_i::GetID (
     , Error::EUnknown
   ))
   {
-    std::cout<<UnitName_<<" :GetID called"<<endl;
+    std::cout << UnitName_ << " :GetID called\n";
 
     return id_;
   }
@@ -272,7 +272,7 @@ void Body_Unit_i::SetName (
     , Error::EUnknown
   ))
   {
-    std::cout<<UnitName_<<" :SetName called"<<endl;
+    std::cout<<UnitName_<<" :SetName called\n";
 
     UnitName_ = std::string(name);
   }

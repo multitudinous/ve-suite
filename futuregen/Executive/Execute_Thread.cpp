@@ -1,3 +1,4 @@
+#include "Executive_i.h"
 
 #include <ace/Task.h>
 #include <ace/OS.h>
@@ -7,9 +8,10 @@
 
 using namespace std;
 
-Execute_Thread::Execute_Thread (Body::Unit_var m) :
-  _mod     ( m ),
-  _is_exec ( false)
+Execute_Thread::Execute_Thread (Body::Unit_var m, Body_Executive_i* ex) :
+  _mod       ( m ),
+  _is_exec   ( false),
+  _executive ( ex )
 {
 
 }
@@ -25,9 +27,8 @@ int Execute_Thread::svc (void)
   while(true) {
     while(true) {
       _mutex.acquire();
-      if(_is_exec) {
-	break;
-      }
+      if(_is_exec) break;
+      
       _mutex.release();
 
 	  ACE_OS::sleep(2); 	    
@@ -40,6 +41,8 @@ int Execute_Thread::svc (void)
     _is_exec = false;
     _mutex.release();
     
+    _executive->execute_next_mod ((long)_mod->GetID());
+
   }
 
 }
