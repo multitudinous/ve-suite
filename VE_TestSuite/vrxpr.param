@@ -51,7 +51,7 @@
    0 0 0             // data dcs translation values (in feet)
    0 0 0             // data dcs rotation values (degrees, Z-X-Y format)
    trans_flowdata    // directory containing indexed 3D meshed vtk files
-   trans_flowdata/trans   // start of name of indexed directories of precomputed plane/surface vtk files
+   trans_flowdata/precomputed    // start of name of indexed directories of precomputed plane vtk files
    trans_geometry    // Transient geometry data directory
    1 1 1             // Transient geometry dcs scale values
    0 0 0             // Transient geometry dcs translation values
