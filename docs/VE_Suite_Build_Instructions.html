@@ -37,16 +37,16 @@
       <p class="Title2">Notes on installation of dependencies</p>
 
       <ul>
-      <li class="bodytext"><p class="bodytext">After TortoiseSVN is installed, you can check out the code provided you have an account registered with ISU’s repository. Create a VE_Suite folder. Go to VE_Suite folder and right-mouse click, choose "Checkout...". For URL, enter https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite.</p>
+         <li class="bodytext"><p class="bodytext">After TortoiseSVN is installed, you can check out the code provided you have an account registered with ISU’s repository. Create a VE_Suite folder. Go to VE_Suite folder and right-mouse click, choose "Checkout...". For URL, enter https://subversion.vrac.iastate.edu/svn/TSVEG/VE_Suite.</p>
 
-      <li class="bodytext"><p><span class="bodytext">Alternatively, if you get the VE-Suite source code as a compressed tarball, some unzip utilities may not maintain the correct directory structure.&nbsp; This can be fixed by unzipping the files on a Unix-based system and then moving the files to the windows machine.<o:p></o:p></span></p>
+         <li class="bodytext"><p class="bodytext">Alternatively, if you get the VE-Suite source code as a compressed tarball, some unzip utilities may not maintain the correct directory structure.&nbsp; This can be fixed by unzipping the files on a Unix-based system and then moving the files to the windows machine.</p>
 
-      <li class="bodytext"><p class="bodytext">While the default locations for installations will work, we recommend creating a directory in the root (C:\) directory to minimize the path lengths and the accompanying potential for typos when configuring environment settings.</p>
+         <li class="bodytext"><p class="bodytext">While the default locations for installations will work, we recommend creating a directory in the root (C:\) directory to minimize the path lengths and the accompanying potential for typos when configuring environment settings.</p>
       </ul>
 
       <p class="bodytextemph">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; vtk-specific notes</p>
       <ul>
-      <li class="bodytext"><p class="bodytext">After downloading the compressed vtk source code and the CMake installer, unzip the vtk source to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease and run CMSetup202.exe to install CMakeSetup.</p>
+      <li class="bodytext"><p class="bodytext">After downloading the compressed vtk source code and the CMake installer, unzip the vtk source to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease and run the CMake setup program (e.g., CMSetup205.exe) to install CMakeSetup.</p>
 
       <li class="bodytext"><p class="bodytext">Go to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease. You will have a "VTK" folder containing the vtk source code. Create two additional folders: "build" and "install".</p>
 
@@ -54,11 +54,11 @@
 
       <li class="bodytext"><p class="bodytext">Change some options from their default values:</p>
       <ol>
-      <li class="bodytext"><p class="bodytext">BUILD_SHARED_LIBS to ON</p>
-      <li class="bodytext"><p class="bodytext">BUILD_TESTING to OFF</p>
-      <li class="bodytext"><p class="bodytext">CMAKE_INSTALL_PREFIX to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\install</p>
-      <li class="bodytext"><p class="bodytext">VTK_USE_HYBRID to ON</p>
-      <li class="bodytext"><p class="bodytext">VTK_USE_PARALLEL to ON</p>
+         <li class="bodytext"><p class="bodytext">BUILD_SHARED_LIBS to ON</p>
+         <li class="bodytext"><p class="bodytext">BUILD_TESTING to OFF</p>
+         <li class="bodytext"><p class="bodytext">CMAKE_INSTALL_PREFIX to C:\&lt;your_path&gt;\VTK-4.4-LatestRelease\install</p>
+         <li class="bodytext"><p class="bodytext">VTK_USE_HYBRID to ON</p>
+         <li class="bodytext"><p class="bodytext">VTK_USE_PARALLEL to ON</p>
       </ol>
 
       <li class="bodytext"><p class="bodytext">Press "Configure" (possibly need to do it twice), then "OK".</p>
@@ -77,25 +77,19 @@
 <dl>
    <p class="Title2">Environment Settings</p>
       <dd>
-      <p class="bodytext">To set up the build environment:</p>
+         <p class="bodytext">To specify the build/run environment, perform a one-time edit of the environment variables that are defined in the setup batch file ($(VE_SUITE_HOME)\VE_Installer\setup.bat). If the paths of your environment variables contain spaces, you need to put the directory containing the spaces in quotation marks.</p>
 
-      <ol>
-      <li class="bodytext"><p class="bodytext">Perform a one-time edit of the environment variables that are defined in the setup batch file (./VE_Installer/vesuite.OMNIBUILD.setup.bat). If the paths of your environment variables contain spaces, you need to put the directory containing the spaces in quotation marks.</p>
-
-      <p class="bodytext"><span class="bodytextemph">Example: </span>set VTK_HOME=C:\&#8221;Documents and Settings&#8221;\user\Desktop\vtk</p>
-
-      <li class="bodytext"><p class="bodytext">Run the batch file:</p>
-
-      <p class="bodytext">./VE_Installer/vesuite.OMNIBUILD.setup.bat</p>
-
-      <p class="bodytext">This will set the defined environment variables and launch a session of Visual Studio with the VE-Suite project loaded. The project should be ready to build.</p>
-      </ol>
+         <p class="bodytext"><span class="bodytextemph">Example: </span>set VTK_HOME=C:\&#8221;Documents and Settings&#8221;\user\Desktop\vtk</p>
 </dl>
 
 <dl>
-   <p class="Title2">VE-Suite Project File Options</p>
-   <dd>
-      <p class="bodytext">Currently there are two configurations available: Debug_OMNI and Release_OMNI.</p>
+   <p class="Title2">Building VE-Suite</p>
+      <dd>
+         <p class="bodytext">To set the defined environment variables and launch a session of Visual Studio with the VE-Suite project loaded, run the batch file:</p>
+
+         <p class="bodytext">$(VE_SUITE_HOME)\VE_Installer\build.bat</p>
+
+         <p class="bodytext">Currently there are two supported configurations available: Debug_OMNI and Release_OMNI.</p>
 </dl>
 
 <dl>
@@ -113,7 +107,7 @@
 
       <p class="bodytext">You will also need to pass in your juggler config files as command arguments on the configuration properties tab. With the two projects still open, right-click on the VE_Xplorer project file, and select properties. For simulation mode, you add the following to your command arguments section:</p>
 
-      <p class="bodytext">&nbsp;&nbsp;&nbsp; ${VE_SUITE_HOME}\VE_Xplorer\vjconfig\sim.base.jconf</p>
+      <p class="bodytext">&nbsp;&nbsp;&nbsp; $(VE_SUITE_HOME)\VE_Xplorer\vjconfig\sim.base.jconf</p>
 
       <p class="bodytext">&nbsp;&nbsp;&nbsp; $(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.wand.mixin.jconf</p>
 
