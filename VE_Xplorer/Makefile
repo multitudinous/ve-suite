@@ -243,6 +243,13 @@ endif
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_SceneGraph
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+#Scene Graph Specific flags
+#Can be: _PERFORMER, _OPENSG, _OSG
+ifeq ($(SCENE_GRAPH), OSG)
+   SRCS+= vtkActorToOSG.cpp
+else
+   SRCS+= vtkActorToPF.cxx
+endif
 
 #LIBS=   $(LIBS_BEGIN) $(SYS_LIBS) $(LIBS_END)
 #include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
@@ -297,7 +304,11 @@ srcdir= .
 NO_DEPEND= YES
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-
+ifeq ($(SCENE_GRAPH), OSG)
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.osg.mk
+else
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.pf.mk
+endif
 # list the cpp and h files here
 #IDL_CXX_FILES= ${CONDUCTOR_BASE_DIR}/Observer.cpp \
                ${CONDUCTOR_BASE_DIR}/VjObs.cpp \
@@ -340,13 +351,6 @@ include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE
 
-#Scene Graph Specific flags
-#Can be: _PERFORMER, _OPENSG, _OSG
-ifeq ($(SCENE_GRAPH), OSG)
-   include $(VE_SUITE_HOME)/VE_Installer/dzr.osg.mk
-else
-   include $(VE_SUITE_HOME)/VE_Installer/dzr.pf.mk
-endif
 
 EXTRA_CXXFLAGS+= $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
 
