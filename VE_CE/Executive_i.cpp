@@ -735,38 +735,39 @@ void Body_Executive_i::RegisterUI (
     , Error::EUnknown
   ))
 { 
-  _mutex.acquire();
+   _mutex.acquire();
   
-  //CosNaming::Name name(1);
-  //name.length(1);
-  //name[0].id = CORBA::string_dup(UIName);
+   //CosNaming::Name name(1);
+   //name.length(1);
+   //name[0].id = CORBA::string_dup(UIName);
   
-  try {
-  //  CORBA::Object_var ui_object = naming_context_->resolve(name); 
-  //  if (CORBA::is_nil(ui_object))
-   //   cerr << "NULL UI_OBJ\n";
+   try 
+   {
+      //  CORBA::Object_var ui_object = naming_context_->resolve(name); 
+      //  if (CORBA::is_nil(ui_object))
+      //   cerr << "NULL UI_OBJ\n";
     
-    //Body::UI_var ui = Body::UI::_narrow(ui_object.in());
+      //Body::UI_var ui = Body::UI::_narrow(ui_object.in());
     
-	Body::UI_var ui = Body::UI::_duplicate(ui_ptr);
-    if (CORBA::is_nil(ui))
-      cerr << "NULL UI\n";
+	   Body::UI_var ui = Body::UI::_duplicate(ui_ptr);
+      if (CORBA::is_nil(ui))
+         cerr << "NULL UI\n";
 
-    //uis_.insert(std::pair<std::string, Body::UI_var>(std::string(UIName), ui));
-    uis_[std::string(UIName)] = ui;
+      //uis_.insert(std::pair<std::string, Body::UI_var>(std::string(UIName), ui));
+      uis_[std::string(UIName)] = ui;
 
-    ui->Raise("Connected to Executive\n");
-    cerr << UIName << " : registered a UI\n";
-  }
-  catch (CORBA::Exception &ex) {
-    //std::cerr << "CORBA exception raised! : " <<ex._name<< std::endl;
-    //std::cerr << ex._info<<std::endl;
-	  std::cerr<<"Can't call be UI "<<UIName<<"\n";
-  }
-  
-  _mutex.release();
-  
-  return ;
+      _mutex.release();
+      ui->Raise("Connected to Executive\n");
+      cerr << UIName << " : registered a UI\n";
+   }
+   catch (CORBA::Exception &ex) 
+   {
+      //std::cerr << "CORBA exception raised! : " <<ex._name<< std::endl;
+      //std::cerr << ex._info<<std::endl;
+	   std::cerr<<"Can't call be UI "<<UIName<<"\n";
+      _mutex.release();
+   }
+   return;
 }
 
 void Body_Executive_i::RegisterUnit (

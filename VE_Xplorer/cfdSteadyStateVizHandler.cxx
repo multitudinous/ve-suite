@@ -117,7 +117,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
    this->computeActorsAndGeodes = false;
    this->actorsAreReady = false;
    this->useLastSource = false;
-   //this->transientBusy = 0;
+   this->texturesActive = false;
    this->transientActors = true;
    _param = 0;
 }

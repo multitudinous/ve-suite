@@ -331,7 +331,8 @@ void cfdExecutive::GetNetwork ( void )
       std::cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << std::endl;
    }
 ///////////////////////////
-   delete [] network;
+   /*if ( network )
+      delete [] network;*/
 }
 ///////////////////////////////////////////////////////////////////
 /*

@@ -314,6 +314,7 @@ void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
    _activeTM = _activeTDSet->GetActiveTextureManager();
    if(_activeVolumeVizNode&&_activeTM){
      _activeVolumeVizNode->CreateNode();
+      //_activeVolumeVizNode->GetUpdateCallback()->SetDelayTime( 20.0f );
      if(!_currentBBox)
      {
          _currentBBox = new float[6];
