@@ -1,46 +1,108 @@
-//***insert license here***\\
+#ifndef CFD_WEBSERVICE_H
+#define CFD_WEBSERVICE_H
 
-//#include "cfdAppWrapper.h"
-//#include "cfdVjObsWrapper.h"
+#include "interface.h"
 
-//This class manages the VE Suite web interface
-#ifdef _TAO
-//#include "Executive_i.h"
-#include <orbsvcs/CosNamingC.h>
-#include <tao/BiDir_GIOP/BiDirGIOP.h>
-#else
-#include <omniORB4/CORBA.h>
-#endif
-#include <iostream>
+#include <map>
+#include <string>
 
-class cfdWebServices : public cfdGlobalBase
+class cfdDCS;
+class cfdGroup;
+class cfdGauges;
+class cfdDashboard;
+class cfdExecutiveConfiguration;
+class cfdInteractiveGeometry;
+class Body_UI_i;
+class cfdCommandArray;
+class Network;
+class cfdVEAvailModules;
+class cfdVEBaseClass;
+class cfdVEAvail_Modules;
+class cfdVjObsWrapper;
+class cfdThread;
+
+namespace Body { class Executive; }
+namespace CosNaming { class NamingContext; }
+namespace PortableServer { class POA; }
+
+class cfdWebServices 
 {
    public:
-      cfdWebServices();
-      ~cfdWebServices();
-      bool initCorba(int&, char**);
-   
-   private:
+      cfdWebServices( CosNaming::NamingContext*, PortableServer::POA* );
 
-      CosNaming::NamingContext* _naming_context;
-      // _it_map : maps a module id to an interface object for a module's inputs.
-      std::map<int, Interface>   _it_map;
+      ~cfdWebServices( void );
+
+      void InitOrbNaming( void );
+
+      // the Computational Engine
+      Body::Executive* exec;
+
+      CosNaming::NamingContext* namingContext;
+
+      // _id_map : maps a module id to an interface object for a module's inputs.
+      std::map<int, Interface>   interfaceMap;
   
       // _pt_map : maps a module id to an interface object for a module'ss port data.
-      std::map<int, Interface>   _pt_map;
+      std::map<int, Interface>   portMap;
   
       // _ot_map : maps a module id to an interface object for a modules's outputs.
       //std::map<int, Interface>   _ot_map;
   
-      // _name_map : maps a module id to its module name.
-      std::map< int, std::string> _id_map;
-      std::map< std::string, int > _name_map;
+      // _name_map : maps a module id to it's module name.
+      std::map< int, std::string> IDMap;
+      std::map< std::string, int > nameMap;
   
-      // _name_map : maps a module name to its module id.
-      std::map<int, cfdVEBaseClass* > _plugins;
+      // _name_map : maps a module name to it's module id.
+      std::map<int, cfdVEBaseClass* > pluginMap;
+
+      // Functions that operate on the Executive
+      void GetNetwork( void );
+      void GetOutput( std::string name);
+      void GetPort( std::string name);
+      void GetEverything( void );
+      void HowToUse( std::string name);
+
+      // Get intial module information from the executive
+      void InitModules( void );
+
+      // Update function called from within preFrame
+      void UpdateModules( void );
+   
+      // Function called within preFrame to allow cfdExecutive
+      // to have access to scalar information
+      void UnbindORB( void );
+
+      void SetCalculationsFlag( bool );
+
+      bool GetCalculationsFlag( void );
+
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray* );
+
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
+
+      //Loading the Available Modules
+      cfdVEAvail_Modules* availableModules; 
+
+      // Network class to decode network string
+      Network* network;
+   private:
       
-      cfdGroup* _masterNode;s
-      CORBA::ORB-var _orb;           //our CORBA orb.  maybe this can be a
-                                    // temp variable in the initCorba function,
-                                    //but will I know that for sure, it's here
+      cfdExecutiveConfiguration* param;
+      std::string activeScalarName;
+      cfdGauges* gauges;
+      cfdDashboard* dashBoard;
+      cfdInteractiveGeometry* geometry;
+      Body_UI_i* uii;
+      cfdGroup* masterNode;
+
+      bool doneWithCalculations;
+      bool updateNetworkString;
+      bool runGetEverythingThread;
+      // Classes and variables for multithreading.
+      //cfdThread* thread;
 };
+
+#endif
+

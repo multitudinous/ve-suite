@@ -3,57 +3,108 @@
 
 
 #include "cfdWebServices.h"
+#include <iostream>
+#include <string>
+#include <sstream>
 
-bool cfdWebServices::initCorba(int &argc, char* argv[])
+#include <vrj/Util/Debug.h>
+#include <vpr/System.h>
+
+#include <orbsvcs/CosNamingC.h>
+
+
+cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, PortableServer::POA* childPOA )
 {
-   #ifdef _TAO
-      this->_orb = CORBA::ORB_init( argc, argv,"VE_Suite_ORB" );
-   #else
-      this->_orb = CORBA::ORB_init( argc, argv,"omniORB4" ); 
-   #endif // _TAO
-      if ( CORBA::is_nil( orb.in() ) )
-         return false;
-     
-      //Here is the part to contact the naming service and get the reference for the executive
-      CORBA::Object_var naming_context_object =
-        orb->resolve_initial_references ("NameService"); 
-      CORBA::String_var sior1(orb->object_to_string( naming_context_object.in() ) );
-      std::cout << "|  IOR of the server side : " << std::endl << sior1 << std::endl;
-      CosNaming::NamingContext_var naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in());
+  this->namingContext = inputNameContext;
+   try
+   {
+      XMLPlatformUtils::Initialize();
+   }
+   catch(const XMLException &toCatch)
+   {
+      std::cerr << "Error during Xerces-c Initialization.\n"
+            << "  Exception message:"
+            << XMLString::transcode(toCatch.getMessage()) << std::endl;
+      return;
+   }
 
-      //Here is the code to set up the server
-      CORBA::Object_var poa_object = orb->resolve_initial_references ("RootPOA"); // get the root poa
-      PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_object.in());
-      PortableServer::POAManager_var poa_manager = poa->the_POAManager();
+   this->_doneWithCalculations = true;
+   this->runGetEverythingThread = true;
+   //this->updateNetworkString = false;
+   //this->thread = 0;
 
-   #ifdef _TAO
-      // Create policy with BiDirPolicy::BOTH
-      CORBA::PolicyList policies( 1 );
-      policies.length( 1 );
+   //this->naming_context = CosNaming::NamingContext::_duplicate( 
+   //   corbaManager->_vjObs->GetCosNaming()->naming_context );
+   this->masterNode = new cfdGroup();
+   this->masterNode->SetName( "cfdExecutive_Node" );
+   cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->masterNode );
 
-      CORBA::Any pol;
-      pol <<= BiDirPolicy::BOTH;
-      policies[ 0 ] = orb->create_policy( BiDirPolicy::BIDIRECTIONAL_POLICY_TYPE,
-                        pol);
+   av_modules = new cfdVEAvail_Modules();
+   network = new Network();
 
-      // Create POA as child of RootPOA with the above policies.  This POA 
-      // will receive request in the same connection in which it sent 
-      // the request 
+   //time_t* timeVal;
+   long id = (long)time( NULL );
+   std::ostringstream dirStringStream;
+   dirStringStream << "VEClient" << id;
+   std::string UINAME = dirStringStream.str();
+   bool isOrbInit = false;
 
-      PortableServer::POA_var child_poa = poa->create_POA ("childPOA",
-                          poa_manager.in(),
-                          policies);
+   exec = NULL;
+   this->uii = 0;
+   if (!isOrbInit)
+   {
+      //init_orb_naming();
+      isOrbInit = true;
+   }
 
-      // Creation of childPOA is over. Destroy the Policy objects. 
-      for (CORBA::ULong i = 0; i < policies.length (); ++i)
-      {
-            policies[i]->destroy();
-      }
-   #endif // _TAO
+   try
+   {
+      CosNaming::Name name(1);
+      name.length(1);
+      name[0].id = CORBA::string_dup ("Executive");
+    
+      CORBA::Object_var exec_object = this->namingContext->resolve(name);
+      this->exec = Body::Executive::_narrow(exec_object.in());
 
-      poa_manager->activate();
+      //Create the Servant
+      uii = new Body_UI_ithis->(exec, UINAME);
+      //Body_UI_i ui_i( UINAME);
 
-      this->_orb->run();
-      return true;
+      PortableServer::ObjectId_var id = 
+         PortableServer::string_to_ObjectId( CORBA::string_dup( "cfdExecutive" ) ); 
+    
+      //activate it with this child POA 
+      child_poa->activate_object_with_id( id.in(), &(*ui_i) );
+
+      // obtain the object reference
+      Body::UI_var unit =  
+      Body::UI::_narrow( childPOA->id_to_reference( id.in() ) );
+
+      // Don't register it to the naming service anymore
+      // the bind call will hang if you try to register
+      // Instead, the new idl make the ref part of the register call 
+      // Naming Service now is only used for boot trap 
+      // to get the ref for Executive
+
+      //Call the Executive CORBA call to register it to the Executive
+      exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
+      std::cout << "|\tConnected to the Executive " << std::endl;   
+	   //this->thread = new cfdThread();
+      //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
+   } 
+   catch (CORBA::Exception &) 
+   {      
+      std::cerr << "|\tExecutive not present or VEClient registration error" << std::endl;
+   }
+
 }
+
+cfdWebServices::~cfdWebServices()
+{
+   delete uii;
+   delete network;
+   delete masterNode;
+}
+
+
 

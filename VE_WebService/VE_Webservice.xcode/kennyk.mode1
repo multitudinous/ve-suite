@@ -206,22 +206,22 @@
 			<key>Content</key>
 			<dict>
 				<key>PBXProjectModuleGUID</key>
-				<string>AD585E4A07F4DF520030C9C2</string>
+				<string>AD0E50D607FB67A0005196A0</string>
 				<key>PBXProjectModuleLabel</key>
-				<string>cfdExecutive.cxx</string>
+				<string>cfdExecutive.h</string>
 				<key>PBXSplitModuleInNavigatorKey</key>
 				<dict>
 					<key>Split0</key>
 					<dict>
 						<key>PBXProjectModuleGUID</key>
-						<string>AD585E4B07F4DF520030C9C2</string>
+						<string>AD0E50D707FB67A0005196A0</string>
 						<key>PBXProjectModuleLabel</key>
-						<string>cfdExecutive.cxx</string>
+						<string>cfdExecutive.h</string>
 						<key>bookmark</key>
-						<string>AD585E5507F4E1520030C9C2</string>
+						<string>ADCC8E8207FCA35B005D8201</string>
 						<key>history</key>
 						<array>
-							<string>AD585E4C07F4DF520030C9C2</string>
+							<string>ADCC8E7807FC9C8A005D8201</string>
 						</array>
 					</dict>
 					<key>SplitCount</key>
@@ -237,7 +237,7 @@
 				<key>PBXModuleWindowStatusBarHidden2</key>
 				<false/>
 				<key>RubberWindowFrame</key>
-				<string>505 384 750 502 0 0 1280 1002 </string>
+				<string>268 341 750 502 0 0 1280 1002 </string>
 			</dict>
 		</dict>
 	</array>
@@ -268,8 +268,6 @@
 			<key>Layout</key>
 			<array>
 				<dict>
-					<key>BecomeActive</key>
-					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -304,11 +302,12 @@
 							<key>PBXSmartGroupTreeModuleOutlineStateSelectionKey</key>
 							<array>
 								<array>
+									<integer>1</integer>
 									<integer>0</integer>
 								</array>
 							</array>
 							<key>PBXSmartGroupTreeModuleOutlineStateVisibleRectKey</key>
-							<string>{{0, 0}, {236, 636}}</string>
+							<string>{{0, 0}, {236, 645}}</string>
 						</dict>
 						<key>PBXTopSmartGroupGIDs</key>
 						<array/>
@@ -316,14 +315,14 @@
 					<key>GeometryConfiguration</key>
 					<dict>
 						<key>Frame</key>
-						<string>{{0, 0}, {253, 654}}</string>
+						<string>{{0, 0}, {253, 663}}</string>
 						<key>GroupTreeTableConfiguration</key>
 						<array>
 							<string>MainColumn</string>
 							<real>236</real>
 						</array>
 						<key>RubberWindowFrame</key>
-						<string>-1024 328 998 696 -1024 256 1024 768 </string>
+						<string>36 254 1022 705 0 0 1280 1002 </string>
 					</dict>
 					<key>Module</key>
 					<string>PBXSmartGroupTreeModule</string>
@@ -349,21 +348,22 @@
 										<key>PBXProjectModuleLabel</key>
 										<string>cfdWebServicesMain.cxx</string>
 										<key>bookmark</key>
-										<string>AD585E5407F4E1520030C9C2</string>
+										<string>ADCC8E7F07FCA35B005D8201</string>
 										<key>history</key>
 										<array>
-											<string>AD585E5207F4E1520030C9C2</string>
-											<string>AD585E3F07F4DE790030C9C2</string>
+											<string>AD0E510407FB6E57005196A0</string>
+											<string>ADCC8E7B07FCA35B005D8201</string>
+											<string>ADCC8E7C07FCA35B005D8201</string>
+											<string>ADD7658707F9D75B00D35CAD</string>
 										</array>
 										<key>prevStack</key>
 										<array>
 											<string>AD585E3A07F4CC070030C9C2</string>
 											<string>AD585E4107F4DE790030C9C2</string>
-											<string>AD585E4207F4DE790030C9C2</string>
-											<string>AD585E4307F4DE790030C9C2</string>
-											<string>AD585E4407F4DE790030C9C2</string>
-											<string>AD585E4507F4DE790030C9C2</string>
-											<string>AD585E5307F4E1520030C9C2</string>
+											<string>ADD7658207F9D68A00D35CAD</string>
+											<string>AD0E510507FB6E57005196A0</string>
+											<string>ADCC8E7D07FCA35B005D8201</string>
+											<string>ADCC8E7E07FCA35B005D8201</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -375,14 +375,14 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 0}, {739, 554}}</string>
+								<string>{{0, 0}, {763, 563}}</string>
 								<key>RubberWindowFrame</key>
-								<string>-1024 328 998 696 -1024 256 1024 768 </string>
+								<string>36 254 1022 705 0 0 1280 1002 </string>
 							</dict>
 							<key>Module</key>
 							<string>PBXNavigatorGroup</string>
 							<key>Proportion</key>
-							<string>554pt</string>
+							<string>563pt</string>
 						</dict>
 						<dict>
 							<key>ContentConfiguration</key>
@@ -395,9 +395,9 @@
 							<key>GeometryConfiguration</key>
 							<dict>
 								<key>Frame</key>
-								<string>{{0, 561}, {739, 93}}</string>
+								<string>{{0, 570}, {763, 93}}</string>
 								<key>RubberWindowFrame</key>
-								<string>-1024 328 998 696 -1024 256 1024 768 </string>
+								<string>36 254 1022 705 0 0 1280 1002 </string>
 							</dict>
 							<key>Module</key>
 							<string>XCDetailModule</string>
@@ -406,7 +406,7 @@
 						</dict>
 					</array>
 					<key>Proportion</key>
-					<string>739pt</string>
+					<string>763pt</string>
 				</dict>
 			</array>
 			<key>Name</key>
@@ -421,9 +421,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>AD585E2807F4A43A0030C9C2</string>
+				<string>ADCC8E8007FCA35B005D8201</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>AD585E2907F4A43A0030C9C2</string>
+				<string>ADCC8E8107FCA35B005D8201</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -436,7 +436,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>133473151.63930075</real>
+	<real>133997318.54522738</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>
@@ -451,12 +451,11 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>AD585E5007F4E12D0030C9C2</string>
-		<string>AD585E4A07F4DF520030C9C2</string>
+		<string>AD0E50D607FB67A0005196A0</string>
 		<string>/Users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/VE_Webservice.xcode</string>
 	</array>
 	<key>WindowString</key>
-	<string>-1024 328 998 696 -1024 256 1024 768 </string>
+	<string>36 254 1022 705 0 0 1280 1002 </string>
 	<key>WindowTools</key>
 	<array>
 		<dict>
