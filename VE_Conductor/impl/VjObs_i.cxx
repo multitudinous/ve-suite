@@ -40,6 +40,10 @@
 #include "cfdDataSet.h"
 #include "cfdFileInfo.h"
 
+#ifdef _CLUSTER
+#include "cfdSequence.h"
+#endif
+
 #include <vtkSystemIncludes.h>  // for VTK_POLY_DATA
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
@@ -49,20 +53,20 @@ void VjObs_i::attach(Observer_ptr o)
 {
    static int clients = 0;
    //corba_mutex.vjObsFpull();  //yang-REI: you want to get the new value by force
-	CORBA::String_var p=orb->object_to_string(o);
-	std::cout << "|   IOR of the client : " << std::endl << p << std::endl;
-	CORBA::Object_var obj=orb->string_to_object(p);
-	Observer_var obsvar=Observer::_narrow(obj);
-	//Observer_ptr obsvar=Observer::_narrow(o);
-	if(CORBA::is_nil(obsvar))
+   CORBA::String_var p=orb->object_to_string(o);
+   std::cout << "|   IOR of the client : " << std::endl << p << std::endl;
+   CORBA::Object_var obj=orb->string_to_object(p);
+   Observer_var obsvar=Observer::_narrow(obj);
+   //Observer_ptr obsvar=Observer::_narrow(o);
+   if(CORBA::is_nil(obsvar))
    {
-		std::cerr<<"Can't invoke on nil object reference\n"<<std::endl;
-	}
+      std::cerr<<"Can't invoke on nil object reference\n"<<std::endl;
+   }
    
-	std::cout << "|   Client " << clients <<" connected!" << std::endl;
-	client_list[ clients ] = obsvar;
-	
-	clients++;
+   std::cout << "|   Client " << clients <<" connected!" << std::endl;
+   client_list[ clients ] = obsvar;
+   
+   clients++;
 
    // This array is used in place of the call backs
    // to the client because the communication didn't
@@ -72,8 +76,8 @@ void VjObs_i::attach(Observer_ptr o)
    clientInfoObserverDataArray = new VjObs::obj_p(50);
    clientInfoObserverDataArray->length( this->numOfClientInfo );
 
-	baf_param = Observer::baf_p_alloc();
-	this->setClients( clients );
+   baf_param = Observer::baf_p_alloc();
+   this->setClients( clients );
    //corba_mutex.vjObsFpush();  //yang-REI, be sure the number of clients is pushed
 }
 
@@ -94,12 +98,12 @@ void VjObs_i::detach(Observer_ptr o)
    int clients = this->getClients();
 
    for( i=0; i < clients; i++ )
-   {	
+   {   
       if(obsvar->_is_equivalent(client_list[ i ]))
       {
          for(j=i; j < clients-1;j++)
          {
-            client_list[j]=client_list[j+1];		
+            client_list[j]=client_list[j+1];      
          }
          client_list[j]=0;
          clients--;   
@@ -193,7 +197,7 @@ void VjObs_i::put_cur_obj(Observer::obj_p_var o)
          client_list[ i ]->put_cur_obj(o);
    }
 }
-*/	 
+*/    
 char* VjObs_i::get_perf()
 {
    return CORBA::string_dup("abc");
@@ -539,10 +543,10 @@ short VjObs_i::get_sc_num()
       << " totalNumberOfVectors: " << this->totalNumberOfVectors
       << std::endl << vprDEBUG_FLUSH;
 
-	this->scl_name = new VjObs::scalar_p( this->totalNumberOfScalars );
+   this->scl_name = new VjObs::scalar_p( this->totalNumberOfScalars );
    this->scl_name->length( this->totalNumberOfScalars );
 
-	this->vec_name = new VjObs::scalar_p( this->totalNumberOfVectors );
+   this->vec_name = new VjObs::scalar_p( this->totalNumberOfVectors );
    this->vec_name->length( this->totalNumberOfVectors );
 
    int sIndex = 0;
@@ -667,7 +671,6 @@ void VjObs_i::GetCfdStateVariables( void )
    this->cfdTeacher_state    = this->mTeacher_state;
 
 #ifdef _CLUSTER
-   cfdSequence* the_sequence;
    if ( mStates.isLocal() )
    {
       this->mStates->clusterIso_value        = this->mIso_value;
@@ -682,13 +685,13 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterTeacher_state    = this->mTeacher_state;
       //This value only matters to the cluster setting;
       //if this is master, get the value from the sequence node
-      if (this->activeSequenceObjec!=NULL)
-	   {
-	      the_sequence=this->activeSequenceObject->GetpfSequence();
-	      if (the_sequence!=NULL)
-	      {
-            this->mStates->currentFrame=the_sequence->getFrame(); 
-	      }
+      if ( this->activeSequenceObject != NULL )
+      {
+         cfdSequence* the_sequence = this->activeSequenceObject->GetpfSequence();
+         if ( the_sequence != NULL )
+         {
+            this->mStates->currentFrame = the_sequence->getFrame(); 
+         }
       }
    }
 #endif
@@ -710,12 +713,12 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    this->cfdTeacher_state  = this->mStates->clusterTeacher_state; 
    //This value only matters to the cluster setting;
    //if this is master, get the value from the sequence node
-   if (this->activeSequenceObjec!=NULL)
-     {
-       the_sequence=this->activeSequenceObject->GetpfSequence();
-       if (the_sequence!=NULL)
-	 the_sequence->setCurrentFrame(this->mStates->currentFrame);
-     }
+   if ( this->activeSequenceObject != NULL )
+   {
+      cfdSequence* the_sequence = this->activeSequenceObject->GetpfSequence();
+      if ( the_sequence != NULL )
+         the_sequence->setCurrentFrame( this->mStates->currentFrame );
+   }
 }
 #endif
 
