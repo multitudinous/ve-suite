@@ -254,7 +254,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    //the number of frames
    int nChildren = sequence->_lSwitch->GetNumChildren();
    //cout<<"Number of frames: "<<nChildren<<endl;
-   vprDEBUG(vprDBG_ALL,3) << "Number of frames:"<<nChildren<<
+   vprDEBUG(vprDBG_ALL,3) << "Number of frames:"<<nChildren
                           << std::endl << vprDEBUG_FLUSH;
    
 
