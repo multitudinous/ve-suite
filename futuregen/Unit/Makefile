@@ -12,7 +12,7 @@ clean:
 	find . -name "*Unit" -exec echo "cd {}; make clean; cd .." > cleaning.sh \;
 	chmod +x cleaning.sh
 	./cleaning.sh
-	rm cleaning.sh
-	rm building.sh
-	rm start.sh
-	rm end.sh
+	rm -f cleaning.sh
+	rm -f building.sh
+	rm -f start.sh
+	rm -f end.sh

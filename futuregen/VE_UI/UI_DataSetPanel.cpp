@@ -43,6 +43,8 @@ void UI_DataSets::_buildScalars(int _numScalars, wxString* scalarNames)
       thisScalar = new UI_Scalars(&scalarNames[i]);
       _Scalars.push_back(thisScalar);
    }
+
+   // Need to repeat for vectors
 }
 
 
@@ -188,7 +190,7 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
             activeDataSet->_numofScalars,
             ((UI_DatasetPanel*)GetParent())->_scalarNames,
             1, wxRA_SPECIFY_COLS);
-
+// Get number of vectors and scalar names
    _col->Prepend(_vectorRBox,2,wxALIGN_LEFT|wxEXPAND);
    _col->Prepend(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
 
@@ -421,6 +423,7 @@ void UI_DatasetPanel::_buildDataSets( void )
          //clean up the names array
          delete [] thisDataScalarNames;                     
       }
+// Need to add in same functionality for vectors as is done for scalars   
    } 
 }
 
@@ -489,6 +492,7 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
    Refresh();
    SetSize(GetSize());
 
+// Set info for vector names
    /*_col2->Remove(_ScalarScroll);
 
    delete _ScalarScroll;

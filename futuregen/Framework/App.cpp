@@ -25,7 +25,7 @@ bool REIApp::OnInit()
 
   SetAppName("NewV21");
    
-  mainFrame= new AppFrame((wxFrame*) NULL, 1023, "Framework UI");
+  mainFrame= new AppFrame((wxFrame*) NULL, 1023, "VE-Conductor");
  
   // Problem with generic wxNotebook implementation whereby it doesn't size
   // properly unless you set the size again

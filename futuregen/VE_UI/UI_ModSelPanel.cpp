@@ -31,11 +31,9 @@ UI_ModSelScroll::UI_ModSelScroll(wxWindow* parent)
    _modelSelBox = new wxRadioBox(this, RBOX_MODEL_SELECT, wxT("VE Models"), 
                                  wxDefaultPosition, wxDefaultSize, _numModels, 
                                  _models, 1, wxRA_SPECIFY_COLS);
-cout << "here 1" <<endl;
    wxBoxSizer* _col = new wxBoxSizer(wxVERTICAL);
    _col->Add(_modelSelBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    SetSizer(_col);
-   cout << "here 2" <<endl;
 }
 
 UI_ModSelScroll::~UI_ModSelScroll()
