@@ -48,12 +48,10 @@
 #include "cfdVjObsWrapper.h"
 
 #include "package.h"
-#include "interface.h"
 #include "Network_Exec.h"
 
 #include <iostream>
 #include <sstream>
-#include <string>
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
@@ -61,10 +59,9 @@
 #include <vrj/Util/Debug.h>
 #include <vpr/System.h>
 #include <orbsvcs/CosNamingC.h>
+#include <tao/BiDir_GIOP/BiDirGIOP.h>
 
-using namespace std;
-
-cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, cfdDCS* worldDCS )
+cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, PortableServer::POA* child_poa, cfdDCS* worldDCS )
 {
    this->naming_context = inputNameContext;
   try
@@ -120,25 +117,25 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, cfdDCS* 
 		//Create the Servant
 		ui_i = new Body_UI_i(_exec, UINAME);
 		//Body_UI_i ui_i( UINAME);
-    
-		//pass the network's pointer to the UI corba implementation
-		//ui_i.SetUINetwork(network);
-      //ui_i->SetcfdExecutive( &_doneWithCalculations );
-		//Activate it to obtain the object reference
-		Body::UI_var ui = (*ui_i)._this();
-     
-		CosNaming::Name UIname(1);
-		UIname.length(1);
-		UIname[0].id = CORBA::string_dup (UINAME.c_str());
-		//Bind the object
-		try	{
-			this->naming_context->bind(UIname, ui.in());
-		}catch(CosNaming::NamingContext::AlreadyBound& ex){
-			this->naming_context->rebind(UIname, ui.in());
-		}
 
-		//register it to the server
-		_exec->RegisterUI(ui_i->UIName_.c_str());
+      PortableServer::ObjectId_var id = 
+         PortableServer::string_to_ObjectId( CORBA::string_dup( "cfdExecutive" ) ); 
+    
+      //activate it with this child POA 
+      child_poa->activate_object_with_id( id.in(), &(*ui_i) );
+
+      // obtain the object reference
+      Body::UI_var unit =  
+      Body::UI::_narrow( child_poa->id_to_reference( id.in() ) );
+
+      // Don't register it to the naming service anymore
+      // the bind call will hang if you try to register
+      // Instead, the new idl make the ref part of the register call 
+      // Naming Service now is only used for boot trap 
+      // to get the ref for Executive
+
+      //Call the Executive CORBA call to register it to the Executive
+      _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
       std::cout << " Connected to the Executive " << std::endl;   
 	} 
    catch (CORBA::Exception &) 
@@ -574,5 +571,5 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdExecutive::UpdateCommand()
 {
-   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }

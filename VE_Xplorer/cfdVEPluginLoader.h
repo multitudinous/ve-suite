@@ -34,14 +34,11 @@
 #ifndef CFD_PLUGINLOADER_H
 #define CFD_PLUGINLOADER_H
 #include <wx/wx.h>
-#include <wx/log.h>
 #include <wx/dynlib.h>
-#include <wx/dir.h>
-#include <wx/filename.h>
 
 #include <vector>
-#include "cfdVEBaseClass.h"
 
+class cfdVEBaseClass;
 /*
  * If we're using wx in Dynamic Library format do we 
  * want FL to be in DLL form as well?
@@ -87,12 +84,12 @@ class cfdVEPluginLoader : public wxObject
       cfdVEBaseClass* CreateObject( char* ); 
 
    //private:
-      vector<cfdVEBaseClass*> plugins;
+      std::vector<cfdVEBaseClass*> plugins;
       //Keep the list of the first intance of each plugin
-      vector<const wxClassInfo*> plugin_cls; 
+      std::vector<const wxClassInfo*> plugin_cls; 
       //The classinfo obj of the each plugin, will be use to generate more instances
 
-      vector<wxPluginLibrary *> libs;
+      std::vector<wxPluginLibrary *> libs;
 };
 
 #endif

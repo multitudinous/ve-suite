@@ -42,8 +42,13 @@ class Package
   string packname; //The package name, goes to the name attrib of the element package
   string system_id; //The file name of the xml file or a fake filename used for parsing the memory buffer input source
   
+#ifdef _WIN32
   void FillIntfs(xercesc_2_5::DOMDocument *doc);
   xercesc_2_5::DOMDocument* BuildFromIntfs();
+#else
+  void FillIntfs(DOMDocument *doc);
+  DOMDocument* BuildFromIntfs();
+#endif
 };
 
 #endif

@@ -31,9 +31,16 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdVEPluginLoader.h"
+#include "cfdVEBaseClass.h"
+#include <iostream>
+
 #include <wx/image.h>
 #include <wx/dynload.h>
 #include <wx/object.h>
+#include <wx/log.h>
+#include <wx/dynlib.h>
+#include <wx/dir.h>
+#include <wx/filename.h>
 
 cfdVEPluginLoader::cfdVEPluginLoader()
 {
@@ -75,7 +82,7 @@ bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
    {
       // deal with the error here - wxDir would already log an 
       // error message explaining the exact reason of the failure
-      cerr << " ERROR : Can't find plugin dir! " << endl;
+      std::cerr << " ERROR : Can't find plugin dir! " << std::endl;
       return FALSE;
    }
 
@@ -141,7 +148,7 @@ void cfdVEPluginLoader::RegisterPlugins()
          cfdVEBaseClass *object = (cfdVEBaseClass *) classInfo->CreateObject();
          plugins.push_back(object);
          plugin_cls.push_back(classInfo);
-         cout << "|     Register plugins : " << classInfo->GetClassName() << endl;
+         std::cout << "|     Register plugins : " << classInfo->GetClassName() << std::endl;
       }
    }
 }
@@ -174,8 +181,8 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
 
    if (selectPlugin == -1)
    {
-      cerr <<"ERROR: cfdVEPluginLoader::CreateObject : " << _objname 
-            << " : Plugin Not Found!"<<endl;
+      std::cerr <<"ERROR: cfdVEPluginLoader::CreateObject : " << _objname 
+            << " : Plugin Not Found!"<< std::endl;
       return NULL;
    }
 

@@ -45,7 +45,6 @@
 #include <osg/Group>
 #include <osgDB/WriteFile>
 #endif
-#include <sys/types.h>
 
 #include <vrj/Kernel/Kernel.h>
 
@@ -61,7 +60,6 @@
 #include "cfdDCS.h"
 #include "cfdObjects.h"
 #include "cfdTempAnimation.h"
-#include "cfdSequence.h"
 #include "cfdIHCCModel.h"
 #include "cfdVjObsWrapper.h"
 
@@ -71,12 +69,7 @@
 
 /// C/C++ libraries
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cmath>
-//#include <omp.h>using namespace vrj;
-using namespace std;
+//#include <omp.h>
 
 cfdApp::cfdApp( void )
 {
@@ -281,7 +274,7 @@ std::cout << "|  3d" << std::endl;
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-   this->executive = new cfdExecutive( _vjobsWrapper->naming_context, this->_sceneManager->GetWorldDCS() );
+   this->executive = new cfdExecutive( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa, this->_sceneManager->GetWorldDCS() );
    this->executive->SetModelHandler( this->_modelHandler, this->_environmentHandler );
 
 #endif // _TAO

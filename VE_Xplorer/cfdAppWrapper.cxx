@@ -63,7 +63,6 @@ void cfdAppWrapper::init( void * )
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
    _cfdApp = new cfdApp();  // Delcare an instance of my application
    _cfdApp->SetWrapper( _vjObsWrapper );
-
    for ( int i = 1; i < argc; i++ )          // Configure the kernel
    {
       kernel->loadConfigFile( argv[i] );  

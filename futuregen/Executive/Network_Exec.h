@@ -6,8 +6,6 @@
 #include <vector>
 #include "moduleS.h"
 
-using namespace std;
-
 class Module;
 class Connection;
 class IPort;

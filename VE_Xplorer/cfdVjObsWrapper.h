@@ -47,6 +47,10 @@ namespace CORBA
 {
    class ORB;
 }
+namespace PortableServer
+{
+   class POA;
+}
 #else
 #include <omniORB4/CORBA.h>
 #endif
@@ -59,7 +63,7 @@ class cfdVjObsWrapper
       cfdVjObsWrapper( void );
       ~cfdVjObsWrapper( void );
 #ifdef _TAO
-      void init( CosNaming::NamingContext*, CORBA::ORB*, int, char** );
+      void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, int, char** );
 #else
       void init( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, int, char** );
 #endif
@@ -77,6 +81,7 @@ class cfdVjObsWrapper
 #ifdef _TAO
       CosNaming::NamingContext* naming_context;
       CORBA::ORB* _orbPtr;
+      PortableServer::POA* child_poa;
 #else
       CosNaming::NamingContext_ptr naming_context;
       CORBA::ORB_ptr _orbPtr;

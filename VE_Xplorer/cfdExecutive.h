@@ -33,6 +33,7 @@
 #define CFD_EXECUTIVE_H
 
 #include "cfdGlobalBase.h"
+#include "interface.h"
 
 #include <map>
 #include <string>
@@ -47,7 +48,6 @@ class Body_UI_i;
 class cfdDataSet;
 class cfdCommandArray;
 class Network;
-class Interface;
 class cfdVEAvailModules;
 class cfdVEBaseClass;
 class cfdVEAvail_Modules;
@@ -57,11 +57,12 @@ class cfdVjObsWrapper;
 
 namespace Body { class Executive; }
 namespace CosNaming { class NamingContext; }
+namespace PortableServer { class POA; }
 
 class cfdExecutive : public cfdGlobalBase
 {
    public:
-      cfdExecutive( CosNaming::NamingContext* , cfdDCS*  );
+      cfdExecutive( CosNaming::NamingContext*, PortableServer::POA*, cfdDCS*  );
 
       ~cfdExecutive( void );
 

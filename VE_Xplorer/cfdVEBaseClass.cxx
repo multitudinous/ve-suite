@@ -39,13 +39,12 @@
 #include "cfdFILE.h"
 #include "cfdDataSet.h"
 #include "cfdNavigate.h"
+#include "cfdDCS.h"
+#include "cfdObjects.h"
 
 #include "package.h"
 
 #include <fstream>
-#include <cstdlib>
-#include <string>
-#include <map>
 
 #include <vrj/Util/Debug.h>
 
@@ -56,7 +55,8 @@
 #include <direct.h>
 #endif
 
-using namespace std;
+#include <wx/dc.h>
+#include <wx/gdicmn.h>
 
 IMPLEMENT_DYNAMIC_CLASS( cfdVEBaseClass, wxObject )
 
@@ -221,7 +221,7 @@ void cfdVEBaseClass::SetModuleResults( const char* network )
 {
    if ( network == NULL )
    {
-      cout << " No results for " << _objectName << endl;
+      std::cout << " No results for " << _objectName << std::endl;
    }
    else
    {
@@ -260,14 +260,14 @@ void cfdVEBaseClass::CreateCustomVizFeature( int input )
 //This is the load function of the module, unpack the input string and fill up the UI according to this
 void cfdVEBaseClass::UnPack(Interface* intf)
 {
-   vector<string> vars;
+   std::vector<std::string> vars;
   
-   map<string, long *>::iterator iteri;
-   map<string, double *>::iterator iterd;
-   map<string, string *>::iterator iters;
-   map<string, vector<long> *>::iterator itervi;
-   map<string, vector<double> *>::iterator itervd;
-   map<string, vector<string> *>::iterator itervs;
+   std::map<std::string, long *>::iterator iteri;
+   std::map<std::string, double *>::iterator iterd;
+   std::map<std::string, std::string *>::iterator iters;
+   std::map<std::string, std::vector<long> *>::iterator itervi;
+   std::map<std::string, std::vector<double> *>::iterator itervd;
+   std::map<std::string, std::vector<std::string> *>::iterator itervs;
   
    unsigned int i;
    long temp;
@@ -338,14 +338,14 @@ void cfdVEBaseClass::UnPack(Interface* intf)
 
 Interface* cfdVEBaseClass::Pack()
 {  
-   string result;
+   std::string result;
   
-   map<string, long *>::iterator iteri;
-   map<string, double *>::iterator iterd;
-   map<string, string *>::iterator iters;
-   map<string, vector<long> *>::iterator itervi;
-   map<string, vector<double> *>::iterator itervd;
-   map<string, vector<string> *>::iterator itervs;
+   std::map<std::string, long *>::iterator iteri;
+   std::map<std::string, double *>::iterator iterd;
+   std::map<std::string, std::string *>::iterator iters;
+   std::map<std::string, std::vector<long> *>::iterator itervi;
+   std::map<std::string, std::vector<double> *>::iterator itervd;
+   std::map<std::string, std::vector<std::string> *>::iterator itervs;
 
 
    //printf("mod id : %d\n", mod_pack._id);
@@ -385,7 +385,7 @@ void cfdVEBaseClass::UnPackResult(Interface * intf)
    // implementation when using the summary table to pack 
    // things up in the module end
    unsigned int i;
-   std::vector<string> descs;
+   std::vector<std::string> descs;
    descs = intf->getStrings();
    v_desc.clear();
    v_value.clear();
@@ -718,32 +718,32 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
 // Stuff taken from Plugin_base.h
 // All of Yang's work (REI)
 /////////////////////////////////////////////////////////////////////////////
-void cfdVEBaseClass::RegistVar(string vname, long *var)
+void cfdVEBaseClass::RegistVar(std::string vname, long *var)
 {
   _int[vname]=var;
 }
 
-void cfdVEBaseClass::RegistVar(string vname, double *var)
+void cfdVEBaseClass::RegistVar(std::string vname, double *var)
 {
   _double[vname]=var;
 }
 
-void cfdVEBaseClass::RegistVar(string vname, string *var)
+void cfdVEBaseClass::RegistVar(std::string vname, std::string *var)
 {
   _string[vname]=var;
 }
 
-void cfdVEBaseClass::RegistVar(string vname, vector<long> *var)
+void cfdVEBaseClass::RegistVar(std::string vname, std::vector<long> *var)
 {
   _int1D[vname]=var;
 }
 
-void cfdVEBaseClass::RegistVar(string vname, vector<double> *var)
+void cfdVEBaseClass::RegistVar(std::string vname, std::vector<double> *var)
 {
   _double1D[vname]=var;
 }
 
-void cfdVEBaseClass::RegistVar(string vname, vector<string> *var)
+void cfdVEBaseClass::RegistVar(std::string vname, std::vector<string> *var)
 {
   _string1D[vname]=var;
 }

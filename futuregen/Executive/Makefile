@@ -37,6 +37,17 @@ include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
 include $(TAO_ROOT)/taoconfig.mk
+include ${VE_SUITE_HOME}/VE_Installer/dzr.ace_tao.mk
+#CXX=CC
+
+#TAO_SRVR_LIBS = -L${ACE_ROOT}/TAO-1.4/IRIX32/lib -L${ACE_ROOT}/ACE-5.4/IRIX32/lib -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO -lTAO_BiDirGIOP -lxerces-c
+#TAO_SRVR_LIBS = -L${ACE_ROOT}/TAO-1.4/Linux/lib -L${ACE_ROOT}/ACE-5.4/Linux/lib -lACE -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_PortableServer -lTAO 
+#${LDFLAGS}
+CPPFLAGS += -I${TAO_ROOT}/include -I${ACE_ROOT}/include 
+                  
+
+#   EXTRA_CXXFLAGS+= -D_TAO -D_REENTRANT -DACE_HAS_AIO_CALLS -D_GNU_SOURCE -DACE_HAS_EXCEPTIONS -D__ACE_INLINE__
+#   CPPFLAGS+=  -DACE_HAS_EXCEPTIONS -DACE_IRIX_VERS=65 -D_SGI_MP_SOURCE -DACE_HAS_XT  -D__ACE_INLINE__
 
 vpath %.cpp ${EXECUTIVE_HOME} ${PLUGIN_HOME} ${IDL_HOME}
 
@@ -98,8 +109,8 @@ all: Exe_server
 Exe_server: $(addprefix $(VDIR),$(FILE_Exe_SVR_OBJS))
 	$(LINK.cc) $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) $(POSTLINK)
 
-clean: clean
-	-$(RM) -r moduleC.* moduleS.* mdule_T.* ./.obj Exe_server
+realclean: 
+	rm -rf *.o ./.obj Exe_server
 
 #endif # ! ghs/Solaris
 #endif # ! ghs/VxWorks

@@ -33,25 +33,17 @@
 #define CFD_VE_BASECLASS_H
 
 #include <wx/wx.h>
-#include <wx/dc.h>
-#include <wx/gdicmn.h>
-
-#include "cfdDCS.h"
-#include "cfdObjects.h"
-#include "interface.h"
-
-//#include <string.h>
+#include <string>
+#include <map>
 
 class cfdModuleGeometry;
 class cfdGroup;
 class cfdModel;
 class cfdReadParam;
 class cfdCursor;
-
-// Need to create or use this in our stuff
-//#include "interface.h"
-
-
+class cfdDCS;
+class cfdObjects;
+#include "interface.h"
 /*
  * If we're using wx in Dynamic Library format do we 
  * want FL to be in DLL form as well?
@@ -148,12 +140,12 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       long pos_y;
       // Stuff taken from Plugin_base.h
       // All of Yang's work (REI)
-      void RegistVar(string vname, long *var);
-      void RegistVar(string vname, double *var);
-      void RegistVar(string vname, std::string *var);
-      void RegistVar(string vname, std::vector<long> *var);
-      void RegistVar(string vname, std::vector<double> *var);
-      void RegistVar(string vname, std::vector<std::string> *var);
+      void RegistVar(std::string vname, long *var);
+      void RegistVar(std::string vname, double *var);
+      void RegistVar(std::string vname, std::string *var);
+      void RegistVar(std::string vname, std::vector<long> *var);
+      void RegistVar(std::string vname, std::vector<double> *var);
+      void RegistVar(std::string vname, std::vector<std::string> *var);
 
       Interface mod_pack;
 

@@ -85,7 +85,9 @@ ifeq ($(TAO_BUILD), TRUE)
    include ${ACE_ROOT}/include/makeinclude/rules.local.GNU
    include ${TAO_ROOT}/taoconfig.mk
 
-   ACE_LIBS = -L${ACE_ROOT}/ace -lACE -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_PortableServer -L${TAO_ROOT}/tao -lTAO 
+   ACE_LIBS = -L${ACE_ROOT}/ace -lACE -lTAO_CosNaming -lTAO_Svc_Utils \
+               -lTAO_IORTable -lTAO_PortableServer -L${TAO_ROOT}/tao -lTAO \
+               -lTAO_BiDirGIOP
 #${LDFLAGS}
    ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs
    EXTRA_INCLUDES+= \
@@ -338,6 +340,7 @@ EXTRA_CXXFLAGS+= -DVTK4 -DVTK44 $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
 EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
 ifeq ($(TAO_BUILD), TRUE)
+   #include ${VE_SUITE_HOME}/VE_Installer/dzr.ace_tao.mk
    EXTRA_CXXFLAGS+= -D_TAO ${CPPFLAGS}
    EXTRA_LIBS+= ${ACE_LIBS} $(WX_LIB)
    #$(VLDLIBS)

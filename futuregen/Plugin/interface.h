@@ -15,7 +15,6 @@
 #include <map>
 
 //#define DELIM  char(0xA9)
-using namespace std;
 
 class Interface //: public packable
 {

@@ -32,6 +32,7 @@
 #include "cfdVjObsWrapper.h"
 #ifdef _TAO
 #include <orbsvcs/CosNamingC.h>
+#include <tao/BiDir_GIOP/BiDirGIOP.h>
 #endif
 #include "VjObs_i.h"     //added for corba stuff
 #include "cfdCommandArray.h"
@@ -86,11 +87,14 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
 }
 
 #ifdef _TAO
-void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr, int argc, char* argv[]  )
+void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr, PortableServer::POA* poa, int argc, char* argv[]  )
 #else
 void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr orbPtr, int argc, char* argv[]  )
 #endif
 {
+#ifdef _TAO
+   child_poa = poa;
+#endif
    naming_context = input;
    _orbPtr = orbPtr;
 #ifdef _CLUSTER
