@@ -2760,7 +2760,7 @@ void  Network::OnShowResult(wxCommandEvent &event)
   if (m_selMod<0)
     return;
 
-  if (exec==NULL)
+  if (CORBA::is_nil(exec))
     {
       cerr<<"Not Connected yet!\n";
       return;
