@@ -1078,8 +1078,11 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    cfdTempAnimation* animation = _modelList.at( 0 )->GetAnimation();
    animation->SetNumberOfFrames( numFiles );
    animation->SetGroups();
-
    _modelList.at( 0 )->GetCfdDataSet( -1 )->SetAnimation( animation );
+   _modelList.at( 0 )->transientDataSets[ _modelList.at( 0 )->GetKeyForCfdDataSet( 
+                        _modelList.at( 0 )->GetCfdDataSet( -1 ) ) ] = _modelList.at( 0 )->GetCfdDataSet( -1 );
+   _modelList.at( 0 )->GetCfdDataSet( -1 )->SetAsPartOfTransientSeries();
+   animation->GetGroup( 0 )->AddChild( _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS() );
    for ( int j = 1; j < numFiles; j++ )
    {
       vprDEBUG(vprDBG_ALL,0) << " For \"" << frameFileNames[ order[ j ]  ]

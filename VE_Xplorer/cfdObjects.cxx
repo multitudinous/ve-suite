@@ -205,7 +205,7 @@ void cfdObjects::AddGeodesToSequence()
          }
       }
    }
-   std::cout<<"adding geodes to sequence!!"<<std::endl;
+   std::cout<<"adding geodes to sequence!! "<< transientGeodes.size() << std::endl;
    std::cout<<"cfdObjects::AddGeodesToSequence"<<std::endl;
    nTransGeodes =  transientGeodes.size();
    for(int g = 0; g < nGroups; g++){
@@ -217,8 +217,8 @@ void cfdObjects::AddGeodesToSequence()
          tempDCS->AddChild(this->transientGeodes.at(g));
       }
    }
-   this->_sequence->GetSequence()->setInterval( CFDSEQ_CYCLE, 0 , nTransGeodes - 1 );
-   this->_sequence->GetSequence()->setDuration( 0.1 * nTransGeodes );
+   //this->_sequence->GetSequence()->setInterval( CFDSEQ_CYCLE, 0 , nTransGeodes - 1 );
+   //this->_sequence->GetSequence()->setDuration( 0.1 * nTransGeodes );
    this->GetSequence()->StartSequence();
 
    std::cout<<"finished adding to the sequence"<<std::endl;
@@ -237,8 +237,27 @@ void cfdObjects::UpdatecfdGeode( void )
       //check if current data set is transient
       if(this->activeDataSet->IsPartOfTransientSeries()){
          this->transientGeodes.push_back(new cfdGeode());
+   if ( this->usePreCalcData && this->PDactor != NULL )
+   {
+      vprDEBUG(vprDBG_ALL, 2) 
+         << "cfdObjects::UpdateGeode... create geode from PDactor"
+         << std::endl << vprDEBUG_FLUSH;
+
+      // Function implements respective vtkActorToGeode function
+      ((cfdGeode*)this->transientGeodes.back())->TranslateTocfdGeode( this->PDactor );
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL, 2) 
+         << "cfdObjects::UpdateGeode... create geode from actor"
+         << std::endl << vprDEBUG_FLUSH;
+
+      // Function implements respective vtkActorToGeode function
+      ((cfdGeode*)this->transientGeodes.back())->TranslateTocfdGeode( this->actor );
+   }
          //check if this is causing problems 
-         this->addTransientGeode = true;
+         if ( this->transientGeodes.size()%_sequence->GetNumberOfFrames() == 0 )
+            this->addTransientGeode = true;
       }else{
          vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::Allocate Geode..."
                            << updateFlag<< std::endl << vprDEBUG_FLUSH;

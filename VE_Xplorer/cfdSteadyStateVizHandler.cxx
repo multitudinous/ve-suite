@@ -323,7 +323,8 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 }
 bool cfdSteadyStateVizHandler::TransientGeodesIsBusy()
 {
-   return this->transientBusy;
+   //return this->transientBusy;
+   return this->computeActorsAndGeodes;
 }
 ////////////////////
 // Helper functions
@@ -818,12 +819,14 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             this->dataList[ i ]->SetGeodeFlag( false );
             this->actorsAreReady = false;
          }else if(this->dataList.at(i)->GetTransientGeodeFlag()){
+            this->dataList.at(i)->SetSequence( this->_activeDataSet->GetAnimation() );
             if ( this->_worldDCS->SearchChild( this->dataList[ i ]->GetSequence()->GetSequence() ) < 0 )
             {
                vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
                                    << std::endl << vprDEBUG_FLUSH;
                this->_worldDCS->AddChild( this->dataList[ i ]->GetSequence()->GetSequence() );
             }
+
             this->dataList.at(i)->AddGeodesToSequence();
             this->dataList.at(i)->SetTransientGeodeFlag(false);
             this->dataList.at(i)->SetSequence( 0 );
@@ -963,6 +966,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
 
                this->_activeObject->Update(); 
                this->_activeObject->UpdatecfdGeode();     
+               this->_activeObject->SetSequence( 0 );
                this->_activeObject = NULL;
                this->computeActorsAndGeodes = false;
             }
