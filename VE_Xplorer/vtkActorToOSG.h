@@ -4,13 +4,13 @@
 
 #ifndef VTKACTORTOOSG_H
 #define VTKACTORTOOSG_H
-
+#ifdef _OSG
 #include <osg/Geode>
 #include <osg/Geometry>
 
-#include <vtk/vtkActor.h>
-#include <vtk/vtkPolyDataMapper.h>
-#include <vtk/vtkCellArray.h>
+#include <vtkActor.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkCellArray.h>
 
 // vtkActorToOSG - translates vtkActor to osg::Geode. If geode is NULL, new one
 //   will be created. Optional verbose parameter prints debugging and
@@ -18,5 +18,5 @@
 osg::Geode* vtkActorToOSG(vtkActor *actor, osg::Geode *geode = NULL, int verbose=0);
 
 osg::Geometry *processPrimitive(vtkActor *a, vtkCellArray *prims, int pType, int v);
-
+#endif
 #endif

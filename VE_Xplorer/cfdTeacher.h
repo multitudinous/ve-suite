@@ -39,7 +39,7 @@ class cfdGroup;
 class cfdNode;
 class cfdCommandArray;
 class cfdSceneNode;
-class cfdWriteTraverser;
+#include "cfdWriteTraverser.h"
 
 #include "cfdGlobalBase.h"
 
@@ -56,7 +56,7 @@ class cfdTeacher : public cfdGlobalBase
 
       // in future, multi-threaded apps will make a copy of VjObs_i commandArray
       virtual void UpdateCommand();
-      void writePFBFile( cfdSceneNode* graph,char* fileName);
+      void writePFBFile( cfdNode* graph,char* fileName);
 
       cfdDCS* GetcfdDCS( );
       cfdNode* getpfNode( int );

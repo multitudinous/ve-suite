@@ -74,12 +74,7 @@ cfdFrame::~cfdFrame()
 {
    // this implies that there would also be a node
    // pfDelete will also delete the node as well as the dcs
-
-/*   if ( this->geode != NULL) 
-   {
-      pfDelete( this->geode );
-   }
-*/   
+ 
    if ( this->transientActor != NULL) 
    {
       delete this->transientActor;

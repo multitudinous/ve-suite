@@ -108,8 +108,17 @@ class cfdObjects : public cfdGlobalBase
       void SetGeodeFlag( bool x );
       bool GetGeodeFlag( void );
 
-      void SetActiveDataSet( cfdDataSet * dataset );
-      cfdDataSet * GetActiveDataSet( void );
+      static void SetActiveDataSet( cfdDataSet * dataset );
+      static cfdDataSet * GetActiveDataSet();
+
+      static void SetActiveMeshedVolume( cfdDataSet * dataset );
+      static cfdDataSet * GetActiveMeshedVolume();
+
+      static void SetActiveParticleData( cfdDataSet * dataset );
+      static cfdDataSet * GetActiveParticleData();
+
+      static void SetActiveSurfaceData( cfdDataSet * dataset );
+      static cfdDataSet * GetActiveSurfaceData();
 
       static void SetVectorScale( float );
       static float GetVectorScale();
@@ -122,7 +131,10 @@ class cfdObjects : public cfdGlobalBase
 
    protected:
 
-      cfdDataSet *activeDataSet;
+      static cfdDataSet *activeDataSet;
+      static cfdDataSet *activeMeshedVolume;
+      static cfdDataSet *activeParticleData;
+      static cfdDataSet *activeSurfaceData;
 
       // used by vectors and intended for warped contours
       static float vectorScale;

@@ -37,8 +37,13 @@
 #include "cfdGroup.h"
 #include "cfdDataSet.h"
 #include "cfdObjects.h"
+#ifdef _PERFORMER
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfNode.h>
+#include <vrj/Draw/Pf/PfUtil.h>
+#elif _OSG
+#include <osg/Node>
+#endif
 
 #include <vtkPolyData.h>
 #include <vtkPolyDataSource.h>
@@ -62,7 +67,7 @@
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Output.h>
-#include <vrj/Draw/Pf/PfUtil.h>
+
 using namespace gmtl; //added by Gengxun
 //using namespace vrj;
 
@@ -662,8 +667,8 @@ void cfdCursor::SetTranslation( void )
    this->cursorDCS->SetTranslationArray( loc_f );
    //cout << loc_f[ 0 ] << " : " << loc_f[ 1 ] << " : " << loc_f[ 2 ] << " : " << endl;
    // get pfMatrix of worldDCS
-   Matrix44f pfWorldMat;
-   pfWorldMat = this->worldDCS->GetMat();
+   Matrix44f worldMat;
+   worldMat = this->worldDCS->GetMat();
 
    Matrix44f totalMat;
    if ( this->activeDataSetDCS )
@@ -672,13 +677,13 @@ void cfdCursor::SetTranslation( void )
       Matrix44f activeDataSetMat;
       activeDataSetMat = this->activeDataSetDCS->GetMat();
 
-      totalMat = activeDataSetMat * pfWorldMat;
+      totalMat = activeDataSetMat * worldMat;
       //vprDEBUG(vprDBG_ALL,1)  << " cfdCursor::SetTranslation : activeDataSetMat " << activeDataSetDCS << " * pfWorldMat : " 
       //      << endl <<  totalMat << " : " << activeDataSetMat << " * " << pfWorldMat << endl << vprDEBUG_FLUSH;
    }
    else
    {
-      totalMat = pfWorldMat;
+      totalMat = worldMat;
       //vprDEBUG(vprDBG_ALL,1) << " cfdCursor::SetTranslation : pfWorldMat : " 
       //      << endl <<  totalMat << endl << vprDEBUG_FLUSH;
    }
@@ -713,16 +718,16 @@ void cfdCursor::GetLocalLocationVector( void )
    jugglerVec[ 3 ] = 1.0f;
 
    // get juggler Matrix of worldDCS
-   Matrix44f pfWorldMat;
-   pfWorldMat = this->worldDCS->GetMat();
+   Matrix44f worldMat;
+   worldMat = this->worldDCS->GetMat();
 
    // invert the worldDCS matrix...
-   Matrix44f pfWorldMatInv;
-   gmtl::invert( pfWorldMatInv, pfWorldMat );
+   Matrix44f worldMatInv;
+   gmtl::invert( worldMatInv, worldMat );
 
    // compute local_vec = [world matrix]^(-1) * global_vec
    Vec4f localVector;
-   localVector = pfWorldMatInv * jugglerVec;
+   localVector = worldMatInv * jugglerVec;
 
    // get juggler Matrix of activeDataSetDCS
    Matrix44f activeDataSetMat;
@@ -817,7 +822,9 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) < 0 )
          {
             this->_rootNode->AddChild( this->GetcfdDCS() );
+#ifdef _PERFORMER
             pfdStoreFile( (pfNode*)this->GetcfdDCS()->GetRawNode(), "test.pfb" );
+#endif
             vprDEBUG(vprDBG_ALL,2) 
                << "added cursor with cursor->GetpfDCS() = "
                << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;

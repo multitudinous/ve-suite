@@ -51,14 +51,14 @@ cfdMomentum::cfdMomentum( )
 #ifdef USE_OMP  
    float b[6];
    float c[3];
-   this->nData = this->GetActiveDataSet()->GetNoOfDataForProcs( );
+   this->nData = this->GetActiveMeshedVolume()->GetNoOfDataForProcs( );
 
    this->append = vtkAppendPolyData::New( );
 
    for ( int i=0; i<this->nData; i++ )
    {
       // get the center of data set.
-      this->GetActiveDataSet()->GetDataSet(i)->GetBounds( b );
+      this->GetActiveMeshedVolume()->GetDataSet(i)->GetBounds( b );
       c[0] = b[1] - b[0];
       c[1] = b[3] - b[2];
       c[2] = b[5] - b[4];
@@ -70,7 +70,7 @@ cfdMomentum::cfdMomentum( )
 
       // set the cut function
       this->cutter[i] = vtkCutter::New( );
-      this->cutter[i]->SetInput( this->GetActiveDataSet()->GetDataSet(i) );
+      this->cutter[i]->SetInput( this->GetActiveMeshedVolume()->GetDataSet(i) );
       this->cutter[i]->SetCutFunction( this->plane[i] );
 
       // append data
@@ -95,6 +95,7 @@ cfdMomentum::cfdMomentum( )
    this->warper->SetInput( (vtkPointSet *)this->cutter->GetOutput() );
 #endif
 
+   this->warper->SetScaleFactor( this->GetActiveMeshedVolume()->GetStepLength() );
 }
 
 cfdMomentum::~cfdMomentum()
@@ -131,7 +132,6 @@ void cfdMomentum::Update( void )
            this->origin[2] > bd[4] && this->origin[2] < bd[5] )
 */
       {  
-      this->warper->SetScaleFactor( this->GetActiveDataSet()->GetStepLength() );
 
 #ifdef USE_OMP
          int i;
@@ -146,15 +146,15 @@ void cfdMomentum::Update( void )
          }
          this->append->Update( );
 #else
-         this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+         this->cutter->SetInput( this->GetActiveMeshedVolume()->GetDataSet() );
          this->plane->SetOrigin( this->origin );
          this->plane->SetNormal( this->normal );
          this->cutter->Update();
 #endif
          this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
-         this->mapper->SetScalarRange( this->GetActiveDataSet()
+         this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
                                            ->GetUserRange() );
-         this->mapper->SetLookupTable( this->GetActiveDataSet()
+         this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
                                            ->GetLookupTable() );
          this->mapper->Update();
 

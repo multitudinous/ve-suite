@@ -38,8 +38,11 @@
 using namespace std;
 
 #include <vpr/Util/Debug.h>
+#ifdef _PERFORMER
 #include <Performer/pr/pfFog.h>
-
+#elif _OSG
+#include <osg/Fog>
+#endif
 cfdFILE::cfdFILE( fileInfo *geomFile, cfdDCS *worldDCS  )
 {
    // Need to fix this and move some code to cfdNode
@@ -90,7 +93,11 @@ cfdFILE::cfdFILE( char* geomFile, cfdDCS* worldDCS  )
    //this->node->flatten( 0 );
    this->DCS->AddChild( this->node );
    worldDCS->AddChild( this->DCS );
-   fog = new pfFog(); 
+#ifdef _PERFORMER
+   fog = new pfFog();
+#elif _OSG
+   fog = new osg::Fog();
+#endif
 }
 
 cfdFILE::cfdFILE( float opVal, float stlColor[3], char *filename  )
@@ -142,7 +149,7 @@ cfdFILE::~cfdFILE()
 
    delete this->DCS;
    delete this->node;
-   delete fog;
+   //delete fog;
 }
 
 char* cfdFILE::GetFilename( void )
@@ -190,17 +197,26 @@ float cfdFILE::getOpacity()
 void cfdFILE::setOpac(float op_val)
 {
    this->op = op_val;
-   
    this->node->SetNodeProperties( _colorFlag, op, stlColor );
+#ifdef _PERFORMER
    this->node->pfTravNodeMaterial( this->node->GetRawNode() );
+#elif _OSG
+   node->TravNodeMaterial(node);
+#endif
 }
-
+/////////////////////////////////
 void cfdFILE::setFog(double dist)
 {
+   
+   
+#ifdef _PERFORMER
    fog->setColor( 0.6f, 0.6f, 0.6f);
    fog->setRange(0, dist);
    fog->setFogType(PFFOG_PIX_EXP2);
    this->node->pfTravNodeFog( this->node->GetRawNode(), fog );
+#elif _OSG
+   node->TravNodeFog(node->GetRawNode(),fog);
+#endif
 }
 
 /// Functions taken from module geometry for future merging

@@ -14,7 +14,7 @@
 
 #ifndef VTK_ACTOR_TO_PF_H
 #define VTK_ACTOR_TO_PF_H
-
+#ifdef _PERFORMER
 #include <Performer/pf/pfTraverser.h>
 #include <Performer/pf/pfGeode.h>
 #include <Performer/pr/pfGeoSet.h>
@@ -45,5 +45,5 @@ pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode = NULL, int verbose=0);
 void vtkActorToGeoSets(vtkActor *actor, pfGeoSet *gsets[], int verbose);
 pfGeoSet *processPrimitive(vtkActor *a, vtkCellArray *prims, int pType, int v);
 void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int v);
-
+#endif
 #endif

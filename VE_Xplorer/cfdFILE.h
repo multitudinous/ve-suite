@@ -38,7 +38,11 @@
 class fileInfo;
 class cfdDCS;
 class cfdNode;
+#ifdef _PERFORMER
 class pfFog;
+#elif _OSG
+#include <osg/Fog>
+#endif
 
 // Need to fix this class
 // BIG PROBLEMS here
@@ -97,9 +101,11 @@ class cfdFILE
 //////
    private:
       float op;
-
+#ifdef _PERFORMER
       pfFog* fog;
-
+#elif _OSG
+      osg::Fog* fog;
+#endif
       double _rgba[ 4 ];
       bool _transparencyFlag;
       float _opacityLevel;

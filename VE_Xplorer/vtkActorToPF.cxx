@@ -24,7 +24,7 @@
 //#     Urbana, IL 61801
 //#     baker@ncsa.uiuc.edu
 //=========================================================================
-
+#ifdef _PERFORMER
 #include "vtkActorToPF.h"
 #ifdef VTK4
 #include "vtkDataSet.h"
@@ -466,3 +466,4 @@ void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int verb
   gstate->setAttr(PFSTATE_TEXENV, texEnv);
 }
 
+#endif

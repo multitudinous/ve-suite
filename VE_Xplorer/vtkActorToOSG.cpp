@@ -7,14 +7,14 @@
 #define _INC_STRSTREAM
 //#include <strstream.h>
 // workaround end
-
+#ifdef _OSG
 #include <vtkActorToOSG.h>
 #ifdef VTK4
-#include <vtk/vtkDataSet.h>
-#include <vtk/vtkPolyData.h>
-#include <vtk/vtkProperty.h>
-#include <vtk/vtkPointData.h>
-#include <vtk/vtkCellData.h>
+#include <vtkDataSet.h>
+#include <vtkPolyData.h>
+#include <vtkProperty.h>
+#include <vtkPointData.h>
+#include <vtkCellData.h>
 #endif
 
 #ifdef VTK44
@@ -267,3 +267,4 @@ osg::Geometry *processPrimitive(vtkActor *actor, vtkCellArray *primArray, int pr
 	return geom;
 }
 
+#endif

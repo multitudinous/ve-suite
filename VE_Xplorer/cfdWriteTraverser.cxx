@@ -32,9 +32,18 @@
 
 #include "cfdWriteTraverser.h"
 #include "cfdSequence.h"
+
+#ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pf/pfSequence.h>
 #include <Performer/pfdb/pfpfb.h>
+#elif _OSG
+#include <osg/Group>
+#include <osgDB/WriteFile>
+#endif
+
+#include "cfdGroup.h"
+#include "cfdSequence.h"
 #include <iostream>
 //////////////////////////////////////
 //Constructor                       //
@@ -49,6 +58,7 @@ cfdWriteTraverser::cfdWriteTraverser()
 }
 ////////////////////////////////////////////////////////////////////
 cfdWriteTraverser::cfdWriteTraverser(const cfdWriteTraverser& cfdWT)
+:cfdNodeTraverser(cfdWT)
 {
    _fName = 0;
    _sequenceIndex = 0;
@@ -131,22 +141,37 @@ void cfdWriteTraverser::setOutputFileName(char* outFile)
 //////////////////////////////////////////////////////////
 //turn on the sequence nodes for proper read back       //
 //////////////////////////////////////////////////////////
-void _turnOnSequence(cfdNodeTraverser* cfdNT,pfNode* node)
+void _turnOnSequence(cfdNodeTraverser* cfdNT,cfdNode* node)
+
+//void _turnOnSequence(cfdNodeTraverser* cfdNT,pfNode* node)
 {
-   pfGroup* curNode = (pfGroup*)node;
+#ifdef _PERFORMER
+   pfGroup* curNode = (pfGroup*)node->GetRawNode();
    //turn on all the sequence nodes
    if(curNode->isOfType(cfdSequence::getClassType())){
       //make sure to start the "derned" sequence--otherwise
       //it won't be running in perfly!!!UGGGHHHH!!!!!
       ((cfdSequence*)curNode)->setPlayMode(CFDSEQ_START);
    }
+#elif _OSG
+   //Not implemented yet
+   //osg::Group* curNode = node->GetRawNode();
+   //should work something more like:
+   if(node->GetCFDNodeType() == cfdNode::CFD_SEQUENCE){
+      //(node->GetRawNode())->setPlayMode(CFDSEQ_START);
+   }
+#endif
+   
 }
 //////////////////////////////////////////////////////
 //swap the sequence nodes                           //
 //////////////////////////////////////////////////////
-void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
-{//Need to fix
-/*   cfdWriteTraverser* cfdWT = (cfdWriteTraverser*)cfdNT;
+void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
+{
+   //need to implement using getRawNode calls!!
+#ifdef _PERFORMER
+   //Need to fix
+   cfdWriteTraverser* cfdWT = (cfdWriteTraverser*)cfdNT;
    pfGroup* curNode = (pfGroup*)node;
 
    //replace cfdSequence nodes
@@ -156,7 +181,7 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
       int nChildren = ((cfdSequence*)curNode)->getNumChildren();
       
       //add this node to our list of cfdSequences
-      cfdWT->_sequenceList.push_back(curNode);
+      cfdWT->_sequenceList.push_back(node);
 
       //get the parent node
       pfGroup* parent = curNode->getParent(0);
@@ -165,7 +190,7 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
       pfSequence* sequence =  new pfSequence();
       //copy the children of the cfdSequence
       for(int i = 0; i < nChildren; i++){
-         sequence->addChild(((cfdSequence*)curNode)->getChild(i));
+         sequence->addChild(((cfdSequence*)node)->getChild(i)->GetRawNode());
       }
 
       sequence->setDuration(1.0,-1);      // regular speed, continue forever
@@ -203,12 +228,15 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
       pfGroup* parent = curNode->getParent(0);
 
       //replace the node in the graph
-      parent->replaceChild(curNode,cfdWT->_sequenceList[cfdWT->_sequenceIndex++]);
+      parent->replaceChild(curNode,(cfdWT->_sequenceList[cfdWT->_sequenceIndex++])->GetRawNode());
 
       //pfDelete(curNode);
       //don't need to continue down 
       return;
-   }*/
+   }
+#elif _OSG
+   return;
+#endif
 }
 ////////////////////////////////////////////////
 //this functionality should probably be       //
@@ -219,9 +247,14 @@ void cfdWriteTraverser::activateSequenceNodes()
    if(_fName && _root){
       //swap out cfdsequence nodes
       _traverseNode(_root);
-
+#ifdef _PERFORMER
       //store file as pfb file
-      pfdStoreFile(_root,_fName);
+      pfdStoreFile(_root->GetRawNode(),_fName);
+#elif _OSG
+      //this may not work
+      osgDB::writeNodeFile(*_root->GetRawNode(),_fName);
+
+#endif
    }
 }
 //////////////////////////////////////
@@ -233,8 +266,14 @@ void cfdWriteTraverser::writePfbFile()
       //swap out cfdsequence nodes
       _traverseNode(_root);
 
+#ifdef _PERFORMER
       //store file as pfb file
-      pfdStoreFile(_root,_fName);
+      pfdStoreFile(_root->GetRawNode(),_fName);
+#elif _OSG
+      //this may not work
+      osgDB::writeNodeFile(*_root->GetRawNode(),_fName);
+
+#endif
 
       //_sequenceIndex = _sequenceList.size();
       //replace pfSequence nodes

@@ -59,17 +59,17 @@ class cfdPresetMomentum : public cfdContourBase
   virtual void Update( void );
 
  private:
-   int xyz;
-   int numSteps;
-   float scale;
+  int xyz;
 
-   vtkCutter       * cutter;
+  float scale;
 
-   vtkWarpVector   * warper;
+  vtkCutter       * cutter;
 
-   cfdCuttingPlane * cuttingPlane;
+  vtkWarpVector   * warper;
 
-   float GetScaleFactor();
+  cfdCuttingPlane * cuttingPlane;
+
+  float GetScaleFactor();
 };
 
 #endif

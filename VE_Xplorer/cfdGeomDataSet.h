@@ -34,15 +34,21 @@
 
 #include <vector>
 #include "cfdFileInfo.h"
-
+#ifdef _PERFORMER
 #include "Performer/pf/pfNode.h"
 #include "Performer/pf/pfDCS.h"
-
 //class pfNode;
 class pfMaterial;
 //class pfNode;
 class pfLightModel;
 //class pfDCS;
+#elif _OSG
+#include <osg/Node>
+#include <osg/MatrixTransform>
+#include <osg/Material>
+#endif
+#include "cfdNode.h"
+#include "cfdDCS.h"
 
 //! CFD shell model loader
 /*!
@@ -57,7 +63,8 @@ have been supported by VTK.
 class cfdGeomDataSet 
 {
  public:
-  cfdGeomDataSet(fileInfo *geomfile, pfDCS *);
+  //cfdGeomDataSet(fileInfo *geomfile, pfDCS *);
+    cfdGeomDataSet(fileInfo *geomfile, cfdDCS *);
   cfdGeomDataSet( float, float [ 3 ], char * );
   ~cfdGeomDataSet( );
 
@@ -72,18 +79,39 @@ class cfdGeomDataSet
   void setScl( float x,float y, float z );
   void setRot(float,float,float);
   void setRotMat(double *);
+#ifdef _PERFORMER
   void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
+#elif _OSG
+  //void TravNodeMaterial(cfdNode*,osg::Material*,int);
+#endif
   /*!
     Get the pfDCS.
   */
+  /*
   pfDCS * getpfDCS( );
   pfNode * getpfNode( );
-  pfLightModel *matLight;
-  pfMaterial *fmaterial;
-  pfMaterial *bmaterial;
   pfNode *node;//[3];
   pfDCS *DCS;//[3];
+  
+  
+
+  */
+  //these need to renamed!!
+   cfdDCS* getpfDCS();
+   cfdNode* getpfNode();
+   cfdNode* node;
+   cfdDCS* DCS;
+
+#ifdef _PERFORMER
+  pfLightModel *matLight;
   pfMaterial *mat1, *mat0;
+  pfMaterial *fmaterial;
+  pfMaterial *bmaterial;
+#elif _OSG
+   osg::Material* mat1, *mat0;
+   osg::Material* fmaterial;
+   osg::Material* bmaterial;
+#endif
 
   //typedef std::vector< pfMaterial *> matlist;
   //matlist matList;

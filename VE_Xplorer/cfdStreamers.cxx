@@ -55,8 +55,15 @@ cfdStreamers::cfdStreamers( float diameter )
    vprDEBUG(vprDBG_ALL,1) << " Specified Streamline Diameter : " 
                           << diameter << std::endl << vprDEBUG_FLUSH;
 
+   if ( ! diameter )
+   {
+      diameter = this->GetActiveMeshedVolume()->GetLength()*0.001f;
+      vprDEBUG(vprDBG_ALL,1) << "       New Streamline Diameter : " 
+                             << diameter << std::endl << vprDEBUG_FLUSH;
+   }
 
    this->tubeFilter = vtkTubeFilter::New();
+   this->tubeFilter->SetRadius( diameter );
 
    this->mapper = vtkPolyDataMapper::New();
 
@@ -65,9 +72,9 @@ cfdStreamers::cfdStreamers( float diameter )
    this->actor->GetProperty()->SetSpecularPower( 20.0f );
 
    this->integrationDirection = 0;
-   this->propagationTime = -1;
-   this->integrationStepLength = -1;
-   this->stepLength = -1;
+   this->propagationTime = 10.0f * this->GetActiveMeshedVolume()->GetMaxTime();
+   this->integrationStepLength = 0.050f;
+   this->stepLength = this->GetActiveMeshedVolume()->GetMeanCellLength()/30.0f;
 }
 
 cfdStreamers::~cfdStreamers()
@@ -90,32 +97,8 @@ void cfdStreamers::Update( void )
       << " Integration Direction : " << this->integrationDirection
       << std::endl << vprDEBUG_FLUSH;
 
-   float diameter = 0.0f;
-   if ( ! diameter )
-   {
-      diameter = this->GetActiveDataSet()->GetLength()*0.001f;
-      vprDEBUG(vprDBG_ALL,1) << "       New Streamline Diameter : " 
-                             << diameter << std::endl << vprDEBUG_FLUSH;
-   }
-   this->tubeFilter->SetRadius( diameter );
-
-   if ( propagationTime == -1 )
-   {
-      this->propagationTime = 10.0f * this->GetActiveDataSet()->GetMaxTime();
-   }
-   
-   if ( integrationStepLength == -1 )
-   {
-      this->integrationStepLength = 0.050f;
-   }
-   
-   if ( stepLength == -1 )
-   {
-      this->stepLength = this->GetActiveDataSet()->GetMeanCellLength()/30.0f;
-   }
-
    //The Block below is a test by Yang
-   this->stream->SetInput( (vtkDataSet*)this->GetActiveDataSet()->GetDataSet() );
+   this->stream->SetInput( (vtkDataSet*)this->GetActiveMeshedVolume()->GetDataSet() );
 
    
    //this->stream->SetSource( this->ptsglyph->GetOutput() );
@@ -175,8 +158,8 @@ void cfdStreamers::Update( void )
    
    this->mapper->SetInput( this->tubeFilter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
-   this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
-   this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
+   this->mapper->SetScalarRange( this->GetActiveMeshedVolume()->GetUserRange() );
+   this->mapper->SetLookupTable( this->GetActiveMeshedVolume()->GetLookupTable() );
    //this->mapper->DebugOn();
    //this->tubeFilter->Print( cout );
    this->mapper->Update();
@@ -200,7 +183,7 @@ void cfdStreamers::SetIntegrationDirection( int value )
 void cfdStreamers::SetPropagationTime( int value )
 {
    this->propagationTime = (float)value * 
-                  ( 10.0f * this->GetActiveDataSet()->GetMaxTime() / 50.0f );
+                  ( 10.0f * this->GetActiveMeshedVolume()->GetMaxTime() / 50.0f );
 }
 
 void cfdStreamers::SetIntegrationStepLength( int value )
@@ -210,7 +193,7 @@ void cfdStreamers::SetIntegrationStepLength( int value )
 
 void cfdStreamers::SetStepLength( int value )
 {
-   this->stepLength = (float)value * ((this->GetActiveDataSet()
+   this->stepLength = (float)value * ((this->GetActiveMeshedVolume()
                                            ->GetMeanCellLength()/30.0f) / 50.0f);     
 }
 

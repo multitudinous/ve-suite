@@ -51,7 +51,7 @@ cfdIsosurface::cfdIsosurface( int numsteps )
 
 #ifdef USE_OMP
    this->append = vtkAppendPolyData::New( );
-   this->nData = this->GetActiveDataSet()->GetNoOfDataForProcs( );
+   this->nData = this->GetActiveMeshedVolume()->GetNoOfDataForProcs( );
 
    for ( int i=0; i<this->nData; i++ )
    {
@@ -83,6 +83,8 @@ cfdIsosurface::cfdIsosurface( int numsteps )
    this->mapper = vtkPolyDataMapper::New();
    this->mapper->SetInput( this->filter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
+   this->mapper->SetScalarRange( this->GetActiveMeshedVolume()->GetUserRange() );
+   this->mapper->SetLookupTable( this->GetActiveMeshedVolume()->GetLookupTable() );
 
    this->actor = vtkActor::New();
    this->actor->SetMapper( this->mapper );
@@ -110,7 +112,7 @@ cfdIsosurface::~cfdIsosurface()
 void cfdIsosurface::Update()
 {
    vprDEBUG(vprDBG_ALL, 1) <<"\ncfdIsosurface::Update: FileName: "
-      << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
+      << this->GetActiveMeshedVolume()->GetFileName() << std::endl << vprDEBUG_FLUSH;
 
    vprDEBUG(vprDBG_ALL, 1) << "this->requestedValue: "<< this->requestedValue
                            << std::endl << vprDEBUG_FLUSH;
@@ -127,7 +129,7 @@ void cfdIsosurface::Update()
 # pragma omp parallel for private(i)
    for ( i=0; i<imax; i++ )
    {
-      this->contour[i]->SetInput( this->GetActiveDataSet()->GetData(i) );
+      this->contour[i]->SetInput( this->GetActiveMeshedVolume()->GetData(i) );
       this->contour[i]->SetValue( 0, this->value );
       this->normals[i]->Update();
    }
@@ -135,20 +137,20 @@ void cfdIsosurface::Update()
 #else
    vprDEBUG(vprDBG_ALL, 1) 
       << "cfdIsosurface: this->GetActiveMeshedVolume() = " 
-      << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
+      << this->GetActiveMeshedVolume() << std::endl << vprDEBUG_FLUSH;
 
    vprDEBUG(vprDBG_ALL, 1) 
       << "cfdIsosurface: this->GetActiveMeshedVolume()->GetDataSet()=" 
-      << this->GetActiveDataSet()->GetDataSet()
+      << this->GetActiveMeshedVolume()->GetDataSet()
       << std::endl << vprDEBUG_FLUSH;
 
-   this->contour->SetInput( this->GetActiveDataSet()->GetDataSet() );
+   this->contour->SetInput( this->GetActiveMeshedVolume()->GetDataSet() );
    this->contour->SetValue( 0, this->value );
    //this->normals->Update();
 #endif
 
-   this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
-   this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
+   this->mapper->SetScalarRange( this->GetActiveMeshedVolume()->GetUserRange() );
+   this->mapper->SetLookupTable( this->GetActiveMeshedVolume()->GetLookupTable() );
    this->mapper->Update();
 
    this->updateFlag = true;
@@ -163,7 +165,7 @@ double cfdIsosurface::convertPercentage( const int percentage )
 {
    // set the step-size for isosurface based on the "pretty" range
    double minmax[2];
-   this->GetActiveDataSet()->GetUserRange( minmax );
+   this->GetActiveMeshedVolume()->GetUserRange( minmax );
 
    vprDEBUG(vprDBG_ALL, 1) << "minmax = " << minmax[0] << "\t" << minmax[1]
                            << std::endl << vprDEBUG_FLUSH;

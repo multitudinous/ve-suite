@@ -37,7 +37,6 @@
 
 #include "cfdVjObsWrapper.h"
 using namespace std;
-
 cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 {
    this->argc = argc;
@@ -72,8 +71,3 @@ void cfdAppWrapper::init( void * )
    
    kernel->waitForKernelStop();              // Block until kernel stops
 }
-
-/*void cfdAppWrapper::exit( void )
-{
-   vrj::Kernel::instance()->stop(); // Stopping kernel using the inherited member variable
-}*/

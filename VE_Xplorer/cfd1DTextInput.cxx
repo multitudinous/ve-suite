@@ -46,41 +46,20 @@
 
 cfd1DTextInput::cfd1DTextInput( void ):cfdDCS()
 {
-   //DCS = new pfDCS();
    geode = new cfdGeode();
    ((cfdDCS*)this)->AddChild( geode );
 }
-/*
-cfd1DTextInput::cfd1DTextInput( cfd1DTextInput* x )
-{
-   this->DCS = x->DCS;
-   this->text = x->text;
 
-   for( int i = 0; i < 3; i++ )
-   {
-      this->scale[ i ] = x->scale[ i ];
-      this->trans[ i ] = x->trans[ i ];
-      this->rot[ i ]   = x->rot[ i ];
-   }
-}
-*/
 
 cfd1DTextInput::~cfd1DTextInput( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfd1DTextInput Destructor" 
                           << std::endl << vprDEBUG_FLUSH;
-/*   if ( this->DCS != NULL )
-   {
-      pfDelete( this->DCS );
-   }*/
+
 }
 
 cfdDCS* cfd1DTextInput::getpfDCS( void )
 {
-   //((pfDCS*)this->GetPfDCS())->addChild( geode );
-   //DCS->setScale( scale[0], scale[1], scale[2] );
-   //DCS->setTrans( trans[0], trans[1], trans[2] );
-   //DCS->setRot( rot[0], rot[1], rot[2] );
    return (cfdDCS*)this;
 }
 

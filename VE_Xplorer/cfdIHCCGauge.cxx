@@ -77,10 +77,7 @@ cfdIHCCGauge::~cfdIHCCGauge( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdDigitalAnalogGauge Destructor" 
                           << std::endl << vprDEBUG_FLUSH;
-/*   if ( this->DCS != NULL )
-   {
-      pfDelete( this->DCS );
-   }*/
+
 }
 
 void cfdIHCCGauge::SetGeometryFilename( std::string filename )

@@ -33,7 +33,9 @@
 #include "cfdIHCCModel.h"
 
 #include "cfdFileInfo.h"
+#ifdef _PERFORMER
 #include <vtkActorToPF.h>
+#endif
 #include <utility>
 #include <sstream>
 
@@ -55,6 +57,7 @@
 #include "cfd1DTextInput.h"
 #include "cfdDCS.h"
 #include "cfdGroup.h"
+#include "cfdGeode.h"
 
 using namespace std;
 
@@ -304,8 +307,8 @@ void cfdIHCCModel::Update( void )
 
 void cfdIHCCModel::MakeSequence( void )
 {
-	vector< pfGeode* > geodes;
-	vector< pfGeode* > scalars;
+	vector< cfdGeode* > geodes;
+	vector< cfdGeode* > scalars;
    vector< cfd1DTextInput* > output;
 	// Loop over all the time steps and create the actors and geodes
 		// read polydata
@@ -321,8 +324,15 @@ void cfdIHCCModel::MakeSequence( void )
       this->actor->SetMapper( this->mapper );
 	   this->actor->GetProperty()->SetSpecularPower( 20.0f );
       this->actor->GetProperty()->SetColor( this->lut->GetColor( solutions[ i ] ) );
-	   geodes.push_back( vtkActorToPF( actor, new pfGeode(), 0) );
-	}
+      cfdGeode* geode = new cfdGeode();
+       geode->TranslateTocfdGeode(actor);
+       geodes.push_back(geode);
+/*#ifdef _PERFORMER
+      
+#elif _OSG
+      geodes.push_back( vtkActorToOSG( actor, new osg::Geode(), 0) );
+#endif*/
+   }
 	// Add the Geodes to the sequence 
 	// Add the gauges with ??? as the quantity
 	for ( int i = 0; i < variables[ 5 ]; i++ )

@@ -52,9 +52,15 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
    vprDEBUG(vprDBG_ALL, 1) << "cfdPresetContour::cfdPresetMomentum"
                            << std::endl << vprDEBUG_FLUSH;
    this->xyz = xyz;
-   this->numSteps = numSteps;
+
+   this->cuttingPlane = new cfdCuttingPlane( 
+            this->GetActiveMeshedVolume()->GetDataSet()->GetBounds(),
+            this->xyz, numSteps );
+
    // set the cut function
    this->cutter = vtkCutter::New();
+   this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
+
    // the pipeline for using nearest precomputed data is initialized below...
    this->PDactor = vtkActor::New();
    this->PDactor->GetProperty()->SetSpecularPower( 20.0f );
@@ -62,7 +68,7 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
 
 cfdPresetContour::~cfdPresetContour()
 {
-//   delete this->cuttingPlane;
+   delete this->cuttingPlane;
    this->cuttingPlane = NULL;
 
    this->cutter->Delete();
@@ -79,7 +85,7 @@ void cfdPresetContour::Update( void )
 
    if ( this->usePreCalcData )
    {
-      vtkPolyData * preCalcData = this->GetActiveDataSet()
+      vtkPolyData * preCalcData = this->GetActiveMeshedVolume()
                                       ->GetPrecomputedSlices( this->xyz )
                                       ->GetClosestPlane( this->requestedValue );
 
@@ -93,9 +99,9 @@ void cfdPresetContour::Update( void )
       }
 
       this->SetMapperInput( preCalcData );
-      this->mapper->SetScalarRange( this->GetActiveDataSet()
+      this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
                                         ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()
+      this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
                                         ->GetLookupTable() );
       this->mapper->Update();
 
@@ -103,27 +109,19 @@ void cfdPresetContour::Update( void )
    }
    else
    {
-      this->cuttingPlane = new cfdCuttingPlane( 
-            this->GetActiveDataSet()->GetDataSet()->GetBounds(),
-            this->xyz, numSteps );
-
       // insure that we are using correct bounds for the given data set...
       this->cuttingPlane->SetBounds( 
-                  this->GetActiveDataSet()->GetDataSet()->GetBounds() );
+                  this->GetActiveMeshedVolume()->GetDataSet()->GetBounds() );
       this->cuttingPlane->Advance( this->requestedValue );
 
-      this->cutter->SetCutFunction( this->cuttingPlane->GetPlane() );
-      this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
+      this->cutter->SetInput( this->GetActiveMeshedVolume()->GetDataSet() );
       this->cutter->Update();
-
-      delete this->cuttingPlane;
-      this->cuttingPlane = NULL;
 
       this->SetMapperInput( this->cutter->GetOutput() );
 
-      this->mapper->SetScalarRange( this->GetActiveDataSet()
+      this->mapper->SetScalarRange( this->GetActiveMeshedVolume()
                                         ->GetUserRange() );
-      this->mapper->SetLookupTable( this->GetActiveDataSet()
+      this->mapper->SetLookupTable( this->GetActiveMeshedVolume()
                                         ->GetLookupTable() );
       this->mapper->Update();
    }

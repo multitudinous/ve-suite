@@ -63,7 +63,7 @@ class cfdVectorBase : public cfdObjects
    static void SetThreshHoldValues( double * );
    static double* GetThreshHoldValues( void );
 
-   void UpdateThreshHoldValues();
+   static void UpdateThreshHoldValues();
 
    static void SetVectorRatioFactor( int );
    static int GetVectorRatioFactor();

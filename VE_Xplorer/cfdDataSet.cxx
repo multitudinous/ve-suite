@@ -43,7 +43,6 @@
 #include "readWriteVtkThings.h"
 #include "cfdDCS.h"
 
-//#include <Performer/pf/pfDCS.h>
 
 #include <vtkGenericCell.h>
 #include <vtkLookupTable.h>
@@ -76,11 +75,7 @@ cfdDataSet::cfdDataSet( )
    this->y_planes = NULL;
    this->z_planes = NULL;
    this->range = new double [ 2 ];
-   range[ 0 ] = 0;
-   range[ 1 ] = 0;
    this->definedRange = new double [ 2 ];
-   definedRange[ 0 ] = 0;
-   definedRange[ 0 ] = 0;
    this->isNewlyActivated = 0;
    this->fileName = NULL;
    this->precomputedDataSliceDir = NULL;
@@ -188,17 +183,12 @@ cfdDataSet::~cfdDataSet()
 
    if ( this->fileName != NULL )
    {
-      vprDEBUG(vprDBG_ALL,2) << " cfdDataSet :  deleting filename " << this->fileName
+      vprDEBUG(vprDBG_ALL,2) << "deleting filename " << this->fileName
                              << std::endl << vprDEBUG_FLUSH;
       delete [] this->fileName;
       this->fileName = NULL;
-      vprDEBUG(vprDBG_ALL,2) << " cfdDataSet : done deleting filename " 
-                             << std::endl << vprDEBUG_FLUSH;
    }
- /*   
-   if ( this->dcs != NULL )
-      pfDelete( this->dcs );
-*/
+ 
 }
 
 void cfdDataSet::SetRange( double * dataRange )

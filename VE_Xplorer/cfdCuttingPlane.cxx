@@ -103,8 +103,7 @@ cfdCuttingPlane::~cfdCuttingPlane( )
 {
    vprDEBUG(vprDBG_ALL,2) << "in cfdCuttingPlane destructor" 
                           << std::endl << vprDEBUG_FLUSH;
-// Fix this mccdo
-//   this->plane->Delete( );
+   this->plane->Delete( );
 }
 
 void cfdCuttingPlane::SetBounds( const double bounds[6] )
@@ -166,9 +165,6 @@ void cfdCuttingPlane::ComputeOrigin( int requestedValue )
    if ( requestedValue < 0 )   requestedValue = 0;
    if ( requestedValue > 100 ) requestedValue = 100;
 
-   // bd is an array of 6 values xmin, xmax, ymin, ymax, zmin, zmax
-   // bd is calculated from the raw cfdDataSet NOT from the precalc values
-   // type is either 0,1,2 representing x,y,z
    this->origin[this->type] = this->bd[2*this->type] + 
                               requestedValue * (this->bd[2*this->type+1] - this->bd[2*this->type]) / 100.0;
 }

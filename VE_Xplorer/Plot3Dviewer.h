@@ -31,8 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef PLOT3DVIEWER_H
 #define PLOT3DVIEWER_H
-
+#ifdef _PERFORMER
 class pfGeode;
+#elif _OSG
+#include <osg/Geode>
+#endif
+#include "cfdGeode.h"
 class vtkPLOT3DReader;
 
 class Plot3Dviewer
@@ -42,7 +46,7 @@ class Plot3Dviewer
 
   ~Plot3Dviewer();
 
-  pfGeode* Init(vtkPLOT3DReader *p);
+  cfdGeode* Init(vtkPLOT3DReader *p);
 };
   
 #endif

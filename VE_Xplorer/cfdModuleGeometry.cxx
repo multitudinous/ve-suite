@@ -42,8 +42,11 @@
 //#include <Performer/pfdu.h>
 #include <cassert>
 #include <iostream>
+#ifdef _PERFORMER
 #include <Performer/pr/pfLPointState.h>
 #include <Performer/pf/pfTraverser.h>
+#elif _OSG
+#endif
 
 #include <vpr/Util/Debug.h>
 using namespace std;

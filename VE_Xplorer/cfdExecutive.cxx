@@ -415,9 +415,7 @@ void cfdExecutive::GetEverything( void )
             // if a module is on the pugins map but not on the id map
             foundPlugin->second->RemoveSelfFromSG();
             _modelHandler->RemoveModel( foundPlugin->second->GetCFDModel() );
-            // Must FIX this this is a huge memory leak
-            //delete ((cfdVEBaseClass*)(foundPlugin->second));
-            //delete _plugins[ foundPlugin->first ];
+            delete foundPlugin->second;
             _plugins.erase( foundPlugin++ );
          }
          else
@@ -428,7 +426,7 @@ void cfdExecutive::GetEverything( void )
                                     << " is already on the plugin and id map." << endl << vprDEBUG_FLUSH;
             ++foundPlugin;
          }
-         // The above code is from : The C++ Standard Library by:Josuttis pg. 205
+         // The above code is from : The C++ Standard Library by:Josuttis
       }
    }
    else

@@ -100,7 +100,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData * polydata )
    {
       this->bfilter->SetInput( polydata );
       double range[2];
-      this->GetActiveDataSet()->GetUserRange( range );
+      this->GetActiveMeshedVolume()->GetUserRange( range );
       this->bfilter->GenerateValues( 10, range[0], range[1] );
       this->bfilter->SetScalarModeToValue();
       this->bfilter->GenerateContourEdgesOn();
@@ -111,7 +111,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData * polydata )
    {
       this->cfilter->SetInput( polydata );
       double range[2];
-      this->GetActiveDataSet()->GetUserRange( range );
+      this->GetActiveMeshedVolume()->GetUserRange( range );
       this->cfilter->GenerateValues( 10, range[0], range[1] );
       this->cfilter->Update();
       this->mapper->SetInput( this->cfilter->GetOutput() );

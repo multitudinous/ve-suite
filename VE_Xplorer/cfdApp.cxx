@@ -37,11 +37,15 @@
 #include "cfdApp.h"
 
 // Scene graph dependant headers
+#ifdef _PERFORMER
 #include <Performer/pf.h>
 #include <Performer/pf/pfGroup.h>
+#include <Performer/pfdb/pfpfb.h>
+#elif _OSG
+#include <osg/Group>
+#include <osgDB/WriteFile>
+#endif
 #include <sys/types.h>
-
-#include <vrj/Kernel/Kernel.h>
 
 #include "cfdEnum.h"
 #include "fileIO.h"
@@ -53,6 +57,7 @@
 #include "cfdCommandArray.h"
 #include "cfdGroup.h"
 #include "cfdDCS.h"
+#include "cfdObjects.h"
 #include "cfdTempAnimation.h"
 #include "cfdSequence.h"
 #include "cfdIHCCModel.h"
@@ -80,7 +85,7 @@ cfdApp::cfdApp( void )
    this->_modelHandler =         NULL;
    this->ihccModel =             NULL;
 }
-
+#ifdef _PERFORMER
 void cfdApp::exit()
 {
    delete filein_name;
@@ -140,9 +145,56 @@ void cfdApp::exit()
    vprDEBUG(vprDBG_ALL,0) 
      << " pfExit" << std::endl << vprDEBUG_FLUSH;
    //delete _corbaManager;
+
    pfExit();
-   cout << " end " << endl;
+
 }
+inline void cfdApp::apiInit( )
+{
+   vprDEBUG(vprDBG_ALL,1) << "cfdApp::apiInit" << std::endl << vprDEBUG_FLUSH;
+}
+
+inline void cfdApp::preForkInit( )
+{
+   vprDEBUG(vprDBG_ALL,1) << "cfdApp::preForkInit"
+                          << std::endl << vprDEBUG_FLUSH;
+   //pfdInitConverter( "air_system.flt" );
+}
+
+inline pfGroup* cfdApp::getScene( )
+{
+  //vprDEBUG(vprDBG_ALL,1) << "cfdApp::getScene" << std::endl << vprDEBUG_FLUSH;
+   pfdStoreFile(this->_sceneManager->GetRootNode()->GetRawNode(),"C:/test6.pfb");
+  return (pfGroup*)(this->_sceneManager->GetRootNode()->GetRawNode());//for test
+}
+inline void cfdApp::preSync( )
+{
+  vprDEBUG(vprDBG_ALL,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
+}
+#endif
+
+#ifdef _OSG
+void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
+{
+   //testing--move to cfdApp.cxx
+   newSceneViewer->setDefaults();
+   //newSceneViewer->setBackgroundColor( osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f) );
+   newSceneViewer->getLight()->setAmbient(osg::Vec4(0.3f,0.3f,0.3f,1.0f));
+   newSceneViewer->getLight()->setDiffuse(osg::Vec4(0.9f,0.9f,0.9f,1.0f));
+   newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+}
+void cfdApp::bufferPreDraw()
+{
+   glClearColor(0.0, 0.0, 0.0, 0.0);
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
+inline osg::Group* cfdApp::getScene()
+{
+   //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
+   //   "C:/test.osg");
+   return (osg::Group*)this->_sceneManager->GetRootNode()->GetRawNode();
+}
+#endif
 
 inline void cfdApp::init( )
 {
@@ -165,41 +217,17 @@ inline void cfdApp::init( )
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
    std::cout << "|  3. Initializing........................... Parameter File Reader |" << std::endl;
-   _vjobsWrapper->InitCluster();
+
+#ifdef _CLUSTER
+  // Cluster Stuff
+   vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
+   std::string hostname = "abbott.vrac.iastate.edu";
+   mStates.init(new_guid,hostname);
+   //cluster::ApplicationData* hack = dynamic_cast<cluster::ApplicationData*>(&(*this->mStates));
+   //hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
+#endif // _CLUSTER
 }
 
-inline void cfdApp::apiInit( )
-{
-   vprDEBUG(vprDBG_ALL,1) << "cfdApp::apiInit" << std::endl << vprDEBUG_FLUSH;
-}
-
-inline void cfdApp::preForkInit( )
-{
-   vprDEBUG(vprDBG_ALL,1) << "cfdApp::preForkInit"
-                          << std::endl << vprDEBUG_FLUSH;
-   //pfdInitConverter( "air_system.flt" );
-}
-
-inline pfGroup* cfdApp::getScene( )
-{
-  //vprDEBUG(vprDBG_ALL,1) << "cfdApp::getScene" << std::endl << vprDEBUG_FLUSH;
-  return (pfGroup*)(this->_sceneManager->GetRootNode()->GetRawNode());//for test
-}
-/*
-inline void cfdApp::preDrawChan(pfChannel* chan, void* chandata)
-{
-  vprDEBUG(vprDBG_ALL,3) << "cfdApp::preDrawChan" 
-                         << std::endl << vprDEBUG_FLUSH;
-
-  pfDisable(PFEN_TEXTURE);
-  pfOverride(PFSTATE_TEXTURE,PF_ON); // Override texturing to turn it off (test)
-}
-*/
-
-inline void cfdApp::preSync( )
-{
-  vprDEBUG(vprDBG_ALL,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
-}
 
 void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 {
@@ -227,14 +255,11 @@ inline void cfdApp::initScene( )
                                               this->_sceneManager->GetWorldDCS() );
    this->_modelHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    this->_modelHandler->InitScene();
-cout << "here 1" << endl;
+
    // navigation and cursor 
    this->_environmentHandler = new cfdEnvironmentHandler( this->filein_name );
-cout << "here 2" << endl;
    this->_environmentHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
-cout << "here 3" << endl;
    this->_environmentHandler->SetRootNode( this->_sceneManager->GetRootNode() );
-cout << "here 4" << endl;
    this->_environmentHandler->SetArrow( this->_modelHandler->GetArrow() );
    this->_environmentHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    this->_environmentHandler->InitScene();
@@ -283,10 +308,11 @@ std::cout << "|  3d" << std::endl;
 void cfdApp::preFrame( void )
 {
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
-
+#ifdef _OSG
+   if(!_modelHandler)initScene();
+#endif
 #ifdef _CLUSTER
-   //call the parent method
-   _vjobsWrapper->GetUpdateClusterStateVariables();
+   this->GetUpdateClusterStateVariables();
 #endif // _CLUSTER
 
    ///////////////////////
@@ -328,19 +354,19 @@ void cfdApp::preFrame( void )
 #ifdef _TAO
       this->executive->UnbindORB();
 #endif // _TAO
-      vrj::Kernel::instance()->stop(); // Stopping kernel using the inherited member variable
+      // need to fix with instance command
+      //this->mKernel->stop(); // Stopping kernel using the inherited member variable
    }
 
 #ifdef _TAO
-   if ( this->_modelHandler->GetActiveDataSet() != NULL )
+   if ( cfdObjects::GetActiveDataSet() != NULL )
    {
-      this->executive->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
+      this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
    }
    this->executive->UpdateModules();
    this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );
 #endif // 
 
-   
    this->_vjobsWrapper->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }
@@ -368,6 +394,31 @@ void cfdApp::postFrame()
       }
    }*/
 
-   this->_vjobsWrapper->GetCfdStateVariables();
+   //this->_corbaManager->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
+
+#ifdef _CLUSTER
+void cfdApp::GetUpdateClusterStateVariables( void )
+{
+   //call the parent method
+   VjObs_i::GetUpdateClusterStateVariables();
+
+   //sync up the frames on all nodes in the
+   //cluster
+   if ( !mStates.isLocal() )
+   {
+      if ( this->_modelHandler->GetActiveSequence() != NULL )
+      {
+         cfdSequence* the_sequence = this->_modelHandler->GetActiveSequence()->GetSequence()->GetSequence();
+         if ( the_sequence != NULL )
+         {
+            the_sequence->setCurrentFrame( this->getTimesteps() );
+            //cout << " cfdTimesteps in preframe : " << cfdTimesteps << endl;
+         }
+      }
+   }
+}
+
+#endif // _CLUSTER
+

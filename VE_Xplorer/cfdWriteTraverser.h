@@ -34,7 +34,13 @@
 #define _CFD_WRITE_TRAVERSER_H_
 
 #include <vector>
+#include "cfdNode.h"
+#ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
+#elif _OSG
+#include <osg/Node>
+#elif _OPENSG
+#endif
 #include "cfdNodeTraverser.h"
 ////////////////////////////////////////
 //This class writes out a performer   // 
@@ -72,12 +78,16 @@ public:
    //equal operator
    cfdWriteTraverser& operator=(const cfdWriteTraverser& rhs);
 protected:
-   friend void _swapSequenceNodes(cfdNodeTraverser* cfdWT,pfNode* node);
-   friend void _turnOnSequence(cfdNodeTraverser* cfdWT,pfNode* node);
+
+   //friend void _swapSequenceNodes(cfdNodeTraverser* cfdWT,pfNode* node);
+   //friend void _turnOnSequence(cfdNodeTraverser* cfdWT,pfNode* node);
+   friend void _swapSequenceNodes(cfdNodeTraverser* cfdWT,cfdNode* node);
+   friend void _turnOnSequence(cfdNodeTraverser* cfdWT,cfdNode* node);
+   
    char* _fName;
    int _sequenceIndex;
    int _toPfb;
-   std::vector<pfNode*> _sequenceList;
+   std::vector<cfdNode*> _sequenceList;
 };
  
 #endif //_CFD_WRITE_TRAVERSER_H_

@@ -49,7 +49,7 @@ Plot3Dviewer::~Plot3Dviewer( )
 {
 }
 
-pfGeode * Plot3Dviewer::Init(vtkPLOT3DReader *p )
+cfdGeode * Plot3Dviewer::Init(vtkPLOT3DReader *p )
 {
    vtkStructuredGridGeometryFilter *cFilter = vtkStructuredGridGeometryFilter::New( );
      cFilter->SetInput( p->GetOutput( ) );
@@ -78,8 +78,10 @@ pfGeode * Plot3Dviewer::Init(vtkPLOT3DReader *p )
   if ( wireframe )    
      ( cActor->GetProperty( ) )->SetRepresentationToWireframe( );*/
 
-  pfGeode *cGeode = new pfGeode;
-  vtkActorToPF( cActor, cGeode );
+  //pfGeode *cGeode = new pfGeode;
+  //vtkActorToPF( cActor, cGeode );
+  cfdGeode* cGeode = new cfdGeode();
+  cGeode->TranslateTocfdGeode(cActor);
 
   cFilter->Delete( );
   cNormal->Delete( );

@@ -45,8 +45,10 @@
 #include "cfdNode.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
+#ifdef _PERFORMER
 #include "cfdWriteTraverser.h"
-
+#elif _OSG
+#endif
 #include <iostream>
 #include <vpr/Util/Debug.h>
 #include <gmtl/MatrixOps.h>
@@ -91,7 +93,12 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    while((file = readdir(dir)) != NULL) 
    {
       //assume all pfb files in this directory should be loaded
+      //this may need to be changed!!
+#ifdef _PERFORMER
       if(strstr(file->d_name, ".pfb")) 
+#elif _OSG
+      if(strstr(file->d_name, ".osg")) 
+#endif
       {
          char * fileName = new char[strlen(file->d_name)+1];
          strcpy( fileName, file->d_name );
@@ -127,7 +134,12 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
 		finished = FALSE;
 	   while(!finished){
           //assume all pfb files in this directory should be loaded
-          if(strstr(fileData.cFileName, ".pfb")){
+#ifdef _PERFORMER     
+         if(strstr(fileData.cFileName, ".pfb"))
+#elif _OSG
+         if(strstr(fileData.cFileName, ".osg"))
+#endif
+          {
              char * fileName = new char[strlen(fileData.cFileName)+1];
 			 strcpy( fileName, fileData.cFileName );
              this->pfbFileNames.push_back( fileName );
@@ -285,8 +297,12 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       // Needs to be moved to cfdTeacher...soon.
       // Generate a .pfb filename...
       char pfb_filename[100];
+#ifdef _PERFORMER
       sprintf( pfb_filename , "%s/stored_scene_%i.pfb",
-               this->getDirectory(), this->pfb_count );
+#elif _OSG
+      sprintf( pfb_filename , "%s/stored_scene_%i.osg",
+#endif
+         this->getDirectory(), this->pfb_count );
 
       vprDEBUG(vprDBG_ALL,0) << "scene stored as " << pfb_filename
                              << std::endl << vprDEBUG_FLUSH;
@@ -331,7 +347,7 @@ void cfdTeacher::UpdateCommand()
 }
 // Need to fix later
 
-void cfdTeacher::writePFBFile( cfdSceneNode* graph,char* fileName)
+void cfdTeacher::writePFBFile( cfdNode* graph,char* fileName)
 {
    //make sure we have a writer
    if(!_cfdWT){
@@ -340,7 +356,7 @@ void cfdTeacher::writePFBFile( cfdSceneNode* graph,char* fileName)
       _cfdWT->setOutputFileName(fileName);
    }
    //set the graph
-   _cfdWT->setNode(graph->GetRawNode());
+   _cfdWT->setNode(graph);
 
    //set the "swapping" callback
    _cfdWT->setCallback(1);

@@ -34,7 +34,12 @@
 #include "cfdFileInfo.h"  
 
 #include <assert.h>
+#include "cfdGeode.h"
+#include "cfdDCS.h"
 
+//shouldn't have to declare these
+//should instead use the cfdNode types!!!
+#ifdef _PERFORMER
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfGeode.h>
@@ -42,6 +47,12 @@
 #include <Performer/pr/pfMaterial.h>
 #include <Performer/pr/pfLight.h>
 #include <Performer/pr.h>
+#elif _OSG
+#include <osg/Geode>
+#include <osg/MatrixTransform>
+#include <osg/Light>
+#include <osg/Material>
+#endif
 
 #include <vtkGeometryFilter.h>
 #include <vtkPolyDataNormals.h>
@@ -50,20 +61,28 @@
 #include <vtkPolyDataMapper.h>
 #include <vpr/Util/Debug.h>
 
-cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, pfDCS *modelDCS  )
+//cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, pfDCS *modelDCS  )
+cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, cfdDCS *modelDCS  )
 {
+#ifdef _PERFORMER
   mat0 = new pfMaterial();
   mat1 = new pfMaterial();
-  DCS  = new pfDCS;
+#elif _OSG
+   mat0 = new osg::Material();
+   mat1 = new osg::Material();
+#endif
+  DCS  = new cfdDCS();
 
   vprDEBUG(vprDBG_ALL,1) << " File:1 " << geomFile->fileName
                          << std::endl << vprDEBUG_FLUSH;
 
-  node = pfdLoadFile( geomFile->fileName );  // pfNode
+  //node = pfdLoadFile( geomFile->fileName );  // pfNode
   //node->ref();
-  node->flatten( 0 );
-  DCS->addChild( node );
-  modelDCS->addChild( DCS );
+  //node->flatten( 0 );
+  node->LoadFile(geomFile->fileName);
+
+  DCS->AddChild( node );
+  modelDCS->AddChild( DCS );
   mat_count =0;
   transparent = geomFile->trans;
   color = geomFile->color; 
@@ -78,11 +97,12 @@ cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, pfDCS *modelDCS  )
    }
 
 }
-
+//////////////////////////////////////////////////////////////////////////////////
 cfdGeomDataSet::cfdGeomDataSet( float opVal, float stlColor[3], char *filename  )
 {
-   node = pfdLoadFile( filename );  // pfNode
+   //node = pfdLoadFile( filename );  // pfNode
    //node->ref();
+   node->LoadFile(filename);
    if ( stlColor[ 0 ] == -1 && stlColor[ 1 ] == -1 && stlColor[ 2 ] == -1 )
    {
       color = 0; 
@@ -112,25 +132,28 @@ cfdGeomDataSet::cfdGeomDataSet( float opVal, float stlColor[3], char *filename  
    }
 }
 
-
+//////////////////////////////////
 cfdGeomDataSet::~cfdGeomDataSet( )
 {
+   delete DCS;
+   delete node;
+   /*
    pfDelete( mat0 );
    pfDelete( mat1 );
    pfDelete( DCS );
-   pfDelete( node );
+   pfDelete( node );*/
    //pfDelete( matLight );
    std::cout << "Destroy cfdGeomDataSet" << std::endl;
 }
 
-
+//////////////////////////////////////////////
 void cfdGeomDataSet::Initialize(float op_val )
 {
    this->op = op_val;
    setOpac( op_val );
 }
 
-
+///////////////////////////////////////////
 void cfdGeomDataSet::setTrans( float t[3] )
 {
    this->setTrans3( t[0], t[1], t[2] );
@@ -138,48 +161,61 @@ void cfdGeomDataSet::setTrans( float t[3] )
       << t[1] << " z: " << t[2] << std::endl << vprDEBUG_FLUSH;
 }
 
-
+////////////////////////////////////////////////////////////
 void cfdGeomDataSet::setTrans3( float x, float y, float z )
 {
-   this->DCS->setTrans( x, y, z );
+   float trans[3];
+   trans[0] = x;
+   trans[1] = y;
+   trans[2] = z;
+   this->DCS->SetTranslationArray(trans);//SetTrans( x, y, z );
    vprDEBUG(vprDBG_ALL,1) << "Trans x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
-
+////////////////////////////////////////////////////////
 void cfdGeomDataSet::setScl( float x, float y, float z )
 {
-   this->DCS->setScale( x, y, z );
+   float scale[3];
+   scale[0] = x;
+   scale[1] = y;
+   scale[2] = z;
+   
+   this->DCS->SetScaleArray(scale);//>SetScale( x, y, z );
    vprDEBUG(vprDBG_ALL,1) << "Scale x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
-
+//////////////////////////////////////////////////////
 void cfdGeomDataSet::setRot(float h, float p, float r)
 {
-   this->DCS->setRot(h,p,r);
+   float rot[3];
+   rot[0] = h;
+   rot[1] = p;
+   rot[2] = r;
+   this->DCS->SetRotationArray(rot);//>SetRot(h,p,r);
    vprDEBUG(vprDBG_ALL,1) << "Rot h: " << h << " p: " 
       << p << " r: " << r << std::endl << vprDEBUG_FLUSH;
 }
-
+//////////////////////////////////////////////
 void cfdGeomDataSet::setRotMat(double *rotate)
 {
 }
-
-pfNode *cfdGeomDataSet::getpfNode( )
+////////////////////////////////////
+cfdNode *cfdGeomDataSet::getpfNode( )
 {
    return this->node;
 }
-
-pfDCS *cfdGeomDataSet::getpfDCS( )
+//////////////////////////////////
+cfdDCS *cfdGeomDataSet::getpfDCS( )
 {
    return this->DCS;
 }
-
+//////////////////////////////////
 float cfdGeomDataSet::getOpacity()
 {
    return this->op;
 }
 
-
+//////////////////////////////////////////
 void cfdGeomDataSet::setOpac(float op_val)
 {
    this->op = op_val;

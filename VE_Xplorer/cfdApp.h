@@ -52,20 +52,32 @@ class cfdIHCCModel;
 //class CorbaManager;
 class cfdVjObsWrapper;
 // Scene graph dependent forward declarations
-class pfGroup;
+
 
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
-#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
 
+#ifdef _PERFORMER
+class pfGroup;
+#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
 // Declare my application class
 class cfdApp : public vrj::PfApp
+#elif _OSG
+#include <osg/Group>
+#include <vrj/Draw/OSG/osgApp.h>
+class cfdApp: public vrj::OsgApp
+#elif _OPENSG
+#endif
 {
    public:
       //cfdApp( vrj::Kernel* kern);
       cfdApp( void );//vrj::Kernel* kern );
+     
+      // Initialize the scene graph
+      virtual void initScene( );
 
       virtual void init( );
+#ifdef _PERFORMER
 
       virtual void apiInit( );
 
@@ -73,19 +85,30 @@ class cfdApp : public vrj::PfApp
       virtual void preForkInit( );
       // Called Before pfConfig()
 
-      // Initialize the scene graph
-      virtual void initScene( );
+      
 
       // Return the current scene graph
       virtual pfGroup* getScene( );
+      
+      // Function called before pfSync
+      virtual void preSync( );
+
+      // Performer calls before exiting
+      virtual void exit( void );
+#elif _OSG
+      osg::Group* getScene();
+      void bufferPreDraw();
+      
+      virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
+#elif _OPENSG
+#endif
+      
 
       // Function called by the DEFAULT drawChan function 
       // before clearing the channel
       // and drawing the next frame (pfFrame( ))
       //virtual void preDrawChan(pfChannel* chan, void* chandata);
 
-      // Function called before pfSync
-      virtual void preSync( );
 
       // Function called after pfSync and before pfDraw
       virtual void preFrame( );
@@ -96,8 +119,7 @@ class cfdApp : public vrj::PfApp
       // Function called after intraFrame
       virtual void postFrame();
 
-      // Performer calls before exiting
-      virtual void exit( void );
+      
 
       // Used to override getFrameBufferAttrs()
       // Should be able to set multi sampling in the config
@@ -120,23 +142,14 @@ class cfdApp : public vrj::PfApp
       cfdExecutive*     executive;
 #endif
 
-      //CosNaming::NamingContext_var naming_context;
-      //CORBA::ORB_var orb;
-      //PortableServer::POA_var poa;
-
-   
-      //biv -- transient stuff
-      /*cfdTransientFlowManager* _cfdTFM_X_Contour[2];//added for windshield hack
-      cfdTransientFlowManager* _cfdTFM_Y_Contour;
-      cfdTransientFlowManager* _cfdTFM_Z_Contour;
-      cfdTransientFlowManager* _cfdTFM_X_Vector;
-      cfdTransientFlowManager* _cfdTFM_Y_Vector;
-      cfdTransientFlowManager* _cfdTFM_Z_Vector;
-      cfdTransientFlowManager* _cfdTFM_Geometry[2];
-      cfdTransientFlowManager* _cfdTFM_Particle;*/
 
    // Only used in preframe for transient stuff
    int   lastFrame;
+
+  
+#ifdef _CLUSTER   
+   virtual void GetUpdateClusterStateVariables( void );
+#endif
    private:
       char * filein_name;
 };

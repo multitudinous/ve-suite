@@ -50,5 +50,4 @@ class cfdAppWrapper
       int argc;
       char** argv;
 }; 
-
 #endif

@@ -41,8 +41,8 @@
 class cfdThread
 {
    public:
-      cfdThread( void );
-      ~cfdThread( void );
+      cfdThread( void ){}
+      ~cfdThread( void ){}
 
 //   private:
       vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;

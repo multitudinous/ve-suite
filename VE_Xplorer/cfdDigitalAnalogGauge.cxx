@@ -66,10 +66,7 @@ cfdDigitalAnalogGauge::~cfdDigitalAnalogGauge( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdDigitalAnalogGauge Destructor" 
                           << std::endl << vprDEBUG_FLUSH;
-/*   if ( this->DCS != NULL )
-   {
-      pfDelete( this->DCS );
-   }*/
+
 }
 
 void cfdDigitalAnalogGauge::SetGeometryFilename( std::string filename )
@@ -79,10 +76,10 @@ void cfdDigitalAnalogGauge::SetGeometryFilename( std::string filename )
    this->node = new cfdNode();
    this->node->LoadFile( (char*)this->_filename.c_str() );
    //this->node->flatten( 0 );
-   this->AddChild( this->node );
+   this->AddChild( (cfdSceneNode*)this->node );
 std::cout << "cfdExecutive load gauge geometry : " << _filename << std::endl;
-   this->AddChild( ((cfd1DTextInput*)_textOutput.first) );
-   this->AddChild( ((cfd1DTextInput*)_textOutput.second) );
+   this->AddChild( (cfdSceneNode*)((cfd1DTextInput*)_textOutput.first) );
+   this->AddChild( (cfdSceneNode*)((cfd1DTextInput*)_textOutput.second) );
    
    this->_masterNode->AddChild( this );   
 }

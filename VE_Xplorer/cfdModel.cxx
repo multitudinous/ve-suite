@@ -38,8 +38,6 @@
 #include "cfdFILE.h"
 
 #include <vpr/Util/Debug.h>
-#include <iostream>
-using namespace std;
 
 cfdModel::cfdModel( cfdDCS *worldDCS)
 {
@@ -66,11 +64,9 @@ cfdModel::~cfdModel()
    mGeomDataSets.clear();
 */
    for(VTKDataSetList::iterator itr = mVTKDataSets.begin();
-                                itr != mVTKDataSets.end(); )
+                                itr != mVTKDataSets.end(); itr++)
    {
-      cout << "cfDModel iter " << endl;
       delete *itr;
-      itr++;
    }
    mVTKDataSets.clear();
 }

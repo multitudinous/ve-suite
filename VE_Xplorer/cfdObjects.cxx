@@ -61,8 +61,6 @@ cfdObjects::cfdObjects( cfdGeode* temp, int type )
    this->usePreCalcData = false;
    this->actor = NULL;
    this->PDactor = NULL;
-
-   this->activeDataSet = NULL;
 }
 
 cfdObjects::cfdObjects( void )
@@ -105,13 +103,7 @@ cfdGeode* cfdObjects::GetcfdGeode( void )
    return this->_geode;
 }
 
-/*
-void cfdObjects::GetGeoSet( pfGeoSet *gset[] )
-{
-   for ( int i = 0; i < 4; i++ )
-      gset[ i ] = geosets[ i ];
-}
-*/
+
 
 void cfdObjects::SetOrigin( float o[ 3 ] )
 {
@@ -244,9 +236,7 @@ void cfdObjects::AddcfdGeodeToDCS( void )
    vprDEBUG(vprDBG_ALL, 2) 
       << "cfdObjects::UpdateGeode... set active geode pointer "
       << this->GetActiveDataSet()->IsNewlyActivated() << " : " << this->_geodes.size() << std::endl << vprDEBUG_FLUSH;
-   //this->geode = (pfGeode *)this->geodes.back();
-   //this->geode = tempGeode;
-   //this->updateFlag = true;
+   
 
    if ( this->GetActiveDataSet()->IsNewlyActivated() )
    {
@@ -264,7 +254,7 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       if ( this->_geodes.size() > 2 ) // remove oldest
       {
          int num = (this->_geodes.size() - 1) - 2;
-         cfdSceneNode* parent = (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetParent(0);
+         cfdNode* parent = ((cfdGeode*)this->_geodes[ num ])->GetParent(0);
          ((cfdDCS*)parent)->RemoveChild( ((cfdGeode*)this->_geodes[ num ]) );
          delete this->_geodes[ num ];
          this->_geodes.erase( this->_geodes.end() - 3 );
@@ -277,7 +267,7 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       int num = (this->_geodes.size() - 1) - 1;
       vprDEBUG(vprDBG_ALL,1) << " removing child num = " << num << " : " << this->_geodes[ num ]
                              << std::endl << vprDEBUG_FLUSH;
-      cfdSceneNode* parent = (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetParent(0);
+      cfdNode* parent = ((cfdGeode*)this->_geodes[ num ])->GetParent(0);
       ((cfdDCS*)parent)->RemoveChild( ((cfdGeode*)this->_geodes[ num ]) );
       delete this->_geodes[ num ];
 
@@ -305,7 +295,7 @@ void cfdObjects::RemovecfdGeodeFromDCS( void )
    {
       // Need to find tha parent becuase with multiple models
       // Not all geodes are going to be on the same dcs
-      cfdSceneNode* parent = this->_geodes[ i ]->GetParent(0);
+      cfdNode* parent = this->_geodes[ i ]->GetParent(0);
       ((cfdDCS*)parent)->RemoveChild( ((cfdGeode*)this->_geodes[ i ]) );
       delete this->_geodes[ i ];
    }
@@ -395,10 +385,16 @@ void cfdObjects::UpdateCommand()
    cerr << "doing nothing in cfdObjects::UpdateCommand()" << endl;
 }
 
-cfdDataSet* cfdObjects::GetActiveDataSet()
-{
-   return activeDataSet;
-}
+/////////////////// STATIC member functions follow ///////////////////
+
+// initial definition of the static variable
+cfdDataSet * cfdObjects::activeDataSet = NULL;
+cfdDataSet * cfdObjects::activeMeshedVolume = NULL;
+cfdDataSet * cfdObjects::activeParticleData = NULL;
+cfdDataSet * cfdObjects::activeSurfaceData = NULL;
+float cfdObjects::vectorScale = 0.0;
+int   cfdObjects::particleOption = 0;
+float cfdObjects::particleScale = 0.0;
 
 void cfdObjects::SetActiveDataSet( cfdDataSet * dataset )
 {
@@ -409,12 +405,55 @@ void cfdObjects::SetActiveDataSet( cfdDataSet * dataset )
    activeDataSet = dataset;
 }
 
-/////////////////// STATIC member functions follow ///////////////////
+cfdDataSet * cfdObjects::GetActiveDataSet()
+{
+   return activeDataSet;
+}
 
+void cfdObjects::SetActiveMeshedVolume( cfdDataSet * dataset )
+{
+   vprDEBUG(vprDBG_ALL, 1) 
+      << "cfdObjects::SetActiveMeshedVolume: " << dataset
+      << std::endl << vprDEBUG_FLUSH;
 
-float cfdObjects::vectorScale = 0.0;
-int   cfdObjects::particleOption = 0;
-float cfdObjects::particleScale = 0.0;
+   activeMeshedVolume = dataset;
+   activeDataSet = dataset;   // only one active dataset for scalar bar
+}
+
+cfdDataSet * cfdObjects::GetActiveMeshedVolume()
+{
+   return activeDataSet;
+}
+
+void cfdObjects::SetActiveParticleData( cfdDataSet * dataset )
+{
+   vprDEBUG(vprDBG_ALL, 1) 
+      << "cfdObjects::SetActiveParticleData: " << dataset
+      << std::endl << vprDEBUG_FLUSH;
+
+   activeParticleData = dataset;
+   activeDataSet = dataset;   // only one active dataset for scalar bar
+}
+
+cfdDataSet * cfdObjects::GetActiveParticleData()
+{
+   return activeParticleData;
+}
+
+void cfdObjects::SetActiveSurfaceData( cfdDataSet * dataset )
+{
+   vprDEBUG(vprDBG_ALL, 1) 
+      << "cfdObjects::SetActiveSurfaceData: " << dataset
+      << std::endl << vprDEBUG_FLUSH;
+
+   activeSurfaceData = dataset;
+   activeDataSet = dataset;   // only one active dataset for scalar bar
+}
+
+cfdDataSet * cfdObjects::GetActiveSurfaceData()
+{
+   return activeSurfaceData;
+}
 
 // used by vectors and intended to be used for warped contours
 void cfdObjects::SetVectorScale( float x )

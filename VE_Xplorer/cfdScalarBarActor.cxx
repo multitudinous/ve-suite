@@ -58,7 +58,6 @@ cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
    vprDEBUG(vprDBG_ALL,2) << "constructing cfdScalarBarActor" 
                           << std::endl << vprDEBUG_FLUSH;
 
-cout << " next 1 " <<endl;
    _param = param;
    _rootNode = rootNode;
    _activeDataSet = NULL;
@@ -451,34 +450,36 @@ cfdDCS* cfdScalarBarActor::GetcfdDCS(void )
 
 bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
 {
-   // set the default return value that indicates whether to update scalar bar
    bool flag = false;
 
-   if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SCALAR_BAR_TOGGLE ) &&
-        ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == 1 ) )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SCALAR_BAR_TOGGLE )
    {
-      //cout << "trying to add a scalar bar" << endl;
-      RefreshScalarBar();
-      flag = true;
-   }
-   else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SCALAR_BAR_TOGGLE ) &&
-             ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == 0 ) )
-   {
-      //cout << "trying to remove a scalar bar" << endl;
       if ( this->scalarBar )
-      {
-         this->_rootNode->RemoveChild( this->scalarBar );
+      { 
+         this->_rootNode->RemoveChild( this->GetcfdDCS() );
          //this->worldDCS->removeChild( this->scalarBarActor->getpfDCS() );
          delete this->scalarBar;
          this->scalarBar = NULL;
+         flag = true;
+      }
+      else
+      { 
+          RefreshScalarBar();
+         flag = true;
       }
    }
    else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR ) || 
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR_RANGE ) ||
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEADYSTATE_DATASET ) )
    { 
-      this->RefreshScalarBar();
-      flag = true;
+      // if already displayed, set a flag to update the scalar bar
+      //if ( this->scalarBar )
+      {  
+         cout << " ******************Update Scalar Bar " << endl;
+         this->RefreshScalarBar();
+         //this->isTimeToUpdateScalarBar = true;
+         flag = true;
+      }
    }
    return flag;
 }
@@ -491,7 +492,7 @@ void cfdScalarBarActor::UpdateCommand()
 void cfdScalarBarActor::RefreshScalarBar()
 {
    vprDEBUG(vprDBG_ALL,1) << " RefreshScalarBar " 
-                          << std::endl << vprDEBUG_FLUSH;
+                             << std::endl << vprDEBUG_FLUSH;
    if ( this->scalarBar )
    {
       this->_rootNode->RemoveChild( this->scalarBar );
@@ -526,11 +527,11 @@ void cfdScalarBarActor::RefreshScalarBar()
    this->SetLookupTable( this->_activeDataSet->GetLookupTable() );
 
    vprDEBUG(vprDBG_ALL,1) << " RefreshScalarBar: " 
-      << "this->_activeDataSet->GetLookupTable() = "
+      << "cfdObjects::GetActiveDataSet()->GetLookupTable() = "
       << this->_activeDataSet->GetLookupTable()
       << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,1) << "RefreshScalarBar: " 
-      << "this->_activeDataSet->GetParent()->GetLookupTable() = "
+      << "cfdObjects::GetActiveDataSet()->GetParent()->GetLookupTable() = "
       << this->_activeDataSet->GetParent()->GetLookupTable()
       << std::endl << vprDEBUG_FLUSH;
 
@@ -566,7 +567,6 @@ void cfdScalarBarActor::CreateObjects( void )
    std::ifstream input;
    input.open( _param );
    input >> numObjects; 
-   cout << numObjects << endl;
    input.getline( text, 256 );   //skip past remainder of line
 
    vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;

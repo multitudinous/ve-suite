@@ -33,9 +33,9 @@
 #include "cfdIHCCContour.h"
 #include "readWriteVtkThings.h"  // for readVtkThing
 #include "cfdGeode.h"
-
+#ifdef _PERFORMER
 #include <vtkActorToPF.h>
-
+#endif
 #include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
