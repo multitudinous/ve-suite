@@ -1,0 +1,30 @@
+
+In the avs file "2D.avs", vertex numbering begins with 1 and there are gaps in
+the vertex numbering -- missing vertices 6,7,10,16,18. 
+
+Every defined vertex has a corresponding solution -- as REQUIRED by avs format.
+
+There are some extra unused vertices (8,9,11,19,20) in both the vertex section
+and the solution section that are not used by the cell definitions -- These
+should be automatically excluded from the flowdata.vtk.
+
+To test the translator, enter:
+   'translateToVtk 1 2D.avs'
+
+Go with the default options (no scaling or transformation, and write all
+parameters to the output file.  To compare your output to the gold standard,
+type:
+   'diff 2D.vtk flowdata.vtk'
+   
+The diff program should show no differences.
+
+To examine the output file as ascii text or to compare between ascii versions,
+use the utility:
+   'convertVTK2Ascii flowdata.vtk flowdata.vtk'
+
+Then do a diff:
+   'diff 2DASCII.vtk flowdata.vtk'
+   
+The diff program should show no differences.
+
+
