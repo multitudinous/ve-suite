@@ -226,9 +226,8 @@ void VjObs_i::CreateDatasetInfo( void )
       }
    }
 
-   vprDEBUG(vprDBG_ALL,1) << "leaving VjObs_i::CreateDatasetInfo()"
+   vprDEBUG(vprDBG_ALL,1) << "\tleaving VjObs_i::CreateDatasetInfo()"
                           << std::endl << vprDEBUG_FLUSH;
-
 }
 
 /////////////////////////////////////////////////////////////
@@ -849,12 +848,14 @@ void VjObs_i::PreFrameUpdate( void )
 
    if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) != GUI_NAV )
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
+
    if ( !commandQueue.empty() && !_ssHandler->TransientGeodesIsBusy() )
    {
-   std::cout << commandQueue.empty() << " : " << _ssHandler->TransientGeodesIsBusy() << std::endl;
-      (*_bufferArray) = (*(*commandQueue.begin()));
+      std::vector< cfdCommandArray* >::iterator iter;
+      iter = commandQueue.begin();
+      (*_bufferArray) = (*(*iter));
       delete commandQueue.at( 0 );
-      commandQueue.erase( commandQueue.begin() );
+      commandQueue.erase( iter );
    }
 }
 
@@ -879,7 +880,6 @@ void VjObs_i::CreateCommandQueue( void )
    for ( iter = _modelHandler->GetActiveModel()->transientDataSets.begin(); 
          iter != _modelHandler->GetActiveModel()->transientDataSets.end(); ++iter)
    { 
-      std::cout << iter->first << std::endl;
       // Set the active datasets
       commandQueue.push_back( new cfdCommandArray() );
       commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, CHANGE_STEADYSTATE_DATASET );
@@ -898,6 +898,7 @@ void VjObs_i::CreateCommandQueue( void )
       commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, newPreState );
    }
 
+   commandQueue.push_back( new cfdCommandArray() );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
    commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 1 );
 }

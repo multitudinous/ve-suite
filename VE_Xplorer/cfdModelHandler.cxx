@@ -60,7 +60,7 @@
 #ifdef WIN32   // windows
 #include <direct.h>
 #else          // not windows
-#include <unistd.h>
+//#include <unistd.h>
 #include <sys/types.h>
 #include <sys/dir.h>
 #endif // WIN32
@@ -755,7 +755,6 @@ void cfdModelHandler::CreateObjects( void )
          _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );*/
 
          // For the geometry we need to loop over all the files and set the dcs appropriately
-
       }else if(id == 15){
          if ( _modelList.empty() )
             _modelList.push_back( new cfdModel( worldNode ) );
@@ -1121,6 +1120,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
                        << ", dcs = "  << _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()
                        << std::endl << vprDEBUG_FLUSH;
       _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( frameFileNames[ order[ 0 ]  ] );
+std::cout << " here 2 " << std::endl;
    }
    else
    {

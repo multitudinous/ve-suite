@@ -32,13 +32,15 @@
 #include "cfdGraphicsObject.h"
 #include "cfdGeode.h"
 #include "cfdGroup.h"
-//#include "cfdNode.h"
 #include "cfdDCS.h"
 #include "cfdSwitch.h"
 #include "cfdModel.h"
 #include "cfdDataSet.h"
 #include "cfdSequence.h"
 #include "cfdTempAnimation.h"
+
+#include "cfdNode.h"
+#include "cfdSceneNode.h"
 
 #include <vtkActor.h>
 
@@ -103,11 +105,17 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
       }
 
       // create geodes
-      for ( unsigned int i = 0; i < this->actors.size(); i++ )
+      vprDEBUG(vprDBG_ALL,1) << "|\t\tGraphicsObject Creating Geodes"
+                             << std::endl << vprDEBUG_FLUSH;
+      for ( unsigned int i = 0; i < this->actors.size(); ++i )
       {
+         vprDEBUG(vprDBG_ALL,2) << "|\t\tGraphicsObject Creating Geode = " << i
+                             << std::endl << vprDEBUG_FLUSH;
          this->geodes.push_back( new cfdGeode() );
          this->geodes.back()->TranslateTocfdGeode( this->actors.at( i ) );
       }
+      vprDEBUG(vprDBG_ALL,1) << "|\t\tGraphicsObject Done Creating Geodes"
+                             << std::endl << vprDEBUG_FLUSH;
 
       // is it transient, classic, or animated class
       // add animation or dcs
@@ -118,11 +126,15 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          // child 0 see line 58 of cfdModel.cxx
          if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( this->model->GetActiveDataSet()->GetDCS() ) < 0 )
          {
-            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS"
+            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic ss "
                              << std::endl << vprDEBUG_FLUSH;
             ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
          }
+         vprDEBUG(vprDBG_ALL,1) << "|\t\t adding geode to active dataset dcs "
+                             << std::endl << vprDEBUG_FLUSH;
          this->model->GetActiveDataSet()->GetDCS()->AddChild( this->geodes.back() );
+         vprDEBUG(vprDBG_ALL,1) << "|\t Finished classic ss add to graph"
+                             << std::endl << vprDEBUG_FLUSH;
       }
       else if ( this->geodes.size() > 1 && 
                ( !(model->GetAnimation()) || 
@@ -135,7 +147,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          this->animation->AddGeodesToSequence( this->geodes );
          if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( this->model->GetActiveDataSet()->GetDCS() ) < 0 )
          {
-            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS"
+            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic ss animation"
                              << std::endl << vprDEBUG_FLUSH;
             ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
          }
@@ -148,15 +160,12 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          // classic transient data
          cfdTempAnimation* transAnimation = this->model->GetAnimation();
          // the following functions should be called upon creation in cfdModel
-         //transAnimation->SetDuration( 10.0f );
-         //transAnimation->SetNumberOfFrames( numFrames );
-         //transAnimation->SetGroups();
          transAnimation->AddGeodesToSequence( this->geodes );
-         if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( this->animation->GetSequence() ) < 0 )
+         if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( transAnimation->GetSequence() ) < 0 )
          {
-            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS"
+            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic trans"
                              << std::endl << vprDEBUG_FLUSH;
-            ((cfdGroup*)temp->GetChild( 0 ))->AddChild(this->animation->GetSequence() );
+            ((cfdGroup*)temp->GetChild( 0 ))->AddChild( transAnimation->GetSequence() );
          }
       }
    }
@@ -398,9 +407,9 @@ void cfdGraphicsObject::RemovecfdGeodeFromDCS( void )
       {
          // Need to find tha parent becuase with multiple models
          // Not all geodes are going to be on the same dcs
-         cfdGroup* parent = (cfdGroup*)this->geodes.at( 0 )->GetParent(0);
-         parent->RemoveChild( this->geodes.at( 0 ) );
-         delete this->geodes.at( 0 );
+         cfdGroup* parent = (cfdGroup*)this->geodes.at( i )->GetParent(0);
+         parent->RemoveChild( this->geodes.at( i ) );
+         delete this->geodes.at( i );
       }
       this->geodes.clear();
 

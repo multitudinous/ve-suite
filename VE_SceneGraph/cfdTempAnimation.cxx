@@ -125,6 +125,9 @@ void cfdTempAnimation::AddGeodesToSequence( std::vector< cfdGeode* > geodes )
 {
    this->StopSequence();
    
+   vprDEBUG(vprDBG_ALL, 2) << "|\t\tNumber Of Frames = " << numFrames 
+               << " Number Of Geodes = " << geodes.size() 
+               << std::endl << vprDEBUG_FLUSH;
    if ( !groups )
    {
       // For animated streamlines
@@ -147,9 +150,13 @@ void cfdTempAnimation::AddGeodesToSequence( std::vector< cfdGeode* > geodes )
          // get the DCS that is beneth the group 
          // child 0 should be the dataset dcs while child 1 should be geom
          // the DCS should be added at intialization
+         vprDEBUG(vprDBG_ALL, 2) << "|\t\tIn TempAnimation Adding Geode = " << i 
+                           << std::endl << vprDEBUG_FLUSH;
          ((cfdDCS*)tempGroup->GetChild( 0 ))->AddChild( geodes.at( i ) );
       }
    }
+   vprDEBUG(vprDBG_ALL, 2) << "|\t\tFinished Creating Frames"
+               << std::endl << vprDEBUG_FLUSH;
    this->StartSequence();
 }
 

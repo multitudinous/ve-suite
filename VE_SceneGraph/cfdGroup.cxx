@@ -200,13 +200,12 @@ int  cfdGroup::SearchChild( cfdNode* child )
    //biv--could be replaced w/ getChildIndex(cfdNode*)
    /* return _group->getChildIndex(child->GetRawNode());*/
 
-   for ( unsigned int i = 0; i < childNodes.size(); i++ )
+   for ( unsigned int i = 0; i < childNodes.size(); ++i )
       if ( childNodes[ i ] == child ){
          return (int)i;
       }
    // if not found
    return -1;
-
 }
 /////////////////////////////////////////////
 cfdNode* cfdGroup::GetChild( int child )

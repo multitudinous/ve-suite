@@ -26,17 +26,17 @@
    90 0 0            // Rotation values for geometry file
    air_system.iv     // Geometry file name
 10                   // Object type 10: Transient data loader
+   6                 // Duration of the transient sequence in seconds
    1 1 1             // data dcs scale values
    0 0 0             // data dcs translation values (in feet)
    0 0 0             // data dcs rotation values (degrees, Z-X-Y format)
-   ./transient_flowdata    // directory of vtk files 3D Mesh
-   ./transient    // directory of vtk files
+   transient_flowdata    // directory of vtk files 3D Mesh
+   transient    // directory of vtk files
    ./trans_geometry  // Transient geometry data directory
    1 1 1             // Transient geometry dcs scale values
    0 0 0             // Transient geometry dcs translation values
    0 0 0             // Transient geometry dcs rotation values
    1  1  1.0 1.0 1.0 // Transient geometry transparency setting, stl color flag (and 3 color values if flag = 1)
-   6                 // Duration of the transient sequence in seconds
 11                   // Object type 11: Sound File block, must have Sound API working, recommend OpenAL
    0                 // ambient, is played as background noise
    1                 // retriggerable, shuts off sound from being retriggered in program

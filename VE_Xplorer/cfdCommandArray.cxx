@@ -47,6 +47,20 @@ cfdCommandArray::cfdCommandArray( const cfdCommandArray& input )
    cfdTeacher_state  = input.cfdTeacher_state; 
 }
 
+cfdCommandArray::cfdCommandArray()
+{
+   cfdIso_value      = -1;
+   cfdSc             = -1;
+   cfdMin            = -1;
+   cfdMax            = -1;
+   cfdId             = -1;
+   cfdGeo_state      = -1;
+   cfdPostdata_state = 0;
+   cfdPre_state      = 0;
+   cfdTimesteps      = -1;
+   cfdTeacher_state  = -1;
+}
+
 cfdCommandArray& cfdCommandArray::operator=( const cfdCommandArray& input )
 {
    if ( this != &input )

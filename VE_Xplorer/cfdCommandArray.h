@@ -37,7 +37,7 @@
 class cfdCommandArray
 {
    public:
-      cfdCommandArray(){}
+      cfdCommandArray();
       ~cfdCommandArray(){}
       cfdCommandArray( const cfdCommandArray& );
       cfdCommandArray& operator=( const cfdCommandArray& );

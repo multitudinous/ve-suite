@@ -789,7 +789,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    // check any virtual objects need to be updated
    if ( this->actorsAreReady && this->transientActors )
    {
-      vprDEBUG(vprDBG_ALL,2) << "|\tUpdating Objects"
+      vprDEBUG(vprDBG_ALL,3) << "|\tUpdating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
       for ( unsigned int i = 0; i < this->dataList.size(); i++ )
       {

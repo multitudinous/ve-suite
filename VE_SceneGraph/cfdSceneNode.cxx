@@ -73,11 +73,9 @@ cfdSceneNode::cfdSceneNode(cfdNodeType nt)
 ///////////////////////////////////
 cfdSceneNode::~cfdSceneNode( void )
 {
-   vprDEBUG(vprDBG_ALL,1) << " 1 destructor for cfdSceneNode " <<  std::endl << vprDEBUG_FLUSH;
    this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
-   vprDEBUG(vprDBG_ALL,1) << " 2 destructor for cfdSceneNode " <<  std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////
 cfdSceneNode::cfdSceneNode( const cfdSceneNode& input )
@@ -129,8 +127,9 @@ void cfdSceneNode::SetParent( cfdNode* parent )
 
    if ( this->_numParents > 1 )
    {
+      // Is this really bad?
       std::cerr << "Error : SetParent "<< _numParents << std::endl;
-      exit( 1 );      
+      //exit( 1 );      
    }
    
    this->_parent = parent;

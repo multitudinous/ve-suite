@@ -133,13 +133,11 @@ cfdNode::cfdNode()
 /////////////////////////
 cfdNode::~cfdNode( void )
 {
-   vprDEBUG(vprDBG_ALL,1) << " 1 destructor for cfdNode " 
-                           << std::endl << vprDEBUG_FLUSH;
    // If neccesary
 #ifdef _PERFORMER
    if ( this->_node != NULL )
    {
-      vprDEBUG(vprDBG_ALL,1) << " 2 destructor for cfdNode " 
+      vprDEBUG(vprDBG_ALL,3) << "destructor for cfdNode " 
                               << std::endl << vprDEBUG_FLUSH;
       pfDelete( this->_node );
    }
