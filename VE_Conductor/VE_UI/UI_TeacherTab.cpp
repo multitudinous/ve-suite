@@ -25,21 +25,23 @@ UI_TeacherTab::UI_TeacherTab(wxNotebook* tControl)
 void UI_TeacherTab::_buildPage()
 {
    //the radio box
-   int numStoredScenes = ((UI_Tabs *)_parent)->num_teacher;
+   // add one for defualt button for no pfbs loaded
+   int numStoredScenes = ((UI_Tabs *)_parent)->num_teacher + 1;
    wxString* defaultName;
-   
-   if ( numStoredScenes > 0 )
+
+   if ( numStoredScenes > 1 )
    {
       defaultName = new wxString[ numStoredScenes ];
-      for(CORBA::ULong i = 0; i < (unsigned int)numStoredScenes; i++)
+      defaultName[ 0 ] = wxT("No PFB Files Selected");
+
+      for(CORBA::ULong i = 1; i < (unsigned int)numStoredScenes; ++i )
       {
-         defaultName[ i ] = ((UI_Tabs*)_parent)->teacher_attrib[ i ];
+         defaultName[ i ] = ((UI_Tabs*)_parent)->teacher_attrib[ i - 1 ];
          std::cout << "PFB  Name " << i << " : " << defaultName[ i ] << std::endl;
       }
    }
    else
    {
-      numStoredScenes = 1;
       defaultName = new wxString[ numStoredScenes ];
       defaultName[ 0 ] = wxT("No PFB Files");
    }
@@ -76,14 +78,17 @@ void UI_TeacherTab::_onTeacher(wxCommandEvent& event)
    // Are there any stored scenes loaded?
    if ( ((UI_Tabs *)_parent)->num_teacher > 0 )
    {
-      for( int i = 0; i < ((UI_Tabs *)_parent)->num_teacher; i++)
-      {  
-         // _teacherRBox->GetSelection();
-         // This code is not correct
-         // Need to fix this 
-         ((UI_Tabs *)_parent)->cIso_value = _teacherRBox->GetSelection();
+      // We must use this if statement becuase the first value
+      // is no selected pfb...see above
+      if ( _teacherRBox->GetSelection() == 0 )
+      {
+         ((UI_Tabs *)_parent)->cId = CLEAR_PFB_FILE;
       }
-      ((UI_Tabs *)_parent)->cId = LOAD_PFB_FILE;
+      else
+      {
+         ((UI_Tabs *)_parent)->cIso_value = _teacherRBox->GetSelection() - 1;
+         ((UI_Tabs *)_parent)->cId = LOAD_PFB_FILE;
+      }
       ((UI_Tabs *)_parent)->sendDataArrayToServer();
    }
    else
