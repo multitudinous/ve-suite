@@ -715,6 +715,9 @@
 				RelativePath="..\VE_SceneGraph\cfdTempAnimation.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdTextOutput.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdThread.cxx">
 			</File>
 			<File
@@ -923,21 +926,6 @@
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\Framework\string_ops.cpp">
-			</File>
-			<File
-				RelativePath=".\textPrompt.cxx">
-				<FileConfiguration
-					Name="OMNI_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\VE_i.cpp">
@@ -1283,6 +1271,9 @@
 				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
 			</File>
 			<File
+				RelativePath=".\cfdTextOutput.h">
+			</File>
+			<File
 				RelativePath=".\cfdThread.h">
 			</File>
 			<File
@@ -1326,21 +1317,6 @@
 			</File>
 			<File
 				RelativePath="readWriteVtkThings.h">
-			</File>
-			<File
-				RelativePath="textPrompt.h">
-				<FileConfiguration
-					Name="OMNI_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCustomBuildTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="VE_i.h">
