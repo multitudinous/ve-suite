@@ -46,7 +46,7 @@
    ./JUNK            // precomputed data slice directory
    ./JUNK2           // precomputed surface directory
 10                   // Object type 10: Transient data loader
-   4   4                 // Number of directories containing vtk data to follow
+   4                 // Number of directories containing vtk data to follow
    1 1 1             // data dcs scale values
    0 0 0             // data dcs translation values
    0 0 0             // data dcs rotation values
@@ -67,7 +67,3 @@
 1        // Warped Contour Scale Value
 0.5      // Navigation Step Size
 0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient
-
-
-
-
