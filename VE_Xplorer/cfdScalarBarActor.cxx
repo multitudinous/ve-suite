@@ -409,7 +409,7 @@ void cfdScalarBarActor::Execute()
       labelActor->SetMapper( labelMapper );
 
       this->pfLabelActor[i]->TranslateTocfdGeode( labelActor );
-      this->scalarBar->AddChild((cfdSceneNode*)this->pfLabelActor[i]);
+      this->scalarBar->AddChild( this->pfLabelActor[i] );
    }
 
    for ( i = 0; i < this->numTextLabels; i ++ )

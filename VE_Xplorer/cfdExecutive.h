@@ -32,18 +32,9 @@
 #ifndef CFD_EXECUTIVE_H
 #define CFD_EXECUTIVE_H
 
-#include "moduleC.h"
-#include "moduleS.h"
-//#include "interface.h"
-//#include "cfd1DTextInput.h"
 #include "cfdGlobalBase.h"
 
-#include <orbsvcs/CosNamingC.h>
 #include <map>
-
-#include <vpr/vpr.h>
-#include <vpr/Sync/Mutex.h>
-#include <vpr/Sync/Guard.h>
 
 class cfdDCS;
 class cfdGroup;
@@ -61,24 +52,24 @@ class cfdVEBaseClass;
 class cfdVEAvail_Modules;
 class cfdModelHandler;
 class cfdEnvironmentHandler;
+class cfdVjObsWrapper;
 
-//class NamingContext_var;
-//class Executive_var;
+namespace Body { class Executive; }
+namespace CosNaming { class NamingContext; }
 
 class cfdExecutive : public cfdGlobalBase
 {
    public:
-      cfdExecutive( CosNaming::NamingContext_ptr nameing, cfdDCS*  );
+      cfdExecutive( CosNaming::NamingContext* , cfdDCS*  );
 
       ~cfdExecutive( void );
 
       void init_orb_naming( void );
 
       // the Computational Engine
-      Body::Executive_var _exec;
-      //CORBA::ORB_var orb;
-      PortableServer::POA_var poa;
-      CosNaming::NamingContext_var naming_context;
+      Body::Executive* _exec;
+
+      CosNaming::NamingContext* naming_context;
 
       // _id_map : maps a module id to an interface object for a module's inputs.
       std::map<int, Interface>   _it_map;
@@ -146,9 +137,7 @@ class cfdExecutive : public cfdGlobalBase
       cfdModelHandler* _modelHandler;
       cfdEnvironmentHandler* _envHandler;
 
-      vpr::Mutex  mValueLock;  /**< A mutex to protect variables accesses */
       bool _doneWithCalculations;
-
 };
 
 #endif

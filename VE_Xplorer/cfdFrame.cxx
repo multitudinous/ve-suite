@@ -188,7 +188,7 @@ int cfdFrame::CreateFrame( void )
       Matrix44f m;
       m = this->param->transientInfo[ this->member ]->GetGeometryDCS()->GetMat();
       this->dcs->SetMat( m );
-      this->dcs->AddChild( (cfdSceneNode*)this->node );
+      this->dcs->AddChild( this->node );
    }
    else
    {

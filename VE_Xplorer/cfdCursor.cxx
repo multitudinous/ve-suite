@@ -198,7 +198,7 @@ void cfdCursor::Initialize( double x[3], double v[3] )
    this->BuildPlaneSource();
 
    this->cursorGeode->TranslateTocfdGeode( this->sphereActor );
-   this->cursorDCS->AddChild( (cfdSceneNode*) this->cursorGeode );
+   this->cursorDCS->AddChild( this->cursorGeode );
 }
 
 int cfdCursor::GetCursorID( void )

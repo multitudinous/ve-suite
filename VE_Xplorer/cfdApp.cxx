@@ -35,8 +35,7 @@
 // It is derived by using the VTK and VRJuggler classes.
 
 #include "cfdApp.h"
-//#include <Performer/pfdu.h>
-//#include <Performer/pf/pfNode.h>
+
 // Scene graph dependant headers
 #include <Performer/pf.h>
 #include <Performer/pf/pfGroup.h>
@@ -56,20 +55,22 @@
 #include "cfdTempAnimation.h"
 #include "cfdSequence.h"
 #include "cfdIHCCModel.h"
-#include "CorbaManager.h"
+#include "cfdVjObsWrapper.h"
 
 #ifdef _TAO
 #include "cfdExecutive.h"
 #endif //_TAO
 
-#include <vpr/Util/Debug.h>
-#include <vpr/System.h>
-
+/// C/C++ libraries
+#include <iostream>
+#include <cstdio>
 #include <cstdlib>
-using namespace vrj;
+#include <cstring>
+#include <cmath>
+//#include <omp.h>using namespace vrj;
 using namespace std;
 
-inline cfdApp::cfdApp( CorbaManager* input )
+cfdApp::cfdApp( void )
 {
    this->_sceneManager =         NULL;
    this->_environmentHandler =   NULL;
@@ -77,16 +78,8 @@ inline cfdApp::cfdApp( CorbaManager* input )
    //this->_transientHandler =     NULL;
    this->_modelHandler =         NULL;
    this->ihccModel =             NULL;
-   _corbaManager = input;
 }
-/*
-void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_ptr orb, PortableServer::POA_ptr poa )
-{
-   this->naming_context = CosNaming::NamingContext::_duplicate( naming );
-   this->orb = CORBA::ORB::_duplicate( orb );
-   this->poa = PortableServer::POA::_duplicate( poa );
-}
-*/
+
 void cfdApp::exit()
 {
    delete filein_name;
@@ -145,7 +138,7 @@ void cfdApp::exit()
 
    vprDEBUG(vprDBG_ALL,0) 
      << " pfExit" << std::endl << vprDEBUG_FLUSH;
-   delete _corbaManager;
+   //delete _corbaManager;
    pfExit();
 }
 
@@ -214,17 +207,10 @@ inline void cfdApp::preSync( )
   vprDEBUG(vprDBG_ALL,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
 }
 
-/*
-std::vector< int > cfdApp::getFrameBufferAttrs( void )
+void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 {
-   std::vector< int > attrs;
-   attrs.push_back( PFFB_SAMPLE_BUFFER );
-   attrs.push_back( 1 );
-   attrs.push_back( PFFB_SAMPLES );
-   attrs.push_back( 1 );
-   return ( attrs );
+   _vjobsWrapper = input;
 }
-*/
 
 inline void cfdApp::initScene( )
 {
@@ -245,7 +231,7 @@ inline void cfdApp::initScene( )
    // modelHandler stores the arrow and holds all data and geometry
    this->_modelHandler = new cfdModelHandler( this->filein_name, 
                                               this->_sceneManager->GetWorldDCS() );
-   this->_modelHandler->SetCommandArray( _corbaManager->GetCommandArray() );
+   this->_modelHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    this->_modelHandler->InitScene();
 
    // navigation and cursor 
@@ -253,7 +239,7 @@ inline void cfdApp::initScene( )
    this->_environmentHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    this->_environmentHandler->SetRootNode( this->_sceneManager->GetRootNode() );
    this->_environmentHandler->SetArrow( this->_modelHandler->GetArrow() );
-   this->_environmentHandler->SetCommandArray( _corbaManager->GetCommandArray() );
+   this->_environmentHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    this->_environmentHandler->InitScene();
 
    // create steady state visualization objects
@@ -261,7 +247,7 @@ inline void cfdApp::initScene( )
    this->_steadystateHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    this->_steadystateHandler->SetNavigate( this->_environmentHandler->GetNavigate() );
    this->_steadystateHandler->SetCursor( this->_environmentHandler->GetCursor() );
-   this->_steadystateHandler->SetCommandArray( _corbaManager->GetCommandArray() );
+   this->_steadystateHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    this->_steadystateHandler->InitScene();
 
@@ -272,11 +258,11 @@ inline void cfdApp::initScene( )
 std::cout << "|  3d" << std::endl;
 */
 
-   this->_corbaManager->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
+   this->_vjobsWrapper->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
-   this->executive = new cfdExecutive( _corbaManager->naming_context.in(), this->_sceneManager->GetWorldDCS() );
+   this->executive = new cfdExecutive( _vjobsWrapper->naming_context, this->_sceneManager->GetWorldDCS() );
    this->executive->SetModelHandler( this->_modelHandler, this->_environmentHandler );
 
 #endif // _TAO
@@ -294,7 +280,7 @@ std::cout << "|  3d" << std::endl;
    }
 */
    // This may need to be fixed
-   this->_corbaManager->GetCfdStateVariables();
+   this->_vjobsWrapper->GetCfdStateVariables();
 }
 
 void cfdApp::preFrame( void )
@@ -326,25 +312,26 @@ void cfdApp::preFrame( void )
    // This need to go very soon
    // IHCC hack
    // fix this soon
-   if ( _corbaManager->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
+   if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
    {
       double data[ 6 ];// = { 0 };
-      data[ 0 ] = _corbaManager->GetShortArray( 1 ); //200;  //Agitation (rpm)  initial value 200
-      data[ 1 ] = _corbaManager->GetShortArray( 2 ); //1.25; //Air Concentration initial value 1.25;
-      data[ 2 ] = _corbaManager->GetShortArray( 3 ); //6;    //Initial pH value    initial value 6
-      data[ 3 ] = _corbaManager->GetShortArray( 4 ); //0.1;  //Nitrate Concentration     initial value 0.1
-      data[ 4 ] = _corbaManager->GetShortArray( 5 ); //37;   //Temperate (Celsius)        initial value 37
-      data[ 5 ] = _corbaManager->GetShortArray( 6 ); //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
+      data[ 0 ] = _vjobsWrapper->GetShortArray( 1 ); //200;  //Agitation (rpm)  initial value 200
+      data[ 1 ] = _vjobsWrapper->GetShortArray( 2 ); //1.25; //Air Concentration initial value 1.25;
+      data[ 2 ] = _vjobsWrapper->GetShortArray( 3 ); //6;    //Initial pH value    initial value 6
+      data[ 3 ] = _vjobsWrapper->GetShortArray( 4 ); //0.1;  //Nitrate Concentration     initial value 0.1
+      data[ 4 ] = _vjobsWrapper->GetShortArray( 5 ); //37;   //Temperate (Celsius)        initial value 37
+      data[ 5 ] = _vjobsWrapper->GetShortArray( 6 ); //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
 
       //this->ihccModel->UpdateModelVariables( data );
       //this->ihccModel->Update();
    }
-   else if ( _corbaManager->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )   // exit cfdApp was selected
+   else if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )   // exit cfdApp was selected
    {
 #ifdef _TAO
       this->executive->UnbindORB();
 #endif // _TAO
-      this->mKernel->stop(); // Stopping kernel using the inherited member variable
+      // need to fix with instance command
+      //this->mKernel->stop(); // Stopping kernel using the inherited member variable
    }
 
 #ifdef _TAO
@@ -353,10 +340,10 @@ void cfdApp::preFrame( void )
       this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
    }
    this->executive->UpdateModules();
-   this->executive->CheckCommandId( _corbaManager->GetCommandArray() );
+   this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );
 #endif // 
 
-   this->_corbaManager->PreFrameUpdate();
+   this->_vjobsWrapper->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -383,40 +370,9 @@ void cfdApp::postFrame()
       }
    }*/
 
-   this->_corbaManager->GetCfdStateVariables();
+   //this->_corbaManager->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
-
-
-int main(int argc, char* argv[])
-{
-   //pfSharedArenaSize (1400 * 1024 * 1024);
-   //pfSharedArenaBase ((void *) 0x20000000);
-   //pfInitArenas(); 
-
-   // cfdApp will call the destructor
-   CorbaManager* manager = new CorbaManager();
-    vpr::System::msleep( 10000 );  // half-second delay
-
-   vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
-
-   cfdApp* application = new cfdApp( manager );//kernel );  // Delcare an instance of my application
-
-
-   for ( int i = 1; i < argc; i++ )          // Configure the kernel
-   {
-      kernel->loadConfigFile( argv[i] );   
-   }
-   
-   kernel->start();                          // Start the kernel thread
-
-   kernel->setApplication( application );    // Give application to kernel
-   
-   kernel->waitForKernelStop();              // Block until kernel stops
-
-   return 0;
-}
-
 
 #ifdef _CLUSTER
 void cfdApp::GetUpdateClusterStateVariables( void )

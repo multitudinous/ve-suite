@@ -177,7 +177,7 @@ cfdTeacher::~cfdTeacher( )
 
    for ( i = 0; i < this->numFiles; i++)
    {  
-      this->DCS->RemoveChild( (cfdSceneNode*)this->node[i] );
+      this->DCS->RemoveChild( this->node[i] );
       delete this->node[i];
    }
    delete this->DCS;

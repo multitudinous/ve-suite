@@ -179,9 +179,9 @@ SRCS=\
    cfdModelHandler.cxx \
    cfdSoundHandler.cxx \
    cfdPfSceneManagement.cxx \
-   CorbaManager.cxx
-
-#   cfdDrawManager.cxx
+   cfdAppWrapper.cxx \
+   cfdVjObsWrapper.cxx \
+   cfdThread.cxx
 
 ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \
@@ -316,7 +316,7 @@ DEBUG_APP?=		TRUE
 
 #Scene Graph Specific flags
 #Can be: _PERFORMER, _OPENSG, _OSG
-EXTRA_CXXFLAGS+=	-D_PERFORMER
+EXTRA_CXXFLAGS+=	-D_PERFORMER -I${VE_SUITE_HOME}/VE_SceneGraph
 
 # vtkActorToPF needs VTK4 and VTK44
 EXTRA_CXXFLAGS+= -DVTK4 -DVTK44 $(WX_CXX) -D WXUSING_PLUGIN_DLL
@@ -360,7 +360,7 @@ CXX_GEN_DIR=		.
                         ${CONDUCTOR_BASE_DIR}/java_stuff/ObserverPackage \
                         ${CONDUCTOR_BASE_DIR}/java_stuff/VjObsPackage 
 
-vpath %.cpp $(CXX_GEN_DIR) ${CONDUCTOR_BASE_DIR}/skel
+vpath %.cpp $(CXX_GEN_DIR) ${CONDUCTOR_BASE_DIR}/skel ${VE_SUITE_HOME}/VE_SceneGraph
 #vpath %.cc ./UMI/skel
 #vpath %.h $(CXX_GEN_DIR)  ${CONDUCTOR_BASE_DIR}/skel
 

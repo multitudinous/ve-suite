@@ -23,7 +23,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\Filtering&quot;;&quot;$(VTK_HOME)\bin&quot;;&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VTK_HOME)\Common&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(VTK_HOME)\Graphics&quot;;&quot;$(VTK_HOME)\IO&quot;;&quot;$(VTK_HOME)\Imaging&quot;;&quot;$(VTK_HOME)\Rendering&quot;;&quot;$(VTK_HOME)\Hybrid&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;"
+				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;"
 				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK4;VTK44;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -351,8 +351,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_WIDGETS)\include&quot;;&quot;$(WX_WIDGETS)\lib\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Executive&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Unit&quot;;&quot;$(XERCESCROOT)\src&quot;"
-				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK4;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_WINDOWS;WINVER=0x400;_MT"
+				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_WIDGETS)\include&quot;;&quot;$(WX_WIDGETS)\lib\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Executive&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Unit&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK4;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_WINDOWS;WINVER=0x400;_MT;_STLP_USE_OWN_NAMESPACE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -434,6 +434,9 @@ echo Done.
 				RelativePath=".\cfdApp.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdAppWrapper.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdCommandArray.cxx">
 			</File>
 			<File
@@ -458,7 +461,7 @@ echo Done.
 				RelativePath=".\cfdDataSet.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdDCS.cxx">
+				RelativePath="..\VE_SceneGraph\cfdDCS.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdEnvironmentHandler.cxx">
@@ -473,7 +476,7 @@ echo Done.
 				RelativePath=".\cfdFrame.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdGeode.cxx">
+				RelativePath="..\VE_SceneGraph\cfdGeode.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdGeomDataSet.cxx">
@@ -482,7 +485,7 @@ echo Done.
 				RelativePath=".\cfdGlobalBase.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdGroup.cxx">
+				RelativePath="..\VE_SceneGraph\cfdGroup.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdIHCCContour.cxx">
@@ -521,16 +524,16 @@ echo Done.
 				RelativePath=".\cfdNavigate.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdNode.cxx">
+				RelativePath="..\VE_SceneGraph\cfdNode.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdNodeTraverser.cxx">
+				RelativePath="..\VE_SceneGraph\cfdNodeTraverser.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdObjects.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdPfSceneManagement.cxx">
+				RelativePath="..\VE_SceneGraph\cfdPfSceneManagement.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdPlanes.cxx">
@@ -560,85 +563,7 @@ echo Done.
 				RelativePath=".\cfdScalarBarActor.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdSceneNode.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdSequence.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdSound.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdSoundHandler.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdSteadyStateVizHandler.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdStreamers.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTeacher.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTempAnimation.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientActor.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientFlowManager.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientInfo.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientParticleActor.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientParticleActor_fluent.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientScalarActor.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientSet.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientVectorActor.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdTransientVizHandler.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdVEAvailModules.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdVEBaseClass.cxx">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\cfdVector.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdVectorBase.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdVectors.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdVEPluginLoader.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdWriteTraverser.cxx">
-			</File>
-			<File
-				RelativePath="..\VE_Conductor\impl\CorbaManager.cxx">
+				RelativePath="..\VE_SceneGraph\cfdSceneNode.cxx">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
@@ -677,22 +602,184 @@ echo Done.
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\VE_SceneGraph\cfdSequence.cxx">
+				<FileConfiguration
+					Name="Debug|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_BUILD|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="TAO_BUILD|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release_OMNI|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Debug_TAO|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\cfdSound.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdSoundHandler.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdSteadyStateVizHandler.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdStreamers.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTeacher.cxx">
+			</File>
+			<File
+				RelativePath="..\VE_SceneGraph\cfdTempAnimation.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdThread.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientActor.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientFlowManager.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientInfo.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientParticleActor.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientParticleActor_fluent.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientScalarActor.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientSet.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientVectorActor.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientVizHandler.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdVEAvailModules.cxx">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\cfdVEBaseClass.cxx">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\cfdVector.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdVectorBase.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdVectors.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdVEPluginLoader.cxx">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\cfdVEXplorer.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdVjObsWrapper.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdWriteTraverser.cxx">
+			</File>
+			<File
 				RelativePath=".\fileIO.cxx">
 			</File>
 			<File
 				RelativePath="..\futuregen\Plugin\interface.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\skel\moduleC.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\skel\moduleS.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\futuregen\Executive\Network_Exec.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\futuregen\Plugin\package.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Plot3Dviewer.cxx">
@@ -708,6 +795,12 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\VE_i.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\skel\VjObs.cpp">
@@ -759,9 +852,21 @@ echo Done.
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\skel\VjObsC.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\skel\VjObsS.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\vtkActorToPF.cxx">
@@ -1127,6 +1232,9 @@ echo Done.
 				RelativePath="cfdApp.h">
 			</File>
 			<File
+				RelativePath=".\cfdAppWrapper.h">
+			</File>
+			<File
 				RelativePath=".\cfdCommandArray.h">
 			</File>
 			<File
@@ -1142,6 +1250,9 @@ echo Done.
 				RelativePath="cfdContours.h">
 			</File>
 			<File
+				RelativePath=".\cfdCosNaming.h">
+			</File>
+			<File
 				RelativePath="cfdCursor.h">
 			</File>
 			<File
@@ -1154,7 +1265,7 @@ echo Done.
 				RelativePath="cfdDataSet.h">
 			</File>
 			<File
-				RelativePath="cfdDCS.h">
+				RelativePath="..\VE_SceneGraph\cfdDCS.h">
 			</File>
 			<File
 				RelativePath="cfdDigitalAnalogGauge.h">
@@ -1184,7 +1295,7 @@ echo Done.
 				RelativePath="cfdGauges.h">
 			</File>
 			<File
-				RelativePath="cfdGeode.h">
+				RelativePath="..\VE_SceneGraph\cfdGeode.h">
 			</File>
 			<File
 				RelativePath="cfdGeomDataSet.h">
@@ -1193,7 +1304,7 @@ echo Done.
 				RelativePath=".\cfdGlobalBase.h">
 			</File>
 			<File
-				RelativePath=".\cfdGroup.h">
+				RelativePath="..\VE_SceneGraph\cfdGroup.h">
 			</File>
 			<File
 				RelativePath=".\cfdIHCCContour.h">
@@ -1232,16 +1343,16 @@ echo Done.
 				RelativePath="cfdNavigate.h">
 			</File>
 			<File
-				RelativePath=".\cfdNode.h">
+				RelativePath="..\VE_SceneGraph\cfdNode.h">
 			</File>
 			<File
-				RelativePath=".\cfdNodeTraverser.h">
+				RelativePath="..\VE_SceneGraph\cfdNodeTraverser.h">
 			</File>
 			<File
 				RelativePath="cfdObjects.h">
 			</File>
 			<File
-				RelativePath=".\cfdPfSceneManagement.h">
+				RelativePath="..\VE_SceneGraph\cfdPfSceneManagement.h">
 			</File>
 			<File
 				RelativePath="cfdPlanes.h">
@@ -1271,10 +1382,10 @@ echo Done.
 				RelativePath="cfdScalarBarActor.h">
 			</File>
 			<File
-				RelativePath=".\cfdSceneNode.h">
+				RelativePath="..\VE_SceneGraph\cfdSceneNode.h">
 			</File>
 			<File
-				RelativePath="cfdSequence.h">
+				RelativePath="..\VE_SceneGraph\cfdSequence.h">
 			</File>
 			<File
 				RelativePath="cfdSound.h">
@@ -1295,7 +1406,13 @@ echo Done.
 				RelativePath="cfdTeacher.h">
 			</File>
 			<File
+				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
+			</File>
+			<File
 				RelativePath=".\cfdTempAnimation.h">
+			</File>
+			<File
+				RelativePath=".\cfdThread.h">
 			</File>
 			<File
 				RelativePath="cfdTransientActor.h">
@@ -1337,6 +1454,9 @@ echo Done.
 				RelativePath="cfdVectors.h">
 			</File>
 			<File
+				RelativePath=".\cfdVjObsWrapper.h">
+			</File>
+			<File
 				RelativePath=".\cfdWriteTraverser.h">
 			</File>
 			<File
@@ -1369,9 +1489,6 @@ echo Done.
 			<Filter
 				Name="OMNI_headers"
 				Filter="">
-				<File
-					RelativePath="..\VE_Conductor\impl\CorbaManager.h">
-				</File>
 				<File
 					RelativePath="VE_i.h">
 				</File>

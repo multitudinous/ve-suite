@@ -23,49 +23,30 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdGeode.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date: date $
+
+
+
+ * Version:       $Rev: 999999 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_GEODE_H
-#define CFD_GEODE_H
+#ifndef CFD_THREAD_H
+#define CFD_THREAD_H
 
-#include "cfdNode.h"
+#include <vpr/Thread/Thread.h>
+#include "cfdAppWrapper.h"
 
-#ifdef _PERFORMER
-class pfGeode;
-#elif _OSG
-class osg::Geode;
-#elif _OPENSG
-#endif
-class vtkActor;
-
-//! Iris Performer
-/*!
-  Update a modified Performer geometry node.
-*/
-class cfdGeode: public cfdNode
+class cfdThread
 {
    public:
-      cfdGeode( void );
-      ~cfdGeode( void );
-      cfdGeode( const cfdGeode& );
-      cfdGeode& operator=( const cfdGeode& );
+      cfdThread( void ){}
+      ~cfdThread( void ){}
 
-      // This function will have to reimplmented for each scenegraph
-      // Get Geode 
-#ifdef _PERFORMER
-      pfGeode* GetGeode( void );    
-#elif _OSG
-      osg::Geode* GetGeod(void);
-#elif _OPENSG
-#endif
-      // This function implements the respective translate vtkActorToGeode
-      void TranslateTocfdGeode( vtkActor* );
-
-   protected:
-      int _vtkDebugLevel;
+//   private:
+      vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;
+      vpr::Thread* new_thread;
+      
 };
 #endif

@@ -257,13 +257,13 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       vprDEBUG(vprDBG_ALL,1) << "this->geodes[ 0 ] = " << this->_geodes[ 0 ]
          << std::endl << "this->geodes[ num ] = " << this->_geodes[ num ]
          << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
+      this->_dcs->AddChild( ((cfdGeode*)this->_geodes[ num ]) );
 
       if ( this->_geodes.size() > 2 ) // remove oldest
       {
          int num = (this->_geodes.size() - 1) - 2;
          cfdSceneNode* parent = (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetParent(0);
-         ((cfdDCS*)parent)->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
+         ((cfdDCS*)parent)->RemoveChild( ((cfdGeode*)this->_geodes[ num ]) );
          delete this->_geodes[ num ];
          this->_geodes.erase( this->_geodes.end() - 3 );
       }
@@ -276,19 +276,19 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       vprDEBUG(vprDBG_ALL,1) << " removing child num = " << num << " : " << this->_geodes[ num ]
                              << std::endl << vprDEBUG_FLUSH;
       cfdSceneNode* parent = (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetParent(0);
-      ((cfdDCS*)parent)->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
+      ((cfdDCS*)parent)->RemoveChild( ((cfdGeode*)this->_geodes[ num ]) );
       delete this->_geodes[ num ];
 
       this->_geodes.erase( this->_geodes.end() - 2 );
       vprDEBUG(vprDBG_ALL,1) << " removing child num = " << num << " : " << this->_geodes[ num ]
                              << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
+      this->_dcs->AddChild( ((cfdGeode*)this->_geodes[ num ]) );
    }
    else //if ( this->geodes.size() == 1 )
    { 
       vprDEBUG(vprDBG_ALL,1) << " adding child geode = " << this->_geodes.at( 0 )
                              << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes.at( 0 )) );     
+      this->_dcs->AddChild( ((cfdGeode*)this->_geodes.at( 0 )) );     
    }
 }
 
@@ -304,7 +304,7 @@ void cfdObjects::RemovecfdGeodeFromDCS( void )
       // Need to find tha parent becuase with multiple models
       // Not all geodes are going to be on the same dcs
       cfdSceneNode* parent = this->_geodes[ i ]->GetParent(0);
-      ((cfdDCS*)parent)->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ i ]) );
+      ((cfdDCS*)parent)->RemoveChild( ((cfdGeode*)this->_geodes[ i ]) );
       delete this->_geodes[ i ];
    }
    this->_geodes.clear();
@@ -329,13 +329,13 @@ cfdDCS* cfdObjects::GetDCS( void )
 // Fix this
 void cfdObjects::AddSequenceToTree( void )
 {
-   if ( this->_dcs->SearchChild( (cfdSceneNode*)this->_sequence->GetSequence() ) < 0 )
+   if ( this->_dcs->SearchChild( this->_sequence->GetSequence() ) < 0 )
    {
       if ( this->objectType == ANIMATED_IMAGES )
       {
-         if ( this->_dcs->SearchChild( (cfdSceneNode*)this->_sequence->GetSequence()->GetParent(0) ) < 0 )
+         if ( this->_dcs->SearchChild( this->_sequence->GetSequence()->GetParent(0) ) < 0 )
          {         
-            this->_dcs->AddChild( (cfdSceneNode*)this->_sequence->GetSequence()->GetParent(0) );
+            this->_dcs->AddChild( this->_sequence->GetSequence()->GetParent(0) );
          }
          else
          {
@@ -344,7 +344,7 @@ void cfdObjects::AddSequenceToTree( void )
       }
       else
       {
-         this->_dcs->AddChild( (cfdSceneNode*)this->_sequence->GetSequence() );
+         this->_dcs->AddChild( this->_sequence->GetSequence() );
       }
    }
 }

@@ -23,69 +23,55 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdNode.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date: date $
+ * Version:       $Rev: 999999 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_NODE_H
-#define CFD_NODE_H
+#ifndef CFD_VJOBSWRAPPER_H
+#define CFD_VJOBSWRAPPER_H
 
-#include "cfdSceneNode.h"
-
-#ifdef _PERFORMER
-class pfNode;
-class pfFog;
-#elif _OSG
-class osg::Node;
-class osg::Fog;
-#elif _OPENSG
+class VjObs_i;
+class cfdCommandArray;
+class cfdSteadyStateVizHandler;
+class cfdEnvironmentHandler;
+class cfdModelHandler;
+#ifdef _TAO
+namespace CosNaming
+{
+   class NamingContext;
+}
+#else
+#include <omniORB4/CORBA.h>
 #endif
+#include <vector>
+#include <string>
 
-class cfdNode: public cfdSceneNode{
-public:
-   
-   cfdNode( void );
-   cfdNode(cfdSceneNode::cfdNodeType nt);
-
-   //biv--don't understand this method
-   cfdNode( float*, float*, float* );
-   
-   //copy constructor
-   cfdNode( const cfdNode& );
-   ~cfdNode( void );
-
-   //equal operator
-   cfdNode& operator=( const cfdNode& );
-   
-
-#ifdef _PERFORMER
-   pfNode* GetRawNode( void );
-   void clearGeodesFromNode( pfNode* );
-#elif _OSG
-   void osg::Node* GetRawNode( void );
-   void clearGeodesFromNode( osg::Node* );
-#elif _OPENSG
+class cfdVjObsWrapper
+{
+   public:
+      cfdVjObsWrapper( void );
+      ~cfdVjObsWrapper( void );
+#ifdef _TAO
+      void init( CosNaming::NamingContext* );
+#else
+      void init( CosNaming::NamingContext_ptr );
 #endif
-
-   //biv--why is this stuff in this class?
-#ifdef _PERFORMER
-   void pfTravNodeMaterial( pfNode* );
-   void pfTravNodeFog( pfNode* node_1, pfFog* fog );
-#elif _OSG
-   void TravNodeMaterial(osg::Node*);
-   void TravNodeFod(osg::Node node_1, osg::Fog* fog);
-#elif _OPENSG
+      cfdCommandArray* GetCommandArray( void );
+      double GetShortArray( int );
+      void GetCfdStateVariables( void );
+      void PreFrameUpdate( void );
+      void SetHandlers( cfdSteadyStateVizHandler*, 
+                           cfdEnvironmentHandler*, 
+                           cfdModelHandler* );
+      int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
+      //cfdCosNaming* GetCosNaming( void );
+#ifdef _TAO
+      CosNaming::NamingContext* naming_context;
+#else
+      CosNaming::NamingContext_ptr naming_context;
 #endif
-   void SetNodeProperties( int, float, float* );
-   void LoadFile( char* );
-      
-   cfdNode* Clone( int );   
-protected:
-
-   float op;
-   float stlColor[ 3 ];
-   int color;
+      VjObs_i* _vjObs;
 };
 #endif

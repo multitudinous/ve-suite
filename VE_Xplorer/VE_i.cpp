@@ -122,7 +122,7 @@ void Body_UI_i::Raise (
       {
          std::cout<<notification<<" :Raise called"<<std::endl;
          std::cout<<UIName_<<" :Raise called"<<std::endl;
-         this->executive->SetCalculationsFlag( true );  
+         (*calcFlag) = true;  
       }
    }
   

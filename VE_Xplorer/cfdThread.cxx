@@ -23,53 +23,11 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdGroup.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date: date $
+ * Version:       $Rev: 999999 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_GROUP_H
-#define CFD_GROUP_H
-
-#include "cfdNode.h"
-#include <vector>
-#ifdef _PERFORMER
-class pfGroup;
-#elif _OSG
-class osg::Group;
-#elif _OPENSG
-#endif
-
-class cfdGroup: public cfdNode{
-public:
-   cfdGroup();
-   cfdGroup( const cfdGroup& );
-
-   cfdGroup(float*, float*, float*);
-   ~cfdGroup( void );
-
-   //equal operator
-   cfdGroup& operator=( const cfdGroup& );
-
-   //the wrappers for child/scene graph
-   //manipulation
-   virtual int RemoveChild( cfdNode* );
-   virtual int AddChild( cfdNode* );
-
-   virtual void InsertChild( int, cfdNode* );
-   virtual int  SearchChild( cfdNode* );
-
-   virtual cfdNode* GetChild( int );
-   virtual int  GetNumChildren( void );
-
-   virtual void SetName( char* );
-   virtual int ReplaceChild( cfdNode*, cfdNode* );
-
-   virtual cfdNode* Clone( int );
-
-   virtual const char* GetName( void );
-protected:
-   std::vector< cfdNode* > childNodes;
-};
-#endif
+#include "cfdThread.h"
+// Do nothing right now

@@ -110,7 +110,7 @@ void cfdModuleGeometry::SetGeometryFilename( std::string filename )
    this->_node = new cfdNode();
    this->_node->LoadFile( (char*)this->_filename.c_str() );
    //this->_node->flatten( 0 );
-   this->AddChild( (cfdSceneNode*)this->_node );
+   this->AddChild( this->_node );
    std::cout << "cfdModuleGeometry load geometry : " << _filename << std::endl;
 
    this->_masterNode->AddChild( this );   

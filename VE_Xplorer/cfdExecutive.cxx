@@ -45,26 +45,27 @@
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfd1DTextInput.h"
+#include "cfdVjObsWrapper.h"
 
 #include "package.h"
 #include "interface.h"
 #include "Network_Exec.h"
-//#include "Executive_i.h"
 
 #include <iostream>
 #include <sstream>
 #include <string>
-#include <time.h>
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 
 #include <vrj/Util/Debug.h>
+#include <orbsvcs/CosNamingC.h>
 
 using namespace std;
 
-cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDCS )
+cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, cfdDCS* worldDCS )
 {
+   this->naming_context = inputNameContext;
   try
     {
       XMLPlatformUtils::Initialize();
@@ -80,12 +81,13 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDC
 
 
    this->_doneWithCalculations = true;
-   //this->orb->_duplicate( orb );
-   this->naming_context = CosNaming::NamingContext::_duplicate( naming );
+
+   //this->naming_context = CosNaming::NamingContext::_duplicate( 
+   //   corbaManager->_vjObs->GetCosNaming()->naming_context );
    this->worldDCS = worldDCS;
    this->_masterNode = new cfdGroup();
    this->_masterNode->SetName( "cfdExecutive_Node" );
-   this->worldDCS->AddChild( (cfdSceneNode*)this->_masterNode );
+   this->worldDCS->AddChild( this->_masterNode );
 
    av_modules = new cfdVEAvail_Modules();
    _network = new Network();
@@ -115,12 +117,12 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDC
 		_exec = Body::Executive::_narrow(exec_object.in());
 
 		//Create the Servant
-		ui_i = new Body_UI_i(_exec.in(), UINAME);
+		ui_i = new Body_UI_i(_exec, UINAME);
 		//Body_UI_i ui_i( UINAME);
     
 		//pass the network's pointer to the UI corba implementation
 		//ui_i.SetUINetwork(network);
-      ui_i->SetcfdExecutive( this );
+      ui_i->SetcfdExecutive( &_doneWithCalculations );
 		//Activate it to obtain the object reference
 		Body::UI_var ui = (*ui_i)._this();
      
@@ -364,7 +366,7 @@ void cfdExecutive::GetPort (std::string name)
 
 void cfdExecutive::GetEverything( void )
 {
-   if ( !CORBA::is_nil( this->_exec.in() ) )
+   if ( !CORBA::is_nil( this->_exec) )
    {
       GetNetwork();
   
@@ -474,7 +476,7 @@ void cfdExecutive::InitModules( void )
 
 void cfdExecutive::UpdateModules( void )
 {
-   if ( !CORBA::is_nil( this->_exec.in() ) )
+   if ( !CORBA::is_nil( this->_exec ) )
    {
       if ( this->GetCalculationsFlag() )
       {
@@ -521,7 +523,7 @@ void cfdExecutive::SetCalculationsFlag( bool x )
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    this->_doneWithCalculations = x;
 }
 
@@ -530,7 +532,7 @@ bool cfdExecutive::GetCalculationsFlag( void )
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    return this->_doneWithCalculations;
 }
 

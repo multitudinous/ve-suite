@@ -771,11 +771,11 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             vprDEBUG(vprDBG_ALL,2) << " have geode flag"
                                    << std::endl << vprDEBUG_FLUSH;
 
-            if ( this->_worldDCS->SearchChild( (cfdSceneNode*)this->dataList[ i ]->GetDCS() ) < 0 )
+            if ( this->_worldDCS->SearchChild( this->dataList[ i ]->GetDCS() ) < 0 )
             {
                vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
                                    << std::endl << vprDEBUG_FLUSH;
-               this->_worldDCS->AddChild( (cfdSceneNode*)this->dataList[ i ]->GetDCS() );
+               this->_worldDCS->AddChild( this->dataList[ i ]->GetDCS() );
             }
 
             if ( this->dataList[ i ]->GetcfdGeode() != NULL )

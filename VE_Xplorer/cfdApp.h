@@ -33,20 +33,11 @@
 #define CFD_APP_H
 
 /// VR Juggler Stuff
-#include <vrj/Kernel/Kernel.h>
-#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
 
-/// C/C++ libraries
-#include <iostream>
-#include <cstdio>
-#include <cstdlib>
-#include <cstring>
-#include <cmath>
-//#include <omp.h>
 #ifndef WIN32
 //#include <sys/time.h>
 #endif
-#include <vector>
+//#include <vector>
 
 #ifdef _TAO
 class cfdExecutive;
@@ -58,20 +49,21 @@ class cfdSteadyStateVizHandler;
 class cfdTransientVizHandler;
 class cfdModelHandler;
 class cfdIHCCModel;
-class CorbaManager;
-
+//class CorbaManager;
+class cfdVjObsWrapper;
 // Scene graph dependent forward declarations
 class pfGroup;
 
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
+#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
 
 // Declare my application class
 class cfdApp : public vrj::PfApp
 {
    public:
       //cfdApp( vrj::Kernel* kern);
-      cfdApp( CorbaManager* );//vrj::Kernel* kern );
+      cfdApp( void );//vrj::Kernel* kern );
 
       virtual void init( );
 
@@ -114,6 +106,7 @@ class cfdApp : public vrj::PfApp
 
       void pushDataToStateInfo( void );
 
+      void SetWrapper( cfdVjObsWrapper* );
       //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
       cfdPfSceneManagement*      _sceneManager;
@@ -122,7 +115,7 @@ class cfdApp : public vrj::PfApp
       cfdTransientVizHandler*    _transientHandler;
       cfdModelHandler*           _modelHandler;
       cfdIHCCModel               *ihccModel;
-      CorbaManager*              _corbaManager;
+      cfdVjObsWrapper*              _vjobsWrapper;
 #ifdef _TAO
       cfdExecutive*     executive;
 #endif

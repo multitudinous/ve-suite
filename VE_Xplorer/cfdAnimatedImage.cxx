@@ -107,7 +107,7 @@ cfdAnimatedImage::cfdAnimatedImage( char* param )
    this->_sequence = new cfdTempAnimation();
    
    // Inhereted function from cfdDCS
-   this->_dcs->AddChild( (cfdSceneNode*)this->_sequence->GetSequence() );
+   this->_dcs->AddChild( (cfdNode*)this->_sequence->GetSequence() );
 }
 
 cfdAnimatedImage::~cfdAnimatedImage()

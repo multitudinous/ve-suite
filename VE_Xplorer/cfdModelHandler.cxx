@@ -353,20 +353,20 @@ void cfdModelHandler::PreFrameUpdate( void )
          vprDEBUG(vprDBG_ALL,2)
             << "guiVal[ " << i << " ] = " << this->_readParam->guiVal[ i ] << endl
             << " : Active Model index : " << _activeModel << endl 
-            << " : SearchChild Result : " << parent->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) << endl 
+            << " : SearchChild Result : " << parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) << endl 
             << " : Filename[ " << i << " ] : " << _activeModel->GetGeomDataSet( i )->GetFilename() << std::endl
             << vprDEBUG_FLUSH;
 
 
          if ( ( this->_readParam->guiVal[ i ] == 1 ) && 
-            ( parent->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
+            ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
          {
-            temp = parent->AddChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() );
+            temp = parent->AddChild( _activeModel->GetGeomDataSet( i )->getpfDCS() );
          }
          else if ( ( this->_readParam->guiVal[ i ] == 0 ) &&
-                  ( parent->SearchChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
+                  ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
          {
-            temp = parent->RemoveChild( (cfdSceneNode*)_activeModel->GetGeomDataSet( i )->getpfDCS() );
+            temp = parent->RemoveChild( _activeModel->GetGeomDataSet( i )->getpfDCS() );
          }
          vprDEBUG(vprDBG_ALL,1) << "|   Add Child Output ( -1 is BAD ) :  " << temp 
                            << std::endl << vprDEBUG_FLUSH;

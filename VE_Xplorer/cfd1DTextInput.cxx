@@ -48,7 +48,7 @@ cfd1DTextInput::cfd1DTextInput( void ):cfdDCS()
 {
    //DCS = new pfDCS();
    geode = new cfdGeode();
-   ((cfdDCS*)this)->AddChild( (cfdSceneNode*)geode );
+   ((cfdDCS*)this)->AddChild( geode );
 }
 /*
 cfd1DTextInput::cfd1DTextInput( cfd1DTextInput* x )

@@ -92,15 +92,15 @@ void cfdIHCCGauge::SetGeometryFilename( std::string filename )
    //this->node->flatten( 0 );
    //this->node->setName("geometry");
    //Inhereted from cfdDCS
-   this->AddChild( (cfdSceneNode*)this->node );
+   this->AddChild( this->node );
 std::cout << "cfdExecutive load gauge geometry : " << _filename << std::endl;
    _textOutput.first->Update();
    ((cfd1DTextInput*)_textOutput.first)->SetName("geometry");
    //Inhereted from cfdDCS
-   this->AddChild( (cfdSceneNode*)((cfd1DTextInput*)_textOutput.first) );
+   this->AddChild( ((cfd1DTextInput*)_textOutput.first) );
    //this->GetPfDCS()->addChild( ((cfd1DTextInput*)_textOutput.second)->GetPfDCS() );
    
-   this->_masterNode->AddChild( (cfdSceneNode*)this->GetDCS() );   
+   this->_masterNode->AddChild( this->GetDCS() );   
 }
 
 void cfdIHCCGauge::SetGaugeName( std::string tagName )
@@ -171,8 +171,8 @@ void cfdIHCCGauge::Update( void )
       dcs->SetTranslationArray( temp_trans );
       dcs->SetScaleArray( temp_scale );
       dcs->SetRotationArray( temp_rot );
-      dcs->AddChild( (cfdSceneNode*)output.back() );
-      ((cfdGroup*)this->GetSequence()->GetSequence()->getChild( i ))->AddChild( (cfdSceneNode*)dcs );
+      dcs->AddChild( output.back() );
+      ((cfdGroup*)this->GetSequence()->GetSequence()->getChild( i ))->AddChild( dcs );
 
       // Display time and concentration
 		// Create geode

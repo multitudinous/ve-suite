@@ -79,7 +79,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
    sequence = new cfdTempAnimation();
    ihccModelNode = new cfdGroup();
 
-   worldDCS->AddChild( (cfdSceneNode*)this->sequence->GetSequence() );
+   worldDCS->AddChild( this->sequence->GetSequence() );
    worldDCS->AddChild( ihccModelNode );
    this->SetSequence( sequence );
    float scale_gauge[ 3 ];

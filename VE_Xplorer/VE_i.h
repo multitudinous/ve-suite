@@ -37,7 +37,7 @@
 #include <winsock2.h>
 #endif
 //#include "Network.h"
-#include "cfdExecutive.h"
+//#include "cfdExecutive.h"
 #include "moduleS.h"
 //#include "moduleC.h"
 #include <string>
@@ -60,12 +60,13 @@ class  Body_UI_i : public virtual POA_Body::UI
 
  protected:
   Body::Executive_var executive_;
-  cfdExecutive* executive;
+  //cfdExecutive* executive;
+  bool* calcFlag;
   
  public:
 
-  void SetcfdExecutive(cfdExecutive* nw) { 
-	  executive=nw; 
+  void SetcfdExecutive( bool* x) { 
+	  calcFlag = x; 
   };
 
 virtual void UpdateNetwork (
