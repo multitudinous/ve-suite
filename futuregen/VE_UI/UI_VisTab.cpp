@@ -349,11 +349,12 @@ void UI_VisualizationTab::_onRecord(wxCommandEvent& event)
 //////////////////////////////////////////////////////////
 void UI_VisualizationTab::_onExit(wxCommandEvent& event)
 {
-   ((UI_Tabs *)_parent)->cId = EXIT;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   
    //wxMessageBox(_T("Exit button clicked!"), _T("Button!"));
    //return 
-	exit(0);
+   ((UI_Tabs *)_parent)->cId = EXIT;
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   //exit(0);
 }
 
 //////////////////////////////////////////////////////////

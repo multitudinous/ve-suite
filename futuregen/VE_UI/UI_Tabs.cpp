@@ -2,6 +2,7 @@
 #include "cfdEnum.h"
 #include "UI_TransTab.h"
 #include "UI_VertTab.h"
+#include "UI_ModelData.h"
 
 #include <iostream>
 //using namespace std;
@@ -10,21 +11,72 @@
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
-/*UI_Tabs::UI_Tabs(wxWindow* parent, wxWindowID id,
+UI_Tabs::UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model, 
+            int activeMod, 
+            wxWindowID id,
             const wxPoint& pos ,
             const wxSize& size ,
             long style )
-*/UI_Tabs::UI_Tabs(VjObs_ptr ref,wxWindow* parent, wxWindowID id,
+/*UI_Tabs::UI_Tabs(VjObs_ptr ref,wxWindow* parent, wxWindowID id,
             const wxPoint& pos ,
             const wxSize& size ,
-            long style )
+            long style )*/
 :wxNotebook(parent, id, pos, size, style)
 {
+   server_ref = VjObs::_duplicate(ref);
+
+   cGeo_state = 0;
+   cIso_value = 0;
+   cMin = 0;
+   cMax = 0;
+
+   _modelData = _model;
+   _activeModIndex = activeMod;
+
    _visPage = 0;
    _vectorPage = 0;
    _streamlinePage = 0;
    _navPage = 0;
-   server_ref = VjObs::_duplicate(ref);
+
+   num_geo = _modelData->GetNumberOfGeomFiles(_activeModIndex);
+   std::cout << "geo number: " << num_geo << std::endl;
+
+   geoNameArray = _modelData->GetGeomFilenames(_activeModIndex);
+
+   // Get Number of Sound Files
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      num_sounds = server_ref->GetNumberOfSounds();
+   }
+   else
+   {
+      num_sounds = 0;
+   }
+
+   std::cout << "number of sound files: " << num_sounds << std::endl;
+   if( num_sounds > 0 ){
+      soundNameArray = server_ref->GetSoundNameArray();
+   }
+
+   // Get Number of Teacher Files
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      num_teacher = server_ref->get_teacher_num();
+   }
+   else
+   {
+      num_teacher = 0;
+   }
+   
+   std::cout << "teacher number: "
+               << num_teacher << std::endl;
+   if( num_teacher > 0 ) {
+      teacher_attrib = server_ref->get_teacher_name();
+   }
+   cTeacher_state = 0;
+
+
+  /* server_ref = VjObs::_duplicate(ref);
 
    cGeo_state = 0;
    cIso_value = 0;
@@ -179,8 +231,25 @@
    
    std::cout << "VE_Conductor : timesteps : " << cTimesteps << std::endl;
 
-   cPre_state = 0;
+   cPre_state = 0;*/
 
+}
+
+UI_Tabs::~UI_Tabs()
+{
+	//delete clientInfoArray;
+	 delete sc_min;
+    delete sc_max;
+	 delete _visPage;
+    delete _geometryPage;
+    delete _soundPage;
+    delete _streamlinePage;
+    delete _teacherPage;
+    delete _vectorPage;
+    delete _navPage;
+    delete _transPage;
+    delete _vertPage;
+    delete _designparPage;
 }
 /////////////////////////////////////////////////////
 //update the active scalar on the                  //

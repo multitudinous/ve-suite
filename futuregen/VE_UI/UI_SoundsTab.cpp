@@ -34,7 +34,7 @@ void UI_SoundTab::_buildPage()
                                 defaultName,1 , wxRA_SPECIFY_COLS);*/
 
    //the radio box
-   int numSounds = ((UI_Tabs *)_parent)->numSounds;
+   int numSounds = ((UI_Tabs *)_parent)->num_sounds;
    wxString* defaultName;
    
    if ( numSounds > 0 )
@@ -63,7 +63,7 @@ void UI_SoundTab::_buildPage()
       _soundCBox->Check( j );
    }
 
-   if ( ((UI_Tabs *)_parent)->numSounds == 0 )
+   if ( ((UI_Tabs *)_parent)->num_sounds == 0 )
    {
       _soundCBox->Enable( false );
    }
@@ -96,7 +96,7 @@ void UI_SoundTab::_onSounds(wxCommandEvent& event)
 void UI_SoundTab::_onUpdate(wxCommandEvent& event)
 {
    ((UI_Tabs *)_parent)->cIso_value = 0;
-   for(int i = 0; i < ((UI_Tabs *)_parent)->numSounds; i++)
+   for(int i = 0; i < ((UI_Tabs *)_parent)->num_sounds; i++)
    {
       if ( _soundCBox->IsChecked( i ) )
          ((UI_Tabs *)_parent)->cIso_value += (int)pow( 2.0f, (float)i );

@@ -22,6 +22,7 @@
 
 class UI_VertTab;
 class UI_TransTab;
+class UI_ModelData;
 ///copied from original Tabs.h//////
 /*enum cfdGeodeEnum {
    // Everything below has to be mirrored exactly in 
@@ -121,15 +122,19 @@ class UI_TransTab;
 //////////////////////////////////////////////
 class UI_Tabs: public wxNotebook{
 public:
-/*   UI_Tabs(wxWindow* parent, wxWindowID =-1,
+   UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model,
+            int activeMod, 
+            wxWindowID =-1,
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize, 
             long style = 0);
-*/
+/*
    UI_Tabs(VjObs_ptr ref, wxWindow* parent, wxWindowID =-1,
             const wxPoint& pos = wxDefaultPosition,
             const wxSize& size = wxDefaultSize, 
-            long style = 0);
+            long style = 0);*/
+
+   ~UI_Tabs();
 
    void updateScalarPage(char** scalarNames,int numScalars, int refresh =0); 
    void updateScalarPage(wxString* scalarNames,int numScalars, int refresh =0); 
@@ -142,6 +147,9 @@ public:
 
    //set active dataset
    void setActiveDataset(int whichDataset);
+
+   UI_ModelData* _modelData;
+   int _activeModIndex;
 
    //send scalar page selection changes
    //to the dataset tab
@@ -168,20 +176,20 @@ public:
    //the pointer to the server
    VjObs_var server_ref;
 
-   short    datasetNum;
-   int      numScalarsInActiveDataset;
+   //short    datasetNum;
+   //int      numScalarsInActiveDataset;
    short    num_geo;
-   short    numSounds;
+   short    num_sounds;
    short    num_teacher;
    short    num_locations;
-   short    numSteadyStateDataSets;
-   bool     hasXPostData;
-   bool     hasYPostData;
-   bool     hasZPostData;
-   VjObs::scalar_p_var   sc_attrib;
-   VjObs::scalar_p_var   datasetNames;
-   VjObs::obj_p_var   datasetTypes;
-   VjObs::obj_p_var   numScalarsPerDataset;
+   //short    numSteadyStateDataSets;
+   //bool     hasXPostData;
+   //bool     hasYPostData;
+   //bool     hasZPostData;
+   //VjObs::scalar_p_var   sc_attrib;
+   //VjObs::scalar_p_var   datasetNames;
+   //VjObs::obj_p_var   datasetTypes;
+   //VjObs::obj_p_var   numScalarsPerDataset;
    VjObs::scalar_p_var   geoNameArray;
    VjObs::scalar_p_var   soundNameArray;
    VjObs::scalar_p_var   teacher_attrib;

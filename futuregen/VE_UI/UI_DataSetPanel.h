@@ -14,6 +14,8 @@
 
 using namespace std;
 
+class UI_ModelData;
+
 enum DATASETS_PANEL_IDS{
    ACTIVE_RBOX,
    RBOX_3D,
@@ -85,7 +87,8 @@ public:
 
 class UI_DatasetPanel: public wxPanel{
 public:
-   UI_DatasetPanel(wxWindow* tControl);
+   //UI_DatasetPanel(wxWindow* tControl);
+   UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int activeMod);
    ~UI_DatasetPanel();
 
    UI_DataSets* thisDataSet;
@@ -98,6 +101,9 @@ public:
    UI_DatasetScroll* _RBoxScroll;
    UI_ScalarScroll* _ScalarScroll;
   
+   UI_ModelData* _modelData;
+   int _activeModIndex;
+
    int _maxnoScalars;
    int _noScalars;
    wxString* _scalarNames;

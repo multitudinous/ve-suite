@@ -32,12 +32,12 @@
 #ifndef UI_MODELDATA_H
 #define UI_MODELDATA_H
 
-#include "VjObsC.h"
+#include "VjObsS.h"
 
 class UI_ModelData
 {
    public:
-      UI_ModelData( void );
+      UI_ModelData( VjObs_ptr );
       ~UI_ModelData( void );
       //UI_ModelData( const UI_ModelData& );
       //UI_ModelData& operator=( const UI_ModelData& );
@@ -54,7 +54,7 @@ class UI_ModelData
       
    private:
       VjObs::Models_var _models;
-      VjObs::VjObs_var server_ref;
+      VjObs_var server_ref;
 };
 
 #endif

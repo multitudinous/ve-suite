@@ -12,6 +12,7 @@
 
 using namespace std;
 
+
 //#include "controlIds.h"
 //Visualizaton tab control ids
 enum VIS_TAB_IDS{
@@ -38,8 +39,11 @@ public:
    UI_VisualizationTab(wxNotebook* tControl);
    ~UI_VisualizationTab(){};
 
+   void _onExit(wxCommandEvent& event);
+
 protected:
    wxNotebook* _parent;
+
    //the controls
    wxRadioBox* _categoryRBox;
    wxRadioBox* _contourRBox;
@@ -70,7 +74,7 @@ protected:
    void _onBlueMenu(wxCommandEvent& event);
    void _onScalarBar(wxCommandEvent& event);
    void _onRecord(wxCommandEvent& event);
-   void _onExit(wxCommandEvent& event);
+   
    void _onSlider(wxCommandEvent& event);
    void _onClear(wxCommandEvent& event);
   DECLARE_EVENT_TABLE()

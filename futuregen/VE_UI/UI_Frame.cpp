@@ -14,8 +14,14 @@ UI_Frame::UI_Frame(wxWindow* parent, wxWindowID id,
              long style)
 : wxPanel(parent, -1, pos, size, style)
 {
+
+   _appParent = new wxString( "DirectVE" );
    buildCORBA();
+
+   _modelData = new UI_ModelData(vjobs);
+   
    buildFrame();
+
 }
 
 UI_Frame::UI_Frame(VjObs_ptr ref,wxWindow* parent, wxWindowID id, 
@@ -24,8 +30,11 @@ UI_Frame::UI_Frame(VjObs_ptr ref,wxWindow* parent, wxWindowID id,
             long style )
 :wxPanel(parent, id, pos, size, style)
 {
+   
    vjobs = VjObs::_duplicate(ref);
+   _modelData = new UI_ModelData(vjobs);
    buildFrame();
+   _appParent = new wxString( "Framework" );
 }
 
 
@@ -114,28 +123,36 @@ void UI_Frame::buildFrame( )
     
    _tabs = 0;
    _datasetPanel = 0;
+   _modselPanel = 0;
    //the tabs of our UI
-   _tabs = new UI_Tabs( vjobs.in(), this, ID_UI_TABS);
-   //_tabs = new UI_Tabs(this,-1);
+
+   //_tabs = new UI_Tabs( vjobs.in(), this, ID_UI_TABS);
+   _tabs = new UI_Tabs( vjobs.in(), this, _modelData, 0);
+
    //set the left side of the gui
-   //_datasetScrollable = new UI_DatasetScrollable(this);
-   _datasetPanel = new UI_DatasetPanel(this);
-   //_scalartab = new UI_ScalarTab(this);
+
+   _datasetPanel = new UI_DatasetPanel(this, _modelData, 0);
+
    
    //create the individual pages for the tab control
    _tabs->createTabPages();
 
    //the frame sizer
-   wxBoxSizer* _frameSizer = new wxBoxSizer(wxHORIZONTAL);
+   _frameSizer = new wxBoxSizer(wxHORIZONTAL);
 
    //the notebook sizer
-   wxNotebookSizer* _tabsSizer = new wxNotebookSizer(_tabs);
+   _tabsSizer = new wxNotebookSizer(_tabs);
 
    //the panel sizers for datasetPage and scalartab
-   wxBoxSizer* _datasetSizer = new wxBoxSizer(wxHORIZONTAL);
+   _datasetSizer = new wxBoxSizer(wxHORIZONTAL);
    //wxBoxSizer* _scalarSizer = new wxBoxSizer(wxHORIZONTAL);
    _datasetSizer->Add(_datasetPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //_scalarSizer->Add(_scalartab,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
+   _modselPanel = new UI_ModSelPanel(this);
+
+   _modselSizer = new wxBoxSizer(wxHORIZONTAL);
+   _modselSizer->Add(_modselPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //add the tabs to the frame
    //NOTE: This is where the layout of the UI 
@@ -144,9 +161,11 @@ void UI_Frame::buildFrame( )
    //_frameSizer->Add(_scalarSizer,8,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //_frameSizer->Add(_tabsSizer,22,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   _frameSizer->Add(_datasetSizer,3,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _frameSizer->Add(_modselSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
+   _frameSizer->Add(_datasetSizer,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //_frameSizer->Add(_scalarSizer,3,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   _frameSizer->Add(_tabsSizer,5,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _frameSizer->Add(_tabsSizer,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //refresh the layout
    _frameSizer->Layout();
 
@@ -166,13 +185,34 @@ void UI_Frame::buildFrame( )
 /////////////////////
 UI_Frame::~UI_Frame()
 {
+	/*_tabsSizer->Remove(_tabs);
+	_datasetSizer->Remove(_datasetPanel);
+	_frameSizer->Remove(_tabsSizer);
+	_frameSizer->Remove(_datasetSizer);
+
+	delete _tabs;
+	delete _datasetPanel;*/
+	
 }
 
-void UI_Frame::changeActiveScalarOnDataset(const char* name)
+void UI_Frame::Reload( void )
 {
-   /*if(name){
-      if(_datasetPage){
-         _datasetPage->makeActiveScalarOnDataset(name);
-      } 
-   }*/
+   //_frameSizer->Remove(_datasetSizer);
+   _datasetSizer->Remove(_datasetPanel);
+   delete _datasetPanel;
+
+   //_frameSizer->Remove(_tabsSizer);
+   _tabsSizer->Remove(_tabs);
+   delete _tabs;
+
+   _datasetPanel = new UI_DatasetPanel(this, _modelData, activeModIndex);
+
+   _tabs = new UI_Tabs( vjobs.in(), this, _modelData, activeModIndex);
+   _tabs->createTabPages();
+
+   _datasetSizer->Prepend(_datasetPanel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _tabsSizer->Prepend(_tabs);
+
+   SetSize(GetSize());
+
 }

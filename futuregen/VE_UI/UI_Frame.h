@@ -10,6 +10,8 @@
 //#include "UI_DataSetTab.h"
 //#include "UI_ScalarTab.h"
 #include "UI_DataSetPanel.h"
+#include "UI_ModSelPanel.h"
+#include "UI_ModelData.h"
 
 ////////////////////////////////////////////////////
 //This is the class that is the frame.            //
@@ -30,7 +32,7 @@ public:
             const wxSize& size = wxDefaultSize, 
             long style = wxMAXIMIZE_BOX|wxMINIMIZE_BOX);
 
-   virtual ~UI_Frame();
+   ~UI_Frame();
 
    void buildCORBA();
    void buildFrame();
@@ -38,7 +40,7 @@ public:
    //the events to handle
    void OnTabsEvent(wxNotebookEvent& event);
    void OnIdleEvent(wxIdleEvent& event);
-   void changeActiveScalarOnDataset(const char* activeScalarName);
+   void Reload( void );
 
    //UI_DatasetTab* _datasetPage;
    //UI_ScalarTab* _scalartab;
@@ -48,8 +50,18 @@ public:
 
    //the notebook control that has our tabs
    UI_Tabs* _tabs;
+   UI_ModSelPanel* _modselPanel;
+   wxString* _appParent;
+
+   UI_ModelData* _modelData;
+
+   int activeModIndex;
 
 protected:
+	wxBoxSizer* _frameSizer;
+	wxNotebookSizer* _tabsSizer;
+	wxBoxSizer* _datasetSizer;
+   wxBoxSizer* _modselSizer;
 
    VjObs_var vjobs;
 };

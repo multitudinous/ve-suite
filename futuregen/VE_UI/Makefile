@@ -19,7 +19,9 @@ OBJECTS = UI_App.o \
             UI_VertTab.o \
             UI_ViewLocTab.o \
             UI_DesignParTab.o \
-            UI_DataSetPanel.o
+            UI_DataSetPanel.o \
+            UI_ModSelPanel.o \
+            UI_ModelData.o
 
 ifeq (${TAO_BUILD}, TRUE)            
    OBJECTS += VjObsC.o
@@ -48,11 +50,12 @@ ifeq (${TAO_BUILD}, TRUE)
    vpath %.cpp    ${VE_SUITE_HOME}/VE_Conductor/skel
 endif
 
-.SUFFIXES : .o .cpp
+.SUFFIXES : .o .cpp .cxx
 
 .cpp.o :
 	$(CXX) -g -c  $(WX_CXX) $(CPP_FLAGS) -o $@ $<
-
+.cxx.o :
+	$(CXX) -g -c  $(WX_CXX) $(CPP_FLAGS) -o $@ $<
 all: $(APP)
 
 $(APP): $(OBJECTS)

@@ -30,21 +30,26 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "UI_ModelData.h"
+#include <iostream>
+
+using namespace std;
 
 UI_ModelData::UI_ModelData( VjObs_ptr ref )
 {
    server_ref = VjObs::_duplicate(ref);
-
+   
    if ( !CORBA::is_nil( server_ref.in() ) )
    {
-      _models = VjObs::Models::duplicate( server_ref->GetModels() );
+cout<<"test1"<<endl;
+      _models = server_ref->GetModels();
+cout<<"test2"<<endl;
    }
    else
    {
       cerr << " ERROR : App won't run " << endl;
       return;
    }
-
+   cout<<"test3"<<endl;
 }
 
 UI_ModelData::~UI_ModelData( void )
@@ -53,46 +58,55 @@ UI_ModelData::~UI_ModelData( void )
 
 short UI_ModelData::GetNumberOfGeomFiles( int input )
 {
-   _models[ input ].geometrynames.length();
+   CORBA::ULong i = input;
+   _models[ i ].geometrynames.length();
 }
 
 VjObs::scalar_p*  UI_ModelData::GetGeomFilenames( int input)
 {
-   return _models[ input ].geometrynames;
+   CORBA::ULong i = input;
+   return &(_models[ i ].geometrynames);
 }
 
 short UI_ModelData::GetNubmerofDataSets( int input )
 {
-   return _models[ input ].datasetnames.length();
+   CORBA::ULong i = input;
+   return _models[ i ].datasetnames.length();
 }
 
 VjObs::scalar_p*  UI_ModelData::GetScalarNames( int input )
 {
-   return _models[ input ].scalarnames;
+   CORBA::ULong i = input;
+   return &(_models[ i ].scalarnames);
 }
 
 VjObs::scalar_p*  UI_ModelData::GetVectorNames( int input )
 {
-   return _models[ input ].vectornames;
+   CORBA::ULong i = input;
+   return &(_models[ i ].vectornames);
 }
 
 VjObs::scalar_p*  UI_ModelData::GetDataSetNames( int input )
 {
-   return _models[ input ].datasetnames;
+   CORBA::ULong i = input;
+   return &(_models[ i ].datasetnames);
 }
 
 VjObs::obj_p*     UI_ModelData::GetDataSetTypes( int input )
 {
-   return _models[ input ].datasettypes;
+   CORBA::ULong i = input;
+   return &(_models[ i ].datasettypes);
 }
 
 VjObs::obj_p*     UI_ModelData::GetNumberOfScalarsPerDataSet( int input )
 {
-   return _models[ input ].num_scalars_per_dataset;
+   CORBA::ULong i = input;
+   return &(_models[ i ].num_scalars_per_dataset);
 }
 
 VjObs::obj_p*     UI_ModelData::GetNumberOfVectorsPerDataSet( int input )
 {
-   return _models[ input ].num_vectors_per_dataset;
+   CORBA::ULong i = input;
+   return &(_models[ i ].num_vectors_per_dataset);
 }
 

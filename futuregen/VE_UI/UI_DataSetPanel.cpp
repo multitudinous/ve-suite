@@ -4,6 +4,7 @@
 #include <iostream>
 #include "UI_Frame.h"
 #include "VjObsC.h"
+#include "UI_ModelData.h"
 
 
 
@@ -171,9 +172,13 @@ END_EVENT_TABLE()
 //////////////////////////////////////////////////
 //Constructor                                   //
 //////////////////////////////////////////////////
-UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl)
+//UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl)
+UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int activeMod)
 :wxPanel(tControl)
 {
+   _modelData = _model;
+   _activeModIndex = activeMod;
+
    _activeRBox;
       
    _buildDataSets();
@@ -295,9 +300,15 @@ void UI_DatasetPanel::_buildPanel()
 
 void UI_DatasetPanel::_buildDataSets( void )
 {
-   UI_Tabs* tempTabs = ((UI_Frame*)GetParent())->_tabs;
-   _numSteadyStateDataSets = tempTabs->datasetNum;
-  
+   //UI_Tabs* tempTabs = ((UI_Frame*)GetParent())->_tabs;
+   //_numSteadyStateDataSets = tempTabs->datasetNum;
+   _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex);
+
+   VjObs::scalar_p_var datasetNames = _modelData->GetDataSetNames(_activeModIndex);
+   VjObs::obj_p_var datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
+   VjObs::obj_p_var numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
+   VjObs::scalar_p_var scalarNames = _modelData->GetScalarNames(_activeModIndex);  
+
    CORBA::ULong index = 0;
       
    if (_numSteadyStateDataSets > 0)
@@ -305,27 +316,28 @@ void UI_DatasetPanel::_buildDataSets( void )
       for (CORBA::ULong i = 0; i<_numSteadyStateDataSets; i++)
       {
          thisDataSet = new UI_DataSets();
-         thisDataSet->_dataSetName = tempTabs->datasetNames[i];
+         //thisDataSet->_dataSetName = tempTabs->datasetNames[i];
+         thisDataSet->_dataSetName = datasetNames[i];
          
-         thisDataSet->_dataSetType = tempTabs->datasetTypes[i];
+         thisDataSet->_dataSetType = datasetTypes[i];
 
-		   wxString* scalarNames;
-		   scalarNames = new wxString[tempTabs->numScalarsPerDataset[i]];
+		   wxString* thisDataScalarNames;
+		   thisDataScalarNames = new wxString[numScalarsPerDataset[i]];
 
-         for (int k=0; k<tempTabs->numScalarsPerDataset[i]; k++)
+         for (int k=0; k<numScalarsPerDataset[i]; k++)
          {
-            scalarNames[k] = tempTabs->sc_attrib[index];
+            thisDataScalarNames[k] = scalarNames[index];
             index++;
          }
          
-         thisDataSet->_buildScalars(tempTabs->numScalarsPerDataset[i], scalarNames);
+         thisDataSet->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
          
          _DataSets.push_back(thisDataSet);
 
          //clean up the names array
          //for(int p = tempTabs->numScalarsPerDataset[i] -1; p >= 0; p--)
          {
-            delete [] scalarNames;   
+            delete [] thisDataScalarNames;   
          }                  
       }
    }  
