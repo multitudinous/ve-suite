@@ -39,6 +39,8 @@
 #include <vtkCutter.h>
 #include <vtkGeometryFilter.h>   // for inherited contourBase member filter
 #include <vtkPolyDataMapper.h>   // for inherited contourBase member mapper
+#include <vtkActor.h>
+#include <vtkProperty.h>
 
 #ifdef USE_OMP
 #include <vtkAppendPolyData.h>
@@ -171,5 +173,8 @@ void cfdContour::Update( void )
 
       this->updateFlag = true;
    }
+	this->actors.push_back( vtkActor::New() );
+	this->actors.back()->SetMapper( this->mapper );
+	this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
 }
 

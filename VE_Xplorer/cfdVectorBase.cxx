@@ -65,10 +65,6 @@ cfdVectorBase::cfdVectorBase()
    this->mapper = vtkPolyDataMapper::New();
    this->mapper->SetInput( this->filter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
-
-   this->actor = vtkActor::New();
-   this->actor->SetMapper( this->mapper );
-   this->actor->GetProperty()->SetSpecularPower( 20.0f );
 }
 
 
@@ -88,9 +84,6 @@ cfdVectorBase::~cfdVectorBase()
    
    this->mapper->Delete();
    this->mapper = NULL;
-
-   this->actor->Delete();
-   this->actor = NULL;
 }
 
 bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )

@@ -55,9 +55,6 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
    this->numSteps = numSteps;
    // set the cut function
    this->cutter = vtkCutter::New();
-   // the pipeline for using nearest precomputed data is initialized below...
-   this->PDactor = vtkActor::New();
-   this->PDactor->GetProperty()->SetSpecularPower( 20.0f );
 }
 
 cfdPresetContour::~cfdPresetContour()
@@ -67,9 +64,6 @@ cfdPresetContour::~cfdPresetContour()
 
    this->cutter->Delete();
    this->cutter = NULL;
-
-   this->PDactor->Delete();
-   this->PDactor = NULL;
 }
 
 void cfdPresetContour::Update( void )
@@ -98,8 +92,6 @@ void cfdPresetContour::Update( void )
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();
-
-      this->PDactor->SetMapper( this->mapper );
    }
    else
    {
@@ -127,7 +119,8 @@ void cfdPresetContour::Update( void )
                                         ->GetLookupTable() );
       this->mapper->Update();
    }
-   
-   std::cout << this->actor->GetProperty()->GetOpacity() << std::endl;
+   this->actors.push_back( vtkActor::New() );
+   this->actors.back()->SetMapper( this->mapper );
+   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
    this->updateFlag = true;
 }

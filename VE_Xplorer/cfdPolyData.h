@@ -44,10 +44,6 @@ class cfdPolyData : public cfdObjects
 
   ~cfdPolyData();
 
-  void setOpacity( float );
-
-  float getOpacity();
-
   virtual void Update( void );
 
  private:
@@ -55,8 +51,6 @@ class cfdPolyData : public cfdObjects
   float GetSphereScaleFactor();
 
   vtkPolyDataMapper *map;
-
-  float op;
 };
 
 #endif

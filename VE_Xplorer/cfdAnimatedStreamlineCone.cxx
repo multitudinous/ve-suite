@@ -233,7 +233,6 @@ void cfdAnimatedStreamlineCone::Update( void )
    vprDEBUG(vprDBG_ALL, 1) << "Deleting Point Array" << std::endl << vprDEBUG_FLUSH;
 
    this->updateFlag = true;
-   this->addGeode = true;
    vprDEBUG(vprDBG_ALL, 1) << "|   Exiting cfdStreamers Update " << std::endl << vprDEBUG_FLUSH;
 }
 

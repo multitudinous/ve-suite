@@ -305,7 +305,6 @@ void cfdTransientFlowManager::Update( void )
    // A hack for now
    // Need to have something specifically for pfsequence
    this->updateFlag = true;
-   this->addGeode = true;
    vprDEBUG(vprDBG_ALL,1) << " Finished Update for TransientFlowManager."
                           << std::endl << vprDEBUG_FLUSH;
 }
@@ -348,8 +347,8 @@ void cfdTransientFlowManager::CreateNodeList( void )
    {
       this->frames[ i ].CreateFrame( this->frameFileNames[ this->order[ i ] ] );
       //this->_geodes.push_back( this->frames[ i ].GetcfdNode() );
-      vprDEBUG(vprDBG_ALL,1) << " Creating Geodes : " << i << " : "
-                             << this->_geodes[ i ]
-                             << std::endl << vprDEBUG_FLUSH;
+      //vprDEBUG(vprDBG_ALL,1) << " Creating Geodes : " << i << " : "
+      //                       << this->_geodes[ i ]
+      //                       << std::endl << vprDEBUG_FLUSH;
    }
 }

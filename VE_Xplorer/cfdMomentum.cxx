@@ -41,6 +41,8 @@
 #include <vtkCutter.h>
 #include <vtkWarpVector.h>
 #include <vtkPolyDataMapper.h>
+#include <vtkActor.h>
+#include <vtkProperty.h>
 
 #include <vpr/Util/Debug.h>
 
@@ -157,7 +159,9 @@ void cfdMomentum::Update( void )
          this->mapper->SetLookupTable( this->GetActiveDataSet()
                                            ->GetLookupTable() );
          this->mapper->Update();
-
+	      this->actors.push_back( vtkActor::New() );
+	      this->actors.back()->SetMapper( this->mapper );
+	      this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
          this->updateFlag = true;
       }
    }

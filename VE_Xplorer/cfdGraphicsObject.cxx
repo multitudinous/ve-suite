@@ -131,6 +131,12 @@ void cfdGraphicsObject::SetActor( vtkActor* input )
    this->actor = input;
 }
 
+// set actor for classic and trans viz objects
+void cfdGraphicsObject::SetActor( std::vector< vtkActor* > input )
+{
+   this->actors = input;
+}
+
 // Return parent node for a this object
 cfdGroup* cfdGraphicsObject::GetParentNode( void )
 {

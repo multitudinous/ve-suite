@@ -65,10 +65,6 @@ cfdPresetMomentum::cfdPresetMomentum( const int xyz,
    this->cutter = vtkCutter::New();
 
    this->warper = vtkWarpVector::New();
-
-   // the pipeline for using nearest precomputed data is initialized below...
-   this->PDactor = vtkActor::New();
-   this->PDactor->GetProperty()->SetSpecularPower( 20.0f );
 }
 
 cfdPresetMomentum::~cfdPresetMomentum()
@@ -81,9 +77,6 @@ cfdPresetMomentum::~cfdPresetMomentum()
 
    this->warper->Delete();
    this->warper = NULL;
-
-   this->PDactor->Delete();
-   this->PDactor = NULL;
 }
 
 void cfdPresetMomentum::Update( void )
@@ -116,9 +109,6 @@ void cfdPresetMomentum::Update( void )
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();
-
-      this->PDactor->SetMapper( this->mapper );
-     
       vprDEBUG(vprDBG_ALL, 1)
          << "Yes Precalc : " << this->cursorType << " : " << usePreCalcData 
          << std::endl << vprDEBUG_FLUSH;
@@ -153,5 +143,8 @@ void cfdPresetMomentum::Update( void )
                                         ->GetLookupTable() );
       this->mapper->Update();
    }
+   this->actors.push_back( vtkActor::New() );
+   this->actors.back()->SetMapper( this->mapper );
+   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
    this->updateFlag = true;
 }

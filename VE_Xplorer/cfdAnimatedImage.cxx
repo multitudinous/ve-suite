@@ -140,13 +140,12 @@ void cfdAnimatedImage::Update( void )
    int i;
    for (i=0; i<frames; i++)
    {
-      this->actor = _images[i]->GetActor();
+      //this->actor = _images[i]->GetActor();
   
-      this->_sequence->CreateGeodeVector( this->actor );
+      //this->_sequence->CreateGeodeVector( this->actor );
    }
 
-   this->updateFlag = true;
-   this->addGeode = true;      
+   this->updateFlag = true;     
 }
 
 void cfdAnimatedImage::CreateObjects( void )

@@ -115,7 +115,8 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
    this->computeActorsAndGeodes = false;
    this->actorsAreReady = false;
    this->useLastSource = false;
-   this->transientBusy = 0;
+   //this->transientBusy = 0;
+   this->transientActors = true;
    _param = param;
 }
 
@@ -732,7 +733,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
    {
       // Initialize all the geode creation flags and dcs flags for all the geodes
       this->dataList.at( i )->SetUpdateFlag( false );
-      this->dataList.at( i )->SetGeodeFlag( false );
+      //this->dataList.at( i )->SetGeodeFlag( false );
       //this->dataList.at( i )->SetDCS( this->_worldDCS );
       this->dataList.at( i )->SetActiveDataSet( this->_activeDataSet );
    }
@@ -770,22 +771,27 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                                    << std::endl << vprDEBUG_FLUSH;
    }
 
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+            == TRANSIENT_ACTIVE )
+   {
+      this->transientActors = commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
+   }
    // check any virtual objects need to be updated
-   if ( this->actorsAreReady )
+   if ( this->actorsAreReady && this->transientActors )
    {
       vprDEBUG(vprDBG_ALL,4) << "|   Updating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
       for ( unsigned int i = 0; i < this->dataList.size(); i++ )
       {
-         if ( this->dataList.at( i )->GetUpdateFlag() || 
-               this->dataList.at( i )->GetTransientGeodeFlag() )
+         if ( this->dataList.at( i )->GetUpdateFlag() )//|| 
+               //this->dataList.at( i )->GetTransientGeodeFlag() )
          {
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
             temp->SetWorldNode( this->_worldDCS );
-            temp->SetActor( this->dataList[ i ]->GetActor() );
+            temp->SetActor( this->dataList[ i ]->GetActors() );
             temp->AddGraphicsObjectToSceneGraph();
 
             // search map for other object types with the same type as this one
@@ -810,11 +816,11 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 
             // Resetting these variables is very important
             this->dataList[ i ]->SetUpdateFlag( false );
-            this->dataList[ i ]->SetGeodeFlag( false );
+            //this->dataList[ i ]->SetGeodeFlag( false );
             this->actorsAreReady = false;
-            this->dataList.at(i)->SetTransientGeodeFlag(false);
-            this->dataList.at(i)->SetSequence( 0 );
-            this->transientBusy = false;
+            //this->dataList.at(i)->SetTransientGeodeFlag(false);
+            //this->dataList.at(i)->SetSequence( 0 );
+            this->dataList[ i ]->ClearActors();
          }
       }
    }
@@ -856,15 +862,15 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                                    << std::endl << vprDEBUG_FLUSH;
                //this->_activeObject->SetDCS( this->_activeDataSetDCS );
                this->_activeObject->SetActiveDataSet( this->_activeDataSet );
-               if ( this->_activeDataSet->IsPartOfTransientSeries() )
-                  this->_activeObject->SetSequence( this->_activeDataSet->GetAnimation() );
+               //if ( this->_activeDataSet->IsPartOfTransientSeries() )
+               //   this->_activeObject->SetSequence( this->_activeDataSet->GetAnimation() );
                this->_activeObject->SetNormal( this->nav->GetDirection() );
                this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 
                this->_activeObject->SetRequestedValue( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
                this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
                this->_activeObject->SetPreCalcFlag( this->commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) );
-               this->transientBusy = true;      
+               //this->transientBusy = true;      
                this->computeActorsAndGeodes = true;
                this->actorsAreReady = true;
             }

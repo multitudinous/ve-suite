@@ -83,17 +83,12 @@ cfdIsosurface::cfdIsosurface( int numsteps )
    this->mapper = vtkPolyDataMapper::New();
    this->mapper->SetInput( this->filter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
-
-   this->actor = vtkActor::New();
-   this->actor->SetMapper( this->mapper );
-   this->actor->GetProperty()->SetSpecularPower( 20.0f );
 }
 
 cfdIsosurface::~cfdIsosurface()
 {
    this->filter->Delete();
    this->mapper->Delete();
-   this->actor->Delete();
 #ifdef USE_OMP
    for(int i = 0; this->nData; i++ )
    {
@@ -150,7 +145,9 @@ void cfdIsosurface::Update()
    this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
    this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
    this->mapper->Update();
-
+   this->actors.push_back( vtkActor::New() );
+   this->actors.back()->SetMapper( this->mapper );
+   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
    this->updateFlag = true;
 }
 

@@ -56,22 +56,20 @@ cfdObjects::cfdObjects( void )
 {
    vprDEBUG(vprDBG_ALL, 1) << " New cfdObjects ! " 
                            << std::endl << vprDEBUG_FLUSH;
-   this->_geode = NULL;
-   this->_sequence = NULL;
+   //this->_geode = NULL;
+   //this->_sequence = NULL;
    this->pointSource = NULL;
    this->vtkToPFDebug = 0;
    this->usePreCalcData = false;
-   this->actor = NULL;
-   this->PDactor = NULL;
-   this->addTransientGeode = 0;
-   
+   //this->actor = NULL;
+   //this->PDactor = NULL;
+   //this->addTransientGeode = 0;
 }
 
 cfdObjects::cfdObjects( const cfdObjects& src)
 {
    this->objectType = src.objectType;
    this->pointSource = src.pointSource;
-   this->addTransientGeode = src.addTransientGeode;
 }
 
 cfdObjects::~cfdObjects( void )
@@ -84,21 +82,18 @@ void cfdObjects::SetObjectType( int type )
    this->objectType = type;
 }
 
-vtkActor* cfdObjects::GetActor( void )
-{
-   if ( this->usePreCalcData && this->PDactor != NULL )
-   {
-      return PDactor;
-   }
-   else
-   {
-      return actor;
-   }
-}
-
 std::vector< vtkActor* > cfdObjects::GetActors( void )
 {
    return actors;
+}
+
+void cfdObjects::ClearActors( void )
+{
+   for ( unsigned int i = 0; i < actors.size(); ++i )
+   {
+      actors.at( i )->Delete();
+   }
+   actors.clear();
 }
 
 void cfdObjects::SetOrigin( float o[ 3 ] )
@@ -142,11 +137,6 @@ void cfdObjects::SetBoxSize( double b[ 6 ]  )
    this->center[2] = (this->box_size[4] + this->box_size[5])/2;
 }
 
-void cfdObjects::DeletecfdGeode( void )
-{
-   delete this->_geode;
-}
-
 void cfdObjects::SetSequence( cfdTempAnimation * x )
 {
    this->_sequence = x;
@@ -160,32 +150,6 @@ cfdTempAnimation* cfdObjects::GetSequence( void )
 void cfdObjects::SetSourcePoints( vtkPolyDataSource* pointSource )
 {
    this->pointSource = pointSource;
-}
-
-void cfdObjects::ClearTransientVector( void )
-{
-   // these geodes are actually deleted in cfdModelHandler
-   // this is a hack an needs to be changed
-   transientGeodes.clear();
-}
-
-void cfdObjects::SetTransientGeodeFlag( bool x ) 
-{ 
-   this->addTransientGeode = x; 
-}
-
-bool cfdObjects::GetTransientGeodeFlag( void ) 
-{ 
-   return this->addTransientGeode; 
-}
-void cfdObjects::SetGeodeFlag( bool x ) 
-{ 
-   this->addGeode = x; 
-}
-
-bool cfdObjects::GetGeodeFlag( void ) 
-{ 
-   return this->addGeode; 
 }
 
 // THIS CODE SHOULD BE REMOVED

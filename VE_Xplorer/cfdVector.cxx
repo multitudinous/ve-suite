@@ -205,5 +205,9 @@ void cfdVector::Update( void )
                               << std::endl << vprDEBUG_FLUSH;
       this->updateFlag = false;
    }
+   
+   this->actors.push_back( vtkActor::New() );
+   this->actors.back()->SetMapper( this->mapper );
+   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
 }
 

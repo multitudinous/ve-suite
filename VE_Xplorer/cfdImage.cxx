@@ -55,7 +55,6 @@ cfdImage::cfdImage( char* param )
    this->plane = NULL;
    this->mapper = NULL;
    this->texture = NULL;
-   this->actor = NULL;
    bmpOrientation = -1;
 
    _param = param;
@@ -113,9 +112,10 @@ cfdImage::cfdImage( char* param )
       this->texture->SetInput( this->bmpReader->GetOutput() );
       this->texture->InterpolateOff();
 
-      this->actor = vtkActor::New();
-      this->actor->SetMapper( this->mapper );
-      this->actor->SetTexture( this->texture );        
+	this->actors.push_back( vtkActor::New() );
+	this->actors.back()->SetMapper( this->mapper );
+	this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
+      this->actors.back()->SetTexture( this->texture );        
 
       this->type = bmpOrientation;
       if      (this->type==0)  this->typeLabel = 'X';
@@ -143,7 +143,6 @@ cfdImage::cfdImage ( char * filename, int resx, int resy, int dim, double *origi
    this->plane = NULL;
    this->mapper = NULL;
    this->texture = NULL;
-   this->actor = NULL;
 
    char * extension = fileIO::getExtension( filename );
    vprDEBUG(vprDBG_ALL, 1) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
@@ -196,14 +195,15 @@ cfdImage::cfdImage ( char * filename, int resx, int resy, int dim, double *origi
 
      // Actor
 
-     this->actor = vtkActor::New();
-     this->actor->SetMapper( this->mapper );
-     this->actor->SetTexture( this->texture );        
+	this->actors.push_back( vtkActor::New() );
+	this->actors.back()->SetMapper( this->mapper );
+	this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
+	this->actors.back()->SetTexture( this->texture );        
 
-     this->actor->GetProperty()->SetAmbient(1.0);
-     this->actor->GetProperty()->SetDiffuse(1.0);
-     this->actor->GetProperty()->SetSpecular(1.0);
-     this->actor->GetProperty()->SetInterpolationToPhong();
+     this->actors.back()->GetProperty()->SetAmbient(1.0);
+     this->actors.back()->GetProperty()->SetDiffuse(1.0);
+     this->actors.back()->GetProperty()->SetSpecular(1.0);
+     this->actors.back()->GetProperty()->SetInterpolationToPhong();
 
      // Dim stuff
 
@@ -227,7 +227,6 @@ cfdImage::~cfdImage()
    if (this->plane != NULL )     this->plane->Delete();
    if (this->mapper != NULL )    this->mapper->Delete();
    if (this->texture != NULL )   this->texture->Delete();
-   if (this->actor != NULL )     this->actor->Delete();
 }
 
 void cfdImage::Update( void )
@@ -244,11 +243,6 @@ bool cfdImage::CheckCommandId( cfdCommandArray* commandArray  )
 void cfdImage::UpdateCommand()
 {
    cerr << "doing nothing in cfdImage::UpdateCommand()" << endl;
-}
-
-vtkActor* cfdImage::GetActor()
-{
-    return this->actor;
 }
 
 void cfdImage::CreateObjects( void )

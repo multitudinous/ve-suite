@@ -191,10 +191,10 @@ void cfdIHCCContour::Update( void )
       actor->GetProperty()->SetSpecularPower( 20.0f );
       //cout << " Color : " << color[ 0 ] << " : " << color[ 1 ] << " : " << color[ 2 ] << endl;
       actor->GetProperty()->SetColor( color );
-      cfdGeode* geo = new cfdGeode();
-      geo->TranslateTocfdGeode( actor );
-      actor->Delete();
-      _geodes.push_back( geo );
+      //cfdGeode* geo = new cfdGeode();
+      //geo->TranslateTocfdGeode( actor );
+      //actor->Delete();
+      //_geodes.push_back( geo );
    }
    this->lut->Delete();
    lut = NULL;

@@ -56,10 +56,6 @@ cfdStreamers::cfdStreamers( void )
 
    this->mapper = vtkPolyDataMapper::New();
 
-   this->actor = vtkActor::New();
-   this->actor->SetMapper( this->mapper );
-   this->actor->GetProperty()->SetSpecularPower( 20.0f );
-
    this->integrationDirection = 0;
    this->propagationTime = -1;
    this->integrationStepLength = -1;
@@ -73,7 +69,6 @@ cfdStreamers::~cfdStreamers()
    this->integ->Delete();
    this->tubeFilter->Delete();
    this->mapper->Delete();
-   this->actor->Delete();
 }
 
 void cfdStreamers::Update( void )
@@ -172,6 +167,10 @@ void cfdStreamers::Update( void )
    this->mapper->Update();
    //this->mapper->Print( cout );
  
+   this->actors.push_back( vtkActor::New() );
+   this->actors.back()->SetMapper( this->mapper );
+   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
+
    this->updateFlag = true;
    
    vprDEBUG(vprDBG_ALL,0) << "|   cfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;

@@ -73,6 +73,7 @@ class cfdObjects : public cfdGlobalBase
 
       vtkActor* GetActor( void );
       std::vector< vtkActor* > GetActors( void );
+      void ClearActors( void );
 
       void SetObjectType( int );
       int GetObjectType( void ) { return this->objectType; }
@@ -123,26 +124,26 @@ class cfdObjects : public cfdGlobalBase
       // used by vectors and intended for warped contours
       static float vectorScale;
 
-      cfdGeode* _geode;
-      cfdGeode* _tempGeode;
+      //cfdGeode* _geode;
+      //cfdGeode* _tempGeode;
       static int particleOption;   // point cloud or variably sized spheres
       static float particleScale;
 
       cfdTempAnimation* _sequence;
 
-      std::vector< cfdGeode* > _geodes;
-      std::vector<cfdGeode* > transientGeodes;
+      //std::vector< cfdGeode* > _geodes;
+      //std::vector<cfdGeode* > transientGeodes;
 
-      vtkActor *actor;
-      vtkActor *PDactor;
+      //vtkActor *actor;
+      //vtkActor *PDactor;
       std::vector< vtkActor* > actors;
       vtkPolyDataSource *pointSource;
 
       //cfdReadParam *paramFile;
    
       bool updateFlag;
-      bool addGeode;
-      bool addTransientGeode;
+      //bool addGeode;
+      //bool addTransientGeode;
       int vtkToPFDebug;
       int objectType;
       int requestedValue;

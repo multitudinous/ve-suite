@@ -61,10 +61,6 @@ cfdContourBase::cfdContourBase()
    this->mapper->SetInput( this->filter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
 
-   this->actor = vtkActor::New();
-   this->actor->SetMapper( this->mapper );
-   this->actor->GetProperty()->SetSpecularPower( 20.0f );
-
    this->warpedContourScale = 0.0f;
    this->contourOpacity = 0.0f;
    this->contourLOD = 1; 
@@ -86,9 +82,6 @@ cfdContourBase::~cfdContourBase()
    
    this->mapper->Delete();
    this->mapper = NULL;
-
-   this->actor->Delete();
-   this->actor = NULL;
 
    this->deci->Delete();
    this->deci = NULL;

@@ -55,18 +55,12 @@ cfdPresetVector::cfdPresetVector( const int xyz, const int numSteps )
 
    // set the cut function
    this->cutter = vtkCutter::New();
-
-   // the pipeline for using nearest precomputed data is initialized below...
-   this->PDactor = vtkActor::New();
 }
 
 cfdPresetVector::~cfdPresetVector()
 {
    this->cutter->Delete();
    this->cutter = NULL;
-
-   this->PDactor->Delete();
-   this->PDactor = NULL;
 }
 
 void cfdPresetVector::Update( void )
@@ -108,10 +102,6 @@ void cfdPresetVector::Update( void )
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                           ->GetLookupTable() );
       this->mapper->Update();
-
-      this->PDactor->SetMapper( this->mapper );
-      this->PDactor->GetProperty()->SetSpecularPower( 20.0f );
-     
       vprDEBUG(vprDBG_ALL, 1)
          << "Yes Precalc : " << this->cursorType << " : " << usePreCalcData 
          << std::endl << vprDEBUG_FLUSH;
@@ -156,6 +146,9 @@ void cfdPresetVector::Update( void )
          << "No Precalc : " << this->cursorType << " : " << usePreCalcData
          << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
    }
+   this->actors.push_back( vtkActor::New() );
+   this->actors.back()->SetMapper( this->mapper );
+   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
    this->updateFlag = true;
 }
 

@@ -150,6 +150,7 @@ class cfdSteadyStateVizHandler
       bool runIntraParallelThread;
       bool useLastSource;
       bool transientBusy;
+      bool transientActors;
 
       // multi map to hold graphics objects
       // the key is the viz type and the value is cfdGraphicsObject

@@ -52,14 +52,9 @@ cfdPolyData::cfdPolyData( float op_val )
    vprDEBUG(vprDBG_ALL,2) << "cfdPolyData constructor"
                           << std::endl << vprDEBUG_FLUSH;
 
-   this->op = op_val;
-
    this->map = vtkPolyDataMapper::New();
    this->map->SetColorModeToMapScalars();
    //this->map->ScalarVisibilityOff();
-
-   this->actor = vtkActor::New();
-
 /*
    this->actor->GetProperty()->SetColor( 1.0f, 1.0f, 1.0f );
    this->actor->GetProperty()->SetAmbient( 0.2f );
@@ -76,18 +71,6 @@ cfdPolyData::~cfdPolyData()
                           << std::endl << vprDEBUG_FLUSH;
 
    this->map->Delete();
-   this->actor->Delete();
-}
-
-void cfdPolyData::setOpacity( float op_val )
-{
-   this->op = op_val;
-   this->actor->GetProperty()->SetOpacity( this->op );
-}
-
-float cfdPolyData::getOpacity()
-{
-   return this->op;
 }
 
 void cfdPolyData::Update()
@@ -114,6 +97,7 @@ void cfdPolyData::Update()
          << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
    }
 
+   this->actors.push_back( vtkActor::New() );
    vtkPolyData * pd = this->GetActiveDataSet()->GetPolyData();   
    vtkCellTypes *types = vtkCellTypes::New();
    pd->GetCellTypes( types );   
@@ -130,7 +114,7 @@ void cfdPolyData::Update()
       polyTubes->Update();
       this->map->SetInput( polyTubes->GetOutput() );
       polyTubes->Delete();
-      this->actor->GetProperty()->SetRepresentationToSurface();
+	  this->actors.back()->GetProperty()->SetRepresentationToSurface();
    }
    else if ( pd->GetCellType( 0 ) == VTK_VERTEX &&
              types->GetNumberOfTypes() == 1 &&
@@ -191,7 +175,7 @@ void cfdPolyData::Update()
       this->map->SetInput( sphereGlyph->GetOutput() );
       sphereSrc->Delete();
       sphereGlyph->Delete();
-      this->actor->GetProperty()->SetRepresentationToSurface();
+      this->actors.back()->GetProperty()->SetRepresentationToSurface();
    }
    else if ( pd->GetCellType( 0 ) == VTK_VERTEX &&
              types->GetNumberOfTypes() == 1 &&
@@ -201,15 +185,15 @@ void cfdPolyData::Update()
                              << std::endl << vprDEBUG_FLUSH;
       this->map->SetColorModeToMapScalars();
       this->map->SetInput( pd );
-      this->actor->GetProperty()->SetRepresentationToPoints();
-      this->actor->GetProperty()->SetPointSize(4*this->GetSphereScaleFactor());
+      this->actors.back()->GetProperty()->SetRepresentationToPoints();
+      this->actors.back()->GetProperty()->SetPointSize(4*this->GetSphereScaleFactor());
    }
    else
    {
       vprDEBUG(vprDBG_ALL,1) << " IS POLYDATA SURFACE"
                              << std::endl << vprDEBUG_FLUSH;
       this->map->SetInput( pd );
-      this->actor->GetProperty()->SetRepresentationToSurface();
+      this->actors.back()->GetProperty()->SetRepresentationToSurface();
    }
 
    types->Delete();
@@ -241,8 +225,8 @@ void cfdPolyData::Update()
 
    this->map->Update();
 
-   this->actor->SetMapper( this->map );
-
+   this->actors.back()->SetMapper( this->map );
+   this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
    this->updateFlag = true;
 }
 
