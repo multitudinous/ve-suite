@@ -81,7 +81,7 @@ void UI_TeacherTab::_onTeacher(wxCommandEvent& event)
          // _teacherRBox->GetSelection();
          // This code is not correct
          // Need to fix this 
-         ((UI_Tabs *)_parent)->cIso_value = i;
+         ((UI_Tabs *)_parent)->cIso_value = _teacherRBox->GetSelection();
       }
       ((UI_Tabs *)_parent)->cId = LOAD_PFB_FILE;
       ((UI_Tabs *)_parent)->sendDataArrayToServer();
