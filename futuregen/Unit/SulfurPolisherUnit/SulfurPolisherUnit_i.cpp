@@ -73,6 +73,10 @@ void Body_Unit_i::StartCalc (
     
     Polisher.Toperating = Temp;
     
+    H2Sradio++;
+    COSradio++;
+    pdrop++;
+
     if (H2Sradio == 1) {
       Polisher.H2Sflag = 0;
       Polisher.H2Seff = effentry;

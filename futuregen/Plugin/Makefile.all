@@ -42,9 +42,9 @@ OBJ22 = GasSource/GasSource.o GasSource/GasSource_UI.o \
 	GasSource/thermo.o GasSource/matrix.o
 OBJ23 = GasSplitter/GasSplitter.o GasSplitter/GasSplitter_UI.o 
 OBJ24 = GasMixer/GasMixer.o 
-OBJ25 = GasSeparator/GasSeparator.o GasSeparator/GasSeparator_UI.o GasSeoarator/thermo.o GasSeparator/matrix.o
+OBJ25 = GasSeparator/GasSeparator.o GasSeparator/GasSeparator_UI.o GasSeparator/thermo.o GasSeparator/matrix.o
 OBJ26 = GasHeatExchanger/GasHeatExchanger.o GasHeatExchanger/GasHeatExchanger_UI.o 
-OBJ27 = KineticReactor/KineticReactor.o KineticReactor/KinecticReactor_UI.o
+OBJ27 = KineticReactor/KineticReactor.o KineticReactor/KineticReactor_UI.o
 OBJ28 = EquilibriumReactor/EquilibriumReactor.o
 OBJ29 = WaterSource/WaterSource.o WaterSource/WaterSource_UI.o
 .SUFFIXES : .o .cpp
@@ -52,7 +52,7 @@ OBJ29 = WaterSource/WaterSource.o WaterSource/WaterSource_UI.o
 .cpp.o :
 	$(CXX) -g -c ${INCLUDES} ${CMP} ${WX_FLAGS} -D WXUSING_PLUGIN_DLL -o $@ $<
 
-all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 s21 s22 s23 s24
+all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 s21 s22 s23 s24 s25 s26 s27 s28 s29
 
 s1:	$(OBJ1)
 	$(CXX) -g -shared -o libGasifier0D.so $(OBJ1)

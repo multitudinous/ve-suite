@@ -1,6 +1,9 @@
 #ifndef CAT_COMB_H
 #define CAT_COMB_H
+
+#ifdef WIN32
 #include <winsock2.h> //have to include this to prevent the windows.h's mess up with winsock.h
+#endif
 #include <ThirdParty/Reks/surface_chem.h>
 #include <V21Helper/Datatypes/Gas.h>
 #include <V21Helper/Datatypes/GasCell.h>
