@@ -119,7 +119,9 @@ protected:
 		BUTTON_ADD_ALL,
 		BUTTON_DELETE_ALL,
 		BUTTON_GO,
-		BUTTON_CLOSE
+		BUTTON_CLOSE,
+		//Added by Alberto Jove 09/29/2004
+		ID_LISTBOX=1000
 	};
 
 	void OnCaseButton(wxCommandEvent& event);

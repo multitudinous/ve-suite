@@ -26,7 +26,7 @@ void writeFile(std::string casefile, std::string datafile,
     std::string check; // = casefile + ".check";
     //check = "";    
     cout << "check size = " << check.size() << endl;
-    FluentReader::FluentIO * infile1 = new FluentReader::FluentIO(
+    FluentReader::FluentIO *infile1 = new FluentReader::FluentIO(
         casefile, info, check, isBinary, isGzip);  
     //infile1->enableDouble();
     infile1->enableFloat();

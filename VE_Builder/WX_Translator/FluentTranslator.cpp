@@ -32,7 +32,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-// Author: Jeremy Jarrell jarrell@csee.wvu.edu
+// Authors: Jeremy Jarrell jarrell@csee.wvu.edu
+// since September 2004: Alberto Jove albertoj@csee.wvu.edu
 //
 // This is a portion of the GUI written for the CFD Translator developed on contract from DOE-NETL.
 
@@ -44,6 +45,13 @@
 #include <wx/wx.h>
 #include <wx/image.h>
 #include <wx/progdlg.h>
+//added by Alberto Jove -- This help in executing a perl file, and displaying info in the ListBox
+#include <wx/file.h>
+#include <wx/wfstream.h>
+#include <wx/txtstrm.h>
+#include <wx/event.h>
+#include <wx/utils.h>
+//
 
 void parseSet( std::string casefile, std::string datafile, bool isBinary, bool isGzip, int var_id );
 
@@ -71,15 +79,16 @@ FluentTranslator::FluentTranslator(wxWindow* parent, int id, const wxString& tit
     label_1 = new wxStaticText(this, -1, wxT("Possible Variables"));
     panel_4 = new wxPanel(this, -1);
     label_2 = new wxStaticText(this, -1, wxT("Selected Variables"));
-    const wxString PossibleVariableListBox_choices[] = {
+    //Listbox PossibleVaraibleListBox
+   // const wxString PossibleVariableListBox_choices[] = {
 
-    };
-    PossibleVariableListBox = new wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, 0, PossibleVariableListBox_choices, 0);
+    //};
+    PossibleVariableListBox = new wxListBox(this, -1, wxDefaultPosition, wxSize(200, 425), 0, NULL, wxLB_MULTIPLE);
     static_line_4 = new wxStaticLine(this, -1, wxDefaultPosition, wxDefaultSize, wxLI_VERTICAL);
-    const wxString SelectedVariableListBox_choices[] = {
+    //const wxString SelectedVariableListBox_choices[] = {
 
-    };
-    SelectedVariableListBox = new wxListBox(this, -1, wxDefaultPosition, wxDefaultSize, 0, SelectedVariableListBox_choices, 0);
+    //};
+    SelectedVariableListBox = new wxListBox(this, -1, wxDefaultPosition, wxSize(200, 425), 0, NULL, wxLB_MULTIPLE);
     AddButton = new wxButton(this, BUTTON_ADD, wxT("Add"));
     AddAllButton = new wxButton(this, BUTTON_ADD_ALL, wxT("Add All"));
     DeleteAllButton = new wxButton(this, BUTTON_DELETE_ALL, wxT("Delete All"));
@@ -186,7 +195,6 @@ BEGIN_EVENT_TABLE(FluentTranslator, wxDialog)
 	EVT_BUTTON	(BUTTON_GO, FluentTranslator::OnGoButton)
 	EVT_BUTTON	(BUTTON_CLOSE, FluentTranslator::OnCloseButton)
 	EVT_BUTTON	(wxID_CANCEL, FluentTranslator::OnCancelButton)
-
 END_EVENT_TABLE()
 
 
@@ -218,7 +226,7 @@ void FluentTranslator::OnDataButton(wxCommandEvent& event)
 {
 	std::cout << "Data Function" << std::endl;
 
-	OpenFileDialog = new wxFileDialog(this, wxT("Choose a Fluent Case File..."), wxT(""), wxT(""), wxT("*.dat"), wxOPEN|wxHIDE_READONLY, wxDefaultPosition);
+	OpenFileDialog = new wxFileDialog(this, wxT("Choose a Fluent Data File..."), wxT(""), wxT(""), wxT("*.dat"), wxOPEN|wxHIDE_READONLY, wxDefaultPosition);
 	if(OpenFileDialog->ShowModal() == wxID_OK)
 	{
 
@@ -248,7 +256,50 @@ void FluentTranslator::OnLoadCaseAndDataButton(wxCommandEvent& event)
     		StatusTextCntrl->AppendText(status_text);
 
 		//parseSet( (std::string)CaseFilename, (std::string)DataFilename, 1, 0, 200 );
-
+		//Added by Alberto Jove
+		//executes the parser
+		wxString cmd = "perl parser_file/another_file.pl ";
+		cmd+=DataFilename;
+		
+		if (!cmd)
+			return;
+		wxLogStatus( _T("'%s' is running please wait..."), cmd.c_str() );
+		int code = wxExecute(cmd, wxEXEC_SYNC);
+		 wxLogStatus( _T("Process '%s' terminated with exit code %d."), cmd.c_str() );
+		
+		//reads the file created by the parser with the variable names and indexes
+		wxString filename = "parser_file/varNamesandIndex.txt";
+		wxString tempLine;
+	
+		wxFile loadfile;
+		loadfile.Open(filename,wxFile::read);
+		if(!loadfile.IsOpened())
+			std::cout<<"File did not open!\n";
+	
+		wxFileInputStream fileStream(loadfile);
+		if(!fileStream.Ok())
+		{
+			std::cout<<"Error reading the file!"<<endl;
+		}
+		wxTextInputStream textStream (fileStream);
+	
+		while(!fileStream.Eof())
+		{
+			tempLine = textStream.ReadLine();
+			PossibleVariableListBox->Append(tempLine);
+		}
+		loadfile.Close();
+		
+		//removing the file created by perl
+		wxString cmd_rm = "rm parser_file/varNamesandIndex.txt";
+		if(!cmd_rm)
+		{
+			return;
+		}
+		wxLogStatus( _T("'%s' is running please wait..."), cmd_rm.c_str() );
+		code = wxExecute(cmd_rm, wxEXEC_SYNC);
+		wxLogStatus(  _T("Process '%s' terminated with exit code %d."), cmd_rm.c_str() );
+		//
 	}
 	else if(CaseFileSelected_Flag && !DataFileSelected_Flag){
 		wxMessageBox(wxT("You forgot to select the data file."), wxT("Problem!"), wxOK);
@@ -259,6 +310,8 @@ void FluentTranslator::OnLoadCaseAndDataButton(wxCommandEvent& event)
 	else {
 		wxMessageBox(wxT("You forgot to select the case and data files."), wxT("Problem!"), wxOK);
 	}
+	
+	
 }
 
 void FluentTranslator::OnAboutButton(wxCommandEvent& event)
@@ -314,18 +367,56 @@ void FluentTranslator::OnUnSelectAllButton(wxCommandEvent& event)
 
 void FluentTranslator::OnAddButton(wxCommandEvent& event)
 {
+	//Added by Alberto Jove
+	SelectedVariableListBox->Clear();
+	
+	wxArrayInt selections;
+	PossibleVariableListBox->GetSelections(selections);
+	//std::cout<<"Selection has: "<<selections.Count()<<" items."<<endl;
+	int number = selections.Count();
+	
+	for(int j=0; j<number; j++)
+	{
+		SelectedVariableListBox->Append(PossibleVariableListBox->GetString(selections[j]));
+	}
+	//
 }
 
 void FluentTranslator::OnAddAllButton(wxCommandEvent& event)
 {
+	//Added by Alberto Jove
+	int amount = PossibleVariableListBox->GetCount();
+	
+	for(int i=0; i<amount; i++)
+	{
+		PossibleVariableListBox->SetSelection(i, TRUE);
+		SelectedVariableListBox->Append(PossibleVariableListBox->GetString(i));
+		PossibleVariableListBox->SetSelection(i, FALSE);
+	}
+	//
 }
 
 void FluentTranslator::OnDeleteAllButton(wxCommandEvent& event)
 {
+	//Added by Alberto Jove
+	SelectedVariableListBox->Clear();
+	//
 }
 
 void FluentTranslator::OnGoButton(wxCommandEvent& event)
 {
+	// Added by Alberto Jove
+	//wxMessageBox(wxT("Here we'll get the indexes and pass them to the command line translator!"), wxT("Go"), wxOK);
+	/*wxArrayInt selectionsToUse;
+	SelectedVariableListBox->GetSelections(selectionsToUse);
+	int amountIndexes = selectionsToUse.Count();
+	std::cout<<"Got something: "<<amountIndexes<<std::endl;
+	for(int m=0; m<amountIndexes; m++)
+	{
+		std::cout<<"Selected indexes: "<<SelectedVariableListBox->GetString(selectionsToUse[m])<<std::endl;
+	}*/
+	//still need to add the execution of testVtkFactory
+	//
 }
 
 void FluentTranslator::OnCloseButton(wxCommandEvent& event)

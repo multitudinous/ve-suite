@@ -1,8 +1,8 @@
 #VTK_HOME = ../VTK/
-VTK_HOME = /.nfs/tera/modeling/bdotson/install_tests/version1.0.3/test1/VTK/
+#VTK_HOME = /.nfs/tera/modeling/bdotson/install_tests/version1.0.3/test1/VTK/
 
 #Blitz Home directory
-BLITZ_HOME = /.nfs/tera/modeling/bdotson/cfd_translator/fluent_reader.1.0.0/Blitz++-0.7
+#BLITZ_HOME = /.nfs/tera/modeling/bdotson/cfd_translator/fluent_reader.1.0.0/Blitz++-0.7
 
 VTK_INCLUDES =  -I$(VTK_HOME)Common -I$(VTK_HOME)Graphics \
 		-I$(VTK_HOME)Filtering -I$(VTK_HOME) \
@@ -22,7 +22,7 @@ FACTORY_OBJECTS = toVTK.o dump.o fluentCase.o \
 	   fluentIO.o fluentObjects.o fluentVtkFactory.o \
 	   reorder.o setOperators.o testVtkFactory.o
 
-LIBS = -lvtkParallel  -lvtkexpat \
+LIBS = -lvtkParallel -lvtkexpat \
 	 -lvtkfreetype -lvtkftgl -lvtkRendering \
 	 -lvtkGraphics -lvtkImaging -lvtkFiltering \
 	 -lvtkCommon -lvtkzlib -lvtkIO
