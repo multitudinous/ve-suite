@@ -72,26 +72,36 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       do
       {
          numChars++;
-         if ( debug ) std::cout<<(char)fileI.peek();
+         if ( debug ) 
+            std::cout<<(char)fileI.peek();
          fileI.get();
-      } while ( (fileI.peek()!=0) && ((char)fileI.peek() != ')') );
+      } 
+      while ( (fileI.peek()!=0) && ((char)fileI.peek() != ')') );
+      
       std::cout<<std::endl;
-      if ( debug ) std::cout<<"Number of characters :"<<numChars<<std::endl;
+      if ( debug ) 
+         std::cout<<"Number of characters :"<<numChars<<std::endl;
       fileI.seekg( 0, std::ios::beg );      //reset file pointer
+
       //read the first 3 lines from the files
       char line[ 256 ];
       for ( int i=0;i<3;i++ )
       {
          fileI.getline( line, 256 );
-         if ( debug ) std::cout<<line<<std::endl;
+         if ( debug ) 
+            std::cout<<line<<std::endl;
       }
+
       //search for "I=" in line
       char* pch;
       pch = strstr( line, "I=" ); pch = pch+2; nX = atoi(pch);
-      if ( debug ) std::cout<<"nX :"<< nX <<std::endl;
+      if ( debug ) 
+         std::cout<<"nX :"<< nX <<std::endl;
       //search for "J=" in line
       pch = strstr( line, "J=" ); pch = pch+2; nY = atoi(pch);
-      if ( debug ) std::cout<<"nY :"<< nY <<std::endl;
+      if ( debug ) 
+         std::cout<<"nY :"<< nY <<std::endl;
+
       //allocate memory since we know nX and nY now
       allocateVariables();
       std::cout<<"Input file        :"<<inFileName<<std::endl
@@ -153,6 +163,8 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       }
       // Set selected scalar and vector quantities to be written to pointdata array
       letUsersAddParamsToField( 3, parameterData, uGrid->GetPointData() );
+      vtkUnstructuredGrid *finalUGrid = vtkUnstructuredGrid::New();
+      finalUGrid->DeepCopy( uGrid );
       for ( int i=0;i<3;i++ )
       {
          parameterData[ i ]->Delete();
@@ -164,7 +176,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       pts->Delete();      
       pts = NULL;
       
-      return uGrid;
+      return finalUGrid;
    }
 }
 

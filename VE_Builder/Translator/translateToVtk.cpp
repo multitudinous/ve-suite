@@ -505,6 +505,7 @@ int main( int argc, char *argv[] )
                 << "(9)PLOT3D (10)John Deere MAP Data\n"
                 << "\t(11)John Deere EnSight Data" << "  " 
                 << "(12)ANSYS rst binary data\n"
+                << "\t(13)Tecplot ASCII files\n"
                 << "\t(0)exit" <<std::endl;
       cfdType = fileIO::getIntegerBetween( 0, 13 );
    }
