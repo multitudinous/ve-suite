@@ -200,7 +200,7 @@ UIDialog* GasSource::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString GasSource::GetName()
 {
-  wxString result="REI_Base_GasSource"; //your name
+  wxString result="REI_Gas_GasSource"; //your name
   return result;
 }
 

@@ -126,7 +126,7 @@ bool DumpCombustor_UI_Dialog::TransferDataFromWindow()
 ////////////////////////////////////////////////////
 bool DumpCombustor_UI_Dialog::TransferDataToWindow()
 {
-wxString txt1, txt2, txt3, txt4;
+  wxString txt1, txt2, txt3, txt4;
 
   txt1<<(*p_conversion);
   t_conversion->SetValue(txt1);

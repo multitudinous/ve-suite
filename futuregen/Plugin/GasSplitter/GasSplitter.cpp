@@ -121,7 +121,7 @@ UIDialog* GasSplitter::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 wxString GasSplitter::GetName()
 {
-  wxString result="REI_Base_GasSplitter"; //your name
+  wxString result="REI_Gas_GasSplitter"; //your name
   return result;
 }
 

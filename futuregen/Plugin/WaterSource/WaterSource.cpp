@@ -4,25 +4,25 @@
 #pragma warning(disable : 4503)
 #pragma warning(disable : 4251)
 
-#include "GasFeedback.h"
-#include "GasFeedback_UI.h"
+#include "WaterSource.h"
+#include "WaterSource_UI.h"
 
-IMPLEMENT_DYNAMIC_CLASS(GasFeedback, REI_Plugin)
+IMPLEMENT_DYNAMIC_CLASS(WaterSource, REI_Plugin)
 
 /////////////////////////////////////////////////////////////////////////////
-GasFeedback
-::GasFeedback()
+WaterSource
+::WaterSource()
 {
-  RegistVar("iterations", &iterations);
-  RegistVar("species", &species);
-  RegistVar("sel_species", &sel_species);
-  RegistVar("max_error", &max_error);
-  
-  iterations = 1;
-  species.push_back("Temperature");
-  species.push_back("Pressure");
-  species.push_back("Flowrate");
-  species.push_back("Particle Flowrate");
+  RegistVar("temp", &temp);
+  RegistVar("pres", &pres);
+  RegistVar("enth", &enth);
+  RegistVar("flow", &flow);
+  RegistVar("case_type", &case_type);
+
+  temp = 499.667;
+  pres = 11721500;
+  enth = 0;
+  flow = 78;
 
   n_pts = 4;
   poly[3]= wxPoint(20, 40);
@@ -31,14 +31,14 @@ GasFeedback
 
 
 /////////////////////////////////////////////////////////////////////////////
-GasFeedback
-::~GasFeedback()
+WaterSource
+::~WaterSource()
 {
 
 }
 
 /////////////////////////////////////////////////////////////////////////////
-double GasFeedback::GetVersion()
+double WaterSource::GetVersion()
 {
   double result=1.0;
 
@@ -48,7 +48,7 @@ double GasFeedback::GetVersion()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-int GasFeedback::GetNumPoly()
+int WaterSource::GetNumPoly()
 {
   int result=0;
   //Your code
@@ -56,29 +56,28 @@ int GasFeedback::GetNumPoly()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-//void GasFeedback::GetPoly(POLY &polygon)
+//void WaterSource::GetPoly(POLY &polygon)
 //{
 //  return ;//polygon;
 //}
 
 /////////////////////////////////////////////////////////////////////////////
-int GasFeedback::GetNumIports()
+int WaterSource::GetNumIports()
 {
-  int result=2;
+  int result=0;
 
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void GasFeedback::GetIPorts(POLY &iports)
+void WaterSource::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0, 20);
-  iports[1]=wxPoint(20, 0);
+  
   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-int GasFeedback::GetNumOports()
+int WaterSource::GetNumOports()
 {
   int result=1;
   //Your code
@@ -86,17 +85,18 @@ int GasFeedback::GetNumOports()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void GasFeedback::GetOPorts(POLY &oports)
+void WaterSource::GetOPorts(POLY &oports)
 {
   oports[0]=wxPoint(40, 20);
+  return ;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void GasFeedback::DrawIcon(wxDC* dc)
+void WaterSource::DrawIcon(wxDC* dc)
 {
   //Your implementation
   wxBrush old_brush=dc->GetBrush();
-  dc->SetBrush(*wxCYAN_BRUSH);
+  dc->SetBrush(*wxBLUE_BRUSH);
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   dc->DrawPolygon(n_pts, poly, xoff, yoff);
@@ -104,31 +104,32 @@ void GasFeedback::DrawIcon(wxDC* dc)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-UIDialog* GasFeedback::UI(wxWindow* parent)
+UIDialog* WaterSource::UI(wxWindow* parent)
 {
   if (dlg!=NULL)
     return dlg;
   
-  dlg = new GasFeedback_UI_Dialog (parent, -1,
-     &iterations,
-     &species,
-     &sel_species,
-     &max_error);
+  dlg = new WaterSource_UI_Dialog (parent, -1,
+     &temp,
+     &pres,
+     &enth,
+     &flow,
+     &case_type);
       
   return dlg;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString GasFeedback::GetName()
+wxString WaterSource::GetName()
 {
-  wxString result="REI_Gas_GasFeedback"; //your name
+  wxString result="REI_Water_WaterSource"; //your name
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString GasFeedback::GetDesc()
+wxString WaterSource::GetDesc()
 {
-  wxString result="Gas Feedback Module by REI"; //your description
+  wxString result="Water Source Module by REI"; //your description
 
   return result;
 }
