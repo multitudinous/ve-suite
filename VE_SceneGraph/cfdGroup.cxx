@@ -215,7 +215,7 @@ int cfdGroup::GetNumChildren( void )
    int numChildren = this->_group->getNumChildren(); 
    if ( numChildren!=(int)childNodes.size() )
    {
-      std::cout << " ERROR: Number of children don't equal " 
+      std::cout << " cfdGroup::ERROR: Number of children don't equal " 
                << numChildren << " : " << childNodes.size() << std::endl;
       exit( 1 );
    }

@@ -139,7 +139,7 @@ void cfdTempAnimation::AddGeodesToSequence( std::vector< cfdGeode* > geodes )
 
       this->_sequence->setInterval( CFDSEQ_CYCLE, 0 , numPts - 1 );
       this->_sequence->setDuration( 0.1 * numPts );
-      vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: End Loop" 
+      vprDEBUG(vprDBG_ALL, 2) << "|\t\tFor animated Streamlines: End Loop" 
                            << std::endl << vprDEBUG_FLUSH;
    }
    else 
