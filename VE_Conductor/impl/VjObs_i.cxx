@@ -709,14 +709,14 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterTeacher_state    = this->mTeacher_state;
       //This value only matters to the cluster setting;
       //if this is master, get the value from the sequence node
-      if ( this->activeSequenceObject != NULL )
+      /*if ( this->activeSequenceObject != NULL )
       {
          cfdSequence* the_sequence = this->activeSequenceObject->GetpfSequence();
          if ( the_sequence != NULL )
          {
             this->mStates->currentFrame = the_sequence->getFrame(); 
          }
-      }
+      }*/
    }
 #endif
 }
@@ -737,12 +737,12 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    this->cfdTeacher_state  = this->mStates->clusterTeacher_state; 
    //This value only matters to the cluster setting;
    //if this is master, get the value from the sequence node
-   if ( this->activeSequenceObject != NULL )
+   /*if ( this->activeSequenceObject != NULL )
    {
       cfdSequence* the_sequence = this->activeSequenceObject->GetpfSequence();
       if ( the_sequence != NULL )
          the_sequence->setCurrentFrame( this->mStates->currentFrame );
-   }
+   }*/
 }
 #endif
 
