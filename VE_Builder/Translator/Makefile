@@ -27,7 +27,8 @@ SRCS=\
    fluentParticles.cpp \
    reiParticles.cpp \
    plot3dReader.cpp \
-   jdMAPReader.cpp
+   jdMAPReader.cpp \
+   enSightGoldReader.cpp
 #   vtkEnSightFortranBinaryReader.cxx
 
 # Specify the OS-dependent directory name for object files and depends

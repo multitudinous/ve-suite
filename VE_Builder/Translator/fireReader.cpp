@@ -94,13 +94,13 @@ vtkUnstructuredGrid * fireReader( char * geomFile, char * dataFile, int debug )
    //debug = 0;
 
    std::getline( geomIn, line );   //skip past remainder of line
-   //std::cout << line << std::endl;
+   std::cout << line << std::endl;
    std::getline( geomIn, line );   //skip past remainder of line
-   //std::cout << line << std::endl;
+   std::cout << line << std::endl;
    std::getline( geomIn, line );   //skip past remainder of line
-   //std::cout << line << std::endl;
+   std::cout << line << std::endl;
    std::getline( geomIn, line );   //skip past remainder of line
-   //std::cout << line << std::endl;
+   std::cout << line << std::endl;
 
    endIdx = line.rfind( numbers );
    begIdx[1] = line.rfind( space, endIdx - 1 );

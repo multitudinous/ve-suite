@@ -48,6 +48,7 @@
 #include "plot3dReader.h"
 #include "starReader.h"
 #include "jdMAPReader.h"
+#include "enSightGoldReader.h"
 
 // function declarations
 extern vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug );
@@ -162,6 +163,8 @@ char * preprocess( int argc, char *argv[],
          B_fname = 1; // don't have a default mfix input file, set flag to ask for filename
       else if ( type == 9 ) 
          B_fname = 1; // don't have a default plot3d input file, set flag to ask for filename
+      else if ( type == 11 ) 
+         B_fname = 1; // don't have a default ensight filename
 #endif  //SJK_TEST
 
       if ( B_fname == 0 )
@@ -302,6 +305,20 @@ char * preprocess( int argc, char *argv[],
         {      
            plot3d = new plot3dReader();
            plot3d->GetFileNames();
+        }
+        else if (type == 11)    
+        // John Deere EnSight
+        {      
+            do
+            {
+                std::cout << "Note: Be sure that the geo filename specified in \n";
+                std::cout << "\t in the case file is not too long. \n";
+                std::cout << "Input EnSight case file: \t";
+                std::cout.flush();
+                cin >> infilename;
+                cin.ignore();
+            }
+            while ( !fileIO::isFileReadable( infilename ) );
         }
       }
 #ifndef SJK_TEST
@@ -576,6 +593,8 @@ int main( int argc, char *argv[] )
    std::cout << "~-~~-~~-~~-~~-~~-~~-~~-~~-~~-~~-~~-~~-~" <<std::endl;
    std::cout <<std::endl;
 
+   enSightGoldReader* _enSightReader = NULL;
+   
    int cfdType;
    if ( argc == 1 )
    {
@@ -583,9 +602,10 @@ int main( int argc, char *argv[] )
                 << "\t(1)Fluent (2)Star-CD (3)REI (4)EnSight (5)FIRE/SWIFT "
                 << "(6)REI Particle\n"
                 << "\t(7)mfix (8)Fluent Particle Data "
-                << "(9)PLOT3D (10)John Deere MAP Data\n"
+                << "(9)PLOT3D (10)John Deere MAP Data "
+                << "(11) John Deere EnSight Data\n"
                 << "\t(0)exit" <<std::endl;
-      cfdType = fileIO::getIntegerBetween( 0, 10 );
+      cfdType = fileIO::getIntegerBetween( 0, 11 );
    }
    else
    {
@@ -661,6 +681,11 @@ int main( int argc, char *argv[] )
       delete data;
       //std::cout<<"delete fluent particles finished"<<std::endl;
       return ( 1 );
+   }
+   else if ( cfdType == 11 )
+   {
+      _enSightReader = new enSightGoldReader();
+      pointset = _enSightReader->GetUnstructuredGrid( infilename, debug );
    }
 /*
    else if (cfdType == 5)        // PIV
@@ -796,6 +821,10 @@ int main( int argc, char *argv[] )
    else if ( star != NULL )
    {
       delete star;
+   }
+   else if ( _enSightReader != NULL )
+   {
+      delete _enSightReader;
    }
 
    std::cout << "NOTE : It is suggested that for all StarCD, PLOT3D, and REI" << std::endl;
