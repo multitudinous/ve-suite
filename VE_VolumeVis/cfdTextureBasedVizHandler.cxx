@@ -131,7 +131,10 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
       _vvvh->EnableDecorator();       
    }else if(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == VOLUME_SHADER){
       _svvh->EnableDecorator();
-   }else{
+   }
+   else
+#else
+   {
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->DisableShaders();
           //_svvh->EnableDecorator();
