@@ -5,8 +5,8 @@ source /isv/VE_Suite/20050107/VE_Installer/setup.deere.tsh
 # Set additional environment variables
 setenv MY_VJCONFIGS /isv/Juggler/deere.config/vrj2.0b1
 #cp ${VE_SUITE_HOME}/VE_Conductor/class_files/config/${HOST}.comm.config ${VE_SUITE_HOME}/VE_Conductor/class_files/config/comm.config
-setenv OMNIORB_CONFIG ${MY_VJCONFIGS}/${HOST}.omniORB4.cfg
-setenv OMNINAMES_LOGDIR ${OMNI_HOME}/logs
+#setenv OMNIORB_CONFIG ${MY_VJCONFIGS}/${HOST}.omniORB4.cfg
+#setenv OMNINAMES_LOGDIR ${OMNI_HOME}/logs
 #setenv PFNFYLEVEL 5
 #setenv VPR_DEBUG_NFY_LEVEL 2
 #setenv VPR_DEBUG_ENABLE 1
@@ -75,8 +75,11 @@ switch ($1)
   case -nserv:
 	killall Naming_Service 
 	killall Exe_server 
+   echo Starting TAO Naming Service...
 	${TAO_HOME}/IRIX32/bin/Naming_Service -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
 	sleep 5
+   echo TAO Naming Service Started
+   echo Starting VE-CE...
 	Exe_server -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &
   breaksw
   
