@@ -89,12 +89,15 @@ void cfdUpdateTextureCallback::load(const osg::Texture3D& texture,osg::State& st
 void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State& state) const
 {
    if(state.getFrameStamp()){
+    //std::cout<<"Valid frame stamp for texture update."<<std::endl;
      double currTime = state.getFrameStamp()->getReferenceTime();
      if(_tm){  
 
         if(!_isSlave){
+           //std::cout<<"Master node." << currTime << " : " << _delay << std::endl;
            //master node in the cluster
            if(_tm->timeToUpdate(currTime,_delay)){
+              //std::cout<<"Time to update texture." <<std::endl;
               texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
                              0,0,0, 
@@ -106,6 +109,7 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              (unsigned char*)_tm->getNextField());
            }
         }else{
+           //std::cout<<"Slave node." <<std::endl;
               texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
                              0,0,0, 

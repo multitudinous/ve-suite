@@ -48,7 +48,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _volumeVizNode  = 0;
    _texGenParams  = 0;
    _utCbk = 0;
-   _mode = STOP;
+   _mode = PLAY; // Need to change this back to stop after gui is wired up
    _traverseDirection = FORWARD;
    _stateSet  = 0;
    _texture  = 0;

@@ -238,18 +238,21 @@ unsigned char* cfdTextureManager::getNextField(/*int plusNeg*/)
    //return _vectorFields.at(_curField);
    unsigned char* field = 0; 
    field = _dataFields.at(_curField);
-   if(field)
+   if(field){
       return field;//_dataFields[_curField];
+   }
    else return 0;
 }
 //////////////////////////////////////////////////////////////
 int cfdTextureManager::timeToUpdate(double curTime,double delay)
 {
-   if(_mode == PLAY){
-     if(curTime - _prevTime >= delay){
+   if ( _mode == PLAY )
+   {
+      if ( curTime - _prevTime >= delay )
+      {
          _prevTime = curTime;
          return 1;
-     }
+      }
    }
    return 0;
 }

@@ -35,8 +35,8 @@ public:
    void SetActiveVector(char* name);
    void SetFileName(char* name);
    void CreateTextureManager(char* textureDescriptionFile);
-   void AddScalarTextureManager( cfdTextureManager*, char* );
-   void AddVectorTextureManager( cfdTextureManager*, char* );
+   void AddScalarTextureManager( cfdTextureManager*, const char* );
+   void AddVectorTextureManager( cfdTextureManager*, const char* );
 
    int FindVector(char* name);
    int FindScalar(char* name);

@@ -157,7 +157,11 @@ void cfdTextureDataSet::CreateTextureManager(char* textureDescriptionFile)
                   << textureDescriptionFile << std::endl;
       int numFiles = 0;      
       fin >> numFiles;      
-
+      std::string tempName;
+      std::getline( fin, tempName );
+      std::getline( fin, tempName );
+      std::cout <<"|\tScalar Name To Match VTK Dataset : "
+                << tempName << std::endl;
       for(int i = 0; i < numFiles; i++)
       {         
          std::cout << "Loading texture time step file: " << i << std::endl;         
@@ -169,11 +173,11 @@ void cfdTextureDataSet::CreateTextureManager(char* textureDescriptionFile)
       
       if( tm->GetDataType(0) == cfdTextureManager::SCALAR )
       {
-         AddScalarTextureManager( tm, textureDescriptionFile );
+         AddScalarTextureManager( tm, tempName.c_str() );
       }
       else
       {
-         AddVectorTextureManager( tm, textureDescriptionFile );
+         AddVectorTextureManager( tm, tempName.c_str() );
       }
    }
    else
@@ -184,7 +188,7 @@ void cfdTextureDataSet::CreateTextureManager(char* textureDescriptionFile)
 }
 /////////////////////////////////////////////////////////////////////
 void cfdTextureDataSet::AddScalarTextureManager(cfdTextureManager* tm,
-                                                char* scalarName)
+                                                const char* scalarName)
 {
    TextureDataInfo* td = new TextureDataInfo();
    td->SetName(std::string(scalarName));
@@ -194,7 +198,7 @@ void cfdTextureDataSet::AddScalarTextureManager(cfdTextureManager* tm,
 }
 /////////////////////////////////////////////////////////////////////
 void cfdTextureDataSet::AddVectorTextureManager(cfdTextureManager* tm,
-                                                char* vectorName)
+                                                const char* vectorName)
 {
    TextureDataInfo* td = new TextureDataInfo();
    td->SetName(std::string(vectorName));
