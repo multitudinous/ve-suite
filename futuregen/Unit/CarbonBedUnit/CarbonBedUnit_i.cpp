@@ -67,7 +67,7 @@ void Body_Unit_i::StartCalc (
     
     double Ga = ( pow(part_diam, 3) * gas_density * ( bulk_density - gas_density ) * 9.81 ) / pow(gas_viscosity, 2);
     double Remf = 25.7 * ( sqrt( 1+.0000553*Ga) - 1 );
-    double Umf = Remf * ( gas_viscosity / part_diam * gas_density );  // Fluid velocity
+    double Umf = Remf * ( gas_viscosity / (part_diam * gas_density) );  // Fluid velocity
   
     // Pressure drop / ft
     double Uo = 0.85 * Umf;  // Superficial velocity
@@ -98,7 +98,7 @@ void Body_Unit_i::StartCalc (
     double hg_leaving_absorber = 0.01 * hg_feed_rate;  // This is absolutely pointless!
     
     // Carbon loading
-    double carbon_loading = hg_feed_rate * 0.99 / mass_of_carbon;
+    double carbon_loading = hg_feed_rate * 0.99 / mass_of_carbon / 7936.6;
  
     //
     // Fill in the gas out data structure and send it on it's way...
@@ -136,14 +136,14 @@ void Body_Unit_i::StartCalc (
     summaries.clear();
     
     summaries.insert_summary_val("Min. Fluidization Vel. UNITS:m/sec FORMAT:10.2f", Umf);
-    summaries.insert_summary_val("Pressure Drop UNITS:psi/ft FORMAT:10.2f", pressure_drop );
+    summaries.insert_summary_val("Pressure Drop UNITS:Pa/m FORMAT:10.2f", pressure_drop );
     summaries.insert_summary_val("Total Bed Pressure Drop UNITS:psi FORMAT:10.2f", bed_pressure_drop);
     summaries.insert_summary_val("Superficial Velocity UNITS:m/sec FORMAT:10.2f", Uo);
-    summaries.insert_summary_val("Bed Height UNITS:ft FORMAT:10.2f", bed_height);
-    summaries.insert_summary_val("Initial Carbon Charge UNITS:tons FORMAT:10.2f", carbon_loading); // Temi says that this is the same as loading
-    summaries.insert_summary_val("Adsorber Diameter UNITS:ft FORMAT:10.2f", absorber_diam);
-    summaries.insert_summary_val("Hg Leaving Adsorber UNITS:lb/hr FORMAT:10.2f", hg_leaving_absorber);
-    summaries.insert_summary_val("Carbon Loading UNITS:% FORMAT:10.2f", carbon_loading);
+    summaries.insert_summary_val("Bed Height UNITS:m FORMAT:10.2f", bed_height);
+    //summaries.insert_summary_val("Initial Carbon Charge FORMAT:10.2f", carbon_loading); // Temi says that this is the same as loading
+    summaries.insert_summary_val("Adsorber Diameter UNITS:m FORMAT:10.2f", absorber_diam);
+    summaries.insert_summary_val("Hg Leaving Adsorber UNITS:lb/hr FORMAT:10.2e", hg_leaving_absorber);
+    //summaries.insert_summary_val("Carbon Loading UNITS:1/sec FORMAT:10.2f", carbon_loading);
     summaries.insert_summary_val("Number of Adsorbers UNITS:# FORMAT:10.2f", 1);
     
    p.intfs.resize(1);
@@ -252,7 +252,7 @@ void Body_Unit_i::SetParams (
     //Now make use of p.intfs to get your GUI vars out
     carbon_type = p.intfs[0].getInt("carbon_type");
     press_drop = p.intfs[0].getDouble("press_drop");
-    part_diam = p.intfs[0].getDouble("part_diam");
+    part_diam = p.intfs[0].getDouble("part_diam")*0.001;
     bulk_density = p.intfs[0].getDouble("bulk_density");
     temp = p.intfs[0].getDouble("temp");
     press = p.intfs[0].getDouble("press");
