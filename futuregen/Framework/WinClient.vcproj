@@ -87,6 +87,7 @@
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
 				PrecompiledHeaderFile=".\Debug/WinClient.pch"
 				AssemblerListingLocation=".\Debug/"
@@ -95,7 +96,8 @@
 				BrowseInformation="1"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
-				CompileAs="0"/>
+				CompileAs="0"
+				DisableSpecificWarnings="4541"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
