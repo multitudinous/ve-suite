@@ -3,11 +3,18 @@
 
 #include "GasifierCFD.h"
 
-
+#ifndef WIN32
 #include <dlfcn.h>
+#else
+#include <windows.h>
+#include <direct.h>
+#endif
+
 #include <sys/types.h>
 #include <sys/stat.h>
+#ifndef WIN32
 #include <unistd.h>
+#endif
 #include <cstdlib>
 #include <cstdio>
 #include <cmath>
@@ -702,8 +709,8 @@ void GasifierCFD::load_and_run_glacier()
   HINSTANCE glacier_handle;
 #endif
   
-  void (*close_io_func)();
-  void (*glacier_func)(gas_abort_status_fp,
+  typedef void WIN_PREFIX close_io_func_type();
+  typedef void WIN_PREFIX glacier_func_type (gas_abort_status_fp,
 		       gas_load_scirun_groups_fp,
 		       gas_send_scirun_specie_fp,
 		       gas_load_scirun_coal_fp,
@@ -728,12 +735,21 @@ void GasifierCFD::load_and_run_glacier()
 		       gas_load_scirun_slag_fp,
 		       gas_load_scirun_flags_fp);
 
+  close_io_func_type * close_io_func;
+  glacier_func_type* glacier_func;
+  
   string path = _work_dir;
+#ifndef WIN32
   if(chdir(path.c_str())) {
     cerr << "GasifierCFD: empty working directory path\n";
     return ;
   }
-  
+#else
+  if(_chdir(path.c_str())) {
+    cerr << "GasifierCFD: empty working directory path\n";
+    return ;
+  }
+#endif
   std::string glac_lib = "./Glacier/make_glacier/glacier_gasifier.so";
 
 #ifndef WIN32
@@ -760,7 +776,7 @@ void GasifierCFD::load_and_run_glacier()
     return;
   }
 #else
-  ((void*)glacier_func) =  GetProcAddress(glacier_handle,"start_glacier");
+  glacier_func =  (glacier_func_type*) GetProcAddress(glacier_handle,"start_glacier");
   if(glacier_func=='\0'){
     cerr<<"Didn't find start_glacier in dll: "<<glac_lib<<endl;
     return;
@@ -800,7 +816,7 @@ void GasifierCFD::load_and_run_glacier()
     return;
   }
 #else
-  ((void*)close_io_func) = GetProcAddress(glacier_handle,"close_io_");
+  close_io_func = (close_io_func_type*) GetProcAddress(glacier_handle,"close_io_");
   if(close_io_func=='\0'){
     cerr<<"Didn't find close_io_ in dll: "<<glac_lib<<endl;
     return;
@@ -815,10 +831,10 @@ void GasifierCFD::load_and_run_glacier()
 #endif
 
   // Back to what?
-   if(chdir("../../../../../../../build")) {
-    cerr << "bad directory path\n";
-    return ;
-  }
+//   if(chdir("../../../../../../../build")) {
+//    cerr << "bad directory path\n";
+//    return ;
+//  }
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -866,7 +882,11 @@ void GasifierCFD::load_scirun_pd(float *pd, float *pmf, int *nps, int *numstr) {
   double pct_thru_50 = _size_50;
   double pct_thru_200 = _size_200;
   // pd/pmf are 2-dim arrays, pass pd/pmf_locals[] instead then fill pd/pmf.
+#ifndef WIN32
   histfit_(pd_local, pmf_local, passed_areas, &size, &pct_thru_50, &pct_thru_200);
+#else
+  HISTFIT(pd_local, pmf_local, passed_areas, &size, &pct_thru_50, &pct_thru_200);
+#endif //WIN32
   // Fill pd, convert from microns to meters.
   // check - pd/pmf(np,numstr) - how to fill?
   for(int i=0; i<size; i++) {
@@ -1390,7 +1410,7 @@ void GasifierCFD::load_scirun_flags (int *lrsrt, int *lprst)
 //******************************  C Functions **********************************
 //******************************************************************************
 
-int gas_abort_status_()
+int WIN_PREFIX gas_abort_status_()
 {
   int ret;  // watch out for byte-sized bool's!
   
@@ -1400,7 +1420,7 @@ int gas_abort_status_()
   return(ret);
 }
 
-void gas_load_geom_sr_(int* ni,int* nj,int* nk,int* nx,int* ny,int* nz,
+void WIN_PREFIX gas_load_geom_sr_(int* ni,int* nj,int* nk,int* nx,int* ny,int* nz,
 		       float *x_vals,float *y_vals,float *z_vals,int *icell_array)
 {
   GAS_GLACIER_PTR->load_geom(ni,nj,nk,nx,ny,nz,x_vals,y_vals,z_vals,icell_array);
@@ -1408,21 +1428,21 @@ void gas_load_geom_sr_(int* ni,int* nj,int* nk,int* nx,int* ny,int* nz,
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_update_sr_(int* iteration_number)
+void WIN_PREFIX gas_update_sr_(int* iteration_number)
 {
   GAS_GLACIER_PTR->send_current_outputs(iteration_number);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_update_sr_nox_(int* iteration_number)
+void WIN_PREFIX gas_update_sr_nox_(int* iteration_number)
 {
   GAS_GLACIER_PTR->send_current_outputs_nox(iteration_number);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_load_current_traj_point_(int *IJKNT, float *XP,float *YP,
+void WIN_PREFIX gas_load_current_traj_point_(int *IJKNT, float *XP,float *YP,
 				  float *ZP, float *TIM, float *PNFRP,
 				  float *SIGMAX,float *SIGMAY,float *SIGMAZ,
 				  float *ALFT0P,float *PDIA,float *TMP,
@@ -1437,77 +1457,77 @@ void gas_load_current_traj_point_(int *IJKNT, float *XP,float *YP,
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_update_sr_begin_particles_()
+void WIN_PREFIX gas_update_sr_begin_particles_()
 {
   GAS_GLACIER_PTR->update_sr_begin_particles();
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_update_sr_end_particles_(float* nix)
+void WIN_PREFIX gas_update_sr_end_particles_(float* nix)
 {
   GAS_GLACIER_PTR->update_sr_end_particles(nix);
 }
 	
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_sr_begin_particle_(int *ips, int *isl)
+void WIN_PREFIX gas_sr_begin_particle_(int *ips, int *isl)
 {
   GAS_GLACIER_PTR->sr_begin_particle(ips,isl);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_sr_end_particle_(int *ips, int *isl, int *nps, int *nsl)
+void WIN_PREFIX gas_sr_end_particle_(int *ips, int *isl, int *nps, int *nsl)
 {
   GAS_GLACIER_PTR->sr_end_particle(ips,isl,nps,nsl);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_load_scirun_wics_(float *wic, int *j, int *nlm, int *np, int *nel)
+void WIN_PREFIX gas_load_scirun_wics_(float *wic, int *j, int *nlm, int *np, int *nel)
 {
   GAS_GLACIER_PTR->load_scirun_wics(wic, j, nlm, np, nel);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/	
 
-void gas_load_scirun_groups_(float *f, float *t, float *p, int* istage)
+void WIN_PREFIX gas_load_scirun_groups_(float *f, float *t, float *p, int* istage)
 {
   GAS_GLACIER_PTR->load_scirun_groups(f, t, p, istage);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_load_scirun_hhv_(float *omegal, float *yy, float *omegaa, float *hc0)
+void WIN_PREFIX gas_load_scirun_hhv_(float *omegal, float *yy, float *omegaa, float *hc0)
 {
   GAS_GLACIER_PTR->load_scirun_hhv(omegal, yy, omegaa, hc0);;
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_load_scirun_pd_(float *pd, float *pmf, int *nps, int *numstr)
+void WIN_PREFIX gas_load_scirun_pd_(float *pd, float *pmf, int *nps, int *numstr)
 {
   GAS_GLACIER_PTR->load_scirun_pd(pd, pmf, nps, numstr);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_load_scirun_coalMT_(float *coal_flows, float *coal_temps)
+void WIN_PREFIX gas_load_scirun_coalMT_(float *coal_flows, float *coal_temps)
 {
   GAS_GLACIER_PTR->load_scirun_coalMT(coal_flows, coal_temps);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_load_scirun_coal_(float *coal_flows)
+void WIN_PREFIX gas_load_scirun_coal_(float *coal_flows)
 {
   GAS_GLACIER_PTR->load_scirun_coal(coal_flows);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_send_scirun_data_(int *ns, int *nlm,
+void WIN_PREFIX gas_send_scirun_data_(int *ns, int *nlm,
 			   float *sns, float *stb, float *sew,
 			   float *part_flow, float *part_temp, float *part_size, float *part_var,
 			   float *u, float *v, float *w, float *x, float *y, float *z,
@@ -1538,7 +1558,7 @@ void gas_send_scirun_data_(int *ns, int *nlm,
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_send_scirun_specie_(int *ns, float *spec_val, char *spec_name,
+void WIN_PREFIX gas_send_scirun_specie_(int *ns, float *spec_val, char *spec_name,
 			     unsigned int slen)
 {
   GAS_GLACIER_PTR->send_scirun_specie(ns, spec_val, spec_name, slen);
@@ -1546,14 +1566,14 @@ void gas_send_scirun_specie_(int *ns, float *spec_val, char *spec_name,
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_insert_summary_val_(char *description, float *value, unsigned int slen)
+void WIN_PREFIX gas_insert_summary_val_(char *description, float *value, unsigned int slen)
 {
   GAS_GLACIER_PTR->insert_summary_val(description, value, slen);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_insert_xdata_(char *xname, float *values, int *num_values,
+void WIN_PREFIX gas_insert_xdata_(char *xname, float *values, int *num_values,
 		       unsigned int slen)
 {
   GAS_GLACIER_PTR->insert_xdata(xname, values, num_values, slen);
@@ -1561,7 +1581,7 @@ void gas_insert_xdata_(char *xname, float *values, int *num_values,
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_insert_ydata_(char *yname, float *values, int *num_values,
+void WIN_PREFIX gas_insert_ydata_(char *yname, float *values, int *num_values,
 		       char *xdata_name, unsigned int s1len, unsigned int s2len)
 {
   GAS_GLACIER_PTR->insert_ydata(yname, values, num_values, xdata_name, s1len, s2len);
@@ -1569,21 +1589,21 @@ void gas_insert_ydata_(char *yname, float *values, int *num_values,
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_update_plot_()
+void WIN_PREFIX gas_update_plot_()
 {
   GAS_GLACIER_PTR->update_plot();
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_update_dbfile_()
+void WIN_PREFIX gas_update_dbfile_()
 {
   GAS_GLACIER_PTR->update_dbfile();
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_load_scirun_slag_(double *deltaw, double *deltar, double *kw, double *kr,
+void WIN_PREFIX gas_load_scirun_slag_(double *deltaw, double *deltar, double *kw, double *kr,
 			   double *ks, double *kd, double *ha, double *rhos,
 			   double *ta1, double *tcv, double *emiss, double *ashcomp)
 {
@@ -1594,7 +1614,7 @@ void gas_load_scirun_slag_(double *deltaw, double *deltar, double *kw, double *k
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void gas_load_scirun_flags_ (int *lrsrt, int *lprst)
+void WIN_PREFIX gas_load_scirun_flags_ (int *lrsrt, int *lprst)
 {  
   GAS_GLACIER_PTR->load_scirun_flags (lrsrt, lprst);
 }
