@@ -53,7 +53,7 @@ enum
     wxSPINCTRLDBL_AUTODIGITS = -1  // try to autocalc the # of digits
 };
 
-class WXDLLEXPORT wxSpinCtrlDbl: public wxControl
+class wxSpinCtrlDbl: public wxControl
 {
 public:
     wxSpinCtrlDbl() : wxControl() { Init(); }

@@ -1,8 +1,9 @@
-
+#ifdef WIN32
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4101)
 #pragma warning(disable : 4503)
 #pragma warning(disable : 4251)
+#endif
 
 #include "Plugin_base.h"
 #include <iostream>
