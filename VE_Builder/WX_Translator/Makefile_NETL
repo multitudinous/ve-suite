@@ -13,7 +13,8 @@ INCLUDE_FLAGS = $(VTK_INCLUDES)
 LINK_FLAGS = -L$(VTK_HOME)bin
 
 OBJECTS = FormatSelector.o converter.o FluentTranslator.o \
-	   mFixTranslator.o UnstructuredGridWriter.o
+	   mFixTranslator.o UnstructuredGridWriter.o \
+	   toVTK.o
 
 LIBS = -lvtkParallel  -lvtkexpat \
 	 -lvtkfreetype -lvtkftgl -lvtkRendering \
@@ -39,6 +40,9 @@ mFixTranslator.o: mFixTranslator.cpp mFixTranslator.h
 
 UnstructuredGridWriter.o: UnstructuredGridWriter.cpp UnstructuredGridWriter.h
 	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated UnstructuredGridWriter.cpp $(INCLUDE_FLAGS)
+
+toVTK.o: toVTK.cpp 
+	$(CXX) -c -Wno-deprecated toVTK.cpp $(INCLUDE_FLAGS)
 
 
 clean:
