@@ -58,10 +58,18 @@ cfdDCS::cfdDCS( float* scale, float* trans, float* rot )
 {
 #ifdef _PERFORMER
    _dcs = new pfDCS();
+   if(_group != 0){
+      pfDelete(_group);
+      _group = 0;
+   }
    _group = dynamic_cast<pfGroup*>(_dcs);
+
 #elif _OSG
    _dcs = new osg::MatrixTransform();
    _dcs->setMatrix(osg::Matrix::identity());
+   if(_group){
+      _group->unref();
+   }
    _group = dynamic_cast<osg::Group*>(_dcs);
 #elif _OPENSG
 #endif
@@ -138,9 +146,16 @@ cfdDCS::cfdDCS( void )
 {
 #ifdef _PERFORMER
    _dcs = new pfDCS();
+   if(_group != 0){
+      pfDelete(_group);
+      _group = 0;
+   }
    _group = dynamic_cast<pfGroup*>(_dcs);
 #elif _OSG
    _dcs = new osg::MatrixTransform();
+   if(_group){
+      _group->unref();
+   }
    _group = dynamic_cast<osg::Group*>(_dcs);
    _dcs->setMatrix(osg::Matrix::identity());
 #elif _OPENSG
