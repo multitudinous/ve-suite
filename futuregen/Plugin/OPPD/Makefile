@@ -13,15 +13,16 @@ THREADS = none
 EXTRA_LIBS =  
 PREFIX = /usr/local
 
-include ${XERCESCROOT}/version.incl
+#include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
-PLUGIN = libOPPD.so
+PLUGIN = ../libOPPD.so
 OBJECTS = OPPD.o \
 	OPPD_UI.o \
    OPPD_UI_entries.o \
    OPPD_UI_outputs.o \
-   OPPD_UI_tabs.o
+   OPPD_UI_tabs.o \
+   OPPD_UI_constants.o
 
 .SUFFIXES : .o .cpp
 

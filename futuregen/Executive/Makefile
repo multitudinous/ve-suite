@@ -23,7 +23,7 @@ LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_Po
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(TAO_ROOT)/rules.tao.GNU
 
-include $(XERCESCROOT)/version.incl
+#include $(XERCESCROOT)/version.incl
 include ../Plugin/Makefile.incl
 
 FILE_Exe_SVR_OBJS = moduleC.o moduleS.o Exe_server.o Executive_i.o \

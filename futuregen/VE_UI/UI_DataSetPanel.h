@@ -67,9 +67,12 @@ public:
    UI_DatasetScroll(wxWindow* parent);
    ~UI_DatasetScroll();
 
+   void changeActiveDatasetType( int );
+
    wxRadioBox* _3dRBox;
-   wxRadioBox* _vertexRBox;
-   wxRadioBox* _polydataRBox;
+   //wxRadioBox* _vertexRBox;
+   //wxRadioBox* _polydataRBox;
+   wxBoxSizer* _col;
 
    DECLARE_EVENT_TABLE()
 };

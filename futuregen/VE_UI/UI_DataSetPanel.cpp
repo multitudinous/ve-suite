@@ -57,7 +57,7 @@ UI_DatasetScroll::UI_DatasetScroll(wxWindow* parent)
 :wxScrolledWindow(parent, -1, wxDefaultPosition, wxDefaultSize,
 		    wxHSCROLL | wxVSCROLL)
 {
-  int nUnitX=10;
+  int nUnitX=20;
   int nUnitY=10;
   int nPixX = 10;
   int nPixY = 10;
@@ -68,7 +68,7 @@ UI_DatasetScroll::UI_DatasetScroll(wxWindow* parent)
 				((UI_DatasetPanel*)GetParent())->_no3DMesh, 
             ((UI_DatasetPanel*)GetParent())->meshArrayNames,
             1, wxRA_SPECIFY_COLS);
-   _vertexRBox = new wxRadioBox(this, VERTEX_RBOX, wxT("Vertex Data"), //1
+   /*_vertexRBox = new wxRadioBox(this, VERTEX_RBOX, wxT("Vertex Data"), //1
                                 wxDefaultPosition, wxDefaultSize,
 				((UI_DatasetPanel*)GetParent())->_noVertex, 
             ((UI_DatasetPanel*)GetParent())->vertexArrayNames,
@@ -77,15 +77,51 @@ UI_DatasetScroll::UI_DatasetScroll(wxWindow* parent)
                                 wxDefaultPosition, wxDefaultSize,
 				((UI_DatasetPanel*)GetParent())->_noPolydata,
             ((UI_DatasetPanel*)GetParent())->polydataArrayNames,
-            1, wxRA_SPECIFY_COLS);
+            1, wxRA_SPECIFY_COLS);*/
 
-   wxBoxSizer* _col = new wxBoxSizer(wxVERTICAL);
+   _col = new wxBoxSizer(wxVERTICAL);
    _col->Add(_3dRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   _col->Add(_vertexRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   _col->Add(_polydataRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   /*_col->Add(_vertexRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _col->Add(_polydataRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);*/
 
    SetSizer(_col);
 
+}
+
+void UI_DatasetScroll::changeActiveDatasetType(int index)
+{
+   _col->Remove(_3dRBox);
+   delete _3dRBox;
+   
+   if (index == 1)
+   {
+      _3dRBox = new wxRadioBox(this, VERTEX_RBOX, wxT("Vertex Data"), //1
+                                wxDefaultPosition, wxDefaultSize,
+				((UI_DatasetPanel*)GetParent())->_noVertex, 
+            ((UI_DatasetPanel*)GetParent())->vertexArrayNames,
+            1, wxRA_SPECIFY_COLS);
+   }
+   else if (index == 2)
+   {
+      _3dRBox = new wxRadioBox(this, POLYDATA_RBOX, wxT("Polydata"), //2
+                                wxDefaultPosition, wxDefaultSize,
+				((UI_DatasetPanel*)GetParent())->_noPolydata,
+            ((UI_DatasetPanel*)GetParent())->polydataArrayNames,
+            1, wxRA_SPECIFY_COLS);
+   }
+   else
+   {
+       _3dRBox = new wxRadioBox(this, RBOX_3D, wxT("3D mesh"), //0
+                                wxDefaultPosition, wxDefaultSize,
+				((UI_DatasetPanel*)GetParent())->_no3DMesh, 
+            ((UI_DatasetPanel*)GetParent())->meshArrayNames,
+            1, wxRA_SPECIFY_COLS);
+   }
+
+   _col->Add(_3dRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   //Complete Hack needed to get the page to refresh properly
+   SetSize(GetSize());
+   //SetSizer(_col);
 }
 
 UI_DatasetScroll::~UI_DatasetScroll()
@@ -184,7 +220,7 @@ UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int a
    _datasetCombo = NULL;
    
    _buildDataSets();
- 
+
    _buildPanel(); 
 
    if ( !_DataSets.empty() )
@@ -279,7 +315,6 @@ void UI_DatasetPanel::_buildPanel()
    _col1->Add(_RBoxScroll,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    
    _col2->Add(_ScalarScroll,1,wxALIGN_LEFT|wxEXPAND);
-   //_col2->Add(_visUpdateButton,0,wxALIGN_CENTER_HORIZONTAL);
 
    _colcombine1_2->Add(_col1,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    _colcombine1_2->Add(_col2,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
@@ -299,17 +334,9 @@ void UI_DatasetPanel::_buildPanel()
    dHeadingBoxSizer->Add(_mastercol1,8,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    dHeadingBoxSizer->Add(_col3,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    dHeadingBoxSizer->Add(_col4,2,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   //_top = new wxBoxSizer(wxHORIZONTAL);
-   //_bottom = new wxBoxSizer(wxHORIZONTAL);
-
-   //_top->Add(_activeRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-
-   //_bottom->Add(dHeadingBoxSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    datasetPanelGroup = new wxBoxSizer(wxHORIZONTAL);
-   //datasetPanelGroup->Add(_top,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   //datasetPanelGroup->Add(_bottom,10,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   //datasetPanelGroup->Add(_activeRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
    datasetPanelGroup->Add(dHeadingBoxSizer,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //set this flag and let wx handle alignment
@@ -318,9 +345,9 @@ void UI_DatasetPanel::_buildPanel()
    //assign the group to the panel
    SetSizer(datasetPanelGroup);
 
-   _RBoxScroll->_3dRBox->Enable(TRUE);
-   _RBoxScroll->_vertexRBox->Enable(FALSE);
-   _RBoxScroll->_polydataRBox->Enable(FALSE);
+   //_RBoxScroll->_3dRBox->Enable(TRUE);
+   //_RBoxScroll->_vertexRBox->Enable(FALSE);
+   //_RBoxScroll->_polydataRBox->Enable(FALSE);
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if(_DataSets[i]->_dataSetType == 0 && _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
       {
@@ -396,6 +423,7 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    minGroup->Remove(_minPercentSlider);
    maxGroup->Remove(maxLabel);
    maxGroup->Remove(_maxPercentSlider);
+   sRangeBoxSizer->Remove(_scalarRangeBox);
    sRangeBoxSizer->Remove(minGroup); 
    sRangeBoxSizer->Remove(maxGroup);
    _col1->Remove(_RBoxScroll);
@@ -416,23 +444,11 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    delete _datasetCombo;
    delete _visUpdateButton;
    delete _scalarRangeBox;
-   sRangeBoxSizer = NULL;
-   //delete sRangeBoxSizer;
    delete minLabel;
    delete maxLabel;
    delete _minPercentSlider; 
    delete _maxPercentSlider; 
-   //delete minGroup; 
-   //delete maxGroup; 
-   //delete _colcombine1_2;
-   //delete _mastercol1;
-   //delete _col1;
-   //delete _col2;;
-   //delete _col3;
-   //delete _col4;
-   //delete _dataHeadingBox;
-   //delete dHeadingBoxSizer;
-   //delete datasetPanelGroup;
+   delete _dataHeadingBox;
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////
    _activeModIndex = _activeMod;
@@ -621,7 +637,18 @@ void UI_DatasetPanel::_organizeRadioBoxInfo()
 
 void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
 {
-   if ( _datasetCombo->GetSelection() == 0 || _datasetCombo->GetSelection() == -1)
+   _RBoxScroll->changeActiveDatasetType(_datasetCombo->GetSelection());
+
+   for (int i=0; i<_numSteadyStateDataSets; i++)
+      if(_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
+      {
+         _setScalars(_DataSets[i]);
+         i = _numSteadyStateDataSets;
+      }
+      else
+        _setScalarsnoDatasets();
+   
+   /*if ( _datasetCombo->GetSelection() == 0 || _datasetCombo->GetSelection() == -1)
    {  
       _RBoxScroll->_3dRBox->Enable(TRUE);
       _RBoxScroll->_vertexRBox->Enable(FALSE);
@@ -662,7 +689,7 @@ void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
          }
          else
             _setScalarsnoDatasets();
-   }
+   }*/
 }
 
 void UI_DatasetPanel::_on3d(wxCommandEvent& event)
@@ -680,7 +707,7 @@ void UI_DatasetPanel::_onVertex(wxCommandEvent& event)
 {
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 1)
-         if (_RBoxScroll->_vertexRBox->GetString(_RBoxScroll->_vertexRBox->GetSelection()) == _DataSets[i]->_dataSetName)
+         if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
          {
             _setScalars(_DataSets[i]);
             ((UI_Frame*)GetParent())->_tabs->setActiveDataset(i);
@@ -692,7 +719,7 @@ void UI_DatasetPanel::_onPolyData(wxCommandEvent& event)
 {
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 2)
-         if (_RBoxScroll->_polydataRBox->GetString(_RBoxScroll->_polydataRBox->GetSelection()) == _DataSets[i]->_dataSetName)
+         if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
          {
             _setScalars(_DataSets[i]);
             ((UI_Frame*)GetParent())->_tabs->setActiveDataset(i);
