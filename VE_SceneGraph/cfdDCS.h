@@ -44,8 +44,9 @@ class pfDCS;
 namespace osg
 {
    class MatrixTransform;
-   class NodeCallback;
+   class NodeVisitor;
 }
+#include  <osg/NodeCallback>
 #elif _OPENSG
 #endif
 
@@ -55,7 +56,7 @@ class cfdDCS: public cfdGroup
       cfdDCS( float*, float*, float* );
       
       cfdDCS( const cfdDCS& );
-      virtual cfdDCS& operator=( const cfdDCS& );
+      cfdDCS& operator=( const cfdDCS& );
 
       cfdDCS( void );
       ~cfdDCS( void );

@@ -72,6 +72,7 @@ class cfdPfSceneManagement : public vpr::Singleton< cfdPfSceneManagement >
       pfLightSource* sun;
       pfLightSource* lit;
 #elif _OSG
+      cfdDCS* transformDCS;
 #endif
 };
 

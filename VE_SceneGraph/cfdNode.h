@@ -38,8 +38,12 @@
 class pfNode;
 class pfFog;
 #elif _OSG
-namespace osg { class Fog; }
-#include <osg/Node>
+namespace osg 
+{ 
+   class Fog; 
+   class Node;
+}
+#include <osg/ref_ptr>
 #elif _OPENSG
 #endif
 
@@ -54,7 +58,7 @@ class cfdNode: public cfdSceneNode
       virtual ~cfdNode( void );
 
       //equal operator
-      virtual cfdNode& operator=( const cfdNode& );
+      cfdNode& operator=( const cfdNode& );
 #ifdef _PERFORMER
       virtual pfNode* GetRawNode( void );
 #elif _OSG

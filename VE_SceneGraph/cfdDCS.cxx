@@ -39,17 +39,15 @@
 
 #ifdef _PERFORMER
 #include <vrj/Draw/Pf/PfUtil.h>
-
 #include <Performer/pf.h>
 #include <Performer/pf/pfDCS.h>
 #include <Performer/pf/pfNode.h>
 #include <Performer/pr/pfLinMath.h>
-
 #elif _OSG
 #include <osg/MatrixTransform>
 #include <osg/Matrix>
 #include <osg/Vec3f>
-#include <osg/NodeCallback>
+#include <osg/NodeVisitor>
 #elif _OPENSG
 #endif
 
