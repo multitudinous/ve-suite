@@ -32,7 +32,7 @@
 #include "cfdNode.h"
 #include <iostream>
 #include <vpr/Util/Debug.h>
-#include <cstdlib>
+//#include <cstdlib>
 
 #ifdef _PERFORMER
 #include <Performer/pf.h>
@@ -70,7 +70,8 @@
 
 #include <vpr/Util/Debug.h>
 #include "cfdSequence.h"
-////////////////////////////////////////////////////////// 
+
+/*////////////////////////////////////////////////////////// 
 cfdNode::cfdNode( float* scale, float* trans, float* rot )
 :cfdSceneNode(CFD_NODE)
 {
@@ -82,7 +83,7 @@ cfdNode::cfdNode( float* scale, float* trans, float* rot )
    _node = 0;
 #elif _OPENSG
 #endif
-}
+}*/
 /////////////////////////////////////////
 cfdNode::cfdNode( const cfdNode& input )
 :cfdSceneNode(CFD_NODE)
@@ -274,8 +275,8 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
 /////////////////////////////////////////
 
 
-/*int attr = geoset->getAttrBind( PFGS_COLOR4 );
-if ( attr == PFGS_OFF )
+int attr = geoset->getAttrBind( PFGS_COLOR4 );
+/*if ( attr == PFGS_OFF )
    std::cout << " attribs are off ";// << std::endl;
 else if ( attr == PFGS_OVERALL )
    std::cout << " attribs are overall ";// << std::endl;
@@ -283,7 +284,7 @@ else if ( attr == PFGS_PER_PRIM )
    std::cout << " attribs are prim ";// << std::endl;
 else if ( attr == PFGS_PER_VERTEX )
    std::cout << " attribs are vert    ";// << std::endl;
-
+*/
 void *alist=0; 
 ushort *ilist=0; 
 
@@ -305,10 +306,8 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
    for ( int k = 0; k < vertcount; ++k )
    {
       colors[ min ][ 3 ] = op;
-       std::cout <<   colors[ k ][ 0 ] << " : " <<
-         colors[ k ][ 1 ] << " : " <<
-         colors[ k ][ 2 ] << " : " <<
-         colors[ k ][ 3 ] << std::endl;
+      //std::cout << colors[ k ][ 0 ] << " : " << colors[ k ][ 1 ] << " : " <<
+      //         colors[ k ][ 2 ] << " : " << colors[ k ][ 3 ] << std::endl;
    }
    
    if ( op != 1.0 )
@@ -324,7 +323,7 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
 
    geoset->setAttr( PFGS_COLOR4, PFGS_OVERALL, colors, ilist );
 }
-*/
+
 
 
 

@@ -52,7 +52,7 @@ public:
    cfdNode(cfdSceneNode::cfdNodeType nt);
 
    //biv--don't understand this method
-   cfdNode( float*, float*, float* );
+   //cfdNode( float*, float*, float* );
    
    //copy constructor
    cfdNode( const cfdNode& );
