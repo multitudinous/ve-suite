@@ -141,7 +141,7 @@ char* cfdVEPluginLoader::GetPluginName( int index )
 {
 
    char* _name;// = plugins.at(index)->GetName();
-
+   _name = NULL;
    return _name;
 }
 

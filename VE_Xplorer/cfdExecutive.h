@@ -62,6 +62,9 @@ class cfdVEAvail_Modules;
 class cfdModelHandler;
 class cfdEnvironmentHandler;
 
+//class NamingContext_var;
+//class Executive_var;
+
 class cfdExecutive : public cfdGlobalBase
 {
    public:

@@ -34,6 +34,9 @@
 
 #ifdef _TAO
 #include "VjObsS.h"
+#include <orbsvcs/CosNamingC.h>
+
+//#include "VjObsC.h"
 #else
 #include "VjObs.h"
 #endif
@@ -54,7 +57,7 @@ class cfdEnvironmentHandler;
 class cfdModelHandler;
 
 #include "cfdCommandArray.h"
-#include <iostream>
+//#include <iostream>
 
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
                 public PortableServer::RefCountServantBase
@@ -171,6 +174,9 @@ public:
    void GetCfdStateVariables( void );
    cfdCommandArray* _cfdArray;
    double cfdShort_data_array[ 9 ];
+   CosNaming::NamingContext_var naming_context;
+	   CORBA::ORB_var orb;
+      PortableServer::POA_var poa;
 protected:
 
 
@@ -204,37 +210,37 @@ protected:
    //void setNumGeoArrays(const short value) throw (CORBA::SystemException);
    //short getNumGeoArrays( void ) throw (CORBA::SystemException);
 
-   void setIsoValue(const CORBA::Long value) throw (CORBA::SystemException);
+   virtual void setIsoValue( CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getIsoValue( void ) throw (CORBA::SystemException);
 
-   void setSc(const CORBA::Long value) throw (CORBA::SystemException);
+   void setSc( CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getSc( void ) throw (CORBA::SystemException);
 
-   void setMin(const CORBA::Long value) throw (CORBA::SystemException);
+   void setMin( CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getMin( void ) throw (CORBA::SystemException);
 
-   void setMax(const CORBA::Long value) throw (CORBA::SystemException);
+   void setMax( CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getMax( void ) throw (CORBA::SystemException);
 
-   void setId(const CORBA::Long value) throw (CORBA::SystemException);
+   void setId( CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getId( void ) throw (CORBA::SystemException);
 
-   void setGeoState(const CORBA::Long value) throw (CORBA::SystemException);
+   void setGeoState( CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getGeoState( void ) throw (CORBA::SystemException);
 
-   void setPostdataState(const short value) throw (CORBA::SystemException);
+   void setPostdataState( short value) throw (CORBA::SystemException);
    short getPostdataState( void ) throw (CORBA::SystemException);
 
-   void setPreState(const short value) throw (CORBA::SystemException);
+   void setPreState( short value) throw (CORBA::SystemException);
    short getPreState( void ) throw (CORBA::SystemException);
 
-   void setTimesteps(const short value) throw (CORBA::SystemException);
+   void setTimesteps( short value) throw (CORBA::SystemException);
    short getTimesteps( void ) throw (CORBA::SystemException);
 
-   void setNumTeacherArrays(const short value) throw (CORBA::SystemException);
+   void setNumTeacherArrays( short value) throw (CORBA::SystemException);
    short getNumTeacherArrays( void ) throw (CORBA::SystemException);
 
-   void setTeacherState(const short value) throw (CORBA::SystemException);
+   void setTeacherState( short value) throw (CORBA::SystemException);
    short getTeacherState( void ) throw (CORBA::SystemException);
 #else   
    /**

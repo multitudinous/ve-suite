@@ -12,19 +12,26 @@ REM (local or on network) machine, otherwise
 REM user may run into runtime problems when loading config files across
 REM the network
 
-set VJ_BASE_DIR=C:\vrjuggler-2.0-alpha4.win32-vc71
+set VJ_BASE_DIR=C:\vrjuggler
 set VJ_DEPS_DIR=C:\vrjuggler-2.0-alpha4.win32-vc71-deps
 
 REM location of VE_Suite directory
 REM example C:\VE_Dev\VE_Suite
-set VE_SUITE_HOME=C:\Documents and Settings\Doug McCorkle\Desktop\VE_Suite
+set VE_SUITE_HOME=C:\VE_Suite
 
 REM location of VTK
-set VTK_HOME=C:\VTK
+set VTK_HOME=C:\VTK_4.4_WinXP
 REM location of java
 set JAVA_HOME=C:\j2sdk1.4.2_04
 REM OmniORB build environment varibles
 set OMNI_HOME=C:\omniORB-4.0.3
+
+REM Location for TAO and ACE 
+set ACE_ROOT=C:\ACE_wrappers
+set TAO_ROOT=%ACE_ROOT%\TAO
+
+REM Location for xerces
+set XERCESCROOT=C:\xerces-c-src_2_5_0
 
 REM
 REM Everything below is relative to the above environment so
@@ -41,6 +48,7 @@ set PHSHAREDSIZE=534773700
 
 REM juggler debug output level
 set VPR_DEBUG_NFY_LEVEL=1
+set VPR_DEBUG_ENABLE=1
 
 REM Juggler dependencies
 set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions
@@ -53,8 +61,9 @@ set OMNINAMES_LOGDIR=%VE_SUITE_HOME%\VE_Installer
 
 REM Python build environment variables
 set PYTHONPATH=%VJ_DEPS_DIR%\lib\python
-set Path=%Path%;%OMNI_HOME%\bin\x86_win32;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib;%VTK_HOME%\bin\debug;%VE_SUITE_HOME%\bin
+set Path=%Path%;%OMNI_HOME%\bin\x86_win32;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib;%VTK_HOME%\bin\debug;%VE_SUITE_HOME%\bin;%VTK_HOME%\bin
+set Path=%Path%;%ACE_ROOT%\bin;%XERCESCROOT%\Build\Win32\VC7\Debug;
 
 REM only change this if your Visual Studio .NET is installed somewhere else
-"C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.exe" ..\VE_Suite.sln
+"C:\Program Files\Microsoft Visual Studio .NET 2003\Common7\IDE\devenv.exe" %VE_SUITE_HOME%\VE_Suite.sln
 cmd

@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <CorbaManager.h>
-#include <fstream>
-#include <cstdlib>
+//#include <fstream>
+//#include <cstdlib>
 #include <iostream>
 
 #include "cfdSteadyStateVizHandler.h"
@@ -69,7 +69,7 @@ CorbaManager::~CorbaManager()
       vprDEBUG(vprDBG_ALL,0) 
          << "naming_context->unbind for CORBA Object  " 
          << endl << vprDEBUG_FLUSH;
-      naming_context->unbind( name );
+      _vjObs->naming_context->unbind( name );
       //naming_context->destroy();
    }
    catch( CosNaming::NamingContext::InvalidName& )
@@ -81,12 +81,12 @@ CorbaManager::~CorbaManager()
       cerr << "Name not found for CORBA Object  " << ex.why << endl;
    }
    
-   poa->destroy (1, 1);
+   _vjObs->poa->destroy (1, 1);
    
    vprDEBUG(vprDBG_ALL,0) 
      << " destroying orb" << std::endl << vprDEBUG_FLUSH;
 
-   orb->destroy();
+   _vjObs->orb->destroy();
 }
 
 VjObs_i* CorbaManager::GetVjObs( void )
@@ -180,28 +180,28 @@ void CorbaManager::init( void * )
 #ifdef _TAO
    //xargv[ 0 ] = "-ORBInitRef";
    //xargv[ 1 ] = "NameService=file:///tmp/ns.ior";
-   orb=CORBA::ORB_init( temp, xargv,"" );
+   _vjObs->orb=CORBA::ORB_init( temp, xargv,"" );
 #else
-   orb=CORBA::ORB_init( temp, xargv );
-   if ( CORBA::is_nil( orb.in() ) )
+   _vjObs->orb=CORBA::ORB_init( temp, xargv );
+   if ( CORBA::is_nil( _vjObs->orb.in() ) )
       exit(0);
 #endif // _TAO
    //Here is the part to contact the naming service and get the reference for the executive
    CORBA::Object_var naming_context_object =
-     orb->resolve_initial_references ("NameService"); 
-   CORBA::String_var sior1(orb->object_to_string(naming_context_object.in ()));
+     _vjObs->orb->resolve_initial_references ("NameService"); 
+   CORBA::String_var sior1(_vjObs->orb->object_to_string( naming_context_object.in ()));
    cout << "|  IOR of the server side : " << endl << sior1 << endl;
 
-   naming_context =
+   _vjObs->naming_context =
        CosNaming::NamingContext::_narrow (naming_context_object.in ());
    
    
     //Here is the code to set up the server
     CORBA::Object_var poa_object =
-      orb->resolve_initial_references ("RootPOA"); // get the root poa
+      _vjObs->orb->resolve_initial_references ("RootPOA"); // get the root poa
 
-    poa = PortableServer::POA::_narrow(poa_object.in());
-    PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
+    _vjObs->poa = PortableServer::POA::_narrow(poa_object.in());
+    PortableServer::POAManager_var poa_manager = _vjObs->poa->the_POAManager ();
     poa_manager->activate ();
 //   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
 //   cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
@@ -231,18 +231,18 @@ void CorbaManager::init( void * )
       //Bind the object
       try
       {
-         naming_context->bind(name, vjobs.in());
+         _vjObs->naming_context->bind(name, vjobs.in());
       }
       catch(CosNaming::NamingContext::AlreadyBound& ex)
       {
-         naming_context->rebind(name, vjobs.in());
+         _vjObs->naming_context->rebind(name, vjobs.in());
       }
    }
 #else // _CLUSTER
    VjObs_var vjobs = _vjObs->_this();
    if ( CORBA::is_nil( vjobs.in() ) )
      cout << "is nil " << endl;
-   CORBA::String_var sior(orb->object_to_string( vjobs.in() ) );
+   CORBA::String_var sior(_vjObs->orb->object_to_string( vjobs.in() ) );
    cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
    CosNaming::Name name;
    name.length(1);
@@ -252,16 +252,16 @@ void CorbaManager::init( void * )
    //Bind the object
    try
    {
-      naming_context->bind(name, vjobs.in());
+      _vjObs->naming_context->bind(name, vjobs.in());
    }
    catch(CosNaming::NamingContext::AlreadyBound&)
    {
-      naming_context->rebind(name, vjobs.in());
+      _vjObs->naming_context->rebind(name, vjobs.in());
    }
 #endif // _CLUSTER
    // If this isn't here the app won't work with TAO 
    cout << " end corba thread " << endl;
-   orb->run();
+   _vjObs->orb->run();
    //while( 1 )
    {
    }
