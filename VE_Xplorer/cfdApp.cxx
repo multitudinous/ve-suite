@@ -324,11 +324,11 @@ void cfdApp::preFrame( void )
 
    //pfdStoreFile( this->_sceneManager->GetRootNode()->GetRawNode(), "test1.pfb" );
    //this->exit();
-   // This need to go very soon
-   // IHCC hack
-   // fix this soon
+
    if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
    {
+      // This IHCC hack needs to go very soon
+/*   
       double data[ 6 ];// = { 0 };
       data[ 0 ] = _vjobsWrapper->GetShortArray( 1 ); //200;  //Agitation (rpm)  initial value 200
       data[ 1 ] = _vjobsWrapper->GetShortArray( 2 ); //1.25; //Air Concentration initial value 1.25;
@@ -337,11 +337,13 @@ void cfdApp::preFrame( void )
       data[ 4 ] = _vjobsWrapper->GetShortArray( 5 ); //37;   //Temperate (Celsius)        initial value 37
       data[ 5 ] = _vjobsWrapper->GetShortArray( 6 ); //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
 
-      //this->ihccModel->UpdateModelVariables( data );
-      //this->ihccModel->Update();
+      this->ihccModel->UpdateModelVariables( data );
+      this->ihccModel->Update();
+*/
    }
-   else if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )   // exit cfdApp was selected
+   else if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )
    {
+      // exit cfdApp was selected
 #ifdef _TAO
       this->executive->UnbindORB();
 #endif // _TAO
