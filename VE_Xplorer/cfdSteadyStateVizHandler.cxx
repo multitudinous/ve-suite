@@ -307,27 +307,37 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 ////////////////////
 void cfdSteadyStateVizHandler::SetActiveDataSet( cfdDataSet* input )
 {
+   if ( input == NULL )
+      exit( 1 );
    _activeDataSet = input;
 }
 
 void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
 {
+   if ( input == NULL )
+      exit( 1 );
    commandArray = input;
 }
 
 void cfdSteadyStateVizHandler::SetWorldDCS( cfdDCS* input )
 {
+   if ( input == NULL )
+      exit( 1 );
    _worldDCS = input;
 }
 
 void cfdSteadyStateVizHandler::SetNavigate( cfdNavigate* input )
 {
+   if ( input == NULL )
+      exit( 1 );
    nav = input;
 }
 
 void cfdSteadyStateVizHandler::SetCursor( cfdCursor* input )
 {
-   cursor = input;
+    if ( input == NULL )
+      exit( 1 );
+  cursor = input;
 }
 ////////////////////
 
@@ -697,8 +707,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
    // This set of thread stuff needs to be in ssvizhandler and transvizhandler
    std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
    this->runIntraParallelThread = true;
-   this->vjThFunc[0] = new ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread );
-   this->vjTh[0] = new Thread( this->vjThFunc[0] );
+   /*this->vjThFunc[0] = new ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread );
+   this->vjTh[0] = new Thread( this->vjThFunc[0] );*/
 }
 
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )

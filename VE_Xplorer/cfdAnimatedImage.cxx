@@ -76,6 +76,7 @@ cfdAnimatedImage::cfdAnimatedImage( char* param )
    char filename[250];
    //frames = param->frames;
    //  _which_frame = 0;
+   frames = 0;
    _readParam = new cfdReadParam( NULL );
    _param = param;
    CreateObjects();

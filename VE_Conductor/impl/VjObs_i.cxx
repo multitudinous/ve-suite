@@ -137,8 +137,8 @@ void VjObs_i::CreateSoundInfo( void )
    int numberOfSounds = this->_envHandler->GetSoundHandler()->GetNumberOfSounds();
    this->sound_names->length( numberOfSounds );
 
-   vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
-                          << numberOfSounds << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
+   //                       << numberOfSounds << std::endl << vprDEBUG_FLUSH;
 
    if( numberOfSounds > 0 )
    {
@@ -159,8 +159,8 @@ void VjObs_i::CreateGeometryInfo( void )
    int numGeoArrays = this->_modelHandler->GetModel( 0 )->GetNumberOfGeomDataSets();
    vprDEBUG(vprDBG_ALL,0)
       << " Number of geometries to be transfered to the client: "
-      << numGeoArrays
-      << std::endl << vprDEBUG_FLUSH;
+      << numGeoArrays << vprDEBUG_FLUSH;
+      //<< std::endl << vprDEBUG_FLUSH;
 
    this->setNumGeoArrays( numGeoArrays );
 
@@ -190,8 +190,8 @@ void VjObs_i::CreateDatasetInfo( void )
    CORBA::ULong i;
 
    int numDatasets = this->_modelHandler->GetModel( 0 )->GetNumberOfCfdDataSets();
-   vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
-                          << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
+   //                       << std::endl << vprDEBUG_FLUSH;
    
    this->setNumDatasets( numDatasets );
 
@@ -280,10 +280,10 @@ void VjObs_i::CreateDatasetInfo( void )
 void VjObs_i::CreateTeacherInfo( void )
 {   
    CORBA::Short numTeacherArrays = this->_envHandler->GetTeacher()->getNumberOfFiles();
-   vprDEBUG(vprDBG_ALL,0)
-      << " Number of performer binary files to be transfered to the client: "
-      << numTeacherArrays
-      << std::endl << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL,0)
+   //   << " Number of performer binary files to be transfered to the client: "
+   //   << numTeacherArrays
+   //   << std::endl << vprDEBUG_FLUSH;
 
    this->setNumTeacherArrays( numTeacherArrays );
    if( numTeacherArrays > 0 )

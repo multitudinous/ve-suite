@@ -439,11 +439,6 @@
 			<File
 				RelativePath=".\cfdModel.cxx">
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
 					Name="Release_OMNI|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
@@ -904,15 +899,6 @@
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-				</File>
-				<File
-					RelativePath="..\VE_Conductor\tao_impl\VjObs_i.cxx">
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="TRUE">
-						<Tool
-							Name="VCCLCompilerTool"/>
 					</FileConfiguration>
 				</File>
 			</Filter>

@@ -146,7 +146,10 @@ void cfdModelHandler::InitScene( void )
 
    // set default active dataset to be the meshed volume
    if ( _modelList.at( 0 )->GetNumberOfCfdDataSets() > 0 )
+   {
       activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
+      cfdObjects::SetActiveDataSet( this->activeDataset );
+   }
 
    if ( activeDataset != NULL )
    {
