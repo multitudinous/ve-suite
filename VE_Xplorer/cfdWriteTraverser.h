@@ -26,6 +26,14 @@ public:
    //write out the pfbFile
    void writePfbFile();
 
+   //set the callback
+   //whichCallback == 0 : activate sequence nodes
+   //whichCallback == 1: swap sequence nodes
+   void setCallback(int whichCallback);
+
+   //activate sequence nodes for writing/reading
+   void activateSequenceNodes();
+
    //set the pre node traverse callback
    virtual void setPreNodeTraverseCallback(preNodeTraverseCallback func);
    
@@ -33,6 +41,7 @@ public:
    cfdWriteTraverser& operator=(const cfdWriteTraverser& rhs);
 protected:
    friend void _swapSequenceNodes(cfdNodeTraverser* cfdWT,pfNode* node);
+   friend void _turnOnSequence(cfdNodeTraverser* cfdWT,pfNode* node);
    char* _fName;
    int _sequenceIndex;
    int _toPfb;

@@ -13,7 +13,7 @@ cfdWriteTraverser::cfdWriteTraverser()
    _fName = 0;
    _sequenceIndex = 0;
    _toPfb = 0;
-   _preFunc = _swapSequenceNodes;
+   _preFunc = 0;
 }
 ////////////////////////////////////////////////////////////////////
 cfdWriteTraverser::cfdWriteTraverser(const cfdWriteTraverser& cfdWT)
@@ -35,7 +35,6 @@ cfdWriteTraverser::cfdWriteTraverser(char* outFile)
    _sequenceIndex = 0;
    _toPfb = 0;
    setOutputFileName(outFile);
-   _preFunc = _swapSequenceNodes;
 }
 ///////////////////////////////////////
 //Destructor                         //
@@ -50,6 +49,7 @@ cfdWriteTraverser::~cfdWriteTraverser()
       _sequenceList.clear();
    }
 }
+////////////////////////////////////////////////////////////////////////////
 cfdWriteTraverser& cfdWriteTraverser::operator=(const cfdWriteTraverser& rhs)
 {
    //make sure it's not the same object
@@ -63,6 +63,17 @@ cfdWriteTraverser& cfdWriteTraverser::operator=(const cfdWriteTraverser& rhs)
    }
    return *this;
 }
+/////////////////////////////////////////////////////
+//set which callback to use                        //
+/////////////////////////////////////////////////////
+void cfdWriteTraverser::setCallback(int swapActivate)
+{
+   if(swapActivate){
+      _preFunc = _swapSequenceNodes;
+   }else{
+      _preFunc = _turnOnSequence;
+   }
+}
 ///////////////////////////////////////////////////
 //the prenode callback  is already set           //
 ///////////////////////////////////////////////////
@@ -70,7 +81,7 @@ void cfdWriteTraverser::setPreNodeTraverseCallback(
 		preNodeTraverseCallback func)
 {
    std::cout<<"WARNING: cfdWriteTraverser::setPreNodeTraverserCallback"<<std::endl;
-   std::cout<<"Pre-Node callback is pre-defined!!!"<<std::endl;
+   std::cout<<"Pre-Node should be set using setCallback(int) function !!!"<<std::endl;
    return;
 }
 ////////////////////////////////////////////////////////
@@ -85,6 +96,19 @@ void cfdWriteTraverser::setOutputFileName(char* outFile)
    _fName = new char[strlen(outFile)+1];
    strcpy(_fName,outFile);
 }
+//////////////////////////////////////////////////////////
+//turn on the sequence nodes for proper read back       //
+//////////////////////////////////////////////////////////
+void _turnOnSequence(cfdNodeTraverser* cfdNT,pfNode* node)
+{
+   pfGroup* curNode = (pfGroup*)node;
+   //turn on all the sequence nodes
+   if(curNode->isOfType(cfdSequence::getClassType())){
+      //make sure to start the "derned" sequence--otherwise
+      //it won't be running in perfly!!!UGGGHHHH!!!!!
+      ((cfdSequence*)curNode)->setPlayMode(CFDSEQ_START);
+   }
+}
 //////////////////////////////////////////////////////
 //swap the sequence nodes                           //
 //////////////////////////////////////////////////////
@@ -92,8 +116,6 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
 {
    cfdWriteTraverser* cfdWT = (cfdWriteTraverser*)cfdNT;
    pfGroup* curNode = (pfGroup*)node;
-
-   //std::cout<<"_swapSequenceNodes: curNode->getClassType() = " << curNode->getClassType() << std::endl;
 
    //replace cfdSequence nodes
    if(curNode->isOfType(cfdSequence::getClassType())){
@@ -154,6 +176,20 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
       //pfDelete(curNode);
       //don't need to continue down 
       return;
+   }
+}
+////////////////////////////////////////////////
+//this functionality should probably be       //
+//in another derived class!!!                 //
+////////////////////////////////////////////////
+void cfdWriteTraverser::activateSequenceNodes()
+{
+   if(_fName && _root){
+      //swap out cfdsequence nodes
+      _traverseNode(_root);
+
+      //store file as pfb file
+      pfdStoreFile(_root,_fName);
    }
 }
 //////////////////////////////////////

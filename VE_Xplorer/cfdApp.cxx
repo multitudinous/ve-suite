@@ -2132,8 +2132,8 @@ void cfdApp::preFrame( void )
 
       //biv--convert the cfdSequence nodes to pfSequence nodes
       //for proper viewing in perfly
-      //writePFBFile(worldDCS,pfb_filename);
-      pfdStoreFile( worldDCS, pfb_filename );
+      writePFBFile(worldDCS,pfb_filename);
+      //pfdStoreFile( worldDCS, pfb_filename );
 
       // store the active geometry and viz objects as a pfb
       // (but not the sun, menu, laser, or text)
@@ -2999,7 +2999,7 @@ void cfdApp::intraParallelThread( void * )
    } // End of While loop
 }
 
-/*void cfdApp::writePFBFile(pfNode* graph,char* fileName)
+void cfdApp::writePFBFile(pfNode* graph,char* fileName)
 {
    //make sure we have a writer
    if(!_cfdWT){
@@ -3010,11 +3010,15 @@ void cfdApp::intraParallelThread( void * )
    //set the graph
    _cfdWT->setNode(graph);
 
+   //set the "swapping" callback
+   _cfdWT->setCallback(1);
+
    //write out the file
+   //_cfdWT->activateSequenceNodes();
    _cfdWT->writePfbFile();
 
 }
-*/
+
 
 int main(int argc, char* argv[])
 {
