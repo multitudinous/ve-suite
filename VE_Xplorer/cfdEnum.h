@@ -45,7 +45,7 @@ enum cursorTYPE {
     XLINE,
     YLINE,
     ZLINE
-    //NONE 
+    NONE 
 };
 //! Enumerator
 /*!
