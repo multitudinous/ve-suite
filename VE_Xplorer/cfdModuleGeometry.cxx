@@ -113,6 +113,10 @@ void cfdModuleGeometry::SetGeometryFilename( std::string filename )
 
 void cfdModuleGeometry::Update( void )
 {
+   std::cout << "Update Filename : " << this->_filename << std::endl;
+   std::cout << "trans : " << this->_transparencyFlag << std::endl;
+   std::cout << "op : " << this->_opacityLevel << std::endl;
+   std::cout << "color : " << this->_colorFlag << std::endl;
    SetColorOfGeometry( this->_node );
 }
 
@@ -146,6 +150,15 @@ void cfdModuleGeometry::SetColorOfGeometry( pfNode* node_1 )
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getGState() ;
          //geoset->setDrawBin(PFSORT_TRANSP_BIN); // draw last
+int attr = geoset->getAttrBind( PFGS_COLOR4 );
+if ( attr == PFGS_OFF )
+   std::cout << " attribs are off ";// << std::endl;
+else if ( attr == PFGS_OVERALL )
+   std::cout << " attribs are overall ";// << std::endl;
+else if ( attr == PFGS_PER_PRIM )
+   std::cout << " attribs are prim ";// << std::endl;
+else if ( attr == PFGS_PER_VERTEX )
+   std::cout << " attribs are vert ";// << std::endl;
 
          if (geostate != NULL)
          {
@@ -154,6 +167,7 @@ void cfdModuleGeometry::SetColorOfGeometry( pfNode* node_1 )
             geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
             //geostate->setMode( PFSTATE_ENHIGHLIGHTING, PF_ON );
             geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
+            geostate->setMode( PFSTATE_SHADEMODEL, PFSM_GOURAUD );
             //geostate->setAttr( PFSTATE_LIGHTMODEL, matLight );
             vprDEBUG(vprDBG_ALL,3) << "Done setting Transparency "
                                    << std::endl << vprDEBUG_FLUSH;

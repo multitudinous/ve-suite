@@ -75,6 +75,14 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
    long numberOfSELXTrains;
    executive->_it_map[mod_id].getVal("selx_idx_in_ntowers", numberOfSELXTrains );
    vprDEBUG(vprDBG_ALL,1) << " selex_idx_in_trains : " << mod_id << " : " << numberOfSELXTrains << std::endl << vprDEBUG_FLUSH;
+   if ( mod_id == 0 )
+   {
+      numberOfSELXTrains = 0;
+   }
+   else
+   {
+      numberOfSELXTrains = 1;
+   }
 
    bool updateTrains = false;
 
@@ -89,6 +97,8 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
       for ( int i = 0; i < iter; i++ )
 	   {
          //std::cout << "Here 1 : " << this->_swappableGeometry[ i ].second->GetModuleName() << std::endl;
+         this->_swappableGeometry[ i ].second->Update();
+         this->_swappableGeometry[ i ].first->Update();
 	      if (!(this->_swappableGeometry[ i ].second->GetModuleName()).compare("SELX") ||
                !(this->_swappableGeometry[ i ].second->GetModuleName()).compare("WGSR") ) //see if SELX is in  
 	      {
@@ -96,7 +106,7 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
 	         if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) < 0 &&
 		            this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) < 0)
 		      {
-               this->_swappableGeometry[ i ].first->Update();
+               //this->_swappableGeometry[ i ].first->Update();
 		         this->_trainNode->addChild(this->_swappableGeometry[ i ].first->GetPfDCS());
                updateTrains = true;
 		      }
@@ -109,7 +119,7 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
 	         else if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) >= 0 &&
 			               this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) >= 0)
 		      {
-               this->_swappableGeometry[ i ].second->Update();
+               //this->_swappableGeometry[ i ].second->Update();
 		         this->_trainNode->removeChild(this->_swappableGeometry[ i ].second->GetPfDCS());
                updateTrains = true;
 		      }
@@ -249,7 +259,7 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
                totalComp += executive->_pt_map[mod_id].getDouble( (char*)syngasNames[ k ].c_str(), &flag );
                if ( !flag )
                {
-                  std::cerr << " ERROR : Sumation Map doesn't have " << (char*)syngasNames[ k ].c_str() << std::endl;
+                  std::cerr << " SwappableGeom :: ERROR : Sumation Map doesn't have " << (char*)syngasNames[ k ].c_str() << std::endl;
                }
             }
          }  
@@ -259,7 +269,7 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
          if ( flag )
          {
             double* color = executive->_3dMesh->GetLookupTable()->GetColor( data );
-            vprDEBUG(vprDBG_ALL,1) << " Module being modified : "<<this->_swappableGeometry[ i ].first->GetModuleName() << " : " << data << endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,1) << "SwappableGeom :: Module being modified : "<<this->_swappableGeometry[ i ].first->GetModuleName() << " : " << data << endl << vprDEBUG_FLUSH;
          
             this->_swappableGeometry[ i ].first->SetRGBAColorArray( color );
             this->_swappableGeometry[ i ].first->Update();
@@ -360,7 +370,7 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
 
          if ( (nameIter != executive->_name_map.end() && !(this->_moduleGeometry[ i ]->GetModuleName()).compare( "REI_Gasi" ) ))
          {
-            vprDEBUG(vprDBG_ALL,1) << "REI Gasifier is in the network" << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,1) << "REI Gasifier is in the network 1 " << std::endl << vprDEBUG_FLUSH;
             this->_moduleGeometry[ i ]->SetOpacity( 0.2 );
             // Remove extra trains
 
@@ -380,7 +390,7 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
          }
          else
          {
-            vprDEBUG(vprDBG_ALL,1) << "REI Gasifier is not in the network" << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,1) << "REI Gasifier is not in the network 2 " << std::endl << vprDEBUG_FLUSH;
             this->_moduleGeometry[ i ]->SetOpacity( 1.0f ); 
             if ( !(this->_moduleGeometry[ i ]->GetModuleName()).compare( "GLASS" ) &&
                   this->_trainNode->searchChild( this->_moduleGeometry[ i ]->GetPfDCS() ) < 0 )

@@ -185,11 +185,11 @@ void cfdExecutive::GetNetwork ( void )
    try 
    { 
       nw_str = _exec->GetNetwork();
-      std::cout << nw_str << std::endl;
+      //std::cout << "| Network String : " << nw_str << std::endl;
    } 
    catch (CORBA::Exception &) 
    {
-      std::cout << "no exec found!" << std::endl;
+      std::cout << "ERROR: cfdExecutive : no exec found! " << std::endl;
    }
   
    char buf[25];
@@ -339,7 +339,7 @@ void cfdExecutive::UpdateModules( void )
    if ( this->GetCalculationsFlag() )
    {
       this->GetEverything();
-std::cout << " Get Everything " << std::endl;      
+      //std::cout << " Get Everything " << std::endl;      
       std::map<std::string, int>::iterator iter;
       for ( iter=_name_map.begin(); iter!=_name_map.end(); iter++ )
       {
@@ -356,9 +356,9 @@ std::cout << " Get Everything " << std::endl;
             // Pass info all the way to each gauge
          }
       }
-std::cout << " End Gauge Update " << std::endl;
+      //std::cout << " End Gauge Update " << std::endl;
       this->_geometry->Update( this->_activeScalarName, this );
-std::cout << " End Geometry Update " << std::endl;
+      //std::cout << " End Geometry Update " << std::endl;
       this->SetCalculationsFlag( false );
    }   
 }

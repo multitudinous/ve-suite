@@ -239,6 +239,19 @@ void cfdFILE::pfTravNodeMaterial( pfNode* node_1, pfMaterial* mat, int list_num 
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getGState() ;
          //geoset->setDrawBin(PFSORT_TRANSP_BIN); // draw last
+//std::cout << geoset->getAttrBind( PFGS_COLOR4 ) << std::endl;
+int attr = geoset->getAttrBind( PFGS_COLOR4 );
+//pfVec4 **colors = NULL;
+//geoset->getAttrLists( PFGS_COLOR4, colors, NULL );
+
+if ( attr == PFGS_OFF )
+   std::cout << " attribs are off ";// << std::endl;
+else if ( attr == PFGS_OVERALL )
+   std::cout << " attribs are overall ";// << std::endl;
+else if ( attr == PFGS_PER_PRIM )
+   std::cout << " attribs are prim ";// << std::endl;
+else if ( attr == PFGS_PER_VERTEX )
+   std::cout << " attribs are vert ";// << std::endl;
 
          if (geostate != NULL)
          {
@@ -247,6 +260,7 @@ void cfdFILE::pfTravNodeMaterial( pfNode* node_1, pfMaterial* mat, int list_num 
             geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
             //geostate->setMode( PFSTATE_ENHIGHLIGHTING, PF_ON );
             geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
+            geostate->setMode( PFSTATE_SHADEMODEL, PFSM_GOURAUD );
             //geostate->setAttr( PFSTATE_LIGHTMODEL, matLight );
             vprDEBUG(vprDBG_ALL,3) << "Done setting Transparency "
                                    << std::endl << vprDEBUG_FLUSH;

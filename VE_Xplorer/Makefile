@@ -7,6 +7,7 @@
 # then define TABLET, CORBA_DEFINES, and CORBA_INCLUDES
 #To make a non-corba version, don't define OMNI_HOME
 CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
+#CFDHOSTTYPE= ${HOSTTYPE}
 
 # Uncomment the following line to use cfdSequence instead of pfSequence
 # It is needed for cluster builds
@@ -163,6 +164,16 @@ endif
 #   Conductor.cpp \
 #   veConductorImpl.cpp \
 
+
+include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+
+#LIBS=   $(LIBS_BEGIN) $(SYS_LIBS) $(LIBS_END)
+#include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
+#include $(DZR_BASE_DIR)/mk/dzr.java-app.mk
+
+#include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
+#include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+
 # object files are being stored in a system-dependent directory so that builds
 # for multiple platforms may be maintained simultaneously.
 #DZR_HOSTTYPE is defined in ${VJ_BASE_DIR}/share/Doozer/mk/dzr.hosttype.mk
@@ -170,15 +181,11 @@ endif
 
 #OBJDIR is the place that the object files are stored.
 #OBJDIR=	$(SYS_SETTING)
-OBJDIR=	$(CFD_LIBS)
+#OBJDIR=	$(CFD_LIBS)
 
 #DEPDIR is the place that the dependency files are stored.
 #DEPDIR=	$(SYS_SETTING)
-DEPDIR=	$(CFD_LIBS)
-
-include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
-
-LIBS=   $(LIBS_BEGIN) $(SYS_LIBS) $(LIBS_END)
+#DEPDIR=	$(CFD_LIBS)
 
 #__________________________________________________________
 # Where is Paul Rajlich's vtkActorToPF directory?
@@ -192,10 +199,24 @@ LIBS=   $(LIBS_BEGIN) $(SYS_LIBS) $(LIBS_END)
 UNAME= $(shell uname -s)
 
 ifeq ($(CLUSTER_APP), TRUE)
-   APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/project_cluster
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/project_cluster-$(CFDHOSTTYPE)
    EXTRA_CXXFLAGS+=	-D_CLUSTER
+   #OBJDIR is the place that the object files are stored.
+   #OBJDIR=	$(SYS_SETTING)
+   OBJDIR=	$(CFD_LIBS)-$(CFDHOSTTYPE)-Cluster
+
+   #DEPDIR is the place that the dependency files are stored.
+   #DEPDIR=	$(SYS_SETTING)
+   DEPDIR=	$(CFD_LIBS)-$(CFDHOSTTYPE)-Cluster
 else
-   APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/project
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/project-$(CFDHOSTTYPE)
+   #OBJDIR is the place that the object files are stored.
+   #OBJDIR=	$(SYS_SETTING)
+   OBJDIR=	$(CFD_LIBS)-$(CFDHOSTTYPE)
+
+   #DEPDIR is the place that the dependency files are stored.
+   #DEPDIR=	$(SYS_SETTING)
+   DEPDIR=	$(CFD_LIBS)-$(CFDHOSTTYPE)
 endif
 
 default: all
@@ -217,6 +238,8 @@ srcdir=		.
 # turn off dependencies for idl stuff, make clean
 NO_DEPEND=	YES
 
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
 
 # list the cpp and h files here
 #IDL_CXX_FILES= ${CONDUCTOR_BASE_DIR}/Observer.cpp \
@@ -255,13 +278,6 @@ NO_DEPEND=	YES
 #EXTRA_SOURCEPATH_DIRS= ${CONDUCTOR_BASE_DIR}/java_stuff
 #CLASSPATH= ${CONDUCTOR_BASE_DIR}/java_stuff
 #CLASSPATH_ARG=	-classpath "${CONDUCTOR_BASE_DIR}/java_stuff"
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
-#include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
-#include $(DZR_BASE_DIR)/mk/dzr.java-app.mk
-
-#include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
-#include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
 
 # One of these must be uncommented.
 DEBUG_APP?=		TRUE
@@ -275,11 +291,11 @@ EXTRA_CXXFLAGS+=	-DVTK4 #${TABLET}
 EXTRA_OPTIM_FLAGS+=	-O2 -OPT:Olimit=0 -D_OPT
 
 ifeq ($(TAO_BUILD), TRUE)
-   EXTRA_CXXFLAGS+=	-D_TAO ${CPPFLAGS}
+   EXTRA_CXXFLAGS+=	-D_TAO ${CPPFLAGS} -I$(BOOST_INCLUDES)
    EXTRA_LIBS+= ${ACE_LIBS} 
    #$(VLDLIBS)
 else
-   EXTRA_CXXFLAGS+=	$(TWEEK_CXX_FLAGS) $(CORBA_DEFINES)
+   EXTRA_CXXFLAGS+=	$(TWEEK_CXX_FLAGS) $(CORBA_DEFINES) -I$(BOOST_INCLUDES)
    EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) 
 endif
 
