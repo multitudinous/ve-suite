@@ -61,7 +61,7 @@ OBJECTS = ../string_ops.o \
 	../ThirdParty/Math/logfit.o \
 	../ThirdParty/Components/cyclone.o
 
-.SUFFIXES : .o .cpp .cc	
+.SUFFIXES : .o .cpp .cc	.f
 
 .cpp.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -o $@ $<

@@ -58,7 +58,7 @@ void Body_Unit_i::StartCalc (
     gas_data->gas_composite.size_variance = sv;
     gas_data->gas_composite.T_particle = p_temp;
     
-    string therm_path="thermo";
+    string therm_path="therm";
 
     thermo *thrmo = new thermo(therm_path);
     const std::map<std::string, int>& name_map = thrmo->get_nam_spec();
@@ -88,7 +88,7 @@ void Body_Unit_i::StartCalc (
     particles.push_back("CHAR");
     particles.push_back("COAL");
     particles.push_back("WATER");
-    
+
     if(p_frac.size()==0)
       for (unsigned int i=0; i<particles.size(); i++) 
 	{
@@ -112,10 +112,12 @@ void Body_Unit_i::StartCalc (
     outport = p.Save(rv);
     //set p.intf to be someting containing the results
     //    result = p.Save(rv);
+
     executive_->SetExportData(id_, 0, outport);
 
     p.intfs.clear();
     result = p.Save(rv);
+
     executive_->SetModuleResult(id_, result); //this marks the end the execution
   }
   
@@ -205,14 +207,15 @@ void Body_Unit_i::SetParams (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    if (param!=NULL)
-      std::cout<<param<<std::endl;
     std::cout<<UnitName_<<" :SetParams called"<<endl;
+
+    if (param!=NULL) ;// std::cout<<param<<std::endl;
+
     Package p;
-        
     p.SetSysId("temp.xml");
     p.Load(param, strlen(param));
+
+    fflush(NULL);
     //Now make use of p.intfs to get your GUI vars out
     temp = p.intfs[0].getDouble("temp");
     pres = p.intfs[0].getDouble("pres");
@@ -229,7 +232,7 @@ void Body_Unit_i::SetParams (
     p_comp = p.intfs[0].getString1D("p_comp");
     p_frac = p.intfs[0].getString1D("p_frac");
    
-    std::cout<<"Set Params done"<<std::endl;
+    fflush(NULL);
   }
   
 void Body_Unit_i::SetID (
@@ -241,9 +244,9 @@ void Body_Unit_i::SetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    id_=id;
     std::cout<<UnitName_<<" :SetID called"<<endl;
+
+    id_=id;
   }
   
 CORBA::Long Body_Unit_i::GetID (
@@ -254,8 +257,8 @@ CORBA::Long Body_Unit_i::GetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     std::cout<<UnitName_<<" :GetID called"<<endl;
+
     return id_;
   }
   
@@ -268,9 +271,9 @@ void Body_Unit_i::SetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    UnitName_ = std::string(name);
     std::cout<<UnitName_<<" :SetName called"<<endl;
+
+    UnitName_ = std::string(name);
   }
   
 char * Body_Unit_i::GetName (
@@ -281,8 +284,8 @@ char * Body_Unit_i::GetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     std::cout<<UnitName_<<" :GetName called"<<endl;
+
     return CORBA::string_dup(UnitName_.c_str());
   }
 
