@@ -2,8 +2,6 @@
 # this is a bourne shell script
 # sets up environment to build and/or run VE-Xplorer
 
-#OMNI_HOME: comment out definitions to make a non-corba version - that's all you have to do
-
 #this is typically defined in your .cshrc file
 #VE_SUITE_HOME=/home/vr/Applications/TSVEG/VE_Suite
 
@@ -19,11 +17,12 @@ else
    echo "uname is" `uname`
    export CFDHOSTTYPE=`uname`
 fi
-
+#if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
+export CFDHOSTTYPE=`echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 #echo "CFDHOSTTYPE =" $CFDHOSTTYPE
 
-export CLUSTER_APP=FALSE
 export TAO_BUILD=TRUE
+export CLUSTER_APP=FALSE
 export SCENE_GRAPH=PF
 
 export PFNFYLEVEL=2
@@ -37,13 +36,10 @@ export OMNINAMES_LOGDIR=${VE_SUITE_HOME}/VE_Installer
 case "$CFDHOSTTYPE" in
    IRIX*) 
    #echo "CFDHOSTTYPE contains IRIX"
-   export JDK_HOME=/usr/java2
    export VTK_BASE_DIR=/home/users/mccdo/vtk-builds/IRIX32
    export VJ_BASE_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-pthread
    export VJ_DEPS_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-deps
-#   export LD_LIBRARYN32_PATH=/home/users/mccdo/VE_Suite/VE_Installer/arenasize/libs
    export LD_LIBRARYN32_PATH=${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
-   export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
    export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:/home/users/mccdo/software/IRIX32/lib
    export WX_HOME=${WX_HOME_DIR}/irix-65
    export BOOST_INCLUDES=${VJ_DEPS_DIR}/include
@@ -51,76 +47,85 @@ case "$CFDHOSTTYPE" in
    if [ ${TAO_BUILD} = "TRUE" ]; then
       export ACE_ROOT=/home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
       export TAO_ROOT=${ACE_ROOT}/TAO
-      export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+      export ACE_HOME=/home/vr/Applications/TSVEG/Libraries/ACE-5.4
+      export TAO_HOME=/home/vr/Applications/TSVEG/Libraries/TAO-1.4
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
+      export PATH=${ACE_ROOT}/bin:${ACE_ROOT}/IRIX32/bin:${TAO_ROOT}/IRIX32/bin:${PATH}
+      
+      export XERCESCROOT=/home/vr/Applications/TSVEG/Libraries/xerces-2.5/IRIX32
+      export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:${XERCESCROOT}/lib
    else
-#      export OMNI_HOME=/home/vr/Juggler/irix/mipspro-omniORB-4.0.1
-#      export OMNI_HOME=/home/users/mccdo/software/IRIX32
-      export OMNI_HOME=${VJ_DEPS_DIR}
-#/home/vr/Juggler/irix/mipspro
-      export PYTHONPATH=${OMNI_HOME}/lib/python1.5/site-packages
-      export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+      export OMNI_HOME=/home/vr/Applications/TSVEG/Libraries/omniORB-4.0.5/Linux-SuSE91
+      export PYTHONPATH=${OMNI_HOME}/lib/python2.2/site-packages
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OMNI_HOME}/lib
+      export PATH=${OMNI_HOME}/bin:${PATH}b
    fi
 ;;
    RedHat*) 
    #echo "CFDHOSTTYPE contains RedHat"
-   export VTK_BASE_DIR=/home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
-
-   export JDK_HOME=/usr/java/j2sdk1.4.2_03
-   export VJ_BASE_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80
-   export VJ_DEPS_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80-deps
-
+   export VTK_BASE_DIR=/home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
+   export VJ_BASE_DIR=/home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/Linux_rh8
+   export VJ_DEPS_DIR=home/vr/Applications/TSVEG/Libraries/vrj-deps/Linux_rh8
+   export WX_HOME=/home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-RH80
    export BOOST_INCLUDES=${VJ_DEPS_DIR}/include
-   export LD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
-   export WX_HOME=${WX_HOME_DIR}/linux-rh80
-
-   if [ ${TAO_BUILD} = "TRUE" ]; then
-      export WX_HOME=${WX_HOME_DIR}/linux-rh80
-      export ACE_ROOT=/home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
-      #export ACE_ROOT=/home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
-
-      export TAO_ROOT=${ACE_ROOT}/TAO
-      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
-   else
-      export OMNI_HOME=/home/vr/Juggler/linux-rh80
-      #export OMNI_HOME=/home/vr/Juggler/linux-fc1
-      export PYTHONPATH=${OMNI_HOME}/lib/python2.2/site-packages
-      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
-   fi
-;;
-   SuSE*) 
-   #echo "CFDHOSTTYPE contains SuSE"
-   export VTK_BASE_DIR=/home/users/mccdo/vtk-builds/Linux-rh
-
-   export JDK_HOME=/usr/lib/java2
-   export VJ_BASE_DIR=/home/users/mccdo/vrjuggler-builds/Suse-9.1-alpha4
-   export VJ_DEPS_DIR=/home/users/mccdo/cppdom-0.3.2/Suse-9.1
-
-   export BOOST_INCLUDES=${VJ_DEPS_DIR}/include/boost-1_31
-   export LD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
-   export WX_HOME=${WX_HOME_DIR}/linux-rh80
-   #export OSG_HOME=/home/vr/Applications/TSVEG/Libraries/OSG/Linux-SuSE91
-   #export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
+   export LD_LIBRARYN32_PATH=${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${WX_HOME}/lib
 
    if [ ${TAO_BUILD} = "TRUE" ]; then
       export ACE_ROOT=/home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       export TAO_ROOT=${ACE_ROOT}/TAO
       export ACE_HOME=/home/vr/Applications/TSVEG/Libraries/ACE-5.4
       export TAO_HOME=/home/vr/Applications/TSVEG/Libraries/TAO-1.4
-      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
       export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
       export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
+      export PATH=${ACE_ROOT}/bin:${ACE_ROOT}/Linux/bin:${TAO_ROOT}/Linux/bin:${PATH}
+      
+      export XERCESCROOT=/home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-RH80
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
+   else
+      export OMNI_HOME=/home/vr/Applications/TSVEG/Libraries/omniORB-4.0.5/Linux_rh8
+      export PYTHONPATH=${OMNI_HOME}/lib/python2.2/site-packages
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OMNI_HOME}/lib
+      export PATH=${OMNI_HOME}/bin:${PATH}
+   fi
+;;
+   SuSE*) 
+   #echo "CFDHOSTTYPE contains SuSE"
+   export JDK_HOME=/usr/lib/java2
+   export VTK_BASE_DIR=/home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
+   export WX_HOME=/home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-SuSE91
+   export VJ_BASE_DIR=/home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/Linux-SuSE91
+   export VJ_DEPS_DIR=/home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/Linux-SuSE91
+   export OSG_HOME=/home/vr/Applications/TSVEG/Libraries/OSG/Linux-SuSE91
+
+   export LD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${WX_HOME}/lib
+   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
+
+   if [ ${TAO_BUILD} = "TRUE" ]; then
+      export MY_ACEDIR=/home/users/mccdo/ACE_TAO
+      export ACE_ROOT=/home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
+      export TAO_ROOT=${ACE_ROOT}/TAO
+      export ACE_HOME=/home/vr/Applications/TSVEG/Libraries/ACE-5.4
+      export TAO_HOME=/home/vr/Applications/TSVEG/Libraries/TAO-1.4
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
       export PATH=${ACE_ROOT}/bin:${PATH}
 
       export XERCESCROOT=/home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-SuSE91
       export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
    else
-      export OMNI_HOME=/home/vr/Juggler/linux-rh80
-      #export OMNI_HOME=/home/vr/Juggler/linux-fc1
+      export OMNI_HOME=/home/vr/Applications/TSVEG/Libraries/omniORB-4.0.5/Linux-SuSE91
       export PYTHONPATH=${OMNI_HOME}/lib/python2.2/site-packages
-      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OMNI_HOME}/lib
+      export PATH=${OMNI_HOME}/bin:${PATH}
    fi
 ;;
    *)
