@@ -4,7 +4,7 @@
 #include <winsock2.h>
 #endif
 
-#include "wx/wx.h"
+#include <wx/wx.h>
 
 class UI_TopFrame;
 

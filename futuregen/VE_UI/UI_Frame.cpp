@@ -60,6 +60,7 @@ UI_Frame::UI_Frame(wxWindow* parent, wxWindowID id,
 {
    //_appParent = new wxString( "DirectVE" );
    _appParent = wxT( "DirectVE" );
+
    buildCORBA();
 
    _modelData = new UI_ModelData(vjobs.in());
