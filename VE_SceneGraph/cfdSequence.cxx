@@ -86,6 +86,7 @@ cfdGroup()
    _pMode = CFDSEQ_START;
    _appFrame = 0;
    _step = -10000;
+   
 #ifdef _PERFORMER
    setTravFuncs(PFTRAV_APP,switchFrame,0);
    setTravData(PFTRAV_APP,this);
@@ -390,6 +391,7 @@ cfdSequence::cfdSequenceCallback::cfdSequenceCallback(cfdSequence* seq)
 {
    _sequence = seq;
    _prevTime = 0;
+   _prevFrame = 0;
 }
 ///////////////////////////////////////////////////////////////////////////
 void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node, 
@@ -424,8 +426,10 @@ void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node,
      currTime = nv->getFrameStamp()->getReferenceTime();
      if((currTime - _prevTime) >= 1.0){
         frameNumber = nv->getTraversalNumber();
-        appFrameRate = (double)frameNumber/(currTime-_prevTime);
+        appFrameRate = (double)(frameNumber-_prevFrame)/(currTime-_prevTime);
         _prevTime = currTime;
+        _prevFrame = frameNumber;
+        
         
      }
    }else{

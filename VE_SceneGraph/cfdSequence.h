@@ -146,6 +146,7 @@ public:
          virtual ~cfdSequenceCallback(){}
          cfdSequence* _sequence;
          double _prevTime;
+         int _prevFrame;
    
    };
 #endif
