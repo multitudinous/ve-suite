@@ -20,11 +20,12 @@ endif
 #setenv TAO_BUILD TRUE
 setenv TAO_BUILD FALSE
 
+set WX_HOME_DIR=/home/users/mccdo/wxWindows/wxGTK
+
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
 setenv VPR_DEBUG_ENABLE 1
 setenv PFSHAREDSIZE 534773700
-setenv WX_HOME_DIR /home/users/mccdo/wxWindows/wxGTK
 setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 
