@@ -112,8 +112,8 @@ void cfdDashboard::CreateDashboard( void )
          this->_node = new cfdNode();
          this->_node->LoadFile( (char*)this->_filename.c_str() );
          //this->_node->flatten( 0 );
-         this->AddChild( (cfdSceneNode*)this->_node );
-         this->_masterNode->AddChild( (cfdSceneNode*)this );
+         this->AddChild( this->_node );
+         this->_masterNode->AddChild( this );
 
          for ( int j = 0; j < 4; j += 2 )
          {

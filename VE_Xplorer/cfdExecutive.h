@@ -35,6 +35,7 @@
 #include "cfdGlobalBase.h"
 
 #include <map>
+#include <string>
 
 class cfdDCS;
 class cfdGroup;

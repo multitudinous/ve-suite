@@ -370,7 +370,7 @@ void cfdApp::postFrame()
       }
    }*/
 
-   //this->_corbaManager->GetCfdStateVariables();
+   this->_vjobsWrapper->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
