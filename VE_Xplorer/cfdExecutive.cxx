@@ -278,8 +278,8 @@ void cfdExecutive::GetNetwork ( void )
    p.Load(network, strlen(network));
   
    _network->clear();
-   //_scheduler->clear();
-  
+   _id_map.clear();
+
    std::vector<Interface>::iterator iter;
    for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
       if(iter->_id==-1) break;
@@ -287,6 +287,7 @@ void cfdExecutive::GetNetwork ( void )
    if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
    {
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+      {
          if(_network->setInput(iter->_id, &(*iter))) 
          {
 	         _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
@@ -295,6 +296,20 @@ void cfdExecutive::GetNetwork ( void )
          }  
          else
 	         cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
+      }
+   
+      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+      {
+///////////////////////////
+// FILE IO Testing
+         if ( iter->_id != -1 ) 
+         {
+         //cout << iter->_id <<endl; 
+         cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
+         _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
+         //cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
+         }
+      }
    } 
    else 
    {
@@ -302,6 +317,7 @@ void cfdExecutive::GetNetwork ( void )
    }
 ///////////////////////////
    delete network;
+
 }
 ///////////////////////////////////////////////////////////////////
 
@@ -346,8 +362,8 @@ void cfdExecutive::GetEverything( void )
    {
       GetNetwork();
   
-      std::map<std::string, int>::iterator iter;
-      for ( iter=_name_map.begin(); iter!=_name_map.end(); iter++ )
+      std::map< int, std::string>::iterator iter;
+      for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
       {
          /*if ( iter->first=="ASU"    || iter->first=="Power"    ||
                iter->first=="SELX"  || iter->first=="SRS"      ||
@@ -364,7 +380,8 @@ void cfdExecutive::GetEverything( void )
    // _plugin.clear();
          // Here we need to test to see what has changed i nthe map
          // not just create new objects.
-            _plugins[ iter->second ] = (cfdVEBaseClass*)av_modules->GetLoader()->CreateObject( (char*)iter->first.c_str() );
+       cout <<  iter->first << " : " << iter->second << endl;
+//  _plugins[ iter->first ] = (cfdVEBaseClass*)av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() );
 
    // When we create the _plugin map here we will do the following
    // _plugin.at( i )->InitializeNode( Pass in correct node );
@@ -444,7 +461,7 @@ void cfdExecutive::UpdateModules( void )
          }
       }*/
       //std::cout << " End Gauge Update " << std::endl;
-      this->_geometry->Update( this->_activeScalarName, this );
+      //this->_geometry->Update( this->_activeScalarName, this );
       //std::cout << " End Geometry Update " << std::endl;
       this->SetCalculationsFlag( false );
    }

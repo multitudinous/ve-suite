@@ -84,8 +84,9 @@ class cfdExecutive : public cfdGlobalBase
       // _ot_map : maps a module id to an interface object for a modules's outputs.
       std::map<int, Interface>   _ot_map;
   
-      // _name_map : maps a module name to it's module id.
-      std::map<std::string, int> _name_map;
+      // _name_map : maps a module id to it's module name.
+      std::map< int, std::string> _id_map;
+      std::map< std::string, int > _name_map;
   
       // _name_map : maps a module name to it's module id.
       std::map<int, cfdVEBaseClass* > _plugins;

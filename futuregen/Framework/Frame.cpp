@@ -84,7 +84,7 @@ void AppFrame::CreateVETab()
   m_imageList->Add(wxArtProvider::GetIcon(wxART_ERROR, wxART_OTHER, imageSize));
   
   //m_tabs = new UI_Tabs(vjobs, wx_ve_splitter, ID_UI_TABS);
-  m_frame = new UI_Frame(vjobs, wx_ve_splitter, ID_UI_TABS);
+  m_frame = new UI_Frame(vjobs.in(), wx_ve_splitter, ID_UI_TABS);
   // Create the notebook's panels
   //m_tabs->AssignImageList(m_imageList);
   m_frame->_tabs->AssignImageList(m_imageList);
@@ -543,7 +543,7 @@ void AppFrame::GlobalParam(wxCommandEvent &event)
 
 void AppFrame::ConExeServer(wxCommandEvent &event)
 {
- 
+ std::cout << "here 1 " <<endl;
   if (!is_orb_init)
   {
     if (init_orb_naming())
@@ -551,6 +551,7 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
     else
       return;
   }
+ std::cout << "here 3 " <<endl;
 
   try{
 
@@ -577,7 +578,7 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
 		
 		Log("Can't find executive or UI registration error\n");
 	}
-
+ std::cout << "here 2 " <<endl;
 }
   
 void AppFrame::ConVEServer(wxCommandEvent &event)
@@ -616,6 +617,7 @@ bool AppFrame::init_orb_naming()
 {
 //	char *argv[]={""};
 //	int argc = 0;
+cout << " orb init " << endl;
 	try {
 		// First initialize the ORB, 
 		orb =

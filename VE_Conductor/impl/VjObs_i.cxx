@@ -51,6 +51,7 @@
 #include "cfdSoundHandler.h"
 #include "cfdModel.h"
 #include "cfdFILE.h"
+#include "cfdEnum.h"
 
 
 
@@ -1078,5 +1079,6 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
 void VjObs_i::PreFrameUpdate( void )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
+   if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) != GUI_NAV )
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
 }

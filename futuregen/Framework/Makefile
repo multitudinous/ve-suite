@@ -1,9 +1,8 @@
 CXX = $(shell wx-config --cxx)
 WX_CXX = $(shell wx-config --cxxflags)
 WX_LIBS = $(shell wx-config --libs)
-XERCES_LIBS = ${XERCESCROOT}/lib
-VE_UI_HOME = ./../VE_UI
-IDL_HOME = ./../IDL
+VE_UI_HOME = ${VE_SUITE_HOME}/futuregen/VE_UI
+IDL_HOME = ${VE_SUITE_HOME}/futuregen/IDL
 SKEL_HOME = ${VE_SUITE_HOME}/VE_Conductor/skel
 
 PLATFORM = LINUX
@@ -17,7 +16,6 @@ THREADS = none
 EXTRA_LIBS =  
 PREFIX = /usr/local
 
-#include ${XERCESCROOT}/version.incl
 include ../Plugin/Makefile.incl
 
 ifndef TAO_ROOT
@@ -31,8 +29,6 @@ LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_Po
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(TAO_ROOT)/rules.tao.GNU
 
-include $(XERCESCROOT)/version.incl
-
 FILE_UI_CLT_OBJS = moduleC.o moduleS.o UI_i.o 
 
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
@@ -43,10 +39,10 @@ include $(TAO_ROOT)/taoconfig.mk
 
 vpath %.cpp ${VE_UI_HOME} ${IDL_HOME} ${VE_SUITE_HOME}/VE_Xplorer ${SKEL_HOME}
 
-LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs -L$(XERCESROOT)/lib
+LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs
 
 CPPFLAGS += -g  ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
-		-I$(TAO_ROOT)/orbsvcs -I${VE_UI_HOME} -I${IDL_HOME} -I${VE_SUITE_HOME}/VE_Xplorer -I${SKEL_HOME} -I${XERCESCROOT}/include \
+		-I$(TAO_ROOT)/orbsvcs -I${VE_UI_HOME} -I${IDL_HOME} -I${VE_SUITE_HOME}/VE_Xplorer -I${SKEL_HOME}  \
 		-I./. #-LANG:std 
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
@@ -98,7 +94,7 @@ OBJECTS = StringParse.o \
 all: $(APP)
 
 $(APP): $(OBJECTS) $(addprefix $(VDIR),$(FILE_UI_CLT_OBJS))
-	g++ ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ ${WX_LIBS} $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK) ${XERCES_LIBS}/libxerces-c.so.25
+	g++ ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ ${WX_LIBS} $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK) 
 
 clean:
 	rm -rf *.o $(APP) ./.obj ./ii_files ./Debug
