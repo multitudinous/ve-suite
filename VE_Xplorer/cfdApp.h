@@ -141,6 +141,9 @@
 #include "cfdQuatCamHandler.h"
 
 #include "cfdIHCCModel.h"
+//biv-- the new write traverser class to handle
+//cfdSequence nodes
+#include "cfdWriteTraverser.h"
 
 class cfdScalarBarActor;
 //class cfdDashboard;
@@ -230,6 +233,11 @@ class cfdApp : public vrj::PfApp
 
    //biv-- get inputs for navigation from the GUI
    void updateNavigationFromGUI();
+
+   //biv -- the write traverser to write out perfly
+   //compliant pfb
+   void writePFBFile(pfNode* graph,char* fileName);
+
 // protected:
    
    void RefreshScalarBar();
@@ -389,6 +397,9 @@ class cfdApp : public vrj::PfApp
    short cfdTimesteps;
    short cfdTeacher_state; 
 #endif
+   //biv -- the write traverser
+   protected:
+      cfdWriteTraverser* _cfdWT;
 
 };
 

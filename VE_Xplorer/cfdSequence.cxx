@@ -39,7 +39,25 @@
 #include <Performer/pf/pfTraverser.h>
 
 using namespace std;
+//Performer statics
+//this code is for performer compliance
+//it allows performer to determine the class type
+//
+pfType* cfdSequence::_classType = 0;
 
+//initialize our class w/ performer at run time
+void cfdSequence::init(void)
+{
+   if(_classType == 0)
+   {
+      //initialize the parent
+      pfGroup::init();
+      //create the new class type
+      _classType = new pfType(pfGroup::getClassType(),"cfdSequence");
+   }
+}
+////////////////////////////////////////
+//our class implementation
 //////////////////////////
 //Constructors          //
 //////////////////////////
@@ -59,6 +77,10 @@ cfdSequence::cfdSequence()
 
    setTravFuncs(PFTRAV_APP,switchFrame,0);
    setTravData(PFTRAV_APP,this);
+
+   //performer stuff
+   init();
+   setType(_classType);
 }
 ///////////////////////////
 //Destructor             //
@@ -306,7 +328,7 @@ void cfdSequence::setCurrentFrame(int index)
       //low to high
       if(index >= _begin && index < _end){
          _currentFrame = index;
-	 _switch->setVal(_currentFrame);
+	      _switch->setVal(_currentFrame);
       }else{
          //invalid index
          cout<<"Error: cfdSequence!"<<endl;

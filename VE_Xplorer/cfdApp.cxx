@@ -124,6 +124,8 @@ inline cfdApp::cfdApp( )//vrj::Kernel* kern )
    this->_cfdTFM_Geometry[1] = NULL;
    this->lastSource = NULL;
    this->ihccModel = NULL;
+   //biv -- the writeTraverser
+   _cfdWT = 0;
 }
 #ifdef TABLET
 void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_ptr orb, PortableServer::POA_ptr poa )
@@ -1970,38 +1972,22 @@ void cfdApp::preFrame( void )
       I.makeIdent();
       this->worldDCS->setMat( I );
 
-/*
-      pfMatrix mm;
-      this->worldDCS->getMat( mm );
-      cout << "stored worldDCS follows..." << endl;
-      for ( int iii=0; iii<4; iii++ )
-      {
-         for ( int jjj=0; jjj<4; jjj++ )
-            cout << "\t" << mm[iii][jjj];
-         cout << endl;
-      }
-*/
+      //biv--convert the cfdSequence nodes to pfSequence nodes
+      //for proper viewing in perfly
+      writePFBFile(worldDCS,pfb_filename);
+      
+
 
       // store the active geometry and viz objects as a pfb
       // (but not the sun, menu, laser, or text)
-      int store_int = pfdStoreFile( this->worldDCS, pfb_filename );
+      int store_int = 0;
+
       vprDEBUG(vprDBG_ALL,1) << "|   Stored Scene Output " << store_int
                              << std::endl << vprDEBUG_FLUSH;
       
       // restore the world DCS matrix...
       this->worldDCS->setMat( m );
 
-/*
-      pfMatrix mmm;
-      this->worldDCS->getMat( mmm );
-      cout << "restored worldDCS follows..." << endl;
-      for ( int iii=0; iii<4; iii++ )
-      {
-         for ( int jjj=0; jjj<4; jjj++ )
-            cout << "\t" << mmm[iii][jjj];
-         cout << endl;
-      }
-*/
 
       // increment the counter and reset the id to -1...
       this->pfb_count ++;
@@ -2946,6 +2932,21 @@ void cfdApp::intraParallelThread( void * )
       }
    } // End of While loop
 }
+void cfdApp::writePFBFile(pfNode* graph,char* fileName)
+{
+   //make sure we have a writer
+   if(!_cfdWT){
+      _cfdWT = new cfdWriteTraverser(fileName);
+   }else{
+      _cfdWT->setOutputFileName(fileName);
+   }
+   //set the graph
+   _cfdWT->setNode(graph);
+
+   //write out the file
+   _cfdWT->writePfbFile();
+
+}
 
 int main(int argc, char* argv[])
 {
@@ -3204,4 +3205,5 @@ int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
   return i;
 }
 #endif
+
 

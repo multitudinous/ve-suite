@@ -58,6 +58,10 @@ public:
    cfdSequence();
    ~cfdSequence();
 
+   //to make this a performer class
+   static void init(void);
+   static pfType* getClassType(void){return _classType;}
+
    //set the duration of the sequence
    void setDuration(double duration){_duration = duration;}
 
@@ -108,9 +112,12 @@ public:
    //get the direction of the sequence
    int direction(){return _dir;}
 
-   //get the duration of the sequence
+   //get the properties of the sequence
    double duration(){return _duration;}
-   
+   int loopMode(){return _lMode;}
+   int playMode(){return _pMode;}
+   int end(){return _end;}
+   int begin(){return _begin;}
     //the node pre-traverser callback
   friend  int switchFrame(pfTraverser* trav, void* userData);
 protected:
@@ -131,6 +138,8 @@ protected:
    int _currentFrame;
    //forward(1)/backward(-1)
    int _dir;
+
+   static pfType* _classType;
    
 };
 

@@ -97,6 +97,7 @@ SRCS=\
    cfdMomentum.cxx \
    cfdMomentums.cxx \
    cfdNavigate.cxx \
+   cfdNodeTraverser.cxx \
    cfdObjects.cxx \
    cfdPlanes.cxx \
    cfdPresetContour.cxx \
@@ -117,6 +118,7 @@ SRCS=\
    cfdVectorBase.cxx \
    cfdVector.cxx \
    cfdVectors.cxx \
+   cfdWriteTraverser\
    fileIO.cxx \
    readWriteVtkThings.cxx \
    cfdAccessoryFunctions.cxx \

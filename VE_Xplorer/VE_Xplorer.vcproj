@@ -446,6 +446,9 @@
 				RelativePath=".\cfdNavigate.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdNodeTraverser.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdObjects.cxx">
 			</File>
 			<File
@@ -519,6 +522,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdVectors.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdWriteTraverser.cxx">
 			</File>
 			<File
 				RelativePath=".\fileIO.cxx">
@@ -1052,6 +1058,9 @@
 				RelativePath="cfdNavigate.h">
 			</File>
 			<File
+				RelativePath=".\cfdNodeTraverser.h">
+			</File>
+			<File
 				RelativePath="cfdObjects.h">
 			</File>
 			<File
@@ -1128,6 +1137,9 @@
 			</File>
 			<File
 				RelativePath="cfdVectors.h">
+			</File>
+			<File
+				RelativePath=".\cfdWriteTraverser.h">
 			</File>
 			<File
 				RelativePath="fileIO.h">

@@ -31,16 +31,27 @@
 			<Tool
 				Name="VCCustomBuildTool"
 				Description="Compiling java classes. . ."
-				CommandLine="$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/ObserverHolder.java
+				CommandLine="echo Compiling ObserverHolder. . .
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/ObserverHolder.java
+echo Compiling VjObsHolder. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/VjObsHolder.java
+echo Compiling ObserverServant. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/ObserverServant.java
+echo Compiling send_param. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/send_param.java
+echo Compiling ack_win. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/ack_win.java
+echo Compiling attrib. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/attrib.java
+echo Compiling draw_baf. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/draw_baf.java
+echo Compiling id_mapper. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/id_mapper.java
+echo Compiling WholeNumberField. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/WholeNumberField.java
+echo Compiling client. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/client.java
+echo Compiling my_orb. . .
 $(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/my_orb.java
 echo Done.
 "
