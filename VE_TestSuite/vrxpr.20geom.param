@@ -1,11 +1,4 @@
-21                   // the number of objects to follow
-8                    // Object type 8: data set
-   1 1 1             // Scale values
-   0 0 0             // Translation values
-   0 0 0             // Rotation values (Z-X-Y format)
-   ./3scl.vtk        // data set name
-   ./JUNK            // precomputed data slice directory
-   ./JUNK            // precomputed surface directory
+20                   // the number of objects to follow
 9                    // Object type 9: Geometry
    1                 // transparency toggle
    1 1 0.7 1         // color flag ( and 3 color values if flag = 1)
