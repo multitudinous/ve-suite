@@ -148,13 +148,13 @@ void UI_StreamlineTab::_buildPage()
                                 wxSL_AUTOTICKS|
                                 wxSL_LABELS|wxSL_RIGHT );
 
-   _nPtsSlider = new wxSlider(this, NUM_PTS_SLIDER,2,1,10,
+   _nPtsSlider = new wxSlider(this, NUM_PTS_SLIDER,2,1,20,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
                                 wxSL_LABELS|wxSL_RIGHT );
 
-   _sizePerSlider = new wxSlider(this, SIZE_SLIDER,20,1,100,
+   _sizePerSlider = new wxSlider(this, SIZE_SLIDER,50,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|

@@ -3,7 +3,6 @@
 #include "cfdEnum.h"
 
 BEGIN_EVENT_TABLE(UI_VectorTab, wxPanel)
-   //EVT_RADIOBOX(VECTOR_RAD_BOX,           UI_VectorTab::_onUpdate)
    EVT_BUTTON(VECTOR_UPDATE_BUTTON,       UI_VectorTab::_onUpdate)
    EVT_CHECKBOX(SCALE_VEC_MAG_CHK,        UI_VectorTab::_onCheck)
    EVT_COMMAND_SCROLL(SCALE_SLIDER,       UI_VectorTab::_onvScaleSlider)
@@ -21,7 +20,6 @@ UI_VectorTab::UI_VectorTab(wxNotebook* tControl)
    _vThresholdMaxSlider = 0;
    _vRatioSlider = 0;
    _vScaleSlider = 0;
-//   _vectorRBox = 0;
    _scaleVecMagChk = 0;
    _updateButton = 0;
 
@@ -34,33 +32,21 @@ UI_VectorTab::UI_VectorTab(wxNotebook* tControl)
 //////////////////////////
 void UI_VectorTab::_buildPage()
 {
-   ///////////////////////////////
-   //Design the Vectors radiobox//
-   ///////////////////////////////
-
    //The names of the radio box choices
-//   wxString vectorName[] = {wxT("default vector")};
-
-   //Create the radio box w/ the list of scalars
-//   _vectorRBox = new wxRadioBox(this, VECTOR_RAD_BOX, wxT("Vectors"),
-//                                wxDefaultPosition, wxDefaultSize, 1,
-//                                                     vectorName, 1,
-//                                                     wxRA_SPECIFY_COLS);
-   //The "Update Visualization" button
-   _updateButton = new wxButton(this, VECTOR_UPDATE_BUTTON, wxT("Update"));
+   //_updateButton = new wxButton(this, VECTOR_UPDATE_BUTTON, wxT("Update"));
 
    //Three static boxes for the sliders
-   wxStaticBox* vtGroup = 0;
-   wxStaticBox* vrGroup = 0;
-   wxStaticBox* vsGroup = 0;
+   wxStaticBox* vectorThreshold = 0;
+   wxStaticText* vectorRatio = 0;
+   wxStaticText* vectorScale = 0;
+   wxStaticBox* vectorControls = 0;
 
-   vtGroup = new wxStaticBox(this,-1, wxT("Vector Threshold"));
-   vrGroup = new wxStaticBox(this,-1, wxT("Vector Ratio"));
-   vsGroup = new wxStaticBox(this,-1, wxT("Vector Scale"));
+   vectorThreshold = new wxStaticBox(this,-1, wxT("Vector Threshold"));
+   vectorRatio = new wxStaticText(this,-1, wxT("Vector Ratio"));
+   vectorScale = new wxStaticText(this,-1, wxT("Vector Scale"));
+   vectorControls = new wxStaticBox(this,-1, wxT("Vector Controls"));
 
    //the sliders for the threshold group
-   //Size of the slider
-   wxSize slidesize(50, 300);
 
    //labels for these sliders 
    //the labels for the sliders
@@ -69,80 +55,98 @@ void UI_VectorTab::_buildPage()
 
    //min threshold slider
    _vThresholdMinSlider = new wxSlider(this, MIN_THRESH_SLIDER,0,0,100,
-                                       wxDefaultPosition, slidesize,
-                                       wxSL_VERTICAL|
+                                       wxDefaultPosition, wxDefaultSize,
+                                       wxSL_HORIZONTAL|
                                        wxSL_AUTOTICKS|
                                        wxSL_LABELS|wxSL_RIGHT );
 
    //max threshold slider
    _vThresholdMaxSlider = new wxSlider(this, MAX_THRESH_SLIDER,100,0,100,
-                                       wxDefaultPosition, slidesize,
-                                       wxSL_VERTICAL|
+                                       wxDefaultPosition, wxDefaultSize,
+                                       wxSL_HORIZONTAL|
                                        wxSL_AUTOTICKS|
                                        wxSL_LABELS|wxSL_RIGHT );
    
    //two sizers to group the sliders and their lables
-   wxBoxSizer* minGroup = new wxBoxSizer(wxVERTICAL);
-   wxBoxSizer* maxGroup = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* minGroup = new wxBoxSizer( wxVERTICAL );
+   wxBoxSizer* maxGroup = new wxBoxSizer( wxVERTICAL );
 
-   minGroup->Add(minLabel,0,wxALIGN_CENTER_HORIZONTAL);
-   minGroup->Add(_vThresholdMinSlider,1,wxALIGN_CENTER_HORIZONTAL);
+   minGroup->Add(minLabel,0,wxALIGN_LEFT|wxEXPAND);
+   minGroup->Add(_vThresholdMinSlider,1,wxALIGN_LEFT|wxEXPAND);
 
-   maxGroup->Add(maxLabel,0,wxALIGN_CENTER_HORIZONTAL);
-   maxGroup->Add(_vThresholdMaxSlider,1,wxALIGN_CENTER_HORIZONTAL);
+   maxGroup->Add(maxLabel,0,wxALIGN_LEFT|wxEXPAND);
+   maxGroup->Add(_vThresholdMaxSlider,1,wxALIGN_LEFT|wxEXPAND);
 
    //ratio slider
-   wxSize slide2size(1, 0);
+   //wxSize slide2size(1, 0);
 
-   _vRatioSlider = new wxSlider(this, RATIO_SLIDER,15,1,15,
+   _vRatioSlider = new wxSlider(this, RATIO_SLIDER,15,1,30,
                                 wxDefaultPosition,wxDefaultSize,/* slidesize,*/
-                                wxSL_VERTICAL|
+                                wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
                                 wxSL_LABELS|wxSL_RIGHT );
+   wxBoxSizer* ratioGroup = new wxBoxSizer( wxVERTICAL );
+   ratioGroup->Add(vectorRatio,0,wxALIGN_LEFT|wxEXPAND);
+   ratioGroup->Add(_vRatioSlider,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
 
    //scale slider
    _vScaleSlider = new wxSlider(this, SCALE_SLIDER,0,-100,100,
                                 wxDefaultPosition, wxDefaultSize,
-                                wxSL_VERTICAL| wxSL_RIGHT );
+                                wxSL_HORIZONTAL|wxSL_AUTOTICKS|
+                                wxSL_LABELS| wxSL_TOP|wxSL_RIGHT );
+   wxBoxSizer* scaleGroup = new wxBoxSizer( wxVERTICAL );
+   scaleGroup->Add(vectorScale,0,wxALIGN_LEFT|wxEXPAND);
+   scaleGroup->Add(_vScaleSlider,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
 
    //check box
    _scaleVecMagChk = new wxCheckBox(this,SCALE_VEC_MAG_CHK,wxT("Scale by Vector Mag"));
    
    //the four groupings
-   wxBoxSizer* vListGroup = new wxBoxSizer(wxVERTICAL);
-   wxStaticBoxSizer* vThreshGroup = new wxStaticBoxSizer(vtGroup,wxHORIZONTAL);
-   wxStaticBoxSizer* vRatioGroup = new wxStaticBoxSizer(vrGroup,wxHORIZONTAL);
-   wxStaticBoxSizer* vScaleGroup = new wxStaticBoxSizer(vsGroup,wxVERTICAL);
+   wxStaticBoxSizer* vThreshGroup = new wxStaticBoxSizer(vectorThreshold,wxVERTICAL);
+   vThreshGroup->Add(maxGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+   vThreshGroup->Add(minGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
 
+   wxStaticBoxSizer* vectorControlsGroup = new wxStaticBoxSizer(vectorControls,wxVERTICAL);
    //first column
-//   vListGroup->Add(_vectorRBox,6,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   vListGroup->Add(_updateButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
    //second column
-   vThreshGroup->Add(minGroup,1,wxALIGN_LEFT|wxEXPAND);
-   vThreshGroup->Add(maxGroup,1,wxALIGN_RIGHT|wxEXPAND);
+   vectorControlsGroup->Add(vThreshGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
 
    //third column
-   vRatioGroup->Add(_vRatioSlider,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   vectorControlsGroup->Add(scaleGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
 
    //fourth column
-   vScaleGroup->Add(_vScaleSlider,6,wxALIGN_CENTER_HORIZONTAL);
-   vScaleGroup->Add(_scaleVecMagChk,0,wxALIGN_CENTER_HORIZONTAL);
-
+   vectorControlsGroup->Add(ratioGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
    
    //the main sizer
-   wxBoxSizer* vecPanelGroup = new wxBoxSizer(wxHORIZONTAL);
-   vecPanelGroup->Add(vListGroup,1,wxEXPAND);
-   vecPanelGroup->Add(vThreshGroup,1,wxEXPAND);
-   vecPanelGroup->Add(vRatioGroup,1,wxEXPAND);
-   vecPanelGroup->Add(vScaleGroup,1,wxEXPAND);
+   wxBoxSizer* vecPanelGroup = new wxBoxSizer(wxVERTICAL);
+   vecPanelGroup->Add(vectorControlsGroup, 1, wxEXPAND|wxALL, 5 );
+   vecPanelGroup->Add(_scaleVecMagChk, 0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5 );
+   //vListGroup->Add(_updateButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
     //set this flag and let wx handle alignment
    SetAutoLayout(true);
 
    //assign the group to the panel
    SetSizer(vecPanelGroup);
+   
+   // Update current gui states on VE-Xplorer side
+   ((UI_Tabs *)_parent)->cId        = CHANGE_VECTOR_MASK_RATIO;
+   ((UI_Tabs *)_parent)->cIso_value = _vRatioSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 
+   ((UI_Tabs *)_parent)->cId        = CHANGE_VECTOR_SCALE;
+   ((UI_Tabs *)_parent)->cIso_value = _vScaleSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
+
+   ((UI_Tabs *)_parent)->cId        = CHANGE_VECTOR_THRESHOLD;
+   ((UI_Tabs *)_parent)->cMin       = _vThresholdMinSlider->GetValue();
+   ((UI_Tabs *)_parent)->cMax       = _vThresholdMaxSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
+
+   ((UI_Tabs *)_parent)->cId        = SCALE_BY_VECTOR_MAGNITUDE;
+   ((UI_Tabs *)_parent)->cIso_value = _vScaleSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
 ///////////////////////////////////////////////////
 //Event callbacks                                // 
@@ -184,6 +188,6 @@ void UI_VectorTab::_onThresholdSlider(wxScrollEvent& event)
 void UI_VectorTab::_onCheck(wxCommandEvent& event)
 {
    ((UI_Tabs *)_parent)->cId        = SCALE_BY_VECTOR_MAGNITUDE;
-   ((UI_Tabs *)_parent)->cIso_value = _vScaleSlider->GetValue();
+   ((UI_Tabs *)_parent)->cIso_value = _scaleVecMagChk->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }

@@ -179,15 +179,19 @@ UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
 
   // Update VE-Xplorer with new data
   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
+                     ((UI_DatasetPanel*)GetParent())->_minPercentSlider->GetValue();
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
+                     ((UI_DatasetPanel*)GetParent())->_maxPercentSlider->GetValue();
   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 
    // Need to add vector support Update VE-Xplorer with new data
   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
-  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
+                     ((UI_DatasetPanel*)GetParent())->_minPercentSlider->GetValue();
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
+                     ((UI_DatasetPanel*)GetParent())->_maxPercentSlider->GetValue();
   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_VECTOR;
   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 }
@@ -226,15 +230,19 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
 
    // Update VE-Xplorer with new data
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
+                     ((UI_DatasetPanel*)GetParent())->_minPercentSlider->GetValue();
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
+                     ((UI_DatasetPanel*)GetParent())->_maxPercentSlider->GetValue();
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 
    // Need to add vector support Update VE-Xplorer with new data
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
+                     ((UI_DatasetPanel*)GetParent())->_minPercentSlider->GetValue();
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
+                     ((UI_DatasetPanel*)GetParent())->_maxPercentSlider->GetValue();
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_VECTOR;
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 }
@@ -293,10 +301,7 @@ UI_DatasetPanel::~UI_DatasetPanel()
 void UI_DatasetPanel::_buildPanel()
 { 
     _organizeRadioBoxInfo();
-   _RBoxScroll = new UI_DatasetScroll(this);
-  
-
-   //_organizeActiveRBox();
+    //_organizeActiveRBox();
    
    /*_activeRBox = new wxRadioBox(this, ACTIVE_RBOX, wxT("Select Active Dataset Type"), 
                                 wxDefaultPosition, wxDefaultSize,
@@ -304,11 +309,7 @@ void UI_DatasetPanel::_buildPanel()
 
   
    _scalarNames = new wxString[1];
-   _scalarNames[0] = wxT("No Scalars");
-   
-   //Create the radio box w/ the list of scalar names if we have them
-   _ScalarScroll = new UI_ScalarScroll(this);
-  
+   _scalarNames[0] = wxT("No Scalars");  
 
    _datasetTypesel[0] = wxT("3D mesh");
    _datasetTypesel[1] = wxT("Vertex Data");
@@ -363,6 +364,10 @@ void UI_DatasetPanel::_buildPanel()
    //_col4 = new wxBoxSizer(wxVERTICAL);
 
    //new layout
+   //Create the radio box w/ the list of scalar names if we have them
+   _RBoxScroll = new UI_DatasetScroll(this);
+   _ScalarScroll = new UI_ScalarScroll(this);
+
    _col1->Add(_RBoxScroll,1,wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL,5);
    
    _col2->Add(_ScalarScroll,1,wxALL|wxALIGN_LEFT|wxEXPAND,5);
@@ -399,6 +404,7 @@ void UI_DatasetPanel::_buildPanel()
    //_RBoxScroll->_3dRBox->Enable(TRUE);
    //_RBoxScroll->_vertexRBox->Enable(FALSE);
    //_RBoxScroll->_polydataRBox->Enable(FALSE);
+
    for (int i=0; i<_numSteadyStateDataSets; i++)
    {
 	  if ( _DataSets.empty() )
@@ -529,7 +535,8 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    delete _maxPercentSlider; 
    delete _dataHeadingBox;
 
-/////////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////
+////////////////////////////////////////////
    _activeModIndex = _activeMod;
    _buildDataSets();
    _buildPanel(); 
