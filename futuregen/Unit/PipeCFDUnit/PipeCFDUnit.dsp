@@ -127,10 +127,6 @@ SOURCE=..\ThirdParty\rei_lib\interp.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\logfit.f
-# End Source File
-# Begin Source File
-
 SOURCE=..\V21Helper\Therm\matrix.cpp
 # End Source File
 # Begin Source File

@@ -103,21 +103,59 @@ bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, Types::Profile_var &prof,
   if(ich==-1) cout << "Profile variable CHI not found" << endl;
   if(itt==-1) cout << "Profile variable TEMPERATURE not found" << endl;
 
+  double zz = prof->profile_vals[iz][0], yy;
+  std::vector<double> yyy;
   std::vector<std::vector<double> > yprof;
   std::vector<double> zprof;
-  double zz = 1.0e10, yy;
+  std::vector<int> iii;
   std::vector<std::vector<int> > prof_index;
 
-  std::vector<double> yyy;
-  std::vector<int> iii;
+  // for interpolation purposes for points outside the profile range
+  // add two extra rows beyond the profile at zz=-1.0e10 and zz=1.0e10
+  // and for each row add two extra points at yy=-1.0e10 and yy=1.0e10
+
+  // add row for zz = -1.0e10
+  // add point at yy = -1.0e10
+  yy = -1.0e10;
+  yyy.push_back(yy);
+  iii.push_back(0);
+  zprof.push_back(-1.0e10);
   for(j=0; j<prof->profile_vals[iy].length(); j++) {
      if(fabs(prof->profile_vals[iz][j]-zz)>1.0e-4){
-        if(j){
-           yprof.push_back(yyy);
-           yyy.clear();
-           prof_index.push_back(iii);
-           iii.clear();
-        }
+        // added point at yy=1.0e10
+        yyy.push_back(1.0e10);
+        iii.push_back(j-1);
+        yprof.push_back(yyy);
+        prof_index.push_back(iii);
+        break;
+     }else{
+        yy = prof->profile_vals[iy][j];
+        yyy.push_back(yy);
+        iii.push_back(j);
+        zz = prof->profile_vals[iz][j];
+     }
+  }
+
+
+  yyy.clear();
+  // added point at yy=-1.0e10 for first zz in profile
+  yyy.push_back(-1.0e10);
+  iii.clear();
+  iii.push_back(0);
+  zz = prof->profile_vals[iz][0];
+  zprof.push_back(zz);
+  for(j=0; j<prof->profile_vals[iy].length(); j++) {
+     if(fabs(prof->profile_vals[iz][j]-zz)>1.0e-4){
+        // added point at yy=1.0e10 for subsequent zz's
+        yyy.push_back(1.0e10);
+        yprof.push_back(yyy);
+        yyy.clear();
+        iii.push_back(j-1);
+        prof_index.push_back(iii);
+        iii.clear();
+        // added point at yy=1.0e10
+        yyy.push_back(-1.0e10);
+        iii.push_back(j);
         zz = prof->profile_vals[iz][j];
         zprof.push_back(zz);
         yy = prof->profile_vals[iy][j];
@@ -127,11 +165,41 @@ bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, Types::Profile_var &prof,
         yy = prof->profile_vals[iy][j];
         yyy.push_back(yy);
         iii.push_back(j);
+        zz = prof->profile_vals[iz][j];
      }
   }
+  //add point at yy=1.0e10 on last row
+  yyy.push_back(1.0e10);
   yprof.push_back(yyy);
+  iii.push_back(j-1);
   prof_index.push_back(iii);
   
+  // add row for zz = 1.0e10
+  // add point at yy = -1.0e10
+  yyy.clear();
+  yy = -1.0e10;
+  yyy.push_back(yy);
+  zprof.push_back(1.0e10);
+  int nv = prof->profile_vals[iz].length();
+  zz = prof->profile_vals[iz][nv-1];
+  int jbeg;
+  for(jbeg=nv-1; jbeg!=-1; jbeg--){
+     if(fabs(prof->profile_vals[iz][j]-zz)>1.0e-4) break;
+  }
+  jbeg++;
+  iii.clear();
+  iii.push_back(jbeg);
+  for(j=jbeg; j<prof->profile_vals[iy].length(); j++) {
+     yy = prof->profile_vals[iy][j];
+     yyy.push_back(yy);
+     iii.push_back(j);
+  }
+  //add point at yy=1.0e10
+  yyy.push_back(1.0e10);
+  iii.push_back(j-1);
+  yprof.push_back(yyy);
+  prof_index.push_back(iii);
+
   // Create INLET
   grid grd((path+"/GRID").c_str());
   grd.read_rei_grid();
@@ -164,69 +232,75 @@ bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, Types::Profile_var &prof,
     for(j=0; j<nj; j++)
       for(k=0; k<nk; k++) {
 	
-         if(grd.celltype(i,j,k)==7){
+         if(grd.celltype(i,j,k)==1){
 
             double u_vel, v_vel, w_vel, eff, eta, chi, tt, ivar = -1;
+            double u_vel1, v_vel1, w_vel1, eff1, eta1, chi1, tt1;
+            double u_vel2, v_vel2, w_vel2, eff2, eta2, chi2, tt2;
             int k1 = 0, k2 = zprof.size()-1, k3, j1, j2, j3;
-            if(-grd.z(k)<zprof[0]){
-               j1 = 0; j2 = yprof[k1].size()-1;
-               if(grd.x(i)<=yprof[k1][0]){
-                  ivar = prof_index[k1][0];
-                  u_vel = prof->profile_vals[iu][ivar];
-                  v_vel = prof->profile_vals[iv][ivar];
-                  w_vel = prof->profile_vals[iw][ivar];
-                  eff = prof->profile_vals[ief][ivar];
-                  eta = prof->profile_vals[iet][ivar];
-                  chi = prof->profile_vals[ich][ivar];
-                  tt = prof->profile_vals[itt][ivar];
-               }else if(grd.x(i)>yprof[k1][j2]){
-                  ivar = prof_index[k1][j2];
-                  u_vel = prof->profile_vals[iu][ivar];
-                  v_vel = prof->profile_vals[iv][ivar];
-                  w_vel = prof->profile_vals[iw][ivar];
-                  eff = prof->profile_vals[ief][ivar];
-                  eta = prof->profile_vals[iet][ivar];
-                  chi = prof->profile_vals[ich][ivar];
-                  tt = prof->profile_vals[itt][ivar];
-               }else{
-                  while(j2-j1>1){
-                     j3 = (j1 + j2)/2;
-                     if(yprof[k1][j3]<grd.x(i)) j1 = j3;
-                     else j2 = j3;
-                  }
-                  double yfrac = (grd.x(i)-yprof[k1][j1])/(yprof[k1][j2] - yprof[k1][j1]);
-                  int ivar1 = prof_index[k1][j1], ivar2 = prof_index[k1][j2];
-                  u_vel = (1.0-yfrac)*prof->profile_vals[iu][ivar1] + yfrac*prof->profile_vals[iu][ivar2];
-                  v_vel = (1.0-yfrac)*prof->profile_vals[iv][ivar1] + yfrac*prof->profile_vals[iv][ivar2];
-                  w_vel = (1.0-yfrac)*prof->profile_vals[iw][ivar1] + yfrac*prof->profile_vals[iw][ivar2];
-                  eff = (1.0-yfrac)*prof->profile_vals[ief][ivar1] + yfrac*prof->profile_vals[ief][ivar2];
-                  eta = (1.0-yfrac)*prof->profile_vals[iet][ivar1] + yfrac*prof->profile_vals[iet][ivar2];
-                  chi = (1.0-yfrac)*prof->profile_vals[ich][ivar1] + yfrac*prof->profile_vals[ich][ivar2];
-                  tt = (1.0-yfrac)*prof->profile_vals[itt][ivar1] + yfrac*prof->profile_vals[itt][ivar2];
-               }
-            }else if(-grd.z(k)>zprof[k2]){
-               k1 = k2;
-            }else{
+            while(k2-k1>1){
+               k3 = (k1 + k2)/2;
+               if(zprof[k3]<-grd.z(k)) k1 = k3;
+               else k2 = k3;
             }
+            double zfrac = (-grd.z(k)-zprof[k1])/(zprof[k2] - zprof[k1]);
+            j1 = 0; j2 = yprof[k1].size()-1;
+            while(j2-j1>1){
+               j3 = (j1 + j2)/2;
+               if(yprof[k1][j3]<grd.x(i)) j1 = j3;
+               else j2 = j3;
+            }
+            double yfrac = (grd.x(i)-yprof[k1][j1])/(yprof[k1][j2] - yprof[k1][j1]);
+            int ivar1 = prof_index[k1][j1], ivar2 = prof_index[k1][j2];
+            u_vel1 = (1.0-yfrac)*prof->profile_vals[iu][ivar1] + yfrac*prof->profile_vals[iu][ivar2];
+            v_vel1 = (1.0-yfrac)*prof->profile_vals[iv][ivar1] + yfrac*prof->profile_vals[iv][ivar2];
+            w_vel1 = (1.0-yfrac)*prof->profile_vals[iw][ivar1] + yfrac*prof->profile_vals[iw][ivar2];
+            eff1 = (1.0-yfrac)*prof->profile_vals[ief][ivar1] + yfrac*prof->profile_vals[ief][ivar2];
+            eta1 = (1.0-yfrac)*prof->profile_vals[iet][ivar1] + yfrac*prof->profile_vals[iet][ivar2];
+            chi1 = (1.0-yfrac)*prof->profile_vals[ich][ivar1] + yfrac*prof->profile_vals[ich][ivar2];
+            tt1 = (1.0-yfrac)*prof->profile_vals[itt][ivar1] + yfrac*prof->profile_vals[itt][ivar2];
+            j1 = 0; j2 = yprof[k2].size()-1;
+            while(j2-j1>1){
+               j3 = (j1 + j2)/2;
+               if(yprof[k2][j3]<grd.x(i)) j1 = j3;
+               else j2 = j3;
+            }
+            yfrac = (grd.x(i)-yprof[k2][j1])/(yprof[k2][j2] - yprof[k2][j1]);
+            ivar1 = prof_index[k2][j1];
+            ivar2 = prof_index[k2][j2];
+            u_vel2 = (1.0-yfrac)*prof->profile_vals[iu][ivar1] + yfrac*prof->profile_vals[iu][ivar2];
+            v_vel2 = (1.0-yfrac)*prof->profile_vals[iv][ivar1] + yfrac*prof->profile_vals[iv][ivar2];
+            w_vel2 = (1.0-yfrac)*prof->profile_vals[iw][ivar1] + yfrac*prof->profile_vals[iw][ivar2];
+            eff2 = (1.0-yfrac)*prof->profile_vals[ief][ivar1] + yfrac*prof->profile_vals[ief][ivar2];
+            eta2 = (1.0-yfrac)*prof->profile_vals[iet][ivar1] + yfrac*prof->profile_vals[iet][ivar2];
+            chi2 = (1.0-yfrac)*prof->profile_vals[ich][ivar1] + yfrac*prof->profile_vals[ich][ivar2];
+            tt2 = (1.0-yfrac)*prof->profile_vals[itt][ivar1] + yfrac*prof->profile_vals[itt][ivar2];
             
-/*            fprintf(inlet,
-               "%4d\t%4d\t%4d\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%4d\t%4d\t\n",
+            u_vel = (1.0-zfrac)*v_vel1 + zfrac*v_vel2;
+            v_vel = (1.0-zfrac)*u_vel1 + zfrac*u_vel2;
+            w_vel = -((1.0-zfrac)*w_vel1 + zfrac*w_vel2);
+            eff = (1.0-zfrac)*eff1 + zfrac*eff2;
+            eta = (1.0-zfrac)*eta1 + zfrac*eta2;
+            chi = (1.0-zfrac)*chi1 + zfrac*chi2;
+            tt = (1.0-zfrac)*tt1 + zfrac*tt2;
+
+            fprintf(inlet,
+               "%4d\t%4d\t%4d\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%12.6E\t%4d\t%4d\t\n",
                i+1, j+1, k+1, //# i, j, k : index 1-based
-               0.0, //# u_vel
-               0.0, //# v_vel
-               z_flow[zone-1][0] * nfwall, //# w_vel
-               //(z_flow[zone-1][0] + z_flow[zone-1][2]) * nfwall, //# w_vel
-               z_flow[zone-1][0] / (z_flow[zone-1][0] + z_flow[zone-1][2]), //# fmean
-               0.0, //# eta
-               0.0, //# chi
-               -1.0, //# temperature,
-               0.0, // f var
-               0.0, // eta var
-               cell_type[i][j][k], //# cell type
-               zone1); //# group
-            // cout <<i+1<<" "<<j+1<<" "<<k+1<<" "<<z_flow[zone-1][0]<<" "<<nfwall<<" "<<z_flow[zone-1][1]<<" "<<z_flow[zone-1][2]<< endl;*/
-         }
+               u_vel,
+               v_vel,
+               w_vel,
+               eff,
+               eta,
+               chi,
+               tt,
+               grd.celltype(i,j,k), //# cell type
+               1); //# group
+         } //if(celltype==1
       }
+
+      fclose(inlet);
+
   _gas_in = gas_in;
 
   _pressure = gas_in->gas_composite.P;
