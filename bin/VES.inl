@@ -19,6 +19,7 @@ case $1 in
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/simstandalone.jconf
+    /usr/share/Performer/bin/rmsem
   ;;
 
   -wall)
@@ -115,7 +116,7 @@ case $1 in
   echo When the viewer has started, start the menu in another shell
   echo "      "-menu = start wxWidgets menu to control viewer
   echo The following utilities might be useful occasionaly
-  echo "     "-nserv = restart TAO nameserver
+  echo "     "-nserv = restart TAO nameserver and VE-CE
   echo "   "-surface = make VTK surface from fluid mesh
   echo "  "-surf2stl = convert surface file to stl
   echo "  "-transVTK = move flowdata to align with geometry
