@@ -202,14 +202,26 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
             //std::cout<<array[ i ]<<"\t";
          }
          //std::cout<<std::endl;
-         data.push_back( array );   //push data into vector
+         //data.push_back( array );   //push data into vector
          pts->InsertPoint( j, array[0], array[1], 0.0 );
          pts->InsertPoint( j+numVertices, array[0], array[1], -0.1 );
          //std::cout<<data[j][3]<<std::endl;
-         for ( int i=2;i<numOfParameters;i++ )
+         for ( int i=0;i<numOfParameters - 1;i++ )
          {
-            parameterData[ i ]->SetComponent( j, 0, data[j][i] );
-            parameterData[ i ]->SetComponent( j+numVertices, 0, data[j][i] );
+            if ( i != (numOfParameters - 2) )
+            {
+               parameterData[ i ]->SetComponent( j, 0, array[ i+2 ] );
+               parameterData[ i ]->SetComponent( j+numVertices, 0, array[ i+2 ] );
+            }
+            else
+            {
+               parameterData[ i ]->SetComponent( j, 0, array[ i+2 ] );
+               parameterData[ i ]->SetComponent( j+numVertices, 0, array[ i+2 ] );
+               parameterData[ i ]->SetComponent( j, 1, array[ i+3 ] );
+               parameterData[ i ]->SetComponent( j+numVertices, 1, array[ i+3 ] );
+               parameterData[ i ]->SetComponent( j, 2, 0 );
+               parameterData[ i ]->SetComponent( j+numVertices, 2, 0 );
+           }
          }
          //parameterData[ 0 ]->
       }
