@@ -260,6 +260,7 @@ VjObs::scalar_p* VjObs_i::get_teacher_name()
 VjObs::scalar_p* VjObs_i::get_teacher_name()
 #endif
 {
+   CreateTeacherInfo();
    VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
    return teacher_name_._retn();
 }
