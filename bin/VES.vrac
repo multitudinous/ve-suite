@@ -48,7 +48,7 @@ switch ($1)
   case -sim:
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
-    ${VE_SUITE_HOME}/VE_Xplorer/vjconfig/sim.base.jconf \
+    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.jconf \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
     /usr/share/Performer/bin/rmsem
   breaksw
@@ -141,7 +141,7 @@ switch ($1)
   default:
   echo ""
   echo Usage:
-  echo VES.vrac [ options ] 
+  echo "VES.vrac [ options ] "
   echo "         "-h = usage information "(this page)"
   echo The following indicates the workflow of getting the cfd data into the viewer.
   echo "   "-cfd2VTK = translate cfd flowdata to VTK format
