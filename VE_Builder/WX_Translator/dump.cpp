@@ -4,10 +4,10 @@
             huckaby@netl.doe.gov
     Date:   3/25/2004
 */
-#include "stdio.h"
+#include <iostream>
+#include <string>
 #include "fluentCase.h"
 #include "fluentObjects.h"
-#include <string>
 
 namespace FluentReader {
 
