@@ -83,7 +83,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)/futuregen/Plugin&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Framework&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)/VE_Conductor/Framework&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_TAO"
 				IgnoreStandardIncludePath="FALSE"
 				BasicRuntimeChecks="3"
@@ -191,7 +191,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\futuregen\Plugin\FinancialDialog.cpp">
+				RelativePath=".\FinancialDialog.cpp">
 			</File>
 			<File
 				RelativePath="Frame.cpp">
@@ -234,7 +234,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\futuregen\Plugin\interface.cpp">
+				RelativePath=".\interface.cpp">
 			</File>
 			<File
 				RelativePath="ListTable.cpp">
@@ -257,13 +257,10 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleC.cpp">
+				RelativePath="..\..\VESOpen\skel\moduleC.cpp">
 			</File>
 			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleS.cpp">
-			</File>
-			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleS_T.cpp">
+				RelativePath="..\..\VESOpen\skel\moduleS.cpp">
 			</File>
 			<File
 				RelativePath="Network.cpp">
@@ -295,7 +292,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\futuregen\Plugin\package.cpp">
+				RelativePath=".\package.cpp">
 			</File>
 			<File
 				RelativePath=".\paraThread.cpp">
@@ -307,7 +304,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\futuregen\Plugin\Plugin_base.cpp">
+				RelativePath=".\Plugin_base.cpp">
 			</File>
 			<File
 				RelativePath="PluginLoader.cpp">
@@ -370,45 +367,16 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\futuregen\Plugin\string_ops.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
+				RelativePath=".\string_ops.cpp">
 			</File>
 			<File
-				RelativePath="StringParse.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath=".\StringParse.cpp">
 			</File>
 			<File
-				RelativePath="..\..\futuregen\Plugin\TexTable.cpp">
+				RelativePath=".\TexTable.cpp">
 			</File>
 			<File
-				RelativePath="..\..\futuregen\Plugin\TextResultDialog.cpp">
+				RelativePath=".\TextResultDialog.cpp">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_DataSetPanel.cpp">
@@ -615,10 +583,13 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\..\futuregen\Plugin\UIDialog.cpp">
+				RelativePath=".\UIDialog.cpp">
 			</File>
 			<File
-				RelativePath="..\..\VE_Conductor\skel\VjObsC.cpp">
+				RelativePath="..\..\VESOpen\skel\VjObsC.cpp">
+			</File>
+			<File
+				RelativePath="..\..\VESOpen\skel\VjObsS.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -631,25 +602,10 @@
 				RelativePath="Avail_Modules.h">
 			</File>
 			<File
-				RelativePath="..\Plugin\FinancialDialog.h">
-			</File>
-			<File
 				RelativePath="Frame.h">
 			</File>
 			<File
 				RelativePath="GlobalParamDialog.h">
-			</File>
-			<File
-				RelativePath="ListTable.h">
-			</File>
-			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleC.h">
-			</File>
-			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleS.h">
-			</File>
-			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleS_T.h">
 			</File>
 			<File
 				RelativePath="Network.h">
@@ -658,16 +614,7 @@
 				RelativePath=".\OrbThread.h">
 			</File>
 			<File
-				RelativePath="..\Plugin\packable.h">
-			</File>
-			<File
-				RelativePath="..\Plugin\package.h">
-			</File>
-			<File
 				RelativePath=".\paraThread.h">
-			</File>
-			<File
-				RelativePath="..\Plugin\Plugin_base.h">
 			</File>
 			<File
 				RelativePath="PluginLoader.h">
@@ -679,16 +626,7 @@
 				RelativePath="ResultPanel.h">
 			</File>
 			<File
-				RelativePath="..\Plugin\string_ops.h">
-			</File>
-			<File
 				RelativePath="StringParse.h">
-			</File>
-			<File
-				RelativePath="..\Plugin\TexTable.h">
-			</File>
-			<File
-				RelativePath="..\Plugin\TextResultDialog.h">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_DataSetPanel.h">
@@ -740,12 +678,6 @@
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_VisTab.h">
-			</File>
-			<File
-				RelativePath="..\Plugin\UIDialog.h">
-			</File>
-			<File
-				RelativePath="..\..\VE_Conductor\skel\VjObsC.h">
 			</File>
 		</Filter>
 		<Filter

@@ -1,10 +1,12 @@
 Microsoft Visual Studio Solution File, Format Version 8.00
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Xplorer", "VE_Xplorer\VE_Xplorer.vcproj", "{8A56716E-3619-45C5-A70D-B8CE20A7FD9E}"
 	ProjectSection(ProjectDependencies) = postProject
+		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7} = {BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Conductor", "VE_Conductor\VE_Conductor.vcproj", "{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}"
 	ProjectSection(ProjectDependencies) = postProject
+		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7} = {BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VESOpen", "VESOpen\VESOpen\VESOpen.vcproj", "{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}"
@@ -13,10 +15,12 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VESOpen", "VESOpen\VESOpen\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinServer", "VE_CE\WinServer.vcproj", "{E96F21F0-C5EF-43F0-9643-154D3BB96118}"
 	ProjectSection(ProjectDependencies) = postProject
+		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7} = {BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "WinClient", "VE_Conductor\Framework\WinClient.vcproj", "{E18B55CA-745E-4EBC-9056-85CA897EE690}"
 	ProjectSection(ProjectDependencies) = postProject
+		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7} = {BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}
 	EndProjectSection
 EndProject
 Global
