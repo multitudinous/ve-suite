@@ -9,8 +9,8 @@ xmlns="http://www.w3.org/TR/REC-html40">
 <meta name=ProgId content=Word.Document>
 <meta name=Generator content="Microsoft Word 10">
 <meta name=Originator content="Microsoft Word 10">
-<link rel=File-List href="SOFC_1D_files/filelist.xml">
-<link rel=Edit-Time-Data href="SOFC_1D_files/editdata.mso">
+<link rel=File-List href="PipeCFD_files/filelist.xml">
+<link rel=Edit-Time-Data href="PipeCFD_files/editdata.mso">
 <!--[if !mso]>
 <style>
 v\:* {behavior:url(#default#VML);}
@@ -19,9 +19,7 @@ w\:* {behavior:url(#default#VML);}
 .shape {behavior:url(#default#VML);}
 </style>
 <![endif]-->
-<title>Vision 21 Workbench-SOFC 1D Module</title>
-<o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
- name="PlaceName"/>
+<title>Vision 21 Workbench-PipeCFD Module</title>
 <o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
  name="place"/>
 <o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
@@ -30,17 +28,17 @@ w\:* {behavior:url(#default#VML);}
  <o:DocumentProperties>
   <o:Author>yang</o:Author>
   <o:LastAuthor>yang</o:LastAuthor>
-  <o:Revision>4</o:Revision>
-  <o:TotalTime>3</o:TotalTime>
-  <o:Created>2004-12-09T18:33:00Z</o:Created>
-  <o:LastSaved>2004-12-10T00:40:00Z</o:LastSaved>
+  <o:Revision>7</o:Revision>
+  <o:TotalTime>47</o:TotalTime>
+  <o:Created>2004-12-09T22:45:00Z</o:Created>
+  <o:LastSaved>2004-12-11T00:39:00Z</o:LastSaved>
   <o:Pages>1</o:Pages>
-  <o:Words>125</o:Words>
-  <o:Characters>715</o:Characters>
+  <o:Words>38</o:Words>
+  <o:Characters>217</o:Characters>
   <o:Company>REI</o:Company>
-  <o:Lines>5</o:Lines>
+  <o:Lines>1</o:Lines>
   <o:Paragraphs>1</o:Paragraphs>
-  <o:CharactersWithSpaces>839</o:CharactersWithSpaces>
+  <o:CharactersWithSpaces>254</o:CharactersWithSpaces>
   <o:Version>10.4219</o:Version>
  </o:DocumentProperties>
 </xml><![endif]--><!--[if gte mso 9]><xml>
@@ -94,9 +92,6 @@ p
 	font-size:12.0pt;
 	font-family:"Times New Roman";
 	mso-fareast-font-family:SimSun;}
-span.SpellE
-	{mso-style-name:"";
-	mso-spl-e:yes;}
 span.GramE
 	{mso-style-name:"";
 	mso-gram-e:yes;}
@@ -110,8 +105,8 @@ div.Section1
 	{page:Section1;}
  /* List Definitions */
  @list l0
-	{mso-list-id:1359308115;
-	mso-list-template-ids:1379052700;}
+	{mso-list-id:658848880;
+	mso-list-template-ids:-1214633066;}
 @list l0:level1
 	{mso-level-number-format:bullet;
 	mso-level-text:\F0B7;
@@ -120,17 +115,45 @@ div.Section1
 	text-indent:-.25in;
 	mso-ansi-font-size:10.0pt;
 	font-family:Symbol;}
-@list l1
-	{mso-list-id:1822381639;
-	mso-list-template-ids:-2108795382;}
-@list l1:level1
-	{mso-level-number-format:bullet;
-	mso-level-text:\F0B7;
-	mso-level-tab-stop:.5in;
+@list l0:level2
+	{mso-level-tab-stop:1.0in;
 	mso-level-number-position:left;
-	text-indent:-.25in;
-	mso-ansi-font-size:10.0pt;
-	font-family:Symbol;}
+	text-indent:-.25in;}
+@list l0:level3
+	{mso-level-tab-stop:1.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level4
+	{mso-level-tab-stop:2.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level5
+	{mso-level-tab-stop:2.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level6
+	{mso-level-tab-stop:3.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level7
+	{mso-level-tab-stop:3.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level8
+	{mso-level-tab-stop:4.0in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l0:level9
+	{mso-level-tab-stop:4.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
+@list l1
+	{mso-list-id:1544756816;
+	mso-list-template-ids:572553878;}
+@list l1:level1
+	{mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;}
 @list l1:level2
 	{mso-level-tab-stop:1.0in;
 	mso-level-number-position:left;
@@ -163,6 +186,20 @@ div.Section1
 	{mso-level-tab-stop:4.5in;
 	mso-level-number-position:left;
 	text-indent:-.25in;}
+@list l2
+	{mso-list-id:1671325844;
+	mso-list-template-ids:1666511862;}
+@list l3
+	{mso-list-id:1762919612;
+	mso-list-template-ids:1600308520;}
+@list l3:level1
+	{mso-level-number-format:bullet;
+	mso-level-text:\F0B7;
+	mso-level-tab-stop:.5in;
+	mso-level-number-position:left;
+	text-indent:-.25in;
+	mso-ansi-font-size:10.0pt;
+	font-family:Symbol;}
 ol
 	{margin-bottom:0in;}
 ul
@@ -186,7 +223,7 @@ ul
 	font-family:"Times New Roman";}
 </style>
 <![endif]--><!--[if gte mso 9]><xml>
- <o:shapedefaults v:ext="edit" spidmax="3074"/>
+ <o:shapedefaults v:ext="edit" spidmax="7170"/>
 </xml><![endif]--><!--[if gte mso 9]><xml>
  <o:shapelayout v:ext="edit">
   <o:idmap v:ext="edit" data="1"/>
@@ -199,55 +236,11 @@ ul
 
 <div>
 
-<div class=MsoNormal>
-
-<hr size=4 width=100 style='width:75.0pt' align=left>
-
-</div>
-
-</div>
+<div>
 
 <div>
 
-<div class=MsoNormal>
-
-<hr size=4 width=200 style='width:150.0pt' align=left>
-
-</div>
-
-</div>
-
 <div>
-
-<div class=MsoNormal>
-
-<hr size=4 width=300 style='width:225.0pt' align=left>
-
-</div>
-
-</div>
-
-<h1>SOFC 1D Module</h1>
-
-<div>
-
-<div class=MsoNormal>
-
-<hr size=4 width=300 style='width:225.0pt' align=left>
-
-</div>
-
-</div>
-
-<div>
-
-<div class=MsoNormal>
-
-<hr size=4 width=200 style='width:150.0pt' align=left>
-
-</div>
-
-</div>
 
 <div>
 
@@ -259,16 +252,151 @@ ul
 
 </div>
 
-<table class=MsoNormalTable border=0 cellpadding=0 style='mso-cellspacing:1.5pt;
- mso-padding-alt:0in 5.4pt 0in 5.4pt'>
- <tr style='mso-yfti-irow:0;mso-yfti-lastrow:yes'>
-  <td style='padding:.75pt .75pt .75pt .75pt'>
-  <p>The SOFC_1D model is of higher fidelity compared to the 0-D SOFC model
-  also in the workbench. The model allows for steady-state spatial variation in
-  one dimension along the fuel cell. </p>
-  </td>
- </tr>
-</table>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=200 style='width:150.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=300 style='width:225.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<h1>PipeCFD Module (Pipe CFD) </h1>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=300 style='width:225.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=200 style='width:150.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div>
+
+<div class=MsoNormal>
+
+<hr size=4 width=100 style='width:75.0pt' align=left>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+<p>This is an experiment module to demonstrate CFD to CFD coupling simulation. Do
+not use this module for ordinary simulation. <o:p></o:p></p>
+
+<p class=MsoNormal><br clear=right style='mso-special-character:line-break' \>
+</p>
 
 <div class=MsoNormal align=center style='text-align:center'>
 
@@ -296,40 +424,31 @@ ul
  </v:formulas>
  <v:path o:extrusionok="f" gradientshapeok="t" o:connecttype="rect"/>
  <o:lock v:ext="edit" aspectratio="t"/>
-</v:shapetype><v:shape id="_x0000_s1026" type="#_x0000_t75" alt="" style='position:absolute;
- margin-left:0;margin-top:0;width:112.5pt;height:101.25pt;z-index:1;
+</v:shapetype><v:shape id="_x0000_s1027" type="#_x0000_t75" alt="" style='position:absolute;
+ margin-left:0;margin-top:0;width:262.5pt;height:29.25pt;z-index:1;
  mso-wrap-distance-left:15pt;mso-wrap-distance-top:15pt;
  mso-wrap-distance-right:15pt;mso-wrap-distance-bottom:15pt;
- mso-position-horizontal:left;mso-position-vertical-relative:line'
- o:allowoverlap="f">
- <v:imagedata src="images/icon_sofc_1d.gif"/>
+ mso-position-horizontal:left;mso-position-vertical:top;
+ mso-position-vertical-relative:line' o:allowoverlap="f">
+ <v:imagedata src="images/iconPipe3d.gif"/>
  <w:wrap type="square"/>
-</v:shape><![endif]--><![if !vml]><img width=150 height=135
-src="images/icon_sofc_1d.gif" align=left hspace=20 vspace=20 v:shapes="_x0000_s1026"><![endif]>Connections</h3>
+</v:shape><![endif]--><![if !vml]><img width=350 height=39
+src="images/iconPipe3d.gif" align=left hspace=20 vspace=20 v:shapes="_x0000_s1027"><![endif]>Connections</h3>
 
 <ul type=disc>
  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l1 level1 lfo3;tab-stops:list .5in'><st1:place><st1:PlaceType><span
+     mso-list:l0 level1 lfo3;tab-stops:list .5in'><st1:place><st1:PlaceType><span
        style='color:red'>Inlet</span></st1:PlaceType><span style='color:red'> </span><st1:PlaceType><span
        style='color:red'>Port</span></st1:PlaceType></st1:place><span
-     style='color:red'> 0</span> (left): Inlet anode gas stream (rich in CO and
-     H<sub>2</sub>).</li>
+     style='color:red'> <span class=GramE>0 <span style='color:windowtext'>:</span></span></span>
+     Inlet gas stream.</li>
  <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l1 level1 lfo3;tab-stops:list .5in'><st1:place><st1:PlaceType><span
-       style='color:red'>Inlet</span></st1:PlaceType><span style='color:red'> </span><st1:PlaceType><span
-       style='color:red'>Port</span></st1:PlaceType></st1:place><span
-     style='color:red'> 1</span> (top): Inlet cathode gas stream.</li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l1 level1 lfo3;tab-stops:list .5in'><st1:place><st1:PlaceName><span
-       style='color:aqua'>Outlet</span></st1:PlaceName><span style='color:aqua'>
-      </span><st1:PlaceType><span style='color:aqua'>Port</span></st1:PlaceType></st1:place><span
-     style='color:aqua'> 0 </span>(up): Outlet anode gas stream.<o:p></o:p></li>
- <li class=MsoNormal style='mso-margin-top-alt:auto;mso-margin-bottom-alt:auto;
-     mso-list:l1 level1 lfo3;tab-stops:list .5in'><span style='color:aqua'>Outlet
-     Port 1 </span>(bottom): Outlet cathode gas stream.<o:p></o:p></li>
+     mso-list:l0 level1 lfo3;tab-stops:list .5in'><span style='color:#16E5DE'>Outlet
+     Port 0 </span><span style='mso-spacerun:yes'>&nbsp;</span>: Outlet gas
+     stream.</li>
 </ul>
 
-<p class=MsoNormal><br clear=left style='mso-special-character:line-break' \>
+<p class=MsoNormal><br clear=left style='mso-special-character:line-break'>
 </p>
 
 <div class=MsoNormal align=center style='text-align:center'>
@@ -338,44 +457,7 @@ src="images/icon_sofc_1d.gif" align=left hspace=20 vspace=20 v:shapes="_x0000_s1
 
 </div>
 
-<h2><a name=ui>Graphical User Interface (UI)</a></h2>
-
-<p><!--[if gte vml 1]><v:shape id="_x0000_s1027" type="#_x0000_t75" alt=""
- style='position:absolute;margin-left:0;margin-top:0;width:450.75pt;height:528.75pt;
- z-index:2;mso-wrap-distance-left:15pt;mso-wrap-distance-right:15pt;
- mso-position-horizontal:left;mso-position-vertical-relative:line'
- o:allowoverlap="f">
- <v:imagedata src="images/gui_sofc_1d_01.gif"/>
- <w:wrap type="square"/>
-</v:shape><![endif]--><![if !vml]><img width=601 height=705
-src="images/gui_sofc_1d_01.gif" align=left hspace=20 v:shapes="_x0000_s1027"><![endif]>This
-user interface allows the user to manipulate fuel cell characteristics and <span
-class=SpellE>perfomance</span>. The user can input not only fuel cell size and
-quantity, but also the cell resistance and general construction of the unit. <o:p></o:p></p>
-
-<p><br clear=left style='mso-special-character:line-break' \>
-</p>
-
-<div class=MsoNormal align=center style='text-align:center'>
-
-<hr size=4 width="100%" align=center>
-
-</div>
-
-<h2><a name=sum>Summary Data (SUM)</a></h2>
-
-<p><span class=GramE>This<span style='mso-spacerun:yes'>&nbsp; </span>shows</span>
-results after the module is executed. The first line shows overall produced
-power and heat transfer of the unit. <o:p></o:p></p>
-
-<p class=MsoNormal><br clear=left style='mso-special-character:line-break' \>
-</p>
-
-<div class=MsoNormal align=center style='text-align:center'>
-
-<hr size=4 width="100%" align=center>
-
-</div>
+<p class=MsoNormal><o:p>&nbsp;</o:p></p>
 
 </div>
 
