@@ -699,7 +699,7 @@ void AppFrame::ConVEServer(wxCommandEvent &event)
 			std::cerr<<"VjObs is Nill"<<std::endl;
 		
 		//Create the VE Tab
-		
+		con_menu->Enable(v21ID_CONNECT_VE, false);
 		con_menu->Enable(v21ID_DISCONNECT_VE, true);
 		//Log("Found VE server\n");
 	} catch (CORBA::Exception &) {
@@ -709,6 +709,7 @@ void AppFrame::ConVEServer(wxCommandEvent &event)
 	}
 
 	CreateVETab();
+   Log("Connected to VE server.\n");
 }
 
 bool AppFrame::init_orb_naming()
@@ -801,8 +802,8 @@ void AppFrame::DisConExeServer(wxCommandEvent &event)
 
 void AppFrame::DisConVEServer(wxCommandEvent &event)
 {
-   try {
-      CosNaming::Name name(1);
+      //try {
+      /*CosNaming::Name name(1);
 
       name.length(1);
       name[0].id   = (const char*) "Master";
@@ -823,17 +824,20 @@ void AppFrame::DisConVEServer(wxCommandEvent &event)
       catch(CosNaming::NamingContext::NotFound& ex)
       {
          cerr << "Name not found for CORBA Object  " << ex.why << endl;
-      }
+      }*/
          wx_ve_splitter->Unsplit(m_frame);
          sizerTab->Remove(m_frame);
+         m_frame = NULL;
          delete m_frame;
          con_menu->Enable(v21ID_CONNECT_VE, true);
          con_menu->Enable(v21ID_DISCONNECT_VE, false);
          	Log("Disconnect VE suceeded.\n");
-		}catch (CORBA::Exception &) {
+		//}catch (CORBA::Exception &) {
 		
-			Log("Disconnect VE failed.\n");
-		}
+			//Log("Disconnect VE failed.\n");
+		//}
+      
+      //delete vjobs;
 
 
 }

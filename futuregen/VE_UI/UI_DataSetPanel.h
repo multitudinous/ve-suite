@@ -17,7 +17,7 @@ using namespace std;
 class UI_ModelData;
 
 enum DATASETS_PANEL_IDS{
-   ACTIVE_RBOX,
+   DATA_SET_SELECT_COMBO,
    RBOX_3D,
    VERTEX_RBOX,
    POLYDATA_RBOX,
@@ -119,8 +119,11 @@ public:
    //Building the panel
    void _buildPanel();
 
+   wxComboBox* _datasetCombo;
+   wxString _datasetTypesel[3];
+
    //the controls
-   wxRadioBox* _activeRBox;
+   //wxRadioBox* _activeRBox;
    
    wxButton* _visUpdateButton;
 
@@ -136,6 +139,10 @@ public:
    wxStaticBoxSizer* sRangeBoxSizer;
 
    wxSizer* _3dSizer;
+
+   wxBoxSizer* _colcombine1_2;
+
+   wxBoxSizer* _mastercol1;
 
    wxBoxSizer* _col1;
    wxBoxSizer* _col2;
@@ -154,7 +161,7 @@ protected:
    void _setScalarsnoDatasets();
    void _organizeRadioBoxInfo();
    void _organizeActiveRBox();
-   void _onActive(wxCommandEvent& event);
+   void _onActiveSelection(wxCommandEvent& event);
    void _on3d(wxCommandEvent& event);
    void _onVertex(wxCommandEvent& event);
    void _onPolyData(wxCommandEvent& event);

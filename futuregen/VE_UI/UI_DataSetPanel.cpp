@@ -159,7 +159,7 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
 
 
 BEGIN_EVENT_TABLE(UI_DatasetPanel, wxPanel)
-   EVT_RADIOBOX(ACTIVE_RBOX, UI_DatasetPanel::_onActive)
+   EVT_COMBOBOX(DATA_SET_SELECT_COMBO, UI_DatasetPanel::_onActiveSelection)
    EVT_RADIOBOX(RBOX_3D, UI_DatasetPanel::_on3d)
    EVT_RADIOBOX(VERTEX_RBOX, UI_DatasetPanel::_onVertex)
    EVT_RADIOBOX(POLYDATA_RBOX, UI_DatasetPanel::_onPolyData)
@@ -178,7 +178,7 @@ UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int a
    _modelData = _model;
    _activeModIndex = activeMod;
 
-   _activeRBox;
+   _datasetCombo;
    
    _buildDataSets();
  
@@ -206,9 +206,9 @@ void UI_DatasetPanel::_buildPanel()
 
    _organizeActiveRBox();
    
-   _activeRBox = new wxRadioBox(this, ACTIVE_RBOX, wxT("Select Active Dataset Type"), 
+   /*_activeRBox = new wxRadioBox(this, ACTIVE_RBOX, wxT("Select Active Dataset Type"), 
                                 wxDefaultPosition, wxDefaultSize,
-				3, datatypes,3, wxRA_SPECIFY_COLS);
+				3, datatypes,1, wxRA_SPECIFY_COLS);*/
 
   
    _scalarNames = new wxString[1];
@@ -216,6 +216,15 @@ void UI_DatasetPanel::_buildPanel()
    
    //Create the radio box w/ the list of scalar names if we have them
    _ScalarScroll = new UI_ScalarScroll(this);
+
+
+   _datasetTypesel[0] = wxT("3D mesh");
+   _datasetTypesel[1] = wxT("Vertex Data");
+   _datasetTypesel[2] = wxT("Polydata");
+
+
+   _datasetCombo = new wxComboBox(this, DATA_SET_SELECT_COMBO, wxT("Select Active Dataset Type"),
+                                    wxDefaultPosition, wxDefaultSize,3,_datasetTypesel, wxCB_DROPDOWN);
    
    //The "Update Visualization" button
    _visUpdateButton = new wxButton(this, SCALAR_UPDATE_BUTTON, wxT("Update"),wxDefaultPosition,wxDefaultSize,wxBU_EXACTFIT);
@@ -255,6 +264,9 @@ void UI_DatasetPanel::_buildPanel()
 
    sRangeBoxSizer->Add(minGroup, 1, wxALIGN_LEFT|wxEXPAND); 
    sRangeBoxSizer->Add(maxGroup, 1, wxALIGN_RIGHT|wxEXPAND);
+
+   _colcombine1_2 = new wxBoxSizer(wxHORIZONTAL);
+   _mastercol1 = new wxBoxSizer(wxVERTICAL);
    
    _col1 = new wxBoxSizer(wxVERTICAL);
    _col2 = new wxBoxSizer(wxVERTICAL);
@@ -264,31 +276,39 @@ void UI_DatasetPanel::_buildPanel()
    //new layout
    _col1->Add(_RBoxScroll,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    
-   _col2->Add(_ScalarScroll,6,wxALIGN_LEFT|wxEXPAND);
+   _col2->Add(_ScalarScroll,1,wxALIGN_LEFT|wxEXPAND);
    //_col2->Add(_visUpdateButton,0,wxALIGN_CENTER_HORIZONTAL);
+
+   _colcombine1_2->Add(_col1,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _colcombine1_2->Add(_col2,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
+   _mastercol1->Add(_datasetCombo,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _mastercol1->Add(_colcombine1_2,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    _col3->Add(sRangeBoxSizer,1,wxALIGN_LEFT|wxEXPAND);
 
    _col4->Add(_visUpdateButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   _dataHeadingBox = new wxStaticBox(this, -1, wxT("---------------------Data and Scalar Set Selection-------------------"));
+
+   _dataHeadingBox = new wxStaticBox(this, -1, wxT("Data and Scalar Set Selection"));
    wxStaticBoxSizer* dHeadingBoxSizer = new wxStaticBoxSizer(_dataHeadingBox,wxHORIZONTAL);
 
-   dHeadingBoxSizer->Add(_col1,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   dHeadingBoxSizer->Add(_col2,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   dHeadingBoxSizer->Add(_mastercol1,8,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    dHeadingBoxSizer->Add(_col3,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    dHeadingBoxSizer->Add(_col4,2,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   _top = new wxBoxSizer(wxHORIZONTAL);
-   _bottom = new wxBoxSizer(wxHORIZONTAL);
+   //_top = new wxBoxSizer(wxHORIZONTAL);
+   //_bottom = new wxBoxSizer(wxHORIZONTAL);
 
-   _top->Add(_activeRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   //_top->Add(_activeRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   _bottom->Add(dHeadingBoxSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   //_bottom->Add(dHeadingBoxSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   wxBoxSizer* datasetPanelGroup = new wxBoxSizer(wxVERTICAL);
-   datasetPanelGroup->Add(_top,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   datasetPanelGroup->Add(_bottom,10,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   wxBoxSizer* datasetPanelGroup = new wxBoxSizer(wxHORIZONTAL);
+   //datasetPanelGroup->Add(_top,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   //datasetPanelGroup->Add(_bottom,10,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   //datasetPanelGroup->Add(_activeRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   datasetPanelGroup->Add(dHeadingBoxSizer,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
@@ -515,9 +535,9 @@ void UI_DatasetPanel::_organizeActiveRBox()
 
 }
 
-void UI_DatasetPanel::_onActive(wxCommandEvent& event)
+void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
 {
-   if ( _activeRBox->GetStringSelection() == "3D mesh")
+   if ( _datasetCombo->GetSelection() == 0 || _datasetCombo->GetSelection() == -1)
    {  
       _RBoxScroll->_3dRBox->Enable(TRUE);
       _RBoxScroll->_vertexRBox->Enable(FALSE);
@@ -531,7 +551,7 @@ void UI_DatasetPanel::_onActive(wxCommandEvent& event)
          else
             _setScalarsnoDatasets();
    }
-   if ( _activeRBox->GetStringSelection() == "Vertex Data")
+   if ( _datasetCombo->GetSelection() == 1)
    {  
       _RBoxScroll->_3dRBox->Enable(FALSE);
       _RBoxScroll->_vertexRBox->Enable(TRUE);
@@ -545,7 +565,7 @@ void UI_DatasetPanel::_onActive(wxCommandEvent& event)
          else
             _setScalarsnoDatasets();
    }
-   if ( _activeRBox->GetStringSelection() == "Polydata")
+   if ( _datasetCombo->GetSelection() == 2)
    {  
       _RBoxScroll->_3dRBox->Enable(FALSE);
       _RBoxScroll->_vertexRBox->Enable(FALSE);

@@ -51,7 +51,7 @@ public:
    //the notebook control that has our tabs
    UI_Tabs* _tabs;
    UI_ModSelPanel* _modselPanel;
-   wxString* _appParent;
+   wxString _appParent;
 
    UI_ModelData* _modelData;
 

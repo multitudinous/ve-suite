@@ -93,7 +93,7 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
   virtual Interface* Pack();
 
   //This is to unpack the result from the 
-  virtual void UnPackResult(Interface * intf) ;
+  virtual void UnPackResult(Interface * intf);
   
   //To Get around the Memory allocation problem of windows dll
   //Add the calls for the size. So the main program can preallocate memory for it

@@ -17,7 +17,8 @@ UI_Frame::UI_Frame(wxWindow* parent, wxWindowID id,
 : wxPanel(parent, -1, pos, size, style)
 {
   
-   _appParent = new wxString( "DirectVE" );
+   //_appParent = new wxString( "DirectVE" );
+   _appParent = wxT( "DirectVE" );
    buildCORBA();
 
    _modelData = new UI_ModelData(vjobs);
@@ -36,7 +37,8 @@ UI_Frame::UI_Frame(VjObs_ptr ref,wxWindow* parent, wxWindowID id,
    vjobs = VjObs::_duplicate(ref);
    _modelData = new UI_ModelData(vjobs);
    buildFrame();
-   _appParent = new wxString( "Framework" );
+   //_appParent = new wxString( "Framework" );
+   _appParent = wxT( "Framework" );
 }
 
 
@@ -184,20 +186,20 @@ void UI_Frame::buildFrame( )
 
    //Tell the sizer to resize the window to
    // match the sizer's minimal size
-   _frameSizer->Fit(this);  
+   _frameSizer->Fit(this); 
 }
 /////////////////////
 //Destructor       //
 /////////////////////
 UI_Frame::~UI_Frame()
 {
-	/*_tabsSizer->Remove(_tabs);
+	_tabsSizer->Remove(_tabs);
 	_datasetSizer->Remove(_datasetPanel);
 	_frameSizer->Remove(_tabsSizer);
 	_frameSizer->Remove(_datasetSizer);
 
 	delete _tabs;
-	delete _datasetPanel;*/
+	delete _datasetPanel;
 	
 }
 

@@ -29,12 +29,13 @@ UI_Tabs::UI_Tabs(VjObs_ptr ref, wxWindow* parent, UI_ModelData* _model,
    cIso_value = 0;
    cMin = 0;
    cMax = 0;
+   cSc = 0;
 
    //copied code from old Tabs.cpp
    numOfClientInfo = 9;
    clientInfoArray = new VjObs::obj_pd(50);
-   //clientInfoArray->length( numOfClientInfo );
-   clientInfoArray->length( 50 );
+   clientInfoArray->length( numOfClientInfo );
+   //clientInfoArray->length( 50 );
 
    _modelData = _model;
    _activeModIndex = activeMod;

@@ -1,6 +1,7 @@
 #include "UI_VisTab.h"
 #include "UI_Tabs.h"
 #include "cfdEnum.h"
+#include "UI_Frame.h"
 
 BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_RADIOBOX    (CATEGORY_RAD_BOX,         UI_VisualizationTab::_onCategory)
@@ -82,6 +83,11 @@ void UI_VisualizationTab::_buildPage()
                                             wxDefaultPosition, wxDefaultSize,3, conType, 1,
                                             wxRA_SPECIFY_COLS);
 
+   // Initialize parameters on cfdApp side
+   ((UI_Tabs *)_parent)->cId = CHANGE_CONTOUR_FILL;
+   ((UI_Tabs *)_parent)->cIso_value = 0;
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+
    //////////////////////////////////
    //Design the Direction radio box//
    //////////////////////////////////
@@ -123,8 +129,9 @@ void UI_VisualizationTab::_buildPage()
 
     
    //Nearest precompute plane check box
-  _nearestCBox = new wxCheckBox(this, NEAREST_PLANE_CHECK_BOX,
+   _nearestCBox = new wxCheckBox(this, NEAREST_PLANE_CHECK_BOX,
                                            wxT("Use nearest precomputed plane"));
+   _nearestCBox->Enable(false);
 
    //Place the buttons in our static box
    typebox_sizer->Add(_pcsButton, 1, wxALIGN_LEFT);
@@ -274,6 +281,7 @@ void UI_VisualizationTab::_onDirection(wxCommandEvent& event)
 /////////////////////////////////////////////////////////
 void UI_VisualizationTab::_onPreComp(wxCommandEvent& event)
 {
+   _nearestCBox->Enable(false);
 /*  if (_pcsButton->GetValue())
     wxMessageBox(_T("single plane selected!"), _T("RadioButton!"));
   else
@@ -282,6 +290,7 @@ void UI_VisualizationTab::_onPreComp(wxCommandEvent& event)
 /////////////////////////////////////////////////////////
 void UI_VisualizationTab::_onSingle(wxCommandEvent& event)
 {
+   _nearestCBox->Enable(true);
 /*  if (_spButton->GetValue())
     wxMessageBox(_T("single plane selected!"), _T("RadioButton!"));
   else
@@ -354,7 +363,8 @@ void UI_VisualizationTab::_onExit(wxCommandEvent& event)
    //return 
    ((UI_Tabs *)_parent)->cId = EXIT;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
-   //exit(0);
+   if(((UI_Frame *)((UI_Tabs *)_parent)->GetParent())->_appParent != _T("Framework"))
+      exit(0);
 }
 
 //////////////////////////////////////////////////////////

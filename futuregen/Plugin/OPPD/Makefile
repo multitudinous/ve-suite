@@ -18,7 +18,10 @@ include ../Makefile.incl
 
 PLUGIN = libOPPD.so
 OBJECTS = OPPD.o \
-	OPPD_UI.o 
+	OPPD_UI.o \
+   OPPD_UI_entries.o \
+   OPPD_UI_outputs.o \
+   OPPD_UI_tabs.o
 
 .SUFFIXES : .o .cpp
 
