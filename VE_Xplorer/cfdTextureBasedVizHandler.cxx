@@ -53,42 +53,6 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _svvh = 0;
 #endif
 }
-
-///////////////////////////////////////////////////////////////////////////////////////////
-/*cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh)
-{
-   int nNodes = tbvh._volumeVisNodes.size();
-   for(int i = 0; i < nNodes; i++) {
-      _volumeVisNodes.push_back(tbvh._volumeVisNodes.at(i));   
-   }
-   _paramFile = new char[strlen(tbvh._paramFile)+1];
-   strcpy(_paramFile,tbvh._paramFile);
-   _cmdArray = tbvh._cmdArray;
-   _worldDCS = tbvh._worldDCS;
-   _nav = tbvh._nav;
-   _cursor = tbvh._cursor;
-   _activeVolumeVizNode = tbvh._activeVolumeVizNode;
-   _activeTM = tbvh._activeTM;
-   _parent = tbvh._parent;
-   _sceneView = tbvh._sceneView;
-   _pbm = tbvh._pbm;
-   activeVisNodeHdlr = tbvh.activeVisNodeHdlr;
-   _visOptionSwitch = new cfdSwitch(*tbvh._visOptionSwitch);
-   _currentBBox = new float[6];
-   _textureBaseSelected = tbvh._textureBaseSelected;
-   _currentBBox[0] = tbvh._currentBBox[0];
-   _currentBBox[1] = tbvh._currentBBox[1];
-   _currentBBox[2] = tbvh._currentBBox[2];
-   _currentBBox[3] = tbvh._currentBBox[3];
-   _currentBBox[4] = tbvh._currentBBox[4];
-   _currentBBox[5] = tbvh._currentBBox[5];
-   _cleared = tbvh._cleared;
-   
-#ifdef CFD_USE_SHADERS
-   _svvh = new cfdScalarVolumeVisHandler(*tbvh._svvh);
-   _vvvh = new cfdVectorVolumeVisHandler(*tbvh._vvvh);
-#endif
-}*/
 ///////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
 {
@@ -182,7 +146,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          //_visOptionSwitch->SetVal(1);
          //testing switch stuff
          //_activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::PLAY);
-         _vvvh->EnableDecorator();
+         if(_vvvh)_vvvh->EnableDecorator();
          //_activeVolumeVizNode->EnableVolumeShader();
          //_activeVolumeVizNode->DeactivateVisualBBox();
          /*if(_svvh){
@@ -192,11 +156,13 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    }
 #endif
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) != CLEAR_ALL && !_cleared){
-      //need to make sure the node is on the graph
-      if((((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get()) == false)){
-         ((osg::Group*)_parent->GetRawNode())->addChild(_activeVolumeVizNode->GetVolumeVisNode().get());
-         _activeVolumeVizNode->GetVolumeVisNode()->setSingleChildOn(0);
-         _cleared = false;
+      if(_activeVolumeVizNode){
+         //need to make sure the node is on the graph
+         if((((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get()) == false)){
+            ((osg::Group*)_parent->GetRawNode())->addChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+            _activeVolumeVizNode->GetVolumeVisNode()->setSingleChildOn(0);
+            _cleared = false;
+         }
       }
    }
    if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_CONTOUR||
@@ -297,11 +263,6 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
       }
    }
 }
-////////////////////////////////////////////////////////////////////
-/*void cfdTextureBasedVizHandler::SetSceneView(osgUtil::SceneView* sv)
-{
-   //_sceneView = sv;
-}*/
 ///////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetParameterFile(char* paramFile)
 {
@@ -477,43 +438,5 @@ void cfdTextureBasedVizHandler::ViewTextureBasedVis(bool trueFalse)
 {
    _textureBaseSelected = trueFalse;
 }
-/////////////////////////////////////////////////////////////////////////////////////////////////
-/*cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTextureBasedVizHandler& tbvh)
-{
-   if(&tbvh != this){
-      int nModels = tbvh._volumeVisNodes.size();
-      for(int i = 0; i < nModels; i++) {
-         _volumeVisNodes.push_back(tbvh._volumeVisNodes.at(i));   
-      }
-      _paramFile = new char[strlen(tbvh._paramFile)+1];
-      strcpy(_paramFile,tbvh._paramFile);
-      _cmdArray = tbvh._cmdArray;
-      _worldDCS = tbvh._worldDCS;
-      _nav = tbvh._nav;
-      _cursor = tbvh._cursor;
-      _activeVolumeVizNode = tbvh._activeVolumeVizNode;
-      _activeTM = tbvh._activeTM;
-      _parent = tbvh._parent;
-      _sceneView = tbvh._sceneView;
-      _pbm = tbvh._pbm;
-      _visOptionSwitch = tbvh._visOptionSwitch;
-      if(!_currentBBox){
-         _currentBBox = new float[6];
-      }
-      
-      _textureBaseSelected = tbvh._textureBaseSelected;
-#ifdef CFD_USE_SHADERS
-      _svvh = tbvh._svvh;
-      _vvvh = tbvh._vvvh;
-      activeVisNodeHdlr = tbvh.activeVisNodeHdlr;
-#endif
-      _currentBBox[0] = tbvh._currentBBox[0];
-      _currentBBox[1] = tbvh._currentBBox[1];
-      _currentBBox[2] = tbvh._currentBBox[2];
-      _currentBBox[3] = tbvh._currentBBox[3];
-      _currentBBox[4] = tbvh._currentBBox[4];
-      _currentBBox[5] = tbvh._currentBBox[5];
-   }
-   return *this;
-}*/
+
 #endif

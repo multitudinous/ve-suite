@@ -10,6 +10,7 @@
 #include <osgNVCg/CgGeometry>
 #include "cfdAdvectionSubGraph.h"
 #endif
+#include <osg/TexMat>
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
 #include <osg/ClipNode>
@@ -34,16 +35,20 @@
 ////////////////////////////////////////////////
 cfdVolumeVisualization::cfdVolumeVisualization()
 {
+   _diagonal = 0;
+   _scale[0] = 0;
+   _scale[1] = 0;
+   _scale[2] = 0;
+   _center[0] = 0;
+   _center[1] = 0;
+   _center[2] = 0;
    _volumeVizNode  = 0;
    _texGenParams  = 0;
-   _vSSCbk = 0;
    _utCbk = 0;
    _mode = STOP;
    _traverseDirection = FORWARD;
    _stateSet  = 0;
-   _material  = 0;
    _texture  = 0;
-   _slices  = 0;
    _nSlices = 100;
    _alpha = 0.5;
    _tUnit = 0;
@@ -60,16 +65,14 @@ cfdVolumeVisualization::cfdVolumeVisualization()
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
 {
    _utCbk = rhs._utCbk;
-   _vSSCbk = rhs._vSSCbk;
    _volumeVizNode = rhs._volumeVizNode;
    _texGenParams = rhs._texGenParams;
    _bbox = rhs._bbox;
    _mode = rhs._mode;
    _traverseDirection = rhs._traverseDirection;
    _stateSet = rhs._stateSet;
-   _material = rhs._material;
    _texture = rhs._texture;
-   _slices = rhs._slices;
+   _billboard = rhs._billboard;
    _nSlices = rhs._nSlices;
    _alpha = rhs._alpha;
    _tUnit = rhs._tUnit;
@@ -175,6 +178,7 @@ void cfdVolumeVisualization::Set3DTextureData(osg::Texture3D* texture)
       _texture = new osg::Texture3D(*texture);
       _texture->setDataVariance(osg::Object::DYNAMIC);
       
+      
    }else{
       if(_texture != texture){
          _texture = texture; 
@@ -197,9 +201,34 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
    maxBBox[1] = bbox[3]; 
    maxBBox[2] = bbox[5]; 
    
+   _diagonal = 0;
+   _scale[0] = fabs(maxBBox[0] - minBBox[0]);
+   _scale[1] = fabs(maxBBox[1] - minBBox[1]);
+   _scale[2] = fabs(maxBBox[2] - minBBox[2]);
+
    _bbox->set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
                 osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
 
+
+   float radius = _bbox->radius();
+   _diagonal = 2.0*radius;
+   _center[0] = _bbox->center()[0];
+   _center[1] = _bbox->center()[1];
+   _center[2] = _bbox->center()[2];
+
+   
+   //recalculate the bbox that is going to be used for
+   //the volume vis
+   minBBox[0] = _center[0] - radius;
+   minBBox[1] = _center[1] - radius;
+   minBBox[2] = _center[2] - radius;
+
+   maxBBox[0] = _center[0] + radius;
+   maxBBox[1] = _center[1] + radius;
+   maxBBox[2] = _center[2] + radius;
+
+   _bbox->set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
+                osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
 }
 //////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
@@ -229,13 +258,17 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 
       _texture->setFilter(osg::Texture3D::MIN_FILTER,osg::Texture3D::LINEAR);
       _texture->setFilter(osg::Texture3D::MAG_FILTER,osg::Texture3D::LINEAR);
-      _texture->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
-      _texture->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
-      _texture->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
+      _texture->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP_TO_EDGE);
+      _texture->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP_TO_EDGE);
+      _texture->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP_TO_EDGE);
+      _texture->setTextureSize(_tm->fieldResolution()[0],
+                     _tm->fieldResolution()[1],
+                     _tm->fieldResolution()[2]);
       _texture->setInternalFormat(GL_RGBA);
       _texture->setImage(_image.get());
+      _texture->setBorderColor(osg::Vec4(0,0,0,0));
+      _texture->setBorderWidth(2);
    }
-   //}
    SetBoundingBox(_tm->getBoundingBox());
    if(_utCbk){
       _utCbk->SetTextureManager(_tm);
@@ -244,7 +277,7 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 ///////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetNumberofSlices(int nSlices)
 {
-   _nSlices = nSlices;
+   _nSlices = nSlices*2;
 }
 ///////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetSliceAlpha(float alpha)
@@ -416,7 +449,9 @@ void cfdVolumeVisualization::_createStateSet()
          _stateSet = _texGenParams->getOrCreateStateSet();;
          _stateSet->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
          _stateSet->setMode(GL_BLEND,osg::StateAttribute::ON);
-
+         osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
+         tMat->setMatrix(osg::Matrix::identity());
+         _stateSet->setTextureAttributeAndModes(0,tMat.get());
          osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
 			 bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
 			 _stateSet->setAttributeAndModes(bf.get());
@@ -468,25 +503,16 @@ void cfdVolumeVisualization::_createTexGenNode()
 {
    if ( _bbox )
    {
-      osg::Vec4 sPlane(0,0,0,0);
-      osg::Vec4 tPlane(0,0,0,0);
-      osg::Vec4 rPlane(0,0,0,0);
-
-      sPlane[0] = 1.0/(_bbox->xMax() - _bbox->xMin());
-      tPlane[1] = 1.0/(_bbox->yMax() - _bbox->yMin());
-      rPlane[2] = 1.0/(_bbox->zMax()- _bbox->zMin());
-   
-      sPlane[3] = - _bbox->xMin()/(_bbox->xMax() - _bbox->xMin());
-      tPlane[3] = - _bbox->yMin()/(_bbox->yMax() - _bbox->yMin());
-      rPlane[3] = - _bbox->zMin()/(_bbox->zMax()- _bbox->zMin());
-      //biv--this may not be right!!!      
+      osg::Vec4 sPlane(1,0,0,0);
+      osg::Vec4 tPlane(0,1,0,0);
+      osg::Vec4 rPlane(0,0,1,0);
+            
       _texGenParams = new osg::TexGenNode();
-      _texGenParams->setTextureUnit(_tUnit);
-      _texGenParams->getTexGen()->setMode(osg::TexGen::OBJECT_LINEAR);
+      _texGenParams->setTextureUnit(0);
+      _texGenParams->getTexGen()->setMode(osg::TexGen::EYE_LINEAR);
       _texGenParams->getTexGen()->setPlane(osg::TexGen::S,sPlane); 
       _texGenParams->getTexGen()->setPlane(osg::TexGen::T,tPlane);
       _texGenParams->getTexGen()->setPlane(osg::TexGen::R,rPlane);
-
    }
    else
    {
@@ -494,111 +520,54 @@ void cfdVolumeVisualization::_createTexGenNode()
          std::cout<<"Invalid bbox in cfdVolumeVisualization::_createTexGenNode!"<<std::endl;
    }
 }
-//////////////////////////////////////////////////////////
-void cfdVolumeVisualization::_buildAxisDependentGeometry()
+///////////////////////////////////////////
+void cfdVolumeVisualization::_buildSlices()
 {
-   osg::Vec3Array* xcoords = new osg::Vec3Array(4*_nSlices);
-   osg::Vec3Array* ycoords = new osg::Vec3Array(4*_nSlices);
-   osg::Vec3Array* zcoords = new osg::Vec3Array(4*_nSlices);
+    // set up the slices.
+    osg::Geometry* geom = new osg::Geometry;
 
-   osg::Vec3Array* xncoords = new osg::Vec3Array(4*_nSlices);
-   osg::Vec3Array* yncoords = new osg::Vec3Array(4*_nSlices);
-   osg::Vec3Array* zncoords = new osg::Vec3Array(4*_nSlices);
+    //the slices are y slices because the camera is looking
+    //down the y axis in eye space
+    float halfSize = _diagonal*0.5f;
+    float y = halfSize;
+    float dy =-_diagonal/(float)(_nSlices-1);
 
-   float y = _bbox->yMin();
-   float dy = (_bbox->yMax() -_bbox->yMin())/(_nSlices - 1.0);
-   for(int i=0;i<_nSlices;++i, y+=dy){
-      (*ycoords)[i*4+0].set(_bbox->xMin(),y,_bbox->zMin());
-      (*ycoords)[i*4+1].set(_bbox->xMax(),y,_bbox->zMin());
-      (*ycoords)[i*4+2].set(_bbox->xMax(),y,_bbox->zMax());
-      (*ycoords)[i*4+3].set(_bbox->xMin(),y,_bbox->zMax());
-   }
-   y = _bbox->yMax();
-   for(int i=0;i<_nSlices;++i, y-=dy){
-      (*yncoords)[i*4+0].set(_bbox->xMin(),y,_bbox->zMin());
-      (*yncoords)[i*4+1].set(_bbox->xMax(),y,_bbox->zMin());
-      (*yncoords)[i*4+2].set(_bbox->xMax(),y,_bbox->zMax());
-      (*yncoords)[i*4+3].set(_bbox->xMin(),y,_bbox->zMax());
-   }
-
-   float x = _bbox->xMin();
-   float dx = (_bbox->xMax() -_bbox->xMin())/(_nSlices - 1.0);
-   for(int i=0;i<_nSlices;++i, x+=dx){
-        (*xcoords)[i*4+0].set(x,_bbox->yMin(),_bbox->zMin());
-        (*xcoords)[i*4+1].set(x,_bbox->yMax(),_bbox->zMin());
-        (*xcoords)[i*4+2].set(x,_bbox->yMax(),_bbox->zMax());
-        (*xcoords)[i*4+3].set(x,_bbox->yMin(),_bbox->zMax());
-   }
-   x = _bbox->xMax();
-   for(int i=0;i<_nSlices;++i, x-=dx){
-        (*xncoords)[i*4+0].set(x,_bbox->yMin(),_bbox->zMin());
-        (*xncoords)[i*4+1].set(x,_bbox->yMax(),_bbox->zMin());
-        (*xncoords)[i*4+2].set(x,_bbox->yMax(),_bbox->zMax());
-        (*xncoords)[i*4+3].set(x,_bbox->yMin(),_bbox->zMax());
-   }
-   float z = _bbox->zMin();
-   float dz = (_bbox->zMax() -_bbox->zMin())/(_nSlices - 1.0);
-   for(int i=0;i<_nSlices;++i, z+=dz){
-      (*zcoords)[i*4+0].set(_bbox->xMax(),_bbox->yMin(),z);
-      (*zcoords)[i*4+1].set(_bbox->xMax(),_bbox->yMax(),z);
-      (*zcoords)[i*4+2].set(_bbox->xMin(),_bbox->yMax(),z);
-      (*zcoords)[i*4+3].set(_bbox->xMin(),_bbox->yMin(),z);
-   }
-   z = _bbox->zMax();
-   for(int i=0;i<_nSlices;++i, z-=dz){
-      (*zncoords)[i*4+0].set(_bbox->xMax(),_bbox->yMin(),z);
-      (*zncoords)[i*4+1].set(_bbox->xMax(),_bbox->yMax(),z);
-      (*zncoords)[i*4+2].set(_bbox->xMin(),_bbox->yMax(),z);
-      (*zncoords)[i*4+3].set(_bbox->xMin(),_bbox->yMin(),z);
-   }
-   osg::Vec4Array* colors = new osg::Vec4Array(1);
-   (*colors)[0].set(1.0f,1.0f,1.0f,_alpha);
-
-   _posXSlices = new osg::Geometry();
-   _posXSlices->setVertexArray(xcoords);
-   _posXSlices->setColorArray(colors);
-   _posXSlices->setColorBinding(osg::Geometry::BIND_OVERALL);
-   _posXSlices->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,xcoords->size()));
+    osg::Vec3Array* ycoords = new osg::Vec3Array(4*_nSlices);
+    geom->setVertexArray(ycoords);
+    
+    for(unsigned int i = 0; i< _nSlices; ++i, y+=dy)
+    {
+        (*ycoords)[i*4+0].set(-halfSize,y,halfSize);
+        (*ycoords)[i*4+1].set(-halfSize,y,-halfSize);
+        (*ycoords)[i*4+2].set(halfSize,y,-halfSize);
+        (*ycoords)[i*4+3].set(halfSize,y,halfSize);
+    }
    
-   _negXSlices= new osg::Geometry();
-   _negXSlices->setVertexArray(xncoords);
-   _negXSlices->setColorArray(colors);
-   _negXSlices->setColorBinding(osg::Geometry::BIND_OVERALL);
-   _negXSlices->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,xncoords->size()));
+    
+    osg::Vec3Array* normals = new osg::Vec3Array(1);
+    (*normals)[0].set(0.0f,-1.0f,0.0f);
+    geom->setNormalArray(normals);
+    geom->setNormalBinding(osg::Geometry::BIND_OVERALL);
 
-   _posYSlices = new osg::Geometry();
-   _posYSlices->setVertexArray(ycoords);
-   _posYSlices->setColorArray(colors);
-   _posYSlices->setColorBinding(osg::Geometry::BIND_OVERALL);
-   _posYSlices->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,ycoords->size()));
-   
-   _negYSlices = new osg::Geometry();
-   _negYSlices->setVertexArray(yncoords);
-   _negYSlices->setColorArray(colors);
-   _negYSlices->setColorBinding(osg::Geometry::BIND_OVERALL);
-   _negYSlices->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,yncoords->size()));
+    osg::Vec4Array* colors = new osg::Vec4Array(1);
+    (*colors)[0].set(1.0f,1.0f,1.0f,.2);
+    geom->setColorArray(colors);
+    geom->setColorBinding(osg::Geometry::BIND_OVERALL);
 
-   _posZSlices = new osg::Geometry();
-   _posZSlices->setVertexArray(zcoords);
-   _posZSlices->setColorArray(colors);
-   _posZSlices->setColorBinding(osg::Geometry::BIND_OVERALL);
-   _posZSlices->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,zcoords->size()));
-   
-   _negZSlices= new osg::Geometry();
-   _negZSlices->setVertexArray(zncoords);
-   _negZSlices->setColorArray(colors);
-   _negZSlices->setColorBinding(osg::Geometry::BIND_OVERALL);
-   _negZSlices->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,zncoords->size()));
+    geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,ycoords->size()));
+    
+    _billboard = new osg::Billboard;
+    _billboard->setMode(osg::Billboard::POINT_ROT_WORLD);
+    _billboard->addDrawable(geom);
+
+    //position the slices in the scene
+    _billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
 
 }
 ///////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_createVolumeSlices()
 {
-   _buildAxisDependentGeometry();
-   _slices = new osg::Geode();
-   //this will change w/ callback so default the z slices
-   _slices->addDrawable(_posZSlices.get());
-   
+   _buildSlices();
 }
 /////////////////////////////////////////
 void cfdVolumeVisualization::CreateNode()
@@ -629,6 +598,7 @@ if(!_tm){
       _noShaderGroup = new osg::Group();
       _noShaderGroup->setName("VViz Node:R");
       _volumeVizNode->addChild(_noShaderGroup.get());
+      
    }
    
    if ( _stateSet.valid() )
@@ -640,23 +610,25 @@ if(!_tm){
    if ( _texGenParams.valid() )
    {
       _noShaderGroup->addChild(_texGenParams.get());
+      if(_stateSet.valid()){
+         float trans[3] = {.5,.5,.5};
+         _scale[0] = 1.0/_scale[0];
+         _scale[1] = 1.0/_scale[1];
+         _scale[2] = 1.0/_scale[2];
 
-      if ( _slices.valid() )
-      {
-         _vSSCbk =  new cfdVolumeSliceSwitchCallback( _bbox->center() );
-         _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::X_POS,_posXSlices);
-         _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Y_POS,_posYSlices);
-         _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Z_POS,_posZSlices);
-         _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::X_NEG,_negXSlices);
-         _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Y_NEG,_negYSlices);
-         _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Z_NEG,_negZSlices);
-         
-         _slices->setCullCallback(_vSSCbk);
+         osg::ref_ptr<osg::TexMat> tmat =
+             dynamic_cast<osg::TexMat*>(_stateSet->getTextureAttribute(0,osg::StateAttribute::TEXMAT));
+         _texGenParams->setCullCallback(new TextureMatrixCallback(tmat.get(),
+                                                            _center,
+                                                            _scale,trans));
+      }
+      if ( _billboard.valid() ){
+        
          if(_clipNode.valid()){
             _texGenParams->addChild(_clipNode.get());
-            _clipNode->addChild(_slices.get());
+            _clipNode->addChild(_billboard.get());
          }else{
-            _texGenParams->addChild(_slices.get());
+            _texGenParams->addChild(_billboard.get());
          }
       }else{
          _isCreated = false;
@@ -670,16 +642,13 @@ cfdVolumeVisualization&
 cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
 {
    if(&rhs != this){
-      _vSSCbk = rhs._vSSCbk;
       _utCbk = rhs._utCbk;
       _volumeVizNode = rhs._volumeVizNode;
       _texGenParams = rhs._texGenParams;
-     
 
       _stateSet = rhs._stateSet;
-      _material = rhs._material;
       _texture = rhs._texture;
-      _slices = rhs._slices;
+      _billboard = rhs._billboard;
       _nSlices = rhs._nSlices;
       _alpha = rhs._alpha;
       _tUnit = rhs._tUnit;
@@ -707,5 +676,35 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
    }
    return *this;
 }
+////////////////////////////////////////////////////////////////////////
+//Constructor                                                         //
+////////////////////////////////////////////////////////////////////////
+TextureMatrixCallback::TextureMatrixCallback(osg::TexMat* texmat,
+                                             osg::Vec3f center,
+                                        float* scale,float* trans)
+:_texMat(texmat),_center(center)
+{
+   _scale[0] = scale[0];
+   _scale[1] = scale[1];
+   _scale[2] = scale[2];
+
+   _trans[0] = trans[0];
+   _trans[1] = trans[1];
+   _trans[2] = trans[2];
+}
+////////////////////////////////////////////////////////////////////////////
+void TextureMatrixCallback::operator()(osg::Node* node,osg::NodeVisitor* nv)
+{
+   osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
+   if (cv && _texMat.valid()){
+      osg::Matrix translate = osg::Matrix::translate(_trans[0],_trans[1],_trans[2]);
+      osg::Matrix scale = osg::Matrix::scale(_scale[0],_scale[1],_scale[2]);
+      osg::Matrix center = osg::Matrix::translate(-_center[0],-_center[1],-_center[2]);
+      
+      _texMat->setMatrix(center*scale*translate);
+   }
+   traverse(node,nv);
+}
+
 #endif
 

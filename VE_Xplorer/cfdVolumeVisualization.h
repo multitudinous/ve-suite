@@ -22,14 +22,18 @@ namespace osg
    class StateSet;
    class Group;
    class BoundingBox;
+   class Billboard;
 }
 
-
+#include <osgUtil/CullVisitor>
+#include <osg/TexMat>
+#include <osg/Vec3>
 #include "cfdVolumeSliceSwitchCallback.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfdTextureManager.h"
+#ifdef CFD_USE_SHADERS
 #include "cfdUpdateableOSGTexture1d.h"
-
+#endif
 class cfdVolumeVisualization{
 public:
    cfdVolumeVisualization();
@@ -81,8 +85,8 @@ protected:
    bool _useShaders;
    bool _volShaderIsActive;
    bool _transferShaderIsActive;
-   int _nSlices;
-   int _tUnit;
+   unsigned int _nSlices;
+   unsigned int _tUnit;
    float _alpha;
    void _createVisualBBox();
    void _createClipCube();
@@ -93,43 +97,44 @@ protected:
    void _createTexGenNode();
    void _createVolumeSlices();
    void _buildAxisDependentGeometry();
+   void _buildSlices();
 
    char* _shaderDirectory;
    cfdTextureManager* _tm;
+   osg::Vec3 _center;
+   float _transRatio[3];
+   float _diagonal;
+   float _scale[3];
 #ifdef _OSG
 
-   osg::ref_ptr<osg::Switch>_volumeVizNode;
+   osg::ref_ptr<osg::Switch> _volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
    osg::BoundingBox* _bbox;
    osg::ref_ptr<osg::ClipNode> _clipNode;
    osg::ref_ptr<osg::StateSet> _stateSet;
+   osg::ref_ptr<osg::Billboard> _billboard;
 
-   
    osg::ref_ptr<osg::Group> _noShaderGroup;
-
-   osg::ref_ptr<osg::Material> _material;
-  
    osg::ref_ptr<osg::Texture3D> _texture;
-
-  
    osg::ref_ptr<osg::Image> _image;
-   osg::ref_ptr<osg::Geode> _slices;
-
-   osg::ref_ptr<osg::Geometry> _posXSlices;
-   osg::ref_ptr<osg::Geometry> _negXSlices;
-   osg::ref_ptr<osg::Geometry> _posYSlices;
-   osg::ref_ptr<osg::Geometry> _negYSlices;
-   osg::ref_ptr<osg::Geometry> _posZSlices;
-   osg::ref_ptr<osg::Geometry> _negZSlices;
-
    osg::ref_ptr<osg::State> _state;
-
-   cfdVolumeSliceSwitchCallback* _vSSCbk;
    cfdUpdateTextureCallback* _utCbk;
-   
-
 #endif
 
+};
+//class to update the texture matrix appropriately
+class TextureMatrixCallback : public osg::NodeCallback
+{
+public:
+   TextureMatrixCallback(osg::TexMat* texmat,osg::Vec3f center,
+                       float* scale,float* trans);
+    virtual void operator()(osg::Node* node,osg::NodeVisitor* nv);
+    
+protected:
+   float _trans[3];
+   float _scale[3];
+   osg::Vec3f _center;
+   mutable osg::ref_ptr<osg::TexMat> _texMat;
 };
 #endif//OSG
 #endif// CFD_VOLUME_VISUALIZATION_H

@@ -66,10 +66,6 @@ cfdTextureManager::~cfdTextureManager()
       _resolution = 0;
    }
 }
-//////////////////////////////////////////////////////////////////////
-//add a scalar field from a file                                    //
-//////////////////////////////////////////////////////////////////////
-
 /////////////////////////////////////////////////////////////////////
 //add a vector field from a file                                   //
 /////////////////////////////////////////////////////////////////////
@@ -112,7 +108,12 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
    
       double R,G,B,A;
       float alpha = 0;
+      double distanceFactor = 0;
+      
       int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
+      int i = 0; 
+      int j = 0;
+      int k = 0;
       unsigned char* pixels = new unsigned char[nPixels*4];
       float invSRange = 1.0/(_range[1]-_range[0]);
       if(curType == VECTOR){
@@ -125,18 +126,15 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
             pixels[p*4 + 2] = (unsigned char)B;
             fin>>A;
             alpha = (A -_range[0])*invSRange;
-            pixels[p*4 + 3] = (unsigned char)(alpha*255);      
+            pixels[p*4 + 3] = (unsigned char)(alpha*255);
          }
       }else if(curType == SCALAR){
          //the scalar data
          
-	      //float invSRange = 1.0/(_range[1]-_range[0]);
          float scalarValue = 0;
          for(int p = 0; p < nPixels; p++){
-            
             fin>>scalarValue;
             alpha = (scalarValue-_range[0])*invSRange;
-         
             //set the scalar pixel data
             if(alpha <= .5){
                R = 0;
@@ -153,9 +151,8 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
             pixels[p*4 + 1] = (unsigned char)G;
             pixels[p*4 + 2] = (unsigned char)B;
             pixels[p*4 + 3] = (unsigned char)A;      
-         }
+         }        
       }
-
       //add the field
       _dataFields.push_back(pixels);
    }else{

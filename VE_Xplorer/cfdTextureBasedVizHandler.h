@@ -80,8 +80,7 @@ private:
    // Required so that vpr::Singleton can instantiate this class.
    friend class vpr::Singleton< cfdTextureBasedVizHandler >;
    cfdTextureBasedVizHandler( void );
-   //cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh);
-   //cfdTextureBasedVizHandler& operator=(const cfdTextureBasedVizHandler& tbvh);
+  
    ~cfdTextureBasedVizHandler( void );
 
 
