@@ -386,7 +386,8 @@ char * preprocess( int argc, char *argv[],
          std::cout << "(3) millim to feet" << std::endl;
          std::cout << "(4) inches to feet" << std::endl;
          std::cout << "(5) meters (1:12 scale) to feet" << std::endl;
-         scaleIndex = fileIO::getIntegerBetween( 0, 5 );
+         std::cout << "(6) centimeters to feet" << std::endl;
+         scaleIndex = fileIO::getIntegerBetween( 0, 6 );
       }
    }
    
@@ -454,6 +455,12 @@ char * preprocess( int argc, char *argv[],
       geomScale[0] = 12.0*3.28083989501;
       geomScale[1] = 12.0*3.28083989501;
       geomScale[2] = 12.0*3.28083989501;
+   }
+   else if ( scaleIndex == 6 )
+   {
+      geomScale[0] = 3.28083989501e-2;
+      geomScale[1] = 3.28083989501e-2;
+      geomScale[2] = 3.28083989501e-2;
    }
    else
       std::cerr << "\n!!! Invalid scaleIndex = " << scaleIndex 
