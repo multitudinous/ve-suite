@@ -33,8 +33,6 @@
 #include "cfd1DTextInput.h"
 #include "cfdGeode.h"
 
-#include <vtkGeometryFilter.h>
-#include <vtkPolyDataNormals.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkVectorText.h>
@@ -42,20 +40,19 @@
 
 #include <vpr/Util/Debug.h>
 
-#include <string>
-
 cfd1DTextInput::cfd1DTextInput( void ):cfdDCS()
 {
-   geode = new cfdGeode();
-   ((cfdDCS*)this)->AddChild( geode );
-}
+   this->geode = new cfdGeode();
+   ((cfdDCS*)this)->AddChild( this->geode );
 
+   // Do we need to initialize this->text here?
+   // If this->text is required, it should probably be a constructor argument
+}
 
 cfd1DTextInput::~cfd1DTextInput( void )
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfd1DTextInput Destructor" 
+   vprDEBUG(vprDBG_ALL,2) << "cfd1DTextInput Destructor: doing nothing" 
                           << std::endl << vprDEBUG_FLUSH;
-
 }
 
 cfdDCS* cfd1DTextInput::getpfDCS( void )
@@ -68,39 +65,36 @@ void cfd1DTextInput::SetFilename( std::string text )
    this->text = text;
    vprDEBUG(vprDBG_ALL,1) << "\tcfd1DTextInput : " << this->text
                           << std::endl << vprDEBUG_FLUSH;
-   //cout << "\tcfd1DTextInput : " << this->text
-   //                       << std::endl;
 }
 
-void cfd1DTextInput::SetTransforms( float scale[ 3 ], float trans[ 3 ], float rot[ 3 ] )
+void cfd1DTextInput::SetTransforms( float scale[ 3 ],
+                                    float trans[ 3 ],
+                                    float rot[ 3 ] )
 {
-/*   for( int i = 0; i < 3; i++ )
-   {
-      this->scale[ i ] = scale[ i ];
-      this->trans[ i ] = trans[ i ];
-      this->rot[ i ]   = rot[ i ];
-   }*/
+   this->SetScaleArray( scale );
    this->SetTranslationArray( trans );
    this->SetRotationArray( rot );
-   this->SetScaleArray( scale );
 }
 
 void cfd1DTextInput::Update( void )
 {
-   vtkVectorText* labelScalar       = vtkVectorText::New();   
-   vtkPolyDataMapper *labelMapper   = vtkPolyDataMapper::New();
-   actor                            = vtkActor::New();
+   vtkVectorText* labelScalar = vtkVectorText::New();   
+   labelScalar->SetText( this->text.c_str() );
 
-   labelScalar->SetText( text.c_str() );
+   vtkPolyDataMapper *labelMapper = vtkPolyDataMapper::New();
    labelMapper->SetInput( labelScalar->GetOutput() );
+
+   vtkActor * actor = vtkActor::New();
    actor->SetMapper( labelMapper );
-   this->actor->GetProperty()->SetSpecularPower( 20.0f );
+   actor->GetProperty()->SetSpecularPower( 20.0f );
+
+   // set text color to green
    double color[ 3 ];
    color[ 0 ] = color[ 2 ] = 0;
    color[ 1 ] = 1;
-   this->actor->GetProperty()->SetColor( color );
+   actor->GetProperty()->SetColor( color );
 
-   geode->TranslateTocfdGeode( actor );
+   this->geode->TranslateTocfdGeode( actor );
 
    actor->Delete();
    labelMapper->Delete();

@@ -32,10 +32,8 @@
 #ifndef CFD_1DTEXTINPUT_H
 #define CFD_1DTEXTINPUT_H
 
-#include <vector>
 #include <string>
 
-class vtkActor;
 class cfdGeode;
 
 #include "cfdDCS.h"
@@ -45,27 +43,22 @@ class cfd1DTextInput : public cfdDCS
    public:
 
       cfd1DTextInput( void );
-      //cfd1DTextInput( cfd1DTextInput* );
 
       ~cfd1DTextInput( void );
 
       cfdDCS* getpfDCS( void );
 
       void SetTransforms( float [ 3 ], float [ 3 ], float [ 3 ] );
+
       void SetFilename( std::string );
+
       void Update( void );
    
-      std::string text;
    private:
    
-      //float scale[ 3 ];
-      //float trans[ 3 ];
-      //float rot[ 3 ];
+      std::string text;
 
-      
-      vtkActor*   actor;
-      //pfDCS*      DCS;
-      cfdGeode*    geode;  
+      cfdGeode*   geode;  
 };
 
 #endif
