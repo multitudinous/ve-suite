@@ -7,7 +7,7 @@ PLATFORM = LINUX
 COMPILER = g++
 GCC = yes
 GXX = yes
-CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
+CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  -I../
 CFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
 LDFLAGS =    
 THREADS = none
@@ -15,7 +15,7 @@ EXTRA_LIBS =
 PREFIX = /usr/local
 
 include ${XERCESCROOT}/version.incl
-include Makefile.incl
+include ../Makefile.incl
 
 PLUGIN = libSteamTurbine.so
 OBJECTS = SteamTurbine.o \

@@ -195,12 +195,13 @@ void GenCode()
 
   mkdir(MOD_name.c_str(), S_IRWXU|S_IRWXG);
   chdir(MOD_name.c_str());
-  system("cp ../Makefile.incl ./");
-  system("cp ../interface.h ./");
-  system("cp ../package.h ./");
-  system("cp ../string_ops.h ./");
-  system("cp ../Plugin_base.h ./");
-  system("cp ../UIDialog.h ./");
+  //no more file copies
+  //system("cp ../Makefile.incl ./");
+  //system("cp ../interface.h ./");
+  //system("cp ../package.h ./");
+  //system("cp ../string_ops.h ./");
+  //system("cp ../Plugin_base.h ./");
+  //system("cp ../UIDialog.h ./");
   ifstream fh_inp("../TEMPLATE.h");
   ifstream fcpp_inp("../TEMPLATE.cpp");
   ifstream fuih_inp("../TEMPLATE_UI.h");

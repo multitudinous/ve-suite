@@ -6,7 +6,7 @@
 
 #include "Plugin_base.h"
 #include <iostream>
-#include "TextResultDialog.h"
+
 IMPLEMENT_DYNAMIC_CLASS(REI_Plugin, wxObject)
 
 /////////////////////////////////////////////////////////////////////////////
@@ -199,9 +199,18 @@ UIDialog* REI_Plugin::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* REI_Plugin::Result(wxWindow* parent)
 {
+  std::vector<wxString> titles;
+  titles.push_back("Description");
+  titles.push_back("Value");
+
   if (result_dlg!=NULL)
     return result_dlg;
   result_dlg = new TextResultDialog(parent);
+  result_dlg->syngas->Clear();
+  result_dlg->syngas->AddRow(titles);
+  result_dlg->syngas->AddSeperator(' ');
+  result_dlg->syngas->AddSeperator('+');
+  result_dlg->syngas->AddSeperator(' ');
 
   return result_dlg;
 }
@@ -361,7 +370,18 @@ void REI_Plugin::UnPack(Interface * intf)
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::UnPackResult(Interface* intf)
 {
-  //This will be module dependent. no Default implementation is possible
+  //This will be module dependent. here is the Default implementation when using the summary table to pack things up in the module end
+  int i;
+  std::vector<string> descs;
+  descs = mod_pack.getStrings();
+  v_desc.clear();
+  v_value.clear();
+  for (i=0; i<descs.size(); i++)
+    {
+      v_desc.push_back(descs[i].c_str());
+      v_value.push_back((intf->getString(descs[i])).c_str());
+    }
+  
 }
 
 /////////////////////////////////////////////////////////////////////////////

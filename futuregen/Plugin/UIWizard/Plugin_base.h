@@ -8,7 +8,7 @@
 #include "interface.h"
 
 #include "UIDialog.h"
-
+#include "TextResultDialog.h"
 /*
  * If we're using wx in Dynamic Library format do we 
  * want FL to be in DLL form as well?
@@ -115,10 +115,12 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
   void RegistVar(string vname, std::vector<std::string> *var);
 
   UIDialog* dlg;
-  UIDialog* result_dlg;
+  TextResultDialog* result_dlg;
   Interface mod_pack;
   wxPoint pos; //The Position to draw Icon;
-  
+  std::vector<wxString> v_desc;
+  std::vector<wxString> v_value;
+
   //That's the for default implementation of the DrawIcon. Not part of the general interface
   wxPoint* poly; //The outline polygon points list;
   int n_pts; //Number of points
