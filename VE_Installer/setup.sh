@@ -20,10 +20,11 @@ else
    export CFDHOSTTYPE=`uname`
 fi
 
-echo "CFDHOSTTYPE =" $CFDHOSTTYPE
+#echo "CFDHOSTTYPE =" $CFDHOSTTYPE
 
-#export TAO_BUILD=TRUE
-export TAO_BUILD=FALSE
+export CLUSTER_APP=FALSE
+export TAO_BUILD=TRUE
+export SCENE_GRAPH=PF
 
 export PFNFYLEVEL=2
 export VPR_DEBUG_NFY_LEVEL=0
@@ -99,15 +100,22 @@ case "$CFDHOSTTYPE" in
    export BOOST_INCLUDES=${VJ_DEPS_DIR}/include/boost-1_31
    export LD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    export WX_HOME=${WX_HOME_DIR}/linux-rh80
+   #export OSG_HOME=/home/vr/Applications/TSVEG/Libraries/OSG/Linux-SuSE91
+   #export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
 
    if [ ${TAO_BUILD} = "TRUE" ]; then
-      export WX_HOME=${WX_HOME_DIR}/linux-rh80
       export ACE_ROOT=/home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
-      #export ACE_ROOT=/home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
-
       export TAO_ROOT=${ACE_ROOT}/TAO
+      export ACE_HOME=/home/vr/Applications/TSVEG/Libraries/ACE-5.4
+      export TAO_HOME=/home/vr/Applications/TSVEG/Libraries/TAO-1.4
       export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
+      export PATH=${ACE_ROOT}/bin:${PATH}
+
+      export XERCESCROOT=/home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-SuSE91
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
    else
       export OMNI_HOME=/home/vr/Juggler/linux-rh80
       #export OMNI_HOME=/home/vr/Juggler/linux-fc1
@@ -127,12 +135,6 @@ export SNX_BASE_DIR=${VJ_BASE_DIR}
 export PATH=${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
 export PATH=${WX_HOME}/bin:${PATH}
 export PATH=${JDK_HOME}/bin:${PATH}
-if [ ${TAO_BUILD} = "TRUE" ]; then
-   export PATH=${ACE_ROOT}/bin:${PATH}
-else
-   export PATH=${OMNI_HOME}/bin:${PATH}
-fi
-
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
 #echo "              or 'gmake clean'
