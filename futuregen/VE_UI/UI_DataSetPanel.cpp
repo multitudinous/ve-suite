@@ -80,7 +80,7 @@ UI_DatasetScroll::UI_DatasetScroll(wxWindow* parent)
             1, wxRA_SPECIFY_COLS);*/
 
    _col = new wxBoxSizer(wxVERTICAL);
-   _col->Add(_3dRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _col->Add(_3dRBox,1,wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL,5);
    /*_col->Add(_vertexRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    _col->Add(_polydataRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);*/
 
@@ -117,7 +117,7 @@ void UI_DatasetScroll::changeActiveDatasetType(int index)
             1, wxRA_SPECIFY_COLS);
    }
 
-   _col->Add(_3dRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _col->Add(_3dRBox,1,wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL,5);
 
    Refresh(); 
    //Complete Hack needed to get the page to refresh properly
@@ -158,8 +158,8 @@ UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
                                 1,empty,1,wxRA_SPECIFY_COLS);
 
    _col = new wxBoxSizer(wxVERTICAL);  
-   _col->Add(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
-   _col->Add(_vectorRBox,2,wxALIGN_LEFT|wxEXPAND);
+   _col->Add(_scalarRBox,6,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   _col->Add(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    SetSizer(_col);
 
@@ -197,8 +197,8 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
             ((UI_DatasetPanel*)GetParent())->_scalarNames,
             1, wxRA_SPECIFY_COLS);
 // Get number of vectors and scalar names
-   _col->Prepend(_vectorRBox,2,wxALIGN_LEFT|wxEXPAND);
-   _col->Prepend(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
+   _col->Prepend(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
+   _col->Prepend(_scalarRBox,6,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    Refresh(); 
    //Complete Hack needed to get the page to refresh properly
@@ -292,47 +292,44 @@ void UI_DatasetPanel::_buildPanel()
    //need a sizer for this box
    //The items will be placed  next (horizontally) to other rather than on top of each other
    //(vertically)
-   sRangeBoxSizer = new wxStaticBoxSizer(_scalarRangeBox,wxHORIZONTAL);
+   sRangeBoxSizer = new wxStaticBoxSizer(_scalarRangeBox,wxVERTICAL);
      
 
    //the labels for the sliders
    minLabel = new wxStaticText(this, -1, wxT("Min%"));
    maxLabel = new wxStaticText(this, -1, wxT("Max%"));
 
-   //Size of the slider
-   wxSize slidesize(50, 300);
-  
    //create the two sliders
-   _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,0,0,100,wxDefaultPosition, slidesize,
-                                  wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
-   _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, slidesize,
-                                  wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+   _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,0,0,100,wxDefaultPosition, wxDefaultSize,
+                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+   _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, wxDefaultSize,
+                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
 
    //two sizers to group the sliders and their lables
-   minGroup = new wxBoxSizer(wxVERTICAL); 
-   maxGroup = new wxBoxSizer(wxVERTICAL); 
+   minGroup = new wxBoxSizer(wxHORIZONTAL); 
+   maxGroup = new wxBoxSizer(wxHORIZONTAL); 
   
    minGroup->Add(minLabel,0,wxALIGN_LEFT);
    minGroup->Add(_minPercentSlider,1,wxALIGN_LEFT);
 
-   maxGroup->Add(maxLabel,0,wxALIGN_RIGHT);
-   maxGroup->Add(_maxPercentSlider,1,wxALIGN_RIGHT);
+   maxGroup->Add(maxLabel,0,wxALIGN_LEFT);
+   maxGroup->Add(_maxPercentSlider,1,wxALIGN_LEFT);
 
    sRangeBoxSizer->Add(minGroup, 1, wxALIGN_LEFT|wxEXPAND); 
-   sRangeBoxSizer->Add(maxGroup, 1, wxALIGN_RIGHT|wxEXPAND);
+   sRangeBoxSizer->Add(maxGroup, 1, wxALIGN_LEFT|wxEXPAND);
   
    _colcombine1_2 = new wxBoxSizer(wxHORIZONTAL);
    _mastercol1 = new wxBoxSizer(wxVERTICAL);
    
    _col1 = new wxBoxSizer(wxVERTICAL);
    _col2 = new wxBoxSizer(wxVERTICAL);
-   _col3 = new wxBoxSizer(wxVERTICAL);
-   _col4 = new wxBoxSizer(wxVERTICAL);
+   //_col3 = new wxBoxSizer(wxHORIZONTAL);
+   //_col4 = new wxBoxSizer(wxVERTICAL);
 
    //new layout
-   _col1->Add(_RBoxScroll,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   _col1->Add(_RBoxScroll,1,wxALL|wxEXPAND|wxALIGN_CENTER_HORIZONTAL,5);
    
-   _col2->Add(_ScalarScroll,1,wxALIGN_LEFT|wxEXPAND);
+   _col2->Add(_ScalarScroll,1,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    _colcombine1_2->Add(_col1,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    _colcombine1_2->Add(_col2,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
@@ -340,18 +337,18 @@ void UI_DatasetPanel::_buildPanel()
    _mastercol1->Add(_datasetCombo,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    _mastercol1->Add(_colcombine1_2,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   _col3->Add(sRangeBoxSizer,1,wxALIGN_LEFT|wxEXPAND);
+   //_col3->Add(sRangeBoxSizer,1,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
    //_col4->Add(_visUpdateButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
   
    _dataHeadingBox = new wxStaticBox(this, -1, wxT("Data and Scalar Set Selection"));
 
-   dHeadingBoxSizer = new wxStaticBoxSizer(_dataHeadingBox,wxHORIZONTAL);
+   dHeadingBoxSizer = new wxStaticBoxSizer(_dataHeadingBox,wxVERTICAL);
 
-   dHeadingBoxSizer->Add(_mastercol1,8,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   dHeadingBoxSizer->Add(_col3,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   dHeadingBoxSizer->Add(_col4,2,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   dHeadingBoxSizer->Add(_mastercol1,8,wxEXPAND|wxALIGN_CENTER_VERTICAL);
+   dHeadingBoxSizer->Add(sRangeBoxSizer,4,wxALL|wxEXPAND|wxALIGN_CENTER_VERTICAL,5);
+   //dHeadingBoxSizer->Add(_col4,2,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    datasetPanelGroup = new wxBoxSizer(wxHORIZONTAL);
 
@@ -375,7 +372,7 @@ void UI_DatasetPanel::_buildPanel()
 	  else if( _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName )
       {
          _setScalars(_DataSets[i]);
-         i = _numSteadyStateDataSets;
+         break;
       }
       else
          std::cerr << " ERROR : Problem with UI_DatasetPanel::_buildPanel " << std::endl;
@@ -459,11 +456,11 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    _colcombine1_2->Remove(_col2);
    _mastercol1->Remove(_datasetCombo);
    _mastercol1->Remove(_colcombine1_2);
-   _col3->Remove(sRangeBoxSizer);
+   //_col3->Remove(sRangeBoxSizer);
    //_col4->Remove(_visUpdateButton);
    dHeadingBoxSizer->Remove(_mastercol1);
-   dHeadingBoxSizer->Remove(_col3);
-   dHeadingBoxSizer->Remove(_col4);
+   dHeadingBoxSizer->Remove(sRangeBoxSizer);
+   //dHeadingBoxSizer->Remove(_col4);
    datasetPanelGroup->Remove(dHeadingBoxSizer);
    delete _RBoxScroll;
    delete [] _scalarNames;
