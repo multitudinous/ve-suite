@@ -110,7 +110,15 @@ void cfd3DTextureBasedModel::InitializeModel()
 void cfd3DTextureBasedModel::_createTextureManager(char* filename)
 {
    cfdTextureManager tm;
-   std::ifstream fin(filename);   char name[256];   if(fin.is_open()){       int numFiles = 0;      fin>>numFiles;      for(int i = 0; i < numFiles; i++){         fin>>name;         tm.addFieldTextureFromFile(name);      }
+   std::ifstream fin(filename);
+   char name[256];
+   if(fin.is_open()){
+     int numFiles = 0;
+      fin>>numFiles;
+    for(int i = 0; i < numFiles; i++){
+         fin>>name;    
+         tm.addFieldTextureFromFile(name);
+     }
       if(tm.GetDataType(0)==cfdTextureManager::SCALAR){
          AddScalarTextureManager(tm,filename);
       }else{
