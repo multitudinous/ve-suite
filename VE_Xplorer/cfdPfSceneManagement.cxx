@@ -126,7 +126,7 @@ void cfdPfSceneManagement::InitScene( void )
    //this->lit->setColor( PFLT_SPECULAR, 0.64f, 0.64f, 0.64f );
    //this->lit->on();
    // Add pfDCS and sun for the world
-   this->rootNode->AddChild( (cfdSceneNode*)this->worldDCS );
+   this->rootNode->AddChild( this->worldDCS );
    // TODO: Might need to add this back in
    ((pfGroup*)this->rootNode->GetRawNode())->addChild( (pfNode*)this->sun );
 
