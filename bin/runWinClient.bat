@@ -8,4 +8,4 @@ REM cd %VE_SUITE_HOME%\VE_Conductor\Framework\
 cd %VE_SUITE_HOME%\VE_Conductor\Framework\
 
 %VE_SUITE_HOME%\VE_Conductor\Framework\WinClient.exe -ORBInitRef NameService=corbaloc:iiop:%TAO_MACHINE%:%TAO_PORT%/NameService 
-cmd
+REM cmd
