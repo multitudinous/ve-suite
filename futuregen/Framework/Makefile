@@ -55,7 +55,7 @@ CPPFLAGS += -g ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
             -I${VE_SUITE_HOME}/VE_Xplorer -I${SKEL_HOME} -I./.
 
 ifeq ($(PLATFORM), IRIX)
-   CPPFLAGS += -n32 -mips3 -LANG:std -I/isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-deps/include/boost/compatibility/cpp_c_headers
+   CPPFLAGS += -n32 -mips3 -LANG:std -I${VJ_DEPS_DIR}/include/boost/compatibility/cpp_c_headers
 endif
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
