@@ -55,6 +55,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.48;
     _wic_S    = 1.64;
     _wic_CL   = 0.098;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 7.01;
     _ash_prox = 7.01;
     _proxH2O  = 1.44;
@@ -100,6 +101,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.191795;
     _wic_S    = 0.0;
     _wic_CL   = 0.0;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 11.06;
     _ash_prox = 9.3015;
     _proxH2O  = 15.9;
@@ -145,6 +147,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.406391;
     _wic_S    = 2.824032;
     _wic_CL   = 0.326283;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 10.913591;
     _ash_prox = 9.7;
     _proxH2O  = 11.12;
@@ -190,6 +193,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 0.99;
     _wic_S    = 5.17;
     _wic_CL   = 0.01;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 0.52;
     _ash_prox = 0.4836;
     _proxH2O  = 7.0;
@@ -235,6 +239,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.43;
     _wic_S    = 0.82;
     _wic_CL   = 0.13;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 7.41;
     _ash_prox = 7.41;
     _proxH2O  = 2.33;
@@ -280,6 +285,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.13;
     _wic_S    = 0.74;
     _wic_CL   = 0.0;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 4.83;
     _ash_prox = 4.83;
     _proxH2O  = 6.13;
@@ -325,6 +331,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.3;
     _wic_S    = 3.74;
     _wic_CL   = 0.2;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 12.6;
     _ash_prox = 12.6;
     _proxH2O  = 13.0;
@@ -370,6 +377,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.33;
     _wic_S    = 0.66;
     _wic_CL   = 0.01;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 12.59;
     _ash_prox = 12.59;
     _proxH2O  = 7.95;
@@ -415,6 +423,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.2;
     _wic_S    = 0.8;
     _wic_CL   = 0.01;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 7.9;
     _ash_prox = 7.9;
     _proxH2O  = 26.6;
@@ -460,6 +469,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.0;
     _wic_S    = 0.53;
     _wic_CL   = 0.04;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 7.63;
     _ash_prox = 7.63;
     _proxH2O  = 30.24;
@@ -488,6 +498,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.5;
     _wic_S    = 2.24;
     _wic_CL   = 0.06;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 7.63;
     _ash_prox = 7.63;
     _proxH2O  = 5.05;
@@ -533,6 +544,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _wic_N    = 1.5;
     _wic_S    = 0.68;
     _wic_CL   = 0.07;
+    _wic_HG   = 1.0e-7;
     _ash_ult  = 10.4;
     _ash_prox = 10.4;
     _proxH2O  = 5.6;
@@ -579,12 +591,15 @@ void GasifierCFD::setCoalType (std::string coaltype)
 
 void GasifierCFD::normalizeUlt ()
 {
-  double total = _wic_C + _wic_H + _wic_O + _wic_N + _wic_S + _wic_CL + _ash_ult;
+  double total = _wic_C + _wic_H + _wic_O + _wic_N + _wic_S + _wic_CL
+     + _wic_HG + _ash_ult;
   _wic_C   = _wic_C   / total * 100; 
   _wic_H   = _wic_H   / total * 100; 
   _wic_O   = _wic_O   / total * 100; 
   _wic_N   = _wic_N   / total * 100;
+  _wic_S   = _wic_S   / total * 100;
   _wic_CL  = _wic_CL  / total * 100;
+  _wic_HG  = _wic_HG  / total * 100;
   _ash_ult = _ash_ult / total * 100;
 
   calculateProx();
@@ -881,14 +896,14 @@ void GasifierCFD::load_geom(int* fni,int* fnj,int* fnk,int* fnx,int* fny,int* fn
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
 
-void GasifierCFD::load_scirun_pd(float *pd, float *pmf, int *np, int *numstr) {
-  int size = *np;
+void GasifierCFD::load_scirun_pd(float *pd, float *pmf, int *nps, int *numstr) {
+  int size = 6;
   double pd_local[20];
   double pmf_local[20];
   // last area is calculated by fortran.
-  double passed_areas[19] = {.05, .06, .09,
-			     .1, .2, .2,
-			     .1, .09, .06,
+  double passed_areas[19] = {.05, .15, .3,
+			     .3, .15, 0.0,
+			     0.0, 0.0, 0.0,
 			     0.0, 0.0, 0.0,
 			     0.0, 0.0, 0.0,
 			     0.0, 0.0, 0.0,
@@ -915,14 +930,15 @@ void GasifierCFD::load_scirun_pd(float *pd, float *pmf, int *np, int *numstr) {
 
 void GasifierCFD::load_scirun_wics(float *wic, int *j, int *nlm, int *np, int *nel) {
   int j_val = *j;
-  int nel_val = *nel;
+  int nel_val = *nel, np_val = *np;
   
   // Read Initial Values from GUI.
-  *(wic + (j_val-1) * nel_val + 0) = (float)_wic_C /(100.-(float)_ash_ult);
-  *(wic + (j_val-1) * nel_val + 1) = (float)_wic_H /(100.-(float)_ash_ult);
-  *(wic + (j_val-1) * nel_val + 2) = (float)_wic_O /(100.-(float)_ash_ult);
-  *(wic + (j_val-1) * nel_val + 3) = (float)_wic_N /(100.-(float)_ash_ult);
-  *(wic + (j_val-1) * nel_val + 4) = (float)_wic_S /(100.-(float)_ash_ult);
+  *(wic + 0 * np_val + j_val-1) = (float)_wic_C /(100.-(float)_ash_ult);
+  *(wic + 1 * np_val + j_val-1) = (float)_wic_H /(100.-(float)_ash_ult);
+  *(wic + 2 * np_val + j_val-1) = (float)_wic_O /(100.-(float)_ash_ult);
+  *(wic + 3 * np_val + j_val-1) = (float)_wic_N /(100.-(float)_ash_ult);
+  *(wic + 4 * np_val + j_val-1) = (float)_wic_S /(100.-(float)_ash_ult);
+  *(wic + 5 * np_val + j_val-1) = (float)_wic_CL /(100.-(float)_ash_ult);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -971,6 +987,7 @@ void GasifierCFD::load_scirun_hhv(float *omegal, float *yy, float *omegaa, float
   double co2 = -94.05;
   double h2o = -68.32;
   double so2 = -71;
+  double hcl = -22.06;
   
   // Convert wics from wt%-dry to gmols.
   double wicAsh = _ash_ult;
@@ -979,6 +996,7 @@ void GasifierCFD::load_scirun_hhv(float *omegal, float *yy, float *omegaa, float
   //double wicO = (_wic_O * basis) / ((100 - wicAsh) * 15.9994) * 1000;
   //double wicN = (_wic_N * basis) / ((100 - wicAsh) * 14.010) * 1000;
   double wicS = (_wic_S * basis) / ((100 - wicAsh) * 32.060) * 1000;
+  double wicCL = (_wic_CL * basis) / ((100 - wicAsh) * 35.4527) * 1000;
 
   // Convert hhv from BTU/lb (as received) to KCal/kg (daf).
   double hhv_1 = (-1) * _hhv;
@@ -987,7 +1005,8 @@ void GasifierCFD::load_scirun_hhv(float *omegal, float *yy, float *omegaa, float
 
   // HC0 in Glacier (J/kg @ 298K)
   // (1 kg basis - 1 mole as defined above)
-  (*hc0) = (wicC*co2 + wicH/2*h2o + wicS*so2 - basis * hhv_1) * 4184;
+  (*hc0) = (wicC*co2 + (wicH - wicCL)/2*h2o + wicS*so2
+     + wicCL*hcl - basis * hhv_1) * 4184;
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
