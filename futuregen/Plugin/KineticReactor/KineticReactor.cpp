@@ -83,7 +83,7 @@ int KineticReactor::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void KineticReactor::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*11/100, icon_h*37/75);
+  iports[0]=wxPoint(icon_w*5/60, icon_h*21/45);
   return;
 }
 
@@ -98,7 +98,7 @@ int KineticReactor::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void KineticReactor::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*87/100, icon_h*37/75);
+  oports[0]=wxPoint(icon_w*52/60, icon_h*21/45);
 }
 
 /////////////////////////////////////////////////////////////////////////////
