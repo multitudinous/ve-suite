@@ -188,14 +188,27 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    _col->Remove(_scalarRBox);
    _col->Remove(_vectorRBox);
 
+   if ( _scalarRBox )
    delete _scalarRBox;
+   if ( _vectorRBox )
    delete _vectorRBox;
 
+   if ( activeDataSet->_numOfScalars != 0 )
+   {
    _scalarRBox = new wxRadioBox(this,SCALAR_PANEL_RAD_BOX, wxT("Scalars"),
                                      wxDefaultPosition, wxDefaultSize,
             activeDataSet->_numOfScalars,
             ((UI_DatasetPanel*)GetParent())->_scalarNames,
             1,wxRA_SPECIFY_COLS);
+   }
+   else
+   {
+      wxString empty[1];
+      empty[0] = wxT("No Scalars");
+      _scalarRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Scalars"),
+                        wxDefaultPosition, wxDefaultSize, 
+                        1, empty, 1, wxRA_SPECIFY_COLS);
+  }
 
    if ( activeDataSet->_numOfVectors != 0 )
    {
@@ -231,14 +244,15 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    SetSize(GetSize());
 
    // Update VE-Xplorer with new data
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
+    if ( activeDataSet->_numOfScalars != 0 )
+   {  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 
                      ((UI_DatasetPanel*)GetParent())->_minPercentSlider->GetValue();
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 
                      ((UI_DatasetPanel*)GetParent())->_maxPercentSlider->GetValue();
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
-
+   }
    // Need to add vector support Update VE-Xplorer with new data
    if ( activeDataSet->_numOfVectors != 0 )
    {
