@@ -72,7 +72,7 @@ public:
    cfdSceneNode& operator=( const cfdSceneNode& );
 
    //get the internal cfd node type
-   virtual GetCFDNodeType(){return _nt;}
+   virtual cfdNodeType GetCFDNodeType(){return _nt;}
 
    //retrieve the underlying node depending on
    //scene graph
