@@ -472,15 +472,17 @@ void UI_Tabs::createTabPages()
 
    //Vectors page
    _vectorPage = new UI_VectorTab(this);
-   AddPage( _vectorPage, _T("Vectors"), false );
+   AddPage( _vectorPage, _T("Vectors/Contours"), false );
 
    //Navigation page
    _navPage = new UI_NavigationTab(this);
    AddPage( _navPage, _T("Navigation"), false );
   
    //Navigation page
-   _transPage = new UI_TransTab(this);
-   AddPage( _transPage, _T("Transient"), false );
+   // This tab needs to be moved to the UI_VisTab
+   //_transPage = new UI_TransTab(this);
+   //AddPage( _transPage, _T("Transient"), false );
+
    //Navigation page
    _vertPage = new UI_VertTab(this);
    AddPage( _vertPage, _T("Vertex"), false );
@@ -488,10 +490,6 @@ void UI_Tabs::createTabPages()
    //Viewing Locations page
    //_viewlocPage = new UI_ViewLocTab(this);
    //AddPage( _viewlocPage, _T("View Points"), false );
-
-   //Design Parameters page
-   _designparPage = new UI_DesignParTab(this);
-   AddPage( _designparPage, _T("Design Parameters"), false );
 
    //SetSelection(0);
 }
@@ -510,23 +508,23 @@ void UI_Tabs::sendDataArrayToServer( void )
 {
    std::cout << " Construct data array to send to server side : " << std::endl;
 
-   clientInfoArray[ 0 ] = (short)cId;
+   clientInfoArray[ 0 ] = (double)cId;
    std::cout << "    command id     : " << clientInfoArray[ 0 ] << std::endl;
-   clientInfoArray[ 1 ] = (short)cIso_value;
+   clientInfoArray[ 1 ] = (double)cIso_value;
    std::cout << "    iso_value      : " << clientInfoArray[ 1 ] << std::endl;
-   clientInfoArray[ 2 ] = (short)cTimesteps;
+   clientInfoArray[ 2 ] = (double)cTimesteps;
    std::cout << "    timesteps      : " << clientInfoArray[ 2 ] << std::endl;
-   clientInfoArray[ 3 ] = (short)cSc;
+   clientInfoArray[ 3 ] = (double)cSc;
    std::cout << "    sc             : " << clientInfoArray[ 3 ] << std::endl;
-   clientInfoArray[ 4 ] = (short)cMin;
+   clientInfoArray[ 4 ] = (double)cMin;
    std::cout << "    min            : " << clientInfoArray[ 4 ] << std::endl;
-   clientInfoArray[ 5 ] = (short)cMax;
+   clientInfoArray[ 5 ] = (double)cMax;
    std::cout << "    max            : " << clientInfoArray[ 5 ] << std::endl;
-   clientInfoArray[ 6 ] = (short)cGeo_state;
+   clientInfoArray[ 6 ] = (double)cGeo_state;
    std::cout << "    geo_state      : " << clientInfoArray[ 6 ] << std::endl;
-   clientInfoArray[ 7 ] = (short)cPre_state;
+   clientInfoArray[ 7 ] = (double)cPre_state;
    std::cout << "    pre_state      : " << clientInfoArray[ 7 ] << std::endl;
-   clientInfoArray[ 8 ] = (short)cTeacher_state;
+   clientInfoArray[ 8 ] = (double)cTeacher_state;
    std::cout << "    teacher_state  : " << clientInfoArray[ 8 ] << std::endl;
 
    if ( !CORBA::is_nil( server_ref ) )

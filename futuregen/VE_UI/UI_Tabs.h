@@ -137,7 +137,7 @@ public:
    short cTimesteps;
    short cNumTeacherArrays;
    short cTeacher_state;
-   short cGetClientInfo;
+   //short cGetClientInfo;
    
    // Must be the same size as specified in VjObs_i.h
    int numOfClientInfo;
