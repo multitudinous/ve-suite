@@ -208,6 +208,9 @@ bool Recuperator_UI_Dialog::TransferDataFromWindow()
   txt = t_ext_press_drop->GetValue();
   (*p_ext_press_drop) = atof(txt.c_str());
 
+  txt = t_fin_effect->GetValue();
+  (*p_fin_effect) = atof(txt.c_str());
+
   txt = cb_arrangement->GetValue();
   (*p_arrangement) = txt.c_str();
   
@@ -222,7 +225,7 @@ bool Recuperator_UI_Dialog::TransferDataFromWindow()
 ////////////////////////////////////////////////////
 bool Recuperator_UI_Dialog::TransferDataToWindow()
 {
-  wxString txt1, txt2, txt3, txt4, txt5, txt6,txt7, txt8, txt9;
+  wxString txt1, txt2, txt3, txt4, txt5, txt6,txt7, txt8, txt9, txt10;
 
   txt1<<(*p_num_tubeL);
   t_num_tubeL->SetValue(txt1);
@@ -250,6 +253,9 @@ bool Recuperator_UI_Dialog::TransferDataToWindow()
 
   txt9<<(*p_ext_press_drop);
   t_ext_press_drop->SetValue(txt9);
+
+  txt10<<(*p_fin_effect);
+  t_fin_effect->SetValue(txt10);
 
   cb_arrangement->SetValue(p_arrangement->c_str());
 
