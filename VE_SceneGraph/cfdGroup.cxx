@@ -223,8 +223,10 @@ int cfdGroup::GetNumChildren( void )
 #endif
 
    int numChildren = this->_group->getNumChildren(); 
-   if(numChildren!=(int)childNodes.size()){
-      std::cout << " ERROR: Number of children don't equal " << std::endl;
+   if ( numChildren!=(int)childNodes.size() )
+   {
+      std::cout << " ERROR: Number of children don't equal " 
+               << numChildren << " : " << childNodes.size() << std::endl;
       exit( 1 );
    }
    return numChildren;
@@ -275,6 +277,8 @@ int cfdGroup::ReplaceChild( cfdNode* childToBeReplaced,
       this->_group->replaceChild( childToBeReplaced->GetRawNode(), 
                                       newChild->GetRawNode() );
 
+      //add the child to cfdscene
+      childNodes.push_back( newChild );
       // Set new parent for the new child
       newChild->SetParent( this );
       // Show that he no longer has a parent
