@@ -226,7 +226,7 @@ void cfdIHCCModel::RunModel( void )
       {
          // transient sequences have groups attached directly to sequence nodes
          cfdGroup* group = (cfdGroup*)this->sequence->GetSequence()->getChild( i );
-         this->sequence->GetSequence()->removeChild( group );
+         this->sequence->GetSequence()->RemoveChild( group );
          delete group;
       }
    }
@@ -267,7 +267,7 @@ void cfdIHCCModel::RunModel( void )
       times.push_back( t * 10 );
       //      cout << "Timestep " << t << endl;
       solutions.push_back( c[ 0 ] );
-      this->sequence->GetSequence()->addChild( new cfdGroup() );
+      this->sequence->GetSequence()->AddChild( new cfdGroup() );
    }
    definedRange[ 0 ] = min;
    definedRange[ 1 ] = max;

@@ -247,6 +247,12 @@ echo Done.
 			</File>
 			<File
 				RelativePath="..\futuregen\Ve_ui\UI_DataSetTab.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\futuregen\Ve_ui\UI_DesignParTab.cpp">
@@ -268,6 +274,12 @@ echo Done.
 			</File>
 			<File
 				RelativePath="..\futuregen\Ve_ui\UI_ScalarTab.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\futuregen\Ve_ui\UI_SoundsTab.cpp">

@@ -80,7 +80,7 @@ void cfdTempAnimation::SetpfGroups( void )
    for ( int i = 0; i < this->numFrames; i++)
    {
       this->groups[ i ] = new cfdGroup();
-      this->_sequence->addChild( this->groups[ i ] );
+      this->_sequence->AddChild( this->groups[ i ] );
    }
    this->_sequence->setInterval( CFDSEQ_CYCLE, 0 , this->numFrames - 1 );
    this->_sequence->setDuration( this->_duration );
@@ -116,7 +116,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
                            << std::endl << vprDEBUG_FLUSH;
 
    cfdGeode* temp;
-   unsigned int type = this->_sequence->getChild( 0 )->GetNodeType();
+   unsigned int type = this->_sequence->GetChild( 0 )->GetNodeType();
    
    if ( objectType == ANIMATED_STREAMLINES )
    {
@@ -127,7 +127,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
       for ( i = 0; i < num; i++ )
       {
          temp = ( cfdGeode* )this->_sequence->getChild( 0 );
-         this->_sequence->removeChild( temp );
+         this->_sequence->RemoveChild( temp );
          _geodes.erase( _geodes.begin() );
          delete temp;
       }
@@ -137,7 +137,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
       int numPts = this->_geodes.size();
       for ( i = 0; i < numPts; i++ )
       {
-         this->_sequence->addChild( this->_geodes[ i ] );
+         this->_sequence->AddChild( this->_geodes[ i ] );
       }      
       vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: Create Sequence" 
                               << std::endl << vprDEBUG_FLUSH;
@@ -158,7 +158,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
       for ( i = 0; i < num; i++ )
       {
          temp = (cfdGeode *)this->_sequence->getChild( 0 );
-         this->_sequence->removeChild( temp );
+         this->_sequence->RemoveChild( temp );
          _geodes.erase( _geodes.begin() );
          delete temp;
       }
@@ -168,7 +168,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
       int numPts = this->_geodes.size();
       for ( i = 0; i < numPts; i++ )
       {
-         this->_sequence->addChild( this->_geodes[ i ] );
+         this->_sequence->AddChild( this->_geodes[ i ] );
       }      
       vprDEBUG(vprDBG_ALL, 2) << " For animated Images: Create Sequence" 
                               << std::endl << vprDEBUG_FLUSH;
@@ -293,7 +293,7 @@ void cfdTempAnimation::ClearSequence( void )
       for ( int i = numSequenceChildren-1; i >= 0; i-- )
       {
          // transient sequences have groups attached directly to sequence nodes
-         unsigned int type = this->_sequence->getChild( i )->GetNodeType();
+         unsigned int type = this->_sequence->GetChild( i )->GetNodeType();
 
          if ( type == 0 )//group )
          {
@@ -337,15 +337,15 @@ void cfdTempAnimation::ClearSequence( void )
             std::vector< cfdGeode* >::iterator iter;
             for ( iter = this->_geodes.begin(); iter != this->_geodes.end(); iter++ )
             {
-               int geodeIndex = this->_sequence->searchChild( *iter );
+               int geodeIndex = this->_sequence->SearchChild( *iter );
    
                if ( geodeIndex >= 0 )                                           
                {
                   vprDEBUG(vprDBG_ALL,1) << " child " << i 
                                          << " is a geode that will be removed"
                                          << std::endl << vprDEBUG_FLUSH; 
-                  cfdGeode* geode = (cfdGeode *)this->_sequence->getChild( geodeIndex );
-                  int error = this->_sequence->removeChild( geode );
+                  cfdGeode* geode = (cfdGeode *)this->_sequence->GetChild( geodeIndex );
+                  int error = this->_sequence->RemoveChild( geode );
                   vprDEBUG(vprDBG_ALL,1) << " Removal of child " << i 
                                          << " was : " << error
                                          << std::endl << vprDEBUG_FLUSH; 

@@ -733,6 +733,9 @@ echo Done.
 				RelativePath=".\cfdStreamers.cxx">
 			</File>
 			<File
+				RelativePath="..\VE_SceneGraph\cfdSwitch.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdTeacher.cxx">
 			</File>
 			<File
@@ -1617,13 +1620,16 @@ echo Done.
 				RelativePath="cfdSwappableGeometry.h">
 			</File>
 			<File
+				RelativePath="..\VE_SceneGraph\cfdSwitch.h">
+			</File>
+			<File
 				RelativePath="cfdTeacher.h">
 			</File>
 			<File
-				RelativePath=".\cfdTempAnimation.h">
+				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
 			</File>
 			<File
-				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
+				RelativePath=".\cfdTempAnimation.h">
 			</File>
 			<File
 				RelativePath=".\cfdThread.h">

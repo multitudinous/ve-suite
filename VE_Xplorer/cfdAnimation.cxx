@@ -98,7 +98,7 @@ void cfdAnimation::SetpfGroups( void )
    for ( int i = 0; i < this->numFrames; i++)
    {
       this->groups[ i ] = new cfdGroup();
-      this->sequence->GetSequence()->addChild( this->groups[ i ] );
+      this->sequence->GetSequence()->AddChild( this->groups[ i ] );
    }
    this->sequence->GetSequence()->setInterval( CFDSEQ_CYCLE, 0 , this->numFrames - 1 );
    this->sequence->GetSequence()->setDuration( this->_duration );
