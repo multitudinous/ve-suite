@@ -178,6 +178,10 @@ vtkDataSet * readVtkThing( char * vtkFilename, int printFlag )
    if (printFlag) 
    {
       printWhatItIs( dataset );
+      int numPoints = dataset->GetNumberOfPoints();
+      std::cout << "numPoints = " << numPoints << std::endl;
+      int numCells = dataset->GetNumberOfCells();
+      std::cout << "numCells = " << numCells << std::endl;
       dataset->GetBounds( bounds );
       printBounds( bounds );
    }
