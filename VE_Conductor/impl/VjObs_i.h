@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef _VJOBS_I_H_
 #define _VJOBS_I_H_
+
 #ifdef _TAO
 #include "VjObsS.h"
 #else
@@ -53,6 +54,7 @@ class cfdEnvironmentHandler;
 class cfdModelHandler;
 
 #include "cfdCommandArray.h"
+#include <iostream>
 
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
                 public PortableServer::RefCountServantBase
@@ -73,7 +75,7 @@ public:
       {
          client_list[temp]=0;
       }*/
-         // allocate enough space
+      // allocate enough space
 	   geo_name       = new VjObs::scalar_p(50);
 	   geo_name->length(50);
 	   scl_name       = new VjObs::scalar_p(50);
