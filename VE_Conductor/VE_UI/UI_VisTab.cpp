@@ -66,7 +66,8 @@ void UI_VisualizationTab::_buildPage()
                            wxT("Isosurface"),
                            wxT("PIV_Image"),
                            wxT("Animated Contours"),
-                           wxT("Polydata") };
+                           wxT("Polydata"),
+                           wxT("Warped Polydata") };
 
    //Create the 3x2 box
    _categoryRBox = new wxRadioBox(this, CATEGORY_RAD_BOX, wxT("Category"),
@@ -573,6 +574,11 @@ void UI_VisualizationTab::createCommandId( void )
    {
       ((UI_Tabs *)_parent)->cId = POLYDATA;
       ((UI_Tabs *)_parent)->cPre_state = 0;
+   } 
+   else if ( _categoryRBox->GetSelection() == 7 ) // Warped Polydata
+   {
+      ((UI_Tabs *)_parent)->cId = POLYDATA;
+      ((UI_Tabs *)_parent)->cPre_state = 1;
    } 
    else 
    {

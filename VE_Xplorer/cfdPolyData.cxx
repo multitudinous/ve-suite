@@ -32,6 +32,8 @@
 #include "cfdPolyData.h"
 #include "cfdDataSet.h"
 #include "cfdGeode.h"
+#include "cfdCommandArray.h"
+#include "cfdEnum.h"
 
 #include <vtkTubeFilter.h>
 #include <vtkCellTypes.h>
@@ -40,6 +42,7 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+#include <vtkWarpVector.h>
 
 // following is for vertex-based sphere glyphs
 #include <vtkGlyph3D.h>
@@ -55,7 +58,10 @@ cfdPolyData::cfdPolyData( float op_val )
 
    this->map = vtkPolyDataMapper::New();
    this->map->SetColorModeToMapScalars();
+   warper = vtkWarpVector::New();
    warpSurface = false;
+   warpedContourScale = 1.0f;
+
    //this->map->ScalarVisibilityOff();
 /*
    this->actor->GetProperty()->SetColor( 1.0f, 1.0f, 1.0f );
@@ -73,6 +79,7 @@ cfdPolyData::~cfdPolyData()
                           << std::endl << vprDEBUG_FLUSH;
 
    this->map->Delete();
+   warper->Delete();
 }
 
 void cfdPolyData::Update()
@@ -196,9 +203,11 @@ void cfdPolyData::Update()
                              << std::endl << vprDEBUG_FLUSH;
       if ( warpSurface )
       {
-         //this->warper->SetInput( this->cutter->GetOutput() );
-         //this->warper->SetScaleFactor( this->warpedContourScale );
-         //this->warper->Update();//can this go???
+         this->warper->SetInput( pd );
+         this->warper->SetScaleFactor( this->warpedContourScale );
+         this->warper->Update();//can this go???
+         this->map->SetInput( (vtkPolyData*)warper->GetOutput() );
+         warpSurface = false;
       }
       else
       {
@@ -242,6 +251,44 @@ void cfdPolyData::Update()
    geodes.back()->TranslateTocfdGeode( temp );
    temp->Delete();
    this->updateFlag = true;
+}
+
+bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
+{
+   // This is here because Dr. K. has code in 
+   // cfdObjects that doesn't belong there
+   // Fix this
+   bool flag = cfdObjects::CheckCommandId( commandArray );
+   
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) == 1 &&
+         commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) == POLYDATA)
+   {
+      warpSurface = true;
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+               == CHANGE_CONTOUR_SETTINGS )
+   {  
+      // warped contour settings
+      double v[2];
+      this->GetActiveDataSet()->GetUserRange( v );
+      int scale = commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
+      this->warpedContourScale = (scale/50.0) * 0.2 
+                    * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
+
+      // contour lod control
+      /*int lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
+      double realLOD = (double)lod/100.0;
+      this->deci->SetTargetReduction( realLOD );*/
+      return true;
+   }
+   return flag;
+}
+
+void cfdPolyData::UpdateCommand()
+{
+   cfdObjects::UpdateCommand();
+   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
 
 float cfdPolyData::GetSphereScaleFactor()

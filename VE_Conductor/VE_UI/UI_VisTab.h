@@ -8,11 +8,13 @@
 
 //#include "controlIds.h"
 //Visualizaton tab control ids
-enum VIS_TAB_IDS{
+enum VIS_TAB_IDS
+{
    CATEGORY_RAD_BOX,
    CONTOUR_RAD_BOX,
    DIRECTION_RBOX,
    PRE_COMP_SURF_BUTTON,
+   POLYDATA_WARPED_DURFACE,
    SINGLE_PLANE_BUTTON,
    CYCLE_CHECK_BOX,
    NEAREST_PLANE_CHECK_BOX,

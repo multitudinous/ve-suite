@@ -35,6 +35,8 @@
 #include "cfdObjects.h"
 
 class vtkPolyDataMapper;
+class vtkWarpVector;
+class cfdCommandArray;
 
 class cfdPolyData : public cfdObjects
 {
@@ -46,12 +48,20 @@ class cfdPolyData : public cfdObjects
 
       virtual void Update( void );
 
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
    private:
 
       float GetSphereScaleFactor();
 
       vtkPolyDataMapper *map;
+      vtkWarpVector* warper;
+	  cfdCommandArray* commandArray;
       bool warpSurface;
+      double warpedContourScale;
 };
 
 #endif
