@@ -48,11 +48,11 @@ class cfdWebServices
       // _ot_map : maps a module id to an interface object for a modules's outputs.
       //std::map<int, Interface>   _ot_map;
   
-      // _name_map : maps a module id to it's module name.
+      // _name_map : maps a module id to its module name.
       std::map< int, std::string> IDMap;
       std::map< std::string, int > nameMap;
   
-      // _name_map : maps a module name to it's module id.
+      //maps a module's ID to its instance
       std::map<int, cfdVEBaseClass* > pluginMap;
 
       // Functions that operate on the Executive
@@ -100,8 +100,7 @@ class cfdWebServices
       bool doneWithCalculations;
       bool updateNetworkString;
       bool runGetEverythingThread;
-      // Classes and variables for multithreading.
-      //cfdThread* thread;
+
 };
 
 #endif

@@ -89,9 +89,9 @@ int main(int argc, char* argv[])
 
    // Create webservice class here
    // vjobsWrapper->init( naming_context.in(), orb.in() );
-   // this recieves data ro mthe executive and writes data to 
+   // this recieves data from the executive and writes data to 
    // mysql
-   
+   cfdWebServices webService( naming_context.in(), orb.in() );;
    orb->run();
 
    return 0;

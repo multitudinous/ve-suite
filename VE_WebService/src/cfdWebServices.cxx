@@ -125,7 +125,7 @@ void cfdExecutive::GetEverything( void )
       std::map< int, std::string >::iterator iter;
       std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
       // Add any plugins that are present in the current network
-      for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
+      for ( iter=IDMap.begin(); iter!=IDMap.end(); iter++ )
       {
          foundPlugin = _plugins.find( iter->first );
          if ( (foundPlugin == _plugins.end()) || _plugins.empty() )
@@ -161,8 +161,8 @@ void cfdExecutive::GetEverything( void )
       {  
          // When we clear the _plugin map will
          // loop over all plugins
-         iter = _id_map.find( foundPlugin->first );
-         if ( iter == _id_map.end() )
+         iter = IDMap.find( foundPlugin->first );
+         if ( iter == IDMap.end() )
          {
             // if a module is on the pugins map but not on the id map
             foundPlugin->second->RemoveSelfFromSG();
@@ -208,19 +208,19 @@ void cfdExecutive::GetNetwork ( void )
    }
 */
    // Get buffer value from Body_UI implementation
-   std::string temp( ui_i->GetNetworkString() );
-   const char* network = temp.c_str();
-   vprDEBUG(vprDBG_ALL,2)  << "|\tNetwork String : " << network 
+   std::string temp( uii->GetNetworkString() );
+   const char* networkString = temp.c_str();
+   vprDEBUG(vprDBG_ALL,2)  << "|\tNetwork String : " << networkString
                               << std::endl << vprDEBUG_FLUSH;
 
 /////////////////////////////
 // This code taken from Executive_i.cpp
    Package p;
    p.SetSysId("temp.xml");
-   p.Load(network, strlen(network));
+   p.Load(networkString, strlen(networkString));
   
-   _network->clear();
-   _id_map.clear();
+   network->clear();
+   IDMap.clear();
 
    std::vector<Interface>::iterator iter;
    // Find network layout chunk in network structure
@@ -232,15 +232,15 @@ void cfdExecutive::GetNetwork ( void )
       }
    }
 
-   if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
+   if(iter!=p.intfs.end() && network->parse(&(*iter))) 
    {
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
       {
-         if(_network->setInput(iter->_id, &(*iter))) 
+         if(network->setInput(iter->_id, &(*iter))) 
          {
-            _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-            _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-            _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+            network->module(network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+            network->module(network->moduleIdx(iter->_id))->_need_execute = 1;
+            network->module(network->moduleIdx(iter->_id))->_return_state = 0;
          }  
          else
          {
@@ -249,10 +249,10 @@ void cfdExecutive::GetNetwork ( void )
 
          if ( iter->_id != -1 ) 
          {
-            //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
-            _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
-            //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
-            _it_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
+            //std::cout <<  network->module( network->moduleIdx(iter->_id) )->get_id() << " : " << network->module( network->moduleIdx(iter->_id) )->_name <<std::endl;
+            IDMap[ network->module( network->moduleIdx(iter->_id) )->get_id() ] = network->module( network->moduleIdx(iter->_id) )->_name;
+            //std::cout <<  network->module( network->moduleIdx(iter->_id) )->get_id() << " : " << network->module( network->moduleIdx(iter->_id) )->_name <<std::endl;
+            _it_map[ network->module( network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
          }
       }
    } 
