@@ -75,6 +75,7 @@
 #include <osg/BlendFunc>
 #include <osg/Array>
 #include <osg/Depth>
+#include <osg/ShadeModel>
 #elif _OPENSG
 #endif
 
@@ -537,6 +538,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getOrCreateStateSet();
          osg::Vec4Array* curColors = 0;
+         
          if(color == 1){
             curColors = new osg::Vec4Array(1);
             geoset->asGeometry()->setColorBinding(osg::Geometry::BIND_OVERALL);
@@ -560,21 +562,32 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          }
          //set up blending for opacity
          osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
+         osg::ref_ptr<osg::ShadeModel> shade = new osg::ShadeModel;
+         shade->setMode(osg::ShadeModel::SMOOTH);
          bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-		 osg::ref_ptr<osg::Depth> depth = new osg::Depth;	 
+		    osg::ref_ptr<osg::Depth> depth = new osg::Depth;	 
          //put in the appropriate bin
          if ( op == 1 ) {
              depth->setWriteMask(true);
              geostate->setRenderingHint(osg::StateSet::OPAQUE_BIN);
-             geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::OFF);
-             geostate->setMode(GL_BLEND,osg::StateAttribute::OFF);
+             geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+             geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
          }else{
              depth->setWriteMask(false);
              geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
              geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
              geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
          }
-          geostate->setAttribute(depth.get());
+         geostate->setAttributeAndModes(shade.get(),osg::StateAttribute::ON);
+         geostate->setAttribute(depth.get());
+         geostate->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
+         osg::Vec4Array* curNormals = 0;
+         curNormals  = dynamic_cast<osg::Vec4Array*>(geoset->asGeometry()->getNormalArray());
+         if(curNormals){
+            unsigned int nNormals = curNormals->getNumElements();
+         }else{
+            geostate->setMode(GL_NORMALIZE, osg::StateAttribute::ON);
+         }
          //reset the state
          geoset->setStateSet(geostate.get());
       }
