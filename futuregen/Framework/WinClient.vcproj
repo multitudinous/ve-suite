@@ -84,7 +84,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="../Plugin;./;../VE_UI/;&quot;$(WX_WIDGETS)\include&quot;;&quot;$(WX_WIDGETS)\lib\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\skel&quot;;&quot;$(VE_SUITE_HOME)\futurgen\IDL&quot;;&quot;$VE_SUITE_HOME)\futuregen\Framework&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_TAO"
 				IgnoreStandardIncludePath="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"

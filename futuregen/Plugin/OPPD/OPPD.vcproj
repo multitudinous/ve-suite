@@ -177,7 +177,7 @@
 				RelativePath=".\OPPD_UI.h">
 			</File>
 			<File
-				RelativePath=".\OPPD_UI_Constants.h">
+				RelativePath=".\OPPD_UI_constants.h">
 			</File>
 			<File
 				RelativePath=".\OPPD_UI_entries.h">

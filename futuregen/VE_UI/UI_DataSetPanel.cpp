@@ -85,7 +85,6 @@ UI_DatasetScroll::UI_DatasetScroll(wxWindow* parent)
    _col->Add(_polydataRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);*/
 
    SetSizer(_col);
-
 }
 
 void UI_DatasetScroll::changeActiveDatasetType(int index)
@@ -119,6 +118,8 @@ void UI_DatasetScroll::changeActiveDatasetType(int index)
    }
 
    _col->Add(_3dRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+
+   Refresh(); 
    //Complete Hack needed to get the page to refresh properly
    SetSize(GetSize());
    //SetSizer(_col);
@@ -191,6 +192,7 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    _col->Prepend(_vectorRBox,2,wxALIGN_LEFT|wxEXPAND);
    _col->Prepend(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
 
+   Refresh(); 
    //Complete Hack needed to get the page to refresh properly
    SetSize(GetSize());
 
@@ -349,13 +351,20 @@ void UI_DatasetPanel::_buildPanel()
    //_RBoxScroll->_vertexRBox->Enable(FALSE);
    //_RBoxScroll->_polydataRBox->Enable(FALSE);
    for (int i=0; i<_numSteadyStateDataSets; i++)
-      if(_DataSets[i]->_dataSetType == 0 && _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
+   {
+	  if ( _DataSets.empty() )
+	  {
+         _setScalarsnoDatasets();
+	  }
+	  else if( _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName )
       {
          _setScalars(_DataSets[i]);
          i = _numSteadyStateDataSets;
       }
       else
-         _setScalarsnoDatasets();
+		  cerr << " ERROR : Problem with UI_DatasetPanel::_buildPanel " << endl;
+         
+   }
 }
 
 void UI_DatasetPanel::_buildDataSets( void )
@@ -439,7 +448,7 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    dHeadingBoxSizer->Remove(_col4);
    datasetPanelGroup->Remove(dHeadingBoxSizer);
    delete _RBoxScroll;
-   delete _scalarNames;
+   delete [] _scalarNames;
    delete _ScalarScroll;
    delete _datasetCombo;
    delete _visUpdateButton;
@@ -477,6 +486,9 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
 
    _ScalarScroll->rebuildRBoxes(activeDataSet);
 
+   Refresh();
+   SetSize(GetSize());
+
    /*_col2->Remove(_ScalarScroll);
 
    delete _ScalarScroll;
@@ -501,6 +513,7 @@ void UI_DatasetPanel::_setScalarsnoDatasets()
 
    _col2->Prepend(_ScalarScroll,6,wxALIGN_LEFT|wxEXPAND);
 
+   Refresh(); 
    //Complete Hack needed to get the page to refresh properly
    SetSize(GetSize());
 }
@@ -640,13 +653,44 @@ void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
    _RBoxScroll->changeActiveDatasetType(_datasetCombo->GetSelection());
 
    for (int i=0; i<_numSteadyStateDataSets; i++)
-      if(_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
+   {
+      if ( _DataSets.empty() )
+	  {
+         _setScalarsnoDatasets();
+	  }
+	  else if( _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName )
       {
          _setScalars(_DataSets[i]);
          i = _numSteadyStateDataSets;
       }
       else
-        _setScalarsnoDatasets();
+	  {
+		  cerr << " ERROR : Problem with UI_DatasetPanel::_buildPanel " << endl;
+		_setScalarsnoDatasets();
+	  }
+   }
+
+	// Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform
+   static bool test = false;
+   int flag = 0;
+   if ( test )
+   {
+      flag = 1;
+	  test = false;
+   }
+   else
+   {
+      flag = -1;
+	  test = true;
+   }
+   
+   wxSize temp = GetSize();
+   temp.SetHeight( temp.GetHeight()+flag );
+   temp.SetWidth( temp.GetWidth()+flag );
+   SetSize( temp );
+   //Refresh();      
+   //Complete Hack needed to get the page to refresh properly
+   //SetSize(GetSize());
    
    /*if ( _datasetCombo->GetSelection() == 0 || _datasetCombo->GetSelection() == -1)
    {  

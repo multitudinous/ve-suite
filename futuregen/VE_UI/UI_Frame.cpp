@@ -221,6 +221,24 @@ void UI_Frame::OnChangeModel( void )
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
    _tabs->sendDataArrayToServer();
  
-   SetSize(GetSize());
-
+   //Refresh();
+   // Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform
+   static bool test = false;
+   int flag = 0;
+   if ( test )
+   {
+      flag = 1;
+	  test = false;
+   }
+   else
+   {
+      flag = -1;
+	  test = true;
+   }
+   
+   wxSize temp = GetSize();
+   temp.SetHeight( temp.GetHeight()+flag );
+   temp.SetWidth( temp.GetWidth()+flag );
+   SetSize( temp );
+   //((wxWindow*)GetParent())->SetSize( ((wxWindow*)GetParent())->GetSize() );  
 }

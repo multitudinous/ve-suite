@@ -23,7 +23,7 @@ class UI_ModSelScroll: public wxScrolledWindow{
 public:
    UI_ModSelScroll(wxWindow* parent);
    ~UI_ModSelScroll();
-
+   wxString* _models;
    wxRadioBox* _modelSelBox;
 
 
