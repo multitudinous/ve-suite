@@ -42,6 +42,8 @@
 #include <iostream>
 #include <fstream>
 
+using namespace std;
+
 // Fix need to add the new style read param to this class
 // tak code out of cfdReadPAram to this function
 cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,

@@ -34,6 +34,8 @@
 #include "cfdDCS.h"
 #include "cfdNavigate.h"
 
+using namespace gmtl;
+
 cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans, float* rotPts)
 {
    

@@ -431,12 +431,6 @@
 				RelativePath=".\cfdIsosurface.cxx">
 			</File>
 			<File
-				RelativePath=".\cfdLaser.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdMenu.cxx">
-			</File>
-			<File
 				RelativePath=".\cfdModel.cxx">
 				<FileConfiguration
 					Name="Release_OMNI|Win32"
@@ -1083,12 +1077,6 @@
 			</File>
 			<File
 				RelativePath="cfdIsosurface.h">
-			</File>
-			<File
-				RelativePath="cfdLaser.h">
-			</File>
-			<File
-				RelativePath="cfdMenu.h">
 			</File>
 			<File
 				RelativePath="cfdModel.h">

@@ -46,6 +46,8 @@
 #include <sstream>
 #include <iostream>
 
+using namespace std;
+
 cfdIHCCGauge::cfdIHCCGauge( cfdSceneNode *masterNode )
 {
    _textOutput = std::make_pair( new cfd1DTextInput(), new cfd1DTextInput() );

@@ -44,6 +44,8 @@
 
 #include <vrj/Util/Debug.h>
 
+using namespace std;
+
 cfdSoundHandler::cfdSoundHandler( char* param )
 {
    _param = NULL;

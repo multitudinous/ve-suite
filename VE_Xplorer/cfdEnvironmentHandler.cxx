@@ -34,8 +34,6 @@
 #include "fileIO.h"
 #include "cfdNavigate.h"
 #include "cfdSoundHandler.h"
-//#include "cfdLaser.h"
-//#include "cfdMenu.h"
 #include "cfdCursor.h"
 #include "cfdDCS.h"
 #include "cfdGroup.h"

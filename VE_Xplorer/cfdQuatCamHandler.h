@@ -52,23 +52,21 @@ class cfdReadParam;
 
 #include "cfdGlobalBase.h"
 
-using namespace gmtl;
-
 
 class cfdPoints
 {
 public:
    
    //Constructor
-   cfdPoints(double*, Matrix44f&);
+   cfdPoints(double*, gmtl::Matrix44f&);
 
    //Destructor
    ~cfdPoints();
-    Matrix44f& matrix(){return m;}
-    Vec3f& ptrans(){return trans;}
+    gmtl::Matrix44f& matrix(){return m;}
+    gmtl::Vec3f& ptrans(){return trans;}
 private:
-    Matrix44f      m;
-    Vec3f    trans; 
+    gmtl::Matrix44f      m;
+    gmtl::Vec3f    trans; 
 
 };
 
@@ -106,7 +104,6 @@ public:
    float angle;
 
 private:
-
 
    cfdQuatCam* thisQuatCam;
    cfdPoints*  nextPoint;

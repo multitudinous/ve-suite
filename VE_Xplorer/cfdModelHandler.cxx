@@ -69,8 +69,10 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
                           << std::endl << vprDEBUG_FLUSH;
    _param = input;
    worldNode = dcs;
+
    activeDataset = NULL;
-   //_scalarBar = NULL;
+   _scalarBar = NULL;
+   this->arrow = NULL;
    _readParam = new cfdReadParam( NULL );
    commandArray = NULL;
    // worldnode getting passed in to model
@@ -95,7 +97,12 @@ cfdModelHandler::~cfdModelHandler()
       delete *itr;
    }
    _modelList.clear();
-   //delete _scalarBar;
+
+   if ( _scalarBar ) 
+      delete _scalarBar;
+
+   if ( this->arrow ) 
+      this->arrow->Delete();
 }
 
 ///////////////////////
@@ -175,11 +182,13 @@ void cfdModelHandler::InitScene( void )
       cfdVectorBase::SetVectorRatioFactor( 1 );
    }
 
+/*
    std::cout << " Create scalar bar "  << endl;
    // Create Scalar bar
-   //_scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
-   //_scalarBar->RefreshScalarBar();
+   _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
+   _scalarBar->RefreshScalarBar();
    std::cout << " Done Create scalar bar "  << endl;
+*/
 }
 
 /////////////////////////////////
@@ -349,10 +358,13 @@ void cfdModelHandler::PreFrameUpdate( void )
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
    }
 
+/*
    // Check and see if we need to refresh the scalar bar
    //_scalarBar->CheckCommandId( commandArray );
    // May use in the future
    //_scalarBar->UpdateCommand();
+*/
+
 }
 
 ///////////////////////////////////////////////

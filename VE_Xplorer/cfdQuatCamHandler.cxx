@@ -46,6 +46,8 @@
 #include <fstream>
 #include <string>
 
+using namespace std;
+using namespace gmtl;
 
 cfdPoints::cfdPoints(double* worldPos, Matrix44f& mat)
 {

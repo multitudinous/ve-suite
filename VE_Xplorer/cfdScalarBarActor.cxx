@@ -55,8 +55,8 @@
 
 cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
 {
-  vprDEBUG(vprDBG_ALL,2) << "constructing cfdScalarBarActor" 
-                         << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,2) << "constructing cfdScalarBarActor" 
+                          << std::endl << vprDEBUG_FLUSH;
 
    _param = param;
    _rootNode = rootNode;

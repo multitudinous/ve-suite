@@ -38,7 +38,6 @@ class vtkLookupTable;
 class vtkPolyData;
 class vtkPolyDataMapper;
 class vtkActor;
-using namespace std;
 
 class cfdIHCCContour: public cfdObjects
 {
@@ -52,7 +51,7 @@ class cfdIHCCContour: public cfdObjects
       void MakeLookupTable( void );
       void MakeSequence( void );
       void Update( void );
-      void SetDataVector( vector< double >, double* x );
+      void SetDataVector( std::vector< double >, double* x );
       double variables[ 6 ];
 
       double min, max;
@@ -61,7 +60,7 @@ class cfdIHCCContour: public cfdObjects
       vtkPolyDataMapper* mapper;
       vtkActor* actor;
       double definedRange[ 2 ];
-      vector< double > solutions;
+      std::vector< double > solutions;
 };
 
 #endif

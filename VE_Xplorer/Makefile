@@ -175,8 +175,6 @@ SRCS=\
    cfdPfSceneManagement.cxx 
 
 #   cfdDrawManager.cxx
-#   cfdLaser.cxx
-#   cfdMenu.cxx
 
 ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \

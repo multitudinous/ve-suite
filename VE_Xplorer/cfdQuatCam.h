@@ -42,18 +42,15 @@
 #include <gmtl/Coord.h>
 #include <gmtl/Generate.h>
 
-
 class cfdDCS;
 class cfdNavigate;
-
-using namespace gmtl;
 
 class cfdQuatCam
 {
 public:
 
    //Constructors
-   cfdQuatCam(Matrix44f&, double*, float*);
+   cfdQuatCam(gmtl::Matrix44f&, double*, float*);
    cfdQuatCam(float, float, float, float, float*);
    
    
@@ -72,22 +69,20 @@ public:
 
    void UpdateRotation();
 
-   Vec3f  vjVecCurrTrans;
+   gmtl::Vec3f  vjVecCurrTrans;
 
-   //Matrix44f m2;
-
-   //pfMatrix m2;
+   //gmtl::Matrix44f m2;
 
    float rotPoints[4];
 
    float angle;
 
 private:
-   Quatf LastPosQuat;
-   Quatf NextPosQuat;
-   Quatf CurPosQuat;
-   Vec3f  vjVecNextTrans;
-   Vec3f  vjVecLastTrans;
+   gmtl::Quatf LastPosQuat;
+   gmtl::Quatf NextPosQuat;
+   gmtl::Quatf CurPosQuat;
+   gmtl::Vec3f vjVecNextTrans;
+   gmtl::Vec3f vjVecLastTrans;
 
 };
 #endif

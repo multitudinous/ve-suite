@@ -70,8 +70,6 @@ class cfdIHCCModel;
 // Scene graph dependent forward declarations
 class pfGroup;
 
-using namespace vrj;
-
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
 

@@ -49,6 +49,9 @@
 
 cfdPolyData::cfdPolyData( float op_val )
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdPolyData constructor"
+                          << std::endl << vprDEBUG_FLUSH;
+
    this->op = op_val;
 
    this->map = vtkPolyDataMapper::New();
@@ -69,6 +72,9 @@ cfdPolyData::cfdPolyData( float op_val )
 
 cfdPolyData::~cfdPolyData()
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdPolyData destructor"
+                          << std::endl << vprDEBUG_FLUSH;
+
    this->map->Delete();
    this->actor->Delete();
 }

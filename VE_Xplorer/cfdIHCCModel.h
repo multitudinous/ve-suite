@@ -35,7 +35,6 @@
 #include "cfdObjects.h"
 #include <vector>
 
-using namespace std;
 class vtkLookupTable;
 class vtkPolyData;
 class vtkPolyDataMapper;
@@ -44,7 +43,6 @@ class vtkActor;
 class fileInfo;
 class cfdDCS;
 class cfdGroup;
-
 class cfdIHCCGauge;
 class cfdIHCCContour;
 class cfdTempAnimation;
@@ -77,8 +75,8 @@ class cfdIHCCModel: public cfdObjects
       vtkPolyDataMapper* mapper;
       vtkActor* actor;
       double definedRange[ 2 ];
-	   vector< double > solutions;
-	   vector< double > times;
+      std::vector< double > solutions;
+      std::vector< double > times;
       cfdTempAnimation* sequence;
 
       cfdIHCCGauge* gauge_acid;

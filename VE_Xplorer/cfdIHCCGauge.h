@@ -32,17 +32,15 @@
 #ifndef CFD_IHCCGAUGE_H
 #define CFD_IHCCGAUGE_H
 
+#include "cfdDCS.h"
+#include "cfdObjects.h"
+#include <string>
+#include <vector>
+//#include <utility>
+
 class cfdGroup;
 class cfdNode;
 class cfdReadParam;
-#include "cfdDCS.h"
-#include "cfdObjects.h"
-#include <utility>
-#include <string>
-#include <vector>
-
-using namespace std;
-
 class cfd1DTextInput;
 
 class cfdIHCCGauge : public cfdDCS, public cfdObjects
@@ -61,7 +59,7 @@ class cfdIHCCGauge : public cfdDCS, public cfdObjects
       void SetUnitsTag( std::string );
       void SetDataTag( std::string );
       void CreateGaugeName( void );
-      void SetDataVector( vector< double > );
+      void SetDataVector( std::vector< double > );
       void UpdateModelVariables( double* );
       void UpdateTransforms( float* scale, float* trans, float* rot );
       void ClearSequence( void );
@@ -82,9 +80,9 @@ class cfdIHCCGauge : public cfdDCS, public cfdObjects
       std::string _unitsName;
       std::string _gaugeTagName;
       
-      vector< double > data;
+      std::vector< double > data;
       double variables[ 6 ];
-      vector< cfd1DTextInput* > output;
+      std::vector< cfd1DTextInput* > output;
       float scale[ 3 ];
       float trans[ 3 ];
       float rot[ 3 ];

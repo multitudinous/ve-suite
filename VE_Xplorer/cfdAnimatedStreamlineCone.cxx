@@ -47,6 +47,9 @@
 
 cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( float diameter )
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdAnimatedStreamlineCone constructor"
+                          << std::endl << vprDEBUG_FLUSH;
+
    this->mapper   = vtkPolyDataMapper::New();
    this->actor    = vtkActor::New();
    this->polydata = vtkPolyData::New();
@@ -71,6 +74,9 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( float diameter )
 
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdAnimatedStreamlineCone destructor"
+                          << std::endl << vprDEBUG_FLUSH;
+
    this->mapper->Delete();
    this->actor->Delete();
    this->polydata->Delete();
@@ -132,15 +138,13 @@ void cfdAnimatedStreamlineCone::Update( void )
    }
 
    // Define the points at each integration time step
-   int forwardPoints;
    pointsArray = new vtkPoints*[ maxNpts ];
-      
-   
    for ( i = 0; i < maxNpts;  i++ )
    {
       pointsArray[ i ] = vtkPoints::New();
    }
 
+   int forwardPoints;
    for ( cellId = 0; cellId < numberOfStreamLines; cellId += 2 )
    {
       // For forward integrated points
@@ -157,7 +161,6 @@ void cfdAnimatedStreamlineCone::Update( void )
             << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
          pointsArray[ i ]->InsertNextPoint( x );        
       }
-      
       
       // For backward integrated points
       points = this->polyData->GetCell( cellId + 1 )->GetPoints();

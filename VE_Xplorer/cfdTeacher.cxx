@@ -52,6 +52,7 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
 
+using namespace std;
 using namespace gmtl;
 
 cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )

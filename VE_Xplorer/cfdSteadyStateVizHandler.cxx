@@ -314,36 +314,51 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 void cfdSteadyStateVizHandler::SetActiveDataSet( cfdDataSet* input )
 {
    if ( input == NULL )
-      exit( 1 );
+   {
+      std::cerr << "cfdSteadyStateVizHandler::SetActiveDataSet input is NULL" << std::endl;
+      //exit( 1 );
+   }
    _activeDataSet = input;
 }
 
 void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
 {
    if ( input == NULL )
+   {
+      std::cerr << "cfdSteadyStateVizHandler::SetCommandArray input is NULL" << std::endl;
       exit( 1 );
+   }
    commandArray = input;
 }
 
 void cfdSteadyStateVizHandler::SetWorldDCS( cfdDCS* input )
 {
    if ( input == NULL )
+   {
+      std::cerr << "cfdSteadyStateVizHandler::SetWorldDCS input is NULL" << std::endl;
       exit( 1 );
+   }
    _worldDCS = input;
 }
 
 void cfdSteadyStateVizHandler::SetNavigate( cfdNavigate* input )
 {
    if ( input == NULL )
+   {
+      std::cerr << "cfdSteadyStateVizHandler::SetNavigate input is NULL" << std::endl;
       exit( 1 );
+   }
    nav = input;
 }
 
 void cfdSteadyStateVizHandler::SetCursor( cfdCursor* input )
 {
-    if ( input == NULL )
+   if ( input == NULL )
+   {
+      std::cerr << "cfdSteadyStateVizHandler::SetCursor input is NULL" << std::endl;
       exit( 1 );
-  cursor = input;
+   }
+   cursor = input;
 }
 ////////////////////
 

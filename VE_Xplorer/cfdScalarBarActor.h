@@ -32,6 +32,9 @@
 #ifndef CFD_SCALAR_BAR_ACTOR_H
 #define CFD_SCALAR_BAR_ACTOR_H
 
+#include "cfdGlobalBase.h"
+//#include <string>
+
 class cfdDCS;
 class cfdGeode;
 class cfdGroup;
@@ -40,10 +43,6 @@ class vtkVectorText;
 class cfdCommandArray;
 class cfdDataSet;
 class cfdReadParam;
-#include <string>
-
-using namespace std;
-#include "cfdGlobalBase.h"
 
 //! VTK scalar bar render
 /*!

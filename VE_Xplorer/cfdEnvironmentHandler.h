@@ -33,8 +33,6 @@
 #define CFD_ENVIRONMENTHANDLER_H
 
 class cfdNavigate;
-//class cfdLaser;
-//class cfdMenu;
 class cfdCursor;
 class cfdDCS;
 class cfdGroup;
@@ -71,8 +69,6 @@ class cfdEnvironmentHandler
       cfdTeacher* _teacher;
       cfdSoundHandler* _soundHandler;
       cfdQuatCamHandler* _camHandler;
-      //cfdLaser* laser;
-      //cfdMenu* menu;
       cfdCursor* cursor;
       char* _param;
       cfdDCS* worldDCS;

@@ -33,7 +33,6 @@
 
 #include <iostream>
 #include <cstdlib>
-using namespace std;
 
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
@@ -49,6 +48,8 @@ using namespace std;
 #endif
 
 using namespace vrj;
+using namespace std;
+using namespace gmtl;
 
 cfdDCS::cfdDCS( float* scale, float* trans, float* rot ):cfdSceneNode()
 {

@@ -36,8 +36,6 @@
 
 #include <vtkActorToPF.h>
 
-using namespace std;
-
 #include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
@@ -48,16 +46,21 @@ using namespace std;
 
 #include <vpr/Util/Debug.h>
 
+using namespace std;
+
 cfdIHCCContour::cfdIHCCContour( void )
 {
-	variables[ 0 ] = 200;  //Agitation (rpm)  initial value 200
-	variables[ 1 ] = 1.25; //Air Concentration initial value 1.25;
-	variables[ 2 ] = 6;    //Initial pH value    initial value 6
-	variables[ 3 ] = 0.1;  //Nitrate Concentration     initial value 0.1
-	variables[ 4 ] = 37;   //Temperate (Celsius)        initial value 37
-	variables[ 5 ] = 240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
-	definedRange[ 0 ] = definedRange[ 1 ] = 0;
-	mapper = vtkPolyDataMapper::New();
+   vprDEBUG(vprDBG_ALL,2) << "cfdIHCCContour constructor"
+                          << std::endl << vprDEBUG_FLUSH;
+
+   variables[ 0 ] = 200;  //Agitation (rpm)  initial value 200
+   variables[ 1 ] = 1.25; //Air Concentration initial value 1.25;
+   variables[ 2 ] = 6;    //Initial pH value    initial value 6
+   variables[ 3 ] = 0.1;  //Nitrate Concentration     initial value 0.1
+   variables[ 4 ] = 37;   //Temperate (Celsius)        initial value 37
+   variables[ 5 ] = 240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
+   definedRange[ 0 ] = definedRange[ 1 ] = 0;
+   mapper = vtkPolyDataMapper::New();
    actor = vtkActor::New();
    lut = NULL;
    // Create two gauges
@@ -65,15 +68,19 @@ cfdIHCCContour::cfdIHCCContour( void )
 
 cfdIHCCContour::~cfdIHCCContour( void )
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdIHCCContour destructor"
+                          << std::endl << vprDEBUG_FLUSH;
+   mapper->Delete();
+   actor->Delete();
 }
 
 // Update variables passed in from the gui
 void cfdIHCCContour::UpdateModelVariables( double* input )
 {
-	for ( int i = 0; i < 6; i++ )
-	{
-		variables[ i ] = input[ i ];
-	}
+   for ( int i = 0; i < 6; i++ )
+   {
+      variables[ i ] = input[ i ];
+   }
 }
 
 void cfdIHCCContour::SetDataVector( vector< double > input, double* x )
@@ -86,7 +93,7 @@ void cfdIHCCContour::SetDataVector( vector< double > input, double* x )
 
 void cfdIHCCContour::RunModel( void )
 {
-	vector< double > solutions;
+   vector< double > solutions;
    double t;                        //time (in hours)
    int i;                           //looping index
 
@@ -125,17 +132,17 @@ void cfdIHCCContour::RunModel( void )
          c[0] = c[0] * c[i];
       }
 
-	  if ( c[ 0 ] < min )
-	  {
-	     min = c[ 0 ];
-	  }
-	  
-	  if ( c[ 0 ] > max )
-	  {
-	     max = c[ 0 ];
-	  }
+     if ( c[ 0 ] < min )
+     {
+        min = c[ 0 ];
+     }
+     
+     if ( c[ 0 ] > max )
+     {
+        max = c[ 0 ];
+     }
 //      cout << "I calculated the concentration" << endl;
-		solutions.push_back( c[ 0 ] );
+      solutions.push_back( c[ 0 ] );
    }
    definedRange[ 0 ] = min;
    definedRange[ 1 ] = max;
@@ -145,7 +152,7 @@ void cfdIHCCContour::MakeLookupTable( void )
 {
    cout << "lut range: " << this->definedRange[ 0 ] << " : " << this->definedRange[ 1 ] << endl;
    if ( lut == NULL )
-   	lut = vtkLookupTable::New();
+      lut = vtkLookupTable::New();
 
    // set up the vtkLookupTable
    this->lut->SetNumberOfColors( 256 );            //default is 256
@@ -156,13 +163,12 @@ void cfdIHCCContour::MakeLookupTable( void )
 
 void cfdIHCCContour::Update( void )
 {
-	// Loop over all the time steps and create the actors and geodes
-		// read polydata
-      // Translate 5 in y direction
+   // Loop over all the time steps and create the actors and geodes
+   // read polydata
    this->MakeLookupTable();
    vtkDataSet* pData = readVtkThing( "./Y_MultiCont_0.vtk" );
    vtkTransform* transform = vtkTransform::New();
-   transform->Translate( 0, 5, 0 );
+   transform->Translate( 0, 5, 0 );  // Translate 5 in y direction
    transform->Update();
 
    // Transformation 
@@ -170,27 +176,28 @@ void cfdIHCCContour::Update( void )
    transFilter->SetInput( (vtkPointSet *)pData );
    transFilter->SetTransform( transform );
    transFilter->Update();
-      this->mapper->SetInput( (vtkPolyData*)transFilter->GetOutput() );
-      this->mapper->ScalarVisibilityOff();
-      //this->mapper->SetLookupTable( lut );
-	   //this->mapper->SetColorModeToMapScalars();
-	   this->mapper->Update();
-   //std::cout << " Contours : " << std::endl;
-	for ( int i = 0; i < (int)solutions.size(); i++ )
-	{
+
+   this->mapper->SetInput( (vtkPolyData*)transFilter->GetOutput() );
+   this->mapper->ScalarVisibilityOff();
+   //this->mapper->SetLookupTable( lut );
+   //this->mapper->SetColorModeToMapScalars();
+   this->mapper->Update();
+
+   for ( int i = 0; i < (int)solutions.size(); i++ )
+   {
       //std::cout << i << " : " << solutions[ i ] << std::endl;
 
       double* color = this->lut->GetColor( solutions[ i ] );
       vtkActor* actor = vtkActor::New();
       actor->SetMapper( this->mapper );
-	   actor->GetProperty()->SetSpecularPower( 20.0f );
+      actor->GetProperty()->SetSpecularPower( 20.0f );
       //cout << " Color : " << color[ 0 ] << " : " << color[ 1 ] << " : " << color[ 2 ] << endl;
       actor->GetProperty()->SetColor( color );
       cfdGeode* geo = new cfdGeode();
       geo->TranslateTocfdGeode( actor );
       actor->Delete();
-	   _geodes.push_back( (cfdSceneNode*)geo );
-	}
+      _geodes.push_back( (cfdSceneNode*)geo );
+   }
    this->lut->Delete();
    lut = NULL;
    pData->Delete();

@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <string>
+//#include <string>
 #include "cfdFrame.h"
 #include "cfdFILE.h"
 #include "cfdTransientVizHandler.h"
@@ -42,7 +42,6 @@
 #include "cfdNode.h"
 #include "cfdGeode.h"
 
-
 #include <vpr/Util/Debug.h>
 #include <gmtl/Matrix.h>
 
@@ -52,6 +51,7 @@
 #include <vtkProperty.h>
 
 using namespace std;
+using namespace gmtl;
 
 cfdFrame::cfdFrame()
 {

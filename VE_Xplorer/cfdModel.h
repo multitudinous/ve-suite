@@ -49,8 +49,6 @@ it is better to treat these two dataset as two different models.
 #include <string>
 #include <vector>
 
-using namespace std;
-
 class cfdDataSet;
 class cfdDCS;
 class cfdNode;

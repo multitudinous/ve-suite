@@ -33,15 +33,13 @@
 #ifndef CFD_SOUNDHANDLER
 #define CFD_SOUNDHANDLER
 
-class cfdCommandArray;
-class cfdSound;
-class fileInfo;
-
-class cfdReadParam;
 #include <vector>
 #include "cfdGlobalBase.h"
 
-using namespace std;
+class cfdCommandArray;
+class cfdSound;
+class fileInfo;
+class cfdReadParam;
 
 class cfdSoundHandler : public cfdGlobalBase
 {
@@ -63,8 +61,8 @@ class cfdSoundHandler : public cfdGlobalBase
    private:
       char* _param;
       cfdReadParam* _readParam;
-      vector< cfdSound* > sounds;
-      vector< fileInfo* > soundFiles;
+      std::vector< cfdSound* > sounds;
+      std::vector< fileInfo* > soundFiles;
       //cfdCommandArray* commandArray;
       int soundFile;
 };

@@ -36,7 +36,6 @@
 #include <vtkActorToPF.h>
 #include <utility>
 #include <sstream>
-using namespace std;
 
 #include "cfdTempAnimation.h"
 #include "cfdSequence.h"
@@ -57,8 +56,12 @@ using namespace std;
 #include "cfdDCS.h"
 #include "cfdGroup.h"
 
+using namespace std;
+
 cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdIHCCModel constructor"
+                          << std::endl << vprDEBUG_FLUSH;
 
    if ( paramFile == NULL )
       return;
@@ -160,6 +163,13 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
 
 cfdIHCCModel::~cfdIHCCModel( void )
 {
+   vprDEBUG(vprDBG_ALL,2) << "cfdIHCCModel destructor"
+                          << std::endl << vprDEBUG_FLUSH;
+   delete sequence;
+   delete ihccModelNode;
+   delete gauge_time;
+   delete gauge_acid;
+   delete contours;
 }
 
 // Update variables passed in from the gui

@@ -65,6 +65,9 @@
 
 #include <cstdlib>
 
+using namespace vrj;
+using namespace std;
+
 #ifdef _CLUSTER
 int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
 #endif // _CLUSTER
@@ -114,7 +117,7 @@ void cfdApp::exit()
    /*if ( this->_transientHandler )
    {  
       vprDEBUG(vprDBG_ALL,2)  
-        << "deleting this->ihccModel" << std::endl << vprDEBUG_FLUSH;
+        << "deleting this->_transientHandler" << std::endl << vprDEBUG_FLUSH;
       delete this->_transientHandler;
    }*/
 
@@ -129,8 +132,7 @@ void cfdApp::exit()
    {
       vprDEBUG(vprDBG_ALL,2)  
         << "deleting this->ihccModel" << std::endl << vprDEBUG_FLUSH;
-      //This destructor needs fixed
-      //delete this->ihccModel;
+      delete this->ihccModel;
    }
 
 #ifdef _TAO
@@ -306,15 +308,18 @@ std::cout << "|  3d" << std::endl;
    this->executive = new cfdExecutive( naming_context.in(), this->_sceneManager->GetWorldDCS() );
 #endif // _TAO
 
+      this->ihccModel = NULL;
+/*
    //
    // Make IHCC Model - should be deleted at a later date
    //
    // Fix this with new read param method
    //if ( this->paramReader->ihccModel )
    {
-      //std::cout << "| 54. Initializing...................................... IHCC Model |" << std::endl;
-      //this->ihccModel = new cfdIHCCModel( NULL, this->_sceneManager->GetWorldDCS() );
+      std::cout << "| 54. Initializing...................................... IHCC Model |" << std::endl;
+      this->ihccModel = new cfdIHCCModel( NULL, this->_sceneManager->GetWorldDCS() );
    }
+*/
 
    // Create data in memory for transfered data
    this->CreateSoundInfo();
@@ -361,8 +366,8 @@ void cfdApp::preFrame( void )
       data[ 4 ] = cfdShort_data_array[ 5 ]; //37;   //Temperate (Celsius)        initial value 37
       data[ 5 ] = cfdShort_data_array[ 6 ]; //240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
 
-      this->ihccModel->UpdateModelVariables( data );
-      this->ihccModel->Update();
+      //this->ihccModel->UpdateModelVariables( data );
+      //this->ihccModel->Update();
    }
    else if ( _cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )   // exit cfdApp was selected
    {

@@ -34,18 +34,13 @@
 
 #include "cfdSceneNode.h"
 #include <gmtl/Matrix.h>
-//#include <gmtl/Vec.h>
+#include <vector>
 
 #ifdef _PERFORMER
 class pfDCS;
 #elif _OSG
 #elif _OPENSG
 #endif
-//class string;
-#include <vector>
-
-using namespace std;
-using namespace gmtl;
 
 class cfdDCS: public cfdSceneNode
 {
@@ -65,7 +60,7 @@ class cfdDCS: public cfdSceneNode
       void SetTranslationArray( float* );
       void SetRotationArray( float* );
       void SetScaleArray( float* );
-      void SetRotationMatrix( Matrix44f& );
+      void SetRotationMatrix( gmtl::Matrix44f& );
 
 #ifdef _PERFORMER
       pfNode* GetRawNode( void );
@@ -89,12 +84,12 @@ class cfdDCS: public cfdSceneNode
       float _rotation[ 3 ];
       float _scale[ 3 ];
    
-      vector< cfdSceneNode* > childNodes;
+      std::vector< cfdSceneNode* > childNodes;
 #ifdef _PERFORMER
       pfDCS* _dcs;
 #elif _OSG
 #elif _OPENSG
 #endif
-      Matrix44f _vjMatrix;
+      gmtl::Matrix44f _vjMatrix;
 };
 #endif

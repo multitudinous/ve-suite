@@ -60,6 +60,8 @@
 
 #include <vpr/Util/Debug.h>
 
+using namespace std;
+
 cfdReadParam::cfdReadParam( char *filein_name )
 {
    this->changeGeometry = false;
