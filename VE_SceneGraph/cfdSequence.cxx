@@ -35,6 +35,24 @@
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
+//Performer static member for performer compliance
+//it allows performer to determine the class type
+pfType* cfdSequence::_classType = NULL;
+
+#include <Performer/pf/pfSwitch.h>
+#include <Performer/pf/pfTraverser.h>
+
+//initialize our class w/ performer at run time
+void cfdSequence::init(void)
+{
+   if(_classType == 0)
+   {
+      //initialize the parent
+      pfGroup::init();
+      //create the new class type
+      _classType = new pfType(pfGroup::getClassType(),"cfdSequence");
+   }
+}
 #elif _OSG
 #include <osg/Node>
 #include <osg/Group>
@@ -46,6 +64,11 @@
 //Constructors          //
 //////////////////////////
 cfdSequence::cfdSequence():
+#ifdef _PERFORMER
+pfGroup(),
+#elif _OSG
+osg::Group(),
+#endif
 cfdGroup()
 {
    _lSwitch = 0;
@@ -59,17 +82,28 @@ cfdGroup()
    _pMode = CFDSEQ_START;
    _appFrame = 0;
    _step = -10000;
+   _sequence = this;
 #ifdef _PERFORMER
-   _group->setTravFuncs(PFTRAV_APP,switchFrame,0);
-   _group->setTravData(PFTRAV_APP,this);
+   setTravFuncs(PFTRAV_APP,switchFrame,0);
+   setTravData(PFTRAV_APP,this);
+   //performer stuff
+   init();
+   setType(_classType);
+   _group = dynamic_cast<cfdSequence*>(_sequence);
+
 #elif _OSG
 #endif
    SetCFDNodeType(CFD_SEQUENCE);
-   _sequence = this;
+   
 }
 ///////////////////////////////////////////////////
 cfdSequence::cfdSequence(const cfdSequence& cfdSeq)
-:cfdGroup()
+#ifdef _PERFORMER
+:pfGroup(),
+#elif _OSG
+:osg::Group(),
+#endif
+cfdGroup()
 {
    _lSwitch = cfdSeq._lSwitch;
    _deltaT = cfdSeq._deltaT;
@@ -83,8 +117,12 @@ cfdSequence::cfdSequence(const cfdSequence& cfdSeq)
    _appFrame = cfdSeq._appFrame;
    _step = cfdSeq._step;
 #ifdef _PERFORMER
-   _group->setTravFuncs(PFTRAV_APP,switchFrame,0);
-   _group->setTravData(PFTRAV_APP,this);
+   setTravFuncs(PFTRAV_APP,switchFrame,0);
+   setTravData(PFTRAV_APP,this);
+   //performer stuff
+   init();
+   setType(_classType);
+   _group = dynamic_cast<cfdSequence*>(_sequence);
 #elif _OSG
 #endif
    SetCFDNodeType(CFD_SEQUENCE);
@@ -102,6 +140,13 @@ cfdSequence& cfdSequence::operator=(const cfdSequence& rhs)
 {
    if ( this != &rhs){
       //call parents = operator
+#ifdef _PERFORMER
+      pfGroup::operator =(rhs);
+#elif _OSG
+      //what is going on here
+      //how does this work
+      //osg::Group::operator=(rhs);
+#endif 
       cfdGroup::operator =(rhs);
 
       //update everything
@@ -118,8 +163,9 @@ cfdSequence& cfdSequence::operator=(const cfdSequence& rhs)
       _step = rhs._step;
 #ifdef _PERFORMER
       _sequence = rhs._sequence;
-      _group->setTravFuncs(PFTRAV_APP,switchFrame,0);
-      _group->setTravData(PFTRAV_APP,this);
+      setTravFuncs(PFTRAV_APP,switchFrame,0);
+      setTravData(PFTRAV_APP,this);
+      _group = dynamic_cast<cfdSequence*>(_sequence);
 #elif _OSG
 #endif
       SetCFDNodeType(CFD_SEQUENCE);

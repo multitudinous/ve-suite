@@ -50,14 +50,34 @@ enum cfdLoopMode{
 #include "cfdGroup.h"
 #include "cfdSwitch.h"
 
-class cfdSequence : public cfdGroup{
 
+#ifdef _PERFORMER
+class pfNode;
+class pfType;
+class pfSwitch;
+class pfTraverser;
+#include <Performer/pf/pfGroup.h>
+class cfdSequence : public pfGroup, public cfdGroup
+
+#elif _OSG
+#include <osg/Group>
+#include <osg/Switch>
+class cfdSequence : public osg::Group, public cfdGroup
+#endif
+{
 public:
    cfdSequence();
    ~cfdSequence();
 
    cfdSequence(const cfdSequence& cfdSeq);
 
+#ifdef _PERFORMER
+   //to make this a performer class
+   static void init(void);
+
+   static pfType* getClassType( void ){ return _classType; }
+#elif _OSG
+#endif   
    cfdSequence& operator=(const cfdSequence& rhs);
    // set/get the duration (in seconds) of any particular frame
    void setTime( double time );
@@ -135,6 +155,10 @@ protected:
    
    int _currentFrame;
    int _dir;   //forward(1)/backward(-1)
+#ifdef _PERFORMER
+   static pfType* _classType;
+#elif _OSG
+#endif
 };
 
 #endif //_VRAC_CFD_SEQUENCE_H_
