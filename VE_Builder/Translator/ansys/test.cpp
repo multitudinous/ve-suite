@@ -12,12 +12,19 @@ int main( int argc, char *argv[] )
       reader = new ansysReader( argv[ 1 ] );
 
    reader->ReadHeader();
+/*
    reader->ReadSecondBlock();
    reader->ReadThirdBlock();
    reader->ReadFourthBlock();
    reader->ReadFifthBlock();
    reader->ReadSixthBlock();
-
+*/
+   int counter = 0;
+   while( 1 )
+   {
+      cout << "\nReading block " << ++counter << endl;
+      reader->ReadGenericIntBlock();
+   }
    cout << "\ndone!\n" << endl;
 
    delete reader;
