@@ -13,15 +13,17 @@ IMPLEMENT_DYNAMIC_CLASS(DumpCombustor, REI_Plugin)
 DumpCombustor
 ::DumpCombustor()
 {
-  RegistVar("desired_temp", &desired_temp);
-  RegistVar("air_temp", &air_temp);
-  RegistVar("air_humidity", &air_humidity);
-  RegistVar("ambient_pres", &ambient_pres);
+  RegistVar("conversion", &conversion);
+  RegistVar("volume", &volume);
+  RegistVar("fracQloss", &fracQloss);
+  RegistVar("press_drop", &press_drop);
+  RegistVar("case_type", &case_type);
 
-  desired_temp = 305;
-  air_temp = 298;
-  air_humidity = 20;
-  ambient_pres = 101325;
+  conversion = 10.0;
+  volume = 0.99;
+  fracQloss = 0.0;
+  press_drop = 0.0;
+  case_type = 0;
 }
 
 
@@ -46,7 +48,7 @@ double DumpCombustor::GetVersion()
 /////////////////////////////////////////////////////////////////////////////
 int DumpCombustor::GetNumPoly()
 {
-  int result=n_pts;
+  int result=0;
   //Your code
   return n_pts;
 }
@@ -105,10 +107,11 @@ UIDialog* DumpCombustor::UI(wxWindow* parent)
     return dlg;
   
   dlg = new DumpCombustor_UI_Dialog (parent, -1,
-     &desired_temp,
-     &air_temp,
-     &air_humidity,
-     &ambient_pres);
+     &conversion,
+     &volume,
+     &fracQloss,
+     &press_drop,
+     &case_type);
       
   return dlg;
 }

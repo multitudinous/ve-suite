@@ -29,7 +29,7 @@ class DumpCombustor : public REI_Plugin
 
   virtual int GetNumPoly();
   
-  //virtual void GetPoly(POLY &polygon); 
+  //  virtual void GetPoly(POLY &polygon); 
   //Return the outline polygon
 
   virtual UIDialog* UI(wxWindow* parent);
@@ -52,10 +52,11 @@ class DumpCombustor : public REI_Plugin
   virtual void GetOPorts(POLY& ports);
 
  public:
-  double desired_temp;
-  double air_temp;
-  double air_humidity;
-  double ambient_pres;
+  double conversion;
+  double volume;
+  double fracQloss;
+  double press_drop;
+  long case_type;
   //HERE is the GUI variable passed to the Dialog and Packed
   
 };

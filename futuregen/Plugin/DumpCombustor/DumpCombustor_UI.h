@@ -6,15 +6,21 @@
 
 using namespace std;
 
+enum {
+  R_CASETYPE_EVA,
+  R_CASETYPE_DES
+};
+
 class DumpCombustor_UI_Dialog : public UIDialog
 {
   DECLARE_DYNAMIC_CLASS(DumpCombustor_UI_Dialog);
  public:
   DumpCombustor_UI_Dialog(wxWindow* parent, int id,
-          double* desired_temp,
-          double* air_temp,
-          double* air_humidity,
-          double* ambient_pres);
+          double* conversion,
+          double* volume,
+          double* fracQloss,
+          double* press_drop,
+          long* case_type);
   DumpCombustor_UI_Dialog() {};
   
   virtual ~DumpCombustor_UI_Dialog();
@@ -24,18 +30,24 @@ class DumpCombustor_UI_Dialog : public UIDialog
   virtual void Lock(bool l); 
  protected:
   //UI widgets variables
+  wxTextCtrl* t_conversion;
+  wxTextCtrl* t_volume;
+  wxTextCtrl* t_fracQloss;
+  wxTextCtrl* t_press_drop;
 
-  wxTextCtrl* t_desired_temp;
-  wxTextCtrl* t_air_temp;
-  wxTextCtrl* t_air_humidity;
-  wxTextCtrl* t_ambient_pres;
+  wxRadioButton* r_case_type_eva;
+  wxRadioButton* r_case_type_des;
 
  public:
-  double* p_desired_temp;
-  double* p_air_temp;
-  double* p_air_humidity;
-  double* p_ambient_pres;
+  double* p_conversion;
+  double* p_volume;
+  double* p_fracQloss;
+  double* p_press_drop;
+  long* p_case_type;
   //GUI Variables
+  void OnCaseTypeChange(wxCommandEvent &event);
+
+  DECLARE_EVENT_TABLE()
 };
 
 #endif
