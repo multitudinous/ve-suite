@@ -277,7 +277,8 @@ void UI_ScalarTab::_onScalars(wxCommandEvent& event)
    ((UI_Frame *)_parent)->_tabs->sendDataArrayToServer();
 
    //update the scalar tab to correctly display the current scalar  
-   ((UI_Frame *)_parent)->changeActiveScalarOnDataset(_scalarRBox->GetStringSelection());  
+   //Commented by Yang to make it compile
+   //   ((UI_Frame *)_parent)->changeActiveScalarOnDataset(_scalarRBox->GetStringSelection());  
    
 }
 
