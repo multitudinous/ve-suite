@@ -45,7 +45,7 @@ void UI_TeacherTab::_buildPage()
    }
 
    _teacherRBox = new wxRadioBox(this, TEACHER_RBOX, wxT("PFB Files"),
-                                wxDefaultPosition, wxDefaultSize, 1,
+                                wxDefaultPosition, wxDefaultSize, numStoredScenes,
                                 defaultName,1 , wxRA_SPECIFY_COLS);
 
    if ( ((UI_Tabs *)_parent)->num_teacher == 0 )
