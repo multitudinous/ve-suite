@@ -12,6 +12,8 @@
 
 // EPRI TAG
 #include "FinancialDialog.h"
+//#include <vector>
+//#include <string>
 
 /*
  * If we're using wx in Dynamic Library format do we 
@@ -120,12 +122,12 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
 
  protected:
 
-  void RegistVar(string vname, long *var);
-  void RegistVar(string vname, double *var);
-  void RegistVar(string vname, std::string *var);
-  void RegistVar(string vname, std::vector<long> *var);
-  void RegistVar(string vname, std::vector<double> *var);
-  void RegistVar(string vname, std::vector<std::string> *var);
+  void RegistVar(std::string vname, long *var);
+  void RegistVar(std::string vname, double *var);
+  void RegistVar(std::string vname, std::string *var);
+  void RegistVar(std::string vname, std::vector<long> *var);
+  void RegistVar(std::string vname, std::vector<double> *var);
+  void RegistVar(std::string vname, std::vector<std::string> *var);
 
   UIDialog* dlg;
   TextResultDialog* result_dlg;

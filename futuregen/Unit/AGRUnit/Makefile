@@ -35,11 +35,13 @@ include $(TAO_ROOT)/taoconfig.mk
 vpath %.cpp ${IDL_HOME}
 
 
-LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs
+LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs -LANG:std
 
 CPPFLAGS += -g  ${INCLUDES} ${CMP} -I$(TAO_ROOT) \
 		-I$(TAO_ROOT)/orbsvcs -I${IDL_HOME} \
-		-I./. -I../ -I../V21Helper/
+		-I./. -I../ -I../V21Helper/ -LANG:std \
+      -I${VJ_DEPS_DIR}/include/boost/compatibility/cpp_c_headers
+
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
 
@@ -69,7 +71,7 @@ OBJECTS = ../string_ops.o \
 all: $(APP)
 
 $(APP): $(OBJECTS) $(addprefix $(VDIR),$(FILE_UNIT_CLT_OBJS))
-	g++ ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK)
+	$(CXX) ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK)
 
 clean:
 	rm -rf *.o $(APP) $(FILE_UNIT_CLT_OBJS) $(OBJECTS)

@@ -11,7 +11,7 @@ THREADS = none
 EXTRA_LIBS =  
 PREFIX = /usr/local
 
-include ${XERCESCROOT}/version.incl
+#include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
 ifndef TAO_ROOT
@@ -40,7 +40,7 @@ LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs
 
 CPPFLAGS += -g  ${INCLUDES} ${CMP} -I$(TAO_ROOT) \
 		-I$(TAO_ROOT)/orbsvcs -I${IDL_HOME} \
-		-I./. -I../ -I../V21Helper/
+		-I./. -I../ -I../V21Helper/ -I${VJ_DEPS_DIR}/include/boost/compatibility/cpp_c_headers/
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
 
@@ -75,7 +75,7 @@ OBJECTS = ../string_ops.o \
 all: $(APP)
 
 $(APP): $(OBJECTS) $(addprefix $(VDIR),$(FILE_UNIT_CLT_OBJS))
-	g++ ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK)
+	$(CXX) ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK)
 
 clean:
 	rm -rf *.o $(APP) $(FILE_UNIT_CLT_OBJS) $(OBJECTS)
