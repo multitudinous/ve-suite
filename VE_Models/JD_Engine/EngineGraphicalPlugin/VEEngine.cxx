@@ -88,7 +88,7 @@ void VEEngine::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[256];
-   this->_param = "/home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/EngineGraphicalPlugin/vrxpr.param.geomorg";
+   this->_param = "Plugins/engine.param";
    //cout << _param << endl;
    CreateObjects();
 }

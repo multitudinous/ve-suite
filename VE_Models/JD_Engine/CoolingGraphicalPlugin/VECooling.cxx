@@ -66,8 +66,6 @@
 #include <direct.h>
 #endif
 
-using namespace std;
-
 IMPLEMENT_DYNAMIC_CLASS( VECooling, cfdVEBaseClass )
 
 // Constructor
@@ -89,7 +87,7 @@ void VECooling::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/CoolingGraphicalPlugin/vrxpr.param.geomorg";
+   this->_param = "Plugins/cooling.param";
    //cout << _param << endl;
    CreateObjects();
 }

@@ -89,7 +89,7 @@ void VEExterior::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[256];
-   this->_param = "/home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/ExteriorGraphicalPlugin/vrxpr.param.geomorg";
+   this->_param = "Plugins/exterior.param";
    cout << _objectName << " : Param File : " << _param << endl;
    CreateObjects();
 }
