@@ -175,8 +175,11 @@ void Body_Unit_i::StartCalc (
   prof.profile_vars.length(10);
   prof.profile_vals.length(10);
 
+  cout << "profile length " << prof.profile_vals.length() << endl;
+   cout << "gas cell size " << gas_out->gas_cell.size() << endl;
+
   for(i=0; i<prof.profile_vals.length(); i++)
-    prof.profile_vals[i].length(gas_out->gas_cell.size());
+    (prof.profile_vals[i]).length(gas_out->gas_cell.size());
 
   prof.profile_vars[0]  = "X_LOC";
   prof.profile_vars[1]  = "Y_LOC";
@@ -191,25 +194,30 @@ void Body_Unit_i::StartCalc (
 
   std::vector<GasCell>::iterator iter;
   for(iter=gas_out->gas_cell.begin(), i=0; iter!=gas_out->gas_cell.end(); iter++, i++) {
-    prof.profile_vals[0][i] = iter->node_location[0];
-    prof.profile_vals[1][i] = iter->node_location[1];
-    prof.profile_vals[2][i] = iter->node_location[2];
-    prof.profile_vals[3][i] = iter->velocity[0];
-    prof.profile_vals[4][i] = iter->velocity[1];
-    prof.profile_vals[5][i] = iter->velocity[2];
-    prof.profile_vals[6][i] = iter->eff;
-    prof.profile_vals[7][i] = iter->eta;
-    prof.profile_vals[8][i] = iter->chi;
-    prof.profile_vals[9][i] = iter->T;
+    (prof.profile_vals[0])[i] = iter->node_location[0];
+    (prof.profile_vals[1])[i] = iter->node_location[1];
+    (prof.profile_vals[2])[i] = iter->node_location[2];
+    (prof.profile_vals[3])[i] = iter->velocity[0];
+    (prof.profile_vals[4])[i] = iter->velocity[1];
+    (prof.profile_vals[5])[i] = iter->velocity[2];
+    (prof.profile_vals[6])[i] = iter->eff;
+    (prof.profile_vals[7])[i] = iter->eta;
+    (prof.profile_vals[8])[i] = iter->chi;
+    (prof.profile_vals[9])[i] = iter->T;
+     cout << i << " ";
   }
+   cout << endl;
 
   executive_->SetProfileData(id_, 0, prof);
   
+   cout << "back from set profile data\n";
+
   // Test
+  cout << "profile vals length " << prof.profile_vals.length() << endl;
   for(i=0; i<prof.profile_vals.length(); i++) {
-    cout << prof.profile_vars[i] << endl;
-    for(j=0; j<prof.profile_vals[i].length(); i++) {
-      cout << prof.profile_vals[i][j] << endl;
+    cout << "VAR " << i << " " << prof.profile_vars[i] << endl;
+    for(j=0; j<(prof.profile_vals[i]).length(); i++) {
+      cout << (prof.profile_vals[i])[j] << endl;
     }
   }
 
