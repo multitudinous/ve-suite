@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdStateInfo.h,v $
- * Date modified: $Date: 2004/04/03 20:39:03 $
- * Version:       $Revision: 1.4 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

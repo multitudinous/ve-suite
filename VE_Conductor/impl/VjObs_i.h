@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: VjObs_i.h,v $
- * Date modified: $Date: 2004/04/25 06:42:42 $
- * Version:       $Revision: 1.5 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
