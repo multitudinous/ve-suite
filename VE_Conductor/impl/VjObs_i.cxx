@@ -31,6 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <VjObs_i.h>
 #include <iostream>
+#include <map>
+
 #ifndef WIN32
 #include <sys/time.h>
 #else
@@ -826,6 +828,58 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
 void VjObs_i::PreFrameUpdate( void )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+            == TRANSIENT_VIS_ACTIVE )
+   {
+      CreateCommandQueue();
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
+      return;
+   }
+
    if ( _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID ) != GUI_NAV )
       _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
+   if ( !commandQueue.empty() && !_ssHandler->TransientGeodesIsBusy() )
+   {
+   std::cout << commandQueue.empty() << " : " << _ssHandler->TransientGeodesIsBusy() << std::endl;
+      (*_bufferArray) = (*(*commandQueue.begin()));
+      delete commandQueue.at( 0 );
+      commandQueue.erase( commandQueue.begin() );
+   }
+}
+
+void VjObs_i::CreateCommandQueue( void )
+{
+   int newId = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
+   int newPreState = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
+   int newIsoValue = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+   
+   int activeVector = _modelHandler->GetActiveDataSet()->GetActiveVector();
+   int activeScalar = _modelHandler->GetActiveDataSet()->GetActiveScalar();
+
+   int activeMinMax[ 2 ];
+   _modelHandler->GetActiveDataSet()->GetRange( activeMinMax );
+
+   std::map< int, cfdDataSet* >::iterator iter;
+   
+   for ( iter = _modelHandler->GetActiveModel()->transientDataSets.begin(); 
+         iter != _modelHandler->GetActiveModel()->transientDataSets.end(); ++iter)
+   { 
+      std::cout << iter->first << std::endl;
+      // Set the active datasets
+      commandQueue.push_back( new cfdCommandArray() );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, CHANGE_STEADYSTATE_DATASET );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, iter->first );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_SC, activeScalar);
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MIN, activeMinMax[ 0 ] );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_MAX, activeMinMax[ 1 ] );
+      // Set active Vector
+      commandQueue.push_back( new cfdCommandArray() );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, CHANGE_VECTOR );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_SC,  activeVector);
+      // Set current viz      
+      commandQueue.push_back( new cfdCommandArray() );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, newId );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, newIsoValue );
+      commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, newPreState );
+   }
 }

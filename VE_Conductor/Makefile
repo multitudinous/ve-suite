@@ -74,7 +74,7 @@ CLASSPATH= $(TWEEK_JARS)
 
 CXX_GEN_DIR= $(srcdir)/skel
 ifeq (${TAO_BUILD}, TRUE)
-   CXX_IDL=      ${TAO_ROOT}/TAO_IDL/tao_idl
+   CXX_IDL=      tao_idl
    CXX_IDL_OPTS=  -o $(CXX_GEN_DIR) -GI -I./idl
 else
   CXX_IDL=    omniidl

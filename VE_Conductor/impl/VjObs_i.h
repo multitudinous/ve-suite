@@ -53,6 +53,8 @@
 class cfdSteadyStateVizHandler;
 class cfdEnvironmentHandler;
 class cfdModelHandler;
+class cfdCommandArray;
+#include <vector>
 
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
                 public PortableServer::RefCountServantBase
@@ -173,8 +175,9 @@ public:
    cfdCommandArray* _cfdArray;
    double cfdShort_data_array[ 9 ];
    
+   std::vector< cfdCommandArray* > commandQueue;
 protected:
-
+   void CreateCommandQueue( void );
 
    cfdSteadyStateVizHandler* _ssHandler;
    cfdEnvironmentHandler*   _envHandler;
