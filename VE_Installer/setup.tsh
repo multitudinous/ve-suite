@@ -28,8 +28,8 @@ setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 # Some like to hardcode the following variables for custom setups.
 # The checked in version of this file should have the settings commented out
 # to allow developers to set them from outside this script (see below).
-#setenv TAO_BUILD FALSE
-#setenv CLUSTER_APP FALSE
+setenv TAO_BUILD FALSE
+setenv CLUSTER_APP FALSE
 setenv SCENE_GRAPH PF
 
 # TAO_BUILD can be set outside this script to override the default of FALSE
