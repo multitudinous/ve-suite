@@ -39,6 +39,9 @@ class vtkPolyData;
 class vtkRungeKutta4;
 
 #include "cfdObjects.h"
+#ifdef _CFDCOMMANDARRAY
+class cfdCommandArray;
+#endif //_CFDCOMMANDARRAY
 
 //! VTK streamers plane renderer.
 /*!
@@ -55,9 +58,17 @@ class cfdStreamers : public cfdObjects
   
       ~cfdStreamers();
    
+#ifdef _CFDCOMMANDARRAY
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
+
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
+#endif //_CFDCOMMANDARRAY
+
       virtual void Update( void );
   
-      vtkPolyData * GetStreamersOutput( void );
+      vtkPolyData* GetStreamersOutput( void );
 
       void SetIntegrationDirection( int );
       
@@ -70,10 +81,10 @@ class cfdStreamers : public cfdObjects
    private:
       //void UpdateTracker( float x[3], float v[3] ); // Update the position of the cursors.
 
-      vtkStreamLine     *stream;
-      vtkTubeFilter     *tubeFilter;
-      vtkPolyDataMapper *mapper;
-      vtkRungeKutta4    *integ;
+      vtkStreamLine*    stream;
+      vtkTubeFilter*    tubeFilter;
+      vtkPolyDataMapper* mapper;
+      vtkRungeKutta4*   integ;
 
       float propagationTime;
       float integrationStepLength;

@@ -31,6 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdContourBase.h"
 #include "cfdDataSet.h"
+
+#ifdef _CFDCOMMANDARRAY
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+#endif //_CFDCOMMANDARRAY
+
 #include <vpr/Util/Debug.h>
 
 #include <vtkPolyData.h>
@@ -114,6 +120,32 @@ void cfdContourBase::SetMapperInput( vtkPolyData * polydata )
       this->mapper->SetInput( this->cfilter->GetOutput() );
    }
 }
+
+#ifdef _CFDCOMMANDARRAY
+bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
+{
+   // This is here because Dr. K. has code in 
+   // cfdObjects that doesn't belong there
+   bool flag = cfdObjects::CheckCommandId( commandArray );
+   
+   if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_CONTOUR_FILL )
+   {
+      vprDEBUG(vprDBG_ALL,0) << "CHANGE_CONTOUR_FILL to type " 
+                             << commandArray->GetCommandValue( CFD_ISOVALUE )
+                             << std::endl << vprDEBUG_FLUSH;
+
+      cfdContourBase::SetFillType( commandArray->GetCommandValue( CFD_ISOVALUE ) );
+      return true;
+   }
+   return flag;
+}
+
+void cfdVectorBase::UpdateCommand()
+{
+   cfdObjects::UpdateCommand();
+   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+}
+#endif //_CFDCOMMANDARRAY
 
 /////////////////// STATIC member functions follow ///////////////////
 

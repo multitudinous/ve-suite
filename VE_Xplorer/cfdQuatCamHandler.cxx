@@ -5,6 +5,11 @@
 #include <cstdlib>
 #include "cfdFileInfo.h"
 #include "fileIO.h"
+#ifdef _CFDCOMMANDARRAY
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+#endif //_CFDCOMMANDARRAY
+
 
 using namespace gmtl;
 using namespace vrj;
@@ -152,4 +157,43 @@ pfDCS* cfdQuatCamHandler::Relocate(int cfdId, pfDCS* worldDCS, int cfdIso_value,
    
    return worldDCS;      
 }
+
+#ifdef _CFDCOMMANDARRAY
+bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
+{
+   // This is here because Dr. K. has code in 
+   // cfdObjects that doesn't belong there
+   bool flag = cfdObjects::CheckCommandId( commandArray );
+   
+   else if ( commandArray->GetCommandValue( CFD_ID ) == LOAD_POINT )
+   {
+      this->LoadData( this->nav->worldTrans, worldDCS );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == WRITE_POINTS_TO_FILE )
+   {
+      this->WriteToFile( this->paramReader->quatCamFileName ); 
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == READ_POINTS_FROM_FILE )
+   {
+      this->LoadFromFile( this->paramReader->quatCamFileName );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
+   {
+      this->Relocate( commandArray->GetCommandValue( CFD_ID ), 
+                        worldDCS, commandArray->GetCommandValue( CFD_ISOVALUE ), nav);
+      this->setId( this->run );
+   }
+
+   return flag;
+}
+
+void cfdQuatCamHandler::UpdateCommand()
+{
+   cfdObjects::UpdateCommand();
+   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+}
+#endif //_CFDCOMMANDARRAY
 

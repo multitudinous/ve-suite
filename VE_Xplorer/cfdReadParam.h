@@ -35,6 +35,10 @@
 #include <vector>
 #include <string>
 
+#ifdef _CFDCOMMANDARRAY
+class cfdCommandArray;
+#endif //_CFDCOMMANDARRAY
+
 class fileInfo;
 class cfdTransientInfo;
 class cfdDataSet;
@@ -46,6 +50,15 @@ class cfdReadParam{
    public:
       cfdReadParam( char * );
       ~cfdReadParam( );
+
+#ifdef _CFDCOMMANDARRAY
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
+#endif //_CFDCOMMANDARRAY
+
       int   numGeoms;
       int   bmpFile;
       char  bmpFileName[ 100 ];

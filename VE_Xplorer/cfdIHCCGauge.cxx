@@ -135,7 +135,7 @@ void cfdIHCCGauge::Update( void )
 	// Add the gauges with ??? as the quantity
    for ( int i = 0; i < (int)output.size(); i++ )
    {
-      delete output[ i ];
+      delete [] output[ i ];
    }
    
    output.clear();

@@ -749,6 +749,172 @@ bool cfdObjects::GetGeodeFlag( void )
    return this->addGeode; 
 }
 
+// THIS CODE SHOULD BE REMOVED
+// THIS DOESN'T BELONG IN THIS CLASS
+#ifdef _CFDCOMMANDARRAY
+bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
+{
+   if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_PARTICLE_VIEW_OPTION )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
+         << commandArray->GetCommandValue( CFD_GEOSTATE ) << std::endl << vprDEBUG_FLUSH;
+
+      // if view option is set to point cloud, set sphere scale out of range
+      if ( commandArray->GetCommandValue( CFD_GEOSTATE ) == 0 )
+      {
+         vprDEBUG(vprDBG_ALL,0) << " setting sphere scale out of range" 
+                                << std::endl << vprDEBUG_FLUSH;
+         cfdObjects::SetSphereScale( -999 );
+      }
+      else if ( commandArray->GetCommandValue( CFD_GEOSTATE ) == 1 )
+      {
+         vprDEBUG(vprDBG_ALL,0) << " setting sphere scale to " 
+            << commandArray->GetCommandValue( CFD_GEOSTATE ) << std::endl << vprDEBUG_FLUSH;
+         cfdObjects::SetSphereScale( commandArray->GetCommandValue( CFD_GEOSTATE ) );
+      }
+
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_SPHERE_SIZE )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_SPHERE_SIZE, value = " 
+         << commandArray->GetCommandValue( CFD_ISOVALUE )
+         << std::endl << vprDEBUG_FLUSH;
+
+      cfdObjects::SetSphereScale( commandArray->GetCommandValue( CFD_ISOVALUE ) );
+
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_VECTOR )
+   { 
+      int vectorIndex = commandArray->GetCommandValue( CFD_SC );
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
+                             << std::endl << vprDEBUG_FLUSH;
+
+      cfdObjects::GetActiveDataSet()->SetActiveVector( vectorIndex );
+      cfdObjects::GetActiveDataSet()->GetParent()
+                                    ->SetActiveVector( vectorIndex );
+
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_STEADYSTATE_DATASET )
+   {
+      vprDEBUG(vprDBG_ALL,1) 
+         << "CHANGE_STEADYSTATE_DATASET " << this->cfdIso_value
+         //<< ", scalarIndex = " << this->cfdSc
+         //<< ", min = " << this->cfdMin 
+         //<< ", max = " << this->cfdMax
+         << std::endl << vprDEBUG_FLUSH;
+
+      i = commandArray->GetCommandValue( CFD_ISOVALUE );
+      if ( i < (int)this->paramReader->GetNumberOfDataSets() )
+      {
+         vprDEBUG(vprDBG_ALL,0) << " dataset = "
+            << this->paramReader->GetDataSet( i )->GetFileName()
+            << ", dcs = " << this->paramReader->GetDataSet( i )->GetDCS()
+            << std::endl << vprDEBUG_FLUSH;
+
+         int cfdType = this->paramReader->GetDataSet( i )->GetType();
+         vprDEBUG(vprDBG_ALL,1) << " cfdType: " << cfdType
+                                << std::endl << vprDEBUG_FLUSH;
+
+         // set the dataset as the appropriate dastaset type
+         // (and the active dataset as well)
+         if ( cfdType == 0 )
+         {
+            cfdObjects::SetActiveMeshedVolume( this->paramReader->GetDataSet(i) );
+         }
+         else if ( cfdType == 1 )
+         {
+            cfdObjects::SetActiveParticleData( this->paramReader->GetDataSet(i) );
+         }
+         else if ( cfdType == 2 )
+         {
+            cfdObjects::SetActiveSurfaceData( this->paramReader->GetDataSet(i) );
+         }
+         else
+         {
+            std::cerr << "Unsupported cfdType: " << cfdType << std::endl;
+         }
+
+         vprDEBUG(vprDBG_ALL,1) << "last active dataset name = " 
+                                << oldDatasetName
+                                << std::endl << vprDEBUG_FLUSH;
+
+         vprDEBUG(vprDBG_ALL,1) << "Activating steady state file " 
+                   << cfdObjects::GetActiveDataSet()->GetFileName()
+                   << std::endl << vprDEBUG_FLUSH;
+
+         // make sure that the user did not just hit same dataset button
+         // (or change scalar since that is routed through here too)
+         if ( strcmp( oldDatasetName, 
+                      cfdObjects::GetActiveDataSet()->GetFileName() ) )
+         {
+            vprDEBUG(vprDBG_ALL,1) << " setting dataset as newly activated" 
+                                   << std::endl << vprDEBUG_FLUSH;
+            cfdObjects::GetActiveDataSet()->SetNewlyActivated();
+            strcpy( oldDatasetName, 
+                    cfdObjects::GetActiveDataSet()->GetFileName() );
+         }
+
+         // update scalar bar for possible new scalar name
+         this->setId( CHANGE_SCALAR );
+      }
+      else
+      {
+         std::cerr << "ERROR: requested steady state dataset " 
+                   << commandArray->GetCommandValue( CFD_ISOVALUE ) << " must be less than " 
+                   << this->paramReader->GetNumberOfDataSets()
+                   << std::endl;
+         return true;
+      }
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_SCALAR || 
+             commandArray->GetCommandValue( CFD_ID ) == CHANGE_SCALAR_RANGE )
+   { 
+      int scalarIndex = commandArray->GetCommandValue( CFD_SC );
+      vprDEBUG(vprDBG_ALL,1) << "CHANGE_SCALAR || CHANGE_SCALAR_RANGE"
+         << ", scalarIndex = " << scalarIndex
+         << ", min = " << commandArray->GetCommandValue( CFD_MIN )
+         << ", max = " << commandArray->GetCommandValue( CFD_MAX )
+         << std::endl << vprDEBUG_FLUSH;
+
+      cfdObjects::GetActiveDataSet()->SetActiveScalar( scalarIndex );
+      cfdObjects::GetActiveDataSet()->GetParent()
+                                    ->SetActiveScalar( scalarIndex );
+
+      cfdObjects::GetActiveDataSet()->ResetScalarBarRange( 
+                           commandArray->GetCommandValue( CFD_MIN ), commandArray->GetCommandValue( CFD_MAX ) );
+      cfdObjects::GetActiveDataSet()->GetParent()->ResetScalarBarRange( 
+                           commandArray->GetCommandValue( CFD_MIN ), commandArray->GetCommandValue( CFD_MAX ) );
+
+      // if already displayed, set a flag to update the scalar bar
+      if ( this->scalarBarActor )
+      {
+         this->isTimeToUpdateScalarBar = true;
+      }
+
+      // when scalar is changed reset vector thresholding to none...
+      if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_SCALAR  )
+      {
+         cfdVectorBase::UpdateThreshHoldValues();
+      }
+#ifdef _TAO
+      if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_SCALAR )
+      {
+         this->executive->SetCalculationsFlag( true );
+      }
+#endif // _TAO
+      return true;
+   }
+   return false;
+}
+
+void cfdObjects::UpdateCommand()
+{
+   cerr << "doing nothing in cfdObjects::UpdateCommand()" << endl;
+}
+#endif //_CFDCOMMANDARRAY
 /////////////////// STATIC member functions follow ///////////////////
 
 // initial definition of the static variable

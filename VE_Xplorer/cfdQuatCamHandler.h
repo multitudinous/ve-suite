@@ -29,8 +29,6 @@
 #include <Performer/prmath.h>
 
 // --- VR Juggler Stuff --- //
-#include <vrj/Kernel/Kernel.h>
-#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
 #include <vrj/Util/Debug.h>
 #include <vrj/Display/Projection.h>  /* for setNearFar (for setting clipping planes) */
 #include <gadget/Type/PositionInterface.h>
@@ -38,6 +36,10 @@
 
 #include "cfdQuatCam.h"
 #include "cfdNavigate.h"
+#ifdef _CFDCOMMANDARRAY
+class cfdCommandArray;
+#endif //_CFDCOMMANDARRAY
+
 
 using namespace vrj;
 
@@ -68,6 +70,14 @@ public:
       
    //Destructor
    ~cfdQuatCamHandler();
+
+#ifdef _CFDCOMMANDARRAY
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
+#endif //_CFDCOMMANDARRAY
 
    void LoadData(double*, pfDCS*);
 

@@ -42,29 +42,31 @@ class cfdCommandArray
 
    int GetCommandValue( int );
 
-   enum commandArrayValue { CFD_ISO_VALUE,
-                            CFD_SC,
-                            CFD_MIN,
-                            CFD_MAX,
-                            CFD_ID,
-                            CFD_GEO_STATE,
-                            CFD_POSTDATA_STATE,
-                            CFD_PRE_STATE,
-                            CFD_TIMESTEPS,
-                            CFD_TEACHER_STATE 
+   enum commandArrayValue 
+   { 
+      CFD_ISO_VALUE,
+      CFD_SC,
+      CFD_MIN,
+      CFD_MAX,
+      CFD_ID,
+      CFD_GEO_STATE,
+      CFD_POSTDATA_STATE,
+      CFD_PRE_STATE,
+      CFD_TIMESTEPS,
+      CFD_TEACHER_STATE 
    };
 
-   int   cfdIso_value;
-   int   cfdSc;
-   int   cfdMin;
-   int   cfdMax;
-   long  cfdId;
-   long  cfdGeo_state;
-   short cfdPostdata_state;
-   bool  cfdPre_state;
-   short cfdTimesteps;
-   short cfdTeacher_state; 
- private:
+   private:
+      int   cfdIso_value;
+      int   cfdSc;
+      int   cfdMin;
+      int   cfdMax;
+      long  cfdId;
+      long  cfdGeo_state;
+      short cfdPostdata_state;
+      bool  cfdPre_state;
+      short cfdTimesteps;
+      short cfdTeacher_state; 
 };
 
 #endif

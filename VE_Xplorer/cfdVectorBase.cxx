@@ -100,57 +100,62 @@ cfdVectorBase::~cfdVectorBase()
 }
 
 #ifdef _CFDCOMMANDARRAY
-bool cfdVectorBase::CheckCommandId( cfdCommandArray * _cfdCommandArray )
+bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
 {
-   if ( _cfdCommandArray->cfdCommandArray::cfdId == CHANGE_VECTOR_THRESHOLD )
+   // This is here because Dr. K. has code in 
+   // cfdObjects that doesn't belong there
+   bool flag = cfdObjects::CheckCommandId( commandArray );
+   
+   if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_VECTOR_THRESHOLD )
    { 
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_THRESHOLD" 
-         << ", min = " << _cfdCommandArray->cfdMin
-         << ", max = " << _cfdCommandArray->cfdMax
+         << ", min = " << commandArray->GetCommandValue( CFD_MIN )
+         << ", max = " << commandArray->GetCommandValue( CFD_MAX )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetThreshHoldPercentages( _cfdCommandArray->cfdMin,
-                                               _cfdCommandArray->cfdMax );
+      cfdVectorBase::SetThreshHoldPercentages( commandArray->GetCommandValue( CFD_MIN ),
+                                               commandArray->GetCommandValue( CFD_MAX ) );
       cfdVectorBase::UpdateThreshHoldValues();
 
       return true;
    }
-   else if ( _cfdCommandArray->cfdId == CHANGE_VECTOR_MASK_RATIO )
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_VECTOR_MASK_RATIO )
    { 
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_MASK_RATIO" 
-         << ", value = " << _cfdCommandArray->cfdIso_value
+         << ", value = " << commandArray->GetCommandValue( CFD_ISOVALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetVectorRatioFactor( _cfdCommandArray->cfdIso_value );
+      cfdVectorBase::SetVectorRatioFactor( commandArray->GetCommandValue( CFD_ISOVALUE ) );
 
       return true;
    }
-   else if ( _cfdCommandArray->cfdId == CHANGE_VECTOR_SCALE )
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_VECTOR_SCALE )
    {
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_SCALE" 
-         << ", value = " << _cfdCommandArray->cfdIso_value
+         << ", value = " << commandArray->GetCommandValue( CFD_ISOVALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdObjects::SetVectorScale( _cfdCommandArray->cfdIso_value );
+      cfdObjects::SetVectorScale( commandArray->GetCommandValue( CFD_ISOVALUE ) );
 
       return true;
    }
-   else if ( _cfdCommandArray->cfdId == SCALE_BY_VECTOR_MAGNITUDE )
+   else if ( commandArray->GetCommandValue( CFD_ID ) == SCALE_BY_VECTOR_MAGNITUDE )
    { 
       vprDEBUG(vprDBG_ALL,0)
-         << "SCALE_BY_VECTOR_MAGNITUDE = " << _cfdCommandArray->cfdIso_value
+         << "SCALE_BY_VECTOR_MAGNITUDE = " << commandArray->GetCommandValue( CFD_ISOVALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetScaleByVectorFlag( _cfdCommandArray->cfdIso_value );
+      cfdVectorBase::SetScaleByVectorFlag( commandArray->GetCommandValue( CFD_ISOVALUE ) );
 
       return true;
    }
 
-   return false;
+   return flag;
 }
 
 void cfdVectorBase::UpdateCommand()
 {
+   cfdObjects::UpdateCommand();
    cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
 }
 #endif //_CFDCOMMANDARRAY

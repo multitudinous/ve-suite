@@ -32,6 +32,11 @@
 #include "cfdStreamers.h"
 #include "cfdDataSet.h"
 
+#ifdef _CFDCOMMANDARRAY
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+#endif //_CFDCOMMANDARRAY
+
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 //#include <vtkUnstructuredGrid.h>
@@ -204,3 +209,194 @@ void cfdStreamers::SetStepLength( int value )
    this->stepLength = (float)value * ((this->GetActiveMeshedVolume()
                                              ->GetMeanCellLength()/30.0f) / 50.0f);     
 }
+
+
+#ifdef _CFDCOMMANDARRAY
+bool cfdStreamers::CheckCommandId( cfdCommandArray* cfdCommandArray )
+{
+   // This is here because Dr. K. has code in 
+   // cfdObjects that doesn't belong there
+   bool flag = cfdObjects::CheckCommandId( commandArray );
+   
+   if ( commandArray->GetCommandValue( CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
+   {
+      this->useLastSource = commandArray->GetCommandValue( CFD_ISOVALUE );
+
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
+   {
+      vprDEBUG(vprDBG_ALL,1) << "this->id = " << commandArray->GetCommandValue( CFD_ID ) 
+                << ", this->min = " << commandArray->GetCommandValue( CFD_MIN ) 
+                << ", this->max = " << commandArray->GetCommandValue( CFD_MAX )
+                << std::endl << vprDEBUG_FLUSH;
+
+      if ( commandArray->GetCommandValue( CFD_ISOVALUE ) == NO_CURSOR )
+      {
+         vprDEBUG(vprDBG_ALL,1) 
+           << "removing cursor with cursor->GetpfDCS() = "
+           << this->cursor->GetpfDCS() << std::endl << vprDEBUG_FLUSH;
+
+         this->cursorId = NONE;
+         if ( this->rootNode->searchChild( this->cursor->GetpfDCS() ) >= 0 )
+            this->rootNode->removeChild( this->cursor->GetpfDCS() );
+      }
+      else
+      {
+         if ( commandArray->GetCommandValue( CFD_ISOVALUE ) == POINT_CURSOR )
+            this->cursorId = SPHERE;
+         else if ( commandArray->GetCommandValue( CFD_ISOVALUE ) == X_PLANE_CURSOR )
+            this->cursorId = XPLANE;
+         else if ( commandArray->GetCommandValue( CFD_ISOVALUE ) == Y_PLANE_CURSOR )
+            this->cursorId = YPLANE;
+         else if ( commandArray->GetCommandValue( CFD_ISOVALUE ) == Z_PLANE_CURSOR )
+            this->cursorId = ZPLANE;
+         else if ( commandArray->GetCommandValue( CFD_ISOVALUE ) == X_LINE_CURSOR )
+            this->cursorId = XLINE;
+         else if ( commandArray->GetCommandValue( CFD_ISOVALUE ) == Y_LINE_CURSOR )
+            this->cursorId = YLINE;
+         else if ( commandArray->GetCommandValue( CFD_ISOVALUE ) == Z_LINE_CURSOR )
+            this->cursorId = ZLINE;
+         else
+         {
+            vprDEBUG(vprDBG_ALL,0) 
+              << "ERROR: Unknown cursorId -- Setting cursor to XPLANE"
+              << std::endl << vprDEBUG_FLUSH;
+
+            this->cursorId = XPLANE;
+         }
+         this->chgMod = true;
+
+         vprDEBUG(vprDBG_ALL,1) 
+           << "adding cursor with cursor->GetpfDCS() = "
+           << this->cursor->GetpfDCS() << std::endl << vprDEBUG_FLUSH;
+
+         // if disconnected from scene graph, add
+         if ( this->rootNode->searchChild( this->cursor->GetpfDCS() ) < 0 )
+         {
+            this->rootNode->addChild( this->cursor->GetpfDCS() );
+         }
+      }
+
+      if ( cfdObjects::GetActiveDataSet() != NULL )
+         this->cursor->SetActiveDataSetDCS( cfdObjects::GetActiveDataSet()->GetDCS() );
+
+      //if ( this->cursorId != NONE && this->cursorId != SPHERE && this->cursorId != CUBE )
+      if ( this->cursorId != NONE && this->cursorId != SPHERE )
+      {
+         this->cursor->SetPlaneReso( commandArray->GetCommandValue( CFD_MIN ) ); 
+
+         // convert size percentage (0-100) request to plane size
+         this->cursor->SetPlaneSize( commandArray->GetCommandValue( CFD_MAX ) * 0.5 * 0.01 * 
+                         cfdObjects::GetActiveMeshedVolume()->GetLength() );
+      }
+      return true;
+   }
+
+/*
+      else  // changed from wand
+      {
+         if ( this->menuB == true )
+         { 
+            // If menu is up, remove menu and laser wand and cycle through cursor modes
+            if ( this->cursorId == NONE )
+            {
+               this->cursorId = XPLANE;
+               this->rootNode->removeChild( this->menu->GetpfDCS() );
+               this->rootNode->removeChild( this->laser->GetpfDCS() );
+               this->rootNode->addChild( this->cursor->GetpfDCS() );
+            }
+            else if ( this->cursorId == XPLANE )
+               this->cursorId = YPLANE;
+            else if ( this->cursorId == YPLANE )
+               this->cursorId = ZPLANE;
+            else if ( this->cursorId == ZPLANE )
+               this->cursorId = SPHERE;
+            else if ( this->cursorId == SPHERE )
+               this->cursorId = ARROW;
+            else if ( this->cursorId == ARROW )
+               this->cursorId = XLINE;
+            else if ( this->cursorId == XLINE )
+               this->cursorId = YLINE;
+            else if ( this->cursorId == YLINE )
+               this->cursorId = ZLINE;
+            else if ( this->cursorId == ZLINE )
+               this->cursorId = CUBE;
+            else if ( this->cursorId == CUBE )
+            {
+               // If on last cursor type, remove menu and reset cursor to off
+               this->cursorId = NONE;
+               this->menuB = false;
+            }
+         }
+         else
+         { 
+            // If menu is down, add menu and laser wand, and keep cursor off
+            this->rootNode->addChild( this->menu->GetpfDCS() );
+            this->rootNode->addChild( this->laser->GetpfDCS() );
+            this->menuB = true;
+            this->rootNode->removeChild( this->cursor->GetpfDCS() );
+         }
+      }
+*/
+
+   else if ( commandArray->GetCommandValue( CFD_ID ) == BACKWARD_INTEGRATION )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " BACKWARD_INTEGRATION" 
+                             << std::endl << vprDEBUG_FLUSH;
+
+      this->streamlines->SetIntegrationDirection( 2 );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == FORWARD_INTEGRATION )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " FORWARD_INTEGRATION"
+                             << std::endl << vprDEBUG_FLUSH;
+
+      this->streamlines->SetIntegrationDirection( 1 );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == TWO_DIRECTION_INTEGRATION )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " 2_DIRECTION_INTEGRATION" 
+                             << std::endl << vprDEBUG_FLUSH;
+
+      this->streamlines->SetIntegrationDirection( 0 );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_PROPAGATION_TIME )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_PROPAGATION_TIME\t" 
+         << commandArray->GetCommandValue( CFD_ISOVALUE )
+         << std::endl << vprDEBUG_FLUSH;
+      
+      this->streamlines->SetPropagationTime( commandArray->GetCommandValue( CFD_ISOVALUE ) );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_INT_STEP_LENGTH )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_INT_STEP_LENGTH\t"
+         << commandArray->GetCommandValue( CFD_ISOVALUE ) 
+         << std::endl << vprDEBUG_FLUSH;
+      
+      this->streamlines->SetIntegrationStepLength( commandArray->GetCommandValue( CFD_ISOVALUE ) );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_STEP_LENGTH )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_STEP_LENGTH\t" << commandArray->GetCommandValue( CFD_ISOVALUE ) 
+                             << std::endl << vprDEBUG_FLUSH;
+         
+      this->streamlines->SetStepLength( commandArray->GetCommandValue( CFD_ISOVALUE ) );
+      return true;
+   }
+   return flag;
+}
+
+void cfdStreamers::UpdateCommand()
+{
+   cfdObjects::UpdateCommand();
+   cerr << "doing nothing in cfdStreamers::UpdateCommand()" << endl;
+}
+#endif //_CFDCOMMANDARRAY
+

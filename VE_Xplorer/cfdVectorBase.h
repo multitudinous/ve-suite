@@ -77,10 +77,10 @@ class cfdVectorBase : public cfdObjects
    static int GetScaleByVectorFlag( void );
 
  protected:
-   vtkGlyph3D *glyph;
-   vtkGeometryFilter *filter;
-   vtkPolyDataMapper *mapper;
-   vtkMaskPoints *ptmask;
+   vtkGlyph3D*       glyph;
+   vtkGeometryFilter* filter;
+   vtkPolyDataMapper* mapper;
+   vtkMaskPoints*    ptmask;
 
    void SetGlyphWithThreshold();
    void SetGlyphAttributes();

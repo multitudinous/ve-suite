@@ -74,10 +74,10 @@ class cfdObjects
       // pure virtual functions to be specified in concrete implementations
 
       // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdApp * _cfdApp ) = 0;
+      virtual bool CheckCommandId( cfdApp * _cfdApp );
 
       // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand() = 0;
+      virtual void UpdateCommand();
 #endif //_CFDCOMMANDARRAY
 
       // update the actor

@@ -1235,6 +1235,9 @@ inline void cfdApp::initScene( )
          this->streamlines = new cfdStreamers( this->paramReader->diameter );
          this->streamlines->SetObjectType( STREAMLINES );
          this->dataList.push_back( this->streamlines );     
+#ifdef _CFDCOMMANDARRAY
+         this->commandList.push_back( this->streamlines );
+#endif //_CFDCOMMANDARRAY
 
          //
          // Initiate the animated streamers.
@@ -1796,6 +1799,7 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
+#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == USE_LAST_STREAMLINE_SEEDPOINTS )
    {
       this->useLastSource = this->cfdIso_value;
@@ -1968,6 +1972,7 @@ void cfdApp::preFrame( void )
       this->streamlines->SetStepLength( this->cfdIso_value );
       this->setId( -1 );
    }
+#endif //_CFDCOMMANDARRAY
    else if ( this->cfdId == RECORD_SCENE )
    {
       // Generate a .pfb filename...
@@ -2225,6 +2230,7 @@ void cfdApp::preFrame( void )
       }
       this->setId( -1 );
    }
+#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == CHANGE_STEADYSTATE_DATASET )
    {
       vprDEBUG(vprDBG_ALL,1) 
@@ -2347,7 +2353,6 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
-#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == CHANGE_VECTOR_THRESHOLD )
    { 
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_THRESHOLD, min = " 
@@ -2377,7 +2382,6 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
-#endif //_CFDCOMMANDARRAY
    else if ( this->cfdId == CHANGE_PARTICLE_VIEW_OPTION)
    {
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
@@ -2409,7 +2413,6 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
-#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == SCALE_BY_VECTOR_MAGNITUDE )
    { 
       vprDEBUG(vprDBG_ALL,0)
@@ -2420,7 +2423,6 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
-#endif //_CFDCOMMANDARRAY
    else if ( this->cfdId == UPDATE_GEOMETRY )
    {
       vprDEBUG(vprDBG_ALL,1)
@@ -2443,6 +2445,7 @@ void cfdApp::preFrame( void )
       cfdContourBase::SetFillType( this->cfdIso_value );
       this->setId( -1 );
    }
+#endif //_CFDCOMMANDARRAY
    else if ( this->cfdId == UPDATE_SOUNDS )
    {
       long int test = this->paramReader->convertDecimalToBinary( this->cfdIso_value );
@@ -2466,6 +2469,7 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
+#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == LOAD_POINT )
    {
       this->quatcamHandler->LoadData( this->nav->worldTrans, worldDCS );
@@ -2486,6 +2490,7 @@ void cfdApp::preFrame( void )
       this->quatcamHandler->Relocate(cfdId, worldDCS, cfdIso_value, nav);
       this->setId( this->quatcamHandler->run );
    }
+#endif //_CFDCOMMANDARRAY
    else if ( this->cfdId == UPDATE_SEND_PARAM )
    {
       double data[ 6 ];// = { 0 };

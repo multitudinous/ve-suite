@@ -990,6 +990,39 @@ void cfdReadParam::quatCamFile( std::ifstream & inFile)
       exit(1);
    }   
 }
+
+#ifdef _CFDCOMMANDARRAY
+bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
+{
+   // This is here because Dr. K. has code in 
+   // cfdObjects that doesn't belong there
+   bool flag = cfdObjects::CheckCommandId( commandArray );
+   
+   if ( commandArray->GetCommandValue( CFD_ID ) == UPDATE_GEOMETRY )
+   {
+      vprDEBUG(vprDBG_ALL,1)
+         << commandArray->GetCommandValue( CFD_GEOSTATE ) << std::endl << vprDEBUG_FLUSH;
+
+      long int test = this->paramReader->convertDecimalToBinary( commandArray->GetCommandValue( CFD_GEOSTATE ) );
+      vprDEBUG(vprDBG_ALL,1)
+         << " test : " << test << std::endl << vprDEBUG_FLUSH;
+
+      this->paramReader->convertBinaryToArray( test, this->paramReader->numGeoms );
+      this->changeGeometry = true;
+      return true;
+   }
+   return flag;
+}
+
+void cfdVectorBase::UpdateCommand()
+{
+   cfdObjects::UpdateCommand();
+   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+}
+#endif //_CFDCOMMANDARRAY
+
+
+
 /*
 void cfdReadParam::set1DText( std::ifstream &inFile )
 {
