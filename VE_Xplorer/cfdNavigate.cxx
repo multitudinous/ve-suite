@@ -361,9 +361,9 @@ void cfdNavigate::updateNavigationFromGUI()
    {
       //this->currentWandDirection = this->GetDirection();
 
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
+      /*vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
          << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
+         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;*/
       //yang-REI: the following block are moved from the intraFrame Function
       //if ( this->currentWandDirection[ 0 ] > 0.0f )
       //{
@@ -380,9 +380,9 @@ void cfdNavigate::updateNavigationFromGUI()
    //CCWrotation
    {
       //this->currentWandDirection = this->GetDirection();
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
+      /*vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
          << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
+         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;*/
       //yang-REI: the following block are moved from the intraFrame Function
       //if ( this->currentWandDirection[ 0 ] > 0.0f )
       //{

@@ -336,11 +336,12 @@ void cfdApp::preFrame( void )
 #endif // _CLUSTER
 
    ///////////////////////
-   vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_environmentHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
-   this->_environmentHandler->PreFrameUpdate();
-   ///////////////////////
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_modelHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
    this->_modelHandler->PreFrameUpdate();
+   ///////////////////////
+   vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_environmentHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
+   this->_environmentHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
+   this->_environmentHandler->PreFrameUpdate();
    ///////////////////////
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_steadystateHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );

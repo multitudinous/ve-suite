@@ -329,6 +329,7 @@ void cfdSteadyStateVizHandler::SetActiveDataSet( cfdDataSet* input )
                               << std::endl << vprDEBUG_FLUSH;
    }
    _activeDataSet = input;
+   //cfdObjects::SetActiveDataSet( _activeDataSet );
 }
 
 void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
@@ -832,7 +833,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             }
             else
             {
-               this->_activeDataSetDCS = _activeDataSet->GetDCS();               
+               this->_activeDataSetDCS = _activeDataSet->GetDCS();
             }
 
             //if ( this->computeActorsAndGeodes == false )

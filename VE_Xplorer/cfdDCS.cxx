@@ -405,12 +405,13 @@ cfdSceneNode* cfdDCS::GetChild( int child )
 
 void cfdDCS::SetRotationMatrix( Matrix44f& input )
 {
-   Coord4fZXY coord;
-   gmtl::set( coord, input );
    // Need to set rotation to this matrix
 #ifdef _PERFORMER
-   // Need to find who calls this function
-   // fix this
+   pfMatrix temp = GetPfMatrix( input );
+   pfCoord* coord = new pfCoord();
+   temp.getOrthoCoord( coord );
+   _dcs->setRot( coord->hpr[ 0 ], coord->hpr[ 1 ], coord->hpr[ 2 ] );
+   delete coord;
 #elif _OSG
    cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << endl;
    exit( 1 );

@@ -43,6 +43,7 @@
 #include "cfdTeacher.h"
 #include "cfdSoundHandler.h"
 #include "cfdQuatCamHandler.h"
+#include "cfdDataSet.h"
 
 #include <vrj/Util/Debug.h>
 
@@ -122,7 +123,7 @@ cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
       delete this->_teacher;
    }
 }
-
+/////////////////////////////////////////
 void cfdEnvironmentHandler::SetRootNode( cfdGroup* input )
 {
    this->rootNode = input;
@@ -153,6 +154,12 @@ cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
    return _teacher;
 }
 
+void cfdEnvironmentHandler::SetActiveDataSet( cfdDataSet* input )
+{
+   _activeDataSet = input;
+}
+
+////////////////////////////////////////
 void cfdEnvironmentHandler::InitScene( void )
 {
    std::cout << "| ***************************************************************** |" << std::endl;
@@ -214,6 +221,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 	
    // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
+   this->cursor->SetActiveDataSet( _activeDataSet );
    this->cursor->CheckCommandId( _commandArray );
    this->cursor->Update( this->nav->GetCursorLocation(),
                            this->nav->GetDirection(), this->nav->worldTrans );

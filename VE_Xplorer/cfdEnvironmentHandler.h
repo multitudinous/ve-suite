@@ -42,6 +42,7 @@ class cfdSoundHandler;
 class cfdTeacher;
 class cfdSoundHandler;
 class cfdQuatCamHandler;
+class cfdDataSet;
 
 class vtkPolyData;
 
@@ -63,6 +64,7 @@ class cfdEnvironmentHandler
       cfdCursor* GetCursor( void );
       cfdSoundHandler* GetSoundHandler( void );
       cfdTeacher* GetTeacher( void );
+      void SetActiveDataSet( cfdDataSet* );
 
    private:
       cfdNavigate* nav;
@@ -75,7 +77,7 @@ class cfdEnvironmentHandler
       cfdGroup* rootNode;
       cfdCommandArray* _commandArray;
       cfdReadParam* _readParam;
-
+      cfdDataSet* _activeDataSet;
       // cur_box will eventually be used to define bounding box
       // for data interagation
       double cur_box[6];
