@@ -561,28 +561,30 @@ void node_module::need_execute ()
 
 void node_module::clear_out_to (std::set<int> mods)
 {
-  Module *module = _net->module(_module-1);
-  for(int i=0; i<module->numOPorts(); i++) {
-    OPort *oport = module->getOPort(i);
-    for(int c=0; c<oport->nconnections(); c++) {
-      Connection *conn = oport->connection(c);
-      IPort *iport = conn->get_iport();
-      Module *nmodule = iport->get_module();
-      int index = _net->module(nmodule)+1;
-      if(mods.find(index) != mods.end()) {
-	
-	// test
-	//cerr << "clearing data at inlet port for " << nmodule->get_id() << "\n";
-	if(iport->clear_data())
-	  ;//cerr << "cleared some data\n";
-	//iport->reset();
-	//while(iport->have_data()) {
-	//  cerr << "finishing port\n";
-	//  iport->finish();
-	//}
+   Module *module = _net->module(_module-1);
+   for(int i=0; i<module->numOPorts(); i++) 
+   {
+      OPort *oport = module->getOPort(i);
+      for(int c=0; c<oport->nconnections(); c++) 
+      {
+         Connection *conn = oport->connection(c);
+         IPort *iport = conn->get_iport();
+         Module *nmodule = iport->get_module();
+         int index = _net->module(nmodule)+1;
+         if(mods.find(index) != mods.end()) 
+         {	
+	         // test
+	         //cerr << "clearing data at inlet port for " << nmodule->get_id() << "\n";
+	         if(iport->clear_data())
+            {;}//cerr << "cleared some data\n";
+	         //iport->reset();
+	         //while(iport->have_data()) {
+	         //  cerr << "finishing port\n";
+	         //  iport->finish();
+	         //}
+         }
       }
-    }
-  }
+   }
 }
 
 ////////////////////////////////////////////////////////////////////////////////
