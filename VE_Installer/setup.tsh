@@ -54,9 +54,8 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
 #      setenv OMNI_HOME /home/vr/Juggler/irix/mipspro-omniORB-4.0.1
 #      setenv OMNI_HOME /home/users/mccdo/software/IRIX32
       setenv OMNI_HOME ${VJ_DEPS_DIR}
-#/home/vr/Juggler/irix/mipspro
-      setenv PYTHONPATH ${OMNI_HOME}/lib/python1.5/site-packages
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+      setenv PYTHONPATH ${OMNI_HOME}/lib32/python2.3/site-packages
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib32:${WX_HOME}/lib
    endif
       
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ FedoraCore_* ) then
