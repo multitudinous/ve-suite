@@ -100,6 +100,7 @@ ansysReader::ansysReader( char * input )
    this->nodalCoordinates = NULL;
    this->ptrElemDescriptions = NULL;
    this->ptrDataSetSolutions = NULL;
+   this->ptrEXT = 0;
 
    this->ugrid = vtkUnstructuredGrid::New();
 }
@@ -1354,12 +1355,101 @@ void ansysReader::ReadSolutionDataHeader()
       exit( 1 );
    }
 
+   // the following pointers are relative to the pointer of this header
+   // (this->ptrDataSetSolutions[ 0 ])
    this->ptrNodalSolution = ReadNthInteger( intPosition++ );
    PRINT( this->ptrNodalSolution );
 
-   // TODO: there is more to read....
-   // but return for now
-   return;
+   int ptrESl = ReadNthInteger( intPosition++ );
+   PRINT( ptrESl );
+
+   int ptrRF  = ReadNthInteger( intPosition++ );
+   PRINT( ptrRF );
+
+   int ptrMST = ReadNthInteger( intPosition++ );
+   PRINT( ptrMST );
+
+   int ptrBC = ReadNthInteger( intPosition++ );
+   PRINT( ptrBC );
+
+   int rxtrap = ReadNthInteger( intPosition++ );
+   PRINT( rxtrap );
+
+   int mode = ReadNthInteger( intPosition++ );
+   PRINT( mode );
+
+   int isym = ReadNthInteger( intPosition++ );
+   PRINT( isym );
+
+   int kcmplx = ReadNthInteger( intPosition++ );
+   PRINT( kcmplx );
+
+   int numdof = ReadNthInteger( intPosition++ );
+   PRINT( numdof );
+   if ( numdof != this->numDOF ) 
+   {
+      cerr << "numdof = " << numdof << " != this->numDOF" << endl;
+      exit( 1 );
+   }
+
+   for ( int i = 0; i < numdof; i++ )
+   {
+      int dofRefNumber = ReadNthInteger( intPosition++ );
+      PRINT( dofRefNumber );
+   }
+
+   for ( int i = 0; i < 30 - numdof; i++ )
+   {
+      int zero = ReadNthInteger( intPosition++ );
+      //PRINT( zero );
+      if ( zero != 0 ) 
+      {
+         cerr << "zero = " << zero << " != 0" << endl;
+         exit( 1 );
+      }
+   }
+
+   for ( int i = 0; i < 20; i++ )
+   {
+      int title = ReadNthInteger( intPosition++ );
+      //PRINT( title );
+   }
+
+   for ( int i = 0; i < 20; i++ )
+   {
+      int stitle1 = ReadNthInteger( intPosition++ );
+      //PRINT( stitle1 );
+   }
+
+   int dbmtim = ReadNthInteger( intPosition++ );
+   PRINT( dbmtim );
+
+   int dbmdat = ReadNthInteger( intPosition++ );
+   PRINT( dbmdat );
+
+   int dbfncl = ReadNthInteger( intPosition++ );
+   PRINT( dbfncl );
+
+   int soltim = ReadNthInteger( intPosition++ );
+   PRINT( soltim );
+
+   int soldat = ReadNthInteger( intPosition++ );
+   PRINT( soldat );
+
+   int ptrOND = ReadNthInteger( intPosition++ );
+   PRINT( ptrOND );
+
+   int ptrOEL = ReadNthInteger( intPosition++ );
+   PRINT( ptrOEL );
+
+   int nfldof = ReadNthInteger( intPosition++ );
+   PRINT( nfldof );
+
+   int ptrEXA = ReadNthInteger( intPosition++ );
+   PRINT( ptrEXA );
+
+   this->ptrEXT = ReadNthInteger( intPosition++ );
+   PRINT( this->ptrEXT );
 
    // the last number is blockSize again
    int blockSize_2;
@@ -1454,6 +1544,87 @@ void ansysReader::ReadNodalSolutions()
    int blockSize_2;
    fileIO::readNByteBlockFromFile( &blockSize_2, sizeof(int),
                                    1, this->s1, this->endian_flip );
+   if ( blockSize_2 != blockSize_1 ) 
+   {
+      cerr << "blockSize = " << blockSize_2
+           << " != expected block size" << endl;
+      exit( 1 );
+   }
+}
+
+void ansysReader::ReadHeaderExtension()
+{
+   if ( this->ptrEXT == 0 )
+      return;
+
+   cout << "\nReading Header Extension" << endl;
+
+   int intPosition = this->ptrDataSetSolutions[ 0 ] + this->ptrEXT;
+
+   int blockSize_1 = ReadNthInteger( intPosition++ );
+   int reportedNumValues = ReadNthInteger( intPosition++ );
+   if ( reportedNumValues != 200 )
+   {
+      cerr << "reportedNumValues = " << reportedNumValues << " != 200" << endl;
+      exit( 1 );
+   }
+
+   // read the data
+   for ( int i = 0; i < this->numDOF; i++ )
+   {
+      int dofRefNumber = ReadNthInteger( intPosition++ );
+      PRINT( dofRefNumber );
+   }
+
+   for ( int i = 0; i < 32 - this->numDOF; i++ )
+   {
+      int zero = ReadNthInteger( intPosition++ );
+      //PRINT( zero );
+      if ( zero != 0 ) 
+      {
+         cerr << "zero = " << zero << " != 0" << endl;
+         exit( 1 );
+      }
+   }
+
+   char dofLabel[ 32 ][ 5 ];
+   for ( int i = 0; i < this->numDOF; i++ )
+   {
+      dofLabel[ i ][ 4 ] = '\0';
+      fileIO::readNByteBlockFromFile( dofLabel[ i ], sizeof(char), 4,
+                                      this->s1, this->endian_flip );
+      PRINT( dofLabel[ i ] );
+   }
+
+   if ( strcmp(dofLabel[ 0 ],"UX  ") &&
+        strcmp(dofLabel[ 1 ],"UY  ") &&
+        strcmp(dofLabel[ 2 ],"UZ  ") )
+   {
+      cerr << "ERROR: unexpected dofLabels" << endl;
+      for ( int i = 0; i < this->numDOF; i++ )
+         cerr << "\tdofLabel[ " << i << " ] = \""
+              << dofLabel[ i ] << "\"" << endl;
+      exit( 1 );
+   }
+
+   for ( int i = 0; i < 32 - this->numDOF; i++ )
+   {
+      int zero;// = ReadNthInteger( intPosition++ );
+      fileIO::readNByteBlockFromFile( &zero,
+                  sizeof(int), 1, this->s1, this->endian_flip );
+      //PRINT( zero );
+      if ( zero != 0 ) 
+      {
+         cerr << "zero = " << zero << " != 0" << endl;
+         exit( 1 );
+      }
+   }
+
+   // TODO: there is more stuff here, but return for now
+   return;
+
+   // the last number is blockSize again
+   int blockSize_2 = ReadNthInteger( intPosition++ );
    if ( blockSize_2 != blockSize_1 ) 
    {
       cerr << "blockSize = " << blockSize_2

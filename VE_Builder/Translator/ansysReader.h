@@ -60,6 +60,7 @@ class ansysReader
       void ReadElementDescription();
       void ReadSolutionDataHeader();
       void ReadNodalSolutions();
+      void ReadHeaderExtension();
       
       // Functions that get pointers to blocks of data
       //int GetPtrNodalEquivalencyTable();
@@ -119,6 +120,7 @@ class ansysReader
       int * ptrElemDescriptions;
       int * ptrDataSetSolutions;
       int ptrNodalSolution;
+      int ptrEXT;
 
       vtkUnstructuredGrid * ugrid;
 };

@@ -1,6 +1,7 @@
 #include <iostream>
 #include "ansysReader.h"
 #include "readWriteVtkThings.h"
+#include "vtkUnstructuredGrid.h"
 
 using namespace std;
 
@@ -25,12 +26,14 @@ int main( int argc, char *argv[] )
    reader->ReadElementDescriptionIndexTable();
    reader->ReadSolutionDataHeader();
    reader->ReadNodalSolutions();
+   reader->ReadHeaderExtension();
 
    // Now write to vtk format...
-   writeVtkThing( (vtkDataSet*)reader->GetUGrid(), "test.vtk", 0 ); // 0=ascii
+   writeVtkThing( reader->GetUGrid(), "test.vtk", 0 ); // 0=ascii
 
    cout << "\ndone!\n" << endl;
 
+   reader->GetUGrid()->Delete(); // this was removed from the destructor
    delete reader;
 
    return 0;
