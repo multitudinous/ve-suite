@@ -47,9 +47,6 @@ interface VjObs
    void setNumGeoArrays(in short value);
    short getNumGeoArrays();
 
-   void setClients(in long value);
-   long getClients();
-
    void setIsoValue(in long value);
    long getIsoValue();
 
