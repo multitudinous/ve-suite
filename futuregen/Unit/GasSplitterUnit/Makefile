@@ -18,14 +18,14 @@ ifndef TAO_ROOT
   TAO_ROOT = $(ACE_ROOT)/TAO
 endif # ! TAO_ROOT
 
-APP = GasSourceUnitApp
+APP = GasSplitterUnitApp
 
 LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO
 
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(TAO_ROOT)/rules.tao.GNU
 
-FILE_UNIT_CLT_OBJS = moduleC.o moduleS.o GasSourceUnit_i.o GasSourceUnit_client.o
+FILE_UNIT_CLT_OBJS = moduleC.o moduleS.o GasSplitterUnit_i.o GasSplitterUnit_client.o
 
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
