@@ -444,7 +444,7 @@ echo Done.
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"

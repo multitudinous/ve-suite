@@ -69,8 +69,21 @@ class cfdGroup: public cfdNode
 
       virtual cfdNode* Clone( int );
 
+#ifdef _PERFORMER
+   virtual pfNode* GetRawNode( void );
+#elif _OSG
+   virtual osg::Node* GetRawNode( void );
+#elif _OPENSG
+#endif
+
       virtual const char* GetName( void );
    protected:
+#ifdef _PERFORMER
+   pfGroup* _group;
+#elif _OSG
+   osg::Group* _group;
+#elif _OPENSG
+#endif
       std::vector< cfdNode* > childNodes;
 };
 #endif

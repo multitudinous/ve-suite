@@ -149,6 +149,13 @@ public:
          int _prevFrame;
    
    };
+
+#endif
+#ifdef _PERFORMER
+   pfNode* GetRawNode( void );
+#elif _OSG
+   osg::Node* GetRawNode( void );
+#elif _OPENSG
 #endif
 protected:
    cfdSwitch* _lSwitch;

@@ -79,7 +79,20 @@ class cfdDCS: public cfdGroup
       void SetName(char* name);
       int ReplaceChild(cfdNode* oldChild, cfdNode* newChild);
 
+#ifdef _PERFORMER
+   pfNode* GetRawNode( void );
+#elif _OSG
+   osg::Node* GetRawNode( void );
+#elif _OPENSG
+#endif
+
    private:
+#ifdef _PERFORMER
+   pfDCS* _dcs;
+#elif _OSG
+   osg::MatrixTransform* _dcs;
+#elif _OPENSG
+#endif
 
       float _translation[ 3 ];
       float _rotation[ 3 ];

@@ -251,7 +251,7 @@ echo Done.
 				Outputs="VjObs_i.cxx;Observer_i.cxx;VjObs.java;Observer.java"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="wxmsw24d.lib omniORB403_rtd.lib omnithread30_rtd.lib omniDynamic403_rtd.lib"
+				AdditionalDependencies="wxmsw24d.lib omniORB405_rtd.lib omnithread30_rtd.lib omniDynamic405_rtd.lib"
 				OutputFile="$(VE_SUITE_HOME)/bin/win32/VE_Conductor.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
@@ -267,14 +267,10 @@ echo Done.
 				Name="VCPreBuildEventTool"
 				Description="Generating stubs. . ."
 				CommandLine="echo C++ stubs. . .
-$(OMNI_HOME)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/Observer.idl
-$(OMNI_HOME)\bin\x86_win32\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/VjObs.idl
+$(VJ_DEPS_DIR)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/Observer.idl
+$(VJ_DEPS_DIR)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/VjObs.idl
 echo Done.
 
-echo Java stubs. . .
-$(JAVA_HOME)\bin\idlj -fall -I$(VJ_BASE_DIR)/include -td ./java_stuff -I./idl ./idl/VjObs.idl
-$(JAVA_HOME)\bin\idlj -fall -I$(VJ_BASE_DIR)/include -td ./java_stuff -I./idl ./idl/Observer.idl
-echo Done
 
 "/>
 			<Tool

@@ -78,9 +78,8 @@
 
 #include <vpr/Util/Debug.h>
 #include "cfdSequence.h"
-
-/*////////////////////////////////////////////////////////// 
-cfdNode::cfdNode( float* scale, float* trans, float* rot )
+//////////////////
+cfdNode::cfdNode()
 :cfdSceneNode(CFD_NODE)
 {
    //biv--do we need to set type for scene node in here?
@@ -88,10 +87,10 @@ cfdNode::cfdNode( float* scale, float* trans, float* rot )
 #ifdef _PERFORMER
    this->_node = 0;
 #elif _OSG
-   _node = 0;
+   _node = new osg::Node();
 #elif _OPENSG
 #endif
-}*/
+}
 /////////////////////////////////////////
 cfdNode::cfdNode( const cfdNode& input )
 :cfdSceneNode(CFD_NODE)
@@ -126,19 +125,7 @@ cfdNode& cfdNode::operator=( const cfdNode& input )
    }
    return *this;
 }
-//////////////////
-cfdNode::cfdNode()
-:cfdSceneNode(CFD_NODE)
-{
-   //biv--do we need to set type for scene node in here?
-   //this->_group = new pfNode();
-#ifdef _PERFORMER
-   this->_node = 0;
-#elif _OSG
-   _node = 0;
-#elif _OPENSG
-#endif
-}
+
 /////////////////////////
 cfdNode::~cfdNode( void )
 {
@@ -163,34 +150,8 @@ osg::Node* cfdNode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-   //return the appropriate graph node
-   switch(GetCFDNodeType()){
-      case CFD_GROUP:
-         return _group;
-         break;
-      case CFD_GEODE:
-         return _geode;
-         break;
-      case CFD_DCS:
-         return _dcs;
-         break;
-      case CFD_SEQUENCE:
-         //std::cout<<"ERROR!!!"<<std::endl;
-         //std::cout<<"cfdSequence doesn't contain a raw node!!!"<<std::endl;
-         //std::cout<<"cfdNode::GetRawNode()"<<std::endl;
-	      return _sequence;
-         break;
-      case CFD_SWITCH:
-         return _switch;
-         break;
-      case CFD_NODE:
-      case CFD_OTHER:
-      default:
-         return _node;
-         break;
-
-   };
-   return 0;
+   return _node;
+   
 }
 /////////////////////////////////////////
 //load scene from file                 //
@@ -200,32 +161,7 @@ void cfdNode::LoadFile( char* filename )
 #ifdef _PERFORMER
    this->_node = pfdLoadFile( filename );  
 #elif _OSG
-   std::cout<< filename<<std::endl;
-   //this just returns a node so we need to 
-   //init the correct type of underlying "raw node"
-   osg::ref_ptr<osg::Node> tmpNode = osgDB::readNodeFile(filename);
-   if(tmpNode.valid()){
-   const char* nType = tmpNode->className();
-   if(!strcmp(nType,"Node")){
-      _node = new osg::Node(*tmpNode.get());
-      SetCFDNodeType(CFD_NODE);
-   }else if(!strcmp(nType,"Switch")){
-      osg::ref_ptr<osg::Switch> switchNode  = dynamic_cast<osg::Switch*>(tmpNode.get());
-      _switch = new osg::Switch(*switchNode.get());
-      SetCFDNodeType(CFD_SWITCH);
-   }else if(!strcmp(nType,"Group")){
-      osg::ref_ptr<osg::Group> group = dynamic_cast<osg::Group*>(tmpNode.get());
-      _group = new osg::Group(*group.get());
-      SetCFDNodeType(CFD_GROUP);
-   }else if(!strcmp(nType,"Geode")){
-      osg::ref_ptr<osg::Geode> geode  = dynamic_cast<osg::Geode*>(tmpNode.get());
-      _geode = new osg::Geode(*geode.get());
-      SetCFDNodeType(CFD_GEODE);
-   }
-   }else{
-      std::cout << " Error:LoadFile !!! " << std::endl;
-   }
-   //may need to add other cases. . .
+   _node= osgDB::readNodeFile(filename);
 #elif _OPENSG
    std::cout << " Error:LoadFile !!! " << std::endl;
    exit( 1 );
@@ -562,13 +498,12 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
    if(!node)return;
 	int i  = 0;
 	int num = 0;
+   osg::ref_ptr<osg::Group> tempGroup = new osg::Group;
 
  	// If the node is a geode...
    if(!strcmp(node->className(),"Geode")){
-   //if (node->GetCFDNodeType() == cfdNode::CFD_GEODE){
       osg::ref_ptr<osg::Drawable> geoset = NULL;
       osg::ref_ptr<osg::Geode> geode = dynamic_cast<osg::Geode*>(node);
-      //geode->setDataVariance(osg::Object::DYNAMIC);
       osg::ref_ptr<osg::StateSet> geostate = NULL;
       
       osg::ref_ptr<osg::Material> material = NULL;
@@ -628,9 +563,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
                   //set up the material properties
                   material->setDiffuse(osg::Material::FRONT_AND_BACK ,
 				                            lColor);
-                  /*material->setAmbient( osg::Material::FRONT_AND_BACK ,
-				                            lColor);
-                   */
+                  
                   vprDEBUG(vprDBG_ALL,2) 
                          << " Front Color : " << stlColor[0]<< " : " 
                          <<  stlColor[1]<< " : " << stlColor[2]
@@ -646,7 +579,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
                geostate->setAttribute(sModel.get(),osg::StateAttribute::ON);
                
                geoset->setStateSet(geostate.get());
-               geoset->asGeometry()->setColorBinding(osg::Geometry::BIND_OVERALL);
+               //geoset->asGeometry()->setColorBinding(osg::Geometry::BIND_OVERALL);
 
          }else{
             vprDEBUG(vprDBG_ALL,0) 
@@ -655,22 +588,15 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          }
       }
 	
-   }else  if(!strcmp(node->className(),"Group")){
-   //}else if (node->GetCFDNodeType()== cfdNode::CFD_GROUP){
-	   	// Run this traverser on each of its children (recursive)
-	   	//num = ((cfdGroup*)node)->GetNumChildren();
+   }else  if(node->isSameKindAs(tempGroup.get())){
       num = ((osg::Group*)node)->getNumChildren();
-      //osg::ref_ptr<osg::Group> geode = dynamic_cast<osg::Group*>(node->GetRawNode());
-      //cfdGroup* group = static_cast<cfdGroup*>(node); 	   
       vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
-
-         for (i = 0; i < num; i++){
-           this->TravNodeMaterial(((osg::Group*)node)->getChild(i)) ;
+      for (i = 0; i < num; i++){
+         this->TravNodeMaterial(((osg::Group*)node)->getChild(i)) ;
            
-         }
-         //count = 0;
-	   }
+      }
+   }
  }
  ///////////////////////////////////////////////////////////
  void cfdNode::TravNodeFog(osg::Node* node_1, osg::Fog* fog)

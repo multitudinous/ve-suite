@@ -38,6 +38,7 @@
 #elif _OSG
 #include <osg/Geode>
 #include <osg/Node>
+#include <osg/CopyOp>
 #include "vtkActorToOSG.h"
 #elif _OPENSG
 #endif
@@ -66,7 +67,7 @@ cfdGeode::cfdGeode( const cfdGeode& input )
 #ifdef _PERFORMER
    this->_geode = input._geode;
 #elif _OSG
-   _geode = new osg::Geode(*input._geode);
+   _geode = new osg::Geode(*input._geode,osg::CopyOp::DEEP_COPY_ALL);
 #elif _OPENSG
 #endif
    this->_vtkDebugLevel = input._vtkDebugLevel;
@@ -102,7 +103,6 @@ cfdGeode::~cfdGeode( void )
    vprDEBUG(vprDBG_ALL,1) << " 2 destructor for cfdGeode " 
                            << std::endl << vprDEBUG_FLUSH;
 #elif _OSG
-   //if(_geode)_geode->unref();
 #elif _OPENSG
 #endif
 }
@@ -118,13 +118,14 @@ void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
 #elif _OPENSG
 #endif
 }
-
+// Reimplement for other graphs
 #ifdef _PERFORMER
-pfNode* cfdGeode::GetNode( void )
+pfNode* cfdGeode::GetRawNode( void )
 #elif _OSG
-osg::Node* cfdGeode::GetNode( void )
+osg::Node* cfdGeode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-   return _node;   
+   return _geode;
+   
 }

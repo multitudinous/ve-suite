@@ -72,7 +72,9 @@
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
-
+#ifdef _OSG
+#include <osgDB/WriteFile>
+#endif
 using namespace vpr;
 
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
@@ -806,7 +808,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             temp->SetWorldNode( this->_worldDCS );
             temp->SetGeodes( this->dataList[ i ]->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
-
+            
             // search map for other object types with the same type as this one
             std::multimap< int, cfdGraphicsObject* >::iterator pos;
             for ( pos = graphicsObjects.lower_bound( this->dataList[ i ]->GetObjectType() ); 

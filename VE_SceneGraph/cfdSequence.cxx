@@ -103,17 +103,17 @@ cfdGroup()
    setUpdateCallback(new cfdSequence::cfdSequenceCallback(this));
 #endif
    SetCFDNodeType(CFD_SEQUENCE);
-   _sequence = this;
-   _group = dynamic_cast<cfdSequence*>(_sequence);
+   //_sequence = this;
+   //_group = dynamic_cast<cfdSequence*>(_sequence);
 }
 ///////////////////////////////////////////////////
 cfdSequence::cfdSequence(const cfdSequence& cfdSeq)
 #ifdef _PERFORMER
-:pfGroup(),
+:pfGroup(cfdSeq),
 #elif _OSG
-:osg::Group(),
+:osg::Group(cfdSeq),
 #endif
-cfdGroup()
+cfdGroup(cfdSeq)
 {
    _lSwitch = new cfdSwitch(*cfdSeq._lSwitch);
    _deltaT = cfdSeq._deltaT;
@@ -132,11 +132,11 @@ cfdGroup()
    //performer stuff
    init();
    setType(_classType);
-   _group = dynamic_cast<cfdSequence*>(_sequence);
+   //_group = dynamic_cast<cfdSequence*>(_sequence);
 #elif _OSG
 #endif
    SetCFDNodeType(CFD_SEQUENCE);
-   _sequence = this;
+   //_sequence = this;
 }
    
 ///////////////////////////
@@ -172,10 +172,10 @@ cfdSequence& cfdSequence::operator=(const cfdSequence& rhs)
       _appFrame = rhs._appFrame;
       _step = rhs._step;
 #ifdef _PERFORMER
-      _sequence = rhs._sequence;
+      //_sequence = rhs._sequence;
       setTravFuncs(PFTRAV_APP,switchFrame,0);
       setTravData(PFTRAV_APP,this);
-      _group = dynamic_cast<cfdSequence*>(_sequence);
+//      _group = dynamic_cast<cfdSequence*>(_sequence);
 #elif _OSG
 #endif
       SetCFDNodeType(CFD_SEQUENCE);
@@ -716,3 +716,15 @@ void cfdSequence::setTime( double time )
    _deltaT = time;
    _duration = time * this->getNumChildren();
 }
+///////////////////////////////
+// Reimplement for other graphs
+#ifdef _PERFORMER
+pfNode* cfdSequence::GetRawNode( void )
+#elif _OSG
+osg::Node* cfdSequence::GetRawNode(void)
+#elif _OPENSG
+#endif
+{
+   return (this);
+}
+

@@ -60,14 +60,10 @@ public:
 
    //equal operator
    virtual cfdNode& operator=( const cfdNode& );
-   
-
 #ifdef _PERFORMER
-   pfNode* GetRawNode( void );
-   void clearGeodesFromNode( pfNode* );
+   virtual pfNode* GetRawNode( void );
 #elif _OSG
-   osg::Node* GetRawNode( void );
-   void clearGeodesFromNode( osg::Node* );
+   virtual osg::Node* GetRawNode( void );
 #elif _OPENSG
 #endif
 
@@ -84,7 +80,12 @@ public:
       
    cfdNode* Clone( int );   
 protected:
-
+#ifdef _PERFORMER
+   pfNode* _node;
+#elif _OSG
+   osg::Node* _node;
+#elif _OPENSG
+#endif
    float op;
    float stlColor[ 3 ];
    int color;

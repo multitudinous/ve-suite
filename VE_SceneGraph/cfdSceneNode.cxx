@@ -49,12 +49,12 @@ cfdSceneNode::cfdSceneNode( void )
    this->_numParents = 0;
    this->_parent = NULL;
    this->_nt = CFD_OTHER;
-   this->_node = NULL;
+   /*this->_node = NULL;
    this->_group = NULL;
    this->_dcs = NULL;
    this->_geode = NULL;
    this->_sequence = NULL;
-   this->_switch = 0;
+   this->_switch = 0;*/
 }
 //////////////////////////////////////////
 cfdSceneNode::cfdSceneNode(cfdNodeType nt)
@@ -63,12 +63,12 @@ cfdSceneNode::cfdSceneNode(cfdNodeType nt)
    this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
-   this->_node = NULL;
+   /*this->_node = NULL;
    this->_group = NULL;
    this->_dcs = NULL;
    this->_geode = NULL;
    this->_sequence = NULL;
-   this->_switch = 0;
+   this->_switch = 0;*/
 }
 ///////////////////////////////////
 cfdSceneNode::~cfdSceneNode( void )

@@ -103,21 +103,6 @@ public:
    virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
 protected:
    //our scene graph specific nodes
-#ifdef _PERFORMER
-   pfNode* _node;
-   pfGroup* _group;
-   pfDCS* _dcs;
-   pfGeode* _geode;
-   pfSwitch* _switch;
-#elif _OSG
-   osg::Node* _node;
-   osg::Group* _group;
-   osg::MatrixTransform* _dcs;
-   osg::Geode* _geode;
-   osg::Switch* _switch;
-#elif _OPENSG
-#endif
-   cfdSequence* _sequence;
    int _nodeType;
    int _numParents;
    cfdNodeType _nt;

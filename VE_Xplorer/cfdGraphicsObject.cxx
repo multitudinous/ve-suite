@@ -46,6 +46,8 @@
 #ifdef _PERFORMER
 #include <Performer/pfdb/pfpfb.h>
 #elif _OSG
+
+#include <osgDB/WriteFile>
 #endif
 // constructor
 cfdGraphicsObject::cfdGraphicsObject( void )
@@ -120,10 +122,10 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          }
          vprDEBUG(vprDBG_ALL,1) << "|\t\t adding geode to active dataset dcs "
                              << std::endl << vprDEBUG_FLUSH;
-         this->model->GetActiveDataSet()->GetDCS()->AddChild( this->geodes.back() );
+          this->model->GetActiveDataSet()->GetDCS()->AddChild( this->geodes.back() );
          vprDEBUG(vprDBG_ALL,1) << "|\t Finished classic ss add to graph"
                              << std::endl << vprDEBUG_FLUSH;
-      }
+          }
       else if ( this->geodes.size() > 1 && 
                ( !(model->GetAnimation()) || 
                  !(model->GetActiveDataSet()->IsPartOfTransientSeries() ) )

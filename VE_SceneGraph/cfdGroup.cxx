@@ -42,19 +42,6 @@
 #include <osg/Node>
 #elif _OPENSG
 #endif
-/*
-cfdGroup::cfdGroup( float* scale, float* trans, float* rot )
-:cfdNode()
-{
-#ifdef _PERFORMER
-   _group = new pfGroup();
-#elif _OSG
-   _group = new osg::Group();
-#elif _OPENSG
-#endif
-   //_node = _group;
-   SetCFDNodeType(CFD_GROUP);
-}*/
 ///////////////////////////////////////////
 cfdGroup::cfdGroup( const cfdGroup& input )
 :cfdNode(input)
@@ -308,4 +295,14 @@ cfdNode* cfdGroup::Clone( int )
    exit( 1 );
    return NULL;
 #endif
+}
+// Reimplement for other graphs
+#ifdef _PERFORMER
+pfNode* cfdGroup::GetRawNode( void )
+#elif _OSG
+osg::Node* cfdGroup::GetRawNode(void)
+#elif _OPENSG
+#endif
+{
+   return _group;
 }
