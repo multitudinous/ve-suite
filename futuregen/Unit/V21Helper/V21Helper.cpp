@@ -50,7 +50,7 @@ int V21Helper::IntToGas (Interface *it, Gas &gs)
 
   gs.gas_composite.soot = it->getDouble("SOOT", &ok);
   gs.gas_composite.tar  = it->getDouble("TAR", &ok);
-  gs.gas_composite.yc = it->getDouble("YC", &ok);
+  gs.gas_composite.ynu = it->getDouble("YNU", &ok);
 
   // TEMPORARY COAL
   gs._wic_C         = it->getDouble("WIC_C", &ok);
@@ -140,7 +140,7 @@ int V21Helper::GasToInt (Gas *gs, Interface &it)
 
   it.setDouble("SOOT", gs->gas_composite.soot);
   it.setDouble("TAR",  gs->gas_composite.tar);
-  it.setDouble("YC", gs->gas_composite.yc);
+  it.setDouble("YNU", gs->gas_composite.ynu);
 
   it.setDouble("MEAN_SIZE",     gs->gas_composite.mean_size);
   it.setDouble("SIZE_VARIANCE", gs->gas_composite.size_variance);
