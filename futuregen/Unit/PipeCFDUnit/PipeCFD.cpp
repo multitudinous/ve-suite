@@ -34,7 +34,7 @@ PipeCFD::PipeCFD ()
   running = false;
   _summaries = NULL;
 
-  _work_dir = "./case";
+  _work_dir = "./case2";
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -73,6 +73,7 @@ bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summaries)
     system(("cp " + basepath + "DATA " + path + "/DATA").c_str());
     system(("cp " + basepath + "THERMO " + path + "/THERMO").c_str());
     system(("cp " + basepath + "GRID " + path + "/GRID").c_str());
+    system(("cp " + basepath + "CPD_DATA " + path + "/CPD_DATA").c_str());
     system(("cp " + basepath + "CPD_DATA " + path + "/CPD_DATA").c_str());
   }
 
