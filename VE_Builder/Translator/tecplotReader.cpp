@@ -30,17 +30,8 @@ tecplotReader::~tecplotReader()
    delete [] measurement; measurement = NULL;
    delete [] absVel; absVel = NULL;
 }
-vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
+void tecplotReader::allocateVariables()
 {
-   int numChars;
-   numChars = 0;
-   std::cout<<"Enter the number of vertices in X"<<std::endl;
-   std::cin>>nX;
-   std::cout<<"Enter the number of vertices in Y"<<std::endl;
-   std::cin>>nY;
-
-   //nX = nx;
-   //nY = ny;
    numCells = (nX-1)*(nY-1);
    numVertices = nX*nY;
    x = new double [nX*nY];
@@ -64,28 +55,51 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
    parameterData[ 2 ]->SetNumberOfComponents( 1 ); //absolute velocity scalar
    parameterData[ 2 ]->SetNumberOfTuples( 2*nX*nY );   
    parameterData[ 2 ]->SetName( "Absolute Velocity" );
-   std::cout<<"Input file        :"<<inFileName<<std::endl
-            <<"Number of  cells  :"<<numCells<<std::endl
-            <<"Number of Vertices:"<<nX*nY<<std::endl;
+}
+vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
+{
+   int numChars;
+   numChars = 0;
    //check existence of file
    fileI.open( inFileName );
    if ( fileI == NULL )
    {
-      std::cout<<"File does not exist :"<<std::endl;
-      //return uGrid;
+      std::cout<<"Input file does not exist :"<<std::endl;
+      return uGrid;
    }
    else  //file exists
    {
       do
       {
          numChars++;
-         //std::cout<<(char)fileI.peek();
+         if ( debug ) std::cout<<(char)fileI.peek();
          fileI.get();
       } while ( (fileI.peek()!=0) && ((char)fileI.peek() != ')') );
       std::cout<<std::endl;
-      if ( debug )std::cout<<"Number of characters :"<<numChars<<std::endl;
+      if ( debug ) std::cout<<"Number of characters :"<<numChars<<std::endl;
       fileI.seekg( 0, std::ios::beg );      //reset file pointer
-      fileI.ignore(numChars+1);        //ignore all characters from beginning until ")"
+      //read the first 3 lines from the files
+      char line[ 256 ];
+      for ( int i=0;i<3;i++ )
+      {
+         fileI.getline( line, 256 );
+         if ( debug ) std::cout<<line<<std::endl;
+      }
+      //search for "I=" in line
+      char* pch;
+      pch = strstr( line, "I=" ); pch = pch+2; nX = atoi(pch);
+      if ( debug ) std::cout<<"nX :"<< nX <<std::endl;
+      //search for "J=" in line
+      pch = strstr( line, "J=" ); pch = pch+2; nY = atoi(pch);
+      if ( debug ) std::cout<<"nY :"<< nY <<std::endl;
+      //allocate memory since we know nX and nY now
+      allocateVariables();
+      std::cout<<"Input file        :"<<inFileName<<std::endl
+               <<"Number of  cells  :"<<numCells<<std::endl
+               <<"Number of Vertices:"<<nX*nY<<std::endl;   
+      //reset file pointer to beginning to read in numbers
+      fileI.seekg( 0, std::ios::beg );
+      fileI.ignore( numChars+1 );        //ignore all characters from beginning until ")"
       for ( int j=0;j<nX*nY;j++ )
       {
          //std::cout<<j<<"\t";
@@ -114,7 +128,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          parameterData[ 2 ]->SetComponent( j+numVertices, 0, absVel[j] );
       }
       pts = vtkPoints::New();
-      int* cPt = new int [ 8 ];  //QUAD elements assumed, coz data is taken from PIV runs
+      int* cPt = new int [ 8 ];  //HEX elements assumed, coz data is taken from PIV runs
       for ( int i=0;i<nX*nY;i++ )
       {
          pts->InsertPoint( i, x[i], y[i], 0.0 );
@@ -139,22 +153,18 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       }
       // Set selected scalar and vector quantities to be written to pointdata array
       letUsersAddParamsToField( 3, parameterData, uGrid->GetPointData() );
-      vtkUnstructuredGrid* finalUGrid = vtkUnstructuredGrid::New();
-
-      finalUGrid->DeepCopy( uGrid );
       for ( int i=0;i<3;i++ )
       {
          parameterData[ i ]->Delete();
-         delete [] parameterData;
       }
+      delete [] parameterData;
       parameterData = NULL;
       uGrid->Delete();
       uGrid = NULL;
-      pts->Delete();
+      pts->Delete();      
       pts = NULL;
-
-
-      return finalUGrid;
+      
+      return uGrid;
    }
 }
 

@@ -33,6 +33,8 @@ class tecplotReader
          double* absVel;
          int numCells;
          int numVertices;
+         //allocate memory once we know the file exists and nX and nY are known
+         void allocateVariables();
    
    public:
          tecplotReader();
