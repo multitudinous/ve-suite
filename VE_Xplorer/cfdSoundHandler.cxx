@@ -83,6 +83,18 @@ cfdSoundHandler::cfdSoundHandler( char* param )
 
 cfdSoundHandler::~cfdSoundHandler( void )
 {
+   delete _readParam;
+
+   if ( this->sounds.size() != 0 )
+   {
+      vprDEBUG(vprDBG_ALL,2) 
+         << "deleting this->sounds" << std::endl << vprDEBUG_FLUSH;
+      for(int i = 0; i < this->soundFile; i++)
+      {
+         delete this->sounds[ i ];
+      }
+      this->sounds.clear();
+   }
 }
 
 int cfdSoundHandler::GetNumberOfSounds( void )

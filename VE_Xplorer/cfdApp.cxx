@@ -84,32 +84,51 @@ inline cfdApp::cfdApp( )
    this->_modelHandler =         NULL;
 }
 
-#ifdef TABLET
 void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_ptr orb, PortableServer::POA_ptr poa )
 {
    this->naming_context = CosNaming::NamingContext::_duplicate( naming );
    this->orb = CORBA::ORB::_duplicate( orb );
    this->poa = PortableServer::POA::_duplicate( poa );
 }
-#endif // TABLET
 
 void cfdApp::exit()
 {
    // we don't have a destructor, so delete items here...
-/*
-   if ( this->sounds.size() != 0 )
-   {
-      vprDEBUG(vprDBG_ALL,2) 
-         << "deleting this->sounds" << std::endl << vprDEBUG_FLUSH;
-      for(int i = 0; i < this->paramReader->soundFile; i++)
-      {
-         delete this->sounds[ i ];
-      }
-      this->sounds.clear();
+   if ( this->_sceneManager )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "deleting this->_sceneManager" << std::endl << vprDEBUG_FLUSH;
+      delete this->_sceneManager;
    }
-   this->arrow->Delete();
-   */
-   
+
+   if ( this->_environmentHandler )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "deleting this->_environmentHandler" << std::endl << vprDEBUG_FLUSH;
+      delete this->_environmentHandler;
+   }
+
+   if ( this->_steadystateHandler )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "deleting this->_steadystateHandler" << std::endl << vprDEBUG_FLUSH;
+      delete this->_steadystateHandler;
+   }
+
+   /*if ( this->_transientHandler )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "deleting this->ihccModel" << std::endl << vprDEBUG_FLUSH;
+      delete this->_transientHandler;
+   }*/
+
+   if ( this->_modelHandler )
+   {  
+      vprDEBUG(vprDBG_ALL,2)  
+        << "deleting this->_modelHandler" << std::endl << vprDEBUG_FLUSH;
+      delete this->_modelHandler;
+   }
+
    if ( this->ihccModel )
    {
       vprDEBUG(vprDBG_ALL,2)  
@@ -126,7 +145,6 @@ void cfdApp::exit()
    }
 #endif // _TAO
 
-#ifdef TABLET
    CosNaming::Name name(1);
 
    name.length(1);
@@ -154,8 +172,9 @@ void cfdApp::exit()
    
    vprDEBUG(vprDBG_ALL,0) 
      << " destroying orb" << std::endl << vprDEBUG_FLUSH;
+
    orb->destroy();
-#endif // TABLET
+
    vprDEBUG(vprDBG_ALL,0) 
      << " pfExit" << std::endl << vprDEBUG_FLUSH;
    pfExit();
@@ -316,10 +335,20 @@ void cfdApp::preFrame( void )
    this->GetUpdateClusterStateVariables();
 #endif // _CLUSTER
 
+   ///////////////////////
+   this->_environmentHandler->SetCommandArray( _cfdArray );
    this->_environmentHandler->PreFrameUpdate();
-   this->_steadystateHandler->PreFrameUpdate();
-   //this->_transientHandler->PreFrameUpdate();
+   ///////////////////////
+   this->_modelHandler->SetCommandArray( _cfdArray );
    this->_modelHandler->PreFrameUpdate();
+   ///////////////////////
+   this->_steadystateHandler->SetCommandArray( _cfdArray );
+   this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
+   this->_steadystateHandler->PreFrameUpdate();
+   ///////////////////////
+   //this->_transientHandler->SetCommandArray( _cfdArray );
+   //this->_transientHandler->PreFrameUpdate();
+   ///////////////////////
 
 
    // This need to go very soon
@@ -377,9 +406,7 @@ void cfdApp::postFrame()
       //cout << " Current Frame :  " << currentFrame << endl;
       if (this->lastFrame != currentFrame )
       {
-#ifdef TABLET 
          this->setTimesteps( currentFrame );
-#endif // TABLET
          this->lastFrame = currentFrame;
       }
    }
@@ -440,7 +467,6 @@ int main(int argc, char* argv[])
    }
 #endif // _CLUSTER
 
-#ifdef TABLET
    int temp = 0;
    char** xargv;
    xargv = new char*[ temp ];
@@ -478,13 +504,10 @@ int main(int argc, char* argv[])
     poa_manager->activate ();
 //   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
 //   cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
-#endif // TABLET
 
    vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
 
    cfdApp* application = new cfdApp( );//kernel );  // Delcare an instance of my application
-
-#ifdef TABLET
 
 #ifdef _CLUSTER
    char raw_hostname[256];
@@ -539,8 +562,6 @@ int main(int argc, char* argv[])
    }
 #endif // _CLUSTER
    application->SetCORBAVariables( naming_context.in(), orb.in(), poa.in() );
-
-#endif // TABLET
 
    for ( int i = 1; i < argc; i++ )          // Configure the kernel
    {
