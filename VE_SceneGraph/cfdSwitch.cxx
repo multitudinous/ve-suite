@@ -122,11 +122,30 @@ int cfdSwitch::RemoveChild( cfdNode* child )
       return -1;
    }
 }
+/////////////////////////////////////
+int cfdSwitch::GetNumChildren( void )
+{
+   
+#ifdef _OPENSG
+   std::cerr << " ERROR: cfdSwitch::GetNumChildren is NOT implemented " << std::endl;
+   exit( 1 );
+   return -1;
+#endif
+
+   int numChildren = this->_switch->getNumChildren(); 
+   if ( numChildren!=(int)childNodes.size() )
+   {
+      std::cout << " ERROR: Number of children don't equal " 
+               << numChildren << " : " << childNodes.size() << std::endl;
+      exit( 1 );
+   }
+   return numChildren;
+}
 /////////////////////////////////////////////
 int cfdSwitch::AddChild( cfdNode* child )
 {
 #ifdef _OPENSG
-   std::cerr << " ERROR: cfdGroup::AddChild is NOT implemented " << std::endl;
+   std::cerr << " ERROR: cfdSwitch::AddChild is NOT implemented " << std::endl;
    exit( 1 );
    return -1;
 #endif
@@ -145,7 +164,7 @@ int cfdSwitch::ReplaceChild( cfdNode* childToBeReplaced,
                          cfdNode* newChild)
 {
 #ifdef _OPENSG
-   cerr << " ERROR: cfdGroup::ReplaceChild is NOT implemented " << endl;
+   cerr << " ERROR: cfdSwitch::ReplaceChild is NOT implemented " << endl;
    exit( 1 );
    return -1;
 #endif
@@ -178,7 +197,7 @@ int cfdSwitch::ReplaceChild( cfdNode* childToBeReplaced,
 void cfdSwitch::InsertChild( int position, cfdNode* child )
 {
 #ifdef _OPENSG
-   std::cerr << " ERROR: cfdGroup::InsertChild is NOT implemented " << std::endl;
+   std::cerr << " ERROR: cfdSwitch::InsertChild is NOT implemented " << std::endl;
    exit( 1 );
 #endif
 

@@ -25,8 +25,9 @@ public:
    int RemoveChild( cfdNode* child );
    int AddChild(cfdNode* child);
    int ReplaceChild(cfdNode* old,cfdNode* newNode);
+   int GetNumChildren();
    void InsertChild(int index,cfdNode* node);
-
+   
 #ifdef _PERFORMER
    pfNode* GetRawNode( void );
 #elif _OSG

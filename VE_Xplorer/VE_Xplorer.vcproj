@@ -42,7 +42,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib omniORB405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libpf.lib libpfv.lib libpfui.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib omniORB405_rtd.lib omniDynamic405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib vtkexpat.lib vtkzlib.lib libpf.lib libpfv.lib libpfui.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
 				LinkIncremental="2"
@@ -439,7 +439,7 @@ echo Done.
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib omniORB405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib omniORB405_rtd.lib omniDynamic405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib vtkexpat.lib vtkzlib.lib opengl32.lib glu32.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
 				LinkIncremental="2"
@@ -507,7 +507,7 @@ echo Done.
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib omniORB405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib osgNVCgd.lib osgNVd.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib omniORB405_rtd.lib omniDynamic405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib osgNVCgd.lib osgNVd.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
 				LinkIncremental="2"
