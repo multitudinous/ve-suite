@@ -1,59 +1,367 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
 "http://www.w3.org/TR/html4/loose.dtd">
-<html>
+<html xmlns:v="urn:schemas-microsoft-com:vml"
+xmlns:o="urn:schemas-microsoft-com:office:office"
+xmlns:w="urn:schemas-microsoft-com:office:word"
+xmlns:st1="urn:schemas-microsoft-com:office:smarttags"
+xmlns="http://www.w3.org/TR/REC-html40">
+
 <head>
-<title>Building VE-Suite for Windows</title>
 <meta http-equiv=Content-Type content="text/html; charset=iso-8859-1">
+<meta name=ProgId content=Word.Document>
+<meta name=Generator content="Microsoft Word 10">
+<meta name=Originator content="Microsoft Word 10">
+<link rel=File-List href="VE_Suite_Build_Instructions_files/filelist.xml">
+<title>Building VE-Suite for Windows</title>
+<o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
+ name="PlaceName"/>
+<o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
+ name="PlaceType"/>
+<o:SmartTagType namespaceuri="urn:schemas-microsoft-com:office:smarttags"
+ name="place"/>
+<!--[if gte mso 9]><xml>
+ <o:DocumentProperties>
+  <o:Author>Steve Corns</o:Author>
+  <o:LastAuthor>Steve Corns</o:LastAuthor>
+  <o:Revision>4</o:Revision>
+  <o:TotalTime>8</o:TotalTime>
+  <o:Created>2004-09-14T20:04:00Z</o:Created>
+  <o:LastSaved>2004-09-14T20:12:00Z</o:LastSaved>
+  <o:Pages>1</o:Pages>
+  <o:Words>692</o:Words>
+  <o:Characters>3946</o:Characters>
+  <o:Lines>32</o:Lines>
+  <o:Paragraphs>9</o:Paragraphs>
+  <o:CharactersWithSpaces>4629</o:CharactersWithSpaces>
+  <o:Version>10.6626</o:Version>
+ </o:DocumentProperties>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <w:WordDocument>
+  <w:Zoom>110</w:Zoom>
+  <w:SpellingState>Clean</w:SpellingState>
+  <w:GrammarState>Clean</w:GrammarState>
+  <w:BrowserLevel>MicrosoftInternetExplorer4</w:BrowserLevel>
+ </w:WordDocument>
+</xml><![endif]--><!--[if !mso]><object
+ classid="clsid:38481807-CA0E-42D2-BF39-B33AF135CC4D" id=ieooui></object>
+<style>
+st1\:*{behavior:url(#ieooui) }
+</style>
+<![endif]-->
 <link rel=Stylesheet type="text/css" media=all href=Ve-Suite.css>
-<body bgcolor="#FFFFFF" link=blue vlink=blue class="Normal" lang=EN-US> 
+<style>
+<!--
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{mso-style-parent:"";
+	margin:0in;
+	margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+h2
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	mso-outline-level:2;
+	font-size:18.0pt;
+	font-family:"Times New Roman";
+	font-weight:bold;}
+a:link, span.MsoHyperlink
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:blue;
+	text-decoration:underline;
+	text-underline:single;}
+p
+	{mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	font-family:"Times New Roman";
+	mso-fareast-font-family:"Times New Roman";}
+p.title1, li.title1, div.title1
+	{mso-style-name:title1;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:18.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.bodytext, li.bodytext, div.bodytext
+	{mso-style-name:bodytext;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.bodytextemph, li.bodytextemph, div.bodytextemph
+	{mso-style-name:bodytextemph;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;}
+p.question, li.question, div.question
+	{mso-style-name:question;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.bullets, li.bullets, div.bullets
+	{mso-style-name:bullets;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:12.0pt;
+	mso-fareast-font-family:"Times New Roman";
+	font-weight:bold;
+	font-style:italic;}
+p.paramfile, li.paramfile, div.paramfile
+	{mso-style-name:paramfile;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:9.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+p.title2, li.title2, div.title2
+	{mso-style-name:title2;
+	mso-margin-top-alt:auto;
+	margin-right:0in;
+	mso-margin-bottom-alt:auto;
+	margin-left:0in;
+	mso-pagination:widow-orphan;
+	font-size:16.0pt;
+	mso-fareast-font-family:"Times New Roman";}
+span.bodytext1
+	{mso-style-name:bodytext1;
+	mso-ansi-font-size:12.0pt;
+	mso-bidi-font-size:12.0pt;
+	font-family:Arial;
+	mso-ascii-font-family:Arial;
+	mso-hansi-font-family:Arial;
+	mso-bidi-font-family:Arial;
+	font-variant:normal !important;
+	color:black;
+	mso-text-animation:none;
+	text-transform:none;
+	font-weight:normal;
+	font-style:normal;
+	text-decoration:none;
+	text-underline:none;
+	text-decoration:none;
+	text-line-through:none;}
+span.SpellE
+	{mso-style-name:"";
+	mso-spl-e:yes;}
+span.GramE
+	{mso-style-name:"";
+	mso-gram-e:yes;}
+@page Section1
+	{size:8.5in 11.0in;
+	margin:1.0in 1.25in 1.0in 1.25in;
+	mso-header-margin:.5in;
+	mso-footer-margin:.5in;
+	mso-paper-source:0;}
+div.Section1
+	{page:Section1;}
+-->
+</style>
+<!--[if gte mso 10]>
+<style>
+ /* Style Definitions */
+ table.MsoNormalTable
+	{mso-style-name:"Table Normal";
+	mso-tstyle-rowband-size:0;
+	mso-tstyle-colband-size:0;
+	mso-style-noshow:yes;
+	mso-style-parent:"";
+	mso-padding-alt:0in 5.4pt 0in 5.4pt;
+	mso-para-margin:0in;
+	mso-para-margin-bottom:.0001pt;
+	mso-pagination:widow-orphan;
+	font-size:10.0pt;
+	font-family:"Times New Roman";}
+</style>
+<![endif]--><!--[if gte mso 9]><xml>
+ <o:shapedefaults v:ext="edit" spidmax="2050"/>
+</xml><![endif]--><!--[if gte mso 9]><xml>
+ <o:shapelayout v:ext="edit">
+  <o:idmap v:ext="edit" data="1"/>
+ </o:shapelayout></xml><![endif]-->
+</head>
 
-  <p class="Title1">Building VE-Suite for Windows</p> 
-  <p class=bodytext>This is our initial port of VE_Suite to windows. Currently it must be built in Visual Studio 7.1(2003)</p> 
-  <p class="Title2">Dependencies</p> 
+<body bgcolor=white lang=EN-US link=blue vlink=blue style='tab-interval:.5in'>
 
-    <p class=bodytext><a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a> to check out and update VE_Suite from ISU's code repository</p> 
-    <p class=bodytext><a href="http://msdn.microsoft.com/visualc/productinfo/">Visual Studio 7.1(2003)</a> to compile the C++ code.</p> 
-    <p class=bodytext><a href="http://sgi.com/software/performer">OpenGL Performer (3.1.1)</a> to manage the scenegraph.</p> 
-    <p class=bodytext><a href="http://vtk.org/get-software.php#interim">VTK (4.4)</a> to render the visualization objects.</p> 
-    <p class=bodytext><a href="http://www.cmake.org/HTML/Download.html">CMake (2.0.3)</a> to build vtk.</p> 
-    <p class=bodytext><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71.zip?download">VRJuggler (2.0alpha4.win32-vc71)</a> for management of the virtual environment.</p> 
-    <p class=bodytext><a href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71-deps.zip?download">VRJuggler dependencies zip file</a></p> 
-    <p class=bodytext><a href="http://omniorb.sourceforge.net/">omniORB (4.0.3)</a> for communication between the gui and the app.</p> 
-    <p class=bodytext><a href="http://java.sun.com/j2se/1.4.2/download.html">Java 2 SDK</a> to compile and run the java-based gui.</p> 
+<div class=Section1>
 
-  <h2 class="Title2">Notes on installation of dependencies:</h2> 
-    <p><span class="bodytext">If you get the VE_Suite source code as a compressed tarball, some unzip utilities may not maintain the correct directory structure.  This can be fixed by unzipping the files on a Unix based system and then moving the files to the windows machine.</p>
- 
-      <p class="bodytext">--While the default locations for installations will work, we recommend creating a directory in the root (C:\) directory to minimize the path lengths and the accompanying potential for typos when configuring environment settings.</p>
-      <p class="bodytext">--For windows, VTK must be built using CMake to create the VTK project and .sln files.</p> 
-      <p class="bodytext">--There was a bug in compiling VTK when using CMake 2.0.3B.  If errors occur in the compile, we recommend downloading CMake 2.0.2 from the <a href="http://www.cmake.org/files/v2.0/">archive</a> section of the kitware webpage.</p> 
-      <p class="bodytext">--When configuring CMake to build VTK, we recommend making a separate directory (such as VTK4.4) in the same directory as the VTK source code.  Inside this directory, make another directory labeled bin and use this as the install path when configuring CMake to build VTK.</p> 
-      <p class="bodytext">--When configuring CMake for building VTK, there are three flags that need to be changed from their default value (&#8220;off&#8221;) to &#8220;on&#8221;:</p> 
+<p class=title1>Building VE-Suite for Windows</p>
 
-    <p class=bodytext>1. shared libs</p> 
-    <p class=bodytext>2. hybrid libs</p> 
-    <p class=bodytext>3. parallel libs</p> 
+<p class=bodytext>This is our initial <st1:place><st1:PlaceType>port</st1:PlaceType>
+ of <st1:PlaceName><span class=SpellE>VE_Suite</span></st1:PlaceName></st1:place>
+to windows. Currently it must be built in Visual Studio 7.1(2003)</p>
 
-  <p class="bodytext">After building VTK, make sure that you build the &#8220;Install&#8221; project.  Some users have needed to copy the .dll files from VTK-4.4-LatestRelease\bin\CMake\Debug folder to the VTK-4.4-LatestRelease\bin\CMake folder (copy them up one directory).</span></p> 
-  <p class="Title2">Environment Settings</p> 
+<p class=title2>Dependencies</p>
 
-   <p class=bodytext>To set up the build environment:</p> 
-    <p class=bodytext>1. Perform a one-time edit of the environment variables that are defined in the setup batch file (./VE_Installer/vesuite.OMNIBUILD.setup.bat)</p> 
-     <p class=bodytext>Remember:  If the paths of your environment variables contain spaces, you need to put the directory containing the spaces in quotation marks.</p> 
-     <p class=bodytextemph>Example: <span class="bodytext">set VTK_HOME=C:\&#8221;Documents and Settings&#8221;\user\Desktop\vtk</p> 
-    <p class=bodytext>2. Run the batch file:</p> 
-     <p class=bodytext>./VE_Installer/vesuite.OMNIBUILD.setup.bat</p> 
-     <p class=bodytext>This will set the defined environment variables and launch a session of Visual Studio with the VE_Suite project loaded. The project should be ready to build.</p> 
+<p class=bodytext><a href="http://tortoisesvn.tigris.org/"><span class=SpellE>TortoiseSVN</span></a>
+to check out and update <span class=SpellE>VE_Suite</span> from <span
+class=SpellE>ISU's</span> code repository</p>
 
-  <p class="Title2">VE_Suite Project File Options</p> 
-     <p class=bodytext>Currently there are two configurations available: Debug_OMNI and Release_OMNI.</p> 
-     <p class="Title2">Running VE_Xplorer</p> 
-     <p class=bodytext>You need to have omniNames started to run VE_Xplorer. If omniNames is not running, type in a command window,</p> 
-     <p class=bodytext>omniNames -start 2809</p> 
-     <p class=bodytext>To run the solution from within Visual Studio, change the working directory in the Configuration Properties tab to point to the directory where your VE_Suite parameter file is located (for example, change the working directory to $(VE_SUITE_HOME)\VE_TestSuite)</p> 
-     <p class=bodytext>You will also need to pass in your juggler config files as command arguments on the configuration properties tab. With the three projects still open, right-click on the VE_Xplorer project file, and select properties. For simulation mode, you add the following to your command arguments section:</p> 
-     <p class=bodytext>$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.base.jconf</p> 
-     <p class=bodytext>$(VJ_BASE_DIR)\share\vrjuggler\data\configFiles\sim.wand.mixin.jconf</p> 
+<p class=bodytext><a href="http://msdn.microsoft.com/visualc/productinfo/"><span
+class=GramE>Visual Studio 7.1(2003)</span></a><span class=GramE> to compile the
+C++ code.</span></p>
+
+<p class=bodytext><a href="http://sgi.com/software/performer"><span
+class=GramE>OpenGL Performer (3.1.1)</span></a><span class=GramE> to manage the
+<span class=SpellE>scenegraph</span>.</span></p>
+
+<p class=bodytext><a href="http://vtk.org/get-software.php#interim">VTK (4.4)</a>
+to render the visualization objects.</p>
+
+<p class=bodytext><a href="http://www.cmake.org/files/v2.0/"><span
+class=SpellE>CMake</span> (2.0.2)</a> to build vtk.</p>
+
+<p class=bodytext><a
+href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71.zip?download"><span
+class=SpellE><span class=GramE>VRJuggler</span></span><span class=GramE>
+(2.0alpha4.win32-vc71)</span></a><span class=GramE> for management of the
+virtual environment.</span></p>
+
+<p class=bodytext><a
+href="http://prdownloads.sourceforge.net/vrjuggler/vrjuggler-2.0-alpha4.win32-vc71-deps.zip?download"><span
+class=SpellE>VRJuggler</span> dependencies zip file</a></p>
+
+<p class=bodytext><a href="http://omniorb.sourceforge.net/"><span class=SpellE><span
+class=GramE>omniORB</span></span> (4.0.3)</a> for communication between the <span
+class=SpellE>gui</span> and the app.</p>
+
+<p class=bodytext><a href="http://java.sun.com/j2se/1.4.2/download.html">Java 2
+SDK</a> to compile and run the java-based <span class=SpellE><span class=GramE>gui</span></span>.</p>
+
+<h2><span style='font-size:16.0pt;font-family:Arial;color:black;font-weight:
+normal'>Notes on installation of dependencies:<o:p></o:p></span></h2>
+
+<p><span class=bodytext1>If you get the <span class=SpellE>VE_Suite</span>
+source code as a compressed <span class=SpellE>tarball</span>, some unzip
+utilities may not maintain the correct directory structure.&nbsp; This can be
+fixed by unzipping the files on a <span class=GramE>Unix</span> based system
+and then moving the files to the windows machine.<o:p></o:p></span></p>
+
+<p class=bodytext>--While the default locations for installations will work, we
+recommend creating a directory in the root (<span class=GramE>C:</span>\)
+directory to minimize the path lengths and the accompanying potential for typos
+when configuring environment settings.</p>
+
+<p class=bodytext>--For windows, VTK must be built using <span class=SpellE>CMake</span>
+to create the VTK project and .<span class=SpellE>sln</span> files.</p>
+
+<p class=bodytext>--There may be a bug in compiling VTK when using <span
+class=SpellE>CMake</span> 2.0.3B.&nbsp; If errors occur in the compile, we
+recommend downloading <span class=SpellE>CMake</span> 2.0.2 from the <a
+href="http://www.cmake.org/files/v2.0/">archive</a> section of the <span
+class=SpellE>kitware</span> webpage for a work around.</p>
+
+<p class=bodytext>--When configuring <span class=SpellE>CMake</span> to build
+VTK, we recommend making a separate directory (such as VTK4.4) in the same
+directory as the VTK source code.&nbsp; Inside this directory, make another
+directory labeled bin and use this as the install path when configuring <span
+class=SpellE>CMake</span> to build VTK.</p>
+
+<p class=bodytext>--When building the solution file (<span class=SpellE>VTK.sln</span>),
+there have been some path problems when the project tries to find the library
+files that are put in the VTK_HOME\bin\<span class=SpellE>cmake</span>\debug
+directory.<span style='mso-spacerun:yes'>  </span>The easiest fix for this is
+to copy all of the .<span class=SpellE>dll</span> files in this directory to
+the parent directory (VTK_HOME\bin\<span class=SpellE>cmake</span>).</p>
+
+<p class=bodytext>--When configuring <span class=SpellE>CMake</span> for
+building VTK, there are three flags that need to be changed from their default
+value (&#8220;off&#8221;) to &#8220;on&#8221;:</p>
+
+<p class=bodytext>1. <span class=GramE>shared</span> <span class=SpellE>libs</span></p>
+
+<p class=bodytext>2. <span class=GramE>hybrid</span> <span class=SpellE>libs</span></p>
+
+<p class=bodytext>3. <span class=GramE>parallel</span> <span class=SpellE>libs</span></p>
+
+<p class=bodytext>--After building VTK, make sure that you build the
+&#8220;Install&#8221; project.&nbsp; Some users have needed to copy the .<span
+class=SpellE>dll</span> files from VTK-4.4-LatestRelease\bin\CMake\Debug folder
+to the VTK-4.4-LatestRelease\bin\CMake folder (copy them up one directory).</p>
+
+<p class=title2>Environment Settings</p>
+
+<p class=bodytext>To set up the build environment:</p>
+
+<p class=bodytext>1. Perform a one-time edit of the environment variables that
+are defined in the setup batch file (./<span class=SpellE>VE_Installer/vesuite.OMNIBUILD.setup.bat</span>)</p>
+
+<p class=bodytext>Remember:&nbsp; If the paths of your environment variables
+contain spaces, you need to put the directory containing the spaces in
+quotation marks.</p>
+
+<p class=bodytextemph>Example: <span class=bodytext1>set VTK_HOME=C<span
+class=GramE>:\</span>&#8221;Documents and Settings&#8221;\user\Desktop\vtk<o:p></o:p></span></p>
+
+<p class=bodytext>2. Run the batch file:</p>
+
+<p class=bodytext>./<span class=SpellE>VE_Installer/vesuite.OMNIBUILD.setup.bat</span></p>
+
+<p class=bodytext>This will set the defined environment variables and launch a
+session of Visual Studio with the <span class=SpellE>VE_Suite</span> project
+loaded. The project should be ready to build.</p>
+
+<p class=title2><span class=SpellE>VE_Suite</span> Project File Options</p>
+
+<p class=bodytext>Currently there are two configurations available: <span
+class=SpellE>Debug_OMNI</span> and <span class=SpellE>Release_OMNI</span>.</p>
+
+<p class=title2>Running <span class=SpellE>VE_Xplorer</span></p>
+
+<p class=bodytext>You need to have <span class=SpellE>omniNames</span> started
+to run <span class=SpellE>VE_Xplorer</span>. If <span class=SpellE>omniNames</span>
+is not running, type in a command window,</p>
+
+<p class=bodytext><span class=SpellE><span class=GramE>omniNames</span></span>
+-start 2809</p>
+
+<p class=bodytext>To run the solution from within Visual Studio, change the
+working directory in the Configuration Properties tab to point to the directory
+where your <span class=SpellE>VE_Suite</span> parameter file is located (for
+example, change the working directory to $(VE_SUITE_HOME)\<span class=SpellE>VE_TestSuite</span>)</p>
+
+<p class=bodytext>You will also need to pass in your juggler <span
+class=SpellE>config</span> files as command arguments on the configuration
+properties tab. With the three projects still open, right-click on the <span
+class=SpellE>VE_Xplorer</span> project file, and select properties. For
+simulation mode, you add the following to your command arguments section:</p>
+
+<p class=bodytext>$(VJ_BASE_DIR)\share\<span class=SpellE>vrjuggler\data\configFiles\sim.base.jconf</span></p>
+
+<p class=bodytext>$(VJ_BASE_DIR)\share\<span class=SpellE>vrjuggler\data\configFiles\sim.wand.mixin.jconf</span></p>
+
+</div>
 
 </body>
+
 </html>
