@@ -68,12 +68,12 @@ bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summaries)
 
   } else {
     string path = _work_dir;
-    string basepath = "./Glacier/Cases/Pipe/";
+    string basepath = "./Glacier/Cases/Pipe2/";
 
     system(("cp " + basepath + "DATA " + path + "/DATA").c_str());
     system(("cp " + basepath + "THERMO " + path + "/THERMO").c_str());
     system(("cp " + basepath + "GRID " + path + "/GRID").c_str());
-
+    system(("cp " + basepath + "CPD_DATA " + path + "/CPD_DATA").c_str());
   }
 
   _gas_in = gas_in;

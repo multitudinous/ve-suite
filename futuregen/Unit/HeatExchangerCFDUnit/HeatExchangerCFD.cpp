@@ -68,11 +68,12 @@ bool HeatExchangerCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summa
 
   } else {
     string path = _work_dir;
-    string basepath = "./Glacier/Cases/HeatExchanger/";
+    string basepath = "./Glacier/Cases/Hx2/";
 
     system(("cp " + basepath + "DATA " + path + "/DATA").c_str());
     system(("cp " + basepath + "THERMO " + path + "/THERMO").c_str());
     system(("cp " + basepath + "GRID " + path + "/GRID").c_str());
+    system(("cp " + basepath + "CPD_DATA " + path + "/CFP_DATA").c_str());
 
   }
 
