@@ -66,7 +66,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
       _images.push_back(im);
    }
 
-   this->_sequence = new cfdTempAnimation();
+   //this->_sequence = new cfdTempAnimation();
    this->_dcs = new cfdDCS();
 }
 
@@ -102,10 +102,10 @@ cfdAnimatedImage::cfdAnimatedImage( char* param )
    this->_dcs->SetRotationArray( imageRot );
    this->_dcs->SetScaleArray( imageScale );
 
-   this->_sequence = new cfdTempAnimation();
+   //this->_sequence = new cfdTempAnimation();
    
    // Inhereted function from cfdDCS
-   this->_dcs->AddChild( (cfdNode*)this->_sequence->GetSequence() );
+   //this->_dcs->AddChild( (cfdNode*)this->_sequence->GetSequence() );
 }
 
 cfdAnimatedImage::~cfdAnimatedImage()
@@ -119,8 +119,8 @@ cfdAnimatedImage::~cfdAnimatedImage()
 
    if ( frames != 0 )
    {
-      this->_sequence->ClearSequence();
-      delete this->_sequence;
+      //this->_sequence->ClearSequence();
+      //delete this->_sequence;
       delete this->_dcs;
    }
 }

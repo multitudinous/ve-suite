@@ -144,7 +144,7 @@ void cfdExecutive::UnbindORB()
 {
 	CosNaming::Name UIname(1);
 	UIname.length(1);
-	UIname[0].id = CORBA::string_dup( (ui_i->UIName_).c_str() );
+	UIname[0].id =  (ui_i->UIName_).c_str();// CORBA::string_dup();
 
    std::cout<< " Executive Destructor " << UIname[0].id << std::endl;
 

@@ -871,6 +871,10 @@ void VjObs_i::CreateCommandQueue( void )
 
    std::map< int, cfdDataSet* >::iterator iter;
    
+   commandQueue.push_back( new cfdCommandArray() );
+   commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
+   commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 0 );
+
    for ( iter = _modelHandler->GetActiveModel()->transientDataSets.begin(); 
          iter != _modelHandler->GetActiveModel()->transientDataSets.end(); ++iter)
    { 
@@ -892,4 +896,7 @@ void VjObs_i::CreateCommandQueue( void )
       commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, newIsoValue );
       commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, newPreState );
    }
+
+   commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_ID, TRANSIENT_ACTIVE );
+   commandQueue.back()->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, 1 );
 }

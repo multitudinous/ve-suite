@@ -71,9 +71,6 @@ class cfdGraphicsObject
       void SetTypeOfViz( VizType );
 
       // set actor for classic and trans viz objects
-      void SetActor( vtkActor* );
-
-      // set actor for classic and trans viz objects
       void SetActor( std::vector< vtkActor* > );
 
       // Return parent node for a this object
@@ -89,7 +86,6 @@ class cfdGraphicsObject
       cfdGroup* parentNode;
       cfdGroup* worldNode;
       VizType type;
-      vtkActor* actor;
       std::vector< vtkActor* > actors;
       cfdTempAnimation* animation;
       // need tempanimation

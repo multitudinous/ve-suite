@@ -170,7 +170,7 @@ void cfdIHCCGauge::Update( void )
       dcs->SetScaleArray( temp_scale );
       dcs->SetRotationArray( temp_rot );
       dcs->AddChild( output.back() );
-      ((cfdGroup*)this->GetSequence()->GetSequence()->getChild( i ))->AddChild( dcs );
+      //((cfdGroup*)this->GetSequence()->GetSequence()->getChild( i ))->AddChild( dcs );
 
       // Display time and concentration
 		// Create geode
@@ -182,7 +182,7 @@ void cfdIHCCGauge::Update( void )
 
 void cfdIHCCGauge::ClearSequence( void )
 {
-   this->GetSequence()->ClearSequence();
+   //this->GetSequence()->ClearSequence();
 }
 
 void cfdIHCCGauge::SetModuleName( std::string moduleName )

@@ -136,13 +136,13 @@ void UI_StreamlineTab::_buildPage()
                                 wxSL_AUTOTICKS|
                                 wxSL_LABELS|wxSL_RIGHT );
 
-   _iStepSlider = new wxSlider(this, INT_STEP_SLIDER,100,1,100,
+   _iStepSlider = new wxSlider(this, INT_STEP_SLIDER,1000,1,5000,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
                                 wxSL_LABELS|wxSL_RIGHT );
 
-   _stepSlider = new wxSlider(this, STEP_SLIDER,1,1,100,
+   _stepSlider = new wxSlider(this, STEP_SLIDER,1,1,5000,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|

@@ -71,7 +71,6 @@ class cfdObjects : public cfdGlobalBase
       // update the actor
       virtual void Update() = 0;
 
-      vtkActor* GetActor( void );
       std::vector< vtkActor* > GetActors( void );
       void ClearActors( void );
 
@@ -89,8 +88,8 @@ class cfdObjects : public cfdGlobalBase
       bool GetUpdateFlag( void ) { return ( this->updateFlag ); }
       void DeletecfdGeode( void );
 
-      void SetSequence( cfdTempAnimation* );
-      cfdTempAnimation* GetSequence( void );
+      //void SetSequence( cfdTempAnimation* );
+      //cfdTempAnimation* GetSequence( void );
       
       void SetSourcePoints( vtkPolyDataSource * );
 
@@ -106,7 +105,7 @@ class cfdObjects : public cfdGlobalBase
       void SetActiveDataSet( cfdDataSet * dataset );
       cfdDataSet * GetActiveDataSet( void );
 
-      void ClearTransientVector( void );
+      //void ClearTransientVector( void );
 
       static void SetVectorScale( float );
       static float GetVectorScale();
@@ -129,7 +128,7 @@ class cfdObjects : public cfdGlobalBase
       static int particleOption;   // point cloud or variably sized spheres
       static float particleScale;
 
-      cfdTempAnimation* _sequence;
+      //cfdTempAnimation* _sequence;
 
       //std::vector< cfdGeode* > _geodes;
       //std::vector<cfdGeode* > transientGeodes;

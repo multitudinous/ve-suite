@@ -137,16 +137,6 @@ void cfdObjects::SetBoxSize( double b[ 6 ]  )
    this->center[2] = (this->box_size[4] + this->box_size[5])/2;
 }
 
-void cfdObjects::SetSequence( cfdTempAnimation * x )
-{
-   this->_sequence = x;
-}
-
-cfdTempAnimation* cfdObjects::GetSequence( void )
-{
-   return this->_sequence;
-}
-
 void cfdObjects::SetSourcePoints( vtkPolyDataSource* pointSource )
 {
    this->pointSource = pointSource;

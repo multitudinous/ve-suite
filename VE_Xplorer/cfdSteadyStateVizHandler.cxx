@@ -779,13 +779,15 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    // check any virtual objects need to be updated
    if ( this->actorsAreReady && this->transientActors )
    {
-      vprDEBUG(vprDBG_ALL,4) << "|   Updating Objects"
+      vprDEBUG(vprDBG_ALL,2) << "|\tUpdating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
       for ( unsigned int i = 0; i < this->dataList.size(); i++ )
       {
          if ( this->dataList.at( i )->GetUpdateFlag() )//|| 
                //this->dataList.at( i )->GetTransientGeodeFlag() )
          {
+            vprDEBUG(vprDBG_ALL,2) << "|\tCreating Objects"
+                                   << std::endl << vprDEBUG_FLUSH;
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
@@ -942,7 +944,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
                  << "non-interactive object." << std::endl << vprDEBUG_FLUSH; 
 
                this->_activeObject->Update();      
-               this->_activeObject->SetSequence( 0 );
+               //this->_activeObject->SetSequence( 0 );
                this->_activeObject = NULL;
                this->computeActorsAndGeodes = false;
             }
@@ -977,7 +979,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
             //                       << pfMemory::getArenaBytesUsed() 
             //                       << std::endl << vprDEBUG_FLUSH;
 
-            vprDEBUG(vprDBG_ALL,0) << " Done updating cfdObject" 
+            vprDEBUG(vprDBG_ALL,0) << "|\tDone updating cfdObject" 
                << std::endl << std::endl << vprDEBUG_FLUSH; 
             
          }

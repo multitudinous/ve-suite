@@ -83,7 +83,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
 
    worldDCS->AddChild( this->sequence->GetSequence() );
    worldDCS->AddChild( ihccModelNode );
-   this->SetSequence( sequence );
+   //this->SetSequence( sequence );
    float scale_gauge[ 3 ];
    scale_gauge[ 0 ]  = 70;
    scale_gauge[ 1 ]  = 70;
@@ -126,7 +126,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
    // Create two gauges
    // Time Gauge
    gauge_time = new cfdIHCCGauge( ihccModelNode );
-   gauge_time->SetSequence( sequence );
+   //gauge_time->SetSequence( sequence );
    //gauge_time->SetDCS( worldDCS );
    gauge_time->SetTranslationArray( trans_gauge );
    gauge_time->SetScaleArray( scale_gauge );
@@ -144,7 +144,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
    trans_gauge[ 1 ] = -5;
    trans_gauge[ 2 ] = 2;
    gauge_acid = new cfdIHCCGauge( ihccModelNode );
-   gauge_acid->SetSequence( sequence );
+   //gauge_acid->SetSequence( sequence );
    //gauge_acid->SetDCS( worldDCS );
    gauge_acid->SetTranslationArray( trans_gauge );
    gauge_acid->SetScaleArray( scale_gauge );
@@ -159,7 +159,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
    
    // Create Contours
    contours = new cfdIHCCContour();
-   contours->SetSequence( sequence );
+   //contours->SetSequence( sequence );
    //contours->SetDCS( worldDCS );
 }
 
@@ -188,9 +188,9 @@ void cfdIHCCModel::UpdateModelVariables( double* input )
 void cfdIHCCModel::RemoveSequence( void )
 {
    this->sequence->StopSequence();
-   this->contours->GetSequence()->ClearSequence(); // Clears Geodes also
-   this->gauge_time->GetSequence()->ClearSequence(); // Clears Geodes also
-   this->gauge_acid->GetSequence()->ClearSequence(); // Clears Geodes also
+   //this->contours->GetSequence()->ClearSequence(); // Clears Geodes also
+   //this->gauge_time->GetSequence()->ClearSequence(); // Clears Geodes also
+   //this->gauge_acid->GetSequence()->ClearSequence(); // Clears Geodes also
 }
 
 void cfdIHCCModel::RunModel( void )
@@ -284,15 +284,15 @@ void cfdIHCCModel::MakeLookupTable( void )
 
 void cfdIHCCModel::Update( void )
 {
-   this->GetSequence()->StopSequence();
-   this->contours->GetSequence()->ClearSequence(); // Clears Geodes also
-   this->gauge_time->GetSequence()->ClearSequence(); // Clears Geodes also
-   this->gauge_acid->GetSequence()->ClearSequence(); // Clears Geodes also
+   //this->GetSequence()->StopSequence();
+   //this->contours->GetSequence()->ClearSequence(); // Clears Geodes also
+   //this->gauge_time->GetSequence()->ClearSequence(); // Clears Geodes also
+   //this->gauge_acid->GetSequence()->ClearSequence(); // Clears Geodes also
    this->RunModel();
 
    this->contours->SetDataVector( this->solutions, definedRange );
    this->contours->Update();
-   this->contours->GetSequence()->AddToSequence( -1 );
+   //this->contours->GetSequence()->AddToSequence( -1 );
 
    this->gauge_time->SetDataVector( this->times );
    this->gauge_time->Update();

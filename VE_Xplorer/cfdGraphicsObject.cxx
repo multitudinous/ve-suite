@@ -44,7 +44,7 @@ cfdGraphicsObject::cfdGraphicsObject( void )
    parentNode = 0;
    worldNode = 0;
    type = OTHER;
-   actor = 0;
+   animation = 0;
 }
 
 // destructor
@@ -102,11 +102,12 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
       }
 
       this->geode = new cfdGeode();
-      this->geode->TranslateTocfdGeode( this->actor );
+      this->geode->TranslateTocfdGeode( this->actors.at( 0 ) );
       this->parentNode->AddChild( this->geode );
    }
    else if ( this->type == TRANSIENT )
    {
+      //this->animation = new cfdTempAnimation();
       if ( this->worldNode->SearchChild( this->parentNode ) < 0 )
       {
          vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
@@ -114,8 +115,11 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          this->worldNode->AddChild( this->parentNode );
       }
       
-      this->geodes.push_back( new cfdGeode() );
-      this->geodes.back()->TranslateTocfdGeode( this->actor );
+      for ( unsigned int i = 0; i < this->actors.size(); i++ )
+      {
+         this->geodes.push_back( new cfdGeode() );
+         this->geodes.back()->TranslateTocfdGeode( this->actors.at( i ) );
+      }
    }
 }
 
@@ -123,12 +127,6 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
 void cfdGraphicsObject::SetTypeOfViz( VizType x )
 {
    this->type = x;
-}
-
-// set actor for classic and trans viz objects
-void cfdGraphicsObject::SetActor( vtkActor* input )
-{
-   this->actor = input;
 }
 
 // set actor for classic and trans viz objects

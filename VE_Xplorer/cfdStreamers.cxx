@@ -144,10 +144,10 @@ void cfdStreamers::Update( void )
    //   this->stream->Print( cout );
    
    // Good Test code to see if you are actually getting streamlines
-   //vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
-   //writer->SetInput( ( vtkPolyData * ) stream->GetOutput() );
-   //writer->SetFileName( "teststreamers.vtk" );
-   //writer->Write();
+   /*vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
+   writer->SetInput( ( vtkPolyData * ) stream->GetOutput() );
+   writer->SetFileName( "teststreamers.vtk" );
+   writer->Write();*/
 
    //this->tubeFilter->DebugOn();
    this->tubeFilter->SetInput( this->stream->GetOutput() );
@@ -173,7 +173,7 @@ void cfdStreamers::Update( void )
 
    this->updateFlag = true;
    
-   vprDEBUG(vprDBG_ALL,0) << "|   cfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
 }
 
 vtkPolyData * cfdStreamers::GetStreamersOutput( void )
@@ -194,13 +194,13 @@ void cfdStreamers::SetPropagationTime( int value )
 
 void cfdStreamers::SetIntegrationStepLength( int value )
 {
-   this->integrationStepLength = (float)value * ( 0.050f ); // /50.0f;
+   this->integrationStepLength = (float)value * ( 0.050f )/50.0f;
 }
 
 void cfdStreamers::SetStepLength( int value )
 {
    this->stepLength = (float)value * ((this->GetActiveDataSet()
-                                           ->GetMeanCellLength()/30.0f) ); // /50.0f    
+                                           ->GetMeanCellLength()/30.0f) /50.0f); //     
 }
 
 bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
