@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: filename,v $
- * Date modified: $Date: date $
- * Version:       $Rev: 999999 $
+ * File:          $RCSfile: cfdAppWrapper.cxx,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -41,11 +41,10 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 {
    this->argc = argc;
    this->argv = argv;
-	cfdThread* _thread = new cfdThread();
+   cfdThread* _thread = new cfdThread();
    _vjObsWrapper = input;
    _thread->corba_run=new vpr::ThreadMemberFunctor<cfdAppWrapper>(this, &cfdAppWrapper::init );
-	_thread->new_thread=new vpr::Thread(_thread->corba_run);
-
+   _thread->new_thread=new vpr::Thread(_thread->corba_run);
 }
 
 cfdAppWrapper::~cfdAppWrapper( void )
