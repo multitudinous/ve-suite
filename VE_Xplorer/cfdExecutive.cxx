@@ -70,7 +70,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
    this->_doneWithCalculations = true;
    this->runGetEverythingThread = true;
    this->updateNetworkString = false;
-   this->thread = 0;
+   //this->thread = 0;
 
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
@@ -128,9 +128,8 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
       //Call the Executive CORBA call to register it to the Executive
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
       std::cout << " Connected to the Executive " << std::endl;   
-	   this->thread = new cfdThread();
-      //thread->executive_run = new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything );
-      thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
+	   //this->thread = new cfdThread();
+      //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
    } 
    catch (CORBA::Exception &) 
    {      
@@ -146,8 +145,8 @@ cfdExecutive::~cfdExecutive( void )
 {
    this->runGetEverythingThread = false;
    vpr::System::msleep( 500 );  // half-second delay
-   if ( thread )
-      delete thread;
+   /*if ( thread )
+      delete thread;*/
    delete av_modules;
 }
 
@@ -366,9 +365,9 @@ void cfdExecutive::GetPort (std::string name)
 
 ///////////////////////////////////////////////////////////////////
 
-void cfdExecutive::GetEverything( void * )
+void cfdExecutive::GetEverything( void )
 {
-   while ( runGetEverythingThread )
+   //while ( runGetEverythingThread )
    {
       //vpr::System::msleep( 500 );  // half-second delay
    if ( !CORBA::is_nil( this->_exec) && updateNetworkString )
@@ -491,22 +490,23 @@ void cfdExecutive::UpdateModules( void )
    {
       if ( ui_i->GetCalcFlag() )
       {
-         vpr::System::msleep( 50 );  // half-second delay
+         /*vpr::System::msleep( 50 );  // half-second delay
          while ( updateNetworkString )
          {
             vpr::System::msleep( 50 );  // half-second delay
-         }
+         }*/
 
          this->updateNetworkString = true;
+         GetEverything();
 
-         while ( updateNetworkString )
+         /*while ( updateNetworkString )
          {
             // This holds preframe until all the geom manipulation is complete 
             // by the get everythign Thread.
             // We actually need to move that code here so 
             // so that we don't have this while loop
             vpr::System::msleep( 50 );  // half-second delay
-         }
+         }*/
       }
    }
 }

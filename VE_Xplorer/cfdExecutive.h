@@ -91,7 +91,7 @@ class cfdExecutive : public cfdGlobalBase
       void GetNetwork( void );
       void GetOutput( std::string name);
       void GetPort( std::string name);
-      void GetEverything( void * );
+      void GetEverything( void );
       void HowToUse( std::string name);
 
       // Get intial module information from the executive
@@ -133,7 +133,7 @@ class cfdExecutive : public cfdGlobalBase
       bool updateNetworkString;
       bool runGetEverythingThread;
       // Classes and variables for multithreading.
-      cfdThread* thread;
+      //cfdThread* thread;
 };
 
 #endif
