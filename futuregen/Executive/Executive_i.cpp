@@ -75,21 +75,21 @@ void Body_Executive_i::execute (std::string mn)
 {
   string msg;
   if(_exec_thread.find(mn)==_exec_thread.end()) 
-  {
-    cerr << "Cannot find execution thread for " << mn << endl;
-  } 
+    {
+      cerr << "Cannot find execution thread for " << mn << endl;
+    } 
   else {
     if(!_exec_thread[mn]->needexecute()) 
-	{
-		msg = "Failed to execute " + mn +"\n";
-		cerr << msg;
-		ClientMessage(msg.c_str());
-	}
+      {
+	msg = "Failed to execute " + mn +"\n";
+	cerr << msg;
+	ClientMessage(msg.c_str());
+      }
     else 
-	{
-		msg = "Executing " + mn +"\n";
-		ClientMessage(msg.c_str());
-	}
+      {
+	msg = "Executing " + mn +"\n";
+	ClientMessage(msg.c_str());
+      }
   }
 }
 
@@ -592,34 +592,41 @@ void Body_Executive_i::StartCalc (
       str2 = p2.Save(rv2);
     
       if(rv2) 
-      {
-         //cout << _network->module(rt)->_name << "\n" << str2 << endl;
-      
-         try 
-         {
-	         cerr << "Initial Execute\n";
-	         if ( !_mod_units.empty() )
-            {
-               _mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
-	            _mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
-	            execute(_network->module(rt)->_name);
-            }
-            else
-            {
-               cerr << " No Module Units connected to the VE-CE, skipping execution " << endl;
-            }
-         }
-         catch(CORBA::Exception &) 
-         {
-	         cerr << "Initial Execute, cannot contact Module " << module_id << endl;
-         }
-      }
+	{
+	  //cout << _network->module(rt)->_name << "\n" << str2 << endl;
+	  
+	  try 
+	    {
+	      cerr << "Initial Execute\n";
+	      if ( !_mod_units.empty() )
+		{
+		  if(_mod_units.find(_network->module(rt)->_name)!=_mod_units.end())
+		    {
+		      _mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
+		      _mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
+		      execute(_network->module(rt)->_name);
+		    }
+		  else
+		    {
+		      cerr << "Initial Execute, cannot contact Module " << _network->module(rt)->_name << endl;
+		    }
+		}
+	      else
+		{
+		  cerr << " No Module Units connected to the VE-CE, skipping execution " << endl;
+		}
+	    }
+	  catch(CORBA::Exception &) 
+	    {
+	      cerr << "Initial Execute, cannot contact Module " << module_id << endl;
+	    }
+	}
       else 
-      {
-         cerr << "Initial Execute, error packing " << module_id << "'s Inputs\n";
-      }
+	{
+	  cerr << "Initial Execute, error packing " << module_id << "'s Inputs\n";
+	}
    }
-  
+   
    _mutex.release();
 }
   
