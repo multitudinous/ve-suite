@@ -1,15 +1,8 @@
-2
+1
 9                // Object type 9: Geometry file name
    0                  // transparency toggle
    0                  // color toggle
    .003281 .003281 .003281     // Scale values for geometry file
    -13 2 -2      // Translation values for geometry file
    0 0 0             // Rotation values for geometry file
-   /home/vr/Applications/TSVEG/Test_Pit/Deere_Day_03_Demos/all_parts/fan_shroud.pfb      // Geometry file name
-9                // Object type 9: Geometry file name
-   0                  // transparency toggle
-   0                  // color toggle
-   .003281 .003281 .003281     // Scale values for geometry file
-   -13 2 -2      // Translation values for geometry file
-   0 0 0             // Rotation values for geometry file
-   /home/vr/Applications/TSVEG/Test_Pit/Deere_Day_03_Demos/all_parts/heat_exchangers.pfb      // Geometry file name
+   /home/users/sgent/deerework/Deere_Day_models/withBaffle1_good/RotaryScreenLouverDoor.pfb      // Geometry file name

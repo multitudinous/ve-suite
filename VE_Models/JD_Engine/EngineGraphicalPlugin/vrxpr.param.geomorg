@@ -1,11 +1,18 @@
-6
+7
 9                       // Object type 9: Geometry file name
    0                  // transparency toggle
    0                  // color toggle
    .003281 .003281 .003281     // Scale values for geometry file
    -13 2 -2      // Translation values for geometry file
    0 0 0             // Rotation values for geometry file
-   /home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/EngineGraphicalPlugin/x85_x88_my03_engine_platform.pfb    // Geometry file name
+   /home/users/sgent/deerework/Deere_Day_models/with_baffle1_good/x85_x88_my03_engine_platform_green.pfb    // Geometry file name
+9                       // Object type 9: Geometry file name
+   0                  // transparency toggle
+   0                  // color toggle
+   .003281 .003281 .003281     // Scale values for geometry file
+   -13 2 -2      // Translation values for geometry file  //check this particular one
+   0 0 0             // Rotation values for geometry file
+   /home/users/sgent/deerework/Deere_Day_models/sample_baffle/baffle.pfb    // Geometry file name
 9                // Object type 9: Geometry file name
    0                  // transparency toggle
    0                  // color toggle
