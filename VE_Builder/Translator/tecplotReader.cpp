@@ -193,7 +193,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       //set points
       pts = vtkPoints::New();
       int* cPt = new int [ 8 ];  //HEX elements assumed, coz data is taken from PIV runs
-      //double* dataArray = new double [ numOfParameters -1 ];
+      double* dataArray = new double [ numOfParameters -1 ];   //last parameter is the vector
       for ( int j=0;j<nX*nY;j++ )//loop over the number of vertices
       {
          //std::cout<<j<<"\t";
@@ -202,12 +202,31 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
             fileI >>array[ i ];  //read from file into array
             //std::cout<<array[ i ]<<"\t";
          }
+         for ( int i=2;i<colsOfData;i++ )
+         {
+            dataArray[ i-2 ] = array[ i ];
+            //std::cout<<dataArray[ i-2 ]<<"\t";
+         }
+         if ( velocityCount<3 ) dataArray[ 2 ] = sqrt( array[ 2 ]*array[ 2] + array[ 3 ]*array[ 3 ] ); //assign velocity magnitud
          //std::cout<<std::endl;
          //data.push_back( array );   //push data into vector
          pts->InsertPoint( j, array[0], array[1], 0.0 );
          pts->InsertPoint( j+numVertices, array[0], array[1], -0.1 );
          //std::cout<<data[j][3]<<std::endl;
-         for ( int i=0;i<numOfParameters ;i++ )
+         //set scalar parameters
+         for ( int i=0;i<numOfParameters-1;i++ )
+         {
+            parameterData[ i ]->SetComponent( j, 0, dataArray[ i ] );
+            parameterData[ i ]->SetComponent( j+numVertices, 0, dataArray[ i ] );
+         }
+         //set vector components
+         parameterData[ numOfParameters-1 ]->SetComponent( j, 0, dataArray[ 0 ] );
+         parameterData[ numOfParameters-1 ]->SetComponent( j+numVertices, 0, dataArray[ 0 ] );
+         parameterData[ numOfParameters-1 ]->SetComponent( j, 1, dataArray[ 1 ] );
+         parameterData[ numOfParameters-1 ]->SetComponent( j+numVertices, 1, dataArray[ 1 ] );
+         parameterData[ numOfParameters-1 ]->SetComponent( j, 2, 0.0 );
+         parameterData[ numOfParameters-1 ]->SetComponent( j+numVertices, 2, 0.0 );
+         /*for ( int i=0;i<numOfParameters ;i++ )
          {
             if ( i != (numOfParameters - 1) )
             {
@@ -223,7 +242,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
                parameterData[ i ]->SetComponent( j, 2, 0 );
                parameterData[ i ]->SetComponent( j+numVertices, 2, 0 );
            }
-         }
+         }*/
          //parameterData[ 0 ]->
       }
          /*parameterData[ 0 ]->SetComponent( j, 0, u[j] );
