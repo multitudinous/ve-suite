@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdDCS.h,v $
+ * File:          $RCSfile: cfdEnvironmentHandler.cxx,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
@@ -42,10 +42,11 @@
 #include "cfdCommandArray.h"
 #include "cfdReadParam.h"
 
-#include <vtkPolyData.h>
+//#include <vtkPolyData.h>
 
 #include <vrj/Util/Debug.h>
 
+#include <fstream>
 #include <cstdlib>
 
 cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
@@ -54,7 +55,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
    std::cout << "|  4. Initializing.............................. Navigation systems |" << std::endl;
    this->nav = new cfdNavigate();
    _param = filename;
-   _readParam = new cfdReadParam( _param );
+   _readParam = new cfdReadParam( NULL );
 }
 
 cfdEnvironmentHandler::~cfdEnvironmentHandler( void )

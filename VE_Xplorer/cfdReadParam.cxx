@@ -78,8 +78,10 @@ cfdReadParam::cfdReadParam( char *filein_name )
 
    // IHCC Model - should be deleted at a later date
    ihccModel = false;
+
    // MUST BE LAST: do not initialize variables after this function
-   data_read (filein_name);
+   if ( filein_name != NULL )
+      data_read (filein_name);
 }
 
 cfdReadParam::~cfdReadParam()
@@ -211,7 +213,6 @@ int cfdReadParam::readID( std::ifstream &inFile )
 
 void cfdReadParam::data_read ( char * filein_name )
 {
-/*
    if ( ! fileIO::isFileReadable( filein_name ) ) 
    {
       std::cerr << "\nError: Could not open the input file " 
@@ -222,7 +223,7 @@ void cfdReadParam::data_read ( char * filein_name )
          std::cin >> filein_name;        
       }
    }
-*/
+
    std::cout << "in cfdReadParam::data_read with " << filein_name << std::endl;
    std::ifstream inFile( filein_name, std::ios::in ); 
 
