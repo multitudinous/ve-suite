@@ -94,25 +94,47 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          std::cout<<"Number of characters :"<<numChars<<std::endl;
          std::cout<<header<<std::endl; //print header to screen
       }
-      //search for "VARIABLES" in the header
-      I_Lower = header.find( "VARIABLES" );
+      /////////////////////////////////////////////////////////////////////////////////////////////////////////
+      //HEADER PARSING SECTION
+      ////////////////////////////////////////////////////////////////////////////////////////////////////////
+      I_Lower = header.find( "VARIABLES" );//search for "VARIABLES" in the header
       if ( debug ) std::cout<<"VARIABLES found at :"<<I_Lower<<std::endl;
-      //search for "ZONE" in the header
-      I_Upper = header.find( "ZONE" );
+      I_Upper = header.find( "ZONE" );//search for "ZONE" in the header
       if ( debug ) std::cout<<"ZONE found at :"<<I_Upper<<std::endl;
       //assign that portion of the header to tempString
-      for ( int i=I_Lower;i<I_Upper;i++ ) tempString+=header[ i ];
+      for ( unsigned int i=I_Lower;i<I_Upper;i++ ) tempString+=header[ i ];
       //std::cout<<tempString<<std::endl;
-      //parse through tempString to find all the "," their count+1 = number of columns of data
       I = tempString.begin();
+      I_Lower = 0;
       for ( I=tempString.begin(); I!=tempString.end(); ++I )
       {
-         if ( (*I) == '"' ) colsOfData++;//search for the quotation marks "
+         I_Lower++;
+         if ( (*I) == '"' )
+         {
+            colsOfData++;//search the quotation marks "
+            locationQuotMarks.push_back( I_Lower );
+         }
       }
       //the number of quotation marks is twice the number of variables in the data
       colsOfData = colsOfData/2;
+      std::string varNamString;
       if ( debug ) std::cout<<" Columns of Data :"<<colsOfData<<std::endl;
-      tempString.empty();  //clear the contents of tempString
+      //SEARCH FOR THE VARIABLE NAMES NOW
+      for ( vectorIntIterator=locationQuotMarks.begin();vectorIntIterator!=locationQuotMarks.end(); vectorIntIterator+=2 )
+      {
+         //std::cout<<(*vectorIntIterator)<<std::endl;
+         I_Lower = ( *vectorIntIterator ); //std::cout<<"I lower :"<<I_Lower<<std::endl;
+         I_Upper = *(vectorIntIterator+1); //std::cout<<"I Upper :"<<I_Upper<<std::endl;
+         //between I_Lower and I_Upper copy from tempString into varNamString
+         varNamString.erase();   //empty string before next iteration so that it does not hold all the values
+         for ( unsigned int c=I_Lower;c<I_Upper-1; c++ ) varNamString+=tempString[c];
+         variablNames.push_back( varNamString );
+      }
+      for ( vectorStringIterator=variablNames.begin();vectorStringIterator!=variablNames.end(); ++vectorStringIterator )
+      {
+         std::cout<<(*vectorStringIterator)<<std::endl;
+      }
+      tempString.erase();  //clear the contents of tempString
       char stringData[ 10 ];  //create a new character array
       I_Lower = header.find( "I=" );   //look for I= in the header
       I_Upper = header.find( "J=" );   //look for J= in the header
@@ -144,8 +166,10 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
             std::cout<<"nY :"<<nY<<std::endl;
             std::cout<<"nX :"<<nX<<std::endl;
          }
-      }      
-
+      } 
+      //////////////////////////////////////////////////////////////////////////////////////////////////////
+      //END HEADER PARSING SECTION
+      /////////////////////////////////////////////////////////////////////////////////////////////////////
       fileI.seekg( 0, std::ios::beg );      //reset file pointer
       //read the first 3 lines from the files
       char line[ 256 ];
@@ -184,12 +208,12 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
             v[j] = array[ 3 ];
             measurement[j] = array[ 4 ];
             absVel[j] = array[ 5];*/
-            std::cout<<array[ i ]<<"\t";
+            //std::cout<<array[ i ]<<"\t";
          }
-         std::cout<<std::endl;
+         //std::cout<<std::endl;
          data.push_back( array );
          pts->InsertPoint( j, array[0], array[1], 0.0 );
-         pts->InsertPoint( j+numVertices, array[0], array[1], -100.0 );
+         pts->InsertPoint( j+numVertices, array[0], array[1], -0.1 );
          //std::cout<<data[j][3]<<std::endl;
          w[j] = 0.0;
          for ( int i=2;i<numOfParameters;i++ )
@@ -227,7 +251,9 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          if ( debug ) std::cout<<"C :"<<c<<"\t"<<"I :"<<alongX<<std::endl;
          c = alongX + 1;
       }
+      writeVtkThing( uGrid, "grid.vtk", 0 );
       // Set selected scalar and vector quantities to be written to pointdata array
+      std::cout<<"Number of Parameters :"<<numOfParameters<<std::endl;
       letUsersAddParamsToField( numOfParameters, parameterData, uGrid->GetPointData() );
       vtkUnstructuredGrid *finalUGrid = vtkUnstructuredGrid::New();
       finalUGrid->DeepCopy( uGrid );
