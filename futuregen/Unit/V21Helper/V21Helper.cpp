@@ -120,6 +120,7 @@ int V21Helper::GasToInt (Gas *gs, Interface &it)
   it.clear();
 
   // Gas
+  gs->thermo_database = thermo_database;
 
   it.setDouble("COALCAL", gs->CoalCal);
   it.setDouble("ASHCAL",  gs->AshCal);
