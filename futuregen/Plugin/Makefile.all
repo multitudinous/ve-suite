@@ -33,12 +33,12 @@ OBJ13 = Recuperator/Recuperator.o Recuperator/Recuperator_UI.o
 OBJ14 = EvaporationCooler/EvaporationCooler.o EvaporationCooler/EvaporationCooler_UI.o 
 OBJ15 = Cyclone/Cyclone.o Cyclone/Cyclone_UI.o 
 OBJ16 = Compressor/Compressor.o Compressor/Compressor_UI.o 
+OBJ18 = Prekin/Prekin.o Prekin/Prekin_UI.o 
 OBJ17 = MembraneReactor/MembraneReactor.o MembraneReactor/MembraneReactor_UI.o 
 OBJ19 = ChlorineBed/ChlorineBed.o ChlorineBed/ChlorineBed_UI.o 
 OBJ20 = GasFeedback/GasFeedback.o GasFeedback/GasFeedback_UI.o GasFeedback/thermo.o GasFeedback/matrix.o
 OBJ21 = Gasifier/Gasifier.o Gasifier/Gasifier_UI.o 
-OBJ22 = GasSource/GasSource.o GasSource/GasSource_UI.o \
-	GasSource/thermo.o GasSource/matrix.o
+OBJ22 = GasSource/GasSource.o GasSource/GasSource_UI.o GasSource/thermo.o GasSource/matrix.o
 OBJ23 = GasSplitter/GasSplitter.o GasSplitter/GasSplitter_UI.o 
 OBJ24 = GasMixer/GasMixer.o 
 OBJ25 = GasSeparator/GasSeparator.o GasSeparator/GasSeparator_UI.o GasSeparator/thermo.o GasSeparator/matrix.o
@@ -49,13 +49,14 @@ OBJ29 = WaterSource/WaterSource.o WaterSource/WaterSource_UI.o
 OBJ30 = AGR/AGR.o AGR/AGR_UI.o 
 OBJ31 = CarbonBed/CarbonBed.o CarbonBed/CarbonBed_UI.o 
 OBJ32 = PipeCFD/PipeCFD.o
+OBJ33 = HeatExchangerCFD/HeatExchangerCFD.o
 
 .SUFFIXES : .o .cpp
 
 .cpp.o :
 	$(CXX) -g -c ${INCLUDES} ${CMP} ${WX_FLAGS} -D WXUSING_PLUGIN_DLL -o $@ $<
 
-all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s19 s20 s21 s22 s23 s24 s25 s26 s27 s28 s29 s30 s31 s32
+all: s1 s2 s3 s4 s5 s6 s7 s8 s9 s10 s11 s12 s13 s14 s15 s16 s17 s18 s19 s20 s21 s22 s23 s24 s25 s26 s27 s28 s29 s30 s31 s32 s33
 
 s1:	$(OBJ1)
 	$(CXX) -g -shared -o libGasifier0D.so $(OBJ1)
@@ -108,6 +109,9 @@ s16:	$(OBJ16)
 s17:	$(OBJ17)
 	$(CXX) -g -shared -o libMembraneReactor.so $(OBJ17)
 
+s18:	$(OBJ18)
+	$(CXX) -g -shared -o libPrekin.so $(OBJ18)
+
 s19:	$(OBJ19)
 	$(CXX) -g -shared -o libChlorineBed.so $(OBJ19)
 
@@ -150,10 +154,14 @@ s31:	$(OBJ31)
 s32:	$(OBJ32)
 	$(CXX) -g -shared -o libPipeCFD.so $(OBJ32)
 
+s33:	$(OBJ33)
+	$(CXX) -g -shared -o libHeatExchangerCFD.so $(OBJ33)
+
 clean:
 	rm -rf *.so *.o $(PLUGIN) $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) \
 	$(OBJ5) $(OBJ6) $(OBJ7) $(OBJ8) $(OBJ9) $(OBJ10) $(OBJ11) \
 	$(OBJ12) $(OBJ13) $(OBJ14) $(OBJ15) $(OBJ16) $(OBJ17) $(OBJ18) \
 	$(OBJ19) $(OBJ20) $(OBJ21) $(OBJ22) $(OBJ23) $(OBJ24) $(OBJ25) \
-	$(OBJ26) $(OBJ27) $(OBJ28) $(OBJ29) $(OBJ30) $(OBJ31) $(OBJ32)
+	$(OBJ26) $(OBJ27) $(OBJ28) $(OBJ29) $(OBJ30) $(OBJ31) $(OBJ32) \
+	$(OBJ33)
 
