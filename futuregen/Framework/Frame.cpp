@@ -25,7 +25,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(v21ID_PAUSE_CALC, AppFrame::PauseCalc)
   EVT_MENU(v21ID_RESUME_CALC, AppFrame::ResumeCalc)
   EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
-//  EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
+  EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
 //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
 //  EVT_MENU(v21ID_SOUR, AppFrame::LoadSour)
@@ -220,7 +220,7 @@ void AppFrame::CreateMenu()
   run_menu->Append(v21ID_STOP_CALC, _("Stop Simulation"));
   run_menu->Append(v21ID_PAUSE_CALC, _("Pause Simulation"));
   run_menu->Append(v21ID_RESUME_CALC, _("Resume Simulation"));
-//  run_menu->Append(v21ID_VIEW_RESULT, _("View Results"));
+  run_menu->Append(v21ID_VIEW_RESULT, _("View Results"));
 //  run_menu->Append(v21ID_GLOBAL_PARAM, _("Global Parameters"));
   //  run_menu->Append(v21ID_VIEW_FINANCIAL, _("View Financial Params"));
 
@@ -228,7 +228,7 @@ void AppFrame::CreateMenu()
   run_menu->Enable(v21ID_STOP_CALC, false);
   run_menu->Enable(v21ID_PAUSE_CALC, false);
   run_menu->Enable(v21ID_RESUME_CALC, false);
- // run_menu->Enable(v21ID_VIEW_RESULT, false);
+  run_menu->Enable(v21ID_VIEW_RESULT, false);
   
   
   edit_menu->Append(v21ID_UNDO, _("&Undo\tCtrl+U"));
@@ -451,6 +451,71 @@ void AppFrame::ResumeCalc(wxCommandEvent &event)
 
 void AppFrame::ViewResult(wxCommandEvent &event)
 {
+	char* result;
+	char buf[80];
+	map<int, MODULE>::iterator iter;
+	unsigned int i;
+	std::vector<wxString> titles;
+	TextResultDialog * result_dlg;
+	std::vector<wxString> v_desc, v_value;
+	std::vector<string> descs;
+
+    if (CORBA::is_nil(network->exec))
+    {
+      cerr<<"Not Connected yet!\n";
+      return;
+    }
+	
+	titles.push_back("Description");
+	titles.push_back("Value");
+
+	result_dlg = new TextResultDialog(NULL);
+	result_dlg->syngas->Clear();
+	result_dlg->syngas->AddRow(titles);
+	
+	try{ 
+		for (iter=network->modules.begin(); iter!=network->modules.end(); iter++)
+		{
+			result = network->exec->GetModuleResult(iter->first);
+				
+			if (string(result)!="")
+			{
+				Package p;
+				p.SetSysId("linkresult.xml");
+				p.Load(result, strlen(result));
+
+				
+				descs = p.intfs[0].getStrings();
+				v_desc.clear();
+				v_value.clear();
+				v_desc.push_back(iter->second.pl_mod->GetName());
+				sprintf(buf,"   %d", iter->first);
+				v_value.push_back(buf);
+				for (i=0; i<descs.size(); i++)
+				{
+					v_desc.push_back(descs[i].c_str());
+					v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
+				}
+
+				result_dlg->syngas->AddSeperator(' ');
+				result_dlg->syngas->AddSeperator('+');
+				result_dlg->syngas->AddSeperator(' ');
+				result_dlg->Set2Cols(v_desc, v_value);
+  
+			}
+		}
+			
+		result_dlg->ShowModal();
+		delete result_dlg;
+	}
+	catch (CORBA::Exception &) {
+		cerr << "Maybe Computational Engine is down" << endl;
+		return;
+	}
+	
+	
+}
+/*
   unsigned int i;
   long mod, port;
   int pos;
@@ -527,7 +592,7 @@ void AppFrame::ViewResult(wxCommandEvent &event)
 
   dlg.ShowModal();
 }
-
+*/
 void AppFrame::GlobalParam(wxCommandEvent &event)
 {
   if (network->globalparam_dlg!=NULL)
@@ -691,7 +756,7 @@ void AppFrame::DisConExeServer(wxCommandEvent &event)
 			con_menu->Enable(v21ID_LOAD, false);
 			con_menu->Enable(v21ID_CONNECT, true);
 			run_menu->Enable(v21ID_START_CALC, false);
-//			run_menu->Enable(v21ID_VIEW_RESULT, false);
+			run_menu->Enable(v21ID_VIEW_RESULT, false);
 			con_menu->Enable(v21ID_DISCONNECT, false);
 			Log("Disconnect suceeded.\n");
 		}catch (CORBA::Exception &) {

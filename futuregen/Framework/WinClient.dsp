@@ -73,7 +73,7 @@ LINK32=link.exe
 # ADD BASE F90 /check:bounds /compile_only /dbglibs /debug:full /nologo /traceback /warn:argument_checking /warn:nofileopt /winapp
 # ADD F90 /browser /check:bounds /compile_only /dbglibs /debug:full /libs:dll /nologo /reentrancy:threaded /threads /traceback /warn:argument_checking /warn:nofileopt /winapp
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /w /W0 /Gm /GX /ZI /Od /I "../Plugin" /I "./" /I "../VE_UI/" /I "../IDL/" /I "$(WX_ROOT)\include" /I "$(TAO_ROOT)" /I "$(ACE_ROOT)" /I "$(TAO_ROOT)\orbsvcs" /I "$(XERCESCROOT)\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /FR /YX /FD /GZ /c
+# ADD CPP /nologo /MD /w /W0 /Gm /GX /ZI /Od /I "../Plugin" /I "./" /I "../VE_UI/" /I "../../VE_Xplorer" /I "../../VE_Conductor/idl" /I "../IDL/" /I "$(WX_ROOT)\include" /I "$(TAO_ROOT)" /I "$(ACE_ROOT)" /I "$(TAO_ROOT)\orbsvcs" /I "$(XERCESCROOT)\include" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /FR /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -173,7 +173,7 @@ SOURCE=..\IDL\moduleS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\moduleS_T.cpp
+SOURCE=..\IDL\moduleS_T.cpp
 # End Source File
 # Begin Source File
 
@@ -288,20 +288,15 @@ SOURCE=..\Plugin\TextResultDialog.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\VE_UI\UI_DataSetTab.cpp
-
-!IF  "$(CFG)" == "WinClient - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "WinClient - Win32 Debug"
-
-# ADD CPP /I "..\IDL.old"
-
-!ENDIF 
-
+SOURCE=..\VE_UI\UI_DataSetPanel.cpp
 # End Source File
 # Begin Source File
 
 SOURCE=..\VE_UI\UI_DesignParTab.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\VE_UI\UI_Frame.cpp
 # End Source File
 # Begin Source File
 
@@ -335,19 +330,6 @@ SOURCE=..\VE_UI\UI_NavTab.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\VE_UI\UI_ScalarTab.cpp
-
-!IF  "$(CFG)" == "WinClient - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "WinClient - Win32 Debug"
-
-# ADD CPP /I "..\IDL.old"
-
-!ENDIF 
-
-# End Source File
-# Begin Source File
-
 SOURCE=..\VE_UI\UI_SoundsTab.cpp
 
 !IF  "$(CFG)" == "WinClient - Win32 Release"
@@ -362,15 +344,6 @@ SOURCE=..\VE_UI\UI_SoundsTab.cpp
 # Begin Source File
 
 SOURCE=..\VE_UI\UI_StreamTab.cpp
-
-!IF  "$(CFG)" == "WinClient - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "WinClient - Win32 Debug"
-
-# ADD CPP /I "..\IDL.old"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
@@ -451,16 +424,11 @@ SOURCE=..\Plugin\UIDialog.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=.\VjObsC.cpp
+SOURCE=..\..\VE_Conductor\idl\VjObsC.cpp
+# End Source File
+# Begin Source File
 
-!IF  "$(CFG)" == "WinClient - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "WinClient - Win32 Debug"
-
-# ADD CPP /I "..\IDL.old"
-
-!ENDIF 
-
+SOURCE=..\..\VE_Conductor\idl\VjObsS.cpp
 # End Source File
 # End Group
 # Begin Group "Header Files"
@@ -497,10 +465,6 @@ SOURCE=..\IDL\moduleC.h
 # Begin Source File
 
 SOURCE=..\IDL\moduleS.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\IDL\moduleS_T.h
 # End Source File
 # Begin Source File
 
@@ -556,11 +520,15 @@ SOURCE=..\Plugin\TextResultDialog.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\VE_UI\UI_DataSetTab.h
+SOURCE=..\VE_UI\UI_DataSetPanel.h
 # End Source File
 # Begin Source File
 
 SOURCE=..\VE_UI\UI_DesignParTab.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\VE_UI\UI_Frame.h
 # End Source File
 # Begin Source File
 
@@ -573,10 +541,6 @@ SOURCE=..\Framework\UI_i.h
 # Begin Source File
 
 SOURCE=..\VE_UI\UI_NavTab.h
-# End Source File
-# Begin Source File
-
-SOURCE=..\VE_UI\UI_ScalarTab.h
 # End Source File
 # Begin Source File
 
@@ -620,7 +584,15 @@ SOURCE=..\Plugin\UIDialog.h
 # End Source File
 # Begin Source File
 
-SOURCE=.\VjObsC.h
+SOURCE=..\..\VE_Conductor\idl\VjObsC.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\VE_Conductor\idl\VjObsS.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\..\VE_Conductor\idl\VjObsS_T.h
 # End Source File
 # End Group
 # Begin Group "Resource Files"
