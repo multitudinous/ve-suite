@@ -41,7 +41,11 @@ CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 WX_CXX = $(shell wx-config --cxxflags)
 WX_LIB = $(shell wx-config --libs)
 CFDUNAME = $(shell uname)
-OSG =
+ifeq ($(SCENE_GRAPH), OSG)
+   OSG = _osg
+else
+   OSG =
+endif
 
 # If OMNI_HOME was defined in the script setup.tsh, 
 # then define CORBA_DEFINES, and CORBA_INCLUDES.
@@ -159,7 +163,9 @@ SRCS=\
    cfdPolyData.cxx \
    cfdTeacher.cxx \
    cfdTextureBasedModel.cxx \
+   cfdTextureBasedVizHandler.cxx \
    cfdTextureManager.cxx \
+   cfdThread.cxx \
    cfdTransientInfo.cxx \
    cfdTransientSet.cxx \
    cfdTransientFlowManager.cxx \
@@ -167,10 +173,13 @@ SRCS=\
    cfdTransientParticleActor.cxx \
    cfdTransientScalarActor.cxx \
    cfdTransientVectorActor.cxx \
+   cfdUpdateTextureCallback.cpp \
    cfdVectorBase.cxx \
    cfdVector.cxx \
    cfdVectors.cxx \
    cfdVolumeSliceSwitchCallback.cpp \
+   cfdVolumeVisualization.cpp \
+   cfdVEXplorer.cxx \
    cfdWriteTraverser.cxx \
    fileIO.cxx \
    readWriteVtkThings.cxx \
@@ -197,9 +206,7 @@ SRCS=\
    cfdSoundHandler.cxx \
    cfdPfSceneManagement.cxx \
    cfdAppWrapper.cxx \
-   cfdVjObsWrapper.cxx \
-   cfdThread.cxx \
-   cfdVEXplorer.cxx
+   cfdVjObsWrapper.cxx 
 
 ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \
@@ -335,18 +342,11 @@ DEBUG_APP?= TRUE
 
 #Scene Graph Specific flags
 #Can be: _PERFORMER, _OPENSG, _OSG
-EXTRA_CXXFLAGS+= -D_PERFORMER
-SRCS+= vtkActorToPF.cxx
-include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
-#EXTRA_CXXFLAGS+= -D_OSG -DUSE_DEPRECATED_API
-#SRCS+= vtkActorToOSG.cpp
-#include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
-#EXTRA_INCLUDES+= -I$(OSG_HOME)/include
-#EXTRA_LIBS+= -L$(OSG_HOME)/lib32 -losg -losgDB -losgGA -losgUtil -lOpenThreads -losgFX
-#SRCS+=\
-   cfdTextureBasedVizHandler.cxx \
-   cfdVolumeVisualization.cpp \
-   cfdUpdateTextureCallback.cpp
+ifeq ($(SCENE_GRAPH), OSG)
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.osg.mk
+else
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.pf.mk
+endif
 
 EXTRA_CXXFLAGS+= $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
 
