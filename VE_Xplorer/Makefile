@@ -172,6 +172,7 @@ SRCS=\
    cfdPolyData.cxx \
    cfdTeacher.cxx \
    cfdTempAnimation.cxx \
+   cfdTextOutput.cxx \
    cfdTextureBasedModel.cxx \
    cfdTextureBasedVizHandler.cxx \
    cfdTextureManager.cxx \
@@ -187,7 +188,6 @@ SRCS=\
    cfdWriteTraverser.cxx \
    fileIO.cxx \
    readWriteVtkThings.cxx \
-   textPrompt.cxx \
    VjObs_i.cxx 
 
 ifeq ($(TAO_BUILD), TRUE)
