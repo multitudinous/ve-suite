@@ -31,34 +31,42 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdVEBaseClass.h"
+IMPLEMENT_DYNAMIC_CLASS( cfdVEBaseClass, wxObject )
 
 // Constructor
-cfdVEBaseClass( void )
+cfdVEBaseClass::cfdVEBaseClass( void )
 {
    this->dataRepresentation = new cfdObjects();
 }
 
 // Destructor
-~cfdVEBaseClass( void )
+cfdVEBaseClass::~cfdVEBaseClass( void )
 {
    delete this->dataRepresentation;
 }
 
 // Methods to do scene graph manipulations
 // New methods may have to be added later
-void AddSelfToSG( void )
+void cfdVEBaseClass::AddSelfToSG( void )
 {
 
 }
 
-virtual void RemoveSelfFromSG( void );
+virtual void cfdVEBaseClass::RemoveSelfFromSG( void )
+{
+}
 
 // Change state information for geometric representation
-virtual void MakeTransparent( void );
-virtual void SetColor( float* );
+virtual void cfdVEBaseClass::MakeTransparent( void )
+{
+}
+
+virtual void cfdVEBaseClass::SetColor( float* )
+{
+}
       
 // transform object based 
-virtual void SetTransforms( float* scale, float* rot, float* trans)
+virtual void cfdVEBaseClass::SetTransforms( float* scale, float* rot, float* trans)
 {
    this->SetTranslationArray( trans );
    this->SetScaleArray( scale );
@@ -69,54 +77,185 @@ virtual void SetTransforms( float* scale, float* rot, float* trans)
 // stuff from vtk. This will be used in parallel
 // with implementation of a unit connected to the 
 // computational engine.
-virtual void GetDataFromUnit( void )
+virtual void cfdVEBaseClass::GetDataFromUnit( void )
 {
    // Need to get Gengxun's work
 }
 // Basically uses vtkActorToPF to create a geode and 
 // add it to the scene graph. Probably use cfdObject.
-virtual void MakeGeodeByUserRequest( int )
+virtual void cfdVEBaseClass::MakeGeodeByUserRequest( int )
 {
    this->dataRepresentation->UpdateGeode();
 }
 
 //This returns the name of the module
-virtual wxString GetName( void )
+virtual wxString cfdVEBaseClass::GetName( void )
 {
    return this->_objectName;
 }
 
 //This returns the description of the module, This should be a short description
-virtual wxString GetDesc( void )
+virtual wxString cfdVEBaseClass::GetDesc( void )
 {
    return this->_objectDescription;
 }
 
 
 //This is the load function of the module, unpack the input string and fill up the UI according to this
-virtual void UnPack(Interface* intf)
+virtual void cfdVEBaseClass::UnPack(Interface* intf)
 {
+   vector<string> vars;
+  
+  map<string, long *>::iterator iteri;
+  map<string, double *>::iterator iterd;
+  map<string, string *>::iterator iters;
+  map<string, vector<long> *>::iterator itervi;
+  map<string, vector<double> *>::iterator itervd;
+  map<string, vector<string> *>::iterator itervs;
+  
+  int i;
+  long temp;
+
+  mod_pack = *intf;
+  vars = mod_pack.getInts();
+  for (i=0; i<vars.size(); i++)
+    {
+      iteri =_int.find(vars[i]);
+      if (iteri!=_int.end())
+	mod_pack.getVal(vars[i], *(iteri->second));
+      else if (vars[i]=="XPOS")
+	{
+	  mod_pack.getVal("XPOS", temp);
+	  //	  printf("xpos %ld\n", temp);
+	  pos.x = temp;
+	}
+      else if (vars[i]=="YPOS")
+	{
+	  //	  printf("ypos %ld\n", temp);
+	  mod_pack.getVal("YPOS", temp);
+	  pos.y = temp;
+	}
+    }
+
+  vars = mod_pack.getDoubles();
+  for (i=0; i<vars.size(); i++)
+    {
+      iterd =_double.find(vars[i]);
+      if (iterd!=_double.end())
+	mod_pack.getVal(vars[i], *(iterd->second));
+    }  
+  
+  vars = mod_pack.getStrings();
+  for (i=0; i<vars.size(); i++)
+    {
+      iters =_string.find(vars[i]);
+      if (iters!=_string.end())
+	mod_pack.getVal(vars[i], *(iters->second));
+    }
+
+  vars = mod_pack.getInts1D();
+  for (i=0; i<vars.size(); i++)
+    {
+      itervi =_int1D.find(vars[i]);
+      if (itervi!=_int1D.end())
+	mod_pack.getVal(vars[i], *(itervi->second));
+    }
+
+  vars = mod_pack.getDoubles1D();
+  for (i=0; i<vars.size(); i++)
+    {
+      itervd =_double1D.find(vars[i]);
+      if (itervd!=_double1D.end())
+	mod_pack.getVal(vars[i], *(itervd->second));
+    }
+
+  vars = mod_pack.getStrings1D();
+  for (i=0; i<vars.size(); i++)
+    {
+      itervs =_string1D.find(vars[i]);
+      if (itervs!=_string1D.end())
+	mod_pack.getVal(vars[i], *(itervs->second));
+    }
 }
 
-virtual Interface* Pack()
-{
+virtual Interface* cfdVEBaseClass::Pack()
+{  string result;
+  
+  map<string, long *>::iterator iteri;
+  map<string, double *>::iterator iterd;
+  map<string, string *>::iterator iters;
+  map<string, vector<long> *>::iterator itervi;
+  map<string, vector<double> *>::iterator itervd;
+  map<string, vector<string> *>::iterator itervs;
+
+
+  //printf("mod id : %d\n", mod_pack._id);
+  mod_pack.setVal("XPOS",long (pos.x));
+  mod_pack.setVal("YPOS",long (pos.y));
+  
+  for(iteri=_int.begin(); iteri!=_int.end(); iteri++)
+    mod_pack.setVal(iteri->first, *(iteri->second));
+
+  for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
+    mod_pack.setVal(iterd->first, *(iterd->second));
+
+  for(iters=_string.begin(); iters!=_string.end(); iters++)
+    mod_pack.setVal(iters->first, *(iters->second));
+
+  for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
+    mod_pack.setVal(itervi->first, *(itervi->second));
+
+  for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
+    mod_pack.setVal(itervd->first, *(itervd->second));
+
+  for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
+    mod_pack.setVal(itervs->first, *(itervs->second));
+
+  //mod_pack.pack(result);
+  
+  //wxString wxstr = result.c_str();
+  return &mod_pack ;//wxstr;
 }
 
 //This is to unpack the result from the 
-virtual void UnPackResult(Interface * intf)
+virtual void cfdVEBaseClass::UnPackResult(Interface * intf)
 {
 }
 
 // Set the id for a particular module
-virtual void SetID(int id)
+virtual void cfdVEBaseClass::SetID(int id)
 {
 }
    
 // Stuff taken from Plugin_base.h
 // All of Yang's work (REI)
-void RegistVar(string vname, long *var);
-void RegistVar(string vname, double *var);
-void RegistVar(string vname, std::string *var);
-void RegistVar(string vname, std::vector<long> *var);
-void RegistVar(string vname, std::vector<double> *var);
-void RegistVar(string vname, std::vector<std::string> *var);
+/////////////////////////////////////////////////////////////////////////////
+void REI_Plugin::RegistVar(string vname, long *var)
+{
+  _int[vname]=var;
+}
+
+void REI_Plugin::RegistVar(string vname, double *var)
+{
+  _double[vname]=var;
+}
+
+void REI_Plugin::RegistVar(string vname, string *var)
+{
+  _string[vname]=var;
+}
+
+void REI_Plugin::RegistVar(string vname, vector<long> *var)
+{
+  _int1D[vname]=var;
+}
+
+void REI_Plugin::RegistVar(string vname, vector<double> *var)
+{
+  _double1D[vname]=var;
+}
+
+void REI_Plugin::RegistVar(string vname, vector<string> *var)
+{
+  _string1D[vname]=var;
+}
