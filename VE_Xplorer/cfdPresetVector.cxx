@@ -71,8 +71,11 @@ cfdPresetVector::~cfdPresetVector()
 
 void cfdPresetVector::Update( void )
 {
-   vprDEBUG(vprDBG_ALL, 1)  << "cfdPresetVector::ActiveDataSet = " << this->GetActiveDataSet() << endl;
-   vprDEBUG(vprDBG_ALL, 1) << this->cursorType << " : " << usePreCalcData
+   vprDEBUG(vprDBG_ALL, 1)  << "cfdPresetVector::ActiveDataSet = " 
+                              << this->GetActiveDataSet() 
+                              << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 1) << this->cursorType 
+                           << " : " << usePreCalcData 
                            << std::endl << vprDEBUG_FLUSH;
 
    if ( this->usePreCalcData )

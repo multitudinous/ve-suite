@@ -111,12 +111,12 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, int argc, char* 
       for (i=0; i<ntoks-1; i++)
       hostfile=hostfile+toks[i]+"/";
       hostfile+="component/host.config";
-      cout<<"Here is the string for the hostfile :"<<hostfile<<endl;
+      std::cout<<"Here is the string for the hostfile :"<<hostfile<<std::endl;
       //Now we open that file and get the host name
       fhost=fopen(hostfile.c_str(), "r");
       if (fhost==NULL)
       {
-         cout<<"Something bad in the path"<<endl;
+         std::cout<<"Something bad in the path"<<std::endl;
          //return -1;
       }
 

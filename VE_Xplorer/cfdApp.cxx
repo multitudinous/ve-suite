@@ -359,7 +359,7 @@ void cfdApp::preFrame( void )
    }
    this->executive->UpdateModules();
    this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );
-#endif // 
+#endif // _TAO
 
    
    this->_vjobsWrapper->PreFrameUpdate();

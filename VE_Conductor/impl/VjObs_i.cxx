@@ -656,8 +656,9 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterTimesteps        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
       this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
    }
-#endif
+#else
    this->_unusedNewData    = false;
+#endif
 }
 
 void VjObs_i::GetUpdateClusterStateVariables( void )
@@ -689,6 +690,7 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
          }
       }
    }
+   this->_unusedNewData    = false;
 #endif
 }
 
