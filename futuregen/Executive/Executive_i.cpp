@@ -709,7 +709,8 @@ void Body_Executive_i::Resume (
 }
   
 void Body_Executive_i::RegisterUI (
-    const char * UIName
+    const char * UIName,
+	Body::UI_ptr ui_ptr
     ACE_ENV_ARG_DECL
   )
   ACE_THROW_SPEC ((
@@ -719,17 +720,18 @@ void Body_Executive_i::RegisterUI (
 { 
   _mutex.acquire();
   
-  CosNaming::Name name(1);
-  name.length(1);
-  name[0].id = CORBA::string_dup(UIName);
+  //CosNaming::Name name(1);
+  //name.length(1);
+  //name[0].id = CORBA::string_dup(UIName);
   
   try {
-    CORBA::Object_var ui_object = naming_context_->resolve(name); 
-    if (CORBA::is_nil(ui_object))
-      cerr << "NULL UI_OBJ\n";
+  //  CORBA::Object_var ui_object = naming_context_->resolve(name); 
+  //  if (CORBA::is_nil(ui_object))
+   //   cerr << "NULL UI_OBJ\n";
     
-    Body::UI_var ui = Body::UI::_narrow(ui_object.in());
+    //Body::UI_var ui = Body::UI::_narrow(ui_object.in());
     
+	Body::UI_var ui = Body::UI::_duplicate(ui_ptr);
     if (CORBA::is_nil(ui))
       cerr << "NULL UI\n";
 
@@ -752,6 +754,7 @@ void Body_Executive_i::RegisterUI (
 
 void Body_Executive_i::RegisterUnit (
     const char * UnitName,
+	Body::Unit_ptr unit,
     CORBA::Long flag
   )
   ACE_THROW_SPEC ((
@@ -765,14 +768,15 @@ void Body_Executive_i::RegisterUnit (
   
   // When this is called, a unit is already binded to the name service, 
   // so this call can get it's reference from the name service
-  CosNaming::Name name(1);
-  name.length(1);
-  name[0].id = CORBA::string_dup(UnitName);
-  CORBA::Object_var unit_object = naming_context_->resolve(name);
+  cerr << "Going to RegisterUnit " << UnitName << endl;
+  //CosNaming::Name name(1);
+  //name.length(1);
+  //name[0].id = CORBA::string_dup(UnitName);
+  //CORBA::Object_var unit_object = naming_context_->resolve(name);
   
-  cerr << "RegisterUnit " << UnitName << endl;
+  //cerr << "RegisterUnit " << UnitName << endl;
 
-  _mod_units[std::string(UnitName)] = Body::Unit::_narrow(unit_object.in());
+  _mod_units[std::string(UnitName)] = Body::Unit::_duplicate(unit);
   _mod_units[std::string(UnitName)]->SetID(unit_id++);
 
   if(_exec_thread.find(std::string(UnitName))==_exec_thread.end()) {

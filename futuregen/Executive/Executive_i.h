@@ -228,7 +228,8 @@ virtual void Resume (
   ));
 
 virtual void RegisterUI (
-    const char * UIName
+    const char * UIName,
+	Body::UI_ptr ui
     ACE_ENV_ARG_DECL
   )
   ACE_THROW_SPEC ((
@@ -238,6 +239,7 @@ virtual void RegisterUI (
 
 virtual void RegisterUnit (
     const char * UnitName,
+	Body::Unit_ptr unit,
     CORBA::Long module_id
     ACE_ENV_ARG_DECL
   )
