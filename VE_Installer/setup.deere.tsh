@@ -67,29 +67,26 @@ setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR /isv/VTK-4.4.0/IRIX32
-   #setenv WX_HOME /isv/Juggler/wxGTK
    setenv WX_HOME /isv/Juggler/wxGTK-2.4.2/IRIX32
-   # Fix this
-   #setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/IRIX32
    setenv VJ_BASE_DIR /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-posix
-   # Fix this 
    setenv VJ_DEPS_DIR /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-deps
-   #setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha3.irix-n32-pthread
 
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/isv/Juggler/openal
-   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/isv/Juggler/Performer3.1_remapped_libs/lib32:${WX_HOME}/lib#${XERCESCROOT}/lib
-   #setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/isv/Juggler/Performer3.1_remapped_libs/lib32:${WX_HOME}/lib
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_ROOT /isv/Juggler/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv XERCESCROOT /isv/Juggler/xerces-2.5/IRIX32
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib:${WX_HOME}/lib
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:/usr/freeware/lib32
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:/usr/freeware/lib32:${XERCESCROOT}/lib
+      setenv PATH ${ACE_ROOT}/bin:${ACE_ROOT}/IRIX32/bin:${TAO_ROOT}/IRIX32/bin:${PATH}
    else
-   	 setenv OMNI_HOME /isv/Juggler/omniORB-4.0.4
+   	setenv OMNI_HOME /isv/Juggler/omniORB-4.0.4
       setenv PYTHONPATH ${OMNI_HOME}/lib/python1.5/site-packages
       setenv LD_LIBRARYN32_PATH ${OMNI_HOME}/lib:${LD_LIBRARYN32_PATH}
+      setenv PATH ${OMNI_HOME}/bin:${PATH}
    endif
 
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
@@ -176,11 +173,6 @@ setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
 setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
 setenv PATH ${WX_HOME}/bin:${PATH}
 setenv PATH ${JDK_HOME}/bin:${PATH}
-if ( ${TAO_BUILD} == "TRUE" ) then
-   setenv PATH ${ACE_ROOT}/bin:${PATH}
-else
-   setenv PATH ${OMNI_HOME}/bin:${PATH}
-endif
 
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
