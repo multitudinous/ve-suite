@@ -38,7 +38,7 @@
 using namespace std;
 
 #include <vpr/Util/Debug.h>
-
+#include <Performer/pr/pfFog.h>
 
 cfdFILE::cfdFILE( fileInfo *geomFile, cfdDCS *worldDCS  )
 {
@@ -90,6 +90,7 @@ cfdFILE::cfdFILE( char* geomFile, cfdDCS* worldDCS  )
    //this->node->flatten( 0 );
    this->DCS->AddChild( this->node );
    worldDCS->AddChild( this->DCS );
+   fog = new pfFog(); 
 }
 
 cfdFILE::cfdFILE( float opVal, float stlColor[3], char *filename  )
@@ -141,6 +142,7 @@ cfdFILE::~cfdFILE()
 
    delete this->DCS;
    delete this->node;
+   delete fog;
 }
 
 char* cfdFILE::GetFilename( void )
@@ -191,6 +193,14 @@ void cfdFILE::setOpac(float op_val)
    
    this->node->SetNodeProperties( _colorFlag, op, stlColor );
    this->node->pfTravNodeMaterial( this->node->GetRawNode() );
+}
+
+void cfdFILE::setFog(double dist)
+{
+   fog->setColor( 0.6f, 0.6f, 0.6f);
+   fog->setRange(0, dist);
+   fog->setFogType(PFFOG_PIX_EXP2);
+   this->node->pfTravNodeFog( this->node->GetRawNode(), fog );
 }
 
 /// Functions taken from module geometry for future merging

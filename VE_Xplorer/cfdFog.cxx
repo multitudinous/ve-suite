@@ -32,7 +32,9 @@
 
 
 #include "cfdFog.h"
-
+#include <iostream>
+using namespace std;
+#include <Performer/pr/pfFog.h>
 
 cfdFog::cfdFog( void )
 {
@@ -46,17 +48,21 @@ cfdFog::~cfdFog( void )
    delete appFog;
 }
 
-void cfdFog::_turnOnFog( double )
+void cfdFog::_turnOnFog( double dist)
 {
-   appFog->setRange(0, double);
+/*   appFog->setRange(0, dist);
    appFog->setFogType(PFFOG_PIX_EXP2);
+cout << " here 1 " << endl;
    pfEnable(PFEN_FOG);
+cout << " here 2 " << endl;
    appFog->apply();
+cout << " here 3 " << endl;
    pfOverride(PFSTATE_FOG | PFSTATE_ENFOG, PF_ON);
+cout << " here 4 " << endl;*/
 }
 
 void cfdFog::_turnOffFog( void )
 {
-   pfDisable(PFEN_FOG);
-   pfOverride(PFSTATE_FOG | PFSTATE_ENFOG, PF_OFF);
+/*   pfDisable(PFEN_FOG);
+   pfOverride(PFSTATE_FOG | PFSTATE_ENFOG, PF_OFF);*/
 }

@@ -41,6 +41,7 @@
 class cfdModuleGeometry;
 class cfdGroup;
 class cfdGeode;
+class cfdFog;
 
 // Need to create or use this in our stuff
 class VEOPPDmod: public cfdVEBaseClass 
@@ -56,6 +57,7 @@ class VEOPPDmod: public cfdVEBaseClass
       virtual void CreateCustomVizFeature( int );
    private:
       cfdGeode* _geode;
+      cfdFog* _fog;
 };
 
 #endif

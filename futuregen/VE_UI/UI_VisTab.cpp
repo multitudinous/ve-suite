@@ -554,4 +554,6 @@ void UI_VisualizationTab::createCommandId( void )
 
 void UI_VisualizationTab::_onCustomVis(wxCommandEvent& event)
 {
+   ((UI_Tabs *)_parent)->cId = ACT_CUSTOM_VIZ;
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }

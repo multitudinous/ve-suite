@@ -562,7 +562,7 @@ int cfdCursor::GetPlaneReso()
 
 double* cfdCursor::GetCursorLocation()
 {
-   return this->pos_c;
+   return this->loc;
 }
 
 vtkPolyDataSource * cfdCursor::GetSourcePoints( void )

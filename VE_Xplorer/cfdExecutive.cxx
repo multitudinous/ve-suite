@@ -386,9 +386,7 @@ void cfdExecutive::GetEverything( void )
                _plugins[ iter->first ]->AddSelfToSG();
                _modelHandler->AddModel( _plugins[ iter->first ]->GetCFDModel() );
                _plugins[ iter->first ]->SetCursor( _envHandler->GetCursor() );
-               //_plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
-               int dummyVar = 0;
-               _plugins[ iter->first ]->CreateCustomVizFeature( dummyVar );
+               _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
                vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
                                       << " ]-> " << iter->second 
                                       << " is being created." << endl << vprDEBUG_FLUSH;
@@ -544,12 +542,23 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 {
 // Add in cfdCommandArray stuff
 #ifdef _TAO
+      std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
       if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR )
       {
          this->SetCalculationsFlag( true );
          return true;
       }
-      return false;
+      else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ACT_CUSTOM_VIZ )
+      {
+         cout << " Custom Viz " << endl;
+         for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
+         {  
+            int dummyVar = 0;
+            _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
+            _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
+         }
+         return true;
+      }               
 #endif // _TAO
    return false;
 }

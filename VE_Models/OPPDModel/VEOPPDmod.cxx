@@ -43,6 +43,7 @@
 #include "cfdDCS.h"
 #include "string_ops.h"
 #include "cfdCursor.h"
+#include "cfdFog.h"
 
 #include <fstream>
 #include <cstdlib>
@@ -74,6 +75,7 @@ VEOPPDmod::VEOPPDmod( void ) : cfdVEBaseClass()
    _objectName ="OPPD";
    //_onSceneGraph = false;
    _geode = NULL;
+   //_fog = new cfdFog();
 }
 
 // Destructor
@@ -107,21 +109,29 @@ void VEOPPDmod::CreateCustomVizFeature( int input )
    vtkPolyDataMapper*  sphereMapper   = vtkPolyDataMapper::New();
    vtkActor*           sphereActor    = vtkActor::New();
    double radius = 0;
+   double visdist = 10000000;
    // Find radius result
    for ( unsigned int i = 0; i < v_desc.size(); i++ )
    {
-      if( v_desc[ i ].Cmp( "hrrhgthesk" ) )
+      if( !v_desc[ i ].Cmp( "hrrhgthesk" ) )
       {
          const string var( v_value[ i ].c_str() );
-         cout << var << endl;
+         cout << " Result from OPPD " << var << endl;
          string_to_double( var, radius );
-         break;
+      }
+      else if ( !v_desc[ i ].Cmp( "visdist" ) )
+      {
+         const string var( v_value[ i ].c_str() );
+         cout << " Result from OPPD " << var << endl;
+         string_to_double( var, visdist );
       }
    }
-
+   ///////////////////////////////////////////////
+cout << " sphere stuff " << endl;
    sphereSrc->SetRadius( radius );
+   sphereSrc->SetEndPhi( 90 );
    double* cursorLoc = _cursor->GetCursorLocation();
-   sphereSrc->SetCenter( cursorLoc[ 0 ], cursorLoc[ 1 ], cursorLoc[ 2 ] );
+   sphereSrc->SetCenter( cursorLoc[ 0 ], cursorLoc[ 1 ], -12 );
    sphereSrc->Update();
 
    sphereNorm->SetInput( sphereSrc->GetOutput() );
@@ -131,7 +141,9 @@ void VEOPPDmod::CreateCustomVizFeature( int input )
    sphereMapper->Update();
 
    sphereActor->SetMapper( sphereMapper );
-   sphereActor->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );
+   sphereActor->GetProperty()->SetColor( 0.0, 0.0, 0.8 );
+   sphereActor->GetProperty()->SetOpacity( 0.5 );
+   sphereActor->GetProperty()->SetInterpolationToPhong();
    // Can also set opacity
    if ( _geode != NULL )
    {
@@ -150,5 +162,13 @@ void VEOPPDmod::CreateCustomVizFeature( int input )
 
    _dcs->AddChild( (cfdSceneNode*)_geode );
    ///////////////////////////////////////////////
+   ///////////////////////////////////////////////
+   cout << " Turn on fog " << endl;
+   //_fog->_turnOnFog( visdist );
+   for ( unsigned int i = 0; i < _model->GetNumberOfGeomDataSets(); i++ )
+   {
+      cout << i << endl;
+      _model->GetGeomDataSet( i )->setFog( visdist );
+   }
 }
 

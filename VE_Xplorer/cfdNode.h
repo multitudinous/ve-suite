@@ -36,6 +36,7 @@
 
 #ifdef _PERFORMER
 class pfNode;
+class pfFog;
 #elif _OSG
 #elif _OPENSG
 #endif
@@ -57,6 +58,7 @@ class cfdNode: public cfdSceneNode
 
 #ifdef _PERFORMER
       void pfTravNodeMaterial( pfNode* );
+      void pfTravNodeFog( pfNode* node_1, pfFog* fog );
 #elif _OSG
 #elif _OPENSG
 #endif

@@ -78,7 +78,8 @@ SRCS=\
    cfdObjects.cxx \
    cfdVEBaseClass.cxx \
    cfdModuleGeometry.cxx \
-   interface.cpp
+   interface.cpp \
+   cfdFog.cxx
 
 APP_NAME= $(VE_SUITE_HOME)/VE_Models/$(CFDHOSTTYPE)$(EXEC_TAG)/lib$(PLUGIN).so
 # object files are being stored in a system-dependent directory so that builds

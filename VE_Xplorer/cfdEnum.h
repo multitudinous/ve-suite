@@ -141,6 +141,7 @@ enum cfdGeodeEnum {
    NAV_BKWD,
    NAV_CCW,
    NAV_CW,
-   CHANGE_ACTIVE_MODEL
+   CHANGE_ACTIVE_MODEL,
+   ACT_CUSTOM_VIZ
 };
 #endif

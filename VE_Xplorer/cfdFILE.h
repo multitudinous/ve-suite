@@ -38,6 +38,8 @@
 class fileInfo;
 class cfdDCS;
 class cfdNode;
+class pfFog;
+
 // Need to fix this class
 // BIG PROBLEMS here
 //class pfNode;
@@ -63,6 +65,7 @@ class cfdFILE
       int GetTransparentFlag( void );
       void setOpac(float op_val);
       float getOpacity();
+      void setFog(double dist);
 
       char* GetFilename( void );
       //pfLightModel *matLight;
@@ -95,7 +98,7 @@ class cfdFILE
    private:
       float op;
 
-
+      pfFog* fog;
 
       double _rgba[ 4 ];
       bool _transparencyFlag;

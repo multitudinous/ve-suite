@@ -48,6 +48,7 @@ using namespace std;
 #include <Performer/pr/pfTexture.h>
 #include <Performer/pr/pfLPointState.h>
 #include <Performer/pf/pfTraverser.h>
+#include <Performer/pr/pfFog.h>
 #elif _OSG
 #elif _OPENSG
 #endif
@@ -607,3 +608,61 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
 	   }
 }
 
+
+void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
+{
+   assert( node_1 != NULL && "bad pointer passed in" );
+   //assert( mat != NULL && "bad pointer passed in" );
+	int i ;
+	int num ;
+	pfGeoState* geostate = NULL;
+	pfGeoSet*	geoset   = NULL;
+
+ 	// If the node is a geode...
+   if (pfIsOfType(node_1, pfGeode::getClassType()))
+   {
+      // Grab each of its geosets
+      num = ((pfGeode*)node_1)->getNumGSets() ;
+      //std::cout << "HERE IT IS " << num << std::endl;
+      for (i=0; i < num; i++)
+      {
+         geoset = ((pfGeode*)node_1)->getGSet(i) ;
+         assert( geoset != NULL && "geoset is null" );
+
+         // Apply the material to the geostate and disable texturing
+         geostate = geoset->getGState() ;
+
+         if (geostate != NULL)
+         {
+            geostate->setMode( PFSTATE_ENFOG, PFFOG_ON );
+            geostate->setAttr( PFSTATE_FOG, fog );
+                        
+            geoset->setGState( geostate );
+            cout << "draw " << endl;
+            //geoset->draw();
+         }
+         else
+         {
+            vprDEBUG(vprDBG_ALL,0) 
+               << "ERROR: Tried to set transparency, but this pfGeoSet"
+               << " has no pfGeoState." << std::endl << vprDEBUG_FLUSH;
+         }
+      }	
+	}
+   else if (pfIsOfType(node_1, pfGroup::getClassType()))
+	{
+		// Run this traverser on each of its children (recursive)
+		num = ((pfGroup*)node_1)->getNumChildren();
+
+		vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+                             << std::endl << vprDEBUG_FLUSH;
+
+      for (i=0; i < num; i++)
+		{
+			//if(count)
+            //matList.push_back( new pfMaterial() );
+         pfTravNodeFog( ((pfGroup*)node_1)->getChild(i), fog ) ;
+		}
+      //count = 0;
+	}
+}

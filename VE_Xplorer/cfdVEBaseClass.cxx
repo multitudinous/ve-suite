@@ -64,6 +64,7 @@ IMPLEMENT_DYNAMIC_CLASS( cfdVEBaseClass, wxObject )
 cfdVEBaseClass::cfdVEBaseClass( void ) 
 {
    _onSceneGraph = false;
+   _network = NULL;
 }
 
 
@@ -240,13 +241,13 @@ void cfdVEBaseClass::SetModuleResults( const char* network )
       return;
    }*/
 
-   cout<<_network<<endl;
    Package p;
    p.SetSysId("veresult.xml");
    p.Load(_network, strlen(_network));
 
    this->UnPackResult(&p.intfs[0]);
    delete _network;
+   _network = NULL;
 }
 
 // Viz feature for the devloper to define
@@ -537,6 +538,7 @@ void cfdVEBaseClass::CreateObjects( void )
          _model->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
          _model->GetGeomDataSet( -1 )->getpfDCS()->SetRotationArray( rotate );
          _model->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
+         _model->GetGeomDataSet( -1 )->setOpac( 1 );
       }
       else
       {

@@ -32,13 +32,7 @@
 #ifndef CFD_FOG_H
 #define CFD_FOG_H
 
-#include <Performer/pr.h>
-#include <Performer/pf/pfLightSource.h>
-#include <Performer/pf/pfScene.h>
-#include <Performer/pf/pfEarthSky.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pr/pfFog.h>
-
+class pfFog;
 
 class cfdFog
 {
@@ -53,3 +47,4 @@ public:
    void _turnOffFog ( void );   
 
 };
+#endif

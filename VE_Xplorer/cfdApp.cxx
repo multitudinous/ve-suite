@@ -383,6 +383,7 @@ void cfdApp::preFrame( void )
       this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
    }
    this->executive->UpdateModules();
+   this->executive->CheckCommandId( _cfdArray );
 #endif // 
 
    this->PreFrameUpdate();
