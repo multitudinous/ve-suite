@@ -14,6 +14,9 @@ BEGIN_EVENT_TABLE(UI_GeometryTab, wxPanel)
    //EVT_RADIOBOX(GEOMETRY_CONFIG_RBOX,UI_GeometryTab::ChangeOpacity)
 END_EVENT_TABLE()
 
+////////////////////////////////////////////////////
+//Constructor                                     //
+////////////////////////////////////////////////////
 UI_GeometryTab::UI_GeometryTab(wxNotebook* tControl)
 :wxPanel(tControl)
 {
@@ -27,6 +30,9 @@ UI_GeometryTab::UI_GeometryTab(wxNotebook* tControl)
    _buildPage();
 }
 
+////////////////////////////////////////////////////
+//Build the Geometry Tab                          //
+////////////////////////////////////////////////////
 void UI_GeometryTab::_buildPage()
 {
    //the radio box
@@ -97,6 +103,7 @@ void UI_GeometryTab::_buildPage()
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_LABELS );
+   // I don't believe these are implemented for all platforms
    //geomOpacitySlider->SetThumbLength( 50 );
 
    //lod slider
@@ -105,6 +112,7 @@ void UI_GeometryTab::_buildPage()
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_LABELS );
+   // I don't believe these are implemented for all platforms
    //geomLODSlider->SetThumbLength( 50 );
 
    //two sizers to group the sliders and their lables
@@ -148,6 +156,7 @@ void UI_GeometryTab::_buildPage()
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
+////////////////////////////////////////////////////
 void UI_GeometryTab::_onGeometry( wxScrollEvent& event )
 {
    ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
@@ -155,6 +164,7 @@ void UI_GeometryTab::_onGeometry( wxScrollEvent& event )
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
+////////////////////////////////////////////////////
 void UI_GeometryTab::ChangeOpacity( wxScrollEvent& event )
 {
    ((UI_Tabs *)_parent)->cPre_state = 0;
@@ -164,6 +174,7 @@ void UI_GeometryTab::ChangeOpacity( wxScrollEvent& event )
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
+////////////////////////////////////////////////////
 void UI_GeometryTab::_onUpdate(wxCommandEvent& event)
 {
    ((UI_Tabs *)_parent)->cGeo_state = 0;
