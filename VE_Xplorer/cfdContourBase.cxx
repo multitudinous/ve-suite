@@ -43,13 +43,16 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+#include <vtkLookupTable.h>
+#include <vtkDecimatePro.h>
 
 // this class requires that the dataset has a scalar field.
 cfdContourBase::cfdContourBase()
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdContourBase constructor"
                           << std::endl << vprDEBUG_FLUSH;
-
+   this->deci = vtkDecimatePro::New();
+   
    this->filter = vtkGeometryFilter::New();
    this->cfilter = vtkContourFilter::New();              // for contourlines
    this->bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
@@ -61,6 +64,10 @@ cfdContourBase::cfdContourBase()
    this->actor = vtkActor::New();
    this->actor->SetMapper( this->mapper );
    this->actor->GetProperty()->SetSpecularPower( 20.0f );
+
+   this->warpedContourScale = 0.0f;
+   this->contourOpacity = 0.0f;
+   this->contourLOD = 1; 
 }
 
 cfdContourBase::~cfdContourBase()
@@ -82,23 +89,30 @@ cfdContourBase::~cfdContourBase()
 
    this->actor->Delete();
    this->actor = NULL;
+
+   this->deci->Delete();
+   this->deci = NULL;
 }
 
-void cfdContourBase::SetMapperInput( vtkPolyData * polydata )
+void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
 {
+   // decimate points is uised for lod control of contours
+   this->deci->SetInput( polydata );
+   this->deci->PreserveTopologyOn();
+   
    if ( this->fillType == 0 )
    {
-/*
-      // convert any type of data to polygonal type
+
+/*      // convert any type of data to polygonal type
       this->filter->SetInput( polydata );
       this->filter->Update();
       this->mapper->SetInput( this->filter->GetOutput() );
 */
-      this->mapper->SetInput( polydata );
+      this->mapper->SetInput( this->deci->GetOutput() );
    }
    else if ( this->fillType == 1 )  // banded contours
    {
-      this->bfilter->SetInput( polydata );
+      this->bfilter->SetInput( this->deci->GetOutput() );
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
       this->bfilter->GenerateValues( 10, range[0], range[1] );
@@ -109,10 +123,11 @@ void cfdContourBase::SetMapperInput( vtkPolyData * polydata )
    }
    else if ( this->fillType == 2 )  // contourlines
    {
-      this->cfilter->SetInput( polydata );
+      this->cfilter->SetInput( this->deci->GetOutput() );
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
       this->cfilter->GenerateValues( 10, range[0], range[1] );
+      this->cfilter->UseScalarTreeOn();
       this->cfilter->Update();
       this->mapper->SetInput( this->cfilter->GetOutput() );
    }
@@ -132,6 +147,22 @@ bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
                              << std::endl << vprDEBUG_FLUSH;
 
       this->SetFillType( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+               == CHANGE_CONTOUR_SETTINGS )
+   {  
+      // warped contour settings
+      double v[2];
+      this->GetActiveDataSet()->GetUserRange( v );
+      int scale = commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
+      this->warpedContourScale = (scale/50.0) * 0.2 
+                    * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
+
+      // contour lod control
+      int lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
+      double realLOD = (double)lod/100.0;
+      this->deci->SetTargetReduction( realLOD );
       return true;
    }
    return flag;

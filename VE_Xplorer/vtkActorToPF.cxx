@@ -218,8 +218,9 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   // check to see if there is color information
   int colorPerVertex = 0;
   int colorPerCell = 0;
+  double opacity = actor->GetProperty()->GetOpacity();
 #ifdef VTK4
-  vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars(1.0);
+  vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars(opacity);
 #else
   vtkScalars *colorArray = actor->GetMapper()->GetColors();
 #endif
@@ -231,6 +232,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     else
       colorPerVertex = 1;
   }
+
   pfVec4 *colors = NULL; 
   if (colorPerVertex)
     colors = (pfVec4 *) pfMalloc(numIndices * sizeof(pfVec4), pfArena);

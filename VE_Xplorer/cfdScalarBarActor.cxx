@@ -207,6 +207,8 @@ void cfdScalarBarActor::SetRange(double r0, double r1)
    this->range[1] = r1;
    this->dScalar = (this->range[1] - this->range[0])/((float)(this->numPts-2)*0.5);
    this->lut->SetTableRange( this->range[0], this->range[1] );
+   //this->lut->SetAlphaRange(realOpacity, realOpacity);
+
    //this->lut->Build();
    vprDEBUG(vprDBG_ALL,1) 
       << "cfdScalarBarActor::SetRange, range = " 

@@ -41,10 +41,9 @@
 
 #include <vpr/Util/Debug.h>
 
-cfdMomentums::cfdMomentums( const int xyz, const float scale )
+cfdMomentums::cfdMomentums( const int xyz )
 {
    this->xyz = xyz;
-   this->scale = scale;
    this->warper = vtkWarpVector::New();
 }
 
@@ -75,7 +74,7 @@ void cfdMomentums::Update( void )
    {
       this->warper->SetInput( this->GetActiveDataSet()
                        ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
-      this->warper->SetScaleFactor( this->GetScaleFactor() );
+      this->warper->SetScaleFactor( this->warpedContourScale );
       this->warper->Update();//can this go???
 
       this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
@@ -97,28 +96,3 @@ void cfdMomentums::Update( void )
       this->updateFlag = false;
    }
 }
-
-float cfdMomentums::GetScaleFactor( )
-{
-   // the idea here was to properly size the size of the warp based on the data set. Good idea, but this implementation used scalar range when it should use vector magnitude range. This will work if the scalar is velocity magnitude.  
-   // If you fix it, then mirror in cfdPresetMomentum.cxx.
-   double v[2];
-   this->GetActiveDataSet()->GetUserRange( v );
-
-   float scaleFactor;
-   if ( v[0] == v[1] )
-   {
-      scaleFactor = 1.0;
-   }
-   else
-   {
-      scaleFactor = this->scale * 0.2 
-                    * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
-   }
-
-   vprDEBUG(vprDBG_ALL, 1) << "scaleFactor = " << this->scale
-                           << std::endl << vprDEBUG_FLUSH;
-
-   return scaleFactor;
-}
-

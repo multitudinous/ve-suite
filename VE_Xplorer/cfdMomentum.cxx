@@ -131,7 +131,7 @@ void cfdMomentum::Update( void )
            this->origin[2] > bd[4] && this->origin[2] < bd[5] )
 */
       {  
-      this->warper->SetScaleFactor( this->GetActiveDataSet()->GetStepLength() );
+      this->warper->SetScaleFactor( this->warpedContourScale );
 
 #ifdef USE_OMP
          int i;

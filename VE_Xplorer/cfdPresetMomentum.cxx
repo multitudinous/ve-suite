@@ -52,14 +52,13 @@
 #include <vpr/Util/Debug.h>
 
 // this class requires that the dataset has a vector field.
-cfdPresetMomentum::cfdPresetMomentum( const int xyz, const float scale,
+cfdPresetMomentum::cfdPresetMomentum( const int xyz,
                                       int numSteps )
 {  
    vprDEBUG(vprDBG_ALL, 1) << "cfdPresetMomentum::cfdPresetMomentum"
                            << std::endl << vprDEBUG_FLUSH;
 
    this->xyz = xyz;
-   this->scale = scale;
    this->numSteps = numSteps;
 
    // set the cut function
@@ -107,7 +106,7 @@ void cfdPresetMomentum::Update( void )
       }
 
       this->warper->SetInput( preCalcData );
-      this->warper->SetScaleFactor( this->GetScaleFactor() );
+      this->warper->SetScaleFactor( this->warpedContourScale );
       this->warper->Update();
 
       this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
@@ -143,7 +142,7 @@ void cfdPresetMomentum::Update( void )
       this->cuttingPlane = NULL;
 
       this->warper->SetInput( this->cutter->GetOutput() );
-      this->warper->SetScaleFactor( this->GetScaleFactor() );
+      this->warper->SetScaleFactor( this->warpedContourScale );
       this->warper->Update();//can this go???
      
       this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
@@ -156,27 +155,3 @@ void cfdPresetMomentum::Update( void )
    }
    this->updateFlag = true;
 }
-
-float cfdPresetMomentum::GetScaleFactor( )
-{
-   // the idea here was to properly size the size of the warp based on the data set. Good idea, but this implementation used scalar range when it should use vector magnitude range. This will work if the scalar is velocity magnitude.  
-   // If you fix it, then mirror in cfdMomentums.cxx.
-   double v[2];
-   this->GetActiveDataSet()->GetUserRange( v );
-
-   float scaleFactor;
-   if ( v[0] == v[1] )
-   {
-      scaleFactor = 1.0;
-   }
-   else
-   {
-      scaleFactor = this->scale * 0.2 
-                    * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
-   }
-
-   vprDEBUG(vprDBG_ALL, 1) << "scaleFactor = " << this->scale
-                           << std::endl << vprDEBUG_FLUSH;
-   return scaleFactor;
-}
-

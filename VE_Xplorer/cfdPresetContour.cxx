@@ -127,5 +127,7 @@ void cfdPresetContour::Update( void )
                                         ->GetLookupTable() );
       this->mapper->Update();
    }
+   
+   std::cout << this->actor->GetProperty()->GetOpacity() << std::endl;
    this->updateFlag = true;
 }

@@ -45,9 +45,9 @@ class cfdMomentums : public cfdContourBase
  public:
   /* Initialize the multiple momentum profiles, based on the input
     from the vtkPolyData generated from cfdPlanes.  */
-  cfdMomentums( const int xyz, const float scale );
+  cfdMomentums( const int xyz );
 
-  ~cfdMomentums();
+  ~cfdMomentums( void );
 
   // Output an updated pfGeoSet.
   virtual void Update( void );
@@ -55,11 +55,7 @@ class cfdMomentums : public cfdContourBase
  private:
   int xyz;
   
-  float scale;
-
   vtkWarpVector * warper;
-
-  float GetScaleFactor();
 };
 
 #endif

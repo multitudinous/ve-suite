@@ -54,9 +54,9 @@ class cfdMomentum : public cfdContourBase
 {
  public:
   // Initialize the VTK objects and pipeline.
-  cfdMomentum( );
+  cfdMomentum( void );
 
-  ~cfdMomentum( );
+  ~cfdMomentum( void );
 
    /* Update the position, x, and normal direction to cut.
     Output a updated pfGeoSet.  */

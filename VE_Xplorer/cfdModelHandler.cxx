@@ -416,6 +416,14 @@ void cfdModelHandler::PreFrameUpdate( void )
             << std::endl << vprDEBUG_FLUSH;
       _activeModel = _modelList.at( commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
    }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+               == CHANGE_CONTOUR_SETTINGS )
+   {  
+      // opacity settings
+      int opacity = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      double realOpacity = (double)opacity/100.0f;
+      this->activeDataset->GetLookupTable()->SetAlphaRange(realOpacity, realOpacity);
+   }
 
    // Can't be an else if because may have to update if dataset has changed beforehand
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR || 

@@ -484,7 +484,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          std::cout << "| 22. Initializing............................... Preset x Momentum |" << std::endl;
          // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-         this->x_momentum = new cfdPresetMomentum( 0, 1, 10 );
+         this->x_momentum = new cfdPresetMomentum( 0, 10 );
          this->x_momentum->SetObjectType( X_MOMENTUM );
          this->dataList.push_back( this->x_momentum );
          this->commandList.push_back( this->x_momentum );
@@ -494,7 +494,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          std::cout << "| 23. Initializing............................... Preset y Momentum |" << std::endl;
          // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-         this->y_momentum = new cfdPresetMomentum( 1, 1, 10 );
+         this->y_momentum = new cfdPresetMomentum( 1, 10 );
          this->y_momentum->SetObjectType( Y_MOMENTUM );
          this->dataList.push_back( this->y_momentum );
          this->commandList.push_back( this->y_momentum );
@@ -504,7 +504,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          std::cout << "| 24. Initializing............................... Preset z Momentum |" << std::endl;
          // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-         this->z_momentum = new cfdPresetMomentum( 2, 1, 10 );
+         this->z_momentum = new cfdPresetMomentum( 2, 10 );
          this->z_momentum->SetObjectType( Z_MOMENTUM );
          this->dataList.push_back( this->z_momentum );
          this->commandList.push_back( this->z_momentum );
@@ -589,7 +589,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          {
             std::cout << "| 31. Initializing.......Multiple X-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-            this->x_momentums = new cfdMomentums( 0, 1 );
+            this->x_momentums = new cfdMomentums( 0 );
             this->x_momentums->SetObjectType( X_MOMENTUMS );
             this->dataList.push_back( this->x_momentums );
             this->commandList.push_back( this->x_momentums );
@@ -603,7 +603,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          {
             std::cout << "| 32. Initializing.......Multiple Y-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-            this->y_momentums = new cfdMomentums( 1, 1 );
+            this->y_momentums = new cfdMomentums( 1 );
             this->y_momentums->SetObjectType( Y_MOMENTUMS );
             this->dataList.push_back( this->y_momentums );
             this->commandList.push_back( this->y_momentums );
@@ -617,7 +617,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          {
             std::cout << "| 33. Initializing.......Multiple Z-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
-            this->z_momentums = new cfdMomentums( 2, 1 );
+            this->z_momentums = new cfdMomentums( 2 );
             this->z_momentums->SetObjectType( Z_MOMENTUMS );
             this->dataList.push_back( this->z_momentums );
             this->commandList.push_back( this->z_momentums );

@@ -50,9 +50,9 @@ class cfdPresetMomentum : public cfdContourBase
  public:
   // Initialize the pipeline.
   // (and set the number of cutting plane increments for blue menu)
-  cfdPresetMomentum( const int xyz, const float scale, int numSteps = 10 );
+  cfdPresetMomentum( const int xyz, int numSteps = 10 );
 
-  ~cfdPresetMomentum();
+  ~cfdPresetMomentum( void );
 
   /* Update the position, x, and normal direction to cut.
     Output a updated pfGeoSet.  */
@@ -61,15 +61,12 @@ class cfdPresetMomentum : public cfdContourBase
  private:
    int xyz;
    int numSteps;
-   float scale;
 
    vtkCutter       * cutter;
 
    vtkWarpVector   * warper;
 
    cfdCuttingPlane * cuttingPlane;
-
-   float GetScaleFactor();
 };
 
 #endif

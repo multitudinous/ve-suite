@@ -39,6 +39,8 @@ class vtkPolyDataMapper;
 class vtkGeometryFilter;
 class vtkContourFilter;
 class vtkBandedPolyDataContourFilter;
+class vtkDecimatePro;
+
 class cfdCommandArray;
 
 class cfdContourBase : public cfdObjects
@@ -62,13 +64,15 @@ class cfdContourBase : public cfdObjects
    void SetFillType( const int );
 
  protected:
-   vtkPolyDataMapper * mapper;
-   vtkGeometryFilter * filter;
-   vtkContourFilter * cfilter;
+   vtkPolyDataMapper*   mapper;
+   vtkGeometryFilter*   filter;
+   vtkContourFilter*    cfilter;
    vtkBandedPolyDataContourFilter * bfilter;
-
+   vtkDecimatePro* deci;
    int fillType;
-
+   double warpedContourScale;
+   double contourOpacity;
+   int contourLOD; 
 };
 
 #endif

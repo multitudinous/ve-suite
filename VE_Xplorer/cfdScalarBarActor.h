@@ -111,31 +111,32 @@ public:
   // 
   cfdDCS * GetcfdDCS( void);
 
-private:
-  float itsX[3];
-  float zrot;
-  float width, height;
-  int numColors;
-  vtkLookupTable *lut;
-  vtkVectorText *titleScalar;
-  int numPts;
-  double range[2];
-  float dScalar;
-  float titleTextScale;
-  cfdGeode *pfaPolyActor;
-  cfdGeode *pftitleActor;
-  cfdGeode *pfLabelActor[5];
-  int numTextLabels;   // number of numerical labels on the scalar bar legend
+   private:
+      float itsX[3];
+      float zrot;
+      float width, height;
+      int numColors;
+      vtkLookupTable* lut;
+      vtkVectorText* titleScalar;
+      int numPts;
+      double range[2];
+      float dScalar;
+      float titleTextScale;
+      cfdGeode* pfaPolyActor;
+      cfdGeode* pftitleActor;
+      cfdGeode* pfLabelActor[5];
+      int numTextLabels;   // number of numerical labels on the scalar bar legend
 
-  cfdDCS *scalarBar;
-   cfdGroup* _rootNode;
-   char* _param;
-   cfdDataSet* _activeDataSet;
-   float scalarBarPos[ 3 ];
-   float scalarBarZRot;
-   float scalarBarH;
-   float scalarBarW;
-   cfdReadParam* _readParam;
+      cfdDCS*  scalarBar;
+      cfdGroup* _rootNode;
+      char* _param;
+      cfdDataSet* _activeDataSet;
+      float scalarBarPos[ 3 ];
+      float scalarBarZRot;
+      float scalarBarH;
+      float scalarBarW;
+      cfdReadParam* _readParam;
+      double realOpacity;
 };
 
 #endif
