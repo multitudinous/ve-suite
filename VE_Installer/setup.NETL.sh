@@ -1,0 +1,134 @@
+#!/bin/sh
+# this is a bourne shell script
+# sets up environment to build and/or run VE-Xplorer
+
+#this is typically defined in your .cshrc file
+export VE_SUITE_HOME=/nfs/scratch/VE_Suite
+
+if [ -e /etc/redhat-release ]; then
+   #echo "found /etc/redhat-release"
+   # extract some words from file to create something like RedHat_8.0
+   export CFDHOSTTYPE=`cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
+elif [ -e /etc/SuSE-release ]; then
+   #echo "found /etc/SuSE-release"
+   # extract first and third words from file to create something like SuSE_9.1
+   export CFDHOSTTYPE=`head -1 /etc/SuSE-release | awk -F" " '{print $1 "_" $3}'`
+else
+   echo "uname is" `uname`
+   export CFDHOSTTYPE=`uname`
+fi
+
+#if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
+export CFDHOSTTYPE=`echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
+#echo "CFDHOSTTYPE =" $CFDHOSTTYPE
+
+export TAO_BUILD=TRUE
+export CLUSTER_APP=TRUE
+export SCENE_GRAPH=OSG
+
+export PFNFYLEVEL=2
+export VPR_DEBUG_NFY_LEVEL=2
+export VPR_DEBUG_ENABLE=1
+export PFSHAREDSIZE=534773700
+export OMNIORB_CONFIG=${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
+export OMNINAMES_LOGDIR=${VE_SUITE_HOME}/VE_Installer
+
+case "$CFDHOSTTYPE" in
+   IRIX*) 
+   #echo "CFDHOSTTYPE contains IRIX"
+   export JDK_HOME=/usr/java2
+   export VTK_BASE_DIR=/home/users/mccdo/vtk-builds/IRIX32
+   export VJ_BASE_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-pthread
+   export VJ_DEPS_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.irix-n32-deps
+#   export LD_LIBRARYN32_PATH=/home/users/mccdo/VE_Suite/VE_Installer/arenasize/libs
+   export LD_LIBRARYN32_PATH=${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
+   export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
+   export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:/home/users/mccdo/software/IRIX32/lib
+   export WX_HOME=${WX_HOME_DIR}/irix-65
+   export BOOST_INCLUDES=${VJ_DEPS_DIR}/include
+
+   if [ ${TAO_BUILD} = "TRUE" ]; then
+      export ACE_ROOT=/home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
+      export TAO_ROOT=${ACE_ROOT}/TAO
+      export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+   else
+#      export OMNI_HOME=/home/vr/Juggler/irix/mipspro-omniORB-4.0.1
+#      export OMNI_HOME=/home/users/mccdo/software/IRIX32
+      export OMNI_HOME=${VJ_DEPS_DIR}
+#/home/vr/Juggler/irix/mipspro
+      export PYTHONPATH=${OMNI_HOME}/lib/python1.5/site-packages
+      export LD_LIBRARYN32_PATH=${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+   fi
+;;
+   RedHat*) 
+   #echo "CFDHOSTTYPE contains RedHat"
+   export VTK_BASE_DIR=/home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
+
+   export JDK_HOME=/usr/java/j2sdk1.4.2_03
+   export VJ_BASE_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80
+   export VJ_DEPS_DIR=/home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80-deps
+
+   export BOOST_INCLUDES=${VJ_DEPS_DIR}/include
+   export LD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   export WX_HOME=${WX_HOME_DIR}/linux-rh80
+
+   if [ ${TAO_BUILD} = "TRUE" ]; then
+      export WX_HOME=${WX_HOME_DIR}/linux-rh80
+      export ACE_ROOT=/home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
+      #export ACE_ROOT=/home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
+
+      export TAO_ROOT=${ACE_ROOT}/TAO
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+   else
+      export OMNI_HOME=/home/vr/Juggler/linux-rh80
+      #export OMNI_HOME=/home/vr/Juggler/linux-fc1
+      export PYTHONPATH=${OMNI_HOME}/lib/python2.2/site-packages
+      export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+   fi
+;;
+   SuSE*) 
+   #echo "CFDHOSTTYPE contains SuSE"
+   export VTK_BASE_DIR=/usr/local/vtk
+
+   export VJ_BASE_DIR=/usr/local/juggler
+   export VJ_DEPS_DIR=/usr/local/juggler-deps
+
+   export LD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   export WX_HOME=/nfs/scratch/wxGTK
+   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${WX_HOME}/lib
+   export OSG_HOME=/usr
+   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
+
+   export ACE_HOME=/nfs/scratch/ACE_TAO/ACE-5.4
+   export TAO_HOME=/nfs/scratch/ACE_TAO/TAO-1.4
+   export ACE_ROOT=/usr/local/ACE_wrappers
+   export TAO_ROOT=${ACE_ROOT}/TAO
+   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
+   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
+   export PATH=${ACE_HOME}/Linux/bin:${TAO_HOME}/Linux/bin:${PATH}
+
+   export XERCESCROOT=/nfs/scratch/xerces
+   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
+
+;;
+   *)
+   echo "ERROR: Unsupported operating system"
+   echo "       OMNI_HOME, etc. are undefined"
+;;
+esac
+
+export TWEEK_BASE_DIR=${VJ_BASE_DIR}
+export DZR_BASE_DIR=${VJ_BASE_DIR}/share/Doozer
+export SNX_BASE_DIR=${VJ_BASE_DIR}
+export PATH=${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
+export PATH=${WX_HOME}/bin:${PATH}
+#echo ""
+#echo "Now you may type 'gmake' to build the application"
+#echo "              or 'gmake clean'
+#echo "              or 'gmake cleandepend'
+#echo "              or 'run' to start the application in sim mode"
+#echo "              or 'runc6' to start the application on the c6"
+#echo "              or 'runc4.closed' or 'runc4.open' to start the application on the c4"
+#echo ""
