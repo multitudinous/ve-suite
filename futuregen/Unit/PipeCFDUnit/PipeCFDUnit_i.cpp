@@ -68,13 +68,13 @@ void Body_Unit_i::StartCalc (
     cout << "Error profile_vars != profile_vals\n";
 
   // Test
-  for(i=0; i<prof_in->profile_vals.length(); i++) {
+  /*for(i=0; i<prof_in->profile_vals.length(); i++) {
     cout << prof_in->profile_vars[i].in() << endl;
     for(j=0; j<prof_in->profile_vals[i].length(); j++) {
       cout << prof_in->profile_vals[i][j] << " ";
     }
     cout << endl;
-  }
+  }*/
 
   ////////
   // Next

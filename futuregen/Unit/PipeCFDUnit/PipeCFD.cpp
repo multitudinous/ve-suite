@@ -550,6 +550,14 @@ void PipeCFD::load_scirun_groups(float *f, float *t, float *p, int *Istage)
   // Pressure
   *p = _pressure;
   
+  // flow
+  f[0] = _gas_in->gas_composite.M;
+  f[1] = 0.0;
+
+  //temperature (is not used in profin.f)
+  t[0] = 300.0;
+  t[1] = 300.0;
+  
   return;
 }
 
