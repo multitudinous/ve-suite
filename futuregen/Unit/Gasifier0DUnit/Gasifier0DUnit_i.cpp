@@ -49,9 +49,10 @@ void Body_Unit_i::StartCalc (
   // OXIDANT stream
   /////////////////
 
+  cout << "getting o2\n";
   o2gas = executive_->GetImportData(id_, 0); //port 0 will be the o2 input port;
 
-  if (!o2gas)
+  if (std::string(o2gas)=="")
     {
       error("Missing o2");
       return;
@@ -68,12 +69,13 @@ void Body_Unit_i::StartCalc (
   // PARTICLE stream
   //////////////////
 
+  cout << "getting part\n";
   ipart = executive_->GetImportData(id_, 1); //port 1 will be the paricle input port;
 
   double ash_in_char = 0.0, char_size=100.0;
   double char_sd=char_size*0.5;
 
-  if (!ipart)
+  if (std::string(ipart)=="")
     {
       warning("No particle recycle stream");
     }
@@ -91,9 +93,10 @@ void Body_Unit_i::StartCalc (
   // SECOND STAGE GAS stream
   //////////////////////////
   
+  cout << "getting 2ndstage\n";
   stage2gas = executive_->GetImportData(id_, 2); //port 2 will be the stage 2 input port;
 
-  if (!stage2gas)
+  if (std::string(stage2gas)=="")
     {
       if (_stage)
 	warning("No 2nd stage gas stream.");
@@ -333,6 +336,8 @@ char * Body_Unit_i::GetStatusMessage (
     , Error::EUnknown
   ))
   {
+    std::cout << UnitName_ <<" :GetStatusMessages called" << endl;
+
     // Add your implementation here
     const char *status;
     bool rv;
@@ -353,8 +358,8 @@ char * Body_Unit_i::GetUserData (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     std::cout<<UnitName_<<" :GetUserData called"<<endl;
+   
     return CORBA::string_dup(data_.c_str());
   }
   
@@ -369,15 +374,13 @@ void Body_Unit_i::SetParams (
   {
     double temp;
 
-    // Add your implementation here
-
-    if (param!=NULL)
-      std::cout<<param<<std::endl;
+    //if (param!=NULL) std::cout<<param<<std::endl;
     std::cout<<UnitName_<<" :SetParams called"<<endl;
+
     Package p;
-    
     p.SetSysId("temp.xml");
     p.Load(param, strlen(param));
+
     //Now make use of p.intfs to get your GUI vars out
     temp = p.intfs[0].getDouble("temp");
 
@@ -439,9 +442,9 @@ void Body_Unit_i::SetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    id_=id;
     std::cout<<UnitName_<<" :SetID called"<<endl;
+
+    id_=id;
   }
   
 CORBA::Long Body_Unit_i::GetID (
@@ -452,8 +455,8 @@ CORBA::Long Body_Unit_i::GetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     std::cout<<UnitName_<<" :GetID called"<<endl;
+   
     return id_;
   }
   
@@ -465,11 +468,11 @@ void Body_Unit_i::SetName (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    // Add your implementation here
-    UnitName_ = std::string(name);
-    std::cout<<UnitName_<<" :SetName called"<<endl;
-  }
+{
+  UnitName_ = std::string(name);
+  
+  std::cout<<UnitName_<<" :SetName called"<<endl;
+}
   
 char * Body_Unit_i::GetName (
     ACE_ENV_SINGLE_ARG_DECL
@@ -479,8 +482,8 @@ char * Body_Unit_i::GetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     std::cout<<UnitName_<<" :GetName called"<<endl;
+   
     return CORBA::string_dup(UnitName_.c_str());
   }
 

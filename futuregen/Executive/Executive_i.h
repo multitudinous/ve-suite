@@ -1,6 +1,8 @@
 #ifndef EXECUTIVE_I_H_
 #define EXECUTIVE_I_H_
 
+#include "Execute_Thread.h"
+
 #include "Network_Exec.h"
 #include "Scheduler.h"
 
@@ -33,7 +35,10 @@ public:
   
 protected:
 
+  void execute (std::string);
+
   std::map<std::string, Body::Unit_var> _mod_units;
+  std::map<std::string, Execute_Thread*> _exec_thread;
 
   CosNaming::NamingContext_var naming_context_;
   std::map<std::string, Body::UI_var> uis_;

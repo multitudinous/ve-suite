@@ -26,7 +26,9 @@ include $(TAO_ROOT)/rules.tao.GNU
 include $(XERCESCROOT)/version.incl
 include ../Plugin/Makefile.incl
 
-FILE_Exe_SVR_OBJS = moduleC.o moduleS.o Exe_server.o Executive_i.o interface.o package.o Network_Exec.o Scheduler.o string_ops.o
+FILE_Exe_SVR_OBJS = moduleC.o moduleS.o Exe_server.o Executive_i.o \
+	interface.o package.o Network_Exec.o Scheduler.o string_ops.o \
+	Execute_Thread.o
 
 BIN_UNCHECKED = Exe_server
 

@@ -107,6 +107,8 @@ public:
   int  schedule (Module*);
   int  execute  (Module*);
 
+  unsigned int snodes_size () { return _schedule_nodes._nodes.size(); }
+  
   void print_schedule ();
 
   Network* _net;

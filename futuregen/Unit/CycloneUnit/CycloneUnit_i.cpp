@@ -205,11 +205,10 @@ void Body_Unit_i::StartCalc (
     p.intfs.resize(1);
     gashelper.SumToInt(&summaries, p.intfs[0]);
     result = p.Save(rv);
-    std::cout<<"cp5\n";
+
     executive_->SetModuleResult(id_, result); //marks the end the execution
     delete gas_out_data;
     delete part_out_data;
-    std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (
@@ -282,8 +281,8 @@ char * Body_Unit_i::GetUserData (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     std::cout<<UnitName_<<" :GetUserData called"<<endl;
+
     return CORBA::string_dup(data_.c_str());
   }
   
@@ -296,14 +295,14 @@ void Body_Unit_i::SetParams (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    if (param!=NULL)
-      std::cout<<param<<std::endl;
+    //if (param!=NULL) std::cout<<param<<std::endl;
+   
     std::cout<<UnitName_<<" :SetParams called"<<endl;
+    
     Package p;
-        
     p.SetSysId("gui.xml");
     p.Load(param, strlen(param));
+    
     //Now make use of p.intfs to get your GUI vars out
     diameter = p.intfs[0].getDouble("diameter");
     _N = p.intfs[0].getDouble("particle_turn_count");
@@ -320,9 +319,9 @@ void Body_Unit_i::SetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    id_=id;
     std::cout<<UnitName_<<" :SetID called"<<endl;
+
+    id_=id;
   }
   
 CORBA::Long Body_Unit_i::GetID (
@@ -333,8 +332,8 @@ CORBA::Long Body_Unit_i::GetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     std::cout<<UnitName_<<" :GetID called"<<endl;
+   
     return id_;
   }
   
@@ -347,8 +346,8 @@ void Body_Unit_i::SetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     UnitName_ = std::string(name);
+   
     std::cout<<UnitName_<<" :SetName called"<<endl;
   }
   
@@ -359,10 +358,10 @@ char * Body_Unit_i::GetName (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    // Add your implementation here
+{
     std::cout<<UnitName_<<" :GetName called"<<endl;
-    return CORBA::string_dup(UnitName_.c_str());
+ 
+   return CORBA::string_dup(UnitName_.c_str());
   }
 
 void Body_Unit_i::error (std::string msg)

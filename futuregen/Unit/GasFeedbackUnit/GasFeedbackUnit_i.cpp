@@ -205,8 +205,8 @@ char * Body_Unit_i::GetStatusMessage (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    //std::cout<<UnitName_<<" :GetStatusMessage called"<<endl;
+    std::cout<<UnitName_<<" :GetStatusMessage called"<<endl;
+    
     const char *status;
     bool rv;
     Package p;
@@ -226,8 +226,8 @@ char * Body_Unit_i::GetUserData (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     std::cout<<UnitName_<<" :GetUserData called"<<endl;
+    
     return CORBA::string_dup(data_.c_str());
   }
   
@@ -240,14 +240,14 @@ void Body_Unit_i::SetParams (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    if (param!=NULL)
-      std::cout<<param<<std::endl;
+    //if (param!=NULL) std::cout<<param<<std::endl;
+    
     std::cout<<UnitName_<<" :SetParams called"<<endl;
+    
     Package p;
-        
     p.SetSysId("UI.xml");
     p.Load(param, strlen(param));
+    
     //Now make use of p.intfs to get your GUI vars out
     iterations = p.intfs[0].getDouble("iterations");
 
@@ -267,7 +267,8 @@ void Body_Unit_i::SetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
+    std::cout<<UnitName_<<" :SetID called"<<endl;
+
     id_=id;
   }
   
@@ -279,7 +280,8 @@ CORBA::Long Body_Unit_i::GetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
+    std::cout<<UnitName_<<" :GetID called"<<endl;
+
     return id_;
   }
   
@@ -292,7 +294,8 @@ void Body_Unit_i::SetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
+    std::cout<<UnitName_<<" :SetName called"<<endl;
+
     UnitName_ = std::string(name);
   }
   
@@ -304,7 +307,8 @@ char * Body_Unit_i::GetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
+    std::cout<<UnitName_<<" :GetName called"<<endl;
+
     return CORBA::string_dup(UnitName_.c_str());
   }
 
