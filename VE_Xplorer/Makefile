@@ -154,6 +154,7 @@ SRCS=\
    cfdScalarBarActor.cxx \
    cfdSceneNode.cxx \
    cfdStreamers.cxx \
+   cfdSwitch.cxx \
    cfdPolyData.cxx \
    cfdTeacher.cxx \
    cfdTransientInfo.cxx \
