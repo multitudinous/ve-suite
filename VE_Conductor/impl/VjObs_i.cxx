@@ -40,6 +40,7 @@
 #include "cfdModel.h"
 #include "cfdFILE.h"
 #include "cfdEnum.h"
+#include "cfdTempAnimation.h"
 
 #ifdef _OSG
 //#include "cfdTextureBasedVizHandler.h"
