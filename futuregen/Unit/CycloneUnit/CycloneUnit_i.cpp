@@ -77,6 +77,10 @@ void Body_Unit_i::StartCalc (
     //double sd = 1.25;
     double mean = gas_in_data->gas_composite.mean_size * 1e+6;
     double sd = pow(gas_in_data->gas_composite.size_variance, 0.5) * 1e+6;
+	if(part_mass_flow_rate<1.0e-10){
+		mean = 50.0;
+		sd = 10.0;
+	}
     
     //cout << "SIZE " << mean << " " << sd << endl;
     double velocity = gas_mass_flow_rate/(gas_density*Wi*H);
