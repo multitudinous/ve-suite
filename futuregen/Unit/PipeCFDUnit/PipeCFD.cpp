@@ -19,6 +19,8 @@
 #include <cstdio>
 #include <cmath>
 
+#include <ThirdParty/rei_lib/grid.h>
+
 class PipeCFD* PIPE_GLACIER_PTR;
 
 #include "externc.h"   // callback prototypes
@@ -75,6 +77,19 @@ bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summaries)
     system(("cp " + basepath + "GRID " + path + "/GRID").c_str());
     system(("cp " + basepath + "CPD_DATA " + path + "/CPD_DATA").c_str());
     system(("cp " + basepath + "CPD_DATA " + path + "/CPD_DATA").c_str());
+
+    // Create INLET
+    grid *grd = new grid((path+"/GRID").c_str());
+    grd->read_rei_grid();
+    // grd->size(0)
+    // grd->size(1)
+    // grd->size(2)
+    // grd->celltype(i,j,k)
+    // grd->x(i)
+    // grd->y(j)
+    // grd->z(k)
+    delete grd;
+
   }
 
   _gas_in = gas_in;

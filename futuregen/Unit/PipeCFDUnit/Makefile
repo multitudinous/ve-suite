@@ -20,7 +20,7 @@ endif # ! TAO_ROOT
 
 APP = PipeCFDApp
 
-LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO
+LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO -lTAO_BiDirGIOP
 
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(TAO_ROOT)/rules.tao.GNU
@@ -57,7 +57,16 @@ OBJECTS = ../string_ops.o \
 	../V21Helper/Therm/matrix.o \
 	../V21Helper/Therm/stream.o \
 	../V21Helper/Steam67/Steam67.o \
-	../V21Helper/Therm/thermo.o
+	../V21Helper/Therm/thermo.o \
+	../ThirdParty/rei_lib/cell.o \
+	../ThirdParty/rei_lib/db_file.o \
+	../ThirdParty/rei_lib/grid.o \
+	../ThirdParty/rei_lib/inl.o \
+	../ThirdParty/rei_lib/inlet.o \
+	../ThirdParty/rei_lib/interp.o \
+	../ThirdParty/rei_lib/scalar.o \
+	../ThirdParty/rei_lib/search.o \
+	../ThirdParty/rei_lib/vector.o
 
 
 .SUFFIXES : .o .cpp .cc	.f
