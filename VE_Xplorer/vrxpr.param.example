@@ -1,4 +1,4 @@
-6                    // Number of objects to be loaded
+7                    // Number of objects to be loaded
 0                    // OPTIONAL world DCS settings (default values shown)
    1 1 1             // Scale values
    0 0 0             // Translation values (in feet)
@@ -8,9 +8,9 @@
    90.0              // scalarBar Z-Rotation (in degrees: used to control orientation of the scalarBar)
    3.0  0.5          // scalarBar Height and Width (in feet)
 5
-   PIV_Image_and_Vectors.BMP
-   11  4.3  5              // Location of lower left corner
-   0                       // Orientation: 0=X-plane, 1=Y-plane, 2=Z-plane
+   PIV_Image_and_Vectors.BMP  // PIV data
+   11  4.3  5        // Location of lower left corner
+   0                 // Orientation: 0=X-plane, 1=Y-plane, 2=Z-plane
 8                    // Object type 8: vtkDataSets, e.g., unstructured grids, or polydatas such as surfaces or particle tracks
    1 1 1             // DCS Scale values
    0 0 0             // DCS Translation values (in feet)
@@ -18,9 +18,9 @@
    flowdata.vtk      // vtkDataSet name
    ./POST_DATA       // precomputed data slice directory (insert JUNK if n/a)
    ./SURFACE         // precomputed surface directory    (insert JUNK if n/a)
-9                    // Object type 9: Geometry file name
+9                    // Object type 9: Geometry: *.stl, *.iv, *.pfb, *.obj
    1                 // transparency toggle (1=make geom transparent when visualizations are active)
-   1   1.0 0.0 0.0   // color flag (and 3 color values if flag = 1)
+   1   1.0 0.0 0.0   // stl color flag (and 3 color values if flag = 1)
    3.93 3.93 3.93    // Scale values for geometry file
    3.5 .72 3.287     // Translation values for geometry file
    90 0 0            // Rotation values for geometry file
@@ -42,7 +42,7 @@
    1 1 1             // Transient geometry dcs scale values
    0 0 0             // Transient geometry dcs translation values
    0 0 0             // Transient geometry dcs rotation values
-   1  1  1.0 1.0 1.0 // Transient geometry transparency setting, color flag (and 3 color values if flag = 1)
+   1  1  1.0 1.0 1.0 // Transient geometry transparency setting, stl color flag (and 3 color values if flag = 1)
    6                 // Duration of the transient sequence in seconds
 11                   // Object type 11: Sound File object, must have Sound API working, recommend OpenAL
    0                 // ambient, is played as background noise
