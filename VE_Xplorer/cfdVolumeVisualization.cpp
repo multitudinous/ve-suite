@@ -442,7 +442,7 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
             _utCbk =  new cfdUpdateTextureCallback();
          
             _utCbk->SetTextureManager(_tm);
-            _utCbk->SetDelayTime(1.0);
+            _utCbk->SetDelayTime(0.1);
          
             int* res = _tm->fieldResolution();
             _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);

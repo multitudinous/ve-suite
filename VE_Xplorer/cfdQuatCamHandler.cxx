@@ -65,6 +65,7 @@ cfdQuatCamHandler::cfdQuatCamHandler( cfdDCS* worldDCS, cfdNavigate* nav, char* 
    _readParam = NULL;
    _param = NULL;
    t = 0.0;
+   numQuatCams = 0;
    
    _worldDCS = worldDCS;
    _nav = nav;

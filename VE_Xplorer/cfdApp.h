@@ -109,6 +109,10 @@ class cfdApp: public vrj::OsgApp
       // Function called after pfSync and before pfDraw
       virtual void preFrame( );
 
+      // Function called after pfSync and before pfDraw
+      //Function called after preFrame() and application-specific data syncronization (in a cluster configuration) but before the start of a new frame.
+      virtual void latePreFrame( );
+
       // Function called after pfDraw
       virtual void intraFrame( );
 
