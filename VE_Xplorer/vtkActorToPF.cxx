@@ -26,6 +26,15 @@
 //=========================================================================
 
 #include "vtkActorToPF.h"
+#ifdef VTK4
+#include "vtkDataSet.h"
+#include "vtkPolyData.h"
+#include "vtkPointData.h"
+#include "vtkCellData.h"
+#include "vtkImageData.h"
+#include "vtkProperty.h"
+#include "vtkTexture.h"
+#endif
 #include <Performer/pr/pfTexture.h>
 
 pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode, int verbose) {
@@ -149,8 +158,7 @@ void vtkActorToGeoSets(vtkActor *actor, pfGeoSet *gsets[], int verbose) {
 pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
                       int primType, int verbose) {
 
-  int transparentFlag = 0;
-   // get polyData from vtkActor
+  // get polyData from vtkActor
   vtkPolyData *polyData = (vtkPolyData *) actor->GetMapper()->GetInput();
 
   int numPrimitives = primArray->GetNumberOfCells();
@@ -251,23 +259,23 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     }
     if (normalPerCell) {
 #ifdef VTK4
-      double *aNormal = normals->GetTuple(prim);
+      float *aNormal = normals->GetTuple(prim);
 #else
       float *aNormal = normals->GetNormal(prim);
 #endif
-      norms[prim].set((float)aNormal[0], (float)aNormal[1], (float)aNormal[2]);
+      norms[prim].set(aNormal[0], aNormal[1], aNormal[2]);
     }
     // go through points in cell (verts)
     for (i=0; i < npts; i++) {
-      double *aVertex = polyData->GetPoint(pts[i]);
-      verts[vert].set((float)aVertex[0], (float)aVertex[1], (float)aVertex[2]);
+      float *aVertex = polyData->GetPoint(pts[i]);
+      verts[vert].set(aVertex[0], aVertex[1], aVertex[2]);
       if (normalPerVertex) {
 #ifdef VTK4
-        double *aNormal = normals->GetTuple(pts[i]);
+        float *aNormal = normals->GetTuple(pts[i]);
 #else
         float *aNormal = normals->GetNormal(pts[i]);
 #endif
-        norms[vert].set((float)aNormal[0], (float)aNormal[1], (float)aNormal[2]);
+        norms[vert].set(aNormal[0], aNormal[1], aNormal[2]);
       }
       if (colorPerVertex) {  
 #ifdef VTK4
@@ -278,15 +286,15 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
         colors[vert].set(aColor[0]/255.0f, aColor[1]/255.0f,
                                 aColor[2]/255.0f, aColor[3]/255.0f);
         if ( aColor[3]/255.0f < 1 )
-           transparentFlag = 1;
-      }
+           transparentFlag = 1; 
+	  }
       if (texCoords != NULL) {
 #ifdef VTK4
-        double *aTCoord = texCoords->GetTuple(pts[i]);
+        float *aTCoord = texCoords->GetTuple(pts[i]);
 #else
         float *aTCoord = texCoords->GetTCoord(pts[i]);
 #endif
-        tcoords[vert].set((float)aTCoord[0], (float)aTCoord[1]);
+        tcoords[vert].set(aTCoord[0], aTCoord[1]);
       }
       vert++;
     }
@@ -305,11 +313,11 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     gset->setAttr(PFGS_COLOR4, PFGS_PER_PRIM, colors, NULL);
   else { 
     // use overall color (get from Actor)
-    double *actorColor = actor->GetProperty()->GetColor();
+    float *actorColor = actor->GetProperty()->GetColor();
     float opacity = actor->GetProperty()->GetOpacity();
 
     pfVec4 *color = (pfVec4 *) pfMalloc(sizeof(pfVec4), pfArena);
-    color->set((float)actorColor[0], (float)actorColor[1], (float)actorColor[2], opacity);
+    color->set(actorColor[0], actorColor[1], actorColor[2], opacity);
     gset->setAttr(PFGS_COLOR4, PFGS_OVERALL, color, NULL);
   }
   
@@ -328,8 +336,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   if (actor->GetProperty()->GetOpacity() < 1.0 || transparentFlag ) {
     gset->setDrawBin(PFSORT_TRANSP_BIN); // draw last
     gstate->setMode(PFSTATE_CULLFACE, PFCF_OFF); // want to see backside thru
-    //gstate->setMode(PFSTATE_TRANSPARENCY, PFTR_HIGH_QUALITY);//| PFTR_NO_OCCLUDE
-    gstate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA );//| PFTR_NO_OCCLUDE
+    gstate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA);//| PFTR_NO_OCCLUDE
   }
 
   // wireframe
@@ -339,7 +346,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   // points - NOTE: you can modify properties of points through lpState
   if (actor->GetProperty()->GetRepresentation() == VTK_POINTS) {
     gset->setPrimType(PFGS_POINTS);
-    gset->setPntSize( actor->GetProperty()->GetPointSize() );
+	gset->setPntSize( actor->GetProperty()->GetPointSize() );
     pfLPointState *lpState = new pfLPointState; 
     gstate->setMode(PFSTATE_ENLPOINTSTATE, PF_ON);
     gstate->setAttr(PFSTATE_LPOINTSTATE, lpState);
@@ -443,7 +450,7 @@ void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int verb
   if (bytesPerPixel == 2 || bytesPerPixel == 4) {
     gset->setDrawBin(PFSORT_TRANSP_BIN);  // draw last
     gstate->setMode(PFSTATE_CULLFACE, PFCF_OFF); // want to see backside thru
-    gstate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
+    gstate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA); //| PFTR_NO_OCCLUDE);
   }
 
   // set geostate attributes
