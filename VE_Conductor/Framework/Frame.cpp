@@ -161,22 +161,22 @@ void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
 
 void AppFrame::OnClose(wxCloseEvent &event)
 {
-  if (is_orb_init)
-    {
+   if (is_orb_init)
+   {
       //CosNaming::Name UIname(1);
       //UIname.length(1);
       //if (p_ui_i!=NULL && p_ui_i->UIName_!="")
-	//{
-	 // UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
-	  //naming_context->unbind(UIname);
-	  if ( poa != NULL )
-	  poa->destroy (1, 1);
-	//}
+	   //{
+	   // UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
+	   //naming_context->unbind(UIname);
+	   if ( !CORBA::is_nil(poa) )
+	      poa->destroy (1, 1);
+	   //}
       orb->destroy();
-    }
+   }
   
-  StoreFrameSize(GetRect(), NULL);
-  Destroy();
+   StoreFrameSize(GetRect(), NULL);
+   Destroy();
 }
 
 void AppFrame::CreateMenu() 
