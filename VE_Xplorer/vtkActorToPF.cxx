@@ -25,10 +25,11 @@
 //#     baker@ncsa.uiuc.edu
 //=========================================================================
 
+// vtkActorToPF.h will define VTK4 if VTK44 is defined
 #include "vtkActorToPF.h"
+
 // starting with vtk4.4, doubles replaced floats
 #ifdef VTK44
-#define VTK4
 typedef double vtkReal;
 #else
 typedef float vtkReal;
