@@ -89,6 +89,15 @@ switch ($1)
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/mergeVertices
   breaksw
 
+  case -meshView:
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/meshViewer
+  breaksw
+
+  case -scalRange:
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/whatIsScalarRange
+  breaksw
+
+
   case -h:
   default:
   echo ""
@@ -114,6 +123,8 @@ switch ($1)
   echo "  "-transVTK = move flowdata to align with geometry
   echo "      "-make = make all VE-Suite modules
   echo " "-makeclean = clean all VE-Suite modules
+  echo "  "-meshView = view any vtk file
+  echo " "-scalRange = view scalar range of any vtk file
   echo ""
   
 endsw
