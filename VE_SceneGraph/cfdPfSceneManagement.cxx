@@ -59,23 +59,24 @@
 #include "cfdDCS.h"
 #include "cfdGroup.h"
 
-//using namespace std;
-
-cfdPfSceneManagement::cfdPfSceneManagement( char* paramfilename )
+cfdPfSceneManagement::cfdPfSceneManagement( void )
 {
-   //std::cout << "entering cfdPfSceneManagement constructor" << std::endl;
-   this->param = paramfilename;
-   this->rootNode = NULL;
-   this->worldDCS = NULL;
-   //this->gstate = NULL;
+   this->_param = 0;
+   this->rootNode = 0;
+   this->worldDCS = 0;
 #ifdef _PERFORMER
-   this->sunModel = NULL;
-   this->sun = NULL;
-   this->lit = NULL;
+   this->sunModel = 0;
+   this->sun = 0;
+   this->lit = 0;
 #elif _OSG
 #endif
-   //std::cout << "finished constructing cfdPfSceneManagement with param = " << this->param << std::endl;
 }
+
+void cfdPfSceneManagement::Initialize( char* param )
+{
+   _param = param;
+}
+
 ///////////////////////////////////////////////////
 cfdPfSceneManagement::~cfdPfSceneManagement( void )
 {

@@ -34,20 +34,26 @@
 
 class cfdDCS;
 class cfdGroup;
-//class pfGeoState;
+
 #ifdef _PERFORMER
 class pfLightModel;
 class pfLightSource;
 #elif _OSG
 #endif
-//#include <string>
+#include <vpr/Util/Singleton.h>
 
-class cfdPfSceneManagement
+class cfdPfSceneManagement : public vpr::Singleton< cfdPfSceneManagement >
 {
-   public:
-      cfdPfSceneManagement( char* );
+   private:
+      // Required so that vpr::Singleton can instantiate this class.
+      friend class vpr::Singleton< cfdPfSceneManagement >;
+      //cfdPfSceneManagement(const cfdPfSceneManagement& o) { ; }
+      //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
+      cfdPfSceneManagement( void );
       ~cfdPfSceneManagement();
       
+   public:
+      void Initialize( char * );
       void InitScene( void );
       
       cfdGroup* GetRootNode( void );
@@ -55,7 +61,7 @@ class cfdPfSceneManagement
 
    private:
       //std::string    param;
-      char*          param;
+      char*          _param;
       cfdGroup*      rootNode;  
       cfdDCS*        worldDCS;
 
