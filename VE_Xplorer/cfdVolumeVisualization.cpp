@@ -631,16 +631,20 @@ if(!_tm){
       _volumeVizNode->addChild(_noShaderGroup.get());
    }
    
-   if(_stateSet.valid()){
+   if ( _stateSet.valid() )
+   {
       _noShaderGroup->setStateSet(_stateSet.get());
    }
 
 
-   if(_texGenParams.valid()){
+   if ( _texGenParams.valid() )
+   {
       _noShaderGroup->addChild(_texGenParams.get());
 
-      if(_slices.valid()){
-         _vSSCbk =  new cfdVolumeSliceSwitchCallback( &(osg::Vec3f)_bbox->center() );
+      if ( _slices.valid() )
+      {
+         osg::Vec3f temp( _bbox->center() );
+         _vSSCbk =  new cfdVolumeSliceSwitchCallback( &temp );
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::X_POS,_posXSlices);
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Y_POS,_posYSlices);
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Z_POS,_posZSlices);
