@@ -99,11 +99,6 @@ OBJDIR= $(CFDHOSTTYPE)
 #DEPDIR is the place that the dependency files are stored.
 DEPDIR= $(CFDHOSTTYPE)
 
-#__________________________________________________________
-# Where is Paul Rajlich's vtkActorToPF directory?
-
-#VTK_TO_PF    = ${VE_SUITE_HOME}/VE_XPlorer/vtkActorToPF
-
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
@@ -173,8 +168,7 @@ WhiteboardSubject.java
 DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE
 
-# vtkActorToPF needs VTK4
-EXTRA_CXXFLAGS+= -DVTK4 -DVTK44 -DTABLET
+EXTRA_CXXFLAGS+= -DTABLET
 EXTRA_LIBS+= -L${HOME}/software/IRIX/lib -lcppdom
 EXTRA_INCLUDES+= -I${HOME}/software/IRIX/include
 #$(EXTRA_FLAGS) 
