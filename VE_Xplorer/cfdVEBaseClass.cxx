@@ -30,13 +30,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
+#include "cfdVEBaseClass.h"
+
 // Constructor
 cfdVEBaseClass( void )
 {
+   this->dataRepresentation = new cfdObjects();
 }
 
 // Destructor
-~cfdVEBaseClass( void );
+~cfdVEBaseClass( void )
+{
+   delete this->dataRepresentation;
+}
 
 // Methods to do scene graph manipulations
 // New methods may have to be added later
@@ -45,14 +51,72 @@ void AddSelfToSG( void )
 
 }
 
-void RemoveSelfFromSG( void );
+virtual void RemoveSelfFromSG( void );
 
 // Change state information for geometric representation
-void MakeTransparent( void );
-void SetColor( float* );
-
+virtual void MakeTransparent( void );
+virtual void SetColor( float* );
+      
 // transform object based 
-void SetTransforms( float*, float*, float* );
+virtual void SetTransforms( float* scale, float* rot, float* trans)
+{
+   this->SetTranslationArray( trans );
+   this->SetScaleArray( scale );
+   this->SetRotationArray( rot );
+}
 
-void GetDataFromUnit( void );
-void MakeGeodeByUserRequest( int );
+// Implement Gengxun's work by using socket
+// stuff from vtk. This will be used in parallel
+// with implementation of a unit connected to the 
+// computational engine.
+virtual void GetDataFromUnit( void )
+{
+   // Need to get Gengxun's work
+}
+// Basically uses vtkActorToPF to create a geode and 
+// add it to the scene graph. Probably use cfdObject.
+virtual void MakeGeodeByUserRequest( int )
+{
+   this->dataRepresentation->UpdateGeode();
+}
+
+//This returns the name of the module
+virtual wxString GetName( void )
+{
+   return this->_objectName;
+}
+
+//This returns the description of the module, This should be a short description
+virtual wxString GetDesc( void )
+{
+   return this->_objectDescription;
+}
+
+
+//This is the load function of the module, unpack the input string and fill up the UI according to this
+virtual void UnPack(Interface* intf)
+{
+}
+
+virtual Interface* Pack()
+{
+}
+
+//This is to unpack the result from the 
+virtual void UnPackResult(Interface * intf)
+{
+}
+
+// Set the id for a particular module
+virtual void SetID(int id)
+{
+}
+   
+// Stuff taken from Plugin_base.h
+// All of Yang's work (REI)
+void RegistVar(string vname, long *var);
+void RegistVar(string vname, double *var);
+void RegistVar(string vname, std::string *var);
+void RegistVar(string vname, std::vector<long> *var);
+void RegistVar(string vname, std::vector<double> *var);
+void RegistVar(string vname, std::vector<std::string> *var);

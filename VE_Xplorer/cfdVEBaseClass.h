@@ -116,6 +116,9 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public cfdDCS, public wxObject // Inheri
 
       pfDCS*   worldNode;
 
+      wxString _objectName;
+      wxString _objectDescription;
+
    protected:
       // Stuff taken from Plugin_base.h
       // All of Yang's work (REI)
@@ -134,6 +137,8 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public cfdDCS, public wxObject // Inheri
       std::map<std::string, std::vector<long> * >        _int1D;
       std::map<std::string, std::vector<double> * >      _double1D;
       std::map<std::string, std::vector<std::string> * > _string1D;
+
+      cfdObjects* dataRepresentation;
 };
 
 #endif
