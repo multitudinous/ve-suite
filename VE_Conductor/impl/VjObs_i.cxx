@@ -106,7 +106,8 @@ void VjObs_i::CreateDatasetInfo( void )
          CORBA::ULong numDatasets = temp->GetNumberOfCfdDataSets();
          vprDEBUG(vprDBG_ALL,0) << " numDatasets = " << numDatasets
                           << std::endl << vprDEBUG_FLUSH;
-   
+         if ( numDatasets > 0 )
+         {
          (*_models)[ i ].datasetnames = VjObs::scalar_p( numDatasets ); 
          (*_models)[ i ].datasetnames.length( numDatasets );
 
@@ -179,7 +180,7 @@ void VjObs_i::CreateDatasetInfo( void )
                vIndex++;
             }
          }
-      
+         }
          CORBA::ULong numGeoArrays = temp->GetNumberOfGeomDataSets();
          vprDEBUG(vprDBG_ALL,0)
                << " Number of geometries to be transfered to the client: "
