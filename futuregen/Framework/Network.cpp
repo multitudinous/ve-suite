@@ -2716,9 +2716,11 @@ void Network::LoadS(const char* inputs)
 {
   Package p;
   p.SetSysId("temp.xml");
-  p.Load(inputs, strlen(inputs));
-  UnPack(p.intfs);
-
+  if (string(inputs)!="")
+  {
+	p.Load(inputs, strlen(inputs));
+	UnPack(p.intfs);
+  }
 }
 
 //////////////////////////////////////////////////////
