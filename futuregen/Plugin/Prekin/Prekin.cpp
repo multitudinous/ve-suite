@@ -26,6 +26,7 @@ Prekin
   RegistVar("pore_radii_micro", &pore_radii_micro);
   RegistVar("pore_macroposity", &pore_macroposity);
   RegistVar("pore_porosity", &pore_porosity);
+  RegistVar("HTVL", &HTVL);
   RegistVar("CPD_AB", &CPD_AB);
   RegistVar("CPD_AC", &CPD_AC);
   RegistVar("CPD_AG", &CPD_AG);
@@ -119,6 +120,7 @@ Prekin
   pore_radii_micro = 0.1;
   pore_macroposity = 0.1;
   pore_porosity = 0.58;
+  HTVL = -1;
   CPD_AB = 2.602E+15;
   CPD_AC = 0.9;
   CPD_AG = 3.0E+15;
@@ -153,9 +155,9 @@ Prekin
   MIR_k3o = -1;
   MIR_k2ok3o = 50000;
   MIR_k3ok1o = 1E-6;
-  MIR_E1 = 32000;
+  MIR_E1 = 6000;
   MIR_E2 = 28000;
-  MIR_E3 = 6000;
+  MIR_E3 = 32000;
   IRO_Step2 = 1.0;
   Aco = 200;
   Eco = 9000;
@@ -194,7 +196,7 @@ Prekin
   manual_input = 0;
   oxidation_flag = 0;
   MIR = 0;
-  Gasification_flag = 0;
+  Gasification_flag = 2;
   FORL_CH = 0;
   LHK_CH = 0;
   Schema = 0;
@@ -302,6 +304,7 @@ UIDialog* Prekin::UI(wxWindow* parent)
      &pore_radii_micro,
      &pore_macroposity,
      &pore_porosity,
+	 &HTVL,
      &CPD_AB,
      &CPD_AC,
      &CPD_AG,

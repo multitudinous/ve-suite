@@ -65,6 +65,7 @@ class Prekin : public REI_Plugin
   double pore_radii_micro;
   double pore_macroposity;
   double pore_porosity;
+  double HTVL;
   double CPD_AB;
   double CPD_AC;
   double CPD_AG;

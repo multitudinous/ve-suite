@@ -15,9 +15,11 @@ enum {
   MANUAL_INPUT,
   OXIDATION_FLAG1,
   OXIDATION_FLAG2,
+  OXIDATION_FLAG3,
   MIR,
   GASIFICATION_FLAG1,
   GASIFICATION_FLAG2,
+  GASIFICATION_FLAG3,
   FOPL_CH,
   LHK_CH    
 };
@@ -53,6 +55,7 @@ class PrekinTabs : public wxNotebook
   wxTextCtrl* t_pore_radii_micro;
   wxTextCtrl* t_pore_macroposity;
   wxTextCtrl* t_pore_porosity;
+  wxTextCtrl* t_HTVL;
   wxTextCtrl* t_CPD_AB;
   wxTextCtrl* t_CPD_AC;
   wxTextCtrl* t_CPD_AG;
@@ -134,11 +137,13 @@ class PrekinTabs : public wxNotebook
 
   wxRadioButton* rb_oxidation_flag1;
   wxRadioButton* rb_oxidation_flag2;
+  wxRadioButton* rb_oxidation_flag3;
 
   wxCheckBox* cbo_MIR;
 
   wxRadioButton* rb_Gasification_flag1;
   wxRadioButton* rb_Gasification_flag2;
+  wxRadioButton* rb_Gasification_flag3;
 
   wxRadioBox* rb_FOPL_CH;
   
@@ -182,6 +187,7 @@ class Prekin_UI_Dialog : public UIDialog
           double* pore_radii_micro,
           double* pore_macroposity,
           double* pore_porosity,
+		  double* HTVL,
           double* CPD_AB,
           double* CPD_AC,
           double* CPD_AG,
@@ -287,6 +293,7 @@ class Prekin_UI_Dialog : public UIDialog
   double* p_pore_radii_micro;
   double* p_pore_macroposity;
   double* p_pore_porosity;
+  double* p_HTVL;
   double* p_CPD_AB;
   double* p_CPD_AC;
   double* p_CPD_AG;
@@ -371,6 +378,7 @@ class Prekin_UI_Dialog : public UIDialog
   void entry2double(wxTextCtrl* entry, double * value);
   //GUI Variables
   
+  void WriteProfile(const char* filename);
 };
 
 #endif

@@ -9,9 +9,11 @@ BEGIN_EVENT_TABLE(PrekinTabs, wxNotebook)
   EVT_CHECKBOX(MANUAL_INPUT, PrekinTabs::Onmanual_input)
   EVT_RADIOBUTTON(OXIDATION_FLAG1, PrekinTabs::Onoxidation_flag)
   EVT_RADIOBUTTON(OXIDATION_FLAG2, PrekinTabs::Onoxidation_flag)
+  EVT_RADIOBUTTON(OXIDATION_FLAG3, PrekinTabs::Onoxidation_flag)
   EVT_CHECKBOX(MIR, PrekinTabs::OnMIR)
   EVT_RADIOBUTTON(GASIFICATION_FLAG1, PrekinTabs::OnGasification_flag)
   EVT_RADIOBUTTON(GASIFICATION_FLAG2, PrekinTabs::OnGasification_flag)
+  EVT_RADIOBUTTON(GASIFICATION_FLAG3, PrekinTabs::OnGasification_flag)
   EVT_RADIOBOX(FOPL_CH, PrekinTabs::OnFOPL_CH)
   EVT_RADIOBOX(LHK_CH, PrekinTabs::OnLHK_CH)
 END_EVENT_TABLE()
@@ -33,6 +35,7 @@ Prekin_UI_Dialog
   double* pore_radii_micro,
   double* pore_macroposity,
   double* pore_porosity,
+  double* HTVL,
   double* CPD_AB,
   double* CPD_AC,
   double* CPD_AG,
@@ -126,6 +129,7 @@ Prekin_UI_Dialog
   p_pore_radii_micro(pore_radii_micro),
   p_pore_macroposity(pore_macroposity),
   p_pore_porosity(pore_porosity),
+  p_HTVL(HTVL),
   p_CPD_AB(CPD_AB),
   p_CPD_AC(CPD_AC),
   p_CPD_AG(CPD_AG),
@@ -220,7 +224,7 @@ Prekin_UI_Dialog
   top_sizer->Add(ok_row, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0); //the bottom margin
 
-  ok_row->Add(new wxButton(this, wxID_OK, "OK"), 0, wxALIGN_CENTER_HORIZONTAL);
+  ok_row->Add(new wxButton(this, wxID_OK, "Generate Profile"), 0, wxALIGN_CENTER_HORIZONTAL);
   ok_row->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALIGN_CENTER_HORIZONTAL);
   SetSizer(top_sizer);
   top_sizer->Layout();
@@ -251,6 +255,7 @@ bool Prekin_UI_Dialog::TransferDataFromWindow()
   entry2double(m_tabs->t_pore_radii_micro, p_pore_radii_micro);
   entry2double(m_tabs->t_pore_macroposity, p_pore_macroposity);
   entry2double(m_tabs->t_pore_porosity, p_pore_porosity);
+  entry2double(m_tabs->t_HTVL, p_HTVL);
   entry2double(m_tabs->t_CPD_AB, p_CPD_AB);
   entry2double(m_tabs->t_CPD_AC, p_CPD_AC);
   entry2double(m_tabs->t_CPD_AG, p_CPD_AG);
@@ -329,11 +334,22 @@ bool Prekin_UI_Dialog::TransferDataFromWindow()
   
   *p_manual_input=m_tabs->cbo_manual_input->GetValue();
 
-  *p_oxidation_flag=m_tabs->rb_oxidation_flag1->GetValue();
+  if (m_tabs->rb_oxidation_flag1->GetValue())
+	  *p_oxidation_flag=0;
+  else if (m_tabs->rb_oxidation_flag2->GetValue())
+	  *p_oxidation_flag=1;
+  else
+	  *p_oxidation_flag=2;
   
   *p_MIR=m_tabs->cbo_MIR->GetValue();
 
-  *p_Gasification_flag=m_tabs->rb_Gasification_flag1->GetValue();
+  if (m_tabs->rb_Gasification_flag1->GetValue())
+	  *p_Gasification_flag=0;
+  else if (m_tabs->rb_Gasification_flag2->GetValue())
+	  *p_Gasification_flag=1;
+  else
+	  *p_Gasification_flag=2;
+
   
   *p_FORL_CH=m_tabs->rb_FOPL_CH->GetSelection();
   
@@ -341,6 +357,8 @@ bool Prekin_UI_Dialog::TransferDataFromWindow()
   
   *p_Schema=m_tabs->rb_Schema->GetSelection();
 
+  wxString ofname=wxFileSelector(_T("Profile name"), "", "Profile001", "txt");
+  WriteProfile(ofname.c_str());
   return true;
 }
 
@@ -360,6 +378,7 @@ bool Prekin_UI_Dialog::TransferDataToWindow()
   double2entry(m_tabs->t_pore_radii_micro, p_pore_radii_micro);
   double2entry(m_tabs->t_pore_macroposity, p_pore_macroposity);
   double2entry(m_tabs->t_pore_porosity, p_pore_porosity);
+  double2entry(m_tabs->t_HTVL, p_HTVL);
   double2entry(m_tabs->t_CPD_AB, p_CPD_AB);
   double2entry(m_tabs->t_CPD_AC, p_CPD_AC);
   double2entry(m_tabs->t_CPD_AG, p_CPD_AG);
@@ -439,13 +458,42 @@ bool Prekin_UI_Dialog::TransferDataToWindow()
   
   m_tabs->cbo_manual_input->SetValue(bool(*p_manual_input));
 
-  m_tabs->rb_oxidation_flag1->SetValue(bool(*p_oxidation_flag));
-  m_tabs->rb_oxidation_flag2->SetValue(!bool(*p_oxidation_flag));
-  
+  switch(*p_oxidation_flag)
+  {
+  case 0:  
+	  m_tabs->rb_oxidation_flag1->SetValue(true);
+	  m_tabs->rb_oxidation_flag2->SetValue(false);
+	  m_tabs->rb_oxidation_flag1->SetValue(false);
+	  break;
+  case 1:
+	  m_tabs->rb_oxidation_flag1->SetValue(false);
+	  m_tabs->rb_oxidation_flag2->SetValue(true);
+	  m_tabs->rb_oxidation_flag1->SetValue(false);
+	  break;
+  case 2:
+	  m_tabs->rb_oxidation_flag1->SetValue(false);
+	  m_tabs->rb_oxidation_flag2->SetValue(false);
+	  m_tabs->rb_oxidation_flag1->SetValue(true);
+	  break;
+  }
+
   m_tabs->cbo_MIR->SetValue(bool(*p_MIR));
 
-  m_tabs->rb_Gasification_flag1->SetValue(bool(*p_Gasification_flag));
-  m_tabs->rb_Gasification_flag2->SetValue(!bool(*p_Gasification_flag));
+  switch (*p_Gasification_flag)
+  {
+  case 0:
+	  m_tabs->rb_Gasification_flag1->SetValue(true);
+	  m_tabs->rb_Gasification_flag1->SetValue(false);
+	  m_tabs->rb_Gasification_flag1->SetValue(false);
+  case 1:
+	  m_tabs->rb_Gasification_flag1->SetValue(false);
+	  m_tabs->rb_Gasification_flag1->SetValue(true);
+	  m_tabs->rb_Gasification_flag1->SetValue(false);
+  case 2:
+	  m_tabs->rb_Gasification_flag1->SetValue(false);
+	  m_tabs->rb_Gasification_flag1->SetValue(false);
+	  m_tabs->rb_Gasification_flag1->SetValue(true);
+  }  
   
   m_tabs->rb_FOPL_CH->SetSelection(*p_FORL_CH);
   
@@ -458,8 +506,6 @@ bool Prekin_UI_Dialog::TransferDataToWindow()
   m_tabs->OnPoreModel(event);
   m_tabs->Onmod_sel(event);
   m_tabs->Onmanual_input(event);
-  m_tabs->Onoxidation_flag(event);
-  m_tabs->OnMIR(event);
   m_tabs->OnGasification_flag(event);
   m_tabs->OnFOPL_CH(event);
   m_tabs->OnLHK_CH(event);
@@ -485,6 +531,410 @@ void Prekin_UI_Dialog::entry2double(wxTextCtrl* entry, double * value)
   (*value) = atof(txt.c_str());
 }
 
+void Prekin_UI_Dialog::WriteProfile(const char* filename)
+{
+  FILE* inputf;
+  double coalC, coalH, coalO, coalASH, ASTM;
+  double alpha, beta;
+  char L120, LCPD, LKOBA;
+  char LRCPD;
+  char LPWLAW,LSEMG,LCO2G,LH2OG,LCO2PL,LH2OPL;
+  char LKoSo, LRANDOMP;
+  
+  double AB, EB, EBSIG;
+  double ACC, EC;
+  double AG, EG, EGSIG;
+  double ACR, ECR;
+  double P0, C0, SIGP1, MW, MDEL;
+  double A11, E11, Y11;
+  double A22, E22, Y22;
+  double XKOSO; //*p_MIR_koso;
+  double RKO; //*p_MIR_ko;
+  double RSO; //*p_MIR_so;
+  double IAE; // *p_MIR_IAE;
+  double XN; // *p_MIR_IRO;
+  double XK3OI; // *p_MIR_k3o;
+  double XK2OBYK3O; // *p_MIR_k2ok3o;
+  double XK3OBYK1O; //*p_MIR_k3ok1o;
+  double E3; //*p_MIR_E3;
+  double E2; //*p_MIR_E2;
+  double E1; // *p_MIR_E1;
+  double ZN; //*p_IRO_Step2;
+
+  double ACO; // *p_Aco;
+  double ECO; // *p_Eco;
+
+  double RKO_CO2PL; // *p_FORL_ko;
+  double RSO_CO2PL; // *p_FORL_so;
+  double IAE_CO2; // *p_FORL_IAE;
+  double IRO_CO2; // *p_FORL_IRO;
+  
+  double RKO_H2O; // *p_FORL_ko; //H2O
+  double RSO_H2O; // *p_FORL_so;
+  double IAE_H2O; // *p_FORL_IAE;
+  double IRO_H2O; // *p_FORL_IRO;
+  
+  double XLHK1O, XLHK2O, XLHK3O;// *p_LHK_k1o, *p_LHK_k2o, *p_LHK_k3o;
+  double XLHE1, XLHE2, XLHE3; // *p_LHK_E1, *p_LHK_E2, *p_LHK_E3;
+  double PRR_FR, PRR_TO, PRR_NUM; // *p_PR_ratio_fr, *p_PR_ratio_to, *p_num_steps;
+
+  double RADIP1, RADIP2, EPSM, EPS; //*p_pore_radii_macro, *p_pore_radii_micro, *p_pore_macroposity, *p_pore_porosity;
+  double TAUBYF; //*p_T_f;
+  
+
+  alpha = *p_size_50;
+  beta = *p_size_200;
+  
+  coalC=coalH=coalO=coalASH=ASTM=0.0;
+
+  if(*p_coal_name == "Pittsburg_#8") {
+    coalC    = 76.62;
+    coalH    = 4.96;
+    coalO    = 8.19;
+    coalASH  = 7.01;
+    ASTM   = 30.22;
+  }
+  else if(*p_coal_name == "Illinois_#5") {
+    coalC    = 69.230892;
+    coalH    = 4.189073;
+    coalO    = 14.328181;
+    coalASH  = 11.06;
+    ASTM   = 34.17824;
+  }
+  else if(*p_coal_name == "Illinois_#6") {
+    coalC    = 71.725923;
+    coalH    = 5.063006;
+    coalO    = 7.740774;
+    coalASH  = 10.913591;
+    ASTM   = 34.99;
+  }
+  else if (*p_coal_name == "Petcoke") {
+    coalC    = 87.48;
+    coalH    = 2.74;
+    coalO    = 3.09;
+    coalASH  = 0.52;
+    ASTM   = 12.4;
+  }
+  else if(*p_coal_name == "Pike_County") {
+    coalC    = 74.87;
+    coalH    = 4.85;
+    coalO    = 10.45;
+    coalASH  = 7.41;
+    ASTM   = 33.8;
+  }
+  else if (*p_coal_name == "Pocahantas_#3") {
+    coalC    = 87.85;
+    coalH    = 4.01;
+    coalO    = 1.31;
+    coalASH  = 4.83;
+    ASTM   = 17.11;
+  }
+  else if (*p_coal_name == "E-Gas_Illinois_#6") {
+    coalC    = 70.4;
+    coalH    = 4.8;
+    coalO    = 6.96;
+    coalASH  = 12.6;
+    ASTM   = 40.0;
+  }
+  else if (*p_coal_name == "E-Gas_Utah") {
+    coalC    = 73.5;
+    coalH    = 5.27;
+    coalO    = 6.64;
+    coalASH  = 12.59;
+    ASTM   = 41.0;
+  }
+  else if (*p_coal_name == "E-Gas_Wyodak") {
+    coalC    = 67.59;
+    coalH    = 4.8;
+    coalO    = 17.7;
+    coalASH  = 7.9;
+    ASTM   = 47.0;
+  }
+  else if (*p_coal_name == "E-Gas_Wyoming") {
+    coalC    = 69.05;
+    coalH    = 4.75;
+    coalO    = 17.01;
+    coalASH  = 7.63;
+    ASTM   = 41.0;
+  }
+  else if (*p_coal_name == "E-Gas_AppMS") {
+    coalC    = 77.74;
+    coalH    = 5.14;
+    coalO    = 5.7;
+    coalASH  = 7.63;
+    ASTM   = 30.38;
+  }
+  else if (*p_coal_name == "E-Gas_AppLS") {
+    coalC    = 76.0;
+    coalH    = 4.9;
+    coalO    = 6.45;
+    coalASH  = 10.4;
+    ASTM   = 25.0;
+  }
+
+  AB= 2.602e+15; EB=55400; EBSIG = 1800;
+  ACC= 0.9; EC = 0;
+  AG = 3E+15; EG = 69000; EGSIG = 81000;
+  ACR = 3E+15; ECR = 65000;
+  
+  P0 = 0.61; C0 = 0.0; SIGP1 = 4.6; MW = 267; MDEL = 29;
+
+  A11 = 9.62E+05; E11 = 1.7579E+4; Y11 = 0.65;
+  A22 = 1.5E+13; E22 = 5.995E+4; Y22 = 1.0000;
+
+  XKOSO = -1; //*p_MIR_koso;
+  RKO = 1E+7; //*p_MIR_ko;
+  RSO = 500; //*p_MIR_so;
+  IAE = 42000; // *p_MIR_IAE;
+  XN = 0.5; // *p_MIR_IRO;
+  XK3OI = -1; // *p_MIR_k3o;
+  XK2OBYK3O = 50000; // *p_MIR_k2ok3o;
+  XK3OBYK1O = 1E-6; //*p_MIR_k3ok1o;
+  E3 = 6000; //*p_MIR_E3;
+  E2 = 28000; //*p_MIR_E2;
+  E1 = 32000; // *p_MIR_E1;
+  ZN = 1.0; //*p_IRO_Step2;
+
+  ACO = 200; // *p_Aco;
+  ECO = 9000; // *p_Eco;
+
+  RKO_CO2PL = 3.243E+5; // *p_FORL_ko;
+  RSO_CO2PL = 200; // *p_FORL_so;
+  IAE_CO2 = 41850; // *p_FORL_IAE;
+  IRO_CO2 = 1.0; // *p_FORL_IRO;
+  
+  RKO_H2O = 3.243E+5; // *p_FORL_ko; //H2O
+  RSO_H2O = 200; // *p_FORL_so;
+  IAE_H2O = 41850; // *p_FORL_IAE;
+  IRO_H2O = 1.0; // *p_FORL_IRO;
+  
+  XLHK1O=5E+3; XLHK2O=1.55E-9; XLHK3O=1.12E+1;// *p_LHK_k1o, *p_LHK_k2o, *p_LHK_k3o;
+  XLHE1=36782; XLHE2=-49966.6; XLHE3=7046; // *p_LHK_E1, *p_LHK_E2, *p_LHK_E3;
+  PRR_FR = 0.01; PRR_TO = 200; PRR_NUM = 20; // *p_PR_ratio_fr, *p_PR_ratio_to, *p_num_steps;
+
+  RADIP1 = 75.0; RADIP2=0.1; EPSM=0.1; EPS = 0.58; //*p_pore_radii_macro, *p_pore_radii_micro, *p_pore_macroposity, *p_pore_porosity;
+  TAUBYF = 6.0; //*p_T_f;
+  
+  switch (*p_mod_sel)
+  {
+  case 0: 
+	  L120='F';  LCPD='F';  LKOBA ='F';
+	  	
+	  break;
+  case 1:
+	  L120='T';  LCPD='F';  LKOBA ='F';
+	  *p_HTVL = -1;
+	  break;
+  case 2:
+	  L120='F';  LCPD='T';  LKOBA ='F';
+	  AB= *p_CPD_AB; EB=*p_CPD_EB; EBSIG = *p_CPD_EBSIG;
+	  ACC= *p_CPD_AC; EC = *p_CPD_EC;
+	  AG = *p_CPD_AG; EG = *p_CPD_EG; EGSIG = *p_CPD_EGSIG;
+	  ACR = *p_CPD_ACR; ECR = *p_CPD_ECR;
+	  *p_HTVL = -1;
+	  break;
+  case 3:
+	  L120='F';  LCPD='F';  LKOBA ='T';
+	  A11=*p_TS_A1; E11=*p_TS_E1; Y11=*p_TS_Y1;
+	  A22=*p_TS_A2; E22=*p_TS_E2; Y22=*p_TS_Y2;
+	  *p_HTVL = -1;
+	  break;
+  }
+
+  if (*p_manual_input)
+  {
+	  LRCPD='T';
+	  P0 = *p_MI_P0; C0 = *p_MI_C0; SIGP1 = *p_MI_SIGP1; MW = *p_MI_MW; MDEL = *p_MDEL;
+  } 
+  else
+  {
+	  LRCPD='F';
+  }
+
+  switch (*p_oxidation_flag)
+  {
+  case 0:
+	  LPWLAW='T';
+	  if (*p_MIR)
+	  {
+		LKoSo='T';
+		XKOSO = *p_MIR_koso;
+		RKO = *p_MIR_ko;
+		RSO = *p_MIR_so;
+		IAE = *p_MIR_IAE;
+		XN = *p_MIR_IRO;
+  
+	  }
+	  else
+		LKoSo='F';
+	  
+	  LSEMG='F';
+	  ACO = *p_Aco;
+	  ECO = *p_Eco;	
+	  break;
+  case 1:
+	  LPWLAW='F';
+	  LKoSo='F';
+	  LSEMG='T';
+	  XK3OI = *p_MIR_k3o;
+	  XK2OBYK3O = *p_MIR_k2ok3o;
+      XK3OBYK1O = *p_MIR_k3ok1o;
+      E3 = *p_MIR_E3;
+	  E2 = *p_MIR_E2;
+	  E1 = *p_MIR_E1;
+	  ZN = *p_IRO_Step2;
+	  ACO = *p_Aco;
+      ECO = *p_Eco;
+	  break;
+  case 2:
+	  LPWLAW='F';
+	  LKoSo='F';
+	  LSEMG='F';
+	  break;
+  }
+  
+  switch(*p_Gasification_flag)
+  {
+  case 0:
+	  LCO2G='F';  LH2OG='F';
+	  if (*p_FORL_CH)
+	  {
+		  LCO2PL='F'; LH2OPL='T';
+		  RKO_H2O = 3.243E+5; // *p_FORL_ko; //H2O
+		  RSO_H2O = 200; // *p_FORL_so;
+		  IAE_H2O = 41850; // *p_FORL_IAE;
+		  IRO_H2O = 1.0; // *p_FORL_IRO;
+	  }
+	  else
+	  {
+		  LCO2PL='T'; LH2OPL='F';
+		  RKO_CO2PL = *p_FORL_ko;
+		  RSO_CO2PL = *p_FORL_so;
+		  IAE_CO2 = *p_FORL_IAE;
+		  IRO_CO2 = *p_FORL_IRO;
+	  }
+	  PRR_FR = *p_PR_ratio_fr; PRR_TO = *p_PR_ratio_to; PRR_NUM = *p_num_steps;
+	  break;
+  case 1:
+	  LCO2PL='F';  LH2OPL='F';
+	  if (*p_LHK_CH)
+	  {
+		  LCO2G='F'; LH2OG='T';
+	  }
+	  else
+	  {
+		  LCO2G='T'; LH2OG='F';
+	  }
+	  XLHK1O=*p_LHK_k1o; XLHK2O=*p_LHK_k2o; XLHK3O=*p_LHK_k3o;
+	  XLHE1=*p_LHK_E1; XLHE2=*p_LHK_E2; XLHE3=*p_LHK_E3;
+	  PRR_FR = *p_PR_ratio_fr; PRR_TO = *p_PR_ratio_to; PRR_NUM = *p_num_steps;
+	  break;
+  case 2:
+	  LCO2PL='F';  LH2OPL='F';
+	  LCO2G='F';  LH2OG='F';
+	  break;
+  }
+
+  if (*p_Pore_Model)
+  {
+	  LRANDOMP='T';
+	  RADIP1 = *p_pore_radii_macro; RADIP2=*p_pore_radii_micro; EPSM=*p_pore_macroposity; EPS = *p_pore_porosity;
+  }
+  else
+  {
+	  LRANDOMP='F';
+	  TAUBYF = *p_T_f;
+  }
+
+  inputf=fopen(filename, "w");	
+  fprintf(inputf, "%s\n", p_coal_name->c_str());
+  fprintf(inputf, "%g     	! coalC;  percentage coal carbon content, daf\n", coalC);
+  fprintf(inputf, "%g     	! coalH;  percentage coal hydrogen content, daf\n", coalH);
+  fprintf(inputf, "%g		! coalO;  percentage coal oxygen content, daf\n", coalO);
+  fprintf(inputf, "%g      	! coalASH; percentage coal ash content, dry basis\n", coalASH);
+  fprintf(inputf, "%g      	! ASTM volatile matter (%daf), for estimation of flame VM\n", ASTM);
+  fprintf(inputf, "%g      	!HTVL: percentage high temperature volatile loss, daf (0 - 100).\n", *p_HTVL);
+  fprintf(inputf, "%g              !OMEGA: linear swelling factor\n", *p_linear_swell);
+  fprintf(inputf, "%g	        !FUELRHOC: initial fuel carbon density g/cc\n", *p_fuel_carbon);
+  fprintf(inputf, "T  F		!LMESH,LSMD: t if mesh size known, LSMD, mesh type distribution\n"); //always T F
+  fprintf(inputf, "3\n");   //alway like that
+  fprintf(inputf, "1	   75      %g\n", alpha);
+  fprintf(inputf, "75.1    150     %g\n", beta-alpha);
+  fprintf(inputf, "150.1   300     %g\n", 100-beta);
+  fprintf(inputf, ">>>>> SUBMODEL SELECTION AND RELATED PARAMETERS\n");
+  fprintf(inputf, ">>>>> DEVOLATILIZATION\n");
+  fprintf(inputf, "%c %c %c		!L120,LCPD,LKOBA: devolatilization flag\n", L120, LCPD, LKOBA);
+  fprintf(inputf, "%g  %g	 %g  	!AB,EB,EBSIG:  CPD INPUTS\n", AB,EB,EBSIG);
+  fprintf(inputf, "%g  %g			!ACC,EC: CPD INPUTS\n", ACC, EC);
+  fprintf(inputf, "%g  %g  %g	!AG,EG,EGSIG: CPD INPUTS\n", AG, EG, EGSIG);
+  fprintf(inputf, "%g  %g		!ACR,ECR: pre-exponential factor for crosslinking rate,Activation energy for crosslinking rate\n", ACR, ECR);
+  fprintf(inputf, "%c   %g,   %g,  %g,   %g,   %g !LRCPD,P0,C0,SIGP1,MW,MDEL: flag for manual input for CPD calculation\n", LRCPD, P0, C0, SIGP1, MW, MDEL);
+  fprintf(inputf, "%g, %g, %g    !A11(1/sec),E11(cal/mol),Y11: two-step model KOBA INPUTS\n", A11, E11, Y11);
+  fprintf(inputf, "%g, %g, %g     !A22(1/sec),E22(cal/mol),Y22: two-step model inputs\n", A22, E22, Y22);
+  fprintf(inputf, ">>>>> DEVOLATILIZATION CONDITIONS\n");
+  fprintf(inputf, "%g, %g		   !NTIM1,NTIM2: #points in non-isothermal(heating) and isothermal region\n", *p_num_grid_heating, *p_num_grid_isothermal);
+  fprintf(inputf, "%g  %g. %g  !DHRATE,DHTEM,DVTIM: heating rate(deg/s),hold temp (K), total residence time(sec)\n",*p_heat_rate, *p_max_temp, *p_res_time);
+  fprintf(inputf, ">>>>> OXIDATION/GASIFICATION KINETICS FLAG\n");
+  fprintf(inputf, "%c %c %c %c %c %c 	!LPWLAW,LSEMG,LCO2G,LH2OG,LCO2PL,LH2OPL\n",LPWLAW,LSEMG,LCO2G,LH2OG,LCO2PL,LH2OPL);
+  fprintf(inputf, ">>>>> POWER-LAW KINETIC PARAMETERS: Oxidation\n");
+  fprintf(inputf, "%c		!LKoSo: If true mass-specific reactivity or built-in correlation is used\n",LKoSo);
+  fprintf(inputf, "%g	 	!XKOSO: mass-specific intrinsic reactivity, koSo, gm-C/(gm-C)-sec-(mol/m3)^n\n", XKOSO);
+  fprintf(inputf, "%g   	!RKO:intrinsic pre-expo factor  gm-C/m2-sec-(mol/m3)^n\n",RKO);
+  fprintf(inputf, "%g		!RSO: Total surface area, m2/gm-C\n",RSO);
+  fprintf(inputf, "%g		!E: intrinsic oxidation activation energy\n",IAE);
+  fprintf(inputf, "%g		!XN: intrinsic reaction order\n", XN);
+  fprintf(inputf, ">>>>> SEMI-GLOBAL KINETIC PARAMETERS:Oxidation\n");
+  fprintf(inputf, "%g       	!XK3OI: THREE STEP mass-specific intrinsic reactivity (step 3 preex. fact, sec-1)\n", XK3OI);
+  fprintf(inputf, "%g   	!XK2OBYK3O: ratio of step 2 to step 3 preex. factors. Units: (mol/cm3)-N\n", XK2OBYK3O);
+  fprintf(inputf, "%g     	!XK3OBYK1O: ratio of step 3 to step 1 preex. factors.  Units: (mol/cm3)-1\n",XK3OBYK1O);
+  fprintf(inputf, "%g   	!E3: intrinsic step 3 activation energy, cal/mol\n", E3);
+  fprintf(inputf, "%g   	!E2: intrinsic step 2 activation energy, cal/mol\n", E2);
+  fprintf(inputf, "%g    	!E1: intrinsic step 1 activation energy, cal/mol\n", E1);
+  fprintf(inputf, "%g             !ZN: intrinsic reaction order for step 2\n", ZN);
+  fprintf(inputf, ">>>>> POWER-LAW KINETIC PARAMETERS: CO2 Gasification from EPRI\n");
+  fprintf(inputf, "%g         !RKO_CO2PL:intrinsic pre-expo factor  gm-C/m2-sec-(mol/m3)^n\n", RKO_CO2PL);
+  fprintf(inputf, "%g		!RSO_CO2PL: Total surface area, m2/gm-C\n", RSO_CO2PL);
+  fprintf(inputf, "%g		!E: intrinsic oxidation activation energy\n", IAE_CO2);
+  fprintf(inputf, "%g		!XN: intrinsic reaction order\n", IRO_CO2);
+  fprintf(inputf, ">>>>> POWER-LAW KINETIC PARAMETERS: H2O Gasification From EPRI\n");
+  fprintf(inputf, "%g       !RKO:intrinsic pre-expo factor  gm-C/m2-sec-(mol/m3)^n\n", RKO_H2O); //H2O
+  fprintf(inputf, "%g		!RSO: Total surface area, m2/gm-C\n", RSO_H2O);
+  fprintf(inputf, "%g		!E: intrinsic oxidation activation energy\n", IAE_H2O);
+  fprintf(inputf, "%g		!XN: intrinsic reaction order\n", IRO_H2O);
+  fprintf(inputf, ">>>>> LANGMUIR-HINSHELWOOD KINETICS:CO2 or STEAM gasification,\n");
+  fprintf(inputf, "%g  %g  %g ! XLHK1O, XLHK2O, XLHK3O\n", *p_LHK_k1o, *p_LHK_k2o, *p_LHK_k3o);
+  fprintf(inputf, "%g  %g  %g ! XLHE1, XLHE2, XLHE3, cal/molK\n",*p_LHK_E1, *p_LHK_E2, *p_LHK_E3);
+  fprintf(inputf, "%g  %g. %g    !PROD/REACT RANGE AND STEPS\n", PRR_FR, PRR_TO, PRR_NUM);
+  fprintf(inputf, ">>>>> CO/CO2 RATIO\n");
+  fprintf(inputf, "%g		!AC: CO/CO2 = Ac exp(-Ec/RTp)\n", ACO);
+  fprintf(inputf, "%g		!EC: cal/mol K\n", ECO);
+  fprintf(inputf, ">>>>> POROSITY MODEL\n");
+  fprintf(inputf, "%c               !LRANDOMP: random pore model flag\n", LRANDOMP);
+  fprintf(inputf, "%g  %g   %g   %g  ! RADIP1(um), RADIP2(um), EPSM, EPS:Average radii for macro and micro pores and porosity\n", RADIP1, RADIP2, EPSM, EPS);
+  fprintf(inputf, "%g		!TAUBYF: parameter to conver diffusivity to effective diffusivity\n",TAUBYF);
+  fprintf(inputf, ">>>>> ETC\n");
+  fprintf(inputf, "%g             !ALPHA: mode of burning parameter\n", *p_mode_burning);
+  fprintf(inputf, "%g		!TPORFILM: porosity of THICK ash film (and of final ash particle)\n", *p_ash_film);
+  fprintf(inputf, "%g.		!DELMONO: ash grain size (um)\n",*p_ash_grain_size);
+  fprintf(inputf, "%g		!XLAMBAT: thermal conductivity of ash, cal/cm-s-C\n",*p_ash_therm_cond);
+  fprintf(inputf, ">>>>> REACTION CONDITIONS: TEMP TIME \n");
+  fprintf(inputf, "%g          !INTSTEP: number of time steps\n",*p_time_step);
+  fprintf(inputf, "%g		!INPSTEP: number of reactant partial pressure steps\n",*p_reac_pres_step);
+  fprintf(inputf, "%g		!INTTEMPSTEP: number of reaction temperature steps\n",*p_mrt_step);
+  fprintf(inputf, "%g  %g 	!RTEMP, RDELTTEMP: mean reaction temperature, K, +-% T\n",*p_mean_rxn_temp, *p_mrt_error);
+  fprintf(inputf, "%g , %g	!REGAS1,REGAS2: reactant fraction range in gas\n", *p_reac_frac_fr,*p_reac_frac_to);
+  fprintf(inputf, "%g		!P: total pressure, atm\n", *p_total_pres);
+  fprintf(inputf, "%g		!DELT: time step, sec\n", *p_time_intv);
+  fprintf(inputf, ">>>>> CONVERSION LEVEL REPORTED\n");
+  fprintf(inputf, "%g      	!RCONV:conversion level at which the global rate will be optimized\n", *p_conv_level);
+  fprintf(inputf, ">>>>> OPTIMIZATION(SIMPLEX)\n");
+  fprintf(inputf, "%g	!TTTAI: initial guess for pre-exp factor, kgC/m2-sec-(Pa)^m\n", *p_optim_kG);
+  fprintf(inputf, "%g		!TTTMI: initial guess or fixed value for global rxn order\n", *p_optim_EG);
+  fprintf(inputf, "%g	!TTTEI: initial guess or fixed value for global activation energy, kcal/mol\n", *p_optim_m);
+  fprintf(inputf, "%g		!OOPTTOL: optimization tolerance\n", *p_tolerance);
+  fprintf(inputf, "%d		!NNDIM\n", *p_Schema+1);
+  fclose(inputf);
+}
 //////////////////////////////////////////////////////////////////////////
 //////////////////////////////////////////////////////////////////////////
 PrekinTabs::PrekinTabs(wxWindow *parent, wxWindowID id,
@@ -710,6 +1160,7 @@ wxPanel* PrekinTabs::CreateSecondPage()
   top_sizer->Add(10, 5, 0);
   
   wxBoxSizer* model_row1 = new wxBoxSizer(wxHORIZONTAL);
+  wxBoxSizer* model_row2 = new wxBoxSizer(wxHORIZONTAL);
   
   wxStaticBox *CPD_box = new wxStaticBox(panel, -1, "CPD parameters");
   wxStaticBox *TwoStep_box = new wxStaticBox(panel, -1, "Two-Step parameters");
@@ -718,6 +1169,8 @@ wxPanel* PrekinTabs::CreateSecondPage()
 
   model_row->Add(10, 5, 0);
   model_row->Add(model_row1);
+  model_row->Add(10, 5, 0);
+  model_row->Add(model_row2);
   model_row->Add(10, 5, 0);
   model_row->Add(CPD_row);
   model_row->Add(10, 5, 0);
@@ -731,6 +1184,11 @@ wxPanel* PrekinTabs::CreateSecondPage()
   rb_mod_sel = new wxRadioBox(panel, MOD_SEL, wxT("Model"), wxDefaultPosition, wxDefaultSize, 4, model_val, 2);
 
   model_row1->Add(rb_mod_sel);
+  
+  wxStaticText * labelHTVL = new wxStaticText(panel, -1, "  HTVL", wxDefaultPosition, wxSize(230, 17));
+  t_HTVL = new wxTextCtrl(panel, -1, wxT("0"), wxDefaultPosition, wxSize(130, 20));
+  model_row2->Add(labelHTVL);
+  model_row2->Add(t_HTVL);
   
   wxGridSizer* CPD_grid = new wxGridSizer(4, 6, 3, 5); //4 rows, 6 cols, v gap 5, h gap 10
   wxBoxSizer* MI_row = new wxBoxSizer(wxHORIZONTAL);
@@ -902,10 +1360,13 @@ wxPanel* PrekinTabs::CreateThirdPage()
   
   wxStaticBoxSizer* FOPL_row = new wxStaticBoxSizer(FOPL_box, wxVERTICAL);
   wxStaticBoxSizer* SG_row = new wxStaticBoxSizer(SG_box, wxVERTICAL);
+  wxBoxSizer* rGasi_row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* rFOPL_row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* rSG_row = new wxBoxSizer(wxHORIZONTAL);
   wxStaticBoxSizer* Ratio_row = new wxStaticBoxSizer(Ratio_box, wxHORIZONTAL);
 
+  top_sizer->Add(10, 5, 0);
+  top_sizer->Add(rGasi_row,0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0);
   top_sizer->Add(rFOPL_row,0, wxALIGN_CENTER_HORIZONTAL); 
   top_sizer->Add(FOPL_row, 0, wxALIGN_CENTER_HORIZONTAL);
@@ -916,7 +1377,9 @@ wxPanel* PrekinTabs::CreateThirdPage()
   top_sizer->Add(Ratio_row,0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0);
 
-  rb_oxidation_flag1 = new wxRadioButton(panel, OXIDATION_FLAG1, wxT("Fractional Order Power Law"), wxDefaultPosition, wxSize(300, 20),wxRB_GROUP);
+  rb_oxidation_flag3 = new wxRadioButton(panel, OXIDATION_FLAG3, wxT("Gasification Page"), wxDefaultPosition, wxSize(300, 20),wxRB_GROUP);
+  rGasi_row->Add(rb_oxidation_flag3);
+  rb_oxidation_flag1 = new wxRadioButton(panel, OXIDATION_FLAG1, wxT("Fractional Order Power Law"), wxDefaultPosition, wxSize(300, 20));
   rFOPL_row->Add(rb_oxidation_flag1);
   rb_oxidation_flag2 = new wxRadioButton(panel, OXIDATION_FLAG2, wxT("Semi-global"), wxDefaultPosition, wxSize(300,20));
   rSG_row->Add(rb_oxidation_flag2);
@@ -1030,12 +1493,15 @@ wxPanel* PrekinTabs::CreateForthPage()
   
   wxStaticBox *Ratio_box = new wxStaticBox(panel, -1, "Product/Reactant Ratio");
   
+  wxBoxSizer* rOxid_row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* rFOPL_row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* FOPL_block = new wxBoxSizer(wxVERTICAL);
   wxBoxSizer* rLHK_row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* LHK_block = new wxBoxSizer(wxVERTICAL);
   wxStaticBoxSizer* Ratio_row = new wxStaticBoxSizer(Ratio_box, wxHORIZONTAL);
 
+  top_sizer->Add(10, 5, 0);
+  top_sizer->Add(rOxid_row, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0);
   top_sizer->Add(rFOPL_row, 0, wxALIGN_CENTER_HORIZONTAL); 
   top_sizer->Add(FOPL_block, 0, wxBOTTOM|wxALIGN_CENTER_HORIZONTAL, 2);
@@ -1046,7 +1512,9 @@ wxPanel* PrekinTabs::CreateForthPage()
   top_sizer->Add(Ratio_row, 0,wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0);
 
-  rb_Gasification_flag1 = new wxRadioButton(panel, GASIFICATION_FLAG1, wxT("Fractional Order Power Law"), wxDefaultPosition, wxSize(220, 20),wxRB_GROUP);
+  rb_Gasification_flag3 = new wxRadioButton(panel, GASIFICATION_FLAG3, wxT("Oxidation Page"), wxDefaultPosition, wxSize(300, 20),wxRB_GROUP);
+  rOxid_row->Add(rb_Gasification_flag3);
+  rb_Gasification_flag1 = new wxRadioButton(panel, GASIFICATION_FLAG1, wxT("Fractional Order Power Law"), wxDefaultPosition, wxSize(220, 20));
   wxString fopl_val[] = { wxT("PLK1")  };
   cb_FOPL = new wxComboBox(panel, -1, wxT("PLK1"), wxDefaultPosition, wxSize(80, 20), 1, fopl_val, wxCB_DROPDOWN|wxCB_READONLY|wxCB_SORT);
   rFOPL_row->Add(rb_Gasification_flag1);
@@ -1321,8 +1789,35 @@ void PrekinTabs::Onmod_sel(wxCommandEvent &event)
 {
 	int v =rb_mod_sel->GetSelection(); 
 	
-	if (v==2) //CPD
+	if (v==0)
 	{
+		t_HTVL->Enable(true);
+		t_CPD_AB->Enable(false);
+		 t_CPD_AC->Enable(false);
+		 t_CPD_AG->Enable(false);
+		 t_CPD_ACR->Enable(false);
+		 t_CPD_EB->Enable(false);
+		 t_CPD_EC->Enable(false);
+		 t_CPD_EG->Enable(false);
+		 t_CPD_ECR->Enable(false);
+		 t_CPD_EBSIG->Enable(false);
+		 t_CPD_EGSIG->Enable(false);
+		 t_TS_A1->Enable(false);
+		 t_TS_A2->Enable(false);
+		 t_TS_E1->Enable(false);
+		 t_TS_E2->Enable(false);
+		 t_TS_Y1->Enable(false);
+		 t_TS_Y2->Enable(false);
+		 cbo_manual_input->Enable(false);
+		 t_MI_P0->Enable(false);
+		 t_MI_C0->Enable(false);
+		 t_MI_SIGP1->Enable(false);
+		 t_MI_MW->Enable(false);
+		 t_MDEL->Enable(false);
+	}
+	else if (v==2) //CPD
+	{
+		t_HTVL->Enable(false);
 		 t_CPD_AB->Enable(true);
 		 t_CPD_AC->Enable(true);
 		 t_CPD_AG->Enable(true);
@@ -1344,6 +1839,7 @@ void PrekinTabs::Onmod_sel(wxCommandEvent &event)
 	}
 	else if (v==3) //Two Step
 	{
+		t_HTVL->Enable(false);
 		t_CPD_AB->Enable(false);
 		 t_CPD_AC->Enable(false);
 		 t_CPD_AG->Enable(false);
@@ -1369,6 +1865,7 @@ void PrekinTabs::Onmod_sel(wxCommandEvent &event)
 	}
 	else
 	{
+		t_HTVL->Enable(false);
 		t_CPD_AB->Enable(false);
 		 t_CPD_AC->Enable(false);
 		 t_CPD_AG->Enable(false);
@@ -1427,8 +1924,24 @@ void PrekinTabs::Onoxidation_flag(wxCommandEvent &event)
 		 t_IRO_Step2->Enable(false);
 		 cbo_MIR->Enable(true);
 		 OnMIR(event);
+		 rb_Gasification_flag3->SetValue(true);
+		 t_FOPL_ko->Enable(false);
+		 t_FOPL_so->Enable(false);
+		 t_FOPL_IAE->Enable(false);
+		 t_FOPL_IRO->Enable(false);
+		 rb_FOPL_CH->Enable(false);
+		 t_LHK_k1o->Enable(false);
+		 t_LHK_k2o->Enable(false);
+		 t_LHK_k3o->Enable(false);
+		 t_LHK_E1->Enable(false);
+		 t_LHK_E2->Enable(false);
+		 t_LHK_E3->Enable(false);
+		 rb_LHK_CH->Enable(false);
+		 t_PR_ratio_fr->Enable(false);
+		 t_PR_ratio_to->Enable(false);
+		 t_num_steps->Enable(false);
 	}
-	else
+	else if (rb_oxidation_flag2->GetValue())
 	{
 		 t_MIR_k3o->Enable(true);
 		 t_MIR_k2ok3o->Enable(true);
@@ -1438,12 +1951,95 @@ void PrekinTabs::Onoxidation_flag(wxCommandEvent &event)
 		 t_MIR_E3->Enable(true);
 		 t_IRO_Step2->Enable(true);
 		 cbo_MIR->Enable(false);
+		 t_MIR_koso->Enable(false);
+		 t_MIR_ko->Enable(false);
+		 t_MIR_so->Enable(false);
+		 t_MIR_IAE->Enable(false);
+		 t_MIR_IRO->Enable(false);
+		 rb_Gasification_flag3->SetValue(true);
+		 t_FOPL_ko->Enable(false);
+		 t_FOPL_so->Enable(false);
+		 t_FOPL_IAE->Enable(false);
+		 t_FOPL_IRO->Enable(false);
+		 rb_FOPL_CH->Enable(false);
+		 t_LHK_k1o->Enable(false);
+		 t_LHK_k2o->Enable(false);
+		 t_LHK_k3o->Enable(false);
+		 t_LHK_E1->Enable(false);
+		 t_LHK_E2->Enable(false);
+		 t_LHK_E3->Enable(false);
+		 rb_LHK_CH->Enable(false);
+		 t_PR_ratio_fr->Enable(false);
+		 t_PR_ratio_to->Enable(false);
+		 t_num_steps->Enable(false);
+  	}
+	else
+	{
+		t_MIR_k3o->Enable(false);
+		t_MIR_k2ok3o->Enable(false);
+		t_MIR_k3ok1o->Enable(false);
+		t_MIR_E1->Enable(false);
+		t_MIR_E2->Enable(false);
+		t_MIR_E3->Enable(false);
+		t_IRO_Step2->Enable(false);
+		cbo_MIR->Enable(false);
 		t_MIR_koso->Enable(false);
 		t_MIR_ko->Enable(false);
 		t_MIR_so->Enable(false);
 		t_MIR_IAE->Enable(false);
 		t_MIR_IRO->Enable(false);
-  	}
+		t_Aco->Enable(false);
+		t_Eco->Enable(false);
+		t_PR_ratio_fr->Enable(true);
+		t_PR_ratio_to->Enable(true);
+		t_num_steps->Enable(true);
+		if (rb_Gasification_flag1->GetValue())
+		{
+			t_FOPL_ko->Enable(true);
+			t_FOPL_so->Enable(true);
+			t_FOPL_IAE->Enable(true);
+			t_FOPL_IRO->Enable(true);
+			rb_FOPL_CH->Enable(true);
+			t_LHK_k1o->Enable(false);
+			t_LHK_k2o->Enable(false);
+			t_LHK_k3o->Enable(false);
+			t_LHK_E1->Enable(false);
+			t_LHK_E2->Enable(false);
+			t_LHK_E3->Enable(false);
+			rb_LHK_CH->Enable(false);
+		}
+		else if (rb_Gasification_flag2->GetValue())
+		{
+			t_FOPL_ko->Enable(false);
+			t_FOPL_so->Enable(false);
+			t_FOPL_IAE->Enable(false);
+			t_FOPL_IRO->Enable(false);
+			rb_FOPL_CH->Enable(false);
+			t_LHK_k1o->Enable(true);
+			t_LHK_k2o->Enable(true);
+			t_LHK_k3o->Enable(true);
+			t_LHK_E1->Enable(true);
+			t_LHK_E2->Enable(true);
+			t_LHK_E3->Enable(true);
+			rb_LHK_CH->Enable(true);
+		}
+		else 
+		{
+			rb_Gasification_flag1->SetValue(true);
+			t_FOPL_ko->Enable(true);
+			t_FOPL_so->Enable(true);
+			t_FOPL_IAE->Enable(true);
+			t_FOPL_IRO->Enable(true);
+			rb_FOPL_CH->Enable(true);
+			t_LHK_k1o->Enable(false);
+			t_LHK_k2o->Enable(false);
+			t_LHK_k3o->Enable(false);
+			t_LHK_E1->Enable(false);
+			t_LHK_E2->Enable(false);
+			t_LHK_E3->Enable(false);
+			rb_LHK_CH->Enable(false);
+		}
+	}
 }
   
 void PrekinTabs::OnMIR(wxCommandEvent &event)
@@ -1471,34 +2067,20 @@ void PrekinTabs::OnGasification_flag(wxCommandEvent &event)
 {
 	if (rb_Gasification_flag1->GetValue())
 	{
-		 t_FOPL_ko->Enable(true);
-		 t_FOPL_so->Enable(true);
-		 t_FOPL_IAE->Enable(true);
-		 t_FOPL_IRO->Enable(true);
-		 rb_FOPL_CH->Enable(true);
-		 t_LHK_k1o->Enable(false);
-		 t_LHK_k2o->Enable(false);
-		 t_LHK_k3o->Enable(false);
-		 t_LHK_E1->Enable(false);
-		 t_LHK_E2->Enable(false);
-		 t_LHK_E3->Enable(false);
-		 rb_LHK_CH->Enable(false);
+		rb_oxidation_flag3->SetValue(true);
+		Onoxidation_flag(event);
+	}
+	else if (rb_Gasification_flag2->GetValue())
+	{
+		rb_oxidation_flag3->SetValue(true);
+		Onoxidation_flag(event);
 	}
 	else
 	{
-		 t_FOPL_ko->Enable(false);
-		 t_FOPL_so->Enable(false);
-		 t_FOPL_IAE->Enable(false);
-		 t_FOPL_IRO->Enable(false);
-		 rb_FOPL_CH->Enable(false);
-		 t_LHK_k1o->Enable(true);
-		 t_LHK_k2o->Enable(true);
-		 t_LHK_k3o->Enable(true);
-		 t_LHK_E1->Enable(true);
-		 t_LHK_E2->Enable(true);
-		 t_LHK_E3->Enable(true);
-		 rb_LHK_CH->Enable(true);
+		rb_oxidation_flag1->SetValue(true);
+		Onoxidation_flag(event);
 	}
+	
 }
 
 void PrekinTabs::OnFOPL_CH(wxCommandEvent &event)
