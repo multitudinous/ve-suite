@@ -23,6 +23,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _tUnit = 0;
    _verbose = 0;
    _tm = 0;
+   _isCreated = false;
 }
 /////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
@@ -43,6 +44,7 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _verbose = rhs._verbose;
    _tm = rhs._tm;
    _image = rhs._image;
+   _isCreated = rhs._isCreated;
 }
 //////////////////////////////////////////////////
 cfdVolumeVisualization::~cfdVolumeVisualization()
@@ -114,30 +116,35 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 
    if(!_image.valid()){
       _image = new osg::Image();
-   }
+   
 
-   _image->allocateImage(_tm->fieldResolution()[0],
+     _image->allocateImage(_tm->fieldResolution()[0],
                      _tm->fieldResolution()[1],
                      _tm->fieldResolution()[2],
                      GL_RGBA,GL_UNSIGNED_BYTE);
 
-   _image->setImage(_tm->fieldResolution()[0],                  _tm->fieldResolution()[1],                  _tm->fieldResolution()[2],GL_RGBA,                  GL_RGBA, GL_UNSIGNED_BYTE,                 _tm->dataField(0),                 osg::Image::USE_NEW_DELETE,1);
-   _image->setDataVariance(osg::Object::DYNAMIC);
-   
+      _image->setImage(_tm->fieldResolution()[0],                  _tm->fieldResolution()[1],                  _tm->fieldResolution()[2],GL_RGBA,                  GL_RGBA, GL_UNSIGNED_BYTE,                 _tm->dataField(0),                 osg::Image::USE_NEW_DELETE,1);
+      _image->setDataVariance(osg::Object::DYNAMIC);
+   }
    if(!_texture.valid()){
       _texture = new osg::Texture3D();
       _texture->setDataVariance(osg::Object::DYNAMIC);
+   
+
+      _texture->setFilter(osg::Texture3D::MIN_FILTER,osg::Texture3D::LINEAR);
+      _texture->setFilter(osg::Texture3D::MAG_FILTER,osg::Texture3D::LINEAR);
+      _texture->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
+      _texture->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
+      _texture->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
+      _texture->setInternalFormat(GL_RGBA);
+      _texture->setImage(_image.get());
+   }
+   //}
+   SetBoundingBox(_tm->getBoundingBox());
+   if(_utCbk){
+      _utCbk->SetTextureManager(_tm);
    }
 
-   _texture->setFilter(osg::Texture3D::MIN_FILTER,osg::Texture3D::LINEAR);
-   _texture->setFilter(osg::Texture3D::MAG_FILTER,osg::Texture3D::LINEAR);
-   _texture->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
-   _texture->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
-   _texture->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
-   _texture->setInternalFormat(GL_RGBA);
-   _texture->setImage(_image.get());
-
-   SetBoundingBox(_tm->getBoundingBox());
 
 }
 ///////////////////////////////////////////////////////////
@@ -475,7 +482,9 @@ void cfdVolumeVisualization::_createVolumeBillboardSlices()
 /////////////////////////////////////////
 void cfdVolumeVisualization::CreateNode()
 {
-   _buildGraph();
+   if(!_isCreated){
+      _buildGraph();
+   }
 }
 //////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()
@@ -485,10 +494,12 @@ void cfdVolumeVisualization::_buildGraph()
    _createStateSet();
    _createVolumeBillboardSlices();
    _createClipNode();
-
+   _isCreated = true;
    if(_texGenParams.valid()){
       if(_stateSet.valid()){
          _texGenParams->setStateSet(_stateSet.get());
+      }else{
+         _isCreated = false;
       }
       _volumeVizNode->addChild(_texGenParams.get());
       if(_slices.valid()){
@@ -502,14 +513,19 @@ void cfdVolumeVisualization::_buildGraph()
          
          _slices->setCullCallback(_vSSCbk);
          _texGenParams->addChild(_slices.get());
+      }else{
+         _isCreated = false;
       }
       if(_visualBoundingBox.valid()){
          _volumeVizNode->addChild(_visualBoundingBox.get());
         
          
          //_volumeVizNode->setUpdateCallback(_utCbk);
+      }else{
+         _isCreated = false;
       } 
    }
+   
 }
 #endif
 

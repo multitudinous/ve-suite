@@ -44,6 +44,9 @@
 #elif _OSG
 #include <osg/Group>
 #include <osgDB/WriteFile>
+#include <osg/FrameStamp>
+
+#include <osgUtil/SceneView>
 #endif
 
 #include <vrj/Kernel/Kernel.h>
@@ -55,6 +58,7 @@
 #include "cfdSteadyStateVizHandler.h"
 #include "cfdTransientVizHandler.h"
 #include "cfdModelHandler.h"
+
 #include "cfdCommandArray.h"
 #include "cfdGroup.h"
 #include "cfdDCS.h"
@@ -62,6 +66,10 @@
 #include "cfdTempAnimation.h"
 #include "cfdIHCCModel.h"
 #include "cfdVjObsWrapper.h"
+
+#ifdef _OSG
+#include "cfdTextureBasedVizHandler.h"
+#endif
 
 #ifdef _TAO
 #include "cfdExecutive.h"
@@ -79,12 +87,20 @@ cfdApp::cfdApp( void )
    //this->_transientHandler =     NULL;
    this->_modelHandler =         NULL;
    this->ihccModel =             NULL;
+#ifdef _OSG
+   _tbvHandler = 0;
+   _frameNumber = 0;
+#endif
 }
 #ifdef _PERFORMER
 void cfdApp::exit()
 {
    delete filein_name;
-
+#ifdef _OSG
+   if(_tbvHandler){
+      delete _tbvHandler;
+   }
+#endif
    // we don't have a destructor, so delete items here...
    if ( this->_sceneManager )
    {  
@@ -191,6 +207,12 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    newSceneViewer->getLight()->setAmbient(osg::Vec4(0.3f,0.3f,0.3f,1.0f));
    newSceneViewer->getLight()->setDiffuse(osg::Vec4(0.9f,0.9f,0.9f,1.0f));
    newSceneViewer->getLight()->setSpecular(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
+   _sceneViewer = newSceneViewer;
+   _frameStamp = new osg::FrameStamp;
+   _start_tick = _timer.tick();
+   _frameStamp->setReferenceTime(0.0);
+   _frameStamp->setFrameNumber(0);
+   _sceneViewer->setFrameStamp(_frameStamp.get());
 }
 void cfdApp::bufferPreDraw()
 {
@@ -275,14 +297,30 @@ inline void cfdApp::initScene( )
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    this->_steadystateHandler->InitScene();
 
+   //create the volume viz handler
+#ifdef _OSG
+   _tbvHandler = new cfdTextureBasedVizHandler();
+   _tbvHandler->SetParameterFile(filein_name);
+   _tbvHandler->SetWorldDCS( _sceneManager->GetWorldDCS() );
+   _tbvHandler->SetNavigate( _environmentHandler->GetNavigate() );
+   _tbvHandler->SetCursor( _environmentHandler->GetCursor() );
+   _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   _tbvHandler->InitVolumeVizNodes();
+   //_tbvhManager->SetContainerClass();
+#endif
 /*
    // TODO fix transient
    this->_transientHandler = new cfdTransientVizHandler( this->filein_name );
    this->_transientHandler->InitScene();
 std::cout << "|  3d" << std::endl;
 */
-
-   this->_vjobsWrapper->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
+#ifdef _OSG
+   this->_vjobsWrapper->SetHandlers( _steadystateHandler, _environmentHandler, 
+                                 _modelHandler, _tbvHandler );
+#else
+    this->_vjobsWrapper->SetHandlers( _steadystateHandler, _environmentHandler, 
+                                 _modelHandler);
+#endif
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
@@ -312,6 +350,12 @@ void cfdApp::preFrame( void )
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _OSG
    if(!_modelHandler)initScene();
+    double time_since_start = _timer.delta_s(_start_tick,_timer.tick());
+    if(_frameStamp.valid()){
+       _frameStamp->setFrameNumber(_frameNumber++);
+       _frameStamp->setReferenceTime(time_since_start);
+    }
+   
 #endif
 #ifdef _CLUSTER
    //call the parent method
@@ -330,8 +374,10 @@ void cfdApp::preFrame( void )
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    this->_steadystateHandler->PreFrameUpdate();
    ///////////////////////
-   //this->_transientHandler->SetCommandArray( _cfdArray );
-   //this->_transientHandler->PreFrameUpdate();
+#ifdef _OSG
+   _tbvHandler->SetActiveTextureManager(_modelHandler->GetActiveTextureManager());
+   _tbvHandler->PreFrameUpdate();
+#endif
    ///////////////////////
 
    //pfdStoreFile( this->_sceneManager->GetRootNode()->GetRawNode(), "test1.pfb" );
@@ -385,6 +431,7 @@ void cfdApp::intraFrame()
 
 void cfdApp::postFrame()
 {
+
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
 
    // if transient data is being displayed, then update gui progress bar

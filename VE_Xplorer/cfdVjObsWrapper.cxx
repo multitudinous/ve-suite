@@ -39,6 +39,7 @@
 #include "cfdSteadyStateVizHandler.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdModelHandler.h"
+#include "cfdTextureBasedVizHandler.h"
 #include <vpr/Util/Debug.h>
 #include <iostream>
 
@@ -222,12 +223,24 @@ void cfdVjObsWrapper::PreFrameUpdate( void )
    _vjObs->PreFrameUpdate();
 }
 
+#ifdef _OSG
 void cfdVjObsWrapper::SetHandlers( cfdSteadyStateVizHandler* _steadystateHandler, 
                            cfdEnvironmentHandler* _environmentHandler, 
-                           cfdModelHandler* _modelHandler )
+                           cfdModelHandler* _modelHandler,
+                           cfdTextureBasedVizHandler* _tbvHandler)
 {
-   _vjObs->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
+   _vjObs->SetHandlers( _steadystateHandler, _environmentHandler, 
+                      _modelHandler,_tbvHandler );
 }
+#else
+void cfdVjObsWrapper::SetHandlers( cfdSteadyStateVizHandler* _steadystateHandler, 
+                           cfdEnvironmentHandler* _environmentHandler, 
+                           cfdModelHandler* _modelHandler)
+{
+   _vjObs->SetHandlers( _steadystateHandler, _environmentHandler, 
+                      _modelHandler);
+}
+#endif
 
 int cfdVjObsWrapper::getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
 {

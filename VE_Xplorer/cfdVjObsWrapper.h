@@ -37,6 +37,9 @@ class cfdCommandArray;
 class cfdSteadyStateVizHandler;
 class cfdEnvironmentHandler;
 class cfdModelHandler;
+#ifdef _OSG
+class cfdTextureBasedVizHandler;
+#endif
 #ifdef _TAO
 namespace CosNaming
 {
@@ -71,9 +74,17 @@ class cfdVjObsWrapper
       double GetShortArray( int );
       void GetCfdStateVariables( void );
       void PreFrameUpdate( void );
+#ifdef _OSG
       void SetHandlers( cfdSteadyStateVizHandler*, 
                            cfdEnvironmentHandler*, 
-                           cfdModelHandler* );
+                           cfdModelHandler*,
+                           cfdTextureBasedVizHandler* tbvh);
+#else
+      void SetHandlers( cfdSteadyStateVizHandler*, 
+                           cfdEnvironmentHandler*, 
+                           cfdModelHandler*);
+
+#endif
       int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
       //cfdCosNaming* GetCosNaming( void );
       void InitCluster( void );

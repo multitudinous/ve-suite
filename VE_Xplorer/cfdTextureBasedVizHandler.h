@@ -6,15 +6,18 @@ class cfdCursor;
 class cfdNavigate;
 class cfdCommandArray;
 class cfdSwitch;
-#include "cfdTextureBasedModel.h"
+
+class cfdTextureManager;
+#include <vector>
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-class cfdTextureBasedModelHandler{
+class cfdVolumeVisualization;
+class cfdTextureBasedVizHandler{
 public:
-   cfdTextureBasedModelHandler();
-   cfdTextureBasedModelHandler(const cfdTextureBasedModelHandler& tbvh);
-   ~cfdTextureBasedModelHandler();
+  cfdTextureBasedVizHandler();
+   cfdTextureBasedVizHandler(const cfdTextureBasedVizHandler& tbvh);
+   ~cfdTextureBasedVizHandler();
 
    void InitScene();
    void PreFrameUpdate();
@@ -23,20 +26,20 @@ public:
    void SetWorldDCS(cfdDCS* dcs);
    void SetNavigate(cfdNavigate* navigate);
    void SetCursor(cfdCursor* cursor);
-
-   cfd3DTextureBasedModel* GetActiveTextureBasedModel();
-   cfd3DTextureBasedModel* GetTextureBasedModel(int whichModel);
-
-   bool InitTextureBasedModelsModels();
-   cfdTextureBasedModelHandler& operator=(const cfdTextureBasedModelHandler& tbvh);
+   void SetActiveTextureManager(cfdTextureManager* tm);
+   bool InitVolumeVizNodes();
+   cfdVolumeVisualization* GetVolumeVizNode(int index);
+   cfdVolumeVisualization* GetActiveVolumeVizNode();
+   cfdTextureBasedVizHandler& operator=(const cfdTextureBasedVizHandler& tbvh);
 protected:	
    char* _paramFile;
    cfdCommandArray* _cmdArray;
    cfdDCS* _worldDCS;
    cfdNavigate* _nav;
    cfdCursor* _cursor;
-   cfd3DTextureBasedModel* _activeTextureModel;
-   std::vector<cfd3DTextureBasedModel> _textureModels;
+   cfdTextureManager* _activeTM;
+   std::vector<cfdVolumeVisualization> _volumeVisNodes;
+   cfdVolumeVisualization* _activeVolumeVizNode;
 };
 #endif //OSG
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

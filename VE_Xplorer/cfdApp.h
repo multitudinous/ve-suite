@@ -49,6 +49,7 @@ class cfdSteadyStateVizHandler;
 class cfdTransientVizHandler;
 class cfdModelHandler;
 class cfdIHCCModel;
+
 //class CorbaManager;
 class cfdVjObsWrapper;
 // Scene graph dependent forward declarations
@@ -63,8 +64,20 @@ class pfGroup;
 // Declare my application class
 class cfdApp : public vrj::PfApp
 #elif _OSG
-#include <osg/Group>
+#include <osg/Timer>
+namespace osg
+{
+   class Group;
+   class FrameStamp;
+  
+} 
+namespace osgUtil
+{
+   class SceneView;
+}
+
 #include <vrj/Draw/OSG/osgApp.h>
+class cfdTextureBasedVizHandler;
 class cfdApp: public vrj::OsgApp
 #elif _OPENSG
 #endif
@@ -133,6 +146,14 @@ class cfdApp: public vrj::OsgApp
       //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
       cfdPfSceneManagement*      _sceneManager;
+#ifdef _OSG
+      cfdTextureBasedVizHandler* _tbvHandler;
+      osg::ref_ptr<osgUtil::SceneView> _sceneViewer;
+      osg::ref_ptr<osg::FrameStamp> _frameStamp;
+      osg::Timer _timer;
+      osg::Timer_t _start_tick;
+      unsigned int _frameNumber;
+#endif
       cfdEnvironmentHandler*     _environmentHandler;
       cfdSteadyStateVizHandler*  _steadystateHandler;
       cfdTransientVizHandler*    _transientHandler;
