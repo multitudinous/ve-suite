@@ -287,6 +287,21 @@ cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
       return mVTKDataSets.at( dataset );
 }
 
+int cfdModel::GetKeyForCfdDataSet( cfdDataSet* input )
+{
+   int key = -1;
+   for ( int i = 0; i < mVTKDataSets.size(); ++i )
+   {
+      if ( mVTKDataSets.at( i ) == input )
+      {
+         key = i;
+         break;
+      }
+   }
+   
+   return key;
+}
+
 unsigned int cfdModel::GetNumberOfCfdDataSets( void )
 {
    return mVTKDataSets.size();

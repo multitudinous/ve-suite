@@ -48,6 +48,7 @@
 #include "cfdReadParam.h"
 #include "cfdFILE.h"
 #include "cfdScalarBarActor.h"
+#include "cfdTempAnimation.h"
 
 #include <fstream>
 #include <cstdlib>
@@ -252,7 +253,8 @@ void cfdModelHandler::PreFrameUpdate( void )
       exit( 1 );
    }
 
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEADYSTATE_DATASET )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+            == CHANGE_STEADYSTATE_DATASET )
    {
       unsigned int i = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       vprDEBUG(vprDBG_ALL,1) 
@@ -298,7 +300,7 @@ void cfdModelHandler::PreFrameUpdate( void )
 
          // update scalar bar for possible new scalar name
          updateScalarRange = true;
-         // Set the curretn active dataset for the scalar bar
+         // Set the current active dataset for the scalar bar
          // so that it knows how to update itself
          _scalarBar->SetActiveDataSet( activeDataset );
       }
@@ -314,7 +316,8 @@ void cfdModelHandler::PreFrameUpdate( void )
       else
          std::cerr << " cfdModelHandler :  ActiveModel handler is null " << std::endl;
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+               == CHANGE_VECTOR )
    { 
       int vectorIndex = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
@@ -323,7 +326,8 @@ void cfdModelHandler::PreFrameUpdate( void )
       activeDataset->SetActiveVector( vectorIndex );
       activeDataset->GetParent()->SetActiveVector( vectorIndex );
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_GEOMETRY )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+               == UPDATE_GEOMETRY )
    {
       vprDEBUG(vprDBG_ALL,1)
          << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) << std::endl << vprDEBUG_FLUSH;
@@ -599,6 +603,13 @@ void cfdModelHandler::CreateObjects( void )
          float stlColor[3];
          int color;
          int transFlag;
+
+         float duration = 0.0f;
+         input >> duration;
+         input.getline( textLine, 256 );   //skip past remainder of line
+         cfdTempAnimation* animation = _modelList.at( 0 )->GetAnimation();
+         animation->SetDuration( duration );
+
          // For the data we need to loop over all the datasets and set the appropriate data dir
          _modelList.at( 0 )->CreateCfdDataSet();
 
@@ -685,6 +696,9 @@ void cfdModelHandler::CreateObjects( void )
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetRotationArray( rotate );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );*/
+
+         // For the geometry we need to loop over all the files and set the dcs appropriately
+
       }
       else
       {
@@ -1061,7 +1075,11 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    }
 
    cfdDCS* baseTransientDCS = _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS();
+   cfdTempAnimation* animation = _modelList.at( 0 )->GetAnimation();
+   animation->SetNumberOfFrames( numFiles );
+   animation->SetGroups();
 
+   _modelList.at( 0 )->GetCfdDataSet( -1 )->SetAnimation( animation );
    for ( int j = 1; j < numFiles; j++ )
    {
       vprDEBUG(vprDBG_ALL,0) << " For \"" << frameFileNames[ order[ j ]  ]
@@ -1070,8 +1088,16 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
       _modelList.at( 0 )->CreateCfdDataSet();
 
       // Pass in -1 to GetCfdDataSet to get the last dataset added
-      _modelList.at( 0 )->GetCfdDataSet( -1 )->SetDCS( baseTransientDCS );
+      _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( baseTransientDCS->GetScaleArray() );
+      _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( baseTransientDCS->GetTranslationArray() );
+      _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( baseTransientDCS->GetRotationArray() );
       _modelList.at( 0 )->GetCfdDataSet( -1 )->SetAsPartOfTransientSeries();
+      
+      int key = _modelList.at( 0 )->GetKeyForCfdDataSet( 
+                        _modelList.at( 0 )->GetCfdDataSet( -1 ) );
+      _modelList.at( 0 )->transientDataSets[ key ] = _modelList.at( 0 )->GetCfdDataSet( -1 );
+      _modelList.at( 0 )->GetCfdDataSet( -1 )->SetAnimation( animation );
+      animation->GetGroup( j )->AddChild( _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS() );
 
       if (fileIO::isFileReadable( frameFileNames[ order[ j ]  ] ) ) 
       {
@@ -1103,7 +1129,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
          exit(1);
       }
    }
-
+   
    frameDirNames.clear();
    frameFileNames.clear();
    //close the directory

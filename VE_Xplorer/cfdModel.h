@@ -101,6 +101,7 @@ class cfdModel
       unsigned int GetNumberOfCfdDataSets( void );
       char* GetCfdDataSetFileName( int );
       void CreateCfdDataSet( void );
+      int GetKeyForCfdDataSet( cfdDataSet* );
 
       cfdFILE* GetGeomDataSet( int );
       unsigned int GetNumberOfGeomDataSets( void );

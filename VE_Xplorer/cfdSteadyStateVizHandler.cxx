@@ -826,6 +826,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             }
             this->dataList.at(i)->AddGeodesToSequence();
             this->dataList.at(i)->SetTransientGeodeFlag(false);
+            this->dataList.at(i)->SetSequence( 0 );
             this->transientBusy = false;
          }
       }
@@ -868,6 +869,8 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                                    << std::endl << vprDEBUG_FLUSH;
                this->_activeObject->SetDCS( this->_activeDataSetDCS );
                this->_activeObject->SetActiveDataSet( this->_activeDataSet );
+               if ( this->_activeDataSet->IsPartOfTransientSeries() )
+                  this->_activeObject->SetSequence( this->_activeDataSet->GetAnimation() );
                this->_activeObject->SetNormal( this->nav->GetDirection() );
                this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 

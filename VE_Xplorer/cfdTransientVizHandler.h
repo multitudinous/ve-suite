@@ -33,6 +33,8 @@
 #define CFD_TRANSIENTVIZHANDLER_H
 
 #include <vector>
+#include <map>
+#include <string>
 
 class cfdTransientFlowManager;
 class cfdObjects;
@@ -86,5 +88,7 @@ class cfdTransientVizHandler
       cfdCommandArray* _commandArray;
       bool computeActorsAndGeodes;
       char* _param;
+      std::vector< cfdCommandArray* > commandList;
+      std::map< int, std::string > mapDataKeyToName;
 };
 #endif

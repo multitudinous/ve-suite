@@ -42,6 +42,7 @@
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
 #include "cfdDCS.h"
+#include "cfdTempAnimation.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
@@ -96,6 +97,7 @@ cfdDataSet::cfdDataSet( )
    this->meanCellBBLength = 0.0;
    this->intRange[0] = 0;
    this->intRange[1] =1000000;
+   this->animation = 0;
 }
 
 cfdDataSet::~cfdDataSet()
@@ -1240,6 +1242,16 @@ void cfdDataSet::SetDCS( cfdDCS* myDCS )
       this->dcs = myDCS;
    else
       std::cerr << " ERROR: DCS is already set for this dataset " << std::endl;
+}
+
+cfdTempAnimation* cfdDataSet::GetAnimation( void )
+{
+   return this->animation;
+}
+
+void cfdDataSet::SetAnimation( cfdTempAnimation* input )
+{
+   this->animation = input;
 }
 
 int cfdDataSet::IsPartOfTransientSeries()

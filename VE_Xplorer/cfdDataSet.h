@@ -43,6 +43,7 @@ class vtkUnstructuredGridReader;
 class vtkDataSet;
 class cfdPlanes;
 class cfdDCS;
+class cfdTempAnimation;
 
 //! CFD data set loader and handler.
 /*!
@@ -184,6 +185,9 @@ class cfdDataSet
   cfdDCS * GetDCS();
   void SetDCS( cfdDCS * );
 
+   cfdTempAnimation* GetAnimation( void );
+   void SetAnimation( cfdTempAnimation* );
+
   int IsPartOfTransientSeries();
   void SetAsPartOfTransientSeries();
 
@@ -242,6 +246,7 @@ class cfdDataSet
   char ** vectorName;
 
   cfdDCS* dcs;
+   cfdTempAnimation* animation;
 
   int partOfTransientSeries;
    int intRange[2];

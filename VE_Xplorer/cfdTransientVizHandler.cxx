@@ -561,11 +561,12 @@ void cfdTransientVizHandler::CreateObjects( void )
          float scale[3], trans[3], rotate[3];   // pfDCS stuff
          this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
 
+         // This needs to be moved to cfdModel
          cfdDCS* dcs = new cfdDCS;
-         dcs->SetScaleArray( scale );
+         /*dcs->SetScaleArray( scale );
          dcs->SetTranslationArray( trans );
          dcs->SetRotationArray( rotate );
-         this->transientInfo[ ii ]->SetDCS( dcs );
+         this->transientInfo[ ii ]->SetDCS( dcs );*/
 
          // read the directories...
          char ** transientDataDir = new char * [ numTransientSets ];
