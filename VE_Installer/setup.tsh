@@ -1,7 +1,7 @@
 #!/bin/csh
 # sets up environment to build and/or run VE-Xplorer
 
-#OMNI_HOME & OMNILIB: comment out definitions to make a non-corba version - that's all you have to do
+#OMNI_HOME : comment out definitions to make a non-corba version - that's all you have to do
 
 #this is typically defined in your .cshrc file
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
@@ -87,7 +87,7 @@ else if ( `uname` == "Linux" ) then
 
 else
    echo "ERROR: Unsupported operating system"
-   echo "       CFD_LIBS, OMNI_HOME, and OMNILIB are undefined"
+   echo "       CFD_LIBS and OMNI_HOME are undefined"
 endif
 
 setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
