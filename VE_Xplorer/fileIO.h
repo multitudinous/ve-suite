@@ -32,7 +32,7 @@
 #ifndef FILEIO_H
 #define FILEIO_H
 
-#include <cstdio>
+#include <iosfwd>
 
 class fileIO
 { 

@@ -30,15 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "fileIO.h"
-#include <string.h>
+#include <string>
 #include <iostream>
 #include <fstream>
-#include <stdlib.h>
 
 #ifdef WIN32     // windows
 #include <direct.h>
 #else             // not windows
-#include <unistd.h>
 #include <sys/types.h>
 #include <sys/stat.h>
 #include <sys/dir.h>
