@@ -80,6 +80,9 @@ class cfdTempAnimation
 
       void ClearSequence( void );
 
+      // Helper function to support animations on clusters
+      void SetCurrentFrame( int );
+
    private:
       int numFrames;
       double _duration;

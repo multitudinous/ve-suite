@@ -270,6 +270,11 @@ int cfdTempAnimation::GetFrameOfSequence( void )
    return this->_sequence->getCurrentFrame();
 }
 
+void cfdTempAnimation::SetCurrentFrame( int frameIndex )
+{
+   this->_sequence->setCurrentFrame( frameIndex );
+}
+
 void cfdTempAnimation::ClearSequence( void )
 {
    // This function is called for one particular type of transientFlowManager
