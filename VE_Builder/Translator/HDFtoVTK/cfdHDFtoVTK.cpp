@@ -1,4 +1,4 @@
-#include "cfdHDFToVTK.h"
+#include "cfdHDFtoVTK.h"
 #include "vtkRectilinearGrid.h"
 #include "vtkDoubleArray.h"
 #include "vtkFloatArray.h"

@@ -5,3 +5,8 @@ To build the project, hdf2vtk.build.bat must be editted to
 match the local build environment. HDF libraries require
 zlib,szip, and jpeglib so these must also be downloaded locally.
 
+LD_LIBRARY_PATH needs to be modified to point to HDF librarys 
+HDF4_HOME and HDF5_HOME need to be set to build.
+
+
+
