@@ -37,6 +37,7 @@
 
 #include "cfdVjObsWrapper.h"
 using namespace std;
+
 cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 {
    this->argc = argc;
