@@ -446,46 +446,57 @@ void Body_Executive_i::SetNetwork (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
+   _mutex.acquire();
   
-  Package p;
-  p.SetSysId("temp.xml");
-  p.Load(network, strlen(network));
+   Package p;
+   p.SetSysId("temp.xml");
+   p.Load(network, strlen(network));
   
-  _network->clear();
-  _scheduler->clear();
+   _network->clear();
+   _scheduler->clear();
   
-  // Keep track of power requirements
-  _module_powers.clear();
-  _thermal_input.clear();
+   // Keep track of power requirements
+   _module_powers.clear();
+   _thermal_input.clear();
 
-  std::vector<Interface>::iterator iter;
-  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-    if(iter->_id==-1) break;
+   std::vector<Interface>::iterator iter;
+   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+      if(iter->_id==-1) 
+         break;
 
-  if(iter!=p.intfs.end() && _network->parse(&(*iter))) {
-    _network_intf = *iter;
-    for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      if(iter->_category==1 &&_network->setInput(iter->_id, &(*iter))) {
-	_network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-	_network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-	_network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-	_network->module(_network->moduleIdx(iter->_id))->_type = iter->_type;
-	_network->module(_network->moduleIdx(iter->_id))->_category = iter->_category;
+   if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
+   {
+      _network_intf = *iter;
+      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+         if(iter->_category==1 &&_network->setInput(iter->_id, &(*iter))) 
+         {
+	         _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+	         _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+	         _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+	         _network->module(_network->moduleIdx(iter->_id))->_type = iter->_type;
+	         _network->module(_network->moduleIdx(iter->_id))->_category = iter->_category;
+         }
+         else
+	         cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
+      
+      _mutex.release();
+      if(!_scheduler->schedule(0))
+      {
+         ClientMessage("Error in Schedule\n");
+         return;
       }
-      else
-	cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
-    if(!_scheduler->schedule(0))
-      ClientMessage("Error in Schedule\n");
-    else {
-      ClientMessage("Successfully Scheduled Network\n");
-      _scheduler->print_schedule();
-    }
-  } else {
-    ClientMessage("Error in SetNetwork\n");
-  }
-  
-  _mutex.release();
+      else 
+      {
+         ClientMessage("Successfully Scheduled Network\n");
+         _scheduler->print_schedule();
+      }
+   } 
+   else 
+   {
+      _mutex.release();
+      ClientMessage("Error in SetNetwork\n");
+      return;
+   }
 }
   
 char * Body_Executive_i::GetNetwork ( 
