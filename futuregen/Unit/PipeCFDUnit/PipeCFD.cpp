@@ -71,7 +71,6 @@ bool PipeCFD::execute (Gas *gas_in, Gas *gas_out, summary_values *summaries)
     string basepath = "./Glacier/Cases/Pipe/";
 
     system(("cp " + basepath + "DATA " + path + "/DATA").c_str());
-    system(("cp " + basepath + "INLET " + path + "/INLET").c_str());
     system(("cp " + basepath + "THERMO " + path + "/THERMO").c_str());
     system(("cp " + basepath + "GRID " + path + "/GRID").c_str());
 

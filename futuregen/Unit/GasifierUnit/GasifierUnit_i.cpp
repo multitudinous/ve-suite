@@ -178,22 +178,22 @@ void Body_Unit_i::StartCalc (
   for(i=0; i<prof.profile_vals.length(); i++)
     prof.profile_vals[i].length(gas_out->gas_cell.size());
 
-  prof.profile_vars[0] = "I_LOC";
-  prof.profile_vars[1] = "J_LOC";
-  prof.profile_vars[2] = "K_LOC";
-  prof.profile_vars[3] = "U_VEL";
-  prof.profile_vars[4] = "V_VEL";
-  prof.profile_vars[5] = "W_VEL";
-  prof.profile_vars[6] = "EFF";
+  prof.profile_vars[0]  = "X_LOC";
+  prof.profile_vars[1]  = "Y_LOC";
+  prof.profile_vars[2]  = "Z_LOC";
+  prof.profile_vars[3]  = "U_VEL";
+  prof.profile_vars[4]  = "V_VEL";
+  prof.profile_vars[5]  = "W_VEL";
+  prof.profile_vars[6]  = "EFF";
   prof.profile_vars[7] = "ETA";
   prof.profile_vars[8] = "CHI";
   prof.profile_vars[9] = "TEMPERATURE";
 
   std::vector<GasCell>::iterator iter;
   for(iter=gas_out->gas_cell.begin(), i=0; iter!=gas_out->gas_cell.end(); iter++, i++) {
-    prof.profile_vals[0][i] = iter->icell[0];
-    prof.profile_vals[1][i] = iter->icell[1];
-    prof.profile_vals[2][i] = iter->icell[2];
+    prof.profile_vals[0][i] = iter->node_location[0];
+    prof.profile_vals[1][i] = iter->node_location[1];
+    prof.profile_vals[2][i] = iter->node_location[2];
     prof.profile_vals[3][i] = iter->velocity[0];
     prof.profile_vals[4][i] = iter->velocity[1];
     prof.profile_vals[5][i] = iter->velocity[2];
