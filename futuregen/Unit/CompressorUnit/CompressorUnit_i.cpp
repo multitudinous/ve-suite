@@ -24,11 +24,10 @@ void Body_Unit_i::StartCalc (
   {
     // Add your implementation here
     const char* igas;
-    const char* ogas[4];
+    const char* ogas;
     bool rv;
     Package p;
     string therm_path="thermo";
-    int i;
     const char* result;
     summary_values summaries;
 
@@ -85,7 +84,7 @@ void Body_Unit_i::StartCalc (
     
     // initialize composition
     std::vector<REAL> composition;
-    for(i=0;i<nspecies;i++)
+    for(int i=0;i<nspecies;i++)
       composition.push_back(0.0);
 
 // grab map for species names
@@ -152,8 +151,8 @@ void Body_Unit_i::StartCalc (
   delete gas_out_data;
   p.SetPackName("ExportData");
   p.SetSysId("test.xml");
-  ogas[i] = p.Save(rv);
-  executive_->SetExportData(id_, i, ogas[i]);
+  ogas = p.Save(rv);
+  executive_->SetExportData(id_, 0, ogas);
   
   if(gas_out_data->gas_composite.T <= 200 || gas_out_data->gas_composite.T >= 3000) {
     warning("Outgoing gas temperature out of range");
