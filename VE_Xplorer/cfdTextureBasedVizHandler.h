@@ -72,7 +72,7 @@ class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandle
       cfdVectorVolumeVisHandler* _vvvh;
       cfdScalarVolumeVisHandler* _svvh;
 #endif
-      cfdSwitch* _visOptionSwitch;
+      //cfdSwitch* _visOptionSwitch;
       float* _currentBBox;
       bool _cleared;
       bool _textureBaseSelected;

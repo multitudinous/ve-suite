@@ -44,6 +44,7 @@ class vtkDataSet;
 class cfdPlanes;
 class cfdDCS;
 class cfdTempAnimation;
+class cfdVTKFileHandler;
 
 //! CFD data set loader and handler.
 /*!
@@ -248,6 +249,7 @@ class cfdDataSet
   cfdDCS* dcs;
    cfdTempAnimation* animation;
 
+   cfdVTKFileHandler* _vtkFHndlr;
   int partOfTransientSeries;
    int intRange[2];
 

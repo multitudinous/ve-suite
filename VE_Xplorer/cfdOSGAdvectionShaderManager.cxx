@@ -134,20 +134,33 @@ void cfdOSGAdvectionShaderManager::Init()
    if(_velocity.valid()){
       _ss = new osg::StateSet();
       _ss->setTextureAttributeAndModes(0,_propertyToAdvect.get(), 
-                                      osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+                                   osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+      _ss->setTextureMode(0,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      
       _ss->setTextureAttributeAndModes(1,_noiseTexture.get(), 
-                                      osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+                                   osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+      _ss->setTextureMode(1,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      
       _ss->setTextureAttributeAndModes(2,_velocity.get(), 
-                                      osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+                                   osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+      _ss->setTextureMode(2,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      
       _ss->setTextureAttributeAndModes(3,_dye.get(), 
-                                     osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+                                   osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+      _ss->setTextureMode(3,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      
       _ss->setTextureAttributeAndModes(4,_lookUpFunction.get(), 
-                                      osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+                                   osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+      _ss->setTextureMode(4,GL_TEXTURE_1D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      
       _ss->setTextureAttributeAndModes(5,_weightW.get(), 
-                                      osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+                                   osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+      _ss->setTextureMode(5,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      
       _ss->setTextureAttributeAndModes(6,_weightV.get(), 
-                                      osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
-
+                                   osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+      _ss->setTextureMode(6,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      
       //load the shader file 
       char directory[1024];
       if(_shaderDirectory){
@@ -310,9 +323,9 @@ void cfdOSGAdvectionShaderManager::_initPropertyTexture()
             data[p*4 + 3] = (unsigned char)0; 
         }else{
            data[p*4   ] = (unsigned char)0;
-           data[p*4 + 1] = (unsigned char)p%255;
+           data[p*4 + 1] = (unsigned char)0;
            data[p*4 + 2] = (unsigned char)0;
-           data[p*4 + 3] = (unsigned char)127;   
+           data[p*4 + 3] = (unsigned char)0;   
         }
         i++;
         if((unsigned int)i > (unsigned int)_fieldSize[0]-1){

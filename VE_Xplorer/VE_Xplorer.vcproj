@@ -802,6 +802,9 @@
 				RelativePath=".\cfdVolumeVisualization.cpp">
 			</File>
 			<File
+				RelativePath=".\cfdVTKFileHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdWriteTraverser.cxx">
 			</File>
 			<File
@@ -1293,6 +1296,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdVolumeVisualization.h">
+			</File>
+			<File
+				RelativePath=".\cfdVTKFileHandler.h">
 			</File>
 			<File
 				RelativePath=".\cfdWriteTraverser.h">

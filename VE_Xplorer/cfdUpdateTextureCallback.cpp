@@ -42,10 +42,10 @@ cfdUpdateTextureCallback::cfdUpdateTextureCallback(const cfdUpdateTextureCallbac
 ///////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::~cfdUpdateTextureCallback()
 {
-   if(_tm){
+   /*if(_tm){
       delete _tm;
       _tm = 0;
-   }
+   }*/
 }
 ///////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::SetTextureManager(cfdTextureManager* tm)

@@ -58,7 +58,7 @@ void cfdTextureBasedVizHandler::CleanUp( void )
 {
    for ( unsigned int i = 0; i < _volumeVisNodes.size(); ++i )
    {
-      delete _volumeVisNodes.at( 0 );
+      delete _volumeVisNodes.at( i );
    }
    _volumeVisNodes.clear();
 
@@ -80,23 +80,6 @@ void cfdTextureBasedVizHandler::CleanUp( void )
       _worldDCS = 0;
    }
 
-   if ( _nav ) 
-   {
-      delete  _nav;
-      _nav = 0;
-   }
-
-   if ( _cursor )
-   {
-      delete  _cursor;
-      _cursor = 0;
-   }
-   
-   if ( _activeVolumeVizNode )
-   {
-      delete _activeVolumeVizNode;
-      _activeVolumeVizNode = 0;
-   }
 
    if ( _parent )
    {
@@ -109,10 +92,10 @@ void cfdTextureBasedVizHandler::CleanUp( void )
       delete [] _currentBBox;
       _currentBBox = 0;
    }
-   if( _visOptionSwitch){
+   /*if( _visOptionSwitch){
       delete  _visOptionSwitch;
        _visOptionSwitch = 0;
-   }
+   }*/
   
 #ifdef CFD_USE_SHADERS
    if(_svvh){
@@ -379,7 +362,7 @@ void cfdTextureBasedVizHandler::_updateScalarVisHandler()
 void cfdTextureBasedVizHandler::_updateVectorVisHandler()
 {
 
-   if(_activeTM&&_activeVolumeVizNode&&_visOptionSwitch&&_pbm){
+   if(_activeTM&&_activeVolumeVizNode&&_pbm){
       if(!_vvvh){
          _vvvh = new cfdVectorVolumeVisHandler();
          _vvvh->SetBoundingBox(_activeTM->getBoundingBox());

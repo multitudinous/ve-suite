@@ -43,6 +43,7 @@
 #include "readWriteVtkThings.h"
 #include "cfdDCS.h"
 #include "cfdTempAnimation.h"
+#include "cfdVTKFileHandler.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
@@ -98,6 +99,7 @@ cfdDataSet::cfdDataSet( )
    this->intRange[0] = 0;
    this->intRange[1] =1000000;
    this->animation = 0;
+   _vtkFHndlr = 0;
 }
 
 cfdDataSet::~cfdDataSet()
@@ -196,6 +198,10 @@ cfdDataSet::~cfdDataSet()
       this->fileName = NULL;
    }
  
+   if(_vtkFHndlr){
+      delete [] _vtkFHndlr;
+      _vtkFHndlr = 0;
+   }
 }
 
 void cfdDataSet::SetRange( double * dataRange )
@@ -456,8 +462,12 @@ void cfdDataSet::LoadData( )
                              << std::endl << vprDEBUG_FLUSH;
    }
 
-   this->dataSet = readVtkThing( this->fileName, 0 );
-
+   //this->dataSet = readVtkThing( this->fileName, 0 );
+   if(!_vtkFHndlr){
+      _vtkFHndlr = new cfdVTKFileHandler();
+   }
+   //_vtkFHndlr->SetInputFileName(fileName);
+   this->dataSet = _vtkFHndlr->GetDataSetFromFile(fileName);
    this->numPtDataArrays = this->dataSet->GetPointData()
                                         ->GetNumberOfArrays();
    vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = " << this->numPtDataArrays

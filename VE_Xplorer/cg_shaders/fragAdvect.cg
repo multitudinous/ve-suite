@@ -16,8 +16,8 @@ frag2app fp_advectTexture(float4 color : COLOR,
                     uniform float deltaT,
                     uniform float time,
                     uniform float period,
-                    //uniform sampler3D wFunc:TEXUNIT5,
-                    //uniform sampler3D vFunc:TEXUNIT6,
+                    uniform sampler3D wFunc:TEXUNIT5,
+                    uniform sampler3D vFunc:TEXUNIT6
                     //uniform float3 vecMin,
                     //uniform float3 vecMax
                     )
@@ -60,7 +60,7 @@ frag2app fp_advectTexture(float4 color : COLOR,
    //float4 V = tex3D(vFunc,texCoord0);
 
    float tInject = tex1D(lookUpTexture,localTime).x;
-   retColor.color.x = (1.0 -.2)*prop.x + tInject*.2*n.x;
+   retColor.color.x = texCoord0.x;//(1.0 -.2)*prop.x + tInject*.2*n.x;
   
    //material 2
    localTime = fmod(time + n.w,period);

@@ -91,13 +91,13 @@ cfdModel::~cfdModel()
    //texture data cleanup
    for ( unsigned int i = 0; i < _vectorDataTextures.size(); ++i )
    {
-      delete _vectorDataTextures.at( 0 );
+      delete _vectorDataTextures.at( i );
    }
    _vectorDataTextures.clear();
 
    for ( unsigned int i = 0; i < _scalarDataTextures.size(); ++i )
    {
-      delete _scalarDataTextures.at( 0 );
+      delete _scalarDataTextures.at( i );
    }
    _scalarDataTextures.clear();
  
