@@ -34,11 +34,11 @@
 
 class cfdDataSet;
 class cfdReadParam;
+class cfdSequence;
 
 class pfDCS;
 class pfNode;
 class pfGeode;
-class cfdSequence;
 
 // VTK Classes
 class vtkPolyData;
@@ -143,8 +143,11 @@ class cfdObjects
       static bool GetTimeToUpdateFlag( void );
       static void SetTimeToUpdateFlag( bool );
 
-      static void SetSphereScale( float );
-      static float GetSphereScale();
+      static void SetParticleOption( int );
+      static int GetParticleOption();
+
+      static void SetParticleScale( float );
+      static float GetParticleScale();
 
    protected:
 
@@ -152,8 +155,13 @@ class cfdObjects
       static cfdDataSet *activeMeshedVolume;
       static cfdDataSet *activeParticleData;
       static cfdDataSet *activeSurfaceData;
-      static float vectorScale;	// used by vectors and intended for warped contours
-      static float sphereScale;	// used by cfdPolydata for setting the size of sphere particles
+
+      // used by vectors and intended for warped contours
+      static float vectorScale;
+
+      // used by cfdPolydata for setting the type and size of particles
+      static int particleOption;   // point cloud or variably sized spheres
+      static float particleScale;
 
       static bool timeToUpdate;
 

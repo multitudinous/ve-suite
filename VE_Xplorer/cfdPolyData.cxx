@@ -128,9 +128,9 @@ void cfdPolyData::Update()
    }
    else if ( pd->GetCellType( 0 ) == VTK_VERTEX &&
              types->GetNumberOfTypes() == 1 &&
-             GetSphereScale() != -999 )
+             GetParticleOption() == 1 )
    {
-      vprDEBUG(vprDBG_ALL,1) << " IS VERTEX-BASED: spheres"
+      vprDEBUG(vprDBG_ALL,1) << " IS VERTEX-BASED: variably sized spheres"
                              << std::endl << vprDEBUG_FLUSH;
 
       vtkSphereSource * sphereSrc   = vtkSphereSource::New();
@@ -149,7 +149,28 @@ void cfdPolyData::Update()
       sphereGlyph->SelectInputScalars( pd->GetPointData()->GetScalars()->GetName() );
       sphereGlyph->SetScaleModeToScaleByScalar();
       sphereGlyph->SetColorModeToColorByScalar();
-      sphereGlyph->SetScaleFactor( GetSphereScaleFactor() );
+
+      // this attempts to set size of largest particle proportional
+      // to the diagonal length of the entire dataset
+
+      float len = this->GetActiveDataSet()->GetLength();
+      // if there is only one point, then len equals zero...
+      if ( len == 0.0 ) 
+         len = 1.0;
+      
+      vprDEBUG(vprDBG_ALL,2) << " diagonalLength = " << len
+                             << std::endl << vprDEBUG_FLUSH;
+
+      int numPts = this->GetActiveDataSet()->GetDataSet()->GetNumberOfPoints();
+      vprDEBUG(vprDBG_ALL,2) << " numPts = " << numPts
+                             << std::endl << vprDEBUG_FLUSH;
+      float scaleFactor = 0.0;
+      if ( numPts != 0 )
+      {
+         scaleFactor = this->GetSphereScaleFactor()*20.0*len / (float)numPts;
+      }
+      sphereGlyph->SetScaleFactor( scaleFactor );
+
       sphereGlyph->ClampingOn();
       double range[ 2 ];
       this->GetActiveDataSet()->GetParent()->GetUserRange( range );
@@ -166,14 +187,16 @@ void cfdPolyData::Update()
       sphereGlyph->Delete();
       this->actor->GetProperty()->SetRepresentationToSurface();
    }
-   else
+   else if ( pd->GetCellType( 0 ) == VTK_VERTEX &&
+             types->GetNumberOfTypes() == 1 &&
+             GetParticleOption() == 0 )
    {
-      vprDEBUG(vprDBG_ALL,1) << " NOT A STREAMLINE, setting mapper"
+      vprDEBUG(vprDBG_ALL,1) << " IS VERTEX-BASED: point cloud"
                              << std::endl << vprDEBUG_FLUSH;
       this->map->SetColorModeToMapScalars();
       this->map->SetInput( pd );
       this->actor->GetProperty()->SetRepresentationToPoints();
-      this->actor->GetProperty()->SetPointSize( 4 );
+      this->actor->GetProperty()->SetPointSize(4*this->GetSphereScaleFactor());
    }
    types->Delete();
 
@@ -211,37 +234,17 @@ void cfdPolyData::Update()
 
 float cfdPolyData::GetSphereScaleFactor()
 {
-   // this->GetSphereScale() is obtained from gui, -100 < sphereScale < 100
+   // this->GetParticleScale() is obtained from gui, -100 < sphereScale < 100
    // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
-   // convert range to -2 < x < 2, and compute the exponent...
-   vprDEBUG(vprDBG_ALL,1) << " sphereScale() = " << this->GetSphereScale()
+   // convert range to -4 < x < 4, and compute the exponent...
+   vprDEBUG(vprDBG_ALL,1) << " sphereScale = " << this->GetParticleScale()
                           << std::endl << vprDEBUG_FLUSH;
 
-   float scaleFactor;
+   float scaleFactor = 0.0;
 
-   if ( this->GetSphereScale() < -100 || this->GetSphereScale() > 100 )
+   if ( -100 <= this->GetParticleScale() && this->GetParticleScale() <= 100 )
    {
-      scaleFactor = 0.0;
-   }
-   else
-   {
-      float len = this->GetActiveDataSet()->GetLength();
-      // if there is only one point, then len equals zero...
-      if ( len == 0.0 ) 
-         len = 1.0;
-      
-      vprDEBUG(vprDBG_ALL,1) << " bbDiagonalLength = " << len
-                             << std::endl << vprDEBUG_FLUSH;
-      int numPts = this->GetActiveDataSet()->GetDataSet()->GetNumberOfPoints();
-      vprDEBUG(vprDBG_ALL,1) << " numPts = " << numPts
-                             << std::endl << vprDEBUG_FLUSH;
-      if ( numPts == 0 )
-         scaleFactor = 0.0;
-      else
-      {
-         scaleFactor = exp( this->GetSphereScale() / 50.0 ) * 
-                            20.0 * len / (float)numPts;
-      }
+      scaleFactor = exp( this->GetParticleScale() / 25.0 );
    }
 
    vprDEBUG(vprDBG_ALL,1) << " scaleFactor = " << scaleFactor 

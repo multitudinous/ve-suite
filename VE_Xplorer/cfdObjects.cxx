@@ -638,22 +638,12 @@ bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
 {
    if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_PARTICLE_VIEW_OPTION )
    {
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
-         << commandArray->GetCommandValue( CFD_GEOSTATE ) << std::endl << vprDEBUG_FLUSH;
+      cfdObjects::SetParticleOption( 
+                               commandArray->GetCommandValue( CFD_GEOSTATE ) );
 
-      // if view option is set to point cloud, set sphere scale out of range
-      if ( commandArray->GetCommandValue( CFD_GEOSTATE ) == 0 )
-      {
-         vprDEBUG(vprDBG_ALL,0) << " setting sphere scale out of range" 
-                                << std::endl << vprDEBUG_FLUSH;
-         cfdObjects::SetSphereScale( -999 );
-      }
-      else if ( commandArray->GetCommandValue( CFD_GEOSTATE ) == 1 )
-      {
-         vprDEBUG(vprDBG_ALL,0) << " setting sphere scale to " 
-            << commandArray->GetCommandValue( CFD_GEOSTATE ) << std::endl << vprDEBUG_FLUSH;
-         cfdObjects::SetSphereScale( commandArray->GetCommandValue( CFD_GEOSTATE ) );
-      }
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
+         << commandArray->GetCommandValue( CFD_GEOSTATE )
+         << std::endl << vprDEBUG_FLUSH;
 
       return true;
    }
@@ -663,7 +653,7 @@ bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
          << commandArray->GetCommandValue( CFD_ISOVALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdObjects::SetSphereScale( commandArray->GetCommandValue( CFD_ISOVALUE ) );
+      cfdObjects::SetParticleScale( commandArray->GetCommandValue( CFD_ISOVALUE ) );
 
       return true;
    }
@@ -806,7 +796,8 @@ cfdDataSet * cfdObjects::activeParticleData = NULL;
 cfdDataSet * cfdObjects::activeSurfaceData = NULL;
 float cfdObjects::vectorScale = 0.0;
 bool  cfdObjects::timeToUpdate = false;
-float cfdObjects::sphereScale = -999.0;
+int   cfdObjects::particleOption = 0;
+float cfdObjects::particleScale = 0.0;
 
 bool cfdObjects::GetTimeToUpdateFlag( void )
 {
@@ -888,14 +879,24 @@ float cfdObjects::GetVectorScale()
    return vectorScale;
 }
 
-// used by cfdPolydata for setting the size of sphere particles
-void cfdObjects::SetSphereScale( float x )
+// used by cfdPolydata for setting the type and size of particles
+void cfdObjects::SetParticleOption( int option )
 {
-   sphereScale = x;
+   particleOption = option;
 }
 
-float cfdObjects::GetSphereScale()
+int cfdObjects::GetParticleOption()
 {
-   return sphereScale;
+   return particleOption;
+}
+
+void cfdObjects::SetParticleScale( float x )
+{
+   particleScale = x;
+}
+
+float cfdObjects::GetParticleScale()
+{
+   return particleScale;
 }
 

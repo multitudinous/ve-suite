@@ -2442,22 +2442,9 @@ void cfdApp::preFrame( void )
    }
    else if ( this->cfdId == CHANGE_PARTICLE_VIEW_OPTION)
    {
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
+      vprDEBUG(vprDBG_ALL,1) << " setting sphere particle option to " 
          << this->cfdGeo_state << std::endl << vprDEBUG_FLUSH;
-
-      // if view option is set to point cloud, set sphere scale out of range
-      if ( this->cfdGeo_state == 0 )
-      {
-         vprDEBUG(vprDBG_ALL,0) << " setting sphere scale out of range" 
-                                << std::endl << vprDEBUG_FLUSH;
-         cfdObjects::SetSphereScale( -999 );
-      }
-      else if ( this->cfdGeo_state == 1 )
-      {
-         vprDEBUG(vprDBG_ALL,0) << " setting sphere scale to " 
-            << this->cfdGeo_state << std::endl << vprDEBUG_FLUSH;
-         cfdObjects::SetSphereScale( this->cfdGeo_state );
-      }
+      cfdObjects::SetParticleOption( this->cfdGeo_state );
 
       this->setId( -1 );
    }
@@ -2467,7 +2454,7 @@ void cfdApp::preFrame( void )
          << this->cfdIso_value 
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdObjects::SetSphereScale( this->cfdIso_value );
+      cfdObjects::SetParticleScale( this->cfdIso_value );
 
       this->setId( -1 );
    }

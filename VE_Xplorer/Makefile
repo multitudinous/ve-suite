@@ -191,8 +191,8 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 ifeq ($(CLUSTER_APP), TRUE)
    APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project_cluster
    EXTRA_CXXFLAGS+= -D_CLUSTER
-   # object files are being stored in a system-dependent directory so that builds
-   # for multiple platforms may be maintained simultaneously.
+   # object files are being stored in a system-dependent directory so that
+   # builds for multiple platforms may be maintained simultaneously.
 
    #OBJDIR is the place that the object files are stored.
    OBJDIR=	$(CFDHOSTTYPE)_cluster
