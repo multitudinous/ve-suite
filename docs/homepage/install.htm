@@ -1,0 +1,580 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>VE-Suite</title>
+<link href="vesuite.css" rel="stylesheet" type="text/css">
+<style type="text/css">
+<!--
+body,td,th {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #FFFFFF;
+}
+a {
+	font-family: Arial, Helvetica, sans-serif;
+	font-size: small;
+	color: #0099FF;
+	font-weight: bold;
+}
+a:link {
+	text-decoration: none;
+	color: #CC6633;
+}
+a:visited {
+	text-decoration: none;
+	color: #CC6633;
+}
+a:hover {
+	text-decoration: underline;
+	color: #CC9900;
+}
+a:active {
+	text-decoration: none;
+	color: #CC6633;
+}
+h1,h2,h3,h4,h5,h6 {
+	font-family: Impact;
+}
+h1 {
+	font-size: x-large;
+	color: #CC9900;
+}
+h2 {
+	font-size: medium;
+	color: #CCCCCC;
+}
+.style5 {font-family: Arial, Helvetica, sans-serif}
+-->
+</style>
+<script language="JavaScript" type="text/JavaScript">
+<!--
+function MM_reloadPage(init) {  //reloads the window if Nav4 resized
+  if (init==true) with (navigator) {if ((appName=="Netscape")&&(parseInt(appVersion)==4)) {
+    document.MM_pgW=innerWidth; document.MM_pgH=innerHeight; onresize=MM_reloadPage; }}
+  else if (innerWidth!=document.MM_pgW || innerHeight!=document.MM_pgH) location.reload();
+}
+MM_reloadPage(true);
+//-->
+</script>
+</head>
+
+<body>
+<TABLE width="85%" border=0 align="center" 
+cellPadding=5 cellSpacing=0 borderColor=#CCCCCC bgcolor="#333366" style="BORDER-COLLAPSE: collapse">
+  <TBODY>
+    <TR>
+      <TD colspan="2"><h1><span class="paragraph style5"><img src="header.gif" width="576" height="114"></span></h1></TD>
+    </TR>
+    <TR>
+      <TD colspan="2"><div align="right"><span class="paragraph"><a href="http://www.vrac.iastate.edu">VRAC</a> | <a href="http://www.vrac.iastate.edu/%7Ekmbryden">Professor Mark Bryden</a> | <a href="http://www.me.iastate.edu/">Mechanical Engineering </a></span></div></TD>
+    </TR>
+    <TR>
+      <TD colspan="2" valign="middle"><h2>&nbsp;</h2>
+      </TD>
+    </TR>
+    <TR>
+      <TD width="22%"><P class="paragraph"><a href="homepage-ves.htm">Home</a></P>
+      </TD>
+      <TD width="78%" rowspan="113" valign="top"><p>Install Suse 9.1 Professional. Choose a single disk partition if possible and use the 32 bit system. Do a typical install plus the following:</p>
+        <blockquote>
+          <p>c/c++ tools<br>
+            experienced user<br>
+            KDE env, dev<br>
+            Multimedia<br>
+            office apps<br>
+            Help and support<br>
+            Tcl/Tkl dev<br>
+            Graphical Base</p>
+        </blockquote>        <p><br>
+          1. All the bits are in a tar file (uno.files.src.tgz) located on the systems
+          in /tmp/uno. This file is still being created as the installation and use of
+          the bit is determined. Unpack this in /tmp/uno and follow the instructions<br>
+        below.<br>
+        <br>
+          2. Install cmake in /usr/local. This is simply untaring the file cmake-2.0.3-x86-linux-files.tar from /usr/local.<br>
+        <br>
+          3. extract ve_suite in /tmp/uno/ve_suite from VE_Suite.tar.<br>
+          <br>
+        4. Insure that the kernel source is installed using Yast.</p>
+        <p>5. Insure that the Mesa development environment, the XFree86 development headers are installed using Yast. Note: the order of this and step 6 andeven step 7 may need to be re-ordered.</p>
+        <p>6. Insure that the Nvidia accelerated drivers are installed and that glx is operating. Do the command xdpyinfo and look for the GLX and NV-GLX in the extensions section. To install the nvidia drivers use Yast ans YOU. See the instructions at: ftp://ftp.suse.com/pub/suse/i386/supplementary/X/XFree86/nvidia-installer-HOWTO</p>
+        <p>7. install/build vtk (follow the readme in that directory)</p>
+        <blockquote>
+          <p>          Must do the command:<br>
+            env CXX=/usr/bin/c++ CC=/usr/bin/cc cmake -i<br>
+            <br>
+            (Go into advanced mode and select<br>
+            VTK_HYBRID ON<br>
+            VTK_PARALLEL ON<br>
+            MPI OFF<br>
+            use shared libraries accept other defaults.)<br>
+            make<br>
+          make install</p>
+        </blockquote>        
+        <p>8. Install the Java2 SDK by running the .bin file.</p>
+        <blockquote>
+          <p>ln -s /tmp/uno/java_2_sdk/j2sdk1.4.2_05/jre/plugin/i386/ns610-<br>
+            gcc32/libjavaplugin_oji.so /<br>
+            root/.mozilla/plugins/libjavaplugin_oji.so<br>
+          </p>
+        </blockquote>        
+        <p>9. install (using YaST):</p>
+        <blockquote>
+          <p>- python-devel<br>
+            - python-opengl<br>
+            - python-orbit<br>
+          - python-tk</p>
+        </blockquote>        
+        <p>10. Build/install OMNIOrb per the README.unix</p>
+        <blockquote>
+          <p>make<br>
+          make install</p>
+        </blockquote>        
+        <p>11. install OpenGL performer</p>
+        <blockquote>
+          <p>untar all the performer*tgz files in / .</p>
+        </blockquote>        
+        <p>12. build/install:</p>
+        <blockquote>
+          <p>- Scons<br>
+            build/install scons using the supplied python script<br>
+            <br>
+            - CppDOM (www.sf.net/projects/xml-cppdom)<br>
+            untar and use scons to install.<br>
+            <br>
+            - Boost-jam (www.boost.org)<br>
+            This has a build.sh script. Then copy bjam to /usr/local/bin<br>
+            <br>
+            - Boost (www.boost.org)<br>
+            This uses bjam to build. bjam &quot;sTOOLS=gcc&quot; install<br>
+            <br>
+            - GMTL (gtt.sf.net)<br>
+          This uses scons to install. scons install.</p>
+        </blockquote>        
+        <p>13. Build vr_juggler and tweek (in ve_suite directory)</p>
+        <blockquote>
+          <p>untar the file vrjuggler-2.0-alpha4.src.tar in the ve_suite path<br>
+            create a build directory in ...ve_suite/vrjuggler-2.0-alpha4.src<br>
+            cd to the vrjuggler build directory<br>
+            <br>
+            The following is one command line:<br>
+            ../configure.pl<br>
+            --with-java-orb=JDK --with-cppdom=/tmp/uno/cppdom/cppdom-0.32<br>
+            --with-boost=/tmp/uno/boost/boost_1_31_0<br>
+            --with-boost-includes=/tmp/uno/boost/boost_1_31_0<br>
+            --with-cxx-orb-root=/usr/local<br>
+          --with-cxx-orb=omniORB4</p>
+        </blockquote>        
+        <p>The prefix option below determines where the code is installed. If it is<br>
+          left blank it goes in /usr/local or you can use the following</p>
+        <blockquote>
+          <p>--prefix=/tmp/uno/ve_suite/vrjuggler-2.0-alpha4.src<br>
+            gmake build<br>
+            gmake install</p>
+        </blockquote>        <p>14. cd to ve_suite/VE_Suite/VE_Installer. There is a script - setup.vista.sh which sets up the environment for building VE_Suite. Sourcethis and then build</p>
+        <blockquote>
+          <p>. ./setup.vista.sh<br>
+            <br>
+            gmake</p>
+          <p> Now it gets a bit unclear.<br>
+            <br>
+            need to set a bunch of the environment variables:</p>
+          <p>export CONDUCTOR_BASE_DIR=/tmp/uno/ve_suite/VE_Suite/VE_Conductor<br>
+            export OMNI_HOME= /tmp/uno/omniorb/omniORB-4.0.4<br>
+            export VJ_BASE_DIR=<br>
+            /tmp/uno/ve_suite/vrjuggler-2.0-alpha4.src/build.linux.suse/instlinks<br>
+            export VE_SUITE_HOME=/tmp/uno/ve_suite/VE_Suite<br>
+            <br>
+            You need to change the omniORB4.cfg file in the VE_Installer dir. <br>
+            Change this line:<br>
+            <br>
+            InitRef = NameService=corbaname::your_computername_or_ip_address:2809<br>
+            <br>
+            This tells our app where to find the omni nameserver.<br>
+            <br>
+            Also, you will need to remove the following lines from sim.base.jconf:<br>
+            <br>
+&lt;corba_remote_reconfig name=&quot;CORBA Remote Run-Time Reconfiguration&quot;<br>
+version=&quot;1&quot;&gt;<br>
+&lt;naming_service_host&gt;localhost&lt;/naming_service_host&gt;<br>
+&lt;naming_service_port&gt;2809&lt;/naming_service_port&gt;<br>
+&lt;iiop_version&gt;1.0&lt;/iiop_version&gt;<br>
+&lt;/corba_remote_reconfig&gt;<br>
+            <br>
+            Before you can run you have to run omniNames to start an omniORB nameserver. Do this by:<br>
+            <br>
+            omniNames -start 2809<br>
+            <br>
+            This only has to be done on the master omniName system. That system is specified in the omniORB4.cfg file on all systems.<br>
+            <br>
+            The second time you just use omniNames only on the server. The clients get it from the omniORB4.cfg file.<br>
+            <br>
+            After this when you run our app it should get to a point where it prompts you for a parameter file. At this point you could consider the app to work. If you would like to test further there are real simple examples in the VE_TestSuite dir. If you run the app in that dir and use the vrxpr.param file you will see the app come up in sim mode.<br>
+            <br>
+            To get the vrml file into perfly use this notation:<br>
+            <br>
+            Perfly filename_here<br>
+            <br>
+            Note that this doesn't work with all vrml files. The cargo ship file had to be changed to a fly file (pfb).<br>
+            <br>
+            To get a cluster to work you need to edit the makefile in VE_Xplorer and uncomment the line<br>
+            <br>
+            CLUSTER_APP = TRUE<br>
+            <br>
+            Then you need to edit the cfdApp.cxx file in the same directory and change the hardcoded path to the cluster master. There are two instances at lines 476 and 3038. Also at line 3046 hostname is set to a &quot;/&quot;. Changing it to a null &quot;&quot; will allow you to use relative paths for the command line files.<br>
+            <br>
+            gmake in that directory.<br>
+            <br>
+            This needs to be done on all systems.<br>
+            <br>
+            The data needs to be available on all systems. This argues strongly for a shared file system.<br>
+            <br>
+            To run this start project_cluster &lt;jconf files&gt; on the master and give it a param file if needed. When it has processed all that it can then start project_cluster the same way on the slaves. The windows should startup and away you go.</p>
+        </blockquote>        
+        <p><a href="InstallSuse.pdf">Click here</a> to view a printable version of installation instructions </p></TD>
+    </TR>
+    <TR>
+      <TD><span class="paragraph"><a href="about.htm">About</a></span></TD>
+    </TR>
+    <TR>
+      <TD><a href="download.htm">Download </a></TD>
+    </TR>
+    <TR>
+      <TD><p><a href="install.htm">Installation</a></p></TD>
+    </TR>
+    <TR>
+      <TD><a href="user.htm">User's Guide </a></TD>
+    </TR>
+    <TR>
+      <TD><p><a href="documentation.htm">Documentation</a></p></TD>
+    </TR>
+    <TR>
+      <TD><a href="appgallery.htm">Application Gallery </a></TD>
+    </TR>
+    <TR>
+      <TD><a href="research.htm">Research</a></TD>
+    </TR>
+    <TR>
+      <TD><a href="developerinfo.htm">Developer Information </a></TD>
+    </TR>
+    <TR>
+      <TD><a href="contact.htm">Contact</a></TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD>&nbsp;</TD>
+    </TR>
+    <TR>
+      <TD colspan="2">&nbsp;</TD>
+    </TR>
+  </TBODY>
+</TABLE>
+</body>
+</html>
