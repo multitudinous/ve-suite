@@ -38,6 +38,7 @@ include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
 include $(TAO_ROOT)/taoconfig.mk
 
 vpath %.cpp ${VE_UI_HOME} ${IDL_HOME} ${VE_SUITE_HOME}/VE_Xplorer ${SKEL_HOME}
+vpath %.cxx ${VE_UI_HOME}
 
 LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs
 
@@ -81,14 +82,19 @@ OBJECTS = StringParse.o \
 	UI_TransTab.o \
 	UI_VertTab.o \
 	UI_DesignParTab.o \
-	UI_ViewLocTab.o
+	UI_ViewLocTab.o \
+   UI_ModSelPanel.o \
+   UI_ModelData.o
 
-.SUFFIXES : .o .cc .cpp
+.SUFFIXES : .o .cc .cpp .cxx
 
 .cc.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -D WXUSING_PLUGIN_DLL -o $@ $<
 
 .cpp.o :
+	$(CXX) -g -c $(CPPFLAGS) -w -D WXUSING_PLUGIN_DLL -o $@ $<
+
+.cxx.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -D WXUSING_PLUGIN_DLL -o $@ $<
 
 all: $(APP)

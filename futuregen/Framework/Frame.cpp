@@ -6,6 +6,7 @@
 #include "package.h"
 #include "OrbThread.h"
 
+
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_CLOSE(AppFrame::OnClose)
   EVT_MENU(v21ID_ZOOMIN, AppFrame::ZoomIn)
@@ -19,6 +20,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(v21ID_SUBMIT, AppFrame::SubmitToServer)
   EVT_MENU(v21ID_CONNECT, AppFrame::ConExeServer)
   EVT_MENU(v21ID_DISCONNECT, AppFrame::DisConExeServer)
+  EVT_MENU(v21ID_DISCONNECT_VE, AppFrame::DisConVEServer)
   EVT_MENU(v21ID_CONNECT_VE, AppFrame::ConVEServer)
   EVT_MENU(v21ID_START_CALC, AppFrame::StartCalc)
   EVT_MENU(v21ID_STOP_CALC, AppFrame::StopCalc)
@@ -90,7 +92,7 @@ void AppFrame::CreateVETab()
    //m_frame->_tabs->AssignImageList(m_imageList);
    //m_tabs->createTabPages();
    //wxNotebookSizer *nbs = new wxNotebookSizer(m_tabs);
-   wxBoxSizer *sizerTab = new wxBoxSizer(wxVERTICAL);
+   sizerTab = new wxBoxSizer(wxVERTICAL);
    //sizerTab->Add(nbs, 1, wxEXPAND | wxALL);
    sizerTab->Add(m_frame, 1, wxEXPAND | wxALL);
    sizerTab->Layout();
@@ -210,10 +212,12 @@ void AppFrame::CreateMenu()
   con_menu->Append(v21ID_LOAD, _("&Load Job\tCtrl+L"));
   con_menu->AppendSeparator();
   con_menu->Append(v21ID_DISCONNECT, _("&Disconnect\tCtrl+d"));
+  con_menu->Append(v21ID_DISCONNECT_VE, _("&Disconnect VE"));
 
   con_menu->Enable(v21ID_SUBMIT,false);
   con_menu->Enable(v21ID_LOAD, false);
   con_menu->Enable(v21ID_DISCONNECT, false);
+  con_menu->Enable(v21ID_DISCONNECT_VE, false);
 
   
   run_menu->Append(v21ID_START_CALC, _("Start Simulation"));
@@ -623,17 +627,14 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
 		    pelog = new PEThread(this);
 		    pelog->activate();
 		  }
-
 		OrbThread* ot = new OrbThread(this);
 		ot->activate();
-
 		//ot->Run();
 		//register it to the server
 		//_mutex.acquire();
 
 		//_mutex.release();
 		//Enalbe Menu items
-
   
 
 	} catch (CORBA::Exception &) {
@@ -653,31 +654,34 @@ void AppFrame::ConVEServer(wxCommandEvent &event)
 	}
 
 	try {
-
+/*
     	  if (pelog==NULL)
 		  {
 		    pelog = new PEThread(this);
 		    pelog->activate();
-		  }
+		  }*/
 
 	    CosNaming::Name name(1);
 		name.length(1);
 		//Now get the reference of the VE server
-		name[0].id   = (const char*) "Master";
-		name[0].kind = (const char*) "VE_Xplorer";
+		name[0].id   = CORBA::string_dup ("Master");
+		name[0].kind = CORBA::string_dup ("VE_Xplorer");
 		CORBA::Object_var ve_object = naming_context->resolve(name);
 		vjobs = VjObs::_narrow(ve_object.in());
 		if (CORBA::is_nil(vjobs.in()))
 			std::cerr<<"VjObs is Nill"<<std::endl;
 		
 		//Create the VE Tab
-		CreateVETab();
-		con_menu->Enable(v21ID_CONNECT_VE, false);
-		Log("Found VE server\n");
+		
+		con_menu->Enable(v21ID_DISCONNECT_VE, true);
+		//Log("Found VE server\n");
 	} catch (CORBA::Exception &) {
 		
 		Log("Can't find VE server\n");
+		return;
 	}
+
+	CreateVETab();
 }
 
 bool AppFrame::init_orb_naming()
@@ -685,13 +689,13 @@ bool AppFrame::init_orb_naming()
 //	char *argv[]={""};
 //	int argc = 0;
 cout << " orb init " << endl;
+
 	try {
 		// First initialize the ORB, 
 		orb =
 			CORBA::ORB_init (wxGetApp().argc, wxGetApp().argv,
                        ""); // the ORB name, it can be anything! 
         
-		
 		//Here is the part to contact the naming service and get the reference for the executive
 		CORBA::Object_var naming_context_object =
 			orb->resolve_initial_references ("NameService");
@@ -713,6 +717,7 @@ cout << " orb init " << endl;
 		Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
 		return false;
 	}
+
 }
 
 void AppFrame::LoadBase(wxCommandEvent &event)
@@ -767,6 +772,45 @@ void AppFrame::DisConExeServer(wxCommandEvent &event)
 
 }
 
+void AppFrame::DisConVEServer(wxCommandEvent &event)
+{
+   try {
+      CosNaming::Name name(1);
+
+      name.length(1);
+      name[0].id   = (const char*) "Master";
+      name[0].kind = (const char*) "VE_Xplorer";
+   
+      try
+      {
+         //vprDEBUG(vprDBG_ALL,0) 
+         //<< "naming_context->unbind for CORBA Object  " 
+         //<< endl << vprDEBUG_FLUSH;
+         naming_context->unbind( name );
+         //naming_context->destroy();
+      }
+      catch( CosNaming::NamingContext::InvalidName& )
+      {
+         cerr << "Invalid name for CORBA Object  " << endl;
+      }
+      catch(CosNaming::NamingContext::NotFound& ex)
+      {
+         cerr << "Name not found for CORBA Object  " << ex.why << endl;
+      }
+         wx_ve_splitter->Unsplit(m_frame);
+         sizerTab->Remove(m_frame);
+         delete m_frame;
+         con_menu->Enable(v21ID_CONNECT_VE, true);
+         con_menu->Enable(v21ID_DISCONNECT_VE, false);
+         	Log("Disconnect VE suceeded.\n");
+		}catch (CORBA::Exception &) {
+		
+			Log("Disconnect VE failed.\n");
+		}
+
+
+}
+
 void AppFrame::ViewHelp(wxCommandEvent& event)
 {
   char browser[1024];
@@ -788,4 +832,9 @@ void AppFrame::ViewHelp(wxCommandEvent& event)
   cmd+="\"";
   
   ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+}
+
+void AppFrame::CloseVE()
+{
+
 }

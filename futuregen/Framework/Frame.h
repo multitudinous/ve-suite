@@ -26,7 +26,8 @@ enum {
   v21ID_CONNECT_VE,
   v21ID_SUBMIT,
   v21ID_LOAD, 
-  v21ID_DISCONNECT, 
+  v21ID_DISCONNECT,
+  v21ID_DISCONNECT_VE, 
   v21ID_UNDO, 
   v21ID_REDO, 
   v21ID_ZOOMIN, 
@@ -88,6 +89,8 @@ class AppFrame : public wxFrame
 
   void Log(const char* msg);
   //ACE_Thread_Mutex _mutex; //public mutex for the execution order
+  void CloseVE();
+
  protected:
   int m_frameNr;
   wxString fname;
@@ -120,6 +123,7 @@ class AppFrame : public wxFrame
   void GlobalParam(wxCommandEvent &event);
   void ConExeServer(wxCommandEvent &event);
   void DisConExeServer(wxCommandEvent &event);
+  void DisConVEServer(wxCommandEvent &event);
   void ConVEServer(wxCommandEvent &event);
   void LoadBase(wxCommandEvent &event);
   void LoadSour(wxCommandEvent &event);
@@ -129,6 +133,8 @@ class AppFrame : public wxFrame
   bool init_orb_naming();
   void CreateVETab();
   void OnUpdateUIPop(wxUpdateUIEvent& event);
+  
+  wxBoxSizer *sizerTab;
 
   DECLARE_EVENT_TABLE()
 };
