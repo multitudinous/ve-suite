@@ -44,13 +44,14 @@
 #include "cfdSoundHandler.h"
 #include "cfdQuatCamHandler.h"
 #include "cfdDataSet.h"
+#include "cfdModelHandler.h"
 
 #include <vrj/Util/Debug.h>
 
 #include <fstream>
 #include <cstdlib>
 
-cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
+cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
    nav            = 0;
    _teacher       = 0;
@@ -71,11 +72,19 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
       worldRot[ i ] = 0.0f;
    }
 
+   this->nav = 0;
+   _readParam = 0;
+   _param = 0;
+}
+
+void cfdEnvironmentHandler::Initialize( char* param )
+{
+   _param = param;
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    this->nav = new cfdNavigate();
    _readParam = new cfdReadParam();
-   _param = filename;
+   this->arrow = cfdModelHandler::instance()->GetArrow();
    CreateObjects();
 }
 
@@ -139,11 +148,6 @@ void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
    _commandArray = input;
 }
 
-void cfdEnvironmentHandler::SetArrow( vtkPolyData* input )
-{
-   this->arrow = input;
-}
-
 cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
 {
    return _soundHandler;
@@ -152,11 +156,6 @@ cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
 cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
 {
    return _teacher;
-}
-
-void cfdEnvironmentHandler::SetActiveDataSet( cfdDataSet* input )
-{
-   _activeDataSet = input;
 }
 
 ////////////////////////////////////////
@@ -224,7 +223,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
    vprDEBUG(vprDBG_ALL,3) << "\t 3. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
-   this->cursor->SetActiveDataSet( _activeDataSet );
+   this->cursor->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
    vprDEBUG(vprDBG_ALL,3) << "\t 4. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    this->cursor->CheckCommandId( _commandArray );
    vprDEBUG(vprDBG_ALL,3) << "\t 5. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;

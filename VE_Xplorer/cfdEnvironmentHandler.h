@@ -32,6 +32,8 @@
 #ifndef CFD_ENVIRONMENTHANDLER_H
 #define CFD_ENVIRONMENTHANDLER_H
 
+#include <vpr/Util/Singleton.h>
+
 class cfdNavigate;
 class cfdCursor;
 class cfdDCS;
@@ -42,29 +44,32 @@ class cfdSoundHandler;
 class cfdTeacher;
 class cfdSoundHandler;
 class cfdQuatCamHandler;
-class cfdDataSet;
 
 class vtkPolyData;
 
-class cfdEnvironmentHandler
+class cfdEnvironmentHandler : public vpr::Singleton< cfdEnvironmentHandler >
 {
-   public:
-      cfdEnvironmentHandler( char* );
+   private:
+      // Required so that vpr::Singleton can instantiate this class.
+      friend class vpr::Singleton< cfdEnvironmentHandler >;
+      //cfdEnvironmentHandler(const cfdEnvironmentHandler& o) { ; }
+      //cfdEnvironmentHandler& operator=(const cfdEnvironmentHandler& o) { ; }
+      cfdEnvironmentHandler( void );
       ~cfdEnvironmentHandler( void );
 
+   public:
+      void Initialize( char * );
       void InitScene( void );
       void PreFrameUpdate( void );
       void SetRootNode( cfdGroup* );
       void SetWorldDCS( cfdDCS* );
       void SetCommandArray( cfdCommandArray* );
-      void SetArrow( vtkPolyData* );
       void CreateObjects( void );
 
       cfdNavigate* GetNavigate( void );
       cfdCursor* GetCursor( void );
       cfdSoundHandler* GetSoundHandler( void );
       cfdTeacher* GetTeacher( void );
-      void SetActiveDataSet( cfdDataSet* );
 
    private:
       cfdNavigate* nav;
@@ -77,7 +82,6 @@ class cfdEnvironmentHandler
       cfdGroup* rootNode;
       cfdCommandArray* _commandArray;
       cfdReadParam* _readParam;
-      cfdDataSet* _activeDataSet;
       // cur_box will eventually be used to define bounding box
       // for data interagation
       double cur_box[6];

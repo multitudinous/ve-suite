@@ -400,8 +400,8 @@ void cfdExecutive::GetEverything( void * )
               // When we create the _plugin map here we will do the following
                _plugins[ iter->first ]->InitializeNode( worldDCS );
                _plugins[ iter->first ]->AddSelfToSG();
-               _modelHandler->AddModel( _plugins[ iter->first ]->GetCFDModel() );
-               _plugins[ iter->first ]->SetCursor( _envHandler->GetCursor() );
+               cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
+               _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
                _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
                vprDEBUG(vprDBG_ALL,1) << " Plugin [ " << iter->first 
                                       << " ]-> " << iter->second 
@@ -427,7 +427,7 @@ void cfdExecutive::GetEverything( void * )
          {
             // if a module is on the pugins map but not on the id map
             foundPlugin->second->RemoveSelfFromSG();
-            _modelHandler->RemoveModel( foundPlugin->second->GetCFDModel() );
+            cfdModelHandler::instance()->RemoveModel( foundPlugin->second->GetCFDModel() );
             // Must FIX this this is a huge memory leak
             //delete ((cfdVEBaseClass*)(foundPlugin->second));
             //delete _plugins[ foundPlugin->first ];
@@ -518,19 +518,6 @@ void cfdExecutive::UpdateModules( void )
    }
 }
 
-void cfdExecutive::SetActiveDataSet( cfdDataSet* dataSet )
-{
-   this->_3dMesh = dataSet;
-/*   const char* scalarName = this->_3dMesh->GetDataSet()->GetPointData()->GetScalars()->GetName();
-   
-   std::ostringstream dataStream;
-   std::string dataString;
-   dataStream << scalarName;
-   this->_activeScalarName = dataStream.str();
-*/
-   //std::cout << this->_activeScalarName<< std::endl;
-}
-
 void cfdExecutive::SetCalculationsFlag( bool x )
 {
    //vprDEBUG(vprDBG_ALL, 0)
@@ -549,11 +536,6 @@ bool cfdExecutive::GetCalculationsFlag( void )
    return this->_doneWithCalculations;
 }
 
-void cfdExecutive::SetModelHandler( cfdModelHandler* input, cfdEnvironmentHandler* env )
-{
-   _modelHandler = input;
-   _envHandler = env;
-}
 bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 {
 // Add in cfdCommandArray stuff

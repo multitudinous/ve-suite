@@ -32,6 +32,8 @@
 #ifndef CFD_MODELHANDLER_H
 #define CFD_MODELHANDLER_H
 
+#include <vpr/Util/Singleton.h>
+
 class cfdDCS;
 class cfdDataSet;
 class cfdModel;
@@ -44,12 +46,18 @@ class vtkPolyData;
 
 #include <vector>
 
-class cfdModelHandler
+class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
 {
-   public:
-      cfdModelHandler( char*, cfdDCS* );
+   private:
+      // Required so that vpr::Singleton can instantiate this class.
+      friend class vpr::Singleton< cfdModelHandler >;
+      //cfdModelHandler(const cfdModelHandler& o) { ; }
+      //cfdModelHandler& operator=(const cfdModelHandler& o) { ; }
+      cfdModelHandler( void );
       ~cfdModelHandler();
    
+   public:
+      void Initialize( char*, cfdDCS* );
       void InitScene( void );
       void PreFrameUpdate( void );
       cfdDataSet* GetActiveDataSet( void );

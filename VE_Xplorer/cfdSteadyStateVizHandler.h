@@ -36,6 +36,7 @@
 #include <map>
 
 #include <vpr/Thread/Thread.h>
+#include <vpr/Util/Singleton.h>
 
 class cfdPolyData;      
 class cfdIsosurface;    
@@ -53,7 +54,6 @@ class cfdImage;
 class cfdAnimatedImage; 
 class cfdAnimatedStreamlineCone;
 class cfdContour;
-class cfdDataSet;
 class cfdGlobalBase;
 class cfdObjects;
 class cfdCommandArray;
@@ -65,26 +65,28 @@ class cfdTempAnimation;
 class cfdGraphicsObject;
 class cfdModel;
 
-class cfdSteadyStateVizHandler
+class cfdSteadyStateVizHandler : public vpr::Singleton< cfdSteadyStateVizHandler >
 {
-   public:
-      cfdSteadyStateVizHandler( char* );
+   private:
+      // Required so that vpr::Singleton can instantiate this class.
+      friend class vpr::Singleton< cfdSteadyStateVizHandler >;
+      cfdSteadyStateVizHandler( void );
+      //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
+      //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
       ~cfdSteadyStateVizHandler( void );
-
+   
+   public:
+      void Initialize( char * );
       void InitScene( void );
       void PreFrameUpdate( void );
       void CreateActorThread( void * );
       void streamers( void );
 
       // Helper functions
-      void SetActiveDataSet( cfdDataSet* );
       void SetCommandArray( cfdCommandArray* );
       void SetWorldDCS( cfdDCS* );
-      void SetNavigate( cfdNavigate* );
-      void SetCursor( cfdCursor* );
       cfdTempAnimation* GetActiveAnimation( void );
       bool TransientGeodesIsBusy();
-      void SetActiveModel( cfdModel* ); 
 
    private:
       cfdPolyData*         surface;
@@ -117,8 +119,6 @@ class cfdSteadyStateVizHandler
       cfdAnimatedStreamlineCone* animStreamer;
 
       // Common objects for all functions
-      cfdDataSet* _activeDataSet;
-      cfdModel* activeModel;
       cfdCommandArray*  commandArray;
       cfdDCS*     _worldDCS;
       cfdDCS*     _activeDataSetDCS;
@@ -126,7 +126,6 @@ class cfdSteadyStateVizHandler
       cfdTempAnimation* _activeTempAnimation;
 
       // Classes and variables for multithreading.
-      vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler >* vjThFunc[1];
       vpr::Thread* vjTh[1];
    
       // Vectors that will eventually be stored as maps

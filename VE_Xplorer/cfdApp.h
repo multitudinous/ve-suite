@@ -37,17 +37,9 @@ class cfdExecutive;
 #endif
 
 class cfdPfSceneManagement;
-class cfdEnvironmentHandler;
-class cfdSteadyStateVizHandler;
-//class cfdTransientVizHandler;
-class cfdModelHandler;
-//class cfdIHCCModel;
-
-//class CorbaManager;
 class cfdVjObsWrapper;
+
 // Scene graph dependent forward declarations
-
-
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
 
@@ -142,19 +134,14 @@ class cfdApp: public vrj::OsgApp
       osg::Timer_t _start_tick;
       unsigned int _frameNumber;
 #endif
-      cfdEnvironmentHandler*     _environmentHandler;
-      cfdSteadyStateVizHandler*  _steadystateHandler;
-      //cfdTransientVizHandler*    _transientHandler;
-      cfdModelHandler*           _modelHandler;
-      //cfdIHCCModel               *ihccModel;
       cfdVjObsWrapper*              _vjobsWrapper;
 #ifdef _TAO
       cfdExecutive*     executive;
 #endif
 
 
-   // Only used in preframe for transient stuff
-   int   lastFrame;
+      // Only used in preframe for transient stuff
+      int   lastFrame;
    private:
       char * filein_name;
 };

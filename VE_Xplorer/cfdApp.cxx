@@ -82,11 +82,6 @@
 cfdApp::cfdApp( void )
 {
    this->_sceneManager =         NULL;
-   this->_environmentHandler =   NULL;
-   this->_steadystateHandler =   NULL;
-   //this->_transientHandler =     NULL;
-   this->_modelHandler =         NULL;
-   //this->ihccModel =             NULL;
 #ifdef _OSG
    _tbvHandler = 0;
    _frameNumber = 0;
@@ -107,34 +102,6 @@ void cfdApp::exit()
       vprDEBUG(vprDBG_ALL,2)  
         << "deleting this->_sceneManager" << std::endl << vprDEBUG_FLUSH;
       delete this->_sceneManager;
-   }
-
-   if ( this->_environmentHandler )
-   {  
-      vprDEBUG(vprDBG_ALL,2)  
-        << "deleting this->_environmentHandler" << std::endl << vprDEBUG_FLUSH;
-      delete this->_environmentHandler;
-   }
-
-   if ( this->_steadystateHandler )
-   {  
-      vprDEBUG(vprDBG_ALL,2)  
-        << "deleting this->_steadystateHandler" << std::endl << vprDEBUG_FLUSH;
-      delete this->_steadystateHandler;
-   }
-
-   /*if ( this->_transientHandler )
-   {  
-      vprDEBUG(vprDBG_ALL,2)  
-        << "deleting this->_transientHandler" << std::endl << vprDEBUG_FLUSH;
-      delete this->_transientHandler;
-   }*/
-
-   if ( this->_modelHandler )
-   {  
-      vprDEBUG(vprDBG_ALL,2)  
-        << "deleting this->_modelHandler" << std::endl << vprDEBUG_FLUSH;
-      delete this->_modelHandler;
    }
 
 #ifdef _TAO
@@ -264,27 +231,22 @@ inline void cfdApp::initScene( )
    this->_sceneManager->InitScene();
 
    // modelHandler stores the arrow and holds all data and geometry
-   this->_modelHandler = new cfdModelHandler( this->filein_name, 
-                                              this->_sceneManager->GetWorldDCS() );
-   this->_modelHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-   this->_modelHandler->InitScene();
+   cfdModelHandler::instance()->Initialize( this->filein_name, this->_sceneManager->GetWorldDCS() );
+   cfdModelHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   cfdModelHandler::instance()->InitScene();
 
    // navigation and cursor 
-   this->_environmentHandler = new cfdEnvironmentHandler( this->filein_name );
-   this->_environmentHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
-   this->_environmentHandler->SetRootNode( this->_sceneManager->GetRootNode() );
-   this->_environmentHandler->SetArrow( this->_modelHandler->GetArrow() );
-   this->_environmentHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-   this->_environmentHandler->InitScene();
+   cfdEnvironmentHandler::instance()->Initialize( this->filein_name );
+   cfdEnvironmentHandler::instance()->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
+   cfdEnvironmentHandler::instance()->SetRootNode( this->_sceneManager->GetRootNode() );
+   cfdEnvironmentHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   cfdEnvironmentHandler::instance()->InitScene();
 
    // create steady state visualization objects
-   this->_steadystateHandler = new cfdSteadyStateVizHandler( this->filein_name );
-   this->_steadystateHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
-   this->_steadystateHandler->SetNavigate( this->_environmentHandler->GetNavigate() );
-   this->_steadystateHandler->SetCursor( this->_environmentHandler->GetCursor() );
-   this->_steadystateHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
-   this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
-   this->_steadystateHandler->InitScene();
+   cfdSteadyStateVizHandler::instance()->Initialize( this->filein_name );
+   cfdSteadyStateVizHandler::instance()->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
+   cfdSteadyStateVizHandler::instance()->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   cfdSteadyStateVizHandler::instance()->InitScene();
 
    //create the volume viz handler
 #ifdef _OSG
@@ -300,39 +262,12 @@ inline void cfdApp::initScene( )
    _tbvHandler->SetSceneView(_sceneViewer.get());
    _tbvHandler->InitVolumeVizNodes();
 #endif
-/*
-   // TODO fix transient
-   this->_transientHandler = new cfdTransientVizHandler( this->filein_name );
-   this->_transientHandler->InitScene();
-std::cout << "|  3d" << std::endl;
-*/
-#ifdef _OSG
-   this->_vjobsWrapper->SetHandlers( _steadystateHandler, _environmentHandler, 
-                                 _modelHandler);//, _tbvHandler );
-#else
-    this->_vjobsWrapper->SetHandlers( _steadystateHandler, _environmentHandler, 
-                                 _modelHandler);
-#endif
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
    this->executive = new cfdExecutive( _vjobsWrapper->naming_context, _vjobsWrapper->child_poa, this->_sceneManager->GetWorldDCS() );
-   this->executive->SetModelHandler( this->_modelHandler, this->_environmentHandler );
-
 #endif // _TAO
 
-    //this->ihccModel = NULL;
-/*
-   //
-   // Make IHCC Model - should be deleted at a later date
-   //
-   // Fix this with new read param method
-   //if ( this->paramReader->ihccModel )
-   {
-      std::cout << "| 54. Initializing...................................... IHCC Model |" << std::endl;
-      this->ihccModel = new cfdIHCCModel( NULL, this->_sceneManager->GetWorldDCS() );
-   }
-*/
    // This may need to be fixed
    this->_vjobsWrapper->GetCfdStateVariables();
 }
@@ -356,16 +291,13 @@ void cfdApp::preFrame( void )
 
    ///////////////////////
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_modelHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
-   this->_modelHandler->PreFrameUpdate();
+   cfdModelHandler::instance()->PreFrameUpdate();
    ///////////////////////
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_environmentHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
-   this->_environmentHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
-   this->_environmentHandler->PreFrameUpdate();
+   cfdEnvironmentHandler::instance()->PreFrameUpdate();
    ///////////////////////
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::this->_steadystateHandler->PreFrameUpdate()" << std::endl << vprDEBUG_FLUSH;
-   this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
-   this->_steadystateHandler->SetActiveModel( this->_modelHandler->GetActiveModel() );
-   this->_steadystateHandler->PreFrameUpdate();
+   cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
    ///////////////////////
 #ifdef _OSG
    _tbvHandler->SetActiveTextureManager(_modelHandler->GetActiveTextureManager());
@@ -399,15 +331,10 @@ void cfdApp::preFrame( void )
    }
 
 #ifdef _TAO
-   if ( this->_modelHandler->GetActiveDataSet() != NULL )
-   {
-      this->executive->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
-   }
    this->executive->UpdateModules();
    this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );
 #endif // _TAO
 
-   
    this->_vjobsWrapper->PreFrameUpdate();
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }

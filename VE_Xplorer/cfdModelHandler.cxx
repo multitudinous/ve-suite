@@ -66,19 +66,25 @@
 #include <sys/dir.h>
 #endif // WIN32
 
-cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
+cfdModelHandler::cfdModelHandler( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdModelHandler constructor"
                           << std::endl << vprDEBUG_FLUSH;
-   _param = input;
-   worldNode = dcs;
+   _param = 0;
+   worldNode = 0;
    _activeTextureManager = 0;
    this->activeDataset  = 0;
    this->_scalarBar     = 0;
    this->arrow          = 0;
-   this->_readParam     = new cfdReadParam();
+   this->_readParam     = 0;
    this->commandArray   = 0;
    this->_activeModel   = 0;
+}
+
+void cfdModelHandler::Initialize( char* param, cfdDCS* dcs )
+{
+   _param = param;
+   worldNode = dcs;
    // worldnode getting passed in to model
    // model will then add its own node to the tree
    if ( worldNode == NULL )
@@ -87,7 +93,8 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
                 << std::endl;
       exit( 1 );
    }
-   this->CreateObjects();
+   _readParam = new cfdReadParam();
+   CreateObjects();
 }
 
 cfdModelHandler::~cfdModelHandler()

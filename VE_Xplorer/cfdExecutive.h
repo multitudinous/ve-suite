@@ -45,14 +45,11 @@ class cfdDashboard;
 class cfdExecutiveConfiguration;
 class cfdInteractiveGeometry;
 class Body_UI_i;
-class cfdDataSet;
 class cfdCommandArray;
 class Network;
 class cfdVEAvailModules;
 class cfdVEBaseClass;
 class cfdVEAvail_Modules;
-class cfdModelHandler;
-class cfdEnvironmentHandler;
 class cfdVjObsWrapper;
 class cfdThread;
 
@@ -105,12 +102,7 @@ class cfdExecutive : public cfdGlobalBase
    
       // Function called within preFrame to allow cfdExecutive
       // to have access to scalar information
-      void SetActiveDataSet( cfdDataSet* );
-      void SetModelHandler( cfdModelHandler*, cfdEnvironmentHandler* );
-
       void UnbindORB( void );
-
-      cfdDataSet* _3dMesh;
 
       void SetCalculationsFlag( bool );
 
@@ -137,8 +129,6 @@ class cfdExecutive : public cfdGlobalBase
       Body_UI_i* ui_i;
       cfdDCS* worldDCS;
       cfdGroup* _masterNode;
-      cfdModelHandler* _modelHandler;
-      cfdEnvironmentHandler* _envHandler;
 
       bool _doneWithCalculations;
       bool updateNetworkString;

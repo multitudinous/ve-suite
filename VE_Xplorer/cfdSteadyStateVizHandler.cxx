@@ -63,11 +63,12 @@
 #include "cfdCursor.h"
 #include "cfdGraphicsObject.h"
 #include "cfdModel.h"
+#include "cfdEnvironmentHandler.h"
+#include "cfdModelHandler.h"
 
 #include <vpr/Util/Debug.h>
 #include <vpr/vpr.h>
 #include <vpr/System.h>
-#include <vpr/Thread/Thread.h>
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
@@ -75,9 +76,8 @@
 #ifdef _OSG
 #include <osgDB/WriteFile>
 #endif
-using namespace vpr;
 
-cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
+cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 {
    this->surface = NULL;
    this->isosurface = NULL;
@@ -108,7 +108,6 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
    this->animStreamer = NULL;
    this->animImg = NULL;
    
-   this->_activeDataSet = NULL;
    this->commandArray = NULL;
    this->_worldDCS = NULL;
    this->_activeDataSetDCS = NULL;
@@ -121,7 +120,14 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
    this->useLastSource = false;
    //this->transientBusy = 0;
    this->transientActors = true;
+   _param = 0;
+}
+
+void cfdSteadyStateVizHandler::Initialize( char* param )
+{
    _param = param;
+   nav = cfdEnvironmentHandler::instance()->GetNavigate();
+   cursor = cfdEnvironmentHandler::instance()->GetCursor();
 }
 
 cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
@@ -335,26 +341,6 @@ bool cfdSteadyStateVizHandler::TransientGeodesIsBusy()
 ////////////////////
 // Helper functions
 ////////////////////
-void cfdSteadyStateVizHandler::SetActiveDataSet( cfdDataSet* input )
-{
-   if ( input == NULL )
-   {
-      vprDEBUG(vprDBG_ALL,2) << "cfdSteadyStateVizHandler::SetActiveDataSet input is NULL" 
-                              << std::endl << vprDEBUG_FLUSH;
-   }
-   _activeDataSet = input;
-}
-
-void cfdSteadyStateVizHandler::SetActiveModel( cfdModel* input )
-{
-   if ( input == NULL )
-   {
-      vprDEBUG(vprDBG_ALL,2) << "cfdSteadyStateVizHandler::SetActiveModel input is NULL" 
-                              << std::endl << vprDEBUG_FLUSH;
-   }
-   activeModel = input;
-}
-
 void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
 {
    if ( input == NULL )
@@ -375,25 +361,6 @@ void cfdSteadyStateVizHandler::SetWorldDCS( cfdDCS* input )
    _worldDCS = input;
 }
 
-void cfdSteadyStateVizHandler::SetNavigate( cfdNavigate* input )
-{
-   if ( input == NULL )
-   {
-      std::cerr << "cfdSteadyStateVizHandler::SetNavigate input is NULL" << std::endl;
-      exit( 1 );
-   }
-   nav = input;
-}
-
-void cfdSteadyStateVizHandler::SetCursor( cfdCursor* input )
-{
-   if ( input == NULL )
-   {
-      std::cerr << "cfdSteadyStateVizHandler::SetCursor input is NULL" << std::endl;
-      exit( 1 );
-   }
-   cursor = input;
-}
 cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
 {
    return this->_activeTempAnimation;
@@ -402,20 +369,20 @@ cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
 
 void cfdSteadyStateVizHandler::InitScene( void )
 {
-   if ( _activeDataSet != NULL )
+   if ( cfdModelHandler::instance()->GetActiveDataSet() != NULL )
    {
       {
          int postData = 0;
-         if ( _activeDataSet->GetPrecomputedXSlices() != NULL &&
-               _activeDataSet->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices() != NULL &&
+               cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetPlanesData() != NULL )
             postData += 1;
 
-         if ( _activeDataSet->GetPrecomputedYSlices() != NULL &&
-               _activeDataSet->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices() != NULL &&
+               cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetPlanesData() != NULL )
             postData += 2;
 
-         if ( _activeDataSet->GetPrecomputedZSlices() != NULL &&
-               _activeDataSet->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices() != NULL &&
+               cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetPlanesData() != NULL )
             postData += 4;
       
          commandArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, postData );
@@ -440,8 +407,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
       this->commandList.push_back( this->contour );
      
       // Make sure that this dataset has a vector and scalar...
-      if ( _activeDataSet->GetDataSet()->GetPointData()->GetVectors() &&
-           _activeDataSet->GetDataSet()->GetPointData()->GetScalars() )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetVectors() &&
+           cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars() )
       {
          //
          // Initiate the interactive momentum.
@@ -462,7 +429,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          this->commandList.push_back( this->vector );
       }
      
-      if ( _activeDataSet->GetDataSet()->GetPointData()->GetScalars() )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars() )
       {
          //
          // Initiate the preset x contour.
@@ -493,7 +460,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
       }
      
       // Make sure that this dataset has a vector field...
-      if ( _activeDataSet->GetDataSet()->GetPointData()->GetVectors() )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetVectors() )
       {
          //
          // Initiate the preset x momentum.
@@ -556,8 +523,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
       //
       // Initiate the preset x contour lines.
       //
-      if ( _activeDataSet->GetPrecomputedXSlices() != NULL &&
-           _activeDataSet->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices() != NULL &&
+           cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetPlanesData() != NULL )
       {
          std::cout << "| 28. Initializing....................Multiple X-planes of Contours |" << std::endl;
          this->x_contours = new cfdContours( 0 );
@@ -569,8 +536,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
       //
       // Initiate the preset y contour lines.
       //
-      if ( _activeDataSet->GetPrecomputedYSlices() != NULL &&
-           _activeDataSet->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices() != NULL &&
+           cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetPlanesData() != NULL )
       {
          std::cout << "| 29. Initializing....................Multiple Y-planes of Contours |" << std::endl;
          this->y_contours = new cfdContours( 1 );
@@ -582,8 +549,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
       //
       // Initiate the preset z contour lines.
       //
-      if ( _activeDataSet->GetPrecomputedZSlices() != NULL &&
-           _activeDataSet->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices() != NULL &&
+           cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetPlanesData() != NULL )
       {
          std::cout << "| 30. Initializing....................Multiple Z-planes of Contours |" << std::endl;
          this->z_contours = new cfdContours( 2 );
@@ -593,15 +560,15 @@ void cfdSteadyStateVizHandler::InitScene( void )
       }
 
       // Make sure that this dataset has a vector and scalar...
-      if ( _activeDataSet->GetDataSet()->GetPointData()->GetVectors() &&
-           _activeDataSet->GetDataSet()->GetPointData()->GetScalars() )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetVectors() &&
+           cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetScalars() )
 
       {
          //
          // Initiate the preset x momentums.
          //
-         if ( _activeDataSet->GetPrecomputedXSlices() != NULL &&
-              _activeDataSet->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices() != NULL &&
+              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 31. Initializing.......Multiple X-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
@@ -614,8 +581,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset y momentums.
          //
-         if ( _activeDataSet->GetPrecomputedYSlices() != NULL &&
-              _activeDataSet->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices() != NULL &&
+              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 32. Initializing.......Multiple Y-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
@@ -628,8 +595,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset z momentums.
          //
-         if ( _activeDataSet->GetPrecomputedZSlices() != NULL &&
-              _activeDataSet->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices() != NULL &&
+              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 33. Initializing.......Multiple Z-planes of Precomputed Momentums |" << std::endl;
             // Needs to be fixed, the isoscale should be set by the gui, 2nd parameter in constructor
@@ -641,13 +608,13 @@ void cfdSteadyStateVizHandler::InitScene( void )
       }
 
       // Make sure that this dataset has a vector and scalar...
-      if ( _activeDataSet->GetDataSet()->GetPointData()->GetVectors() )
+      if ( cfdModelHandler::instance()->GetActiveDataSet()->GetDataSet()->GetPointData()->GetVectors() )
       {
          //
          // Initiate the preset x vectors.
          //
-         if ( _activeDataSet->GetPrecomputedXSlices() != NULL &&
-              _activeDataSet->GetPrecomputedXSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices() != NULL &&
+              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedXSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 34. Initializing.........Multiple X-planes of Precomputed Vectors |" << std::endl;
             this->x_vectors = new cfdVectors( 0 );
@@ -658,8 +625,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset y vectors.
          //
-         if ( _activeDataSet->GetPrecomputedYSlices() != NULL &&
-              _activeDataSet->GetPrecomputedYSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices() != NULL &&
+              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedYSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 35. Initializing.........Multiple Y-planes of Precomputed Vectors |" << std::endl;
             this->y_vectors = new cfdVectors( 1 );
@@ -670,8 +637,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the preset z vectors.
          //
-         if ( _activeDataSet->GetPrecomputedZSlices() != NULL &&
-              _activeDataSet->GetPrecomputedZSlices()->GetPlanesData() != NULL )
+         if ( cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices() != NULL &&
+              cfdModelHandler::instance()->GetActiveDataSet()->GetPrecomputedZSlices()->GetPlanesData() != NULL )
          {
             std::cout << "| 36. Initializing.........Multiple Z-planes of Precomputed Vectors |" << std::endl;
             this->z_vectors = new cfdVectors( 2 );
@@ -747,14 +714,13 @@ void cfdSteadyStateVizHandler::InitScene( void )
    {
       // Initialize all the geode creation flags and dcs flags for all the geodes
       this->dataList.at( i )->SetUpdateFlag( false );
-      this->dataList.at( i )->SetActiveDataSet( this->_activeDataSet );
+      this->dataList.at( i )->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
    }
 
    // This set of thread stuff needs to be in ssvizhandler and transvizhandler
    std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
    this->runIntraParallelThread = true;
-   this->vjThFunc[0] = new vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread );
-   this->vjTh[0] = new vpr::Thread( this->vjThFunc[0] );
+   this->vjTh[0] = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread ) );
 }
 
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )
@@ -804,7 +770,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             //temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
-            temp->SetActiveModel( this->activeModel );
+            temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
             temp->SetWorldNode( this->_worldDCS );
             temp->SetGeodes( this->dataList[ i ]->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
@@ -864,7 +830,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             }
             else
             {
-               this->_activeDataSetDCS = _activeDataSet->GetDCS();
+               this->_activeDataSetDCS = cfdModelHandler::instance()->GetActiveDataSet()->GetDCS();
             }
 
             //if ( this->computeActorsAndGeodes == false )
@@ -873,7 +839,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                vprDEBUG(vprDBG_ALL,1) << " setting DCS to activeDCS = "
                                    << this->_activeDataSetDCS
                                    << std::endl << vprDEBUG_FLUSH;
-               this->_activeObject->SetActiveDataSet( this->_activeDataSet );
+               this->_activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
                this->_activeObject->SetNormal( this->nav->GetDirection() );
                this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 
