@@ -32,7 +32,7 @@ void tecplotReader::allocateVariables()
       if ( i != (numOfParameters-1) )
          parameterData[ i ]->SetNumberOfComponents( 1 );
       else 
-         parameterData[ i ]->SetNumberOfComponents( 2 ); //this is the velocity vector
+         parameterData[ i ]->SetNumberOfComponents( 3 ); //this is the velocity vector
       parameterData[ i ]->SetNumberOfTuples( 2*nX*nY );
    }
 }
@@ -193,6 +193,7 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
       //set points
       pts = vtkPoints::New();
       int* cPt = new int [ 8 ];  //HEX elements assumed, coz data is taken from PIV runs
+      //double* dataArray = new double [ numOfParameters -1 ];
       for ( int j=0;j<nX*nY;j++ )//loop over the number of vertices
       {
          //std::cout<<j<<"\t";
@@ -206,9 +207,9 @@ vtkUnstructuredGrid* tecplotReader::tecplotToVTK( char* inFileName, int debug )
          pts->InsertPoint( j, array[0], array[1], 0.0 );
          pts->InsertPoint( j+numVertices, array[0], array[1], -0.1 );
          //std::cout<<data[j][3]<<std::endl;
-         for ( int i=0;i<numOfParameters - 1;i++ )
+         for ( int i=0;i<numOfParameters ;i++ )
          {
-            if ( i != (numOfParameters - 2) )
+            if ( i != (numOfParameters - 1) )
             {
                parameterData[ i ]->SetComponent( j, 0, array[ i+2 ] );
                parameterData[ i ]->SetComponent( j+numVertices, 0, array[ i+2 ] );
