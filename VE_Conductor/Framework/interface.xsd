@@ -2,66 +2,61 @@
 <xs:schema xmlns:xs="http://www.w3.org/2001/XMLSchema">
 
 <xs:element name="package">
-  <xs:complexType>
-    <xs:sequence>
-       <xs:element name="interface" minOccurs="1" maxOccurs="100">
-         <xs:complexType>
-           <xs:sequence>
-             <xs:element name="double" minOccurs="0" maxOccurs="100">
-               <xs:complexType>
-  	         <xs:attribute name="name" type="xs:string"/>
-                 <xs:attribute name="val"  type="xs:decimal"/>
-               </xs:complexType>
-	     </xs:element>
-
-       	     <xs:element name="string" minOccurs="0" maxOccurs="50">
-               <xs:complexType>
-  	         <xs:attribute name="name" type="xs:string"/>
-                 <xs:attribute name="val"  type="xs:string"/>
-               </xs:complexType>
-	     </xs:element>
-
-	     <xs:element name="integer" minOccurs="0" maxOccurs="100">
-               <xs:complexType>
-  	         <xs:attribute name="name" type="xs:string"/>
-	         <xs:attribute name="val"  type="xs:integer"/>
-               </xs:complexType>
-	     </xs:element>
-
-	     <xs:element name="doubleArray" minOccurs="0" maxOccurs="10">
-	       <xs:complexType>
-                 <xs:sequence>
-	           <xs:element name="val" type="xs:decimal" minOccurs="0" maxOccurs="200"/>
-                 </xs:sequence>
-      	         <xs:attribute name="name" type="xs:string"/>
-	       </xs:complexType>
-	     </xs:element>
-
-	     <xs:element name="stringArray" minOccurs="0" maxOccurs="10">
-	       <xs:complexType>
-	         <xs:sequence>
-	           <xs:element name="val" type="xs:string" minOccurs="0" maxOccurs="100"/>
-	         </xs:sequence>
-	         <xs:attribute name="name" type="xs:string"/>
-	       </xs:complexType>
-	     </xs:element>
-
-	     <xs:element name="integerArray" minOccurs="0" maxOccurs="10">
-	       <xs:complexType>
-	         <xs:sequence>
-	           <xs:element name="val" type="xs:integer" minOccurs="0" maxOccurs="200"/>
-	         </xs:sequence>
-	         <xs:attribute name="name" type="xs:string"/>
-	       </xs:complexType>
-	     </xs:element>
-           </xs:sequence>
-           <xs:attribute name="category" type="xs:integer"/>
-           <xs:attribute name="type" type="xs:integer"/>
-           <xs:attribute name="id" type="xs:integer"/>
-         </xs:complexType>
-       </xs:element>
-     </xs:sequence>
-     <xs:attribute name="name" type="xs:string"/>
+   <xs:complexType>
+      <xs:sequence>
+         <xs:element name="interface" minOccurs="1" maxOccurs="100">
+            <xs:complexType>
+               <xs:sequence>
+                  <xs:element name="double" minOccurs="0" maxOccurs="100">
+                     <xs:complexType>
+  	                     <xs:attribute name="name" type="xs:string"/>
+                        <xs:attribute name="val"  type="xs:decimal"/>
+                     </xs:complexType>
+	               </xs:element>
+     	            <xs:element name="string" minOccurs="0" maxOccurs="50">
+                     <xs:complexType>
+  	                     <xs:attribute name="name" type="xs:string"/>
+                        <xs:attribute name="val"  type="xs:string"/>
+                     </xs:complexType>
+	               </xs:element>
+	               <xs:element name="integer" minOccurs="0" maxOccurs="100">
+                     <xs:complexType>
+  	                     <xs:attribute name="name" type="xs:string"/>
+	                     <xs:attribute name="val"  type="xs:integer"/>
+                     </xs:complexType>
+	               </xs:element>
+                  <xs:element name="doubleArray" minOccurs="0" maxOccurs="10">
+	                  <xs:complexType>
+                        <xs:sequence>
+	                        <xs:element name="val" type="xs:decimal" minOccurs="0" maxOccurs="200"/>
+                        </xs:sequence>
+      	               <xs:attribute name="name" type="xs:string"/>
+	                  </xs:complexType>
+	               </xs:element>
+	               <xs:element name="stringArray" minOccurs="0" maxOccurs="10">
+	                  <xs:complexType>
+	                     <xs:sequence>
+	                        <xs:element name="val" type="xs:string" minOccurs="0" maxOccurs="100"/>
+	                     </xs:sequence>
+	                     <xs:attribute name="name" type="xs:string"/>
+	                  </xs:complexType>
+	               </xs:element>
+	               <xs:element name="integerArray" minOccurs="0" maxOccurs="10">
+	                  <xs:complexType>
+	                     <xs:sequence>
+	                        <xs:element name="val" type="xs:integer" minOccurs="0" maxOccurs="200"/>
+	                     </xs:sequence>
+	                     <xs:attribute name="name" type="xs:string"/>
+	                  </xs:complexType>
+	               </xs:element>
+               </xs:sequence>
+               <xs:attribute name="category" type="xs:integer"/>
+               <xs:attribute name="type" type="xs:integer"/>
+               <xs:attribute name="id" type="xs:integer"/>
+            </xs:complexType>
+         </xs:element>
+      </xs:sequence>
+      <xs:attribute name="name" type="xs:string"/>
    </xs:complexType>
 </xs:element>
 

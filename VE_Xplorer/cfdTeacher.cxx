@@ -136,11 +136,11 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, cfdDCS* worldDCS )
    hList = FindFirstFile(tdirectory, &fileData);
   // if (hList == INVALID_HANDLE_VALUE)
   // { 
-   if ( _mkdir(this->directory) == 0 )
+   if ( _mkdir(this->directory.c_str()) == 0 )
    {
       vprDEBUG(vprDBG_ALL,0) <<"Directory \"" << this->directory 
                              << "\"" << std::endl << vprDEBUG_FLUSH;
-      hList = FindFirstFile(directory, &fileData);
+      hList = FindFirstFile(tdirectory, &fileData);
       
    }
       //return;
