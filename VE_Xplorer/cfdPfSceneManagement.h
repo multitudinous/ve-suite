@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdApp.cxx,v $
+ * File:          $RCSfile: cfdPfSceneManagement.h,v $
  * Date modified: $Date: 2004-08-02 12:13:03 -0500 (Mon, 02 Aug 2004) $
  * Version:       $Rev: 734 $
  * -----------------------------------------------------------------
@@ -38,8 +38,7 @@ class pfGeoState;
 class pfLightModel;
 class pfLightSource;
 
-#include <string>
-using namespace std;
+//#include <string>
 
 class cfdPfSceneManagement
 {
@@ -53,16 +52,16 @@ class cfdPfSceneManagement
       cfdDCS*   GetWorldDCS( void );
 
    private:
-      string _param;
-      cfdDCS* worldNode;
-      // Performer objects - used to control the scene graph.
+      //std::string    param;
+      char*          param;
+      cfdGroup*      rootNode;  
+      cfdDCS*        worldDCS;
+
+      // Performer objects
+      pfGeoState*    gstate;
       pfLightModel*  sunModel;
       pfLightSource* sun;
       pfLightSource* lit;
-      pfGeoState*    gstate;
-      cfdGroup*      rootNode;  
-      cfdDCS*        worldDCS;
-      cfdDCS*        activeDataSetDCS;
 };
 
 #endif

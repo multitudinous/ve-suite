@@ -8,7 +8,7 @@
 EXTRA_CXXFLAGS+= -D_CFDCOMMANDARRAY
 #
 # Uncomment this line if you want to build a cluster juggler app
-CLUSTER_APP = TRUE
+#CLUSTER_APP = TRUE
 #_______________________________________________________________________________
 
 CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor

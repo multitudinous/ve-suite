@@ -23,59 +23,45 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdApp.cxx,v $
+ * File:          $RCSfile: cfdPfSceneManagement.cxx,v $
  * Date modified: $Date: 2004-08-02 12:13:03 -0500 (Mon, 02 Aug 2004) $
  * Version:       $Rev: 734 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdPfSceneManagement.h"
-#include <sys/types.h>
+
+/// Performer libraries
+#include <Performer/pf/pfLightSource.h>
+#include <Performer/pr/pfLight.h>
+
 #ifndef WIN32
 #include <unistd.h>
+#include <sys/types.h>
+//biv--check here if build/run problems occur
+//#include <Performer/pfdb/pfiv.h>
 #else
 //#include <windows.h>
 #endif
-//#include <malloc.h>
-/// Performer libraries
-#include <Performer/pr/pfGeoState.h>
-#include <Performer/pf/pfChannel.h>
-#include <Performer/pf/pfEarthSky.h>
-#include <Performer/pf/pfLightSource.h>
-#include <Performer/pf/pfNode.h>
-#include <Performer/pf/pfTraverser.h>
-//#include <Performer/pf/pfDCS.h>
-#include <Performer/pfdu.h>
-#include <Performer/pfutil.h>
-//#include <Performer/pf/pfGeode.h>
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pr/pfMaterial.h>
-#include <Performer/pr.h>
-#include <Performer/pf/pfSwitch.h>
-
-#ifndef WIN32
-//biv--check here if build/run problems occur
-#include <Performer/pfdb/pfiv.h>
-#endif
-#include <Performer/pr/pfLight.h>
-#include <Performer/pf/pfSequence.h>
-
 
 #include <iostream>
 
 #include "cfdDCS.h"
 #include "cfdGroup.h"
 
-cfdPfSceneManagement::cfdPfSceneManagement( char* param )
+//using namespace std;
+
+cfdPfSceneManagement::cfdPfSceneManagement( char* paramfilename )
 {
-   worldNode = NULL;
-   sunModel = NULL;
-   sun = NULL;
-   lit = NULL;
-   gstate = NULL;
-   rootNode = NULL;
-   worldDCS = NULL;
-   activeDataSetDCS = NULL;
+   std::cout << "entering cfdPfSceneManagement constructor" << std::endl;
+   this->param = paramfilename;
+   this->rootNode = NULL;
+   this->worldDCS = NULL;
+   this->gstate = NULL;
+   this->sunModel = NULL;
+   this->sun = NULL;
+   this->lit = NULL;
+   std::cout << "finished constructing cfdPfSceneManagement with param = " << this->param << std::endl;
 }
 
 cfdPfSceneManagement::~cfdPfSceneManagement( void )

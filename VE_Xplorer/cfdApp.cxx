@@ -64,18 +64,12 @@
 //#include <gmtl/MatrixOps.h>
 //#include <gmtl/Vec.h>
 
-//#include <vtkPolyDataReader.h>
-//#include <vtkSystemIncludes.h>  // for VTK_POLY_DATA
-//#include <vtkPolyDataSource.h>
-
 // Scene graph dependant headers
 #include <Performer/pf.h>
 #include <Performer/pf/pfGroup.h>
 
-
 #include <sys/types.h>
 using namespace snx;
-
 
 #ifdef _CLUSTER
 int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
@@ -167,14 +161,23 @@ void cfdApp::exit()
    pfExit();
 }
 
-
 inline void cfdApp::init( )
 {
-   char filein_name[100];
-   printf("|   Enter VE_Xplorer parameter filename: ");
-   scanf("%s",filein_name);
-   //std::cout << "filein_name: " << filein_name << std::endl;
-   //**********************************Need to be changed************************************ HGX//
+   vprDEBUG(vprDBG_ALL,0) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
+   char * filein_name = new char [ 256 ];
+   do
+   {
+      std::cout << "|   Enter VE_Xplorer parameter filename: ";
+      std::cin >> filein_name;
+      if ( ! fileIO::isFileReadable( filein_name ) )
+      {
+         std::cerr << "\n\"" << filein_name << "\" is not readable." << std::endl;
+      }
+   }
+   while ( ! fileIO::isFileReadable( filein_name ) );
+
+   std::cout << "filein_name: " << filein_name << std::endl;
+
    std::cout << std::endl;
    std::cout << "| ***************************************************************** |" << std::endl;
    std::cout << "|  3. Initializing........................... Parameter File Reader |" << std::endl;
@@ -246,7 +249,7 @@ std::vector< int > cfdApp::getFrameBufferAttrs( void )
 
 inline void cfdApp::initScene( )
 {
-   vprDEBUG(vprDBG_ALL,1) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
 
 # ifdef _OPENMP
    std::cout << "\n\n\n";

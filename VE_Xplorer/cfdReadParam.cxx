@@ -211,6 +211,7 @@ int cfdReadParam::readID( std::ifstream &inFile )
 
 void cfdReadParam::data_read ( char * filein_name )
 {
+/*
    if ( ! fileIO::isFileReadable( filein_name ) ) 
    {
       std::cerr << "\nError: Could not open the input file " 
@@ -221,7 +222,7 @@ void cfdReadParam::data_read ( char * filein_name )
          std::cin >> filein_name;        
       }
    }
-   
+*/
    std::ifstream inFile( filein_name, std::ios::in ); 
 
    // Read the information in the file.
