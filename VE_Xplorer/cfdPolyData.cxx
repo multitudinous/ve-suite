@@ -96,8 +96,8 @@ void cfdPolyData::Update()
    }
    else if ( ! this->GetActiveDataSet()->GetDataSet()->IsA("vtkPolyData") )
    {
-      cout << "ERROR: Activate a polydata file to use this function" 
-         << std::endl;
+      std::cerr << "ERROR: Activate a polydata file to use this function" 
+                << std::endl;
       this->updateFlag = false;
       return;
    }
@@ -108,8 +108,8 @@ void cfdPolyData::Update()
          << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
    }
 
-   vtkCellTypes *types = vtkCellTypes::New();
    vtkPolyData * pd = this->GetActiveDataSet()->GetPolyData();   
+   vtkCellTypes *types = vtkCellTypes::New();
    pd->GetCellTypes( types );   
    
    if ( pd->GetCellType( 0 ) == VTK_POLY_LINE &&
@@ -132,12 +132,13 @@ void cfdPolyData::Update()
    {
       vprDEBUG(vprDBG_ALL,1) << " IS VERTEX-BASED: spheres"
                              << std::endl << vprDEBUG_FLUSH;
-      vtkGlyph3D * sphereGlyph = vtkGlyph3D::New();
+
       vtkSphereSource * sphereSrc   = vtkSphereSource::New();
       sphereSrc->SetThetaResolution( 3 ); // default is 8
       sphereSrc->SetPhiResolution( 3 );   // default is 8
       //this->sphereSrc->SetRadius( 0.5f );
 
+      vtkGlyph3D * sphereGlyph = vtkGlyph3D::New();
       sphereGlyph->SetInput( pd );
       sphereGlyph->SetSource( sphereSrc->GetOutput() );
       sphereGlyph->Update();
@@ -157,7 +158,8 @@ void cfdPolyData::Update()
       vprDEBUG(vprDBG_ALL,1) << " clamping range: "
          << range[0] << " : " << range[1]
          << std::endl << vprDEBUG_FLUSH;
-      sphereGlyph->SetRange( this->GetActiveDataSet()->GetParent()->GetUserRange() );
+      sphereGlyph->SetRange( range );
+      //sphereGlyph->SetRange( this->GetActiveDataSet()->GetParent()->GetUserRange() );
 
       this->map->SetInput( sphereGlyph->GetOutput() );
       sphereSrc->Delete();
@@ -166,39 +168,38 @@ void cfdPolyData::Update()
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,1) << " NOT A STREAMLINE"
+      vprDEBUG(vprDBG_ALL,1) << " NOT A STREAMLINE, setting mapper"
                              << std::endl << vprDEBUG_FLUSH;
+      this->map->SetColorModeToMapScalars();
       this->map->SetInput( pd );
       this->actor->GetProperty()->SetRepresentationToPoints();
       this->actor->GetProperty()->SetPointSize( 4 );
    }
    types->Delete();
 
-
    if ( pd->GetPointData()->GetScalars()->GetLookupTable() != NULL )
    {
-      vprDEBUG(vprDBG_ALL,0)
-         << " A lookup table is being read from the vtk file" 
+      vprDEBUG(vprDBG_ALL,1) << " A lookup table (" 
+         << pd->GetPointData()->GetScalars()->GetLookupTable()
+         << ")is being read from the vtk file" 
          << std::endl << vprDEBUG_FLUSH;
-      double* range = new double [ 2 ];
+      double range[ 2 ];
       pd->GetPointData()->GetScalars()->GetRange( range );
       this->map->SetScalarRange( range );
       this->map->SetLookupTable( pd->GetPointData()->GetScalars()->GetLookupTable() );
-      delete [] range;
    }
    else
    {
-      double * junkRange = this->GetActiveDataSet()
-                            ->GetParent()->GetUserRange();
+      double * range = this->GetActiveDataSet()->GetParent()->GetUserRange();
       vprDEBUG(vprDBG_ALL,1) << "setting mapper using parent " 
          << this->GetActiveDataSet()->GetParent()
-         << ", range = " << junkRange[0] << " : " << junkRange[1]
+         << ", range = " << range[0] << " : " << range[1]
          << std::endl << vprDEBUG_FLUSH;
       
       this->map->SetScalarRange( this->GetActiveDataSet()
-                                  ->GetParent()->GetUserRange() );
+                                     ->GetParent()->GetUserRange() );
       this->map->SetLookupTable( this->GetActiveDataSet()
-                                  ->GetParent()->GetLookupTable() );
+                                     ->GetParent()->GetLookupTable() );
    }
 
    this->map->Update();
