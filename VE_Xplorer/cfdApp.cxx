@@ -65,7 +65,6 @@
 #include <Performer/pf.h>
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pfdb/pfpfb.h>
-#include <Performer/pr.h>
 #include "cfdNotify.h"
 #elif _OSG
 #include <osg/Group>
