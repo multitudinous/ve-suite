@@ -34,6 +34,7 @@
 #include "cfdDataSet.h"
 #include "cfdPlanes.h"
 #include "cfdEnum.h"    // needed for cursorType
+#include "cfdGeode.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
@@ -69,7 +70,7 @@ void cfdContours::Update( void )
    //make sure that there are planesData and that the cursorType is correct...
    if ( this->mapper && this->cursorType == NONE )
    {   
-    this->SetMapperInput( this->GetActiveDataSet()
+      this->SetMapperInput( this->GetActiveDataSet()
                         ->GetPrecomputedSlices( this->xyz )->GetPlanesData() );
 
       this->mapper->SetScalarRange( this->GetActiveDataSet()
@@ -81,8 +82,9 @@ void cfdContours::Update( void )
       vtkActor* temp = vtkActor::New();
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
-      this->actors.push_back( vtkActor::New() );
-      this->actors.back()->ShallowCopy( temp );
+      geodes.push_back( new cfdGeode() );
+      geodes.back()->TranslateTocfdGeode( temp );
+      temp->Delete();
       this->updateFlag = true;
    }
    else

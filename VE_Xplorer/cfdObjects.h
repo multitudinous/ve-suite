@@ -51,6 +51,7 @@ class vtkMaskPoints;
 #include <vpr/Sync/Mutex.h>
 
 class cfdCommandArray;
+class cfdGeode;
 #include "cfdGlobalBase.h"
 
 class cfdObjects : public cfdGlobalBase
@@ -71,8 +72,8 @@ class cfdObjects : public cfdGlobalBase
       // update the actor
       virtual void Update() = 0;
 
-      std::vector< vtkActor* > GetActors( void );
-      void ClearActors( void );
+      std::vector< cfdGeode* > GetGeodes( void );
+      void ClearGeodes( void );
 
       void SetObjectType( int );
       int GetObjectType( void ) { return this->objectType; }
@@ -121,27 +122,13 @@ class cfdObjects : public cfdGlobalBase
 
       // used by vectors and intended for warped contours
       static float vectorScale;
-
-      //cfdGeode* _geode;
-      //cfdGeode* _tempGeode;
       static int particleOption;   // point cloud or variably sized spheres
       static float particleScale;
 
-      //cfdTempAnimation* _sequence;
-
-      //std::vector< cfdGeode* > _geodes;
-      //std::vector<cfdGeode* > transientGeodes;
-
-      //vtkActor *actor;
-      //vtkActor *PDactor;
-      std::vector< vtkActor* > actors;
+      std::vector< cfdGeode* > geodes;
       vtkPolyDataSource *pointSource;
 
-      //cfdReadParam *paramFile;
-   
       bool updateFlag;
-      //bool addGeode;
-      //bool addTransientGeode;
       int vtkToPFDebug;
       int objectType;
       int requestedValue;

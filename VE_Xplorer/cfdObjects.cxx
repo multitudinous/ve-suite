@@ -82,19 +82,18 @@ void cfdObjects::SetObjectType( int type )
    this->objectType = type;
 }
 
-std::vector< vtkActor* > cfdObjects::GetActors( void )
+std::vector< cfdGeode* > cfdObjects::GetGeodes( void )
 {
-   return actors;
+   return geodes;
 }
 
-void cfdObjects::ClearActors( void )
+void cfdObjects::ClearGeodes( void )
 {
-   for ( unsigned int i = 0; i < actors.size(); ++i )
+   for ( unsigned int i = 0; i < geodes.size(); ++i )
    {
-      actors.at( i )->Delete();
+      delete geodes.at( i );
    }
-   actors.clear();
-
+   geodes.clear();
 }
 
 void cfdObjects::SetOrigin( float o[ 3 ] )

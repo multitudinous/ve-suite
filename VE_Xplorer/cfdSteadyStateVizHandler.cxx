@@ -804,7 +804,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             //temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( this->activeModel );
             temp->SetWorldNode( this->_worldDCS );
-            temp->SetActor( this->dataList[ i ]->GetActors() );
+            temp->SetGeodes( this->dataList[ i ]->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
 
             // search map for other object types with the same type as this one
@@ -830,7 +830,9 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             // Resetting these variables is very important
             this->dataList[ i ]->SetUpdateFlag( false );
             this->actorsAreReady = false;
-            this->dataList[ i ]->ClearActors();
+            this->dataList[ i ]->ClearGeodes();
+            vprDEBUG(vprDBG_ALL,2) << "|\tDone Creating Objects"
+                                   << std::endl << vprDEBUG_FLUSH;
          }
       }
    }

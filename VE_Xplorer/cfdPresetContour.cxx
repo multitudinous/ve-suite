@@ -34,6 +34,7 @@
 #include "cfdCuttingPlane.h"
 #include "cfdDataSet.h"
 #include "cfdPlanes.h"
+#include "cfdGeode.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
@@ -55,8 +56,6 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
    this->numSteps = numSteps;
    // set the cut function
    this->cutter = vtkCutter::New();
-   vtkActor* temp = 0;
-   actors.assign(10,temp);
 }
 
 cfdPresetContour::~cfdPresetContour()
@@ -125,7 +124,8 @@ void cfdPresetContour::Update( void )
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   this->actors.push_back( vtkActor::New() );
-   this->actors.back()->ShallowCopy( temp );
+   geodes.push_back( new cfdGeode() );
+   geodes.back()->TranslateTocfdGeode( temp );
+   temp->Delete();
    this->updateFlag = true;
 }

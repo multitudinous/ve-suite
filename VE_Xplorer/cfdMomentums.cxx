@@ -33,6 +33,7 @@
 #include "cfdDataSet.h"
 #include "cfdEnum.h"    // needed for cursorType
 #include "cfdPlanes.h"
+#include "cfdGeode.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
@@ -89,8 +90,9 @@ void cfdMomentums::Update( void )
       vtkActor* temp = vtkActor::New();
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
-      this->actors.push_back( vtkActor::New() );
-      this->actors.back()->ShallowCopy( temp );
+      geodes.push_back( new cfdGeode() );
+      geodes.back()->TranslateTocfdGeode( temp );
+      temp->Delete();
       this->updateFlag = true;
    }
    else

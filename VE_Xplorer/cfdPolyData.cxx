@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdPolyData.h"
 #include "cfdDataSet.h"
+#include "cfdGeode.h"
 
 #include <vtkTubeFilter.h>
 #include <vtkCellTypes.h>
@@ -227,8 +228,9 @@ void cfdPolyData::Update()
 
    temp->SetMapper( this->map );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   this->actors.push_back( vtkActor::New() );
-   this->actors.back()->ShallowCopy( temp );
+   geodes.push_back( new cfdGeode() );
+   geodes.back()->TranslateTocfdGeode( temp );
+   temp->Delete();
    this->updateFlag = true;
 }
 

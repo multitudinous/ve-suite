@@ -33,6 +33,8 @@
 #include "cfdDataSet.h"
 #include "cfdPlanes.h"
 #include "cfdCuttingPlane.h"
+#include "cfdGeode.h"
+
 #include <vpr/Util/Debug.h>
 
 #include <vtkLookupTable.h>
@@ -149,8 +151,9 @@ void cfdPresetVector::Update( void )
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   this->actors.push_back( vtkActor::New() );
-   this->actors.back()->ShallowCopy( temp );
+   geodes.push_back( new cfdGeode() );
+   geodes.back()->TranslateTocfdGeode( temp );
+   temp->Delete();
    this->updateFlag = true;
 }
 

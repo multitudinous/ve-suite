@@ -42,12 +42,8 @@
 #include "cfdNode.h"
 #include "cfdSceneNode.h"
 
-#include <vtkActor.h>
-
 #include <vpr/Util/Debug.h>
 #include <Performer/pfdb/pfpfb.h>
-
-#include <vtkPropCollection.h>
 
 // constructor
 cfdGraphicsObject::cfdGraphicsObject( void )
@@ -106,20 +102,6 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
                              << std::endl << vprDEBUG_FLUSH;
          this->worldNode->AddChild( temp );
       }
-
-      // create geodes
-      vprDEBUG(vprDBG_ALL,1) << "|\t\tGraphicsObject Creating Geodes"
-                             << std::endl << vprDEBUG_FLUSH;
-      for ( unsigned int i = 0; i < this->actors.size(); ++i )
-      {
-         vprDEBUG(vprDBG_ALL,2) << "|\t\tGraphicsObject Creating Geode = " << i << " : " << this->actors.at( i )
-                             << std::endl << vprDEBUG_FLUSH;
-
-         this->geodes.push_back( new cfdGeode() );
-         this->geodes.back()->TranslateTocfdGeode( this->actors.at( i ) );
-      }
-      vprDEBUG(vprDBG_ALL,1) << "|\t\tGraphicsObject Done Creating Geodes"
-                             << std::endl << vprDEBUG_FLUSH;
 
       // is it transient, classic, or animated class
       // add animation or dcs
@@ -186,9 +168,12 @@ void cfdGraphicsObject::SetTypeOfViz( VizType x )
 }
 
 // set actor for classic and trans viz objects
-void cfdGraphicsObject::SetActor( std::vector< vtkActor* > input )
+void cfdGraphicsObject::SetGeodes( std::vector< cfdGeode* > input )
 {
-   this->actors = input;
+   for ( unsigned int i = 0; i < input.size(); ++i )
+   {
+      this->geodes.push_back( new cfdGeode( *input.at( i ) ) );
+   }
 }
 
 // Return parent node for a this object

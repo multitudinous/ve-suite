@@ -35,6 +35,7 @@
 #include "cfdCommandArray.h"
 #include "fileIO.h"
 #include "cfdReadParam.h"
+#include "cfdGeode.h"
 
 #include <vtkPlaneSource.h>
 #include <vtkBMPReader.h>
@@ -116,8 +117,9 @@ cfdImage::cfdImage( char* param )
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
       temp->SetTexture( this->texture ); 
-      this->actors.push_back( vtkActor::New() );
-      this->actors.back()->ShallowCopy( temp );       
+      geodes.push_back( new cfdGeode() );
+      geodes.back()->TranslateTocfdGeode( temp );
+      temp->Delete();
 
       this->type = bmpOrientation;
       if      (this->type==0)  this->typeLabel = 'X';
@@ -197,15 +199,17 @@ cfdImage::cfdImage ( char * filename, int resx, int resy, int dim, double *origi
 
      // Actor
 
-	this->actors.push_back( vtkActor::New() );
-	this->actors.back()->SetMapper( this->mapper );
-	this->actors.back()->GetProperty()->SetSpecularPower( 20.0f );
-	this->actors.back()->SetTexture( this->texture );        
-
-     this->actors.back()->GetProperty()->SetAmbient(1.0);
-     this->actors.back()->GetProperty()->SetDiffuse(1.0);
-     this->actors.back()->GetProperty()->SetSpecular(1.0);
-     this->actors.back()->GetProperty()->SetInterpolationToPhong();
+      vtkActor* temp = vtkActor::New();
+	   temp->SetMapper( this->mapper );
+	   temp->GetProperty()->SetSpecularPower( 20.0f );
+	   temp->SetTexture( this->texture );        
+      temp->GetProperty()->SetAmbient(1.0);
+      temp->GetProperty()->SetDiffuse(1.0);
+      temp->GetProperty()->SetSpecular(1.0);
+      temp->GetProperty()->SetInterpolationToPhong();
+      geodes.push_back( new cfdGeode() );
+      geodes.back()->TranslateTocfdGeode( temp );
+      temp->Delete();
 
      // Dim stuff
 

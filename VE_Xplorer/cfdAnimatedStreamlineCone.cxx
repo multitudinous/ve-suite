@@ -33,6 +33,7 @@
 #include "cfdDataSet.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
+#include "cfdGeode.h"
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -51,7 +52,6 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
                           << std::endl << vprDEBUG_FLUSH;
 
    this->mapper   = vtkPolyDataMapper::New();
-   //this->actor    = vtkActor::New();
    this->polydata = vtkPolyData::New();
    this->polyData = vtkPolyData::New();
    this->glyph    = vtkGlyph3D::New();
@@ -67,7 +67,6 @@ cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
                           << std::endl << vprDEBUG_FLUSH;
 
    this->mapper->Delete();
-   //this->actor->Delete();
    this->polydata->Delete();
    this->polyData->Delete();
    this->glyph->Delete();
@@ -75,12 +74,6 @@ cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
    
    //this->_sequence->ClearSequence();
    //delete this->_sequence;
-   
-   for ( unsigned int i = 0; i < actors.size(); ++i )
-   {
-      this->actors.at( i )->Delete();
-   }
-   this->actors.clear();
 }
 
 void cfdAnimatedStreamlineCone::SetPolyDataSource( vtkPolyData *input )
@@ -207,8 +200,9 @@ void cfdAnimatedStreamlineCone::Update( void )
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
       temp->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
-      this->actors.push_back( vtkActor::New() );
-      this->actors.back()->ShallowCopy( temp );
+      geodes.push_back( new cfdGeode() );
+      geodes.back()->TranslateTocfdGeode( temp );
+      temp->Delete();
      
       //Make geodes from each polydata
       vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop4" << std::endl << vprDEBUG_FLUSH;

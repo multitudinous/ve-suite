@@ -39,9 +39,6 @@ class cfdGroup;
 class cfdTempAnimation;
 class cfdModel;
 
-class vtkActor;
-class vtkPropCollection;
-
 class cfdGraphicsObject
 {
    public:
@@ -76,8 +73,8 @@ class cfdGraphicsObject
       // set type of viz: trans, classic, texture
       void SetTypeOfViz( VizType );
 
-      // set actor for classic and trans viz objects
-      void SetActor( std::vector< vtkActor* > );
+      // set geodes for classic and trans viz objects
+      void SetGeodes( std::vector< cfdGeode* > );
 
       // Return parent node for a this object
       cfdGroup* GetParentNode( void );
@@ -90,7 +87,7 @@ class cfdGraphicsObject
       cfdGroup* parentNode;
       cfdGroup* worldNode;
       VizType type;
-      std::vector< vtkActor* > actors;
+
       // used for animated particles and other ss 
       // animated features
       cfdTempAnimation* animation;
