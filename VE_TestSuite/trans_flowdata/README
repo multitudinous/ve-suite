@@ -1,0 +1,27 @@
+This directory contains six files representing different states of a transient
+dataset:
+   transient3scl_00.vtk  transient3scl_02.vtk  transient3scl_04.vtk
+   transient3scl_01.vtk  transient3scl_03.vtk  transient3scl_05.vtk
+
+Using the following script, precomputed plane data was created:
+
+set index = 0
+foreach file (*.vtk)
+   echo ""
+   mkdir -p precomputed_$index
+   preprocessor $file precomputed_$index 0 0 0 1 1 1 0 5 0
+   set index = `expr $index + 1`
+end
+
+Above script processes only planes, setting 1 x-plane, 0 y-planes, 5 z-planes,
+with planes kept as separate entities
+
+When the above script was run, six new directories were created, each containing the cutting planes specified in the shell script:
+   precomputed_0
+   precomputed_1
+   precomputed_2
+   precomputed_3
+   precomputed_4
+   precomputed_5
+
+
