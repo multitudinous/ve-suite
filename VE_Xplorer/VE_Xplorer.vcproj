@@ -351,7 +351,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Executive&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Unit&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_CE&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Unit&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\src&quot;"
 				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_WINDOWS;WINVER=0x400;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -385,12 +385,7 @@
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				CommandLine="echo C++ stubs. . .
-$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VE_Conductor/skel -GI -I./idl   $(VE_SUITE_HOME)/futuregen/IDL/module.idl
-echo Done.
-
-"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -598,6 +593,32 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\cfdEnvironmentHandler.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdExecutive.cxx">
+				<FileConfiguration
+					Name="TAO_BUILD|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release_OMNI|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_OSG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_OSG_CG_DBG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdFILE.cxx">
@@ -954,9 +975,15 @@ echo Done.
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\skel\moduleC.cpp">
+				RelativePath="..\VESOpen\skel\moduleC.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_BUILD|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -975,9 +1002,15 @@ echo Done.
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\skel\moduleS.cpp">
+				RelativePath="..\VESOpen\skel\moduleS.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_BUILD|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -996,9 +1029,15 @@ echo Done.
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\futuregen\Executive\Network_Exec.cpp">
+				RelativePath="..\Ve_ce\Network_Exec.cpp">
 				<FileConfiguration
-					Name="Debug|Win32"
+					Name="OMNI_BUILD|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="Release_OMNI|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -1087,6 +1126,12 @@ echo Done.
 			</File>
 			<File
 				RelativePath="..\VESOpen\skel\VjObs.cpp">
+				<FileConfiguration
+					Name="Debug_TAO|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\impl\VjObs_i.cxx">
@@ -1140,6 +1185,60 @@ echo Done.
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\VESOpen\skel\VjObsC.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_BUILD|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_OSG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_OSG_CG_DBG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\VESOpen\skel\VjObsS.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_BUILD|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_OSG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_OSG_CG_DBG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
 				RelativePath=".\vtkActorToOSG.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -1169,10 +1268,6 @@ echo Done.
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
 			</File>
-			<Filter
-				Name="TAO_src"
-				Filter=".cpp">
-			</Filter>
 		</Filter>
 		<Filter
 			Name="headers"

@@ -203,13 +203,7 @@ echo Done.
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="IDL Compiler"
-				CommandLine="echo C++ stubs. . .
-$(ACE_ROOT)/bin/tao_idl.exe -o ./skel -GI -I./idl   ./idl/VjObs.idl
-echo Done.
-
-"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -263,13 +257,7 @@ echo Done.
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Generating stubs. . ."
-				CommandLine="echo C++ stubs. . .
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(IDL_HOME)/skel $(IDL_HOME)/idl/VjObs.idl
-echo Done.
-
-"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -323,12 +311,7 @@ echo Done.
 			<Tool
 				Name="VCPostBuildEventTool"/>
 			<Tool
-				Name="VCPreBuildEventTool"
-				Description="Generating stubs. . ."
-				CommandLine="echo C++ stubs. . .
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(IDL_HOME)/skel $(IDL_HOME)/idl/VjObs.idl
-echo Done.
-"/>
+				Name="VCPreBuildEventTool"/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
 			<Tool
@@ -407,6 +390,33 @@ echo Done.
 			</File>
 			<File
 				RelativePath="..\VESOpen\skel\VjObs.cpp">
+				<FileConfiguration
+					Name="Debug_TAO|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\VESOpen\skel\VjObsC.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_OSG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OMNI_OSG_CG_DBG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter
@@ -471,9 +481,6 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\Ve_ui\UI_VisTab.h">
-			</File>
-			<File
-				RelativePath="..\VESOpen\skel\VjObs.h">
 			</File>
 		</Filter>
 	</Files>
