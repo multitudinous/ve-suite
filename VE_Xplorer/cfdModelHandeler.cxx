@@ -63,7 +63,7 @@
 #include <direct.h>
 #endif
 
-//using namespace std;
+using namespace std;
 
 cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
 {

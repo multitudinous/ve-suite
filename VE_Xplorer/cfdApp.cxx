@@ -269,6 +269,7 @@ std::cout << "|  3a" << std::endl;
    // modelHandler stores the arrow and holds all data and geometry
    this->_modelHandler = new cfdModelHandler( this->filein_name, 
                                               this->_sceneManager->GetWorldDCS() );
+   this->_modelHandler->SetCommandArray( _cfdArray );
    this->_modelHandler->InitScene();
 std::cout << "|  3e" << std::endl;
 
@@ -277,6 +278,7 @@ std::cout << "|  3e" << std::endl;
    this->_environmentHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    this->_environmentHandler->SetRootNode( this->_sceneManager->GetRootNode() );
    this->_environmentHandler->SetArrow( this->_modelHandler->GetArrow() );
+   this->_environmentHandler->SetCommandArray( _cfdArray );
    this->_environmentHandler->InitScene();
 std::cout << "|  3b" << std::endl;
 
@@ -285,6 +287,8 @@ std::cout << "|  3b" << std::endl;
    this->_steadystateHandler->SetWorldDCS( this->_sceneManager->GetWorldDCS() );
    this->_steadystateHandler->SetNavigate( this->_environmentHandler->GetNavigate() );
    this->_steadystateHandler->SetCursor( this->_environmentHandler->GetCursor() );
+   this->_steadystateHandler->SetCommandArray( _cfdArray );
+   this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    this->_steadystateHandler->InitScene();
 std::cout << "|  3c" << std::endl;
 
@@ -294,6 +298,8 @@ std::cout << "|  3c" << std::endl;
    this->_transientHandler->InitScene();
 std::cout << "|  3d" << std::endl;
 */
+
+   this->SetHandlers( _steadystateHandler, _environmentHandler, _modelHandler );
 
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
@@ -329,13 +335,10 @@ void cfdApp::preFrame( void )
 #endif // _CLUSTER
 
    ///////////////////////
-   this->_environmentHandler->SetCommandArray( _cfdArray );
    this->_environmentHandler->PreFrameUpdate();
    ///////////////////////
-   this->_modelHandler->SetCommandArray( _cfdArray );
    this->_modelHandler->PreFrameUpdate();
    ///////////////////////
-   this->_steadystateHandler->SetCommandArray( _cfdArray );
    this->_steadystateHandler->SetActiveDataSet( this->_modelHandler->GetActiveDataSet() );
    this->_steadystateHandler->PreFrameUpdate();
    ///////////////////////
