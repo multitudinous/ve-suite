@@ -35,9 +35,11 @@
 class cfdDCS;
 class cfdGroup;
 //class pfGeoState;
+#ifdef _PERFORMER
 class pfLightModel;
 class pfLightSource;
-
+#elif _OSG
+#endif
 //#include <string>
 
 class cfdPfSceneManagement
@@ -59,9 +61,12 @@ class cfdPfSceneManagement
 
       // Performer objects
       //pfGeoState*    gstate;
+#ifdef _PERFORMER
       pfLightModel*  sunModel;
       pfLightSource* sun;
       pfLightSource* lit;
+#elif _OSG
+#endif
 };
 
 #endif

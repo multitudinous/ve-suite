@@ -33,14 +33,15 @@
 #include <iostream>
 #include <algorithm>
 #include <cstdlib>
+#include <string>
 using namespace std;
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pf/pfNode.h>
 #elif _OSG
-#include <osg/osg::Group>
-#include <osg/osg::Node>
+#include <osg/Group>
+#include <osg/Node>
 #elif _OPENSG
 #endif
 
@@ -69,7 +70,7 @@ cfdGroup::cfdGroup( const cfdGroup& input )
 #ifdef _PERFORMER
    this->_group = input._group;
 #elif _OSG
-   _group = new osg::Group(input._group);
+   _group = input._group;
 #elif _OPENSG
 #endif
    SetCFDNodeType(CFD_GROUP);
@@ -97,7 +98,7 @@ cfdGroup& cfdGroup::operator=( const cfdGroup& input)
       if(_group){
          _group->unref();
       }
-      _group = new osg::Group(input._group);
+      _group = input._group;
 #elif _OPENSG
 #endif
       
@@ -245,7 +246,11 @@ const char* cfdGroup::GetName( void )
 #ifdef _OPENSG
    return 0;
 #endif
+#ifdef _PERFORMER
    return _group->getName();
+#elif _OSG
+    return _group->getName().data() ;
+#endif
 }
 ////////////////////////////////////////////////////////////
 int cfdGroup::ReplaceChild( cfdNode* childToBeReplaced,

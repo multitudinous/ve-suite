@@ -40,10 +40,10 @@ class pfGeode;
 class pfDCS;
 class pfGroup;
 #elif _OSG
-class osg::Node;
-class osg::Geode;
-class osg::Group;
-class osg::MatrixTransform;
+#include <osg/Node>
+#include <osg/Geode>
+#include <osg/Group>
+#include <osg/MatrixTransform>
 #elif _OPENSG
 #endif
 
@@ -79,7 +79,7 @@ public:
 #ifdef _PERFORMER
    virtual pfNode* GetRawNode( void )=0;
 #elif _OSG
-   virtual osg::Node* GetRawNode( void )=0;
+   virtual osg::Node* GetRawNode(void)=0;
 #elif _OPENSG
 #endif
 

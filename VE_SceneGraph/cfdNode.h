@@ -38,8 +38,8 @@
 class pfNode;
 class pfFog;
 #elif _OSG
-class osg::Node;
-class osg::Fog;
+#include <osg/Node>
+#include <osg/Fog>
 #elif _OPENSG
 #endif
 
@@ -64,18 +64,21 @@ public:
    pfNode* GetRawNode( void );
    void clearGeodesFromNode( pfNode* );
 #elif _OSG
-   void osg::Node* GetRawNode( void );
+   osg::Node* GetRawNode( void );
    void clearGeodesFromNode( osg::Node* );
 #elif _OPENSG
 #endif
 
    //biv--why is this stuff in this class?
+   //should change to take a cfdNode and 
+   //let internals call get raw node and then
+   //traverse. . .
 #ifdef _PERFORMER
    void pfTravNodeMaterial( pfNode* );
    void pfTravNodeFog( pfNode* node_1, pfFog* fog );
 #elif _OSG
-   void TravNodeMaterial(osg::Node*);
-   void TravNodeFod(osg::Node node_1, osg::Fog* fog);
+   void TravNodeMaterial(cfdNode*);
+   void TravNodeFog(osg::Node* node_1, osg::Fog* fog);
 #elif _OPENSG
 #endif
    void SetNodeProperties( int, float, float* );

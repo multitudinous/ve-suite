@@ -33,7 +33,13 @@
 #include "cfdNodeTraverser.h"
 #include <iostream>
 using namespace std;
+#include "cfdGroup.h"
+
+#ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
+#elif _OSG
+#include <osg/Group>
+#endif
 ////////////////////////////////////
 //Constructors                    //
 ////////////////////////////////////
@@ -64,7 +70,7 @@ cfdNodeTraverser::~cfdNodeTraverser()
 ////////////////////////////////////////////
 //set the node to traverse                //
 ////////////////////////////////////////////
-void cfdNodeTraverser::setNode(pfNode* root)
+void cfdNodeTraverser::setNode(cfdNode* root)
 {
    _root = root;
 }
@@ -95,30 +101,38 @@ void cfdNodeTraverser::traverse()
 /////////////////////////////////////////////////////
 //depth first recursion of a node/scene graph      //
 /////////////////////////////////////////////////////
-void cfdNodeTraverser::_traverseNode(pfNode* node)
+void cfdNodeTraverser::_traverseNode(cfdNode* cNode)
 {
    int nChildren = 0;
    
-   if(!node->isOfType(pfGroup::getClassType())){
+#ifdef _PERFORMER
+   /*if(!node->isOfType(pfGroup::getClassType())){
+      return;
+   }*/
+#elif _OSG
+
+#endif
+   if(cNode->GetCFDNodeType() != cfdNode::CFD_GROUP){
       return;
    }
    //grab the children of this group
-   pfGroup* curGroup = (pfGroup*)node;
-   nChildren = curGroup->getNumChildren();
+   //pfGroup* curGroup = (pfGroup*)node;
+   cfdGroup* curGroup = (cfdGroup*)cNode;
+   nChildren = curGroup->GetNumChildren();
 
    //the pre-callback
    if(_preFunc){
-      _preFunc(this,node);
+      _preFunc(this,cNode);
    }
 
    //recurse the children of this node
    for(int i = 0; i < nChildren; i++){
-      _traverseNode(curGroup->getChild(i));
+      _traverseNode(curGroup->GetChild(i));
    }
 
    //the post-callback
    if(_postFunc){
-      _postFunc(this,node);
+      _postFunc(this,cNode);
    }
 }
 

@@ -32,11 +32,17 @@
 #include "cfdPfSceneManagement.h"
 
 /// Performer libraries
+#ifdef _PERFORMER
 #include <Performer/pf/pfLightSource.h>
 #include <Performer/pr/pfLight.h>
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pf/pfNode.h>
-
+#elif _OSG
+#include <osg/Group>
+#include <osg/Node>
+#endif
+#include "cfdNode.h"
+#include "cfdGroup.h"
 /*
 #ifndef WIN32
 #include <unistd.h>
@@ -62,50 +68,43 @@ cfdPfSceneManagement::cfdPfSceneManagement( char* paramfilename )
    this->rootNode = NULL;
    this->worldDCS = NULL;
    //this->gstate = NULL;
+#ifdef _PERFORMER
    this->sunModel = NULL;
    this->sun = NULL;
    this->lit = NULL;
+#elif _OSG
+#endif
    std::cout << "finished constructing cfdPfSceneManagement with param = " << this->param << std::endl;
 }
-
+///////////////////////////////////////////////////
 cfdPfSceneManagement::~cfdPfSceneManagement( void )
 {
 }
 
 void cfdPfSceneManagement::InitScene( void )
 {
-# ifdef _IRIX
+# ifdef _IRIX 
+#ifdef _PERFORMER
    std::cout << "|   Performer Arena Size *** " << pfGetSharedArenaSize()/ (1024 * 1024) << std::endl;
    std::cout << "|   Shared arena base is *** " << pfGetSharedArenaBase() << std::endl;
    amallopt(M_MXCHK,10000000,pfGetSharedArena());
    amallopt(M_FREEHD, 1, pfGetSharedArena() );
+#endif
 #endif
    //
    // Establish Iris Performer Scenegraph.
    //
    std::cout << "|  1. Initializing................................ Performer scenes |" << std::endl;
    // Setup performer pipeline
+#ifdef _PERFORMER
    this->sunModel = new pfLightModel();
+#endif
    this->rootNode = new cfdGroup();
    this->rootNode->SetName( "group node" );
    this->worldDCS = new cfdDCS();
    this->worldDCS->SetName( "worlddcs" );
+#ifdef _PERFORMER
    this->sun      = new pfLightSource();
-   //this->lit      = new pfLightSource();
-   //this->gstate   = new pfGeoState();
-   //this->scene    = new pfScene();
-
-   // Setup geosets properties
-   //this->sunModel->setTwoSide( PF_ON );
-   //this->sunModel->apply();
-
-   /* Override so that all geometry is lit with 'lmodel' */
-   //pfOverride(PFSTATE_LIGHTMODEL, PF_ON);
-   //this->gstate->setMode( PFSTATE_ENLIGHTING, PF_ON );
-   //this->gstate->setMode( PFSTATE_ANTIALIAS, PFAA_ON );
-   //this->gstate->setAttr( PFSTATE_LIGHTMODEL, sunModel );
-   //this->gstate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
-   //this->scene->setGState( this->gstate );
    // Create lights
    this->sun->setPos( 100.0f, -100.0f, 100.0f, 0.0f );
    //this->sun->setPos( 0.0f, -1.0f, 0.0f, 0.0f );
@@ -117,22 +116,15 @@ void cfdPfSceneManagement::InitScene( void )
    this->sun->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
    this->sun->setVal(PFLS_INTENSITY, 1.0);
    this->sun->on();
+#endif
 
-   //this->lit->setPos( 100.0f, 0.0f, 0.0f, 0.0f );
-   //this->sun->setPos( 0.0f, -1.0f, 0.0f, 0.0f );
-   //this->lit->setColor( PFLT_DIFFUSE, 0.64f, 0.64f, 0.64f );
-   //this->lit->setColor( PFLT_AMBIENT, 0.0f, 0.0f, 0.0f );
-   //this->sun->setColor( PFLT_SPECULAR, 1.0f, 1.0f, 1.0f );
-   //this->lit->setColor( PFLT_SPECULAR, 0.64f, 0.64f, 0.64f );
-   //this->lit->on();
    // Add pfDCS and sun for the world
    this->rootNode->AddChild( this->worldDCS );
    // TODO: Might need to add this back in
-   ((pfGroup*)this->rootNode->GetRawNode())->addChild( (pfNode*)this->sun );
-
-   //this->rootNode->setGState( this->gstate );
-   //this->rootNode->addChild( this->lit );
-   //this->temp_text = new pfDCS();
+#ifdef _PERFORMER
+   ((pfGroup*)(this->rootNode->GetRawNode()))->addChild( this->sun );
+#endif
+  
 }
 
 cfdGroup* cfdPfSceneManagement::GetRootNode( void )

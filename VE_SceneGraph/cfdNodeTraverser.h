@@ -32,7 +32,15 @@
 
 #ifndef _CFD_NODE_TRAVERSER_H_
 #define _CFD_NODE_TRAVERSER_H_
+
+#include "cfdNode.h"
+
+#ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
+#elif _OSG
+#include <osg/Node>
+#endif
+
 class cfdNodeTraverser{
 public:
    cfdNodeTraverser();
@@ -40,8 +48,8 @@ public:
    virtual ~cfdNodeTraverser();
    
    //the pre and post node callbacks
-   typedef void (*preNodeTraverseCallback)(cfdNodeTraverser*,pfNode*);
-   typedef void (*postNodeTraverseCallback)(cfdNodeTraverser*,pfNode*);
+   typedef void (*preNodeTraverseCallback)(cfdNodeTraverser*,cfdNode*);
+   typedef void (*postNodeTraverseCallback)(cfdNodeTraverser*,cfdNode*);
 
    //set the pre node traverse callback
    virtual void setPreNodeTraverseCallback(preNodeTraverseCallback func)
@@ -54,7 +62,7 @@ public:
       _postFunc = func;
    }
    //set the node to traverse
-   void setNode(pfNode* root);
+   void setNode(cfdNode* root);
 
    //begin traversing the node
    void traverse();
@@ -63,9 +71,9 @@ public:
    cfdNodeTraverser& operator=(const cfdNodeTraverser& cfdNT);
 protected:
    //recurse the nodes
-   virtual void _traverseNode(pfNode* currentNode);
+   virtual void _traverseNode(cfdNode* currentNode);
 
-   pfNode* _root;
+   cfdNode* _root;
    preNodeTraverseCallback _preFunc;
    postNodeTraverseCallback _postFunc;
 };

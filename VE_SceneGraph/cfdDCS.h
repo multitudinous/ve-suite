@@ -40,6 +40,7 @@
 #ifdef _PERFORMER
 class pfDCS;
 #elif _OSG
+class osg::MatrixTransform;
 #elif _OPENSG
 #endif
 
@@ -63,35 +64,15 @@ class cfdDCS: public cfdGroup
       void SetScaleArray( float* );
       void SetRotationMatrix( gmtl::Matrix44f& );
 
-#ifdef _PERFORMER
-      //pfNode* GetRawNode( void );
-#elif _OSG
-#elif _OPENSG
-#endif
-
-      //int RemoveChild( cfdNode* );
-      //int AddChild( cfdNode* );
       gmtl::Matrix44f GetMat( void );
       void SetMat( gmtl::Matrix44f& );
-      //int SearchChild( cfdNode* );
-      //int GetNumChildren( void );
-      //cfdNode* GetChild( int );
-      //int ReplaceChild( cfdNode*, cfdNode* );
-      //void SetName( char* );
-      //const char* GetName( void );
-
+    
    private:
 
       float _translation[ 3 ];
       float _rotation[ 3 ];
       float _scale[ 3 ];
-   
-      std::vector< cfdNode* > childNodes;
-#ifdef _PERFORMER
-      //pfDCS* _dcs;
-#elif _OSG
-#elif _OPENSG
-#endif
+
       gmtl::Matrix44f _vjMatrix;
 };
 #endif

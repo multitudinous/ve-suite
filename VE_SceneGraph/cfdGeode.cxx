@@ -55,7 +55,7 @@ cfdGeode::cfdGeode( void )
    _geode = new osg::Geode();
 #elif _OPENSG
 #endif
-   _vtkDebugLevel = 0;
+   _vtkDebugLevel = 1;
    SetCFDNodeType(CFD_GEODE);
 }
 ////////////////////////////////////////////
@@ -65,7 +65,7 @@ cfdGeode::cfdGeode( const cfdGeode& input )
 #ifdef _PERFORMER
    this->_geode = input._geode;
 #elif _OSG
-   _geode = new osg::Geode(input._geode);
+   _geode = input._geode;
 #elif _OPENSG
 #endif
    this->_vtkDebugLevel = input._vtkDebugLevel;
@@ -81,10 +81,7 @@ cfdGeode& cfdGeode::operator=( const cfdGeode& input )
       pfDelete( _geode );
       this->_geode = input._geode;
 #elif _OSG
-      if(_geode){
-         _geode->unref();
-      }
-      _geode = new osg::Geode(input._geode);
+      _geode = input._geode;
 #elif _OPENSG
 #endif
       this->_vtkDebugLevel = input._vtkDebugLevel;

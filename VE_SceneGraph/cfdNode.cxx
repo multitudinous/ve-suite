@@ -51,7 +51,19 @@ using namespace std;
 #include <Performer/pf/pfTraverser.h>
 #include <Performer/pr/pfFog.h>
 #elif _OSG
-#include <osgDB/Reader>
+#include <osgDB/ReadFile>
+#include <osg/Node>
+#include <osg/Group>
+#include <osg/MatrixTransform>
+#include <osg/Geode>
+#include <osg/Sequence>
+#include <osg/Material>
+#include <osg/State>
+#include <osg/StateSet>
+#include <osg/StateAttribute>
+#include <osg/ShadeModel>
+#include <osgDB/Registry>
+#include <osgDB/FileUtils>
 #elif _OPENSG
 #endif
 
@@ -77,7 +89,7 @@ cfdNode::cfdNode( const cfdNode& input )
 #ifdef _PERFORMER
    this->_node = input._node;
 #elif _OSG
-   _node = new osg::Node(input._node);
+   _node = input._node;
 #elif _OPENSG
 #endif
 }
@@ -92,8 +104,8 @@ cfdNode& cfdNode::operator=( const cfdNode& input )
       this->_node = input._node;
 #elif _OSG
       //recreate the node
-      _node->unref();
-      _node = new osg::Node(input._node);
+      //_node->unref();
+      _node = input._node;
 #elif _OPENSG
 #endif
       op = input.op;
@@ -116,6 +128,7 @@ cfdNode::~cfdNode( void )
 #ifdef _PERFORMER
    pfDelete( this->_node );
 #elif _OSG
+   //_node->unref();
 #elif _OPENSG
 #endif
 }
@@ -160,6 +173,11 @@ void cfdNode::LoadFile( char* filename )
    this->_node = pfdLoadFile( filename );  
 #elif _OSG
    cout<< filename<<endl;
+
+   //osgDB::RegisterReaderWriterProxy<ReaderWriterPFB> rw;
+  
+   //osgDB::Registry::instance()->addReaderWriter(rw);
+   //osgDB::setLibraryFilePathList("C:/OSG_OP_OT-0.9.7-3/OpenSceneGraph/bin");
    _node = osgDB::readNodeFile(filename);
 #elif _OPENSG
    cout << " Error:LoadFile !!! " << endl;
@@ -445,6 +463,118 @@ void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
 	}
 }
 #elif _OSG
+///////////////////////////////////////////////
+void cfdNode::TravNodeMaterial(cfdNode* node)
+{
+   
+	int i  = 0;
+	int num = 0;
+
+ 	// If the node is a geode...
+   if (node->GetCFDNodeType()== cfdNode::CFD_GEODE){
+      osg::Drawable* geoset = NULL;
+      osg::Geode* geode = (osg::Geode*)node->GetRawNode();
+      osg::StateSet* geostate = NULL;
+      
+      osg::Material* material = NULL;
+      osg::Material* front = NULL;
+      osg::Material* back = NULL;
+
+      // Grab each of its geosets
+      num = geode->getNumDrawables();
+
+      //std::cout << "HERE IT IS " << num << std::endl;
+      for (i=0; i < num; i++){
+         geoset = geode->getDrawable(i) ;
+         assert( geoset != NULL && "geoset is null" );
+
+         // Apply the material to the geostate and disable texturing
+         geostate = geoset->getStateSet();
+
+         if (geostate != NULL){
+            //lighting
+            geostate->setMode(GL_LIGHTING,osg::StateAttribute::ON);
+            
+            //culling
+            geostate->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
+            
+            //gourand shading
+            geostate->setMode(osg::StateAttribute::SHADEMODEL,
+                            osg::ShadeModel::SMOOTH);
+
+            vprDEBUG(vprDBG_ALL,3) << "Done setting Transparency "
+                                   << std::endl << vprDEBUG_FLUSH;
+
+            vprDEBUG(vprDBG_ALL,2) << "setting alpha to " << op 
+                                   << std::endl << vprDEBUG_FLUSH;
+            //if ( ssattrib != NULL ){
+               vprDEBUG(vprDBG_ALL,2) << "Setting Material : " << op 
+                                      << std::endl << vprDEBUG_FLUSH;
+               vprDEBUG(vprDBG_ALL,2) << " Color Flag : " << color
+                                      << std::endl << vprDEBUG_FLUSH;
+               //create the material
+               material = new osg::Material();
+               
+               //set the opacity
+               material->setAlpha(osg::Material::FRONT_AND_BACK,
+                                op);
+               //Turn colors on
+               if( color == 1 ){
+                  osg::Vec4f lColor(stlColor[0],
+				       	               stlColor[1],
+				       	               stlColor[2],
+                                         op);
+                  //set up the material properties
+                  material->setDiffuse(osg::Material::FRONT_AND_BACK ,
+				                            lColor);
+                  material->setAmbient( osg::Material::FRONT_AND_BACK ,
+				                            lColor);
+                   
+                  vprDEBUG(vprDBG_ALL,2) 
+                         << " Front Color : " << stlColor[0]<< " : " 
+                         <<  stlColor[1]<< " : " << stlColor[2]
+                        << std::endl << vprDEBUG_FLUSH;
+               }else{
+                  // Do NOT turn of transparency here because textured
+                  // objects may have transparent textures
+                  material->setColorMode( osg::Material::AMBIENT_AND_DIFFUSE );
+                  vprDEBUG(vprDBG_ALL,3) << "Set color Mode "
+                                         << std::endl << vprDEBUG_FLUSH;
+               }
+               //put in the appropriate bin
+               if ( op == 1 ) {
+                  geostate->setRenderingHint(osg::StateSet::OPAQUE_BIN);
+               }else{
+                  geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+               }
+               geostate->setAttribute(material,osg::StateAttribute::ON);            
+               geoset->setStateSet(geostate);
+
+         }else{
+            vprDEBUG(vprDBG_ALL,0) 
+               << "ERROR: Tried to set transparency, but this pfGeoSet"
+               << " has no pfGeoState." << std::endl << vprDEBUG_FLUSH;
+         }
+      }
+	
+   }else if (node->GetCFDNodeType()== cfdNode::CFD_GROUP){
+	   	// Run this traverser on each of its children (recursive)
+	   	num = ((cfdGroup*)node)->GetNumChildren();
+
+	   	vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+                                << std::endl << vprDEBUG_FLUSH;
+
+         for (i=0; i < num; i++){
+	   		
+            TravNodeMaterial( ((cfdGroup*)node)->GetChild(i) ) ;
+         }
+         //count = 0;
+	   }
+ }
+ ///////////////////////////////////////////////////////////
+ void cfdNode::TravNodeFog(osg::Node* node_1, osg::Fog* fog)
+ {
+ }
 #elif _OPENSG
 #endif
 
