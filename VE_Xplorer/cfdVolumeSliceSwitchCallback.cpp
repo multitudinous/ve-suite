@@ -10,8 +10,8 @@
 //Constructor
 ////////////////////////////////////////////////////////////
 cfdVolumeSliceSwitchCallback::cfdVolumeSliceSwitchCallback(
-osg::Vec3f* center)
-:_center(center)
+osg::Vec3f center)
+:_center( (&center) )
 {
    _whichSlices = Z_POS;
    _lastDir = Z_POS;
