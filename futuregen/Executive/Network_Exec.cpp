@@ -1,13 +1,9 @@
 #include <iostream>
-using namespace std;
-
+#include "Network_Exec.h"
 #include <set>
 #include <string>
-
-#include "Network_Exec.h"
-
 ////////////////////////////////////////////////////////////////////////////////
-
+using namespace std;
 Network::Network ()
 {
 }
