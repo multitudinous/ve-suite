@@ -7,7 +7,7 @@
 #pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
-//Class Body_Unit_i
+//This is the implementation of Module GasFeedback
 class  Body_Unit_i : public virtual POA_Body::Unit
 {
  public:
@@ -21,9 +21,17 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   CORBA::Long id_;
   std::string status_;
   std::string data_;
-
+  
  protected:
   Body::Executive_var executive_;
+
+  int iter_counter;
+  long iterations;
+  std::vector<std::string> species;
+  std::vector<std::string> sel_species;
+  std::vector<std::string> max_error;
+  long return_state;
+  std::map<std::string, double> last_values;
 
  public:
 

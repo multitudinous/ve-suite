@@ -1,4 +1,4 @@
-IDL_HOME = ./../IDL
+IDL_HOME = /home/yang/newVE_Suite/futuregen/IDL
 XERCESCROOT=/home/yang/newinterface/xerces-c-src_2_5_0
 PLATFORM = LINUX
 COMPILER = g++
@@ -12,7 +12,7 @@ EXTRA_LIBS =
 PREFIX = /usr/local
 
 include ${XERCESCROOT}/version.incl
-include Makefile.incl
+include ../Makefile.incl
 
 ifndef TAO_ROOT
   TAO_ROOT = $(ACE_ROOT)/TAO
@@ -25,7 +25,7 @@ LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_Po
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(TAO_ROOT)/rules.tao.GNU
 
-FILE_UNIT_CLT_OBJS = moduleC.o moduleS.o Unit_i.o Unit_client.o
+FILE_UNIT_CLT_OBJS = moduleC.o moduleS.o GasFeedbackUnit_i.o GasFeedbackUnit_client.o
 
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
@@ -40,17 +40,28 @@ LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs
 
 CPPFLAGS += -g  ${INCLUDES} ${CMP} -I$(TAO_ROOT) \
 		-I$(TAO_ROOT)/orbsvcs -I${IDL_HOME} \
-		-I./. 
+		-I./. -I../ -I../V21Helper/
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
 
-OBJECTS = string_ops.o \
-	interface.o \
-	package.o 
+OBJECTS = ../string_ops.o \
+	../interface.o \
+	../package.o \
+	../V21Helper/V21Helper.o \
+	../V21Helper/SummaryValues/summary_values.o \
+	../V21Helper/SummaryValues/unit_conversion.o \
+	../V21Helper/Gas/Gas.o \
+	../V21Helper/Gas/GasCell.o \
+	../V21Helper/Therm/matrix.o \
+	../V21Helper/Therm/stream.o \
+	../V21Helper/Therm/thermo.o 
 
-.SUFFIXES : .o .cpp	
+.SUFFIXES : .o .cpp .cc	
 
 .cpp.o :
+	$(CXX) -g -c $(CPPFLAGS) -w -o $@ $<
+
+.cc.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -o $@ $<
 
 all: $(APP)
@@ -59,4 +70,4 @@ $(APP): $(OBJECTS) $(addprefix $(VDIR),$(FILE_UNIT_CLT_OBJS))
 	g++ ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK)
 
 clean:
-	rm -rf *.o $(APP) $(FILE_UNIT_CLT_OBJS)
+	rm -rf *.o $(APP) $(FILE_UNIT_CLT_OBJS) $(OBJECTS)
