@@ -19,7 +19,7 @@ int main (int argc, char* argv[])
 				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
       return 1;
     }
-  std::string UNITNAME = "ASU";
+  std::string UNITNAME = "V21ASU";
   try {
     // First initialize the ORB, 
     CORBA::ORB_var orb =
@@ -32,7 +32,6 @@ int main (int argc, char* argv[])
     CosNaming::NamingContext_var naming_context =
       CosNaming::NamingContext::_narrow (naming_context_object.in ());
     
-    std::cout<<"CP1"<<std::endl;
     CosNaming::Name name(1);
     name.length(1);
     name[0].id = CORBA::string_dup ("Executive");

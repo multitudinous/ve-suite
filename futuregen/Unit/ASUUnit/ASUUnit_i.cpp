@@ -188,7 +188,7 @@ char * Body_Unit_i::GetUserData (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" :GetUserData called"<<endl;
+    std::cout << UnitName_ << " :GetUserData called\n";
     return CORBA::string_dup(data_.c_str());
   }
   
@@ -204,7 +204,7 @@ void Body_Unit_i::SetParams (
     // Add your implementation here
     if (string(param)=="")
       return;
-    std::cout<<UnitName_<<" :SetParams called"<<endl;
+    std::cout << UnitName_ << " :SetParams called\n";
     Package p;
         
     p.SetSysId("gui.xml");
@@ -227,9 +227,9 @@ void Body_Unit_i::SetID (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    id_=id;
-    std::cout<<UnitName_<<" :SetID called"<<endl;
+    std::cout << UnitName_ << " :SetID called " << id << endl;
+    
+    id_ = id;
   }
   
 CORBA::Long Body_Unit_i::GetID (
@@ -239,11 +239,10 @@ CORBA::Long Body_Unit_i::GetID (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    // Add your implementation here
-    std::cout<<UnitName_<<" :GetID called"<<endl;
-    return id_;
-  }
+{
+  std::cout << UnitName_ << " :GetID called\n";
+  return id_;
+}
   
 void Body_Unit_i::SetName (
     const char * name
@@ -254,9 +253,8 @@ void Body_Unit_i::SetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
     UnitName_ = std::string(name);
-    std::cout<<UnitName_<<" :SetName called"<<endl;
+    std::cout << UnitName_ << " :SetName called\n";
   }
   
 char * Body_Unit_i::GetName (
@@ -267,8 +265,8 @@ char * Body_Unit_i::GetName (
     , Error::EUnknown
   ))
   {
-    // Add your implementation here
-    std::cout<<UnitName_<<" :GetName called"<<endl;
+    std::cout << UnitName_ << " :GetName called\n";
+
     return CORBA::string_dup(UnitName_.c_str());
   }
 

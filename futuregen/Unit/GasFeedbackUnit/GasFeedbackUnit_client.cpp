@@ -32,7 +32,6 @@ int main (int argc, char* argv[])
     CosNaming::NamingContext_var naming_context =
       CosNaming::NamingContext::_narrow (naming_context_object.in ());
     
-    std::cout<<"CP1"<<std::endl;
     CosNaming::Name name(1);
     name.length(1);
     name[0].id = CORBA::string_dup ("Executive");

@@ -264,7 +264,11 @@ void Body_Executive_i::SetModuleResult (
       if(rt<0) {
 	cerr << "Network execution complete\n";
       }
+      else if(_mod_units.find(_network->module(rt)->_name)==_mod_units.end()) {
+	cerr <<  "Cannot find running unit " << _network->module(rt)->_name << endl;
+      }
       else {
+	
 	bool        rv2;
 	std::string str2;
 	
