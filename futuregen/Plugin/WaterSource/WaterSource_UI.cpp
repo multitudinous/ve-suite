@@ -165,13 +165,13 @@ void WaterSource_UI_Dialog::OnCaseTypeChange(wxCommandEvent &event)
 {
   if (r_case_type_eva->GetValue())
     {
-      t_enth->Enable(true);
-      t_temp->Enable(false);
+      t_enth->Enable(false);
+      t_temp->Enable(true);
     }
   else
     {
-      t_enth->Enable(false);
-      t_temp->Enable(true);
+      t_enth->Enable(true);
+      t_temp->Enable(false);
     }
 }
 

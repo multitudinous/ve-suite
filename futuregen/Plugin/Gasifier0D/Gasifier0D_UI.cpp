@@ -823,6 +823,11 @@ void GasiTabs::OnChangeGeom(wxCommandEvent &event)
       t_geo_stage2_len->Enable(true);
       t_geo_stage1_wall->Enable(true);
       t_geo_stage2_wall->Enable(true);
+	  t_burn_out->Enable(false);
+	  t_stage1_heatloss->Enable(false);
+      t_stage2_heatloss->Enable(false);
+	  t_LD_ratio->Enable(false);
+      cb_des_mode->Enable(false); 
     }
   else
     {
@@ -831,6 +836,10 @@ void GasiTabs::OnChangeGeom(wxCommandEvent &event)
       t_geo_stage2_len->Enable(false);
       t_geo_stage1_wall->Enable(false);
       t_geo_stage2_wall->Enable(false);
+	  t_burn_out->Enable(true);
+	  t_stage1_heatloss->Enable(true);
+      t_stage2_heatloss->Enable(true);
+      cb_des_mode->Enable(true); 
     }
 
 }
