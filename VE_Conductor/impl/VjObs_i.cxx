@@ -36,8 +36,11 @@
 #else
 #include <time.h>
 #endif
-//#include <vpr/vpr.h>
-//#include <vpr/Sync/Mutex.h>
+
+#include <vpr/vpr.h>
+#include <vpr/System.h>
+#include <vpr/Sync/Guard.h>
+#include <vpr/Util/Debug.h>
 
 #include "cfdReadParam.h"
 #include "cfdTeacher.h"

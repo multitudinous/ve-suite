@@ -36,30 +36,20 @@
 #else
 #include "VjObs.h"
 #endif
-//#include "CorbaManager.h"
-//#include "omniORB4/CORBA.h"
-//#include "Observer.h"
-#include <cstdlib>
-#include <vpr/vpr.h>
+
 #include <vpr/Sync/Mutex.h>
-#include <vpr/Sync/Guard.h>
-#include <vpr/Util/Debug.h>
 
 #ifdef _CLUSTER
-// Cluster Stuff
-#include <vpr/IO/SerializableObject.h>
 #include <cluster/ClusterManager.h>
-#include <plugins/ApplicationDataManager/UserData.h>
 #include <cluster/ClusterNetwork/ClusterNetwork.h>
 #include <cluster/ClusterNetwork/ClusterNode.h>
+#include <plugins/ApplicationDataManager/UserData.h>
+#include <vpr/IO/SerializableObject.h>
 #include "cfdStateInfo.h"
 #endif
 
 class cfdTeacher;
 class cfdReadParam;
-
-//#include "MutexInterface.h"   //yang-REI, the mutex interface
-//#include "cfdStateInfoImpl.h"   
 
 #ifdef _CFDCOMMANDARRAY
 #include "cfdGlobalBase.h"
@@ -232,12 +222,12 @@ protected:
    VjObs::obj_p_var clientInfoObserverDataArray;
    int numOfClientInfo;
    bool _unusedNewData;
-   //MutexInterface corba_mutex;   //yang-REI, list of things replaced with the mutex interface version
    void GetCfdStateVariables( void );
+
 #ifdef _CLUSTER
-   // Cluster Stuff
    virtual void GetUpdateClusterStateVariables( void );
 #endif
+
 #ifdef _TAO   
    void setNumDatasets(const short value) throw (CORBA::SystemException);
    short getNumDatasets( void ) throw (CORBA::SystemException);
@@ -338,7 +328,7 @@ protected:
    void setTeacherState(CORBA::Short value);
    CORBA::Short getTeacherState( void );
 #endif
-   vpr::Mutex  mValueLock;  /**< A mutex to protect variables accesses */
+   vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
 
    // Buffer variables...always right
    short mNumScalars;
