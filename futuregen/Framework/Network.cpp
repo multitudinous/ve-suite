@@ -2726,31 +2726,9 @@ void  Network::OnShowLinkContent(wxCommandEvent &event)
 {
   int mod, port;
   char *linkresult;
-  Interface linkintf;
   int ipos;
   double temp;
-  
-  std::vector<wxString> col1;
-  std::vector<wxString> col2;
-  std::vector<wxString> col3;
-
-  col1.push_back("CO");  col2.push_back("");
-  col1.push_back("H2");  col2.push_back("");
-  col1.push_back("CH4"); col2.push_back("");
-  col1.push_back("H2S"); col2.push_back("");
-  col1.push_back("COS"); col2.push_back("");
-  col1.push_back("NH3"); col2.push_back("");
-  col1.push_back("HCl"); col2.push_back("");
-  col1.push_back("CO2"); col2.push_back("");
-  col1.push_back("H2O"); col2.push_back("");
-  col1.push_back("N2");  col2.push_back("");
-  col1.push_back("Ar");  col2.push_back("");
-  col1.push_back("O2");  col2.push_back("");
-  col1.push_back("SO2"); col2.push_back("");
-  col1.push_back("SO3"); col2.push_back("");
-  col1.push_back("NO");  col2.push_back("");
-  col1.push_back("NO2"); col2.push_back("");
-
+  UIDialog * port_dlg;
   mod = links[m_selLink]->Fr_mod; //The to Mod are actually the from module for the data flow
   port = links[m_selLink]->Fr_port;
   try {
@@ -2761,64 +2739,52 @@ void  Network::OnShowLinkContent(wxCommandEvent &event)
     cerr << "Maybe Engine is down" << endl;
     return;
   }
-  Package p;
-  p.SetSysId("linkresult.xml");
-  p.Load(linkresult, strlen(linkresult));
-  linkintf = p.intfs[0];
-  
-  unsigned int i;
-  double total_val = 0.0;
-  char col2val[256];
-
-  for(i=0; i<col1.size(); i++) {
-    double val;
-    linkintf.getVal((std::string)(col1[i].c_str()), val);
-    total_val += val;
-    sprintf(col2val, "%.2lf", val);
-    col2[i] = (wxString)(col2val);
-  }
-
-  col3.resize(col1.size());
-  char col3val[256];
-  
-
-  for(i=0; i<col3.size(); i++)
+  if (linkresult!=NULL)
     {
-      if (total_val!=0)
-	{
-	  sprintf(col3val, "%.2lf", 100.0*atof(col2[i].c_str())/total_val);
-	  col3[i]=wxString(col3val);
-	}
-      else
-	col3[i]="0.0";
+      Package p;
+      p.SetSysId("linkresult.xml");
+      p.Load(linkresult, strlen(linkresult));
+      port_dlg = modules[mod].pl_mod->PortData(NULL,  &(p.intfs[0]));
+      
+      if (port_dlg!=NULL)
+	port_dlg->Show();
     }
-  std::vector<wxString> titles;
-  titles.push_back("Specie");
-  titles.push_back("lb-mol/hr");
-  titles.push_back("Mole %");
-  PortDialog* pd = new PortDialog("Stream Data");
-  
-  char double_buf[80];
-
-  sprintf(double_buf, "%g", linkintf.getDouble("TEMPERATURE"));
-  pd->SetVal("TEMP", double_buf);
-  sprintf(double_buf, "%g", linkintf.getDouble("PRESSURE"));
-  pd->SetVal("PRES", double_buf);
-  sprintf(double_buf, "%g", linkintf.getDouble("FLOWRATE"));
-  pd->SetVal("FLRT", double_buf);
-
-  pd->syngas->SetTitle(titles);
-  pd->Set3Cols(col1, col2, col3);
-
-  pd->ShowModal();
-
-  delete pd;
   
 }
 
 //////////////////////////////////////////////////////
 void  Network::OnShowResult(wxCommandEvent &event)
 {
+  char* result;
   
+  if (m_selMod<0)
+    return;
+
+  if (exec==NULL)
+    {
+      cerr<<"Not Connected yet!\n";
+      return;
+    }
+  try {
+    result = exec->GetModuleResult(m_selMod);
+  }
+  catch (CORBA::Exception &) {
+		
+    cerr << "Maybe Computational Engine is down" << endl;
+    return;
+  }
+
+  if (result!=NULL)
+    {
+      Package p;
+      p.SetSysId("linkresult.xml");
+      p.Load(result, strlen(result));
+
+      modules[m_selMod].pl_mod->UnPackResult(&p.intfs[0]);
+      UIDialog * hello;
+      hello = modules[m_selMod].pl_mod->Result(NULL);
+      if (hello!=NULL)
+	hello->Show();
+    }
 }
 

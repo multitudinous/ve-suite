@@ -3,7 +3,6 @@ WX_CXX = $(shell wx-config --cxxflags)
 WX_LIBS = $(shell wx-config --libs)
 VE_UI_HOME = ./../VE_UI
 IDL_HOME = ./../IDL
-XERCESCROOT=/usr/local/xerces-c-src_2_5_0
 
 PLATFORM = LINUX
 COMPILER = g++

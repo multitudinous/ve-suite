@@ -137,7 +137,7 @@ s29:	$(OBJ29)
 	$(CXX) -g -shared -o libWaterSource.so $(OBJ29)
 
 clean:
-	rm -rf *.o $(PLUGIN) $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) \
+	rm -rf *.so *.o $(PLUGIN) $(OBJ1) $(OBJ2) $(OBJ3) $(OBJ4) \
 	$(OBJ5) $(OBJ6) $(OBJ7) $(OBJ8) $(OBJ9) $(OBJ10) $(OBJ11) \
 	$(OBJ12) $(OBJ13) $(OBJ14) $(OBJ15) $(OBJ16) $(OBJ17) $(OBJ18) \
 	$(OBJ19) $(OBJ20) $(OBJ21) $(OBJ22) $(OBJ23) $(OBJ24) $(OBJ25) \

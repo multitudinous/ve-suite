@@ -73,6 +73,9 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
   virtual UIDialog* Result(wxWindow* parent);
   //This returns the Result dialog of the module
 
+  virtual UIDialog* PortData(wxWindow* parent,  Interface *intf);
+  //This returns the PortData dialog of the module
+
   virtual unsigned int GetID();
   //This is the ID to identify the module
 
@@ -91,8 +94,7 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
 
   //This is to unpack the result from the 
   virtual void UnPackResult(Interface * intf) ;
-  //This is the save function of the module. 
-
+  
   //To Get around the Memory allocation problem of windows dll
   //Add the calls for the size. So the main program can preallocate memory for it
 
@@ -116,6 +118,7 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
 
   UIDialog* dlg;
   TextResultDialog* result_dlg;
+  TextResultDialog* port_dlg;
   Interface mod_pack;
   wxPoint pos; //The Position to draw Icon;
   std::vector<wxString> v_desc;

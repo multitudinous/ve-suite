@@ -1,4 +1,3 @@
-
 // -*- C++ -*-
 //
 // $Id$
@@ -16,31 +15,25 @@
 //       Irvine, CA
 //       USA
 //       http://doc.ece.uci.edu/
-// and
-//       Institute for Software Integrated Systems
-//       Vanderbilt University
-//       Nashville, TN
-//       USA
-//       http://www.isis.vanderbilt.edu/
 //
 // Information about TAO is available at:
 //     http://www.cs.wustl.edu/~schmidt/TAO.html
 
 // TAO_IDL - Generated from
-// be/be_codegen.cpp:338
+// be/be_codegen.cpp:314
 
 
 #include "VjObsC.h"
-#include "tao/Exception_Data.h"
-#include "tao/Invocation_Adapter.h"
-#include "tao/Object_T.h"
-#include "tao/Typecode.h"
-#include "tao/Any_Impl_T.h"
-#include "tao/Any_Dual_Impl_T.h"
-#include "tao/Basic_Arguments.h"
-#include "tao/UB_String_Arguments.h"
-#include "tao/Var_Size_Argument_T.h"
-#include "ace/OS_NS_string.h"
+#include "tao/Stub.h"
+#include "tao/Invocation.h"
+#include "tao/PortableInterceptor.h"
+
+#if TAO_HAS_INTERCEPTORS == 1
+#include "tao/RequestInfo_Util.h"
+#include "tao/ClientRequestInfo_i.h"
+#include "tao/ClientInterceptorAdapter.h"
+#endif  /* TAO_HAS_INTERCEPTORS == 1 */
+
 
 #if defined (__BORLANDC__)
 #pragma option -w-rvl -w-rch -w-ccc -w-aus -w-sig
@@ -51,141 +44,14345 @@
 #endif /* !defined INLINE */
 
 // TAO_IDL - Generated from
-// be/be_visitor_arg_traits.cpp:62
+// be/be_visitor_interface/interface_cs.cpp:61
 
-// Arg traits specializations.
-namespace TAO
-{
-  
-  // TAO_IDL - Generated from
-  // be/be_visitor_arg_traits.cpp:265
+int VjObs::_tao_class_id = 0;
 
-#if !defined (_VJOBS_SCALAR_P__ARG_TRAITS_CS_)
-#define _VJOBS_SCALAR_P__ARG_TRAITS_CS_
-  
-  ACE_TEMPLATE_SPECIALIZATION
-  class  Arg_Traits<VjObs::scalar_p>
-    : public
-        Var_Size_Arg_Traits_T<
-            VjObs::scalar_p,
-            VjObs::scalar_p_var,
-            VjObs::scalar_p_out
-          >
-  {
-  };
-
-#endif /* end #if !defined */
-  
-  // TAO_IDL - Generated from
-  // be/be_visitor_arg_traits.cpp:265
-
-#if !defined (_VJOBS_OBJ_P__ARG_TRAITS_CS_)
-#define _VJOBS_OBJ_P__ARG_TRAITS_CS_
-  
-  ACE_TEMPLATE_SPECIALIZATION
-  class  Arg_Traits<VjObs::obj_p>
-    : public
-        Var_Size_Arg_Traits_T<
-            VjObs::obj_p,
-            VjObs::obj_p_var,
-            VjObs::obj_p_out
-          >
-  {
-  };
-
-#endif /* end #if !defined */
-}
-
-
-// TAO_IDL - Generated from
-// be/be_visitor_interface/interface_cs.cpp:60
-
-// Traits specializations for VjObs.
-
-ACE_TEMPLATE_CLASS_MEMBER_SPECIALIZATION
 VjObs_ptr
-TAO::Objref_Traits<VjObs>::tao_duplicate (
+tao_VjObs_duplicate (
     VjObs_ptr p
   )
 {
   return VjObs::_duplicate (p);
 }
 
-ACE_TEMPLATE_CLASS_MEMBER_SPECIALIZATION
 void
-TAO::Objref_Traits<VjObs>::tao_release (
+tao_VjObs_release (
     VjObs_ptr p
   )
 {
   CORBA::release (p);
 }
 
-ACE_TEMPLATE_CLASS_MEMBER_SPECIALIZATION
 VjObs_ptr
-TAO::Objref_Traits<VjObs>::tao_nil (void)
+tao_VjObs_nil (
+    void
+  )
 {
   return VjObs::_nil ();
 }
 
-ACE_TEMPLATE_CLASS_MEMBER_SPECIALIZATION
-CORBA::Boolean
-TAO::Objref_Traits<VjObs>::tao_marshal (
-    VjObs_ptr p,
-    TAO_OutputCDR & cdr
+VjObs_ptr
+tao_VjObs_narrow (
+    CORBA::Object *p
+    ACE_ENV_ARG_DECL
   )
 {
-  return p->marshal (cdr);
+  return VjObs::_narrow (p ACE_ENV_ARG_PARAMETER);
 }
 
-// Function pointer for collocation factory initialization.
-TAO::Collocation_Proxy_Broker * 
-(*_TAO_VjObs_Proxy_Broker_Factory_function_pointer) (
+CORBA::Object *
+tao_VjObs_upcast (
+    void *src
+  )
+{
+  VjObs **tmp =
+    ACE_static_cast (VjObs **, src);
+  return *tmp;
+}
+
+// TAO_IDL - Generated from
+// be/be_interface.cpp:721
+
+// *************************************************************
+// VjObs_var
+// *************************************************************
+
+VjObs_var::VjObs_var (void)
+  : ptr_ (VjObs::_nil ())
+{}
+
+::VjObs_ptr
+VjObs_var::ptr (void) const
+{
+  return this->ptr_;
+}
+
+VjObs_var::VjObs_var (const ::VjObs_var &p)
+  : TAO_Base_var (),
+    ptr_ (VjObs::_duplicate (p.ptr ()))
+{}
+
+VjObs_var::~VjObs_var (void)
+{
+  CORBA::release (this->ptr_);
+}
+
+VjObs_var &
+VjObs_var::operator= (VjObs_ptr p)
+{
+  CORBA::release (this->ptr_);
+  this->ptr_ = p;
+  return *this;
+}
+
+VjObs_var &
+VjObs_var::operator= (const ::VjObs_var &p)
+{
+  if (this != &p)
+  {
+    CORBA::release (this->ptr_);
+    this->ptr_ = ::VjObs::_duplicate (p.ptr ());
+  }
+  return *this;
+}
+
+VjObs_var::operator const ::VjObs_ptr &() const // cast
+{
+  return this->ptr_;
+}
+
+VjObs_var::operator ::VjObs_ptr &() // cast 
+{
+  return this->ptr_;
+}
+
+::VjObs_ptr
+VjObs_var::operator-> (void) const
+{
+  return this->ptr_;
+}
+
+::VjObs_ptr
+VjObs_var::in (void) const
+{
+  return this->ptr_;
+}
+
+::VjObs_ptr &
+VjObs_var::inout (void)
+{
+  return this->ptr_;
+}
+
+::VjObs_ptr &
+VjObs_var::out (void)
+{
+  CORBA::release (this->ptr_);
+  this->ptr_ = ::VjObs::_nil ();
+  return this->ptr_;
+}
+
+::VjObs_ptr
+VjObs_var::_retn (void)
+{
+  // yield ownership of managed obj reference
+  ::VjObs_ptr val = this->ptr_;
+  this->ptr_ = ::VjObs::_nil ();
+  return val;
+}
+
+::VjObs_ptr
+VjObs_var::tao_duplicate (VjObs_ptr p)
+{
+  return ::VjObs::_duplicate (p);
+}
+
+void
+VjObs_var::tao_release (VjObs_ptr p)
+{
+  CORBA::release (p);
+}
+
+::VjObs_ptr
+VjObs_var::tao_nil (void)
+{
+  return ::VjObs::_nil ();
+}
+
+::VjObs_ptr
+VjObs_var::tao_narrow (
+    CORBA::Object *p
+    ACE_ENV_ARG_DECL
+  )
+{
+  return ::VjObs::_narrow (p ACE_ENV_ARG_PARAMETER);
+}
+
+CORBA::Object *
+VjObs_var::tao_upcast (void *src)
+{
+  VjObs **tmp =
+    ACE_static_cast (VjObs **, src);
+  return *tmp;
+}
+
+// TAO_IDL - Generated from
+// be/be_interface.cpp:1030
+
+// *************************************************************
+// VjObs_out
+// *************************************************************
+
+VjObs_out::VjObs_out (VjObs_ptr &p)
+  : ptr_ (p)
+{
+  this->ptr_ = ::VjObs::_nil ();
+}
+
+VjObs_out::VjObs_out (VjObs_var &p)
+  : ptr_ (p.out ())
+{
+  CORBA::release (this->ptr_);
+  this->ptr_ = ::VjObs::_nil ();
+}
+
+VjObs_out::VjObs_out (const ::VjObs_out &p)
+  : ptr_ (ACE_const_cast (VjObs_out &, p).ptr_)
+{}
+
+::VjObs_out &
+VjObs_out::operator= (const ::VjObs_out &p)
+{
+  this->ptr_ = ACE_const_cast (VjObs_out&, p).ptr_;
+  return *this;
+}
+
+VjObs_out &
+VjObs_out::operator= (const ::VjObs_var &p)
+{
+  this->ptr_ = ::VjObs::_duplicate (p.ptr ());
+  return *this;
+}
+
+VjObs_out &
+VjObs_out::operator= (VjObs_ptr p)
+{
+  this->ptr_ = p;
+  return *this;
+}
+
+VjObs_out::operator ::VjObs_ptr &() // cast
+{
+  return this->ptr_;
+}
+
+::VjObs_ptr &
+VjObs_out::ptr (void)
+{
+  return this->ptr_;
+}
+
+::VjObs_ptr
+VjObs_out::operator-> (void)
+{
+  return this->ptr_;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_interface/interceptors_cs.cpp:56
+
+#if (TAO_HAS_INTERCEPTORS == 1)
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_update : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_update (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_update (const TAO_ClientRequestInfo_VjObs_update &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_update &);
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_update::TAO_ClientRequestInfo_VjObs_update (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_update::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_update::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_update::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_update_scalar : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_update_scalar (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::scalar_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_update_scalar (const TAO_ClientRequestInfo_VjObs_update_scalar &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_update_scalar &);
+  
+  ::VjObs::scalar_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_update_scalar::TAO_ClientRequestInfo_VjObs_update_scalar (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_update_scalar::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_update_scalar::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_update_scalar::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_update_scalar::result (::VjObs::scalar_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_update_vector : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_update_vector (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::scalar_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_update_vector (const TAO_ClientRequestInfo_VjObs_update_vector &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_update_vector &);
+  
+  ::VjObs::scalar_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_update_vector::TAO_ClientRequestInfo_VjObs_update_vector (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_update_vector::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_update_vector::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_update_vector::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_update_vector::result (::VjObs::scalar_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_geo_name : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_geo_name (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::scalar_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_geo_name (const TAO_ClientRequestInfo_VjObs_get_geo_name &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_geo_name &);
+  
+  ::VjObs::scalar_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_geo_name::TAO_ClientRequestInfo_VjObs_get_geo_name (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_geo_name::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_geo_name::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_geo_name::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_geo_name::result (::VjObs::scalar_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_teacher_name : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_teacher_name (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::scalar_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_teacher_name (const TAO_ClientRequestInfo_VjObs_get_teacher_name &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_teacher_name &);
+  
+  ::VjObs::scalar_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_teacher_name::TAO_ClientRequestInfo_VjObs_get_teacher_name (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_teacher_name::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_teacher_name::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_teacher_name::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_teacher_name::result (::VjObs::scalar_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_sc_num : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_sc_num (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_sc_num (const TAO_ClientRequestInfo_VjObs_get_sc_num &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_sc_num &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_sc_num::TAO_ClientRequestInfo_VjObs_get_sc_num (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_sc_num::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_sc_num::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_sc_num::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_sc_num::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_geo_num : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_geo_num (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_geo_num (const TAO_ClientRequestInfo_VjObs_get_geo_num &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_geo_num &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_geo_num::TAO_ClientRequestInfo_VjObs_get_geo_num (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_geo_num::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_geo_num::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_geo_num::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_geo_num::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_teacher_num : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_teacher_num (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_teacher_num (const TAO_ClientRequestInfo_VjObs_get_teacher_num &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_teacher_num &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_teacher_num::TAO_ClientRequestInfo_VjObs_get_teacher_num (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_teacher_num::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_teacher_num::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_teacher_num::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_teacher_num::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_perf : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_perf (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (char * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_perf (const TAO_ClientRequestInfo_VjObs_get_perf &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_perf &);
+  
+  char * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_perf::TAO_ClientRequestInfo_VjObs_get_perf (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_perf::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_perf::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_perf::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_perf::result (char * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_SetClientInfoFlag : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_SetClientInfoFlag (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Short & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_SetClientInfoFlag (const TAO_ClientRequestInfo_VjObs_SetClientInfoFlag &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_SetClientInfoFlag &);
+  const CORBA::Short & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_SetClientInfoFlag::TAO_ClientRequestInfo_VjObs_SetClientInfoFlag (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Short & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_SetClientInfoFlag::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_SetClientInfoFlag::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_SetClientInfoFlag::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_SetClientInfoData : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_SetClientInfoData (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const VjObs::obj_p & o);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_SetClientInfoData (const TAO_ClientRequestInfo_VjObs_SetClientInfoData &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_SetClientInfoData &);
+  const VjObs::obj_p & o_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_SetClientInfoData::TAO_ClientRequestInfo_VjObs_SetClientInfoData (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const VjObs::obj_p & o    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    o_ (o)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_SetClientInfoData::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<=  this->o_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_SetClientInfoData::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_SetClientInfoData::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_GetClientInfoData : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_GetClientInfoData (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::obj_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_GetClientInfoData (const TAO_ClientRequestInfo_VjObs_GetClientInfoData &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_GetClientInfoData &);
+  
+  ::VjObs::obj_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_GetClientInfoData::TAO_ClientRequestInfo_VjObs_GetClientInfoData (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_GetClientInfoData::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_GetClientInfoData::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_GetClientInfoData::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_GetClientInfoData::result (::VjObs::obj_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_GetNumberOfSounds : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_GetNumberOfSounds (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_GetNumberOfSounds (const TAO_ClientRequestInfo_VjObs_GetNumberOfSounds &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_GetNumberOfSounds &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_GetNumberOfSounds::TAO_ClientRequestInfo_VjObs_GetNumberOfSounds (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_GetNumberOfSounds::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_GetNumberOfSounds::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_GetNumberOfSounds::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_GetNumberOfSounds::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_GetSoundNameArray : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_GetSoundNameArray (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::scalar_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_GetSoundNameArray (const TAO_ClientRequestInfo_VjObs_GetSoundNameArray &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_GetSoundNameArray &);
+  
+  ::VjObs::scalar_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_GetSoundNameArray::TAO_ClientRequestInfo_VjObs_GetSoundNameArray (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_GetSoundNameArray::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_GetSoundNameArray::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_GetSoundNameArray::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_GetSoundNameArray::result (::VjObs::scalar_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_dataset_names : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_dataset_names (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::scalar_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_dataset_names (const TAO_ClientRequestInfo_VjObs_get_dataset_names &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_dataset_names &);
+  
+  ::VjObs::scalar_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_dataset_names::TAO_ClientRequestInfo_VjObs_get_dataset_names (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_dataset_names::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_dataset_names::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_dataset_names::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_dataset_names::result (::VjObs::scalar_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_dataset_types : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_dataset_types (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::obj_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_dataset_types (const TAO_ClientRequestInfo_VjObs_get_dataset_types &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_dataset_types &);
+  
+  ::VjObs::obj_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_dataset_types::TAO_ClientRequestInfo_VjObs_get_dataset_types (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_dataset_types::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_dataset_types::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_dataset_types::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_dataset_types::result (::VjObs::obj_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::obj_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset (const TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset &);
+  
+  ::VjObs::obj_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset::TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset::result (::VjObs::obj_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::VjObs::obj_p * result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset (const TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset &);
+  
+  ::VjObs::obj_p * _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset::TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset::result (::VjObs::obj_p * result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setNumDatasets : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setNumDatasets (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Short & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setNumDatasets (const TAO_ClientRequestInfo_VjObs_setNumDatasets &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setNumDatasets &);
+  const CORBA::Short & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setNumDatasets::TAO_ClientRequestInfo_VjObs_setNumDatasets (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Short & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setNumDatasets::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setNumDatasets::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setNumDatasets::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getNumDatasets : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getNumDatasets (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getNumDatasets (const TAO_ClientRequestInfo_VjObs_getNumDatasets &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getNumDatasets &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getNumDatasets::TAO_ClientRequestInfo_VjObs_getNumDatasets (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getNumDatasets::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getNumDatasets::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getNumDatasets::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getNumDatasets::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars (const TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars::TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setNumVectors : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setNumVectors (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Short & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setNumVectors (const TAO_ClientRequestInfo_VjObs_setNumVectors &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setNumVectors &);
+  const CORBA::Short & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setNumVectors::TAO_ClientRequestInfo_VjObs_setNumVectors (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Short & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setNumVectors::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setNumVectors::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setNumVectors::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getNumVectors : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getNumVectors (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getNumVectors (const TAO_ClientRequestInfo_VjObs_getNumVectors &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getNumVectors &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getNumVectors::TAO_ClientRequestInfo_VjObs_getNumVectors (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getNumVectors::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getNumVectors::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getNumVectors::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getNumVectors::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setNumGeoArrays : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setNumGeoArrays (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Short & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setNumGeoArrays (const TAO_ClientRequestInfo_VjObs_setNumGeoArrays &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setNumGeoArrays &);
+  const CORBA::Short & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setNumGeoArrays::TAO_ClientRequestInfo_VjObs_setNumGeoArrays (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Short & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setNumGeoArrays::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setNumGeoArrays::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setNumGeoArrays::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getNumGeoArrays : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getNumGeoArrays (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getNumGeoArrays (const TAO_ClientRequestInfo_VjObs_getNumGeoArrays &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getNumGeoArrays &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getNumGeoArrays::TAO_ClientRequestInfo_VjObs_getNumGeoArrays (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getNumGeoArrays::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getNumGeoArrays::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getNumGeoArrays::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getNumGeoArrays::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setClients : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setClients (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Long & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setClients (const TAO_ClientRequestInfo_VjObs_setClients &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setClients &);
+  const CORBA::Long & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setClients::TAO_ClientRequestInfo_VjObs_setClients (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Long & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setClients::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setClients::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setClients::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getClients : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getClients (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Long result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getClients (const TAO_ClientRequestInfo_VjObs_getClients &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getClients &);
+  
+  ::CORBA::Long _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getClients::TAO_ClientRequestInfo_VjObs_getClients (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getClients::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getClients::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getClients::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getClients::result (CORBA::Long result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setIsoValue : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setIsoValue (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Long & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setIsoValue (const TAO_ClientRequestInfo_VjObs_setIsoValue &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setIsoValue &);
+  const CORBA::Long & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setIsoValue::TAO_ClientRequestInfo_VjObs_setIsoValue (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Long & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setIsoValue::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setIsoValue::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setIsoValue::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getIsoValue : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getIsoValue (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Long result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getIsoValue (const TAO_ClientRequestInfo_VjObs_getIsoValue &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getIsoValue &);
+  
+  ::CORBA::Long _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getIsoValue::TAO_ClientRequestInfo_VjObs_getIsoValue (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getIsoValue::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getIsoValue::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getIsoValue::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getIsoValue::result (CORBA::Long result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setSc : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setSc (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Long & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setSc (const TAO_ClientRequestInfo_VjObs_setSc &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setSc &);
+  const CORBA::Long & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setSc::TAO_ClientRequestInfo_VjObs_setSc (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Long & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setSc::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setSc::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setSc::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getSc : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getSc (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Long result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getSc (const TAO_ClientRequestInfo_VjObs_getSc &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getSc &);
+  
+  ::CORBA::Long _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getSc::TAO_ClientRequestInfo_VjObs_getSc (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getSc::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getSc::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getSc::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getSc::result (CORBA::Long result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setMin : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setMin (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Long & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setMin (const TAO_ClientRequestInfo_VjObs_setMin &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setMin &);
+  const CORBA::Long & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setMin::TAO_ClientRequestInfo_VjObs_setMin (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Long & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setMin::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setMin::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setMin::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getMin : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getMin (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Long result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getMin (const TAO_ClientRequestInfo_VjObs_getMin &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getMin &);
+  
+  ::CORBA::Long _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getMin::TAO_ClientRequestInfo_VjObs_getMin (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getMin::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getMin::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getMin::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getMin::result (CORBA::Long result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setMax : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setMax (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Long & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setMax (const TAO_ClientRequestInfo_VjObs_setMax &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setMax &);
+  const CORBA::Long & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setMax::TAO_ClientRequestInfo_VjObs_setMax (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Long & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setMax::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setMax::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setMax::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getMax : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getMax (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Long result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getMax (const TAO_ClientRequestInfo_VjObs_getMax &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getMax &);
+  
+  ::CORBA::Long _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getMax::TAO_ClientRequestInfo_VjObs_getMax (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getMax::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getMax::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getMax::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getMax::result (CORBA::Long result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setId : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setId (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Long & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setId (const TAO_ClientRequestInfo_VjObs_setId &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setId &);
+  const CORBA::Long & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setId::TAO_ClientRequestInfo_VjObs_setId (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Long & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setId::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setId::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setId::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getId : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getId (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Long result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getId (const TAO_ClientRequestInfo_VjObs_getId &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getId &);
+  
+  ::CORBA::Long _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getId::TAO_ClientRequestInfo_VjObs_getId (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getId::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getId::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getId::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getId::result (CORBA::Long result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setGeoState : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setGeoState (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Long & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setGeoState (const TAO_ClientRequestInfo_VjObs_setGeoState &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setGeoState &);
+  const CORBA::Long & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setGeoState::TAO_ClientRequestInfo_VjObs_setGeoState (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Long & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setGeoState::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setGeoState::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setGeoState::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getGeoState : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getGeoState (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Long result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getGeoState (const TAO_ClientRequestInfo_VjObs_getGeoState &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getGeoState &);
+  
+  ::CORBA::Long _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getGeoState::TAO_ClientRequestInfo_VjObs_getGeoState (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getGeoState::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getGeoState::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getGeoState::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getGeoState::result (CORBA::Long result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setPostdataState : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setPostdataState (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Short & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setPostdataState (const TAO_ClientRequestInfo_VjObs_setPostdataState &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setPostdataState &);
+  const CORBA::Short & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setPostdataState::TAO_ClientRequestInfo_VjObs_setPostdataState (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Short & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setPostdataState::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setPostdataState::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setPostdataState::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getPostdataState : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getPostdataState (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getPostdataState (const TAO_ClientRequestInfo_VjObs_getPostdataState &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getPostdataState &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getPostdataState::TAO_ClientRequestInfo_VjObs_getPostdataState (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getPostdataState::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getPostdataState::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getPostdataState::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getPostdataState::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setPreState : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setPreState (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Short & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setPreState (const TAO_ClientRequestInfo_VjObs_setPreState &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setPreState &);
+  const CORBA::Short & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setPreState::TAO_ClientRequestInfo_VjObs_setPreState (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Short & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setPreState::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setPreState::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setPreState::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getPreState : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getPreState (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getPreState (const TAO_ClientRequestInfo_VjObs_getPreState &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getPreState &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getPreState::TAO_ClientRequestInfo_VjObs_getPreState (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getPreState::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getPreState::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getPreState::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getPreState::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setTimesteps : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setTimesteps (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Short & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setTimesteps (const TAO_ClientRequestInfo_VjObs_setTimesteps &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setTimesteps &);
+  const CORBA::Short & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setTimesteps::TAO_ClientRequestInfo_VjObs_setTimesteps (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Short & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setTimesteps::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setTimesteps::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setTimesteps::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getTimesteps : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getTimesteps (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getTimesteps (const TAO_ClientRequestInfo_VjObs_getTimesteps &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getTimesteps &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getTimesteps::TAO_ClientRequestInfo_VjObs_getTimesteps (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getTimesteps::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getTimesteps::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getTimesteps::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getTimesteps::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setNumTeacherArrays : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setNumTeacherArrays (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Short & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setNumTeacherArrays (const TAO_ClientRequestInfo_VjObs_setNumTeacherArrays &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setNumTeacherArrays &);
+  const CORBA::Short & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setNumTeacherArrays::TAO_ClientRequestInfo_VjObs_setNumTeacherArrays (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Short & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setNumTeacherArrays::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setNumTeacherArrays::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setNumTeacherArrays::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getNumTeacherArrays : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getNumTeacherArrays (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getNumTeacherArrays (const TAO_ClientRequestInfo_VjObs_getNumTeacherArrays &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getNumTeacherArrays &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getNumTeacherArrays::TAO_ClientRequestInfo_VjObs_getNumTeacherArrays (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getNumTeacherArrays::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getNumTeacherArrays::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getNumTeacherArrays::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getNumTeacherArrays::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_setTeacherState : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_setTeacherState (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target,
+      const CORBA::Short & value);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+private:
+  TAO_ClientRequestInfo_VjObs_setTeacherState (const TAO_ClientRequestInfo_VjObs_setTeacherState &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_setTeacherState &);
+  const CORBA::Short & value_;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_setTeacherState::TAO_ClientRequestInfo_VjObs_setTeacherState (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target,
+    const CORBA::Short & value    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target),
+    value_ (value)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_setTeacherState::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  Dynamic::ParameterList_var safe_parameter_list = parameter_list;
+  
+  parameter_list->length (1);
+  CORBA::ULong len = 0;
+  (*parameter_list)[len].argument <<= value_;
+  (*parameter_list)[len].mode = CORBA::PARAM_IN;
+  len++;
+  
+  return safe_parameter_list._retn ();
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_setTeacherState::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_setTeacherState::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 1;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return result_any;
+}
+
+
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:76
+
+class TAO_ClientRequestInfo_VjObs_getTeacherState : public TAO_ClientRequestInfo_i
+{
+public:
+  TAO_ClientRequestInfo_VjObs_getTeacherState (
+      TAO_GIOP_Invocation *_tao_invocation,
+      CORBA::Object_ptr _tao_target);
+
+  virtual Dynamic::ParameterList * arguments (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual Dynamic::ExceptionList * exceptions (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+  
+  virtual CORBA::Any * result (ACE_ENV_SINGLE_ARG_DECL)
+    ACE_THROW_SPEC ((CORBA::SystemException));
+
+  void result (::CORBA::Short result);
+  
+private:
+  TAO_ClientRequestInfo_VjObs_getTeacherState (const TAO_ClientRequestInfo_VjObs_getTeacherState &);
+  void operator= (const TAO_ClientRequestInfo_VjObs_getTeacherState &);
+  
+  ::CORBA::Short _result;
+};
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/interceptors_cs.cpp:378
+
+TAO_ClientRequestInfo_VjObs_getTeacherState::TAO_ClientRequestInfo_VjObs_getTeacherState (
+    TAO_GIOP_Invocation *_tao_invocation,
+    CORBA::Object_ptr _tao_target    
+  )
+  : TAO_ClientRequestInfo_i (_tao_invocation, _tao_target)
+{}
+
+Dynamic::ParameterList *
+TAO_ClientRequestInfo_VjObs_getTeacherState::arguments (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the argument list on demand.
+  Dynamic::ParameterList *parameter_list =
+    TAO_RequestInfo_Util::make_parameter_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return parameter_list;
+}
+
+Dynamic::ExceptionList *
+TAO_ClientRequestInfo_VjObs_getTeacherState::exceptions (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the exception list on demand.
+  Dynamic::ExceptionList *exception_list =
+    TAO_RequestInfo_Util::make_exception_list (ACE_ENV_SINGLE_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  return exception_list;
+}
+
+CORBA::Any * 
+TAO_ClientRequestInfo_VjObs_getTeacherState::result (ACE_ENV_SINGLE_ARG_DECL)
+  ACE_THROW_SPEC ((CORBA::SystemException))
+{
+  // Generate the result on demand.
+  CORBA::Boolean tk_void_any = 0;
+  CORBA::Any *result_any =
+    TAO_RequestInfo_Util::make_any (tk_void_any ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
+  
+  CORBA::Any_var safe_result_any = result_any;
+  
+  (*result_any) <<= this->_result;
+  return safe_result_any._retn ();
+}
+
+void 
+TAO_ClientRequestInfo_VjObs_getTeacherState::result (CORBA::Short result)
+{
+  // Update the result. 
+  this->_result = result;
+}
+
+#endif /* TAO_HAS_INTERCEPTORS */
+
+// TAO_IDL - Generated from
+// be/be_visitor_interface/remote_proxy_impl_cs.cpp:31
+
+///////////////////////////////////////////////////////////////////////
+//                Base & Remote Proxy  Implementation. 
+//
+
+_TAO_VjObs_Proxy_Impl::_TAO_VjObs_Proxy_Impl (void)
+{}
+
+_TAO_VjObs_Remote_Proxy_Impl::_TAO_VjObs_Remote_Proxy_Impl (void)
+{}
+
+// Remote Implementation of the IDL interface methods
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::update (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "update",
+      6,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_update _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::scalar_p * _TAO_VjObs_Remote_Proxy_Impl::update_scalar (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::scalar_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::scalar_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::scalar_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "update_scalar",
+      13,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_update_scalar _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::scalar_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::scalar_p * _TAO_VjObs_Remote_Proxy_Impl::update_vector (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::scalar_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::scalar_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::scalar_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "update_vector",
+      13,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_update_vector _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::scalar_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::scalar_p * _TAO_VjObs_Remote_Proxy_Impl::get_geo_name (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::scalar_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::scalar_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::scalar_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_geo_name",
+      12,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_geo_name _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::scalar_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::scalar_p * _TAO_VjObs_Remote_Proxy_Impl::get_teacher_name (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::scalar_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::scalar_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::scalar_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_teacher_name",
+      16,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_teacher_name _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::scalar_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::get_sc_num (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_sc_num",
+      10,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_sc_num _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::get_geo_num (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_geo_num",
+      11,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_geo_num _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::get_teacher_num (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_teacher_num",
+      15,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_teacher_num _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+char * _TAO_VjObs_Remote_Proxy_Impl::get_perf (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::String_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_perf",
+      8,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_perf _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          char * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::SetClientInfoFlag (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Short value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "SetClientInfoFlag",
+      17,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_SetClientInfoFlag _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::SetClientInfoData (
+    CORBA_Object *_collocated_tao_target_,
+    const VjObs::obj_p & o
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "SetClientInfoData",
+      17,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_SetClientInfoData _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          o
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << o)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::obj_p * _TAO_VjObs_Remote_Proxy_Impl::GetClientInfoData (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::obj_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::obj_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::obj_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "GetClientInfoData",
+      17,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_GetClientInfoData _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::obj_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::GetNumberOfSounds (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "GetNumberOfSounds",
+      17,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_GetNumberOfSounds _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::scalar_p * _TAO_VjObs_Remote_Proxy_Impl::GetSoundNameArray (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::scalar_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::scalar_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::scalar_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "GetSoundNameArray",
+      17,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_GetSoundNameArray _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::scalar_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::scalar_p * _TAO_VjObs_Remote_Proxy_Impl::get_dataset_names (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::scalar_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::scalar_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::scalar_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_dataset_names",
+      17,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_dataset_names _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::scalar_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::obj_p * _TAO_VjObs_Remote_Proxy_Impl::get_dataset_types (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::obj_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::obj_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::obj_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_dataset_types",
+      17,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_dataset_types _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::obj_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::obj_p * _TAO_VjObs_Remote_Proxy_Impl::get_num_scalars_per_dataset (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::obj_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::obj_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::obj_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_num_scalars_per_dataset",
+      27,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_num_scalars_per_dataset _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::obj_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+::VjObs::obj_p * _TAO_VjObs_Remote_Proxy_Impl::get_num_vectors_per_dataset (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  VjObs::obj_p_var _tao_retval;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval._retn ());
+    }
+  
+  {
+    VjObs::obj_p *tmp;
+    ACE_NEW_RETURN (tmp, VjObs::obj_p, _tao_retval._retn ());
+    _tao_retval = tmp;
+  }
+  
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "get_num_vectors_per_dataset",
+      27,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_get_num_vectors_per_dataset _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval._retn ());
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval.inout ())
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  0
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          ::VjObs::obj_p * _tao_retval_info =
+            _tao_retval._retn ();
+          _tao_ri.result (_tao_retval_info);
+          _tao_retval = _tao_retval_info;
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval._retn ());
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval._retn ();
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setNumDatasets (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Short value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setNumDatasets",
+      14,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setNumDatasets _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::getNumDatasets (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getNumDatasets",
+      14,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getNumDatasets _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::getTotalNumberOfScalars (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getTotalNumberOfScalars",
+      23,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getTotalNumberOfScalars _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setNumVectors (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Short value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setNumVectors",
+      13,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setNumVectors _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::getNumVectors (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getNumVectors",
+      13,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getNumVectors _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setNumGeoArrays (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Short value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setNumGeoArrays",
+      15,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setNumGeoArrays _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::getNumGeoArrays (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getNumGeoArrays",
+      15,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getNumGeoArrays _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setClients (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Long value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setClients",
+      10,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setClients _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Long _TAO_VjObs_Remote_Proxy_Impl::getClients (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Long _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getClients",
+      10,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getClients _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Long _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setIsoValue (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Long value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setIsoValue",
+      11,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setIsoValue _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Long _TAO_VjObs_Remote_Proxy_Impl::getIsoValue (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Long _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getIsoValue",
+      11,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getIsoValue _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Long _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setSc (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Long value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setSc",
+      5,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setSc _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Long _TAO_VjObs_Remote_Proxy_Impl::getSc (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Long _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getSc",
+      5,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getSc _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Long _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setMin (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Long value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setMin",
+      6,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setMin _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Long _TAO_VjObs_Remote_Proxy_Impl::getMin (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Long _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getMin",
+      6,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getMin _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Long _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setMax (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Long value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setMax",
+      6,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setMax _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Long _TAO_VjObs_Remote_Proxy_Impl::getMax (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Long _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getMax",
+      6,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getMax _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Long _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setId (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Long value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setId",
+      5,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setId _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Long _TAO_VjObs_Remote_Proxy_Impl::getId (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Long _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getId",
+      5,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getId _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Long _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setGeoState (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Long value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setGeoState",
+      11,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setGeoState _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Long _TAO_VjObs_Remote_Proxy_Impl::getGeoState (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Long _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getGeoState",
+      11,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getGeoState _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Long _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setPostdataState (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Short value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setPostdataState",
+      16,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setPostdataState _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::getPostdataState (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getPostdataState",
+      16,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getPostdataState _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setPreState (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Short value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setPreState",
+      11,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setPreState _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::getPreState (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getPreState",
+      11,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getPreState _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setTimesteps (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Short value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setTimesteps",
+      12,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setTimesteps _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::getTimesteps (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getTimesteps",
+      12,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getTimesteps _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setNumTeacherArrays (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Short value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setNumTeacherArrays",
+      19,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setNumTeacherArrays _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::getNumTeacherArrays (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getNumTeacherArrays",
+      19,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getNumTeacherArrays _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+void _TAO_VjObs_Remote_Proxy_Impl::setTeacherState (
+    CORBA_Object *_collocated_tao_target_,
+    CORBA::Short value
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW (CORBA::INTERNAL ());
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "setTeacherState",
+      15,
+      1,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_setTeacherState _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_,
+          value
+        );
+      ACE_CHECK;
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK;
+
+          TAO_OutputCDR &_tao_out = _tao_call.out_stream ();
+          
+          if (!(
+              (_tao_out << value)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::MARSHAL (
+                      
+                    )
+                );
+            }
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK;
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    )
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+#if TAO_HAS_INTERCEPTORS == 1
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK;
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK;
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+}
+
+// TAO_IDL - Generated from
+// be/be_visitor_operation/remote_proxy_impl_cs.cpp:63
+
+CORBA::Short _TAO_VjObs_Remote_Proxy_Impl::getTeacherState (
+    CORBA_Object *_collocated_tao_target_
+  )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+{
+  ACE_DECLARE_NEW_CORBA_ENV;
+  CORBA::Short _tao_retval = 0;
+  TAO_Stub *istub = _collocated_tao_target_->_stubobj ();
+  
+  if (istub == 0)
+    {
+      ACE_THROW_RETURN (CORBA::INTERNAL (),_tao_retval);
+    }
+    
+  TAO_GIOP_Twoway_Invocation _tao_call (
+      istub,
+      "getTeacherState",
+      15,
+      0,
+      istub->orb_core ()
+    );
+  
+  int _invoke_status;
+  
+#if (TAO_HAS_INTERCEPTORS == 1)
+  TAO_ClientRequestInterceptor_Adapter _tao_vfr (
+      istub->orb_core ()->client_request_interceptors (),
+      &_tao_call,
+      _invoke_status
+    );
+  
+#endif  /* TAO_HAS_INTERCEPTORS */
+  
+  for (;;)
+    {
+      _invoke_status = TAO_INVOKE_EXCEPTION;
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      TAO_ClientRequestInfo_VjObs_getTeacherState _tao_ri (
+          &_tao_call,
+          _collocated_tao_target_
+        );
+      ACE_CHECK_RETURN (_tao_retval);
+      
+#endif /* TAO_HAS_INTERCEPTORS */
+      
+      CORBA::Short _tao_response_flag = TAO_TWOWAY_RESPONSE_FLAG;
+      TAO_INTERCEPTOR (_tao_ri.response_expected (1));
+      
+#if TAO_HAS_INTERCEPTORS == 1
+      
+      ACE_TRY
+        {
+          _tao_vfr.send_request (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              _tao_call.restart_flag (1);
+              continue;
+            }
+          
+#endif /* TAO_HAS_INTERCEPTORS */
+          
+          _tao_call.start (ACE_ENV_SINGLE_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          _tao_call.prepare_header (
+              ACE_static_cast (CORBA::Octet, _tao_response_flag)
+              ACE_ENV_ARG_PARAMETER
+            );
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          
+          _invoke_status =
+            _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+          TAO_INTERCEPTOR_CHECK_RETURN (_tao_retval);
+
+          if (_invoke_status == TAO_INVOKE_EXCEPTION)
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::UNKNOWN (
+                      CORBA::OMGVMCID | 1, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          else if (_invoke_status == TAO_INVOKE_RESTART)
+            {
+              TAO_INTERCEPTOR (
+                  _tao_ri.reply_status (_invoke_status);
+                  _tao_vfr.receive_other (
+                      &_tao_ri
+                      ACE_ENV_ARG_PARAMETER
+                    );
+                  ACE_TRY_CHECK;
+                )
+              
+              continue;
+            }
+          
+          TAO_InputCDR &_tao_in = _tao_call.inp_stream ();
+          
+          if (!(
+              (_tao_in >> _tao_retval)
+              ))
+            {
+              TAO_INTERCEPTOR_THROW_RETURN (
+                  CORBA::MARSHAL (
+                      TAO_DEFAULT_MINOR_CODE, CORBA::COMPLETED_YES
+                    ),
+                  _tao_retval
+                );
+            }
+          
+#if TAO_HAS_INTERCEPTORS == 1
+          CORBA::Short _tao_retval_info =
+            _tao_retval;
+          _tao_ri.result (_tao_retval_info);
+          
+          _tao_ri.reply_status (_invoke_status);
+          _tao_vfr.receive_reply (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+        }
+      ACE_CATCHANY
+        {
+          _tao_ri.exception (&ACE_ANY_EXCEPTION);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION
+              || _tao_status == PortableInterceptor::USER_EXCEPTION)
+            {
+              ACE_RE_THROW;
+            }
+        }
+      
+# if defined (ACE_HAS_EXCEPTIONS) \
+     && defined (ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS)
+      ACE_CATCHALL
+        {
+          CORBA::UNKNOWN ex;
+          
+          _tao_ri.exception (&ex);
+          _tao_vfr.receive_exception (
+              &_tao_ri
+              ACE_ENV_ARG_PARAMETER
+            );
+          ACE_TRY_CHECK;
+          
+          PortableInterceptor::ReplyStatus _tao_status =
+            _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+          ACE_TRY_CHECK;
+          
+          if (_tao_status == PortableInterceptor::SYSTEM_EXCEPTION)
+            ACE_TRY_THROW (ex);
+        }
+# endif  /* ACE_HAS_EXCEPTIONS && ACE_HAS_BROKEN_UNEXPECTED_EXCEPTIONS */
+      
+      ACE_ENDTRY;
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      PortableInterceptor::ReplyStatus _tao_status =
+        _tao_ri.reply_status (ACE_ENV_SINGLE_ARG_PARAMETER);
+      ACE_CHECK_RETURN (_tao_retval);
+      
+      if (_tao_status == PortableInterceptor::LOCATION_FORWARD
+          || _tao_status == PortableInterceptor::TRANSPORT_RETRY)
+        {
+          continue;
+        }
+      
+#endif  /* TAO_HAS_INTERCEPTORS */
+      
+      break;
+    }
+  
+  return _tao_retval;
+}
+
+//
+//            End  Base & Remote  Proxy Implemeentation. 
+///////////////////////////////////////////////////////////////////////
+
+// TAO_IDL - Generated from
+// be/be_visitor_interface/remote_proxy_broker_cs.cpp:31
+
+///////////////////////////////////////////////////////////////////////
+//           Remote & Base  Proxy Broker Implementation
+//
+
+_TAO_VjObs_Proxy_Broker::_TAO_VjObs_Proxy_Broker (void)
+{
+}
+
+_TAO_VjObs_Proxy_Broker::~_TAO_VjObs_Proxy_Broker (void)
+{
+}
+
+_TAO_VjObs_Proxy_Broker * (*_TAO_VjObs_Proxy_Broker_Factory_function_pointer) (
     CORBA::Object_ptr obj
   ) = 0;
 
+// Factory Member function Implementation.
+_TAO_VjObs_Remote_Proxy_Broker *
+_TAO_VjObs_Remote_Proxy_Broker::the_TAO_VjObs_Remote_Proxy_Broker (void)
+{
+  static ::_TAO_VjObs_Remote_Proxy_Broker remote_proxy_broker;
+  return &remote_proxy_broker;
+}
+
+_TAO_VjObs_Remote_Proxy_Broker::_TAO_VjObs_Remote_Proxy_Broker (void)
+{
+}
+
+_TAO_VjObs_Remote_Proxy_Broker::~_TAO_VjObs_Remote_Proxy_Broker (void)
+{
+}
+
+_TAO_VjObs_Proxy_Impl&
+_TAO_VjObs_Remote_Proxy_Broker::select_proxy (
+    ::VjObs *
+    ACE_ENV_ARG_DECL_NOT_USED
+  )
+{
+  return this->remote_proxy_impl_;
+}
+
+//
+//           End Remote & Base Proxy Broker Implementation
+///////////////////////////////////////////////////////////////////////
+
 // TAO_IDL - Generated from 
-// be/be_visitor_sequence/sequence_cs.cpp:65
+// be/be_visitor_interface/interface_cs.cpp:225
+
+VjObs::VjObs (int collocated)
+{
+  this->VjObs_setup_collocation (collocated);
+}
+
+void
+VjObs::VjObs_setup_collocation (int collocated)
+{
+  if (collocated)
+    this->the_TAO_VjObs_Proxy_Broker_ =
+      ::_TAO_VjObs_Proxy_Broker_Factory_function_pointer (this);
+  else
+    this->the_TAO_VjObs_Proxy_Broker_ =
+      ::_TAO_VjObs_Remote_Proxy_Broker::the_TAO_VjObs_Remote_Proxy_Broker ();
+}
+
+VjObs::~VjObs (void)
+{}
+
+void 
+VjObs::_tao_any_destructor (void *_tao_void_pointer)
+{
+  VjObs *tmp = ACE_static_cast (VjObs *, _tao_void_pointer);
+  CORBA::release (tmp);
+}
+
+VjObs_ptr
+VjObs::_narrow (
+    CORBA::Object_ptr obj
+    ACE_ENV_ARG_DECL
+  )
+{
+  if (CORBA::is_nil (obj))
+    {
+      return VjObs::_nil ();
+    }
+  
+  if (! obj->_is_local ())
+    {
+      CORBA::Boolean is_a =
+        obj->_is_a (
+            "IDL:VjObs:1.0"
+            ACE_ENV_ARG_PARAMETER
+          );
+      ACE_CHECK_RETURN (VjObs::_nil ());
+      
+      if (is_a == 0)
+        {
+          return VjObs::_nil ();
+        }
+    }
+  
+  return VjObs::_unchecked_narrow (obj ACE_ENV_ARG_PARAMETER);
+}
+
+VjObs_ptr 
+VjObs::_unchecked_narrow (
+    CORBA::Object_ptr obj
+    ACE_ENV_ARG_DECL_NOT_USED
+  )
+{
+  if (CORBA::is_nil (obj))
+    {
+      return VjObs::_nil ();
+    }
+  
+  if (! obj->_is_local ())
+    {
+      TAO_Stub* stub = obj->_stubobj ();
+      
+      if (stub != 0)
+        {
+          stub->_incr_refcnt ();
+        }
+      
+      VjObs_ptr default_proxy = VjObs::_nil ();
+      
+      if (
+          !CORBA::is_nil (stub->servant_orb_var ().ptr ()) &&
+          stub->servant_orb_var ()->orb_core ()->optimize_collocation_objects () &&
+          obj->_is_collocated () &&
+          _TAO_VjObs_Proxy_Broker_Factory_function_pointer != 0
+        )
+        {
+          ACE_NEW_RETURN (
+              default_proxy,
+              ::VjObs (
+                  stub,
+                  1,
+                  obj->_servant ()
+                ),
+              VjObs::_nil ()
+            );
+        }
+      
+      if (CORBA::is_nil (default_proxy))
+        {
+          ACE_NEW_RETURN (
+              default_proxy,
+              ::VjObs (
+                  stub,
+                  0,
+                  obj->_servant ()
+                ),
+              VjObs::_nil ()
+            );
+        }
+      
+      return default_proxy;
+    }
+  else 
+    return
+      ACE_reinterpret_cast (
+          VjObs_ptr,
+          obj->_tao_QueryInterface (
+              ACE_reinterpret_cast (
+                  ptr_arith_t,
+                  &VjObs::_tao_class_id
+                )
+            )
+        );
+}
+
+VjObs_ptr
+VjObs::_duplicate (VjObs_ptr obj)
+{
+  if (! CORBA::is_nil (obj))
+    {
+      obj->_add_ref ();
+    }
+  
+  return obj;
+}
+
+CORBA::Boolean
+VjObs::_is_a (
+    const char *value
+    ACE_ENV_ARG_DECL
+  )
+{
+  if (
+      !ACE_OS::strcmp (
+          (char *)value,
+          "IDL:VjObs:1.0"
+        ) ||
+      !ACE_OS::strcmp (
+          (char *)value,
+          "IDL:omg.org/CORBA/Object:1.0"
+        )
+     )
+    {
+      return 1; // success using local knowledge
+    }
+  else
+    {
+      return this->CORBA_Object::_is_a (
+          value
+          ACE_ENV_ARG_PARAMETER
+        );
+    }
+}
+
+void *VjObs::_tao_QueryInterface (ptr_arith_t type)
+{
+  void *retv = 0;
+  
+  if (type == ACE_reinterpret_cast (
+              ptr_arith_t,
+              &VjObs::_tao_class_id)
+            )
+    {
+      retv = ACE_reinterpret_cast (void*, this);
+    }
+  else if (type == ACE_reinterpret_cast (
+               ptr_arith_t,
+               &CORBA::Object::_tao_class_id)
+             )
+    {
+      retv =
+        ACE_reinterpret_cast (
+            void *,
+            ACE_static_cast (CORBA::Object_ptr, this)
+          );
+    }
+  
+  if (retv != 0)
+    {
+      this->_add_ref ();
+    }
+  
+  return retv;
+}
+
+const char* VjObs::_interface_repository_id (void) const
+{
+  return "IDL:VjObs:1.0";
+}
 
 #if !defined (_VJOBS_SCALAR_P_CS_)
 #define _VJOBS_SCALAR_P_CS_
 
+// TAO_IDL - Generated from
+// be/be_visitor_sequence/sequence_cs.cpp:250
+
+// *************************************************************
+// VjObs::scalar_p
+// *************************************************************
+
 VjObs::scalar_p::scalar_p (void)
 {}
 
-VjObs::scalar_p::scalar_p (
-    CORBA::ULong max
-  )
-  : TAO_Unbounded_String_Sequence
-    (max)
+VjObs::scalar_p::scalar_p (CORBA::ULong max)
+  : 
+
+#if !defined (TAO_USE_SEQUENCE_TEMPLATES)
+TAO_Unbounded_String_Sequence
+#else /* TAO_USE_SEQUENCE_TEMPLATES */
+TAO_Unbounded_String_Sequence
+
+#endif /* !TAO_USE_SEQUENCE_TEMPLATES */ 
+ (max)
 {}
 
 VjObs::scalar_p::scalar_p (
     CORBA::ULong max,
     CORBA::ULong length,
-    char * * buffer,
+    char * *buffer,
     CORBA::Boolean release
   )
-  : TAO_Unbounded_String_Sequence
-    (max, length, buffer, release)
+  : 
+
+#if !defined (TAO_USE_SEQUENCE_TEMPLATES)
+TAO_Unbounded_String_Sequence
+#else /* TAO_USE_SEQUENCE_TEMPLATES */
+TAO_Unbounded_String_Sequence
+
+#endif /* !TAO_USE_SEQUENCE_TEMPLATES */ 
+ (max, length, buffer, release)
 {}
 
-VjObs::scalar_p::scalar_p (
-    const scalar_p &seq
-  )
-  : TAO_Unbounded_String_Sequence
-    (seq)
+VjObs::scalar_p::scalar_p (const scalar_p &seq)
+  : 
+
+#if !defined (TAO_USE_SEQUENCE_TEMPLATES)
+TAO_Unbounded_String_Sequence
+#else /* TAO_USE_SEQUENCE_TEMPLATES */
+TAO_Unbounded_String_Sequence
+
+#endif /* !TAO_USE_SEQUENCE_TEMPLATES */ 
+ (seq)
 {}
 
-VjObs::scalar_p::~scalar_p (void)
+VjObs::scalar_p::~scalar_p (void) // dtor
 {}
 
-void VjObs::scalar_p::_tao_any_destructor (
-    void * _tao_void_pointer
-  )
+void VjObs::scalar_p::_tao_any_destructor (void *_tao_void_pointer)
 {
-  scalar_p * _tao_tmp_pointer =
-    ACE_static_cast (scalar_p *, _tao_void_pointer);
-  delete _tao_tmp_pointer;
+  scalar_p *tmp = ACE_static_cast (scalar_p*, _tao_void_pointer);
+  delete tmp;
 }
 
 #endif /* end #if !defined */
@@ -203,11 +14400,11 @@ static const CORBA::Long _oc_VjObs_scalar_p[] =
   ACE_NTOHL (0x616c6172), 
   ACE_NTOHL (0x5f703a31), 
   ACE_NTOHL (0x2e300000),  // repository ID = IDL:VjObs/scalar_p:1.0
-    9,
+  9,
   ACE_NTOHL (0x7363616c), 
   ACE_NTOHL (0x61725f70), 
   ACE_NTOHL (0x0),  // name = scalar_p
-    CORBA::tk_sequence, // typecode kind
+  CORBA::tk_sequence, // typecode kind
   16, // encapsulation length
     TAO_ENCAP_BYTE_ORDER, // byte order
     CORBA::tk_string, 
@@ -228,54 +14425,122 @@ static CORBA::TypeCode _tc_TAO_tc_VjObs_scalar_p (
   &_tc_TAO_tc_VjObs_scalar_p;
 
 // TAO_IDL - Generated from 
-// be/be_visitor_sequence/sequence_cs.cpp:65
+// be/be_visitor_sequence/gen_unbounded_sequence_cs.cpp:101
+
+#if !defined (TAO_USE_SEQUENCE_TEMPLATES)
+
+#if !defined (__TAO_UNBOUNDED_SEQUENCE_VJOBS_OBJ_P_CS_)
+#define __TAO_UNBOUNDED_SEQUENCE_VJOBS_OBJ_P_CS_
+
+void
+VjObs::_TAO_Unbounded_Sequence_VjObs_obj_p::_allocate_buffer (CORBA::ULong length)
+{
+  CORBA::Short* tmp = 0;
+  tmp = _TAO_Unbounded_Sequence_VjObs_obj_p::allocbuf (length);
+  
+  if (this->buffer_ != 0)
+    {
+      CORBA::Short *old =
+        ACE_reinterpret_cast (CORBA::Short *, this->buffer_);
+      
+      for (CORBA::ULong i = 0; i < this->length_; ++i)
+        {
+          tmp[i] = old[i];
+        }
+      
+      if (this->release_)
+        {
+          _TAO_Unbounded_Sequence_VjObs_obj_p::freebuf (old);
+        }
+    }
+  
+  this->buffer_ = tmp;
+}
+
+void
+VjObs::_TAO_Unbounded_Sequence_VjObs_obj_p::_deallocate_buffer (void)
+{
+  if (this->buffer_ == 0 || this->release_ == 0)
+    {
+      return;
+    }
+  
+  CORBA::Short *tmp =
+    ACE_reinterpret_cast (CORBA::Short *, this->buffer_);
+  _TAO_Unbounded_Sequence_VjObs_obj_p::freebuf (tmp);
+  this->buffer_ = 0;
+} 
+
+VjObs::_TAO_Unbounded_Sequence_VjObs_obj_p::~_TAO_Unbounded_Sequence_VjObs_obj_p (void)
+{
+  this->_deallocate_buffer ();
+}
+
+#endif /* end #if !defined */
+
+#endif /* !TAO_USE_SEQUENCE_TEMPLATES */ 
 
 #if !defined (_VJOBS_OBJ_P_CS_)
 #define _VJOBS_OBJ_P_CS_
 
+// TAO_IDL - Generated from
+// be/be_visitor_sequence/sequence_cs.cpp:250
+
+// *************************************************************
+// VjObs::obj_p
+// *************************************************************
+
 VjObs::obj_p::obj_p (void)
 {}
 
-VjObs::obj_p::obj_p (
-    CORBA::ULong max
-  )
-  : TAO_Unbounded_Sequence<
-        CORBA::Short
-      >
-    (max)
+VjObs::obj_p::obj_p (CORBA::ULong max)
+  : 
+
+#if !defined (TAO_USE_SEQUENCE_TEMPLATES)
+_TAO_Unbounded_Sequence_VjObs_obj_p
+#else /* TAO_USE_SEQUENCE_TEMPLATES */
+TAO_Unbounded_Sequence<CORBA::Short>
+
+#endif /* !TAO_USE_SEQUENCE_TEMPLATES */ 
+ (max)
 {}
 
 VjObs::obj_p::obj_p (
     CORBA::ULong max,
     CORBA::ULong length,
-    CORBA::Short * buffer,
+    CORBA::Short *buffer,
     CORBA::Boolean release
   )
-  : TAO_Unbounded_Sequence<
-        CORBA::Short
-      >
-    (max, length, buffer, release)
+  : 
+
+#if !defined (TAO_USE_SEQUENCE_TEMPLATES)
+_TAO_Unbounded_Sequence_VjObs_obj_p
+#else /* TAO_USE_SEQUENCE_TEMPLATES */
+TAO_Unbounded_Sequence<CORBA::Short>
+
+#endif /* !TAO_USE_SEQUENCE_TEMPLATES */ 
+ (max, length, buffer, release)
 {}
 
-VjObs::obj_p::obj_p (
-    const obj_p &seq
-  )
-  : TAO_Unbounded_Sequence<
-        CORBA::Short
-      >
-    (seq)
+VjObs::obj_p::obj_p (const obj_p &seq)
+  : 
+
+#if !defined (TAO_USE_SEQUENCE_TEMPLATES)
+_TAO_Unbounded_Sequence_VjObs_obj_p
+#else /* TAO_USE_SEQUENCE_TEMPLATES */
+TAO_Unbounded_Sequence<CORBA::Short>
+
+#endif /* !TAO_USE_SEQUENCE_TEMPLATES */ 
+ (seq)
 {}
 
-VjObs::obj_p::~obj_p (void)
+VjObs::obj_p::~obj_p (void) // dtor
 {}
 
-void VjObs::obj_p::_tao_any_destructor (
-    void * _tao_void_pointer
-  )
+void VjObs::obj_p::_tao_any_destructor (void *_tao_void_pointer)
 {
-  obj_p * _tao_tmp_pointer =
-    ACE_static_cast (obj_p *, _tao_void_pointer);
-  delete _tao_tmp_pointer;
+  obj_p *tmp = ACE_static_cast (obj_p*, _tao_void_pointer);
+  delete tmp;
 }
 
 #endif /* end #if !defined */
@@ -292,10 +14557,10 @@ static const CORBA::Long _oc_VjObs_obj_p[] =
   ACE_NTOHL (0x732f6f62), 
   ACE_NTOHL (0x6a5f703a), 
   ACE_NTOHL (0x312e3000),  // repository ID = IDL:VjObs/obj_p:1.0
-    6,
+  6,
   ACE_NTOHL (0x6f626a5f), 
   ACE_NTOHL (0x70000000),  // name = obj_p
-    CORBA::tk_sequence, // typecode kind
+  CORBA::tk_sequence, // typecode kind
   12, // encapsulation length
     TAO_ENCAP_BYTE_ORDER, // byte order
     CORBA::tk_short,
@@ -316,7 +14581,7 @@ static CORBA::TypeCode _tc_TAO_tc_VjObs_obj_p (
   &_tc_TAO_tc_VjObs_obj_p;
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::update (
     
@@ -325,41 +14590,19 @@ void VjObs::update (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "update",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.update (
+      this
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::scalar_p * VjObs::update_scalar (
     
@@ -368,43 +14611,19 @@ void VjObs::update (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "update_scalar",
-      13,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.update_scalar (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::scalar_p * VjObs::update_vector (
     
@@ -413,43 +14632,19 @@ void VjObs::update (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "update_vector",
-      13,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.update_vector (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::scalar_p * VjObs::get_geo_name (
     
@@ -458,43 +14653,19 @@ void VjObs::update (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_geo_name",
-      12,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_geo_name (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::scalar_p * VjObs::get_teacher_name (
     
@@ -503,43 +14674,19 @@ void VjObs::update (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_teacher_name",
-      16,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_teacher_name (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::get_sc_num (
     
@@ -548,43 +14695,19 @@ CORBA::Short VjObs::get_sc_num (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_sc_num",
-      10,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_sc_num (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::get_geo_num (
     
@@ -593,43 +14716,19 @@ CORBA::Short VjObs::get_geo_num (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_geo_num",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_geo_num (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::get_teacher_num (
     
@@ -638,43 +14737,19 @@ CORBA::Short VjObs::get_teacher_num (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_teacher_num",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_teacher_num (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 char * VjObs::get_perf (
     
@@ -683,43 +14758,19 @@ char * VjObs::get_perf (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Char *>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_perf",
-      8,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_perf (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::SetClientInfoFlag (
     CORBA::Short value
@@ -728,43 +14779,20 @@ void VjObs::SetClientInfoFlag (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "SetClientInfoFlag",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.SetClientInfoFlag (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::SetClientInfoData (
     const VjObs::obj_p & o
@@ -773,43 +14801,20 @@ void VjObs::SetClientInfoData (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<VjObs::obj_p>::in_arg_val _tao_o (o);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_o
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "SetClientInfoData",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.SetClientInfoData (
+      this,
+      o
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::obj_p * VjObs::GetClientInfoData (
     
@@ -818,43 +14823,19 @@ void VjObs::SetClientInfoData (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::obj_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "GetClientInfoData",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.GetClientInfoData (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::GetNumberOfSounds (
     
@@ -863,43 +14844,19 @@ CORBA::Short VjObs::GetNumberOfSounds (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "GetNumberOfSounds",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.GetNumberOfSounds (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::scalar_p * VjObs::GetSoundNameArray (
     
@@ -908,43 +14865,19 @@ CORBA::Short VjObs::GetNumberOfSounds (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "GetSoundNameArray",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.GetSoundNameArray (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::scalar_p * VjObs::get_dataset_names (
     
@@ -953,43 +14886,19 @@ CORBA::Short VjObs::GetNumberOfSounds (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_dataset_names",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_dataset_names (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::obj_p * VjObs::get_dataset_types (
     
@@ -998,43 +14907,19 @@ CORBA::Short VjObs::GetNumberOfSounds (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::obj_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_dataset_types",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_dataset_types (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::obj_p * VjObs::get_num_scalars_per_dataset (
     
@@ -1043,43 +14928,19 @@ CORBA::Short VjObs::GetNumberOfSounds (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::obj_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_num_scalars_per_dataset",
-      27,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_num_scalars_per_dataset (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 ::VjObs::obj_p * VjObs::get_num_vectors_per_dataset (
     
@@ -1088,43 +14949,19 @@ CORBA::Short VjObs::GetNumberOfSounds (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::obj_p>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_num_vectors_per_dataset",
-      27,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.get_num_vectors_per_dataset (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setNumDatasets (
     CORBA::Short value
@@ -1133,43 +14970,20 @@ void VjObs::setNumDatasets (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setNumDatasets",
-      14,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setNumDatasets (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::getNumDatasets (
     
@@ -1178,43 +14992,19 @@ CORBA::Short VjObs::getNumDatasets (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getNumDatasets",
-      14,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getNumDatasets (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::getTotalNumberOfScalars (
     
@@ -1223,43 +15013,19 @@ CORBA::Short VjObs::getTotalNumberOfScalars (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getTotalNumberOfScalars",
-      23,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getTotalNumberOfScalars (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setNumVectors (
     CORBA::Short value
@@ -1268,43 +15034,20 @@ void VjObs::setNumVectors (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setNumVectors",
-      13,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setNumVectors (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::getNumVectors (
     
@@ -1313,43 +15056,19 @@ CORBA::Short VjObs::getNumVectors (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getNumVectors",
-      13,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getNumVectors (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setNumGeoArrays (
     CORBA::Short value
@@ -1358,43 +15077,20 @@ void VjObs::setNumGeoArrays (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setNumGeoArrays",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setNumGeoArrays (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::getNumGeoArrays (
     
@@ -1403,43 +15099,19 @@ CORBA::Short VjObs::getNumGeoArrays (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getNumGeoArrays",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getNumGeoArrays (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setClients (
     CORBA::Long value
@@ -1448,43 +15120,20 @@ void VjObs::setClients (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setClients",
-      10,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setClients (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Long VjObs::getClients (
     
@@ -1493,43 +15142,19 @@ CORBA::Long VjObs::getClients (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getClients",
-      10,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getClients (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setIsoValue (
     CORBA::Long value
@@ -1538,43 +15163,20 @@ void VjObs::setIsoValue (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setIsoValue",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setIsoValue (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Long VjObs::getIsoValue (
     
@@ -1583,43 +15185,19 @@ CORBA::Long VjObs::getIsoValue (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getIsoValue",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getIsoValue (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setSc (
     CORBA::Long value
@@ -1628,43 +15206,20 @@ void VjObs::setSc (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setSc",
-      5,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setSc (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Long VjObs::getSc (
     
@@ -1673,43 +15228,19 @@ CORBA::Long VjObs::getSc (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getSc",
-      5,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getSc (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setMin (
     CORBA::Long value
@@ -1718,43 +15249,20 @@ void VjObs::setMin (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setMin",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setMin (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Long VjObs::getMin (
     
@@ -1763,43 +15271,19 @@ CORBA::Long VjObs::getMin (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getMin",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getMin (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setMax (
     CORBA::Long value
@@ -1808,43 +15292,20 @@ void VjObs::setMax (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setMax",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setMax (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Long VjObs::getMax (
     
@@ -1853,43 +15314,19 @@ CORBA::Long VjObs::getMax (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getMax",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getMax (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setId (
     CORBA::Long value
@@ -1898,43 +15335,20 @@ void VjObs::setId (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setId",
-      5,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setId (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Long VjObs::getId (
     
@@ -1943,43 +15357,19 @@ CORBA::Long VjObs::getId (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getId",
-      5,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getId (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setGeoState (
     CORBA::Long value
@@ -1988,43 +15378,20 @@ void VjObs::setGeoState (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setGeoState",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setGeoState (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Long VjObs::getGeoState (
     
@@ -2033,43 +15400,19 @@ CORBA::Long VjObs::getGeoState (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getGeoState",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getGeoState (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setPostdataState (
     CORBA::Short value
@@ -2078,43 +15421,20 @@ void VjObs::setPostdataState (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setPostdataState",
-      16,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setPostdataState (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::getPostdataState (
     
@@ -2123,43 +15443,19 @@ CORBA::Short VjObs::getPostdataState (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getPostdataState",
-      16,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getPostdataState (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setPreState (
     CORBA::Short value
@@ -2168,43 +15464,20 @@ void VjObs::setPreState (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setPreState",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setPreState (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::getPreState (
     
@@ -2213,43 +15486,19 @@ CORBA::Short VjObs::getPreState (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getPreState",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getPreState (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setTimesteps (
     CORBA::Short value
@@ -2258,43 +15507,20 @@ void VjObs::setTimesteps (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setTimesteps",
-      12,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setTimesteps (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::getTimesteps (
     
@@ -2303,43 +15529,19 @@ CORBA::Short VjObs::getTimesteps (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getTimesteps",
-      12,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getTimesteps (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setNumTeacherArrays (
     CORBA::Short value
@@ -2348,43 +15550,20 @@ void VjObs::setNumTeacherArrays (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setNumTeacherArrays",
-      19,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setNumTeacherArrays (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::getNumTeacherArrays (
     
@@ -2393,43 +15572,19 @@ CORBA::Short VjObs::getNumTeacherArrays (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getNumTeacherArrays",
-      19,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getNumTeacherArrays (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 void VjObs::setTeacherState (
     CORBA::Short value
@@ -2438,43 +15593,20 @@ void VjObs::setTeacherState (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setTeacherState",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
   ACE_CHECK;
+  
+  proxy.setTeacherState (
+      this,
+      value
+    );
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
+// be/be_visitor_operation/operation_cs.cpp:80
 
 CORBA::Short VjObs::getTeacherState (
     
@@ -2483,146 +15615,15 @@ CORBA::Short VjObs::getTeacherState (
     CORBA::SystemException
   ))
 {
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
   ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
   
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
+  _TAO_VjObs_Proxy_Impl &proxy = 
+    this->the_TAO_VjObs_Proxy_Broker_->select_proxy (this ACE_ENV_ARG_PARAMETER);
+  ACE_CHECK_RETURN (0);
   
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getTeacherState",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
+  return proxy.getTeacherState (
+      this
     );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-VjObs::VjObs (int collocated)
- : the_TAO_VjObs_Proxy_Broker_ (0)
-{
-  this->VjObs_setup_collocation (collocated);
-}
-
-void
-VjObs::VjObs_setup_collocation (int collocated)
-{
-  if (collocated)
-    {
-      this->the_TAO_VjObs_Proxy_Broker_ =
-        ::_TAO_VjObs_Proxy_Broker_Factory_function_pointer (this);
-    }
-}
-
-VjObs::~VjObs (void)
-{}
-
-void 
-VjObs::_tao_any_destructor (void *_tao_void_pointer)
-{
-  VjObs *_tao_tmp_pointer =
-    ACE_static_cast (VjObs *, _tao_void_pointer);
-  CORBA::release (_tao_tmp_pointer);
-}
-
-VjObs_ptr
-VjObs::_narrow (
-    CORBA::Object_ptr _tao_objref
-    ACE_ENV_ARG_DECL
-  )
-{
-  return
-    TAO::Narrow_Utils<VjObs>::narrow (
-        _tao_objref,
-        "IDL:VjObs:1.0",
-        _TAO_VjObs_Proxy_Broker_Factory_function_pointer
-        ACE_ENV_ARG_PARAMETER
-      );
-}
-
-VjObs_ptr
-VjObs::_unchecked_narrow (
-    CORBA::Object_ptr _tao_objref
-    ACE_ENV_ARG_DECL
-  )
-{
-  return
-    TAO::Narrow_Utils<VjObs>::unchecked_narrow (
-        _tao_objref,
-        "IDL:VjObs:1.0",
-        _TAO_VjObs_Proxy_Broker_Factory_function_pointer
-        ACE_ENV_ARG_PARAMETER
-      );
-}
-
-VjObs_ptr
-VjObs::_duplicate (VjObs_ptr obj)
-{
-  if (! CORBA::is_nil (obj))
-    {
-      obj->_add_ref ();
-    }
-  
-  return obj;
-}
-
-CORBA::Boolean
-VjObs::_is_a (
-    const char *value
-    ACE_ENV_ARG_DECL
-  )
-{
-  if (
-      !ACE_OS::strcmp (
-          (char *)value,
-          "IDL:VjObs:1.0"
-        ) ||
-      !ACE_OS::strcmp (
-          (char *)value,
-          "IDL:omg.org/CORBA/Object:1.0"
-        )
-     )
-    {
-      return 1; // success using local knowledge
-    }
-  else
-    {
-      return this->ACE_NESTED_CLASS (CORBA, Object)::_is_a (
-          value
-          ACE_ENV_ARG_PARAMETER
-        );
-    }
-}
-
-const char* VjObs::_interface_repository_id (void) const
-{
-  return "IDL:VjObs:1.0";
-}
-
-CORBA::Boolean
-VjObs::marshal (TAO_OutputCDR &cdr)
-{
-  return (cdr << this);
 }
 
 // TAO_IDL - Generated from
@@ -2636,10 +15637,10 @@ static const CORBA::Long _oc_VjObs[] =
   ACE_NTOHL (0x566a4f62), 
   ACE_NTOHL (0x733a312e), 
   ACE_NTOHL (0x30000000),  // repository ID = IDL:VjObs:1.0
-    6,
+  6,
   ACE_NTOHL (0x566a4f62), 
   ACE_NTOHL (0x73000000),  // name = VjObs
-  };
+};
 
 static CORBA::TypeCode _tc_TAO_tc_VjObs (
     CORBA::tk_objref,
@@ -2653,19 +15654,9 @@ static CORBA::TypeCode _tc_TAO_tc_VjObs (
   &_tc_TAO_tc_VjObs;
 
 // TAO_IDL - Generated from
-// be/be_visitor_interface/any_op_cs.cpp:50
+// be/be_visitor_interface/any_op_cs.cpp:52
 
-ACE_TEMPLATE_SPECIALIZATION
-CORBA::Boolean
-TAO::Any_Impl_T<VjObs>::to_object (
-    CORBA::Object_ptr &_tao_elem
-  ) const
-{
-  _tao_elem = CORBA::Object::_duplicate (this->value_);
-  return 1;
-}
-
-// Copying insertion.
+// Copying version.
 void
 operator<<= (
     CORBA::Any &_tao_any,
@@ -2677,19 +15668,26 @@ operator<<= (
   _tao_any <<= &_tao_objptr;
 }
 
-// Non-copying insertion.
+// Non-copying version.
 void
 operator<<= (
     CORBA::Any &_tao_any,
     VjObs_ptr *_tao_elem
   )
 {
-  TAO::Any_Impl_T<VjObs>::insert (
-      _tao_any,
-      VjObs::_tao_any_destructor,
-      _tc_VjObs,
-      *_tao_elem
-    );
+  TAO_OutputCDR stream;
+  
+  if (stream << *_tao_elem)
+    {
+      _tao_any._tao_replace (
+          _tc_VjObs, 
+          TAO_ENCAP_BYTE_ORDER,
+          stream.begin (),
+          1,
+          *_tao_elem,
+          VjObs::_tao_any_destructor
+        );
+    }
 }
 
 CORBA::Boolean
@@ -2698,14 +15696,57 @@ operator>>= (
     VjObs_ptr &_tao_elem
   )
 {
-  return
-    TAO::Any_Impl_T<VjObs>::extract (
-        _tao_any,
-        VjObs::_tao_any_destructor,
-        _tc_VjObs,
-        _tao_elem
+  ACE_TRY_NEW_ENV
+  {
+    _tao_elem = VjObs::_nil ();
+    CORBA::TypeCode_var type = _tao_any.type ();
+    
+    CORBA::Boolean _tao_result =
+      type->equivalent (
+          _tc_VjObs
+          ACE_ENV_ARG_PARAMETER
+        );
+    ACE_TRY_CHECK;
+    
+    if (!_tao_result)
+      {
+        return 0; // not equivalent
+      }
+    
+    TAO_InputCDR stream (
+        _tao_any._tao_get_cdr (),
+        _tao_any._tao_byte_order ()
       );
+    
+    if (stream >> _tao_elem)
+      {
+        ((CORBA::Any *)&_tao_any)->_tao_replace (
+            _tc_VjObs,
+            1,
+            _tao_elem,
+            VjObs::_tao_any_destructor
+          );
+        
+        return 1;
+      }
+  }
+  ACE_CATCHANY
+  {
+    _tao_elem = VjObs::_nil ();
+    return 0;
+  }
+  ACE_ENDTRY;
+  
+  _tao_elem = VjObs::_nil ();
+  return 0;
 }
+
+#if defined (ACE_HAS_EXPLICIT_TEMPLATE_INSTANTIATION)  || \
+    defined (ACE_HAS_GNU_REPO)
+  template class TAO_Object_Manager<VjObs,VjObs_var>;
+#elif defined (ACE_HAS_TEMPLATE_INSTANTIATION_PRAGMA)
+# pragma instantiate TAO_Object_Manager<VjObs,VjObs_var>
+#endif /* ACE_HAS_EXPLICIT_TEMPLATE_INSTANTIATION */
 
 // TAO_IDL - Generated from 
 // be/be_visitor_sequence/any_op_cs.cpp:54
@@ -2716,12 +15757,16 @@ void operator<<= (
     const VjObs::scalar_p &_tao_elem
   )
 {
-  TAO::Any_Dual_Impl_T<VjObs::scalar_p>::insert_copy (
-      _tao_any,
-      VjObs::scalar_p::_tao_any_destructor,
-      VjObs::_tc_scalar_p,
-      _tao_elem
-    );
+  TAO_OutputCDR stream;
+  
+  if (stream << _tao_elem)
+    {
+      _tao_any._tao_replace (
+          VjObs::_tc_scalar_p,
+          TAO_ENCAP_BYTE_ORDER,
+          stream.begin ()
+        );
+    }
 }
 
 // Non-copying insertion.
@@ -2730,12 +15775,19 @@ void operator<<= (
     VjObs::scalar_p *_tao_elem
   )
 {
-  TAO::Any_Dual_Impl_T<VjObs::scalar_p>::insert (
-      _tao_any,
-      VjObs::scalar_p::_tao_any_destructor,
-      VjObs::_tc_scalar_p,
-      _tao_elem
-    );
+  TAO_OutputCDR stream;
+  
+  if (stream << *_tao_elem)
+    {
+      _tao_any._tao_replace (
+          VjObs::_tc_scalar_p,
+          TAO_ENCAP_BYTE_ORDER,
+          stream.begin (),
+          1,
+          _tao_elem,
+          VjObs::scalar_p::_tao_any_destructor
+        );
+    }
 }
 
 // Extraction to non-const pointer (deprecated).
@@ -2744,8 +15796,8 @@ CORBA::Boolean operator>>= (
     VjObs::scalar_p *&_tao_elem
   )
 {
-  return _tao_any >>= ACE_const_cast (
-      const VjObs::scalar_p *&,
+  return _tao_any >>= ACE_const_cast(
+      const VjObs::scalar_p*&,
       _tao_elem
     );
 }
@@ -2756,2915 +15808,71 @@ CORBA::Boolean operator>>= (
     const VjObs::scalar_p *&_tao_elem
   )
 {
-  return
-    TAO::Any_Dual_Impl_T<VjObs::scalar_p>::extract (
-        _tao_any,
-        VjObs::scalar_p::_tao_any_destructor,
-        VjObs::_tc_scalar_p,
-        _tao_elem
-      );
-}
-
-// TAO_IDL - Generated from 
-// be/be_visitor_sequence/any_op_cs.cpp:54
-
-// Copying insertion.
-void operator<<= (
-    CORBA::Any &_tao_any,
-    const VjObs::obj_p &_tao_elem
-  )
-{
-  TAO::Any_Dual_Impl_T<VjObs::obj_p>::insert_copy (
-      _tao_any,
-      VjObs::obj_p::_tao_any_destructor,
-      VjObs::_tc_obj_p,
-      _tao_elem
-    );
-}
-
-// Non-copying insertion.
-void operator<<= (
-    CORBA::Any &_tao_any,
-    VjObs::obj_p *_tao_elem
-  )
-{
-  TAO::Any_Dual_Impl_T<VjObs::obj_p>::insert (
-      _tao_any,
-      VjObs::obj_p::_tao_any_destructor,
-      VjObs::_tc_obj_p,
-      _tao_elem
-    );
-}
-
-// Extraction to non-const pointer (deprecated).
-CORBA::Boolean operator>>= (
-    const CORBA::Any &_tao_any,
-    VjObs::obj_p *&_tao_elem
-  )
-{
-  return _tao_any >>= ACE_const_cast (
-      const VjObs::obj_p *&,
-      _tao_elem
-    );
-}
-
-// Extraction to const pointer.
-CORBA::Boolean operator>>= (
-    const CORBA::Any &_tao_any,
-    const VjObs::obj_p *&_tao_elem
-  )
-{
-  return
-    TAO::Any_Dual_Impl_T<VjObs::obj_p>::extract (
-        _tao_any,
-        VjObs::obj_p::_tao_any_destructor,
-        VjObs::_tc_obj_p,
-        _tao_elem
-      );
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_sequence/cdr_op_cs.cpp:95
-
-#if !defined _TAO_CDR_OP_VjObs_scalar_p_CPP_
-#define _TAO_CDR_OP_VjObs_scalar_p_CPP_
-
-CORBA::Boolean operator<< (
-    TAO_OutputCDR &strm,
-    const VjObs::scalar_p &_tao_sequence
-  )
-{
-  CORBA::ULong _tao_seq_len = _tao_sequence.length ();
+  _tao_elem = 0;
   
-  if (strm << _tao_seq_len)
-    {
-      // Encode all elements.
-      CORBA::Boolean _tao_marshal_flag = 1;
-      
-      for (CORBA::ULong i = 0; i < _tao_seq_len && _tao_marshal_flag; ++i)
-        {
-          _tao_marshal_flag = (strm << _tao_sequence[i].in ());
-        }
-      
-      return _tao_marshal_flag;
-    }
-  
-  return 0;
-}
-
-CORBA::Boolean operator>> (
-    TAO_InputCDR &strm,
-    VjObs::scalar_p &_tao_sequence
-  )
-{
-  CORBA::ULong _tao_seq_len;
-  
-  if (strm >> _tao_seq_len)
-    {
-      // Add a check to the length of the sequence
-      // to make sure it does not exceed the length
-      // of the stream. (See bug 58.)
-      if (_tao_seq_len > strm.length ())
-        {
-          return 0;
-        }
-      
-      // Set the length of the sequence.
-      _tao_sequence.length (_tao_seq_len);
-      
-      // If length is 0 we return true.
-      if (0 >= _tao_seq_len) 
-        {
-          return 1;
-        }
-      
-      // Retrieve all the elements.
-      CORBA::Boolean _tao_marshal_flag = 1;
-      
-      for (CORBA::ULong i = 0; i < _tao_seq_len && _tao_marshal_flag; ++i)
-        {
-          _tao_marshal_flag = (strm >> _tao_sequence[i].out ());
-        
+  ACE_TRY_NEW_ENV
+  {
+    CORBA::TypeCode_var type = _tao_any.type ();
+    
+    CORBA::Boolean _tao_result =
+      type->equivalent (
+          VjObs::_tc_scalar_p
+          ACE_ENV_ARG_PARAMETER
+        );
+    ACE_TRY_CHECK;
+    
+    if (!_tao_result)
+      {
+        return 0; // not equivalent
       }
     
-    return _tao_marshal_flag;
-  
-  }
-
-return 0;
-}
-
-#endif /* _TAO_CDR_OP_VjObs_scalar_p_CPP_ */
-
-// TAO_IDL - Generated from
-// be/be_visitor_sequence/cdr_op_cs.cpp:95
-
-#if !defined _TAO_CDR_OP_VjObs_obj_p_CPP_
-#define _TAO_CDR_OP_VjObs_obj_p_CPP_
-
-CORBA::Boolean operator<< (
-    TAO_OutputCDR &strm,
-    const VjObs::obj_p &_tao_sequence
-  )
-{
-  CORBA::ULong _tao_seq_len = _tao_sequence.length ();
-  
-  if (strm << _tao_seq_len)
-    {
-      // Encode all elements.
-      return strm.write_short_array (_tao_sequence.get_buffer (), _tao_sequence.length ());
-    }
-  
-  return 0;
-}
-
-CORBA::Boolean operator>> (
-    TAO_InputCDR &strm,
-    VjObs::obj_p &_tao_sequence
-  )
-{
-  CORBA::ULong _tao_seq_len;
-  
-  if (strm >> _tao_seq_len)
-    {
-      // Add a check to the length of the sequence
-      // to make sure it does not exceed the length
-      // of the stream. (See bug 58.)
-      if (_tao_seq_len > strm.length ())
-        {
-          return 0;
-        }
-      
-      // Set the length of the sequence.
-      _tao_sequence.length (_tao_seq_len);
-      
-      // If length is 0 we return true.
-      if (0 >= _tao_seq_len) 
-        {
-          return 1;
-        }
-      
-      // Retrieve all the elements.
-      return strm.read_short_array (_tao_sequence.get_buffer (), _tao_sequence.length ());
-    
-    }
-  
-  return 0;
-}
-
-#endif /* _TAO_CDR_OP_VjObs_obj_p_CPP_ */
-
-// TAO_IDL - Generated from
-// be/be_visitor_interface/cdr_op_cs.cpp:63
-
-CORBA::Boolean operator<< (
-    TAO_OutputCDR &strm,
-    const VjObs_ptr _tao_objref
-  )
-{
-  CORBA::Object_ptr _tao_corba_obj = _tao_objref;
-  return (strm << _tao_corba_obj);
-}
-
-CORBA::Boolean operator>> (
-    TAO_InputCDR &strm,
-    VjObs_ptr &_tao_objref
-  )
-{
-  CORBA::Object_var obj;
-  
-  if ((strm >> obj.inout ()) == 0)
-    {
-      return 0;
-    }
-  
-  typedef ::VjObs RHS_SCOPED_NAME;
-  
-  // Narrow to the right type.
-  _tao_objref =
-    TAO::Narrow_Utils<RHS_SCOPED_NAME>::unchecked_narrow (
-        obj.in (),
-        _TAO_VjObs_Proxy_Broker_Factory_function_pointer
-      );
-    
-  return 1;
-}
-
-=======
-// -*- C++ -*-
-//
-// $Id: VjObsC.cpp,v 1.11 2004/04/17 20:59:21 dougm Exp $
-
-// ****  Code generated by the The ACE ORB (TAO) IDL Compiler ****
-// TAO and the TAO IDL Compiler have been developed by:
-//       Center for Distributed Object Computing
-//       Washington University
-//       St. Louis, MO
-//       USA
-//       http://www.cs.wustl.edu/~schmidt/doc-center.html
-// and
-//       Distributed Object Computing Laboratory
-//       University of California at Irvine
-//       Irvine, CA
-//       USA
-//       http://doc.ece.uci.edu/
-// and
-//       Institute for Software Integrated Systems
-//       Vanderbilt University
-//       Nashville, TN
-//       USA
-//       http://www.isis.vanderbilt.edu/
-//
-// Information about TAO is available at:
-//     http://www.cs.wustl.edu/~schmidt/TAO.html
-
-// TAO_IDL - Generated from
-// be/be_codegen.cpp:338
-
-
-#include "VjObsC.h"
-#include "tao/Exception_Data.h"
-#include "tao/Invocation_Adapter.h"
-#include "tao/Object_T.h"
-#include "tao/Typecode.h"
-#include "tao/Any_Impl_T.h"
-#include "tao/Any_Dual_Impl_T.h"
-#include "tao/Basic_Arguments.h"
-#include "tao/UB_String_Arguments.h"
-#include "tao/Var_Size_Argument_T.h"
-#include "ace/OS_NS_string.h"
-
-#if defined (__BORLANDC__)
-#pragma option -w-rvl -w-rch -w-ccc -w-aus -w-sig
-#endif /* __BORLANDC__ */
-
-#if !defined (__ACE_INLINE__)
-#include "VjObsC.i"
-#endif /* !defined INLINE */
-
-// TAO_IDL - Generated from
-// be/be_visitor_arg_traits.cpp:62
-
-// Arg traits specializations.
-namespace TAO
-{
-  
-  // TAO_IDL - Generated from
-  // be/be_visitor_arg_traits.cpp:265
-
-#if !defined (_VJOBS_SCALAR_P__ARG_TRAITS_CS_)
-#define _VJOBS_SCALAR_P__ARG_TRAITS_CS_
-  
-  ACE_TEMPLATE_SPECIALIZATION
-  class  Arg_Traits<VjObs::scalar_p>
-    : public
-        Var_Size_Arg_Traits_T<
+    if (_tao_any.any_owns_data ())
+      {
+        _tao_elem = ACE_static_cast(
+            const VjObs::scalar_p*,
+            _tao_any.value ()
+          );
+        
+        return 1;
+      }
+    else
+      {
+        VjObs::scalar_p *tmp = 0;
+        ACE_NEW_RETURN (
+            tmp,
             VjObs::scalar_p,
-            VjObs::scalar_p_var,
-            VjObs::scalar_p_out
-          >
+            0
+          );
+        
+        TAO_InputCDR stream (
+            _tao_any._tao_get_cdr (),
+            _tao_any._tao_byte_order ()
+          );
+        
+        if (stream >> *tmp)
+          {
+            ((CORBA::Any *)&_tao_any)->_tao_replace (
+                VjObs::_tc_scalar_p,
+                1,
+                ACE_static_cast (void *, tmp),
+                VjObs::scalar_p::_tao_any_destructor
+              );
+            
+            _tao_elem = tmp;
+            return 1;
+          }
+        else
+          {
+            delete tmp;
+          }
+      }
+  }
+  ACE_CATCHANY
   {
-  };
-
-#endif /* end #if !defined */
+  }
+  ACE_ENDTRY;
   
-  // TAO_IDL - Generated from
-  // be/be_visitor_arg_traits.cpp:265
-
-#if !defined (_VJOBS_OBJ_P__ARG_TRAITS_CS_)
-#define _VJOBS_OBJ_P__ARG_TRAITS_CS_
-  
-  ACE_TEMPLATE_SPECIALIZATION
-  class  Arg_Traits<VjObs::obj_p>
-    : public
-        Var_Size_Arg_Traits_T<
-            VjObs::obj_p,
-            VjObs::obj_p_var,
-            VjObs::obj_p_out
-          >
-  {
-  };
-
-#endif /* end #if !defined */
-}
-
-
-// TAO_IDL - Generated from
-// be/be_visitor_interface/interface_cs.cpp:60
-
-// Traits specializations for VjObs.
-
-ACE_TEMPLATE_CLASS_MEMBER_SPECIALIZATION
-VjObs_ptr
-TAO::Objref_Traits<VjObs>::tao_duplicate (
-    VjObs_ptr p
-  )
-{
-  return VjObs::_duplicate (p);
-}
-
-ACE_TEMPLATE_CLASS_MEMBER_SPECIALIZATION
-void
-TAO::Objref_Traits<VjObs>::tao_release (
-    VjObs_ptr p
-  )
-{
-  CORBA::release (p);
-}
-
-ACE_TEMPLATE_CLASS_MEMBER_SPECIALIZATION
-VjObs_ptr
-TAO::Objref_Traits<VjObs>::tao_nil (void)
-{
-  return VjObs::_nil ();
-}
-
-ACE_TEMPLATE_CLASS_MEMBER_SPECIALIZATION
-CORBA::Boolean
-TAO::Objref_Traits<VjObs>::tao_marshal (
-    VjObs_ptr p,
-    TAO_OutputCDR & cdr
-  )
-{
-  return p->marshal (cdr);
-}
-
-// Function pointer for collocation factory initialization.
-TAO::Collocation_Proxy_Broker * 
-(*_TAO_VjObs_Proxy_Broker_Factory_function_pointer) (
-    CORBA::Object_ptr obj
-  ) = 0;
-
-// TAO_IDL - Generated from 
-// be/be_visitor_sequence/sequence_cs.cpp:65
-
-#if !defined (_VJOBS_SCALAR_P_CS_)
-#define _VJOBS_SCALAR_P_CS_
-
-VjObs::scalar_p::scalar_p (void)
-{}
-
-VjObs::scalar_p::scalar_p (
-    CORBA::ULong max
-  )
-  : TAO_Unbounded_String_Sequence
-    (max)
-{}
-
-VjObs::scalar_p::scalar_p (
-    CORBA::ULong max,
-    CORBA::ULong length,
-    char * * buffer,
-    CORBA::Boolean release
-  )
-  : TAO_Unbounded_String_Sequence
-    (max, length, buffer, release)
-{}
-
-VjObs::scalar_p::scalar_p (
-    const scalar_p &seq
-  )
-  : TAO_Unbounded_String_Sequence
-    (seq)
-{}
-
-VjObs::scalar_p::~scalar_p (void)
-{}
-
-void VjObs::scalar_p::_tao_any_destructor (
-    void * _tao_void_pointer
-  )
-{
-  scalar_p * _tao_tmp_pointer =
-    ACE_static_cast (scalar_p *, _tao_void_pointer);
-  delete _tao_tmp_pointer;
-}
-
-#endif /* end #if !defined */
-
-// TAO_IDL - Generated from
-// be/be_visitor_typecode/typecode_defn.cpp:284
-
-static const CORBA::Long _oc_VjObs_scalar_p[] =
-{
-    TAO_ENCAP_BYTE_ORDER, // byte order
-  23,
-  ACE_NTOHL (0x49444c3a), 
-  ACE_NTOHL (0x566a4f62), 
-  ACE_NTOHL (0x732f7363), 
-  ACE_NTOHL (0x616c6172), 
-  ACE_NTOHL (0x5f703a31), 
-  ACE_NTOHL (0x2e300000),  // repository ID = IDL:VjObs/scalar_p:1.0
-    9,
-  ACE_NTOHL (0x7363616c), 
-  ACE_NTOHL (0x61725f70), 
-  ACE_NTOHL (0x0),  // name = scalar_p
-    CORBA::tk_sequence, // typecode kind
-  16, // encapsulation length
-    TAO_ENCAP_BYTE_ORDER, // byte order
-    CORBA::tk_string, 
-    0U, // string length
-    0U,
-
-};
-
-static CORBA::TypeCode _tc_TAO_tc_VjObs_scalar_p (
-    CORBA::tk_alias,
-    sizeof (_oc_VjObs_scalar_p),
-    (char *) &_oc_VjObs_scalar_p,
-    0,
-    sizeof (VjObs::scalar_p)
-  );
-
-::CORBA::TypeCode_ptr VjObs::_tc_scalar_p =
-  &_tc_TAO_tc_VjObs_scalar_p;
-
-// TAO_IDL - Generated from 
-// be/be_visitor_sequence/sequence_cs.cpp:65
-
-#if !defined (_VJOBS_OBJ_P_CS_)
-#define _VJOBS_OBJ_P_CS_
-
-VjObs::obj_p::obj_p (void)
-{}
-
-VjObs::obj_p::obj_p (
-    CORBA::ULong max
-  )
-  : TAO_Unbounded_Sequence<
-        CORBA::Short
-      >
-    (max)
-{}
-
-VjObs::obj_p::obj_p (
-    CORBA::ULong max,
-    CORBA::ULong length,
-    CORBA::Short * buffer,
-    CORBA::Boolean release
-  )
-  : TAO_Unbounded_Sequence<
-        CORBA::Short
-      >
-    (max, length, buffer, release)
-{}
-
-VjObs::obj_p::obj_p (
-    const obj_p &seq
-  )
-  : TAO_Unbounded_Sequence<
-        CORBA::Short
-      >
-    (seq)
-{}
-
-VjObs::obj_p::~obj_p (void)
-{}
-
-void VjObs::obj_p::_tao_any_destructor (
-    void * _tao_void_pointer
-  )
-{
-  obj_p * _tao_tmp_pointer =
-    ACE_static_cast (obj_p *, _tao_void_pointer);
-  delete _tao_tmp_pointer;
-}
-
-#endif /* end #if !defined */
-
-// TAO_IDL - Generated from
-// be/be_visitor_typecode/typecode_defn.cpp:284
-
-static const CORBA::Long _oc_VjObs_obj_p[] =
-{
-    TAO_ENCAP_BYTE_ORDER, // byte order
-  20,
-  ACE_NTOHL (0x49444c3a), 
-  ACE_NTOHL (0x566a4f62), 
-  ACE_NTOHL (0x732f6f62), 
-  ACE_NTOHL (0x6a5f703a), 
-  ACE_NTOHL (0x312e3000),  // repository ID = IDL:VjObs/obj_p:1.0
-    6,
-  ACE_NTOHL (0x6f626a5f), 
-  ACE_NTOHL (0x70000000),  // name = obj_p
-    CORBA::tk_sequence, // typecode kind
-  12, // encapsulation length
-    TAO_ENCAP_BYTE_ORDER, // byte order
-    CORBA::tk_short,
-
-    0U,
-
-};
-
-static CORBA::TypeCode _tc_TAO_tc_VjObs_obj_p (
-    CORBA::tk_alias,
-    sizeof (_oc_VjObs_obj_p),
-    (char *) &_oc_VjObs_obj_p,
-    0,
-    sizeof (VjObs::obj_p)
-  );
-
-::CORBA::TypeCode_ptr VjObs::_tc_obj_p =
-  &_tc_TAO_tc_VjObs_obj_p;
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::update (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "update",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-::VjObs::scalar_p * VjObs::update_scalar (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "update_scalar",
-      13,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-::VjObs::scalar_p * VjObs::get_geo_name (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_geo_name",
-      12,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-::VjObs::scalar_p * VjObs::get_teacher_name (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_teacher_name",
-      16,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::get_sc_num (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_sc_num",
-      10,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::get_geo_num (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_geo_num",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::get_teacher_num (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_teacher_num",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-char * VjObs::get_perf (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Char *>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_perf",
-      8,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::SetClientInfoFlag (
-    CORBA::Short value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "SetClientInfoFlag",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::SetClientInfoData (
-    const VjObs::obj_p & o
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<VjObs::obj_p>::in_arg_val _tao_o (o);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_o
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "SetClientInfoData",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-::VjObs::obj_p * VjObs::GetClientInfoData (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::obj_p>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "GetClientInfoData",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::GetNumberOfSounds (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "GetNumberOfSounds",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-::VjObs::scalar_p * VjObs::GetSoundNameArray (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "GetSoundNameArray",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-::VjObs::scalar_p * VjObs::get_dataset_names (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::scalar_p>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_dataset_names",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-::VjObs::obj_p * VjObs::get_dataset_types (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::obj_p>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_dataset_types",
-      17,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-::VjObs::obj_p * VjObs::get_num_scalars_per_dataset (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<VjObs::obj_p>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "get_num_scalars_per_dataset",
-      27,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setNumDatasets (
-    CORBA::Short value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setNumDatasets",
-      14,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::getNumDatasets (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getNumDatasets",
-      14,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::getTotalNumberOfScalars (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getTotalNumberOfScalars",
-      23,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setNumVectors (
-    CORBA::Short value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setNumVectors",
-      13,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::getNumVectors (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getNumVectors",
-      13,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setNumGeoArrays (
-    CORBA::Short value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setNumGeoArrays",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::getNumGeoArrays (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getNumGeoArrays",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setClients (
-    CORBA::Long value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setClients",
-      10,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Long VjObs::getClients (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getClients",
-      10,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setIsoValue (
-    CORBA::Long value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setIsoValue",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Long VjObs::getIsoValue (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getIsoValue",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setSc (
-    CORBA::Long value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setSc",
-      5,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Long VjObs::getSc (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getSc",
-      5,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setMin (
-    CORBA::Long value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setMin",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Long VjObs::getMin (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getMin",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setMax (
-    CORBA::Long value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setMax",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Long VjObs::getMax (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getMax",
-      6,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setId (
-    CORBA::Long value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setId",
-      5,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Long VjObs::getId (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getId",
-      5,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setGeoState (
-    CORBA::Long value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Long>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setGeoState",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Long VjObs::getGeoState (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Long>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getGeoState",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setPostdataState (
-    CORBA::Short value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setPostdataState",
-      16,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::getPostdataState (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getPostdataState",
-      16,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setPreState (
-    CORBA::Short value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setPreState",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::getPreState (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getPreState",
-      11,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setTimesteps (
-    CORBA::Short value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setTimesteps",
-      12,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::getTimesteps (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getTimesteps",
-      12,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setNumTeacherArrays (
-    CORBA::Short value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setNumTeacherArrays",
-      19,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::getNumTeacherArrays (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getNumTeacherArrays",
-      19,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-void VjObs::setTeacherState (
-    CORBA::Short value
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<void>::ret_val _tao_retval;
-  TAO::Arg_Traits<CORBA::Short>::in_arg_val _tao_value (value);
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval,
-      &_tao_value
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      2,
-      "setTeacherState",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK;
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_operation/operation_cs.cpp:78
-
-CORBA::Short VjObs::getTeacherState (
-    
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-{
-  if (!this->is_evaluated ())
-    {
-      ACE_NESTED_CLASS (CORBA, Object)::tao_object_initialize (this);
-    }
-  
-  if (this->the_TAO_VjObs_Proxy_Broker_ == 0)
-    {
-      VjObs_setup_collocation (
-          this->ACE_NESTED_CLASS (CORBA, Object)::_is_collocated ()
-        );
-    }
-  
-  ACE_DECLARE_NEW_CORBA_ENV;
-  TAO::Arg_Traits<CORBA::Short>::ret_val _tao_retval;
-  
-  TAO::Argument *_tao_signature [] =
-    {
-      &_tao_retval
-    };
-  
-  TAO::Invocation_Adapter _tao_call (
-      this,
-      _tao_signature,
-      1,
-      "getTeacherState",
-      15,
-      this->the_TAO_VjObs_Proxy_Broker_
-    );
-  
-  _tao_call.invoke (0, 0 ACE_ENV_ARG_PARAMETER);
-  ACE_CHECK_RETURN (_tao_retval.excp ());
-  
-  return _tao_retval.retn ();
-}
-
-VjObs::VjObs (int collocated)
- : the_TAO_VjObs_Proxy_Broker_ (0)
-{
-  this->VjObs_setup_collocation (collocated);
-}
-
-void
-VjObs::VjObs_setup_collocation (int collocated)
-{
-  if (collocated)
-    {
-      this->the_TAO_VjObs_Proxy_Broker_ =
-        ::_TAO_VjObs_Proxy_Broker_Factory_function_pointer (this);
-    }
-}
-
-VjObs::~VjObs (void)
-{}
-
-void 
-VjObs::_tao_any_destructor (void *_tao_void_pointer)
-{
-  VjObs *_tao_tmp_pointer =
-    ACE_static_cast (VjObs *, _tao_void_pointer);
-  CORBA::release (_tao_tmp_pointer);
-}
-
-VjObs_ptr
-VjObs::_narrow (
-    CORBA::Object_ptr _tao_objref
-    ACE_ENV_ARG_DECL
-  )
-{
-  return
-    TAO::Narrow_Utils<VjObs>::narrow (
-        _tao_objref,
-        "IDL:VjObs:1.0",
-        _TAO_VjObs_Proxy_Broker_Factory_function_pointer
-        ACE_ENV_ARG_PARAMETER
-      );
-}
-
-VjObs_ptr
-VjObs::_unchecked_narrow (
-    CORBA::Object_ptr _tao_objref
-    ACE_ENV_ARG_DECL
-  )
-{
-  return
-    TAO::Narrow_Utils<VjObs>::unchecked_narrow (
-        _tao_objref,
-        "IDL:VjObs:1.0",
-        _TAO_VjObs_Proxy_Broker_Factory_function_pointer
-        ACE_ENV_ARG_PARAMETER
-      );
-}
-
-VjObs_ptr
-VjObs::_duplicate (VjObs_ptr obj)
-{
-  if (! CORBA::is_nil (obj))
-    {
-      obj->_add_ref ();
-    }
-  
-  return obj;
-}
-
-CORBA::Boolean
-VjObs::_is_a (
-    const char *value
-    ACE_ENV_ARG_DECL
-  )
-{
-  if (
-      !ACE_OS::strcmp (
-          (char *)value,
-          "IDL:VjObs:1.0"
-        ) ||
-      !ACE_OS::strcmp (
-          (char *)value,
-          "IDL:omg.org/CORBA/Object:1.0"
-        )
-     )
-    {
-      return 1; // success using local knowledge
-    }
-  else
-    {
-      return this->ACE_NESTED_CLASS (CORBA, Object)::_is_a (
-          value
-          ACE_ENV_ARG_PARAMETER
-        );
-    }
-}
-
-const char* VjObs::_interface_repository_id (void) const
-{
-  return "IDL:VjObs:1.0";
-}
-
-CORBA::Boolean
-VjObs::marshal (TAO_OutputCDR &cdr)
-{
-  return (cdr << this);
-}
-
-// TAO_IDL - Generated from
-// be/be_visitor_typecode/typecode_defn.cpp:284
-
-static const CORBA::Long _oc_VjObs[] =
-{
-    TAO_ENCAP_BYTE_ORDER, // byte order
-  14,
-  ACE_NTOHL (0x49444c3a), 
-  ACE_NTOHL (0x566a4f62), 
-  ACE_NTOHL (0x733a312e), 
-  ACE_NTOHL (0x30000000),  // repository ID = IDL:VjObs:1.0
-    6,
-  ACE_NTOHL (0x566a4f62), 
-  ACE_NTOHL (0x73000000),  // name = VjObs
-  };
-
-static CORBA::TypeCode _tc_TAO_tc_VjObs (
-    CORBA::tk_objref,
-    sizeof (_oc_VjObs),
-    (char *) &_oc_VjObs,
-    0,
-    sizeof (VjObs)
-  );
-
-::CORBA::TypeCode_ptr _tc_VjObs =
-  &_tc_TAO_tc_VjObs;
-
-// TAO_IDL - Generated from
-// be/be_visitor_interface/any_op_cs.cpp:50
-
-ACE_TEMPLATE_SPECIALIZATION
-CORBA::Boolean
-TAO::Any_Impl_T<VjObs>::to_object (
-    CORBA::Object_ptr &_tao_elem
-  ) const
-{
-  _tao_elem = CORBA::Object::_duplicate (this->value_);
-  return 1;
-}
-
-// Copying insertion.
-void
-operator<<= (
-    CORBA::Any &_tao_any,
-    VjObs_ptr _tao_elem
-  )
-{
-  VjObs_ptr _tao_objptr =
-    VjObs::_duplicate (_tao_elem);
-  _tao_any <<= &_tao_objptr;
-}
-
-// Non-copying insertion.
-void
-operator<<= (
-    CORBA::Any &_tao_any,
-    VjObs_ptr *_tao_elem
-  )
-{
-  TAO::Any_Impl_T<VjObs>::insert (
-      _tao_any,
-      VjObs::_tao_any_destructor,
-      _tc_VjObs,
-      *_tao_elem
-    );
-}
-
-CORBA::Boolean
-operator>>= (
-    const CORBA::Any &_tao_any,
-    VjObs_ptr &_tao_elem
-  )
-{
-  return
-    TAO::Any_Impl_T<VjObs>::extract (
-        _tao_any,
-        VjObs::_tao_any_destructor,
-        _tc_VjObs,
-        _tao_elem
-      );
-}
-
-// TAO_IDL - Generated from 
-// be/be_visitor_sequence/any_op_cs.cpp:54
-
-// Copying insertion.
-void operator<<= (
-    CORBA::Any &_tao_any,
-    const VjObs::scalar_p &_tao_elem
-  )
-{
-  TAO::Any_Dual_Impl_T<VjObs::scalar_p>::insert_copy (
-      _tao_any,
-      VjObs::scalar_p::_tao_any_destructor,
-      VjObs::_tc_scalar_p,
-      _tao_elem
-    );
-}
-
-// Non-copying insertion.
-void operator<<= (
-    CORBA::Any &_tao_any,
-    VjObs::scalar_p *_tao_elem
-  )
-{
-  TAO::Any_Dual_Impl_T<VjObs::scalar_p>::insert (
-      _tao_any,
-      VjObs::scalar_p::_tao_any_destructor,
-      VjObs::_tc_scalar_p,
-      _tao_elem
-    );
-}
-
-// Extraction to non-const pointer (deprecated).
-CORBA::Boolean operator>>= (
-    const CORBA::Any &_tao_any,
-    VjObs::scalar_p *&_tao_elem
-  )
-{
-  return _tao_any >>= ACE_const_cast (
-      const VjObs::scalar_p *&,
-      _tao_elem
-    );
-}
-
-// Extraction to const pointer.
-CORBA::Boolean operator>>= (
-    const CORBA::Any &_tao_any,
-    const VjObs::scalar_p *&_tao_elem
-  )
-{
-  return
-    TAO::Any_Dual_Impl_T<VjObs::scalar_p>::extract (
-        _tao_any,
-        VjObs::scalar_p::_tao_any_destructor,
-        VjObs::_tc_scalar_p,
-        _tao_elem
-      );
+  return 0;
 }
 
 // TAO_IDL - Generated from 
@@ -5676,12 +15884,16 @@ void operator<<= (
     const VjObs::obj_p &_tao_elem
   )
 {
-  TAO::Any_Dual_Impl_T<VjObs::obj_p>::insert_copy (
-      _tao_any,
-      VjObs::obj_p::_tao_any_destructor,
-      VjObs::_tc_obj_p,
-      _tao_elem
-    );
+  TAO_OutputCDR stream;
+  
+  if (stream << _tao_elem)
+    {
+      _tao_any._tao_replace (
+          VjObs::_tc_obj_p,
+          TAO_ENCAP_BYTE_ORDER,
+          stream.begin ()
+        );
+    }
 }
 
 // Non-copying insertion.
@@ -5690,12 +15902,19 @@ void operator<<= (
     VjObs::obj_p *_tao_elem
   )
 {
-  TAO::Any_Dual_Impl_T<VjObs::obj_p>::insert (
-      _tao_any,
-      VjObs::obj_p::_tao_any_destructor,
-      VjObs::_tc_obj_p,
-      _tao_elem
-    );
+  TAO_OutputCDR stream;
+  
+  if (stream << *_tao_elem)
+    {
+      _tao_any._tao_replace (
+          VjObs::_tc_obj_p,
+          TAO_ENCAP_BYTE_ORDER,
+          stream.begin (),
+          1,
+          _tao_elem,
+          VjObs::obj_p::_tao_any_destructor
+        );
+    }
 }
 
 // Extraction to non-const pointer (deprecated).
@@ -5704,8 +15923,8 @@ CORBA::Boolean operator>>= (
     VjObs::obj_p *&_tao_elem
   )
 {
-  return _tao_any >>= ACE_const_cast (
-      const VjObs::obj_p *&,
+  return _tao_any >>= ACE_const_cast(
+      const VjObs::obj_p*&,
       _tao_elem
     );
 }
@@ -5716,20 +15935,75 @@ CORBA::Boolean operator>>= (
     const VjObs::obj_p *&_tao_elem
   )
 {
-  return
-    TAO::Any_Dual_Impl_T<VjObs::obj_p>::extract (
-        _tao_any,
-        VjObs::obj_p::_tao_any_destructor,
-        VjObs::_tc_obj_p,
-        _tao_elem
-      );
+  _tao_elem = 0;
+  
+  ACE_TRY_NEW_ENV
+  {
+    CORBA::TypeCode_var type = _tao_any.type ();
+    
+    CORBA::Boolean _tao_result =
+      type->equivalent (
+          VjObs::_tc_obj_p
+          ACE_ENV_ARG_PARAMETER
+        );
+    ACE_TRY_CHECK;
+    
+    if (!_tao_result)
+      {
+        return 0; // not equivalent
+      }
+    
+    if (_tao_any.any_owns_data ())
+      {
+        _tao_elem = ACE_static_cast(
+            const VjObs::obj_p*,
+            _tao_any.value ()
+          );
+        
+        return 1;
+      }
+    else
+      {
+        VjObs::obj_p *tmp = 0;
+        ACE_NEW_RETURN (
+            tmp,
+            VjObs::obj_p,
+            0
+          );
+        
+        TAO_InputCDR stream (
+            _tao_any._tao_get_cdr (),
+            _tao_any._tao_byte_order ()
+          );
+        
+        if (stream >> *tmp)
+          {
+            ((CORBA::Any *)&_tao_any)->_tao_replace (
+                VjObs::_tc_obj_p,
+                1,
+                ACE_static_cast (void *, tmp),
+                VjObs::obj_p::_tao_any_destructor
+              );
+            
+            _tao_elem = tmp;
+            return 1;
+          }
+        else
+          {
+            delete tmp;
+          }
+      }
+  }
+  ACE_CATCHANY
+  {
+  }
+  ACE_ENDTRY;
+  
+  return 0;
 }
 
 // TAO_IDL - Generated from
-// be/be_visitor_sequence/cdr_op_cs.cpp:95
-
-#if !defined _TAO_CDR_OP_VjObs_scalar_p_CPP_
-#define _TAO_CDR_OP_VjObs_scalar_p_CPP_
+// be/be_visitor_sequence/cdr_op_cs.cpp:103
 
 CORBA::Boolean operator<< (
     TAO_OutputCDR &strm,
@@ -5786,23 +16060,16 @@ CORBA::Boolean operator>> (
       for (CORBA::ULong i = 0; i < _tao_seq_len && _tao_marshal_flag; ++i)
         {
           _tao_marshal_flag = (strm >> _tao_sequence[i].out ());
-        
-      }
-    
-    return _tao_marshal_flag;
+        }
+      
+      return _tao_marshal_flag;
+    }
   
-  }
-
-return 0;
+  return 0;
 }
 
-#endif /* _TAO_CDR_OP_VjObs_scalar_p_CPP_ */
-
 // TAO_IDL - Generated from
-// be/be_visitor_sequence/cdr_op_cs.cpp:95
-
-#if !defined _TAO_CDR_OP_VjObs_obj_p_CPP_
-#define _TAO_CDR_OP_VjObs_obj_p_CPP_
+// be/be_visitor_sequence/cdr_op_cs.cpp:103
 
 CORBA::Boolean operator<< (
     TAO_OutputCDR &strm,
@@ -5848,13 +16115,10 @@ CORBA::Boolean operator>> (
       
       // Retrieve all the elements.
       return strm.read_short_array (_tao_sequence.get_buffer (), _tao_sequence.length ());
-    
     }
   
   return 0;
 }
-
-#endif /* _TAO_CDR_OP_VjObs_obj_p_CPP_ */
 
 // TAO_IDL - Generated from
 // be/be_visitor_interface/cdr_op_cs.cpp:63
@@ -5873,21 +16137,29 @@ CORBA::Boolean operator>> (
     VjObs_ptr &_tao_objref
   )
 {
-  CORBA::Object_var obj;
-  
-  if ((strm >> obj.inout ()) == 0)
-    {
-      return 0;
-    }
-  
-  typedef ::VjObs RHS_SCOPED_NAME;
-  
-  // Narrow to the right type.
-  _tao_objref =
-    TAO::Narrow_Utils<RHS_SCOPED_NAME>::unchecked_narrow (
-        obj.in (),
-        _TAO_VjObs_Proxy_Broker_Factory_function_pointer
-      );
+  ACE_TRY_NEW_ENV
+  {
+    CORBA::Object_var obj;
     
-  return 1;
+    if ((strm >> obj.inout ()) == 0)
+      {
+        return 0;
+      }
+    
+    // Narrow to the right type.
+    _tao_objref =
+      VjObs::_unchecked_narrow (
+          obj.in ()
+          ACE_ENV_ARG_PARAMETER
+        );
+    ACE_TRY_CHECK;
+    return 1;
+  }
+  ACE_CATCHANY
+  {
+    // do nothing
+  }
+  ACE_ENDTRY;
+  return 0;
 }
+

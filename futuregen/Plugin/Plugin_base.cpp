@@ -6,7 +6,7 @@
 
 #include "Plugin_base.h"
 #include <iostream>
-
+#include "string_ops.h"
 IMPLEMENT_DYNAMIC_CLASS(REI_Plugin, wxObject)
 
 /////////////////////////////////////////////////////////////////////////////
@@ -203,15 +203,14 @@ UIDialog* REI_Plugin::Result(wxWindow* parent)
   titles.push_back("Description");
   titles.push_back("Value");
 
-  if (result_dlg!=NULL)
-    return result_dlg;
-  result_dlg = new TextResultDialog(parent);
+  if (result_dlg==NULL)
+    result_dlg = new TextResultDialog(parent);
   result_dlg->syngas->Clear();
   result_dlg->syngas->AddRow(titles);
   result_dlg->syngas->AddSeperator(' ');
   result_dlg->syngas->AddSeperator('+');
   result_dlg->syngas->AddSeperator(' ');
-
+  result_dlg->Set2Cols(v_desc, v_value);
   return result_dlg;
 }
 
@@ -413,4 +412,107 @@ void REI_Plugin::RegistVar(string vname, vector<double> *var)
 void REI_Plugin::RegistVar(string vname, vector<string> *var)
 {
   _string1D[vname]=var;
+}
+
+///////////////////////////////////////////////
+UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
+{
+  //This default implementation is for the Gas and water Interface's Data package
+  //New modules can override the function to implement its own port dialog
+  std::vector<wxString> titles;
+  titles.push_back("Description");
+  titles.push_back("Value");
+
+  std::vector<wxString> gas_desc;
+  std::vector<wxString> gas_value;
+  int i;
+  //first, to decide if it is water or gas
+
+  bool ok = true;
+  it->getDouble("ENTHALPY",    &ok);
+  if (!ok)
+    { //gas
+      gas_desc.push_back("COALCAL");
+      gas_value.push_back(to_string(it->getDouble("COALCAL")).c_str());
+      gas_desc.push_back("ASHCAL");
+      gas_value.push_back(to_string(it->getDouble("ASHCAL")).c_str());
+      gas_desc.push_back("ASHPH");
+      gas_value.push_back(to_string(it->getDouble("ASHPH")).c_str());
+      gas_desc.push_back("PRESSURE_DROP");
+      gas_value.push_back(to_string(it->getDouble("PRESSURE_DROP")).c_str());
+      gas_desc.push_back("TEMPERATURE");
+      gas_value.push_back(to_string(it->getDouble("TEMPERATURE")).c_str());
+      gas_desc.push_back("PRESSURE");
+      gas_value.push_back(to_string(it->getDouble("PRESSURE")).c_str());
+      gas_desc.push_back("FLOWRATE");
+      gas_value.push_back(to_string(it->getDouble("FLOWRATE")).c_str());
+      gas_desc.push_back("TAR");
+      gas_value.push_back(to_string(it->getDouble("TAR")).c_str());
+      gas_desc.push_back("SOOT");
+      gas_value.push_back(to_string(it->getDouble("SOOT")).c_str());
+      gas_desc.push_back("PT MEAN_SIZE");
+      gas_value.push_back(to_string(it->getDouble("MEAN_SIZE")).c_str());
+      gas_desc.push_back("PT SIZE_VARIANCE");
+      gas_value.push_back(to_string(it->getDouble("SIZE_VARIANCE")).c_str());
+      gas_desc.push_back("PARTICLE T");
+      gas_value.push_back(to_string(it->getDouble("T_PARTICLE")).c_str());
+      gas_desc.push_back("PARITCLE M");
+      gas_value.push_back(to_string(it->getDouble("M_PARTICLE")).c_str());
+      gas_desc.push_back("COMP NAME");
+      gas_value.push_back("COMP CONC");
+      
+      std::vector<std::string> comp_name = it->getString1D("COMP_NAME");
+      std::vector<double>      comp_conc = it->getDouble1D("COMP_CONC");
+      for (i=0; i<comp_name.size(); i++)
+	{
+	  gas_desc.push_back(comp_name[i].c_str());
+	  gas_value.push_back(to_string(comp_conc[i]).c_str());
+	}
+      
+      gas_desc.push_back("PART NAME");
+      gas_value.push_back("PART CONC");
+
+      std::vector<std::string> part_name = it->getString1D("PART_NAME");
+      std::vector<double>      part_conc = it->getDouble1D("PART_CONC");
+      for (i=0; i<part_name.size(); i++)
+	{
+	  gas_desc.push_back(part_name[i].c_str());
+	  gas_value.push_back(to_string(part_conc[i]).c_str());
+	}
+      gas_desc.push_back("WIC NAME");
+      gas_value.push_back("WIC CONC");
+      std::vector<std::string> wic_name = it->getString1D("WIC_NAME", &ok);
+      std::vector<double>      wic_conc = it->getDouble1D("WIC_CONC", &ok);
+      for (i=0; i<wic_name.size(); i++)
+	{
+	  gas_desc.push_back(wic_name[i].c_str());
+	  gas_value.push_back(to_string(wic_conc[i]).c_str());
+	}
+    }
+  else
+    { //water
+      gas_desc.push_back("TEMPERATURE");
+      gas_value.push_back(to_string(it->getDouble("TEMPERATURE")).c_str());
+      gas_desc.push_back("PRESSURE");
+      gas_value.push_back(to_string(it->getDouble("PRESSURE")).c_str());
+      gas_desc.push_back("ENTHALPY");
+      gas_value.push_back(to_string(it->getDouble("ENTHALPY")).c_str());
+      gas_desc.push_back("QUALITY");
+      gas_value.push_back(to_string(it->getDouble("QUALITY")).c_str());
+      gas_desc.push_back("FLOWRATE");
+      gas_value.push_back(to_string(it->getDouble("FLOWRATE")).c_str());
+    
+    }
+
+  if (port_dlg==NULL)
+    port_dlg = new TextResultDialog(parent);
+  
+  port_dlg->syngas->Clear();
+  port_dlg->syngas->AddRow(titles);
+  port_dlg->syngas->AddSeperator(' ');
+  port_dlg->syngas->AddSeperator('+');
+  port_dlg->syngas->AddSeperator(' ');
+  port_dlg->Set2Cols(gas_desc, gas_value);
+
+  return result_dlg;
 }
