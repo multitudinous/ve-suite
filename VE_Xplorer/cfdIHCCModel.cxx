@@ -216,7 +216,7 @@ void cfdIHCCModel::RunModel( void )
    solutions.clear();
    times.clear();
    // Geodes have already been cleared
-   int numSequenceChildren = this->sequence->GetSequence()->getNumChildren();
+   int numSequenceChildren = this->sequence->GetSequence()->GetNumChildren();
    vprDEBUG(vprDBG_ALL,1) << " numSequenceChildren: " << numSequenceChildren
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -225,7 +225,7 @@ void cfdIHCCModel::RunModel( void )
       for ( int i = numSequenceChildren-1; i >= 0; i-- )
       {
          // transient sequences have groups attached directly to sequence nodes
-         cfdGroup* group = (cfdGroup*)this->sequence->GetSequence()->getChild( i );
+         cfdGroup* group = (cfdGroup*)this->sequence->GetSequence()->GetChild( i );
          this->sequence->GetSequence()->RemoveChild( group );
          delete group;
       }

@@ -200,7 +200,7 @@ void cfdStreamers::SetIntegrationDirection( int value )
 void cfdStreamers::SetPropagationTime( int value )
 {
    this->propagationTime = (float)value * 
-                  ( 10.0f * this->GetActiveDataSet()->GetMaxTime() / 50.0f );
+                  ( 100.0f * this->GetActiveDataSet()->GetMaxTime() / 50.0f );
 }
 
 void cfdStreamers::SetIntegrationStepLength( int value )

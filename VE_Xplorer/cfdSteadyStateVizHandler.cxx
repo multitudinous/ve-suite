@@ -55,6 +55,8 @@
 #include "cfdObjects.h"
 #include "cfdPlanes.h"
 #include "cfdDCS.h"
+#include "cfdGroup.h"
+#include "cfdSequence.h"
 #include "cfdTempAnimation.h"
 #include "cfdNavigate.h"
 #include "cfdCursor.h"
@@ -796,6 +798,12 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                {
                   this->dataList[ i ]->GetSequence()->AddToSequence(
                                           this->dataList[ i ]->GetObjectType() );
+                  if ( this->dataList[ i ]->GetDCS()->SearchChild(
+                        this->dataList[ i ]->GetSequence()->GetSequence() ) < 0 )
+                  {
+                     this->dataList[ i ]->GetDCS()->AddChild( 
+                           this->dataList[ i ]->GetSequence()->GetSequence() );
+                  }
                }
             }
             vprDEBUG(vprDBG_ALL,2) << " End Update Loop"
@@ -1009,7 +1017,6 @@ cout << temp[ 0 ] << " : " << temp[ 1 ] << " : " << temp[ 2 ] << endl;
       }
 
       this->lastSource = vtkPolyData::New();
-//this->cursor->
       this->lastSource->DeepCopy( 
          (vtkPolyData*)this->cursor->GetSourcePoints() );
 

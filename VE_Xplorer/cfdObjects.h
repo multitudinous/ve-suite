@@ -99,7 +99,7 @@ class cfdObjects : public cfdGlobalBase
       void UpdatecfdGeode( void );
       void AddcfdGeodeToDCS( void );
       void RemovecfdGeodeFromDCS( void );
-      void CreatecfdGeode( void );
+      //void CreatecfdGeode( void );
 
       void SetDCS( cfdDCS* );
       cfdDCS* GetDCS( void );

@@ -199,15 +199,6 @@ void cfdObjects::UpdatecfdGeode( void )
    }
 }
 
-void cfdObjects::CreatecfdGeode( void )
-{
-   // used by cfdAnimatedStreamlineCone
-   this->_geodes.push_back( new cfdGeode() );
- 
-   // Function implements respective vtkActorToGeode function
-   ((cfdGeode*)this->_geodes.back())->TranslateTocfdGeode( this->actor );
-}
-
 // This function simply adds the created geode from function UpdateGeode
 void cfdObjects::AddcfdGeodeToDCS( void )
 {

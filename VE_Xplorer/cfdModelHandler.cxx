@@ -237,7 +237,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    
    if ( commandArray == NULL )
    {
-      cerr << " ERROR : commandArray not set fot cfdModelHandler " << endl;
+      std::cerr << " ERROR : commandArray not set fot cfdModelHandler " << std::endl;
       exit( 1 );
    }
 
@@ -254,24 +254,24 @@ void cfdModelHandler::PreFrameUpdate( void )
       {
          if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
          {
-         vprDEBUG(vprDBG_ALL,0) << " dataset = "
+         vprDEBUG(vprDBG_ALL,0) << "\tcfdModelHandler::PreFrameUpdate dataset = "
                   << _activeModel->GetCfdDataSet( i )->GetFileName()
                   << ", dcs = " << _activeModel->GetCfdDataSet( i )->GetDCS()
                   << std::endl << vprDEBUG_FLUSH;
 
          int cfdType = _activeModel->GetCfdDataSet( i )->GetType();
-         vprDEBUG(vprDBG_ALL,1) << " cfdType: " << cfdType
+         vprDEBUG(vprDBG_ALL,1) << "\tcfdModelHandler::PreFrameUpdate cfdType: " << cfdType
                              << std::endl << vprDEBUG_FLUSH;
 
          // set the dataset as the appropriate dastaset type
          // (and the active dataset as well)
          activeDataset = _activeModel->GetCfdDataSet( i );         
       
-         vprDEBUG(vprDBG_ALL,1) << "last active dataset name = " 
+         vprDEBUG(vprDBG_ALL,1) << "\tcfdModelHandler::PreFrameUpdate last active dataset name = " 
                              << oldDatasetName
                              << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL,1) << "Activating steady state file " 
+         vprDEBUG(vprDBG_ALL,1) << "\tcfdModelHandler::PreFrameUpdate Activating steady state file " 
                 << activeDataset->GetFileName()
                 << std::endl << vprDEBUG_FLUSH;
 
@@ -279,7 +279,7 @@ void cfdModelHandler::PreFrameUpdate( void )
          // (or change scalar since that is routed through here too)
          if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
          {
-            vprDEBUG(vprDBG_ALL,1) << " setting dataset as newly activated" 
+            vprDEBUG(vprDBG_ALL,1) << "\tcfdModelHandler::PreFrameUpdate  setting dataset as newly activated" 
                                 << std::endl << vprDEBUG_FLUSH;
             activeDataset->SetNewlyActivated();
             strcpy( oldDatasetName, activeDataset->GetFileName() );
@@ -293,7 +293,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       }
       else
       {
-         std::cerr << "ERROR: requested steady state dataset " 
+         std::cerr << "ERROR: cfdModelHandler::PreFrameUpdate  requested steady state dataset " 
                   << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) << " must be less than " 
                   << _activeModel->GetNumberOfCfdDataSets()
                   << std::endl;

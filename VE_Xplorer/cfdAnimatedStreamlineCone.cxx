@@ -102,7 +102,7 @@ void cfdAnimatedStreamlineCone::Update( void )
  
    if ( numberOfStreamLines == 0 )
    {
-      cout << "|   cfdAnimatedStreamlineCone::Update : Number of streamlines is 0 " << endl;
+      std::cout << "|   cfdAnimatedStreamlineCone::Update : Number of streamlines is 0 " << std::endl;
       return;
    }
 
@@ -187,34 +187,34 @@ void cfdAnimatedStreamlineCone::Update( void )
    for ( i = 0; i < w; i+=ratio )
    {
       //Make ploydata from the points
-      //vprDEBUG(vprDBG_ALL, 1) << " begin loop " << i << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop " << i << std::endl << vprDEBUG_FLUSH;
       this->polydata->SetPoints( pointsArray[ i ] );
       //polydata->Update();
       //polydata->Print( cout );
 
       //Map spheres to the polydata
-      //vprDEBUG(vprDBG_ALL, 1) << " begin loop1" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop1" << std::endl << vprDEBUG_FLUSH;
       this->glyph->SetSource( this->sphere->GetOutput() );
       this->glyph->SetInput( this->polydata );
       //glyph->Update();      
 
-      //vprDEBUG(vprDBG_ALL, 1) << " begin loop2" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop2" << std::endl << vprDEBUG_FLUSH;
       this->mapper->SetInput( this->glyph->GetOutput() );
       this->mapper->Update();
 
 
-      //vprDEBUG(vprDBG_ALL, 1) << " begin loop3" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop3" << std::endl << vprDEBUG_FLUSH;
       this->actor->SetMapper( this->mapper );
       this->actor->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
      
       //Make geodes from each polydata
-      //vprDEBUG(vprDBG_ALL, 1) << " begin loop4" << std::endl << vprDEBUG_FLUSH;
-      this->CreatecfdGeode();
+      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop4" << std::endl << vprDEBUG_FLUSH;
+      this->_sequence->CreateGeodeVector( this->actor );
 
       // Reset polydata to its intial state and release all memory
       //polydata->Reset();
       this->polydata->Initialize();
-      //vprDEBUG(vprDBG_ALL, 1) << "end loop" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: end loop" << std::endl << vprDEBUG_FLUSH;
    }
    
    /*vtkPolyDataWriter *writer = vtkPolyDataWriter::New();

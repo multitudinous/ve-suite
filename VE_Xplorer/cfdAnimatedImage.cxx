@@ -142,7 +142,7 @@ void cfdAnimatedImage::Update( void )
    {
       this->actor = _images[i]->GetActor();
   
-      this->CreatecfdGeode();
+      this->_sequence->CreateGeodeVector( this->actor );
    }
 
    this->updateFlag = true;
