@@ -95,12 +95,12 @@ class cfdQuatCamHandler : public cfdGlobalBase
 
       void LoadFromFile(char*);
 
-      void Relocate(int runSlerp, cfdDCS* worldDCS, int cfdIso_value, cfdNavigate* nav); 
+      void Relocate(cfdDCS* worldDCS, cfdNavigate* nav); 
 
       int getNumLocs();
 
       // If a quat is active this will move the cam to the next location
-      void PreFrameUpdate( void );
+      void PreFrameUpdate();
    
       int numQuatCams;
 
@@ -117,8 +117,10 @@ class cfdQuatCamHandler : public cfdGlobalBase
       std::vector<cfdPoints*> cfdPointsVec;
       std::vector<cfdQuatCam*> QuatCams;
       int run;
+      int cam_id;
       float rotvec[3];
       float angle;
+      bool activecam;
 };
 #endif
 

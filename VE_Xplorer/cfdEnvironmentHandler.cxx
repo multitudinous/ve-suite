@@ -216,11 +216,8 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 	
    // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)
-   vprDEBUG(vprDBG_ALL,3) << "\t 3. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    this->cursor->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
-   vprDEBUG(vprDBG_ALL,3) << "\t 4. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    this->cursor->CheckCommandId( _commandArray );
-   vprDEBUG(vprDBG_ALL,3) << "\t 5. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    this->cursor->Update( this->nav->GetCursorLocation(),
                            this->nav->GetDirection(), this->nav->worldTrans );
 
@@ -231,9 +228,9 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    }
 */
    _camHandler->CheckCommandId( _commandArray );
-   _camHandler->PreFrameUpdate();
    _soundHandler->CheckCommandId( _commandArray );
    _teacher->CheckCommandId( _commandArray );
+   _camHandler->PreFrameUpdate();   
 }
 
 void cfdEnvironmentHandler::CreateObjects( void )

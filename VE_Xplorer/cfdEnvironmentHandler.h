@@ -34,6 +34,20 @@
 
 #include <vpr/Util/Singleton.h>
 
+///ADDED FOR TESTING ONLY: TAKE OUT WHEN DONE
+#include <Performer/pr.h>
+#include <Performer/pf/pfLightSource.h>
+#include <Performer/pr/pfLinMath.h>
+#include <Performer/pf/pfNode.h>
+#include <Performer/pf/pfDCS.h>
+#include <Performer/pf/pfSwitch.h>
+#include <Performer/pf/pfGroup.h>
+#include <Performer/pfdu.h>
+#include <Performer/pfutil.h>
+#include <Performer/prmath.h>
+/////////////////////////////////////////////
+
+
 class cfdNavigate;
 class cfdCursor;
 class cfdDCS;

@@ -70,11 +70,11 @@ void cfdQuatCam::MoveCam(double* worldTrans, float t, cfdDCS* dummy)
 {
    TransLerp(t);
    RotSlerp(t);
-   Matrix44f temp;
-   setRot( temp, CurPosQuat);
-   setTrans( temp, vjVecCurrTrans );
+   //Matrix44f temp;
+   //setRot( temp, CurPosQuat);
+   //setTrans( temp, vjVecCurrTrans );
 
-   dummy->SetMat(temp);
+   //dummy->SetMat(temp);
 }
 
 void cfdQuatCam::RotSlerp(float t)
@@ -85,7 +85,7 @@ void cfdQuatCam::RotSlerp(float t)
 
 void cfdQuatCam::TransLerp(float t)
 {
-   lerp(vjVecCurrTrans, t, vjVecLastTrans, vjVecNextTrans); 
+   gmtl::lerp(vjVecCurrTrans, t, vjVecLastTrans, vjVecNextTrans); 
 }
 
 
@@ -94,7 +94,7 @@ void cfdQuatCam::UpdateTrans(cfdNavigate* nav)
    nav->worldTrans[0] = (double)vjVecCurrTrans[0];
    nav->worldTrans[1] = (double)vjVecCurrTrans[1];
    nav->worldTrans[2] = (double)vjVecCurrTrans[2];
-   nav->UpdateLoc(nav->worldTrans);
+   //nav->UpdateLoc((double*)vjVecCurrTrans);
 
    //return worldTrans;
 }
@@ -104,10 +104,12 @@ void cfdQuatCam::UpdateRotation()
    if (rotPoints[1]<0.000001)
    {
       angle = gmtl::Math::aCos(rotPoints[0])*57.29877951;
+      //angle = rotPoints[0];
    }
    else
    {
       angle = 360 - (gmtl::Math::aCos(rotPoints[0])*57.29877951);
+      //angle = 360 - rotPoints[0];
    }
 }   
 

@@ -227,12 +227,12 @@ void cfdNavigate::UpdateLoc( )      //Changed by Gengxun
    loc[2] =  loc_temp[1];
 }  
 
-void cfdNavigate::UpdateLoc( double* worldTrans )  //Added by Dave
+void cfdNavigate::UpdateLoc( double* tempTrans )  //Added by Dave
 {
    // used to get cfdNavigate caught up with moving done by quatcams
-   this->worldLoc[0] = worldTrans[0];
-   this->worldLoc[1] = worldTrans[1];
-   this->worldLoc[2] = worldTrans[2];
+   this->worldLoc[0] = tempTrans[0];
+   this->worldLoc[1] = tempTrans[1];
+   this->worldLoc[2] = tempTrans[2];
 }
 
 /*

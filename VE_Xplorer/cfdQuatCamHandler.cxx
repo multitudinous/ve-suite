@@ -66,6 +66,8 @@ cfdQuatCamHandler::cfdQuatCamHandler( cfdDCS* worldDCS, cfdNavigate* nav, char* 
    _param = NULL;
    t = 0.0;
    numQuatCams = 0;
+   activecam = false;
+   cam_id = 0;
    
    _worldDCS = worldDCS;
    _nav = nav;
@@ -80,7 +82,7 @@ cfdQuatCamHandler::~cfdQuatCamHandler( void )
 void cfdQuatCamHandler::LoadData(double* worldPos, cfdDCS* worldDCS)
 {
    Matrix44f vjm;
-   vjm = worldDCS->GetMat();;
+   vjm = worldDCS->GetMat();
    nextPoint = new cfdPoints(worldPos, vjm);
    cfdPointsVec.push_back(nextPoint);
 }
@@ -154,8 +156,8 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
          recordrot[2] = temp[1][0];
          recordrot[3] = temp[1][1];
          
-         thisQuatCam = new cfdQuatCam(temp, transpts, recordrot);
-         QuatCams.push_back(thisQuatCam);
+         //thisQuatCam = new cfdQuatCam(temp, transpts, recordrot);
+         QuatCams.push_back(new cfdQuatCam(temp, transpts, recordrot));
       } 
    }
    else 
@@ -163,20 +165,20 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
           
 }
 
-void cfdQuatCamHandler::Relocate(int cfdId, cfdDCS* worldDCS, int cfdIso_value, cfdNavigate* nav)
+void cfdQuatCamHandler::Relocate( cfdDCS* worldDCS,  cfdNavigate* nav )
 {
    Matrix44f vjm;
-   run = cfdId;
+   //run = cfdId;
 
    if ( t == 0.0 )
-      QuatCams[cfdIso_value]->SetCamPos(nav->worldTrans, worldDCS);
+      QuatCams[cam_id]->SetCamPos( nav->worldTrans, worldDCS );
 
    if ( t < 1.0 )
    {
       t += 0.01f;
-      QuatCams[cfdIso_value]->MoveCam(nav->worldTrans, t, worldDCS);
-      QuatCams[cfdIso_value]->UpdateTrans(nav);
-      QuatCams[cfdIso_value]->UpdateRotation();
+      QuatCams[cam_id]->MoveCam( nav->worldTrans, t, worldDCS );
+      QuatCams[cam_id]->UpdateTrans( nav );
+      QuatCams[cam_id]->UpdateRotation();
 
       vjm = worldDCS->GetMat();
 
@@ -184,15 +186,17 @@ void cfdQuatCamHandler::Relocate(int cfdId, cfdDCS* worldDCS, int cfdIso_value, 
       {
          rotvec[i] = makeRot<EulerAngleXYZf>(vjm)[i];
       }
-      std::cout<<"angle "<<QuatCams[cfdIso_value]->angle<<std::endl;
-      nav->worldRot[0] = QuatCams[cfdIso_value]->angle;
+      //std::cout<<"angle "<<QuatCams[cfdIso_value]->angle<<std::endl;
+      nav->worldRot[0] = QuatCams[cam_id]->angle;
+      //nav->worldRot[0] = rotvec[0];
       nav->worldRot[1] = rotvec[1];
       nav->worldRot[2] = rotvec[2];
    }
    else
    {
       t = 0.0;
-      run = -1;
+      //run = -1;
+      activecam = false;
    }      
 }
 
@@ -217,8 +221,10 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
    {
-      this->Relocate( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
-                        _worldDCS, commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), _nav);
+      activecam = true;
+      cam_id = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      this->Relocate( _worldDCS, _nav);
+      return true;
       // Need to fix this
       //this->setId( this->run );
    }
@@ -229,7 +235,10 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 // If a quat is active this will move the cam to the next location
 void cfdQuatCamHandler::PreFrameUpdate( void )
 {
-   
+   if ( activecam )
+   {
+      this->Relocate( _worldDCS, _nav);    
+   }
 }
 
 void cfdQuatCamHandler::UpdateCommand()
