@@ -10,7 +10,7 @@ set JAVA_HOME=C:\j2sdk1.4.2_06
 set ACE_ROOT=C:\ACE_wrappers
 set TAO_ROOT=%ACE_ROOT%\TAO
 set XERCESCROOT=C:\xerces-c-src_2_5_0
-set WX_ROOT=C:\wxWindows-2.4.2
+REM set WX_ROOT=C:\wxWindows-2.4.2
 set OSGHOME=C:\OSG_OP_OT-0.9.8-2\OpenSceneGraph
 
 REM set TAO_MACHINE=lego.vrac.iastate.edu
