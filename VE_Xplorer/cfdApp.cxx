@@ -113,18 +113,19 @@ void cfdApp::exit()
         << "deleting this->_vjobsWrapper" << std::endl << vprDEBUG_FLUSH;
       delete this->_vjobsWrapper;
    }
-std::cout << " done exit " << std::endl;
 }
 
 #ifdef _PERFORMER
 inline void cfdApp::apiInit( )
 {
+   vrj::PfApp::apiInit();
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::apiInit" << std::endl << vprDEBUG_FLUSH;
    pfNotifyHandler( notifyHandler );
 }
 
 inline void cfdApp::preForkInit( )
 {
+   vrj::PfApp::preForkInit();
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::preForkInit"
                           << std::endl << vprDEBUG_FLUSH;
    //pfdInitConverter( "air_system.flt" );

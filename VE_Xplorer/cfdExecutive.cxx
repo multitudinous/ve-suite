@@ -139,7 +139,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
    
    //_param = new cfdExecutiveConfiguration();
 
-   InitModules();
+   //InitModules();
 }
 
 cfdExecutive::~cfdExecutive( void )
