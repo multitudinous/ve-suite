@@ -35,6 +35,8 @@
 #include "cfdGlobalBase.h"
 #include "interface.h"
 
+#include <vpr/Thread/Thread.h>
+
 #include <map>
 #include <string>
 
@@ -93,7 +95,7 @@ class cfdExecutive : public cfdGlobalBase
       void GetNetwork( void );
       void GetOutput( std::string name);
       void GetPort( std::string name);
-      void GetEverything ( void );
+      void GetEverything( void * );
       void HowToUse( std::string name);
 
       // Get intial module information from the executive
@@ -140,6 +142,11 @@ class cfdExecutive : public cfdGlobalBase
       cfdEnvironmentHandler* _envHandler;
 
       bool _doneWithCalculations;
+      bool updateNetworkString;
+      bool runGetEverythingThread;
+      // Classes and variables for multithreading.
+      vpr::ThreadMemberFunctor< cfdExecutive >* vjThFunc[1];
+      vpr::Thread* vjTh[1];
 };
 
 #endif

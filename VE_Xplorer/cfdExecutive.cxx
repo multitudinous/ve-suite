@@ -47,6 +47,8 @@
 #include <sstream>
 
 #include <vrj/Util/Debug.h>
+#include <vpr/System.h>
+
 #include <orbsvcs/CosNamingC.h>
 //#include <tao/BiDir_GIOP/BiDirGIOP.h>
 
@@ -66,6 +68,10 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
    }
 
    this->_doneWithCalculations = true;
+   this->runGetEverythingThread = true;
+   this->updateNetworkString = false;
+   this->vjThFunc[0] = 0;
+   this->vjTh[0] = 0;
 
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
@@ -128,6 +134,9 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
       //Call the Executive CORBA call to register it to the Executive
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
       std::cout << " Connected to the Executive " << std::endl;   
+
+      this->vjThFunc[0] = new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything );
+      this->vjTh[0] = new vpr::Thread( this->vjThFunc[0] );
    } 
    catch (CORBA::Exception &) 
    {      
@@ -141,6 +150,9 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
 
 cfdExecutive::~cfdExecutive( void )
 {
+   this->runGetEverythingThread = false;
+   vpr::System::msleep( 500 );  // half-second delay
+   delete this->vjTh[0];
    delete av_modules;
 }
 
@@ -148,27 +160,27 @@ void cfdExecutive::UnbindORB()
 {
    if ( ui_i )
    {
-	CosNaming::Name UIname(1);
-	UIname.length(1);
-	UIname[0].id = CORBA::string_dup((ui_i->UIName_).c_str());
-   std::cout<< " Executive Destructor " << UIname[0].id << std::endl;
+	   CosNaming::Name UIname(1);
+	   UIname.length(1);
+	   UIname[0].id = CORBA::string_dup((ui_i->UIName_).c_str());
+      std::cout<< " Executive Destructor " << UIname[0].id << std::endl;
 
-   try
-   {
-      this->naming_context->unbind(UIname);
-   }
-   catch ( CosNaming::NamingContext::InvalidName& ex )
-   {
-      std::cout << " cfdExecutive : Invalid Name! " << std::endl;
-   }
-   catch ( CosNaming::NamingContext::NotFound& ex )
-   {
-      std::cout << " cfdExecutive : Not Found! " << std::endl;
-   }
-   catch ( CosNaming::NamingContext::CannotProceed& ex )
-   {
-      std::cout << " cfdExecutive : Cannot Proceed! " << std::endl;
-   }
+      try
+      {
+         this->naming_context->unbind(UIname);
+      }
+      catch ( CosNaming::NamingContext::InvalidName& ex )
+      {
+         std::cout << " cfdExecutive : Invalid Name! " << std::endl;
+      }
+      catch ( CosNaming::NamingContext::NotFound& ex )
+      {
+         std::cout << " cfdExecutive : Not Found! " << std::endl;
+      }
+      catch ( CosNaming::NamingContext::CannotProceed& ex )
+      {
+         std::cout << " cfdExecutive : Cannot Proceed! " << std::endl;
+      }
    }
 }
 
@@ -285,8 +297,13 @@ void cfdExecutive::GetNetwork ( void )
    std::vector<Interface>::iterator iter;
    // Find network layout chunk in network structure
    for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      if(iter->_id==-1) break;
-  
+   {
+      if ( iter->_id == -1 ) 
+      {
+         break;
+      }
+   }
+
    if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
    {
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
@@ -319,17 +336,17 @@ void cfdExecutive::GetNetwork ( void )
 
 }
 ///////////////////////////////////////////////////////////////////
-
-void cfdExecutive::GetOutput (std::string name)
+/*
+void cfdExecutive::GetOutput( std::string name )
 {
   // NOTHING YET
 }
-
+*/
 ///////////////////////////////////////////////////////////////////
 
 void cfdExecutive::GetPort (std::string name)
 {
-   char *pt_str;
+   char* pt_str = 0;
       
    CORBA::Long mod_id  = (CORBA::Long)_name_map[name];
    CORBA::Long port_id = 0;
@@ -355,10 +372,14 @@ void cfdExecutive::GetPort (std::string name)
 
 ///////////////////////////////////////////////////////////////////
 
-void cfdExecutive::GetEverything( void )
+void cfdExecutive::GetEverything( void * )
 {
-   if ( !CORBA::is_nil( this->_exec) )
+   while ( runGetEverythingThread )
    {
+      vpr::System::msleep( 500 );  // half-second delay
+   if ( !CORBA::is_nil( this->_exec) && updateNetworkString )
+   {
+      vprDEBUG(vprDBG_ALL,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
       GetNetwork();
   
       std::map< int, std::string >::iterator iter;
@@ -421,19 +442,22 @@ void cfdExecutive::GetEverything( void )
          }
          // The above code is from : The C++ Standard Library by:Josuttis pg. 205
       }
+      vprDEBUG(vprDBG_ALL,0) << "|\tDone Getting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
    }
    else
    {
-      std::cerr << "ERROR : The Executive has not been intialized! " <<std::endl;     
+      vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been intialized! " << std::endl << vprDEBUG_FLUSH;     
+   }
+      updateNetworkString = false;
    }
 }
 
 ///////////////////////////////////////////////////////////////////
-
+/*
 void cfdExecutive::HowToUse( std::string name )
 {
    // get a module id from a name
-/*  
+  
    CORBA::Long mod_id = (CORBA::Long)_name_map[name];
   
    // get some input data for module
@@ -449,9 +473,9 @@ void cfdExecutive::HowToUse( std::string name )
    // get output data for module
   
    double efficiency = _ot_map[mod_id].getDouble("EFFICIENCY");
-   double cash_flow  = _ot_map[mod_id].getDouble("CASH_FLOW");*/
+   double cash_flow  = _ot_map[mod_id].getDouble("CASH_FLOW");
 }
-
+*/
 void cfdExecutive::InitModules( void )
 {
    // Initiallize the dashboard
@@ -473,30 +497,14 @@ void cfdExecutive::UpdateModules( void )
    {
       if ( ui_i->GetCalcFlag() )
       {
-         //vpr::System::msleep( 1000 );  // half-second delay
-
-         this->GetEverything();
-         std::cout << " Get Everything End" << std::endl;      
-         /*std::map<std::string, int>::iterator iter;
-         for ( iter=_name_map.begin(); iter!=_name_map.end(); iter++ )
+         while ( updateNetworkString )
          {
-            if ( iter->first=="ASU"    || iter->first=="Power"    ||
-                  iter->first=="SELX"  || iter->first=="SRS"      ||
-                  iter->first=="STACK" || iter->first=="GASI"     ||
-                  iter->first=="WGSR"  || iter->first=="REI_Gasi" ||
-                  iter->first=="NETWORK") 
-            {
-               //std::string temp = "ASU";
-               this->_gauges->Update( iter->first, this );
-               //this->_gauges->Update( temp, this );
-               // Find each modules scalar info
-               // Pass info all the way to each gauge
-            }
-         }*/
-         //std::cout << " End Gauge Update " << std::endl;
-         //this->_geometry->Update( this->_activeScalarName, this );
-         //std::cout << " End Geometry Update " << std::endl;
-         //this->SetCalculationsFlag( false );
+            vpr::System::msleep( 500 );  // half-second delay
+         }
+
+         //this->GetEverything();
+         
+         this->updateNetworkString = true;
       }
    }
 }
