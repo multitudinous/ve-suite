@@ -5,10 +5,18 @@ VE_UI_HOME = ${VE_SUITE_HOME}/futuregen/VE_UI
 IDL_HOME = ${VE_SUITE_HOME}/futuregen/IDL
 SKEL_HOME = ${VE_SUITE_HOME}/VE_Conductor/skel
 
-PLATFORM = LINUX
-COMPILER = g++
-GCC = yes
-GXX = yes
+ifeq ($(CFDHOSTTYPE), IRIX64)
+   PLATFORM = IRIX
+   COMPILER = CC
+   GCC = yes
+   GXX = yes
+else
+   PLATFORM = LINUX
+   COMPILER = g++
+   GCC = yes
+   GXX = yes
+endif
+
 CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS -D_TAO
 CFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS
 LDFLAGS =    
@@ -21,7 +29,6 @@ include ../Plugin/Makefile.incl
 ifndef TAO_ROOT
   TAO_ROOT = $(ACE_ROOT)/TAO
 endif # ! TAO_ROOT
-
 
 APP = app
 
@@ -43,51 +50,54 @@ vpath %.cxx ${VE_UI_HOME}
 
 LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs
 
-CPPFLAGS += -g  ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
-		-I$(TAO_ROOT)/orbsvcs -I${VE_UI_HOME} -I${IDL_HOME} -I${VE_SUITE_HOME}/VE_Xplorer -I${SKEL_HOME}  \
-		-I./. #-LANG:std 
+CPPFLAGS += -g ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
+            -I$(TAO_ROOT)/orbsvcs -I${VE_UI_HOME} -I${IDL_HOME} \
+            -I${VE_SUITE_HOME}/VE_Xplorer -I${SKEL_HOME} -I./.
+
+ifeq ($(PLATFORM), IRIX)
+   CPPFLAGS += -n32 -mips3 -LANG:std -I/isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-deps/include/boost/compatibility/cpp_c_headers
+endif
 
 .PRECIOUS: moduleC.i moduleC.cpp moduleS.i moduleS.cpp
 
-
 OBJECTS = StringParse.o \
-	OrbThread.o \
-	Frame.o \
-	VjObsC.o \
-	VjObsS.o \
-	App.o \
-	PluginLoader.o \
-	Network.o \
-	Avail_Modules.o \
-	ListTable.o \
-	PortDialog.o \
-	ResultPanel.o \
-	paraThread.o \
-	GlobalParamDialog.o \
-	string_ops.o \
-	interface.o \
-	package.o \
-	Plugin_base.o \
-	UIDialog.o \
-	TexTable.o \
-	TextResultDialog.o \
-	FinancialDialog.o \
-	UI_Frame.o \
-	UI_Tabs.o \
-	UI_VisTab.o \
-	UI_VecTab.o \
-	UI_StreamTab.o \
-	UI_DataSetPanel.o \
-	UI_SoundsTab.o \
-	UI_GeometryTab.o \
-	UI_TeacherTab.o \
-	UI_NavTab.o  \
-	UI_TransTab.o \
-	UI_VertTab.o \
-	UI_DesignParTab.o \
-	UI_ViewLocTab.o \
-	UI_ModSelPanel.o \
-	UI_ModelData.o
+          OrbThread.o \
+          Frame.o \
+          VjObsC.o \
+          VjObsS.o \
+          App.o \
+          PluginLoader.o \
+          Network.o \
+          Avail_Modules.o \
+          ListTable.o \
+          PortDialog.o \
+          ResultPanel.o \
+          paraThread.o \
+          GlobalParamDialog.o \
+          string_ops.o \
+          interface.o \
+          package.o \
+          Plugin_base.o \
+          UIDialog.o \
+          TexTable.o \
+          TextResultDialog.o \
+          FinancialDialog.o \
+          UI_Frame.o \
+          UI_Tabs.o \
+          UI_VisTab.o \
+          UI_VecTab.o \
+          UI_StreamTab.o \
+          UI_DataSetPanel.o \
+          UI_SoundsTab.o \
+          UI_GeometryTab.o \
+          UI_TeacherTab.o \
+          UI_NavTab.o  \
+          UI_TransTab.o \
+          UI_VertTab.o \
+          UI_DesignParTab.o \
+          UI_ViewLocTab.o \
+          UI_ModSelPanel.o \
+          UI_ModelData.o
 
 .SUFFIXES : .o .cc .cpp .cxx
 
@@ -103,7 +113,7 @@ OBJECTS = StringParse.o \
 all: $(APP)
 
 $(APP): $(OBJECTS) $(addprefix $(VDIR),$(FILE_UI_CLT_OBJS))
-	g++ ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ ${WX_LIBS} $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK) 
+	$(CXX) ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ ${WX_LIBS} $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK) 
 
 clean:
-	rm -rf *.o $(APP) ./.obj ./ii_files ./Debug 	
+	rm -rf *.o $(APP) ./.obj ./ii_files ./Debug
