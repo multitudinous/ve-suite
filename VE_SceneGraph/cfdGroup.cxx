@@ -32,7 +32,6 @@
 #include "cfdGroup.h"
 #include <iostream>
 #include <algorithm>
-#include <cstdlib>
 #include <string>
 
 #ifdef _PERFORMER
@@ -234,11 +233,16 @@ int cfdGroup::GetNumChildren( void )
 ////////////////////////////////////
 void cfdGroup::SetName( char* name )
 {
+   const std::string test(name);
 #ifdef _OPENSG
-   cerr << " ERROR: cfdGroup::SetName is NOT implemented " << endl;
+   std::cerr << " ERROR: cfdGroup::SetName is NOT implemented " << std::endl;
    exit( 1 );
 #endif
-   _group->setName(name);
+#ifdef _PERFORMER
+   _group->setName( test.c_str() );
+#elif _OSG
+   _group->setName( test );
+#endif
 }
 //////////////////////////////////////
 const char* cfdGroup::GetName( void )

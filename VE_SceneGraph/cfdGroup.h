@@ -37,9 +37,7 @@
 #ifdef _PERFORMER
 class pfGroup;
 #elif _OSG
-namespace osg{
-   class Group;
-}
+namespace osg { class Group; }
 #elif _OPENSG
 #endif
 

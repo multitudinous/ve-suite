@@ -319,8 +319,8 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
    rot.set(input.getData());
    
    _dcs->setMatrix(rot* orig);
-   std::cerr <<"Check to make sure rotation is working!!"<<std::endl;
-   std::cerr <<"OSG cfdDCS::SetRotationMatrix."<<std::endl;
+   //std::cerr <<"Check to make sure rotation is working!!"<<std::endl;
+   //std::cerr <<"OSG cfdDCS::SetRotationMatrix."<<std::endl;
    
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;

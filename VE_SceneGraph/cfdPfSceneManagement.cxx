@@ -124,7 +124,6 @@ void cfdPfSceneManagement::InitScene( void )
 #ifdef _PERFORMER
    ((pfGroup*)(this->rootNode->GetRawNode()))->addChild( this->sun );
 #endif
-  
 }
 
 cfdGroup* cfdPfSceneManagement::GetRootNode( void )
