@@ -170,6 +170,16 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          arbPlane
          _activeVolumeVizNode->AddClipPlane(cfdVolumeVisualization::ARBITRARY,arbPlane);
       }*/
+   }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SHOW_TEXTURE_BBOX){
+      //display the bbox
+      if(_activeVolumeVizNode){
+         int showBBox = (float)_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         if(showBBox){
+            _activeVolumeVizNode->ActivateVisualBBox();  
+         }else{
+            _activeVolumeVizNode->DeactivateVisualBBox();
+         }
+      }
    }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_STOP){
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::STOP);
@@ -184,6 +194,22 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetPlayDirection(cfdVolumeVisualization::BACKWARD);
          _cleared = false;
+      }
+   }else if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TEXTURE_BASED_SHADERS){
+      if(_activeVolumeVizNode){
+         int useShaders = _cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      
+         if(!useShaders){
+            _activeVolumeVizNode->UseNormalGraphicsPipeline();
+         }
+#ifdef CFD_USE_SHADERS
+         else if(useShaders == ADVECTION_SHADER){
+            _activeVolumeVizNode->EnableTransferShader();
+         }else if(useShaders == VOLUME_SHADER){
+            _activeVolumeVizNode->EnableVolumeShader();
+         
+         }
+#endif
       }
    }else if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ){ 
       if(_parent){
@@ -200,7 +226,6 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          _activeTM = 0;
          _cleared = true;
       }
-      
    }
 }
 ///////////////////////////////////////////////////////////////////
@@ -256,10 +281,7 @@ void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetTextureManager(_activeTM);
          _activeVolumeVizNode->CreateNode();
-#ifdef CFD_USE_SHADERS
-         //testing for now
-        _activeVolumeVizNode->EnableVolumeShader();
-#endif
+
          //need to move/switch
          if(_parent){
             if(!((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get())&&!_cleared){

@@ -498,7 +498,7 @@ void fileIO::IdentifyTagAssignValue(char *TagName, char *TagValue )
    }
 }
 
-int fileIO::getIntegerBetween( const int min, const int max )
+int fileIO::getIntegerBetween( const int minimum, const int maximum )
 {
    int value = 0;
    char string[100];
@@ -575,10 +575,12 @@ int fileIO::getIntegerBetween( const int min, const int max )
             // convert array of chars to integer
             value = atoi(string);
          }
-         delete [] shortString;
+         if(shortString){
+            delete [] shortString;
+         }
       }
       //std::cout << "value = " << value << std::endl;
-   } while ( index == 0 || (value < min || value > max ) );
+   } while ( index == 0 || (value < minimum || value > maximum ) );
 
    return value;
 }

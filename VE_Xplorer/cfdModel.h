@@ -153,10 +153,10 @@ private:
    //the information for following three variables should be transfered from cfdApp
    ModelTypeIndex mModelType;
    Operation2Model mActiveOperation2Model;
-#ifdef _OSG
+//#ifdef _OSG
    //this will change once we figure out how to implement in Performer
    //maybe we need to use Volumizer. . .
-#endif
+//#endif
    cfdTextureManager* _activeVector;
    cfdTextureManager* _activeScalar;
    std::vector< cfdTextureManager* > _vectorDataTextures;

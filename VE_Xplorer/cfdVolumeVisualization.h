@@ -7,6 +7,7 @@ class cfdGroup;
 namespace osg{
    class Node;
    class Geometry;
+   class Texture1D;
    class Texture3D;
    class TexGen;
    class TexEnv;
@@ -17,6 +18,7 @@ namespace osg{
    class Material;
    class Shape;
    class Image;
+   class Switch;
 }
 #include "cfdVolumeSliceSwitchCallback.h"
 #include "cfdUpdateTextureCallback.h"
@@ -50,10 +52,16 @@ public:
    void AddClipPlane(ClipPlane direction,double* position);
    void RemoveClipPlane(ClipPlane direction);
    void UpdateClipPlanePosition(ClipPlane direction,double* newPosition);
+   void ActivateVisualBBox();  
+   void DeactivateVisualBBox();
+   void UseNormalGraphicsPipeline();
+
    bool isCreated(){return _isCreated;}
 #ifdef CFD_USE_SHADERS
    void EnableVolumeShader();
    void DisableVolumeShader();
+   void EnableTransferShader();
+   void DisableTransferShader();
 #endif
    cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk;}
    
@@ -72,6 +80,8 @@ protected:
    bool _verbose;
    bool _isCreated;
    bool _useShaders;
+   bool _volShaderIsActive;
+   bool _transferShaderIsActive;
    int _nSlices;
    int _tUnit;
    float _alpha;
@@ -89,11 +99,15 @@ protected:
    cfdTextureManager* _tm;
 #ifdef _OSG
 #ifdef CFD_USE_SHADERS
+   
    void _setupCGShaderPrograms(osg::StateSet *ss, 
                      char* fragProgramFileName,
                      char* fragFunctionName);
    void _initVolumeShader();
    void _initTransferFunctionShader();
+   
+   void _attachTransferFunctionsToStateSet(osg::StateSet* ss);
+   void _attachPropertyTextureToStateSet(osg::StateSet* ss);
 #endif
    osg::ref_ptr<osg::Group>_volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
@@ -105,8 +119,22 @@ protected:
    osg::ref_ptr<osg::StateSet> _transferFunctionFragSS;
    osg::ref_ptr<osg::StateSet> _advectionFragSS;
 
+   osg::ref_ptr<osg::Switch> _bboxSwitch;
+   osg::ref_ptr<osg::Switch> _shaderSwitch;
+   osg::ref_ptr<osg::Group> _noShaderGroup;
+   osg::ref_ptr<osg::Group> _scalarFragGroup;
+   osg::ref_ptr<osg::Group> _advectionVectorGroup;
+
    osg::ref_ptr<osg::Material> _material;
+  
    osg::ref_ptr<osg::Texture3D> _texture;
+   osg::ref_ptr<osg::Texture3D> _property;
+
+   osg::ref_ptr<osg::Texture1D> _trans1;
+   osg::ref_ptr<osg::Texture1D> _trans2;
+   osg::ref_ptr<osg::Texture1D> _trans3;
+   osg::ref_ptr<osg::Texture1D> _trans4;
+
    osg::ref_ptr<osg::Image> _image;
    osg::ref_ptr<osg::Geode> _slices;
    osg::ref_ptr<osg::Group> _visualBoundingBox;

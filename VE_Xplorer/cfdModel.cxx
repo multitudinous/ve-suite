@@ -61,6 +61,7 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
    this->textureBased = new cfdGroup();
    this->textureBased->SetName( "textureBased" );
    this->switchNode->AddChild( this->textureBased );
+   this->switchNode->SetVal(0);
 
    this->animation = 0;
    this->activeDataSet = 0;

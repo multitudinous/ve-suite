@@ -338,6 +338,8 @@ int switchFrame(pfTraverser* trav, void* userData)
          //update the frames the app has processed
          sequence->_appFrame++;
          //cout<<"App frames: "<<sequence->_appFrame<<endl;
+         vprDEBUG(vprDBG_ALL,3) << "App frame total: "<<sequence->_appFrame
+                          << std::endl << vprDEBUG_FLUSH;
          return PFTRAV_CONT;
       }
        //cout<<"Switching frames!"<<endl;
@@ -461,6 +463,8 @@ void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node,
 
    //length of _sequence (secs)
    double duration = _sequence->_duration;
+   vprDEBUG(vprDBG_ALL,3) << "Duration: "<<duration
+                          << std::endl << vprDEBUG_FLUSH;
 
    //the frame rate the app is running at
    double currTime =0;

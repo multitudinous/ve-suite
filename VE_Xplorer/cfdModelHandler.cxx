@@ -1014,6 +1014,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
 #else
    char buffer[_MAX_PATH];
    HANDLE hList;
+   HANDLE hList2;
    TCHAR directoryPath[MAX_PATH+1];
    WIN32_FIND_DATA fileData;
 
@@ -1022,13 +1023,15 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
       std::cerr << "Couldn't get the current working directory!" << std::endl;
       return;
    }
-
+   
    // Get the proper directory path for transient files
    //sprintf(directoryPath, "%s\\*", directory);
    strcpy(directoryPath,directory);
-
+   
+   //change to directory
+   _chdir(directoryPath);
    //get the first file
-   hList = FindFirstFile(directoryPath, &fileData);
+   hList = FindFirstFile("*.vtk", &fileData);
   
    //check to see if directory is valid
    if ( hList == INVALID_HANDLE_VALUE )
@@ -1053,6 +1056,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
             strcat(pathAndFileName,fileData.cFileName);
 
             frameFileNames.push_back( pathAndFileName );
+            
             vprDEBUG(vprDBG_ALL,1) << " pathAndFileName : " << pathAndFileName
                                    << std::endl << vprDEBUG_FLUSH;
             //increment the number of frames found
@@ -1068,8 +1072,64 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
          }
       }
    }
-   FindClose( hList );  // close the handle
-   chdir( cwd );        // return to original directory
+   FindClose( hList );
+   _chdir( cwd );
+   char tempDir[1024];
+   strcpy(tempDir,cwd);
+   strcat(tempDir,"/");
+   strcat(tempDir,preComputedDir);
+   char tempName[1024];
+   strcpy(tempName,preComputedDir);
+   strcat(tempName,"*");
+   //get the first file
+   hList2 = FindFirstFile(tempName, &fileData);
+  
+   //check to see if directory is valid
+   if ( hList2 == INVALID_HANDLE_VALUE )
+   { 
+      std::cerr << "No transient files found in: " << directory << std::endl;
+      return;
+   }
+   else
+   {
+      // Traverse through the directory structure
+      bool finished = FALSE;
+      while ( !finished )
+      {
+         //add the file name to our data list
+         //assume all vtk files in this directory are part of the sequence
+         if(strstr(fileData.cFileName,preComputedDir ))
+         {
+            char* pathAndFileName = new char[
+                  strlen(cwd) + strlen(fileData.cFileName) + 2 ];
+            strcpy(pathAndFileName,cwd);
+            strcat(pathAndFileName,"/");
+            strcat(pathAndFileName,fileData.cFileName);
+
+            frameDirNames.push_back( pathAndFileName );
+            
+            vprDEBUG(vprDBG_ALL,1) << " pathAndFileName : " << pathAndFileName
+                                   << std::endl << vprDEBUG_FLUSH;
+            //increment the number of frames found
+            numDir++;
+         }
+         //check to see if this is the last file
+         if ( !FindNextFile(hList, &fileData) )
+         {
+            if ( GetLastError() == ERROR_NO_MORE_FILES )
+            {
+               finished = TRUE;
+            }
+         }
+      }
+   }
+   FindClose( hList2 );
+   // close the handle
+   //change to the precomputed directory
+   //chdir(preComputedDir);
+
+           // return to original directory
+
 #endif
 
    vprDEBUG(vprDBG_ALL,0) << " Number of files in directory \"" 

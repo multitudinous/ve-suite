@@ -1864,9 +1864,6 @@ echo Done.
 				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
 			</File>
 			<File
-				RelativePath=".\cfdTempAnimation.h">
-			</File>
-			<File
 				RelativePath=".\cfdTextureBasedModel.h">
 			</File>
 			<File

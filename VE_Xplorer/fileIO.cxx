@@ -120,7 +120,8 @@ int fileIO::isDirWritable( char *dirname )
    //std::cout << "test file is \"" << filename << "\"" << std::endl;
 
    //"a" means append -- don't erase existing file
-   FILE *fileID = fopen( filename, "a" );
+
+   FILE *fileID = fopen( filename, "a+" );
    if ( !fileID )
    {
       delete [] filename;

@@ -508,6 +508,9 @@ echo Done
 				RelativePath="..\futuregen\Ve_ui\UI_TeacherTab.h">
 			</File>
 			<File
+				RelativePath="..\futuregen\Ve_ui\UI_TextureBasedPanel.h">
+			</File>
+			<File
 				RelativePath="..\futuregen\Ve_ui\UI_TopFrame.h">
 			</File>
 			<File

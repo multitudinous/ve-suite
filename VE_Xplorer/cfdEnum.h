@@ -152,6 +152,10 @@ enum cfdGeodeEnum {
    //biv -- these are for texture based visualization
    VIS_OPTION,
    TEXTURE_BASED_VISUALIZATION,
-   CLASSIC_VISUALIZATION
+   CLASSIC_VISUALIZATION,
+   SHOW_TEXTURE_BBOX,
+   TEXTURE_BASED_SHADERS,
+   ADVECTION_SHADER,
+   VOLUME_SHADER
 };
 #endif
