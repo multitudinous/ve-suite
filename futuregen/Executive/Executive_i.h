@@ -45,9 +45,9 @@ protected:
   Scheduler* _scheduler;
 
   Types::ArrayLong watch_list_;
-  std::string status_;
-  
-  std::vector<CORBA::Long> exec_list_;
+
+  ACE_Thread_Mutex _mutex;
+
 public:
 
 virtual char * GetImportData (

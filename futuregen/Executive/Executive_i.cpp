@@ -5,18 +5,18 @@
 // Implementation skeleton constructor
 Body_Executive_i::Body_Executive_i (CosNaming::NamingContext_ptr nc)
   : naming_context_(CosNaming::NamingContext::_duplicate(nc))
-  {
-    _network = new Network();
-    _scheduler = new Scheduler(_network);
-  }
-  
+{
+  _network = new Network();
+  _scheduler = new Scheduler(_network);
+}
+
 // Implementation skeleton destructor
 Body_Executive_i::~Body_Executive_i (void)
-  {
-    delete _network;
-    delete _scheduler;
-  }
-  
+{
+  delete _network;
+  delete _scheduler;
+}
+
 char * Body_Executive_i::GetImportData (
     CORBA::Long module_id,
     CORBA::Long port_id
@@ -26,29 +26,33 @@ char * Body_Executive_i::GetImportData (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    Module *mod = _network->module(_network->moduleIdx(module_id));
-    IPort *iport = mod->getIPort(mod->iportIdx(port_id));
-
-    if(iport && iport->nconnections()) {
-      Connection* conn=iport->connection(0); // should only have one connection
-      OPort* oport=conn->get_oport();
-         
-      bool        rv;
-      std::string str;
-
-      Package p;
-      p.SetSysId("temp.xml");
-      p.intfs.push_back(oport->_data);
+{
+  _mutex.acquire();
+  
+  Module *mod = _network->module(_network->moduleIdx(module_id));
+  IPort *iport = mod->getIPort(mod->iportIdx(port_id));
+  
+  bool        rv = false;
+  std::string str;
+  
+  if(iport && iport->nconnections()) {
+    Connection* conn=iport->connection(0); // should only have one connection
+    OPort* oport=conn->get_oport();
     
-      str = p.Save(rv);
-      
-      if(rv) return CORBA::string_dup(str.c_str());
-    }
+    Package p;
+    p.SetSysId("temp.xml");
+    p.intfs.push_back(oport->_data);
     
-    return 0;
+    str = p.Save(rv);
   }
   
+  _mutex.release();
+  
+  if(rv) return CORBA::string_dup(str.c_str());
+  
+  return 0;
+}
+
 void Body_Executive_i::SetExportData (
     CORBA::Long module_id,
     CORBA::Long port_id,
@@ -59,18 +63,22 @@ void Body_Executive_i::SetExportData (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    Package p;
-    p.SetSysId("temp.xml");
-    p.Load(data, strlen(data));
-    
-    // Should only be one item. But, maybe later...
-    std::vector<Interface>::iterator iter;
-    for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      if(!_network->setPortData(module_id, port_id, &(*iter)))
-	cerr << "Unable to set mod id# " << module_id 
-	     << ", port id# " << port_id << "'s port data\n";
-  }
+{
+  _mutex.acquire();
+  
+  Package p;
+  p.SetSysId("temp.xml");
+  p.Load(data, strlen(data));
+  
+  // Should only be one item. But, maybe later...
+  std::vector<Interface>::iterator iter;
+  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+    if(!_network->setPortData(module_id, port_id, &(*iter)))
+      cerr << "Unable to set mod id# " << module_id 
+	   << ", port id# " << port_id << "'s port data\n";
+  
+  _mutex.release();
+}
   
 char * Body_Executive_i::GetExportData (
     CORBA::Long module_id,
@@ -81,26 +89,30 @@ char * Body_Executive_i::GetExportData (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    Interface intf;
-    if(!_network->getPortData(module_id, port_id, intf)) {
-      cerr << "Unable to get mod id# " << module_id 
-	   << ", port id# " << port_id << "'s port data\n";
-    }
-    
-    bool        rv;
-    std::string str;
-
-    Package p;
-    p.SetSysId("temp.xml");
-    p.intfs.push_back(intf);
-
-    str = p.Save(rv);
-
-    if(!rv) return 0;
-    
-    return CORBA::string_dup(str.c_str());
+{
+  _mutex.acquire();
+  
+  Interface intf;
+  if(!_network->getPortData(module_id, port_id, intf)) {
+    cerr << "Unable to get mod id# " << module_id 
+	 << ", port id# " << port_id << "'s port data\n";
   }
+  
+  bool        rv;
+  std::string str;
+  
+  Package p;
+  p.SetSysId("temp.xml");
+  p.intfs.push_back(intf);
+  
+  str = p.Save(rv);
+  
+  _mutex.release();
+  
+  if(rv) return CORBA::string_dup(str.c_str());
+
+  return 0;
+}
 
 void Body_Executive_i::SetProfileData (
     CORBA::Long module_id,
@@ -112,6 +124,11 @@ void Body_Executive_i::SetProfileData (
     , Error::EUnknown
   ))
 {
+  _mutex.acquire();
+ 
+  // Stuff here
+
+  _mutex.release();
 }
 
 void Body_Executive_i::GetProfileData (
@@ -124,6 +141,11 @@ void Body_Executive_i::GetProfileData (
     , Error::EUnknown
   ))
 {
+  _mutex.acquire();
+
+  // Stuff here
+
+  _mutex.release();
 }
 
 void Body_Executive_i::SetModuleMessage (
@@ -135,18 +157,22 @@ void Body_Executive_i::SetModuleMessage (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    Package p;
-    p.SetSysId("temp.xml");
-    p.Load(msg, strlen(msg));
-    
+{
+  _mutex.acquire();
+  
+  Package p;
+  p.SetSysId("temp.xml");
+  p.Load(msg, strlen(msg));
+  
   // Should only be one item. But, maybe later...
-    std::vector<Interface>::iterator iter;
-    for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      if(!_network->setMessage(module_id, &(*iter)))
-	cerr << "Unable to set mod id# " << module_id 
-	     << "'s Message data\n";
-  }
+  std::vector<Interface>::iterator iter;
+  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+    if(!_network->setMessage(module_id, &(*iter)))
+      cerr << "Unable to set mod id# " << module_id 
+	   << "'s Message data\n";
+  
+  _mutex.release();
+}
   
 void Body_Executive_i::SetModuleResult (
     CORBA::Long module_id,
@@ -157,6 +183,8 @@ void Body_Executive_i::SetModuleResult (
     , Error::EUnknown
   ))
 {
+  _mutex.acquire();
+  
   Package p;
   p.SetSysId("temp.xml");
   p.Load(result, strlen(result));
@@ -167,7 +195,7 @@ void Body_Executive_i::SetModuleResult (
     if(_network->setOutput(module_id, &(*iter))) {
       
       char *msg;
-
+      
       try {
 	std::string mod_type = _network->module(_network->moduleIdx(module_id))->_name;
 	if(_mod_units.find(mod_type)!=_mod_units.end()) {
@@ -234,6 +262,8 @@ void Body_Executive_i::SetModuleResult (
     else {
       cerr << "Unable to set mod id# " << module_id << "'s Output data\n";
     }
+
+  _mutex.release();
 }
 
 char * Body_Executive_i::GetModuleResult (
@@ -244,12 +274,14 @@ char * Body_Executive_i::GetModuleResult (
     , Error::EUnknown
   ))
 {
+  _mutex.acquire();
+  
   Interface intf;
   if(!_network->getOutput(module_id, intf)) {
     cerr << "Unable to get mod id# " << module_id 
 	 << "'s ouput data\n";
   }
-    
+  
   bool        rv;
   std::string str;
   
@@ -259,9 +291,12 @@ char * Body_Executive_i::GetModuleResult (
   
   str = p.Save(rv);
   
-  if(!rv) return 0;
-  
-  return CORBA::string_dup(str.c_str());
+
+  _mutex.release();
+
+  if(rv) return CORBA::string_dup(str.c_str());
+
+  return 0;
 }
 
 void Body_Executive_i::SetNetwork (
@@ -272,34 +307,38 @@ void Body_Executive_i::SetNetwork (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    Package p;
-    p.SetSysId("temp.xml");
-    p.Load(network, strlen(network));
-    
-    _network->clear();
-    _scheduler->clear();
-    
-    std::vector<Interface>::iterator iter;
+{
+  _mutex.acquire();
+  
+  Package p;
+  p.SetSysId("temp.xml");
+  p.Load(network, strlen(network));
+  
+  _network->clear();
+  _scheduler->clear();
+  
+  std::vector<Interface>::iterator iter;
+  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+    if(iter->_id==-1) break;
+  
+  if(iter!=p.intfs.end() && _network->parse(&(*iter)) && _scheduler->schedule(0)) {
+    _network_intf = *iter;
     for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      if(iter->_id==-1) break;
+      if(_network->setInput(iter->_id, &(*iter))) {
+	_network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+	_network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+	_network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+      }
+      else
+	cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
     
-    if(iter!=p.intfs.end() && _network->parse(&(*iter)) && _scheduler->schedule(0)) {
-      _network_intf = *iter;
-      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-	if(_network->setInput(iter->_id, &(*iter))) {
-	  _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-	  _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-	  _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-	}
-	else
-	  cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
-      
-      _scheduler->print_schedule();
-    } else {
-      cerr << "Error in SetNetwork\n";
-    }
+    _scheduler->print_schedule();
+  } else {
+    cerr << "Error in SetNetwork\n";
   }
+  
+  _mutex.release();
+}
   
 char * Body_Executive_i::GetNetwork ( 
     ACE_ENV_SINGLE_ARG_DECL
@@ -308,25 +347,29 @@ char * Body_Executive_i::GetNetwork (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    int         i;
-    bool        rv;
-    std::string str;
-
-    Package p;
-    p.SetSysId("temp.xml");
-    p.intfs.push_back(_network_intf);
-
-    for(i=0; i<_network->nmodules(); i++) {
-      p.intfs.push_back(_network->module(i)->_inputs);
-    }
-
-    str = p.Save(rv);
-
-    if(!rv) return 0;
-    
-    return CORBA::string_dup(str.c_str());
+{
+  _mutex.acquire();
+  
+  int         i;
+  bool        rv;
+  std::string str;
+  
+  Package p;
+  p.SetSysId("temp.xml");
+  p.intfs.push_back(_network_intf);
+  
+  for(i=0; i<_network->nmodules(); i++) {
+    p.intfs.push_back(_network->module(i)->_inputs);
   }
+  
+  str = p.Save(rv);
+   
+  _mutex.release();
+  
+  if(rv) return CORBA::string_dup(str.c_str());
+
+  return 0;
+}
 
 void Body_Executive_i::SetModuleUI (
     CORBA::Long module_id,
@@ -337,6 +380,8 @@ void Body_Executive_i::SetModuleUI (
     , Error::EUnknown
   ))
 {
+  _mutex.acquire();
+  
   Package p;
   p.SetSysId("temp.xml");
   p.Load(ui, strlen(ui));
@@ -351,6 +396,8 @@ void Body_Executive_i::SetModuleUI (
     else
       cerr << "Unable to set mod id# " << module_id 
 	   << "'s Input data\n";
+  
+  _mutex.release();
 }
   
 void Body_Executive_i::SetWatchList (
@@ -361,11 +408,14 @@ void Body_Executive_i::SetWatchList (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    // Add your implementation here
-    watch_list_ = id;
-  }
+{
+  _mutex.acquire();
   
+  watch_list_ = id;
+  
+  _mutex.release();
+}
+
 ::Types::ArrayLong * Body_Executive_i::GetWatchList (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -373,11 +423,16 @@ void Body_Executive_i::SetWatchList (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    return new ::Types::ArrayLong(watch_list_);
-    // Add your implementation here
-  }
+{
+  _mutex.acquire();
   
+  // Stuff here
+
+  _mutex.release();
+  
+  return new ::Types::ArrayLong(watch_list_);
+}
+
 char * Body_Executive_i::GetStatus (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -385,9 +440,15 @@ char * Body_Executive_i::GetStatus (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    return 0;
-  }
+{
+  _mutex.acquire();
+  
+  // Stuff here
+  
+  _mutex.release();
+  
+  return 0;
+}
   
 void Body_Executive_i::StartCalc (
     ACE_ENV_SINGLE_ARG_DECL
@@ -396,39 +457,43 @@ void Body_Executive_i::StartCalc (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    int rt = _scheduler->execute(0)-1;
-    int module_id = _network->module(rt)->_inputs._id;
-
-    if(rt<0) {
-      cerr << "Network execution complete\n";
+{
+  _mutex.acquire();
+  
+  int rt = _scheduler->execute(0)-1;
+  int module_id = _network->module(rt)->_inputs._id;
+  
+  if(rt<0) {
+    cerr << "Network execution complete\n";
+  }
+  else {
+    bool        rv2;
+    std::string str2;
+    
+    Package p2;
+    p2.SetSysId("temp.xml");
+    p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
+    
+    str2 = p2.Save(rv2);
+    
+    if(rv2) {
+      try {
+	cerr << "Initial Execute " << _network->module(rt)->_inputs._id << endl;
+	_mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
+	_mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
+	_mod_units[_network->module(rt)->_name]->StartCalc();
+      }
+      catch(CORBA::Exception &) {
+	cerr << "Initial Execute, cannot contact Module " << module_id << endl;
+      }
     }
     else {
-      bool        rv2;
-      std::string str2;
-      
-      Package p2;
-      p2.SetSysId("temp.xml");
-      p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
-      
-      str2 = p2.Save(rv2);
-      
-      if(rv2) {
-	try {
-	  cerr << "Initial Execute " << _network->module(rt)->_inputs._id << endl;
-	  _mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
-	  _mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
-	  _mod_units[_network->module(rt)->_name]->StartCalc();
-	}
-	catch(CORBA::Exception &) {
-	  cerr << "Initial Execute, cannot contact Module " << module_id << endl;
-	}
-      }
-      else {
-	cerr << "Initial Execute, error packing " << module_id << "'s Inputs\n";
-      }
+      cerr << "Initial Execute, error packing " << module_id << "'s Inputs\n";
     }
   }
+  
+  _mutex.release();
+}
   
 void Body_Executive_i::StopCalc (
     ACE_ENV_SINGLE_ARG_DECL
@@ -437,10 +502,14 @@ void Body_Executive_i::StopCalc (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    // mod->StopCalc();
-  }
-    
+{
+  _mutex.acquire();
+  
+  // mod->StopCalc();
+  
+  _mutex.release();
+}
+
 void Body_Executive_i::PauseCalc (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -448,10 +517,14 @@ void Body_Executive_i::PauseCalc (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    // mod->PauseCalc();
-  }
+{
+  _mutex.acquire();
   
+  // mod->PauseCalc();
+  
+  _mutex.release();
+}
+
 void Body_Executive_i::Resume (
     ACE_ENV_SINGLE_ARG_DECL
   )
@@ -459,9 +532,13 @@ void Body_Executive_i::Resume (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  {
-    // mod->Resume();
-  }
+{
+  _mutex.acquire();
+  
+  // mod->Resume();
+  
+  _mutex.release();
+}
   
 void Body_Executive_i::RegisterUI (
     const char * UIName
@@ -471,32 +548,37 @@ void Body_Executive_i::RegisterUI (
     CORBA::SystemException
     , Error::EUnknown
   ))
-  { 
-    CosNaming::Name name(1);
-    name.length(1);
-    name[0].id = CORBA::string_dup(UIName);
+{ 
+  _mutex.acquire();
+  
+  CosNaming::Name name(1);
+  name.length(1);
+  name[0].id = CORBA::string_dup(UIName);
+  
+  try {
+    CORBA::Object_var ui_object = naming_context_->resolve(name); 
+    if (CORBA::is_nil(ui_object))
+      cerr << "NULL UI_OBJ\n";
     
-    try {
-      CORBA::Object_var ui_object = naming_context_->resolve(name); 
-      if (CORBA::is_nil(ui_object))
-        cerr << "NULL UI_OBJ\n";
+    Body::UI_var ui = Body::UI::_narrow(ui_object.in());
     
-      Body::UI_var ui = Body::UI::_narrow(ui_object.in());
-
-      if (CORBA::is_nil(ui))
-        cerr << "NULL UI\n";
-      //uis_.insert(std::pair<std::string, Body::UI_var>(std::string(UIName), ui));
-	  uis_[std::string(UIName)]=ui;
-      ui->Raise("Hello from exec!");
-      cerr << UIName << " : registered a UI\n";
-    }
-    catch (CORBA::Exception &ex) {
-      //std::cerr << "CORBA exception raised! : " <<ex._name<< std::endl;
-	  //std::cerr << ex._info<<std::endl;
-	}
-    return ;
+    if (CORBA::is_nil(ui))
+      cerr << "NULL UI\n";
+    //uis_.insert(std::pair<std::string, Body::UI_var>(std::string(UIName), ui));
+    uis_[std::string(UIName)]=ui;
+    ui->Raise("Hello from exec!");
+    cerr << UIName << " : registered a UI\n";
+  }
+  catch (CORBA::Exception &ex) {
+    //std::cerr << "CORBA exception raised! : " <<ex._name<< std::endl;
+    //std::cerr << ex._info<<std::endl;
   }
   
+  _mutex.release();
+  
+  return ;
+}
+
 void Body_Executive_i::RegisterUnit (
     const char * UnitName,
     CORBA::Long flag
@@ -506,8 +588,10 @@ void Body_Executive_i::RegisterUnit (
     , Error::EUnknown
   ))
 {
+  _mutex.acquire();
+  
   static long unit_id;
-
+  
   // When this is called, a unit is already binded to the name service, 
   // so this call can get it's reference from the name service
   CosNaming::Name name(1);
@@ -519,6 +603,8 @@ void Body_Executive_i::RegisterUnit (
 
   _mod_units[std::string(UnitName)] = Body::Unit::_narrow(unit_object.in());
   _mod_units[std::string(UnitName)]->SetID(unit_id++);
+
+  _mutex.release();
 }
   
 void Body_Executive_i::UnRegisterUI (
@@ -529,7 +615,11 @@ void Body_Executive_i::UnRegisterUI (
     , Error::EUnknown
   ))
 {
+  _mutex.acquire();
+
   // Add your implementation here
+
+  _mutex.release();
 }
 
 void Body_Executive_i::UnRegisterUnit (
@@ -540,7 +630,11 @@ void Body_Executive_i::UnRegisterUnit (
     , Error::EUnknown
   ))
 {
+  _mutex.acquire();
+  
   // Add your implementation here
+  
+  _mutex.release();
 }
 
 CORBA::Long Body_Executive_i::GetGlobalMod (
@@ -551,7 +645,11 @@ CORBA::Long Body_Executive_i::GetGlobalMod (
     , Error::EUnknown
   ))
 {
+  _mutex.acquire();
+  
   // Add your implementation here
+  
+  _mutex.release();
   
   return CORBA::Long(0);
 }
