@@ -53,6 +53,8 @@
 #include <vtkUnstructuredGridReader.h>
 #include <vtkSystemIncludes.h>  // for VTK_POLY_DATA
 #include <vtkCellTypes.h>
+#include <vtkCellDataToPointData.h>
+#include <vtkCellData.h>
 
 #include <vpr/Util/Debug.h>
 
@@ -450,7 +452,49 @@ void cfdDataSet::LoadData( )
                              << std::endl << vprDEBUG_FLUSH;
    }
 
-   this->dataSet = readVtkThing( this->fileName, 1 );
+   this->dataSet = readVtkThing( this->fileName, 0 );
+
+   this->numPtDataArrays = this->dataSet->GetPointData()
+                                        ->GetNumberOfArrays();
+   vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = " << this->numPtDataArrays
+                          << std::endl << vprDEBUG_FLUSH;
+
+   int numCellArrays = this->dataSet->GetCellData()->GetNumberOfArrays();
+   vprDEBUG(vprDBG_ALL,1) << "\tnumCellArrays = " << numCellArrays
+                          << std::endl << vprDEBUG_FLUSH;
+
+   if ( numCellArrays > 0 && this->numPtDataArrays == 0 )
+   {
+      std::cout <<"\nThe dataset has no point data -- "
+         << "will try to convert cell data to point data\n" << std::endl;
+
+      vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
+      converter->SetInput( this->dataSet );
+      converter->Update();
+
+      if ( this->dataSet->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
+      {
+         vtkDataSet * newdataset = vtkUnstructuredGrid::New();
+         newdataset->DeepCopy( converter->GetOutput() );
+         converter->Delete();
+
+         this->dataSet->Delete();
+         this->dataSet = newdataset;
+         this->numPtDataArrays = this->dataSet->GetPointData()
+                                              ->GetNumberOfArrays();
+
+         vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = "
+                                << this->numPtDataArrays
+                                << std::endl << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         converter->Delete();
+         std::cout <<"\nAttempt failed: can not currently handle "
+                   << "this type of data\n" << std::endl;
+         exit(1);
+      }
+   }
 
 #ifdef USE_OMP
    char label[100];
@@ -492,12 +536,6 @@ void cfdDataSet::LoadData( )
       this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir(), bounds );
       this->z_planes = new cfdPlanes( 2, this->GetPrecomputedDataSliceDir(), bounds );
    }
-
-   this->numPtDataArrays = this->GetDataSet()->GetPointData()
-                                             ->GetNumberOfArrays();
-
-   vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = " << this->numPtDataArrays
-                          << std::endl << vprDEBUG_FLUSH;
 
    // count the number of scalars and store names and ranges...
    this->StoreScalarInfo();
