@@ -86,9 +86,9 @@ void Body_Unit_i::StartCalc (
     gas_data->gas_composite.T_particle = p_temp;
     
     string therm_path="therm";
-
-    thermo *thrmo = new thermo(therm_path);
-    const std::map<std::string, int>& name_map = thrmo->get_nam_spec();
+    V21Helper gashelper(therm_path.c_str());
+ 
+    const std::map<std::string, int>& name_map = gashelper.thermo_database->get_nam_spec();
     vector<string> species; // available species, from thermo
     species.clear();
     map<std::string, int>::const_iterator iter;
@@ -128,7 +128,7 @@ void Body_Unit_i::StartCalc (
 	  gas_data->gas_composite.comp_particle.push_back(atof(p_frac[i].c_str()));
 	  gas_data->particle[p_comp[i].c_str()] = i;
 	}
-    V21Helper gashelper(therm_path.c_str());
+
     p.intfs.resize(1);
     gashelper.GasToInt(gas_data, p.intfs[0]);
     

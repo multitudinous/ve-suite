@@ -34,7 +34,7 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   std::vector<std::string> sel_species;
   std::vector<std::string> max_error;
   
-  std::map<std::string, double> last_values;
+  std::map<int, std::map<std::string, double> > last_values;
 
  public:
 

@@ -233,8 +233,27 @@ void Body_Unit_i::StartCalc (
     gas_out_data->gas_composite.M = output_stream.get_mass_flow_rate();
     gas_out_data->gas_composite.P = gas_in_anode->gas_composite.P - press_drop;
     
-    
-    // Check incoming
+    gas_out_data->gas_composite.comp_particle.push_back(0.0);
+    gas_out_data->particle["ASH"] = 0;
+    gas_out_data->gas_composite.comp_particle.push_back(0.0);
+    gas_out_data->particle["CHAR"] = 1;
+    gas_out_data->gas_composite.comp_particle.push_back(0.0);
+    gas_out_data->particle["COAL"] = 2;
+    gas_out_data->gas_composite.comp_particle.push_back(0.0);
+    gas_out_data->particle["WATER"] = 3;
+
+    gas_out_data->gas_composite.area = 0.0;
+    gas_out_data->gas_composite.eff = 0.0;
+    gas_out_data->gas_composite.eta = 0.0;
+    gas_out_data->gas_composite.chi = 0.0;
+    gas_out_data->gas_composite.tar = 0.0;
+    gas_out_data->gas_composite.soot = 0.0;
+    gas_out_data->gas_composite.mean_size = 0.0;
+    gas_out_data->gas_composite.size_variance = 0.0;
+    gas_out_data->gas_composite.T_particle = 0.0;
+    gas_out_data->gas_composite.M_particle = 0.0;
+
+  // Check incoming
     if(gas_out_data->gas_composite.T <= 200 || gas_out_data->gas_composite.T >= 3000) {
       warning("Outgoing gas temperature out of range.");
     }

@@ -43,6 +43,25 @@ void Scheduler::clear ()
 
 ////////////////////////////////////////////////////////////////////////////////
 
+void Scheduler::reset ()
+{
+  int nmodules=_net->nmodules();
+  int i, j;	
+		    
+  for(i=0;i<nmodules;i++) {
+    _net->module(i)->_need_execute = 1;
+    _net->module(i)->_return_state = 0;
+    //_net->module(i)->_inputs.clear();
+    _net->module(i)->_outputs.clear();
+    _net->module(i)->_messages.clear();
+
+    for(j=0; j<_net->module(i)->numOPorts(); j++)
+      _net->module(i)->getOPort(j)->_data.clear();
+  }
+}
+
+////////////////////////////////////////////////////////////////////////////////
+
 void Scheduler::set_net (Network *n)
 {
   clear();

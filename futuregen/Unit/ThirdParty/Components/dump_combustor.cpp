@@ -126,8 +126,8 @@ pair<vector<int>, vector<string> > dump_combustor::calculate(Gas& gasin, Gas& ga
 				 gasw.gas_composite.density() * 1.0 / length;   // m2: mdot / rho * tau / length
 	}
  
-	string griMechFname = "grimech30.dat";
-	string griMechThermoFname  = "thermo30.dat";
+	string griMechFname = "./ThirdParty/Components/grimech30.dat";
+	string griMechThermoFname  = "./ThirdParty/Components/thermo30.dat";
 
 	vector<string> inp_files;
 	inp_files.push_back(griMechFname);

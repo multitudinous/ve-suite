@@ -97,8 +97,8 @@ pair<vector<int>, vector<string> > cat_comb::calculate(Gas& gasin, Gas& gasw) {
 	// Setup REKS
 	//-------------------------------------------------------------------------
 
-	string griMechFname = "grimech30.dat";
-	string griMechThermoFname  = "thermo30.dat";
+	string griMechFname = "./ThirdParty/Components/grimech30.dat";
+	string griMechThermoFname  = "./ThirdParty/Components/thermo30.dat";
 
 	vector<string> inp_files;
 	inp_files.push_back(griMechFname);

@@ -247,7 +247,7 @@ void Body_Unit_i::StartCalc (
   /////////////
 
   gas_model.setCoalType(_coal_type);
- 
+   
   //////////
   // Execute
   //////////
@@ -471,7 +471,7 @@ void Body_Unit_i::SetID (
     , Error::EUnknown
   ))
   {
-    std::cout<<UnitName_<<" :SetID called"<<endl;
+    std::cout << UnitName_ << " :SetID called " << id << endl;
 
     id_=id;
   }
@@ -484,7 +484,7 @@ CORBA::Long Body_Unit_i::GetID (
     , Error::EUnknown
   ))
   {
-    std::cout<<UnitName_<<" :GetID called"<<endl;
+    std::cout << UnitName_ << " :GetID called " << id_ << endl;
    
     return id_;
   }

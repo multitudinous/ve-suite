@@ -33,6 +33,10 @@ char * Body_Executive_i::GetImportData (
   cout << "GetImportData " << module_id << " " << port_id << endl;
 
   Module *mod = _network->module(_network->moduleIdx(module_id));
+  if(!mod) {
+    cerr << "Cannot find module, id# " << module_id << endl;
+    return CORBA::string_dup("");  
+  }
   IPort *iport = mod->getIPort(mod->iportIdx(port_id));
   
   bool        rv = false;
@@ -42,13 +46,19 @@ char * Body_Executive_i::GetImportData (
     Connection* conn=iport->connection(0); // should only have one connection
     OPort* oport=conn->get_oport();
     
-    Package p;
-    p.SetSysId("temp.xml");
-    p.intfs.push_back(oport->_data);
-    
-    str = p.Save(rv);
+    if(oport->have_data()) {
+      Package p;
+      p.SetSysId("temp.xml");
+      p.intfs.push_back(oport->_data);
+      
+      str = p.Save(rv);
+    } else {
+      string msg = "Mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+" has no data\n" ;
+      cerr << msg;
+      ClientMessage(msg.c_str());
+    }
   } else {
-	string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
+    string msg = "Unable to get mod #" + to_string(module_id) + " IPort, id #" + to_string(port_id)+"\n" ;
     cerr << msg;
     ClientMessage(msg.c_str());
 	
@@ -298,11 +308,11 @@ void Body_Executive_i::SetModuleMessage (
       // cerr << "Unable to set mod id# " << module_id 
 	//    << "'s Message data\n";
 /*  
-  std::vector<Interface>::iterator iter;
-  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-    if(!_network->setMessage(module_id, &(*iter)))
-      cerr << "Unable to set mdo id# " << module_id
-	   << "'s Message data\n";
+  //std::vector<Interface>::iterator iter2;
+  //for(iter2=p.intfs.begin(); iter2!=p.intfs.end(); iter2++)
+  //  if(!_network->setMessage(module_id, &(*iter2)))
+  //    cerr << "Unable to set mdo id# " << module_id
+  //	   << "'s Message data\n";
 */
   _mutex.release();
 }
@@ -536,6 +546,8 @@ void Body_Executive_i::StartCalc (
     , Error::EUnknown
   ))
 {
+  //_scheduler->reset();
+
   if(_scheduler->snodes_size()==0) return;
 
   _mutex.acquire();

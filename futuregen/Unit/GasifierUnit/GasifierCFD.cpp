@@ -705,6 +705,7 @@ void GasifierCFD::load_and_run_glacier()
   GAS_GLACIER_PTR = this;
 
   const char *errmsg;
+
 #ifndef WIN32
   void *glacier_handle;
 #else
@@ -741,6 +742,7 @@ void GasifierCFD::load_and_run_glacier()
   glacier_func_type* glacier_func;
   
   string path = _work_dir;
+
 #ifndef WIN32
   if(chdir(path.c_str())) {
     cerr << "GasifierCFD: empty working directory path\n";
@@ -756,7 +758,7 @@ void GasifierCFD::load_and_run_glacier()
 #ifndef WIN32
   std::string glac_lib = "./Glacier/make_glacier/glacier_gasifier.so";
 #else
-  std::string glac_lib = "./Glacier/Glacier.dll";	
+  std::string glac_lib = "./Glacier/Glacier.dll";
 #endif
 
 #ifndef WIN32
@@ -766,11 +768,13 @@ void GasifierCFD::load_and_run_glacier()
 #endif
 
   if(glacier_handle=='\0'){
+
 #ifndef WIN32
     cerr<<"Failed to load lib: "<<dlerror()<<endl;
 #else
     cerr<<"Failed to open dll: "<<glac_lib<<endl;
 #endif
+
     return;
   }
 
@@ -833,22 +837,18 @@ void GasifierCFD::load_and_run_glacier()
 #endif
 
   close_io_func();
+
 #ifndef WIN32
   dlclose(glacier_handle); 
+  if(chdir("../")) {
 #else
   FreeLibrary(glacier_handle);
+  if(_chdir("../")) {
 #endif
 
-	
-  // Back to what?
-   if(_chdir("../")) {
     cerr << "bad directory path\n";
-    return ;
-   }  //work_dir is ./case
-//   if(chdir("../../../../../../../build")) {
-//    cerr << "bad directory path\n";
-//    return ;
-//  }
+    return;
+  }  //work_dir is ./case
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/

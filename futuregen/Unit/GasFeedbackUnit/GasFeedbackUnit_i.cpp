@@ -27,6 +27,11 @@ void Body_Unit_i::StartCalc (
     if(iter_counter.find((int)id_)==iter_counter.end())
       iter_counter[(int)id_] = 0;
 
+    if(last_values.find((int)id_)==last_values.end()) {
+      std::map<std::string, double> junk;
+      last_values[(int)id_] = junk;
+    }
+
     // Add your implementation here
     const char* initial_igas;
     const char* feedbck_igas;
@@ -36,9 +41,9 @@ void Body_Unit_i::StartCalc (
     Package p;
     
     string therm_path="thermo";
+    V21Helper gashelper(therm_path.c_str());
 
-    thermo *thrmo = new thermo(therm_path);
-    const std::map<std::string, int>& name_map = thrmo->get_nam_spec();
+    const std::map<std::string, int>& name_map = gashelper.thermo_database->get_nam_spec();
     vector<string> species; // available species, from thermo
     species.clear();
 
@@ -61,22 +66,22 @@ void Body_Unit_i::StartCalc (
 	return;
       }
 
-    feedbck_igas = executive_->GetImportData(id_, 1); //port 1 will be the feedback input port;
-    if (string(feedbck_igas)=="")
-      {
+    p.SetSysId("gas_in.xml");
+
+    if(iter_counter[(int)id_] == 0) {
+      p.Load(initial_igas, strlen(initial_igas));
+    } else {
+      feedbck_igas = executive_->GetImportData(id_, 1); //port 1 will be the feedback input port;
+      if (std::string(feedbck_igas) == "") {
 	error("Missing feedback input.");
+	iter_counter[(int)id_] = 0;
 	return;
       }
-
-    p.SetSysId("gas_in.xml");
-    if (iter_counter[(int)id_] ==0)
-      p.Load(initial_igas, strlen(initial_igas));
-    else
       p.Load(feedbck_igas, strlen(feedbck_igas));
+    }
 
     Gas *gas_in = new Gas;
 
-    V21Helper gashelper(therm_path.c_str());
     gashelper.IntToGas(&(p.intfs[0]), *gas_in);
          
     std::map<std::string, double>::iterator mapiter;
@@ -107,9 +112,9 @@ void Body_Unit_i::StartCalc (
 	      }
 	  }
 	
-	mapiter = last_values.find(sel_species[i]);
+	mapiter = last_values[(int)id_].find(sel_species[i]);
 	
-	if(mapiter != last_values.end()) 
+	if(mapiter != last_values[(int)id_].end()) 
 	  {
 	    if(sp == 0) 
 	      sp = 1e-08;
@@ -125,38 +130,41 @@ void Body_Unit_i::StartCalc (
 	      }
       
 	  } 
-	else 
-	  done = false;
+	else {
+	  //done = false;
+	}
 	
-	last_values[sel_species[i]] = sp;
+	last_values[(int)id_][sel_species[i]] = sp;
       }
 
     if(++iter_counter[(int)id_] >= iterations) 
       {
-	cout << iter_counter[(int)id_] << " " << iterations << endl;
 	warning("Max iterations reached, items not converged: " + notconv);
 	done = true;
       }
 
-    if(done) 
-      {
-	last_values.clear();
-	iter_counter[(int)id_] = 0;
-	return_state = 3;
-      }
+    if(done) {
+      last_values[(int)id_].clear();
+      iter_counter[(int)id_] = 0;
+      return_state = 3;
+    } else
+      return_state = 0;
 
-    //Gas in == Gas out;
+    p.intfs.resize(1); //each port has its own package
+    p.SetPackName("ExportData");
+    p.SetSysId("test.xml");
+    gashelper.GasToInt(gas_in, p.intfs[0]);
+    p.intfs[0].setInt("RETURN_STATE", return_state);
 
-    //set p.intf to be someting containing the results
-    
-    //    result = p.Save(rv);
-    if (iter_counter[(int)id_]==1)
-      executive_->SetExportData(id_, 0, initial_igas);
-    else
-      executive_->SetExportData(id_, 0, feedbck_igas);
-    
-    executive_->SetModuleResult(id_, NULL); //marks the end the execution
- 
+    result = p.Save(rv); 
+
+    executive_->SetExportData(id_, 0, result);
+   
+    p.intfs.clear();
+    result = p.Save(rv);
+
+    executive_->SetModuleResult(id_, result);  
+
     if(gas_in) delete gas_in;
  }
   
@@ -261,7 +269,7 @@ void Body_Unit_i::SetParams (
     sel_species = p.intfs[0].getString1D("sel_species");
     max_error = p.intfs[0].getString1D("max_error");
    
-    
+    cout << param << endl;
   }
   
 void Body_Unit_i::SetID (

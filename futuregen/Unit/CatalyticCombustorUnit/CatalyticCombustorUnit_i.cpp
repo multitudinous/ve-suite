@@ -57,7 +57,7 @@ void Body_Unit_i::StartCalc (
     pair<vector<int>, vector<string> > exit_condition;
     
     // WHAT ?
-    string surf_mech_name = "Chou_Surf_Chem_ch4.dat"; 
+    string surf_mech_name = "./ThirdParty/Components/Chou_Surf_Chem_ch4.dat"; 
     
     cout << "MKD3" << endl;
     cat_comb cat(surf_mech_name);

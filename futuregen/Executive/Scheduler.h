@@ -101,6 +101,7 @@ public:
   ~Scheduler ();
   
   void clear   ();  
+  void reset   ();
   void set_net (Network *);
 
   void sweep    (Module*);

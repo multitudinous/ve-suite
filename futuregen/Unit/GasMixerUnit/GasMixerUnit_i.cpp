@@ -39,23 +39,21 @@ void Body_Unit_i::StartCalc (
     for (i=0; i<4; i++)
       {
 	igas[i] = executive_->GetImportData(id_, i); //port i will be the gas input port i;
-	if (string(igas[i])!="")
-	  {
-	    count++;
-	    p.Load(igas[i], strlen(igas[i])); 
-	    gas_in[i] = new Gas;
-	    gashelper.IntToGas(&(p.intfs[0]), *(gas_in[i]));
-	  }
+	if (std::string(igas[i])!="") {
+	  count++;
+	  p.Load(igas[i], strlen(igas[i])); 
+	  gas_in[i] = new Gas;
+	  gashelper.IntToGas(&(p.intfs[0]), *(gas_in[i]));
+	}
 	else {
 	  gas_in[i] = NULL;
 	}
       }
 
-    if (count==0)
-      {
-	error("Missing input input.");
-	return;
-      }
+    if (count==0) {
+      error("Missing input input.");
+      return;
+    }
 
     Gas *gas_out = new Gas; 
     gas_out->gas_composite.M = 0;
@@ -75,51 +73,52 @@ void Body_Unit_i::StartCalc (
     double sumn, sum_M_particle = 0.0;
     std::vector<double> n(count);
     
-    for(i=0, sumn=0; i<count; i++) {
-      n[i] = gas_in[i]->gas_composite.M / gas_in[i]->gas_composite.mw();
-      sumn += n[i];
-      
-      for(iter=gas_in[i]->specie.begin(); iter!=gas_in[i]->specie.end(); iter++) {
-	mf = gas_out->gas_composite.getFrac(iter->first);
-	if(mf<0) {
-	  gas_out->addSpecie(iter->first);
-	  gas_out->gas_composite.setFrac(iter->first,
-					 gas_in[i]->gas_composite.getFrac(iter->first)*n[i]);
-	}
-	else
-	  gas_out->gas_composite.setFrac(iter->first,
-					 gas_in[i]->gas_composite.getFrac(iter->first)*n[i]+mf);
-      }
-      
-      h_out += gas_in[i]->gas_composite.enthalpy() *
-	(gas_in[i]->gas_composite.M / gas_in[i]->gas_composite.mw());
-      
-      temp += gas_in[i]->gas_composite.T;
-      gas_out->gas_composite.M += gas_in[i]->gas_composite.M;
-      
-      if(gas_in[i]->gas_composite.P < gas_out->gas_composite.P)
-	gas_out->gas_composite.P = gas_in[i]->gas_composite.P;
-      
-      // particle
-      gas_out->gas_composite.M_particle += gas_in[i]->gas_composite.M_particle;
-      
-      sum_M_particle += gas_in[i]->gas_composite.M_particle;
-      
-      gas_out->gas_composite.T_particle += gas_in[i]->gas_composite.T_particle*gas_in[i]->gas_composite.M_particle;
-      
-      gas_out->gas_composite.mean_size += gas_in[i]->gas_composite.mean_size*gas_in[i]->gas_composite.M_particle;
-      gas_out->gas_composite.size_variance += gas_in[i]->gas_composite.size_variance*gas_in[i]->gas_composite.M_particle;
-      for(iter=gas_in[i]->particle.begin(); iter!=gas_in[i]->particle.end(); iter++) {
-	mf = gas_out->gas_composite.getPFrac(iter->first);
+    for(i=0, sumn=0; i<count; i++)
+      if(gas_in[i]) {
+	n[i] = gas_in[i]->gas_composite.M / gas_in[i]->gas_composite.mw();
+	sumn += n[i];
 	
-	if(mf<0) {
-	  gas_out->addParticle(iter->first, 0.0);
-	  mf = 0.0;
+	for(iter=gas_in[i]->specie.begin(); iter!=gas_in[i]->specie.end(); iter++) {
+	  mf = gas_out->gas_composite.getFrac(iter->first);
+	  if(mf<0) {
+	    gas_out->addSpecie(iter->first);
+	    gas_out->gas_composite.setFrac(iter->first,
+					   gas_in[i]->gas_composite.getFrac(iter->first)*n[i]);
+	  }
+	  else
+	    gas_out->gas_composite.setFrac(iter->first,
+					 gas_in[i]->gas_composite.getFrac(iter->first)*n[i]+mf);
 	}
-	gas_out->gas_composite.setPFrac(iter->first,
-					mf + gas_in[i]->gas_composite.getPFrac(iter->first)*gas_in[i]->gas_composite.M_particle);
+	
+	h_out += gas_in[i]->gas_composite.enthalpy() *
+	  (gas_in[i]->gas_composite.M / gas_in[i]->gas_composite.mw());
+	
+	temp += gas_in[i]->gas_composite.T;
+	gas_out->gas_composite.M += gas_in[i]->gas_composite.M;
+	
+	if(gas_in[i]->gas_composite.P < gas_out->gas_composite.P)
+	  gas_out->gas_composite.P = gas_in[i]->gas_composite.P;
+	
+	// particle
+	gas_out->gas_composite.M_particle += gas_in[i]->gas_composite.M_particle;
+	
+	sum_M_particle += gas_in[i]->gas_composite.M_particle;
+	
+	gas_out->gas_composite.T_particle += gas_in[i]->gas_composite.T_particle*gas_in[i]->gas_composite.M_particle;
+	
+	gas_out->gas_composite.mean_size += gas_in[i]->gas_composite.mean_size*gas_in[i]->gas_composite.M_particle;
+	gas_out->gas_composite.size_variance += gas_in[i]->gas_composite.size_variance*gas_in[i]->gas_composite.M_particle;
+	for(iter=gas_in[i]->particle.begin(); iter!=gas_in[i]->particle.end(); iter++) {
+	  mf = gas_out->gas_composite.getPFrac(iter->first);
+	  
+	  if(mf<0) {
+	    gas_out->addParticle(iter->first, 0.0);
+	    mf = 0.0;
+	  }
+	  gas_out->gas_composite.setPFrac(iter->first,
+					  mf + gas_in[i]->gas_composite.getPFrac(iter->first)*gas_in[i]->gas_composite.M_particle);
+	}
       }
-    }
     
     for(iter=gas_out->specie.begin(); iter!=gas_out->specie.end(); iter++) {
       gas_out->gas_composite.comp_specie[iter->second] /= sumn;
@@ -127,9 +126,6 @@ void Body_Unit_i::StartCalc (
     
     h_out /= sumn;
     
-    // Need a THERMO
-    thermo *thm = new thermo(therm_path);
-      
     if(sum_M_particle){
       gas_out->gas_composite.T_particle /= sum_M_particle;
       gas_out->gas_composite.mean_size /= sum_M_particle;
@@ -139,7 +135,7 @@ void Body_Unit_i::StartCalc (
     }
     
     // grab map for species names
-    const std::map<std::string, int>& name_map = thm->get_nam_spec();
+    const std::map<std::string, int>& name_map = gashelper.thermo_database->get_nam_spec();
     
     // initialize composition
     std::vector<double> composition(name_map.size(), 0.0);
@@ -157,7 +153,7 @@ void Body_Unit_i::StartCalc (
     
     temp /= count;
     
-    thm->find_temperature(temp, cp_out, h_out, composition);
+    gashelper.thermo_database->find_temperature(temp, cp_out, h_out, composition);
     
     gas_out->gas_composite.T = temp;
     

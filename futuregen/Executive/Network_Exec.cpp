@@ -138,6 +138,7 @@ int Network::module (Module* mod)
 
 Module* Network::module (int idx)
 {
+  if(idx<0 || idx>=(int)_module_ptrs.size()) return NULL;
   return _module_ptrs[idx];
 }
 

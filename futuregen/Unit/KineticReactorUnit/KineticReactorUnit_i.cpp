@@ -54,8 +54,8 @@ void Body_Unit_i::StartCalc (
     int caseType = case_type; // 0: PFR, 1: PSR    
     //std::string workDir = work_dir.get();
     
-    std::string griMechFname = "grimech30.dat";
-    std::string griMechThermoFname  = "thermo30.dat";
+    std::string griMechFname = "./ThirdParty/Components/grimech30.dat";
+    std::string griMechThermoFname  = "./ThirdParty/Components/thermo30.dat";
 
     std::vector<string> inp_files;
     inp_files.push_back(griMechFname);
