@@ -8,40 +8,49 @@
 #include <wx/wx.h>
 
 //Vector tab control ids
-enum VECTOR_TAB_IDS{
+enum VECTOR_TAB_IDS
+{
    VECTOR_UPDATE_BUTTON,
    SCALE_VEC_MAG_CHK,
    MIN_THRESH_SLIDER,
    MAX_THRESH_SLIDER,
    RATIO_SLIDER,
-   SCALE_SLIDER
-//   VECTOR_RAD_BOX
-
+   SCALE_SLIDER,
+   WARP_SCALE_SLIDER,
+   CONTOUR_OPACITY_SLIDER,
+   CONTOUR_LOD_SLIDER
 };
 
-class UI_VectorTab : public wxPanel{
-public:
-   UI_VectorTab(wxNotebook* tControl);
-protected:
-   void _buildPage();
+class UI_VectorTab : public wxPanel
+{
+   public:
+      UI_VectorTab(wxNotebook* tControl);
 
-   wxNotebook* _parent;
-   //the controls
-   wxSlider* _vThresholdMinSlider;
-   wxSlider* _vThresholdMaxSlider;
-   wxSlider* _vRatioSlider;
-   wxSlider* _vScaleSlider;
-//   wxRadioBox* _vectorRBox;
-   wxCheckBox* _scaleVecMagChk;
-   wxButton* _updateButton;
+   protected:
+      void _buildPage();
 
-   //event callback fucntions
-   void _onUpdate(wxCommandEvent& event);
-   void _onCheck(wxCommandEvent& event);
-   void _onvRatioSlider(wxScrollEvent& event);
-   void _onvScaleSlider(wxScrollEvent& event);
-   void _onThresholdSlider(wxScrollEvent& event);
+      wxNotebook* _parent;
+      //the controls
+      wxSlider* _vThresholdMinSlider;
+      wxSlider* _vThresholdMaxSlider;
+      wxSlider* _vRatioSlider;
+      wxSlider* _vScaleSlider;
+      wxSlider* wrapContourScaleSlider;
+      wxSlider* contourOpacitySlider;
+      wxSlider* contourLODSlider;
 
-   DECLARE_EVENT_TABLE()
+      //wxRadioBox* _vectorRBox;
+      wxCheckBox* _scaleVecMagChk;
+      wxButton* _updateButton;
+
+      //event callback fucntions
+      void _onUpdate(wxCommandEvent& event);
+      void _onCheck(wxCommandEvent& event);
+      void _onvRatioSlider(wxScrollEvent& event);
+      void _onvScaleSlider(wxScrollEvent& event);
+      void _onThresholdSlider(wxScrollEvent& event);
+      void OnContourSliders( wxScrollEvent& event );
+
+      DECLARE_EVENT_TABLE()
 };
 #endif //_VE_UI_VECTOR_TAB_H_

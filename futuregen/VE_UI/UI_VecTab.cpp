@@ -9,6 +9,9 @@ BEGIN_EVENT_TABLE(UI_VectorTab, wxPanel)
    EVT_COMMAND_SCROLL(RATIO_SLIDER,       UI_VectorTab::_onvRatioSlider)
    EVT_COMMAND_SCROLL(MAX_THRESH_SLIDER,  UI_VectorTab::_onThresholdSlider)
    EVT_COMMAND_SCROLL(MIN_THRESH_SLIDER,  UI_VectorTab::_onThresholdSlider)
+   EVT_COMMAND_SCROLL(WARP_SCALE_SLIDER,  UI_VectorTab::OnContourSliders)
+   EVT_COMMAND_SCROLL(CONTOUR_OPACITY_SLIDER,   UI_VectorTab::OnContourSliders)
+   EVT_COMMAND_SCROLL(CONTOUR_LOD_SLIDER,       UI_VectorTab::OnContourSliders)
 END_EVENT_TABLE()
 /////////////////////////////////////////////
 //Constructor                              //
@@ -40,11 +43,13 @@ void UI_VectorTab::_buildPage()
    wxStaticText* vectorRatio = 0;
    wxStaticText* vectorScale = 0;
    wxStaticBox* vectorControls = 0;
+   wxStaticBox* contourControls = 0;
 
    vectorThreshold = new wxStaticBox(this,-1, wxT("Vector Threshold"));
    vectorRatio = new wxStaticText(this,-1, wxT("Vector Ratio"));
    vectorScale = new wxStaticText(this,-1, wxT("Vector Scale"));
    vectorControls = new wxStaticBox(this,-1, wxT("Vector Controls"));
+   contourControls = new wxStaticBox(this,-1, wxT("Contour Controls"));
 
    //the sliders for the threshold group
 
@@ -110,18 +115,62 @@ void UI_VectorTab::_buildPage()
    //first column
 
    //second column
-   vectorControlsGroup->Add(vThreshGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+   vectorControlsGroup->Add(vThreshGroup,6,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
 
    //third column
-   vectorControlsGroup->Add(scaleGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+   vectorControlsGroup->Add(scaleGroup,3,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
 
    //fourth column
-   vectorControlsGroup->Add(ratioGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+   vectorControlsGroup->Add(ratioGroup,3,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
    
+   //fifth column
+   vectorControlsGroup->Add(_scaleVecMagChk,0,wxALIGN_LEFT|wxALL, 5 );
+
+   // Contour controls
+   wxStaticBoxSizer* contourControlsGroup = new wxStaticBoxSizer(contourControls,wxVERTICAL);
+
+   // first row
+   wxStaticText* contourOpacityText = new wxStaticText(this,-1, wxT("Contour Opacity"));
+   contourOpacitySlider = new wxSlider(this, CONTOUR_OPACITY_SLIDER,100,0,100,
+                                wxDefaultPosition,wxDefaultSize,/* slidesize,*/
+                                wxSL_HORIZONTAL|
+                                wxSL_AUTOTICKS|
+                                wxSL_LABELS|wxSL_RIGHT );
+   wxBoxSizer* contourOpacityGroup = new wxBoxSizer( wxVERTICAL );
+   contourOpacityGroup->Add(contourOpacityText,0,wxALIGN_LEFT|wxEXPAND);
+   contourOpacityGroup->Add(contourOpacitySlider,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
+   
+   // second row
+   wxStaticText* warpScaleText = new wxStaticText(this,-1, wxT("Warped Contour Scale"));
+   wrapContourScaleSlider = new wxSlider(this, WARP_SCALE_SLIDER,50,1,100,
+                                wxDefaultPosition,wxDefaultSize,/* slidesize,*/
+                                wxSL_HORIZONTAL|
+                                wxSL_AUTOTICKS|
+                                wxSL_LABELS|wxSL_RIGHT );
+   wxBoxSizer* warpScaleGroup = new wxBoxSizer( wxVERTICAL );
+   warpScaleGroup->Add(warpScaleText,0,wxALIGN_LEFT|wxEXPAND);
+   warpScaleGroup->Add(wrapContourScaleSlider,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
+
+   // third row
+   wxStaticText* lodText = new wxStaticText(this,-1, wxT("Contour LOD"));
+   contourLODSlider = new wxSlider(this, CONTOUR_LOD_SLIDER,0,0,99,
+                                wxDefaultPosition,wxDefaultSize,/* slidesize,*/
+                                wxSL_HORIZONTAL|
+                                wxSL_AUTOTICKS|
+                                wxSL_LABELS|wxSL_RIGHT );
+   wxBoxSizer* lodGroup = new wxBoxSizer( wxVERTICAL );
+   lodGroup->Add(lodText,0,wxALIGN_LEFT|wxEXPAND);
+   lodGroup->Add(contourLODSlider,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );   
+
+   // Add to contour static sizer
+   contourControlsGroup->Add(contourOpacityGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+   contourControlsGroup->Add(warpScaleGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+   contourControlsGroup->Add(lodGroup,1,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+
    //the main sizer
    wxBoxSizer* vecPanelGroup = new wxBoxSizer(wxVERTICAL);
-   vecPanelGroup->Add(vectorControlsGroup, 1, wxEXPAND|wxALL, 5 );
-   vecPanelGroup->Add(_scaleVecMagChk, 0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5 );
+   vecPanelGroup->Add(vectorControlsGroup, 3, wxEXPAND|wxALL, 5 );
+   vecPanelGroup->Add(contourControlsGroup, 2,wxEXPAND|wxALL, 5 );
    //vListGroup->Add(_updateButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
     //set this flag and let wx handle alignment
@@ -146,6 +195,12 @@ void UI_VectorTab::_buildPage()
 
    ((UI_Tabs *)_parent)->cId        = SCALE_BY_VECTOR_MAGNITUDE;
    ((UI_Tabs *)_parent)->cIso_value = _vScaleSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
+
+   ((UI_Tabs *)_parent)->cId        = CHANGE_CONTOUR_SETTINGS;
+   ((UI_Tabs *)_parent)->cIso_value = contourOpacitySlider->GetValue();
+   ((UI_Tabs *)_parent)->cMin       = wrapContourScaleSlider->GetValue();
+   ((UI_Tabs *)_parent)->cMax       = contourLODSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
 ///////////////////////////////////////////////////
@@ -191,3 +246,14 @@ void UI_VectorTab::_onCheck(wxCommandEvent& event)
    ((UI_Tabs *)_parent)->cIso_value = _scaleVecMagChk->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
+
+//////////////////////////////////////////////////
+void UI_VectorTab::OnContourSliders( wxScrollEvent& event )
+{
+   ((UI_Tabs *)_parent)->cId        = CHANGE_CONTOUR_SETTINGS;
+   ((UI_Tabs *)_parent)->cIso_value = contourOpacitySlider->GetValue();
+   ((UI_Tabs *)_parent)->cMin       = wrapContourScaleSlider->GetValue();
+   ((UI_Tabs *)_parent)->cMax       = contourLODSlider->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();   
+}
+
