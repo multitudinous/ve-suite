@@ -1,22 +1,24 @@
-#__________________________________________________________
+#_______________________________________________________________________________
 # MAKEFILE
-#__________________________________________________________
+#_______________________________________________________________________________
 #
-# CFD_LIBS is defined in setup.tsh
-# If OMNI_HOME was defined in the script setup.tsh, 
-# then define TABLET, CORBA_DEFINES, and CORBA_INCLUDES
-#To make a non-corba version, don't define OMNI_HOME
-CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
-#CFDHOSTTYPE= ${HOSTTYPE}
-
-# Uncomment the following line to use cfdSequence instead of pfSequence
-# It is needed for cluster builds
+#_______________________________CUSTOM OPTIONS__________________________________
+#
+# Uncomment this line if you want to build a cluster juggler app
+#CLUSTER_APP = TRUE
+#
+# Uncomment the following line to use cfdSequence instead of pfSequence.
+# (It is automatically turned on for cluster builds.)
 #EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
+#__________________________________________________________
 
+CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
+
+# If OMNI_HOME was defined in the script setup.tsh, 
+# then define CORBA_DEFINES, and CORBA_INCLUDES.
+# (To make a non-corba version, don't define OMNI_HOME.)
 ifdef OMNI_HOME
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl
-
-   #TABLET = -DTABLET
 
    CORBA_DEFINES = -D__OSVERSION__=6 
 
@@ -38,7 +40,6 @@ endif
 
 ifdef ACE_ROOT
    FUTUREGEN_HOME = /home/users/mccdo/REI/futuregen
-   #TABLET = -DTABLET
 
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/tao_impl 
    vpath %.cpp    ${FUTUREGEN_HOME}/IDL.old ${FUTUREGEN_HOME}/Plugin
@@ -66,17 +67,12 @@ ifdef ACE_ROOT
                   -I${FUTUREGEN_HOME}/Plugin
 endif
 
-# Comment out this line if you don't want to build a cluster 
-# juggler app
-#CLUSTER_APP = TRUE
 #__________________________________________________________
 # Operating System Specific stuff
+# CFD_LIBS is defined in setup.tsh
 ifeq ($(CFD_LIBS), Linux_LIB)
  #  EXTRA_FLAGS = -O2 -DHAVE_CONFIG_H
 endif
-
-#_____________________CUSTOM DEFINES_______________________
-#
 
 # list the source files that are in current directory
 SRCS=\
@@ -162,8 +158,7 @@ endif
 #   Observer.cpp \
 #   CorbaManager.cxx \
 #   Conductor.cpp \
-#   veConductorImpl.cpp \
-
+#   veConductorImpl.cpp
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 
@@ -176,15 +171,11 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 
 # object files are being stored in a system-dependent directory so that builds
 # for multiple platforms may be maintained simultaneously.
-#DZR_HOSTTYPE is defined in ${VJ_BASE_DIR}/share/Doozer/mk/dzr.hosttype.mk
-#SYS_SETTING=	$(DZR_HOSTTYPE)-$(VPR_SUBSYSTEM)
 
 #OBJDIR is the place that the object files are stored.
-#OBJDIR=	$(SYS_SETTING)
 #OBJDIR=	$(CFD_LIBS)
 
 #DEPDIR is the place that the dependency files are stored.
-#DEPDIR=	$(SYS_SETTING)
 #DEPDIR=	$(CFD_LIBS)
 
 #__________________________________________________________
@@ -200,7 +191,8 @@ UNAME= $(shell uname -s)
 
 ifeq ($(CLUSTER_APP), TRUE)
    APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/project_cluster-$(CFDHOSTTYPE)
-   EXTRA_CXXFLAGS+=	-D_CLUSTER
+   EXTRA_CXXFLAGS+= -D_CLUSTER
+   EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
    #OBJDIR is the place that the object files are stored.
    #OBJDIR=	$(SYS_SETTING)
    OBJDIR=	$(CFD_LIBS)-$(CFDHOSTTYPE)-Cluster
@@ -325,14 +317,12 @@ CXX_GEN_DIR=		.
                         ${CONDUCTOR_BASE_DIR}/java_stuff/ObserverPackage \
                         ${CONDUCTOR_BASE_DIR}/java_stuff/VjObsPackage 
 
-
 vpath %.cpp $(CXX_GEN_DIR) ${CONDUCTOR_BASE_DIR}/skel
 #vpath %.cc ./UMI/skel
 #vpath %.h $(CXX_GEN_DIR)  ${CONDUCTOR_BASE_DIR}/skel
 
 #vpath %.idl $(CONDUCTOR_BASE_DIR)
 #vpath %.java $(JAVA_GEN_DIR)
-
 
 # -----------------------------------------------------------------------------
 # Application build targets.
