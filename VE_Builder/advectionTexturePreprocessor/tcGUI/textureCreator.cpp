@@ -8,6 +8,7 @@
 #include <vtkUnstructuredGridReader.h>
 #include <vtkRectilinearGrid.h>
 #include <vtkUnstructuredGrid.h>
+#include <vtkCellDataToPointData.h>
 #ifdef WIN32
 #include <direct.h>
 #endif
@@ -30,7 +31,8 @@ VTKDataToTexture::VTKDataToTexture()
    _dataSet = 0;
    _vFileName = 0;
    _outputDir = 0;
-  
+ 
+   _dataConvertCellToPoint = 0 
    _usgrid = 0;
    _rgrid = 0;
 
@@ -46,7 +48,7 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
    _resolution[0] = v._resolution[0];
    _resolution[1] = v._resolution[1];
    _resolution[2] = v._resolution[2];
-   
+  _dataConvertCellToPoint = v._dataConvertCellToPoint;
    _nPtDataArrays = v._nPtDataArrays;
    _nScalars = v._nScalars;
    _nVectors = v._nVectors;
@@ -109,7 +111,8 @@ VTKDataToTexture::~VTKDataToTexture()
       delete [] _outputDir;
       _outputDir = 0;
    }
-   
+   if(_dataConvertCellToPoint)
+      _dataConvertCellToPoint->Delete(); 
    _velocity.clear();
    _curScalar.clear();
    _scalarRanges.clear();
@@ -201,8 +204,26 @@ void VTKDataToTexture::createDataSetFromFile(char* filename)
       //update the grid w/ the new file name
       _usgrid->SetFileName(filename);
       _usgrid->Update();
-   
-      setDataset(_usgrid->GetOutput());
+      vtkDataSet* tmpDSet = _usgrid->GetOutput();
+
+      
+      //get the info about the data in the data set
+      _nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
+      if(!_nPtDataArrays){
+         std::cout<<"Warning!!!"<<std::endl;
+         std::cout<<"No point data found!"<<std::endl;
+         std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+         if(!_dataConvertCellToPoint)
+            _dataConvertCellToPoint = vtkCellDataToPointData::New();
+
+         _dataConvertCellToPoint->SetInput( tmpDSet);
+         _dataConvertCellToPoint->PassCellDataOff();
+         _dataConvertCellToPoint->Update();
+         setDataset(_dataConvertCellToPoint->GetUnstructuredGridOutput());
+      }else{
+         setDataset(tmpDSet);
+      }
+     
    }else{
       if(!_rgrid){
          _rgrid = vtkRectilinearGridReader::New();

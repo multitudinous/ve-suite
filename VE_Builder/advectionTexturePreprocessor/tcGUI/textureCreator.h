@@ -6,7 +6,7 @@
 #include <vtkRectilinearGridReader.h>
 #include <vtkCellLocator.h>
 #include "flowTexture.h"
-
+class vtkCellDataToPointData;
 
 //////////////////////////////////////////////
 //This class takes a vtkdataset and creates //
@@ -126,6 +126,7 @@ protected:
 
    vtkDataSet* _dataSet;
    vtkCellLocator* _cLocator;
+   vtkCellDataToPointData* _dataConvertCellToPoint;
    vtkUnstructuredGridReader* _usgrid;
    vtkRectilinearGridReader* _rgrid;
 };
