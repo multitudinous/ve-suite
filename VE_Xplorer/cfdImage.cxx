@@ -46,6 +46,8 @@
 
 #include <vpr/Util/Debug.h>
 
+#include <fstream>
+
 cfdImage::cfdImage( char* param )
 {
    this->bmpReader = NULL;

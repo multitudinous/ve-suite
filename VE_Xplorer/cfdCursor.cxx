@@ -69,7 +69,6 @@
 #include <gmtl/Output.h>
 
 using namespace gmtl; //added by Gengxun
-//using namespace vrj;
 
 cfdCursor::cfdCursor( vtkPolyData * arrow, cfdDCS *worldDCS, cfdGroup* rootNode )
 {
@@ -822,13 +821,11 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) < 0 )
          {
             this->_rootNode->AddChild( this->GetcfdDCS() );
-#ifdef _PERFORMER
-            pfdStoreFile( (pfNode*)this->GetcfdDCS()->GetRawNode(), "test.pfb" );
-#endif
+
             vprDEBUG(vprDBG_ALL,2) 
                << "added cursor with cursor->GetpfDCS() = "
                << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
-            cout << this->cursorDCS->GetMat() << endl;
+            std::cout << this->cursorDCS->GetMat() << std::endl;
          }
       }
       
@@ -849,6 +846,6 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 // in future, multi-threaded apps will make a copy of VjObs_i commandArray
 void cfdCursor::UpdateCommand()
 {
-   cerr << "doing nothing in cfdCursor::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdCursor::UpdateCommand()" << std::endl;
 
 }

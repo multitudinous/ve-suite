@@ -32,7 +32,7 @@
 
 #include <cfdAccessoryFunctions.h>
 #include <vtkDataArray.h>
-//#include <vrj/Util/Debug.h>
+#include <iostream>
 
 cfdAccessoryFunctions::cfdAccessoryFunctions( )
 {
@@ -64,7 +64,7 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
 
    if ( dataArray->GetNumberOfComponents() != 3 )
    {
-      cerr << "ERROR: ComputeVectorMagnitudeRange requires 3-component "
+      std::cerr << "ERROR: ComputeVectorMagnitudeRange requires 3-component "
            << "vector data" << std::endl;
       return NULL;
    }

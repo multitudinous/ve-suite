@@ -53,6 +53,8 @@
 #include <vtkPolyDataMapper.h>
 #include <vpr/Util/Debug.h>
 
+#include <fstream>
+
 cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
 {
    vprDEBUG(vprDBG_ALL,2) << "constructing cfdScalarBarActor" 
