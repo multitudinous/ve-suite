@@ -93,9 +93,9 @@ void VjObs_i::CreateDatasetInfo( void )
    CORBA::ULong numberOfModels = this->_modelHandler->GetNumberOfModels();
    if ( numberOfModels > 0 )
    {
-      if ( _models != NULL )
+      if ( &_models != NULL )
       {
-         delete _models;
+         delete &_models;
       }
 
       _models = new VjObs::Models( numberOfModels );
@@ -686,9 +686,9 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
    vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
                           << numberOfSounds << std::endl << vprDEBUG_FLUSH;
 
-   if ( sound_names != NULL )
+   if ( &sound_names != NULL )
    {
-      delete sound_names;
+      delete &sound_names;
    }
 
    if( numberOfSounds > 0 )
