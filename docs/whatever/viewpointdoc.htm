@@ -1,0 +1,36 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
+"http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+<title>Viewpoint</title>
+<style type="text/css">
+<!--
+.style1 {
+	font-family: Arial, Helvetica, sans-serif;
+	color: #000000;
+}
+-->
+</style>
+</head>
+
+<body>
+<p class="style1">The code is rough, so the operations have to be very specific for everything to work properly. </p>
+<p class="style1">- Start by making a file (say locations.dat) in the working directory for the application </p>
+<p class="style1">- Add a block 14 to the parameter file with the view points file name on the next line<br>
+(the vrxpr.param.example should be good now)</p>
+<p class="style1"> -Start the app running and when a chosen point has been found, select Add View Point <br>
+on the View Points tab. Continue this until you have found all of the view points you would like <br>
+to store, 
+then click Write Points to File. </p>
+<p class="style1">- Currently the GUI isn't set up to dynamically display new points when read in from the file, <br>
+so in order to see your stored points in the selection box you will have to restart the app. </p>
+<p class="style1">- At this point you should be in good shape to move around to the different points. <br>
+To do this simply select the desired point in the selection box and click the Move button. </p>
+<p class="style1">- A major flaw comes in with loading new points into a file with existing points. Right now, <br>
+if you have file with existing points and find new points that you want to store, you will have to <br>
+manually copy the previously stored locations out of the file before writing new points to the file, <br>
+because the old points will be overwritten. After writing the new points to the file, you can go <br>
+back in and manually copy the previously stored points back into the file.</p>
+</body>
+</html>
