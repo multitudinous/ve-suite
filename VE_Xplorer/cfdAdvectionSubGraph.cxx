@@ -215,7 +215,9 @@ void pbufferDrawCallback::drawImplementation(osg::State& state,
             tempTexture->copyTexSubImage3D(state,
                                      0,0,i,
                                      0,0,_w,_h);
-         }         _pbuffer->endSlicing();         _pbuffer->deactivate();   
+         }
+         _pbuffer->endSlicing();
+         _pbuffer->deactivate();   
       }
    }
 }

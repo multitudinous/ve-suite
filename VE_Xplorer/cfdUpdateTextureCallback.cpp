@@ -27,7 +27,8 @@ _subloadImageDepth(0)
 {
    _tm = 0;
    _delay = 1.0;
-
+   _isSlave = false;
+   _currentFrame = 0;
 }
 /////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::cfdUpdateTextureCallback(const cfdUpdateTextureCallback& cb)
@@ -35,6 +36,8 @@ cfdUpdateTextureCallback::cfdUpdateTextureCallback(const cfdUpdateTextureCallbac
 {
    _tm = cb._tm;
    _delay = cb._delay;
+   _isSlave = cb._isSlave;
+   _currentFrame = cb._currentFrame;
 }
 ///////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::~cfdUpdateTextureCallback()
@@ -54,6 +57,22 @@ void cfdUpdateTextureCallback::SetDelayTime(double delayTime)
 {
    _delay = delayTime;
 }
+////////////////////////////////////////////////////////
+unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
+{
+   if(_tm){
+      return _tm->GetCurrentFrame();
+   }
+   return 0;
+}
+////////////////////////////////////////////////////////////////////////
+void cfdUpdateTextureCallback::SetCurrentFrame(unsigned int cFrame)
+{
+   if(_tm){
+      _currentFrame = cFrame;
+      _isSlave = true;
+   }
+}
 ////////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::load(const osg::Texture3D& texture,osg::State& state )const 
 {
@@ -64,7 +83,7 @@ void cfdUpdateTextureCallback::load(const osg::Texture3D& texture,osg::State& st
                                           _textureDepth,
                                           0, GL_RGBA, 
                                           GL_UNSIGNED_BYTE, 
-                                          (unsigned char*)_tm->getNextField());
+                                          (unsigned char*)_tm->dataField(0));
 }
 //////////////////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State& state) const
@@ -72,8 +91,10 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
    if(state.getFrameStamp()){
      double currTime = state.getFrameStamp()->getReferenceTime();
      if(_tm){  
-        if(_tm->timeToUpdate(currTime,_delay)){
-           texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
+        if(!_isSlave){
+           //master node in the cluster
+           if(_tm->timeToUpdate(currTime,_delay)){
+              texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
                              0,0,0, 
                              _textureWidth,
@@ -82,6 +103,17 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              GL_RGBA, 
                              GL_UNSIGNED_BYTE,
                              (unsigned char*)_tm->getNextField());
+           }
+        }else{
+              texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
+                             0,
+                             0,0,0, 
+                             _textureWidth,
+                             _textureHeight,
+                             _textureDepth, 
+                             GL_RGBA, 
+                             GL_UNSIGNED_BYTE,
+                             (unsigned char*)_tm->dataField(_currentFrame));
         }
      }
    }   

@@ -25,6 +25,9 @@ public:
    //forwardBackward == 1 forward
    void setDirection(int forwardBackward);
 
+   //set the current frame
+   void SetCurrentFrame(unsigned int whichFrame);
+
    float* getBoundingBox(){return _bbox;}
    int timeToUpdate(double curTime,double delay);
 
@@ -39,6 +42,9 @@ public:
 
    //the resolution of the fields
    int* fieldResolution(){return _resolution;}
+
+   //the current frame
+   unsigned int GetCurrentFrame();
 
    //the data ranges
    float* dataRange(){return _range;}

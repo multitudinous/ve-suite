@@ -324,7 +324,7 @@ void cfdApp::latePreFrame( void )
    // don't move above function call
    if ( _frameStamp.valid() )
    {
-      _frameStamp->setFrameNumber( this->_vjobsWrapper->GetSetFrameNumber(-1) );
+      _frameStamp->setFrameNumber( _frameNumber++ );
       _frameStamp->setReferenceTime( this->_vjobsWrapper->GetSetAppTime(-1) );
    }
 #endif
@@ -388,7 +388,7 @@ void cfdApp::postFrame()
 #ifdef _OSG
    double time_since_start = _timer.delta_s(_start_tick,_timer.tick());
    this->_vjobsWrapper->GetSetAppTime( time_since_start );
-   this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
+   //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
 #endif
    this->_vjobsWrapper->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;

@@ -50,6 +50,7 @@ public:
    void SetVeboseFlag(bool flag);
    void SetShaderDirectory(char* shadDir);
 #ifdef _OSG
+   void SetCurrentTransientTexture(unsigned int frame);
    void SetStateSet(osg::StateSet* ss);
    void SetState(osg::State* state);
    void Set3DTextureData(osg::Texture3D* texture);
@@ -63,6 +64,7 @@ public:
    void UpdateClipPlanePosition(ClipPlane direction,double* newPosition);
    
 
+   unsigned int GetCurrentTransientTexture();
    bool isCreated(){return _isCreated;}
 
    cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk;}

@@ -87,12 +87,17 @@ public:
    void SetTextureManager(cfdTextureManager* tm);
    void SetDelayTime(double delayTime);
 
+   void SetCurrentFrame(unsigned int cFrame);
+   unsigned int GetCurrentFrame();
+
    void subload(const osg::Texture3D& texture,osg::State& state) const;
    void load(const osg::Texture3D& texture,osg::State&) const;
    
 protected:
    cfdTextureManager* _tm;
    double _delay;
+   bool _isSlave;
+   unsigned int _currentFrame;
    SubloadMode _subloadMode;
    mutable GLsizei _textureWidth, _textureHeight,_textureDepth;
    GLint _subloadTextureOffsetX, _subloadTextureOffsetY,_subloadTextureOffsetZ;
