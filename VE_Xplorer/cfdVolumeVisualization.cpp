@@ -52,6 +52,9 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _shaderDirectory = 0;
    _volShaderIsActive =  false;
    _transferShaderIsActive = false;
+#ifdef CFD_USE_SHADERS
+   _sSM = 0;
+#endif
 }
 /////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
@@ -96,7 +99,11 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _trans4 = rhs._trans4;
    _volShaderIsActive =  rhs._volShaderIsActive;
    _transferShaderIsActive = rhs._transferShaderIsActive;
+   _property = rhs._property;
    _transferFunctions.clear();
+#ifdef CFD_USE_SHADERS
+   _sSM = rhs._sSM;
+#endif
 
    for(int i = 0; i < 2; i++){
       _transferFunctions.push_back(rhs._transferFunctions.at(i));
@@ -122,8 +129,17 @@ cfdVolumeVisualization::~cfdVolumeVisualization()
    if(_transferFunctions.size()){
      _transferFunctions.clear();
    }
-
-   
+#ifdef CFD_USE_SHADERS
+   if(_sSM){
+      delete _sSM;
+      _sSM = 0;
+   }
+#endif
+}
+////////////////////////////////////////////////////////
+void cfdVolumeVisualization::SetState(osg::State* state)
+{
+   _state = state;
 }
 //////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetShaderDirectory(char* shadDir)
@@ -150,7 +166,7 @@ void cfdVolumeVisualization::DeactivateVisualBBox()
    }
 }
 #ifdef CFD_USE_SHADERS
-/////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_setupCGShaderPrograms(osg::StateSet *ss, 
                                               char* fragProgramFileName,
                                               char* fragFunctionName)
@@ -163,30 +179,7 @@ void cfdVolumeVisualization::_setupCGShaderPrograms(osg::StateSet *ss,
 	//apply the shaders to state set
 	ss->setAttributeAndModes(fprog);
 }
-///////////////////////////////////////////////
-void cfdVolumeVisualization::_initVolumeShader()
-{
-   //load the shader file 
-   char directory[1024];
-   if(_shaderDirectory){
-      strcpy(directory,_shaderDirectory);
-   }else{
-      strcpy(directory,"../cg_shaders/");
-   }
-   strcat(directory,"fragVol.cg");
-   _scalarFragSS = new osg::StateSet();
-   _scalarFragSS->setTextureAttributeAndModes(0,_texture.get(), 
-                             osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
-   _scalarFragSS->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-   _scalarFragSS->setMode(GL_BLEND,osg::StateAttribute::ON);
 
-   osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
-   bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-   _scalarFragSS->setAttributeAndModes(bf.get());
-   _scalarFragSS->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-   _setupCGShaderPrograms(_scalarFragSS.get(),directory,"fp_volume");
-
-}
 //////////////////////////////////////////////////////////
 void cfdVolumeVisualization::_initTransferFunctionShader()
 {
@@ -197,13 +190,11 @@ void cfdVolumeVisualization::_initTransferFunctionShader()
    }else{
       strcpy(directory,"../cg_shaders/");
    }
-   /*here we need a class to init/manager the transfer functions
-     should be a simple class!!!
-   */
+   
    strcat(directory,"volumeTransferFunctions.cg");
    _transferFunctionFragSS = new osg::StateSet();
-   _transferFunctionFragSS->setTextureAttributeAndModes(0,_texture.get(), 
-                             osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+   _initTransferFunctions();
+   _initPropertyTexture();
    _setupCGShaderPrograms(_transferFunctionFragSS.get(),directory,"densityTransfer");
 
 }
@@ -213,8 +204,6 @@ void cfdVolumeVisualization::EnableTransferShader()
 {
    _useShaders = true;
    if(_transferFunctionFragSS.valid()&&(!_transferShaderIsActive)){
-      _attachPropertyTextureToStateSet(_transferFunctionFragSS.get());
-      _attachTransferFunctionsToStateSet(_transferFunctionFragSS.get());
       _transferShaderIsActive = true;
       _volShaderIsActive = false;
    }
@@ -273,6 +262,60 @@ void cfdVolumeVisualization::UpdateTransferFunction(cfdUpdateableOSGTexture1d::T
    };
    temp.UpdateParam(type,param);
 }
+///////////////////////////////////////////////////
+void cfdVolumeVisualization::_initPropertyTexture()
+{
+   if(_tm){
+      int* textureSize = _tm->fieldResolution();
+      int dataSize = textureSize[0]*textureSize[1]*textureSize[2];
+      unsigned char* data = new unsigned char[dataSize*4];
+   
+      for(int p = 0; p < dataSize; p++){
+      
+         data[p*4   ] = (unsigned char)0;
+
+         data[p*4 + 1] = (unsigned char)0;
+         data[p*4 + 2] = (unsigned char)0;
+     
+         data[p*4 + 3] = (unsigned char)0;      
+      }
+      osg::Image* propertyField = new osg::Image();
+
+      propertyField->allocateImage(textureSize[0],
+                                textureSize[1],
+                                textureSize[2],
+                                GL_RGBA,GL_UNSIGNED_BYTE);
+
+      propertyField->setImage(textureSize[0], textureSize[1], textureSize[2],
+		                      GL_RGBA,
+		                      GL_RGBA,
+			                   GL_UNSIGNED_BYTE,
+                           data,/*may need a function to init empty data*/
+                           osg::Image::USE_NEW_DELETE,1);
+
+      _property = new osg::Texture3D();
+      _property->setDataVariance(osg::Object::DYNAMIC);
+      
+      osg::TexEnv* texEnv = new osg::TexEnv();
+      texEnv->setMode(osg::TexEnv::REPLACE);
+
+      _property->setFilter(osg::Texture3D::MIN_FILTER,osg::Texture3D::LINEAR);
+      _property->setFilter(osg::Texture3D::MAG_FILTER,osg::Texture3D::LINEAR);
+      _property->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
+      _property->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
+      _property->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
+      _property->setInternalFormat(GL_RGBA);
+      _property->setTextureSize(textureSize[0],
+                                textureSize[1],
+                                textureSize[2]);
+      _property->setImage(propertyField);
+      if(data){
+         delete [] data;
+         data = 0;
+      }
+      _attachPropertyTextureToStateSet(_transferFunctionFragSS.get());
+   }
+}
 /////////////////////////////////////////////////////
 void cfdVolumeVisualization::_initTransferFunctions()
 { 
@@ -281,25 +324,61 @@ void cfdVolumeVisualization::_initTransferFunctions()
    osg::ref_ptr<osg::Image> data3 = new osg::Image();
    osg::ref_ptr<osg::Image> data4 = new osg::Image();
    
-   data1->allocateImage(256,1,1,
-                            GL_LUMINANCE,GL_UNSIGNED_BYTE);
-   data2->allocateImage(256,1,1,
-                            GL_LUMINANCE,GL_UNSIGNED_BYTE);
-   data3->allocateImage(256,1,1,
-                            GL_LUMINANCE,GL_UNSIGNED_BYTE);
-   data4->allocateImage(256,1,1,
-                            GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   data1->allocateImage(256,1,1,GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   data2->allocateImage(256,1,1,GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   data3->allocateImage(256,1,1,GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   data4->allocateImage(256,1,1,GL_LUMINANCE,GL_UNSIGNED_BYTE);
    
    _trans1 = new osg::Texture1D;
+   _trans1->setFilter(osg::Texture1D::MIN_FILTER,
+                    osg::Texture1D::LINEAR);
+
+   _trans1->setFilter(osg::Texture1D::MAG_FILTER,
+                    osg::Texture1D::LINEAR);
+
+   _trans1->setWrap(osg::Texture1D::WRAP_S,
+                  osg::Texture3D::CLAMP);
+
+   _trans1->setInternalFormat(GL_LUMINANCE);
    _trans1->setImage(data1.get());
 
    _trans2 = new osg::Texture1D;
+   _trans2->setFilter(osg::Texture1D::MIN_FILTER,
+                    osg::Texture1D::LINEAR);
+
+   _trans2->setFilter(osg::Texture1D::MAG_FILTER,
+                    osg::Texture1D::LINEAR);
+
+   _trans2->setWrap(osg::Texture1D::WRAP_S,
+                  osg::Texture3D::CLAMP);
+
+   _trans2->setInternalFormat(GL_LUMINANCE);
    _trans2->setImage(data2.get());
   
    _trans3 = new osg::Texture1D;
+   _trans3->setFilter(osg::Texture1D::MIN_FILTER,
+                    osg::Texture1D::LINEAR);
+
+   _trans3->setFilter(osg::Texture1D::MAG_FILTER,
+                    osg::Texture1D::LINEAR);
+
+   _trans3->setWrap(osg::Texture1D::WRAP_S,
+                  osg::Texture3D::CLAMP);
+
+   _trans3->setInternalFormat(GL_LUMINANCE);
    _trans3->setImage(data3.get());
 
    _trans4 = new osg::Texture1D;
+   _trans4->setFilter(osg::Texture1D::MIN_FILTER,
+                    osg::Texture1D::LINEAR);
+
+   _trans4->setFilter(osg::Texture1D::MAG_FILTER,
+                    osg::Texture1D::LINEAR);
+
+   _trans4->setWrap(osg::Texture1D::WRAP_S,
+                  osg::Texture3D::CLAMP);
+
+   _trans4->setInternalFormat(GL_LUMINANCE);
    _trans4->setImage(data4.get());
 
    cfdUpdateableOSGTexture1d t1;
@@ -327,10 +406,11 @@ void cfdVolumeVisualization::_initTransferFunctions()
    _transferFunctions.push_back(t3);
    _transferFunctions.push_back(t4);
 
+   //make sure our functions are initialized
    for(int i = 0; i < 4; i++){
-      _transferFunctions.at(i).UpdateParam(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION,1.39);
+      _transferFunctions.at(i).UpdateParam(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION,1.4);
    }
-
+   _attachTransferFunctionsToStateSet(_transferFunctionFragSS.get());
 }
 #endif
 
@@ -418,7 +498,16 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
 void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 {
    _tm = tm;
-
+#ifdef CFD_USE_SHADERS
+   
+   if(!_sSM){
+      _sSM = new cfdOSGScalarShaderManager();
+      _sSM->InitTextureManager(_tm);
+   }else{
+      _sSM->UpdateTextureManager(_tm);
+   }
+   _sSM->Init();
+#endif
    if(!_image.valid()){
       _image = new osg::Image();
    
@@ -724,12 +813,12 @@ void cfdVolumeVisualization::_attachPropertyTextureToStateSet(osg::StateSet* ss)
 {
    if(ss){
       if(_property.valid()){
-         ss->setTextureAttributeAndModes(0,_property.get(),
-			                        osg::StateAttribute::ON);
-         ss->setTextureMode(_tUnit,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
-         ss->setTextureMode(_tUnit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
-         ss->setTextureMode(_tUnit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
-         ss->setTextureAttributeAndModes(_tUnit,new osg::TexEnv(osg::TexEnv::REPLACE),
+         ss->setTextureAttributeAndModes(4,_property.get(),
+			                              osg::StateAttribute::ON);
+         ss->setTextureMode(PROPERTY, GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
+         ss->setTextureMode(PROPERTY, GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
+         ss->setTextureMode(PROPERTY, GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
+         ss->setTextureAttributeAndModes(PROPERTY,new osg::TexEnv(osg::TexEnv::REPLACE),
 		                             osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
       }
    }else{
@@ -743,12 +832,16 @@ void cfdVolumeVisualization::_attachTransferFunctionsToStateSet(osg::StateSet* s
 {
    if(ss){
       if(_trans1.valid()){
+         ss->setTextureAttributeAndModes(TRANS_1,_trans1.get(),osg::StateAttribute::ON);
       }
       if(_trans2.valid()){
+         ss->setTextureAttributeAndModes(TRANS_2,_trans2.get(),osg::StateAttribute::ON);
       }
       if(_trans3.valid()){
+         ss->setTextureAttributeAndModes(TRANS_3,_trans3.get(),osg::StateAttribute::ON);
       }
       if(_trans4.valid()){
+         ss->setTextureAttributeAndModes(TRANS_4,_trans4.get(),osg::StateAttribute::ON);
       }
    }
 }
@@ -768,12 +861,12 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
             _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
             _texture->setSubloadCallback(_utCbk);
          }
-         ss->setTextureAttributeAndModes(_tUnit,_texture.get(),
+         ss->setTextureAttributeAndModes(PLAIN,_texture.get(),
 			                        osg::StateAttribute::ON);
-         ss->setTextureMode(_tUnit,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
-         ss->setTextureMode(_tUnit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
-         ss->setTextureMode(_tUnit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
-         ss->setTextureAttributeAndModes(_tUnit,new osg::TexEnv(osg::TexEnv::REPLACE),
+         ss->setTextureMode(PLAIN,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
+         ss->setTextureMode(PLAIN,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
+         ss->setTextureMode(PLAIN,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
+         ss->setTextureAttributeAndModes(PLAIN,new osg::TexEnv(osg::TexEnv::REPLACE),
 		                             osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
       }
    }else{
@@ -927,8 +1020,13 @@ void cfdVolumeVisualization::CreateNode()
 //////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()
 {
-    _volumeVizNode = new osg::Group();
+if(!_tm){
+      std::cout<<"Texture Manager not set!!!"<<std::endl;
+      return;
+   }
+   _volumeVizNode = new osg::Group();
    _volumeVizNode->setDataVariance(osg::Object::DYNAMIC);
+   
    _createTexGenNode();
    _createStateSet();
    _createVolumeSlices();
@@ -936,8 +1034,7 @@ void cfdVolumeVisualization::_buildGraph()
    _createClipNode();
    _isCreated = true;
 #ifdef CFD_USE_SHADERS
-   _initVolumeShader();
-   _initTransferFunctions();
+   _initTransferFunctionShader();
 #endif
    //build our funky graph
 
@@ -991,12 +1088,12 @@ void cfdVolumeVisualization::_buildGraph()
    _shaderSwitch->addChild(_scalarFragGroup.get());
    _shaderSwitch->addChild(_advectionVectorGroup.get());
 
-   if(_scalarFragSS.valid()){
-     _scalarFragGroup->setStateSet(_scalarFragSS.get()); 
+   if(_sSM->GetShaderStateSet()){
+     _scalarFragGroup->setStateSet(_sSM->GetShaderStateSet()); 
    }
 
    if(_advectionFragSS.valid()){
-      _advectionVectorGroup->setStateSet(_advectionFragSS.get());
+      _advectionVectorGroup->setStateSet(_transferFunctionFragSS.get());
    }
 #endif
 
@@ -1086,11 +1183,15 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
 
       _volShaderIsActive =  rhs._volShaderIsActive;
       _transferShaderIsActive = rhs._transferShaderIsActive;
+
+#ifdef CFD_USE_SHADERS
+      _sSM = rhs._sSM;
+#endif
       _transferFunctions.clear();
       for(int i = 0; i < 2; i++){
          _transferFunctions.push_back(rhs._transferFunctions.at(i));
       }
-   
+      _property = rhs._property;
    }
    return *this;
 }

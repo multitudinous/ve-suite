@@ -14,6 +14,8 @@
 #elif _OPENSG
 #elif _OSG
 #include <osg/Group>
+#include <osgUtil/SceneView>
+#include <osg/State>
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////
@@ -47,6 +49,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHan
    _activeVolumeVizNode = tbvh._activeVolumeVizNode;
    _activeTM = tbvh._activeTM;
    _parent = tbvh._parent;
+   _sceneView = tbvh._sceneView;
    _currentBBox = new float[6];
    _currentBBox[0] = tbvh._currentBBox[0];
    _currentBBox[1] = tbvh._currentBBox[1];
@@ -120,7 +123,11 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE ){
       //set the transient flag in the callback
       if(_activeVolumeVizNode){
-         _activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::PLAY);
+         //testing switch stuff
+         //_activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::PLAY);
+         
+         //_activeVolumeVizNode->EnableVolumeShader();
+         //_activeVolumeVizNode->DeactivateVisualBBox();
       }
    }
    //biv --need to figure out the correct enum to grab!!!
@@ -228,6 +235,11 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
       }
    }
 }
+////////////////////////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::SetSceneView(osgUtil::SceneView* sv)
+{
+   _sceneView = sv;
+}
 ///////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetParameterFile(char* paramFile)
 {
@@ -332,6 +344,9 @@ bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
          cfdVolumeVisualization* volVizNode = new cfdVolumeVisualization();
          volVizNode->SetNumberofSlices(100);
          volVizNode->SetSliceAlpha(.5);
+         if(_sceneView){
+            volVizNode->SetState(_sceneView->getState());
+         }
          _volumeVisNodes.push_back(volVizNode);
       }
       else
@@ -363,6 +378,7 @@ cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTexture
       _activeVolumeVizNode = tbvh._activeVolumeVizNode;
       _activeTM = tbvh._activeTM;
       _parent = tbvh._parent;
+      _sceneView = tbvh._sceneView;
       if(!_currentBBox){
          _currentBBox = new float[6];
       }

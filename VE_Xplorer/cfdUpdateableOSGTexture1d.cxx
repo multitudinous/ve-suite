@@ -11,8 +11,8 @@ cfdUpdateableOSGTexture1d::cfdUpdateableOSGTexture1d()
 {
    _alphaCutoff = .1;
    _gamma = 1.4;
-   _lastAlpha = _alphaCutoff;
-   _lastGamma = _gamma;
+   _lastAlpha = 0.0;
+   _lastGamma = 0.0;
    _type = GAMMA_CORRECTION;
    _textureWidth = 0;
    _oWidth = -1;

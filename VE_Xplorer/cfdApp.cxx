@@ -305,6 +305,7 @@ inline void cfdApp::initScene( )
    _tbvHandler->SetNavigate( _environmentHandler->GetNavigate() );
    _tbvHandler->SetCursor( _environmentHandler->GetCursor() );
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
+   _tbvHandler->SetSceneView(_sceneViewer.get());
    _tbvHandler->InitVolumeVizNodes();
 #endif
 /*

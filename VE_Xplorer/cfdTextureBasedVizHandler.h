@@ -14,6 +14,9 @@ class cfdTextureManager;
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
+namespace osgUtil{
+   class SceneView;
+};
 class cfdVolumeVisualization;
 class cfdTextureBasedVizHandler
 {
@@ -30,6 +33,9 @@ class cfdTextureBasedVizHandler
       void SetNavigate(cfdNavigate* navigate);
       void SetCursor(cfdCursor* cursor);
       void SetActiveTextureManager(cfdTextureManager* tm);
+      //once we get pf side this may need to be ifdef'd
+      void SetSceneView(osgUtil::SceneView* sv);
+
       bool InitVolumeVizNodes( void );
       cfdVolumeVisualization* GetVolumeVizNode(int index);
       cfdVolumeVisualization* GetActiveVolumeVizNode( void );
@@ -45,6 +51,7 @@ class cfdTextureBasedVizHandler
       std::vector<cfdVolumeVisualization*> _volumeVisNodes;
       cfdVolumeVisualization* _activeVolumeVizNode;
       cfdGroup* _parent;
+      osgUtil::SceneView* _sceneView;
       float* _currentBBox;
       bool _cleared;
 };

@@ -22,18 +22,23 @@ namespace osg{
    class StateSet;
    class Group;
 }
+#ifdef CFD_USE_SHADERS
+#include "cfdOSGScalarShaderManager.h"
+#endif
 #include <osg/BoundingBox>
 #include "cfdVolumeSliceSwitchCallback.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfdTextureManager.h"
 #include "cfdUpdateableOSGTexture1d.h"
 
+
 class cfdVolumeVisualization{
 public:
    cfdVolumeVisualization();
    cfdVolumeVisualization(const cfdVolumeVisualization&);
    virtual ~cfdVolumeVisualization();
-
+   enum CfdTexUnit{PLAIN = 0,TRANS_1,TRANS_2,
+                 TRANS_3,TRANS_4,PROPERTY,VELOCITY,NOISE};
    enum VisMode{PLAY,STOP};
    enum Direction{FORWARD,BACKWARD};
    enum ClipPlane{XPLANE=0,YPLANE,ZPLANE,ARBITRARY};
@@ -46,6 +51,7 @@ public:
    void SetShaderDirectory(char* shadDir);
 #ifdef _OSG
    void SetStateSet(osg::StateSet* ss);
+   void SetState(osg::State* state);
    void Set3DTextureData(osg::Texture3D* texture);
    void SetBoundingBox(float* bbox);
    void SetNumberofSlices(int nSlices = 100);
@@ -105,13 +111,14 @@ protected:
    cfdTextureManager* _tm;
 #ifdef _OSG
 #ifdef CFD_USE_SHADERS
-   
+   cfdOSGScalarShaderManager* _sSM;
+
    void _setupCGShaderPrograms(osg::StateSet *ss, 
                      char* fragProgramFileName,
                      char* fragFunctionName);
-   void _initVolumeShader();
    void _initTransferFunctionShader();
-   void _initTransferFunctions();   
+   void _initTransferFunctions();  
+   void _initPropertyTexture();
    void _attachTransferFunctionsToStateSet(osg::StateSet* ss);
    void _attachPropertyTextureToStateSet(osg::StateSet* ss);
 
@@ -151,9 +158,13 @@ protected:
    osg::ref_ptr<osg::Geometry> _negYSlices;
    osg::ref_ptr<osg::Geometry> _posZSlices;
    osg::ref_ptr<osg::Geometry> _negZSlices;
+
+   osg::ref_ptr<osg::State> _state;
+
    cfdVolumeSliceSwitchCallback* _vSSCbk;
    cfdUpdateTextureCallback* _utCbk;
    std::vector<cfdUpdateableOSGTexture1d> _transferFunctions;
+
 #endif
 
 };
