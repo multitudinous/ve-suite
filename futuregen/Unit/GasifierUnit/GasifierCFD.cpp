@@ -60,7 +60,7 @@ void GasifierCFD::setCoalType (std::string coaltype)
     _ash_prox = 7.01;
     _proxH2O  = 1.44;
     _proxVM   = 30.22;
-    _proxFC   = 61.99;
+    _proxFC   = 61.99; 
     _hhv      = 13729.1;
     
     // Ash composition
@@ -1485,10 +1485,71 @@ void GasifierCFD::load_scirun_flags (int *lrsrt, int *lprst)
 }
 
 void GasifierCFD::load_oxidant (float *tf0, float *hsub0, float *densf0, float *erf0, float *smf0,
-	  float *cpsf0, float *bf0, float *specfoo, float *spec0, int *nel, int *nsp,
+	  float *cpsf0, float *bf0, float *specf00, float *specf0, int *nel, int *nsp,
 	  char *spec_name, char *wic_name, unsigned int s1len, unsigned int s2len)
 {
   // Gas *_ox_in is oxidant
+   *hsub0 = _ox_in->gas_composite.enthalpy(*tf0);
+   *hsub0 /= _ox_in->gas_composite.mw();
+   *densf0 = _pressure/(_ox_in->thermo_database->get_rgas()*(*tf0))*_ox_in->gas_composite.mw();
+
+   // equivalence ratio and specific moles
+   double numer, denom, valnc;
+   std::map<std::string,int>::iterator it;
+   std::map<std::string,int>::const_iterator itc;
+   *erf0 = 0.0;
+   numer = denom = 0.0;
+   int nelth = _ox_in->thermo_database->get_nel(), ie, len, isp;
+   for(isp=0; isp<*nsp; isp++){
+      *(specf0+isp) = 0.0;
+      *(specf00+isp) = 0.0;
+   }
+   for(it=_ox_in->specie.begin(); it!=_ox_in->specie.end(); it++){
+      itc = _ox_in->thermo_database->get_nam_spec().find(it->first);
+      if(itc!=_ox_in->thermo_database->get_nam_spec().end()){
+         len = itc->first.length();
+         if(len>8) len = 8; 
+         for(isp=0; isp<*nsp; isp++){
+            if(!strncmp(spec_name+isp*9,itc->first.c_str(),len)) break;
+         }
+         if(isp==*nsp) cout<<"specie " << itc->first << " not found on CFD side" << endl;
+         *(specf0+isp) = _ox_in->gas_composite.comp_specie[it->second]/_ox_in->gas_composite.mw();
+         *(specf00+isp) = *(specf0+isp);
+         for(ie=0; ie<nelth; ie++){
+            valnc = _ox_in->thermo_database->get_valence()[ie];
+            if(valnc>0.0){
+               numer += _ox_in->gas_composite.comp_specie[it->second]*_ox_in->thermo_database->get_mol_at_spc()[ie][itc->second]*valnc;
+            }
+            valnc = -valnc;
+            if(valnc>0.0){
+               denom += _ox_in->gas_composite.comp_specie[it->second]*_ox_in->thermo_database->get_mol_at_spc()[ie][itc->second]*valnc;
+            }
+         }
+      } // if(itc!=
+   }
+   if(denom>0.0) *erf0 = numer/denom;
+
+   *smf0 = 1.0/_ox_in->gas_composite.mw();
+   *cpsf0 = _ox_in->gas_composite.cp_mix(*tf0);
+
+   int ie1;
+   for(ie1=0; ie1<*nel; ie1++) *(bf0+ie1) = 0.0;
+   for(ie=0; ie<nelth; ie++){
+      len = _ox_in->thermo_database->get_el_nam()[ie].length();
+      if(len>8) len = 8;
+      for(ie1=0; ie1<*nel; ie1++){
+         if(!strncmp(wic_name+ie1*9,_ox_in->thermo_database->get_el_nam()[ie].c_str(),8)) break;
+      }
+      if(ie1==*nel) cout << "element " << _ox_in->thermo_database->get_el_nam()[ie] << " not found on CFD side" << endl;
+      for(it=_ox_in->specie.begin(); it!=_ox_in->specie.end(); it++){
+         itc = _ox_in->thermo_database->get_nam_spec().find(it->first);
+         if(itc!=_ox_in->thermo_database->get_nam_spec().end()){
+            *(bf0 + ie1) += _ox_in->gas_composite.comp_specie[it->second]*_ox_in->thermo_database->get_mol_at_spc()[ie][itc->second];
+         }
+      }
+   }
+   for(ie1=0; ie1<*nel; ie1++) *(bf0 + ie1) /= _ox_in->gas_composite.mw();
+
 }
 
 //******************************************************************************
