@@ -1,13 +1,17 @@
 #!/usr/bin/tcsh -f
 
 # Set environment variables and paths for running the program
-source /isv/VE_Suite/VE_Installer/setup.deere.tsh
+source /isv/VE_Suite_20041012/VE_Installer/setup.deere.tsh
 # Set additional environment variables
-setenv MY_VJCONFIGS /isv/Juggler/deere.config/icecube_2.0a2
+setenv MY_VJCONFIGS /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-posix/share/vrjuggler/data/configFiles
+#cp ${VE_SUITE_HOME}/VE_Conductor/class_files/config/${HOST}.comm.config ${VE_SUITE_HOME}/VE_Conductor/class_files/config/comm.config
+setenv OMNIORB_CONFIG /export/isv/Juggler/deere.config/vrj2.0a3/${HOST}.omniORB4.cfg
+setenv OMNINAMES_LOGDIR /export/isv/Juggler/deere.config/vrj2.0a3/logs
 
 switch ($1)
 
   case -c:
+    sgi_use_anyaddr \
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/icecube.base.config \
     ${MY_VJCONFIGS}/icecube.displays.closed.config \
@@ -16,6 +20,7 @@ switch ($1)
   breaksw
   
   case -cf:
+    sgi_use_anyaddr \
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/icecube.base.config \
     ${MY_VJCONFIGS}/icecube.displays.closed.config \
@@ -25,11 +30,12 @@ switch ($1)
   
   case -d:
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
-    ${MY_VJCONFIGS}/sim.base.config \
-    ${MY_VJCONFIGS}/sim.wand.mixin.config 
+    ${MY_VJCONFIGS}/sim.base.jconf \
+    ${MY_VJCONFIGS}/sim.wand.mixin.jconf 
   breaksw
   
   case -o:
+    sgi_use_anyaddr \
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/icecube.base.config \
     ${MY_VJCONFIGS}/icecube.displays.open.config \
@@ -38,6 +44,7 @@ switch ($1)
   breaksw
   
   case -of:
+    sgi_use_anyaddr \
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project \
     ${MY_VJCONFIGS}/icecube.base.config \
     ${MY_VJCONFIGS}/icecube.displays.open.config \
@@ -46,12 +53,14 @@ switch ($1)
   breaksw
   
   case -nserv:
-    omniNames -start 8088 &
+	killall omniNames
+	rm ${OMNINAMES_LOGDIR}/omninames-${HOST}.log
+	rm ${OMNINAMES_LOGDIR}/omninames-${HOST}.bak
+    omniNames -start &
   breaksw
   
   case -menu:
-    cd ${VE_SUITE_HOME}/VE_Conductor/class_files
-    java client
+    ve_conductor
   breaksw
 
   case -surface:
@@ -97,6 +106,9 @@ switch ($1)
     ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/whatIsScalarRange
   breaksw
 
+  case -doc:
+        netscape file:///isv/VE_Suite_20041012/docs/starcd/initial.htm &
+  breaksw
 
   case -h:
   default:
@@ -125,6 +137,8 @@ switch ($1)
   echo " "-makeclean = clean all VE-Suite modules
   echo "  "-meshView = view any vtk file
   echo " "-scalRange = view scalar range of any vtk file
+  echo "       "-doc = view documentation for setting up a CFD post process case
   echo ""
   
 endsw
+
