@@ -1,4 +1,4 @@
-#include <stdio.h>
+#include <cstdio>
 #include <OpenSG/OSGConfig.h>
 #include <OpenSG/OSGSimpleGeometry.h>
 #include <OpenSG/OSGGeometry.h>
