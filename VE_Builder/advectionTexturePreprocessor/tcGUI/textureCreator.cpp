@@ -11,6 +11,7 @@
 #ifdef WIN32
 #include <direct.h>
 #endif
+#include <iostream>
 ////////////////////////////////////
 //Constructor                     // 
 ////////////////////////////////////

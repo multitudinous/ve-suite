@@ -1,4 +1,4 @@
-#include "TCApp.h"
+#include "tcApp.h"
 
 IMPLEMENT_APP(TCApp)
 

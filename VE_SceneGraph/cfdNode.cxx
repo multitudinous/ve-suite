@@ -550,12 +550,8 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
                //handle stl
                if(color == 1){
                   (*curColors)[i][0] = stlColor[0];
-				       (*curColors)[i][1] = stlColor[1];
+                  (*curColors)[i][1] = stlColor[1];
                   (*curColors)[i][2] = stlColor[2];
-               }else{
-                  (*curColors)[i][0] = 1.;
-				       (*curColors)[i][1] = 1.;
-                  (*curColors)[i][2] = 1.;
                }
                //just update the opacity
                (*curColors)[i][3] = op;
@@ -568,18 +564,17 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
 		 osg::ref_ptr<osg::Depth> depth = new osg::Depth;	 
          //put in the appropriate bin
          if ( op == 1 ) {
-			 depth->setWriteMask(true);
+             depth->setWriteMask(true);
              geostate->setRenderingHint(osg::StateSet::OPAQUE_BIN);
              geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::OFF);
              geostate->setMode(GL_BLEND,osg::StateAttribute::OFF);
          }else{
-			 depth->setWriteMask(false);
-			 //geostate->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
-			 geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
+             depth->setWriteMask(false);
+             geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
              geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
              geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
          }
-		 geostate->setAttribute(depth.get());
+          geostate->setAttribute(depth.get());
          //reset the state
          geoset->setStateSet(geostate.get());
       }

@@ -1,5 +1,5 @@
 
-#include "TCFrame.h"
+#include "tcFrame.h"
 #include "wx/string.h"
 BEGIN_EVENT_TABLE(TCFrame,wxFrame)
    EVT_BUTTON(TRANSLATE_BUTTON,TCFrame::_onTranslateCallback)

@@ -5,7 +5,7 @@
 #include <vtkUnstructuredGridReader.h>
 #include <vtkRectilinearGridReader.h>
 #include <vtkCellLocator.h>
-#include "flowtexture.h"
+#include "flowTexture.h"
 
 
 //////////////////////////////////////////////
