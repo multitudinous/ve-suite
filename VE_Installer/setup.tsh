@@ -67,7 +67,6 @@ else if ( ${CFDHOSTTYPE} == "RedHat_8.0" ) then
    setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
 
    if ( ${TAO_BUILD} == "TRUE" ) then
-      setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
 
@@ -93,7 +92,6 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
    setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
 
    if ( ${TAO_BUILD} == "TRUE" ) then
-      setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
 
