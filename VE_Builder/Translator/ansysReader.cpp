@@ -1008,7 +1008,9 @@ int * ansysReader::ReadElementTypeDescription( int pointer )
 
    if ( pointer == 0 ) 
    {
+#ifdef PRINT
       cout << "\treturning NULL because pointer == 0" << endl;
+#endif // PRINT_HEADERS
       return NULL;
    }
 
