@@ -1,3 +1,4 @@
+
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2004 by Iowa State University
@@ -63,7 +64,7 @@ int main(int argc, char* argv[])
    poa_manager->activate();
 
    cfdVjObsWrapper* vjobsWrapper = new cfdVjObsWrapper();
-   vjobsWrapper->init( naming_context.in() );
+   vjobsWrapper->init( naming_context.in(), argc, argv );
    cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
    orb->run();

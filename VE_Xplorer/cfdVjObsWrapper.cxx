@@ -85,15 +85,15 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
 }
 
 #ifdef _TAO
-void cfdVjObsWrapper::init( CosNaming::NamingContext* input  )
+void cfdVjObsWrapper::init( CosNaming::NamingContext* input, int argc, char* argv[]  )
 #else
-void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input  )
+void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, int argc, char* argv[]  )
 #endif
 {
    naming_context = input;
 #ifdef _CLUSTER
-   int argc;
-   char** argv;
+   //int argc;
+   //char** argv;
    char buffer[1025];
    int ntoks, i;
    std::vector<std::string> toks;

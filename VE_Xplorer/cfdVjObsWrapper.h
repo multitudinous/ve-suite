@@ -54,9 +54,9 @@ class cfdVjObsWrapper
       cfdVjObsWrapper( void );
       ~cfdVjObsWrapper( void );
 #ifdef _TAO
-      void init( CosNaming::NamingContext* );
+      void init( CosNaming::NamingContext*, int, char** );
 #else
-      void init( CosNaming::NamingContext_ptr );
+      void init( CosNaming::NamingContext_ptr, int, char** );
 #endif
       cfdCommandArray* GetCommandArray( void );
       double GetShortArray( int );
