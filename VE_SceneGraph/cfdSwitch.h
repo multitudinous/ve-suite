@@ -40,7 +40,7 @@ protected:
 #ifdef _PERFORMER
    pfSwitch* _switch;
 #elif _OSG
-   osg::Switch* _switch;
+   osg::ref_ptr<osg::Switch> _switch;
 #elif _OPENSG
 #endif
 

@@ -304,5 +304,5 @@ osg::Node* cfdGroup::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-   return _group;
+   return _group.get();
 }

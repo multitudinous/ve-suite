@@ -73,7 +73,7 @@ class cfdGeode: public cfdNode
 #ifdef _PERFORMER
    pfGeode* _geode;
 #elif _OSG
-   osg::Geode* _geode;
+      osg::ref_ptr<osg::Geode> _geode;
 #elif _OPENSG
 #endif
 };

@@ -39,9 +39,9 @@ class pfNode;
 class pfFog;
 #elif _OSG
 namespace osg{
-   class Node;
    class Fog;
 }
+#include <osg/Node>
 #elif _OPENSG
 #endif
 
@@ -83,7 +83,7 @@ protected:
 #ifdef _PERFORMER
    pfNode* _node;
 #elif _OSG
-   osg::Node* _node;
+   osg::ref_ptr<osg::Node> _node;
 #elif _OPENSG
 #endif
    float op;

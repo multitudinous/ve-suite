@@ -48,7 +48,7 @@ cfdSwitch::~cfdSwitch()
 //////////////////////////////////////////////
 void cfdSwitch::SetVal(int whichChildIsActive)
 {
-   if(_switch){
+   if(_switch.valid()){
 #ifdef _PERFORMER
       if(whichChildIsActive == OFF)
          _switch->setVal(-1);
@@ -86,7 +86,7 @@ osg::Node* cfdSwitch::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-   return _switch;
+   return _switch.get();
 }
 ////////////////////////////////////////////////
 int cfdSwitch::RemoveChild( cfdNode* child )

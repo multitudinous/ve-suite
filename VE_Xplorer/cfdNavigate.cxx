@@ -79,7 +79,9 @@ void cfdNavigate::Initialize( cfdDCS* worldDCS )
 
    this->navigationStepSize = 0.25f;
    this->worldLoc[0] = this->worldLoc[1] = this->worldLoc[2] = 0.0f;
-
+   this->worldTrans[0] = 0;
+   this->worldTrans[1] = 0;
+   this->worldTrans[2] = 0;
    for ( int i=0; i<3; i++ )
    {
       this->cursorLoc[i] = this->loc[i] + this->dir[i]*this->cursorLen;

@@ -287,7 +287,7 @@ void cfdDCS::SetMat( Matrix44f& input )
    pfMatrix temp = vrj::GetPfMatrix( input );
    this->_dcs->setMat( temp );
 #elif _OSG
-   if(_dcs){
+   if(_dcs.valid()){
       osg::Matrix inMat;
       inMat.set(input.getData());
       _dcs->setMatrix(inMat);
@@ -470,7 +470,7 @@ osg::Node* cfdDCS::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-   return _dcs;
+   return _dcs.get();
    
 }
 

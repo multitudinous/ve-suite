@@ -87,7 +87,7 @@ cfdNode::cfdNode()
 #ifdef _PERFORMER
    this->_node = 0;
 #elif _OSG
-   _node = new osg::Node();
+   _node = 0;//new osg::Node();
 #elif _OPENSG
 #endif
 }
@@ -98,7 +98,7 @@ cfdNode::cfdNode( const cfdNode& input )
 #ifdef _PERFORMER
    this->_node = input._node;
 #elif _OSG
-   _node = new osg::Node(*input._node);
+   _node = input._node;
 #elif _OPENSG
 #endif
 }
@@ -150,7 +150,7 @@ osg::Node* cfdNode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-   return _node;
+   return _node.get();
    
 }
 /////////////////////////////////////////
@@ -161,7 +161,9 @@ void cfdNode::LoadFile( char* filename )
 #ifdef _PERFORMER
    this->_node = pfdLoadFile( filename );  
 #elif _OSG
-   _node= osgDB::readNodeFile(filename);
+   _node = osgDB::readNodeFile(filename);
+      
+      
 #elif _OPENSG
    std::cout << " Error:LoadFile !!! " << std::endl;
    exit( 1 );

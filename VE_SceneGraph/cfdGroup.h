@@ -81,7 +81,7 @@ class cfdGroup: public cfdNode
 #ifdef _PERFORMER
    pfGroup* _group;
 #elif _OSG
-   osg::Group* _group;
+      osg::ref_ptr<osg::Group> _group;
 #elif _OPENSG
 #endif
       std::vector< cfdNode* > childNodes;

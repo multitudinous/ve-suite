@@ -479,7 +479,7 @@ void cfdVolumeVisualization::UpdateClipPlanePosition(ClipPlane direction,
          {
             if ( newPosition )
             {
-               plane->setClipPlane(newPosition);
+               plane->setClipPlane(newPosition[0],newPosition[1],newPosition[2],newPosition[3]);
             }
             else
             {

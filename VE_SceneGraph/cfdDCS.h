@@ -90,7 +90,7 @@ class cfdDCS: public cfdGroup
 #ifdef _PERFORMER
    pfDCS* _dcs;
 #elif _OSG
-   osg::MatrixTransform* _dcs;
+      osg::ref_ptr<osg::MatrixTransform> _dcs;
 #elif _OPENSG
 #endif
 

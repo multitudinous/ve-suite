@@ -114,7 +114,7 @@ void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
 #ifdef _PERFORMER
    vtkActorToPF( actor, this->_geode, _vtkDebugLevel );
 #elif _OSG
-   vtkActorToOSG(actor,_geode,_vtkDebugLevel);
+   vtkActorToOSG(actor,_geode.get(),_vtkDebugLevel);
 #elif _OPENSG
 #endif
 }
@@ -126,6 +126,6 @@ osg::Node* cfdGeode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-   return _geode;
+   return _geode.get();
    
 }
