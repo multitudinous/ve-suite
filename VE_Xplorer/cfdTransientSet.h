@@ -34,15 +34,15 @@
 
 #include <vector>
 
-class pfDCS;
-class cfdReadParam;
+class cfdDCS;
+class cfdTransientVizHandler;
 class vtkDataSet;
 
 class cfdTransientSet
 {
    public:
       // the constructor allows transientInfo to pass on the DCS
-      cfdTransientSet( char * dir, int id, pfDCS * dcs );
+      cfdTransientSet( char * dir, int id, cfdDCS * dcs );
       ~cfdTransientSet( );
 
       char * GetDirectory();
@@ -52,7 +52,7 @@ class cfdTransientSet
       //void   SetID( int );
 
       // the following function allows transientInfo to pass on the DCS
-      pfDCS * GetDCS();
+      cfdDCS * GetDCS();
       //void    SetDCS( pfDCS * );
       
       double * GetMinMax( int scalarIndex );
@@ -65,7 +65,7 @@ class cfdTransientSet
 
       void ReadScalarRanges();
 
-      void SetParameterFile( cfdReadParam* param );
+      void SetParameterFile( cfdTransientVizHandler* param );
 
       void RecheckDatasetTypes();
 
@@ -86,8 +86,8 @@ class cfdTransientSet
       int            numVectors;
       char        ** scalarName;
       //char        ** vectorName;
-      pfDCS        * dcs;
-      cfdReadParam * param;
+      cfdDCS        * dcs;
+      cfdTransientVizHandler * param;
       int            numFiles;
       int            iii;     // start index
 };

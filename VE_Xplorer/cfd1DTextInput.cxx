@@ -31,9 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfd1DTextInput.h"
-#include "vtkActorToPF.h"
-
-#include <Performer/pf/pfDCS.h>
+#include "cfdGeode.h"
 
 #include <vtkGeometryFilter.h>
 #include <vtkPolyDataNormals.h>
@@ -46,11 +44,11 @@
 
 #include <string>
 
-cfd1DTextInput::cfd1DTextInput( void )
+cfd1DTextInput::cfd1DTextInput( void ):cfdDCS()
 {
    //DCS = new pfDCS();
-   geode = new pfGeode();
-   ((pfDCS*)this->GetPfDCS())->addChild( geode );
+   geode = new cfdGeode();
+   ((cfdDCS*)this)->AddChild( (cfdSceneNode*)geode );
 }
 /*
 cfd1DTextInput::cfd1DTextInput( cfd1DTextInput* x )
@@ -77,13 +75,13 @@ cfd1DTextInput::~cfd1DTextInput( void )
    }*/
 }
 
-pfDCS* cfd1DTextInput::getpfDCS( void )
+cfdDCS* cfd1DTextInput::getpfDCS( void )
 {
    //((pfDCS*)this->GetPfDCS())->addChild( geode );
    //DCS->setScale( scale[0], scale[1], scale[2] );
    //DCS->setTrans( trans[0], trans[1], trans[2] );
    //DCS->setRot( rot[0], rot[1], rot[2] );
-   return (pfDCS*)this->GetPfDCS();
+   return (cfdDCS*)this;
 }
 
 void cfd1DTextInput::SetFilename( std::string text )
@@ -123,7 +121,7 @@ void cfd1DTextInput::Update( void )
    color[ 1 ] = 1;
    this->actor->GetProperty()->SetColor( color );
 
-   vtkActorToPF( actor, geode, 0 );
+   geode->TranslateTocfdGeode( actor );
 
    actor->Delete();
    labelMapper->Delete();

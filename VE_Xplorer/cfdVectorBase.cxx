@@ -30,13 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdVectorBase.h"
-#include <cmath>
 #include "cfdDataSet.h"
-
-#ifdef _CFDCOMMANDARRAY
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
-#endif //_CFDCOMMANDARRAY
+
+#include <cmath>
 
 #include <vpr/Util/Debug.h>
 
@@ -99,57 +97,61 @@ cfdVectorBase::~cfdVectorBase()
    this->actor = NULL;
 }
 
-#ifdef _CFDCOMMANDARRAY
 bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
 {
    // This is here because Dr. K. has code in 
    // cfdObjects that doesn't belong there
    bool flag = cfdObjects::CheckCommandId( commandArray );
    
-   if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_VECTOR_THRESHOLD )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR_THRESHOLD )
    { 
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_THRESHOLD" 
-         << ", min = " << commandArray->GetCommandValue( CFD_MIN )
-         << ", max = " << commandArray->GetCommandValue( CFD_MAX )
+         << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
+         << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetThreshHoldPercentages( commandArray->GetCommandValue( CFD_MIN ),
-                                               commandArray->GetCommandValue( CFD_MAX ) );
+      cfdVectorBase::SetThreshHoldPercentages( commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ),
+                                               commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
       cfdVectorBase::UpdateThreshHoldValues();
 
       return true;
    }
-   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_VECTOR_MASK_RATIO )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR_MASK_RATIO )
    { 
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_MASK_RATIO" 
-         << ", value = " << commandArray->GetCommandValue( CFD_ISOVALUE )
+         << ", value = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetVectorRatioFactor( commandArray->GetCommandValue( CFD_ISOVALUE ) );
+      cfdVectorBase::SetVectorRatioFactor( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
       return true;
    }
-   else if ( commandArray->GetCommandValue( CFD_ID ) == CHANGE_VECTOR_SCALE )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR_SCALE )
    {
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_SCALE" 
-         << ", value = " << commandArray->GetCommandValue( CFD_ISOVALUE )
+         << ", value = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdObjects::SetVectorScale( commandArray->GetCommandValue( CFD_ISOVALUE ) );
+      cfdObjects::SetVectorScale( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
       return true;
    }
-   else if ( commandArray->GetCommandValue( CFD_ID ) == SCALE_BY_VECTOR_MAGNITUDE )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SCALE_BY_VECTOR_MAGNITUDE )
    { 
       vprDEBUG(vprDBG_ALL,0)
-         << "SCALE_BY_VECTOR_MAGNITUDE = " << commandArray->GetCommandValue( CFD_ISOVALUE )
+         << "SCALE_BY_VECTOR_MAGNITUDE = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetScaleByVectorFlag( commandArray->GetCommandValue( CFD_ISOVALUE ) );
+      cfdVectorBase::SetScaleByVectorFlag( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
       return true;
    }
 
+   // when scalar is changed reset vector thresholding to none...
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR  )
+   {
+      cfdVectorBase::UpdateThreshHoldValues();
+   }
    return flag;
 }
 
@@ -158,7 +160,6 @@ void cfdVectorBase::UpdateCommand()
    cfdObjects::UpdateCommand();
    cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
 }
-#endif //_CFDCOMMANDARRAY
 
 void cfdVectorBase::SetGlyphWithThreshold()
 {

@@ -33,16 +33,15 @@
 #include "cfdDashboard.h"
 #include "cfdReadParam.h"
 #include "cfd1DTextInput.h"
-
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pfdu.h>
-//#include <Performer/pr.h>
+#include "cfdDCS.h"
+#include "cfdGroup.h"
+#include "cfdNode.h"
 
 #include <vpr/Util/Debug.h>
 
 #include <fstream>
 
-cfdDashboard::cfdDashboard( std::string param, pfGroup *masterNode  )
+cfdDashboard::cfdDashboard( std::string param, cfdGroup *masterNode  )
 {
    this->_masterNode = masterNode;
    this->_param = param;
@@ -110,10 +109,11 @@ void cfdDashboard::CreateDashboard( void )
          input >> _filename;
          input.getline( text, 256 );   //skip past remainder of line
 
-         this->_node = pfdLoadFile( (char*)this->_filename.c_str() );
-         this->_node->flatten( 0 );
-         this->GetPfDCS()->addChild( this->_node );
-         this->_masterNode->addChild( this->GetPfDCS() );
+         this->_node = new cfdNode();
+         this->_node->LoadFile( (char*)this->_filename.c_str() );
+         //this->_node->flatten( 0 );
+         this->AddChild( (cfdSceneNode*)this->_node );
+         this->_masterNode->AddChild( (cfdSceneNode*)this );
 
          for ( int j = 0; j < 4; j += 2 )
          {
@@ -137,8 +137,8 @@ void cfdDashboard::CreateDashboard( void )
             input.getline( text, 256 );   //skip past remainder of line
             this->_dashDisplay[ j ].SetFilename( tagName );
             
-            this->GetPfDCS()->addChild( this->_dashDisplay[ j ].GetPfDCS() );
-            this->GetPfDCS()->addChild( this->_dashDisplay[ j + 1 ].GetPfDCS() );
+            this->AddChild( (cfdDCS*)this->_dashDisplay[ j ].getpfDCS() );
+            this->AddChild( (cfdDCS*)this->_dashDisplay[ j + 1 ].getpfDCS() );
          }
       }
    }

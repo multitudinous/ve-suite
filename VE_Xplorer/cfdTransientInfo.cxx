@@ -32,11 +32,10 @@
 
 #include "cfdTransientInfo.h"
 #include "cfdTransientSet.h"
+#include "cfdDCS.h"
 
 #include <iostream>
 #include <vpr/Util/Debug.h>
-
-#include <Performer/pf/pfDCS.h>
 
 cfdTransientInfo::cfdTransientInfo( )
 {
@@ -67,22 +66,22 @@ cfdTransientInfo::~cfdTransientInfo( )
 }
 
 // get/set this dataset's DCS
-pfDCS * cfdTransientInfo::GetDCS()
+cfdDCS* cfdTransientInfo::GetDCS()
 {
    return this->dcs;
 }
 
-void cfdTransientInfo::SetDCS( pfDCS * myDCS )
+void cfdTransientInfo::SetDCS( cfdDCS * myDCS )
 {
    this->dcs = myDCS;
 }
 
-pfDCS * cfdTransientInfo::GetGeometryDCS()
+cfdDCS * cfdTransientInfo::GetGeometryDCS()
 {
    return this->geometryDcs;
 }
 
-void cfdTransientInfo::SetGeometryDCS( pfDCS * myDCS )
+void cfdTransientInfo::SetGeometryDCS( cfdDCS * myDCS )
 {
    this->geometryDcs = myDCS;
 }

@@ -31,22 +31,24 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdFILE.h"
-
 #include "cfdFileInfo.h"
+#include "cfdDCS.h"
+#include "cfdNode.h"
 
-#include <assert.h>
+#include <cassert>
+using namespace std;
 
-#include <Performer/pfdu.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pf/pfGeode.h>
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pr/pfMaterial.h>
-#include <Performer/pr/pfLight.h>
-#include <Performer/pr.h>
-#include <Performer/pfutil.h>
-#include <Performer/pr/pfTexture.h>
-#include <Performer/pr/pfLPointState.h>
-#include <Performer/pf/pfTraverser.h>
+//#include <Performer/pfdu.h>
+//#include <Performer/pf/pfDCS.h>
+//#include <Performer/pf/pfGeode.h>
+//#include <Performer/pr/pfGeoSet.h>
+//#include <Performer/pr/pfMaterial.h>
+//#include <Performer/pr/pfLight.h>
+//#include <Performer/pr.h>
+//#include <Performer/pfutil.h>
+//#include <Performer/pr/pfTexture.h>
+//#include <Performer/pr/pfLPointState.h>
+//#include <Performer/pf/pfTraverser.h>
 
 #include <vtkGeometryFilter.h>
 #include <vtkPolyDataNormals.h>
@@ -56,9 +58,10 @@
 
 #include <vpr/Util/Debug.h>
 
-cfdFILE::cfdFILE( fileInfo *geomFile, pfDCS *worldDCS  )
+
+cfdFILE::cfdFILE( fileInfo *geomFile, cfdDCS *worldDCS  )
 {
-// this constructor is used by cfdApp
+/*// this constructor is used by cfdApp
    vprDEBUG(vprDBG_ALL,1) << " cfdFILE:geomFile->fileName = " 
                           << geomFile->fileName
                           << std::endl << vprDEBUG_FLUSH;
@@ -78,7 +81,7 @@ cfdFILE::cfdFILE( fileInfo *geomFile, pfDCS *worldDCS  )
    //this->node->ref();
    this->node->flatten( 0 );
    this->DCS->addChild( this->node );
-   worldDCS->addChild( this->DCS );
+   worldDCS->AddChild( this->DCS );
     
    if ( this->color == 1 )
    {
@@ -86,7 +89,7 @@ cfdFILE::cfdFILE( fileInfo *geomFile, pfDCS *worldDCS  )
       {
          this->stlColor[i] = geomFile->stlColor[i];
       }
-   }
+   }*/
 }
 
 cfdFILE::cfdFILE( float opVal, float stlColor[3], char *filename  )
@@ -99,11 +102,10 @@ cfdFILE::cfdFILE( float opVal, float stlColor[3], char *filename  )
       << " : " << stlColor[1] << " : " << stlColor[2]
       << std::endl << vprDEBUG_FLUSH;
 
-   this->node = pfdLoadFile( filename );  // pfNode
-   //node->ref();
+   //this->node = pfdLoadFile( filename );  // pfNode
 
-   this->mat0 = new pfMaterial();
-   this->mat1 = new pfMaterial();
+   //this->mat0 = new pfMaterial();
+   //this->mat1 = new pfMaterial();
    this->mat_count = 0;
 
    if ( stlColor[ 0 ] == -1 && stlColor[ 1 ] == -1 && stlColor[ 2 ] == -1 )
@@ -161,12 +163,12 @@ void cfdFILE::Initialize( float op_val )
    setOpac( op_val );
 }
 
-pfNode *cfdFILE::getpfNode( )
+cfdNode* cfdFILE::GetcfdNode( void )
 {
    return this->node;
 }
 
-pfDCS* cfdFILE::getpfDCS()
+cfdDCS* cfdFILE::getpfDCS()
 {
    return this->DCS;
 }
@@ -180,28 +182,8 @@ float cfdFILE::getOpacity()
 void cfdFILE::setOpac(float op_val)
 {
    this->op = op_val;
-   //mat1->setAlpha( op );
-   // mat1->setSide( PFMTL_BOTH );
    
-   //if( color )
-   //   mat1->setColor( PFMTL_DIFFUSE , stlColor[0], stlColor[1], stlColor[2]);
-      
-/*
-  if( op == 1 ) 
-  {
-      //Turn colors on
-      this->mat1->setColorMode( PFMTL_FRONT, PFMTL_CMODE_AMBIENT_AND_DIFFUSE );
-      std::cout << "Set color Mode "<< std::endl;
-      this->mat1->setColorMode( PFMTL_BACK,  PFMTL_CMODE_AMBIENT_AND_DIFFUSE );
-   }
-   else
-   {
-      this->mat1->setColorMode( PFMTL_FRONT, PFMTL_CMODE_OFF );
-      this->mat1->setColorMode( PFMTL_BACK,  PFMTL_CMODE_OFF );
-   }
-*/
-   
-   this->pfTravNodeMaterial( this->node, this->mat1, 0 );
+   //this->pfTravNodeMaterial( this->node );
 }
 
 //*****************************************************************/
@@ -209,8 +191,8 @@ void cfdFILE::setOpac(float op_val)
 // Traverses the given node's structure looking for geosets.
 // It then changes the geostates of them all to have the same
 // given material.
-
-void cfdFILE::pfTravNodeMaterial( pfNode* node_1, pfMaterial* mat, int list_num )
+/* Need to fix this 
+void cfdFILE::pfTravNodeMaterial( pfNode* node_1 )
 {
     
    assert( node_1 != NULL && "bad pointer passed in" );
@@ -305,14 +287,6 @@ void cfdFILE::pfTravNodeMaterial( pfNode* node_1, pfMaterial* mat, int list_num 
                   geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
                   if( color == 1 )
                   {
-/*
-                     this->fmaterial->getColor( PFMTL_AMBIENT, &colorone[0], &colorone[1], &colorone[2] );
-                     this->fmaterial->getColor( PFMTL_DIFFUSE, &colorone[3], &colorone[4], &colorone[5] );
-                     vprDEBUG(vprDBG_ALL,3)
-                     << " Front Color 1 : " << colorone[0] << " : " 
-                     << colorone[1]<< " : " << colorone[2] 
-                     << std::endl << vprDEBUG_FLUSH;
-*/
                      testMat->setColor( PFMTL_DIFFUSE , 1.0f, 1.0f, 1.0f );
                      testMat->setColor( PFMTL_AMBIENT , 1.0f, 1.0f, 1.0f );
                      vprDEBUG(vprDBG_ALL,2)
@@ -342,14 +316,6 @@ void cfdFILE::pfTravNodeMaterial( pfNode* node_1, pfMaterial* mat, int list_num 
                                          << std::endl << vprDEBUG_FLUSH;
                   if( color == 1)
                   {
-/*
-                     this->bmaterial->getColor( PFMTL_AMBIENT, &colorone[0], &colorone[1], &colorone[2] );
-                     this->bmaterial->getColor( PFMTL_DIFFUSE, &colorone[3], &colorone[4], &colorone[5] );
-                     vprDEBUG(vprDBG_ALL,3) 
-                        << " Front Color 1 : " << colorone[0] << " : " 
-                        << colorone[1] << " : " << colorone[2] 
-                        << std::endl << vprDEBUG_FLUSH;
-*/
                      this->bmaterial->setColor( PFMTL_DIFFUSE , stlColor[0], stlColor[1], stlColor[2]);
                      this->bmaterial->setColor( PFMTL_AMBIENT , stlColor[0], stlColor[1], stlColor[2]);
                      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
@@ -375,13 +341,6 @@ void cfdFILE::pfTravNodeMaterial( pfNode* node_1, pfMaterial* mat, int list_num 
                   geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
                   if( color == 1 )
                   {
-/*
-                     this->fmaterial->getColor( PFMTL_AMBIENT, &colorone[0], &colorone[1], &colorone[2] );
-                     this->fmaterial->getColor( PFMTL_DIFFUSE, &colorone[3], &colorone[4], &colorone[5] );
-                     vprDEBUG(vprDBG_ALL,3) << " Front Color 1 : "
-                        << colorone[0] << " : " <<  colorone[1] << " : " 
-                        << colorone[2] << std::endl << vprDEBUG_FLUSH;
-*/
                      this->bmaterial->setColor( PFMTL_DIFFUSE , 1.0f, 1.0f, 1.0f );
                      this->bmaterial->setColor( PFMTL_AMBIENT , 1.0f, 1.0f, 1.0f );
                      vprDEBUG(vprDBG_ALL,3)
@@ -405,42 +364,6 @@ void cfdFILE::pfTravNodeMaterial( pfNode* node_1, pfMaterial* mat, int list_num 
                << "ERROR: Tried to set transparency, but this pfGeoSet"
                << " has no pfGeoState." << std::endl << vprDEBUG_FLUSH;
          }
-            /*
-				   oldmat = (pfMaterial*)(geostate->getAttr( PFSTATE_FRONTMTL ));
-               oldmat->getColor( PFMTL_AMBIENT, &color[0], &color[1], &color[2] );
-               oldmat->getColor( PFMTL_DIFFUSE, &color[3], &color[4], &color[5] );
-               matList[list_num]->setColor( PFMTL_AMBIENT, color[0],color[1],color[2]);
-               matList[list_num]->setColor( PFMTL_DIFFUSE, color[3],color[4],color[5]);
-               matList[list_num]->setSide( PFMTL_BOTH );
-               if( op == 1 ) {
-                  //Turn colors on
-                  matList[list_num]->setColorMode( PFMTL_FRONT, PFMTL_CMODE_AMBIENT_AND_DIFFUSE);
-                  matList[list_num]->setColorMode( PFMTL_BACK, PFMTL_CMODE_AMBIENT_AND_DIFFUSE);
-               }else{
-                  matList[list_num]->setColorMode( PFMTL_FRONT, PFMTL_CMODE_OFF );
-                  matList[list_num]->setColorMode( PFMTL_BACK, PFMTL_CMODE_OFF );
-               }
-            
-            matList[list_num]->setAlpha( op );
-            vprDEBUG(vprDBG_ALL,1) << " Alpha = " << oldmat->getAlpha()
-                                   << std::endl << vprDEBUG_FLUSH;
-             vprDEBUG(vprDBG_ALL,1) << " r = " << color[0] << " g = "
-                                    << color[1] << " b = " << color[2]
-                                    << std::endl << vprDEBUG_FLUSH;
-             vprDEBUG(vprDBG_ALL,1) << " r = " << color[3] << " g = "
-                                    << color[4] << " b = " << color[5]
-                                    << std::endl << vprDEBUG_FLUSH;
-	         */
-            /*if (geostate == NULL)
-	   			geostate = new pfGeoState ;
-           
-            geostate->setMode( PFSTATE_TRANSPARENCY, PFTR_ON );
-            geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
-            geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
-	   		geostate->setAttr( PFSTATE_LIGHTMODEL, matLight );
-            geostate->setAttr( PFSTATE_FRONTMTL, mat);//List[list_num]);
-            geostate->setAttr( PFSTATE_BACKMTL, mat);//List[list_num]);
-	   		geoset->setGState( geostate );*/
 	   	}
 	
 	   }
@@ -456,9 +379,10 @@ void cfdFILE::pfTravNodeMaterial( pfNode* node_1, pfMaterial* mat, int list_num 
 	   	{
 	   		//if(count)
                //matList.push_back( new pfMaterial() );
-            pfTravNodeMaterial(((pfGroup*)node_1)->getChild(i), mat, i) ;
+            pfTravNodeMaterial( ((pfGroup*)node_1)->getChild(i) ) ;
 	   	}
          //count = 0;
 	   }
 
 }
+*/

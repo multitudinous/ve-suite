@@ -129,3 +129,60 @@ void textPrompt::DeleteText()
   pfDelete(this->text);
   pfDelete(this->str);
 }
+
+void textPrompt::flush_text(char * t)
+{
+   return;
+    /*-- for 3D pop-up text message
+      set add_text signal to activate text prompt:
+      0 = no output(initial state)
+      1 = add text to output(without timer)
+      2 = add text to output(with timer)
+      3 = hold the output(with timer)
+      4 = delete text from output
+      6 = hold the output(without timer)
+      9 = not allow text output unless re-select the menu*/
+/*      
+   my_timer = time(&my_timer);
+
+   if (text_sig == 1)
+   {
+      this->temp_text = this->tPrompt->add_text(t);
+      this->rootNode->InsertChild(3,this->temp_text);
+      vprDEBUG(vprDBG_ALL,1) << "TTT" << std::endl << vprDEBUG_FLUSH;
+      //this->tPrompt->DeleteText();
+      text_sig = 6;
+   }
+
+   if (text_sig == 2)
+   {
+      this->temp_text = this->tPrompt->add_text(t);
+      this->rootNode->insertChild(3,this->temp_text);
+      //this->tPrompt->DeleteText();
+      text_sig = 3;     //  3 = hold the output(with timer)
+   }
+
+   if ( (my_timer - time_r) > 5 && text_sig == 3)
+   {
+      text_sig = 4;
+   }
+
+   if (text_sig == 4)    // 4 = delete text from output
+   { 
+      int text_num =  rootNode->searchChild(this->temp_text);
+      if ( text_num != -1)
+      {
+         temp_text = this->rootNode->getChild(text_num);
+         this->rootNode->removeChild(temp_text);
+         pfDelete(temp_text);
+         //this->tPrompt->DeleteText();
+      }
+      else
+      {
+         vprDEBUG(vprDBG_ALL,1) << "in cfdApp: no text to delete" 
+                                << std::endl << vprDEBUG_FLUSH;
+      }
+      text_sig = 9;
+   }
+*/
+}

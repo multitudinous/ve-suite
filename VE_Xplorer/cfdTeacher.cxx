@@ -40,17 +40,21 @@
 #endif
 
 #include "cfdTeacher.h"
-#ifdef _CFDCOMMANDARRAY
+#include "cfdGroup.h"
+#include "cfdDCS.h"
+#include "cfdNode.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
-#endif //_CFDCOMMANDARRAY
+#include "cfdWriteTraverser.h"
 
 #include <iostream>
 #include <vpr/Util/Debug.h>
-#include <Performer/pfdu.h>
-#include <Performer/pf/pfDCS.h>
+#include <gmtl/MatrixOps.h>
+#include <gmtl/Matrix.h>
 
-cfdTeacher::cfdTeacher( char specifiedDir[], pfGroup * groupNode )
+using namespace gmtl;
+
+cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
 {
    this->directory = NULL;
    this->setDirectory( specifiedDir );
@@ -144,17 +148,23 @@ cfdTeacher::cfdTeacher( char specifiedDir[], pfGroup * groupNode )
                           << std::endl << vprDEBUG_FLUSH;
 
    
-
-   this->DCS = new pfDCS;
-   this->node = new pfNode * [ this->numFiles ];
+   pfb_count = 0;
+   _cfdWT = NULL;
+   this->DCS = new cfdDCS();
+   this->node = new cfdNode * [ this->numFiles ];
    
    for (int i=0; i<this->numFiles; i++)
    {
-      this->node[ i ] = pfdLoadFile( this->pfbFileNames[ i ] );
+      this->node[ i ] = new cfdNode();
+      this->node[ i ]->LoadFile( this->pfbFileNames[ i ] );
       //this->DCS->addChild( this->node[i] );
    }
 
-   groupNode->addChild( this->DCS );
+
+   // Fix this
+   // is this correct
+   _worldDCS = worldDCS;
+   _worldDCS->AddChild( this->DCS );
 
    //change back to the original directory
    chdir( cwd );
@@ -166,10 +176,10 @@ cfdTeacher::~cfdTeacher( )
 
    for ( i = 0; i < this->numFiles; i++)
    {  
-      this->DCS->removeChild( this->node[i] );
-      pfDelete( this->node[i] );
+      this->DCS->RemoveChild( (cfdSceneNode*)this->node[i] );
+      delete this->node[i];
    }
-   pfDelete( this->DCS );
+   delete this->DCS;
 
    // delete vector of pfbFileNames
    for ( i = 0; i < this->numFiles; i++ )
@@ -186,12 +196,12 @@ cfdTeacher::~cfdTeacher( )
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-pfNode * cfdTeacher::getpfNode( int i )
+cfdNode * cfdTeacher::getpfNode( int i )
 {
    return this->node[i];
 }
 
-pfDCS * cfdTeacher::getpfDCS()
+cfdDCS * cfdTeacher::GetcfdDCS()
 {
    return this->DCS;
 }
@@ -234,41 +244,79 @@ void cfdTeacher::setDirectory( char * dir )
    strcpy( this->directory, dir );
 }
 
-#ifdef _CFDCOMMANDARRAY
 bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 {
-   if ( commandArray->GetCommandValue( CFD_ID ) == LOAD_PFB_FILE )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_PFB_FILE )
    {
       vprDEBUG(vprDBG_ALL,1) << "LOAD_PFB_FILE: numChildren = " 
-         << this->getpfDCS()->getNumChildren()
-         << ", cfdTeacher_state = " << commandArray->GetCommandValue( CFD_TEACHERSTATE )
+         << this->GetcfdDCS()->GetNumChildren()
+         << ", cfdTeacher_state = " << commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE )
          << std::endl << vprDEBUG_FLUSH;
 
-      if ( this->getpfDCS()->getNumChildren() == 0 )
+      if ( this->GetcfdDCS()->GetNumChildren() == 0 )
       {
          vprDEBUG(vprDBG_ALL,2) << "LOAD_PFB_FILE: addChild" 
                                 << std::endl << vprDEBUG_FLUSH;
             
-         this->getpfDCS()->addChild( 
-            this->getpfNode( commandArray->GetCommandValue( CFD_TEACHERSTATE ) ) );
+         this->GetcfdDCS()->AddChild( 
+            this->getpfNode( commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE ) ) );
       }
       else
       {
          vprDEBUG(vprDBG_ALL,2) << "LOAD_PFB_FILE: replaceChild" 
                                 << std::endl << vprDEBUG_FLUSH;
-
-         this->getpfDCS()->replaceChild( 
-            this->getpfDCS()->getChild( 0 ), 
-            this->getpfNode( this->cfdTeacher_state ) );
+         int child = commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
+         this->GetcfdDCS()->ReplaceChild( this->GetcfdDCS()->GetChild( 0 ), this->getpfNode( child ) );
       }
       return true;
    }
-   else if ( commandArray->GetCommandValue( CFD_ID ) == CLEAR_PFB_FILE )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_PFB_FILE )
    {      
-      if ( this->getpfDCS()->getNumChildren() > 0 )
+      if ( this->GetcfdDCS()->GetNumChildren() > 0 )
       {
-         this->getpfDCS()->removeChild( this->getpfDCS()->getChild( 0 ) );
+         this->GetcfdDCS()->RemoveChild( this->GetcfdDCS()->GetChild( 0 ) );
       }
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RECORD_SCENE )
+   {
+      // Needs to be moved to cfdTeacher...soon.
+      // Generate a .pfb filename...
+      char pfb_filename[100];
+      sprintf( pfb_filename , "%s/stored_scene_%i.pfb",
+               this->getDirectory(), this->pfb_count );
+
+      vprDEBUG(vprDBG_ALL,0) << "scene stored as " << pfb_filename
+                             << std::endl << vprDEBUG_FLUSH;
+
+      // store the world DCS matrix..
+      gmtl::Matrix44f m;
+      m = this->_worldDCS->GetMat();
+
+      // temporarily reset the world DCS matrix to the identity
+      gmtl::Matrix44f I;
+      // Make an identity matrix
+      gmtl::identity( I );
+      this->_worldDCS->SetMat( I );
+
+      //biv--convert the cfdSequence nodes to pfSequence nodes
+      //for proper viewing in perfly
+      writePFBFile(_worldDCS,pfb_filename);
+      //pfdStoreFile( worldDCS, pfb_filename );
+
+      // store the active geometry and viz objects as a pfb
+      // (but not the sun, menu, laser, or text)
+      int store_int = 0;
+
+      vprDEBUG(vprDBG_ALL,1) << "|   Stored Scene Output " << store_int
+                             << std::endl << vprDEBUG_FLUSH;
+      
+      // restore the world DCS matrix...
+      this->_worldDCS->SetMat( m );
+
+
+      // increment the counter and reset the id to -1...
+      this->pfb_count ++;
       return true;
    }
 
@@ -279,4 +327,24 @@ void cfdTeacher::UpdateCommand()
 {
    cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
 }
-#endif //_CFDCOMMANDARRAY
+// Need to fix later
+
+void cfdTeacher::writePFBFile( cfdSceneNode* graph,char* fileName)
+{
+   //make sure we have a writer
+   if(!_cfdWT){
+      _cfdWT = new cfdWriteTraverser(fileName);
+   }else{
+      _cfdWT->setOutputFileName(fileName);
+   }
+   //set the graph
+   _cfdWT->setNode(graph->GetRawNode());
+
+   //set the "swapping" callback
+   _cfdWT->setCallback(1);
+
+   //write out the file
+   //_cfdWT->activateSequenceNodes();
+   _cfdWT->writePfbFile();
+
+}

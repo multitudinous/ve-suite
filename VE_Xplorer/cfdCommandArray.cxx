@@ -65,3 +65,52 @@ int cfdCommandArray::GetCommandValue( int i )
    }
 }
 
+void cfdCommandArray::SetCommandValue( int i, int value)
+{
+   if      ( i == CFD_ISO_VALUE )
+   {
+      cfdIso_value = value;
+   }
+   else if ( i == CFD_SC )
+   {
+      cfdSc = value;
+   }
+   else if ( i == CFD_MIN )
+   {
+      cfdMin = value;
+   }
+   else if ( i == CFD_MAX )
+   {
+      cfdMax = value;
+   }
+   else if ( i == CFD_ID )
+   {
+      (int)cfdId = value;
+   }
+   else if ( i == CFD_GEO_STATE )
+   {
+      (int)cfdGeo_state = value;
+   }  
+   else if ( i == CFD_POSTDATA_STATE )
+   {
+      (int)cfdPostdata_state = value;
+   }
+   else if ( i == CFD_PRE_STATE )
+   {
+      (int)cfdPre_state = value;
+   }
+   else if ( i == CFD_TIMESTEPS )
+   {
+      (int)cfdTimesteps = value;
+   }
+   else if ( i == CFD_TEACHER_STATE )
+   {
+      (int)cfdTeacher_state = value;
+   }
+   else
+   {
+      cerr << "invalid argument(" << i << ") in "
+           << "cfdCommandArray::SetCommandValue()" << endl;
+   }
+
+}

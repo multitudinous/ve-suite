@@ -35,7 +35,7 @@
 //class cfd1DTextInput;
 class cfdDigitalAnalogGauge;
 class cfdExecutive;
-class pfGroup;
+class cfdGroup;
 
 #include <string>
 #include <vector>
@@ -50,7 +50,7 @@ class pfGroup;
 class cfdGauges 
 {
    public:
-      cfdGauges( std::string, pfGroup* );
+      cfdGauges( std::string, cfdGroup* );
       ~cfdGauges( void );
       void Update( std::string, cfdExecutive* );
       void CreateGaugeList( void );
@@ -61,7 +61,7 @@ class cfdGauges
       std::vector < cfdDigitalAnalogGauge* > _gaugesList;
       int _numberOfGauges;
       std::string param;
-      pfGroup* _masterNode;
+      cfdGroup* _masterNode;
 };
 
 #endif

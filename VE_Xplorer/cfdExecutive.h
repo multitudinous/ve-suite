@@ -36,6 +36,8 @@
 #include "moduleS.h"
 #include "interface.h"
 #include "cfd1DTextInput.h"
+#include "cfdGlobalBase.h"
+
 #include <orbsvcs/CosNamingC.h>
 #include <map>
 
@@ -43,19 +45,20 @@
 #include <vpr/Sync/Mutex.h>
 #include <vpr/Sync/Guard.h>
 
-class pfDCS;
-class pfGroup;
+class cfdDCS;
+class cfdGroup;
 class cfdGauges;
 class cfdDashboard;
 class cfdExecutiveConfiguration;
 class cfdInteractiveGeometry;
 class Body_UI_i;
 class cfdDataSet;
+class cfdCommandArray;
 
-class cfdExecutive
+class cfdExecutive : public cfdGlobalBase
 {
    public:
-      cfdExecutive( CosNaming::NamingContext_ptr nameing, pfDCS*  );
+      cfdExecutive( CosNaming::NamingContext_ptr nameing, cfdDCS*  );
 
       ~cfdExecutive( void );
 
@@ -104,6 +107,12 @@ class cfdExecutive
 
       bool GetCalculationsFlag( void );
 
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray* );
+
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
+
    private:
       
       cfdExecutiveConfiguration* _param;
@@ -112,8 +121,8 @@ class cfdExecutive
       cfdDashboard* _dashBoard;
       cfdInteractiveGeometry* _geometry;
       Body_UI_i* ui_i;
-      pfDCS* worldDCS;
-      pfGroup* _masterNode;
+      cfdDCS* worldDCS;
+      cfdGroup* _masterNode;
 
       vpr::Mutex  mValueLock;  /**< A mutex to protect variables accesses */
       bool _doneWithCalculations;

@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdTransientActor.h"
 #include "cfdDataSet.h"
-#include "cfdReadParam.h"
+#include "cfdTransientVizHandler.h"
 #include "readWriteVtkThings.h"
 
 #include <vtkActor.h>
@@ -136,7 +136,7 @@ void cfdTransientActor::SetActiveDataSet( cfdDataSet * dataSet )
    this->activeDataSet = dataSet;
 }
 
-void cfdTransientActor::SetParameterFile( cfdReadParam *param, int member )
+void cfdTransientActor::SetParameterFile( cfdTransientVizHandler *param, int member )
 {
    this->param = param;
    this->member = member;

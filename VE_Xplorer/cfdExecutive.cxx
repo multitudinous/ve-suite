@@ -34,10 +34,13 @@
 #include "cfdDashboard.h"
 #include "cfdDataSet.h"
 #include "cfdExecutiveConfiguration.h"
-#include <Performer/pf/pfGroup.h>
-#include <Performer/pf/pfDCS.h>
+#include "cfdDCS.h"
+#include "cfdGroup.h"
 #include "cfdInteractiveGeometry.h"
 #include "VE_i.h"
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+
 #include <iostream>
 #include <sstream>
 #include <string>
@@ -47,15 +50,15 @@
 
 using namespace std;
 
-cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, pfDCS* worldDCS )
+cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDCS )
 {
    this->_doneWithCalculations = true;
    //this->orb->_duplicate( orb );
    this->naming_context = CosNaming::NamingContext::_duplicate( naming );
    this->worldDCS = worldDCS;
-   this->_masterNode = new pfGroup();
-   int nameFlag = this->_masterNode->setName( "cfdExecutive_Node" );
-   this->worldDCS->addChild( this->_masterNode );
+   this->_masterNode = new cfdGroup();
+   this->_masterNode->SetName( "cfdExecutive_Node" );
+   this->worldDCS->AddChild( (cfdSceneNode*)this->_masterNode );
 
    //time_t* timeVal;
    long id = (long)time( NULL );
@@ -391,4 +394,23 @@ bool cfdExecutive::GetCalculationsFlag( void )
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    return this->_doneWithCalculations;
+}
+
+bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
+{
+// Add in cfdCommandArray stuff
+#ifdef _TAO
+      if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR )
+      {
+         this->SetCalculationsFlag( true );
+         return true;
+      }
+      return false;
+#endif // _TAO
+   return false;
+}
+
+void cfdExecutive::UpdateCommand()
+{
+   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
 }

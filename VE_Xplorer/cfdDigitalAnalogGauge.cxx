@@ -33,16 +33,14 @@
 #include "cfdDigitalAnalogGauge.h"
 #include "cfdReadParam.h"
 #include "cfd1DTextInput.h"
-
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pfdu.h>
-//#include <Performer/pr.h>
+#include "cfdGroup.h"
+#include "cfdNode.h"
 
 #include <vpr/Util/Debug.h>
 
 #include <string>
 
-cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( pfGroup *masterNode )
+cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( cfdGroup *masterNode )
 {
    _textOutput = std::make_pair( new cfd1DTextInput(), new cfd1DTextInput() );
    this->_masterNode = masterNode;
@@ -78,14 +76,15 @@ void cfdDigitalAnalogGauge::SetGeometryFilename( std::string filename )
 {
    this->_filename = filename;
 
-   this->node = pfdLoadFile( (char*)this->_filename.c_str() );
-   this->node->flatten( 0 );
-   this->GetPfDCS()->addChild( this->node );
+   this->node = new cfdNode();
+   this->node->LoadFile( (char*)this->_filename.c_str() );
+   //this->node->flatten( 0 );
+   this->AddChild( (cfdSceneNode*)this->node );
 std::cout << "cfdExecutive load gauge geometry : " << _filename << std::endl;
-   this->GetPfDCS()->addChild( ((cfd1DTextInput*)_textOutput.first)->GetPfDCS() );
-   this->GetPfDCS()->addChild( ((cfd1DTextInput*)_textOutput.second)->GetPfDCS() );
+   this->AddChild( (cfdSceneNode*)((cfd1DTextInput*)_textOutput.first) );
+   this->AddChild( (cfdSceneNode*)((cfd1DTextInput*)_textOutput.second) );
    
-   this->_masterNode->addChild( this->GetPfDCS() );   
+   this->_masterNode->AddChild( this );   
 }
 
 void cfdDigitalAnalogGauge::SetGaugeName( std::string tagName )

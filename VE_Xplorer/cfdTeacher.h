@@ -34,42 +34,46 @@
 
 #include <vector>
 
-class pfDCS;
-class pfGroup;
-class pfNode;
-#ifdef _CFDCOMMANDARRAY
+class cfdDCS;
+class cfdGroup;
+class cfdNode;
 class cfdCommandArray;
-#endif //_CFDCOMMANDARRAY
+class cfdSceneNode;
+class cfdWriteTraverser;
 
+#include "cfdGlobalBase.h"
 
 //A reader that reads performer binary files
-class cfdTeacher
+class cfdTeacher : public cfdGlobalBase
 {
- public:
-  cfdTeacher( char directory[], pfGroup * );
+   public:
+      cfdTeacher( char directory[], cfdDCS* );
 
-  ~cfdTeacher( );
-#ifdef _CFDCOMMANDARRAY
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+      ~cfdTeacher( );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-  pfDCS * getpfDCS( );
-  pfNode * getpfNode( int );
-  int getNumberOfFiles();
-  char * getFileName( int i );
-  char * getDirectory();
-  void setDirectory( char * );
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
+      void writePFBFile( cfdSceneNode* graph,char* fileName);
 
- private:
-  pfDCS *DCS;
-  pfNode **node;  // array of nodes
-  int numFiles;
-  std::vector<char*> pfbFileNames;
-  char * directory;
+      cfdDCS* GetcfdDCS( );
+      cfdNode* getpfNode( int );
+      int getNumberOfFiles();
+      char * getFileName( int i );
+      char * getDirectory();
+      void setDirectory( char * );
+
+   private:
+      cfdDCS*     DCS;
+      cfdDCS*     _worldDCS;
+      cfdNode**   node;  // array of nodes
+      int numFiles;
+      std::vector<char*> pfbFileNames;
+      char * directory;
+      int pfb_count;
+      cfdWriteTraverser* _cfdWT;
 };
 
 #endif

@@ -32,8 +32,8 @@
 #ifndef CFD_IHCCGAUGE_H
 #define CFD_IHCCGAUGE_H
 
-class pfGroup;
-class pfNode;
+class cfdGroup;
+class cfdNode;
 class cfdReadParam;
 #include "cfdDCS.h"
 #include "cfdObjects.h"
@@ -49,7 +49,7 @@ class cfdIHCCGauge : public cfdDCS, public cfdObjects
 {
    public:
 
-      cfdIHCCGauge( pfGroup* );
+      cfdIHCCGauge( cfdSceneNode* );
       //cfdDigitalAnalogGauge( cfdDigitalAnalogGauge* );
 
       ~cfdIHCCGauge( void );
@@ -73,8 +73,8 @@ class cfdIHCCGauge : public cfdDCS, public cfdObjects
       std::pair < cfd1DTextInput*, cfd1DTextInput* > _textOutput;
    private:
    
-      pfNode* node;
-      pfGroup* _masterNode;
+      cfdNode* node;
+      cfdGroup* _masterNode;
 
       std::string _filename;
       std::string _gaugeName;

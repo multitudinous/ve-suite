@@ -35,9 +35,8 @@
 #include <vector>
 #include <string>
 
-//class pfDCS;
 class vtkActor;
-class pfGeode;
+class cfdGeode;
 
 #include "cfdDCS.h"
 
@@ -50,7 +49,7 @@ class cfd1DTextInput : public cfdDCS
 
       ~cfd1DTextInput( void );
 
-      pfDCS* getpfDCS( void );
+      cfdDCS* getpfDCS( void );
 
       void SetTransforms( float [ 3 ], float [ 3 ], float [ 3 ] );
       void SetFilename( std::string );
@@ -66,7 +65,7 @@ class cfd1DTextInput : public cfdDCS
       
       vtkActor*   actor;
       //pfDCS*      DCS;
-      pfGeode*    geode;  
+      cfdGeode*    geode;  
 };
 
 #endif

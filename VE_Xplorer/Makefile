@@ -5,10 +5,10 @@
 #_______________________________CUSTOM OPTIONS__________________________________
 #
 # Uncomment the following line to use CFDCOMMANDARRAY.
-#EXTRA_CXXFLAGS+= -D_CFDCOMMANDARRAY
+EXTRA_CXXFLAGS+= -D_CFDCOMMANDARRAY
 #
 # Uncomment this line if you want to build a cluster juggler app
-#CLUSTER_APP = TRUE
+CLUSTER_APP = TRUE
 #_______________________________________________________________________________
 
 CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
@@ -43,6 +43,7 @@ ifdef ACE_ROOT
 
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl 
    vpath %.cpp    ${FUTUREGEN_HOME}/IDL.old ${FUTUREGEN_HOME}/Plugin
+
    #----------------------------------------------------------------------------
    # Include macros and targets
    #----------------------------------------------------------------------------
@@ -80,18 +81,22 @@ SRCS=\
    cfdContours.cxx \
    cfdCursor.cxx \
    cfdCuttingPlane.cxx \
+   cfdDCS.cxx \
    cfdDataSet.cxx \
    cfdFILE.cxx \
    cfdFileInfo.cxx \
    cfdFrame.cxx \
    cfdGeode.cxx \
+   cfdGroup.cxx \
    cfdImage.cxx \
    cfdIsosurface.cxx \
    cfdLaser.cxx \
    cfdMenu.cxx \
+   cfdModel.cxx \
    cfdMomentum.cxx \
    cfdMomentums.cxx \
    cfdNavigate.cxx \
+   cfdNode.cxx \
    cfdNodeTraverser.cxx \
    cfdObjects.cxx \
    cfdPlanes.cxx \
@@ -100,6 +105,7 @@ SRCS=\
    cfdPresetVector.cxx \
    cfdReadParam.cxx \
    cfdScalarBarActor.cxx \
+   cfdSceneNode.cxx \
    cfdStreamers.cxx \
    cfdPolyData.cxx \
    cfdTeacher.cxx \
@@ -122,21 +128,23 @@ SRCS=\
    cfdSound.cxx \
    cfdTransientParticleActor_fluent.cxx \
    VjObs_i.cxx \
-   cfdDCS.cxx \
    cfdQuatCamHandler.cxx \
    cfdQuatCam.cxx \
    cfdSequence.cxx \
    cfdIHCCModel.cxx \
    cfdIHCCGauge.cxx \
    cfdIHCCContour.cxx \
-   cfd1DTextInput.cxx
-
-ifdef _CFDCOMMANDARRAY
-SRCS+= \
+   cfd1DTextInput.cxx \
+   cfdTempAnimation.cxx \
    cfdGlobalBase.cxx \
    cfdCommandObjects.cxx \
-   cfdCommandArray.cxx
-endif
+   cfdCommandArray.cxx \
+   cfdSteadyStateVizHandler.cxx \
+   cfdTransientVizHandler.cxx \
+   cfdEnvironmentHandler.cxx \
+   cfdModelHandeler.cxx \
+   cfdSoundHandler.cxx \
+   cfdPfSceneManagement.cxx 
 
 #   cfdDrawManager.cxx
 
@@ -270,6 +278,10 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
 # One of these must be uncommented.
 DEBUG_APP?=		TRUE
 #OPTIM_APP?=		TRUE
+
+#Scene Graph Specific flags
+#Can be: _PERFORMER, _OPENSG, _OSG
+EXTRA_CXXFLAGS+=	-D_PERFORMER
 
 # vtkActorToPF needs VTK4
 EXTRA_CXXFLAGS+=	-DVTK4 -DTABLET

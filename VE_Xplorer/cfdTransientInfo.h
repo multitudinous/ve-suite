@@ -34,7 +34,7 @@
 
 #include <vector>
 
-class pfDCS;
+class cfdDCS;
 class cfdTransientSet;
 
 class cfdTransientInfo
@@ -44,12 +44,12 @@ class cfdTransientInfo
       ~cfdTransientInfo();
 
       // get/set this dataset's DCS
-      pfDCS * GetDCS();
-      void    SetDCS( pfDCS * );
+      cfdDCS* GetDCS();
+      void    SetDCS( cfdDCS * );
 
       // get/set this geometry's DCS
-      pfDCS * GetGeometryDCS();
-      void    SetGeometryDCS( pfDCS * );
+      cfdDCS * GetGeometryDCS();
+      void    SetGeometryDCS( cfdDCS * );
 
       char  * GetGeometryDir();
       void    SetGeometryDir( char * );
@@ -74,11 +74,11 @@ class cfdTransientInfo
    private:
       std::vector< cfdTransientSet * > transientSet;
       cfdTransientSet * findTransientSetWithID( int );
-      pfDCS * dcs;
-      char  * geometryDir;
-      pfDCS * geometryDcs;
-      double  duration;
-      int     numberOfFrames;
+      cfdDCS*  dcs;
+      char*    geometryDir;
+      cfdDCS*  geometryDcs;
+      double   duration;
+      int      numberOfFrames;
 };
 
 #endif

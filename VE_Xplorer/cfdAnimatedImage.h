@@ -33,7 +33,6 @@
 #define CFD_ANIMATED_IMAGE_H
 
 #include "cfdObjects.h"
-#include "cfdDCS.h"
 
 class vtkPolyDataMapper;
 class vtkPolyData;
@@ -41,39 +40,48 @@ class vtkGlyph3D;
 class vtkSphereSource;
 class cfdImage;
 class cfdReadParam;
+class cfdCommandArray;
+class cfdDCS;
 
-#ifdef _CFDCOMMANDARRAY
-class cfdApp;
-#endif //_CFDCOMMANDARRAY
-
-class cfdAnimatedImage : public cfdObjects, public cfdDCS
+class cfdAnimatedImage : public cfdObjects
 {
-public:
-  cfdAnimatedImage( char *basename, int frames,
+   public:
+      cfdAnimatedImage( char *basename, int frames,
                     int ex_x, int ex_y, int dim, 
                     double *origin, double *spacing );
 
-  cfdAnimatedImage( cfdReadParam* );
+      cfdAnimatedImage( char* );
   
-  ~cfdAnimatedImage();
+      ~cfdAnimatedImage();
   
-#ifdef _CFDCOMMANDARRAY
-  // compare VjObs_i commandArray with its child's value
-  virtual bool CheckCommandId( cfdApp * _cfdApp );
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
-  // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-  virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
 
-  // update the actor
-  virtual void Update( void );
+      // update the actor
+      virtual void Update( void );
   
-  std::vector< cfdImage* > _images;
+      void CreateObjects( void );
 
-private:
+      std::vector< cfdImage* > _images;
 
-  int _frames;
-  //int _which_frame;
+   private:
+      int _frames;
+      cfdDCS* _dcs;
+      char basename[256];
+      int frames;
+      int ex_x, ex_y;
+      int dim;
+      double origin[3];
+      double spacing[3];
+      float imageScale[ 3 ];
+      float imageTrans[ 3 ];
+      float imageRot[ 3 ];
+      char* _param;
+      cfdReadParam* _readParam;
+      //int _which_frame;
 };
 
 #endif

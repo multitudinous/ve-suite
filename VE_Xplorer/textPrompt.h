@@ -52,6 +52,7 @@ class textPrompt
     pfDCS *add_text(char *text_input);
     
     void DeleteText();
+   void flush_text(char * t);
     
         
  private:

@@ -37,8 +37,12 @@
 // VTK objects(vtkActor) are translated into Performer objects(pfGeode).
 
 #include "cfdLaser.h"
-#include <Performer/pf/pfDCS.h>
-#include "vtkActorToPF.h"
+#include "cfdCommandObjects.h"
+#include "cfdCommandArray.h"
+#include "cfdDCS.h"
+#include "cfdGeode.h"
+#include "cfdEnum.h"
+#include "cfdGroup.h"
 
 #include <vtkLineSource.h>
 #include <vtkPolyDataNormals.h>
@@ -49,8 +53,10 @@
 #include <vtkBox.h>
 #include <vpr/Util/Debug.h>
 
-cfdLaser::cfdLaser( )
+cfdLaser::cfdLaser( cfdGroup* rootNode )
 {
+   this->menuB = true;
+   this->_rootNode = rootNode;
    this->length = 100.0f;
 
    this->hitXYZ[0] = 0.0f;
@@ -79,13 +85,38 @@ cfdLaser::cfdLaser( )
    this->actor->GetProperty()->SetColor( 1.0f, 0.0f, 0.0f );
    //this->actor->GetMapper()->GetInput()->Update(); //changed to fit vtk4.0
 
-   this->geode = new pfGeode;
-   this->DCS = new pfDCS;
-   vtkActorToPF( this->actor, this->geode );
+   this->_geode = new cfdGeode();
+   this->DCS = new cfdDCS();
+   this->_geode->TranslateTocfdGeode( this->actor );
 
-   this->DCS->addChild( this->geode );
+   this->DCS->AddChild( (cfdSceneNode*)this->_geode );
 }
 
+bool cfdLaser::CheckCommandId( cfdCommandArray* commandArray  )
+{
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == BLUE_MENU_TOGGLE )
+   {
+      if ( this->menuB == true )
+      { 
+         this->_rootNode->RemoveChild( this->GetcfdDCS() );
+         this->menuB = false;
+      }
+      else
+      { 
+         // If menu is down, add menu and laser wand, and keep cursor off
+         this->_rootNode->AddChild( this->GetcfdDCS() );
+         this->menuB = true;
+      }
+
+      return true;
+   }
+   return false;
+}
+
+void cfdLaser::UpdateCommand()
+{
+   cerr << "cfdMenu::UpdateCommand() does nothing" << endl;
+}
 
 double * cfdLaser::GetDirection( double vec[3] )
 {
@@ -131,12 +162,12 @@ void cfdLaser::Update( double origin[3], double vec[3] )
 
    //this->actor->GetMapper()->GetInput()->Update(); //changed to fit vtk4.0
 
-   vtkActorToPF( this->actor, this->geode );
+   this->_geode->TranslateTocfdGeode( this->actor );
    //return true;
 }
 
 
-pfDCS * cfdLaser::GetpfDCS( )
+cfdDCS * cfdLaser::GetcfdDCS( )
 {
    return this->DCS;
 }
@@ -156,7 +187,7 @@ cfdLaser::~cfdLaser( )
    this->mapper->Delete();
    this->actor->Delete();
 
-   pfDelete( this->geode );
-   pfDelete( this->DCS );
+   delete this->_geode;
+   delete this->DCS;
 }
 

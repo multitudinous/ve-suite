@@ -46,8 +46,10 @@
 #include "cfdDataSet.h"
 #include "cfdFileInfo.h"
 #include "fileIO.h"
-
-#include <Performer/pf/pfDCS.h>
+#include "cfdDCS.h"
+#include "cfdEnum.h"
+#include "cfdGlobalBase.h"
+#include "cfdCommandArray.h"
 
 #include <cstdio>
 #include <iostream>
@@ -60,6 +62,7 @@
 
 cfdReadParam::cfdReadParam( char *filein_name )
 {
+   this->changeGeometry = false;
 //files.reserve(10);   //added
    this->numGeoms = 0;
    this->bmpFile     = 0;
@@ -163,7 +166,7 @@ cfdDataSet * cfdReadParam::GetDataSetWithName( const char * vtkFilename )
    return NULL;
 }
 
-char * readDirName( std::ifstream &inFile, char * description )
+char * cfdReadParam::readDirName( std::ifstream &inFile, char * description )
 {
   char textLine[256];
    char * dirName = new char [256];
@@ -197,7 +200,7 @@ char * readDirName( std::ifstream &inFile, char * description )
    return dirName;
 }
 
-int readID( std::ifstream &inFile )
+int cfdReadParam::readID( std::ifstream &inFile )
 {
    int id;
    inFile >> id;
@@ -308,10 +311,10 @@ void cfdReadParam::getTransientInfo( std::ifstream &inFile )
    float scale[3], trans[3], rotate[3];   // pfDCS stuff
    this->read_pf_DCS_parameters( inFile, scale, trans, rotate);
 
-   pfDCS * dcs = new pfDCS;
-   dcs->setScale( scale[0], scale[1], scale[2] );
-   dcs->setTrans( trans[0], trans[1], trans[2] );
-   dcs->setRot( rotate[0], rotate[1], rotate[2] );
+   cfdDCS* dcs = new cfdDCS;
+   dcs->SetScaleArray( scale );
+   dcs->SetTranslationArray( trans );
+   dcs->SetRotationArray( rotate );
    this->transientInfo[ ii ]->SetDCS( dcs );
 
    // read the directories...
@@ -326,7 +329,8 @@ void cfdReadParam::getTransientInfo( std::ifstream &inFile )
       {
          cfdTransientSet * cfdtransientset = new cfdTransientSet( 
                                               transientDataDir[ i ], id, dcs );
-         cfdtransientset->SetParameterFile( this );
+         // Maybe need to fix but should not used 
+         //cfdtransientset->SetParameterFile( this );
          this->transientInfo[ ii ]->LoadTransientSet( cfdtransientset );
       }
       else
@@ -344,10 +348,10 @@ void cfdReadParam::getTransientInfo( std::ifstream &inFile )
 
    this->read_pf_DCS_parameters( inFile, scale, trans, rotate);
 
-   pfDCS * geometryDcs = new pfDCS;
-   geometryDcs->setScale( scale[0], scale[1], scale[2] );
-   geometryDcs->setTrans( trans[0], trans[1], trans[2] );
-   geometryDcs->setRot( rotate[0], rotate[1], rotate[2] );
+   cfdDCS* geometryDcs = new cfdDCS;
+   geometryDcs->SetScaleArray( scale );
+   geometryDcs->SetTranslationArray( trans );
+   geometryDcs->SetRotationArray( rotate );
    this->transientInfo[ ii ]->SetGeometryDCS( geometryDcs );
 
    // read geometry transparency flag
@@ -401,10 +405,10 @@ void cfdReadParam::Vtk( std::ifstream &inFile )
    float scale[3], trans[3], rotate[3];   // pfDCS stuff
    this->read_pf_DCS_parameters( inFile, scale, trans, rotate);
 
-   pfDCS * dcs = new pfDCS;
-   dcs->setScale( scale[0], scale[1], scale[2] );
-   dcs->setTrans( trans[0], trans[1], trans[2] );
-   dcs->setRot( rotate[0], rotate[1], rotate[2] );
+   cfdDCS* dcs = new cfdDCS;
+   dcs->SetScaleArray( scale );
+   dcs->SetTranslationArray( trans );
+   dcs->SetRotationArray( rotate );
    this->dataSets[ ii ]->SetDCS( dcs );
 
    // get vtk data set name...
@@ -627,10 +631,10 @@ void cfdReadParam::Stl( std::ifstream &inFile )
    float scale[3], trans[3], rotate[3];   // pfDCS stuff
    this->read_pf_DCS_parameters( inFile, scale, trans, rotate);
 
-   pfDCS * dcs = new pfDCS;
-   dcs->setScale( scale[0], scale[1], scale[2] );
-   dcs->setTrans( trans[0], trans[1], trans[2] );
-   dcs->setRot( rotate[0], rotate[1], rotate[2] );
+   cfdDCS * dcs = new cfdDCS();
+   dcs->SetScaleArray( scale );
+   dcs->SetTranslationArray( trans );
+   dcs->SetRotationArray( rotate );
    this->files[ ii ]->dcs = dcs;
 
    inFile >> this->files[ ii ]->fileName;
@@ -991,36 +995,28 @@ void cfdReadParam::quatCamFile( std::ifstream & inFile)
    }   
 }
 
-#ifdef _CFDCOMMANDARRAY
-bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
+bool cfdReadParam::CheckCommandId( cfdCommandArray* commandArray )
 {
-   // This is here because Dr. K. has code in 
-   // cfdObjects that doesn't belong there
-   bool flag = cfdObjects::CheckCommandId( commandArray );
-   
-   if ( commandArray->GetCommandValue( CFD_ID ) == UPDATE_GEOMETRY )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_GEOMETRY )
    {
       vprDEBUG(vprDBG_ALL,1)
-         << commandArray->GetCommandValue( CFD_GEOSTATE ) << std::endl << vprDEBUG_FLUSH;
+         << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) << std::endl << vprDEBUG_FLUSH;
 
-      long int test = this->paramReader->convertDecimalToBinary( commandArray->GetCommandValue( CFD_GEOSTATE ) );
+      long int test = this->convertDecimalToBinary( commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
       vprDEBUG(vprDBG_ALL,1)
          << " test : " << test << std::endl << vprDEBUG_FLUSH;
 
-      this->paramReader->convertBinaryToArray( test, this->paramReader->numGeoms );
+      this->convertBinaryToArray( test, this->numGeoms );
       this->changeGeometry = true;
       return true;
    }
-   return flag;
+   return false;
 }
 
-void cfdVectorBase::UpdateCommand()
+void cfdReadParam::UpdateCommand()
 {
-   cfdObjects::UpdateCommand();
    cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
 }
-#endif //_CFDCOMMANDARRAY
-
 
 
 /*
@@ -1069,3 +1065,75 @@ void cfdReadParam::set1DText( std::ifstream &inFile )
    }   
 }
 */
+
+void cfdReadParam::ContinueRead( std::ifstream &input, unsigned int id )
+{
+   unsigned int numLines = 0;
+
+   // Set how many lines to skip...
+   switch(id)
+   {
+      case 0:
+         // World DCS
+         numLines = 3;
+         break;
+      case 1:
+         // Scalar Bar
+         numLines = 3;
+         break;
+      case 2:
+         //set1DText( inFile );
+         std::cerr << "Type 2 is no longer used." << std::endl;
+         exit(1);
+         break;
+      case 5:
+         // BMP Loader
+         numLines = 3;
+         break;
+      case 6:
+         std::cerr << "Type 6 is no longer used: Use type 8" << std::endl;
+         exit(1);
+         break;
+      case 7: 
+         std::cerr << "Type 7 is no longer used: Use type 8" << std::endl;
+         exit(1);
+         break;
+      case 8:
+         // VTK File
+         numLines = 4;
+         break;
+      case 9:
+         // Geometry File
+         numLines = 6;
+         break;
+      case 10:
+         //getTransientInfo( inFile );
+         break;
+      case 11:
+         // Sound loader
+	      numLines = 10;
+         break;
+      case 12:
+         // IMG Reader
+	      numLines = 6;
+         break;
+      case 13:
+         // IHCC Hack code
+	      numLines = 0;
+         break;
+      case 14:
+         // Quat stuff...
+	      numLines = 1;
+         break;
+      default:
+         std::cerr << "ERROR : Unknown Type: " << id << std::endl;
+         exit ( 1 );
+   }
+
+   // Based on the object type skip the respective object 
+   char text[ 256 ];
+   for ( unsigned int i = 0; i < numLines; i++ )
+   {
+      input.getline( text, 256 );   //skip past line      
+   }
+}

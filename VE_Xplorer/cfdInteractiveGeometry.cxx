@@ -30,24 +30,26 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdInteractiveGeometry.h"
-#include <Performer/pf/pfGroup.h>
-#include <Performer/pf/pfDCS.h>
+#include "cfdDCS.h"
+#include "cfdGroup.h"
 #include "cfdModuleGeometry.h"
 #include "cfdExecutive.h"
 #include "cfdReadParam.h"
 #include "cfdDataSet.h"
+#include "cfdNode.h"
+
 #include <vtkLookupTable.h>
 //#include <sstream>
 //#include <fstream>
 #include <iostream>
 #include <vpr/Util/Debug.h>
 
-cfdInteractiveGeometry::cfdInteractiveGeometry( std::string param, pfGroup* masterNode)
+cfdInteractiveGeometry::cfdInteractiveGeometry( std::string param, cfdGroup* masterNode)
 {
    this->_masterNode = masterNode;
    this->_param      = param;
-   this->_trainNode  = new pfGroup();
-   this->_masterNode->addChild( this->_trainNode ); 
+   this->_trainNode  = new cfdGroup();
+   this->_masterNode->AddChild( (cfdSceneNode*)this->_trainNode ); 
    this->CreateGeometryList();
 }
 
@@ -103,28 +105,29 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
                !(this->_swappableGeometry[ i ].second->GetModuleName()).compare("WGSR") ) //see if SELX is in  
 	      {
             //std::cout << "Here 2 : " << this->_swappableGeometry[ i ].second->GetModuleName() << std::endl;
-	         if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) < 0 &&
-		            this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) < 0)
+	         if ( this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first ) < 0 &&
+		            this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) < 0)
 		      {
                //this->_swappableGeometry[ i ].first->Update();
-		         this->_trainNode->addChild(this->_swappableGeometry[ i ].first->GetPfDCS());
+		         this->_trainNode->AddChild((cfdSceneNode*)this->_swappableGeometry[ i ].first );
                updateTrains = true;
 		      }
-	         else if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) < 0 &&
-			               this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) >= 0)
+	         else if ( this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first ) < 0 &&
+			               this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) >= 0)
 		      {
-		         this->_trainNode->replaceChild(this->_swappableGeometry[ i ].second->GetPfDCS(), this->_swappableGeometry[ i ].first->GetPfDCS());
+		         this->_trainNode->ReplaceChild((cfdSceneNode*)this->_swappableGeometry[ i ].second, 
+                                                (cfdSceneNode*)this->_swappableGeometry[ i ].first );
                updateTrains = true;
 		      }
-	         else if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) >= 0 &&
-			               this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) >= 0)
+	         else if ( this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first ) >= 0 &&
+			               this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) >= 0)
 		      {
                //this->_swappableGeometry[ i ].second->Update();
-		         this->_trainNode->removeChild(this->_swappableGeometry[ i ].second->GetPfDCS());
+		         this->_trainNode->RemoveChild(this->_swappableGeometry[ i ].second );
                updateTrains = true;
 		      }
-	         else if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) >= 0 &&
-			               this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) < 0)
+	         else if ( this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first ) >= 0 &&
+			               this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) < 0)
 		      {
                         ; //we are good, do nothing
             }	         
@@ -143,36 +146,36 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
 	      {
 
             vprDEBUG(vprDBG_ALL,2) << " Swappable geom - Is the pipe on ? " 
-                                    << this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) << std::endl << vprDEBUG_FLUSH;
+                                    << this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first ) << std::endl << vprDEBUG_FLUSH;
             vprDEBUG(vprDBG_ALL,2) << " Swappable geom - Is the part on ? " 
-                                    << this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) << std::endl << vprDEBUG_FLUSH;
+                                    << this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) << std::endl << vprDEBUG_FLUSH;
 
             this->_swappableGeometry[ i ].second->Update();
             this->_swappableGeometry[ i ].first->Update();
-	         if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) < 0 &&
-		            this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) < 0)
+	         if ( this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first ) < 0 &&
+		            this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) < 0)
 		      {
                
-		         this->_trainNode->addChild(this->_swappableGeometry[ i ].second->GetPfDCS());
+		         this->_trainNode->AddChild((cfdSceneNode*)this->_swappableGeometry[ i ].second );
                updateTrains = true;
 		      }
-	         else if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) >= 0 &&
-			               this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) < 0)
+	         else if ( this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first ) >= 0 &&
+			               this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) < 0)
 		      {
 		         //this->_trainNode->replaceChild(this->_swappableGeometry[ i ].first->GetPfDCS(), this->_swappableGeometry[ i ].second->GetPfDCS());
-               this->_trainNode->addChild((pfNode*)this->_swappableGeometry[ i ].second->GetPfDCS() );
-               this->_trainNode->removeChild((pfNode*)this->_swappableGeometry[ i ].first->GetPfDCS() );
+               this->_trainNode->AddChild((cfdSceneNode*)this->_swappableGeometry[ i ].second );
+               this->_trainNode->RemoveChild((cfdSceneNode*)this->_swappableGeometry[ i ].first );
 
                updateTrains = true;
 		      }
-	         else if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) >= 0 &&
-			               this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) >= 0)
+	         else if ( this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first ) >= 0 &&
+			               this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) >= 0)
 		      {
-		         this->_trainNode->removeChild( this->_swappableGeometry[ i ].first->GetPfDCS());
+		         this->_trainNode->RemoveChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first );
                updateTrains = true;
 		      }
-	         else if ( this->_trainNode->searchChild( this->_swappableGeometry[ i ].first->GetPfDCS() ) < 0 &&
-			               this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) >= 0)
+	         else if ( this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].first ) < 0 &&
+			               this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) >= 0)
 		      {
                ; //we are good, do nothing
 	         }
@@ -193,8 +196,8 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
       int counter = this->_trainDCS.size();
       for ( int iter = counter - 1; iter >= 0; iter-- )
       {
-         this->_masterNode->removeChild( (pfNode*)this->_trainDCS[ iter ] );
-         pfDelete( this->_trainDCS[ iter ] );
+         this->_masterNode->RemoveChild( (cfdSceneNode*)this->_trainDCS[ iter ] );
+         delete this->_trainDCS[ iter ];
          this->_trainDCS.pop_back();
  
          if ( (long)this->_trainDCS.size() + 1 == numberOfTrains )
@@ -208,10 +211,14 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
       int initialNumber = this->_trainDCS.size();
       for ( int j = initialNumber; j < numberOfTrains - 1; j++ )
       {
-         this->_trainDCS.push_back( new pfDCS() );
-         this->_trainDCS.back()->setTrans( 0, (j+1) * 40.0f, 0 );
-         this->_trainDCS.back()->addChild( this->_trainNode->clone( 0 ) );
-         this->_masterNode->addChild( this->_trainDCS.back() );    
+         this->_trainDCS.push_back( new cfdDCS() );
+         float temp[ 3 ];
+         temp[ 0 ] = 0;
+         temp[ 1 ] = (j+1) * 40.0f;
+         temp[ 2 ] = 0;
+         this->_trainDCS.back()->SetTranslationArray( temp );
+         this->_trainDCS.back()->AddChild( this->_trainNode->Clone( 0 ) );
+         this->_masterNode->AddChild( (cfdSceneNode*)this->_trainDCS.back() );    
       }
    }
    
@@ -235,7 +242,7 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
          if ( this->_swappableGeometry[ i ].second->GetColorFlag() == 1 && 
                ( !(this->_swappableGeometry[ i ].second->GetModuleName()).compare("WGSR") || 
                   !(this->_swappableGeometry[ i ].second->GetModuleName()).compare("SELX") ) &&
-                this->_trainNode->searchChild( this->_swappableGeometry[ i ].second->GetPfDCS() ) >= 0
+                this->_trainNode->SearchChild( (cfdSceneNode*)this->_swappableGeometry[ i ].second ) >= 0
             )
          {           
             mod_id = (CORBA::Long)executive->_name_map[ this->_swappableGeometry[ i ].second->GetModuleName() ];
@@ -377,8 +384,8 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
             int counter = this->_trainDCS.size();
             for ( int iter = counter - 1; iter >= 0; iter-- )
             {
-               this->_masterNode->removeChild( (pfNode*)this->_trainDCS[ iter ] );
-               pfDelete( this->_trainDCS[ iter ] );
+               this->_masterNode->RemoveChild( (cfdSceneNode*)this->_trainDCS[ iter ] );
+               delete this->_trainDCS[ iter ];
                this->_trainDCS.pop_back();
             }
          }
@@ -386,17 +393,17 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
          {
             // Drop buildings
             vprDEBUG(vprDBG_ALL,2) << " Drop the buildings " << std::endl << vprDEBUG_FLUSH;
-            this->_trainNode->removeChild( this->_moduleGeometry[ i ]->GetPfDCS() );
+            this->_trainNode->RemoveChild( (cfdSceneNode*)this->_moduleGeometry[ i ] );
          }
          else
          {
             vprDEBUG(vprDBG_ALL,1) << "REI Gasifier is not in the network 2 " << std::endl << vprDEBUG_FLUSH;
             this->_moduleGeometry[ i ]->SetOpacity( 1.0f ); 
             if ( !(this->_moduleGeometry[ i ]->GetModuleName()).compare( "GLASS" ) &&
-                  this->_trainNode->searchChild( this->_moduleGeometry[ i ]->GetPfDCS() ) < 0 )
+                  this->_trainNode->SearchChild( (cfdSceneNode*)this->_moduleGeometry[ i ] ) < 0 )
             {
                // Add building back
-               this->_trainNode->addChild( this->_moduleGeometry[ i ]->GetPfDCS() );
+               this->_trainNode->AddChild( (cfdSceneNode*)this->_moduleGeometry[ i ] );
             }                         
          }
 
@@ -410,29 +417,29 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
 
          // Check to see if we need to add or remove it
          if ( numberOfSpares == 0 && 
-               this->_masterNode->searchChild( this->_moduleGeometry[ i ]->GetPfDCS() ) >= 0
+               this->_masterNode->SearchChild( (cfdSceneNode*)this->_moduleGeometry[ i ] ) >= 0
             )
          {
             // Remove the spare 
-            this->_masterNode->removeChild( this->_moduleGeometry[ i ]->GetPfDCS() );
+            this->_masterNode->RemoveChild( (cfdSceneNode*)this->_moduleGeometry[ i ] );
          }
          else if ( numberOfSpares > 0 &&
-                     this->_masterNode->searchChild( this->_moduleGeometry[ i ]->GetPfDCS() ) < 0
+                     this->_masterNode->SearchChild( (cfdSceneNode*)this->_moduleGeometry[ i ] ) < 0
                  )
          {
             // Add it 
-            this->_masterNode->addChild( this->_moduleGeometry[ i ]->GetPfDCS() );
+            this->_masterNode->AddChild( (cfdSceneNode*)this->_moduleGeometry[ i ] );
          }
-         else if ( this->_trainNode->searchChild( this->_moduleGeometry[ i ]->GetPfDCS() ) >= 0 )
+         else if ( this->_trainNode->SearchChild( (cfdSceneNode*)this->_moduleGeometry[ i ] ) >= 0 )
          {
-            this->_trainNode->removeChild( this->_moduleGeometry[ i ]->GetPfDCS() );
+            this->_trainNode->RemoveChild( (cfdSceneNode*)this->_moduleGeometry[ i ] );
          }
          else if ( nameIter != executive->_name_map.end() && 
-                     this->_masterNode->searchChild( this->_moduleGeometry[ i ]->GetPfDCS() ) >= 0 
+                     this->_masterNode->SearchChild( (cfdSceneNode*)this->_moduleGeometry[ i ] ) >= 0 
                  )
          {
             // Remove the spare 
-            this->_masterNode->removeChild( this->_moduleGeometry[ i ]->GetPfDCS() );
+            this->_masterNode->RemoveChild( (cfdSceneNode*)this->_moduleGeometry[ i ] );
          }
       }
    }
@@ -444,18 +451,22 @@ void cfdInteractiveGeometry::Update( std::string activeScalar, cfdExecutive* exe
       int counter = this->_trainDCS.size();
       for ( int iter = counter - 1; iter >= 0; iter-- )
       {
-         this->_masterNode->removeChild( (pfNode*)this->_trainDCS[ iter ] );
-         pfDelete( this->_trainDCS[ iter ] );
+         this->_masterNode->RemoveChild( (cfdSceneNode*)this->_trainDCS[ iter ] );
+         delete this->_trainDCS[ iter ];
          this->_trainDCS.pop_back();
       }
       
       int initialNumber = this->_trainDCS.size();
       for ( int j = initialNumber; j < numberOfTrains - 1; j++ )
       {
-         this->_trainDCS.push_back( new pfDCS() );
-         this->_trainDCS.back()->setTrans( 0, (j+1) * 40.0f, 0 );
-         this->_trainDCS.back()->addChild( this->_trainNode->clone( 0 ) );
-         this->_masterNode->addChild( this->_trainDCS.back() );    
+         this->_trainDCS.push_back( new cfdDCS() );
+         float temp[ 3 ];
+         temp[ 0 ] = 0;
+         temp[ 1 ] = (j+1) * 40.0f;
+         temp[ 2 ] = 0;
+         this->_trainDCS.back()->SetTranslationArray( temp );
+         this->_trainDCS.back()->AddChild( this->_trainNode->Clone( 0 ) );
+         this->_masterNode->AddChild( (cfdSceneNode*)this->_trainDCS.back() );    
       }
       updateTrains = false;
    }

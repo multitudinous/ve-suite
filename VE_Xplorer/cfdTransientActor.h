@@ -36,7 +36,7 @@ class vtkActor;
 class vtkDataSet;
 class vtkPolyData;
 class vtkPolyDataMapper;
-class cfdReadParam;
+class cfdTransientVizHandler;
 class cfdDataSet;
 
 class cfdTransientActor
@@ -48,7 +48,7 @@ class cfdTransientActor
       vtkActor * CreateActor( char * );
       void SetArrow( vtkPolyData * );
       void SetActiveDataSet( cfdDataSet * );
-      void SetParameterFile( cfdReadParam* param, int );
+      void SetParameterFile( cfdTransientVizHandler* param, int );
       void SetArrowSize( float );
 
    protected:
@@ -59,7 +59,7 @@ class cfdTransientActor
       vtkDataSet * dataset;   // note all lowercase
       vtkPolyData * arrow;
       float arrowSize;
-      cfdReadParam * param;
+      cfdTransientVizHandler * param;
       cfdDataSet * activeDataSet;
       int   member;
 };

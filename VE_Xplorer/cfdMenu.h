@@ -40,14 +40,13 @@ class vtkPolyDataNormals;
 class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkActor;
-class pfGeode;
-class pfDCS;
 
-#ifdef _CFDCOMMANDARRAY
+class cfdGeode;
+class cfdGroup;
+class cfdDCS;
 class cfdCommandObjects;
 
 #include "cfdCommandObjects.h"
-#endif //_CFDCOMMANDARRAY
 
 //! Create menu objects.
 /*!
@@ -55,10 +54,7 @@ class cfdCommandObjects;
   render using Performer.  VTK objects(vtkActor) are translated into
   Performer objects(pfGeode).
 */
-class cfdMenu
-#ifdef _CFDCOMMANDARRAY
-                       : public cfdCommandObjects
-#endif //_CFDCOMMANDARRAY
+class cfdMenu : public cfdCommandObjects
 {
  public:
    //! Constructor
@@ -69,23 +65,21 @@ class cfdMenu
     Load the menu data set, an unstructured grid, (POS_DATA/menu.vtk).
     Set the outline, shading, label, and active cell.
    */
-   cfdMenu( char *, char * );
+   cfdMenu( char *, char *, cfdGroup* );
 
    //Destruct VTK objects and Performer objects for menu.
    ~cfdMenu();
 
-#ifdef _CFDCOMMANDARRAY
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray  );
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
 
    /*!
     Return the dynamic coordinate system with pfGeode objects.
    */
-   pfDCS * GetpfDCS();
+   cfdDCS* GetcfdDCS();
    //!
    /*!
     Find the hit cell on menu and update.
@@ -113,22 +107,22 @@ class cfdMenu
    /*!
     Get the white outline for the menu's cells.
    */
-   pfGeode * GetOutline();
+   cfdGeode* GetOutline();
    //!
    /*!
     Get the transparent shading for the menu's cells.
    */
-   pfGeode * GetShaded();
+   cfdGeode* GetShaded();
    //!
    /*!
     Get the text label for the menu's cells.
    */
-   pfGeode * GetLabel( char *);
+   cfdGeode* GetLabel( char *);
    //!
    /*!
     Get the active and highlighted menu's cell.
    */
-   pfGeode * GetCell();
+   cfdGeode* GetCell();
    //!
    /*!
     Get the polygons of the text for menu's cells.
@@ -183,28 +177,30 @@ class cfdMenu
    /*!
     pfGeode(s) for the menu.
    */
-   pfGeode *outlineGeode;
+   cfdGeode *outlineGeode;
    //! Performer object
    /*!
     pfGeode(s) for the menu.
    */
-   pfGeode *shadedGeode;
+   cfdGeode *shadedGeode;
    //! Performer object
    /*!
     pfGeode(s) for the menu.
    */
-   pfGeode *labelGeode;
+   cfdGeode *labelGeode;
    //! Performer object
    /*!
     pfGeode(s) for the menu.
    */
-   pfGeode *cellGeode;
+   cfdGeode *cellGeode;
    //! Performer object
    /*!
     Performer dynamic coordinate systems with pre-loaded translated VTK objects.
    */
-   pfDCS *menuDCS;
+   cfdDCS *menuDCS;
+   cfdGroup* _rootNode;
 
+   bool menuB;
 };
 
 #endif

@@ -29,28 +29,29 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <string.h>
+#include <string>
 #include "cfdFrame.h"
 #include "cfdFILE.h"
-#include "cfdReadParam.h"
+#include "cfdTransientVizHandler.h"
 #include "cfdTransientInfo.h"
 #include "cfdTransientVectorActor.h"
 #include "cfdTransientScalarActor.h"
 #include "cfdTransientParticleActor.h"
 #include "cfdTransientParticleActor_fluent.h"
+#include "cfdDCS.h"
+#include "cfdNode.h"
+#include "cfdGeode.h"
+
+
 #include <vpr/Util/Debug.h>
-
-//performer includes
-#include <Performer/pf/pfGeode.h>
-#include <Performer/pf/pfNode.h>
-#include <Performer/pf/pfDCS.h>
-
-#include "vtkActorToPF.h"
+#include <gmtl/Matrix.h>
 
 //vtk includes
 #include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkProperty.h>
+
+using namespace std;
 
 cfdFrame::cfdFrame()
 {
@@ -153,12 +154,12 @@ int cfdFrame::CreateFrame( void )
       //create the new group node for the frame
       if ( this->actor != NULL )
       {
-         this->geode = new pfGeode();
+         this->geode = new cfdGeode();
 
          //get the geometry information from vtk and convert
          //it to performer geometry
          //then add it to the graph
-         vtkActorToPF( this->actor, this->geode, 0 );
+         this->geode->TranslateTocfdGeode( this->actor );
       }
    }
    else if ( this->frameDataType == GEOM )
@@ -182,12 +183,12 @@ int cfdFrame::CreateFrame( void )
          << this->param->transientInfo[ this->member ]->GetGeometryDCS()
          << std::endl << vprDEBUG_FLUSH;
 
-      this->node = this->geomFile->getpfNode();
-      this->dcs = new pfDCS();
-      pfMatrix m;
-      this->param->transientInfo[ this->member ]->GetGeometryDCS()->getMat( m );
-      this->dcs->setMat( m );
-      this->dcs->addChild( this->node );
+      this->node = this->geomFile->GetcfdNode();
+      this->dcs = new cfdDCS();
+      Matrix44f m;
+      m = this->param->transientInfo[ this->member ]->GetGeometryDCS()->GetMat();
+      this->dcs->SetMat( m );
+      this->dcs->AddChild( (cfdSceneNode*)this->node );
    }
    else
    {
@@ -218,7 +219,7 @@ void cfdFrame::CreateFrame( char* vtkFileName )
    }
 }
 
-void cfdFrame::SetParameterFile( cfdReadParam *param, int member)
+void cfdFrame::SetParameterFile( cfdTransientVizHandler *param, int member)
 {
    this->param = param;
    this->member = member;
@@ -251,17 +252,17 @@ void cfdFrame::SetActiveDataSets( cfdDataSet * activeDataSet,
    this->activeSurfaceData = activeSurfaceData;
 }
 
-pfNode * cfdFrame::GetpfNode( void )
+cfdSceneNode* cfdFrame::GetcfdNode( void )
 {
    vprDEBUG(vprDBG_ALL,2) << " Using frameDataType = " << this->frameDataType
                           << std::endl << vprDEBUG_FLUSH;
    if ( this->frameDataType == GEOM )
    {
-      return (pfNode*)this->dcs;
+      return (cfdSceneNode*)this->dcs;
    }
    else
    {
-      return (pfNode*)this->geode;
+      return (cfdSceneNode*)this->geode;
    }
 }
 

@@ -30,21 +30,25 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdModuleGeometry.h"
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pf/pfGroup.h>
-#include <Performer/pf/pfGeode.h>
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pr/pfMaterial.h>
-#include <Performer/pr/pfLight.h>
-#include <Performer/pfdu.h>
-#include <assert.h>
+#include "cfdGroup.h"
+#include "cfdNode.h"
+
+//#include <Performer/pf/pfDCS.h>
+//#include <Performer/pf/pfGroup.h>
+//#include <Performer/pf/pfGeode.h>
+//#include <Performer/pr/pfGeoSet.h>
+//#include <Performer/pr/pfMaterial.h>
+//#include <Performer/pr/pfLight.h>
+//#include <Performer/pfdu.h>
+#include <cassert>
 #include <iostream>
 #include <Performer/pr/pfLPointState.h>
 #include <Performer/pf/pfTraverser.h>
 
 #include <vpr/Util/Debug.h>
+using namespace std;
 
-cfdModuleGeometry::cfdModuleGeometry( pfGroup* masterNode )
+cfdModuleGeometry::cfdModuleGeometry( cfdGroup* masterNode )
 {
    this->_masterNode = masterNode;
    this->_rgba[ 0 ] = this->_rgba[ 1 ] = this->_rgba[ 2 ] = 0.6;
@@ -103,12 +107,13 @@ std::string cfdModuleGeometry::GetModuleName( void )
 void cfdModuleGeometry::SetGeometryFilename( std::string filename )
 {
    this->_filename = filename;
-   this->_node = pfdLoadFile( (char*)this->_filename.c_str() );
-   this->_node->flatten( 0 );
-   this->GetPfDCS()->addChild( this->_node );
+   this->_node = new cfdNode();
+   this->_node->LoadFile( (char*)this->_filename.c_str() );
+   //this->_node->flatten( 0 );
+   this->AddChild( (cfdSceneNode*)this->_node );
    std::cout << "cfdModuleGeometry load geometry : " << _filename << std::endl;
 
-   this->_masterNode->addChild( this->GetPfDCS() );   
+   this->_masterNode->AddChild( this );   
 }
 
 void cfdModuleGeometry::Update( void )
@@ -120,9 +125,9 @@ void cfdModuleGeometry::Update( void )
    SetColorOfGeometry( this->_node );
 }
 
-void cfdModuleGeometry::SetColorOfGeometry( pfNode* node_1 )
-{
-   assert( node_1 != NULL && "bad pointer passed in" );
+void cfdModuleGeometry::SetColorOfGeometry( cfdNode* node_1 )
+{ // Needs to be fixed
+/*   assert( node_1 != NULL && "bad pointer passed in" );
    //assert( mat != NULL && "bad pointer passed in" );
 	int i ;
 	int num ;
@@ -150,54 +155,55 @@ void cfdModuleGeometry::SetColorOfGeometry( pfNode* node_1 )
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getGState() ;
          //geoset->setDrawBin(PFSORT_TRANSP_BIN); // draw last
-/*int attr = geoset->getAttrBind( PFGS_COLOR4 );
-if ( attr == PFGS_OFF )
-   std::cout << " attribs are off ";// << std::endl;
-else if ( attr == PFGS_OVERALL )
-   std::cout << " attribs are overall ";// << std::endl;
-else if ( attr == PFGS_PER_PRIM )
-   std::cout << " attribs are prim ";// << std::endl;
-else if ( attr == PFGS_PER_VERTEX )
-   std::cout << " attribs are vert    ";// << std::endl;
- void *alist=0; 
-   ushort *ilist=0; 
+//int attr = geoset->getAttrBind( PFGS_COLOR4 );
+//if ( attr == PFGS_OFF )
+//   std::cout << " attribs are off ";// << std::endl;
+//else if ( attr == PFGS_OVERALL )
+//   std::cout << " attribs are overall ";// << std::endl;
+//else if ( attr == PFGS_PER_PRIM )
+//   std::cout << " attribs are prim ";// << std::endl;
+//else if ( attr == PFGS_PER_VERTEX )
+//   std::cout << " attribs are vert    ";// << std::endl;
+// void *alist=0; 
+//   ushort *ilist=0; 
+
 //  geoset->getAttrLists(PFGS_COORD3, &alist, &ilist); 
 //   verts = (pfVec3 *) alist; 
 //std::cout << geoset->getAttrBind( PFGS_COLOR4 ) << std::endl;
 //int attr = geoset->getAttrBind( PFGS_COLOR4 );
 //pfVec4 **colors = NULL;
- if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_PER_PRIM ))
-{
-geoset->getAttrLists( PFGS_COLOR4, &alist, &ilist );
-pfVec4 *colors;
-colors = (pfVec4 *) alist;
- int min, max; 
-   int vertcount; 
-vertcount = geoset->getAttrRange(PFGS_COLOR4, &min, &max); 
-std::cout << " New set : " << vertcount << " : " << min << " : " << max << std::endl;
-bool alphaFlag = false;
-for ( int k = 0; k < vertcount; k++ )
-{
-if ( colors[k][3] != 1.0 )
-{
-std::cout << " alist value " <<  colors[k][0] << " : " 
-                              << colors[k][1] << " : " 
-                              << colors[k][2] << " : " 
-                              << colors[k][3] << std::endl;
-                  geoset->setDrawBin(PFSORT_TRANSP_BIN);  // draw last
-                  //geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF); // want to see backside thru
-            geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
-            //geostate->setMode( PFSTATE_ENHIGHLIGHTING, PF_ON );
-            geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
-                  geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
-   alphaFlag = true;
-   break;
-}
-}
-if ( alphaFlag )
-   continue;
-}
-*/
+// if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_PER_PRIM ))
+//{
+//geoset->getAttrLists( PFGS_COLOR4, &alist, &ilist );
+//pfVec4 *colors;
+//colors = (pfVec4 *) alist;
+// int min, max; 
+//   int vertcount; 
+//vertcount = geoset->getAttrRange(PFGS_COLOR4, &min, &max); 
+//std::cout << " New set : " << vertcount << " : " << min << " : " << max << std::endl;
+//bool alphaFlag = false;
+//for ( int k = 0; k < vertcount; k++ )
+//{
+//if ( colors[k][3] != 1.0 )
+//{
+//std::cout << " alist value " <<  colors[k][0] << " : " 
+//                              << colors[k][1] << " : " 
+//                              << colors[k][2] << " : " 
+//                              << colors[k][3] << std::endl;
+//                  geoset->setDrawBin(PFSORT_TRANSP_BIN);  // draw last
+//                  //geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF); // want to see backside thru
+//            geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
+//            //geostate->setMode( PFSTATE_ENHIGHLIGHTING, PF_ON );
+//            geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
+//                  geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
+//   alphaFlag = true;
+//   break;
+//}
+//}
+//if ( alphaFlag )
+//   continue;
+//}
+
          if (geostate != NULL)
          {
             geostate->setMode( PFSTATE_ANTIALIAS, PFAA_ON );
@@ -271,14 +277,6 @@ if ( alphaFlag )
                   geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
                   if( _colorFlag == 1 )
                   {
-/*
-                     this->fmaterial->getColor( PFMTL_AMBIENT, &colorone[0], &colorone[1], &colorone[2] );
-                     this->fmaterial->getColor( PFMTL_DIFFUSE, &colorone[3], &colorone[4], &colorone[5] );
-                     vprDEBUG(vprDBG_ALL,3)
-                     << " Front Color 1 : " << colorone[0] << " : " 
-                     << colorone[1]<< " : " << colorone[2] 
-                     << std::endl << vprDEBUG_FLUSH;
-*/
                      testMat->setColor( PFMTL_DIFFUSE , 1.0f, 1.0f, 1.0f );
                      testMat->setColor( PFMTL_AMBIENT , 1.0f, 1.0f, 1.0f );
                      //testMat->setColor( PFMTL_DIFFUSE , _rgba[0], _rgba[1], _rgba[2]);
@@ -310,14 +308,6 @@ if ( alphaFlag )
                                          << std::endl << vprDEBUG_FLUSH;
                   if( _colorFlag == 1)
                   {
-/*
-                     this->bmaterial->getColor( PFMTL_AMBIENT, &colorone[0], &colorone[1], &colorone[2] );
-                     this->bmaterial->getColor( PFMTL_DIFFUSE, &colorone[3], &colorone[4], &colorone[5] );
-                     vprDEBUG(vprDBG_ALL,3) 
-                        << " Front Color 1 : " << colorone[0] << " : " 
-                        << colorone[1] << " : " << colorone[2] 
-                        << std::endl << vprDEBUG_FLUSH;
-*/
                      bmaterial->setColor( PFMTL_DIFFUSE , _rgba[0], _rgba[1], _rgba[2]);
                      bmaterial->setColor( PFMTL_AMBIENT , _rgba[0], _rgba[1], _rgba[2]);
                      vprDEBUG(vprDBG_ALL,3) 
@@ -341,13 +331,6 @@ if ( alphaFlag )
                   geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA | PFTR_NO_OCCLUDE);
                   if( _colorFlag == 1 )
                   {
-/*
-                     this->fmaterial->getColor( PFMTL_AMBIENT, &colorone[0], &colorone[1], &colorone[2] );
-                     this->fmaterial->getColor( PFMTL_DIFFUSE, &colorone[3], &colorone[4], &colorone[5] );
-                     vprDEBUG(vprDBG_ALL,3) << " Front Color 1 : "
-                        << colorone[0] << " : " <<  colorone[1] << " : " 
-                        << colorone[2] << std::endl << vprDEBUG_FLUSH;
-*/
                      bmaterial->setColor( PFMTL_DIFFUSE , 1.0f, 1.0f, 1.0f );
                      bmaterial->setColor( PFMTL_AMBIENT , 1.0f, 1.0f, 1.0f );
                      vprDEBUG(vprDBG_ALL,3)
@@ -390,5 +373,5 @@ if ( alphaFlag )
 	   	}
          //count = 0;
 	   }
-
+*/
 }

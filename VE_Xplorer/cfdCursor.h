@@ -32,9 +32,9 @@
 #ifndef CFD_CURSOR_H
 #define CFD_CURSOR_H
 
-class pfDCS;
-class pfGeode;
-struct pfCoord;
+class cfdDCS;
+class cfdGeode;
+
 class vtkGlyph3D;
 class vtkCubeSource;
 class vtkSphereSource;
@@ -46,17 +46,28 @@ class vtkPointSource;
 class vtkPlaneSource;
 class vtkLineSource;
 class vtkPolyDataSource;
+class cfdCommandArray;
+class cfdDataSet;
+class cfdGroup;
+
+#include "cfdGlobalBase.h"
 
 //! Virtual cursors
 /*!
    A class to build virtual cursors. Type of virtual
    cursor built are single point, arrow, and multiple points.
 */
-class cfdCursor
+class cfdCursor : public cfdGlobalBase
 {
    public:
-      cfdCursor( vtkPolyData *, pfDCS * );
+      cfdCursor( vtkPolyData* , cfdDCS* , cfdGroup* );
       ~cfdCursor();
+
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray*  );
+
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
 
       void Initialize( double x[3], double v[3] );
 
@@ -77,7 +88,7 @@ class cfdCursor
       vtkPolyDataSource * GetSourcePoints( int );
 
       // Return the dynamic coordinate system with pfGeode objects.
-      pfDCS * GetpfDCS();
+      cfdDCS * GetcfdDCS();
 
       // Set/Get plane size.
       void SetPlaneSize( float size );
@@ -95,7 +106,8 @@ class cfdCursor
       float boxExtent;
       //add end
 
-      void SetActiveDataSetDCS( pfDCS * myDCS );
+      void SetActiveDataSetDCS( cfdDCS* myDCS );
+      void SetActiveDataSet( cfdDataSet* input );
 
    private:
 
@@ -159,12 +171,11 @@ class cfdCursor
       double pos_c[3];
  
       // Performer dynamic coordinate systems with pre-loaded translated VTK objects.
-      pfDCS *cursorDCS;
-      pfDCS *worldDCS;
-      pfCoord * coord;
+      cfdDCS *cursorDCS;
+      cfdDCS *worldDCS;
 
       // A Performer geometry node.
-      pfGeode *cursorGeode;
+      cfdGeode *cursorGeode;
 
       // Plane size;
       float pSize;
@@ -191,8 +202,11 @@ class cfdCursor
       
       void GetLocalLocationVector( void );
 
-     pfDCS * activeDataSetDCS;
+      cfdDCS * activeDataSetDCS;
 
+      cfdGroup* _rootNode;
+      cfdDataSet* _activeDataSet;
+      int cursorId;
 };
 
 #endif

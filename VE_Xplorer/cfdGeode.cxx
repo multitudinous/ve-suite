@@ -30,64 +30,100 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdGeode.h"
-#include <Performer/pf.h>
-#include <vpr/Util/Debug.h>
+
+#ifdef _PERFORMER
+#include <Performer/pf/pfGeode.h>
+#include <Performer/pf/pfNode.h>
+#elif _OSG
+#elif _OPENSG
+#endif
+
+#include <vtkActor.h>
+
 #include <iostream>
 
+#ifdef _PERFORMER
+// vtkActorToPF
+#include "vtkActorToPF.h"
+#elif _OSG
+#elif _OPENSG
+#endif
 
-void cfdGeodeSetsUpdate( pfGeoSet *gsets[], 
-			 pfGeode *geode )
+
+cfdGeode::cfdGeode( void ):cfdSceneNode()
 {
-   int numGSets = geode->getNumGSets( );
-
-   vprDEBUG(vprDBG_ALL, 0) << "Memory used: " << pfMemory::getArenaBytesUsed()
-                           << std::endl << vprDEBUG_FLUSH;
-
-   if ( numGSets != 0 )
-   {
-      for ( int i=0; i<numGSets; i++ ) 
-      {
-         pfGeoSet *g = geode->getGSet( 0 ); // children shift after a removal
-         geode->removeGSet( g );
-         pfDelete(g);
-      }
-   }
-
-   for ( int i=0; i<4; i++ )  
-   {
-      if ( gsets[i] != NULL )	
-      {  
-         geode->addGSet( gsets[i] );
-      }
-   }
+#ifdef _PERFORMER
+   _geode = new pfGeode();
+#elif _OSG
+#elif _OPENSG
+#endif
+   _vtkToPFDebug = 0;
 }
 
-void cfdGeodeSetsFlush( pfGeoSet *gsets[],pfGeode *geode )
+cfdGeode::cfdGeode( const cfdGeode& input )
 {
-   int numGSets = geode->getNumGSets( );
-
-   if ( numGSets != 0 )
-   {
-      pfGeoSet *g = geode -> getGSet(numGSets-1);
-      geode->replaceGSet( g,gsets[0] );
-      pfDelete(g);
-   }
+   this->_geode = input._geode;
+   this->_vtkToPFDebug = input._vtkToPFDebug;
 }
 
-void cfdGeodeSetsDelete( pfGeode *geode )
+cfdGeode& cfdGeode::operator=( const cfdGeode& input )
 {
-   int numGSets = geode->getNumGSets( );
-
-   vprDEBUG(vprDBG_ALL, 1) << "numGSets: " << numGSets 
-                           << std::endl << vprDEBUG_FLUSH;
-
-   if ( numGSets != 0 )
+   if ( this != (&input) )
    {
-      for ( int i=0; i<numGSets; i++ ) 
-      {
-         pfGeoSet *g = geode->getGSet( 0 ); // children shift after a removal
-         geode->removeGSet( g );
-         pfDelete(g);
-      }
+#ifdef _PERORMER
+      pfDelete( _geode );
+#elif _OSG
+#elif _OPENSG
+#endif
+      this->_geode = input._geode;
+      this->_vtkToPFDebug = input._vtkToPFDebug;
    }
+   return *this;
+}
+
+cfdGeode::~cfdGeode( void )
+{
+#ifdef _PERORMER
+   pfDelete( _geode );
+#elif _OSG
+#elif _OPENSG
+#endif
+}
+
+// This function must be reimplemented for each scene graph
+#ifdef _PERFORMER
+pfGeode* cfdGeode::GetGeode( void )
+#elif _OSG
+#elif _OPENSG
+#endif
+{
+   // Returns low level node for scene graph
+#ifdef _PERFORMER
+   return _geode;
+#elif _OSG
+#elif _OPENSG
+#endif
+}
+
+#ifdef _PERFORMER
+pfNode* cfdGeode::GetRawNode( void )
+#elif _OSG
+#elif _OPENSG
+#endif
+{
+   // Returns low level node for scene graph
+#ifdef _PERFORMER
+   return _geode;
+#elif _OSG
+#elif _OPENSG
+#endif
+}
+
+void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
+{
+#ifdef _PERFORMER
+   vtkActorToPF( actor, this->_geode, _vtkToPFDebug );
+#elif _OSG
+#elif _OPENSG
+#endif
 }

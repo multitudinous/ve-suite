@@ -36,13 +36,13 @@
 #include "cfdDCS.h"
 #include <string>
 
-class pfGroup;
-class pfNode;
+class cfdGroup;
+class cfdNode;
 
 class cfdModuleGeometry : public cfdDCS
 {
    public:
-      cfdModuleGeometry( pfGroup* masterNode );
+      cfdModuleGeometry( cfdGroup* masterNode );
       ~cfdModuleGeometry( void );
 
       void SetRGBAColorArray( double* );
@@ -53,7 +53,7 @@ class cfdModuleGeometry : public cfdDCS
       void SetColorFlag( int );
       int GetColorFlag( void );
       std::string GetModuleName( void );
-      void SetColorOfGeometry( pfNode* );
+      void SetColorOfGeometry( cfdNode* );
       void Update( void );
       void SetOpacity( float );
 
@@ -63,8 +63,8 @@ class cfdModuleGeometry : public cfdDCS
       bool _transparencyFlag;
       float _opacityLevel;
       int _colorFlag;
-      pfNode* _node;
-      pfGroup* _masterNode;
+      cfdNode* _node;
+      cfdGroup* _masterNode;
       std::string _filename;
       std::string _moduleName;
 };

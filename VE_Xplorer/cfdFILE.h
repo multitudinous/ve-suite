@@ -35,37 +35,38 @@
 #include <vector>
 
 class fileInfo;
-class pfNode;
-class pfMaterial;
-class pfNode;
-class pfDCS;
-//class pfLightModel;
+class cfdDCS;
+class cfdNode;
+// Need to fix this class
+// BIG PROBLEMS here
+//class pfNode;
+//class pfMaterial;
 
 class cfdFILE 
 {
  public:
-  cfdFILE( fileInfo *, pfDCS * );
+  cfdFILE( fileInfo*, cfdDCS* );
   cfdFILE( float, float [ 3 ], char * );
 
   ~cfdFILE();
 
   void Initialize(float);
 
-  void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
+  //void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
 
-  pfDCS * getpfDCS();
-  pfNode * getpfNode();
+  cfdDCS* getpfDCS( void );
+  cfdNode* GetcfdNode( void );
 
   void setOpac(float op_val);
   float getOpacity();
 
   //pfLightModel *matLight;
-  pfMaterial *fmaterial;
-  pfMaterial *bmaterial;
-  std::vector< pfMaterial *> matList;
-  pfNode *node;
-  pfDCS *DCS;
-  pfMaterial *mat1, *mat0;
+  //pfMaterial *fmaterial;
+  //pfMaterial *bmaterial;
+  //std::vector< pfMaterial *> matList;
+  cfdNode* node;
+  cfdDCS*  DCS;
+  //pfMaterial *mat1, *mat0;
   int mat_count;
   int color;
   int transparent;

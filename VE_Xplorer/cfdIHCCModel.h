@@ -42,17 +42,18 @@ class vtkPolyDataMapper;
 class vtkActor;
 
 class fileInfo;
-class pfDCS;
-class pfGroup;
+class cfdDCS;
+class cfdGroup;
 
 class cfdIHCCGauge;
 class cfdIHCCContour;
-class cfdSequence;
+class cfdTempAnimation;
+class cfdCommandArray;
 
 class cfdIHCCModel: public cfdObjects
 {
    public:
-      cfdIHCCModel( fileInfo *, pfDCS * );
+      cfdIHCCModel( fileInfo *, cfdDCS * );
 
       ~cfdIHCCModel( void );
 
@@ -63,6 +64,11 @@ class cfdIHCCModel: public cfdObjects
       void RemoveSequence( void );
       void Update( void );
 
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray* commandArray );
+
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
       double variables[ 6 ];
 
       double min, max;
@@ -73,12 +79,12 @@ class cfdIHCCModel: public cfdObjects
       double definedRange[ 2 ];
 	   vector< double > solutions;
 	   vector< double > times;
-      cfdSequence* sequence;
+      cfdTempAnimation* sequence;
 
       cfdIHCCGauge* gauge_acid;
       cfdIHCCGauge* gauge_time;
       cfdIHCCContour* contours;
-      pfGroup* ihccModelNode;
+      cfdGroup* ihccModelNode;
 };
 
 #endif

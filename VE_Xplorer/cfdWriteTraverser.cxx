@@ -145,8 +145,8 @@ void _turnOnSequence(cfdNodeTraverser* cfdNT,pfNode* node)
 //swap the sequence nodes                           //
 //////////////////////////////////////////////////////
 void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
-{
-   cfdWriteTraverser* cfdWT = (cfdWriteTraverser*)cfdNT;
+{//Need to fix
+/*   cfdWriteTraverser* cfdWT = (cfdWriteTraverser*)cfdNT;
    pfGroup* curNode = (pfGroup*)node;
 
    //replace cfdSequence nodes
@@ -176,16 +176,16 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
       sequence->setInterval(((cfdSequence*)curNode)->getLoopMode(),
                             ((cfdSequence*)curNode)->getBegin(),
                             ((cfdSequence*)curNode)->getEnd());
-/*
-      std::cout<<"\tnChildren = " << nChildren << std::endl;
-      std::cout<<"\tnumSeconds = " << numSeconds << std::endl;
-      std::cout<<"\t((cfdSequence*)curNode)->getLoopMode() = "
-               <<((cfdSequence*)curNode)->getLoopMode() << std::endl;
-      std::cout<<"\t((cfdSequence*)curNode)->getBegin() = "
-               <<((cfdSequence*)curNode)->getBegin() << std::endl;
-      std::cout<<"\t((cfdSequence*)curNode)->getEnd() = "
-               <<((cfdSequence*)curNode)->getEnd() << std::endl;
-*/
+
+//      std::cout<<"\tnChildren = " << nChildren << std::endl;
+//      std::cout<<"\tnumSeconds = " << numSeconds << std::endl;
+//      std::cout<<"\t((cfdSequence*)curNode)->getLoopMode() = "
+//               <<((cfdSequence*)curNode)->getLoopMode() << std::endl;
+//      std::cout<<"\t((cfdSequence*)curNode)->getBegin() = "
+//               <<((cfdSequence*)curNode)->getBegin() << std::endl;
+//      std::cout<<"\t((cfdSequence*)curNode)->getEnd() = "
+//               <<((cfdSequence*)curNode)->getEnd() << std::endl;
+
 
       //make sure to start the "derned" sequence--otherwise
       //it won't be running in perfly!!!UGGGHHHH!!!!!
@@ -208,7 +208,7 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,pfNode* node)
       //pfDelete(curNode);
       //don't need to continue down 
       return;
-   }
+   }*/
 }
 ////////////////////////////////////////////////
 //this functionality should probably be       //

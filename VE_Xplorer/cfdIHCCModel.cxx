@@ -38,6 +38,7 @@
 #include <sstream>
 using namespace std;
 
+#include "cfdTempAnimation.h"
 #include "cfdSequence.h"
 
 #include <vtkGeometryFilter.h>
@@ -53,8 +54,10 @@ using namespace std;
 #include "cfdIHCCGauge.h"
 #include "cfdIHCCContour.h"
 #include "cfd1DTextInput.h"
+#include "cfdDCS.h"
+#include "cfdGroup.h"
 
-cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
+cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
 {
 	variables[ 0 ] = 200;  //Agitation (rpm)  initial value 200
 	variables[ 1 ] = 1.25; //Air Concentration initial value 1.25;
@@ -67,11 +70,11 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
 	definedRange[ 0 ] = definedRange[ 1 ] = 0;
 	pData = vtkPolyData::New();
    
-   sequence = new cfdSequence();
-   ihccModelNode = new pfGroup();
+   sequence = new cfdTempAnimation();
+   ihccModelNode = new cfdGroup();
 
-   worldDCS->addChild( (pfNode*)this->sequence );
-   worldDCS->addChild( ihccModelNode );
+   worldDCS->AddChild( (cfdSceneNode*)this->sequence->GetSequence() );
+   worldDCS->AddChild( ihccModelNode );
    this->SetSequence( sequence );
    float scale_gauge[ 3 ];
    scale_gauge[ 0 ]  = 70;
@@ -169,10 +172,10 @@ void cfdIHCCModel::UpdateModelVariables( double* input )
 // Update variables passed in from the gui
 void cfdIHCCModel::RemoveSequence( void )
 {
-   this->StopSequence();
-   this->contours->ClearSequence(); // Clears Geodes also
-   this->gauge_time->ClearSequence(); // Clears Geodes also
-   this->gauge_acid->ClearSequence(); // Clears Geodes also
+   this->sequence->StopSequence();
+   this->contours->GetSequence()->ClearSequence(); // Clears Geodes also
+   this->gauge_time->GetSequence()->ClearSequence(); // Clears Geodes also
+   this->gauge_acid->GetSequence()->ClearSequence(); // Clears Geodes also
 }
 
 void cfdIHCCModel::RunModel( void )
@@ -198,7 +201,7 @@ void cfdIHCCModel::RunModel( void )
    solutions.clear();
    times.clear();
    // Geodes have already been cleared
-   int numSequenceChildren = this->sequence->getNumChildren();
+   int numSequenceChildren = this->sequence->GetSequence()->getNumChildren();
    vprDEBUG(vprDBG_ALL,1) << " numSequenceChildren: " << numSequenceChildren
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -207,9 +210,9 @@ void cfdIHCCModel::RunModel( void )
       for ( int i = numSequenceChildren-1; i >= 0; i-- )
       {
          // transient sequences have groups attached directly to sequence nodes
-         pfGroup* group = (pfGroup*)this->sequence->getChild( i );
-         this->sequence->removeChild( group );
-         pfDelete( group );
+         cfdGroup* group = (cfdGroup*)this->sequence->GetSequence()->getChild( i );
+         this->sequence->GetSequence()->removeChild( group );
+         delete group;
       }
    }
 
@@ -247,7 +250,7 @@ void cfdIHCCModel::RunModel( void )
       times.push_back( t * 10 );
 //      cout << "Timestep " << t << endl;
 		solutions.push_back( c[ 0 ] );
-      this->sequence->addChild( new pfGroup() );
+      this->sequence->GetSequence()->addChild( new cfdGroup() );
    }
    definedRange[ 0 ] = min;
    definedRange[ 1 ] = max;
@@ -264,15 +267,15 @@ void cfdIHCCModel::MakeLookupTable( void )
 
 void cfdIHCCModel::Update( void )
 {
-   this->StopSequence();
-   this->contours->ClearSequence(); // Clears Geodes also
-   this->gauge_time->ClearSequence(); // Clears Geodes also
-   this->gauge_acid->ClearSequence(); // Clears Geodes also
+   this->GetSequence()->StopSequence();
+   this->contours->GetSequence()->ClearSequence(); // Clears Geodes also
+   this->gauge_time->GetSequence()->ClearSequence(); // Clears Geodes also
+   this->gauge_acid->GetSequence()->ClearSequence(); // Clears Geodes also
    this->RunModel();
 
    this->contours->SetDataVector( this->solutions, definedRange );
    this->contours->Update();
-   this->contours->AddToSequence();
+   this->contours->GetSequence()->AddToSequence( -1 );
 
    this->gauge_time->SetDataVector( this->times );
    this->gauge_time->Update();
@@ -282,8 +285,8 @@ void cfdIHCCModel::Update( void )
    this->gauge_acid->Update();
    //this->gauge_acid->AddToSequence();
    
-   this->sequence->setDuration( 1.0);
-   this->StartSequence();
+   this->sequence->GetSequence()->setDuration( 1.0);
+   this->sequence->StartSequence();
 }
 
 void cfdIHCCModel::MakeSequence( void )
@@ -331,4 +334,12 @@ void cfdIHCCModel::MakeSequence( void )
 		// Create geode
 		// Add geode to vector
 	}
+}
+
+bool cfdIHCCModel::CheckCommandId( cfdCommandArray* commandArray )
+{
+}
+
+void cfdIHCCModel::UpdateCommand()
+{
 }

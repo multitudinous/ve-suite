@@ -32,23 +32,44 @@
 #ifndef CFD_GEODE_H
 #define CFD_GEODE_H
 
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pf/pfGeode.h>
+#include "cfdSceneNode.h"
+
+#ifdef _PERFORMER
+class pfGeode;
+#elif _OSG
+#elif _OPENSG
+#endif
+class vtkActor;
 
 //! Iris Performer
 /*!
   Update a modified Performer geometry node.
 */
-void cfdGeodeSetsUpdate( pfGeoSet *gsets[], 
-			 pfGeode *geode );
+class cfdGeode: public cfdSceneNode
+{
+   public:
+      cfdGeode( void );
+      ~cfdGeode( void );
+      cfdGeode( const cfdGeode& );
+      cfdGeode& operator=( const cfdGeode& );
 
-void cfdGeodeSetsFlush ( pfGeoSet *gsets[], 
-			 pfGeode *geode );
+      // This function will have to reimplmented for each scenegraph
+      // Get Geode 
+#ifdef _PERFORMER
+      pfGeode* GetGeode( void );
+      pfNode*  GetRawNode( void );
+#elif _OSG
+#elif _OPENSG
+#endif
+      // This function implements the respective translate vtkActorToGeode
+      void TranslateTocfdGeode( vtkActor* );
 
-//! Iris Performer
-/*!
-  Delete a Performer geometry node's pfGeoSet.
-*/
-void cfdGeodeSetsDelete( pfGeode *geode );
-
+   private:
+#ifdef _PERFORMER
+      pfGeode* _geode;
+#elif _OSG
+#elif _OPENSG
+#endif
+      int _vtkToPFDebug;
+};
 #endif

@@ -35,8 +35,8 @@
 //#include <vector>
 //#include <string>
 
-class pfGroup;
-class pfNode;
+class cfdGroup;
+class cfdNode;
 class cfdReadParam;
 #include "cfdDCS.h"
 #include <utility>
@@ -47,7 +47,7 @@ class cfdDigitalAnalogGauge : public cfdDCS
 {
    public:
 
-      cfdDigitalAnalogGauge( pfGroup* );
+      cfdDigitalAnalogGauge( cfdGroup* );
       //cfdDigitalAnalogGauge( cfdDigitalAnalogGauge* );
 
       ~cfdDigitalAnalogGauge( void );
@@ -67,8 +67,8 @@ class cfdDigitalAnalogGauge : public cfdDCS
       std::pair < cfd1DTextInput*, cfd1DTextInput* > _textOutput;
    private:
    
-      pfNode* node;
-      pfGroup* _masterNode;
+      cfdNode* node;
+      cfdGroup* _masterNode;
 
       std::string _filename;
       std::string _gaugeName;

@@ -44,21 +44,20 @@
 #endif
 
 #include "cfdTransientSet.h"
-#include "cfdReadParam.h"
+#include "cfdTransientVizHandler.h"
 #include "cfdDataSet.h"
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
-#include <vector>
+#include "cfdDCS.h"
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 
-#include <Performer/pf/pfDCS.h>
-
 #include <iostream>
+#include <vector>
 #include <vpr/Util/Debug.h>
 
-cfdTransientSet::cfdTransientSet( char * dir, int id, pfDCS * dcs )
+cfdTransientSet::cfdTransientSet( char * dir, int id, cfdDCS * dcs )
 {
    this->directory = dir;
    this->id = id;
@@ -159,7 +158,7 @@ void cfdTransientSet::SetID( int id )
 }
 */
 
-pfDCS * cfdTransientSet::GetDCS()
+cfdDCS * cfdTransientSet::GetDCS()
 {
    return this->dcs;
 }
@@ -530,7 +529,7 @@ void cfdTransientSet::CountScalarsAndVectors( vtkDataSet * dataset,
       << std::endl << vprDEBUG_FLUSH;
 }
 
-void cfdTransientSet::SetParameterFile( cfdReadParam *param )
+void cfdTransientSet::SetParameterFile( cfdTransientVizHandler *param )
 {
    this->param = param;
 }

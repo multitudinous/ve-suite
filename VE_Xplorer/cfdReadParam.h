@@ -34,30 +34,29 @@
 
 #include <vector>
 #include <string>
-
-#ifdef _CFDCOMMANDARRAY
-class cfdCommandArray;
-#endif //_CFDCOMMANDARRAY
+#include "cfdGlobalBase.h"
 
 class fileInfo;
 class cfdTransientInfo;
 class cfdDataSet;
 class vtkDataSet;
-//class cfd1DTextInput;
-class pfDCS;
+class cfdCommandArray;
+class cfdDCS;
 
-class cfdReadParam{
+class cfdReadParam : public cfdGlobalBase
+{
    public:
       cfdReadParam( char * );
       ~cfdReadParam( );
 
-#ifdef _CFDCOMMANDARRAY
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
+      // Continues to read parameter file based on the current object type
+      void ContinueRead( std::ifstream &, unsigned int );
 
       int   numGeoms;
       int   bmpFile;
@@ -89,6 +88,7 @@ class cfdReadParam{
 
       // IHCC Model - should be deleted at a later date
       bool ihccModel;
+      bool changeGeometry;
 
       std::vector< fileInfo * > files;
       std::vector< fileInfo * > soundFiles;
@@ -133,6 +133,9 @@ class cfdReadParam{
       void IMGReader( std::ifstream &inFile );
       void quatCamFile( std::ifstream &inFile );
 
+      char * readDirName( std::ifstream &inFile, char * description );
+      int readID( std::ifstream &inFile );
+
       float worldScale[ 3 ];
       float worldTrans[ 3 ];
       float worldRot[ 3 ];
@@ -141,7 +144,7 @@ class cfdReadParam{
       float imageTrans[ 3 ];
       float imageRot[ 3 ];
 
-      pfDCS* dashBoardDCS;
+      cfdDCS* dashBoardDCS;
       std::string dashboardFilename;
 
       static void read_pf_DCS_parameters( std::ifstream &inFile,

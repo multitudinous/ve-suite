@@ -34,11 +34,11 @@
 #include "cfdReadParam.h"
 #include "cfd1DTextInput.h"
 #include "cfdDCS.h"
+#include "cfdGroup.h"
+#include "cfdNode.h"
+#include "cfdSequence.h"
+#include "cfdTempAnimation.h"
 
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pfdu.h>
-#include <Performer/pf/pfGroup.h>
-#include <Performer/pf/pfSequence.h>
 
 #include <vpr/Util/Debug.h>
 
@@ -47,10 +47,10 @@
 #include <sstream>
 #include <iostream>
 
-cfdIHCCGauge::cfdIHCCGauge( pfGroup *masterNode )
+cfdIHCCGauge::cfdIHCCGauge( cfdSceneNode *masterNode )
 {
    _textOutput = std::make_pair( new cfd1DTextInput(), new cfd1DTextInput() );
-   this->_masterNode = masterNode;
+   this->_masterNode = (cfdGroup*)masterNode;
    //this->scale = { 0 };
    //this->trans = { 0 };
    //this->rot = { 0 };
@@ -86,17 +86,20 @@ void cfdIHCCGauge::SetGeometryFilename( std::string filename )
 {
    this->_filename = filename;
 
-   this->node = pfdLoadFile( (char*)this->_filename.c_str() );
-   this->node->flatten( 0 );
-   this->node->setName("geometry");
-   this->GetPfDCS()->addChild( this->node );
+   this->node = new cfdNode();
+   this->node->LoadFile( (char*)this->_filename.c_str() );
+   //this->node->flatten( 0 );
+   //this->node->setName("geometry");
+   //Inhereted from cfdDCS
+   this->AddChild( (cfdSceneNode*)this->node );
 std::cout << "cfdExecutive load gauge geometry : " << _filename << std::endl;
    _textOutput.first->Update();
-   ((cfd1DTextInput*)_textOutput.first)->GetPfDCS()->setName("geometry");
-   this->GetPfDCS()->addChild( ((cfd1DTextInput*)_textOutput.first)->GetPfDCS() );
+   ((cfd1DTextInput*)_textOutput.first)->SetName("geometry");
+   //Inhereted from cfdDCS
+   this->AddChild( (cfdSceneNode*)((cfd1DTextInput*)_textOutput.first) );
    //this->GetPfDCS()->addChild( ((cfd1DTextInput*)_textOutput.second)->GetPfDCS() );
    
-   this->_masterNode->addChild( this->GetPfDCS() );   
+   this->_masterNode->AddChild( (cfdSceneNode*)this->GetDCS() );   
 }
 
 void cfdIHCCGauge::SetGaugeName( std::string tagName )
@@ -157,18 +160,18 @@ void cfdIHCCGauge::Update( void )
       output.back()->SetFilename( dataString );
       output.back()->SetTransforms( scale, trans, rot );
       output.back()->Update();
-      pfDCS* dcs = new pfDCS();
+      cfdDCS* dcs = new cfdDCS();
       float* temp_trans = GetTranslationArray();
       float* temp_scale = GetScaleArray();
       float* temp_rot   = GetRotationArray();
       //cout <<  temp_trans[ 0 ] << " : " <<  temp_trans[ 1 ] << " : " <<  temp_trans[ 2 ] << endl;
       //cout <<  temp_scale[ 0 ] << " : " <<  temp_scale[ 1 ] << " : " <<  temp_scale[ 2 ] << endl;
       //cout <<  temp_rot[ 0 ] << " : " <<  temp_rot[ 1 ] << " : " <<  temp_rot[ 2 ] << endl;
-      dcs->setTrans( temp_trans[ 0 ], temp_trans[ 1 ], temp_trans[ 2 ] );
-      dcs->setScale( temp_scale[ 0 ], temp_scale[ 1 ], temp_scale[ 2 ] );
-      dcs->setRot( temp_rot[ 0 ], temp_rot[ 1 ], temp_rot[ 2 ] );
-      dcs->addChild( output.back()->GetPfDCS() );
-      ((pfGroup*)((pfSequence*)this->GetSequence())->getChild( i ))->addChild( dcs );
+      dcs->SetTranslationArray( temp_trans );
+      dcs->SetScaleArray( temp_scale );
+      dcs->SetRotationArray( temp_rot );
+      dcs->AddChild( (cfdSceneNode*)output.back() );
+      ((cfdGroup*)this->GetSequence()->GetSequence()->getChild( i ))->AddChild( (cfdSceneNode*)dcs );
 
       // Display time and concentration
 		// Create geode
@@ -180,32 +183,7 @@ void cfdIHCCGauge::Update( void )
 
 void cfdIHCCGauge::ClearSequence( void )
 {
-   int numSequenceChildren = ((pfSequence*)this->GetSequence())->getNumChildren();
-   vprDEBUG(vprDBG_ALL,1) << " numSequenceChildren: " << numSequenceChildren
-                          << std::endl << vprDEBUG_FLUSH;
-
-   int numGeodes = this->output.size();
-   vprDEBUG(vprDBG_ALL,1) << " numGeodes: " << numGeodes
-                          << std::endl << vprDEBUG_FLUSH; 
-
-   if ( numSequenceChildren > 0 && numGeodes > 0 )
-   {
-      for ( int i = numSequenceChildren-1; i >= 0; i-- )
-      {
-         // transient sequences have groups attached directly to sequence nodes
-         if ( ((pfSequence*)this->GetSequence())->getChild( i )->getType() 
-                                                == pfGroup::getClassType() )
-         {
-            // Each group in a transient sequence should have the same number of children
-            // One particular node (at most) in each group pertains to the TFM
-            // We want to remove that node (geode) that pertain to that TFM
-
-            pfGroup * group = (pfGroup *)((pfSequence*)this->GetSequence())->getChild( i );
-            group->removeChild( output[ i ]->getpfDCS() );
-            pfDelete( output[ i ]->getpfDCS() );
-         }
-      }
-   }         
+   this->GetSequence()->ClearSequence();
 }
 
 void cfdIHCCGauge::SetModuleName( std::string moduleName )

@@ -30,17 +30,14 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdScalarBarActor.h"
-#ifdef _CFDCOMMANDARRAY
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
-#endif //_CFDCOMMANDARRAY
-
-
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pf.h>
-#include <Performer/pf/pfGeode.h>
-
-#include "vtkActorToPF.h"
+#include "cfdGlobalBase.h"
+#include "cfdGeode.h"
+#include "cfdDCS.h"
+#include "cfdGroup.h"
+#include "cfdDataSet.h"
+#include "cfdReadParam.h"
 
 #include <vtkFloatArray.h>
 #include <vtkLookupTable.h>
@@ -56,11 +53,15 @@
 #include <vtkPolyDataMapper.h>
 #include <vpr/Util/Debug.h>
 
-cfdScalarBarActor::cfdScalarBarActor()
+cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
 {
   vprDEBUG(vprDBG_ALL,2) << "constructing cfdScalarBarActor" 
                          << std::endl << vprDEBUG_FLUSH;
 
+   _param = param;
+   _rootNode = rootNode;
+   _activeDataSet = NULL;
+   _readParam = new cfdReadParam( NULL );
   // Initialize the all the variables
   this->SetPosition( -5.0f, 6.0f, 0.0f );
   this->zrot = 90;
@@ -79,7 +80,7 @@ cfdScalarBarActor::cfdScalarBarActor()
 
   this->titleScalar = vtkVectorText::New();
 
-  this->scalarBar = new pfDCS();
+  this->scalarBar = new cfdDCS();
 }
  
 cfdScalarBarActor::~cfdScalarBarActor()
@@ -89,25 +90,25 @@ cfdScalarBarActor::~cfdScalarBarActor()
 
    for ( int i=0; i<this->numTextLabels; i++ )
    {
-      this->scalarBar->removeChild( this->pfLabelActor[i] );
-      pfDelete( this->pfLabelActor[i] );
+      this->scalarBar->RemoveChild( (cfdSceneNode*)this->pfLabelActor[i] );
+      delete this->pfLabelActor[i];
    }
    vprDEBUG(vprDBG_ALL,2) << "   scalarBar->getNumChildren() = " 
-      << this->scalarBar->getNumChildren() 
+      << this->scalarBar->GetNumChildren() 
       << std::endl << vprDEBUG_FLUSH;
 
-   this->scalarBar->removeChild( this->pfaPolyActor );
-   pfDelete( this->pfaPolyActor );
+   this->scalarBar->RemoveChild( this->pfaPolyActor );
+   delete this->pfaPolyActor;
 
    vprDEBUG(vprDBG_ALL,2) << "   scalarBar->getNumChildren() = " 
-      << this->scalarBar->getNumChildren() 
+      << this->scalarBar->GetNumChildren() 
       << std::endl << vprDEBUG_FLUSH;
 
-   this->scalarBar->removeChild( this->pftitleActor );
-   pfDelete( this->pftitleActor );
+   this->scalarBar->RemoveChild( this->pftitleActor );
+   delete this->pftitleActor;
 
    vprDEBUG(vprDBG_ALL,2) << "   scalarBar->getNumChildren() = " 
-      << this->scalarBar->getNumChildren() 
+      << this->scalarBar->GetNumChildren() 
       << std::endl << vprDEBUG_FLUSH;
 
    vprDEBUG(vprDBG_ALL,2) << "   titleScalar->Delete()"
@@ -121,7 +122,7 @@ cfdScalarBarActor::~cfdScalarBarActor()
 
    vprDEBUG(vprDBG_ALL,2) << "   pfDelete( scalarBar )"
                           << std::endl << vprDEBUG_FLUSH;
-   pfDelete( this->scalarBar );
+   delete this->scalarBar;
 
    vprDEBUG(vprDBG_ALL,2) << "   finished deconstructing cfdScalarBarActor"
                           << std::endl << vprDEBUG_FLUSH;
@@ -351,7 +352,7 @@ void cfdScalarBarActor::Execute()
    for ( i=0; i<this->numTextLabels; i++ )
    {
       labelScalar[i] = vtkVectorText::New();
-      this->pfLabelActor[i] = new pfGeode;
+      this->pfLabelActor[i] = new cfdGeode();
    }
    
    // creating the numerical labels on the scalar bar legend
@@ -400,8 +401,8 @@ void cfdScalarBarActor::Execute()
       labelMapper->SetInput( labelFilter->GetOutput() );
       labelActor->SetMapper( labelMapper );
 
-      vtkActorToPF(labelActor, this->pfLabelActor[i]);
-      this->scalarBar->addChild(this->pfLabelActor[i]);
+      this->pfLabelActor[i]->TranslateTocfdGeode( labelActor );
+      this->scalarBar->AddChild((cfdSceneNode*)this->pfLabelActor[i]);
    }
 
    for ( i = 0; i < this->numTextLabels; i ++ )
@@ -410,13 +411,13 @@ void cfdScalarBarActor::Execute()
    }
    delete [] labelText;
 
-   this->pfaPolyActor = new pfGeode;
-   vtkActorToPF(aPolyActor, this->pfaPolyActor);
-   this->scalarBar->addChild(this->pfaPolyActor); 
+   this->pfaPolyActor = new cfdGeode();
+   this->pfaPolyActor->TranslateTocfdGeode(aPolyActor);
+   this->scalarBar->AddChild(this->pfaPolyActor); 
 
-   this->pftitleActor = new pfGeode;
-   vtkActorToPF(titleActor, this->pftitleActor);
-   this->scalarBar->addChild(this->pftitleActor); 
+   this->pftitleActor = new cfdGeode();
+   this->pftitleActor->TranslateTocfdGeode( titleActor );
+   this->scalarBar->AddChild(this->pftitleActor); 
 
    aPolyActor->Delete();
    titleTransform->Delete();
@@ -435,103 +436,158 @@ void cfdScalarBarActor::Execute()
    labelScalar = NULL;
 }
 
-pfDCS * cfdScalarBarActor::getpfDCS(void )
+cfdDCS* cfdScalarBarActor::GetcfdDCS(void )
 {
    return this->scalarBar;
 }
 
-
-#ifdef _CFDCOMMANDARRAY
 bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
 {
-   if ( commandArray->GetCommandValue( CFD_ID ) == SCALAR_BAR_TOGGLE )
+   bool flag = false;
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SCALAR_BAR_TOGGLE )
    {
-      if ( this->scalarBarActor )
+      if ( this->scalarBar )
       { 
-          this->rootNode->removeChild( this->scalarBarActor->getpfDCS() );
-          //this->worldDCS->removeChild( this->scalarBarActor->getpfDCS() );
-          delete this->scalarBarActor;
-          this->scalarBarActor = NULL;
+         this->_rootNode->RemoveChild( this->GetcfdDCS() );
+         //this->worldDCS->removeChild( this->scalarBarActor->getpfDCS() );
+         delete this->scalarBar;
+         this->scalarBar = NULL;
+         flag = true;
       }
       else
       { 
           RefreshScalarBar();
+         flag = true;
       }
-
-      this->setId( -1 );
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR || 
+             commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR_RANGE )
+   { 
+      // if already displayed, set a flag to update the scalar bar
+      if ( this->scalarBar )
+      {  
+         this->RefreshScalarBar();
+         //this->isTimeToUpdateScalarBar = true;
+         flag = true;
+      }
    }
    return flag;
 }
 
 void cfdScalarBarActor::UpdateCommand()
 {
-   cfdObjects::UpdateCommand();
    cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
 }
 
 void cfdScalarBarActor::RefreshScalarBar()
 {
-   if ( this->scalarBarActor )
+   if ( this->scalarBar )
    {
-      this->rootNode->removeChild( this->scalarBarActor->getpfDCS() );
+      this->_rootNode->RemoveChild( this->scalarBar );
       //this->worldDCS->removeChild( this->scalarBarActor->getpfDCS() );
-      delete this->scalarBarActor;
-      this->scalarBarActor = NULL;
+      delete this->scalarBar;
+      this->scalarBar = NULL;
    }
 
-   if ( cfdObjects::GetActiveDataSet() == NULL ||
-        cfdObjects::GetActiveDataSet()->GetNumberOfScalars() == 0 )
+   if ( this->_activeDataSet == NULL ||
+        this->_activeDataSet->GetNumberOfScalars() == 0 )
    {
       vprDEBUG(vprDBG_ALL,0) << " RefreshScalarBar: no data" 
                              << std::endl << vprDEBUG_FLUSH;
       return;
    }
 
-   this->scalarBarActor = new cfdScalarBarActor();
+   this->scalarBar = new cfdDCS();
 
    // if the param file specified scalarBar settings, apply them here...
-   if ( this->paramReader->scalarBarH != 0.0 )
+   if ( this->scalarBarH != 0.0 )
    {
-      this->scalarBarActor->SetPosition( this->paramReader->scalarBarPos );
-      this->scalarBarActor->SetZRotation( this->paramReader->scalarBarZRot );
-      this->scalarBarActor->SetHeight( this->paramReader->scalarBarH );
-      this->scalarBarActor->SetWidth( this->paramReader->scalarBarW );
-      this->scalarBarActor->SetTitleTextScale( 
-                                     this->paramReader->scalarBarH / 15.0 );
+      this->SetPosition( this->scalarBarPos );
+      this->SetZRotation( this->scalarBarZRot );
+      this->SetHeight( this->scalarBarH );
+      this->SetWidth( this->scalarBarW );
+      this->SetTitleTextScale( this->scalarBarH / 15.0 );
    }
 
-   this->scalarBarActor->SetRange( 
-                  cfdObjects::GetActiveDataSet()->GetDisplayedScalarRange() );
-
-   this->scalarBarActor->SetLookupTable( 
-                  cfdObjects::GetActiveDataSet()->GetLookupTable() );
+   this->SetRange( this->_activeDataSet->GetDisplayedScalarRange() );
+   this->SetLookupTable( this->_activeDataSet->GetLookupTable() );
 
    vprDEBUG(vprDBG_ALL,1) << " RefreshScalarBar: " 
       << "cfdObjects::GetActiveDataSet()->GetLookupTable() = "
-      << cfdObjects::GetActiveDataSet()->GetLookupTable()
+      << this->_activeDataSet->GetLookupTable()
       << std::endl << vprDEBUG_FLUSH;
    vprDEBUG(vprDBG_ALL,1) << "RefreshScalarBar: " 
       << "cfdObjects::GetActiveDataSet()->GetParent()->GetLookupTable() = "
-      << cfdObjects::GetActiveDataSet()->GetParent()->GetLookupTable()
+      << this->_activeDataSet->GetParent()->GetLookupTable()
       << std::endl << vprDEBUG_FLUSH;
 
    // give a name to display over the scalarBar
    static char legend[50];
-   strcpy( legend, cfdObjects::GetActiveDataSet()->GetDataSet()
+   strcpy( legend, this->_activeDataSet->GetDataSet()
                        ->GetPointData()->GetScalars()->GetName() );
 
    vprDEBUG(vprDBG_ALL,1) << "RefreshScalarBar: " 
                           << "desired scalar bar name: " << legend 
                           << std::endl << vprDEBUG_FLUSH;
 
-   this->scalarBarActor->SetVtkVectorText( legend );
+   this->SetVtkVectorText( legend );
 
-   this->scalarBarActor->Execute();
+   this->Execute();
 
    // give the scalarBar DCS a name so that it can be detected during a CLEAR_ALL
-   this->scalarBarActor->getpfDCS()->setName("scalarBar");
-   this->rootNode->addChild( this->scalarBarActor->getpfDCS() );
+   this->GetcfdDCS()->SetName("scalarBar");
+   this->_rootNode->AddChild( this->scalarBar );
    //this->worldDCS->addChild( this->scalarBarActor->getpfDCS() );
 }
 
-#endif //_CFDCOMMANDARRAY
+void cfdScalarBarActor::SetActiveDataSet( cfdDataSet* input )
+{
+   this->_activeDataSet = input;
+}
+
+void cfdScalarBarActor::CreateObjects( void )
+{
+   int numObjects;
+   char text[ 256 ];
+   char textLine[ 256 ];
+   std::ifstream input;
+   input.open( _param );
+   input >> numObjects; 
+   input.getline( text, 256 );   //skip past remainder of line
+
+   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   for( int i = 0; i < numObjects; i++ )
+   {
+      int id;
+      input >> id;
+      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      input.getline( text, 256 );   //skip past remainder of line
+      if ( id == 1 )
+      {
+         input >> this->scalarBarPos[0]
+               >> this->scalarBarPos[1]
+               >> this->scalarBarPos[2];
+         input.getline( textLine, 256 );   //skip past remainder of line
+         vprDEBUG(vprDBG_ALL,0) << " scalarBarPos = " 
+                        << this->scalarBarPos[0] << " : " << this->scalarBarPos[1] << " : "
+                        << this->scalarBarPos[2] << std::endl << vprDEBUG_FLUSH;
+
+         input >> this->scalarBarZRot;
+         input.getline( textLine, 256 );   //skip past remainder of line
+         vprDEBUG(vprDBG_ALL,0) << " scalarBar_Z-Rotation = " << this->scalarBarZRot
+                        << std::endl << vprDEBUG_FLUSH;
+
+         input >> this->scalarBarH >> this->scalarBarW;
+         input.getline( textLine, 256 );   //skip past remainder of line
+         vprDEBUG(vprDBG_ALL,0) << " scalarBar_Height = " << this->scalarBarH
+                        << ", scalarBar_Width = " << this->scalarBarW
+                        << std::endl << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         // Skip past block
+         _readParam->ContinueRead( input, id );
+      }
+   }
+}
+

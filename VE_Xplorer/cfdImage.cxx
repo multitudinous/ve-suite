@@ -32,12 +32,9 @@
 #include "cfdImage.h"
 #include "cfdObjects.h"
 #include "cfdDataSet.h"
-
-#ifdef _CFDCOMMANDARRAY
-#include "cfdApp.h"
-#endif //_CFDCOMMANDARRAY
-
+#include "cfdCommandArray.h"
 #include "fileIO.h"
+#include "cfdReadParam.h"
 
 #include <vtkPlaneSource.h>
 #include <vtkBMPReader.h>
@@ -48,7 +45,7 @@
 #include <vtkImageReader.h>
 #include <vtkProperty.h>
 
-cfdImage::cfdImage( char * filename, double * position, int xyz )
+cfdImage::cfdImage( char* param )
 {
    this->bmpReader = NULL;
    this->imgReader = NULL;
@@ -56,8 +53,10 @@ cfdImage::cfdImage( char * filename, double * position, int xyz )
    this->mapper = NULL;
    this->texture = NULL;
    this->actor = NULL;
-
-   char * extension = fileIO::getExtension( filename );
+   
+   _param = param;
+   _readParam = new cfdReadParam( NULL );
+   char * extension = fileIO::getExtension( bmpFileName );
    vprDEBUG(vprDBG_ALL, 1) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
 
    if ( !strcmp(extension,"bmp") || !strcmp(extension,"BMP") )
@@ -69,14 +68,14 @@ cfdImage::cfdImage( char * filename, double * position, int xyz )
       // lower left at origin
 
       this->bmpReader = vtkBMPReader::New();
-      this->bmpReader->SetFileName( filename );
+      this->bmpReader->SetFileName( bmpFileName );
       this->bmpReader->Update();
 
       this->plane = vtkPlaneSource::New();
       double lowerLeftCoords[3];
-      lowerLeftCoords[0] = position[ 0 ];
-      lowerLeftCoords[1] = position[ 1 ];
-      lowerLeftCoords[2] = position[ 2 ];
+      lowerLeftCoords[0] = bmpPosition[ 0 ];
+      lowerLeftCoords[1] = bmpPosition[ 1 ];
+      lowerLeftCoords[2] = bmpPosition[ 2 ];
       this->plane->SetOrigin( lowerLeftCoords );
 
       double lowerRightCoords[3];
@@ -92,9 +91,9 @@ cfdImage::cfdImage( char * filename, double * position, int xyz )
       this->plane->SetPoint2( upperLeftCoords );
       this->plane->SetResolution( 1, 1 );
 
-      if ( xyz == 1 )
+      if ( bmpOrientation == 1 )
          this->plane->SetNormal( 0, 1, 0 );
-      else if ( xyz == 2 )
+      else if ( bmpOrientation == 2 )
          this->plane->SetNormal( 0, 0, 1 );
 
       this->mapper = vtkPolyDataMapper::New();
@@ -108,7 +107,7 @@ cfdImage::cfdImage( char * filename, double * position, int xyz )
       this->actor->SetMapper( this->mapper );
       this->actor->SetTexture( this->texture );        
 
-      this->type = xyz;
+      this->type = bmpOrientation;
       if      (this->type==0)  this->typeLabel = 'X';
       else if (this->type==1)  this->typeLabel = 'Y';
       else if (this->type==2)  this->typeLabel = 'Z';
@@ -121,7 +120,7 @@ cfdImage::cfdImage( char * filename, double * position, int xyz )
    else
    {
       vprDEBUG(vprDBG_ALL, 0) << "ERROR: invalid extension on file \""
-         << filename << "\"\n" << vprDEBUG_FLUSH;
+         << bmpFileName << "\"\n" << vprDEBUG_FLUSH;
    }
 }
 
@@ -227,8 +226,7 @@ void cfdImage::Update( void )
    this->updateFlag = true;
 }
 
-#ifdef _CFDCOMMANDARRAY
-bool cfdImage::CheckCommandId( cfdApp * _cfdApp )
+bool cfdImage::CheckCommandId( cfdCommandArray* commandArray  )
 {
    return false;
 }
@@ -237,10 +235,62 @@ void cfdImage::UpdateCommand()
 {
    cerr << "doing nothing in cfdImage::UpdateCommand()" << endl;
 }
-#endif //_CFDCOMMANDARRAY
 
-vtkActor * cfdImage::GetActor()
+vtkActor* cfdImage::GetActor()
 {
     return this->actor;
 }
 
+void cfdImage::CreateObjects( void )
+{
+   int numObjects;
+   char text[ 256 ];
+   char textLine[ 256 ];
+   std::ifstream input;
+   input.open( this->_param );
+   input >> numObjects; 
+   input.getline( textLine, 256 );   //skip past remainder of line
+
+   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   for( int i = 0; i < numObjects; i++ )
+   {
+      int id;
+      input >> id;
+      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      input.getline( textLine, 256 );   //skip past remainder of line
+      if ( id == 5 )
+      {
+         input >> this->bmpFileName;
+         input.getline( textLine, 256 );   //skip past remainder of line
+
+         if (fileIO::isFileReadable( this->bmpFileName ) ) 
+         {
+            vprDEBUG(vprDBG_ALL,0) << " BMP file = " << this->bmpFileName
+                             << std::endl << vprDEBUG_FLUSH;
+         }
+         else
+         {
+            std::cerr << "ERROR: unreadable BMP File = " << this->bmpFileName 
+                     << ".  You may need to correct your param file." << std::endl;
+            exit(1);
+         }
+
+         input >> this->bmpPosition[ 0 ] >> this->bmpPosition[ 1 ]
+               >> this->bmpPosition[ 2 ];
+         input.getline( textLine, 256 );   //skip past remainder of line
+         vprDEBUG(vprDBG_ALL,0) << " BMP Position = " << this->bmpPosition[ 0 ]
+            << "\t" << this->bmpPosition[ 1 ] << "\t" <<  this->bmpPosition[ 2 ]
+            << std::endl << vprDEBUG_FLUSH;
+
+         input >> this->bmpOrientation;
+         input.getline( textLine, 256 );   //skip past remainder of line
+         vprDEBUG(vprDBG_ALL,0) << " BMP Orientation = " << this->bmpOrientation
+            << std::endl << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         // Skip past block
+         _readParam->ContinueRead( input, id );
+      }
+   }
+}

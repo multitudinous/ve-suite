@@ -33,14 +33,6 @@
 #ifndef _CFD_QUAT_CAM_HANDLER_H_
 #define _CFD_QUAT_CAM_HANDLER_H_
 
-#include <iostream>
-#include <fstream>
-#include <cstdio>
-#include <cstdlib>
-#include <vector>
-#include <stdlib.h>
-#include <string.h>
-#include <math.h>
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Point.h>
@@ -49,31 +41,17 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/Coord.h>
 #include <gmtl/Generate.h>
-#include <Performer/pr.h>
-#include <Performer/pf/pfLightSource.h>
-#include <Performer/pr/pfLinMath.h>
-#include <Performer/pf/pfNode.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pf/pfSwitch.h>
-#include <Performer/pf/pfGroup.h>
-#include <Performer/pfdu.h>
-#include <Performer/pfutil.h>
-#include <Performer/prmath.h>
 
-// --- VR Juggler Stuff --- //
-#include <vrj/Util/Debug.h>
-#include <vrj/Display/Projection.h>  /* for setNearFar (for setting clipping planes) */
-#include <gadget/Type/PositionInterface.h>
-#include <gadget/Type/DigitalInterface.h>
-
-#include "cfdQuatCam.h"
-#include "cfdNavigate.h"
-#ifdef _CFDCOMMANDARRAY
+class cfdDCS;
+class cfdQuatCam;
+class cfdNavigate;
 class cfdCommandArray;
-#endif //_CFDCOMMANDARRAY
+class cfdReadParam;
 
+#include <vector>
 
-using namespace vrj;
+#include "cfdGlobalBase.h"
+
 using namespace gmtl;
 
 
@@ -95,31 +73,31 @@ private:
 };
 
 
-class cfdQuatCamHandler
+class cfdQuatCamHandler : public cfdGlobalBase
 {
 public:
 
    //Constructors
-   cfdQuatCamHandler();
+   cfdQuatCamHandler( cfdDCS*, cfdNavigate*, char* );
       
    //Destructor
    ~cfdQuatCamHandler();
 
-#ifdef _CFDCOMMANDARRAY
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
 
-   void LoadData(double*, pfDCS*);
+   void CreateObjects( void );
+   
+   void LoadData(double*, cfdDCS*);
 
    void WriteToFile(char*);
 
    void LoadFromFile(char*);
 
-   void Relocate(int runSlerp, pfDCS* worldDCS, int cfdIso_value, cfdNavigate* nav); 
+   void Relocate(int runSlerp, cfdDCS* worldDCS, int cfdIso_value, cfdNavigate* nav); 
 
    std::vector<cfdPoints*> cfdPointsVec;
    std::vector<cfdQuatCam*> QuatCams;
@@ -132,8 +110,12 @@ private:
 
    cfdQuatCam* thisQuatCam;
    cfdPoints*  nextPoint;
-
+   cfdDCS*     _worldDCS;
+   cfdNavigate* _nav;
+   cfdReadParam* _readParam;
+   char*       _param;
    float t;
+   char quatCamFileName[ 100 ];
 };
 #endif
 

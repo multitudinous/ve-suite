@@ -119,28 +119,28 @@ int cfdSequence::getNumChildren()
    return -1;
 }
 
-int cfdSequence::removeChild(pfNode* child)
+int cfdSequence::removeChild(cfdSceneNode* child)
 {
    if ( _switch )
    {
-      return _switch->removeChild(child);
+      //return _switch->removeChild(child);
    }
    return -1;
 }
 
-int cfdSequence::searchChild(pfNode* child)
+int cfdSequence::searchChild(cfdSceneNode* child)
 {
    if(_switch){
-      return _switch->searchChild(child);   
+      //return _switch->searchChild(child);   
    }
    return -1;
 }
 
-pfNode* cfdSequence::getChild(int index)
+cfdSceneNode* cfdSequence::getChild(int index)
 {
    if(_switch){
       //cout<<"getting child: "<<index<<endl;
-      return _switch->getChild(index);
+      //return _switch->getChild(index);
    }
    return 0;
 }
@@ -353,7 +353,7 @@ void cfdSequence::setCurrentFrame(int index)
 }
 
 //add a child
-void cfdSequence::addChild(pfNode* child)
+void cfdSequence::addChild(cfdSceneNode* child)
 {
    //cout<<"Adding frame to sequence."<<endl;
    //init the switch node
@@ -364,8 +364,10 @@ void cfdSequence::addChild(pfNode* child)
       //add the switch node to the tree
       pfGroup::addChild(_switch);
    }
-  
-   _switch->addChild(child);
+   
+   // Need to fix
+   // fix this by adding virtual GetRaw node to cfdSceneNode
+   //_switch->addChild(child);
 
    // force recomputation of time per frame
    this->setDuration( _duration );
@@ -388,3 +390,7 @@ void cfdSequence::setTime( double time )
    _duration = time * this->getNumChildren();
 }
 
+pfNode* cfdSequence::GetRawNode( void )
+{
+   return this;
+}

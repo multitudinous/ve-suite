@@ -39,8 +39,12 @@ class vtkTubeFilter;
 class vtkPolyDataNormals;
 class vtkPolyDataMapper;
 class vtkActor;
-class pfDCS;
-class pfGeode;
+class cfdDCS;
+class cfdGeode;
+class cfdGroup;
+class cfdCommandObjects;
+
+#include "cfdCommandObjects.h"
 
 //! Create a laser beam.
 /*!
@@ -48,20 +52,26 @@ class pfGeode;
   using vtk functions and render using Performer.  
   VTK objects(vtkActor) are translated into Performer objects(pfGeode).
 */
-class cfdLaser //: public cfdObjects
+class cfdLaser : public cfdCommandObjects
 {
  public:
   //! Constructor
   /*!
     Construct vtk objects, pfGeode, and pfDCS.
   */
-  cfdLaser( );
+  cfdLaser( cfdGroup* );
   //! Destructor
   /*!
     Destruct vtk objects, pfGeode, and pfDCS.
   */
   ~cfdLaser( );
   //!
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray  );
+
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
+
   /*!
     Check whether the laser beam is hitting the menu.
     If non-zero, then it is true (hit).
@@ -80,7 +90,7 @@ class cfdLaser //: public cfdObjects
   /*!
     Get the dynamic coordinate system with pre-loaded vtkObjects.
   */
-  pfDCS * GetpfDCS( );
+  cfdDCS * GetcfdDCS( );
   //!
   /*!
     Update the laser position and direction of ray.
@@ -138,12 +148,14 @@ class cfdLaser //: public cfdObjects
   /*!
     Performer pfGeode for scenegraph.
   */
-  pfGeode *geode;
+  cfdGeode *_geode;
   //! Performer object
   /*!
     Performer dynamic coordinate systems with pre-loadedtranslated VTK objects. 
   */
-  pfDCS *DCS;
+  cfdDCS *DCS;
+   cfdGroup* _rootNode;
+   bool menuB;
 
 };
 

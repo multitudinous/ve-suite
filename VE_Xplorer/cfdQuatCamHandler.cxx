@@ -30,21 +30,21 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cfdQuatCamHandler.h>
-#include <cstdio>
-#include <iostream>
-#include <fstream>
-#include <cstdlib>
+#include "cfdQuatCamHandler.h"
 #include "cfdFileInfo.h"
 #include "fileIO.h"
-#ifdef _CFDCOMMANDARRAY
+#include "cfdDCS.h"
+#include "cfdQuatCam.h"
+#include "cfdNavigate.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
-#endif //_CFDCOMMANDARRAY
+#include "cfdReadParam.h"
 
-
-using namespace gmtl;
-using namespace vrj;
+#include <cstdio>
+#include <iostream>
+#include <cstdlib>
+#include <fstream>
+#include <string>
 
 
 cfdPoints::cfdPoints(double* worldPos, Matrix44f& mat)
@@ -55,19 +55,24 @@ cfdPoints::cfdPoints(double* worldPos, Matrix44f& mat)
 }
 
 
-cfdQuatCamHandler::cfdQuatCamHandler()
+cfdQuatCamHandler::cfdQuatCamHandler( cfdDCS* worldDCS, cfdNavigate* nav, char* param )
 {
    t = 0.0;
+   // IS this correct 
+   // Needs fixed
+   _worldDCS = worldDCS;
+   _nav = nav;
+   _param = param;
+   _readParam = new cfdReadParam( NULL );
 }
 
-
-void cfdQuatCamHandler::LoadData(double* worldPos, pfDCS* worldDCS)
+cfdQuatCamHandler::~cfdQuatCamHandler( void )
+{
+}
+void cfdQuatCamHandler::LoadData(double* worldPos, cfdDCS* worldDCS)
 {
    Matrix44f vjm;
-   pfMatrix m;
-
-   worldDCS->getMat(m);
-   vjm = GetVjMatrix(m);
+   vjm = worldDCS->GetMat();;
    nextPoint = new cfdPoints(worldPos, vjm);
    cfdPointsVec.push_back(nextPoint);
 }
@@ -76,7 +81,7 @@ void cfdQuatCamHandler::LoadData(double* worldPos, pfDCS* worldDCS)
 void cfdQuatCamHandler::WriteToFile(char* fileName)
 {
 
-   float* matpts = new float [16];
+   //float* matpts = new float [16];
 
    FILE* ptsFile = fopen(fileName, "w");
 
@@ -111,7 +116,6 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
    double transpts[3];
    float recordrot[4];
    Matrix44f temp;
-   pfMatrix mat;
    
    std::ifstream inFile( fileName, std::ios::in ); 
 
@@ -152,9 +156,8 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
           
 }
 
-void cfdQuatCamHandler::Relocate(int cfdId, pfDCS* worldDCS, int cfdIso_value, cfdNavigate* nav)
+void cfdQuatCamHandler::Relocate(int cfdId, cfdDCS* worldDCS, int cfdIso_value, cfdNavigate* nav)
 {
-   pfMatrix pfm;
    Matrix44f vjm;
    run = cfdId;
 
@@ -168,9 +171,8 @@ void cfdQuatCamHandler::Relocate(int cfdId, pfDCS* worldDCS, int cfdIso_value, c
       QuatCams[cfdIso_value]->UpdateTrans(nav);
       QuatCams[cfdIso_value]->UpdateRotation();
 
-      worldDCS->getMat(pfm);
+      vjm = worldDCS->GetMat();
 
-      vjm = GetVjMatrix(pfm);
       for ( int i=0; i<3; i++)
       {
          rotvec[i] = makeRot<EulerAngleXYZf>(vjm)[i];
@@ -187,33 +189,31 @@ void cfdQuatCamHandler::Relocate(int cfdId, pfDCS* worldDCS, int cfdIso_value, c
    }      
 }
 
-#ifdef _CFDCOMMANDARRAY
 bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
-   // This is here because Dr. K. has code in 
-   // cfdObjects that doesn't belong there
-   bool flag = cfdObjects::CheckCommandId( commandArray );
+   bool flag = false;
    
-   else if ( commandArray->GetCommandValue( CFD_ID ) == LOAD_POINT )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_POINT )
    {
-      this->LoadData( this->nav->worldTrans, worldDCS );
+      this->LoadData( this->_nav->worldTrans, _worldDCS );
       return true;
    }
-   else if ( commandArray->GetCommandValue( CFD_ID ) == WRITE_POINTS_TO_FILE )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == WRITE_POINTS_TO_FILE )
    {
-      this->WriteToFile( this->paramReader->quatCamFileName ); 
+      this->WriteToFile( this->quatCamFileName ); 
       return true;
    }
-   else if ( commandArray->GetCommandValue( CFD_ID ) == READ_POINTS_FROM_FILE )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == READ_POINTS_FROM_FILE )
    {
-      this->LoadFromFile( this->paramReader->quatCamFileName );
+      this->LoadFromFile( this->quatCamFileName );
       return true;
    }
-   else if ( commandArray->GetCommandValue( CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
    {
-      this->Relocate( commandArray->GetCommandValue( CFD_ID ), 
-                        worldDCS, commandArray->GetCommandValue( CFD_ISOVALUE ), nav);
-      this->setId( this->run );
+      this->Relocate( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
+                        _worldDCS, commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), _nav);
+      // Need to fix this
+      //this->setId( this->run );
    }
 
    return flag;
@@ -221,8 +221,51 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdQuatCamHandler::UpdateCommand()
 {
-   cfdObjects::UpdateCommand();
    cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
 }
-#endif //_CFDCOMMANDARRAY
+
+void cfdQuatCamHandler::CreateObjects( void )
+{
+   int numObjects;
+   char text[ 256 ];
+   char textLine[ 256 ];
+
+   std::ifstream input;
+   input.open( this->_param );
+   input >> numObjects; 
+   input.getline( text, 256 );   //skip past remainder of line
+
+   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   for( int i = 0; i < numObjects; i++ )
+   {
+      int id;
+      input >> id;
+      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      input.getline( text, 256 );   //skip past remainder of line
+      if ( id == 14 )
+      {
+         input >> quatCamFileName;
+         input.getline( textLine, 256 );   //skip past remainder of line
+
+         if (fileIO::isFileReadable( quatCamFileName ) ) 
+         {
+            vprDEBUG(vprDBG_ALL,0) << " QuatCam file = " << quatCamFileName 
+                             << std::endl << vprDEBUG_FLUSH;
+         }
+         else
+         {
+            std::cerr << "ERROR: unreadable QuatCam file = " << quatCamFileName 
+                     << ".  You may need to correct your param file."
+                     << std::endl;
+            exit(1);
+         }   
+      }
+      else
+      {
+         // Skip past block
+         _readParam->ContinueRead( input, id );
+      }
+   }
+}
+
 

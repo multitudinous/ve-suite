@@ -42,15 +42,15 @@
 #include <vector>
 #include <utility>
 
-class pfGroup;
-class pfDCS;
+class cfdGroup;
+class cfdDCS;
 class cfdModuleGeometry;
 class cfdExecutive;
 
 class cfdInteractiveGeometry
 {
    public:
-      cfdInteractiveGeometry( std::string, pfGroup* );
+      cfdInteractiveGeometry( std::string, cfdGroup* );
       ~cfdInteractiveGeometry( void );
 
       void GetNumberOfTrains( void );
@@ -58,8 +58,8 @@ class cfdInteractiveGeometry
       void Update( std::string, cfdExecutive* );
 
    private:
-      pfGroup* _masterNode;
-      pfGroup* _trainNode;
+      cfdGroup* _masterNode;
+      cfdGroup* _trainNode;
 
       std::string _param;
       int _numberOfModules;
@@ -67,7 +67,7 @@ class cfdInteractiveGeometry
 
       std::vector < std::pair < cfdModuleGeometry*, cfdModuleGeometry* > > _swappableGeometry;
       std::vector < cfdModuleGeometry* > _moduleGeometry;
-      std::vector < pfDCS* > _trainDCS;
+      std::vector < cfdDCS* > _trainDCS;
 };
 
 #endif

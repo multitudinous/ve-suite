@@ -39,44 +39,47 @@ class vtkImageReader;
 class vtkPlaneSource;
 class vtkPolyDataMapper;
 class vtkTexture;
-
-#ifdef _CFDCOMMANDARRAY
-class cfdApp;
-#endif //_CFDCOMMANDARRAY
+class cfdCommandArray;
+class cfdReadParam;
 
 class cfdImage : public cfdObjects
 {
  public:
-   cfdImage( char * filename, double * position, int xyz );
+   cfdImage( char* );
 
    cfdImage( char * filename, int ex_x, int ex_y, int dim,
              double *origin, double *spacing );
 
    ~cfdImage( );
 
-#ifdef _CFDCOMMANDARRAY
    // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdApp * _cfdApp );
+   virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
 
    // update the actor
    virtual void Update( void );
 
-   vtkActor * GetActor( );
+   vtkActor* GetActor( void );
 
- private:
+   void CreateObjects( void );
 
-   int type;         // Direction: 0=X-plane, 1=Y-plane, and 2=Z-plane.
-   char typeLabel;   // 'X', 'Y', or 'Z'
+   private:
 
-   vtkBMPReader *bmpReader;
-   vtkImageReader *imgReader;
-   vtkPlaneSource *plane;
-   vtkPolyDataMapper *mapper;
-   vtkTexture *texture;
+      int type;         // Direction: 0=X-plane, 1=Y-plane, and 2=Z-plane.
+      char typeLabel;   // 'X', 'Y', or 'Z'
+
+      vtkBMPReader *bmpReader;
+      vtkImageReader *imgReader;
+      vtkPlaneSource *plane;
+      vtkPolyDataMapper *mapper;
+      vtkTexture *texture;
+      char  bmpFileName[ 100 ];
+      double bmpPosition[ 3 ];
+      int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
+      char* _param;
+      cfdReadParam* _readParam;
 };
 
 #endif

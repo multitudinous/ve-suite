@@ -34,11 +34,11 @@
 
 class cfdDataSet;
 class cfdReadParam;
+class cfdGeode;
+class cfdDCS;
 class cfdSequence;
-
-class pfDCS;
-class pfNode;
-class pfGeode;
+class cfdSceneNode;
+class cfdTempAnimation;
 
 // VTK Classes
 class vtkPolyData;
@@ -50,40 +50,32 @@ class vtkMaskPoints;
 #include <vector>
 #include <vpr/Sync/Mutex.h>
 
-#ifdef _CFDCOMMANDARRAY
-class cfdApp;
+class cfdCommandArray;
 #include "cfdGlobalBase.h"
-#endif //_CFDCOMMANDARRAY
 
-class cfdObjects
-#ifdef _CFDCOMMANDARRAY
-                  : public cfdGlobalBase
-#endif //_CFDCOMMANDARRAY
-
+class cfdObjects : public cfdGlobalBase
 {
    public:
-      cfdObjects( pfGeode *, int );
+      cfdObjects( cfdGeode*, int );
       cfdObjects( const cfdObjects& src );
       cfdObjects( void );
       virtual ~cfdObjects( void );
 
-#ifdef _CFDCOMMANDARRAY
       // pure virtual functions to be specified in concrete implementations
 
       // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdApp * _cfdApp );
+      virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
       // in future, multi-threaded apps will make a copy of VjObs_i commandArray
       virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
 
       // update the actor
       virtual void Update() = 0;
 
-      void SetGeode( pfGeode * );
+      void SetcfdGeode( cfdGeode* );
       void SetObjectType( int );
       //void UpdateObject( void );
-      pfGeode *GetGeode( void );
+      cfdGeode *GetcfdGeode( void );
       //void GetGeoSet( pfGeoSet *[] );
       int GetObjectType( void ) { return this->objectType; }
       void SetOrigin( float [3] );
@@ -96,32 +88,22 @@ class cfdObjects
       void SetPreCalcFlag( int x ) { this->usePreCalcData = x; }
       void SetUpdateFlag( bool x ) { this->updateFlag = x; }
       bool GetUpdateFlag( void ) { return ( this->updateFlag ); }
-      void DeleteGeode( void );
+      void DeletecfdGeode( void );
 
-      void SetSequence( cfdSequence * );
-      cfdSequence* GetSequence( void );
-
-      //void DeleteSequence( void );
-      void StopSequence( void );
-      void StartSequence( void );
-      void PauseSequence( void );
-      void ResumeSequence( void );
-      void ClearSequence( void );
-      void AddToSequence( void );
-      void ReverseSequence( void );
-      void ForwardSequence( void );
-      int  GetFrameOfSequence( void );
+      void SetSequence( cfdTempAnimation* );
+      cfdTempAnimation* GetSequence( void );
+      void AddSequenceToTree( void );
       
       void SetSourcePoints( vtkPolyDataSource * );
 
-      void UpdateGeode( void );
-      void AddGeodeToDCS( void );
-      void RemoveGeodeFromDCS( void );
-      void CreateGeode( void );
+      void UpdatecfdGeode( void );
+      void AddcfdGeodeToDCS( void );
+      void RemovecfdGeodeFromDCS( void );
+      void CreatecfdGeode( void );
 
-      void SetDCS( pfDCS * );
-      pfDCS *GetDCS( void );
-      void SetcfdReadParam( cfdReadParam * );
+      void SetDCS( cfdDCS* );
+      cfdDCS* GetDCS( void );
+      //void SetcfdReadParam( cfdReadParam * );
 
       void SetGeodeFlag( bool x );
       bool GetGeodeFlag( void );
@@ -157,36 +139,34 @@ class cfdObjects
       // used by vectors and intended for warped contours
       static float vectorScale;
 
-      // used by cfdPolydata for setting the type and size of particles
+      cfdGeode* _geode;
+      cfdGeode* _tempGeode;
       static int particleOption;   // point cloud or variably sized spheres
       static float particleScale;
 
-      pfGeode *geode;
-      pfGeode* tempGeode;
+      cfdTempAnimation* _sequence;
 
-      cfdSequence* sequence;
-
-      pfDCS *dcs;
-      std::vector< pfNode * > geodes;
+      cfdDCS* _dcs;
+      std::vector< cfdSceneNode* > _geodes;
 
       vtkActor *actor;
       vtkActor *PDactor;
       vtkPolyDataSource *pointSource;
 
-      cfdReadParam *paramFile;
+      //cfdReadParam *paramFile;
    
-      float scale;
+      bool updateFlag;
+      bool addGeode;
+      int vtkToPFDebug;
       int objectType;
       int requestedValue;
+      int cursorType;
+      int usePreCalcData;
       double origin[ 3 ];
       double center[ 3 ];
       double normal[ 3 ];
       double box_size[ 6 ];
-      int cursorType;
-      int usePreCalcData;
-      bool updateFlag;
-      bool addGeode;
-      int vtkToPFDebug;
+      float scale;
 
    private:
 };

@@ -39,10 +39,7 @@ class vtkPolyDataMapper;
 class vtkGeometryFilter;
 class vtkContourFilter;
 class vtkBandedPolyDataContourFilter;
-
-#ifdef _CFDCOMMANDARRAY
 class cfdCommandArray;
-#endif //_CFDCOMMANDARRAY
 
 class cfdContourBase : public cfdObjects
 {
@@ -54,17 +51,15 @@ class cfdContourBase : public cfdObjects
    // update the actor
    virtual void Update( void ) = 0;
 
-#ifdef _CFDCOMMANDARRAY
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
 
    void SetMapperInput( vtkPolyData * );
 
-   static void SetFillType( const int );
+   void SetFillType( const int );
 
  protected:
    vtkPolyDataMapper * mapper;
@@ -72,7 +67,7 @@ class cfdContourBase : public cfdObjects
    vtkContourFilter * cfilter;
    vtkBandedPolyDataContourFilter * bfilter;
 
-   static int fillType;
+   int fillType;
 
 };
 

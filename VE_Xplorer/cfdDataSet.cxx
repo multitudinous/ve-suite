@@ -41,8 +41,9 @@
 #include "cfdAccessoryFunctions.h"
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
+#include "cfdDCS.h"
 
-#include <Performer/pf/pfDCS.h>
+//#include <Performer/pf/pfDCS.h>
 
 #include <vtkGenericCell.h>
 #include <vtkLookupTable.h>
@@ -1189,12 +1190,12 @@ void cfdDataSet::SetDisplayedScalarRange( int index, double * range )
 }
 
 // get/set this dataset's DCS
-pfDCS * cfdDataSet::GetDCS()
+cfdDCS* cfdDataSet::GetDCS()
 {
    return this->dcs;
 }
 
-void cfdDataSet::SetDCS( pfDCS * myDCS )
+void cfdDataSet::SetDCS( cfdDCS* myDCS )
 {
    this->dcs = myDCS;
 }

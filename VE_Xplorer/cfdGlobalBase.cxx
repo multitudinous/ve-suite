@@ -41,3 +41,6 @@ cfdGlobalBase::cfdGlobalBase()
    cout << "cfdGlobalBase constructor" << endl;
 }
 
+cfdGlobalBase::~cfdGlobalBase ()
+{
+}

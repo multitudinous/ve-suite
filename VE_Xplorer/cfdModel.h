@@ -35,15 +35,30 @@
 
 /*
 
-1.The difference between the concept of multiple models and multiple datasets is that:
+1.The difference between the concept of multiple models and multiple datasets 
+is that:
 
-A model can contain several vtkDataSets, geometricalDataSets (surface dataset). These datasets have the same operations. For example, for the same shape design, if we want to see the effects of different boundary condition, we can put two different cases into the same model, so the comparision can be made very easily.But if we want to see the two different shape design or need to see the difference between the experiment results and the simulation results, it is better to treat these two dataset as two different models.
+A model can contain several vtkDataSets, geometricalDataSets (surface dataset). 
+These datasets have the same operations. For example, for the same shape design, 
+if we want to see the effects of different boundary condition, we can put two 
+different cases into the same model, so the comparision can be made very 
+easily.But if we want to see the two different shape design or need to see 
+the difference between the experiment results and the simulation results, 
+it is better to treat these two dataset as two different models.
  
 */
 
-#include "cfdFileInfo.h"
-#include "cfdDataSets.h"
-#include "cfdGeomDataSets.h"
+
+#include <string>
+#include <vector>
+
+using namespace std;
+
+class cfdDataSet;
+class cfdDCS;
+class cfdNode;
+class fileInfo;
+class cfdFILE;
 
 enum ModelTypeIndex
 {
@@ -57,18 +72,20 @@ enum Operation2Model
 {
    AddVTKdataset=1,
    DelVTKdataset,
+   DeleteVTKdataset,
    AddGeodataset,
-   DelGeodataset
+   DelGeodataset,
+   DeleteGeomdataset
 };
 
 class cfdModel
 {
    public:
-      cfdModel(pfDCS *);
+      cfdModel(cfdDCS *);
       ~cfdModel();
       
-      void setModelNode( pfNode * );
-      void setModelType( int );//four type models right now (experiment, simulation, design, and geometry)
+      void setModelNode( cfdNode * );
+      void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
             
       void setTrans3( float x, float y, float z );
       void setTrans( float trans[3] );
@@ -77,19 +94,28 @@ class cfdModel
       void setRotMat(double *);
 
       void updateCurModel();//handling the add or delete the vtkdateset or geomdataset
-      void addVTKdataset();
+      void addVTKdataset(const std::string&);
       void delVTKdataset();
       void addGeomdataset(const std::string &filename);
       void delGeomdataset(int);
       
+      cfdDataSet* GetCfdDataSet( int );
+      unsigned int GetNumberOfCfdDataSets( void );
+
+      cfdFILE* GetGeomDataSet( int );
+      unsigned int GetNumberOfGeomDataSets( void );
+      cfdNode* GetCfdNode( void );
+      cfdDCS* GetCfdDCS( void );
    private:
-      typedef std::vector<cfdGeomDataSets *> GeometoryDataSetList;
+      typedef std::vector< cfdFILE* > GeometoryDataSetList;
       GeometoryDataSetList mGeomDataSets;
-      typedef std::vector<cfdDataSet *> VTKdataSetList;
+      typedef std::vector<cfdDataSet* > VTKDataSetList;
       VTKDataSetList mVTKDataSets;
       
-      pfDCS *mModelDCS;
-      class fileInfo mGeomFileInfo,mVTKFileInfo;
+      cfdDCS* mModelDCS;
+      cfdNode* mModelNode;
+      fileInfo* mGeomFileInfo;
+      fileInfo* mVTKFileInfo;
    
       
       //the information for following three variables should be transfered from cfdApp
@@ -98,9 +124,7 @@ class cfdModel
       
       bool mUpdateModelFlag;
       bool mMoveOldGeomDataSets;
-      bool mMoveOldVTKDataSets;
-   	
-   
+      bool mMoveOldVTKDataSets;   
 };
 
 #endif

@@ -37,15 +37,15 @@
 #include <map>
 
 #include "cfdDCS.h"
-class pfNode;
-class pfGroup;
+class cfdNode;
+class cfdGroup;
 class cfd1DTextInput;
 
 class cfdDashboard : public cfdDCS
 {
    public:
 
-      cfdDashboard( std::string, pfGroup* );
+      cfdDashboard( std::string, cfdGroup* );
       cfdDashboard( cfdDashboard* );
 
       ~cfdDashboard( void );
@@ -54,8 +54,8 @@ class cfdDashboard : public cfdDCS
 
    private:
       
-      pfNode* _node;
-      pfGroup* _masterNode;
+      cfdNode* _node;
+      cfdGroup* _masterNode;
       std::string _filename;
       std::string _param;
       std::map<int, cfd1DTextInput>   _dashDisplay;

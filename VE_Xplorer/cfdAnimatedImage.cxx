@@ -32,21 +32,23 @@
 #include "cfdAnimatedImage.h"
 #include "cfdReadParam.h"
 #include "cfdImage.h"
-
-#ifdef _CFDCOMMANDARRAY
-#include "cfdApp.h"
-#endif //_CFDCOMMANDARRAY
-
-#include <Performer/pf/pfDCS.h>
-
-#include "cfdSequence.h"
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+#include "cfdTempAnimation.h"
+#include "cfdDCS.h"
 
 #include <vpr/Util/Debug.h>
 
+#include <iostream>
+#include <fstream>
+
+// Fix need to add the new style read param to this class
+// tak code out of cfdReadPAram to this function
 cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
                                     int ex_x, int ex_y, int dim,
                                     double *origin, double *spacing )
 {
+   _readParam = new cfdReadParam( NULL );
   unsigned int i;
   char filename[250];
   cfdImage* im;
@@ -64,35 +66,42 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
       _images.push_back(im);
    }
 
-   this->sequence = new cfdSequence();
+   this->_sequence = new cfdTempAnimation();
+   this->_dcs = new cfdDCS();
 }
 
-cfdAnimatedImage::cfdAnimatedImage( cfdReadParam* param )
+cfdAnimatedImage::cfdAnimatedImage( char* param )
 {
    unsigned int i;
    char filename[250];
    cfdImage* im;
-   _frames = param->frames;
+   //_frames = param->frames;
    //  _which_frame = 0;
+   _readParam = new cfdReadParam( NULL );
+   _param = param;
 
    _images.clear();
-
+   
+   // Nedd to fix this
+   // probably create new function
    for(i=0; i<(unsigned)_frames; i++) 
    {
-      sprintf(filename, "%s%02d.lic", param->basename, i);
+      sprintf(filename, "%s%02d.lic", basename, i);
 
-      im = new cfdImage(filename, param->ex_x, param->ex_y, param->dim, param->origin, param->spacing);
+      im = new cfdImage(filename, ex_x,ex_y, dim, origin, spacing);
 
       _images.push_back(im);
    }
 
-   this->SetTranslationArray( param->imageTrans );
-   this->SetRotationArray( param->imageRot );
-   this->SetScaleArray( param->imageScale );
+   this->_dcs = new cfdDCS();
+   this->_dcs->SetTranslationArray( imageTrans );
+   this->_dcs->SetRotationArray( imageRot );
+   this->_dcs->SetScaleArray( imageScale );
 
-   this->sequence = new cfdSequence();
-
-   this->GetPfDCS()->addChild( (pfNode*)this->sequence );
+   this->_sequence = new cfdTempAnimation();
+   
+   // Inhereted function from cfdDCS
+   this->_dcs->AddChild( (cfdSceneNode*)this->_sequence->GetSequence() );
 }
 
 cfdAnimatedImage::~cfdAnimatedImage()
@@ -104,12 +113,12 @@ cfdAnimatedImage::~cfdAnimatedImage()
 
    _images.clear();
 
-   this->ClearSequence();
-   pfDelete( this->sequence );
+   this->_sequence->ClearSequence();
+   delete this->_sequence;
+   delete this->_dcs;
 }
 
-#ifdef _CFDCOMMANDARRAY
-bool cfdAnimatedImage::CheckCommandId( cfdApp * _cfdApp )
+bool cfdAnimatedImage::CheckCommandId( cfdCommandArray* commandArray )
 {
    return false;
 }
@@ -118,7 +127,6 @@ void cfdAnimatedImage::UpdateCommand()
 {
    cerr << "doing nothing in cfdAnimatedImage::UpdateCommand()" << endl;
 }
-#endif //_CFDCOMMANDARRAY
 
 void cfdAnimatedImage::Update( void )
 {
@@ -127,9 +135,54 @@ void cfdAnimatedImage::Update( void )
    {
       this->actor = _images[i]->GetActor();
   
-      this->CreateGeode();
+      this->CreatecfdGeode();
    }
 
    this->updateFlag = true;
    this->addGeode = true;      
+}
+
+void cfdAnimatedImage::CreateObjects( void )
+{
+   int numObjects;
+   char text[ 256 ];
+   char textLine[ 256 ];
+   std::ifstream input;
+   input.open( this->_param );
+   input >> numObjects; 
+   input.getline( textLine, 256 );   //skip past remainder of line
+
+   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   for( int i = 0; i < numObjects; i++ )
+   {
+      int id;
+      input >> id;
+      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      input.getline( textLine, 256 );   //skip past remainder of line
+      if ( id == 12 )
+      {
+         input >> basename;
+         input.getline( textLine, 256 );   //skip past remainder of line
+
+         input >> frames;
+         input >> ex_x;
+         input >> ex_y;
+         input >> dim;
+         input.getline( textLine, 256 );
+         input >> origin[0];
+         input >> origin[1];
+         input >> origin[2];
+         input >> spacing[0];
+         input >> spacing[1];
+         input >> spacing[2];
+         input.getline( textLine, 256 );
+
+         this->_readParam->read_pf_DCS_parameters( input, this->imageScale, this->imageTrans, this->imageRot );
+      }
+      else
+      {
+         // Skip past block
+         _readParam->ContinueRead( input, id );
+      }
+   }
 }

@@ -37,7 +37,7 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
-class pfDCS;
+class cfdDCS;
 //! Navigation tracker
 /*!
   A class to track the wand location, object translation,
@@ -61,7 +61,7 @@ class cfdNavigate
   /*!
     Initialization of navigation objects: VR Juggler, wand, cursor, data set
   */
-  void Initialize( float, pfDCS* );
+  void Initialize( float, cfdDCS* );
   void SetDataValues( int, int );
   void updateNavigationFromGUI( void );
   void GetDirection( float xyzV[3] );
@@ -153,7 +153,7 @@ public:
   int cfdIso_value;
   double worldTrans[ 3 ];
   float worldRot[ 3 ];
-  pfDCS* worldDCS;
+  cfdDCS* worldDCS;
 private:
  //! VR Juggler
   /*!

@@ -29,37 +29,35 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdModel_hgx.h"
+#include "cfdModel.h"
 #include "cfdObjects.h"
 #include "cfdReadParam.h"
 #include "cfdDataSet.h"
+#include "cfdDCS.h"
+#include "cfdNode.h"
+#include "cfdFileInfo.h"
+#include "cfdFILE.h"
+
 #include <vpr/Util/Debug.h>
 
-// Performer Includes
-#include <Performer/pf.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pf/pfNode.h>
 
-// C++ Libs
-#include <vector>
-
-
-cfdModel::cfdModel( pfDCS *worldDCS)
+cfdModel::cfdModel( cfdDCS *worldDCS)
 {
    vprDEBUG(vprDBG_ALL, 1) << " New cfdModel ! " 
                            << std::endl << vprDEBUG_FLUSH;
    this->mModelNode = NULL;
-   this->actor = NULL;
-   ModelIndex = static_cast<ModelTypeIndex>(value);
-   mModelDCS=new pfDCS;
-   worldDCS->addChild(mModelDCS);
+   //this->actor = NULL;
+   //ModelIndex = static_cast<ModelTypeIndex>(value);
+   mModelDCS=new cfdDCS;
+   worldDCS->AddChild(mModelDCS);
    
 }
 
 
 cfdModel::~cfdModel()
 {
-   for(GeometryDataSetList::iterator itr = mGeomDataSets.begin(); itr != mGeomDataSets.end(); ++itr)
+// Need to fix the syntax of these iterators
+/*   for(GeometryDataSetList::iterator itr = mGeomDataSets.begin(); itr != mGeomDataSets.end(); ++itr)
    {
       delete *itr;
    }
@@ -68,10 +66,10 @@ cfdModel::~cfdModel()
    {
       delete *itr;
    }
-   mVTKDataSets.clear();
+   mVTKDataSets.clear();*/
 }
 
-void cfdModel::setModelNode( *pfNode *temp )
+void cfdModel::setModelNode( cfdNode *temp )
 {
 
 }
@@ -84,6 +82,7 @@ void cfdModel::setModelType( ModelTypeIndex type )
 void cfdModel::setTrans( float t[3] )
 
 {
+   this->mModelDCS->SetTranslationArray( t );
    this->setTrans3( t[0], t[1], t[2] );
    vprDEBUG(vprDBG_ALL,1) << "Trans x: " << t[0] << " y: "
       << t[1] << " z: " << t[2] << std::endl << vprDEBUG_FLUSH;
@@ -92,21 +91,30 @@ void cfdModel::setTrans( float t[3] )
 
 void cfdModel::setTrans3( float x, float y, float z )
 {
-   this->mModelDCS->setTrans( x, y, z );
+   //this->mModelDCS->SetTrans( x, y, z );
    vprDEBUG(vprDBG_ALL,1) << "Trans x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdModel::setScale( float x, float y, float z )
 {
-   this->mModelDCS->setScale( x, y, z );
+   float temp[ 3 ];
+   temp [ 0 ] = x;
+   temp [ 1 ] = y;
+   temp [ 2 ] = z;
+
+   this->mModelDCS->SetScaleArray( temp );
    vprDEBUG(vprDBG_ALL,1) << "Scale x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdModel::setRot(float h, float p, float r)
 {
-   this->mModelDCS->setRot(h,p,r);
+   float temp[ 3 ];
+   temp [ 0 ] = h;
+   temp [ 1 ] = p;
+   temp [ 2 ] = r;
+   this->mModelDCS->SetRotationArray(temp);
    vprDEBUG(vprDBG_ALL,1) << "Rot h: " << h << " p: " 
       << p << " r: " << r << std::endl << vprDEBUG_FLUSH;
 }
@@ -115,27 +123,30 @@ void cfdModel::setRotMat(double *rotate)
 {
 }
 
-pfNode *cfdModel::getpfNode( )
+cfdNode* cfdModel::GetCfdNode( )
 {
-   return this->node;
+   return this->mModelNode;
 }
 
-pfDCS *cfdModel::getpfDCS( )
+cfdDCS* cfdModel::GetCfdDCS( )
 {
-   return this->mModeldcs;
+   return this->mModelDCS;
 }
 
-void updateCurModel()
+void cfdModel::updateCurModel()
 {
   
    vprDEBUG(vprDBG_ALL, 1) << "cfdModel::UpdateCurModel..."
                            << std::endl << vprDEBUG_FLUSH;
+  // Need to fix this 
+  std::string tempstring;
+  int temp;
   if(this->mUpdateModelFlag)
   {
       switch(this->mActiveOperation2Model)
       {
          case AddVTKdataset:
-            addVTKdataset(); 
+            addVTKdataset(tempstring); 
             break;
                
          case DeleteVTKdataset:
@@ -143,11 +154,11 @@ void updateCurModel()
             break;
             
          case AddGeodataset:
-            addGeomdataset();
+            addGeomdataset( tempstring );
             break;
             
          case DeleteGeomdataset:
-            delGeodataset(); 
+            delGeomdataset( temp ); 
             break;
             
          default:
@@ -157,23 +168,26 @@ void updateCurModel()
    }
 }
 
-void addVTKdataset(const std::string& vtkfilename)
+void cfdModel::addVTKdataset(const std::string& vtkfilename)
 {
 
 }
 
-void delVTKdataset()
+void cfdModel::delVTKdataset()
 {
 
 }
 
-void addGeometrydataset(const std::string& geomfilename)
+void cfdModel::addGeomdataset(const std::string& geomfilename)
 {
-      this->mGeomFileInfo->fileName=<const_cast<char*>(geomfilename.c_str());
+      // Need to fix this
+      // this->mGeomFileInfo->fileName= (char*)geomfilename.c_str();
       this->mMoveOldGeomDataSets = true;
       this->mMoveOldVTKDataSets = true;
+      char* mGeomFileName;
       std::cout << "[DBG]....Adding Geometry files " << mGeomFileName<<std::endl;
-      for(GeometryDataSetList::iterator itr = mGeomDataSets.begin(); itr != mGeomDataSets.end(); ++itr)
+      // Need to fix the iterator stuff
+      //for(GeometryDataSetList::iterator itr = mGeomDataSets.begin(); itr != mGeomDataSets.end(); ++itr)
 
       {/*
          //The following need to be changed later, maybe we can get trans information from Java GUI
@@ -182,12 +196,14 @@ void addGeometrydataset(const std::string& geomfilename)
         */ 
       }
       //assume that if we move the geometry, the relative VTK dataset should be moved too.
-      for(VTKDataSetList::iterator itr = mVTKDataSets.begin(); itr != mVTKDataSets.end(); ++itr)
+      // Need to fix the iterator stuff
+      //for(VTKDataSetList::iterator itr = mVTKDataSets.begin(); itr != mVTKDataSets.end(); ++itr)
       {
          //this->mVTKDataSets[i]->DCS->setTrans(, , ,);
       }
       
-      this->mGeomDataSets.push_back( new cfdGeomSets(fileInfo *mGeomFileInfo,this->mModelDCS ) );
+      // Fix this don't have a class cfdGeomSets
+      //this->mGeomDataSets.push_back( new cfdGeomSets(fileInfo *mGeomFileInfo,this->mModelDCS ) );
      /* 
       Need to find an efficient way to  
       this->mGeomeDataSets->DCS->setScale( cfdscale[0], cfdscale[1], cfdscale[2] );
@@ -199,9 +215,29 @@ void addGeometrydataset(const std::string& geomfilename)
    
 }
 
-void delGeodataset(int DelIndex)
+void cfdModel::delGeomdataset(int DelIndex)
 {
    delete (mGeomDataSets[DelIndex]);
    this->mGeomDataSets.erase(this->mGeomDataSets.begin() + DelIndex);
+}
+
+cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
+{
+   return mVTKDataSets.at( dataset );
+}
+
+unsigned int cfdModel::GetNumberOfCfdDataSets( void )
+{
+   return mVTKDataSets.size();
+}
+
+cfdFILE* cfdModel::GetGeomDataSet( int dataset )
+{
+   return mGeomDataSets.at( dataset );
+}
+
+unsigned int cfdModel::GetNumberOfGeomDataSets( void )
+{
+   return mGeomDataSets.size();
 }
 

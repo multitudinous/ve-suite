@@ -34,14 +34,15 @@
 #include "cfdDigitalAnalogGauge.h"
 #include "cfdReadParam.h"
 #include "cfdExecutive.h"
-#include <Performer/pf/pfGroup.h>
+#include "cfdGroup.h"
+
 #include <fstream>
 #include <sstream>
 #include <iostream>
 #include <map>
 //#include <stdio.h>
 
-cfdGauges::cfdGauges( std::string param, pfGroup* masterNode )
+cfdGauges::cfdGauges( std::string param, cfdGroup* masterNode )
 {
    this->param = param;
    this->_masterNode = masterNode;
@@ -129,7 +130,6 @@ void cfdGauges::Update( std::string activeModule, cfdExecutive* executive )
          
          this->_gaugesList[ i ]->SetDataValue( dataString );
          this->_gaugesList[ i ]->Update();
-      }
    }
 }
 */
@@ -153,17 +153,17 @@ void cfdGauges::CreateGaugeList( void )
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-std::cout << numObjects << std::endl;
+//std::cout << numObjects << std::endl;
    for( i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-std::cout << id << std::endl;
+//std::cout << id << std::endl;
       input.getline( text, 256 );   //skip past remainder of line
       if ( id == 1 )
       {
          input >> _numberOfGauges;
-std::cout << _numberOfGauges << std::endl;
+//std::cout << _numberOfGauges << std::endl;
          input.getline( text, 256 );   //skip past remainder of line
          
          float scale[3], trans[3], rot[3];
@@ -182,7 +182,7 @@ std::cout << _numberOfGauges << std::endl;
             input >> geomFilename;
             input.getline( text, 256 );   //skip past remainder of line
             this->_gaugesList[ j ]->SetGeometryFilename( geomFilename );
-std::cout << geomFilename << std::endl;
+//std::cout << geomFilename << std::endl;
 
             cfdReadParam::read_pf_DCS_parameters( input, scale, trans, rot );
             ((cfd1DTextInput*)this->_gaugesList[ j ]->_textOutput.first)->SetRotationArray( rot );
@@ -190,13 +190,13 @@ std::cout << geomFilename << std::endl;
             ((cfd1DTextInput*)this->_gaugesList[ j ]->_textOutput.first)->SetScaleArray( scale );
 
             input >> tagName;
-std::cout << tagName << std::endl;
+//std::cout << tagName << std::endl;
             this->_gaugesList[ j ]->SetDataTag( tagName );
             input >> tagName;
-std::cout << tagName << std::endl;
+//std::cout << tagName << std::endl;
             this->_gaugesList[ j ]->SetGaugeName( tagName );
             input >> tagName;
-std::cout << tagName << std::endl;
+//std::cout << tagName << std::endl;
             this->_gaugesList[ j ]->SetUnitsTag( tagName );
             input.getline( text, 256 );   //skip past remainder of line
             this->_gaugesList[ j ]->CreateGaugeName();

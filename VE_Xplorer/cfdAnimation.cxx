@@ -37,14 +37,14 @@ using namespace std;
 
 #include "cfdTransientFlowManager.h"
 #include "cfdSequence.h"
-
-#include <Performer/pf/pfGroup.h>
+#include "cfdTempAnimation.h"
+#include "cfdGroup.h"
 
 #include <vpr/Util/Debug.h>
 
 cfdAnimation::cfdAnimation()
 {
-   this->sequence = new cfdSequence();
+   this->sequence = new cfdTempAnimation();
    this->numFrames = 0;
    this->groups = NULL;
 }
@@ -52,7 +52,7 @@ cfdAnimation::cfdAnimation()
 cfdAnimation::~cfdAnimation()
 {
    // This Delete also takes care of this->groups
-   pfDelete( this->sequence );
+   delete this->sequence;
    
    int num = this->flowManagers.size();
    
@@ -96,14 +96,14 @@ void cfdAnimation::SetpfGroups( void )
    this->numFrames = this->flowManagers[ 0 ]->GetNumberOfFrames();
 
    vprDEBUG(vprDBG_ALL,1) << " Making groups" << std::endl << vprDEBUG_FLUSH;
-   this->groups = new pfGroup*[ this->numFrames ];
+   this->groups = new cfdGroup*[ this->numFrames ];
    for ( int i = 0; i < this->numFrames; i++)
    {
-      this->groups[ i ] = new pfGroup();
-      this->sequence->addChild( this->groups[ i ] );
+      this->groups[ i ] = new cfdGroup();
+      this->sequence->GetSequence()->addChild( (cfdSceneNode*)this->groups[ i ] );
    }
-   this->sequence->setInterval( CFDSEQ_CYCLE, 0 , this->numFrames - 1 );
-   this->sequence->setDuration( this->_duration );
+   this->sequence->GetSequence()->setInterval( CFDSEQ_CYCLE, 0 , this->numFrames - 1 );
+   this->sequence->GetSequence()->setDuration( this->_duration );
 }
 
 // set the duration of the sequence (in seconds)
@@ -112,12 +112,12 @@ void cfdAnimation::SetDuration( double time )
    this->_duration = time;
 }
 
-pfGroup* cfdAnimation::GetpfGroup( int i )
+cfdGroup* cfdAnimation::GetpfGroup( int i )
 {
    return this->groups[ i ];
 }
 
-cfdSequence* cfdAnimation::GetSequence( void )
+cfdTempAnimation* cfdAnimation::GetSequence( void )
 {
    return this->sequence;
 }

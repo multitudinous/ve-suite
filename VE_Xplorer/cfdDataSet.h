@@ -42,7 +42,7 @@ class vtkUnstructuredGrid;
 class vtkUnstructuredGridReader;
 class vtkDataSet;
 class cfdPlanes;
-class pfDCS;
+class cfdDCS;
 
 //! CFD data set loader and handler.
 /*!
@@ -179,8 +179,8 @@ class cfdDataSet
   double * GetVectorMagRange();
 
   // get/set this dataset's DCS
-  pfDCS * GetDCS();
-  void SetDCS( pfDCS * );
+  cfdDCS * GetDCS();
+  void SetDCS( cfdDCS * );
 
   int IsPartOfTransientSeries();
   void SetAsPartOfTransientSeries();
@@ -239,7 +239,7 @@ class cfdDataSet
   char ** scalarName;
   char ** vectorName;
 
-  pfDCS * dcs;
+  cfdDCS* dcs;
 
   int partOfTransientSeries;
 

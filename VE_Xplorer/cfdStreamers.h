@@ -39,9 +39,7 @@ class vtkPolyData;
 class vtkRungeKutta4;
 
 #include "cfdObjects.h"
-#ifdef _CFDCOMMANDARRAY
 class cfdCommandArray;
-#endif //_CFDCOMMANDARRAY
 
 //! VTK streamers plane renderer.
 /*!
@@ -58,13 +56,11 @@ class cfdStreamers : public cfdObjects
   
       ~cfdStreamers();
    
-#ifdef _CFDCOMMANDARRAY
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand();
 
       virtual void Update( void );
   

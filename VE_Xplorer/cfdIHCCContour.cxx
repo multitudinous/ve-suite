@@ -32,6 +32,8 @@
 
 #include "cfdIHCCContour.h"
 #include "readWriteVtkThings.h"  // for readVtkThing
+#include "cfdGeode.h"
+
 #include <vtkActorToPF.h>
 
 using namespace std;
@@ -184,10 +186,10 @@ void cfdIHCCContour::Update( void )
 	   actor->GetProperty()->SetSpecularPower( 20.0f );
       //cout << " Color : " << color[ 0 ] << " : " << color[ 1 ] << " : " << color[ 2 ] << endl;
       actor->GetProperty()->SetColor( color );
-      pfGeode* geo = new pfGeode();
-      vtkActorToPF( actor, geo, 0);
+      cfdGeode* geo = new cfdGeode();
+      geo->TranslateTocfdGeode( actor );
       actor->Delete();
-	   geodes.push_back( geo );
+	   _geodes.push_back( (cfdSceneNode*)geo );
 	}
    this->lut->Delete();
    lut = NULL;

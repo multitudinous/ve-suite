@@ -32,7 +32,8 @@
 #ifndef CFD_FILEINFO_H
 #define CFD_FILEINFO_H
 
-#include <Performer/pf/pfDCS.h>
+//#include <Performer/pf/pfDCS.h>
+class cfdDCS;
 
 class fileInfo
 {
@@ -47,7 +48,7 @@ class fileInfo
       float stlColor[3];
       int color;
       int trans;
-      pfDCS * dcs;
+      cfdDCS * dcs;
 
       //sound-specific stuff
       int ambient;

@@ -32,7 +32,7 @@
 #include "cfdAnimatedStreamlineCone.h"
 #include "cfdDataSet.h"
 
-#include "cfdSequence.h"
+#include "cfdTempAnimation.h"
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -66,7 +66,7 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( float diameter )
    this->sphere->SetPhiResolution( 3 );
    this->sphere->Update();
 
-   this->sequence = new cfdSequence();
+   this->_sequence = new cfdTempAnimation();
 }
 
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
@@ -78,8 +78,8 @@ cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
    this->glyph->Delete();
    this->sphere->Delete();
    
-   this->ClearSequence();
-   pfDelete( this->sequence );
+   this->_sequence->ClearSequence();
+   delete this->_sequence;
 }
 
 void cfdAnimatedStreamlineCone::SetPolyDataSource( vtkPolyData *input )
@@ -205,7 +205,7 @@ void cfdAnimatedStreamlineCone::Update( void )
      
       //Make geodes from each polydata
       //vprDEBUG(vprDBG_ALL, 1) << " begin loop4" << std::endl << vprDEBUG_FLUSH;
-      this->CreateGeode();
+      this->CreatecfdGeode();
 
       // Reset polydata to its intial state and release all memory
       //polydata->Reset();

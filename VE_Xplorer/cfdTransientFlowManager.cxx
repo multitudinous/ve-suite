@@ -43,7 +43,8 @@
 #include "cfdTransientFlowManager.h"
 #include "cfdFrame.h"
 #include "cfdDataSet.h"
-#include "cfdReadParam.h"
+#include "cfdTransientVizHandler.h"
+#include "cfdTransientSet.h"
 #include "fileIO.h"
 #include <vpr/Util/Debug.h>
 
@@ -275,7 +276,7 @@ void cfdTransientFlowManager::LoadFrames()
    vprDEBUG(vprDBG_ALL,1) << " End of Frames" << std::endl << vprDEBUG_FLUSH;
 }
 
-void cfdTransientFlowManager::SetParameterFile( cfdReadParam *paramFile, int member )
+void cfdTransientFlowManager::SetParameterFile( cfdTransientVizHandler *paramFile, int member )
 {
    this->paramFile = paramFile;
    this->member = member;
@@ -343,9 +344,9 @@ void cfdTransientFlowManager::CreateNodeList( void )
    for(int i = 0; i < this->numFrames; i+=inc)
    {
       this->frames[ i ].CreateFrame( this->frameFileNames[ this->order[ i ] ] );
-      this->geodes.push_back( this->frames[ i ].GetpfNode() );
+      this->_geodes.push_back( this->frames[ i ].GetcfdNode() );
       vprDEBUG(vprDBG_ALL,1) << " Creating Geodes : " << i << " : "
-                             << this->geodes[ i ]
+                             << this->_geodes[ i ]
                              << std::endl << vprDEBUG_FLUSH;
    }
 }

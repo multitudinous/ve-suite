@@ -32,17 +32,18 @@
 #ifndef CFDFRAME_H
 #define CFDFRAME_H
 
-class cfdReadParam;
+class cfdTransientVizHandler;
 class cfdDataSet;
 class cfdFILE;
 class cfdTransientActor;
+class cfdSceneNode;
 
 class vtkActor;
 class vtkPolyData;
 
-class pfGeode;
-class pfDCS;
-class pfNode;
+class cfdGeode;
+class cfdDCS;
+class cfdNode;
 
 class cfdFrame
 {
@@ -59,7 +60,7 @@ class cfdFrame
       enum FrameGeomDisplayType{VTK_SOLID = 0, VTK_WIRE};
       
       void CreateFrame( char * ); 
-      void SetParameterFile( cfdReadParam *, int );
+      void SetParameterFile( cfdTransientVizHandler *, int );
       void SetArrow( vtkPolyData * );
       void SetArrowSize( float );
 
@@ -68,7 +69,7 @@ class cfdFrame
                               cfdDataSet * activeParticleData,
                               cfdDataSet * activeSurfaceData );
 
-      pfNode *GetpfNode( void );
+      cfdSceneNode* GetcfdNode( void );
 
       void SetFrameDataType( int );
       int  GetFrameDataType();
@@ -76,16 +77,16 @@ class cfdFrame
    protected:
       int CreateFrame( void );
 
-      pfDCS   * dcs;
-      pfGeode * geode;
-      pfNode  * node;
+      cfdDCS*     dcs;
+      cfdGeode*   geode;
+      cfdNode*    node;
 
       vtkActor *actor;
       vtkPolyData * arrow;
       float arrowSize;
 
       cfdFILE *geomFile;
-      cfdReadParam *param;
+      cfdTransientVizHandler *param;
 
       cfdTransientActor * transientActor;
 
@@ -93,9 +94,9 @@ class cfdFrame
       int displayType;
       int member;
       int frameDataType;
-      cfdDataSet * activeDataSet;
-      cfdDataSet * activeMeshedVolume;
-      cfdDataSet * activeParticleData;
-      cfdDataSet * activeSurfaceData;
+      cfdDataSet* activeDataSet;
+      cfdDataSet* activeMeshedVolume;
+      cfdDataSet* activeParticleData;
+      cfdDataSet* activeSurfaceData;
 };
 #endif

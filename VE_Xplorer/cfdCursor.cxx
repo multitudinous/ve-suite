@@ -31,12 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdCursor.h"
 #include "cfdEnum.h"
-
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pf/pfGeode.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pr/pfLinMath.h>
-#include "vtkActorToPF.h"
+#include "cfdDCS.h"
+#include "cfdGeode.h"
+#include "cfdCommandArray.h"
+#include "cfdGroup.h"
+#include "cfdDataSet.h"
 
 #include <vtkPolyData.h>
 #include <vtkPolyDataSource.h>
@@ -58,27 +57,37 @@
 #include <gmtl/Matrix.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Vec.h>
+#include <gmtl/VecOps.h>
 #include <vrj/Draw/Pf/PfUtil.h>
-//using namespace gmtl; //added by Gengxun
+using namespace gmtl; //added by Gengxun
 //using namespace vrj;
 
-cfdCursor::cfdCursor( vtkPolyData * arrow, pfDCS *worldDCS )
+cfdCursor::cfdCursor( vtkPolyData * arrow, cfdDCS *worldDCS, cfdGroup* rootNode )
 {
    this->arrow = arrow;
    this->worldDCS = worldDCS;
    this->activeDataSetDCS = NULL;
+   _rootNode = rootNode;
 
    // get scale factors of the worldDCS...
-   pfMatrix mat;
-   this->worldDCS->getMat( mat );
+   Matrix44f mat;
+   mat = this->worldDCS->GetMat();
 
-   pfVec3 r;
-   mat.getRow(0, r);
-   float xscale = r.length();
-   mat.getRow(1, r);
-   float yscale = r.length();
-   mat.getRow(2, r);
-   float zscale = r.length();
+   Vec3f r;
+   
+   for ( unsigned int i = 0; i < 3; i++ )
+      r[ i ] = mat[ 0 ][ i ];
+   float xscale = length( r );
+
+   for ( unsigned int i = 0; i < 3; i++ )
+      r[ i ] = mat[ 1 ][ i ];
+   float yscale = length( r );
+
+   for ( unsigned int i = 0; i < 3; i++ )
+      r[ i ] = mat[ 2 ][ i ];
+   float zscale = length( r );
+
+   
    vprDEBUG(vprDBG_ALL,1) << "cfdCursor: scale = "
                           << xscale << " : " << yscale << " : "  << zscale
                           << std::endl << vprDEBUG_FLUSH;
@@ -109,9 +118,14 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, pfDCS *worldDCS )
    this->arrowActorS    = vtkActor::New();
    this->arrowGlyphS    = vtkGlyph3D::New();
 
-   this->cursorGeode = new pfGeode;
-   this->cursorDCS = new pfDCS;
-   this->cursorDCS->setScale( xscale,  yscale, zscale );
+   this->cursorGeode = new cfdGeode;
+   this->cursorDCS = new cfdDCS;
+   float tempArray[ 3 ];
+   tempArray[ 0 ] = xscale;
+   tempArray[ 1 ] = yscale;
+   tempArray[ 2 ] = zscale;
+
+   this->cursorDCS->SetScaleArray( tempArray );
 
    this->pReso = 2;  // Set the number of x-y subdivisions in the plane
    this->last_pReso = this->pReso;
@@ -121,8 +135,6 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, pfDCS *worldDCS )
 
    this->last_direction = XPLANE;
    this->last_cursor_type = XPLANE;
-
-   this->coord = new pfCoord();
 }
 
 cfdCursor::~cfdCursor()
@@ -153,10 +165,8 @@ cfdCursor::~cfdCursor()
    this->arrowActorS->Delete();
    this->arrowGlyphS->Delete();
 
-   pfDelete( this->cursorGeode );
-   pfDelete( this->cursorDCS );
-
-   pfDelete( this->coord );
+   delete this->cursorGeode;
+   delete this->cursorDCS;
 }
 
 void cfdCursor::Initialize( double x[3], double v[3] )
@@ -177,8 +187,8 @@ void cfdCursor::Initialize( double x[3], double v[3] )
 
    this->BuildPlaneSource();
 
-   vtkActorToPF( this->sphereActor, this->cursorGeode );
-   this->cursorDCS->addChild( this->cursorGeode );
+   this->cursorGeode->TranslateTocfdGeode( this->sphereActor );
+   this->cursorDCS->AddChild( (cfdSceneNode*) this->cursorGeode );
 }
 
 
@@ -290,7 +300,7 @@ void cfdCursor::UpdateSphere( void )
 {
    this->sphereSrc->SetCenter( 0.0f, 0.0f, 0.0f );
    this->sphereSrc->Update();
-   vtkActorToPF( this->sphereActor, this->cursorGeode );
+   this->cursorGeode->TranslateTocfdGeode( this->sphereActor );
 }
 
 void cfdCursor::UpdateArrowSource( void )
@@ -311,7 +321,7 @@ void cfdCursor::UpdateArrowSource( void )
    this->arrowPlaneS->SetNormal( this->dir );
    this->arrowPlaneS->Update();
 
-   vtkActorToPF( this->arrowActorS, this->cursorGeode );
+   this->cursorGeode->TranslateTocfdGeode( this->arrowActorS );
 }
 
 //add for box cursor
@@ -320,7 +330,7 @@ void cfdCursor::UpdateCube( void )
    vprDEBUG(vprDBG_ALL, 1) << " updating cube source "
                            << std::endl << vprDEBUG_FLUSH;
 
-   vtkActorToPF( this->cubeActor, this->cursorGeode );
+   this->cursorGeode->TranslateTocfdGeode( this->cubeActor );
 }
 //add end
 
@@ -352,7 +362,7 @@ void cfdCursor::UpdateLineSource( int direction )
 
    this->lineSrc->Update();
 
-   vtkActorToPF( this->lineActor, this->cursorGeode );
+   this->cursorGeode->TranslateTocfdGeode( this->lineActor );
 }
 
 void cfdCursor::UpdatePlaneSource( int i )
@@ -392,7 +402,7 @@ void cfdCursor::UpdatePlaneSource( int i )
    vprDEBUG(vprDBG_ALL, 1) << " updating plane source " << last_direction
                            << std::endl << vprDEBUG_FLUSH;
    this->planeSrc->Update();
-   vtkActorToPF( this->planeActorS, this->cursorGeode );
+   this->cursorGeode->TranslateTocfdGeode( this->planeActorS );
 }
 
 void cfdCursor::Update( int t, double x[3], double v[3], double wx[3] )
@@ -423,18 +433,6 @@ void cfdCursor::Update( int t, double x[3], double v[3], double wx[3] )
          this->last_pReso != this->pReso ||
          this->last_pSize != this->pSize )
    {
-      int numGSets = this->cursorGeode->getNumGSets();
-      vprDEBUG(vprDBG_ALL, 1) << "cfdCursor numGSets: " << numGSets
-                              << std::endl << vprDEBUG_FLUSH;
-
-      for ( i=0; i<numGSets; i++ )
-      {
-         pfGeoSet *g  = this->cursorGeode->getGSet( 0 );
-         this->cursorGeode->removeGSet( g );
-         pfDelete( g );
-      }
-      vprDEBUG(vprDBG_ALL, 1) << " Cursor : " << t
-                              << std::endl << vprDEBUG_FLUSH;
       switch( t )
       {
          case XPLANE:
@@ -485,7 +483,7 @@ void cfdCursor::Update( int t, double x[3], double v[3], double wx[3] )
 }
 
 
-pfDCS * cfdCursor::GetpfDCS()
+cfdDCS* cfdCursor::GetcfdDCS()
 {
    return this->cursorDCS;
 }
@@ -629,20 +627,6 @@ vtkPolyDataSource * cfdCursor::GetSourcePoints( int cursorId )
    }
 }
 
-void writePfMatrix( char * text, pfMatrix pfMat )
-{
-   std::cout << text << std::endl;
-   for (int i=0; i<4; i++)
-   {
-      for (int j=0; j<4; j++)
-      {
-         std::cout << pfMat[i][j] << "\t";
-      }
-      std::cout << std::endl;
-   }
-   std::cout << std::endl;
-}
-
 void cfdCursor::SetTranslation( void )
 {
    // Called constantly to place the active cursor in the virtual world.
@@ -650,28 +634,32 @@ void cfdCursor::SetTranslation( void )
    // Extract rotations from totalMat, where
    // totalMat = activeDataSetMat * pfWorldMat;
 
-   this->cursorDCS->setTrans( this->loc[ 0 ], this->loc[ 1 ], this->loc[ 2 ] );
+   float loc_f[ 3 ];
+   loc_f[ 0 ] = this->loc[ 0 ];
+   loc_f[ 1 ] = this->loc[ 1 ];
+   loc_f[ 2 ] = this->loc[ 2 ];
+   //*loc_f = *loc;
+   this->cursorDCS->SetTranslationArray( loc_f );
 
    // get pfMatrix of worldDCS
-   pfMatrix pfWorldMat;
-   this->worldDCS->getMat( pfWorldMat );
+   Matrix44f pfWorldMat;
+   pfWorldMat = this->worldDCS->GetMat();
 
-   pfMatrix totalMat;
+   Matrix44f totalMat;
    if ( this->activeDataSetDCS )
    {
       // get pfMatrix of activeDataSetDCS
-      pfMatrix activeDataSetMat;
-      this->activeDataSetDCS->getMat( activeDataSetMat );
+      Matrix44f activeDataSetMat;
+      activeDataSetMat = this->activeDataSetDCS->GetMat();
 
       totalMat = activeDataSetMat * pfWorldMat;
    }
    else
       totalMat = pfWorldMat;
 
-   totalMat.getOrthoCoord( this->coord );
-   this->cursorDCS->setRot( this->coord->hpr[ 0 ],
-                            this->coord->hpr[ 1 ],
-                            this->coord->hpr[ 2 ] );
+   //totalMat.getOrthoCoord( this->coord );
+   //this->cursorDCS->SetRotationArray( this->coord->hpr );
+   this->cursorDCS->SetRotationMatrix( totalMat );
 }
 
 void cfdCursor::GetLocalLocationVector( void )
@@ -694,49 +682,186 @@ void cfdCursor::GetLocalLocationVector( void )
                           << this->loc[ 2 ] << std::endl << vprDEBUG_FLUSH;
 
    // store the global location in a performer vector...
-   pfVec3 pfLoc = pfVec3( this->loc[ 0 ], this->loc[ 1 ], this->loc[ 2 ] );
+   gmtl::Vec4f jugglerVec;
+   jugglerVec[ 0 ] = this->loc[ 0 ];
+   jugglerVec[ 1 ] = this->loc[ 1 ];
+   jugglerVec[ 2 ] = this->loc[ 2 ];
+   jugglerVec[ 3 ] = 1.0f;
 
-   // get pfMatrix of worldDCS
-   pfMatrix pfWorldMat;
-   this->worldDCS->getMat( pfWorldMat );
-
-   //writePfMatrix( "pfWorldMat =", pfWorldMat );
+   // get juggler Matrix of worldDCS
+   Matrix44f pfWorldMat;
+   pfWorldMat = this->worldDCS->GetMat();
 
    // invert the worldDCS matrix...
-   pfMatrix pfWorldMatInv;
-   pfWorldMatInv.invertFull( pfWorldMat );
+   Matrix44f pfWorldMatInv;
+   gmtl::invert( pfWorldMatInv, pfWorldMat );
 
    // compute local_vec = [world matrix]^(-1) * global_vec
-   pfVec3 pfLocX;
-   pfLocX.fullXformPt( pfLoc, pfWorldMatInv );
+   Vec4f localVector;
+   localVector = pfWorldMatInv * jugglerVec;
 
-   // get pfMatrix of activeDataSetDCS
-   pfMatrix activeDataSetMat;
-   this->activeDataSetDCS->getMat( activeDataSetMat );
-
-   //writePfMatrix( "activeDataSetMat =", activeDataSetMat );
+   // get juggler Matrix of activeDataSetDCS
+   Matrix44f activeDataSetMat;
+   activeDataSetMat = this->activeDataSetDCS->GetMat();
 
    // invert activeDataSetDCS
-   pfMatrix activeDataSetMatInv;
-   activeDataSetMatInv.invertFull( activeDataSetMat );
+   Matrix44f activeDataSetMatInv;
+   gmtl::invert( activeDataSetMatInv, activeDataSetMat );
 
    // compute new_local_vec = [activeDataSet Matrix]^(-1) * local_vec
-   pfVec3 pfLocXX;
-   pfLocXX.fullXformPt( pfLocX, activeDataSetMatInv );
+   Vec4f pfLocXX;
+   pfLocXX = activeDataSetMatInv * localVector;
 
-   this->localLocation[ 0 ] = (double)pfLocXX[ 0 ];
-   this->localLocation[ 1 ] = (double)pfLocXX[ 1 ];
-   this->localLocation[ 2 ] = (double)pfLocXX[ 2 ];
+   // Set class member location
+   this->localLocation[ 0 ] =  (double)pfLocXX[ 0 ];
+   this->localLocation[ 1 ] =  (double)pfLocXX[ 1 ];
+   this->localLocation[ 2 ] =  (double)pfLocXX[ 2 ];
 
-   vprDEBUG(vprDBG_ALL,1) << " local position rel to performer: "
+   vprDEBUG(vprDBG_ALL,1) << " NOIE : local position rel to Juggler: "
                           << this->localLocation[ 0 ] << " : "
                           << this->localLocation[ 1 ] << " : "
                           << this->localLocation[ 2 ]
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-void cfdCursor::SetActiveDataSetDCS( pfDCS * myDCS )
+void cfdCursor::SetActiveDataSetDCS( cfdDCS* myDCS )
 {
    this->activeDataSetDCS = myDCS;
 }
 
+void cfdCursor::SetActiveDataSet( cfdDataSet* input )
+{
+   _activeDataSet = input;
+}
+
+// compare VjObs_i commandArray with its child's value
+bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
+{
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
+   {
+      vprDEBUG(vprDBG_ALL,1) << "this->id = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+                << ", this->min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) 
+                << ", this->max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
+                << std::endl << vprDEBUG_FLUSH;
+
+      if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == NO_CURSOR )
+      {
+         vprDEBUG(vprDBG_ALL,1) 
+           << "removing cursor with cursor->GetpfDCS() = "
+           << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
+
+         this->cursorId = NONE;
+         if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) >= 0 )
+            this->_rootNode->RemoveChild( this->GetcfdDCS() );
+      }
+      else
+      {
+         if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == POINT_CURSOR )
+            this->cursorId = SPHERE;
+         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == X_PLANE_CURSOR )
+            this->cursorId = XPLANE;
+         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == Y_PLANE_CURSOR )
+            this->cursorId = YPLANE;
+         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == Z_PLANE_CURSOR )
+            this->cursorId = ZPLANE;
+         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == X_LINE_CURSOR )
+            this->cursorId = XLINE;
+         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == Y_LINE_CURSOR )
+            this->cursorId = YLINE;
+         else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == Z_LINE_CURSOR )
+            this->cursorId = ZLINE;
+         else
+         {
+            vprDEBUG(vprDBG_ALL,0) 
+              << "ERROR: Unknown cursorId -- Setting cursor to XPLANE"
+              << std::endl << vprDEBUG_FLUSH;
+
+            this->cursorId = XPLANE;
+         }
+         
+         // fix this don't know what it used for
+         // look in old in cfdApp.cxx
+         // this->chgMod = true;
+
+         vprDEBUG(vprDBG_ALL,1) 
+           << "adding cursor with cursor->GetpfDCS() = "
+           << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
+
+         // if disconnected from scene graph, add
+         if ( this->_rootNode->SearchChild( this->GetcfdDCS() ) < 0 )
+         {
+            this->_rootNode->AddChild( this->GetcfdDCS() );
+         }
+      }
+
+      if ( _activeDataSet != NULL )
+         this->SetActiveDataSetDCS( _activeDataSet->GetDCS() );
+
+      //if ( this->cursorId != NONE && this->cursorId != SPHERE && this->cursorId != CUBE )
+      if ( this->cursorId != NONE && this->cursorId != SPHERE )
+      {
+         this->SetPlaneReso( commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) ); 
+
+         // convert size percentage (0-100) request to plane size
+         // fix this
+         //this->SetPlaneSize( commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * 
+         //                cfdObjects::GetActiveMeshedVolume()->GetLength() );
+      }
+      return true;
+   }
+
+/*
+      else  // changed from wand
+      {
+         if ( this->menuB == true )
+         { 
+            // If menu is up, remove menu and laser wand and cycle through cursor modes
+            if ( this->cursorId == NONE )
+            {
+               this->cursorId = XPLANE;
+               this->rootNode->removeChild( this->menu->GetpfDCS() );
+               this->rootNode->removeChild( this->laser->GetpfDCS() );
+               this->rootNode->addChild( this->cursor->GetpfDCS() );
+            }
+            else if ( this->cursorId == XPLANE )
+               this->cursorId = YPLANE;
+            else if ( this->cursorId == YPLANE )
+               this->cursorId = ZPLANE;
+            else if ( this->cursorId == ZPLANE )
+               this->cursorId = SPHERE;
+            else if ( this->cursorId == SPHERE )
+               this->cursorId = ARROW;
+            else if ( this->cursorId == ARROW )
+               this->cursorId = XLINE;
+            else if ( this->cursorId == XLINE )
+               this->cursorId = YLINE;
+            else if ( this->cursorId == YLINE )
+               this->cursorId = ZLINE;
+            else if ( this->cursorId == ZLINE )
+               this->cursorId = CUBE;
+            else if ( this->cursorId == CUBE )
+            {
+               // If on last cursor type, remove menu and reset cursor to off
+               this->cursorId = NONE;
+               this->menuB = false;
+            }
+         }
+         else
+         { 
+            // If menu is down, add menu and laser wand, and keep cursor off
+            this->rootNode->addChild( this->menu->GetpfDCS() );
+            this->rootNode->addChild( this->laser->GetpfDCS() );
+            this->menuB = true;
+            this->rootNode->removeChild( this->cursor->GetpfDCS() );
+         }
+      }
+*/
+
+}
+
+// in future, multi-threaded apps will make a copy of VjObs_i commandArray
+void cfdCursor::UpdateCommand()
+{
+   cerr << "doing nothing in cfdCursor::UpdateCommand()" << endl;
+
+}

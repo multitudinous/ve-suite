@@ -35,8 +35,13 @@
 // render using Performer.  VTK objects(vtkActor) are translated into
 // Performer objects(pfGeode).
 #include "cfdMenu.h"
-#include <Performer/pf/pfDCS.h>
-#include "vtkActorToPF.h"
+#include "cfdGeode.h"
+#include "cfdDCS.h"
+#include "cfdEnum.h"
+#include "cfdCommandObjects.h"
+#include "cfdCommandArray.h"
+#include "cfdGroup.h"
+
 
 #include <vtkTransform.h>
 #include <vtkUnstructuredGrid.h>
@@ -53,20 +58,15 @@
 #include <vtkProperty.h>
 #include <vtkPolyData.h>
 
-#ifdef _CFDCOMMANDARRAY
-#include "cfdCommandObjects.h"
-#endif //_CFDCOMMANDARRAY
-
 #include <vpr/Util/Debug.h>
 
-cfdMenu::cfdMenu( char *menuFile, char *menuConfig )
-#ifdef _CFDCOMMANDARRAY
-                                                    : cfdCommandObjects ()
-#endif //_CFDCOMMANDARRAY
+cfdMenu::cfdMenu( char *menuFile, char *menuConfig, cfdGroup* rootNode ) : cfdCommandObjects ()
 {
    cout << "cfdMenu constructor" << endl;
 
    this->id = 0;
+   this->menuB = true;
+   this->_rootNode = rootNode;
 
    // Read menu data
    this->reader = vtkUnstructuredGridReader::New();
@@ -82,17 +82,22 @@ cfdMenu::cfdMenu( char *menuFile, char *menuConfig )
    this->cellMapper = vtkPolyDataMapper::New();
    this->cellActor = vtkActor::New();
 
-   this->outlineGeode = new pfGeode;
-   this->shadedGeode = new pfGeode;
-   this->labelGeode = new pfGeode;
-   this->cellGeode = new pfGeode;
+   this->outlineGeode = new cfdGeode;
+   this->shadedGeode = new cfdGeode;
+   this->labelGeode = new cfdGeode;
+   this->cellGeode = new cfdGeode;
 
-   this->menuDCS = new pfDCS;
-   this->menuDCS->addChild( this->GetOutline() );
-   this->menuDCS->addChild( this->GetShaded() );
-   this->menuDCS->addChild( this->GetLabel( menuConfig ) );
-   this->menuDCS->addChild( this->GetCell() );
-   this->menuDCS->setTrans(0.0,0.0,-2.0);   //to fit Deere's screen
+   this->menuDCS = new cfdDCS;
+   this->menuDCS->AddChild( this->GetOutline() );
+   this->menuDCS->AddChild( this->GetShaded() );
+   this->menuDCS->AddChild( this->GetLabel( menuConfig ) );
+   this->menuDCS->AddChild( this->GetCell() );
+   float tempArray[ 3 ];
+   tempArray[ 0 ] = 0.0f;
+   tempArray[ 1 ] = 0.0f;
+   tempArray[ 2 ] = -2.0f;
+   
+   this->menuDCS->SetTranslationArray( tempArray );   //to fit Deere's screen
 }
 
 cfdMenu::~cfdMenu()
@@ -104,30 +109,27 @@ cfdMenu::~cfdMenu()
    this->cellMapper->Delete();
    this->cellActor->Delete();
 
-   pfDelete( this->outlineGeode );
-   pfDelete( this->shadedGeode );
-   pfDelete( this->labelGeode );
-   pfDelete( this->cellGeode );
-   pfDelete( this->menuDCS );
+   delete this->outlineGeode;
+   delete this->shadedGeode;
+   delete this->labelGeode;
+   delete this->cellGeode;
+   delete this->menuDCS;
 }
 
-#ifdef _CFDCOMMANDARRAY
 bool cfdMenu::CheckCommandId( cfdCommandArray* commandArray  )
 {
-   if ( commandArray->GetCommandValue( CFD_ID ) == BLUE_MENU_TOGGLE )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == BLUE_MENU_TOGGLE )
    {
       if ( this->menuB == true )
       { 
-         this->rootNode->removeChild( this->GetpfDCS() );
-         this->rootNode->removeChild( this->laser->GetpfDCS() );
+         this->_rootNode->RemoveChild( this->GetcfdDCS() );
          this->menuB = false;
       }
       else
       { 
          // If menu is down, add menu and laser wand, and keep cursor off
-         this->rootNode->addChild( this->GetpfDCS() );
-         this->rootNode->addChild( this->laser->GetpfDCS() );
-         this->menuB = true;
+         this->_rootNode->AddChild( this->GetcfdDCS() );
+        this->menuB = true;
       }
 
       return true;
@@ -139,9 +141,9 @@ void cfdMenu::UpdateCommand()
 {
    cerr << "cfdMenu::UpdateCommand() does nothing" << endl;
 }
-#endif //_CFDCOMMANDARRAY
 
-pfDCS * cfdMenu::GetpfDCS()
+
+cfdDCS * cfdMenu::GetcfdDCS()
 {
    return this->menuDCS;
 }
@@ -203,19 +205,20 @@ void cfdMenu::UpdateCell()
 {
    double *temp1;
    double  temp2[ 6 ];
-   temp1 = this->grid->GetCell( this->id )->GetBounds();
+   // Needs to be fixed 
+   //temp1 = this->grid->GetCell( this->id )->GetBounds();
    for ( int i = 0; i < 6; i++ )
       temp2[ i ] = temp1[ i ];
-  cell->SetBounds( temp2 );
+   cell->SetBounds( temp2 );
   
-  //cellActor->Update();
-  cellActor->GetMapper()->GetInput()->Update(); //changed to fit vtk4.0
+   //cellActor->Update();
+   cellActor->GetMapper()->GetInput()->Update(); //changed to fit vtk4.0
 
-  vtkActorToPF( this->cellActor, this->cellGeode );
+   this->cellGeode->TranslateTocfdGeode( this->cellActor );
 }
 
 
-pfGeode * cfdMenu::GetOutline()
+cfdGeode * cfdMenu::GetOutline()
 {
   vtkGeometryFilter *cFilter = vtkGeometryFilter::New();
      cFilter->SetInput( this->grid );
@@ -236,7 +239,7 @@ pfGeode * cfdMenu::GetOutline()
      cActor->GetProperty()->SetSpecularPower( 20.0f );
      cActor->GetProperty()->SetRepresentationToWireframe();
 
-  vtkActorToPF( cActor, this->outlineGeode );
+   this->outlineGeode->TranslateTocfdGeode( cActor );
 
   cFilter->Delete();
   cNormal->Delete();
@@ -246,7 +249,7 @@ pfGeode * cfdMenu::GetOutline()
   return this->outlineGeode;
 }
 
-pfGeode * cfdMenu::GetShaded(  )
+cfdGeode * cfdMenu::GetShaded(  )
 {
   vtkGeometryFilter *cFilter = vtkGeometryFilter::New();
      cFilter->SetInput( this->grid );
@@ -267,7 +270,7 @@ pfGeode * cfdMenu::GetShaded(  )
      cActor->GetProperty()->SetSpecularPower( 20.0f );
      cActor->GetProperty()->SetOpacity( 0.2f );
 
-  vtkActorToPF( cActor, this->shadedGeode );
+   this->shadedGeode->TranslateTocfdGeode( cActor );
 
   cFilter->Delete();
   cNormal->Delete();
@@ -277,7 +280,7 @@ pfGeode * cfdMenu::GetShaded(  )
   return this->shadedGeode;
 }
 
-pfGeode * cfdMenu::GetLabel( char* menuConfig )
+cfdGeode * cfdMenu::GetLabel( char* menuConfig )
 {
    int  MAX_MENU_ARRAY;
    char menuText[ 30 ][ 50 ];
@@ -338,7 +341,7 @@ pfGeode * cfdMenu::GetLabel( char* menuConfig )
    textActor->GetProperty()->SetColor( 1.0f, 1.0f, 1.0f );
    textActor->GetProperty()->SetSpecularPower( 40.0f );
 
-   vtkActorToPF( textActor, this->labelGeode );
+   this->labelGeode->TranslateTocfdGeode( textActor );
 
    centers->Delete();
    textAppend->Delete();
@@ -374,11 +377,12 @@ vtkPolyData * cfdMenu::GetText( char menuText[ ], double tPos[3] )
    return pData;
 }
 
-pfGeode * cfdMenu::GetCell()
+cfdGeode * cfdMenu::GetCell()
 {
    double *temp1;
    double  temp2[ 6 ];
-   temp1 = this->grid->GetCell( this->id )->GetBounds();
+   // Needs to be fixed
+   //temp1 = this->grid->GetCell( this->id )->GetBounds();
    for ( int i = 0; i < 6; i++ )
       temp2[ i ] = temp1[ i ];
   cell->SetBounds( temp2 );
@@ -402,7 +406,7 @@ pfGeode * cfdMenu::GetCell()
   //cellActor->Update();
   cellActor->GetMapper()->GetInput()->Update();
 
-  vtkActorToPF( this->cellActor, this->cellGeode );
+   this->cellGeode->TranslateTocfdGeode( this->cellActor );
 
   return this->cellGeode;
 }

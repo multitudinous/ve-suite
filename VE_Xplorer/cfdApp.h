@@ -29,13 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef PF_NAV_H
-#define PF_NAV_H
+#ifndef CFD_APP_H
+#define CFD_APP_H
 
-//biv -- added for non-corba build
-//#ifdef TABLET
 #include <VjObs_i.h>     //added for corba stuff
-//#endif
 
 #ifdef _TAO
 #include <orbsvcs/CosNamingC.h>
@@ -43,20 +40,20 @@
 //#include <CorbaManager.h>
 #endif
 
-#include <vtkTimerLog.h>
-#include <vtkPolyData.h>
-#include <vtkPointData.h>
-#include <vtkUnstructuredGrid.h>
-#include <vtkFieldData.h>
+//#include <vtkTimerLog.h>
+//#include <vtkPolyData.h>
+//#include <vtkPointData.h>
+//#include <vtkUnstructuredGrid.h>
+//#include <vtkFieldData.h>
 
 /// VR Juggler Stuff
 #include <vrj/Kernel/Kernel.h>
-#include <gmtl/Math.h>
-#include <gmtl/Quat.h>
-#include <gmtl/Vec.h>
-#include <gmtl/Matrix.h>
-#include <gmtl/Coord.h>
-#include <gmtl/Generate.h>
+//#include <gmtl/Math.h>
+//#include <gmtl/Quat.h>
+//#include <gmtl/Vec.h>
+//#include <gmtl/Matrix.h>
+//#include <gmtl/Coord.h>
+//#include <gmtl/Generate.h>
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 #include <vpr/Thread/Thread.h>
@@ -81,86 +78,28 @@
 #else
 //#include <windows.h>
 #endif
-/// Performer libraries
-#include <Performer/pr/pfGeoState.h>
-#include <Performer/pf/pfChannel.h>
-#include <Performer/pf/pfEarthSky.h>
-#include <Performer/pf/pfLightSource.h>
-#include <Performer/pf/pfNode.h>
-#include <Performer/pf/pfTraverser.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pfdu.h>
-#include <Performer/pfutil.h>
-#include <Performer/pf.h>
-#include <Performer/pf/pfGeode.h>
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pr/pfMaterial.h>
-#include <Performer/pr.h>
-#include <Performer/pf/pfSwitch.h>
-#ifndef WIN32
-//biv--check here if build/run problems occur
-#include <Performer/pfdb/pfiv.h>
-#endif
-#include <Performer/pr/pfLight.h>
-#include <Performer/pf/pfSequence.h>
 
-#include "cfdEnum.h"
-#include "cfdGeode.h"
-#include "cfdScalarBarActor.h"
-#include "cfdCursor.h"
 
-#include "cfdDataSet.h"
-#include "cfdMenu.h"
-#include "cfdLaser.h"
-#include "cfdNavigate.h"
-#include "cfdImage.h"
-#include "cfdIsosurface.h"
-#include "cfdContour.h"
-#include "cfdMomentum.h"
-#include "cfdVector.h"
-#include "cfdPresetContour.h"
-#include "cfdPresetMomentum.h"
-#include "cfdPresetVector.h"
-#include "cfdContours.h"
-#include "cfdMomentums.h"
-#include "cfdVectors.h"
-#include "cfdStreamers.h"
-#include "cfdAnimatedStreamlineCone.h"
-#include "cfdAnimatedImage.h"
-#include "cfdObjects.h"
-
-#include "cfdTransientFlowManager.h"
-#include "cfdAnimation.h"
-
-#include "textPrompt.h"
-#include "Plot3Dviewer.h"
-#include "cfdReadParam.h"
-#include "cfdFILE.h"
-
-#include "cfdSound.h"
-#include "cfdQuatCamHandler.h"
-
-#include "cfdIHCCModel.h"
-//biv-- the new write traverser class to handle
-//cfdSequence nodes
-#include "cfdWriteTraverser.h"
-
-class cfdScalarBarActor;
-//class cfdDashboard;
 #ifdef _TAO
 class cfdExecutive;
 #endif
-class cfdPolyData;
-class cfdTeacher;
-class cfdSound;
 
-class vtkTransform;
-class vtkTransformFilter;
+class cfdPfSceneManagement;
+class cfdEnvironmentHandler;
+class cfdSteadyStateVizHandler;
+class cfdTransientVizHandler;
+class cfdModelHandler;
+class cfdIHCCModel;
+//class vtkTransform;
+//class vtkTransformFilter;
+
+
+// Scene graph dependent forward declarations
+class pfGroup;
 
 using namespace vrj;
 using namespace gmtl;
 using namespace gadget;
-using namespace snx;
 
 // The sleep time for sampling of threads.
 const float SAMPLE_TIME = 1.0f;
@@ -231,32 +170,13 @@ class cfdApp : public vrj::PfApp
 	  void setId( int x ){ this->cfdId = x; }
 #endif
 
-   //biv-- get inputs for navigation from the GUI
-   void updateNavigationFromGUI();
-
-   //biv -- the write traverser to write out perfly
-   //compliant pfb
-   void writePFBFile(pfNode* graph,char* fileName);
-
-// protected:
-   
-   void RefreshScalarBar();
-   
-   // Performer objects - used to control the scene graph.
-   pfLightModel  * sunModel;
-   pfLightSource * sun,*lit;
-   pfGeoState    * gstate;
-   pfScene       * scene;
-   pfGroup       * rootNode;  
-   pfDCS         * worldDCS;
-   pfDCS *activeDataSetDCS;
-
-   // Classes and variables for multithreading.
-   vpr::ThreadMemberFunctor<cfdApp> *vjThFunc[2];
-   vpr::Thread *vjTh[2];
-   
+   cfdPfSceneManagement*      _sceneManager;
+   cfdEnvironmentHandler*     _environmentHandler;
+   cfdSteadyStateVizHandler*  _steadystateHandler;
+   cfdTransientVizHandler*    _transientHandler;
+   cfdModelHandler*          _modelHandler;
    // Objects defined in virtual environment space.
-   cfdPolyData       *surface;
+   /*cfdPolyData       *surface;
    cfdMenu           *menu;
    cfdLaser          *laser;
    cfdNavigate       *nav;
@@ -293,9 +213,9 @@ class cfdApp : public vrj::PfApp
    cfdAnimatedImage           *animImg;
    cfdIsosurface              *isosurface;
    cfdQuatCamHandler          *quatcamHandler;
-   cfdIHCCModel               *ihccModel;
    textPrompt                 *tPrompt;
-   //cfdDashboard*     dashBoard;
+   //cfdDashboard*     dashBoard;*/
+   cfdIHCCModel               *ihccModel;
 #ifdef _TAO
    cfdExecutive*     executive;
 #endif
@@ -304,28 +224,21 @@ class cfdApp : public vrj::PfApp
    CORBA::ORB_var orb;
    PortableServer::POA_var poa;
 #endif
-   std::vector< cfdSound * > sounds;
-   std::vector< cfdFILE * > geomL;
-   std::vector< cfdObjects * > dataList;
+   //std::vector< cfdSound * > sounds;
+   //std::vector< cfdFILE * > geomL;
 
-#ifdef _CFDCOMMANDARRAY
-   std::vector< cfdGlobalBase * > commandList;
-#endif //_CFDCOMMANDARRAY
-
-   cfdObjects *activeObject;
-   cfdObjects *activeSequenceObject;
    
    //biv -- transient stuff
-   cfdTransientFlowManager* _cfdTFM_X_Contour[2];//added for windshield hack
+   /*cfdTransientFlowManager* _cfdTFM_X_Contour[2];//added for windshield hack
    cfdTransientFlowManager* _cfdTFM_Y_Contour;
    cfdTransientFlowManager* _cfdTFM_Z_Contour;
    cfdTransientFlowManager* _cfdTFM_X_Vector;
    cfdTransientFlowManager* _cfdTFM_Y_Vector;
    cfdTransientFlowManager* _cfdTFM_Z_Vector;
    cfdTransientFlowManager* _cfdTFM_Geometry[2];
-   cfdTransientFlowManager* _cfdTFM_Particle;
+   cfdTransientFlowManager* _cfdTFM_Particle;*/
 
-   // Used for defining the vectors for data display
+/*   // Used for defining the vectors for data display
    vtkPolyData * arrow;
 
    // Text processing stuff: needs to be reimplemented with a little thought
@@ -344,7 +257,7 @@ class cfdApp : public vrj::PfApp
    // Geometry and opacity controls
    bool  chgMod;
    bool  changeGeometry;
-   
+*/   
    // Stores data from cfdCursor
    // Variable will eventually be used to define bounding box
    // for data interagation
@@ -355,8 +268,8 @@ class cfdApp : public vrj::PfApp
 
    // A hack for multi - model stuff with streamlines
    // will probably disappear in the future
-   int   useLastSource;
-   vtkPolyData * lastSource;
+   //int   useLastSource;
+   //vtkPolyData * lastSource;
 
    // Thread state flags
    bool  runStreamersThread;
@@ -401,7 +314,7 @@ class cfdApp : public vrj::PfApp
 #endif
    //biv -- the write traverser
    protected:
-      cfdWriteTraverser* _cfdWT;
+      //cfdWriteTraverser* _cfdWT;
 
 };
 

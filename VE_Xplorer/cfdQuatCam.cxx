@@ -30,10 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include <cfdQuatCam.h>
-
-using namespace gmtl;
-using namespace vrj;
+#include "cfdQuatCam.h"
+#include "cfdDCS.h"
+#include "cfdNavigate.h"
 
 cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans, float* rotPts)
 {
@@ -54,30 +53,26 @@ cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans, float* rotPts)
 }*/
 
 
-void cfdQuatCam::SetCamPos(double* worldTrans, pfDCS* worldDCS)
+void cfdQuatCam::SetCamPos(double* worldTrans, cfdDCS* worldDCS)
 {
    for (int i=0; i<3; i++)
       vjVecLastTrans[i] = worldTrans[i];
-   pfMatrix m;
-   worldDCS->getMat(m);
+   
    Matrix44f vjm;  
-   vjm = GetVjMatrix(m);
+   vjm = worldDCS->GetMat();
    set(LastPosQuat,vjm);
 }
 
 
-void cfdQuatCam::MoveCam(double* worldTrans, float t, pfDCS* dummy)
+void cfdQuatCam::MoveCam(double* worldTrans, float t, cfdDCS* dummy)
 {
    TransLerp(t);
    RotSlerp(t);
    Matrix44f temp;
    setRot( temp, CurPosQuat);
    setTrans( temp, vjVecCurrTrans );
-   
-   pfMatrix pfTemp = GetPfMatrix( temp );
-   dummy->setMat(pfTemp);
-   //dummy->setTrans(-vjVecCurrTrans[0], -vjVecCurrTrans[1], -vjVecCurrTrans[2]);
-   //return dummy;
+
+   dummy->SetMat(temp);
 }
 
 void cfdQuatCam::RotSlerp(float t)

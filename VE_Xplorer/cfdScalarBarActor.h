@@ -32,34 +32,43 @@
 #ifndef CFD_SCALAR_BAR_ACTOR_H
 #define CFD_SCALAR_BAR_ACTOR_H
 
-class pfDCS;
-class pfGeode;
+class cfdDCS;
+class cfdGeode;
+class cfdGroup;
 class vtkLookupTable;
 class vtkVectorText;
-
-#ifdef _CFDCOMMANDARRAY
 class cfdCommandArray;
-#endif //_CFDCOMMANDARRAY
+class cfdDataSet;
+class cfdReadParam;
+#include <string>
+
+using namespace std;
+#include "cfdGlobalBase.h"
 
 //! VTK scalar bar render
 /*!
   A rebuilt class from vtkScalarBarActor(2-D) for use in the
   3-D space.
 */
-class cfdScalarBarActor
+class cfdScalarBarActor : public cfdGlobalBase
 {
 public:
-   cfdScalarBarActor();
+   cfdScalarBarActor( char*, cfdGroup* );
    ~cfdScalarBarActor();
 
-#ifdef _CFDCOMMANDARRAY
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
    // in future, multi-threaded apps will make a copy of VjObs_i commandArray
    virtual void UpdateCommand();
-#endif //_CFDCOMMANDARRAY
   
+   // Create the scalar bar
+   void RefreshScalarBar( void );
+   // Set the active dataset for scalar bar computations
+   void SetActiveDataSet( cfdDataSet* );
+   // Read parameter file
+   void CreateObjects( void );
+
    // Set/Get the position of the scalar bar in 3D space
    void SetPosition(float x, float y, float z);
    void SetPosition(float x[3]);
@@ -101,7 +110,7 @@ public:
   void Execute();
 
   // 
-  pfDCS * getpfDCS( void);
+  cfdDCS * GetcfdDCS( void);
 
 private:
   float itsX[3];
@@ -114,12 +123,20 @@ private:
   double range[2];
   float dScalar;
   float titleTextScale;
-  pfGeode *pfaPolyActor;
-  pfGeode *pftitleActor;
-  pfGeode *pfLabelActor[5];
+  cfdGeode *pfaPolyActor;
+  cfdGeode *pftitleActor;
+  cfdGeode *pfLabelActor[5];
   int numTextLabels;   // number of numerical labels on the scalar bar legend
 
-  pfDCS *scalarBar;
+  cfdDCS *scalarBar;
+   cfdGroup* _rootNode;
+   char* _param;
+   cfdDataSet* _activeDataSet;
+   float scalarBarPos[ 3 ];
+   float scalarBarZRot;
+   float scalarBarH;
+   float scalarBarW;
+   cfdReadParam* _readParam;
 };
 
 #endif

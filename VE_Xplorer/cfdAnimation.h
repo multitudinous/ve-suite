@@ -33,8 +33,8 @@
 #define CFDANIMATION_H
 
 class cfdTransientFlowManager;
-class cfdSequence;
-class pfGroup;
+class cfdTempAnimation;
+class cfdGroup;
 
 #include <vector>
 
@@ -54,9 +54,9 @@ class cfdAnimation
       void SetpfGroups( void );
       
       //get a pointer to the animation
-      cfdSequence* GetSequence( void );
+      cfdTempAnimation* GetSequence( void );
       
-      pfGroup* GetpfGroup( int i );
+      cfdGroup* GetpfGroup( int i );
 
       int GetNumberOfFrames( void ){ return numFrames;}
 
@@ -64,9 +64,9 @@ class cfdAnimation
       int numFrames;
       double _duration;
 
-      cfdSequence* sequence;
+      cfdTempAnimation* sequence;
 
-      pfGroup** groups;
+      cfdGroup** groups;
 
       std::vector< cfdTransientFlowManager * > flowManagers;
 

@@ -39,6 +39,7 @@
 
 class cfdReadParam;
 class cfdFrame;
+class cfdTransientVizHandler;
 
 class cfdTransientFlowManager : public cfdObjects
 {
@@ -50,7 +51,7 @@ public:
    virtual void Update( void );   
 
    // this allows the TFM to pass parameter file info down to frames 
-   void SetParameterFile( cfdReadParam* param, int );
+   void SetParameterFile( cfdTransientVizHandler* param, int );
 
    void SetDirectory( char * );
    char * GetDirectory();
@@ -75,5 +76,8 @@ protected:
    cfdFrame* frames;
    std::vector< char* > frameFileNames;
    int * order;
+   // Fix this 
+   // this classs needs major rework fix
+   cfdTransientVizHandler* paramFile;
 };
 #endif //_VRAC_TRANSIENT_FLOW_MANAGER_H_

@@ -41,6 +41,7 @@ class cfdCommandArray
    ~cfdCommandArray(){}
 
    int GetCommandValue( int );
+   void SetCommandValue( int, int );
 
    enum commandArrayValue 
    { 
