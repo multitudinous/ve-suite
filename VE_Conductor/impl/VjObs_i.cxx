@@ -655,6 +655,7 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterMin              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
       this->mStates->clusterMax              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
       this->mStates->clusterId               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
+      //std::cout << this->mStates->clusterId << std::endl;
       this->mStates->clusterGeo_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
       this->mStates->clusterPostdata_state   = _bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
       this->mStates->clusterPre_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
@@ -675,6 +676,8 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_MIN, this->mStates->clusterMin );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_MAX, this->mStates->clusterMax );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, this->mStates->clusterId );
+   //   std::cout << this->mStates->clusterId << std::endl;
+   //   std::cout << _cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) << std::endl;
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, this->mStates->clusterGeo_state );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, this->mStates->clusterPostdata_state );
    _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );

@@ -119,16 +119,16 @@ void UI_GeometryTab::_buildPage()
    wxBoxSizer* lodGroup = new wxBoxSizer( wxVERTICAL );
    wxBoxSizer* lodLabelBottom = new wxBoxSizer( wxHORIZONTAL );
 
-   opacityGroup->Add(opacityLabel,0,wxALIGN_LEFT|wxEXPAND);
+   opacityGroup->Add(opacityLabel,0,wxALIGN_LEFT);
    opacityGroup->Add(geomOpacitySlider,1,wxALIGN_LEFT|wxEXPAND);
-   opacityLabelBottom->Add(opacityLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
-   opacityLabelBottom->Add(opacityLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
-   opacityGroup->Add(opacityLabelBottom,0,wxALIGN_LEFT|wxEXPAND);
+   opacityLabelBottom->Add(opacityLabelLeft,6,wxALIGN_LEFT);
+   opacityLabelBottom->Add(opacityLabelRight,0,wxALIGN_RIGHT);
+   opacityGroup->Add(opacityLabelBottom,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5);
 
-   lodGroup->Add(lodLabel,0,wxALIGN_LEFT|wxEXPAND);
+   lodGroup->Add(lodLabel,0,wxALIGN_LEFT);
    lodGroup->Add(geomLODSlider,1,wxALIGN_LEFT|wxEXPAND);
-   lodLabelBottom->Add(lodLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
-   lodLabelBottom->Add(lodLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
+   lodLabelBottom->Add(lodLabelLeft,6,wxALIGN_LEFT);
+   lodLabelBottom->Add(lodLabelRight,0,wxALIGN_RIGHT);
    lodGroup->Add(lodLabelBottom,0,wxALIGN_LEFT|wxEXPAND|wxALL);
 
    //the update button
@@ -138,7 +138,7 @@ void UI_GeometryTab::_buildPage()
    wxStaticBoxSizer* geomControlsGroup = new wxStaticBoxSizer(geomControls,wxVERTICAL);
    //the panel sizer
    //geometryPanelGroup->Add(_geometryRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   geomControlsGroup->Add(radioAndCheckBoxes,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+   geomControlsGroup->Add(radioAndCheckBoxes,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
    geomControlsGroup->Add(opacityGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5);
    geomControlsGroup->Add(lodGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5);
 

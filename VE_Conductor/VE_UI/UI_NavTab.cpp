@@ -62,19 +62,19 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
    topSizer->Add(_ccwButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    topSizer->Add(_forwardButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    topSizer->Add(_cwButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   topSizer->Add(blank1,0,wxALIGN_CENTER_HORIZONTAL);
-   topSizer->Add(_upButton,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   topSizer->Add(blank1,1,wxALIGN_CENTER_HORIZONTAL);
+   topSizer->Add(_upButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //second row of the grid
    topSizer->Add(_leftButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   topSizer->Add(blank2,0,wxALIGN_CENTER_HORIZONTAL);
+   topSizer->Add(blank2,1,wxALIGN_CENTER_HORIZONTAL);
    topSizer->Add(_rightButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   topSizer->Add(blank3,0,wxALIGN_CENTER_HORIZONTAL);
-   topSizer->Add(blank4,0,wxALIGN_CENTER_HORIZONTAL);
+   topSizer->Add(blank3,1,wxALIGN_CENTER_HORIZONTAL);
+   topSizer->Add(blank4,1,wxALIGN_CENTER_HORIZONTAL);
     //third row
-   topSizer->Add(blank5,0,wxALIGN_CENTER_HORIZONTAL);
+   topSizer->Add(blank5,1,wxALIGN_CENTER_HORIZONTAL);
    topSizer->Add(_backButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   topSizer->Add(blank6,0,wxALIGN_CENTER_HORIZONTAL);
-   topSizer->Add(blank7,0,wxALIGN_CENTER_HORIZONTAL);
+   topSizer->Add(blank6,1,wxALIGN_CENTER_HORIZONTAL);
+   topSizer->Add(blank7,1,wxALIGN_CENTER_HORIZONTAL);
    topSizer->Add(_downButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
  
    navCol->Add(topSizer,1,wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
