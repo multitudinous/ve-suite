@@ -50,7 +50,6 @@ class cfdTextOutput
     
    private:
       cfdDCS*   dcs;
-      cfdGeode* geode;
 #ifdef _PERFORMER
       //pfFont *fnt;
       pfText *text;

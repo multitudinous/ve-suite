@@ -156,6 +156,13 @@ void cfdEnvironmentHandler::InitScene( void )
    //this->nav->SetWorldLocation( this->nav->worldTrans );
    cfdPfSceneManagement::instance()->GetWorldDCS()->SetScaleArray( this->worldScale );
 
+#ifdef _OSG
+   this->worldRot[ 1 ] -= 90;
+   // We have to do this o "trick" the user into thinking that the coordinate
+   // system is he same as performers or Z up, X right, Y into the screen
+   // DO NOT REMOVE OR CHANGE!!!!!!!!!!!!!!!!!!!!!!
+#endif // _OSG
+
    for ( int i = 0; i < 3; i++)
    {
       this->nav->worldTrans[ i ] = this->worldTrans[ i ];

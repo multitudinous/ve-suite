@@ -64,6 +64,7 @@ class cfdCursor;
 class cfdTempAnimation;
 class cfdGraphicsObject;
 class cfdModel;
+class cfdTextOutput;
 
 class cfdSteadyStateVizHandler : public vpr::Singleton< cfdSteadyStateVizHandler >
 {
@@ -116,7 +117,7 @@ class cfdSteadyStateVizHandler : public vpr::Singleton< cfdSteadyStateVizHandler
       cfdImage*            image;
       cfdAnimatedImage*    animImg;
       cfdAnimatedStreamlineCone* animStreamer;
-
+      cfdTextOutput*       textOutput;
       // Common objects for all functions
       cfdCommandArray*  commandArray;
       cfdDCS*     _activeDataSetDCS;

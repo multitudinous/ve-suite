@@ -63,6 +63,7 @@
 #include "cfdCursor.h"
 #include "cfdGraphicsObject.h"
 #include "cfdModel.h"
+#include "cfdTextOutput.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdModelHandler.h"
 #include "cfdPfSceneManagement.h"
@@ -80,40 +81,41 @@
 
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 {
-   this->surface = NULL;
-   this->isosurface = NULL;
-   this->contour = NULL;
-   this->momentum = NULL;
-   this->vector = NULL;
-   this->x_contour = NULL;
-   this->y_contour = NULL;
-   this->z_contour = NULL;
-   this->x_momentum = NULL;
-   this->y_momentum = NULL;
-   this->z_momentum = NULL;
-   this->x_vector = NULL;
-   this->y_vector = NULL;
-   this->z_vector = NULL;
-   this->x_contours = NULL;
-   this->y_contours = NULL;
-   this->z_contours = NULL;
-   this->x_momentums = NULL;
-   this->y_momentums = NULL;
-   this->z_momentums = NULL;
-   this->x_vectors = NULL;
-   this->y_vectors = NULL;
-   this->z_vectors = NULL;
-   this->streamlines = NULL;
-   this->particles = NULL;
-   this->image = NULL;
-   this->animStreamer = NULL;
-   this->animImg = NULL;
-   
-   this->commandArray = NULL;
-   this->_activeDataSetDCS = NULL;
-   this->_activeObject = NULL;
-   this->lastSource = NULL;
-   this->_activeTempAnimation = NULL;
+   this->surface = 0;
+   this->isosurface = 0;
+   this->contour = 0;
+   this->momentum = 0;
+   this->vector = 0;
+   this->x_contour = 0;
+   this->y_contour = 0;
+   this->z_contour = 0;
+   this->x_momentum = 0;
+   this->y_momentum = 0;
+   this->z_momentum = 0;
+   this->x_vector = 0;
+   this->y_vector = 0;
+   this->z_vector = 0;
+   this->x_contours = 0;
+   this->y_contours = 0;
+   this->z_contours = 0;
+   this->x_momentums = 0;
+   this->y_momentums = 0;
+   this->z_momentums = 0;
+   this->x_vectors = 0;
+   this->y_vectors = 0;
+   this->z_vectors = 0;
+   this->streamlines = 0;
+   this->particles = 0;
+   this->image = 0;
+   this->animStreamer = 0;
+   this->animImg = 0;
+   this->textOutput = 0;
+
+   this->commandArray = 0;
+   this->_activeDataSetDCS = 0;
+   this->_activeObject = 0;
+   this->lastSource = 0;
+   this->_activeTempAnimation = 0;
 
    this->computeActorsAndGeodes = false;
    this->actorsAreReady = false;
@@ -330,6 +332,13 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
       vprDEBUG(vprDBG_ALL,2)  
         << "deleting this->animStreamer" << std::endl << vprDEBUG_FLUSH;
       delete this->animStreamer;
+   }
+
+   if ( this->textOutput ) 
+   {
+      vprDEBUG(vprDBG_ALL,2)  
+        << "deleting this->textOutput" << std::endl << vprDEBUG_FLUSH;
+      delete this->textOutput;
    }
 }
 bool cfdSteadyStateVizHandler::TransientGeodesIsBusy()
@@ -710,6 +719,9 @@ void cfdSteadyStateVizHandler::InitScene( void )
    std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
    this->runIntraParallelThread = true;
    this->vjTh[0] = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread ) );
+
+   std::cout << "|  9. Initializing..................................... Text Output |" << std::endl;
+   this->textOutput = new cfdTextOutput();
 }
 
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )
@@ -748,6 +760,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    {
       vprDEBUG(vprDBG_ALL,3) << "|\tUpdating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
+      bool alreadyRemoved = false;
       for ( unsigned int i = 0; i < this->dataList.size(); i++ )
       {
          if ( this->dataList.at( i )->GetUpdateFlag() )//|| 
@@ -791,6 +804,13 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             vprDEBUG(vprDBG_ALL,2) << "|\tDone Creating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
          }
+         
+         // if we have selected a viz feature and it is complete the remove the text
+         if ( !computeActorsAndGeodes && !alreadyRemoved )
+         {
+            alreadyRemoved = true;
+            cfdPfSceneManagement::instance()->GetRootNode()->RemoveChild( textOutput->add_text( "executing..." ) );
+         }
       }
    }
 
@@ -811,6 +831,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                                    << " to _activeObject"
                                    << std::endl << vprDEBUG_FLUSH;
 
+            cfdPfSceneManagement::instance()->GetRootNode()->AddChild( textOutput->add_text( "executing..." ) );
             this->_activeObject = this->dataList[ i ];
             
             if ( this->_activeObject->GetObjectType() == IMAGE_EX )

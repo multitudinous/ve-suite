@@ -39,8 +39,15 @@
 #include <string>
 #include <iostream>
 
+#ifdef _PERFORMER
+#include <Performer/pfdu.h>
+#include <Performer/pf/pfDCS.h>
+#elif _OSG
+#elif _OPENSG
+#endif
+
 cfdTextOutput::cfdTextOutput()
-:text_DCS(0)
+:dcs(0)
 {
 #ifdef _PERFORMER
    text = 0;
@@ -65,6 +72,11 @@ cfdDCS *cfdTextOutput::add_text(char * text_input)
 {
    if ( dcs )
    {
+      cfdGroup* temp = (cfdGroup*)dcs->GetParent( 0 );
+      if ( temp )
+      {
+         temp->RemoveChild( dcs );
+      }
       delete dcs;
       dcs = 0;
    }
@@ -94,15 +106,24 @@ cfdDCS *cfdTextOutput::add_text(char * text_input)
    str->setColor(0.8f,0.8f,0.0f,1.0f);
    str->setString(text_input);
    str->flatten();
-
+   //str->getGState();
    text->addString(str);
-   dcs->addChild(text);
-   dcs->setTrans(1.0f,0.2f,3.0f);
-   dcs->setScale(0.5,0.5,0.5);
+   ((pfDCS*)dcs->GetRawNode())->addChild(text);
 
+   float trans[ 3 ];
+   trans[ 0 ] = 1.0f;
+   trans[ 1 ] = 0.2f;
+   trans[ 2 ] = 3.0f;
+   dcs->SetTranslationArray( trans );
+
+   float scale[ 3 ];
+   scale[ 0 ] = 0.5f;
+   scale[ 1 ] = 0.5f;
+   scale[ 2 ] = 0.5f;
+   dcs->SetScaleArray( scale );
 #elif _OSG
 #elif _OPENSG
 #endif
-   return text_DCS;
+   return dcs;
 }
 

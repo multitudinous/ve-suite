@@ -161,6 +161,7 @@ SRCS=\
    cfdQuatCam.cxx \
    cfdReadParam.cxx \
    cfdScalarBarActor.cxx \
+   cfdScalarVolumeVisHandler.cxx \
    cfdSceneNode.cxx \
    cfdSequence.cxx \
    cfdSound.cxx \
@@ -184,6 +185,7 @@ SRCS=\
    cfdVjObsWrapper.cxx \
    cfdVolumeSliceSwitchCallback.cpp \
    cfdVolumeVisualization.cpp \
+   cfdVolumeVisNodeHandler.cxx \
    cfdVEXplorer.cxx \
    cfdWriteTraverser.cxx \
    fileIO.cxx \

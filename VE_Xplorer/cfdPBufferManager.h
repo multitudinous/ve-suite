@@ -1,6 +1,7 @@
 #ifndef _BIV_PBUFFER_MANAGER_H_
 #define _BIV_PBUFFER_MANAGER_H_
 #ifdef _OSG
+#ifdef CFD_USE_SHADERS
 #include <osg/GL>
 
 #if defined(WIN32)
@@ -8,38 +9,41 @@
     #include <windows.h>
 #endif
 ///////////////////////
+
 #include "gl/wglext.h"
 #include "gl/glext.h"
+
 #include <iostream>
 
 
 
-class cfdPBufferManager{
-public:
-   cfdPBufferManager();
-   ~cfdPBufferManager();
+class cfdPBufferManager
+{
+   public:
+      cfdPBufferManager();
+      ~cfdPBufferManager();
    
-   //initialize the entry functions
-   void initializePBufferEntryFunctions();
+      //initialize the entry functions
+      void initializePBufferEntryFunctions();
    
-   //clean up the pbuffer
-   void cleanUpPBuffer();
+      //clean up the pbuffer
+      void cleanUpPBuffer();
    
-   void setViewport(double w, double h);
+      void setViewport(double w, double h);
 
-   void activate(){
-      wglMakeCurrent(_pBufferDeviceContext, _pBufferGLContext);
-   }
+      void activate(){
+         wglMakeCurrent(_pBufferDeviceContext, _pBufferGLContext);
+      }
     
-   void deactivate(){
-      wglMakeCurrent(_frameBufferDeviceContext, _frameBDGLContext);
-   }
+      void deactivate(){
+         wglMakeCurrent(_frameBufferDeviceContext, _frameBDGLContext);
+      }
 
-   //get the device context
-   HDC pBufferDeviceContex(){return _pBufferDeviceContext;}
+      //get the device context
+      HDC pBufferDeviceContex(){return _pBufferDeviceContext;}
 
-   //get the gl rendering pbuffer contex
-   HGLRC pBufferGLDC(){return _pBufferGLContext;}
+      //get the gl rendering pbuffer contex
+      HGLRC pBufferGLDC(){return _pBufferGLContext;}
 
    //initialize a pixel buffer
    //this functionality will be
@@ -76,5 +80,6 @@ protected:
    int _w;
 
 };
+#endif //CFD_USE_SHADER
 #endif
 #endif //_BIV_PBUFFER_MANAGER_H_
