@@ -16,9 +16,9 @@ PREFIX = /usr/local
 include ${XERCESCROOT}/version.incl
 include ../Makefile.incl
 
-PLUGIN = libTEMPLATE.so
-OBJECTS = TEMPLATE.o \
-	TEMPLATE_UI.o 
+PLUGIN = libAGR.so
+OBJECTS = AGR.o \
+	AGR_UI.o 
 
 .SUFFIXES : .o .cpp
 
@@ -32,3 +32,4 @@ $(PLUGIN): $(OBJECTS)
 	$(CXX) -g -shared -o $(PLUGIN) $(OBJECTS) 
 clean:
 	rm -rf *.o $(PLUGIN) $(OBJECTS) 
+

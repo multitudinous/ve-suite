@@ -4,26 +4,38 @@
 #pragma warning(disable : 4503)
 #pragma warning(disable : 4251)
 
-#include "TEMPLATE.h"
-#include "TEMPLATE_UI.h"
+#include "AGR.h"
+#include "AGR_UI.h"
 
-IMPLEMENT_DYNAMIC_CLASS(TEMPLATE, REI_Plugin)
-
-/////////////////////////////////////////////////////////////////////////////
-TEMPLATE
-::TEMPLATE()
-
-
+IMPLEMENT_DYNAMIC_CLASS(AGR, REI_Plugin)
 
 /////////////////////////////////////////////////////////////////////////////
-TEMPLATE
-::~TEMPLATE()
+AGR
+::AGR()
+{
+  RegistVar("solv_mw", &solv_mw);
+  RegistVar("solv_den", &solv_den);
+  RegistVar("solv_type", &solv_type);
+  RegistVar("tray_type", &tray_type);
+
+  solv_mw = 119.16;
+  solv_den = 1041.0;
+  solv_type = 0;
+  tray_type = 0;
+
+}
+
+
+
+/////////////////////////////////////////////////////////////////////////////
+AGR
+::~AGR()
 {
 
 }
 
 /////////////////////////////////////////////////////////////////////////////
-double TEMPLATE::GetVersion()
+double AGR::GetVersion()
 {
   double result=1.0;
 
@@ -33,7 +45,7 @@ double TEMPLATE::GetVersion()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-int TEMPLATE::GetNumPoly()
+int AGR::GetNumPoly()
 {
   int result=0;
   //Your code
@@ -41,69 +53,74 @@ int TEMPLATE::GetNumPoly()
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void TEMPLATE::GetPoly(POLY &polygon)
-{
-  return ;//polygon;
-}
+//void AGR::GetPoly(POLY &polygon)
+//{
+//  return ;//polygon;
+//}
 
 /////////////////////////////////////////////////////////////////////////////
-int TEMPLATE::GetNumIports()
+int AGR::GetNumIports()
 {
-  int result=0;
+  int result=1;
 
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void TEMPLATE::GetIPorts(POLY &iports)
+void AGR::GetIPorts(POLY &iports)
 {
-  
+  iports[0]=poly[0];
   return;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-int TEMPLATE::GetNumOports()
+int AGR::GetNumOports()
 {
-  int result=0;
+  int result=1;
   //Your code
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void TEMPLATE::GetOPorts(POLY &oports)
+void AGR::GetOPorts(POLY &oports)
 {
-    
+  oports[0]=poly[3];
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void TEMPLATE::DrawIcon(wxDC* dc)
-{
+//void AGR::DrawIcon(wxDC* dc)
+//{
   //Your implementation
-}
+//}
 
 /////////////////////////////////////////////////////////////////////////////
-UIDialog* TEMPLATE::UI(wxWindow* parent)
+UIDialog* AGR::UI(wxWindow* parent)
 {
   if (dlg!=NULL)
     return dlg;
   
-  dlg = new TEMPLATE_UI_Dialog 
+  dlg = new AGR_UI_Dialog(parent, -1,
+     &solv_mw,
+     &solv_den,
+     &solv_type,
+     &tray_type);
       
   return dlg;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString TEMPLATE::GetName()
+wxString AGR::GetName()
 {
-  wxString result="NEW_MOD"; //your name
+  wxString result="REI_Components_AGR"; //your name
   return result;
 }
 
 /////////////////////////////////////////////////////////////////////////////
-wxString TEMPLATE::GetDesc()
+wxString AGR::GetDesc()
 {
-  wxString result="None"; //your description
+  wxString result="AGR Module by REI"; //your description
 
   return result;
 }
+
 

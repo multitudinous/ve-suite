@@ -14,7 +14,7 @@ THREADS = none
 EXTRA_LIBS =  
 PREFIX = /usr/local
 
-include ${XERCESCROOT}/version.incl
+#include ${XERCESCROOT}/version.incl
 include Makefile.incl
 
 OBJ1 = Gasifier0D/Gasifier0D.o Gasifier0D/Gasifier0D_UI.o 

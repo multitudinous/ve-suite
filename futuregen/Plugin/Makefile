@@ -13,7 +13,7 @@ THREADS = none
 EXTRA_LIBS =  
 PREFIX = /usr/local
 
-include ${XERCESCROOT}/version.incl
+#include ${XERCESCROOT}/version.incl
 include Makefile.incl
 
 PLUGIN = libZplugin.so
