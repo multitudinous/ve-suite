@@ -64,7 +64,9 @@ class MembraneReactor : public REI_Plugin
   long f_pre_mr;
   long f_H2O_CO;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;     
 };
 
 #endif

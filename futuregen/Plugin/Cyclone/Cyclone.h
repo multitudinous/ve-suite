@@ -56,7 +56,9 @@ class Cyclone : public REI_Plugin
   double particle_turn_count;
   double velocity_heads;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;    
 };
 
 #endif

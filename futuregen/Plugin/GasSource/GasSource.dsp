@@ -108,6 +108,10 @@ SOURCE=..\interface.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\matrix.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\package.cpp
 # End Source File
 # Begin Source File
@@ -125,6 +129,10 @@ SOURCE=..\TexTable.cpp
 # Begin Source File
 
 SOURCE=..\TextResultDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\thermo.cpp
 # End Source File
 # Begin Source File
 

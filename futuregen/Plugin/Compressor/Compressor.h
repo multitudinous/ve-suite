@@ -57,7 +57,9 @@ class Compressor : public REI_Plugin
   double pressure_change;
   long case_type;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h; 
 };
 
 #endif

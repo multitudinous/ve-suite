@@ -69,8 +69,18 @@ Gasifier0D
   slag_eff = 50;
   pres_drop = 524691;
 
+  wxString icon_file="Icons/gasifier2.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
   n_pts = 4;
-  poly[3]= wxPoint(20, 40);
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
 }
 
 
@@ -140,12 +150,13 @@ void Gasifier0D::GetOPorts(POLY &oports)
 void Gasifier0D::DrawIcon(wxDC* dc)
 {
   //Your implementation
-  wxBrush old_brush=dc->GetBrush();
+  /*wxBrush old_brush=dc->GetBrush();
   dc->SetBrush(*wxBLUE_BRUSH);
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   dc->DrawPolygon(n_pts, poly, xoff, yoff);
-  dc->SetBrush(old_brush);
+  dc->SetBrush(old_brush);*/
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////

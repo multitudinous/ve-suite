@@ -66,7 +66,9 @@ class SOFC : public REI_Plugin
   double fuel_util;
   double press_drop;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;     
 };
 
 #endif

@@ -28,6 +28,19 @@ Condenser
   tube_length = 11.948;
   int_press_drop = 0;
   ext_press_drop = 0;
+  
+  wxString icon_file="Icons/condenser.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  n_pts = 4;
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
 }
 
 
@@ -74,8 +87,8 @@ int Condenser::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Condenser::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,20);
-  iports[1]=wxPoint(20, 0);
+  iports[0]=wxPoint(icon_w*4/10,icon_h/10);
+  iports[1]=wxPoint(icon_w*6/10, icon_h/10);
   return;
 }
 
@@ -90,20 +103,22 @@ int Condenser::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Condenser::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40,20);
-  oports[0]=wxPoint(30,40);
+  oports[0]=wxPoint(icon_w*4/10,icon_h*9/10);
+  oports[1]=wxPoint(icon_w*6/10,icon_h*9/10);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 void Condenser::DrawIcon(wxDC* dc)
 {
   //Your implementation
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
+  /*
   wxBrush old_brush=dc->GetBrush();
   dc->SetBrush(*wxGREEN_BRUSH);
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   dc->DrawPolygon(n_pts, poly, xoff, yoff);
-  dc->SetBrush(old_brush);
+  dc->SetBrush(old_brush);*/
 }
 
 /////////////////////////////////////////////////////////////////////////////

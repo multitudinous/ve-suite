@@ -64,7 +64,9 @@ class ChlorineBed : public REI_Plugin
   long rHCL_eff_ppm;
   long rPresDrop_spec_calc;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+   protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;
 };
 
 #endif
