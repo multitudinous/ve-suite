@@ -8,9 +8,9 @@
 #include <wx/notebook.h>
 //#include "controlIds.h"
 enum DATASETS_TAB_IDS{
-   RBOX_3D,
-   VERTEX_RBOX,
-   POLYDATA_RBOX,
+   RBOX_TABS_3D,
+   VERTEX_TABS_RBOX,
+   POLYDATA_TABS_RBOX,
    SCALAR_V_RBOX,
    SCALAR_P_RBOX,
    SCALAR_3D_RBOX

@@ -4,9 +4,9 @@
 #include "UI_DataSetTab.h"
 
 BEGIN_EVENT_TABLE(UI_DatasetTab, wxScrolledWindow)
-   EVT_RADIOBOX(RBOX_3D, UI_DatasetTab::_on3d)
-   EVT_RADIOBOX(VERTEX_RBOX, UI_DatasetTab::_onVertex)
-   EVT_RADIOBOX(POLYDATA_RBOX, UI_DatasetTab::_onPolyData)
+   EVT_RADIOBOX(RBOX_TABS_3D, UI_DatasetTab::_on3d)
+   EVT_RADIOBOX(VERTEX_TABS_RBOX, UI_DatasetTab::_onVertex)
+   EVT_RADIOBOX(POLYDATA_TABS_RBOX, UI_DatasetTab::_onPolyData)
    EVT_RADIOBOX(SCALAR_P_RBOX, UI_DatasetTab::_onScalar1)
    EVT_RADIOBOX(SCALAR_V_RBOX, UI_DatasetTab::_onScalar2)
    EVT_RADIOBOX(SCALAR_3D_RBOX, UI_DatasetTab::_onScalar3)
@@ -526,9 +526,9 @@ void UI_DatasetTab::updateScalarBoxForDataset(int index)
             _col3->Add(_scalarPRBox,1,wxALIGN_BOTTOM);
 
             //update the scalar page
-            ((UI_Frame*)GetParent())->_tabs->updateScalarPage(newNames,nScalars,1);
-            ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarPRBox->GetSelection()); 
-            
+            //((UI_Frame*)GetParent())->_tabs->updateScalarPage(newNames,nScalars,1);
+            //((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarPRBox->GetSelection()); 
+            exit(1);
             //should be ok to clean up
             if(newNames){
                delete [] newNames;
@@ -562,9 +562,9 @@ void UI_DatasetTab::updateScalarBoxForDataset(int index)
             _col2->Add(_scalarVRBox,1,wxALIGN_BOTTOM);
 
             //update the scalar page
-            ((UI_Frame*)GetParent())->_tabs->updateScalarPage(newNames,nScalars,1);
-            ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarVRBox->GetSelection()); 
-            
+            //((UI_Frame*)GetParent())->_tabs->updateScalarPage(newNames,nScalars,1);
+            //((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarVRBox->GetSelection()); 
+            exit(1);
             //should be ok to clean up
             if(newNames){
                delete [] newNames;
@@ -598,9 +598,9 @@ void UI_DatasetTab::updateScalarBoxForDataset(int index)
             _col1->Add(_scalarMRBox,1,wxALIGN_BOTTOM);
 
             //update the scalar page
-            ((UI_Frame*)GetParent())->_tabs->updateScalarPage(newNames,nScalars,1);
-            ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarMRBox->GetSelection()); 
-            
+            //((UI_Frame*)GetParent())->_tabs->updateScalarPage(newNames,nScalars,1);
+            //((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarMRBox->GetSelection()); 
+            exit(1);
             //should be ok to clean up
             if(newNames){
                delete [] newNames;
@@ -688,7 +688,8 @@ void UI_DatasetTab::_onScalar1(wxCommandEvent& event)
    //((UI_Tabs *)GetParent())->cSc = _scalarPRBox->GetSelection();         // using zero-based scalar counting
    //((UI_Tabs *)GetParent())->cId  = CHANGE_SCALAR;
    //((UI_Tabs *)GetParent())->sendDataArrayToServer();
-  ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarPRBox->GetSelection()); 
+  //((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarPRBox->GetSelection()); 
+   exit(1);
 }
 ////////////////////////////////////////////////
 void UI_DatasetTab::_onScalar2(wxCommandEvent& event)
@@ -697,7 +698,8 @@ void UI_DatasetTab::_onScalar2(wxCommandEvent& event)
   // ((UI_Tabs *)GetParent())->cSc = _scalarVRBox->GetSelection();         // using zero-based scalar counting
   // ((UI_Tabs *)GetParent())->cId  = CHANGE_SCALAR;
   // ((UI_Tabs *)GetParent())->sendDataArrayToServer();
-  ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarVRBox->GetSelection()); 
+  //((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarVRBox->GetSelection()); 
+   exit(1);
 }
 ////////////////////////////////////////////////
 void UI_DatasetTab::_onScalar3(wxCommandEvent& event)
@@ -707,5 +709,6 @@ void UI_DatasetTab::_onScalar3(wxCommandEvent& event)
   // ((UI_Tabs *)GetParent())->cId  = CHANGE_SCALAR;
   // ((UI_Tabs *)GetParent())->sendDataArrayToServer();
 
-  ((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarMRBox->GetSelection()); 
+  //((UI_Frame*)GetParent())->_tabs->setActiveScalar(_scalarMRBox->GetSelection()); 
+  exit(1);
 }

@@ -111,11 +111,11 @@ UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
 
    
 
-   _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
+   _scalarRBox = new wxRadioBox(this,SCALAR_PANEL_RAD_BOX, wxT("Scalars"),
                                      wxDefaultPosition, wxDefaultSize,
                                      1,empty,1,wxRA_SPECIFY_COLS);
 
-   _vectorRBox = new wxRadioBox(this, VECTOR_RAD_BOX, wxT("Vectors"),
+   _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
                                 wxDefaultPosition, wxDefaultSize, 
                                 1,empty,1,wxRA_SPECIFY_COLS);
 
@@ -139,13 +139,13 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    delete _scalarRBox;
    delete _vectorRBox;
 
-   _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
+   _scalarRBox = new wxRadioBox(this,SCALAR_PANEL_RAD_BOX, wxT("Scalars"),
                                      wxDefaultPosition, wxDefaultSize,
             activeDataSet->_numofScalars,
             ((UI_DatasetPanel*)GetParent())->_scalarNames,
             1,wxRA_SPECIFY_COLS);
 
-   _vectorRBox = new wxRadioBox(this, VECTOR_RAD_BOX, wxT("Vectors"),
+   _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
                                 wxDefaultPosition, wxDefaultSize, 
             activeDataSet->_numofScalars,
             ((UI_DatasetPanel*)GetParent())->_scalarNames,
@@ -165,10 +165,10 @@ BEGIN_EVENT_TABLE(UI_DatasetPanel, wxPanel)
    EVT_RADIOBOX(RBOX_3D, UI_DatasetPanel::_on3d)
    EVT_RADIOBOX(VERTEX_RBOX, UI_DatasetPanel::_onVertex)
    EVT_RADIOBOX(POLYDATA_RBOX, UI_DatasetPanel::_onPolyData)
-   EVT_RADIOBOX(SCALAR_RAD_BOX, UI_DatasetPanel::_onScalars)
-   EVT_BUTTON(SCALAR_UPDATE_BUTTON, UI_DatasetPanel::_onUpdate)   
-   EVT_COMMAND_SCROLL(MIN_PER_SLIDER, UI_DatasetPanel::_onMinMaxSlider)
-   EVT_COMMAND_SCROLL(MAX_PER_SLIDER, UI_DatasetPanel::_onMinMaxSlider)
+   EVT_RADIOBOX(SCALAR_PANEL_RAD_BOX, UI_DatasetPanel::_onScalars)
+   EVT_BUTTON(SCALAR_PANEL_UPDATE_BUTTON, UI_DatasetPanel::_onUpdate)   
+   EVT_COMMAND_SCROLL(MIN_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
+   EVT_COMMAND_SCROLL(MAX_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
 END_EVENT_TABLE()
 //////////////////////////////////////////////////
 //Constructor                                   //
@@ -229,7 +229,7 @@ void UI_DatasetPanel::_buildPanel()
                                     wxDefaultPosition, wxDefaultSize,3,_datasetTypesel, wxCB_DROPDOWN);
    
    //The "Update Visualization" button
-   _visUpdateButton = new wxButton(this, SCALAR_UPDATE_BUTTON, wxT("Update"),wxDefaultPosition,wxDefaultSize,wxBU_EXACTFIT);
+   _visUpdateButton = new wxButton(this, SCALAR_PANEL_UPDATE_BUTTON, wxT("Update"),wxDefaultPosition,wxDefaultSize,wxBU_EXACTFIT);
 
  
    //The static box for the scalar range sliders
@@ -249,9 +249,9 @@ void UI_DatasetPanel::_buildPanel()
    wxSize slidesize(50, 300);
 
    //create the two sliders
-   _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER,0,0,100,wxDefaultPosition, slidesize,
+   _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,0,0,100,wxDefaultPosition, slidesize,
                                   wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
-   _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER,100,0,100,wxDefaultPosition, slidesize,
+   _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, slidesize,
                                   wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
 
    //two sizers to group the sliders and their lables
