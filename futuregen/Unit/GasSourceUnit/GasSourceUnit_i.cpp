@@ -288,6 +288,7 @@ void Body_Unit_i::error (std::string msg)
   executive_->SetModuleMessage(id_, msg.c_str());
   p.intfs.clear();
   result = p.Save(rv);
+  return_state = 1;
   executive_->SetModuleResult(id_, result); //this marks the end the execution
 }
 
