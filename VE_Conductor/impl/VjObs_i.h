@@ -53,7 +53,11 @@
 class cfdSteadyStateVizHandler;
 class cfdEnvironmentHandler;
 class cfdModelHandler;
+
 class cfdCommandArray;
+#ifdef _OSG
+class cfdTextureBasedVizHandler;
+#endif
 #include <vector>
 
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
@@ -169,8 +173,14 @@ public:
    VjObs::obj_p* GetClientInfoData();
 #endif   
 
+#ifdef _OSG
+     void SetHandlers( cfdSteadyStateVizHandler*, 
+                     cfdEnvironmentHandler*, cfdModelHandler*,
+                           cfdTextureBasedVizHandler* _tbvHandler );
+#else
    void SetHandlers( cfdSteadyStateVizHandler*, 
-                     cfdEnvironmentHandler*, cfdModelHandler* );
+                     cfdEnvironmentHandler*, cfdModelHandler*);
+#endif
    void GetCfdStateVariables( void );
    cfdCommandArray* _cfdArray;
    double cfdShort_data_array[ 9 ];
@@ -182,7 +192,9 @@ protected:
    cfdSteadyStateVizHandler* _ssHandler;
    cfdEnvironmentHandler*   _envHandler;
    cfdModelHandler*       _modelHandler;
-
+#ifdef _OSG
+   cfdTextureBasedVizHandler* _tbvHandler;
+#endif
    //VjObs::scalar_p_var scl_name;
    //VjObs::scalar_p_var vec_name;
    //VjObs::scalar_p_var geo_name;

@@ -57,6 +57,10 @@
 #include "cfdFILE.h"
 #include "cfdEnum.h"
 
+#ifdef _OSG
+#include "cfdTextureBasedVizHandler.h"
+#endif
+
 #include <vtkSystemIncludes.h>  // for VTK_POLY_DATA
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
@@ -73,14 +77,27 @@ void VjObs_i::InitCluster( void )
    //hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
 #endif // _CLUSTER
 }
-
+#ifdef _OSG
 void VjObs_i::SetHandlers( cfdSteadyStateVizHandler* ssHandler, 
-                     cfdEnvironmentHandler* envHandler, cfdModelHandler* modelHandler)
+                     cfdEnvironmentHandler* envHandler, 
+                     cfdModelHandler* modelHandler,
+                     cfdTextureBasedVizHandler* tbvHandler)
+{
+   _ssHandler = ssHandler;
+   _envHandler = envHandler;
+   _modelHandler = modelHandler;
+   _tbvHandler = tbvHandler;
+}
+#else
+void VjObs_i::SetHandlers( cfdSteadyStateVizHandler* ssHandler, 
+                     cfdEnvironmentHandler* envHandler, 
+                     cfdModelHandler* modelHandler)
 {
    _ssHandler = ssHandler;
    _envHandler = envHandler;
    _modelHandler = modelHandler;
 }
+#endif
 
 #ifdef _TAO
 VjObs::Models* VjObs_i::GetModels()
