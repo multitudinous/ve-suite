@@ -1,128 +1,84 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN"
-"http://www.w3.org/TR/html4/loose.dtd">
 <html>
 <head>
 <title>Creating a Parameter File for VE-Xplorer</title>
-<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="../Ve-Suite.css" rel="stylesheet" type="text/css">
 </head>
-
-<body class="Title1">
- <p>Creating a parameter file for VE-Xplorer</p>
- <p class="bodytext">In VE-Xplorer directory, open vrxpr.param. This will be 
- used as a sample parameter file.</p>
- <p class="bodytext">The parameter file tells VE-Xplorer what types of data are
- going to be loaded into the virtual environment.&nbsp;</p>
- <p class="bodytext">Each file is given a block type depending on what type of
- file it is.</p>
- <p class="bodytext">The parameter file is divided into blocks.  </p>
- <p class="bodytext">The first line indicates how many blocks are to be loaded.  </p>
- <p class="bodytext">In the sample parameter file, the first line indicates that 7 blocks will be loaded. </p>
- <p class="bodytext">Note: <span class="bodytextemph">This integer must be included and must be accurate. </span></p>
- <p class="bodytext">The 7 blocks in the sample parameter file are currently the only types of blocks that may be defined.  </p>
- <p class="bodytext"><b>All blocks are optional, and they may be inserted in any order.
- </b></p>
- <p class="bodytext">The user chooses which blocks to include based on the desired VE-Xplorer display.</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"><b>Block type 0</b> (<b>World DCS Settings</b>, tweak 
- display in virtual environment<b>)</b></p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">If included, it must contain the following lines:</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">--Scale values (must be greater than 0 to be visible)<br>
-   --Translation values (in feet)<br>
- --Rotation values (in degrees, Z-X-Y format)</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"><b>Block type 1 (Scalarbar Settings, </b>tweak display in 
- virtual environment<b>)</b></p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">If included, it must contain the following lines:<br>
- --ScalarBar Position (of lower left corner, in feet, relative to the performer coordinate frame)<br>
- --ScalarBar Z-Rotation (in degrees: used to control orientation of the scalarBar)<br>
- --ScalarBar Height and Width (in feet)</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"><b>Block type 5 (PIV Data)
- </b><i>This block is currently being developed and may change.
- </i>  </p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;  </p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">If included, it must contain the following lines:<br>
-   --Name of image file</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">--xyz location of lower left corner</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">--Orientation:
- 0=X-plane, 1=Y-plane, 2=Z-plane</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"><b>Block type 8 (VTK Datasets)</b></p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;These VTK datasets have uses such as unstructured grids or polydata 
- such as surfaces or particle tracks.</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;If included, it must contain the following lines:<br>
-  --DCS scale values<br>
-  --DCS translation values (in feet)<br>
-  --DCS rotation values (degrees, Z-X-Y format)<br>
-  --vtkDataSet name<br>
-  --Precomputed data slice directory. Insert JUNK or other undefined directory name if not applicable<br>
-  --Precomputed surface directory. Insert JUNK or other undefined directory name if not applicable</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"><b>Block type 9 (Geometry
- File(s))</b></p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">It can only contain files that can be visualized with perfly (e.g., *.stl, *.iv, *.pfb, *.obj).  </p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">If included, it must contain the following lines:<br>
-  --Transparency toggle (1 makes the geometry transparent when visualizations are active)<br>
-  -- *.stl color flag (and 3 color values if flag = 1). This line applies only to *.stl files, but must be present for all files.<br>
-  --Scale values for geometry file<br>
-  --Translation values for geometry file<br>
-  --Rotation values for geometry file<br>
-  --Geometry file name</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"><b>Block type 10 (Transient Data Loader)</b></p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">If included, it must contain the following lines:<span class="question"><br>
-   </span>--Number of directories containing vtk data to follow<br>
-  --Data dcs scale values<br>
-  --Data dcs translation values (in feet)<br>
-  --Data dcs rotation values (degrees, Z-X-Y format)<br>
-  --Directory of vtk files</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"><span class="bodytextemph"><i><b>This and the following line 
- should be repeated the number of times indicated in the first line of this 
- block.</b></i> </span></p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"> <span class="bodytextemph">Each set of 2 lines ties data 
- to a button on the GUI.</span></p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"> 
-  --Button ID: 0 = 3D_mesh, 1 = x-planes, 2 = y-planes, 3 = z-planes, 4 = particle cloud<br>
-  --Transient geometry data directory (This line MUST be included)</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"> <span style="font-weight: 400">
- <i>
- [If there is no transient 
- geometry data directory, insert &quot;UNUSED&quot; or other undefined directory name.]</i></span></p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"> --Transient geometry dcs scale values<br>
-  --Transient geometry dcs translation values<br>
-  --Transient geometry dcs rotation values<br>
-  --Transient geometry transparency setting, *.stl color flag (and 3 color values if flag = 1)<br>
-  --Duration of the transient sequence in seconds</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"> &nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0"><b>Block type 11(Sound File)</b></p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">&nbsp;</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">You must have Sound API working (OpenAL is recommended) to use this block. If included, it must contain the following lines:</p>
- <p class="bodytext" style="margin-top: 0; margin-bottom: 0">
-   --Ambient background noise (0 = off, 1 = on)<br>
- --Retriggerable, prevents sound from being retriggered in the program (0 = off, 1 = on)<br>
- --Volume (range is 0 [soft] to 1 [loud])<br>
-   --Cutoff (range is 0-1)<br>
-   --Sound position x (OpenGL coordinates 0 is center)<br>
-   --Sound position y (OpenGL coordinates 0 is center)<br>
-   --Sound position z (OpenGL coordinates 0 is center)<br>
-   --Sound file name<br>
- --Sound name alias (give a unique name of alphanumeric characters)<br>
- --Orientation: 0 = X-plane, 1 = Y-plane, 2 = Z-plane</p>
- <p class="bodytext"><u>The final 3 lines are mandatory in pre-8/20/04 versions of VE-Suite. In versions from 8/20/04 and later, these lines are hard-coded into the GUI and do not need to be included:</u><br>
---Warped contour scale value<br>
---Navigation step file (increase to go faster)<br>
---Streamline diameter (if set to 0, the diameter will be auto-scaled by VE-Xplorer. If greater than 0, it represents the actual diameter in feet.)</p>
- <p class="bodytext"><a href="xplorer.htm">VE-Xplorer/Conductor</a></p>
+<body bgcolor="#FFFFFF" class="Title1"> 
+<p>Creating a parameter file for VE-Xplorer</p> 
+<p class="bodytext">In VE-Xplorer directory, open vrxpr.param. This will be used as a sample parameter file.</p> 
+<p class="bodytext">The parameter file tells VE-Xplorer what types of data are going to be loaded into the virtual environment.</p> 
+<p class="bodytext">Each file is given a block type depending on what type of file it is.</p> 
+<p class="bodytext">The parameter file is divided into blocks. </p> 
+<p class="bodytext">The first line indicates how many blocks are to be loaded. </p> 
+<p class="bodytext">In the sample parameter file, the first line indicates that 7 blocks will be loaded. </p> 
+<p class="bodytextemph">This integer must be included and must be accurate.</p> 
+<p class="bodytext">The 7 blocks in the sample parameter file are currently the only types of blocks that may be defined. </p> 
+<p class="bodytextemph">All blocks are optional, and they may be inserted in any order. </p> 
+<p class="bodytext">The user chooses which blocks to include based on the desired VE-Xplorer display.</p> 
+<p class="bodytext"><span class="bodytextemph">Block type 0 </span>(World DCS Settings, tweak display in virtual environment)<br> 
+  If included, it must contain the following lines:<br> 
+  --Scale values (must be greater than 0 to be visible)<br> 
+  --Translation values (in feet)<br> 
+  --Rotation values (in degrees, Z-X-Y format)</p> 
+<p class="bodytext"><span class="bodytextemph">Block type 1 </span>(Scalarbar Settings, tweak display in virtual environment)<br> 
+  If included, it must contain the following lines:<br> 
+  --ScalarBar Position (of lower left corner, in feet, relative to the performer coordinate frame)<br> 
+  --ScalarBar Z-Rotation (in degrees: used to control orientation of the scalarBar)<br> 
+  --ScalarBar Height and Width (in feet)</p> 
+<p class="bodytext"><span class="bodytextemph">Block type 5</span> (PIV Data) This block is currently being developed and may change.<br> 
+  If included, it must contain the following lines:<br> 
+  --Name of image file<br> 
+  --xyz location of lower left corner<br> 
+  --Orientation: 0=X-plane, 1=Y-plane, 2=Z-plane
+<p class="bodytext"><span class="bodytextemph">Block type 8</span> (VTK Datasets) These VTK datasets have uses such as unstructured grids or polydata such as surfaces or particle tracks.<br>
+  If included, it must contain the following lines:<br> 
+  --DCS scale values<br> 
+  --DCS translation values (in feet)<br> 
+  --DCS rotation values (degrees, Z-X-Y format)<br> 
+  --vtkDataSet name<br> 
+  --Precomputed data slice directory. Insert JUNK or other undefined directory name if not applicable<br> 
+  --Precomputed surface directory. Insert JUNK or other undefined directory name if not applicable</p> 
+<p class="bodytext"><span class="bodytextemph">Block type 9</span> (Geometry File(s)) This block can only contain files that can be visualized with perfly (e.g., *.stl, *.iv, *.pfb, *.obj). <br>
+  If included, it must contain the following lines:<br> 
+  --Transparency toggle (1 makes the geometry transparent when visualizations are active)<br> 
+  -- *.stl color flag (and 3 color values if flag = 1). This line applies only to *.stl files, but must be present for all files.<br> 
+  --Scale values for geometry file<br> 
+  --Translation values for geometry file<br> 
+  --Rotation values for geometry file<br> 
+  --Geometry file name</p> 
+<p class="bodytext"><span class="bodytextemph">Block type 10</span> (Transient Data Loader)<br>
+  If included, it must contain the following lines:<br> 
+  --Number of directories containing vtk data to follow<br> 
+  --Data dcs scale values<br> 
+  --Data dcs translation values (in feet)<br> 
+  --Data dcs rotation values (degrees, Z-X-Y format)<br> 
+  --Directory of vtk files</p> 
+<p class="bodytext"><span class="bodytextital">This and the following line should be repeated the number of times indicated in the first line of this block. </span></p> 
+<span class="bodytextemph">Each set of 2 lines ties data to a button on the GUI.</span></p> 
+<p class="bodytext"> --Button ID: 0 = 3D_mesh, 1 = x-planes, 2 = y-planes, 3 = z-planes, 4 = particle cloud<br> 
+  --Transient geometry data directory (This line MUST be included)</p> 
+<p class="bodytextital">[If there is no transient geometry data directory, insert &quot;UNUSED&quot; or other undefined directory name.]</p> 
+<p class="bodytext"> --Transient geometry dcs scale values<br> 
+  --Transient geometry dcs translation values<br> 
+  --Transient geometry dcs rotation values<br> 
+  --Transient geometry transparency setting, *.stl color flag (and 3 color values if flag = 1)<br> 
+  --Duration of the transient sequence in seconds</p> 
+<p class="bodytext"><span class="bodytextemph">Block type 11 </span>(Sound File)<br>
+You must have Sound API working (OpenAL is recommended) to use this block. If included, it must contain the following lines:<br>
+--Ambient background noise (0 = off, 1 = on)<br> 
+  --Retriggerable, prevents sound from being retriggered in the program (0 = off, 1 = on)<br> 
+  --Volume (range is 0 [soft] to 1 [loud])<br> 
+  --Cutoff (range is 0-1)<br> 
+  --Sound position x (OpenGL coordinates 0 is center)<br> 
+  --Sound position y (OpenGL coordinates 0 is center)<br> 
+  --Sound position z (OpenGL coordinates 0 is center)<br> 
+  --Sound file name<br> 
+  --Sound name alias (give a unique name of alphanumeric characters)<br> 
+  --Orientation: 0 = X-plane, 1 = Y-plane, 2 = Z-plane</p> 
+<p class="bodytext"><span class="bodytextemph">The final 3 lines are mandatory in pre-8/20/04 versions of VE-Suite. In versions from 8/20/04 and later, these lines are hard-coded into the GUI and do not need to be included:</span><br> 
+  --Warped contour scale value<br> 
+  --Navigation step file (increase to go faster)<br> 
+  --Streamline diameter (if set to 0, the diameter will be auto-scaled by VE-Xplorer. If greater than 0, it represents the actual diameter in feet.)</p> 
+<p class="bodytext"><a href="xplorer.htm">VE-Xplorer/Conductor</a></p> 
 </body>
 </html>

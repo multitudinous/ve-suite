@@ -6,77 +6,71 @@
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
 <link href="../Ve-Suite.css" rel="stylesheet" type="text/css">
 </head>
-
-<body>
-<p class="Title1">Creating a Parameter file for Translator</p>
-<p class="bodytext"><span class="bodytextemph">1.</span> Copy star.param file from Builder/translator directory to
-the current working directory.</p>
-<p class="bodytext"><span class="bodytextemph">2.</span> Open star.param</p>
-<p class="bodytext"><span class="bodytextemph">2.1</span> Edit Star.cel, Star.vrt, and Star.usr to show where they are located</p>
-<p class="bodytext"><span class="bodytextemph">2.2</span> Change scalarname lines to respective scalars</p>
-<p class="bodytext"><span class="bodytextemph">2.3</span> For StarCD, &quot;writeoption&quot; should be Option 1</p>
-<p class="bodytext"><span class="bodytextemph">2.4</span> Enter one of the following on the scale index line:</p>
-<table width="353" border="0" cellpadding="5" bordercolor="#000000" bordercolorlight="#FFFFCC" bgcolor="#FFFFFF">
-  <tr class="bodytextemph">
-    <td width="52"><div align="center">Enter:</div></td>
-    <td width="275">For scale factor of: </td>
-  </tr>
-  <tr class="bodytext">
-    <td><div align="center"><span class="bodytext">0</span></div></td>
-    <td>No scale, corresponding to a scale factor of 1.0 </td>
-  </tr>
-  <tr class="bodytext">
-    <td><div align="center"><span class="bodytext">1</span></div></td>
-    <td>Custom scale, indicating that the SCALEFACTOR tag will be used to specify a scale factor </td>
-  </tr>
-  <tr class="bodytext">
-    <td><div align="center"><span class="bodytext">2</span></div></td>
-    <td>Meters to feet, corresponding to a scale factor of 3.28 </td>
-  </tr>
-  <tr class="bodytext">
-    <td><div align="center"><span class="bodytext">3</span></div></td>
-    <td>Millimeters to feet, corresponding to a scale factor of 3.28e-3 </td>
-  </tr>
-  <tr class="bodytext">
-    <td><div align="center"><span class="bodytext">4</span></div></td>
-    <td>Inches to feet, corresponding to a scale factor of 1.0/12.0 </td>
-  </tr>
-  <tr class="bodytext">
-    <td><div align="center">5</div></td>
-    <td>Meters (1:12) scale to feet, corresponding to a scale factor of 12.0*3.28 </td>
-  </tr>
-</table>
-<p class="bodytext"><span class="bodytextemph">2.5</span> <span class="bodytextemph">VR space is always in feet, so the scale factor tag must be in feet.</span></p>
-<p class="bodytext"><a href="pics/star_param.jpg" target="_blank"><img src="pics/star_param.gif" width="109" height="113" border="0"></a></p>
-<p class="bodytext"><span class="bodytextemph">3.</span> Save and close</p>
-<p class="bodytext"><span class="bodytextemph">4. </span>Enter &quot;vedemo&quot;</p>
-<p class="bodytext"><span class="bodytextemph">5.</span> Enter &quot;translateToVtk&quot; in your shell</p>
-<p class="bodytext"><span class="bodytextemph">6. </span>Select data type to convert</p>
-<p class="bodytext"><span class="bodytextemph">7.</span> Name the file</p>
-<p class="bodytext"><span class="bodytextemph">8. </span>Enter &quot;mergeVertices&quot;</p>
-<p class="bodytext"><span class="bodytextemph">8.1</span> Enter file name for input</p>
-<p class="bodytext"><span class="bodytextemph">8.2</span> Enter file name for output</p>
-<p class="bodytext"><span class="bodytextemph">Note: </span>After the mergeVertices step, you may get the following error message: &quot;vtkDebugLeaks has detected LEAKS!&quot; This is normal.</p>
-<p class="bodytext"><span class="bodytextemph">Note:</span> take note of orientation (size, etc.) and correct in VE-Xplorer parameter file if necessary*</p>
-<p class="bodytext"><span class="bodytextemph">9.</span> Run meshViewer for visual verification of the location of the converted data</p>
-<p class="bodytext"><span class="bodytextemph">9.1</span> Enter file name for input</p>
-<p class="bodytext"><span class="bodytextemph">9.2</span> Input shrink factor</p>
-<p class="bodytext"><span class="bodytextemph">10.</span> Enter the integer corresponding to the scalar you want to activate</p>
-<p class="bodytext"><span class="bodytextemph">11.</span> Pick an option for displaying cells</p>
-<p class="bodytext"><span class="bodytextemph">12.</span> Manipulate the display views with the mouse:</p>
-<p class="bodytext">--left: rotate</p>
-<p class="bodytext">--right: zoom out</p>
-<p class="bodytext">--middle: translate</p>
-<p class="bodytext"><span class="bodytextemph">13.</span> Keyboard shortcuts:</p>
-<p class="bodytext">--T: toggles mouse between joystick and trackball modes </p>
-<p class="bodytext">--E: exit </p>
-<p class="bodytext"><span class="bodytextemph">14.</span> Run WhatIsScalarRange for information on data set type, bounding box, and scalar and vector**</p>
-<p class="bodytext">*optional
-**optional but recommended
-</pre>
-<pre class="bodytext"><span class="bodytextemph">14.</span> Run WhatIsScalarRange for information on data set type, bounding box, and scalar and vector**
-
-<a href="preprocessor.htm">Preprocessor</a></p>
-
+<body bgcolor="#FFFFFF"> 
+<p class="Title1">Creating a Parameter file for Translator</p> 
+<p class="bodytext"><span class="bodytextemph">1.</span> Copy star.param file from Builder/translator directory to the current working directory.</p> 
+<p class="bodytext"><span class="bodytextemph">2.</span> Open star.param</p> 
+<p class="bodytext"><span class="bodytextemph">2.1</span> Edit Star.cel, Star.vrt, and Star.usr to show where they are located</p> 
+<p class="bodytext"><span class="bodytextemph">2.2</span> Change scalarname lines to respective scalars</p> 
+<p class="bodytext"><span class="bodytextemph">2.3</span> For StarCD, &quot;writeoption&quot; should be Option 1</p> 
+<p class="bodytext"><span class="bodytextemph">2.4</span> Enter one of the following on the scale index line:</p> 
+<table width="353" border="0" cellpadding="5" bordercolor="#000000" bordercolorlight="#FFFFCC" bgcolor="#FFFFFF"> 
+  <tr class="bodytextemph"> 
+    <td width="52"><div align="center">Enter:</div></td> 
+    <td width="275">For scale factor of: </td> 
+  </tr> 
+  <tr class="bodytext"> 
+    <td><div align="center"><span class="bodytext">0</span></div></td> 
+    <td>No scale, corresponding to a scale factor of 1.0 </td> 
+  </tr> 
+  <tr class="bodytext"> 
+    <td><div align="center"><span class="bodytext">1</span></div></td> 
+    <td>Custom scale, indicating that the SCALEFACTOR tag will be used to specify a scale factor </td> 
+  </tr> 
+  <tr class="bodytext"> 
+    <td><div align="center"><span class="bodytext">2</span></div></td> 
+    <td>Meters to feet, corresponding to a scale factor of 3.28 </td> 
+  </tr> 
+  <tr class="bodytext"> 
+    <td><div align="center"><span class="bodytext">3</span></div></td> 
+    <td>Millimeters to feet, corresponding to a scale factor of 3.28e-3 </td> 
+  </tr> 
+  <tr class="bodytext"> 
+    <td><div align="center"><span class="bodytext">4</span></div></td> 
+    <td>Inches to feet, corresponding to a scale factor of 1.0/12.0 </td> 
+  </tr> 
+  <tr class="bodytext"> 
+    <td><div align="center">5</div></td> 
+    <td>Meters (1:12) scale to feet, corresponding to a scale factor of 12.0*3.28 </td> 
+  </tr> 
+</table> 
+<p class="bodytext"><span class="bodytextemph">2.5</span> <span class="bodytextemph">VR space is always in feet, so the scale factor tag must be in feet.</span></p> 
+<p class="bodytext"><a href="pics/star_param.jpg" target="_blank"><img src="pics/star_param.gif" width="109" height="113" border="0"></a></p> 
+<p class="bodytext"><span class="bodytextemph">3.</span> Save and close</p> 
+<p class="bodytext"><span class="bodytextemph">4. </span>Enter &quot;vedemo&quot;</p> 
+<p class="bodytext"><span class="bodytextemph">5.</span> Enter &quot;translateToVtk&quot; in your shell</p> 
+<p class="bodytext"><span class="bodytextemph">6. </span>Select data type to convert</p> 
+<p class="bodytext"><span class="bodytextemph">7.</span> Name the file</p> 
+<p class="bodytext"><span class="bodytextemph">8. </span>Enter &quot;mergeVertices&quot;</p> 
+<p class="bodytext"><span class="bodytextemph">8.1</span> Enter file name for input</p> 
+<p class="bodytext"><span class="bodytextemph">8.2</span> Enter file name for output</p> 
+<p class="bodytext"><span class="bodytextemph">Note: </span>After the mergeVertices step, you may get the following error message: &quot;vtkDebugLeaks has detected LEAKS!&quot; This is normal.</p> 
+<p class="bodytext"><span class="bodytextemph">Note:</span> take note of orientation (size, etc.) and correct in VE-Xplorer parameter file if necessary*</p> 
+<p class="bodytext"><span class="bodytextemph">9.</span> Run meshViewer for visual verification of the location of the converted data</p> 
+<p class="bodytext"><span class="bodytextemph">9.1</span> Enter file name for input</p> 
+<p class="bodytext"><span class="bodytextemph">9.2</span> Input shrink factor</p> 
+<p class="bodytext"><span class="bodytextemph">10.</span> Enter the integer corresponding to the scalar you want to activate</p> 
+<p class="bodytext"><span class="bodytextemph">11.</span> Pick an option for displaying cells</p> 
+<p class="bodytext"><span class="bodytextemph">12.</span> Manipulate the display views with the mouse:</p> 
+<p class="bodytext">--left: rotate</p> 
+<p class="bodytext">--right: zoom out</p> 
+<p class="bodytext">--middle: translate</p> 
+<p class="bodytext"><span class="bodytextemph">13.</span> Keyboard shortcuts:</p> 
+<p class="bodytext">--T: toggles mouse between joystick and trackball modes </p> 
+<p class="bodytext">--E: exit </p> 
+<p class="bodytext"><span class="bodytextemph">14.</span> Run WhatIsScalarRange for information on data set type, bounding box, and scalar and vector**</p> 
+<p class="bodytext">*optional **optional but recommended
+  </pre> 
+<p class="bodytext"><a href="preprocessor.htm">Preprocessor</a> </p> 
 </body>
 </html>
