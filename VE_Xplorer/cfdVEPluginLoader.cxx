@@ -83,23 +83,27 @@ void cfdVEPluginLoader::RegisterPlugins()
    plugin_cls.clear();
    const wxChar *name = "cfdVEBaseClass";
    wxClassInfo *lastInfo = NULL;
+   int i = 0;
    for ( wxClassInfo *info = wxClassInfo::sm_first; info; info = info->m_next )
    {
-      //cout << info << " : " << info->m_className << endl;
+      cout << "Info : " << info << " : " << info->m_className << endl << "Last Info : " << lastInfo << endl;
       if (wxStrcmp(info->m_baseClassName1, name) == 0)
       {
+      if ( lastInfo != info  )
+         lastInfo = info;
+      else
+         break;
          cfdVEBaseClass *object = (cfdVEBaseClass *) info->CreateObject();
          plugins.push_back(object);
          plugin_cls.push_back(info);
          cout << info->m_className << endl;
       }
 
-      if ( info->m_next == wxClassInfo::sm_first )
+      /*if ( info->m_next == wxClassInfo::sm_first )
          break;
-      if ( lastInfo != info  )
-         lastInfo = info;
-      else
-         break;
+	 i++;
+	 if ( i > 10 )
+	 break;*/
    }
 //   wxClassInfo::sm_classTable->BeginFind();
   
