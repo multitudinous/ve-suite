@@ -38,9 +38,11 @@ cfdSwitch::cfdSwitch(const cfdSwitch& rhs)
 cfdSwitch::~cfdSwitch()
 {
 #ifdef _PERFORMER
-   if(_switch){
-     pfDelete(_switch);
+   if ( _switch )
+   {
+     pfDelete( _switch );
    }
+   _switch = 0;
 #elif _OSG
 #elif _OPENSG
 #endif
