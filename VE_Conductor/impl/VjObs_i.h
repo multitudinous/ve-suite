@@ -50,13 +50,10 @@
 
 class cfdTeacher;
 class cfdReadParam;
-class cfdCommandArray;
-
-#include "cfdGlobalBase.h"
+#include "cfdCommandArray.h"
 
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
-                public PortableServer::RefCountServantBase,
-                public cfdGlobalBase
+                public PortableServer::RefCountServantBase
 {
 public:
    
@@ -64,8 +61,11 @@ public:
    {
       this->numOfClientInfo = 9;
       //int temp=0;
-      this->setClients( 0 );
-            this->mId = -1;
+      //this->setClients( 0 );
+      _cfdArray = new cfdCommandArray();
+      _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
+      _bufferArray = new cfdCommandArray();
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, -1 );
       //orb=CORBA::ORB_init(temp,0,"omniORB4");
       /*for(temp=0;temp<25;temp++)
       {
@@ -112,11 +112,6 @@ public:
    void CreateDatasetInfo( void );
    void CreateTeacherInfo( void );
 
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
-
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
 #ifdef _TAO   
    void update() throw (CORBA::SystemException);
    //Observer::baf_p_slice* baf_param;
@@ -242,9 +237,6 @@ protected:
    void setNumGeoArrays(const short value) throw (CORBA::SystemException);
    short getNumGeoArrays( void ) throw (CORBA::SystemException);
 
-   void setClients(const CORBA::Long value) throw (CORBA::SystemException);
-   CORBA::Long getClients( void ) throw (CORBA::SystemException);
-
    void setIsoValue(const CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getIsoValue( void ) throw (CORBA::SystemException);
 
@@ -293,9 +285,6 @@ protected:
    void setNumGeoArrays(CORBA::Short value);
    CORBA::Short getNumGeoArrays( void );
 
-   void setClients(CORBA::Long value);
-   CORBA::Long getClients( void );
-
    void setIsoValue(CORBA::Long value);
    CORBA::Long getIsoValue( void );
 
@@ -335,23 +324,24 @@ protected:
    short mNumScalars;
    short mNnumVectors;
    short mNumGeoArrays;
-   int   mClients;
-   int   mIso_value;
-   int   mSc;
-   int   mMin;
-   int   mMax;
-   long  mId;
-   long  mGeo_state;
-   short mPostdata_state;
-   bool  mPre_state;
-   short mTimesteps;
+   //int   mClients;
+   //int   mIso_value;
+   //int   mSc;
+   //int   mMin;
+   //int   mMax;
+   //long  mId;
+   //long  mGeo_state;
+   //short mPostdata_state;
+   //bool  mPre_state;
+   //short mTimesteps;
    short mNumTeacherArrays;
-   short mTeacher_state;
+   //short mTeacher_state;
    short mGetClientInfo;
    double mShort_data_array[ 9 ];
 
    // cfdApp side variables
-   int   cfdIso_value;
+   // Now in cfdCommandArray
+   /*int   cfdIso_value;
    int   cfdSc;
    int   cfdMin;
    int   cfdMax;
@@ -360,9 +350,11 @@ protected:
    short cfdPostdata_state;
    bool  cfdPre_state;
    short cfdTimesteps;
-   short cfdTeacher_state; 
+   short cfdTeacher_state; */
    double cfdShort_data_array[ 9 ];
 
+   cfdCommandArray* _cfdArray;
+   cfdCommandArray* _bufferArray;
 #ifdef _CLUSTER
    // Cluster Stuff for the above state variables
    cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;

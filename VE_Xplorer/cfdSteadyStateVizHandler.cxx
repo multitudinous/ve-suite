@@ -306,11 +306,15 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 ////////////////////
 void cfdSteadyStateVizHandler::SetActiveDataSet( cfdDataSet* input )
 {
+   // Fix this, need to lock out _activeDataSet
+   // Can be read in streamers and ccreatacotrs thread
    _activeDataSet = input;
 }
 
 void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
 {
+   // Fix this, need to lock out _activeDataSet
+   // Can be read in streamers and ccreatacotrs thread
    commandArray = input;
 }
 

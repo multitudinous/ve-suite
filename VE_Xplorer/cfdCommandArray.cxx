@@ -35,6 +35,38 @@
 
 using namespace std;
 
+cfdCommandArray::cfdCommandArray( const cfdCommandArray& input )
+{
+   cfdIso_value      = input.cfdIso_value;
+   cfdSc             = input.cfdSc;
+   cfdMin            = input.cfdMin;
+   cfdMax            = input.cfdMax;
+   cfdId             = input.cfdId;
+   cfdGeo_state      = input.cfdGeo_state;
+   cfdPostdata_state = input.cfdPostdata_state;
+   cfdPre_state      = input.cfdPre_state;
+   cfdTimesteps      = input.cfdTimesteps;
+   cfdTeacher_state  = input.cfdTeacher_state; 
+}
+
+cfdCommandArray& cfdCommandArray::operator=( const cfdCommandArray& input )
+{
+   if ( this != &input )
+   {
+      cfdIso_value      = input.cfdIso_value;
+      cfdSc             = input.cfdSc;
+      cfdMin            = input.cfdMin;
+      cfdMax            = input.cfdMax;
+      cfdId             = input.cfdId;
+      cfdGeo_state      = input.cfdGeo_state;
+      cfdPostdata_state = input.cfdPostdata_state;
+      cfdPre_state      = input.cfdPre_state;
+      cfdTimesteps      = input.cfdTimesteps;
+      cfdTeacher_state  = input.cfdTeacher_state; 
+   }
+   return *this;
+}
+
 int cfdCommandArray::GetCommandValue( int i )
 {
    if      ( i == CFD_ISO_VALUE )
@@ -65,7 +97,7 @@ int cfdCommandArray::GetCommandValue( int i )
    }
 }
 
-void cfdCommandArray::SetCommandValue( int i, int value)
+void cfdCommandArray::SetCommandValue( int i, double value)
 {
    if      ( i == CFD_ISO_VALUE )
    {

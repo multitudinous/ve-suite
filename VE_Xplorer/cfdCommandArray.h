@@ -36,26 +36,28 @@
 // cfdApp side variables declared in VjObs_i.h
 class cfdCommandArray
 {
- public:
-   cfdCommandArray(){}
-   ~cfdCommandArray(){}
+   public:
+      cfdCommandArray(){}
+      ~cfdCommandArray(){}
+      cfdCommandArray( const cfdCommandArray& );
+      cfdCommandArray& operator=( const cfdCommandArray& );
 
-   int GetCommandValue( int );
-   void SetCommandValue( int, int );
+      int GetCommandValue( int );
+      void SetCommandValue( int, double );
 
-   enum commandArrayValue 
-   { 
-      CFD_ISO_VALUE,
-      CFD_SC,
-      CFD_MIN,
-      CFD_MAX,
-      CFD_ID,
-      CFD_GEO_STATE,
-      CFD_POSTDATA_STATE,
-      CFD_PRE_STATE,
-      CFD_TIMESTEPS,
-      CFD_TEACHER_STATE 
-   };
+      enum commandArrayValue 
+      { 
+         CFD_ISO_VALUE,
+         CFD_SC,
+         CFD_MIN,
+         CFD_MAX,
+         CFD_ID,
+         CFD_GEO_STATE,
+         CFD_POSTDATA_STATE,
+         CFD_PRE_STATE,
+         CFD_TIMESTEPS,
+         CFD_TEACHER_STATE 
+      };
 
    private:
       int   cfdIso_value;

@@ -48,7 +48,6 @@
 #include "cfdFileInfo.h"
 #include "cfdCommandArray.h"
 
-
 #ifdef _CLUSTER
 #include "cfdSequence.h"
 #endif
@@ -57,16 +56,6 @@
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
 #include <vtkCellTypes.h>
-
-
-bool VjObs_i::CheckCommandId( cfdCommandArray* commandArray )
-{
-   return false;
-}
-
-void VjObs_i::UpdateCommand()
-{
-}
 
 
 /*
@@ -411,18 +400,7 @@ VjObs::scalar_p* VjObs_i::get_teacher_name()
    VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
    return teacher_name_._retn();
 }
-/*
-void VjObs_i::put_cur_obj(Observer::obj_p_var o)
-{
-   int clients = mClients;
 
-   if(clients!=0)
-   {
-      for(int i=0;i<clients;i++)
-         client_list[ i ]->put_cur_obj(o);
-   }
-}
-*/
 #ifdef _TAO
 char* VjObs_i::get_perf()
   ACE_THROW_SPEC ((
@@ -434,19 +412,7 @@ char* VjObs_i::get_perf()
 {
    return CORBA::string_dup("abc");
 }
-/*
-short VjObs_i::get_postdata()
-{
-   corba_mutex.snapShot2(false);
-   return corba_mutex.C_postdata_state;
-}
 
-short VjObs_i::get_timesteps()
-{
-   corba_mutex.snapShot2(false);
-   return corba_mutex.C_timesteps;(unsigned int)
-}
-*/
 #ifdef _TAO
 VjObs::scalar_p * VjObs_i::get_dataset_names()
   ACE_THROW_SPEC ((
@@ -495,7 +461,8 @@ VjObs::obj_p * VjObs_i::get_num_vectors_per_dataset()
 VjObs::obj_p * VjObs_i::get_num_vectors_per_dataset()
 #endif
 {
-   return this->num_vectors_per_dataset._retn();
+   VjObs::obj_p_var num_vectors_per_dataset_=new VjObs::obj_p(num_vectors_per_dataset);
+   return num_vectors_per_dataset_._retn();
 }
 
 #ifdef _TAO
@@ -616,38 +583,6 @@ CORBA::Short VjObs_i::getNumGeoArrays()
 }
 
 #ifdef _TAO
-void VjObs_i::setClients(const CORBA::Long value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setClients(CORBA::Long value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //cout   << "Setting number of Clients to " << value << endl; 
-   //<< vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mClients = value;
-}
-
-#ifdef _TAO
-CORBA::Long VjObs_i::getClients()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Long VjObs_i::getClients()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mClients;
-}
-
-#ifdef _TAO
 void VjObs_i::setIsoValue(const CORBA::Long value)
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -660,7 +595,7 @@ void VjObs_i::setIsoValue(CORBA::Long value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mIso_value = value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, value );
 }
 
 #ifdef _TAO
@@ -675,7 +610,7 @@ CORBA::Long VjObs_i::getIsoValue()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mIso_value;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
 }
 
 #ifdef _TAO
@@ -691,7 +626,7 @@ void VjObs_i::setSc(CORBA::Long value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mSc = value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_SC, value );
 }
 
 #ifdef _TAO
@@ -706,7 +641,7 @@ CORBA::Long VjObs_i::getSc()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mSc;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
 }
 
 #ifdef _TAO
@@ -722,7 +657,7 @@ void VjObs_i::setMin(CORBA::Long value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mMin = value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_MIN, value );
 }
 
 #ifdef _TAO
@@ -737,7 +672,7 @@ CORBA::Long VjObs_i::getMin()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mMin;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
 }
 
 #ifdef _TAO
@@ -753,7 +688,7 @@ void VjObs_i::setMax(CORBA::Long value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mMax = value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_MAX, value );
 }
 
 #ifdef _TAO
@@ -768,7 +703,7 @@ CORBA::Long VjObs_i::getMax()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mMax;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
 }
 
 #ifdef _TAO
@@ -784,7 +719,7 @@ void VjObs_i::setId(CORBA::Long value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mId = value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, value );
 }
 
 #ifdef _TAO
@@ -799,7 +734,7 @@ CORBA::Long VjObs_i::getId()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mId;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
 }
 
 #ifdef _TAO
@@ -815,7 +750,7 @@ void VjObs_i::setGeoState(CORBA::Long value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mGeo_state = value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, value );
 }
 
 #ifdef _TAO
@@ -830,7 +765,7 @@ CORBA::Long VjObs_i::getGeoState()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mGeo_state;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
 }
 
 #ifdef _TAO
@@ -846,7 +781,7 @@ void VjObs_i::setPostdataState(CORBA::Short value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mPostdata_state = value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, value );
 }
 
 #ifdef _TAO
@@ -862,7 +797,7 @@ CORBA::Short VjObs_i::getPostdataState()
    //vprDEBUG(vprDBG_ALL, 0)
 
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mPostdata_state;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
 }
 
 #ifdef _TAO
@@ -878,7 +813,7 @@ void VjObs_i::setPreState(CORBA::Short value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mPre_state = (bool)value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, value );
 }
 
 #ifdef _TAO
@@ -893,7 +828,7 @@ CORBA::Short VjObs_i::getPreState()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mPre_state;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
 }
 
 #ifdef _TAO
@@ -909,7 +844,7 @@ void VjObs_i::setTimesteps(CORBA::Short value)
       << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mTimesteps = value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, value );
 }
 
 #ifdef _TAO
@@ -924,7 +859,7 @@ CORBA::Short VjObs_i::getTimesteps()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 2)
    //   << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
-   return mTimesteps;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
 }
 
 #ifdef _TAO
@@ -971,7 +906,7 @@ void VjObs_i::setTeacherState(CORBA::Short value)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mTeacher_state = value;
+   _bufferArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, value );
 }
 
 #ifdef _TAO
@@ -987,7 +922,7 @@ CORBA::Short VjObs_i::getTeacherState()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mTeacher_state;
+   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
 }
 
 // These functions are called from the java side
@@ -1054,16 +989,7 @@ void VjObs_i::GetCfdStateVariables( void )
 {
 
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   this->cfdIso_value      = this->mIso_value;
-   this->cfdSc             = this->mSc;
-   this->cfdMin            = this->mMin;
-   this->cfdMax            = this->mMax;
-   this->cfdId             = this->mId;
-   this->cfdGeo_state      = this->mGeo_state;
-   this->cfdPostdata_state = this->mPostdata_state;
-   this->cfdPre_state      = this->mPre_state;
-   this->cfdTimesteps      = this->mTimesteps;
-   this->cfdTeacher_state  = this->mTeacher_state;
+   _cfdArray = _bufferArray;
    
    for ( int i = 0; i < 9; i++ )
    {
@@ -1073,16 +999,16 @@ void VjObs_i::GetCfdStateVariables( void )
 #ifdef _CLUSTER
    if ( mStates.isLocal() )
    {
-      this->mStates->clusterIso_value        = this->mIso_value;
-      this->mStates->clusterSc               = this->mSc;
-      this->mStates->clusterMin              = this->mMin;
-      this->mStates->clusterMax              = this->mMax;
-      this->mStates->clusterId               = this->mId;
-      this->mStates->clusterGeo_state        = this->mGeo_state;
-      this->mStates->clusterPostdata_state   = this->mPostdata_state;
-      this->mStates->clusterPre_state        = this->mPre_state;
-      this->mStates->clusterTimesteps        = this->mTimesteps;
-      this->mStates->clusterTeacher_state    = this->mTeacher_state;
+      this->mStates->clusterIso_value        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      this->mStates->clusterSc               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
+      this->mStates->clusterMin              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
+      this->mStates->clusterMax              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
+      this->mStates->clusterId               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
+      this->mStates->clusterGeo_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
+      this->mStates->clusterPostdata_state   = _bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
+      this->mStates->clusterPre_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
+      this->mStates->clusterTimesteps        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
+      this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
    }
 #endif
    this->_unusedNewData    = false;
@@ -1092,16 +1018,16 @@ void VjObs_i::GetCfdStateVariables( void )
 void VjObs_i::GetUpdateClusterStateVariables( void )
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   this->cfdIso_value      = this->mStates->clusterIso_value;    
-   this->cfdSc             = this->mStates->clusterSc;            
-   this->cfdMin            = this->mStates->clusterMin;           
-   this->cfdMax            = this->mStates->clusterMax;          
-   this->cfdId             = this->mStates->clusterId;            
-   this->cfdGeo_state      = this->mStates->clusterGeo_state;     
-   this->cfdPostdata_state = this->mStates->clusterPostdata_state;
-   this->cfdPre_state      = this->mStates->clusterPre_state;     
-   this->cfdTimesteps      = this->mStates->clusterTimesteps;     
-   this->cfdTeacher_state  = this->mStates->clusterTeacher_state;
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, this->mStates->clusterIso_value );
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_SC, this->mStates->clusterSc );
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_MIN, this->mStates->clusterMin );
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_MAX, this->mStates->clusterMax );
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_ID, this->mStates->clusterId );
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, this->mStates->clusterGeo_state );
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE, this->mStates->clusterPostdata_state );
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, this->mStates->clusterPre_state );
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_TIMESTEPS, this->mStates->clusterTimesteps );
+   _cfdArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, this->mStates->clusterTeacher_state );
 }
 #endif
 
@@ -1178,11 +1104,11 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
    // my_orb.java
    if ( (value[ 7 ] != -1) && (value [ 8 ] != -1) )
    {
-      this->mId = value[ 0 ];
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, value[ 0 ] );
       //cout<<"update:this->corba_mutex.C_id = "<<this->mId<<endl;
 
       // get the value of the slider bar, used by many visualizations
-      this->mIso_value = value[ 1 ];
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ISO_VALUE, value[ 1 ] );
       //cout<<"iso_value"<<this->mIso_value<<endl;
 
       //NOTE: Data is oneway transfer from
@@ -1192,26 +1118,26 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
       //GUI side
       //this->mTimesteps = value[ 2 ];
 
-      this->mSc = value[ 3 ];
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_SC, value[ 3 ] );
       //cout<<"select scalar:"<<this->mSc<<endl;
 
       // change scalar range or cursor settings
-      this->mMin = value[ 4 ];
-      this->mMax = value[ 5 ];
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_MIN, value[ 4 ] );
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_MAX, value[ 5 ] );
       //cout<<"update:min,max values: "<<this->mMin<<"\t"<<this->mMax<<endl;
 
-      this->mGeo_state = value[ 6 ];
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_GEO_STATE, value[ 6 ] );
       //cout<<"geometry state:"<< this->mGeo_state <<endl;
 
-      this->mPre_state = (bool)value[ 7 ];
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_PRE_STATE, value[ 7 ] );
       //cout<<"pre_state:"<< this->mPre_state <<endl;
 
-      this->mTeacher_state = value[ 8 ];
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_TEACHER_STATE, value[ 8 ] );
       //cout<<"mTeacher state:"<< this->mTeacher_state <<endl;
    }
    else
    {
-      this->mId = value[ 0 ];
+      _bufferArray->SetCommandValue( cfdCommandArray::CFD_ID, value[ 0 ] );
       for ( int i = 0; i < 9; i ++ )
       {
          mShort_data_array[ i ] = value[ i ];

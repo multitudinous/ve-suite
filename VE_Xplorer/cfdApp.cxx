@@ -293,10 +293,8 @@ std::cout << "|  3e" << std::endl;
    this->CreateDatasetInfo();
    this->CreateTeacherInfo();
 
-#ifdef TABLET
-   this->pushDataToStateInfo();
+   // This may need to be fixed
    this->GetCfdStateVariables();
-#endif // TABLET
 }
 
 void cfdApp::preFrame( void )
@@ -316,7 +314,7 @@ void cfdApp::preFrame( void )
    // This need to go very soon
    // IHCC hack
    // fix this soon
-   if ( this->cfdId == UPDATE_SEND_PARAM )
+   if ( _cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SEND_PARAM )
    {
       double data[ 6 ];// = { 0 };
       data[ 0 ] = cfdShort_data_array[ 1 ]; //200;  //Agitation (rpm)  initial value 200
@@ -328,9 +326,8 @@ void cfdApp::preFrame( void )
 
       this->ihccModel->UpdateModelVariables( data );
       this->ihccModel->Update();
-      this->setId( -1 );
    }
-   else if ( this->cfdId == EXIT )   // exit cfdApp was selected
+   else if ( _cfdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )   // exit cfdApp was selected
    {
 #ifdef _TAO
       this->executive->UnbindORB();
@@ -382,21 +379,6 @@ void cfdApp::postFrame()
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
-#ifdef TABLET
-void cfdApp::pushDataToStateInfo( void )
-{
-   this->setIsoValue( this->cfdIso_value );   
-   this->setSc( this->cfdSc );                    
-   this->setMin( this->cfdMin );
-   this->setMax( this->cfdMax );                   
-   this->setId( this->cfdId );                    
-   this->setGeoState( this->cfdGeo_state );
-   this->setPostdataState( this->cfdPostdata_state );        
-   this->setPreState( this->cfdPre_state );             
-   this->setTimesteps( this->cfdTimesteps );
-   this->setTeacherState( this->cfdTeacher_state );         
-}
-#endif // TABLET
 
 int main(int argc, char* argv[])
 {
@@ -583,7 +565,7 @@ void cfdApp::GetUpdateClusterStateVariables( void )
          cfdSequence* the_sequence = this->_modelHandler->GetActiveSequence()->GetSequence()->GetSequence();
          if ( the_sequence != NULL )
          {
-            the_sequence->setCurrentFrame( this->cfdTimesteps );
+            the_sequence->setCurrentFrame( this->getTimesteps() );
             //cout << " cfdTimesteps in preframe : " << cfdTimesteps << endl;
          }
       }
