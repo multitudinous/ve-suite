@@ -191,19 +191,19 @@ bool HeatExchanger_UI_Dialog::TransferDataFromWindow()
   (*p_Sl) = atof(txt.c_str());
 
   txt = t_St->GetValue();
-  (*p_St) = atoi(txt.c_str());
+  (*p_St) = atof(txt.c_str());
   
   txt = t_tube_id->GetValue();
-  (*p_tube_id) = atoi(txt.c_str());
+  (*p_tube_id) = atof(txt.c_str());
 
   txt = t_tube_od->GetValue();
   (*p_tube_od) = atof(txt.c_str());
 
   txt = t_tube_length->GetValue();
-  (*p_tube_length) = atoi(txt.c_str());
+  (*p_tube_length) = atof(txt.c_str());
   
   txt = t_int_press_drop->GetValue();
-  (*p_int_press_drop) = atoi(txt.c_str());
+  (*p_int_press_drop) = atof(txt.c_str());
 
   txt = t_ext_press_drop->GetValue();
   (*p_ext_press_drop) = atof(txt.c_str());

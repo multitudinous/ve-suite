@@ -142,13 +142,13 @@ bool WaterSource_UI_Dialog::TransferDataToWindow()
   wxCommandEvent event;
   if (*p_case_type)
     {
-      r_case_type_eva->SetValue(true);
-      r_case_type_des->SetValue(false);
+      r_case_type_eva->SetValue(false);
+      r_case_type_des->SetValue(true);
     }
   else
     {
-      r_case_type_eva->SetValue(false);
-      r_case_type_des->SetValue(true);
+      r_case_type_eva->SetValue(true);
+      r_case_type_des->SetValue(false);
     }
 
    OnCaseTypeChange(event);
