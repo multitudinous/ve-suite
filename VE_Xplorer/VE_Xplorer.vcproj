@@ -347,6 +347,9 @@
 			Name="src"
 			Filter=".cpp">
 			<File
+				RelativePath=".\cfd1DTextInput.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdAccessoryFunctions.cxx">
 			</File>
 			<File
@@ -398,13 +401,13 @@
 				RelativePath=".\cfdGeomDataSet.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdIHCCContour.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdIHCCGauge.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdIHCCModel.cxx">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdImage.cxx">
@@ -459,6 +462,12 @@
 			</File>
 			<File
 				RelativePath=".\cfdPresetVector.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdQuatCam.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdQuatCamHandler.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdReadParam.cxx">
@@ -532,41 +541,6 @@
 			<Filter
 				Name="TAO_src"
 				Filter=".cpp">
-				<File
-					RelativePath=".\cfd1DTextInput.cxx">
-					<FileConfiguration
-						Name="Debug|Win32"
-						ExcludedFromBuild="TRUE">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="OMNI_BUILD|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="TAO_BUILD|Win32">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-					<FileConfiguration
-						Name="Release_OMNI|Win32"
-						ExcludedFromBuild="TRUE">
-						<Tool
-							Name="VCCLCompilerTool"
-							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-					</FileConfiguration>
-				</File>
 				<File
 					RelativePath=".\cfdDashboard.cxx">
 					<FileConfiguration
@@ -1033,7 +1007,13 @@
 				RelativePath="cfdGeomDataSet.h">
 			</File>
 			<File
-				RelativePath=".\cfDIHCCModel.h">
+				RelativePath=".\cfdIHCCContour.h">
+			</File>
+			<File
+				RelativePath=".\cfdIHCCGauge.h">
+			</File>
+			<File
+				RelativePath=".\cfdIHCCModel.h">
 			</File>
 			<File
 				RelativePath="cfdImage.h">
@@ -1082,6 +1062,12 @@
 			</File>
 			<File
 				RelativePath="cfdPresetVector.h">
+			</File>
+			<File
+				RelativePath=".\cfdQuatCam.h">
+			</File>
+			<File
+				RelativePath=".\cfdQuatCamHandler.h">
 			</File>
 			<File
 				RelativePath="cfdReadParam.h">

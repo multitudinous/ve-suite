@@ -201,7 +201,7 @@ void cfdIHCCContour::Update( void )
       //cout << " Color : " << color[ 0 ] << " : " << color[ 1 ] << " : " << color[ 2 ] << endl;
       actor->GetProperty()->SetColor( color );
       pfGeode* geo = new pfGeode();
-      vtkActorToPF( actor, geo, 1);
+      vtkActorToPF( actor, geo, 0);
       actor->Delete();
 	   geodes.push_back( geo );
 	}

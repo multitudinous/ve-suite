@@ -34,7 +34,7 @@
 
 class pfDCS;
 class pfGeode;
-class pfCoord;
+struct pfCoord;
 class vtkGlyph3D;
 class vtkCubeSource;
 class vtkSphereSource;

@@ -42,7 +42,7 @@ void cfdQuatCamHandler::WriteToFile(char* fileName)
    fprintf(ptsFile, "%d", cfdPointsVec.size());
    fprintf(ptsFile, "\n");
 
-   for (int i=0; i<cfdPointsVec.size(); i++)
+   for (unsigned int i=0; i<cfdPointsVec.size(); i++)
    {
       cfdPointsVec[i]->m.getCol(0, &matpts[0], &matpts[1], &matpts[2], &matpts[3]);
       cfdPointsVec[i]->m.getCol(1, &matpts[4], &matpts[5], &matpts[6], &matpts[7]);
@@ -127,7 +127,7 @@ pfDCS* cfdQuatCamHandler::Relocate(int cfdId, pfDCS* worldDCS, int cfdIso_value,
 
    if ( t < 1.0 )
    {
-      t += 0.01;
+      t += 0.01f;
       QuatCams[cfdIso_value]->MoveCam(nav->worldTrans, t, worldDCS);
       QuatCams[cfdIso_value]->UpdateTrans(nav);
       QuatCams[cfdIso_value]->UpdateRotation();

@@ -37,6 +37,7 @@
 //#include <assert.h>
 #include <vector>
 #include <utility>
+#include <sstream>
 using namespace std;
 
 #include <Performer/pfdu.h>
@@ -87,13 +88,13 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
    worldDCS->addChild( ihccModelNode );
    this->SetpfSequence( sequence );
    float scale_gauge[ 3 ];
-   scale_gauge[ 0 ]  = 700;
-   scale_gauge[ 1 ]  = 700;
-   scale_gauge[ 2 ]  = 700;
+   scale_gauge[ 0 ]  = 70;
+   scale_gauge[ 1 ]  = 70;
+   scale_gauge[ 2 ]  = 70;
    float trans_gauge[ 3 ];
-   trans_gauge[ 0 ] = -4;
-   trans_gauge[ 1 ] = 5;
-   trans_gauge[ 2 ] = 4;
+   trans_gauge[ 0 ] = -0.5;
+   trans_gauge[ 1 ] = -5;
+   trans_gauge[ 2 ] = 2;
    float rot_gauge[ 3 ];
    rot_gauge[ 0 ] = 0;
    rot_gauge[ 1 ] = 60;
@@ -142,9 +143,9 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
    gauge_time->SetGeometryFilename( std::string("dash_digital.flt") );
 
    // Acid Gauge
-   trans_gauge[ 0 ] = 4;
-   trans_gauge[ 1 ] = 5;
-   trans_gauge[ 2 ] = 4;
+   trans_gauge[ 0 ] = -0.5;
+   trans_gauge[ 1 ] = -5;
+   trans_gauge[ 2 ] = 2;
    gauge_acid = new cfdIHCCGauge( ihccModelNode );
    gauge_acid->SetpfSequence( sequence );
    gauge_acid->SetDCS( worldDCS );
@@ -259,7 +260,7 @@ void cfdIHCCModel::RunModel( void )
 	  {
 	     max = c[ 0 ];
 	  }
-      cout << "I calculated the concentration : " << c[ 0 ] << endl;
+      //cout << "I calculated the concentration : " << c[ 0 ] << endl;
       times.push_back( t * 10 );
 //      cout << "Timestep " << t << endl;
 		solutions.push_back( c[ 0 ] );

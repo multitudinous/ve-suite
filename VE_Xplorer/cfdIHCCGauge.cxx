@@ -202,7 +202,7 @@ void cfdIHCCGauge::ClearSequence( void )
 
             pfGroup * group = (pfGroup *)((pfSequence*)this->GetpfSequence())->getChild( i );
             group->removeChild( output[ i ]->getpfDCS() );
-
+            pfDelete( output[ i ]->getpfDCS() );
          }
       }
    }         

@@ -70,7 +70,7 @@ pfDCS *textPrompt::add_text(char * text_input)
 
    text->addString(str);
    text_DCS->addChild(text);
-   text_DCS->setTrans(1.0,0.2,3.0);
+   text_DCS->setTrans(1.0f,0.2f,3.0f);
    text_DCS->setScale(0.5,0.5,0.5);
 
    return text_DCS;
