@@ -23,9 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: filename,v $
- * Date modified: $Date: date $
- * Version:       $Rev: 999999 $
+ * File:          $RCSfile: cfdVjObsWrapper.cxx,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
