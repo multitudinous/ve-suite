@@ -22,7 +22,7 @@ int main(int argc, char** argv)
    }
    cfdHDFToVTK* xlatr = new cfdHDFToVTK(inFile);
 
-   xlatr->setVerboseTranslationFlag(1);
+   xlatr->setVerboseTranslationFlag(0);
    xlatr->setType(cfdHDFToVTK::DCLARKE);
    xlatr->viewGridBeforeWriting(0);
    xlatr->setOutputVTKDirectory(outdir);

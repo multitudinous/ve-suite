@@ -678,15 +678,6 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
    _ay = new double[_dimensions[1]+1];
    _az = new double[_dimensions[2]+1];
 
- /*  _deltaAX = new double[_dimensions[0]-1];
-   _deltaBX = new double[_dimensions[0]-1];
-
-   _deltaAY = new double[_dimensions[1]-1];
-   _deltaBY = new double[_dimensions[1]];
-
-   _deltaAZ = new double[_dimensions[2]-1];
-   _deltaBZ = new double[_dimensions[2]-1];
-*/
    double xSquared = 0;
    for(int i = 1; i < _dimensions[0] -1;i++){
       xSquared = (_bx[i]-_bx[i-1]) * (_bx[i]-_bx[i-1]);
@@ -700,16 +691,6 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
    _ax[0] = 2.0*_bx[0] - _ax[1];
 
 
- /*  for(int i = 0; i < _dimensions[0]-1; i++){
-      _deltaAX[i] = _ax[i+1] - _ax[i];
-   }
-
-   for(int i = 1; i < _dimensions[0]-1; i++){
-      _deltaBX[i] = _bx[i] - _bx[i-1];
-   }
-   _deltaBX[0] = _deltaAX[0];
-   _deltaBX[_dimensions[0]-1] = _deltaAX[_dimensions[0]-1];
-*/
    double ySquared = 0;
    for(int i = 1; i < _dimensions[1] -1;i++){
       ySquared = (_by[i]-_by[i-1]) * (_by[i]-_by[i-1]);
@@ -723,16 +704,6 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
    _ay[0] = 2.0*_by[0] - _ay[1];
 
 
- /*  for(int i = 0; i < _dimensions[1]-1; i++){
-      _deltaAY[i] = _ay[i+1] - _ay[i];
-   }
-
-   for(int i = 1; i < _dimensions[1]-1; i++){
-      _deltaBY[i] = _by[i] - _by[i-1];
-   }
-   _deltaBY[0] = _deltaAY[0];
-   _deltaBY[_dimensions[1]-1] = _deltaAY[_dimensions[1]-1];
-*/
    double zSquared = 0;
    for(int i = 1; i < _dimensions[2] -1;i++){
       zSquared = (_bz[i]-_bz[i-1]) * (_bz[i]-_bz[i-1]);
@@ -748,16 +719,6 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
    _az[0] = 2.0*_bz[0] - _az[1];
 
 
- /*  for(int i = 0; i < _dimensions[2]-1; i++){
-      _deltaAZ[i] = _az[i+1] - _az[i];
-   }
-
-   for(int i = 1; i < _dimensions[2]-1; i++){
-      _deltaBZ[i] = _bz[i] - _bz[i-1];
-   }
-   _deltaBZ[0] = _deltaAZ[0];
-   _deltaBZ[_dimensions[2]-1] = _deltaAZ[_dimensions[2]-1];
-*/
    if(gridData){
       delete [] gridData;
       gridData = 0;
@@ -864,7 +825,7 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
    cellData.clear();
 
    char* aName = 0;
-   char* bName = 0;
+   //char* bName = 0;
    if(!_outVTKDirectory){
       _outVTKDirectory =  new char[256];
       strcpy(_outVTKDirectory,"./");
@@ -874,7 +835,7 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
    if(!_outFile){
       setVTKOutFileName(0);
    }
-   strcat(aName,"a");
+   //strcat(aName,"a");
    strcat(aName,_outFile);
    strcat(aName,".vtk");
   
@@ -933,7 +894,6 @@ void cfdHDFToVTK::_addCellDataToGrid(vtkDataSet* dSet,
    data->SetNumberOfComponents(nComponents);
    data->SetNumberOfTuples( nTuples );
    double* tuple = new double[nComponents];
-   double bounds[6];
    for( int j = 0; j < nTuples; j++ ){
       for(int i = 0; i < nComponents; i++){
          tuple[i] = cellData.at(i)[j];      
