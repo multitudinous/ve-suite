@@ -9,25 +9,32 @@ VTK_INCLUDES =  -I$(VTK_HOME)Common -I$(VTK_HOME)Graphics \
                 -I$(VTK_HOME)Rendering  -I$(VTK_HOME)IO \
 		-I$(VTK_HOME)Parallel
 
-CXX = c++
+CXX = g++
 
 INCLUDE_FLAGS = $(VTK_INCLUDES) -I$(BLITZ_HOME)
 
 LINK_FLAGS = -L$(VTK_HOME)bin -L $(BLITZ_HOME)/lib/.libs -lblitz
 
 OBJECTS = FormatSelector.o converter.o FluentTranslator.o \
-	   mFixTranslator.o UnstructuredGridWriter.o \
-	   toVTK.o dump.o fluentCase.o \
+	   mFixTranslator.o UnstructuredGridWriter.o 
+	   
+FACTORY_OBJECTS = toVTK.o dump.o fluentCase.o \
 	   fluentIO.o fluentObjects.o fluentVtkFactory.o \
-	   reorder.o setOperators.o
+	   reorder.o setOperators.o testVtkFactory.o
 
 LIBS = -lvtkParallel  -lvtkexpat \
 	 -lvtkfreetype -lvtkftgl -lvtkRendering \
 	 -lvtkGraphics -lvtkImaging -lvtkFiltering \
 	 -lvtkCommon -lvtkzlib -lvtkIO
 
-all: cfdtrans
+all: cfdtrans testFactory
 
+testFactory: $(FACTORY_OBJECTS)
+	$(CXX) -o testVtkFactory $(FACTORY_OBJECTS) $(LINK_FLAGS) $(LIBS)
+
+testVtkFactory.o: testVtkFactory.cpp
+	$(CXX) -c testVtkFactory.cpp $(INCLUDE_FLAGS)
+	
 cfdtrans: $(OBJECTS)
 	$(CXX) -o cfdtrans $(OBJECTS) `wx-config --libs` $(LINK_FLAGS) $(LIBS)
 
@@ -42,10 +49,10 @@ mFixTranslator.o: mFixTranslator.cpp mFixTranslator.h
 
 UnstructuredGridWriter.o: UnstructuredGridWriter.cpp UnstructuredGridWriter.h
 	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated UnstructuredGridWriter.cpp $(INCLUDE_FLAGS)
-
+	
 FluentTranslator.o: FluentTranslator.cpp FluentTranslator.h
 	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated FluentTranslator.cpp $(INCLUDE_FLAGS)
-
+	
 toVTK.o: toVTK.cpp fluentObjects.h fluentCase.h fluentIO.h var_defs.h
 	$(CXX) -c -Wno-deprecated toVTK.cpp $(INCLUDE_FLAGS)
 
@@ -72,4 +79,4 @@ setOperators.o: setOperators.cpp
 
 
 clean:
-	rm *.o  cfdtrans
+	rm *.o  cfdtrans testVtkFactory
