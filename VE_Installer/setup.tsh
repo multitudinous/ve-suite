@@ -146,7 +146,7 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
-   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OSG_HOME}/lib32:${OSG_HOME}/lib32/osgPlugins
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv MY_ACEDIR /home/users/mccdo/ACE_TAO
