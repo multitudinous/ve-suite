@@ -672,15 +672,16 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
   
 void AppFrame::ConVEServer(wxCommandEvent &event)
 {
-  if (!is_orb_init)
-    {
+   if (!is_orb_init)
+   {
       if (init_orb_naming())
-	is_orb_init=true;
+	      is_orb_init=true;
       else
-	return;
-    }
+	      return;
+   }
   
-  try {
+   try 
+   {
     /*
       if (pelog==NULL)
       {
