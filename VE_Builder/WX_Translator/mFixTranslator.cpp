@@ -663,7 +663,7 @@ void mFixTranslator::FormatDate(int iDay, int iMonth, int iYear)
 	(*TC_RunDate) << iYear;
 	
 	wxString statusReportDate;
-	statusReportDate.Printf(wxT("Run Date: %s %i, %i\n"), strMonth, iDay, iYear);
+	statusReportDate.Printf(wxT("Run Date: %s %i, %i\n"), iMonth, iDay, iYear);
 	text_ctrl_statusReport->AppendText(statusReportDate);
 	TC_RunDate->SetInsertionPoint(0);
 }
