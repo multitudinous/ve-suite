@@ -49,9 +49,9 @@ class PluginLoader : public wxObject
 
 
   // private:
-  vector<REI_Plugin*> plugins;
+  std::vector<REI_Plugin*> plugins;
   //Keep the list of the first intance of each plugin
-  vector<wxClassInfo*> plugin_cls; 
+  std::vector<wxClassInfo*> plugin_cls; 
   //The classinfo obj of the each plugin, will be use to generate more instances
   
 

@@ -38,7 +38,7 @@ include $(ACE_ROOT)/include/makeinclude/rules.nonested.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.local.GNU
 include $(TAO_ROOT)/taoconfig.mk
 
-vpath %.cpp ${VE_UI_HOME} ${IDL_HOME} ${VE_SUITE_HOME}/VE_Xplorer ${SKEL_HOME}
+vpath %.cpp ${VE_UI_HOME} ${IDL_HOME} ${VE_SUITE_HOME}/VE_Xplorer ${SKEL_HOME} ../Plugin
 vpath %.cxx ${VE_UI_HOME}
 
 LDFLAGS += -L$(TAO_ROOT)/tao -L$(TAO_ROOT)/orbsvcs/orbsvcs
@@ -53,8 +53,8 @@ CPPFLAGS += -g  ${INCLUDES} ${CMP} -I../Plugin ${WX_CXX} -I$(TAO_ROOT) \
 OBJECTS = StringParse.o \
 	OrbThread.o \
 	Frame.o \
-	../../VE_Conductor/skel/VjObsC.o \
-	../../VE_Conductor/skel/VjObsS.o \
+	VjObsC.o \
+	VjObsS.o \
 	App.o \
 	PluginLoader.o \
 	Network.o \
@@ -64,14 +64,14 @@ OBJECTS = StringParse.o \
 	ResultPanel.o \
 	paraThread.o \
 	GlobalParamDialog.o \
-	../Plugin/string_ops.o \
-	../Plugin/interface.o \
-	../Plugin/package.o \
-	../Plugin/Plugin_base.o \
-	../Plugin/UIDialog.o \
-	../Plugin/TexTable.o \
-	../Plugin/TextResultDialog.o \
-	../Plugin/FinancialDialog.o \
+	string_ops.o \
+	interface.o \
+	package.o \
+	Plugin_base.o \
+	UIDialog.o \
+	TexTable.o \
+	TextResultDialog.o \
+	FinancialDialog.o \
 	UI_Frame.o \
 	UI_Tabs.o \
 	UI_VisTab.o \
@@ -106,4 +106,4 @@ $(APP): $(OBJECTS) $(addprefix $(VDIR),$(FILE_UI_CLT_OBJS))
 	g++ ${PLATFORM_LIB_LINK_OPTIONS} $(LDFLAGS) -o $@ $^ ${WX_LIBS} $(TAO_SRVR_LIBS) $(VLDLIBS) ${LIBRARY_SEARCH_PATHS} ${LIBRARY_NAMES} ${EXTRA_LINK_OPTIONS} $(POSTLINK) 
 
 clean:
-	rm -rf *.o $(APP) ./.obj ./ii_files ./Debug
+	rm -rf *.o $(APP) ./.obj ./ii_files ./Debug 	

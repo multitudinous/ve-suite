@@ -387,7 +387,7 @@ void GlobalParamDialog::entry2double(wxTextCtrl* entry, double * value)
 void GlobalParamDialog::UnPack(Interface *intf)
 {
   
-  string temp;
+  std::string temp;
 
   globalparam_intf=*intf;
   globalparam_intf.getVal("plant_capacity", plant_capacity_d);
@@ -415,7 +415,7 @@ void GlobalParamDialog::UnPack(Interface *intf)
 
 Interface *GlobalParamDialog::Pack()
 {
-  string temp;
+  std::string temp;
 
   globalparam_intf._id= 100000 ; //The id for the globalparam
 
