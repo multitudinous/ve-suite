@@ -49,6 +49,7 @@
 #include "starReader.h"
 #include "jdMAPReader.h"
 #include "enSightGoldReader.h"
+#include "ansysReader.h"
 
 // function declarations
 extern vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug );
@@ -62,6 +63,8 @@ extern vtkUnstructuredGrid * fireReader( char * geomFile, char * dataFile, int d
 extern vtkUnstructuredGrid * mfixReader( char * mfixFileName, 
                   int nx, int ny, int nz, 
                   int retainEveryNthFrame, vtkTransform * transform, int debug );
+
+using namespace std;
 
 int debug = 0;   // 0=no debug output, 1=some debug output, 2=more debug output
 
@@ -604,8 +607,9 @@ int main( int argc, char *argv[] )
                 << "\t(7)mfix (8)Fluent Particle Data "
                 << "(9)PLOT3D (10)John Deere MAP Data "
                 << "(11) John Deere EnSight Data\n"
+                << "(12) ANSYS rst binary data\n"
                 << "\t(0)exit" <<std::endl;
-      cfdType = fileIO::getIntegerBetween( 0, 11 );
+      cfdType = fileIO::getIntegerBetween( 0, 12 );
    }
    else
    {
@@ -686,6 +690,24 @@ int main( int argc, char *argv[] )
    {
       _enSightReader = new enSightGoldReader();
       pointset = _enSightReader->GetUnstructuredGrid( infilename, debug );
+   }
+   else if ( cfdType == 12 )
+   {
+      reader = new ansysReader( infilename );
+      reader->ReadHeader();
+      reader->ReadRSTHeader();
+      reader->ReadDOFBlock();
+      reader->ReadNodalEquivalencyTable();
+      reader->ReadElementEquivalencyTable();
+      reader->ReadDataStepsIndexTable();
+      reader->ReadTimeTable();
+      reader->ReadGeometryTable();
+      reader->ReadElementTypeIndexTable();
+      reader->ReadNodalCoordinates();
+      reader->ReadElementDescriptionIndexTable();
+      reader->ReadSolutionDataHeader();
+      reader->ReadNodalSolutions();
+      pointset = reader->GetUGrid();
    }
 /*
    else if (cfdType == 5)        // PIV
