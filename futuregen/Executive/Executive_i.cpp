@@ -363,7 +363,7 @@ char * Body_Executive_i::GetModuleResult (
   _mutex.acquire();
   
   Interface intf;
-  if(module_id = -1) {
+  if(module_id == -1) {
     // Calculate efficiency
     double tot_power = 0.0;
     std::map<long, double>::iterator iter;
