@@ -2,9 +2,8 @@ This is our initial port of our app (VE_Suite) to windows.
 Currently it must be built in Visual Studio 7.1(2003).
 
 To set up the build environment:
-1) edit the batch filerun the batch file to reflect your
-   environment:
-   ./VE_Installer/vesuite.OMNIBUILD.setup.bat
+1) edit the batch file ./VE_Installer/vesuite.OMNIBUILD.setup.bat
+   to reflect your environment.
 
 2) run the batch file:
    ./VE_Installer/vesuite.OMNIBUILD.setup.bat
@@ -21,7 +20,6 @@ Configuration Properties tab to point to the directory
 where your parameter files are. You will also need to pass in
 your config files as command arguments on the configuration
 properties tab.
-
 
 NOTE: Paths on windows SHOULD NOT contain spaces!!!!
 Example:
