@@ -742,6 +742,12 @@ echo Done.
 				RelativePath="..\VE_SceneGraph\cfdTempAnimation.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdTextureBasedModel.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTextureManager.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdThread.cxx">
 			</File>
 			<File
@@ -1644,10 +1650,16 @@ echo Done.
 				RelativePath="cfdTeacher.h">
 			</File>
 			<File
+				RelativePath=".\cfdTempAnimation.h">
+			</File>
+			<File
 				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
 			</File>
 			<File
-				RelativePath=".\cfdTempAnimation.h">
+				RelativePath=".\cfdTextureBasedModel.h">
+			</File>
+			<File
+				RelativePath=".\cfdTextureManager.h">
 			</File>
 			<File
 				RelativePath=".\cfdThread.h">

@@ -156,6 +156,8 @@ SRCS=\
    cfdSwitch.cxx \
    cfdPolyData.cxx \
    cfdTeacher.cxx \
+   cfdTextureBasedModel.cxx \
+   cfdTextureManager.cxx \
    cfdTransientInfo.cxx \
    cfdTransientSet.cxx \
    cfdTransientFlowManager.cxx \
