@@ -37,6 +37,7 @@ void summary_values::insert_summary_val (char *description, float value)
 
 void summary_values::insert_summary_val (char *description, double value)
 {
+  //printf("insertval double called\n");
   int i, j, description_end;
   std::string desc, format, units;
   char f[50], u[50], val[100];

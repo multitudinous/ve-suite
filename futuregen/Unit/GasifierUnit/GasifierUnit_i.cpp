@@ -116,6 +116,7 @@ void Body_Unit_i::StartCalc (
   //////////
 
   gas_out = new Gas;
+  gas_out->thermo_database = gashelper.thermo_database;
 
   summary_values summaries;
 

@@ -32,6 +32,7 @@ GasifierCFD::GasifierCFD ()
 
   abort_glacier = false;
   running = false;
+  _summaries = NULL;
 
   _work_dir = "./case";
 }
@@ -675,6 +676,7 @@ bool GasifierCFD::execute (Gas *ox_in, Gas *gas_out, summary_values *summaries)
     set_running(false);
   }
   
+  cout<<"execute return"<<endl;
   return true;
 }
 
@@ -710,7 +712,7 @@ void GasifierCFD::load_and_run_glacier()
 #endif
   
   typedef void WIN_PREFIX close_io_func_type();
-  typedef void WIN_PREFIX glacier_func_type (gas_abort_status_fp,
+  typedef void glacier_func_type (gas_abort_status_fp,
 		       gas_load_scirun_groups_fp,
 		       gas_send_scirun_specie_fp,
 		       gas_load_scirun_coal_fp,
@@ -750,7 +752,12 @@ void GasifierCFD::load_and_run_glacier()
     return ;
   }
 #endif
+
+#ifndef WIN32
   std::string glac_lib = "./Glacier/make_glacier/glacier_gasifier.so";
+#else
+  std::string glac_lib = "./Glacier/Glacier.dll";	
+#endif
 
 #ifndef WIN32
   glacier_handle = dlopen(glac_lib.c_str(), RTLD_NOW);
@@ -808,6 +815,8 @@ void GasifierCFD::load_and_run_glacier()
 	       gas_load_scirun_slag_,
  	       gas_load_scirun_flags_);
 
+	cout<<"Done with glacier_func"<<endl;
+
 #ifndef WIN32  
   dlerror();  // clear errors
   ((void*)close_io_func) = dlsym(glacier_handle,"close_io_");
@@ -816,7 +825,7 @@ void GasifierCFD::load_and_run_glacier()
     return;
   }
 #else
-  close_io_func = (close_io_func_type*) GetProcAddress(glacier_handle,"close_io_");
+  close_io_func = (close_io_func_type*) GetProcAddress(glacier_handle,"CLOSE_IO");
   if(close_io_func=='\0'){
     cerr<<"Didn't find close_io_ in dll: "<<glac_lib<<endl;
     return;
@@ -1016,6 +1025,8 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
   int nlm_val = (*nlm);
   int FF = 7;
  
+
+  printf("start call send_scirun_data\n");
   for(k=0; k<nk; k++)
     for(j=0; j<nj; j++) {
       if((pcell[0][j][k] == FF) &&
@@ -1043,6 +1054,7 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 part_char, part_ash, part_water, part_coal,
 						 hco, hwo, hao, hho));	
     }
+	printf("cp1\n"); fflush(NULL);
   for(k=1; k<nk-1; k++)
     for(i=1; i<ni-1; i++) {
       if((pcell[i][0][k] == FF) &&
@@ -1070,6 +1082,7 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 part_char, part_ash, part_water, part_coal,
 						 hco, hwo, hao, hho));
     }
+	printf("cp2\n"); fflush(NULL);
   for(j=1; j<nj-1; j++)
     for(i=1; i<ni-1; i++) {
       if((pcell[i][j][0] == FF) &&
@@ -1098,31 +1111,63 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
 						 hco, hwo, hao, hho));
     }
   
+	/*
+//This section of code is to take care of the \0 problem for Compaq Fortan compiler, it takes \0 as '\\0'
+  char *copy_wic;
+  char *copy_spec;
+  char *copy_part;
+  int len = strlen(wic_name);
+  copy_wic = new char[len+1];
+  strcpy(copy_wic, wic_name);
+  int ci;
+  for (ci=0; ci<len-1; ci++)
+	  if (copy_wic[ci]=='\\'&& copy_wic[ci+1]=='0')
+		  copy_wic[ci]='\0';
+  len = strlen(spec_name);
+  copy_spec = new char[len+1];
+  strcpy(copy_spec, spec_name);
+  for (ci=0; ci<len-1; ci++)
+	  if (copy_spec[ci]=='\\'&&copy_spec[ci+1]=='0')
+		  copy_spec[ci]='\0';
+  len = strlen(part_name);
+  copy_part = new char[len+1];
+  strcpy(copy_part, part_name);
+  for (ci=0; ci<len-1; ci++)
+	  if (copy_part[ci]=='\\'&&copy_part[ci+1]=='0')
+		  copy_part[ci]='\0';
+  		*/
+
   for(i=0; i<nlm_val; i++) {
     _gas_out->comp_wics.push_back((double)*(wic_val + i));
-    _gas_out->wics[string(wic_name + i*9)] = i;
+    _gas_out->wics[string(/*copy_wic*/wic_name + i*9)] = i;
   }
- 
+ printf("cp3\n"); fflush(NULL);
   for(i=0; i<ns_val; i++)
-    _gas_out->specie[string(spec_name + i*9)] = i;
+    _gas_out->specie[string(/*copy_spec*/spec_name + i*9)] = i;
    
   for(i=0; i<4; i++) 
-    _gas_out->particle[string(part_name + i*9)] = i;
+    _gas_out->particle[string(/*copy_part*/part_name + i*9)] = i;
+
+  //delete copy_wic;
+  //delete copy_spec;
+  //delete copy_part;
       
   _gas_out->hh0.push_back((double)(*hho));
   _gas_out->hh0.push_back((double)(*hao));
   _gas_out->hh0.push_back((double)(*hwo));
   _gas_out->hh0.push_back((double)(*hco));
 
+  printf("cp4\n"); fflush(NULL);
   _gas_out->average();
-
+  printf("cp5\n"); fflush(NULL);
   // Pressure at inlet is gage.
   _gas_out->pressure_drop = _press_drop;
- 
+  printf("cp6\n"); fflush(NULL);
   // Heat data
   //heat_data->conv =((double)(*ht_conv));
   //heat_data->net = ((double)(*ht_netwall));
   //heat_data->inc = (-1)*((double)(*ht_netexit));
+  printf("end call send_scirun_data\n"); fflush(NULL);
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
@@ -1277,7 +1322,19 @@ void GasifierCFD::send_scirun_specie(int *ns, float *spec_val, char *spec_name,
 void GasifierCFD::insert_summary_val(char *description, float *value,
 				  unsigned int slen)
 {
-  _summaries->insert_summary_val(description, *value);
+	//cout<<"Yang: insert summary_val called on _summaries"<<endl;
+	//cout<<description<<endl;
+	//cout<<"try to print the value"<<endl;
+	//cout<<value<<endl;
+	//if (value)
+	//	cout<<(float)(*value)<<endl;
+	//else
+	//	cout<<"value is NULL"<<endl;
+	//cout<<"Value printed"<<endl;
+	//if (_summaries!=NULL)
+	_summaries->insert_summary_val(description, *value);
+	//else
+	//	cout<<"NULL _summaries"<<endl;
 }
 
 //\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/\/
