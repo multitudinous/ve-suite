@@ -48,3 +48,5 @@
    0.0               // Sound Position Z,  OpenGL Coordinates 0 is center
    /sound.wav        // Sound file name  
    mysound           // Sound Name Alias, give a unique name of alphanumeric characters   
+14
+   locations.dat     //QuatCam file: should be an existing file in the working directory 
