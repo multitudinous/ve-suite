@@ -181,7 +181,8 @@ SRCS=\
    cfdPfSceneManagement.cxx \
    cfdAppWrapper.cxx \
    cfdVjObsWrapper.cxx \
-   cfdThread.cxx
+   cfdThread.cxx \
+   cfdVEXplorer.cxx
 
 ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \
