@@ -28,6 +28,7 @@ endif
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
 setenv TAO_BUILD TRUE
+setenv SCENE_GRAPH PF
 #setenv TAO_BUILD FALSE
 # TAO_BUILD can be set from outside this script to override the default of FALSE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -56,9 +57,14 @@ else if ( $CLUSTER_APP != "TRUE" && $CLUSTER_APP != "FALSE" ) then
    echo "   If you want otherwise, redefine CLUSTER_APP"
 endif
 
+# Specify your scene graph: OSG = OpenSceneGraph, PF = OpenGL Performer
+#setenv SCENE_GRAPH PF
+
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
 setenv VPR_DEBUG_ENABLE 1
+setenv NO_RTRC_PLUGIN TRUE
+setenv NO_PERF_PLUGIN TRUE
 setenv PFSHAREDSIZE 536870000
 setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
@@ -70,10 +76,12 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv WX_HOME /isv/Juggler/wxGTK-2.4.2/IRIX32
    setenv VJ_BASE_DIR /isv/Juggler/vrjuggler-2.0-beta1.irix-n32-posix
    setenv VJ_DEPS_DIR /isv/Juggler/vrjuggler-2.0-beta1.irix-n32-deps
-
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/IRIX32 #this needs to change
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/isv/Juggler/openal
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/isv/Juggler/Performer3.1_remapped_libs/lib32:${WX_HOME}/lib
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OSG_HOME}/lib32:${OSG_HOME}/lib32/osgPlugins
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_ROOT /isv/Juggler/ACE_wrappers
@@ -177,6 +185,9 @@ setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
 setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
 setenv PATH ${WX_HOME}/bin:${PATH}
 setenv PATH ${JDK_HOME}/bin:${PATH}
+if ( $?OSG_HOME ) then
+   setenv PATH ${OSG_HOME}/OpenSceneGraph/bin:${PATH}
+endif
 
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
