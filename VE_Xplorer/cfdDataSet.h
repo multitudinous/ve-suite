@@ -207,7 +207,7 @@ class cfdDataSet
 
   float bbDiagonal;        // length of the diagonal of the bounding box.
 
-  float meanCellBBLength;  // length of diagonal of average cell bounding box. 
+  double meanCellBBLength; // length of diagonal of average cell bounding box. 
   
   float stepLength;        // Step length for streamline integration.
 

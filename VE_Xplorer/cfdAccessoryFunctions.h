@@ -33,6 +33,7 @@
 #define CFD_ACCESSORY_FUNCTIONS_H
 
 class vtkDataArray;
+class vtkDataSet;
 
 class cfdAccessoryFunctions
 { 
@@ -40,6 +41,8 @@ class cfdAccessoryFunctions
       cfdAccessoryFunctions();
       ~cfdAccessoryFunctions();
       static double * ComputeVectorMagnitudeRange( vtkDataArray * dataArray );
+      static double ComputeMeanCellBBLength( vtkDataSet * dataSet );
+
 
    private:
       static double ComputeVectorMagnitude( double vectorComponents [ 3 ] );

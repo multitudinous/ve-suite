@@ -43,7 +43,6 @@
 #include "readWriteVtkThings.h"
 #include "cfdDCS.h"
 
-#include <vtkGenericCell.h>
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
 #include <vtkDataSet.h>
@@ -662,27 +661,27 @@ void cfdDataSet::UpdatePropertiesForNewMesh()
    vtkFieldData * field = this->GetDataSet()->GetFieldData();
    int numFieldArrays = field->GetNumberOfArrays();
    vprDEBUG(vprDBG_ALL,1) << " numFieldArrays = " << numFieldArrays
-                          << endl << vprDEBUG_FLUSH;
+                          << std::endl << vprDEBUG_FLUSH;
    for ( int i = 0; i < numFieldArrays; i++ )
    {
       // print some debug information
       vprDEBUG(vprDBG_ALL,0) << " Reading field \""
            << field->GetArray( i )->GetName()
-           << "\"" << endl << vprDEBUG_FLUSH;
+           << "\"" << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL,1) << "\tNumComponents = "
            << field->GetArray( i )->GetNumberOfComponents()
-           << endl << vprDEBUG_FLUSH;
+           << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL,1) << "\tNumTuples= "
            << field->GetArray( i )->GetNumberOfTuples()
-           << endl << vprDEBUG_FLUSH;
+           << std::endl << vprDEBUG_FLUSH;
       vprDEBUG(vprDBG_ALL,1) << "\tfirst value = "
            << field->GetArray( i )->GetComponent( 0, 0 )
-           << endl << vprDEBUG_FLUSH;
+           << std::endl << vprDEBUG_FLUSH;
       if ( field->GetArray( i )->GetNumberOfTuples() > 1 )
       {
          vprDEBUG(vprDBG_ALL,1) << "\tsecond value = "
               << field->GetArray( i )->GetComponent( 0, 1 )
-              << endl << vprDEBUG_FLUSH;
+              << std::endl << vprDEBUG_FLUSH;
       }
 
       // If any field names match with member variable names, use them:
@@ -695,24 +694,8 @@ void cfdDataSet::UpdatePropertiesForNewMesh()
    // If not provided in the dataset field, compute :
    if ( this->meanCellBBLength == 0.0 )
    {
-      vprDEBUG(vprDBG_ALL,0) << "\tcomputing meanCellBBLength..."
-                             << std::endl << vprDEBUG_FLUSH;
-      // THIS METHOD IS THREAD SAFE IF FIRST CALLED FROM A SINGLE THREAD
-      // AND THE DATASET IS NOT MODIFIED
-      vtkGenericCell *cell = vtkGenericCell::New();
-      int numCells = this->GetDataSet()->GetNumberOfCells();
-
-      for (int cellId=0; cellId < numCells; cellId++)
-      {
-         this->GetDataSet()->GetCell( cellId, cell);
-         this->meanCellBBLength += sqrt( cell->GetLength2() );
-         // THIS METHOD IS THREAD SAFE IF FIRST CALLED FROM A SINGLE THREAD
-         // AND THE DATASET IS NOT MODIFIED
-      }
-      cell->Delete();
-      this->meanCellBBLength /= numCells;
-      vprDEBUG(vprDBG_ALL,0) << "\tnumCells = " << numCells 
-                             << std::endl << vprDEBUG_FLUSH;
+      this->meanCellBBLength = cfdAccessoryFunctions::
+                               ComputeMeanCellBBLength( this->GetDataSet() );
    }
    vprDEBUG(vprDBG_ALL,0) << "\tmeanCellBBLength = " << this->meanCellBBLength
                           << std::endl << vprDEBUG_FLUSH;
@@ -1247,7 +1230,7 @@ void cfdDataSet::SetDCS( cfdDCS* myDCS )
    if ( dcs == NULL )
       this->dcs = myDCS;
    else
-      cerr << " ERROR: DCS is already set for this dataset " << endl;
+      std::cerr << " ERROR: DCS is already set for this dataset " << std::endl;
 }
 
 int cfdDataSet::IsPartOfTransientSeries()
@@ -1317,17 +1300,17 @@ void cfdDataSet::StoreScalarInfo()
 
 void cfdDataSet::Print()
 {
-   cout << "filename = " << this->fileName << endl;
+   std::cout << "filename = " << this->fileName << std::endl;
 
 /*
-   cout << "numPtDataArrays = " << this->numPtDataArrays << endl;
+   std::cout << "numPtDataArrays = " << this->numPtDataArrays << std::endl;
    for ( int i=0; i < this->numPtDataArrays; i++ )
    {
       vtkDataArray *array_i = this->GetDataSet()->GetPointData()->GetArray( i );
 
       if ( array_i->GetNumberOfComponents() == 3 )
       {
-         cout << "array " << i << " (vector): " << array_i->GetName() << endl;
+         std::cout << "array " << i << " (vector): " << array_i->GetName() << std::endl;
          continue; 
       }
       else if ( array_i->GetNumberOfComponents() != 1 ) 
@@ -1335,31 +1318,31 @@ void cfdDataSet::Print()
 
       double minMax[2];
       array_i->GetRange( minMax );
-      cout << "array " << i << " (scalar): " << array_i->GetName() 
-         << "\t"  << minMax[ 0 ] << "\t" << minMax[ 1 ] << endl;
+      std::cout << "array " << i << " (scalar): " << array_i->GetName() 
+         << "\t"  << minMax[ 0 ] << "\t" << minMax[ 1 ] << std::endl;
    }
 */
-   cout << "numScalars = " << this->numScalars << endl;
+   std::cout << "numScalars = " << this->numScalars << std::endl;
    for ( int i=0; i < this->numScalars; i++ )
    {
-       cout << "\tscalarName[" << i << "] = \"" << this->scalarName[ i ] 
+       std::cout << "\tscalarName[" << i << "] = \"" << this->scalarName[ i ] 
          << "\"\tactualScalarRange = "
          << this->actualScalarRange[ i ][ 0 ] << " : "
          << this->actualScalarRange[ i ][ 1 ]
          << ", displayedScalarRange = "
          << this->displayedScalarRange[ i ][ 0 ] << " : "
          << this->displayedScalarRange[ i ][ 1 ]
-         << endl;
+         << std::endl;
    }
 
-   cout << "numVectors = " << this->numVectors << endl;
+   std::cout << "numVectors = " << this->numVectors << std::endl;
    for ( int i=0; i < this->numVectors; i++ )
    {
-       cout << "\tvectorName[" << i << "] = \"" << this->vectorName[ i ] 
+       std::cout << "\tvectorName[" << i << "] = \"" << this->vectorName[ i ] 
          << "\"\tvectorMagRange = "
          << this->vectorMagRange[ 0 ] << " : "
          << this->vectorMagRange[ 1 ]
-         << endl;
+         << std::endl;
    }
 }
 

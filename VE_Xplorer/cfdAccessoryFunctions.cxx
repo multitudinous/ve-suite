@@ -31,7 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include <cfdAccessoryFunctions.h>
+#include <vtkGenericCell.h>
+#include <vtkDataSet.h>
 #include <vtkDataArray.h>
+//#include <vrj/Util/Debug.h>
 #include <iostream>
 
 cfdAccessoryFunctions::cfdAccessoryFunctions( )
@@ -65,7 +68,7 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
    if ( dataArray->GetNumberOfComponents() != 3 )
    {
       std::cerr << "ERROR: ComputeVectorMagnitudeRange requires 3-component "
-           << "vector data" << std::endl;
+                << "vector data" << std::endl;
       return NULL;
    }
 
@@ -119,3 +122,34 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
    return magnitudeRange;
 }
 
+double cfdAccessoryFunctions::ComputeMeanCellBBLength( vtkDataSet * dataSet )
+{
+   std::cout << "\tcomputing meanCellBBLength..." << std::endl;
+
+   double meanCellBBLength = 0.0;
+
+   // THIS METHOD IS THREAD SAFE IF FIRST CALLED FROM A SINGLE THREAD
+   // AND THE DATASET IS NOT MODIFIED
+   int numCells = dataSet->GetNumberOfCells();
+   //std::cout << "\tnumCells = " << numCells << std::endl;
+   if ( numCells == 0 )
+   {
+      meanCellBBLength = 1.0;
+      std::cout << "\tnumCells = 0, so setting meanCellBBLength to "
+                << meanCellBBLength << std::endl;
+      return meanCellBBLength;
+   }
+
+   vtkGenericCell *cell = vtkGenericCell::New();
+   for ( int cellId=0; cellId < numCells; cellId++ )
+   {
+      dataSet->GetCell( cellId, cell);
+      meanCellBBLength += sqrt( cell->GetLength2() );
+      // THIS METHOD IS THREAD SAFE IF FIRST CALLED FROM A SINGLE THREAD
+      // AND THE DATASET IS NOT MODIFIED
+   }
+   cell->Delete();
+   meanCellBBLength /= numCells;
+
+   return meanCellBBLength;
+}
