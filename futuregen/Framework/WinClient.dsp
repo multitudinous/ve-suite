@@ -190,6 +190,10 @@ SOURCE=.\Network.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\OrbThread.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\Plugin\package.cpp
 # End Source File
 # Begin Source File
@@ -497,6 +501,10 @@ SOURCE=..\IDL\moduleS_T.h
 # Begin Source File
 
 SOURCE=..\Framework\Network.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\OrbThread.h
 # End Source File
 # Begin Source File
 

@@ -13,6 +13,7 @@
 #include <orbsvcs/CosNamingC.h>
 #include "UI_i.h"
 
+
 const wxString LOCATION = _T("Framesize");
 const wxString LOCATION_X = _T("LocationX");
 const wxString LOCATION_Y = _T("LocationY");
@@ -65,18 +66,20 @@ class AppFrame : public wxFrame
   UI_Tabs *m_tabs;
   	
   wxImageList *m_imageList;
+  CORBA::ORB_var orb;
+  PortableServer::POA_var poa;
+  CosNaming::NamingContext_var naming_context;
+  Body_UI_i* p_ui_i;
 
+  //ACE_Thread_Mutex _mutex; //public mutex for the execution order
  protected:
   int m_frameNr;
   wxString fname;
   wxString directory;
-  wxString path;
-
-  CORBA::ORB_var orb;
-  PortableServer::POA_var poa;
-  CosNaming::NamingContext_var naming_context;
+  wxString path;	
+	
   VjObs_var vjobs;
-  Body_UI_i* p_ui_i;
+  
  private:
   bool is_orb_init;
   wxMenu *file_menu;

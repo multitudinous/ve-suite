@@ -4,6 +4,7 @@
 #include "ResultPanel.h"
 #include "App.h"
 #include "package.h"
+#include "OrbThread.h"
 
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_CLOSE(AppFrame::OnClose)
@@ -530,11 +531,7 @@ void AppFrame::GlobalParam(wxCommandEvent &event)
 
 void AppFrame::ConExeServer(wxCommandEvent &event)
 {
-  long id = time(NULL);
-  char uiname[256];
-  sprintf(uiname, "UIClient%ld", id);
-  std::string UINAME = uiname;
-
+ 
   if (!is_orb_init)
   {
     if (init_orb_naming())
@@ -544,39 +541,15 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
   }
 
   try{
-		CosNaming::Name name(1);
-		name.length(1);
-		name[0].id = CORBA::string_dup ("Executive");
-    
-		CORBA::Object_var exec_object = naming_context->resolve(name);
-		network->exec = Body::Executive::_narrow(exec_object.in());
 
-		//Create the Servant
-		if (p_ui_i==NULL)
-			p_ui_i= new Body_UI_i(network->exec.in(), UINAME);
-		else
-			UINAME=p_ui_i->UIName_.c_str();
-    
-		//pass the Frame's pointer to the UI corba implementation
-		p_ui_i->SetUIFrame(this);
-
-		//Activate it to obtain the object reference
-		Body::UI_var ui = (*p_ui_i)._this();
-     
-		CosNaming::Name UIname(1);
-		UIname.length(1);
-		UIname[0].id = CORBA::string_dup (UINAME.c_str());
-   
-		//Bind the object
-		try	{
-			naming_context->bind(UIname, ui.in());
-		}catch(CosNaming::NamingContext::AlreadyBound& ex){
-			naming_context->rebind(UIname, ui.in());
-		}
+		//_mutex.acquire();	  
+		OrbThread* ot = new OrbThread(this);
+		ot->activate();
 
 		//register it to the server
-		network->exec->RegisterUI(p_ui_i->UIName_.c_str());
+		//_mutex.acquire();
 
+		//_mutex.release();
 		//Enalbe Menu items
 		con_menu->Enable(v21ID_SUBMIT,true);
 		con_menu->Enable(v21ID_LOAD, true);
@@ -634,14 +607,7 @@ bool AppFrame::init_orb_naming()
 			CORBA::ORB_init (wxGetApp().argc, wxGetApp().argv,
                        ""); // the ORB name, it can be anything! 
         
-		//Here is the code to set up the ROOT POA
-		CORBA::Object_var poa_object =
-			orb->resolve_initial_references ("RootPOA"); // get the root poa
-    
-		poa = PortableServer::POA::_narrow(poa_object.in());
-		PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
-		poa_manager->activate ();
-	
+		
 		//Here is the part to contact the naming service and get the reference for the executive
 		CORBA::Object_var naming_context_object =
 			orb->resolve_initial_references ("NameService");
