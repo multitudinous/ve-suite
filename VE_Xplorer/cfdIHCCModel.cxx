@@ -338,6 +338,7 @@ void cfdIHCCModel::MakeSequence( void )
 
 bool cfdIHCCModel::CheckCommandId( cfdCommandArray* commandArray )
 {
+   return false;
 }
 
 void cfdIHCCModel::UpdateCommand()

@@ -117,27 +117,27 @@ void cfdCommandArray::SetCommandValue( int i, double value)
    }
    else if ( i == CFD_ID )
    {
-      (int)cfdId = value;
+      cfdId = value;
    }
    else if ( i == CFD_GEO_STATE )
    {
-      (int)cfdGeo_state = value;
+      cfdGeo_state = value;
    }  
    else if ( i == CFD_POSTDATA_STATE )
    {
-      (int)cfdPostdata_state = value;
+      cfdPostdata_state = value;
    }
    else if ( i == CFD_PRE_STATE )
    {
-      (int)cfdPre_state = value;
+      cfdPre_state = (bool)value;
    }
    else if ( i == CFD_TIMESTEPS )
    {
-      (int)cfdTimesteps = value;
+      cfdTimesteps = value;
    }
    else if ( i == CFD_TEACHER_STATE )
    {
-      (int)cfdTeacher_state = value;
+      cfdTeacher_state = value;
    }
    else
    {

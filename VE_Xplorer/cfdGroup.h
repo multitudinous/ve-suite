@@ -34,7 +34,6 @@
 
 #include "cfdSceneNode.h"
 #include <vector>
-using namespace std;
  
 
 class pfGroup;
@@ -70,7 +69,7 @@ class cfdGroup: public cfdSceneNode
       float _rotation[ 3 ];
       float _scale[ 3 ];
    
-      vector< cfdSceneNode* > childNodes;
+      std::vector< cfdSceneNode* > childNodes;
 #ifdef _PERFORMER
       pfGroup* _group;
 #elif _OSG

@@ -31,7 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdGroup.h"
 #include <iostream>
+#include <algorithm>
 #include <cstdlib>
+using namespace std;
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
@@ -117,7 +119,7 @@ int cfdGroup::RemoveChild( cfdSceneNode* child )
 {
 #ifdef _PERFORMER
    vector< cfdSceneNode* >::iterator oldChild;
-   oldChild = find( childNodes.begin(), childNodes.end(), child );
+   oldChild = std::find( childNodes.begin(), childNodes.end(), child );
    
    // Check to make sure he is on this node
    if ( oldChild != childNodes.end() )

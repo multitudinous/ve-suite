@@ -23,8 +23,8 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\Filtering&quot;;&quot;$(VTK_HOME)\bin&quot;;&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)&quot;;&quot;$(VTK_HOME)\Common&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(VTK_HOME)\Graphics&quot;;&quot;$(VTK_HOME)\IO&quot;;&quot;$(VTK_HOME)\Imaging&quot;;&quot;$(VTK_HOME)\Rendering&quot;;&quot;$(VTK_HOME)\Hybrid&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;"
-				PreprocessorDefinitions="_DEBUG;VTK4;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32"
+				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\Filtering&quot;;&quot;$(VTK_HOME)\bin&quot;;&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VTK_HOME)\Common&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(VTK_HOME)\Graphics&quot;;&quot;$(VTK_HOME)\IO&quot;;&quot;$(VTK_HOME)\Imaging&quot;;&quot;$(VTK_HOME)\Rendering&quot;;&quot;$(VTK_HOME)\Hybrid&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;"
+				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK4;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -47,7 +47,7 @@
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
@@ -365,6 +365,12 @@
 				RelativePath=".\cfdApp.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdCommandArray.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdCommandObjects.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdContour.cxx">
 			</File>
 			<File
@@ -386,6 +392,9 @@
 				RelativePath=".\cfdDCS.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdEnvironmentHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdFILE.cxx">
 			</File>
 			<File
@@ -399,6 +408,12 @@
 			</File>
 			<File
 				RelativePath=".\cfdGeomDataSet.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdGlobalBase.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdGroup.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdIHCCContour.cxx">
@@ -424,8 +439,7 @@
 			<File
 				RelativePath=".\cfdModel.cxx">
 				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
+					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
@@ -437,6 +451,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath=".\cfdModelHandeler.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdMomentum.cxx">
 			</File>
 			<File
@@ -446,10 +463,16 @@
 				RelativePath=".\cfdNavigate.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdNode.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdNodeTraverser.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdObjects.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdPfSceneManagement.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdPlanes.cxx">
@@ -479,16 +502,28 @@
 				RelativePath=".\cfdScalarBarActor.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdSceneNode.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdSequence.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdSound.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdSoundHandler.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdSteadyStateVizHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdStreamers.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdTeacher.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTempAnimation.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdTransientActor.cxx">
@@ -513,6 +548,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdTransientVectorActor.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdTransientVizHandler.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdVEBaseClass.cxx">
@@ -974,6 +1012,12 @@
 				RelativePath="cfdApp.h">
 			</File>
 			<File
+				RelativePath=".\cfdCommandArray.h">
+			</File>
+			<File
+				RelativePath=".\cfdCommandObjects.h">
+			</File>
+			<File
 				RelativePath="cfdContour.h">
 			</File>
 			<File
@@ -1004,6 +1048,9 @@
 				RelativePath="cfdEnum.h">
 			</File>
 			<File
+				RelativePath=".\cfdEnvironmentHandler.h">
+			</File>
+			<File
 				RelativePath="cfdExecutive.h">
 			</File>
 			<File
@@ -1026,6 +1073,12 @@
 			</File>
 			<File
 				RelativePath="cfdGeomDataSet.h">
+			</File>
+			<File
+				RelativePath=".\cfdGlobalBase.h">
+			</File>
+			<File
+				RelativePath=".\cfdGroup.h">
 			</File>
 			<File
 				RelativePath=".\cfdIHCCContour.h">
@@ -1055,6 +1108,9 @@
 				RelativePath="cfdModel.h">
 			</File>
 			<File
+				RelativePath=".\cfdModelHandeler.h">
+			</File>
+			<File
 				RelativePath="cfdModuleGeometry.h">
 			</File>
 			<File
@@ -1067,10 +1123,16 @@
 				RelativePath="cfdNavigate.h">
 			</File>
 			<File
+				RelativePath=".\cfdNode.h">
+			</File>
+			<File
 				RelativePath=".\cfdNodeTraverser.h">
 			</File>
 			<File
 				RelativePath="cfdObjects.h">
+			</File>
+			<File
+				RelativePath=".\cfdPfSceneManagement.h">
 			</File>
 			<File
 				RelativePath="cfdPlanes.h">
@@ -1100,10 +1162,19 @@
 				RelativePath="cfdScalarBarActor.h">
 			</File>
 			<File
+				RelativePath=".\cfdSceneNode.h">
+			</File>
+			<File
 				RelativePath="cfdSequence.h">
 			</File>
 			<File
 				RelativePath="cfdSound.h">
+			</File>
+			<File
+				RelativePath=".\cfdSoundHandler.h">
+			</File>
+			<File
+				RelativePath=".\cfdSteadyStateVizHandler.h">
 			</File>
 			<File
 				RelativePath="cfdStreamers.h">
@@ -1113,6 +1184,9 @@
 			</File>
 			<File
 				RelativePath="cfdTeacher.h">
+			</File>
+			<File
+				RelativePath=".\cfdTempAnimation.h">
 			</File>
 			<File
 				RelativePath="cfdTransientActor.h">
@@ -1137,6 +1211,9 @@
 			</File>
 			<File
 				RelativePath="cfdTransientVectorActor.h">
+			</File>
+			<File
+				RelativePath=".\cfdTransientVizHandler.h">
 			</File>
 			<File
 				RelativePath=".\cfdVEBaseClass.h">
