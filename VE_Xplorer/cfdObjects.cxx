@@ -241,7 +241,7 @@ void cfdObjects::AddcfdGeodeToDCS( void )
 
    vprDEBUG(vprDBG_ALL, 2) 
       << "cfdObjects::UpdateGeode... set active geode pointer "
-      << this->GetActiveDataSet()->IsNewlyActivated() << std::endl << vprDEBUG_FLUSH;
+      << this->GetActiveDataSet()->IsNewlyActivated() << " : " << this->_geodes.size() << std::endl << vprDEBUG_FLUSH;
    //this->geode = (pfGeode *)this->geodes.back();
    //this->geode = tempGeode;
    //this->updateFlag = true;
@@ -262,7 +262,8 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       if ( this->_geodes.size() > 2 ) // remove oldest
       {
          int num = (this->_geodes.size() - 1) - 2;
-         this->_dcs->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
+         cfdSceneNode* parent = (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetParent(0);
+         ((cfdDCS*)parent)->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
          delete this->_geodes[ num ];
          this->_geodes.erase( this->_geodes.end() - 3 );
       }
@@ -272,12 +273,15 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       // geodes.size is not zero based therefore the first -1 is needed
       // the second -1 is to get the second to last geode on the list
       int num = (this->_geodes.size() - 1) - 1;
-      vprDEBUG(vprDBG_ALL,1) << " removing child num = " << num 
+      vprDEBUG(vprDBG_ALL,1) << " removing child num = " << num << " : " << this->_geodes[ num ]
                              << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
+      cfdSceneNode* parent = (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetParent(0);
+      ((cfdDCS*)parent)->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
       delete this->_geodes[ num ];
 
       this->_geodes.erase( this->_geodes.end() - 2 );
+      vprDEBUG(vprDBG_ALL,1) << " removing child num = " << num << " : " << this->_geodes[ num ]
+                             << std::endl << vprDEBUG_FLUSH;
       this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
    }
    else //if ( this->geodes.size() == 1 )
@@ -297,7 +301,10 @@ void cfdObjects::RemovecfdGeodeFromDCS( void )
    // Iterate backwards for performance
    for ( i = num - 1; i >= 0; i-- )
    {
-      this->_dcs->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ i ]) );
+      // Need to find tha parent becuase with multiple models
+      // Not all geodes are going to be on the same dcs
+      cfdSceneNode* parent = this->_geodes[ i ]->GetParent(0);
+      ((cfdDCS*)parent)->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ i ]) );
       delete this->_geodes[ i ];
    }
    this->_geodes.clear();

@@ -215,21 +215,25 @@ void cfdModelHandler::InitScene( void )
       // done in cfdDataSet upon initialization
       // set first scalar active
       activeDataset->SetActiveScalar( 0 );
+      
       strcpy( oldDatasetName, activeDataset->GetFileName() );
-
+      vprDEBUG(vprDBG_ALL,1) << "cfdModelHandler: Setting active dataset to " 
+                  << activeDataset->GetFileName() << " , " 
+                  << oldDatasetName << endl << vprDEBUG_FLUSH;
       cfdVectorBase::SetThreshHoldPercentages( 0, 100 );
       cfdVectorBase::UpdateThreshHoldValues();
       cfdVectorBase::SetVectorRatioFactor( 1 );
    }
 
 
-   std::cout << " Create scalar bar "  << endl;
+   std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
    // Create Scalar bar
+   cout << (cfdGroup*)worldNode->GetParent( 0 ) << endl;
    _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
    // Assumes active dataset isn't null
    _scalarBar->SetActiveDataSet( activeDataset );
    _scalarBar->RefreshScalarBar();
-   std::cout << " Done Create scalar bar "  << endl;
+   //std::cout << " Done Create scalar bar "  << endl;
 
 }
 

@@ -70,6 +70,10 @@ cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
    this->numColors = 256;
    this->numPts = 2*(this->numColors + 1);
    this->numTextLabels = 5;
+   scalarBarPos[ 0 ] = -5.0f;  scalarBarPos[ 1 ] = 6.0f; scalarBarPos[ 2 ] = 0.0f; 
+   this->scalarBarZRot = 90.0f;
+   this->scalarBarH = 3.0f;
+   this->scalarBarW = 0.5f;
 
    this->lut = vtkLookupTable::New();
    this->lut->SetNumberOfColors(numColors); //default is 256
@@ -468,10 +472,10 @@ bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR_RANGE ) ||
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEADYSTATE_DATASET ) )
    { 
-           // if already displayed, set a flag to update the scalar bar
+      // if already displayed, set a flag to update the scalar bar
       //if ( this->scalarBar )
       {  
- cout << " ******************Update Scalar Bar " << endl;
+         cout << " ******************Update Scalar Bar " << endl;
          this->RefreshScalarBar();
          //this->isTimeToUpdateScalarBar = true;
          flag = true;
@@ -505,7 +509,8 @@ void cfdScalarBarActor::RefreshScalarBar()
       return;
    }
 
-   // Fix this. Don't think we need a DCS here. Could speed up the code a little bit.
+   // Fix this. Don't think we need a DCS here. 
+   // Could speed up the code a little bit.
    this->scalarBar = new cfdDCS();
 
    // if the param file specified scalarBar settings, apply them here...
@@ -544,7 +549,7 @@ void cfdScalarBarActor::RefreshScalarBar()
    this->Execute();
 
    // give the scalarBar DCS a name so that it can be detected during a CLEAR_ALL
-   this->GetcfdDCS()->SetName("scalarBar");
+   this->scalarBar->SetName("scalarBar");
    this->_rootNode->AddChild( this->scalarBar );
    //this->worldDCS->addChild( this->scalarBarActor->getpfDCS() );
 }

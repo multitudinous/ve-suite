@@ -36,6 +36,7 @@
 #include "cfdCommandArray.h"
 #include "cfdGroup.h"
 #include "cfdDataSet.h"
+#include "cfdObjects.h"
 
 #include <vtkPolyData.h>
 #include <vtkPolyDataSource.h>
@@ -418,6 +419,9 @@ void cfdCursor::UpdatePlaneSource( int i )
 void cfdCursor::Update( double x[3], double v[3], double wx[3] )
 {
    int i;
+   _activeDataSet = cfdObjects::GetActiveDataSet();
+   if ( _activeDataSet != NULL )
+      this->SetActiveDataSetDCS( _activeDataSet->GetDCS() );
 
    for( i=0; i<3; i++ )
    {
@@ -563,6 +567,7 @@ double* cfdCursor::GetCursorLocation()
 
 vtkPolyDataSource * cfdCursor::GetSourcePoints( void )
 {
+
    this->GetLocalLocationVector();
 
    switch( this->cursorId )
@@ -808,7 +813,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
             this->_rootNode->AddChild( this->GetcfdDCS() );
          }
       }
-
+      
       if ( _activeDataSet != NULL )
          this->SetActiveDataSetDCS( _activeDataSet->GetDCS() );
 
@@ -819,8 +824,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 
          // convert size percentage (0-100) request to plane size
          // fix this
-         //this->SetPlaneSize( commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * 
-         //                cfdObjects::GetActiveMeshedVolume()->GetLength() );
+         this->SetPlaneSize( commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * cfdObjects::GetActiveDataSet()->GetLength() );
       }
    }
 

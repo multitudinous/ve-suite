@@ -111,6 +111,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
 
    this->computeActorsAndGeodes = false;
    this->actorsAreReady = false;
+   this->useLastSource = false;
    _param = param;
 }
 
@@ -658,7 +659,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          std::cout << "| 37. Initializing..................................... Streamlines |" << std::endl;
          // Needs to be set by the gui, fix this
-         this->streamlines = new cfdStreamers( 0.0f );
+         this->streamlines = new cfdStreamers( 0.3f );
          this->streamlines->SetObjectType( STREAMLINES );
          this->dataList.push_back( this->streamlines );     
          this->commandList.push_back( this->streamlines );
@@ -987,6 +988,8 @@ void cfdSteadyStateVizHandler::streamers( void )
    this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
    this->_activeObject->SetNormal( this->nav->GetDirection() );
    this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
+float* temp = this->nav->GetObjLocation();
+cout << temp[ 0 ] << " : " << temp[ 1 ] << " : " << temp[ 2 ] << endl;
 
    if ( this->cursor->GetCursorID() == CUBE )
    {
@@ -1003,7 +1006,7 @@ void cfdSteadyStateVizHandler::streamers( void )
       }
 
       this->lastSource = vtkPolyData::New();
-
+//this->cursor->
       this->lastSource->DeepCopy( 
          (vtkPolyData*)this->cursor->GetSourcePoints() );
 

@@ -118,6 +118,16 @@ cfdDCS::cfdDCS( void ):cfdSceneNode()
 #elif _OSG
 #elif _OPENSG
 #endif
+   float temp[ 3 ];
+   for ( unsigned int i = 0; i < 3; i++ )
+      temp[ i ] = 0.0f;
+   SetTranslationArray( temp );
+   for ( unsigned int i = 0; i < 3; i++ )
+      temp[ i ] = 0.0f;
+   SetRotationArray( temp );
+   for ( unsigned int i = 0; i < 3; i++ )
+      temp[ i ] = 1.0f;
+   SetScaleArray( temp );
 }
 
 cfdDCS::~cfdDCS( void )
@@ -414,6 +424,7 @@ void cfdDCS::SetName( char* name )
 {
 #ifdef _PERFORMER
    this->_dcs->setName( name );
+   cout << "*****************DCS Name : " << name << endl;
 #elif _OSG
    cerr << " ERROR: cfdDCS::SetName is NOT implemented " << endl;
    exit( 1 );
