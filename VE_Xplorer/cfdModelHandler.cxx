@@ -182,13 +182,15 @@ void cfdModelHandler::InitScene( void )
       cfdVectorBase::SetVectorRatioFactor( 1 );
    }
 
-/*
+
    std::cout << " Create scalar bar "  << endl;
    // Create Scalar bar
    _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
+   // Assumes active dataset isn't null
+   _scalarBar->SetActiveDataSet( activeDataset );
    _scalarBar->RefreshScalarBar();
    std::cout << " Done Create scalar bar "  << endl;
-*/
+
 }
 
 /////////////////////////////////
@@ -261,6 +263,10 @@ void cfdModelHandler::PreFrameUpdate( void )
                    << _modelList.at( j )->GetNumberOfCfdDataSets()
                    << std::endl;
       }
+
+      // Set the curretn active dataset for the scalar bar
+      // so th it know how to update itself
+      _scalarBar->SetActiveDataSet( activeDataset );
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR )
    { 
@@ -358,13 +364,11 @@ void cfdModelHandler::PreFrameUpdate( void )
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
    }
 
-/*
+
    // Check and see if we need to refresh the scalar bar
-   //_scalarBar->CheckCommandId( commandArray );
+   _scalarBar->CheckCommandId( commandArray );
    // May use in the future
    //_scalarBar->UpdateCommand();
-*/
-
 }
 
 ///////////////////////////////////////////////
