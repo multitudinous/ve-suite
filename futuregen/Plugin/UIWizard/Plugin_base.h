@@ -90,8 +90,8 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
   virtual Interface* Pack();
 
   //This is to unpack the result from the 
-  virtual void UnPackResult(wxString result) ;
-  //This is the save function of the module. Pack the UI input into a string
+  virtual void UnPackResult(Interface * intf) ;
+  //This is the save function of the module. 
 
   //To Get around the Memory allocation problem of windows dll
   //Add the calls for the size. So the main program can preallocate memory for it

@@ -18,7 +18,7 @@ include ${XERCESCROOT}/version.incl
 include Makefile.incl
 
 PLUGIN = libZplugin.so
-OBJECTS = string_ops.o package.o interface.o UIDialog.o Plugin_base.o
+OBJECTS = string_ops.o package.o interface.o UIDialog.o Plugin_base.o TexTable.o TextResultDialog.o
 
 .SUFFIXES : .o .cpp
 

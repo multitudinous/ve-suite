@@ -6,7 +6,7 @@
 
 #include "Plugin_base.h"
 #include <iostream>
-
+#include "TextResultDialog.h"
 IMPLEMENT_DYNAMIC_CLASS(REI_Plugin, wxObject)
 
 /////////////////////////////////////////////////////////////////////////////
@@ -201,7 +201,7 @@ UIDialog* REI_Plugin::Result(wxWindow* parent)
 {
   if (result_dlg!=NULL)
     return result_dlg;
-  result_dlg = new UIDialog(parent, -1, "Result Dialog");
+  result_dlg = new TextResultDialog(parent);
 
   return result_dlg;
 }
@@ -359,7 +359,7 @@ void REI_Plugin::UnPack(Interface * intf)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::UnPackResult(wxString result)
+void REI_Plugin::UnPackResult(Interface* intf)
 {
   //This will be module dependent. no Default implementation is possible
 }
