@@ -201,6 +201,11 @@ void cfdFILE::SetFILEProperties( int color, int trans, float* stlColor )
    this->stlColor[ 2 ] = stlColor[ 2 ];
 }
 
+int cfdFILE::GetTransparentFlag( void )
+{
+   return transparent;
+}
+
 void cfdFILE::Initialize( float op_val )
 {
    this->op = op_val;
