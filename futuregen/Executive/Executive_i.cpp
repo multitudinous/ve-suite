@@ -172,18 +172,17 @@ void Body_Executive_i::SetProfileData (
 {
   _mutex.acquire();
 
-  cout << "SetProfileData\n";
+  cout << " in SetProfileData\n";
  
   std::string msg;
   
-  Types::Profile *prof = new Types::Profile(data);
-  if(!_network->setPortProfile(module_id, port_id, prof)) {
+  if(!_network->setPortProfile(module_id, port_id, &data)) {
     msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port profile\n";
     ClientMessage(msg.c_str());
   } else {
     cout << "setPortProfile success\n";
   }
-
+ 
   _mutex.release();
 }
 

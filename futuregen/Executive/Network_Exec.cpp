@@ -392,10 +392,11 @@ int Module::setPortProfile (int p, const Types::Profile* prof)
 {
   int fi = oportIdx(p);
   if(fi<0) return 0;
-  cout << "setPortProfile\n";
+
   if(_oports[fi]->_profile) delete _oports[fi]->_profile;
+
   _oports[fi]->_profile = new Types::Profile(*prof);
-  cout << "setPortProfile success\n";
+ 
   return 1;
 }
 
@@ -509,6 +510,7 @@ int Port::get_id ()
 OPort::OPort (int id, Module* m)
   : Port (id, m)
 {
+  _profile = NULL;
 }
 
 OPort::OPort (const OPort& p)
