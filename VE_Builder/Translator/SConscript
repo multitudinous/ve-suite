@@ -4,21 +4,16 @@ pj = os.path.join
 Import('baseEnv')
 Import('Platform')
 
-sources = Split("""
+srcs = Split("""
    translateToVtk.cpp 
    starReader.cpp 
    avsReader.cpp 
    reiReader.cpp 
    en7Reader.cpp
-   mfixReader.cpp 
-   fileIO.cxx 
+   mfixReader.cpp  
    converter.cpp 
    gridConversion.cpp 
-   viewCells.cpp 
    fireReader.cpp 
-   readWriteVtkThings.cxx 
-   cleanVtk.cpp 
-   cfdGrid2Surface.cpp 
    particle.cpp 
    fluentParticles.cpp 
    reiParticles.cpp 
@@ -27,8 +22,10 @@ sources = Split("""
    enSightGoldReader.cpp
 """)
 
-sources = map(lambda s: pj('#', 'VE_Xplorer', s), sources)
+srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', s), srcs)
 
 env = baseEnv.Copy()
 env.Append(CPPPATH = [os.getcwd()])
-env.Program(pj('#','bin',Platform,'Translator'), source = sources)
+env.Append(LIBPATH = '#',
+              LIBS = 'Shared_Library')
+env.Program(pj('#','bin',Platform,'Translator'), source = srcs)

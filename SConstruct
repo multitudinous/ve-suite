@@ -199,18 +199,46 @@ Export('Platform')
 buildDir = 'build.' + GetPlatform()
 BuildDir(buildDir, '.', duplicate = 0)
 
+trans_srcs = Split("""
+   cfdGrid2Surface.cpp
+   cleanVtk.cpp
+   viewCells.cpp
+""")
+
+xplorer_srcs = Split("""
+   fileIO.cxx
+   readWriteVtkThings.cxx
+   cfdAccessoryFunctions.cxx
+""")
+
+utilities_srcs = Split("""
+   setScalarAndVector.cpp
+""")
+
+trans_srcs = map(lambda s: pj('#', 'VE_Builder', 'Translator', s), trans_srcs)
+xplorer_srcs = map(lambda s: pj('#', 'VE_Xplorer', s), xplorer_srcs)
+utilities_srcs = map(lambda s: pj('#', 'VE_Builder', 'Utilities', s), utilities_srcs)
+
+srcs = list()
+srcs.extend(trans_srcs)
+srcs.extend(xplorer_srcs)
+srcs.extend(utilities_srcs)
+
+env = baseEnv.Copy()
+env.Append(CPPPATH = ['#/VE_Builder/Translator'])
+env.Append(CPPPATH = ['#/VE_Builder/Preprocessor'])
+env.Append(CPPPATH = ['#/VE_Builder/Utilities'])
+env.Append(CPPPATH = ['#/VE_Xplorer'])
+env.SharedLibrary(target = '#/vrshares', source = srcs)
+
 subdirs = Split("""
    Preprocessor
-   Translator 
+   Translator
    Utilities
-""")
+""") 
 
 subdirs = map(lambda s: pj(buildDir, 'VE_Builder', s), subdirs)
 
 SConscript(dirs = subdirs)
 
-#for d in subdirs:
-#    SConscript(os.path.join( d, 'SConscript'))
-#   SConscriptChdir(0)
-#   SConscript(pj( d, 'SConscript'))
 Default('.')
