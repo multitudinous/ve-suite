@@ -523,7 +523,7 @@ int node_module::execute_mods(int mod, bool running)
 {
   Module *module = _net->module(_module-1);
   if(module->_need_execute) {
-    // EXECUTE MODULE HERE
+    // EXECUTING THIS MODULE
     module->_need_execute = false;
     return _module;
   }

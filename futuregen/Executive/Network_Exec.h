@@ -134,12 +134,15 @@ public:
 
   int get_id ();
 
+  std::string _name;
+
   int _need_execute;
   int _return_state;
   int _is_feedback;
 
   Interface _inputs;
   Interface _outputs;
+  Interface _messages;
 
   Network* _net;
 
@@ -164,7 +167,7 @@ public:
   int  parse (Interface *);
 
   int nmodules   ();
-  void         add_module (int);
+  void         add_module (int, std::string);
   int          module     (Module*);
   Module*      module     (int);
   int moduleIdx  (int);
@@ -177,6 +180,9 @@ public:
 
   int getOutput (int, Interface&);
   int setOutput (int, Interface*);
+
+  int getMessage (int, Interface&);
+  int setMessage (int, Interface*);
 
   int getPortData (int, int, Interface&);
   int setPortData (int, int, Interface*);

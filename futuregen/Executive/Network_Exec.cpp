@@ -40,7 +40,7 @@ int Network::parse (Interface* intf)
     intf->getVal(vars[i], temps);
     if ((pos=vars[i].find("modCls_"))!=string::npos) {
       num =atoi(vars[i].substr(pos+7, 4).c_str());
-      add_module(num);
+      add_module(num, temps);
     }
   }
 
@@ -151,13 +151,14 @@ int Network::moduleIdx (int id)
   return fi;
 }
 
-void Network::add_module (int m)
+void Network::add_module (int m, std::string name)
 {
   int fi = moduleIdx(m);
 
   if(fi>=0) return;
   
   Module *mod = new Module(m, this);
+  mod->_name = name;
   _module_ptrs.push_back(mod);
 }  
 
@@ -191,6 +192,22 @@ int Network::setOutput (int m, Interface* intf)
   int fi = moduleIdx(m);
   if(fi<0) return 0;
   _module_ptrs[fi]->_outputs.copy(*intf);
+  return 1;
+}
+
+int Network::getMessage (int m, Interface &intf)
+{
+  int fi = moduleIdx(m);
+  if(fi<0) return 0;
+  intf.copy(_module_ptrs[fi]->_messages);
+  return 1;
+}
+
+int Network::setMessage (int m, Interface* intf)
+{
+  int fi = moduleIdx(m);
+  if(fi<0) return 0;
+  _module_ptrs[fi]->_messages.copy(*intf);
   return 1;
 }
 
@@ -331,7 +348,7 @@ void Module::addOPort (int p, Connection* c)
 
 int Module::getPortData (int p, Interface& intf)
 {
-  int fi = iportIdx(p);
+  int fi = oportIdx(p);
   if(fi<0) return 0;
   intf.copy(_oports[fi]->_data);
   return 1;

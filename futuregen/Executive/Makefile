@@ -16,6 +16,7 @@ endif # ! TAO_ROOT
 
 EXECUTIVE_HOME = ../Executive
 PLUGIN_HOME = ../Plugin
+IDL_HOME = ../IDL
 
 LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO -lxerces-c
 

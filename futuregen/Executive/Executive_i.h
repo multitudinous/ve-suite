@@ -33,13 +33,13 @@ public:
   
 protected:
 
+  std::map<std::string, Body::Unit_var> _mod_units;
+
   CosNaming::NamingContext_var naming_context_;
   std::map<std::string, Body::UI_var> uis_;
 
-  std::map<int, MODULE_DATA> msg_data_;
-  std::map<int, Interface> network_;
-  std::map<int, Interface> port_data_;
-  std::map<int, Interface> output_data_;
+  Interface _network_intf;
+  Interface _global_intf;
 
   Network*   _network;
   Scheduler* _scheduler;
