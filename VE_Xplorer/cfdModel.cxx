@@ -104,7 +104,13 @@ cfdModel::~cfdModel()
    vprDEBUG(vprDBG_ALL,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
 }
-
+cfdTempAnimation* cfdModel::GetAnimation()
+{
+   if(!sequence){
+      sequence = new cfdTempAnimation();
+   }
+   return sequence;
+}
 void cfdModel::CreateCfdDataSet( void )
 {
    mVTKDataSets.push_back( new cfdDataSet() );

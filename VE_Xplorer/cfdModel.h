@@ -110,6 +110,8 @@ class cfdModel
       cfdNode* GetCfdNode( void );
       cfdDCS* GetCfdDCS( void );
 
+      cfdTempAnimation* GetAnimation();
+
       std::map<int,cfdDataSet*> transientDataSets;
 
    private:
