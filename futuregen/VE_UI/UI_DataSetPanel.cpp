@@ -10,6 +10,7 @@
 UI_Scalars::UI_Scalars(wxString* scalarName)
 {
    _thisScalarName = (*scalarName);
+   cout << "\tScalar Name : " << _thisScalarName << endl;
 }
 
 UI_Scalars::~UI_Scalars()
@@ -180,7 +181,7 @@ UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int a
    _modelData = _model;
    _activeModIndex = activeMod;
 
-   _datasetCombo;
+   _datasetCombo = NULL;
    
    _buildDataSets();
  
@@ -201,9 +202,7 @@ UI_DatasetPanel::~UI_DatasetPanel()
 ////////////////////////////////
 void UI_DatasetPanel::_buildPanel()
 { 
-   
-   _organizeRadioBoxInfo();
-
+    _organizeRadioBoxInfo();
    _RBoxScroll = new UI_DatasetScroll(this);
   
 
@@ -219,20 +218,20 @@ void UI_DatasetPanel::_buildPanel()
    
    //Create the radio box w/ the list of scalar names if we have them
    _ScalarScroll = new UI_ScalarScroll(this);
-
+  
 
    _datasetTypesel[0] = wxT("3D mesh");
    _datasetTypesel[1] = wxT("Vertex Data");
    _datasetTypesel[2] = wxT("Polydata");
 
-
+  
    _datasetCombo = new wxComboBox(this, DATA_SET_SELECT_COMBO, wxT("Select Active Dataset Type"),
                                     wxDefaultPosition, wxDefaultSize,3,_datasetTypesel, wxCB_DROPDOWN);
    
    //The "Update Visualization" button
    _visUpdateButton = new wxButton(this, SCALAR_PANEL_UPDATE_BUTTON, wxT("Update"),wxDefaultPosition,wxDefaultSize,wxBU_EXACTFIT);
 
- 
+   
    //The static box for the scalar range sliders
    _scalarRangeBox = new wxStaticBox(this, -1, wxT("Scalar Range"));
 
@@ -240,15 +239,15 @@ void UI_DatasetPanel::_buildPanel()
    //The items will be placed  next (horizontally) to other rather than on top of each other
    //(vertically)
    sRangeBoxSizer = new wxStaticBoxSizer(_scalarRangeBox,wxHORIZONTAL);
-   
+     
 
    //the labels for the sliders
-   wxStaticText* minLabel = new wxStaticText(this, -1, wxT("Min%"));
-   wxStaticText* maxLabel = new wxStaticText(this, -1, wxT("Max%"));
+   minLabel = new wxStaticText(this, -1, wxT("Min%"));
+   maxLabel = new wxStaticText(this, -1, wxT("Max%"));
 
    //Size of the slider
    wxSize slidesize(50, 300);
-
+  
    //create the two sliders
    _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,0,0,100,wxDefaultPosition, slidesize,
                                   wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
@@ -256,9 +255,9 @@ void UI_DatasetPanel::_buildPanel()
                                   wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
 
    //two sizers to group the sliders and their lables
-   wxBoxSizer* minGroup = new wxBoxSizer(wxVERTICAL); 
-   wxBoxSizer* maxGroup = new wxBoxSizer(wxVERTICAL); 
-
+   minGroup = new wxBoxSizer(wxVERTICAL); 
+   maxGroup = new wxBoxSizer(wxVERTICAL); 
+  
    minGroup->Add(minLabel,0,wxALIGN_LEFT);
    minGroup->Add(_minPercentSlider,1,wxALIGN_LEFT);
 
@@ -267,7 +266,7 @@ void UI_DatasetPanel::_buildPanel()
 
    sRangeBoxSizer->Add(minGroup, 1, wxALIGN_LEFT|wxEXPAND); 
    sRangeBoxSizer->Add(maxGroup, 1, wxALIGN_RIGHT|wxEXPAND);
-
+  
    _colcombine1_2 = new wxBoxSizer(wxHORIZONTAL);
    _mastercol1 = new wxBoxSizer(wxVERTICAL);
    
@@ -292,14 +291,14 @@ void UI_DatasetPanel::_buildPanel()
 
    _col4->Add(_visUpdateButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-
+  
    _dataHeadingBox = new wxStaticBox(this, -1, wxT("Data and Scalar Set Selection"));
-   wxStaticBoxSizer* dHeadingBoxSizer = new wxStaticBoxSizer(_dataHeadingBox,wxHORIZONTAL);
+
+   dHeadingBoxSizer = new wxStaticBoxSizer(_dataHeadingBox,wxHORIZONTAL);
 
    dHeadingBoxSizer->Add(_mastercol1,8,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    dHeadingBoxSizer->Add(_col3,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    dHeadingBoxSizer->Add(_col4,2,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-
    //_top = new wxBoxSizer(wxHORIZONTAL);
    //_bottom = new wxBoxSizer(wxHORIZONTAL);
 
@@ -307,7 +306,7 @@ void UI_DatasetPanel::_buildPanel()
 
    //_bottom->Add(dHeadingBoxSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-   wxBoxSizer* datasetPanelGroup = new wxBoxSizer(wxHORIZONTAL);
+   datasetPanelGroup = new wxBoxSizer(wxHORIZONTAL);
    //datasetPanelGroup->Add(_top,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //datasetPanelGroup->Add(_bottom,10,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //datasetPanelGroup->Add(_activeRBox,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
@@ -334,9 +333,14 @@ void UI_DatasetPanel::_buildPanel()
 
 void UI_DatasetPanel::_buildDataSets( void )
 {
-   //UI_Tabs* tempTabs = ((UI_Frame*)GetParent())->_tabs;
-   //_numSteadyStateDataSets = tempTabs->datasetNum;
-   
+   if ( !_DataSets.empty())
+   {
+      cout<<"DataSets successfully cleared"<<endl;
+      for (int i=0; i<_numSteadyStateDataSets; i++)
+         delete _DataSets[i];
+      _DataSets.clear();
+   }
+
    _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex);
 
    cout<<"numdatasets: "<<_numSteadyStateDataSets<<endl;
@@ -345,18 +349,25 @@ void UI_DatasetPanel::_buildDataSets( void )
       
    if (_numSteadyStateDataSets > 0)
    {
-      VjObs::scalar_p_var datasetNames = _modelData->GetDataSetNames(_activeModIndex);
-      VjObs::obj_p_var datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
-      VjObs::obj_p_var numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
-      VjObs::scalar_p_var scalarNames = _modelData->GetScalarNames(_activeModIndex);  
+      VjObs::scalar_p datasetNames = 
+            VjObs::scalar_p( *_modelData->GetDataSetNames(_activeModIndex) );
+      
+      VjObs::obj_p   datasetTypes = 
+            VjObs::obj_p( *_modelData->GetDataSetTypes(_activeModIndex) );
+      
+      VjObs::obj_p   numScalarsPerDataset = 
+            VjObs::obj_p( *_modelData->GetNumberOfScalarsPerDataSet(_activeModIndex) );
+      
+      VjObs::scalar_p scalarNames = 
+            VjObs::scalar_p( *_modelData->GetScalarNames(_activeModIndex) );  
 
-      for (CORBA::ULong i = 0; i<_numSteadyStateDataSets; i++)
+      for (CORBA::ULong i = 0; i<(unsigned int)_numSteadyStateDataSets; i++)
       {
-         thisDataSet = new UI_DataSets();
-         //thisDataSet->_dataSetName = tempTabs->datasetNames[i];
-         thisDataSet->_dataSetName = datasetNames[i];
+          _DataSets.push_back( new UI_DataSets() );
          
-         thisDataSet->_dataSetType = datasetTypes[i];
+         _DataSets.at( i )->_dataSetName = datasetNames[i];
+         cout << " DataSet Name[ " << i << " ] = " << _DataSets.at( i )->_dataSetName << endl;
+         _DataSets.at( i )->_dataSetType = datasetTypes[i];
 
 		   wxString* thisDataScalarNames;
 		   thisDataScalarNames = new wxString[numScalarsPerDataset[i]];
@@ -367,9 +378,9 @@ void UI_DatasetPanel::_buildDataSets( void )
             index++;
          }
         
-         thisDataSet->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
+         _DataSets.at( i )->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
          
-         _DataSets.push_back(thisDataSet);
+        
 
          //clean up the names array
          delete [] thisDataScalarNames;                     
@@ -380,50 +391,57 @@ void UI_DatasetPanel::_buildDataSets( void )
 
 void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
 {
+///////////////////////////////////////////////////////////////////////////////////////////
+   minGroup->Remove(minLabel);
+   minGroup->Remove(_minPercentSlider);
+   maxGroup->Remove(maxLabel);
+   maxGroup->Remove(_maxPercentSlider);
+   sRangeBoxSizer->Remove(minGroup); 
+   sRangeBoxSizer->Remove(maxGroup);
+   _col1->Remove(_RBoxScroll);
+   _col2->Remove(_ScalarScroll);
+   _colcombine1_2->Remove(_col1);
+   _colcombine1_2->Remove(_col2);
+   _mastercol1->Remove(_datasetCombo);
+   _mastercol1->Remove(_colcombine1_2);
+   _col3->Remove(sRangeBoxSizer);
+   _col4->Remove(_visUpdateButton);
+   dHeadingBoxSizer->Remove(_mastercol1);
+   dHeadingBoxSizer->Remove(_col3);
+   dHeadingBoxSizer->Remove(_col4);
+   datasetPanelGroup->Remove(dHeadingBoxSizer);
+   delete _RBoxScroll;
+   delete _scalarNames;
+   delete _ScalarScroll;
+   delete _datasetCombo;
+   delete _visUpdateButton;
+   delete _scalarRangeBox;
+   sRangeBoxSizer = NULL;
+   //delete sRangeBoxSizer;
+   delete minLabel;
+   delete maxLabel;
+   delete _minPercentSlider; 
+   delete _maxPercentSlider; 
+   //delete minGroup; 
+   //delete maxGroup; 
+   //delete _colcombine1_2;
+   //delete _mastercol1;
+   //delete _col1;
+   //delete _col2;;
+   //delete _col3;
+   //delete _col4;
+   //delete _dataHeadingBox;
+   //delete dHeadingBoxSizer;
+   //delete datasetPanelGroup;
+
+/////////////////////////////////////////////////////////////////////////////////////////////////////////////
    _activeModIndex = _activeMod;
+   _buildDataSets();
+   _buildPanel(); 
 
-   _DataSets.clear();   
-   for (int i=0; i<_numSteadyStateDataSets; i++)
-      delete _DataSets[i];
-   //_DataSets.clear();
-   cout<<"numdatasets: "<<_numSteadyStateDataSets<<endl;
-   _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex); 
-   cout<<"numdatasets: "<<_numSteadyStateDataSets<<endl; 
-   CORBA::ULong index = 0;
-     
-   if (_numSteadyStateDataSets > 0)
-   {
-      VjObs::scalar_p_var datasetNames = _modelData->GetDataSetNames(_activeModIndex);
-      VjObs::obj_p_var datasetTypes = _modelData->GetDataSetTypes(_activeModIndex);
-      VjObs::obj_p_var numScalarsPerDataset = _modelData->GetNumberOfScalarsPerDataSet(_activeModIndex);
-      VjObs::scalar_p_var scalarNames = _modelData->GetScalarNames(_activeModIndex);  
-      for (CORBA::ULong i = 0; i<_numSteadyStateDataSets; i++)
-      {
-cout<<"testd1"<<endl; 
-         thisDataSet = new UI_DataSets();
+   if ( !_DataSets.empty() )
+	  _setScalars(_DataSets[0]);
 
-         //thisDataSet->_dataSetName = tempTabs->datasetNames[i];
-         thisDataSet->_dataSetName = datasetNames[i];
-cout<<"testd1"<<endl;        
-         thisDataSet->_dataSetType = datasetTypes[i];
-cout<<"testd1"<<endl; 
-		   wxString* thisDataScalarNames;
-		   thisDataScalarNames = new wxString[numScalarsPerDataset[i]];
-cout<<"testd2"<<endl;
-         for (int k=0; k<numScalarsPerDataset[i]; k++)
-         {
-            thisDataScalarNames[k] = scalarNames[index];
-            index++;
-         }
-        
-         thisDataSet->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
-         cout<<"testd3"<<endl;
-         _DataSets.push_back(thisDataSet);
-
-         //clean up the names array
-         delete [] thisDataScalarNames;                     
-      }
-   } 
 }
 
 void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
@@ -447,7 +465,7 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
 
    delete _ScalarScroll;
    _ScalarScroll = new UI_ScalarScroll(this);
-   /*_scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
+   _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
                                      wxDefaultPosition, wxDefaultSize,activeDataSet->_numofScalars,
                                      _scalarNames,1,wxRA_SPECIFY_COLS);
    _col2->Prepend(_ScalarScroll,6,wxALIGN_LEFT|wxEXPAND);

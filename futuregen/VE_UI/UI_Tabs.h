@@ -50,6 +50,7 @@ public:
 
    ~UI_Tabs();
 
+   void getData( void );
    void updateScalarPage(char** scalarNames,int numScalars, int refresh =0); 
    void updateScalarPage(wxString* scalarNames,int numScalars, int refresh =0); 
 
@@ -106,7 +107,7 @@ public:
    //VjObs::scalar_p_var   datasetNames;
    //VjObs::obj_p_var   datasetTypes;
    //VjObs::obj_p_var   numScalarsPerDataset;
-   VjObs::scalar_p_var   geoNameArray;
+   VjObs::scalar_p   geoNameArray;
    VjObs::scalar_p_var   soundNameArray;
    VjObs::scalar_p_var   teacher_attrib;
    VjObs::scalar_p_var   viewlocNameArray;

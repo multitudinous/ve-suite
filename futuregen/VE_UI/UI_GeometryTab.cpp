@@ -30,15 +30,16 @@ UI_GeometryTab::UI_GeometryTab(wxNotebook* tControl)
 //////////////////////////////
 void UI_GeometryTab::_buildPage()
 {
+
    //the radio box
    int numGeoms = ((UI_Tabs *)_parent)->num_geo;
    wxString* defaultName;
-   
+
    if ( numGeoms > 0 )
-   {
+   {  
       defaultName = new wxString[ numGeoms ];
       for(CORBA::ULong i = 0; i < (unsigned int)numGeoms; i++)
-      {
+      {  
          defaultName[ i ] = ((UI_Tabs*)_parent)->geoNameArray[ i ];
          std::cout << "Geometry Name " << i << " : " << defaultName[ i ] << std::endl;
       }

@@ -159,6 +159,7 @@ void UI_Frame::buildFrame( )
    //_scalarSizer->Add(_scalartab,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    _modselPanel = new UI_ModSelPanel(this, _modelData);
+      
    _tabs->cSc = activeModIndex;         // using zero-based scalar counting
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
    _tabs->sendDataArrayToServer();
@@ -209,19 +210,17 @@ UI_Frame::~UI_Frame()
 
 void UI_Frame::OnChangeModel( void )
 {
-   //_tabs->cSc = activeModIndex;         // using zero-based scalar counting
-   //_tabs->cId  = CHANGE_ACTIVE_MODEL;
-   //_tabs->sendDataArrayToServer();
-cout<<"test1"<<endl;
+  
    _datasetPanel->_rebuildDataSets( activeModIndex );
    _tabs->DeleteAllPages();   
-cout<<"test2"<<endl;
    _tabs->rebuildTabPages( activeModIndex );
-cout<<"test3"<<endl;
-   
-cout<<"test4"<<endl;
+   cout<<"Act Mod Index2: "<<activeModIndex<<endl;
 
-
+   _tabs->cSc = activeModIndex;         // using zero-based scalar counting
+   cout<<"Act Mod Index1: "<<activeModIndex<<endl;
+   _tabs->cId  = CHANGE_ACTIVE_MODEL;
+   _tabs->sendDataArrayToServer();
+ 
    SetSize(GetSize());
 
 }

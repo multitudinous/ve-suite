@@ -129,6 +129,12 @@ public:
 
    //the controls
    //wxRadioBox* _activeRBox;
+
+   wxStaticText* minLabel;
+   wxStaticText* maxLabel;
+
+   wxBoxSizer* minGroup; 
+   wxBoxSizer* maxGroup; 
    
    wxButton* _visUpdateButton;
 
@@ -143,6 +149,8 @@ public:
 
    wxStaticBoxSizer* sRangeBoxSizer;
 
+   wxStaticBoxSizer* dHeadingBoxSizer;
+
    wxSizer* _3dSizer;
 
    wxBoxSizer* _colcombine1_2;
@@ -153,6 +161,8 @@ public:
    wxBoxSizer* _col2;
    wxBoxSizer* _col3;
    wxBoxSizer* _col4;
+
+   wxBoxSizer* datasetPanelGroup;
 
    /*VjObs::scalar_p_var datasetNames;
    VjObs::obj_p_var datasetTypes;
