@@ -292,7 +292,10 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
       cout << "\tNothing to plot: The number of cells is " << numCells << endl;
       return actor;
    }
-   else    cout << "\tgetActorFromDataSet: The number of cells is " << numCells << endl;
+   else
+   {
+      cout << "\tgetActorFromDataSet: The number of cells is " << numCells << endl;
+   }
 
    vtkDataSetMapper *map = vtkDataSetMapper::New();
    // By default, VTK uses OpenGL display lists which results in another copy
@@ -304,6 +307,9 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
 
    actor = vtkActor::New();
 
+   cout << "dataset->GetPointData()->GetNumberOfArrays() = "
+        << dataset->GetPointData()->GetNumberOfArrays() << endl;
+
    if ( dataset->GetPointData()->GetScalars() )
    {
       vtkLookupTable *lut = vtkLookupTable::New();
@@ -314,6 +320,10 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
       cout << "dataset->GetPointData()->GetScalars()->GetLookupTable() = "
            << dataset->GetPointData()->GetScalars()->GetLookupTable() << endl;
 
+      double minMax[ 2 ];
+      minMax[ 0 ] = 0.0;
+      minMax[ 1 ] = 1.0;
+
       if ( dataset->GetPointData()->GetScalars()->GetLookupTable() )
       {
          cout << "lookup table is added in getActorFromDataSet" << endl;
@@ -321,7 +331,6 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
       else
       {
          lut->SetHueRange(2.0f/3.0f, 0.0f); //a blue-to-red scale
-         double minMax[ 2 ];
          dataset->GetPointData()->GetScalars()->GetRange( minMax );
          cout << "minMax: " << minMax[0] << " " << minMax[1] << endl;
          lut->SetTableRange( minMax );
@@ -337,16 +346,19 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
          writeVtkThing( dataset, "junk.vtk", 0 );
 */
       }
+      map->SetScalarRange( minMax );
       map->SetLookupTable(lut);
       lut->Delete();
    }
    else
+   {
       actor->GetProperty()->SetColor( 1, 0, 0 );
+   }
 
    actor->SetMapper( map );
-   actor->GetProperty()->SetOpacity( 0.5 );
-
    map->Delete();
+
+   actor->GetProperty()->SetOpacity( 0.5 );
 
    return actor;
 }
@@ -397,7 +409,6 @@ vtkActor * getActorFromFile( char * vtkFilename )
       cout << "Answer  (1) drawExteriorFacesOnly (for faster interaction)   (2) drawAllCells" << endl;
       cin >> showGraphics;
 
-      //viewCellsOption: 0=noDrawCells, 1=drawExteriorFacesOnly, 2=drawAllCells
       //if (showGraphics)
       {
          if (showGraphics == 1) 
