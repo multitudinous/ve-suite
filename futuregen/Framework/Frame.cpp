@@ -5,7 +5,7 @@
 #include "App.h"
 #include "package.h"
 #include "OrbThread.h"
-
+#include "controlIds.h"
 
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_CLOSE(AppFrame::OnClose)

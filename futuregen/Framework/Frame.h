@@ -76,6 +76,7 @@ class AppFrame : public wxFrame
   wxImageList *m_imageList;
   CORBA::ORB_var orb;
   PortableServer::POA_var poa;
+  PortableServer::POA_var poa_root;
   CosNaming::NamingContext_var naming_context;
   Body_UI_i* p_ui_i;
   wxMenu *file_menu;
