@@ -66,7 +66,7 @@ void VjObs_i::InitCluster( void )
   // Cluster Stuff
    vpr::GUID new_guid("15c09c99-ed6d-4994-bbac-83587d4400d1");
    std::string hostname = "abbott.vrac.iastate.edu";
-   this->mStates.init(new_guid,hostname);
+   this->mStates.init(new_guid);//,hostname);
    //cluster::ApplicationData* hack = dynamic_cast<cluster::ApplicationData*>(&(*this->mStates));
    //hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
 #endif // _CLUSTER
