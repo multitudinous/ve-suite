@@ -237,13 +237,9 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
        this->cursor->getExtent( this->cur_box );   //record current box cursor position
    }
 */
-   vprDEBUG(vprDBG_ALL,3) << "\t 6. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    _camHandler->CheckCommandId( _commandArray );
-   vprDEBUG(vprDBG_ALL,3) << "\t 7. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    _soundHandler->CheckCommandId( _commandArray );
-   vprDEBUG(vprDBG_ALL,3) << "\t 8. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
    _teacher->CheckCommandId( _commandArray );
-   vprDEBUG(vprDBG_ALL,3) << "\t 9. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
 }
 
 void cfdEnvironmentHandler::CreateObjects( void )

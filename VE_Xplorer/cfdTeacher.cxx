@@ -175,8 +175,6 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
       //this->DCS->addChild( this->node[i] );
    }
 
-   // Fix this
-   // is this correct
    _worldDCS = worldDCS;
    _worldDCS->AddChild( this->DCS );
 

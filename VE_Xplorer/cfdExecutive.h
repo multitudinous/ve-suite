@@ -35,8 +35,6 @@
 #include "cfdGlobalBase.h"
 #include "interface.h"
 
-#include <vpr/Thread/Thread.h>
-
 #include <map>
 #include <string>
 
@@ -56,6 +54,7 @@ class cfdVEAvail_Modules;
 class cfdModelHandler;
 class cfdEnvironmentHandler;
 class cfdVjObsWrapper;
+class cfdThread;
 
 namespace Body { class Executive; }
 namespace CosNaming { class NamingContext; }
@@ -145,8 +144,7 @@ class cfdExecutive : public cfdGlobalBase
       bool updateNetworkString;
       bool runGetEverythingThread;
       // Classes and variables for multithreading.
-      vpr::ThreadMemberFunctor< cfdExecutive >* vjThFunc[1];
-      vpr::Thread* vjTh[1];
+      cfdThread* thread;
 };
 
 #endif

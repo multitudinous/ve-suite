@@ -37,7 +37,7 @@
 
 #include <vpr/Thread/Thread.h>
 #include "cfdAppWrapper.h"
-
+#include "cfdExecutive.h"
 class cfdThread
 {
    public:
@@ -46,6 +46,7 @@ class cfdThread
 
 //   private:
       vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;
+      vpr::ThreadMemberFunctor<cfdExecutive>* executive_run;
       vpr::Thread* new_thread;
       
 };

@@ -38,6 +38,7 @@
 #include "cfdVEBaseClass.h"
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
+#include "cfdThread.h"
 
 #include "package.h"
 #include "Network_Exec.h"
@@ -70,8 +71,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
    this->_doneWithCalculations = true;
    this->runGetEverythingThread = true;
    this->updateNetworkString = false;
-   this->vjThFunc[0] = 0;
-   this->vjTh[0] = 0;
+   this->thread = 0;
 
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
@@ -134,9 +134,9 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
       //Call the Executive CORBA call to register it to the Executive
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
       std::cout << " Connected to the Executive " << std::endl;   
-
-      this->vjThFunc[0] = new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything );
-      this->vjTh[0] = new vpr::Thread( this->vjThFunc[0] );
+	  this->thread = new cfdThread();
+      thread->executive_run = new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything );
+      thread->new_thread = new vpr::Thread( thread->executive_run );
    } 
    catch (CORBA::Exception &) 
    {      
@@ -152,7 +152,8 @@ cfdExecutive::~cfdExecutive( void )
 {
    this->runGetEverythingThread = false;
    vpr::System::msleep( 500 );  // half-second delay
-   delete this->vjTh[0];
+   if ( thread )
+      delete thread;
    delete av_modules;
 }
 
