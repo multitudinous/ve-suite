@@ -139,6 +139,9 @@ public:
   int _need_execute;
   int _return_state;
   int _is_feedback;
+  
+  int _type;
+  int _category;
 
   Interface _inputs;
   Interface _outputs;

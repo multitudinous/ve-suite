@@ -423,14 +423,16 @@ void Body_Executive_i::SetNetwork (
   std::vector<Interface>::iterator iter;
   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
     if(iter->_id==-1) break;
-  
+
   if(iter!=p.intfs.end() && _network->parse(&(*iter))) {
     _network_intf = *iter;
     for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-      if(_network->setInput(iter->_id, &(*iter))) {
+      if(iter->_category==1 &&_network->setInput(iter->_id, &(*iter))) {
 	_network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
 	_network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
 	_network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+	_network->module(_network->moduleIdx(iter->_id))->_type = iter->_type;
+	_network->module(_network->moduleIdx(iter->_id))->_category = iter->_category;
       }
       else
 	cerr << "Unable to set id# " << iter->_id << "'s inputs\n";

@@ -233,7 +233,9 @@ Module::Module (int id, Network* net)
     _return_state (0),
     _is_feedback  (0),
     _net          (net),
-    _id           (id)
+    _id           (id),
+    _type         (-1),
+    _category     (-1)
 {
 }
 
@@ -259,6 +261,8 @@ void Module::copy (const Module &m)
   _oports       = m._oports;
   _net          = m._net;
   _id           = m._id;
+  _type         = m._type;
+  _category     = m._category;
 }
 
 int Module::numOPorts ()
