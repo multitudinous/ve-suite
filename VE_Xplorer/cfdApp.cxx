@@ -252,8 +252,6 @@ inline void cfdApp::init( )
    _vjobsWrapper->InitCluster();
 }
 
-
-
 void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 {
    _vjobsWrapper = input;
