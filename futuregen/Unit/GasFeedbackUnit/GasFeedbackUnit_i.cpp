@@ -1,5 +1,6 @@
-#include "GasFeedbackUnit_i.h"
 #include "V21Helper.h"
+#include "GasFeedbackUnit_i.h"
+
 
 // Implementation skeleton constructor
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
@@ -53,7 +54,7 @@ void Body_Unit_i::StartCalc (
     
     if (!initial_igas)
       {
-	executive_->SetModuleMessage(id_, "Missing initial input.\n");
+	error("Missing initial input.");
 	return_state = 1;
 	return;
       }
@@ -61,7 +62,7 @@ void Body_Unit_i::StartCalc (
     feedbck_igas = executive_->GetImportData(id_, 1); //port 1 will be the feedback input port;
     if (!feedbck_igas)
       {
-	executive_->SetModuleMessage(id_, "Missing feedback input.\n");
+	error("Missing feedback input.");
 	return_state = 1;
 	return;
       }
@@ -101,8 +102,7 @@ void Body_Unit_i::StartCalc (
 	    sp = gas_in->gas_composite.getFrac(sel_species[i]);
 	    if(sp < 0)
 	      { 
-		msg = sel_species[i]+ " not in stream.\n";
-		executive_->SetModuleMessage(id_,msg.c_str());
+		warning(sel_species[i]+ " not in stream.");
 	      }
 	  }
 	
@@ -132,8 +132,7 @@ void Body_Unit_i::StartCalc (
 
     if(++iter_counter >= iterations) 
       {
-	msg = "Max iterations reached, items not converged: " + notconv;
-	executive_->SetModuleMessage(id_,msg.c_str());
+	warning("Max iterations reached, items not converged: " + notconv);
 	done = true;
       }
 
@@ -309,3 +308,23 @@ char * Body_Unit_i::GetName (
     // Add your implementation here
     return CORBA::string_dup(UnitName_.c_str());
   }
+
+void Body_Unit_i::error (std::string msg)
+{
+  Package p;
+  const char* result;
+  bool rv;
+  p.SetPackName("result");
+  p.SetSysId("result.xml");
+  msg+="\n";
+  executive_->SetModuleMessage(id_, msg.c_str());
+  p.intfs.clear();
+  result = p.Save(rv);
+  executive_->SetModuleResult(id_, result); //this marks the end the execution
+}
+
+void Body_Unit_i::warning (std::string msg)
+{
+  msg+="\n";
+  executive_->SetModuleMessage(id_, msg.c_str());
+}

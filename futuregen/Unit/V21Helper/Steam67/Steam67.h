@@ -24,11 +24,13 @@
 #ifndef REISTEAM67_H
 #define REISTEAM67_H
 
-#include <iostream.h>
+#include <iostream>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <math.h>
+
+using namespace std;
 
 class Steam67 {
 

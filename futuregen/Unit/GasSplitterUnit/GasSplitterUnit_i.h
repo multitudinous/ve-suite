@@ -24,9 +24,12 @@ class  Body_Unit_i : public virtual POA_Body::Unit
 
  protected:
   Body::Executive_var executive_;
+  long return_state;
+  void error(std::string msg);
+  void warning(std::string msg);
 
   double pct[4];
-  int return_state;
+
  public:
 
 virtual void StartCalc (

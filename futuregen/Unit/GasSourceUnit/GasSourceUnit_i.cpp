@@ -1,11 +1,12 @@
-#include "GasSourceUnit_i.h"
 #include "V21Helper.h"
+#include "GasSourceUnit_i.h"
 
 // Implementation skeleton constructor
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))
 {
   UnitName_=name;
+  return_state = 0;
 }
   
 // Implementation skeleton destructor
@@ -275,3 +276,23 @@ char * Body_Unit_i::GetName (
     std::cout<<UnitName_<<" :GetName called"<<endl;
     return CORBA::string_dup(UnitName_.c_str());
   }
+
+void Body_Unit_i::error (std::string msg)
+{
+  Package p;
+  const char* result;
+  bool rv;
+  p.SetPackName("result");
+  p.SetSysId("result.xml");
+  msg+="\n";
+  executive_->SetModuleMessage(id_, msg.c_str());
+  p.intfs.clear();
+  result = p.Save(rv);
+  executive_->SetModuleResult(id_, result); //this marks the end the execution
+}
+
+void Body_Unit_i::warning (std::string msg)
+{
+  msg+="\n";
+  executive_->SetModuleMessage(id_, msg.c_str());
+}

@@ -24,7 +24,10 @@ class  Body_Unit_i : public virtual POA_Body::Unit
 
  protected:
   Body::Executive_var executive_;
-
+  int return_state;
+  void error(std::string msg);
+  void warning(std::string msg);
+  
   double temp;
   double pres;
   double flow;

@@ -1,5 +1,5 @@
 #include "V21Helper.h"
-#include "GasSplitterUnit_i.h"
+#include "CompressorUnit_i.h"
 
 // Implementation skeleton constructor
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
@@ -30,6 +30,7 @@ void Body_Unit_i::StartCalc (
     string therm_path="thermo";
     int i;
     const char* result;
+    summary_values summaries;
 
     fflush(NULL);
     std::cout<<"cp1\n";
@@ -46,39 +47,141 @@ void Body_Unit_i::StartCalc (
     p.Load(igas, strlen(igas)); 
 
     std::cout<<"cp2\n";
-    Gas *gas_in = new Gas();
+    Gas *gas_in_data = new Gas();
 
     V21Helper gashelper(therm_path.c_str());
-    gashelper.IntToGas(&(p.intfs[0]), *gas_in);
+    gashelper.IntToGas(&(p.intfs[0]), *gas_in_data);
 
-    p.intfs.resize(1); //each port has its own package
-    Gas *gas_out[4];
+    // Check incoming
+    if(gas_in_data->gas_composite.T <= 200 || gas_in_data->gas_composite.T >= 3000) {
+      warning("Incoming gas temperature out of range.");
+    }
+    
+    Gas *gas_out_data = new Gas(); 
 
-    for(i=0; i<4; i++)
-      gas_out[i] = new Gas(*gas_in);
-    std::cout<<"cp3\n";
-    for(i=0; i<4; i++) 
-      {
-	std::cout<<"cp1\4-"<<i<<std::endl;;
-	if(pct[i] > 1e-6) 
-	  {
-	    gas_out[i]->gas_composite.M = gas_in->gas_composite.M * pct[i] / 100;
-	    gas_out[i]->gas_composite.M_particle = gas_in->gas_composite.M_particle * pct[i] / 100;
-	    gashelper.GasToInt(gas_out[i], p.intfs[0]);
-	    delete gas_out[i];
-	    p.SetPackName("ExportData");
-	    p.SetSysId("test.xml");
-	    ogas[i] = p.Save(rv);
-    	    executive_->SetExportData(id_, i, ogas[i]);
-	  } 
-	else 
-	  ;
+    REAL tinlet                = gas_in_data->gas_composite.T;   // kelvin
+    REAL pinlet                = gas_in_data->gas_composite.P;   // pascals
+    REAL eta                   = eff;                      // isentropic efficiency
+    REAL total_molar_flow_rate = gas_in_data->gas_composite.M / 
+      gas_in_data->gas_composite.mw();                             // kmol/sec
+    
+    REAL poutlet;
+    if(case_type==0) {
+      poutlet = pinlet + pressure_change; // pascals
+    } else {
+      poutlet = pressure_out; // pascals
+      pressure_change=poutlet-pinlet;
+    }
+
+    if(poutlet<0) {
+      error("Pressure drop too large.");
+      return_state = 1;
+      return;
+    }
+
+    thermo thm;
+    thm.read_thermo(therm_path.c_str());
+
+    // how many species are in the thermo file?
+    int nspecies = thm.get_spec_nam().size();
+    
+    // initialize composition
+    std::vector<REAL> composition;
+    for(i=0;i<nspecies;i++)
+      composition.push_back(0.0);
+
+// grab map for species names
+  const std::map< std::string, int>& name_map = thm.get_nam_spec();
+	
+  // look up and set names for species of interest
+  std::map< std::string, int >::const_iterator iter, iter2;
+  std::vector<int> species_indexes;
+
+  // find and store thermo file indexes for species of interest
+  for(iter2=gas_in_data->specie.begin(); iter2!=gas_in_data->specie.end(); iter2++)
+    {	
+      iter = name_map.find(iter2->first);
+      
+      if(iter!=name_map.end()){
+	species_indexes.push_back((*iter).second);
+	// now manually set mole fractions (this again will be replaced by scirun code)
+	composition[(*iter).second] = gas_in_data->gas_composite.comp_specie[iter2->second];
+      } else {
+	error("Species " + iter2->first + " not found - critical error!!!");
+	return_state = 1;
+	return;
       }
-    p.intfs.clear();
-    result = p.Save(rv);
-    std::cout<<"cp5\n";
-    executive_->SetModuleResult(id_, result); //marks the end the execution
-    std::cout<<"cp6\n";
+    }
+  // find entropy of mixture
+  REAL total_entropy = thm.entropy_mix(composition, tinlet, pinlet);
+  
+  // now find exit temperature assuming this process is isentropic
+  REAL ts_exit = tinlet;  // used for initial guess
+  
+  if(!thm.find_temperature(ts_exit, total_entropy, composition, poutlet)) {
+    error("Convergence problem - finding temp from entropy.");
+    return_state = 1;
+    return;
+  }
+
+  // now find h2s (isentropic enthalpy at outlet)
+  REAL h2s = thm.enthalpy_mix(composition, ts_exit);
+  
+  // now find h2a (actual enthalpy at outlet) using isentropic efficiency (eta) of
+  // compressor/turbine
+  REAL h2a;
+  REAL h1 = thm.enthalpy_mix(composition, tinlet);  // entrance enthalpy
+
+  if(pinlet<poutlet)   // compressor
+    h2a = -1*((h1-h2s)/eta-h1);
+  else                 // expander/turbine
+    h2a = -1*((h1-h2s)*eta-h1);
+  
+  // find temperature at exit and power
+  REAL texit = tinlet;   // initial guess
+  REAL cp_mix;
+  
+  if(!thm.find_temperature(texit, cp_mix, h2a, composition)){
+    warning("Convergence problem - temp from enthalpy.");
+    return;
+  }
+
+  //fill out the output stream  
+  p.intfs.resize(1); //each port has its own package
+  gas_out_data->copy(*gas_in_data);
+  gas_out_data->gas_composite.T = texit;
+  gas_out_data->gas_composite.P = poutlet;
+  
+  gashelper.GasToInt(gas_out_data, p.intfs[0]);
+  delete gas_out_data;
+  p.SetPackName("ExportData");
+  p.SetSysId("test.xml");
+  ogas[i] = p.Save(rv);
+  executive_->SetExportData(id_, i, ogas[i]);
+  
+  if(gas_out_data->gas_composite.T <= 200 || gas_out_data->gas_composite.T >= 3000) {
+    warning("Outgoing gas temperature out of range");
+  }
+
+  //Here is the result table
+  summaries.clear();
+  
+  // Fill in summary tables
+  summaries.insert_summary_val("Power UNITS:MW FORMAT:10.2f",
+			       -total_molar_flow_rate*(h2a-h1)/1e6);
+  if(case_type == 1) {
+    summaries.insert_summary_val("Pressure Change UNITS:Pa FORMAT:10.2f",
+				 poutlet-pinlet);
+  }
+  // gui->eval(id + " module_power " + to_string(-total_molar_flow_rate*(h2a-h1)/1e6), result); we'll come back to this later
+
+  p.intfs.resize(1);
+  
+  gashelper.SumToInt(&summaries, p.intfs[0]);
+  result = p.Save(rv);
+  std::cout<<"cp5\n";
+  executive_->SetModuleResult(id_, result); //marks the end the execution
+  std::cout<<"cp6\n";
   }
   
 void Body_Unit_i::StopCalc (
@@ -174,10 +277,10 @@ void Body_Unit_i::SetParams (
     p.SetSysId("gui.xml");
     p.Load(param, strlen(param));
     //Now make use of p.intfs to get your GUI vars out
-    pct[0] = p.intfs[0].getDouble("percent_port1");
-    pct[1] = p.intfs[0].getDouble("percent_port2");
-    pct[2] = p.intfs[0].getDouble("percent_port3");
-    pct[3] = p.intfs[0].getDouble("percent_port4");
+    eff = p.intfs[0].getDouble("eff");
+    pressure_out = p.intfs[0].getDouble("pressure_out");
+    pressure_change = p.intfs[0].getDouble("pressure_change");
+    case_type = p.intfs[0].getInt("case_type");
     
   }
   
