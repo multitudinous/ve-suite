@@ -4,54 +4,167 @@
 #OMNI_HOME: comment out definitions to make a non-corba version - that's all you have to do
 
 #this is typically defined in your .cshrc file
-setenv VE_SUITE_HOME /isv/VE_Suite
+setenv VE_SUITE_HOME /isv/VE_Suite_20041012
 
-3if ( -e /etc/redhat-release ) then
-#   # extract some words from file to create something like RedHat_8.0
-#   setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
-#else if ( -e /etc/SuSE-release ) then
-#   # extract first and third words from file to create something like SuSE_9.1
-#   setenv CFDHOSTTYPE `head -1 /etc/SuSE-release | awk -F" " '{print $1 "_" $3}'`
-#else
+if ( -e /etc/redhat-release ) then
+   set firstWord=`cat /etc/redhat-release | awk -F" " '{print $1}'`
+   #echo "firstWord is" ${firstWord}
+   if ( ${firstWord} == "Red" ) then
+      # extract some words from file to create something like RedHat_8.0 or RedHat_9
+      setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
+   else if ( ${firstWord} == "Fedora" ) then
+      # extract some words from file to create something like Fedora_1
+      setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 "_" $4}'`
+   endif
+else if ( -e /etc/SuSE-release ) then
+   # extract first and third words from file to create something like SuSE_9.1
+   setenv CFDHOSTTYPE `head -1 /etc/SuSE-release | awk -F" " '{print $1 "_" $3}'`
+else
+   #echo "uname is" `uname`
    setenv CFDHOSTTYPE `uname`
-#endif
+endif
+
+#if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
+setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
+
+setenv TAO_BUILD FALSE
+#setenv TAO_BUILD FALSE
+# TAO_BUILD can be set from outside this script to override the default of FALSE
+# Make sure that TAO_BUILD is set to either TRUE or FALSE...
+if ( ! $?TAO_BUILD ) then
+   setenv TAO_BUILD FALSE
+   echo "   Because it was undefined, setting TAO_BUILD to" ${TAO_BUILD}
+   echo "   If you want otherwise, open new shell, define TAO_BUILD, and run script again"
+   echo ""
+else if ( $TAO_BUILD != "TRUE" && $TAO_BUILD != "FALSE" ) then
+   setenv TAO_BUILD FALSE
+   echo "   Because it was not defined properly, setting TAO_BUILD to" ${TAO_BUILD}
+   echo "   If you want otherwise, open new shell, define TAO_BUILD, and run script again"
+   echo ""
+endif
+
+setenv CLUSTER_APP FALSE
+# CLUSTER_APP can be set from outside this script to override the default of FALSE
+# Make sure that CLUSTER_APP is set to either TRUE or FALSE...
+if ( ! $?CLUSTER_APP ) then
+   setenv CLUSTER_APP FALSE
+   echo "   Because it was undefined, setting CLUSTER_APP to" ${CLUSTER_APP}
+   echo "   If you want otherwise, redefine CLUSTER_APP"
+else if ( $CLUSTER_APP != "TRUE" && $CLUSTER_APP != "FALSE" ) then
+   setenv CLUSTER_APP FALSE
+   echo "   Because it was not defined properly, setting CLUSTER_APP to" ${CLUSTER_APP}
+   echo "   If you want otherwise, redefine CLUSTER_APP"
+endif
 
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
-setenv VPR_DEBUG_ENABLE 0
-setenv PFSHAREDSIZE 534773700
+setenv VPR_DEBUG_ENABLE 1
+setenv PFSHAREDSIZE 1280000000
 setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
-setenv VTK_HOME_DIR /isv/VTK-builds
-setenv WX_HOME_DIR /isv/Juggler/wxGTK
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
-setenv TAO_BUILD FALSE
 
 #echo "specifying libraries for" ${CFDHOSTTYPE}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
-   setenv VJ_BASE_DIR /isv/Juggler/vrjuggler-2.0-alpha3.irix-n32-pthread
-#   setenv PYTHONPATH ${OMNI_HOME}/lib/python1.5/site-packages
-   setenv VTK_BASE_DIR ${VTK_HOME_DIR}/IRIX32
-#   setenv LD_LIBRARYN32_PATH /home/users/mccdo/VE_Suite/VE_Installer/arenasize/libs
-   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk
+   setenv VTK_BASE_DIR /isv/VTK-4.4.0/IRIX32
+   #setenv WX_HOME /isv/Juggler/wxGTK
+   setenv WX_HOME /isv/Juggler/wxGTK-2.4.2/IRIX32
+   # Fix this
+   #setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/IRIX32
+   setenv VJ_BASE_DIR /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-posix
+   # Fix this 
+   setenv VJ_DEPS_DIR /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-deps
+   #setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha3.irix-n32-pthread
+
+   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/isv/Juggler/openal
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/isv/Juggler/Performer3.1_remapped_libs/lib32:${WX_HOME}/lib#${XERCESCROOT}/lib
+   #setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include
+
    if ( ${TAO_BUILD} == "TRUE" ) then
-      setenv WX_HOME ${WX_HOME_DIR}
       setenv ACE_ROOT /isv/Juggler/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib:${WX_HOME}/lib
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:/usr/freeware/lib32
    else
-      setenv WX_HOME ${WX_HOME_DIR}
-   	setenv OMNI_HOME /isv/Juggler/omniORB-4.0.1
+   	 setenv OMNI_HOME /isv/Juggler/omniORB-4.0.4
       setenv PYTHONPATH ${OMNI_HOME}/lib/python1.5/site-packages
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib
+      setenv LD_LIBRARYN32_PATH ${OMNI_HOME}/lib:${LD_LIBRARYN32_PATH}
    endif
-else if ( ${CFDHOSTTYPE} == "RedHat_8.0" ) then
-   setenv JDK_HOME /usr/java/j2sdk1.4.1_02
-   setenv VJ_BASE_DIR  /home/vr/Juggler/2.0/vrjuggler-2.0-alpha2.linux-rh80
-   setenv OMNI_HOME /home/users/lisong/omni/omni-gcc3-rh8
-   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:/usr/lib/debug:${VTK_HOME_DIR}-rh8/bin:/usr/lib/Performer/Debug:${OMNI_HOME}/lib/i586_linux_2.0_glibc2.1:/usr/lib
+
+else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
+   setenv JDK_HOME /usr/java/j2sdk1.4.2_03
+   setenv VTK_BASE_DIR /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
+   #setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-RH80
+   setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-RH80
+   setenv VJ_BASE_DIR /home/users/hgx/group_project/vrjuggler-2.0-alpha4.linux-rh80
+   setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-rh80-deps
+   #setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/Suse-9.1-alpha4
+   #setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
+
+   setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include
+   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib:${XERCESCROOT}/lib
+
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
+      #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
+      setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+   else
+      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Linux-RH80
+      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+   endif
+
+else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
+   setenv JDK_HOME /usr/lib/java2
+   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-SuSE91
+   setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-SuSE91
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/Linux_SuSE91
+   setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
+   #setenv VJ_BASE_DIR /home/users/sjk60/suse_deps/Suse-9.1-alpha4_vrjuggler
+   #setenv VJ_DEPS_DIR /home/users/sjk60/suse_deps/Suse-9.1-alpha4_vrjuggler-deps
+
+   setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include/boost-1_31
+   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib:${XERCESCROOT}/lib
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv MY_ACEDIR /home/users/mccdo/ACE_TAO
+      setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
+      #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
+      setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+   else
+      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Linux-SuSE91
+      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+   endif
+
+else if ( ${CFDHOSTTYPE} == "SunOS" ) then
+   setenv JDK_HOME /usr/java
+   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Solaris
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Solaris
+   setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Solaris
+   #setenv VJ_BASE_DIR ??
+   #setenv VJ_DEPS_DIR ??
+
+   setenv BOOST_INCLUDES ${VJ_DEPS_DIR}/include/boost-1_31
+   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib:${XERCESCROOT}/lib
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
+      #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
+      setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+   else
+      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Solaris
+      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+   endif
+
 else
    echo "ERROR: Unsupported operating system"
    echo "       OMNI_HOME, etc. are undefined"
@@ -60,12 +173,13 @@ endif
 setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
 setenv DZR_BASE_DIR   ${VJ_BASE_DIR}/share/Doozer
 setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
-setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}
+setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
+setenv PATH ${WX_HOME}/bin:${PATH}
 setenv PATH ${JDK_HOME}/bin:${PATH}
 if ( ${TAO_BUILD} == "TRUE" ) then
-   setenv PATH ${ACE_ROOT}/bin:${WX_HOME}/bin:${PATH}
+   setenv PATH ${ACE_ROOT}/bin:${PATH}
 else
-   setenv PATH ${OMNI_HOME}/bin:${WX_HOME}/bin:${PATH}
+   setenv PATH ${OMNI_HOME}/bin:${PATH}
 endif
 
 #echo ""
@@ -76,3 +190,4 @@ endif
 #echo "              or 'runc6' to start the application on the c6"
 #echo "              or 'runc4.closed' or 'runc4.open' to start the application on the c4"
 #echo ""
+
