@@ -21,3 +21,12 @@ Configuration Properties tab to point to the directory
 where your parameter files are. You will also need to pass in
 your config files as command arguments on the configuration
 properties tab.
+
+
+NOTE: Paths on windows SHOULD NOT contain spaces!!!!
+Example:
+BAD!!!!!
+set VTK_HOME=C:\Documents and Settings\user\Desktop\vtk
+
+GOOD!
+set VTK_HOME=C:\vtk

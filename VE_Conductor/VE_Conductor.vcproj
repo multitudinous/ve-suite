@@ -40,8 +40,8 @@ $(JAVA_HOME)\bin\idlj -fall -I$(VJ_BASE_DIR)/include -td ./java_stuff -I./idl ./
 $(JAVA_HOME)\bin\idlj -fall -I$(VJ_BASE_DIR)/include -td ./java_stuff -I./idl ./idl/Observer.idl
 echo Done
 "
-				AdditionalDependencies="VjObs.idl;Obsever.idl"
-				Outputs="VjObs.cpp;Observer.cpp;VjObs.java;Observer.java"/>
+				AdditionalDependencies="VjObs.idl;Obsever.idl;VjObs.cpp;Observer.cpp;VjObs.java;Observer.java"
+				Outputs="VjObs_i.cxx;Observer_i.cxx;VjObs.java;Observer.java"/>
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/VE_Conductor.exe"
