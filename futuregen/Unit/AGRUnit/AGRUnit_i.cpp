@@ -44,12 +44,107 @@ void Body_Unit_i::StartCalc (
     p.SetSysId("gas_in.xml");
     p.Load(igas, strlen(igas)); 
 
-    Gas *gas_in_data = new Gas;
+    Gas *gas_in = new Gas;
 
     V21Helper gashelper(therm_path.c_str());
-    gashelper.IntToGas(&(p.intfs[0]), *gas_in_data);
+    gashelper.IntToGas(&(p.intfs[0]), *gas_in);
 
-    // fill in summary table
+    // Actual gas flow rate, MMCFD
+    double MM = gas_in->gas_composite.M / gas_in->gas_composite.density() 
+      * 60 * 60 * 24 * 3.2808 * 3.2808 * 3.2808;
+    
+    // Mole Loading
+    double ML =  (gas_in->gas_composite.moles("H2S") + gas_in->gas_composite.moles("CO2"))
+      / gas_in->gas_composite.moles();
+    
+    // Amine solution weight % circulated
+    double WT = 50.0;
+    
+    // Amine circulation rate
+    double GPM = 0.206 * MM * (gas_in->gas_composite.getFrac("H2S") + gas_in->gas_composite.getFrac("CO2")) 
+      * solv_mw / (ML * WT);
+    
+    // Tray type factor
+    double TTF = 0.0;
+    if(tray_type == 0)     TTF = 0.25;
+    else if(tray_type ==1) TTF = 0.20;
+    else                   TTF = 0.0; /* TEMI - sieve tray */
+    
+    // Density of syngas at tray conditions
+    double DEN_SYN = gas_in->gas_composite.density(); /* TEMI - tray conditions? */
+    
+    // Bubbling area
+    double BA = gas_in->gas_composite.M / gas_in->gas_composite.density() * 35.31 / 
+      (TTF * sqrt((solv_den * 2.20462 * 0.028316 - DEN_SYN ) / sqrt(DEN_SYN)));
+    
+    // Area of downcomer
+    // Assume downflow velocity of 0.25 ft/sec
+    double AREA_DOWN = GPM / (60 * 7.48 * 0.25);
+    
+    // Total required tray area
+    double AREA_TRAY = (BA + AREA_DOWN + AREA_DOWN) * 1.15;
+    
+    // Tray diameter
+    double DIAM_TRAY = sqrt(4 * AREA_TRAY / 3.14159);
+    
+    // Clear liquid residence time
+    double CLRT = BA * (3.1 / 12) * 0.3 / (GPM / (7.48 * 60));
+    
+    // Liquid molar flowrate / unit area
+    // i.e. solvent entering at top of tower
+    double LM = solv_den * GPM * 0.3048 * 0.3048 * 0.3048 
+      / (7.48 * 60 * solv_mw * AREA_TRAY * 0.09290304);
+    
+    // Gas molar flow rate / unit area
+    // i.e. syngas entering at bottom of tower
+    double GM = gas_in->gas_composite.M / (gas_in->gas_composite.mw() * AREA_TRAY * 0.09290304);
+    
+    // Slope of equilibrium curve
+    // for 50% MDEA at 40degC, the slope of the equilibrium curve: m = 0.0304;
+    double m = 0.0304; /* switch this ? */
+    
+    // Absorption factor
+    double A = LM / (m * GM);
+    
+    // Theoretical number of trays
+    double T_NTRAYS = log((1-1/A)*gas_in->gas_composite.moles("H2S") /
+			  gas_in->gas_composite.moles("H2S") * 0.03 + 1/A) / log(A);
+    
+    // Actual number of trays
+    int A_NTRAYS = ceil(T_NTRAYS);
+    
+    // Absorber height
+    double ABS_HEIGHT = A_NTRAYS * 2;
+    
+    //
+    // Fill in the gas out data structure and send it on it's way...
+    //
+
+    // Martin,
+    // gas_out begins as an exact copy of gas_in -
+    // Just for the ease of filling everything in.
+
+    Gas *gas_out = new Gas; 
+    
+    gas_out->copy(*gas_in);
+        
+    gas_out->gas_composite.T = 100000; // example
+    gas_out->gas_composite.P = -99999; // example
+    gas_out->gas_composite.setFrac("HGCL2", 0.0002); // example
+    gas_out->gas_composite.normalize_specie(); // example
+
+    p.intfs.resize(1);
+    gashelper.GasToInt(gas_out, p.intfs[0]);
+
+    p.SetPackName("ExportData");
+    p.SetSysId("test.xml");
+    ogas = p.Save(rv);
+    executive_->SetExportData(id_, 0, ogas);
+
+    //
+    // Fill in summary table
+    //
+
     summaries.clear();
     
     summaries.insert_summary_val("Amine Feed Rate UNITS:GPM FORMAT:10.2f", 403);
@@ -63,8 +158,8 @@ void Body_Unit_i::StartCalc (
     
     executive_->SetModuleResult(id_, result); //marks the end the execution
     
-    if(gas_in_data)  delete gas_in_data;
-    // if(gas_out_data) delete gas_out_data;
+    if(gas_in)  delete gas_in;
+    if(gas_out) delete gas_out;
   }
 
 void Body_Unit_i::StopCalc (
@@ -160,6 +255,7 @@ void Body_Unit_i::SetParams (
     p.SetSysId("gui.xml");
     p.Load(param, strlen(param));
     //Now make use of p.intfs to get your GUI vars out
+    tray_type = p.intfs[0].getInt("tray_type");
     solv_type = p.intfs[0].getInt("solv_type");
     solv_mw = p.intfs[0].getDouble("solv_mw");
     solv_den = p.intfs[0].getDouble("solv_den");

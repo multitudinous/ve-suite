@@ -28,7 +28,8 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   void error(std::string msg);
   void warning(std::string msg);
 
-  long    solv_type;
+  long   tray_type;
+  long   solv_type;
   double solv_mw;
   double solv_den;
   

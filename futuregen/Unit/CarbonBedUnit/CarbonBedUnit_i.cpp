@@ -44,15 +44,15 @@ void Body_Unit_i::StartCalc (
     p.SetSysId("gas_in.xml");
     p.Load(igas, strlen(igas)); 
 
-    Gas *gas_in_data = new Gas;
+    Gas *gas_in = new Gas;
 
     V21Helper gashelper(therm_path.c_str());
-    gashelper.IntToGas(&(p.intfs[0]), *gas_in_data);
+    gashelper.IntToGas(&(p.intfs[0]), *gas_in);
 
-    double gas_temp = gas_in_data->gas_composite.T;
-    double gas_density = gas_in_data->gas_composite.density();
-    double gas_viscosity = gas_in_data->gas_composite.Visc();
-    double gas_flow_rate = gas_in_data->gas_composite.M;
+    double gas_temp = gas_in->gas_composite.T;
+    double gas_density = gas_in->gas_composite.density();
+    double gas_viscosity = gas_in->gas_composite.Visc();
+    double gas_flow_rate = gas_in->gas_composite.M;
     double hg_feed_rate = 1.0;
 
     // Fluidization velocity calculation
@@ -92,8 +92,35 @@ void Body_Unit_i::StartCalc (
     // Carbon loading
     double carbon_loading = hg_feed_rate * 0.99 / mass_of_carbon;
  
+    //
+    // Fill in the gas out data structure and send it on it's way...
+    //
 
-    // fill in summary table
+    // Martin,
+    // gas_out begins as an exact copy of gas_in -
+    // Just for the ease of filling everything in.
+
+    Gas *gas_out = new Gas; 
+    
+    gas_out->copy(*gas_in);
+        
+    gas_out->gas_composite.T = 100000; // example
+    gas_out->gas_composite.P = -99999; // example
+    gas_out->gas_composite.setFrac("HGCL2", 0.0002); // example
+    gas_out->gas_composite.normalize_specie(); // example
+
+    p.intfs.resize(1);
+    gashelper.GasToInt(gas_out, p.intfs[0]);
+
+    p.SetPackName("ExportData");
+    p.SetSysId("test.xml");
+    ogas = p.Save(rv);
+    executive_->SetExportData(id_, 0, ogas);
+
+    //
+    // Fill in summary table
+    //
+
     summaries.clear();
     
     summaries.insert_summary_val("Min. Fluidization Vel. UNITS:m/sec FORMAT:10.2f", Umf);
@@ -109,14 +136,14 @@ void Body_Unit_i::StartCalc (
     
    p.intfs.resize(1);
   
-  gashelper.SumToInt(&summaries, p.intfs[0]);
-  result = p.Save(rv);
+   gashelper.SumToInt(&summaries, p.intfs[0]);
+   result = p.Save(rv);
+   
+   executive_->SetModuleResult(id_, result); //marks the end the execution
 
-  executive_->SetModuleResult(id_, result); //marks the end the execution
-
-  if(gas_in_data)  delete gas_in_data;
-  // if(gas_out_data) delete gas_out_data;
-  }
+  if(gas_in)  delete gas_in;
+  if(gas_out) delete gas_out;
+}
   
 void Body_Unit_i::StopCalc (
     ACE_ENV_SINGLE_ARG_DECL
