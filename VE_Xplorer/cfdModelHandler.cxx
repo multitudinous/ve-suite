@@ -73,12 +73,12 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
    _param = input;
    worldNode = dcs;
    _activeTextureManager = 0;
-   activeDataset = NULL;
-   _scalarBar = NULL;
-   this->arrow = NULL;
-   _readParam = new cfdReadParam();
-   commandArray = NULL;
-   _activeModel = 0;
+   this->activeDataset  = 0;
+   this->_scalarBar     = 0;
+   this->arrow          = 0;
+   this->_readParam     = new cfdReadParam();
+   this->commandArray   = 0;
+   this->_activeModel   = 0;
    // worldnode getting passed in to model
    // model will then add its own node to the tree
    if ( worldNode == NULL )
@@ -230,8 +230,6 @@ void cfdModelHandler::InitScene( void )
 
    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
    // Create Scalar bar
-   vprDEBUG(vprDBG_ALL,2) << " cfdModelHandler::InitScene = Get root node for scalar bar : " 
-                           << (cfdGroup*)worldNode->GetParent( 0 ) << std::endl<< vprDEBUG_FLUSH;
    _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
    // Assumes active dataset isn't null
    _scalarBar->SetActiveDataSet( activeDataset );
@@ -756,16 +754,22 @@ void cfdModelHandler::CreateObjects( void )
          _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );*/
 
          // For the geometry we need to loop over all the files and set the dcs appropriately
-      }else if(id == 15){
+      }
+      else if ( id == 15 )
+      {
          if ( _modelList.empty() )
+         {
             _modelList.push_back( new cfdModel( worldNode ) );
-         
+         }
+   
          //read the number of files that describe the texture
          int numTextureDescriptionFiles = 0;
          input >> numTextureDescriptionFiles;
          input.getline(textLine,256);
          char textureDescriptionFile[256];
-         for(int i = 0; i < numTextureDescriptionFiles; i++){
+
+         for ( int i = 0; i < numTextureDescriptionFiles; ++i ) 
+         {
              input>>textureDescriptionFile;
              input.getline(textLine,256);
              //this isn't right--we should have a pointer to the
@@ -773,8 +777,9 @@ void cfdModelHandler::CreateObjects( void )
              //since we only have one model
              _modelList.at(0)->CreateTextureManager(textureDescriptionFile);
          }
-
-      }else{
+      }
+      else
+      {
          // Skip past block
          _readParam->ContinueRead( input, id );
       }
