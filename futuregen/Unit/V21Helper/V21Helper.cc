@@ -154,12 +154,32 @@ int V21Helper::GasToInt (Gas *gs, Interface &it)
 
 int IntToWat (Interface *it, Water &wt)
 {
+  bool ok = true;
+  
+  wt.T = it->getDouble("TEMPERATURE", &ok);
+  wt.P = it->getDouble("PRESSURE",    &ok);
+  wt.H = it->getDouble("ENTHALPY",    &ok);
+  wt.Q = it->getDouble("QUALITY",     &ok);
+  wt.M = it->getDouble("FLOWRATE",    &ok);
+
+  if(!ok) { /* ERROR - MISSING A WATER DEFINITION */ }
+
+  return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
 
 int WatToInt (Water *wt, Interface &it)
 {
+  it.clear();
+
+  it.setDouble("TEMPERATURE", wt->T);
+  it.setDouble("PRESSURE",    wt->P);
+  it.setDouble("ENTHALPY",    wt->H);
+  it.setDouble("QUALITY",     wt->Q);
+  it.setDouble("FLOWRATE",    wt->M);
+
+  return 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////
