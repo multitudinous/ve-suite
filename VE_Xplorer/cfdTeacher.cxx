@@ -106,6 +106,7 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
          char * fileName = new char[strlen(file->d_name)+1];
          strcpy( fileName, file->d_name );
          this->pfbFileNames.push_back( std::string(fileName) );
+         delete [] fileName;
          vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << fileName
                                 << std::endl << vprDEBUG_FLUSH;
       }
@@ -157,7 +158,8 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
             std::ostringstream filenameStream;
             filenameStream <<"./STORED_FILES/"<<fileName;
             std::string fileString = filenameStream.str();
-			this->pfbFileNames.push_back( fileString );
+			   this->pfbFileNames.push_back( fileString );
+            delete [] fileName;
             vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << fileString
                                    << std::endl << vprDEBUG_FLUSH;
          }
@@ -182,7 +184,7 @@ cfdTeacher::cfdTeacher( char specifiedDir[], cfdDCS* worldDCS )
    for (int i=0; i<this->numFiles; i++)
    {
       this->node[ i ] = new cfdNode();
-	  this->node[ i ]->LoadFile( (char*)this->pfbFileNames[ i ].c_str() );
+	   this->node[ i ]->LoadFile( (char*)this->pfbFileNames[ i ].c_str() );
    }
    //change back to the original directory
    chdir( cwd );
@@ -197,14 +199,6 @@ cfdTeacher::~cfdTeacher( )
       delete this->node[i];
    }
    delete this->DCS;
-
-   // delete vector of pfbFileNames
-   for ( i = 0; i < this->numFiles; i++ )
-   {
-      vprDEBUG(vprDBG_ALL,1) << "deleting pfbFileName " 
-         << this->pfbFileNames[i] << std::endl << vprDEBUG_FLUSH;
-      //delete [] this->pfbFileNames[i];
-   }
 
    delete [] this->directory;
    this->directory = NULL;
