@@ -5,7 +5,7 @@
 
 BEGIN_EVENT_TABLE(UI_TeacherTab, wxPanel)
    EVT_RADIOBOX(TEACHER_RBOX,UI_TeacherTab::_onTeacher)
-   EVT_RADIOBOX(TEACHER_CLEAR_BUTTON,UI_TeacherTab::_onClear)
+   EVT_BUTTON(TEACHER_CLEAR_BUTTON,UI_TeacherTab::_onClear)
 END_EVENT_TABLE()
 
 ///////////////
