@@ -56,7 +56,7 @@ class cfdVjObsWrapper
       cfdVjObsWrapper( void );
       ~cfdVjObsWrapper( void );
 #ifdef _TAO
-      void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, int, char** );
+      void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, PortableServer::POA*, int, char** );
 #else
       void init( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, int, char** );
 #endif
@@ -83,6 +83,7 @@ class cfdVjObsWrapper
       CosNaming::NamingContext* naming_context;
       CORBA::ORB* _orbPtr;
       PortableServer::POA* child_poa;
+      PortableServer::POA* poa;
 #else
       CosNaming::NamingContext_ptr naming_context;
       CORBA::ORB_ptr _orbPtr;

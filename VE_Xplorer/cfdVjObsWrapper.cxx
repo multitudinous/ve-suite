@@ -85,7 +85,8 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
       std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }
 #ifdef _TAO
-   child_poa->destroy(1,1);
+   this->child_poa->destroy(1,1);
+   this->poa->destroy (1, 1);
 #endif // _TAO
    this->_orbPtr->shutdown(0);
    this->_orbPtr->destroy();
@@ -95,13 +96,14 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
 }
 
 #ifdef _TAO
-void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr, PortableServer::POA* poa, int argc, char* argv[]  )
+void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr, PortableServer::POA* child_poa, PortableServer::POA* poa,int argc, char* argv[]  )
 #else
 void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr orbPtr, int argc, char* argv[]  )
 #endif // _TAO
 {
 #ifdef _TAO
-   child_poa = poa;
+   this->child_poa = child_poa;
+   this->poa = poa;
 #endif // _TAO
    naming_context = input;
    _orbPtr = orbPtr;

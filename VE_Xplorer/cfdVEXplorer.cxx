@@ -92,7 +92,7 @@ int main(int argc, char* argv[])
 
    cfdVjObsWrapper* vjobsWrapper = new cfdVjObsWrapper();
 #ifdef _TAO
-   vjobsWrapper->init( naming_context.in(), orb.in(), child_poa.in(), argc, argv );
+   vjobsWrapper->init( naming_context.in(), orb.in(), child_poa.in(), poa.in(), argc, argv );
 #else
    vjobsWrapper->init( naming_context.in(), orb.in(), argc, argv );
 #endif // _TAO
