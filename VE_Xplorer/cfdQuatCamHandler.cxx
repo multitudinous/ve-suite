@@ -64,7 +64,7 @@ cfdQuatCamHandler::cfdQuatCamHandler( cfdDCS* worldDCS, cfdNavigate* nav, char* 
    _nav = NULL;
    _readParam = NULL;
    _param = NULL;
-   t = 0.0;
+   t = 0.0f;
    numQuatCams = 0;
    activecam = false;
    cam_id = 0;
@@ -170,31 +170,37 @@ void cfdQuatCamHandler::Relocate( cfdDCS* worldDCS,  cfdNavigate* nav )
    Matrix44f vjm;
    //run = cfdId;
 
-   if ( t == 0.0 )
+   if ( t == 0.0f )
       QuatCams[cam_id]->SetCamPos( nav->worldTrans, worldDCS );
 
-   if ( t < 1.0 )
+   if ( t < 1.0f )
    {
-      t += 0.01f;
+      t += 0.0010f;
       QuatCams[cam_id]->MoveCam( nav->worldTrans, t, worldDCS );
       QuatCams[cam_id]->UpdateTrans( nav );
-      QuatCams[cam_id]->UpdateRotation();
+      QuatCams[cam_id]->UpdateRotation( nav );
 
-      vjm = worldDCS->GetMat();
+      //vjm = worldDCS->GetMat();
 
-      for ( int i=0; i<3; i++)
-      {
-         rotvec[i] = makeRot<EulerAngleXYZf>(vjm)[i];
-      }
+      //for ( int i=0; i<3; i++)
+      //{
+         //rotvec[i] = makeRot<EulerAngleXYZf>(vjm)[i];
+      /*rotvec[0] = makeZRot(vjm);
+      std::cout<<"z "<<rotvec[0]<<std::endl;
+      rotvec[1] = makeXRot(vjm);
+      std::cout<<"x "<<rotvec[1]<<std::endl;
+      rotvec[2] = makeYRot(vjm);
+      std::cout<<"y "<<rotvec[2]<<std::endl;
+      //}
       //std::cout<<"angle "<<QuatCams[cfdIso_value]->angle<<std::endl;
-      nav->worldRot[0] = QuatCams[cam_id]->angle;
-      //nav->worldRot[0] = rotvec[0];
+      //nav->worldRot[0] = QuatCams[cam_id]->angle;
+      nav->worldRot[0] = rotvec[0];
       nav->worldRot[1] = rotvec[1];
-      nav->worldRot[2] = rotvec[2];
+      nav->worldRot[2] = rotvec[2];*/
    }
    else
    {
-      t = 0.0;
+      t = 0.0f;
       //run = -1;
       activecam = false;
    }      

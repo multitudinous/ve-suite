@@ -67,7 +67,7 @@ public:
 
    void UpdateTrans(cfdNavigate*);
 
-   void UpdateRotation();
+   void UpdateRotation(cfdNavigate*);
 
    gmtl::Vec3f  vjVecCurrTrans;
 
@@ -83,6 +83,8 @@ private:
    gmtl::Quatf CurPosQuat;
    gmtl::Vec3f vjVecNextTrans;
    gmtl::Vec3f vjVecLastTrans;
+
+   float rotvec[3];
 
 };
 #endif

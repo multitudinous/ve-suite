@@ -79,7 +79,7 @@ void cfdQuatCam::MoveCam(double* worldTrans, float t, cfdDCS* dummy)
 
 void cfdQuatCam::RotSlerp(float t)
 {  
-   slerp(CurPosQuat,t,LastPosQuat,NextPosQuat);
+   gmtl::slerp(CurPosQuat,t,LastPosQuat,NextPosQuat);
 }
 
 
@@ -99,9 +99,39 @@ void cfdQuatCam::UpdateTrans(cfdNavigate* nav)
    //return worldTrans;
 }
 
-void cfdQuatCam::UpdateRotation()
+void cfdQuatCam::UpdateRotation( cfdNavigate* nav )
 {
-   if (rotPoints[1]<0.000001)
+   Matrix44f temp;
+   gmtl::Vec3f test;
+   //setRot( temp, CurPosQuat);
+   //AxisAngle angle;
+   std::cout<<CurPosQuat<<std::endl;
+   temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
+   //test = angle.getAxis();
+   //rotvec[0] = test.getAngle();
+
+   rotvec[2] = makeZRot(temp);
+   std::cout<<"z "<<rotvec[0]<<std::endl;
+   rotvec[1] = makeXRot(temp);
+   std::cout<<"x "<<rotvec[1]<<std::endl;
+   rotvec[0] = makeYRot(temp);
+   std::cout<<"y "<<rotvec[2]<<std::endl;
+   
+   nav->worldRot[0] = rotvec[0];
+   nav->worldRot[1] = rotvec[1];
+   nav->worldRot[2] = rotvec[2];
+
+/*   cfdDCS tempDCS;
+   tempDCS.SetRotationMatrix( temp );
+   float* rot = tempDCS.GetRotationArray();
+   nav->worldRot[0] = rot[0];
+std::cout<<"z "<<rot[0]<<std::endl;
+   nav->worldRot[1] = rot[1];
+std::cout<<"x "<<rot[0]<<std::endl;
+   nav->worldRot[2] = rot[2];
+std::cout<<"y "<<rot[0]<<std::endl;*/
+
+   /*if (rotPoints[1]<0.000001)
    {
       angle = gmtl::Math::aCos(rotPoints[0])*57.29877951;
       //angle = rotPoints[0];
@@ -110,7 +140,7 @@ void cfdQuatCam::UpdateRotation()
    {
       angle = 360 - (gmtl::Math::aCos(rotPoints[0])*57.29877951);
       //angle = 360 - rotPoints[0];
-   }
+   }*/
 }   
 
 
