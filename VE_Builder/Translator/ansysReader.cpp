@@ -1643,15 +1643,15 @@ void ansysReader::AttachStressToGrid()
    }
 
    char arrayName[ 256 ];
-   sprintf( arrayName, "fg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
-   parameterData[ 0 ]->SetName( arrayName );
    sprintf( arrayName, "fg max prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   parameterData[ 0 ]->SetName( arrayName );
+   sprintf( arrayName, "fg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
    parameterData[ 1 ]->SetName( arrayName );
    sprintf( arrayName, "fg von Mises stress %i %s", this->currentDataSetSolution, this->stressUnits );
    parameterData[ 2 ]->SetName( arrayName );
-   sprintf( arrayName, "pg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
-   parameterData[ 3 ]->SetName( arrayName );
    sprintf( arrayName, "pg max prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   parameterData[ 3 ]->SetName( arrayName );
+   sprintf( arrayName, "pg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
    parameterData[ 4 ]->SetName( arrayName );
    sprintf( arrayName, "pg von Mises stress %i %s", this->currentDataSetSolution, this->stressUnits );
    parameterData[ 5 ]->SetName( arrayName );
