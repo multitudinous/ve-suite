@@ -50,17 +50,13 @@
 
 class cfdTeacher;
 class cfdReadParam;
+class cfdCommandArray;
 
-#ifdef _CFDCOMMANDARRAY
 #include "cfdGlobalBase.h"
-#endif // _CFDCOMMANDARRAY
 
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
-                public PortableServer::RefCountServantBase
-#ifdef _CFDCOMMANDARRAY
-                ,
+                public PortableServer::RefCountServantBase,
                 public cfdGlobalBase
-#endif // _CFDCOMMANDARRAY
 {
 public:
    
@@ -116,6 +112,11 @@ public:
    void CreateDatasetInfo( void );
    void CreateTeacherInfo( void );
 
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
 #ifdef _TAO   
    void update() throw (CORBA::SystemException);
    //Observer::baf_p_slice* baf_param;
@@ -134,8 +135,8 @@ public:
    //reimplemented it with virtual functions, which will be overided in
    //cfdApp. So they are actually direct function calls to the cfdApp.
    short get_sc_num() throw (CORBA::SystemException);//{return this->get_sc_num();}; //*
-   short get_geo_num() throw (CORBA::SystemException);//{return this->get_geo_num();}; //*
    short get_teacher_num() throw (CORBA::SystemException);//{return this->get_teacher_num();}; //*
+   short get_geo_num() throw (CORBA::SystemException);//{return this->get_geo_num();}; //*
    char* get_perf() throw (CORBA::SystemException);
 
    short GetNumberOfSounds() throw (CORBA::SystemException);

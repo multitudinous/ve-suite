@@ -46,6 +46,8 @@
 #include "cfdTeacher.h"
 #include "cfdDataSet.h"
 #include "cfdFileInfo.h"
+#include "cfdCommandArray.h"
+
 
 #ifdef _CLUSTER
 #include "cfdSequence.h"
@@ -55,6 +57,18 @@
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
 #include <vtkCellTypes.h>
+
+
+bool VjObs_i::CheckCommandId( cfdCommandArray* commandArray )
+{
+   return false;
+}
+
+void VjObs_i::UpdateCommand()
+{
+}
+
+
 /*
 void VjObs_i::attach(Observer_ptr o)
 {
@@ -393,6 +407,7 @@ VjObs::scalar_p* VjObs_i::get_teacher_name()
 VjObs::scalar_p* VjObs_i::get_teacher_name()
 #endif
 {
+   cout << "get teachername"<<endl;
    VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
    return teacher_name_._retn();
 }
@@ -509,7 +524,7 @@ CORBA::Short VjObs_i::getNumDatasets()
 #endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL,0) << "Returning '" << mNumScalars << "' to caller\n"
+   //vprDEBUG(vprDBG_ALL,0) << "Returning num, datasets'" << mNumScalars << "' to caller\n"
    //     << vprDEBUG_FLUSH;
    return mNumScalars;
 }
@@ -907,8 +922,8 @@ CORBA::Short VjObs_i::getTimesteps()
 #endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   vprDEBUG(vprDBG_ALL, 2)
-      << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
+   //vprDEBUG(vprDBG_ALL, 2)
+   //   << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
    return mTimesteps;
 }
 
@@ -968,6 +983,7 @@ short VjObs_i::getTeacherState()
 CORBA::Short VjObs_i::getTeacherState()
 #endif
 {
+   cout << "getTeacherState" << endl;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
@@ -985,8 +1001,13 @@ short VjObs_i::get_sc_num()
 CORBA::Short VjObs_i::get_sc_num() 
 #endif
 {
-   return this->getNumDatasets();
+   std::cout << "num scalars " << endl;
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL,0) << "Returning num scalars'" << mNumScalars << "' to caller\n"
+   //     << vprDEBUG_FLUSH;
+   return mNumScalars;
 }
+
 
 #ifdef _TAO
 short VjObs_i::get_geo_num()
@@ -997,6 +1018,9 @@ short VjObs_i::get_geo_num()
 CORBA::Short VjObs_i::get_geo_num()
 #endif
 {
+   //vprDEBUG(vprDBG_ALL,0) << "Returning num geos'" << this->mParamReader->numGeoms << "' to caller\n"
+   //     << vprDEBUG_FLUSH;
+   std::cout << this->mParamReader->numGeoms << std::endl;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    return this->mParamReader->numGeoms;
 }
@@ -1011,6 +1035,8 @@ CORBA::Short VjObs_i::get_teacher_num()
 #endif
 {
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   //vprDEBUG(vprDBG_ALL,0) << "Returning num teacher'" << this->mTeacher->getNumberOfFiles()<< "' to caller\n"
+   //     << vprDEBUG_FLUSH;
    return this->mTeacher->getNumberOfFiles();
 }
 
@@ -1088,6 +1114,7 @@ short VjObs_i::GetNumberOfSounds()
 CORBA::Short VjObs_i::GetNumberOfSounds()
 #endif
 {
+   std::cout << this->mParamReader->soundFile << endl;
    return this->mParamReader->soundFile;
 }
 
@@ -1126,6 +1153,7 @@ VjObs::obj_p* VjObs_i::GetClientInfoData()
 VjObs::obj_p* VjObs_i::GetClientInfoData()
 #endif
 {
+   cout << "GetClientInfoData" << endl;
    return clientInfoObserverDataArray._retn();
 }
 
