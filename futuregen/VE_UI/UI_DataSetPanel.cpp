@@ -27,22 +27,35 @@ UI_DataSets::UI_DataSets()
 
 UI_DataSets::~UI_DataSets()
 {
-   for (int i=0; i<_numofScalars; i++)
+   for (int i=0; i<_numOfScalars; i++)
       delete _Scalars[i];
    _Scalars.clear();
+
+   for (int i=0; i<_numOfVectors; i++)
+      delete _Vectors[i];
+   _Vectors.clear();
 }
 
 void UI_DataSets::_buildScalars(int _numScalars, wxString* scalarNames)
 {
-   _numofScalars = _numScalars;
+   _numOfScalars = _numScalars;
 
-   for (int i=0; i<_numScalars; i++)
+   for (int i=0; i<_numOfScalars; i++)
    {
       thisScalar = new UI_Scalars(&scalarNames[i]);
       _Scalars.push_back(thisScalar);
    }
+}
 
-   // Need to repeat for vectors
+void UI_DataSets::_buildVectors(int _numVectors, wxString* vectorNames)
+{
+   _numOfVectors = _numVectors;
+
+   for (int i=0; i<_numOfVectors; i++)
+   {
+      thisVector = new UI_Scalars(&vectorNames[i]);
+      _Vectors.push_back(thisVector);
+   }
 }
 
 
@@ -165,13 +178,18 @@ UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
    SetSizer(_col);
 
   // Update VE-Xplorer with new data
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
-   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_SCALAR;
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 
    // Need to add vector support Update VE-Xplorer with new data
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_VECTOR;
+  ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 }
 
 UI_ScalarScroll::~UI_ScalarScroll()
@@ -188,16 +206,17 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
 
    _scalarRBox = new wxRadioBox(this,SCALAR_PANEL_RAD_BOX, wxT("Scalars"),
                                      wxDefaultPosition, wxDefaultSize,
-            activeDataSet->_numofScalars,
+            activeDataSet->_numOfScalars,
             ((UI_DatasetPanel*)GetParent())->_scalarNames,
             1,wxRA_SPECIFY_COLS);
 
    _vectorRBox = new wxRadioBox(this, VECTOR_PANEL_RAD_BOX, wxT("Vectors"),
                                 wxDefaultPosition, wxDefaultSize, 
-            activeDataSet->_numofScalars,
-            ((UI_DatasetPanel*)GetParent())->_scalarNames,
+            activeDataSet->_numOfVectors,
+            ((UI_DatasetPanel*)GetParent())->_vectorNames,
             1, wxRA_SPECIFY_COLS);
-// Get number of vectors and scalar names
+   
+   // Get number of vectors and scalar names
    _col->Prepend(_vectorRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
    _col->Prepend(_scalarRBox,2,wxALL|wxALIGN_LEFT|wxEXPAND,5);
 
@@ -213,6 +232,11 @@ void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
    ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 
    // Need to add vector support Update VE-Xplorer with new data
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cSc = 0; // using zero-based scalar counting      
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMin = 0;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cMax = 100;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->cId  = CHANGE_VECTOR;
+   ((UI_Frame *)((UI_DatasetPanel *)GetParent())->GetParent())->_tabs->sendDataArrayToServer();
 }
 
 
@@ -222,6 +246,7 @@ BEGIN_EVENT_TABLE(UI_DatasetPanel, wxPanel)
    EVT_RADIOBOX(VERTEX_RBOX, UI_DatasetPanel::_onVertex)
    EVT_RADIOBOX(POLYDATA_RBOX, UI_DatasetPanel::_onPolyData)
    EVT_RADIOBOX(SCALAR_PANEL_RAD_BOX, UI_DatasetPanel::_onScalars)
+   EVT_RADIOBOX(VECTOR_PANEL_RAD_BOX, UI_DatasetPanel::_onVectors)
    EVT_BUTTON(SCALAR_PANEL_UPDATE_BUTTON, UI_DatasetPanel::_onUpdate)   
    EVT_COMMAND_SCROLL(MIN_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
    EVT_COMMAND_SCROLL(MAX_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
@@ -395,7 +420,8 @@ void UI_DatasetPanel::_buildDataSets( void )
 
    std::cout<<"numdatasets: "<<_numSteadyStateDataSets<<std::endl;
 
-   CORBA::ULong index = 0;
+   CORBA::ULong indexScalar = 0;
+   CORBA::ULong indexVector = 0;
       
    if (_numSteadyStateDataSets > 0)
    {
@@ -408,8 +434,14 @@ void UI_DatasetPanel::_buildDataSets( void )
       VjObs::obj_p   numScalarsPerDataset = 
             VjObs::obj_p( *_modelData->GetNumberOfScalarsPerDataSet(_activeModIndex) );
       
+      VjObs::obj_p   numVectorsPerDataset = 
+            VjObs::obj_p( *_modelData->GetNumberOfVectorsPerDataSet(_activeModIndex) );
+
       VjObs::scalar_p scalarNames = 
             VjObs::scalar_p( *_modelData->GetScalarNames(_activeModIndex) );  
+
+      VjObs::scalar_p vectorNames = 
+            VjObs::scalar_p( *_modelData->GetVectorNames(_activeModIndex) );  
 
       for (CORBA::ULong i = 0; i<(unsigned int)_numSteadyStateDataSets; i++)
       {
@@ -423,20 +455,31 @@ void UI_DatasetPanel::_buildDataSets( void )
 		   wxString* thisDataScalarNames;
 		   thisDataScalarNames = new wxString[numScalarsPerDataset[i]];
 
+		   wxString* thisDataVectorNames;
+		   thisDataVectorNames = new wxString[numVectorsPerDataset[i]];
+
          for (int k=0; k<numScalarsPerDataset[i]; k++)
          {
-            thisDataScalarNames[k] = scalarNames[index];
-            index++;
+            thisDataScalarNames[k] = scalarNames[indexScalar];
+            indexScalar++;
+         }
+
+         // another for loop to construct per dataset vector names
+         for (int k=0; k<numVectorsPerDataset[i]; k++)
+         {
+            thisDataVectorNames[k] = vectorNames[indexVector];
+            indexVector++;
          }
         
          _DataSets.at( i )->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
          
-        
-
+         _DataSets.at( i )->_buildVectors(numVectorsPerDataset[i], thisDataVectorNames);
+         
          //clean up the names array
          delete [] thisDataScalarNames;                     
+         delete [] thisDataVectorNames;                     
       }
-// Need to add in same functionality for vectors as is done for scalars   
+      // Need to add in same functionality for vectors as is done for scalars   
    } 
 }
 
@@ -465,6 +508,7 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    datasetPanelGroup->Remove(dHeadingBoxSizer);
    delete _RBoxScroll;
    delete [] _scalarNames;
+   delete [] _vectorNames;
    delete _ScalarScroll;
    delete _datasetCombo;
    //delete _visUpdateButton;
@@ -491,13 +535,20 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
 
    //_noScalars = activeDataSet->_numofScalars;
    //for (int p=0; p<_ScalarScroll->_scalarRBox->GetCount(); p++)
-      delete [] _scalarNames;
+   delete [] _scalarNames;
+   delete [] _vectorNames;
+
+   _scalarNames = new wxString[activeDataSet->_numOfScalars];
+   _vectorNames = new wxString[activeDataSet->_numOfVectors];
    
-   _scalarNames = new wxString[activeDataSet->_numofScalars];
-   
-   for (int i=0; i<activeDataSet->_numofScalars; i++)
+   for (int i=0; i<activeDataSet->_numOfScalars; i++)
    {
       _scalarNames[i] = activeDataSet->_Scalars[i]->_thisScalarName;
+   }
+
+   for (int i=0; i<activeDataSet->_numOfVectors; i++)
+   {
+      _vectorNames[i] = activeDataSet->_Vectors[i]->_thisScalarName;
    }
 
    _ScalarScroll->rebuildRBoxes(activeDataSet);
@@ -505,7 +556,6 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
    Refresh();
    SetSize(GetSize());
 
-// Set info for vector names
    /*_col2->Remove(_ScalarScroll);
 
    delete _ScalarScroll;
@@ -789,6 +839,15 @@ void UI_DatasetPanel::_onPolyData(wxCommandEvent& event)
    
 }
 
+void UI_DatasetPanel::_onVectors( wxCommandEvent& event )
+{
+   ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_vectorRBox->GetSelection();         // using zero-based scalar counting
+   ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
+   ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
+   ((UI_Frame *)GetParent())->_tabs->cId  = CHANGE_VECTOR;
+   ((UI_Frame *)GetParent())->_tabs->sendDataArrayToServer();
+}
+
 void UI_DatasetPanel::_onScalars(wxCommandEvent& event)
 {
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
@@ -815,22 +874,3 @@ void UI_DatasetPanel::_onMinMaxSlider(wxScrollEvent& event)
    ((UI_Frame *)GetParent())->_tabs->cId  = CHANGE_SCALAR_RANGE;
    ((UI_Frame *)GetParent())->_tabs->sendDataArrayToServer();
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

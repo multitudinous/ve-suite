@@ -50,14 +50,17 @@ public:
    ~UI_DataSets();
 
    UI_Scalars* thisScalar;
+   UI_Scalars* thisVector;
    std::vector<UI_Scalars*> _Scalars;
+   std::vector<UI_Scalars*> _Vectors;
 
    void _buildScalars(int, wxString*);
+   void _buildVectors(int, wxString*);
 
    wxString _dataSetName;
    int _dataSetType;
-   int _numofScalars;
-
+   int _numOfScalars;
+   int _numOfVectors;
 };
 
 
@@ -114,7 +117,9 @@ public:
 
    int _maxnoScalars;
    int _noScalars;
+
    wxString* _scalarNames;
+   wxString* _vectorNames;
 
    int _no3DMesh;
    int _noVertex;
@@ -185,6 +190,7 @@ protected:
    void _onVertex(wxCommandEvent& event);
    void _onPolyData(wxCommandEvent& event);
    void _onScalars(wxCommandEvent& event);
+   void _onVectors(wxCommandEvent& event);
    void _onUpdate(wxCommandEvent& event);
    void _onMinMaxSlider(wxScrollEvent& event);
 
