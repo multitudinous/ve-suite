@@ -100,8 +100,8 @@ int GasFeedback::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void GasFeedback::GetIPorts(POLY &iports)
 {
-  iports[1]=wxPoint(icon_w*11/100, icon_h*37/75);
-  iports[0]=wxPoint(icon_w*18/100, icon_h*8/75);
+  iports[0]=wxPoint(icon_w*10/60, icon_h*4/45);
+  iports[1]=wxPoint(icon_w*6/60, icon_h*22/45);
   return;
 }
 
@@ -116,7 +116,7 @@ int GasFeedback::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasFeedback::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*87/100, icon_h*37/75);
+  oports[0]=wxPoint(icon_w*52/60, icon_h*22/45);
 }
 
 /////////////////////////////////////////////////////////////////////////////
