@@ -4,6 +4,8 @@
 #include "cfdReadParam.h"
 
 #include "cfdTextureManager.h"
+#include "cfdVolumeVisualization.h"
+
 #include <vector>
 class cfd3DTextureBasedModel{
 public:
@@ -25,6 +27,11 @@ public:
 
    cfdTextureManager* GetActiveScalarTexture();
    cfdTextureManager* GetActiveVectorTexture();
+
+   cfdVolumeVisualization* GetVolumeVisualizaionWithScalar(int whichScalar);
+   cfdVolumeVisualization* GetVolumeVisualizationWithVector(int whichVector);
+   cfdVolumeVisualization* GetVolumeVisualizaionWithScalar(char* name);
+   cfdVolumeVisualization* GetVolumeVisualizationWithVector(char* name);
    
    float* GetScalarBoundingBox();
    float* GetVectorBoundingBox();
@@ -35,6 +42,7 @@ protected:
 
    cfdTextureManager* _activeScalar;
    cfdTextureManager* _activeVector;
+   cfdVolumeVisualization* _volumeVizNode;
 
    std::vector<char*> _scalarNames;
    std::vector<char*> _vectorNames;
@@ -42,6 +50,7 @@ protected:
    std::vector<cfdTextureManager> _vectorDataTextures;
    std::vector<cfdTextureManager> _scalarDataTextures;
    char* _paramFileName;
+   
 };
 
 #endif// CFD_TEXTURE_BASED_MODEL_H

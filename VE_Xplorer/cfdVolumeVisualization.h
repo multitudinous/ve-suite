@@ -27,6 +27,9 @@ public:
    cfdVolumeVisualization(const cfdVolumeVisualization&);
    virtual ~cfdVolumeVisualization();
 
+   enum VisMode{PLAY,STOP};
+
+   void SetPlayMode(VisMode mode);
    void SetStateSet(osg::StateSet* ss);
    void Set3DTextureData(osg::Texture3D* texture);
    void SetBoundingBox(float* bbox);
@@ -36,6 +39,7 @@ public:
    void SetVeboseFlag(bool flag);
    void SetTextureManager(cfdTextureManager* tm);
    void UpdateStateSet(osg::StateSet* ss);
+   void CreateNode();
 
    cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk;}
    
@@ -45,6 +49,7 @@ public:
 
    cfdVolumeVisualization& operator=(const cfdVolumeVisualization& rhs);
 protected:
+   VisMode _mode;
    bool _verbose;
    int _nSlices;
    int _tUnit;

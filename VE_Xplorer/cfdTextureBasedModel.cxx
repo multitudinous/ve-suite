@@ -10,13 +10,14 @@ cfd3DTextureBasedModel::cfd3DTextureBasedModel()
    _activeScalar = 0;
    _activeVector = 0;
    _paramFileName = 0;
+   _volumeVizNode = 0;
 }
 ////////////////////////////////////////////////////////////////////////////////
 cfd3DTextureBasedModel::cfd3DTextureBasedModel(const cfd3DTextureBasedModel& tbm)
 {
    _activeScalar = tbm._activeScalar;
    _activeVector = tbm._activeVector;
-
+   _volumeVizNode = tbm._volumeVizNode;
    int nScalarNames = 0;
    int nVectorNames = 0;
    nScalarNames = tbm._scalarNames.size();
@@ -58,6 +59,22 @@ cfd3DTextureBasedModel::~cfd3DTextureBasedModel()
    _vectorNames.clear();
    _scalarDataTextures.clear();
    _vectorDataTextures.clear();
+   if(_volumeVizNode){
+      delete _volumeVizNode;
+      _volumeVizNode = 0;
+   }
+   if(_activeScalar){
+      delete _activeScalar;
+      _activeScalar = 0;
+   }
+   if(_activeVector){
+      delete _activeVector;
+      _activeVector = 0;
+   }
+   if(_paramFileName){
+      delete _paramFileName;
+      _paramFileName = 0;
+   }
 }
 /////////////////////////////////////////////////////////////////
 void cfd3DTextureBasedModel::SetParameterFileName(char* filename)
@@ -110,15 +127,7 @@ void cfd3DTextureBasedModel::InitializeModel()
 void cfd3DTextureBasedModel::_createTextureManager(char* filename)
 {
    cfdTextureManager tm;
-   std::ifstream fin(filename);
-   char name[256];
-   if(fin.is_open()){
-     int numFiles = 0;
-      fin>>numFiles;
-    for(int i = 0; i < numFiles; i++){
-         fin>>name;    
-         tm.addFieldTextureFromFile(name);
-     }
+   std::ifstream fin(filename);   char name[256];   if(fin.is_open()){       int numFiles = 0;      fin>>numFiles;      for(int i = 0; i < numFiles; i++){         fin>>name;         tm.addFieldTextureFromFile(name);      }
       if(tm.GetDataType(0)==cfdTextureManager::SCALAR){
          AddScalarTextureManager(tm,filename);
       }else{
@@ -213,12 +222,74 @@ cfdTextureManager* cfd3DTextureBasedModel::GetActiveScalarTexture()
 {
    return _activeScalar;
 }
-///////////////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////////
 cfdTextureManager* cfd3DTextureBasedModel::GetActiveVectorTexture()
 {
    return _activeVector;
 }
-   
+////////////////////////////////////////////////////////////////////////////////////////////////
+cfdVolumeVisualization* cfd3DTextureBasedModel::GetVolumeVisualizaionWithScalar(int whichScalar)
+{
+   if(_scalarDataTextures.size()){
+      if(!_volumeVizNode){
+         _volumeVizNode = new cfdVolumeVisualization();
+      }
+      _volumeVizNode->SetNumberofSlices(100);
+      _volumeVizNode->SetSliceAlpha(.5);
+      _volumeVizNode->SetTextureManager(&_scalarDataTextures.at(whichScalar));
+      return _volumeVizNode;
+   }else{
+      std::cout<<"Invalid scalar!!!"<<std::endl;
+      std::cout<<"cfd3DTextureBasedModel::GetVolumeVisualizationWithScalar()"<<std::endl;
+   }
+   return 0;
+}
+////////////////////////////////////////////////////////////////////////////////////////////////
+cfdVolumeVisualization* cfd3DTextureBasedModel::GetVolumeVisualizationWithVector(int whichVector)
+{
+    if(_vectorDataTextures.size()){
+      if(!_volumeVizNode){
+         _volumeVizNode = new cfdVolumeVisualization();
+      }
+      _volumeVizNode->SetNumberofSlices(100);
+      _volumeVizNode->SetSliceAlpha(.5);
+      _volumeVizNode->SetTextureManager(&_vectorDataTextures.at(whichVector));
+      return _volumeVizNode;
+   }else{
+      std::cout<<"Invalid scalar!!!"<<std::endl;
+      std::cout<<"cfd3DTextureBasedModel::GetVolumeVisualizationWithVector()"<<std::endl;
+   }
+   return 0;
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+cfdVolumeVisualization* cfd3DTextureBasedModel::GetVolumeVisualizaionWithScalar(char* name)
+{
+   std::cout<<"GetVolumeVisualizationWithScalar(name) not implemented yet!"<<std::endl;
+   std::cout<<"Use index instead of name!"<<std::endl;
+   return _volumeVizNode;
+   /*if(_vectorDataTextures.size()){
+      if(!_volumeVizNode){
+         _volumeVizNode = new cfdVolumeVisualization();
+      }
+      _volumeVizNode->SetNumberofSlices(100);
+      _volumeVizNode->SetSliceAlpha(.5);
+      _volumeVisNode->SetTextureManager(_vectorDataTextures.at(whichVector);
+      return _volumeVizNode;
+   }else{
+      std::cout<<"Invalid scalar!!!"<<std::endl;
+      std::"cfd3DTextureBasedModel::GetVolumeVisualizationWithVector()"<<std::endl;
+   }
+   return 0;*/
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////
+cfdVolumeVisualization* cfd3DTextureBasedModel::GetVolumeVisualizationWithVector(char* name)
+{
+   std::cout<<"GetVolumeVisualizationWithVector(name) not implemented yet!"<<std::endl;
+   std::cout<<"Use index instead of name!"<<std::endl;
+   return _volumeVizNode;
+}
 /////////////////////////////////////////////////////////////
 cfd3DTextureBasedModel& cfd3DTextureBasedModel::operator=(const
 	                                  cfd3DTextureBasedModel& tbm)
@@ -226,6 +297,7 @@ cfd3DTextureBasedModel& cfd3DTextureBasedModel::operator=(const
    if(&tbm != this){
       _activeScalar = tbm._activeScalar;
       _activeVector = tbm._activeVector;
+      _volumeVizNode = tbm._volumeVizNode;
 
       int nScalarNames = 0;
       int nVectorNames = 0;

@@ -13,7 +13,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _texGenParams  = 0;
    _vSSCbk = 0;
    _utCbk = 0;
-   
+   _mode = PLAY;
    _stateSet  = 0;
    _material  = 0;
    _texture  = 0;
@@ -32,7 +32,7 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _volumeVizNode = rhs._volumeVizNode;
    _texGenParams = rhs._texGenParams;
    _bbox = rhs._bbox;
-   
+   _mode = rhs._mode;
    _stateSet = rhs._stateSet;
    _material = rhs._material;
    _texture = rhs._texture;
@@ -55,6 +55,27 @@ cfdVolumeVisualization::~cfdVolumeVisualization()
    if(_utCbk){
       delete _utCbk;
       _utCbk = 0;
+   }
+}
+//////////////////////////////////////////////////////
+void cfdVolumeVisualization::SetPlayMode(VisMode mode)
+{
+   _mode = mode;
+   if(_tm){
+      switch(_mode){
+         case PLAY:       
+            _tm->setPlayMode(cfdTextureManager::PLAY);
+            break;
+         case STOP:
+         default:
+            _tm->setPlayMode(cfdTextureManager::STOP);
+            break;
+      };
+   }else{
+      std::cout<<"Warning!!!!"<<std::endl;
+      std::cout<<"Invalid cfdTextureManager!"<<std::endl;
+      std::cout<<"Cannot set viz mode of texture manager in:"<<std::endl;
+      std::cout<<"cfdVolumeVisualization::SetPlayMode()"<<std::endl;
    }
 }
 //////////////////////////////////////////////////////////////////////
@@ -450,6 +471,11 @@ void cfdVolumeVisualization::_createVolumeBillboardSlices()
    //this will change w/ callback so default the z slices
    _slices->addDrawable(_posZSlices.get());
    
+}
+/////////////////////////////////////////
+void cfdVolumeVisualization::CreateNode()
+{
+   _buildGraph();
 }
 //////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()

@@ -15,10 +15,12 @@ public:
    virtual ~cfdTextureManager();
 
    enum DataType{SCALAR,VECTOR};
+   enum PlayMode{PLAY,STOP};
 
    //add a vector field from a file
    void addFieldTextureFromFile(char* textureFile);
 
+   void setPlayMode(PlayMode mode){_mode = mode;}
    //forwardBackward == -1 backward
    //forwardBackward == 1 forward
    void setDirection(int forwardBackward);
@@ -58,5 +60,6 @@ protected:
    std::vector<unsigned char*> _dataFields;
    double _prevTime;
    int _direction;
+   PlayMode _mode;
 };
 #endif //_BIV_TEXTURE_MANAGER_H_

@@ -13,6 +13,7 @@ cfdTextureManager::cfdTextureManager()
    _transientRange[0] = 1000000;
    _transientRange[1] = -1000000;
    _direction = 1;
+   _mode = PLAY;
    
 }
 ////////////////////////////////////////////////////////
@@ -30,7 +31,7 @@ cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
       _dataFields.push_back(tm._dataFields[i]);   
       _types.push_back(tm._types.at(i));
    }
-   
+   _mode = tm._mode;
    _curField = tm._curField;
    _prevTime = tm._prevTime;
    _resolution = new int[3];
@@ -198,12 +199,13 @@ unsigned char* cfdTextureManager::getNextField(/*int plusNeg*/)
 //////////////////////////////////////////////////////////////
 int cfdTextureManager::timeToUpdate(double curTime,double delay)
 {
-   if(curTime - _prevTime >= delay){
-      _prevTime = curTime;
-      return 1;
-   }else{
-      return 0;
+   if(_mode == PLAY){
+     if(curTime - _prevTime >= delay){
+         _prevTime = curTime;
+         return 1;
+     }
    }
+   return 0;
 }
 ///////////////////////////////////////////////////////////////////
 //equal operator                                                 //
@@ -234,6 +236,7 @@ cfdTextureManager& cfdTextureManager::operator=(const cfdTextureManager& tm)
       _range[0] = tm._range[0];
       _range[1] = tm._range[1];
       _direction = tm._direction;
+      _mode = tm._mode;
    }
    return *this;
 
