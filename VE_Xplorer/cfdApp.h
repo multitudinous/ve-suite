@@ -97,7 +97,7 @@ class cfdApp: public vrj::OsgApp
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
 #elif _OPENSG
 #endif
-      
+     
 
       // Function called by the DEFAULT drawChan function 
       // before clearing the channel
@@ -150,6 +150,20 @@ class cfdApp: public vrj::OsgApp
       int   lastFrame;
    private:
       char * filein_name;
+	  
+	  //web interface stuff for writing the image file
+	  //to be viewed over the web
+#ifdef _WEB_INTERFACE
+	bool runWebImageSaveThread;
+	bool readyToWriteWebImage;
+	bool writingWebImageNow;
+	int webImageWidth;
+	int webImageHeight;
+	vpr::Thread* writeWebImageFileThread;			//thread in which we write to the file
+	char* webImagePixelArray;
+	void writeWebImageFile(void*);
+	void captureWebImage();
+#endif 
 };
 
 #endif

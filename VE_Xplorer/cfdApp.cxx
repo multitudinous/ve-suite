@@ -82,7 +82,14 @@
 /// C/C++ libraries
 #include <iostream>
 //#include <omp.h>
+
 #include <vrj/Kernel/Kernel.h>
+
+//web interface stuff
+#ifdef _WEB_INTERFACE
+#include <corona.h>
+#include <vrj/Draw/OGL/GlApp.h>
+#endif	//_WEB_INTERFACE
 
 cfdApp::cfdApp( void )
 {
@@ -91,6 +98,8 @@ cfdApp::cfdApp( void )
    _frameNumber = 0;
    _pbuffer = 0;
 #endif
+
+
 }
 
 void cfdApp::exit()
@@ -121,6 +130,14 @@ void cfdApp::exit()
         << "deleting this->_vjobsWrapper" << std::endl << vprDEBUG_FLUSH;
       delete this->_vjobsWrapper;
    }
+   
+#ifdef _WEB_INTERFACE
+	runWebImageSaveThread=false;
+	vpr::System::msleep( 1000 );  // one-second delay
+	delete writeWebImageFileThread;
+	if(readyToWriteWebImage)	//if we've captured the pixels, but didn't write them out
+		delete[] webImagePixelArray;	//delete the pixel array
+#endif  //_WEB_INTERFACE
 }
 
 #ifdef _PERFORMER
@@ -262,6 +279,12 @@ inline void cfdApp::init( )
 #ifdef _OSG
    initScene();
 #endif
+
+#ifdef _WEB_INTERFACE
+	runWebImageSaveThread = true;
+	readyToWriteWebImage = false;
+	writingWebImageNow = false;
+#endif   //_WEB_INTERFACE
 }
 
 void cfdApp::SetWrapper( cfdVjObsWrapper* input )
@@ -389,7 +412,11 @@ void cfdApp::postFrame()
 {
 
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
-   
+#ifdef _WEB_INTERfACE
+	
+
+
+#endif  //_WEB_INTERFACE
    // if transient data is being displayed, then update gui progress bar
   /* if (  this->_modelHandler->GetActiveSequence() )
    {
@@ -410,3 +437,49 @@ void cfdApp::postFrame()
    this->_vjobsWrapper->GetCfdStateVariables();
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
+
+//web interface thread for writing the file
+#ifdef _WEB_INTERFACE
+
+void cfdApp::captureWebImage()
+{
+	if(writingWebImageNow || readyToWriteWebImage) return;
+	int dummyOx=0;
+	int dummyOy=0;
+
+	printf("Reading viewport size...\n");
+	//get the viewport height and width
+	vrj::GlDrawManager::instance()->currentUserData()->getGlWindow()->
+		getOriginSize(dummyOx, dummyOy, webImageWidth, webImageHeight);
+	printf("Copying frame buffer %ix%i.......\n", frameWidth, frameHeight);
+	captureNextFrame=false;		//we're not going to capture next time around
+	webImagePixelArray=new char[frameHeight*frameWidth*3];		//create an array to store the data
+	glReadPixels(0, 0, webImageWidth, webImageHeight, GL_RGB, GL_UNSIGNED_BYTE, webImagePixelArray);	//copy from the framebuffer
+	readyToWriteWebImage=true;		
+
+}
+
+
+void cfdApp::writeImageFileForWeb(void*)
+{
+	while(runImageSaveThread)
+	{
+		vpr::System::msleep( 500 );  // half-second delay
+		if(readyToWriteWebImage)
+		{
+			readyToWriteWebImage=false;
+			//let's try saving the image with Corona
+			Image* frameCap=CreateImage(frameWidth, frameHeight, PF_R8G8B8, (void*)webImagePixelArray);
+			frameCap=FlipImage(frameCap, CA_X);
+			if(!SaveImage("../../public_html/PowerPlant/VE/dump.png", FF_PNG, frameCap))
+				printf("error saving image\n");
+			else printf("Image saved successfully.\n");
+			delete frameCap;
+			delete [] webImagePixelArray;										//delete our array
+			printf("All done!\n");
+		}
+	}
+
+}
+
+#endif   //_WEB_INTERFACE
