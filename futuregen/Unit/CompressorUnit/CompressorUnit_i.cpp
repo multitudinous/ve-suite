@@ -37,7 +37,7 @@ void Body_Unit_i::StartCalc (
 
     if (string(igas)=="")
       {
-	error("Missing input input.");
+	error("Compressor: Missing input input.");
 	return;
       }
 
@@ -51,7 +51,7 @@ void Body_Unit_i::StartCalc (
 
     // Check incoming
     if(gas_in_data->gas_composite.T <= 200 || gas_in_data->gas_composite.T >= 3000) {
-      warning("Incoming gas temperature out of range.");
+      warning("Compressor: Incoming gas temperature out of range.");
     }
     
     Gas *gas_out_data = new Gas(); 
@@ -71,7 +71,7 @@ void Body_Unit_i::StartCalc (
     }
 
     if(poutlet<0) {
-      error("Pressure drop too large.");
+      error("Compressor: Pressure drop too large.");
       return;
     }
 
@@ -103,7 +103,7 @@ void Body_Unit_i::StartCalc (
 	// now manually set mole fractions (this again will be replaced by scirun code)
 	composition[(*iter).second] = gas_in_data->gas_composite.comp_specie[iter2->second];
       } else {
-	error("Species " + iter2->first + " not found - critical error!!!");
+	error("Compressor: Species " + iter2->first + " not found - critical error!!!");
 	return;
       }
     }
@@ -114,7 +114,7 @@ void Body_Unit_i::StartCalc (
   REAL ts_exit = tinlet;  // used for initial guess
   
   if(!thm.find_temperature(ts_exit, total_entropy, composition, poutlet)) {
-    error("Convergence problem - finding temp from entropy.");
+    error("Compressor: Convergence problem - finding temp from entropy.");
     return;
   }
 
@@ -136,7 +136,7 @@ void Body_Unit_i::StartCalc (
   REAL cp_mix;
   
   if(!thm.find_temperature(texit, cp_mix, h2a, composition)){
-    warning("Convergence problem - temp from enthalpy.");
+    warning("Compressor: Convergence problem - temp from enthalpy.");
     return;
   }
 
@@ -155,7 +155,7 @@ void Body_Unit_i::StartCalc (
   executive_->SetExportData(id_, 0, ogas);
   
   if(gas_out_data->gas_composite.T <= 200 || gas_out_data->gas_composite.T >= 3000) {
-    warning("Outgoing gas temperature out of range");
+    warning("Compressor: Outgoing gas temperature out of range");
   }
 
   //Here is the result table

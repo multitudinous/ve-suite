@@ -38,7 +38,7 @@ void Body_Unit_i::StartCalc (
 
     if (string(igas)=="")
       {
-	error("Missing input input.");
+	error("Chlorine Bed: Missing input input.");
 	return;
       }
 
@@ -52,10 +52,10 @@ void Body_Unit_i::StartCalc (
 
     // Check incoming
     if(gas_in_data->gas_composite.T <= 500 || gas_in_data->gas_composite.T >= 1100) {
-      warning("Incoming gas temperature out of range.");
+      warning("Chlorine Bed: Incoming gas temperature out of range.");
     }
     if(gas_in_data->gas_composite.getFrac("HCL")<=0) {
-      warning("No HCL in gas stream.\n");
+      warning("Chlorine Bed: No HCL in gas stream.\n");
     }
 
     Gas *gas_out_data = new Gas;
@@ -86,7 +86,7 @@ void Body_Unit_i::StartCalc (
     }
     
     if (!Chlorine_Guard.calculate(*gas_in_data, *gas_out_data)) {
-      error("Error in model calculate\n");
+      error("Chlorine Bed: Error in model calculate\n");
       
       return;
     }
@@ -110,7 +110,7 @@ void Body_Unit_i::StartCalc (
     executive_->SetExportData(id_, 0, ogas);
     
     if(gas_out_data->gas_composite.T <= 500 || gas_out_data->gas_composite.T >= 1100) {
-      warning("Outgoing gas temperature out of range");
+      warning("Chlorine Bed: Outgoing gas temperature out of range");
     }
 
     p.intfs.resize(1);

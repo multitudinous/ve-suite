@@ -40,7 +40,7 @@ void Body_Unit_i::StartCalc (
 
     if (string(igas)=="")
       {
-	error("Missing input input.");
+	error("ASU: Missing input input.");
 	return;
       }
 
@@ -56,7 +56,7 @@ void Body_Unit_i::StartCalc (
     
     // Check incoming
     if(AirIn->gas_composite.T <= 225 || AirIn->gas_composite.T >= 1000) {
-      warning("Incoming Gas temperature out of range.");
+      warning("ASU: Incoming Gas temperature out of range.");
     }
     
     Air_separation_unit asu_obj;
@@ -88,10 +88,10 @@ void Body_Unit_i::StartCalc (
     
     // Check outgoing
     if(O2stream->gas_composite.T <= 25 || O2stream->gas_composite.T >= 500) {
-      warning("O2 Gas temperature out of range.");
+      warning("ASU: O2 Gas temperature out of range.");
     }
     if(N2stream->gas_composite.T <= 25 || N2stream->gas_composite.T >= 500) {
-      warning("N2 Gas temperature out of range.");
+      warning("ASU: N2 Gas temperature out of range.");
     }    
     
     

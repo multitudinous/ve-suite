@@ -41,7 +41,7 @@ void Body_Unit_i::StartCalc (
     igas = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
     if (string(igas)=="")
       {
-	error("Missing input input.");
+	error("Cyclone: Missing input input.");
 	return;
       }
     p.SetSysId("gas_in.xml");
@@ -54,7 +54,7 @@ void Body_Unit_i::StartCalc (
     
     // Check incoming
     if(gas_in_data->gas_composite.T <= 200 || gas_in_data->gas_composite.T >= 3000) {
-      warning("Incoming gas temperature out of range.");
+      warning("Cyclone: Incoming gas temperature out of range.");
     }    
 
     float cyclone_diameter = diameter; // 2.0
@@ -205,7 +205,7 @@ void Body_Unit_i::StartCalc (
     executive_->SetExportData(id_, 1, ogas[1]);
 
     if(gas_out_data->gas_composite.T <= 200 || gas_out_data->gas_composite.T >= 3000) {
-      warning("Outgoing gas temperature out of range");
+      warning("Cyclone: Outgoing gas temperature out of range");
     }
 
     p.intfs.resize(1);

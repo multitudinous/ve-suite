@@ -53,7 +53,7 @@ void Body_Unit_i::StartCalc (
 
   if (std::string(o2gas)=="")
     {
-      error("Missing o2");
+      error("Gasifier0D: Missing o2");
       return;
     }
   
@@ -75,7 +75,7 @@ void Body_Unit_i::StartCalc (
 
   if (std::string(ipart)=="")
     {
-      warning("No particle recycle stream");
+      warning("Gasifier0D: No particle recycle stream");
     }
   else
     {
@@ -96,7 +96,7 @@ void Body_Unit_i::StartCalc (
   if (std::string(stage2gas)=="")
     {
       if (_stage!=1)
-	warning("No 2nd stage gas stream.");
+	warning("Gasifier0D: No 2nd stage gas stream.");
     }
   else
     {
@@ -122,8 +122,8 @@ void Body_Unit_i::StartCalc (
     gas_model._ox_temp[0] = ox_in->gas_composite.T;
     gas_model._ox_temp[1] = ox_in->gas_composite.T;
     gas_model._ox_temp[2] = 300.0;
-    gas_model._ox_flow[0] = ox_in->gas_composite.M;
-    gas_model._ox_flow[1] = ox_in->gas_composite.M;
+    gas_model._ox_flow[0] = ox_in->gas_composite.M / 2;
+    gas_model._ox_flow[1] = ox_in->gas_composite.M / 2;
     gas_model._ox_flow[2] = 0.0;
 
     if(stage2in) {
@@ -161,7 +161,7 @@ void Body_Unit_i::StartCalc (
 
     itp = part_in->particle.find("CHAR");
     if(itp == part_in->particle.end()) {
-      error("CHAR missing as particle component");
+      error("Gasifier0D: CHAR missing as particle component");
       return_state = 1;
       return;
     }
@@ -171,7 +171,7 @@ void Body_Unit_i::StartCalc (
 
     itp = part_in->particle.find("ASH");
     if(itp == part_in->particle.end()) {
-      error("ASH missing as particle component");
+      error("Gasifier0D: ASH missing as particle component");
       return_state = 1;
       return;
     }
@@ -179,24 +179,24 @@ void Body_Unit_i::StartCalc (
     
     itp = part_in->particle.find("COAL");
     if(itp == part_in->particle.end()) {
-      error("COAL missing as particle component");
+      error("Gasifier0D: COAL missing as particle component");
       return_state = 1;
       return;
     }
     if(part_in->gas_composite.comp_particle[itp->second]>0.0) {
-      error("NO raw coal can exist in recycled char");
+      error("Gasifier0D: NO raw coal can exist in recycled char");
       return_state = 1;
       return;
     }
 
     itp = part_in->particle.find("WATER");
     if(itp == part_in->particle.end()) {
-      error("WATER missing as particle component");
+      error("Gasifier0D: WATER missing as particle component");
       return_state = 1;
       return;
     }
     if(part_in->gas_composite.comp_particle[itp->second]>0.0) {
-      error("NO water can exist in recycled char");
+      error("Gasifier0D: NO water can exist in recycled char");
       return_state = 1;
       return;
     }

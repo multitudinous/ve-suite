@@ -38,7 +38,7 @@ void Body_Unit_i::StartCalc (
 
     if (string(igas)=="")
       {
-	error("Missing input input.");
+	error("Bulk Desulfurizer: Missing input input.");
 	return;
       }
 
@@ -52,13 +52,13 @@ void Body_Unit_i::StartCalc (
 
     // Check incoming
     if(gas_in_data->gas_composite.T <= 200 || gas_in_data->gas_composite.T >= 3000) {
-      warning("Incoming gas temperature out of range.");
+      warning("Bulk Desulfurizer: Incoming gas temperature out of range.");
     }
     if(gas_in_data->gas_composite.getFrac("H2S")<=0) {
-      warning("No H2S in gas stream.\n");
+      warning("Bulk Desulfurizer: No H2S in gas stream.\n");
     }
     if(gas_in_data->gas_composite.getFrac("COS")<=0) {
-      warning("No COS in gas stream.\n");
+      warning("Bulk Desulfurizer: No COS in gas stream.\n");
     }
 
 
@@ -97,7 +97,7 @@ void Body_Unit_i::StartCalc (
     }
     
     if (!Bulk_Desulf.calculate(*gas_in_data, *gas_out_data)) {
-    error("Error in model calculate.\n");
+    error("Bulk Desulfurizer: Error in model calculate.\n");
     return;
     }
     
@@ -124,7 +124,7 @@ void Body_Unit_i::StartCalc (
     executive_->SetExportData(id_, 0, ogas);
     
     if(gas_out_data->gas_composite.T <= 500 || gas_out_data->gas_composite.T >= 1100) {
-      warning("Outgoing gas temperature out of range");
+      warning("Bulk Desulfurizer: Outgoing gas temperature out of range");
     }
 
     p.intfs.resize(1);

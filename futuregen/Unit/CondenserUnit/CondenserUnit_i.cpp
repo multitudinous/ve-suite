@@ -39,7 +39,7 @@ void Body_Unit_i::StartCalc (
     
     if (string(iwater1)=="" || string(iwater2)=="")
       {
-	error("Missing input input.");
+	error("Condenser: Missing input input.");
 	return;
       }
 
@@ -60,7 +60,7 @@ void Body_Unit_i::StartCalc (
     
     // Check incoming
     if(water_in_data1->T <= 200 || water_in_data1->T >= 3000) {
-      warning("Incoming water temperature out of range.");
+      warning("Condenser: Incoming water temperature out of range.");
     }
     
   // get sat_temp and hfg
@@ -111,7 +111,7 @@ void Body_Unit_i::StartCalc (
     // incoming water_in_data1 must have some vapor
     
     if(quality1==0.0){
-      error("Incoming steam has no steam.");
+      error("Condenser: Incoming steam has no steam.");
       return;
     }
     
@@ -268,7 +268,7 @@ void Body_Unit_i::StartCalc (
     water_out_data2->H = enthalpy2;
     water_out_data2->Q = quality2;
     if(quality2>0.0){
-      warning("Internal cooling water has reached saturation. Try to increase flow.");
+      warning("Condenser: Internal cooling water has reached saturation. Try to increase flow.");
     }
     
     // SEND OUTGOING DATA   

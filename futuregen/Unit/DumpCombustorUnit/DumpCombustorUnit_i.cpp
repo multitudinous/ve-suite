@@ -39,7 +39,7 @@ void Body_Unit_i::StartCalc (
 
     if (string(igas)=="")
       {
-	error("Missing input input.");
+	error("Dump Combustor: Missing input input.");
 	return;
       }
 
@@ -52,7 +52,7 @@ void Body_Unit_i::StartCalc (
     gashelper.IntToGas(&(p.intfs[0]), *gasin);
     // Check incoming
     if(gasin->gas_composite.T <= 750 || gasin->gas_composite.T >= 1600) {
-      warning("Incoming Gas temperature out of range.");
+      warning("Dump Combustor: Incoming Gas temperature out of range.");
     }
 
     summaries.clear();
@@ -79,9 +79,9 @@ void Body_Unit_i::StartCalc (
       string s1;
       for(i=0; i < exit_condition.first.size(); i++) 
 	if(exit_condition.first[i] == 1)
-	  warning(exit_condition.second[i]);
+	  warning("Dump Combustor: " + exit_condition.second[i]);
 	else {
-	  error(exit_condition.second[i]);
+	  error("Dump Combustor: " + exit_condition.second[i]);
 	}
     }
 

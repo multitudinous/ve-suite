@@ -488,7 +488,7 @@ void Body_Unit_i::error (std::string msg)
   bool rv;
   pack.SetPackName("result");
   pack.SetSysId("result.xml");
-  msg+="\n";
+  msg = "Heat Exchanger: " + msg + "\n";
   executive_->SetModuleMessage(id_, msg.c_str());
   pack.intfs.clear();
   result = pack.Save(rv);
@@ -498,7 +498,7 @@ void Body_Unit_i::error (std::string msg)
 
 void Body_Unit_i::warning (std::string msg)
 {
-  msg+="\n";
+  msg = "Heat Exchanger: " + msg + "\n";
   executive_->SetModuleMessage(id_, msg.c_str());
 }
 // Interpolates to find f(xt) along the line defined by the other four variables.

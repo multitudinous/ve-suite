@@ -39,7 +39,7 @@ void Body_Unit_i::StartCalc (
 
     if (string(igas)=="")
       {
-	error("Missing input input.");
+	error("Catalytic Combustor: Missing input input.");
 	return;
       }
 
@@ -63,7 +63,7 @@ void Body_Unit_i::StartCalc (
     cat_comb cat(surf_mech_name);
   
     if(cat.fError) {
-      error("Error Initializing Surface Mechanism");
+      error("Catalytic Combustor: Error Initializing Surface Mechanism");
       return;
     }
     
@@ -105,7 +105,7 @@ void Body_Unit_i::StartCalc (
     exit_condition = cat.calculate(*gas_in, *gas_out);
     
     if(exit_condition.first.size() != exit_condition.second.size()) {
-      error("\nError following calculate");
+      error("Catalytic Combustor: Error following calculate");
       return;
     }
     if(!exit_condition.first.size() == 0) {
@@ -114,9 +114,9 @@ void Body_Unit_i::StartCalc (
       for(i=0; i <(int)exit_condition.first.size(); i++)
 	if (exit_condition.first[i] != 1) {
 	  err_count++;
-	  error(exit_condition.second[i]);
+	  error("Catalytic Combustor:" + exit_condition.second[i]);
 	} else {
-	  warning(exit_condition.second[i]); 
+	  warning("Catalytic Combustor:" + exit_condition.second[i]); 
 	}
       if(err_count) 
 	return;

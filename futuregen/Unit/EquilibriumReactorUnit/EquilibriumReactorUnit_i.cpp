@@ -230,7 +230,7 @@ void Body_Unit_i::error (std::string msg)
   bool rv;
   p.SetPackName("result");
   p.SetSysId("result.xml");
-  msg+="\n";
+  msg = "Equilibrium Reactor: " + msg + "\n";
   executive_->SetModuleMessage(id_, msg.c_str());
   p.intfs.clear();
   result = p.Save(rv);
@@ -240,6 +240,6 @@ void Body_Unit_i::error (std::string msg)
 
 void Body_Unit_i::warning (std::string msg)
 {
-  msg+="\n";
+  msg = "Equilibrium Reactor: " + msg + "\n";
   executive_->SetModuleMessage(id_, msg.c_str());
 }
