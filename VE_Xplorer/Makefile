@@ -183,7 +183,6 @@ SRCS=\
    cfdVector.cxx \
    cfdVectors.cxx \
    cfdVjObsWrapper.cxx \
-   cfdVolumeSliceSwitchCallback.cpp \
    cfdVolumeVisualization.cpp \
    cfdVolumeVisNodeHandler.cxx \
    cfdVEXplorer.cxx \
