@@ -32,6 +32,12 @@
 #include "cfdVectorBase.h"
 #include <cmath>
 #include "cfdDataSet.h"
+
+#ifdef _CFDCOMMANDARRAY
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+#endif //_CFDCOMMANDARRAY
+
 #include <vpr/Util/Debug.h>
 
 #include <vtkPolyData.h>
@@ -92,6 +98,62 @@ cfdVectorBase::~cfdVectorBase()
    this->actor->Delete();
    this->actor = NULL;
 }
+
+#ifdef _CFDCOMMANDARRAY
+bool cfdVectorBase::CheckCommandId( cfdCommandArray * _cfdCommandArray )
+{
+   if ( _cfdCommandArray->cfdCommandArray::cfdId == CHANGE_VECTOR_THRESHOLD )
+   { 
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_THRESHOLD" 
+         << ", min = " << _cfdCommandArray->cfdMin
+         << ", max = " << _cfdCommandArray->cfdMax
+         << std::endl << vprDEBUG_FLUSH;
+
+      cfdVectorBase::SetThreshHoldPercentages( _cfdCommandArray->cfdMin,
+                                               _cfdCommandArray->cfdMax );
+      cfdVectorBase::UpdateThreshHoldValues();
+
+      return true;
+   }
+   else if ( _cfdCommandArray->cfdId == CHANGE_VECTOR_MASK_RATIO )
+   { 
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_MASK_RATIO" 
+         << ", value = " << _cfdCommandArray->cfdIso_value
+         << std::endl << vprDEBUG_FLUSH;
+
+      cfdVectorBase::SetVectorRatioFactor( _cfdCommandArray->cfdIso_value );
+
+      return true;
+   }
+   else if ( _cfdCommandArray->cfdId == CHANGE_VECTOR_SCALE )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_SCALE" 
+         << ", value = " << _cfdCommandArray->cfdIso_value
+         << std::endl << vprDEBUG_FLUSH;
+
+      cfdObjects::SetVectorScale( _cfdCommandArray->cfdIso_value );
+
+      return true;
+   }
+   else if ( _cfdCommandArray->cfdId == SCALE_BY_VECTOR_MAGNITUDE )
+   { 
+      vprDEBUG(vprDBG_ALL,0)
+         << "SCALE_BY_VECTOR_MAGNITUDE = " << _cfdCommandArray->cfdIso_value
+         << std::endl << vprDEBUG_FLUSH;
+
+      cfdVectorBase::SetScaleByVectorFlag( _cfdCommandArray->cfdIso_value );
+
+      return true;
+   }
+
+   return false;
+}
+
+void cfdVectorBase::UpdateCommand()
+{
+   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+}
+#endif //_CFDCOMMANDARRAY
 
 void cfdVectorBase::SetGlyphWithThreshold()
 {

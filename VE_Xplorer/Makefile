@@ -4,13 +4,16 @@
 #
 #_______________________________CUSTOM OPTIONS__________________________________
 #
+# Uncomment the following line to use CFDCOMMANDARRAY.
+#EXTRA_CXXFLAGS+= -D_CFDCOMMANDARRAY
+#
 # Uncomment this line if you want to build a cluster juggler app
 #CLUSTER_APP = TRUE
 #
 # Uncomment the following line to use cfdSequence instead of pfSequence.
 # (It is automatically turned on for cluster builds.)
 #EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
-#__________________________________________________________
+#_______________________________________________________________________________
 
 CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 
@@ -135,6 +138,13 @@ SRCS=\
    cfdIHCCGauge.cxx \
    cfdIHCCContour.cxx \
    cfd1DTextInput.cxx
+
+ifdef _CFDCOMMANDARRAY
+SRCS+= \
+   cfdGlobalBase.cxx \
+   cfdCommandObjects.cxx \
+   cfdCommandArray.cxx
+endif
 
 #   cfdDrawManager.cxx
 
@@ -348,7 +358,6 @@ install:
 
 # in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
 CLEAN_FILES+= $(APP_NAME)
-#CLEAN_FILES+= $(APP_NAME) *.d
 #CLEAN_FILES+=	CorbaManager.o \
       $(addprefix $(srcdir)/, $(IDL_CXX_FILES))		\
 		$(addprefix $(srcdir)/networktest/, $(IDL_JAVA_FILES))	\

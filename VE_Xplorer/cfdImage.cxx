@@ -32,6 +32,11 @@
 #include "cfdImage.h"
 #include "cfdObjects.h"
 #include "cfdDataSet.h"
+
+#ifdef _CFDCOMMANDARRAY
+#include "cfdApp.h"
+#endif //_CFDCOMMANDARRAY
+
 #include "fileIO.h"
 
 #include <vtkPlaneSource.h>
@@ -216,13 +221,26 @@ cfdImage::~cfdImage()
    if (this->actor != NULL )     this->actor->Delete();
 }
 
-vtkActor * cfdImage::GetActor( )
-{
-    return this->actor;
-}
-
 void cfdImage::Update( void )
 {
    //this->actor->Print(cout);
    this->updateFlag = true;
 }
+
+#ifdef _CFDCOMMANDARRAY
+bool cfdImage::CheckCommandId( cfdApp * _cfdApp )
+{
+   return false;
+}
+
+void cfdImage::UpdateCommand()
+{
+   cerr << "doing nothing in cfdImage::UpdateCommand()" << endl;
+}
+#endif //_CFDCOMMANDARRAY
+
+vtkActor * cfdImage::GetActor()
+{
+    return this->actor;
+}
+

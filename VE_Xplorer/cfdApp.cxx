@@ -50,9 +50,11 @@
 #include "cfdTransientSet.h"
 //#include "cfdDrawManager.h"
 //#include "cfdDashboard.h"
+//
 #ifdef _TAO
 #include "cfdExecutive.h"
-#endif
+#endif //_TAO
+
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 #include <vpr/Thread/Thread.h>
@@ -74,7 +76,7 @@
 
 #ifdef _CLUSTER
 int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
-#endif
+#endif // _CLUSTER
 
 inline cfdApp::cfdApp( )//vrj::Kernel* kern ) 
 //   : PfApp(kern)//, mMyDrawManager( new cfdDrawManager() )
@@ -127,6 +129,7 @@ inline cfdApp::cfdApp( )//vrj::Kernel* kern )
    //biv -- the writeTraverser
    _cfdWT = 0;
 }
+
 #ifdef TABLET
 void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_ptr orb, PortableServer::POA_ptr poa )
 {
@@ -134,7 +137,8 @@ void cfdApp::SetCORBAVariables( CosNaming::NamingContext_ptr naming, CORBA::ORB_
    this->orb = CORBA::ORB::_duplicate( orb );
    this->poa = PortableServer::POA::_duplicate( poa );
 }
-#endif
+#endif // TABLET
+
 void cfdApp::exit()
 {
    // we don't have a destructor, so delete items here...
@@ -420,7 +424,8 @@ void cfdApp::exit()
         << "deleting this->executive" << std::endl << vprDEBUG_FLUSH;
       delete this->executive;
    }
-#endif
+#endif // _TAO
+
 #ifdef TABLET
    CosNaming::Name name(1);
 
@@ -428,7 +433,7 @@ void cfdApp::exit()
    name[0].id   = (const char*) "Master";
    name[0].kind = (const char*) "VE_Xplorer";
    
-   try	
+   try
    {
       naming_context->unbind( name );
       //naming_context->destroy();
@@ -447,7 +452,7 @@ void cfdApp::exit()
    vprDEBUG(vprDBG_ALL,0) 
      << " destroying orb" << std::endl << vprDEBUG_FLUSH;
    orb->destroy();
-#endif
+#endif // TABLET
    vprDEBUG(vprDBG_ALL,0) 
      << " pfExit" << std::endl << vprDEBUG_FLUSH;
    pfExit();
@@ -468,7 +473,7 @@ inline void cfdApp::init( )
   
    //cluster::ApplicationData* hack = dynamic_cast<cluster::ApplicationData*>(&(*this->mStates));
    //hack->setIsLocal(hostname == cluster::ClusterNetwork::instance()->getLocalHostname());
-#endif
+#endif // _CLUSTER
 }
 
 
@@ -616,14 +621,14 @@ inline void cfdApp::initScene( )
    std::cout << "|          Compiled by an OpenMP-compliant implementation           |" << std::endl;
    std::cout << "|===================================================================|" << std::endl;
    std::cout << "|                                                                   |" << std::endl;
-# endif
+# endif // _OPENMP
 
 # ifdef _IRIX
    std::cout << "|   Performer Arena Size *** " << pfGetSharedArenaSize()/ (1024 * 1024) << std::endl;
-	std::cout << "|   Shared arena base is *** " << pfGetSharedArenaBase() << std::endl;
+   std::cout << "|   Shared arena base is *** " << pfGetSharedArenaBase() << std::endl;
    amallopt(M_MXCHK,10000000,pfGetSharedArena());
    amallopt(M_FREEHD, 1, pfGetSharedArena() );
-# endif
+# endif // _IRIX
 
    //
    // Establish Iris Performer Scenegraph.
@@ -706,7 +711,7 @@ inline void cfdApp::initScene( )
 #ifdef _TAO
    std::cout << "|  2. Initializing.................................... cfdExecutive |" << std::endl;
    this->executive = new cfdExecutive( naming_context.in(), this->worldDCS );
-#endif
+#endif // _TAO
    printf("|   Enter VE_Xplorer parameter filename: ");
    scanf("%s",filein_name);
    //std::cout << "filein_name: " << filein_name << std::endl;
@@ -894,7 +899,7 @@ inline void cfdApp::initScene( )
    this->changeGeometry = false;
 #ifdef TABLET
    this->SetCfdReadParam( this->paramReader );
-#endif
+#endif // TABLET
    std::cout << "| ***************************************************************** |" << std::endl;
    this->nav->Initialize( this->paramReader->delta, this->worldDCS );
    this->nav->SetWorldLocation( this->nav->worldTrans );
@@ -927,6 +932,9 @@ inline void cfdApp::initScene( )
    }
 
    this->menu = new cfdMenu( menuFile, menuConfigFile );
+#ifdef _CFDCOMMANDARRAY
+   this->commandList.push_back( this->menu );
+#endif //_CFDCOMMANDARRAY
 
    this->rootNode->addChild( this->menu->GetpfDCS() );
    this->menuB = true;
@@ -1236,7 +1244,7 @@ inline void cfdApp::initScene( )
          this->animStreamer->SetObjectType( ANIMATED_STREAMLINES );
          this->dataList.push_back( this->animStreamer );     
 
-	      //
+         //
          // Initiate the animated Images.
          //
          if ( this->paramReader->frames != 0 )
@@ -1554,12 +1562,12 @@ inline void cfdApp::initScene( )
    this->CreateGeometryInfo();
    this->CreateDatasetInfo();
    this->CreateTeacherInfo();
-#endif
+#endif // _TAO
 
 #ifdef TABLET
    this->pushDataToStateInfo();
    this->GetCfdStateVariables();
-#endif
+#endif // TABLET
 }
 
 inline void cfdApp::flush_text(char * t)
@@ -1694,9 +1702,8 @@ void cfdApp::preFrame( void )
    vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
 
 #ifdef _CLUSTER
-   // CLuster Stuff
    this->GetUpdateClusterStateVariables();
-#endif
+#endif // _CLUSTER
 
    // Update Navigation variables
    this->nav->SetDataValues(this->cfdId, this->cfdIso_value);
@@ -1739,6 +1746,16 @@ void cfdApp::preFrame( void )
    }
 
    int i;
+#ifdef _CFDCOMMANDARRAY
+   for ( i = 0; i < (int)this->commandList.size(); i ++ )
+   {
+      bool commandApplies = this->commandList[ i ]
+                                ->CheckCommandId( this->cfdCommandArray );
+      if ( commandApplies )
+         break;
+   }
+   this->setId( -1 );
+#endif //_CFDCOMMANDARRAY
 
    if ( this->nav->digital[0]->getData() == gadget::Digital::TOGGLE_ON && 
         this->cursorId == NONE )
@@ -2317,7 +2334,7 @@ void cfdApp::preFrame( void )
       {
          this->executive->SetCalculationsFlag( true );
       }
-#endif
+#endif // _TAO
       this->setId( -1 );
    }
    else if ( this->cfdId == CHANGE_VECTOR )
@@ -2332,6 +2349,7 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
+#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == CHANGE_VECTOR_THRESHOLD )
    { 
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR_THRESHOLD, min = " 
@@ -2361,6 +2379,7 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
+#endif //_CFDCOMMANDARRAY
    else if ( this->cfdId == CHANGE_PARTICLE_VIEW_OPTION)
    {
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
@@ -2392,6 +2411,7 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
+#ifndef _CFDCOMMANDARRAY
    else if ( this->cfdId == SCALE_BY_VECTOR_MAGNITUDE )
    { 
       vprDEBUG(vprDBG_ALL,0)
@@ -2402,6 +2422,7 @@ void cfdApp::preFrame( void )
 
       this->setId( -1 );
    }
+#endif //_CFDCOMMANDARRAY
    else if ( this->cfdId == UPDATE_GEOMETRY )
    {
       vprDEBUG(vprDBG_ALL,1)
@@ -2485,7 +2506,7 @@ void cfdApp::preFrame( void )
    {
 #ifdef _TAO
       this->executive->UnbindORB();
-#endif
+#endif // _TAO
       this->runStreamersThread = false;
       this->runIntraParallelThread = false;   
       this->mKernel->stop(); // Stopping kernel using the inherited member variable
@@ -2501,7 +2522,8 @@ void cfdApp::preFrame( void )
          {
             // verify that if a transient sequence is desired, 
             // an appropriate DCS is active...
-            if ( ( X_TRANSIENT_CONTOUR <= this->cfdId && this->cfdId <= PARTICLE_TRANSIENT ) &&
+            if ( ( X_TRANSIENT_CONTOUR <= this->cfdId &&
+                                          this->cfdId <= PARTICLE_TRANSIENT ) &&
                  ! cfdObjects::GetActiveDataSet()->IsPartOfTransientSeries() )
             {
                std::cerr << "\nERROR: You must activate an appropriate transient "
@@ -2691,7 +2713,7 @@ void cfdApp::preFrame( void )
       {
 #ifdef TABLET 
          this->setTimesteps( currentFrame );
-#endif
+#endif // TABLET
          this->lastFrame = currentFrame;
       }
    }
@@ -2702,7 +2724,7 @@ void cfdApp::preFrame( void )
       this->executive->SetActiveDataSet( cfdObjects::GetActiveDataSet() );
    }
    this->executive->UpdateModules();
-#endif
+#endif // _TAO
    vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -2718,7 +2740,7 @@ void cfdApp::postFrame()
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef TABLET
    this->GetCfdStateVariables();
-#endif
+#endif // TABLET
    vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -2736,7 +2758,7 @@ void cfdApp::pushDataToStateInfo( void )
    this->setTimesteps( this->cfdTimesteps );
    this->setTeacherState( this->cfdTeacher_state );         
 }
-#endif
+#endif // TABLET
 
 void cfdApp::streamers( void * )
 {
@@ -2745,8 +2767,8 @@ void cfdApp::streamers( void * )
    { 
       // Wait for some  work
      while (   !this->interactiveObject && 
-	            !this->animatedStreamlines &&
-	            !this->animatedImages)
+               !this->animatedStreamlines &&
+               !this->animatedImages)
       {
          vpr::System::msleep( 500 );  // half-second delay
       }
@@ -2803,10 +2825,10 @@ void cfdApp::streamers( void * )
       }
       
       if (this->animatedImages)
-	   {
-	      this->animImg->Update();
-	      this->animatedImages = false;
-	   }
+      {
+         this->animImg->Update();
+         this->animatedImages = false;
+      }
       cfdObjects::SetTimeToUpdateFlag( true );
    }
 }
@@ -2839,7 +2861,7 @@ void cfdApp::intraParallelThread( void * )
                dynamic_cast<cfdStreamers *>( this->activeObject );
             cfdAnimatedStreamlineCone * animStreamerTest = 
                dynamic_cast<cfdAnimatedStreamlineCone *>( this->activeObject );
-	         cfdAnimatedImage* animImgTest = 
+            cfdAnimatedImage* animImgTest = 
                dynamic_cast<cfdAnimatedImage *>( this->activeObject );
             cfdTransientFlowManager * tfmTest = 
                dynamic_cast<cfdTransientFlowManager *>( this->activeObject );
@@ -2858,7 +2880,7 @@ void cfdApp::intraParallelThread( void * )
                   momentumTest == NULL &&   
                   streamersTest == NULL &&
                   animStreamerTest == NULL &&
-		            animImgTest == NULL &&
+                  animImgTest == NULL &&
                   tfmTest == NULL )
             {
                // For everything except for the interactive and transient stuff
@@ -2953,28 +2975,27 @@ void cfdApp::writePFBFile(pfNode* graph,char* fileName)
 
 int main(int argc, char* argv[])
 {
-	//pfSharedArenaSize (1400 * 1024 * 1024);
-	//pfSharedArenaBase ((void *) 0x20000000);
+   //pfSharedArenaSize (1400 * 1024 * 1024);
+   //pfSharedArenaBase ((void *) 0x20000000);
    //pfInitArenas(); 
 
 #ifdef _CLUSTER
+   char buffer[1025];
+   int ntoks, i;
+   std::vector<std::string> toks;
+   std::string hostfile;
+   FILE * fhost;
+   bool found=false;
+   std::string masterhost="abbott";
 
-  char buffer[1025];
-  int ntoks, i;
-  std::vector<std::string> toks;
-  std::string hostfile;
-  FILE * fhost;
-  bool found=false;
-  std::string masterhost="abbott";
-
-  if (argc>1)
-    {
+   if (argc>1)
+   {
       strcpy(buffer, argv[1]);
       ntoks=getStringTokens(buffer, "/", toks);
       //Now construct the name for the host file;
       hostfile="/";
       for (i=0; i<ntoks-1; i++)
-	hostfile=hostfile+toks[i]+"/";
+      hostfile=hostfile+toks[i]+"/";
       hostfile+="component/host.config";
       cout<<"Here is the string for the hostfile :"<<hostfile<<endl;
       //Now we open that file and get the host name
@@ -2986,20 +3007,20 @@ int main(int argc, char* argv[])
       }
 
       while(!feof(fhost)&&!found)
-	{
-	  fgets(buffer, 1024, fhost);
-	  ntoks=getStringTokens(buffer, "<>/ ", toks);
-	  for (i=0; i<ntoks; i++)
-	    if (toks[i]=="hostname" && i!=ntoks-1)
-	      {
-		masterhost=toks[i+1];
-		found=true;
-		break;
-	      }
-	}
+      {
+         fgets(buffer, 1024, fhost);
+         ntoks=getStringTokens(buffer, "<>/ ", toks);
+         for (i=0; i<ntoks; i++)
+            if (toks[i]=="hostname" && i!=ntoks-1)
+            {
+               masterhost=toks[i+1];
+               found=true;
+               break;
+            }
+      }
       fclose(fhost);
-    }
-#endif
+   }
+#endif // _CLUSTER
 
 #ifdef TABLET
    int temp = 0;
@@ -3016,19 +3037,19 @@ int main(int argc, char* argv[])
    //xargv[ 1 ] = "NameService=file:///tmp/ns.ior";
    CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv,"" );
 #else
-	CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv );
-	if ( CORBA::is_nil( orb.in() ) )
-		exit(0);
-#endif
+   CORBA::ORB_var orb=CORBA::ORB_init( temp, xargv );
+   if ( CORBA::is_nil( orb.in() ) )
+      exit(0);
+#endif // _TAO
    //Here is the part to contact the naming service and get the reference for the executive
    CORBA::Object_var naming_context_object =
      orb->resolve_initial_references ("NameService"); 
    CORBA::String_var sior1(orb->object_to_string(naming_context_object.in ()));
-	cout << "|  IOR of the server side : " << endl << sior1 << endl;
+   cout << "|  IOR of the server side : " << endl << sior1 << endl;
 
    CosNaming::NamingContext_var naming_context =
        CosNaming::NamingContext::_narrow (naming_context_object.in ());
-	
+   
    
     //Here is the code to set up the server
     CORBA::Object_var poa_object =
@@ -3037,18 +3058,17 @@ int main(int argc, char* argv[])
     PortableServer::POA_var poa = PortableServer::POA::_narrow(poa_object.in());
     PortableServer::POAManager_var poa_manager = poa->the_POAManager ();
     poa_manager->activate ();
-//	CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
-//	cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
-#endif
+//   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
+//   cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
+#endif // TABLET
 
-	   vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
+   vrj::Kernel* kernel = vrj::Kernel::instance(); // Declare a new Kernel
 
    cfdApp* application = new cfdApp( );//kernel );  // Delcare an instance of my application
 
- #ifdef TABLET
+#ifdef TABLET
 
 #ifdef _CLUSTER
-
    char raw_hostname[256];
    std::string hostname;
    
@@ -3060,28 +3080,28 @@ int main(int argc, char* argv[])
 
    
    if (hostname==masterhost||toks[0]==masterhost)
-     {
-       cout<<"This is the master!"<<endl;
-       
-       VjObs_var vjobs = application->_this();
-       CORBA::String_var sior(orb->object_to_string(vjobs.in()));
-       cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
-       CosNaming::Name name;
-       name.length(1);
-   
-       name[0].id   = (const char*) "Master";
-       name[0].kind = (const char*) "VE_Xplorer";
-       //Bind the object
-	try	
-	  {
-	    naming_context->bind(name, vjobs.in());
-	  }
-	catch(CosNaming::NamingContext::AlreadyBound& ex)
-	  {
-	    naming_context->rebind(name, vjobs.in());
-	  }
-     }
-#else //the _CLUSTER
+   {
+      cout<<"This is the master!"<<endl;
+
+      VjObs_var vjobs = application->_this();
+      CORBA::String_var sior(orb->object_to_string(vjobs.in()));
+      cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
+      CosNaming::Name name;
+      name.length(1);
+
+      name[0].id   = (const char*) "Master";
+      name[0].kind = (const char*) "VE_Xplorer";
+      //Bind the object
+      try
+      {
+         naming_context->bind(name, vjobs.in());
+      }
+      catch(CosNaming::NamingContext::AlreadyBound& ex)
+      {
+         naming_context->rebind(name, vjobs.in());
+      }
+   }
+#else // _CLUSTER
    VjObs_var vjobs = application->_this();
    CORBA::String_var sior(orb->object_to_string(vjobs.in()));
    cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
@@ -3091,24 +3111,23 @@ int main(int argc, char* argv[])
    name[0].id   = (const char*) "Master";
    name[0].kind = (const char*) "VE_Xplorer";
    //Bind the object
-   try	
-     {
-       naming_context->bind(name, vjobs.in());
-     }
+   try
+   {
+      naming_context->bind(name, vjobs.in());
+   }
    catch(CosNaming::NamingContext::AlreadyBound&)
-     {
-       naming_context->rebind(name, vjobs.in());
-     }
-#endif //the _CLUSTER
+   {
+      naming_context->rebind(name, vjobs.in());
+   }
+#endif // _CLUSTER
    application->SetCORBAVariables( naming_context.in(), orb.in(), poa.in() );
 
-#endif //the TABLET
+#endif // TABLET
 
-	
    for ( int i = 1; i < argc; i++ )          // Configure the kernel
-     {
-       kernel->loadConfigFile( argv[i] );   
-	 }
+   {
+      kernel->loadConfigFile( argv[i] );   
+   }
    
    kernel->start();                          // Start the kernel thread
 
@@ -3117,7 +3136,7 @@ int main(int argc, char* argv[])
 #ifdef _TAO
    // If this isn't here the app won't work with TAO 
    orb->run();
-#endif
+#endif // _TAO
    kernel->waitForKernelStop();              // Block until kernel stops
 
    return 0;
@@ -3212,21 +3231,19 @@ void cfdApp::GetUpdateClusterStateVariables( void )
 
 int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
 {
-  
-  char* token;
-  int i=0;
-  token = strtok(buffer, delim);
-  
-  toks.clear();
-  while( token )
-    {
+   char* token;
+   int i=0;
+   token = strtok(buffer, delim);
+
+   toks.clear();
+   while( token )
+   {
       i++;
       toks.push_back(std::string(token));
       token = strtok(NULL, delim);
-    }
-  
-  return i;
-}
-#endif
+   }
 
+   return i;
+}
+#endif // _CLUSTER
 

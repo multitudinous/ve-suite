@@ -40,6 +40,10 @@ class vtkPlaneSource;
 class vtkPolyDataMapper;
 class vtkTexture;
 
+#ifdef _CFDCOMMANDARRAY
+class cfdApp;
+#endif //_CFDCOMMANDARRAY
+
 class cfdImage : public cfdObjects
 {
  public:
@@ -50,9 +54,18 @@ class cfdImage : public cfdObjects
 
    ~cfdImage( );
 
-   vtkActor * GetActor( );
+#ifdef _CFDCOMMANDARRAY
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdApp * _cfdApp );
 
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
+#endif //_CFDCOMMANDARRAY
+
+   // update the actor
    virtual void Update( void );
+
+   vtkActor * GetActor( );
 
  private:
 

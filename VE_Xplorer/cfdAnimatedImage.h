@@ -42,14 +42,30 @@ class vtkSphereSource;
 class cfdImage;
 class cfdReadParam;
 
+#ifdef _CFDCOMMANDARRAY
+class cfdApp;
+#endif //_CFDCOMMANDARRAY
+
 class cfdAnimatedImage : public cfdObjects, public cfdDCS
 {
 public:
-  cfdAnimatedImage(char *basename, int frames, int ex_x, int ex_y, int dim, double *origin, double *spacing);
+  cfdAnimatedImage( char *basename, int frames,
+                    int ex_x, int ex_y, int dim, 
+                    double *origin, double *spacing );
+
   cfdAnimatedImage( cfdReadParam* );
   
   ~cfdAnimatedImage();
   
+#ifdef _CFDCOMMANDARRAY
+  // compare VjObs_i commandArray with its child's value
+  virtual bool CheckCommandId( cfdApp * _cfdApp );
+
+  // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+  virtual void UpdateCommand();
+#endif //_CFDCOMMANDARRAY
+
+  // update the actor
   virtual void Update( void );
   
   std::vector< cfdImage* > _images;

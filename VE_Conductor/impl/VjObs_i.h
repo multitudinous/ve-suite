@@ -58,8 +58,16 @@ class cfdReadParam;
 //#include "MutexInterface.h"   //yang-REI, the mutex interface
 //#include "cfdStateInfoImpl.h"   
 
-class VjObs_i:public virtual POA_VjObs, //public virtual CorbaManager,
-               public PortableServer::RefCountServantBase
+#ifdef _CFDCOMMANDARRAY
+#include "cfdGlobalBase.h"
+#endif // _CFDCOMMANDARRAY
+
+class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
+                public PortableServer::RefCountServantBase
+#ifdef _CFDCOMMANDARRAY
+                ,
+                public cfdGlobalBase
+#endif // _CFDCOMMANDARRAY
 {
 public:
    

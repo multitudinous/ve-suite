@@ -53,13 +53,35 @@ class vtkMaskPoints;
 
 #include <vector>
 
+#ifdef _CFDCOMMANDARRAY
+class cfdApp;
+#include "cfdGlobalBase.h"
+#endif //_CFDCOMMANDARRAY
+
 class cfdObjects
+#ifdef _CFDCOMMANDARRAY
+                  : public cfdGlobalBase
+#endif //_CFDCOMMANDARRAY
+
 {
    public:
       cfdObjects( pfGeode *, int );
       cfdObjects( const cfdObjects& src );
       cfdObjects( void );
       virtual ~cfdObjects( void );
+
+#ifdef _CFDCOMMANDARRAY
+      // pure virtual functions to be specified in concrete implementations
+
+      // compare VjObs_i commandArray with its child's value
+      virtual bool CheckCommandId( cfdApp * _cfdApp ) = 0;
+
+      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+      virtual void UpdateCommand() = 0;
+#endif //_CFDCOMMANDARRAY
+
+      // update the actor
+      virtual void Update() = 0;
 
       void SetGeode( pfGeode * );
       void SetObjectType( int );
@@ -98,8 +120,6 @@ class cfdObjects
       void ForwardpfSequence( void );
       int  GetFrameOfpfSequence( void );
       
-      virtual void Update( void ) = 0;
-
       void SetSourcePoints( vtkPolyDataSource * );
 
       void UpdateGeode( void );

@@ -51,13 +51,23 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
-//#include <vtkPointSet.h>
 #include <vtkPolyData.h>
+
+#ifdef _CFDCOMMANDARRAY
+#include "cfdApp.h"
+#endif //_CFDCOMMANDARRAY
 
 #include <vpr/Util/Debug.h>
 
 cfdMenu::cfdMenu( char *menuFile, char *menuConfig )
+#ifdef _CFDCOMMANDARRAY
+                                                    : cfdCommandObjects ()
+#endif //_CFDCOMMANDARRAY
 {
+#ifdef _CFDCOMMANDARRAY
+   cout << "cfdMenu constructor" << endl;
+#endif //_CFDCOMMANDARRAY
+
    this->id = 0;
 
    // Read menu data
@@ -87,7 +97,6 @@ cfdMenu::cfdMenu( char *menuFile, char *menuConfig )
    this->menuDCS->setTrans(0.0,0.0,-2.0);   //to fit Deere's screen
 }
 
-
 cfdMenu::~cfdMenu()
 {
    this->reader->Delete();
@@ -104,12 +113,22 @@ cfdMenu::~cfdMenu()
    pfDelete( this->menuDCS );
 }
 
+#ifdef _CFDCOMMANDARRAY
+bool cfdMenu::CheckCommandId( cfdApp * _cfdApp )
+{
+   return false;
+}
+
+void cfdMenu::UpdateCommand()
+{
+   cerr << "cfdMenu::UpdateCommand() does nothing" << endl;
+}
+#endif //_CFDCOMMANDARRAY
 
 pfDCS * cfdMenu::GetpfDCS()
 {
    return this->menuDCS;
 }
-
 
 void cfdMenu::UpdateHitCell( double x[3] )
 {
@@ -154,18 +173,15 @@ void cfdMenu::UpdateHitCell( double x[3] )
    }
 }
 
-
 double * cfdMenu::GetBound()
 {
   return this->bound;
 }
 
-
 int cfdMenu::GetCellId()
 {
   return this->id;
 }
-
 
 void cfdMenu::UpdateCell()
 {
@@ -213,7 +229,6 @@ pfGeode * cfdMenu::GetOutline()
 
   return this->outlineGeode;
 }
-
 
 pfGeode * cfdMenu::GetShaded(  )
 {
@@ -317,7 +332,6 @@ pfGeode * cfdMenu::GetLabel( char* menuConfig )
    return this->labelGeode;
 }  
 
-
 vtkPolyData * cfdMenu::GetText( char menuText[ ], double tPos[3] )
 {
    vtkVectorText *atext = vtkVectorText::New();
@@ -343,7 +357,6 @@ vtkPolyData * cfdMenu::GetText( char menuText[ ], double tPos[3] )
 
    return pData;
 }
-
 
 pfGeode * cfdMenu::GetCell()
 {

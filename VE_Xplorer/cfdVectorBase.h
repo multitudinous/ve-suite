@@ -39,6 +39,10 @@ class vtkGeometryFilter;
 class vtkPolyDataMapper;
 class vtkMaskPoints;
 
+#ifdef _CFDCOMMANDARRAY
+class cfdCommandArray;
+#endif //_CFDCOMMANDARRAY
+
 class cfdVectorBase : public cfdObjects
 {
  public:
@@ -46,7 +50,18 @@ class cfdVectorBase : public cfdObjects
 
    virtual ~cfdVectorBase();
 
-   //virtual void Update( void ) = 0;
+   // pure virtual int functions to be specified in concrete implementations
+
+#ifdef _CFDCOMMANDARRAY
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
+#endif //_CFDCOMMANDARRAY
+
+   // update the actor
+   virtual void Update() = 0;
 
    static void SetThreshHoldPercentages( int min, int max );
 

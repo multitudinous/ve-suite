@@ -33,6 +33,10 @@
 #include "cfdReadParam.h"
 #include "cfdImage.h"
 
+#ifdef _CFDCOMMANDARRAY
+#include "cfdApp.h"
+#endif //_CFDCOMMANDARRAY
+
 #include <Performer/pf/pfDCS.h>
 
 #ifndef _USE_CFD_SEQUENCE
@@ -43,7 +47,9 @@
 
 #include <vpr/Util/Debug.h>
 
-cfdAnimatedImage::cfdAnimatedImage(char *basename, int frames, int ex_x, int ex_y, int dim, double *origin, double *spacing)
+cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
+                                    int ex_x, int ex_y, int dim,
+                                    double *origin, double *spacing )
 {
   unsigned int i;
   char filename[250];
@@ -100,8 +106,8 @@ cfdAnimatedImage::cfdAnimatedImage( cfdReadParam* param )
 
    this->GetPfDCS()->addChild( this->sequence );
 }
-cfdAnimatedImage::~cfdAnimatedImage()
 
+cfdAnimatedImage::~cfdAnimatedImage()
 {
    unsigned int i;
 
@@ -120,16 +126,28 @@ cfdAnimatedImage::~cfdAnimatedImage()
    }
 }
 
+#ifdef _CFDCOMMANDARRAY
+bool cfdAnimatedImage::CheckCommandId( cfdApp * _cfdApp )
+{
+   return false;
+}
+
+void cfdAnimatedImage::UpdateCommand()
+{
+   cerr << "doing nothing in cfdAnimatedImage::UpdateCommand()" << endl;
+}
+#endif //_CFDCOMMANDARRAY
+
 void cfdAnimatedImage::Update( void )
 {
-  int i;
-  for (i=0; i<_frames; i++)
-    {
+   int i;
+   for (i=0; i<_frames; i++)
+   {
       this->actor = _images[i]->GetActor();
   
       this->CreateGeode();
-    }
+   }
 
-  this->updateFlag = true;
-  this->addGeode = true;      
+   this->updateFlag = true;
+   this->addGeode = true;      
 }

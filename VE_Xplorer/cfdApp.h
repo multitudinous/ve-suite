@@ -313,6 +313,10 @@ class cfdApp : public vrj::PfApp
    std::vector< cfdFILE * > geomL;
    std::vector< cfdObjects * > dataList;
 
+#ifdef _CFDCOMMANDARRAY
+   std::vector< cfdGlobalBase * > commandList;
+#endif //_CFDCOMMANDARRAY
+
    cfdObjects *activeObject;
    cfdObjects *activeSequenceObject;
    
