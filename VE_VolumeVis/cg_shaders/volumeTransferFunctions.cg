@@ -1,0 +1,34 @@
+struct f2app{
+   float4 color : COLOR;
+};
+
+
+f2app densityTransfer(float4 color:COLOR0,
+                      float3 texCoord:TEXCOORD4,
+                      uniform sampler1D mat1Func:TEXUNIT0, 
+                      uniform sampler1D mat2Func:TEXUNIT1,
+                      uniform sampler1D mat3Func:TEXUNIT2,
+                      uniform sampler1D mat4Func:TEXUNIT3,
+                      uniform sampler3D densityTexture:TEXUNIT4)
+{
+   f2app retColor;
+   
+   //get the density for each material
+   float4 density = tex3D(densityTexture,texCoord);
+   
+   float red = tex1D(mat1Func,density.x);
+   float4 dye = float4(red,0,0,red);
+
+   float green = tex1D(mat2Func,density.y);
+   float4 mat1 = float4(0,green,0,green);
+
+   float blue = tex1D(mat3Func,density.z);
+   float4 mat2 = float4(0,0,blue,blue);
+
+   retColor.color = mat1+mat2+dye;
+   retColor.color.w *= color.a;
+
+   return retColor;
+}
+
+
