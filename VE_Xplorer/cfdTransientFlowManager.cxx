@@ -347,7 +347,7 @@ void cfdTransientFlowManager::CreateNodeList( void )
    for(int i = 0; i < this->numFrames; i+=inc)
    {
       this->frames[ i ].CreateFrame( this->frameFileNames[ this->order[ i ] ] );
-      this->_geodes.push_back( this->frames[ i ].GetcfdNode() );
+      //this->_geodes.push_back( this->frames[ i ].GetcfdNode() );
       vprDEBUG(vprDBG_ALL,1) << " Creating Geodes : " << i << " : "
                              << this->_geodes[ i ]
                              << std::endl << vprDEBUG_FLUSH;

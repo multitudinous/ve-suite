@@ -124,9 +124,14 @@ cfdNode::cfdNode()
 /////////////////////////
 cfdNode::~cfdNode( void )
 {
+   std::cout << " 1 destructor for cfdNode " << std::endl;
    // If neccesary
 #ifdef _PERFORMER
-   pfDelete( this->_node );
+   if ( this->_node != NULL )
+   {
+   std::cout << " 2 destructor for cfdNode " << std::endl;
+      pfDelete( this->_node );
+   }
 #elif _OSG
    //_node->unref();
 #elif _OPENSG

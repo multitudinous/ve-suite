@@ -256,14 +256,15 @@ void cfdModelHandler::PreFrameUpdate( void )
    {
       unsigned int i = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       vprDEBUG(vprDBG_ALL,1) 
-         << "CHANGE_STEADYSTATE_DATASET " << i
+         << "CHANGE_STEADYSTATE_DATASET " << i 
          //<< ", scalarIndex = " << this->cfdSc
          //<< ", min = " << this->cfdMin 
          //<< ", max = " << this->cfdMax
          << std::endl << vprDEBUG_FLUSH;
-     
-      if ( _activeModel && ( i < _activeModel->GetNumberOfCfdDataSets() ) )
+      if ( _activeModel != NULL )
       {
+         if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
+         {
          vprDEBUG(vprDBG_ALL,0) << " dataset = "
                   << _activeModel->GetCfdDataSet( i )->GetFileName()
                   << ", dcs = " << _activeModel->GetCfdDataSet( i )->GetDCS()
@@ -297,6 +298,9 @@ void cfdModelHandler::PreFrameUpdate( void )
 
          // update scalar bar for possible new scalar name
          updateScalarRange = true;
+         // Set the curretn active dataset for the scalar bar
+         // so that it knows how to update itself
+         _scalarBar->SetActiveDataSet( activeDataset );
       }
       else
       {
@@ -306,9 +310,9 @@ void cfdModelHandler::PreFrameUpdate( void )
                   << std::endl;
       }
 
-      // Set the curretn active dataset for the scalar bar
-      // so that it knows how to update itself
-      _scalarBar->SetActiveDataSet( activeDataset );
+      }
+      else
+         std::cerr << " cfdModelHandler :  ActiveModel handler is null " << std::endl;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_VECTOR )
    { 
@@ -406,6 +410,9 @@ void cfdModelHandler::PreFrameUpdate( void )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_ACTIVE_MODEL )
    {
+      vprDEBUG(vprDBG_ALL,1) << " cfdModelHandler :: Change Active Model " 
+            << commandArray->GetCommandValue( cfdCommandArray::CFD_SC )
+            << std::endl << vprDEBUG_FLUSH;
       _activeModel = _modelList.at( commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
    }
 

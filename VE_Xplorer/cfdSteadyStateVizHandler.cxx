@@ -118,6 +118,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
 cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 {
    this->runIntraParallelThread = false;
+   vpr::System::msleep( 1000 );  // half-second delay
    //delete this->vjThFunc[0];
    delete this->vjTh[0];
 

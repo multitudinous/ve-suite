@@ -104,7 +104,7 @@ cfdCuttingPlane::~cfdCuttingPlane( )
    vprDEBUG(vprDBG_ALL,2) << "in cfdCuttingPlane destructor" 
                           << std::endl << vprDEBUG_FLUSH;
 // Fix this mccdo
-//   this->plane->Delete( );
+   this->plane->Delete();
 }
 
 void cfdCuttingPlane::SetBounds( const double bounds[6] )

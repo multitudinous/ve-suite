@@ -54,7 +54,7 @@ public:
    
    //copy constructor
    cfdNode( const cfdNode& );
-   ~cfdNode( void );
+   virtual ~cfdNode( void );
 
    //equal operator
    cfdNode& operator=( const cfdNode& );

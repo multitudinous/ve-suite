@@ -189,6 +189,7 @@ void cfdObjects::UpdatecfdGeode( void )
                            << updateFlag<< std::endl << vprDEBUG_FLUSH;
    
       this->_geode = new cfdGeode();
+      std::cout << this->_geode->GetNode() << std::endl;
       this->addGeode = true;      
    }
    else
@@ -202,7 +203,7 @@ void cfdObjects::UpdatecfdGeode( void )
 void cfdObjects::CreatecfdGeode( void )
 {
    // used by cfdAnimatedStreamlineCone
-   this->_geodes.push_back( new cfdGeode );
+   this->_geodes.push_back( new cfdGeode() );
  
    // Function implements respective vtkActorToGeode function
    ((cfdGeode*)this->_geodes.back())->TranslateTocfdGeode( this->actor );
@@ -214,11 +215,9 @@ void cfdObjects::AddcfdGeodeToDCS( void )
    vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::AddGeodeToDCS"
       << std::endl << vprDEBUG_FLUSH;
   
-   vprDEBUG(vprDBG_ALL, 2) << "cfdObjects::UpdateGeode... updateFlag == true"
-                           << std::endl << vprDEBUG_FLUSH;
-
+   vprDEBUG(vprDBG_ALL, 2) << "cfdObjects::UpdateGeode... updateFlag == true "
+                           << this->_geodes.size() << std::endl << vprDEBUG_FLUSH;
    this->_geodes.push_back( this->_geode );
-
    vprDEBUG(vprDBG_ALL, 2) << "cfdObjects::UpdateGeode... pushback new geode"
                            << std::endl << vprDEBUG_FLUSH;
 
@@ -275,16 +274,24 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       // geodes.size is not zero based therefore the first -1 is needed
       // the second -1 is to get the second to last geode on the list
       int num = (this->_geodes.size() - 1) - 1;
-      vprDEBUG(vprDBG_ALL,1) << " removing child num = " << num << " : " << this->_geodes[ num ]
+      vprDEBUG(vprDBG_ALL,1) << " 1. removing child num = " << num << " : " << this->_geodes[ num ] << " : " << _geodes.size()
                              << std::endl << vprDEBUG_FLUSH;
       cfdGroup* parent = (cfdGroup*)this->_geodes[ num ]->GetParent(0);
-      parent->RemoveChild(this->_geodes[ num ] );
+      vprDEBUG(vprDBG_ALL,1) << " 1. removing child parent = " << parent 
+                             << std::endl << vprDEBUG_FLUSH;
+      parent->RemoveChild( this->_geodes[ num ] );
+      vprDEBUG(vprDBG_ALL,1) << " 1. removing child succesful" 
+                             << std::endl << vprDEBUG_FLUSH;
       delete this->_geodes[ num ];
+      vprDEBUG(vprDBG_ALL,1) << " 1. delete child sucessful" 
+                             << std::endl << vprDEBUG_FLUSH;
 
       this->_geodes.erase( this->_geodes.end() - 2 );
-      vprDEBUG(vprDBG_ALL,1) << " removing child num = " << num << " : " << this->_geodes[ num ]
+      vprDEBUG(vprDBG_ALL,1) << " 1. erase child succesful" 
                              << std::endl << vprDEBUG_FLUSH;
       this->_dcs->AddChild( ((cfdGeode*)this->_geodes[ num ]) );
+      vprDEBUG(vprDBG_ALL,1) << " 1. add child succesful " 
+                             << std::endl << vprDEBUG_FLUSH;
    }
    else //if ( this->geodes.size() == 1 )
    { 

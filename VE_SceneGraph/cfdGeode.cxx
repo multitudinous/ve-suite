@@ -92,10 +92,12 @@ cfdGeode& cfdGeode::operator=( const cfdGeode& input )
 ///////////////////////////
 cfdGeode::~cfdGeode( void )
 {
+   std::cout << " 1 destructor for cfdGeode " << std::endl;
 #ifdef _PERFORMER
    // Fix this
    //if ( _geode != NULL )
-   //   pfDelete( _geode );
+   pfDelete( _geode );
+   std::cout << " 2 destructor for cfdGeode " << std::endl;
 #elif _OSG
    if(_geode)_geode->unref();
 #elif _OPENSG
@@ -112,4 +114,14 @@ void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
    vtkActorToOSG(actor,_geode,_vtkDebugLevel);
 #elif _OPENSG
 #endif
+}
+
+#ifdef _PERFORMER
+pfNode* cfdGeode::GetNode( void )
+#elif _OSG
+osg::Node* cfdGeode::GetNode( void )
+#elif _OPENSG
+#endif
+{
+   return _node;   
 }

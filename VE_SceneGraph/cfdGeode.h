@@ -58,14 +58,17 @@ class cfdGeode: public cfdNode
       // Get Geode 
 #ifdef _PERFORMER
       pfGeode* GetGeode( void );    
+      pfNode* GetNode( void );
 #elif _OSG
       osg::Geode* GetGeode(void);
+      osg::Node* GetNode( void );
 #elif _OPENSG
 #endif
       void TurnOnDebugOutput(int onOff = 0){_vtkDebugLevel = onOff;}
       // This function implements the respective translate vtkActorToGeode
       void TranslateTocfdGeode( vtkActor* );
 
+      
    protected:
       int _vtkDebugLevel;
 };

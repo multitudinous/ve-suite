@@ -779,7 +779,7 @@ void VjObs_i::SetClientInfoData( const VjObs::obj_pd &value )
       vpr::System::msleep( 50 );  // 50 milli-second delay
    }
    while ( this->_unusedNewData );
-   
+   cout << this->_unusedNewData << endl;
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    // The order of setting these values
    // MUST MATCH the order in which they are set in 

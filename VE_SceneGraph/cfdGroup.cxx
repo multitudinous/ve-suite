@@ -129,7 +129,10 @@ cfdGroup::~cfdGroup( void )
    
    // If neccesary
 #ifdef _PERFORMER
-   pfDelete ( this->_group );
+   if ( this->_group != NULL )
+   {
+      pfDelete ( this->_group );
+   }
 #elif _OSG
    _group->unref();
 #elif _OPENSG

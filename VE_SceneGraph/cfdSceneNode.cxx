@@ -43,7 +43,12 @@ cfdSceneNode::cfdSceneNode( void )
    this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
-   _nt = CFD_OTHER;
+   this->_nt = CFD_OTHER;
+   this->_node = NULL;
+   this->_group = NULL;
+   this->_dcs = NULL;
+   this->_geode = NULL;
+   this->_sequence = NULL;
 }
 //////////////////////////////////////////
 cfdSceneNode::cfdSceneNode(cfdNodeType nt)
@@ -51,14 +56,20 @@ cfdSceneNode::cfdSceneNode(cfdNodeType nt)
    this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
-   _nt = nt;
+   this->_node = NULL;
+   this->_group = NULL;
+   this->_dcs = NULL;
+   this->_geode = NULL;
+   this->_sequence = NULL;
 }
 ///////////////////////////////////
 cfdSceneNode::~cfdSceneNode( void )
 {
+   std::cout << " 1 destructor for cfdSceneNode " << std::endl;
    this->_nodeType = -1;
    this->_numParents = 0;
    this->_parent = NULL;
+   std::cout << " 2 destructor for cfdSceneNode " << std::endl;
 }
 ////////////////////////////////////////////////////////
 cfdSceneNode::cfdSceneNode( const cfdSceneNode& input )

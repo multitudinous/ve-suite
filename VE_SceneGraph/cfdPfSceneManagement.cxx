@@ -43,16 +43,16 @@
 #endif
 #include "cfdNode.h"
 #include "cfdGroup.h"
-/*
+
 #ifndef WIN32
-#include <unistd.h>
+#include <malloc.h>
 #include <sys/types.h>
 //biv--check here if build/run problems occur
 //#include <Performer/pfdb/pfiv.h>
 #else
 //#include <windows.h>
 #endif
-*/
+
 
 #include <iostream>
 
@@ -63,7 +63,7 @@
 
 cfdPfSceneManagement::cfdPfSceneManagement( char* paramfilename )
 {
-   std::cout << "entering cfdPfSceneManagement constructor" << std::endl;
+   //std::cout << "entering cfdPfSceneManagement constructor" << std::endl;
    this->param = paramfilename;
    this->rootNode = NULL;
    this->worldDCS = NULL;
@@ -74,7 +74,7 @@ cfdPfSceneManagement::cfdPfSceneManagement( char* paramfilename )
    this->lit = NULL;
 #elif _OSG
 #endif
-   std::cout << "finished constructing cfdPfSceneManagement with param = " << this->param << std::endl;
+   //std::cout << "finished constructing cfdPfSceneManagement with param = " << this->param << std::endl;
 }
 ///////////////////////////////////////////////////
 cfdPfSceneManagement::~cfdPfSceneManagement( void )
@@ -83,7 +83,7 @@ cfdPfSceneManagement::~cfdPfSceneManagement( void )
 
 void cfdPfSceneManagement::InitScene( void )
 {
-# ifdef _IRIX 
+#ifdef _IRIX 
 #ifdef _PERFORMER
    std::cout << "|   Performer Arena Size *** " << pfGetSharedArenaSize()/ (1024 * 1024) << std::endl;
    std::cout << "|   Shared arena base is *** " << pfGetSharedArenaBase() << std::endl;

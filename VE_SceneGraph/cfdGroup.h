@@ -47,7 +47,7 @@ public:
    cfdGroup( const cfdGroup& );
 
    cfdGroup(float*, float*, float*);
-   ~cfdGroup( void );
+   virtual ~cfdGroup( void );
 
    //equal operator
    cfdGroup& operator=( const cfdGroup& );

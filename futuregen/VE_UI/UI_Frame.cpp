@@ -167,6 +167,7 @@ void UI_Frame::buildFrame( )
       
    _tabs->cSc = activeModIndex;         // using zero-based scalar counting
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
+   cout << " Changing active Model = " << activeModIndex << endl;
    _tabs->sendDataArrayToServer();
 
    _modselSizer = new wxBoxSizer(wxHORIZONTAL);

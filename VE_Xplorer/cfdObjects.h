@@ -135,7 +135,7 @@ class cfdObjects : public cfdGlobalBase
       cfdTempAnimation* _sequence;
 
       cfdDCS* _dcs;
-      std::vector< cfdNode* > _geodes;
+      std::vector< cfdGeode* > _geodes;
 
       vtkActor *actor;
       vtkActor *PDactor;
