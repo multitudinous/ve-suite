@@ -185,15 +185,15 @@ void cfdNode::LoadFile( char* filename )
 cfdNode* cfdNode::Clone( int level )
 {
 #ifdef _PERFORMER
-   // fix this
+   std::cout << " Error:Clone !!! " << level << std::endl;
    exit( 1 );
    return NULL;
 #elif _OSG
-   std::cout << " Error:Clone !!! " << std::endl;
+   std::cout << " Error:Clone !!! " << level << std::endl;
    exit( 1 );
    return NULL;
 #elif _OPENSG
-   std::cout << " Error:Clone !!! " << std::endl;
+   std::cout << " Error:Clone !!! " << level << std::endl;
    exit( 1 );
    return NULL;
 #endif

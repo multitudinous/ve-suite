@@ -41,7 +41,8 @@ class cfdNode;
 #ifdef _PERFORMER
 class pfDCS;
 #elif _OSG
-namespace osg{
+namespace osg
+{
    class MatrixTransform;
    class NodeCallback;
 }
@@ -82,10 +83,11 @@ class cfdDCS: public cfdGroup
 
 
 #ifdef _PERFORMER
-   pfNode* GetRawNode( void );
+      pfNode* GetRawNode( void );
 #elif _OSG
-   osg::Node* GetRawNode( void );
-   class cfdUpdateDCSCallback : public osg::NodeCallback{
+      osg::Node* GetRawNode( void );
+   class cfdUpdateDCSCallback : public osg::NodeCallback
+   {
       public:
          cfdUpdateDCSCallback();
          virtual ~cfdUpdateDCSCallback(){}
@@ -105,7 +107,7 @@ class cfdDCS: public cfdGroup
 
    private:
 #ifdef _PERFORMER
-   pfDCS* _dcs;
+      pfDCS* _dcs;
 #elif _OSG
       osg::ref_ptr<osg::MatrixTransform> _dcs;
       cfdUpdateDCSCallback* _udcb;

@@ -236,8 +236,8 @@ void cfdDCS::SetRotationArray( float* rot )
                     this->_rotation[ 1 ],
                     this->_rotation[ 2 ]);
 #elif _OSG
-  
-   if(_udcb){
+   if ( _udcb )
+   {
       _udcb->setRotationDegreeAngles(_rotation[0],_rotation[1],_rotation[2]);
    }
 #elif _OPENSG
@@ -502,7 +502,6 @@ cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback()
    _h = 0;
    _p = 0;
    _r = 0;
-
 }
 //////////////////////////////////////////////////////////////////
 void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,
@@ -516,7 +515,8 @@ void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,
 ///////////////////////////////////////////////////////////////
 void cfdDCS::cfdUpdateDCSCallback::setTranslation(float* trans)
 {
-   if(trans){
+   if ( trans )
+   {
       _trans[0] = trans[0];
       _trans[1] = trans[1];
       _trans[2] = trans[2];
@@ -525,7 +525,8 @@ void cfdDCS::cfdUpdateDCSCallback::setTranslation(float* trans)
 ////////////////////////////////////////////////////////////////
 void cfdDCS::cfdUpdateDCSCallback::setScaleValues(float* scale)
 {
-   if(scale){
+   if ( scale )
+   {
       _scale[0] = scale[0];
       _scale[1] = scale[1];
       _scale[2] = scale[2];
@@ -535,7 +536,8 @@ void cfdDCS::cfdUpdateDCSCallback::setScaleValues(float* scale)
 void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
 {
    osg::ref_ptr<osg::MatrixTransform> dcs = dynamic_cast<osg::MatrixTransform*>(node);
-   if(dcs.valid()){
+   if ( dcs.valid() )
+   {
       osg::Vec3f pitch(1,0,0);
       osg::Vec3f roll(0,1,0);
       osg::Vec3f yaw(0,0,1);
@@ -548,7 +550,7 @@ void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor*
                          _p,pitch,
                          _h,yaw);
 
-      osg::Vec3f transMat(osg::Vec3f(_trans[0],_trans[1],_trans[2]));
+      osg::Vec3f transMat( _trans[0], _trans[1], _trans[2] );
       scale.setTrans(transMat);
 
       dcs->setMatrix(rotateMat*scale);

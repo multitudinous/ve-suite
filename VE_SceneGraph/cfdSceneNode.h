@@ -41,12 +41,13 @@ class pfDCS;
 class pfGroup;
 class pfSwitch;
 #elif _OSG
-namespace osg{
-class Node;
-class Geode;
-class Group;
-class MatrixTransform;
-class Switch;
+namespace osg
+{
+   class Node;
+   class Geode;
+   class Group;
+   class MatrixTransform;
+   class Switch;
 };
 #elif _OPENSG
 #endif
@@ -59,53 +60,57 @@ class Switch;
 //and then an appropriate wrapper class    //
 //should be created.                       //
 /////////////////////////////////////////////
-class cfdSceneNode{
-public:
-   enum cfdNodeType{CFD_NODE,
-                  CFD_GROUP,
-                  CFD_DCS,
-                  CFD_GEODE,
-                  CFD_SEQUENCE,
-                  CFD_SWITCH,
-                  CFD_OTHER};
+class cfdSceneNode
+{
+   public:
+      enum cfdNodeType
+      {
+         CFD_NODE,
+         CFD_GROUP,
+         CFD_DCS,
+         CFD_GEODE,
+         CFD_SEQUENCE,
+         CFD_SWITCH,
+         CFD_OTHER
+      };
 
-   cfdSceneNode();
-   cfdSceneNode(cfdNodeType nt);
-   cfdSceneNode( const cfdSceneNode& );
+      cfdSceneNode();
+      cfdSceneNode(cfdNodeType nt);
+      cfdSceneNode( const cfdSceneNode& );
 
-   virtual ~cfdSceneNode( void );
-   cfdSceneNode& operator=( const cfdSceneNode& );
+      virtual ~cfdSceneNode( void );
+      cfdSceneNode& operator=( const cfdSceneNode& );
 
-   //get the internal cfd node type
-   virtual cfdNodeType GetCFDNodeType(){return _nt;}
+      //get the internal cfd node type
+      virtual cfdNodeType GetCFDNodeType(){return _nt;}
 
-   //retrieve the underlying node depending on
-   //scene graph
+      //retrieve the underlying node depending on
+      //scene graph
 #ifdef _PERFORMER
-   virtual pfNode* GetRawNode( void )=0;
+      virtual pfNode* GetRawNode( void )=0;
 #elif _OSG
-   virtual osg::Node* GetRawNode(void)=0;
+      virtual osg::Node* GetRawNode(void)=0;
 #elif _OPENSG
 #endif
+      //??
+      int GetNodeType( void );
 
-   //??
-   int GetNodeType( void );
+      //the parent node    
+      cfdNode* GetParent( int );
 
-   //the parent node    
-   cfdNode* GetParent( int );
+      //set the parent
+      void SetParent( cfdNode* );
+      //??
+      void SetNodeType(int);
 
-   //set the parent
-   void SetParent( cfdNode* );
-   //??
-   void SetNodeType(int);
+      //set internal cfd node type
+      virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
 
-   //set internal cfd node type
-   virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
-protected:
-   //our scene graph specific nodes
-   int _nodeType;
-   int _numParents;
-   cfdNodeType _nt;
-   cfdNode* _parent;
+   protected:
+      //our scene graph specific nodes
+      int _nodeType;
+      int _numParents;
+      cfdNodeType _nt;
+      cfdNode* _parent;
 };
 #endif

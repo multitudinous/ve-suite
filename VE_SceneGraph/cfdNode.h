@@ -38,56 +38,52 @@
 class pfNode;
 class pfFog;
 #elif _OSG
-namespace osg{
-   class Fog;
-}
+namespace osg { class Fog; }
 #include <osg/Node>
 #elif _OPENSG
 #endif
 
-class cfdNode: public cfdSceneNode{
-public:
-   
-   cfdNode( void );
-   cfdNode(cfdSceneNode::cfdNodeType nt);
+class cfdNode: public cfdSceneNode
+{
+   public:   
+      cfdNode( void );
+      cfdNode(cfdSceneNode::cfdNodeType nt);
 
-   //biv--don't understand this method
-   //cfdNode( float*, float*, float* );
-   
-   //copy constructor
-   cfdNode( const cfdNode& );
-   virtual ~cfdNode( void );
+      //copy constructor
+      cfdNode( const cfdNode& );
+      virtual ~cfdNode( void );
 
-   //equal operator
-   virtual cfdNode& operator=( const cfdNode& );
+      //equal operator
+      virtual cfdNode& operator=( const cfdNode& );
 #ifdef _PERFORMER
-   virtual pfNode* GetRawNode( void );
+      virtual pfNode* GetRawNode( void );
 #elif _OSG
-   virtual osg::Node* GetRawNode( void );
+      virtual osg::Node* GetRawNode( void );
 #elif _OPENSG
 #endif
 
 #ifdef _PERFORMER
-   void pfTravNodeMaterial( pfNode* );
-   void pfTravNodeFog( pfNode* node_1, pfFog* fog );
+      void pfTravNodeMaterial( pfNode* );
+      void pfTravNodeFog( pfNode* node_1, pfFog* fog );
 #elif _OSG
-   void TravNodeMaterial(osg::Node*);
-   void TravNodeFog(osg::Node* node_1, osg::Fog* fog);
+      void TravNodeMaterial(osg::Node*);
+      void TravNodeFog(osg::Node* node_1, osg::Fog* fog);
 #elif _OPENSG
 #endif
-   void SetNodeProperties( int, float, float* );
-   void LoadFile( char* );
+      void SetNodeProperties( int, float, float* );
+      void LoadFile( char* );
       
-   cfdNode* Clone( int );   
-protected:
+      cfdNode* Clone( int );
+
+   protected:
 #ifdef _PERFORMER
-   pfNode* _node;
+      pfNode* _node;
 #elif _OSG
-   osg::ref_ptr<osg::Node> _node;
+      osg::ref_ptr<osg::Node> _node;
 #elif _OPENSG
 #endif
-   float op;
-   float stlColor[ 3 ];
-   int color;
+      float op;
+      float stlColor[ 3 ];
+      int color;
 };
 #endif
