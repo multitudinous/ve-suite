@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdApp.cxx,v $
- * Date modified: $Date: 2004/05/01 16:20:30 $
- * Version:       $Revision: 1.152 $
+ * Date modified: $Date: 2004/05/08 01:24:12 $
+ * Version:       $Revision: 1.153 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -451,7 +451,7 @@ inline void cfdApp::init( )
    this->digital[4].init("VJButton4");   // 6 o'clock -- reset
    this->digital[5].init("VJButton5");   // 9 o'clock -- exit streamer while loop
 
-#ifdef IHCC_SYS
+//#ifdef IHCC_SYS
    this->IHdigital[0].init("VJMovementZ0");  //press "8" for forward navigation
    this->IHdigital[1].init("VJMovementZ1");  //press "2" for backward navigation
    this->IHdigital[2].init("VJMovementX0");  //press "6" for rightward navigation
@@ -462,7 +462,7 @@ inline void cfdApp::init( )
    this->IHdigital[7].init("VJRotateY");  //press "left_arrow" for CCW rotation
    //this->IHdigital[8].init("IHVJButton8");  //press "up_arrow" for upward rotation
    //this->IHdigital[9].init("IHVJButton9");  //press "down_arrow" for downward rotation
-#endif
+//#endif
 
 #ifdef _CLUSTER
    // Cluster Stuff
@@ -1724,44 +1724,44 @@ inline void cfdApp::NavigationForIHCC( void )
    if ( this->IHdigital[0]->getData() == gadget::Digital::ON ) //forward translate
    { 
         this->worldTrans[1] += 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
+        this->worldDCS->setTrans( -this->worldTrans[0],
                                   -this->worldTrans[1],
-                                   this->worldTrans[2] );
+                                  -this->worldTrans[2] );
    }
    else if ( this->IHdigital[1]->getData() == gadget::Digital::ON ) //backward translate
    { 
         this->worldTrans[1] -= 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
+        this->worldDCS->setTrans( -this->worldTrans[0],
                                   -this->worldTrans[1],
-                                   this->worldTrans[2] );
+                                  -this->worldTrans[2] );
    }
    else if ( this->IHdigital[2]->getData() == gadget::Digital::ON ) //right translate
    { 
         this->worldTrans[0] += 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
+        this->worldDCS->setTrans( -this->worldTrans[0],
                                   -this->worldTrans[1],
-                                   this->worldTrans[2] );
+                                  -this->worldTrans[2] );
    }
    else if ( this->IHdigital[3]->getData() == gadget::Digital::ON ) //left translate
    { 
         this->worldTrans[0] -= 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
+        this->worldDCS->setTrans( -this->worldTrans[0],
                                   -this->worldTrans[1],
-                                   this->worldTrans[2] );
+                                  -this->worldTrans[2] );
    }
    else if ( this->IHdigital[4]->getData() == gadget::Digital::ON ) //upward translate
    { 
         this->worldTrans[2] += 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
+        this->worldDCS->setTrans( -this->worldTrans[0],
                                   -this->worldTrans[1],
-                                   this->worldTrans[2] );
+                                  -this->worldTrans[2] );
    }
    else if ( this->IHdigital[5]->getData() == gadget::Digital::ON ) //downward translate
    { 
         this->worldTrans[2] -= 0.25f;
-        this->worldDCS->setTrans(  this->worldTrans[0],
+        this->worldDCS->setTrans( -this->worldTrans[0],
                                   -this->worldTrans[1],
-                                   this->worldTrans[2] );
+                                  -this->worldTrans[2] );
    }
    else if ( this->IHdigital[6]->getData() == gadget::Digital::ON )        //CW rotation
    {
@@ -1874,7 +1874,7 @@ void cfdApp::preFrame( void )
 #endif
    this->buttonData[ 1 ] = this->digital[ 1 ]->getData();
    this->buttonData[ 2 ] = this->digital[ 2 ]->getData();
-
+//std::cout << this->buttonData[ 1 ] << " : " << this->buttonData[ 2 ] <<std::endl;
    //indian hills navigation
    NavigationForIHCC();
 
