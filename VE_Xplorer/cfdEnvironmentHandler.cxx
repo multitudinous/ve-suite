@@ -33,6 +33,7 @@
 
 #include "fileIO.h"
 #include "cfdNavigate.h"
+#include "cfdSoundHandler.h"
 //#include "cfdLaser.h"
 //#include "cfdMenu.h"
 #include "cfdCursor.h"
@@ -41,6 +42,7 @@
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 #include "cfdReadParam.h"
+#include "cfdTeacher.h"
 
 #include <vrj/Util/Debug.h>
 
@@ -78,6 +80,16 @@ void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 void cfdEnvironmentHandler::SetArrow( vtkPolyData* input )
 {
    this->arrow = input;
+}
+
+cfdSoundHandler* cfdEnvironmentHandler::GetSoundHandler( void )
+{
+   return _soundHandler;
+}
+
+cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
+{
+   return _teacher;
 }
 
 void cfdEnvironmentHandler::InitScene( void )

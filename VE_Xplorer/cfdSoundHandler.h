@@ -56,6 +56,10 @@ class cfdSoundHandler : public cfdGlobalBase
 
       // in future, multi-threaded apps will make a copy of VjObs_i commandArray
       virtual void UpdateCommand();
+
+      int GetNumberOfSounds( void );
+      char* GetSoundFilename( int );
+
    private:
       char* _param;
       cfdReadParam* _readParam;

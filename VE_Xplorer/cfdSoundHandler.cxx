@@ -49,6 +49,8 @@ cfdSoundHandler::cfdSoundHandler( char* param )
    _param = param;
    _readParam = new cfdReadParam( NULL );
 
+   CreateObjects();
+
    if ( this->soundFile ) 
    {
       std::cout << "| Special: Initializing................................... cfdSound |" << std::endl;
@@ -81,6 +83,16 @@ cfdSoundHandler::cfdSoundHandler( char* param )
 
 cfdSoundHandler::~cfdSoundHandler( void )
 {
+}
+
+int cfdSoundHandler::GetNumberOfSounds( void )
+{
+   return soundFile;
+}
+
+char* cfdSoundHandler::GetSoundFilename( int i )
+{
+   return this->sounds[i]->fileName;
 }
 
 bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )

@@ -85,7 +85,7 @@ cfdFILE::cfdFILE( char* geomFile, cfdDCS* worldDCS  )
    this->node = new cfdNode();  
    this->node->LoadFile( geomFile );
    std::cout << " Load file 2" << std::endl;
-
+   fileName = geomFile;
    // Maybe fix this functionality later
    //this->node->flatten( 0 );
    this->DCS->AddChild( this->node );
@@ -140,6 +140,11 @@ cfdFILE::~cfdFILE()
                           << std::endl << vprDEBUG_FLUSH;
 
    delete this->node;
+}
+
+char* cfdFILE::GetFilename( void )
+{
+   return fileName;
 }
 
 void cfdFILE::SetFILEProperties( int color, int trans, float* stlColor )

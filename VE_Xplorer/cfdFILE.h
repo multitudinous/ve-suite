@@ -64,6 +64,7 @@ class cfdFILE
       void setOpac(float op_val);
       float getOpacity();
 
+      char* GetFilename( void );
       //pfLightModel *matLight;
       //pfMaterial *fmaterial;
       //pfMaterial *bmaterial;
@@ -75,7 +76,7 @@ class cfdFILE
       int color;
       int transparent;
       float stlColor [ 3 ];
-
+      char* fileName;
 
 //////
       void SetRGBAColorArray( double* );

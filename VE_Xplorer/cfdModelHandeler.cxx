@@ -103,6 +103,12 @@ cfdDataSet* cfdModelHandler::GetActiveDataSet( void )
 {
    return activeDataset;
 }
+
+cfdModel* cfdModelHandler::GetModel( int i )
+{
+   return _modelList.at( i );
+}
+
 ///////////////////////
 
 void cfdModelHandler::InitScene( void )
