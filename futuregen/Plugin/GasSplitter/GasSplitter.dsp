@@ -72,8 +72,8 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE F90 /check:bounds /compile_only /dbglibs /debug:full /dll /nologo /traceback /warn:argument_checking /warn:nofileopt
 # ADD F90 /check:bounds /compile_only /dbglibs /debug:full /dll /nologo /traceback /warn:argument_checking /warn:nofileopt
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "GASSPLITTER_EXPORTS" /YX /FD /GZ  /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "$(WX_ROOT)\include" /I "$(XERCESCROOT)\include" /I "..\\" /D "_MBCS" /D "GASSPLITTER_EXPORTS" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "WXMAKING_PLUGIN_DLL" /D "_USRDLL" /D "WINDLL_EXPORTS" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /YX /FD /GZ /c
+# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "GASSPLITTER_EXPORTS" /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "$(WX_ROOT)\include" /I "$(XERCESCROOT)\include" /I "..\\" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "WXMAKING_PLUGIN_DLL" /D "_USRDLL" /D "WINDLL_EXPORTS" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"

@@ -101,7 +101,7 @@ int Gasifier::GetNumPoly()
 /////////////////////////////////////////////////////////////////////////////
 int Gasifier::GetNumIports()
 {
-  int result=3;
+  int result=1;
 
   return result;
 }
@@ -109,9 +109,8 @@ int Gasifier::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Gasifier::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*26/63, icon_h*86/123);
-  iports[1]=wxPoint(icon_w*20/63, icon_h*105/123);
-  iports[2]=wxPoint(icon_w*36/63, icon_h*118/123);
+  iports[0]=wxPoint(icon_w*20/63, icon_h*105/123);
+  
   return;
 }
 

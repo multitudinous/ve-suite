@@ -3,7 +3,31 @@ Microsoft Developer Studio Workspace File, Format Version 6.00
 
 ###############################################################################
 
+Project: "AGR"=.\AGR\AGR.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
 Project: "BulkDesulfurizer"=.\BulkDesulfurizer\BulkDesulfurizer.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "CarbonBed"=.\CarbonBed\CarbonBed.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
@@ -172,6 +196,18 @@ Package=<4>
 ###############################################################################
 
 Project: "GasSplitter"=.\GasSplitter\GasSplitter.dsp - Package Owner=<4>
+
+Package=<5>
+{{{
+}}}
+
+Package=<4>
+{{{
+}}}
+
+###############################################################################
+
+Project: "Gasifier"=.\Gasifier\Gasifier.dsp - Package Owner=<4>
 
 Package=<5>
 {{{
