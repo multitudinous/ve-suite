@@ -463,6 +463,7 @@ int cfdSequence::AddChild(cfdNode* child)
 
    // force recomputation of time per frame
    this->setDuration( _duration );
+   return 1;
 }
 ///////////////////////////////
 //get the frame that is      //
