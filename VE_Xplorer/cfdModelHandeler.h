@@ -38,6 +38,7 @@ class cfdDataSet;
 class cfdModel;
 class cfdCommandArray;
 class cfdReadParam;
+class cfdScalarBarActor;
 
 class vtkPolyData;
 
@@ -67,6 +68,7 @@ class cfdModelHandler
       cfdDataSet* activeDataset;
       cfdCommandArray* commandArray;
       cfdReadParam* _readParam;
+      cfdScalarBarActor* _scalarBar;
 
       vtkPolyData* arrow;
       vector< cfdModel* > _modelList;

@@ -32,6 +32,7 @@
 #include "cfdModelHandeler.h"
 
 #include "cfdDCS.h"
+#include "cfdGroup.h"
 #include "cfdObjects.h"
 #include "cfdDataSet.h"
 #include "fileIO.h"
@@ -41,6 +42,7 @@
 #include "cfdEnum.h"
 #include "cfdReadParam.h"
 #include "cfdFILE.h"
+#include "cfdScalarBarActor.h"
 
 #ifndef _WIN32 // not windows
 #include <unistd.h>
@@ -64,6 +66,7 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
    _param = input;
    worldNode = dcs;
    activeDataset = NULL;
+   _scalarBar = NULL;
    _readParam = new cfdReadParam( NULL );
    commandArray = NULL;
    // worldnode getting passed in to model
@@ -79,6 +82,7 @@ cfdModelHandler::cfdModelHandler( char* input, cfdDCS* dcs)
 
 cfdModelHandler::~cfdModelHandler()
 {
+   delete _scalarBar;
 }
 
 ///////////////////////
@@ -147,6 +151,10 @@ void cfdModelHandler::InitScene( void )
       cfdVectorBase::UpdateThreshHoldValues();
       cfdVectorBase::SetVectorRatioFactor( 1 );
    }
+
+   // Create Scalar bar
+   _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)worldNode->GetParent( 0 ) );
+   _scalarBar->RefreshScalarBar();
 }
 
 void cfdModelHandler::PreFrameUpdate( void )
@@ -248,7 +256,14 @@ void cfdModelHandler::PreFrameUpdate( void )
       activeDataset->GetParent()->ResetScalarBarRange( 
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
+      // Fix this if we update scalar we need to update the scalar bar
+      // very important
    }
+   
+   // Check and see if we need to refresh the scalar bar
+   _scalarBar->CheckCommandId( commandArray );
+   // May use in the future
+   //_scalarBar->UpdateCommand();
 }
 
 ///////////////////////////////////////////////

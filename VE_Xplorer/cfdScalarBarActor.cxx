@@ -81,6 +81,8 @@ cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
   this->titleScalar = vtkVectorText::New();
 
   this->scalarBar = new cfdDCS();
+
+   this->CreateObjects();
 }
  
 cfdScalarBarActor::~cfdScalarBarActor()
@@ -476,7 +478,7 @@ bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdScalarBarActor::UpdateCommand()
 {
-   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+   cerr << "doing nothing in cfdScalarBarActor::UpdateCommand()" << endl;
 }
 
 void cfdScalarBarActor::RefreshScalarBar()
@@ -497,6 +499,7 @@ void cfdScalarBarActor::RefreshScalarBar()
       return;
    }
 
+   // Fix this. Don't think we need a DCS here. Could speed up the code a little bit.
    this->scalarBar = new cfdDCS();
 
    // if the param file specified scalarBar settings, apply them here...
