@@ -619,7 +619,7 @@ int main( int argc, char *argv[] )
    if ( argc == 1 )
    {
       std::cout << "Which data type do you want to convert to VTK?\n" 
-                << "\t(1)Fluent (2)Star-CD (3)REI (4)EnSight (5)FIRE/SWIFT "
+                << "\t(1)Fluent avs (2)Star-CD (3)REI (4)EnSight (5)FIRE/SWIFT "
                 << "(6)REI Particle\n"
                 << "\t(7)mfix (8)Fluent Particle Data "
                 << "(9)PLOT3D (10)John Deere MAP Data\n"
@@ -791,12 +791,14 @@ int main( int argc, char *argv[] )
       if ( pointset->IsA("vtkUnstructuredGrid") )
       {
          transformedPointset = vtkUnstructuredGrid::New();
-         transformedPointset->DeepCopy( transFilter->GetOutput() );
+         //transformedPointset->DeepCopy( transFilter->GetOutput() );
+         transformedPointset->ShallowCopy( transFilter->GetOutput() );
       }
       else if ( pointset->IsA("vtkStructuredGrid") )
       {
          transformedPointset = vtkStructuredGrid::New();
-         transformedPointset->DeepCopy( transFilter->GetOutput() );
+         //transformedPointset->DeepCopy( transFilter->GetOutput() );
+         transformedPointset->ShallowCopy( transFilter->GetOutput() );
       }
       else
       {
