@@ -126,6 +126,10 @@ osg::Node* cfdGeode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
+#ifdef _PERFORMER
+   return _geode;
+#elif _OSG
    return _geode.get();
-   
+#elif _OPENSG
+#endif
 }

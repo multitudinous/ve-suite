@@ -475,6 +475,11 @@ osg::Node* cfdDCS::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
+#ifdef _PERFORMER
+   return _dcs;
+#elif _OSG
    return _dcs.get();
+#elif _OPENSG
+#endif
 }
 

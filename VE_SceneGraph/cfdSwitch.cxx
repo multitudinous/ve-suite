@@ -86,7 +86,12 @@ osg::Node* cfdSwitch::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
+#ifdef _PERFORMER
+   return _switch;
+#elif _OSG
    return _switch.get();
+#elif _OPENSG
+#endif
 }
 ////////////////////////////////////////////////
 int cfdSwitch::RemoveChild( cfdNode* child )

@@ -150,7 +150,12 @@ osg::Node* cfdNode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
+#ifdef _PERFORMER
+   return _node;
+#elif _OSG
    return _node.get();
+#elif _OPENSG
+#endif
 }
 /////////////////////////////////////////
 //load scene from file                 //
