@@ -1,15 +1,11 @@
-2
-2
-7
-/home/users/sjk60/cvs/VRXPR_serial/36cubes/Surface.vtk
-8
-1 0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 
-1 1 1 
-0 0 0 
-0 0 0
-/home/users/sjk60/cvs/VRXPR_serial/36cubes/OldStyleNoScalar.vtk
-0 0
 1
-1
-0.5
-0.0
+8                    // Object type 8: data set
+   1 1 1             // Scale values
+   0 0 0             // Translation values
+   0 0 0             // Rotation values (Z-X-Y format)
+   ./OldStyleNoScalar.vtk   // data set name
+   ./POST_DATA1      // precomputed data slice directory
+   ./SURFACE1        // precomputed surface directory contains Surface.vtk
+1        // Warped Contour Scale Value
+0.5      // Navigation Step Size
+0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient
