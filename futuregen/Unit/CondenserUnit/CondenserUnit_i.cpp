@@ -37,7 +37,7 @@ void Body_Unit_i::StartCalc (
     iwater1 = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
     iwater2 = executive_->GetImportData(id_, 1); //port 1 will be the sweep input port;
     
-    if (!iwater1 || !iwater2)
+    if (string(iwater1)=="" || string(iwater2)=="")
       {
 	error("Missing input input.");
 	return;
@@ -382,8 +382,8 @@ void Body_Unit_i::SetParams (
   ))
   {
     // Add your implementation here
-    if (param!=NULL)
-      std::cout<<param<<std::endl;
+    if (string(param)=="")
+      return;
     std::cout<<UnitName_<<" :SetParams called"<<endl;
     Package pack;
         

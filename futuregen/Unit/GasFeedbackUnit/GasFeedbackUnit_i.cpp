@@ -52,14 +52,14 @@ void Body_Unit_i::StartCalc (
     
     initial_igas = executive_->GetImportData(id_, 0); //port 0 will be the initial input port;
     
-    if (!initial_igas)
+    if (string(initial_igas)=="")
       {
 	error("Missing initial input.");
 	return;
       }
 
     feedbck_igas = executive_->GetImportData(id_, 1); //port 1 will be the feedback input port;
-    if (!feedbck_igas)
+    if (string(feedbck_igas)=="")
       {
 	error("Missing feedback input.");
 	return;
@@ -241,7 +241,8 @@ void Body_Unit_i::SetParams (
     , Error::EUnknown
   ))
   {
-    //if (param!=NULL) std::cout<<param<<std::endl;
+    if (string(param)=="") 
+		return;
     
     std::cout<<UnitName_<<" :SetParams called"<<endl;
     

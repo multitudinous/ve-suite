@@ -41,7 +41,7 @@ void Body_Unit_i::StartCalc (
     for (i=0; i<4; i++)
       {
 	igas[i] = executive_->GetImportData(id_, i); //port i will be the gas input port i;
-	if (igas[i])
+	if (string(igas[i])!="")
 	  {
 	    count++;
 	    p.Load(igas[i], strlen(igas[i])); 

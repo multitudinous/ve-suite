@@ -373,7 +373,8 @@ void Body_Unit_i::SetParams (
   {
     double temp;
 
-    //if (param!=NULL) std::cout<<param<<std::endl;
+    if (string(param)=="")
+		return;
     std::cout<<UnitName_<<" :SetParams called"<<endl;
 
     Package p;

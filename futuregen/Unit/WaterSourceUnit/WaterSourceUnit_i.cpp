@@ -177,8 +177,8 @@ void Body_Unit_i::SetParams (
   ))
   {
     // Add your implementation here
-    if (param!=NULL)
-      std::cout<<param<<std::endl;
+    if (string(param)=="")
+      return;
     std::cout<<UnitName_<<" :SetParams called"<<endl;
     Package p;
         

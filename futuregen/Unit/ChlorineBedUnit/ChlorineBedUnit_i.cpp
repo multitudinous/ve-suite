@@ -36,7 +36,7 @@ void Body_Unit_i::StartCalc (
 
     igas = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
 
-    if (!igas)
+    if (string(igas)=="")
       {
 	error("Missing input input.");
 	return;
@@ -206,8 +206,8 @@ void Body_Unit_i::SetParams (
   ))
   {
     // Add your implementation here
-    if (param!=NULL)
-      std::cout<<param<<std::endl;
+    if (string(param)=="")
+      return;
     std::cout<<UnitName_<<" :SetParams called"<<endl;
     Package p;
         

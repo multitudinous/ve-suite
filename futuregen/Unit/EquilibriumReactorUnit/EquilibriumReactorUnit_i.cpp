@@ -35,7 +35,7 @@ void Body_Unit_i::StartCalc (
   std::cout<<"cp1\n";
   igas = executive_->GetImportData(id_, 0); //port 0 will be the gas input port;
   std::cout<<"cp2\n";
-  if (!igas)
+  if (string(igas)=="")
     {
       error("Missing input input.");
       return;
