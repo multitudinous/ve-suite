@@ -69,3 +69,8 @@ $(APP): $(OBJECTS)
 clean:
 	rm -rf $(OBJDIR) $(APP)
 
+cleandepend:
+#	@echo "    There are no depends to clean with this makefile"
+#	@echo ""
+# (defined for compatability with VE_Installer)
+
