@@ -1,0 +1,8 @@
+MOD_NAME GasSplitter #This is the module name
+
+Double percent_port1
+Double percent_port2
+Double percent_port3
+Double percent_port4
+
+END
