@@ -211,7 +211,7 @@ void cfdVEBaseClass::SetCursor( cfdCursor* input )
    }
    else
    {
-      cerr << " ERROR : cfdVEBaseClass::SetNavigationObject cursor input is NULL " << endl;
+      std::cerr << " ERROR : cfdVEBaseClass::SetNavigationObject cursor input is NULL " << std::endl;
    }
 }
 
@@ -537,7 +537,7 @@ void cfdVEBaseClass::CreateObjects( void )
             exit(1);
          }
 
-         cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << endl;
+         std::cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << std::endl;
          _model->CreateGeomDataSet( fileName );
          _model->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
          _model->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
@@ -743,7 +743,7 @@ void cfdVEBaseClass::RegistVar(std::string vname, std::vector<double> *var)
   _double1D[vname]=var;
 }
 
-void cfdVEBaseClass::RegistVar(std::string vname, std::vector<string> *var)
+void cfdVEBaseClass::RegistVar(std::string vname, std::vector<std::string> *var)
 {
   _string1D[vname]=var;
 }
