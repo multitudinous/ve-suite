@@ -56,8 +56,8 @@ EXTRA_SOURCEPATH_DIRS= $(srcdir)/java_stuff
 #CLASSPATH= ${CONDUCTOR_BASE_DIR}/java_stuff
 #CLASSPATH_ARG= -classpath "${CONDUCTOR_BASE_DIR}/java_stuff"
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
-include $(DZR_BASE_DIR)/mk/dzr.java-app.mk
-include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
+#include $(DZR_BASE_DIR)/mk/dzr.java-app.mk
+#include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
 #include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
 
 # One of these must be uncommented.
