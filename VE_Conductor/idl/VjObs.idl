@@ -11,6 +11,7 @@ interface VjObs
       scalar_p datasetnames;
       scalar_p scalarnames;
       scalar_p vectornames;
+      scalar_p geometrynames;
 
       obj_p datasettypes;
       obj_p num_scalars_per_dataset;
@@ -25,10 +26,10 @@ interface VjObs
    //void update();
    //scalar_p update_scalar();
    //scalar_p update_vector();
-   scalar_p get_geo_name();
+   //scalar_p get_geo_name();
    scalar_p get_teacher_name();
    //short get_sc_num();
-   short get_geo_num();
+   //short get_geo_num();
    short get_teacher_num();
    //short get_postdata();
    string get_perf();
@@ -44,8 +45,8 @@ interface VjObs
 
    // New Stuff
 
-   void setNumGeoArrays(in short value);
-   short getNumGeoArrays();
+   //void setNumGeoArrays(in short value);
+   //short getNumGeoArrays();
 
    void setIsoValue(in long value);
    long getIsoValue();

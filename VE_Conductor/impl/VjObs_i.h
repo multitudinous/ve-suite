@@ -76,8 +76,8 @@ public:
          client_list[temp]=0;
       }*/
       // allocate enough space
-	   geo_name       = new VjObs::scalar_p(50);
-	   geo_name->length(50);
+	   //geo_name       = new VjObs::scalar_p(50);
+	   //geo_name->length(50);
 	   //scl_name       = new VjObs::scalar_p(50);
 	   //scl_name->length(50);
 	   teacher_name   = new VjObs::scalar_p(50);
@@ -115,7 +115,7 @@ public:
 
    void PreFrameUpdate( void );
 #ifdef _TAO   
-   VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
+   //VjObs::scalar_p* get_geo_name() throw (CORBA::SystemException);
    VjObs::scalar_p* get_teacher_name() throw (CORBA::SystemException);
    VjObs::Models* GetModels() throw (CORBA::SystemException);
    //yang-REI : Change the design a little here
@@ -129,7 +129,7 @@ public:
    //reimplemented it with virtual functions, which will be overided in
    //cfdApp. So they are actually direct function calls to the cfdApp.
    short get_teacher_num() throw (CORBA::SystemException);//{return this->get_teacher_num();}; //*
-   short get_geo_num() throw (CORBA::SystemException);//{return this->get_geo_num();}; //*
+   //short get_geo_num() throw (CORBA::SystemException);//{return this->get_geo_num();}; //*
    char* get_perf() throw (CORBA::SystemException);
 
    short GetNumberOfSounds() throw (CORBA::SystemException);
@@ -140,7 +140,7 @@ public:
    VjObs::obj_p* GetClientInfoData() throw (CORBA::SystemException);
 #else   
    VjObs::Models* GetModels();
-   VjObs::scalar_p* get_geo_name();
+   //VjObs::scalar_p* get_geo_name();
    VjObs::scalar_p* get_teacher_name();
    //yang-REI : Change the design a little here
    //The original code's idea to set shared flag. Using that flag to wait for
@@ -152,7 +152,7 @@ public:
    //wait for it return, which is the basic behavior of function calls.  I
    //reimplemented it with virtual functions, which will be overided in
    //cfdApp. So they are actually direct function calls to the cfdApp.
-   short get_geo_num();//{return this->get_geo_num();}; //*
+   //short get_geo_num();//{return this->get_geo_num();}; //*
    short get_teacher_num();//{return this->get_teacher_num();}; //*
    char* get_perf();
 
@@ -177,7 +177,7 @@ protected:
 
    //VjObs::scalar_p_var scl_name;
    //VjObs::scalar_p_var vec_name;
-   VjObs::scalar_p_var geo_name;
+   //VjObs::scalar_p_var geo_name;
    VjObs::scalar_p_var sound_names;
    VjObs::scalar_p_var teacher_name;
    VjObs::Models_var _models;
@@ -199,8 +199,8 @@ protected:
 #endif
 
 #ifdef _TAO   
-   void setNumGeoArrays(const short value) throw (CORBA::SystemException);
-   short getNumGeoArrays( void ) throw (CORBA::SystemException);
+   //void setNumGeoArrays(const short value) throw (CORBA::SystemException);
+   //short getNumGeoArrays( void ) throw (CORBA::SystemException);
 
    void setIsoValue(const CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getIsoValue( void ) throw (CORBA::SystemException);
@@ -238,8 +238,8 @@ protected:
    /**
     * Sets this subject's internal value.
     */
-   void setNumGeoArrays(CORBA::Short value);
-   CORBA::Short getNumGeoArrays( void );
+   //void setNumGeoArrays(CORBA::Short value);
+   //CORBA::Short getNumGeoArrays( void );
 
    void setIsoValue(CORBA::Long value);
    CORBA::Long getIsoValue( void );

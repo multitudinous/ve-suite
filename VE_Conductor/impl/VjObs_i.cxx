@@ -180,6 +180,27 @@ void VjObs_i::CreateDatasetInfo( void )
                vIndex++;
             }
          }
+      
+         CORBA::ULong numGeoArrays = temp->GetNumberOfGeomDataSets();
+         vprDEBUG(vprDBG_ALL,0)
+               << " Number of geometries to be transfered to the client: "
+               << numGeoArrays 
+               << std::endl << vprDEBUG_FLUSH;
+
+         if( numGeoArrays > 0 )
+         {
+            this->_models[ i ].geometrynames = VjObs::scalar_p(50);
+            this->_models[ i ].geometrynames.length( numGeoArrays );
+            for(CORBA::ULong j = 0; j < numGeoArrays; j++)
+            {
+                  vprDEBUG(vprDBG_ALL,0)
+                        << " Geometry file ( "
+                        << j << " ) = " << temp->GetGeomDataSet( j )->GetFilename() 
+                        << std::endl << vprDEBUG_FLUSH;
+                  this->_models[ i ].geometrynames[ j ] = CORBA::string_dup(
+                                  temp->GetGeomDataSet( j )->GetFilename() );
+            }
+         }
       }
    }
 
@@ -210,62 +231,6 @@ void VjObs_i::CreateTeacherInfo( void )
 }
 
 #ifdef _TAO
-VjObs::scalar_p* VjObs_i::get_geo_name()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-VjObs::scalar_p* VjObs_i::get_geo_name()
-#endif
-{
-   if ( geo_name != NULL )
-   {
-      delete geo_name;
-   }
-
-   this->setPreState( 1 );
-
-   cfdModel* temp = this->_modelHandler->GetActiveModel();
-   if ( temp != NULL )
-   {
-      int numGeoArrays = temp->GetNumberOfGeomDataSets();
-      vprDEBUG(vprDBG_ALL,0)
-         << " Number of geometries to be transfered to the client: "
-         << numGeoArrays 
-         << std::endl << vprDEBUG_FLUSH;
-
-      this->setNumGeoArrays( numGeoArrays );
-
-      if( numGeoArrays > 0 )
-      {
-         geo_name = new VjObs::scalar_p(50);
-         this->geo_name->length( numGeoArrays );
-         for(CORBA::ULong i = 0; i < (unsigned int)numGeoArrays; i++)
-         {
-            vprDEBUG(vprDBG_ALL,0)
-               << " Geometry file ( "
-               << i << " ) = " << temp->GetGeomDataSet( i )->GetFilename() 
-               << std::endl << vprDEBUG_FLUSH;
-            this->geo_name[ i ] = CORBA::string_dup(
-                                  temp->GetGeomDataSet( i )->GetFilename() );
-         }
-      }
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL,0)
-         << " Number of geometries to be transfered to the client: "
-         << 0 
-         << std::endl << vprDEBUG_FLUSH;
-      geo_name = NULL;
-      this->setNumGeoArrays( 0 );
-   }
-
-  VjObs::scalar_p_var geo_name_=new VjObs::scalar_p(geo_name);
-  return geo_name_._retn();
-}
-
-#ifdef _TAO
 VjObs::scalar_p* VjObs_i::get_teacher_name()
   ACE_THROW_SPEC ((
     CORBA::SystemException
@@ -288,38 +253,6 @@ char* VjObs_i::get_perf()
 #endif
 {
    return CORBA::string_dup("abc");
-}
-
-
-#ifdef _TAO
-void VjObs_i::setNumGeoArrays(const short value)
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-void VjObs_i::setNumGeoArrays(CORBA::Short value)
-#endif
-{
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
-
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   mNumGeoArrays = value;
-}
-
-#ifdef _TAO
-short VjObs_i::getNumGeoArrays()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::getNumGeoArrays()
-#endif
-{
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   //vprDEBUG(vprDBG_ALL, 0)
-   //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return mNumGeoArrays;
 }
 
 #ifdef _TAO
@@ -666,29 +599,6 @@ CORBA::Short VjObs_i::getTeacherState()
 
 // These functions are called from the java side
 // Need to figure out a better notation so that this all makes sense
-#ifdef _TAO
-short VjObs_i::get_geo_num()
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-  ))
-#else
-CORBA::Short VjObs_i::get_geo_num()
-#endif
-{
-   //vprDEBUG(vprDBG_ALL,0) << "Returning num geos'" << this->mParamReader->numGeoms << "' to caller\n"
-   //     << vprDEBUG_FLUSH;
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   cfdModel* temp = this->_modelHandler->GetActiveModel();
-   if ( temp != NULL )
-   {
-      return temp->GetNumberOfGeomDataSets();
-   }
-   else
-   {
-      return (unsigned int)0;
-   }
-}
-
 #ifdef _TAO
 short VjObs_i::get_teacher_num()
   ACE_THROW_SPEC ((
