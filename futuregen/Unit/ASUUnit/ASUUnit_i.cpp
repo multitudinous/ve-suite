@@ -70,12 +70,11 @@ void Body_Unit_i::StartCalc (
     asu_obj.Calculate(*AirIn, *O2stream, *N2stream);
   
     // Fill in summary tables
-    summaries.insert_summary_val("Energy Requirement UNITS:MW FORMAT:10.4f",
+    if(asu_obj.energy_requirement>0.0)
+    summaries.insert_summary_val("Thermal Input UNITS:MW FORMAT:10.4f",
 				 asu_obj.energy_requirement/1000);
-    summaries.insert_summary_val("Energy Requirement UNITS:kW FORMAT:10.4f",
-				 asu_obj.energy_requirement);
-    
-    summaries.insert_summary_val("Power UNITS:MW FORMAT:12.2f", asu_obj.energy_requirement/1000);
+    else
+    summaries.insert_summary_val("Q UNITS:MW FORMAT:12.2f", asu_obj.energy_requirement/1000);
     
     //cout << "\n T O2 stream = " << asu_obj.T_O2stream
     //     << "\n P O2 stream = " << asu_obj.P_O2stream
