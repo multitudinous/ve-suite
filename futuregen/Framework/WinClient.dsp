@@ -324,15 +324,6 @@ SOURCE=..\Framework\UI_i.cpp
 # Begin Source File
 
 SOURCE=..\VE_UI\UI_NavTab.cpp
-
-!IF  "$(CFG)" == "WinClient - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "WinClient - Win32 Debug"
-
-# PROP Exclude_From_Build 1
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 
