@@ -11,7 +11,7 @@
 #include <string>
 #include <vector>
 #include <map>
-#include <orbsvcs/orbsvcs/CosNamingC.h>
+#include <orbsvcs/CosNamingC.h>
 
 #if !defined (ACE_LACKS_PRAGMA_ONCE)
 #pragma once

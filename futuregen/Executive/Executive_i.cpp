@@ -827,12 +827,14 @@ void Body_Executive_i::ClientMessage(const char *msg)
 	for(iter=uis_.begin(); iter!=uis_.end(); iter++) 
 	{
 		cout << msg << " :TO: " << iter->first << endl;
-	try {
-		iter->second->Raise(msg);
-	}catch (CORBA::Exception &) {
-		
-		cout <<iter->first<<" is obsolete.\n";
-		uis_.erase(iter);
-	}
- }
+	   try 
+      {
+		   iter->second->Raise(msg);
+	   }
+      catch (CORBA::Exception &) 
+      {
+		   cout <<iter->first<<" is obsolete.\n";
+		   uis_.erase(iter);
+	   }
+   }
 }
