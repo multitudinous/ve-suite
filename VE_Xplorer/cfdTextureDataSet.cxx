@@ -4,6 +4,62 @@
 #include "cfdTextureManager.h"
 #include <iostream>
 #include <fstream>
+//////////////////////////////////
+//Constructor                   //
+//////////////////////////////////
+TextureDataInfo::TextureDataInfo()
+{
+   _name = " ";
+   _tm = 0;
+}
+////////////////////////////////////////////////////////////
+TextureDataInfo::TextureDataInfo(const TextureDataInfo& tdi)
+{
+   _name = tdi._name;
+   _tm = new cfdTextureManager(*tdi._tm);
+}
+///////////////////////////////////
+TextureDataInfo::~TextureDataInfo()
+{
+   _name.erase();
+   if(_tm){
+      delete _tm;
+      _tm = 0;
+   }
+}
+///////////////////////////////////////////////
+void TextureDataInfo::SetName(std::string name)
+{
+   _name = name;
+}
+//////////////////////////////////////////////////////////////
+void TextureDataInfo::SetTextureManager(cfdTextureManager* tm)
+{
+   _tm = tm;
+}
+//////////////////////////////////////
+const char* TextureDataInfo::GetName()
+{
+   return _name.c_str();
+}
+///////////////////////////////////////////////////////
+cfdTextureManager* TextureDataInfo::GetTextureManager()
+{
+   if(_tm)
+   {
+      return _tm;
+   }
+   return 0;
+}
+///////////////////////////////////////////////////////////////////////
+TextureDataInfo& TextureDataInfo::operator=(const TextureDataInfo& tdi)
+{
+   if(this != &tdi){
+      _name = tdi._name;
+      _tm = tdi._tm;
+   }
+   return *this;
+}
 //////////////////////////////////////
 //Constructor                       //
 //////////////////////////////////////
@@ -28,46 +84,34 @@ cfdTextureDataSet::~cfdTextureDataSet()
       delete _volVisNode;
       _volVisNode = 0;
    }
-   TextureDataList::iterator pos;
-
-   //need to fix this, I'm sure it's a memory leak. . .
-   for (pos = _scalars.begin( ); pos != _scalars.end( ); pos++)
-   {
-      _scalars.erase( pos );
-   }
    
-   for ( pos = _vectors.begin(); pos != _vectors.end(); )
+   for(unsigned int i = 0; i < _nScalars; i++)
    {
-      _vectors.erase( pos++ );
+      delete _scalars.at(i);
    }
+   _scalars.clear();
+   for(unsigned int i = 0; i < _nVectors; i++)
+   {
+      delete _vectors.at(i);
+   }
+   _vectors.clear();
 }
 ///////////////////////////////////////////////////
 void cfdTextureDataSet::SetActiveScalar(char* name)
 {
-   TextureDataList::iterator pos;
-   for (pos = _scalars.begin(); 
-       pos != _scalars.end(); 
-       ++pos)
+   int whichScalar = FindScalar(name);
+   if( whichScalar >= 0)
    {
-      std::cout<<"Scalar :" <<(*pos).first<<std::endl;
-      if(strstr(pos->first,name)){
-         _activeTM = pos->second;
-         break;
-      }
+      _activeTM = _scalars.at(whichScalar)->GetTextureManager();
    }
 }
 ///////////////////////////////////////////////////
 void cfdTextureDataSet::SetActiveVector(char* name)
 {
-   TextureDataList::iterator pos;
-   for (pos = _vectors.begin( ); pos != _vectors.end( ); pos++)
+   int whichVector = FindVector(name);
+   if( whichVector >= 0)
    {
-      std::cout<<"Vector :" <<pos->first<<std::endl;
-      if(strstr(pos->first,name)){
-         _activeTM = (*pos).second;
-         break;
-
-      }
+      _activeTM = _vectors.at(whichVector)->GetTextureManager();
    }
 }
 ///////////////////////////////////////////////
@@ -94,7 +138,11 @@ cfdVolumeVisualization* cfdTextureDataSet::GetVolumeVisNode()
 ////////////////////////////////////////////////////////////////
 cfdTextureManager* cfdTextureDataSet::GetActiveTextureManager()
 {
-   return _activeTM;
+   if(_activeTM)
+   {
+      return _activeTM;
+   }
+   return 0;
 }
 //////////////////////////////////////////////////////////////////////////
 void cfdTextureDataSet::CreateTextureManager(char* textureDescriptionFile)
@@ -138,18 +186,44 @@ void cfdTextureDataSet::CreateTextureManager(char* textureDescriptionFile)
 void cfdTextureDataSet::AddScalarTextureManager(cfdTextureManager* tm,
                                                 char* scalarName)
 {
-   char* lName = new char[strlen(scalarName)+1];
-   strcpy(lName,scalarName);
-   _scalars.insert( std::pair<const char* , 
-                           cfdTextureManager*>(lName, tm));
+   TextureDataInfo* td = new TextureDataInfo();
+   td->SetName(std::string(scalarName));
+   td->SetTextureManager(tm);
+   _scalars.push_back(td);
+   _nScalars = _scalars.size(); 
 }
 /////////////////////////////////////////////////////////////////////
 void cfdTextureDataSet::AddVectorTextureManager(cfdTextureManager* tm,
                                                 char* vectorName)
 {
-   char* lName= new char[strlen(vectorName)+1];
-   strcpy(lName,vectorName);
-   _vectors.insert( std::pair<const char* , 
-                           cfdTextureManager*>(lName, tm));
+   TextureDataInfo* td = new TextureDataInfo();
+   td->SetName(std::string(vectorName));
+   td->SetTextureManager(tm);
+   _vectors.push_back(td);
+   _nVectors = _vectors.size();
+}
+/////////////////////////////////////////////
+int cfdTextureDataSet::FindScalar(char* name)
+{
+   for(unsigned int i = 0; i < _nScalars; i++)
+   {
+      if(strstr(_scalars.at(i)->GetName(),name))
+      {
+         return i;
+      }
+   }
+   return -1;
+}
+/////////////////////////////////////////////
+int cfdTextureDataSet::FindVector(char* name)
+{
+   for(unsigned int i = 0; i < _nVectors; i++)
+   {
+      if(strstr(_vectors.at(i)->GetName(),name))
+      {
+         return i;
+      }
+   }
+   return -1;
 }
 #endif //_OSG

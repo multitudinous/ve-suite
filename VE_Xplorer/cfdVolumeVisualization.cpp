@@ -95,10 +95,6 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
 cfdVolumeVisualization::~cfdVolumeVisualization()
 {
    //not sure if I should call release here or not
-   if(_tm){
-      delete [] _tm;
-      _tm = 0;
-   }
    if(_utCbk){
       delete _utCbk;
       _utCbk = 0;

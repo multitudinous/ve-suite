@@ -56,6 +56,12 @@ cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
 cfdTextureManager::~cfdTextureManager()
 {
    if(_dataFields.size()){
+      unsigned int nFields = _dataFields.size();
+      for(unsigned int i = 0; i < nFields; i++)
+      {
+         if(_dataFields.at(i))
+            delete [] _dataFields.at(i);
+      }
       _dataFields.clear();
    }
    if(_types.size()){

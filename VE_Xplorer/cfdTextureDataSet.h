@@ -7,13 +7,25 @@ class cfdTextureManager;
 #include <vector>
 #include <map>
 #include <iostream>
-struct compareString
-{
-  bool operator()(const char* s1, const char* s2) const
-  {
-     return strcmp(s1, s2) < 0;
-  }
+#include <string>
+
+class TextureDataInfo{
+public:
+   TextureDataInfo();
+   TextureDataInfo(const TextureDataInfo& tdi);
+   ~TextureDataInfo();
+   void SetName(std::string name);
+   void SetTextureManager(cfdTextureManager* tm);
+
+   const char* GetName();
+   cfdTextureManager* GetTextureManager();
+   TextureDataInfo& operator=(const TextureDataInfo& tdi);
+protected:
+   std::string _name;
+   cfdTextureManager* _tm;
+
 };
+
 class cfdTextureDataSet{
 public:
    cfdTextureDataSet();
@@ -26,6 +38,9 @@ public:
    void AddScalarTextureManager( cfdTextureManager*, char* );
    void AddVectorTextureManager( cfdTextureManager*, char* );
 
+   int FindVector(char* name);
+   int FindScalar(char* name);
+
    cfdTextureManager* GetActiveTextureManager();
    cfdVolumeVisualization* GetVolumeVisNode();
 protected:
@@ -35,7 +50,10 @@ protected:
    cfdVolumeVisualization* _volVisNode;
    cfdTextureManager* _activeTM;
 
-   typedef std::multimap<const char*,cfdTextureManager*,compareString> TextureDataList;
+   typedef std::vector<TextureDataInfo*> TextureDataList;
+
+   std::vector<std::string> _scalarNames;
+   std::vector<std::string> _vectorNames;
 
    TextureDataList _scalars;
    TextureDataList _vectors;
