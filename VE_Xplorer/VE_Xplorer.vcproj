@@ -920,6 +920,12 @@ echo Done.
 			</File>
 			<File
 				RelativePath="..\futuregen\Plugin\string_ops.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\textPrompt.cxx">
@@ -1031,9 +1037,21 @@ echo Done.
 			</File>
 			<File
 				RelativePath=".\vtkActorToOSG.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\vtkActorToPF.cxx">
+				<FileConfiguration
+					Name="OMNI_OSG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<Filter
 				Name="TAO_src"
