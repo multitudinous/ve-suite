@@ -3,8 +3,8 @@
 
 # The following allows you to control the TAO nameServer properties
 #setenv TAO_MACHINE lego.vrac.iastate.edu
-setenv TAO_MACHINE localhost
-setenv TAO_PORT 1234
+#setenv TAO_MACHINE localhost
+#setenv TAO_PORT 1234
 
 #this is typically defined in your .cshrc file
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
@@ -33,9 +33,9 @@ setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 # Some like to hardcode the following variables for custom setups.
 # The checked in version of this file should have the settings commented out
 # to allow developers to set them from outside this script (see below).
-#setenv TAO_BUILD FALSE
+#setenv TAO_BUILD TRUE
 #setenv CLUSTER_APP FALSE
-#setenv SCENE_GRAPH OSG
+#setenv SCENE_GRAPH PF
 
 # TAO_BUILD can be set outside this script to override the default of FALSE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -88,12 +88,12 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OSG_HOME}/lib32:${OSG_HOME}/lib32/osgPlugins
 
    if ( ${TAO_BUILD} == "TRUE" ) then
-      #setenv ACE_ROOT /home/vr/Applications/TSVEG/Libraries/ACE-5.4
-      #setenv TAO_ROOT /home/vr/Applications/TSVEG/Libraries/TAO-1.4
+      setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
+      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/TAO-1.4
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
       setenv TAO_ROOT ${ACE_ROOT}/TAO
-      #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/IRIX32/lib
-      #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/IRIX32/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_HOME}/IRIX32/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_HOME}/IRIX32/lib
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL
       setenv PATH ${ACE_ROOT}/bin:${ACE_ROOT}/IRIX32/bin:${TAO_ROOT}/IRIX32/bin:${PATH}

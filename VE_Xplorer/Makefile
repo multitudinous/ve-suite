@@ -81,19 +81,21 @@ ifeq ($(TAO_BUILD), TRUE)
    # Include macros and targets
    #----------------------------------------------------------------------------
 
-   include ${ACE_ROOT}/include/makeinclude/wrapper_macros.GNU
-   include ${ACE_ROOT}/include/makeinclude/macros.GNU
+#   include ${ACE_ROOT}/include/makeinclude/wrapper_macros.GNU
+#   include ${ACE_ROOT}/include/makeinclude/macros.GNU
 #   include ${TAO_ROOT}/rules.tao.GNU
-   include ${ACE_ROOT}/include/makeinclude/rules.common.GNU
-   include ${ACE_ROOT}/include/makeinclude/rules.nonested.GNU
-   include ${ACE_ROOT}/include/makeinclude/rules.local.GNU
-   include ${TAO_ROOT}/taoconfig.mk
+#   include ${ACE_ROOT}/include/makeinclude/rules.common.GNU
+#   include ${ACE_ROOT}/include/makeinclude/rules.nonested.GNU
+#   include ${ACE_ROOT}/include/makeinclude/rules.local.GNU
+#   include ${TAO_ROOT}/taoconfig.mk
 
-   ACE_LIBS = -L${ACE_ROOT}/ace -lACE -lTAO_CosNaming -lTAO_Svc_Utils \
+#   ACE_LIBS = -L${ACE_ROOT}/ace -lACE -lTAO_CosNaming -lTAO_Svc_Utils \
                -lTAO_IORTable -lTAO_PortableServer -L${TAO_ROOT}/tao -lTAO \
                -lTAO_BiDirGIOP
 #${LDFLAGS}
-   ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs
+#   ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
+
    EXTRA_INCLUDES+= \
                   ${ACE_INCLUDES} \
                   -I${CONDUCTOR_BASE_DIR}/impl \
@@ -353,18 +355,18 @@ DEBUG_APP?= TRUE
 
 
 EXTRA_CXXFLAGS+= $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
-
+EXTRA_LIBS+= $(WX_LIB)
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
 EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
 ifeq ($(TAO_BUILD), TRUE)
    #include ${VE_SUITE_HOME}/VE_Installer/dzr.ace_tao.mk
-   EXTRA_CXXFLAGS+= -D_TAO ${CPPFLAGS}
-   EXTRA_LIBS+= ${ACE_LIBS} $(WX_LIB)
+   #EXTRA_CXXFLAGS+= -D_TAO
+   #EXTRA_LIBS+= ${ACE_LIBS} $(WX_LIB)
    #$(VLDLIBS)
 else
    EXTRA_CXXFLAGS+= $(TWEEK_CXX_FLAGS) $(CORBA_DEFINES)
-   EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) $(WX_LIB)
+   EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) 
 endif
 
 LINKALL_ON= -all
