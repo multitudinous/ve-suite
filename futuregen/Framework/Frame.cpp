@@ -24,6 +24,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(v21ID_STOP_CALC, AppFrame::StopCalc)
   EVT_MENU(v21ID_PAUSE_CALC, AppFrame::PauseCalc)
   EVT_MENU(v21ID_RESUME_CALC, AppFrame::ResumeCalc)
+  EVT_MENU(v21ID_HELP, AppFrame::ViewHelp)
 //  EVT_MENU(v21ID_VIEW_RESULT, AppFrame::ViewResult)
 //  EVT_MENU(v21ID_GLOBAL_PARAM, AppFrame::GlobalParam)
 //  EVT_MENU(v21ID_BASE, AppFrame::LoadBase)
@@ -232,12 +233,12 @@ void AppFrame::CreateMenu()
   edit_menu->Enable(v21ID_REDO, false);
    
   help_menu->Append(wxID_HELP_CONTENTS, _("&Content\tF1"));
-  help_menu->Append (wxID_HELP, _("&Index\tF1"));
+  help_menu->Append (v21ID_HELP, _("&Index"));
   help_menu->AppendSeparator();
   help_menu->Append (wxID_ABOUT, _("&About ..\tShift+F1"));
 
   help_menu->Enable(wxID_HELP_CONTENTS, false);
-  help_menu->Enable(wxID_HELP, false);
+  //help_menu->Enable(v21ID_HELP, false);
   help_menu->Enable(wxID_ABOUT, false);
 
 //  config_menu->Append(v21ID_BASE,_("Base Quench"));
@@ -686,4 +687,27 @@ void AppFrame::DisConExeServer(wxCommandEvent &event)
 		}
 	
 
+}
+
+void AppFrame::ViewHelp(wxCommandEvent& event)
+{
+  char browser[1024];
+  wxString help;
+  wxString fgroot;
+  wxString docdir;
+  wxString cmd;
+  fgroot = getenv("FGROOT");
+  
+#ifdef WIN32
+  docdir=fgroot+"\\Framework\\doc";
+  help = fgroot+"\\Framework\\doc\\index.html";
+  FindExecutable("index.html", docdir.c_str(), browser);
+#endif
+  cmd="\"";
+  cmd+=browser;
+  cmd+="\" \"";
+  cmd+=help;
+  cmd+="\"";
+  
+  ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
 }

@@ -42,7 +42,8 @@ enum {
   v21ID_REI_SOUR,
   v21ID_SWEET,
   v21ID_CO_DISPOSAL,
-  MYLOG
+  MYLOG,
+  v21ID_HELP
 };
 
 class OrbThread;
@@ -113,6 +114,7 @@ class AppFrame : public wxFrame
   void PauseCalc(wxCommandEvent &event);	
   void ResumeCalc(wxCommandEvent &event);	
   void ViewResult(wxCommandEvent &event);
+  void ViewHelp(wxCommandEvent &event);
   void GlobalParam(wxCommandEvent &event);
   void ConExeServer(wxCommandEvent &event);
   void DisConExeServer(wxCommandEvent &event);
