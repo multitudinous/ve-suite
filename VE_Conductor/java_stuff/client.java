@@ -1953,7 +1953,7 @@ static class ParticlePanel extends JPanel
 
       scaleSlider = new Single_slider( "Sphere Size", 10,
                                   "CHANGE_SPHERE_SIZE", -100, 100, 0, 0 );
-      disableContainer( scaleSlider );
+      //disableContainer( scaleSlider );
       add(scaleSlider);
    }
 
@@ -1984,7 +1984,11 @@ static class ParticlePanel extends JPanel
 
          if ( bttn[ 0 ].isSelected() )
          {  
-            disableContainer( scaleSlider );
+            //disableContainer( scaleSlider );
+            // use slider for scaling point cloud and variably sized spheres,
+            // so instead do this...
+            enableContainer( scaleSlider );
+            clt.obsref.iso_value = scaleSlider.slide.getValue();
          }
          else if ( bttn[ 1 ].isSelected() )
          {  
