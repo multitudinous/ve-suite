@@ -1178,6 +1178,12 @@ void GasifierCFD::send_scirun_data(int *ns, int *nlm,
   _summaries->insert_summary_val("Tar Mass Fraction", _gas_out->gas_composite.tar);
   _summaries->insert_summary_val("Soot Part #/Mass Fraction", _gas_out->gas_composite.ynu);
   
+  double fuel_flow_nochar = 0.0;
+  int nlev = 3;
+  if(_stage==1) nlev = 1; 
+  for(i=0; i<nlev; i++) fuel_flow_nochar += _slur_flow[i] * _coal_pct[i];
+  double thermoinput = fuel_flow_nochar*_hhv*.00232587;
+  _summaries->insert_summary_val("Thermal Input UNITS:MW FORMAT:12.2e", thermoinput);
   // Heat data
   //heat_data->conv =((double)(*ht_conv));
   //heat_data->net = ((double)(*ht_netwall));
