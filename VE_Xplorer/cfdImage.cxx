@@ -242,7 +242,7 @@ bool cfdImage::CheckCommandId( cfdCommandArray* commandArray  )
 
 void cfdImage::UpdateCommand()
 {
-   cerr << "doing nothing in cfdImage::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdImage::UpdateCommand()" << std::endl;
 }
 
 void cfdImage::CreateObjects( void )

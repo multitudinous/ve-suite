@@ -80,6 +80,6 @@ void letUsersAddParamsToField( const int numParams, vtkFloatArray** data,
    }
 
    if ( debug > 1 ) 
-      pointData->Print( cout );
+      pointData->Print( std::cout );
 }
 

@@ -46,11 +46,11 @@ vtkUnstructuredGrid * convertToUnstructuredGrid( vtkDataSet * rgrid )
 
    int numCells = rgrid->GetNumberOfCells();
    if ( debug ) 
-      cout << "\tThe number of cells in the input grid is " << numCells << endl;
+      std::cout << "\tThe number of cells in the input grid is " << numCells << std::endl;
 
    int numPts = rgrid->GetNumberOfPoints();
    if ( debug ) 
-      cout << "\tThe number of points in the input grid is " << numPts << endl;
+      std::cout << "\tThe number of points in the input grid is " << numPts << std::endl;
 
    vtkUnstructuredGrid *ugrid = vtkUnstructuredGrid::New();
    if ( numCells == 0 ) 
@@ -63,7 +63,7 @@ vtkUnstructuredGrid * convertToUnstructuredGrid( vtkDataSet * rgrid )
     // attach the cell information to the unstructured grid
     for(int cellId = 0; cellId < numCells; cellId++)
     {
-        //cout << "cellId = " << cellId << " of " << numCells << endl;
+        //std::cout << "cellId = " << cellId << " of " << numCells << std::endl;
         rgrid->GetCell( cellId, cell );
         npts = cell->GetNumberOfPoints();
         pts->Reset();
@@ -81,8 +81,8 @@ vtkUnstructuredGrid * convertToUnstructuredGrid( vtkDataSet * rgrid )
     {
         rgrid->GetPoint( ptId, x );
 /*
-        if (ptId<20 || ptId>numPts-20) cout << "ptId = " << ptId << " of " << numPts
-                                       << "\tx:\t" << x[0] << "\t" << x[1] << "\t" << x[2] << endl;
+        if (ptId<20 || ptId>numPts-20) std::cout << "ptId = " << ptId << " of " << numPts
+                                       << "\tx:\t" << x[0] << "\t" << x[1] << "\t" << x[2] << std::endl;
 */
         vertices->InsertPoint( ptId, x );
     }//for all points
@@ -92,7 +92,7 @@ vtkUnstructuredGrid * convertToUnstructuredGrid( vtkDataSet * rgrid )
 
    // if the data set has FIELD data connected to the point data, attach these to unstructured grid...
    int numPDArrays = rgrid->GetPointData()->GetNumberOfArrays();
-   if ( debug ) cout << "number of point data arrays = " << numPDArrays << endl;
+   if ( debug ) std::cout << "number of point data arrays = " << numPDArrays << std::endl;
    if ( numPDArrays )
    {
       ugrid->GetPointData()->AllocateArrays( numPDArrays ); 
@@ -115,11 +115,11 @@ vtkStructuredGrid * convertToStructuredGrid( vtkRectilinearGrid * rGrid )
 
    int numCells = rGrid->GetNumberOfCells();
    if ( debug ) 
-      cout << "\tThe number of cells in the input grid is " << numCells << endl;
+      std::cout << "\tThe number of cells in the input grid is " << numCells << std::endl;
 
    int numPts = rGrid->GetNumberOfPoints();
    if ( debug ) 
-      cout << "\tThe number of points in the input grid is " << numPts << endl;
+      std::cout << "\tThe number of points in the input grid is " << numPts << std::endl;
 
    if ( numCells == 0 ) 
       return NULL;
@@ -135,7 +135,7 @@ vtkStructuredGrid * convertToStructuredGrid( vtkRectilinearGrid * rGrid )
    for(int cellId = 0; cellId < numCells; cellId++)
    {
       if ( debug > 1 ) 
-         cout << "cellId = " << cellId << " of " << numCells << endl;
+         std::cout << "cellId = " << cellId << " of " << numCells << std::endl;
 
       rGrid->GetCell( cellId, cell );
       npts = cell->GetNumberOfPoints();
@@ -161,8 +161,8 @@ vtkStructuredGrid * convertToStructuredGrid( vtkRectilinearGrid * rGrid )
       if ( debug > 1 ) 
       {
          if (ptId<20 || ptId>numPts-20)
-            cout << "ptId = " << ptId << " of " << numPts
-                 << "\tx:\t" << x[0] << "\t" << x[1] << "\t" << x[2] << endl;
+            std::cout << "ptId = " << ptId << " of " << numPts
+                 << "\tx:\t" << x[0] << "\t" << x[1] << "\t" << x[2] << std::endl;
       }
       vertices->InsertPoint( ptId, x );
    }//for all points
@@ -175,7 +175,7 @@ vtkStructuredGrid * convertToStructuredGrid( vtkRectilinearGrid * rGrid )
    // attach these to the structured grid...
    int numPDArrays = rGrid->GetPointData()->GetNumberOfArrays();
    if ( debug )
-      cout << "number of point data arrays = " << numPDArrays << endl;
+      std::cout << "number of point data arrays = " << numPDArrays << std::endl;
 
    if ( numPDArrays )
    {

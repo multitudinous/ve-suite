@@ -30,6 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "multiPlaneVtkOutput.h"
+#include <iostream>
+#include <fstream>
 
 #include <vtkDataSet.h>
 #include <vtkPlane.h>
@@ -71,10 +73,10 @@ void multiPlaneVtkOutput::writeMultiPlanes( vtkDataSet *unsGrid,
    this->unsData = unsGrid;
 
 /*
-   cout << X_cutMaxStepRange << " : " << Y_cutMaxStepRange << " : " 
+   std::cout << X_cutMaxStepRange << " : " << Y_cutMaxStepRange << " : " 
         << Z_cutMaxStepRange << " : " << multiPlaneOption << " : " 
         << transientFileNumber << " : " << myid << " : " << xprocs << " : " 
-        << yprocs << " : " << zprocs <<" : "<< numProcs << endl;
+        << yprocs << " : " << zprocs <<" : "<< numProcs << std::endl;
 */
 
    double tmp[6];
@@ -92,9 +94,9 @@ void multiPlaneVtkOutput::writeMultiPlanes( vtkDataSet *unsGrid,
    float dz = ( zmax - zmin ) / (float) ( Z_cutMaxStepRange + 1 );
 
 /*
-cout << xmin << " : " << xmax << endl;
-cout << ymin << " : " << ymax << endl;
-cout << zmin << " : " << zmax << endl;
+std::cout << xmin << " : " << xmax << std::endl;
+std::cout << ymin << " : " << ymax << std::endl;
+std::cout << zmin << " : " << zmax << std::endl;
 */
 
    int i;
@@ -276,7 +278,7 @@ cout << zmin << " : " << zmax << endl;
          WriteMultiPolyData( appendPolyData->GetOutput(), 2, transientFileNumber );
       appendPolyData->Delete();
    }
-   cout << endl;
+   std::cout << std::endl;
 }
 
 void multiPlaneVtkOutput::readParamFileandWriteMultiPlanes( vtkDataSet *unsGrid,
@@ -345,11 +347,11 @@ void multiPlaneVtkOutput::readParamFileandWriteMultiPlanes( vtkDataSet *unsGrid,
 
 vtkPolyData * multiPlaneVtkOutput::MakePolyData( int xyz, float pos )
 {
-   //cout << "in MakePolyData, pos = " << pos << endl;
-   //for (int k=0; k<80; k++) cout << "\b";
-   cout << "Working on plane direction " << xyz 
-        << ", position " << pos <<  "     " << endl;
-   //cout.flush();
+   //std::cout << "in MakePolyData, pos = " << pos << std::endl;
+   //for (int k=0; k<80; k++) std::cout << "\b";
+   std::cout << "Working on plane direction " << xyz 
+        << ", position " << pos <<  "     " << std::endl;
+   //std::cout.flush();
 
    vtkPlane *plane = vtkPlane::New();
    if      ( xyz == 0 )  //  Set up the X cutting plane
@@ -436,7 +438,7 @@ void multiPlaneVtkOutput::WritePolyData( vtkPolyData * polyData, int xyz, int i 
    }
 */
 
-   //cout << "contFname = " << contFname << endl;
+   //std::cout << "contFname = " << contFname << std::endl;
 
    vtkPolyDataWriter *polyDataWriter = vtkPolyDataWriter::New();
    polyDataWriter->SetFileName( contFname );
@@ -468,7 +470,7 @@ void multiPlaneVtkOutput::WriteMultiPolyData( vtkPolyData * polyData, int xyz, i
    }
 */
 
-   //cout << "contFname = " << contFname << endl;
+   //std::cout << "contFname = " << contFname << std::endl;
 
    vtkPolyDataWriter *polyDataWriter = vtkPolyDataWriter::New();
    polyDataWriter->SetFileName( contFname );

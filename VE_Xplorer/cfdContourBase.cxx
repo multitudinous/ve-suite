@@ -164,7 +164,7 @@ bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
 void cfdContourBase::UpdateCommand()
 {
    cfdObjects::UpdateCommand();
-   cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
 
 void cfdContourBase::SetFillType( const int type )

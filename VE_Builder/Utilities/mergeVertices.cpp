@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
@@ -66,7 +64,7 @@ int main( int argc, char *argv[] )
       extunsgrid->MergingOn();
 
       int numPoints = dataset->GetNumberOfPoints();
-      cout << "numPoints = " << numPoints << endl;
+      std::cout << "numPoints = " << numPoints << std::endl;
       extunsgrid->SetInput( ( vtkUnstructuredGrid * ) dataset );
       extunsgrid->SetPointMinimum( 0 );
       extunsgrid->SetPointMaximum( numPoints );
@@ -77,7 +75,7 @@ int main( int argc, char *argv[] )
    }
    else
    {
-      cout <<"\nERROR - can only merge points for vtkUnstructuredGrids" << endl;
+      std::cout <<"\nERROR - can only merge points for vtkUnstructuredGrids" << std::endl;
       dataset->Delete();
       delete [] inFileName;   inFileName = NULL;
       delete [] outFileName;  outFileName = NULL;

@@ -488,7 +488,7 @@ bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdScalarBarActor::UpdateCommand()
 {
-   cerr << "doing nothing in cfdScalarBarActor::UpdateCommand()" << endl;
+  std::cerr << "doing nothing in cfdScalarBarActor::UpdateCommand()" << std::endl;
 }
 
 void cfdScalarBarActor::RefreshScalarBar()

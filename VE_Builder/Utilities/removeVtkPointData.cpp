@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
@@ -44,7 +42,7 @@ void removeVtkPointData( vtkDataSet * dataSet )
 {
    // if there are data arrays, count the number of arrays
    int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
-   cout << "numPDArrays = " << numPDArrays << endl;
+   std::cout << "numPDArrays = " << numPDArrays << std::endl;
    if ( numPDArrays )
    {
       char **names = new char * [numPDArrays];
@@ -61,9 +59,9 @@ void removeVtkPointData( vtkDataSet * dataSet )
          char response;
          do 
          {
-            cout << "Do you want parameter \"" << names[i] 
+            std::cout << "Do you want parameter \"" << names[i] 
                  << "\" retained in the flowdata file? [y/n]: ";
-            cin >> response;
+            std::cin >> response;
          } while (response != 'y' && response != 'Y' && response != 'n' && response != 'N');
 
          // go to next scalar if anything other than n/N was input...

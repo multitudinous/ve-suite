@@ -134,7 +134,7 @@ int main( int argc, char *argv[] )
       {
          std::cout << "Number of cells for each octant : ";
          std::cout.flush();
-         cin >> noOfCellsInOctant;
+         std::cin >> noOfCellsInOctant;
       }
 
       if ( argc > arg )
@@ -152,7 +152,7 @@ int main( int argc, char *argv[] )
       {
          std::cout << "Decimation value (range from 0.0 to 1.0 ) : ";
          std::cout.flush();
-         cin >> deciVal;
+         std::cin >> deciVal;
 
          std::cout << "\nFilename to output?" << std::endl;
          std::cout << "By default : " << postDataDir << "/surface.vtk" << std::endl;
@@ -163,7 +163,7 @@ int main( int argc, char *argv[] )
          {
             std::cout << "Enter file name (including path if desired): ";
             std::cout.flush();
-            cin >> surfFname;
+            std::cin >> surfFname;
          }
          else
          {
@@ -194,7 +194,7 @@ int main( int argc, char *argv[] )
          {
             std::cout << "No. of isosurfaces : ";
             std::cout.flush();
-            cin >> isoNum;
+            std::cin >> isoNum;
          }
          else 
          {
@@ -209,11 +209,11 @@ int main( int argc, char *argv[] )
          {
             std::cout << "Min range value : ";
             std::cout.flush();
-            cin >> isoMin;
+            std::cin >> isoMin;
 
             std::cout << "Max range value : ";
             std::cout.flush();
-            cin >> isoMax;
+            std::cin >> isoMax;
          }
          else
          {
@@ -266,15 +266,15 @@ int main( int argc, char *argv[] )
             {
                std::cout << "Number of X cut : ";
                std::cout.flush();
-               cin >> xCut;
+               std::cin >> xCut;
 
                std::cout << "Number of Y cut : ";
                std::cout.flush();
-               cin >> yCut;
+               std::cin >> yCut;
 
                std::cout << "Number of Z cut : ";
                std::cout.flush();
-               cin >> zCut;
+               std::cin >> zCut;
             }
          }
          else if ( cutPlanesOption == 2 )
@@ -289,7 +289,7 @@ int main( int argc, char *argv[] )
             {
                std::cout << "Enter text file name: ";
                std::cout.flush();
-               cin >> paramFile;
+               std::cin >> paramFile;
             }
          }
          else 

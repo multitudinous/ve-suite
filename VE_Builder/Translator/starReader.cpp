@@ -95,12 +95,12 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
    if ( fvertices == NULL )
    {
-      cerr <<"\nError - Cannot open the designated vertex file: "
-           << this->starVertFileName << endl;
+      std::cerr <<"\nError - Cannot open the designated vertex file: "
+           << this->starVertFileName << std::endl;
       return uGrid;
    }
 
-   cout << "\nReading vertex data from " << this->starVertFileName << endl;
+   std::cout << "\nReading vertex data from " << this->starVertFileName << std::endl;
 
    // The first thing we do is count the vertices and compute the minimum
    // and maximum vertex IDs
@@ -124,11 +124,11 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       numStarVertices++;
    }
 
-   cout << "\tTotal no. of points in vertex file = "
-        << numStarVertices << endl;
+   std::cout << "\tTotal no. of points in vertex file = "
+        << numStarVertices << std::endl;
 
    if ( this->debug )
-      cout << "\tvShift = " << vShift << endl;
+      std::cout << "\tvShift = " << vShift << std::endl;
 
    // Because we know the number of vertices, use vtk's SetNumberOfPoints
    // and SetPoint functions for efficiency
@@ -143,8 +143,8 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       fscanf(fvertices, "%d %f %f %f\n", &vertexId, &vx, &vy, &vz);
       vertices->SetPoint( vertexId-vShift, vx, vy, vz );
       if ( this->debug > 1 )
-         cout << "Inserted point # " << vertexId-vShift << ": "
-              << "\t" << vx << "\t" << vy << "\t" << vz << endl;
+         std::cout << "Inserted point # " << vertexId-vShift << ": "
+              << "\t" << vx << "\t" << vy << "\t" << vz << std::endl;
    }
    fclose( fvertices );
 
@@ -153,13 +153,13 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    vertices->Delete();
 
    // now for the cell data...
-   cout << "\nReading cell data from " << this->starCellFileName << endl;
+   std::cout << "\nReading cell data from " << this->starCellFileName << std::endl;
 
    FILE * fcells = fopen( this->starCellFileName, "r" );
    if ( fcells == NULL )
    {
-      cerr <<"\nError - Cannot open the designated cell file: "
-           << this->starCellFileName << endl;
+      std::cerr <<"\nError - Cannot open the designated cell file: "
+           << this->starCellFileName << std::endl;
       uGrid->Delete();
       uGrid = NULL;
       return uGrid;
@@ -194,22 +194,22 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          &sId, 
          &sPt[0], &sPt[1], &sPt[2], &sPt[3], &sPt[4], &sPt[5], &sPt[6], &sPt[7],
          &sGroup, &sType);
-         if ( sId != cId ) cerr << "ERROR: On reading line 2 of samm cell "
-                                << cId << ", sId=" << sId << endl;
-         if ( sType != 0 ) cerr << "ERROR: For cell " << sId 
+         if ( sId != cId ) std::cerr << "ERROR: On reading line 2 of samm cell "
+                                << cId << ", sId=" << sId << std::endl;
+         if ( sType != 0 ) std::cerr << "ERROR: For cell " << sId 
                                 << ", record line 2, sType=" << sType 
-                                << ".  Expected sType != 0" << endl;
+                                << ".  Expected sType != 0" << std::endl;
                            
          // read third line of this record...
          fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
          &sId, 
          &tPt[0], &tPt[1], &tPt[2], &tPt[3], &tPt[4], &tPt[5], &tPt[6], &tPt[7], 
          &sGroup, &sType);
-         if ( sId != cId ) cerr << "ERROR: On reading line 3 of samm cell " 
-                                << cId << ", sId=" << sId << endl;
-         if ( sType != 0 ) cerr << "ERROR: For cell " << sId 
+         if ( sId != cId ) std::cerr << "ERROR: On reading line 3 of samm cell " 
+                                << cId << ", sId=" << sId << std::endl;
+         if ( sType != 0 ) std::cerr << "ERROR: For cell " << sId 
                                 << ", record line 3, sType=" << sType 
-                                << ".  Expected sType != 0" << endl;
+                                << ".  Expected sType != 0" << std::endl;
          resolutionType = tPt[5];
          REG = tPt[6];
 
@@ -218,8 +218,8 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             if      ( REG == 0 ) numVtkCells += 1;    // the corner (a tetrahedron)
             else if ( REG == 1 ) numVtkCells += 3;    // remainder to be a hexahedron and 2 tets
             else    
-               cerr << "ERROR: samm cell resolutionType " << resolutionType
-                    << ", REG=" << REG << " is not handled" << endl;
+               std::cerr << "ERROR: samm cell resolutionType " << resolutionType
+                    << ", REG=" << REG << " is not handled" << std::endl;
          }
 
          else if ( resolutionType == 2 )              // hex with two corners (wedge) cut away
@@ -227,16 +227,16 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             if      ( REG == 0 ) numVtkCells += 1;    // the wedge
             else if ( REG == 1 ) numVtkCells += 2;    // hex with wedge cut away
             else    
-               cerr << "ERROR: samm cell resolutionType " << resolutionType
-                    << ", REG=" << REG << " is not handled" << endl;
+               std::cerr << "ERROR: samm cell resolutionType " << resolutionType
+                    << ", REG=" << REG << " is not handled" << std::endl;
          }
 
          else if ( resolutionType == 3 )              // samm hexahedron
          {
             if      ( REG == 0 ) numVtkCells += 1;
             else    
-               cerr << "ERROR: samm cell resolutionType " << resolutionType
-                    << ", REG=" << REG << " is not handled" << endl;
+               std::cerr << "ERROR: samm cell resolutionType " << resolutionType
+                    << ", REG=" << REG << " is not handled" << std::endl;
          }
 
          else if ( resolutionType == 7 )              // hex with plane cutting three corners 
@@ -244,8 +244,8 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
             if      ( REG == 0 ) numVtkCells += 4;    // 
             else if ( REG == 1 ) numVtkCells += 3;    // 
             else    
-               cerr << "ERROR: samm cell resolutionType " << resolutionType
-                    << ", REG=" << REG << " is not handled" << endl;
+               std::cerr << "ERROR: samm cell resolutionType " << resolutionType
+                    << ", REG=" << REG << " is not handled" << std::endl;
          }
 
          else if ( resolutionType == 8 ) numVtkCells += 5;    // hex with plane cutting four corners 
@@ -255,8 +255,8 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          else if ( resolutionType == 275 && REG == 0 ) numVtkCells += 1;    // samm pyramid
 
          else
-            cerr << "ERROR: samm cell resolutionType=" << resolutionType
-                 << " with REG=" << REG << " is not yet handled" << endl;
+            std::cerr << "ERROR: samm cell resolutionType=" << resolutionType
+                 << " with REG=" << REG << " is not yet handled" << std::endl;
       }
       else
       {
@@ -264,8 +264,8 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          numVtkCells++;
       }
    }
-   cout << "\tTotal no. of cells in star-cd model  = " << numStarCells << endl;
-   cout << "\tTotal no. of vtk cells to be created = " << numVtkCells << endl;
+   std::cout << "\tTotal no. of cells in star-cd model  = " << numStarCells << std::endl;
+   std::cout << "\tTotal no. of vtk cells to be created = " << numVtkCells << std::endl;
 
    int cMemSize = numVtkCells;
    uGrid->Allocate(numVtkCells, cMemSize);
@@ -285,21 +285,21 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       for ( i=0; i<8; i++ ) cPt[i] -= vShift;
 
       if ( this->debug > 1 ) 
-         cout << "After vShift adjustment, just read cell " << cId 
+         std::cout << "After vShift adjustment, just read cell " << cId 
               << " with vertices: " 
               << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2] 
               << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5] 
-              << "\t" << cPt[6] << "\t" << cPt[7] << endl;
+              << "\t" << cPt[6] << "\t" << cPt[7] << std::endl;
 
       // Skip the cell if all vertices are zero...
       if ( cPt[0] == 0 && cPt[1] == 0 && cPt[2] == 0 && cPt[3] == 0 && 
            cPt[4] == 0 && cPt[5] == 0 && cPt[6] == 0 && cPt[7] == 0   )
       {
          if ( this->debug ) 
-            cout << "***Skipping cell " << cId << " with vertices: " 
+            std::cout << "***Skipping cell " << cId << " with vertices: " 
                  << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2] 
                  << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5]
-                 << "\t" << cPt[6] << "\t" << cPt[7] << endl;
+                 << "\t" << cPt[6] << "\t" << cPt[7] << std::endl;
          continue;    // to next cell record
       }
 
@@ -314,10 +314,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          for ( i=0; i<8; i++ ) sPt[i] -= vShift;
 
          if ( this->debug ) 
-            cout << "               After vShift adjustment, line 2 vertices: " 
+            std::cout << "               After vShift adjustment, line 2 vertices: " 
                  << "\t" << sPt[0] << "\t" << sPt[1] << "\t" << sPt[2]
                  << "\t" << sPt[3] << "\t" << sPt[4] << "\t" << sPt[5]
-                 << "\t" << sPt[6] << "\t" << sPt[7] << endl;
+                 << "\t" << sPt[6] << "\t" << sPt[7] << std::endl;
                    
          // read third line of this record...
          fscanf(fcells,"%d %d %d %d %d %d %d %d %d %d %d\n", 
@@ -326,10 +326,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                 &sGroup, &sType);
 
          if ( this->debug ) 
-            cout << "                                    On line 3, vertices: " 
+            std::cout << "                                    On line 3, vertices: " 
                  << "\t" << tPt[0] << "\t" << tPt[1] << "\t" << tPt[2]
                  << "\t" << tPt[3] << "\t" << tPt[4] << "\t" << tPt[5]
-                 << "\t" << tPt[6] << "\t" << tPt[7] << endl;
+                 << "\t" << tPt[6] << "\t" << tPt[7] << std::endl;
 
          resolutionType = tPt[5];
          REG = tPt[6];
@@ -345,9 +345,9 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[3] = sPt[1];
                uGrid->InsertNextCell( VTK_TETRA, 4, temp );
                if ( this->debug ) 
-                  cout << "For samm cell 1, inserted tetrahedron cell w/ vertices:  " 
+                  std::cout << "For samm cell 1, inserted tetrahedron cell w/ vertices:  " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << endl;
+                       << "\t" << temp[3] << std::endl;
             }        
             else if ( REG == 1 )    // write the [hex with corner cut away] as a hexahedron and two tetrahedrons
             {
@@ -361,32 +361,32 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[7] = cPt[7];
                uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
                if ( this->debug ) 
-                  cout << "For samm cell 1, inserted hexahedron cell w/ vertices:  " 
+                  std::cout << "For samm cell 1, inserted hexahedron cell w/ vertices:  " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << endl;
+                       << "\t" << temp[6] << "\t" << temp[7] << std::endl;
                temp[0] = sPt[1];
                temp[1] = sPt[3];
                temp[2] = sPt[4];
                temp[3] = cPt[3];
                uGrid->InsertNextCell( VTK_TETRA, 4, temp );
                if ( this->debug ) 
-                  cout << "For samm cell 1, inserted tetrahedron cell w/ vertices: " 
+                  std::cout << "For samm cell 1, inserted tetrahedron cell w/ vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << endl; 
+                       << "\t" << temp[3] << std::endl; 
                temp[0] = sPt[1];
                temp[1] = cPt[3];
                temp[2] = cPt[4];
                temp[3] = sPt[4];
                uGrid->InsertNextCell( VTK_TETRA, 4, temp );
                if ( this->debug )
-                  cout << "For samm cell 1, inserted tetrahedron cell w/ vertices: " 
+                  std::cout << "For samm cell 1, inserted tetrahedron cell w/ vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << endl; 
+                       << "\t" << temp[3] << std::endl; 
             }
             else 
-               cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
-                    << resolutionType << ", invalid REG=" << REG << endl;
+               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
+                    << resolutionType << ", invalid REG=" << REG << std::endl;
          }
 
          else if ( resolutionType == 2 )  // hex with wedge cut away
@@ -401,10 +401,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[5] = sPt[5];
                uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
                if ( this->debug ) 
-                  cout << "For samm cell resolutionType 2, inserted wedge cell with vertices: " 
+                  std::cout << "For samm cell resolutionType 2, inserted wedge cell with vertices: " 
                   << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                   << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                  << endl;
+                  << std::endl;
             }        
             else if ( REG == 1 )    // write the [hex with wedge cut away] as a hexahedron and a wedge
             {
@@ -416,10 +416,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[5] = sPt[2];
                uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
                if ( this->debug ) 
-                  cout << "For samm cell resolutionType 2, inserted wedge cell with vertices: " 
+                  std::cout << "For samm cell resolutionType 2, inserted wedge cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << endl;
+                       << std::endl;
                temp[0] = sPt[3];
                temp[1] = cPt[7];
                temp[2] = cPt[4];
@@ -430,13 +430,13 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[7] = sPt[5];
                uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
                if ( this->debug ) 
-                  cout << "For samm cell resolutionType 2, inserted hex cell with vertices: " 
+                  std::cout << "For samm cell resolutionType 2, inserted hex cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << endl; 
+                       << "\t" << temp[6] << "\t" << temp[7] << std::endl; 
             }
-            else cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" << resolutionType
-                 << ", invalid REG=" << REG << endl;
+            else std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" << resolutionType
+                 << ", invalid REG=" << REG << std::endl;
             }
 
             else if ( resolutionType == 3 )   // samm hexahedron
@@ -453,15 +453,15 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[7] = sPt[7];
                uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
                if ( this->debug ) 
-                  cout << "For samm cell resolutionType 3, inserted hex cell with vertices: " 
+                  std::cout << "For samm cell resolutionType 3, inserted hex cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << endl; 
+                       << "\t" << temp[6] << "\t" << temp[7] << std::endl; 
             }
             else                    // samm hexahedron will only be "inside"
             {
-               cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
-                    << resolutionType << ", invalid REG=" << REG << endl;
+               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
+                    << resolutionType << ", invalid REG=" << REG << std::endl;
             }
          }
 
@@ -477,10 +477,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[5] = sPt[2];
                uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
                if ( this->debug ) 
-                  cout << "For samm cell 7, inserted 1st wedge cell with vertices:  " 
+                  std::cout << "For samm cell 7, inserted 1st wedge cell with vertices:  " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << endl; 
+                       << std::endl; 
                temp[0] = cPt[0];
                temp[1] = cPt[2];
                temp[2] = cPt[3];
@@ -489,10 +489,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[5] = sPt[3];
                uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
                if ( this->debug )
-                  cout << "For samm cell 7, inserted 2nd wedge cell with vertices:  " 
+                  std::cout << "For samm cell 7, inserted 2nd wedge cell with vertices:  " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << endl; 
+                       << std::endl; 
                temp[0] = cPt[0];
                temp[1] = cPt[2];
                temp[2] = sPt[2];
@@ -500,18 +500,18 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[4] = sPt[4];
                uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
                if ( this->debug ) 
-                  cout << "For samm cell 7, inserted pyramid cell with vertices:    " 
+                  std::cout << "For samm cell 7, inserted pyramid cell with vertices:    " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << endl; 
+                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
                temp[0] = cPt[0];
                temp[1] = sPt[0];
                temp[2] = sPt[4];
                temp[3] = cPt[4];
                uGrid->InsertNextCell( VTK_TETRA, 4, temp );
                if ( this->debug ) 
-                  cout << "For samm cell 7, inserted tetrahedron cell w/ vertices:  " 
+                  std::cout << "For samm cell 7, inserted tetrahedron cell w/ vertices:  " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << endl; 
+                       << "\t" << temp[3] << std::endl; 
             }
             else if ( REG == 1 )    // divide the piece with the three original corners into two pyramids and a tet
             {
@@ -522,9 +522,9 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[4] = sPt[0];
                uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
                if ( this->debug ) 
-                  cout << "For samm cell 7, inserted 1st pyramid cell w/ vertices:  " 
+                  std::cout << "For samm cell 7, inserted 1st pyramid cell w/ vertices:  " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << endl; 
+                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
                temp[0] = sPt[2];
                temp[1] = sPt[3];
                temp[2] = cPt[7];
@@ -532,18 +532,18 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[4] = sPt[4];
                uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
                if ( this->debug )
-                  cout << "For samm cell 7, inserted 2nd pyramid cell w/ vertices:  " 
+                  std::cout << "For samm cell 7, inserted 2nd pyramid cell w/ vertices:  " 
                   << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                  << "\t" << temp[3] << "\t" << temp[4] << endl; 
+                  << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
                temp[0] = sPt[0];
                temp[1] = cPt[6];
                temp[2] = sPt[2];
                temp[3] = sPt[4];
                uGrid->InsertNextCell( VTK_TETRA, 4, temp );
                if ( this->debug )
-                  cout << "For samm cell 7, inserted tetrahedron cell w/ vertices:  " 
+                  std::cout << "For samm cell 7, inserted tetrahedron cell w/ vertices:  " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << endl; 
+                       << "\t" << temp[3] << std::endl; 
             }
          }
 
@@ -558,9 +558,9 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[4] = cPt[0];
                uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
                if ( this->debug ) 
-                  cout << "For samm cell 8, inserted 1st pyramid cell with vertices:" 
+                  std::cout << "For samm cell 8, inserted 1st pyramid cell with vertices:" 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << endl; 
+                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
                temp[0] = sPt[1];
                temp[1] = sPt[2];
                temp[2] = sPt[3];
@@ -568,41 +568,41 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[4] = cPt[0];
                uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
                if ( this->debug )
-                  cout << "For samm cell 8, inserted 2nd pyramid cell with vertices:" 
+                  std::cout << "For samm cell 8, inserted 2nd pyramid cell with vertices:" 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << endl; 
+                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
                temp[0] = cPt[1];
                temp[1] = sPt[0];
                temp[2] = sPt[5];
                temp[3] = cPt[0];
                uGrid->InsertNextCell( VTK_TETRA, 4, temp );
                if ( this->debug )
-                  cout << "For samm cell 8, inserted 1st tetra cell with vertices: " 
+                  std::cout << "For samm cell 8, inserted 1st tetra cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << endl; 
+                       << "\t" << temp[3] << std::endl; 
                temp[0] = cPt[3];
                temp[1] = sPt[2];
                temp[2] = sPt[1];
                temp[3] = cPt[0];
                uGrid->InsertNextCell( VTK_TETRA, 4, temp );
                if ( this->debug ) 
-                  cout << "For samm cell 8, inserted 2nd tetra cell with vertices: " 
+                  std::cout << "For samm cell 8, inserted 2nd tetra cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << endl; 
+                       << "\t" << temp[3] << std::endl; 
                temp[0] = cPt[4];
                temp[1] = sPt[4];
                temp[2] = sPt[3];
                temp[3] = cPt[0];
                uGrid->InsertNextCell( VTK_TETRA, 4, temp );
                if ( this->debug )
-                  cout << "For samm cell 8, inserted 3rd tetra cell with vertices: " 
+                  std::cout << "For samm cell 8, inserted 3rd tetra cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << endl; 
+                       << "\t" << temp[3] << std::endl; 
             }
             else                     // Wayne Oaks of adapco says resolution type 8 cells will only be "inside"
             {
-               cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
-                    << resolutionType << ", invalid REG=" << REG << endl;
+               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType="
+                    << resolutionType << ", invalid REG=" << REG << std::endl;
             }
          }
 
@@ -618,10 +618,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[5] = sPt[1];
                uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
                if ( this->debug ) 
-                  cout << "For samm cell resolutionType 85, inserted first wedge cell with vertices: " 
+                  std::cout << "For samm cell resolutionType 85, inserted first wedge cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << endl; 
+                       << std::endl; 
                temp[0] = cPt[7];
                temp[1] = sPt[4];
                temp[2] = sPt[7];
@@ -630,10 +630,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[5] = sPt[6];
                uGrid->InsertNextCell( VTK_WEDGE, 6, temp );
                if ( this->debug ) 
-                  cout << "For samm cell resolutionType 85, inserted second wedge cell with vertices: " 
+                  std::cout << "For samm cell resolutionType 85, inserted second wedge cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << endl; 
+                       << std::endl; 
             }
             else if ( REG == 1 )        // write the six-sided cylinder as two hexahedrons
             {
@@ -647,10 +647,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[7] = sPt[6];
                uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
                if ( this->debug ) 
-                  cout << "For samm cell resolutionType 85, inserted first hex cell with vertices: " 
+                  std::cout << "For samm cell resolutionType 85, inserted first hex cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << endl;
+                       << "\t" << temp[6] << "\t" << temp[7] << std::endl;
                temp[0] = sPt[0];
                temp[1] = sPt[7];
                temp[2] = sPt[4];
@@ -661,14 +661,14 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                temp[7] = cPt[5];
                uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
                if ( this->debug ) 
-                  cout << "For samm cell resolutionType 85, inserted second hex cell with vertices: " 
+                  std::cout << "For samm cell resolutionType 85, inserted second hex cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
                        << "\t" << temp[3] << "\t" << temp[4] << "\t" << temp[5]
-                       << "\t" << temp[6] << "\t" << temp[7] << endl; 
+                       << "\t" << temp[6] << "\t" << temp[7] << std::endl; 
             }
             else 
-               cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" 
-                    << resolutionType << ", invalid REG=" << REG << endl;
+               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" 
+                    << resolutionType << ", invalid REG=" << REG << std::endl;
          }
          else if ( resolutionType == 275 )  // samm pyramid
          {
@@ -682,14 +682,14 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
                uGrid->InsertNextCell( VTK_PYRAMID, 5, temp );
                
                if ( this->debug ) 
-                  cout << "For samm cell 275, inserted a pyramid cell with vertices: " 
+                  std::cout << "For samm cell 275, inserted a pyramid cell with vertices: " 
                        << "\t" << temp[0] << "\t" << temp[1] << "\t" << temp[2]
-                       << "\t" << temp[3] << "\t" << temp[4] << endl; 
+                       << "\t" << temp[3] << "\t" << temp[4] << std::endl; 
             }
             else                    // samm pyramid will only be "inside"
             {
-               cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" 
-                    << resolutionType << ", invalid REG=" << REG << endl;
+               std::cerr << "ERROR: For samm cell cId=" << cId << ", with resolutionType=" 
+                    << resolutionType << ", invalid REG=" << REG << std::endl;
             }
          }
       }
@@ -701,18 +701,18 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          cPt[3] = cPt[4]; 
          uGrid->InsertNextCell(VTK_TETRA, 4, cPt);
          if ( this->debug > 1 )
-            cout << "Inserted tetrahedron cell with vertices: " << "\t\t\t" 
+            std::cout << "Inserted tetrahedron cell with vertices: " << "\t\t\t" 
                  << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
-                 << "\t" << cPt[3] << endl; 
+                 << "\t" << cPt[3] << std::endl; 
       }
       // use a tet if third and fourth are unique and the last four are zero
       else if ( cPt[2]!=cPt[3] && (cPt[4]==cPt[5] && cPt[5]==cPt[6] && cPt[6]==cPt[7] && cPt[7]==0))
       {
          uGrid->InsertNextCell(VTK_TETRA, 4, cPt);
          if ( this->debug > 1 )
-            cout << "Inserted tetrahed. cell with vertices: " << "\t\t\t" 
+            std::cout << "Inserted tetrahed. cell with vertices: " << "\t\t\t" 
                  << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
-                 << "\t" << cPt[3] << endl; 
+                 << "\t" << cPt[3] << std::endl; 
       }
 
       // StarCD pyramid cell vertex connectivity:  12345555
@@ -720,9 +720,9 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       {
          uGrid->InsertNextCell(VTK_PYRAMID, 5, cPt);
          if ( this->debug > 1 )
-            cout << "Inserted pyramid cell with vertices: " << "\t\t\t" 
+            std::cout << "Inserted pyramid cell with vertices: " << "\t\t\t" 
                  << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
-                 << "\t" << cPt[3] << "\t" << cPt[4] << endl; 
+                 << "\t" << cPt[3] << "\t" << cPt[4] << std::endl; 
       }
 
       // StarCD prism (wedge) cell vertex connectivity:  12334566  
@@ -733,10 +733,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
          cPt[5] = cPt[6];
          uGrid->InsertNextCell(VTK_WEDGE, 6, cPt);
          if ( this->debug > 1 )
-            cout << "Inserted wedge cell with vertices: " 
+            std::cout << "Inserted wedge cell with vertices: " 
                  << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
                  << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5]
-                 << endl; 
+                 << std::endl; 
       }
 
       // StarCD hexahedron cell vertex connectivity:    12345678
@@ -744,34 +744,34 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       {
          uGrid->InsertNextCell(VTK_HEXAHEDRON, 8, cPt);
          if ( this->debug > 1 )
-            cout << "Inserted hex cell with vertices: " << "\t\t\t" 
+            std::cout << "Inserted hex cell with vertices: " << "\t\t\t" 
                  << "\t" << cPt[0] << "\t" << cPt[1] << "\t" << cPt[2]
                  << "\t" << cPt[3] << "\t" << cPt[4] << "\t" << cPt[5]
-                 << "\t" << cPt[6] << "\t" << cPt[7] << endl; 
+                 << "\t" << cPt[6] << "\t" << cPt[7] << std::endl; 
       }
    }
    fclose( fcells );
 
    // now for the solution data
-   cout << "\nReading solution data from " << this->starUsrFileName << endl;
+   std::cout << "\nReading solution data from " << this->starUsrFileName << std::endl;
 
    if ( this->debug )
    {
-      cout << "numScalars = " << this->numScalars << endl;
-      cout << "numVectors = " << this->numVectors << endl;
+      std::cout << "numScalars = " << this->numScalars << std::endl;
+      std::cout << "numVectors = " << this->numVectors << std::endl;
    }
 
    int numColumns = 3 * this->numVectors + this->numScalars;
    if ( this->debug )
-      cout << "numColumns = " << numColumns << endl;   
+      std::cout << "numColumns = " << numColumns << std::endl;   
 
    float * data = new float [ numColumns ];
    
    ifstream fsolns( this->starUsrFileName, ios::in );
    if ( fsolns == NULL )
    {
-       cerr <<"\nError - Cannot open the designated solution file: " 
-            << this->starUsrFileName << endl;
+       std::cerr <<"\nError - Cannot open the designated solution file: " 
+            << this->starUsrFileName << std::endl;
        uGrid->Delete();
        uGrid = NULL;
        return uGrid;
@@ -782,7 +782,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
    if ( this->numVectors )
    {
       if ( this->debug )
-         cout << "\tcreating vector for " << this->vectorName[ 0 ] << endl;   
+         std::cout << "\tcreating vector for " << this->vectorName[ 0 ] << std::endl;   
 
       vec = vtkFloatArray::New();
       vec->SetNumberOfComponents(3);
@@ -833,10 +833,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
       if ( this->debug > 1) 
       {
-         cout << "raw data: " << sId << "\t";
+         std::cout << "raw data: " << sId << "\t";
          for ( i = 0; i < numColumns; i++)
-            cout <<  data[ i ] << "\t";        
-         cout << endl;
+            std::cout <<  data[ i ] << "\t";        
+         std::cout << std::endl;
       }
    
       // if solution pertains to a vertex higher than the range already defined,
@@ -844,7 +844,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       if ( sId > maxOrigVertexId )
       {
          if ( this->debug ) 
-            cout << "skipping solution " << sId << endl;
+            std::cout << "skipping solution " << sId << std::endl;
          
          // try to read the first term in the next line of data
          // (failure will get us out of loop)...
@@ -857,7 +857,7 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       if ( sId < 0 )
       {
          if ( this->debug ) 
-            cout << "Invalid sId = " << sId << endl;
+            std::cout << "Invalid sId = " << sId << std::endl;
 
          // try to read the first term in the next line of data
          // (failure will get us out of loop)...
@@ -871,10 +871,10 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
       {
          if ( this->debug > 1 )
          {
-            cout << "VECTOR: " << sId;
+            std::cout << "VECTOR: " << sId;
             for ( i=0; i<3; i++ ) 
-               cout << "\t" << data[ i ];
-            cout << endl;
+               std::cout << "\t" << data[ i ];
+            std::cout << std::endl;
          }
 
          vec->SetTuple( sId, data );
@@ -907,12 +907,12 @@ vtkUnstructuredGrid * starReader::GetUnsGrid( void )
 
    delete [] data;      
  
-   cout << "\tTotal no. of solutions = " << numSolns << endl;
+   std::cout << "\tTotal no. of solutions = " << numSolns << std::endl;
 
    if ( this->debug && numSolns != numStarVertices) 
-      cout << "Warning: numSolns != numStarVertices" << endl;
+      std::cout << "Warning: numSolns != numStarVertices" << std::endl;
 
-   cout << endl;
+   std::cout << std::endl;
 
    // If vector data exists, then vector magnitude scalar will exist as well.
    // Let the user select the scalar and vector quantities to be written
@@ -963,7 +963,7 @@ void starReader::ReadParameterFile( void )
       
       if ( this->debug )
       {
-         cout << "textline = " << textline << endl;
+         std::cout << "textline = " << textline << std::endl;
          std::cout << "tagValue = " << tagValue << std::endl;
       }
    
@@ -985,13 +985,13 @@ void starReader::ReadParameterFile( void )
          strcpy(newSpace,tagValue);
          this->vectorName.push_back( newSpace );
          if ( this->debug )
-            cout << "vectorName[" << this->numVectors << "] = " 
-                 << this->vectorName[ this->numVectors ] << endl;
+            std::cout << "vectorName[" << this->numVectors << "] = " 
+                 << this->vectorName[ this->numVectors ] << std::endl;
          this->numVectors++;
          if ( this->numVectors > 1 )
          {
-            cerr <<"\nError - Star-CD format should have no more than 1 vector"
-                 << endl;
+            std::cerr <<"\nError - Star-CD format should have no more than 1 vector"
+                 << std::endl;
             exit ( 1 );
          }
       }
@@ -1001,8 +1001,8 @@ void starReader::ReadParameterFile( void )
          strcpy(newSpace,tagValue);
          this->scalarName.push_back( newSpace );
          if ( this->debug )
-            cout << "scalarName[" << this->numScalars << "] = " 
-                 << this->scalarName[ this->numScalars ] << endl;
+            std::cout << "scalarName[" << this->numScalars << "] = " 
+                 << this->scalarName[ this->numScalars ] << std::endl;
          this->numScalars++;
       }
       else if ( strcmp("SCALEINDEX", tagName)==0 )

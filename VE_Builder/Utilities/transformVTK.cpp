@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
@@ -71,31 +69,31 @@ int main( int argc, char *argv[] )
       transX = (float)atof( argv[ arg++ ] );
       transY = (float)atof( argv[ arg++ ] );
       transZ = (float)atof( argv[ arg++ ] );
-      cout << "Using commandline-set extents..." << endl;
-      cout << "\trotX: " << rotX << endl;
-      cout << "\trotY: " << rotY << endl;
-      cout << "\trotZ: " << rotZ << endl;
-      cout << "\ttransX: " << transX << endl;
-      cout << "\ttransY: " << transY << endl;
-      cout << "\ttransZ: " << transZ << endl;
+      std::cout << "Using commandline-set extents..." << std::endl;
+      std::cout << "\trotX: " << rotX << std::endl;
+      std::cout << "\trotY: " << rotY << std::endl;
+      std::cout << "\trotZ: " << rotZ << std::endl;
+      std::cout << "\ttransX: " << transX << std::endl;
+      std::cout << "\ttransY: " << transY << std::endl;
+      std::cout << "\ttransZ: " << transZ << std::endl;
    }
    else
    {
-      cout << "\nTo rotate X (degrees) : ";
-      cin >> rotX;
+      std::cout << "\nTo rotate X (degrees) : ";
+      std::cin >> rotX;
 
-      cout << "To rotate Y (degrees) : ";
-      cin >> rotY;
+      std::cout << "To rotate Y (degrees) : ";
+      std::cin >> rotY;
 
-      cout << "To rotate Z (degrees) : ";
-      cin >> rotZ;
+      std::cout << "To rotate Z (degrees) : ";
+      std::cin >> rotZ;
 
-      cout << "\nTo translate X value : ";
-      cin >> transX;
-      cout << "To translate Y value : ";
-      cin >> transY;
-      cout << "To translate Z value : ";
-      cin >> transZ;
+      std::cout << "\nTo translate X value : ";
+      std::cin >> transX;
+      std::cout << "To translate Y value : ";
+      std::cin >> transY;
+      std::cout << "To translate Z value : ";
+      std::cin >> transZ;
    }
 
    // Transform the geometry 
@@ -111,7 +109,7 @@ int main( int argc, char *argv[] )
    // Transformation 
    vtkTransformFilter *transFilter = vtkTransformFilter::New();
    //        vtkPointSet* ptSet = vtkPointSet::SafeDownCast( dataset );
-   //        if ( ptSet == NULL ) cout << "SafeDownCast to a vtkPointSet failed";
+   //        if ( ptSet == NULL ) std:cout << "SafeDownCast to a vtkPointSet failed";
    transFilter->SetInput( (vtkPointSet *)dataset );
    transFilter->SetTransform( aTransform );
 

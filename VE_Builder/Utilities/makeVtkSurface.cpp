@@ -58,21 +58,21 @@ void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
       tFilter->SetInput( (vtkPolyData*)dataset );
    else 
    {
-      cout << "Using vtkGeometryFilter to convert to polydata" << endl;
+      std::cout << "Using vtkGeometryFilter to convert to polydata" << std::endl;
       gFilter = vtkGeometryFilter::New();
       gFilter->SetInput( dataset );
       tFilter->SetInput( gFilter->GetOutput() );
    }
 
-   cout << "Writing \"" << filename << "\"... ";
-   cout.flush();
+   std::cout << "Writing \"" << filename << "\"... ";
+   std::cout.flush();
    vtkSTLWriter *writer = vtkSTLWriter::New();
       writer->SetInput( tFilter->GetOutput() );
       writer->SetFileName( filename );
       writer->SetFileTypeToBinary();
       writer->Write();
       writer->Delete();
-   cout << "... done\n" << endl;
+   std::cout << "... done\n" << std::endl;
 
    tFilter->Delete();
 
@@ -93,8 +93,8 @@ int main( int argc, char *argv[] )
 
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
 
-   cout << "\nEnter (0) to wrap the entire solution space in a surface, or"
-        << "\n      (1) to extract a particular isosurface: " << endl;
+   std::cout << "\nEnter (0) to wrap the entire solution space in a surface, or"
+        << "\n      (1) to extract a particular isosurface: " << std::endl;
    int extractIsosurface = fileIO::getIntegerBetween( 0, 1 );
 
    vtkPolyData * surface = NULL;
@@ -105,11 +105,11 @@ int main( int argc, char *argv[] )
       activateScalar( dataset );
       double range[2];
       dataset->GetScalarRange( range );
-      cout << "\nThe scalar range is " << range[0] << " to " << range[1] << endl;
+      std::cout << "\nThe scalar range is " << range[0] << " to " << range[1] << std::endl;
 
       float value = 0.0;
-      cout << "Enter isosurface value: ";
-      cin >> value;
+      std::cout << "Enter isosurface value: ";
+      std::cin >> value;
 
       // Create an isosurace with the specified isosurface value...
       vtkContourFilter *contour = vtkContourFilter::New();
@@ -125,12 +125,12 @@ int main( int argc, char *argv[] )
          filter->Update();
 
       int numPolys = filter->GetOutput()->GetNumberOfPolys();
-      cout << "     The number of polys is "<< numPolys << endl;
+      std::cout << "     The number of polys is "<< numPolys << std::endl;
       if ( numPolys==0 ) return 1;
 
       float deciVal;
-      cout << "\nDecimation value (range from 0 [more triangles] to 1 [less triangles]) : ";
-      cin >> deciVal;
+      std::cout << "\nDecimation value (range from 0 [more triangles] to 1 [less triangles]) : ";
+      std::cin >> deciVal;
 
       surface = cfdGrid2Surface( filter->GetOutput(), deciVal );
 
@@ -144,10 +144,10 @@ int main( int argc, char *argv[] )
    else // Create a polydata surface file that completely envelopes the solution space
    {
       float deciVal;
-      cout << "\nDecimation value (range from 0 [more triangles] to 1 [less triangles]) : ";
-      cin >> deciVal;
-      cin.ignore();
-      //cout << "Decimation value = " << deciVal << endl;
+      std::cout << "\nDecimation value (range from 0 [more triangles] to 1 [less triangles]) : ";
+      std::cin >> deciVal;
+      std::cin.ignore();
+      //std::cout << "Decimation value = " << deciVal << std::endl;
 
       surface = cfdGrid2Surface( dataset, deciVal );
 
@@ -160,8 +160,8 @@ int main( int argc, char *argv[] )
          answer = 0;
       else
       {
-         cout << "\nDo you want output as a VTK file or as an STL? "
-              << "( 0=VTK, 1=STL )" << endl;
+         std::cout << "\nDo you want output as a VTK file or as an STL? "
+              << "( 0=VTK, 1=STL )" << std::endl;
          answer = fileIO::getIntegerBetween( 0, 1 );
       }
 
@@ -182,7 +182,7 @@ int main( int argc, char *argv[] )
    delete [] inFileName;    inFileName = NULL;
    delete [] outFileName;   outFileName = NULL;
 
-   cout << "\ndone\n";
+   std::cout << "\ndone\n";
    return 0;
 }
 

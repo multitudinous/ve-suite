@@ -320,7 +320,7 @@ void cfdTransientSet::ReadScalarRanges()
 
    if ( this->param == NULL )
    {
-      cout << "need a param!!!!!" << endl;
+      std::cout << "need a param!!!!!" << std::endl;
       exit(1);
    }
 

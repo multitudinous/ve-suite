@@ -41,6 +41,7 @@
 #include <vtkTransformPolyDataFilter.h>
 #include "reiParticles.h"
 #include "particle.h"
+#include <iostream>
 #include <fstream>
 #include "converter.h"
 
@@ -140,7 +141,7 @@ void reiParticles::readPPLOT3( void ) {
    if ( debug )
       for ( i = 0; i < (int)particles.size(); i++ ) 
          for ( int j = 0; j < (int)particles[i]->locations.size(); j++ ) 
-            cout << particles[i]->locations[j]->x << "  " 
+            std::cout << particles[i]->locations[j]->x << "  " 
                << particles[i]->locations[j]->y << "  "
                << particles[i]->locations[j]->z << "  " 
                << particles[i]->locations[j]->time<< "  "
@@ -153,7 +154,7 @@ void reiParticles::readPPLOT3( void ) {
                << particles[i]->locations[j]->particleSize<< "  "
                << particles[i]->locations[j]->particleCloudDispersion<< "  "
                << particles[i]->locations[j]->massOfChar<< "  "
-               << particles[i]->locations[j]->moistureFraction<< endl;
+               << particles[i]->locations[j]->moistureFraction<< std::endl;
                
 }
 
@@ -176,7 +177,7 @@ void reiParticles::writeParticlePolyData( void ){
       parameterData[i]->SetNumberOfComponents( 1 );
       if (parameterData[i] == NULL)
       {
-         cerr << "ERROR: can't get memory for parameterData, so exiting" << endl;
+         std::cerr << "ERROR: can't get memory for parameterData, so exiting" << std::endl;
          exit( 1 );
       }
    }
@@ -203,7 +204,7 @@ void reiParticles::writeParticlePolyData( void ){
    IntList whichParticles;
    
    if ( !paramFile ) {
-      cerr << "File Could Not Be Opened" << endl;
+      std::cerr << "File Could Not Be Opened" << std::endl;
       exit( 1 );
    }
    
@@ -215,13 +216,13 @@ void reiParticles::writeParticlePolyData( void ){
    paramFile.getline( textLine, 256 );   //skip past remainder of line
 
    yScale = zScale = xScale;
-   cout << xRot   << " : " << yRot   << " : " << zRot   << " : "
+   std::cout << xRot   << " : " << yRot   << " : " << zRot   << " : "
         << xTrans << " : " << yTrans << " : " << zTrans << " : "
-        << xScale << " : " << coordinateFilter << endl;
+        << xScale << " : " << coordinateFilter << std::endl;
 
    while( paramFile >> particleNumber ) 
    {
-      cout << " Particle Number : " << particleNumber << endl;
+      std::cout << " Particle Number : " << particleNumber << std::endl;
       paramFile.getline( textLine, 256 );   //skip past remainder of line
       whichParticles.push_back( particleNumber );
    }
@@ -234,10 +235,10 @@ void reiParticles::writeParticlePolyData( void ){
          for ( int y = 0; y < (int)particles[i]->locations.size(); y+= coordinateFilter )
             test++;
 
-         cout << " Time Steps = " << particles[i]->timeSteps << " " 
+         std::cout << " Time Steps = " << particles[i]->timeSteps << " " 
               << " Path Index = " << whichParticles[k] << " " 
               << " Actual Time Steps = " << test << " "
-              << " PPLOT3 LINE Index = " << particles[i]->pathIndex << endl;
+              << " PPLOT3 LINE Index = " << particles[i]->pathIndex << std::endl;
 
          lines->InsertNextCell( test );
          for ( j = 0; j < (int)particles[i]->locations.size(); j+= coordinateFilter ) 

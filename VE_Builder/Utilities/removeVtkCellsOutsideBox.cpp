@@ -53,7 +53,7 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
                             double ymin, double ymax, double zmin, double zmax )
 {
    int numVertices = pointset->GetNumberOfPoints();
-   if ( debug ) cout << "numVertices = " << numVertices << endl;
+   if ( debug ) std::cout << "numVertices = " << numVertices << std::endl;
 
    int j;
 
@@ -81,10 +81,10 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
    for (j=0; j < numVertices; j++)
    {
       if ( debug > 1 && isNeededPoint[j] )
-         cout << "\tisNeededPoint[" << j << "] = " << isNeededPoint[j] << endl;
+         std::cout << "\tisNeededPoint[" << j << "] = " << isNeededPoint[j] << std::endl;
       numNeededVertices += isNeededPoint[j];
    }
-   if ( debug ) cout << "numNeededVertices = " << numNeededVertices << endl;
+   if ( debug ) std::cout << "numNeededVertices = " << numNeededVertices << std::endl;
    if ( numNeededVertices  == 0 )
    {
       delete [] isNeededPoint;
@@ -92,7 +92,7 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
    }
    else if ( numNeededVertices == numVertices ) 
    {
-      cout << "Will NOT try to collapse the file" << endl;
+      std::cout << "Will NOT try to collapse the file" << std::endl;
       delete [] isNeededPoint;
       return;
    }
@@ -104,7 +104,7 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
       smallGrid = vtkPolyData::New();
    else
    {
-      cout << "removeCellsOutsideBox can not handle this data object type" << endl;
+      std::cout << "removeCellsOutsideBox can not handle this data object type" << std::endl;
       delete [] isNeededPoint;
       exit( 1 );
    }
@@ -112,7 +112,7 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
    smallGrid->SetPoints( pointset->GetPoints() );
 
    int numCells = pointset->GetNumberOfCells();
-   if (debug) cout << "The original number of cells is " << numCells << endl;
+   if (debug) std::cout << "The original number of cells is " << numCells << std::endl;
 
    if ( pointset->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
       ((vtkUnstructuredGrid*)smallGrid)->Allocate( numCells, numCells );
@@ -128,7 +128,7 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
    {      
       int useThisCell = 0; // initially mark this cell to NOT be retained 
       pointset->GetCell( cellId, cell );
-      if ( debug > 1 ) cout << "\tcellType = " << cell->GetCellType() << endl;
+      if ( debug > 1 ) std::cout << "\tcellType = " << cell->GetCellType() << std::endl;
 
       npts = cell->GetNumberOfPoints();
       ptIdList->Reset();
@@ -138,15 +138,15 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
          // mark this cell to be retained if ANY of its points are "needed"
          if ( isNeededPoint[ptId] )
          {
-            if ( debug > 1 ) cout << "\t\tNEED ptId= " << ptId << endl;
+            if ( debug > 1 ) std::cout << "\t\tNEED ptId= " << ptId << std::endl;
             useThisCell = 1;
          }
          ptIdList->InsertId( i, ptId );
       }
 
       if ( debug > 1 )
-         cout << "\tcellId = " << cellId
-              << ",\tuseThisCell = " << useThisCell << endl;
+         std::cout << "\tcellId = " << cellId
+              << ",\tuseThisCell = " << useThisCell << std::endl;
 
       if ( useThisCell )
 
@@ -160,8 +160,8 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
    ptIdList->Delete();
    cell->Delete();
 
-   if ( debug ) cout << "\tsmallGrid->GetNumberOfCells() = "
-                     << smallGrid->GetNumberOfCells() << endl;
+   if ( debug ) std::cout << "\tsmallGrid->GetNumberOfCells() = "
+                     << smallGrid->GetNumberOfCells() << std::endl;
 
    if ( pointset->GetPointData()->GetScalars() )
       smallGrid->GetPointData()->SetScalars( 
@@ -176,7 +176,7 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
             pointset->GetPointData()->GetNormals() );
 
    int numPdArrays = pointset->GetPointData()->GetNumberOfArrays();
-   if ( debug ) cout << "numPdArrays = " << numPdArrays << endl;
+   if ( debug ) std::cout << "numPdArrays = " << numPdArrays << std::endl;
 
    for ( int i=0; i < numPdArrays; i++ )
    {
@@ -194,15 +194,15 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
                        pointset->GetPointData()->GetArray( i )->GetName() ) )
          )
       {
-         if ( debug ) cout << "will not add "
+         if ( debug ) std::cout << "will not add "
               << pointset->GetPointData()->GetArray( i )->GetName()
-              << " to point data field" << endl;
+              << " to point data field" << std::endl;
       }
       else
       {
-         if ( debug ) cout << "will add "
+         if ( debug ) std::cout << "will add "
               << pointset->GetPointData()->GetArray( i )->GetName()
-              << " to point data field" << endl;
+              << " to point data field" << std::endl;
          smallGrid->GetPointData()->AddArray( 
                pointset->GetPointData()->GetArray( i ) );
       }
@@ -220,8 +220,8 @@ void removeCellsOutsideBox( vtkPointSet * & pointset, double xmin, double xmax,
    }
    else
    {
-      cerr << "removeCellsOutsideBox can not handle this data object type"
-           << endl;
+      std::cerr << "removeCellsOutsideBox can not handle this data object type"
+           << std::endl;
       exit( 1 );
    }
 
@@ -256,41 +256,41 @@ int main( int argc, char *argv[] )
       y_max = atof( argv[ arg++ ] );
       z_min = atof( argv[ arg++ ] );
       z_max = atof( argv[ arg++ ] );
-      cout << "Using commandline-set extents..." << endl;
-      cout << "\tlimitOption: " << limitOption << endl;
-      cout << "\tx_min: " << x_min << endl;
-      cout << "\tx_max: " << x_max << endl;
-      cout << "\ty_min: " << y_min << endl;
-      cout << "\ty_max: " << y_max << endl;
-      cout << "\tz_min: " << z_min << endl;
-      cout << "\tz_max: " << z_max << endl;
+      std::cout << "Using commandline-set extents..." << std::endl;
+      std::cout << "\tlimitOption: " << limitOption << std::endl;
+      std::cout << "\tx_min: " << x_min << std::endl;
+      std::cout << "\tx_max: " << x_max << std::endl;
+      std::cout << "\ty_min: " << y_min << std::endl;
+      std::cout << "\ty_max: " << y_max << std::endl;
+      std::cout << "\tz_min: " << z_min << std::endl;
+      std::cout << "\tz_max: " << z_max << std::endl;
    }
    else
    {
-      cout << "\nYou have a choice on how you specify the limits of the box."
+      std::cout << "\nYou have a choice on how you specify the limits of the box."
            << "\n\t(0) All cells with any vertices in the box will be retained"
            << "\n\t(1) Only those cells totally inside the box will be retained"
-           << endl;
+           << std::endl;
       limitOption = fileIO::getIntegerBetween( 0, 1 );
 
-      cout << "\nNow specify the limits of the box -- ";
+      std::cout << "\nNow specify the limits of the box -- ";
       if ( limitOption == 0 )
-         cout << "All cells with any vertices in the box will be retained" << endl;
+         std::cout << "All cells with any vertices in the box will be retained" << std::endl;
       else if ( limitOption == 1 )
-         cout << "Only those cells totally inside the box will be retained" << endl;
+         std::cout << "Only those cells totally inside the box will be retained" << std::endl;
 
-      cout << "\tinput x_min: ";
-      cin >> x_min;
-      cout << "\tinput x_max: ";
-      cin >> x_max;
-      cout << "\tinput y_min: ";
-      cin >> y_min;
-      cout << "\tinput y_max: ";
-      cin >> y_max;
-      cout << "\tinput z_min: ";
-      cin >> z_min;
-      cout << "\tinput z_max: ";
-      cin >> z_max;
+      std::cout << "\tinput x_min: ";
+      std::cin >> x_min;
+      std::cout << "\tinput x_max: ";
+      std::cin >> x_max;
+      std::cout << "\tinput y_min: ";
+      std::cin >> y_min;
+      std::cout << "\tinput y_max: ";
+      std::cin >> y_max;
+      std::cout << "\tinput z_min: ";
+      std::cin >> z_min;
+      std::cout << "\tinput z_max: ";
+      std::cin >> z_max;
    }
 
    if ( limitOption == 0 )
@@ -298,7 +298,7 @@ int main( int argc, char *argv[] )
       vtkPointSet * pointset = vtkPointSet::SafeDownCast( dataset );
       if ( pointset == NULL )
       {
-         cerr << "SafeDownCast to a pointset failed";
+         std::cerr << "SafeDownCast to a pointset failed";
          exit( 1 );
       }
 
@@ -306,7 +306,7 @@ int main( int argc, char *argv[] )
                              y_min, y_max, z_min, z_max );
 
       if ( debug ) 
-         cout << "now to dumpVerticesNotUsedByCells..." << endl;
+         std::cout << "now to dumpVerticesNotUsedByCells..." << std::endl;
       dumpVerticesNotUsedByCells( pointset );
 
       if ( debug )
@@ -348,15 +348,15 @@ int main( int argc, char *argv[] )
       }
       else
       {
-         cerr <<"\nERROR - can only currently delete cells from "
-              << "vtkUnstructuredGrids or vtkPolyData" << endl;
+         std::cerr <<"\nERROR - can only currently delete cells from "
+              << "vtkUnstructuredGrids or vtkPolyData" << std::endl;
          delete [] inFileName;   inFileName = NULL;
          delete [] outFileName;  outFileName = NULL;
          dataset->Delete();
          exit(1);
       }
 
-      cout << "now to dumpVerticesNotUsedByCells..." << endl;
+      std::cout << "now to dumpVerticesNotUsedByCells..." << std::endl;
       dumpVerticesNotUsedByCells( pointset );
       if ( debug )
          writeVtkThing( pointset, outFileName, 0 ); // one is for binary
@@ -369,7 +369,7 @@ int main( int argc, char *argv[] )
 
    delete [] inFileName;   inFileName = NULL;
    delete [] outFileName;  outFileName = NULL;
-   //cout << "now to delete dataset..." << endl;
+   //std::cout << "now to delete dataset..." << std::endl;
    dataset->Delete();
    return 0;
 }

@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
@@ -53,22 +51,22 @@ int main( int argc, char *argv[] )
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
 
 /*
-   cout << "\nback in main..." << endl;
-   cout << "dataset->IsA(\"vtkDataSet\") =          " << dataset->IsA("vtkDataSet") << endl;
-   cout << "dataset->IsA(\"vtkPointSet\") =         " << dataset->IsA("vtkPointSet") << endl;
-   cout << "dataset->IsA(\"vtkUnstructuredGrid\") = " << dataset->IsA("vtkUnstructuredGrid") << endl;
-   cout << "dataset->IsA(\"vtkStructuredGrid\") =   " << dataset->IsA("vtkStructuredGrid") << endl;
-   cout << "dataset->IsA(\"vtkPolyData\") =         " << dataset->IsA("vtkPolyData") << endl;
-   cout << "dataset->GetDataObjectType() =          " << dataset->GetDataObjectType() << endl;
-   cout << endl;
+   std::cout << "\nback in main..." << std::endl;
+   std::cout << "dataset->IsA(\"vtkDataSet\") =          " << dataset->IsA("vtkDataSet") << std::endl;
+   std::cout << "dataset->IsA(\"vtkPointSet\") =         " << dataset->IsA("vtkPointSet") << std::endl;
+   std::cout << "dataset->IsA(\"vtkUnstructuredGrid\") = " << dataset->IsA("vtkUnstructuredGrid") << std::endl;
+   std::cout << "dataset->IsA(\"vtkStructuredGrid\") =   " << dataset->IsA("vtkStructuredGrid") << std::endl;
+   std::cout << "dataset->IsA(\"vtkPolyData\") =         " << dataset->IsA("vtkPolyData") << std::endl;
+   std::cout << "dataset->GetDataObjectType() =          " << dataset->GetDataObjectType() << std::endl;
+   std::cout << std::endl;
 */
 
    // if the data set has FIELD data, then move over appropriate data to point data arrays...
    char scalarName [100], vectorName [100];
 
    int numFieldArrays = dataset->GetFieldData()->GetNumberOfArrays();
-   //cout << "numFieldArrays = " << numFieldArrays << endl;
-   cout << endl;
+   //std::cout << "numFieldArrays = " << numFieldArrays << std::endl;
+   std::cout << std::endl;
 
    // If there are field data, move it (and scalar and vector) to the point data section...
    if ( numFieldArrays )
@@ -76,17 +74,17 @@ int main( int argc, char *argv[] )
       int i=0;
       for ( i=0; i<numFieldArrays; i++ )
       {
-         cout << "moving field \"" << dataset->GetFieldData()->GetArray(i)->GetName() << "\" to the point data field" << endl;
+         std::cout << "moving field \"" << dataset->GetFieldData()->GetArray(i)->GetName() << "\" to the point data field" << std::endl;
          dataset->GetPointData()->AddArray( dataset->GetFieldData()->GetArray(i) );
       }
 
-      //cout << "dataset->GetPointData()->GetScalars() = " << dataset->GetPointData()->GetScalars() << endl;
+      //std::cout << "dataset->GetPointData()->GetScalars() = " << dataset->GetPointData()->GetScalars() << std::endl;
       if ( dataset->GetPointData()->GetScalars() ) 
       {
          vtkFloatArray * scalars = vtkFloatArray::New();
          scalars->DeepCopy( dataset->GetPointData()->GetScalars() );
          strcpy( scalarName, dataset->GetPointData()->GetScalars()->GetName() );
-         cout << "moving scalar \"" << scalarName << "\" to the point data field" << endl;
+         std::cout << "moving scalar \"" << scalarName << "\" to the point data field" << std::endl;
          dataset->GetPointData()->RemoveArray( scalarName );
          dataset->Update();
          scalars->SetName( scalarName ); // have to do this or the name will be NULL
@@ -94,13 +92,13 @@ int main( int argc, char *argv[] )
          scalars->Delete();
       }
 
-      //cout << "dataset->GetPointData()->GetVectors() = " << dataset->GetPointData()->GetVectors() << endl;
+      //std::cout << "dataset->GetPointData()->GetVectors() = " << dataset->GetPointData()->GetVectors() << std::endl;
       if ( dataset->GetPointData()->GetVectors() ) 
       {
          vtkFloatArray *  vectors = vtkFloatArray::New();
          vectors->DeepCopy( dataset->GetPointData()->GetVectors() );
          strcpy( vectorName, dataset->GetPointData()->GetVectors()->GetName() );
-         cout << "moving vector \"" << vectorName << "\" to the point data field" << endl;
+         std::cout << "moving vector \"" << vectorName << "\" to the point data field" << std::endl;
          dataset->GetPointData()->RemoveArray( vectorName );
          vectors->SetName( vectorName ); // have to do this or the name will be NULL
          dataset->GetPointData()->AddArray( vectors );
@@ -113,7 +111,7 @@ int main( int argc, char *argv[] )
       writeVtkThing( dataset, outFileName, 1 );    // 1 is binary
    }
    else
-      cout << "\nNOTE: This file did not require reformatting. No changes were made.\n" << endl;
+      std::cout << "\nNOTE: This file did not require reformatting. No changes were made.\n" << std::endl;
 
    delete [] inFileName;   inFileName = NULL;
    delete [] outFileName;  outFileName = NULL;

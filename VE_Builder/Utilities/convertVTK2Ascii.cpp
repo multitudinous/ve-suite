@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
@@ -55,7 +53,7 @@ int main( int argc, char *argv[] )
 
    if ( printInfoToScreen )
    {
-      cout << "\nback in main..." << endl; 
+      std::cout << "\nback in main..." << std::endl; 
       printWhatItIs( dataset );
    }
 

@@ -213,7 +213,7 @@ void writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag )
       vtkUnstructuredGrid * uGrid = vtkUnstructuredGrid::SafeDownCast( vtkThing );
       if ( uGrid == NULL )
       {
-         cout << "SafeDownCast to a vtkUnstructuredGrid failed";
+         std::cout << "SafeDownCast to a vtkUnstructuredGrid failed";
       }
 
       vtkUnstructuredGridWriter *writer = vtkUnstructuredGridWriter::New();
@@ -234,7 +234,7 @@ void writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag )
       vtkStructuredGrid * sGrid = vtkStructuredGrid::SafeDownCast( vtkThing );
       if ( sGrid == NULL )
       {
-         cout << "SafeDownCast to a vtkStructuredGrid failed";
+         std::cout << "SafeDownCast to a vtkStructuredGrid failed";
       }
       // Part of old vtk build may need to fix later
       //sGrid->BlankingOff();

@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
 #include <vtkDataSet.h>
 #include <vtkGeometryFilter.h>
@@ -60,15 +58,15 @@ int main( int argc, char *argv[] )
    vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
       tFilter->SetInput( cFilter->GetOutput() );
 
-   cout << "Writing \"" << outFileName << "\"... ";
-   cout.flush();
+   std::cout << "Writing \"" << outFileName << "\"... ";
+   std::cout.flush();
    vtkSTLWriter *writer = vtkSTLWriter::New();
       writer->SetInput( tFilter->GetOutput() );
       writer->SetFileName( outFileName );
       writer->SetFileTypeToBinary();
       writer->Write();
       writer->Delete();
-   cout << "... done\n" << endl;
+   std::cout << "... done\n" << std::endl;
 
    cFilter->Delete();
    tFilter->Delete();

@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-//#include <math.h>
 
 #include "cfdArrow.h"
 #include "fileIO.h"
@@ -66,70 +64,70 @@ int main( int argc, char *argv[] )
    }
    reader->Delete();
 
-   cout << "Writing \"currentArrow.vtk\"... ";
-   cout.flush();
+   std::cout << "Writing \"currentArrow.vtk\"... ";
+   std::cout.flush();
    vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
    writer->SetInput( reader1->GetOutput() );
    writer->SetFileName( "currentArrow.vtk" );
    //writer->SetFileTypeToBinary();
    writer->Write();
    writer->Delete();
-   cout << "... done" << endl;
+   std::cout << "... done" << std::endl;
 */
 
-   cout << "\nThis is your opportunity to supply arrow parameter information" << endl;
-   cout << "For each response, you may type '0' to use VE-Suite defaults" << endl;
+   std::cout << "\nThis is your opportunity to supply arrow parameter information" << std::endl;
+   std::cout << "For each response, you may type '0' to use VE-Suite defaults" << std::endl;
 
    cfdArrow * arrow = new cfdArrow;
 
    // in vtkArrowSource, the shaft base is always at (0,0,0). The arrow tip is always at (1,0,0). 
    // here, the shaft base is always at (-1,0,0). The arrow tip is always at (0,0,0)
    int shaftResolution;
-   cout << "\nInput shaft resolution" << endl;
-   cout << "(1 gives a rectangle, 2 gives crossed rectangles, vtk default is 6)" << endl;
-   cout << "(VE-Suite uses a 3-sided rectangular shaft): ";
-   cin >> shaftResolution;
+   std::cout << "\nInput shaft resolution" << std::endl;
+   std::cout << "(1 gives a rectangle, 2 gives crossed rectangles, vtk default is 6)" << std::endl;
+   std::cout << "(VE-Suite uses a 3-sided rectangular shaft): ";
+   std::cin >> shaftResolution;
    if ( shaftResolution == 0 ) shaftResolution = 3;
    arrow->SetShaftResolution( shaftResolution );
 
    float shaftRadius;
-   cout << "\nInput shaft radius" << endl;
-   cout << "(VE-Suite uses vtk default of 0.03): ";
-   cin >> shaftRadius;
+   std::cout << "\nInput shaft radius" << std::endl;
+   std::cout << "(VE-Suite uses vtk default of 0.03): ";
+   std::cin >> shaftRadius;
    if ( shaftRadius == 0.0 ) shaftRadius = 0.03;
    arrow->SetShaftRadius( shaftRadius );
 
    int tipResolution;
-   cout << "\nInput tip resolution" << endl;
-   cout << "(1 gives a single triangle, 2 gives crossed triangles, vtk default is 6)" << endl;
-   cout << "(VE-Suite uses a 3-sided pyramidal tip): ";
-   cin >> tipResolution;
+   std::cout << "\nInput tip resolution" << std::endl;
+   std::cout << "(1 gives a single triangle, 2 gives crossed triangles, vtk default is 6)" << std::endl;
+   std::cout << "(VE-Suite uses a 3-sided pyramidal tip): ";
+   std::cin >> tipResolution;
    if ( tipResolution == 0 ) tipResolution = 3;
    arrow->SetTipResolution( tipResolution );
 
    float tipRadius;
-   cout << "\nInput tip radius" << endl;
-   cout << "(vtk default is 0.10, VE-Suite uses default of 0.15): ";
-   cin >> tipRadius;
+   std::cout << "\nInput tip radius" << std::endl;
+   std::cout << "(vtk default is 0.10, VE-Suite uses default of 0.15): ";
+   std::cin >> tipRadius;
    if ( tipRadius == 0.0 ) tipRadius = 0.15;
    arrow->SetTipRadius( tipRadius );
 
    float tipLength;
-   cout << "\nInput tip length" << endl;
-   cout << "(VE-Suite uses vtk default of 0.35): ";
-   cin >> tipLength;
+   std::cout << "\nInput tip length" << std::endl;
+   std::cout << "(VE-Suite uses vtk default of 0.35): ";
+   std::cin >> tipLength;
    if ( tipLength == 0.0 ) tipLength = 0.35;
    arrow->SetTipLength( tipLength );
 
-   cout << "\nWriting \"" << outFileName << "\"... ";
-   cout.flush();
+   std::cout << "\nWriting \"" << outFileName << "\"... ";
+   std::cout.flush();
    vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
    writer->SetInput( arrow->GetPolyData() );
    writer->SetFileName( outFileName );
    //writer->SetFileTypeToBinary();
    writer->Write();
    writer->Delete();
-   cout << "... done\n" << endl;
+   std::cout << "... done\n" << std::endl;
 
    return 0;
 }

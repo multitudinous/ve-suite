@@ -270,8 +270,8 @@ void plot3dReader::GetFileNames( void )
          do
          {
             std::cout << "Geometry file name (xyz file):\t" << std::endl;
-            cin >> plot3dSurfaceFileName[ numOfSurfaceGrids ];
-            cin.ignore();
+            std::cin >> plot3dSurfaceFileName[ numOfSurfaceGrids ];
+            std::cin.ignore();
          }
          while ( ! fileIO::isFileReadable( plot3dSurfaceFileName[ numOfSurfaceGrids ] ) );
          numOfSurfaceGrids+=1;
@@ -290,16 +290,16 @@ void plot3dReader::GetFileNames( void )
       do
       {
          std::cout << "Geometry file name (xyz file):\t" << std::endl;
-         cin >> plot3dGeomFileName;
-         cin.ignore();
+         std::cin >> plot3dGeomFileName;
+         std::cin.ignore();
       }
       while ( ! fileIO::isFileReadable( plot3dGeomFileName ) );
 
       do
       {
          std::cout << "Data file name (q file):\t" << std::endl;
-         cin >> plot3dDataFileName;
-         cin.ignore();
+         std::cin >> plot3dDataFileName;
+         std::cin.ignore();
       }
       while ( ! fileIO::isFileReadable( plot3dDataFileName ) );
    }   
@@ -320,13 +320,11 @@ vtkUnstructuredGrid *plot3dReader::MakeVTKSurfaceFromGeomFiles( void )
 std::cout << plot3dSurfaceFileName[ i ] << std::endl;
       body3[i]->SetXYZFileName( plot3dSurfaceFileName[ i ] );
 	   body3[i]->Update( );
-std::cout << " 1 " << std::endl;
+
      cFilter->SetInput( body3[i]->GetOutput( ) );
-std::cout << " 2 " << std::endl;
      cFilter->SetExtent( 0, 100, 0, 100, 0, 100 );
-std::cout << " 3 " << std::endl;
      cFilter->Update( );
-std::cout << " 4 " << std::endl;
+
          
       polyfilter->AddInput( (vtkPolyData *)cfdGrid2Surface( (vtkStructuredGrid * ) cFilter->GetOutput(), 0.6 ) );
       //cFilter->SetInput( body3->GetOutput( ) );

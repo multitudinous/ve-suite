@@ -267,5 +267,5 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
 void cfdAnimatedStreamlineCone::UpdateCommand()
 {
    cfdObjects::UpdateCommand();
-   cerr << "doing nothing in cfdStreamers::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdStreamers::UpdateCommand()" << std::endl;
 }

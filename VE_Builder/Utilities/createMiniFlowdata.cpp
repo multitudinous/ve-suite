@@ -30,7 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
 
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
@@ -61,7 +60,7 @@ int main( int argc, char *argv[] )
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
    if ( ! dataset->IsA("vtkUnstructuredGrid") )
    { 
-      cerr << "ERROR: This function requires an unstructured grid" << endl;
+      std::cerr << "ERROR: This function requires an unstructured grid" << std::endl;
       delete [] inFileName;   inFileName = NULL;
       delete [] outFileName;  outFileName = NULL;
       return 1;
@@ -77,7 +76,7 @@ int main( int argc, char *argv[] )
    // Read the dataset fields and see if any match with member variable names
    vtkFieldData * field = dataset->GetFieldData();
    int numFieldArrays = field->GetNumberOfArrays();
-   cout << " numFieldArrays = " << numFieldArrays << endl ;
+   std::cout << " numFieldArrays = " << numFieldArrays << std::endl ;
 
    // add all arrays to the new dataset:
    for ( int i = 0; i < numFieldArrays; i++ )
@@ -103,7 +102,7 @@ int main( int argc, char *argv[] )
       uGrid->GetFieldData()->AddArray( array );
       array->Delete();
    }
-   cout << " meanCellBBLength = " << meanCellBBLength << endl;
+   std::cout << " meanCellBBLength = " << meanCellBBLength << std::endl;
 
 /*
    // Get the bounds of the data set, where ...
@@ -137,7 +136,7 @@ int main( int argc, char *argv[] )
    uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, temp );
 
    int numArrays = dataset->GetPointData()->GetNumberOfArrays();
-   //cout << "numArrays = " << numArrays << endl;
+   //std::cout << "numArrays = " << numArrays << std::endl;
 
    // set up arrays to store data...
    vtkFloatArray ** data = new vtkFloatArray * [ numArrays ];
@@ -154,18 +153,18 @@ int main( int argc, char *argv[] )
 
       if ( numComponents != 1 && numComponents != 3 )
       {
-         cout << "ERROR: Unexpected number of components (" 
-              << numComponents << ") in array " << i << endl;
+         std::cout << "ERROR: Unexpected number of components (" 
+              << numComponents << ") in array " << i << std::endl;
          continue;
       }
 
       if ( numComponents == 1 )
       {
          dataset->GetPointData()->GetArray( i )->GetRange( minMax );
-         cout << "array " << i << ": scalar named \"" 
+         std::cout << "array " << i << ": scalar named \"" 
               << dataset->GetPointData()->GetArray( i )->GetName() 
               << "\", range:\t" 
-              << minMax[ 0 ] << "\t" << minMax[ 1 ] << endl;
+              << minMax[ 0 ] << "\t" << minMax[ 1 ] << std::endl;
 
          for (int j = 0; j < 4; j++)
             data[ i ]->SetTuple1( j, minMax[ 0 ] );
@@ -178,10 +177,10 @@ int main( int argc, char *argv[] )
                                 ComputeVectorMagnitudeRange( 
                                       dataset->GetPointData()->GetArray( i ) );
 
-         cout << "array " << i << ": vector named \"" 
+         std::cout << "array " << i << ": vector named \"" 
               << dataset->GetPointData()->GetArray( i )->GetName() 
               << "\", vector magnitude range:\t" 
-              << vecMagRange[ 0 ] << "\t" << vecMagRange[ 1 ] << endl;
+              << vecMagRange[ 0 ] << "\t" << vecMagRange[ 1 ] << std::endl;
 
          // set the z-coord to the vector magnitude range...
          for (int j = 0; j < 4; j++)

@@ -228,8 +228,8 @@ char * preprocess( int argc, char *argv[],
             {
                 std::cout << "\nFluent *.AVS file: \t";
                 std::cout.flush();
-                cin >> infilename;
-                cin.ignore();
+                std::cin >> infilename;
+                std::cin.ignore();
             }
             while ( ! fileIO::isFileReadable( infilename ) );
          }
@@ -248,8 +248,8 @@ char * preprocess( int argc, char *argv[],
             {
                 std::cout << "Input rei file: \t";
                 std::cout.flush();
-                cin >> infilename;
-                cin.ignore();
+                std::cin >> infilename;
+                std::cin.ignore();
             }
             while ( ! fileIO::isFileReadable( infilename ) );
          }
@@ -260,8 +260,8 @@ char * preprocess( int argc, char *argv[],
             {
                 std::cout << "Input EnSight case file: \t";
                 std::cout.flush();
-                cin >> infilename;
-                cin.ignore();
+                std::cin >> infilename;
+                std::cin.ignore();
             }
             while ( ! fileIO::isFileReadable( infilename ) );
          }
@@ -271,8 +271,8 @@ char * preprocess( int argc, char *argv[],
              {
                  std::cout << "Geometry file name:   \t";
                  std::cout.flush();
-                 cin >> fireGeomFileName;
-                 cin.ignore();
+                 std::cin >> fireGeomFileName;
+                 std::cin.ignore();
                  //strcpy(fireGeomFileName,"/home/users/mccdo/jdeere/FIRE/avl-geo.dat");
                  
              }
@@ -282,8 +282,8 @@ char * preprocess( int argc, char *argv[],
              {
                  std::cout << "Data file name:\t";
                  std::cout.flush();
-                 cin >> fireDataFileName;
-                 cin.ignore();
+                 std::cin >> fireDataFileName;
+                 std::cin.ignore();
                  //strcpy(fireDataFileName,"/home/users/mccdo/jdeere/FIRE/avl_results.dat");
              }
              while ( ! fileIO::isFileReadable( fireDataFileName ) );
@@ -295,19 +295,19 @@ char * preprocess( int argc, char *argv[],
            {
               std::cout << "mfix *.SP# file: \t";
               std::cout.flush();
-              cin >> infilename;
-              cin.ignore();
+              std::cin >> infilename;
+              std::cin.ignore();
            }
            while ( ! fileIO::isFileReadable( infilename ) );
            std::cout << "input mesh cell dimensions nx, ny, nz: \t";
            std::cout.flush();
-           cin >> nx >> ny >> nz;
-           cin.ignore();
+           std::cin >> nx >> ny >> nz;
+           std::cin.ignore();
 
            std::cout << "input retainEveryNthFrame (1 to write every frame, 2 to write every other frame, etc.): \t";
            std::cout.flush();
-           cin >> retainEveryNthFrame;
-           cin.ignore();
+           std::cin >> retainEveryNthFrame;
+           std::cin.ignore();
         }
         else if (type == 9)    // PLOT3D
         {      
@@ -323,8 +323,8 @@ char * preprocess( int argc, char *argv[],
                 std::cout << "\t in the case file is not too long. \n";
                 std::cout << "Input EnSight case file: \t";
                 std::cout.flush();
-                cin >> infilename;
-                cin.ignore();
+                std::cin >> infilename;
+                std::cin.ignore();
             }
             while ( !fileIO::isFileReadable( infilename ) );
          }
@@ -334,8 +334,8 @@ char * preprocess( int argc, char *argv[],
             {
                 std::cout << "\nANSYS *.rst file: \t";
                 std::cout.flush();
-                cin >> infilename;
-                cin.ignore();
+                std::cin >> infilename;
+                std::cin.ignore();
             }
             while ( ! fileIO::isFileReadable( infilename ) );
          }
@@ -410,8 +410,8 @@ char * preprocess( int argc, char *argv[],
             {
                std::cout << "input the scale factor for axis " << i << ": ";
                std::cout.flush();
-               cin >> geomScale[i];
-               cin.ignore();
+               std::cin >> geomScale[i];
+               std::cin.ignore();
             }
          }
       }
@@ -615,8 +615,8 @@ int main( int argc, char *argv[] )
    if ( debug > 1 ) 
    {
       std::cout << "pointset = " << pointset << std::endl;
-      pointset->Print( cout );
-      aTransform->Print( cout );
+      pointset->Print( std::cout );
+      aTransform->Print( std::cout );
    }
    
    if ( pointset == NULL )
@@ -636,9 +636,10 @@ int main( int argc, char *argv[] )
    {
       for (int j=0; j<4; j++)
       {
-         if ( debug ) cout << i << " : " << j << " : "
+         if ( debug ) 
+            std::cout << i << " : " << j << " : "
                  << aTransform->GetMatrix()->GetElement(i,j) << " : "
-                 << identity->GetElement(i,j) << endl;
+                 << identity->GetElement(i,j) << std::endl;
 
          //if ( fabs( aTransform->GetMatrix()->GetElement(i,j) - 
          //          identity->GetElement(i,j) ) > 0.00001 )

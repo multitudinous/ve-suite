@@ -49,7 +49,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    // open db file
    if((s1=fopen(reiFileName,"r"))==NULL)
    {
-      cerr << "ERROR: can't open file \"" << reiFileName << "\", so exiting" << endl;
+      std::cerr << "ERROR: can't open file \"" << reiFileName << "\", so exiting" << std::endl;
       return sGrid;
    }
    //debug = 1;
@@ -58,21 +58,21 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    char header[81];
    header[80] = '\0';
 
-   cout << "\nReading the REI data file..." << endl;
+   std::cout << "\nReading the REI data file..." << std::endl;
    // read first line
    fseek(s1,4L,SEEK_SET);
    fread(header, sizeof(char), 80, s1);
-   cout << "\theader: \"" << header << "\"" << endl;
+   std::cout << "\theader: \"" << header << "\"" << std::endl;
 
    // second line is grid type: "cartesian_rectangular", "body_fitted_structured_grid", "cartesian_cylindrical"   
    fseek(s1,8L,SEEK_CUR);
    fread(header, sizeof(char), 80, s1);
-   cout << "\theader: \"" << header << "\"" << endl;
+   std::cout << "\theader: \"" << header << "\"" << std::endl;
 
    // read third line
    fseek(s1,8L,SEEK_CUR);
    fread(header, sizeof(char), 80, s1);
-   cout << "\theader: \"" << header << "\"" << endl;
+   std::cout << "\theader: \"" << header << "\"" << std::endl;
 
    //**************************************MESH GEOMETRY***********************
    // create some loop counters
@@ -95,11 +95,11 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
       // read dimensions
       if (fileIO::readNByteBlockFromFile( &ndim, sizeof(int), 1, s1, endian_flip ))
       {
-         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return sGrid;
       }
       if ( debug )
-         cout << "ndim = " << ndim << endl;
+         std::cout << "ndim = " << ndim << std::endl;
 
       // read nx, ny, & nz
       fseek(s1,8L,SEEK_CUR);
@@ -107,15 +107,15 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
       fileIO::readNByteBlockFromFile( &ny, sizeof(int), 1, s1, endian_flip ) ||
       fileIO::readNByteBlockFromFile( &nz, sizeof(int), 1, s1, endian_flip ) )
       {
-         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return sGrid;
       }
 
       if ( debug )
       {
-         cout << "nx = " << nx << endl;
-         cout << "ny = " << ny << endl;
-         cout << "nz = " << nz << endl;
+         std::cout << "nx = " << nx << std::endl;
+         std::cout << "ny = " << ny << std::endl;
+         std::cout << "nz = " << nz << std::endl;
       }
 
       if ( ( nx < 0 || nx > 500 ) ||
@@ -124,16 +124,16 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
       {
          if ( debug )
          {
-            cout << "NOTE flipping endian flag in attempt to read data "
-                 << "that makes sense" << endl;
+            std::cout << "NOTE flipping endian flag in attempt to read data "
+                 << "that makes sense" << std::endl;
          }
          endian_flip = 0;
          continue;
       }
-      cout << "\tndim = " << ndim << endl;
-      cout << "\tnx = " << nx << endl;
-      cout << "\tny = " << ny << endl;
-      cout << "\tnz = " << nz << endl;
+      std::cout << "\tndim = " << ndim << std::endl;
+      std::cout << "\tnx = " << nx << std::endl;
+      std::cout << "\tny = " << ny << std::endl;
+      std::cout << "\tnz = " << nz << std::endl;
       break;
    }
    int num_verts = nx*ny*nz;
@@ -146,13 +146,13 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    if ( fileIO::readNByteBlockFromFile( &numScalars, sizeof(int), 1, s1, endian_flip ) ||
    fileIO::readNByteBlockFromFile( &numVectors, sizeof(int), 1, s1, endian_flip ) )
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return sGrid;
    }
-   if (debug) cout << "numScalars: \"" << numScalars << "\"" << endl;
-   if (debug) cout << "numVectors: \"" << numVectors << "\"" << endl;
+   if (debug) std::cout << "numScalars: \"" << numScalars << "\"" << std::endl;
+   if (debug) std::cout << "numVectors: \"" << numVectors << "\"" << std::endl;
    int numParameters = numScalars + numVectors;
-   if (debug) cout << "numParameters: \"" << numParameters << "\"" << endl;
+   if (debug) std::cout << "numParameters: \"" << numParameters << "\"" << std::endl;
 
    // make space for scalar and vector names
    char ** parameterNames = new char * [numParameters];
@@ -164,7 +164,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    {
       if (parameterNames[i]==NULL)
       {
-         cerr << "ERROR: can't get memory for parameterNames, so exiting" << endl;
+         std::cerr << "ERROR: can't get memory for parameterNames, so exiting" << std::endl;
          return sGrid;
       }
       parameterNames[i][8]='\0';
@@ -178,7 +178,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    {
       if (parameterNames[numScalars+i]==NULL)
       {
-         cerr << "ERROR: can't get memory for parameterNames, so exiting" << endl;
+         std::cerr << "ERROR: can't get memory for parameterNames, so exiting" << std::endl;
          return sGrid;
       }
       parameterNames[numScalars+i][8]='\0';
@@ -189,7 +189,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    if (debug)
    {
       for (i=0;i<numParameters;i++)
-         cout << "parameterNames[" << i << "]: \t\"" << parameterNames[i] << "\"" << endl;
+         std::cout << "parameterNames[" << i << "]: \t\"" << parameterNames[i] << "\"" << std::endl;
    }
 
    // make room for xCenters, yCenters, zCenters
@@ -199,7 +199,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    zCenters = new float [nz];
    if (xCenters==NULL || yCenters==NULL || zCenters==NULL)
    {
-      cerr << "ERROR: can't get memory for centers, so exiting" << endl;
+      std::cerr << "ERROR: can't get memory for centers, so exiting" << std::endl;
       return sGrid;
    }
 
@@ -207,28 +207,28 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    fseek(s1,8L,SEEK_CUR);
    if ( fileIO::readNByteBlockFromFile( xCenters, sizeof(float), nx, s1, endian_flip ) )
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return sGrid;
    }
-   if (debug > 1) for (i=0; i<nx; i++) cout << "xCenters[" << i << "] = " << xCenters[i] << endl;
+   if (debug > 1) for (i=0; i<nx; i++) std::cout << "xCenters[" << i << "] = " << xCenters[i] << std::endl;
 
    // get yCenters
    fseek(s1,8L,SEEK_CUR);
    if ( fileIO::readNByteBlockFromFile( yCenters, sizeof(float), ny, s1, endian_flip ) )
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return sGrid;
    }
-   if (debug > 1) for (i=0; i<ny; i++) cout << "yCenters[" << i << "] = " << yCenters[i] << endl;
+   if (debug > 1) for (i=0; i<ny; i++) std::cout << "yCenters[" << i << "] = " << yCenters[i] << std::endl;
 
    // get zCenters
    fseek(s1,8L,SEEK_CUR);
    if ( fileIO::readNByteBlockFromFile( zCenters, sizeof(float), nz, s1, endian_flip ) )
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return sGrid;
    }
-   if (debug > 1) for (i=0; i<nz; i++) cout << "zCenters[" << i << "] = " << zCenters[i] << endl;
+   if (debug > 1) for (i=0; i<nz; i++) std::cout << "zCenters[" << i << "] = " << zCenters[i] << std::endl;
 
    // populate the vertex coordinate floatArrays with the center values
    // SetArray uses the actual array provided; it does not copy the data from
@@ -237,25 +237,25 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    // up or reallocates memory.
 
    if ( debug )
-      cout << "DEBUG :: Allocating X_Centers float arrays " << endl;
+      std::cout << "DEBUG :: Allocating X_Centers float arrays " << std::endl;
 
    vtkFloatArray *xCoords = vtkFloatArray::New();
    xCoords->SetArray( xCenters, nx, 0 );
 
    if ( debug )
-      cout << "DEBUG :: Allocating Y_Centers float arrays " << endl;
+      std::cout << "DEBUG :: Allocating Y_Centers float arrays " << std::endl;
 
    vtkFloatArray *yCoords = vtkFloatArray::New();
    yCoords->SetArray( yCenters, ny, 0 );
 
    if ( debug )
-      cout << "DEBUG :: Allocating Z_Centers float arrays " << endl;
+      std::cout << "DEBUG :: Allocating Z_Centers float arrays " << std::endl;
 
    vtkFloatArray *zCoords = vtkFloatArray::New();
    zCoords->SetArray( zCenters, nz, 0 );
 
    if ( debug )
-      cout << "DEBUG :: Allocating vtkRectilinearGrid " << endl;
+      std::cout << "DEBUG :: Allocating vtkRectilinearGrid " << std::endl;
 
    vtkRectilinearGrid *rGrid = vtkRectilinearGrid::New();
    rGrid->SetDimensions(nx,ny,nz);
@@ -268,7 +268,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    zCoords->Delete();
 
    if ( debug )
-      cout << "DEBUG :: Finished allocating float arrays " << endl;
+      std::cout << "DEBUG :: Finished allocating float arrays " << std::endl;
 
    // convertToStructuredGrid will supply a new structured grid
    sGrid = convertToStructuredGrid( rGrid );
@@ -283,7 +283,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
       parameterData[i] = vtkFloatArray::New();
       if (parameterData[i] == NULL)
       {
-         cerr << "ERROR: can't get memory for parameterData, so exiting" << endl;
+         std::cerr << "ERROR: can't get memory for parameterData, so exiting" << std::endl;
          sGrid->Delete();
          sGrid = NULL;
          return sGrid;
@@ -297,7 +297,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
       scalarData[i] = new float [num_verts];
       if (scalarData[i] == NULL)
       {
-         cerr << "ERROR: can't get memory for scalar data, so exiting" << endl;
+         std::cerr << "ERROR: can't get memory for scalar data, so exiting" << std::endl;
          return sGrid;
       }
    }
@@ -308,7 +308,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
       fseek(s1,8L,SEEK_CUR);
       if ( fileIO::readNByteBlockFromFile( scalarData[i], sizeof(float), num_verts, s1, endian_flip ) )
       {
-         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile for scalar data, so exiting" << endl;
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile for scalar data, so exiting" << std::endl;
          return sGrid;
       }
 
@@ -322,23 +322,23 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
       parameterData[ i ]->SetArray( scalarData[ i ], num_verts, 0 );
 
       if ( debug )
-         cout << "Reading scalarData[" << i+1 << " of " 
+         std::cout << "Reading scalarData[" << i+1 << " of " 
               << numScalars << "]:\t\"" 
-              << parameterNames[i] << "\"" << endl;
+              << parameterNames[i] << "\"" << std::endl;
 
       if (debug > 1)
       {
          for (j=0; j<4; j++) 
-            cout << "scalarData[" << i << "][" << j << "] = "
-                 << scalarData[i][j] << endl;
+            std::cout << "scalarData[" << i << "][" << j << "] = "
+                 << scalarData[i][j] << std::endl;
 
-         cout << "                ..." << endl;
+         std::cout << "                ..." << std::endl;
 
          for (j=num_verts-4; j<num_verts; j++) 
-            cout << "scalarData[" << i << "][" << j << "] = "
-                 << scalarData[i][j] << endl;
+            std::cout << "scalarData[" << i << "][" << j << "] = "
+                 << scalarData[i][j] << std::endl;
 
-         cout << endl;
+         std::cout << std::endl;
       }
    }
 
@@ -350,7 +350,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
       vectorData[xyz] = new float [num_verts];
       if (vectorData[xyz] == NULL)
       {
-         cerr << "ERROR: can't get memory for vector data, so exiting" << endl;
+         std::cerr << "ERROR: can't get memory for vector data, so exiting" << std::endl;
          sGrid->Delete();
          sGrid = NULL;
          return sGrid;
@@ -361,9 +361,9 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    for (i=0; i<numVectors; i++)
    {
       if ( debug )
-         cout << "Reading vectorData[" << i+1 << " of " 
+         std::cout << "Reading vectorData[" << i+1 << " of " 
               << numVectors << "]:\t\"" 
-              << parameterNames[numScalars+i] << "\"" << endl;
+              << parameterNames[numScalars+i] << "\"" << std::endl;
 
       for (xyz=0; xyz<3; xyz++)
       {
@@ -371,7 +371,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
          if ( fileIO::readNByteBlockFromFile( vectorData[xyz], sizeof(float),
                                               num_verts, s1, endian_flip ) )
          {
-            cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+            std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
             sGrid->Delete();
             sGrid = NULL;
             return sGrid;
@@ -387,13 +387,13 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
          if ( debug )
          {
             for (j=0; j<20; j++) 
-               cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = " 
-                    << vectorData[xyz][j] << endl;
-            cout << "                ..." << endl;
+               std::cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = " 
+                    << vectorData[xyz][j] << std::endl;
+            std::cout << "                ..." << std::endl;
             for (j=num_verts-20; j<num_verts; j++) 
-               cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = " 
-                    << vectorData[xyz][j] << endl;
-            cout << endl;
+               std::cout << "vectorData[" << i << "][" << xyz << "][" << j << "] = " 
+                    << vectorData[xyz][j] << std::endl;
+            std::cout << std::endl;
          }
       }
    }
@@ -402,7 +402,7 @@ vtkStructuredGrid * reiReader( char * reiFileName, int debug )
    // "end of file found after reading 1 more floats"
    if ( debug ) fileIO::readToFileEnd( s1 );
    fclose(s1); 
-   cout << endl;
+   std::cout << std::endl;
 
    //delete parameterNames
    for (i=0; i < numParameters; i++) delete parameterNames[i];

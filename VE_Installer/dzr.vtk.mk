@@ -7,5 +7,5 @@ EXTRA_LIBS+= -L${VTK_BASE_DIR}/lib/vtk -lvtkImaging -lvtkGraphics\
              -lvtkRendering -lvtkParallel
 
 #vtkActorToPf needs to know which version of VTK we are using:
-EXTRA_CXXFLAGS+= -DVTK44
+EXTRA_CXXFLAGS+= -DVTK44 -DVTK_STREAMS_FWD_ONLY
 

@@ -67,7 +67,7 @@ int main( int argc, char *argv[] )
       converter->Delete();
    }
    else
-      cout << "There are no cell-centered data arrays to convert!" << endl;
+      std::cout << "There are no cell-centered data arrays to convert!" << std::endl;
 
    dataset->Delete();
    delete [] inFileName;   inFileName = NULL;

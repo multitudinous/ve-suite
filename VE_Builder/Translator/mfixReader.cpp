@@ -50,23 +50,23 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
 //debug = 1;
    vtkUnstructuredGrid * uGrid = NULL;
 
-   if ( debug ) cout << "mfix input file is " << mfixFileName << endl;
+   if ( debug ) std::cout << "mfix input file is " << mfixFileName << std::endl;
 
    FILE *inFile;
    if((inFile=fopen(mfixFileName,"r"))==NULL)
    {
-      cout << "ERROR: can't open file \"" << mfixFileName << "\", so exiting" << endl;
+      std::cout << "ERROR: can't open file \"" << mfixFileName << "\", so exiting" << std::endl;
       return uGrid;
    }
 
    char * ext = NULL;
    ext = fileIO::getExtension( mfixFileName );
-   if ( debug ) cout << "ext = " << ext << endl;
+   if ( debug ) std::cout << "ext = " << ext << std::endl;
 
    int i, j, k, ii, kk;
 
-   cout << "nx=" << nx << ", ny=" << ny << ", nz=" << nz << endl; 
-   cout << "requested retainEveryNthFrame = " << retainEveryNthFrame << endl; 
+   std::cout << "nx=" << nx << ", ny=" << ny << ", nz=" << nz << std::endl; 
+   std::cout << "requested retainEveryNthFrame = " << retainEveryNthFrame << std::endl; 
 
    const int recordLength = 512;
 
@@ -76,9 +76,9 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
    fseek(inFile,0*recordLength,SEEK_SET);
    fread(version, sizeof(char), versionLength, inFile);
    version[versionLength] = '\0';
-   //cout << "version = \"" << version << "\"" << endl;
+   //std::cout << "version = \"" << version << "\"" << std::endl;
    fileIO::StripTrailingSpaces( version );
-   cout << "version = \"" << version << "\"" << endl;
+   std::cout << "version = \"" << version << "\"" << std::endl;
 
    //read the second record, a text string containing name and six ints
    const int nameLength = 60;
@@ -86,7 +86,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
    fseek(inFile,1*recordLength,SEEK_SET);
    fread(name, sizeof(char), nameLength, inFile);
    name[nameLength] = '\0';
-   //cout << "name = \"" << name << "\"" << endl;
+   //std::cout << "name = \"" << name << "\"" << std::endl;
    fileIO::StripTrailingSpaces( name );
 
    // initially set endian flag to false
@@ -97,32 +97,32 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
 
    if (fileIO::readNByteBlockFromFile( &month, sizeof(int), 1, inFile, endianFlip ))
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return uGrid;
    }
    if (fileIO::readNByteBlockFromFile( &day, sizeof(int), 1, inFile, endianFlip ))
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return uGrid;
    }
    if (fileIO::readNByteBlockFromFile( &year, sizeof(int), 1, inFile, endianFlip ))
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return uGrid;
    }
    if (fileIO::readNByteBlockFromFile( &hour, sizeof(int), 1, inFile, endianFlip ))
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return uGrid;
    }
    if (fileIO::readNByteBlockFromFile( &minute, sizeof(int), 1, inFile, endianFlip ))
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return uGrid;
    }
    if (fileIO::readNByteBlockFromFile( &second, sizeof(int), 1, inFile, endianFlip ))
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return uGrid;
    }
 
@@ -132,85 +132,85 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       fseek(inFile,1*recordLength,SEEK_SET);
       fread(name, sizeof(char), nameLength, inFile);
       name[nameLength] = '\0';
-      //cout << "name = \"" << name << "\"" << endl;
+      //std::cout << "name = \"" << name << "\"" << std::endl;
       fileIO::StripTrailingSpaces( name );
 
       endianFlip = 1;
 
       if (fileIO::readNByteBlockFromFile( &month, sizeof(int), 1, inFile, endianFlip ))
       {
-         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return uGrid;
       }
       if (fileIO::readNByteBlockFromFile( &day, sizeof(int), 1, inFile, endianFlip ))
       {
-         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return uGrid;
       }
       if (fileIO::readNByteBlockFromFile( &year, sizeof(int), 1, inFile, endianFlip ))
       {
-         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return uGrid;
       }
       if (fileIO::readNByteBlockFromFile( &hour, sizeof(int), 1, inFile, endianFlip ))
       {
-         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return uGrid;
       }
       if (fileIO::readNByteBlockFromFile( &minute, sizeof(int), 1, inFile, endianFlip ))
       {
-         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return uGrid;
       }
       if (fileIO::readNByteBlockFromFile( &second, sizeof(int), 1, inFile, endianFlip ))
       {
-         cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return uGrid;
       }
    }
 
    if ( ! ( ( 0 < month && month < 13 ) && ( 0 < day && day < 32 ) ) )
    {
-      cerr << "ERROR: Could not read valid month and day from line 2, so exiting" << endl;
+      std::cerr << "ERROR: Could not read valid month and day from line 2, so exiting" << std::endl;
       return uGrid;
    }
 
-   cout << "name = \"" << name << "\"" << endl;
+   std::cout << "name = \"" << name << "\"" << std::endl;
 
-   cout << "endianFlip = " << endianFlip << endl;
+   std::cout << "endianFlip = " << endianFlip << std::endl;
 
-   cout << "month/day/year hour:minute:second = ";
-   cout.fill('0');
-   cout.width(2); 
-   cout << month << "/";
-   cout.width(2); 
-   cout << day << "/" << year << " ";
-   cout.width(2); 
-   cout << hour << ":";
-   cout.width(2); 
-   cout << minute << ":";
-   cout.width(2); 
-   cout << second << endl;
+   std::cout << "month/day/year hour:minute:second = ";
+   std::cout.fill('0');
+   std::cout.width(2); 
+   std::cout << month << "/";
+   std::cout.width(2); 
+   std::cout << day << "/" << year << " ";
+   std::cout.width(2); 
+   std::cout << hour << ":";
+   std::cout.width(2); 
+   std::cout << minute << ":";
+   std::cout.width(2); 
+   std::cout << second << std::endl;
 
    //read the third record, two ints
    fseek(inFile,2*recordLength,SEEK_SET);
    int last_rec1, num_rec1;
    if (fileIO::readNByteBlockFromFile( &last_rec1, sizeof(int), 1, inFile, endianFlip ))
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return uGrid;
    }
    if (fileIO::readNByteBlockFromFile( &num_rec1, sizeof(int), 1, inFile, endianFlip ))
    {
-      cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return uGrid;
    }
-   cout << "last_rec1 (the line number of last record) = " << last_rec1 << endl;           //1813
-   cout << "num_rec1 (number of records between each separate start of array data) = " << num_rec1 << endl;      //9
+   std::cout << "last_rec1 (the line number of last record) = " << last_rec1 << std::endl;           //1813
+   std::cout << "num_rec1 (number of records between each separate start of array data) = " << num_rec1 << std::endl;      //9
 
    //compute the number of time steps by subtracting the three header lines and dividing by number of records per array
    int numTimeSteps = (last_rec1-3-1)/num_rec1;
-   cout << "computed number of time steps = " << numTimeSteps << endl;
+   std::cout << "computed number of time steps = " << numTimeSteps << std::endl;
 
    if ( retainEveryNthFrame < 1 ) retainEveryNthFrame = 1;  // enforce a minimum of one
 
@@ -220,7 +220,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       // double-check length of file:
       inFile.seekg(0, ios::end);
       int fileLength = inFile.tellg();
-      cout << "fileLength/512 = " << fileLength/512 << endl;
+      std::cout << "fileLength/512 = " << fileLength/512 << std::endl;
    }
 */
 
@@ -229,18 +229,18 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
    if (nz==1) arraySize = (nx+2)*(ny+2);
    else       arraySize = (nx+2)*(ny+2)*(nz+2);
 
-   cout << "computed arraySize = " << arraySize << endl;
+   std::cout << "computed arraySize = " << arraySize << std::endl;
    float * rawData = new float [arraySize];   // rawData contains "garbage" values at the ghost cell vertices
 
-   cout << "required number of records per timestep = " << ((float)arraySize)/128.0 << endl;   //7.17188
+   std::cout << "required number of records per timestep = " << ((float)arraySize)/128.0 << std::endl;   //7.17188
    int numExtraTerms = 128 - (arraySize%128);
-   cout << "computed numExtraTerms = " << numExtraTerms << endl;                                        //106
+   std::cout << "computed numExtraTerms = " << numExtraTerms << std::endl;                                        //106
    int numRecordsPerTimeStep = (arraySize+numExtraTerms)/128;
-   cout << "computed numRecordsPerTimeStep = " << numRecordsPerTimeStep << endl;                        //8
+   std::cout << "computed numRecordsPerTimeStep = " << numRecordsPerTimeStep << std::endl;                        //8
 
    //subtract the record that stores time and compute the number of arrays at each time step
    float floatnumComponents = (float)(num_rec1-1)/numRecordsPerTimeStep;
-   cout << "float numComponents = " << floatnumComponents << endl;
+   std::cout << "float numComponents = " << floatnumComponents << std::endl;
 
    vtkFloatArray **dataArray = NULL;
    int numArrays = 0;
@@ -357,20 +357,20 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
 //      numArrays = ???;
    else
    {
-      cout <<"\n\nERROR - Cannot deal with MFIX file extension \"" << ext << "\"\n"<< endl;
+      std::cout <<"\n\nERROR - Cannot deal with MFIX file extension \"" << ext << "\"\n"<< std::endl;
       return uGrid;
    }
 
-   cout << "computed numComponents per array = " << numComponents << endl;
+   std::cout << "computed numComponents per array = " << numComponents << std::endl;
 
    fseek(inFile,4*recordLength,SEEK_SET);
    if (fileIO::readNByteBlockFromFile( rawData, sizeof(float), arraySize, inFile, endianFlip ))
    {
-      cerr << "ERROR: bad read of rawData in fileIO::readNByteBlockFromFile, so exiting" << endl;
+      std::cerr << "ERROR: bad read of rawData in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
       return uGrid;
    }
    const float ghostValueReal = rawData[nx+2];
-   cout << "ghostValueReal = " << ghostValueReal << endl;
+   std::cout << "ghostValueReal = " << ghostValueReal << std::endl;
    // The garbage values at the ghost cells are written as approximately 9.87654e+31.
    // If read in as an integer instead of a float, the value would be exactly 1956369162;
    //    const int ghostValue = 1956369162;
@@ -380,7 +380,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
    float *scalarData = new float [nx*ny*nz];
    if ( scalarData==NULL )
    {
-      cerr << "ERROR: can't get memory for scalarData, so exiting" << endl;
+      std::cerr << "ERROR: can't get memory for scalarData, so exiting" << std::endl;
       exit(1);
    }
 
@@ -415,23 +415,23 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       fseek(inFile,tStep*num_rec1*recordLength + 3*recordLength,SEEK_SET);
       if (fileIO::readNByteBlockFromFile( &time1, sizeof(float), 1, inFile, endianFlip ))
       {
-         cerr << "ERROR: bad read of time value in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read of time value in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return uGrid;
       }
       ///inFile.seekg(tStep*num_rec1*recordLength + 3*recordLength);
       //inFile.read((char *) &time1, sizeof(float));
-      //if (inFile.eof()){ cerr << "Error reading time value" << endl; break; }
+      //if (inFile.eof()){ std::cerr << "Error reading time value" << std::endl; break; }
 
       if (fileIO::readNByteBlockFromFile( &nstep1, sizeof(float), 1, inFile, endianFlip ))
       {
-         cerr << "ERROR: bad read of nstep value in fileIO::readNByteBlockFromFile, so exiting" << endl;
+         std::cerr << "ERROR: bad read of nstep value in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
          return uGrid;
       }
-      cout << "tStep = " << tStep << "\ttime1 = " << time1 <<  "\tnstep1 = " << nstep1 << endl;
+      std::cout << "tStep = " << tStep << "\ttime1 = " << time1 <<  "\tnstep1 = " << nstep1 << std::endl;
       if (time1 < time1Old  || nstep1 < nstep1Old)
       {
-         cout << "ERROR: time1 < time1Old  || nstep1 < nstep1Old: WILL CONTINUE TO NEXT TIMESTEP" << endl;
-         cerr << "ERROR: time1 < time1Old  || nstep1 < nstep1Old: WILL CONTINUE TO NEXT TIMESTEP" << endl;
+         std::cout << "ERROR: time1 < time1Old  || nstep1 < nstep1Old: WILL CONTINUE TO NEXT TIMESTEP" << std::endl;
+         std::cerr << "ERROR: time1 < time1Old  || nstep1 < nstep1Old: WILL CONTINUE TO NEXT TIMESTEP" << std::endl;
          continue;
       }
       time1Old = time1;
@@ -453,22 +453,22 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
                          (paramIndex*numComponents + kk)*numRecordsPerTimeStep*recordLength,SEEK_SET);
             if (fileIO::readNByteBlockFromFile( rawData, sizeof(float), arraySize, inFile, endianFlip ))
             {
-               cerr << "ERROR: bad read of component " << kk 
-                    << " of rawData in fileIO::readNByteBlockFromFile, so exiting" << endl;
+               std::cerr << "ERROR: bad read of component " << kk 
+                    << " of rawData in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
                return uGrid;
             }
 
             if ( debug )
             {
-               cout << "Array " << kk << "..." << endl;
+               std::cout << "Array " << kk << "..." << std::endl;
                for (ii=0; ii<30; ii++) 
-                  cout << "     rawData[" << ii << "] = " << rawData[ii] << endl;
-               cout << "                  ..." << endl;
+                  std::cout << "     rawData[" << ii << "] = " << rawData[ii] << std::endl;
+               std::cout << "                  ..." << std::endl;
                for (ii=arraySize-30; ii<arraySize; ii++) 
-                  cout << "     rawData[" << ii << "] = " << rawData[ii] << endl;
+                  std::cout << "     rawData[" << ii << "] = " << rawData[ii] << std::endl;
             }
 
-            //for (ii=0; ii<arraySize; ii++) cout << "     rawData[" << ii << "] = " << rawData[ii] << endl;
+            //for (ii=0; ii<arraySize; ii++) std::cout << "     rawData[" << ii << "] = " << rawData[ii] << std::endl;
 
             if ( debug )
             {
@@ -478,10 +478,10 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
                {
                   if (fileIO::readNByteBlockFromFile( &junk, sizeof(float), 1, inFile, endianFlip ))
                   {
-                     cerr << "ERROR: bad read of nstep value in fileIO::readNByteBlockFromFile, so exiting" << endl;
+                     std::cerr << "ERROR: bad read of nstep value in fileIO::readNByteBlockFromFile, so exiting" << std::endl;
                      return uGrid;
                   }
-                  cout << "junk= " << junk << endl;
+                  std::cout << "junk= " << junk << std::endl;
                }
             }
 
@@ -509,17 +509,17 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
                else       index += (nx+2); //skip last group of non-data (bracketed with ghostValues)
 
             }
-            //cout << "ending counter = " << counter << endl;
-            //cout << "ending index = " << index << endl;
+            //std::cout << "ending counter = " << counter << std::endl;
+            //std::cout << "ending index = " << index << std::endl;
 
             if ( debug )
             {
-               cout << "scalarData for component " << kk << "..." << endl;
+               std::cout << "scalarData for component " << kk << "..." << std::endl;
                for (ii=0; ii<30; ii++) 
-                  cout << "scalarData[" << ii << "] = " << scalarData[ii] << endl;
-               cout << "                  ..." << endl;
+                  std::cout << "scalarData[" << ii << "] = " << scalarData[ii] << std::endl;
+               std::cout << "                  ..." << std::endl;
                for (ii=nx*ny*nz-30; ii<nx*ny*nz; ii++) 
-                  cout << "scalarData[" << ii << "] = " << scalarData[ii] << endl;
+                  std::cout << "scalarData[" << ii << "] = " << scalarData[ii] << std::endl;
             }
 
             for (ii=0; ii<nx*ny*nz; ii++) // for each tuple
@@ -575,7 +575,7 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
    delete [] scalarData;   scalarData = NULL;
    delete [] ext;
 
-   cout << "returning uGrid = NULL" << endl;
+   std::cout << "returning uGrid = NULL" << std::endl;
    uGrid = NULL;
    return uGrid;
 }

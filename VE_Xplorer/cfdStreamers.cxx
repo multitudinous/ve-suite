@@ -291,6 +291,6 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
 void cfdStreamers::UpdateCommand()
 {
    cfdObjects::UpdateCommand();
-   cerr << "doing nothing in cfdStreamers::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdStreamers::UpdateCommand()" << std::endl;
 }
 

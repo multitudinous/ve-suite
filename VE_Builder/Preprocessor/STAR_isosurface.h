@@ -100,7 +100,7 @@ void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
 
    for ( int i=0; i<numContours; i++ )
    {
-      cout << "\tCreating isosurface at " << value << endl;
+      std::cout << "\tCreating isosurface at " << value << std::endl;
 
       vtkContourFilter *contour = vtkContourFilter::New();
          contour->SetInput( unsGrid );

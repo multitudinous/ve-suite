@@ -191,7 +191,7 @@ void Octree::InitOctreeDecomposition( vtkUnstructuredGrid *grid, int cells )
 
   Decompose( );
 
-  cout << "Decomposition ended.... " << endl;
+  //cout << "Decomposition ended.... " << endl;
 }
 
 void Octree::ExtractUnsGridBound( )
@@ -371,13 +371,13 @@ void Octree::Decompose( )
 	totalNumberOfNodes = pRoot->GetNumberOfNodesAt_h_Height( height );
 	for ( int k=0; k<totalNumberOfNodes; k++ )
 	{
-	    cout <<  "The Node " << theNode[k]->GetID( )
+	    std::cout <<  "The Node " << theNode[k]->GetID( )
 		 << " Parent " << theNode[k]->GetParent( )->GetID( ) 
 		 << " Level " << theNode[k]->GetLevel( )
 		 << " Number of cells " << theNode[k]->GetOctant( )->GetNumberOfCells( ) 
-		 << endl;
+		 << std::endl;
 	}
-	cout << endl;
+	std::cout << std::endl;
   }
 
   WriteOctantsTable( );

@@ -77,11 +77,11 @@ int main( const int argc, char *argv[] )
        vtkFilename = fileIO::getReadableFileFromDefault( tempText, 
                                                          "delaunay3DOut.vtk" );
        shrinkFactor = 0.95;
-       cout << "Recommended shrinkFactor = " << shrinkFactor << endl;
+       std::cout << "Recommended shrinkFactor = " << shrinkFactor << std::endl;
        do
        {
-           cout << "Input your shrinkFactor (0 < X <= 1, with 1 for no shrinkage)" << endl;
-           cin >> shrinkFactor;
+           std::cout << "Input your shrinkFactor (0 < X <= 1, with 1 for no shrinkage)" << std::endl;
+           std::cin >> shrinkFactor;
        }
        while (shrinkFactor<=0.0 || 1.0<shrinkFactor);
 
@@ -176,7 +176,7 @@ int main( const int argc, char *argv[] )
        // Reset the clipping range of the camera
        ren1->ResetCameraClippingRange();
 
-       cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << endl;
+       std::cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << std::endl;
 
        // interact with data
        renWin->SetSize( 800, 800 );
@@ -208,7 +208,7 @@ int main( const int argc, char *argv[] )
 
 void viewWhatsInFile( char * vtkFilename, const float shrinkFactor )
 {
-   //cout << "viewWhatsInFile" << endl;
+   //std::cout << "viewWhatsInFile" << std::endl;
    //
    // "1" means print info to screen
    vtkDataSet * dataset = readVtkThing( vtkFilename, 1 );
@@ -221,10 +221,10 @@ void viewWhatsInFile( char * vtkFilename, const float shrinkFactor )
 
       //showGraphics: 0=noShowCells, 1=showExteriorCells, 2=showAllCells
       int showGraphics;
-      cout << "\nPick an option for displaying cells..." << endl;
-      cout << "Answer  (0) noDrawCells   " 
-      << "(1) drawExteriorCellsOnly (faster)   (2) drawAllCells" << endl;
-      cin >> showGraphics;
+      std::cout << "\nPick an option for displaying cells..." << std::endl;
+      std::cout << "Answer  (0) noDrawCells   " 
+      << "(1) drawExteriorCellsOnly (faster)   (2) drawAllCells" << std::endl;
+      std::cin >> showGraphics;
 
       if (showGraphics)
       {
@@ -251,31 +251,31 @@ void viewWhatsInFile( char * vtkFilename, const float shrinkFactor )
    else if ( dataset->GetDataObjectType() == VTK_RECTILINEAR_GRID )
    {
       int showGraphics;
-      cout << "\nPick an option for displaying cells "
-           << "(0=3D mesh, 1=cross-section): " << endl;
-      cin >> showGraphics;
+      std::cout << "\nPick an option for displaying cells "
+           << "(0=3D mesh, 1=cross-section): " << std::endl;
+      std::cin >> showGraphics;
       if (showGraphics == 0) viewCells( dataset, shrinkFactor );
       else
       {
-         cout << " calling viewXSectionOfRectilinearGrid" << endl;
+         std::cout << " calling viewXSectionOfRectilinearGrid" << std::endl;
          viewXSectionOfRectilinearGrid( (vtkRectilinearGrid*)dataset );
       }
    }
    else if ( dataset->GetDataObjectType() == VTK_POLY_DATA )
    {
-      cout <<"sjk 1" << endl;
+      std::cout <<"sjk 1" << std::endl;
       // let the user pick the active scalar
       activateScalar( dataset ); 
       viewCells( dataset, shrinkFactor );
    }
    else if ( dataset->GetDataObjectType() == VTK_STRUCTURED_GRID )
    {
-      cout <<"IsFileStructuredGrid" << endl;
+      std::cout <<"IsFileStructuredGrid" << std::endl;
       viewCells( dataset, shrinkFactor );
    }
    else
    {
-      cout <<"ERROR - Unsupported vtk file format" << endl;
+      std::cout <<"ERROR - Unsupported vtk file format" << std::endl;
       exit(1);
    }
    dataset->Delete();
@@ -289,12 +289,12 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
    int numCells = dataset->GetNumberOfCells();
    if ( numCells==0 )
    {
-      cout << "\tNothing to plot: The number of cells is " << numCells << endl;
+      std::cout << "\tNothing to plot: The number of cells is " << numCells << std::endl;
       return actor;
    }
    else
    {
-      cout << "\tgetActorFromDataSet: The number of cells is " << numCells << endl;
+      std::cout << "\tgetActorFromDataSet: The number of cells is " << numCells << std::endl;
    }
 
    vtkDataSetMapper *map = vtkDataSetMapper::New();
@@ -307,18 +307,18 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
 
    actor = vtkActor::New();
 
-   cout << "dataset->GetPointData()->GetNumberOfArrays() = "
-        << dataset->GetPointData()->GetNumberOfArrays() << endl;
+   std::cout << "dataset->GetPointData()->GetNumberOfArrays() = "
+        << dataset->GetPointData()->GetNumberOfArrays() << std::endl;
 
    if ( dataset->GetPointData()->GetScalars() )
    {
       vtkLookupTable *lut = vtkLookupTable::New();
       lut->SetNumberOfColors(256); //default is 256
 
-      cout << "dataset->GetPointData()->GetScalars()->GetName() = "
-           << dataset->GetPointData()->GetScalars()->GetName() << endl;
-      cout << "dataset->GetPointData()->GetScalars()->GetLookupTable() = "
-           << dataset->GetPointData()->GetScalars()->GetLookupTable() << endl;
+      std::cout << "dataset->GetPointData()->GetScalars()->GetName() = "
+           << dataset->GetPointData()->GetScalars()->GetName() << std::endl;
+      std::cout << "dataset->GetPointData()->GetScalars()->GetLookupTable() = "
+           << dataset->GetPointData()->GetScalars()->GetLookupTable() << std::endl;
 
       double minMax[ 2 ];
       minMax[ 0 ] = 0.0;
@@ -326,13 +326,13 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
 
       if ( dataset->GetPointData()->GetScalars()->GetLookupTable() )
       {
-         cout << "lookup table is added in getActorFromDataSet" << endl;
+         std::cout << "lookup table is added in getActorFromDataSet" << std::endl;
       }
       else
       {
          lut->SetHueRange(2.0f/3.0f, 0.0f); //a blue-to-red scale
          dataset->GetPointData()->GetScalars()->GetRange( minMax );
-         cout << "minMax: " << minMax[0] << " " << minMax[1] << endl;
+         std::cout << "minMax: " << minMax[0] << " " << minMax[1] << std::endl;
          lut->SetTableRange( minMax );
          lut->Build();
 /*
@@ -366,12 +366,12 @@ vtkActor * getActorFromDataSet( vtkDataSet * dataset )
 
 vtkActor * getActorFromFile( char * vtkFilename )
 {
-   //cout << "getActorFromFile" << endl;
+   //std::cout << "getActorFromFile" << std::endl;
    vtkActor *actor = NULL;
 
    char * extension = fileIO::getExtension( vtkFilename );
-   //cout << "vtkFilename = \"" << vtkFilename << "\"" << endl;
-   //cout << "extension = \"" << extension << "\"" << endl;
+   //std::cout << "vtkFilename = \"" << vtkFilename << "\"" << std::endl;
+   //std::cout << "extension = \"" << extension << "\"" << std::endl;
 
    if ( !strcmp(extension,"bmp") || !strcmp(extension,"BMP") )
    {
@@ -397,17 +397,17 @@ vtkActor * getActorFromFile( char * vtkFilename )
 
    if ( dataset->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
    {
-      cout << "IsFileUnstructuredGrid" << endl;
+      std::cout << "IsFileUnstructuredGrid" << std::endl;
 
       // let the user pick the active scalar
       activateScalar( dataset ); 
 
       //showGraphics: 0=noShowCells, 1=showExteriorCells, 2=showAllCells
       int showGraphics;
-      cout << "\nPick an option for displaying cells..." << endl;
-      //cout << "Answer  (0) noDrawCells   (1) drawExteriorFacesOnly (for faster interaction)   (2) drawAllCells" << endl;
-      cout << "Answer  (1) drawExteriorFacesOnly (for faster interaction)   (2) drawAllCells" << endl;
-      cin >> showGraphics;
+      std::cout << "\nPick an option for displaying cells..." << std::endl;
+      //std::cout << "Answer  (0) noDrawCells   (1) drawExteriorFacesOnly (for faster interaction)   (2) drawAllCells" << std::endl;
+      std::cout << "Answer  (1) drawExteriorFacesOnly (for faster interaction)   (2) drawAllCells" << std::endl;
+      std::cin >> showGraphics;
 
       //if (showGraphics)
       {
@@ -432,22 +432,22 @@ vtkActor * getActorFromFile( char * vtkFilename )
    }
    else if ( dataset->GetDataObjectType() == VTK_RECTILINEAR_GRID )
    {
-      cout <<"IsFileRectilinearGrid" << endl;
+      std::cout <<"IsFileRectilinearGrid" << std::endl;
       actor = getActorFromDataSet( dataset );
    }
    else if ( dataset->GetDataObjectType() == VTK_POLY_DATA )
    {
-      cout <<"IsFilePolyData" << endl;
+      std::cout <<"IsFilePolyData" << std::endl;
       actor = getActorFromDataSet( dataset );
    }
    else if ( dataset->GetDataObjectType() == VTK_STRUCTURED_GRID )
    {
-      cout <<"IsFileStructuredGrid" << endl;
+      std::cout <<"IsFileStructuredGrid" << std::endl;
       actor = getActorFromDataSet( dataset );
    }
    else
    {
-      cout <<"ERROR - Unsupported vtk file format" << endl;
+      std::cout <<"ERROR - Unsupported vtk file format" << std::endl;
    }
    dataset->Delete();
    return actor;

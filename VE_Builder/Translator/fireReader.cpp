@@ -278,11 +278,11 @@ vtkUnstructuredGrid * fireReader( char * geomFile, char * dataFile, int debug )
          inputStrings >> iters;
         std::cout << "Do you want the data from iteration number : " << 
                                                       iters << " (1 or 0) " <<std::endl;
-         cin >> ans;
+         std::cin >> ans;
          if ( !ans )
          {
            std::cout << "Do you want to continue extracting data (1 or 0)? " <<std::endl;
-            cin >> ans2;
+            std::cin >> ans2;
          }
 
          if ( ans2 )
@@ -305,7 +305,7 @@ vtkUnstructuredGrid * fireReader( char * geomFile, char * dataFile, int debug )
                   input >> iters;
                  std::cout << "Do you want the data from iteration number : " << 
                                                       iters << " (1 or 0) " <<std::endl;
-                  cin >> ans;
+                  std::cin >> ans;
                   if ( ans )
                      flag = 1;
                }
@@ -553,7 +553,7 @@ int ExitReader( void )
 {
    int ans;
   std::cout << " Do you want to exit 0 or 1 : " <<std::endl;
-   cin >> ans;
+   std::cin >> ans;
    if ( ans )
       return ( 1 );
    else

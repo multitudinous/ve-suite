@@ -45,6 +45,8 @@ typedef float vtkReal;
 #include "vtkTexture.h"
 #endif
 #include <Performer/pr/pfTexture.h>
+#include <iostream>
+using namespace std;
 
 pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode, int verbose) {
 

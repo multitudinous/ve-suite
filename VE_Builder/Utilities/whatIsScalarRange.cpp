@@ -60,7 +60,7 @@ int main( int argc, char *argv[] )
    vtkDataSet * dataset = readVtkThing( inFileName, 1 );
 
    int numArrays = dataset->GetPointData()->GetNumberOfArrays();
-   //cout << "numArrays = " << numArrays << endl;
+   //std::cout << "numArrays = " << numArrays << std::endl;
    double minMax[ 2 ];
    for ( int i = 0; i < numArrays; i++ )
    {
@@ -68,8 +68,8 @@ int main( int argc, char *argv[] )
       int numComponents = array_i->GetNumberOfComponents();
       if ( numComponents != 1 && numComponents != 3 )
       {
-         cout << "ERROR: Unexpected number of components (" 
-              << numComponents << ") in array " << i << endl;
+         std::cout << "ERROR: Unexpected number of components (" 
+              << numComponents << ") in array " << i << std::endl;
          continue;
       }
 
@@ -79,21 +79,21 @@ int main( int argc, char *argv[] )
                                 ComputeVectorMagnitudeRange( 
                                       dataset->GetPointData()->GetArray( i ) );
 
-         cout << "array " << i << ": vector named \"" << array_i->GetName() 
+         std::cout << "array " << i << ": vector named \"" << array_i->GetName() 
               << "\", vector magnitude range:\t" 
-              << vecMagRange[ 0 ] << "\t" << vecMagRange[ 1 ] << endl;
+              << vecMagRange[ 0 ] << "\t" << vecMagRange[ 1 ] << std::endl;
          delete [] vecMagRange;
 
       }
       else // if ( numComponents == 1 ) 
       {
          array_i->GetRange( minMax );
-         cout << "array " << i << ": scalar named \"" << array_i->GetName()
+         std::cout << "array " << i << ": scalar named \"" << array_i->GetName()
               << "\", scalar magnitude range:\t"
-              << minMax[0] << "\t" << minMax[1] << endl;
+              << minMax[0] << "\t" << minMax[1] << std::endl;
       }
    }
-   cout << endl;
+   std::cout << std::endl;
 
    dataset->Delete();
    delete [] inFileName;   inFileName = NULL;

@@ -835,7 +835,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          this->SetPlaneReso( commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) ); 
 
          // convert size percentage (0-100) request to plane size
-         cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << endl;
+         std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << std::endl;
          this->SetPlaneSize( commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
       }
    }

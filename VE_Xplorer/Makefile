@@ -47,12 +47,12 @@ CFDUNAME = $(shell uname)
 ifdef OMNI_HOME
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl
 
-   CORBA_DEFINES = -D__OSVERSION__=6 
-
    ifeq (${CFDUNAME},Linux)
+      CORBA_DEFINES = -D__OSVERSION__=2
       CORBA_DEFINES += -D__x86__ -D__linux__
       OMNI_LIB = ${OMNI_HOME}/lib
    else
+      CORBA_DEFINES = -D__OSVERSION__=6
       CORBA_DEFINES += -D__mips__ -D__irix__
       OMNI_LIB = ${OMNI_HOME}/lib
    endif

@@ -173,7 +173,7 @@ bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdObjects::UpdateCommand()
 {
-   cerr << "doing nothing in cfdObjects::UpdateCommand()" << endl;
+   std::cerr << "doing nothing in cfdObjects::UpdateCommand()" << std::endl;
 }
 
 cfdDataSet* cfdObjects::GetActiveDataSet()

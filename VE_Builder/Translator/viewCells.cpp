@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "viewCells.h"
+#include <iostream>
 
 #include <vtkPoints.h>
 #include <vtkUnstructuredGrid.h>
@@ -71,7 +72,7 @@ vtkUnstructuredGrid* extractExteriorCellsOnly( vtkUnstructuredGrid *output )
     //    exteriorCells->DebugOn();
 
     int numCells = output->GetNumberOfCells();
-    //cout << "     The number of cells is " << numCells << endl;
+    //std::cout << "     The number of cells is " << numCells << std::endl;
     exteriorCells->Allocate( numCells, numCells );
     
     for(int cellId=0; cellId < numCells; cellId++)
@@ -85,7 +86,7 @@ vtkUnstructuredGrid* extractExteriorCellsOnly( vtkUnstructuredGrid *output )
             face = cell->GetFace(j);
             output->GetCellNeighbors(cellId, face->PointIds, cellIds);
             //face->Delete();
-//              cout << "cellId=" << cellId << ", face " << j << ", cellIds->GetNumberOfIds()=" << cellIds->GetNumberOfIds() << endl;
+//              std::cout << "cellId=" << cellId << ", face " << j << ", cellIds->GetNumberOfIds()=" << cellIds->GetNumberOfIds() << std::endl;
             if ( cellIds->GetNumberOfIds() <= 0 )    // exterior faces have a zero here
             {
                 thisIsExteriorCell = 1;
@@ -95,7 +96,7 @@ vtkUnstructuredGrid* extractExteriorCellsOnly( vtkUnstructuredGrid *output )
 
         if( thisIsExteriorCell )
         {
-//            cout << "ext cell found" << endl;
+//            std::cout << "ext cell found" << std::endl;
             npts = cell->GetNumberOfPoints();
             pts->Reset();
             for ( int i=0; i < npts; i++)
@@ -104,16 +105,16 @@ vtkUnstructuredGrid* extractExteriorCellsOnly( vtkUnstructuredGrid *output )
                 x = output->GetPoint( ptId );
                 pt = extCellPoints->InsertNextPoint( x );
                 pts->InsertId( i, pt );
-//                cout << "   Inserted point pt=" << pt << endl;
+//                std::cout << "   Inserted point pt=" << pt << std::endl;
             }
-//            cout << " cell->GetCellType()=" <<  cell->GetCellType() << endl;
+//            std::cout << " cell->GetCellType()=" <<  cell->GetCellType() << std::endl;
             exteriorCells->InsertNextCell( cell->GetCellType(), pts );
         }
     }//for all cells
  
     exteriorCells->SetPoints( extCellPoints );
     //exteriorCells->Squeeze();    // Reclaim any extra memory used to store data. vtk says: THIS METHOD IS NOT THREAD SAFE
-//    exteriorCells->Print( cout );
+//    exteriorCells->Print( std::cout );
 
     pts->Delete();
     extCellPoints->Delete();
@@ -124,11 +125,11 @@ vtkUnstructuredGrid* extractExteriorCellsOnly( vtkUnstructuredGrid *output )
 
 void viewCells( vtkDataSet *dataset, const float shrinkFactor )
 {
-    cout << "\nviewCells: Preparing to view mesh..." << endl;
+    std::cout << "\nviewCells: Preparing to view mesh..." << std::endl;
     int numCells = dataset->GetNumberOfCells();
-    cout << "     The number of cells is " << numCells << endl;
+    std::cout << "     The number of cells is " << numCells << std::endl;
     int numPts = dataset->GetNumberOfPoints();
-    cout << "     The number of points is "<< numPts << endl;
+    std::cout << "     The number of points is "<< numPts << std::endl;
     
     if ( numCells==0 ) return;
 
@@ -211,7 +212,7 @@ void viewCells( vtkDataSet *dataset, const float shrinkFactor )
         cam1->SetParallelProjection(1);    // no perspective
         //cam1->ParallelProjectionOn();    // no perspective
 */
-    cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << endl;
+    std::cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << std::endl;
 
     // interact with data
     renWin->SetSize( 800, 800 );
@@ -235,16 +236,16 @@ void viewCells( vtkDataSet *dataset, const float shrinkFactor )
 
 void viewXSectionOfRectilinearGrid( vtkRectilinearGrid *output )
 {
-    cout << "\nPreparing to view mesh..." << endl;
+    std::cout << "\nPreparing to view mesh..." << std::endl;
     int numCells = output->GetNumberOfCells();
-    cout << "     The number of cells is " << numCells << endl;
+    std::cout << "     The number of cells is " << numCells << std::endl;
 
     int dim[3];
     output->GetDimensions( dim );
     int nx = dim[0];
     int ny = dim[1];
     int nz = dim[2];
-    cout << "nx = " << nx << ", ny = " << ny << ", nz = " << nz << endl;
+    std::cout << "nx = " << nx << ", ny = " << ny << ", nz = " << nz << std::endl;
 
     //view a cross-section parallel to y-z axes, at half-way point of model 
     vtkRectilinearGridGeometryFilter *plane = vtkRectilinearGridGeometryFilter::New();
@@ -277,7 +278,7 @@ void viewXSectionOfRectilinearGrid( vtkRectilinearGrid *output )
 		cam1->Zoom( 1.5 );
         cam1->SetParallelProjection(1);    // no perspective
 
-    cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << endl;
+    std::cout << "\nWith cursor on the graphics window, press 'e' to exit the viewer" << std::endl;
 
 	// interact with data
 	renWin->SetSize( 500, 500 );
@@ -299,16 +300,16 @@ void viewXSectionOfRectilinearGrid( vtkRectilinearGrid *output )
 /*
 void viewXSection( vtkDataObject *output )
 {
-    cout << "\nPreparing to view mesh..." << endl;
+    std::cout << "\nPreparing to view mesh..." << std::endl;
     int numCells = output->GetNumberOfCells();
-    cout << "     The number of cells is " << numCells << endl;
+    std::cout << "     The number of cells is " << numCells << std::endl;
 
     int dim[3];
     output->GetDimensions( dim );
     int nx = dim[0];
     int ny = dim[1];
     int nz = dim[2];
-    cout << "nx = " << nx << ", ny = " << ny << ", nz = " << nz << endl;
+    std::cout << "nx = " << nx << ", ny = " << ny << ", nz = " << nz << std::endl;
 
     //view a cross-section parallel to y-z axes, at half-way point of model 
     vtkGeometryFilter *plane = vtkGeometryFilter::New();
@@ -457,20 +458,20 @@ void GetAxesLabels( vtkFollower * xActor,
 
 void AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFactor )
 {
-    //cout << "\nPreparing to view mesh..." << endl;
+    //std::cout << "\nPreparing to view mesh..." << std::endl;
     int numCells = dataset->GetNumberOfCells();
 /*
-    cout << "     The number of cells is " << numCells << endl;
+    std::cout << "     The number of cells is " << numCells << std::endl;
     int numPts = dataset->GetNumberOfPoints();
-    cout << "     The number of points is "<< numPts << endl;
+    std::cout << "     The number of points is "<< numPts << std::endl;
 */
 
     if ( numCells==0 )
     {
-        cout << "\tNothing to plot in AddToRenderer: The number of cells is " << numCells << endl;
+        std::cout << "\tNothing to plot in AddToRenderer: The number of cells is " << numCells << std::endl;
         return;
     }
-    //else    cout << "\tAddToRenderer: The number of cells is " << numCells << endl;
+    //else    std::cout << "\tAddToRenderer: The number of cells is " << numCells << std::endl;
 
     vtkDataSetMapper *map = vtkDataSetMapper::New();
 //    By default, VTK uses OpenGL display lists which results in another copy of the data being stored
@@ -478,12 +479,12 @@ void AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFa
 //    You can turn off display lists by turning on ImmediateModeRendering.
     map->ImmediateModeRenderingOn();
 
-    cout << "Using shrinkFactor = " << shrinkFactor << endl;
+    std::cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
 
     vtkShrinkFilter *shrink = NULL;
     if ( shrinkFactor > 0.0 && shrinkFactor < 1.0 ) 
     {
-        //cout << "Using shrinkFactor = " << shrinkFactor << endl;
+        //std::cout << "Using shrinkFactor = " << shrinkFactor << std::endl;
         shrink = vtkShrinkFilter::New();
         shrink->SetInput( dataset );
         shrink->SetShrinkFactor( shrinkFactor );
@@ -534,9 +535,9 @@ void AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFa
       vtkLookupTable *lut = vtkLookupTable::New();
       lut->SetNumberOfColors( 256 ); //default is 256
 
-      cout << "dataset->GetPointData()->GetScalars()->GetName() = "
-           << dataset->GetPointData()->GetScalars()->GetName() << endl;
-      //cout << "dataset->GetPointData()->GetScalars()->GetLookupTable() = " << dataset->GetPointData()->GetScalars()->GetLookupTable() << endl;
+      std::cout << "dataset->GetPointData()->GetScalars()->GetName() = "
+           << dataset->GetPointData()->GetScalars()->GetName() << std::endl;
+      //std::cout << "dataset->GetPointData()->GetScalars()->GetLookupTable() = " << dataset->GetPointData()->GetScalars()->GetLookupTable() << std::endl;
 
       double minMax[ 2 ];
       minMax[ 0 ] = 0.0;
@@ -544,13 +545,13 @@ void AddToRenderer( vtkDataSet *dataset, vtkRenderer* ren1, const float shrinkFa
 
       if ( dataset->GetPointData()->GetScalars()->GetLookupTable() )
       {
-         cout << "lookup table is added in getActorFromDataSet" << endl;
+         std::cout << "lookup table is added in getActorFromDataSet" << std::endl;
       }
       else
       {
          lut->SetHueRange( 2.0f/3.0f, 0.0f ); //a blue-to-red scale
          dataset->GetPointData()->GetScalars()->GetRange( minMax );
-         cout << "tableRange: " << minMax[ 0 ] << " " << minMax[ 1 ] << endl;
+         std::cout << "tableRange: " << minMax[ 0 ] << " " << minMax[ 1 ] << std::endl;
          lut->SetTableRange( minMax );
          lut->Build();
       }

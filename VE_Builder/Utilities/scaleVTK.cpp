@@ -30,8 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
@@ -61,7 +59,7 @@ int main( int argc, char *argv[] )
 
    if ( printInfoToScreen )
    {
-      cout << "\nback in main..." << endl; 
+      std::cout << "\nback in main..." << std::endl; 
       printWhatItIs( dataset );
    }
  
@@ -74,17 +72,17 @@ int main( int argc, char *argv[] )
    int velSCALE;
    if ( argc > 3 )
    {   
-      cout << "Using commandline-set extents..." << endl;
+      std::cout << "Using commandline-set extents..." << std::endl;
       velSCALE = atoi( argv[ arg++ ] );
-      cout << "\tvelSCALE: " << velSCALE << endl;
+      std::cout << "\tvelSCALE: " << velSCALE << std::endl;
    }
    else
    {
-      cout << "\nSelect the geometry scaling:" << endl;
-      cout << "(0) No scaling" << endl;
-      cout << "(1) Custom scaling" << endl;
-      cout << "(2) meters to feet" << endl;
-      cin >> velSCALE;
+      std::cout << "\nSelect the geometry scaling:" << std::endl;
+      std::cout << "(0) No scaling" << std::endl;
+      std::cout << "(1) Custom scaling" << std::endl;
+      std::cout << "(2) meters to feet" << std::endl;
+      std::cin >> velSCALE;
    }
 
    // Get factor to scale the geometry
@@ -97,12 +95,12 @@ int main( int argc, char *argv[] )
          if ( argc > 3 )
          {   
             geomScale[i] = (float)atof( argv[ arg++ ] );
-            cout << "\tgeomScale[" << i << "]: " << geomScale[i] << endl;
+            std::cout << "\tgeomScale[" << i << "]: " << geomScale[i] << std::endl;
          }
          else
          {
-            cout << "input the geometry scale factor for axis " << i << ": ";
-            cin >> geomScale[i];
+            std::cout << "input the geometry scale factor for axis " << i << ": ";
+            std::cin >> geomScale[i];
          }
       }
    }
@@ -113,7 +111,7 @@ int main( int argc, char *argv[] )
       geomScale[2] = 3.28083989501f;
    }
    else
-      cout << "Invalid entry: will not scale geometry" << endl;
+      std::cout << "Invalid entry: will not scale geometry" << std::endl;
 
    // Transform the geometry 
    vtkTransform * transform = NULL;
@@ -149,7 +147,7 @@ int main( int argc, char *argv[] )
       }
       else if ( dataset->GetDataObjectType() == VTK_STRUCTURED_GRID )
       {
-         cout << "doing nothing for VTK_STRUCTURED_GRID" << endl;
+         std::cout << "doing nothing for VTK_STRUCTURED_GRID" << std::endl;
       }
       else if ( dataset->GetDataObjectType() == VTK_POLY_DATA )
       {
@@ -159,8 +157,8 @@ int main( int argc, char *argv[] )
       }
       else
       {
-         cout <<"\nERROR - Unsupported vtk object type: "
-              << dataset->GetDataObjectType() << endl;
+         std::cout <<"\nERROR - Unsupported vtk object type: "
+              << dataset->GetDataObjectType() << std::endl;
          return 1;
       }
       //pointset->Delete();
@@ -169,7 +167,7 @@ int main( int argc, char *argv[] )
    }
    else
    {
-      cout <<"\nERROR - can only scale vtkPointSets" << endl;
+      std::cout <<"\nERROR - can only scale vtkPointSets" << std::endl;
       dataset->Delete();
       delete [] inFileName;   inFileName = NULL;
       delete [] outFileName;  outFileName = NULL;

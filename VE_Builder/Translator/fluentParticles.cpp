@@ -35,8 +35,6 @@
 #include "converter.h"
 #include <cmath>
 #include <ctime>
-#include <cstdlib>
-#include <cstdio>
 
 fluentParticles::fluentParticles( void ) 
 {
@@ -181,7 +179,7 @@ void fluentParticles::allocatePolydata( void )
       parameterData[i]->SetNumberOfComponents( 1 );
       if (parameterData[i] == NULL)
       {
-         cerr << "ERROR: can't get memory for parameterData, so exiting" << endl;
+         std::cerr << "ERROR: can't get memory for parameterData, so exiting" << std::endl;
          exit( 1 );
       }
    }

@@ -99,7 +99,7 @@ void jdMAPReader::translateFluentPartToVTK( void )
    std::string names2;
    //const std::string letters ( "XE" );
    std::cout<< "Input filename to be converted : " <<std::endl;
-   cin >> inputFileName;
+   std::cin >> inputFileName;
    inFile.open(inputFileName);
    std::getline( inFile, line );
    names2 = line.substr(0, 2 );
@@ -122,7 +122,7 @@ void jdMAPReader::translateFluentPartToVTK( void )
       parameterData[i]->SetNumberOfComponents( 1 );
       if (parameterData[i] == NULL)
       {
-         cerr << "ERROR: can't get memory for parameterData, so exiting" << endl;
+         std::cerr << "ERROR: can't get memory for parameterData, so exiting" << std::endl;
          exit( 1 );
       }
    }

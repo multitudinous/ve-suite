@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
+#include <fstream>
 #include <cstdio>
 
 #include "vtkUnstructuredGrid.h"
@@ -47,14 +48,14 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
    vtkUnstructuredGrid * uGrid = NULL;
 
    if ( debug )
-      cout << "AVS input file is " << fluentAVSFileName << endl;
+      std::cout << "AVS input file is " << fluentAVSFileName << std::endl;
 
-   ifstream fvert;
-   fvert.open( fluentAVSFileName, ios::in );
+   std::fstream fvert;
+   fvert.open( fluentAVSFileName, std::ios::in );
 
    if ( fvert == NULL )
    {
-      cout <<"\n\nERROR - Cannot open the designated file\n"<< endl;
+      std::cout <<"\n\nERROR - Cannot open the designated file\n"<< std::endl;
       return uGrid;
    }
 
@@ -81,13 +82,13 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
    
    if ( debug )
    {
-      cout << "numOrigVertices = " << numOrigVertices << endl;
-      cout << "num_cells = " << num_cells << endl;
-      cout << "numDataColumns=" << numDataColumns << endl;
+      std::cout << "numOrigVertices = " << numOrigVertices << std::endl;
+      std::cout << "num_cells = " << num_cells << std::endl;
+      std::cout << "numDataColumns=" << numDataColumns << std::endl;
    }
 
-   cout << "\nReading vertex data...";
-   cout.flush();
+   std::cout << "\nReading vertex data...";
+   std::cout.flush();
 
    // Read the first vertex line...
    // Assign the first vertexId to vShift, the offset of the vertex numbering
@@ -125,12 +126,12 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
 
    if ( debug )
    {
-      cout << "\n\tAfter reading in " << numOrigVertices
-           << " vertices..." << endl;
-      cout << "\tmaxOrigVertexId = " << maxOrigVertexId << endl;
-      cout << "\tvShift = " << vShift << endl;
-      cout << "\tmaxVertexId = " << maxVertexId << endl;
-      cout << "\tis2D = " << is2D << endl;
+      std::cout << "\n\tAfter reading in " << numOrigVertices
+           << " vertices..." << std::endl;
+      std::cout << "\tmaxOrigVertexId = " << maxOrigVertexId << std::endl;
+      std::cout << "\tvShift = " << vShift << std::endl;
+      std::cout << "\tmaxVertexId = " << maxVertexId << std::endl;
+      std::cout << "\tis2D = " << is2D << std::endl;
    }
 
    // ifstream doesn't have a rewind function,
@@ -169,8 +170,8 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
       v->InsertPoint( vertexId[ i ], pts[ 0 ], pts[ 1 ], pts[ 2 ] );
       if ( debug > 1 )
       {
-         cout << "\tInserted point # " << vertexId[ i ] << ": " << "\t" 
-              << pts[ 0 ] << "\t" << pts[ 1 ] << "\t" << pts[ 2 ] << endl;
+         std::cout << "\tInserted point # " << vertexId[ i ] << ": " << "\t" 
+              << pts[ 0 ] << "\t" << pts[ 1 ] << "\t" << pts[ 2 ] << std::endl;
       }
 
       if ( is2D )
@@ -179,21 +180,21 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
          v->InsertPoint( newVertexId, pts[ 0 ], pts[ 1 ], (pts[ 2 ]+1.0) );
          if ( debug > 1 )
          {
-            cout << "\tInserted point # " << newVertexId << ": " << "\t" 
+            std::cout << "\tInserted point # " << newVertexId << ": " << "\t" 
                  << pts[ 0 ] << "\t" << pts[ 1 ] << "\t" << (pts[ 2 ]+1.0)
-                 << endl;
+                 << std::endl;
          }
       }
    }
-   cout << " ...done reading " << numOrigVertices
-        << " lines of vertex data." << endl;
+   std::cout << " ...done reading " << numOrigVertices
+        << " lines of vertex data." << std::endl;
 
    uGrid = vtkUnstructuredGrid::New();
    uGrid->SetPoints( v );
    v->Delete();
 
-   cout << "\nReading cell data...";
-   cout.flush();
+   std::cout << "\nReading cell data...";
+   std::cout.flush();
 
    // Will use function strtok to pull off text and integers from a text string
    char cellDataLine[ 256 ];
@@ -209,13 +210,13 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
    { 
       fvert.getline( cellDataLine, 256 );
       if ( debug > 1 )
-         cout << cellDataLine << endl;
+         std::cout << cellDataLine << std::endl;
 
       // extract first word (cell identifier number)
       pointerToCharArray = strtok( cellDataLine, excludes );
       if (pointerToCharArray == NULL)
       {
-         cout << "\n\nERROR: Could not find cell identifier number\n" << endl;
+         std::cout << "\n\nERROR: Could not find cell identifier number\n" << std::endl;
          continue;
       }
       cellID = atoi( pointerToCharArray );
@@ -224,7 +225,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
       pointerToCharArray = strtok( NULL, excludes );
       if (pointerToCharArray == NULL)
       {
-         cout << "\n\nERROR: Could not find cell group number\n" << endl;
+         std::cout << "\n\nERROR: Could not find cell group number\n" << std::endl;
          continue;
       }
       junk = atoi( pointerToCharArray );
@@ -233,16 +234,16 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
       pointerToCharArray = strtok( NULL, excludes );
       if (pointerToCharArray == NULL)
       {
-         cout << "\n\nERROR: Could not find cell type\n" << endl;
+         std::cout << "\n\nERROR: Could not find cell type\n" << std::endl;
          continue;
       }
       strcpy( sjunk, pointerToCharArray );
 
       if ( debug > 1 )
       {
-         cout << "\tcell identifier number is " << cellID
+         std::cout << "\tcell identifier number is " << cellID
               << ", cell group number is " << junk
-              << ", cell type is \"" << sjunk <<  "\"" << endl; 
+              << ", cell type is \"" << sjunk <<  "\"" << std::endl; 
       }
 
       if ( !strcmp( sjunk, "tet" ) )
@@ -252,7 +253,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
             pointerToCharArray = strtok( NULL, excludes );     // get next word
             if (pointerToCharArray == NULL)
             {
-               cout << "\n\nERROR: missing \'tet\' vertex data\n" << endl;
+               std::cout << "\n\nERROR: missing \'tet\' vertex data\n" << std::endl;
                exit( 1 );
             }
             cPt[ j ] = atoi( pointerToCharArray );             // vertex number
@@ -261,9 +262,9 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
          uGrid->InsertNextCell(VTK_TETRA, 4, cPt);
          if ( debug > 1 )
          {
-            cout << "\tInserted tetrahedron cell with vertices: " 
+            std::cout << "\tInserted tetrahedron cell with vertices: " 
                  << "\t" << cPt[ 0 ] << "\t" << cPt[ 1 ] << "\t" << cPt[ 2 ]
-                 << "\t" << cPt[ 3 ] << endl; 
+                 << "\t" << cPt[ 3 ] << std::endl; 
          }
       }
       else if ( !strcmp( sjunk, "pyr" ) ) 
@@ -273,7 +274,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
             pointerToCharArray = strtok( NULL, excludes );     // get next word
             if (pointerToCharArray == NULL)
             {
-               cout << "\n\nERROR: missing \'pyr\' vertex data\n" << endl;
+               std::cout << "\n\nERROR: missing \'pyr\' vertex data\n" << std::endl;
                exit( 1 );
             }
             cPt[ j ] = atoi( pointerToCharArray );             // vertex number
@@ -282,9 +283,9 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
          uGrid->InsertNextCell( VTK_PYRAMID, 5, cPt );
          if ( debug > 1 )
          {
-            cout << "\tInserted a pyramid cell with vertices:   " 
+            std::cout << "\tInserted a pyramid cell with vertices:   " 
                  << "\t" << cPt[ 0 ] << "\t" << cPt[ 1 ] << "\t" << cPt[ 2 ]
-                 << "\t" << cPt[ 3 ] << "\t" << cPt[ 4 ] << endl; 
+                 << "\t" << cPt[ 3 ] << "\t" << cPt[ 4 ] << std::endl; 
          }
       }
       else if ( !strcmp( sjunk, "hex" ) ) 
@@ -294,7 +295,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
             pointerToCharArray = strtok( NULL, excludes );     // get next word
             if (pointerToCharArray == NULL)
             {
-               cout << "\n\nERROR: missing \'hex\' vertex data\n" << endl;
+               std::cout << "\n\nERROR: missing \'hex\' vertex data\n" << std::endl;
                exit( 1 );
             }
             cPt[ j ] = atoi( pointerToCharArray );             // vertex number
@@ -303,10 +304,10 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
          uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, cPt );
          if ( debug > 1 )
          {
-            cout << "\tInserted hexahedron cell with vertices:  " 
+            std::cout << "\tInserted hexahedron cell with vertices:  " 
                  << "\t" << cPt[ 0 ] << "\t" << cPt[ 1 ] << "\t" << cPt[ 2 ]
                  << "\t" << cPt[ 3 ] << "\t" << cPt[ 4 ] << "\t" << cPt[ 5 ]
-                 << "\t" << cPt[ 6 ] << "\t" << cPt[ 7 ] << endl;
+                 << "\t" << cPt[ 6 ] << "\t" << cPt[ 7 ] << std::endl;
          }
       }
       else if ( !strcmp( sjunk, "quad" ) )
@@ -317,7 +318,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
             pointerToCharArray = strtok( NULL, excludes );     // get next word
             if (pointerToCharArray == NULL)
             {
-               cout << "\n\nERROR: missing \'quad\' vertex data\n" << endl;
+               std::cout << "\n\nERROR: missing \'quad\' vertex data\n" << std::endl;
                exit( 1 );
             }
             cPt[ j ] = atoi( pointerToCharArray );             // vertex number
@@ -327,10 +328,10 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
          uGrid->InsertNextCell( VTK_HEXAHEDRON, 8, cPt );
          if ( debug > 1 )
          {
-            cout << "\tInserted hexahedron cell with vertices:  " 
+            std::cout << "\tInserted hexahedron cell with vertices:  " 
                  << "\t" << cPt[ 0 ] << "\t" << cPt[ 1 ] << "\t" << cPt[ 2 ]
                  << "\t" << cPt[ 3 ] << "\t" << cPt[ 4 ] << "\t" << cPt[ 5 ]
-                 << "\t" << cPt[ 6 ] << "\t" << cPt[ 7 ] << endl;
+                 << "\t" << cPt[ 6 ] << "\t" << cPt[ 7 ] << std::endl;
          }
       }
       else if ( !strcmp( sjunk, "tri" ) )
@@ -341,7 +342,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
             pointerToCharArray = strtok( NULL, excludes );     // get next word
             if (pointerToCharArray == NULL)
             {
-               cout << "\n\nERROR: missing \'tri\' vertex data\n" << endl;
+               std::cout << "\n\nERROR: missing \'tri\' vertex data\n" << std::endl;
                exit( 1 );
             }
             cPt[ j ] = atoi( pointerToCharArray );             // vertex number
@@ -351,33 +352,33 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
          uGrid->InsertNextCell( VTK_WEDGE, 6, cPt );
          if ( debug > 1 )
          {
-            cout << "\tInserted wedge cell with vertices:  " 
+            std::cout << "\tInserted wedge cell with vertices:  " 
                  << "\t" << cPt[ 0 ] << "\t" << cPt[ 1 ] << "\t" << cPt[ 2 ]
                  << "\t" << cPt[ 3 ] << "\t" << cPt[ 4 ] << "\t" << cPt[ 5 ]
-                 << endl;
+                 << std::endl;
          }
       }
       else
       {
-         cout << "\n\nERROR: Unsupported cell type \"" << sjunk
-              << "\"\n" << endl;
+         std::cout << "\n\nERROR: Unsupported cell type \"" << sjunk
+              << "\"\n" << std::endl;
          continue;
       }
    }
-   cout << " ...done reading " << num_cells << " lines of cell data." << endl;
+   std::cout << " ...done reading " << num_cells << " lines of cell data." << std::endl;
 
-   cout << "\nReading solution data...";
-   cout.flush();
+   std::cout << "\nReading solution data...";
+   std::cout.flush();
 
    int numSolnValues;
    fvert >> numSolnValues;      // the number of columns of data per vertex
    if ( debug )
-      cout << "\n\tnumSolnValues = " << numSolnValues << endl;
+      std::cout << "\n\tnumSolnValues = " << numSolnValues << std::endl;
 
    if ( numSolnValues != numDataColumns )
    {
-      cout << "\n\nWARNING: numSolnValues (" << numSolnValues 
-           << ") != numDataColumns (" << numDataColumns << ")\n" << endl;
+      std::cout << "\n\nWARNING: numSolnValues (" << numSolnValues 
+           << ") != numDataColumns (" << numDataColumns << ")\n" << std::endl;
    }
 
    int junk2;
@@ -398,19 +399,19 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
       fvert.getline( cellDataLine, 256 );
       if ( debug > 1 )
       {
-         cout << cellDataLine << endl;
+         std::cout << cellDataLine << std::endl;
       }
 
       // extract data column identifier, i.e., "vel-magnitude" or "x-velocity"
       pDataColumnTitle = strtok( cellDataLine, excludes );
       if ( pDataColumnTitle == NULL )
       {
-         cout << "\nERROR: unexpected column identifier read in" << endl;
+         std::cout << "\nERROR: unexpected column identifier read in" << std::endl;
       }
       strcpy( dataColumnTitle[ i ], pDataColumnTitle );
       if ( debug > 1 )
       {
-         cout << "\tdata column identifier: " << dataColumnTitle[ i ] << endl;
+         std::cout << "\tdata column identifier: " << dataColumnTitle[ i ] << std::endl;
       }
 
       // looking for a word that starts with "x-" 
@@ -430,25 +431,25 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
      pointerToCharArray = strtok( NULL, excludes );
      if ( pointerToCharArray == NULL )
      {
-         cout << "ERROR: unexpected units identifier read in" << endl;
+         std::cout << "ERROR: unexpected units identifier read in" << std::endl;
      }
      strcpy( sjunk, pointerToCharArray );
      if ( debug > 1 )
      {
-        cout << "\tunits identifier: " << sjunk << endl;
+        std::cout << "\tunits identifier: " << sjunk << std::endl;
      }
    }
 
    if ( debug )
    {
-      cout << "\n\tnumParameters = " << numParameters << endl;
-      cout << "\tnum components per vector = " << numVectorComponents
-           << "\n" << endl;
+      std::cout << "\n\tnumParameters = " << numParameters << std::endl;
+      std::cout << "\tnum components per vector = " << numVectorComponents
+           << "\n" << std::endl;
    }
 
    if ( ! numParameters )
    {
-      cerr << "ERROR: file does not contain any parameters, so exiting" << endl;
+      std::cerr << "ERROR: file does not contain any parameters, so exiting" << std::endl;
       uGrid->Delete();
       uGrid = NULL;
       return uGrid;
@@ -463,7 +464,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
 /*
       if ( parameterData[ i ] == NULL )
       {
-         cerr << "ERROR: can't get memory for parameterData, exiting" << endl;
+         std::cerr << "ERROR: can't get memory for parameterData, exiting" << std::endl;
          uGrid->Delete();
          uGrid = NULL;
          return uGrid;
@@ -473,7 +474,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
 
    if ( debug )
    {
-      cout << endl;
+      std::cout << std::endl;
    }
 
    // specify the name and number of components for each of the parameter arrays
@@ -506,8 +507,8 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
 
       if ( debug )
       {
-         cout << "parameter array " << jj << " is named \""
-              << parameterData[ jj ]->GetName() << "\"" << endl;
+         std::cout << "parameter array " << jj << " is named \""
+              << parameterData[ jj ]->GetName() << "\"" << std::endl;
       }
       jj++;
    }
@@ -539,10 +540,10 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
 
       if ( debug > 1 )
       {
-         cout << "\nvertexId[" << j << "] = " << vertexId[j] << ", solnValue:";
+         std::cout << "\nvertexId[" << j << "] = " << vertexId[j] << ", solnValue:";
          for ( i=0; i < numSolnValues; i++ )
-            cout << "\t" << solnValue[ i ];
-         cout << endl;
+            std::cout << "\t" << solnValue[ i ];
+         std::cout << std::endl;
       }
 
       // load the data into the appropriate scalar or vector data array...
@@ -569,21 +570,21 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
 
          if ( debug > 1 ) 
          {
-            cout << "\tparameter " << jj << ":";
-            cout.flush();
+            std::cout << "\tparameter " << jj << ":";
+            std::cout.flush();
             for ( k=0; k < parameterData[ jj ]->GetNumberOfComponents(); k++ )
             {
-               cout << "\t" 
+               std::cout << "\t" 
                     << parameterData[ jj ]->GetComponent(vertexId[ j ],k);
             }
-            cout << endl;
+            std::cout << std::endl;
          }
          jj++;
       }
    }
 
-   cout << " ...done reading " << numOrigVertices << " lines of solution data."
-        << endl << endl;
+   std::cout << " ...done reading " << numOrigVertices << " lines of solution data."
+        << std::endl << std::endl;
    fvert.close();
 
    // expand 2D data into 3D data...
@@ -591,7 +592,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
    {
       if ( debug > 1 )
       {
-         cout << "expanding 2D data into 3D data..." << endl;
+         std::cout << "expanding 2D data into 3D data..." << std::endl;
       }
 
       for ( int i=0; i < numParameters; i++ )
@@ -601,9 +602,9 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
          {
             if ( debug > 1 )
             {
-               cout << "setting vertex = " << vertexId[ j ] + maxVertexId + 1
+               std::cout << "setting vertex = " << vertexId[ j ] + maxVertexId + 1
                     << "\t" << parameterData[ i ]->GetComponent(vertexId[j],0)
-                    << endl;
+                    << std::endl;
             }
             parameterData[ i ]->SetTuple( vertexId[ j ] + maxVertexId + 1,
                               parameterData[ i ]->GetTuple( vertexId[ j ] ) ); 
@@ -611,7 +612,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
 
          if ( debug > 2 )
          {
-            parameterData[ i ]->Print( cout );
+            parameterData[ i ]->Print( std::cout );
          }
       }
    }
@@ -619,13 +620,13 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
    // Optionally print to screen the parameter data arrays
    if ( debug > 1 )
    {
-      cout << "parameterData" << endl;
+      std::cout << "parameterData" << std::endl;
       for ( j=0; j < numOrigVertices; j++ )
       {
          for ( i=0; i < numParameters; i++ )
             for ( k=0; k < parameterData[ i ]->GetNumberOfComponents(); k++ )
-               cout << "\t" << parameterData[ i ]->GetComponent(vertexId[j],k);
-         cout << endl;
+               std::cout << "\t" << parameterData[ i ]->GetComponent(vertexId[j],k);
+         std::cout << std::endl;
       }
    }
 

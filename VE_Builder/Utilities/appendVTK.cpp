@@ -29,10 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
 #include "fileIO.h"
 #include "readWriteVtkThings.h"
@@ -71,8 +68,8 @@ int main( int argc, char *argv[] )
         char response;
         do 
         {
-            cout << "\nSo you want to add " << inFileName1 << " to " << inFileName2  << " to get " << outFileName << "? (y/n): ";
-            cin >> response;
+            std::cout << "\nSo you want to add " << inFileName1 << " to " << inFileName2  << " to get " << outFileName << "? (y/n): ";
+            std::cin >> response;
         } while (response != 'y' && response != 'Y' && response != 'n' && response != 'N');
 
         //if anything other than y/Y was input then get filenames from user...
@@ -94,28 +91,28 @@ int main( int argc, char *argv[] )
     float rotX = 0.0, rotY = 0.0, rotZ = 0.0;
     float transX = 0.0, transY = 0.0, transZ = 0.0;
 
-    cout << "\nTransform (translate/rotate) the geometry of " << inFileName2 << "? (0) No (1) Yes " << endl;
-    cin >> B_trans;
+    std::cout << "\nTransform (translate/rotate) the geometry of " << inFileName2 << "? (0) No (1) Yes " << std::endl;
+    std::cin >> B_trans;
 
     if ( B_trans )
     {
-        cout << "\nTo translate X value : ";
-        cin >> transX;
+        std::cout << "\nTo translate X value : ";
+        std::cin >> transX;
         
-        cout << "To translate Y value : ";
-        cin >> transY;
+        std::cout << "To translate Y value : ";
+        std::cin >> transY;
 
-        cout << "To translate Z value : ";
-        cin >> transZ;
+        std::cout << "To translate Z value : ";
+        std::cin >> transZ;
 
-        cout << "\nTo rotate X (degrees) : ";
-        cin >> rotX;
+        std::cout << "\nTo rotate X (degrees) : ";
+        std::cin >> rotX;
 
-        cout << "To rotate Y (degrees) : ";
-        cin >> rotY;
+        std::cout << "To rotate Y (degrees) : ";
+        std::cin >> rotY;
 
-        cout << "To rotate Z (degrees) : ";
-        cin >> rotZ;
+        std::cout << "To rotate Z (degrees) : ";
+        std::cin >> rotZ;
     }
 
     vtkTransform * t = vtkTransform::New();
@@ -145,8 +142,8 @@ int main( int argc, char *argv[] )
    dataset1->Delete();
    dataset2->Delete();
 
-   cout << "... done" << endl;
-   cout << endl;
+   std::cout << "... done" << std::endl;
+   std::cout << std::endl;
 
    return 0;
 }

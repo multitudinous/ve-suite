@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdImage.h"
+#include <iostream>
 
 //#include <Performer/pr/pfGeoSet.h>
 //#include "vtkActorToPF.h"
@@ -102,12 +103,12 @@ cfdImage::cfdImage( char * filename, int xyz )
       else if (this->type==2)  this->typeLabel = 'Z';
       else
       {
-         cout << "ERROR: in cfdImage, xyz must be 0, 1, or 2" << endl;
+         std::cout << "ERROR: in cfdImage, xyz must be 0, 1, or 2" << std::endl;
          exit( 1 );
       }
    }
    else
-      cout << "ERROR: invalid extension on file \"" << filename << "\"" << endl;
+      std::cout << "ERROR: invalid extension on file \"" << filename << "\"" << std::endl;
 }
 
 
