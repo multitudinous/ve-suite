@@ -367,7 +367,7 @@ wxPanel* GasSourceTabs::CreateFirstPage()
   data2_row->Add(spec_row);
   data2_row->Add(comp_row);
 
-  lb_species = new wxListBox(panel, -1, wxDefaultPosition, wxSize(120, 500), 0, NULL, wxLB_MULTIPLE|wxLB_SORT|wxLB_NEEDED_SB);
+  lb_species = new wxListBox(panel, -1, wxDefaultPosition, wxSize(120, 350), 0, NULL, wxLB_MULTIPLE|wxLB_SORT|wxLB_NEEDED_SB);
   spec_row->Add(new wxStaticText(panel, -1, "    Specie", wxDefaultPosition, wxSize(120, 17)));
   spec_row->Add(lb_species);
 
@@ -378,7 +378,7 @@ wxPanel* GasSourceTabs::CreateFirstPage()
   title_row->Add(new wxStaticText(panel, -1, "Composition", wxDefaultPosition, wxSize(100, 17)));
   title_row->Add(new wxStaticText(panel, -1, "Mole Fraction", wxDefaultPosition, wxSize(120, 17)));
 
-  lb_comp_frac = new wxListBox(panel, SPEC_LIST, wxDefaultPosition, wxSize(240,500), 0, NULL, wxLB_SINGLE|wxLB_SORT);  
+  lb_comp_frac = new wxListBox(panel, SPEC_LIST, wxDefaultPosition, wxSize(240,350), 0, NULL, wxLB_SINGLE|wxLB_SORT);  
   comp_row->Add(lb_comp_frac);
 
   b_add = new wxButton(panel, ADD, "Add");
@@ -486,7 +486,7 @@ wxPanel* GasSourceTabs::CreateSecondPage()
   data2_row->Add(spec_row);
   data2_row->Add(comp_row);
 
-  lb_particles = new wxListBox(panel, -1, wxDefaultPosition, wxSize(120, 400), 0, NULL, wxLB_MULTIPLE|wxLB_SORT|wxLB_NEEDED_SB);
+  lb_particles = new wxListBox(panel, -1, wxDefaultPosition, wxSize(120, 250), 0, NULL, wxLB_MULTIPLE|wxLB_SORT|wxLB_NEEDED_SB);
   spec_row->Add(new wxStaticText(panel, -1, "      Constituent", wxDefaultPosition, wxSize(120, 17)));
   spec_row->Add(lb_particles);
 
@@ -497,7 +497,7 @@ wxPanel* GasSourceTabs::CreateSecondPage()
   title_row->Add(new wxStaticText(panel, -1, "Composition", wxDefaultPosition, wxSize(100, 17)));
   title_row->Add(new wxStaticText(panel, -1, "Mass Fraction", wxDefaultPosition, wxSize(120, 17)));
 
-  lb_p_comp_frac = new wxListBox(panel, PART_LIST, wxDefaultPosition, wxSize(240,400), 0, NULL, wxLB_SINGLE|wxLB_SORT);  
+  lb_p_comp_frac = new wxListBox(panel, PART_LIST, wxDefaultPosition, wxSize(240,250), 0, NULL, wxLB_SINGLE|wxLB_SORT);  
   comp_row->Add(lb_p_comp_frac);
 
   b_p_add = new wxButton(panel, P_ADD, "Add");

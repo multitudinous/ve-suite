@@ -55,7 +55,7 @@ GasFeedback_UI_Dialog
   data2_row->Add(spec_row);
   data2_row->Add(sel_row);
   
-  lb_species = new wxListBox(this, -1, wxDefaultPosition, wxSize(120, 500), 0, NULL, wxLB_MULTIPLE|wxLB_SORT|wxLB_NEEDED_SB);
+  lb_species = new wxListBox(this, -1, wxDefaultPosition, wxSize(120, 300), 0, NULL, wxLB_MULTIPLE|wxLB_SORT|wxLB_NEEDED_SB);
   spec_row->Add(new wxStaticText(this, -1, "    Available", wxDefaultPosition, wxSize(120, 17)));
   spec_row->Add(lb_species);
 
@@ -65,7 +65,7 @@ GasFeedback_UI_Dialog
   title_row->Add(new wxStaticText(this, -1, "Variable", wxDefaultPosition, wxSize(100, 17)));
   title_row->Add(new wxStaticText(this, -1, "Threshold", wxDefaultPosition, wxSize(120, 17)));
 
-  lb_selspec_thresh = new wxListBox(this, SPEC_LIST, wxDefaultPosition, wxSize(240,500), 0, NULL, wxLB_SINGLE|wxLB_SORT);  
+  lb_selspec_thresh = new wxListBox(this, SPEC_LIST, wxDefaultPosition, wxSize(240,300), 0, NULL, wxLB_SINGLE|wxLB_SORT);  
   sel_row->Add(lb_selspec_thresh);
 
   b_add = new wxButton(this, ADD, "Add");
