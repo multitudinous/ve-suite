@@ -20,10 +20,10 @@ setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
 setenv VPR_DEBUG_ENABLE 1
 setenv PFSHAREDSIZE 534773700
-setenv VTK_HOME_DIR /home/users/mccdo/vtk-builds
 setenv WX_HOME_DIR /home/users/mccdo/wxWindows/wxGTK
 setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
+set VTK_HOME_DIR /home/users/mccdo/vtk-builds
 
 if ( `uname` == "IRIX64" ) then
    #echo "specifying libraries for irix"
