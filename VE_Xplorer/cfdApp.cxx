@@ -377,7 +377,6 @@ void cfdApp::preFrame( void )
       this->mKernel->stop(); // Stopping kernel using the inherited member variable
    }
 
-
 #ifdef _TAO
    if ( cfdObjects::GetActiveDataSet() != NULL )
    {

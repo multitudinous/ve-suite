@@ -285,6 +285,13 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
       delete this->particles;
    }
 
+   if ( this->surface ) 
+   {
+      vprDEBUG(vprDBG_ALL,2) 
+        << "deleting this->surface" << std::endl << vprDEBUG_FLUSH;
+      delete this->surface;
+   }
+
    if ( this->image ) 
    {
       vprDEBUG(vprDBG_ALL,2)  
@@ -305,7 +312,6 @@ cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
         << "deleting this->animStreamer" << std::endl << vprDEBUG_FLUSH;
       delete this->animStreamer;
    }
-   
 }
 
 ////////////////////
@@ -687,31 +693,23 @@ void cfdSteadyStateVizHandler::InitScene( void )
    //
    // Initiate the PolyData File
    //
-   // Neeed to fix this
-   //if ( cfdObjects::GetActiveParticleData() != NULL )
-   {
-      std::cout << "| 41. Initializing................................... PolyData File |" << std::endl;
-      this->particles = new cfdPolyData();
-      this->particles->SetObjectType( PARTICLES );
-      this->dataList.push_back( this->particles );     
-   } 
+   std::cout << "| 41. Initializing................................... PolyData File |" << std::endl;
+   this->particles = new cfdPolyData();
+   this->particles->SetObjectType( PARTICLES );
+   this->dataList.push_back( this->particles );     
 
-      std::cout << "|  5. Initializing................................. Dataset surface |" << std::endl;
-      this->surface = new cfdPolyData( 1.0 );
-      this->surface->SetObjectType( POLYDATA );
-      this->dataList.push_back( this->surface );
+   std::cout << "|  5. Initializing................................. Dataset surface |" << std::endl;
+   this->surface = new cfdPolyData( 1.0 );
+   this->surface->SetObjectType( POLYDATA );
+   this->dataList.push_back( this->surface );
 
    //
    // Initiate PIV data from INEL
    //
-   // Need to fix this
-   //if ( this->paramReader->bmpFile ) 
-   {
-      std::cout << "| 42. Initializing.................................... Bitmap Image |" << std::endl;
-      this->image = new cfdImage( _param );
-      this->image->SetObjectType( IMAGE_EX );
-      this->dataList.push_back( this->image );     
-   } 
+   std::cout << "| 42. Initializing.................................... Bitmap Image |" << std::endl;
+   this->image = new cfdImage( _param );
+   this->image->SetObjectType( IMAGE_EX );
+   this->dataList.push_back( this->image );     
    //
    // Initiate the Performer objects.
    //
