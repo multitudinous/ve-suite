@@ -257,11 +257,15 @@ void cfdVolumeVisualization::_createClipNode()
 {
    if(!_clipNode.valid()){
       _clipNode = new osg::ClipNode();
+      _clipNode->setDataVariance(osg::Object::DYNAMIC);
    }
 }
 //////////////////////////////////////////////////////////////////////////////
-void cfdVolumeVisualization::AddClipPlane(ClipPlane direction,float* position)
+void cfdVolumeVisualization::AddClipPlane(ClipPlane direction,double* position)
 {
+   //biv -- check the logic here if we add more than one plane in
+   //the same direction  but w/ different equation. . .this method shouldn't
+   //be used but it might mistakenly be called. .. 
    if(_clipNode.valid()){
       _clipNode->addClipPlane(new osg::ClipPlane(direction,
                                             position[0],
@@ -284,21 +288,41 @@ void cfdVolumeVisualization::RemoveClipPlane(ClipPlane direction)
 void cfdVolumeVisualization::UpdateClipPlanePosition(ClipPlane direction,
                                                double* newPosition)
 {
-   osg::ClipPlane* plane = 0;
+   osg::ref_ptr<osg::ClipPlane> plane =0;
    if(_clipNode.valid()){
-      plane = _clipNode->getClipPlane(direction);
-      if(plane){
-         if(newPosition){
-            plane->setClipPlane(newPosition);
+      if(_clipNode->getNumClipPlanes()){
+         for(unsigned int i = 0; i<_clipNode->getNumClipPlanes();i++){
+            plane = _clipNode->getClipPlane(i);
+            if(plane->getClipPlaneNum() == direction){
+               break;
+            }else{
+               plane = 0;
+            }
+         }
+         //plane = _clipNode->getClipPlane(direction);
+         if(plane.valid()){
+            if(newPosition){
+               plane->setClipPlane(newPosition);
+            }else{
+               std::cout<<"Invalid plane position!"<<std::endl;
+               std::cout<<"cfdVolumeVisualization::UpdateClipPlanePosition."<<std::endl;
+            }
          }else{
-            std::cout<<"Invalid plane position!"<<std::endl;
+            
+            std::cout<<"Invalid plane!"<<std::endl;
             std::cout<<"cfdVolumeVisualization::UpdateClipPlanePosition."<<std::endl;
+            std::cout<<"Adding new clip plane via::AddClipPlane."<<std::endl;
+            AddClipPlane(direction,newPosition);
          }
       }else{
          std::cout<<"Invalid plane!"<<std::endl;
          std::cout<<"cfdVolumeVisualization::UpdateClipPlanePosition."<<std::endl;
+         std::cout<<"Adding new clip plane via::AddClipPlane."<<std::endl;
+         AddClipPlane(direction,newPosition);
+      
       }
    }
+   plane = 0;
 }
 //////////////////////////////////////////////
 void cfdVolumeVisualization::_createVisualBBox()
@@ -588,9 +612,7 @@ void cfdVolumeVisualization::_buildGraph()
       }else{
          _isCreated = false;
       }
-      if(_clipNode.valid()){
-         _texGenParams->addChild(_clipNode.get());
-      }
+      
       _volumeVizNode->addChild(_texGenParams.get());
       if(_slices.valid()){
          _vSSCbk =  new cfdVolumeSliceSwitchCallback(_bbox.center());
@@ -602,7 +624,12 @@ void cfdVolumeVisualization::_buildGraph()
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Z_NEG,_negZSlices);
          
          _slices->setCullCallback(_vSSCbk);
-         _texGenParams->addChild(_slices.get());
+         if(_clipNode.valid()){
+            _texGenParams->addChild(_clipNode.get());
+            _clipNode->addChild(_slices.get());
+         }else{
+            _texGenParams->addChild(_slices.get());
+         }
       }else{
          _isCreated = false;
       }

@@ -43,6 +43,7 @@ protected:
    std::vector<cfdVolumeVisualization> _volumeVisNodes;
    cfdVolumeVisualization* _activeVolumeVizNode;
    cfdGroup* _parent;
+   float* _currentBBox;
 };
 #endif //OSG
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

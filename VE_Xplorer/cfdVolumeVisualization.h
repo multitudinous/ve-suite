@@ -46,7 +46,7 @@ public:
    void SetTextureManager(cfdTextureManager* tm);
    void UpdateStateSet(osg::StateSet* ss);
    void CreateNode();
-   void AddClipPlane(ClipPlane direction,float* position);
+   void AddClipPlane(ClipPlane direction,double* position);
    void RemoveClipPlane(ClipPlane direction);
    void UpdateClipPlanePosition(ClipPlane direction,double* newPosition);
    bool isCreated(){return _isCreated;}

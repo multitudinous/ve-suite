@@ -27,6 +27,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _activeVolumeVizNode = 0;
    _activeTM = 0;
    _parent = 0;
+   _currentBBox = 0;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -45,6 +46,13 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHan
    _activeVolumeVizNode = tbvh._activeVolumeVizNode;
    _activeTM = tbvh._activeTM;
    _parent = tbvh._parent;
+   _currentBBox = new float[6];
+   _currentBBox[0] = tbvh._currentBBox[0];
+   _currentBBox[1] = tbvh._currentBBox[1];
+   _currentBBox[2] = tbvh._currentBBox[2];
+   _currentBBox[3] = tbvh._currentBBox[3];
+   _currentBBox[4] = tbvh._currentBBox[4];
+   _currentBBox[5] = tbvh._currentBBox[5];
 }
 ///////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
@@ -78,6 +86,10 @@ cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
       delete _parent;
       _parent = 0;
    }
+   if(_currentBBox){
+      delete [] _currentBBox;
+      _currentBBox = 0;
+   }
 }
 //////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::PreFrameUpdate()
@@ -101,7 +113,51 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          _activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::PLAY);
       }
    }
-   if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_STOP){
+   //biv --need to figure out the correct enum to grab!!!
+   //this is the one for all precomputed which isn't what we want but *_CONTOUR doesn't
+   //seem to pick up!!!1
+   if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_CONTOURS){
+      if(_activeVolumeVizNode&&_currentBBox){
+         //create an x plane
+         double xplane[4] = {1,0,0,0};
+         float alpha = (float)_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         alpha /= 100.0;
+         //get the xplane positions
+         xplane[3] = _currentBBox[0] + alpha*(_currentBBox[1] - _currentBBox[0]);
+         xplane[3] *=-1.0;
+         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE,xplane);
+      }
+   }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_CONTOURS){
+      if(_activeVolumeVizNode&&_currentBBox){
+         //create an y plane
+         double yplane[4] = {0,1,0,0};
+         float alpha = (float)_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         alpha /= 100.0;
+         //get the yplane positions
+         yplane[3] = _currentBBox[2] + alpha*(_currentBBox[3] - _currentBBox[2]);
+         yplane[3] *= -1.0;
+         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE,yplane);
+      }
+   }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Z_CONTOURS){
+      if(_activeVolumeVizNode&&_currentBBox){
+         //create an z plane
+         double zplane[4] = {0,0,1,0};
+         float alpha = (float)_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         alpha /= 100.0;
+         //get the zplane positions
+         zplane[3] = _currentBBox[4] + alpha*(_currentBBox[5] - _currentBBox[4]);
+         zplane[3] *= -1.0;
+         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE,zplane);
+      }
+   /*}else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ARBITRARY){
+      if(_activeVolumeVizNode&&_currentBBox){
+         //create an arbitrary plane
+         double arbPlane[4] = {0,0,0,0};
+         //not sure how this is going to work w/ the gui!!!!
+         arbPlane
+         _activeVolumeVizNode->AddClipPlane(cfdVolumeVisualization::ARBITRARY,arbPlane);
+      }*/
+   }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_STOP){
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::STOP);
       }
@@ -115,7 +171,17 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
       }
    }else if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ){ 
       if(_parent){
-         ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+         //need to remove the clip planes
+         if(_activeVolumeVizNode){
+           //we can do this because osg checks to see if the plane exists!!!
+            _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::XPLANE);
+            _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::YPLANE);
+            _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ZPLANE);
+            _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ARBITRARY);
+            //remove the volviz node from the tree. . .
+            ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+         }
+         _activeTM = 0;
       }
       
    }
@@ -160,6 +226,16 @@ void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
 {
    if(tm != _activeTM){
       _activeTM = tm;
+      if(!_currentBBox){
+         _currentBBox = new float[6];
+      }
+      _currentBBox[0] = _activeTM->getBoundingBox()[0];
+      _currentBBox[1] = _activeTM->getBoundingBox()[1];
+      _currentBBox[2] = _activeTM->getBoundingBox()[2];
+      _currentBBox[3] = _activeTM->getBoundingBox()[3];
+      _currentBBox[4] = _activeTM->getBoundingBox()[4];
+      _currentBBox[5] = _activeTM->getBoundingBox()[5];
+
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetTextureManager(_activeTM);
          _activeVolumeVizNode->CreateNode();
@@ -238,6 +314,15 @@ cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTexture
       _activeVolumeVizNode = tbvh._activeVolumeVizNode;
       _activeTM = tbvh._activeTM;
       _parent = tbvh._parent;
+      if(!_currentBBox){
+         _currentBBox = new float[6];
+      }
+      _currentBBox[0] = tbvh._currentBBox[0];
+      _currentBBox[1] = tbvh._currentBBox[1];
+      _currentBBox[2] = tbvh._currentBBox[2];
+      _currentBBox[3] = tbvh._currentBBox[3];
+      _currentBBox[4] = tbvh._currentBBox[4];
+      _currentBBox[5] = tbvh._currentBBox[5];
    }
    return *this;
 }

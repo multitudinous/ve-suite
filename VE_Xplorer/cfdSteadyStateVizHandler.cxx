@@ -827,7 +827,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       }
    }
 
-   if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ==              USE_LAST_STREAMLINE_SEEDPOINTS ){
+   if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS ){
       this->useLastSource = this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
    }
    else if (   ( 0 <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&

@@ -1,4 +1,4 @@
-3                    // the number of objects to follow
+4                    // the number of objects to follow
 0                    // OPTIONAL world DCS settings
    1 1 1             // Scale values
    0 0 0             // Translation values
@@ -17,3 +17,7 @@
    ./2scl.vtk        // data set name
    ./POST_DATA2      // precomputed data slice directory
    ./SURFACE2        // precomputed surface directory
+15
+ 1
+ ./scalars.txt
+
