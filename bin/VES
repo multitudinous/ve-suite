@@ -15,18 +15,6 @@ setenv MY_VJCONFIGS /isv/Juggler/deere.config/vrj2.0b1
 setenv TAO_MACHINE `host ${HOST} | awk '{print $1}'`
 setenv TAO_PORT 1235
 
-# VE_Suite needs vrjuggler to not find these files.
-# The VES start script will rename the files by adding .bak
-# The TApp253 start script will rename the files by removing the .bak
-if ( -e ${VJ_BASE_DIR}/lib32/jccl/plugins/corba_rtrc.so ) then
-
-echo "Hiding corba_rtrc.so"
-endif
-if ( -e ${VJ_BASE_DIR}/lib32/vrjuggler/plugins/corba_perf_mon_d.so ) then
-
-echo "Hiding corba_perf_mon_d.so"
-endif
-
 switch ($1)
 
   case -c:
