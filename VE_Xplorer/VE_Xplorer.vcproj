@@ -1466,6 +1466,9 @@
 						RelativePath=".\cfdUpdateTextureCallback.cpp">
 					</File>
 					<File
+						RelativePath=".\cfdVectorVolumeVisHandler.cxx">
+					</File>
+					<File
 						RelativePath=".\cfdVolumeVisNodeHandler.cxx">
 					</File>
 				</Filter>
@@ -1501,6 +1504,9 @@
 					</File>
 					<File
 						RelativePath=".\cfdUpdateTextureCallback.h">
+					</File>
+					<File
+						RelativePath=".\cfdVectorVolumeVisHandler.h">
 					</File>
 					<File
 						RelativePath=".\cfdVolumeVisNodeHandler.h">

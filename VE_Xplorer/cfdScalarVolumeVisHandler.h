@@ -4,7 +4,7 @@
 #ifdef _OSG
 #include <osg/Group>
 
-#include "cfdScalarVolumeVisHandler.h" 
+
 #include "cfdOSGScalarShaderManager.h"
 #include "cfdTextureManager.h"
 #include "cfdVolumeVisNodeHandler.h" 

@@ -101,7 +101,6 @@ void cfdScalarVolumeVisHandler::_attachVolumeVisNodeToGraph()
       _bboxSwitch->addChild(_shaderSwitch->GetRawNode());
    }
 
-   //now we need three groups
    //0 == plain vis group (doesn't use shaders)
    //1 == volume shader group (uses scalar texture)
    ((osg::Group*)_shaderSwitch->GetRawNode())->addChild(_vvN.get());

@@ -6,7 +6,7 @@
 ////////////////////////////////////////////////////////////////////////////
 cfd3DTextureCullCallback::cfd3DTextureCullCallback(osg::Node* subgraph,
 		                                       osg::Texture3D* texture,
-						       cfdPBufferManager* pbm)
+						                            cfdPBufferManager* pbm)
 :_subgraph(subgraph),_textureToUpdate(texture) 
 {
    _pbuffer = pbm;               

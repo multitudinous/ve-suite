@@ -24,6 +24,9 @@ namespace osgUtil{
 class cfdPBufferManager;
 class cfdVolumeVisualization;
 class cfdScalarVolumeVisHandler;
+#ifdef CFD_USE_SHADERS
+class cfdVectorVolumeVisHandler;
+#endif
 class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
 {
 public:
@@ -39,12 +42,14 @@ public:
    void SetPBuffer(cfdPBufferManager* pbm);
    //once we get pf side this may need to be ifdef'd
    void SetSceneView(osgUtil::SceneView* sv);
-
-
+#ifdef CFD_USE_SHADERS
+   void PingPongTextures();
+#endif
+   cfdPBufferManager* GetPBuffer();
    bool InitVolumeVizNodes( void );
    cfdVolumeVisualization* GetVolumeVizNode(int index);
    cfdVolumeVisualization* GetActiveVolumeVizNode( void );
-   cfdPBufferManager* GetPBuffer();  
+  
    cfdTextureBasedVizHandler& operator=(const cfdTextureBasedVizHandler& tbvh);
 
 protected:	
@@ -63,6 +68,9 @@ protected:
    cfdPBufferManager* _pbm;
    osgUtil::SceneView* _sceneView;
    cfdScalarVolumeVisHandler* _svvh;
+#ifdef CFD_USE_SHADERS
+   cfdVectorVolumeVisHandler* _vvvh;
+#endif
    cfdSwitch* _visOptionSwitch;
    float* _currentBBox;
    bool _cleared;

@@ -187,7 +187,7 @@ void cfdModel::CreateTextureManager(char* textureDescriptionFile)
 
       for(int i = 0; i < numFiles; i++)
       {         
-         std::cout << "Loading texture file: " << i << std::endl;         
+         std::cout << "Loading texture time step file: " << i << std::endl;         
          fin >> name;         
          tm->addFieldTextureFromFile(name);      
       }

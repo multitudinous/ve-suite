@@ -18,6 +18,7 @@
 #include <osgUtil/SceneView>
 #include <osg/State>
 #include "cfdScalarVolumeVisHandler.h"
+#include "cfdVectorVolumeVisHandler.h"
 
 //////////////////////////////////////////////////////////
 //Constructors                                          //
@@ -36,6 +37,9 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _cleared = true;
    _pbm = 0;
    _svvh = 0;
+#ifdef CFD_USE_SHADERS
+   _vvvh = 0;
+#endif
    _visOptionSwitch = new cfdSwitch();
    _visOptionSwitch->SetName("VVis Switch");
    cfdGroup* scalarGroup = new cfdGroup();
@@ -75,6 +79,9 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHan
    _currentBBox[5] = tbvh._currentBBox[5];
    _cleared = tbvh._cleared;
    _svvh = new cfdScalarVolumeVisHandler(*tbvh._svvh);
+#ifdef CFD_USE_SHADERS
+   _vvvh = new cfdVectorVolumeVisHandler(*tbvh._vvvh);
+#endif
 }
 ///////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
@@ -140,10 +147,24 @@ cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
       delete _svvh;
       _svvh = 0;
    }
+#ifdef CFD_USE_SHADERS
+   if(_vvvh){
+      delete _svvh;
+      _vvvh = 0;
+   }
+#endif
 }
 //////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::PreFrameUpdate()
 {
+#ifdef CFD_USE_SHADERS
+   //check if we are viewing vectors
+   if(_visOptionSwitch->GetRawNode()->getValue(1)){
+      if(_vvvh){
+         _vvvh->PingPongTextures();
+      }
+   }
+#endif
    //this may need to change 
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE ){
       //set the transient flag in the callback
@@ -162,6 +183,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
       //need to make sure the node is on the graph
       if(_parent->SearchChild(_visOptionSwitch) < 0){
          _parent->AddChild(_visOptionSwitch);
+         _cleared = false;
       }
    }
    //biv --need to figure out the correct enum to grab!!!
@@ -283,6 +305,13 @@ cfdPBufferManager* cfdTextureBasedVizHandler::GetPBuffer()
    }
    return 0;
 }
+#ifdef CFD_USE_SHADERS
+//////////////////////////////////////////////////
+void cfdTextureBasedVizHandler::PingPongTextures()
+{
+  //don't need this, i think
+}
+#endif
 //////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetPBuffer(cfdPBufferManager* pbm)
 {
@@ -373,6 +402,23 @@ void cfdTextureBasedVizHandler::_updateScalarVisHandler()
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateVectorVisHandler()
 {
+#ifdef CFD_USE_SHADERS
+   if(_activeTM&&_activeVolumeVizNode&&_visOptionSwitch){
+      if(!_vvvh){
+         _vvvh = new cfdVectorVolumeVisHandler();
+         _vvvh->SetBoundingBox(_activeTM->getBoundingBox());
+         _vvvh->SetVolumeVizNode(_activeVolumeVizNode->GetVolumeVisNode().get());
+      }
+      _vvvh->SetTextureManager(_activeTM);
+      _vvvh->Init();
+      osg::ref_ptr<osg::Group> vectorChild = 
+         dynamic_cast<osg::Group*>(_visOptionSwitch->GetChild(1)->GetRawNode());
+      if(!vectorChild->containsNode(_vvvh->GetVisualization())){
+        //this may not be right
+        vectorChild->addChild(_vvvh->GetVisualization());
+      }
+   }
+#endif
 }
 /////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization* cfdTextureBasedVizHandler::GetActiveVolumeVizNode()
@@ -453,6 +499,9 @@ cfdTextureBasedVizHandler& cfdTextureBasedVizHandler::operator=(const cfdTexture
          _currentBBox = new float[6];
       }
       _svvh = tbvh._svvh;
+#ifdef CFD_USE_SHADERS
+      _vvvh = tbvh._vvvh;
+#endif
       _currentBBox[0] = tbvh._currentBBox[0];
       _currentBBox[1] = tbvh._currentBBox[1];
       _currentBBox[2] = tbvh._currentBBox[2];
