@@ -430,7 +430,7 @@ void UI_Tabs::sendDataArrayToServer( void )
 
    if ( !CORBA::is_nil( server_ref ) )
    {
-	  server_ref->SetClientInfoData( clientInfoArray );
+     //	  server_ref->SetClientInfoData( clientInfoArray );
    }
    else
    {

@@ -1,6 +1,6 @@
 #include "moduleC.h"
 #include "orbsvcs/CosNamingC.h"
-#include "EquilibriumReactorUnit_i.h"
+#include "Gasifier0DUnit_i.h"
  
 //This Unit_client act as the executive's client 
 //This Unit is also the Unit servant for the executive' Unit client
@@ -19,7 +19,7 @@ int main (int argc, char* argv[])
 				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
       return 1;
     }
-  std::string UNITNAME = "EquilibriumReactor";
+  std::string UNITNAME = "Gasifier0D";
   try {
     // First initialize the ORB, 
     CORBA::ORB_var orb =

@@ -28,39 +28,45 @@ class  Body_Unit_i : public virtual POA_Body::Unit
   void error(std::string msg);
   void warning(std::string msg);
 
- //GUI Variable 
-  double steam_temp1;
-  double steam_flrt1;
-  double slurry_temp1;
-  double slurry_flrt1;
-  double coal_percent1;
-  double steam_temp2;
-  double steam_flrt2;
-  double slurry_temp2;
-  double slurry_flrt2;
-  double coal_percent2;
-  double steam_temp3;
-  double steam_flrt3;
-  double slurry_temp3;
-  double slurry_flrt3;
-  double coal_percent3;
-  double geo_diam;
-  double geo_stage1_len;
-  double geo_stage2_len;
-  double geo_stage1_wall;
-  double geo_stage2_wall;
-  double burn_out;
-  double stage1_heatloss;
-  double stage2_heatloss;
-  double LD_ratio;
-  double stage1_emis;
-  double stage2_emis;
-  double backside_temp;
-  double slag_eff;
-  double pres_drop;
-  long stage;
-  long spec_geometry;
-  long des_mode;
+  // Flows
+  double _stm_temp  [3];
+  double _stm_flow  [3];
+  double _slur_temp [3];
+  double _slur_flow [3];
+  double _coal_pct  [3];
+
+  // Coal
+  std::string _coal_type;
+  double _size_50;
+  double _size_200;
+
+  //# Pressure
+  double _press;
+
+  //# One or Two stage gasifier
+  int _stage;
+
+  //# Execution
+  double _diameter;
+  double _length1;
+  double _length2;
+  
+  double _burnout_gui;
+  double _heatloss_gui1;
+  double _heatloss_gui2;
+  double _LD;
+  
+  int _specify_geom;
+  int _design_mode;
+
+  double _rwall1;
+  double _rwall2;
+  double _emis1;
+  double _emis2;
+  
+  double _back_temp;
+  double _slag_eff;
+
  public:
 
 virtual void StartCalc (

@@ -3,6 +3,7 @@ PLATFORM = LINUX
 COMPILER = g++
 GCC = yes
 GXX = yes
+F77 = g77
 CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
 CFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
 LDFLAGS =    
@@ -17,14 +18,14 @@ ifndef TAO_ROOT
   TAO_ROOT = $(ACE_ROOT)/TAO
 endif # ! TAO_ROOT
 
-APP = EquilibriumReactorUnitApp
+APP = Gasifier0DApp
 
 LDLIBS = -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_Messaging -lTAO_PortableServer -lTAO
 
 include $(ACE_ROOT)/include/makeinclude/wrapper_macros.GNU
 include $(TAO_ROOT)/rules.tao.GNU
 
-FILE_UNIT_CLT_OBJS = moduleC.o moduleS.o EquilibriumReactorUnit_i.o EquilibriumReactorUnit_client.o
+FILE_UNIT_CLT_OBJS = moduleC.o moduleS.o Gasifier0DUnit_i.o Gasifier0DUnit_client.o
 
 include $(ACE_ROOT)/include/makeinclude/macros.GNU
 include $(ACE_ROOT)/include/makeinclude/rules.common.GNU
@@ -46,6 +47,11 @@ CPPFLAGS += -g  ${INCLUDES} ${CMP} -I$(TAO_ROOT) \
 OBJECTS = ../string_ops.o \
 	../interface.o \
 	../package.o \
+	./Gasifier0D.o \
+	./sode_rk.o \
+	./part_kinetics.o \
+	./equil.o \
+	./logfit.o \
 	../V21Helper/V21Helper.o \
 	../V21Helper/SummaryValues/summary_values.o \
 	../V21Helper/SummaryValues/unit_conversion.o \
@@ -54,17 +60,20 @@ OBJECTS = ../string_ops.o \
 	../V21Helper/Datatypes/Water.o \
 	../V21Helper/Therm/matrix.o \
 	../V21Helper/Therm/stream.o \
-	../V21Helper/Therm/thermo.o  \
-	../V21Helper/Steam67/Steam67.o
+	../V21Helper/Steam67/Steam67.o \
+	../V21Helper/Therm/thermo.o
 
 
-.SUFFIXES : .o .cpp .cc	
+.SUFFIXES : .o .cpp .cc	.f
 
 .cpp.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -o $@ $<
 
 .cc.o :
 	$(CXX) -g -c $(CPPFLAGS) -w -o $@ $<
+
+.f.o : 
+	$(F77) -g -c -w -o $@ $<
 
 all: $(APP)
 
