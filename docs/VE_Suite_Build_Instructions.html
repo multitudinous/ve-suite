@@ -14,8 +14,9 @@
 
 <dl>
    <p>Dependencies</p>
-      <dd><p class="bodytext"><a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a> to checkout and update VE_Suite from ISU's code repository</p>
-      <p class="bodytext">If you instead get the VE_Suite source code as a compressed tarball, note that some have found that a free unzip utility did not maintain the correct directory structure. Workaround: Unzip the files on Irix/linux and move the files to the Windows machine.</p>
+      <dd>
+        <p class="bodytext"><a href="http://tortoisesvn.tigris.org/">TortoiseSVN</a> to check out and update VE_Suite from ISU's code repository</p>
+        <p class="bodytext">If you instead get the VE_Suite source code as a compressed tarball, note that some have found that a free unzip utility did not maintain the correct directory structure. Workaround: Unzip the files on Irix/linux and move the files to the Windows machine.</p>
       <p class="bodytext"><a href="http://msdn.microsoft.com/visualc/productinfo/">Visual Studio 7.1(2003)</a> to compile the C++ code.</p>
       <p class="bodytext"><a href="http://sgi.com/software/performer">OpenGL Performer (3.1.1)</a> to manage the scenegraph.</p>
       <p class="bodytext"><a href="http://vtk.org/get-software.php#interim">VTK (4.4)</a> to render the visualization objects.</p>
@@ -42,16 +43,16 @@
    <dd>
    <p class="bodytext">To set up the build environment:</p>
    <OL>
-      <LI><p class="bodytext">Perform a one-time edit of the environment variables that are defined in the setup batch file (./VE_Installer/vesuite.OMNIBUILD.setup.bat)</p>
+      <LI class="bodytext"><p class="bodytext">Perform a one-time edit of the environment variables that are defined in the setup batch file (./VE_Installer/vesuite.OMNIBUILD.setup.bat)</p>
 
    <p class="bodytext"><span class="bodytextemph">Note: </span>Paths of environment variables on windows <span class="bodytextemph">SHOULD NOT</span> contain spaces!!</p>
-   <p class="bodytext"><span class="bodytextemph">Example:</span></p>
+   <p class="bodytextemph">Example:</p>
    <UL>
-   <LI><p class="bodytext"><span class="bodytextemph">BAD!!!!:</span> set VTK_HOME=C:\Documents and Settings\user\Desktop\vtk</p>
+   <LI><p class="bodytext"><span class="bodytextemph">BAD:</span> set VTK_HOME=C:\Documents and Settings\user\Desktop\vtk</p>
    <LI><p class="bodytext"><span class="bodytextemph">GOOD:</span> set VTK_HOME=C:\vtk</p>
    </UL>
-   <LI><p class="bodytext">Run the batch file:</p>
-   <p class="bodytext"><span class="bodytextemph">./VE_Installer/vesuite.OMNIBUILD.setup.bat</span></p>
+   <LI class="bodytext"><p class="bodytext">Run the batch file:</p>
+   <p class="bodytextemph">./VE_Installer/vesuite.OMNIBUILD.setup.bat</p>
    <p class="bodytext">This will set the defined environment variables and launch a session of Visual Studio with the VE_Suite project loaded. The project should be ready to build.</p>
    </OL>
 </dl>
