@@ -3,6 +3,8 @@
 
 #ifdef WIN32
 #define WIN_PREFIX __stdcall
+#else
+#define WIN_PREFIX 
 #endif //WIN32
 
 extern "C"
