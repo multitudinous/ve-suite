@@ -270,7 +270,8 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       }
       return true;
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_PFB_FILE )
+   else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_PFB_FILE ) ||
+             ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ) )
    {      
       if ( this->GetcfdDCS()->GetNumChildren() > 0 )
       {

@@ -297,6 +297,15 @@ void cfdModelHandler::PreFrameUpdate( void )
          }
       }
    }  //change the model's property
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
+   { 
+      // change all transparent geometries back to opaque
+      for( unsigned int i = 0; i < _modelList.at( 0 )->GetNumberOfGeomDataSets(); i++ )
+      {
+         if( _modelList.at( 0 )->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
+            _modelList.at( 0 )->GetGeomDataSet( i )->setOpac( 1.0 );
+      }
+   }
    
    // Can't be an else if because may have to update if dataset has changed beforehand
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR || 
@@ -320,8 +329,6 @@ void cfdModelHandler::PreFrameUpdate( void )
       activeDataset->GetParent()->ResetScalarBarRange( 
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
-      // Fix this if we update scalar we need to update the scalar bar
-      // very important
    }
 
    // Check and see if we need to refresh the scalar bar

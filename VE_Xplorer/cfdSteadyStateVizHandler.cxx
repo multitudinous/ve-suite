@@ -822,6 +822,33 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       }
       //extracting from inside the for loop
    }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
+   { 
+      for ( int i = 0; i < (int)this->dataList.size(); i++ )  
+      {
+         if ( this->dataList[ i ]->GetcfdGeode() != NULL )
+         {
+            vprDEBUG(vprDBG_ALL,2) << "RemoveGeodeFromDCS"
+                                   << std::endl << vprDEBUG_FLUSH;
+            this->dataList[ i ]->RemovecfdGeodeFromDCS();
+         }
+         // Fix this when we implement trans stuff
+         // Need to to clears in trans handler.
+         /*else if ( this->dataList[ i ]->GetSequence() != NULL )
+         {
+            vprDEBUG(vprDBG_ALL,2) << "stop the sequence and set to NULL"
+                                   << std::endl << vprDEBUG_FLUSH;
+            // stop the sequence and set the active sequence to NULL
+            this->dataList[ i ]->GetSequence()->StopSequence();
+            // disconnect transient data from the graph
+            this->dataList[ i ]->GetSequence()->ClearSequence();
+            // don't update progress bar any more
+            this->_activeSequenceObject = NULL;  
+         }*/
+         this->dataList[ i ]->SetUpdateFlag( false );
+      }
+      this->useLastSource = 0;
+   }
 }
 
 

@@ -63,6 +63,12 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( char* filename )
 
 cfdEnvironmentHandler::~cfdEnvironmentHandler( void )
 {
+   delete nav;
+   delete _readParam;
+   delete cursor;
+   delete _camHandler;
+   delete _soundHandler;
+   delete _teacher;
 }
 
 void cfdEnvironmentHandler::SetRootNode( cfdGroup* input )
@@ -164,63 +170,6 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    if ( cursorId == CUBE)
    {
        this->cursor->getExtent( this->cur_box );   //record current box cursor position
-   }
-
-   if ( ( this->nav->digital[4]->getData() == gadget::Digital::TOGGLE_ON ) || 
-        ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ) )
-   { 
-      // This code will need to be thought about later
-      // Must fix this to clear the tree appropriately
-      //reset button is triggered so delete all the objects in the scene
-/*      for ( int i = 0; i < (int)this->dataList.size(); i++ )  
-      {
-         if ( this->dataList[ i ]->GetcfdGeode() != NULL )
-         {
-            vprDEBUG(vprDBG_ALL,2) << "RemoveGeodeFromDCS"
-                                   << std::endl << vprDEBUG_FLUSH;
-            this->dataList[ i ]->RemovecfdGeodeFromDCS();
-         }
-         else if ( this->dataList[ i ]->GetSequence() != NULL )
-         {
-            vprDEBUG(vprDBG_ALL,2) << "stop the sequence and set to NULL"
-                                   << std::endl << vprDEBUG_FLUSH;
-            // stop the sequence and set the active sequence to NULL
-            this->dataList[ i ]->GetSequence()->StopSequence();
-            // disconnect transient data from the graph
-            this->dataList[ i ]->GetSequence()->ClearSequence();
-            // don't update progress bar any more
-            this->activeSequenceObject = NULL;  
-         }
-         this->dataList[ i ]->SetUpdateFlag( false );
-      }
-
-      if ( this->pfb_count != 0 )
-      {
-         if ( this->teacher->GetcfdDCS()->GetNumChildren() != 0 )
-         {
-            this->teacher->GetcfdDCS()->RemoveChild( 
-                                  this->teacher->GetcfdDCS()->GetChild( 0 ) );
-         }
-      }
-
-      // change all transparent geometries back to opaque
-      for( int q = 0; q < this->paramReader->numGeoms; q++)
-      {
-         if( this->geomL[q]->transparent )
-            this->geomL[q]->setOpac( 1.0 );
-      }
-
-      // HACK follows: need to do better at adding and removing cfdObjects
-      // double check that no garbage is left on the scene graph...
-      vprDEBUG(vprDBG_ALL,1) << "after first CLEAR_ALL attempt, ..." 
-                             << std::endl << vprDEBUG_FLUSH;
-
-      // Need to fix this later
-      //clearGeodesFromNode( this->worldDCS );
-
-      this->useLastSource = 0;
-    
-      this->setId( -1 );*/
    }
 
    _camHandler->CheckCommandId( _commandArray );
