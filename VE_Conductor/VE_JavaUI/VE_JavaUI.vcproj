@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="Windows-1252"?>
+<VisualStudioProject
+	ProjectType="Visual C++"
+	Version="7.10"
+	Name="VE_JavaUI"
+	ProjectGUID="{073CCC67-7667-476D-A890-03EE6A896F35}"
+	RootNamespace="VE_JavaUI"
+	Keyword="ManagedCProj">
+	<Platforms>
+		<Platform
+			Name="Win32"/>
+	</Platforms>
+	<Configurations>
+		<Configuration
+			Name="Debug|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="2"
+			ManagedExtensions="TRUE">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				PreprocessorDefinitions="WIN32;_DEBUG"
+				MinimalRebuild="FALSE"
+				BasicRuntimeChecks="0"
+				RuntimeLibrary="1"
+				UsePrecompiledHeader="3"
+				WarningLevel="3"
+				DebugInformationFormat="3"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="Compiling java classes. . ."
+				CommandLine="$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/ObserverHolder.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/VjObsHolder.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/ObserverServant.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/send_param.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/ack_win.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/attrib.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/draw_baf.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/id_mapper.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/WholeNumberField.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/client.java
+$(JAVA_HOME)\bin\javac -sourcepath &quot;../java_stuff&quot; -O -d &quot;../class_files&quot; ../java_stuff/my_orb.java
+echo Done.
+"
+				AdditionalDependencies="VjObs.idl;Observer.idl,client.java"
+				Outputs="VjObs.class;Observer.class,client.class"/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
+				LinkIncremental="2"
+				GenerateDebugInformation="TRUE"
+				AssemblyDebug="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="Release|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="2"
+			ManagedExtensions="TRUE">
+			<Tool
+				Name="VCCLCompilerTool"
+				PreprocessorDefinitions="WIN32;NDEBUG"
+				MinimalRebuild="FALSE"
+				RuntimeLibrary="0"
+				UsePrecompiledHeader="3"
+				WarningLevel="3"
+				DebugInformationFormat="3"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)\$(ProjectName).exe"
+				LinkIncremental="1"
+				GenerateDebugInformation="TRUE"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+	</Configurations>
+	<References>
+	</References>
+	<Files>
+	</Files>
+	<Globals>
+	</Globals>
+</VisualStudioProject>

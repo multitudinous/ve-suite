@@ -2642,11 +2642,12 @@ static class ProgressBar extends JPanel
          public void actionPerformed(ActionEvent e) 
          {
             currentVal = clt.obj_vis.testObs.getTimesteps();
-            if ( (currentVal == 0) && (oldVal > 1) && (oldVal != my_pBarLength) )
+           /* if ( (currentVal == 0) && (oldVal >= 1) && (oldVal != my_pBarLength) )
             {
             // do nothing when currentVal makes dramatic jump back to zero
             }
-            else if ( oldVal != currentVal )
+            else*/
+            if ( oldVal != currentVal )
             {
                System.out.println("updating progress bar with currentVal: "+currentVal);
                progressBar.setValue( currentVal );
