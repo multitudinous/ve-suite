@@ -4,7 +4,6 @@ VE_SUITE_HOME?= ../
 
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/Exe_server
 
-PLUGIN_HOME = $(VE_SUITE_HOME)/futuregen/Plugin
 IDL_HOME = $(VE_SUITE_HOME)/VESOpen
 
 all:
@@ -53,9 +52,9 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 
-vpath %.cpp $(PLUGIN_HOME) $(IDL_HOME)/skel 
+vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework $(IDL_HOME)/skel 
 
-EXTRA_CXXFLAGS += -I$(PLUGIN_HOME) -I$(IDL_HOME)/skel 
+EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel 
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------

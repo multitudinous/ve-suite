@@ -94,9 +94,8 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 
 vpath %.cpp $(VE_UI_HOME) $(IDL_HOME)/skel ./Framework
-vpath %.cpp $(VE_SUITE_HOME)/futuregen/Plugin
 
-EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/futuregen/Plugin -I$(VE_UI_HOME) \
+EXTRA_CXXFLAGS += -I$(VE_UI_HOME) \
                   -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer
 # -----------------------------------------------------------------------------
 # Application build targets.

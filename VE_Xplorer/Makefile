@@ -66,16 +66,13 @@ ifdef OMNI_HOME
    
    CORBA_INCLUDES = -I${OMNI_HOME}/include 
    EXTRA_INCLUDES+= -I${CONDUCTOR_BASE_DIR}/impl \
-                    -I${CONDUCTOR_BASE_DIR}/skel \
                      ${CORBA_INCLUDES}
    EXEC_TAG =
 endif
 
 ifeq ($(TAO_BUILD), TRUE)
-   FUTUREGEN_HOME = $(VE_SUITE_HOME)/futuregen
-
    vpath %.cxx    $(CONDUCTOR_BASE_DIR)/impl 
-   vpath %.cpp    $(VE_SUITE_HOME)/VESOpen/skel $(FUTUREGEN_HOME)/Plugin 
+   vpath %.cpp    $(VE_SUITE_HOME)/VESOpen/skel
    vpath %.cpp    $(VE_SUITE_HOME)/VE_Conductor/Framework $(VE_SUITE_HOME)/VE_CE
 
    #----------------------------------------------------------------------------
@@ -98,10 +95,8 @@ ifeq ($(TAO_BUILD), TRUE)
    include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 
    EXTRA_INCLUDES+= \
-                  ${ACE_INCLUDES} \
                   -I${CONDUCTOR_BASE_DIR}/impl \
                   -I$(VE_SUITE_HOME)/VESOpen/skel \
-                  -I${FUTUREGEN_HOME}/Plugin \
                   -I$(VE_SUITE_HOME)/VE_Conductor/Framework \
                   -I$(VE_SUITE_HOME)/VE_CE
    EXEC_TAG = _tao
@@ -369,7 +364,6 @@ CXX_GEN_DIR= .
                         ${CONDUCTOR_BASE_DIR}/java_stuff/ObserverPackage \
                         ${CONDUCTOR_BASE_DIR}/java_stuff/VjObsPackage 
 
-vpath %.cpp $(CXX_GEN_DIR) $(CONDUCTOR_BASE_DIR)/skel
 vpath %.cxx $(VE_SUITE_HOME)/VE_SceneGraph
 #vpath %.cc ./UMI/skel
 #vpath %.h $(CXX_GEN_DIR)  ${CONDUCTOR_BASE_DIR}/skel
