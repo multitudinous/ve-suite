@@ -1,6 +1,6 @@
 
 #include <ace/Task.h>
-
+#include <ace/OS.h>
 #include "Execute_Thread.h"
 
 #include <iostream>
@@ -29,9 +29,8 @@ int Execute_Thread::svc (void)
 	break;
       }
       _mutex.release();
-      
-      ACE_OS::sleep(2);
-      
+
+	  ACE_OS::sleep(2); 	    
     }
     
     _mutex.release();
@@ -48,11 +47,15 @@ int Execute_Thread::svc (void)
 int Execute_Thread::lock ()
 {
   _mutex.acquire();
+
+  return 0;
 }
 
 int Execute_Thread::unlock ()
 {
   _mutex.release();
+  
+  return 0;
 }
 
 int Execute_Thread::needexecute ()

@@ -6,7 +6,7 @@
 #include <iostream>
 #include <queue>
 
-#include <algo.h>
+#include <algorithm>
 
 using namespace std;
 

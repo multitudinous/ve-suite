@@ -26,6 +26,7 @@ CFG=WinServer - Win32 Debug
 # PROP Scc_ProjName ""
 # PROP Scc_LocalPath ""
 CPP=cl.exe
+F90=df.exe
 RSC=rc.exe
 
 !IF  "$(CFG)" == "WinServer - Win32 Release"
@@ -40,7 +41,6 @@ RSC=rc.exe
 # PROP Output_Dir "Release"
 # PROP Intermediate_Dir "Release"
 # PROP Target_Dir ""
-F90=df.exe
 # ADD BASE F90 /compile_only /nologo /warn:nofileopt
 # ADD F90 /compile_only /nologo /warn:nofileopt
 # ADD BASE CPP /nologo /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /c
@@ -67,11 +67,10 @@ LINK32=link.exe
 # PROP Intermediate_Dir "Debug"
 # PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
-F90=df.exe
 # ADD BASE F90 /check:bounds /compile_only /dbglibs /debug:full /nologo /traceback /warn:argument_checking /warn:nofileopt
-# ADD F90 /check:bounds /compile_only /dbglibs /debug:full /nologo /traceback /warn:argument_checking /warn:nofileopt
+# ADD F90 /browser /check:bounds /compile_only /dbglibs /debug:full /nologo /traceback /warn:argument_checking /warn:nofileopt
 # ADD BASE CPP /nologo /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
-# ADD CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /I "./" /I "../Plugin" /I "../IDL.old" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "$(TAO_ROOT)" /I "$(ACE_ROOT)" /I "$(TAO_ROOT)\orbsvcs" /I "$(XERCESCROOT)\include" /I "..\IDL" /I "..\Plugin" /D "WIN32" /D "_DEBUG" /D "_CONSOLE" /D "_MBCS" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /FR /YX /FD /GZ /c
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
 # ADD RSC /l 0x409 /d "_DEBUG"
 BSC32=bscmake.exe
@@ -79,7 +78,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"M:\ACE_TAO\Windows-vrac\ACE_wrappers\ace" /libpath:"M:\ACE_TAO\Windows-vrac\ACE_wrappers\TAO\tao" /libpath:"M:\ACE_TAO\Windows-vrac\ACE_wrappers\TAO\orbsvcs\orbsvcs" /libpath:"M:\ACE_TAO\Windows-vrac\ACE_wrappers\TAO\tao\PortableServer" /libpath:"C:/wxWindows-2.4.2/lib"
+# ADD LINK32 aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /subsystem:console /debug /machine:I386 /pdbtype:sept /libpath:"$(ACE_ROOT)\ace" /libpath:"$(TAO_ROOT)\tao" /libpath:"$(TAO_ROOT)\orbsvcs\orbsvcs" /libpath:"$(TAO_ROOT)\tao\PortableServer" /libpath:"$(XERCESCROOT)\lib"
 
 !ENDIF 
 
@@ -96,6 +95,10 @@ SOURCE=.\Exe_server.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=.\Execute_Thread.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=.\Executive_i.cpp
 # End Source File
 # Begin Source File
@@ -104,15 +107,27 @@ SOURCE=..\Plugin\interface.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\IDL.old\moduleC.cpp
+SOURCE=..\IDL\moduleC.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\IDL.old\moduleS.cpp
+SOURCE=..\IDL\moduleS.cpp
 # End Source File
 # Begin Source File
 
-SOURCE=..\IDL.old\moduleS_T.cpp
+SOURCE=..\IDL\moduleS_T.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Network_Exec.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\Plugin\package.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\Scheduler.cpp
 # End Source File
 # Begin Source File
 
@@ -124,6 +139,10 @@ SOURCE=..\Plugin\string_ops.cpp
 # PROP Default_Filter "h;hpp;hxx;hm;inl;fi;fd"
 # Begin Source File
 
+SOURCE=.\Execute_Thread.h
+# End Source File
+# Begin Source File
+
 SOURCE=.\Executive_i.h
 # End Source File
 # Begin Source File
@@ -132,19 +151,27 @@ SOURCE=..\Plugin\interface.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\IDL.old\moduleC.h
+SOURCE=..\IDL\moduleC.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\IDL.old\moduleS.h
+SOURCE=..\IDL\moduleS.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\IDL.old\moduleS_T.h
+SOURCE=..\IDL\moduleS_T.h
 # End Source File
 # Begin Source File
 
-SOURCE=..\Plugin\packable.h
+SOURCE=.\Network_Exec.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\Plugin\package.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\Scheduler.h
 # End Source File
 # Begin Source File
 
