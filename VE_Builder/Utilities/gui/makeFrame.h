@@ -234,7 +234,7 @@ void makeFrame::onFileMakVtkSurf( wxCommandEvent &event )
          *txt<<range[0]<<" : "<<range[1]<<"\n";
          
          popup = new makePopupDialog( this, 400, 200, 
-               (int)(range[0]*100), (int)(range[1]*100), *tempString );
+               range[0], range[1], *tempString );
       
          popup->Center( wxBOTH );
 
@@ -279,7 +279,6 @@ void makeFrame::onFileMakVtkSurf( wxCommandEvent &event )
                   txt->WriteText( "Saved as " + saveDialog->GetFilename() + "\n" );
                }
 			   }
-
 		   }
       
          else if ( wxID_CANCEL )txt->WriteText( wxString( "Cancel pressed... \n" ) );
@@ -288,6 +287,7 @@ void makeFrame::onFileMakVtkSurf( wxCommandEvent &event )
     }
 	   else	txt->WriteText( wxString( "Select files to make surface \n" ) );
 }
+
 
 
 void makeFrame::onDel( wxCommandEvent &event )
@@ -346,7 +346,7 @@ void makeFrame::writeVtkGeomToStl( vtkDataSet * vtkdataset, char filename [] )
 
 
 //-------------------------making Iso-Surfaces
-void makeFrame::writeIsoSurface( vtkDataSet * vtkdataset )
+void makeFrame::writeIsoSurface( vtkDataSet* vtkdataset )
 {
       activateScalar( vtkdataset );
 
@@ -368,6 +368,5 @@ void makeFrame::writeIsoSurface( vtkDataSet * vtkdataset )
          normals->Delete();
          filter->Delete();
 }
-
 
 #endif
