@@ -32,7 +32,6 @@
 #include "cfdPresetVector.h"
 #include "cfdDataSet.h"
 #include "cfdPlanes.h"
-//#include "cfdEnum.h"
 #include "cfdCuttingPlane.h"
 #include <vpr/Util/Debug.h>
 
@@ -61,7 +60,6 @@ cfdPresetVector::cfdPresetVector( const int xyz, const int numSteps )
    this->PDactor = vtkActor::New();
 }
 
-
 cfdPresetVector::~cfdPresetVector()
 {
    this->cutter->Delete();
@@ -70,7 +68,6 @@ cfdPresetVector::~cfdPresetVector()
    this->PDactor->Delete();
    this->PDactor = NULL;
 }
-
 
 void cfdPresetVector::Update( void )
 {

@@ -32,17 +32,17 @@
 #include "cfdContour.h"
 
 #include "cfdDataSet.h"
-#include "cfdPlanes.h"
 #include "cfdEnum.h"    // needed for cursorType
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
-#include <vtkPolyData.h>
-//#include <vtkUnstructuredGrid.h>
-#include <vtkDataSet.h>
 #include <vtkCutter.h>
-#include <vtkGeometryFilter.h>
-#include <vtkPolyDataMapper.h>
+#include <vtkGeometryFilter.h>   // for inherited contourBase member filter
+#include <vtkPolyDataMapper.h>   // for inherited contourBase member mapper
+
+#ifdef USE_OMP
+#include <vtkAppendPolyData.h>
+#endif
 
 #include <vpr/Util/Debug.h>
 
@@ -55,7 +55,7 @@ cfdContour::cfdContour()
    this->append = vtkAppendPolyData::New();
    this->nData = this->GetActiveMeshedVolume()->GetNoOfDataForProcs();
 
-   for ( int i=0; i<this->nData; i++ )
+   for ( int i = 0; i < this->nData; i++ )
    {
       this->GetActiveMeshedVolume()->GetData(i)->GetBounds( b );
       c[0] = b[1] - b[0];
@@ -89,7 +89,6 @@ cfdContour::cfdContour()
 #endif
 
    this->filter->ExtentClippingOn();
-
 }
 
 cfdContour::~cfdContour()
@@ -165,7 +164,6 @@ void cfdContour::Update( void )
 
       this->mapper->SetLookupTable( 
                              this->GetActiveMeshedVolume()->GetLookupTable() );
-
 
       this->updateFlag = true;
    }

@@ -41,9 +41,10 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkTexture.h>
-#include <vpr/Util/Debug.h>
 #include <vtkImageReader.h>
 #include <vtkProperty.h>
+
+#include <vpr/Util/Debug.h>
 
 cfdImage::cfdImage( char* param )
 {

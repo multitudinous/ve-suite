@@ -32,15 +32,15 @@
 #ifndef CFD_CONTOUR_H
 #define CFD_CONTOUR_H
 
-#ifdef USE_OMP
-#define MAX_CONTOUR 20
-#include <vtkAppendPolyData.h>
-#endif
-
 #include "cfdContourBase.h"
 
 class vtkPlane;
 class vtkCutter;
+
+#ifdef USE_OMP
+#define MAX_CONTOUR 20
+class vtkAppendPolyData;
+#endif
 
 //! VTK contour plane renderer.
 /*!
