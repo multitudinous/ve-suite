@@ -207,18 +207,6 @@ Package=<4>
 
 ###############################################################################
 
-Project: "HeatExchanger0DUnit"=.\HeatExchanger0DUnit\HeatExchanger0DUnit.dsp - Package Owner=<4>
-
-Package=<5>
-{{{
-}}}
-
-Package=<4>
-{{{
-}}}
-
-###############################################################################
-
 Project: "HeatExchangerUnit"=.\HeatExchangerUnit\HeatExchangerUnit.dsp - Package Owner=<4>
 
 Package=<5>

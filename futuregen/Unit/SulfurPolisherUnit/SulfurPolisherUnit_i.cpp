@@ -276,7 +276,7 @@ CORBA::Long Body_Unit_i::GetID (
     , Error::EUnknown
   ))
   {
-    std::cout<<UnitName_<<" :GetID called"<<endl;
+    std::cout<<UnitName_<<" :GetID called\n";
     
     return id_;
   }
