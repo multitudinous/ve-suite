@@ -29,15 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef _WIN32
-#include <unistd.h>
-#include <sys/types.h>
-#include <sys/dir.h>
-#else
-//#error ("NOT Portable to Windows Yet!!")
-#include <windows.h>
-#include <direct.h>
-#endif
 
 #include "cfdReadParam.h"
 #include "cfdTransientInfo.h"
@@ -167,35 +158,25 @@ cfdDataSet * cfdReadParam::GetDataSetWithName( const char * vtkFilename )
 
 char * cfdReadParam::readDirName( std::ifstream &inFile, char * description )
 {
-  char textLine[256];
-   char * dirName = new char [256];
+   char * dirName = new char [ 256 ];
    inFile >> dirName;
-   
-   inFile.getline( textLine, 256 );   //skip past remainder of line
-#ifndef WIN32  
-   
-   //try to open the directory
 
-   DIR* dir = opendir( dirName );
-   if (dir == NULL) 
+   char textLine[ 256 ];
+   inFile.getline( textLine, 256 );   //skip past remainder of line
+
+   if ( fileIO::DirectoryExists( dirName ) ) 
    {
-      vprDEBUG(vprDBG_ALL,0) << " " << description << " \""
-         << dirName << "\" does not exist"
-         << std::endl << vprDEBUG_FLUSH;
-      delete [] dirName;
-      dirName = NULL;
+      vprDEBUG(vprDBG_ALL,0) << " " << description << " = \""
+                << dirName << "\"" << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,0) << " " << description << " = \""
-                             << dirName << "\""
+      vprDEBUG(vprDBG_ALL,0) << " " << description << " \""
+                             << dirName << "\" does not exist"
                              << std::endl << vprDEBUG_FLUSH;
+      delete [] dirName;
+      dirName = NULL;
    }
-   closedir( dir );
-#else
-
-//exit( 1 );
-#endif
    return dirName;
 }
 
@@ -276,10 +257,10 @@ void cfdReadParam::param_read( std::ifstream &inFile )
             soundData(inFile);
             break;
          case 12:
-	         IMGReader(inFile);
+            IMGReader(inFile);
             break;
          case 13:
-	         ihccModel = true;
+            ihccModel = true;
             break;
          case 14:
             quatCamFile( inFile);
@@ -393,9 +374,6 @@ void cfdReadParam::getTransientInfo( std::ifstream &inFile )
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-
-
-
 int cfdReadParam::convertDecimalToBinary( long number) 
 {
    vprDEBUG(vprDBG_ALL,1) << " Number = " << number
@@ -414,8 +392,6 @@ int cfdReadParam::convertDecimalToBinary( long number)
    //   cout << testBin[ j ];
    return 0;
 }
-
-
 
 void cfdReadParam::convertBinaryToArray( int gui, int size ) 
 {
@@ -484,7 +460,6 @@ void cfdReadParam::SkipModuleBlock( std::ifstream &inFile, int numLines )
    }
 }
 
-
 bool cfdReadParam::CheckCommandId( cfdCommandArray* commandArray )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_GEOMETRY )
@@ -507,9 +482,6 @@ void cfdReadParam::UpdateCommand()
 {
    std::cerr << "doing nothing in cfdReadParam::UpdateCommand()" << std::endl;
 }
-
-
-
 
 void cfdReadParam::ContinueRead( std::ifstream &input, unsigned int id )
 {
@@ -556,19 +528,19 @@ void cfdReadParam::ContinueRead( std::ifstream &input, unsigned int id )
          break;
       case 11:
          // Sound loader
-	      numLines = 10;
+         numLines = 10;
          break;
       case 12:
          // IMG Reader
-	      numLines = 6;
+         numLines = 6;
          break;
       case 13:
          // IHCC Hack code
-	      numLines = 0;
+         numLines = 0;
          break;
       case 14:
          // Quat stuff...
-	      numLines = 1;
+         numLines = 1;
          break;
       default:
          std::cerr << "ERROR : ContinueRead Unknown Type: " << id << std::endl;
