@@ -63,6 +63,7 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
    this->switchNode->AddChild( this->textureBased );
 
    this->animation = 0;
+   this->activeDataSet = 0;
 }
 
 cfdModel::~cfdModel()

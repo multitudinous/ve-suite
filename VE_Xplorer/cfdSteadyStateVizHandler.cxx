@@ -868,17 +868,13 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                vprDEBUG(vprDBG_ALL,1) << " setting DCS to activeDCS = "
                                    << this->_activeDataSetDCS
                                    << std::endl << vprDEBUG_FLUSH;
-               //this->_activeObject->SetDCS( this->_activeDataSetDCS );
                this->_activeObject->SetActiveDataSet( this->_activeDataSet );
-               //if ( this->_activeDataSet->IsPartOfTransientSeries() )
-               //   this->_activeObject->SetSequence( this->_activeDataSet->GetAnimation() );
                this->_activeObject->SetNormal( this->nav->GetDirection() );
                this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 
                this->_activeObject->SetRequestedValue( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
                this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
                this->_activeObject->SetPreCalcFlag( this->commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) );
-               //this->transientBusy = true;      
                this->computeActorsAndGeodes = true;
                this->actorsAreReady = true;
             }

@@ -208,6 +208,7 @@ void cfdModelHandler::InitScene( void )
       if ( _modelList.at( 0 )->GetNumberOfCfdDataSets() > 0 )
       {
          activeDataset = _modelList.at( 0 )->GetCfdDataSet( 0 );
+         _activeModel->SetActiveDataSet( activeDataset );
       }
    }
 

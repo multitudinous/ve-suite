@@ -114,7 +114,12 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          // classic ss
          // we can do this because classic group is always
          // child 0 see line 58 of cfdModel.cxx
-         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
+         if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( this->model->GetActiveDataSet()->GetDCS() ) < 0 )
+         {
+            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS"
+                             << std::endl << vprDEBUG_FLUSH;
+            ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
+         }
          this->model->GetActiveDataSet()->GetDCS()->AddChild( this->geodes.back() );
       }
       else if ( this->geodes.size() > 1 && 
@@ -126,7 +131,12 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          // even if model contains transient data
          this->animation = new cfdTempAnimation();
          this->animation->AddGeodesToSequence( this->geodes );
-         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
+         if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( this->model->GetActiveDataSet()->GetDCS() ) < 0 )
+         {
+            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS"
+                             << std::endl << vprDEBUG_FLUSH;
+            ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->model->GetActiveDataSet()->GetDCS() );
+         }
          this->model->GetActiveDataSet()->GetDCS()->AddChild( this->animation->GetSequence() );
       }
       else if ( (this->geodes.size() > 1) && 
@@ -140,7 +150,12 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          //transAnimation->SetNumberOfFrames( numFrames );
          //transAnimation->SetGroups();
          transAnimation->AddGeodesToSequence( this->geodes );
-         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->animation->GetSequence() );
+         if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( this->animation->GetSequence() ) < 0 )
+         {
+            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS"
+                             << std::endl << vprDEBUG_FLUSH;
+            ((cfdGroup*)temp->GetChild( 0 ))->AddChild(this->animation->GetSequence() );
+         }
       }
    }
    else if ( type == TEXTURE )
@@ -376,15 +391,14 @@ void cfdGraphicsObject::RemovecfdGeodeFromDCS( void )
    if ( this->type == CLASSIC )
    {
       unsigned int num = this->geodes.size();
-  
-      // Iterate backwards for performance
-      for ( unsigned int i = num - 1; i >= 0; i-- )
+
+      for ( unsigned int i = 0; i < num; ++i )
       {
          // Need to find tha parent becuase with multiple models
          // Not all geodes are going to be on the same dcs
-         cfdGroup* parent = (cfdGroup*)this->geodes.at( i )->GetParent(0);
-         parent->RemoveChild( this->geodes.at( i ) );
-         delete this->geodes.at( i );
+         cfdGroup* parent = (cfdGroup*)this->geodes.at( 0 )->GetParent(0);
+         parent->RemoveChild( this->geodes.at( 0 ) );
+         delete this->geodes.at( 0 );
       }
       this->geodes.clear();
 
