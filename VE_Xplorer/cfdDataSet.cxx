@@ -43,7 +43,6 @@
 #include "readWriteVtkThings.h"
 #include "cfdDCS.h"
 
-
 #include <vtkGenericCell.h>
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
@@ -75,11 +74,11 @@ cfdDataSet::cfdDataSet( )
    this->y_planes = NULL;
    this->z_planes = NULL;
    this->range = new double [ 2 ];
-   range[ 0 ] = 0;
-   range[ 1 ] = 0;
+   this->range[ 0 ] = 0;
+   this->range[ 1 ] = 0;
    this->definedRange = new double [ 2 ];
-   definedRange[ 0 ] = 0;
-   definedRange[ 0 ] = 0;
+   this->definedRange[ 0 ] = 0;
+   this->definedRange[ 0 ] = 0;
    this->isNewlyActivated = 0;
    this->fileName = NULL;
    this->precomputedDataSliceDir = NULL;
@@ -93,8 +92,9 @@ cfdDataSet::cfdDataSet( )
    this->partOfTransientSeries = 0;
    this->datasetType = -1;
    this->vectorMagRange = NULL;
-   actualScalarRange = NULL;
-   displayedScalarRange = NULL;
+   this->actualScalarRange = NULL;
+   this->displayedScalarRange = NULL;
+   this->meanCellBBLength = 0.0;
 }
 
 cfdDataSet::~cfdDataSet()
@@ -653,27 +653,68 @@ void cfdDataSet::UpdatePropertiesForNewMesh()
    vprDEBUG(vprDBG_ALL,1) << "\tthis->bbDiagonal = " << this->bbDiagonal
                           << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,0) << "\tcomputing meanCellBBLength..."
-                          << std::endl << vprDEBUG_FLUSH;
-   // Get the length of the diagonal of the bounding box of the average cell. 
-   // THIS METHOD IS THREAD SAFE IF FIRST CALLED FROM A SINGLE THREAD
-   // AND THE DATASET IS NOT MODIFIED
+   // Read or compute the length of the diagonal of the bounding box
+   // of the average cell. 
+   // First set it to zero as the default:
    this->meanCellBBLength = 0.0;
-   vtkGenericCell *cell = vtkGenericCell::New();
-   int numCells = this->GetDataSet()->GetNumberOfCells();
-   vtkDataSet* tempDataSet =  this->GetDataSet();
 
-   for (int cellId=0; cellId < numCells; cellId++)
+   // Read the dataset fields and see if any match with member variable names
+   vtkFieldData * field = this->GetDataSet()->GetFieldData();
+   int numFieldArrays = field->GetNumberOfArrays();
+   vprDEBUG(vprDBG_ALL,1) << " numFieldArrays = " << numFieldArrays
+                          << endl << vprDEBUG_FLUSH;
+   for ( int i = 0; i < numFieldArrays; i++ )
    {
-      tempDataSet->GetCell( cellId, cell);
-      this->meanCellBBLength += sqrt( cell->GetLength2() );
+      // print some debug information
+      vprDEBUG(vprDBG_ALL,0) << " Reading field \""
+           << field->GetArray( i )->GetName()
+           << "\"" << endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,1) << "\tNumComponents = "
+           << field->GetArray( i )->GetNumberOfComponents()
+           << endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,1) << "\tNumTuples= "
+           << field->GetArray( i )->GetNumberOfTuples()
+           << endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,1) << "\tfirst value = "
+           << field->GetArray( i )->GetComponent( 0, 0 )
+           << endl << vprDEBUG_FLUSH;
+      if ( field->GetArray( i )->GetNumberOfTuples() > 1 )
+      {
+         vprDEBUG(vprDBG_ALL,1) << "\tsecond value = "
+              << field->GetArray( i )->GetComponent( 0, 1 )
+              << endl << vprDEBUG_FLUSH;
+      }
+
+      // If any field names match with member variable names, use them:
+      if ( !strcmp(field->GetArray( i )->GetName(),"meanCellBBLength") )
+      {
+         this->meanCellBBLength = field->GetArray( i )->GetComponent( 0, 0 );
+      }
+   }
+
+   // If not provided in the dataset field, compute :
+   if ( this->meanCellBBLength == 0.0 )
+   {
+      vprDEBUG(vprDBG_ALL,0) << "\tcomputing meanCellBBLength..."
+                             << std::endl << vprDEBUG_FLUSH;
       // THIS METHOD IS THREAD SAFE IF FIRST CALLED FROM A SINGLE THREAD
       // AND THE DATASET IS NOT MODIFIED
+      vtkGenericCell *cell = vtkGenericCell::New();
+      int numCells = this->GetDataSet()->GetNumberOfCells();
+
+      for (int cellId=0; cellId < numCells; cellId++)
+      {
+         this->GetDataSet()->GetCell( cellId, cell);
+         this->meanCellBBLength += sqrt( cell->GetLength2() );
+         // THIS METHOD IS THREAD SAFE IF FIRST CALLED FROM A SINGLE THREAD
+         // AND THE DATASET IS NOT MODIFIED
+      }
+      cell->Delete();
+      this->meanCellBBLength /= numCells;
+      vprDEBUG(vprDBG_ALL,0) << "\tnumCells = " << numCells 
+                             << std::endl << vprDEBUG_FLUSH;
    }
-   cell->Delete();
-   this->meanCellBBLength /= numCells;
-   vprDEBUG(vprDBG_ALL,0) << "\tnumCells = " << numCells 
-                          << ", meanCellBBLength = " << this->meanCellBBLength
+   vprDEBUG(vprDBG_ALL,0) << "\tmeanCellBBLength = " << this->meanCellBBLength
                           << std::endl << vprDEBUG_FLUSH;
 }
 
