@@ -58,7 +58,16 @@ OBJECTS = ../string_ops.o \
 	../V21Helper/Therm/matrix.o \
 	../V21Helper/Therm/stream.o \
 	../V21Helper/Steam67/Steam67.o \
-	../V21Helper/Therm/thermo.o
+	../V21Helper/Therm/thermo.o \
+	../ThirdParty/rei_lib/grid.o \
+	../ThirdParty/rei_lib/inl.o \
+	../ThirdParty/rei_lib/inlet.o \
+	../ThirdParty/rei_lib/interp.o \
+	../ThirdParty/rei_lib/cell.o \
+	../ThirdParty/rei_lib/db_file.o \
+	../ThirdParty/rei_lib/scalar.o \
+	../ThirdParty/rei_lib/search.o \
+	../THirdParty/rei_lib/vector.o
 
 
 .SUFFIXES : .o .cpp .cc	.f
