@@ -194,7 +194,7 @@ char * cfdReadParam::readDirName( std::ifstream &inFile, char * description )
    closedir( dir );
 #else
 
-exit( 1 );
+//exit( 1 );
 #endif
    return dirName;
 }

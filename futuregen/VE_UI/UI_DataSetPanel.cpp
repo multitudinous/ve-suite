@@ -260,6 +260,8 @@ UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int a
 {
    _modelData = _model;
    _activeModIndex = activeMod;
+   _vectorNames = 0;
+   _scalarNames = 0;
 
    _datasetCombo = NULL;
    
@@ -535,8 +537,15 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
 
    //_noScalars = activeDataSet->_numofScalars;
    //for (int p=0; p<_ScalarScroll->_scalarRBox->GetCount(); p++)
-   delete [] _scalarNames;
-   delete [] _vectorNames;
+   if(_scalarNames){  
+      delete [] _scalarNames;
+      _scalarNames = 0;
+   }
+   
+   if(_vectorNames){
+      delete [] _vectorNames;
+      _vectorNames = 0;
+   }
 
    _scalarNames = new wxString[activeDataSet->_numOfScalars];
    _vectorNames = new wxString[activeDataSet->_numOfVectors];

@@ -886,6 +886,8 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    std::vector< char* > frameFileNames;
    std::vector< char* > frameDirNames;
    int numFiles = 0;
+   // count the files and record the name of each file
+   int numDir = 0;
    // Read Scalar Ranges
    char *cwd;
 #ifndef WIN32
@@ -925,8 +927,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    //chdir( cwd );
    closedir(dir);
    dir = opendir( cwd );
-   // count the files and record the name of each file
-   int numDir = 0;
+   
    while( (file = readdir(dir)) != NULL )
    {
       //std::cout << file->d_name << " : " << preComputedDir<< " : " << /*file->ino_t << " : " << file->off_t << */std::endl;
@@ -949,7 +950,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    char buffer[_MAX_PATH];
    BOOL finished;
    HANDLE hList;
-   TCHAR directory[MAX_PATH+1];
+   TCHAR directoryPath[MAX_PATH+1];
    WIN32_FIND_DATA fileData;
 
    //windows compatibility
@@ -960,14 +961,15 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    }
 
    // Get the proper directory path for transient files
-   sprintf(directory, "%s\\*", this->directory);
+   //sprintf(directoryPath, "%s\\*", directory);
+   strcpy(directoryPath,directory);
 
    //get the first file
-   hList = FindFirstFile(directory, &fileData);
+   hList = FindFirstFile(directoryPath, &fileData);
   
    //check to see if directory is valid
    if(hList == INVALID_HANDLE_VALUE){ 
-      cerr<<"No transient files found in: "<<this->directory<<endl;
+      cerr<<"No transient files found in: "<<directory<<endl;
       return;
    }else{
       // Traverse through the directory structure
@@ -977,8 +979,8 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
 		 //assume all vtk files in this directory are part of the sequence
 		 if(strstr(fileData.cFileName, ".vtk")){
             char* pathAndFileName = new char[
-                  strlen(this->directory) + strlen(fileData.cFileName) + 2 ];
-            strcpy(pathAndFileName,this->directory);
+                  strlen(directoryPath) + strlen(fileData.cFileName) + 2 ];
+            strcpy(pathAndFileName,directoryPath);
             strcat(pathAndFileName,"/");
             strcat(pathAndFileName,fileData.cFileName);
 
@@ -986,7 +988,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
             vprDEBUG(vprDBG_ALL, 1) << " pathAndFileName : " 
                                     << pathAndFileName << std::endl << vprDEBUG_FLUSH;
             //increment the number of frames found
-            this->numFiles++;
+            numFiles++;
 		 }
 		 //check to see if this is the last file
 		 if(!FindNextFile(hList, &fileData)){
