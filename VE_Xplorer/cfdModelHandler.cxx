@@ -261,7 +261,8 @@ void cfdModelHandler::PreFrameUpdate( void )
          //<< ", min = " << this->cfdMin 
          //<< ", max = " << this->cfdMax
          << std::endl << vprDEBUG_FLUSH;
-      if ( i < _activeModel->GetNumberOfCfdDataSets() )
+     
+      if ( _activeModel && i < _activeModel->GetNumberOfCfdDataSets() )
       {
          vprDEBUG(vprDBG_ALL,0) << " dataset = "
                   << _activeModel->GetCfdDataSet( i )->GetFileName()

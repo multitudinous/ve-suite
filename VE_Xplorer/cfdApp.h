@@ -145,11 +145,6 @@ class cfdApp: public vrj::OsgApp
 
    // Only used in preframe for transient stuff
    int   lastFrame;
-
-  
-#ifdef _CLUSTER   
-   virtual void GetUpdateClusterStateVariables( void );
-#endif
    private:
       char * filein_name;
 };

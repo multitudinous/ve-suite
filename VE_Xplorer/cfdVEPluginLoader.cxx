@@ -1,15 +1,16 @@
 #include "cfdVEPluginLoader.h"
 #include <wx/image.h>
+#include <wx/dynload.h>
 #include <wx/object.h>
-//IMPLEMENT_DYNAMIC_CLASS(cfdVEPluginLoader, wxObject);
-
 
 cfdVEPluginLoader::cfdVEPluginLoader()
 {
    plugins.clear();
    plugin_cls.clear();
-   ::wxInitAllImageHandlers();
-   //wxClassInfo::InitializeClasses();
+   //::wxInitAllImageHandlers();
+   wxPluginLibrary::ms_classes = new wxDLImports(wxKEY_STRING);
+   wxPluginManager::CreateManifest();
+   wxClassInfo::InitializeClasses();
 }
 
 cfdVEPluginLoader::~cfdVEPluginLoader()
@@ -21,57 +22,63 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
 
    plugins.clear();
    plugin_cls.clear();
-   //wxClassInfo::CleanUpClasses();
+   delete wxPluginLibrary::ms_classes;
+   wxPluginLibrary::ms_classes = NULL;
+   wxPluginManager::ClearManifest();
+   wxClassInfo::CleanUpClasses();
 }
     
 bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
 {
-  wxString filename;
+   wxString filename;
 
-  wxString ext = "*" + wxDllLoader::GetDllExt();
+   wxString ext = "*" + wxDllLoader::GetDllExt();
   
-  wxLogDebug ("Loading plugins from [%s]", lib_dir.c_str());
+   wxLogDebug ("Loading plugins from [%s]", lib_dir.c_str());
   
-  /* Create a directory object we can scan for plugins */
-  wxDir dir(lib_dir);// + "\\" + "plugins");
+   /* Create a directory object we can scan for plugins */
+   wxDir dir(lib_dir);// + "\\" + "plugins");
   
-  if ( !dir.IsOpened() )
-    {
-      // deal with the error here - wxDir would already log an error message explaining the exact reason of the failure
+   if ( !dir.IsOpened() )
+   {
+      // deal with the error here - wxDir would already log an 
+      // error message explaining the exact reason of the failure
       cerr << " ERROR : Can't find plugin dir! " << endl;
       return FALSE;
-    }
-  wxDynamicLibrary* lib;
-	bool cont = dir.GetFirst(&filename, ext, wxDIR_FILES );
+   }
 
-	if ( cont )
+   bool cont = dir.GetFirst(&filename, ext, wxDIR_FILES );
+
+   if ( cont )
    {
       while ( cont )
-	   {
-	      wxFileName  libname(lib_dir, filename);
-	      const wxString libn=lib_dir+"/"+libname.GetName()+wxDllLoader::GetDllExt();
-         lib = new wxDynamicLibrary( libn );
-	      //wxPluginLibrary *lib = wxPluginManager::LoadLibrary (libn);
-         if (lib->IsLoaded())
-	      {
+      {
+         wxFileName  libname(lib_dir, filename);
+         const wxString libn=lib_dir+"/"+libname.GetName()+wxDllLoader::GetDllExt();
+         //libs.push_back( new wxDynamicLibrary( libn ) );
+         libs.push_back( wxPluginManager::LoadLibrary (libn) );
+
+         if (libs.back()->IsLoaded())
+         {
             wxLogDebug ("Loaded [ %s ]", filename.c_str());
-	      }
+         }
          else
          {
             wxLogDebug ("Could Not Load [ %s ]", filename.c_str());
+         //wxClassInfo* test = CLASSINFO(lib->GetLibHandle() )
+         //cout << test->m_className << endl;
          }
          cont = dir.GetNext(&filename);
-     
          //delete lib;
-	   }
+      }
 
       RegisterPlugins();
-      return TRUE;	
-	}
+      return TRUE;   
+   }
    else
-	{
+   {
       wxLogDebug ("Appropriate directory is present but no plugins are present" );
-      return false;	      
+      return false;        
    }
 }
 
@@ -81,27 +88,8 @@ void cfdVEPluginLoader::RegisterPlugins()
   
    plugins.clear();
    plugin_cls.clear();
-   const wxChar *name = "cfdVEBaseClass";
-   wxClassInfo *lastInfo = NULL;
-   for ( wxClassInfo *info = wxClassInfo::sm_first; info; info = info->m_next )
-   {
-      //cout << info << " : " << info->m_className << endl;
-      if (wxStrcmp(info->m_baseClassName1, name) == 0)
-      {
-         cfdVEBaseClass *object = (cfdVEBaseClass *) info->CreateObject();
-         plugins.push_back(object);
-         plugin_cls.push_back(info);
-         cout << info->m_className << endl;
-      }
 
-      if ( info->m_next == wxClassInfo::sm_first )
-         break;
-      if ( lastInfo != info  )
-         lastInfo = info;
-      else
-         break;
-   }
-//   wxClassInfo::sm_classTable->BeginFind();
+   wxClassInfo::sm_classTable->BeginFind();
   
    /*
     Rip through the entire classinfo hash
@@ -111,30 +99,20 @@ void cfdVEPluginLoader::RegisterPlugins()
     
     This is a real rip off from the wxModule initialisation code
    */
-/*  
+  
    while ( (node = wxClassInfo::sm_classTable->Next()) )
    {
+   
       wxClassInfo *classInfo = (wxClassInfo *)node->Data();
       if ( classInfo->IsKindOf(CLASSINFO(cfdVEBaseClass)) &&
-	   (classInfo != (& (cfdVEBaseClass::sm_classcfdVEBaseClass))) )
+	      (classInfo != (& (cfdVEBaseClass::sm_classcfdVEBaseClass))) )
 	   {
-         cout << classInfo->GetClassName() << endl;
-	      RegisterPlugin(classInfo);
+         cfdVEBaseClass *object = (cfdVEBaseClass *) classInfo->CreateObject();
+         plugins.push_back(object);
+         plugin_cls.push_back(classInfo);
+         cout << "|     Register plugins : " << classInfo->GetClassName() << endl;
 	   }
-   }*/
-}
-
-void cfdVEPluginLoader::RegisterPlugin(wxClassInfo* info)
-{
-   //int id;
-/*cout << " register plugins" << endl;
-   if (info)
-     {
-       cfdVEBaseClass *object = (cfdVEBaseClass *) info->CreateObject();
-       plugins.push_back(object);
-       plugin_cls.push_back(info);
-       cout << info->GetClassName() << endl;
-     }*/
+   }
 }
 
 char* cfdVEPluginLoader::GetPluginName( int index )
@@ -171,5 +149,5 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
       return NULL;
    }
 
-   return (cfdVEBaseClass*)plugin_cls.at( selectPlugin )->CreateObject();
+   return (cfdVEBaseClass*)((wxClassInfo*)plugin_cls.at( selectPlugin ))->CreateObject();
 }

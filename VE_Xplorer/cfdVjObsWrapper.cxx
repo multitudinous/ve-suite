@@ -48,6 +48,16 @@ cfdVjObsWrapper::cfdVjObsWrapper( void )
    _vjObs = new VjObs_i();
 }
 
+void cfdVjObsWrapper::InitCluster( void )
+{
+   _vjObs->InitCluster();
+}
+
+void cfdVjObsWrapper::GetUpdateClusterStateVariables( void )
+{
+   _vjObs->GetUpdateClusterStateVariables();
+}
+
 cfdVjObsWrapper::~cfdVjObsWrapper( void )
 {
    CosNaming::Name name(1);
@@ -82,6 +92,8 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input  )
 {
    naming_context = input;
 #ifdef _CLUSTER
+   int argc;
+   char** argv;
    char buffer[1025];
    int ntoks, i;
    std::vector<std::string> toks;
@@ -105,7 +117,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input  )
       if (fhost==NULL)
       {
          cout<<"Something bad in the path"<<endl;
-         return -1;
+         //return -1;
       }
 
       while(!feof(fhost)&&!found)
@@ -143,8 +155,8 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input  )
    {
       std::cout<<"This is the master!"<<std::endl;
 
-      VjObs_var vjobs = application->_this();
-      CORBA::String_var sior(orb->object_to_string(vjobs.in()));
+      VjObs_var vjobs = this->_vjObs->_this();
+      //CORBA::String_var sior(orb->object_to_string(vjobs.in()));
       //cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
       CosNaming::Name name;
       name.length(1);

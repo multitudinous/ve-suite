@@ -39,7 +39,6 @@
 #endif
 #include <iostream>
 using namespace std;
-
 int main(int argc, char* argv[])
 {
 #ifdef _TAO
@@ -68,5 +67,8 @@ int main(int argc, char* argv[])
    cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
    orb->run();
+   delete vjobsWrapper;
+   delete appWrapper;
+
    return 0;
 }
