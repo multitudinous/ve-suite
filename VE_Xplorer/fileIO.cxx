@@ -527,11 +527,13 @@ char * fileIO::GetFile( char fileKeyword[], char fileLocation[] )
    {
       strcpy( file, path );
       strcat( file, fileLocation );
+      delete [] path;
    }
    else
    {
       std::cerr << "ERROR: environment variable VE_SUITE_HOME is not defined"
                 << std::endl;
+      delete [] file;
       return NULL; 
    }
 
@@ -539,6 +541,7 @@ char * fileIO::GetFile( char fileKeyword[], char fileLocation[] )
    {
       std::cerr << "ERROR: Can't read the " << fileKeyword 
                 << " file named \"" << file << "\"" << std::endl;
+      delete [] file;
       return NULL; 
    }
    else

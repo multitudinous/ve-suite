@@ -32,7 +32,7 @@
 
 class cfdVEPluginLoader : public wxObject
 {
-  DECLARE_DYNAMIC_CLASS(cfdVEPluginLoader)
+  //DECLARE_DYNAMIC_CLASS(cfdVEPluginLoader)
 
     public:
 

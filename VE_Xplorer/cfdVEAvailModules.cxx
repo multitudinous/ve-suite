@@ -1,4 +1,6 @@
 #include "cfdVEAvailModules.h"
+#include <fstream>
+#include <sstream>
 //#include "StringParse.h"
 
 /*BEGIN_EVENT_TABLE(Avail_Modules, wxTreeCtrl)
@@ -11,7 +13,7 @@ END_EVENT_TABLE()*/
 //using namespace std;
    
 //IMPLEMENT_DYNAMIC_CLASS(Avail_Modules, wxTreeCtrl)
-IMPLEMENT_DYNAMIC_CLASS(cfdVEAvail_Modules, wxObject)
+//IMPLEMENT_DYNAMIC_CLASS(cfdVEAvail_Modules, wxObject)
 
 /*Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
   : wxTreeCtrl(parent, id, pos, size, style)
@@ -35,16 +37,31 @@ cfdVEAvail_Modules::cfdVEAvail_Modules( void )
   LoadModules();
 }
 
+cfdVEAvail_Modules::~cfdVEAvail_Modules( void )
+{
+  delete pl_loader;
+}
+
 bool cfdVEAvail_Modules::LoadModules()
 {
-  //int i;
+   //int i;
+   char* path = getenv("VE_SUITE_HOME");
+   char* modelPath = "/VE_Models";
+   char* file = new char[100];
+   
+   strcpy( file, path );
+   strcat( file, modelPath );
 
-  pl_loader->LoadPlugins("../Plugin");
+   wxString wxPath = file;
+   pl_loader->LoadPlugins( wxPath );
   
-  //for (i=0; i<pl_loader->plugins.size(); i++)
-    //AddModule(pl_loader->plugins[i], pl_loader->plugin_cls[i]);
+   //for (i=0; i<pl_loader->plugins.size(); i++)
+   //AddModule(pl_loader->plugins[i], pl_loader->plugin_cls[i]);
+   delete [] path;
+   delete [] modelPath;
+   delete [] file;
 
-  return true;
+   return true;
 }
 
 cfdVEPluginLoader* cfdVEAvail_Modules::GetLoader( void )

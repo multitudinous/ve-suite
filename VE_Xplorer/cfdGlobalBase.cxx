@@ -38,7 +38,7 @@ using namespace std;
 
 cfdGlobalBase::cfdGlobalBase()
 { 
-   cout << "cfdGlobalBase constructor" << endl;
+   //cout << "cfdGlobalBase constructor" << endl;
 }
 
 cfdGlobalBase::~cfdGlobalBase ()

@@ -29,7 +29,7 @@
 
 class cfdVEAvail_Modules : public wxObject
 {
-  DECLARE_DYNAMIC_CLASS(cfdVEAvail_Modules);
+  //DECLARE_DYNAMIC_CLASS(cfdVEAvail_Modules);
 
  public:
   /*enum
@@ -45,7 +45,7 @@ class cfdVEAvail_Modules : public wxObject
   //Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style);
 
    cfdVEAvail_Modules( void );
-   //~cfdVEAvail_Modules
+   ~cfdVEAvail_Modules( void );
   bool LoadModules(); //Load all the modules from the dlls 
   cfdVEPluginLoader* GetLoader( void );
   //void OnItemRightClick(wxTreeEvent& event);

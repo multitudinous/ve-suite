@@ -143,6 +143,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDC
 
 cfdExecutive::~cfdExecutive( void )
 {
+   delete av_modules;
 }
 
 void cfdExecutive::UnbindORB()
@@ -305,7 +306,7 @@ void cfdExecutive::GetNetwork ( void )
          if ( iter->_id != -1 ) 
          {
          //cout << iter->_id <<endl; 
-         cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
+         //cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
          _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
          //cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<endl;
          }
@@ -365,11 +366,6 @@ void cfdExecutive::GetEverything( void )
       std::map< int, std::string>::iterator iter;
       for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
       {
-         /*if ( iter->first=="ASU"    || iter->first=="Power"    ||
-               iter->first=="SELX"  || iter->first=="SRS"      ||
-               iter->first=="STACK" || iter->first=="GASI"     ||
-               iter->first=="WGSR"  || iter->first=="REI_Gasi" ||
-               iter->first=="NETWORK") */
          {
             //GetOutput(iter->first);
             //GetPort(iter->first);
@@ -380,8 +376,8 @@ void cfdExecutive::GetEverything( void )
    // _plugin.clear();
          // Here we need to test to see what has changed i nthe map
          // not just create new objects.
-       cout <<  iter->first << " : " << iter->second << endl;
-//  _plugins[ iter->first ] = (cfdVEBaseClass*)av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() );
+       //cout <<  iter->first << " : " << iter->second << endl;
+      //_plugins[ iter->first ] = (cfdVEBaseClass*)av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() );
 
    // When we create the _plugin map here we will do the following
    // _plugin.at( i )->InitializeNode( Pass in correct node );
