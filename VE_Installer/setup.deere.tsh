@@ -1,16 +1,20 @@
 #!/bin/csh
 # sets up environment to build and/or run VE-Xplorer
 
-#OMNI_HOME & OMNILIB: comment out definitions to make a non-corba version - that's all you have to do
+#OMNI_HOME: comment out definitions to make a non-corba version - that's all you have to do
 
 #this is typically defined in your .cshrc file
 setenv VE_SUITE_HOME /isv/VE_Suite
 
-#echo "uname is" `uname`
-#echo "uname -n is" `uname -n`
-setenv CFD_LIBS `uname`_LIB
-setenv VE_LIBS `uname`
-#echo "CFD_LIBS" ${CFD_LIBS}
+if ( -e /etc/redhat-release ) then
+   # extract some words from file to create something like RedHat_8.0
+   setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
+else if ( -e /etc/SuSE-release ) then
+   # extract first and third words from file to create something like SuSE_9.1
+   setenv CFDHOSTTYPE `head -1 /etc/SuSE-release | awk -F" " '{print $1 "_" $3}'`
+else
+   setenv CFDHOSTTYPE `uname`
+endif
 
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
@@ -20,9 +24,8 @@ setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 setenv VTK_HOME_DIR /isv/VTK-4.3.0
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 
-
-if ( `uname` == "IRIX64" ) then
-   #echo "specifying libraries for irix"
+#echo "specifying libraries for" ${CFDHOSTTYPE}
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VJ_BASE_DIR /isv/Juggler/vrjuggler-2.0-alpha3.irix-n32-pthread
    setenv OMNI_HOME /isv/corba/omni3.0
@@ -30,16 +33,14 @@ if ( `uname` == "IRIX64" ) then
 #   setenv LD_LIBRARYN32_PATH /home/users/mccdo/VE_Suite/VE_Installer/arenasize/libs
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk:${OMNI_HOME}/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
-else if ( `uname` == "Linux" ) then
-   #echo "specifying libraries for linux"
+else if ( ${CFDHOSTTYPE} == "RedHat_8.0" ) then
    setenv JDK_HOME /usr/java/j2sdk1.4.1_02
    setenv VJ_BASE_DIR  /home/vr/Juggler/2.0/vrjuggler-2.0-alpha2.linux-rh80
    setenv OMNI_HOME /home/users/lisong/omni/omni-gcc3-rh8
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:/usr/lib/debug:${VTK_HOME_DIR}-rh8/bin:/usr/lib/Performer/Debug:${OMNI_HOME}/lib/i586_linux_2.0_glibc2.1:/usr/lib
 else
    echo "ERROR: Unsupported operating system"
-   echo "       CFD_LIBS, OMNI_HOME, and OMNILIB are undefined"
-
+   echo "       OMNI_HOME, etc. are undefined"
 endif
 
 setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
