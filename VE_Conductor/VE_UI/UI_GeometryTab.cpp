@@ -6,19 +6,17 @@
 #include <cmath>
 
 BEGIN_EVENT_TABLE(UI_GeometryTab, wxPanel)
-   EVT_COMMAND_SCROLL_ENDSCROLL(GEOMETRY_OPACITY_SLIDER, UI_GeometryTab::ChangeOpacity)
-   EVT_COMMAND_SCROLL_ENDSCROLL(GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry)
+   EVT_COMMAND_SCROLL(GEOMETRY_OPACITY_SLIDER, UI_GeometryTab::ChangeOpacity)
+   //EVT_COMMAND_SCROLL_ENDSCROLL(GEOMETRY_OPACITY_SLIDER, UI_GeometryTab::ChangeOpacity)
+   EVT_COMMAND_SCROLL(GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry)
+   //EVT_COMMAND_SCROLL_ENDSCROLL(GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry)
    EVT_CHECKLISTBOX(GEOMETRY_CBOX,UI_GeometryTab::_onUpdate)
    //EVT_RADIOBOX(GEOMETRY_CONFIG_RBOX,UI_GeometryTab::ChangeOpacity)
 END_EVENT_TABLE()
 
-///////////////
-//Constructor//
-///////////////
 UI_GeometryTab::UI_GeometryTab(wxNotebook* tControl)
 :wxPanel(tControl)
 {
-   
    _geometryRBox = 0;
    _geometryCBox = 0;
    _updateButton = 0;
@@ -28,9 +26,7 @@ UI_GeometryTab::UI_GeometryTab(wxNotebook* tControl)
 
    _buildPage();
 }
-//////////////////////////////
-//build the geometry tab    //
-//////////////////////////////
+
 void UI_GeometryTab::_buildPage()
 {
    //the radio box
@@ -99,15 +95,17 @@ void UI_GeometryTab::_buildPage()
    //opacity slider
    geomOpacitySlider = new wxSlider(this, GEOMETRY_OPACITY_SLIDER,100,0,100,
                                        wxDefaultPosition, wxDefaultSize,
-                                       wxSL_HORIZONTAL );
-   geomOpacitySlider->SetThumbLength( 50 );
+                                       wxSL_HORIZONTAL|
+                                       wxSL_LABELS );
+   //geomOpacitySlider->SetThumbLength( 50 );
 
    //lod slider
-   geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,100,100,1000,
+   //geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,100,100,1000,
+   geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,0,0,1000,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_LABELS );
-   geomLODSlider->SetThumbLength( 50 );
+   //geomLODSlider->SetThumbLength( 50 );
 
    //two sizers to group the sliders and their lables
    wxBoxSizer* opacityGroup = new wxBoxSizer( wxVERTICAL );
@@ -150,7 +148,6 @@ void UI_GeometryTab::_buildPage()
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
-//////////////////////////////////////////////////
 void UI_GeometryTab::_onGeometry( wxScrollEvent& event )
 {
    ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
@@ -158,7 +155,6 @@ void UI_GeometryTab::_onGeometry( wxScrollEvent& event )
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
-//////////////////////////////////////////////////
 void UI_GeometryTab::ChangeOpacity( wxScrollEvent& event )
 {
    ((UI_Tabs *)_parent)->cPre_state = 0;
@@ -168,7 +164,6 @@ void UI_GeometryTab::ChangeOpacity( wxScrollEvent& event )
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
-//////////////////////////////////////////////////
 void UI_GeometryTab::_onUpdate(wxCommandEvent& event)
 {
    ((UI_Tabs *)_parent)->cGeo_state = 0;
