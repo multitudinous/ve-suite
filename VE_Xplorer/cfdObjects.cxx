@@ -210,8 +210,10 @@ void cfdObjects::AddGeodesToSequence()
    nTransGeodes =  transientGeodes.size();
    for(int g = 0; g < nGroups; g++){
       tempGroup = this->_sequence->GetGroup(g);
+      std::cout<<" adding to group: "<<g<<std::endl;
       nDCSs = tempGroup->GetNumChildren();
       for(int i = 0; i < nDCSs; i ++){
+         tempDCS = (cfdDCS*)tempGroup->GetChild(i);
          tempDCS->AddChild(this->transientGeodes.at(g));
       }
    }
