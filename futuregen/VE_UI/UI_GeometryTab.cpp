@@ -23,6 +23,8 @@ UI_GeometryTab::UI_GeometryTab(wxNotebook* tControl)
    _geometryRBox = 0;
    _geometryCBox = 0;
    _updateButton = 0;
+   geomOpacitySlider = 0;
+   geomLODSlider = 0;
    _parent = tControl;
 
    _buildPage();
@@ -35,8 +37,8 @@ void UI_GeometryTab::_buildPage()
 
    //the radio box
    int numGeoms = ((UI_Tabs *)_parent)->num_geo;
-   wxString* defaultName;
-   wxString* opacitytName;
+   wxString* defaultName = 0;
+   wxString* opacitytName = 0;
 
    if ( numGeoms > 0 )
    {  
