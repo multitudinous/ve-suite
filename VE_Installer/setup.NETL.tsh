@@ -51,7 +51,7 @@ endif
 setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
 setenv DZR_BASE_DIR   ${VJ_BASE_DIR}/share/Doozer
 setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
-setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${VE_LIBS}
+setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}
 setenv PATH ${OMNI_HOME}/bin:${JDK_HOME}/bin:${PATH}
 
 #echo ""

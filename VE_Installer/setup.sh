@@ -125,7 +125,7 @@ esac
 export TWEEK_BASE_DIR=${VJ_BASE_DIR}
 export DZR_BASE_DIR=${VJ_BASE_DIR}/share/Doozer
 export SNX_BASE_DIR=${VJ_BASE_DIR}
-export PATH=${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${VE_LIBS}:${VJ_DEPS_DIR}/bin
+export PATH=${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
 export PATH=${WX_HOME}/bin:${PATH}
 export PATH=${JDK_HOME}/bin:${PATH}
 if [ ${TAO_BUILD} = "TRUE" ]; then
