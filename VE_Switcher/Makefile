@@ -34,15 +34,17 @@
 # This requires GNU make.
 # -----------------------------------------------------------------------------
 
+APP_NAME=TSVEGpfSwitcher
+
 # where is StopWatch.h ?
 EXTRA_INCLUDES+= -I$(VJ_BASE_DIR)/../vrjuggler-2.0-alpha3.src/modules/vrjuggler/samples/Pf/advanced/pfNav
 
-all: TSVEGpfSwitcher
+default: all
 
-APP_NAME=	TSVEGpfSwitcher
+all: $(APP_NAME)
 
 # Basic options.
-srcdir=		.
+srcdir=	.
 SRCS=		TSVEGpfswitchermain.cpp \
          TSVEGpfswitcher.cpp \
          TSVEGpfSwitchAppHandler.cpp \
@@ -54,5 +56,9 @@ include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-TSVEGpfSwitcher: $(OBJS)
+$(APP_NAME): $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+
+# in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
+CLEAN_FILES+= $(APP_NAME)
+
