@@ -9,6 +9,9 @@ int main()
    reader->ReadHeader();
    reader->ReadSecondBlock();
    reader->ReadThirdBlock();
+   reader->ReadFourthBlock();
+   reader->ReadFifthBlock();
+   reader->ReadSixthBlock();
    cout << "\ndone!\n" << endl;
    return 0;
 }

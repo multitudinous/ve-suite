@@ -43,6 +43,9 @@ class ansysReader
       void ReadHeader();
       void ReadSecondBlock();
       void ReadThirdBlock();
+      void ReadFourthBlock();
+      void ReadFifthBlock();
+      void ReadSixthBlock();
 
    private:
       void FlipEndian();
@@ -54,5 +57,11 @@ class ansysReader
       int headerBlockSize;
       int secondBlockSize;
       int thirdBlockSize;
+      int fourthBlockSize;
+      int fifthBlockSize;
+      int sixthBlockSize;
+
+      int numNodes;
+      int numElems;
 };
 #endif

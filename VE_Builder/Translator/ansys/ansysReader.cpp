@@ -52,6 +52,8 @@ ansysReader::ansysReader( char * input )
    }
    
    this->endian_flip = 1;
+   this->numNodes = 0;
+   this->numElems = 0;
 }
 
 ansysReader::~ansysReader()
@@ -81,7 +83,7 @@ int ansysReader::ReadNthInteger( int n )
 
 void ansysReader::ReadHeader()
 {
-   cout << "Reading header" << endl;
+   cout << "\nReading header" << endl;
 
 /*
    // read all integers
@@ -304,55 +306,67 @@ void ansysReader::ReadHeader()
 
 void ansysReader::ReadSecondBlock()
 {
-   cout << "Reading second block" << endl;
+   cout << "\nReading second block" << endl;
 
-   // we have now read headerSize, headerBlockSize, headerSize
+   // We have now will read past the header which includes integers
+   // headerSize, headerBlockSize, headerSize
    int position = this->headerBlockSize + 3;
 
    // the number at the next integer position 164
-   int blockSize = ReadNthInteger( position++ );
-   if ( blockSize != 164 ) 
+   int blockSize_1 = ReadNthInteger( position++ );
+   if ( blockSize_1 != 164 ) 
    {
-      cerr << "blockSize = " << blockSize << " != 16" << endl;
+      cerr << "blockSize = " << blockSize_1 << " != 16" << endl;
       exit( 1 );
    }
-   
+
    // this block is 40 ints long
    this->secondBlockSize = ReadNthInteger( position++ );
    if ( this->secondBlockSize != 40 ) 
    {
-      cerr << "secondBlockSize= " << this->secondBlockSize << " != 40" << endl;
+      cerr << "secondBlockSize = " << this->secondBlockSize << " != 40" << endl;
       exit( 1 );
    }
 
    // read all integers
+   int intArray[ 40 ];
    for ( int i=0; i < this->secondBlockSize; i++ )
    {
-      int integer = ReadNthInteger( position++ );
-      cout << "\tinteger[ " << i << " ]: " << integer << endl;
+      intArray[ i ] = ReadNthInteger( position++ );
+      cout << "\tintArray[ " << i << " ]: " << intArray[ i ] << endl;
    }
 
+   if ( intArray[ 1 ] == intArray[ 2 ] )
+      this->numNodes = intArray[ 1 ];
+
+   cout << "\tnumNodes = " << this->numNodes << endl;
+
+   if ( intArray[ 5 ] == intArray[ 6 ] )
+      this->numElems = intArray[ 5 ];
+
+   cout << "\tnumElems = " << this->numElems << endl;
+
    // the last number is blockSize again
-   blockSize = ReadNthInteger( position++ );
-   if ( blockSize != 164 ) 
+   int blockSize_2 = ReadNthInteger( position++ );
+   if ( blockSize_2 != blockSize_1 ) 
    {
-      cerr << "blockSize = " << blockSize << " != 164" << endl;
+      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
       exit( 1 );
    }
 }
 
 void ansysReader::ReadThirdBlock()
 {
-   cout << "Reading third block" << endl;
+   cout << "\nReading third block" << endl;
 
    // we have now read headerSize, headerBlockSize, headerSize
    int position = this->headerBlockSize + 3 + this->secondBlockSize + 3;
 
    // the number at the next integer position 16 
-   int blockSize = ReadNthInteger( position++ );
-   if ( blockSize != 16 ) 
+   int blockSize_1 = ReadNthInteger( position++ );
+   if ( blockSize_1 != 16 ) 
    {
-      cerr << "blockSize = " << blockSize << " != 16" << endl;
+      cerr << "blockSize = " << blockSize_1 << " != 16" << endl;
       exit( 1 );
    }
    
@@ -372,10 +386,149 @@ void ansysReader::ReadThirdBlock()
    }
 
    // the last number is blockSize again
-   blockSize = ReadNthInteger( position++ );
-   if ( blockSize != 16 ) 
+   int blockSize_2 = ReadNthInteger( position++ );
+   if ( blockSize_2 != blockSize_1 ) 
    {
-      cerr << "blockSize = " << blockSize << " != 164" << endl;
+      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
+      exit( 1 );
+   }
+}
+
+void ansysReader::ReadFourthBlock()
+{
+   cout << "\nReading fourth block" << endl;
+
+   // we have now read headerSize, headerBlockSize, headerSize
+   int position = this->headerBlockSize + 3
+                + this->secondBlockSize + 3
+                + this->thirdBlockSize + 3;
+
+   int blockSize_1 = ReadNthInteger( position++ );
+   
+   // this block is numNodes ints long
+   this->fourthBlockSize = ReadNthInteger( position++ );
+   if ( this->fourthBlockSize != this->numNodes ) 
+   {
+      cerr << "fourthBlockSize = " << this->fourthBlockSize
+           << " != numNodes" << endl;
+      exit( 1 );
+   }
+
+   // read all integers
+   for ( int i = 0; i < this->fourthBlockSize; i++ )
+   {
+      int integer = ReadNthInteger( position++ );
+      cout << "\tinteger[ " << i << " ]: " << integer << endl;
+   }
+
+   // the last number is blockSize again
+   int blockSize_2 = ReadNthInteger( position++ );
+   if ( blockSize_2 != blockSize_1 ) 
+   {
+      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
+      exit( 1 );
+   }
+}
+
+void ansysReader::ReadFifthBlock()
+{
+   cout << "\nReading fifth block" << endl;
+
+   // we have now read headerSize, headerBlockSize, headerSize
+   int position = this->headerBlockSize + 3
+                + this->secondBlockSize + 3
+                + this->thirdBlockSize + 3
+                + this->fourthBlockSize + 3;
+
+   int blockSize_1 = ReadNthInteger( position++ );
+   
+   // this block is numElems ints long
+   this->fifthBlockSize = ReadNthInteger( position++ );
+   if ( this->fifthBlockSize != this->numElems ) 
+   {
+      cerr << "fifthBlockSize = " << this->fifthBlockSize
+           << " != numElems" << endl;
+      exit( 1 );
+   }
+
+   // read all integers
+   for ( int i = 0; i < this->fifthBlockSize; i++ )
+   {
+      int integer = ReadNthInteger( position++ );
+      cout << "\tinteger[ " << i << " ]: " << integer << endl;
+   }
+
+   // the last number is blockSize again
+   int blockSize_2 = ReadNthInteger( position++ );
+   if ( blockSize_2 != blockSize_1 ) 
+   {
+      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
+      exit( 1 );
+   }
+}
+
+void ansysReader::ReadSixthBlock()
+{
+   cout << "\nReading sixth block" << endl;
+
+   // we have now read headerSize, headerBlockSize, headerSize
+   int position = this->headerBlockSize + 3
+                + this->secondBlockSize + 3
+                + this->thirdBlockSize + 3
+                + this->fourthBlockSize + 3
+                + this->fifthBlockSize + 3;
+
+   int blockSize_1 = ReadNthInteger( position++ );
+   
+   this->sixthBlockSize = ReadNthInteger( position++ );
+/*
+   if ( this->sixthBlockSize != this->numElems ) 
+   {
+      cerr << "sixthBlockSize = " << this->sixthBlockSize
+           << " != numElems" << endl;
+      exit( 1 );
+   }
+*/
+
+   // read all integers
+   for ( int i = 0; i < this->sixthBlockSize; i++ )
+   {
+      int integer = ReadNthInteger( position++ );
+      cout << "\tinteger[ " << i << " ]: " << integer << endl;
+   }
+
+   // the last number is blockSize again
+   int blockSize_2 = ReadNthInteger( position++ );
+   if ( blockSize_2 != blockSize_1 ) 
+   {
+      cerr << "blockSize = " << blockSize_2 << " != expected block size" << endl;
+      exit( 1 );
+   }
+
+   // read a second same size block...
+   // read blockSize again
+   int blockSize_3 = ReadNthInteger( position++ );
+   if ( blockSize_3 != blockSize_1 ) 
+   {
+      cerr << "blockSize = " << blockSize_3 << " != expected block size" << endl;
+      exit( 1 );
+   }
+
+   int whatIsThis = ReadNthInteger( position++ );
+   cout << "whatIsThis = " << whatIsThis << endl;
+
+   // read all integers
+   for ( int i = 0; i < this->sixthBlockSize; i++ )
+   {
+      int integer = ReadNthInteger( position++ );
+      cout << "\tinteger[ " << i << " ]: " << integer << endl;
+   }
+
+   // the last number is blockSize again
+   int blockSize_4 = ReadNthInteger( position++ );
+   if ( blockSize_4 != blockSize_1 ) 
+   {
+      cerr << "blockSize = " << blockSize_4 << " != expected block size" << endl;
       exit( 1 );
    }
 }
