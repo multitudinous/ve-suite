@@ -553,6 +553,7 @@ void cfdModelHandler::CreateObjects( void )
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetRotationArray( rotate );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );
       }
       else
       {
