@@ -99,8 +99,8 @@ int HeatExchanger::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void HeatExchanger::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w*11/100,icon_h*23/75);
-  iports[1]=wxPoint(icon_w*11/100,icon_h*53/75);
+  iports[0]=wxPoint(icon_w*6/60,icon_h*14/45);
+  iports[1]=wxPoint(icon_w*6/60,icon_h*32/45);
   return;
 }
 
@@ -115,8 +115,8 @@ int HeatExchanger::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void HeatExchanger::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*87/100,icon_h*23/75);
-  oports[1]=wxPoint(icon_w*87/100, icon_h*53/75);
+  oports[0]=wxPoint(icon_w*52/60,icon_h*14/45);
+  oports[1]=wxPoint(icon_w*52/60, icon_h*32/45);
 }
 
 /////////////////////////////////////////////////////////////////////////////
