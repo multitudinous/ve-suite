@@ -31,7 +31,8 @@ SRCS=\
    enSightGoldReader.cpp \
    ansysReader.cpp \
    cfdAccessoryFunctions.cpp \
-   tecplotReader.cpp
+   tecplotReader.cpp \
+   vtkCleanUnstructuredGrid.cxx
 #   vtkEnSightFortranBinaryReader.cxx
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)

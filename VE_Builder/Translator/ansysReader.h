@@ -33,123 +33,122 @@
 #define ANSYSREADER_H
 
 #include <iostream>
+typedef int int32;
+typedef long long int64;
 
 class vtkUnstructuredGrid;
+class vtkIntArray;
+class vtkDoubleArray;
 
 class ansysReader
 {
    public:
       ansysReader( char * );
+
       ~ansysReader();
-
-      void ReadHeader();
-
-      void ReadRSTHeader();
-
-      void ReadDOFBlock();
-
-      void ReadNodalEquivalencyTable();
-      void ReadElementEquivalencyTable();
-      void ReadDataStepsIndexTable();
-      void ReadTimeTable();
-      void ReadLoadStepTable();
-      void ReadGeometryTable();
-      void ReadElementTypeIndexTable();
-      void ReadNodalCoordinates();
-      void ReadElementDescriptionIndexTable();
-      void ReadHeaderExtension();
-
-      //int GetCornerNodeOnElement( int, int );
-      //int ElementContainsNode( int elementIndex, int node );
-      //int GetCornerNodeIndex( int elementIndex, int node );
-      //double * GetNodalComponentStresses( int elementIndex, int nodeIndex );
-      //void ComputeNodalStresses();
-
-      // Functions that get pointers to blocks of data
-      //int GetPtrNodalEquivalencyTable();
-      //int GetPtrElementEquivalencyTable();
-      //int GetPtrDataStepsIndexTable();
-      //int GetPtrTIM();
-      //int GetPtrLoadStepTable();
-      //int GetPtrGEO();
-      //int GetElemTypePtr( int i );
-      //int GetPtrETY();
-      //int GetPtrNOD();
 
       vtkUnstructuredGrid * GetUGrid();
 
    private:
       void FlipEndian();
-      int ReadNthInteger( int n );
-      long ReadNthLong( int n );
-      float ReadNthFloat( int n );
-      double ReadNthDouble( int n );
+      int32 ReadNthInteger( int32 & n );
+      int64 ReadNthDoubleLong( int32 & n );
+      float ReadNthFloat( int32 & n );
+      double ReadNthDouble( int32 & n );
 
-      void ReadSolutionDataHeader( int ptrDataSetSolution );
-      void ReadNodalSolutions( int ptrDataSetSolution );
-      void ReadElementSolutions( int ptrDataSetSolution );
-      void ReadElementDescription( int elemIndex, int ptr );
-      int * ReadElementTypeDescription( int ptr );
-      void ReadGenericBlock( int intPosition );
-      void ReadElementIndexTable( int, int );
-      int VerifyNumberOfValues( int reportedNumValues, int blockSize_1 );
-      void VerifyBlock( int blockSize_1, int blockSize_2 );
-      void ReadNodalComponentStresses( int );
-      double ComputeVonMisesStress( double stresses [ 11 ] );
+      void ReadHeader();
+      void ReadRSTHeader();
+      void ReadDOFBlock();
+      void ReadNodalEquivalencyTable();
+      void ReadElementEquivalencyTable();
+      void ReadDataStepsIndexTable();
+      void ReadTimeTable();
+      void ReadGeometryTable();
+      void ReadElementTypeIndexTable();
+      void ReadRealConstantsIndexTable();
+      void ReadCoordinateSystemsIndexTable();
+      void ReadNodalCoordinates();
+      void ReadElementDescriptionIndexTable();
+      void ReadHeaderExtension();
+
+      void ReadSolutionDataHeader( int32 ptrDataSetSolution );
+      void ReadNodalSolutions( int32 ptrDataSetSolution );
+      void ReadElementSolutions( int32 ptrDataSetSolution );
+      void ReadElementDescription( int32 elemIndex, int32 ptr );
+      int32 * ReadElementTypeDescription( int32 ptr );
+      double * ReadElementRealConstants( int32 ptr );
+      double * ReadCoordinateSystemDescription( int32 ptr );
+      void ReadGenericBlock( int32 int32Position );
+      void ReadElementIndexTable( int32, int32 );
+      int32 VerifyNumberOfValues( int32 reportedNumValues, int32 blockSize_1 );
+      void VerifyBlock( int32 blockSize_1, int32 blockSize_2 );
+      void ReadNodalComponentStresses( int32 );
       void AttachStressToGrid();
-      void StoreNodalStessesForThisElement( int elemIndex );
+      void StoreNodalStessesForThisElement( int32 elemIndex );
 
       char * ansysFileName;
       FILE *s1;
       bool endian_flip;
-      long integerPosition;
+      int32 integerPosition;
+      char ansysVersion [ 5 ];
 
-      int numNodes;
-      int maxNumberDataSets;
-      int numElems;
-      int numDOF;
-      int * dofCode;
-      int * nodeID;
-      int * elemID;
+      int32 numNodes;
+      int32 numExpandedNodes;
+      int32 maxNumberDataSets;
+      int32 numElems;
+      int32 numDOF;
+      int32 * dofCode;
+      vtkIntArray * nodeID;
+      int32 * elemID;
 
-      int ptrNodalEquivalencyTable;
-      int ptrElementEquivalencyTable;
-      int ptrDataStepsIndexTable;
-      int ptrTIM;
-      int ptrLoadStepTable;
-      int ptrGEO;
-      int currentDataSetSolution;
+      int32 ptrNodalEquivalencyTable;
+      int32 ptrElementEquivalencyTable;
+      int32 ptrDataStepsIndexTable;
+      int32 ptrTIM;
+      int32 ptrLoadStepTable;
+      int32 ptrGEO;
+      int32 currentDataSetSolution;
 
-      int maxety;
-      int ptrETY;
-      int ptrREL;
-      int ptrNOD;
-      int ptrCSY;
-      int ptrELM;
-      int ptrMAS;
+      int32 maxety;
+      int32 maxrl;
+      int32 maxcsy;
+      int32 ptrETY;
+      int32 ptrREL;
+      int32 ptrNOD;
+      int32 ptrCSY;
+      int32 ptrELM;
+      int32 csysiz;
 
-      int etysiz;
-      int * ptrToElemType;
-      int ** elemDescriptions;
+      int32 etysiz;
+      int32 * ptrToElemType;
+      int32 * ptrToElemRealConstants;
+      int32 * ptrToCoordinateSystems;
+      int32 ** elemDescriptions;
+      double ** elemRealConstants;
+      double ** coordinateSystemDescriptions;
       double ** nodalCoordinates;
-      int * ptrElemDescriptions;
-      int * ptrDataSetSolutions;
-      int ptrNSL; // Nodal solutions
-      int ptrESL; // Element solutions
-      int ptrEXT;
-      int * ptrENS;
-      int * numCornerNodesInElement;
-      int ** cornerNodeNumbersForElement;
-      double * summedFullGraphicsS1Stress;
-      double * summedFullGraphicsS3Stress;
-      double * summedFullGraphicsVonMisesStress;
-      double * summedPowerGraphicsS1Stress;
-      double * summedPowerGraphicsS3Stress;
-      double * summedPowerGraphicsVonMisesStress;
-      int * numContributingFullGraphicsElements;
-      int * numContributingPowerGraphicsElements;
+      int32 * ptrElemDescriptions;
+      int32 * ptrDataSetSolutions;
+      int32 ptrNSL; // Nodal solutions
+      int32 ptrESL; // Element solutions
+      int32 ptrEXT;
+      int32 * ptrENS;
+      int32 * materialInElement;
+      int32 * realConstantsForElement;
+      int32 * coordSystemforElement;
+      int32 * numCornerNodesInElement;
+      int32 ** cornerNodeNumbersForElement;
+      vtkDoubleArray * summedFullGraphicsS1Stress;
+      vtkDoubleArray * summedFullGraphicsS3Stress;
+      vtkDoubleArray * summedFullGraphicsVonMisesStress;
+      vtkDoubleArray * summedPowerGraphicsS1Stress;
+      vtkDoubleArray * summedPowerGraphicsS3Stress;
+      vtkDoubleArray * summedPowerGraphicsVonMisesStress;
+      vtkIntArray * numContributingFullGraphicsElements;
+      vtkIntArray * numContributingPowerGraphicsElements;
       char * displacementUnits;
       char * stressUnits;
       vtkUnstructuredGrid * ugrid;
+      vtkIntArray * pointerToMidPlaneNode;
 };
 #endif

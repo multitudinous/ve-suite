@@ -617,17 +617,6 @@ int main( int argc, char *argv[] )
    else if ( cfdType == 12 )
    {
       reader = new ansysReader( infilename );
-      reader->ReadHeader();
-      reader->ReadRSTHeader();
-      reader->ReadDOFBlock();
-      reader->ReadNodalEquivalencyTable();
-      reader->ReadElementEquivalencyTable();
-      reader->ReadDataStepsIndexTable();
-      reader->ReadTimeTable();
-      reader->ReadGeometryTable();
-      reader->ReadElementTypeIndexTable();
-      reader->ReadNodalCoordinates();
-      reader->ReadElementDescriptionIndexTable();
       pointset = reader->GetUGrid();
    }
 
