@@ -11,10 +11,10 @@ BEGIN_EVENT_TABLE(UI_StreamlineTab, wxPanel)
    EVT_CHECKBOX      (SEED_POINTS_CHK,       UI_StreamlineTab::_onCheck)
    EVT_COMMAND_SCROLL(NUM_PTS_SLIDER,        UI_StreamlineTab::_onnPointsSlider)
    EVT_COMMAND_SCROLL(SIZE_SLIDER,           UI_StreamlineTab::_onnPointsSlider)
-   EVT_COMMAND_SCROLL(PROP_SLIDER,           UI_StreamlineTab::_onPropSlider)
-   EVT_COMMAND_SCROLL(INT_STEP_SLIDER,       UI_StreamlineTab::_oniStepSlider)
-   EVT_COMMAND_SCROLL(STEP_SLIDER,           UI_StreamlineTab::_onStepSlider)
-   EVT_COMMAND_SCROLL(DIAMETER_SLIDER,       UI_StreamlineTab::_onDiameterSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(PROP_SLIDER,           UI_StreamlineTab::_onPropSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(INT_STEP_SLIDER,       UI_StreamlineTab::_oniStepSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(STEP_SLIDER,           UI_StreamlineTab::_onStepSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(DIAMETER_SLIDER,       UI_StreamlineTab::_onDiameterSlider)
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////////
@@ -46,37 +46,6 @@ UI_StreamlineTab::UI_StreamlineTab(wxNotebook* tControl)
 ///////////////////////////////////
 void UI_StreamlineTab::_buildPage()
 {
-   //the box for the first group
-   //wxBoxSizer* sliderGroup = new wxBoxSizer(wxHORIZONTAL);
-
-   //the two sliders for this group
-/*   wxSize slidesize(300,50);
-   _nPtsSlider = new wxSlider(this, NUM_PTS_SLIDER,2,1,10,
-                                wxDefaultPosition, slidesize,
-                                wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
-
-   _sizePerSlider = new wxSlider(this, SIZE_SLIDER,20,0,100,
-                                wxDefaultPosition, slidesize,
-                                wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
-*/
-   //sizers for the two sliders and labels
-   //wxBoxSizer* leftGroup = new wxBoxSizer(wxVERTICAL);
-   //wxBoxSizer* rightGroup = new wxBoxSizer(wxVERTICAL);
-
-   //add the items now
-   /*leftGroup->Add(npLabel,0,wxALIGN_CENTER_HORIZONTAL);
-   leftGroup->Add(_nPtsSlider,1,wxALIGN_CENTER_HORIZONTAL);
-
-   rightGroup->Add(sizeLabel,0,wxALIGN_CENTER_HORIZONTAL);
-   rightGroup->Add(_sizePerSlider,1,wxALIGN_CENTER_HORIZONTAL);
-
-   sliderGroup->Add(leftGroup,1,wxALIGN_LEFT|wxEXPAND);
-   sliderGroup->Add(rightGroup,1,wxALIGN_RIGHT|wxEXPAND);*/
-
    //create the 3 radio boxes
    //cursor radio box
    wxString cursorName[] = {wxT("none"),
@@ -111,13 +80,6 @@ void UI_StreamlineTab::_buildPage()
                                 3, dirIntegrateName, 1,
                                 wxRA_SPECIFY_COLS);
    
-   //The static box for the sliders
-   wxStaticBox* sGroupLabel = new wxStaticBox(this, -1, wxT("Streamline Controls"));
-
-   //need a sizer for this box
-   //The items will be placed  next (vertically) to other 
-   //rather than on top of each other(horizontally)
-   wxStaticBoxSizer* streamControllerBoxSizer = new wxStaticBoxSizer(sGroupLabel,wxVERTICAL);
 
    //the other three sliders
 
@@ -145,38 +107,32 @@ void UI_StreamlineTab::_buildPage()
    _propSlider = new wxSlider(this, PROP_SLIDER,100,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    _iStepSlider = new wxSlider(this, INT_STEP_SLIDER,1000,1,5000,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    _stepSlider = new wxSlider(this, STEP_SLIDER,1,1,5000,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    _nPtsSlider = new wxSlider(this, NUM_PTS_SLIDER,2,1,20,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    _sizePerSlider = new wxSlider(this, SIZE_SLIDER,50,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    _diameterSlider = new wxSlider(this, DIAMETER_SLIDER,0,-100,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
-                                wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    //group the sliders and the labels together
    wxBoxSizer* propGroup      = new wxBoxSizer(wxVERTICAL);
@@ -196,39 +152,39 @@ void UI_StreamlineTab::_buildPage()
 
    //the prop slider
    propGroup->Add(pLabel,0,wxALIGN_LEFT);
-   propGroup->Add(_propSlider,1,wxALIGN_LEFT|wxEXPAND);
+   propGroup->Add(_propSlider,1,wxALIGN_RIGHT|wxEXPAND );
    propGroupBottom->Add(pLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
    propGroupBottom->Add(pLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
-   propGroup->Add(propGroupBottom,1,wxALIGN_LEFT|wxEXPAND);
+   propGroup->Add(propGroupBottom,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5);
 
    //the int step slider
    intGroup->Add(iLabel,0,wxALIGN_LEFT);
-   intGroup->Add(_iStepSlider,1,wxALIGN_LEFT|wxEXPAND);
+   intGroup->Add(_iStepSlider,1,wxALIGN_RIGHT|wxEXPAND );
    intGroupBottom->Add(iLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
    intGroupBottom->Add(iLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
-   intGroup->Add(intGroupBottom,1,wxALIGN_LEFT|wxEXPAND);
+   intGroup->Add(intGroupBottom,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
 
    //the step slider
    stepGroup->Add(sLabel,0,wxALIGN_LEFT);
-   stepGroup->Add(_stepSlider,1,wxALIGN_LEFT|wxEXPAND);
+   stepGroup->Add(_stepSlider,1,wxALIGN_RIGHT|wxEXPAND );
    stepGroupBottom->Add(sLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
    stepGroupBottom->Add(sLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
-   stepGroup->Add(stepGroupBottom,1,wxALIGN_LEFT|wxEXPAND);
+   stepGroup->Add(stepGroupBottom,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
 
    //the numPoints Slider
    numPointsGroup->Add(npLabel,0,wxALIGN_LEFT);
-   numPointsGroup->Add(_nPtsSlider,1,wxALIGN_LEFT|wxEXPAND);
+   numPointsGroup->Add(_nPtsSlider,1,wxALIGN_RIGHT|wxEXPAND);
 
    // The plane size slider
    sizePointsGroup->Add(sizeLabel,0,wxALIGN_LEFT);
-   sizePointsGroup->Add(_sizePerSlider,1,wxALIGN_LEFT|wxEXPAND);
+   sizePointsGroup->Add(_sizePerSlider,1,wxALIGN_RIGHT|wxEXPAND);
 
    // The streamline diameter slider
    diameterGroup->Add(diameterLabel,0,wxALIGN_LEFT);
-   diameterGroup->Add(_diameterSlider,1,wxALIGN_LEFT|wxEXPAND);
+   diameterGroup->Add(_diameterSlider,1,wxALIGN_RIGHT|wxEXPAND );
    diameterGroupBottom->Add(diameterLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
    diameterGroupBottom->Add(diameterLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
-   diameterGroup->Add(diameterGroupBottom,1,wxALIGN_LEFT|wxEXPAND);
+   diameterGroup->Add(diameterGroupBottom,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
 
 
 
@@ -266,26 +222,32 @@ void UI_StreamlineTab::_buildPage()
    radioBoxGroup->Add(_integrationDirRBox,1,wxALL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND,5);
 
    //the group boxes for the other sliders
-   wxBoxSizer* sGroup = new wxBoxSizer(wxVERTICAL);
-   sGroup->Add(propGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
-   sGroup->Add(intGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
-   sGroup->Add(stepGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
-   sGroup->Add(sizePointsGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
-   sGroup->Add(numPointsGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
-   sGroup->Add(diameterGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
+   //The static box for the sliders
+   wxStaticBox* sGroupLabel = new wxStaticBox(this, -1, wxT("Streamline Controls"));
+
+   //need a sizer for this box
+   //The items will be placed  next (vertically) to other 
+   //rather than on top of each other(horizontally)
+   wxStaticBoxSizer* streamControllerBoxSizer = new wxStaticBoxSizer(sGroupLabel,wxVERTICAL);
+   //wxBoxSizer* streamControllerBoxSizer = new wxBoxSizer(wxVERTICAL);
+   streamControllerBoxSizer->Add(propGroup,        1, wxEXPAND|wxALIGN_RIGHT );
+   streamControllerBoxSizer->Add(intGroup,         1, wxEXPAND|wxALIGN_RIGHT );
+   streamControllerBoxSizer->Add(stepGroup,        1, wxEXPAND|wxALIGN_RIGHT );
+   streamControllerBoxSizer->Add(sizePointsGroup,  1, wxEXPAND|wxALIGN_RIGHT );
+   streamControllerBoxSizer->Add(numPointsGroup,   1, wxEXPAND|wxALIGN_RIGHT );
+   streamControllerBoxSizer->Add(diameterGroup,    1, wxEXPAND|wxALIGN_RIGHT );
 
    // Add to the static box sizer
-   streamControllerBoxSizer->Add(sGroup,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
+   //streamControllerBoxSizer->Add(sGroup,1,wxEXPAND|wxALL, 5);
 
    //now add the groups to the first row
    //row1->Add(sliderGroup,1,wxEXPAND|wxALIGN_RIGHT);
-   row1->Add(radioBoxGroup,1,wxEXPAND|wxALIGN_LEFT,5);
-   row1->Add(streamControllerBoxSizer,2,wxALL|wxEXPAND|wxALIGN_RIGHT,5);
-
+   row1->Add(streamControllerBoxSizer, 3, wxEXPAND|wxALIGN_RIGHT|wxALL, 5);
+   row1->Add(radioBoxGroup, 1, wxEXPAND|wxALIGN_LEFT );
   
    //add the rows to the main panel
-   streamPanelGroup->Add(row1,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND,5); 
-   streamPanelGroup->Add(row2,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND,5); 
+   streamPanelGroup->Add(row1, 1, wxALIGN_CENTER_HORIZONTAL|wxEXPAND ); 
+   streamPanelGroup->Add(row2, 0, wxALIGN_CENTER_HORIZONTAL|wxEXPAND ); 
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
