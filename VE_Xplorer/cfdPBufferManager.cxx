@@ -1,4 +1,4 @@
-
+#ifdef _OSG
 #include "cfdPBufferManager.h"
 
 // WGL_ARB_pbuffer
@@ -246,6 +246,6 @@ int cfdPBufferManager::isSupported()
    return _isSupported;
 }
 
-
+#endif
 
    

@@ -597,6 +597,12 @@
 			<File
 				RelativePath=".\cfdExecutive.cxx">
 				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="Release_OMNI|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
@@ -683,6 +689,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdOSGTransferShaderManager.cxx">
+			</File>
+			<File
+				RelativePath=".\cfdPBufferManager.cxx">
 			</File>
 			<File
 				RelativePath="..\VE_SceneGraph\cfdPfSceneManagement.cxx">
@@ -1008,6 +1017,12 @@
 			<File
 				RelativePath="..\Ve_ce\Network_Exec.cpp">
 				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
 					Name="OMNI_BUILD|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
@@ -1034,6 +1049,12 @@
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\Framework\package.cpp">
+				<FileConfiguration
+					Name="Debug|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 				<FileConfiguration
 					Name="OMNI_OSG|Win32"
 					ExcludedFromBuild="TRUE">
@@ -1389,6 +1410,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdOSGTransferShaderManager.h">
+			</File>
+			<File
+				RelativePath=".\cfdPBufferManager.h">
 			</File>
 			<File
 				RelativePath="..\VE_SceneGraph\cfdPfSceneManagement.h">

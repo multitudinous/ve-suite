@@ -1,16 +1,17 @@
 #ifndef _BIV_PBUFFER_MANAGER_H_
 #define _BIV_PBUFFER_MANAGER_H_
+#ifdef _OSG
 #include <osg/GL>
-
+///////////////////////
+#include "gl/wglext.h"
+#include "gl/glext.h"
 #if defined(WIN32)
     #define WIN32_LEAN_AND_MEAN
     #include <windows.h>
 #endif
 #include <iostream>
 
-///////////////////////
-#include "gl/wglext.h"
-#include "gl/glext.h"
+
 
 class cfdPBufferManager{
 public:
@@ -74,4 +75,5 @@ protected:
    int _w;
 
 };
+#endif
 #endif //_BIV_PBUFFER_MANAGER_H_
