@@ -24,6 +24,19 @@ KineticReactor
   quench_rate = 1000.0;
   work_dir = "";
   case_type = 0;
+
+  wxString icon_file="Icons/kinetic_reactor.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  n_pts = 4;
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
 }
 
 
@@ -70,7 +83,7 @@ int KineticReactor::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void KineticReactor::GetIPorts(POLY &iports)
 {
-  iports[0]=poly[1];
+  iports[0]=wxPoint(icon_w*11/100, icon_h*37/75);
   return;
 }
 
@@ -85,17 +98,18 @@ int KineticReactor::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void KineticReactor::GetOPorts(POLY &oports)
 {
-  oports[0]=poly[3];
+  oports[0]=wxPoint(icon_w*87/100, icon_h*37/75);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 void KineticReactor::DrawIcon(wxDC* dc)
 {
-  //Your implementation
+  /*//Your implementation
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   
-  dc->DrawPolygon(n_pts, poly, xoff, yoff);
+  dc->DrawPolygon(n_pts, poly, xoff, yoff);*/
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -40,6 +40,19 @@ HeatExchanger
   ext_press_drop = 0;
   use_fins = 1;
   fin_effect = 2.0;
+
+  wxString icon_file="Icons/heat_exchanger.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  n_pts = 4;
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
 }
 
 
@@ -86,8 +99,8 @@ int HeatExchanger::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void HeatExchanger::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,20);
-  iports[1]=wxPoint(0, 25);
+  iports[0]=wxPoint(icon_w*11/100,icon_h*23/75);
+  iports[1]=wxPoint(icon_w*11/100,icon_h*53/75);
   return;
 }
 
@@ -102,20 +115,22 @@ int HeatExchanger::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void HeatExchanger::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40,20);
-  oports[1]=wxPoint(40,25);
+  oports[0]=wxPoint(icon_w*87/100,icon_h*23/75);
+  oports[1]=wxPoint(icon_w*87/100, icon_h*53/75);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 void HeatExchanger::DrawIcon(wxDC* dc)
 {
   //Your implementation
+	/*
   wxBrush old_brush=dc->GetBrush();
   dc->SetBrush(*wxLIGHT_GREY_BRUSH);
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   dc->DrawPolygon(n_pts, poly, xoff, yoff);
-  dc->SetBrush(old_brush);
+  dc->SetBrush(old_brush);*/
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////

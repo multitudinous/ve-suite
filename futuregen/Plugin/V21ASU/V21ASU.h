@@ -58,7 +58,9 @@ class V21ASU : public REI_Plugin
   double n2_temp;
   double n2_pres;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;       
 };
 
 #endif

@@ -20,6 +20,18 @@ GasSeparator
   specie="";
   remain = 1.0;
   purity = 95.0;
+  wxString icon_file="Icons/gas_separator.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  n_pts = 4;
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
 }
 
 
@@ -66,7 +78,7 @@ int GasSeparator::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSeparator::GetIPorts(POLY &iports)
 {
-  iports[0] = poly[0];
+  iports[0] = wxPoint(icon_w*11/100, icon_h*37/75);
   return;
 }
 
@@ -81,18 +93,20 @@ int GasSeparator::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSeparator::GetOPorts(POLY &oports)
 {
-  oports[0]=poly[2];
-  oports[1]=poly[3];
+  oports[0]=wxPoint(icon_w*87/100, icon_h*37/75);
+  oports[1]=wxPoint(icon_w*87/100, icon_h*56/75);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 void GasSeparator::DrawIcon(wxDC* dc)
 {
   //Your implementation
+	/*
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   
-  dc->DrawPolygon(n_pts, poly, xoff, yoff);
+  dc->DrawPolygon(n_pts, poly, xoff, yoff);*/
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////

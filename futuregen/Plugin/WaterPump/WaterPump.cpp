@@ -81,7 +81,7 @@ int WaterPump::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void WaterPump::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,icon_h/2);
+  iports[0]=wxPoint(icon_w*14/70,icon_h*34/70);
   return;
 }
 
@@ -96,7 +96,7 @@ int WaterPump::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void WaterPump::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w, icon_h/10); 
+  oports[0]=wxPoint(icon_w*56/70, icon_h*16/70); 
 }
 
 /////////////////////////////////////////////////////////////////////////////

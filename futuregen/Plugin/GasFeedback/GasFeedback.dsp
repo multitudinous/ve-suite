@@ -108,6 +108,10 @@ SOURCE=..\interface.cpp
 # End Source File
 # Begin Source File
 
+SOURCE=..\GasSeparator\matrix.cpp
+# End Source File
+# Begin Source File
+
 SOURCE=..\package.cpp
 # End Source File
 # Begin Source File
@@ -125,6 +129,10 @@ SOURCE=..\TexTable.cpp
 # Begin Source File
 
 SOURCE=..\TextResultDialog.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=..\GasSeparator\thermo.cpp
 # End Source File
 # Begin Source File
 
@@ -148,6 +156,10 @@ SOURCE=..\interface.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\GasSeparator\matrix.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\packable.h
 # End Source File
 # Begin Source File
@@ -160,6 +172,10 @@ SOURCE=..\Plugin_base.h
 # End Source File
 # Begin Source File
 
+SOURCE=..\GasSeparator\REAL.h
+# End Source File
+# Begin Source File
+
 SOURCE=..\string_ops.h
 # End Source File
 # Begin Source File
@@ -169,6 +185,10 @@ SOURCE=..\TexTable.h
 # Begin Source File
 
 SOURCE=..\TextResultDialog.h
+# End Source File
+# Begin Source File
+
+SOURCE=..\GasSeparator\thermo.h
 # End Source File
 # Begin Source File
 

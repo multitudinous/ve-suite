@@ -88,7 +88,7 @@ int CatalyticCombustor::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void CatalyticCombustor::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0, icon_h/2);
+  iports[0]=wxPoint(icon_w*3/80, icon_h*36/75);
   return;
 }
 
@@ -103,7 +103,7 @@ int CatalyticCombustor::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void CatalyticCombustor::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w, icon_h/2);
+  oports[0]=wxPoint(icon_w*77/80, icon_h*36/75);
 }
 
 /////////////////////////////////////////////////////////////////////////////

@@ -16,11 +16,18 @@ HeatExchange0D
   RegistVar("desired_temp", &desired_temp);
   desired_temp = 1000;
   
-  n_pts = 3;
-  
-  poly[0]=wxPoint(0,20);
-  poly[1]=wxPoint(20,0);
-  poly[2]=wxPoint(40,20);
+  wxString icon_file="Icons/hrsg.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  n_pts = 4;
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -65,7 +72,7 @@ int HeatExchange0D::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void HeatExchange0D::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,20);
+  iports[0]=wxPoint(0,icon_h/2);
   return;
 }
 
@@ -80,18 +87,20 @@ int HeatExchange0D::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void HeatExchange0D::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40,20);
+  oports[0]=wxPoint(icon_w, icon_h/2);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 void HeatExchange0D::DrawIcon(wxDC* dc)
 {
-  wxBrush old_brush=dc->GetBrush();
+  /*wxBrush old_brush=dc->GetBrush();
   dc->SetBrush(*wxBLACK_BRUSH);
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   dc->DrawPolygon(n_pts, poly, xoff, yoff);
   dc->SetBrush(old_brush);
+  */
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
   //Your implementation
 }
 

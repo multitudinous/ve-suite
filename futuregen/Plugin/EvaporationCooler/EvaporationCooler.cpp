@@ -81,7 +81,7 @@ int EvaporationCooler::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void EvaporationCooler::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w/4,icon_h/2);
+  iports[0]=wxPoint(icon_w*15/65,icon_h*55/70);
   return;
 }
 
@@ -96,7 +96,7 @@ int EvaporationCooler::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void EvaporationCooler::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*3/4,icon_h/2);
+  oports[0]=wxPoint(icon_w*50/65,icon_h*55/70);
 }
 
 /////////////////////////////////////////////////////////////////////////////

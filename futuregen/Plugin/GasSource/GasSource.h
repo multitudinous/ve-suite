@@ -69,7 +69,9 @@ class GasSource : public REI_Plugin
   vector<string> p_comp;
   vector<string> p_frac;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;       
 };
 
 #endif

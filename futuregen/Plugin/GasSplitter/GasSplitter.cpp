@@ -22,6 +22,19 @@ GasSplitter
   percent_port2 = 50.0;
   percent_port3 = 0.0;
   percent_port4 = 0.0;
+
+   wxString icon_file="Icons/gas_splitter.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  n_pts = 4;
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
   
 }
 
@@ -69,7 +82,7 @@ int GasSplitter::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSplitter::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,20);
+  iports[0]=wxPoint(icon_w*11/100, icon_h*35/75);
 
   return;
 }
@@ -85,22 +98,23 @@ int GasSplitter::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSplitter::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(20,0);
-  oports[1]=wxPoint(40,20);
-  oports[2]=wxPoint(30, 40);
-  oports[3]=wxPoint(10,40);
+  oports[0]=wxPoint(icon_w*87/100, icon_h*18/75);
+  oports[1]=wxPoint(icon_w*87/100, icon_h*30/75);
+  oports[2]=wxPoint(icon_w*87/100, icon_h*43/75);
+  oports[3]=wxPoint(icon_w*87/100, icon_h*55/75);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 void GasSplitter::DrawIcon(wxDC* dc)
 {
   //Your implementation
-  wxBrush old_brush=dc->GetBrush();
+ /* wxBrush old_brush=dc->GetBrush();
   dc->SetBrush(*wxBLUE_BRUSH);
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   dc->DrawPolygon(n_pts, poly, xoff, yoff);
-  dc->SetBrush(old_brush);
+  dc->SetBrush(old_brush);*/
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////

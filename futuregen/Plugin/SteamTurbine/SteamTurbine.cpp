@@ -77,7 +77,7 @@ int SteamTurbine::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void SteamTurbine::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w/10,icon_h/10);
+  iports[0]=wxPoint(icon_w*7/48,icon_h*23/87);
   return;
 }
 
@@ -92,7 +92,7 @@ int SteamTurbine::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void SteamTurbine::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*9/10,icon_h);  
+  oports[0]=wxPoint(icon_w*41/48,icon_h*69/87);  
 }
 
 /////////////////////////////////////////////////////////////////////////////

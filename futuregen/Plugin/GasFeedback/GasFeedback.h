@@ -57,7 +57,9 @@ class GasFeedback : public REI_Plugin
   vector<string> sel_species;
   vector<string> max_error;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;       
 };
 
 #endif

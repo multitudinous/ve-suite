@@ -90,7 +90,9 @@ class SOFC1D : public REI_Plugin
   long l_numCells;
   long ax_nodes;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;       
 };
 
 #endif

@@ -92,8 +92,18 @@ GasSource
   delete thrmo;
   
   
+  wxString icon_file="Icons/gas_source.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
   n_pts = 4;
-  poly[3]= wxPoint(20, 40);
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
 }
 
 
@@ -154,7 +164,7 @@ int GasSource::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSource::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40, 20);
+  oports[0]=wxPoint(icon_w*88/100, icon_h*37/75);
   return ;
 }
 
@@ -162,12 +172,13 @@ void GasSource::GetOPorts(POLY &oports)
 void GasSource::DrawIcon(wxDC* dc)
 {
   //Your implementation
-  wxBrush old_brush=dc->GetBrush();
+  /*wxBrush old_brush=dc->GetBrush();
   dc->SetBrush(*wxGREEN_BRUSH);
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   dc->DrawPolygon(n_pts, poly, xoff, yoff);
-  dc->SetBrush(old_brush);
+  dc->SetBrush(old_brush);*/
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////

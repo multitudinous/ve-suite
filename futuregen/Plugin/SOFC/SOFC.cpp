@@ -99,8 +99,8 @@ int SOFC::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void SOFC::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0,icon_h*3/4);
-  iports[1]=wxPoint(icon_w*9/10, 0);
+  iports[0]=wxPoint(icon_w*18/100,icon_h*62/89);
+  iports[1]=wxPoint(icon_w*90/100, icon_h*22/89);
   return;
 }
 
@@ -115,7 +115,7 @@ int SOFC::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void SOFC::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*3/4,icon_h); 
+  oports[0]=wxPoint(icon_w*65/100,icon_h*69/89); 
 }
 
 /////////////////////////////////////////////////////////////////////////////

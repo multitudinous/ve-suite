@@ -81,7 +81,7 @@ int Compressor::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Compressor::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w/5,0);
+  iports[0]=wxPoint(icon_w*10/52, icon_h*26/98);
   return;
 }
 
@@ -96,7 +96,7 @@ int Compressor::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Compressor::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(6*icon_w/7,icon_h); 
+  oports[0]=wxPoint(icon_w*43/52,icon_h*74/98); 
 }
 
 /////////////////////////////////////////////////////////////////////////////

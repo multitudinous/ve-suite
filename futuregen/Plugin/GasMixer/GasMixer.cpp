@@ -12,6 +12,18 @@ IMPLEMENT_DYNAMIC_CLASS(GasMixer, REI_Plugin)
 GasMixer
 ::GasMixer()
 {
+ wxString icon_file="Icons/gas_mixer.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  n_pts = 4;
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
 }
 
 
@@ -58,10 +70,10 @@ int GasMixer::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void GasMixer::GetIPorts(POLY &iports)
 {
-  iports[0]=poly[1];
-  iports[1]=poly[0];
-  iports[2]=poly[4];
-  iports[3]=poly[3];
+  iports[0]=wxPoint(icon_w*12/100, icon_h*19/75);
+  iports[1]=wxPoint(icon_w*12/100, icon_h*31/75);
+  iports[2]=wxPoint(icon_w*12/100, icon_h*44/75);
+  iports[3]=wxPoint(icon_w*12/100, icon_h*56/75);
   return;
 }
 
@@ -76,17 +88,19 @@ int GasMixer::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasMixer::GetOPorts(POLY &oports)
 {
-  oports[0]=poly[2];
+  oports[0]=wxPoint(icon_w*88/100, icon_h*39/75);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 void GasMixer::DrawIcon(wxDC* dc)
 {
   //Your implementation
+/*
   wxCoord xoff = pos.x;
   wxCoord yoff = pos.y;
   
-  dc->DrawPolygon(n_pts, poly, xoff, yoff);
+  dc->DrawPolygon(n_pts, poly, xoff, yoff);*/
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////

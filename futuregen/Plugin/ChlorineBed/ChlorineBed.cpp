@@ -96,7 +96,7 @@ int ChlorineBed::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void ChlorineBed::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(icon_w/2, 0);
+  iports[0]=wxPoint(icon_w*19/37, icon_h*18/98);
   return;
 }
 
@@ -111,7 +111,7 @@ int ChlorineBed::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void ChlorineBed::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w/2, icon_h);
+  oports[0]=wxPoint(icon_w*19/37, icon_h*82/98);
 }
 
 /////////////////////////////////////////////////////////////////////////////

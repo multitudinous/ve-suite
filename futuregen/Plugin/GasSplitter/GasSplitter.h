@@ -57,7 +57,9 @@ class GasSplitter : public REI_Plugin
   double percent_port3;
   double percent_port4;
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;       
 };
 
 #endif
