@@ -65,6 +65,8 @@ OBJECTS = StringParse.o \
 	../Plugin/package.o \
 	../Plugin/Plugin_base.o \
 	../Plugin/UIDialog.o \
+	../Plugin/TexTable.o \
+	../Plugin/TextResultDialog.o \
 	UI_Tabs.o \
 	UI_VisTab.o \
 	UI_ScalarTab.o \
