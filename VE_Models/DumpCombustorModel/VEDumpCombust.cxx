@@ -44,7 +44,7 @@
 #include "string_ops.h"
 #include "cfdCursor.h"
 #include "cfdFog.h"
-
+  
 #include <fstream>
 #include <cstdlib>
 #include <string>
