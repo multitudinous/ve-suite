@@ -507,7 +507,7 @@ void cfdTransientVizHandler::CreateActors( void )
          if ( this->_activeObject->GetObjectType() == 
               this->dataList[ i ]->GetObjectType() )
          {
-            this->dataList[ i ]->SetDCS( this->_activeDataSetDCS );
+            //this->dataList[ i ]->SetDCS( this->_activeDataSetDCS );
             vprDEBUG(vprDBG_ALL,1) << "Trans Data : Object : " << i  
                                    << std::endl << vprDEBUG_FLUSH;
 
@@ -516,7 +516,7 @@ void cfdTransientVizHandler::CreateActors( void )
          // Transient Geometry Update
          else if ( this->dataList[ i ]->GetObjectType() == TRANS_GEOM )
          {
-            this->dataList[ i ]->SetDCS( this->_activeDataSetDCS );
+            //this->dataList[ i ]->SetDCS( this->_activeDataSetDCS );
             vprDEBUG(vprDBG_ALL,1) << "Trans Geom : Object : " << i
                                    << std::endl << vprDEBUG_FLUSH;
 

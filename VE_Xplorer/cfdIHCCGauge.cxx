@@ -98,7 +98,7 @@ std::cout << "cfdExecutive load gauge geometry : " << _filename << std::endl;
    this->AddChild( ((cfd1DTextInput*)_textOutput.first) );
    //this->GetPfDCS()->addChild( ((cfd1DTextInput*)_textOutput.second)->GetPfDCS() );
    
-   this->_masterNode->AddChild( this->GetDCS() );   
+//   this->_masterNode->AddChild( this->GetDCS() );   
 }
 
 void cfdIHCCGauge::SetGaugeName( std::string tagName )

@@ -52,19 +52,6 @@
  // C++ Libs
 #include <vector>
 
-cfdObjects::cfdObjects( cfdGeode* temp, int type )
-{
-   SetcfdGeode( temp );
-   SetObjectType( type );
-   this->pointSource = NULL;
-   this->vtkToPFDebug = 0;
-   this->usePreCalcData = false;
-   this->actor = NULL;
-   this->PDactor = NULL;
-   this->addTransientGeode = 0;
-   this->activeDataSet = NULL;
-}
-
 cfdObjects::cfdObjects( void )
 {
    vprDEBUG(vprDBG_ALL, 1) << " New cfdObjects ! " 
@@ -92,25 +79,26 @@ cfdObjects::~cfdObjects( void )
    //pfDelete( this->geode );
 }
 
-void cfdObjects::SetcfdGeode( cfdGeode* temp )
-{
-   //this->geode = temp;
-   exit( 1 );
-}
-
 void cfdObjects::SetObjectType( int type )
 {
    this->objectType = type;
 }
 
-cfdGeode* cfdObjects::GetcfdGeode( void )
-{ 
-   return this->_geode;
-}
-
 vtkActor* cfdObjects::GetActor( void )
 {
-   return actor;
+   if ( this->usePreCalcData && this->PDactor != NULL )
+   {
+      return PDactor;
+   }
+   else
+   {
+      return actor;
+   }
+}
+
+std::vector< vtkActor* > cfdObjects::GetActors( void )
+{
+   return actors;
 }
 
 void cfdObjects::SetOrigin( float o[ 3 ] )
@@ -179,253 +167,6 @@ void cfdObjects::ClearTransientVector( void )
    // these geodes are actually deleted in cfdModelHandler
    // this is a hack an needs to be changed
    transientGeodes.clear();
-}
-
-void cfdObjects::AddGeodesToSequence()
-{
-   int nTransGeodes = 0; 
-   
-   int nGroups = _sequence->GetSequence()->GetNumChildren();
-   int nDCSs = 0;
-   int nGeodes = 0;
-   cfdGroup* tempGroup = 0;
-   cfdDCS* tempDCS = 0;
-   cfdGeode* tempGeode = 0;
-      
-   std::cout<<"removing nodes from the sequence!!"<<std::endl;
-   std::cout<<"cfdObjects::AddGeodesToSequence"<<std::endl;
-   for(int i = 0; i < nGroups; i++){
-      tempGroup = (cfdGroup*)this->_sequence->GetSequence()->GetChild(i);
-      nDCSs = tempGroup->GetNumChildren();
-      std::cout<<"number of dcs: "<< nDCSs<<std::endl;
-      for(int j = 0; j < nDCSs; j++){
-         tempDCS = (cfdDCS*)tempGroup->GetChild(j);
-         nGeodes = tempDCS->GetNumChildren();
-         for(int k = 0; k < nGeodes; k++){
-            std::cout<<"removing geode : "<< k<<std::endl;
-            tempGeode = (cfdGeode*)tempDCS->GetChild(0);
-            tempDCS->RemoveChild(tempGeode);
-            transientGeodes.erase(transientGeodes.begin());
-            delete tempGeode;
-         }
-      }
-   }
-   std::cout<<"adding geodes to sequence!! "<< transientGeodes.size() << std::endl;
-   std::cout<<"cfdObjects::AddGeodesToSequence"<<std::endl;
-   nTransGeodes =  transientGeodes.size();
-   for(int g = 0; g < nGroups; g++){
-      tempGroup = this->_sequence->GetGroup(g);
-      std::cout<<" adding to group: "<<g<<std::endl;
-      nDCSs = tempGroup->GetNumChildren();
-      for(int i = 0; i < nDCSs; i ++){
-         tempDCS = (cfdDCS*)tempGroup->GetChild(i);
-         tempDCS->AddChild(this->transientGeodes.at(g));
-      }
-   }
-   //this->_sequence->GetSequence()->setInterval( CFDSEQ_CYCLE, 0 , nTransGeodes - 1 );
-   //this->_sequence->GetSequence()->setDuration( 0.1 * nTransGeodes );
-   this->GetSequence()->StartSequence();
-
-   std::cout<<"finished adding to the sequence"<<std::endl;
-   std::cout<<"cfdObjects::AddGeodesToSequence"<<std::endl;
-}
-// This function just creates a geode from the actor for a particular
-// visualization feature. It is not responsible for adding the 
-// newly created geode to the scene graph. 
-void cfdObjects::UpdatecfdGeode( void )
-{
-   vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::UpdateGeode..."
-                           << std::endl << vprDEBUG_FLUSH;
-   
-   if ( this->updateFlag )
-   {
-      //check if current data set is transient
-      if(this->activeDataSet->IsPartOfTransientSeries()){
-         this->transientGeodes.push_back(new cfdGeode());
-   if ( this->usePreCalcData && this->PDactor != NULL )
-   {
-      vprDEBUG(vprDBG_ALL, 2) 
-         << "cfdObjects::UpdateGeode... create geode from PDactor"
-         << std::endl << vprDEBUG_FLUSH;
-
-      // Function implements respective vtkActorToGeode function
-      ((cfdGeode*)this->transientGeodes.back())->TranslateTocfdGeode( this->PDactor );
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL, 2) 
-         << "cfdObjects::UpdateGeode... create geode from actor"
-         << std::endl << vprDEBUG_FLUSH;
-
-      // Function implements respective vtkActorToGeode function
-      ((cfdGeode*)this->transientGeodes.back())->TranslateTocfdGeode( this->actor );
-   }
-         //check if this is causing problems 
-         if ( this->transientGeodes.size()%_sequence->GetNumberOfFrames() == 0 )
-            this->addTransientGeode = true;
-      }else{
-         vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::Allocate Geode..."
-                           << updateFlag<< std::endl << vprDEBUG_FLUSH;
-   
-         this->_geode = new cfdGeode();
-         this->addGeode = true;      
-      }
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL, 0) 
-         << "cfdObjects::UpdateGeode... updateFlag == false for ObjectType = "
-         << this->objectType << std::endl << vprDEBUG_FLUSH;
-   }
-}
-
-// This function simply adds the created geode from function UpdateGeode
-void cfdObjects::AddcfdGeodeToDCS( void )
-{
-   vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::AddGeodeToDCS"
-      << std::endl << vprDEBUG_FLUSH;
-  
-   vprDEBUG(vprDBG_ALL, 2) << "cfdObjects::UpdateGeode... updateFlag == true "
-                           << this->_geodes.size() << std::endl << vprDEBUG_FLUSH;
-   this->_geodes.push_back( this->_geode );
-   vprDEBUG(vprDBG_ALL, 2) << "cfdObjects::UpdateGeode... pushback new geode"
-                           << std::endl << vprDEBUG_FLUSH;
-
-   if ( this->usePreCalcData && this->PDactor != NULL )
-   {
-      vprDEBUG(vprDBG_ALL, 2) 
-         << "cfdObjects::UpdateGeode... create geode from PDactor"
-         << std::endl << vprDEBUG_FLUSH;
-
-      // Function implements respective vtkActorToGeode function
-      ((cfdGeode*)this->_geodes.back())->TranslateTocfdGeode( this->PDactor );
-   }
-   else
-   {
-      vprDEBUG(vprDBG_ALL, 2) 
-         << "cfdObjects::UpdateGeode... create geode from actor"
-         << std::endl << vprDEBUG_FLUSH;
-
-      // Function implements respective vtkActorToGeode function
-      ((cfdGeode*)this->_geodes.back())->TranslateTocfdGeode( this->actor );
-   }
-
-   vprDEBUG(vprDBG_ALL, 2) 
-      << "cfdObjects::UpdateGeode... set active geode pointer "
-      << this->GetActiveDataSet()->IsNewlyActivated() << " : " << this->_geodes.size() << std::endl << vprDEBUG_FLUSH;
-   //this->geode = (pfGeode *)this->geodes.back();
-   //this->geode = tempGeode;
-   //this->updateFlag = true;
-
-   if ( this->GetActiveDataSet()->IsNewlyActivated() )
-   {
-      // add new with old
-      this->GetActiveDataSet()->SetNotNewlyActivated();
-      // geodes.size is not zero based therefore the -1 is needed
-      int num = this->_geodes.size() - 1;
-      vprDEBUG(vprDBG_ALL,1) << " adding child num = " << num
-                             << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,1) << "this->geodes[ 0 ] = " << this->_geodes[ 0 ]
-         << std::endl << "this->geodes[ num ] = " << this->_geodes[ num ]
-         << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( ((cfdGeode*)this->_geodes[ num ]) );
-
-      if ( this->_geodes.size() > 2 ) // remove oldest
-      {
-         int num = (this->_geodes.size() - 1) - 2;
-         cfdGroup* parent = (cfdGroup*)this->_geodes[ num ]->GetParent(0);
-         parent->RemoveChild(this->_geodes[ num ] );
-         delete this->_geodes[ num ];
-         this->_geodes.erase( this->_geodes.end() - 3 );
-      }
-   }
-   else if ( this->_geodes.size() > 1 ) // replace old with new
-   {
-      // geodes.size is not zero based therefore the first -1 is needed
-      // the second -1 is to get the second to last geode on the list
-      int num = (this->_geodes.size() - 1) - 1;
-      vprDEBUG(vprDBG_ALL,1) << " 1. removing child num = " << num << " : " << this->_geodes[ num ] << " : " << _geodes.size()
-                             << std::endl << vprDEBUG_FLUSH;
-      cfdGroup* parent = (cfdGroup*)this->_geodes[ num ]->GetParent(0);
-      vprDEBUG(vprDBG_ALL,2) << " 1. removing child parent = " << parent 
-                             << std::endl << vprDEBUG_FLUSH;
-      parent->RemoveChild( this->_geodes[ num ] );
-      vprDEBUG(vprDBG_ALL,2) << " 1. removing child succesful" 
-                             << std::endl << vprDEBUG_FLUSH;
-      delete this->_geodes[ num ];
-      vprDEBUG(vprDBG_ALL,2) << " 1. delete child sucessful" 
-                             << std::endl << vprDEBUG_FLUSH;
-
-      this->_geodes.erase( this->_geodes.end() - 2 );
-      vprDEBUG(vprDBG_ALL,2) << " 1. erase child succesful" 
-                             << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( ((cfdGeode*)this->_geodes[ num ]) );
-      vprDEBUG(vprDBG_ALL,1) << " 1. add child succesful " 
-                             << std::endl << vprDEBUG_FLUSH;
-   }
-   else //if ( this->geodes.size() == 1 )
-   { 
-      vprDEBUG(vprDBG_ALL,1) << " adding child geode = " << this->_geodes.at( 0 )
-                             << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( ((cfdGeode*)this->_geodes.at( 0 )) );     
-   }
-}
-
-void cfdObjects::RemovecfdGeodeFromDCS( void )
-{
-   int i, num;
-     
-   num = this->_geodes.size();
-  
-   // Iterate backwards for performance
-   for ( i = num - 1; i >= 0; i-- )
-   {
-      // Need to find tha parent becuase with multiple models
-      // Not all geodes are going to be on the same dcs
-      cfdGroup* parent = (cfdGroup*)this->_geodes[ i ]->GetParent(0);
-      parent->RemoveChild( this->_geodes[ i ] );
-      delete this->_geodes[ i ];
-   }
-   this->_geodes.clear();
-}
-
-void cfdObjects::SetDCS( cfdDCS *dcs )
-{
-   this->_dcs = dcs;
-}
-
-cfdDCS* cfdObjects::GetDCS( void )
-{
-   return this->_dcs;
-}
-
-//void cfdObjects::SetcfdReadParam( cfdReadParam *param )
-//{
-//   this->paramFile = param;   
-//}
-
-// Function probably shouldn't be here
-// Fix this
-void cfdObjects::AddSequenceToTree( void )
-{
-   if ( this->_dcs->SearchChild( this->_sequence->GetSequence() ) < 0 )
-   {
-      if ( this->objectType == ANIMATED_IMAGES )
-      {
-         if ( this->_dcs->SearchChild( this->_sequence->GetSequence()->GetParent(0) ) < 0 )
-         {         
-            this->_dcs->AddChild( this->_sequence->GetSequence()->GetParent(0) );
-         }
-         else
-         {
-            // Already added ( this is a hack until cfDModel is inmplemented )
-         }
-      }
-      else
-      {
-         this->_dcs->AddChild( this->_sequence->GetSequence() );
-      }
-   }
 }
 
 void cfdObjects::SetTransientGeodeFlag( bool x ) 

@@ -733,7 +733,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
       // Initialize all the geode creation flags and dcs flags for all the geodes
       this->dataList.at( i )->SetUpdateFlag( false );
       this->dataList.at( i )->SetGeodeFlag( false );
-      this->dataList.at( i )->SetDCS( this->_worldDCS );
+      //this->dataList.at( i )->SetDCS( this->_worldDCS );
       this->dataList.at( i )->SetActiveDataSet( this->_activeDataSet );
    }
 
@@ -766,6 +766,8 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       // Check to see if any of the objectss need updated before we 
       // create actors
       bool commandApplies = this->commandList[ i ]->CheckCommandId( this->commandArray );
+      vprDEBUG(vprDBG_ALL,4) << "|\tCommand Applies : " << commandApplies
+                                   << std::endl << vprDEBUG_FLUSH;
    }
 
    // check any virtual objects need to be updated
@@ -775,72 +777,45 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                                    << std::endl << vprDEBUG_FLUSH;
       for ( unsigned int i = 0; i < this->dataList.size(); i++ )
       {
-         if ( this->dataList[ i ]->GetGeodeFlag() )
+         if ( this->dataList.at( i )->GetGeodeFlag() || 
+               this->dataList.at( i )->GetTransientGeodeFlag() )
          {
-            vprDEBUG(vprDBG_ALL,2) << " have geode flag"
-                                   << std::endl << vprDEBUG_FLUSH;
-
-            if ( this->_worldDCS->SearchChild( this->dataList[ i ]->GetDCS() ) < 0 )
-            {
-               vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
-                                   << std::endl << vprDEBUG_FLUSH;
-               this->_worldDCS->AddChild( this->dataList[ i ]->GetDCS() );
-            }
-
-            if ( this->dataList[ i ]->GetcfdGeode() != NULL )
-            {
-               vprDEBUG(vprDBG_ALL,1) << " will add geode to sg"
-                                      << std::endl << vprDEBUG_FLUSH;
-               // Add steady state geodes to the scene graph
-               this->dataList[ i ]->AddcfdGeodeToDCS();
-            }
-            else if ( this->dataList[ i ]->GetSequence() != NULL )
-            {
-               vprDEBUG(vprDBG_ALL,1) << " will add viz object "
-                                      << i << " to sequence"
-                                      << std::endl << vprDEBUG_FLUSH;
-
-               {
-                  this->dataList[ i ]->GetSequence()->AddToSequence(
-                                          this->dataList[ i ]->GetObjectType() );
-                  if ( this->dataList[ i ]->GetDCS()->SearchChild(
-                        this->dataList[ i ]->GetSequence()->GetSequence() ) < 0 )
-                  {
-                     this->dataList[ i ]->GetDCS()->AddChild( 
-                           this->dataList[ i ]->GetSequence()->GetSequence() );
-                  }
-               }
-            }
-            vprDEBUG(vprDBG_ALL,2) << " End Update Loop"
-                                   << std::endl << vprDEBUG_FLUSH;
-
-            // Resetting these variables is very important
-            this->dataList[ i ]->SetUpdateFlag( false );
-            this->dataList[ i ]->SetGeodeFlag( false );
-            this->actorsAreReady = false;
-         }else if(this->dataList.at(i)->GetTransientGeodeFlag()){
-            this->dataList.at(i)->SetSequence( this->_activeDataSet->GetAnimation() );
-            if ( this->_worldDCS->SearchChild( this->dataList[ i ]->GetSequence()->GetSequence() ) < 0 )
-            {
-               vprDEBUG(vprDBG_ALL,1) << " adding active DCS to worldDCS"
-                                   << std::endl << vprDEBUG_FLUSH;
-               this->_worldDCS->AddChild( this->dataList[ i ]->GetSequence()->GetSequence() );
-            }
-
-            this->dataList.at(i)->AddGeodesToSequence();
-            this->dataList.at(i)->SetTransientGeodeFlag(false);
-            this->dataList.at(i)->SetSequence( 0 );
-            this->transientBusy = false;
-         }
-         // if object needs updated then already have a graphics object
-         /*   cfdGraphicsObject* temp = new cfdGraphicsObject();
+            // if object needs updated then already have a graphics object
+            cfdGraphicsObject* temp = new cfdGraphicsObject();
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
             temp->SetWorldNode( this->_worldDCS );
             temp->SetActor( this->dataList[ i ]->GetActor() );
             temp->AddGraphicsObjectToSceneGraph();
+
+            // search map for other object types with the same type as this one
+            std::multimap< int, cfdGraphicsObject* >::iterator pos;
+            for ( pos = graphicsObjects.lower_bound( this->dataList[ i ]->GetObjectType() ); 
+                  pos != graphicsObjects.upper_bound( this->dataList[ i ]->GetObjectType() ); )
+            {
+               // and see if they have the same parent node
+               // the parent node is unique becaue each dataset has a dcs
+               if ( pos->second->GetParentNode() == temp->GetParentNode() )
+               {
+                  pos->second->RemovecfdGeodeFromDCS();
+                  delete pos->second;
+                  graphicsObjects.erase( pos++ );
+               }
+               else
+               {
+                  ++pos;
+               }
+            }
             graphicsObjects.insert( std::make_pair( this->dataList[ i ]->GetObjectType(), temp ) );
-         */
+
+            // Resetting these variables is very important
+            this->dataList[ i ]->SetUpdateFlag( false );
+            this->dataList[ i ]->SetGeodeFlag( false );
+            this->actorsAreReady = false;
+            this->dataList.at(i)->SetTransientGeodeFlag(false);
+            this->dataList.at(i)->SetSequence( 0 );
+            this->transientBusy = false;
+         }
       }
    }
 
@@ -879,7 +854,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                vprDEBUG(vprDBG_ALL,1) << " setting DCS to activeDCS = "
                                    << this->_activeDataSetDCS
                                    << std::endl << vprDEBUG_FLUSH;
-               this->_activeObject->SetDCS( this->_activeDataSetDCS );
+               //this->_activeObject->SetDCS( this->_activeDataSetDCS );
                this->_activeObject->SetActiveDataSet( this->_activeDataSet );
                if ( this->_activeDataSet->IsPartOfTransientSeries() )
                   this->_activeObject->SetSequence( this->_activeDataSet->GetAnimation() );
@@ -900,29 +875,15 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
    { 
-            vprDEBUG(vprDBG_ALL,2) << "cfdSteadyStateVizHandler::RemoveGeodeFromDCS"
-                                   << std::endl << vprDEBUG_FLUSH;
-      for ( int i = 0; i < (int)this->dataList.size(); i++ )  
+      vprDEBUG(vprDBG_ALL,2) << "|\tClear All Graphics Objects From Scene Graph"
+                             << std::endl << vprDEBUG_FLUSH;
+      std::multimap< int, cfdGraphicsObject* >::iterator pos;
+      for ( pos = graphicsObjects.begin(); pos != graphicsObjects.end(); )
       {
-         if ( this->dataList[ i ]->GetcfdGeode() != NULL )
-         {
-            vprDEBUG(vprDBG_ALL,2) << "\tcfdSteadyStateVizHandler::RemoveGeodeFromDCS : " << i
-                                   << std::endl << vprDEBUG_FLUSH;
-            this->dataList[ i ]->RemovecfdGeodeFromDCS();
-         }
-         else if ( this->dataList[ i ]->GetSequence() != NULL )
-         {
-            vprDEBUG(vprDBG_ALL,2) << "\tcfdSteadyStateVizHandler:: stop the sequence and set to NULL"
-                                   << std::endl << vprDEBUG_FLUSH;
-            // stop the sequence and set the active sequence to NULL
-            this->dataList[ i ]->GetSequence()->StopSequence();
-            // disconnect transient data from the graph
-            this->dataList[ i ]->GetSequence()->ClearSequence();
-         }
-         this->dataList[ i ]->SetUpdateFlag( false );
-         this->dataList[ i ]->ClearTransientVector();
+         pos->second->RemovecfdGeodeFromDCS();
+         delete pos->second;
+         graphicsObjects.erase( pos++ );
       }
-      this->useLastSource = 0;
    }
 }
 
@@ -974,8 +935,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
                vprDEBUG(vprDBG_ALL,1)
                  << "non-interactive object." << std::endl << vprDEBUG_FLUSH; 
 
-               this->_activeObject->Update(); 
-               this->_activeObject->UpdatecfdGeode();     
+               this->_activeObject->Update();      
                this->_activeObject->SetSequence( 0 );
                this->_activeObject = NULL;
                this->computeActorsAndGeodes = false;
@@ -1026,8 +986,6 @@ void cfdSteadyStateVizHandler::streamers( void )
    this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
    this->_activeObject->SetNormal( this->nav->GetDirection() );
    this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
-float* temp = this->nav->GetObjLocation();
-cout << temp[ 0 ] << " : " << temp[ 1 ] << " : " << temp[ 2 ] << endl;
 
    if ( this->cursor->GetCursorID() == CUBE )
    {
@@ -1060,6 +1018,5 @@ cout << temp[ 0 ] << " : " << temp[ 1 ] << " : " << temp[ 2 ] << endl;
    }
 
    this->_activeObject->Update();
-   this->_activeObject->UpdatecfdGeode();
    this->_activeObject = NULL;
 }

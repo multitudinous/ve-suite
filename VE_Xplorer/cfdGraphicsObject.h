@@ -36,6 +36,7 @@
 
 class cfdGeode;
 class cfdGroup;
+class cfdTempAnimation;
 
 class vtkActor;
 
@@ -72,6 +73,12 @@ class cfdGraphicsObject
       // set actor for classic and trans viz objects
       void SetActor( vtkActor* );
 
+      // Return parent node for a this object
+      cfdGroup* GetParentNode( void );
+
+      // clear geodes vector and geode from memory and the graph
+      void RemovecfdGeodeFromDCS( void );
+
       // need all the scene graph stuff out of cfdObjects
    protected:
       cfdGeode* geode;
@@ -80,6 +87,7 @@ class cfdGraphicsObject
       cfdGroup* worldNode;
       VizType type;
       vtkActor* actor;
+      cfdTempAnimation* animation;
       // need tempanimation
       // need texture viz
 };

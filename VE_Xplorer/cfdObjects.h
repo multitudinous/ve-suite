@@ -56,7 +56,6 @@ class cfdCommandArray;
 class cfdObjects : public cfdGlobalBase
 {
    public:
-      cfdObjects( cfdGeode*, int );
       cfdObjects( const cfdObjects& src );
       cfdObjects( void );
       virtual ~cfdObjects( void );
@@ -72,13 +71,10 @@ class cfdObjects : public cfdGlobalBase
       // update the actor
       virtual void Update() = 0;
 
-      void SetcfdGeode( cfdGeode* );
       vtkActor* GetActor( void );
+      std::vector< vtkActor* > GetActors( void );
 
       void SetObjectType( int );
-      //void UpdateObject( void );
-      cfdGeode *GetcfdGeode( void );
-      //void GetGeoSet( pfGeoSet *[] );
       int GetObjectType( void ) { return this->objectType; }
       void SetOrigin( float [3] );
       double * GetOrigin();
@@ -94,19 +90,10 @@ class cfdObjects : public cfdGlobalBase
 
       void SetSequence( cfdTempAnimation* );
       cfdTempAnimation* GetSequence( void );
-      void AddSequenceToTree( void );
       
       void SetSourcePoints( vtkPolyDataSource * );
 
-      void UpdatecfdGeode( void );
-      void AddcfdGeodeToDCS( void );
-      void RemovecfdGeodeFromDCS( void );
       void AddGeodesToSequence(void);
-      //void CreatecfdGeode( void );
-
-      void SetDCS( cfdDCS* );
-      cfdDCS* GetDCS( void );
-      //void SetcfdReadParam( cfdReadParam * );
 
       void SetGeodeFlag( bool x );
       bool GetGeodeFlag( void );
@@ -143,12 +130,12 @@ class cfdObjects : public cfdGlobalBase
 
       cfdTempAnimation* _sequence;
 
-      cfdDCS* _dcs;
       std::vector< cfdGeode* > _geodes;
       std::vector<cfdGeode* > transientGeodes;
 
       vtkActor *actor;
       vtkActor *PDactor;
+      std::vector< vtkActor* > actors;
       vtkPolyDataSource *pointSource;
 
       //cfdReadParam *paramFile;

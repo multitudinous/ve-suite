@@ -33,7 +33,6 @@
 #include "cfdDataSet.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
-#include "cfdTempAnimation.h"
 
 #include <vtkPolyData.h>
 #include <vtkActor.h>
@@ -52,13 +51,13 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
                           << std::endl << vprDEBUG_FLUSH;
 
    this->mapper   = vtkPolyDataMapper::New();
-   this->actor    = vtkActor::New();
+   //this->actor    = vtkActor::New();
    this->polydata = vtkPolyData::New();
    this->polyData = vtkPolyData::New();
    this->glyph    = vtkGlyph3D::New();
    this->sphere   = vtkSphereSource::New();
 
-   this->_sequence = new cfdTempAnimation();
+   //this->_sequence = new cfdTempAnimation();
    this->particleDiameter = 1.0f;
 }
 
@@ -68,14 +67,20 @@ cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
                           << std::endl << vprDEBUG_FLUSH;
 
    this->mapper->Delete();
-   this->actor->Delete();
+   //this->actor->Delete();
    this->polydata->Delete();
    this->polyData->Delete();
    this->glyph->Delete();
    this->sphere->Delete();
    
-   this->_sequence->ClearSequence();
-   delete this->_sequence;
+   //this->_sequence->ClearSequence();
+   //delete this->_sequence;
+   
+   for ( unsigned int i = 0; i < actors.size(); ++i )
+   {
+      this->actors.at( i )->Delete();
+   }
+   this->actors.clear();
 }
 
 void cfdAnimatedStreamlineCone::SetPolyDataSource( vtkPolyData *input )
@@ -198,12 +203,13 @@ void cfdAnimatedStreamlineCone::Update( void )
 
 
       vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop3" << std::endl << vprDEBUG_FLUSH;
-      this->actor->SetMapper( this->mapper );
-      this->actor->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
+      this->actors.push_back( vtkActor::New() );
+      this->actors.back()->SetMapper( this->mapper );
+      this->actors.back()->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
      
       //Make geodes from each polydata
       vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop4" << std::endl << vprDEBUG_FLUSH;
-      this->_sequence->CreateGeodeVector( this->actor );
+      //this->_sequence->CreateGeodeVector( this->actor );
 
       // Reset polydata to its intial state and release all memory
       //polydata->Reset();

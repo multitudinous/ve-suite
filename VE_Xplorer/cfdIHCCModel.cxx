@@ -127,7 +127,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
    // Time Gauge
    gauge_time = new cfdIHCCGauge( ihccModelNode );
    gauge_time->SetSequence( sequence );
-   gauge_time->SetDCS( worldDCS );
+   //gauge_time->SetDCS( worldDCS );
    gauge_time->SetTranslationArray( trans_gauge );
    gauge_time->SetScaleArray( scale_gauge );
    gauge_time->SetRotationArray( rot_gauge );
@@ -145,7 +145,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
    trans_gauge[ 2 ] = 2;
    gauge_acid = new cfdIHCCGauge( ihccModelNode );
    gauge_acid->SetSequence( sequence );
-   gauge_acid->SetDCS( worldDCS );
+   //gauge_acid->SetDCS( worldDCS );
    gauge_acid->SetTranslationArray( trans_gauge );
    gauge_acid->SetScaleArray( scale_gauge );
    gauge_acid->SetRotationArray( rot_gauge );
@@ -160,7 +160,7 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
    // Create Contours
    contours = new cfdIHCCContour();
    contours->SetSequence( sequence );
-   contours->SetDCS( worldDCS );
+   //contours->SetDCS( worldDCS );
 }
 
 cfdIHCCModel::~cfdIHCCModel( void )
