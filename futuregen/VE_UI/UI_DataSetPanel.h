@@ -69,6 +69,20 @@ public:
 };
 
 
+class UI_ScalarScroll: public wxScrolledWindow{
+public:
+   UI_ScalarScroll(wxWindow* parent);
+   ~UI_ScalarScroll();
+
+   wxRadioBox* _scalarRBox;
+   wxRadioBox* _vectorRBox;
+   wxBoxSizer* _col;
+
+   void rebuildRBoxes(UI_DataSets*);
+
+   DECLARE_EVENT_TABLE()
+};
+
 
 class UI_DatasetPanel: public wxPanel{
 public:
@@ -76,13 +90,14 @@ public:
    ~UI_DatasetPanel();
 
    UI_DataSets* thisDataSet;
+   //UI_DataSets* activeDataSet;
 
    int _numSteadyStateDataSets;
 
    vector<UI_DataSets*> _DataSets;
 
    UI_DatasetScroll* _RBoxScroll;
-   
+   UI_ScalarScroll* _ScalarScroll;
   
    int _maxnoScalars;
    int _noScalars;
@@ -99,13 +114,9 @@ public:
    //Building the panel
    void _buildPanel();
 
-   wxScrolledWindow* _3dScroll;
-
    //the controls
    wxRadioBox* _activeRBox;
-   wxRadioBox* _scalarRBox;
-   wxRadioBox* _vectorRBox;
-
+   
    wxButton* _visUpdateButton;
 
    wxStaticBox* _scalarRangeBox;
@@ -124,6 +135,7 @@ public:
    wxBoxSizer* _col1;
    wxBoxSizer* _col2;
    wxBoxSizer* _col3;
+   wxBoxSizer* _col4;
    void _setScalars(UI_DataSets*);
 protected:
    void _buildDataSets();

@@ -88,6 +88,73 @@ UI_DatasetScroll::~UI_DatasetScroll()
 {
 }
 
+BEGIN_EVENT_TABLE(UI_ScalarScroll, wxScrolledWindow)
+END_EVENT_TABLE()
+//////////////////////////////////////////////////
+//Constructor                                   //
+//////////////////////////////////////////////////
+UI_ScalarScroll::UI_ScalarScroll(wxWindow* parent)
+:wxScrolledWindow(parent, -1, wxDefaultPosition, wxDefaultSize,
+		    wxHSCROLL | wxVSCROLL)
+{
+   wxString empty[1];
+   empty[0] = wxT("No scalars");
+
+   int nUnitX=10;
+   int nUnitY=10;
+   int nPixX = 10;
+   int nPixY = 10;
+   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+
+   
+
+   _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
+                                     wxDefaultPosition, wxDefaultSize,
+                                     1,empty,1,wxRA_SPECIFY_COLS);
+
+   _vectorRBox = new wxRadioBox(this, VECTOR_RAD_BOX, wxT("Vectors"),
+                                wxDefaultPosition, wxDefaultSize, 
+                                1,empty,1,wxRA_SPECIFY_COLS);
+
+   _col = new wxBoxSizer(wxVERTICAL);  
+   _col->Add(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
+   _col->Add(_vectorRBox,2,wxALIGN_LEFT|wxEXPAND);
+
+   SetSizer(_col);
+
+}
+
+UI_ScalarScroll::~UI_ScalarScroll()
+{
+}
+
+void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
+{
+   _col->Remove(_scalarRBox);
+   _col->Remove(_vectorRBox);
+
+   delete _scalarRBox;
+   delete _vectorRBox;
+
+   _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
+                                     wxDefaultPosition, wxDefaultSize,
+            activeDataSet->_numofScalars,
+            ((UI_DatasetPanel*)GetParent())->_scalarNames,
+            1,wxRA_SPECIFY_COLS);
+
+   _vectorRBox = new wxRadioBox(this, VECTOR_RAD_BOX, wxT("Vectors"),
+                                wxDefaultPosition, wxDefaultSize, 
+            activeDataSet->_numofScalars,
+            ((UI_DatasetPanel*)GetParent())->_scalarNames,
+            1, wxRA_SPECIFY_COLS);
+
+   _col->Prepend(_vectorRBox,2,wxALIGN_LEFT|wxEXPAND);
+   _col->Prepend(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
+
+   //Complete Hack needed to get the page to refresh properly
+   SetSize(GetSize());
+
+}
 
 
 BEGIN_EVENT_TABLE(UI_DatasetPanel, wxPanel)
@@ -107,12 +174,11 @@ UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl)
 :wxPanel(tControl)
 {
    _activeRBox;
-   _scalarRBox;
-   _vectorRBox;
-   
+      
    _buildDataSets();
    
    _buildPanel(); 
+
    _setScalars(_DataSets[0]);   
 }
 ///////////////////////////////
@@ -144,17 +210,10 @@ void UI_DatasetPanel::_buildPanel()
    _scalarNames[0] = wxT("No Scalars");
    
    //Create the radio box w/ the list of scalar names if we have them
-   _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
-                                     wxDefaultPosition, wxDefaultSize,
-            1,_scalarNames,1,wxRA_SPECIFY_COLS);
-
-   _vectorRBox = new wxRadioBox(this, VECTOR_RAD_BOX, wxT("Vectors"),
-                                wxDefaultPosition, wxDefaultSize, 
-            1, _scalarNames, 1, wxRA_SPECIFY_COLS);
-
-
+   _ScalarScroll = new UI_ScalarScroll(this);
+   
    //The "Update Visualization" button
-   _visUpdateButton = new wxButton(this, SCALAR_UPDATE_BUTTON, wxT("Update"));
+   _visUpdateButton = new wxButton(this, SCALAR_UPDATE_BUTTON, wxT("Update"),wxDefaultPosition,wxDefaultSize,wxBU_EXACTFIT);
 
  
    //The static box for the scalar range sliders
@@ -195,23 +254,25 @@ void UI_DatasetPanel::_buildPanel()
    _col1 = new wxBoxSizer(wxVERTICAL);
    _col2 = new wxBoxSizer(wxVERTICAL);
    _col3 = new wxBoxSizer(wxVERTICAL);
-
+   _col4 = new wxBoxSizer(wxVERTICAL);
 
    //new layout
    _col1->Add(_RBoxScroll,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    
-   _col2->Add(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
-   _col2->Add( _vectorRBox,2,wxALIGN_LEFT|wxEXPAND);
-   _col2->Add(_visUpdateButton,0,wxALIGN_CENTER_HORIZONTAL);
+   _col2->Add(_ScalarScroll,6,wxALIGN_LEFT|wxEXPAND);
+   //_col2->Add(_visUpdateButton,0,wxALIGN_CENTER_HORIZONTAL);
 
    _col3->Add(sRangeBoxSizer,1,wxALIGN_LEFT|wxEXPAND);
+
+   _col4->Add(_visUpdateButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    _dataHeadingBox = new wxStaticBox(this, -1, wxT("---------------------Data and Scalar Set Selection-------------------"));
    wxStaticBoxSizer* dHeadingBoxSizer = new wxStaticBoxSizer(_dataHeadingBox,wxHORIZONTAL);
 
-   dHeadingBoxSizer->Add(_col1,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   dHeadingBoxSizer->Add(_col2,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   dHeadingBoxSizer->Add(_col3,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   dHeadingBoxSizer->Add(_col1,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   dHeadingBoxSizer->Add(_col2,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   dHeadingBoxSizer->Add(_col3,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   dHeadingBoxSizer->Add(_col4,2,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    _top = new wxBoxSizer(wxHORIZONTAL);
    _bottom = new wxBoxSizer(wxHORIZONTAL);
@@ -270,9 +331,10 @@ void UI_DatasetPanel::_buildDataSets( void )
 
 void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
 {
+   //activeDataSet = thisactiveDataSet;
 
    //_noScalars = activeDataSet->_numofScalars;
-   for (int p=0; p<_scalarRBox->GetCount(); p++)
+   for (int p=0; p<_ScalarScroll->_scalarRBox->GetCount(); p++)
       delete [] _scalarNames[p];
    
    _scalarNames = new wxString[activeDataSet->_numofScalars];
@@ -282,28 +344,31 @@ void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
       _scalarNames[i] = activeDataSet->_Scalars[i]->_thisScalarName;
    }
 
-   _col2->Remove(_scalarRBox);
+   _ScalarScroll->rebuildRBoxes(activeDataSet);
 
-   delete _scalarRBox;
-   _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
+   /*_col2->Remove(_ScalarScroll);
+
+   delete _ScalarScroll;
+   _ScalarScroll = new UI_ScalarScroll(this);
+   /*_scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
                                      wxDefaultPosition, wxDefaultSize,activeDataSet->_numofScalars,
                                      _scalarNames,1,wxRA_SPECIFY_COLS);
-   _col2->Prepend(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
+   _col2->Prepend(_ScalarScroll,6,wxALIGN_LEFT|wxEXPAND);
    
    //Complete Hack needed to get the page to refresh properly
-   SetSize(GetSize());
+   SetSize(GetSize());*/
 }
 
 void UI_DatasetPanel::_setScalarsnoDatasets()
 {
    wxString empty[1];
    empty[0] = wxT("No scalars");
-   _col2->Remove(_scalarRBox);
-   delete _scalarRBox;
-   _scalarRBox = new wxRadioBox(this,SCALAR_RAD_BOX, wxT("Scalars"),
-                                     wxDefaultPosition, wxDefaultSize,1,
-                                     empty,1,wxRA_SPECIFY_COLS);
-   _col2->Prepend(_scalarRBox,6,wxALIGN_LEFT|wxEXPAND);
+   _col2->Remove(_ScalarScroll);
+
+   delete _ScalarScroll;
+   _ScalarScroll = new UI_ScalarScroll(this);
+
+   _col2->Prepend(_ScalarScroll,6,wxALIGN_LEFT|wxEXPAND);
 
    //Complete Hack needed to get the page to refresh properly
    SetSize(GetSize());
@@ -524,7 +589,7 @@ void UI_DatasetPanel::_onPolyData(wxCommandEvent& event)
 
 void UI_DatasetPanel::_onScalars(wxCommandEvent& event)
 {
-   ((UI_Frame *)GetParent())->_tabs->cSc = _scalarRBox->GetSelection();         // using zero-based scalar counting
+   ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cId  = CHANGE_SCALAR;
@@ -533,7 +598,7 @@ void UI_DatasetPanel::_onScalars(wxCommandEvent& event)
 
 void UI_DatasetPanel::_onUpdate(wxCommandEvent& event)
 {
-   ((UI_Frame *)GetParent())->_tabs->cSc = _scalarRBox->GetSelection();         // using zero-based scalar counting
+   ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cId  = CHANGE_SCALAR;
@@ -542,7 +607,7 @@ void UI_DatasetPanel::_onUpdate(wxCommandEvent& event)
 
 void UI_DatasetPanel::_onMinMaxSlider(wxCommandEvent& event)
 {
-   ((UI_Frame *)GetParent())->_tabs->cSc = _scalarRBox->GetSelection();         // using zero-based scalar counting
+   ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cId  = CHANGE_SCALAR_RANGE;
