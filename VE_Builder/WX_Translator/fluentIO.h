@@ -8,7 +8,6 @@
 #ifndef FLUENT_IO
 #define FLUENT_IO
 
-#include "stdio.h"
 #include "var_defs.h"
 #include <string>
 

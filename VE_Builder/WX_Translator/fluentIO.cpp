@@ -4,8 +4,8 @@
             huckaby@netl.doe.gov
     Date:   3/25/2004
 */
-#include <stdio.h>
-#include <ctype.h>
+#include <cstdio>
+//#include <ctype.h>
 #include "fluentIO.h"
 
 namespace FluentReader {

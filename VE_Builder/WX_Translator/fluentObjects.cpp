@@ -9,7 +9,6 @@
 #include <vector>
 #include "setOperators.hpp"
 #include "reorder.h"
-// #include "setOperators.hpp"
 #include "blitz/array.h"
 #include "var_defs.h"
 
@@ -772,7 +771,6 @@ SegResiduals::SegResiduals(FluentIO *infile)
 */
 
 /* should these be members of face or cell */
-#include "stdio.h"
 #include <algorithm>
 /* this is used by the below algorithm, with a loop over the element trees, instead of starting with
     a loop over all the cells. In this algorithm, hopefully we loop only over those cells for which

@@ -20,10 +20,11 @@ SRCS=\
    mFixTranslator.cpp \
    fluentCase.cpp \
    fluentIO.cpp \
-   avgVariables.cpp \
+   fluentObjects.cpp \
    FluentTranslator.cpp \
    fluentVtkFactory.cpp \
-   parseFluent.cpp \
+   reorder.cpp \
+   setOperators.cpp \
    UnstructuredGridWriter.cpp
 
 # Specify the OS-dependent directory name for object files and depends
