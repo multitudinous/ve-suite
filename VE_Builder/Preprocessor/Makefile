@@ -34,8 +34,7 @@ EXTRA_DEFS+=
 #SJK_TEST produces ascii output
 
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer \
-                 -I$(VE_SUITE_HOME)/VE_Builder/Utilities\
-                 -I$(BOOST_INCLUDES)
+                 -I$(VE_SUITE_HOME)/VE_Builder/Utilities
 
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG
 #EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
