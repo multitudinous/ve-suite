@@ -357,9 +357,10 @@ bool Prekin_UI_Dialog::TransferDataFromWindow()
   
   *p_Schema=m_tabs->rb_Schema->GetSelection();
 
-  wxString ofname=wxFileSelector(_T("Profile name"), "", "Profile001", "txt");
-  WriteProfile(ofname.c_str());
-  return true;
+  //wxString ofname=wxFileSelector(_T("Profile name"), "", "Profile001", "txt");
+  WriteProfile("INPUT");//(ofname.c_str());
+  ::wxExecute("PREKIN_new.exe",wxEXEC_ASYNC);
+  return true; 
 }
 
 ////////////////////////////////////////////////////
@@ -582,8 +583,8 @@ void Prekin_UI_Dialog::WriteProfile(const char* filename)
   double TAUBYF; //*p_T_f;
   
 
-  alpha = *p_size_50;
-  beta = *p_size_200;
+  alpha = *p_size_200;
+  beta = *p_size_50;
   
   coalC=coalH=coalO=coalASH=ASTM=0.0;
 
@@ -856,7 +857,7 @@ void Prekin_UI_Dialog::WriteProfile(const char* filename)
   fprintf(inputf, "%g      	!HTVL: percentage high temperature volatile loss, daf (0 - 100).\n", *p_HTVL);
   fprintf(inputf, "%g              !OMEGA: linear swelling factor\n", *p_linear_swell);
   fprintf(inputf, "%g	        !FUELRHOC: initial fuel carbon density g/cc\n", *p_fuel_carbon);
-  fprintf(inputf, "T  F		!LMESH,LSMD: t if mesh size known, LSMD, mesh type distribution\n"); //always T F
+  fprintf(inputf, "T  T		!LMESH,LSMD: t if mesh size known, LSMD, mesh type distribution\n"); //always T F
   fprintf(inputf, "3\n");   //alway like that
   fprintf(inputf, "1	   75      %g\n", alpha);
   fprintf(inputf, "75.1    150     %g\n", beta-alpha);
