@@ -504,9 +504,16 @@ void cfdExecutive::UpdateModules( void )
             vpr::System::msleep( 500 );  // half-second delay
          }
 
-         //this->GetEverything();
-         
          this->updateNetworkString = true;
+
+         while ( updateNetworkString )
+         {
+            // This holds preframe until all the geom manipulation is complete 
+            // by the get everythign Thread.
+            // We actually need to move that code here so 
+            // so that we don't have this while loop
+            vpr::System::msleep( 500 );  // half-second delay
+         }
       }
    }
 }

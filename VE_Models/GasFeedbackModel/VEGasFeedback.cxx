@@ -32,7 +32,7 @@
 
 #include "VEGasFeedback.h"
 //#include "cfdVEBaseClass.h"
-#include "cfdModuleGeometry.h"
+//#include "cfdModuleGeometry.h"
 #include "cfdGroup.h"
 #include "cfdModel.h"
 #include "cfdReadParam.h"
@@ -46,7 +46,7 @@
 #include "cfdFog.h"
 
 #include <fstream>
-#include <cstdlib>
+//#include <cstdlib>
 #include <string>
 #include <map>
 

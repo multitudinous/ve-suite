@@ -329,7 +329,7 @@ DEBUG_APP?= TRUE
 
 
 EXTRA_CXXFLAGS+= $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
-EXTRA_LIBS+= $(WX_LIB)
+EXTRA_LIBS+= $(WX_LIB) -L$(VJ_DEPS_DIR)/lib
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
 EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
@@ -370,7 +370,7 @@ CXX_GEN_DIR= .
                         ${CONDUCTOR_BASE_DIR}/java_stuff/VjObsPackage 
 
 vpath %.cpp $(CXX_GEN_DIR) ${CONDUCTOR_BASE_DIR}/skel
-vpath %.cxx  ${VE_SUITE_HOME}/VE_SceneGraph
+vpath %.cxx ${VE_SUITE_HOME}/VE_SceneGraph
 #vpath %.cc ./UMI/skel
 #vpath %.h $(CXX_GEN_DIR)  ${CONDUCTOR_BASE_DIR}/skel
 

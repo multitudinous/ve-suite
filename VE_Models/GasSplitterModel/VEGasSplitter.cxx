@@ -32,7 +32,7 @@
 
 #include "VEGasSplitter.h"
 //#include "cfdVEBaseClass.h"
-#include "cfdModuleGeometry.h"
+//#include "cfdModuleGeometry.h"
 #include "cfdGroup.h"
 #include "cfdModel.h"
 #include "cfdReadParam.h"

@@ -32,7 +32,7 @@
 
 #include "VEOPPDmod.h"
 //#include "cfdVEBaseClass.h"
-#include "cfdModuleGeometry.h"
+//#include "cfdModuleGeometry.h"
 #include "cfdGroup.h"
 #include "cfdModel.h"
 #include "cfdReadParam.h"
@@ -46,7 +46,7 @@
 #include "cfdFog.h"
 
 #include <fstream>
-#include <cstdlib>
+//#include <cstdlib>
 #include <string>
 #include <map>
 
@@ -93,7 +93,7 @@ void VEOPPDmod::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   strcpy( this->_param, "/home/vr/Applications/TSVEG/OPPD_Work/PROE_Redraw/vrxpr.param.geomorg");
+   strcpy( this->_param, "/home/vr/Applications/TSVEG/Test_Pit/OPPD/Current_Demo/vrxpr.param.geomorg");
    CreateObjects();
 }
 

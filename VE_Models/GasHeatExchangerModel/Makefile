@@ -72,16 +72,9 @@ endif
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   VEGasHeatExchanger.cxx \
-   cfdDCS.cxx \
-   cfdGeode.cxx \
-   cfdGroup.cxx \
-   cfdObjects.cxx \
-   cfdVEBaseClass.cxx \
-   cfdModuleGeometry.cxx \
-   interface.cpp
+   VEGasHeatExchanger.cxx 
 
-APP_NAME= $(VE_SUITE_HOME)/VE_Models/$(CFDHOSTTYPE)$(EXEC_TAG)/lib$(PLUGIN).so
+APP_NAME= $(VE_SUITE_HOME)/VE_Models/$(CFDHOSTTYPE)/lib$(PLUGIN).so
 # object files are being stored in a system-dependent directory so that builds
 # for multiple platforms may be maintained simultaneously.
 
