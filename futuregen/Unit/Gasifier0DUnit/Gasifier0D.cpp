@@ -508,14 +508,14 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _devol_a2 = 1.5e13;
     _devol_e2 = 2.51e8;
     _devol_y2 = 0.6;
-    _oxid_a   = 1.0e2*0.3052e-3;//0.013856;
-    _oxid_n   = 0.8687; //1.0;
+    _oxid_a   = 1.0e2*0.3052e-3;//1.0e2*0.3052e-3;//0.013856;
+    _oxid_n   = 0.8687;//0.8687; //1.0;
     _oxid_e   = 1.00416e8;
-    _co2gas_a = 1.0e2*0.30428e-5; //0.024377;
-    _co2gas_n = 1.0;
+    _co2gas_a = 0.32753E-03;//0.32753E-03;//1.0e2*0.30428e-5; //0.024377;
+    _co2gas_n = 0.97729361;//0.97729361;//1.0;
     _co2gas_e = 1.7522e8;
-    _h2ogas_a = 1.0e2*0.59533e-2; //0.024377;
-    _h2ogas_n = 0.5; //1.0;
+    _h2ogas_a = 0.42336E+00;//0.42336E+00;//1.0e2*0.59533e-2; //0.024377;
+    _h2ogas_n = 0.5;//0.5; //1.0;
     _h2ogas_e = 1.7522e8;
   }
   else if (coaltype == "E-Gas_AppLS") {
@@ -1164,7 +1164,6 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
  << endl;
       
       if(fabs(temp-tempold)<1.0) break;
-      temp = 0.5*temp+0.5*tempold;
     }  // for(iter
   }else{ // if(geom_input
     if(second_stage)
