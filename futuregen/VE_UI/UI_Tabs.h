@@ -6,7 +6,12 @@
 
 #include "wx/wx.h"
 #include "wx/notebook.h"
+#ifdef _TAO
 #include "VjObsC.h"
+#else
+#include "VjObs.h"
+#endif
+
 #include "controlIds.h"
 #include <string>
 

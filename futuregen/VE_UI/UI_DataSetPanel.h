@@ -10,7 +10,11 @@
 #include <wx/notebook.h>
 #include <stdlib.h>
 #include <vector>
+#ifdef _TAO
 #include "VjObsC.h"
+#else
+#include "VjObs.h"
+#endif
 
 using namespace std;
 

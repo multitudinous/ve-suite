@@ -1,9 +1,12 @@
 #include "UI_Frame.h"
-#include <orbsvcs/CosNamingC.h>
 #include <iostream>
 using namespace std;
+#ifdef _TAO
 #include "VjObsC.h"
-#include "VjObsS.h"
+#include <orbsvcs/CosNamingC.h>
+#else
+#include "VjObs.h"
+#endif
 #include "cfdEnum.h"
 
 

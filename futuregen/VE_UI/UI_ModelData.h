@@ -32,7 +32,11 @@
 #ifndef UI_MODELDATA_H
 #define UI_MODELDATA_H
 
-#include "VjObsS.h"
+#ifdef _TAO
+#include "VjObsC.h"
+#else
+#include "VjObs.h"
+#endif
 
 class UI_ModelData
 {
