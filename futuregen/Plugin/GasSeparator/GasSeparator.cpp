@@ -78,7 +78,7 @@ int GasSeparator::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSeparator::GetIPorts(POLY &iports)
 {
-  iports[0] = wxPoint(icon_w*11/100, icon_h*37/75);
+  iports[0] = wxPoint(icon_w*6/60, icon_h*22/45);
   return;
 }
 
@@ -93,8 +93,8 @@ int GasSeparator::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void GasSeparator::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(icon_w*87/100, icon_h*37/75);
-  oports[1]=wxPoint(icon_w*87/100, icon_h*56/75);
+  oports[0]=wxPoint(icon_w*52/60, icon_h*22/45);
+  oports[1]=wxPoint(icon_w*52/60, icon_h*33/45);
 }
 
 /////////////////////////////////////////////////////////////////////////////
