@@ -114,7 +114,7 @@ void Body_Unit_i::StartCalc (
     
     //    result = p.Save(rv);
     executive_->SetExportData(id_, 0, outport);
-    //executive_->SetExportData(id_, 0, result);
+    executive_->SetModuleResult(id_, NULL); //this marks the end the execution
   }
   
 void Body_Unit_i::StopCalc (
@@ -126,7 +126,10 @@ void Body_Unit_i::StopCalc (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" : Instant calculation, already finished"<<endl;
+    string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    executive_->SetModuleMessage(id_,msg.c_str());
+
   }
   
 void Body_Unit_i::PauseCalc (
@@ -138,7 +141,9 @@ void Body_Unit_i::PauseCalc (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" : Instant calculation, already finished"<<endl;
+    string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    executive_->SetModuleMessage(id_,msg.c_str());
   }
   
 void Body_Unit_i::Resume (
@@ -150,7 +155,9 @@ void Body_Unit_i::Resume (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" : Instant calculation, already finished"<<endl;
+    string msg;
+    msg = UnitName_+" : Instant calculation, already finished\n";
+    executive_->SetModuleMessage(id_,msg.c_str());
   }
   
 char * Body_Unit_i::GetStatusMessage (
@@ -162,8 +169,7 @@ char * Body_Unit_i::GetStatusMessage (
   ))
   {
     // Add your implementation here
-    std::cout<<UnitName_<<" :GetStatusMessage called"<<endl;
-    return CORBA::string_dup(status_.c_str());
+    return NULL;
   }
   
 char * Body_Unit_i::GetUserData (
