@@ -30,7 +30,7 @@ setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 # to allow developers to set them from outside this script (see below).
 #setenv TAO_BUILD FALSE
 #setenv CLUSTER_APP FALSE
-setenv SCENE_GRAPH PF
+#setenv SCENE_GRAPH OSG
 
 # TAO_BUILD can be set outside this script to override the default of FALSE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -81,7 +81,6 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OSG_HOME}/lib32:${OSG_HOME}/lib32/osgPlugins
-   setenv PATH ${OSG_HOME}/OpenSceneGraph/bin:${PATH}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       #setenv ACE_ROOT /home/vr/Applications/TSVEG/Libraries/ACE-5.4
@@ -141,12 +140,13 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
    setenv JDK_HOME /usr/lib/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-SuSE91
-   setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-suse91
-   setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha4.linux-suse91-deps
-   #setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b1/Linux-SuSE91
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b1-deps/Linux-SuSE91
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/Linux-SuSE91
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OSG_HOME}/lib32:${OSG_HOME}/lib32/osgPlugins
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv MY_ACEDIR /home/users/mccdo/ACE_TAO
@@ -209,6 +209,7 @@ setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
 setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
 setenv PATH ${WX_HOME}/bin:${PATH}
 setenv PATH ${JDK_HOME}/bin:${PATH}
+setenv PATH ${OSG_HOME}/OpenSceneGraph/bin:${PATH}
 
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
