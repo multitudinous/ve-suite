@@ -270,11 +270,11 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
                == CHANGE_CONTOUR_SETTINGS )
    {  
       // warped contour settings
-      double v[2];
-	   this->GetActiveDataSet()->GetParent()->GetUserRange( v );
+      //double v[2];
+	  // this->GetActiveDataSet()->GetParent()->GetUserRange( v );
       int scale = commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
-      this->warpedContourScale = (scale/50.0) * 0.2 
-                    * this->GetActiveDataSet()->GetParent()->GetLength()/(float)(v[1]-v[0]);
+      this->warpedContourScale = (scale/50.0) * 0.1 
+                    * this->GetActiveDataSet()->GetParent()->GetLength();///(float)(v[1]-v[0]);
 
       // contour lod control
       /*int lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
