@@ -108,6 +108,9 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
    this->_activeDataSetDCS = NULL;
    this->_activeObject = NULL;
 
+
+   this->computeActorsAndGeodes = false;
+   this->actorsAreReady = false;   
    _param = param;
 }
 
@@ -743,6 +746,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          << ", geo_state = " << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
          << ", pre_state = " << commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE )
          << ", teacher_state = " << commandArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE )
+         << ", compute actors and geode = " << computeActorsAndGeodes 
          << std::endl << vprDEBUG_FLUSH;
    }
 
@@ -800,12 +804,13 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          }
       }
    }
-   else if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
+
+   if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == USE_LAST_STREAMLINE_SEEDPOINTS )
    {
       this->useLastSource = this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
    }
-   else if ( ( ( 0 <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&
-               ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) < 100 ) ) && 
+   else if (   ( 0 <= this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) ) &&
+               ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) < 100 )  && 
                ( this->computeActorsAndGeodes == false ) )
    {
       vprDEBUG(vprDBG_ALL,1) << " selected ID number = " << this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )

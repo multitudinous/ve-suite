@@ -257,12 +257,12 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       vprDEBUG(vprDBG_ALL,1) << "this->geodes[ 0 ] = " << this->_geodes[ 0 ]
          << std::endl << "this->geodes[ num ] = " << this->_geodes[ num ]
          << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetGeode() );
+      this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
 
       if ( this->_geodes.size() > 2 ) // remove oldest
       {
          int num = (this->_geodes.size() - 1) - 2;
-         this->_dcs->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetGeode() );
+         this->_dcs->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
          delete this->_geodes[ num ];
          this->_geodes.erase( this->_geodes.end() - 3 );
       }
@@ -274,22 +274,17 @@ void cfdObjects::AddcfdGeodeToDCS( void )
       int num = (this->_geodes.size() - 1) - 1;
       vprDEBUG(vprDBG_ALL,1) << " removing child num = " << num 
                              << std::endl << vprDEBUG_FLUSH;
-      this->_dcs->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetGeode() );
+      this->_dcs->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
       delete this->_geodes[ num ];
-/*
-      vprDEBUG(vprDBG_ALL,0) 
-         << "this->geodes.begin() = " << this->geodes.begin() << std::endl 
-         << "this->geodes.end()-2 = " << this->geodes.end()-2 << std::endl
-         << "this->geodes.end()-1 = " << this->geodes.end()-1 << std::endl
-         << "this->geodes.end() =   " << this->geodes.end()
-         << std::endl << vprDEBUG_FLUSH;
-*/
+
       this->_geodes.erase( this->_geodes.end() - 2 );
-      this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ])->GetGeode() );
+      this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ num ]) );
    }
    else //if ( this->geodes.size() == 1 )
-   {
-      this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ 0 ])->GetGeode() );     
+   { 
+      vprDEBUG(vprDBG_ALL,1) << " adding child geode = " << this->_geodes.at( 0 )
+                             << std::endl << vprDEBUG_FLUSH;
+      this->_dcs->AddChild( (cfdSceneNode*)((cfdGeode*)this->_geodes.at( 0 )) );     
    }
 }
 
@@ -302,7 +297,7 @@ void cfdObjects::RemovecfdGeodeFromDCS( void )
    // Iterate backwards for performance
    for ( i = num - 1; i >= 0; i-- )
    {
-      this->_dcs->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ i ])->GetGeode() );
+      this->_dcs->RemoveChild( (cfdSceneNode*)((cfdGeode*)this->_geodes[ i ]) );
       delete this->_geodes[ i ];
    }
    this->_geodes.clear();

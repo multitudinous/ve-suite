@@ -86,7 +86,7 @@ cfdGeode::~cfdGeode( void )
 }
 
 // This function must be reimplemented for each scene graph
-#ifdef _PERFORMER
+/*#ifdef _PERFORMER
 pfGeode* cfdGeode::GetGeode( void )
 #elif _OSG
 #elif _OPENSG
@@ -98,7 +98,7 @@ pfGeode* cfdGeode::GetGeode( void )
 #elif _OSG
 #elif _OPENSG
 #endif
-}
+}*/
 
 #ifdef _PERFORMER
 pfNode* cfdGeode::GetRawNode( void )
