@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: multiPlaneVtkOutput.cxx,v $
- * Date modified: $Date: 2004/04/26 03:16:37 $
- * Version:       $Revision: 1.11 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

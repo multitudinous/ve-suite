@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: STAR_node.h,v $
- * Date modified: $Date: 2004/04/22 16:23:35 $
- * Version:       $Revision: 1.3 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

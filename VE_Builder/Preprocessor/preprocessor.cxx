@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: preprocessor.cxx,v $
- * Date modified: $Date: 2004/04/22 15:47:33 $
- * Version:       $Revision: 1.12 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
