@@ -49,12 +49,47 @@
 #include <osg/MatrixTransform>
 #include <osg/Matrix>
 #include <osg/Vec3f>
-#include <osgUtil/TransformCallback>
+#include <osg/NodeCallback>
 #elif _OPENSG
 #endif
 
 using namespace gmtl;
-
+//////////////////////
+cfdDCS::cfdDCS( void )
+:cfdGroup()
+{
+#ifdef _PERFORMER
+   _dcs = new pfDCS();
+#elif _OSG
+   _dcs = new osg::MatrixTransform();
+   _dcs->setMatrix(osg::Matrix::identity());
+   _dcs->setDataVariance(osg::Object::DYNAMIC);
+   _udcb =new cfdUpdateDCSCallback();
+   _dcs->setUpdateCallback(_udcb);
+   
+#elif _OPENSG
+#endif
+   _scale[0] = 1;
+   _scale[1] = 1;
+   _scale[2] = 1;
+   _translation[0] = 0;
+   _translation[1] = 0;
+   _translation[2] = 0;
+   _rotation[0] = 0;
+   _rotation[1] = 0;
+   _rotation[2] = 0;
+   float temp[ 3 ];
+   for ( unsigned int i = 0; i < 3; i++ )
+      temp[ i ] = 0.0f;
+   SetTranslationArray( temp );
+   for ( unsigned int i = 0; i < 3; i++ )
+      temp[ i ] = 0.0f;
+   SetRotationArray( temp );
+   for ( unsigned int i = 0; i < 3; i++ )
+      temp[ i ] = 1.0f;
+   SetScaleArray( temp );
+   SetCFDNodeType(CFD_DCS);
+}
 cfdDCS::cfdDCS( float* scale, float* trans, float* rot )
 :cfdGroup()
 {
@@ -63,6 +98,8 @@ cfdDCS::cfdDCS( float* scale, float* trans, float* rot )
 #elif _OSG
    _dcs = new osg::MatrixTransform();
    _dcs->setMatrix(osg::Matrix::identity());
+   _udcb =new cfdUpdateDCSCallback();
+   _dcs->setUpdateCallback(_udcb);
 #elif _OPENSG
 #endif
    this->SetTranslationArray( trans );
@@ -80,7 +117,7 @@ cfdDCS::cfdDCS( const cfdDCS& input )
       this->_rotation[ i ] = input._rotation[ i ];
       this->_scale[ i ] = input._scale[ i ];
    }
-
+   
    this->childNodes = input.childNodes;
    this->_vjMatrix = input._vjMatrix;
    
@@ -88,6 +125,7 @@ cfdDCS::cfdDCS( const cfdDCS& input )
    _dcs = new pfDCS(*input._dcs);
 #elif _OSG 
    this->_dcs = new osg::MatrixTransform(*input._dcs);
+   _udcb = input._udcb;
 #elif _OPENSG
 #endif
   
@@ -120,6 +158,7 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
       this->_dcs = input._dcs;
 #elif _OSG
       _dcs = input._dcs;
+      _udcb = input._udcb;
 #elif _OPENSG
 #endif
       //_group = _dcs;
@@ -127,29 +166,7 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
    }
    return *this;
 }
-//////////////////////
-cfdDCS::cfdDCS( void )
-:cfdGroup()
-{
-#ifdef _PERFORMER
-   _dcs = new pfDCS();
-#elif _OSG
-   _dcs = new osg::MatrixTransform();
-   _dcs->setMatrix(osg::Matrix::identity());
-#elif _OPENSG
-#endif
-   float temp[ 3 ];
-   for ( unsigned int i = 0; i < 3; i++ )
-      temp[ i ] = 0.0f;
-   SetTranslationArray( temp );
-   for ( unsigned int i = 0; i < 3; i++ )
-      temp[ i ] = 0.0f;
-   SetRotationArray( temp );
-   for ( unsigned int i = 0; i < 3; i++ )
-      temp[ i ] = 1.0f;
-   SetScaleArray( temp );
-   SetCFDNodeType(CFD_DCS);
-}
+
 ///////////////////////
 cfdDCS::~cfdDCS( void )
 {
@@ -163,6 +180,7 @@ cfdDCS::~cfdDCS( void )
 #ifdef _PERFORMER
    //pfDelete ( this->_dcs );
 #elif _OSG
+   
 #elif _OPENSG
 #endif
 }
@@ -196,9 +214,10 @@ void cfdDCS::SetTranslationArray( float* trans )
                        this->_translation[ 2 ] );
 #elif _OSG           
    //update the specified transform
-   osg::Matrix temp(_dcs->getMatrix());
-   temp.setTrans(_translation[0],_translation[1],_translation[2]);
-   _dcs->setMatrix(temp);
+   if(_udcb){
+      _udcb->setTranslation(_translation);
+   }
+   
 #elif _OPENSG
 #endif
    //std::cout << this->_translation[ 0 ]<< " : " << this->_translation[ 1 ] << " : " <<
@@ -217,16 +236,10 @@ void cfdDCS::SetRotationArray( float* rot )
                     this->_rotation[ 1 ],
                     this->_rotation[ 2 ]);
 #elif _OSG
-   osg::Matrix rotMat;
-   osg::Vec3f xAxis(1,0,0);
-   osg::Vec3f yAxis(0,1,0);
-   osg::Vec3f zAxis(0,0,1);
-   rotMat.set(osg::Matrix::identity());
-   rotMat = osg::Matrix::rotate(rot[0],xAxis,
-                             rot[1],yAxis,
-                             rot[2],zAxis);
-   //not sure about this stuff. . .
-   _dcs->setMatrix(rotMat);
+  
+   if(_udcb){
+      _udcb->setRotationDegreeAngles(_rotation);
+   }
 #elif _OPENSG
 #endif
    //std::cout << this->_rotation[ 0 ]<< " : " <<   
@@ -246,12 +259,9 @@ void cfdDCS::SetScaleArray( float* scale )
                            this->_scale[ 1 ],
                            this->_scale[ 2 ] );
 #elif _OSG
-   osg::Matrix scaleMat;
-   scaleMat.set(osg::Matrix::identity());
-   scaleMat = osg::Matrix::scale(this->_scale[ 0 ],
-                        this->_scale[ 1 ],
-                        this->_scale[ 2 ] );
-   _dcs->preMult(scaleMat);
+   if(_udcb){
+      _udcb->setScaleValues(_scale);
+   }
 #elif _OPENSG
 #endif
    //std::cout << this->_scale[ 0 ]<< " : " <<   
@@ -481,4 +491,66 @@ osg::Node* cfdDCS::GetRawNode(void)
 #elif _OPENSG
 #endif
 }
+#ifdef _OSG
+////////////////////////////////////////////
+//Constructor                             //
+////////////////////////////////////////////
+cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback()
+{
+   _scale[0] = 1.;
+   _scale[1] = 1.;
+   _scale[2] = 1.;
+   _trans[0] = 0;
+   _trans[1] = 0;
+   _trans[2] = 0;
+   _rotAngles[0] = 0;
+   _rotAngles[1] = 0;
+   _rotAngles[2] = 0;
 
+}
+//////////////////////////////////////////////////////////////
+void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float* rot)
+{
+   if(rot){
+      _rotAngles[0] = osg::DegreesToRadians(rot[0]);
+      _rotAngles[1] = osg::DegreesToRadians(rot[1]);
+      _rotAngles[2] = osg::DegreesToRadians(rot[2]);
+   }
+}
+///////////////////////////////////////////////////////
+void cfdDCS::cfdUpdateDCSCallback::setTranslation(float* trans)
+{
+   if(trans){
+      _trans[0] = trans[0];
+      _trans[1] = trans[1];
+      _trans[2] = trans[2];
+   }
+}
+////////////////////////////////////////////////////////////////
+void cfdDCS::cfdUpdateDCSCallback::setScaleValues(float* scale)
+{
+   if(scale){
+      _scale[0] = scale[0];
+      _scale[1] = scale[1];
+      _scale[2] = scale[2];
+   }
+}
+//////////////////////////////////////////////////////////////////////////////////////
+void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
+{
+   osg::ref_ptr<osg::MatrixTransform> dcs = dynamic_cast<osg::MatrixTransform*>(node);
+   if(dcs.valid()){
+      osg::Vec3f xAxis(1,0,0);
+      osg::Vec3f yAxis(0,1,0);
+      osg::Vec3f zAxis(0,0,1);
+      osg::Matrixd updateMat(osg::Matrixd::scale(_scale[0],_scale[1],_scale[2])
+                          *osg::Matrixd::rotate(_rotAngles[0],xAxis,
+                                              _rotAngles[1],yAxis,
+                                              _rotAngles[2],zAxis));
+      osg::Matrixd transMat = osg::Matrix::translate(osg::Vec3f(_trans[0],_trans[1],_trans[2]));
+
+      dcs->setMatrix(updateMat*transMat);
+      traverse(node,nv);
+   }
+ }
+#endif

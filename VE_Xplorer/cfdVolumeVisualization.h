@@ -12,7 +12,6 @@ namespace osg{
    class TexGen;
    class TexEnv;
    class Geode;
-   class Billboard;
    class ClipNode;
    class TexGenNode;
    class Material;
@@ -47,7 +46,6 @@ public:
    void SetPlayDirection(Direction dir);
    void SetPlayMode(VisMode mode);
    void SetSliceAlpha(float alpha = .5);
-   void SetTextureUnit(int tUnit = 0);
    void SetVeboseFlag(bool flag);
    void SetShaderDirectory(char* shadDir);
 #ifdef _OSG
@@ -56,9 +54,8 @@ public:
    void Set3DTextureData(osg::Texture3D* texture);
    void SetBoundingBox(float* bbox);
    void SetNumberofSlices(int nSlices = 100);
-   
    void SetTextureManager(cfdTextureManager* tm);
-   void UpdateStateSet(osg::StateSet* ss);
+   
    void CreateNode();
    void AddClipPlane(ClipPlane direction,double* position);
    void RemoveClipPlane(ClipPlane direction);
@@ -66,11 +63,12 @@ public:
    void ActivateVisualBBox();  
    void DeactivateVisualBBox();
    void UseNormalGraphicsPipeline();
-   void UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
-                            float param,int whichFunction);
+   
 
    bool isCreated(){return _isCreated;}
 #ifdef CFD_USE_SHADERS
+   void UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
+                            float param,int whichFunction);
    void EnableVolumeShader();
    void DisableVolumeShader();
    void EnableTransferShader();
@@ -120,8 +118,6 @@ protected:
    osg::BoundingBox _bbox;
    osg::ref_ptr<osg::ClipNode> _clipNode;
    osg::ref_ptr<osg::StateSet> _stateSet;
-
-   osg::ref_ptr<osg::StateSet> _advectionFragSS;
 
    osg::ref_ptr<osg::Switch> _bboxSwitch;
    osg::ref_ptr<osg::Switch> _shaderSwitch;

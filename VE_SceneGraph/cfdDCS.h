@@ -43,6 +43,7 @@ class pfDCS;
 #elif _OSG
 namespace osg{
    class MatrixTransform;
+   class NodeCallback;
 }
 #elif _OPENSG
 #endif
@@ -79,10 +80,24 @@ class cfdDCS: public cfdGroup
       void SetName(char* name);
       int ReplaceChild(cfdNode* oldChild, cfdNode* newChild);
 
+
 #ifdef _PERFORMER
    pfNode* GetRawNode( void );
 #elif _OSG
    osg::Node* GetRawNode( void );
+   class cfdUpdateDCSCallback : public osg::NodeCallback{
+      public:
+         cfdUpdateDCSCallback();
+         virtual ~cfdUpdateDCSCallback(){}
+         void setRotationDegreeAngles(float* rot);
+         void setTranslation(float* trans);
+         void setScaleValues(float* scale);
+         virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
+      protected:
+         float _scale[3];
+         float _trans[3];
+         float _rotAngles[3];
+   };
 #elif _OPENSG
 #endif
 
@@ -91,6 +106,7 @@ class cfdDCS: public cfdGroup
    pfDCS* _dcs;
 #elif _OSG
       osg::ref_ptr<osg::MatrixTransform> _dcs;
+      cfdUpdateDCSCallback* _udcb;
 #elif _OPENSG
 #endif
 

@@ -172,6 +172,7 @@ void cfdNode::LoadFile( char* filename )
    std::cout << " Error:LoadFile !!! " << std::endl;
    exit( 1 );
 #endif
+   _node->setName(filename);
 }
 ////////////////////////////////////
 cfdNode* cfdNode::Clone( int level )
@@ -596,6 +597,14 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
 	
    }else  if(node->isSameKindAs(tempGroup.get())){
       num = ((osg::Group*)node)->getNumChildren();
+      vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+                                << std::endl << vprDEBUG_FLUSH;
+      for (i = 0; i < num; i++){
+         this->TravNodeMaterial(((osg::Group*)node)->getChild(i)) ;
+           
+      }
+   }else if(!strcmp(node->className(),"MatrixTransform")){
+       num = ((osg::Group*)node)->getNumChildren();
       vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
       for (i = 0; i < num; i++){

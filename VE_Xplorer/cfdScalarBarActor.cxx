@@ -569,7 +569,7 @@ void cfdScalarBarActor::RefreshScalarBar()
    this->Execute();
 
    // give the scalarBar DCS a name so that it can be detected during a CLEAR_ALL
-   this->scalarBar->SetName("scalarBar");
+   this->scalarBar->SetName("Scalar Bar");
    this->_rootNode->AddChild( this->scalarBar );
    //this->worldDCS->addChild( this->scalarBarActor->getpfDCS() );
 }

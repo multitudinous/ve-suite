@@ -100,9 +100,9 @@ void cfdPfSceneManagement::InitScene( void )
    this->sunModel = new pfLightModel();
 #endif
    this->rootNode = new cfdGroup();
-   this->rootNode->SetName( "group node" );
+   this->rootNode->SetName( "Root Node" );
    this->worldDCS = new cfdDCS();
-   this->worldDCS->SetName( "worlddcs" );
+   this->worldDCS->SetName( "World DCS" );
 #ifdef _PERFORMER
    this->sun      = new pfLightSource();
    // Create lights

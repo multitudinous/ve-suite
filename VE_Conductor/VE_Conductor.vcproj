@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\msw&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\futuregen\VE_UI&quot;"
+				AdditionalIncludeDirectories="./;&quot;$(OMNI_HOME)\include&quot;;&quot;$(IDL_HOME)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\msw&quot;;&quot;$(VE_UI_HOME)&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WINVER=0x400"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -51,8 +51,7 @@
 				Name="VCPreBuildEventTool"
 				Description="Generating stubs. . ."
 				CommandLine="echo C++ stubs. . .
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/Observer.idl
-$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/VjObs.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(IDL_HOME)/skel $(IDL_HOME)/idl/VjObs.idl
 echo Done.
 "/>
 			<Tool
@@ -235,7 +234,7 @@ echo Done.
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="./;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\msw&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\futuregen\VE_UI&quot;"
+				AdditionalIncludeDirectories="./;&quot;$(OMNI_HOME)\include&quot;;&quot;$(IDL_HOME)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\msw&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\futuregen\VE_UI&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WINVER=0x400"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
@@ -267,10 +266,8 @@ echo Done.
 				Name="VCPreBuildEventTool"
 				Description="Generating stubs. . ."
 				CommandLine="echo C++ stubs. . .
-$(VJ_DEPS_DIR)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/Observer.idl
-$(VJ_DEPS_DIR)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/VjObs.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(IDL_HOME)/skel $(IDL_HOME)/idl/VjObs.idl
 echo Done.
-
 
 "/>
 			<Tool
@@ -329,10 +326,8 @@ echo Done.
 				Name="VCPreBuildEventTool"
 				Description="Generating stubs. . ."
 				CommandLine="echo C++ stubs. . .
-$(VJ_DEPS_DIR)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/Observer.idl
-$(VJ_DEPS_DIR)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C./skel ./idl/VjObs.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(IDL_HOME)/skel $(IDL_HOME)/idl/VjObs.idl
 echo Done.
-
 "/>
 			<Tool
 				Name="VCPreLinkEventTool"/>
@@ -357,88 +352,61 @@ echo Done.
 			Name="src"
 			Filter="">
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_App.cpp">
+				RelativePath=".\Ve_ui\UI_App.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_DataSetPanel.cpp">
+				RelativePath=".\Ve_ui\UI_DataSetPanel.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_DesignParTab.cpp">
+				RelativePath=".\Ve_ui\UI_DesignParTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_Frame.cpp">
+				RelativePath=".\Ve_ui\UI_Frame.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_GeometryTab.cpp">
+				RelativePath=".\Ve_ui\UI_GeometryTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_ModelData.cxx">
+				RelativePath=".\Ve_ui\UI_ModelData.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_ModSelPanel.cpp">
+				RelativePath=".\Ve_ui\UI_ModSelPanel.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_NavTab.cpp">
+				RelativePath=".\Ve_ui\UI_NavTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_SoundsTab.cpp">
+				RelativePath=".\Ve_ui\UI_SoundsTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_StreamTab.cpp">
+				RelativePath=".\Ve_ui\UI_StreamTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_Tabs.cpp">
+				RelativePath=".\Ve_ui\UI_Tabs.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_TeacherTab.cpp">
+				RelativePath=".\Ve_ui\UI_TeacherTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_TopFrame.cpp">
+				RelativePath=".\Ve_ui\UI_TopFrame.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_TransTab.cpp">
+				RelativePath=".\Ve_ui\UI_TransTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_VecTab.cpp">
+				RelativePath=".\Ve_ui\UI_VecTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_VertTab.cpp">
+				RelativePath=".\Ve_ui\UI_VertTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_ViewLocTab.cpp">
+				RelativePath=".\Ve_ui\UI_ViewLocTab.cpp">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_VisTab.cpp">
+				RelativePath=".\Ve_ui\UI_VisTab.cpp">
 			</File>
 			<File
-				RelativePath=".\skel\VjObs.cpp">
-				<FileConfiguration
-					Name="Debug_TAO|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\skel\VjObsC.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
+				RelativePath="..\VESOpen\skel\VjObs.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -448,73 +416,64 @@ echo Done.
 				RelativePath="..\VE_Xplorer\cfdEnum.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\controlIds.h">
+				RelativePath=".\Ve_ui\controlIds.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_App.h">
+				RelativePath=".\Ve_ui\UI_App.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_DataSetPanel.h">
+				RelativePath=".\Ve_ui\UI_DataSetPanel.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_DataSetTab.h">
+				RelativePath=".\Ve_ui\UI_DesignParTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_DesignParTab.h">
+				RelativePath=".\Ve_ui\UI_Frame.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_Frame.h">
+				RelativePath=".\Ve_ui\UI_GeometryTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_GeometryTab.h">
+				RelativePath=".\Ve_ui\UI_ModelData.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_ModelData.h">
+				RelativePath=".\Ve_ui\UI_ModSelPanel.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_ModSelPanel.h">
+				RelativePath=".\Ve_ui\UI_NavTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_NavTab.h">
+				RelativePath=".\Ve_ui\UI_SoundsTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_ScalarTab.h">
+				RelativePath=".\Ve_ui\UI_StreamTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_SoundsTab.h">
+				RelativePath=".\Ve_ui\UI_Tabs.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_StreamTab.h">
+				RelativePath=".\Ve_ui\UI_TeacherTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_Tabs.h">
+				RelativePath=".\Ve_ui\UI_TopFrame.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_TeacherTab.h">
+				RelativePath=".\Ve_ui\UI_TransTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_TextureBasedPanel.h">
+				RelativePath=".\Ve_ui\UI_VecTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_TopFrame.h">
+				RelativePath=".\Ve_ui\UI_VertTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_TransTab.h">
+				RelativePath=".\Ve_ui\UI_ViewLocTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_VecTab.h">
+				RelativePath=".\Ve_ui\UI_VisTab.h">
 			</File>
 			<File
-				RelativePath="..\futuregen\Ve_ui\UI_VertTab.h">
-			</File>
-			<File
-				RelativePath="..\futuregen\Ve_ui\UI_ViewLocTab.h">
-			</File>
-			<File
-				RelativePath="..\futuregen\Ve_ui\UI_VisTab.h">
-			</File>
-			<File
-				RelativePath=".\skel\VjObsC.h">
+				RelativePath="..\VESOpen\skel\VjObs.h">
 			</File>
 		</Filter>
 	</Files>
