@@ -211,7 +211,8 @@ FinancialDialog::~FinancialDialog() {};
 
 void FinancialDialog::OnChange(wxCommandEvent &event)
 {
-  _use_data = specify_a->GetValue();
+   event.GetInt();
+   _use_data = specify_a->GetValue();
 }
 
 bool FinancialDialog::TransferDataToWindow()

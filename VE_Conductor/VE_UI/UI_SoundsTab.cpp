@@ -90,11 +90,13 @@ void UI_SoundTab::_buildPage()
 //////////////////////////////////////////////////
 void UI_SoundTab::_onSounds(wxCommandEvent& event)
 {
+   event.GetId();
 }
 
 //////////////////////////////////////////////////
 void UI_SoundTab::_onUpdate(wxCommandEvent& event)
 {
+   event.GetId();
    ((UI_Tabs *)_parent)->cIso_value = 0;
    for(int i = 0; i < ((UI_Tabs *)_parent)->num_sounds; i++)
    {

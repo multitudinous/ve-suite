@@ -14,9 +14,7 @@ PluginLoader::PluginLoader()
 
 PluginLoader::~PluginLoader()
 {
-  int i;
-  
-  for (i=0; i<plugins.size(); i++)
+  for ( unsigned int i=0; i<plugins.size(); ++i )
     delete (plugins[i]);
 
   plugins.clear();
@@ -88,12 +86,10 @@ void PluginLoader::RegisterPlugins()
 
 void PluginLoader::RegisterPlugin(wxClassInfo* info)
 {
-   int id;
-
    if (info)
-     {
+   {
        REI_Plugin *object = (REI_Plugin *) info->CreateObject();
        plugins.push_back(object);
        plugin_cls.push_back(info);
-     }
+   }
 }

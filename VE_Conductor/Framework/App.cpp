@@ -6,9 +6,6 @@ IMPLEMENT_APP(REIApp);
 bool REIApp::OnInit()
 {
 
-
-  int width, height;
-
   try
     {
       XMLPlatformUtils::Initialize();
@@ -31,6 +28,7 @@ bool REIApp::OnInit()
   // properly unless you set the size again
 
 #if defined(__WIN16__) || defined(__WXMOTIF__)
+   int width, height;
 	mainFrame->GetSize(& width, & height);
 	mainFrame->SetSize(-1, -1, width, height);
 #endif

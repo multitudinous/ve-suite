@@ -236,6 +236,7 @@ GlobalParamDialog::~GlobalParamDialog() {};
 
 void GlobalParamDialog::OnChange(wxCommandEvent &event)
 {
+   event.GetInt();
   if (specify_a->GetValue())
     {
       fixed_charge->Enable(true);

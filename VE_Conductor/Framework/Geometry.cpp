@@ -176,6 +176,7 @@ void Geometry::_buildPage()
 //////////////////////////////////////////////////
 void Geometry::_onGeometry( wxScrollEvent& event )
 {
+   event.GetInt();
 /*   ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
    ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();*/
@@ -184,6 +185,7 @@ void Geometry::_onGeometry( wxScrollEvent& event )
 //////////////////////////////////////////////////
 void Geometry::ChangeOpacity( wxScrollEvent& event )
 {
+   event.GetInt();
 /*   ((UI_Tabs *)_parent)->cPre_state = 0;
    ((UI_Tabs *)_parent)->cSc = _geometryRBox->GetSelection();
    ((UI_Tabs *)_parent)->cMin = geomOpacitySlider->GetValue();
@@ -194,6 +196,7 @@ void Geometry::ChangeOpacity( wxScrollEvent& event )
 //////////////////////////////////////////////////
 void Geometry::_onUpdate(wxCommandEvent& event)
 {
+   event.GetInt();
 /*   ((UI_Tabs *)_parent)->cGeo_state = 0;
    ((UI_Tabs *)_parent)->cPre_state = 1;
    for(int i = 0; i < ((UI_Tabs *)_parent)->num_geo; i++)

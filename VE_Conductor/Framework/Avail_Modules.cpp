@@ -1,6 +1,13 @@
 #include "Avail_Modules.h"
 #include "StringParse.h"
 
+#include "icon1.xpm"
+#include "icon2.xpm"
+#include "icon3.xpm"
+#include "icon4.xpm"
+#include "icon5.xpm"
+
+
 BEGIN_EVENT_TABLE(Avail_Modules, wxTreeCtrl)
   EVT_TREE_ITEM_RIGHT_CLICK(TREE_CTRL, Avail_Modules::OnItemRightClick)
   EVT_TREE_SEL_CHANGED(TREE_CTRL, Avail_Modules::OnSelChanged)
@@ -75,6 +82,7 @@ void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
 
 void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
 {
+   event.GetInt();
   ReiTreeItemData* item_data;
 
   selection = GetSelection();
@@ -90,6 +98,7 @@ void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
 
 void Avail_Modules::Instantiate(wxTreeEvent& event) //Double click
 {
+   event.GetInt();
   ReiTreeItemData* item_data;
   wxClassInfo* info;
   REI_Plugin *object;
@@ -198,17 +207,17 @@ void Avail_Modules::CreateImageList(int size)
 
 void Avail_Modules::OnSelChanged(wxTreeEvent& event)
 {
+   event.GetInt();
 }
 
 bool Avail_Modules::LoadModules()
 {
-  int i;
 #ifdef _TAO
   pl_loader->LoadPlugins("GUIPlugins");
 #else
   pl_loader->LoadPlugins("../Plugin");
 #endif  
-  for (i=0; i<pl_loader->plugins.size(); i++)
+  for ( unsigned int i=0; i<pl_loader->plugins.size(); i++)
     AddModule(pl_loader->plugins[i], pl_loader->plugin_cls[i]);
 
   return true;
@@ -216,6 +225,7 @@ bool Avail_Modules::LoadModules()
 
 void Avail_Modules::ShowDesc(wxCommandEvent& event)
 {
+   event.GetInt();
   ReiTreeItemData* item_data;
   REI_Plugin* pl;
   wxString desc;
@@ -239,6 +249,7 @@ void Avail_Modules::ShowDesc(wxCommandEvent& event)
 
 void Avail_Modules::ShowHelp(wxCommandEvent& event)
 {
+   event.GetInt();
   char browser[1024];
   REI_Plugin* pl;
   wxString help;

@@ -56,7 +56,7 @@ UI_Frame::UI_Frame(wxWindow* parent, wxWindowID id,
              const wxPoint& pos,
              const wxSize& size,
              long style)
-: wxPanel(parent, -1, pos, size, style)
+: wxPanel(parent, id, pos, size, style)
 {
    //_appParent = new wxString( "DirectVE" );
    _appParent = wxT( "DirectVE" );

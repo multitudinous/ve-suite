@@ -75,6 +75,7 @@ void UI_TeacherTab::_buildPage()
 //////////////////////////////////////////////////
 void UI_TeacherTab::_onTeacher(wxCommandEvent& event)
 {
+   event.GetInt();
    // Are there any stored scenes loaded?
    if ( ((UI_Tabs *)_parent)->num_teacher > 0 )
    {
@@ -99,6 +100,7 @@ void UI_TeacherTab::_onTeacher(wxCommandEvent& event)
 
 void UI_TeacherTab::_onClear(wxCommandEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId = CLEAR_PFB_FILE;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }

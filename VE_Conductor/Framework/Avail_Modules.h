@@ -12,12 +12,6 @@
 #include "PluginLoader.h"
 #include "Network.h"
 
-#include "icon1.xpm"
-#include "icon2.xpm"
-#include "icon3.xpm"
-#include "icon4.xpm"
-#include "icon5.xpm"
-
 using namespace std;
 
 enum {

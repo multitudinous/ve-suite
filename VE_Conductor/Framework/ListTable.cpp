@@ -38,12 +38,10 @@ void ListTable::SetTitle(std::vector<wxString> titles)
 
 void ListTable::AddRow(std::vector<wxString> vals)
 {
-	int i;
-
 	if (vals.size()>0)
 		InsertItem(num_of_row, vals[0]);//, 0);
  
-	for (i=1; i<vals.size(); i++)
+	for (unsigned int i=1; i<vals.size(); i++)
 		SetItem(num_of_row, i, vals[i]);
 
 	 num_of_row++;

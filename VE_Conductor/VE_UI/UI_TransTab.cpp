@@ -156,12 +156,14 @@ void UI_TransTab::_buildPage()
 ////////////////////////////
 void UI_TransTab::_onCategory(wxCommandEvent& event)
 {
+   event.GetInt();
   //wxMessageBox(_categoryRBox->GetStringSelection(), _T("Category RadioBox!"));
 }
 
 /////////////////////////////////////////////////////////
 void UI_TransTab::_onDirection(wxCommandEvent& event)
 {
+   event.GetInt();
    //wxMessageBox(_directionRBox->GetStringSelection(), _T("RadioBox!"));
    std::cout << " Direction of Cutting plane is : "
                << _directionRBox->GetStringSelection() << std::endl;
@@ -200,6 +202,7 @@ void UI_TransTab::_onDirection(wxCommandEvent& event)
 /////////////////////////////////////////////////////////
 void UI_TransTab::_onReset(wxCommandEvent& event)
 {
+   event.GetInt();
 /*  if (_spButton->GetValue())
     wxMessageBox(_T("single plane selected!"), _T("RadioButton!"));
   else
@@ -209,6 +212,7 @@ void UI_TransTab::_onReset(wxCommandEvent& event)
 /////////////////////////////////////////////////////////
 void UI_TransTab::_onBackward(wxCommandEvent& event)
 {
+   event.GetInt();
 /*  if (_nearestCBox->GetValue())
     wxMessageBox(_T("nearest plane box checked!"), _T("CheckBox!"));
   else
@@ -218,6 +222,7 @@ void UI_TransTab::_onBackward(wxCommandEvent& event)
 //////////////////////////////////////////////////////////
 void UI_TransTab::_onStart(wxCommandEvent& event)
 {
+   event.GetInt();
 /*
    // This function changes the min and max of the current active scalar
    ((UI_Tabs *)_parent)->cId  = CHANGE_SCALAR_RANGE;
@@ -229,11 +234,13 @@ void UI_TransTab::_onStart(wxCommandEvent& event)
 //////////////////////////////////////////////////////////
 void UI_TransTab::_onForward(wxCommandEvent& event)
 {
+   event.GetInt();
 }
 
 //////////////////////////////////////////////////////////
 void UI_TransTab::_onPause(wxCommandEvent& event)
 {
+   event.GetInt();
 /*
    ((UI_Tabs *)_parent)->cId = SCALAR_BAR_TOGGLE;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();

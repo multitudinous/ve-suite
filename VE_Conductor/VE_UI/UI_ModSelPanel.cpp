@@ -69,6 +69,7 @@ UI_ModSelPanel::~UI_ModSelPanel()
 
 void UI_ModSelPanel::_onModSelect(wxCommandEvent& event)
 {
+   event.GetInt();
    ((UI_Frame *)GetParent())->activeModIndex = _modselScroll->_modelSelBox->GetSelection();
    ((UI_Frame *)GetParent())->OnChangeModel();
 }

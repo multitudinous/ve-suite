@@ -171,6 +171,7 @@ int PEThread::svc (void)
       _mutex.release();
       ACE_OS::sleep(1); 
    }
+   return 1;
 }
 
 void PEThread::SetMessage(const char* msg)

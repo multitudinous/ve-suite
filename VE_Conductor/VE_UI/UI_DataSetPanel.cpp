@@ -882,14 +882,25 @@ void UI_DatasetPanel::_resetScalarAdjustment( int dataSetSelected, int scalarSet
       double minScalar = _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->range[ 0 ];
       double maxScalar = _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->range[ 1 ];
 
-      double tempminslid =  
+      double tempminslid = 0;
+      double tempmaxslid = 0;
+
+      if ( minScalar == maxScalar )
+      {
+         tempminslid = minScalar;
+         tempmaxslid = maxScalar;
+      }
+      else
+      {
+         tempminslid =  
             (_DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMinSetting -
             minScalar ) / ( maxScalar - minScalar ) * 100;  
 
-      double tempmaxslid =
+         tempmaxslid =
             ( (maxScalar - minScalar) - ( maxScalar -
             _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->lastMaxSetting) ) /
             ( maxScalar - minScalar) * 100; 
+      }
 
       //create the two sliders
       _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,(int)tempminslid,0,100,wxDefaultPosition, wxDefaultSize,
@@ -1151,9 +1162,18 @@ void UI_DatasetPanel::_onMinSpinCtrl(wxScrollEvent& event)
    double minScalar, maxScalar;
 
    GetMinMaxScalar( minScalar, maxScalar );
+   int minValue = 0;
 
-   int minValue = (int)( ( _minSpinner->GetValue() - 
+   if ( minScalar == maxScalar )
+   {
+      minValue = (int)minScalar;
+   }
+   else
+   {
+      minValue = (int)( ( _minSpinner->GetValue() - 
                   minScalar ) / ( maxScalar - minScalar ) * 100);
+   }
+
    _minPercentSlider->SetValue( minValue );
 
    _DataSets[_RBoxScroll->_3dRBox->GetSelection()]->
@@ -1169,10 +1189,19 @@ void UI_DatasetPanel::_onMaxSpinCtrl(wxScrollEvent& event)
    double minScalar, maxScalar;
 
    GetMinMaxScalar( minScalar, maxScalar );
+   int maxValue = 0;
 
-   int maxValue = (int)( ( ( maxScalar - minScalar ) -
+   if ( minScalar == maxScalar )
+   {
+      maxValue = (int)maxScalar;
+   }
+   else
+   {
+      maxValue = (int)( ( ( maxScalar - minScalar ) -
                   ( maxScalar - _maxSpinner->GetValue() ) ) /
                   ( maxScalar - minScalar ) * 100 );
+   }
+
    _maxPercentSlider->SetValue( maxValue );
 
    _DataSets[_RBoxScroll->_3dRBox->GetSelection()]->

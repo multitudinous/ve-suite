@@ -67,9 +67,9 @@ void UI_VertTab::_buildPage()
                                     wxT("Display Particles"));
 
    //group the sliders and the labels together
-   wxBoxSizer* propGroup = new wxBoxSizer(wxVERTICAL);
+   /*wxBoxSizer* propGroup = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* intGroup = new wxBoxSizer(wxVERTICAL);
-   wxBoxSizer* stepGroup = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* stepGroup = new wxBoxSizer(wxVERTICAL);*/
 
    ////////////////////////////////////////////////////////////////////
    //the layout                                                      //
@@ -116,12 +116,13 @@ void UI_VertTab::_buildPage()
 //////////////////////////////////////////////////////////////
 void UI_VertTab::_onParticleOption(wxCommandEvent& event)
 {
+   event.GetInt();
 }
 
 ///////////////////////////////////////////////////////////
 void  UI_VertTab::_onDisplayParticle(wxCommandEvent& event)
 {
-
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_PARTICLE_VIEW_OPTION;
    ((UI_Tabs *)_parent)->cGeo_state = _particleOptionRBox->GetSelection();
    ((UI_Tabs *)_parent)->cIso_value = _spherePointSizeSlider->GetValue();
@@ -132,5 +133,6 @@ void  UI_VertTab::_onDisplayParticle(wxCommandEvent& event)
 //////////////////////////////////////////////////////////////
 void UI_VertTab::_onSpherePointSizeSlider(wxScrollEvent& event)
 {
+   event.GetInt();
 }
 

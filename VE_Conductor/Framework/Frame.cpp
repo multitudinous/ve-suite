@@ -277,6 +277,7 @@ void AppFrame::CreateMenu()
 
 void AppFrame::ZoomIn(wxCommandEvent &event)
 {
+   event.GetInt();
   //  printf("Scale = %g\n", network->m_xUserScale);
   int w, h, sx, sy;
   int xpos, ypos;
@@ -302,6 +303,7 @@ void AppFrame::ZoomIn(wxCommandEvent &event)
 
 void AppFrame::ZoomOut(wxCommandEvent &event)
 {
+   event.GetInt();
   //  printf("Scale = %g\n", network->m_xUserScale);
   int w, h, sx, sy;
   int xpos, ypos;
@@ -326,6 +328,7 @@ void AppFrame::ZoomOut(wxCommandEvent &event)
 
 void AppFrame::Save(wxCommandEvent &event)
 {
+   event.GetInt();
   if (path==wxString("")) //First time call save will be the same as SaveAs
     SaveAs(event);
   else
@@ -334,6 +337,7 @@ void AppFrame::Save(wxCommandEvent &event)
 
 void AppFrame::SaveAs(wxCommandEvent &event)
 {
+   event.GetInt();
   wxFileDialog dialog
     (
      this,
@@ -358,6 +362,7 @@ void AppFrame::SaveAs(wxCommandEvent &event)
 
 void AppFrame::Open(wxCommandEvent &event)
 {
+   event.GetInt();
   wxFileDialog dialog
     (
      this,
@@ -381,6 +386,7 @@ void AppFrame::Open(wxCommandEvent &event)
 
 void AppFrame::LoadFromServer(wxCommandEvent &event)
 {
+   event.GetInt();
   char *nw_str;
   try	{ 
     nw_str=network->exec->GetNetwork();
@@ -395,11 +401,13 @@ void AppFrame::LoadFromServer(wxCommandEvent &event)
 
 void AppFrame::New(wxCommandEvent &event)
 {
-  network->New();
+   event.GetInt();
+   network->New();
 }
 
 void AppFrame::SubmitToServer(wxCommandEvent &event)
 {
+   event.GetInt();
   std::string nw_str;
   network->SaveS(nw_str);
   try {
@@ -411,6 +419,7 @@ void AppFrame::SubmitToServer(wxCommandEvent &event)
 
 void AppFrame::StartCalc(wxCommandEvent &event)
 {
+   event.GetInt();
   try	{ 
     network->exec->StartCalc();
     
@@ -421,6 +430,7 @@ void AppFrame::StartCalc(wxCommandEvent &event)
 
 void AppFrame::StopCalc(wxCommandEvent &event)
 {
+   event.GetInt();
   try	{ 
     network->exec->StopCalc();
     
@@ -431,6 +441,7 @@ void AppFrame::StopCalc(wxCommandEvent &event)
 
 void AppFrame::PauseCalc(wxCommandEvent &event)
 {
+   event.GetInt();
   try	{ 
     network->exec->PauseCalc();
     
@@ -441,6 +452,7 @@ void AppFrame::PauseCalc(wxCommandEvent &event)
 
 void AppFrame::ResumeCalc(wxCommandEvent &event)
 {
+   event.GetInt();
   try	{ 
     network->exec->Resume();
     
@@ -451,6 +463,7 @@ void AppFrame::ResumeCalc(wxCommandEvent &event)
 
 void AppFrame::ViewResult(wxCommandEvent &event)
 {
+   event.GetInt();
   char* result;
   char buf[80];
   map<int, MODULE>::iterator iter;
@@ -628,6 +641,7 @@ void AppFrame::ViewResult(wxCommandEvent &event)
 
 void AppFrame::GlobalParam(wxCommandEvent &event)
 {
+   event.GetInt();
   if (network->globalparam_dlg!=NULL)
     network->globalparam_dlg->Show();
   else
@@ -640,6 +654,7 @@ void AppFrame::GlobalParam(wxCommandEvent &event)
 
 void AppFrame::ConExeServer(wxCommandEvent &event)
 {
+   event.GetInt();
   if (!is_orb_init)
     {
       if (init_orb_naming())
@@ -675,6 +690,7 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
   
 void AppFrame::ConVEServer(wxCommandEvent &event)
 {
+   event.GetInt();
    if (!is_orb_init)
    {
       if (init_orb_naming())
@@ -758,20 +774,24 @@ bool AppFrame::init_orb_naming()
 
 void AppFrame::LoadBase(wxCommandEvent &event)
 {
+   event.GetInt();
   network->Load("IECMBase.nt");
 }
 
 void AppFrame::LoadSour(wxCommandEvent &event)
 {
+   event.GetInt();
   network->Load("IECMSour.nt");
 }
 
 void AppFrame::LoadREIBase(wxCommandEvent &event)
 {
+   event.GetInt();
   network->Load("REIBase.nt");
 }
 void AppFrame::LoadREISour(wxCommandEvent &event)
 {
+   event.GetInt();
   network->Load("REISour.nt");
 }
 
@@ -785,11 +805,13 @@ void AppFrame::Log(const char* msg)
 
 void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event)
 {
+   event.GetInt();
   logwindow->AppendText(event.GetText());
 }
 
 void AppFrame::DisConExeServer(wxCommandEvent &event)
 {
+   event.GetInt();
    try
    {
       network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
@@ -813,6 +835,7 @@ void AppFrame::DisConExeServer(wxCommandEvent &event)
 
 void AppFrame::DisConVEServer(wxCommandEvent &event)
 {
+   event.GetInt();
   //try {
   /*CosNaming::Name name(1);
     
@@ -854,25 +877,26 @@ void AppFrame::DisConVEServer(wxCommandEvent &event)
 
 void AppFrame::ViewHelp(wxCommandEvent& event)
 {
-  char browser[1024];
-  wxString help;
-  wxString fgroot;
-  wxString docdir;
-  wxString cmd;
-  fgroot = getenv("FGROOT");
+   event.GetInt();
+   char browser[1024];
+   wxString help;
+   wxString fgroot;
+   wxString docdir;
+   wxString cmd;
+   fgroot = getenv("FGROOT");
   
 #ifdef WIN32
-  docdir=fgroot+"\\Framework\\doc";
-  help = fgroot+"\\Framework\\doc\\index.html";
-  FindExecutable("index.html", docdir.c_str(), browser);
+   docdir=fgroot+"\\Framework\\doc";
+   help = fgroot+"\\Framework\\doc\\index.html";
+   FindExecutable("index.html", docdir.c_str(), browser);
 #endif
-  cmd="\"";
-  cmd+=browser;
-  cmd+="\" \"";
-  cmd+=help;
-  cmd+="\"";
+   cmd="\"";
+   cmd+=browser;
+   cmd+="\" \"";
+   cmd+=help;
+   cmd+="\"";
   
-  ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
+   ::wxExecute(cmd, wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
 }
 
 void AppFrame::CloseVE()

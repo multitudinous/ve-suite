@@ -1,4 +1,6 @@
+#ifdef WIN32
 #pragma warning(disable : 4786)
+#endif
 
 #include "string_ops.h"
 #include <stdio.h>

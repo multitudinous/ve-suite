@@ -219,12 +219,12 @@ void UI_VisualizationTab::_buildPage()
    sixthRow ->Add(_customVisButton, 1, wxALIGN_CENTER_HORIZONTAL);
 
    //Add the rows to the main grouping
-   visPanelGroup->Add(firstRow,  3.0, wxALIGN_LEFT|wxEXPAND);
-   visPanelGroup->Add(secondRow, 4.0, wxALIGN_LEFT|wxEXPAND);
-   visPanelGroup->Add(thirdRow,  2.0, wxALIGN_LEFT|wxEXPAND);
-   visPanelGroup->Add(forthRow,  1.0, wxALIGN_LEFT|wxEXPAND);
-   visPanelGroup->Add(fifthRow,  1.0, wxALIGN_LEFT|wxEXPAND);
-   visPanelGroup->Add(sixthRow,  1.5, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(firstRow,  3, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(secondRow, 4, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(thirdRow,  2, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(forthRow,  1, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(fifthRow,  1, wxALIGN_LEFT|wxEXPAND);
+   visPanelGroup->Add(sixthRow,  1, wxALIGN_LEFT|wxEXPAND);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
@@ -238,12 +238,14 @@ void UI_VisualizationTab::_buildPage()
 ////////////////////////////
 void UI_VisualizationTab::_onCategory(wxCommandEvent& event)
 {
+   event.GetInt();
   //wxMessageBox(_categoryRBox->GetStringSelection(), _T("Category RadioBox!"));
 }
 
 /////////////////////////////////////////////////////////
 void UI_VisualizationTab::_onContour(wxCommandEvent& event)
 {
+   event.GetInt();
    ((UI_Tabs *)_parent)->cId = CHANGE_CONTOUR_FILL;
    if ( _contourRBox->GetSelection() == 0 ) // X Plane 
    {
@@ -345,7 +347,6 @@ void UI_VisualizationTab::_onNearest(wxCommandEvent& event)
 void UI_VisualizationTab::_onUpdate(wxCommandEvent& event)
 {
    event.GetInt();
-   char s[256];
    this->createCommandId();
    this->createTransientCommandId();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
