@@ -1,8 +1,8 @@
 #include "cfdVolumeVisualization.h"
-
+#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG
+#elif _OSG 
 #include <iostream>
 #ifdef CFD_USE_SHADERS
 #include <osgNVCg/Context>
@@ -724,6 +724,6 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
    return *this;
 }
 
-
+#endif
 #endif
 

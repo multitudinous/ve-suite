@@ -1,6 +1,7 @@
 #ifndef CFD_AVDECTION_SUBGRAPH_H
 #define CFD_AVDECTION_SUBGRAPH_H
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #ifdef CFD_USE_SHADERS
 class cfdTextureManager;
 class cfdPBufferManager;
@@ -24,4 +25,5 @@ osg::ref_ptr<osg::Group> CreateAdvectionSubGraph(cfdTextureManager* tm,
 
 #endif// CFD_USE_SHADERS
 #endif// _OSG
+#endif
 #endif //CFD_AVDECTION_SUBGRAPH_H

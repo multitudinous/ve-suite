@@ -1,3 +1,4 @@
+#ifdef VE_PATENTED
 #include "cfdTextureManager.h"
 #include <fstream>
 ////////////////////////////////
@@ -301,3 +302,4 @@ cfdTextureManager& cfdTextureManager::operator=(const cfdTextureManager& tm)
    return *this;
 
 }
+#endif // VE_PATENTED

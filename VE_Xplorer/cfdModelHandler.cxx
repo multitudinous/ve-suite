@@ -343,6 +343,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       activeDataset->SetActiveVector( vectorIndex );
       //activeDataset->GetParent()->SetActiveVector( vectorIndex );
 #ifdef _OSG
+#ifdef VE_PATENTED
       if(_activeModel !=0)
       {
          if(_activeTDSet)
@@ -350,6 +351,7 @@ void cfdModelHandler::PreFrameUpdate( void )
             _activeTDSet->SetActiveVector(activeDataset->GetVectorName(vectorIndex));
          }
       }
+#endif
 #endif
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
@@ -508,6 +510,7 @@ void cfdModelHandler::PreFrameUpdate( void )
          << std::endl << vprDEBUG_FLUSH;
       //update active scalar texture if it exists
 #ifdef _OSG
+#ifdef VE_PATENTED
       if(_activeModel !=0)
       {
          if(_activeTDSet)
@@ -515,6 +518,7 @@ void cfdModelHandler::PreFrameUpdate( void )
             _activeTDSet->SetActiveScalar(activeDataset->GetScalarName(scalarIndex));
          }
       }
+#endif
 #endif
 
       activeDataset->SetActiveScalar( scalarIndex );
@@ -527,7 +531,8 @@ void cfdModelHandler::PreFrameUpdate( void )
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
                            commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
    }
-#ifdef _OSG   
+#ifdef _OSG 
+#ifdef VE_PATENTED
    if(commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_VECTOR||
       commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_VECTOR||
       commandArray->GetCommandValue(cfdCommandArray::CFD_ID) == Z_VECTOR)
@@ -551,6 +556,7 @@ void cfdModelHandler::PreFrameUpdate( void )
          }
       }
    }
+#endif
 #endif
    // Check and see if we need to refresh the scalar bar
    vprDEBUG(vprDBG_ALL,3) << "cfdModelHandler::_scalarBar->CheckCommandId"
@@ -809,6 +815,7 @@ void cfdModelHandler::CreateObjects( void )
       else if ( id == 15 )
       {
 #ifdef _OSG
+#ifdef VE_PATENTED
          if ( _modelList.empty() )
          {
             _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
@@ -833,6 +840,7 @@ void cfdModelHandler::CreateObjects( void )
                                                 textureDescriptionFile);
          }
          nTextureDataSets++;
+#endif
 #endif
       }
       else

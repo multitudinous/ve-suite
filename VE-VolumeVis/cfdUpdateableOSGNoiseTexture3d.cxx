@@ -1,7 +1,8 @@
+#ifdef VE_PATENTED
 #include <iostream>
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG
+#elif _OSG 
 
 #include <osg/State>
 #include "cfdUpdateableOSGNoiseTexture3d.h" 
@@ -184,3 +185,4 @@ cfdUpdateableOSGNoiseTexture3d::operator=(const cfdUpdateableOSGNoiseTexture3d& 
    return *this;
 }
 #endif 
+#endif

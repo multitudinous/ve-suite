@@ -1,6 +1,6 @@
 #ifndef CFD_TEXTURE_BASED_MODEL_HANDLER_H
 #define CFD_TEXTURE_BASED_MODEL_HANDLER_H
-
+#ifdef VE_PATENTED
 #include <vpr/Util/Singleton.h>
 
 class cfdDCS;
@@ -16,7 +16,7 @@ class cfdTextureManager;
 #include <vector>
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG
+#elif _OSG 
 namespace osgUtil { class SceneView; }
 class cfdPBufferManager;
 class cfdVolumeVisualization;
@@ -88,4 +88,5 @@ private:
       ~cfdTextureBasedVizHandler( void ){ ; }// Never gets called, don't implement
 };
 #endif //OSG
+#endif //
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

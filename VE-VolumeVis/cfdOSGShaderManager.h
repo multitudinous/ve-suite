@@ -1,7 +1,7 @@
 #ifndef CFD_OSG_SHADER_MANAGER_H
 #define CFD_OSG_SHADER_MANAGER_H
-
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #include <osg/StateSet>
 #ifdef CFD_USE_SHADERS
 #include <osgNVCg/Program>
@@ -36,4 +36,5 @@ protected:
 
 #endif //CFD_USE_SHADERS
 #endif //_OSG
+#endif
 #endif// CFD_OSG_SHADER_MANAGER_H

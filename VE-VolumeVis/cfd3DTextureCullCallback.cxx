@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 
 #ifdef CFD_USE_SHADERS
 #include "cfd3DTextureCullCallback.h"
@@ -126,5 +127,6 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
     if(_textureToUpdate.valid())rtts->set3DTexture(_textureToUpdate.get());
 }
    
+#endif
 #endif
 #endif

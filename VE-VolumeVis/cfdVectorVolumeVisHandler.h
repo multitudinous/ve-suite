@@ -1,7 +1,7 @@
 #ifndef CFD_VECTOR_VOLUME_VIS_HANDLER_H
 #define CFD_VECTOR_VOLUME_VIS_HANDLER_H
-
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #ifdef CFD_USE_SHADERS
 namespace osg{
    class Group;
@@ -55,4 +55,5 @@ protected:
 };
 #endif //
 #endif //_OSG
+#endif
 #endif// CFD_SCALAR_VOLUME_VIS_HANDLER_H

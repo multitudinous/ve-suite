@@ -1,6 +1,7 @@
 #ifndef CFD_TEXTURE_DATA_SET_H
 #define CFD_TEXTURE_DATA_SET_H
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 
 class cfdVolumeVisualization;
 class cfdTextureManager;
@@ -59,4 +60,5 @@ protected:
    TextureDataList _vectors;
 };
 #endif // _OSG
+#endif
 #endif// CFD_TEXTURE_DATA_SET_H

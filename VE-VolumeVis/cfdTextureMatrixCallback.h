@@ -1,7 +1,8 @@
 //class to update the texture matrix appropriately
 #ifndef CFD_TEXTURE_MATRIX_CALLBACK_H 
 #define CFD_TEXTURE_MATRIX_CALLBACK_H 
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 
 namespace osg{
    class TexMat;
@@ -23,4 +24,5 @@ protected:
    mutable osg::ref_ptr<osg::TexMat> _texMat;
 };
 #endif //_OSG
+#endif
 #endif// CFD_TEXTURE_MATRIX_CALLBACK_H 

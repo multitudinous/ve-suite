@@ -1,9 +1,9 @@
 #ifndef _BIV_TEXTURE_MANAGER_H_
 #define _BIV_TEXTURE_MANAGER_H_
-#ifdef WIN32
+#ifdef WIN32 
 #include <windows.h>
 #endif
-
+#ifdef  VE_PATENTED
 //#include <gl/gl.h>
 #include <iostream>
 #include <vector>
@@ -68,4 +68,5 @@ protected:
    int _direction;
    PlayMode _mode;
 };
+#endif //VE_PATENTED
 #endif //_BIV_TEXTURE_MANAGER_H_

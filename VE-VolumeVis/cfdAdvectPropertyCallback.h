@@ -1,7 +1,7 @@
 #ifndef CFD_ADVECT_PROPERTY_CALLBACK_H
 #define CFD_ADVECT_PROPERTY_CALLBACK_H
-
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #ifdef CFD_USE_SHADERS
 
 namespace osg{
@@ -24,5 +24,6 @@ protected:
 };
 #endif //CFD_USE_SHADERS
 #endif //_OSG
+#endif
 #endif //CFD_ADVECT_PROPERTY_CALLBACK_H
 

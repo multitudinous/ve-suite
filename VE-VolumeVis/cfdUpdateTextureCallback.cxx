@@ -1,7 +1,8 @@
 #include "cfdUpdateTextureCallback.h"
+#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG
+#elif _OSG 
 #include <osg/State>
 
 #include <osg/Node>
@@ -123,4 +124,5 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
      }
    }   
 }
+#endif
 #endif

@@ -1,3 +1,4 @@
+#ifdef VE_PATENTED
 #ifdef _OSG
 #ifdef CFD_USE_SHADERS
 #include "cfdUpdateParameterCallback.h"
@@ -75,3 +76,4 @@ void cfdUpdateParameterCallback::updateParameter(float* v)
 }
 #endif //CFD_USE_SHADERS
 #endif //_OSG
+#endif

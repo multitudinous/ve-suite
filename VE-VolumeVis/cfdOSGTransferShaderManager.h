@@ -1,6 +1,6 @@
 #ifndef CFD_OSG_TRANSFER_SHADER_MANAGER_H
 #define CFD_OSG_TRANSFER_SHADER_MANAGER_H
-
+#ifdef VE_PATENTED
 #ifdef _OSG
 namespace osg{
    class Texture3D;
@@ -49,4 +49,5 @@ protected:
 };
 #endif// _CFD_USE_SHADERS
 #endif//_OSG
+#endif //
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H

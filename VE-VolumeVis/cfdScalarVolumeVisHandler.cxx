@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 
 #include "cfdTextureManager.h"
 #include "cfdScalarVolumeVisHandler.h"
@@ -125,4 +126,5 @@ cfdScalarVolumeVisHandler::operator=(const cfdScalarVolumeVisHandler& vvnh)
 }
 #endif//CFD_USE_SHADERS
 #endif //_OSG
+#endif
 

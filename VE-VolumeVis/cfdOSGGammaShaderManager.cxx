@@ -1,5 +1,6 @@
+#ifdef VE_PATENTED
 #include <iostream>
-#ifdef _OSG
+#ifdef _OSG 
 #include <osg/Texture3D>
 #include <osg/Texture1D>
 #include <osg/BlendFunc>
@@ -110,3 +111,4 @@ void cfdOSGGammaShaderManager::_initPropertyTexture()
 }
 #endif// _CFD_USE_SHADERS
 #endif//_OSG
+#endif

@@ -1,8 +1,9 @@
 #ifndef CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H
 #define CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H
+#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG
+#elif _OSG 
 namespace osg{
    class State;
 };
@@ -34,4 +35,5 @@ protected:
    unsigned char* _data;
 };
 #endif //_OSG
+#endif
 #endif// CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H

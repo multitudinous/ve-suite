@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #include <osg/Texture1D>
 #include <osg/Image>
 #include <osg/State>
@@ -151,4 +152,5 @@ cfdUpdateableOSGTexture1d& cfdUpdateableOSGTexture1d::operator=(const cfdUpdatea
    }
    return *this;
 }
+#endif
 #endif

@@ -88,12 +88,14 @@ cfdModel::~cfdModel()
 
    //texture data cleanup
 #ifdef _OSG
+#ifdef VE_PATENTED
    TextureDataSetList::iterator tDataSet;
-   for ( tDataSet=mTextureDataSets.begin(); tDataSet!=mTextureDataSets.end(); )
+   for ( tDataSet=mTextureDataSets.begin(); tDataSet!=mTextureDataSets.end();tDataSet++ )
    {
-         mTextureDataSets.erase( tDataSet++ );
+         delete *tDataSet;
    }
    mTextureDataSets.clear();
+#endif
 #endif
  
    std::map<int,cfdDataSet*>::iterator foundPlugin;
@@ -161,6 +163,7 @@ void cfdModel::SetActiveDataSet( cfdDataSet* input )
    activeDataSet = input;
 }
 #ifdef _OSG
+#ifdef VE_PATENTED
 /////////////////////////////////////
 void cfdModel::CreateTextureDataSet()
 {
@@ -172,6 +175,7 @@ void cfdModel::AddDataSetToTextureDataSet(unsigned int index,
 {
    mTextureDataSets.at(index)->CreateTextureManager(textureDescriptionFile);
 }
+#endif
 #endif
 //////////////////////////////////////////////////
 void cfdModel::CreateGeomDataSet( char* filename )

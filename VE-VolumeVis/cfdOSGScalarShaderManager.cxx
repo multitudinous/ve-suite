@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #include <osg/Texture3D>
 #include <osg/Image>
 #include <osg/BlendFunc>
@@ -154,3 +155,4 @@ cfdOSGScalarShaderManager& cfdOSGScalarShaderManager::operator=(const
 }
 #endif// _CFD_USE_SHADERS
 #endif//_OSG
+#endif

@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #include "cfdTextureDataSet.h"
 #include "cfdVolumeVisualization.h"
 #include "cfdTextureManager.h"
@@ -232,3 +233,4 @@ int cfdTextureDataSet::FindVector(char* name)
    return -1;
 }
 #endif //_OSG
+#endif//vE_PATENTED

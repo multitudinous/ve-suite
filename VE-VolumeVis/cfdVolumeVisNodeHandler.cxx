@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 
 #include <osg/Geometry>
 #include <osg/Geode>
@@ -325,3 +326,4 @@ cfdVolumeVisNodeHandler::operator=(const cfdVolumeVisNodeHandler& vvnh)
 }
 
 #endif //_OSG
+#endif

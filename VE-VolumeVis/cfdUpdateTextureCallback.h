@@ -1,8 +1,9 @@
 #ifndef CFD_UPDATE_TEXTURE_CALLBACK_H
 #define CFD_UPDATE_TEXTURE_CALLBACK_H
+#ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG
+#elif _OSG 
 namespace osg{
    class Node;
    class NodeVisitor;
@@ -105,4 +106,5 @@ protected:
    GLsizei _subloadImageWidth, _subloadImageHeight,_subloadImageDepth;
 };
 #endif //OSG
+#endif
 #endif //CFD_UPDATE_TEXTURE_CALLBACK_H

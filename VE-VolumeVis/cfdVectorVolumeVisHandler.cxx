@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #include <osg/TexEnv>
 #include <osg/Geode>
 #include <osg/TexMat>
@@ -248,4 +249,5 @@ cfdVectorVolumeVisHandler::operator=(const cfdVectorVolumeVisHandler& vvnh)
 }
 #endif //CFD_USE_SHADERS
 #endif //_OSG
+#endif
 

@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #include <osg/StateSet>
 #ifdef CFD_USE_SHADERS
 #include <osgNVCg/Context>
@@ -108,3 +109,4 @@ cfdOSGShaderManager& cfdOSGShaderManager::operator=(const
 }
 #endif //CFD_USE_SHADERS
 #endif //_OSG
+#endif 

@@ -1,9 +1,10 @@
 #ifndef CFD_VOLUME_VISUALIZATION_H
 #define CFD_VOLUME_VISUALIZATION_H
+#ifdef VE_PATENTED
 class cfdGroup;
 #ifdef _PERFORMER
 #elif _OPENSG
-#elif _OSG
+#elif _OSG 
 namespace osg
 {
    class Node;
@@ -126,4 +127,5 @@ protected:
 
 };
 #endif//OSG
+#endif//
 #endif// CFD_VOLUME_VISUALIZATION_H

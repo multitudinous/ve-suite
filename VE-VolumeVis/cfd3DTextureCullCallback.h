@@ -1,6 +1,7 @@
 #ifndef CFD_3D_TEXTURE_UPDATE_CALLBACK_H
 #define CFD_3D_TEXTURE_UPDATE_CALLBACK_H
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #ifdef CFD_USE_SHADERS
 namespace osg{
    class Node;
@@ -45,4 +46,5 @@ protected:
 };
 #endif
 #endif//_OSG
+#endif
 #endif //CFD_3D_TEXTURE_UPDATE_CALLBACK_H

@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #ifdef CFD_USE_SHADERS
 #include "cfdAdvectPropertyCallback.h"
 #include <osgUtil/Cullvisitor>
@@ -29,5 +30,6 @@ void cfdAdvectPropertyCallback::operator()(osg::Node* node,
    traverse(node,nv);
    
 }
+#endif
 #endif
 #endif

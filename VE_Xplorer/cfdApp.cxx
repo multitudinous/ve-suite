@@ -97,7 +97,9 @@ void cfdApp::exit()
    cfdEnvironmentHandler::instance()->CleanUp();
    cfdSteadyStateVizHandler::instance()->CleanUp();
 #ifdef _OSG
+#ifdef VE_PATENTED
    cfdTextureBasedVizHandler::instance()->CleanUp();
+#endif
 #endif
 
 #ifdef _TAO
@@ -296,7 +298,7 @@ void cfdApp::initScene( )
 
    //create the volume viz handler
 #ifdef _OSG
- 
+#ifdef VE_PATENTED
    _tbvHandler = cfdTextureBasedVizHandler::instance();
    _tbvHandler->SetParameterFile(filein_name);
    _tbvHandler->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
@@ -304,6 +306,7 @@ void cfdApp::initScene( )
    _tbvHandler->SetCommandArray( _vjobsWrapper->GetCommandArray() );
    //_tbvHandler->SetSceneView(_sceneViewer.get());
    //_tbvHandler->InitVolumeVizNodes();
+#endif
 #endif
 
 #ifdef _TAO
@@ -343,11 +346,13 @@ void cfdApp::latePreFrame( void )
    cfdSteadyStateVizHandler::instance()->PreFrameUpdate();
    ///////////////////////
 #ifdef _OSG
+#ifdef VE_PATENTED
    //_tbvHandler->SetActiveTextureManager(cfdModelHandler::instance()->GetActiveTextureManager());
    _tbvHandler->SetParentNode((cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
    _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
    _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
    _tbvHandler->PreFrameUpdate();
+#endif
 #endif
    ///////////////////////
 

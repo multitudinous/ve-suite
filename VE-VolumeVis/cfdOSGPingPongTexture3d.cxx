@@ -1,5 +1,6 @@
+#ifdef VE_PATENTED
 #ifdef _PERFORMER
-#elif _OSG
+#elif _OSG 
 #ifdef CFD_USE_SHADERS
 #include "cfdOSGPingPongTexture3D.h"
 #include <osg/Image>
@@ -135,3 +136,4 @@ void cfdOSGPingPongTexture3D::cfdPingPongSubload::SetSubloadTextureSize(const in
 }
 #endif //
 #endif //_OSG
+#endif

@@ -1,6 +1,7 @@
 #ifndef CFD_PBUFFER_QUAD_H
 #define CFD_PBUFFER_QUAD_H
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #include <osg/Drawable>
 #ifdef CFD_USE_SHADERS
 #include <osgNVCg/CgGeometry>
@@ -50,4 +51,5 @@ protected:
 };
 #endif 
 #endif// _OSG
+#endif
 #endif// CFD_PBUFFER_QUAD_H

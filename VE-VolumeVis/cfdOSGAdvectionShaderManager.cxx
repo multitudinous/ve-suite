@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #include <osg/Texture3D>
 #include <osg/Texture1D>
 #include <osg/TexEnv>
@@ -780,3 +781,4 @@ cfdOSGAdvectionShaderManager& cfdOSGAdvectionShaderManager::operator=(const
 }
 #endif// _CFD_USE_SHADERS
 #endif//_OSG
+#endif

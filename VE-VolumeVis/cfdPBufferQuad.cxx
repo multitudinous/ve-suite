@@ -1,4 +1,5 @@
-#ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef _OSG 
 #ifdef CFD_USE_SHADERS
 #include <iostream>
 #include <osg/BoundingBox>
@@ -343,3 +344,4 @@ void cfdPBufferQuad::drawImplementation(osg::State& state)const
 }
 #endif //CFD_USE_SHADERS
 #endif// _OSG
+#endif

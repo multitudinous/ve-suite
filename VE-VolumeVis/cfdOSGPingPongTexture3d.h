@@ -1,7 +1,8 @@
 #ifndef CFD_OSG_PING_PONG_TEXTURE_3D_H
 #define CFD_OSG_PING_PONG_TEXTURE_3D_H
+#ifdef VE_PATENTED
 #ifdef _PERFORMER
-#elif _OSG
+#elif _OSG 
 #include <osg/Texture3D>
 class cfdOSGPingPongTexture3D{
 public:
@@ -40,4 +41,5 @@ protected:
    osg::ref_ptr<osg::Texture3D> _pong;
 };
 #endif //_OSG
+#endif
 #endif // CFD_OSG_PING_PONG_TEXTURE_3D_H
