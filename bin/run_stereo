@@ -1,0 +1,1 @@
+${VE_SUITE_HOME}/bin/${VE_LIBS}/project ${VE_SUITE_HOME}/VE_Xplorer/vjconfig/aron.base.config ${VE_SUITE_HOME}/VE_Xplorer/vjconfig/aron.displays.config ${VE_SUITE_HOME}/VE_Xplorer/vjconfig/aron.wand.mixin.config

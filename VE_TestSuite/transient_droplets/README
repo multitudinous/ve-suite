@@ -1,0 +1,9 @@
+the droplet files were created by transforming selected files from the GM engine spray demo file...
+
+transformVTK /home/vr/Applications/TSVEG/Test_Pit/GMC_Engine_Spray/droplets/flowdata_003.vtk droplet_00.vtk 0 0 0 2.5 -2.1 1
+transformVTK /home/vr/Applications/TSVEG/Test_Pit/GMC_Engine_Spray/droplets/flowdata_005.vtk droplet_01.vtk 0 0 0 1.5 -2.1 1
+transformVTK /home/vr/Applications/TSVEG/Test_Pit/GMC_Engine_Spray/droplets/flowdata_007.vtk droplet_02.vtk 0 0 0 0.5 -2.1 1
+transformVTK /home/vr/Applications/TSVEG/Test_Pit/GMC_Engine_Spray/droplets/flowdata_009.vtk droplet_03.vtk 0 0 0 -0.5 -2.1 1
+transformVTK /home/vr/Applications/TSVEG/Test_Pit/GMC_Engine_Spray/droplets/flowdata_011.vtk droplet_04.vtk 0 0 0 -1.5 -2.1 1
+transformVTK /home/vr/Applications/TSVEG/Test_Pit/GMC_Engine_Spray/droplets/flowdata_013.vtk droplet_05.vtk 0 0 0 -2.5 -2.1 1
+

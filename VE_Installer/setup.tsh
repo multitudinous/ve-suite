@@ -1,0 +1,105 @@
+#!/bin/csh
+# sets up environment to build and/or run VE-Xplorer
+
+#OMNI_HOME & OMNILIB: comment out definitions to make a non-corba version - that's all you have to do
+
+#this is typically defined in your .cshrc file
+#setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
+
+#echo "uname is" `uname`
+#echo "uname -n is" `uname -n`
+setenv CFD_LIBS `uname`_LIB
+setenv VE_LIBS `uname`
+#echo "CFD_LIBS" ${CFD_LIBS}
+
+#setenv TAO_BUILD TRUE
+setenv TAO_BUILD FALSE
+
+setenv PFNFYLEVEL 2
+setenv VPR_DEBUG_NFY_LEVEL 0
+setenv VPR_DEBUG_ENABLE 1
+setenv PFSHAREDSIZE 534773700
+setenv VTK_HOME_DIR /home/users/mccdo/vtk-builds
+setenv WX_HOME_DIR /home/users/mccdo/wxWindows/wxGTK
+setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
+setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
+
+if ( `uname` == "IRIX64" ) then
+   #echo "specifying libraries for irix"
+   setenv JDK_HOME /usr/java2
+   setenv VTK_BASE_DIR ${VTK_HOME_DIR}/IRIX32
+   setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-alpha3.irix-n32-pthread
+#   setenv LD_LIBRARYN32_PATH /home/users/mccdo/VE_Suite/VE_Installer/arenasize/libs
+   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/mccdo/software/IRIX32/lib
+   setenv WX_HOME ${WX_HOME_DIR}/irix-65
+
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
+      setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+   else
+#      setenv OMNI_HOME /home/vr/Juggler/irix/mipspro-omniORB-4.0.1
+#      setenv OMNI_HOME /home/users/mccdo/software/IRIX32
+      setenv OMNI_HOME /home/vr/Juggler/irix/mipspro
+      setenv PYTHONPATH ${OMNI_HOME}/lib/python1.5/site-packages
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+   endif
+      
+else if ( `uname` == "Linux" ) then
+   #echo "specifying libraries for linux"
+   setenv JDK_HOME /usr/java/j2sdk1.4.2_03
+   setenv VTK_BASE_DIR ${VTK_HOME_DIR}/Linux-rh8
+   if ( ${HOSTTYPE} == "i386-linux" ) then
+      setenv VJ_BASE_DIR  /home/vr/Juggler/2.0/vrjuggler-2.0-alpha3.linux-rh80
+      #setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/Fedora-Core1
+   else
+      #setenv VJ_BASE_DIR  /opt/vrjuggler
+      setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/Suse-9-alpha-branch
+   endif
+
+   setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk
+   setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
+
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv WX_HOME ${WX_HOME_DIR}/linux-rh80
+      setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
+      #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
+
+      setenv TAO_ROOT ${ACE_ROOT}/TAO
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
+   else
+      setenv OMNI_HOME /home/vr/Juggler/linux-rh80
+      #setenv OMNI_HOME /home/vr/Juggler/linux-fc1
+      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
+   endif
+
+else
+   echo "ERROR: Unsupported operating system"
+   echo "       CFD_LIBS, OMNI_HOME, and OMNILIB are undefined"
+endif
+
+setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
+setenv DZR_BASE_DIR   ${VJ_BASE_DIR}/share/Doozer
+setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
+setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${VE_LIBS}
+setenv PATH ${WX_HOME}/bin:${PATH}
+setenv PATH ${JDK_HOME}/bin:${PATH}
+if ( ${TAO_BUILD} == "TRUE" ) then
+   setenv PATH ${ACE_ROOT}/bin:${PATH}
+else
+   setenv PATH ${OMNI_HOME}/bin:${PATH}
+endif
+
+#echo ""
+#echo "Now you may type 'gmake' to build the application"
+#echo "              or 'gmake clean'
+#echo "              or 'gmake cleandepend'
+#echo "              or 'run' to start the application in sim mode"
+#echo "              or 'runc6' to start the application on the c6"
+#echo "              or 'runc4.closed' or 'runc4.open' to start the application on the c4"
+#echo ""

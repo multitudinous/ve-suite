@@ -1,0 +1,8 @@
+0 0 0    // X, Y, Z Rotations
+0 0 0    // X, Y, Z Translations
+1 1      // Scale Factor, Coarseness of stream tube
+1        // Particle numbers to get
+450
+550
+668
+793

@@ -1,0 +1,367 @@
+#__________________________________________________________
+# MAKEFILE
+#__________________________________________________________
+#
+# CFD_LIBS is defined in setup.tsh
+# If OMNI_HOME was defined in the script setup.tsh, 
+# then define TABLET, CORBA_DEFINES, and CORBA_INCLUDES
+#To make a non-corba version, don't define OMNI_HOME
+CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
+
+# Uncomment the following line to use cfdSequence instead of pfSequence
+# It is needed for cluster builds
+#EXTRA_CXXFLAGS+= -D_USE_CFD_SEQUENCE
+
+ifdef OMNI_HOME
+   vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl
+
+   TABLET = -DTABLET
+
+   CORBA_DEFINES = -D__OMNIORB4__ -D__REENTRANT -D__OSVERSION__=6 #-DNO_NS
+
+   ifeq ($(CFD_LIBS), Linux_LIB)
+      CORBA_DEFINES += -D__x86__ -D__linux__
+      OMNI_LIB = ${OMNI_HOME}/lib
+   else
+      CORBA_DEFINES += -D__mips__ -D__irix__
+      OMNI_LIB = ${OMNI_HOME}/lib
+   endif
+
+   OMNILIB = -L${OMNI_LIB} -lomniORB4 -lomnithread -lomniDynamic4
+   
+   CORBA_INCLUDES = -I${OMNI_HOME}/include 
+   EXTRA_INCLUDES+=	-I${CONDUCTOR_BASE_DIR}/impl \
+                     -I${CONDUCTOR_BASE_DIR}/skel \
+                     ${CORBA_INCLUDES}
+endif
+
+ifdef ACE_ROOT
+   FUTUREGEN_HOME = /home/users/mccdo/REI/futuregen
+   TABLET = -DTABLET
+
+   vpath %.cxx    ${CONDUCTOR_BASE_DIR}/tao_impl 
+   vpath %.cpp    ${FUTUREGEN_HOME}/IDL.old ${FUTUREGEN_HOME}/Plugin
+   vpath %.h      ${CONDUCTOR_BASE_DIR}/tao_impl ${FUTUREGEN_HOME}/IDL.old
+   #----------------------------------------------------------------------------
+   # Include macros and targets
+   #----------------------------------------------------------------------------
+
+   include ${ACE_ROOT}/include/makeinclude/wrapper_macros.GNU
+   include ${ACE_ROOT}/include/makeinclude/macros.GNU
+#   include ${TAO_ROOT}/rules.tao.GNU
+   include ${ACE_ROOT}/include/makeinclude/rules.common.GNU
+   include ${ACE_ROOT}/include/makeinclude/rules.nonested.GNU
+   include ${ACE_ROOT}/include/makeinclude/rules.local.GNU
+   include ${TAO_ROOT}/taoconfig.mk
+
+   ACE_LIBS = -L${ACE_ROOT}/ace -lACE -lTAO_CosNaming -lTAO_Svc_Utils -lTAO_IORTable -lTAO_PortableServer -L${TAO_ROOT}/tao -lTAO 
+#${LDFLAGS}
+   ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs
+   EXTRA_INCLUDES+=	\
+                  ${ACE_INCLUDES} \
+                  -I${CONDUCTOR_BASE_DIR}/skel \
+                  -I${CONDUCTOR_BASE_DIR}/tao_impl \
+                  -I${FUTUREGEN_HOME}/IDL.old \
+                  -I${FUTUREGEN_HOME}/Plugin
+endif
+
+# Comment out this line if you don't want to build a cluster 
+# juggler app
+#CLUSTER_APP = TRUE
+#__________________________________________________________
+# Operating System Specific stuff
+ifeq ($(CFD_LIBS), Linux_LIB)
+ #  EXTRA_FLAGS = -O2 -DHAVE_CONFIG_H
+endif
+
+#_____________________CUSTOM DEFINES_______________________
+#
+
+# list the source files that are in current directory
+SRCS=\
+   Plot3Dviewer.cxx \
+   cfdAnimatedStreamlineCone.cxx \
+   cfdAnimatedImage.cxx \
+   cfdAnimation.cxx \
+   cfdApp.cxx \
+   cfdContour.cxx \
+   cfdContourBase.cxx \
+   cfdContours.cxx \
+   cfdCursor.cxx \
+   cfdCuttingPlane.cxx \
+   cfdDataSet.cxx \
+   cfdFILE.cxx \
+   cfdFileInfo.cxx \
+   cfdFrame.cxx \
+   cfdGeode.cxx \
+   cfdImage.cxx \
+   cfdIsosurface.cxx \
+   cfdLaser.cxx \
+   cfdMenu.cxx \
+   cfdMomentum.cxx \
+   cfdMomentums.cxx \
+   cfdNavigate.cxx \
+   cfdObjects.cxx \
+   cfdPlanes.cxx \
+   cfdPresetContour.cxx \
+   cfdPresetMomentum.cxx \
+   cfdPresetVector.cxx \
+   cfdReadParam.cxx \
+   cfdScalarBarActor.cxx \
+   cfdStreamers.cxx \
+   cfdPolyData.cxx \
+   cfdTeacher.cxx \
+   cfdTransientInfo.cxx \
+   cfdTransientSet.cxx \
+   cfdTransientFlowManager.cxx \
+   cfdTransientActor.cxx \
+   cfdTransientParticleActor.cxx \
+   cfdTransientScalarActor.cxx \
+   cfdTransientVectorActor.cxx \
+   cfdVectorBase.cxx \
+   cfdVector.cxx \
+   cfdVectors.cxx \
+   fileIO.cxx \
+   pfNaver.cxx \
+   readWriteVtkThings.cxx \
+   cfdAccessoryFunctions.cxx \
+   textPrompt.cxx \
+   vtkActorToPF.cxx \
+   cfdSound.cxx \
+   cfdTransientParticleActor_fluent.cxx \
+   VjObs_i.cxx \
+   cfdDCS.cxx \
+   cfdSequence.cxx
+
+#   cfdDrawManager.cxx
+
+ifeq ($(TAO_BUILD), TRUE)
+SRCS+= \
+   VjObsS.cpp \
+   VjObsC.cpp \
+   cfdExecutive.cxx \
+   cfdExecutiveConfiguration.cxx \
+   cfdGauges.cxx \
+   cfdDigitalAnalogGauge.cxx \
+   cfd1DTextInput.cxx \
+   cfdDashboard.cxx \
+   cfdSwappableGeometry.cxx \
+   cfdInteractiveGeometry.cxx \
+   cfdModuleGeometry.cxx \
+   VE_i.cpp \
+   moduleC.cpp \
+   moduleS.cpp \
+   interface.cpp \
+   string_ops.cpp
+else
+SRCS+= \
+   VjObs.cpp 
+endif
+
+#   Observer.cpp \
+#   CorbaManager.cxx \
+#   Conductor.cpp \
+#   veConductorImpl.cpp \
+
+# object files are being stored in a system-dependent directory so that builds
+# for multiple platforms may be maintained simultaneously.
+#DZR_HOSTTYPE is defined in ${VJ_BASE_DIR}/share/Doozer/mk/dzr.hosttype.mk
+#SYS_SETTING=	$(DZR_HOSTTYPE)-$(VPR_SUBSYSTEM)
+
+#OBJDIR is the place that the object files are stored.
+#OBJDIR=	$(SYS_SETTING)
+OBJDIR=	$(CFD_LIBS)
+
+#DEPDIR is the place that the dependency files are stored.
+#DEPDIR=	$(SYS_SETTING)
+DEPDIR=	$(CFD_LIBS)
+
+include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+
+LIBS=   $(LIBS_BEGIN) $(SYS_LIBS) $(LIBS_END)
+
+#__________________________________________________________
+# Where is Paul Rajlich's vtkActorToPF directory?
+
+#VTK_TO_PF    = ${VE_SUITE_HOME}/VE_XPlorer/vtkActorToPF
+
+# -----------------------------------------------------------------------------
+# following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
+
+# Create the OS-dependent directory name
+UNAME= $(shell uname -s)
+
+ifeq ($(CLUSTER_APP), TRUE)
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/project_cluster
+   EXTRA_CXXFLAGS+=	-D_CLUSTER
+else
+   APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/project
+endif
+
+default: all
+
+# Create the OS-dependent directory for the executable. If the dir exists, 
+# 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
+all:
+	mkdir -p $(VE_SUITE_HOME)/bin/$(UNAME)
+#	$(MAKE) cxx_idl
+#	$(MAKE) java_idl
+	$(MAKE) NO_DEPEND=0 cxx
+	$(MAKE) $(APP_NAME)
+#	$(MAKE) java
+#	$(MAKE) NetworkTestBean.jar
+#	-$(MAKE) install
+
+srcdir=		.
+
+# turn off dependencies for idl stuff, make clean
+NO_DEPEND=	YES
+
+
+# list the cpp and h files here
+#IDL_CXX_FILES= ${CONDUCTOR_BASE_DIR}/Observer.cpp \
+               ${CONDUCTOR_BASE_DIR}/VjObs.cpp \
+               ${CONDUCTOR_BASE_DIR}/Observer.h \
+               ${CONDUCTOR_BASE_DIR}/VjObs.h 
+
+# list the cpp and h files here
+#IDL_CXX_FILES=	SliderSubject.cpp SliderSubject.h		\
+		WhiteboardSubject.cpp WhiteboardSubject.h
+
+# list the corresponding java files that are in directory "networktest"
+#IDL_JAVA_FILES=	SliderSubject.java	\
+		WhiteboardSubject.java
+
+#JAVA_SRCS=  ObserverHolder.java \
+            VjObsHolder.java \
+            ObserverServant.java \
+            send_param.java \
+            ack_win.java \
+            attrib.java \
+            draw_baf.java \
+            id_mapper.java \
+            WholeNumberField.java \
+            client.java \
+            my_orb.java 
+#            FileInterfaceHolder.java \
+#            HelloHolder.java \
+# list the corresponding java files that are in directory "networktest"
+# These files correspond to the IDL_CXX_FILES listed above
+#IDL_JAVA_FILES= Observer.java \
+               VjObs.java 
+
+# all class files are used in creating the jar files
+#ALL_CLASSES= *.class
+#EXTRA_SOURCEPATH_DIRS= ${CONDUCTOR_BASE_DIR}/java_stuff
+#CLASSPATH= ${CONDUCTOR_BASE_DIR}/java_stuff
+#CLASSPATH_ARG=	-classpath "${CONDUCTOR_BASE_DIR}/java_stuff"
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.pfapp.mk
+#include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
+#include $(DZR_BASE_DIR)/mk/dzr.java-app.mk
+
+#include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
+#include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+
+# One of these must be uncommented.
+DEBUG_APP?=		TRUE
+#OPTIM_APP?=		TRUE
+
+# vtkActorToPF needs VTK4
+EXTRA_CXXFLAGS+=	-DVTK4 ${TABLET} 
+#$(EXTRA_FLAGS) 
+
+#EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG -gslim 
+EXTRA_OPTIM_FLAGS+=	-O2 -OPT:Olimit=0 -D_OPT
+
+ifeq ($(TAO_BUILD), TRUE)
+   EXTRA_CXXFLAGS+=	-D_TAO ${CPPFLAGS}
+   EXTRA_LIBS+= ${ACE_LIBS} 
+   #$(VLDLIBS)
+else
+   EXTRA_CXXFLAGS+=	$(TWEEK_CXX_FLAGS) $(CORBA_DEFINES)
+   EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) 
+endif
+
+LINKALL_ON=		-all
+LINKALL_OFF=		
+
+STATIC_ON=		@APP_LINK_STATIC_ON@
+STATIC_OFF=		@APP_LINK_STATIC_OFF@
+
+#CLASSPATH=		$(TWEEK_JARS)
+
+CXX_GEN_DIR=		.
+#CXX_IDL=		$(TWEEK_IDL_CXX)
+#CXX_IDL_OPTS=		$(TWEEK_IDLFLAGS_CXX)			\
+			$(TWEEK_IDL_GENDIR_CXX)$(CXX_GEN_DIR)
+#CXX_IDL_INCLUDES=	
+
+#JAVA_GEN_DIR=		$(CONDUCTOR_BASE_DIR)/java_stuff
+#JAVA_IDL=		$(TWEEK_IDL_JAVA)
+#JAVA_IDL_OPTS=		$(TWEEK_IDLFLAGS_JAVA)			\
+			$(TWEEK_IDL_GENDIR_JAVA)$(JAVA_GEN_DIR)
+#JAVA_IDL_INCLUDES=	
+
+#WARN_MSG= I_AM_HERE
+#EXTRA_PATH_FOR_SOURCES= ${CONDUCTOR_BASE_DIR} \
+                        ${CONDUCTOR_BASE_DIR}/java_stuff \
+                        ${CONDUCTOR_BASE_DIR}/java_stuff/ObserverPackage \
+                        ${CONDUCTOR_BASE_DIR}/java_stuff/VjObsPackage 
+
+
+vpath %.cpp $(CXX_GEN_DIR) ${CONDUCTOR_BASE_DIR}/skel
+#vpath %.cc ./UMI/skel
+#vpath %.h $(CXX_GEN_DIR)  ${CONDUCTOR_BASE_DIR}/skel
+
+#vpath %.idl $(CONDUCTOR_BASE_DIR)
+#vpath %.java $(JAVA_GEN_DIR)
+
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+#cxx_idl: $(IDL_CXX_FILES)
+
+#%.cpp %.h: %.idl
+#	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $<
+
+#java_idl: $(IDL_JAVA_FILES)
+
+#%.java: %.idl
+#	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_INCLUDES) $<
+
+cxx: $(OBJS)
+
+#java: $(CLASSES)
+
+${APP_NAME}: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+#$(TWEEK_LIBS) 
+#NetworkTestBean.jar: $(JAVA_CLASSES)
+#	$(JAR) cvf $@ $(ALL_CLASSES)
+
+install:
+	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+
+# in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
+CLEAN_FILES+= $(APP_NAME)
+#CLEAN_FILES+= $(APP_NAME) *.d
+#CLEAN_FILES+=	CorbaManager.o \
+      $(addprefix $(srcdir)/, $(IDL_CXX_FILES))		\
+		$(addprefix $(srcdir)/networktest/, $(IDL_JAVA_FILES))	\
+      $(CONDUCTOR_BASE_DIR)/*.d \
+		$(CLASSES) tweek/*.class
+
+#  in addition to the "ii_files" directory, the following directories will be removed during "gmake clean"
+#CLEAN_DIRS+=	$(srcdir)/tweek
+
+#CLOBBER_FILES+=	NetworkTestBean.jar
+
+# DO NOT DELETE THIS LINE -- g++dep uses it.
+# DO NOT PUT ANYTHING AFTER THIS LINE, IT WILL GO AWAY.
+
+
+
+# IF YOU PUT ANYTHING HERE IT WILL GO AWAY

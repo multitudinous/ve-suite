@@ -1,0 +1,73 @@
+8                    // the number of objects to follow
+0                    // OPTIONAL world DCS settings
+   1 1 1             // Scale values
+   0 0 0             // Translation values
+   30 0 0            // Rotation values (Z-X-Y format)
+9                    // Object type 9: Geometry
+   0                 // transparency toggle
+   1   1.0 0.0 0.0   // color flag ( and 3 color values if flag = 1)
+   1 1 1             // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0             // Rotation values (Z-X-Y format)
+   ./eightCorners.stl   // Geometry file name
+8                    // Object type 8: data set
+   1 1 1             // Scale values
+   0 0 0             // Translation values
+   0 0 0             // Rotation values (Z-X-Y format)
+   ./3scl.vtk        // data set name
+   ./POST_DATA1      // precomputed data slice directory
+   ./SURFACE1        // precomputed surface directory
+9                    // Object type 9: Geometry
+   1                 // transparency toggle
+   1 1 0.7 1         // color flag ( and 3 color values if flag = 1)
+   1 1 1             // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0             // Rotation values (Z-X-Y format)
+   ./Surface0.75.stl // Geometry file name
+8                    // Object type 8: data set
+   1 1 1             // Scale values
+   -4 0 0            // Translation values
+   40 40 0           // Rotation values (Z-X-Y format)
+   ./2scl.vtk        // data set name
+   ./POST_DATA2      // precomputed data slice directory
+   ./SURFACE2        // precomputed surface directory
+9                    // Object type 9: Geometry
+   1                 // transparency toggle
+   1  1 1 1          // color flag (and 3 color values if flag = 1)
+   1 1 1             // Scale values for geometry file
+   -4 0 0            // Translation values for geometry file
+   40 40 0           // Rotation values (Z-X-Y format)
+   ./Surface0.75.stl // Geometry file name
+8                    // Object type 8: data set
+   1 1 1 
+   0 0 0 
+   0 0 0
+   vtkPolyData.vtk
+   ./JUNK            // precomputed data slice directory
+   ./JUNK2           // precomputed surface directory
+10                   // Object type 10: Transient data loader
+   4   4                 // Number of directories containing vtk data to follow
+   1 1 1             // data dcs scale values
+   0 0 0             // data dcs translation values
+   0 0 0             // data dcs rotation values
+   ./transient_flowdata    // directory of vtk files
+      0                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
+   ./transient_y_planes    // directory of vtk files
+      2                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
+   ./transient_z_planes    // directory of vtk files
+      3                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
+   ./transient_droplets    // directory of vtk files
+      4                    // button ID (0=3D_mesh, 1=x-planes, 2=y-planes, 3=z-planes, 4=particle cloud)
+   ./trans_geometry  // Transient geometry data directory
+   1 1 1             // Transient geometry dcs scale values
+   0 0 0             // Transient geometry dcs translation values
+   0 0 0             // Transient geometry dcs rotation values
+   1  1  1.0 1.0 1.0 // Transient geometry transparency setting, color flag (and 3 color values if flag = 1)
+   6                 // Duration of the transient sequence in seconds
+1        // Warped Contour Scale Value
+0.5      // Navigation Step Size
+0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient
+
+
+
+

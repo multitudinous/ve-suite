@@ -1,0 +1,120 @@
+#!/usr/bin/tcsh -f
+
+# Set environment variables and paths for running the program
+source /isv/VE_Suite/VE_Installer/setup.deere.tsh
+setenv VE_LIBS `uname`
+# Set additional environment variables
+setenv MY_VJCONFIGS /isv/Juggler/deere.config/icecube_2.0a2
+
+switch ($1)
+
+  case -c:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/icecube.base.config \
+    ${MY_VJCONFIGS}/icecube.displays.closed.config \
+    ${MY_VJCONFIGS}/icecube.mstar.config \
+    ${MY_VJCONFIGS}/icecube.rfwand.config 
+  breaksw
+  
+  case -cf:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/icecube.base.config \
+    ${MY_VJCONFIGS}/icecube.displays.closed.config \
+    ${MY_VJCONFIGS}/icecube.mstar.headless.config \
+    ${MY_VJCONFIGS}/icecube.rfwand.config 
+  breaksw
+  
+  case -d:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/sim.base.config \
+    ${MY_VJCONFIGS}/sim.wand.mixin.config 
+  breaksw
+  
+  case -o:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/icecube.base.config \
+    ${MY_VJCONFIGS}/icecube.displays.open.config \
+    ${MY_VJCONFIGS}/icecube.mstar.config \
+    ${MY_VJCONFIGS}/icecube.rfwand.config 
+  breaksw
+  
+  case -of:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/icecube.base.config \
+    ${MY_VJCONFIGS}/icecube.displays.open.config \
+    ${MY_VJCONFIGS}/icecube.mstar.headless.config \
+    ${MY_VJCONFIGS}/icecube.rfwand.config 
+  breaksw
+  
+  case -nserv:
+    omniNames -start 8088 &
+  breaksw
+  
+  case -menu:
+    cd ${VE_SUITE_HOME}/VE_Conductor/class_files
+    java client
+  breaksw
+
+  case -surface:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/makeVtkSurface
+  breaksw
+
+  case -preproc:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/preprocessor
+  breaksw
+
+  case -surf2stl:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/convertSurfaceFileToStl
+  breaksw
+
+  case -transVTK:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/transformVTK
+  breaksw
+
+  case -cfd2VTK:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/translateToVtk
+  breaksw
+
+  case -make:
+    cd ${VE_SUITE_HOME}/VE_Installer
+    gmake
+  breaksw
+  
+  case -makeclean:
+    cd ${VE_SUITE_HOME}/VE_Installer
+    gmake clean
+    gmake cleandepend
+  breaksw
+  
+  case -merge:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/mergeVertices
+  breaksw
+
+  case -h:
+  default:
+  echo ""
+  echo Usage:
+  echo VES [ options ] 
+  echo "         "-h = usage information
+  echo The following indicates the workflow of getting the cfd data into the viewer.
+  echo "   "-cfd2VTK = translate cfd flowdata to VTK format
+  echo "     "-merge = merge vertices in unstructured grid
+  echo "   "-preproc = precompute cutting planes
+  echo This will start the viewer using the specified display
+  echo "         "-c = cave display
+  echo "        "-cf = cave display with fixed viewpoints
+  echo "         "-d = desktop display
+  echo "         "-o = wall display
+  echo "        "-of = wall display with fixed viewpoints
+  echo When the viewer has started, start the menu in another shell
+  echo "      "-menu = start java menu to control viewer
+  echo The following utilities might be useful occasionaly
+  echo "     "-nserv = start corba server for menu
+  echo "   "-surface = make VTK surface from fluid mesh
+  echo "  "-surf2stl = convert surface file to stl
+  echo "  "-transVTK = move flowdata to align with geometry
+  echo "      "-make = make all VE-Suite modules
+  echo " "-makeclean = clean all VE-Suite modules
+  echo ""
+  
+endsw

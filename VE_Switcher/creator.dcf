@@ -1,0 +1,137 @@
+[zoomControl]
+Left=3
+Top=7
+Right=229
+Bottom=92
+
+[statusShell]
+Visible=0
+Left=10
+Top=76
+Right=822
+Bottom=341
+
+[ToolPalette]
+Visible=1
+Left=10
+Top=94
+Right=34
+Bottom=996
+
+[ModifyColor]
+Visible=0
+Left=184
+Top=224
+Right=570
+Bottom=715
+
+[TexturePalette]
+Visible=0
+Left=426
+Top=170
+Right=1002
+Bottom=833
+
+[ViewTrackSelectPalette]
+Visible=1
+Left=1027
+Top=314
+Right=1241
+Bottom=954
+
+[viewControl]
+Visible=1
+
+[TextureList]
+Visible=0
+
+[TextureMappingPalette]
+Visible=0
+Left=182
+Top=184
+Right=712
+Bottom=734
+
+[ColorPalette]
+Visible=0
+Left=176
+Top=158
+Right=720
+Bottom=746
+Expand=1
+
+[FaceCreateTools]
+Visible=0
+Hide Tools=
+
+[GeometryCreateTools]
+Visible=0
+Hide Tools=
+
+[ManeuverTools]
+Visible=0
+Hide Tools=
+
+[DuplicateTools]
+Visible=0
+Hide Tools=
+
+[ModifyGeomTools]
+Visible=0
+Hide Tools=
+
+[ModifyFaceTools]
+Visible=0
+Hide Tools=
+
+[ModifyVertexTools]
+Visible=0
+Hide Tools=
+
+[PropertyTools]
+Visible=0
+Hide Tools=
+
+[MapTextureTools]
+Visible=0
+Hide Tools=
+
+[ModifyTextureTools]
+Visible=0
+Hide Tools=
+
+[ConstructionEdgeTools]
+Visible=0
+Hide Tools=
+
+[ConstructionVertexTools]
+Visible=0
+Hide Tools=
+
+[CreateTools]
+Visible=0
+Hide Tools=
+
+[StructureTools]
+Visible=0
+Hide Tools=
+
+[ModeBank]
+Visible=0
+Hide Tools=
+
+[CustomTools]
+Visible=0
+
+[fromIDPrompt]
+Left=37
+Top=141
+Right=411
+Bottom=287
+
+[TrackPalette]
+Visible=0
+
+[IDSelectPalette]
+Visible=0
+

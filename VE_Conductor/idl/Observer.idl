@@ -1,0 +1,21 @@
+// these things are returned to cfdApp from the gui
+interface Observer
+{
+   typedef short baf_p[15];
+   typedef sequence< short > obj_p;
+
+   long update();
+   long get_iso_value();
+   long get_sc();
+   long get_min();
+   long get_max();
+   long get_geo_state();
+   long get_pre_state();
+   baf_p get_baf_param();
+   obj_p get_other_param();
+
+   void ack(in string d);
+   void put_cur_obj(in obj_p o);
+   short get_timesteps();
+   short get_teacher_state();
+};

@@ -1,0 +1,97 @@
+#!/usr/bin/tcsh -f
+
+# Set environment variables and paths for running the program
+setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
+setenv VE_SUITE_LIBS /home/vr/Applications/TSVEG/VE_Suite
+source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
+# Set additional environment variables
+setenv MY_VJCONFIGS /home/vr/vjconfig/2.0alpha3
+
+switch ($1)
+
+  case -c6:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.config 
+  breaksw
+  
+  case -c4open:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.open.config
+  breaksw
+  
+  case -c4closed:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.config
+  breaksw
+  
+  case -sim:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/sim/sim.config 
+  breaksw
+  
+  case -c6mono:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.mono.config
+  breaksw
+  
+  case -c4mono:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/project \
+    ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.mono.config
+  breaksw
+
+  case -nserv:
+    /usr/java/bin/tnameserv -ORBInitialPort 8088 &
+  breaksw
+  
+  case -menu:
+    cd ${VE_SUITE_HOME}/VE_Conductor/class_files
+    java client
+  breaksw
+
+  case -surface:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/makeVtkSurface
+  breaksw
+
+  case -preproc:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/preprocessor
+  breaksw
+
+  case -surf2stl:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/convertSurfaceFileToStl
+  breaksw
+
+  case -transVTK:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/transformVTK
+  breaksw
+
+  case -cfd2VTK:
+    ${VE_SUITE_HOME}/bin/${VE_LIBS}/translateToVtk
+  breaksw
+
+  
+  case -h:
+  default:
+  echo ""
+  echo Usage:
+  echo VES.netl [ options ] 
+  echo "         "-h = usage information
+  echo The following indicates the workflow of getting the cfd data into the viewer.
+  echo "   "-cfd2VTK = translate cfd flowdata to VTK format
+  echo "   "-preproc = precompute cutting planes
+  echo This will start the viewer using the specified display
+  echo "        "-c6 = c6 cave display
+  echo "    "-c4open = c4 open cave display
+  echo "  "-c4closed = c4 closed cave display
+  echo "       "-sim = sim mode
+  echo "    "-c6mono = c6 in mono
+  echo "    "-c4mono = c4 closed in mono
+  echo When the viewer has started, start the menu in another shell
+  echo "      "-menu = start java menu to control viewer
+  echo The following utilities might be useful occasionaly
+#  echo "     "-nserv = start corba server for menu
+  echo "   "-surface = make VTK surface from fluid mesh
+  echo "  "-surf2stl = convert surface file to stl
+  echo "  "-transVTK = move flowdata to align with geometry
+  echo ""
+  
+endsw

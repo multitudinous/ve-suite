@@ -1,0 +1,29 @@
+4
+0                    // OPTIONAL world DCS settings
+   1 1 1             // Scale values
+   0 0 0             // Translation values
+   0 0 0             // Rotation values
+9                    // Object type 9: Geometry      0     // model number (this line for GM compiled version only)
+   1                 // transparency toggle
+   0                 // color flag ( and 3 color values if flag = 1)
+   1 1 1             // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0             // Rotation values for geometry file
+   ./Surface0.75.stl // Geometry file name
+9                    // Object type 9: Geometry      1     // model number (this line for GM compiled version only)
+   1                 // transparency toggle
+   0                 // color flag (and 3 color values if flag = 1)
+   1 1 1             // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0             // Rotation values for geometry file
+   ./SurfaceMoved.stl   // Geometry file name
+9                    // Object type 9: Geometry      0     // model number (this line for GM compiled version only)
+   0                 // transparency toggle
+   1   1.0 0.0 0.0   // color flag ( and 3 color values if flag = 1)
+   1 1 1             // Scale values for geometry file
+   0 0 0             // Translation values for geometry file
+   0 0 0             // Rotation values for geometry file
+   ./eightCorners.stl   // Geometry file name
+1        // Warped Contour Scale Value
+0.5      // Navigation Step Size
+0.0      // Streamline Diameter, set to 0.0 if auto-value is sufficient

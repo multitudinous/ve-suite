@@ -1,0 +1,7 @@
+The files in this directory were created by going to 
+transient_flowdata and running this command...
+
+foreach file (*.vtk)
+foreach? preprocessor $file POST_DATA 0 0 0 1 1 0 1 3 1
+foreach? end
+

@@ -1,0 +1,82 @@
+# Create the OS-dependent directory name
+UNAME= $(shell uname -s)
+LIBS_DIR= $(UNAME)_LIB
+
+APP_NAME= $(VE_SUITE_HOME)/bin/$(UNAME)/translateToVtk
+
+all:
+	$(MAKE) NO_DEPEND=0 cxx
+	$(MAKE) $(APP_NAME)
+#	-$(MAKE) install
+
+srcdir=		.
+
+SRCS=\
+   translateToVtk.cpp \
+   starReader.cpp \
+   avsReader.cpp \
+   reiReader.cpp \
+   en7Reader.cpp \
+   mfixReader.cpp \
+   fileIO.cxx \
+   converter.cpp \
+   gridConversion.cpp \
+   viewCells.cpp \
+   fireReader.cpp \
+   readWriteVtkThings.cxx \
+   cleanVtk.cpp \
+   cfdGrid2Surface.cpp \
+   particle.cpp \
+   fluentParticles.cpp \
+   reiParticles.cpp \
+   plot3dReader.cpp \
+   jdMAPReader.cpp
+#   vtkEnSightFortranBinaryReader.cxx \
+
+OBJDIR=	$(LIBS_DIR)
+DEPDIR=	$(LIBS_DIR)
+NO_DEPEND= YES
+# One of these must be uncommented.
+DEBUG_APP?=		TRUE
+#OPTIM_APP?=		TRUE
+
+EXTRA_CFLAGS+=		 
+#EXTRA_CXXFLAGS+= -DSJK_TEST
+EXTRA_DEFS+=
+EXTRA_INCLUDES+=	-I${VE_SUITE_HOME}/VE_Xplorer
+
+#EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG
+#EXTRA_OPTIM_FLAGS+=	-O2 -OPT:Olimit=0 -D_OPT
+
+LINKALL_ON=		-all
+LINKALL_OFF=		
+
+STATIC_ON=		@APP_LINK_STATIC_ON@
+STATIC_OFF=		@APP_LINK_STATIC_OFF@
+
+EXTRA_LIBS+= -lm
+
+#include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+
+vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer
+vpath %.h    $(VE_SUITE_HOME)/VE_Xplorer
+
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+cxx: $(OBJS)
+
+# Create the OS-dependent directory for the executable. If the dir exists, 
+# 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
+${APP_NAME}: $(OBJS)
+	mkdir -p $(VE_SUITE_HOME)/bin/$(UNAME)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+
+#install:
+#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+
+CLEAN_FILES+= $(APP_NAME)

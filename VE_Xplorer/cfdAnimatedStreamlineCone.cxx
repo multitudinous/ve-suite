@@ -1,0 +1,240 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2004 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile: cfdAnimatedStreamlineCone.cxx,v $
+ * Date modified: $Date: 2004/04/24 21:24:37 $
+ * Version:       $Revision: 1.28 $
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "cfdAnimatedStreamlineCone.h"
+#include "cfdDataSet.h"
+
+#ifndef _USE_CFD_SEQUENCE
+#include <Performer/pf/pfSequence.h>
+#else
+#include "cfdSequence.h"
+#endif
+
+#include <vtkPolyData.h>
+#include <vtkActor.h>
+#include <vtkSphereSource.h>
+#include <vtkGlyph3D.h>
+#include <vtkPolyDataWriter.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkProperty.h>
+#include <vtkGenericCell.h>
+
+#include <vpr/Util/Debug.h>
+
+//#include <cmath>
+
+cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( float diameter )
+{
+   this->mapper   = vtkPolyDataMapper::New();
+   this->actor    = vtkActor::New();
+   this->polydata = vtkPolyData::New();
+   this->polyData = vtkPolyData::New();
+   this->glyph    = vtkGlyph3D::New();
+   this->sphere   = vtkSphereSource::New();
+
+   if ( diameter == 0.0 )
+   {
+      diameter = this->GetActiveMeshedVolume()->GetLength()*0.001f;
+   }
+   vprDEBUG(vprDBG_ALL,1) << "raw diameter : " << diameter
+                          << std::endl << vprDEBUG_FLUSH;
+
+   this->sphere->SetRadius( 8.0f * diameter);
+   this->sphere->SetThetaResolution( 3 );
+   this->sphere->SetPhiResolution( 3 );
+   this->sphere->Update();
+
+#ifndef _USE_CFD_SEQUENCE
+   this->sequence = new pfSequence();
+#else
+   this->sequence = new cfdSequence();
+#endif
+}
+
+cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
+{
+   this->mapper->Delete();
+   this->actor->Delete();
+   this->polydata->Delete();
+   this->polyData->Delete();
+   this->glyph->Delete();
+   this->sphere->Delete();
+   
+   if ( this->sequence )
+   {
+      this->ClearpfSequence();
+      pfDelete( this->sequence );
+   }
+}
+
+void cfdAnimatedStreamlineCone::SetPolyDataSource( vtkPolyData *input )
+{
+   this->polyData->DeepCopy( input );
+}
+
+void cfdAnimatedStreamlineCone::Update( void )
+{
+   vtkIdType cellId;        //vtkIdType
+   vtkIdType npts;          //vtkIdType
+   int i;
+   vtkPoints * points;   
+   vtkPoints **pointsArray;   
+   double *x;
+   int numberOfStreamLines;
+
+   vprDEBUG(vprDBG_ALL, 1) 
+      << "Number of Cells : " << this->polyData->GetNumberOfCells()
+      << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 1) 
+      << "Number of Lines : " << this->polyData->GetNumberOfLines()
+      << std::endl << vprDEBUG_FLUSH;
+
+   numberOfStreamLines = this->polyData->GetNumberOfLines();
+ 
+   // Find the maximum number of points in one streamline
+   int maxNpts = 0;
+   int minNpts = 1000000;
+
+   for ( cellId = 0; cellId < numberOfStreamLines; cellId += 2 )
+   {
+      points = this->polyData->GetCell( cellId )->GetPoints();
+      npts = points->GetNumberOfPoints();
+      points = this->polyData->GetCell( cellId + 1 )->GetPoints();
+      npts += points->GetNumberOfPoints();
+      vprDEBUG(vprDBG_ALL, 1) << " Number of points in cell " << cellId 
+         << " = " << npts << std::endl << vprDEBUG_FLUSH;
+      if ( maxNpts < npts )
+         maxNpts = npts;
+      
+      if ( minNpts > npts )
+         minNpts = npts;
+   }
+
+   // Define the points at each integration time step
+   int forwardPoints;
+   pointsArray = new vtkPoints*[ maxNpts ];
+      
+   
+   for ( i = 0; i < maxNpts;  i++ )
+   {
+      pointsArray[ i ] = vtkPoints::New();
+   }
+
+   for ( cellId = 0; cellId < numberOfStreamLines; cellId += 2 )
+   {
+      // For forward integrated points
+      points = this->polyData->GetCell( cellId )->GetPoints();
+      forwardPoints = points->GetNumberOfPoints();
+      vprDEBUG(vprDBG_ALL, 1) 
+         << "Number of Forward points = " << forwardPoints
+         << std::endl << vprDEBUG_FLUSH;      
+      for ( i = 0; i < forwardPoints; i++ )
+      {
+         x = points->GetPoint( i );
+         vprDEBUG(vprDBG_ALL, 1) 
+            << "x[ " << i << " ] = " << x[ 0 ] << " : " 
+            << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
+         pointsArray[ i ]->InsertNextPoint( x );        
+      }
+      
+      
+      // For backward integrated points
+      points = this->polyData->GetCell( cellId + 1 )->GetPoints();
+      npts = points->GetNumberOfPoints();
+      vprDEBUG(vprDBG_ALL, 1) << "Number of Backward points = " << npts
+         << std::endl << vprDEBUG_FLUSH;
+      for ( i = npts - 1; i >= 0; i-- )
+      {
+         x = points->GetPoint( i );
+         vprDEBUG(vprDBG_ALL, 2)
+            << " x[ " << i << " ] = " << x[ 0 ] << " : " 
+            << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
+         pointsArray[ ( npts - 1 ) - i + forwardPoints]->InsertNextPoint( x );
+      }
+   }
+
+   vprDEBUG(vprDBG_ALL, 1) << "maxNpts = " << maxNpts << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL, 1) << "minNpts = " << minNpts << std::endl << vprDEBUG_FLUSH;
+   int w = maxNpts;
+   double decimalRatio = (double)w / 150.0;
+   int ratio = (int)ceil( decimalRatio );
+
+   for ( i = 0; i < w; i+=ratio )
+   {
+      //Make ploydata from the points
+      //vprDEBUG(vprDBG_ALL, 1) << " begin loop " << i << std::endl << vprDEBUG_FLUSH;
+      this->polydata->SetPoints( pointsArray[ i ] );
+      //polydata->Update();
+      //polydata->Print( cout );
+
+      //Map spheres to the polydata
+      //vprDEBUG(vprDBG_ALL, 1) << " begin loop1" << std::endl << vprDEBUG_FLUSH;
+      this->glyph->SetSource( this->sphere->GetOutput() );
+      this->glyph->SetInput( this->polydata );
+      //glyph->Update();      
+
+      //vprDEBUG(vprDBG_ALL, 1) << " begin loop2" << std::endl << vprDEBUG_FLUSH;
+      this->mapper->SetInput( this->glyph->GetOutput() );
+      this->mapper->Update();
+
+
+      //vprDEBUG(vprDBG_ALL, 1) << " begin loop3" << std::endl << vprDEBUG_FLUSH;
+      this->actor->SetMapper( this->mapper );
+      this->actor->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
+     
+      //Make geodes from each polydata
+      //vprDEBUG(vprDBG_ALL, 1) << " begin loop4" << std::endl << vprDEBUG_FLUSH;
+      this->CreateGeode();
+
+      // Reset polydata to its intial state and release all memory
+      //polydata->Reset();
+      this->polydata->Initialize();
+      //vprDEBUG(vprDBG_ALL, 1) << "end loop" << std::endl << vprDEBUG_FLUSH;
+   }
+   
+   /*vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
+   writer->SetInput( input );
+   writer->SetFileName( "outPut.vtk" );
+   writer->SetFileTypeToASCII();
+   writer->Write();
+   writer->Delete();*/
+   vprDEBUG(vprDBG_ALL, 1) << "Deleting Point Array" << std::endl << vprDEBUG_FLUSH;
+   for ( i = 0; i < maxNpts;  i++ )
+   {
+      pointsArray[ i ]->Delete();
+   }
+   
+   delete [] pointsArray;
+   vprDEBUG(vprDBG_ALL, 1) << "Deleting Point Array" << std::endl << vprDEBUG_FLUSH;
+
+   this->updateFlag = true;
+   this->addGeode = true;      
+}
