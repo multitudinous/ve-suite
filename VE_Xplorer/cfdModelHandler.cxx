@@ -60,7 +60,8 @@
 #ifdef WIN32   // windows
 #include <direct.h>
 #else          // not windows
-//#include <unistd.h>
+// Needed for irix
+#include <unistd.h>
 #include <sys/types.h>
 #include <sys/dir.h>
 #endif // WIN32

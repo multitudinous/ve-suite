@@ -103,8 +103,8 @@ bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
          else
          {
             wxLogDebug ("Could Not Load [ %s ]", filename.c_str());
-         //wxClassInfo* test = CLASSINFO(lib->GetLibHandle() )
-         //cout << test->m_className << endl;
+            //wxClassInfo* test = CLASSINFO(lib->GetLibHandle() )
+            //cout << test->m_className << endl;
          }
          cont = dir.GetNext(&filename);
          //delete lib;
@@ -144,7 +144,7 @@ void cfdVEPluginLoader::RegisterPlugins()
       if ( classInfo->IsKindOf(CLASSINFO(cfdVEBaseClass)) &&
           (classInfo != (& (cfdVEBaseClass::sm_classcfdVEBaseClass))) )
       {
-         cfdVEBaseClass *object = (cfdVEBaseClass *) classInfo->CreateObject();
+         cfdVEBaseClass* object = (cfdVEBaseClass *) classInfo->CreateObject();
          plugins.push_back(object);
          plugin_cls.push_back(classInfo);
          std::cout << "|     Register plugins : " << classInfo->GetClassName() << std::endl;

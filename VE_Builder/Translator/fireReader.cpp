@@ -30,13 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-//#include <unistd.h>
 #include <fstream>
 //#include <istream>
 #include <sstream>
 #include <string>
 #include <vector>
-//using namespace std;
+// Needed on irix
+#include <unistd.h>
 using std::string;
 
 #include <vtkUnstructuredGrid.h>
