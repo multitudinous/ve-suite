@@ -203,7 +203,6 @@ void UI_Frame::buildFrame( )
    //_frameSizer->Add(_tabsSizer,22,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    _frameSizer->Add(_modselSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-
    _frameSizer->Add(_datasetSizer,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //_frameSizer->Add(_scalarSizer,3,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    _frameSizer->Add(_tabsSizer,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
@@ -241,10 +240,8 @@ void UI_Frame::OnChangeModel( void )
    _datasetPanel->_rebuildDataSets( activeModIndex );
    _tabs->DeleteAllPages();   
    _tabs->rebuildTabPages( activeModIndex );
-   std::cout<<"Act Mod Index2: "<<activeModIndex<<std::endl;
-
    _tabs->cSc = activeModIndex;         // using zero-based scalar counting
-   std::cout << "Act Mod Index1: "<<activeModIndex<< std::endl;
+   std::cout << " Act Mod Index : "<<activeModIndex<< std::endl;
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
    _tabs->sendDataArrayToServer();
  

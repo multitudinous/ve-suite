@@ -49,7 +49,7 @@ AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
 
   // VE Tabs
   //m_tabs = ( UI_Tabs*) NULL;
-  m_frame = ( UI_Frame*) NULL;
+  m_frame = 0;
   is_orb_init= false;
   p_ui_i=NULL;	
   av_modules = new Avail_Modules(wx_nw_splitter, TREE_CTRL, wxDefaultPosition, wxDefaultSize, wxTR_HAS_BUTTONS);
@@ -834,8 +834,8 @@ void AppFrame::DisConVEServer(wxCommandEvent &event)
     }*/
   wx_ve_splitter->Unsplit(m_frame);
   sizerTab->Remove(m_frame);
-  m_frame = NULL;
   delete m_frame;
+  m_frame = NULL;
   con_menu->Enable(v21ID_CONNECT_VE, true);
   con_menu->Enable(v21ID_DISCONNECT_VE, false);
   Log("Disconnect VE suceeded.\n");

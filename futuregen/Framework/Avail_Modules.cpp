@@ -203,9 +203,11 @@ void Avail_Modules::OnSelChanged(wxTreeEvent& event)
 bool Avail_Modules::LoadModules()
 {
   int i;
-
+#ifdef _TAO
+  pl_loader->LoadPlugins("GUIPlugins");
+#else
   pl_loader->LoadPlugins("../Plugin");
-  
+#endif  
   for (i=0; i<pl_loader->plugins.size(); i++)
     AddModule(pl_loader->plugins[i], pl_loader->plugin_cls[i]);
 

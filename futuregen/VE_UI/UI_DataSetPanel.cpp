@@ -257,7 +257,6 @@ UI_DatasetPanel::UI_DatasetPanel(wxWindow* tControl, UI_ModelData* _model, int a
    _datasetCombo = NULL;
    
    _buildDataSets();
-
    _buildPanel(); 
 
    if ( !_DataSets.empty() )
@@ -285,11 +284,9 @@ void UI_DatasetPanel::_buildPanel()
 { 
     _organizeRadioBoxInfo();
     //_organizeActiveRBox();
-   
    /*_activeRBox = new wxRadioBox(this, ACTIVE_RBOX, wxT("Select Active Dataset Type"), 
                                 wxDefaultPosition, wxDefaultSize,
 				3, datatypes,1, wxRA_SPECIFY_COLS);*/
-
   
    _scalarNames = new wxString[1];
    _scalarNames[0] = wxT("No Scalars");  
@@ -298,14 +295,12 @@ void UI_DatasetPanel::_buildPanel()
    _datasetTypesel[1] = wxT("Vertex Data");
    _datasetTypesel[2] = wxT("Polydata");
 
-  
    _datasetCombo = new wxComboBox(this, DATA_SET_SELECT_COMBO, wxT("Select Active Dataset Type"),
                                     wxDefaultPosition, wxDefaultSize,3,_datasetTypesel, wxCB_DROPDOWN);
    
    //The "Update Visualization" button
    //_visUpdateButton = new wxButton(this, SCALAR_PANEL_UPDATE_BUTTON, wxT("Update"),wxDefaultPosition,wxDefaultSize,wxBU_EXACTFIT);
 
-   
    //The static box for the scalar range sliders
    _scalarRangeBox = new wxStaticBox(this, -1, wxT("Scalar Range"));
 
@@ -314,7 +309,6 @@ void UI_DatasetPanel::_buildPanel()
    //(vertically)
    sRangeBoxSizer = new wxStaticBoxSizer(_scalarRangeBox,wxVERTICAL);
      
-
    //the labels for the sliders
    minLabel = new wxStaticText(this, -1, wxT("Min%"));
    maxLabel = new wxStaticText(this, -1, wxT("Max%"));
@@ -365,7 +359,6 @@ void UI_DatasetPanel::_buildPanel()
 
    //_col4->Add(_visUpdateButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
-  
    _dataHeadingBox = new wxStaticBox(this, -1, wxT("Data and Scalar Set Selection"));
 
    dHeadingBoxSizer = new wxStaticBoxSizer(_dataHeadingBox,wxVERTICAL);
@@ -390,11 +383,11 @@ void UI_DatasetPanel::_buildPanel()
 
    for (int i=0; i<_numSteadyStateDataSets; i++)
    {
-	  if ( _DataSets.empty() )
-	  {
+	   if ( _DataSets.empty() )
+	   {
          _setScalarsnoDatasets();
-	  }
-	  else if( _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName )
+	   }
+	   else if( _RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName )
       {
          _setScalars(_DataSets[i]);
          break;
@@ -471,8 +464,8 @@ void UI_DatasetPanel::_buildDataSets( void )
             indexVector++;
          }
         
+
          _DataSets.at( i )->_buildScalars(numScalarsPerDataset[i], thisDataScalarNames);
-         
          _DataSets.at( i )->_buildVectors(numVectorsPerDataset[i], thisDataVectorNames);
          
          //clean up the names array
@@ -507,8 +500,18 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    //dHeadingBoxSizer->Remove(_col4);
    datasetPanelGroup->Remove(dHeadingBoxSizer);
    delete _RBoxScroll;
-   delete [] _scalarNames;
-   delete [] _vectorNames;
+   
+   if ( _scalarNames )
+   {
+      delete [] _scalarNames;
+      _scalarNames = 0;
+   }
+   
+   if ( _vectorNames )
+   {
+      delete [] _vectorNames;
+      _vectorNames = 0;
+   }
    delete _ScalarScroll;
    delete _datasetCombo;
    //delete _visUpdateButton;
@@ -519,9 +522,10 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
    delete _maxPercentSlider; 
    delete _dataHeadingBox;
 
-////////////////////////////////////////////
-////////////////////////////////////////////
+   ////////////////////////////////////////////
+   ////////////////////////////////////////////
    _activeModIndex = _activeMod;
+
    _buildDataSets();
    _buildPanel(); 
 
@@ -533,14 +537,15 @@ void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
 void UI_DatasetPanel::_setScalars(UI_DataSets* activeDataSet)
 {
 	int i;
-
    // This function is guarded above if there are no datasets   
-   if(_scalarNames){  
+   if(_scalarNames)
+   {  
       delete [] _scalarNames;
       _scalarNames = 0;
    }
    
-   if(_vectorNames){
+   if(_vectorNames)
+   {
       delete [] _vectorNames;
       _vectorNames = 0;
    }
