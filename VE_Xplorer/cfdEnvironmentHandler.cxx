@@ -147,6 +147,11 @@ cfdTeacher* cfdEnvironmentHandler::GetTeacher( void )
    return _teacher;
 }
 
+cfdQuatCamHandler* cfdEnvironmentHandler::GetQuatCamHandler( void )
+{
+   return _camHandler;
+}
+
 ////////////////////////////////////////
 void cfdEnvironmentHandler::InitScene( void )
 {

@@ -119,7 +119,6 @@ void cfdQuatCamHandler::WriteToFile(char* fileName)
 void cfdQuatCamHandler::LoadFromFile(char* fileName)
 { 
    char textLine [ 256 ];
-   int numQuatCams;
    double transpts[3];
    float recordrot[4];
    Matrix44f temp;
@@ -253,11 +252,14 @@ void cfdQuatCamHandler::CreateObjects( void )
       {
          input >> quatCamFileName;
          input.getline( textLine, 256 );   //skip past remainder of line
+         std::cout<< " QuatCam file = " << quatCamFileName << std::endl;
 
          if (fileIO::isFileReadable( quatCamFileName ) ) 
          {
             vprDEBUG(vprDBG_ALL,0) << " QuatCam file = " << quatCamFileName 
                              << std::endl << vprDEBUG_FLUSH;
+
+            LoadFromFile( quatCamFileName );
          }
          else
          {
@@ -273,6 +275,11 @@ void cfdQuatCamHandler::CreateObjects( void )
          _readParam->ContinueRead( input, id );
       }
    }
+}
+
+int cfdQuatCamHandler::getNumLocs()
+{
+   return this->numQuatCams;
 }
 
 

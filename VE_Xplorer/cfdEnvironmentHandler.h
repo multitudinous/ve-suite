@@ -68,6 +68,7 @@ class cfdEnvironmentHandler : public vpr::Singleton< cfdEnvironmentHandler >
       cfdCursor* GetCursor( void );
       cfdSoundHandler* GetSoundHandler( void );
       cfdTeacher* GetTeacher( void );
+      cfdQuatCamHandler* GetQuatCamHandler( void );
 
    private:
       cfdNavigate* nav;

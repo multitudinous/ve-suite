@@ -97,11 +97,14 @@ public:
 
    void Relocate(int runSlerp, cfdDCS* worldDCS, int cfdIso_value, cfdNavigate* nav); 
 
+   int getNumLocs();
+
    std::vector<cfdPoints*> cfdPointsVec;
    std::vector<cfdQuatCam*> QuatCams;
    int run;
    float rotvec[3];
    float angle;
+   int numQuatCams;
 
 private:
 
