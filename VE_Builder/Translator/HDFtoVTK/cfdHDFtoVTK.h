@@ -27,6 +27,7 @@ public:
    void setVerboseTranslationFlag(int flag){_verbose = flag;}
    void viewGridBeforeWriting(int noYes=1){_viewGridBeforeWriting = noYes;}
    void setVTKOutFileName(char* vtkOut);
+   void writeAsciiOutput(){_asciiOut = 1;}
 
    //returns 1 if successful
    int translateFileToVTK();
@@ -37,7 +38,7 @@ public:
    
 protected:
    int _readDCHDFFile(char* inDCFile);
-   int _copyData(float32* inData,double*& outData, int* dimensions);
+   int _copyData(float32* inData,double* outData, int* dimensions);
    void _createVelocityMagnitudeScalars();
    void _createMagneticMagnitudeScalars();
    void _createRectilinearVTKGrid();
@@ -53,7 +54,7 @@ protected:
    char* _outVTKDirectory;
    char* _outFile;
    int _verbose;
-
+   int _asciiOut;
    HDFFILETYPE _type;
    int _numCells;
    

@@ -14,6 +14,7 @@
 //////////////////////////////
 cfdHDFToVTK::cfdHDFToVTK()
 {
+   _asciiOut = 0;
    _outFile = 0;
    _viewGridBeforeWriting = 1;
    _numCells = 0;
@@ -53,6 +54,7 @@ cfdHDFToVTK::cfdHDFToVTK()
 ///////////////////////////////////////////////
 cfdHDFToVTK::cfdHDFToVTK(char* inHDFFileName)
 {
+   _asciiOut = 0;
    _outFile = 0;
     _velocityMag = 0;
    _magneticMag =0;
@@ -94,6 +96,7 @@ cfdHDFToVTK::cfdHDFToVTK(char* inHDFFileName)
 //////////////////////////////////////////////////////////////////
 cfdHDFToVTK::cfdHDFToVTK(char* inHDFFileName,char* outputVTKDir)
 {
+   _asciiOut = 0;
    _outFile = 0;
     _velocityMag = 0;
    _magneticMag =0;
@@ -754,19 +757,24 @@ int cfdHDFToVTK::_readDCHDFFile(char* inDCFile)
    return 0;	
 }
 /////////////////////////////////////////////////////////////////////////////
-int cfdHDFToVTK::_copyData(float32* inData,double*& outData, int* dimensions)
+int cfdHDFToVTK::_copyData(float32* inData,double* outData, int* dimensions)
 {
    int dataSize = 0;
    dataSize = dimensions[0]*dimensions[1]*dimensions[2];
-
-   if(outData){
-     delete [] outData; 
-     outData = 0;
-   }
-   outData = new double[dataSize];
+   
    for(int i = 0; i < dataSize; i++){
       outData[i] = inData[i];
    }
+   int index3 = 0;
+   //need to check these w/ data. . .
+   /*for(int rows = 0; rows < _dimensions[0]; rows++){
+      for(int cols = 0; cols < _dimensions[1]; cols++){
+         for(int depth = 0; depth < _dimensions[2]; depth++){
+            //rows*(_dimensions[2]*dimensions[0]) + cols*_dimensions[2] + depth
+            outData[index3] = inData[index3++];
+         }   
+      }   
+   }*/
    return 0;
 }
 //////////////////////////////////////////////
@@ -892,7 +900,7 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
    strcat(aName,_outFile);
    strcat(aName,".vtk");
   
-   _writeRectilinearCellDataToPointDataFile(aGrid,aName);
+   _writeRectilinearCellDataToPointDataFile(aGrid,aName,_asciiOut);
    bName = new char[1028];
    strcpy(bName,_outVTKDirectory);
    if(!_outFile){
@@ -901,7 +909,7 @@ void cfdHDFToVTK::_createRectilinearVTKGrid()
    strcat(bName,"b");
    strcat(bName,_outFile);
    strcat(bName,".vtk");
-   _writeRectilinearCellDataToPointDataFile(bGrid,bName);
+   _writeRectilinearCellDataToPointDataFile(bGrid,bName,_asciiOut);
   
    if(aName){
       delete [] aName;
@@ -962,10 +970,12 @@ void cfdHDFToVTK::_addCellDataToGrid(vtkDataSet* dSet,
    data->SetNumberOfTuples( nTuples );
    double* tuple = new double[nComponents];
    for( int j = 0; j < nTuples; j++ ){
+      //double* tuple = 0;
       for(int i = 0; i < nComponents; i++){
-         tuple[i] = (cellData[i])[j];
+         tuple[i] = cellData.at(i)[j];      
       }
       data->SetTuple(j,tuple);
+     
    }
    dSet->GetCellData()->AddArray(data);
    data->Delete();
@@ -1018,6 +1028,7 @@ void cfdHDFToVTK::_createMagneticMagnitudeScalars()
                           _b3[i]*_b3[i]);
    }
 }
+//////////////////////////////////////////////////////
 void cfdHDFToVTK::setVTKOutFileName(char* outfileName)
 {
    if(!outfileName){
