@@ -30,7 +30,7 @@ setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 # to allow developers to set them from outside this script (see below).
 setenv TAO_BUILD TRUE
 #setenv CLUSTER_APP FALSE
-setenv SCENE_GRAPH PF
+setenv SCENE_GRAPH PF 
 
 # TAO_BUILD can be set outside this script to override the default of TRUE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -75,8 +75,8 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/IRIX32
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/IRIX32
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/IRIX32-pthread
-   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrj-deps/IRIX32
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/IRIX32-pthread
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/IRIX32-pthread
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/IRIX32
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VTK_BASE_DIR}/lib/vtk
