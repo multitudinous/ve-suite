@@ -42,8 +42,6 @@
 #include "cfdTempAnimation.h"
 #include "cfdSequence.h"
 
-#include <vtkGeometryFilter.h>
-#include <vtkPolyDataNormals.h>
 #include <vtkPolyData.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
@@ -68,16 +66,17 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, cfdDCS* worldDCS )
 
    if ( paramFile == NULL )
       return;
-	variables[ 0 ] = 200;  //Agitation (rpm)  initial value 200
-	variables[ 1 ] = 1.25; //Air Concentration initial value 1.25;
-	variables[ 2 ] = 6;    //Initial pH value    initial value 6
-	variables[ 3 ] = 0.1;  //Nitrate Concentration     initial value 0.1
-	variables[ 4 ] = 37;   //Temperate (Celsius)        initial value 37
-	variables[ 5 ] = 240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
 
-	lut = vtkLookupTable::New();
-	definedRange[ 0 ] = definedRange[ 1 ] = 0;
-	pData = vtkPolyData::New();
+   variables[ 0 ] = 200;  //Agitation (rpm)  initial value 200
+   variables[ 1 ] = 1.25; //Air Concentration initial value 1.25;
+   variables[ 2 ] = 6;    //Initial pH value    initial value 6
+   variables[ 3 ] = 0.1;  //Nitrate Concentration     initial value 0.1
+   variables[ 4 ] = 37;   //Temperate (Celsius)        initial value 37
+   variables[ 5 ] = 240;  //Simulate [a text box] Hours in 10 seconds, initial value 240
+
+   lut = vtkLookupTable::New();
+   definedRange[ 0 ] = definedRange[ 1 ] = 0;
+   pData = vtkPolyData::New();
    
    sequence = new cfdTempAnimation();
    ihccModelNode = new cfdGroup();
@@ -178,11 +177,11 @@ cfdIHCCModel::~cfdIHCCModel( void )
 // Update variables passed in from the gui
 void cfdIHCCModel::UpdateModelVariables( double* input )
 {
-	for ( int i = 0; i < 6; i++ )
-	{
-		variables[ i ] = input[ i ];
+   for ( int i = 0; i < 6; i++ )
+   {
+      variables[ i ] = input[ i ];
       std::cout<< variables[ i ] << std::endl;
-	}
+   }
 }
 
 // Update variables passed in from the gui
@@ -236,36 +235,38 @@ void cfdIHCCModel::RunModel( void )
    {
       c[ 0 ] = 1;
       c[1] = (-0.000036*t*t*t) + (0.0092*t*t) - (0.072*t) + 1;
-   { // Move this out of the for loop because they aren't dependent on t
-      c[2] = (-0.000091*r*r) + 0.035*r -2.56;
-      c[3] = (-1*a*a) + (2*a) -2;
-      c[4] = (-0.41*p*p) + (4.9*p) - 13;
-      c[5] = (-17*n*n) + (8.4*n) - 0.004;
-      c[6] = (-0.01*k*k) + (0.69*k) - 7.8;
-      c[7] = -1;
-      c[0] = 1;
-      //cout << c[ 0 ] << " : " << c[ 1 ] << " : " << c[ 2 ] << " : " 
-      //               << c[ 3 ] << " : " << c[ 4 ] << " : " << c[ 5 ] << " : " << c[ 6 ] << " : " << c[ 7 ] <<endl;
-   }
+
+      { // Move this out of the for loop because they aren't dependent on t
+         c[2] = (-0.000091*r*r) + 0.035*r -2.56;
+         c[3] = (-1*a*a) + (2*a) -2;
+         c[4] = (-0.41*p*p) + (4.9*p) - 13;
+         c[5] = (-17*n*n) + (8.4*n) - 0.004;
+         c[6] = (-0.01*k*k) + (0.69*k) - 7.8;
+         c[7] = -1;
+         c[0] = 1;
+         //cout << c[ 0 ] << " : " << c[ 1 ] << " : " << c[ 2 ] << " : " 
+         //               << c[ 3 ] << " : " << c[ 4 ] << " : " << c[ 5 ] << " : " << c[ 6 ] << " : " << c[ 7 ] <<endl;
+      }
 
       for( int i=1;i<8;i++)
       {
          c[0] = c[0] * c[i];
       }
 
-	  if ( c[ 0 ] < min )
-	  {
-	     min = c[ 0 ];
-	  }
-	  
-	  if ( c[ 0 ] > max )
-	  {
-	     max = c[ 0 ];
-	  }
+      if ( c[ 0 ] < min )
+      {
+         min = c[ 0 ];
+      }
+
+      if ( c[ 0 ] > max )
+      {
+         max = c[ 0 ];
+      }
+
       //cout << "I calculated the concentration : " << c[ 0 ] << endl;
       times.push_back( t * 10 );
-//      cout << "Timestep " << t << endl;
-		solutions.push_back( c[ 0 ] );
+      //      cout << "Timestep " << t << endl;
+      solutions.push_back( c[ 0 ] );
       this->sequence->GetSequence()->addChild( new cfdGroup() );
    }
    definedRange[ 0 ] = min;
@@ -307,37 +308,37 @@ void cfdIHCCModel::Update( void )
 
 void cfdIHCCModel::MakeSequence( void )
 {
-	vector< cfdGeode* > geodes;
-	vector< cfdGeode* > scalars;
+   vector< cfdGeode* > geodes;
+   vector< cfdGeode* > scalars;
    vector< cfd1DTextInput* > output;
-	// Loop over all the time steps and create the actors and geodes
-		// read polydata
-      // Translate 5 in y direction
-	for ( int i = 0; i < variables[ 5 ]; i++ )
-	{
+   // Loop over all the time steps and create the actors and geodes
+   // read polydata
+   // Translate 5 in y direction
+   for ( int i = 0; i < variables[ 5 ]; i++ )
+   {
       this->mapper->SetInput( pData );
       this->mapper->SetScalarRange( definedRange );
       this->mapper->SetLookupTable( lut );
-	   this->mapper->SetColorModeToMapScalars();
-	   this->mapper->Update();
+      this->mapper->SetColorModeToMapScalars();
+      this->mapper->Update();
 
       this->actor->SetMapper( this->mapper );
-	   this->actor->GetProperty()->SetSpecularPower( 20.0f );
+      this->actor->GetProperty()->SetSpecularPower( 20.0f );
       this->actor->GetProperty()->SetColor( this->lut->GetColor( solutions[ i ] ) );
       cfdGeode* geode = new cfdGeode();
-       geode->TranslateTocfdGeode(actor);
-       geodes.push_back(geode);
+      geode->TranslateTocfdGeode(actor);
+      geodes.push_back(geode);
 /*#ifdef _PERFORMER
       
 #elif _OSG
       geodes.push_back( vtkActorToOSG( actor, new osg::Geode(), 0) );
 #endif*/
    }
-	// Add the Geodes to the sequence 
-	// Add the gauges with ??? as the quantity
-	for ( int i = 0; i < variables[ 5 ]; i++ )
-	{
-		// Convert scalar value to text
+   // Add the Geodes to the sequence 
+   // Add the gauges with ??? as the quantity
+   for ( int i = 0; i < variables[ 5 ]; i++ )
+   {
+      // Convert scalar value to text
       double time = i * 10;
 
       std::ostringstream dataStream;
@@ -354,9 +355,9 @@ void cfdIHCCModel::MakeSequence( void )
       //(this->sequence->getChild( i ))->addChild( output.back->getpfDCS() );
 
       // Display time and concentration
-		// Create geode
-		// Add geode to vector
-	}
+      // Create geode
+      // Add geode to vector
+   }
 }
 
 bool cfdIHCCModel::CheckCommandId( cfdCommandArray* commandArray )
