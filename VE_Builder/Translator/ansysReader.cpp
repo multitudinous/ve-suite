@@ -48,7 +48,7 @@
 #define PRINT(x)
 #else
 #define PRINT(x) \
-   std::cout << setw(PRINT_WIDTH-3) << #x << " = " << x << std::endl;
+   std::cout << std::setw(PRINT_WIDTH-3) << #x << " = " << x << std::endl;
 #endif
 
 ansysReader::ansysReader( char * input )
@@ -268,14 +268,14 @@ void ansysReader::ReadHeader()
    int itemNumber = 1;   // get ready to get the first item: fileNumber
    int fileNumber = ReadNthInteger( itemNumber+1 );
 #ifdef PRINT_HEADERS
-   cout << setw( PRINT_WIDTH ) << "fileNumber = " << fileNumber 
+   std::cout << std::setw( PRINT_WIDTH ) << "fileNumber = " << fileNumber 
         << " where 12 = results files, 16 = db files" << std::endl;
 #endif // PRINT_HEADERS
 
    itemNumber = 2;      // file format
    int fileFormat = ReadNthInteger( itemNumber+1 );
 #ifdef PRINT_HEADERS
-   cout << setw( PRINT_WIDTH ) << "fileFormat = " << fileFormat
+   std::cout << std::setw( PRINT_WIDTH ) << "fileFormat = " << fileFormat
         << " (0=internal, 1=external)" << std::endl;
 #endif // PRINT_HEADERS
 
@@ -290,7 +290,7 @@ void ansysReader::ReadHeader()
    itemNumber = 5;      // units
    int units = ReadNthInteger( itemNumber+1 );
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "units = " << units 
+   std::cout << std::setw( PRINT_WIDTH ) << "units = " << units 
         << " (0=user-defined, 1=SI, 2=CSG, 3=feet, 4=inches)" << std::endl;
 #endif // PRINT_HEADERS
 
@@ -301,7 +301,7 @@ void ansysReader::ReadHeader()
    fseek(this->s1,position,SEEK_SET);
    fread(buffer4, sizeof(char), 4, this->s1);
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "ANSYS release level = " << "\""
+   std::cout << std::setw( PRINT_WIDTH ) << "ANSYS release level = " << "\""
         << buffer4 << "\"" << std::endl;
 #endif // PRINT_HEADERS
 
@@ -310,13 +310,13 @@ void ansysReader::ReadHeader()
    fseek(this->s1,position,SEEK_SET);
    fread(buffer4, sizeof(char), 4, this->s1);
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "date of ANSYS release = " << "\""
+   std::cout << std::setw( PRINT_WIDTH ) << "date of ANSYS release = " << "\""
         << buffer4 << "\"" << std::endl;
 #endif // PRINT_HEADERS
 
    // item number 12-14 is machine identifier
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "machine identifier = " << "\"";
+   std::cout << std::setw( PRINT_WIDTH ) << "machine identifier = " << "\"";
 #endif // PRINT_HEADERS
    for ( itemNumber = 12; itemNumber <= 14; itemNumber++ )
    {
@@ -333,7 +333,7 @@ void ansysReader::ReadHeader()
 
    // item number 15-16 is jobname
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "short form of jobname = " << "\"";
+   std::cout << std::setw( PRINT_WIDTH ) << "short form of jobname = " << "\"";
 #endif // PRINT_HEADERS
    for ( itemNumber = 15; itemNumber <= 16; itemNumber++ )
    {
@@ -350,7 +350,7 @@ void ansysReader::ReadHeader()
 
    // item number 17-18 is ANSYS product name
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "ANSYS product name = " << "\"";
+   std::cout << std::setw( PRINT_WIDTH ) << "ANSYS product name = " << "\"";
 #endif // PRINT_HEADERS
    for ( itemNumber = 17; itemNumber <= 18; itemNumber++ )
    {
@@ -371,13 +371,13 @@ void ansysReader::ReadHeader()
    fseek(this->s1,position,SEEK_SET);
    fread(buffer4, sizeof(char), 4, this->s1);
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "ANSYS special version label = " << "\""
+   std::cout << std::setw( PRINT_WIDTH ) << "ANSYS special version label = " << "\""
         << buffer4 << "\"" << std::endl;
 #endif // PRINT_HEADERS
 
    // item number 20-22 is username
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "username = " << "\"";
+   std::cout << std::setw( PRINT_WIDTH ) << "username = " << "\"";
 #endif // PRINT_HEADERS
    for ( itemNumber = 20; itemNumber <= 22; itemNumber++ )
    {
@@ -394,7 +394,7 @@ void ansysReader::ReadHeader()
 
    // item number 23-25 is machine identifier
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "machine identifier = " << "\"";
+   std::cout << std::setw( PRINT_WIDTH ) << "machine identifier = " << "\"";
 #endif // PRINT_HEADERS
    for ( itemNumber = 23; itemNumber <= 25; itemNumber++ )
    {
@@ -423,7 +423,7 @@ void ansysReader::ReadHeader()
 
    // item number 31-38 is jobname
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "long form of jobname = " << "\"";
+   std::cout << std::setw( PRINT_WIDTH ) << "long form of jobname = " << "\"";
 #endif // PRINT_HEADERS
    for ( itemNumber = 31; itemNumber <= 38; itemNumber++ )
    {
@@ -440,7 +440,7 @@ void ansysReader::ReadHeader()
 
    // item number 41-60 is main analysis title 
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "main analysis title = " << "\"";
+   std::cout << std::setw( PRINT_WIDTH ) << "main analysis title = " << "\"";
 #endif // PRINT_HEADERS
    for ( itemNumber = 41; itemNumber <= 60; itemNumber++ )
    {
@@ -457,7 +457,7 @@ void ansysReader::ReadHeader()
 
    // item number 61-80 is first subtitle
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "first subtitle = " << "\"";
+   std::cout << std::setw( PRINT_WIDTH ) << "first subtitle = " << "\"";
 #endif // PRINT_HEADERS
    for ( itemNumber = 61; itemNumber <= 80; itemNumber++ )
    {
@@ -476,14 +476,14 @@ void ansysReader::ReadHeader()
    itemNumber = 95;
    int splitPoint = ReadNthInteger( itemNumber+1 );
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "split point of the file = " << splitPoint << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "split point of the file = " << splitPoint << std::endl;
 #endif // PRINT_HEADERS
 
    // item number 97-98 is filesize at write
    itemNumber = 97;
    long filesize = ReadNthLong( itemNumber+1 );
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "filesize at write = " << filesize << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "filesize at write = " << filesize << std::endl;
 #endif // PRINT_HEADERS
 
    // the number at integer position 102 is 404
@@ -1042,11 +1042,11 @@ int * ansysReader::ReadElementTypeDescription( int pointer )
    int numCornerNodes = elemDescription[ 94-1 ];
 
 #ifdef PRINT_HEADERS
-   std::cout << setw( PRINT_WIDTH ) << "element type reference number = " << elemDescription[ 1-1 ] << std::endl;
-   std::cout << setw( PRINT_WIDTH ) << "element routine number = " << elemDescription[ 2-1 ] << std::endl;
-   std::cout << setw( PRINT_WIDTH ) << "number of dof/node = " << elemDescription[ 34-1 ] << std::endl;
-   std::cout << setw( PRINT_WIDTH ) << "number of nodes = " << numNodesInElement << std::endl;
-   std::cout << setw( PRINT_WIDTH ) << "number of corner nodes = " << numCornerNodes << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "element type reference number = " << elemDescription[ 1-1 ] << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "element routine number = " << elemDescription[ 2-1 ] << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "number of dof/node = " << elemDescription[ 34-1 ] << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "number of nodes = " << numNodesInElement << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "number of corner nodes = " << numCornerNodes << std::endl;
 #endif // PRINT_HEADERS
 
    // the last number is blockSize again
