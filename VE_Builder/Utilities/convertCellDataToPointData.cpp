@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: convertCellDataToPointData.cpp,v $
- * Date modified: $Date: 2004/04/22 15:55:07 $
- * Version:       $Revision: 1.1 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

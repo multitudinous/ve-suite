@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: convertVTK2Binary.cpp,v $
- * Date modified: $Date: 2004/03/23 16:36:52 $
- * Version:       $Revision: 1.6 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

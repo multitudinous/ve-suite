@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: removeVtkCellsOutsideBox.cpp,v $
- * Date modified: $Date: 2004/04/20 18:05:21 $
- * Version:       $Revision: 1.12 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
