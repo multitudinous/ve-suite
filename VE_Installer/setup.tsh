@@ -27,8 +27,8 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
-setenv TAO_BUILD TRUE
-#setenv TAO_BUILD FALSE
+#setenv TAO_BUILD TRUE
+setenv TAO_BUILD FALSE
 
 set WX_HOME_DIR=/home/users/mccdo/wxWindows/wxGTK
 
@@ -109,7 +109,6 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
    #setenv WX_HOME /home/users/sjk60/suse_deps/wxWidgets_GTK
 
    if ( ${TAO_BUILD} == "TRUE" ) then
-      setenv MY_ACEDIR /home/users/mccdo/ACE_TAO
       setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
       #setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Linux-rh80-vrac/ACE_wrappers
       setenv XERCESCROOT /home/users/dmuthjr/xerces
