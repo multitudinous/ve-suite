@@ -59,14 +59,14 @@ endif
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
 setenv VPR_DEBUG_ENABLE 1
-setenv PFSHAREDSIZE 1280000000
+setenv PFSHAREDSIZE 536870000
 setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 
 #echo "specifying libraries for" ${CFDHOSTTYPE}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
-   setenv VTK_BASE_DIR /isv/VTK-4.4.0/IRIX32
+   setenv VTK_BASE_DIR /isv/VE_Suite/VTK-4.4.0/IRIX32
    setenv WX_HOME /isv/Juggler/wxGTK-2.4.2/IRIX32
    setenv VJ_BASE_DIR /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-posix
    setenv VJ_DEPS_DIR /isv/Juggler/vrjuggler-2.0-alpha4.irix-n32-deps
