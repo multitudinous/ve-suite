@@ -32,7 +32,7 @@
 #ifndef ENSIGHTGOLDREADER_H
 #define ENSIGHTGOLDREADER_H
 
-class vtkEnSightGoldReader;
+class vtkGenericEnSightReader;
 class vtkCellDataToPointData;
 class vtkUnstructuredGrid;
 
@@ -46,7 +46,7 @@ class enSightGoldReader
       vtkUnstructuredGrid* GetUnstructuredGrid( char*, int );
 
    private:
-      vtkEnSightGoldReader*   reader;
+      vtkGenericEnSightReader*   reader;
       vtkCellDataToPointData* cell2point;
 };
 

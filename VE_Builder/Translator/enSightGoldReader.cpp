@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "enSightGoldReader.h"
 
-#include <vtkEnSightGoldReader.h>          // will open any ensight file
+#include <vtkGenericEnSightReader.h>          // will open any ensight file
 #include <vtkCellDataToPointData.h>
 #include <vtkUnstructuredGrid.h>
 
@@ -52,7 +52,7 @@ enSightGoldReader::~enSightGoldReader( void )
 
 vtkUnstructuredGrid* enSightGoldReader::GetUnstructuredGrid( char* caseFileName, int debug )
 {
-   reader = vtkEnSightGoldReader::New();
+   reader = vtkGenericEnSightReader::New();
    //reader->DebugOn();
    reader->SetCaseFileName( caseFileName );
    reader->Update();
