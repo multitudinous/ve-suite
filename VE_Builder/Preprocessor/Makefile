@@ -5,7 +5,7 @@ all:
 	$(MAKE) $(APP_NAME)
 #	-$(MAKE) install
 
-srcdir=		.
+srcdir= .
 
 SRCS=\
    preprocessor.cxx \
@@ -15,31 +15,33 @@ SRCS=\
    setScalarAndVector.cpp
 
 # Specify the OS-dependent directory name for object files and depends
-OBJDIR=	$(CFDHOSTTYPE)
-DEPDIR=	$(CFDHOSTTYPE)
+OBJDIR= $(CFDHOSTTYPE)
+DEPDIR= $(CFDHOSTTYPE)
 
 NO_DEPEND= YES
-# One of these must be uncommented.
-#DEBUG_APP?=		TRUE
-OPTIM_APP?=		TRUE
 
-EXTRA_CFLAGS+=		 
+# One of these must be uncommented.
+#DEBUG_APP?= TRUE
+OPTIM_APP?= TRUE
+
+EXTRA_CFLAGS+=
 EXTRA_CXXFLAGS+=
 EXTRA_DEFS+=
 #_MPI for HPC build
 #SJK_TEST produces ascii output
+
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Xplorer \
                  -I$(VE_SUITE_HOME)/VE_Builder/Utilities\
-		            -I$(BOOST_INCLUDES)/include
+                 -I$(BOOST_INCLUDES)
 
-#EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG
-#EXTRA_OPTIM_FLAGS+=	-O2 -OPT:Olimit=0 -D_OPT
+#EXTRA_DEBUG_FLAGS+= -g -D_DEBUG
+#EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
-LINKALL_ON=		-all
-LINKALL_OFF=		
+LINKALL_ON= -all
+LINKALL_OFF=
 
-STATIC_ON=		@APP_LINK_STATIC_ON@
-STATIC_OFF=		@APP_LINK_STATIC_OFF@
+STATIC_ON= @APP_LINK_STATIC_ON@
+STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 EXTRA_LIBS+= -lm
 
