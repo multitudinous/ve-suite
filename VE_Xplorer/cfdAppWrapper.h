@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CFD_APPWRAPPER_H
 #define CFD_APPWRAPPER_H
-#include <wx/wx.h>
 
 class cfdThread;
 class cfdApp;
