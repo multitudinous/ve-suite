@@ -64,7 +64,7 @@ cfdGauges::~cfdGauges( void )
 
 void cfdGauges::Update( std::string activeModule, cfdExecutive* executive )
 {
-   for ( int i = 0; i < this->_numberOfGauges; i++ )
+/*   for ( int i = 0; i < this->_numberOfGauges; i++ )
    {
       if ( activeModule == this->_gaugesList[ i ]->GetModuleName() ||
            ( !activeModule.compare( "REI_Gasi" ) && !(this->_gaugesList[ i ]->GetModuleName()).compare( "GASI" ) )
@@ -96,7 +96,7 @@ void cfdGauges::Update( std::string activeModule, cfdExecutive* executive )
          this->_gaugesList[ i ]->SetDataValue( dataString );
          this->_gaugesList[ i ]->Update();
       }
-   }
+   }*/
 }
 
 // Update Function Specfic to IHCC demo for Angran

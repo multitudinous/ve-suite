@@ -181,7 +181,8 @@ SRCS=\
    cfdPfSceneManagement.cxx \
    cfdAppWrapper.cxx \
    cfdVjObsWrapper.cxx \
-   cfdThread.cxx
+   cfdThread.cxx \
+   cfdVEXplorer.cxx
 
 ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \
@@ -334,6 +335,9 @@ else
    EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) $(WX_LIB)
 endif
 
+#EXTRA_CXXFLAGS+=	$(TWEEK_CXX_FLAGS) $(CORBA_DEFINES) -I$(BOOST_INCLUDES)
+EXTRA_LIBS+= -L/usr/freeware/lib32
+
 LINKALL_ON=		-all
 LINKALL_OFF=		
 
@@ -360,7 +364,8 @@ CXX_GEN_DIR=		.
                         ${CONDUCTOR_BASE_DIR}/java_stuff/ObserverPackage \
                         ${CONDUCTOR_BASE_DIR}/java_stuff/VjObsPackage 
 
-vpath %.cpp $(CXX_GEN_DIR) ${CONDUCTOR_BASE_DIR}/skel ${VE_SUITE_HOME}/VE_SceneGraph
+vpath %.cpp $(CXX_GEN_DIR) ${CONDUCTOR_BASE_DIR}/skel 
+vpath %.cxx $(CXX_GEN_DIR) ${VE_SUITE_HOME}/VE_SceneGraph
 #vpath %.cc ./UMI/skel
 #vpath %.h $(CXX_GEN_DIR)  ${CONDUCTOR_BASE_DIR}/skel
 

@@ -34,13 +34,13 @@
 #include <orbsvcs/CosNamingC.h>
 #endif
 #include "VjObs_i.h"     //added for corba stuff
-#include "cfdcommandArray.h"
+#include "cfdCommandArray.h"
 #include "cfdSteadyStateVizHandler.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdModelHandler.h"
 #include <vpr/Util/Debug.h>
 #include <iostream>
-using namespace std;
+
 using namespace CosNaming;
 
 cfdVjObsWrapper::cfdVjObsWrapper( void )
@@ -60,17 +60,17 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    {
       vprDEBUG(vprDBG_ALL,0) 
          << "naming_context->unbind for CORBA Object  " 
-         << endl << vprDEBUG_FLUSH;
+         << std::endl << vprDEBUG_FLUSH;
        
       naming_context->unbind( name );
    }
    catch( CosNaming::NamingContext::InvalidName& )
    {
-      cerr << "Invalid name for CORBA Object  " << endl;
+      std::cerr << "Invalid name for CORBA Object  " << std::endl;
    }
    catch(CosNaming::NamingContext::NotFound& ex)
    {
-      cerr << "Name not found for CORBA Object  " << ex.why << endl;
+      std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }
 }
 
@@ -134,14 +134,14 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input  )
    
    gethostname(raw_hostname, 255); //get the host name 
    hostname=raw_hostname;
-   cout<<"Host name is "<<hostname<<endl;   
+   std::cout<<"Host name is "<<hostname<<std::endl;   
    getStringTokens(raw_hostname,".", toks);
    //now the toks[0] will be the short host name, which is the one without the domain name
 
    
    if (hostname==masterhost||toks[0]==masterhost)
    {
-      cout<<"This is the master!"<<endl;
+      std::cout<<"This is the master!"<<std::endl;
 
       VjObs_var vjobs = application->_this();
       CORBA::String_var sior(orb->object_to_string(vjobs.in()));
@@ -165,7 +165,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input  )
    
    VjObs_var vjobs = this->_vjObs->_this();
    if ( CORBA::is_nil( vjobs.in() ) )
-     cout << "is nil " << endl;
+     std::cout << "is nil " << std::endl;
 
    CosNaming::Name name;
    name.length(1);
