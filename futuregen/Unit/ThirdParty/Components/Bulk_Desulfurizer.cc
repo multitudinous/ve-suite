@@ -12,8 +12,6 @@ using std::endl;
 
 namespace Vision21 {
 
-using namespace REI;
-
 Bulk_Desulfurizer::Bulk_Desulfurizer()
 {
   Rgas         = 8.31451;                 // J/mol*K

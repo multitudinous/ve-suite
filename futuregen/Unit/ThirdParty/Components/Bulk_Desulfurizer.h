@@ -9,11 +9,9 @@
 #define BULK_DESULFURIZER_H
 
 #include <cmath>
-#include <Packages/REI/Core/Datatypes/Gas.h>
+#include <V21Helper/Datatypes/Gas.h>
 
 namespace Vision21 {
-
-using namespace REI;
 
 class Bulk_Desulfurizer {
 
