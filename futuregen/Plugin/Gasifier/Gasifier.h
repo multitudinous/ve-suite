@@ -29,7 +29,7 @@ class Gasifier : public REI_Plugin
 
   virtual int GetNumPoly();
   
-  //virtual void GetPoly(POLY &polygon); 
+  //  virtual void GetPoly(POLY &polygon); 
   //Return the outline polygon
 
   virtual UIDialog* UI(wxWindow* parent);
@@ -57,35 +57,29 @@ class Gasifier : public REI_Plugin
   double slurry_temp1;
   double slurry_flrt1;
   double coal_percent1;
+  double char_percent1;
   double steam_temp2;
   double steam_flrt2;
   double slurry_temp2;
   double slurry_flrt2;
   double coal_percent2;
+  double char_percent2;
   double steam_temp3;
   double steam_flrt3;
   double slurry_temp3;
   double slurry_flrt3;
   double coal_percent3;
-  double geo_diam;
-  double geo_stage1_len;
-  double geo_stage2_len;
-  double geo_stage1_wall;
-  double geo_stage2_wall;
-  double burn_out;
-  double stage1_heatloss;
-  double stage2_heatloss;
-  double LD_ratio;
-  double stage1_emis;
-  double stage2_emis;
-  double backside_temp;
-  double slag_eff;
+  double char_percent3;
+  double size_50;
+  double size_200;
   double pres_drop;
+  string coal_type;
   long stage;
-  long spec_geometry;
-  long des_mode;
+
   //HERE is the GUI variable passed to the Dialog and Packed
-  
+ protected:
+  wxBitmap *my_icon;
+  int icon_w, icon_h;  
 };
 
 #endif

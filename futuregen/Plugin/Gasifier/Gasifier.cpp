@@ -18,59 +18,51 @@ Gasifier
   RegistVar("slurry_temp1", &slurry_temp1);
   RegistVar("slurry_flrt1", &slurry_flrt1);
   RegistVar("coal_percent1", &coal_percent1);
+  RegistVar("char_percent1", &char_percent1);
   RegistVar("steam_temp2", &steam_temp2);
   RegistVar("steam_flrt2", &steam_flrt2);
   RegistVar("slurry_temp2", &slurry_temp2);
   RegistVar("slurry_flrt2", &slurry_flrt2);
   RegistVar("coal_percent2", &coal_percent2);
+  RegistVar("char_percent2", &char_percent2);
   RegistVar("steam_temp3", &steam_temp3);
   RegistVar("steam_flrt3", &steam_flrt3);
   RegistVar("slurry_temp3", &slurry_temp3);
   RegistVar("slurry_flrt3", &slurry_flrt3);
   RegistVar("coal_percent3", &coal_percent3);
-  RegistVar("geo_diam", &geo_diam);
-  RegistVar("geo_stage1_len", &geo_stage1_len);
-  RegistVar("geo_stage2_len", &geo_stage2_len);
-  RegistVar("geo_stage1_wall", &geo_stage1_wall);
-  RegistVar("geo_stage2_wall", &geo_stage2_wall);
-  RegistVar("burn_out", &burn_out);
-  RegistVar("stage1_heatloss", &stage1_heatloss);
-  RegistVar("stage2_heatloss", &stage2_heatloss);
-  RegistVar("LD_ratio", &LD_ratio);
-  RegistVar("stage1_emis", &stage1_emis);
-  RegistVar("stage2_emis", &stage2_emis);
-  RegistVar("backside_temp", &backside_temp);
-  RegistVar("slag_eff", &slag_eff);
-  RegistVar("pres_drop", &slag_eff);
+  RegistVar("char_percent3", &char_percent3);
+  RegistVar("size_50", &size_50);
+  RegistVar("size_200", &size_200);
+  RegistVar("pres_drop", &pres_drop);
+  RegistVar("coal_type", &coal_type);
   RegistVar("stage", &stage);
-  RegistVar("spec_geometry", &spec_geometry);
-  RegistVar("des_mode", &des_mode);
-
+  
   stage = 1;
   steam_temp1 = steam_temp2 = steam_temp3 = 0.0;
   steam_flrt1 = steam_flrt2 = steam_flrt3 = 0.0;
+  coal_percent1 = coal_percent2 = coal_percent3 = 74.26;
+  char_percent1 = char_percent2 = char_percent3 = 0.0;
   slurry_temp1 = slurry_temp2 = slurry_temp3 = 422.0;
   slurry_flrt1 = slurry_flrt2 = slurry_flrt3= 43.46;
   
-  spec_geometry = 0;
-  geo_diam = 2.2;
-  geo_stage1_len = 5.5;
-  geo_stage2_len = 1;
-  geo_stage1_wall = 1.0;
-  geo_stage2_wall = 1.0;
-  burn_out = 98.0;
-  stage1_heatloss = 0.0;
-  stage2_heatloss = 0.0;
-  des_mode = 0;
-  LD_ratio = 3.0;
-  stage1_emis = 0.75;
-  stage2_emis = 0.75;
-  backside_temp = 300;
-  slag_eff = 50;
-  pres_drop = 524691;
+  pres_drop = 0.0;
+
+  size_50 = 99.9;
+  size_200 = 90.0;
+  wxString icon_file="Icons/gasifier2.gif";
+  wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
+  icon_w = my_img.GetWidth();
+  icon_h = my_img.GetHeight();
+  my_icon=new wxBitmap(my_img.Scale(icon_w, icon_h));
+
+  coal_type = "Illinois_#6";
 
   n_pts = 4;
-  poly[3]= wxPoint(20, 40);
+
+  poly[0]=wxPoint(0,0);
+  poly[1]=wxPoint(icon_w,0);
+  poly[2]=wxPoint(icon_w,icon_h);
+  poly[3]=wxPoint(0,icon_h);
 }
 
 
@@ -109,7 +101,7 @@ int Gasifier::GetNumPoly()
 /////////////////////////////////////////////////////////////////////////////
 int Gasifier::GetNumIports()
 {
-  int result=1;
+  int result=3;
 
   return result;
 }
@@ -117,8 +109,9 @@ int Gasifier::GetNumIports()
 /////////////////////////////////////////////////////////////////////////////
 void Gasifier::GetIPorts(POLY &iports)
 {
-  iports[0]=wxPoint(0, 20);
-
+  iports[0]=wxPoint(icon_w*26/63, icon_h*86/123);
+  iports[1]=wxPoint(icon_w*20/63, icon_h*105/123);
+  iports[2]=wxPoint(icon_w*36/63, icon_h*118/123);
   return;
 }
 
@@ -133,19 +126,14 @@ int Gasifier::GetNumOports()
 /////////////////////////////////////////////////////////////////////////////
 void Gasifier::GetOPorts(POLY &oports)
 {
-  oports[0]=wxPoint(40, 20);
+  oports[0]=wxPoint(icon_w*37/63, icon_h*20/123);
 }
 
 /////////////////////////////////////////////////////////////////////////////
 void Gasifier::DrawIcon(wxDC* dc)
 {
   //Your implementation
-  wxBrush old_brush=dc->GetBrush();
-  dc->SetBrush(*wxBLUE_BRUSH);
-  wxCoord xoff = pos.x;
-  wxCoord yoff = pos.y;
-  dc->DrawPolygon(n_pts, poly, xoff, yoff);
-  dc->SetBrush(old_brush);
+  dc->DrawBitmap(*my_icon,pos.x, pos.y);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -154,39 +142,30 @@ UIDialog* Gasifier::UI(wxWindow* parent)
   if (dlg!=NULL)
     return dlg;
   
-  dlg = new Gasifier_UI_Dialog (parent, -1,
+  dlg = new Gasifier_UI_Dialog(parent, -1,
      &steam_temp1,
      &steam_flrt1,
      &slurry_temp1,
      &slurry_flrt1,
      &coal_percent1,
+     &char_percent1,
      &steam_temp2,
      &steam_flrt2,
      &slurry_temp2,
      &slurry_flrt2,
      &coal_percent2,
+     &char_percent2,
      &steam_temp3,
      &steam_flrt3,
      &slurry_temp3,
      &slurry_flrt3,
      &coal_percent3,
-     &geo_diam,
-     &geo_stage1_len,
-     &geo_stage2_len,
-     &geo_stage1_wall,
-     &geo_stage2_wall,
-     &burn_out,
-     &stage1_heatloss,
-     &stage2_heatloss,
-     &LD_ratio,
-     &stage1_emis,
-     &stage2_emis,
-     &backside_temp,
-     &slag_eff,
-     &pres_drop,				
-     &stage,
-     &spec_geometry,
-     &des_mode);
+     &char_percent3,
+     &size_50,
+     &size_200,
+     &pres_drop,
+     &coal_type,
+     &stage);
       
   return dlg;
 }
