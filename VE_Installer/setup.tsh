@@ -102,7 +102,7 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL:${WX_HOME}/lib
    else
-      setenv OMNI_HOME /home/vr/Juggler/linux-rh80
+      setenv OMNI_HOME /home/users/mccdo/omniORB-4.0.3/omni-Suse-9.1
       #setenv OMNI_HOME /home/vr/Juggler/linux-fc1
       setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib:${WX_HOME}/lib
