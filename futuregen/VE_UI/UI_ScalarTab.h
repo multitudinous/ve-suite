@@ -5,8 +5,7 @@
 #endif
 
 #include <wx/wx.h>
-#include "wx/notebook.h"
-//#include "controlIds.h"
+
 //Scalars tab control ids
 enum SCALAR_TAB_IDS{
    SCALAR_RAD_BOX,

@@ -4,8 +4,7 @@
 #include <winsock2.h>
 #endif
 #include <wx/wx.h>
-#include <wx/notebook.h>
-//#include "controlIds.h"
+
 enum SOUNDS_TAB_IDS{
    SOUND_RBOX,
    SOUND_CBOX,

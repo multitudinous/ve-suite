@@ -2,6 +2,7 @@
 #include "UI_Tabs.h"
 #include "cfdEnum.h"
 #include "UI_Frame.h"
+#include <iostream>
 
 BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_RADIOBOX    (CATEGORY_RAD_BOX,         UI_VisualizationTab::_onCategory)

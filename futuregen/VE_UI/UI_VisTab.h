@@ -5,10 +5,6 @@
 #endif
 
 #include "wx/wx.h"
-#include "wx/notebook.h"
-#include <iostream>
-
-using namespace std;
 
 //#include "controlIds.h"
 //Visualizaton tab control ids

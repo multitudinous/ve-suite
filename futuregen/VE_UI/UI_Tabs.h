@@ -6,30 +6,29 @@
 
 #include "wx/wx.h"
 #include "wx/notebook.h"
+
 #ifdef _TAO
 #include "VjObsC.h"
-#include "VjObsS.h"
 #else
 #include "VjObs.h"
 #endif
 
-#include "controlIds.h"
+
 #include <string>
 
-#include "UI_NavTab.h"
-#include "UI_VisTab.h"
-#include "UI_VecTab.h"
-#include "UI_StreamTab.h"
-#include "UI_TeacherTab.h"
-#include "UI_SoundsTab.h"
-#include "UI_GeometryTab.h"
-#include "UI_ViewLocTab.h"
-#include "UI_DesignParTab.h"
-
+class UI_NavigationTab;
+class UI_StreamTab;
+class UI_TeacherTab;
+class UI_SoundTab;
+class UI_GeometryTab;
+class UI_ViewLocTab;
+class UI_DesignParTab;
 class UI_VertTab;
 class UI_TransTab;
 class UI_ModelData;
-
+class UI_VisualizationTab;
+class UI_VectorTab;
+class UI_StreamlineTab;
 //////////////////////////////////////////////
 //the control for the different pages "tabs"//
 //on the VE_UI                              //

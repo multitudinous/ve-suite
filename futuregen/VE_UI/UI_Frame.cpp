@@ -32,7 +32,14 @@
 
 #include "UI_Frame.h"
 #include <iostream>
-using namespace std;
+#include "UI_Tabs.h"
+//#include "UI_DataSetTab.h"
+//#include "UI_ScalarTab.h"
+#include "UI_DataSetPanel.h"
+#include "UI_ModSelPanel.h"
+#include "UI_ModelData.h"
+#include "controlIds.h"
+
 #ifdef _TAO
 #include "VjObsS.h"
 #include <orbsvcs/CosNamingC.h>
@@ -118,7 +125,7 @@ void UI_Frame::buildCORBA( )
       poa->destroy (1, 1);
       // Finally destroy the ORB
       orb->destroy();
-      cerr << "CORBA exception raised!" << endl;
+      std::cerr << "CORBA exception raised!" << std::endl;
    }
    
    CosNaming::Name name;
@@ -136,18 +143,18 @@ void UI_Frame::buildCORBA( )
       }
       catch ( CORBA::Exception & )
       {
-         cout << " Can't resolve name " <<endl;
+         std::cout << " Can't resolve name " << std::endl;
       }
 
       if ( !CORBA::is_nil( ve_object.in() ) )
          vjobs = VjObs::_narrow(ve_object.in());
 
       if (CORBA::is_nil(vjobs.in()))
-         std::cerr<<"VjObs is Nill"<<std::endl;
+         std::cerr<<"VjObs is Nill"<< std::endl;
    } 
    catch (CORBA::Exception &) 
    {
-      cerr << "Can't find VE server" << endl;
+      std::cerr << "Can't find VE server" << std::endl;
    }
 }    
  
@@ -184,7 +191,7 @@ void UI_Frame::buildFrame( )
       
    _tabs->cSc = activeModIndex;         // using zero-based scalar counting
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
-   cout << " Changing active Model = " << activeModIndex << endl;
+   std::cout << " Changing active Model = " << activeModIndex << std::endl;
    _tabs->sendDataArrayToServer();
 
    _modselSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -236,10 +243,10 @@ void UI_Frame::OnChangeModel( void )
    _datasetPanel->_rebuildDataSets( activeModIndex );
    _tabs->DeleteAllPages();   
    _tabs->rebuildTabPages( activeModIndex );
-   cout<<"Act Mod Index2: "<<activeModIndex<<endl;
+   std::cout<<"Act Mod Index2: "<<activeModIndex<<std::endl;
 
    _tabs->cSc = activeModIndex;         // using zero-based scalar counting
-   cout<<"Act Mod Index1: "<<activeModIndex<<endl;
+   std::cout << "Act Mod Index1: "<<activeModIndex<< std::endl;
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
    _tabs->sendDataArrayToServer();
  

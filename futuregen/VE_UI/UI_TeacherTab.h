@@ -5,8 +5,7 @@
 #endif
 
 #include <wx/wx.h>
-#include <wx/notebook.h>
-//#include "controlIds.h"
+
 enum TEACHER_TAB_IDS{
    TEACHER_RBOX,
    TEACHER_CLEAR_BUTTON

@@ -5,7 +5,6 @@
 #endif
 
 #include "wx/wx.h"
-#include "UI_TopFrame.h"
 
 class UI_TopFrame;
 

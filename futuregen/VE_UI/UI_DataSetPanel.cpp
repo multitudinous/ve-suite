@@ -5,12 +5,10 @@
 #include "UI_Frame.h"
 #include "UI_ModelData.h"
 
-
-
 UI_Scalars::UI_Scalars(wxString* scalarName)
 {
    _thisScalarName = (*scalarName);
-   cout << "\tScalar Name : " << _thisScalarName << endl;
+   std::cout << "\tScalar Name : " << _thisScalarName << std::endl;
 }
 
 UI_Scalars::~UI_Scalars()
@@ -364,7 +362,7 @@ void UI_DatasetPanel::_buildPanel()
          i = _numSteadyStateDataSets;
       }
       else
-		  cerr << " ERROR : Problem with UI_DatasetPanel::_buildPanel " << endl;
+         std::cerr << " ERROR : Problem with UI_DatasetPanel::_buildPanel " << std::endl;
          
    }
 }
@@ -373,7 +371,7 @@ void UI_DatasetPanel::_buildDataSets( void )
 {
    if ( !_DataSets.empty())
    {
-      cout<<"DataSets successfully cleared"<<endl;
+      std::cout<<"DataSets successfully cleared"<<std::endl;
       for (int i=0; i<_numSteadyStateDataSets; i++)
          delete _DataSets[i];
       _DataSets.clear();
@@ -381,7 +379,7 @@ void UI_DatasetPanel::_buildDataSets( void )
 
    _numSteadyStateDataSets = _modelData->GetNubmerofDataSets(_activeModIndex);
 
-   cout<<"numdatasets: "<<_numSteadyStateDataSets<<endl;
+   std::cout<<"numdatasets: "<<_numSteadyStateDataSets<<std::endl;
 
    CORBA::ULong index = 0;
       
@@ -404,7 +402,8 @@ void UI_DatasetPanel::_buildDataSets( void )
           _DataSets.push_back( new UI_DataSets() );
          
          _DataSets.at( i )->_dataSetName = datasetNames[i];
-         cout << " DataSet Name[ " << i << " ] = " << _DataSets.at( i )->_dataSetName << endl;
+         std::cout << " DataSet Name[ " << i << " ] = " 
+                     << _DataSets.at( i )->_dataSetName << std::endl;
          _DataSets.at( i )->_dataSetType = datasetTypes[i];
 
 		   wxString* thisDataScalarNames;
@@ -669,7 +668,7 @@ void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
       }
       else
 	  {
-		  cerr << " ERROR : Problem with UI_DatasetPanel::_buildPanel " << endl;
+        std::cerr << " ERROR : Problem with UI_DatasetPanel::_buildPanel " << std::endl;
 		_setScalarsnoDatasets();
 	  }
    }

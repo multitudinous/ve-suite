@@ -1,6 +1,7 @@
 #include "UI_TransTab.h"
 #include "UI_Tabs.h"//remember to add trans tab callbacks to UI_Tabs.h
 #include "cfdEnum.h"
+#include <iostream>
 
 BEGIN_EVENT_TABLE(UI_TransTab, wxPanel)
   EVT_RADIOBOX    (TRANS_CATEGORY_RAD_BOX,   UI_TransTab::_onCategory)
@@ -54,7 +55,7 @@ void UI_TransTab::_buildPage()
                            wxT("Droplets"),
                           };
    //Create the 2x2 box
-   _categoryRBox = new wxRadioBox(this, CATEGORY_RAD_BOX, wxT("Category"),
+   _categoryRBox = new wxRadioBox(this, TRANS_CATEGORY_RAD_BOX, wxT("Category"),
                                   wxDefaultPosition, wxDefaultSize, 4,
                                   category, 2, wxRA_SPECIFY_COLS);
 
@@ -66,7 +67,7 @@ void UI_TransTab::_buildPage()
    wxString direction[] = {wxT("X"), wxT("Y"), wxT("Z")};
 
    //Create a vertical radio box
-   _directionRBox = new wxRadioBox(this, DIRECTION_RBOX, wxT("Direction"),
+   _directionRBox = new wxRadioBox(this, TRANS_DIRECTION_RAD_BOX, wxT("Direction"),
                                    wxDefaultPosition, wxDefaultSize, 3,
                                    direction,1, wxRA_SPECIFY_COLS);
 

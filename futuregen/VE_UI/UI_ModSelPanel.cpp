@@ -1,7 +1,7 @@
 #include "UI_ModSelPanel.h"
 #include "UI_Frame.h"
 #include "UI_ModelData.h"
-
+#include <iostream>
 
 BEGIN_EVENT_TABLE(UI_ModSelScroll, wxScrolledWindow)
 END_EVENT_TABLE()
@@ -22,7 +22,7 @@ UI_ModSelScroll::UI_ModSelScroll(wxWindow* parent)
 
    _models = new wxString[_numModels]; 
 
-   cout << " Number of Models in System : " << _numModels << endl;
+   std::cout << " Number of Models in System : " << _numModels << std::endl;
 
    for ( int i=0; i<_numModels; i++)
       _models[i] = wxT(((UI_ModSelPanel *)GetParent())->_modelData->GetModelName(i));

@@ -6,7 +6,6 @@
 #endif
 
 #include <wx/wx.h>
-#include <wx/notebook.h>
 
 enum NAV_TAB_IDS {
   LEFT_B,

@@ -5,8 +5,7 @@
 #endif
 
 #include "wx/wx.h"
-#include "UI_Frame.h"
-
+class UI_Frame;
 
 class UI_TopFrame: public wxFrame{
 public:

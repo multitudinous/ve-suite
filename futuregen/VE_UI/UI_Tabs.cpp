@@ -3,10 +3,18 @@
 #include "UI_TransTab.h"
 #include "UI_VertTab.h"
 #include "UI_ModelData.h"
+#include "UI_NavTab.h"
+#include "UI_VisTab.h"
+#include "UI_VecTab.h"
+#include "UI_StreamTab.h"
+#include "UI_TeacherTab.h"
+#include "UI_SoundsTab.h"
+#include "UI_GeometryTab.h"
+#include "UI_ViewLocTab.h"
+#include "UI_DesignParTab.h"
 
+#include "controlIds.h"
 #include <iostream>
-//using namespace std;
-
 
 ////////////////////////////////////////////////////
 //Constructor                                     //
@@ -523,12 +531,12 @@ void UI_Tabs::sendDataArrayToServer( void )
 
    if ( !CORBA::is_nil( server_ref ) )
    {
-      cout << " Setting client data " << endl;
+      std::cout << " Setting client data " << std::endl;
       server_ref->SetClientInfoData( clientInfoArray );
-      cout << " Done Setting client data " << endl;
+      std::cout << " Done Setting client data " << std::endl;
    }
    else
    {
-	   cout << "VE_Conductor : Just testing..." << endl;
+      std::cout << "VE_Conductor : Just testing..." << std::endl;
    }
 }

@@ -4,12 +4,14 @@
 #include <winsock2.h>
 #endif
 #include <wx/wx.h>
-#include <wx/notebook.h>
-//#include "controlIds.h"
+
 enum VERTEXDATA_TAB_IDS{
    PARTICLE_OPTIONS_RBOX,   
    DISPLAY_PARTICLE_BUTTON,
-   SPHERE_POINT_SIZE_SLIDER
+   SPHERE_POINT_SIZE_SLIDER,
+   SPHERE_SIZE_SLIDER,
+   PARTICLE_OPTION_RBOX,
+   DISPLAY_PARTICLES_BUTTON
 };
 
 

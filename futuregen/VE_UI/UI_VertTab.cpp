@@ -34,7 +34,7 @@ void UI_VertTab::_buildPage()
 
    //making the slider
    wxSize slidesize(150,300);
-   _spherePointSizeSlider = new wxSlider(this, NUM_PTS_SLIDER,50,0,100,
+   _spherePointSizeSlider = new wxSlider(this, SPHERE_SIZE_SLIDER,50,0,100,
                                 wxDefaultPosition, slidesize,
                                 wxSL_VERTICAL|
                                 wxSL_AUTOTICKS|
@@ -56,14 +56,14 @@ void UI_VertTab::_buildPage()
    wxString particleOption[] = {wxT("View as a point cloud"),
                             wxT("View as variably sized spheres")};
 
-   _particleOptionRBox = new wxRadioBox(this,CURSOR_SELECT_RBOX,
+   _particleOptionRBox = new wxRadioBox(this,PARTICLE_OPTION_RBOX,
                                 wxT("Cursor Selection"),
                                 wxDefaultPosition, wxDefaultSize,
                                 2, particleOption, 1,
                                 wxRA_SPECIFY_COLS);
 
    //the buttons and check box for the bottom of the UI
-   _displayParticlesButton = new wxButton(this, COMP_STREAMLINE_BUTTON,
+   _displayParticlesButton = new wxButton(this, DISPLAY_PARTICLES_BUTTON,
                                     wxT("Display Particles"));
 
    //group the sliders and the labels together

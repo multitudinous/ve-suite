@@ -5,9 +5,11 @@
 #endif
 
 #include <wx/wx.h>
-#include <wx/notebook.h>
-//#include "controlIds.h"
+
 enum DATASETS_TAB_IDS{
+   DATASET_POLYDATA_RBOX,
+   DATASET_RBOX_3D,
+   DATASET_VERTEX_RBOX,
    RBOX_TABS_3D,
    VERTEX_TABS_RBOX,
    POLYDATA_TABS_RBOX,

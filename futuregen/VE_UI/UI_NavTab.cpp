@@ -1,7 +1,7 @@
 #include "UI_NavTab.h"
 #include "UI_Tabs.h"
 #include "cfdEnum.h"
-
+#include <iostream>
 
 BEGIN_EVENT_TABLE(UI_NavigationTab, wxPanel)
   EVT_MOUSE_EVENTS(UI_NavigationTab::onMouse)
@@ -75,12 +75,12 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
 ///////////////////////////////////////////////////
 void UI_NavigationTab::onMouse(wxMouseEvent& mouse)
 {
-   cout<<"Mouse action from tab!!"<<endl;
+   std::cout<<"Mouse action from tab!!"<<std::endl;
    //if left button comes up 
    //specific button we need to 
    //tell cfdApp to stop moving 
    if(mouse.LeftUp()){
-      cout<<"left is up from tab!"<<endl;
+      std::cout<<"left is up from tab!"<<std::endl;
       //reset the active button
       setActiveButton(NONE);
       
@@ -102,7 +102,7 @@ wxWindowID id, const wxString& label)
 void UI_NavButton::onMouseUp(wxMouseEvent& mouse)
 {
    _buttonPushed = 0;
-   cout<<"Mouse released from button: "<<GetId()<<endl;
+   std::cout<<"Mouse released from button: "<<GetId()<<std::endl;
    //if left button comes up 
    //specific button we need to 
    //tell cfdApp to stop moving 
@@ -123,7 +123,7 @@ void UI_NavButton::onMouse(wxMouseEvent& mouse)
    //no button pushed yet
    if(activeId == NONE){     
       if(mouse.LeftIsDown()){
-        cout<<"Mouse pushed on button: "<<GetId()<<endl;
+         std::cout<<"Mouse pushed on button: "<<GetId()<<std::endl;
         //set the active id to this button
         //if mouse is down
          _buttonPushed = 1;         

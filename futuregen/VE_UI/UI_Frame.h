@@ -5,13 +5,17 @@
 #endif
 
 #include "wx/wx.h"
-#include "controlIds.h"
-#include "UI_Tabs.h"
-//#include "UI_DataSetTab.h"
-//#include "UI_ScalarTab.h"
-#include "UI_DataSetPanel.h"
-#include "UI_ModSelPanel.h"
-#include "UI_ModelData.h"
+class wxNotebookEvent;
+class UI_DatasetPanel;
+class UI_Tabs;
+class UI_ModSelPanel;
+class UI_ModelData;
+
+#ifdef _TAO
+#include "VjObsC.h"
+#else
+#include "VjObs.h"
+#endif
 
 ////////////////////////////////////////////////////
 //This is the class that is the frame.            //

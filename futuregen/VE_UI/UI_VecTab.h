@@ -6,8 +6,6 @@
 #endif
 
 #include <wx/wx.h>
-#include <wx/notebook.h>
-//#include "controlIds.h"
 
 //Vector tab control ids
 enum VECTOR_TAB_IDS{

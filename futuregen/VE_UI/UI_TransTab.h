@@ -4,11 +4,7 @@
 #include <winsock2.h>
 #endif
 #include "wx/wx.h"
-#include "wx/notebook.h"
-#include <iostream>
-using namespace std;
 
-//#include "controlIds.h"
 //Transient tab control ids
 enum TRANS_TAB_IDS
 {

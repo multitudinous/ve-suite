@@ -7,12 +7,7 @@
 
 
 #include <wx/wx.h>
-#include <wx/notebook.h>
-#include <stdlib.h>
-#include <vector>
 
-
-using namespace std;
 class UI_Frame;
 class UI_ModelData;
 

@@ -4,8 +4,8 @@
 #include <winsock2.h>
 #endif
 #include <wx/wx.h>
-#include <wx/notebook.h>
-//#include "controlIds.h"
+
+
 enum DESGINPAR_TAB_IDS{
    DESIGNPAR_UPDATE_BUTTON
 };

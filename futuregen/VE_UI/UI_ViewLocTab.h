@@ -5,8 +5,7 @@
 #endif
 
 #include <wx/wx.h>
-#include <wx/notebook.h>
-//#include "controlIds.h"
+
 enum VIEWLOC_TAB_IDS{
    VIEWLOC_RBOX,
    VIEWLOC_LOAD_BUTTON,

@@ -34,7 +34,6 @@
 
 #ifdef _TAO
 #include "VjObsC.h"
-#include "VjObsS.h"
 #else
 #include "VjObs.h"
 #endif

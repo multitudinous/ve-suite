@@ -4,7 +4,6 @@
 #include <winsock2.h>
 #endif
 #include <wx/wx.h>
-#include <wx/notebook.h>
 
 enum GEOMETRY_TAB_IDS
 {

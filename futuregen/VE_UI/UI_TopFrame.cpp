@@ -1,4 +1,6 @@
 #include "UI_TopFrame.h"
+#include "UI_Frame.h"
+#include "controlIds.h"
 
 ////////////////////////////////////////////////////
 UI_TopFrame::UI_TopFrame(const wxString& title,

@@ -4,25 +4,27 @@
 #include <winsock2.h>
 #endif
 
-
-
 #include <wx/wx.h>
-#include <wx/notebook.h>
-#include <stdlib.h>
+
 #include <vector>
 #ifdef _TAO
 #include "VjObsC.h"
-#include "VjObsS.h"
 #else
 #include "VjObs.h"
 #endif
 
-using namespace std;
+//using namespace std;
 
 class UI_ModelData;
+/*class wxNotebook;
+class wxString;
+class wxComboBox;
+class wxStaticBoxSizer;
+class wxBoxSizer;*/
 
 enum DATASETS_PANEL_IDS{
    DATA_SET_SELECT_COMBO,
+   DATASET_POLYDATA_RBOX,
    RBOX_3D,
    VERTEX_RBOX,
    POLYDATA_RBOX,
@@ -32,8 +34,6 @@ enum DATASETS_PANEL_IDS{
    MAX_PER_SLIDER_PANEL,
    VECTOR_PANEL_RAD_BOX
 };
-
-
 
 class UI_Scalars{
 public:
@@ -50,7 +50,7 @@ public:
    ~UI_DataSets();
 
    UI_Scalars* thisScalar;
-   vector<UI_Scalars*> _Scalars;
+   std::vector<UI_Scalars*> _Scalars;
 
    void _buildScalars(int, wxString*);
 
@@ -104,7 +104,7 @@ public:
 
    int _numSteadyStateDataSets;
 
-   vector<UI_DataSets*> _DataSets;
+   std::vector<UI_DataSets*> _DataSets;
 
    UI_DatasetScroll* _RBoxScroll;
    UI_ScalarScroll* _ScalarScroll;

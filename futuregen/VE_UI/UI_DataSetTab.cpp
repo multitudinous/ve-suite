@@ -1,7 +1,9 @@
-#include <iostream>
+#include "UI_DataSetTab.h"
+
 #include "UI_Tabs.h"
 #include "UI_Frame.h"
-#include "UI_DataSetTab.h"
+
+#include <iostream>
 
 BEGIN_EVENT_TABLE(UI_DatasetTab, wxScrolledWindow)
    EVT_RADIOBOX(RBOX_TABS_3D, UI_DatasetTab::_on3d)
@@ -150,7 +152,7 @@ const char* UI_DatasetInfo::scalarName(int whichScalar)
    if(_scalarNames[whichScalar]){
       return _scalarNames[whichScalar];
    }else{
-      cout<<"Invalid index for scalar: "<<whichScalar<<endl;
+      std::cout<<"Invalid index for scalar: "<<whichScalar<<std::endl;
       return 0;
    }
 }
@@ -200,13 +202,13 @@ void UI_DatasetTab::_buildPage()
 
    //create 6(?) radio boxes
    wxString defaultNames[] = {wxT("default")};
-   _3dRBox = new wxRadioBox(this, RBOX_3D, wxT("3D mesh"),
+   _3dRBox = new wxRadioBox(this, DATASET_RBOX_3D, wxT("3D mesh"),
                                 wxDefaultPosition, wxDefaultSize,
 				1, defaultNames,1, wxRA_SPECIFY_COLS);
-   _vertexRBox = new wxRadioBox(this, VERTEX_RBOX, wxT("Vertex Data"),
+   _vertexRBox = new wxRadioBox(this, DATASET_VERTEX_RBOX, wxT("Vertex Data"),
                                 wxDefaultPosition, wxDefaultSize,
 				1, defaultNames,1, wxRA_SPECIFY_COLS);
-   _polydataRBox = new wxRadioBox(this, POLYDATA_RBOX, wxT("Polydata"),
+   _polydataRBox = new wxRadioBox(this, DATASET_POLYDATA_RBOX, wxT("Polydata"),
                                 wxDefaultPosition, wxDefaultSize,
 				1, defaultNames,1, wxRA_SPECIFY_COLS);
 /*   _scalarVRBox = new wxRadioBox(this, SCALAR_V_RBOX, wxT("Scalars"),
@@ -272,10 +274,13 @@ void UI_DatasetTab::makeActiveScalarOnDataset(const char* name)
    UI_DatasetInfo curDataset;           
 
    //get the current dataset info
-   if(_dSetInfo){
+   if(_dSetInfo)
+   {
       curDataset = _dSetInfo[_currentDataSet];          
-   }else{
-      cout<<"Datasets not specified yet!!"<<endl;
+   }
+   else
+   {
+      std::cout<<"Datasets not specified yet!!"<<std::endl;
       return;
    }
    //need to update the correct radio box
@@ -315,7 +320,7 @@ int UI_DatasetTab::findDataset(char* name)
 {
  
    if(!_dSetInfo){
-      cout<<"No datasets found!!"<<endl;
+      std::cout<<"No datasets found!!"<<std::endl;
       return -1;
    }
    //search the array and find the one 
@@ -333,12 +338,12 @@ void UI_DatasetTab::updateView()
 {
    //updatet the page w/ the correct names
    if(!_dSetInfo){
-      cout<<"Datasets not specified"<<endl;
+      std::cout<<"Datasets not specified"<<std::endl;
       return; 
    }
 
    if(!_foundTypes){
-      cout<<"No matching types found for datasets!!"<<endl; 
+      std::cout<<"No matching types found for datasets!!"<<std::endl; 
       return ;      
    }
    //the index of the first found dataset
@@ -371,7 +376,7 @@ void UI_DatasetTab::updateView()
 	      _col3->Remove(_polydataRBox);
                delete  _polydataRBox;
                //create the radio box
-               _polydataRBox = new wxRadioBox(this,POLYDATA_RBOX, wxT("Polydata"),
+               _polydataRBox = new wxRadioBox(this,DATASET_POLYDATA_RBOX, wxT("Polydata"),
                                      wxDefaultPosition, wxDefaultSize,_foundTypes[i],
                                      names,1,wxRA_SPECIFY_COLS);
 
@@ -386,7 +391,7 @@ void UI_DatasetTab::updateView()
 	      _col2->Remove(_vertexRBox);
                delete _vertexRBox;
                //create the radio box
-               _vertexRBox = new wxRadioBox(this,VERTEX_RBOX, wxT("Vertex Data"),
+               _vertexRBox = new wxRadioBox(this,DATASET_VERTEX_RBOX, wxT("Vertex Data"),
                                      wxDefaultPosition, wxDefaultSize,_foundTypes[i],
                                      names,1,wxRA_SPECIFY_COLS);
 
@@ -400,7 +405,7 @@ void UI_DatasetTab::updateView()
 	      _col1->Remove(_3dRBox);
                delete  _3dRBox;
               //create the radio box
-               _3dRBox = new wxRadioBox(this,RBOX_3D, wxT("3D Mesh"),
+               _3dRBox = new wxRadioBox(this,DATASET_RBOX_3D, wxT("3D Mesh"),
                                      wxDefaultPosition, wxDefaultSize,_foundTypes[i],
                                      names,1,wxRA_SPECIFY_COLS);
 
@@ -453,10 +458,10 @@ void UI_DatasetTab::addDataset(UI_DatasetInfo* dataset)
          _numAddedDSets++;
          return;
       }else{
-         cout<<"Not enough space to add dataset!"<<endl;
-         cout<<"Number of datasets already added: "
-             <<_numAddedDSets<<endl;
-         cout<<"Number of allowable Datasets: "<<_nDatasets<<endl;
+         std::cout<<"Not enough space to add dataset!"<<std::endl;
+         std::cout<<"Number of datasets already added: "
+            <<_numAddedDSets<<std::endl;
+         std::cout<<"Number of allowable Datasets: "<<_nDatasets<<std::endl;
          return;
       }
    } 
@@ -483,7 +488,7 @@ void UI_DatasetTab::updateScalarBoxForDataset(int index)
    if(_dSetInfo)
       curDataset = _dSetInfo[index];          
    else{
-      cout<<"Datasets not specified yet!!"<<endl;
+      std::cout<<"Datasets not specified yet!!"<<std::endl;
       return;
    }
 

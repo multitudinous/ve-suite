@@ -4,8 +4,7 @@
 #include <winsock2.h>
 #endif
 #include <wx/wx.h>
-#include <wx/notebook.h>
-//#include "controlIds.h"
+
 enum STREAMLINE_TAB_IDS{
    CURSOR_SELECT_RBOX,
    DIR_RBOX,
