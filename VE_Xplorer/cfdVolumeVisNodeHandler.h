@@ -2,9 +2,13 @@
 #define CFD_VOLUME_VIZ_NODE_HANDLER_H
 
 #ifdef _OSG
-#include <osg/Group>
 #include <osg/BoundingBox>
-#include <osg/Switch>
+#include <osg/ref_ptr>
+namespace osg
+{
+   class Group;
+   class Switch;
+}
 class cfdVolumeVisNodeHandler{
 public:
    cfdVolumeVisNodeHandler();

@@ -18,9 +18,7 @@ class cfdTextureManager;
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-namespace osgUtil{
-   class SceneView;
-};
+namespace osgUtil { class SceneView; }
 class cfdPBufferManager;
 class cfdVolumeVisualization;
 class cfdScalarVolumeVisHandler;

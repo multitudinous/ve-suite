@@ -163,7 +163,7 @@ inline osg::Group* cfdApp::getScene()
 //////////////////////////
 void cfdApp::contextInit()
 {
-   OsgApp::contextInit();
+   vrj::OsgApp::contextInit();
 #ifdef CFD_USE_SHADERS
    if (!_pbuffer){
       _pbuffer = new cfdPBufferManager();
@@ -248,7 +248,7 @@ void cfdApp::SetWrapper( cfdVjObsWrapper* input )
    _vjobsWrapper = input;
 }
 
-inline void cfdApp::initScene( )
+void cfdApp::initScene( )
 {
    vprDEBUG(vprDBG_ALL,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
 

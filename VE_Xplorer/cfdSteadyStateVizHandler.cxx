@@ -75,9 +75,6 @@
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
-#ifdef _OSG
-#include <osgDB/WriteFile>
-#endif
 
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 {
@@ -665,23 +662,12 @@ void cfdSteadyStateVizHandler::InitScene( void )
          //
          // Initiate the animated Images.
          //
-         // Need to fix this
-         //if ( this->paramReader->frames != 0 )
-         {
-            std::cout << "| 39.b Initializing............................. Animated Images |" << std::endl;
-            this->animImg = new cfdAnimatedImage( _param );
-            this->animImg->SetObjectType( ANIMATED_IMAGES );
-            this->dataList.push_back( this->animImg);  
-         }  
+         std::cout << "| 39.b Initializing............................. Animated Images |" << std::endl;
+         this->animImg = new cfdAnimatedImage( _param );
+         this->animImg->SetObjectType( ANIMATED_IMAGES );
+         this->dataList.push_back( this->animImg);  
       }
    }
-
-   //
-   // Initiate the Text Prompt
-   //
-   //std::cout << "| 40. Initializing..................................... Text Prompt |" << std::endl;
-   //this->tPrompt = new textPrompt();
-   //this->text_sig = 0 ;
 
    //
    // Initiate the PolyData File

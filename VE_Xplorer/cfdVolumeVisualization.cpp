@@ -27,6 +27,7 @@
 #include <osg/Shape>
 #include <osg/Image>
 #include <osg/Switch>
+#include <osg/BoundingBox>
 
 ////////////////////////////////////////////////
 //Constructor                                 //
@@ -48,12 +49,12 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _tUnit = 0;
    _verbose = 0;
    _tm = 0;
+   _bbox = new osg::BoundingBox();
    _isCreated = false;
    _useShaders = false;
    _shaderDirectory = 0;
    _volShaderIsActive =  false;
    _transferShaderIsActive = false;
-
 }
 /////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
@@ -96,12 +97,18 @@ cfdVolumeVisualization::~cfdVolumeVisualization()
       delete _utCbk;
       _utCbk = 0;
    }
-   if(_shaderDirectory){
+
+   if ( _shaderDirectory )
+   {
       delete [] _shaderDirectory;
       _shaderDirectory = 0;
    }
    
-
+   if ( _bbox )
+   {
+      delete _bbox;
+      _bbox = 0;
+   }
 }
 ////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetState(osg::State* state)
@@ -222,7 +229,8 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
    maxBBox[0] = bbox[1]; 
    maxBBox[1] = bbox[3]; 
    maxBBox[2] = bbox[5]; 
-   _bbox.set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
+   
+   _bbox->set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
                 osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
 
 }
@@ -491,18 +499,19 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 ////////////////////////////////////////////////
 void cfdVolumeVisualization::_createTexGenNode()
 {
-   if(_bbox.valid()){
+   if ( _bbox )
+   {
       osg::Vec4 sPlane(0,0,0,0);
       osg::Vec4 tPlane(0,0,0,0);
       osg::Vec4 rPlane(0,0,0,0);
 
-      sPlane[0] = 1.0/(_bbox.xMax() - _bbox.xMin());
-      tPlane[1] = 1.0/(_bbox.yMax() - _bbox.yMin());
-      rPlane[2] = 1.0/(_bbox.zMax()- _bbox.zMin());
+      sPlane[0] = 1.0/(_bbox->xMax() - _bbox->xMin());
+      tPlane[1] = 1.0/(_bbox->yMax() - _bbox->yMin());
+      rPlane[2] = 1.0/(_bbox->zMax()- _bbox->zMin());
    
-      sPlane[3] = - _bbox.xMin()/(_bbox.xMax() - _bbox.xMin());
-      tPlane[3] = - _bbox.yMin()/(_bbox.yMax() - _bbox.yMin());
-      rPlane[3] = - _bbox.zMin()/(_bbox.zMax()- _bbox.zMin());
+      sPlane[3] = - _bbox->xMin()/(_bbox->xMax() - _bbox->xMin());
+      tPlane[3] = - _bbox->yMin()/(_bbox->yMax() - _bbox->yMin());
+      rPlane[3] = - _bbox->zMin()/(_bbox->zMax()- _bbox->zMin());
       //biv--this may not be right!!!      
       _texGenParams = new osg::TexGenNode();
       _texGenParams->setTextureUnit(_tUnit);
@@ -511,7 +520,9 @@ void cfdVolumeVisualization::_createTexGenNode()
       _texGenParams->getTexGen()->setPlane(osg::TexGen::T,tPlane);
       _texGenParams->getTexGen()->setPlane(osg::TexGen::R,rPlane);
 
-   }else{
+   }
+   else
+   {
       if(_verbose)
          std::cout<<"Invalid bbox in cfdVolumeVisualization::_createTexGenNode!"<<std::endl;
    }
@@ -527,51 +538,51 @@ void cfdVolumeVisualization::_buildAxisDependentGeometry()
    osg::Vec3Array* yncoords = new osg::Vec3Array(4*_nSlices);
    osg::Vec3Array* zncoords = new osg::Vec3Array(4*_nSlices);
 
-   float y = _bbox.yMin();
-   float dy = (_bbox.yMax() -_bbox.yMin())/(_nSlices - 1.0);
+   float y = _bbox->yMin();
+   float dy = (_bbox->yMax() -_bbox->yMin())/(_nSlices - 1.0);
    for(int i=0;i<_nSlices;++i, y+=dy){
-      (*ycoords)[i*4+0].set(_bbox.xMin(),y,_bbox.zMin());
-      (*ycoords)[i*4+1].set(_bbox.xMax(),y,_bbox.zMin());
-      (*ycoords)[i*4+2].set(_bbox.xMax(),y,_bbox.zMax());
-      (*ycoords)[i*4+3].set(_bbox.xMin(),y,_bbox.zMax());
+      (*ycoords)[i*4+0].set(_bbox->xMin(),y,_bbox->zMin());
+      (*ycoords)[i*4+1].set(_bbox->xMax(),y,_bbox->zMin());
+      (*ycoords)[i*4+2].set(_bbox->xMax(),y,_bbox->zMax());
+      (*ycoords)[i*4+3].set(_bbox->xMin(),y,_bbox->zMax());
    }
-   y = _bbox.yMax();
+   y = _bbox->yMax();
    for(int i=0;i<_nSlices;++i, y-=dy){
-      (*yncoords)[i*4+0].set(_bbox.xMin(),y,_bbox.zMin());
-      (*yncoords)[i*4+1].set(_bbox.xMax(),y,_bbox.zMin());
-      (*yncoords)[i*4+2].set(_bbox.xMax(),y,_bbox.zMax());
-      (*yncoords)[i*4+3].set(_bbox.xMin(),y,_bbox.zMax());
+      (*yncoords)[i*4+0].set(_bbox->xMin(),y,_bbox->zMin());
+      (*yncoords)[i*4+1].set(_bbox->xMax(),y,_bbox->zMin());
+      (*yncoords)[i*4+2].set(_bbox->xMax(),y,_bbox->zMax());
+      (*yncoords)[i*4+3].set(_bbox->xMin(),y,_bbox->zMax());
    }
 
-   float x = _bbox.xMin();
-   float dx = (_bbox.xMax() -_bbox.xMin())/(_nSlices - 1.0);
+   float x = _bbox->xMin();
+   float dx = (_bbox->xMax() -_bbox->xMin())/(_nSlices - 1.0);
    for(int i=0;i<_nSlices;++i, x+=dx){
-        (*xcoords)[i*4+0].set(x,_bbox.yMin(),_bbox.zMin());
-        (*xcoords)[i*4+1].set(x,_bbox.yMax(),_bbox.zMin());
-        (*xcoords)[i*4+2].set(x,_bbox.yMax(),_bbox.zMax());
-        (*xcoords)[i*4+3].set(x,_bbox.yMin(),_bbox.zMax());
+        (*xcoords)[i*4+0].set(x,_bbox->yMin(),_bbox->zMin());
+        (*xcoords)[i*4+1].set(x,_bbox->yMax(),_bbox->zMin());
+        (*xcoords)[i*4+2].set(x,_bbox->yMax(),_bbox->zMax());
+        (*xcoords)[i*4+3].set(x,_bbox->yMin(),_bbox->zMax());
    }
-   x = _bbox.xMax();
+   x = _bbox->xMax();
    for(int i=0;i<_nSlices;++i, x-=dx){
-        (*xncoords)[i*4+0].set(x,_bbox.yMin(),_bbox.zMin());
-        (*xncoords)[i*4+1].set(x,_bbox.yMax(),_bbox.zMin());
-        (*xncoords)[i*4+2].set(x,_bbox.yMax(),_bbox.zMax());
-        (*xncoords)[i*4+3].set(x,_bbox.yMin(),_bbox.zMax());
+        (*xncoords)[i*4+0].set(x,_bbox->yMin(),_bbox->zMin());
+        (*xncoords)[i*4+1].set(x,_bbox->yMax(),_bbox->zMin());
+        (*xncoords)[i*4+2].set(x,_bbox->yMax(),_bbox->zMax());
+        (*xncoords)[i*4+3].set(x,_bbox->yMin(),_bbox->zMax());
    }
-   float z = _bbox.zMin();
-   float dz = (_bbox.zMax() -_bbox.zMin())/(_nSlices - 1.0);
+   float z = _bbox->zMin();
+   float dz = (_bbox->zMax() -_bbox->zMin())/(_nSlices - 1.0);
    for(int i=0;i<_nSlices;++i, z+=dz){
-      (*zcoords)[i*4+0].set(_bbox.xMax(),_bbox.yMin(),z);
-      (*zcoords)[i*4+1].set(_bbox.xMax(),_bbox.yMax(),z);
-      (*zcoords)[i*4+2].set(_bbox.xMin(),_bbox.yMax(),z);
-      (*zcoords)[i*4+3].set(_bbox.xMin(),_bbox.yMin(),z);
+      (*zcoords)[i*4+0].set(_bbox->xMax(),_bbox->yMin(),z);
+      (*zcoords)[i*4+1].set(_bbox->xMax(),_bbox->yMax(),z);
+      (*zcoords)[i*4+2].set(_bbox->xMin(),_bbox->yMax(),z);
+      (*zcoords)[i*4+3].set(_bbox->xMin(),_bbox->yMin(),z);
    }
-   z = _bbox.zMax();
+   z = _bbox->zMax();
    for(int i=0;i<_nSlices;++i, z-=dz){
-      (*zncoords)[i*4+0].set(_bbox.xMax(),_bbox.yMin(),z);
-      (*zncoords)[i*4+1].set(_bbox.xMax(),_bbox.yMax(),z);
-      (*zncoords)[i*4+2].set(_bbox.xMin(),_bbox.yMax(),z);
-      (*zncoords)[i*4+3].set(_bbox.xMin(),_bbox.yMin(),z);
+      (*zncoords)[i*4+0].set(_bbox->xMax(),_bbox->yMin(),z);
+      (*zncoords)[i*4+1].set(_bbox->xMax(),_bbox->yMax(),z);
+      (*zncoords)[i*4+2].set(_bbox->xMin(),_bbox->yMax(),z);
+      (*zncoords)[i*4+3].set(_bbox->xMin(),_bbox->yMin(),z);
    }
    osg::Vec4Array* colors = new osg::Vec4Array(1);
    (*colors)[0].set(1.0f,1.0f,1.0f,_alpha);
@@ -661,7 +672,8 @@ if(!_tm){
       _noShaderGroup->addChild(_texGenParams.get());
 
       if(_slices.valid()){
-         _vSSCbk =  new cfdVolumeSliceSwitchCallback(_bbox.center());
+         osg::Vec3f temp( _bbox->center() );
+         _vSSCbk =  new cfdVolumeSliceSwitchCallback( (&temp) );
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::X_POS,_posXSlices);
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Y_POS,_posYSlices);
          _vSSCbk->AddGeometrySlices(cfdVolumeSliceSwitchCallback::Z_POS,_posZSlices);

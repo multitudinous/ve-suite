@@ -68,33 +68,33 @@ class cfdApp: public vrj::OsgApp
       ~cfdApp( void ) { ; }
      
       // Initialize the scene graph
-      virtual void initScene( );
+      virtual void initScene( void );
 
-      virtual void init( );
+      virtual void init( void );
 #ifdef _PERFORMER
 
-      virtual void apiInit( );
+      virtual void apiInit( void );
 
       // Called After pfInit()
-      virtual void preForkInit( );
+      virtual void preForkInit( void );
       // Called Before pfConfig()
 
       virtual void appChanFunc( pfChannel* chan );
 
       // Return the current scene graph
-      virtual pfGroup* getScene( );
+      virtual pfGroup* getScene( void );
       
       // Function called before pfSync
-      virtual void preSync( );
+      virtual void preSync( void );
 
       // Performer calls before exiting
       virtual void exit( void );
 #elif _OSG
-      osg::Group* getScene();
-      void bufferPreDraw();
-      void contextInit();
-      virtual void contextClose();
-      cfdPBufferManager* cfdApp::GetPBuffer();
+      osg::Group* getScene( void );
+      void bufferPreDraw( void );
+      void contextInit( void );
+      virtual void contextClose( void );
+      cfdPBufferManager* GetPBuffer( void );
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
 #elif _OPENSG
 #endif

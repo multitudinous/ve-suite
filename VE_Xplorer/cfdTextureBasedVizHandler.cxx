@@ -1,11 +1,19 @@
 #include "cfdTextureBasedVizHandler.h"
+#ifdef _PERFORMER
+#elif _OPENSG
+#elif _OSG
+#include <osgUtil/SceneView>
+#include <osg/State>
+#include "cfdVolumeVisNodeHandler.h"
+#include "cfdScalarVolumeVisHandler.h"
+#endif
+#include "cfdVolumeVisualization.h"
 
 #include "cfdCommandArray.h"
 #include "cfdReadParam.h"
 #include "cfdDCS.h"
 #include "cfdCursor.h"
 #include "cfdNavigate.h"
-#include "cfdVolumeVisualization.h"
 #include "cfdTextureManager.h"
 #include "cfdGraphicsObject.h"
 #include "cfdEnum.h"
@@ -14,11 +22,7 @@
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-#include <osg/Group>
-#include <osgUtil/SceneView>
-#include <osg/State>
-#include "cfdScalarVolumeVisHandler.h"
-#include "cfdVolumeVisNodeHandler.h"
+//#include <osg/Group>
 #ifdef CFD_USE_SHADERS
 #include "cfdVectorVolumeVisHandler.h"
 #endif
@@ -438,7 +442,8 @@ cfdVolumeVisualization* cfdTextureBasedVizHandler::GetVolumeVizNode(int whichMod
 ////////////////////////////////////////////////////
 bool cfdTextureBasedVizHandler::InitVolumeVizNodes()
 {
-   if(!_paramFile){
+   if ( !_paramFile )
+   {
       std::cout<<"Invalid parameter file!"<<std::endl;
       std::cout<<"Cannot initialize texture based models!!"<<std::endl;
       std::cout<<"cfdTextureBasedVizHandler::InitTextureBasedModels()"<<std::endl;

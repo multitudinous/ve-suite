@@ -2,9 +2,7 @@
 #define CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
 #ifdef _PERFORMER
 #elif _OSG
-namespace osg{
-   class Texture1D;
-}
+namespace osg { class Texture1D; }
 
 class cfdUpdateableOSGTexture1d{
 public:

@@ -2,9 +2,7 @@
 #define CFD_SCALAR_VOLUME_VIS_HANDLER_H
 
 #ifdef _OSG
-#include <osg/Group>
-
-
+namespace osg { class Group; }
 #include "cfdOSGScalarShaderManager.h"
 #include "cfdTextureManager.h"
 #include "cfdVolumeVisNodeHandler.h" 

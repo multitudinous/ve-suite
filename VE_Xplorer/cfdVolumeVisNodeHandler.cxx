@@ -2,6 +2,8 @@
 
 #include <osg/Geometry>
 #include <osg/Geode>
+#include <osg/Group>
+#include <osg/Switch>
 #include <iostream>
 #include "cfdVolumeVisNodeHandler.h"
 //////////////////////////////////////////////////

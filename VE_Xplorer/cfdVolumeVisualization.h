@@ -4,7 +4,8 @@ class cfdGroup;
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-namespace osg{
+namespace osg
+{
    class Node;
    class Geometry;
    class Texture1D;
@@ -20,6 +21,7 @@ namespace osg{
    class Switch;
    class StateSet;
    class Group;
+   class BoundingBox;
 }
 
 
@@ -27,7 +29,6 @@ namespace osg{
 #include "cfdUpdateTextureCallback.h"
 #include "cfdTextureManager.h"
 #include "cfdUpdateableOSGTexture1d.h"
-
 
 class cfdVolumeVisualization{
 public:
@@ -99,7 +100,7 @@ protected:
 
    osg::ref_ptr<osg::Group>_volumeVizNode;
    osg::ref_ptr<osg::TexGenNode> _texGenParams;
-   osg::BoundingBox _bbox;
+   osg::BoundingBox* _bbox;
    osg::ref_ptr<osg::ClipNode> _clipNode;
    osg::ref_ptr<osg::StateSet> _stateSet;
 

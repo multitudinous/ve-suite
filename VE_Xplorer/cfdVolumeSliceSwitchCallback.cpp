@@ -3,20 +3,28 @@
 #elif _OPENSG
 #elif _OSG
 #include <osg/Geode>
-
 #include <osg/Node>
-
-#include <osg/Vec3>
+#include <osg/Vec3f>
 #include <osgUtil/CullVisitor>
 ////////////////////////////////////////////////////////////
 //Constructor
 ////////////////////////////////////////////////////////////
 cfdVolumeSliceSwitchCallback::cfdVolumeSliceSwitchCallback(
-osg::Vec3f center)
+osg::Vec3f* center)
 :_center(center)
 {
    _whichSlices = Z_POS;
    _lastDir = Z_POS;
+}
+
+///////////////////////////////////////////////////////////////////
+cfdVolumeSliceSwitchCallback::~cfdVolumeSliceSwitchCallback()
+{
+   if ( _center )
+   {
+      delete [] _center;
+      _center = 0;
+   }
 }
 ///////////////////////////////////////////////////////////////////
 void cfdVolumeSliceSwitchCallback::AddGeometrySlices(SliceDir dir,
@@ -28,14 +36,14 @@ void cfdVolumeSliceSwitchCallback::AddGeometrySlices(SliceDir dir,
    _switchSlices[dir] = geom;
 }
 //////////////////////////////////////////////////////////////
-void cfdVolumeSliceSwitchCallback::switchSlices(osg::Vec3f eye)
+void cfdVolumeSliceSwitchCallback::switchSlices(osg::Vec3f* eye)
 {
-   osg::Vec3 xAxis(1,0,0);
-   osg::Vec3 yAxis(0,1,0);
-   osg::Vec3 zAxis(0,0,1);
-   osg::Vec3 viewVector(0,0,0);
+   osg::Vec3f xAxis(1,0,0);
+   osg::Vec3f yAxis(0,1,0);
+   osg::Vec3f zAxis(0,0,1);
+   osg::Vec3f viewVector(0,0,0);
 
-   viewVector = eye - _center;
+   viewVector = (*eye) - (*_center);
    viewVector.normalize();
    float closeAxis = 0 ;
   
@@ -74,8 +82,8 @@ void cfdVolumeSliceSwitchCallback::operator()(osg::Node* node,
 {
    osgUtil::CullVisitor* cullVisitor = dynamic_cast<osgUtil::CullVisitor*>(nv);
    if (cullVisitor ){
-      osg::Vec3 viewVector = cullVisitor->getEyePoint();
-      switchSlices(viewVector);
+      osg::Vec3f viewVector = cullVisitor->getEyePoint();
+      switchSlices( (&viewVector) );
       if(_lastDir != _whichSlices){
          ((osg::Geode*)node)->setDrawable(0,_switchSlices[_whichSlices].get());
       }
