@@ -6,6 +6,8 @@ APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/Exe_server
 
 IDL_HOME = $(VE_SUITE_HOME)/VESOpen
 
+srcdir= .
+
 all:
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)

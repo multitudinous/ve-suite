@@ -76,10 +76,11 @@ EXTRA_DEFS+=
 
 EXTRA_LIBS+= -lm -lpthread -Wl,-E #-ldl -lrt -lc 
 
-ifeq ($(CFDHOSTTYPE),IRIX64)
+ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
    EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include/boost/compatibility/cpp_c_headers
 endif
+
 
 LINKALL_ON= -all
 LINKALL_OFF=
@@ -97,6 +98,7 @@ vpath %.cpp $(VE_UI_HOME) $(IDL_HOME)/skel ./Framework
 
 EXTRA_CXXFLAGS += -I$(VE_UI_HOME) \
                   -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer
+
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
