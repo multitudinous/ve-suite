@@ -15,30 +15,31 @@ all:
 srcdir= .
 
 SRCS=\
+   App.cpp \
+   Avail_Modules.cpp \
+   Frame.cpp \
+   FinancialDialog.cpp \
+   Geometry.cpp \
+   GlobalParamDialog.cpp \
+   interface.cpp \
+   ListTable.cpp \
    moduleC.cpp \
    moduleS.cpp \
-   StringParse.cpp \
-   OrbThread.cpp \
-   Frame.cpp \
-   VjObsC.cpp \
-   VjObsS.cpp \
-   App.cpp \
-   PluginLoader.cpp \
    Network.cpp \
-   Avail_Modules.cpp \
-   ListTable.cpp \
-   PortDialog.cpp \
-   ResultPanel.cpp \
-   paraThread.cpp \
-   GlobalParamDialog.cpp \
-   string_ops.cpp \
-   interface.cpp \
+   OrbThread.cpp \
    package.cpp \
+   paraThread.cpp \
+   PluginLoader.cpp \
+   PortDialog.cpp \
    Plugin_base.cpp \
-   UIDialog.cpp \
+   ResultPanel.cpp \
+   string_ops.cpp \
+   StringParse.cpp \
    TexTable.cpp \
    TextResultDialog.cpp \
-   FinancialDialog.cpp \
+   UIDialog.cpp \
+   VjObsC.cpp \
+   VjObsS.cpp \
    UI_i.cpp \
    UI_Frame.cpp \
    UI_Tabs.cpp \
