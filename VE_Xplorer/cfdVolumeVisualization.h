@@ -56,6 +56,7 @@ public:
    void SetBoundingBox(float* bbox);
    void SetNumberofSlices(int nSlices = 100);
    void SetTextureManager(cfdTextureManager* tm);
+   void SetCurrentTransientTexture(unsigned int ct);
    
    void CreateNode();
    void AddClipPlane(ClipPlane direction,double* position);
@@ -64,7 +65,7 @@ public:
    
 
    bool isCreated(){return _isCreated;}
-
+   unsigned int GetCurrentTransientTexture();
    cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk;}
    osg::Vec3f GetBBoxCenter(){return _center;}
    float* GetTextureScale(){return _scale;}

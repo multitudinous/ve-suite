@@ -127,6 +127,21 @@ void cfdVolumeVisualization::SetShaderDirectory(char* shadDir)
    _shaderDirectory = new char[strlen(shadDir)+1];
    strcpy(_shaderDirectory,shadDir);
 }
+/////////////////////////////////////////////////////////////////
+unsigned int cfdVolumeVisualization::GetCurrentTransientTexture()
+{
+   if(_utCbk){
+      return _utCbk->GetCurrentFrame();
+   }
+   return 0;
+}
+////////////////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::SetCurrentTransientTexture(unsigned int ct)
+{
+   if(_utCbk){
+     _utCbk->SetCurrentFrame(ct);
+   }
+}
 //////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetPlayMode(VisMode mode)
 {
