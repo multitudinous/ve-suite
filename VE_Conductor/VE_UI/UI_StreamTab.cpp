@@ -9,6 +9,7 @@ BEGIN_EVENT_TABLE(UI_StreamlineTab, wxPanel)
    EVT_BUTTON        (COMP_STREAMLINE_BUTTON,UI_StreamlineTab::_onCompStreamline)
    EVT_BUTTON        (PARTICLE_TRACK_BUTTON, UI_StreamlineTab::_onParticleTrack)
    EVT_CHECKBOX      (SEED_POINTS_CHK,       UI_StreamlineTab::_onCheck)
+   EVT_CHECKBOX      (ARROW_POINTS_CHK,       UI_StreamlineTab::OnArrowCheck )
    EVT_COMMAND_SCROLL(NUM_PTS_SLIDER,        UI_StreamlineTab::_onnPointsSlider)
    EVT_COMMAND_SCROLL(SIZE_SLIDER,           UI_StreamlineTab::_onnPointsSlider)
 #ifdef WIN32
@@ -202,6 +203,10 @@ void UI_StreamlineTab::_buildPage()
                                     wxT("Particle Tracking"));
    _lastSeedPtChk = new wxCheckBox(this, SEED_POINTS_CHK,
                                     wxT("Use Last Seedpoints"));
+   _lastSeedPtChk->SetValue( false );
+   arrowPointsChk = new wxCheckBox(this, ARROW_POINTS_CHK,
+                                    wxT("Stream Arrows"));
+   arrowPointsChk->SetValue( false );
    //the layout
    //heirarchy
    //main group
@@ -221,6 +226,7 @@ void UI_StreamlineTab::_buildPage()
    row2->Add(_compStreamButton,1,wxALL|wxALIGN_CENTER_HORIZONTAL,5);
    row2->Add(_parTrackingButton,1,wxALL|wxALIGN_CENTER_HORIZONTAL,5);
    row2->Add(_lastSeedPtChk,1,wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+   row2->Add(arrowPointsChk,1,wxALL|wxALIGN_CENTER_HORIZONTAL,5);
 
    //the radio box group
    wxBoxSizer* radioBoxGroup = new wxBoxSizer(wxVERTICAL); 
@@ -374,6 +380,14 @@ void  UI_StreamlineTab::_onDiameterSlider(wxScrollEvent& event)
 void  UI_StreamlineTab::_onCheck(wxCommandEvent& event)
 {
    event.GetInt();
+}
+
+void UI_StreamlineTab::OnArrowCheck( wxCommandEvent& event )
+{
+   event.GetInt();
+   ((UI_Tabs *)_parent)->cId = STREAMLINE_ARROW;
+   ((UI_Tabs *)_parent)->cIso_value = arrowPointsChk->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 ///////////////////////////////////////////////////////

@@ -36,7 +36,7 @@ class vtkStreamLine;
 class vtkTubeFilter;
 class vtkPolyDataMapper;
 class vtkPolyData;
-class vtkRungeKutta4;
+class vtkRungeKutta45;
 
 #include "cfdObjects.h"
 class cfdCommandArray;
@@ -80,13 +80,14 @@ class cfdStreamers : public cfdObjects
       vtkStreamLine*    stream;
       vtkTubeFilter*    tubeFilter;
       vtkPolyDataMapper* mapper;
-      vtkRungeKutta4*   integ;
+      vtkRungeKutta45*   integ;
 
       float propagationTime;
       float integrationStepLength;
       float stepLength;
       int   integrationDirection;
       float lineDiameter;
+      int   streamArrows;
 };
 
 #endif

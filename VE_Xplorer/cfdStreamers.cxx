@@ -38,20 +38,24 @@
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 #include <vtkDataSet.h>
-#include <vtkRungeKutta4.h>
+#include <vtkRungeKutta45.h>
 #include <vtkStreamLine.h>
 #include <vtkTubeFilter.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 #include <vtkPolyDataWriter.h>
-
+#include <vtkConeSource.h>
+#include <vtkStreamPoints.h>
+#include <vtkGlyph3D.h>
+#include <vtkAppendPolyData.h>
+#include <vtkStreamTracer.h>
 #include <vpr/Util/Debug.h>
 
 cfdStreamers::cfdStreamers( void )
 {
    this->stream = vtkStreamLine::New();
-   this->integ = vtkRungeKutta4::New();
+   this->integ = vtkRungeKutta45::New();
 
    this->tubeFilter = vtkTubeFilter::New();
 
@@ -62,6 +66,7 @@ cfdStreamers::cfdStreamers( void )
    this->integrationStepLength = -1;
    this->stepLength = -1;
    this->lineDiameter = 0.0f;
+   streamArrows = 0;
 }
 
 cfdStreamers::~cfdStreamers()
@@ -82,7 +87,24 @@ void cfdStreamers::Update( void )
       << " Step Length : " << this->stepLength 
       << " Integration Direction : " << this->integrationDirection
       << std::endl << vprDEBUG_FLUSH;
+/*
+//Create source for streamtubes
+vtkStreamTracer streamer
+streamer SetInput [reader GetOutput]
+streamer SetStartPosition 0.1 2.1 0.5
+streamer SetMaximumPropagation 0 500
+streamer SetMinimumIntegrationStep 1 0.1
+streamer SetMaximumIntegrationStep 1 1.0
+streamer SetInitialIntegrationStep 2 0.2
+streamer SetIntegrationDirection 0
+streamer SetIntegrator rk
+streamer SetRotationScale 0.5
+streamer SetMaximumError 1.0E-8
 
+vtkAssignAttribute aa
+aa SetInput [streamer GetOutput]
+aa Assign Normals NORMALS POINT_DATA
+*/
    this->tubeFilter->SetRadius( this->lineDiameter );
 
    if ( propagationTime == -1 )
@@ -122,17 +144,40 @@ void cfdStreamers::Update( void )
    this->stream->SetStepLength( this->stepLength );
    //this->stream->SetStepLength( this->GetActiveMeshedVolume()->GetMeanCellLength() ); 
 
+   // Stream Points Section
+   vtkStreamPoints* streamPoints = 0;
+   vtkConeSource* cone = 0;
+   vtkGlyph3D* cones = 0;
+   vtkAppendPolyData* append = 0;
+
+   if ( streamArrows )
+   {
+      streamPoints = vtkStreamPoints::New();
+      streamPoints->SetInput( (vtkDataSet*)this->GetActiveDataSet()->GetDataSet() );
+      streamPoints->SetSource( (vtkDataSet*)this->pointSource );
+      streamPoints->SetTimeIncrement( this->stepLength * 500 );
+      streamPoints->SetMaximumPropagationTime( this->propagationTime );
+      streamPoints->SetIntegrationStepLength( this->integrationStepLength );    
+      streamPoints->SetIntegrator( this->integ );
+   }
+
    if ( this->integrationDirection == 0 )
    {
-      this->stream->SetIntegrationDirectionToIntegrateBothDirections();      
+      this->stream->SetIntegrationDirectionToIntegrateBothDirections();
+      if ( streamArrows )
+         streamPoints->SetIntegrationDirectionToIntegrateBothDirections();
    }
    else if ( this->integrationDirection == 1 )
    {
       this->stream->SetIntegrationDirectionToForward();
+      if ( streamArrows )
+         streamPoints->SetIntegrationDirectionToForward();
    }
    else if ( this->integrationDirection == 2 )
    {
       this->stream->SetIntegrationDirectionToBackward();
+      if ( streamArrows )
+         streamPoints->SetIntegrationDirectionToBackward();
    }
    this->stream->SetNumberOfThreads( 1 );
 
@@ -158,14 +203,34 @@ void cfdStreamers::Update( void )
 
    //this->filter = vtkGeometryFilter::New();
    //this->filter->SetInput( this->tubeFilter->GetOutput() );
-   
-   this->mapper->SetInput( this->tubeFilter->GetOutput() );
+
+   if ( streamArrows )
+   {
+      cone = vtkConeSource::New();
+      cone->SetResolution( 3 );
+
+      cones = vtkGlyph3D::New();
+      cones->SetInput( streamPoints->GetOutput() );
+      cones->SetSource( cone->GetOutput() );
+      cones->SetScaleFactor( this->lineDiameter * 4.0 );
+      cones->SetScaleModeToScaleByVector();
+
+      append = vtkAppendPolyData::New();
+      append->AddInput( this->tubeFilter->GetOutput() );
+      append->AddInput( cones->GetOutput() );
+      this->mapper->SetInput( append->GetOutput() );
+   }
+   else
+   {
+      this->mapper->SetInput( this->tubeFilter->GetOutput() );
+   }
    this->mapper->SetColorModeToMapScalars();
    this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
    this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
+   this->mapper->ImmediateModeRenderingOn();
    //this->mapper->DebugOn();
    //this->tubeFilter->Print( cout );
-   this->mapper->Update();
+   //this->mapper->Update();
    //this->mapper->Print( cout );
  
    vtkActor* temp = vtkActor::New();
@@ -175,7 +240,15 @@ void cfdStreamers::Update( void )
    geodes.back()->TranslateTocfdGeode( temp );
    temp->Delete();
    this->updateFlag = true;
-   
+
+   if ( streamArrows )
+   {
+      // Clean Up Now...
+      streamPoints->Delete();
+      append->Delete();
+      cone->Delete();
+      cones->Delete();
+   }
    vprDEBUG(vprDBG_ALL,0) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -268,6 +341,14 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
                              << std::endl << vprDEBUG_FLUSH;
          
       this->SetStepLength( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_ARROW )
+   {
+      vprDEBUG(vprDBG_ALL,0) << " STREAMLINE_ARROW\t" << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
+                             << std::endl << vprDEBUG_FLUSH;
+         
+      streamArrows = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_DIAMETER )

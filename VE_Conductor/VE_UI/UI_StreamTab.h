@@ -17,7 +17,8 @@ enum STREAMLINE_TAB_IDS{
    PROP_SLIDER,
    INT_STEP_SLIDER,
    STEP_SLIDER,
-   DIAMETER_SLIDER
+   DIAMETER_SLIDER,
+   ARROW_POINTS_CHK
 };
 
 
@@ -41,6 +42,7 @@ protected:
    wxButton* _compStreamButton;
    wxButton* _parTrackingButton;
    wxCheckBox* _lastSeedPtChk;
+   wxCheckBox* arrowPointsChk;
 
    //event handling callbacks
    void _onCursorSelect(wxCommandEvent& event);
@@ -49,6 +51,7 @@ protected:
    void _onParticleTrack(wxCommandEvent& event);
    void _onCompStreamline(wxCommandEvent& event);
    void _onCheck(wxCommandEvent& event);
+   void OnArrowCheck( wxCommandEvent& event );
    void _oniStepSlider(wxScrollEvent& event);
    void _onPropSlider(wxScrollEvent& event);
    void _onStepSlider(wxScrollEvent& event);
