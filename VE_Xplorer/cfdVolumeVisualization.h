@@ -28,7 +28,6 @@ namespace osg
 #include <osgUtil/CullVisitor>
 #include <osg/TexMat>
 #include <osg/Vec3>
-#include "cfdVolumeSliceSwitchCallback.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfdTextureManager.h"
 #ifdef CFD_USE_SHADERS
