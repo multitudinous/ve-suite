@@ -552,11 +552,7 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
 
 		//_mutex.release();
 		//Enalbe Menu items
-		con_menu->Enable(v21ID_SUBMIT,true);
-		con_menu->Enable(v21ID_LOAD, true);
-		con_menu->Enable(v21ID_CONNECT, false);
-		run_menu->Enable(v21ID_START_CALC, true);
-		run_menu->Enable(v21ID_VIEW_RESULT, true);
+
   
 
 	} catch (CORBA::Exception &) {

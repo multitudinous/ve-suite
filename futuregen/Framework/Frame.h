@@ -71,6 +71,12 @@ class AppFrame : public wxFrame
   PortableServer::POA_var poa;
   CosNaming::NamingContext_var naming_context;
   Body_UI_i* p_ui_i;
+  wxMenu *file_menu;
+  wxMenu *con_menu;
+  wxMenu *run_menu;
+  wxMenu *edit_menu;
+  wxMenu *help_menu;
+  wxMenu *config_menu;
 
   void Log(const char* msg);
   //ACE_Thread_Mutex _mutex; //public mutex for the execution order
@@ -84,12 +90,7 @@ class AppFrame : public wxFrame
   
  private:
   bool is_orb_init;
-  wxMenu *file_menu;
-  wxMenu *con_menu;
-  wxMenu *run_menu;
-  wxMenu *edit_menu;
-  wxMenu *help_menu;
-  wxMenu *config_menu;
+ 
   
  protected:
   wxRect DetermineFrameSize (wxConfig* config);

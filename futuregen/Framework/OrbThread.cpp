@@ -64,6 +64,11 @@ int OrbThread::svc (void)
 	//(frame_->_mutex).release();
 	try {
 	frame_->network->exec->RegisterUI(frame_->p_ui_i->UIName_.c_str());
+	frame_->con_menu->Enable(v21ID_SUBMIT,true);
+	frame_->con_menu->Enable(v21ID_LOAD, true);
+	frame_->con_menu->Enable(v21ID_CONNECT, false);
+	frame_->run_menu->Enable(v21ID_START_CALC, true);
+	frame_->run_menu->Enable(v21ID_VIEW_RESULT, true);
 	frame_->orb->run();
 		}catch (CORBA::Exception &) {
 		
