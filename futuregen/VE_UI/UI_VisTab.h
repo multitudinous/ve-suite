@@ -4,7 +4,7 @@
 #include <winsock2.h>
 #endif
 
-#include "wx/wx.h"
+#include <wx/wx.h>
 
 //#include "controlIds.h"
 //Visualizaton tab control ids
@@ -22,7 +22,8 @@ enum VIS_TAB_IDS{
    RECORD_BUTTON,
    CLEAR_BUTTON,
    EXIT_BUTTON,
-   CUSTOM_VIS_BUTTON
+   CUSTOM_VIS_BUTTON,
+   TRANSIENT_CHECK_BOX
 };
 
 class UI_VisualizationTab : public wxPanel {
@@ -47,6 +48,7 @@ protected:
    wxSlider* _slider;
    wxButton* _sliderUpdate;
    wxCheckBox* _scalarBarCBox;
+   wxCheckBox* _transientCheckBox;
    wxButton* _recordButton;
    wxButton* _clearButton;
    wxButton* _exitButton;
