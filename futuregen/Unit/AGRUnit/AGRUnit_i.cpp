@@ -51,7 +51,7 @@ void Body_Unit_i::StartCalc (
 
     // Actual gas flow rate, MMCFD
     double MM = gas_in->gas_composite.M / gas_in->gas_composite.density() 
-      * 60 * 60 * 24 * 3.2808 * 3.2808 * 3.2808;
+      * 60 * 60 * 24 * 3.2808 * 3.2808 * 3.2808 / 1.0e6;
     
     // Mole Loading
     double ML =  (gas_in->gas_composite.moles("H2S") + gas_in->gas_composite.moles("CO2"))
@@ -62,7 +62,7 @@ void Body_Unit_i::StartCalc (
     
     // Amine circulation rate
     double GPM = 0.206 * MM * (gas_in->gas_composite.getFrac("H2S") + gas_in->gas_composite.getFrac("CO2")) 
-      * solv_mw / (ML * WT);
+      * solv_mw * 100.0 / (ML * WT);
     
     // Tray type factor
     double TTF = 0.0;
@@ -71,7 +71,7 @@ void Body_Unit_i::StartCalc (
     else                   TTF = 0.0; /* TEMI - sieve tray */
     
     // Density of syngas at tray conditions
-    double DEN_SYN = gas_in->gas_composite.density(); /* TEMI - tray conditions? */
+    double DEN_SYN = gas_in->gas_composite.density()*2.20462 * 0.028316; 
     
     // Bubbling area
     double BA = gas_in->gas_composite.M / gas_in->gas_composite.density() * 35.31 / 
@@ -107,8 +107,8 @@ void Body_Unit_i::StartCalc (
     double A = LM / (m * GM);
     
     // Theoretical number of trays
-    double T_NTRAYS = log((1-1/A)*gas_in->gas_composite.moles("H2S") /
-			  gas_in->gas_composite.moles("H2S") * 0.03 + 1/A) / log(A);
+    double T_NTRAYS = log((1-1/A)*gas_in->gas_composite.getFrac("H2S") /
+			  1.0e-6 + 1/A) / log(A);
     
     // Actual number of trays
     int A_NTRAYS = ceil(T_NTRAYS);
@@ -120,18 +120,23 @@ void Body_Unit_i::StartCalc (
     // Fill in the gas out data structure and send it on it's way...
     //
 
-    // Martin,
-    // gas_out begins as an exact copy of gas_in -
-    // Just for the ease of filling everything in.
-
     Gas *gas_out = new Gas; 
     
     gas_out->copy(*gas_in);
         
-    gas_out->gas_composite.T = 100000; // example
-    gas_out->gas_composite.P = -99999; // example
-    gas_out->gas_composite.setFrac("HGCL2", 0.0002); // example
-    gas_out->gas_composite.normalize_specie(); // example
+    gas_out->gas_composite.normalize_specie();
+    double mole_CO2_s = gas_out->gas_composite.moles("CO2"), change_by = 0.0;
+    if(mole_CO2_s>0.0){
+       change_by = -0.5*mole_CO2_s;
+       gas_out->gas_composite.moles(change_by,"CO2");
+    }
+    double mole_H2S_s = gas_out->gas_composite.moles("H2S");
+    if(mole_H2S_s>0.0){
+       if(mole_H2S_s>gas_out->gas_composite.moles()*1.0e-6){
+          change_by = gas_out->gas_composite.moles()*1.0e-6 - mole_H2S_s;
+          gas_out->gas_composite.moles(change_by,"H2S");
+       }
+    }
 
     p.intfs.resize(1);
     gashelper.GasToInt(gas_out, p.intfs[0]);
@@ -147,9 +152,17 @@ void Body_Unit_i::StartCalc (
 
     summaries.clear();
     
-    summaries.insert_summary_val("Amine Feed Rate UNITS:GPM FORMAT:10.2f", 403);
-    summaries.insert_summary_val("H2S UNITS:ppm FORMAT:10.2f", 1.0);
-    summaries.insert_summary_val("CO2 UNITS:mol_frac FORMAT:10.2f", 7.1);
+    summaries.insert_summary_val("Amine Circulation Rate UNITS:GPM FORMAT:10.2f", GPM);
+    double H2S_out = gas_out->gas_composite.getFrac("H2S");
+    if(H2S_out<0.0) H2S_out = 0.0;
+    summaries.insert_summary_val("H2S UNITS:ppm FORMAT:10.2f", H2S_out*1.0e6);
+    double CO2_out = gas_out->gas_composite.getFrac("CO2");
+    if(CO2_out<0.0) CO2_out = 0.0;
+    summaries.insert_summary_val("CO2 UNITS:mol_frac FORMAT:10.2f", CO2_out);
+    summaries.insert_summary_val("Area of Downcomer UNITS:ft^2 FORMAT:10.2e", AREA_DOWN);
+    summaries.insert_summary_val("Tray Diameter UNITS:ft FORMAT:10.2e", DIAM_TRAY);
+    summaries.insert_summary_val("Number of Trays FORMAT:10.0f", A_NTRAYS);
+    summaries.insert_summary_val("Absorber Height UNITS:ft FORMAT:10.2e", ABS_HEIGHT);
     
     p.intfs.resize(1);
     
