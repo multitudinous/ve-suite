@@ -1246,7 +1246,6 @@ inline void cfdApp::initScene( )
          }  
       }
    }
-   std::cout << " ******************int scene 8 : " << worldDCS << endl;
 
    //
    // Initiate the Text Prompt
@@ -1541,7 +1540,6 @@ inline void cfdApp::initScene( )
    //
    // Make IHCC Model - should be deleted at a later date
    //
-   this->ihccModel = NULL;
    if ( this->paramReader->ihccModel )
    {
       std::cout << "| 54. Initializing...................................... IHCC Model |" << std::endl;
