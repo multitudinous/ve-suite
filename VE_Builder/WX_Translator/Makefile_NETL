@@ -6,6 +6,8 @@ VTK_INCLUDES =  -I$(VTK_HOME)Common -I$(VTK_HOME)Graphics \
                 -I$(VTK_HOME)Rendering  -I$(VTK_HOME)IO \
 		-I$(VTK_HOME)Parallel
 
+CXX = c++
+
 INCLUDE_FLAGS = $(VTK_INCLUDES)
 
 LINK_FLAGS = -L$(VTK_HOME)bin
@@ -21,22 +23,22 @@ LIBS = -lvtkParallel  -lvtkexpat \
 all: cfdtrans
 
 cfdtrans: $(OBJECTS)
-	c++ -o cfdtrans $(OBJECTS) `wx-config --libs` $(LINK_FLAGS) $(LIBS)
+	$(CXX) -o cfdtrans $(OBJECTS) `wx-config --libs` $(LINK_FLAGS) $(LIBS)
 
 FormatSelector.o: FormatSelector.cpp FormatSelector.h
-	c++ -c `wx-config --cxxflags` -Wno-deprecated FormatSelector.cpp $(INCLUDE_FLAGS)
+	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated FormatSelector.cpp $(INCLUDE_FLAGS)
 
 converter.o: converter.cpp converter.h
-	c++ -c `wx-config --cxxflags` -Wno-deprecated converter.cpp $(INCLUDE_FLAGS)
+	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated converter.cpp $(INCLUDE_FLAGS)
 
 FluentTranslator.o: FluentTranslator.cpp FluentTranslator.h
-	c++ -c `wx-config --cxxflags` -Wno-deprecated FluentTranslator.cpp $(INCLUDE_FLAGS)
+	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated FluentTranslator.cpp $(INCLUDE_FLAGS)
 
 mFixTranslator.o: mFixTranslator.cpp mFixTranslator.h
-	c++ -c `wx-config --cxxflags` -Wno-deprecated mFixTranslator.cpp $(INCLUDE_FLAGS)
+	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated mFixTranslator.cpp $(INCLUDE_FLAGS)
 
 UnstructuredGridWriter.o: UnstructuredGridWriter.cpp UnstructuredGridWriter.h
-	c++ -c `wx-config --cxxflags` -Wno-deprecated UnstructuredGridWriter.cpp $(INCLUDE_FLAGS)
+	$(CXX) -c `wx-config --cxxflags` -Wno-deprecated UnstructuredGridWriter.cpp $(INCLUDE_FLAGS)
 
 
 clean:
