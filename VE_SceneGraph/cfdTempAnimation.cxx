@@ -272,11 +272,11 @@ void cfdTempAnimation::ClearSequence( void )
                           << std::endl << vprDEBUG_FLUSH;
 
    int numSequenceChildren = this->_sequence->GetNumChildren();
-   vprDEBUG(vprDBG_ALL,1) << " numSequenceChildren: " << numSequenceChildren
+   vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::numSequenceChildren: " << numSequenceChildren
                           << std::endl << vprDEBUG_FLUSH;
 
    int numGeodes = this->_geodes.size();
-   vprDEBUG(vprDBG_ALL,1) << " numGeodes: " << numGeodes
+   vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::numGeodes: " << numGeodes
                           << std::endl << vprDEBUG_FLUSH; 
 
    if ( numSequenceChildren > 0 && numGeodes > 0 )
@@ -289,36 +289,31 @@ void cfdTempAnimation::ClearSequence( void )
          if ( type == cfdSceneNode::CFD_GROUP )//group )
          {
             // Each group in a transient sequence should have the same number of children
-            // One particular node (at most) in each group pertains to the TFM
-            // We want to remove that node (geode) that pertain to that TFM
+            // One particular node (at most) in each group pertains to the DCS
             int numChildrenPerGroup = ((cfdGroup *)this->_sequence->GetChild( i ))->GetNumChildren();
 
-            vprDEBUG(vprDBG_ALL,1) << " looking at child " << i << ", a group with "
+            vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::looking at child " << i << ", a group with "
                                    << numChildrenPerGroup << " children"
                                    << std::endl << vprDEBUG_FLUSH; 
 
-            cfdGroup* group = (cfdGroup *)this->_sequence->GetChild( i );
-
-            std::vector< cfdGeode* >::iterator iter;
-            for ( iter = this->_geodes.begin(); iter != this->_geodes.end(); iter++ )
+            vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::removing nodes from the sequence!!" 
+                                    << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::AddGeodesToSequence" 
+                                    << std::endl << vprDEBUG_FLUSH;
+            cfdGroup* tempGroup = (cfdGroup*)this->_sequence->GetChild(i);
+            int nDCSs = tempGroup->GetNumChildren();
+            vprDEBUG(vprDBG_ALL,1) <<"cfdTempAnimation::number of dcs: "<< nDCSs<<std::endl<< vprDEBUG_FLUSH;
+            for(int j = 0; j < nDCSs; j++)
             {
-               int geodeIndex = group->SearchChild( *iter );
-   
-               if ( geodeIndex >= 0 )                                           
+               cfdDCS* tempDCS = (cfdDCS*)tempGroup->GetChild(j);
+               int nGeodes = tempDCS->GetNumChildren();
+               for(int k = 0; k < nGeodes; k++)
                {
-                  vprDEBUG(vprDBG_ALL,1) << "\twill remove geode " << geodeIndex
-                                         << std::endl << vprDEBUG_FLUSH; 
-                  cfdGeode* geode = ( cfdGeode* )group->GetChild( geodeIndex );
-                  group->RemoveChild( geode );
-                  delete geode;
-
-                  this->_geodes.erase( iter );
-                  break;
-               }
-               else
-               {
-                  vprDEBUG(vprDBG_ALL,1) << "\twill NOT remove geode"
-                                         << std::endl << vprDEBUG_FLUSH; 
+                  vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::removing geode : " 
+                                          << k << std::endl << vprDEBUG_FLUSH;
+                  cfdGeode* tempGeode = (cfdGeode*)tempDCS->GetChild(0);
+                  tempDCS->RemoveChild(tempGeode);
+                  delete tempGeode;
                }
             } 
          }
