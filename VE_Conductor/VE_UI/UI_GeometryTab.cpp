@@ -106,7 +106,7 @@ void UI_GeometryTab::_buildPage()
                                        wxSL_LABELS|wxSL_RIGHT );
 
    //lod slider
-   geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,1000,0,1000,
+   geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,0,0,1000,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_AUTOTICKS|
