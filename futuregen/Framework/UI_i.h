@@ -13,6 +13,7 @@
 #pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
+
 //Class Body_UI_i
 class  Body_UI_i : public virtual POA_Body::UI
 {
