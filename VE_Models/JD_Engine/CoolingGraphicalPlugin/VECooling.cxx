@@ -1,3 +1,4 @@
+
 /*************** <auto-copyright.pl BEGIN do not edit this line> **************
  *
  * VE-Suite is (C) Copyright 1998-2004 by Iowa State University
@@ -72,7 +73,7 @@ IMPLEMENT_DYNAMIC_CLASS( VECooling, cfdVEBaseClass )
 // Constructor
 VECooling::VECooling( void ) : cfdVEBaseClass()
 {
-   _objectName ="COOLING";
+   _objectName ="Cooling";
    //_onSceneGraph = false;
 }
 
@@ -87,7 +88,7 @@ void VECooling::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/CatalyticCombustorModel/vrxpr.param.geomorg";
+   this->_param = "/home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/CoolingGraphicalPlugin/vrxpr.param.geomorg";
    //cout << _param << endl;
    CreateObjects();
 }

@@ -19,7 +19,7 @@ int main (int argc, char* argv[])
 				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
       return 1;
     }
-  std::string UNITNAME = "COOLING";
+  std::string UNITNAME = "Cooling";
   try {
     // First initialize the ORB, 
     CORBA::ORB_var orb =

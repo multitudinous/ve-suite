@@ -72,7 +72,7 @@ IMPLEMENT_DYNAMIC_CLASS( VEEngine, cfdVEBaseClass )
 // Constructor
 VEEngine::VEEngine( void ) : cfdVEBaseClass()
 {
-   _objectName ="BAFFLE";
+   _objectName ="Baffle";
    //_onSceneGraph = false;
 }
 
@@ -87,7 +87,7 @@ void VEEngine::InitializeNode( cfdDCS* veworldDCS )
 {
    cfdVEBaseClass::InitializeNode( veworldDCS );
    this->_param = new char[100];
-   this->_param = "/home/vesuite/VE_Suite/VE_Models/CatalyticCombustorModel/vrxpr.param.geomorg";
+   this->_param = "/home/users/mccdo/svn_VE_Suite/VE_Suite/VE_Models/JD_Engine/EngineGraphicalPlugin/vrxpr.param.geomorg";
    //cout << _param << endl;
    CreateObjects();
 }

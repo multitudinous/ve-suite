@@ -72,7 +72,7 @@ IMPLEMENT_DYNAMIC_CLASS( VEExterior, cfdVEBaseClass )
 // Constructor
 VEExterior::VEExterior( void ) : cfdVEBaseClass()
 {
-   _objectName ="EXTERIOR";
+   _objectName ="Exterior";
    //_onSceneGraph = false;
 }
 
