@@ -142,26 +142,12 @@ void cfdWriteTraverser::setOutputFileName(char* outFile)
 //turn on the sequence nodes for proper read back       //
 //////////////////////////////////////////////////////////
 void _turnOnSequence(cfdNodeTraverser* cfdNT,cfdNode* node)
-
-//void _turnOnSequence(cfdNodeTraverser* cfdNT,pfNode* node)
 {
-#ifdef _PERFORMER
-   pfGroup* curNode = (pfGroup*)node->GetRawNode();
-   //turn on all the sequence nodes
-   if(curNode->isOfType(cfdSequence::getClassType())){
+if(node->GetCFDNodeType() == cfdSceneNode::CFD_SEQUENCE){
       //make sure to start the "derned" sequence--otherwise
       //it won't be running in perfly!!!UGGGHHHH!!!!!
-      ((cfdSequence*)curNode)->setPlayMode(CFDSEQ_START);
-   }
-#elif _OSG
-   //Not implemented yet
-   //osg::Group* curNode = node->GetRawNode();
-   //should work something more like:
-   if(node->GetCFDNodeType() == cfdNode::CFD_SEQUENCE){
-      //(node->GetRawNode())->setPlayMode(CFDSEQ_START);
-   }
-#endif
-   
+      ((cfdSequence*)node)->setPlayMode(CFDSEQ_START);
+   } 
 }
 //////////////////////////////////////////////////////
 //swap the sequence nodes                           //
@@ -169,25 +155,30 @@ void _turnOnSequence(cfdNodeTraverser* cfdNT,cfdNode* node)
 void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
 {
    //need to implement using getRawNode calls!!
-#ifdef _PERFORMER
+
    //Need to fix
    cfdWriteTraverser* cfdWT = (cfdWriteTraverser*)cfdNT;
-   pfGroup* curNode = (pfGroup*)node;
 
    //replace cfdSequence nodes
-   if(curNode->isOfType(cfdSequence::getClassType())){
+   if(node->GetCFDNodeType() == cfdSceneNode::CFD_SEQUENCE){
       //std::cout<<"\t_swapSequenceNodes: cfdSequence"<<std::endl;
 
-      int nChildren = ((cfdSequence*)curNode)->getNumChildren();
+      int nChildren = ((cfdSequence*)node)->getNumChildren();
       
       //add this node to our list of cfdSequences
       cfdWT->_sequenceList.push_back(node);
 
       //get the parent node
-      pfGroup* parent = curNode->getParent(0);
+
+      cfdGroup* parent = dynamic_cast<cfdGroup*>(node->GetParent(0));
       
       //create a pfSequence
+#ifdef _PERFORMER
       pfSequence* sequence =  new pfSequence();
+#elif _OSG
+      osg::Sequence* sequence =  new osg::Sequence();
+#elif _OPENSG
+#endif
       //copy the children of the cfdSequence
       for(int i = 0; i < nChildren; i++){
          sequence->addChild(((cfdSequence*)node)->getChild(i)->GetRawNode());
@@ -195,12 +186,12 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
 
       sequence->setDuration(1.0,-1);      // regular speed, continue forever
 
-      double numSeconds = ((cfdSequence*)curNode)->getTime();
+      double numSeconds = ((cfdSequence*)node)->getTime();
       sequence->setTime(-1,numSeconds);   // display all children for numSeconds
 
-      sequence->setInterval(((cfdSequence*)curNode)->getLoopMode(),
-                            ((cfdSequence*)curNode)->getBegin(),
-                            ((cfdSequence*)curNode)->getEnd());
+      sequence->setInterval(((cfdSequence*)node)->getLoopMode(),
+                            ((cfdSequence*)node)->getBegin(),
+                            ((cfdSequence*)node)->getEnd());
 
 //      std::cout<<"\tnChildren = " << nChildren << std::endl;
 //      std::cout<<"\tnumSeconds = " << numSeconds << std::endl;
@@ -217,26 +208,36 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
       sequence->setMode(PFSEQ_START);
 
       //replace the node in the graph
-      parent->replaceChild(curNode,sequence);
-
+#ifdef _PERFORMER
+      ((pfGroup*)parent->GetRawNode())->replaceChild(node->GetRawNode(),sequence);
+#elif _OSG
+      ((osg::Group*)parent->GetRawNode())->replaceChild(node->GetRawNode(),sequence);
+#elif _OPENSG
+#endif
       //don't need to continue down 
       return;
-   }else if(curNode->isOfType(pfSequence::getClassType())){
+#ifdef _PERFORMER
+   }else if(node->GetRawNode()->isOfType(pfSequence::getClassType())){
+#elif _OSG
+   }else if(node->GetRawNode()->isOfType(osg::Sequence::getClassType())){
+#elif _OPENSG
+#endif
       //std::cout<<"\t_swapSequenceNodes: pfSequence"<<std::endl;
       //return tree to original state
       //get the parent node
-      pfGroup* parent = curNode->getParent(0);
+      cfdGroup* parent = (cfdGroup*)node->GetParent(0);
 
       //replace the node in the graph
-      parent->replaceChild(curNode,(cfdWT->_sequenceList[cfdWT->_sequenceIndex++])->GetRawNode());
+      parent->ReplaceChild(node,
+                        (cfdWT->_sequenceList[cfdWT->_sequenceIndex++]));
 
       //pfDelete(curNode);
       //don't need to continue down 
       return;
    }
-#elif _OSG
+
    return;
-#endif
+
 }
 ////////////////////////////////////////////////
 //this functionality should probably be       //
