@@ -36,6 +36,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.48;
     _wic_S    = 1.64;
     _wic_CL   = 0.098;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 7.01;
     _ash_prox = 7.01;
     _proxH2O  = 1.44;
@@ -81,6 +82,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.191795;
     _wic_S    = 0.0;
     _wic_CL   = 0.0;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 11.06;
     _ash_prox = 9.3015;
     _proxH2O  = 15.9;
@@ -126,6 +128,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.406391;
     _wic_S    = 2.824032;
     _wic_CL   = 0.326283;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 10.913591;
     _ash_prox = 9.7;
     _proxH2O  = 11.12;
@@ -154,15 +157,15 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _devol_a2 = 1.5e13;
     _devol_e2 = 2.51e8;
     _devol_y2 = 0.6;
-    _oxid_a   = 0.013856;
-    _oxid_n   = 1.0;
-    _oxid_e   = 1.00416e8;
-    _co2gas_a = 0.024377;
-    _co2gas_n = 1.0;
-    _co2gas_e = 1.7522e8;
-    _h2ogas_a = 0.024377;
-    _h2ogas_n = 1.0;
-    _h2ogas_e = 1.7522e8;
+    _oxid_a   = 0.013856;//0.1152e-2;//1.1144e-4;//0.49701e-3;
+    _oxid_n   = 1.0;//0.819;//0.9085145;
+    _oxid_e   = 1.00416e8;//0.73269e8;//7.5058e7;//1.00416e8;
+    _co2gas_a = 0.024377;//7.4273e-6;//0.68243e-4;
+    _co2gas_n = 1.0;//0.77032804;//0.7589587;
+    _co2gas_e = 1.7522e8;//1.3898e8;//1.7522e8;
+    _h2ogas_a = 0.024377;//3.6751e-5;//0.5465e-3;
+    _h2ogas_n = 1.0;//0.5;
+    _h2ogas_e = 1.7522e8;//1.2767e8;//1.7522e8;
   }
   else if (coaltype == "Petcoke") {
     _wic_C    = 87.48;
@@ -171,6 +174,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 0.99;
     _wic_S    = 5.17;
     _wic_CL   = 0.01;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 0.52;
     _ash_prox = 0.4836;
     _proxH2O  = 7.0;
@@ -216,6 +220,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.43;
     _wic_S    = 0.82;
     _wic_CL   = 0.13;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 7.41;
     _ash_prox = 7.41;
     _proxH2O  = 2.33;
@@ -261,6 +266,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.13;
     _wic_S    = 0.74;
     _wic_CL   = 0.0;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 4.83;
     _ash_prox = 4.83;
     _proxH2O  = 6.13;
@@ -306,6 +312,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.3;
     _wic_S    = 3.74;
     _wic_CL   = 0.2;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 12.6;
     _ash_prox = 12.6;
     _proxH2O  = 13.0;
@@ -351,6 +358,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.33;
     _wic_S    = 0.66;
     _wic_CL   = 0.01;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 12.59;
     _ash_prox = 12.59;
     _proxH2O  = 7.95;
@@ -396,6 +404,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.2;
     _wic_S    = 0.8;
     _wic_CL   = 0.01;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 7.9;
     _ash_prox = 7.9;
     _proxH2O  = 26.6;
@@ -441,6 +450,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.0;
     _wic_S    = 0.53;
     _wic_CL   = 0.04;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 7.63;
     _ash_prox = 7.63;
     _proxH2O  = 30.24;
@@ -469,6 +479,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.5;
     _wic_S    = 2.24;
     _wic_CL   = 0.06;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 7.63;
     _ash_prox = 7.63;
     _proxH2O  = 5.05;
@@ -514,6 +525,7 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _wic_N    = 1.5;
     _wic_S    = 0.68;
     _wic_CL   = 0.07;
+    _wic_HG   = 1.0e-7*100.0;
     _ash_ult  = 10.4;
     _ash_prox = 10.4;
     _proxH2O  = 5.6;
@@ -560,13 +572,14 @@ void Gasifier0D::setCoalType (std::string coaltype)
 
 void Gasifier0D::normalizeUlt ()
 {
-  double total = _wic_C + _wic_H + _wic_O + _wic_N + _wic_S + _wic_CL + _ash_ult;
-  _wic_C   = _wic_C   / total * 100; 
-  _wic_H   = _wic_H   / total * 100; 
-  _wic_O   = _wic_O   / total * 100; 
-  _wic_N   = _wic_N   / total * 100;
-  _wic_CL  = _wic_CL  / total * 100;
-  _ash_ult = _ash_ult / total * 100;
+  double total = _wic_C + _wic_H + _wic_O + _wic_N + _wic_S + _wic_CL + _wic_HG + _ash_ult;
+  _wic_C   = _wic_C   / total * 100.0; 
+  _wic_H   = _wic_H   / total * 100.0; 
+  _wic_O   = _wic_O   / total * 100.0; 
+  _wic_N   = _wic_N   / total * 100.0;
+  _wic_CL  = _wic_CL  / total * 100.0;
+  _wic_HG  = _wic_HG  / total * 100.0;
+  _ash_ult = _ash_ult / total * 100.0;
 
   calculateProx();
 }
@@ -596,6 +609,7 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
   double wic_n  = _wic_N;
   double wic_s  = _wic_S;
   double wic_cl = _wic_CL;
+  double wic_hg = _wic_HG;
   
   double pres0 = ox_in->gas_composite.P - _press_drop;
   
@@ -752,6 +766,7 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
   spc_nam[1].push_back("N");  frac[1].push_back(wic_n  / (100 - wicAsh));
   spc_nam[1].push_back("S");  frac[1].push_back(wic_s  / (100 - wicAsh));
   spc_nam[1].push_back("CL"); frac[1].push_back(wic_cl / (100 - wicAsh));
+  spc_nam[1].push_back("HG"); frac[1].push_back(wic_hg / (100 - wicAsh));
 
   hform[1] = hhf_coal;
 

@@ -69,6 +69,7 @@ public:
   double _wic_N;
   double _wic_S;
   double _wic_CL;
+  double _wic_HG;
   double _ash_ult;
   double _ash_prox;
   double _proxH2O;
