@@ -758,68 +758,20 @@ void cfdReadParam::readScalarBar( std::ifstream &inFile )
 
 int cfdReadParam::convertDecimalToBinary( long number) 
 {
-/*   long int org_num=0;
-   long org_base=0, pos_org_num;
-   long int new_num, base10_num, remainder;
-   int new_base=0;
-   int pow_limit, pow_test;
-   int cur_term=0;
-*/
    vprDEBUG(vprDBG_ALL,1) << " Number = " << number
                           << std::endl << vprDEBUG_FLUSH;
-/*   new_base = 2;
-   org_base = 10;
-   pos_org_num = number;
-   //Start of Conversion to Base Ten
-   for(pow_test=0; pow(10.0, pow_test) <= pos_org_num; ++pow_test);
-   {
-      for(pow_limit=(pow_test - 1), remainder=pos_org_num, base10_num=0; pow_limit >= 0; --pow_limit)
-      {
-         cur_term = (int)(remainder / pow(10.0, pow_limit));
-         if(cur_term >= org_base)
-         {
-            pow_limit=-1;
-         }
-         base10_num = (long int)(base10_num + (cur_term * pow((float)org_base, pow_limit)));
-         remainder = (long int)(remainder - (pow(10.0, pow_limit) * cur_term));
-      }
-   }
-   //End of Base Ten Conversion
-   vprDEBUG(vprDBG_ALL,1)
-      << "The conversion of "<<org_num<<" from base "
-      << org_base<<" to base "<<new_base<<" reads as follows:"
-      << std::endl << vprDEBUG_FLUSH;
-   for(pow_test=0; pow((float)new_base, pow_test) <= base10_num; ++pow_test);
-   {
-      if(new_base < 11)
-      {
-         for(pow_limit=(pow_test-1), remainder=base10_num, new_num=0; pow_limit >= 0; --pow_limit)
-         {
-            cur_term = (int)pow((float)new_base, pow_limit);
-            new_num = new_num + (long int)(pow(10.0, pow_limit) * (remainder / cur_term));
-            remainder = (long int)(remainder - ((remainder / cur_term) * cur_term));
-         }
-         //if(org_num < 0)
-         //   new_num = new_num * -1;
-         vprDEBUG(vprDBG_ALL,1) <<new_num << std::endl << vprDEBUG_FLUSH;
-      }
-   }
-   //display the user's final, highly desired conversion solution
-   vprDEBUG(vprDBG_ALL,1) <<"new_num: "<< new_num 
-                           << std::endl << vprDEBUG_FLUSH;
-
-*/testBin.clear();
-  
+   testBin.clear();
    long int n = number;
-    while (n > 0) {
-                testBin.push_back( n%2 );
-                n = n/2;
-            }
-   
-for ( unsigned int j = 0; j < testBin.size(); j++ )
-      cout << testBin[ j ];
+   while (n > 0) 
+   {
+      testBin.push_back( n%2 );
+      n = n/2;
+   }
+   // converts decimal to binary but binary number is backwards
+   // Number gets converted to forward in function below
 
- cout << " Number is backwards " << endl;
+   //for ( unsigned int j = 0; j < testBin.size(); j++ )
+   //   cout << testBin[ j ];
    return 0;
 }
 
@@ -862,45 +814,17 @@ void cfdReadParam::convertBinaryToDecimal( int org_num )
 
 void cfdReadParam::convertBinaryToArray( int gui, int size ) 
 {
-/*   int input;
-   int i;
-   int val;
-   
-   if ( guiVal != NULL )
-   {
-      delete [] this->guiVal;
-      this->guiVal = NULL;
-   }
-
-   this->guiVal = new int[ size ];
-
-   //int base[2] = {10,1};
-   //int base[5] = {10000,1000,100,10,1};
-
-   //std::cout << "Enter a binary number: " << std::endl;
-   //std::cin >> input;
-   input = gui;
-   vprDEBUG(vprDBG_ALL,1) << " Input = " << input
-                          << std::endl << vprDEBUG_FLUSH;
-
-   for ( i = 0; i < size; i++ ) 
-   {
-      val = (int)pow(10.0,(size - 1) - i);
-      guiVal[(size - 1) - i] = input/val; 
-      input = input%val;
-   }
-   int n;
-   int testbinsize = testBin.size();*/
    while ( size > (int)testBin.size() )
    {
       testBin.push_back( 0 );
    }
-//cout << size << " : " << testBin.size() << endl;
+   // Must add zeros to binary number because binary number 
+   // may be less than the num ber of geometries
+
    for ( int i = 0; i < size; i++ ) 
-   {
-      
+   {      
       guiVal[ i] = testBin[ i ];
-      //cout << guiVal[ i] << endl;
+      vprDEBUG(vprDBG_ALL,2) << "Binary number : " << guiVal[ i] << endl << vprDEBUG_FLUSH;
    }
 }
 /*
