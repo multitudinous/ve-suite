@@ -265,7 +265,9 @@ char * fileIO::getWritableFile( char* defaultName )
     return filename;
 }
 
-int fileIO::readNByteBlockFromFile(void *ptr, const unsigned int nByte, const unsigned int num, FILE *stream, const bool endian_flip)
+int fileIO::readNByteBlockFromFile( void *ptr, const unsigned int nByte,
+                                    const unsigned int num, FILE *stream,
+                                    const bool endian_flip)
 {
     if ( feof(stream) ) return 1;
     
@@ -277,9 +279,12 @@ int fileIO::readNByteBlockFromFile(void *ptr, const unsigned int nByte, const un
         char * buf = new char [nByte];
         for(unsigned int i=0; i < num*nByte; i += nByte)
         {
-            for(unsigned int j=0; j<nByte; j++) buf[nByte-1-j] =* (((char*)ptr)+i+j);
+            for(unsigned int j=0; j<nByte; j++)
+               buf[nByte-1-j] =* (((char*)ptr)+i+j);
+
             memcpy(((char*)ptr)+i,buf,nByte);
         }
+        delete [] buf;
     }
     return 0;  //success
 }

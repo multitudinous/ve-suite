@@ -64,6 +64,10 @@ class ansysReader
       void ReadHeaderExtension();
 
       int GetCornerNodeOnElement( int, int );
+      int ElementContainsNode( int elementIndex, int node );
+      int GetCornerNodeIndex( int elementIndex, int node );
+      double * GetNodalComponentStresses( int elementIndex, int nodeIndex );
+      void ComputeNodalStresses();
 
       // Functions that get pointers to blocks of data
       //int GetPtrNodalEquivalencyTable();
@@ -91,6 +95,7 @@ class ansysReader
       void ReadElementIndexTable( int, int );
       int VerifyNumberOfValues( int reportedNumValues, int blockSize_1 );
       void VerifyBlock( int blockSize_1, int blockSize_2 );
+      void ReadNodalComponentStresses( int );
 
       char * ansysFileName;
       FILE *s1;

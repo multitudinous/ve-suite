@@ -195,7 +195,8 @@ int ansysReader::ReadNthInteger( int n )
    if (fileIO::readNByteBlockFromFile( &integer, sizeof(int), 1,
                                        this->s1, this->endian_flip ))
    {
-      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile" << std::endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile"
+                << std::endl;
       exit( 1 );
    }
    return integer;
@@ -209,7 +210,8 @@ long ansysReader::ReadNthLong( int n )
    if (fileIO::readNByteBlockFromFile( &value, sizeof(long), 1,
                                        this->s1, this->endian_flip ))
    {
-      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile" << std::endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile"
+                << std::endl;
       exit( 1 );
    }
    return value;
@@ -223,7 +225,8 @@ float ansysReader::ReadNthFloat( int n )
    if (fileIO::readNByteBlockFromFile( &value, sizeof(float), 1,
                                        this->s1, this->endian_flip ))
    {
-      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile" << std::endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile"
+                << std::endl;
       exit( 1 );
    }
    return value;
@@ -237,7 +240,8 @@ double ansysReader::ReadNthDouble( int n )
    if (fileIO::readNByteBlockFromFile( &value, sizeof(double), 1,
                                        this->s1, this->endian_flip ))
    {
-      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile" << std::endl;
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile"
+                << std::endl;
       exit( 1 );
    }
    return value;
@@ -257,7 +261,8 @@ void ansysReader::ReadHeader()
       headerSize = ReadNthInteger( 0 );
       if ( headerSize != 404 ) 
       {
-         std::cerr << "headerSize = " << headerSize << " != 404, will exit" << std::endl;
+         std::cerr << "headerSize = " << headerSize
+                   << " != 404, will exit" << std::endl;
          exit( 1 );
       }
    }
@@ -1015,11 +1020,16 @@ int * ansysReader::ReadElementTypeDescription( int pointer )
    int numCornerNodes = elemDescription[ 94-1 ];
 
 #ifdef PRINT_HEADERS
-   std::cout << std::setw( PRINT_WIDTH ) << "element type reference number = " << elemDescription[ 1-1 ] << std::endl;
-   std::cout << std::setw( PRINT_WIDTH ) << "element routine number = " << elemDescription[ 2-1 ] << std::endl;
-   std::cout << std::setw( PRINT_WIDTH ) << "number of dof/node = " << elemDescription[ 34-1 ] << std::endl;
-   std::cout << std::setw( PRINT_WIDTH ) << "number of nodes = " << numNodesInElement << std::endl;
-   std::cout << std::setw( PRINT_WIDTH ) << "number of corner nodes = " << numCornerNodes << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "element type reference number = "
+             << elemDescription[ 1-1 ] << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "element routine number = "
+             << elemDescription[ 2-1 ] << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "number of dof/node = "
+             << elemDescription[ 34-1 ] << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "number of nodes = "
+             << numNodesInElement << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "number of corner nodes = "
+             << numCornerNodes << std::endl;
 #endif // PRINT_HEADERS
 
    // the last number is blockSize again
@@ -1194,7 +1204,7 @@ void ansysReader::ReadElementDescription( int pointer )
    int numCornerNodes = this->elemDescriptions[ type - 1 ][ 94-1 ];
    PRINT( numCornerNodes );
 
-   // allocate space for the node IDs that define the corners of the hex element
+   // allocate space for the node IDs that define the corners of the element
    int * nodes = new int [ numNodesInElement ];
 
    // read the node IDs that define the element
@@ -1203,7 +1213,7 @@ void ansysReader::ReadElementDescription( int pointer )
    {
       std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
            << std::endl;
-      exit(1);
+      exit( 1 );
    }
 
 #ifdef PRINT_HEADERS
@@ -1227,9 +1237,7 @@ void ansysReader::ReadElementDescription( int pointer )
    }
 
    // the last number is blockSize again
-   int blockSize_2;
-   fileIO::readNByteBlockFromFile( &blockSize_2, sizeof(int),
-                                   1, this->s1, this->endian_flip );
+   int blockSize_2 = ReadNthInteger( intPosition++ );
    VerifyBlock( blockSize_1, blockSize_2 );
 
    if ( numCornerNodes == 8 )
@@ -1243,6 +1251,7 @@ void ansysReader::ReadElementDescription( int pointer )
    }
 
    delete [] nodes;
+   nodes = NULL;
 }
 
 void ansysReader::ReadSolutionDataHeader()
@@ -1451,9 +1460,8 @@ void ansysReader::ReadNodalSolutions()
    }
 
    // set up arrays to store scalar and vector data over entire mesh...
-   // TODO: hardcoded for two scalar and one vector
+   // TODO: hardcoded for one scalar and one vector
    int numParameters = 2;
-   //int numParameters = 3;
    vtkFloatArray ** parameterData = new vtkFloatArray * [ numParameters ];
    for ( int i=0; i < numParameters; i++ )
    {
@@ -1469,11 +1477,7 @@ void ansysReader::ReadNodalSolutions()
    parameterData[ 1 ]->SetName( "displacement magnitude" );
    parameterData[ 1 ]->SetNumberOfComponents( 1 );
    parameterData[ 1 ]->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
-/*
-   parameterData[ 2 ]->SetName( "von Mises stress" );
-   parameterData[ 2 ]->SetNumberOfComponents( 1 );
-   parameterData[ 2 ]->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
-*/
+
    // Read the solutions and populate the floatArrays.
    // Because the ansys vertices are one-based, up the loop by one
    double * nodalSolution = new double [ this->numDOF ];
@@ -1490,10 +1494,13 @@ void ansysReader::ReadNodalSolutions()
       parameterData[ 0 ]->SetTuple( this->nodeID[ i ], nodalSolution );
 
 #ifdef PRINT_HEADERS
-      std::cout <<  "nodalSolution[ " << this->nodeID[ i ] <<" ] = ";
-      for ( int j = 0; j < this->numDOF; j++ )
-         std::cout << "\t" << nodalSolution[ j ];
-      std::cout << std::endl;
+      //if ( this->nodeID[ i ] == 2108 ) 
+      {
+         std::cout <<  "nodalSolution[ " << this->nodeID[ i ] <<" ] = ";
+         for ( int j = 0; j < this->numDOF; j++ )
+            std::cout << "\t" << nodalSolution[ j ];
+         std::cout << std::endl;
+      }
 #endif // PRINT_HEADERS
 
       double magnitude = nodalSolution[ 0 ] * nodalSolution[ 0 ] +
@@ -1511,6 +1518,7 @@ void ansysReader::ReadNodalSolutions()
    delete [] parameterData;      parameterData = NULL;
    
    delete [] nodalSolution;
+   nodalSolution = NULL;
 
    // the last number is blockSize again
    int blockSize_2;
@@ -1585,6 +1593,7 @@ void ansysReader::ReadElementIndexTable( int i, int intPosition )
    PRINT( this->ptrENS[ i ] );
    //std::cout << "ptrENS[ " << i << " ] = " << this->ptrENS[ i ] << std::endl;
 
+   // read remainder of the values...
    for ( int i = 0; i < 22; i++ )
    {
       int ptrElement_i = ReadNthInteger( intPosition++ );
@@ -1594,9 +1603,6 @@ void ansysReader::ReadElementIndexTable( int i, int intPosition )
    // the last number is blockSize again
    int blockSize_2 = ReadNthInteger( intPosition++ );
    VerifyBlock( blockSize_1, blockSize_2 );
-
-   ReadGenericBlock( this->ptrDataSetSolutions[ 0 ] + ptrENS[ i ] );
-   //exit( 1 );
 }
 
 void ansysReader::ReadHeaderExtension()
@@ -1765,6 +1771,55 @@ int ansysReader::GetPtrNOD()
 
 vtkUnstructuredGrid * ansysReader::GetUGrid()
 {
+   double avgStresses [ 11 ];
+   for ( int node = 0; node < this->numNodes; node++ )
+   {
+      for ( int j = 0; j < 11; j++ )
+         avgStresses [ j ] = 0.0;
+
+      int numElementsContainingNode = 0;
+
+      for ( int i = 0; i < this->numElems; i++ )
+      {
+         int nodeIndex = GetCornerNodeIndex( i, nodeID[ node ] );
+         if ( nodeIndex != -1 )
+         {
+            numElementsContainingNode++;
+/*
+            std::cout << "element " << this->elemID[ i ]
+                      << " contains corner node " << nodeID[ node ]
+                      << " at index " << nodeIndex << std::endl;
+*/
+            double * stresses = GetNodalComponentStresses( i, nodeIndex );
+/*
+            for ( int j = 0; j < 11; j++ )
+            {
+               std::cout << "stresses [ " << j << " ] = "
+                         << stresses [ j ] << std::endl;
+            }
+*/
+            for ( int j = 0; j < 11; j++ )
+               avgStresses [ j ] += stresses [ j ];
+
+            delete [] stresses;
+            stresses = NULL;
+         }
+      }
+
+      PRINT( numElementsContainingNode );
+
+      if ( numElementsContainingNode > 0 )
+      {
+         std::cout << "For node " << nodeID[ node ] << std::endl;
+         for ( int j = 0; j < 11; j++ )
+         {
+            avgStresses [ j ] /= numElementsContainingNode;
+            std::cout << "\tavgStresses [ " << j << " ] = "
+                      << avgStresses [ j ] << std::endl;
+         }
+      }
+   }
+
    return this->ugrid;
 }
 
@@ -1800,12 +1855,308 @@ void ansysReader::VerifyBlock( int blockSize_1, int blockSize_2 )
    }
 }
 
-int ansysReader::GetCornerNodeOnElement( int element, int node )
+int ansysReader::GetCornerNodeOnElement( int elementIndex, int nodeIndex )
 {
-   if ( element < 0 || element >= (this->numElems-1) ) 
+   if ( elementIndex < 0 || elementIndex >= this->numElems ) 
    {
-      std::cerr << "element = " << element << " is out of range" << std::endl;
+      std::cerr << "elementIndex = " << elementIndex << " is out of range" << std::endl;
+      return -1;
+   }
+
+   // NOTE: elementIndex is not the element ID
+   //std::cout << "getting a corner node for element " << this->elemID[ elementIndex ] << std::endl;
+
+   if ( this->ptrElemDescriptions[ elementIndex ] == 0 )
+      return -1;
+
+   //std::cout << "\nReading Element Description" << std::endl;
+
+   int intPosition = this->ptrElemDescriptions[ elementIndex ];
+   int blockSize_1 = ReadNthInteger( intPosition++ );
+   
+   int numValues = ReadNthInteger( intPosition++ );
+
+   int mat = ReadNthInteger( intPosition++ );
+
+   int type = ReadNthInteger( intPosition++ );  //important
+
+   for ( int i = 0; i < 8; i++ )
+   {  
+      int integer = ReadNthInteger( intPosition++ );
+   }
+
+   int numNodesInElement = this->elemDescriptions[ type - 1 ][ 61-1 ];
+   //PRINT( numNodesInElement );
+
+   int numCornerNodes = this->elemDescriptions[ type - 1 ][ 94-1 ];
+   //PRINT( numCornerNodes );
+
+   if ( nodeIndex < 0 || nodeIndex >= numCornerNodes ) 
+   {
+      std::cerr << "nodeIndex = " << nodeIndex << " is out of range" << std::endl;
+      return -1;
+   }
+
+   // allocate space for the node IDs that define the corners of the element
+   int * nodes = new int [ numNodesInElement ];
+
+   // read the node IDs that define the element
+   if ( fileIO::readNByteBlockFromFile( nodes,
+                  sizeof(int), numNodesInElement, this->s1, this->endian_flip ) )
+   {
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
+           << std::endl;
       exit( 1 );
    }
+
+//#ifdef PRINT_HEADERS
+   for ( int i = 0; i < numCornerNodes; i++ )
+   {  
+      std::cout << "\tcornerNodes[ " << i << " ] = " << nodes[ i ] << std::endl;
+   }
+//#endif // PRINT_HEADERS
+   int cornerNodeNumber = nodes[ nodeIndex ];
+   delete [] nodes;
+
+   // read rest of values
+   intPosition += numNodesInElement;
+   for ( int i = 0; i < numValues - (10 + numNodesInElement); i++ )
+   {  
+      int integer = ReadNthInteger( intPosition++ );
+   }
+
+   // the last number is blockSize again
+   int blockSize_2 = ReadNthInteger( intPosition++ );
+   VerifyBlock( blockSize_1, blockSize_2 );
+
+   return cornerNodeNumber;
+}
+
+int ansysReader::ElementContainsNode( int elementIndex, int node )
+{
+   if ( elementIndex < 0 || elementIndex >= this->numElems ) 
+   {
+      std::cerr << "elementIndex = " << elementIndex << " is out of range" << std::endl;
+      return 0;
+   }
+
+   // NOTE: elementIndex is not the element ID
+   //std::cout << "looking at element " << this->elemID[ elementIndex ] << std::endl;
+
+   if ( this->ptrElemDescriptions[ elementIndex ] == 0 )
+      return 0;
+
+   //std::cout << "\nReading Element Description" << std::endl;
+
+   int intPosition = this->ptrElemDescriptions[ elementIndex ];
+   int blockSize_1 = ReadNthInteger( intPosition++ );
+   
+   int numValues = ReadNthInteger( intPosition++ );
+
+   int mat = ReadNthInteger( intPosition++ );
+
+   int type = ReadNthInteger( intPosition++ );  //important
+
+   for ( int i = 0; i < 8; i++ )
+   {  
+      int integer = ReadNthInteger( intPosition++ );
+   }
+
+   int numNodesInElement = this->elemDescriptions[ type - 1 ][ 61-1 ];
+   PRINT( numNodesInElement );
+
+   int numCornerNodes = this->elemDescriptions[ type - 1 ][ 94-1 ];
+   PRINT( numCornerNodes );
+
+   if ( node < 0 || node >= this->numNodes ) 
+   {
+      std::cerr << "node = " << node << " is out of range" << std::endl;
+      return 0;
+   }
+
+   // allocate space for the node IDs that define the corners of the element
+   int * nodes = new int [ numNodesInElement ];
+
+   // read the node IDs that define the element
+   if ( fileIO::readNByteBlockFromFile( nodes,
+                  sizeof(int), numNodesInElement, this->s1, this->endian_flip ) )
+   {
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
+           << std::endl;
+      exit( 1 );
+   }
+
+   for ( int i = 0; i < numCornerNodes; i++ )
+   {  
+      //std::cout << "\tcornerNodes[ " << i << " ] = " << nodes[ i ] << std::endl;
+      if ( node == nodes[ i ] )
+      {
+         delete [] nodes;
+         return 1;
+      }
+   }
+   delete [] nodes;
+
+   // read rest of values
+   intPosition += numNodesInElement;
+   for ( int i = 0; i < numValues - (10 + numNodesInElement); i++ )
+   {  
+      int integer = ReadNthInteger( intPosition++ );
+   }
+
+   // the last number is blockSize again
+   int blockSize_2 = ReadNthInteger( intPosition++ );
+   VerifyBlock( blockSize_1, blockSize_2 );
+
+   return 0;
+}
+
+int ansysReader::GetCornerNodeIndex( int elementIndex, int node )
+{
+   if ( elementIndex < 0 || elementIndex >= this->numElems ) 
+   {
+      std::cerr << "elementIndex = " << elementIndex
+                << " is out of range" << std::endl;
+      return -1;
+   }
+
+   // NOTE: elementIndex is not the element ID
+   //std::cout << "looking at element " << this->elemID[ elementIndex ] << std::endl;
+
+   if ( this->ptrElemDescriptions[ elementIndex ] == 0 )
+      return -1;
+
+   //std::cout << "\nReading Element Description" << std::endl;
+
+   int intPosition = this->ptrElemDescriptions[ elementIndex ];
+   int blockSize_1 = ReadNthInteger( intPosition++ );
+   
+   int numValues = ReadNthInteger( intPosition++ );
+
+   int mat = ReadNthInteger( intPosition++ );
+
+   int type = ReadNthInteger( intPosition++ );  //important
+
+   for ( int i = 0; i < 8; i++ )
+   {  
+      int integer = ReadNthInteger( intPosition++ );
+   }
+
+   int numNodesInElement = this->elemDescriptions[ type - 1 ][ 61-1 ];
+   PRINT( numNodesInElement );
+
+   int numCornerNodes = this->elemDescriptions[ type - 1 ][ 94-1 ];
+   PRINT( numCornerNodes );
+
+   if ( node < 0 || node >= this->numNodes ) 
+   {
+      std::cerr << "node = " << node << " is out of range" << std::endl;
+      return -1;
+   }
+
+   // allocate space for the node IDs that define the corners of the element
+   int * nodes = new int [ numNodesInElement ];
+
+   // read the node IDs that define the element
+   if ( fileIO::readNByteBlockFromFile( nodes,
+                  sizeof(int), numNodesInElement, this->s1, this->endian_flip ) )
+   {
+      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
+           << std::endl;
+      exit( 1 );
+   }
+
+   for ( int i = 0; i < numCornerNodes; i++ )
+   {  
+      //std::cout << "\tcornerNodes[ " << i << " ] = " << nodes[ i ] << std::endl;
+      if ( node == nodes[ i ] )
+      {
+         delete [] nodes;
+         nodes = NULL;
+         return i;   // success
+      }
+   }
+   delete [] nodes;
+   nodes = NULL;
+
+   // read rest of values
+   intPosition += numNodesInElement;
+   for ( int i = 0; i < numValues - (10 + numNodesInElement); i++ )
+   {  
+      int integer = ReadNthInteger( intPosition++ );
+   }
+
+   // the last number is blockSize again
+   int blockSize_2 = ReadNthInteger( intPosition++ );
+   VerifyBlock( blockSize_1, blockSize_2 );
+
+   return -1;
+}
+
+double * ansysReader::GetNodalComponentStresses( int elementIndex, int nodeIndex )
+{
+   if ( this->ptrENS[ elementIndex ] == 0 )
+      return NULL;
+
+   int intPosition = this->ptrDataSetSolutions[ 0 ] + this->ptrENS[ elementIndex ];
+   int blockSize_1 = ReadNthInteger( intPosition++ );
+   int reportedNumValues = ReadNthInteger( intPosition++ );
+   if ( reportedNumValues != 0 )
+   {
+      std::cerr << "expected doubles" << std::endl;
+      exit( 1 );
+   }
+
+   int numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
+
+   double * stresses = new double [ 11 ];
+   // SX, SY, SZ, SXY, SYZ, SXZ, S1, S2, S3, SI, SIGE
+
+   // skip over stresses not of interest...
+   intPosition += nodeIndex * 11 * 2;
+   for ( int i = 0; i < 11; i++ )
+   {
+      stresses [ i ] = ReadNthDouble( intPosition++ );
+      intPosition++;  //increment again for doubles
+#ifdef PRINT_HEADERS
+      std::cout << "\tstresses[ " << i << " ]: " << stresses [ i ] << std::endl;
+#endif // PRINT_HEADERS
+   }
+   
+/*
+   // if want full error checking then must pass by remainder of stress terms
+   // ......
+
+   // the last number is blockSize again
+   int blockSize_2 = ReadNthInteger( intPosition++ );
+   VerifyBlock( blockSize_1, blockSize_2 );
+*/
+
+   return stresses;
+}
+
+void ansysReader::ComputeNodalStresses()
+{
+   vtkFloatArray * parameterData = vtkFloatArray::New();
+
+   // Because the ansys vertices are one-based, increase the arrays by one
+   parameterData->SetName( "von Mises stress" );
+   parameterData->SetNumberOfComponents( 1 );
+   parameterData->SetNumberOfTuples( this->numNodes + 1 );   // note: +1
+/*
+   for ( int i = 0; i < this->numNodes; i++ )
+   {
+      double magnitude = nodalSolution[ 0 ] * nodalSolution[ 0 ] +
+                         nodalSolution[ 1 ] * nodalSolution[ 1 ] +
+                         nodalSolution[ 2 ] * nodalSolution[ 2 ];
+      magnitude = sqrt( magnitude );
+      parameterData->SetTuple1( this->nodeID[ i ], magnitude );
+   }
+*/
+   // Set selected scalar and vector quantities to be written to pointdata array
+   //letUsersAddParamsToField( 1, parameterData, this->ugrid->GetPointData() );
+
+   parameterData->Delete();
+   parameterData = NULL;
 }
 
