@@ -952,8 +952,6 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
 
                this->_activeObject->Update();      
                //this->_activeObject->SetSequence( 0 );
-               this->_activeObject = NULL;
-               this->computeActorsAndGeodes = false;
             }
             else if ( streamersTest != NULL )
             {
@@ -961,22 +959,17 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
                                        << std::endl << vprDEBUG_FLUSH;
                // if we are not already computing streamlines
                this->streamers();  
-               this->computeActorsAndGeodes = false;   
             }
             else if ( animStreamerTest != NULL )
             {
                // if we are not already computing animatedStreamlines
                this->animStreamer->SetPolyDataSource( this->streamlines->GetStreamersOutput() );
                this->animStreamer->Update();
-               this->_activeObject = NULL;
-               this->computeActorsAndGeodes = false;   
             }
             else if ( animImgTest != NULL )
             {
                // if we are not already computing animatedImages
                this->animImg->Update();
-               this->_activeObject = NULL;
-               this->computeActorsAndGeodes = false;   
             }
 
             // May fix later, not a crucial part
@@ -986,6 +979,8 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
             //                       << pfMemory::getArenaBytesUsed() 
             //                       << std::endl << vprDEBUG_FLUSH;
 
+            this->_activeObject = NULL;
+            this->computeActorsAndGeodes = false;   
             vprDEBUG(vprDBG_ALL,0) << "|\tDone updating cfdObject" 
                << std::endl << std::endl << vprDEBUG_FLUSH; 
             

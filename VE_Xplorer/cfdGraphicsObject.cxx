@@ -123,7 +123,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          vprDEBUG(vprDBG_ALL,1) << "|\t\t adding geode to active dataset dcs "
                              << std::endl << vprDEBUG_FLUSH;
           this->model->GetActiveDataSet()->GetDCS()->AddChild( this->geodes.back() );
-         vprDEBUG(vprDBG_ALL,1) << "|\t Finished classic ss add to graph"
+         vprDEBUG(vprDBG_ALL,1) << "|\tFinished classic ss add to graph"
                              << std::endl << vprDEBUG_FLUSH;
           }
       else if ( this->geodes.size() > 1 && 
@@ -151,7 +151,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          cfdTempAnimation* transAnimation = this->model->GetAnimation();
          // the following functions should be called upon creation in cfdModel
          transAnimation->AddGeodesToSequence( this->geodes );
-         if ( ((cfdGroup*)temp->GetChild( 0 ))->SearchChild( transAnimation->GetSequence() ) < 0 )
+         if ( ((cfdGroup*)(temp->GetChild( 0 )))->SearchChild( transAnimation->GetSequence() ) < 0 )
          {
             vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic trans"
                              << std::endl << vprDEBUG_FLUSH;
