@@ -24,8 +24,31 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
-#setenv TAO_BUILD TRUE
-setenv TAO_BUILD FALSE
+# TAO_BUILD can be set from outside this script to override the default of FALSE
+# Make sure that TAO_BUILD is set to either TRUE or FALSE...
+if ( ! $?TAO_BUILD ) then
+   setenv TAO_BUILD FALSE
+   echo "   Because it was undefined, setting TAO_BUILD to" ${TAO_BUILD}
+   echo "   If you want otherwise, open new shell, define TAO_BUILD, and run script again"
+   echo ""
+else if ( $TAO_BUILD != "TRUE" && $TAO_BUILD != "FALSE" ) then
+   setenv TAO_BUILD FALSE
+   echo "   Because it was not defined properly, setting TAO_BUILD to" ${TAO_BUILD}
+   echo "   If you want otherwise, open new shell, define TAO_BUILD, and run script again"
+   echo ""
+endif
+
+# CLUSTER_APP can be set from outside this script to override the default of FALSE
+# Make sure that CLUSTER_APP is set to either TRUE or FALSE...
+if ( ! $?CLUSTER_APP ) then
+   setenv CLUSTER_APP FALSE
+   echo "   Because it was undefined, setting CLUSTER_APP to" ${CLUSTER_APP}
+   echo "   If you want otherwise, redefine CLUSTER_APP"
+else if ( $CLUSTER_APP != "TRUE" && $CLUSTER_APP != "FALSE" ) then
+   setenv CLUSTER_APP FALSE
+   echo "   Because it was not defined properly, setting CLUSTER_APP to" ${CLUSTER_APP}
+   echo "   If you want otherwise, redefine CLUSTER_APP"
+endif
 
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
@@ -61,7 +84,8 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
       
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* ) then
    setenv JDK_HOME /usr/java/j2sdk1.4.2_03
-   setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
+   setenv VTK_BASE_DIR /home/users/sjk60/vtk/VTK-4.4/RedHat_8.0
+   #setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-RH80
    setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-RH80
    setenv VJ_BASE_DIR /home/users/hgx/group_project/vrjuggler-2.0-alpha4.linux-rh80
@@ -89,7 +113,7 @@ else if ( ${CFDHOSTTYPE} == "SuSE_9.1" ) then
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-SuSE91
    setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-SuSE91
-   setenv VJ_BASE_DIR /home/users/mccdo/vrjuggler-builds/Suse-9.1-alpha4
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/Linux_SuSE91
    setenv VJ_DEPS_DIR /home/users/mccdo/cppdom-0.3.2/Suse-9.1
    #setenv VJ_BASE_DIR /home/users/sjk60/suse_deps/Suse-9.1-alpha4_vrjuggler
    #setenv VJ_DEPS_DIR /home/users/sjk60/suse_deps/Suse-9.1-alpha4_vrjuggler-deps
