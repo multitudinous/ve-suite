@@ -28,8 +28,8 @@ setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 # Some like to hardcode the following variables for custom setups.
 # The checked in version of this file should have the settings commented out
 # to allow developers to set them from outside this script (see below).
-#setenv TAO_BUILD TRUE
-#setenv CLUSTER_APP FALSE
+setenv TAO_BUILD FALSE
+setenv CLUSTER_APP FALSE
 
 # TAO_BUILD can be set outside this script to override the default of FALSE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -74,10 +74,13 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/IRIX32
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/IRIX32-pthread
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrj-deps/IRIX32
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/IRIX32
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VTK_BASE_DIR}/lib/vtk
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OSG_HOME}/lib32:${OSG_HOME}/lib32/osgPlugins
+   setenv PATH ${OSG_HOME}/OpenSceneGraph/bin:${PATH}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       #setenv ACE_ROOT /home/vr/Applications/TSVEG/Libraries/ACE-5.4
