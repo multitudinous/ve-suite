@@ -1,5 +1,6 @@
 #include "UI_TeacherTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_TeacherTab, wxPanel)

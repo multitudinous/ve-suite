@@ -10,11 +10,11 @@
 #include <string>
 
 #include "UI_NavTab.h"
-#include "UI_ScalarTab.h"
+//#include "UI_ScalarTab.h"
 #include "UI_VisTab.h"
 #include "UI_VecTab.h"
 #include "UI_StreamTab.h"
-#include "UI_DataSetTab.h"
+//#include "UI_DataSetTab.h"
 #include "UI_TeacherTab.h"
 #include "UI_SoundsTab.h"
 #include "UI_GeometryTab.h"
@@ -24,7 +24,7 @@
 class UI_VertTab;
 class UI_TransTab;
 ///copied from original Tabs.h//////
-enum cfdGeodeEnum {
+/*enum cfdGeodeEnum {
    // Everything below has to be mirrored exactly in 
    // VE_Suite/VE_Xplorer/UMI/hello/config/mapping.config
    CONTOUR, X_CONTOUR, Y_CONTOUR, Z_CONTOUR,
@@ -92,10 +92,14 @@ enum cfdGeodeEnum {
    UPDATE_SOUNDS,
    CHANGE_PARTICLE_VIEW_OPTION,
    CHANGE_SPHERE_SIZE,
-   CURRENT_VIEW_LOC,
-   LOAD_VIEW_LOC,
-   REMOVE_VIEW_LOC,
-   MOVE_TO_VIEW_LOC,
+   //CURRENT_VIEW_LOC,
+   //LOAD_VIEW_LOC,
+   //REMOVE_VIEW_LOC,
+   //MOVE_TO_VIEW_LOC,
+   LOAD_POINT,
+   WRITE_POINTS_TO_FILE,
+   READ_POINTS_FROM_FILE,
+   MOVE_TO_SELECTED_LOCATION,
    DESIGN_PARMS,
    UPDATE_DESIGNPARMS,
    EXIT,
@@ -108,8 +112,8 @@ enum cfdGeodeEnum {
    NAV_FWD,
    NAV_BKWD,
    NAV_CCW,
-   NAV_CW
-};
+   NAV_CW*/
+//};
 //end Tabs.h copy/////////
 
 //////////////////////////////////////////////
@@ -144,11 +148,11 @@ public:
    //to the dataset tab
    //void changeActiveScalarOnDataset(const char* activeScalarName);
 //protected:
-   void _initDatasetPage(UI_DatasetTab* _datasetPage);
+   //void _initDatasetPage(UI_DatasetTab* _datasetPage);
 
    //the tab pages
    UI_VisualizationTab* _visPage;
-   UI_ScalarTab* _scalarPage;
+   //UI_ScalarTab* _scalarPage;
    UI_VectorTab* _vectorPage;
    UI_StreamlineTab* _streamlinePage;
    //UI_DatasetTab* _datasetPage;
@@ -213,7 +217,7 @@ public:
    
    // Must be the same size as specified in VjObs_i.h
    int numOfClientInfo;
-   VjObs::obj_p_var clientInfoArray;
+   VjObs::obj_pd_var clientInfoArray;
    void sendDataArrayToServer( void );
 
 

@@ -1,5 +1,6 @@
 #include "UI_SoundsTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 #include <iostream>
 #include <cmath>
 

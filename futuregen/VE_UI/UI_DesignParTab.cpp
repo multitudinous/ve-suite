@@ -1,5 +1,6 @@
 #include "UI_DesignParTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 #include <iostream>
 #include <cmath>
 
@@ -105,8 +106,8 @@ void UI_DesignParTab::_buildPage()
 //////////////////////////////////////////////////
 void UI_DesignParTab::_onDesignPar(wxCommandEvent& event)
 {
-      ((UI_Tabs *)_parent)->cId = DESIGN_PARMS;
-      ((UI_Tabs *)_parent)->sendDataArrayToServer();
+      //((UI_Tabs *)_parent)->cId = DESIGN_PARMS;
+      //((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 //////////////////////////////////////////////////
@@ -119,6 +120,6 @@ void UI_DesignParTab::_onUpdate(wxCommandEvent& event)
          ((UI_Tabs *)_parent)->cIso_value += (int)pow( 2.0f, (float)i );
    }
    cout << ((UI_Tabs *)_parent)->cIso_value <<endl;*/
-   ((UI_Tabs *)_parent)->cId  = UPDATE_DESIGNPARMS;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   //((UI_Tabs *)_parent)->cId  = UPDATE_DESIGNPARMS;
+   //((UI_Tabs *)_parent)->sendDataArrayToServer();
 }

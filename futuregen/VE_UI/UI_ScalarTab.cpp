@@ -1,6 +1,7 @@
 #include <iostream>
 #include "UI_ScalarTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 #include "UI_Frame.h"
 
 BEGIN_EVENT_TABLE(UI_ScalarTab, wxScrolledWindow)
@@ -199,7 +200,7 @@ void UI_ScalarTab::_buildPage()
    //create the two sliders
    _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER,0,0,100,wxDefaultPosition, slidesize,
                                   wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
-   _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER,100,0,200,wxDefaultPosition, slidesize,
+   _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER,100,0,100,wxDefaultPosition, slidesize,
                                   wxSL_VERTICAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
 
 /*  

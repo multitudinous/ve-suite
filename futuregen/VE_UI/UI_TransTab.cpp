@@ -1,5 +1,6 @@
 #include "UI_TransTab.h"
 #include "UI_Tabs.h"//remember to add trans tab callbacks to UI_Tabs.h
+#include "cfdEnum.h"
 
 BEGIN_EVENT_TABLE(UI_TransTab, wxPanel)
   EVT_RADIOBOX    (TRANS_CATEGORY_RAD_BOX,   UI_TransTab::_onCategory)

@@ -1,5 +1,6 @@
 #include "UI_NavTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 
 
 BEGIN_EVENT_TABLE(UI_NavigationTab, wxPanel)
@@ -100,6 +101,7 @@ wxWindowID id, const wxString& label)
 ///////////////////////////////////////////////////
 void UI_NavButton::onMouseUp(wxMouseEvent& mouse)
 {
+   _buttonPushed = 0;
    cout<<"Mouse released from button: "<<GetId()<<endl;
    //if left button comes up 
    //specific button we need to 
@@ -119,7 +121,7 @@ void UI_NavButton::onMouse(wxMouseEvent& mouse)
    int activeId = ((UI_NavigationTab*)GetParent())->getActiveButton();
 
    //no button pushed yet
-   if(activeId == NONE){
+   if(activeId == NONE){     
       if(mouse.LeftIsDown()){
         cout<<"Mouse pushed on button: "<<GetId()<<endl;
         //set the active id to this button
@@ -130,10 +132,11 @@ void UI_NavButton::onMouse(wxMouseEvent& mouse)
          ((UI_NavigationTab*)GetParent())->setActiveButton(GetId());
 
          //pass the nav info to cfdApp
-         ((UI_NavigationTab*)GetParent())->updateParent(_buttonPushed,GetId());
+         ((UI_NavigationTab*)GetParent())->updateParent(_buttonPushed,GetId());              
       }
    }
 }
+
 ///////////////////////////////////////////////////////
 void UI_NavigationTab::updateParent(int pushed, int id)
 {

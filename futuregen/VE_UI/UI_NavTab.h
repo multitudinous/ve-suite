@@ -28,6 +28,7 @@ public:
    //need to override this function
    void onMouse(wxMouseEvent& event);
    void onMouseUp(wxMouseEvent& event);
+
 protected:
    int _buttonPushed;
    DECLARE_EVENT_TABLE()

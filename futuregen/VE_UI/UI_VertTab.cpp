@@ -1,5 +1,6 @@
 #include "UI_VertTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 
 BEGIN_EVENT_TABLE(UI_VertTab, wxPanel)
    EVT_RADIOBOX      (PARTICLE_OPTIONS_RBOX,    UI_VertTab::_onParticleOption)
@@ -115,80 +116,21 @@ void UI_VertTab::_buildPage()
 //////////////////////////////////////////////////////////////
 void UI_VertTab::_onParticleOption(wxCommandEvent& event)
 {
-/*
-   ((UI_Tabs *)_parent)->cId  = CHANGE_INT_STEP_LENGTH;
-   ((UI_Tabs *)_parent)->cIso_value = _iStepSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
 }
 
 ///////////////////////////////////////////////////////////
 void  UI_VertTab::_onDisplayParticle(wxCommandEvent& event)
 {
-/*
-   ((UI_Tabs *)_parent)->cId  = CHANGE_PROPAGATION_TIME;
-   ((UI_Tabs *)_parent)->cIso_value = _propSlider->GetValue();
+
+   ((UI_Tabs *)_parent)->cId  = CHANGE_PARTICLE_VIEW_OPTION;
+   ((UI_Tabs *)_parent)->cGeo_state = _particleOptionRBox->GetSelection();
+   ((UI_Tabs *)_parent)->cIso_value = _spherePointSizeSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
+
 }
 
 //////////////////////////////////////////////////////////////
 void UI_VertTab::_onSpherePointSizeSlider(wxScrollEvent& event)
 {
-/*
-   ((UI_Tabs *)_parent)->cId  = CHANGE_STEP_LENGTH;
-   ((UI_Tabs *)_parent)->cIso_value = _stepSlider->GetValue();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-*/
 }
-/*
-///////////////////////////////////////////////////////
-void  UI_VertTab::ConstructCommandId( void )
-{
-   ((UI_Tabs *)_parent)->cId  = CHANGE_STREAMLINE_CURSOR;
-   ((UI_Tabs *)_parent)->cMin = _nPtsSlider->GetValue();
-   ((UI_Tabs *)_parent)->cMax = _sizePerSlider->GetValue();
 
-   if ( _cursorRBox->GetSelection() == 0 )
-   {
-      ((UI_Tabs *)_parent)->cIso_value = NO_CURSOR;
-   }
-   else if ( _cursorRBox->GetSelection() == 1 )
-   {   
-      ((UI_Tabs *)_parent)->cIso_value = POINT_CURSOR;
-   }
-   else if ( _cursorRBox->GetSelection() == 2 )
-   {
-
-      if ( _directionRBox->GetSelection() == 0 )
-      {
-         ((UI_Tabs *)_parent)->cIso_value = X_LINE_CURSOR;
-      }
-      else if ( _directionRBox->GetSelection() == 1 )
-      {
-         ((UI_Tabs *)_parent)->cIso_value = Y_LINE_CURSOR;
-      }
-      else if ( _directionRBox->GetSelection() == 2 )
-      {
-         ((UI_Tabs *)_parent)->cIso_value = Z_LINE_CURSOR;
-      }
-   }
-   else if ( _cursorRBox->GetSelection() == 3 )
-   {
-
-      if ( _directionRBox->GetSelection() == 0 )
-      {
-         ((UI_Tabs *)_parent)->cIso_value = X_PLANE_CURSOR;
-      }
-      else if ( _directionRBox->GetSelection() == 1 )
-      {
-         ((UI_Tabs *)_parent)->cIso_value = Y_PLANE_CURSOR;
-      }
-      else if ( _directionRBox->GetSelection() == 2 )
-      {
-         ((UI_Tabs *)_parent)->cIso_value = Z_PLANE_CURSOR;
-      }
-   }
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-}
-*/

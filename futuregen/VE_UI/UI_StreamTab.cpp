@@ -1,5 +1,6 @@
 #include "UI_StreamTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 
 BEGIN_EVENT_TABLE(UI_StreamlineTab, wxPanel)
    EVT_RADIOBOX      (CURSOR_SELECT_RBOX,    UI_StreamlineTab::_onDirection)

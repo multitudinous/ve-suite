@@ -1,11 +1,14 @@
 #include "UI_ViewLocTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_ViewLocTab, wxPanel)
    EVT_RADIOBOX(VIEWLOC_RBOX,UI_ViewLocTab::_onViewLoc)
    EVT_BUTTON(VIEWLOC_LOAD_BUTTON,UI_ViewLocTab::_onLoad)
-   EVT_BUTTON(VIEWLOC_REMOVE_BUTTON,UI_ViewLocTab::_onRemove)
+   EVT_BUTTON(VIEWLOC_WRITE_BUTTON,UI_ViewLocTab::_onWrite)
+   EVT_BUTTON(VIEWLOC_READ_BUTTON,UI_ViewLocTab::_onRead)
+   //EVT_BUTTON(VIEWLOC_REMOVE_BUTTON,UI_ViewLocTab::_onRemove)
    EVT_BUTTON(VIEWLOC_MOVE_BUTTON,UI_ViewLocTab::_onMove)
 END_EVENT_TABLE()
 
@@ -28,8 +31,14 @@ void UI_ViewLocTab::_buildPage()
    //the radio box
    int numStoredLocations = ((UI_Tabs *)_parent)->num_locations;
    wxString* defaultName;
+
+   for( unsigned int i=0; i<numStoredLocations; i++)
+   {
+      char no = i;
+      defaultName[i] = "View Location " + no;
+   }
    
-   if ( numStoredLocations > 0 )
+   /*if ( numStoredLocations > 0 )
    {
       defaultName = new wxString[ numStoredLocations ];
       for(CORBA::ULong i = 0; i < (unsigned int)numStoredLocations; i++)
@@ -43,7 +52,7 @@ void UI_ViewLocTab::_buildPage()
       numStoredLocations = 1;
       defaultName = new wxString[ numStoredLocations ];
       defaultName[ 0 ] = wxT("No Stored View Points");
-   }
+   }*/
 
    _locationsRBox = new wxRadioBox(this, VIEWLOC_RBOX, wxT("Stored View Points"),
                                 wxDefaultPosition, wxDefaultSize, 1,
@@ -56,10 +65,13 @@ void UI_ViewLocTab::_buildPage()
 
    // Add View Point Button
    _loadButton = new wxButton(this, VIEWLOC_LOAD_BUTTON, wxT("Add View Point"));
-   _viewpointName = new wxTextCtrl(this, -1, wxT("Enter New View Point Name Here"),wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
+   //_viewpointName = new wxTextCtrl(this, -1, wxT("Enter New View Point Name Here"),wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
 
    // Remove View Point Button
-   _removeButton = new wxButton(this, VIEWLOC_REMOVE_BUTTON, wxT("Remove View Point"));
+   //_removeButton = new wxButton(this, VIEWLOC_REMOVE_BUTTON, wxT("Remove View Point"));
+
+   _writeButton = new wxButton(this, VIEWLOC_WRITE_BUTTON, wxT("Write View Point to File"));
+   _readButton = new wxButton(this, VIEWLOC_READ_BUTTON, wxT("Read View Points From File"));
 
    // Move To Selected View Point Button
    _moveButton = new wxButton(this, VIEWLOC_MOVE_BUTTON, wxT("Move To Selected View Point"));
@@ -79,11 +91,13 @@ void UI_ViewLocTab::_buildPage()
    wxStaticText* blank3 = new wxStaticText(this, -1, ""); //just a place holder
 
    buttonSizer->Add(blank1,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   buttonSizer->Add(_viewpointName,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   //buttonSizer->Add(_viewpointName,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    buttonSizer->Add(_loadButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    buttonSizer->Add(blank2,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   buttonSizer->Add(_writeButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    buttonSizer->Add(blank3,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   buttonSizer->Add(_removeButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   //buttonSizer->Add(_removeButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   buttonSizer->Add(_readButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
    //the action button sizer
    wxBoxSizer* buttonGroup = new wxBoxSizer(wxVERTICAL);
@@ -108,7 +122,7 @@ void UI_ViewLocTab::_buildPage()
 //////////////////////////////////////////////////
 void UI_ViewLocTab::_onViewLoc(wxCommandEvent& event)
 {
-   // Are there any stored locations loaded?
+   /*// Are there any stored locations loaded?
    if ( ((UI_Tabs *)_parent)->num_locations > 0 )
    {
       for( int i = 0; i < ((UI_Tabs *)_parent)->num_locations; i++)
@@ -124,17 +138,17 @@ void UI_ViewLocTab::_onViewLoc(wxCommandEvent& event)
    else
    {
       std::cout << "There are no stored view points loaded to select!" << std::endl;
-   }
+   }*/
 }
 
 void UI_ViewLocTab::_onLoad(wxCommandEvent& event)
 {
-   ((UI_Tabs *)_parent)->cId = LOAD_VIEW_LOC;
-   ((UI_Tabs *)_parent)->viewlocNewPointName = _viewpointName->GetValue();
+   ((UI_Tabs *)_parent)->cId = LOAD_POINT;
+   //((UI_Tabs *)_parent)->viewlocNewPointName = _viewpointName->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
-void UI_ViewLocTab::_onRemove(wxCommandEvent& event)
+/*void UI_ViewLocTab::_onRemove(wxCommandEvent& event)
 {
    if ( ((UI_Tabs *)_parent)->num_locations > 0 )
    {
@@ -152,6 +166,20 @@ void UI_ViewLocTab::_onRemove(wxCommandEvent& event)
    {
       std::cout << "There are no stored view points loaded to remove!" << std::endl;
    }
+}*/
+
+void UI_ViewLocTab::_onWrite(wxCommandEvent& event)
+{
+   ((UI_Tabs *)_parent)->cId = WRITE_POINTS_TO_FILE;
+   //((UI_Tabs *)_parent)->viewlocNewPointName = _viewpointName->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+}
+
+void UI_ViewLocTab::_onRead(wxCommandEvent& event)
+{
+   ((UI_Tabs *)_parent)->cId = READ_POINTS_FROM_FILE;
+   //((UI_Tabs *)_parent)->viewlocNewPointName = _viewpointName->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 void UI_ViewLocTab::_onMove(wxCommandEvent& event)
@@ -165,7 +193,7 @@ void UI_ViewLocTab::_onMove(wxCommandEvent& event)
          // Need to fix this 
          ((UI_Tabs *)_parent)->cIso_value = i;
       }
-      ((UI_Tabs *)_parent)->cId = MOVE_TO_VIEW_LOC;
+      ((UI_Tabs *)_parent)->cId = MOVE_TO_SELECTED_LOCATION;
       ((UI_Tabs *)_parent)->sendDataArrayToServer();
    }
    else

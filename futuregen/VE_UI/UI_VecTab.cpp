@@ -1,8 +1,9 @@
 #include "UI_VecTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 
 BEGIN_EVENT_TABLE(UI_VectorTab, wxPanel)
-   EVT_RADIOBOX(VECTOR_RAD_BOX,           UI_VectorTab::_onUpdate)
+   //EVT_RADIOBOX(VECTOR_RAD_BOX,           UI_VectorTab::_onUpdate)
    EVT_BUTTON(VECTOR_UPDATE_BUTTON,       UI_VectorTab::_onUpdate)
    EVT_CHECKBOX(SCALE_VEC_MAG_CHK,        UI_VectorTab::_onCheck)
    EVT_COMMAND_SCROLL(SCALE_SLIDER,       UI_VectorTab::_onvScaleSlider)

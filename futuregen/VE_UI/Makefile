@@ -9,17 +9,16 @@ OBJECTS = UI_App.o \
             UI_Tabs.o \
             UI_NavTab.o\
             UI_VisTab.o \
-            UI_ScalarTab.o \
             UI_VecTab.o \
             UI_StreamTab.o \
-            UI_DataSetTab.o \
             UI_SoundsTab.o \
             UI_GeometryTab.o \
             UI_TeacherTab.o \
             UI_TransTab.o \
             UI_VertTab.o \
             UI_ViewLocTab.o \
-            UI_DesignParTab.o
+            UI_DesignParTab.o \
+            UI_DataSetPanel.o
 
 ifeq (${TAO_BUILD}, TRUE)            
    OBJECTS += VjObsC.o
@@ -43,7 +42,8 @@ ifeq (${TAO_BUILD}, TRUE)
                -L${TAO_ROOT}/tao -lTAO -lpthread
 #${LDFLAGS}
    ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs
-   CPP_FLAGS = -LANG:std -D_TAO -I${VE_SUITE_HOME}/VE_Conductor/skel ${ACE_INCLUDES} ${CPPFLAGS}
+   ENUM_INCLUDES = -I${VE_SUITE_HOME}/VE_Xplorer
+   CPP_FLAGS = -LANG:std -D_TAO -I${VE_SUITE_HOME}/VE_Conductor/skel ${ACE_INCLUDES} ${ENUM_INCLUDES} ${CPPFLAGS}
    vpath %.cpp    ${VE_SUITE_HOME}/VE_Conductor/skel
 endif
 

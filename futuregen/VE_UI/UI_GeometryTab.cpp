@@ -1,5 +1,6 @@
 #include "UI_GeometryTab.h"
 #include "UI_Tabs.h"
+#include "cfdEnum.h"
 #include <iostream>
 #include <string>
 #include <cmath>

@@ -1,5 +1,5 @@
 #include "UI_Tabs.h"
-
+#include "cfdEnum.h"
 #include "UI_TransTab.h"
 #include "UI_VertTab.h"
 
@@ -21,12 +21,12 @@
 :wxNotebook(parent, id, pos, size, style)
 {
    _visPage = 0;
-   _scalarPage = 0;
+   //_scalarPage = 0;
    _vectorPage = 0;
    _streamlinePage = 0;
    //_datasetPage = 0;
    _navPage = 0;
-//   server_ref = VjObs::_duplicate(ref);
+   server_ref = VjObs::_duplicate(ref);
 
    cGeo_state = 0;
    cIso_value = 0;
@@ -35,7 +35,7 @@
 
    //copied code from old Tabs.cpp
    numOfClientInfo = 9;
-   clientInfoArray = new VjObs::obj_p(50);
+   clientInfoArray = new VjObs::obj_pd(50);
    clientInfoArray->length( numOfClientInfo );
 
    // Get Number of Geometry Files
@@ -138,6 +138,7 @@
       std::cout << "numScalars in first dataset: "
                   << numScalarsInFirstDataset << std::endl;
    }
+
    numScalarsInActiveDataset = numScalarsInFirstDataset;
    
    short postDataFlag;
@@ -206,7 +207,7 @@ void UI_Tabs::setActiveDataset(int whichDataset)
 
 }
 //////////////////////////////////////////////
-void UI_Tabs::setActiveScalar(int whichScalar)
+/*void UI_Tabs::setActiveScalar(int whichScalar)
 {
    if(_scalarPage){
       _scalarPage->setActiveScalar(whichScalar);
@@ -318,7 +319,7 @@ void UI_Tabs::updateScalarPage(char** names, int numNames, int refresh)
    if(_scalarPage){
       _scalarPage->updateScalarTabRadioBoxInfo(numNames,names);
    }
-}
+}*/
 //////////////////////////////
 //Create the pages of the UI//
 //////////////////////////////
@@ -343,7 +344,7 @@ void UI_Tabs::createTabPages()
    AddPage( _geometryPage, _T("Geometry"), false );
 
    //Scalars page
-   if(numScalarsInActiveDataset){
+   /*if(numScalarsInActiveDataset){
       //get the names from the server to put in the radio box
       char** scalarNames = new char*[numScalarsInActiveDataset];
       for(CORBA::ULong i = 0; i< numScalarsInActiveDataset; i++){
@@ -365,7 +366,7 @@ void UI_Tabs::createTabPages()
       wxString noScalarString[] = {wxT("No Scalars")};
        //_scalarPage = new UI_ScalarTab(this,1,(char**) noScalarString);
    }
-   //AddPage( _scalarPage, _T("Scalars"), false );
+   //AddPage( _scalarPage, _T("Scalars"), false );*/
 
    //Sounds page
    _soundPage = new UI_SoundTab(this);
@@ -430,7 +431,7 @@ void UI_Tabs::sendDataArrayToServer( void )
 
    if ( !CORBA::is_nil( server_ref ) )
    {
-     //	  server_ref->SetClientInfoData( clientInfoArray );
+      server_ref->SetClientInfoData( clientInfoArray );
    }
    else
    {
