@@ -126,3 +126,6 @@ void cfdModuleGeometry::Update( void )
    //SetColorOfGeometry( this->_node );
 }
 
+pfDCS* cfdModuleGeometry::GetPfDCS( void )
+{
+}

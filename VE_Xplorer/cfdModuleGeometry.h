@@ -56,6 +56,7 @@ class cfdModuleGeometry : public cfdDCS
       void SetColorOfGeometry( cfdNode* );
       void Update( void );
       void SetOpacity( float );
+      pfDCS* GetPfDCS();
 
    private:
    

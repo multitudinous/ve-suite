@@ -70,7 +70,8 @@ class cfdObjects : public cfdGlobalBase
       virtual void UpdateCommand();
 
       // update the actor
-      virtual void Update() = 0;
+      //virtual void Update() = 0;
+      virtual void Update();
 
       void SetcfdGeode( cfdGeode* );
       void SetObjectType( int );

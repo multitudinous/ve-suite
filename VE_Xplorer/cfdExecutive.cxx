@@ -60,6 +60,8 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext_ptr naming, cfdDCS* worldDC
    this->_masterNode->SetName( "cfdExecutive_Node" );
    this->worldDCS->AddChild( (cfdSceneNode*)this->_masterNode );
 
+   av_modules = new cfdVEAvail_Modules();
+
    //time_t* timeVal;
    long id = (long)time( NULL );
    char uiname[256];
@@ -210,7 +212,7 @@ void cfdExecutive::GetNetwork ( void )
    while(1) 
    {    
       Interface intf;
-      intf.unpack_ids(&nw_str[ipos]);
+      //intf.unpack_ids(&nw_str[ipos]);
     
       ipos+=72;
     
@@ -222,7 +224,7 @@ void cfdExecutive::GetNetwork ( void )
       buf2 = new char[size+1];
       strncpy(buf2, &nw_str[ipos], size);
       ipos+=size;
-      intf.unpack(buf2);
+      //intf.unpack(buf2);
       delete [] buf2;
     
       _it_map[intf._id] = intf;
@@ -261,8 +263,8 @@ void cfdExecutive::GetPort (std::string name)
   
    Interface intf;
   
-   intf.unpack_ids(&pt_str[0]);
-   intf.unpack(&pt_str[96]);
+   //intf.unpack_ids(&pt_str[0]);
+   //intf.unpack(&pt_str[96]);
   
    _pt_map[mod_id] = intf;
   

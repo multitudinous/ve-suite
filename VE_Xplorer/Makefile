@@ -39,6 +39,9 @@
 
 CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
 
+WX_CXX = $(shell wx-config --cxxflags)
+WX_LIB = $(shell wx-config --libs)
+
 # If OMNI_HOME was defined in the script setup.tsh, 
 # then define CORBA_DEFINES, and CORBA_INCLUDES.
 # (To make a non-corba version, don't define OMNI_HOME.)
@@ -65,10 +68,10 @@ ifdef OMNI_HOME
 endif
 
 ifdef ACE_ROOT
-   FUTUREGEN_HOME = /home/users/mccdo/REI/futuregen
+   FUTUREGEN_HOME = /home/users/dmuthjr/RProj/VE_Suite/futuregen
 
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl 
-   vpath %.cpp    ${FUTUREGEN_HOME}/IDL.old ${FUTUREGEN_HOME}/Plugin
+   vpath %.cpp    ${FUTUREGEN_HOME}/IDL ${FUTUREGEN_HOME}/Plugin ${FUTUREGEN_HOME}/Framework
 
    #----------------------------------------------------------------------------
    # Include macros and targets
@@ -89,8 +92,9 @@ ifdef ACE_ROOT
                   ${ACE_INCLUDES} \
                   -I${CONDUCTOR_BASE_DIR}/impl \
                   -I${CONDUCTOR_BASE_DIR}/skel \
-                  -I${FUTUREGEN_HOME}/IDL.old \
-                  -I${FUTUREGEN_HOME}/Plugin
+                  -I${FUTUREGEN_HOME}/IDL \
+                  -I${FUTUREGEN_HOME}/Plugin \
+                  -I${FUTUREGEN_HOME}/Framework
    EXEC_TAG = _tao
 endif
 
@@ -178,7 +182,6 @@ ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \
    VjObsS.cpp \
    VjObsC.cpp \
-   cfdExecutive.cxx \
    cfdExecutiveConfiguration.cxx \
    cfdGauges.cxx \
    cfdDigitalAnalogGauge.cxx \
@@ -190,7 +193,11 @@ SRCS+= \
    moduleC.cpp \
    moduleS.cpp \
    interface.cpp \
-   string_ops.cpp
+   string_ops.cpp \
+   cfdVEPluginLoader.cxx \
+   cfdVEAvailModules.cxx \
+   cfdVEBaseClass.cxx \
+   cfdExecutive.cxx
 else
 SRCS+= \
    VjObs.cpp 
@@ -310,7 +317,7 @@ DEBUG_APP?=		TRUE
 EXTRA_CXXFLAGS+=	-D_PERFORMER
 
 # vtkActorToPF needs VTK4
-EXTRA_CXXFLAGS+=	-DVTK4
+EXTRA_CXXFLAGS+=	-DVTK4 $(WX_CXX) -D WXUSING_PLUGIN_DLL
 #$(EXTRA_FLAGS) 
 
 #EXTRA_DEBUG_FLAGS+=	-g -D_DEBUG -gslim 
@@ -318,11 +325,11 @@ EXTRA_OPTIM_FLAGS+=	-O2 -OPT:Olimit=0 -D_OPT
 
 ifeq ($(TAO_BUILD), TRUE)
    EXTRA_CXXFLAGS+=	-D_TAO ${CPPFLAGS} -I$(BOOST_INCLUDES)
-   EXTRA_LIBS+= ${ACE_LIBS} 
+   EXTRA_LIBS+= ${ACE_LIBS} $(WX_LIB)
    #$(VLDLIBS)
 else
    EXTRA_CXXFLAGS+=	$(TWEEK_CXX_FLAGS) $(CORBA_DEFINES) -I$(BOOST_INCLUDES)
-   EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) 
+   EXTRA_LIBS+= $(TWEEK_LIBS) $(TWEEK_EXTRA_LIBS) $(OMNILIB) $(WX_LIB)
 endif
 
 LINKALL_ON=		-all

@@ -41,7 +41,7 @@ class pfDCS;
 #elif _OSG
 #elif _OPENSG
 #endif
-class string;
+//class string;
 #include <vector>
 
 using namespace std;

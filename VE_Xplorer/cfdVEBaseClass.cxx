@@ -31,18 +31,25 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdVEBaseClass.h"
-#include "cfdModuleGeometry"
+#include "cfdModuleGeometry.h"
+#include "cfdGroup.h"
 #include <string>
 #include <map>
 
 IMPLEMENT_DYNAMIC_CLASS( cfdVEBaseClass, wxObject )
 
 // Constructor
-cfdVEBaseClass::cfdVEBaseClass( void )
+cfdVEBaseClass::cfdVEBaseClass( void ) {}
+
+
+cfdVEBaseClass::cfdVEBaseClass( cfdDCS* veworldDCS )
 {
+   this->groupNode = new cfdGroup();
+   this->_dcs = new cfdDCS();
    this->dataRepresentation = new cfdObjects();
-   this->geometryNode = new cfdModuleGeometry( /*Need to pass a group in here*/ );
-   this->worldDCS->addChild( this->geometryNode->GetPfDCS() );
+   this->geometryNode = new cfdModuleGeometry( groupNode );
+   this->worldDCS = veworldDCS;
+   //this->worldDCS->addChild( this->geometryNode->GetPfDCS() );
 }
 
 // Destructor
@@ -55,51 +62,51 @@ cfdVEBaseClass::~cfdVEBaseClass( void )
 // New methods may have to be added later
 void cfdVEBaseClass::AddSelfToSG( void )
 {
-   this->worldDCS->addChild( this->GetPfDCS() );
+   this->worldDCS->AddChild( this->_dcs );
 }
 
-virtual void cfdVEBaseClass::RemoveSelfFromSG( void )
+void cfdVEBaseClass::RemoveSelfFromSG( void )
 {
-   this->worldDCS->removeChild( this->GetPfDCS() );
+   this->worldDCS->RemoveChild( this->_dcs );
 }
 
 // Change state information for geometric representation
-virtual void cfdVEBaseClass::MakeTransparent( void )
+void cfdVEBaseClass::MakeTransparent( void )
 {
    this->geometryNode->SetOpacity( 0.7 );
    this->geometryNode->Update();
 }
 
-virtual void cfdVEBaseClass::SetColor( double* color )
+void cfdVEBaseClass::SetColor( double* color )
 {
    this->geometryNode->SetRGBAColorArray( color );
    this->geometryNode->Update();
 }
       
 // transform object based 
-virtual void cfdVEBaseClass::SetTransforms( float* scale, float* rot, float* trans)
+void cfdVEBaseClass::SetTransforms( float* scale, float* rot, float* trans)
 {
-   this->SetTranslationArray( trans );
-   this->SetScaleArray( scale );
-   this->SetRotationArray( rot );
+   this->_dcs->SetTranslationArray( trans );
+   this->_dcs->SetScaleArray( scale );
+   this->_dcs->SetRotationArray( rot );
 }
 
 // Implement Gengxun's work by using socket
 // stuff from vtk. This will be used in parallel
 // with implementation of a unit connected to the 
 // computational engine.
-virtual void cfdVEBaseClass::GetDataFromUnit( void )
+void cfdVEBaseClass::GetDataFromUnit( void )
 {
    // Need to get Gengxun's work
-   std::cout << "this->cfdId = " << geodeEnumToString(this->cfdId) << std::endl;
+   /*std::cout << "this->cfdId = " << geodeEnumToString(this->cfdId) << std::endl;
    this-> sock = vtkSocketCommunicator::New();
    this-> sock->WaitForConnection(33000);
 
    std::cout << "[DBG] VE_Xplorer is connected to the port 33000 "<< std::endl;
    
 
-   /*vprDEBUG(vprDBG_ALL,1)
-         <<" UPDATE_INTERACTIVE_DESIGN " << this->Interactive_state;*/
+   vprDEBUG(vprDBG_ALL,1)
+         <<" UPDATE_INTERACTIVE_DESIGN " << this->Interactive_state;
    
    vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
    
@@ -129,30 +136,30 @@ virtual void cfdVEBaseClass::GetDataFromUnit( void )
       this->sock->Delete();
       this->sock = NULL;
 
-   }
+   }*/
 }
 // Basically uses vtkActorToPF to create a geode and 
 // add it to the scene graph. Probably use cfdObject.
-virtual void cfdVEBaseClass::MakeGeodeByUserRequest( int )
+void cfdVEBaseClass::MakeGeodeByUserRequest( int )
 {
-   this->dataRepresentation->UpdateGeode();
+   this->dataRepresentation->UpdatecfdGeode();
 }
 
 //This returns the name of the module
-virtual wxString cfdVEBaseClass::GetName( void )
+wxString cfdVEBaseClass::GetName( void )
 {
    return this->_objectName;
 }
 
 //This returns the description of the module, This should be a short description
-virtual wxString cfdVEBaseClass::GetDesc( void )
+wxString cfdVEBaseClass::GetDesc( void )
 {
    return this->_objectDescription;
 }
 
 
 //This is the load function of the module, unpack the input string and fill up the UI according to this
-virtual void cfdVEBaseClass::UnPack(Interface* intf)
+void cfdVEBaseClass::UnPack(Interface* intf)
 {
    vector<string> vars;
   
@@ -163,7 +170,7 @@ virtual void cfdVEBaseClass::UnPack(Interface* intf)
   map<string, vector<double> *>::iterator itervd;
   map<string, vector<string> *>::iterator itervs;
   
-  int i;
+  unsigned int i;
   long temp;
 
   mod_pack = *intf;
@@ -177,13 +184,15 @@ virtual void cfdVEBaseClass::UnPack(Interface* intf)
 	{
 	  mod_pack.getVal("XPOS", temp);
 	  //	  printf("xpos %ld\n", temp);
-	  pos.x = temp;
+	  //pos.x = temp;
+     pos_x = temp;
 	}
       else if (vars[i]=="YPOS")
 	{
 	  //	  printf("ypos %ld\n", temp);
 	  mod_pack.getVal("YPOS", temp);
-	  pos.y = temp;
+	  //pos.y = temp;
+     pos_y = temp;
 	}
     }
 
@@ -228,7 +237,7 @@ virtual void cfdVEBaseClass::UnPack(Interface* intf)
    }
 }
 
-virtual Interface* cfdVEBaseClass::Pack()
+Interface* cfdVEBaseClass::Pack()
 {  
    string result;
   
@@ -241,8 +250,10 @@ virtual Interface* cfdVEBaseClass::Pack()
 
 
    //printf("mod id : %d\n", mod_pack._id);
-   mod_pack.setVal("XPOS",long (pos.x));
-   mod_pack.setVal("YPOS",long (pos.y));
+   //mod_pack.setVal("XPOS",long (pos.x));
+   //mod_pack.setVal("YPOS",long (pos.y));
+   mod_pack.setVal("XPOS",long (pos_x));
+   mod_pack.setVal("YPOS",long (pos_y));
   
    for(iteri=_int.begin(); iteri!=_int.end(); iteri++)
       mod_pack.setVal(iteri->first, *(iteri->second));
@@ -269,44 +280,46 @@ virtual Interface* cfdVEBaseClass::Pack()
 }
 
 //This is to unpack the result from the 
-virtual void cfdVEBaseClass::UnPackResult(Interface * intf)
+void cfdVEBaseClass::UnPackResult(Interface * intf)
 {
 }
 
 // Set the id for a particular module
-virtual void cfdVEBaseClass::SetID(int id)
+void cfdVEBaseClass::SetID(int id)
 {
 }
+
+
    
 // Stuff taken from Plugin_base.h
 // All of Yang's work (REI)
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::RegistVar(string vname, long *var)
+void cfdVEBaseClass::RegistVar(string vname, long *var)
 {
   _int[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, double *var)
+void cfdVEBaseClass::RegistVar(string vname, double *var)
 {
   _double[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, string *var)
+void cfdVEBaseClass::RegistVar(string vname, string *var)
 {
   _string[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, vector<long> *var)
+void cfdVEBaseClass::RegistVar(string vname, vector<long> *var)
 {
   _int1D[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, vector<double> *var)
+void cfdVEBaseClass::RegistVar(string vname, vector<double> *var)
 {
   _double1D[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, vector<string> *var)
+void cfdVEBaseClass::RegistVar(string vname, vector<string> *var)
 {
   _string1D[vname]=var;
 }

@@ -37,6 +37,7 @@
 #include "interface.h"
 #include "cfd1DTextInput.h"
 #include "cfdGlobalBase.h"
+#include "cfdVEAvailModules.h"
 
 #include <orbsvcs/CosNamingC.h>
 #include <map>
@@ -112,6 +113,9 @@ class cfdExecutive : public cfdGlobalBase
 
       // in future, multi-threaded apps will make a copy of VjObs_i commandArray
       virtual void UpdateCommand();
+
+      //Loading the Available Modules
+      cfdVEAvail_Modules* av_modules; 
 
    private:
       

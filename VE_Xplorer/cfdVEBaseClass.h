@@ -32,17 +32,24 @@
 #ifndef CFD_VE_BASECLASS_H
 #define CFD_VE_BASECLASS_H
 
-#include "cfdDCS.h"
-class cfdModuleGeometry;
-class string;
-class map;
-
 #include <wx/wx.h>
 #include <wx/dc.h>
 #include <wx/gdicmn.h>
 
+#include "cfdDCS.h"
+#include "cfdObjects.h"
+#include "interface.h"
+
+//#include <string.h>
+
+class cfdModuleGeometry;
+class cfdGroup;
+//class string;
+//class map;
+
 // Need to create or use this in our stuff
 //#include "interface.h"
+
 
 /*
  * If we're using wx in Dynamic Library format do we 
@@ -65,12 +72,13 @@ class map;
 #endif // WXUSINGDLL && (WXMAKING_PLUGIN_DLL || WXUSING_PLUGIN_DLL)
 
 
-class WXPLUGIN_DECLSPEC cfdVEBaseClass: public cfdDCS, public wxObject // Inherit from wxBase class to enable string instantiation
+class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
 {
    DECLARE_DYNAMIC_CLASS( cfdVEBaseClass )
 
    public:
       cfdVEBaseClass( void );
+      cfdVEBaseClass( cfdDCS* );
       ~cfdVEBaseClass( void );
 
       // Methods to do scene graph manipulations
@@ -80,7 +88,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public cfdDCS, public wxObject // Inheri
 
       // Change state information for geometric representation
       virtual void MakeTransparent( void );
-      virtual void SetColor( float* );
+      virtual void SetColor( double* );
       
       // transform object based 
       virtual void SetTransforms( float*, float*, float* );
@@ -113,13 +121,17 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public cfdDCS, public wxObject // Inheri
    private:
       // This needs to be vector of geometry nodes
       cfdModuleGeometry*  geometryNode;
+      cfdGroup* groupNode;
 
-      pfDCS*   worldNode;
+      cfdDCS*   worldDCS;
+      cfdDCS* _dcs;
 
       wxString _objectName;
       wxString _objectDescription;
 
    protected:
+      long pos_x;
+      long pos_y;
       // Stuff taken from Plugin_base.h
       // All of Yang's work (REI)
       void RegistVar(string vname, long *var);
