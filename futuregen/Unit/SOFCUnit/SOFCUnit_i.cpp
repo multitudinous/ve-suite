@@ -229,6 +229,38 @@ void Body_Unit_i::StartCalc (
       gas_out_data->addSpecie(*iter2);
       gas_out_data->gas_composite.setFrac(*iter2, output_stream.get_mole_fraction(*iter2));
     }
+
+    // get exact mercury
+  double mole_sec = gas_in_anode->gas_composite.M/gas_in_anode->gas_composite.mw();
+  double mfr = gas_in_anode->gas_composite.getFrac("HG");
+  double mole_HG_sec = 0.0;
+  if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
+  mfr = gas_in_anode->gas_composite.getFrac("HGCL2");
+  if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
+  double tot_mole_sec = mole_sec;
+
+  mole_sec = gas_in_cathode->gas_composite.M/gas_in_cathode->gas_composite.mw();
+  mfr = gas_in_cathode->gas_composite.getFrac("HG");
+  if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
+  mfr = gas_in_cathode->gas_composite.getFrac("HGCL2");
+  if(mfr>0.0) mole_HG_sec += mole_sec*mfr;
+  tot_mole_sec += mole_sec;
+
+  // split the HG between el HG and HGCL2 per equilibrium result
+  double fracHG = 0.0, totHG = 0.0;
+  mfr = gas_out_data->gas_composite.getFrac("HG");
+  if(mfr>0.0){
+     fracHG += mfr;
+     totHG += mfr;
+  }
+  mfr = gas_out_data->gas_composite.getFrac("HGCL2");
+  if(mfr>0.0) totHG += mfr;
+  if(totHG) fracHG /= totHG;
+  if(totHG>0.0){
+     if(fracHG>0.0) gas_out_data->gas_composite.setFrac("HG",mole_HG_sec*fracHG/tot_mole_sec);
+     if(fracHG<1.0) gas_out_data->gas_composite.setFrac("HGCL2",mole_HG_sec*(1.0-fracHG)/tot_mole_sec);
+  }
+  
     gas_out_data->gas_composite.T = output_stream.get_temp();
     gas_out_data->gas_composite.M = output_stream.get_mass_flow_rate();
     gas_out_data->gas_composite.P = gas_in_anode->gas_composite.P - press_drop;
