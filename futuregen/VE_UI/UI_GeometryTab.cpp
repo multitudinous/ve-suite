@@ -6,8 +6,8 @@
 #include <cmath>
 
 BEGIN_EVENT_TABLE(UI_GeometryTab, wxPanel)
-   //EVT_RADIOBOX(GEOMETRY_RBOX,UI_GeometryTab::_onGeometry)
-   //EVT_CHECKLISTBOX(GEOMETRY_RBOX,UI_GeometryTab::_onGeometry)
+   EVT_COMMAND_SCROLL(GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry)
+   EVT_CHECKLISTBOX(GEOMETRY_CBOX,UI_GeometryTab::_onUpdate)
    EVT_BUTTON(GEOMETRY_UPDATE_BUTTON,UI_GeometryTab::_onUpdate)
 END_EVENT_TABLE()
 
@@ -72,20 +72,58 @@ void UI_GeometryTab::_buildPage()
       _geometryCBox->Enable( false );
    }
 
-   //the update button
-   _updateButton = new wxButton(this,GEOMETRY_UPDATE_BUTTON,wxT("Update"));
+   // slider info
+   //the labels for the sliders
+   wxStaticText* opacityLabel = new wxStaticText(this, -1, wxT("Geometry Opacity"));
+   wxStaticText* lodLabel = new wxStaticText(this, -1, wxT("Geometry LOD Control"));
 
+   //opacity slider
+   geomOpacitySlider = new wxSlider(this, GEOMETRY_OPACITY_SLIDER,0,0,100,
+                                       wxDefaultPosition, wxDefaultSize,
+                                       wxSL_HORIZONTAL|
+                                       wxSL_AUTOTICKS|
+                                       wxSL_LABELS|wxSL_RIGHT );
+
+   //lod slider
+   geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,1000,0,1000,
+                                       wxDefaultPosition, wxDefaultSize,
+                                       wxSL_HORIZONTAL|
+                                       wxSL_AUTOTICKS|
+                                       wxSL_LABELS|wxSL_RIGHT );
+
+   //two sizers to group the sliders and their lables
+   wxBoxSizer* opacityGroup = new wxBoxSizer( wxVERTICAL );
+   wxBoxSizer* lodGroup = new wxBoxSizer( wxVERTICAL );
+
+   opacityGroup->Add(opacityLabel,0,wxALIGN_LEFT|wxEXPAND);
+   opacityGroup->Add(geomOpacitySlider,1,wxALIGN_LEFT|wxEXPAND);
+
+   lodGroup->Add(lodLabel,0,wxALIGN_LEFT|wxEXPAND);
+   lodGroup->Add(geomLODSlider,1,wxALIGN_LEFT|wxEXPAND);
+
+   //the update button
+   //_updateButton = new wxButton(this,GEOMETRY_UPDATE_BUTTON,wxT("Update"));
+
+   wxStaticBox* geomControls = new wxStaticBox(this,-1, wxT("Geometry Controls"));
+   wxStaticBoxSizer* geomControlsGroup = new wxStaticBoxSizer(geomControls,wxVERTICAL);
    //the panel sizer
-   wxBoxSizer* geometryPanelGroup = new wxBoxSizer(wxVERTICAL);
    //geometryPanelGroup->Add(_geometryRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   geometryPanelGroup->Add(_geometryCBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   geometryPanelGroup->Add(_updateButton,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   geomControlsGroup->Add(_geometryCBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+   geomControlsGroup->Add(opacityGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5);
+   geomControlsGroup->Add(lodGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5);
+
+   wxBoxSizer* geometryPanelGroup = new wxBoxSizer(wxVERTICAL);
+   geometryPanelGroup->Add(geomControlsGroup,1,wxEXPAND|wxALL, 5);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
    //assign the group to the panel
    SetSizer(geometryPanelGroup);
 
+   // Send lod info back to ve-xplorer
+   ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
+   ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 //////////////////
 //event handling//
@@ -96,9 +134,13 @@ void UI_GeometryTab::_buildPage()
 ///////////////////
 
 //////////////////////////////////////////////////
-void UI_GeometryTab::_onGeometry(wxCommandEvent& event)
+void UI_GeometryTab::_onGeometry( wxScrollEvent& event )
 {
+   ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
+   ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
+
 //////////////////////////////////////////////////
 void UI_GeometryTab::_onUpdate(wxCommandEvent& event)
 {

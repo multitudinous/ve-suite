@@ -9,7 +9,9 @@ enum GEOMETRY_TAB_IDS
 {
    GEOMETRY_RBOX,
    GEOMETRY_CBOX,
-   GEOMETRY_UPDATE_BUTTON
+   GEOMETRY_UPDATE_BUTTON,
+   GEOMETRY_OPACITY_SLIDER,
+   GEOMETRY_LOD_SLIDER
 };
 
 
@@ -25,9 +27,11 @@ protected:
    wxCheckListBox* _geometryCBox;
    wxButton*   _updateButton;
    wxNotebook* _parent;
+   wxSlider* geomOpacitySlider;
+   wxSlider* geomLODSlider;
 
    //event handlers
-   void _onGeometry(wxCommandEvent& event);
+   void _onGeometry( wxScrollEvent& event );
    void _onUpdate(wxCommandEvent& event);
 
    DECLARE_EVENT_TABLE()

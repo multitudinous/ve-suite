@@ -86,7 +86,7 @@ class cfdApp: public vrj::OsgApp
       virtual void preForkInit( );
       // Called Before pfConfig()
 
-      
+      virtual void appChanFunc( pfChannel* chan );
 
       // Return the current scene graph
       virtual pfGroup* getScene( );

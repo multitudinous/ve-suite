@@ -164,6 +164,18 @@ inline pfGroup* cfdApp::getScene( )
   //vprDEBUG(vprDBG_ALL,1) << "cfdApp::getScene" << std::endl << vprDEBUG_FLUSH;
   return (pfGroup*)(this->_sceneManager->GetRootNode()->GetRawNode());//for test
 }
+
+void cfdApp::appChanFunc( pfChannel* chan )
+{
+   // used to adjust lod scaling
+   vrj::PfApp::appChanFunc( chan );
+   
+   if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_LOD_SCALE )
+   {
+      chan->setLODAttr(PFLOD_SCALE, (float)_vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_SC ));
+   }
+}
+
 inline void cfdApp::preSync( )
 {
   vprDEBUG(vprDBG_ALL,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
