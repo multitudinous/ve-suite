@@ -11,6 +11,7 @@ END_EVENT_TABLE()
 IMPLEMENT_DYNAMIC_CLASS(Gasifier0D_UI_Dialog, UIDialog);
 
 //Here is the constructor with passed in pointers
+
 Gasifier0D_UI_Dialog
 ::Gasifier0D_UI_Dialog
 (wxWindow* parent, int id,
@@ -80,6 +81,7 @@ Gasifier0D_UI_Dialog
   p_spec_geometry(spec_geometry),
   p_des_mode(des_mode)
 {
+
   wxBoxSizer* top_sizer = new wxBoxSizer(wxVERTICAL);
    
   m_tabs = new GasiTabs(this);
@@ -183,11 +185,13 @@ bool Gasifier0D_UI_Dialog::TransferDataFromWindow()
   (*p_des_mode) = m_tabs->cb_des_mode->GetValue();
 
   return true;
+
 }
 
 ////////////////////////////////////////////////////
 bool Gasifier0D_UI_Dialog::TransferDataToWindow()
 {
+
   wxString txt1, txt2, txt3, txt4, txt5, txt6, txt7, txt8, txt9, txt10;
   wxString txt11, txt12, txt13, txt14, txt15, txt16, txt17, txt18, txt19, txt20;
   wxString txt21, txt22, txt23, txt24, txt25, txt26, txt27, txt28, txt29;
@@ -302,6 +306,7 @@ bool Gasifier0D_UI_Dialog::TransferDataToWindow()
   m_tabs->OnChangeMode(event);
 
   return true;
+  
 }
 
 void Gasifier0D_UI_Dialog::Lock(bool l)

@@ -10,7 +10,6 @@
 using std::cout;
 using std::endl;
 
-namespace REI {
 
 ///////////////////////
 void matrix::resize(int& nmat0)
@@ -333,4 +332,3 @@ void matrix::back_sub(){
    } // for(j
 }
 
-} // End namespace REI

@@ -68,12 +68,12 @@ LINK32=link.exe
 # PROP Use_Debug_Libraries 1
 # PROP Output_Dir "Debug"
 # PROP Intermediate_Dir "Debug"
-# PROP Ignore_Export_Lib 1
+# PROP Ignore_Export_Lib 0
 # PROP Target_Dir ""
 # ADD BASE F90 /check:bounds /compile_only /dbglibs /debug:full /dll /nologo /traceback /warn:argument_checking /warn:nofileopt
 # ADD F90 /check:bounds /compile_only /dbglibs /debug:full /dll /nologo /traceback /warn:argument_checking /warn:nofileopt
 # ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "V21ASU_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "$(WX_ROOT)\include" /I "$(XERCESCROOT)\include" /I "..\\" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "WXMAKING_PLUGIN_DLL" /D "_USRDLL" /D "WINDLL_EXPORTS" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /YX /FD /GZ /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "$(WX_ROOT)\include" /I "$(XERCESCROOT)\include" /I "..\\" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "WXMAKING_PLUGIN_DLL" /D "WINDLL_EXPORTS" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -83,7 +83,7 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw24d.lib /nologo /dll /debug /machine:I386 /out:"..\V21ASU.dll" /pdbtype:sept /libpath:"$(WX_ROOT)\lib" /libpath:"$(XERCESCROOT)\lib"
+# ADD LINK32 xerces-c_2.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw24d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"..\V21ASU.dll" /pdbtype:sept /libpath:"$(WX_ROOT)\lib" /libpath:"$(XERCESCROOT)\lib"
 # SUBTRACT LINK32 /force
 
 !ENDIF 
@@ -126,13 +126,6 @@ SOURCE=..\UIDialog.cpp
 # Begin Source File
 
 SOURCE=.\V21ASU.cpp
-
-!IF  "$(CFG)" == "V21ASU - Win32 Release"
-
-!ELSEIF  "$(CFG)" == "V21ASU - Win32 Debug"
-
-!ENDIF 
-
 # End Source File
 # Begin Source File
 

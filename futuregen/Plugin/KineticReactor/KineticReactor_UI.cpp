@@ -1,5 +1,9 @@
 #include "KineticReactor_UI.h"
 
+BEGIN_EVENT_TABLE(KineticReactor_UI_Dialog, UIDialog)
+  EVT_RADIOBOX(R_CASETYPE, KineticReactor_UI_Dialog::OnCaseTypeChange)
+END_EVENT_TABLE()
+
 IMPLEMENT_DYNAMIC_CLASS(KineticReactor_UI_Dialog, UIDialog);
 
 //Here is the constructor with passed in pointers

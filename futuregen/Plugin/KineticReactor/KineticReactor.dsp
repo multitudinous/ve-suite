@@ -1,24 +1,24 @@
-# Microsoft Developer Studio Project File - Name="Gasifier0D" - Package Owner=<4>
+# Microsoft Developer Studio Project File - Name="KineticReactor" - Package Owner=<4>
 # Microsoft Developer Studio Generated Build File, Format Version 6.00
 # ** DO NOT EDIT **
 
 # TARGTYPE "Win32 (x86) Dynamic-Link Library" 0x0102
 
-CFG=Gasifier0D - Win32 Debug
+CFG=KineticReactor - Win32 Debug
 !MESSAGE This is not a valid makefile. To build this project using NMAKE,
 !MESSAGE use the Export Makefile command and run
 !MESSAGE 
-!MESSAGE NMAKE /f "Gasifier0D.mak".
+!MESSAGE NMAKE /f "KineticReactor.mak".
 !MESSAGE 
 !MESSAGE You can specify a configuration when running NMAKE
 !MESSAGE by defining the macro CFG on the command line. For example:
 !MESSAGE 
-!MESSAGE NMAKE /f "Gasifier0D.mak" CFG="Gasifier0D - Win32 Debug"
+!MESSAGE NMAKE /f "KineticReactor.mak" CFG="KineticReactor - Win32 Debug"
 !MESSAGE 
 !MESSAGE Possible choices for configuration are:
 !MESSAGE 
-!MESSAGE "Gasifier0D - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
-!MESSAGE "Gasifier0D - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "KineticReactor - Win32 Release" (based on "Win32 (x86) Dynamic-Link Library")
+!MESSAGE "KineticReactor - Win32 Debug" (based on "Win32 (x86) Dynamic-Link Library")
 !MESSAGE 
 
 # Begin Project
@@ -30,7 +30,7 @@ F90=df.exe
 MTL=midl.exe
 RSC=rc.exe
 
-!IF  "$(CFG)" == "Gasifier0D - Win32 Release"
+!IF  "$(CFG)" == "KineticReactor - Win32 Release"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 0
@@ -44,8 +44,8 @@ RSC=rc.exe
 # PROP Target_Dir ""
 # ADD BASE F90 /compile_only /dll /nologo /warn:nofileopt
 # ADD F90 /compile_only /dll /nologo /warn:nofileopt
-# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "GASIFIER0D_EXPORTS" /YX /FD /c
-# ADD CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "GASIFIER0D_EXPORTS" /YX /FD /c
+# ADD BASE CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "KINETICREACTOR_EXPORTS" /YX /FD /c
+# ADD CPP /nologo /MT /W3 /GX /O2 /D "WIN32" /D "NDEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "KINETICREACTOR_EXPORTS" /YX /FD /c
 # ADD BASE MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "NDEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "NDEBUG"
@@ -57,7 +57,7 @@ LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
 # ADD LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /machine:I386
 
-!ELSEIF  "$(CFG)" == "Gasifier0D - Win32 Debug"
+!ELSEIF  "$(CFG)" == "KineticReactor - Win32 Debug"
 
 # PROP BASE Use_MFC 0
 # PROP BASE Use_Debug_Libraries 1
@@ -72,8 +72,8 @@ LINK32=link.exe
 # PROP Target_Dir ""
 # ADD BASE F90 /check:bounds /compile_only /dbglibs /debug:full /dll /nologo /traceback /warn:argument_checking /warn:nofileopt
 # ADD F90 /check:bounds /compile_only /dbglibs /debug:full /dll /nologo /traceback /warn:argument_checking /warn:nofileopt
-# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "GASIFIER0D_EXPORTS" /YX /FD /GZ /c
-# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "$(WX_ROOT)\include" /I "$(XERCESCROOT)\include" /I "..\\" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "WXMAKING_PLUGIN_DLL" /D "WINDLL_EXPORTS" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D "_USRDLL" /YX /FD /GZ /c
+# ADD BASE CPP /nologo /MTd /W3 /Gm /GX /ZI /Od /D "WIN32" /D "_DEBUG" /D "_WINDOWS" /D "_MBCS" /D "_USRDLL" /D "KINETICREACTOR_EXPORTS" /YX /FD /GZ  /c
+# ADD CPP /nologo /MD /W3 /Gm /GX /ZI /Od /I "$(WX_ROOT)\include" /I "$(XERCESCROOT)\include" /I "..\\" /D "_MBCS" /D "KINETICREACTOR_EXPORTS" /D "_DEBUG" /D "WIN32" /D "_WINDOWS" /D WINVER=0x400 /D "_MT" /D wxUSE_GUI=1 /D "__WXDEBUG__" /D WXDEBUG=1 /D "WXUSINGDLL" /D "WXMAKING_PLUGIN_DLL" /D "_USRDLL" /D "WINDLL_EXPORTS" /D "_REENTRANT" /D "_STLP_USE_OWN_NAMESPACE" /YX /FD /GZ /c
 # ADD BASE MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD MTL /nologo /D "_DEBUG" /mktyplib203 /win32
 # ADD BASE RSC /l 0x409 /d "_DEBUG"
@@ -83,28 +83,28 @@ BSC32=bscmake.exe
 # ADD BSC32 /nologo
 LINK32=link.exe
 # ADD BASE LINK32 kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /pdbtype:sept
-# ADD LINK32 xerces-c_2.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw24d.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib /nologo /dll /debug /machine:I386 /out:"../Gasifier0D.dll" /pdbtype:sept /libpath:"$(WX_ROOT)\lib" /libpath:"$(XERCESCROOT)\lib"
+# ADD LINK32 xerces-c_2.lib kernel32.lib user32.lib gdi32.lib winspool.lib comdlg32.lib advapi32.lib shell32.lib ole32.lib oleaut32.lib uuid.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw24d.lib /nologo /dll /debug /machine:I386 /out:"..\KineticReactor.dll" /pdbtype:sept /libpath:"$(WX_ROOT)\lib" /libpath:"$(XERCESCROOT)\lib"
 
 !ENDIF 
 
 # Begin Target
 
-# Name "Gasifier0D - Win32 Release"
-# Name "Gasifier0D - Win32 Debug"
+# Name "KineticReactor - Win32 Release"
+# Name "KineticReactor - Win32 Debug"
 # Begin Group "Source Files"
 
-# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat"
-# Begin Source File
-
-SOURCE=.\Gasifier0D.cpp
-# End Source File
-# Begin Source File
-
-SOURCE=.\Gasifier0D_UI.cpp
-# End Source File
+# PROP Default_Filter "cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp"
 # Begin Source File
 
 SOURCE=..\interface.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\KineticReactor.cpp
+# End Source File
+# Begin Source File
+
+SOURCE=.\KineticReactor_UI.cpp
 # End Source File
 # Begin Source File
 
@@ -133,18 +133,18 @@ SOURCE=..\UIDialog.cpp
 # End Group
 # Begin Group "Header Files"
 
-# PROP Default_Filter "h;hpp;hxx;hm;inl"
-# Begin Source File
-
-SOURCE=.\Gasifier0D.h
-# End Source File
-# Begin Source File
-
-SOURCE=.\Gasifier0D_UI.h
-# End Source File
+# PROP Default_Filter "h;hpp;hxx;hm;inl;fi;fd"
 # Begin Source File
 
 SOURCE=..\interface.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\KineticReactor.h
+# End Source File
+# Begin Source File
+
+SOURCE=.\KineticReactor_UI.h
 # End Source File
 # Begin Source File
 

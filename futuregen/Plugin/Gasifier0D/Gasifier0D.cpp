@@ -187,7 +187,7 @@ UIDialog* Gasifier0D::UI(wxWindow* parent)
      &stage,
      &spec_geometry,
      &des_mode);
-      
+     
   return dlg;
 }
 

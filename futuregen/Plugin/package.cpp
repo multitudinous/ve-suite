@@ -363,7 +363,7 @@ DOMDocument * Package::BuildFromIntfs()
   
   //Now start to create the interfaces
 
-  int i, j, k;
+  unsigned int i, j, k;
   vector<string> var_names;
   DOMElement* cur_intf;
   DOMElement* cur_elem;

@@ -248,7 +248,7 @@ void REI_Plugin::Lock(bool lock)
 ////////////////////////////////////////////////////////////////////
 Interface* REI_Plugin::Pack()
 {
-  string result;
+  //string result;
   
   map<string, long *>::iterator iteri;
   map<string, double *>::iterator iterd;
@@ -283,6 +283,7 @@ Interface* REI_Plugin::Pack()
   //mod_pack.pack(result);
   
   //wxString wxstr = result.c_str();
+ 
   return &mod_pack ;//wxstr;
   
 }
@@ -299,7 +300,7 @@ void REI_Plugin::UnPack(Interface * intf)
   map<string, vector<double> *>::iterator itervd;
   map<string, vector<string> *>::iterator itervs;
   
-  int i;
+  unsigned int i;
   long temp;
 
   mod_pack = *intf;
@@ -370,7 +371,7 @@ void REI_Plugin::UnPack(Interface * intf)
 void REI_Plugin::UnPackResult(Interface* intf)
 {
   //This will be module dependent. here is the Default implementation when using the summary table to pack things up in the module end
-  int i;
+  unsigned int i;
   std::vector<string> descs;
   descs = mod_pack.getStrings();
   v_desc.clear();
@@ -425,7 +426,7 @@ UIDialog* REI_Plugin::PortData(wxWindow* parent,  Interface *it)
 
   std::vector<wxString> gas_desc;
   std::vector<wxString> gas_value;
-  int i;
+  unsigned int i;
   //first, to decide if it is water or gas
 
   bool ok = true;

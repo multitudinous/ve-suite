@@ -235,7 +235,7 @@ wxString GasFeedback_UI_Dialog::ToString(const wxString inp, const wxString val)
 }
 
 EditDialog2::EditDialog2(wxWindow *parent, wxWindowID id)
-  :wxDialog(parent, id, _T("Edit"))
+  :wxDialog(parent, id, _T("Edit"), wxDefaultPosition, wxDefaultSize, wxDEFAULT_DIALOG_STYLE, "dialogBox")
 {
   wxBoxSizer* toptop= new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer* left_margin = new wxBoxSizer(wxHORIZONTAL);
