@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdFILE.h,v $
- * Date modified: $Date: 2004/03/23 16:29:15 $
- * Version:       $Revision: 1.9 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -33,7 +33,6 @@
 #define CFD_IHCCMODEL_H
 
 #include "cfdObjects.h"
-#include "cfdSequence.h"
 #include <vector>
 
 using namespace std;
@@ -43,15 +42,17 @@ class vtkPolyDataMapper;
 class vtkActor;
 
 class fileInfo;
-class pfNode;
-class pfMaterial;
-class pfNode;
 class pfDCS;
 class pfGroup;
 
 class cfdIHCCGauge;
 class cfdIHCCContour;
+
+#ifndef _USE_CFD_SEQUENCE
 class pfSequence;
+#else
+class cfdSequence;
+#endif
 
 class cfdIHCCModel: public cfdObjects
 {

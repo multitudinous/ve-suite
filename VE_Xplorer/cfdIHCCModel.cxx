@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdFILE.cxx,v $
- * Date modified: $Date: 2004/04/30 13:00:44 $
- * Version:       $Revision: 1.27 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -34,24 +34,15 @@
 
 #include "cfdFileInfo.h"
 #include <vtkActorToPF.h>
-//#include <assert.h>
-#include <vector>
 #include <utility>
 #include <sstream>
 using namespace std;
 
-#include <Performer/pfdu.h>
-#include <Performer/pf/pfDCS.h>
-#include <Performer/pf/pfGeode.h>
-#include <Performer/pr/pfGeoSet.h>
-#include <Performer/pr/pfMaterial.h>
-#include <Performer/pr/pfLight.h>
-#include <Performer/pr.h>
-#include <Performer/pfutil.h>
-#include <Performer/pr/pfTexture.h>
-#include <Performer/pr/pfLPointState.h>
-#include <Performer/pf/pfTraverser.h>
+#ifndef _USE_CFD_SEQUENCE
 #include <Performer/pf/pfSequence.h>
+#else
+#include "cfdSequence.h"
+#endif
 
 #include <vtkGeometryFilter.h>
 #include <vtkPolyDataNormals.h>
@@ -60,12 +51,12 @@ using namespace std;
 #include <vtkPolyDataMapper.h>
 #include <vtkLookupTable.h>
 #include <vtkProperty.h>
+
 #include <vpr/Util/Debug.h>
 
 #include "cfdIHCCGauge.h"
 #include "cfdIHCCContour.h"
 #include "cfd1DTextInput.h"
-
 
 cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
 {
@@ -163,7 +154,6 @@ cfdIHCCModel::cfdIHCCModel( fileInfo* paramFile, pfDCS* worldDCS )
    gauge_acid->CreateGaugeName();
    gauge_acid->SetGeometryFilename( std::string("dash_digital.flt") );
    
-   
    // Create Contours
    contours = new cfdIHCCContour();
    contours->SetpfSequence( sequence );
@@ -220,7 +210,6 @@ void cfdIHCCModel::RunModel( void )
    vprDEBUG(vprDBG_ALL,1) << " numSequenceChildren: " << numSequenceChildren
                           << std::endl << vprDEBUG_FLUSH;
 
-
    if ( numSequenceChildren > 0 )
    {
       for ( int i = numSequenceChildren-1; i >= 0; i-- )
@@ -231,7 +220,6 @@ void cfdIHCCModel::RunModel( void )
          pfDelete( group );
       }
    }
-
 
    for(t=0;t<numsteps;t++)         //=0.4)
    {
