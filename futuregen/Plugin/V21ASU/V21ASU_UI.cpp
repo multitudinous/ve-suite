@@ -50,7 +50,7 @@ V21ASU_UI_Dialog
   
   o2_row->Add(10, 5, 0);
   o2_row->Add(o2_first_row, 0);
-  o2_row->Add(10, 3, 0);
+  //o2_row->Add(10, 3, 0);
   o2_row->Add(o2_second_row, 0);
   o2_row->Add(10, 3, 0);
   o2_row->Add(o2_third_row, 0);
@@ -72,10 +72,10 @@ V21ASU_UI_Dialog
   o2_first_row->Add(label0);
   o2_first_row->Add(t_o2_temp);
 
-  wxStaticText * label1 = new wxStaticText(this, -1, " Pressure (Pa)", wxDefaultPosition, wxSize(150, 17));
-  t_o2_pres = new wxTextCtrl(this, -1, wxT("15.70"), wxDefaultPosition, wxSize(80, 20));
-  o2_second_row->Add(label1);
-  o2_second_row->Add(t_o2_pres);
+  //wxStaticText * label1 = new wxStaticText(this, -1, " Pressure (Pa)", wxDefaultPosition, wxSize(150, 17));
+  //t_o2_pres = new wxTextCtrl(this, -1, wxT("15.70"), wxDefaultPosition, wxSize(80, 20));
+  //o2_second_row->Add(label1);
+  //o2_second_row->Add(t_o2_pres);
 
   wxStaticText * label2 = new wxStaticText(this, -1, " Purity (%)", wxDefaultPosition, wxSize(150, 17));
   t_o2_purity = new wxTextCtrl(this, -1, wxT("15.70"), wxDefaultPosition, wxSize(80, 20));
@@ -87,10 +87,10 @@ V21ASU_UI_Dialog
   n2_first_row->Add(label3);
   n2_first_row->Add(t_n2_temp);
 
-  wxStaticText * label4 = new wxStaticText(this, -1, " Pressure (K)", wxDefaultPosition, wxSize(150, 17));
-  t_n2_pres = new wxTextCtrl(this, -1, wxT("15.70"), wxDefaultPosition, wxSize(80, 20));
-  n2_second_row->Add(label4);
-  n2_second_row->Add(t_n2_pres);
+  //wxStaticText * label4 = new wxStaticText(this, -1, " Pressure (K)", wxDefaultPosition, wxSize(150, 17));
+  //t_n2_pres = new wxTextCtrl(this, -1, wxT("15.70"), wxDefaultPosition, wxSize(80, 20));
+  //n2_second_row->Add(label4);
+  //n2_second_row->Add(t_n2_pres);
   
   SetSizer(toptop);
   SetAutoLayout(TRUE);
@@ -113,8 +113,8 @@ bool V21ASU_UI_Dialog::TransferDataFromWindow()
   txt = t_o2_temp->GetValue();
   (*p_o2_temp) = atof(txt.c_str());
   
-  txt = t_o2_pres->GetValue();
-  (*p_o2_pres) = atof(txt.c_str());
+  //txt = t_o2_pres->GetValue();
+  //(*p_o2_pres) = atof(txt.c_str());
 
   txt = t_o2_purity->GetValue();
   (*p_o2_purity) = atof(txt.c_str());
@@ -122,8 +122,8 @@ bool V21ASU_UI_Dialog::TransferDataFromWindow()
   txt = t_n2_temp->GetValue();
   (*p_n2_temp) = atof(txt.c_str());
   
-  txt = t_n2_pres->GetValue();
-  (*p_n2_pres) = atof(txt.c_str());
+  //txt = t_n2_pres->GetValue();
+  //(*p_n2_pres) = atof(txt.c_str());
   
   return true;
 }
@@ -136,8 +136,8 @@ bool V21ASU_UI_Dialog::TransferDataToWindow()
   txt1<<(*p_o2_temp);
   t_o2_temp->SetValue(txt1);
 
-  txt2<<(*p_o2_pres);
-  t_o2_pres->SetValue(txt2);
+  //txt2<<(*p_o2_pres);
+  //t_o2_pres->SetValue(txt2);
 
   txt3<<(*p_o2_purity);
   t_o2_purity->SetValue(txt3);
@@ -145,8 +145,8 @@ bool V21ASU_UI_Dialog::TransferDataToWindow()
   txt4<<(*p_n2_temp);
   t_n2_temp->SetValue(txt4);
 
-  txt5<<(*p_n2_pres);
-  t_n2_pres->SetValue(txt5);
+  //txt5<<(*p_n2_pres);
+  //t_n2_pres->SetValue(txt5);
   
     return true;
 }
