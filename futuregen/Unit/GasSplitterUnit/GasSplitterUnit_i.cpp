@@ -73,6 +73,7 @@ void Body_Unit_i::StartCalc (
 	else 
 	  ;
       }
+    delete gas_in;
     p.intfs.clear();
     result = p.Save(rv);
     std::cout<<"cp5\n";

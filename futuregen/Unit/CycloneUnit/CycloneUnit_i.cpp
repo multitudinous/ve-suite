@@ -173,6 +173,7 @@ void Body_Unit_i::StartCalc (
     //# Fill in gas_out_data
     Gas *gas_out_data = new Gas;
     gas_out_data->copy(*gas_in_data);
+    delete gas_in_data;
     gas_out_data->gas_composite.mean_size = mmd * 1.0e-6;
     gas_out_data->gas_composite.size_variance = sd * 1.0e-12;
     gas_out_data->gas_composite.M_particle = part_mass_flow_rate * (sum_p_delta_phi[n-1]); 
@@ -184,7 +185,6 @@ void Body_Unit_i::StartCalc (
     p.SetSysId("test.xml");
 
     gashelper.GasToInt(gas_out_data, p.intfs[0]);
-    delete gas_out_data;
     ogas[0] = p.Save(rv);
     executive_->SetExportData(id_, 0, ogas[0]);
   
@@ -195,7 +195,6 @@ void Body_Unit_i::StartCalc (
     part_out_data->gas_composite.size_variance = var_c * 1.0e-12;
     part_out_data->gas_composite.M_particle = part_mass_flow_rate * (sum_c_delta_phi[n-1]); 
     gashelper.GasToInt(part_out_data, p.intfs[0]);
-    delete part_out_data;
     ogas[1] = p.Save(rv);
     executive_->SetExportData(id_, 1, ogas[1]);
 
@@ -208,6 +207,8 @@ void Body_Unit_i::StartCalc (
     result = p.Save(rv);
     std::cout<<"cp5\n";
     executive_->SetModuleResult(id_, result); //marks the end the execution
+    delete gas_out_data;
+    delete part_out_data;
     std::cout<<"cp6\n";
   }
   

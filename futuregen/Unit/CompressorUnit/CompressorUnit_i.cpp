@@ -144,11 +144,12 @@ void Body_Unit_i::StartCalc (
   //fill out the output stream  
   p.intfs.resize(1); //each port has its own package
   gas_out_data->copy(*gas_in_data);
+  delete gas_in_data;
   gas_out_data->gas_composite.T = texit;
   gas_out_data->gas_composite.P = poutlet;
   
   gashelper.GasToInt(gas_out_data, p.intfs[0]);
-  delete gas_out_data;
+ 
   p.SetPackName("ExportData");
   p.SetSysId("test.xml");
   ogas = p.Save(rv);
@@ -176,6 +177,7 @@ void Body_Unit_i::StartCalc (
   result = p.Save(rv);
   std::cout<<"cp5\n";
   executive_->SetModuleResult(id_, result); //marks the end the execution
+  delete gas_out_data;
   std::cout<<"cp6\n";
   }
   

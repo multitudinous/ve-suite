@@ -151,6 +151,7 @@ void Body_Unit_i::StartCalc (
     else
       executive_->SetExportData(id_, 0, feedbck_igas);
     
+    delete gas_in;
     executive_->SetModuleResult(id_, NULL); //marks the end the execution
   }
   
