@@ -470,7 +470,7 @@ DOMDocument * Package::BuildFromIntfs()
 	  cur_elem=doc->createElement(XMLString::transcode("stringArray"));
 	  cur_elem->setAttribute(XMLString::transcode("name"), XMLString::transcode(var_names[j].c_str()));
 	  svals = intfs[i].getString1D(var_names[j]);
-	  for (k=0; k<lvals.size(); k++)
+	  for (k=0; k<svals.size(); k++)
 	    {
 	      sprintf(tmp,"%s", svals[k].c_str());
 	      tmp_elem=doc->createElement(XMLString::transcode("val"));

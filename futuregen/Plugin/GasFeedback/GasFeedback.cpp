@@ -18,7 +18,9 @@ GasFeedback
   RegistVar("species", &species);
   RegistVar("sel_species", &sel_species);
   RegistVar("max_error", &max_error);
-  
+  RegistVar("FEEDBACK", &FEEDBACK);
+
+  FEEDBACK = 1;
   iterations = 1;
   species.push_back("Temperature");
   species.push_back("Pressure");

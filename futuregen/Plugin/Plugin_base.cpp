@@ -278,8 +278,13 @@ Interface* REI_Plugin::Pack()
     mod_pack.setVal(itervd->first, *(itervd->second));
 
   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
+  {
+	vector<string> * y;
+	string x;
+	x=itervs->first;
+	y=itervs->second;
     mod_pack.setVal(itervs->first, *(itervs->second));
-
+  }
   //mod_pack.pack(result);
   
   //wxString wxstr = result.c_str();
