@@ -108,13 +108,10 @@ cfdGeode* cfdObjects::GetcfdGeode( void )
    return this->_geode;
 }
 
-/*
-void cfdObjects::GetGeoSet( pfGeoSet *gset[] )
+vtkActor* cfdObjects::GetActor( void )
 {
-   for ( int i = 0; i < 4; i++ )
-      gset[ i ] = geosets[ i ];
+   return actor;
 }
-*/
 
 void cfdObjects::SetOrigin( float o[ 3 ] )
 {

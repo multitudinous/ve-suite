@@ -60,6 +60,7 @@
 #include "cfdTempAnimation.h"
 #include "cfdNavigate.h"
 #include "cfdCursor.h"
+#include "cfdGraphicsObject.h"
 
 #include <vpr/Util/Debug.h>
 #include <vpr/vpr.h>
@@ -831,6 +832,15 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             this->dataList.at(i)->SetSequence( 0 );
             this->transientBusy = false;
          }
+         // if object needs updated then already have a graphics object
+         /*   cfdGraphicsObject* temp = new cfdGraphicsObject();
+            temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
+            temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
+            temp->SetWorldNode( this->_worldDCS );
+            temp->SetActor( this->dataList[ i ]->GetActor() );
+            temp->AddGraphicsObjectToSceneGraph();
+            graphicsObjects.insert( std::make_pair( this->dataList[ i ]->GetObjectType(), temp ) );
+         */
       }
    }
 
@@ -853,7 +863,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                                    << std::endl << vprDEBUG_FLUSH;
 
             this->_activeObject = this->dataList[ i ];
-
+            
             if ( this->_activeObject->GetObjectType() == IMAGE_EX )
             {
                this->_activeDataSetDCS = _worldDCS;

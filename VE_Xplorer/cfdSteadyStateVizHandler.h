@@ -33,6 +33,7 @@
 #define CFD_STEADYSTATEVIZHANDLER_H
 
 #include <vector>
+#include <map>
 
 #include <vpr/Thread/Thread.h>
 
@@ -61,7 +62,7 @@ class vtkPolyData;
 class cfdNavigate;
 class cfdCursor;
 class cfdTempAnimation;
-
+class cfdGraphicsObject;
 class cfdSteadyStateVizHandler
 {
    public:
@@ -149,5 +150,9 @@ class cfdSteadyStateVizHandler
       bool runIntraParallelThread;
       bool useLastSource;
       bool transientBusy;
+
+      // multi map to hold graphics objects
+      // the key is the viz type and the value is cfdGraphicsObject
+      std::multimap< int, cfdGraphicsObject* > graphicsObjects;
 };
 #endif

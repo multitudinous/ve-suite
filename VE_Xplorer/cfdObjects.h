@@ -73,6 +73,8 @@ class cfdObjects : public cfdGlobalBase
       virtual void Update() = 0;
 
       void SetcfdGeode( cfdGeode* );
+      vtkActor* GetActor( void );
+
       void SetObjectType( int );
       //void UpdateObject( void );
       cfdGeode *GetcfdGeode( void );

@@ -123,19 +123,42 @@ void cfdModel::CreateCfdDataSet( void )
 {
    mVTKDataSets.push_back( new cfdDataSet() );
 }
+
 /////////////////////////////////////////////////////////////////
 void cfdModel::CreateTextureManager(char* textureDescriptionFile)
 {
    cfdTextureManager tm;
-   std::ifstream fin(textureDescriptionFile);   char name[256];   if(fin.is_open()){       std::cout<<"Reading texture description file: "<<textureDescriptionFile<<std::endl;      int numFiles = 0;      fin>>numFiles;      for(int i = 0; i < numFiles; i++){         std::cout<<"Loading texture file: "<<i<<std::endl;         fin>>name;         tm.addFieldTextureFromFile(name);      }
-      std::cout<<"Finished reading texture description file."<<std::endl;
-      if(tm.GetDataType(0) == cfdTextureManager::SCALAR){
-         AddScalarTextureManager(tm,textureDescriptionFile);
-      }else{
-         AddVectorTextureManager(tm,textureDescriptionFile);
+   std::ifstream fin( textureDescriptionFile );   
+   char name[256];
+   
+   if ( fin.is_open() )
+   {       
+      std::cout << "Reading texture description file: " 
+                  << textureDescriptionFile << std::endl;
+      int numFiles = 0;      
+      fin >> numFiles;      
+
+      for(int i = 0; i < numFiles; i++)
+      {         
+         std::cout << "Loading texture file: " << i << std::endl;         
+         fin >> name;         
+         tm.addFieldTextureFromFile(name);      
       }
-   }else{
-      std::cout<<"Couldn't open file in cfd3DTextureBasedModel::CreateTextureManager!"<<std::endl;
+
+      std::cout << "Finished reading texture description file." << std::endl;
+      
+      if( tm.GetDataType(0) == cfdTextureManager::SCALAR )
+      {
+         AddScalarTextureManager( tm, textureDescriptionFile );
+      }
+      else
+      {
+         AddVectorTextureManager( tm, textureDescriptionFile );
+      }
+   }
+   else
+   {
+      std::cout << "Couldn't open file in cfd3DTextureBasedModel::CreateTextureManager!" << std::endl;
       return;
    }
 }

@@ -135,6 +135,7 @@ SRCS=\
    cfdFileInfo.cxx \
    cfdFrame.cxx \
    cfdGeode.cxx \
+   cfdGraphicsObject.cxx \
    cfdGroup.cxx \
    cfdImage.cxx \
    cfdIsosurface.cxx \

@@ -51,8 +51,7 @@ protected:
 
    std::vector<cfdTextureManager> _vectorDataTextures;
    std::vector<cfdTextureManager> _scalarDataTextures;
-   char* _paramFileName;
-   
+   char* _paramFileName;   
 };
 #endif
 #endif// CFD_TEXTURE_BASED_MODEL_H
