@@ -1,0 +1,8 @@
+MOD_NAME GasFeedback #This is the module name
+
+Int    iterations
+String1D species
+String1D sel_species
+String1D max_error
+
+END

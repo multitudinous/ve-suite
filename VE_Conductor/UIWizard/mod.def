@@ -1,0 +1,9 @@
+MOD_NAME FuelCell #This is the module name
+
+Double length
+Int    cells
+String specie
+Double1D doubles
+
+
+END

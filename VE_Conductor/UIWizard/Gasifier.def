@@ -1,0 +1,31 @@
+MOD_NAME Gasifier #This is the module name
+
+Int stage
+
+Double steam_temp1
+Double steam_flrt1
+Double slurry_temp1
+Double slurry_flrt1
+Double coal_percent1
+Double char_percent1
+
+Double steam_temp2
+Double steam_flrt2
+Double slurry_temp2
+Double slurry_flrt2
+Double coal_percent2
+Double char_percent2
+
+Double steam_temp3
+Double steam_flrt3
+Double slurry_temp3
+Double slurry_flrt3
+Double coal_percent3
+Double char_percent3
+
+String coal_type
+Double size_50
+Double size_200
+Double pres_drop
+
+END

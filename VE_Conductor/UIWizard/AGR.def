@@ -1,0 +1,8 @@
+MOD_NAME AGR #This is the module name
+
+Int    solv_type
+Int    tray_type
+Double solv_mw
+Double solv_den
+
+END

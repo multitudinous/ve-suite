@@ -1,0 +1,9 @@
+MOD_NAME ASU #This is the module name
+
+Double o2_temp
+Double o2_pres
+Double o2_purity
+Double n2_temp
+Double n2_pres
+
+END
