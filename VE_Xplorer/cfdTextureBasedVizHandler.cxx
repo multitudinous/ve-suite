@@ -28,6 +28,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _activeTM = 0;
    _parent = 0;
    _currentBBox = 0;
+   _cleared = false;
 }
 
 ///////////////////////////////////////////////////////////////////////////////////////////
@@ -53,6 +54,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler(const cfdTextureBasedVizHan
    _currentBBox[3] = tbvh._currentBBox[3];
    _currentBBox[4] = tbvh._currentBBox[4];
    _currentBBox[5] = tbvh._currentBBox[5];
+   _cleared = tbvh._cleared;
 }
 ///////////////////////////////////////////////////////////
 cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
@@ -94,19 +96,7 @@ cfdTextureBasedVizHandler::~cfdTextureBasedVizHandler()
 //////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::PreFrameUpdate()
 {
-   if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) != -1 ){
-      vprDEBUG(vprDBG_ALL,2) 
-         << "preFrame: id = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID )
-         << ", iso = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
-         << ", scalarIndex = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_SC )
-         << ", min = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_MIN )
-         << ", max = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_MAX )
-         << ", geo_state = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
-         << ", pre_state = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE )
-         << ", teacher_state = " << _cmdArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE )
-         << std::endl << vprDEBUG_FLUSH;
-   }
-
+   //this may need to change 
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE ){
       //set the transient flag in the callback
       if(_activeVolumeVizNode){
@@ -126,6 +116,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          xplane[3] = _currentBBox[0] + alpha*(_currentBBox[1] - _currentBBox[0]);
          xplane[3] *=-1.0;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE,xplane);
+         _cleared = false;
       }
    }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_CONTOURS){
       if(_activeVolumeVizNode&&_currentBBox){
@@ -137,6 +128,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          yplane[3] = _currentBBox[2] + alpha*(_currentBBox[3] - _currentBBox[2]);
          yplane[3] *= -1.0;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE,yplane);
+         _cleared = false;
       }
    }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Z_CONTOURS){
       if(_activeVolumeVizNode&&_currentBBox){
@@ -148,6 +140,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          zplane[3] = _currentBBox[4] + alpha*(_currentBBox[5] - _currentBBox[4]);
          zplane[3] *= -1.0;
          _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE,zplane);
+         _cleared = false;
       }
    /*}else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ARBITRARY){
       if(_activeVolumeVizNode&&_currentBBox){
@@ -160,14 +153,17 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
    }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_STOP){
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::STOP);
+         _cleared = false;
       }
    }else if(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_FORWARD){
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetPlayDirection(cfdVolumeVisualization::FORWARD);
+         _cleared = false;
       }
    }else if(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_BACKWARD){
       if(_activeVolumeVizNode){
          _activeVolumeVizNode->SetPlayDirection(cfdVolumeVisualization::BACKWARD);
+         _cleared = false;
       }
    }else if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ){ 
       if(_parent){
@@ -179,9 +175,11 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
             _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ZPLANE);
             _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ARBITRARY);
             //remove the volviz node from the tree. . .
-            ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+            osg::ref_ptr<osg::Group> groupPtr = (osg::Group*)_parent->GetRawNode();
+            ((osg::Group*)_parent->GetRawNode())->removeChild(0,1);//_activeVolumeVizNode->GetVolumeVisNode().get());
          }
          _activeTM = 0;
+         _cleared = true;
       }
       
    }
@@ -224,7 +222,7 @@ void cfdTextureBasedVizHandler::SetCursor(cfdCursor* cursor)
 //////////////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
 {
-   if(tm != _activeTM){
+   if((tm != _activeTM)||!_cleared){
       _activeTM = tm;
       if(!_currentBBox){
          _currentBBox = new float[6];
@@ -241,9 +239,10 @@ void cfdTextureBasedVizHandler::SetActiveTextureManager(cfdTextureManager* tm)
          _activeVolumeVizNode->CreateNode();
          //need to move/switch
          if(_parent){
-            if(!((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get())){
+            if(!((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get())&&!_cleared){
              //this may not be right
                ((osg::Group*)_parent->GetRawNode())->addChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+               _cleared = false;
             }
          }
       }

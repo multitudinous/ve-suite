@@ -32,9 +32,9 @@ cfdSwitch::cfdSwitch(const cfdSwitch& rhs)
 {
    _switch = rhs._switch;
 #ifdef _PERFORMER
-   _group = dynamic_cast<pfSwitch*>(_switch);
+   _group = dynamic_cast<pfGroup*>(_switch);
 #elif _OSG
-   _group = dynamic_cast<osg::Switch*>(_switch);
+   _group = dynamic_cast<osg::Group*>(_switch);
 
 #elif _OPENSG
 #endif

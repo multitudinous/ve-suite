@@ -22,6 +22,7 @@ public:
    //this is all we need for now
    //the rest are inherited from group
    void SetVal(int whichChildIsActive);
+   
 
    cfdSwitch& operator=(const cfdSwitch& rhs);
    

@@ -44,6 +44,7 @@ protected:
    cfdVolumeVisualization* _activeVolumeVizNode;
    cfdGroup* _parent;
    float* _currentBBox;
+   bool _cleared;
 };
 #endif //OSG
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

@@ -77,7 +77,7 @@ protected:
    void _createStateSet();
    void _attachTextureToStateSet();
    void _createTexGenNode();
-   void _createVolumeBillboardSlices();
+   void _createVolumeSlices();
    void _buildAxisDependentGeometry();
 
    cfdTextureManager* _tm;

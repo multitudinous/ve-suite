@@ -606,7 +606,7 @@ void cfdVolumeVisualization::_buildAxisDependentGeometry()
 
 }
 ///////////////////////////////////////////////////////////
-void cfdVolumeVisualization::_createVolumeBillboardSlices()
+void cfdVolumeVisualization::_createVolumeSlices()
 {
    _buildAxisDependentGeometry();
    _slices = new osg::Geode();
@@ -627,7 +627,7 @@ void cfdVolumeVisualization::_buildGraph()
    _volumeVizNode = new osg::Group();
    _createTexGenNode();
    _createStateSet();
-   _createVolumeBillboardSlices();
+   _createVolumeSlices();
    _createVisualBBox();
    _createClipNode();
    _isCreated = true;
