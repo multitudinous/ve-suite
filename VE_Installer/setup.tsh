@@ -1,10 +1,11 @@
 #!/bin/csh
 # sets up environment to build and/or run VE-Xplorer
 
-# The following allows you to control the TAO nameServer properties
+# The following allows you to control the TAO nameServer properties,
+# used by runTAONameService.sh and the run scripts
 #setenv TAO_MACHINE lego.vrac.iastate.edu
-#setenv TAO_MACHINE localhost
-#setenv TAO_PORT 1234
+setenv TAO_MACHINE localhost
+setenv TAO_PORT 1234
 
 #this is typically defined in your .cshrc file
 #setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite
@@ -35,17 +36,16 @@ setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 # to allow developers to set them from outside this script (see below).
 #setenv TAO_BUILD TRUE
 #setenv CLUSTER_APP FALSE
-#setenv SCENE_GRAPH PF
 
-# TAO_BUILD can be set outside this script to override the default of FALSE
+# TAO_BUILD can be set outside this script to override the default of TRUE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
 if ( ! $?TAO_BUILD ) then
-   setenv TAO_BUILD FALSE
-   echo "   Because it was undefined, setting TAO_BUILD to" ${TAO_BUILD}
-   echo "   If you want otherwise, open new shell, define TAO_BUILD, and run script again"
-   echo ""
+   setenv TAO_BUILD TRUE
+   #echo "   Because it was undefined, setting TAO_BUILD to" ${TAO_BUILD}
+   #echo "   If you want otherwise, open new shell, define TAO_BUILD, and run script again"
+   #echo ""
 else if ( $TAO_BUILD != "TRUE" && $TAO_BUILD != "FALSE" ) then
-   setenv TAO_BUILD FALSE
+   setenv TAO_BUILD TRUE
    echo "   Because it was not defined properly, setting TAO_BUILD to" ${TAO_BUILD}
    echo "   If you want otherwise, open new shell, define TAO_BUILD, and run script again"
    echo ""
@@ -55,16 +55,17 @@ endif
 # Make sure that CLUSTER_APP is set to either TRUE or FALSE...
 if ( ! $?CLUSTER_APP ) then
    setenv CLUSTER_APP FALSE
-   echo "   Because it was undefined, setting CLUSTER_APP to" ${CLUSTER_APP}
-   echo "   If you want otherwise, redefine CLUSTER_APP"
+   #echo "   Because it was undefined, setting CLUSTER_APP to" ${CLUSTER_APP}
+   #echo "   If you want otherwise, redefine CLUSTER_APP"
 else if ( $CLUSTER_APP != "TRUE" && $CLUSTER_APP != "FALSE" ) then
    setenv CLUSTER_APP FALSE
    echo "   Because it was not defined properly, setting CLUSTER_APP to" ${CLUSTER_APP}
    echo "   If you want otherwise, redefine CLUSTER_APP"
 endif
 
-#echo "TAO_BUILD =" ${TAO_BUILD}
-#echo "CLUSTER_APP =" ${CLUSTER_APP}
+# Specify your scene graph: OSG = OpenSceneGraph, PF = OpenGL Performer
+setenv SCENE_GRAPH PF
+#setenv SCENE_GRAPH OSG
 
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
