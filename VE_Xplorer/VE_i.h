@@ -61,12 +61,19 @@ class  Body_UI_i : public virtual POA_Body::UI
  protected:
   Body::Executive_var executive_;
   //cfdExecutive* executive;
-  bool* calcFlag;
+  bool calcFlag;
   
  public:
 
   void SetcfdExecutive( bool* x) { 
 	  calcFlag = x; 
+  };
+
+  bool GetCalcFlag( void ) 
+  { 
+     bool temp = calcFlag;
+     calcFlag = false;
+     return temp;
   };
 
 virtual void UpdateNetwork (

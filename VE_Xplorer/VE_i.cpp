@@ -37,6 +37,7 @@
 Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))
   {
+    calcFlag = false;
     UIName_=name;
   }
   
@@ -122,7 +123,9 @@ void Body_UI_i::Raise (
       {
          std::cout<<notification<<" :Raise called"<<std::endl;
          std::cout<<UIName_<<" :Raise called"<<std::endl;
-         (*calcFlag) = true;  
+         calcFlag = true;
+         std::cout<< " End Raise " << std::endl;  
       }
+         std::cout<< " End Raise " << std::endl;  
    }
   
