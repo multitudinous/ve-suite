@@ -1538,6 +1538,14 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
     gas_out->gas_composite.comp_specie[i] = mol[i];
   }
 
+  gas_out->gas_composite.M = 0;
+  if(second_stage) {
+    for(i=0; i<3; i++)
+      gas_out->gas_composite.M += coal_m_daf[i]*burnout + h2o_m_liq[i] + _stm_flow[i] + _ox_flow[i];
+  } else {
+    gas_out->gas_composite.M += coal_m_daf[0]*burnout + h2o_m_liq[0] + _stm_flow[0] + _ox_flow[0];
+  }
+  
   // get exact mercury
   double mole_HG_sec = fuel_flow*wic_hg / (100.0 - wicAsh)/200.59;
   double tot_mol = ox_in->gas_composite.M/ox_in->gas_composite.mw();
@@ -1550,6 +1558,8 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
   if(id_HG>-1) totHG += mol[id_HG];
   if(id_HGCL2>-1&&wic_cl>0.0) totHG += mol[id_HGCL2];
   if(totHG&&id_HG>-1) fracHG = mol[id_HG]/totHG;
+  gas_out->thermo_database = ox_in->thermo_database;
+  tot_mol = gas_out->gas_composite.M/gas_out->gas_composite.mw();
   if(id_HG>-1) gas_out->gas_composite.comp_specie[id_HG] = mole_HG_sec*fracHG/tot_mol;
   if(id_HGCL2>-1){
      if(wic_cl>0.0) gas_out->gas_composite.comp_specie[id_HGCL2] = mole_HG_sec*(1.0 - fracHG)/tot_mol;
@@ -1590,14 +1600,6 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
   gas_out->gas_composite.T = temp;
   gas_out->gas_composite.P = pres0;
 
-  gas_out->gas_composite.M = 0;
-  if(second_stage) {
-    for(i=0; i<3; i++)
-      gas_out->gas_composite.M += coal_m_daf[i]*burnout + h2o_m_liq[i] + _stm_flow[i] + _ox_flow[i];
-  } else {
-    gas_out->gas_composite.M += coal_m_daf[0]*burnout + h2o_m_liq[0] + _stm_flow[0] + _ox_flow[0];
-  }
-  
   gas_out->pressure_drop = 0;
 
   //# Aiolos
