@@ -42,8 +42,7 @@
 
 
 // for info on avs format...
-// http://archive.ncsa.uiuc.edu/EP/CSM/courses/csm-02/avs-ucd/examples.html
-
+// http://www.ncsa.uiuc.edu/Divisions/Communities/CSM/courses/csm-02/avs-ucd/format.html
 vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
 {
     vtkUnstructuredGrid * uGrid = NULL;
@@ -115,7 +114,8 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
         cout << "\tis2D = " << is2D << endl;
     }
 
-    // ifstream doesn't have a rewind function, but this takes it back to the beginning...
+    // ifstream doesn't have a rewind function,
+    // but this takes it back to the beginning...
     fvert.clear();              // forget if we hit the end of file
     fvert.seekg( 0, ios::beg ); // move to the start of the file
     
@@ -127,7 +127,8 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
     fvert >> junk;
 
     int * vertexId;             // array to store vertex identification numbers
-    if (is2D) vertexId = new int[numOrigVertices*2];// for 2D, make room for double the number of vertices
+    // for 2D, make room for double the number of vertices
+    if (is2D) vertexId = new int[numOrigVertices*2];
     else      vertexId = new int[numOrigVertices];
     
     vtkPoints *v = vtkPoints::New();
@@ -433,29 +434,37 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
    // create an array to store scalar and vector data at a single vertex
    float * solnValue = new float[numSolnValues];
 
-   // in avs files there is a 1-to-1 correspondence between solution points and vertices
+   // in avs files there is a 1-to-1 correspondence between solution points
+   // and vertices
+   // We find that the vertex numbering is usually one-based,
+   // the solution numbering may be zero- or one-based
    for (j=0; j < numOrigVertices; j++)
    {
       fvert >> vertexId[j];
 
-      // in avs files there is a 1-to-1 correspondence between solution points and vertices
-      // thus there should be no need for the following.
-      // if solution pertains to a vertex higher than the range already defined, then skip...
+      // in avs files there is a 1-to-1 correspondence between solution points
+      // and vertices: thus there should be no need for the following.
+      // if solution pertains to a vertex higher than the range already defined,
+      // then skip...
       if ( vertexId[j] > maxOrigVertexId )
       {
-         cout << "Solution has no corresponding vertex, so skipping solution " << vertexId[j] << endl;
+         cerr << "Solution has no corresponding vertex, so skipping solution "
+              << vertexId[j] << endl;
          continue;
       }
 
-      vertexId[j] -= vShift;
+      // don't do next: vertex numbering not guaranteed to equal soln numbering
+      //vertexId[j] -= vShift;
 
-      // read (and optionally print to screen) scalar and vector data at a single vertex
+      // read (and optionally print to screen) scalar and vector data
+      // at a single vertex
       for (i=0; i<numSolnValues; i++) fvert >> solnValue[i];
 
       if ( debug > 1 )
       {
          cout << "\nvertexId[" << j << "] =" << vertexId[j] << ", solnValue:";
-         for (i=0; i<numSolnValues; i++) cout << "\t" << solnValue[i];
+         for (i=0; i<numSolnValues; i++)
+            cout << "\t" << solnValue[i];
          cout << endl;
       }
 
@@ -470,18 +479,20 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
             if ( debug > 1 ) 
             {
                for (k=0; k<numVectorComponents; k++)
-                  cout << "solnValue[" << i << "+" << k << "] =" << solnValue[i+k] << endl;
+                  cout << "solnValue[" << i << "+" << k << "] ="
+                       << solnValue[i+k] << endl;
             }
 */
             for (k=0; k<numVectorComponents; k++)
-               parameterData[jj]->SetComponent( vertexId[j], k, solnValue[i+k] );
+               parameterData[jj]->SetComponent( j, k, solnValue[i+k] );
 
-            // give a boost, for loop will increment one more to properly go to next quantity
+            // give a boost, for loop will increment one more to properly
+            // go to next quantity
             i += (numVectorComponents-1);
          }
          else  //then we have scalar data...
          {
-            parameterData[jj]->SetTuple1( vertexId[j], solnValue[i] );
+            parameterData[jj]->SetTuple1( j, solnValue[i] );
          }
 
          if ( debug > 1 ) 
@@ -489,14 +500,15 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
             cout << "\tparameter " << jj << ":";
             cout.flush();
             for (k=0; k < parameterData[jj]->GetNumberOfComponents(); k++)
-               cout << "\t" << parameterData[jj]->GetComponent(vertexId[j],k);
+               cout << "\t" << parameterData[jj]->GetComponent(j,k);
             cout << endl;
          }
          jj++;
       }
    }
 
-   cout << " ...done reading " << numOrigVertices << " lines of solution data." << endl << endl;
+   cout << " ...done reading " << numOrigVertices << " lines of solution data."
+        << endl << endl;
    fvert.close();
 
    // expand 2D data into 3D data...
@@ -507,8 +519,11 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
          // for each vertex, reproduce tuples to expand 2D to 3D data...
          for ( int j=0; j<maxVertexId+1; j++ )
          {
-            if ( debug > 1 ) cout << "setting vertex = " << j + maxVertexId + 1
-                                  << "\t" << parameterData[i]->GetComponent(j,0) << endl;
+            if ( debug > 1 )
+            {
+               cout << "setting vertex = " << j + maxVertexId + 1
+                    << "\t" << parameterData[i]->GetComponent(j,0) << endl;
+            }
             parameterData[i]->SetTuple( j + maxVertexId + 1, parameterData[i]->GetTuple(j) ); 
          }
 
