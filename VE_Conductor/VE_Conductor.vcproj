@@ -172,7 +172,7 @@ echo Done.
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(VE_SUITE_HOME)\futuregen/Plugin&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\skel&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;_TAO;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL"
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"

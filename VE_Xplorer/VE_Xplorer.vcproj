@@ -351,7 +351,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_CE&quot;;&quot;$(VE_SUITE_HOME)\futuregen\Plugin&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_CE&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\src&quot;"
 				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_WINDOWS;WINVER=0x400;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -949,25 +949,7 @@
 				RelativePath=".\fileIO.cxx">
 			</File>
 			<File
-				RelativePath="..\futuregen\Plugin\interface.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
+				RelativePath="..\VE_Conductor\Framework\interface.cpp">
 			</File>
 			<File
 				RelativePath="..\VESOpen\skel\moduleC.cpp">
@@ -1051,37 +1033,13 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\futuregen\Plugin\package.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
+				RelativePath="..\VE_Conductor\Framework\package.cpp">
 			</File>
 			<File
 				RelativePath=".\readWriteVtkThings.cxx">
 			</File>
 			<File
-				RelativePath="..\futuregen\Plugin\string_ops.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
+				RelativePath="..\VE_Conductor\Framework\string_ops.cpp">
 			</File>
 			<File
 				RelativePath=".\textPrompt.cxx">

@@ -3,6 +3,7 @@
 	ProjectType="Visual C++"
 	Version="7.10"
 	Name="WinServer"
+	ProjectGUID="{E96F21F0-C5EF-43F0-9643-154D3BB96118}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -79,7 +80,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\skel&quot;;..\IDL;..\Plugin"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -200,33 +201,13 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\interface.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\VE_Conductor\Framework\interface.cpp">
 			</File>
 			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleC.cpp">
+				RelativePath="..\VESOpen\skel\moduleC.cpp">
 			</File>
 			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleS.cpp">
-			</File>
-			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleS_T.cpp">
+				RelativePath="..\VESOpen\skel\moduleS.cpp">
 			</File>
 			<File
 				RelativePath="Network_Exec.cpp">
@@ -249,24 +230,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\package.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\VE_Conductor\Framework\package.cpp">
 			</File>
 			<File
 				RelativePath="Scheduler.cpp">
@@ -289,24 +253,7 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\Plugin\string_ops.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
+				RelativePath="..\VE_Conductor\Framework\string_ops.cpp">
 			</File>
 		</Filter>
 		<Filter
@@ -319,28 +266,25 @@
 				RelativePath="Executive_i.h">
 			</File>
 			<File
-				RelativePath="..\Plugin\interface.h">
+				RelativePath="..\VE_Conductor\Framework\interface.h">
 			</File>
 			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleC.h">
+				RelativePath="..\VESOpen\skel\moduleC.h">
 			</File>
 			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleS.h">
-			</File>
-			<File
-				RelativePath="..\..\VE_Conductor\skel\moduleS_T.h">
+				RelativePath="..\VESOpen\skel\moduleS.h">
 			</File>
 			<File
 				RelativePath="Network_Exec.h">
 			</File>
 			<File
-				RelativePath="..\Plugin\package.h">
+				RelativePath="..\VE_Conductor\Framework\package.h">
 			</File>
 			<File
 				RelativePath="Scheduler.h">
 			</File>
 			<File
-				RelativePath="..\Plugin\string_ops.h">
+				RelativePath="..\VE_Conductor\Framework\string_ops.h">
 			</File>
 		</Filter>
 		<Filter
