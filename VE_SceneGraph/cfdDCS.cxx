@@ -517,7 +517,7 @@ void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float* rot)
       _rotAngles[2] = osg::DegreesToRadians(rot[2]);
    }
 }
-///////////////////////////////////////////////////////
+///////////////////////////////////////////////////////////////
 void cfdDCS::cfdUpdateDCSCallback::setTranslation(float* trans)
 {
    if(trans){
@@ -543,13 +543,15 @@ void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor*
       osg::Vec3f xAxis(1,0,0);
       osg::Vec3f yAxis(0,1,0);
       osg::Vec3f zAxis(0,0,1);
-      osg::Matrixd updateMat(osg::Matrixd::scale(_scale[0],_scale[1],_scale[2])
-                          *osg::Matrixd::rotate(_rotAngles[0],xAxis,
-                                              _rotAngles[1],yAxis,
-                                              _rotAngles[2],zAxis));
-      osg::Matrixd transMat = osg::Matrix::translate(osg::Vec3f(_trans[0],_trans[1],_trans[2]));
+      osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
 
-      dcs->setMatrix(updateMat*transMat);
+      osg::Matrixd rotateMat;  
+      rotateMat.makeRotate(_rotAngles[0],xAxis,_rotAngles[1],yAxis,_rotAngles[2],zAxis);
+
+      osg::Vec3f transMat(osg::Vec3f(_trans[0],_trans[1],_trans[2]));
+      scale.setTrans(transMat);
+
+      dcs->setMatrix(scale*rotateMat);
       traverse(node,nv);
    }
  }

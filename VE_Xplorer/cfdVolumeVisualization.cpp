@@ -77,7 +77,7 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
    _tm = rhs._tm;
    _image = rhs._image;
    _isCreated = rhs._isCreated;
-   _advectionFragSS =  rhs._advectionFragSS;
+   
 
    _bboxSwitch = rhs._bboxSwitch;
    _shaderSwitch = rhs._shaderSwitch;
@@ -561,25 +561,6 @@ void cfdVolumeVisualization::_createVisualBBox()
          std::cout<<"Invalid bbox in cfdVolumeVisualization::_createClipNode!"<<std::endl;
    }
 }
-//////////////////////////////////////////////////////////////
-void cfdVolumeVisualization::UpdateStateSet(osg::StateSet* ss)
-{
-   if(!_stateSet.valid()){
-      _stateSet = new osg::StateSet();
-   }
-   _stateSet = ss;
-   if(_texGenParams.valid()){
-      _texGenParams->setStateSet(_stateSet.get());
-   }
-}
-//////////////////////////////////////////////////////
-void cfdVolumeVisualization::SetTextureUnit(int tUnit)
-{
-   _tUnit = tUnit;
-   if(_texGenParams.valid()){
-      _texGenParams->setTextureUnit(_tUnit);
-   }
-}
 ////////////////////////////////////////////////
 void cfdVolumeVisualization::_createStateSet()
 {
@@ -907,9 +888,6 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
       _alpha = rhs._alpha;
       _tUnit = rhs._tUnit;
       _tm = rhs._tm;
-      
-      _advectionFragSS =  rhs._advectionFragSS;
-
       
       _mode = rhs._mode;
       _traverseDirection = rhs._traverseDirection;
