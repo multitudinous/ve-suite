@@ -36,7 +36,7 @@ OPPD_UI_entries::OPPD_UI_entries(wxNotebook* parent)
 
 OPPD_UI_entries::~OPPD_UI_entries()
 {
-	delete Dialog;
+	//delete Dialog;
 }
 
 
@@ -133,8 +133,8 @@ void OPPD_UI_entries::_buildPage()
    wxStaticText* airtempLabel       = new wxStaticText(this, -1, wxT("Air Temperature "));
    wxStaticText* spheatairLabel     = new wxStaticText(this, -1, wxT("Specific Heat Air "));
    wxStaticText* airdensityLabel    = new wxStaticText(this, -1, wxT("Air Density "));
-   wxStaticText* massfuelburnLabel  = new wxStaticText(this, -1, wxT("Mass of Solid Fuel Burn "));
-   wxStaticText* solidfuelareaLabel = new wxStaticText(this, -1, wxT("Surface Area of Solid Fuel "));
+   wxStaticText* massfuelburnLabel  = new wxStaticText(this, -1, wxT("Mass of Solid Fuel Burn (lb) "));
+   wxStaticText* solidfuelareaLabel = new wxStaticText(this, -1, wxT("Surface Area of Solid Fuel (sq ft) "));
    wxStaticText* vismatselLabel     = new wxStaticText(this, -1, wxT("Solid Fuel Selection(Particulate Yield Table) "));
    wxStaticText* durmatselLabel     = new wxStaticText(this, -1, wxT("Solid Fuel Selection(HRR,Heat of Comb. Table) "));
    wxStaticText* vispropselLabel    = new wxStaticText(this, -1, wxT("Light Situation Selection "));

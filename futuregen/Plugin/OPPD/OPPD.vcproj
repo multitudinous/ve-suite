@@ -136,6 +136,9 @@
 				RelativePath=".\OPPD_UI_entries.cpp">
 			</File>
 			<File
+				RelativePath=".\OPPD_UI_outputs.cpp">
+			</File>
+			<File
 				RelativePath=".\OPPD_UI_tabs.cpp">
 			</File>
 			<File
@@ -172,6 +175,9 @@
 			</File>
 			<File
 				RelativePath=".\OPPD_UI_entries.h">
+			</File>
+			<File
+				RelativePath=".\OPPD_UI_outputs.h">
 			</File>
 			<File
 				RelativePath=".\OPPD_UI_tabs.h">

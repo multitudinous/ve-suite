@@ -60,16 +60,16 @@ OPPD_UI_Dialog
   p_ventpardbls(ventpardbls),
   p_detectpardbls(detectpardbls)
 {
-   (*p_fuelselindex) = 0;
-   (*p_matselindex) = 0;
-   (*p_vismatselindex) = 0;
-   (*p_durmatselindex) = 0;
-   (*p_vispropselindex) = 0;
-   (*p_viscombselindex) = 0;
-   (*p_detrtiselindex) = 0;
-   (*p_dettempratselindex) = 0;
-   (*p_detspaceselindex) = 0;
-   (*p_cableselindex) = 0;
+   (*p_fuelselindex) = 1;
+   (*p_matselindex) = 1;
+   (*p_vismatselindex) = 1;
+   (*p_durmatselindex) = 1;
+   (*p_vispropselindex) = 1;
+   (*p_viscombselindex) = 1;
+   (*p_detrtiselindex) = 1;
+   (*p_dettempratselindex) = 1;
+   (*p_detspaceselindex) = 1;
+   (*p_cableselindex) = 1;
    (*p_tempmethod) = 0;
    (*p_tempcalcmethod) = 0;
    (*p_detectortype) = 0;
@@ -84,7 +84,7 @@ OPPD_UI_Dialog
 OPPD_UI_Dialog
 ::~OPPD_UI_Dialog()
 {
-	delete _tabs;
+	//delete _tabs;
 }
 
 /////////////////////////////////////////////////////

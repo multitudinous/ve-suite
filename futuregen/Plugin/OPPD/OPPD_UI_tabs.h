@@ -2,9 +2,11 @@
 #define _OPPD_UI_TABS_H_
 
 #include "OPPD_UI_entries.h"
+#include "OPPD_UI_outputs.h"
 
 
 class OPPD_UI_entries;
+class OPPD_UI_outputs;
 
 class OPPD_UI_tabs: public wxNotebook{
 public:
@@ -19,6 +21,7 @@ public:
    void createTabPages();
 
    OPPD_UI_entries* _entriesPage;
+   OPPD_UI_outputs* _outputsPage;
 
 
 

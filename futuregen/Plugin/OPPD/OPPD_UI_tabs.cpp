@@ -17,12 +17,15 @@ OPPD_UI_tabs::OPPD_UI_tabs(wxWindow* parent, wxWindowID id,
 
 OPPD_UI_tabs::~OPPD_UI_tabs()
 {
-	delete _entriesPage;
+	//delete _entriesPage;
 }
 
 void OPPD_UI_tabs::createTabPages()
 {
 	_entriesPage = new OPPD_UI_entries(this);
 	AddPage( _entriesPage, _T("Inputs"), true);
+
+	_outputsPage = new OPPD_UI_outputs(this);
+	AddPage( _outputsPage, _T("Outputs"), false);
 
 }

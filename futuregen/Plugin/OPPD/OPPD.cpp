@@ -40,7 +40,7 @@ OPPD
   RegistVar("detectpardbls", &detectpardbls);
   RegistVar("killexcel", &killexcel);
 
-  wxString icon_file="Icons/compressor.gif";
+  wxString icon_file="Icons/bonfire.gif";
   wxImage my_img(icon_file, wxBITMAP_TYPE_GIF);
   icon_w = my_img.GetWidth();
   icon_h = my_img.GetHeight();
