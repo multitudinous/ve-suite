@@ -1,0 +1,30 @@
+body					{ margin: 1em; font-family:serif; background-color: white; color: black; text-align: justify; font-size: smaller; }
+h1, h2, h3, h4, h5, h6	{ margin: 0em; font-family: sans-serif; font-weight: normal; color: #639; }
+a						{ text-decoration:none; }
+a:hover					{ text-decoration: underline; }
+hr						{ margin: 0em; color: #609; border-top: 3px solid purple; }
+h1 + h2					{ margin-left: 1em; color: #399; }
+p						{ margin-left: 2em; margin-right: 2em; }
+table                   { margin-left: 3em; margin-right: 3em; font-size: smaller; }
+pre						{ margin-left: 3em; margin-right: 3em; }
+.navbar					{ margin-left: 0em; }
+.footer					{ text-align: center; font-size:smaller; }
+.r						{ color: red; }
+.y						{ color: #FF9C00; }
+.g						{ color: green; }
+
+.calendar .eventlist { margin-left: 0; }
+.calendar .eventlist ul { list-style: none; padding-left: 0em; }
+.calendar .eventlist ul ul { list-style: none; padding-left: 1em; }
+.calendar { font-size: medium; }
+.calendar .view { margin: 0; border-collapse: collapse; }
+.calendar .title, .calendar .weektitle { border: 1px solid #c33; /* nudge */ }
+.calendar .weektitle th { border-top: 1px solid white; padding: 0 1px; }
+.calendar .view td { border: 1px dotted #c33; }
+.calendar .days { border: 1px solid #c33; text-align: right; vertical-align: top; }
+.calendar .event { background: #900; color: white; text-align: center; }
+.sat, .sun { background-color: #f99; }
+.title, .weektitle { background-color: #c33; color: white; border: 0; }
+.weektitle .sat { background-color: #c33; color: white; }
+.weektitle .sun { background-color: #c33; color: white; }
+.calendar .eventlist { vertical-align: top; }
