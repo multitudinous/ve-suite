@@ -36,8 +36,6 @@
 #include <stdlib.h>
 #include <sys/stat.h>
 
-#include <vrj/Util/Debug.h>
-
 fileIO::fileIO( )
 {
 }
@@ -527,28 +525,25 @@ char * fileIO::GetFile( char fileKeyword[], char fileLocation[] )
    //std::cout << "path is \"" << path << "\"" << std::endl;
    if(path != NULL)
    {
-       strcpy( file, path );
-       strcat( file, fileLocation );
+      strcpy( file, path );
+      strcat( file, fileLocation );
    }
    else
    {
-       std::cerr << "ERROR: environment variable VE_SUITE_HOME is not defined"
-                 << std::endl;
+      std::cerr << "ERROR: environment variable VE_SUITE_HOME is not defined"
+                << std::endl;
       return NULL; 
-      //this->exit();
    }
 
    if ( ! fileIO::isFileReadable( file ) )
    {
-       std::cerr << "ERROR: Can't read the " << fileKeyword 
-                 << " file named \"" << file << "\"" << std::endl;
+      std::cerr << "ERROR: Can't read the " << fileKeyword 
+                << " file named \"" << file << "\"" << std::endl;
       return NULL; 
-      //this->exit();
    }
    else
    {
-       vprDEBUG(vprDBG_ALL,0) << "Found " << fileKeyword << " file"
-                              << std::endl << vprDEBUG_FLUSH;
+      std::cout << "Found " << fileKeyword << " file" << std::endl;
    }
    
    return file;
