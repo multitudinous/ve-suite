@@ -9,8 +9,8 @@ PLATFORM = LINUX
 COMPILER = g++
 GCC = yes
 GXX = yes
-CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
-CFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS  
+CXXFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS -D_TAO
+CFLAGS =   -g -w -O  -DAPP_NO_THREADS -DXML_USE_NO_THREADS
 LDFLAGS =    
 THREADS = none
 EXTRA_LIBS =  
@@ -21,6 +21,7 @@ include ../Plugin/Makefile.incl
 ifndef TAO_ROOT
   TAO_ROOT = $(ACE_ROOT)/TAO
 endif # ! TAO_ROOT
+
 
 APP = app
 
@@ -63,7 +64,7 @@ OBJECTS = StringParse.o \
 	ResultPanel.o \
 	paraThread.o \
 	GlobalParamDialog.o \
-	../Plugin/string_ops.o \
+   ../Plugin/string_ops.o \
 	../Plugin/interface.o \
 	../Plugin/package.o \
 	../Plugin/Plugin_base.o \
