@@ -59,6 +59,7 @@
 #include <vtkPointData.h>
 
 #include <vrj/Util/Debug.h>
+#include <vpr/System.h>
 #include <orbsvcs/CosNamingC.h>
 
 using namespace std;
@@ -122,7 +123,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, cfdDCS* 
     
 		//pass the network's pointer to the UI corba implementation
 		//ui_i.SetUINetwork(network);
-      ui_i->SetcfdExecutive( &_doneWithCalculations );
+      //ui_i->SetcfdExecutive( &_doneWithCalculations );
 		//Activate it to obtain the object reference
 		Body::UI_var ui = (*ui_i)._this();
      
@@ -480,10 +481,12 @@ void cfdExecutive::UpdateModules( void )
 {
    if ( !CORBA::is_nil( this->_exec ) )
    {
-      if ( this->GetCalculationsFlag() )
+      if ( ui_i->GetCalcFlag() )
       {
+         vpr::System::msleep( 1000 );  // half-second delay
+
          this->GetEverything();
-         std::cout << " Get Everything " << std::endl;      
+         std::cout << " Get Everything End" << std::endl;      
          /*std::map<std::string, int>::iterator iter;
          for ( iter=_name_map.begin(); iter!=_name_map.end(); iter++ )
          {
@@ -503,7 +506,7 @@ void cfdExecutive::UpdateModules( void )
          //std::cout << " End Gauge Update " << std::endl;
          //this->_geometry->Update( this->_activeScalarName, this );
          //std::cout << " End Geometry Update " << std::endl;
-         this->SetCalculationsFlag( false );
+         //this->SetCalculationsFlag( false );
       }
    }
 }
@@ -511,12 +514,13 @@ void cfdExecutive::UpdateModules( void )
 void cfdExecutive::SetActiveDataSet( cfdDataSet* dataSet )
 {
    this->_3dMesh = dataSet;
-   const char* scalarName = this->_3dMesh->GetDataSet()->GetPointData()->GetScalars()->GetName();
+/*   const char* scalarName = this->_3dMesh->GetDataSet()->GetPointData()->GetScalars()->GetName();
    
    std::ostringstream dataStream;
    std::string dataString;
    dataStream << scalarName;
    this->_activeScalarName = dataStream.str();
+*/
    //std::cout << this->_activeScalarName<< std::endl;
 }
 
