@@ -10,18 +10,19 @@
 // workaround end
 
 #include <vtkActorToOSG.h>
+#ifdef VTK44
+#define VTK4
+typedef double vtkReal;
+#else
+typedef float vtkReal;
+#endif
+
 #ifdef VTK4
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
 #include <vtkProperty.h>
 #include <vtkPointData.h>
 #include <vtkCellData.h>
-#endif
-
-#ifdef VTK44
-typedef double vtkReal;
-#else
-typedef float vtkReal;
 #endif
 
 #include <osg/Vec3>
@@ -110,9 +111,10 @@ osg::Geometry *processPrimitive(vtkActor *actor, vtkCellArray *primArray, int pr
 	int colorPerVertex = 0;
 	int colorPerCell = 0;
 #ifdef VTK4
-	vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars(1.0);
+   vtkReal opacity = actor->GetProperty()->GetOpacity();
+   vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars(opacity);
 #else
-   vtkScalars *colorArray = actor->GetMapper()->MapScalars(1.0)
+   vtkScalars *colorArray = actor->GetMapper()->GetColors();
 #endif
    if (actor->GetMapper()->GetScalarVisibility() && colorArray != NULL)
 	{
@@ -147,36 +149,24 @@ osg::Geometry *processPrimitive(vtkActor *actor, vtkCellArray *primArray, int pr
 #ifdef VTK4
 		   unsigned char *aColor = colorArray->GetPointer(4*prim);
 #else
-        unsigned char *aColor = colorArray->GetPointer(prim);
+         unsigned char *aColor = colorArray->GetPointer(prim);
 #endif
          colors->push_back(osg::Vec4(aColor[0]/255.0f, aColor[1]/255.0f,
 										aColor[2]/255.0f, aColor[3]/255.0f));
 		}
 		if (normalPerCell)
 		{
-#ifdef VTK4
 			vtkReal* aNormal = normals->GetTuple(prim);
-#else
-        float* aNormal = normals->GetTuple(prim);
-#endif
          norms->push_back(osg::Vec3(aNormal[0], aNormal[1], aNormal[2]));
 		}
 		// go through points in cell (verts)
 		for (i=0; i < npts; i++)
 		{
-#ifdef VTK4
 			vtkReal* aVertex = polyData->GetPoint(pts[i]);
-#else
-			float* aVertex = polyData->GetPoint(pts[i]);
-#endif	
          vertices->push_back(osg::Vec3(aVertex[0], aVertex[1], aVertex[2]));
 			if (normalPerVertex)
 			{
-#ifdef VTK4
 				vtkReal* aNormal = normals->GetTuple(pts[i]);
-#else
-            float* aNormal = normals->GetTuple(pts[i]);
-#endif
             norms->push_back(osg::Vec3(aNormal[0], aNormal[1], aNormal[2]));
 			}
 			if (colorPerVertex)
@@ -191,11 +181,7 @@ osg::Geometry *processPrimitive(vtkActor *actor, vtkCellArray *primArray, int pr
 			}
 			if (texCoords != NULL)
 			{
-#ifdef VTK4
 				vtkReal* aTCoord = texCoords->GetTuple(pts[i]);
-#else
-            float* aTCoord = texCoords->GetTuple(pts[i]);
-#endif
             tcoords->push_back(osg::Vec2(aTCoord[0], aTCoord[1]));
 			}
 			vert++;
@@ -219,12 +205,8 @@ osg::Geometry *processPrimitive(vtkActor *actor, vtkCellArray *primArray, int pr
 	else
 	{ 
     // use overall color (get from Actor)
-#ifdef VTK4
       vtkReal* actorColor = actor->GetProperty()->GetColor();
-#else
-		float* actorColor = actor->GetProperty()->GetColor();
-#endif
-      float opacity = actor->GetProperty()->GetOpacity();
+      vtkReal opacity = actor->GetProperty()->GetOpacity();
 
 		colors->push_back(osg::Vec4(actorColor[0], actorColor[1], actorColor[2], opacity));
         geom->setColorBinding(osg::Geometry::BIND_OVERALL);

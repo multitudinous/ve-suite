@@ -24,8 +24,16 @@
 //#     Urbana, IL 61801
 //#     baker@ncsa.uiuc.edu
 //=========================================================================
-#ifdef _PERFORMER
+
 #include "vtkActorToPF.h"
+// starting with vtk4.4, doubles replaced floats
+#ifdef VTK44
+#define VTK4
+typedef double vtkReal;
+#else
+typedef float vtkReal;
+#endif
+
 #ifdef VTK4
 #include "vtkDataSet.h"
 #include "vtkPolyData.h"
@@ -36,12 +44,6 @@
 #include "vtkTexture.h"
 #endif
 #include <Performer/pr/pfTexture.h>
-
-#ifdef VTK44
-typedef double vtkReal;
-#else
-typedef float vtkReal;
-#endif
 
 pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode, int verbose) {
 
@@ -218,8 +220,8 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   // check to see if there is color information
   int colorPerVertex = 0;
   int colorPerCell = 0;
-  double opacity = actor->GetProperty()->GetOpacity();
 #ifdef VTK4
+  vtkReal opacity = actor->GetProperty()->GetOpacity();
   vtkUnsignedCharArray *colorArray = actor->GetMapper()->MapScalars(opacity);
 #else
   vtkScalars *colorArray = actor->GetMapper()->GetColors();
@@ -232,7 +234,6 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
     else
       colorPerVertex = 1;
   }
-
   pfVec4 *colors = NULL; 
   if (colorPerVertex)
     colors = (pfVec4 *) pfMalloc(numIndices * sizeof(pfVec4), pfArena);
@@ -324,10 +325,10 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
   else { 
     // use overall color (get from Actor)
     vtkReal *actorColor = actor->GetProperty()->GetColor();
-    float opacity = actor->GetProperty()->GetOpacity();
+    vtkReal opacity = actor->GetProperty()->GetOpacity();
 
     pfVec4 *color = (pfVec4 *) pfMalloc(sizeof(pfVec4), pfArena);
-    color->set((float)actorColor[0], (float)actorColor[1], (float)actorColor[2], opacity);
+    color->set((float)actorColor[0], (float)actorColor[1], (float)actorColor[2], (float)opacity);
     gset->setAttr(PFGS_COLOR4, PFGS_OVERALL, color, NULL);
   }
   
@@ -395,13 +396,13 @@ void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int verb
   pfTexEnv *texEnv = new pfTexEnv;
 
   // get image data
-#if VTK4 
+#ifdef VTK4 
   vtkImageData *img = actor->GetTexture()->GetInput();
 #else
   vtkStructuredPoints *img = actor->GetTexture()->GetInput();
 #endif
   int *dims = img->GetDimensions();
-#if VTK4
+#ifdef VTK4
   vtkDataArray *scalars = img->GetPointData()->GetScalars();
 #else
   vtkScalars *scalars = img->GetPointData()->GetScalars();
@@ -436,7 +437,7 @@ void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int verb
   uint *texels = (uint *)pfMalloc(xsize*ysize*bytesPerPixel,pfGetSharedArena());
   unsigned char *texelData = (unsigned char *) texels;
   unsigned char *dataPtr = NULL;
-#if VTK4
+#ifdef VTK4
   dataPtr = (unsigned char *) scalars->GetVoidPointer(0);
 #else
   dataPtr = ((vtkUnsignedCharArray *) scalars->GetData())->GetPointer(0);
@@ -468,4 +469,3 @@ void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int verb
   gstate->setAttr(PFSTATE_TEXENV, texEnv);
 }
 
-#endif

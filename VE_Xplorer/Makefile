@@ -44,7 +44,6 @@ CFDUNAME = $(shell uname)
 
 # If OMNI_HOME was defined in the script setup.tsh, 
 # then define CORBA_DEFINES, and CORBA_INCLUDES.
-# (To make a non-corba version, don't define OMNI_HOME.)
 ifdef OMNI_HOME
    vpath %.cxx    ${CONDUCTOR_BASE_DIR}/impl
 
@@ -172,7 +171,6 @@ SRCS=\
    readWriteVtkThings.cxx \
    cfdAccessoryFunctions.cxx \
    textPrompt.cxx \
-   vtkActorToPF.cxx \
    cfdSound.cxx \
    cfdTransientParticleActor_fluent.cxx \
    VjObs_i.cxx \
@@ -229,6 +227,8 @@ endif
 #   CorbaManager.cxx \
 #   Conductor.cpp \
 #   veConductorImpl.cpp
+
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_SceneGraph
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 
@@ -331,11 +331,12 @@ DEBUG_APP?= TRUE
 
 #Scene Graph Specific flags
 #Can be: _PERFORMER, _OPENSG, _OSG
-EXTRA_CXXFLAGS+= -D_PERFORMER -I${VE_SUITE_HOME}/VE_SceneGraph
+EXTRA_CXXFLAGS+= -D_PERFORMER
+SRCS+= vtkActorToPF.cxx
+# vtkActorToPF needs to know if we are using VTK4.0 (VTK4) or VTK4.4 (VTK44)
+EXTRA_CXXFLAGS+= -DVTK44
 
-# vtkActorToPF needs VTK4 and VTK44
-EXTRA_CXXFLAGS+= -DVTK4 -DVTK44 $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
-#$(EXTRA_FLAGS) 
+EXTRA_CXXFLAGS+= $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
 
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
 EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
