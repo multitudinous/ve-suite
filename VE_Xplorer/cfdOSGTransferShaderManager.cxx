@@ -4,6 +4,8 @@
 #include <osg/Texture1D>
 #include <osg/BlendFunc>
 #include <osg/TexEnv>
+#include <osg/TexMat>
+#include <osg/TexGen>
 
 #ifdef CFD_USE_SHADERS
 #include "cfdOSGTransferShaderManager.h"
@@ -32,12 +34,21 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager(const
    _fieldSize[1] = sm._fieldSize[1];
    _fieldSize[2] = sm._fieldSize[2];
    _reinit = sm._reinit;
+   _texMat = sm._texMat;
 }
 ///////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
 {
    if(_transferFunctions.size()){
       _transferFunctions.clear();
+   }
+}
+/////////////////////////////////////////////////////////////////////
+void cfdOSGTransferShaderManager::SetTextureMatrix(osg::TexMat* tmat)
+{
+   _texMat = tmat;
+   if(_ss.valid()){
+      _ss->setTextureAttributeAndModes(0,_texMat.get(),osg::StateAttribute::ON);
    }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -49,11 +60,10 @@ void cfdOSGTransferShaderManager::SetPropertyTexture(osg::Texture3D* property)
 void cfdOSGTransferShaderManager::Init()
 {
    _initTransferFunctions();
-   //_initPropertyTexture();
-   if(!_ss.valid()){
+   _initPropertyTexture();
+   if(!_ss.valid() && _reinit &&_property.valid()){
       _ss = new osg::StateSet();
       _ss->setDataVariance(osg::Object::DYNAMIC);
-      _ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
       _ss->setMode(GL_BLEND,osg::StateAttribute::ON);
 
       osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
@@ -61,19 +71,23 @@ void cfdOSGTransferShaderManager::Init()
 
       _ss->setAttributeAndModes(bf.get());
       _ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
-   }
-   if(_reinit&& _property.valid()){
-      _ss->setTextureAttributeAndModes(0,_property.get(),osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
-      _ss->setTextureAttributeAndModes(0,new osg::TexEnv(osg::TexEnv::REPLACE),
-		                    osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+      
+
+      _ss->setTextureAttributeAndModes(0,_property.get(),osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      _ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      _ss->setTextureMode(0,GL_TEXTURE_GEN_T,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      _ss->setTextureMode(0,GL_TEXTURE_GEN_R,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      _ss->setTextureMode(0,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      
       int nTransferFunctions = _transferFunctions.size();
       for(int i =0; i < nTransferFunctions; i++){
-         osg::ref_ptr<osg::Texture1D> trans = _transferFunctions.at(i).GetTexture();
-         _ss->setTextureAttributeAndModes(i+1,trans.get(),osg::StateAttribute::ON);
+         _ss->setTextureAttributeAndModes(i+1,_transferFunctions.at(i).get(),osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+         _ss->setTextureMode(i+1,GL_TEXTURE_1D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+         _ss->setTextureMode(i+1,GL_TEXTURE_GEN_S,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+         _ss->setTextureMode(i+1,GL_TEXTURE_GEN_T,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+         _ss->setTextureMode(i+1,GL_TEXTURE_GEN_R,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       }
+      
       //load the shader file 
       char directory[1024];
       if(_shaderDirectory){
@@ -87,7 +101,6 @@ void cfdOSGTransferShaderManager::Init()
       _setupCGShaderProgram(_ss.get(),directory,"densityTransfer");
    }
    _reinit = false;
-
 }
 /////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGTransferShaderManager::GetPropertyTexture()
@@ -113,7 +126,7 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool clearList)
       if(_transferFunctions.size())
 	       _transferFunctions.clear();
    }
-   GLubyte lutex[256*2];
+   GLubyte* lutex = new GLubyte[256];
    //gamma table
    GLubyte gTable[256];
    double gamma = 2.5;
@@ -124,17 +137,24 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool clearList)
       gTable[i] = (int) floor(255.0 * y + 0.5);  
    }
    for (int i = 0; i < 256; i++){
-     lutex[i*2    ] = (GLubyte)gTable[i];
-     lutex[i*2 + 1] = (GLubyte)i;
+     if(!i)
+        lutex[i   ] = (GLubyte)0;
+     else if(i == 255)
+        lutex[i   ] = (GLubyte)0;
+     else
+        lutex[i   ] = (GLubyte)gTable[i];
+     //lutex[i*2 + 1] = (GLubyte)i;
    }
 
-   osg::ref_ptr<osg::Image> data = new osg::Image();
-   data->allocateImage(256,1,1,GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE);
-   data->setImage(256,1,1,GL_LUMINANCE_ALPHA,GL_LUMINANCE_ALPHA,GL_UNSIGNED_BYTE,lutex,
-                osg::Image::USE_NEW_DELETE);
+   osg::ref_ptr<osg::Image> imageField = new osg::Image();
+   imageField->allocateImage(256,1,1,GL_LUMINANCE,GL_UNSIGNED_BYTE);
+   imageField->setImage(256,1,1,GL_LUMINANCE,GL_LUMINANCE,GL_UNSIGNED_BYTE,lutex,
+                osg::Image::USE_NEW_DELETE,1);
+   imageField->setDataVariance(osg::Object::DYNAMIC);
 
-   osg::ref_ptr<osg::Texture1D>trans = new osg::Texture1D;
+   osg::ref_ptr<osg::Texture1D> trans = new osg::Texture1D;
    trans->setTextureSize(256);
+   trans->setDataVariance(osg::Object::DYNAMIC);
    trans->setFilter(osg::Texture1D::MIN_FILTER,
                     osg::Texture1D::LINEAR);
 
@@ -142,17 +162,17 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool clearList)
                     osg::Texture1D::LINEAR);
 
    trans->setWrap(osg::Texture1D::WRAP_S,
-                  osg::Texture3D::CLAMP);
+                  osg::Texture1D::CLAMP);
 
    trans->setInternalFormat(GL_LUMINANCE);
-   trans->setImage(data.get());
+   trans->setImage(imageField.get());
 
-   cfdUpdateableOSGTexture1d ut;
+   /*cfdUpdateableOSGTexture1d ut;
    ut.SetTransferFunctionType(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION);
-   ut.SetTexture1D(trans.get());
 
-   ut.UpdateParam(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION,1.4);
-   _transferFunctions.push_back(ut);
+   ut.UpdateParam(cfdUpdateableOSGTexture1d::GAMMA_CORRECTION,1.4);*/
+   //trans->setSubloadCallback(&ut);
+   _transferFunctions.push_back(trans);
 }
 ///////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::_initPropertyTexture()
@@ -162,17 +182,37 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
       _fieldSize[2]){ 
       int dataSize = _fieldSize[0]*_fieldSize[1]*_fieldSize[2];
       unsigned char* data = new unsigned char[dataSize*4];
-   
+      unsigned int i=0;
+      unsigned int j=0;
+      unsigned int k = 0;
       for(int p = 0; p < dataSize; p++){
-      
-         data[p*4   ] = (unsigned char)0;
-
-         data[p*4 + 1] = (unsigned char)0;
-         data[p*4 + 2] = (unsigned char)0;
-     
-         data[p*4 + 3] = (unsigned char)0;      
+          if((i == 0 || i == _fieldSize[0] - 1)||
+           (j == 0 || j == _fieldSize[1] - 1)||
+           (k == 0 || k == _fieldSize[2] - 1)){
+            data[p*4   ] = (unsigned char)0;
+            data[p*4 + 1] = (unsigned char)0;
+            data[p*4 + 2] = (unsigned char)0;
+            data[p*4 + 3] = (unsigned char)0; 
+        }else{
+           data[p*4   ] = (unsigned char)p%255;
+           data[p*4 + 1] = (unsigned char)0;
+           data[p*4 + 2] = (unsigned char)0;
+           data[p*4 + 3] = (unsigned char)127;   
+        }
+        i++;
+        if((unsigned int)i > (unsigned int)_fieldSize[0]-1){
+            i = 0;
+            j ++;
+           if((unsigned int)j > (unsigned int)_fieldSize[1]-1){
+               j = 0;
+               k ++;
+               if((unsigned int)k > (unsigned int)_fieldSize[2]-1){
+                  k = 0;
+               }
+           }
+        }
       }
-      osg::Image* propertyField = new osg::Image();
+      osg::ref_ptr<osg::Image> propertyField = new osg::Image();
 
       propertyField->allocateImage(_fieldSize[0],
                                 _fieldSize[1],
@@ -183,29 +223,23 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
 		                      GL_RGBA,
 		                      GL_RGBA,
 			                   GL_UNSIGNED_BYTE,
-                           data,/*may need a function to init empty data*/
+                           data,
                            osg::Image::USE_NEW_DELETE,1);
-
+      propertyField->setDataVariance(osg::Object::DYNAMIC);
       _property = new osg::Texture3D();
       _property->setDataVariance(osg::Object::DYNAMIC);
       
-      osg::TexEnv* texEnv = new osg::TexEnv();
-      texEnv->setMode(osg::TexEnv::REPLACE);
-
       _property->setFilter(osg::Texture3D::MIN_FILTER,osg::Texture3D::LINEAR);
       _property->setFilter(osg::Texture3D::MAG_FILTER,osg::Texture3D::LINEAR);
-      _property->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
-      _property->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
-      _property->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
+      _property->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP_TO_EDGE);
+      _property->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP_TO_EDGE);
+      _property->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP_TO_EDGE);
       _property->setInternalFormat(GL_RGBA);
       _property->setTextureSize(_fieldSize[0],
-                                _fieldSize[1],
-                                _fieldSize[2]);
-      _property->setImage(propertyField);
-      if(data){
-         delete [] data;
-         data = 0;
-      }
+                             _fieldSize[1],
+                             _fieldSize[2]);
+      _property->setImage(propertyField.get());
+      
    }else{
       std::cout<<"Invalid field size!!"<<std::endl;
       std::cout<<"cfdOSGTransferShaderManager::_initPropertyTexture"<<std::endl;
@@ -215,27 +249,27 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
 void cfdOSGTransferShaderManager::UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
                                               float param,int whichFunction)
 {
-   cfdUpdateableOSGTexture1d temp;
+   cfdUpdateableOSGTexture1d* temp;
    if(!_transferFunctions.size()){
       std::cout<<"Transfer functions not initialized!!!"<<std::endl;
       return;
    }
    switch(whichFunction){
       case 0:
-         temp = _transferFunctions.at(0);
+         temp = dynamic_cast<cfdUpdateableOSGTexture1d*>(_transferFunctions.at(0)->getSubloadCallback());
          break;
       case 1:
-         temp = _transferFunctions.at(1);
+         temp = dynamic_cast<cfdUpdateableOSGTexture1d*>(_transferFunctions.at(1)->getSubloadCallback());
          break;
       case 2:
-         temp = _transferFunctions.at(2);
+         temp = dynamic_cast<cfdUpdateableOSGTexture1d*>(_transferFunctions.at(2)->getSubloadCallback());
          break;
       case 3:
       default:
-         temp = _transferFunctions.at(3);
+         temp = dynamic_cast<cfdUpdateableOSGTexture1d*>(_transferFunctions.at(3)->getSubloadCallback());
          break;
    };
-   temp.UpdateParam(type,param);
+   temp->UpdateParam(type,param);
 }
 /////////////////////////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::SetFieldSize(unsigned int x,unsigned int y,unsigned  int z)

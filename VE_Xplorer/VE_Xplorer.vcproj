@@ -1355,9 +1355,6 @@
 						RelativePath=".\cfdAdvectionSubGraph.cxx">
 					</File>
 					<File
-						RelativePath=".\cfdAdvectPropertyCallback.cxx">
-					</File>
-					<File
 						RelativePath=".\cfdOSGAdvectionShaderManager.cxx">
 					</File>
 					<File
@@ -1371,6 +1368,9 @@
 					</File>
 					<File
 						RelativePath=".\cfdPBufferManager.cxx">
+					</File>
+					<File
+						RelativePath=".\cfdTextureMatrixCallback.cxx">
 					</File>
 				</Filter>
 				<Filter
@@ -1397,6 +1397,9 @@
 					<File
 						RelativePath=".\cfdPBufferManager.h">
 					</File>
+					<File
+						RelativePath=".\cfdTextureMatrixCallback.h">
+					</File>
 				</Filter>
 			</Filter>
 			<Filter
@@ -1410,9 +1413,6 @@
 					</File>
 					<File
 						RelativePath=".\cfdCopyTextureCallback.cxx">
-					</File>
-					<File
-						RelativePath=".\cfdCopyTo3DTextureStage.cxx">
 					</File>
 					<File
 						RelativePath=".\cfdOSGPingPongTexture3d.cxx">

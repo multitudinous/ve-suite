@@ -140,12 +140,12 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
                R = 0;
                G = (2.0*alpha)*255,      
                B = (1.0-2.0*alpha)*255;
-               A = 255*alpha;
+               A = 255*alpha*.5;
             }else{
                R = (2.0*alpha-1.0)*255;
                G = (2.0 - 2.0*alpha)*255;       
                B = 0.;
-               A = 255*alpha;
+               A = 255*alpha*.5;
             }
             pixels[p*4   ]  = (unsigned char)R;
             pixels[p*4 + 1] = (unsigned char)G;

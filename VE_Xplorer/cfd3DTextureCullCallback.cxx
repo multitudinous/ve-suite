@@ -1,41 +1,42 @@
 #ifdef _OSG
-#include <osg/Geode>
-#include <osg/Geometry>
-#include <osg/Plane>
 
 #ifdef CFD_USE_SHADERS
-#include "cfdAdvectPropertyCallback.h"
 #include "cfd3DTextureCullCallback.h"
-#include "cfdCopyTo3DTextureStage.h"
+//#include "cfdCopyTo3DTextureStage.h"
+#include "cfdPBufferManager.h"
+
+#include <osg/Node>
+#include <osg/NodeVisitor>
+#include <osg/Texture3D>
+#include <osgUtil/CullVisitor>
+#include <osg/Viewport>
+#include <osg/Geode>
+#include <osg/Geometry>
+#include <osgUtil/RenderStage>
+//#include <osg/BoundingBox>
+
+
 ////////////////////////////////////////////////////////////////////////////
 cfd3DTextureCullCallback::cfd3DTextureCullCallback(osg::Node* subgraph,
-		                                       osg::Texture3D* texture,
-						                            cfdPBufferManager* pbm,
-                                              osg::TexGen* tgn,
-                                            unsigned int nSlices)
-:_subgraph(subgraph),_textureToUpdate(texture),_texGen(tgn)
+                                             unsigned int width,
+                                             unsigned int height)
+:_subgraph(subgraph)
 {
-   _pbuffer = pbm;               
-   _nSlices = nSlices;
+   _w = width;
+   _h = height;
+}
+/////////////////////////////////////////////////////
+cfd3DTextureCullCallback::~cfd3DTextureCullCallback()
+{
+   
 }
 ////////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::operator()(osg::Node* node, 
                                      osg::NodeVisitor* nv)
 {
    osgUtil::CullVisitor* cullVisitor = dynamic_cast<osgUtil::CullVisitor*>(nv); 
-   if (cullVisitor && 
-      _textureToUpdate.valid()&&
-      _texGen.valid()&&
-      _subgraph.valid()){
-      //unsigned int sliceNumber = 0;
-      float delta = 1.0/(float)_nSlices;
-      osg::Plane tmpPlane = _texGen->getPlane(osg::TexGen::R);
-      float origZcoord = tmpPlane[2];
-      for(unsigned int i = 0; i < _nSlices; i++){
-         tmpPlane[2] = origZcoord + i*delta;
-         preRender(*node,*cullVisitor, i);
-      }
-      tmpPlane[2] = origZcoord;
+   if (cullVisitor && _subgraph.valid()){
+      preRender(*node,*cullVisitor);
       // must traverse the Node's subgraph            
       traverse(node,nv);
    }
@@ -43,110 +44,68 @@ void cfd3DTextureCullCallback::operator()(osg::Node* node,
 }
 ////////////////////////////////////////////////////////
 void cfd3DTextureCullCallback::preRender(osg::Node& node,
-                                    osgUtil::CullVisitor& cv,
-					                       int sliceNumber)
+                                    osgUtil::CullVisitor& cv)
 {
-   cv.getState()->setReportGLErrors(true);
+
    const osg::BoundingSphere& bs = _subgraph->getBound();
-   if(!bs.valid()){
-      osg::notify(osg::WARN) << "bb invalid"<<_subgraph.get()<<std::endl;
-      return;
-   } 
-
-   int height = 0;
-   int width = 0;
-   int depth = 0;
-
-   _textureToUpdate->getTextureSize(width,height,depth);
-
-   // create the copy to 3dtexture stage.
-   osg::ref_ptr<cfdCopyTo3DTextureStage> update3DTexture = new cfdCopyTo3DTextureStage;
-    
-    //init the pbuffer if needed
-    if(!_pbuffer->isCreated()){
-       _pbuffer->initializePBuffer(width,height);
+    if (!bs.valid())
+    {
+        osg::notify(osg::WARN) << "bb invalid"<<_subgraph.get()<<std::endl;
+        return;
     }
-    update3DTexture->setPBuffer(_pbuffer);
-    update3DTexture->setSliceToUpdate(sliceNumber);
- 
+
+    // create the render to texture stage.
+    osg::ref_ptr<osgUtil::RenderStage> rtts = new osgUtil::RenderStage;
+    
     // set up lighting.
     // currently ignore lights in the scene graph itself..
     // will do later.
     osgUtil::RenderStage* previous_stage = cv.getCurrentRenderBin()->getStage();
 
     // set up the background color and clear mask.
-    update3DTexture->setClearColor(osg::Vec4(0.0f,0.0f,0.0f,1.0f));
-    update3DTexture->setClearMask(previous_stage->getClearMask());
+    rtts->setClearColor(osg::Vec4(0.0f,0.0,0.0f,1.0f));
+    rtts->setClearMask(previous_stage->getClearMask());
 
-    // set up to change the same RenderStageLighting as the parent previous stage.
-    update3DTexture->setRenderStageLighting(previous_stage->getRenderStageLighting());
+    // set up to charge the same RenderStageLighting is the parent previous stage.
+    rtts->setRenderStageLighting(previous_stage->getRenderStageLighting());
 
     // record the render bin, to be restored after creation
     // of the render to text
     osgUtil::RenderBin* previousRenderBin = cv.getCurrentRenderBin();
 
     // set the current renderbin to be the newly created stage.
-    cv.setCurrentRenderBin(update3DTexture.get());
+    cv.setCurrentRenderBin(rtts.get());
 
-    // set up projection.
-    osg::RefMatrix* projection = new osg::RefMatrix;
-    
-    projection->makeIdentity();
-    
-
-    osg::RefMatrix* matrix = new osg::RefMatrix;
-    matrix->makeIdentity();
-
-    cv.pushModelViewMatrix(matrix);
-    cv.pushProjectionMatrix(projection);
-
-    if (!_localState.valid()){
-       _localState = new osg::StateSet;
-    }
+    if (!_localState) _localState = new osg::StateSet;
     cv.pushStateSet(_localState.get());
-
     {
-       // traverse the subgraph
-       _subgraph->accept(cv);
+        // traverse the subgraph
+        _subgraph->accept(cv);
     }
-
     cv.popStateSet();
-
-    // restore the previous model view matrix.
-    cv.popProjectionMatrix();
-
-    // restore the previous model view matrix.
-    cv.popModelViewMatrix();
-
-
     // restore the previous renderbin.
     cv.setCurrentRenderBin(previousRenderBin);
 
-    if (update3DTexture->getRenderGraphList().size()==0 
-       && update3DTexture->getRenderBinList().size()==0)
+    if (rtts->getRenderGraphList().size()==0 && rtts->getRenderBinList().size()==0)
     {
         // getting to this point means that all the subgraph has been
         // culled by small feature culling or is beyond LOD ranges.
         return;
     }
-    // offset the impostor viewport from the center of the main window
-    // viewport as often the edges of the viewport might be obscured by
-    // other windows, which can cause image/reading writing problems.
 
+    int height = _h;
+    int width  = _w;
+
+    
     osg::Viewport* new_viewport = new osg::Viewport;
     new_viewport->setViewport(0,0,width,height);
-    update3DTexture->setViewport(new_viewport);
+    rtts->setViewport(new_viewport);
 
     _localState->setAttribute(new_viewport);    
 
-   // and the render to texture stage to the current stages
-   // dependancy list.
-   cv.getCurrentRenderBin()->getStage()->addToDependencyList(update3DTexture.get());
-
-   // if one exist attach texture to the RenderToTextureStage.
-   if(_textureToUpdate.valid()){
-      update3DTexture->set3DTexture(_textureToUpdate.get());
-   }
+    // and the render to texture stage to the current stages
+    // dependancy list.
+    cv.getCurrentRenderBin()->getStage()->addToDependencyList(rtts.get());
 }
    
 #endif

@@ -6,7 +6,7 @@
 #ifdef CFD_USE_SHADERS
 #include "cfdOSGScalarShaderManager.h"
 #endif
-
+#include <osg/TexGen>
 #include <osg/Group>
 //////////////////////////////////////////////////////
 //Constructors                                      //
@@ -61,6 +61,8 @@ void cfdScalarVolumeVisHandler::_setUpDecorator()
    _sSM->Init();
 
    if(_sSM->GetShaderStateSet() && _decoratorGroup.valid()){
+      //_sSM->GetShaderStateSet()->setTextureAttributeAndModes(0,_texGen.get(),
+         //osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
      _decoratorGroup->setStateSet(_sSM->GetShaderStateSet()); 
    }
 #endif

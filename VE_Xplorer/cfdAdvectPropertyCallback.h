@@ -2,23 +2,27 @@
 #define CFD_ADVECT_PROPERTY_CALLBACK_H
 
 #ifdef _OSG
-#include <osg/Node>
-#include <osg/Texture3D>
-#include <osgUtil/CullVisitor>
+#ifdef CFD_USE_SHADERS
 
-#include "cfdPBufferManager.h"
+namespace osg{
+   class Node;
+}
+
+#include <osg/NodeCallback>
+
+class cfd3DTextureCullCallback;
 
 class cfdAdvectPropertyCallback : public osg::NodeCallback  
 {
 public:
    cfdAdvectPropertyCallback(osg::Node* subgraph);
    virtual ~cfdAdvectPropertyCallback();
+
    virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);     
 protected:
    osg::ref_ptr<osg::Node> _subgraph;
-   
 };
-
+#endif //CFD_USE_SHADERS
 #endif //_OSG
 #endif //CFD_ADVECT_PROPERTY_CALLBACK_H
 

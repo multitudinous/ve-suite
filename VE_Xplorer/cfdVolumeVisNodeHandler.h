@@ -8,6 +8,7 @@ namespace osg
 {
    class Group;
    class Switch;
+   class TexGenNode;
 }
 
 class cfdTextureManager;
@@ -18,6 +19,9 @@ public:
    virtual ~cfdVolumeVisNodeHandler();
 
    void SetSwitchNode(osg::Switch* vvn);
+   void SetAttachNode(osg::Group* attachNode);
+   void SetCenter(osg::Vec3f center);
+   void SetTextureScale(float* scale,bool isInverted = true);
    void SetTextureManager(cfdTextureManager* tm);
    void SetBoundingBox(float* bbox);
    void SetBoundingBoxName(char*name);
@@ -35,6 +39,7 @@ protected:
    void _createVisualBBox();
    //set up the stateset for the decorator
    virtual void _setUpDecorator()=0;
+   void _createTexGenNode();
    unsigned int _whichChildIsThis;
    cfdTextureManager* _tm;
    osg::ref_ptr<osg::Switch>_bboxSwitch;
@@ -42,7 +47,10 @@ protected:
    osg::ref_ptr<osg::Switch> _vvN;
    osg::ref_ptr<osg::Group> _decoratorGroup;
    osg::ref_ptr<osg::Group> _byPassNode;
+   osg::ref_ptr<osg::TexGenNode> _texGenParams;
    osg::BoundingBox _bbox;
+   osg::Vec3f _center;
+   float _scale[3];
 };
 
 #endif //_OSG

@@ -52,13 +52,7 @@ protected:
    virtual void _setupCGShaderProgram(osg::StateSet* ss,
 		                      char* progName, char* funcName);
    unsigned int _fieldSize[3];
-   /*float _dyeScale[3];
-   float _dyeTranslation[3];
-   float _noiseScale[3];
-   float _period;
-   float _time;
-   float _deltaT;
-*/
+   
    cfdUpdateParameterCallback* _noiseScaleCallback;
    cfdUpdateParameterCallback* _deltaCallback;
    cfdUpdateParameterCallback* _timeCallback;
@@ -71,9 +65,9 @@ protected:
    osg::ref_ptr<osg::Texture3D> _weightW;
    osg::ref_ptr<osg::Texture3D> _weightV;
    osg::ref_ptr<osg::Texture3D> _dye;
+   osg::ref_ptr<osg::Texture3D> _noiseTexture;
    osg::ref_ptr<osg::Texture1D> _lookUpFunction;
-   cfdUpdateableOSGNoiseTexture3d* _noise;
-   osg::ref_ptr<osg::State> _state;
+   cfdUpdateableOSGNoiseTexture3d* _noiseCbk;
    bool _reinit;
 };
 #endif// _CFD_USE_SHADERS

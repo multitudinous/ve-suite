@@ -2,9 +2,9 @@
 #define CFD_UPDATEABLE_TRANSFER_FUNCTION_TEXTURE_1D_H
 #ifdef _PERFORMER
 #elif _OSG
-namespace osg { class Texture1D; }
+#include <osg/Texture1D>
 
-class cfdUpdateableOSGTexture1d{
+class cfdUpdateableOSGTexture1d: public  osg::Texture1D::SubloadCallback{
 public:
    cfdUpdateableOSGTexture1d();
    cfdUpdateableOSGTexture1d(const cfdUpdateableOSGTexture1d& cb);
@@ -13,19 +13,19 @@ public:
    enum TransType{ALPHA_CUTOFF,GAMMA_CORRECTION};
    
    void UpdateParam(TransType type,GLfloat param);
-   void SetTexture1D(osg::Texture1D* texture);
    void SetGamma(GLfloat gamma);
    void SetAlphaCutoff(GLfloat aCutoff);
    void SetTransferFunctionType(TransType type);
-   osg::Texture1D* GetTexture();
+   
+   void subload(const osg::Texture1D& texture,osg::State& state) const;
+   void load(const osg::Texture1D& texture,osg::State&) const;
 
    cfdUpdateableOSGTexture1d& operator=(const cfdUpdateableOSGTexture1d& cb);
 protected:	
    void _updateData();
-   bool _needsUpdate();
+   bool _needsUpdate()const;
 
    unsigned char* _data;
-   osg::ref_ptr<osg::Texture1D> _texture1d;
    GLfloat _alphaCutoff;
    GLfloat _gamma;
    GLfloat _lastAlpha;

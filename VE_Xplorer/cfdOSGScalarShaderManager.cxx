@@ -66,7 +66,7 @@ void cfdOSGScalarShaderManager::Init()
       _utCbk =  new cfdUpdateTextureCallback();
    }
    _utCbk->SetTextureManager(_tm);
-   _utCbk->SetDelayTime(1.0);
+   _utCbk->SetDelayTime(.1);
    _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
 
    if(!_image.valid()){
@@ -96,9 +96,9 @@ void cfdOSGScalarShaderManager::Init()
    }
    if(_reinit){
       _ss->setTextureAttributeAndModes(0,_scalarProp.get(),osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
+      _ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+      _ss->setTextureMode(0,GL_TEXTURE_GEN_T,osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
+      _ss->setTextureMode(0,GL_TEXTURE_GEN_R,osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
       _ss->setTextureAttributeAndModes(0,new osg::TexEnv(osg::TexEnv::REPLACE),
 		                    osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
       //load the shader file 

@@ -2,33 +2,54 @@
 #define CFD_3D_TEXTURE_UPDATE_CALLBACK_H
 #ifdef _OSG
 #ifdef CFD_USE_SHADERS
-#include <osg/Node>
-#include <osg/NodeVisitor>
-#include <osg/Texture3D>
-#include <osgUtil/CullVisitor>
-#include <osg/TexGen>
-#include "cfdPBufferManager.h"
-class cfdSliceNodeVisitor;
+namespace osg{
+   class Node;
+   class Texture3D;
+   class NodeVisitor;
+   class Viewport;
+   //class BoundingBox;
+}
+namespace osgUtil{
+   class CullVisitor;
+}
+class cfdPBufferManager;
+
+
+#include <osg/NodeCallback>
+#include <osg/BoundingBox>
 class cfd3DTextureCullCallback : public osg::NodeCallback
 {
 public:    
    cfd3DTextureCullCallback(osg::Node* subgraph,
-		              osg::Texture3D* updateTexture,
-                    cfdPBufferManager* pbm,osg::TexGen* tgn,
-                   unsigned int nSlices);
+                         unsigned int width,
+                         unsigned int height);/*,
+		                    osg::Texture3D* updateTexture,
+                         cfdPBufferManager* pbm,
+                         osg::BoundingBox bbox,
+                         float deltaZ,
+                         unsigned int nSlices);*/
 
+   virtual ~cfd3DTextureCullCallback();
+   //void SetWhichSliceToUpdate(unsigned int sliceNumber);
    virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
-   void preRender(osg::Node& node,osgUtil::CullVisitor& cv,int whichSlice);
+
+   void preRender(osg::Node& node,osgUtil::CullVisitor& cv);//,int whichSlice);
         
    osg::Node* subgraph(){return _subgraph.get();}
         
 protected:
    osg::ref_ptr<osg::Node> _subgraph;
-   osg::ref_ptr<osg::Texture3D> _textureToUpdate;
-   osg::ref_ptr<osg::TexGen> _texGen;
+   unsigned int _w;
+   unsigned int _h;
+   /*osg::ref_ptr<osg::Texture3D> _textureToUpdate;
    cfdPBufferManager* _pbuffer;
-   osg::ref_ptr<osg::StateSet> _localState;
    unsigned int _nSlices;
+   float _deltaZ;
+   osg::ref_ptr<osg::Viewport> _viewport;
+   osg::BoundingBox _bbox;*/
+   //cfdCopyTo3DTextureStage* _update3DTexture;
+   osg::ref_ptr<osg::StateSet> _localState;
+   
 };
 #endif
 #endif//_OSG

@@ -4,6 +4,8 @@
 #ifdef _OSG
 namespace osg{
    class Texture3D;
+   class Texture1D;
+   class TexMat;
 };
 #include <vector>
 #ifdef CFD_USE_SHADERS
@@ -21,6 +23,7 @@ public:
    void UpdateTransferFunction(cfdUpdateableOSGTexture1d::TransType type,
                                               float param,int whichFunction);
    void SetPropertyTexture(osg::Texture3D* property);
+   void SetTextureMatrix(osg::TexMat* tmat);
    osg::Texture3D* GetPropertyTexture();
 
    virtual cfdOSGTransferShaderManager& operator=(const 
@@ -29,9 +32,11 @@ protected:
    void _initTransferFunctions();
    void _createTransferFunction(bool clearList = true);
    void _initPropertyTexture();
-   osg::ref_ptr<osg::Texture3D> _property;
    unsigned int _fieldSize[3];
-   std::vector<cfdUpdateableOSGTexture1d> _transferFunctions;
+   osg::ref_ptr<osg::TexMat> _texMat;
+   osg::ref_ptr<osg::Texture3D> _property;
+   typedef osg::ref_ptr<osg::Texture1D> TransferFunction ;
+   std::vector<TransferFunction> _transferFunctions;
    bool _reinit;
 };
 #endif// _CFD_USE_SHADERS

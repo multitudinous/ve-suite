@@ -25,15 +25,23 @@ cfdCopyTo3DTextureStage::cfdCopyTo3DTextureStage()
 ///////////////////////////////////////////////////
 cfdCopyTo3DTextureStage::~cfdCopyTo3DTextureStage()
 {
-   if(_pbuffer){
+   /*if(_pbuffer){
       _pbuffer->cleanUpPBuffer();
       _pbuffer = 0;
-   }
+   }*/
+}
+///////////////////////////////////////////////////////////////////////////
+void cfdCopyTo3DTextureStage::SetWhichSliceToUpdate(unsigned int nSlices)
+{
+   _whichSlice = nSlices;
 }
 /////////////////////////////////////
 void cfdCopyTo3DTextureStage::reset()
 {
     RenderStage::reset();
+    if(_whichSlice == _nSlices){
+       _whichSlice = 0;
+    }
 }
 /////////////////////////////////////////////////////////////////////////////////////
 void cfdCopyTo3DTextureStage::draw(osg::State& state, osgUtil::RenderLeaf*& previous)
@@ -53,7 +61,7 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state, osgUtil::RenderLeaf*& prev
       }
       //draw to the pbuffer
       RenderStage::draw(*_localState,previous);
-      _pbuffer->deactivate();
+      
       //copy into our texture
       //or should this be the local state?
       switch(_whichDir){
@@ -78,7 +86,8 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state, osgUtil::RenderLeaf*& prev
             break;
       };
       
-      
+      _pbuffer->deactivate();
+      //_whichSlice++;
    }
 }
 #endif

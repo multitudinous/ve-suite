@@ -9,7 +9,10 @@
 #include <osgNVCg/Program>
 #include <osgNVCg/CgGeometry>
 #include "cfdAdvectionSubGraph.h"
+
 #endif
+
+#include "cfdTextureMatrixCallback.h"
 #include <osg/TexMat>
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
@@ -233,6 +236,9 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
 //////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 {
+   if(tm->GetDataType(0) == cfdTextureManager::VECTOR)
+      return;
+
    _tm = tm;
 
    if(!_image.valid()){
@@ -266,8 +272,8 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
                      _tm->fieldResolution()[2]);
       _texture->setInternalFormat(GL_RGBA);
       _texture->setImage(_image.get());
-      _texture->setBorderColor(osg::Vec4(0,0,0,0));
-      _texture->setBorderWidth(2);
+      //_texture->setBorderColor(osg::Vec4(0,0,0,0));
+      //_texture->setBorderWidth(2);
    }
    SetBoundingBox(_tm->getBoundingBox());
    if(_utCbk){
@@ -444,17 +450,20 @@ void cfdVolumeVisualization::UpdateClipPlanePosition(ClipPlane direction,
 ////////////////////////////////////////////////
 void cfdVolumeVisualization::_createStateSet()
 {
-   if(_texGenParams.valid()){
+   if(_noShaderGroup.valid()){
       if(!_stateSet.valid()){
-         _stateSet = _texGenParams->getOrCreateStateSet();;
+         _stateSet = _noShaderGroup->getOrCreateStateSet();;
          _stateSet->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
          _stateSet->setMode(GL_BLEND,osg::StateAttribute::ON);
+         
          osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
          tMat->setMatrix(osg::Matrix::identity());
          _stateSet->setTextureAttributeAndModes(0,tMat.get());
+         
          osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
 			 bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-			 _stateSet->setAttributeAndModes(bf.get());
+			 
+         _stateSet->setAttributeAndModes(bf.get());
 			 _stateSet->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
          _attachTextureToStateSet(_stateSet.get());
       }else{
@@ -483,13 +492,13 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
             _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
             _texture->setSubloadCallback(_utCbk);
          }
-         ss->setTextureAttributeAndModes(PLAIN,_texture.get(),
+         ss->setTextureAttributeAndModes(0,_texture.get(),
 			                        osg::StateAttribute::ON);
-         ss->setTextureMode(PLAIN,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
-         ss->setTextureMode(PLAIN,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
-         ss->setTextureMode(PLAIN,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
-         ss->setTextureAttributeAndModes(PLAIN,new osg::TexEnv(osg::TexEnv::REPLACE),
-		                             osg::StateAttribute::OVERRIDE | osg::StateAttribute::ON);
+         ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
+         ss->setTextureMode(0,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
+         ss->setTextureMode(0,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
+         ss->setTextureAttributeAndModes(0,new osg::TexEnv(osg::TexEnv::REPLACE),
+		                                osg::StateAttribute::ON);
       }
    }else{
       if(_verbose)
@@ -501,8 +510,7 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 ////////////////////////////////////////////////
 void cfdVolumeVisualization::_createTexGenNode()
 {
-   if ( _bbox )
-   {
+   if ( _bbox ){
       osg::Vec4 sPlane(1,0,0,0);
       osg::Vec4 tPlane(0,1,0,0);
       osg::Vec4 rPlane(0,0,1,0);
@@ -569,6 +577,14 @@ void cfdVolumeVisualization::_createVolumeSlices()
 {
    _buildSlices();
 }
+//////////////////////////////////////////////////////////////////////////
+osg::ref_ptr<osg::Group> cfdVolumeVisualization::GetDecoratorAttachNode()
+{
+   if(_decoratorAttachNode.valid()){
+      return _decoratorAttachNode;
+   }
+   return 0;
+}
 /////////////////////////////////////////
 void cfdVolumeVisualization::CreateNode()
 {
@@ -587,12 +603,6 @@ if(!_tm){
    _volumeVizNode->setName("Volume Viz Node");
    _volumeVizNode->setSingleChildOn(0);
    _volumeVizNode->setDataVariance(osg::Object::DYNAMIC);
-   
-   _createTexGenNode();
-   _createStateSet();
-   _createVolumeSlices();
-   _createClipNode();
-   _isCreated = true;
 
    if(!_noShaderGroup.valid()){
       _noShaderGroup = new osg::Group();
@@ -601,31 +611,42 @@ if(!_tm){
       
    }
    
+
+   _createTexGenNode();
+   _createStateSet();
+   _createVolumeSlices();
+   _createClipNode();
+   _isCreated = true;
+
    if ( _stateSet.valid() )
    {
       _noShaderGroup->setStateSet(_stateSet.get());
    }
-
 
    if ( _texGenParams.valid() )
    {
       _noShaderGroup->addChild(_texGenParams.get());
       if(_stateSet.valid()){
          float trans[3] = {.5,.5,.5};
-         _scale[0] = 1.0/_scale[0];
-         _scale[1] = 1.0/_scale[1];
-         _scale[2] = 1.0/_scale[2];
+         float scale[3] = {0,0,0};
+         scale[0] = 1.0/_scale[0];
+         scale[1] = 1.0/_scale[1];
+         scale[2] = 1.0/_scale[2];
 
          osg::ref_ptr<osg::TexMat> tmat =
              dynamic_cast<osg::TexMat*>(_stateSet->getTextureAttribute(0,osg::StateAttribute::TEXMAT));
-         _texGenParams->setCullCallback(new TextureMatrixCallback(tmat.get(),
+         _texGenParams->setUpdateCallback(new cfdTextureMatrixCallback(tmat.get(),
                                                             _center,
-                                                            _scale,trans));
+                                                            scale,trans));
       }
-      if ( _billboard.valid() ){
-        
+      if(!_decoratorAttachNode){
+         _decoratorAttachNode = new osg::Group();
+         _decoratorAttachNode->setName("VViz Decorator Attach");
+         _texGenParams->addChild(_decoratorAttachNode.get());
+      }
+      if(_billboard.valid()){
          if(_clipNode.valid()){
-            _texGenParams->addChild(_clipNode.get());
+            _decoratorAttachNode->addChild(_clipNode.get());
             _clipNode->addChild(_billboard.get());
          }else{
             _texGenParams->addChild(_billboard.get());
@@ -654,7 +675,7 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
       _tUnit = rhs._tUnit;
       _tm = rhs._tm;
       
-
+      _decoratorAttachNode = rhs._decoratorAttachNode;
       _mode = rhs._mode;
       _traverseDirection = rhs._traverseDirection;
       _stateSet = rhs._stateSet;
@@ -676,35 +697,7 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
    }
    return *this;
 }
-////////////////////////////////////////////////////////////////////////
-//Constructor                                                         //
-////////////////////////////////////////////////////////////////////////
-TextureMatrixCallback::TextureMatrixCallback(osg::TexMat* texmat,
-                                             osg::Vec3f center,
-                                        float* scale,float* trans)
-:_texMat(texmat),_center(center)
-{
-   _scale[0] = scale[0];
-   _scale[1] = scale[1];
-   _scale[2] = scale[2];
 
-   _trans[0] = trans[0];
-   _trans[1] = trans[1];
-   _trans[2] = trans[2];
-}
-////////////////////////////////////////////////////////////////////////////
-void TextureMatrixCallback::operator()(osg::Node* node,osg::NodeVisitor* nv)
-{
-   osgUtil::CullVisitor* cv = dynamic_cast<osgUtil::CullVisitor*>(nv);
-   if (cv && _texMat.valid()){
-      osg::Matrix translate = osg::Matrix::translate(_trans[0],_trans[1],_trans[2]);
-      osg::Matrix scale = osg::Matrix::scale(_scale[0],_scale[1],_scale[2]);
-      osg::Matrix center = osg::Matrix::translate(-_center[0],-_center[1],-_center[2]);
-      
-      _texMat->setMatrix(center*scale*translate);
-   }
-   traverse(node,nv);
-}
 
 #endif
 

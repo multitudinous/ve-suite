@@ -138,7 +138,11 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          _vvvh->PingPongTextures();
       }
    }
-   
+   if(_svvh){
+      if(!_svvh->IsThisActive()){
+        // _svvh->EnableDecorator();
+      }
+   }
    //this may need to change 
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_ACTIVE ){
       //set the transient flag in the callback
@@ -146,7 +150,7 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
          //_visOptionSwitch->SetVal(1);
          //testing switch stuff
          //_activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::PLAY);
-         if(_vvvh)_vvvh->EnableDecorator();
+         activeVisNodeHdlr->EnableDecorator();
          //_activeVolumeVizNode->EnableVolumeShader();
          //_activeVolumeVizNode->DeactivateVisualBBox();
          /*if(_svvh){
@@ -157,11 +161,15 @@ void cfdTextureBasedVizHandler::PreFrameUpdate()
 #endif
    if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) != CLEAR_ALL && !_cleared){
       if(_activeVolumeVizNode){
-         //need to make sure the node is on the graph
-         if((((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get()) == false)){
-            ((osg::Group*)_parent->GetRawNode())->addChild(_activeVolumeVizNode->GetVolumeVisNode().get());
-            _activeVolumeVizNode->GetVolumeVisNode()->setSingleChildOn(0);
-            _cleared = false;
+         if(_activeTM){
+            _activeVolumeVizNode->SetTextureManager(_activeTM);
+            _activeVolumeVizNode->CreateNode();
+            //need to make sure the node is on the graph
+            if((((osg::Group*)_parent->GetRawNode())->containsNode(_activeVolumeVizNode->GetVolumeVisNode().get()) == false)){
+               ((osg::Group*)_parent->GetRawNode())->addChild(_activeVolumeVizNode->GetVolumeVisNode().get());
+               _activeVolumeVizNode->GetVolumeVisNode()->setSingleChildOn(0);
+               _cleared = false;
+            }
          }
       }
    }
@@ -357,7 +365,11 @@ void cfdTextureBasedVizHandler::_updateScalarVisHandler()
          _svvh = new cfdScalarVolumeVisHandler();
          _svvh->SetBoundingBox(_activeTM->getBoundingBox());
          _svvh->SetSwitchNode(_activeVolumeVizNode->GetVolumeVisNode().get());
+         _svvh->SetTextureScale(_activeVolumeVizNode->GetTextureScale(),false);
+         _svvh->SetCenter(_activeVolumeVizNode->GetBBoxCenter());
+         
       }
+      _svvh->SetAttachNode(_activeVolumeVizNode->GetDecoratorAttachNode().get());
       _svvh->SetTextureManager(_activeTM);
       _svvh->Init();
       activeVisNodeHdlr = _svvh;
@@ -372,7 +384,10 @@ void cfdTextureBasedVizHandler::_updateVectorVisHandler()
          _vvvh = new cfdVectorVolumeVisHandler();
          _vvvh->SetBoundingBox(_activeTM->getBoundingBox());
          _vvvh->SetSwitchNode(_activeVolumeVizNode->GetVolumeVisNode().get());
+         _vvvh->SetTextureScale(_activeVolumeVizNode->GetTextureScale(),false);
+         _vvvh->SetCenter(_activeVolumeVizNode->GetBBoxCenter());
       }
+      _vvvh->SetAttachNode(_activeVolumeVizNode->GetDecoratorAttachNode().get());
       _vvvh->SetTextureManager(_activeTM);
       _vvvh->SetPBufferManager(_pbm);
       _vvvh->Init();

@@ -24,7 +24,7 @@ namespace osg
    class BoundingBox;
    class Billboard;
 }
-
+class cfdTextureMatrixCallback;
 #include <osgUtil/CullVisitor>
 #include <osg/TexMat>
 #include <osg/Vec3>
@@ -66,10 +66,12 @@ public:
    bool isCreated(){return _isCreated;}
 
    cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk;}
-   
+   osg::Vec3f GetBBoxCenter(){return _center;}
+   float* GetTextureScale(){return _scale;}
    osg::ref_ptr<osg::StateSet> GetStateSet();
    osg::ref_ptr<osg::Texture3D> GetTextureData();
    osg::ref_ptr<osg::Switch> GetVolumeVisNode();
+   osg::ref_ptr<osg::Group> GetDecoratorAttachNode();
    
 
    cfdVolumeVisualization& operator=(const cfdVolumeVisualization& rhs);
@@ -114,26 +116,13 @@ protected:
    osg::ref_ptr<osg::Billboard> _billboard;
 
    osg::ref_ptr<osg::Group> _noShaderGroup;
+   osg::ref_ptr<osg::Group> _decoratorAttachNode;
    osg::ref_ptr<osg::Texture3D> _texture;
    osg::ref_ptr<osg::Image> _image;
    osg::ref_ptr<osg::State> _state;
    cfdUpdateTextureCallback* _utCbk;
 #endif
 
-};
-//class to update the texture matrix appropriately
-class TextureMatrixCallback : public osg::NodeCallback
-{
-public:
-   TextureMatrixCallback(osg::TexMat* texmat,osg::Vec3f center,
-                       float* scale,float* trans);
-    virtual void operator()(osg::Node* node,osg::NodeVisitor* nv);
-    
-protected:
-   float _trans[3];
-   float _scale[3];
-   osg::Vec3f _center;
-   mutable osg::ref_ptr<osg::TexMat> _texMat;
 };
 #endif//OSG
 #endif// CFD_VOLUME_VISUALIZATION_H

@@ -37,7 +37,7 @@ void cfdOSGShaderManager::_setupCGShaderProgram(osg::StateSet *ss,
       fprog->setUseOptimalOptions(true);
 
       //apply the shaders to state set
-      _ss->setAttributeAndModes(fprog);
+      _ss->setAttributeAndModes(fprog,osg::StateAttribute::OVERRIDE);
    }
 }
 

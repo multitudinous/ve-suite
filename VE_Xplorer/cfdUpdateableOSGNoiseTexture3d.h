@@ -6,22 +6,23 @@
 namespace osg{
    class State;
 };
-#include <osg/Texture3d>
+#include <osg/Texture3D>
 
-class cfdUpdateableOSGNoiseTexture3d{
+class cfdUpdateableOSGNoiseTexture3d : public  osg::Texture3D::SubloadCallback{
 public:
    cfdUpdateableOSGNoiseTexture3d();
    cfdUpdateableOSGNoiseTexture3d(const cfdUpdateableOSGNoiseTexture3d& );
    virtual ~cfdUpdateableOSGNoiseTexture3d();
-   void SetState(osg::State* state);
-   void SetNoiseTexture(osg::Texture3D* noise);
+
    void UpdateTaoH(GLfloat taoH);
    void UpdateTaoI(GLfloat taoI);
-   osg::Texture3D* GetNoiseTexture();
+
+   void subload(const osg::Texture3D& texture,osg::State& state) const;
+   void load(const osg::Texture3D& texture,osg::State&) const;
 
    cfdUpdateableOSGNoiseTexture3d& operator=(const cfdUpdateableOSGNoiseTexture3d&);
 protected:
-   bool _needsUpdate();
+   bool _needsUpdate() const;
    void _updateData();
    mutable GLsizei _textureWidth,_textureHeight,_textureDepth;
 
@@ -31,9 +32,6 @@ protected:
    GLfloat _lastI;
 
    unsigned char* _data;
-
-   osg::ref_ptr<osg::State> _state;
-   osg::ref_ptr<osg::Texture3D> _noise;
 };
 #endif //_OSG
 #endif// CFD_UPDATEABLE_OSG_NOISE_TEXTURE_3D_H

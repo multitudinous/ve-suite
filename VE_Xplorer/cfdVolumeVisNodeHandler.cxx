@@ -3,10 +3,14 @@
 #include <osg/Geometry>
 #include <osg/Geode>
 #include <osg/Group>
+#include <osg/TexGenNode>
+#include <osg/TexMat>
 #include <osg/Switch>
 #include <iostream>
+#include <osg/Vec3f>
 #include "cfdVolumeVisNodeHandler.h"
 #include "cfdTextureManager.h"
+#include "cfdTextureMatrixCallback.h"
 //////////////////////////////////////////////////
 //Constructors                                  //
 //////////////////////////////////////////////////
@@ -14,6 +18,13 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler()
 {
    _whichChildIsThis = 0;
    _tm = 0;
+   _center[0] = 0;
+   _center[1] = 0;
+   _center[2] = 0;
+
+   _scale[0] = 1;
+   _scale[1] = 1;
+   _scale[2] = 1;
 }
 //////////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
@@ -26,6 +37,12 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
    _whichChildIsThis = vvnh._whichChildIsThis;
    _decoratorGroup = new osg::Group(*vvnh._decoratorGroup);
    _tm = new cfdTextureManager(*vvnh._tm);
+   _center = osg::Vec3f(vvnh._center[0],vvnh._center[1],vvnh._center[2]);
+
+   _scale[0] = vvnh._scale[0];
+   _scale[1] = vvnh._scale[1];
+   _scale[2] = vvnh._scale[2];
+   _texGenParams = new osg::TexGenNode(*vvnh._texGenParams);
 }
 ///////////////////////////////////////////////////
 //Destructor                                     //
@@ -61,7 +78,15 @@ void cfdVolumeVisNodeHandler::SetSwitchNode(osg::Switch* vvn)
 ////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetTextureManager(cfdTextureManager* tm)
 {
-   _tm = tm;
+   if(!_tm)
+      _tm = new cfdTextureManager(*tm);
+   else
+      _tm->operator =(*tm);
+}
+///////////////////////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::SetAttachNode(osg::Group* attachNode)
+{
+   _byPassNode = attachNode;
 }
 ////////////////////////////////////
 void cfdVolumeVisNodeHandler::Init()
@@ -81,6 +106,12 @@ void cfdVolumeVisNodeHandler::Init()
       std::cout<<"cfdVolumeVisNodeHandler::Init!!"<<std::endl;
       return;
    }
+   if(!_byPassNode){
+      std::cout<<"Decorator attachment node not set!!"<<std::endl;
+      std::cout<<"cfdVolumeVisNodeHandler::Init!!"<<std::endl;
+   }
+   //create the texture generation param node
+   _createTexGenNode();
    
    if(!_bboxSwitch.valid()){
       _createVisualBBox();
@@ -89,7 +120,7 @@ void cfdVolumeVisNodeHandler::Init()
       _bboxSwitch = new osg::Switch();
       _bboxSwitch->setName("VVNH BBox Switch");
       _bboxSwitch->addChild(_visualBoundingBox.get());
-      _bboxSwitch->setSingleChildOn(0);
+      
       _vvN->addChild(_bboxSwitch.get());
 
       //set up the decorator nodes
@@ -99,28 +130,75 @@ void cfdVolumeVisNodeHandler::Init()
 
       _visualBoundingBox->addChild(_decoratorGroup.get());
       _bboxSwitch->addChild(_decoratorGroup.get());
+      _bboxSwitch->setSingleChildOn(0);
       
-      //need to bypass the "decorator" level to attach
-      _byPassNode = dynamic_cast<osg::Group*>
-	                  (((osg::Group*)_vvN->getChild(0))->getChild(0));
+      _decoratorGroup->addChild(_texGenParams.get());
+      _texGenParams->addChild(_byPassNode.get());
       
-      //hook up the decorator
-      _decoratorGroup->addChild(_byPassNode.get());
-
+      
       //NOTE -- In derived classes, must override this call
       //to setup the stateset for the decorator
       _setUpDecorator();
+      osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
+      tMat->setMatrix(osg::Matrix::identity());
+      _decoratorGroup->getStateSet()->setTextureAttributeAndModes(0,tMat.get(),osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      float trans[3] = {.5,.5,.5};
+      _decoratorGroup->setUpdateCallback(new cfdTextureMatrixCallback(tMat.get(),
+                                                             _center,
+                                                             _scale,
+                                                             trans));
 
       //must do this to make sure switch is initially
       //traversing the "undecorated" node
       _vvN->setSingleChildOn(0);
    }
 }
+//////////////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::SetCenter(osg::Vec3f center)
+{
+   _center[0] = center[0];
+   _center[1] = center[1];
+   _center[2] = center[2];
+}
+///////////////////////////////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::SetTextureScale(float* scale,bool isInverted)
+{
+   _scale[0] = scale[0];
+   _scale[1] = scale[1];
+   _scale[2] = scale[2];
+
+   if(!isInverted){
+      _scale[0] = 1.0/scale[0];
+      _scale[1] = 1.0/scale[1];
+      _scale[2] = 1.0/scale[2];
+
+   }
+}
+////////////////////////////////////////////////
+//may need to modify this to use the bbox     //
+////////////////////////////////////////////////
+void cfdVolumeVisNodeHandler::_createTexGenNode()
+{
+   if(!_texGenParams.valid()){
+      osg::Vec4 sPlane(1,0,0,0);
+      osg::Vec4 tPlane(0,1,0,0);
+      osg::Vec4 rPlane(0,0,1,0);
+            
+      _texGenParams = new osg::TexGenNode();
+      _texGenParams->setTextureUnit(0);
+      _texGenParams->getTexGen()->setMode(osg::TexGen::EYE_LINEAR);
+      _texGenParams->getTexGen()->setPlane(osg::TexGen::S,sPlane); 
+      _texGenParams->getTexGen()->setPlane(osg::TexGen::T,tPlane);
+      _texGenParams->getTexGen()->setPlane(osg::TexGen::R,rPlane);
+
+      
+   }
+}
 ////////////////////////////////////////////
 bool cfdVolumeVisNodeHandler::IsThisActive()
 {
    if(_vvN.valid()){
-      int index = _whichChildIsThis - 1;
+      int index = _whichChildIsThis ;
       return _vvN->getValue(index);
    }
    return false;
@@ -234,6 +312,11 @@ cfdVolumeVisNodeHandler::operator=(const cfdVolumeVisNodeHandler& vvnh)
       _bboxSwitch = vvnh._bboxSwitch;
       _tm = vvnh._tm;
       _byPassNode = vvnh._byPassNode;
+      _center = vvnh._center;
+      _scale[0] = vvnh._scale[0];
+      _scale[1] = vvnh._scale[1];
+      _scale[2] = vvnh._scale[2];
+      _texGenParams = vvnh._texGenParams;
    }
    return *this;
 }

@@ -44,9 +44,10 @@ void cfdOSGPingPongTexture3D::PingPongTextures()
    
    //switch ping image to pong
    _ping = _pong;
-
+   _ping->getImage()->dirty();
    //switch pong image to ping
    _pong = tempPing;
+   _pong->getImage()->dirty();
 }
 /////////////////////////////////////////////////////////////////////   
 //equal operator                                                   //

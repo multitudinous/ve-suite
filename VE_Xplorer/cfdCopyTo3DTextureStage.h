@@ -13,7 +13,7 @@ class cfdCopyTo3DTextureStage: public osgUtil::RenderStage
 {
 public:
    cfdCopyTo3DTextureStage();
-
+   virtual ~cfdCopyTo3DTextureStage();
    virtual osg::Object* cloneType() const { return new cfdCopyTo3DTextureStage(); }
    virtual osg::Object* clone(const osg::CopyOp&) const { return new cfdCopyTo3DTextureStage(); } // note only implements a clone of type.
    virtual bool isSameKindAs(const osg::Object* obj) const { return dynamic_cast<const cfdCopyTo3DTextureStage*>(obj)!=0L; }
@@ -21,7 +21,9 @@ public:
    virtual const char* className() const { return "cfdCopyTo3DTextureStage"; }
 
    inline void setPBuffer(cfdPBufferManager* pbuffer) { _pbuffer = pbuffer; }
-        
+  
+   void SetWhichSliceToUpdate(unsigned int whichSlice);
+
    //whichSlice corresponds to offset in the 3d texture
    //whichDir corresponds to the direction (x =0,y=1,z=2)
    inline void setSliceToUpdate(int whichSlice=0,int whichDir=2)
@@ -38,7 +40,7 @@ public:
    virtual void draw(osg::State& state,osgUtil::RenderLeaf*& previous);
 
 protected:   
-   virtual ~cfdCopyTo3DTextureStage();
+  
         
    osg::ref_ptr<osg::Texture3D> _texture;
    osg::ref_ptr<osg::State> _localState;

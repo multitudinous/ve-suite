@@ -29,6 +29,7 @@ _subloadImageDepth(0)
 //////////////////////////////////////////////////////////////////////////////////////////
 void cfdCopyTextureCallback::load(const osg::Texture3D& texture,osg::State& state )const 
 {
+   texture.getTextureSize(_textureWidth,_textureHeight,_textureDepth);
    texture.getExtensions(state.getContextID(),false)->glTexImage3D(GL_TEXTURE_3D, 0, 
                                           GL_RGBA, 
                                           _textureWidth,

@@ -18,8 +18,8 @@ public:
    virtual cfdOSGShaderManager& operator=(const cfdOSGShaderManager& sm);
 protected:
    virtual void _setupCGShaderProgram(osg::StateSet* ss,
-		                      char* progName,
-			                     char* funcName);
+		                             char* progName,
+			                          char* funcName);
    osg::ref_ptr<osg::StateSet> _ss;
    char* _shaderDirectory;
 };

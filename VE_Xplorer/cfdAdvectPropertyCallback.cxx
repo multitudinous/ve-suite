@@ -23,8 +23,6 @@ void cfdAdvectPropertyCallback::operator()(osg::Node* node,
                                       osg::NodeVisitor* nv)
 {
    if (nv && _subgraph.valid()){
-      //traverse this graph for each slice in
-      //the texture
       _subgraph->accept(*nv);   
    }
    // must call this             
