@@ -4,7 +4,7 @@ IMPLEMENT_DYNAMIC_CLASS(Prekin_UI_Dialog, UIDialog);
 
 BEGIN_EVENT_TABLE(PrekinTabs, wxNotebook)
   EVT_RADIOBUTTON(PORE_MODEL1, PrekinTabs::OnPoreModel)
-  EVT_RADIOBUTTON(PORE_MODEL1, PrekinTabs::OnPoreModel)
+  EVT_RADIOBUTTON(PORE_MODEL2, PrekinTabs::OnPoreModel)
   EVT_RADIOBOX(MOD_SEL, PrekinTabs::Onmod_sel)
   EVT_CHECKBOX(MANUAL_INPUT, PrekinTabs::Onmanual_input)
   EVT_RADIOBUTTON(OXIDATION_FLAG1, PrekinTabs::Onoxidation_flag)
@@ -238,19 +238,255 @@ Prekin_UI_Dialog
 
 bool Prekin_UI_Dialog::TransferDataFromWindow()
 {
+  entry2double(m_tabs->t_mode_burning,p_mode_burning);
+  entry2double(m_tabs->t_linear_swell,p_linear_swell);
+  entry2double(m_tabs->t_fuel_carbon,p_fuel_carbon );
+  entry2double(m_tabs->t_ash_film,p_ash_film );
+  entry2double(m_tabs->t_ash_grain_size,p_ash_grain_size );
+  entry2double(m_tabs->t_ash_therm_cond,p_ash_therm_cond );
+  entry2double(m_tabs->t_size_50,p_size_50 );
+  entry2double(m_tabs->t_size_200,p_size_200 );
+  entry2double(m_tabs->t_T_f,p_T_f );
+  entry2double(m_tabs->t_pore_radii_macro, p_pore_radii_macro);
+  entry2double(m_tabs->t_pore_radii_micro, p_pore_radii_micro);
+  entry2double(m_tabs->t_pore_macroposity, p_pore_macroposity);
+  entry2double(m_tabs->t_pore_porosity, p_pore_porosity);
+  entry2double(m_tabs->t_CPD_AB, p_CPD_AB);
+  entry2double(m_tabs->t_CPD_AC, p_CPD_AC);
+  entry2double(m_tabs->t_CPD_AG, p_CPD_AG);
+  entry2double(m_tabs->t_CPD_ACR, p_CPD_ACR);
+  entry2double(m_tabs->t_CPD_EB, p_CPD_EB);
+  entry2double(m_tabs->t_CPD_EC, p_CPD_EC);
+  entry2double(m_tabs->t_CPD_EG, p_CPD_EG);
+  entry2double(m_tabs->t_CPD_ECR, p_CPD_ECR);
+  entry2double(m_tabs->t_CPD_EBSIG, p_CPD_EBSIG);
+  entry2double(m_tabs->t_CPD_EGSIG, p_CPD_EGSIG);
+  entry2double(m_tabs->t_TS_A1, p_TS_A1);
+  entry2double(m_tabs->t_TS_A2, p_TS_A2);
+  entry2double(m_tabs->t_TS_E1, p_TS_E1);
+  entry2double(m_tabs->t_TS_E2, p_TS_E2);
+  entry2double(m_tabs->t_TS_Y1, p_TS_Y1);
+  entry2double(m_tabs->t_TS_Y2, p_TS_Y2);
+  entry2double(m_tabs->t_MI_P0, p_MI_P0);
+  entry2double(m_tabs->t_MI_C0, p_MI_C0);
+  entry2double(m_tabs->t_MI_SIGP1, p_MI_SIGP1);
+  entry2double(m_tabs->t_MI_MW, p_MI_MW);
+  entry2double(m_tabs->t_MDEL, p_MDEL);
+  entry2double(m_tabs->t_heat_rate, p_heat_rate);
+  entry2double(m_tabs->t_max_temp, p_max_temp);
+  entry2double(m_tabs->t_res_time, p_res_time);
+  entry2double(m_tabs->t_num_grid_heating, p_num_grid_heating);
+  entry2double(m_tabs->t_num_grid_isothermal, p_num_grid_isothermal);
+  entry2double(m_tabs->t_MIR_koso, p_MIR_koso);
+  entry2double(m_tabs->t_MIR_ko, p_MIR_ko);
+  entry2double(m_tabs->t_MIR_so, p_MIR_so);
+  entry2double(m_tabs->t_MIR_IAE, p_MIR_IAE);
+  entry2double(m_tabs->t_MIR_IRO, p_MIR_IRO);
+  entry2double(m_tabs->t_MIR_k3o, p_MIR_k3o);
+  entry2double(m_tabs->t_MIR_k2ok3o, p_MIR_k2ok3o);
+  entry2double(m_tabs->t_MIR_k3ok1o, p_MIR_k3ok1o);
+  entry2double(m_tabs->t_MIR_E1, p_MIR_E1);
+  entry2double(m_tabs->t_MIR_E2, p_MIR_E2);
+  entry2double(m_tabs->t_MIR_E3, p_MIR_E3);
+  entry2double(m_tabs->t_IRO_Step2, p_IRO_Step2);
+  entry2double(m_tabs->t_Aco, p_Aco);
+  entry2double(m_tabs->t_Eco, p_Eco);
+  entry2double(m_tabs->t_FOPL_ko, p_FORL_ko);
+  entry2double(m_tabs->t_FOPL_so, p_FORL_so);
+  entry2double(m_tabs->t_FOPL_IAE, p_FORL_IAE);
+  entry2double(m_tabs->t_FOPL_IRO, p_FORL_IRO);
+  entry2double(m_tabs->t_LHK_k1o, p_LHK_k1o);
+  entry2double(m_tabs->t_LHK_k2o, p_LHK_k2o);
+  entry2double(m_tabs->t_LHK_k3o, p_LHK_k3o);
+  entry2double(m_tabs->t_LHK_E1, p_LHK_E1);
+  entry2double(m_tabs->t_LHK_E2, p_LHK_E2);
+  entry2double(m_tabs->t_LHK_E3, p_LHK_E3);
+  entry2double(m_tabs->t_PR_ratio_fr, p_PR_ratio_fr);
+  entry2double(m_tabs->t_PR_ratio_to, p_PR_ratio_to);
+  entry2double(m_tabs->t_num_steps, p_num_steps);
+  entry2double(m_tabs->t_mean_rxn_temp, p_mean_rxn_temp);
+  entry2double(m_tabs->t_mrt_error, p_mrt_error);
+  entry2double(m_tabs->t_mrt_step, p_mrt_step);
+  entry2double(m_tabs->t_reac_frac_fr, p_reac_frac_fr);
+  entry2double(m_tabs->t_reac_frac_to, p_reac_frac_to);
+  entry2double(m_tabs->t_reac_pres_step, p_reac_pres_step);
+  entry2double(m_tabs->t_total_pres, p_total_pres);
+  entry2double(m_tabs->t_time_intv, p_time_intv);
+  entry2double(m_tabs->t_time_step, p_time_step);
+  entry2double(m_tabs->t_conv_level, p_conv_level);
+  entry2double(m_tabs->t_optim_kG, p_optim_kG);
+  entry2double(m_tabs->t_optim_EG, p_optim_EG);
+  entry2double(m_tabs->t_optim_m, p_optim_m);
+  entry2double(m_tabs->t_tolerance, p_tolerance);
+
+  (*p_coal_name) = m_tabs->cb_coal_name->GetValue();
+  (*p_FORL) = m_tabs->cb_FOPL->GetValue();
+  (*p_LHK) = m_tabs->cb_LHK->GetValue();
+
+  *p_Pore_Model=m_tabs->rb_Pore_Model1->GetValue();
+    
+  *p_mod_sel=m_tabs->rb_mod_sel->GetSelection();
+  
+  *p_manual_input=m_tabs->cbo_manual_input->GetValue();
+
+  *p_oxidation_flag=m_tabs->rb_oxidation_flag1->GetValue();
+  
+  *p_MIR=m_tabs->cbo_MIR->GetValue();
+
+  *p_Gasification_flag=m_tabs->rb_Gasification_flag1->GetValue();
+  
+  *p_FORL_CH=m_tabs->rb_FOPL_CH->GetSelection();
+  
+  *p_LHK_CH=m_tabs->rb_LHK_CH->GetSelection();
+  
+  *p_Schema=m_tabs->rb_Schema->GetSelection();
+
   return true;
 }
 
 ////////////////////////////////////////////////////
 bool Prekin_UI_Dialog::TransferDataToWindow()
 {
-    return true;
+  double2entry(m_tabs->t_mode_burning,p_mode_burning);
+  double2entry(m_tabs->t_linear_swell,p_linear_swell);
+  double2entry(m_tabs->t_fuel_carbon,p_fuel_carbon );
+  double2entry(m_tabs->t_ash_film,p_ash_film );
+  double2entry(m_tabs->t_ash_grain_size,p_ash_grain_size );
+  double2entry(m_tabs->t_ash_therm_cond,p_ash_therm_cond );
+  double2entry(m_tabs->t_size_50,p_size_50 );
+  double2entry(m_tabs->t_size_200,p_size_200 );
+  double2entry(m_tabs->t_T_f,p_T_f );
+  double2entry(m_tabs->t_pore_radii_macro, p_pore_radii_macro);
+  double2entry(m_tabs->t_pore_radii_micro, p_pore_radii_micro);
+  double2entry(m_tabs->t_pore_macroposity, p_pore_macroposity);
+  double2entry(m_tabs->t_pore_porosity, p_pore_porosity);
+  double2entry(m_tabs->t_CPD_AB, p_CPD_AB);
+  double2entry(m_tabs->t_CPD_AC, p_CPD_AC);
+  double2entry(m_tabs->t_CPD_AG, p_CPD_AG);
+  double2entry(m_tabs->t_CPD_ACR, p_CPD_ACR);
+  double2entry(m_tabs->t_CPD_EB, p_CPD_EB);
+  double2entry(m_tabs->t_CPD_EC, p_CPD_EC);
+  double2entry(m_tabs->t_CPD_EG, p_CPD_EG);
+  double2entry(m_tabs->t_CPD_ECR, p_CPD_ECR);
+  double2entry(m_tabs->t_CPD_EBSIG, p_CPD_EBSIG);
+  double2entry(m_tabs->t_CPD_EGSIG, p_CPD_EGSIG);
+  double2entry(m_tabs->t_TS_A1, p_TS_A1);
+  double2entry(m_tabs->t_TS_A2, p_TS_A2);
+  double2entry(m_tabs->t_TS_E1, p_TS_E1);
+  double2entry(m_tabs->t_TS_E2, p_TS_E2);
+  double2entry(m_tabs->t_TS_Y1, p_TS_Y1);
+  double2entry(m_tabs->t_TS_Y2, p_TS_Y2);
+  double2entry(m_tabs->t_MI_P0, p_MI_P0);
+  double2entry(m_tabs->t_MI_C0, p_MI_C0);
+  double2entry(m_tabs->t_MI_SIGP1, p_MI_SIGP1);
+  double2entry(m_tabs->t_MI_MW, p_MI_MW);
+  double2entry(m_tabs->t_MDEL, p_MDEL);
+  double2entry(m_tabs->t_heat_rate, p_heat_rate);
+  double2entry(m_tabs->t_max_temp, p_max_temp);
+  double2entry(m_tabs->t_res_time, p_res_time);
+  double2entry(m_tabs->t_num_grid_heating, p_num_grid_heating);
+  double2entry(m_tabs->t_num_grid_isothermal, p_num_grid_isothermal);
+  double2entry(m_tabs->t_MIR_koso, p_MIR_koso);
+  double2entry(m_tabs->t_MIR_ko, p_MIR_ko);
+  double2entry(m_tabs->t_MIR_so, p_MIR_so);
+  double2entry(m_tabs->t_MIR_IAE, p_MIR_IAE);
+  double2entry(m_tabs->t_MIR_IRO, p_MIR_IRO);
+  double2entry(m_tabs->t_MIR_k3o, p_MIR_k3o);
+  double2entry(m_tabs->t_MIR_k2ok3o, p_MIR_k2ok3o);
+  double2entry(m_tabs->t_MIR_k3ok1o, p_MIR_k3ok1o);
+  double2entry(m_tabs->t_MIR_E1, p_MIR_E1);
+  double2entry(m_tabs->t_MIR_E2, p_MIR_E2);
+  double2entry(m_tabs->t_MIR_E3, p_MIR_E3);
+  double2entry(m_tabs->t_IRO_Step2, p_IRO_Step2);
+  double2entry(m_tabs->t_Aco, p_Aco);
+  double2entry(m_tabs->t_Eco, p_Eco);
+  double2entry(m_tabs->t_FOPL_ko, p_FORL_ko);
+  double2entry(m_tabs->t_FOPL_so, p_FORL_so);
+  double2entry(m_tabs->t_FOPL_IAE, p_FORL_IAE);
+  double2entry(m_tabs->t_FOPL_IRO, p_FORL_IRO);
+  double2entry(m_tabs->t_LHK_k1o, p_LHK_k1o);
+  double2entry(m_tabs->t_LHK_k2o, p_LHK_k2o);
+  double2entry(m_tabs->t_LHK_k3o, p_LHK_k3o);
+  double2entry(m_tabs->t_LHK_E1, p_LHK_E1);
+  double2entry(m_tabs->t_LHK_E2, p_LHK_E2);
+  double2entry(m_tabs->t_LHK_E3, p_LHK_E3);
+  double2entry(m_tabs->t_PR_ratio_fr, p_PR_ratio_fr);
+  double2entry(m_tabs->t_PR_ratio_to, p_PR_ratio_to);
+  double2entry(m_tabs->t_num_steps, p_num_steps);
+  double2entry(m_tabs->t_mean_rxn_temp, p_mean_rxn_temp);
+  double2entry(m_tabs->t_mrt_error, p_mrt_error);
+  double2entry(m_tabs->t_mrt_step, p_mrt_step);
+  double2entry(m_tabs->t_reac_frac_fr, p_reac_frac_fr);
+  double2entry(m_tabs->t_reac_frac_to, p_reac_frac_to);
+  double2entry(m_tabs->t_reac_pres_step, p_reac_pres_step);
+  double2entry(m_tabs->t_total_pres, p_total_pres);
+  double2entry(m_tabs->t_time_intv, p_time_intv);
+  double2entry(m_tabs->t_time_step, p_time_step);
+  double2entry(m_tabs->t_conv_level, p_conv_level);
+  double2entry(m_tabs->t_optim_kG, p_optim_kG);
+  double2entry(m_tabs->t_optim_EG, p_optim_EG);
+  double2entry(m_tabs->t_optim_m, p_optim_m);
+  double2entry(m_tabs->t_tolerance, p_tolerance);
+  
+  m_tabs->cb_coal_name->SetValue(p_coal_name->c_str());
+  m_tabs->cb_FOPL->SetValue(p_FORL->c_str());
+  m_tabs->cb_LHK->SetValue(p_LHK->c_str());
+
+  m_tabs->rb_Pore_Model1->SetValue(bool(*p_Pore_Model));
+  m_tabs->rb_Pore_Model2->SetValue(!bool(*p_Pore_Model));  
+
+  m_tabs->rb_mod_sel->SetSelection(*p_mod_sel);
+  
+  m_tabs->cbo_manual_input->SetValue(bool(*p_manual_input));
+
+  m_tabs->rb_oxidation_flag1->SetValue(bool(*p_oxidation_flag));
+  m_tabs->rb_oxidation_flag2->SetValue(!bool(*p_oxidation_flag));
+  
+  m_tabs->cbo_MIR->SetValue(bool(*p_MIR));
+
+  m_tabs->rb_Gasification_flag1->SetValue(bool(*p_Gasification_flag));
+  m_tabs->rb_Gasification_flag2->SetValue(!bool(*p_Gasification_flag));
+  
+  m_tabs->rb_FOPL_CH->SetSelection(*p_FORL_CH);
+  
+  m_tabs->rb_LHK_CH->SetSelection(*p_LHK_CH);
+  
+  m_tabs->rb_Schema->SetSelection(*p_Schema);
+
+  wxCommandEvent event;
+
+  m_tabs->OnPoreModel(event);
+  m_tabs->Onmod_sel(event);
+  m_tabs->Onmanual_input(event);
+  m_tabs->Onoxidation_flag(event);
+  m_tabs->OnMIR(event);
+  m_tabs->OnGasification_flag(event);
+  m_tabs->OnFOPL_CH(event);
+  m_tabs->OnLHK_CH(event);
+
+  return true;
 }
 
 void Prekin_UI_Dialog::Lock(bool l)
 {
 }
 
+void Prekin_UI_Dialog:: double2entry(wxTextCtrl* entry, double * value)
+{
+  wxString txt;
+  txt<<(*value);
+  entry->SetValue(txt);
+}
+
+void Prekin_UI_Dialog::entry2double(wxTextCtrl* entry, double * value)
+{
+  wxString txt;
+  txt=entry->GetValue();
+  (*value) = atof(txt.c_str());
+}
+
+//////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////
 PrekinTabs::PrekinTabs(wxWindow *parent, wxWindowID id,
 	   const wxPoint& pos , 
 	   const wxSize& size , 
@@ -671,18 +907,18 @@ wxPanel* PrekinTabs::CreateThirdPage()
   wxStaticBoxSizer* Ratio_row = new wxStaticBoxSizer(Ratio_box, wxHORIZONTAL);
 
   top_sizer->Add(10, 5, 0);
-  top_sizer->Add(rFOPL_row); 
+  top_sizer->Add(rFOPL_row,0, wxALIGN_CENTER_HORIZONTAL); 
   top_sizer->Add(FOPL_row, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0);
-  top_sizer->Add(rSG_row);
+  top_sizer->Add(rSG_row,0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(SG_row, 0, wxALIGN_CENTER_HORIZONTAL);
-  top_sizer->Add(10, 5, 0);
-  top_sizer->Add(Ratio_row, 0,wxALIGN_CENTER_HORIZONTAL);
+  top_sizer->Add(10, 15, 0);
+  top_sizer->Add(Ratio_row,0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 5, 0);
 
-  rb_oxidation_flag1 = new wxRadioButton(panel, OXIDATION_FLAG1, wxT("Fractional Order Power Law"), wxDefaultPosition, wxDefaultSize,wxRB_GROUP);
+  rb_oxidation_flag1 = new wxRadioButton(panel, OXIDATION_FLAG1, wxT("Fractional Order Power Law"), wxDefaultPosition, wxSize(300, 20),wxRB_GROUP);
   rFOPL_row->Add(rb_oxidation_flag1);
-  rb_oxidation_flag2 = new wxRadioButton(panel, OXIDATION_FLAG2, wxT("Semi-global"), wxDefaultPosition);
+  rb_oxidation_flag2 = new wxRadioButton(panel, OXIDATION_FLAG2, wxT("Semi-global"), wxDefaultPosition, wxSize(300,20));
   rSG_row->Add(rb_oxidation_flag2);
   
   wxBoxSizer* FOPL_row1 = new wxBoxSizer(wxHORIZONTAL);
@@ -1063,33 +1299,215 @@ wxPanel* PrekinTabs::CreateFifthPage()
 
 void PrekinTabs::OnPoreModel(wxCommandEvent &event)
 {
+	if (rb_Pore_Model1->GetValue()==TRUE)
+	{
+		t_T_f->Enable(true);
+		t_pore_radii_macro->Enable(false);
+		t_pore_radii_micro->Enable(false);
+		t_pore_macroposity->Enable(false);
+		t_pore_porosity->Enable(false);
+	}
+	else
+	{
+		t_T_f->Enable(false);
+		t_pore_radii_macro->Enable(true);
+		t_pore_radii_micro->Enable(true);
+		t_pore_macroposity->Enable(true);
+		t_pore_porosity->Enable(true);
+	}
 }
 
 void PrekinTabs::Onmod_sel(wxCommandEvent &event)
 {
+	int v =rb_mod_sel->GetSelection(); 
+	
+	if (v==2) //CPD
+	{
+		 t_CPD_AB->Enable(true);
+		 t_CPD_AC->Enable(true);
+		 t_CPD_AG->Enable(true);
+		 t_CPD_ACR->Enable(true);
+		 t_CPD_EB->Enable(true);
+		 t_CPD_EC->Enable(true);
+		 t_CPD_EG->Enable(true);
+		 t_CPD_ECR->Enable(true);
+		 t_CPD_EBSIG->Enable(true);
+		 t_CPD_EGSIG->Enable(true);
+		 t_TS_A1->Enable(false);
+		 t_TS_A2->Enable(false);
+		 t_TS_E1->Enable(false);
+		 t_TS_E2->Enable(false);
+		 t_TS_Y1->Enable(false);
+		 t_TS_Y2->Enable(false);
+		 cbo_manual_input->Enable(true);
+		 Onmanual_input(event);
+	}
+	else if (v==3) //Two Step
+	{
+		t_CPD_AB->Enable(false);
+		 t_CPD_AC->Enable(false);
+		 t_CPD_AG->Enable(false);
+		 t_CPD_ACR->Enable(false);
+		 t_CPD_EB->Enable(false);
+		 t_CPD_EC->Enable(false);
+		 t_CPD_EG->Enable(false);
+		 t_CPD_ECR->Enable(false);
+		 t_CPD_EBSIG->Enable(false);
+		 t_CPD_EGSIG->Enable(false);
+		 t_TS_A1->Enable(true);
+		 t_TS_A2->Enable(true);
+		 t_TS_E1->Enable(true);
+		 t_TS_E2->Enable(true);
+		 t_TS_Y1->Enable(true);
+		 t_TS_Y2->Enable(true);
+		 cbo_manual_input->Enable(false);
+		 t_MI_P0->Enable(false);
+		 t_MI_C0->Enable(false);
+		 t_MI_SIGP1->Enable(false);
+		 t_MI_MW->Enable(false);
+		 t_MDEL->Enable(false);
+	}
+	else
+	{
+		t_CPD_AB->Enable(false);
+		 t_CPD_AC->Enable(false);
+		 t_CPD_AG->Enable(false);
+		 t_CPD_ACR->Enable(false);
+		 t_CPD_EB->Enable(false);
+		 t_CPD_EC->Enable(false);
+		 t_CPD_EG->Enable(false);
+		 t_CPD_ECR->Enable(false);
+		 t_CPD_EBSIG->Enable(false);
+		 t_CPD_EGSIG->Enable(false);
+		 t_TS_A1->Enable(false);
+		 t_TS_A2->Enable(false);
+		 t_TS_E1->Enable(false);
+		 t_TS_E2->Enable(false);
+		 t_TS_Y1->Enable(false);
+		 t_TS_Y2->Enable(false);
+		 cbo_manual_input->Enable(false);
+		 t_MI_P0->Enable(false);
+		 t_MI_C0->Enable(false);
+		 t_MI_SIGP1->Enable(false);
+		 t_MI_MW->Enable(false);
+		 t_MDEL->Enable(false);
+	}
 }
 
 void PrekinTabs::Onmanual_input(wxCommandEvent &event)
 {
+	if (cbo_manual_input->GetValue())
+	{
+		 t_MI_P0->Enable(true);
+		 t_MI_C0->Enable(true);
+		 t_MI_SIGP1->Enable(true);
+		 t_MI_MW->Enable(true);
+		 t_MDEL->Enable(true);
+	}
+	else
+	{
+		t_MI_P0->Enable(false);
+		 t_MI_C0->Enable(false);
+		 t_MI_SIGP1->Enable(false);
+		 t_MI_MW->Enable(false);
+		 t_MDEL->Enable(false);
+	}
 }
 
 void PrekinTabs::Onoxidation_flag(wxCommandEvent &event)
 {
+	if (rb_oxidation_flag1->GetValue())
+	{
+		 t_MIR_k3o->Enable(false);
+		 t_MIR_k2ok3o->Enable(false);
+		 t_MIR_k3ok1o->Enable(false);
+		 t_MIR_E1->Enable(false);
+		 t_MIR_E2->Enable(false);
+		 t_MIR_E3->Enable(false);
+		 t_IRO_Step2->Enable(false);
+		 cbo_MIR->Enable(true);
+		 OnMIR(event);
+	}
+	else
+	{
+		 t_MIR_k3o->Enable(true);
+		 t_MIR_k2ok3o->Enable(true);
+		 t_MIR_k3ok1o->Enable(true);
+		 t_MIR_E1->Enable(true);
+		 t_MIR_E2->Enable(true);
+		 t_MIR_E3->Enable(true);
+		 t_IRO_Step2->Enable(true);
+		 cbo_MIR->Enable(false);
+		t_MIR_koso->Enable(false);
+		t_MIR_ko->Enable(false);
+		t_MIR_so->Enable(false);
+		t_MIR_IAE->Enable(false);
+		t_MIR_IRO->Enable(false);
+  	}
 }
   
 void PrekinTabs::OnMIR(wxCommandEvent &event)
 {
+	if (cbo_MIR->GetValue())
+	{
+		t_MIR_koso->Enable(true);
+		t_MIR_ko->Enable(true);
+		t_MIR_so->Enable(true);
+		t_MIR_IAE->Enable(true);
+		t_MIR_IRO->Enable(true);
+	}
+	else
+	{
+		t_MIR_koso->Enable(false);
+		t_MIR_ko->Enable(false);
+		t_MIR_so->Enable(false);
+		t_MIR_IAE->Enable(false);
+		t_MIR_IRO->Enable(false);
+	}
+		 
 }
 
 void PrekinTabs::OnGasification_flag(wxCommandEvent &event)
 {
+	if (rb_Gasification_flag1->GetValue())
+	{
+		 t_FOPL_ko->Enable(true);
+		 t_FOPL_so->Enable(true);
+		 t_FOPL_IAE->Enable(true);
+		 t_FOPL_IRO->Enable(true);
+		 rb_FOPL_CH->Enable(true);
+		 t_LHK_k1o->Enable(false);
+		 t_LHK_k2o->Enable(false);
+		 t_LHK_k3o->Enable(false);
+		 t_LHK_E1->Enable(false);
+		 t_LHK_E2->Enable(false);
+		 t_LHK_E3->Enable(false);
+		 rb_LHK_CH->Enable(false);
+	}
+	else
+	{
+		 t_FOPL_ko->Enable(false);
+		 t_FOPL_so->Enable(false);
+		 t_FOPL_IAE->Enable(false);
+		 t_FOPL_IRO->Enable(false);
+		 rb_FOPL_CH->Enable(false);
+		 t_LHK_k1o->Enable(true);
+		 t_LHK_k2o->Enable(true);
+		 t_LHK_k3o->Enable(true);
+		 t_LHK_E1->Enable(true);
+		 t_LHK_E2->Enable(true);
+		 t_LHK_E3->Enable(true);
+		 rb_LHK_CH->Enable(true);
+	}
 }
 
 void PrekinTabs::OnFOPL_CH(wxCommandEvent &event)
 {
+
 }
   
 void PrekinTabs::OnLHK_CH(wxCommandEvent &event)
 {
+
 }
 

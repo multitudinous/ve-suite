@@ -367,6 +367,8 @@ class Prekin_UI_Dialog : public UIDialog
   long* p_LHK_CH;
   long* p_Schema;
 
+  void double2entry(wxTextCtrl* entry, double * value);
+  void entry2double(wxTextCtrl* entry, double * value);
   //GUI Variables
   
 };
