@@ -57,9 +57,14 @@ cfdPoints::cfdPoints(double* worldPos, Matrix44f& mat)
 
 cfdQuatCamHandler::cfdQuatCamHandler( cfdDCS* worldDCS, cfdNavigate* nav, char* param )
 {
+   thisQuatCam = NULL;
+   nextPoint = NULL;
+   _worldDCS = NULL;
+   _nav = NULL;
+   _readParam = NULL;
+   _param = NULL;
    t = 0.0;
-   // IS this correct 
-   // Needs fixed
+   
    _worldDCS = worldDCS;
    _nav = nav;
    _param = param;

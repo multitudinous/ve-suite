@@ -102,13 +102,19 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( char* param )
    this->animStreamer = NULL;
    this->animImg = NULL;
    
+   this->_activeDataSet = NULL;
+   this->commandArray = NULL;
+   this->_worldDCS = NULL;
+   this->_activeDataSetDCS = NULL;
+   this->_activeObject = NULL;
+
    _param = param;
 }
 
 cfdSteadyStateVizHandler::~cfdSteadyStateVizHandler( void )
 {
    this->runIntraParallelThread = false;
-   delete this->vjThFunc[0];
+   //delete this->vjThFunc[0];
    delete this->vjTh[0];
 
    if ( this->isosurface ) 
@@ -707,8 +713,8 @@ void cfdSteadyStateVizHandler::InitScene( void )
    // This set of thread stuff needs to be in ssvizhandler and transvizhandler
    std::cout << "|  9. Initializing......................................... Threads |" << std::endl;
    this->runIntraParallelThread = true;
-   /*this->vjThFunc[0] = new ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread );
-   this->vjTh[0] = new Thread( this->vjThFunc[0] );*/
+   this->vjThFunc[0] = new vpr::ThreadMemberFunctor< cfdSteadyStateVizHandler > ( this, &cfdSteadyStateVizHandler::CreateActorThread );
+   this->vjTh[0] = new vpr::Thread( this->vjThFunc[0] );
 }
 
 void cfdSteadyStateVizHandler::PreFrameUpdate( void )

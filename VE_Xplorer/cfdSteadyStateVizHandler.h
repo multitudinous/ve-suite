@@ -122,7 +122,7 @@ class cfdSteadyStateVizHandler
    
       // Vectors that will eventually be stored as maps
       // these hold all the objectsa for easy access and management
-      std::vector< cfdObjects * > dataList;
+      std::vector< cfdObjects* > dataList;
       std::vector< cfdGlobalBase* > commandList;
 
       char* _param;
