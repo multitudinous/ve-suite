@@ -38,45 +38,54 @@
 class pfNode;
 class pfFog;
 #elif _OSG
+class osg::Node;
+class osg::Fog;
 #elif _OPENSG
 #endif
 
-class cfdNode: public cfdSceneNode
-{
-   public:
-      cfdNode( float*, float*, float* );
-      cfdNode( const cfdNode& );
-      cfdNode& operator=( const cfdNode& );
-      cfdNode( void );
-      ~cfdNode( void );
-
-#ifdef _PERFORMER
-		pfNode*  GetRawNode( void );
-#elif _OSG
-#elif _OPENSG
-#endif
-
-#ifdef _PERFORMER
-      void pfTravNodeMaterial( pfNode* );
-      void pfTravNodeFog( pfNode* node_1, pfFog* fog );
-#elif _OSG
-#elif _OPENSG
-#endif
-
-      void     LoadFile( char* );
-      cfdSceneNode* Clone( int );
-
-      void SetNodeProperties( int, float, float* );
-      
-   private:
-#ifdef _PERFORMER
-      pfNode* _node;
-#elif _OSG
-#elif _OPENSG
-#endif
+class cfdNode: public cfdSceneNode{
+public:
    
-      float op;
-      float stlColor[ 3 ];
-      int color;
+   cfdNode( void );
+   cfdNode(cfdSceneNode::cfdNodeType nt);
+
+   //biv--don't understand this method
+   cfdNode( float*, float*, float* );
+   
+   //copy constructor
+   cfdNode( const cfdNode& );
+   ~cfdNode( void );
+
+   //equal operator
+   cfdNode& operator=( const cfdNode& );
+   
+
+#ifdef _PERFORMER
+   pfNode* GetRawNode( void );
+   void clearGeodesFromNode( pfNode* );
+#elif _OSG
+   void osg::Node* GetRawNode( void );
+   void clearGeodesFromNode( osg::Node* );
+#elif _OPENSG
+#endif
+
+   //biv--why is this stuff in this class?
+#ifdef _PERFORMER
+   void pfTravNodeMaterial( pfNode* );
+   void pfTravNodeFog( pfNode* node_1, pfFog* fog );
+#elif _OSG
+   void TravNodeMaterial(osg::Node*);
+   void TravNodeFod(osg::Node node_1, osg::Fog* fog);
+#elif _OPENSG
+#endif
+   void SetNodeProperties( int, float, float* );
+   void LoadFile( char* );
+      
+   cfdNode* Clone( int );   
+protected:
+
+   float op;
+   float stlColor[ 3 ];
+   int color;
 };
 #endif
