@@ -3,7 +3,7 @@
 #include "UIDialog.h"
 #include <vector>
 #include <string>
-//#include <wx/notebook.h>
+#include <wx/notebook.h>
 
 
 using namespace std;
@@ -14,7 +14,7 @@ enum {
   SPEC_GEOM,
   DES_MODE
 };
-/*
+
 class GasiTabs : public wxNotebook
 {
  public:
@@ -72,13 +72,13 @@ class GasiTabs : public wxNotebook
   DECLARE_EVENT_TABLE()
 };
 
-*/
+
 class Gasifier0D_UI_Dialog : public UIDialog
 {
   DECLARE_DYNAMIC_CLASS(Gasifier0D_UI_Dialog);
 
  public:
-	 /*
+	 
   Gasifier0D_UI_Dialog(wxWindow* parent, int id,
           double* steam_temp1,
           double* steam_flrt1,
@@ -112,7 +112,7 @@ class Gasifier0D_UI_Dialog : public UIDialog
           long* stage,
           long* spec_geometry,
           long* des_mode);
-		  */
+		  
   Gasifier0D_UI_Dialog() {};
   virtual ~Gasifier0D_UI_Dialog();
   
@@ -121,8 +121,8 @@ class Gasifier0D_UI_Dialog : public UIDialog
   virtual void Lock(bool l); 
  protected:
   //UI widgets variables
-  //GasiTabs *m_tabs;
-  //wxNotebookSizer *m_sizerNotebook;
+  GasiTabs *m_tabs;
+  wxNotebookSizer *m_sizerNotebook;
  public:
   double* p_steam_temp1;
   double* p_steam_flrt1;

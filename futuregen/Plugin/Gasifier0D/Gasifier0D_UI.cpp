@@ -1,5 +1,5 @@
-#include "wx/image.h"
 #include "Gasifier0D_UI.h"
+#include "wx/image.h" //This line have to be under the first line for some unknown reason to pass the compilation
 
 BEGIN_EVENT_TABLE(GasiTabs, wxNotebook)
   EVT_RADIOBUTTON(R_STAGE1, GasiTabs::OnChangeStage)
