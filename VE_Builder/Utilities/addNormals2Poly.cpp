@@ -29,9 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include <iostream>
-#include <cstdio>
-
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
 #include <vtkPolyDataNormals.h>

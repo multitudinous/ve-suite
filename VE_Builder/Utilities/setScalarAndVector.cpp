@@ -30,12 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <cstdio>
-#include <cstdlib>
 
-#include "vtkDataSet.h"
-#include "vtkPointData.h"
-#include "vtkFloatArray.h"
+#include <vtkDataSet.h>
+#include <vtkPointData.h>
+#include <vtkFloatArray.h>
 
 void activateScalar( vtkDataSet * dataSet )
 {
