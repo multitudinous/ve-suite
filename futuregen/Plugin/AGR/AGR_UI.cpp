@@ -33,24 +33,24 @@ AGR_UI_Dialog
 
   wxBoxSizer* ok_row = new wxBoxSizer(wxHORIZONTAL);
 
-  top_sizer->Add(10, 10, 0); //the top margin
+  //top_sizer->Add(10, 10, 0); //the top margin
   top_sizer->Add(data_row, 0); 
-  top_sizer->Add(10, 5, 0);
+  //top_sizer->Add(10, 5, 0);
   top_sizer->Add(data1_row, 0);
   top_sizer->Add(10, 5, 0);
   top_sizer->Add(ok_row, 0, wxALIGN_CENTER_HORIZONTAL);
   top_sizer->Add(10, 10, 0); //the bottom margin
   
-  wxBoxSizer *data_first_row = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *data_second_row = new wxBoxSizer(wxHORIZONTAL);
+  //wxBoxSizer *data_first_row = new wxBoxSizer(wxHORIZONTAL);
+  //wxBoxSizer *data_second_row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer *data_third_row = new wxBoxSizer(wxHORIZONTAL);
   wxBoxSizer *data_forth_row = new wxBoxSizer(wxHORIZONTAL);
  
-  data_row->Add(10, 5, 0);
-  data_row->Add(data_first_row, 0);
-  data_row->Add(10, 3, 0);
-  data_row->Add(data_second_row, 0);
-  data1_row->Add(10, 3, 0);
+  //data_row->Add(10, 5, 0);
+  //data_row->Add(data_first_row, 0);
+  //data_row->Add(10, 3, 0);
+  //data_row->Add(data_second_row, 0);
+  //data1_row->Add(10, 3, 0);
   data1_row->Add(data_third_row, 0);
   data1_row->Add(10, 3, 0);
   data1_row->Add(data_forth_row, 0);
@@ -59,12 +59,12 @@ AGR_UI_Dialog
   ok_row->Add(new wxButton(this, wxID_OK, "OK"), 0, wxALIGN_CENTER_HORIZONTAL);
   ok_row->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALIGN_CENTER_HORIZONTAL);
   
-  wxStaticText * label0 = new wxStaticText(this, -1, " Tray Type ", wxDefaultPosition, wxSize(140, 17));
-  wxString tray_val[] = {wxT("Valv"), wxT("Bubble"), wxT("Sieve")};
+  //wxStaticText * label0 = new wxStaticText(this, -1, " Tray Type ", wxDefaultPosition, wxSize(140, 17));
+  //wxString tray_val[] = {wxT("Valv"), wxT("Bubble"), wxT("Sieve")};
 
-  cb_tray_type = new wxComboBox(this, -1, wxT("Valv"), wxDefaultPosition, wxSize(140, 20), 3, tray_val, wxCB_DROPDOWN|wxCB_READONLY|wxCB_SORT);
-  data_first_row->Add(label0);
-  data_first_row->Add(cb_tray_type);
+  //cb_tray_type = new wxComboBox(this, -1, wxT("Valv"), wxDefaultPosition, wxSize(140, 20), 3, tray_val, wxCB_DROPDOWN|wxCB_READONLY|wxCB_SORT);
+  //data_first_row->Add(label0);
+  //data_first_row->Add(cb_tray_type);
 
   //wxStaticText * label1 = new wxStaticText(this, -1, " Solvent Type", wxDefaultPosition, wxSize(140, 17));
   //wxString solv_val[] = {wxT("MDEA"), wxT("Selexol"), wxT("Rectisol")};
@@ -106,7 +106,7 @@ bool AGR_UI_Dialog::TransferDataFromWindow()
   (*p_solv_den) = atof(txt.c_str());
 
   //(*p_solv_type) = cb_solv_type->GetSelection();
-  (*p_tray_type) = cb_tray_type->GetSelection();
+  //(*p_tray_type) = cb_tray_type->GetSelection();
 
   return true;
 }
@@ -125,7 +125,7 @@ bool AGR_UI_Dialog::TransferDataToWindow()
   
   //cb_solv_type->SetSelection(*p_solv_type);
 
-  cb_tray_type->SetSelection(*p_tray_type);
+  //cb_tray_type->SetSelection(*p_tray_type);
   
     return true;
 }
