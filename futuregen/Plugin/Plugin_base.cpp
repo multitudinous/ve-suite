@@ -185,7 +185,7 @@ void REI_Plugin::DrawID(wxDC* dc)
 
   text<<mod_pack._id;
   dc->GetTextExtent(text, &w, &h);
-  //dc->DrawText(text, (x-w/2+xoff), (y-h/2+yoff));
+  dc->DrawText(text, (x-w/2+xoff), (y-h/2+yoff));
   
 }
 

@@ -1,6 +1,6 @@
 #include "string_ops.h"
 #include "Executive_i.h"
-
+ 
 #include <iostream>
 
 // Implementation skeleton constructor
@@ -765,7 +765,7 @@ void Body_Executive_i::RegisterUnit (
   //_mutex.acquire();
 
   static long unit_id;
-  
+  std::map<std::string, Execute_Thread*>::iterator iter;
   // When this is called, a unit is already binded to the name service, 
   // so this call can get it's reference from the name service
   cerr << "Going to RegisterUnit " << UnitName << endl;
@@ -778,13 +778,23 @@ void Body_Executive_i::RegisterUnit (
 
   _mod_units[std::string(UnitName)] = Body::Unit::_duplicate(unit);
   _mod_units[std::string(UnitName)]->SetID(unit_id++);
-
-  if(_exec_thread.find(std::string(UnitName))==_exec_thread.end()) {
+  
+  if((iter=_exec_thread.find(std::string(UnitName)))==_exec_thread.end()) {
     // CLEAN THIS UP IN UNREGISTER UNIT !
     Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
     ex->activate();
 
     _exec_thread[std::string(UnitName)] = ex;
+  }
+  else //replace it with new reference
+  {
+
+	ACE_Task_Base::cleanup(iter->second, NULL);
+	if (iter->second)
+		delete iter->second;
+	Execute_Thread *ex = new Execute_Thread(_mod_units[std::string(UnitName)], (Body_Executive_i*)this);
+    ex->activate();
+	iter->second=ex;
   }
 
   //_mutex.release();
@@ -821,7 +831,16 @@ void Body_Executive_i::UnRegisterUnit (
   ))
 {
   _mutex.acquire();
-  
+  std::map<std::string, Execute_Thread*>::iterator iter;
+  iter=_exec_thread.find(std::string(UnitName));
+  if (iter!=_exec_thread.end())
+  {
+	ACE_Task_Base::cleanup(iter->second, NULL);
+	if (iter->second)
+		delete iter->second;
+
+	_exec_thread.erase(iter);
+  }
   // Add your implementation here
   
   _mutex.release();
