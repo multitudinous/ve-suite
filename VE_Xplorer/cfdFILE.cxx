@@ -84,8 +84,8 @@ cfdFILE::cfdFILE( char* geomFile, cfdDCS* worldDCS  )
    std::cout << " Load file 1" << std::endl;
    this->node = new cfdNode();  
    this->node->LoadFile( geomFile );
-   std::cout << " Load file 2" << std::endl;
-   fileName = geomFile;
+   std::cout << " Load file 2" << geomFile << std::endl;
+   strcpy( fileName, geomFile );
    // Maybe fix this functionality later
    //this->node->flatten( 0 );
    this->DCS->AddChild( this->node );
