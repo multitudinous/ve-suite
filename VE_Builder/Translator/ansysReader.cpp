@@ -1700,7 +1700,8 @@ void ansysReader::StoreNodalStessesForThisElement( int elemIndex )
    {
       double * stresses = new double [ 11 ];
       // SX, SY, SZ, SXY, SYZ, SXZ, S1, S2, S3, SI, SIGE
-      // Believe it or not, SIGE is the von Mises stress
+      // The first 6 are the component stresses, then the 3 principal stresses
+      // SI is maximum shear stress and SIGE is the von Mises stress
 
       if ( fileIO::readNByteBlockFromFile( stresses,
                      sizeof(double), 11, this->s1, this->endian_flip ) )
