@@ -157,14 +157,14 @@ void Gasifier0D::setCoalType (std::string coaltype)
     _devol_a2 = 1.5e13;
     _devol_e2 = 2.51e8;
     _devol_y2 = 0.6;
-    _oxid_a   = 0.49701e-3; //0.013856;//0.1152e-2;//1.1144e-4;//0.49701e-3;
-    _oxid_n   = 0.9085145; //1.0;//0.819;//0.9085145;
+    _oxid_a   = 0.10672E-02; //0.013856;//0.1152e-2;//1.1144e-4;//0.49701e-3;
+    _oxid_n   = 0.82291037; //1.0;//0.819;//0.9085145;
     _oxid_e   = 1.00416e8;//0.73269e8;//7.5058e7;//1.00416e8;
-    _co2gas_a = 0.68243e-4; //0.024377;//7.4273e-6;//0.68243e-4;
-    _co2gas_n = 0.7589587; //1.0;//0.77032804;//0.7589587;
+    _co2gas_a = 0.11305E-01; //0.024377;//7.4273e-6;//0.68243e-4;
+    _co2gas_n = 0.88653469; //1.0;//0.77032804;//0.7589587;
     _co2gas_e = 1.7522e8;//1.3898e8;//1.7522e8;
-    _h2ogas_a = 0.5465e-3; //0.024377;//3.6751e-5;//0.5465e-3;
-    _h2ogas_n = 0.5;  //1.0;//0.5;
+    _h2ogas_a = 0.60912E-01; //0.024377;//3.6751e-5;//0.5465e-3;
+    _h2ogas_n = 0.73337477;  //1.0;//0.5;
     _h2ogas_e = 1.7522e8;//1.2767e8;//1.7522e8;
   }
   else if (coaltype == "Petcoke") {
@@ -1536,6 +1536,30 @@ void Gasifier0D::execute (Gas *ox_in, Gas *stage2in,
   for(i=0; i<nspc; i++) {
     gas_out->specie[thm->get_spec_nam()[i]] = i;
     gas_out->gas_composite.comp_specie[i] = mol[i];
+  }
+
+  // get exact mercury
+  double mole_HG_sec = fuel_flow*wic_hg / (100.0 - wicAsh)/200.59;
+  double tot_mol = ox_in->gas_composite.M/ox_in->gas_composite.mw();
+  if(stage2in) tot_mol +=
+                 stage2in->gas_composite.M/stage2in->gas_composite.mw();
+  int id_HG    = ox_in->thermo_database->spec_int("HG");
+  int id_HGCL2 = ox_in->thermo_database->spec_int("HGCL2");
+  double fracHG = 0.0, totHG = 0.0;
+  // split the HG between el HG and HGCL2 per equilibrium result
+  if(id_HG>-1) totHG += mol[id_HG];
+  if(id_HGCL2>-1&&wic_cl>0.0) totHG += mol[id_HGCL2];
+  if(totHG&&id_HG>-1) fracHG = mol[id_HG]/totHG;
+  if(id_HG>-1) gas_out->gas_composite.comp_specie[id_HG] = mole_HG_sec*fracHG/tot_mol;
+  if(id_HGCL2>-1){
+     if(wic_cl>0.0) gas_out->gas_composite.comp_specie[id_HGCL2] = mole_HG_sec*(1.0 - fracHG)/tot_mol;
+     else           gas_out->gas_composite.comp_specie[id_HGCL2] = 0.0;
+     if(            gas_out->gas_composite.comp_specie[id_HGCL2]<0.0)
+                    gas_out->gas_composite.comp_specie[id_HGCL2] = 0.0;
+  }
+  if(wic_hg==0.0){
+     if(id_HG>-1)    gas_out->gas_composite.comp_specie[id_HG] = 0.0;
+     if(id_HGCL2>-1) gas_out->gas_composite.comp_specie[id_HG] = 0.0;
   }
 
   //# HHV - WHAT GOES HERE
