@@ -9,7 +9,6 @@ import java.lang.String;
 import java.lang.Integer;
 import java.lang.Math;
 import java.util.Enumeration;
-//import java.util.*;
 
 public class client implements ActionListener
 {
@@ -146,10 +145,6 @@ static class Tabbed_But extends JPanel
       tabbedPane.addTab("Teacher     ", icon, panel5, "");
       tabbedPane.setSelectedIndex(5);
 
-      Component panel8 = makeButtonPanel(8);
-      tabbedPane.addTab("Design Parameters", icon, panel8, "");
-      //tabbedPane.setSelectedIndex(8);
-
       Component panel6 = makeButtonPanel(6);
       tabbedPane.addTab("Streamlines ", icon, panel6, "");
       tabbedPane.setSelectedIndex(6);
@@ -157,6 +152,11 @@ static class Tabbed_But extends JPanel
       Component panel7 = makeButtonPanel(7);
       tabbedPane.addTab("Vectors     ", icon, panel7, "");
       tabbedPane.setSelectedIndex(7);
+
+      Component panel8 = new JPanel(false); //Component panel8 = makeButtonPanel(8);
+      tabbedPane.addTab("Design Parameters", icon, panel8, "");
+      tabbedPane.setSelectedIndex(8);
+      tabbedPane.setEnabledAt(8,false);
 
       Component panel9 = makeButtonPanel(9);
       tabbedPane.addTab("Sounds      ", icon, panel9, "");
@@ -166,9 +166,10 @@ static class Tabbed_But extends JPanel
       tabbedPane.addTab("Vertex Data", icon, panel10, "");
       tabbedPane.setSelectedIndex(10);
 
-      Component panel11 = makeButtonPanel(11);
+      Component panel11 = new JPanel(false); //Component panel11 = makeButtonPanel(11);
       tabbedPane.addTab("View Locations", icon, panel11, "");
       tabbedPane.setSelectedIndex(11);
+      tabbedPane.setEnabledAt(11,false);
 
       Component panel12 = makeButtonPanel(12);
       tabbedPane.addTab("Datasets    ", icon, panel12, "");
@@ -233,16 +234,6 @@ protected Component makeButtonPanel(int type)
       isoPanel = new Iso_Panel();
       panel.add( isoPanel );
 
-      JCheckBox blueMenuToggle = new JCheckBox("blue menu");
-      blueMenuToggle.setActionCommand("BLUE_MENU_TOGGLE");
-      blueMenuToggle.addActionListener(listener);
-      blueMenuToggle.setSelected(true);
-
-      // gui will turn off blue menu by default
-      clt.obsref.id = my_mapper2.get_id("BLUE_MENU_TOGGLE");
-      clt.obj_vis.send_id();
-      blueMenuToggle.setSelected(false);
-
       JCheckBox scalarBarToggle = new JCheckBox("scalar bar");
       scalarBarToggle.setActionCommand("SCALAR_BAR_TOGGLE");
       scalarBarToggle.addActionListener(listener);
@@ -274,8 +265,6 @@ protected Component makeButtonPanel(int type)
       Box buttonBox = Box.createHorizontalBox();
       buttonBox.add( exitButton );
       buttonBox.add( Box.createHorizontalGlue() );
-      buttonBox.add( blueMenuToggle );
-      buttonBox.add( Box.createHorizontalStrut(5) );
       buttonBox.add( scalarBarToggle );
       buttonBox.add( Box.createHorizontalStrut(5) );
       buttonBox.add( refreshButton );
@@ -2646,11 +2635,6 @@ static class ProgressBar extends JPanel
          public void actionPerformed(ActionEvent e) 
          {
             currentVal = clt.obj_vis.testObs.getTimesteps();
-           /* if ( (currentVal == 0) && (oldVal >= 1) && (oldVal != my_pBarLength) )
-            {
-            // do nothing when currentVal makes dramatic jump back to zero
-            }
-            else*/
             if ( oldVal != currentVal )
             {
                System.out.println("updating progress bar with currentVal: "+currentVal);
@@ -2659,7 +2643,6 @@ static class ProgressBar extends JPanel
             }
          }
       });
-
    }
 
    class ButtonListener implements ActionListener 
