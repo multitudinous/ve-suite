@@ -36,7 +36,9 @@
 
 #include "cfdApp.h"
 #ifdef _OSG
+#ifdef VE_PATENTED
 #include "cfdTextureBasedVizHandler.h"
+#endif
 #endif
 
 #include "cfdEnum.h"
@@ -94,9 +96,11 @@
 cfdApp::cfdApp( void )
 {
 #ifdef _OSG
+#ifdef VE_PATENTED
    _tbvHandler = 0;
-   _frameNumber = 0;
    _pbuffer = 0;
+#endif
+   _frameNumber = 0;
 #endif
 }
 
@@ -188,12 +192,12 @@ inline osg::Group* cfdApp::getScene()
 }
 
 #ifdef _OSG
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
 //////////////////////////
 void cfdApp::contextInit()
 {
    vrj::OsgApp::contextInit();
-#ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
 
    if (!_pbuffer){
       _pbuffer = new cfdPBufferManager();
@@ -202,29 +206,25 @@ void cfdApp::contextInit()
    if(_tbvHandler){
       _tbvHandler->SetPBuffer(_pbuffer);
    }
-#endif
-#endif
 }
 ///////////////////////////
 void cfdApp::contextClose()
 {
-#ifdef CFD_USE_SHADERS
    if(!_pbuffer){
       delete _pbuffer;
       _pbuffer = 0;
    }
-#endif
 }
 ////////////////////////////////////////
 cfdPBufferManager* cfdApp::GetPBuffer()
 {
-#ifdef CFD_USE_SHADERS
    if(_pbuffer){
       return _pbuffer;
    }
-#endif
    return 0;
 }
+#endif
+#endif
 void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 {
    //testing--move to cfdApp.cxx
