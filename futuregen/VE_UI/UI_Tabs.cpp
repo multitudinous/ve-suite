@@ -35,29 +35,55 @@
    clientInfoArray->length( numOfClientInfo );
 
    // Get Number of Geometry Files
-   num_geo = server_ref->get_geo_num();
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      num_geo = server_ref->get_geo_num();
+   }
+   else
+   {
+      num_geo = 0;
+   }
    std::cout << "geo number: " << num_geo << std::endl;
-   if( num_geo > 0 )
+   if ( num_geo > 0 )
    {  
-      //CORBA::ULong i = 0;
-      //geoNameArray->length( num_geo );
-      //for(CORBA::ULong i = 0; i < (unsigned int)num_geo; i++)
-      //   geo_name[ i ] = CORBA::string_dup(this->mParamReader->files[ i ]->fileName);
-      geoNameArray = server_ref->get_geo_name();
+      if ( !CORBA::is_nil( server_ref ) )
+      {
+         geoNameArray = server_ref->get_geo_name();
+      }
+      else
+      {
+         geoNameArray = NULL;
+      }
       std::cout << "geo number: " << num_geo << std::endl;
       for(CORBA::ULong i = 0; i < (unsigned int)num_geo; i++)
       std::cout << geoNameArray[ i ] << std::endl;
    }
 
    // Get Number of Sound Files
-   numSounds = server_ref->GetNumberOfSounds();
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      numSounds = server_ref->GetNumberOfSounds();
+   }
+   else
+   {
+      numSounds = 0;
+   }
+
    std::cout << "number of sound files: " << numSounds << std::endl;
    if( numSounds > 0 ){
       soundNameArray = server_ref->GetSoundNameArray();
    }
 
    // Get Number of Teacher Files
-   num_teacher = server_ref->get_teacher_num();
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      num_teacher = server_ref->get_teacher_num();
+   }
+   else
+   {
+      num_teacher = 0;
+   }
+   
    std::cout << "teacher number: "
                << num_teacher << std::endl;
    if( num_teacher > 0 ) {
@@ -65,7 +91,15 @@
    }
    cTeacher_state = 0;
 
-   datasetNum = server_ref->get_sc_num();
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      datasetNum = server_ref->get_sc_num();
+   }
+   else
+   {
+      datasetNum = 0;
+   }
+   
    std::cout << "number of datasets: "
                << datasetNum << std::endl;
 
@@ -101,8 +135,17 @@
                   << numScalarsInFirstDataset << std::endl;
    }
    numScalarsInActiveDataset = numScalarsInFirstDataset;
-
-   short postDataFlag = server_ref->getPostdataState();
+   
+   short postDataFlag;
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      postDataFlag = server_ref->getPostdataState();
+   }
+   else
+   {
+      postDataFlag = 0;
+   }
+   
    std::cout << "postdata number: " << postDataFlag << std::endl;
 
    hasXPostData = hasYPostData = hasZPostData = false;
@@ -122,8 +165,16 @@
       hasZPostData = true;
    }
 
-   cTimesteps = server_ref->getTimesteps();
-   std::cout << "1. timesteps: " << cTimesteps << std::endl;
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      cTimesteps = server_ref->getTimesteps();
+   }
+   else
+   {
+      cTimesteps = 0;
+   }
+   
+   std::cout << "VE_Conductor : timesteps : " << cTimesteps << std::endl;
 
    cPre_state = 0;
 
@@ -358,5 +409,13 @@ void UI_Tabs::sendDataArrayToServer( void )
    std::cout << "    pre_state      : " << clientInfoArray[ 7 ] << std::endl;
    clientInfoArray[ 8 ] = (short)cTeacher_state;
    std::cout << "    teacher_state  : " << clientInfoArray[ 8 ] << std::endl;
-   server_ref->SetClientInfoData( clientInfoArray );
+
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+	  server_ref->SetClientInfoData( clientInfoArray );
+   }
+   else
+   {
+	   cout << "VE_Conductor : Just testing..." << endl;
+   }
 }
