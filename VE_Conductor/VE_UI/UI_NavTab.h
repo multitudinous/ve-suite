@@ -17,16 +17,17 @@ enum NAV_TAB_IDS
    BACKWARD_B,
    CCW_B,
    CW_B,
-   NAV_STEP_SLIDER,
+   TRANS_STEP_SLIDER,
+   ROT_STEP_SLIDER,
    HEAD_ROTATE_CHK,
    RESET_NAV_POSITION
    //NONE= -1000
 };
 
 //override the buttons
-class UI_NavButton: public wxButton{
+class UI_NavButton: public wxBitmapButton{
 public:
-   UI_NavButton(wxWindow* parent, wxWindowID id, const wxString& label);
+   UI_NavButton(wxWindow* parent, wxWindowID id, const wxBitmap& bitmap);
    virtual ~UI_NavButton(){};
 
    //need to override this function
@@ -58,7 +59,8 @@ class UI_NavigationTab : public wxPanel {
    void setActiveButton(int id){_activeButton = id;}
    int getActiveButton(){return _activeButton;}
    
-   void OnNavigationStepSlider( wxScrollEvent& event);
+   void OnTransStepSlider( wxScrollEvent& event);
+   void OnRotStepSlider( wxScrollEvent& event);
    void OnResetNavPosition( wxCommandEvent& event );
  protected:
    int _activeButton;
@@ -70,10 +72,15 @@ class UI_NavigationTab : public wxPanel {
    UI_NavButton* _downButton;
    UI_NavButton* _forwardButton;
    UI_NavButton* _backButton;
-   UI_NavButton* _ccwButton;
-   UI_NavButton* _cwButton;
+   UI_NavButton* _pitchupButton;
+   UI_NavButton* _pitchdownButton;
+   UI_NavButton* _rollccwButton;
+   UI_NavButton* _rollcwButton;
+   UI_NavButton* _yawccwButton;
+   UI_NavButton* _yawcwButton;
 
-   wxSlider*   navigationStepSize;
+   wxSlider*   translationStepSize;
+   wxSlider*   rotationStepSize;
    wxCheckBox* headRotationChk;
    wxButton*   resetNavPosition;
    DECLARE_EVENT_TABLE()

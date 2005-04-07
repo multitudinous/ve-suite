@@ -203,7 +203,8 @@ class cfdNavigate
       */
       float dObj;
    
-      float navigationStepSize;
+      float translationStepSize;
+	  float rotationStepSize;
 };
 
 #endif

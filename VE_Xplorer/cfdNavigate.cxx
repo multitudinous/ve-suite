@@ -80,7 +80,8 @@ void cfdNavigate::Initialize( cfdDCS* worldDCS )
    this->UpdateDir( );
    this->UpdateLoc( );
 
-   this->navigationStepSize = 0.25f;
+   this->translationStepSize = 0.25f;
+   this->rotationStepSize = 1.0f;
    this->worldLoc[0] = this->worldLoc[1] = this->worldLoc[2] = 0.0f;
    this->worldTrans[0] = 0;
    this->worldTrans[1] = 0;
@@ -311,39 +312,39 @@ void cfdNavigate::updateNavigationFromGUI()
          this->IHdigital[0]->getData() == gadget::Digital::ON ) 
    //forward translate
    { 
-      this->worldTrans[1] += navigationStepSize;
+      this->worldTrans[1] += translationStepSize;
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_BKWD) ||
                this->IHdigital[1]->getData() == gadget::Digital::ON ) 
    //backward translate
    { 
-      this->worldTrans[1] -= navigationStepSize;
+      this->worldTrans[1] -= translationStepSize;
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_RIGHT) || 
       this->IHdigital[2]->getData() == gadget::Digital::ON ) 
    //right translate
    { 
-        this->worldTrans[0] += navigationStepSize;
+        this->worldTrans[0] += translationStepSize;
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_LEFT) || 
                this->IHdigital[3]->getData() == gadget::Digital::ON ) 
    //left translate
    { 
-        this->worldTrans[0] -= navigationStepSize;
+        this->worldTrans[0] -= translationStepSize;
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_UP) ||
                this->IHdigital[4]->getData() == gadget::Digital::ON ) 
    //upward translate
    { 
-      this->worldTrans[2] += navigationStepSize;  
+      this->worldTrans[2] += translationStepSize;  
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_DOWN) ||
                this->IHdigital[5]->getData() == gadget::Digital::ON ) 
    //downward translate
    { 
-      this->worldTrans[2] -= navigationStepSize;  
+      this->worldTrans[2] -= translationStepSize;  
    } 
-   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_CW) ||
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == YAW_CCW) ||
                this->IHdigital[6]->getData() == gadget::Digital::ON )        
    //CW rotation
    {
@@ -355,14 +356,14 @@ void cfdNavigate::updateNavigationFromGUI()
       //yang-REI: the following block are moved from the intraFrame Function
       //if ( this->currentWandDirection[ 0 ] > 0.0f )
       //{
-         this->worldRot[ 0 ] -= 1.0f;
+         this->worldRot[ 0 ] -= rotationStepSize;
       //}
       //else 
       //{
       //   this->worldRot[ 0 ] -= 1.0f;
       //}
    }
-   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_CCW) ||
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == YAW_CW) ||
                this->IHdigital[7]->getData() == gadget::Digital::ON )         
    //CCWrotation
    {
@@ -377,8 +378,28 @@ void cfdNavigate::updateNavigationFromGUI()
       //}
       //else 
       //{
-         this->worldRot[ 0 ] += 1.0f;
+         this->worldRot[ 0 ] += rotationStepSize;
       //}
+   }
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == PITCH_DOWN) ||
+               this->IHdigital[7]->getData() == gadget::Digital::ON )         
+   {
+         this->worldRot[ 1 ] += rotationStepSize;
+   }
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == PITCH_UP) ||
+               this->IHdigital[7]->getData() == gadget::Digital::ON )         
+   {
+         this->worldRot[ 1 ] -= rotationStepSize;
+   }
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == ROLL_CW) ||
+               this->IHdigital[7]->getData() == gadget::Digital::ON )         
+   {
+         this->worldRot[ 2 ] -= rotationStepSize;
+   }
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == ROLL_CCW) ||
+               this->IHdigital[7]->getData() == gadget::Digital::ON )         
+   {
+         this->worldRot[ 2 ] += rotationStepSize;
    }
 
 
@@ -394,11 +415,11 @@ void cfdNavigate::updateNavigationFromGUI()
 
       if ( this->currentWandDirection[ 0 ] > 0.0f )
       {
-         this->worldRot[ 0 ] -= 1.0f;
+         this->worldRot[ 0 ] -= rotationStepSize;
       }
       else 
       {
-         this->worldRot[ 0 ] += 1.0f;
+         this->worldRot[ 0 ] += rotationStepSize;
       }
    }
    else if ( this->buttonData[2] == gadget::Digital::TOGGLE_ON ||
@@ -409,15 +430,22 @@ void cfdNavigate::updateNavigationFromGUI()
       this->FwdTranslate();
       this->GetWorldLocation( this->worldTrans );
    }
-   else if ( this->cfdId == CHANGE_NAVIGATION_STEP_SIZE )         
+   else if ( this->cfdId == CHANGE_TRANSLATION_STEP_SIZE )         
    {
-      this->navigationStepSize = cfdIso_value * (0.25f/50.0f);
+      this->translationStepSize = cfdIso_value * (0.25f/50.0f);
+   }
+   else if ( this->cfdId == CHANGE_ROTATION_STEP_SIZE )         
+   {
+      this->rotationStepSize = cfdIso_value * (1.0f/50.0f);
    }
    else if ( this->cfdId == RESET_NAVIGATION_POSITION )         
    {
-      this->worldRot[ 0 ] = 0.0f;
+      //this->worldRot[ 0 ] = 0.0f;
       for ( unsigned int i = 0; i < 3; i++ )
+	  {
          this->worldTrans[ i ] = 0.0f;
+	     this->worldRot[ i ] = 0.0f;
+	  }
    }
    // Set the DCS postion based off of previous 
    // manipulation of the worldTrans array

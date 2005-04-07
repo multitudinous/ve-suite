@@ -4,6 +4,7 @@
 	Version="7.10"
 	Name="WinClient"
 	ProjectGUID="{E18B55CA-745E-4EBC-9056-85CA897EE690}"
+	RootNamespace="WinClient"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -79,14 +80,15 @@
 			IntermediateDirectory=".\Debug"
 			ConfigurationType="1"
 			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE">
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			ManagedExtensions="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)/VE_Conductor/Framework&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Utilities\gui&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
 				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_TAO"
 				IgnoreStandardIncludePath="FALSE"
-				BasicRuntimeChecks="3"
+				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="2"
@@ -96,7 +98,7 @@
 				ProgramDataBaseFileName=".\Debug/"
 				BrowseInformation="1"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="4"
+				DebugInformationFormat="3"
 				CompileAs="0"
 				DisableSpecificWarnings="4541"
 				ForcedIncludeFiles="$(XERCESCROOT)\src\xercesc\dom\DOM.hpp;$(XERCESCROOT)\src\xercesc\dom\DOMDocument.hpp"
@@ -109,10 +111,12 @@
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\WinClientd.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Release&quot;"
 				GenerateDebugInformation="TRUE"
+				AssemblyDebug="1"
 				ProgramDatabaseFile=".\Debug/WinClient.pdb"
 				SubSystem="2"
+				TurnOffAssemblyGeneration="FALSE"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -1157,6 +1161,12 @@
 			</File>
 			<File
 				RelativePath="PortDialog.h">
+			</File>
+			<File
+				RelativePath=".\resource.h">
+			</File>
+			<File
+				RelativePath=".\resource1.h">
 			</File>
 			<File
 				RelativePath="ResultPanel.h">
