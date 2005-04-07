@@ -1,7 +1,6 @@
 #include "UI_NavTab.h"
 #include "UI_Tabs.h"
 #include "cfdEnum.h"
-#include "resource.h"
 #include <iostream>
 
 
