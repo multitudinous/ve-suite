@@ -289,13 +289,6 @@ void cfdNavigate::CursorTranslate( )
   }
 }
 
-//////////////////////////////////////
-//this is a straight copy of the    //
-//indian hills nav stuff because    //
-//we are doing the same thing only  //
-//the input is from the UI_Nav page //
-//in the gui                        //
-//////////////////////////////////////
 void cfdNavigate::SetDataValues( int id, int iso )
 {
    this->cfdId = id;
@@ -306,7 +299,6 @@ void cfdNavigate::updateNavigationFromGUI()
 {
    this->buttonData[ 1 ] = this->digital[ 1 ]->getData();
    this->buttonData[ 2 ] = this->digital[ 2 ]->getData();
-   float tempArray[ 3 ];
    
    if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_FWD) ||
          this->IHdigital[0]->getData() == gadget::Digital::ON ) 
@@ -348,56 +340,27 @@ void cfdNavigate::updateNavigationFromGUI()
                this->IHdigital[6]->getData() == gadget::Digital::ON )        
    //CW rotation
    {
-      //this->currentWandDirection = this->GetDirection();
-
-      /*vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
-         << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;*/
-      //yang-REI: the following block are moved from the intraFrame Function
-      //if ( this->currentWandDirection[ 0 ] > 0.0f )
-      //{
-         this->worldRot[ 0 ] -= rotationStepSize;
-      //}
-      //else 
-      //{
-      //   this->worldRot[ 0 ] -= 1.0f;
-      //}
+      this->worldRot[ 0 ] -= rotationStepSize;
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == YAW_CW) ||
                this->IHdigital[7]->getData() == gadget::Digital::ON )         
    //CCWrotation
    {
-      //this->currentWandDirection = this->GetDirection();
-      /*vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
-         << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;*/
-      //yang-REI: the following block are moved from the intraFrame Function
-      //if ( this->currentWandDirection[ 0 ] > 0.0f )
-      //{
-      //   this->worldRot[ 0 ] -= 1.0f;
-      //}
-      //else 
-      //{
-         this->worldRot[ 0 ] += rotationStepSize;
-      //}
+      this->worldRot[ 0 ] += rotationStepSize;
    }
-   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == PITCH_DOWN) ||
-               this->IHdigital[7]->getData() == gadget::Digital::ON )         
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == PITCH_DOWN) )         
    {
          this->worldRot[ 1 ] += rotationStepSize;
    }
-   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == PITCH_UP) ||
-               this->IHdigital[7]->getData() == gadget::Digital::ON )         
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == PITCH_UP) )         
    {
          this->worldRot[ 1 ] -= rotationStepSize;
    }
-   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == ROLL_CW) ||
-               this->IHdigital[7]->getData() == gadget::Digital::ON )         
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == ROLL_CW) )         
    {
          this->worldRot[ 2 ] -= rotationStepSize;
    }
-   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == ROLL_CCW) ||
-               this->IHdigital[7]->getData() == gadget::Digital::ON )         
+   else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == ROLL_CCW) )         
    {
          this->worldRot[ 2 ] += rotationStepSize;
    }
@@ -426,7 +389,6 @@ void cfdNavigate::updateNavigationFromGUI()
              this->buttonData[2] == gadget::Digital::ON )
    // Navigation based on current wand direction
    { 
-      vprDEBUG(vprDBG_ALL,1) << " Navigate" << std::endl << vprDEBUG_FLUSH;
       this->FwdTranslate();
       this->GetWorldLocation( this->worldTrans );
    }
@@ -438,106 +400,15 @@ void cfdNavigate::updateNavigationFromGUI()
    {
       this->rotationStepSize = cfdIso_value * (1.0f/50.0f);
    }
-   else if ( this->cfdId == RESET_NAVIGATION_POSITION )         
-   {
-      //this->worldRot[ 0 ] = 0.0f;
-      for ( unsigned int i = 0; i < 3; i++ )
-	  {
-         this->worldTrans[ i ] = 0.0f;
-	     this->worldRot[ i ] = 0.0f;
-	  }
-   }
+
    // Set the DCS postion based off of previous 
    // manipulation of the worldTrans array
-      for ( unsigned int i = 0; i < 3; i++ )
-         tempArray[ i ] = -this->worldTrans[ i ];
+   float tempArray[ 3 ];
+   for ( unsigned int i = 0; i < 3; i++ )
+      tempArray[ i ] = -this->worldTrans[ i ];
+
+   vprDEBUG(vprDBG_ALL,3) << " Navigate" << std::endl << vprDEBUG_FLUSH;
    this->worldDCS->SetTranslationArray( tempArray );
    this->worldDCS->SetRotationArray( this->worldRot );   
    this->UpdateLoc( this->worldTrans );
 }
-/*
-inline void cfdApp::NavigationForIHCC( void )
-{
-   if ( this->IHdigital[0]->getData() == gadget::Digital::ON ) //forward translate
-   { 
-        this->worldTrans[1] += 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[1]->getData() == gadget::Digital::ON ) //backward translate
-   { 
-        this->worldTrans[1] -= 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[2]->getData() == gadget::Digital::ON ) //right translate
-   { 
-        this->worldTrans[0] += 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[3]->getData() == gadget::Digital::ON ) //left translate
-   { 
-        this->worldTrans[0] -= 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[4]->getData() == gadget::Digital::ON ) //upward translate
-   { 
-        this->worldTrans[2] += 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[5]->getData() == gadget::Digital::ON ) //downward translate
-   { 
-        this->worldTrans[2] -= 0.25f;
-        this->worldDCS->setTrans( -this->worldTrans[0],
-                                  -this->worldTrans[1],
-                                  -this->worldTrans[2] );
-   }
-   else if ( this->IHdigital[6]->getData() == gadget::Digital::ON )        //CW rotation
-   {
-      this->currentWandDirection = this->nav->GetDirection();
-
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
-         << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
-      //yang-REI: the following block are moved from the intraFrame Function
-      if ( this->currentWandDirection[ 0 ] > 0.0f )
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      else 
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      this->worldDCS->setRot( this->worldRot[ 0 ], 
-                              this->worldRot[ 1 ], 
-                              this->worldRot[ 2 ] );   
-   }
-   else if ( this->IHdigital[7]->getData() == gadget::Digital::ON )         //CCWrotation
-   {
-      this->currentWandDirection = this->nav->GetDirection();
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
-         << this->currentWandDirection[1] << " : " 
-         << this->currentWandDirection[2] << std::endl << vprDEBUG_FLUSH;
-      //yang-REI: the following block are moved from the intraFrame Function
-      if ( this->currentWandDirection[ 0 ] > 0.0f )
-      {
-         this->worldRot[ 0 ] -= 1.0f;
-      }
-      else 
-      {
-         this->worldRot[ 0 ] += 1.0f;
-      }
-      this->worldDCS->setRot( this->worldRot[ 0 ], 
-                              this->worldRot[ 1 ], 
-                              this->worldRot[ 2 ] );   
-   }
-}
-*/
