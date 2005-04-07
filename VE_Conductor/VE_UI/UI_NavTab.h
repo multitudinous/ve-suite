@@ -6,6 +6,7 @@
 #endif
 
 #include <wx/wx.h>
+#include <wx/image.h>
 
 enum NAV_TAB_IDS 
 {
