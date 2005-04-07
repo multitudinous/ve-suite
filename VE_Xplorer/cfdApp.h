@@ -139,9 +139,9 @@ class cfdApp: public vrj::OsgApp
       //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
 #ifdef _OSG
-#ifdef _WEB_INTERFACE
+//#ifdef _WEB_INTERFACE
 		void draw();
-#endif	//_WEB_INTERFACE
+//#endif	//_WEB_INTERFACE
 #ifdef VE_PATENTED
       cfdTextureBasedVizHandler* _tbvHandler;
 #ifdef CFD_USE_SHADERS

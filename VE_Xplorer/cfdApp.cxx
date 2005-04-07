@@ -75,6 +75,10 @@
 #include <osgDB/WriteFile>
 #include <osg/FrameStamp>
 #include <osgUtil/SceneView>
+#include <osg/MatrixTransform>
+#include <gmtl/Generate.h>
+#include <gmtl/Coord.h>
+#include <osg/Matrix>
 #endif
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -92,7 +96,6 @@
 //web interface stuff
 #ifdef _WEB_INTERFACE
 #include <corona.h>
-#include <vrj/Draw/OGL/GlApp.h>
 #endif   //_WEB_INTERFACE
 
 cfdApp::cfdApp( void )
@@ -482,9 +485,11 @@ void cfdApp::writeImageFileForWeb(void*)
       }
    }
 }
+#endif   //_WEB_INTERFACE
 
 #ifdef _OSG
 void cfdApp::draw()
+{
    glClear(GL_DEPTH_BUFFER_BIT);
 
    glPushAttrib(GL_ALL_ATTRIB_BITS);
@@ -505,8 +510,8 @@ void cfdApp::draw()
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT( sv != NULL);
 
-   GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
-   gl_manager = GlDrawManager::instance();
+   vrj::GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
+   gl_manager = vrj::GlDrawManager::instance();
 
    // Set the up the viewport (since OSG clears it out)
    float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
@@ -527,26 +532,42 @@ void cfdApp::draw()
    sv->setViewport(ll_x, ll_y, x_size, y_size);
 
    //Get the view matrix and the frustrum form the draw manager
-   GlDrawManager* drawMan = dynamic_cast<GlDrawManager*>(this->getDrawManager());
+   vrj::GlDrawManager* drawMan = dynamic_cast<vrj::GlDrawManager*>(this->getDrawManager());
    vprASSERT(drawMan != NULL);
-   GlUserData* userData = drawMan->currentUserData();
+   vrj::GlUserData* userData = drawMan->currentUserData();
 
    // Copy the matrix
-   Projection* project = userData->getProjection();
+   vrj::Projection* project = userData->getProjection();
    const float* vj_proj_view_mat = project->getViewMatrix().mData;
    osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
+/*
+   gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
+   gmtl::Matrix44f _vjMatrix;
+   _vjMatrix.set( vj_proj_view_mat );
+   gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
+   gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+   osg_proj_xform_mat->set( _vjMatrix.mData );
+*/
    osg_proj_xform_mat->set( vj_proj_view_mat );
 
    //Get the frustrum
-   Frustum frustum = project->getFrustum();
-   sv->setProjectionMatrixAsFrustum(frustum[Frustum::VJ_LEFT],
-                                    frustum[Frustum::VJ_RIGHT],
-                                    frustum[Frustum::VJ_BOTTOM],
-                                    frustum[Frustum::VJ_TOP],
-                                    frustum[Frustum::VJ_NEAR],
-                                    frustum[Frustum::VJ_FAR]);
-
+   vrj::Frustum frustum = project->getFrustum();
+   sv->setProjectionMatrixAsFrustum(frustum[vrj::Frustum::VJ_LEFT],
+                                    frustum[vrj::Frustum::VJ_RIGHT],
+                                    frustum[vrj::Frustum::VJ_BOTTOM],
+                                    frustum[vrj::Frustum::VJ_TOP],
+                                    frustum[vrj::Frustum::VJ_NEAR],
+                                    frustum[vrj::Frustum::VJ_FAR]);
+   
+   // need to mess with this matrix to change how the coordinate system is 
+   // positioned
+   // maybe use this function call
+   /*osgUtil::SceneView::setViewMatrixAsLookAt  	(   	const osg::Vec3 &   	 eye,
+		const osg::Vec3 &  	center,
+		const osg::Vec3 &  	up
+	) */ 
    sv->setViewMatrix(*osg_proj_xform_mat);
+#ifdef _WEB_INTERFACE
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
    if(userData->getViewport()->isSimulator())   //if this is a sim window context....
    {
@@ -556,13 +577,16 @@ void cfdApp::draw()
 //      gluLookAt(0, 100, 0, 0, 0, 0, 0, 0, -1);   //an overhead view
       if(captureNextFrameForWeb) goCapture=true;   //now if we're go for capture, we'll know for sure
    }
+#endif   //_WEB_INTERFACE
 
    //Draw the scene
    sv->update();
    sv->cull();
    sv->draw();
+#ifdef _WEB_INTERFACE
    if(goCapture)
       captureWebImage();
+#endif   //_WEB_INTERFACE
    glMatrixMode(GL_TEXTURE);
    glPopMatrix();
 
@@ -577,4 +601,3 @@ void cfdApp::draw()
    glPopAttrib();
 }
 #endif //_OSG
-#endif   //_WEB_INTERFACE
