@@ -74,32 +74,32 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
    imagecoord->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/coordinates.bmp",wxBITMAP_TYPE_BMP);
 #else
    wxBitmap* image1 = new wxBitmap();
-   image1->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/x_left.BMP",wxBITMAP_TYPE_BMP);
+   image1->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/x_left.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image2 = new wxBitmap();
-   image2->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/x_right.BMP",wxBITMAP_TYPE_BMP);
+   image2->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/x_right.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image3 = new wxBitmap();
-   image3->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/z_up.BMP",wxBITMAP_TYPE_BMP);
+   image3->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/z_up.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image4 = new wxBitmap();
-   image4->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/z_down.BMP",wxBITMAP_TYPE_BMP);
+   image4->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/z_down.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image5 = new wxBitmap();
-   image5->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/y_up.BMP",wxBITMAP_TYPE_BMP);
+   image5->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/y_up.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image6 = new wxBitmap();
-   image6->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/y_down.BMP",wxBITMAP_TYPE_BMP);
+   image6->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/y_down.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image7 = new wxBitmap();
-   image7->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/pitch_down.BMP",wxBITMAP_TYPE_BMP);
+   image7->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/pitch_down.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image8 = new wxBitmap();
-   image8->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/pitch_up.BMP",wxBITMAP_TYPE_BMP);
+   image8->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/pitch_up.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image9 = new wxBitmap();
-   image9->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/ccw_roll.BMP",wxBITMAP_TYPE_BMP);
+   image9->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/ccw_roll.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image10 = new wxBitmap();
-   image10->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/cw_roll.BMP",wxBITMAP_TYPE_BMP);
+   image10->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/cw_roll.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image11 = new wxBitmap();
-   image11->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/yaw_ccw.BMP",wxBITMAP_TYPE_BMP);
+   image11->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/yaw_ccw.BMP",wxBITMAP_TYPE_XPM);
    wxBitmap* image12 = new wxBitmap();
-   image12->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/yaw_cw.BMP",wxBITMAP_TYPE_BMP);
+   image12->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/yaw_cw.BMP",wxBITMAP_TYPE_XPM);
 
    wxBitmap* imagecoord = new wxBitmap();
-   imagecoord->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/coordinates.bmp",wxBITMAP_TYPE_BMP);
+   imagecoord->LoadFile("./../../VE_Conductor/Framework/Nav_bitmaps/coordinates.bmp",wxBITMAP_TYPE_XPM);
 #endif
 //************Done loading up the bitmaps
 
