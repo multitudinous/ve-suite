@@ -56,10 +56,14 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    image11->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/yaw_ccw.BMP",wxBITMAP_TYPE_BMP);
    wxBitmap* image12 = new wxBitmap();
    image12->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/yaw_cw.BMP",wxBITMAP_TYPE_BMP);
+
+   wxBitmap* imagecoord = new wxBitmap();
+   imagecoord->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/coordinates.bmp",wxBITMAP_TYPE_BMP);
 #else
+   wxString temp;
    
    wxImage* image1 = new wxImage();
-   wxString temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/x_left.BMP");
+   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/x_left.BMP");
    image1->LoadFile(temp,wxBITMAP_TYPE_BMP);
    wxImage* image2 = new wxImage();
    temp.clear();
@@ -105,6 +109,11 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    temp.clear();
    temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/yaw_cw.bmp");
    image12->LoadFile(temp,wxBITMAP_TYPE_BMP);
+
+   wxImage* imagecoord = new wxImage();
+   temp.clear();
+   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/coordinates.bmp");
+   imagecoord->LoadFile(temp,wxBITMAP_TYPE_BMP);
 #endif
 //************Done loading up the bitmaps
 
@@ -224,16 +233,6 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    //***********************Done filling the gridsizer, now pull together the page
 
    navCol->Add(topSizer,5,wxALIGN_CENTER_HORIZONTAL|wxALL);
-
-   #ifdef WIN32
-   wxBitmap* imagecoord = new wxBitmap();
-   imagecoord->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/coordinates.bmp",wxBITMAP_TYPE_BMP);
-#else
-   wxImage* imagecoord = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/coordinates.bmp");
-   imagecoord->LoadFile(temp,wxBITMAP_TYPE_BMP);
-#endif
 
    wxStaticBitmap* coordpic = new wxStaticBitmap(this, -1,wxBitmap(*imagecoord),wxDefaultPosition,
 											wxSize(100,102),wxMINIMIZE_BOX|wxTHICK_FRAME); 
