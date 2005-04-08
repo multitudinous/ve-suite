@@ -48,7 +48,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    vesuitehome = getenv("VE_SUITE_HOME");
    if(vesuitehome){
       strcpy(directory,vesuitehome);
-      strcat(directory,"/VE_Conductor/Framework/Nav_bitmaps/");
+      strcat(directory,"/VE_Conductor/Framework/Nav_Bitmaps/");
       _image1 = _createButtonImage(directory,"x_left.BMP");
       _image2 = _createButtonImage(directory,"x_right.BMP");
       _image3 = _createButtonImage(directory,"z_up.BMP");
@@ -61,7 +61,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
       _image10 = _createButtonImage(directory,"cw_roll.BMP");
       _image11 = _createButtonImage(directory,"yaw_ccw.BMP");
       _image12 = _createButtonImage(directory,"yaw_cw.BMP");
-      _imagecoord = _createButtonImage(directory,"coordinates.bmp");
+      _imagecoord = _createButtonImage(directory,"coordinates.BMP");
    }
 
 //************Done loading up the bitmaps
