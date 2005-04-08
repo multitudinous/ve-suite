@@ -338,6 +338,9 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
    ((UI_Tabs *)_parent)->cId = CHANGE_TRANSLATION_STEP_SIZE;
    ((UI_Tabs *)_parent)->cIso_value = navScroll->translationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   ((UI_Tabs *)_parent)->cId = CHANGE_ROTATION_STEP_SIZE;
+   ((UI_Tabs *)_parent)->cIso_value = navScroll->rotationStepSize->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 
 }
 ///////////////////////////////////////////////////
