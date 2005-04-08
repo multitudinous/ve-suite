@@ -25,10 +25,13 @@ export CFDHOSTTYPE=`echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | 
 export TAO_BUILD=TRUE
 export CLUSTER_APP=TRUE
 export SCENE_GRAPH=OSG
+export VE_PATENTED=TRUE
 
 export PFNFYLEVEL=2
-export VPR_DEBUG_NFY_LEVEL=2
+export VPR_DEBUG_NFY_LEVEL=1
 export VPR_DEBUG_ENABLE=1
+export NO_RTRC_PLUGIN=TRUE
+export NO_PERF_PLUGIN=TRUE
 export PFSHAREDSIZE=534773700
 export OMNIORB_CONFIG=${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 export OMNINAMES_LOGDIR=${VE_SUITE_HOME}/VE_Installer
@@ -124,6 +127,9 @@ export DZR_BASE_DIR=${VJ_BASE_DIR}/share/Doozer
 export SNX_BASE_DIR=${VJ_BASE_DIR}
 export PATH=${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
 export PATH=${WX_HOME}/bin:${PATH}
+if [ $?OSG_HOME ]; then
+   export PATH=${OSG_HOME}/OpenSceneGraph/bin:${PATH}
+fi
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
 #echo "              or 'gmake clean'

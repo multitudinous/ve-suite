@@ -32,11 +32,13 @@ case $1 in
     killall -q Exe_server 
     echo Starting TAO Naming Service on $TAO_MACHINE, port $TAO_PORT
     Naming_Service -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
+#/hostname_in_ior=lars.netl.doe.gov &
+#-ORBDebug -ORBDebugLevel 10 -ORBEndPoint iiop://ids7.scilan:54 &
     sleep 5
     echo TAO Naming Service Started
     echo Starting VE-CE...
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/Exe_server \
-    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &
+    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/Exe_server \#-ORBEndPoint iiop://ids7.scilan:57/hostname_in_ior=lars.netl.doe.gov \
+    -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &#-ORBDebug -ORBDebugLevel 10 &
   ;;
   
   -shutdown)
