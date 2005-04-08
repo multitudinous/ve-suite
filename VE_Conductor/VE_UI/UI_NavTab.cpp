@@ -3,28 +3,19 @@
 #include "cfdEnum.h"
 #include <iostream>
 
-
-BEGIN_EVENT_TABLE(UI_NavigationTab, wxPanel)
-   EVT_MOUSE_EVENTS(UI_NavigationTab::onMouse)
-   EVT_COMMAND_SCROLL( TRANS_STEP_SLIDER, UI_NavigationTab::OnTransStepSlider)
-   EVT_COMMAND_SCROLL( ROT_STEP_SLIDER, UI_NavigationTab::OnRotStepSlider)
-   EVT_BUTTON        ( RESET_NAV_POSITION, UI_NavigationTab::OnResetNavPosition)
-  //EVT_LEFT_UP(UI_NavigationTab::onMouse)
+BEGIN_EVENT_TABLE(UI_NavigateScroll, wxScrolledWindow)
 END_EVENT_TABLE()
-
-BEGIN_EVENT_TABLE(UI_NavButton, wxButton)
-   //EVT_S(UI_NavButton::onMouse)
-   EVT_LEFT_DOWN(UI_NavButton::onMouse)
-   EVT_LEFT_UP(UI_NavButton::onMouseUp)
-END_EVENT_TABLE()
-
-////////////////////////////////////////////////////////  
-UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
-:wxPanel(tControl)
+UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
+:wxScrolledWindow(parent, -1, wxDefaultPosition, wxDefaultSize,
+		    wxHSCROLL | wxVSCROLL)
 {
-   _parent = tControl;
+  int nUnitX=20;
+  int nUnitY=10;
+  int nPixX = 5;
+  int nPixY = 10;
+  SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
-   //The static box for the buttons
+     //The static box for the buttons
    wxStaticBox* buttonStaticBox = new wxStaticBox(this, -1, wxT("Navigation Controls"));
 
    //need a sizer for this box
@@ -32,13 +23,9 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
    //rather than on top of each other(horizontally)
    wxStaticBoxSizer* buttonStaticBoxSizer = new wxStaticBoxSizer( buttonStaticBox, wxVERTICAL);
 
-   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
-
    wxBoxSizer* navCol = new wxBoxSizer(wxVERTICAL);
 
    wxGridSizer* topSizer = new wxGridSizer(11,4);
-
-   _activeButton = NONE;
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
    //*******Loading up the bitmaps for navigation buttons
@@ -69,9 +56,6 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
    image11->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/yaw_ccw.BMP",wxBITMAP_TYPE_BMP);
    wxBitmap* image12 = new wxBitmap();
    image12->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/yaw_cw.BMP",wxBITMAP_TYPE_BMP);
-
-   wxBitmap* imagecoord = new wxBitmap();
-   imagecoord->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/coordinates.bmp",wxBITMAP_TYPE_BMP);
 #else
    
    wxImage* image1 = new wxImage();
@@ -121,11 +105,6 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
    temp.clear();
    temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/yaw_cw.bmp");
    image12->LoadFile(temp,wxBITMAP_TYPE_BMP);
-
-   wxImage* imagecoord = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/coordinates.bmp");
-   imagecoord->LoadFile(temp,wxBITMAP_TYPE_BMP);
 #endif
 //************Done loading up the bitmaps
 
@@ -246,13 +225,21 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
 
    navCol->Add(topSizer,5,wxALIGN_CENTER_HORIZONTAL|wxALL);
 
-   buttonStaticBoxSizer->Add(navCol,4,wxALIGN_CENTER_HORIZONTAL);
+   #ifdef WIN32
+   wxBitmap* imagecoord = new wxBitmap();
+   imagecoord->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/coordinates.bmp",wxBITMAP_TYPE_BMP);
+#else
+   wxImage* imagecoord = new wxImage();
+   temp.clear();
+   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/coordinates.bmp");
+   imagecoord->LoadFile(temp,wxBITMAP_TYPE_BMP);
+#endif
 
    wxStaticBitmap* coordpic = new wxStaticBitmap(this, -1,wxBitmap(*imagecoord),wxDefaultPosition,
 											wxSize(100,102),wxMINIMIZE_BOX|wxTHICK_FRAME); 
    wxGridSizer* picSizer = new wxGridSizer(1,1);
    picSizer->Add(coordpic,1,wxALIGN_CENTER_HORIZONTAL);
-   
+
    // add step size sliders
    translationStepSize = new wxSlider(this, TRANS_STEP_SLIDER,50,1,100,
                                 wxDefaultPosition, wxDefaultSize,
@@ -287,15 +274,51 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
    miscGroup->Add( picSizer,1,wxALIGN_RIGHT);
 
    // Add everything to static box sizer
+   buttonStaticBoxSizer->Add( navCol,4,wxALIGN_CENTER_HORIZONTAL);
    buttonStaticBoxSizer->Add( stepSizeGroup,2,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
    buttonStaticBoxSizer->Add( miscGroup,2,wxALL|wxALIGN_LEFT, 5);
 
-   mainSizer->Add( buttonStaticBoxSizer,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
+   SetSizer(buttonStaticBoxSizer);
+}
+
+UI_NavigateScroll::~UI_NavigateScroll()
+{
+}
+
+
+
+BEGIN_EVENT_TABLE(UI_NavigationTab, wxPanel)
+   EVT_MOUSE_EVENTS(UI_NavigationTab::onMouse)
+   EVT_COMMAND_SCROLL( TRANS_STEP_SLIDER, UI_NavigationTab::OnTransStepSlider)
+   EVT_COMMAND_SCROLL( ROT_STEP_SLIDER, UI_NavigationTab::OnRotStepSlider)
+   EVT_BUTTON        ( RESET_NAV_POSITION, UI_NavigationTab::OnResetNavPosition)
+  //EVT_LEFT_UP(UI_NavigationTab::onMouse)
+END_EVENT_TABLE()
+
+BEGIN_EVENT_TABLE(UI_NavButton, wxButton)
+   //EVT_S(UI_NavButton::onMouse)
+   EVT_LEFT_DOWN(UI_NavButton::onMouse)
+   EVT_LEFT_UP(UI_NavButton::onMouseUp)
+END_EVENT_TABLE()
+
+////////////////////////////////////////////////////////  
+UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
+:wxPanel(tControl)
+{
+   _parent = tControl;
+
+   wxBoxSizer* mainSizer = new wxBoxSizer(wxVERTICAL);
+
+   _activeButton = NONE;
+
+   navScroll = new UI_NavigateScroll(this);
+
+   mainSizer->Add( navScroll,1,wxALL|wxALIGN_LEFT|wxEXPAND, 5);
    SetSizer( mainSizer );
 
    // Update VE-Xplorer data
    ((UI_Tabs *)_parent)->cId = CHANGE_TRANSLATION_STEP_SIZE;
-   ((UI_Tabs *)_parent)->cIso_value = translationStepSize->GetValue();
+   ((UI_Tabs *)_parent)->cIso_value = navScroll->translationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 
 }
@@ -334,10 +357,10 @@ void UI_NavButton::onMouseUp(wxMouseEvent& mouse)
    //specific button we need to 
    //tell cfdApp to stop moving 
    //reset the active button
-   ((UI_NavigationTab*)GetParent())->setActiveButton(NONE);
+   ((UI_NavigationTab*)((UI_NavigateScroll*)GetParent())->GetParent())->setActiveButton(NONE);
       
    //relay info to cfdApp 
-   ((UI_NavigationTab*)GetParent())->updateParent(0,-1);
+   ((UI_NavigationTab*)((UI_NavigateScroll*)GetParent())->GetParent())->updateParent(0,-1);
 }
 ///////////////////////////////////////////////
 //only activate motion when left mouse is    //
@@ -345,7 +368,7 @@ void UI_NavButton::onMouseUp(wxMouseEvent& mouse)
 ///////////////////////////////////////////////
 void UI_NavButton::onMouse(wxMouseEvent& mouse)
 {
-   int activeId = ((UI_NavigationTab*)GetParent())->getActiveButton();
+   int activeId = ((UI_NavigationTab*)((UI_NavigateScroll*)GetParent())->GetParent())->getActiveButton();
 
    //no button pushed yet
    if(activeId == NONE){     
@@ -356,10 +379,10 @@ void UI_NavButton::onMouse(wxMouseEvent& mouse)
          _buttonPushed = 1;         
 
          //update the active button
-         ((UI_NavigationTab*)GetParent())->setActiveButton(GetId());
+         ((UI_NavigationTab*)((UI_NavigateScroll*)GetParent())->GetParent())->setActiveButton(GetId());
 
          //pass the nav info to cfdApp
-         ((UI_NavigationTab*)GetParent())->updateParent(_buttonPushed,GetId());              
+         ((UI_NavigationTab*)((UI_NavigateScroll*)GetParent())->GetParent())->updateParent(_buttonPushed,GetId());              
       }
    }
 }
@@ -388,7 +411,7 @@ void UI_NavigationTab::OnTransStepSlider( wxScrollEvent& event)
 {
    event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_TRANSLATION_STEP_SIZE;
-   ((UI_Tabs *)_parent)->cIso_value = translationStepSize->GetValue();
+   ((UI_Tabs *)_parent)->cIso_value = navScroll->translationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
@@ -396,7 +419,7 @@ void UI_NavigationTab::OnRotStepSlider( wxScrollEvent& event)
 {
    event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_ROTATION_STEP_SIZE;
-   ((UI_Tabs *)_parent)->cIso_value = rotationStepSize->GetValue();
+   ((UI_Tabs *)_parent)->cIso_value = navScroll->rotationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
@@ -404,6 +427,6 @@ void UI_NavigationTab::OnResetNavPosition( wxCommandEvent& event )
 {
    event.GetInt();
    ((UI_Tabs *)_parent)->cId  = RESET_NAVIGATION_POSITION;
-   ((UI_Tabs *)_parent)->cIso_value = translationStepSize->GetValue();
+   ((UI_Tabs *)_parent)->cIso_value = navScroll->translationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }

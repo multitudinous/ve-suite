@@ -40,6 +40,32 @@ protected:
    DECLARE_EVENT_TABLE()
 };
 
+class UI_NavigateScroll: public wxScrolledWindow{
+public:
+   UI_NavigateScroll(wxWindow* parent);
+   ~UI_NavigateScroll();
+
+   UI_NavButton* _leftButton;
+   UI_NavButton* _rightButton;
+   UI_NavButton* _upButton;
+   UI_NavButton* _downButton;
+   UI_NavButton* _forwardButton;
+   UI_NavButton* _backButton;
+   UI_NavButton* _pitchupButton;
+   UI_NavButton* _pitchdownButton;
+   UI_NavButton* _rollccwButton;
+   UI_NavButton* _rollcwButton;
+   UI_NavButton* _yawccwButton;
+   UI_NavButton* _yawcwButton;
+
+   wxSlider*   translationStepSize;
+   wxSlider*   rotationStepSize;
+   wxCheckBox* headRotationChk;
+   wxButton*   resetNavPosition;
+
+   DECLARE_EVENT_TABLE()
+};
+
 //the main navigation tab class
 class UI_NavigationTab : public wxPanel {
  public:
@@ -63,27 +89,13 @@ class UI_NavigationTab : public wxPanel {
    void OnTransStepSlider( wxScrollEvent& event);
    void OnRotStepSlider( wxScrollEvent& event);
    void OnResetNavPosition( wxCommandEvent& event );
+
+   UI_NavigateScroll* navScroll;
+
  protected:
    int _activeButton;
    wxNotebook* _parent;
 
-   UI_NavButton* _leftButton;
-   UI_NavButton* _rightButton;
-   UI_NavButton* _upButton;
-   UI_NavButton* _downButton;
-   UI_NavButton* _forwardButton;
-   UI_NavButton* _backButton;
-   UI_NavButton* _pitchupButton;
-   UI_NavButton* _pitchdownButton;
-   UI_NavButton* _rollccwButton;
-   UI_NavButton* _rollcwButton;
-   UI_NavButton* _yawccwButton;
-   UI_NavButton* _yawcwButton;
-
-   wxSlider*   translationStepSize;
-   wxSlider*   rotationStepSize;
-   wxCheckBox* headRotationChk;
-   wxButton*   resetNavPosition;
    DECLARE_EVENT_TABLE()
 };
 #endif  //_VE_UI_NAV_H_
