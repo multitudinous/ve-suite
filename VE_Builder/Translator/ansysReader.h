@@ -51,12 +51,14 @@ class ansysReader
 
    private:
       void FlipEndian();
-      int32 ReadNthInteger( int32 & n );
-      int64 ReadNthDoubleLong( int32 & n );
+      int64 ReadIntegerAsInt64( int32 & n );
+      int64 readInt64ansys();
+      int32 ReadNthInt32( int32 & n );
+      int64 ReadNthInt64( int32 & n );
       float ReadNthFloat( int32 & n );
       double ReadNthDouble( int32 & n );
 
-      void ReadHeader();
+      void ReadGenericBinaryHeader();
       void ReadRSTHeader();
       void ReadDOFBlock();
       void ReadNodalEquivalencyTable();
@@ -67,7 +69,9 @@ class ansysReader
       void ReadElementTypeIndexTable();
       void ReadRealConstantsIndexTable();
       void ReadCoordinateSystemsIndexTable();
-      void ReadNodalCoordinates();
+      void ReadNodalCoordinates_8();
+      void ReadNodalCoordinates_9();
+      void CreatePointerArrayForShellNodes();
       void ReadElementDescriptionIndexTable();
       void ReadHeaderExtension();
 
@@ -78,13 +82,13 @@ class ansysReader
       int32 * ReadElementTypeDescription( int32 ptr );
       double * ReadElementRealConstants( int32 ptr );
       double * ReadCoordinateSystemDescription( int32 ptr );
-      void ReadGenericBlock( int32 int32Position );
-      void ReadElementIndexTable( int32, int32 );
+      void ReadGenericBlock( int32 & intPosition );
+      void ReadElementIndexTable( int32, int32, int64 );
       int32 VerifyNumberOfValues( int32 reportedNumValues, int32 blockSize_1 );
       void VerifyBlock( int32 blockSize_1, int32 blockSize_2 );
       void ReadNodalComponentStresses( int32 );
       void AttachStressToGrid();
-      void StoreNodalStessesForThisElement( int32 elemIndex );
+      void StoreNodalStessesForThisElement( int32 elemIndex, int64 ptrElement_i );
       double * GetIntersectionPoint( double n1[ 3 ], double n2[ 3 ],
                                      double p1[ 3 ], double p2[ 3 ] );
       char * ansysFileName;
@@ -120,6 +124,11 @@ class ansysReader
       int32 ptrCSY;
       int32 ptrELM;
       int32 csysiz;
+      int64 ptrETYL;
+      int64 ptrRELL;
+      int64 ptrNODL;
+      int64 ptrCSYL;
+      int64 ptrELML;
 
       int32 etysiz;
       int32 * ptrToElemType;
@@ -129,7 +138,7 @@ class ansysReader
       double ** elemRealConstants;
       double ** coordinateSystemDescriptions;
       double ** nodalCoordinates;
-      int32 * ptrElemDescriptions;
+      int64 * ptrElemDescriptions;
       int32 * ptrDataSetSolutions;
       int32 ptrNSL; // Nodal solutions
       int32 ptrESL; // Element solutions
@@ -152,5 +161,6 @@ class ansysReader
       char * stressUnits;
       vtkUnstructuredGrid * ugrid;
       vtkIntArray * pointerToMidPlaneNode;
+      int32 int32MaximumFileLength;
 };
 #endif

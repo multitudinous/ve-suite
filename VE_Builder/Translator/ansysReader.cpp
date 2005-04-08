@@ -49,9 +49,6 @@
 #include <vtkCellType.h>
 #include <vtkMath.h>
 
-// from http://www.codeproject.com/cpp/endianness.asp
-#define ntohll(x) (((long long)(ntohl((int)((x << 32) >> 32))) << 32) | (unsigned int)ntohl(((int)(x >> 32)))) //By Runner
-
 #define PRINT_WIDTH 36
 
 #ifndef PRINT_HEADERS
@@ -73,7 +70,7 @@ ansysReader::ansysReader( char * input )
            << "\", so exiting" << std::endl;
       exit( 1 );
    }
-/* 
+/*
    double n1[3] = {0,1,0};
    double n2[3] = {1,0,0};
    double p1[3] = {1,2,0};
@@ -108,6 +105,11 @@ ansysReader::ansysReader( char * input )
    this->ptrNOD = 0;
    this->ptrCSY = 0;
    this->ptrELM = 0;
+   this->ptrETYL = 0;
+   this->ptrRELL = 0;
+   this->ptrNODL = 0;
+   this->ptrCSYL = 0;
+   this->ptrELML = 0;
 
    this->etysiz = 0;
    this->ptrToElemType = NULL;
@@ -127,6 +129,7 @@ ansysReader::ansysReader( char * input )
    this->coordSystemforElement = NULL;
    this->numCornerNodesInElement = NULL;
    this->cornerNodeNumbersForElement = NULL;
+   this->pointerToMidPlaneNode = NULL;
    this->summedFullGraphicsS1Stress = NULL;
    this->summedFullGraphicsS3Stress = NULL;
    this->summedFullGraphicsVonMisesStress = NULL;
@@ -137,8 +140,7 @@ ansysReader::ansysReader( char * input )
    this->numContributingPowerGraphicsElements = NULL;
 
    this->ugrid = vtkUnstructuredGrid::New();
-   this->pointerToMidPlaneNode = NULL;
-  
+
    char tempText [ 256 ];
    std::cout << "\nWhat are the units for displacement (in,mm,m,etc.): " << std::endl;
    std::cin >> tempText;
@@ -150,7 +152,18 @@ ansysReader::ansysReader( char * input )
    this->stressUnits = new char [ strlen(tempText)+1 ];
    strcpy(this->stressUnits,tempText);
 
-   this->ReadHeader();
+/*
+   // Test code that reads all blocks in the rst file
+   this->ReadGenericBinaryHeader(); // to get endian correct
+   int32 intPosition = 0;           // restart at beginning
+   while( intPosition < this->int32MaximumFileLength )
+   {
+      ReadGenericBlock( intPosition );
+   }
+   return;
+*/
+
+   this->ReadGenericBinaryHeader();
    this->ReadRSTHeader();
    this->ReadDOFBlock();
    this->ReadNodalEquivalencyTable();
@@ -161,7 +174,15 @@ ansysReader::ansysReader( char * input )
    this->ReadElementTypeIndexTable();
    this->ReadRealConstantsIndexTable();
    //this->ReadCoordinateSystemsIndexTable();
-   this->ReadNodalCoordinates();
+   if      ( !strcmp(this->ansysVersion," 8.1") )
+   {
+      this->ReadNodalCoordinates_8();
+   }
+   else if ( !strcmp(this->ansysVersion," 9.0") )
+   {
+      this->ReadNodalCoordinates_9();
+   }
+   this->CreatePointerArrayForShellNodes();
    this->ReadElementDescriptionIndexTable();
 }
 
@@ -207,7 +228,7 @@ ansysReader::~ansysReader()
 
    if ( this->elemDescriptions )
    {
-      for ( int32 i = 0; i < this->maxety; i++ )
+      for ( int i = 0; i < this->maxety; i++ )
          delete [] this->elemDescriptions[ i ];
 
       delete [] this->elemDescriptions;
@@ -216,7 +237,7 @@ ansysReader::~ansysReader()
 
    if ( this->elemRealConstants )
    {
-      for ( int32 i = 0; i < this->maxrl; i++ )
+      for ( int i = 0; i < this->maxrl; i++ )
          delete [] this->elemRealConstants[ i ];
 
       delete [] this->elemRealConstants;
@@ -225,7 +246,7 @@ ansysReader::~ansysReader()
 
    if ( this->coordinateSystemDescriptions )
    {
-      for ( int32 i = 0; i < this->maxcsy; i++ )
+      for ( int i = 0; i < this->maxcsy; i++ )
          delete [] this->coordinateSystemDescriptions[ i ];
 
       delete [] this->coordinateSystemDescriptions;
@@ -234,7 +255,7 @@ ansysReader::~ansysReader()
 
    if ( this->nodalCoordinates )
    {
-      for ( int32 i = 0; i < this->ndnod; i++ )
+      for ( int i = 0; i < this->ndnod; i++ )
          delete [] this->nodalCoordinates[ i ];
 
       delete [] this->nodalCoordinates;
@@ -280,15 +301,32 @@ ansysReader::~ansysReader()
    delete [] this->displacementUnits;
    delete [] this->stressUnits;
 
-   this->pointerToMidPlaneNode->Delete();
-   this->summedFullGraphicsS1Stress->Delete();
-   this->summedFullGraphicsS3Stress->Delete();
-   this->summedFullGraphicsVonMisesStress->Delete();
-   this->summedPowerGraphicsS1Stress->Delete();
-   this->summedPowerGraphicsS3Stress->Delete();
-   this->summedPowerGraphicsVonMisesStress->Delete();
-   this->numContributingFullGraphicsElements->Delete();
-   this->numContributingPowerGraphicsElements->Delete();
+   if ( this->pointerToMidPlaneNode )
+      this->pointerToMidPlaneNode->Delete();
+
+   if ( this->summedFullGraphicsS1Stress )
+      this->summedFullGraphicsS1Stress->Delete();
+      
+   if ( this->summedFullGraphicsS3Stress )
+      this->summedFullGraphicsS3Stress->Delete();
+      
+   if ( this->summedFullGraphicsVonMisesStress )
+      this->summedFullGraphicsVonMisesStress->Delete();
+      
+   if ( this->summedPowerGraphicsS1Stress )
+      this->summedPowerGraphicsS1Stress->Delete();
+      
+   if ( this->summedPowerGraphicsS3Stress )
+      this->summedPowerGraphicsS3Stress->Delete();
+      
+   if ( this->summedPowerGraphicsVonMisesStress )
+      this->summedPowerGraphicsVonMisesStress->Delete();
+      
+   if ( this->numContributingFullGraphicsElements )
+      this->numContributingFullGraphicsElements->Delete();
+
+   if ( this->numContributingPowerGraphicsElements )
+      this->numContributingPowerGraphicsElements->Delete();
 }
 
 void ansysReader::FlipEndian()
@@ -299,7 +337,32 @@ void ansysReader::FlipEndian()
       this->endian_flip = true;
 }
 
-int32 ansysReader::ReadNthInteger( int32 & n )
+int64 ansysReader::ReadIntegerAsInt64( int32 & intPosition )
+{
+   int64 returnValue = 0;
+   if      ( !strcmp(this->ansysVersion," 8.1") )
+      returnValue = (int64)this->ReadNthInt32( intPosition );
+   else if ( !strcmp(this->ansysVersion," 9.0") )  // uses double longs
+      returnValue = this->ReadNthInt64( intPosition );
+   return returnValue;
+}
+
+int64 ansysReader::readInt64ansys()
+{
+   int64 xx;
+   xx  = (int64)fgetc( this->s1 ) << 24;   // read high byte
+   xx |= (int64)fgetc( this->s1 ) << 16;   // read high byte
+   xx |= (int64)fgetc( this->s1 ) << 8;    // read high byte
+   xx |= (int64)fgetc( this->s1 ) & 0xFF;  // read low byte
+   xx |= (int64)fgetc( this->s1 ) << 56;   // read high byte
+   xx |= (int64)fgetc( this->s1 ) << 48;   // read high byte
+   xx |= (int64)fgetc( this->s1 ) << 40;   // read high byte
+   xx |= (int64)fgetc( this->s1 ) << 32;   // read high byte
+   //std::cout << "int64 = " << xx << std::endl;
+   return xx;
+}
+
+int32 ansysReader::ReadNthInt32( int32 & n )
 {
    long currentPosition = n * sizeof(int);
    fseek(this->s1,currentPosition,SEEK_SET);
@@ -315,20 +378,12 @@ int32 ansysReader::ReadNthInteger( int32 & n )
    return integer;
 }
 
-int64 ansysReader::ReadNthDoubleLong( int32 & n )
+int64 ansysReader::ReadNthInt64( int32 & n )
 {
    long currentPosition = n * sizeof(int);
    fseek(this->s1,currentPosition,SEEK_SET);
-   int64 value;
-   if (fileIO::readNByteBlockFromFile( &value, sizeof(int64), 1,
-                                       this->s1, this->endian_flip ))
-   {
-      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile"
-                << std::endl;
-      exit( 1 );
-   }
    n+=2; //increment to next integer position
-   return ntohll( value );
+   return readInt64ansys();
 }
 
 float ansysReader::ReadNthFloat( int32 & n )
@@ -363,7 +418,7 @@ double ansysReader::ReadNthDouble( int32 & n )
    return value;
 }
 
-void ansysReader::ReadHeader()
+void ansysReader::ReadGenericBinaryHeader()
 {
 #ifdef PRINT_HEADERS
    std::cout << "\nReading generic binary header" << std::endl;
@@ -371,17 +426,17 @@ void ansysReader::ReadHeader()
 
    // the very first number is the integer 404
    int32 itemNumber = 0;
-   int32 headerSize = ReadNthInteger( itemNumber );
-   if ( headerSize != 404 ) 
+   int32 headerSize = ReadNthInt32( itemNumber );
+   if ( headerSize != 404 )
    {
 #ifdef PRINT_HEADERS
-      std::cout << "headerSize = " << headerSize 
-           << " != 404, will flip endian flag" << std::endl;
+      std::cout << "headerSize = " << headerSize
+                << " != 404, will flip endian flag" << std::endl;
 #endif // PRINT_HEADERS
       this->FlipEndian();
       itemNumber = 0;
-      headerSize = ReadNthInteger( itemNumber );
-      if ( headerSize != 404 ) 
+      headerSize = ReadNthInt32( itemNumber );
+      if ( headerSize != 404 )
       {
          std::cerr << "headerSize = " << headerSize
                    << " != 404, will exit" << std::endl;
@@ -390,8 +445,8 @@ void ansysReader::ReadHeader()
    }
 
    // the ANSYS header is 100 ints long
-   int32 numValues = ReadNthInteger( itemNumber );
-   if ( numValues != 100 ) 
+   int32 numValues = ReadNthInt32( itemNumber );
+   if ( numValues != 100 )
    {
       std::cerr << "numValues = " << numValues << " != 100" << std::endl;
       exit( 1 );
@@ -401,31 +456,28 @@ void ansysReader::ReadHeader()
    char buffer4[ 5 ];
    buffer4[ 4 ] = '\0';
 
-   int32 fileNumber = ReadNthInteger( itemNumber );
+   int32 fileNumber = ReadNthInt32( itemNumber );
 #ifdef PRINT_HEADERS
-   std::cout << std::setw( PRINT_WIDTH ) << "fileNumber = " << fileNumber 
+   std::cout << std::setw( PRINT_WIDTH ) << "fileNumber = " << fileNumber
         << " where 12 = results files, 16 = db files" << std::endl;
 #endif // PRINT_HEADERS
 
    // file format
-   int32 fileFormat = ReadNthInteger( itemNumber );
+   int32 fileFormat = ReadNthInt32( itemNumber );
 #ifdef PRINT_HEADERS
    std::cout << std::setw( PRINT_WIDTH ) << "fileFormat = " << fileFormat
         << " (0=internal, 1=external)" << std::endl;
 #endif // PRINT_HEADERS
 
-   // time
-   int32 time = ReadNthInteger( itemNumber );
+   int32 time = ReadNthInt32( itemNumber );
    PRINT( time );
 
-   // date
-   int32 date = ReadNthInteger( itemNumber );
+   int32 date = ReadNthInt32( itemNumber );
    PRINT( date );
 
-   // units
-   int32 units = ReadNthInteger( itemNumber );
+   int32 units = ReadNthInt32( itemNumber );
 #ifdef PRINT_HEADERS
-   std::cout << std::setw( PRINT_WIDTH ) << "units = " << units 
+   std::cout << std::setw( PRINT_WIDTH ) << "units = " << units
         << " (0=user-defined, 1=SI, 2=CSG, 3=feet, 4=inches)" << std::endl;
 #endif // PRINT_HEADERS
 
@@ -441,10 +493,10 @@ void ansysReader::ReadHeader()
 #endif // PRINT_HEADERS
 
    strcpy( this->ansysVersion, buffer4 );
-   if ( strcmp(this->ansysVersion," 8.1") )
+   if ( strcmp(this->ansysVersion," 8.1") && strcmp(this->ansysVersion," 9.0") )
    {
       std::cerr << "this->ansysVersion = " << this->ansysVersion << std::endl;
-      std::cerr << "Error: This translator is only created for ansys version 8.1"/* and 9.0*/ << std::endl;
+      std::cerr << "Error: This translator is only created for ansys versions 8.1 and 9.0" << std::endl;
       exit( 1 );
    }
 
@@ -514,8 +566,8 @@ void ansysReader::ReadHeader()
    fseek(this->s1,position,SEEK_SET);
    fread(buffer4, sizeof(char), 4, this->s1);
 #ifdef PRINT_HEADERS
-   std::cout << std::setw( PRINT_WIDTH ) << "ANSYS special version label = " << "\""
-        << buffer4 << "\"" << std::endl;
+   std::cout << std::setw( PRINT_WIDTH ) << "ANSYS special version label = "
+             << "\"" << buffer4 << "\"" << std::endl;
 #endif // PRINT_HEADERS
 
    // item number 20-22 is username
@@ -554,16 +606,15 @@ void ansysReader::ReadHeader()
 
    itemNumber = 27;
    // system record size
-   int32 systemRecordSize = ReadNthInteger( itemNumber );
+   int32 systemRecordSize = ReadNthInt32( itemNumber );
    PRINT( systemRecordSize );
 
    // maximum file length
-   int32 maximumFileLength = ReadNthInteger( itemNumber );
-   PRINT( maximumFileLength );
-   //std::cout << std::setw( PRINT_WIDTH ) << "int34 maximumFileLength = " << maximumFileLength << std::endl;
+   this->int32MaximumFileLength = ReadNthInt32( itemNumber );
+   PRINT( this->int32MaximumFileLength );
 
    // maximum record size
-   int32 maximumRecordSize = ReadNthInteger( itemNumber );
+   int32 maximumRecordSize = ReadNthInt32( itemNumber );
    PRINT( maximumRecordSize );
 
    // item number 31-38 is jobname
@@ -583,7 +634,7 @@ void ansysReader::ReadHeader()
    std::cout << "\"" << std::endl;
 #endif // PRINT_HEADERS
 
-   // item number 41-60 is main analysis title 
+   // item number 41-60 is main analysis title
 #ifdef PRINT_HEADERS
    std::cout << std::setw( PRINT_WIDTH ) << "main analysis title = " << "\"";
 #endif // PRINT_HEADERS
@@ -619,22 +670,29 @@ void ansysReader::ReadHeader()
 
    // item number 95 is split point of the file
    itemNumber = 96;
-   int32 splitPoint = ReadNthInteger( itemNumber );
+   int32 splitPoint = ReadNthInt32( itemNumber );
 #ifdef PRINT_HEADERS
    std::cout << std::setw( PRINT_WIDTH ) << "split point of the file = " << splitPoint << std::endl;
 #endif // PRINT_HEADERS
 
    // item number 97-98 is filesize at write
    itemNumber = 98;
-   int64 filesize = ReadNthDoubleLong( itemNumber );
+   int64 filesize = ReadNthInt64( itemNumber );
 #ifdef PRINT_HEADERS
    std::cout << std::setw( PRINT_WIDTH ) << "int64 filesize at write = " << filesize << std::endl;
 #endif // PRINT_HEADERS
+   if ( filesize != int32MaximumFileLength )
+   {
+      std::cerr << "filesize at write = " << filesize
+                << " != int32MaximumFileLength (" << int32MaximumFileLength
+                << ")" << std::endl;
+      exit( 1 );
+   }
 
    // the number at integer position 102 is 404
    itemNumber = 102;
-   headerSize = ReadNthInteger( itemNumber );
-   if ( headerSize != 404 ) 
+   headerSize = ReadNthInt32( itemNumber );
+   if ( headerSize != 404 )
    {
       std::cerr << "headerSize = " << headerSize << " != 404" << std::endl;
       exit( 1 );
@@ -650,23 +708,23 @@ void ansysReader::ReadRSTHeader()
    std::cout << "\nReading RST Header" << std::endl;
 
    // the number at the next integer position 164
-   int32 blockSize_1 = ReadNthInteger( this->integerPosition );
-   if ( blockSize_1 != 164 ) 
+   int32 blockSize_1 = ReadNthInt32( this->integerPosition );
+   if ( blockSize_1 != 164 )
    {
       std::cerr << "blockSize = " << blockSize_1 << " != 16" << std::endl;
       exit( 1 );
    }
 
    // this block is 40 ints long
-   int32 numValues = ReadNthInteger( this->integerPosition );
-   if ( numValues != 40 ) 
+   int32 numValues = ReadNthInt32( this->integerPosition );
+   if ( numValues != 40 )
    {
       std::cerr << "numValues = " << numValues << " != 40" << std::endl;
       exit( 1 );
    }
 
    // read all 40 integers
-   int32 fun12 = ReadNthInteger( this->integerPosition );
+   int32 fun12 = ReadNthInt32( this->integerPosition );
    PRINT( fun12 );
    if ( fun12 != 12 )
    {
@@ -674,99 +732,98 @@ void ansysReader::ReadRSTHeader()
       exit( 1 );
    }
 
-   int32 maxNodeNumber = ReadNthInteger( this->integerPosition );
+   int32 maxNodeNumber = ReadNthInt32( this->integerPosition );
    PRINT( maxNodeNumber );
 
-   this->numNodes = ReadNthInteger( this->integerPosition );
+   this->numNodes = ReadNthInt32( this->integerPosition );
    PRINT( this->numNodes );
    std::cout << "\tnumNodes = " << this->numNodes << std::endl;
 
-   this->maxNumberDataSets = ReadNthInteger( this->integerPosition );
+   this->maxNumberDataSets = ReadNthInt32( this->integerPosition );
    PRINT( this->maxNumberDataSets );
 
-   this->numDOF = ReadNthInteger( this->integerPosition );
+   this->numDOF = ReadNthInt32( this->integerPosition );
    PRINT( this->numDOF );
-   //std::cout << "\tnumDOF = " << this->numDOF << std::endl;
 
-   int32 maxElemNumber = ReadNthInteger( this->integerPosition );
+   int32 maxElemNumber = ReadNthInt32( this->integerPosition );
    PRINT( maxElemNumber );
 
-   this->numElems = ReadNthInteger( this->integerPosition );
+   this->numElems = ReadNthInt32( this->integerPosition );
    PRINT( this->numElems );
 
-   int32 analysisType = ReadNthInteger( this->integerPosition );
+   int32 analysisType = ReadNthInt32( this->integerPosition );
    PRINT( analysisType );
 
-   int32 numDataSets = ReadNthInteger( this->integerPosition );
+   int32 numDataSets = ReadNthInt32( this->integerPosition );
    PRINT( numDataSets );
 
-   int32 ptrEndOfFile = ReadNthInteger( this->integerPosition );
+   int32 ptrEndOfFile = ReadNthInt32( this->integerPosition );
    PRINT( ptrEndOfFile );
 
-   this->ptrDataStepsIndexTable = ReadNthInteger( this->integerPosition );
+   this->ptrDataStepsIndexTable = ReadNthInt32( this->integerPosition );
    PRINT( this->ptrDataStepsIndexTable );
 
-   this->ptrTIM = ReadNthInteger( this->integerPosition );
+   this->ptrTIM = ReadNthInt32( this->integerPosition );
    PRINT( this->ptrTIM );
 
-   this->ptrLoadStepTable = ReadNthInteger( this->integerPosition );
+   this->ptrLoadStepTable = ReadNthInt32( this->integerPosition );
    PRINT( this->ptrLoadStepTable );
 
-   this->ptrElementEquivalencyTable = ReadNthInteger( this->integerPosition );
+   this->ptrElementEquivalencyTable = ReadNthInt32( this->integerPosition );
    PRINT( this->ptrElementEquivalencyTable );
 
-   this->ptrNodalEquivalencyTable = ReadNthInteger( this->integerPosition );
+   this->ptrNodalEquivalencyTable = ReadNthInt32( this->integerPosition );
    PRINT( this->ptrNodalEquivalencyTable );
 
-   this->ptrGEO = ReadNthInteger( this->integerPosition );
+   this->ptrGEO = ReadNthInt32( this->integerPosition );
    PRINT( this->ptrGEO );
 
-   int32 ptrCYC = ReadNthInteger( this->integerPosition );
+   int32 ptrCYC = ReadNthInt32( this->integerPosition );
    PRINT( ptrCYC );
 
-   int32 CMSflg = ReadNthInteger( this->integerPosition );
+   int32 CMSflg = ReadNthInt32( this->integerPosition );
    PRINT( CMSflg );
 
-   int32 units = ReadNthInteger( this->integerPosition );
+   int32 units = ReadNthInt32( this->integerPosition );
    PRINT( units );
 
-   int32 nSector = ReadNthInteger( this->integerPosition );
+   int32 nSector = ReadNthInt32( this->integerPosition );
    PRINT( nSector );
 
-   int32 csyCYC = ReadNthInteger( this->integerPosition );
+   int32 csyCYC = ReadNthInt32( this->integerPosition );
    PRINT( csyCYC );
 
-   int32 csEls = ReadNthInteger( this->integerPosition );
+   int32 csEls = ReadNthInt32( this->integerPosition );
    PRINT( csEls );
 
-   int64 ptrEnd8 = ReadNthDoubleLong( this->integerPosition );
+   int64 ptrEnd8 = ReadNthInt64( this->integerPosition );
    PRINT( ptrEnd8 );
 
-   int32 fsiflag = ReadNthInteger( this->integerPosition );
+   int32 fsiflag = ReadNthInt32( this->integerPosition );
    PRINT( fsiflag );
 
-   int32 pmeth = ReadNthInteger( this->integerPosition );
+   int32 pmeth = ReadNthInt32( this->integerPosition );
    PRINT( pmeth );
 
-   int32 nodeOffset = ReadNthInteger( this->integerPosition );
+   int32 nodeOffset = ReadNthInt32( this->integerPosition );
    PRINT( nodeOffset );
 
-   int32 elemOffset = ReadNthInteger( this->integerPosition );
+   int32 elemOffset = ReadNthInt32( this->integerPosition );
    PRINT( elemOffset );
 
-   int32 nTrans = ReadNthInteger( this->integerPosition );
+   int32 nTrans = ReadNthInt32( this->integerPosition );
    PRINT( nTrans );
 
-   int32 ptrTran = ReadNthInteger( this->integerPosition );
+   int32 ptrTran = ReadNthInt32( this->integerPosition );
    PRINT( ptrTran );
 
-   int32 kLong = ReadNthInteger( this->integerPosition );
+   int32 kLong = ReadNthInt32( this->integerPosition );
    PRINT( kLong );
 
    // read  nine zeroes
-   for ( int32 i=0; i < 9; i++ )
+   for ( int i = 0; i < 9; i++ )
    {
-      int32 zero = ReadNthInteger( this->integerPosition );
+      int32 zero = ReadNthInt32( this->integerPosition );
       PRINT( zero );
       if ( zero != 0 )
       {
@@ -776,7 +833,7 @@ void ansysReader::ReadRSTHeader()
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( this->integerPosition );
+   int32 blockSize_2 = ReadNthInt32( this->integerPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 
@@ -784,12 +841,12 @@ void ansysReader::ReadDOFBlock()
 {
    std::cout << "\nReading DOF block" << std::endl;
 
-   // the number at the next integer position 16 
-   int32 blockSize_1 = ReadNthInteger( this->integerPosition );
-   
+   // the number at the next integer position 16
+   int32 blockSize_1 = ReadNthInt32( this->integerPosition );
+
    // this block is numDOF ints long
-   int32 numValues = ReadNthInteger( this->integerPosition );
-   if ( numValues != this->numDOF ) 
+   int32 numValues = ReadNthInt32( this->integerPosition );
+   if ( numValues != this->numDOF )
    {
       std::cerr << "numValues = " << numValues << " != numDOF" << std::endl;
       exit( 1 );
@@ -797,16 +854,16 @@ void ansysReader::ReadDOFBlock()
 
    // read all integers
    this->dofCode = new int32 [ this->numDOF ];
-   for ( int32 i=0; i < this->numDOF; i++ )
+   for ( int i = 0; i < this->numDOF; i++ )
    {
-      this->dofCode[ i ] = ReadNthInteger( this->integerPosition );
+      this->dofCode[ i ] = ReadNthInt32( this->integerPosition );
 #ifdef PRINT_HEADERS
       std::cout << "\tdofCode[ " << i << " ]: " << this->dofCode[ i ] << std::endl;
 #endif // PRINT_HEADERS
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( this->integerPosition );
+   int32 blockSize_2 = ReadNthInt32( this->integerPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 
@@ -818,11 +875,11 @@ void ansysReader::ReadNodalEquivalencyTable()
    std::cout << "\nReading Nodal Equivalency Table" << std::endl;
 
    int32 intPosition = this->ptrNodalEquivalencyTable;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
 
    // this block is numNodes ints long
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != this->numNodes ) 
+   int32 numValues = ReadNthInt32( intPosition );
+   if ( numValues != this->numNodes )
    {
       std::cerr << "numValues = " << numValues << " != numNodes" << std::endl;
       exit( 1 );
@@ -837,9 +894,9 @@ void ansysReader::ReadNodalEquivalencyTable()
 #ifdef PRINT_HEADERS
    std::cout << "Reading " << this->numNodes << " values..." << std::endl;
 #endif // PRINT_HEADERS
-   for ( int32 i = 0; i < this->numNodes; i++ )
+   for ( int i = 0; i < this->numNodes; i++ )
    {
-      this->nodeID->SetTuple1( i, ReadNthInteger( intPosition ) );
+      this->nodeID->SetTuple1( i, ReadNthInt32( intPosition ) );
 #ifdef PRINT_HEADERS
       if ( i < 10 || i > (this->numNodes-10) )
       {
@@ -849,13 +906,14 @@ void ansysReader::ReadNodalEquivalencyTable()
       if ( this->nodeID->GetTuple1( i ) > this->numNodes )
       {
          std::cout << "\tnodeID[ " << i << " ]: "
-                   << this->nodeID->GetTuple1( i ) << " > numNodes (" << this->numNodes << ")" << std::endl;
+                   << this->nodeID->GetTuple1( i ) << " > numNodes ("
+                   << this->numNodes << ")" << std::endl;
       }
 #endif // PRINT_HEADERS
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 
@@ -867,11 +925,11 @@ void ansysReader::ReadElementEquivalencyTable()
    std::cout << "\nReading Element Equivalency Table" << std::endl;
 
    int32 intPosition = this->ptrElementEquivalencyTable;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
    // this block is numElems ints long
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != this->numElems ) 
+   int32 numValues = ReadNthInt32( intPosition );
+   if ( numValues != this->numElems )
    {
       std::cerr << "numValues = " << numValues << " != numElems" << std::endl;
       exit( 1 );
@@ -879,9 +937,9 @@ void ansysReader::ReadElementEquivalencyTable()
 
    // read all integers
    this->elemID = new int32 [ this->numElems ];
-   for ( int32 i = 0; i < this->numElems; i++ )
+   for ( int i = 0; i < this->numElems; i++ )
    {
-      this->elemID[ i ] = ReadNthInteger( intPosition );
+      this->elemID[ i ] = ReadNthInt32( intPosition );
 #ifdef PRINT_HEADERS
       if ( i < 10 || i > (this->numElems-10) )
       {
@@ -892,7 +950,7 @@ void ansysReader::ReadElementEquivalencyTable()
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 
@@ -904,20 +962,21 @@ void ansysReader::ReadDataStepsIndexTable()
    std::cout << "\nReading Data Steps Index Table" << std::endl;
 
    int32 intPosition = this->ptrDataStepsIndexTable;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != 2 * this->maxNumberDataSets ) 
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
+   int32 numValues = ReadNthInt32( intPosition );
+   if ( numValues != 2 * this->maxNumberDataSets )
    {
-      std::cerr << "numValues = " << numValues << " != 2 * maxNumberDataSets " << std::endl;
+      std::cerr << "numValues = " << numValues
+                << " != 2 * maxNumberDataSets " << std::endl;
       exit( 1 );
    }
 
    this->ptrDataSetSolutions = new int32 [ 2 * this->maxNumberDataSets ];
    // read all integers
-   for ( int32 i = 0; i < 2 * this->maxNumberDataSets; i++ )
+   for ( int i = 0; i < 2 * this->maxNumberDataSets; i++ )
    {
-      this->ptrDataSetSolutions [ i ] = ReadNthInteger( intPosition );
+      this->ptrDataSetSolutions [ i ] = ReadNthInt32( intPosition );
 
 #ifdef PRINT_HEADERS
       if ( this->ptrDataSetSolutions [ i ] != 0 )
@@ -930,7 +989,7 @@ void ansysReader::ReadDataStepsIndexTable()
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 
@@ -942,17 +1001,17 @@ void ansysReader::ReadTimeTable()
    std::cout << "\nReading Time Table" << std::endl;
 
    int32 intPosition = this->ptrTIM;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != 0 ) 
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
+   int32 numValues = ReadNthInt32( intPosition );
+   if ( numValues != 0 )
    {
       std::cerr << "numValues = " << numValues << " != 0" << std::endl;
       exit( 1 );
    }
 
-   // read all values 
-   for ( int32 i = 0; i < this->maxNumberDataSets; i++ )
+   // read all values
+   for ( int i = 0; i < this->maxNumberDataSets; i++ )
    {
       double value = ReadNthDouble( intPosition );
 
@@ -963,7 +1022,7 @@ void ansysReader::ReadTimeTable()
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 
@@ -975,19 +1034,20 @@ void ansysReader::ReadGeometryTable()
    std::cout << "\nReading Geometry Table" << std::endl;
 
    int32 intPosition = this->ptrGEO;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
- 
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
    // ansys 8.1 uses 20 values, ansys 9.0 uses 40 values
-   int32 numValues = ReadNthInteger( intPosition );
+   int32 numValues = ReadNthInt32( intPosition );
    PRINT( numValues );
-   if ( numValues != 20 && numValues != 40 ) 
+   if ( numValues != 20 && numValues != 40 )
    {
-      std::cerr << "numValues = " << numValues << " must be 20 or 40" << std::endl;
+      std::cerr << "numValues = " << numValues
+                << " must be 20 or 40" << std::endl;
       exit( 1 );
    }
 
-   // read all integer values 
-   int32 zero = ReadNthInteger( intPosition );
+   // read all integer values
+   int32 zero = ReadNthInt32( intPosition );
    PRINT( zero );
    if ( zero != 0 )
    {
@@ -995,41 +1055,41 @@ void ansysReader::ReadGeometryTable()
       exit( 1 );
    }
 
-   this->maxety = ReadNthInteger( intPosition );
+   this->maxety = ReadNthInt32( intPosition );
    PRINT( this->maxety );
 
-   this->maxrl = ReadNthInteger( intPosition );
+   this->maxrl = ReadNthInt32( intPosition );
    PRINT( this->maxrl );
 
-   this->ndnod = ReadNthInteger( intPosition );
+   this->ndnod = ReadNthInt32( intPosition );
    PRINT( this->ndnod );
    std::cout << "\tndnod = " << this->ndnod << std::endl;
 
-   int32 nelm = ReadNthInteger( intPosition );
+   int32 nelm = ReadNthInt32( intPosition );
    PRINT( nelm );
 
-   this->maxcsy = ReadNthInteger( intPosition );
+   this->maxcsy = ReadNthInt32( intPosition );
    PRINT( this->maxcsy );
 
-   this->ptrETY = ReadNthInteger( intPosition );
+   this->ptrETY = ReadNthInt32( intPosition );
    PRINT( this->ptrETY );
 
-   this->ptrREL = ReadNthInteger( intPosition );
+   this->ptrREL = ReadNthInt32( intPosition );
    PRINT( this->ptrREL );
 
-   this->ptrNOD = ReadNthInteger( intPosition );
+   this->ptrNOD = ReadNthInt32( intPosition );
    PRINT( this->ptrNOD );
 
-   this->ptrCSY = ReadNthInteger( intPosition );
+   this->ptrCSY = ReadNthInt32( intPosition );
    PRINT( this->ptrCSY );
 
-   this->ptrELM = ReadNthInteger( intPosition );
+   this->ptrELM = ReadNthInt32( intPosition );
    PRINT( this->ptrELM );
 
    // read four zeroes
-   for ( int32 i=0; i < 4; i++ )
+   for ( int i = 0; i < 4; i++ )
    {
-      int32 zero = ReadNthInteger( intPosition );
+      int32 zero = ReadNthInt32( intPosition );
       PRINT( zero );
       if ( zero != 0 )
       {
@@ -1038,44 +1098,44 @@ void ansysReader::ReadGeometryTable()
       }
    }
 
-   int32 ptrMAS = ReadNthInteger( intPosition );
+   int32 ptrMAS = ReadNthInt32( intPosition );
    PRINT( ptrMAS );
 
-   this->csysiz = ReadNthInteger( intPosition );
+   this->csysiz = ReadNthInt32( intPosition );
    PRINT( this->csysiz );
    if ( this->csysiz != 24 )
       std::cerr << "WARNING: csysiz != 24" << std::endl;
 
-   int32 elmsiz = ReadNthInteger( intPosition );
+   int32 elmsiz = ReadNthInt32( intPosition );
    PRINT( elmsiz );
 
-   this->etysiz = ReadNthInteger( intPosition );
+   this->etysiz = ReadNthInt32( intPosition );
    PRINT( this->etysiz );
 
-   int32 rlsiz = ReadNthInteger( intPosition );
+   int32 rlsiz = ReadNthInt32( intPosition );
    PRINT( rlsiz );
 
-   if ( numValues == 40 ) 
+   if ( numValues == 40 )
    {
-      int64 ptrETYPEL = ReadNthDoubleLong( intPosition );
-      PRINT( ptrETYPEL );
+      this->ptrETYL = ReadNthInt64( intPosition );
+      PRINT( this->ptrETYL );
 
-      int64 ptrRELL = ReadNthDoubleLong( intPosition );
-      PRINT( ptrRELL );
+      this->ptrRELL = ReadNthInt64( intPosition );
+      PRINT( this->ptrRELL );
 
-      int64 ptrCSYL = ReadNthDoubleLong( intPosition );
-      PRINT( ptrCSYL );
+      this->ptrCSYL = ReadNthInt64( intPosition );
+      PRINT( this->ptrCSYL );
 
-      int64 ptrNODL = ReadNthDoubleLong( intPosition );
-      PRINT( ptrNODL );
+      this->ptrNODL = ReadNthInt64( intPosition );
+      PRINT( this->ptrNODL );
 
-      int64 ptrELML = ReadNthDoubleLong( intPosition );
-      PRINT( ptrELML );
+      this->ptrELML = ReadNthInt64( intPosition );
+      PRINT( this->ptrELML );
 
-      // read ten zeroedouble s
-      for ( int32 i=0; i < 10; i++ )
+      // read ten zeroes
+      for ( int i = 0; i < 10; i++ )
       {
-         int32 zero = ReadNthInteger( intPosition );
+         int32 zero = ReadNthInt32( intPosition );
          PRINT( zero );
          if ( zero != 0 )
          {
@@ -1086,25 +1146,34 @@ void ansysReader::ReadGeometryTable()
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 
 void ansysReader::ReadElementTypeIndexTable()
 {
-   if ( this->ptrETY == 0 )
+   int32 intPosition;
+   if      ( !strcmp(this->ansysVersion," 8.1") )
    {
-      std::cerr << "\nthis->ptrETY == 0" << std::endl;
+      intPosition = this->ptrETY;
+   }
+   else if ( !strcmp(this->ansysVersion," 9.0") )
+   {
+      intPosition = this->ptrETYL;
+   }
+
+   if ( intPosition == 0 )
+   {
+      std::cerr << "\npointer to Element Type Index Table == 0" << std::endl;
       return;
    }
 
    std::cout << "\nReading Element Type Index Table" << std::endl;
 
-   int32 intPosition = this->ptrETY;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != this->maxety ) 
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
+   int32 numValues = ReadNthInt32( intPosition );
+   if ( numValues != this->maxety )
    {
       std::cerr << "numValues = " << numValues << " != maxety" << std::endl;
       exit( 1 );
@@ -1112,41 +1181,48 @@ void ansysReader::ReadElementTypeIndexTable()
 
    // read all integers
    this->ptrToElemType = new int32 [ this->maxety ];
-   for ( int32 i = 0; i < this->maxety; i++ )
+   for ( int i = 0; i < this->maxety; i++ )
    {
-      this->ptrToElemType[ i ] = ReadNthInteger( intPosition );
+      this->ptrToElemType[ i ] = ReadNthInt32( intPosition );
 #ifdef PRINT_HEADERS
       std::cout << "\tptrToElemType[ " << i << " ]: "
-           << this->ptrToElemType[ i ] << std::endl;
+                << this->ptrToElemType[ i ] << std::endl;
 #endif // PRINT_HEADERS
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 
    // allocate space for the element description arrays
    this->elemDescriptions = new int32 * [ this->maxety ];
-   for ( int32 i = 0; i < this->maxety; i++ )
-      this->elemDescriptions[ i ] = this->ReadElementTypeDescription(
-                                                   this->ptrToElemType[ i ] );
+   for ( int i = 0; i < this->maxety; i++ )
+   {
+      int64 pos = this->ptrETYL + this->ptrToElemType[ i ];
+      this->elemDescriptions[ i ] = this->ReadElementTypeDescription( pos );
+   }
 }
 
 void ansysReader::ReadRealConstantsIndexTable()
 {
-   if ( this->ptrREL == 0 )
+   int32 intPosition;
+   if      ( !strcmp(this->ansysVersion," 8.1") )
+      intPosition = this->ptrREL;
+   else if ( !strcmp(this->ansysVersion," 9.0") )
+      intPosition = this->ptrRELL;
+
+   if ( intPosition == 0 )
    {
-      std::cerr << "\nthis->ptrREL == 0" << std::endl;
+      std::cerr << "\npointer to Real Constants Index Table == 0" << std::endl;
       return;
    }
 
    std::cout << "\nReading Real Constants Index Table" << std::endl;
 
-   int32 intPosition = this->ptrREL;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != this->maxrl ) 
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
+   int32 numValues = ReadNthInt32( intPosition );
+   if ( numValues != this->maxrl )
    {
       std::cerr << "numValues = " << numValues << " != maxrl" << std::endl;
       exit( 1 );
@@ -1154,9 +1230,9 @@ void ansysReader::ReadRealConstantsIndexTable()
 
    // read all integers
    this->ptrToElemRealConstants = new int32 [ this->maxrl ];
-   for ( int32 i = 0; i < this->maxrl; i++ )
+   for ( int i = 0; i < this->maxrl; i++ )
    {
-      this->ptrToElemRealConstants[ i ] = ReadNthInteger( intPosition );
+      this->ptrToElemRealConstants[ i ] = ReadNthInt32( intPosition );
 #ifdef PRINT_HEADERS
       std::cout << "\tptrToElemRealConstants[ " << i << " ]: "
            << this->ptrToElemRealConstants[ i ] << std::endl;
@@ -1164,33 +1240,50 @@ void ansysReader::ReadRealConstantsIndexTable()
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 
    // allocate space for the element description arrays
    this->elemRealConstants = new double * [ this->maxrl ];
-   for ( int32 i = 0; i < this->maxrl; i++ )
+   for ( int i = 0; i < this->maxrl; i++ )
    {
-      this->elemRealConstants[ i ] = this->ReadElementRealConstants(
-                                          this->ptrToElemRealConstants[ i ] );
+      if ( this->ptrToElemRealConstants[ i ] == 0 )
+      {
+#ifdef PRINT_HEADERS
+         std::cout << "\nsetting elemRealConstants[ " << i
+                   << " ] to NULL because pointer == 0" << std::endl;
+#endif // PRINT_HEADERS
+         this->elemRealConstants[ i ] = NULL;
+      }
+      else
+      {
+         int64 pos = this->ptrRELL + this->ptrToElemRealConstants[ i ];
+         this->elemRealConstants[ i ] = this->ReadElementRealConstants( pos );
+      }
    }
 }
 
 void ansysReader::ReadCoordinateSystemsIndexTable()
 {
-   if ( this->ptrCSY == 0 )
+   int32 intPosition;
+   if      ( !strcmp(this->ansysVersion," 8.1") )
+      intPosition = this->ptrCSY;
+   else if ( !strcmp(this->ansysVersion," 9.0") )
+      intPosition = this->ptrCSYL;
+
+   if ( intPosition == 0 )
    {
-      std::cerr << "\nthis->ptrCSY == 0" << std::endl;
+      std::cerr << "\npointer to Coordinate Systems Index Table == 0"
+                << std::endl;
       return;
    }
 
    std::cout << "\nReading Coordinate Systems Index Table" << std::endl;
 
-   int32 intPosition = this->ptrCSY;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != this->maxcsy ) 
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
+   int32 numValues = ReadNthInt32( intPosition );
+   if ( numValues != this->maxcsy )
    {
       std::cerr << "numValues = " << numValues << " != maxcsy" << std::endl;
       exit( 1 );
@@ -1198,9 +1291,9 @@ void ansysReader::ReadCoordinateSystemsIndexTable()
 
    // read all integers
    this->ptrToCoordinateSystems = new int32 [ this->maxcsy ];
-   for ( int32 i = 0; i < this->maxcsy; i++ )
+   for ( int i = 0; i < this->maxcsy; i++ )
    {
-      this->ptrToCoordinateSystems[ i ] = ReadNthInteger( intPosition );
+      this->ptrToCoordinateSystems[ i ] = ReadNthInt32( intPosition );
 #ifdef PRINT_HEADERS
       std::cout << "\tptrToCoordinateSystems[ " << i << " ]: "
            << this->ptrToCoordinateSystems[ i ] << std::endl;
@@ -1208,14 +1301,14 @@ void ansysReader::ReadCoordinateSystemsIndexTable()
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 
    // allocate space for the coord system description arrays
    this->coordinateSystemDescriptions = new double * [ this->maxcsy ];
-   for ( int32 i = 0; i < this->maxcsy; i++ )
+   for ( int i = 0; i < this->maxcsy; i++ )
    {
-      this->coordinateSystemDescriptions[ i ] = this->ReadCoordinateSystemDescription( 
+      this->coordinateSystemDescriptions[ i ] = this->ReadCoordinateSystemDescription(
                                                 this->ptrToCoordinateSystems[ i ] );
    }
 }
@@ -1223,10 +1316,10 @@ void ansysReader::ReadCoordinateSystemsIndexTable()
 int32 * ansysReader::ReadElementTypeDescription( int32 pointer )
 {
 #ifdef PRINT_HEADERS
-   std::cout << "\nReading Element Type Description" << std::endl;
+   std::cout << "\nReading Element Type Description at position " << pointer << std::endl;
 #endif // PRINT_HEADERS
 
-   if ( pointer == 0 ) 
+   if ( pointer == 0 )
    {
 #ifdef PRINT_HEADERS
       std::cout << "\treturning NULL because pointer == 0" << std::endl;
@@ -1235,20 +1328,21 @@ int32 * ansysReader::ReadElementTypeDescription( int32 pointer )
    }
 
    int32 intPosition = pointer;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != this->etysiz ) 
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
+   int32 numValues = ReadNthInt32( intPosition );
+   if ( numValues != this->etysiz )
    {
-      std::cerr << "numValues = " << numValues << " != etysiz" << std::endl;
+      std::cerr << "numValues = " << numValues << " != etysiz ("
+                << this->etysiz << ")" << std::endl;
       exit( 1 );
    }
 
    // read all integers
    int32 * elemDescription = new int32 [ this->etysiz ];
-   for ( int32 i = 0; i < this->etysiz; i++ )
+   for ( int i = 0; i < this->etysiz; i++ )
    {
-      elemDescription[ i ] = ReadNthInteger( intPosition );
+      elemDescription[ i ] = ReadNthInt32( intPosition );
       //std::cout << "\telemDescriptions[ " << i << " ]: " << elemDescriptions[ i ] << std::endl;
    }
 
@@ -1278,7 +1372,7 @@ int32 * ansysReader::ReadElementTypeDescription( int32 pointer )
 #endif // PRINT_HEADERS
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 
    return elemDescription;
@@ -1287,25 +1381,18 @@ int32 * ansysReader::ReadElementTypeDescription( int32 pointer )
 double * ansysReader::ReadElementRealConstants( int32 pointer )
 {
 #ifdef PRINT_HEADERS
-   std::cout << "\nReading Element Real Constants" << std::endl;
+   std::cout << "\nReading Element Real Constants at position "
+             << pointer << std::endl;
 #endif // PRINT_HEADERS
-
-   if ( pointer == 0 ) 
-   {
-#ifdef PRINT_HEADERS
-      std::cout << "\treturning NULL because pointer == 0" << std::endl;
-#endif // PRINT_HEADERS
-      return NULL;
-   }
 
    int32 intPosition = pointer;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   int32 reportedNumValues = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+   int32 reportedNumValues = ReadNthInt32( intPosition );
    int32 numValues = this->VerifyNumberOfValues( reportedNumValues, blockSize_1 );
 
    // read all constants
    double * elemRealConstants = new double [ numValues ];
-   for ( int32 i = 0; i < numValues; i++ )
+   for ( int i = 0; i < numValues; i++ )
    {
       elemRealConstants[ i ] = ReadNthDouble( intPosition );
 #ifdef PRINT_HEADERS
@@ -1315,7 +1402,7 @@ double * ansysReader::ReadElementRealConstants( int32 pointer )
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 
    return elemRealConstants;
@@ -1327,7 +1414,7 @@ double * ansysReader::ReadCoordinateSystemDescription( int32 pointer )
    std::cout << "\nReading Coordinate System Description" << std::endl;
 #endif // PRINT_HEADERS
 
-   if ( pointer == 0 ) 
+   if ( pointer == 0 )
    {
 #ifdef PRINT_HEADERS
       std::cout << "\treturning NULL because pointer == 0" << std::endl;
@@ -1336,8 +1423,8 @@ double * ansysReader::ReadCoordinateSystemDescription( int32 pointer )
    }
 
    int32 intPosition = pointer;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   int32 reportedNumValues = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+   int32 reportedNumValues = ReadNthInt32( intPosition );
    int32 numValues = this->VerifyNumberOfValues( reportedNumValues, blockSize_1 );
 
    if ( numValues != this->csysiz )
@@ -1348,7 +1435,7 @@ double * ansysReader::ReadCoordinateSystemDescription( int32 pointer )
 
    // read all data
    double * coordinateSystemDescription = new double [ this->csysiz ];
-   for ( int32 i = 0; i < this->csysiz; i++ )
+   for ( int i = 0; i < this->csysiz; i++ )
    {
       coordinateSystemDescription[ i ] = ReadNthDouble( intPosition );
 #ifdef PRINT_HEADERS
@@ -1358,34 +1445,36 @@ double * ansysReader::ReadCoordinateSystemDescription( int32 pointer )
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 
    return coordinateSystemDescription;
 }
-void ansysReader::ReadNodalCoordinates()
+
+void ansysReader::ReadNodalCoordinates_8()  // this is ansys 8.1 version
 {
-   if ( this->ptrNOD == 0 )
+   int32 intPosition = this->ptrNOD;
+
+   if ( intPosition == 0 )
       return;
 
    std::cout << "\nReading Nodal Coordinates and Storing Vertices" << std::endl;
 
-   int32 intPosition = this->ptrNOD;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   int32 reportedNumValues = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+   int32 reportedNumValues = ReadNthInt32( intPosition );
    int32 numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
-   
-   if ( numValues != 7 * this->ndnod ) 
+
+   if ( numValues != 7 * this->ndnod )
    {
-      std::cout << "Note: numValues = " << numValues
+      std::cout << "Error: numValues = " << numValues
                 << " != 7 * ndnod = " << 7 * this->ndnod << std::endl;
       exit( 1 );
    }
-
+  
    vtkPoints *vertex = vtkPoints::New();
    // allocate space for the nodal coordinate arrays
    this->nodalCoordinates = new double * [ this->ndnod ];
-   for ( int32 i = 0; i < this->ndnod; i++ )
+   for ( int i = 0; i < this->ndnod; i++ )
    {
       this->nodalCoordinates[ i ] =  new double [ 7 ];
 
@@ -1395,15 +1484,86 @@ void ansysReader::ReadNodalCoordinates()
       {
          std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
               << std::endl;
-         exit(1);
+         exit( 1 );
       }
 
 #ifdef PRINT_HEADERS
       if ( i < 10 || i > (this->ndnod-10) )
       {
          std::cout << "for i = " << i << std::endl;
-         for ( int32 j = 0; j < 7; j++ )
-         {  
+         for ( int j = 0; j < 7; j++ )
+         {
+            std::cout << "\t" << this->nodalCoordinates[ i ][ j ] << std::endl;
+         }
+      }
+#endif // PRINT_HEADERS
+
+      vertex->InsertPoint( (int)this->nodalCoordinates[ i ][ 0 ],
+                                this->nodalCoordinates[ i ][ 1 ],
+                                this->nodalCoordinates[ i ][ 2 ],
+                                this->nodalCoordinates[ i ][ 3 ] );
+   }
+   this->ugrid->SetPoints( vertex );
+   vertex->Delete();
+
+#ifdef PRINT_HEADERS
+   std::cout << "\tAfter reading in ansys-defined points, vertex array size = "
+             << this->ugrid->GetNumberOfPoints() << std::endl;
+#endif // PRINT_HEADERS
+
+   // the last number is blockSize again
+   int32 blockSize_2;
+   fileIO::readNByteBlockFromFile( &blockSize_2, sizeof(int),
+                                   1, this->s1, this->endian_flip );
+   VerifyBlock( blockSize_1, blockSize_2 );
+}
+
+void ansysReader::ReadNodalCoordinates_9()  // this is ansys 9.0 version
+{
+   int32 intPosition = this->ptrNODL;
+
+   if ( intPosition == 0 )
+      return;
+
+   std::cout << "\nReading Nodal Coordinates and Storing Vertices" << std::endl;
+
+   vtkPoints *vertex = vtkPoints::New();
+   // allocate space for the nodal coordinate arrays
+   this->nodalCoordinates = new double * [ this->ndnod ];
+   for ( int i = 0; i < this->ndnod; i++ )
+   {
+      int32 blockSize_1 = ReadNthInt32( intPosition );
+      int32 reportedNumValues = ReadNthInt32( intPosition );
+      int32 numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
+
+      if ( numValues != 7 )
+      {
+         std::cout << "Error: numValues = " << numValues
+                   << " != 7" << std::endl;
+         exit( 1 );
+      }
+
+      this->nodalCoordinates[ i ] = new double [ 7 ];
+
+      // read all values
+      if ( fileIO::readNByteBlockFromFile( this->nodalCoordinates[ i ],
+                             sizeof(double), 7, this->s1, this->endian_flip ) )
+      {
+         std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
+              << std::endl;
+         exit( 1 );
+      }
+      // the last number is blockSize again
+      intPosition += 14;    // increment past the nodal coordinate array
+      int32 blockSize_2 = ReadNthInt32( intPosition );
+      VerifyBlock( blockSize_1, blockSize_2 );
+
+#ifdef PRINT_HEADERS
+      if ( i < 10 || i > (this->ndnod-10) )
+      {
+         std::cout << "for i = " << i << std::endl;
+         for ( int j = 0; j < 7; j++ )
+         {
             std::cout << "\t" << this->nodalCoordinates[ i ][ j ] << std::endl;
          }
       }
@@ -1417,52 +1577,65 @@ void ansysReader::ReadNodalCoordinates()
    this->ugrid->SetPoints( vertex );
    vertex->Delete();
 #ifdef PRINT_HEADERS
-   std::cout << "\tAfter reading in ansys-defined points, vertex array size = "
+   std::cout << "\nAfter reading in ansys-defined points, vertex array size = "
              << this->ugrid->GetNumberOfPoints() << std::endl;
 #endif // PRINT_HEADERS
+}
 
-   // the last number is blockSize again
-   int32 blockSize_2;
-   fileIO::readNByteBlockFromFile( &blockSize_2, sizeof(int),
-                                   1, this->s1, this->endian_flip );
-   VerifyBlock( blockSize_1, blockSize_2 );
-
-///////////////////////////////////////////////////////////////////////
+void ansysReader::CreatePointerArrayForShellNodes()
+{
 // Shell elements require the creation of extra nodes. Create an array to keep
-// track of displacements of top and bottom shell nodes relative to midplane nodes
-// when i is top shell node number pointerToMidPlaneNode->GetTuple1( i ) returns
-// midPlane node number
+// track of top and bottom shell nodes relative to midplane nodes.
+// Displacements of midplane nodes will be assigned to top and bottom nodes.
+// When i is top shell node number pointerToMidPlaneNode->GetTuple1( i ) returns
+// midPlane node number.
 
    this->pointerToMidPlaneNode = vtkIntArray::New();
    // Because the ansys vertices are one-based, increase the array size by one
    this->pointerToMidPlaneNode->SetName( "pointerToMidPlaneNode" );
    this->pointerToMidPlaneNode->SetNumberOfComponents( 1 );
-   this->pointerToMidPlaneNode->SetNumberOfTuples( this->ndnod+ 1 );   // note: +1
-   for ( int32 i = 0; i < this->ndnod+1; i++ )
+   this->pointerToMidPlaneNode->SetNumberOfTuples( this->ndnod+ 1 ); // note: +1
+   for ( int i = 0; i < this->ndnod+1; i++ )
       this->pointerToMidPlaneNode->SetTuple1( i, i );
 }
 
 void ansysReader::ReadElementDescriptionIndexTable()
 {
-   if ( this->ptrELM == 0 )
+   int32 intPosition;
+   if      ( !strcmp(this->ansysVersion," 8.1") )
+      intPosition = this->ptrELM;
+   else if ( !strcmp(this->ansysVersion," 9.0") )
+      intPosition = this->ptrELML;
+
+   if ( intPosition == 0 )
       return;
 
 #ifdef PRINT_HEADERS
    std::cout << "\nReading Element Description Index Table" << std::endl;
 #endif // PRINT_HEADERS
 
-   int32 intPosition = this->ptrELM;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != this->numElems ) 
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
+   int32 numValues = ReadNthInt32( intPosition );
+
+   // ansys 9 uses double long ints ...
+   if      ( !strcmp(this->ansysVersion," 8.1") &&
+             ( numValues != this->numElems ) )
    {
-      std::cerr << "numValues = " << numValues << " != numElems" << std::endl;
+      std::cerr << "numValues = " << numValues << " != numElems ("
+                << this->numElems << ")" << std::endl;
+      exit( 1 );
+   }
+   else if ( !strcmp(this->ansysVersion," 9.0") &&
+             ( numValues != 2 * this->numElems ) )
+   {
+      std::cerr << "numValues = " << numValues << " != 2 * numElems ("
+                << 2 * this->numElems << ")" << std::endl;
       exit( 1 );
    }
 
    // allocate space for the element-specific arrays
-   this->ptrElemDescriptions = new int32 [ this->numElems ];
+   this->ptrElemDescriptions = new int64 [ this->numElems ];//int64 to accomodate ansys9
    this->materialInElement = new int32 [ this->numElems ];
    this->realConstantsForElement = new int32 [ this->numElems ];
    this->coordSystemforElement = new int32 [ this->numElems ];
@@ -1470,23 +1643,24 @@ void ansysReader::ReadElementDescriptionIndexTable()
    this->cornerNodeNumbersForElement = new int32 * [ this->numElems ];
 
    // read all values
-   if ( fileIO::readNByteBlockFromFile( this->ptrElemDescriptions,
-                  sizeof(int), this->numElems, this->s1, this->endian_flip ) )
+   for ( int i = 0; i < this->numElems; i++ )
    {
-      std::cerr << "ERROR: bad read in fileIO::readNByteBlockFromFile, so exiting"
-           << std::endl;
-      exit(1);
+      this->ptrElemDescriptions[ i ] = ReadIntegerAsInt64( intPosition );
    }
 
-/*
 #ifdef PRINT_HEADERS
-   for ( int32 i = 0; i < this->numElems; i++ )
-   {  
-      std::cout << "\tptrElemDescriptions[ " << i << " ] = " 
+   for ( int i = 0; i < 10; i++ )
+   {
+      std::cout << "\tptrElemDescriptions[ " << i << " ] = "
+           << this->ptrElemDescriptions[ i ] << std::endl;
+   }
+   std::cout << "\t...." << std::endl;
+   for ( int i = this->numElems-10; i < this->numElems; i++ )
+   {
+      std::cout << "\tptrElemDescriptions[ " << i << " ] = "
            << this->ptrElemDescriptions[ i ] << std::endl;
    }
 #endif // PRINT_HEADERS
-*/
 
    // the last number is blockSize again
    int32 blockSize_2;
@@ -1497,21 +1671,24 @@ void ansysReader::ReadElementDescriptionIndexTable()
    // now we are ready to construct the mesh
    std::cout << "\nReading Element Descriptions and Constructing the Mesh" << std::endl;
    this->ugrid->Allocate(this->numElems,this->numElems);
-   for ( int32 i = 0; i < this->numElems; i++ )
+   for ( int i = 0; i < this->numElems; i++ )
    {
-      this->ReadElementDescription( i, this->ptrElemDescriptions[ i ] );
+      if      ( !strcmp(this->ansysVersion," 8.1") )
+         this->ReadElementDescription( i, this->ptrElemDescriptions[ i ] );
+      else if ( !strcmp(this->ansysVersion," 9.0") )
+         this->ReadElementDescription( i, this->ptrElemDescriptions[ i ] + this->ptrELML );
    }
 
 #ifdef PRINT_HEADERS
-   for ( int32 i = 0; i < 10; i++ )
+   for ( int i = 0; i < 10; i++ )
    {
-      std::cout << "Elem[ " << i << " ]: material = " 
+      std::cout << "Elem[ " << i << " ]: material = "
                 << this->materialInElement[ i ] << std::endl;
    }
    std::cout << "..." << std::endl;
-   for ( int32 i = this->numElems-10; i < this->numElems; i++ )
+   for ( int i = this->numElems-10; i < this->numElems; i++ )
    {
-      std::cout << "Elem[ " << i << " ]: material = " 
+      std::cout << "Elem[ " << i << " ]: material = "
                 << this->materialInElement[ i ] << std::endl;
    }
 #endif // PRINT_HEADERS
@@ -1563,7 +1740,7 @@ void ansysReader::ReadElementDescriptionIndexTable()
    this->numContributingPowerGraphicsElements->SetNumberOfTuples( this->numExpandedNodes + 1 );   // note: +1
 
    this->currentDataSetSolution = 0;
-   for ( int32 i = 0; i < 2 * this->maxNumberDataSets; i++ )
+   for ( int i = 0; i < 2 * this->maxNumberDataSets; i++ )
    {
       if ( this->ptrDataSetSolutions[ i ] == 0 )
          continue;
@@ -1595,42 +1772,42 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
    //std::cout << "\nReading Element Description" << std::endl;
 
    int32 intPosition = pointer;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
-   int32 numValues = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
+   int32 numValues = ReadNthInt32( intPosition );
    //PRINT( numValues );
 
-   int32 mat = ReadNthInteger( intPosition );
+   int32 mat = ReadNthInt32( intPosition );
    //PRINT( mat );
    this->materialInElement[ elemIndex ] = mat;
 
-   int32 type = ReadNthInteger( intPosition );  //important
+   int32 type = ReadNthInt32( intPosition );  //important
    //PRINT( type );
 
-   int32 real = ReadNthInteger( intPosition );
+   int32 real = ReadNthInt32( intPosition );
    //PRINT( real );
    this->realConstantsForElement[ elemIndex ] = real;
 
-   int32 secnum = ReadNthInteger( intPosition );
+   int32 secnum = ReadNthInt32( intPosition );
    //PRINT( secnum );
 
-   int32 esys = ReadNthInteger( intPosition );
+   int32 esys = ReadNthInt32( intPosition );
    //PRINT( esys );
    this->coordSystemforElement[ elemIndex ] = esys;
 
-   int32 death = ReadNthInteger( intPosition );
+   int32 death = ReadNthInt32( intPosition );
    //PRINT( death );
 
-   int32 solidm = ReadNthInteger( intPosition );
+   int32 solidm = ReadNthInt32( intPosition );
    //PRINT( solidm );
 
-   int32 shape = ReadNthInteger( intPosition );
+   int32 shape = ReadNthInt32( intPosition );
    //PRINT( shape );
 
-   int32 elnum = ReadNthInteger( intPosition );
+   int32 elnum = ReadNthInt32( intPosition );
    //PRINT( elnum );
 
-   int32 zero = ReadNthInteger( intPosition );
+   int32 zero = ReadNthInt32( intPosition );
    //PRINT( zero );
    if ( zero != 0 )
    {
@@ -1675,9 +1852,9 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
 
    // read rest of values: usually but not always zero
    intPosition += numNodesInElement;
-   for ( int32 i = 0; i < numValues - (10 + numNodesInElement); i++ )
-   {  
-      int32 zero = ReadNthInteger( intPosition );
+   for ( int i = 0; i < numValues - (10 + numNodesInElement); i++ )
+   {
+      int32 zero = ReadNthInt32( intPosition );
       /*PRINT( zero );
       if ( zero != 0 )
       {
@@ -1687,7 +1864,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 
 /////////////////////////////////////////////////////////////////////////
@@ -1722,7 +1899,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
       //std::cout << "Inserting QUAD for elementRoutineNumber = " << elementRoutineNumber << std::endl;
       this->ugrid->InsertNextCell( VTK_QUAD, numCornerNodes, nodes );
    }
-   else if ( elementRoutineNumber == 175 && 
+   else if ( elementRoutineNumber == 175 &&
              numNodesInElement == 1 && numCornerNodes == 1 )
    {
       //std::cout << "Inserting VERTEX for elementRoutineNumber = " << elementRoutineNumber << std::endl;
@@ -1789,7 +1966,7 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
       realSet--;  // convert to c++ zero-based array counting
 
       // ansys says that if shell has uniform thickness
-      // it will be defined in first slot, with others zeroed out. 
+      // it will be defined in first slot, with others zeroed out.
       thickness[ 0 ] = this->elemRealConstants[ realSet ][ 0 ];
       if ( this->elemRealConstants[ realSet ][ 1 ] == 0. &&
            this->elemRealConstants[ realSet ][ 2 ] == 0. &&
@@ -1831,14 +2008,6 @@ void ansysReader::ReadElementDescription( int32 elemIndex, int32 pointer )
             //if ( elemIndex == 0 ) std::cout << "topPlaneCoordinates[ " << j << " ] = " << topPlaneCoordinates[ j ] << std::endl;
          }
          expandedNodes[ i ] = vertices->InsertNextPoint( topPlaneCoordinates );
-
-#ifdef PRINT_HEADERS
-         //if ( elemIndex == 0 ) 
-std::cout << "new vertex = " << expandedNodes[ i ] << std::endl;
-std::cout << "vertices follow..." << std::endl;
-vertices->Print(std::cout);
-exit(1);
-#endif // PRINT_HEADERS
 
          this->nodeID->InsertTuple1( expandedNodes[ i ], expandedNodes[ i ] );
 
@@ -1935,171 +2104,191 @@ void ansysReader::ReadSolutionDataHeader( int32 ptrDataSetSolution )
    std::cout << "\tReading Solution Data Header" << std::endl;
 
    int32 intPosition = ptrDataSetSolution;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   
-   int32 numValues = ReadNthInteger( intPosition );
-   if ( numValues != 100 ) 
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+
+   int32 numValues = ReadNthInt32( intPosition );
+
+   if      ( !strcmp(this->ansysVersion," 8.1") )
    {
-      std::cerr << "numValues = " << numValues << " != 100" << std::endl;
-      exit( 1 );
+      if ( numValues != 100 )
+      {
+         std::cerr << "numValues = " << numValues << " != 100" << std::endl;
+         exit( 1 );
+      }
+   }
+   else if ( !strcmp(this->ansysVersion," 9.0") )  // has 100 extra int32s
+   {
+      if ( numValues != 100 * 2 )
+      {
+         std::cerr << "numValues = " << numValues << " != 200" << std::endl;
+         exit( 1 );
+      }
    }
 
-   int32 solnSetNumber = ReadNthInteger( intPosition );
+   int32 solnSetNumber = this->ReadNthInt32( intPosition );
    PRINT( solnSetNumber );
-   if ( solnSetNumber != 0 ) 
+   if ( solnSetNumber != 0 )
    {
       std::cerr << "solnSetNumber = " << solnSetNumber << " != 0" << std::endl;
       exit( 1 );
    }
 
-   int32 numberOfElements = ReadNthInteger( intPosition );
+   int32 numberOfElements = this->ReadNthInt32( intPosition );
    PRINT( numberOfElements );
-   if ( numberOfElements != this->numElems ) 
+   if ( numberOfElements != this->numElems )
    {
       std::cerr << "numberOfElements = " << numberOfElements
            << " != numElems" << std::endl;
       exit( 1 );
    }
 
-   int32 numberOfNodes = ReadNthInteger( intPosition );
+   int32 numberOfNodes = this->ReadNthInt32( intPosition );
    PRINT( numberOfNodes );
-   if ( numberOfNodes != this->numNodes ) 
+   if ( numberOfNodes != this->numNodes )
    {
       std::cerr << "numberOfNodes = " << numberOfNodes
                 << " != numNodes" << std::endl;
       exit( 1 );
    }
 
-   int32 bitmask = ReadNthInteger( intPosition );
+   int32 bitmask = this->ReadNthInt32( intPosition );
    PRINT( bitmask );
 
-   int32 itime = ReadNthInteger( intPosition );
+   int32 itime = this->ReadNthInt32( intPosition );
    PRINT( itime );
 
-   int32 iter = ReadNthInteger( intPosition );
+   int32 iter = this->ReadNthInt32( intPosition );
    PRINT( iter );
-   if ( iter != 1 ) 
+   if ( iter != 1 )
    {
       std::cerr << "iter = " << iter << " != 1" << std::endl;
       exit( 1 );
    }
 
-   int32 ncumit = ReadNthInteger( intPosition );
+   int32 ncumit = this->ReadNthInt32( intPosition );
    PRINT( ncumit );
 
-   int32 numReactionForces = ReadNthInteger( intPosition );
+   int32 numReactionForces = this->ReadNthInt32( intPosition );
    PRINT( numReactionForces );
 
-   int32 cs_LSC = ReadNthInteger( intPosition );
+   int32 cs_LSC = this->ReadNthInt32( intPosition );
    PRINT( cs_LSC );
-   if ( cs_LSC != 0 ) 
+   if ( cs_LSC != 0 )
    {
       std::cerr << "cs_LSC = " << cs_LSC << " != 0" << std::endl;
       exit( 1 );
    }
 
-   int32 nmast = ReadNthInteger( intPosition );
+   int32 nmast = this->ReadNthInt32( intPosition );
    PRINT( nmast );
-   if ( nmast != 0 ) 
+   if ( nmast != 0 )
    {
       std::cerr << "nmast = " << nmast << " != 0" << std::endl;
       exit( 1 );
    }
 
    // the following pointers are relative to the pointer of this header
-   //NSL = NodalSolution
-   this->ptrNSL = ReadNthInteger( intPosition );
-   PRINT( this->ptrNSL );
+   this->ptrNSL = this->ReadNthInt32( intPosition );
+   PRINT( this->ptrNSL ); //NSL = NodalSolution
 
-   this->ptrESL = ReadNthInteger( intPosition );
+   this->ptrESL = this->ReadNthInt32( intPosition );
    PRINT( this->ptrESL );
 
-   int32 ptrRF  = ReadNthInteger( intPosition );
+   int32 ptrRF = this->ReadNthInt32( intPosition );
    PRINT( ptrRF );
 
-   int32 ptrMST = ReadNthInteger( intPosition );
+   int32 ptrMST = this->ReadNthInt32( intPosition );
    PRINT( ptrMST );
 
-   int32 ptrBC = ReadNthInteger( intPosition );
+   int32 ptrBC = this->ReadNthInt32( intPosition );
    PRINT( ptrBC );
 
-   int32 rxtrap = ReadNthInteger( intPosition );
+   int32 rxtrap = this->ReadNthInt32( intPosition );
    PRINT( rxtrap );
 
-   int32 mode = ReadNthInteger( intPosition );
+   int32 mode = this->ReadNthInt32( intPosition );
    PRINT( mode );
 
-   int32 isym = ReadNthInteger( intPosition );
+   int32 isym = this->ReadNthInt32( intPosition );
    PRINT( isym );
 
-   int32 kcmplx = ReadNthInteger( intPosition );
+   int32 kcmplx = this->ReadNthInt32( intPosition );
    PRINT( kcmplx );
 
-   int32 numdof = ReadNthInteger( intPosition );
+   int32 numdof = this->ReadNthInt32( intPosition );
    PRINT( numdof );
-   if ( numdof != this->numDOF ) 
+   if ( numdof != this->numDOF )
    {
       std::cerr << "numdof = " << numdof << " != this->numDOF" << std::endl;
       exit( 1 );
    }
 
-   for ( int32 i = 0; i < numdof; i++ )
+   for ( int i = 0; i < numdof; i++ )
    {
-      int32 dofRefNumber = ReadNthInteger( intPosition );
+      int32 dofRefNumber = this->ReadNthInt32( intPosition );
       PRINT( dofRefNumber );
    }
 
-   for ( int32 i = 0; i < 30 - numdof; i++ )
+   for ( int i = 0; i < 30 - numdof; i++ )
    {
-      int32 zero = ReadNthInteger( intPosition );
-      if ( zero != 0 ) 
+      int32 zero = this->ReadNthInt32( intPosition );
+      if ( zero != 0 )
       {
          std::cerr << "zero = " << zero << " != 0" << std::endl;
          exit( 1 );
       }
    }
 
-   for ( int32 i = 0; i < 20; i++ )
+   for ( int i = 0; i < 20; i++ )
    {
-      int32 title = ReadNthInteger( intPosition );
+      int32 title = this->ReadNthInt32( intPosition );
       //PRINT( title );
    }
 
-   for ( int32 i = 0; i < 20; i++ )
+   for ( int i = 0; i < 20; i++ )
    {
-      int32 stitle1 = ReadNthInteger( intPosition );
+      int32 stitle1 = this->ReadNthInt32( intPosition );
       //PRINT( stitle1 );
    }
 
-   int32 dbmtim = ReadNthInteger( intPosition );
+   int32 dbmtim = this->ReadNthInt32( intPosition );
    PRINT( dbmtim );
 
-   int32 dbmdat = ReadNthInteger( intPosition );
+   int32 dbmdat = this->ReadNthInt32( intPosition );
    PRINT( dbmdat );
 
-   int32 dbfncl = ReadNthInteger( intPosition );
+   int32 dbfncl = this->ReadNthInt32( intPosition );
    PRINT( dbfncl );
 
-   int32 soltim = ReadNthInteger( intPosition );
+   int32 soltim = this->ReadNthInt32( intPosition );
    PRINT( soltim );
 
-   int32 soldat = ReadNthInteger( intPosition );
+   int32 soldat = this->ReadNthInt32( intPosition );
    PRINT( soldat );
 
-   int32 ptrOND = ReadNthInteger( intPosition );
+   int32 ptrOND = this->ReadNthInt32( intPosition );
    PRINT( ptrOND );
 
-   int32 ptrOEL = ReadNthInteger( intPosition );
+   int32 ptrOEL = this->ReadNthInt32( intPosition );
    PRINT( ptrOEL );
 
-   int32 nfldof = ReadNthInteger( intPosition );
+   int32 nfldof = this->ReadNthInt32( intPosition );
    PRINT( nfldof );
 
-   int32 ptrEXA = ReadNthInteger( intPosition );
+   int32 ptrEXA = this->ReadNthInt32( intPosition );
    PRINT( ptrEXA );
 
-   this->ptrEXT = ReadNthInteger( intPosition );
+   this->ptrEXT = this->ReadNthInt32( intPosition );
    PRINT( this->ptrEXT );
+
+   if ( !strcmp(this->ansysVersion," 9.0") )
+   {
+      for ( int i = 0; i < 100; i++ )
+      {
+         int32 junk = this->ReadNthInt32( intPosition );
+         PRINT( junk );
+      }
+   }
 
    // the last number is blockSize again
    int32 blockSize_2;
@@ -2116,11 +2305,11 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
    std::cout << "\tReading Nodal Solutions" << std::endl;
 
    int32 intPosition = ptrDataSetSolution + this->ptrNSL;
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   int32 reportedNumValues = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+   int32 reportedNumValues = ReadNthInt32( intPosition );
    int32 numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
-   
-   if ( numValues != this->numDOF * this->numNodes ) 
+
+   if ( numValues != this->numDOF * this->numNodes )
    {
       std::cerr << "numValues = " << numValues
                 << " != numDOF * numNodes" << std::endl;
@@ -2130,7 +2319,7 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
    // set up arrays to store scalar and vector data over entire mesh...
    int32 numParameters = 2;
    vtkFloatArray ** parameterData = new vtkFloatArray * [ numParameters ];
-   for ( int32 i=0; i < numParameters; i++ )
+   for ( int i = 0; i < numParameters; i++ )
    {
       parameterData[ i ] = vtkFloatArray::New();
    }
@@ -2151,7 +2340,7 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
    // Because the ansys vertices are one-based, up the loop by one
    //std::cout << "this->numNodes = " << this->numNodes << std::endl;
    double * nodalSolution = new double [ this->numDOF ];
-   for ( int32 i = 0; i < this->numNodes; i++ )
+   for ( int i = 0; i < this->numNodes; i++ )
    {
       if ( fileIO::readNByteBlockFromFile( nodalSolution,
                  sizeof(double), this->numDOF, this->s1, this->endian_flip ) )
@@ -2161,22 +2350,28 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
          exit( 1 );
       }
 
-      int ansysNode = this->nodeID->GetTuple1( i );
+      int ansysNode = (int)this->nodeID->GetTuple1( i );//get warning if don't cast
+      
 #ifdef PRINT_HEADERS
+/*
 if ( i >  22797 )
 std::cout << "i = " << i << ", ansysNode = " << ansysNode << std::endl;
+*/
 #endif // PRINT_HEADERS
+
       parameterData[ 0 ]->SetTuple( ansysNode, nodalSolution );
 
 #ifdef PRINT_HEADERS
+/*
       //if ( ansysNode == 2108 )    //tets
 if ( i >  22797 )
       {
          std::cout <<  "nodalSolution[ " << ansysNode <<" ] = ";
-         for ( int32 j = 0; j < this->numDOF; j++ )
+         for ( int j = 0; j < this->numDOF; j++ )
             std::cout << "\t" << nodalSolution[ j ];
          std::cout << std::endl;
       }
+*/
 #endif // PRINT_HEADERS
 
       // parameterData[ 1 ] is displacement magnitude scalar
@@ -2200,11 +2395,11 @@ if ( i >  22797 )
 #endif // PRINT_HEADERS
 
    // Now take care of shell elements
-   for ( int32 i = this->ndnod+1; i < this->numExpandedNodes+1; i++ )
+   for ( int i = this->ndnod+1; i < this->numExpandedNodes+1; i++ )
    {
-      int32 midPlaneNode = this->pointerToMidPlaneNode->GetTuple1( i );
+      int32 midPlaneNode = (int)this->pointerToMidPlaneNode->GetTuple1( i );
       //std::cout << "i = " << i << ", midPlaneNode = " << midPlaneNode << std::endl;
-      for ( int32 j = 0; j < numParameters; j++ )
+      for ( int j = 0; j < numParameters; j++ )
       {
          if ( parameterData[ j ]->GetTuple( midPlaneNode ) == NULL )
             std::cout << "parameterData[ " << j << " ]->GetTuple( midPlaneNode ) == NULL" << std::endl;
@@ -2212,14 +2407,14 @@ if ( i >  22797 )
       }
    }
 
-   for ( int32 i=0; i < numParameters; i++ )
+   for ( int i=0; i < numParameters; i++ )
    {
       this->ugrid->GetPointData()->AddArray( parameterData [ i ] );
       parameterData[ i ]->Delete();
    }
 
    delete [] parameterData;
-   
+
    delete [] nodalSolution;
 
    // the last number is blockSize again
@@ -2238,30 +2433,49 @@ void ansysReader::ReadElementSolutions( int32 ptrDataSetSolution )
 
    int32 intPosition = ptrDataSetSolution + this->ptrESL;
 
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   int32 reportedNumValues = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+   int32 reportedNumValues = ReadNthInt32( intPosition );
    int32 numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
 
-   if ( numValues != this->numElems ) 
+   // ansys 9 uses double long ints ...
+   if      ( !strcmp(this->ansysVersion," 8.1") &&
+             ( numValues != this->numElems ) )
    {
-      std::cerr << "numValues = " << numValues << " != numElems" << std::endl;
+      std::cerr << "numValues = " << numValues << " != numElems ("
+                << this->numElems << ")" << std::endl;
+      exit( 1 );
+   }
+   else if ( !strcmp(this->ansysVersion," 9.0") &&
+             ( numValues != 2 * this->numElems ) )
+   {
+      std::cerr << "numValues = " << numValues << " != 2 * numElems ("
+                << 2 * this->numElems << ")" << std::endl;
       exit( 1 );
    }
 
    this->ptrENS = new int32 [ this->numElems ];
 
-   for ( int32 elemIndex = 0; elemIndex < this->numElems; elemIndex++ )
+   for ( int elemIndex = 0; elemIndex < this->numElems; elemIndex++ )
    {
-      int32 ptrElement_i = ReadNthInteger( intPosition );
+      int64 ptrElement_i = ReadIntegerAsInt64( intPosition );
 
-      //PRINT( ptrElement_i );
+      if ( elemIndex < 10 || elemIndex > this->numElems - 10 )
+      {
+         PRINT( ptrElement_i );
+      }
 
-      int32 ptrPosition = ptrDataSetSolution + ptrElement_i;
-      ReadElementIndexTable( elemIndex, ptrPosition );
+      int64 ptrPosition = 0;
+      if      ( !strcmp(this->ansysVersion," 8.1") )
+         ptrPosition = ptrDataSetSolution + ptrElement_i;
+      else if ( !strcmp(this->ansysVersion," 9.0") )
+         ptrPosition = ptrDataSetSolution + ptrElement_i + this->ptrESL;
+
+      int32 int32Number = (int32)ptrPosition;
+      ReadElementIndexTable( elemIndex, int32Number, ptrElement_i );
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 
    this->AttachStressToGrid();
@@ -2274,7 +2488,7 @@ void ansysReader::AttachStressToGrid()
    // set up arrays to store stresses over entire mesh...
    int32 numParameters = 6;
    vtkFloatArray ** parameterData = new vtkFloatArray * [ numParameters ];
-   for ( int32 i=0; i < numParameters; i++ )
+   for ( int i = 0; i < numParameters; i++ )
    {
       parameterData[ i ] = vtkFloatArray::New();
       parameterData[ i ]->SetNumberOfComponents( 1 );
@@ -2302,14 +2516,14 @@ void ansysReader::AttachStressToGrid()
    std::cout << "this->ndnod = " << this->ndnod << std::endl;
    std::cout << "this->numExpandedNodes = " << this->numExpandedNodes << std::endl;
 #endif // PRINT_HEADERS
-   for ( int32 nodeIndex = 0; nodeIndex < this->numExpandedNodes; nodeIndex++ )
+   for ( int nodeIndex = 0; nodeIndex < this->numExpandedNodes; nodeIndex++ )
    {
-      int ansysNode = this->nodeID->GetTuple1( nodeIndex );
+      int ansysNode = (int)this->nodeID->GetTuple1( nodeIndex );
 
-      if ( ansysNode < 1 || ansysNode > this->numExpandedNodes ) 
+      if ( ansysNode < 1 || ansysNode > this->numExpandedNodes )
       {
 #ifdef PRINT_HEADERS
-         std::cerr << "AttachStressToGrid: fg: ansysNode = "
+         std::cout << "AttachStressToGrid: fg: ansysNode = "
                    << ansysNode << " is out of range" << std::endl;
 #endif // PRINT_HEADERS
          continue;
@@ -2347,10 +2561,10 @@ void ansysReader::AttachStressToGrid()
    }
 /*
    // shell: reference non-unique new nodes back to midPlane nodes
-   for ( int32 nodeIndex1 = this->numNodes; nodeIndex1 < this->numExpandedNodes; nodeIndex1++ )
+   for ( int nodeIndex1 = this->numNodes; nodeIndex1 < this->numExpandedNodes; nodeIndex1++ )
    {
       int ansysNode1 = this->nodeID->GetTuple1( nodeIndex1 );
-      if ( ansysNode1 < 1 || ansysNode1 > this->numExpandedNodes ) 
+      if ( ansysNode1 < 1 || ansysNode1 > this->numExpandedNodes )
       {
          std::cerr << "sjk1: ansysNode = " << ansysNode1 << " is out of range" << std::endl;
          exit( 1 );
@@ -2358,10 +2572,10 @@ void ansysReader::AttachStressToGrid()
       double vertex1[ 3 ];
       this->ugrid->GetPoints()->GetPoint( ansysNode1, vertex1 );
 
-      for ( int32 nodeIndex2 = this->numNodes; nodeIndex2 < this->numExpandedNodes; nodeIndex2++ )
+      for ( int nodeIndex2 = this->numNodes; nodeIndex2 < this->numExpandedNodes; nodeIndex2++ )
       {
          int ansysNode2 = this->nodeID->GetTuple1( nodeIndex2 );
-         if ( ansysNode2 < 1 || ansysNode2 > this->numExpandedNodes ) 
+         if ( ansysNode2 < 1 || ansysNode2 > this->numExpandedNodes )
          {
             std::cerr << "sjk1: ansysNode = " << ansysNode2 << " is out of range" << std::endl;
             exit( 1 );
@@ -2397,14 +2611,14 @@ void ansysReader::AttachStressToGrid()
 */
 
    // now do power graphics calculations...
-   for ( int32 nodeIndex = 0; nodeIndex < this->numExpandedNodes; nodeIndex++ )
+   for ( int nodeIndex = 0; nodeIndex < this->numExpandedNodes; nodeIndex++ )
    {
-      int ansysNode = this->nodeID->GetTuple1( nodeIndex );
+      int ansysNode = (int)this->nodeID->GetTuple1( nodeIndex );
 
-      if ( ansysNode < 1 || ansysNode > this->numExpandedNodes ) 
+      if ( ansysNode < 1 || ansysNode > this->numExpandedNodes )
       {
 #ifdef PRINT_HEADERS
-         std::cerr << "AttachStressToGrid: pg: ansysNode = "
+         std::cout << "AttachStressToGrid: pg: ansysNode = "
                    << ansysNode << " is out of range" << std::endl;
 #endif // PRINT_HEADERS
          continue;
@@ -2441,7 +2655,7 @@ void ansysReader::AttachStressToGrid()
       parameterData[ 5 ]->SetTuple1( ansysNode, avgPowerGraphicsVonMisesStress );
    }
 
-   for ( int32 i=0; i < numParameters; i++ )
+   for ( int i = 0; i < numParameters; i++ )
    {
       this->ugrid->GetPointData()->AddArray( parameterData [ i ] );
       parameterData[ i ]->Delete();
@@ -2449,7 +2663,7 @@ void ansysReader::AttachStressToGrid()
    delete [] parameterData;
 }
 
-void ansysReader::ReadElementIndexTable( int32 elemIndex, int32 intPosition )
+void ansysReader::ReadElementIndexTable( int32 elemIndex, int32 intPosition, int64 ptrElement_i )
 {
    if ( intPosition == 0 )
       return;
@@ -2460,44 +2674,51 @@ void ansysReader::ReadElementIndexTable( int32 elemIndex, int32 intPosition )
 #endif // PRINT_HEADERS
 */
 
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   int32 reportedNumValues = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+   int32 reportedNumValues = ReadNthInt32( intPosition );
    int32 numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
 
-   if ( numValues != 25 ) 
+   if ( numValues != 25 )
    {
       std::cerr << "numValues = " << numValues << " != 25" << std::endl;
       exit( 1 );
    }
 
-   int32 ptrEMS = ReadNthInteger( intPosition );
+   int32 ptrEMS = ReadNthInt32( intPosition );
    //PRINT( ptrEMS );
 
-   int32 ptrENF = ReadNthInteger( intPosition );
+   int32 ptrENF = ReadNthInt32( intPosition );
    //PRINT( ptrENF );
 
    // pointer to Nodal Stresses
-   this->ptrENS[ elemIndex ] = ReadNthInteger( intPosition );
-   //PRINT( this->ptrENS[ elemIndex ] );
-   //std::cout << "ptrENS[ " << elemIndex << " ] = " << this->ptrENS[ elemIndex ] << std::endl;
+   this->ptrENS[ elemIndex ] = ReadNthInt32( intPosition );
+   //std::cout << "this->ptrENS[ " << elemIndex << " ] = " << this->ptrENS[ elemIndex ] << std::endl;
+   if ( 0 > this->ptrENS[ elemIndex ] )   // saw some "-88" with ansys 9 file
+   {
+      std::cout << "\tskipping stresses with this->ptrENS[ " << elemIndex
+                << " ] = " << this->ptrENS[ elemIndex ] << std::endl;
+      //this->ptrENS[ elemIndex ] = 293;  //worked one time
+      return;
+   }
 
-   this->StoreNodalStessesForThisElement( elemIndex );
+   this->StoreNodalStessesForThisElement( elemIndex, ptrElement_i );
 
 /*
    // read remainder of the values...
-   for ( int32 i = 0; i < 22; i++ )
+   for ( int i = 0; i < 22; i++ )
    {
-      int32 ptrElement_i = ReadNthInteger( intPosition );
+      int32 ptrElement_i = ReadNthInt32( intPosition );
       PRINT( ptrElement_i );
    }
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 */
 }
 
-void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex )
+void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex,
+                                                   int64 ptrElement_i )
 {
    if ( this->ptrENS[ elemIndex ] == 0 )
       return;
@@ -2514,7 +2735,7 @@ void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex )
 
    int32 thisIsExteriorCell = 0;
    vtkIdList *cellIds = vtkIdList::New();
-   for ( int32 j=0; j < cell->GetNumberOfFaces(); j++ )
+   for ( int j = 0; j < cell->GetNumberOfFaces(); j++ )
    {
       vtkCell * face = cell->GetFace( j );
       this->ugrid->GetCellNeighbors( elemIndex, face->PointIds, cellIds );
@@ -2529,10 +2750,27 @@ void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex )
    cell->Delete();
    cellIds->Delete();
 
-   int32 intPosition = this->ptrDataSetSolutions[ this->currentDataSetSolution ]
-                     + this->ptrENS[ elemIndex ];
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   int32 reportedNumValues = ReadNthInteger( intPosition );
+   int32 intPosition = 0;
+   if      ( !strcmp(this->ansysVersion," 8.1") )
+   {
+      intPosition = this->ptrDataSetSolutions[ this->currentDataSetSolution ]
+                  + this->ptrENS[ elemIndex ];
+   }
+   else if ( !strcmp(this->ansysVersion," 9.0") )
+   {
+      intPosition = this->ptrDataSetSolutions[ this->currentDataSetSolution ]
+                  + this->ptrENS[ elemIndex ] + this->ptrESL + ptrElement_i;
+   }
+/*
+std::cout << "this->ptrDataSetSolutions[ " << this->currentDataSetSolution << " ] = "
+          << this->ptrDataSetSolutions[ this->currentDataSetSolution ]
+          << ", this->ptrENS[ " << elemIndex << " ] = " << this->ptrENS[ elemIndex ]
+          << ", this->ptrESL = " << this->ptrESL
+          << ", ptrElement_i = " << ptrElement_i << std::endl;
+std::cout << "intPosition = " << intPosition << std::endl;
+*/
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+   int32 reportedNumValues = ReadNthInt32( intPosition );
    if ( reportedNumValues != 0 )
    {
       std::cerr << "expected doubles" << std::endl;
@@ -2540,17 +2778,16 @@ void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex )
    }
 
    int32 numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
-/*
+
    if ( this->numCornerNodesInElement[ elemIndex ] * 11 != numValues )
    {
       std::cerr << "numValues = " << numValues
-                << " != numCornerNodesInElement[ i ] * 11 ="
+                << " != numCornerNodesInElement[ i ] * 11 = "
                 << (this->numCornerNodesInElement[ elemIndex ] * 11) << std::endl;
       exit( 1 );
    }
-*/
 
-   for ( int32 j = 0; j < this->numCornerNodesInElement[ elemIndex ]; j++ )
+   for ( int j = 0; j < this->numCornerNodesInElement[ elemIndex ]; j++ )
    {
       double * stresses = new double [ 11 ];
       // SX, SY, SZ, SXY, SYZ, SXZ, S1, S2, S3, SI, SIGE
@@ -2585,7 +2822,7 @@ void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex )
          std::cout << "Ansys node " << node
                    << " on element " << this->elemID[ elemIndex ]
                    << " has stress:" << std::endl;
-         for ( int32 ii = 0; ii < 11; ii++ )
+         for ( int ii = 0; ii < 11; ii++ )
          {
             std::cout << "\t" << stresses[ ii ];
          }
@@ -2595,7 +2832,7 @@ void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex )
 */
 
       // ansys node numbering goes from 1 to numNodes
-      if ( node < 1 || node > this->numExpandedNodes ) 
+      if ( node < 1 || node > this->numExpandedNodes )
       {
          std::cerr << "StoreNodalStessesForThisElement: node = "
                    << node << " is out of range" << std::endl;
@@ -2604,7 +2841,7 @@ void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex )
 
       this->summedFullGraphicsS1Stress->SetTuple1( node, this->summedFullGraphicsS1Stress->GetTuple1( node ) + stresses [ 6 ] );
       this->summedFullGraphicsS3Stress->SetTuple1( node, this->summedFullGraphicsS3Stress->GetTuple1( node ) + stresses [ 8 ] );
-      this->summedFullGraphicsVonMisesStress->SetTuple1( node, this->summedFullGraphicsVonMisesStress->GetTuple1( node ) + stresses [ 10 ] ); //vonMisesStress;
+      this->summedFullGraphicsVonMisesStress->SetTuple1( node, this->summedFullGraphicsVonMisesStress->GetTuple1( node ) + stresses [ 10 ] );
       this->numContributingFullGraphicsElements->SetTuple1( node, this->numContributingFullGraphicsElements->GetTuple1( node ) + 1 );
 
       // ansys powergraphic values
@@ -2612,7 +2849,7 @@ void ansysReader::StoreNodalStessesForThisElement( int32 elemIndex )
       {
          this->summedPowerGraphicsS1Stress->SetTuple1( node, this->summedPowerGraphicsS1Stress->GetTuple1( node ) + stresses [ 6 ] );
          this->summedPowerGraphicsS3Stress->SetTuple1( node, this->summedPowerGraphicsS3Stress->GetTuple1( node ) + stresses [ 8 ] );
-         this->summedPowerGraphicsVonMisesStress->SetTuple1( node, this->summedPowerGraphicsVonMisesStress->GetTuple1( node ) + stresses [ 10 ] ); //vonMisesStress;
+         this->summedPowerGraphicsVonMisesStress->SetTuple1( node, this->summedPowerGraphicsVonMisesStress->GetTuple1( node ) + stresses [ 10 ] );
          this->numContributingPowerGraphicsElements->SetTuple1( node, this->numContributingPowerGraphicsElements->GetTuple1( node ) + 1 );
       }
 
@@ -2630,8 +2867,8 @@ void ansysReader::ReadHeaderExtension()
 
    int32 intPosition = this->ptrDataSetSolutions[ 0 ] + this->ptrEXT;
 
-   int32 blockSize_1 = ReadNthInteger( intPosition );
-   int32 reportedNumValues = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
+   int32 reportedNumValues = ReadNthInt32( intPosition );
    int32 numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
    if ( numValues != 200 )
    {
@@ -2640,16 +2877,16 @@ void ansysReader::ReadHeaderExtension()
    }
 
    // read the data
-   for ( int32 i = 0; i < this->numDOF; i++ )
+   for ( int i = 0; i < this->numDOF; i++ )
    {
-      int32 dofRefNumber = ReadNthInteger( intPosition );
+      int32 dofRefNumber = ReadNthInt32( intPosition );
       PRINT( dofRefNumber );
    }
 
-   for ( int32 i = 0; i < 32 - this->numDOF; i++ )
+   for ( int i = 0; i < 32 - this->numDOF; i++ )
    {
-      int32 zero = ReadNthInteger( intPosition );
-      if ( zero != 0 ) 
+      int32 zero = ReadNthInt32( intPosition );
+      if ( zero != 0 )
       {
          std::cerr << "zero = " << zero << " != 0" << std::endl;
          exit( 1 );
@@ -2657,7 +2894,7 @@ void ansysReader::ReadHeaderExtension()
    }
 
    char dofLabel[ 32 ][ 5 ];
-   for ( int32 i = 0; i < this->numDOF; i++ )
+   for ( int i = 0; i < this->numDOF; i++ )
    {
       dofLabel[ i ][ 4 ] = '\0';
       fileIO::readNByteBlockFromFile( dofLabel[ i ], sizeof(char), 4,
@@ -2670,19 +2907,19 @@ void ansysReader::ReadHeaderExtension()
         strcmp(dofLabel[ 2 ],"UZ  ") )
    {
       std::cerr << "ERROR: unexpected dofLabels" << std::endl;
-      for ( int32 i = 0; i < this->numDOF; i++ )
+      for ( int i = 0; i < this->numDOF; i++ )
          std::cerr << "\tdofLabel[ " << i << " ] = \""
               << dofLabel[ i ] << "\"" << std::endl;
       exit( 1 );
    }
 
-   for ( int32 i = 0; i < 32 - this->numDOF; i++ )
+   for ( int i = 0; i < 32 - this->numDOF; i++ )
    {
-      int32 zero;// = ReadNthInteger( intPosition );
+      int32 zero;// = ReadNthInt32( intPosition );
       fileIO::readNByteBlockFromFile( &zero,
                   sizeof(int), 1, this->s1, this->endian_flip );
       //PRINT( zero );
-      if ( zero != 0 ) 
+      if ( zero != 0 )
       {
          std::cerr << "zero = " << zero << " != 0" << std::endl;
          exit( 1 );
@@ -2693,36 +2930,37 @@ void ansysReader::ReadHeaderExtension()
    return;
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    VerifyBlock( blockSize_1, blockSize_2 );
 }
 */
 
-void ansysReader::ReadGenericBlock( int32 intPosition )
+void ansysReader::ReadGenericBlock( int32 & intPosition )
 {
    //std::cout << "\nReading block at intPosition = " << intPosition << std::endl;
 
-   int32 blockSize_1 = ReadNthInteger( intPosition );
+   int32 blockSize_1 = ReadNthInt32( intPosition );
    //std::cout << "blockSize_1 = " << blockSize_1 << std::endl;
 
-   int32 reportedNumValues = ReadNthInteger( intPosition );
+   int32 reportedNumValues = ReadNthInt32( intPosition );
 
    int32 numValues = VerifyNumberOfValues( reportedNumValues, blockSize_1 );
-   //std::cout << "numValues = " << numValues << std::endl;
+   std::cout << "\nReading block at intPosition = " << intPosition
+             << " with numValues = " << numValues << std::endl;
 
    // read the data
-   for ( int32 i = 0; i < numValues; i++ )
+   for ( int i = 0; i < numValues; i++ )
    {
       if ( reportedNumValues == 0 )
       {
          double value = ReadNthDouble( intPosition );
 #ifdef PRINT_HEADERS
-         std::cout << "\tvalue[ " << i << " ]: " << value << std::endl;
+         std::cout << "\t double[ " << i << " ]: " << value << std::endl;
 #endif // PRINT_HEADERS
       }
       else
       {
-         int32 integer = ReadNthInteger( intPosition );
+         int32 integer = this->ReadNthInt32( intPosition );// always assumes int32
 #ifdef PRINT_HEADERS
          std::cout << "\tinteger[ " << i << " ]: " << integer << std::endl;
 #endif // PRINT_HEADERS
@@ -2731,7 +2969,7 @@ void ansysReader::ReadGenericBlock( int32 intPosition )
    //std::cout << "after loop, intPosition = " << intPosition << std::endl;
 
    // the last number is blockSize again
-   int32 blockSize_2 = ReadNthInteger( intPosition );
+   int32 blockSize_2 = ReadNthInt32( intPosition );
    //std::cout << "blockSize_2 = " << blockSize_2 << std::endl;
    VerifyBlock( blockSize_1, blockSize_2 );
 }
@@ -2763,7 +3001,7 @@ int32 ansysReader::VerifyNumberOfValues( int32 reportedNumValues, int32 blockSiz
    //std::cout << "reportedNumValues = " << reportedNumValues << std::endl;
    //std::cout << "expectedNumValues = " << expectedNumValues << std::endl;
 
-   if ( reportedNumValues != 0 && reportedNumValues != expectedNumValues ) 
+   if ( reportedNumValues != 0 && reportedNumValues != expectedNumValues )
    {
       std::cerr << "reportedNumValues = " << reportedNumValues
                 << "!= expectedNumValues = " << expectedNumValues << std::endl;
@@ -2776,7 +3014,7 @@ void ansysReader::VerifyBlock( int32 blockSize_1, int32 blockSize_2 )
 {
    //std::cout << "VerifyBlock: blockSize_1 = " << blockSize_1 << std::endl;
    //std::cout << "VerifyBlock: blockSize_2 = " << blockSize_2 << std::endl;
-   if ( blockSize_2 != blockSize_1 ) 
+   if ( blockSize_2 != blockSize_1 )
    {
       std::cerr << "terminal blockSize = " << blockSize_2
                 << " != expected block size = " << blockSize_1 << std::endl;
@@ -2798,7 +3036,7 @@ double * ansysReader::GetIntersectionPoint( double n1[ 3 ], double n2[ 3 ],
    A[ 1 ] = n2;
    A[ 2 ] = d;
 
-   double x[ 3 ];
+   double * x = new double [ 3 ];
    x[ 0 ] = p1[ 0 ]*n1[ 0 ] +  p1[ 1 ]*n1[ 1 ] + p1[ 2 ]*n1[ 2 ];
    x[ 1 ] = p2[ 0 ]*n2[ 0 ] +  p2[ 1 ]*n2[ 1 ] + p2[ 2 ]*n2[ 2 ];
    x[ 2 ] = p1[ 0 ]*d[ 0 ] +  p1[ 1 ]*d[ 1 ] + p1[ 2 ]*d[ 2 ];
@@ -2806,7 +3044,7 @@ double * ansysReader::GetIntersectionPoint( double n1[ 3 ], double n2[ 3 ],
    int error = vtkMath::SolveLinearSystem( A, x, 3 );
    std::cout << "intersection point = " << x[ 0 ] << "\t" << x[ 1 ] << "\t"
              << x[ 2 ] << std::endl;
-   
+
    return x;
 }
 
