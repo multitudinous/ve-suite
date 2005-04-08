@@ -33,6 +33,7 @@ protected:
 
    void _onSlider(wxScrollEvent& event);
    void _onEnableCheck(wxCommandEvent& event);
+   void _onShowBBoxCheck(wxCommandEvent& event);
 
    wxCheckBox* _enableCheck; 
    wxCheckBox* _enableBBox;

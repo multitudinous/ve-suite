@@ -1,14 +1,21 @@
 #ifdef VE_PATENTED
 #ifdef CFD_USE_SHADERS
+#include "cfdEnum.h"
+#include "UI_Tabs.h"
 #include "UI_AdvectionPanel.h"
 #include "wx/string.h"
 #include "wx/notebook.h"
 #include <iostream>
+
 BEGIN_EVENT_TABLE(UI_AdvectionPanel,wxPanel)
    EVT_COMMAND_SCROLL(X_DYE_POS, _onSlider)
    EVT_COMMAND_SCROLL(Y_DYE_POS, _onSlider)
    EVT_COMMAND_SCROLL(Z_DYE_POS, _onSlider)
+   EVT_COMMAND_SCROLL(MATERIAL_DENSITY, _onSlider)
+   EVT_COMMAND_SCROLL(MATERIAL_INJECTION, _onSlider)
+   EVT_COMMAND_SCROLL(MATERIAL_DECAY, _onSlider)
    EVT_CHECKBOX(ENABLE_CHECK,_onEnableCheck)
+   EVT_CHECKBOX(BBOX_CHECK,_onShowBBoxCheck)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////
@@ -93,6 +100,7 @@ void UI_AdvectionPanel::_buildPage()
                                wxCB_READONLY, 
                                wxDefaultValidator, 
                                "Injection Color");
+   _materialCBox->SetSelection(0);
    wxStaticText* nLabel = new wxStaticText(this, -1, wxT("Injection Density"));
    wxStaticText* iLabel = new wxStaticText(this, -1, wxT("Injection Strength"));
    wxStaticText* dLabel = new wxStaticText(this, -1, wxT("Decay Factor"));
@@ -136,6 +144,7 @@ void UI_AdvectionPanel::_buildPage()
 
    _enableCheck = new wxCheckBox(this, ENABLE_CHECK, "Enable Advection");
    _enableBBox = new wxCheckBox(this,BBOX_CHECK, "Display Bounds");
+   _enableBBox->SetValue(true);
    //craziness w/ sizers!!!
    wxBoxSizer* advectionPanelGroup = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* enableSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -154,8 +163,9 @@ void UI_AdvectionPanel::_buildPage()
    SetAutoLayout(true);
    SetSizer(advectionPanelGroup);
    _setGroupVisibility(false);
+   Enable(false);
 }
-////////////////////////////////////////
+///////////////////////////////////////////////////////
 void UI_AdvectionPanel::_setGroupVisibility(bool onOff)
 {
    if(_dyeGroup){
@@ -211,27 +221,59 @@ void UI_AdvectionPanel::_setGroupVisibility(bool onOff)
 //////////////////////////////////////////////////////////////
 void UI_AdvectionPanel::_onEnableCheck(wxCommandEvent& event)
 {
+   event.GetInt();
    if(_enableCheck->GetValue())
    {
       _setGroupVisibility(true);
+      ((UI_Tabs *)GetParent())->cId = ADVECTION_SHADER;
+      ((UI_Tabs *)GetParent())->sendDataArrayToServer();
    }else{
       _setGroupVisibility(false);
+      ((UI_Tabs *)GetParent())->cId = VOLUME_SHADER;
+      ((UI_Tabs *)GetParent())->sendDataArrayToServer();
+   }
+
+}
+///////////////////////////////////////////////////////////////
+void UI_AdvectionPanel::_onShowBBoxCheck(wxCommandEvent& event)
+{
+   event.GetInt();
+   if(_enableBBox)
+   {
+      ((UI_Tabs *)GetParent())->cId = SHOW_TEXTURE_BBOX;
+      ((UI_Tabs *)GetParent())->cIso_value = _enableBBox->GetValue();
+      ((UI_Tabs *)GetParent())->sendDataArrayToServer();
    }
 }
 ///////////////////////////////////////////////////////
 void UI_AdvectionPanel::_onSlider(wxScrollEvent& event)
 {
+   event.GetInt();
    switch(event.GetId()){
       case X_DYE_POS:
-         std::cout<<"x"<<std::endl;
+      case Y_DYE_POS: 
+      case Z_DYE_POS:   
+         ((UI_Tabs*)GetParent())->cIso_value = DYE_TRANSLATION;
+         ((UI_Tabs*)GetParent())->cSc = _xDyeLocation->GetValue();;         
+         ((UI_Tabs*)GetParent())->cMin = _yDyeLocation->GetValue();
+         ((UI_Tabs*)GetParent())->cMax = _zDyeLocation->GetValue();
          break;
-      case Y_DYE_POS:
-         std::cout<<"y"<<std::endl;
+      case MATERIAL_DENSITY:
+         ((UI_Tabs*)GetParent())->cIso_value = NOISE_SCALE;
+         ((UI_Tabs*)GetParent())->cSc = _noiseDensityCtrl->GetValue();         
+         ((UI_Tabs*)GetParent())->cMin = _materialCBox->GetSelection();
          break;
-      case Z_DYE_POS:
-         std::cout<<"z"<<std::endl;
+      case MATERIAL_DECAY:
+      case MATERIAL_INJECTION:
+         ((UI_Tabs*)GetParent())->cIso_value = WEIGHT;
+         ((UI_Tabs*)GetParent())->cSc = _decayStrengthCtrl->GetValue();
+         ((UI_Tabs*)GetParent())->cMin = _injectionStrengthCtrl->GetValue();
+         ((UI_Tabs*)GetParent())->cMax = _materialCBox->GetSelection();
          break;
    };
+   
+   ((UI_Tabs*)GetParent())->cId = ADVECTION_SHADER;
+   ((UI_Tabs*)GetParent())->sendDataArrayToServer();
 }
 #endif
 #endif
