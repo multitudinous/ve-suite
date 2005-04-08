@@ -29,10 +29,6 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
    //*******Loading up the bitmaps for navigation buttons
-   //*******Relative paths are handled differently in windows, so check the OS and implement accordingly
-////////////////////////////////////////////////////////////////////////////////////////////////////////
-//#ifdef WIN32
-   
    char directory[1024];
    char fileName[1024];
    char* vesuitehome = 0;
@@ -67,62 +63,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
       _image12 = _createButtonImage(directory,"yaw_cw.BMP");
       _imagecoord = _createButtonImage(directory,"coordinates.bmp");
    }
-/*#else
-   wxString temp;
-   
-   wxImage* image1 = new wxImage();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/x_left.BMP");
-   image1->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image2 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/x_right.BMP");
-   image2->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image3 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/z_up.BMP");
-   image3->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image4 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/z_down.BMP");
-   image4->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image5 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/y_up.BMP");
-   image5->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image6 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/y_down.BMP");
-   image6->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image7 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/pitch_down.BMP");
-   image7->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image8 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/pitch_up.bmp");
-   image8->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image9 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/ccw_roll.BMP");
-   image9->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image10 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/cw_roll.BMP");
-   image10->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image11 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/yaw_ccw.bmp");
-   image11->LoadFile(temp,wxBITMAP_TYPE_BMP);
-   wxImage* image12 = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/yaw_cw.bmp");
-   image12->LoadFile(temp,wxBITMAP_TYPE_BMP);
 
-   wxImage* imagecoord = new wxImage();
-   temp.clear();
-   temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/coordinates.bmp");
-   imagecoord->LoadFile(temp,wxBITMAP_TYPE_BMP);
-#endif*/
 //************Done loading up the bitmaps
 
    //Assign the bitmaps to the respective buttons
