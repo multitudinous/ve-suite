@@ -62,7 +62,10 @@ public:
    wxSlider*   rotationStepSize;
    wxCheckBox* headRotationChk;
    wxButton*   resetNavPosition;
-
+protected:
+   wxBitmap* _createButtonImage(char* directory,
+                    char* fileName,
+                    wxBitmapType type = wxBITMAP_TYPE_BMP);
    DECLARE_EVENT_TABLE()
 };
 

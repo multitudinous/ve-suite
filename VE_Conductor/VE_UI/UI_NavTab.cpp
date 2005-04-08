@@ -32,33 +32,41 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    //*******Relative paths are handled differently in windows, so check the OS and implement accordingly
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
 #ifdef WIN32
-   wxBitmap* image1 = new wxBitmap();
-   image1->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/x_left.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image2 = new wxBitmap();
-   image2->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/x_right.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image3 = new wxBitmap();
-   image3->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/z_up.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image4 = new wxBitmap();
-   image4->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/z_down.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image5 = new wxBitmap();
-   image5->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/y_up.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image6 = new wxBitmap();
-   image6->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/y_down.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image7 = new wxBitmap();
-   image7->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/pitch_down.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image8 = new wxBitmap();
-   image8->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/pitch_up.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image9 = new wxBitmap();
-   image9->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/ccw_roll.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image10 = new wxBitmap();
-   image10->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/cw_roll.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image11 = new wxBitmap();
-   image11->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/yaw_ccw.BMP",wxBITMAP_TYPE_BMP);
-   wxBitmap* image12 = new wxBitmap();
-   image12->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/yaw_cw.BMP",wxBITMAP_TYPE_BMP);
-
-   wxBitmap* imagecoord = new wxBitmap();
-   imagecoord->LoadFile("~/../../VE_Conductor/Framework/Nav_bitmaps/coordinates.bmp",wxBITMAP_TYPE_BMP);
+   
+   char directory[1024];
+   char fileName[1024];
+   char* vesuitehome = 0;
+   wxBitmap* image1 = 0;
+   wxBitmap* image2 = 0;
+   wxBitmap* image3 = 0;
+   wxBitmap* image4 = 0;
+   wxBitmap* image5 = 0;
+   wxBitmap* image6 = 0;
+   wxBitmap* image7 = 0;
+   wxBitmap* image8 = 0;
+   wxBitmap* image9 = 0;
+   wxBitmap* image10 = 0;
+   wxBitmap* image11 = 0;
+   wxBitmap* image12 = 0;
+   wxBitmap* imagecoord = 0;
+   vesuitehome = getenv("VE_SUITE_HOME");
+   if(vesuitehome){
+      strcpy(directory,vesuitehome);
+      strcat(directory,"/VE_Conductor/Framework/Nav_bitmaps/");
+      image1 = _createButtonImage(directory,"x_left.BMP");
+      image2 = _createButtonImage(directory,"x_right.BMP");
+      image3 = _createButtonImage(directory,"z_up.BMP");
+      image4 = _createButtonImage(directory,"z_down.BMP");
+      image5 = _createButtonImage(directory,"y_up.BMP");
+      image6 = _createButtonImage(directory,"y_down.BMP");
+      image7 = _createButtonImage(directory,"pitch_down.BMP");
+      image8 = _createButtonImage(directory,"pitch_up.BMP");
+      image9 = _createButtonImage(directory,"ccw_roll.BMP");
+      image10 = _createButtonImage(directory,"cw_roll.BMP");
+      image11 = _createButtonImage(directory,"yaw_ccw.BMP");
+      image12 = _createButtonImage(directory,"yaw_cw.BMP");
+      imagecoord = _createButtonImage(directory,"coordinates.bmp");
+   }
 #else
    wxString temp;
    
@@ -279,7 +287,25 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
 
    SetSizer(buttonStaticBoxSizer);
 }
+/////////////////////////////////////////////////////////////////////
+wxBitmap* UI_NavigateScroll::_createButtonImage(char* directory,
+                                             char* fileName,
+                                             wxBitmapType type)
+{
+   char pathAndFileName[1024];
+   strcpy(pathAndFileName,directory);
+   strcat(pathAndFileName,fileName);
+   wxBitmap* image = new wxBitmap();
+   if(image->LoadFile(pathAndFileName,type))
+   {
+      return image;
+   }
+   delete image;
+   image = 0;
 
+   return 0;
+}
+///////////////////////////////////////
 UI_NavigateScroll::~UI_NavigateScroll()
 {
 }
