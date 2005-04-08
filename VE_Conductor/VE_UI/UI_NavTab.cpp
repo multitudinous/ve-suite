@@ -31,43 +31,43 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    //*******Loading up the bitmaps for navigation buttons
    //*******Relative paths are handled differently in windows, so check the OS and implement accordingly
 ////////////////////////////////////////////////////////////////////////////////////////////////////////
-#ifdef WIN32
+//#ifdef WIN32
    
    char directory[1024];
    char fileName[1024];
    char* vesuitehome = 0;
-   wxBitmap* image1 = 0;
-   wxBitmap* image2 = 0;
-   wxBitmap* image3 = 0;
-   wxBitmap* image4 = 0;
-   wxBitmap* image5 = 0;
-   wxBitmap* image6 = 0;
-   wxBitmap* image7 = 0;
-   wxBitmap* image8 = 0;
-   wxBitmap* image9 = 0;
-   wxBitmap* image10 = 0;
-   wxBitmap* image11 = 0;
-   wxBitmap* image12 = 0;
-   wxBitmap* imagecoord = 0;
+   _image1 = 0;
+   _image2 = 0;
+   _image3 = 0;
+   _image4 = 0;
+   _image5 = 0;
+   _image6 = 0;
+   _image7 = 0;
+   _image8 = 0;
+   _image9 = 0;
+   _image10 = 0;
+   _image11 = 0;
+   _image12 = 0;
+   _imagecoord = 0;
    vesuitehome = getenv("VE_SUITE_HOME");
    if(vesuitehome){
       strcpy(directory,vesuitehome);
       strcat(directory,"/VE_Conductor/Framework/Nav_bitmaps/");
-      image1 = _createButtonImage(directory,"x_left.BMP");
-      image2 = _createButtonImage(directory,"x_right.BMP");
-      image3 = _createButtonImage(directory,"z_up.BMP");
-      image4 = _createButtonImage(directory,"z_down.BMP");
-      image5 = _createButtonImage(directory,"y_up.BMP");
-      image6 = _createButtonImage(directory,"y_down.BMP");
-      image7 = _createButtonImage(directory,"pitch_down.BMP");
-      image8 = _createButtonImage(directory,"pitch_up.BMP");
-      image9 = _createButtonImage(directory,"ccw_roll.BMP");
-      image10 = _createButtonImage(directory,"cw_roll.BMP");
-      image11 = _createButtonImage(directory,"yaw_ccw.BMP");
-      image12 = _createButtonImage(directory,"yaw_cw.BMP");
-      imagecoord = _createButtonImage(directory,"coordinates.bmp");
+      _image1 = _createButtonImage(directory,"x_left.BMP");
+      _image2 = _createButtonImage(directory,"x_right.BMP");
+      _image3 = _createButtonImage(directory,"z_up.BMP");
+      _image4 = _createButtonImage(directory,"z_down.BMP");
+      _image5 = _createButtonImage(directory,"y_up.BMP");
+      _image6 = _createButtonImage(directory,"y_down.BMP");
+      _image7 = _createButtonImage(directory,"pitch_down.BMP");
+      _image8 = _createButtonImage(directory,"pitch_up.BMP");
+      _image9 = _createButtonImage(directory,"ccw_roll.BMP");
+      _image10 = _createButtonImage(directory,"cw_roll.BMP");
+      _image11 = _createButtonImage(directory,"yaw_ccw.BMP");
+      _image12 = _createButtonImage(directory,"yaw_cw.BMP");
+      _imagecoord = _createButtonImage(directory,"coordinates.bmp");
    }
-#else
+/*#else
    wxString temp;
    
    wxImage* image1 = new wxImage();
@@ -122,22 +122,22 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    temp.clear();
    temp = strcat( getenv("VE_SUITE_HOME"), "/VE_Conductor/Framework/Nav_Bitmaps/coordinates.bmp");
    imagecoord->LoadFile(temp,wxBITMAP_TYPE_BMP);
-#endif
+#endif*/
 //************Done loading up the bitmaps
 
    //Assign the bitmaps to the respective buttons
-   _leftButton = new UI_NavButton(this, NAV_LEFT, wxImage(*image1));
-   _rightButton = new UI_NavButton(this, NAV_RIGHT, wxBitmap(*image2));
-   _upButton = new UI_NavButton(this, NAV_UP, wxBitmap(*image3));
-   _downButton = new UI_NavButton(this, NAV_DOWN, wxBitmap(*image4));
-   _forwardButton = new UI_NavButton(this, NAV_FWD, wxBitmap(*image5));
-   _backButton = new UI_NavButton(this, NAV_BKWD, wxBitmap(*image6));
-   _pitchdownButton = new UI_NavButton(this, PITCH_DOWN, wxBitmap(*image7));
-   _pitchupButton = new UI_NavButton(this, PITCH_UP, wxBitmap(*image8));
-   _rollccwButton = new UI_NavButton(this, ROLL_CCW, wxBitmap(*image9));
-   _rollcwButton = new UI_NavButton(this, ROLL_CW, wxBitmap(*image10));
-   _yawccwButton = new UI_NavButton(this, YAW_CCW, wxBitmap(*image11));
-   _yawcwButton = new UI_NavButton(this, YAW_CW, wxBitmap(*image12));
+   _leftButton = new UI_NavButton(this, NAV_LEFT, wxImage(*_image1));
+   _rightButton = new UI_NavButton(this, NAV_RIGHT, wxBitmap(*_image2));
+   _upButton = new UI_NavButton(this, NAV_UP, wxBitmap(*_image3));
+   _downButton = new UI_NavButton(this, NAV_DOWN, wxBitmap(*_image4));
+   _forwardButton = new UI_NavButton(this, NAV_FWD, wxBitmap(*_image5));
+   _backButton = new UI_NavButton(this, NAV_BKWD, wxBitmap(*_image6));
+   _pitchdownButton = new UI_NavButton(this, PITCH_DOWN, wxBitmap(*_image7));
+   _pitchupButton = new UI_NavButton(this, PITCH_UP, wxBitmap(*_image8));
+   _rollccwButton = new UI_NavButton(this, ROLL_CCW, wxBitmap(*_image9));
+   _rollcwButton = new UI_NavButton(this, ROLL_CW, wxBitmap(*_image10));
+   _yawccwButton = new UI_NavButton(this, YAW_CCW, wxBitmap(*_image11));
+   _yawcwButton = new UI_NavButton(this, YAW_CW, wxBitmap(*_image12));
 
    //Place holders to use in filling up empty holes in the grid sizer
    wxStaticText* blank1 = new wxStaticText(this, -1, ""); //just a place holder
@@ -242,7 +242,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
 
    navCol->Add(topSizer,5,wxALIGN_CENTER_HORIZONTAL|wxALL);
 
-   wxStaticBitmap* coordpic = new wxStaticBitmap(this, -1,wxBitmap(*imagecoord),wxDefaultPosition,
+   wxStaticBitmap* coordpic = new wxStaticBitmap(this, -1,wxBitmap(*_imagecoord),wxDefaultPosition,
 											wxSize(100,102),wxMINIMIZE_BOX|wxTHICK_FRAME); 
    wxGridSizer* picSizer = new wxGridSizer(1,1);
    picSizer->Add(coordpic,1,wxALIGN_CENTER_HORIZONTAL);
@@ -308,6 +308,58 @@ wxBitmap* UI_NavigateScroll::_createButtonImage(char* directory,
 ///////////////////////////////////////
 UI_NavigateScroll::~UI_NavigateScroll()
 {
+   if(_image1){
+      delete _image1;
+      _image1 = 0; 
+   }
+   if(_image2){
+      delete _image2;
+      _image2 = 0; 
+   }
+   if(_image3){
+      delete _image3;
+      _image3 = 0; 
+   }
+   if(_image4){
+      delete _image4;
+      _image4 = 0; 
+   }
+   if(_image5){
+      delete _image5;
+      _image5 = 0; 
+   }
+   if(_image6){
+      delete _image6;
+      _image6 = 0; 
+   }
+   if(_image7){
+      delete _image7;
+      _image7 = 0; 
+   }
+   if(_image8){
+      delete _image8;
+      _image8 = 0; 
+   }
+   if(_image9){
+      delete _image9;
+      _image9 = 0; 
+   }
+   if(_image10){
+      delete _image10;
+      _image10 = 0; 
+   }
+   if(_image11){
+      delete _image11;
+      _image11 = 0; 
+   }
+   if(_image12){
+      delete _image12;
+      _image12 = 0; 
+   }
+   if(_imagecoord){
+      delete _imagecoord;
+      _imagecoord = 0; 
+   }
 }
 
 

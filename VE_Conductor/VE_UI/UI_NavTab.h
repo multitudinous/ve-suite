@@ -63,6 +63,19 @@ public:
    wxCheckBox* headRotationChk;
    wxButton*   resetNavPosition;
 protected:
+   wxBitmap* _image1;
+   wxBitmap* _image2;
+   wxBitmap* _image3;
+   wxBitmap* _image4;
+   wxBitmap* _image5;
+   wxBitmap* _image6;
+   wxBitmap* _image7;
+   wxBitmap* _image8;
+   wxBitmap* _image9;
+   wxBitmap* _image10;
+   wxBitmap* _image11;
+   wxBitmap* _image12;
+   wxBitmap* _imagecoord;
    wxBitmap* _createButtonImage(char* directory,
                     char* fileName,
                     wxBitmapType type = wxBITMAP_TYPE_BMP);
