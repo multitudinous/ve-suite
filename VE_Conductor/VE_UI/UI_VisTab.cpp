@@ -474,6 +474,11 @@ void UI_VisualizationTab::createCommandId( void )
       }
       ((UI_Tabs *)_parent)->cPre_state = _nearestCBox->GetValue();
       ((UI_Tabs *)_parent)->cIso_value = _slider->GetValue();
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+      ((UI_Tabs *)_parent)->DisableAdvectionPage();
+#endif
+#endif
    } 
    else if ( _categoryRBox->GetSelection() == 1 ) // Warped Contour 
    {
@@ -568,6 +573,12 @@ void UI_VisualizationTab::createCommandId( void )
       }
       ((UI_Tabs *)_parent)->cPre_state = _nearestCBox->GetValue();
       ((UI_Tabs *)_parent)->cIso_value = _slider->GetValue();
+      
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+      ((UI_Tabs *)_parent)->EnableAdvectionPage();
+#endif
+#endif
    } 
    else if ( _categoryRBox->GetSelection() == 3 ) // Iso-Surface Selection 
    {

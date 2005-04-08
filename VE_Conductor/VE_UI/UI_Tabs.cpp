@@ -12,6 +12,11 @@
 #include "UI_GeometryTab.h"
 #include "UI_ViewLocTab.h"
 #include "UI_DesignParTab.h"
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+#include "UI_AdvectionPanel.h"
+#endif
+#endif
 
 #include "controlIds.h"
 #include <iostream>
@@ -496,11 +501,35 @@ void UI_Tabs::createTabPages()
    //Viewing Locations page
    _viewlocPage = new UI_ViewLocTab(this);
    AddPage( _viewlocPage, _T("View Points"), false );
-
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+   _advectionPage = new UI_AdvectionPanel(this);
+   AddPage(_advectionPage,_T("Texture-Based Tools"));
+#endif
+#endif
    //SetSelection(0);
 }
 
-
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+////////////////////////////////////
+void UI_Tabs::EnableAdvectionPage()
+{
+   if(_advectionPage)
+   {
+      _advectionPage->Enable(true);
+   }
+}
+////////////////////////////////////
+void UI_Tabs::DisableAdvectionPage()
+{
+   if(_advectionPage)
+   {
+      _advectionPage->Enable(false);
+   }
+}
+#endif
+#endif
 ///////////////////////////////////////////
 void UI_Tabs::rebuildTabPages( int activeMod )
 {

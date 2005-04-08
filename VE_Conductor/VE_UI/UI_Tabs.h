@@ -29,6 +29,13 @@ class UI_ModelData;
 class UI_VisualizationTab;
 class UI_VectorTab;
 class UI_StreamlineTab;
+
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+class UI_AdvectionPanel;
+#endif
+#endif
+
 //////////////////////////////////////////////
 //the control for the different pages "tabs"//
 //on the VE_UI                              //
@@ -64,6 +71,12 @@ public:
 
    void rebuildTabPages(int activeModIndex);
 
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+   void DisableAdvectionPage();
+   void EnableAdvectionPage();
+#endif
+#endif
    UI_ModelData* _modelData;
    int _activeModIndex;
 
@@ -88,6 +101,11 @@ public:
    UI_ViewLocTab* _viewlocPage;
    UI_DesignParTab* _designparPage;
 
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+   UI_AdvectionPanel* _advectionPage;
+#endif
+#endif
 ///////copied from old Tabs.h///////
    //the pointer to the server
    VjObs_var server_ref;
