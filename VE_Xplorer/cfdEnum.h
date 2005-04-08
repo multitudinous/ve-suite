@@ -124,8 +124,8 @@ enum cfdGeodeEnum
    CHANGE_STEP_LENGTH,
    STREAMLINE_DIAMETER,
    STREAMLINE_ARROW,
-   CHANGE_CONTOUR_FILL,
-   UPDATE_SOUNDS,//140
+   CHANGE_CONTOUR_FILL, //140
+   UPDATE_SOUNDS,//141
    CHANGE_PARTICLE_VIEW_OPTION,
    //CHANGE_SPHERE_SIZE, //Not used, functionality taken care of with CHANGE_PARTICLE_VIEW_OPTION 
    LOAD_POINT,
@@ -136,8 +136,8 @@ enum cfdGeodeEnum
    //biv--added these for the navigation page
    GUI_NAV,
    NAV_UP,
-   NAV_DOWN,
-   NAV_LEFT,//150
+   NAV_DOWN, //150
+   NAV_LEFT,//151
    NAV_RIGHT,
    NAV_FWD,
    NAV_BKWD,
