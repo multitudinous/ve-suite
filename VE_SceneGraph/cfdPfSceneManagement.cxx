@@ -68,13 +68,6 @@ cfdPfSceneManagement::cfdPfSceneManagement( void )
    this->sunModel = 0;
    this->sun = 0;
    this->lit = 0;
-#elif _OSG
-   transformDCS = new cfdDCS();
-   float rot[ 3 ];
-   rot[ 0 ] = 0;
-   rot[ 1 ] = -90;
-   rot[ 2 ] = 0;
-   transformDCS->SetRotationArray( rot );
 #endif
 }
 
@@ -126,18 +119,7 @@ void cfdPfSceneManagement::InitScene( void )
    this->sun->on();
 #endif
 
-   // Add pfDCS and sun for the world
-
-#ifdef _PERFORMER
    this->rootNode->AddChild( this->worldDCS );
-   // TODO: Might need to add this back in
-#elif _OSG
-   this->rootNode->AddChild( this->transformDCS );   
-   this->transformDCS->AddChild( this->worldDCS );   
-   // We have to do this o "trick" the user into thinking that the coordinate
-   // system is he same as performers or Z up, X right, Y into the screen
-   // DO NOT REMOVE OR CHANGE!!!!!!!!!!!!!!!!!!!!!!
-#endif
 #ifdef _PERFORMER
    ((pfGroup*)(this->rootNode->GetRawNode()))->addChild( this->sun );
 #endif
