@@ -421,9 +421,28 @@ void cfdApp::intraFrame()
    // Do nothing here
    // Usually slows things down
 }
+#ifdef VE_PATENTED
+#ifdef _OSG
+#ifdef CFD_USE_SHADERS
+void cfdApp::contextPostDraw()
+{
+   if(_tbvHandler)
+     _tbvHandler->PingPongTextures();
+}
+#endif//CFD_USE_SHADERS
+#endif//_OSG
+#endif//VE_PATENTED
 
 void cfdApp::postFrame()
 {
+#ifdef VE_PATENTED
+#ifdef _OSG
+#ifdef CFD_USE_SHADERS
+   //if(_tbvHandler)
+    //  _tbvHandler->PingPongTextures();
+#endif//CFD_USE_SHADERS
+#endif//_OSG
+#endif//VE_PATENTED
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
 
 #ifdef _OSG
@@ -519,8 +538,8 @@ void cfdApp::draw()
    glMatrixMode(GL_PROJECTION);
    glPushMatrix();
 
-   glMatrixMode(GL_TEXTURE);
-   glPushMatrix();
+   //glMatrixMode(GL_TEXTURE);
+   //glPushMatrix();
 
 
    osgUtil::SceneView* sv(NULL);
@@ -601,8 +620,8 @@ void cfdApp::draw()
    if(goCapture)
       captureWebImage();
 #endif   //_WEB_INTERFACE
-   glMatrixMode(GL_TEXTURE);
-   glPopMatrix();
+  // glMatrixMode(GL_TEXTURE);
+   //glPopMatrix();
 
    glMatrixMode(GL_PROJECTION);
    glPopMatrix();

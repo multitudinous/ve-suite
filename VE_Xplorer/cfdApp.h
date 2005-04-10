@@ -100,6 +100,7 @@ class cfdApp: public vrj::OsgApp
       void contextInit( void );
       virtual void contextClose( void );
       cfdPBufferManager* GetPBuffer( void );
+      void contextPostDraw();
 #endif
 #endif
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
