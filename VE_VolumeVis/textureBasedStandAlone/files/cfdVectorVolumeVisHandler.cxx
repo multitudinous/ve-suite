@@ -216,7 +216,7 @@ void cfdVectorVolumeVisHandler::_setupTransferPropertyStateSet()
       ss->setTextureMode(tunit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
       ss->setTextureMode(tunit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
       ss->setTextureAttributeAndModes(tunit,
-                                  new osg::TexEnv(osg::TexEnv::MODULATE),
+                                  new osg::TexEnv(osg::TexEnv::REPLACE),
 		                             osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
       ss->setDataVariance(osg::Object::DYNAMIC);
       _ssIsSet = true;
@@ -237,7 +237,7 @@ void cfdVectorVolumeVisHandler::_setupAdvectionPropertyStateSet()
       ss->setTextureMode(tunit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
       ss->setTextureMode(tunit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
       ss->setTextureAttributeAndModes(tunit,
-                                  new osg::TexEnv(osg::TexEnv::MODULATE),
+                                  new osg::TexEnv(osg::TexEnv::REPLACE),
 		                             osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
       ss->setDataVariance(osg::Object::DYNAMIC);
    }

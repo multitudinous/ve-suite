@@ -12,7 +12,6 @@ f2app gammaCorrection(float3 texCoord:TEXCOORD0,
                       uniform sampler1D mat4Func:TEXUNIT4)
 {
    f2app retColor;
-   
    //get the density for each material
    float4 density = tex3D(densityTexture,texCoord);
    
@@ -28,10 +27,8 @@ f2app gammaCorrection(float3 texCoord:TEXCOORD0,
    density.b =0 ;
    retColor.color.xyz = texCoord.xyz;//density;
 */
-   //retColor.color.xyz = texCoord.xyz;//density;
    retColor.color = density;
    retColor.color.w = density.a*color.a;
-   //retColor.color.w = 1;
 
    return retColor;
 }

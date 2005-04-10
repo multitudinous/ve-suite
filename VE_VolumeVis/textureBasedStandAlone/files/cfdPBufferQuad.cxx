@@ -319,11 +319,11 @@ void cfdPBufferQuad::drawImplementation(osg::State& state)const
       std::cout<<"Texture not set for cfdPBufferQuad!!"<<std::endl;
       return;
    }*/
-   glClearColor(0,0,0,1);
+   glClearColor(0,0,0,0);
    if(curSlice == _nSlices-1){
       //reset the current slice
       curSlice = 1;
-      glColor4f(1,1,1,1);
+      glColor4f(1,1,1,0);
        
    }
    

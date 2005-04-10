@@ -18,7 +18,7 @@ public:
    cfdScalarVolumeVisHandler(const cfdScalarVolumeVisHandler& vvnh);
    virtual ~cfdScalarVolumeVisHandler();
    virtual void Init();
- 
+   virtual void SetTextureManager(cfdTextureManager* tm);
    cfdScalarVolumeVisHandler& operator=(const cfdScalarVolumeVisHandler& vvnh);
 protected:
    virtual void _setUpDecorator();

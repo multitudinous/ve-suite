@@ -72,6 +72,17 @@ void cfdOSGGammaShaderManager::Init()
    }
    _reinit = false;
 }
+//////////////////////////////////////////////////////////////////////////
+void cfdOSGGammaShaderManager::UpdateTextureManager(cfdTextureManager* tm)
+{
+   if(_tm != tm){
+      _tm = tm;
+      if(_utCbk){
+         _utCbk->SetTextureManager(_tm);
+      }
+   }
+   _reinit = false;
+}
 ///////////////////////////////////////////////////////
 void cfdOSGGammaShaderManager::_initPropertyTexture()
 {

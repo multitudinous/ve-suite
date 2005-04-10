@@ -4,12 +4,14 @@
 #ifdef _OSG
 #ifdef CFD_USE_SHADERS
 #include "cfdOSGTransferShaderManager.h"
+class cfdTextureManager;
 
 class cfdOSGGammaShaderManager:public cfdOSGTransferShaderManager{
 public:
    cfdOSGGammaShaderManager(){_useTM = true;}
    virtual ~cfdOSGGammaShaderManager(){}
    virtual void Init();
+   virtual void UpdateTextureManager(cfdTextureManager* tm);
 
 protected:
    void _initPropertyTexture();

@@ -68,6 +68,9 @@ void cfdOSGTransferShaderManager::InitTextureManager(cfdTextureManager* tm)
 void cfdOSGTransferShaderManager::UpdateTextureManager(cfdTextureManager* tm)
 {
    _tm = tm;
+   if(_utCbk){
+      _utCbk->SetTextureManager(_tm);
+   }
    _reinit = false;
 }
 /////////////////////////////////////////////////////////////////////
