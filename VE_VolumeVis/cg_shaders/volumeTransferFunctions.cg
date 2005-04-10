@@ -4,7 +4,8 @@ struct f2app{
 
 
 f2app densityTransfer(float4 color:COLOR0,
-                      float3 texCoord:TEXCOORD4,
+                      float3 tCoord0:TEXCOORD0,
+                      float3 tCoord4:TEXCOORD4,
                       uniform sampler1D mat1Func:TEXUNIT0, 
                       uniform sampler1D mat2Func:TEXUNIT1,
                       uniform sampler1D mat3Func:TEXUNIT2,
@@ -14,19 +15,23 @@ f2app densityTransfer(float4 color:COLOR0,
    f2app retColor;
    
    //get the density for each material
-   float4 density = tex3D(densityTexture,texCoord);
+   float4 density = tex3D(densityTexture,tCoord0);
    
-   float2 red = tex1D(mat4Func,density.x).ba;
-   float4 dye = float4(red.x,0,0,red.y);
+   float4 red = tex1D(mat4Func,density.x);
+   float4 dye = float4(red.x,0,0,red.a);
 
-   float2 green = tex1D(mat1Func,density.y).ba;
-   float4 mat1 = float4(0,green.y,0,green.y);
+   float4 green = tex1D(mat1Func,density.y);
+   float4 mat1 = float4(0,green.a,0,green.a);
 
-   float2 blue = tex1D(mat2Func,density.z).ba;
-   float4 mat2 = float4(0,0,blue.y,blue.y);
+   float4 blue = tex1D(mat2Func,density.z);
+   float4 mat2 = float4(0,0,blue.a,blue.a);
 
-   retColor.color = clamp(mat1 + mat2 +dye,float4(0,0,0,0),float4(1,1,1,1));
+   //retColor.color = density;
+   //retColor.color.xyz = tCoord0.xyz;
+    retColor.color = clamp(mat1 + mat2 +dye,float4(0,0,0,0),float4(1,1,1,1));
    retColor.color.w *= color.a;
+   //retColor.color.w = 1.0;
+
 
    return retColor;
 }

@@ -26,10 +26,12 @@ f2app gammaCorrection(float3 texCoord:TEXCOORD0,
    float blue = tex1D(mat3Func,density.z);
    float4 dye = float4(0,0,blue,blue);
    density.b =0 ;
-   retColor.color = density;
+   retColor.color.xyz = texCoord.xyz;//density;
 */
+   //retColor.color.xyz = texCoord.xyz;//density;
    retColor.color = density;
    retColor.color.w = density.a*color.a;
+   //retColor.color.w = 1;
 
    return retColor;
 }
