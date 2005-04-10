@@ -1,5 +1,5 @@
 #ifdef VE_PATENTED
-#ifdef _OSG 
+#ifdef _OSG
 #include <cmath>
 #ifdef CFD_USE_SHADERS
 #include "cfdPBufferManager.h"

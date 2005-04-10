@@ -94,7 +94,7 @@ void cfdOSGTransferShaderManager::Init()
       _ss = new osg::StateSet();
       _ss->setDataVariance(osg::Object::DYNAMIC);
       _ss->setMode(GL_BLEND,osg::StateAttribute::ON);
-      _ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+      _ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
       bf->setFunction(osg::BlendFunc::SRC_ALPHA, 
                     osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
@@ -105,11 +105,18 @@ void cfdOSGTransferShaderManager::Init()
       int nTransferFunctions = _transferFunctions.size();
       for(int i =0; i < nTransferFunctions; i++){
          _ss->setTextureAttributeAndModes(i,_transferFunctions.at(i).get(),
-                                      osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-         _ss->setTextureMode(i,GL_TEXTURE_1D,
+                                      osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
+          _ss->setTextureMode(i,GL_TEXTURE_1D,
                           osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
          _ss->setTextureMode(i,GL_TEXTURE_3D,
-                          osg::StateAttribute::OVERRIDE|osg::StateAttribute::OFF);
+                          osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
+         _ss->setTextureMode(i,GL_TEXTURE_GEN_S,
+                           osg::StateAttribute::ON);
+         _ss->setTextureMode(i,GL_TEXTURE_GEN_T,
+                           osg::StateAttribute::ON);
+         _ss->setTextureMode(i,GL_TEXTURE_GEN_R,
+                           osg::StateAttribute::ON);
+     
       }
       if(_useTM){
          _ss->setTextureAttributeAndModes(nTransferFunctions,_property.get(),
@@ -178,7 +185,7 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool useGamma,
    GLubyte* lutex = new GLubyte[256*4];
    //gamma table
    GLubyte gTable[256];
-   double gamma = 2.5;
+   double gamma = 1.4;
    //double y = 0;
    for (int i=0; i<256; i++) {       
       double y = (double)(i)/255.0;   
@@ -194,9 +201,15 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool useGamma,
       }
    }else{
       for (int i = 0; i < 256; i++){
-        lutex[i*4    ] =
-        lutex[i*4 + 1] = 
-        lutex[i*4 + 2] = (GLubyte)gTable[i];
+         if(i < 75){
+           lutex[i*4    ] =
+           lutex[i*4 + 1] = 
+           lutex[i*4 + 2] = (GLubyte)0;
+         }else{
+           lutex[i*4    ] =
+           lutex[i*4 + 1] = 
+           lutex[i*4 + 2] = (GLubyte)gTable[i];
+         }
         lutex[i*4 + 3] = (GLubyte)i;//ga[i];
       }
    }

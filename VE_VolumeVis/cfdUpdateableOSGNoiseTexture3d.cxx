@@ -17,8 +17,8 @@ cfdUpdateableOSGNoiseTexture3d::cfdUpdateableOSGNoiseTexture3d()
    _taoH = .01;
    _taoI = .1;
    _taoA = .9;
-   _lastH = -1;
-   _lastI = -1;
+   _lastH = _taoH;
+   _lastI = _taoI;
    _data = 0;
    _updateData();
 }
@@ -157,7 +157,7 @@ void cfdUpdateableOSGNoiseTexture3d::load(const osg::Texture3D& texture,osg::Sta
 //////////////////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateableOSGNoiseTexture3d::subload(const osg::Texture3D& texture,osg::State& state) const
 {
-   if(_data){
+   if(_data&&_needsUpdate()){
       texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                           0,
                           0,0,0, 

@@ -193,8 +193,6 @@ void cfdVolumeVisNodeHandler::_createTexGenNode()
       _texGenParams->getTexGen()->setPlane(osg::TexGen::S,sPlane); 
       _texGenParams->getTexGen()->setPlane(osg::TexGen::T,tPlane);
       _texGenParams->getTexGen()->setPlane(osg::TexGen::R,rPlane);
-
-      
    }
 }
 ////////////////////////////////////////////
@@ -251,7 +249,7 @@ void cfdVolumeVisNodeHandler::_createVisualBBox()
       osg::ref_ptr<osg::StateSet> ss = _visualBoundingBox->getOrCreateStateSet();
       ss->setRenderingHint(osg::StateSet::OPAQUE_BIN);
       ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-      
+      ss->setMode(GL_DEPTH_TEST,osg::StateAttribute::ON);
       osg::Geometry* bboxCube = new osg::Geometry;
 
       osg::Vec3Array* coords = new osg::Vec3Array();

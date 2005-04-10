@@ -12,7 +12,7 @@ namespace osg{
 #include "cfdOSGShaderManager.h"
 #include "cfdUpdateableOSGNoiseTexture3d.h"
 #include "cfdUpdateParameterCallback.h"
-//class cfdUpdateMatrixParameterCallback;
+class cfdUpdateMatrixParameterCallback;
 
 class cfdOSGAdvectionShaderManager: public cfdOSGShaderManager{
 public:
@@ -69,7 +69,7 @@ protected:
    cfdUpdateParameterCallback* _minBoundsCallback;
    cfdUpdateParameterCallback* _maxBoundsCallback;
    cfdUpdateParameterCallback* _dyeCoordCallback;
-   //cfdUpdateMatrixParameterCallback* _dyeMatCallback;
+   cfdUpdateMatrixParameterCallback* _dyeMatCallback;
 
    osg::ref_ptr<osg::Texture3D> _velocity;
    osg::ref_ptr<osg::Texture3D> _propertyToAdvect;

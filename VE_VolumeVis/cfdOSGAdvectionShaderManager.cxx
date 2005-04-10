@@ -17,7 +17,7 @@
 #include "cfdOSGAdvectionShaderManager.h"
 #include "cfdUpdateableOSGTexture1d.h"
 #include "cfdSimpleTextureCallback.h"
-#include "cfdUpdateMatrixParameterCallback.h"
+//#include "cfdUpdateMatrixParameterCallback.h"
 #define PI  3.1416
 ////////////////////////////////////////////////////////////
 //Constructors                                            //
@@ -109,8 +109,7 @@ cfdOSGAdvectionShaderManager::~cfdOSGAdvectionShaderManager()
       delete _dyeTransCallback;
       _dyeTransCallback = 0;
    }
-   /*
-   if(_dyeMatCallback){
+   /*if(_dyeMatCallback){
       delete _dyeMatCallback;
       _dyeMatCallback = 0;
    }*/
@@ -128,8 +127,9 @@ void cfdOSGAdvectionShaderManager::Init()
    if(_velocity.valid()){
      //set up the state for textures
       _ss = new osg::StateSet();
-      _ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
-      
+      _ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      _ss->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      _ss->setMode(GL_SCISSOR_TEST,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureAttributeAndModes(0,_noiseTexture.get(), 
                                    osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
       _ss->setTextureMode(0,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
@@ -213,12 +213,12 @@ void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
 
    float dyeCoord[3] = {0,0,0};
    float dyeScale[3] = {1,1,1};
-   float dyeTrans[3] = {.7,.35,.7};
-   float noiseScale[3] = {1,1,1};
+   float dyeTrans[3] = {.05,.41,.449};
+   float noiseScale[3] = {.5,.5,.5};
 
-   noiseScale[0] = _fieldSize[0]/32.0;
-   noiseScale[1] = _fieldSize[1]/32.0;
-   noiseScale[2] = _fieldSize[2]/32.0;
+   noiseScale[0] = .5*_fieldSize[0]/32.0;
+   noiseScale[1] = .5*_fieldSize[1]/32.0;
+   noiseScale[2] = .5*_fieldSize[2]/32.0;
 
    dyeScale[0] = .5*_fieldSize[0]/4.0;
    dyeScale[1] = .5*_fieldSize[1]/4.0;

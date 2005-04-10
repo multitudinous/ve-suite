@@ -247,7 +247,9 @@ unsigned char* cfdTextureManager::getNextField(/*int plusNeg*/)
 //////////////////////////////////////////////////////////////
 int cfdTextureManager::timeToUpdate(double curTime,double delay)
 {
-   if ( _mode == PLAY )
+   int numFields = _dataFields.size();
+
+   if ( (numFields > 1) && _mode == PLAY  )
    {
       if ( curTime - _prevTime >= delay )
       {

@@ -37,8 +37,8 @@ void cfdOSGGammaShaderManager::Init()
                         osg::StateAttribute::ON);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_R,
                         osg::StateAttribute::ON);
-      _ss->setTextureMode(0,GL_TEXTURE_3D,
-                        osg::StateAttribute::ON);
+      /*_ss->setTextureMode(0,GL_TEXTURE_3D,
+                        osg::StateAttribute::ON);*/
       _ss->setTextureAttributeAndModes(0,
                                    new osg::TexEnv(osg::TexEnv::REPLACE),
 		                              osg::StateAttribute::ON);
@@ -46,8 +46,8 @@ void cfdOSGGammaShaderManager::Init()
       for(int i =0; i < nTransferFunctions; i++){
          _ss->setTextureAttributeAndModes(i+1,_transferFunctions.at(i).get(),
                                       osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
-         _ss->setTextureMode(i+1,GL_TEXTURE_1D,
-                          osg::StateAttribute::ON);
+         /*_ss->setTextureMode(i+1,GL_TEXTURE_1D,
+                          osg::StateAttribute::ON);*/
          _ss->setTextureMode(i+1,GL_TEXTURE_GEN_S,
                            osg::StateAttribute::OFF);
          _ss->setTextureMode(i+1,GL_TEXTURE_GEN_T,

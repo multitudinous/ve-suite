@@ -70,11 +70,13 @@ void cfd3DTextureCullCallback::operator()(osg::Node* node,
 {
    osgUtil::CullVisitor* cullVisitor = dynamic_cast<osgUtil::CullVisitor*>(nv); 
    if (cullVisitor && _subgraph.valid() && _pingPonger)
-   {
+   {  
+      //_pingPonger->PingPongTextures();
       _textureToUpdate = _pingPonger->GetCurrentTexture();
       preRender(*node,*cullVisitor);
       // must traverse the Node's subgraph            
       traverse(node,nv);
+      
       //
    }
 }
@@ -156,9 +158,10 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
 
    // and the render to texture stage to the current stages
    // dependancy list.
-   cv.getCurrentRenderBin()->getStage()->addToDependencyList(rtts.get());
-   if(_textureToUpdate.valid())
+   if(_textureToUpdate.valid()){
       rtts->set3DTexture(_textureToUpdate.get());
+      cv.getCurrentRenderBin()->getStage()->addToDependencyList(rtts.get());
+   }
    _count++;
 }
    

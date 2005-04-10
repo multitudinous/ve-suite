@@ -130,7 +130,13 @@ cfdVolumeVisualization* cfdTextureDataSet::GetVolumeVisNode()
 {
    if(_volVisNode){
       if(_activeTM){
+#ifdef CFD_USE_SHADERS
+         _volVisNode->SetBoundingBox(_activeTM->getBoundingBox());
+         //if(_activeTM->GetDataType(0)== cfdTextureManager::SCALAR)
          _volVisNode->SetTextureManager(_activeTM);
+#else
+         _volVisNode->SetTextureManager(_activeTM);
+#endif
       }
       return _volVisNode;
    }

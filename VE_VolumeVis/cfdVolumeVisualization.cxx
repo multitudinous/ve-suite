@@ -248,8 +248,8 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
 //////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 {
-   //if(tm->GetDataType(0) == cfdTextureManager::VECTOR)
-      //return;
+   if(tm->GetDataType(0) == cfdTextureManager::VECTOR)
+      return;
 
    _tm = tm;
 
@@ -472,7 +472,7 @@ void cfdVolumeVisualization::_createStateSet()
    if(_noShaderGroup.valid()){
       if(!_stateSet.valid()){
          _stateSet = _noShaderGroup->getOrCreateStateSet();;
-         _stateSet->setMode(GL_LIGHTING,osg::StateAttribute::ON);
+         _stateSet->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
          _stateSet->setMode(GL_BLEND,osg::StateAttribute::ON);
          
          osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
@@ -501,6 +501,7 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 {
    if(ss){
       if(_texture.valid()){
+
          if(!_utCbk){
             _utCbk =  new cfdUpdateTextureCallback();
          
@@ -511,6 +512,7 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
             _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
             _texture->setSubloadCallback(_utCbk);
          }
+
          ss->setTextureAttributeAndModes(0,_texture.get(),
 			                        osg::StateAttribute::ON);
          ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
@@ -535,6 +537,7 @@ void cfdVolumeVisualization::_createTexGenNode()
       osg::Vec4 rPlane(0,0,1,0);
             
       _texGenParams = new osg::TexGenNode();
+      _texGenParams->setName("VV TexGenNode");
       _texGenParams->setTextureUnit(0);
       _texGenParams->getTexGen()->setMode(osg::TexGen::EYE_LINEAR);
       _texGenParams->getTexGen()->setPlane(osg::TexGen::S,sPlane); 
@@ -582,7 +585,7 @@ void cfdVolumeVisualization::_buildSlices()
     geom->setColorBinding(osg::Geometry::BIND_OVERALL);
 
     geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,ycoords->size()));
-    
+    geom->setUseDisplayList(false);
     _billboard = new osg::Billboard;
     _billboard->setMode(osg::Billboard::POINT_ROT_WORLD);
     _billboard->addDrawable(geom);
@@ -614,13 +617,17 @@ void cfdVolumeVisualization::CreateNode()
 //////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()
 {
+#ifndef CFD_USE_SHADERS
    if(!_tm){
       std::cout<<"Texture Manager not set!!!"<<std::endl;
       return;
    }
+#endif
    _volumeVizNode = new osg::Switch();
    _volumeVizNode->setName("Volume Viz Node");
-   _volumeVizNode->setSingleChildOn(0);
+#ifdef CFD_USE_SHADERS
+   _volumeVizNode->setAllChildrenOff();
+#endif
    _volumeVizNode->setDataVariance(osg::Object::DYNAMIC);
 
    if(!_noShaderGroup.valid()){
@@ -653,7 +660,7 @@ void cfdVolumeVisualization::_buildGraph()
          osg::ref_ptr<osg::TexMat> tmat =
              dynamic_cast<osg::TexMat*>(_stateSet->getTextureAttribute(0,osg::StateAttribute::TEXMAT));
          _texGenParams->setUpdateCallback(new cfdTextureMatrixCallback(tmat.get(),
-                                                            _center,
+                                                           _center,
                                                             scale,trans));
       }
       if(!_decoratorAttachNode){

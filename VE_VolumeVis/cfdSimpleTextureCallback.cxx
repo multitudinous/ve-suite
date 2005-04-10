@@ -4,6 +4,9 @@
 #elif _OPENSG
 #elif _OSG
 #include <osg/State>
+#include <osg/TexMat>
+#include <osg/StateAttribute>
+#include <iostream>
 //////////////////////////////////////////////////////////////////
 //Constructor                                                   //
 //////////////////////////////////////////////////////////////////
@@ -25,6 +28,9 @@ void cfdSimpleTextureCallback::load(const osg::Texture3D& texture,osg::State& st
 //////////////////////////////////////////////////////////////////////////////////////////////
 void cfdSimpleTextureCallback::subload(const osg::Texture3D& texture,osg::State& state) const
 {
+  
+        
+       
 }
 #endif
 #endif

@@ -60,7 +60,11 @@ osg::Texture3D* cfdOSGPingPongTexture3D::GetCurrentTexture()
 void cfdOSGPingPongTexture3D::PingPongTextures()
 {
    osg::ref_ptr<osg::StateSet> tmpStateSet = _previous->getStateSet();
+   unsigned int tmpUnit = 0;
+   tmpUnit = _pingUnit;
+   _pingUnit = _pongUnit;
    _previous->setStateSet(_current->getStateSet());
+   _pongUnit = tmpUnit;
    _current->setStateSet(tmpStateSet.get());
    return;
 }
