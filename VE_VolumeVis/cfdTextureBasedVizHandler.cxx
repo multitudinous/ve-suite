@@ -293,7 +293,7 @@ void cfdTextureBasedVizHandler::_updateShaderState()
             weights[1] = (float)_cmdArray->GetCommandValue(cfdCommandArray::CFD_MIN);
             weights[1] /= 100.0;
             float whichMat = (float)_cmdArray->GetCommandValue(cfdCommandArray::CFD_MAX);
-            //aShader->UpdateWeight(weights,whichMat);
+            aShader->UpdateWeight(weights,whichMat);
          }
          _vvvh->EnableDecorator();
          activeVisNodeHdlr = _vvvh;

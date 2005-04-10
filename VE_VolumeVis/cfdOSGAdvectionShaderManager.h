@@ -36,7 +36,7 @@ public:
    //whichMaterial
    //0,1 ==> noise
    //2 ==>dye
-   void UpdateWeight(GLfloat param, int whichMaterial = 0);
+   void UpdateWeight(GLfloat* param, int whichMaterial = 0);
    void SetState(osg::State* state);
    void SetCenter(osg::Vec3 center);
 
@@ -69,12 +69,13 @@ protected:
    cfdUpdateParameterCallback* _minBoundsCallback;
    cfdUpdateParameterCallback* _maxBoundsCallback;
    cfdUpdateParameterCallback* _dyeCoordCallback;
-   cfdUpdateMatrixParameterCallback* _dyeMatCallback;
+   cfdUpdateParameterCallback* _weightWCallback;
+   cfdUpdateParameterCallback* _weightVCallback;
 
    osg::ref_ptr<osg::Texture3D> _velocity;
    osg::ref_ptr<osg::Texture3D> _propertyToAdvect;
-   osg::ref_ptr<osg::Texture3D> _weightW;
-   osg::ref_ptr<osg::Texture3D> _weightV;
+   float _weightW[4];
+   float _weightV[4];
    osg::ref_ptr<osg::Texture3D> _dye;
    osg::ref_ptr<osg::Texture3D> _noiseTexture;
    osg::ref_ptr<osg::Texture1D> _lookUpFunction;

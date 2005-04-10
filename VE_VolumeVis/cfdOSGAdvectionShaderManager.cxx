@@ -38,10 +38,23 @@ cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager()
    _dyeScaleCallback =0 ;
    _dyeTransCallback = 0;
    _noiseCbk = 0;
-   //_dyeMatCallback = 0;
+   
+   _weightWCallback = 0;
+   _weightVCallback = 0;
+   
    _fieldSize[0] = 0;
    _fieldSize[1] = 0;
    _fieldSize[2] = 0;
+
+   _weightV[0] = .8;
+   _weightV[1] = .8;
+   _weightV[2] = .8;
+   _weightV[3] = .8;
+
+   _weightW[0] = .2;
+   _weightW[1] = .2;
+   _weightW[2] = .2;
+   _weightW[3] = .2;
 
    _center.set(0,0,0);
 }
@@ -58,8 +71,7 @@ cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager(const
    _isFrag = sm._isFrag;
    //new these
    _propertyToAdvect = new osg::Texture3D(*(sm._propertyToAdvect.get()));
-   _weightW = new osg::Texture3D(*(sm._weightW.get()));
-   _weightV = new osg::Texture3D(*(sm._weightV.get()));
+  
    _lookUpFunction = new osg::Texture1D(*(sm._lookUpFunction.get()));
    _noiseCbk = new cfdUpdateableOSGNoiseTexture3d(*sm._noiseCbk);
    _dye = new osg::Texture3D(*(sm._dye.get()));
@@ -73,7 +85,19 @@ cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager(const
    _deltaCallback = new cfdUpdateParameterCallback(*sm._deltaCallback);
    _timeCallback = new cfdUpdateParameterCallback(*sm._timeCallback);
    _periodCallback = new cfdUpdateParameterCallback(*sm._periodCallback);
-   //_dyeMatCallback = new cfdUpdateMatrixParameterCallback(*sm._dyeMatCallback);
+   _weightWCallback = new cfdUpdateParameterCallback(*sm._weightWCallback);
+   _weightVCallback = new cfdUpdateParameterCallback(*sm._weightVCallback);
+
+ 
+   _weightV[0] = sm._weightV[0];
+   _weightV[1] = sm._weightV[1];
+   _weightV[2] = sm._weightV[2];
+   _weightV[3] = sm._weightV[3];
+
+   _weightW[0] = sm._weightW[0];
+   _weightW[1] = sm._weightW[1];
+   _weightW[2] = sm._weightW[2];
+   _weightW[3] = sm._weightW[3];
 }
 
 /////////////////////////////////////////////////////////////
@@ -105,10 +129,22 @@ cfdOSGAdvectionShaderManager::~cfdOSGAdvectionShaderManager()
       delete _dyeScaleCallback;
       _dyeScaleCallback = 0;
    }
-   if(_dyeTransCallback){
+   if(_dyeTransCallback)
+   {
       delete _dyeTransCallback;
       _dyeTransCallback = 0;
    }
+
+    if(_weightWCallback)
+    {
+       delete _weightWCallback;
+       _weightWCallback = 0;
+    }
+    if(_weightVCallback)
+    {
+       delete _weightWCallback;
+       _weightWCallback = 0;
+    }
    /*if(_dyeMatCallback){
       delete _dyeMatCallback;
       _dyeMatCallback = 0;
@@ -158,7 +194,7 @@ void cfdOSGAdvectionShaderManager::Init()
       _ss->setTextureMode(3,GL_TEXTURE_GEN_T,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(3,GL_TEXTURE_GEN_R,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       
-      _ss->setTextureAttributeAndModes(5,_weightW.get(), 
+      /*_ss->setTextureAttributeAndModes(5,_weightW.get(), 
                                    osg::StateAttribute::OVERRIDE |osg::StateAttribute::ON);
       _ss->setTextureMode(5,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(5,GL_TEXTURE_GEN_S,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
@@ -171,7 +207,7 @@ void cfdOSGAdvectionShaderManager::Init()
       _ss->setTextureMode(6,GL_TEXTURE_GEN_S,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(6,GL_TEXTURE_GEN_T,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(6,GL_TEXTURE_GEN_R,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-      
+      */
       _tUnit = 4;
       {
          //load the shader file 
@@ -204,6 +240,8 @@ void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
    _periodCallback = new cfdUpdateParameterCallback();
    _dyeTransCallback = new cfdUpdateParameterCallback();
    _dyeScaleCallback = new cfdUpdateParameterCallback();
+   _weightWCallback = new cfdUpdateParameterCallback();
+   _weightVCallback = new cfdUpdateParameterCallback();
 
    float period = 1.0;
    float delta[3];
@@ -244,6 +282,11 @@ void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
                                    cfdUpdateParameterCallback::ONE);
    _periodCallback->updateParameter(&period);
 
+   _weightWCallback->setTypeAndSize(cfdUpdateParameterCallback::VECTOR,
+                                   cfdUpdateParameterCallback::FOUR);
+   
+   _weightVCallback->setTypeAndSize(cfdUpdateParameterCallback::VECTOR,
+                                   cfdUpdateParameterCallback::FOUR);
    
 }
 //////////////////////////////////////////////////////////////
@@ -270,6 +313,8 @@ void cfdOSGAdvectionShaderManager::_setupCGShaderProgram(osg::StateSet* ss,
       fprog->addVectorParameter("deltaT")->setCallback(_deltaCallback);
       fprog->addVectorParameter("time")->setCallback(new osgNV::TimePicker);
       fprog->addVectorParameter("period")->setCallback(_periodCallback);
+      fprog->addVectorParameter("weightW")->setCallback(_weightWCallback);
+      fprog->addVectorParameter("weightV")->setCallback(_weightVCallback);
       _frag = fprog;
       //apply the shaders to state set
       ss->setAttributeAndModes(fprog,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
@@ -348,10 +393,35 @@ void cfdOSGAdvectionShaderManager::UpdateNoiseFunction(float param,
    }
 }
 //////////////////////////////////////////////////////////////
-void cfdOSGAdvectionShaderManager::UpdateWeight(GLfloat param,
+void cfdOSGAdvectionShaderManager::UpdateWeight(GLfloat* param,
                                         int whichMaterial)
 {
-   //do nothing for now
+   switch(whichMaterial)
+   {
+      //red -- or dye
+      case 0:
+         //decay 
+         _weightW[0] = 1.0 - param[0];
+         //inject
+         _weightV[0] = param[1];
+         break;
+      //green -- or material 1
+      case 1:
+         //decay
+         _weightW[1] = 1.0 - param[0];
+         //inject
+         _weightV[1] = param[1];
+         break;
+      //blue -- or material 2
+      case 2:
+         //decay
+         _weightW[2] = 1.0 - param[0];
+         //inject
+         _weightV[2] = param[1];
+         break;
+   }
+   _weightWCallback->updateParameter(_weightW);
+   _weightVCallback->updateParameter(_weightV);
 }
 //////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGAdvectionShaderManager::GetPropertyTexture()
@@ -575,7 +645,7 @@ void cfdOSGAdvectionShaderManager::_initNoiseTexture()
 /////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initWeightFunctions()
 {
-   if(_weightW.valid()&&_weightV.valid())return;
+   /*if(_weightW.valid()&&_weightV.valid())return;
    //this does nothing for now. . .can be functions that are
    //weighted based on velocity
    osg::ref_ptr<osg::Image> tempW = new osg::Image();
@@ -641,7 +711,7 @@ void cfdOSGAdvectionShaderManager::_initWeightFunctions()
    _weightV->setWrap(osg::Texture3D::WRAP_R,
                            osg::Texture3D::REPEAT);
    _weightV->setInternalFormat(GL_RGBA);
-   _weightV->setImage(tempV.get());
+   _weightV->setImage(tempV.get());*/
 }
 ////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initLookUpFunction()
@@ -711,8 +781,6 @@ cfdOSGAdvectionShaderManager& cfdOSGAdvectionShaderManager::operator=(const
    if(this != &sm){
       _velocity = sm._velocity;
       _propertyToAdvect = sm._velocity;
-      _weightW = sm._weightW;
-      _weightV = sm._weightV;
       _lookUpFunction = sm._lookUpFunction;
       _reinit = sm._reinit;
       _dye = sm._dye;
@@ -756,17 +824,16 @@ cfdOSGAdvectionShaderManager& cfdOSGAdvectionShaderManager::operator=(const
       _periodCallback = new cfdUpdateParameterCallback(*sm._periodCallback);
       _dyeScaleCallback = new cfdUpdateParameterCallback(*sm._dyeScaleCallback);
       _dyeTransCallback = new cfdUpdateParameterCallback(*sm._dyeTransCallback);
-      /*_dyeScale[0] = sm._dyeScale[0];
-      _dyeScale[1] = sm._dyeScale[1];
-      _dyeScale[2] = sm._dyeScale[2];
+      
+      _weightV[0] = sm._weightV[0];
+      _weightV[1] = sm._weightV[1];
+      _weightV[2] = sm._weightV[2];
+      _weightV[3] = sm._weightV[3];
 
-      _dyeTranslation[0] = sm._dyeTranslation[0];
-      _dyeTranslation[1] = sm._dyeTranslation[1];
-      _dyeTranslation[2] = sm._dyeTranslation[2];
-
-      _noiseScale[0] = sm._noiseScale[0];
-      _noiseScale[1] = sm._noiseScale[1];
-      _noiseScale[2] = sm._noiseScale[2];*/
+      _weightW[0] = sm._weightW[0];
+      _weightW[1] = sm._weightW[1];
+      _weightW[2] = sm._weightW[2];
+      _weightW[3] = sm._weightW[3];
    }
    return *this;
 }
