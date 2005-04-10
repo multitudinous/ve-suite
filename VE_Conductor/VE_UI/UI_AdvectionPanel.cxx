@@ -16,6 +16,7 @@ BEGIN_EVENT_TABLE(UI_AdvectionPanel,wxPanel)
    EVT_COMMAND_SCROLL(MATERIAL_DECAY, _onSlider)
    EVT_CHECKBOX(ENABLE_CHECK,_onEnableCheck)
    EVT_CHECKBOX(BBOX_CHECK,_onShowBBoxCheck)
+   EVT_COMBOBOX(MATERIAL_COMBO,_onMaterialSwitch)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////
@@ -24,12 +25,87 @@ END_EVENT_TABLE()
 UI_AdvectionPanel::UI_AdvectionPanel(wxNotebook* tControl)
 :wxPanel(tControl)
 {
+   _enableCheck =0; 
+   _enableBBox=0;
+
+   _dyeGroup=0;
+   _dyeSliderBox=0;  
+   _dyeInjectCheck=0;
+   _xDyeLocation=0;
+   _yDyeLocation=0;
+   _zDyeLocation=0;
+
+   _materialGroup=0;
+   _materialCBox=0;
+   _noiseDensityCtrl=0;
+   _injectionStrengthCtrl=0;
+   _decayStrengthCtrl=0;
    _buildPage();
 }
 ///////////////////////////////////////
 UI_AdvectionPanel::~UI_AdvectionPanel()
 {
-
+   if(_dyeGroup)
+   {
+      delete _dyeGroup;
+      _dyeGroup = 0;
+   }
+   if(_materialGroup)
+   {
+      delete _materialGroup;
+      _materialGroup = 0;
+   }
+   
+   if(_dyeSliderBox)
+   {
+      delete _dyeSliderBox;
+      _dyeSliderBox = 0;
+   } 
+   if(_dyeInjectCheck)
+   {
+      delete _dyeInjectCheck;
+      _dyeInjectCheck = 0;
+   } 
+   if(_xDyeLocation)
+   {
+      delete _xDyeLocation;
+      _xDyeLocation = 0;
+   }
+   if(_yDyeLocation)
+   {
+      delete _yDyeLocation;
+      _yDyeLocation = 0;
+   }
+   if(_zDyeLocation)
+   {
+      delete _zDyeLocation;
+      _zDyeLocation = 0;
+   }
+   if(_materialGroup)
+   {
+      delete _materialGroup;
+      _materialGroup = 0;
+   }
+   if(_noiseDensityCtrl)
+   {
+      delete _noiseDensityCtrl;
+      _noiseDensityCtrl = 0;
+   }
+   if(_noiseDensityCtrl)
+   {
+      delete _noiseDensityCtrl;
+      _noiseDensityCtrl = 0;
+   }
+   if(_injectionStrengthCtrl)
+   {
+      delete _injectionStrengthCtrl;
+      _injectionStrengthCtrl = 0;
+   }
+   if(_decayStrengthCtrl)
+   {
+      delete _decayStrengthCtrl;
+      _decayStrengthCtrl = 0;
+   }
 }
 ////////////////////////////////////
 //build the advection panel tab   //
@@ -40,63 +116,63 @@ void UI_AdvectionPanel::_buildPage()
    //dye group
    _dyeGroup = new wxStaticBox(this, DYE_GROUP,"Dye Emmiter");
    _dyeSliderBox = new wxStaticBox(this, DYE_SLIDER_GROUP,"Position");
-   _dyeInjectCheck = new wxCheckBox(this, DYE_CHECK, "Inject");
+   //_dyeInjectCheck = new wxCheckBox(this, DYE_CHECK, "Inject");
    wxStaticText* xLabel = new wxStaticText(this, -1, wxT("X"));
    wxStaticText* yLabel = new wxStaticText(this, -1, wxT("Y"));
    wxStaticText* zLabel = new wxStaticText(this, -1, wxT("Z"));
    
-   wxBoxSizer* xSizer = new wxBoxSizer(wxHORIZONTAL);
-   wxBoxSizer* ySizer = new wxBoxSizer(wxHORIZONTAL);
-   wxBoxSizer* zSizer = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* xSizer = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* ySizer = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* zSizer = new wxBoxSizer(wxVERTICAL);
    
    _xDyeLocation = new wxSlider(this,
                              X_DYE_POS, 0, 
 			                     0,100,
                              wxDefaultPosition, wxDefaultSize,
-                             wxSL_HORIZONTAL| wxSL_AUTOTICKS|
+                             wxSL_VERTICAL| wxSL_AUTOTICKS|
                              wxSL_LABELS|wxSL_RIGHT);
 
-   xSizer->Add(xLabel,0,wxALIGN_LEFT|wxEXPAND);
-   xSizer->Add(_xDyeLocation,1,wxALIGN_LEFT|wxEXPAND);
+   xSizer->Add(xLabel,0,wxALIGN_CENTER|wxEXPAND);
+   xSizer->Add(_xDyeLocation,1,wxALIGN_CENTER|wxEXPAND);
 
    _yDyeLocation = new wxSlider(this,
                              Y_DYE_POS, 0,
                              0,100,
                              wxDefaultPosition, wxDefaultSize,
-                             wxSL_HORIZONTAL| wxSL_AUTOTICKS|
+                             wxSL_VERTICAL| wxSL_AUTOTICKS|
                              wxSL_LABELS|wxSL_RIGHT );
 
-   ySizer->Add(yLabel,0,wxALIGN_LEFT|wxEXPAND);
-   ySizer->Add(_yDyeLocation,1,wxALIGN_LEFT|wxEXPAND);
+   ySizer->Add(yLabel,0,wxALIGN_CENTER|wxEXPAND);
+   ySizer->Add(_yDyeLocation,1,wxALIGN_CENTER|wxEXPAND);
 
    _zDyeLocation = new wxSlider(this,
                             Z_DYE_POS, 0, 
                             0,100,
                             wxDefaultPosition, wxDefaultSize,
-                            wxSL_HORIZONTAL| wxSL_AUTOTICKS|
+                            wxSL_VERTICAL| wxSL_AUTOTICKS|
                             wxSL_LABELS|wxSL_RIGHT );
 
-   zSizer->Add(zLabel,0,wxALIGN_LEFT|wxEXPAND);
-   zSizer->Add(_zDyeLocation,1,wxALIGN_LEFT|wxEXPAND);
+   zSizer->Add(zLabel,0,wxALIGN_CENTER|wxEXPAND);
+   zSizer->Add(_zDyeLocation,1,wxALIGN_CENTER|wxEXPAND);
 
-   wxStaticBoxSizer* dyeSliderSizer = new wxStaticBoxSizer(_dyeSliderBox,wxVERTICAL);
+   wxStaticBoxSizer* dyeSliderSizer = new wxStaticBoxSizer(_dyeSliderBox,wxHORIZONTAL);
    dyeSliderSizer->Add(xSizer,1,wxALIGN_CENTER|wxEXPAND);
    dyeSliderSizer->Add(ySizer,1,wxALIGN_CENTER|wxEXPAND);
    dyeSliderSizer->Add(zSizer,1,wxALIGN_CENTER|wxEXPAND);
 
    wxStaticBoxSizer* dyeSGroupSizer = new wxStaticBoxSizer(_dyeGroup,wxVERTICAL);
-   dyeSGroupSizer->Add(_dyeInjectCheck,1,wxALIGN_CENTER|wxEXPAND);
+   //dyeSGroupSizer->Add(_dyeInjectCheck,1,wxALIGN_CENTER|wxEXPAND);
    dyeSGroupSizer->Add(dyeSliderSizer,2,wxALIGN_CENTER|wxEXPAND);
    
    //material group
    _materialGroup = new wxStaticBox(this, MATERIAL_GROUP,"Injection Materials");
-   wxString materialColors[2] = {"Green","Blue"};
+   wxString materialColors[3] = {"Red (Dye)","Green","Blue"};
    _materialCBox = new wxComboBox(this, 
                                MATERIAL_COMBO, 
                                "", 
                                wxDefaultPosition,
                                wxDefaultSize, 
-                               2,materialColors, 
+                               3,materialColors, 
                                wxCB_READONLY, 
                                wxDefaultValidator, 
                                "Injection Color");
@@ -148,12 +224,13 @@ void UI_AdvectionPanel::_buildPage()
    //craziness w/ sizers!!!
    wxBoxSizer* advectionPanelGroup = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* enableSizer = new wxBoxSizer(wxHORIZONTAL);
-   wxBoxSizer* groupSizer = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* groupSizer = new wxBoxSizer(wxHORIZONTAL);
 
    enableSizer->Add(_enableCheck,0,wxEXPAND|wxALL);
    enableSizer->Add(_enableBBox,0,wxEXPAND|wxALL);
-   groupSizer->Add(dyeSGroupSizer,1,wxEXPAND|wxALIGN_CENTER);
    groupSizer->Add(materialGroupSizer,1,wxEXPAND|wxALIGN_CENTER);
+   groupSizer->Add(dyeSGroupSizer,1,wxEXPAND|wxALIGN_CENTER);
+   
 
    advectionPanelGroup->Add(groupSizer, 3, wxEXPAND|wxALIGN_CENTER);
    advectionPanelGroup->Add(enableSizer, 0,wxALIGN_BOTTOM|wxALIGN_CENTER );
@@ -168,13 +245,16 @@ void UI_AdvectionPanel::_buildPage()
 ///////////////////////////////////////////////////////
 void UI_AdvectionPanel::_setGroupVisibility(bool onOff)
 {
+   _setDyeVisibility(onOff);
+   _setMaterialVisibility(onOff);
+
+}
+/////////////////////////////////////////////////////
+void UI_AdvectionPanel::_setDyeVisibility(bool onOff)
+{
    if(_dyeGroup){
       _dyeGroup->Enable(onOff);
    }
-   if(_materialGroup){
-      _materialGroup->Enable(onOff);
-   }
-   
    if(_dyeSliderBox)
    {
       _dyeSliderBox->Enable(onOff);
@@ -195,6 +275,10 @@ void UI_AdvectionPanel::_setGroupVisibility(bool onOff)
    {
       _zDyeLocation->Enable(onOff);
    }
+}
+//////////////////////////////////////////////////////////
+void UI_AdvectionPanel::_setMaterialVisibility(bool onOff)
+{
    if(_materialGroup)
    {
       _materialGroup->Enable(onOff);
@@ -232,7 +316,22 @@ void UI_AdvectionPanel::_onEnableCheck(wxCommandEvent& event)
       ((UI_Tabs *)GetParent())->cId = VOLUME_SHADER;
       ((UI_Tabs *)GetParent())->sendDataArrayToServer();
    }
+}
+////////////////////////////////////////////////////////////////
+void UI_AdvectionPanel::_onMaterialSwitch(wxCommandEvent& event)
+{
+   event.GetInt();
+   if(_materialCBox->GetSelection() == 0)
+   {
+      _setDyeVisibility(true);
+      _noiseDensityCtrl->Enable(false);
+      _injectionStrengthCtrl->Enable(false);
+   }else{
+      _setDyeVisibility(false);
+      _noiseDensityCtrl->Enable(true);
+      _injectionStrengthCtrl->Enable(true);
 
+   }
 }
 ///////////////////////////////////////////////////////////////
 void UI_AdvectionPanel::_onShowBBoxCheck(wxCommandEvent& event)

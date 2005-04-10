@@ -30,10 +30,13 @@ public:
 protected:
    void _buildPage();
    void _setGroupVisibility(bool onOff = true);
+   void _setDyeVisibility(bool onOff);
+   void _setMaterialVisibility(bool onOff);
 
    void _onSlider(wxScrollEvent& event);
    void _onEnableCheck(wxCommandEvent& event);
    void _onShowBBoxCheck(wxCommandEvent& event);
+   void _onMaterialSwitch(wxCommandEvent& event);
 
    wxCheckBox* _enableCheck; 
    wxCheckBox* _enableBBox;
