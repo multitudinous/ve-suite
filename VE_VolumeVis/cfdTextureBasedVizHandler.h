@@ -54,7 +54,13 @@ class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandle
       cfdVolumeVisualization* GetVolumeVizNode(int index);
       cfdVolumeVisualization* GetActiveVolumeVizNode( void );
   
-   protected:	
+   protected:
+#ifdef CFD_USE_SHADERS
+      void _updateShaderState();
+#endif
+      void _updateGraph();
+      void _updateVisualization();
+      void _updateShaders();
       void _updateScalarVisHandler();
       void _updateVectorVisHandler();
 
