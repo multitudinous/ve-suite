@@ -286,7 +286,7 @@ void cfdModelHandler::PreFrameUpdate( void )
 #ifdef _OSG
 #ifdef VE_PATENTED
       unsigned int nTextureDataSets = _activeModel->GetNumberOfTextureDataSets();
-      if( (nTextureDataSets) && ( (int)i < nTextureDataSets ) )
+      if( (nTextureDataSets) && ( i < nTextureDataSets ) )
       {
          _activeTDSet = _activeModel->GetTextureDataSet(i);
          _activeModel->SetActiveTextureDataSet(_activeTDSet);
@@ -569,8 +569,6 @@ void cfdModelHandler::PreFrameUpdate( void )
 #endif
 #endif
    // Check and see if we need to refresh the scalar bar
-   vprDEBUG(vprDBG_ALL,3) << "cfdModelHandler::_scalarBar->CheckCommandId"
-                          << std::endl << vprDEBUG_FLUSH;
    _scalarBar->CheckCommandId( commandArray );
    // May use in the future
    //_scalarBar->UpdateCommand();

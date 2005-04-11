@@ -162,7 +162,6 @@ inline void cfdApp::preForkInit( )
    vrj::PfApp::preForkInit();
    vprDEBUG(vprDBG_ALL,1) << "cfdApp::preForkInit"
                           << std::endl << vprDEBUG_FLUSH;
-   pfdInitConverter("./NewComponents/Terrain_all.obj");
    //pfdInitConverter( "air_system.flt" );
 }
 
@@ -242,11 +241,6 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    newSceneViewer->setClearColor(osg::Vec4(0,0,0,1));
 
    //newSceneViewer->getLight()->setConstantAttenuation( 1.0f );
-   //account for 90 rotation of the model
-   //default light is at (0,0,1,0) so change this to
-   //so move to (0,0,1,0) to ligth down on the team
-   //might not be the correct solution for this but
-   //this is what we'll do for now. ..
    osg::Vec4 lPos = osg::Vec4(100,-100,100,0); 
    newSceneViewer->getLight()->setPosition(lPos);
 
@@ -356,6 +350,7 @@ void cfdApp::initScene( )
    // This may need to be fixed
    this->_vjobsWrapper->GetCfdStateVariables();
 }
+
 void cfdApp::preFrame( void )
 {
 }
@@ -386,7 +381,6 @@ void cfdApp::latePreFrame( void )
    ///////////////////////
 #ifdef _OSG
 #ifdef VE_PATENTED
-   //_tbvHandler->SetActiveTextureManager(cfdModelHandler::instance()->GetActiveTextureManager());
    if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
    {
       _tbvHandler->SetParentNode((cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
@@ -435,14 +429,6 @@ void cfdApp::contextPostDraw()
 
 void cfdApp::postFrame()
 {
-#ifdef VE_PATENTED
-#ifdef _OSG
-#ifdef CFD_USE_SHADERS
-   //if(_tbvHandler)
-    //  _tbvHandler->PingPongTextures();
-#endif//CFD_USE_SHADERS
-#endif//_OSG
-#endif//VE_PATENTED
    vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
 
 #ifdef _OSG
@@ -537,10 +523,12 @@ void cfdApp::draw()
 
    glMatrixMode(GL_PROJECTION);
    glPushMatrix();
-
+   
+   // The code below is commented out because it causes 
+   // problems with the cg shader code
+   // for more details please contact Gerrick
    //glMatrixMode(GL_TEXTURE);
    //glPushMatrix();
-
 
    osgUtil::SceneView* sv(NULL);
    sv = (*sceneViewer);    // Get context specific scene viewer
@@ -575,6 +563,7 @@ void cfdApp::draw()
    vrj::Projection* project = userData->getProjection();
    const float* vj_proj_view_mat = project->getViewMatrix().mData;
    osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
+
 /*
    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
    gmtl::Matrix44f _vjMatrix( project->getViewMatrix() );
@@ -593,13 +582,11 @@ void cfdApp::draw()
                                     frustum[vrj::Frustum::VJ_TOP],
                                     frustum[vrj::Frustum::VJ_NEAR],
                                     frustum[vrj::Frustum::VJ_FAR]);
-   
+
    // need to mess with this matrix to change how the coordinate system is 
    // positioned
-   // maybe use this function call
-   //std::cout << project->getViewMatrix() << std::endl;
    sv->setViewMatrixAsLookAt(  osg::Vec3( 0, -1, 0 ), osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 1 ) );
-  //sv->setViewMatrix(*osg_proj_xform_mat);
+   //sv->setViewMatrix(*osg_proj_xform_mat);
 #ifdef _WEB_INTERFACE
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
    if(userData->getViewport()->isSimulator())   //if this is a sim window context....
@@ -620,7 +607,7 @@ void cfdApp::draw()
    if(goCapture)
       captureWebImage();
 #endif   //_WEB_INTERFACE
-  // glMatrixMode(GL_TEXTURE);
+   //glMatrixMode(GL_TEXTURE);
    //glPopMatrix();
 
    glMatrixMode(GL_PROJECTION);
