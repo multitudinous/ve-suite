@@ -55,6 +55,7 @@
 		};
 		08FB7794FE84155DC02AAC07 = {
 			children = (
+				ADE6D0C6080ADB1F00D993A2,
 				AD585E2A07F4A4560030C9C2,
 			);
 			isa = PBXGroup;
@@ -74,9 +75,9 @@
 //AD4
 		AD585E2A07F4A4560030C9C2 = {
 			children = (
-				AD585E3507F4CB640030C9C2,
+				ADE6D0D8080AE87300D993A2,
+				ADE6D0D9080AE87300D993A2,
 				AD585E3607F4CB640030C9C2,
-				AD585E3707F4CB640030C9C2,
 			);
 			indentWidth = 6;
 			isa = PBXGroup;
@@ -84,17 +85,6 @@
 			refType = 4;
 			sourceTree = "<group>";
 			tabWidth = 6;
-			usesTabs = 0;
-		};
-		AD585E3507F4CB640030C9C2 = {
-			fileEncoding = 30;
-			indentWidth = 3;
-			isa = PBXFileReference;
-			lastKnownFileType = sourcecode.cpp.cpp;
-			path = cfdWebServicesMain.cxx;
-			refType = 4;
-			sourceTree = "<group>";
-			tabWidth = 3;
 			usesTabs = 0;
 		};
 		AD585E3607F4CB640030C9C2 = {
@@ -108,16 +98,29 @@
 			tabWidth = 3;
 			usesTabs = 0;
 		};
-		AD585E3707F4CB640030C9C2 = {
+		ADE6D0C6080ADB1F00D993A2 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.make;
+			path = Makefile;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		ADE6D0D8080AE87300D993A2 = {
 			fileEncoding = 30;
-			indentWidth = 3;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = cfdWebServicesMain.cxx;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		ADE6D0D9080AE87300D993A2 = {
+			fileEncoding = 30;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = cfdWebServices.cxx;
 			refType = 4;
 			sourceTree = "<group>";
-			tabWidth = 3;
-			usesTabs = 0;
 		};
 //AD0
 //AD1

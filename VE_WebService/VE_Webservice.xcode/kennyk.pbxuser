@@ -35,9 +35,9 @@
 				PBXFileTableDataSourceColumnWidthsKey = (
 					20,
 					20,
-					451,
+					725,
 					20,
-					73,
+					112,
 					43,
 					43,
 					20,
@@ -53,7 +53,7 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 134443405;
+			PBXPerProjectTemplateStateSaveDate = 134928770;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -230,7 +230,7 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 134443405;
+			PBXWorkspaceStateSaveDate = 134928770;
 		};
 		perUserProjectItems = {
 			AD0E510407FB6E57005196A0 = AD0E510407FB6E57005196A0;
@@ -245,6 +245,43 @@
 			ADDBE7F40803593800145123 = ADDBE7F40803593800145123;
 			ADDFB29D080375C0007F4CB5 = ADDFB29D080375C0007F4CB5;
 			ADDFB29E080375C0007F4CB5 = ADDFB29E080375C0007F4CB5;
+			ADE6D0BB080AD9BD00D993A2 = ADE6D0BB080AD9BD00D993A2;
+			ADE6D0BC080AD9BD00D993A2 = ADE6D0BC080AD9BD00D993A2;
+			ADE6D0BF080AD9BD00D993A2 = ADE6D0BF080AD9BD00D993A2;
+			ADE6D0C0080ADA8300D993A2 = ADE6D0C0080ADA8300D993A2;
+			ADE6D0C1080ADA8300D993A2 = ADE6D0C1080ADA8300D993A2;
+			ADE6D0C2080ADB1400D993A2 = ADE6D0C2080ADB1400D993A2;
+			ADE6D0C3080ADB1400D993A2 = ADE6D0C3080ADB1400D993A2;
+			ADE6D0C4080ADB1900D993A2 = ADE6D0C4080ADB1900D993A2;
+			ADE6D0C5080ADB1900D993A2 = ADE6D0C5080ADB1900D993A2;
+			ADE6D0C7080ADB7C00D993A2 = ADE6D0C7080ADB7C00D993A2;
+			ADE6D0C8080ADB7C00D993A2 = ADE6D0C8080ADB7C00D993A2;
+			ADE6D0C9080ADB7C00D993A2 = ADE6D0C9080ADB7C00D993A2;
+			ADE6D0CA080ADB7C00D993A2 = ADE6D0CA080ADB7C00D993A2;
+			ADE6D0CB080ADB7C00D993A2 = ADE6D0CB080ADB7C00D993A2;
+			ADE6D0CC080AE12C00D993A2 = ADE6D0CC080AE12C00D993A2;
+			ADE6D0CD080AE12C00D993A2 = ADE6D0CD080AE12C00D993A2;
+			ADE6D0CE080AE12C00D993A2 = ADE6D0CE080AE12C00D993A2;
+			ADE6D0CF080AE12C00D993A2 = ADE6D0CF080AE12C00D993A2;
+			ADE6D0D0080AE12C00D993A2 = ADE6D0D0080AE12C00D993A2;
+			ADE6D0D1080AE7FF00D993A2 = ADE6D0D1080AE7FF00D993A2;
+			ADE6D0D2080AE7FF00D993A2 = ADE6D0D2080AE7FF00D993A2;
+			ADE6D0D3080AE86300D993A2 = ADE6D0D3080AE86300D993A2;
+			ADE6D0D4080AE86300D993A2 = ADE6D0D4080AE86300D993A2;
+			ADE6D0D5080AE86300D993A2 = ADE6D0D5080AE86300D993A2;
+			ADE6D0D6080AE86300D993A2 = ADE6D0D6080AE86300D993A2;
+			ADE6D0D7080AE86300D993A2 = ADE6D0D7080AE86300D993A2;
+			ADE6D0DA080AE8E800D993A2 = ADE6D0DA080AE8E800D993A2;
+			ADE6D0DB080AE8E800D993A2 = ADE6D0DB080AE8E800D993A2;
+			ADE6D0DC080AE8E800D993A2 = ADE6D0DC080AE8E800D993A2;
+			ADE6D0DD080AE8E800D993A2 = ADE6D0DD080AE8E800D993A2;
+			ADE6D0DE080AE8E800D993A2 = ADE6D0DE080AE8E800D993A2;
+			ADE6D0DF080AE8E800D993A2 = ADE6D0DF080AE8E800D993A2;
+			ADE6D0E0080AE8E800D993A2 = ADE6D0E0080AE8E800D993A2;
+			ADE6D0E1080AE8E800D993A2 = ADE6D0E1080AE8E800D993A2;
+			ADE6D0E2080AE8E800D993A2 = ADE6D0E2080AE8E800D993A2;
+			ADE6D0E3080AE8E800D993A2 = ADE6D0E3080AE8E800D993A2;
+			ADE6D0E4080AE8E800D993A2 = ADE6D0E4080AE8E800D993A2;
 		};
 		sourceControlManager = AD585E2107F4A39E0030C9C2;
 		userBuildSettings = {
@@ -301,27 +338,45 @@
 		wantsIndex = 1;
 	};
 	AD585E3507F4CB640030C9C2 = {
+		fileEncoding = 30;
+		indentWidth = 3;
+		isa = PBXFileReference;
+		name = cfdWebServicesMain.cxx;
+		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/src/cfdWebServicesMain.cxx;
+		refType = 0;
+		sourceTree = "<absolute>";
+		tabWidth = 3;
 		uiCtxt = {
 			sepNavIntBoundsRect = "{{0, 0}, {1005, 1484}}";
 			sepNavSelRange = "{1704, 0}";
 			sepNavVisRect = "{{0, 0}, {1005, 768}}";
 		};
+		usesTabs = 0;
 	};
 	AD585E3607F4CB640030C9C2 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {705, 1634}}";
-			sepNavSelRange = "{2538, 0}";
-			sepNavVisRect = "{{0, 1181}, {705, 428}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 1649}}";
+			sepNavSelRange = "{769, 0}";
+			sepNavVisRect = "{{0, 126}, {1005, 768}}";
 			sepNavWindowFrame = "{{-800, 266}, {750, 502}}";
 		};
 	};
 	AD585E3707F4CB640030C9C2 = {
+		fileEncoding = 30;
+		indentWidth = 3;
+		isa = PBXFileReference;
+		name = cfdWebServices.cxx;
+		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/src/cfdWebServices.cxx;
+		refType = 0;
+		sourceTree = "<absolute>";
+		tabWidth = 3;
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1315, 4409}}";
-			sepNavSelRange = "{10444, 0}";
-			sepNavVisRect = "{{0, 3476}, {1005, 768}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1315, 5519}}";
+			sepNavSelRange = "{9810, 0}";
+			sepNavVisRect = "{{0, 4221}, {1005, 768}}";
 			sepNavWindowFrame = "{{30, 88}, {1224, 914}}";
 		};
+		usesTabs = 0;
 	};
 	AD585E3A07F4CC070030C9C2 = {
 		fRef = AD585E3607F4CB640030C9C2;
@@ -418,12 +473,6 @@
 		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_Conductor/Framework/interface.h;
 		refType = 0;
 		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {705, 1454}}";
-			sepNavSelRange = "{2743, 0}";
-			sepNavVisRect = "{{0, 1016}, {705, 428}}";
-			sepNavWindowFrame = "{{-760, 383}, {750, 502}}";
-		};
 	};
 	ADDFB29D080375C0007F4CB5 = {
 		fRef = AD585E3707F4CB640030C9C2;
@@ -447,10 +496,400 @@
 	};
 	ADDFB29F080375C0007F4CB5 = {
 		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
 		name = interface.h;
 		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_Conductor/Framework/interface.h;
 		refType = 0;
 		sourceTree = "<absolute>";
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {705, 1454}}";
+			sepNavSelRange = "{2743, 0}";
+			sepNavVisRect = "{{0, 1005}, {705, 428}}";
+		};
+	};
+	ADE6D0BB080AD9BD00D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 270";
+		rLen = 0;
+		rLoc = 10444;
+		rType = 0;
+		vrLen = 2713;
+		vrLoc = 8250;
+	};
+	ADE6D0BC080AD9BD00D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 270";
+		rLen = 0;
+		rLoc = 10444;
+		rType = 0;
+		vrLen = 2713;
+		vrLoc = 8250;
+	};
+	ADE6D0BF080AD9BD00D993A2 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "interface.h: 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 2655;
+	};
+	ADE6D0C0080ADA8300D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 259";
+		rLen = 0;
+		rLoc = 9810;
+		rType = 0;
+		vrLen = 2647;
+		vrLoc = 8727;
+	};
+	ADE6D0C1080ADA8300D993A2 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "interface.h: 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 2655;
+	};
+	ADE6D0C2080ADB1400D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 259";
+		rLen = 0;
+		rLoc = 9810;
+		rType = 0;
+		vrLen = 2647;
+		vrLoc = 8727;
+	};
+	ADE6D0C3080ADB1400D993A2 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "interface.h: 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 2655;
+	};
+	ADE6D0C4080ADB1900D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 259";
+		rLen = 0;
+		rLoc = 9810;
+		rType = 0;
+		vrLen = 2647;
+		vrLoc = 8727;
+	};
+	ADE6D0C5080ADB1900D993A2 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "interface.h: 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 2655;
+	};
+	ADE6D0C6080ADB1F00D993A2 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 1034}}";
+			sepNavSelRange = "{149, 0}";
+			sepNavVisRect = "{{0, 0}, {1005, 768}}";
+		};
+	};
+	ADE6D0C7080ADB7C00D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 259";
+		rLen = 0;
+		rLoc = 9810;
+		rType = 0;
+		vrLen = 2647;
+		vrLoc = 8727;
+	};
+	ADE6D0C8080ADB7C00D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Makefile: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	ADE6D0C9080ADB7C00D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 259";
+		rLen = 0;
+		rLoc = 9810;
+		rType = 0;
+		vrLen = 2647;
+		vrLoc = 8727;
+	};
+	ADE6D0CA080ADB7C00D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Makefile: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
+	ADE6D0CB080ADB7C00D993A2 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "interface.h: 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 2655;
+	};
+	ADE6D0CC080AE12C00D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "%.cpp";
+		rLen = 5;
+		rLoc = 868;
+		rType = 0;
+		vrLen = 910;
+		vrLoc = 0;
+	};
+	ADE6D0CD080AE12C00D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 259";
+		rLen = 0;
+		rLoc = 9810;
+		rType = 0;
+		vrLen = 2658;
+		vrLoc = 8716;
+	};
+	ADE6D0CE080AE12C00D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "%.cpp";
+		rLen = 5;
+		rLoc = 868;
+		rType = 0;
+		vrLen = 910;
+		vrLoc = 0;
+	};
+	ADE6D0CF080AE12C00D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 259";
+		rLen = 0;
+		rLoc = 9810;
+		rType = 0;
+		vrLen = 2315;
+		vrLoc = 10967;
+	};
+	ADE6D0D0080AE12C00D993A2 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "interface.h: 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 2655;
+	};
+	ADE6D0D1080AE7FF00D993A2 = {
+		fRef = AD585E3707F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 259";
+		rLen = 0;
+		rLoc = 9810;
+		rType = 0;
+		vrLen = 2315;
+		vrLoc = 10967;
+	};
+	ADE6D0D2080AE7FF00D993A2 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "interface.h: 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 2655;
+	};
+	ADE6D0D3080AE86300D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Exe_server.cpp \\\n   Executive_i.cpp \\\n\tinterface.cpp \\\n   package.cpp \\\n   Network_Exec.cpp \\\n   Scheduler.cpp \\\n   string_ops.cpp \\\n\tExecute_Thread.cpp";
+		rLen = 0;
+		rLoc = 293;
+		rType = 0;
+		vrLen = 857;
+		vrLoc = 0;
+	};
+	ADE6D0D4080AE86300D993A2 = {
+		fRef = AD585E3607F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.h: 39";
+		rLen = 0;
+		rLoc = 769;
+		rType = 0;
+		vrLen = 1463;
+		vrLoc = 109;
+	};
+	ADE6D0D5080AE86300D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Exe_server.cpp \\\n   Executive_i.cpp \\\n\tinterface.cpp \\\n   package.cpp \\\n   Network_Exec.cpp \\\n   Scheduler.cpp \\\n   string_ops.cpp \\\n\tExecute_Thread.cpp";
+		rLen = 0;
+		rLoc = 293;
+		rType = 0;
+		vrLen = 857;
+		vrLoc = 0;
+	};
+	ADE6D0D6080AE86300D993A2 = {
+		fRef = AD585E3607F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.h: 39";
+		rLen = 0;
+		rLoc = 769;
+		rType = 0;
+		vrLen = 1463;
+		vrLoc = 109;
+	};
+	ADE6D0D7080AE86300D993A2 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "interface.h: 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 2655;
+	};
+	ADE6D0D8080AE87300D993A2 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 1484}}";
+			sepNavSelRange = "{0, 0}";
+			sepNavVisRect = "{{0, 0}, {1005, 768}}";
+		};
+	};
+	ADE6D0DA080AE8E800D993A2 = {
+		fRef = AD585E3607F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.h: 39";
+		rLen = 0;
+		rLoc = 769;
+		rType = 0;
+		vrLen = 1463;
+		vrLoc = 109;
+	};
+	ADE6D0DB080AE8E800D993A2 = {
+		fRef = ADE6D0D8080AE87300D993A2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServicesMain.cxx: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2066;
+		vrLoc = 0;
+	};
+	ADE6D0DC080AE8E800D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Exe_server.cpp \\\n   Executive_i.cpp \\\n\tinterface.cpp \\\n   package.cpp \\\n   Network_Exec.cpp \\\n   Scheduler.cpp \\\n   string_ops.cpp \\\n\tExecute_Thread.cpp";
+		rLen = 0;
+		rLoc = 293;
+		rType = 0;
+		vrLen = 857;
+		vrLoc = 0;
+	};
+	ADE6D0DD080AE8E800D993A2 = {
+		fRef = AD585E3607F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.h: 39";
+		rLen = 0;
+		rLoc = 769;
+		rType = 0;
+		vrLen = 1463;
+		vrLoc = 109;
+	};
+	ADE6D0DE080AE8E800D993A2 = {
+		fRef = ADE6D0D8080AE87300D993A2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServicesMain.cxx: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2066;
+		vrLoc = 0;
+	};
+	ADE6D0DF080AE8E800D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Exe_server.cpp \\\n   Executive_i.cpp \\\n\tinterface.cpp \\\n   package.cpp \\\n   Network_Exec.cpp \\\n   Scheduler.cpp \\\n   string_ops.cpp \\\n\tExecute_Thread.cpp";
+		rLen = 0;
+		rLoc = 293;
+		rType = 0;
+		vrLen = 857;
+		vrLoc = 0;
+	};
+	ADE6D0E0080AE8E800D993A2 = {
+		fRef = ADE6D0D8080AE87300D993A2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServicesMain.cxx: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2066;
+		vrLoc = 0;
+	};
+	ADE6D0E1080AE8E800D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Exe_server.cpp \\\n   Executive_i.cpp \\\n\tinterface.cpp \\\n   package.cpp \\\n   Network_Exec.cpp \\\n   Scheduler.cpp \\\n   string_ops.cpp \\\n\tExecute_Thread.cpp";
+		rLen = 0;
+		rLoc = 293;
+		rType = 0;
+		vrLen = 857;
+		vrLoc = 0;
+	};
+	ADE6D0E2080AE8E800D993A2 = {
+		fRef = ADE6D0D8080AE87300D993A2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServicesMain.cxx: 1";
+		rLen = 0;
+		rLoc = 0;
+		rType = 0;
+		vrLen = 2066;
+		vrLoc = 0;
+	};
+	ADE6D0E3080AE8E800D993A2 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Makefile: 5";
+		rLen = 0;
+		rLoc = 149;
+		rType = 0;
+		vrLen = 1013;
+		vrLoc = 0;
+	};
+	ADE6D0E4080AE8E800D993A2 = {
+		fRef = ADDFB29F080375C0007F4CB5;
+		isa = PBXTextBookmark;
+		name = "interface.h: 70";
+		rLen = 0;
+		rLoc = 2743;
+		rType = 0;
+		vrLen = 1249;
+		vrLoc = 2655;
 	};
 	D28A88AD04BDD90700651E21 = {
 		activeExec = 0;
