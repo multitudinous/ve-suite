@@ -6,7 +6,7 @@ APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WebServices
 
 IDL_HOME = $(VE_SUITE_HOME)/VEOpen
 
-srcdir= ../
+srcdir= src/
 
 all:
 	$(MAKE) NO_DEPEND=0 cxx
@@ -49,7 +49,12 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 
 vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework $(IDL_HOME)/skel 
 
-EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel 
+EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel  
+EXTRA_CXXFLAGS += -I$(VJ_BASE_DIR)/include -I$(VE_SUITE_HOME)/VE_CE -I$(VE_SUITE_HOME)/VE_Xplorer -I$(VE_SUITE_HOME)/VE_SceneGraph 
+EXTRA_CXXFLAGS += -I$(VJ_DEPS_DIR)/include 
+EXTRA_CXXFLAGS += -I$(WX_HOME)/include/
+EXTRA_CXXFLAGS += -I$(WX_HOME)/lib/wx/include/gtkd-2.4
+EXTRA_CXXFLAGS += -I$(VJ_DEPS_DIR)/include/boost/compatibility/cpp_c_headers
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------

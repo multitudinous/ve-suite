@@ -29,17 +29,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+ 
 #ifdef _TAO
-#include "Executive_i.h"
+#include <Executive_i.h>
 #include <orbsvcs/CosNamingC.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #else
 #include <omniORB4/CORBA.h>
 #endif
 #include <iostream>
-
+#include "cfdWebServices.h"
 int main(int argc, char* argv[])
-{I kno
+{
 #ifdef _TAO
    CORBA::ORB_var orb = CORBA::ORB_init( argc, argv,"VE_Suite_ORB" );
 #else
@@ -91,7 +92,7 @@ int main(int argc, char* argv[])
    // vjobsWrapper->init( naming_context.in(), orb.in() );
    // this recieves data from the executive and writes data to 
    // mysql
-   cfdWebServices webService( naming_context.in(), orb.in() );;
+   cfdWebServices webService( naming_context.in(), child_poa.in() );
    orb->run();
 
    return 0;

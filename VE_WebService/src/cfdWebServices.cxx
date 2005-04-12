@@ -11,7 +11,19 @@
 #include <vpr/System.h>
 
 #include <orbsvcs/CosNamingC.h>
-
+#include "cfdExecutive.h"
+#include "VE_i.h"
+#include "cfdDCS.h"
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+//#include "cfdVEAvailModules.h"
+//#include "cfdVEBaseClass.h"
+#include "cfdModelHandler.h"
+#include "cfdEnvironmentHandler.h"
+#include "cfdThread.h"
+#include "cfdPfSceneManagement.h"
+#include "package.h"
+#include "Network_Exec.h"
 
 cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, PortableServer::POA* childPOA )
 {
@@ -28,7 +40,7 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
       return;
    }
 
-   this->_doneWithCalculations = true;
+
    this->runGetEverythingThread = true;
    //this->updateNetworkString = false;
    //this->thread = 0;
@@ -38,10 +50,10 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
    this->masterNode = new cfdGroup();
    this->masterNode->SetName( "cfdExecutive_Node" );
    cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->masterNode );
-
+#ifdef AINTWORKIN
    av_modules = new cfdVEAvail_Modules();
    network = new Network();
-
+#endif
    //time_t* timeVal;
    long id = (long)time( NULL );
    std::ostringstream dirStringStream;
@@ -114,6 +126,7 @@ void cfdExecutive::UpdateModules( void )
 
 void cfdExecutive::GetEverything( void )
 {
+#ifdef AINTWORKIN
    //while ( runGetEverythingThread )
    {
       //vpr::System::msleep( 500 );  // half-second delay
@@ -189,6 +202,7 @@ void cfdExecutive::GetEverything( void )
    }
       //updateNetworkString = false;
    }
+#endif
 }
 
 ///////////////////////////////////////////////////////////////////
