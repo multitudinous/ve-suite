@@ -20,18 +20,15 @@ f2app densityTransfer(float4 color:COLOR0,
    float4 red = tex1D(mat4Func,density.x);
    float4 dye = float4(red.x,0,0,red.a);
 
-   float4 green = tex1D(mat1Func,density.y);
-   float4 mat1 = float4(0,green.a,0,green.a);
+   float4 ink = tex1D(mat1Func,density.y);
+   //float4 mat1 = float4(green.x,green.x,0,green.a);
 
-   float4 blue = tex1D(mat2Func,density.z);
-   float4 mat2 = float4(0,0,blue.a,blue.a);
+   float4 hole = tex1D(mat2Func,density.z);
+   //float4 mat2 = float4(0,0,0,blue.a);
+   ink = clamp((ink - hole),float4(0,0,0,0),float4(1,1,1,1));
 
-   //retColor.color = density;
-   //retColor.color.xyz = tCoord0.xyz;
-    retColor.color = clamp(mat1 + mat2 +dye,float4(0,0,0,0),float4(1,1,1,1));
+   retColor.color = clamp(ink +dye,float4(0,0,0,0),float4(1,1,1,1));
    retColor.color.w *= color.a;
-   //retColor.color.w = 1.0;
-
 
    return retColor;
 }

@@ -188,7 +188,7 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool useGamma,
    GLubyte* lutex = new GLubyte[256*4];
    //gamma table
    GLubyte gTable[256];
-   double gamma = 1.4;
+   double gamma = 2.4;
    //double y = 0;
    for (int i=0; i<256; i++) {       
       double y = (double)(i)/255.0;   
@@ -204,15 +204,15 @@ void cfdOSGTransferShaderManager::_createTransferFunction(bool useGamma,
       }
    }else{
       for (int i = 0; i < 256; i++){
-         if(i < 75){
+         /*if(i < 75){
            lutex[i*4    ] =
            lutex[i*4 + 1] = 
            lutex[i*4 + 2] = (GLubyte)0;
-         }else{
+         }else{*/
            lutex[i*4    ] =
            lutex[i*4 + 1] = 
            lutex[i*4 + 2] = (GLubyte)gTable[i];
-         }
+         //}
         lutex[i*4 + 3] = (GLubyte)i;//ga[i];
       }
    }
