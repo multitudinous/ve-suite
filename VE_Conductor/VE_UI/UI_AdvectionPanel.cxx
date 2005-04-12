@@ -8,12 +8,18 @@
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_AdvectionPanel,wxPanel)
-   EVT_COMMAND_SCROLL(X_DYE_POS, _onSlider)
-   EVT_COMMAND_SCROLL(Y_DYE_POS, _onSlider)
-   EVT_COMMAND_SCROLL(Z_DYE_POS, _onSlider)
+#ifdef WIN32
+   EVT_COMMAND_SCROLL_ENDSCROLL(MATERIAL_DENSITY, _onSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(MATERIAL_INJECTION, _onSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(MATERIAL_DECAY, _onSlider)
+#else
    EVT_COMMAND_SCROLL(MATERIAL_DENSITY, _onSlider)
    EVT_COMMAND_SCROLL(MATERIAL_INJECTION, _onSlider)
    EVT_COMMAND_SCROLL(MATERIAL_DECAY, _onSlider)
+#endif
+   EVT_COMMAND_SCROLL(X_DYE_POS, _onSlider)
+   EVT_COMMAND_SCROLL(Y_DYE_POS, _onSlider)
+   EVT_COMMAND_SCROLL(Z_DYE_POS, _onSlider)
    EVT_CHECKBOX(ENABLE_CHECK,_onEnableCheck)
    EVT_CHECKBOX(BBOX_CHECK,_onShowBBoxCheck)
    EVT_COMBOBOX(MATERIAL_COMBO,_onMaterialSwitch)
@@ -166,7 +172,7 @@ void UI_AdvectionPanel::_buildPage()
    
    //material group
    _materialGroup = new wxStaticBox(this, MATERIAL_GROUP,"Injection Materials");
-   wxString materialColors[3] = {"Red (Dye)","Green","Blue"};
+   wxString materialColors[3] = {"Red (Dye)","Gray (Smoke)","Clear (Holes)"};
    _materialCBox = new wxComboBox(this, 
                                MATERIAL_COMBO, 
                                "", 
