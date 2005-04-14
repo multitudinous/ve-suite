@@ -49,6 +49,7 @@ class cfdSoundHandler : public cfdGlobalBase
 
       // Used to read parameter file and configure objects
       void CreateObjects( void );
+
       // compare VjObs_i commandArray with its child's value
       virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
@@ -64,6 +65,5 @@ class cfdSoundHandler : public cfdGlobalBase
       std::vector< cfdSound* > sounds;
       std::vector< fileInfo* > soundFiles;
       //cfdCommandArray* commandArray;
-      int soundFile;
 };
 #endif

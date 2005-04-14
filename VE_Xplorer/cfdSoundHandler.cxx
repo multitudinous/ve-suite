@@ -46,23 +46,24 @@
 
 cfdSoundHandler::cfdSoundHandler( char* param )
 {
-   _param = NULL;
-   _readParam = NULL;
    _param = param;
-   _readParam = new cfdReadParam();
-   soundFile = 0;
+   this->_readParam = new cfdReadParam();
 
+   // Read the sound objects from the parameter file...
    CreateObjects();
 
-   if ( this->soundFile ) 
+   if ( this->soundFiles.size() > 0 ) 
    {
-      std::cout << "| Special: Initializing................................... cfdSound |" << std::endl;
+      std::cout << "| 10b Initializing........................................... Sound |" << std::endl;
 
-      sonix::instance()->changeAPI( "OpenAL" );
+      vprDEBUG(vprDBG_ALL,1) << " cfdSoundHandler: this->soundFiles.size() = "
+                             << this->soundFiles.size()
+                             << std::endl << vprDEBUG_FLUSH;
+
+      snx::sonix::instance()->changeAPI( "OpenAL" );
 
       //this->sounds[i]->initApi();
-      // this->sounds = new cfdSound[this->paramReader->soundFile];
-      for(int i = 0; i < this->soundFile; i++)
+      for ( int i = 0; i < this->soundFiles.size(); i++ )
       {
          this->sounds.push_back(new cfdSound());
          strcpy(this->sounds[i]->fileName, this->soundFiles[i]->fileName);
@@ -75,24 +76,32 @@ cfdSoundHandler::cfdSoundHandler( char* param )
          this->sounds[i]->soundPositionY = this->soundFiles[i]->soundPositionY;
          this->sounds[i]->soundPositionZ = this->soundFiles[i]->soundPositionZ;
          strcpy(this->sounds[i]->soundName, this->soundFiles[i]->soundName);
-         this->sounds[i]->initSound();
+
+         this->sounds[ i ]->initSound();
          
-         std::cout << "Success  fileName: " << this->sounds[i]->fileName << std::endl;
-         std::cout << "Success    volume: " << this->sounds[i]->volume << std::endl;
-         std::cout << "Success soundName: " << this->sounds[i]->soundName << std::endl;
+         vprDEBUG(vprDBG_ALL,1) << "\tcfdSoundHandler:  fileName: "
+                                << this->sounds[ i ]->fileName
+                                << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,1) << "\tcfdSoundHandler:    volume: "
+                                << this->sounds[ i ]->volume
+                                << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,1) << "\tcfdSoundHandler: soundName: "
+                                << this->sounds[ i ]->soundName
+                                << std::endl << vprDEBUG_FLUSH;
       }
    }
 }
 
 cfdSoundHandler::~cfdSoundHandler( void )
 {
-   delete _readParam;
+   delete this->_readParam;
 
    if ( this->sounds.size() != 0 )
    {
-      vprDEBUG(vprDBG_ALL,2) 
-         << "deleting this->sounds" << std::endl << vprDEBUG_FLUSH;
-      for(int i = 0; i < this->soundFile; i++)
+      vprDEBUG(vprDBG_ALL,2) << "deleting sounds"
+                             << std::endl << vprDEBUG_FLUSH;
+
+      for ( int i = 0; i < this->sounds.size(); i++ )
       {
          delete this->sounds[ i ];
       }
@@ -102,34 +111,45 @@ cfdSoundHandler::~cfdSoundHandler( void )
 
 int cfdSoundHandler::GetNumberOfSounds( void )
 {
-   return soundFile;
+   return this->soundFiles.size();
 }
 
 char* cfdSoundHandler::GetSoundFilename( int i )
 {
-   return this->sounds[i]->fileName;
+   return this->sounds[ i ]->fileName;
 }
 
 bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SOUNDS )
    {
-      long int test = this->_readParam->convertDecimalToBinary( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-      vprDEBUG(vprDBG_ALL,1)
-         << " test : " << test << " : Number of Sound Files :" 
-         << this->soundFile << vprDEBUG_FLUSH;
+      this->_readParam->convertDecimalToBinary( (long)
+            commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
-      this->_readParam->convertBinaryToArray( test, this->soundFile );
+      vprDEBUG(vprDBG_ALL,1) << " raw decimal = "
+         << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
+         << ", this->sounds.size() = " << this->sounds.size()
+         << std::endl << vprDEBUG_FLUSH;
 
-      for(int i = 0; i < this->soundFile; i++)
-      {  // need to fix the gui value thing
-         if ( this->sounds[i]->IsSounding() && _readParam->guiVal[ i ] == 0 ) 
+      this->_readParam->convertBinaryToArray( 0, this->soundFiles.size() );
+
+      for ( int i = 0; i < this->sounds.size(); i++ )
+      {
+         // need to fix the gui value thing
+         vprDEBUG(vprDBG_ALL,1) << " this->_readParam->guiVal[ " << i << " ] = "
+            << this->_readParam->guiVal[ i ] << std::endl << vprDEBUG_FLUSH;
+
+         if ( this->sounds[ i ]->IsSounding() && this->_readParam->guiVal[ i ] == 0 ) 
          {
-            this->sounds[i]->stopSound();  //Stop sound stuff here
+            vprDEBUG(vprDBG_ALL,0) << " stopping sound " << i
+               << std::endl << vprDEBUG_FLUSH;
+            this->sounds[ i ]->stopSound();
          }              
-         else
+         else if ( this->_readParam->guiVal[ i ] == 1 ) //allows sound restart
          {
-            this->sounds[i]->playSound();   //Start sound again
+            vprDEBUG(vprDBG_ALL,0) << " playing sound " << i
+               << std::endl << vprDEBUG_FLUSH;
+            this->sounds[ i ]->playSound();
          } 
       }      
 
@@ -140,7 +160,7 @@ bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdSoundHandler::UpdateCommand()
 {
-   std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
+   std::cerr << "doing nothing in cfdSoundHandler::UpdateCommand()" << std::endl;
 }
 
 void cfdSoundHandler::CreateObjects( void )
@@ -153,66 +173,75 @@ void cfdSoundHandler::CreateObjects( void )
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1) << " Number of Objects in Interactive Geometry : "
+                          << numObjects << std::endl  << vprDEBUG_FLUSH;
+
    for( int i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : "
+                             << id << std::endl << vprDEBUG_FLUSH;
       input.getline( text, 256 );   //skip past remainder of line
       if ( id == 11 )
       {
-         soundFile = soundFile + 1;
-         soundFiles.push_back( new fileInfo() );
-         int size = soundFiles.size() - 1;
+         this->soundFiles.push_back( new fileInfo() );
+
+         vprDEBUG(vprDBG_ALL,1) << "this->soundFiles.size() = "
+            << this->soundFiles.size() << std::endl << vprDEBUG_FLUSH;
+
+         int index = this->soundFiles.size() - 1;
 
          //ambient
-         input >> soundFiles[ size ]->ambient;
+         input >> this->soundFiles[ index ]->ambient;
          input.getline( textLine, 256 );   //skip past remainder of line
          //retriggerable
-         input >> soundFiles[ size ]->retriggerable;
+         input >> this->soundFiles[ index ]->retriggerable;
          input.getline( textLine, 256 );   //skip past remainder of line
          //volume
-         input >> soundFiles[ size ]->volume;
+         input >> this->soundFiles[ index ]->volume;
          input.getline( textLine, 256 );   //skip past remainder of line
          //pitchbend
-         input >> soundFiles[ size ]->pitchbend;
+         input >> this->soundFiles[ index ]->pitchbend;
          input.getline( textLine, 256 );   //skip past remainder of line
          //cutoff
-         input >> soundFiles[ size ]->cutoff;
+         input >> this->soundFiles[ index ]->cutoff;
          input.getline( textLine, 256 );   //skip past remainder of line
          //PositionX
-         input >> soundFiles[ size ]->soundPositionX;
+         input >> this->soundFiles[ index ]->soundPositionX;
          input.getline( textLine, 256 );   //skip past remainder of line   
          //PositionY
-         input >> soundFiles[ size ]->soundPositionY;
+         input >> this->soundFiles[ index ]->soundPositionY;
          input.getline( textLine, 256 );   //skip past remainder of line   
          //PositionZ
-         input >> soundFiles[ size ]->soundPositionZ;
+         input >> this->soundFiles[ index ]->soundPositionZ;
          input.getline( textLine, 256 );   //skip past remainder of line   
          //filename
-         input >> soundFiles[ size ]->fileName;
+         input >> this->soundFiles[ index ]->fileName;
          input.getline( textLine, 256 );   //skip past remainder of line
          //Sound name
-         input >> soundFiles[ size ]->soundName;
+         input >> this->soundFiles[ index ]->soundName;
          input.getline( textLine, 256 );   //skip past remainder of line
 
-         if (fileIO::isFileReadable( soundFiles[ size ]->fileName ) ) 
+         if (fileIO::isFileReadable( this->soundFiles[ index ]->fileName ) ) 
          {
-            std::cout << "   fileName= " << soundFiles[ size ]->fileName << std::endl;
+            vprDEBUG(vprDBG_ALL,0) << "\tsound fileName = " 
+                                   << this->soundFiles[ index ]->fileName
+                                   << std::endl << vprDEBUG_FLUSH;
          }
          else
          {
             std::cerr << "ERROR: unreadable sound file = " 
-                      << soundFiles[ size ]->fileName 
-                      << ".  You may need to correct your param file." << std::endl;
+                      << this->soundFiles[ index ]->fileName 
+                      << ".  You may need to correct your param file."
+                      << std::endl;
             exit(1);
          }
       }
       else
       {
          // Skip past block
-         _readParam->ContinueRead( input, id );
+         this->_readParam->ContinueRead( input, id );
       }
    }
 }
