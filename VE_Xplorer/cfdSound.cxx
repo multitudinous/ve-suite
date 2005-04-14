@@ -36,13 +36,12 @@
 #include <cstdlib>
 #include <cstdio>
 #include <snx/sonix.h>
-#include <snx/SoundHandle.h>
-//using namespace sonix;
+#include <vpr/Util/Debug.h>
 
 cfdSound::cfdSound()
 {
-   //sonix::instance()->changeAPI( "Stub" );
-   sonix::instance()->changeAPI( "OpenAL" );
+   //snx::sonix::instance()->changeAPI( "Stub" );
+   //////snx::sonix::instance()->changeAPI( "OpenAL" );
 }
 
 cfdSound::~cfdSound()
@@ -51,29 +50,34 @@ cfdSound::~cfdSound()
 
 void cfdSound::initSound()
 {
-   sound.init( soundName );
-   std::cout << "soundName" << soundName << std::endl;
-   // sonix::instance()->changeAPI( "Stub" );
+   this->sound.init( this->soundName );
+   vprDEBUG(vprDBG_ALL,1) << "\tcfdSound: soundName = " << this->soundName
+                          << std::endl << vprDEBUG_FLUSH;
+
+   //snx::sonix::instance()->changeAPI( "Stub" );
    snx::SoundInfo si;
-   //si.filename = "/home/users/jhynek/VE_SUITE/VE_Xplorer/sol.wav";  
    si.filename = fileName;  
-   std::cout << "fileName" << fileName << std::endl;
+   vprDEBUG(vprDBG_ALL,1) << "\tcfdSound: fileName = " << fileName
+                          << std::endl << vprDEBUG_FLUSH;
    si.ambient = false;
    si.datasource = snx::SoundInfo::FILESYSTEM;
-   sound.configure( si );
-   // sonix::instance()->changeAPI( "OpenAL" );
+   this->sound.configure( si );
+   //snx::sonix::instance()->changeAPI( "OpenAL" );
 }
+
 void cfdSound::playSound()
 {
-   //sonix::instance()->trigger(si);
-   sound.trigger(-1);
+   //snx::sonix::instance()->trigger(si);
+   this->sound.trigger(-1);
 }
+
 void cfdSound::stopSound()
 {
-   sound.stop();
+   this->sound.stop();
 }
+
 bool cfdSound::IsSounding()
 {
-   return sound.isPlaying();
+   return this->sound.isPlaying();
 }
 

@@ -34,31 +34,28 @@
 
 #include <snx/SoundHandle.h>
 
-using namespace snx;
-
 class cfdSound
 { 
   public:
-    cfdSound();
-    ~cfdSound();
+   cfdSound();
+   ~cfdSound();
 
-    void initSound();
-    void initApi();
-    void playSound();
-    void stopSound();
-    bool IsSounding();
+   void initSound();
+   void initApi();
+   void playSound();
+   void stopSound();
+   bool IsSounding();
 
-    char  fileName[100];
-    char  soundName[100];
-    int ambient;
-    int retriggerable;      
-    float volume;
-    float pitchbend;
-    float cutoff;
-    float soundPositionX;
-    float soundPositionY;
-    float soundPositionZ;
-    
+   char  fileName[ 100 ];
+   char  soundName[ 100 ];
+   int   ambient;
+   int   retriggerable;      
+   float volume;
+   float pitchbend;
+   float cutoff;
+   float soundPositionX;
+   float soundPositionY;
+   float soundPositionZ;
    
    snx::SoundHandle sound;
 };
