@@ -7,15 +7,15 @@ BEGIN_EVENT_TABLE(UI_NavigateScroll, wxScrolledWindow)
 END_EVENT_TABLE()
 UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
 :wxScrolledWindow(parent, -1, wxDefaultPosition, wxDefaultSize,
-		    wxHSCROLL | wxVSCROLL)
+          wxHSCROLL | wxVSCROLL)
 {
-  int nUnitX=20;
-  int nUnitY=10;
-  int nPixX = 5;
-  int nPixY = 10;
-  SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+   int nUnitX=20;
+   int nUnitY=10;
+   int nPixX = 5;
+   int nPixY = 10;
+   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
-     //The static box for the buttons
+   //The static box for the buttons
    wxStaticBox* buttonStaticBox = new wxStaticBox(this, -1, wxT("Navigation Controls"));
 
    //need a sizer for this box
@@ -27,7 +27,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
 
    wxGridSizer* topSizer = new wxGridSizer(11,4);
 
-////////////////////////////////////////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
    //*******Loading up the bitmaps for navigation buttons
    char directory[1024];
    char fileName[1024];
@@ -62,6 +62,11 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
       _image11 = _createButtonImage(directory,"yaw_ccw.BMP");
       _image12 = _createButtonImage(directory,"yaw_cw.BMP");
       _imagecoord = _createButtonImage(directory,"coordinates.BMP");
+   }
+   else
+   {
+      std::cerr << "Error: VE_SUITE_HOME is not defined, can't find Nav_Bitmaps"
+                << std::endl;
    }
 
 //************Done loading up the bitmaps
@@ -143,7 +148,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    topSizer->Add(blank28,1,wxALIGN_CENTER_HORIZONTAL);
    topSizer->Add(topDesc3,1,wxALIGN_BOTTOM);
    topSizer->Add(blank29,1,wxALIGN_CENTER_HORIZONTAL);
-	//first row of the grid
+   //first row of the grid
    topSizer->Add(blank1,1,wxALIGN_CENTER_HORIZONTAL);
    topSizer->Add(_pitchdownButton,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    topSizer->Add(blank2,1,wxALIGN_CENTER_HORIZONTAL);
@@ -184,7 +189,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    navCol->Add(topSizer,5,wxALIGN_CENTER_HORIZONTAL|wxALL);
 
    wxStaticBitmap* coordpic = new wxStaticBitmap(this, -1,wxBitmap(*_imagecoord),wxDefaultPosition,
-											wxSize(100,102),wxMINIMIZE_BOX|wxTHICK_FRAME); 
+                                 wxSize(100,102),wxMINIMIZE_BOX|wxTHICK_FRAME); 
    wxGridSizer* picSizer = new wxGridSizer(1,1);
    picSizer->Add(coordpic,1,wxALIGN_CENTER_HORIZONTAL);
 
@@ -395,8 +400,8 @@ void UI_NavButton::onMouse(wxMouseEvent& mouse)
    if(activeId == NONE){     
       if(mouse.LeftIsDown()){
          std::cout<<"Mouse pushed on button: "<<GetId()<<std::endl;
-        //set the active id to this button
-        //if mouse is down
+         //set the active id to this button
+         //if mouse is down
          _buttonPushed = 1;         
 
          //update the active button
