@@ -369,16 +369,19 @@ void cfdModelHandler::PreFrameUpdate( void )
    {
       if ( commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) )
       {
-         vprDEBUG(vprDBG_ALL,1)
-            << " CommandArray Geostate Value = " 
-            << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,1) << " CommandArray Geostate Value = " 
+            << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
+            << std::endl << vprDEBUG_FLUSH;
 
          long int test = this->_readParam->convertDecimalToBinary( (long)
                         commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
-         vprDEBUG(vprDBG_ALL,1)
-            << " Return from conversion : " << test << " : Active Model Ptr = " << _activeModel << std::endl << vprDEBUG_FLUSH;
+
+         vprDEBUG(vprDBG_ALL,1) << " Return from conversion : " << test
+            << " : Active Model Ptr = " << _activeModel
+            << std::endl << vprDEBUG_FLUSH;
 
          this->_readParam->convertBinaryToArray( test, _activeModel->GetNumberOfGeomDataSets() );
+
          // Update Scene Graph with selected or deselected geometry
          vprDEBUG(vprDBG_ALL,0) << " Change Geometry in Scene Graph."
                           << std::endl << vprDEBUG_FLUSH;
@@ -582,7 +585,11 @@ void cfdModelHandler::CreateObjects( void )
    int numObjects;
    char text[ 256 ];
    char textLine[ 256 ];
+#ifdef _OSG
+#ifdef VE_PATENTED
    unsigned int nTextureDataSets = 0;
+#endif
+#endif
    std::ifstream input;
    input.open( this->_param );
    input >> numObjects; 
