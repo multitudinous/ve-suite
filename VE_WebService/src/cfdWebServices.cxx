@@ -11,6 +11,21 @@
 #include <vpr/System.h>
 
 #include <orbsvcs/CosNamingC.h>
+<<<<<<< .mine
+#include "cfdWebServices.h"
+#include "VE_i.h"
+#include "cfdDCS.h"
+#include "cfdEnum.h"
+#include "cfdCommandArray.h"
+//#include "cfdVEAvailModules.h"
+//#include "cfdVEBaseClass.h"
+#include "cfdModelHandler.h"
+#include "cfdEnvironmentHandler.h"
+#include "cfdThread.h"
+#include "cfdPfSceneManagement.h"
+#include "package.h"
+#include "Network_Exec.h"
+=======
 #include "cfdExecutive.h"
 #include "VE_i.h"
 #include "cfdDCS.h"
@@ -24,7 +39,12 @@
 #include "cfdPfSceneManagement.h"
 #include "package.h"
 #include "Network_Exec.h"
+>>>>>>> .r2193
 
+<<<<<<< .mine
+#define AINTWORKIN
+=======
+>>>>>>> .r2193
 cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, PortableServer::POA* childPOA )
 {
   this->namingContext = inputNameContext;
@@ -48,9 +68,13 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
    this->masterNode = new cfdGroup();
-   this->masterNode->SetName( "cfdExecutive_Node" );
+   this->masterNode->SetName( "cfdWebServices_Node" );
    cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->masterNode );
+<<<<<<< .mine
+#ifndef AINTWORKIN
+=======
 #ifdef AINTWORKIN
+>>>>>>> .r2193
    av_modules = new cfdVEAvail_Modules();
    network = new Network();
 #endif
@@ -79,15 +103,15 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
       this->exec = Body::Executive::_narrow(exec_object.in());
 
       //Create the Servant
-      uii = new Body_UI_ithis->(exec, UINAME);
+     // uii = new Body_UI_ithis->(exec, UINAME);
       //Body_UI_i ui_i( UINAME);
 
       PortableServer::ObjectId_var id = 
-         PortableServer::string_to_ObjectId( CORBA::string_dup( "cfdExecutive" ) ); 
-    
+         PortableServer::string_to_ObjectId( CORBA::string_dup( "cfdWebServices" ) ); 
+#ifndef AINTWORKIN
       //activate it with this child POA 
-      child_poa->activate_object_with_id( id.in(), &(*ui_i) );
-
+      childPOA->activate_object_with_id( id.in(), &(*uii) );
+#endif      
       // obtain the object reference
       Body::UI_var unit =  
       Body::UI::_narrow( childPOA->id_to_reference( id.in() ) );
@@ -99,10 +123,10 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
       // to get the ref for Executive
 
       //Call the Executive CORBA call to register it to the Executive
-      exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
+      exec->RegisterUI( uii->UIName_.c_str(), unit.in() );
       std::cout << "|\tConnected to the Executive " << std::endl;   
 	   //this->thread = new cfdThread();
-      //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
+      //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdWebServices > ( this, &cfdWebServices::GetEverything ) );
    } 
    catch (CORBA::Exception &) 
    {      
@@ -113,9 +137,9 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
 
 ///////////////////////////////////////////////////////////////////
 
-void cfdExecutive::UpdateModules( void )
+void cfdWebServices::UpdateModules( void )
 {
-   if ( !CORBA::is_nil( this->_exec ) && ui_i->GetCalcFlag() )
+   if ( !CORBA::is_nil( this->exec ) && uii->GetCalcFlag() )
    {
       // Get Network and parse it
       this->GetEverything();
@@ -124,9 +148,13 @@ void cfdExecutive::UpdateModules( void )
 
 ///////////////////////////////////////////////////////////////////
 
-void cfdExecutive::GetEverything( void )
+void cfdWebServices::GetEverything( void )
 {
+<<<<<<< .mine
+#ifndef AINTWORKIN
+=======
 #ifdef AINTWORKIN
+>>>>>>> .r2193
    //while ( runGetEverythingThread )
    {
       //vpr::System::msleep( 500 );  // half-second delay
@@ -208,7 +236,7 @@ void cfdExecutive::GetEverything( void )
 ///////////////////////////////////////////////////////////////////
 
 
-void cfdExecutive::GetNetwork ( void )
+void cfdWebServices::GetNetwork ( void )
 {
    // Get buffer value from Body_UI implementation
    std::string temp( uii->GetNetworkString() );
@@ -275,13 +303,15 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
 {
    std::vector<std::string> names;              //vector to hold all the names we get
    std::string SQLString;                       //the string we'll pass to the database
-   std::vector<std::string>::iter stringIter;   //an interator to go through the strings
+   std::vector<std::string>::iterator stringIter;   //an iterator to go through the strings
    
    names = interface.getInts();           //grab the names of the ints from this interface
    SQLString = "";                        //clear the SQL string
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
    {
-      SQLString += *stringIter + "|" + interface.getInt(*stringIter) + "||";  //tack the name and number into our string, seperated by pipes
+      char numStr[16];
+      sprintf(numStr, "%l", interface.getInt(*stringIter));
+      SQLString += *stringIter + "|" + numStr + "||";  //tack the name and number into our string, seperated by pipes
    
    }
 
@@ -289,7 +319,9 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
    SQLString = "";                        //clear the SQL string
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
    {
-      SQLString += *stringIter + "|" + interface.getDouble(*stringIter) + "||";  //tack the name and number into our string, seperated by pipes
+      char numStr[16];
+      sprintf(numStr, "%l", interface.getDouble(*stringIter));
+      SQLString += *stringIter + "|" + numStr + "||";  //tack the name and number into our string, seperated by pipes
    
    }
    
@@ -313,7 +345,7 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       {
          SQLString += "|" + *valIter;
       }
-      SQLSTring += "||";
+      SQLString += "||";
    
    }
 
@@ -326,9 +358,13 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       std::vector<double>::iterator valIter;
       for(valIter = vals.begin(); valIter != vals.end(); valIter++)
       {
-         SQLString += "|" + *valIter;
+            char valString[32];
+            double val = *valIter;
+            sprintf(valString, "%d", val);
+            std::string valStringString(valString);
+            SQLString += "|" + valStringString;
       }
-      SQLSTring += "||";
+      SQLString += "||";
    
    }
    
@@ -343,14 +379,14 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       {
          SQLString += "|" + *valIter;
       }
-      SQLSTring += "||";
+      SQLString += "||";
    
    }
    
 //the old way of doing it
 //   std::map<std::string, long> ints;      //grab a copy of the interface's int map
 //   ints = interface.getIntMap();
-//   std::map<std::string, long>::iter intsIter;  //and make an iter
+//   std::map<std::string, long>::iterator intsIter;  //and make an iter
 //   for(intsIter = ints.begin(); intsIter != ints.end(); intsIter++)  //iterate through the map
 //   {  
 //      intString += intsIter->first + "|" + intsIter->second + "||";         //and tack the name and number into our string, separated by pipes
@@ -361,7 +397,7 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
 //   std::string doubleString;                
 //   std::map<std::string, long> ints;     
 //   ints = interface.getIntMap();
-//   std::map<std::string, long>::iter intsIter;  
+//   std::map<std::string, long>::iterator intsIter;  
 //   for(doublesIter = ints.begin(); doublesIter != ints.end(); doublesIter++) 
 //   {  
 //      intString += doublesIter->first + "|" + doublesIter->second + "||";    
