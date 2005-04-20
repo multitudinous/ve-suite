@@ -724,21 +724,23 @@ VjObs::scalar_p* VjObs_i::GetSoundNameArray()
 VjObs::scalar_p* VjObs_i::GetSoundNameArray()
 #endif
 {
-   int numberOfSounds = cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
+   CORBA::ULong numberOfSounds = cfdEnvironmentHandler::instance()->GetSoundHandler()->GetNumberOfSounds();
 
    vprDEBUG(vprDBG_ALL,0) << " Number of Sounds to be transfered to client: " 
                           << numberOfSounds << std::endl << vprDEBUG_FLUSH;
-
-   if ( &sound_names != NULL )
+/*
+   if ( sound_names != NULL )
    {
-      delete &sound_names;
+      vprDEBUG(vprDBG_ALL,1) << " deleting sound_names"
+                             << std::endl << vprDEBUG_FLUSH;
+      delete sound_names;
    }
-
-   if( numberOfSounds > 0 )
+*/
+   if ( numberOfSounds > 0 )
    {
-      sound_names = new VjObs::scalar_p(50);
+      //sound_names = new VjObs::scalar_p(50);
       this->sound_names->length( numberOfSounds );
-      for(CORBA::ULong i = 0; i < (unsigned int)numberOfSounds; i++)
+      for ( CORBA::ULong i = 0; i < numberOfSounds; i++)
       {
          this->sound_names[ i ] = CORBA::string_dup( 
                      cfdEnvironmentHandler::instance()->GetSoundHandler()->GetSoundFilename( i ) );
