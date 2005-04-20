@@ -1551,10 +1551,10 @@
 				RelativePath="VE_i.h">
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\skel\VjObsC.h">
+				RelativePath="..\VEOpen\skel\VjObsC.h">
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\skel\VjObsS.h">
+				RelativePath="..\VEOpen\skel\VjObsS.h">
 			</File>
 			<File
 				RelativePath=".\vtkActorToOSG.h">
