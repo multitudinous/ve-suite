@@ -128,9 +128,16 @@ void cfdTextureBasedVizHandler::_updateVisualization()
          float alpha = (float)_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          alpha /= 100.0;
          //get the xplane positions
-         xplane[3] = _currentBBox[0] + alpha*(_currentBBox[1] - _currentBBox[0]);
-         xplane[3] *=-1.0;
-         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE,xplane);
+         if(alpha < .5)
+         {
+            xplane[3] = _currentBBox[0] + alpha*(_currentBBox[1] - _currentBBox[0]);
+            xplane[3] *=-1.0;
+            _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE_MIN,xplane);
+         }else{
+            xplane[3] = _currentBBox[0] + alpha*(_currentBBox[1] - _currentBBox[0]);
+            xplane[0] *=-1.0;
+            _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE_MAX,xplane);
+         }
       }
       _cleared = false;
    }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Y_CONTOUR||
@@ -141,9 +148,17 @@ void cfdTextureBasedVizHandler::_updateVisualization()
          float alpha = (float)_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          alpha /= 100.0;
          //get the yplane positions
-         yplane[3] = _currentBBox[2] + alpha*(_currentBBox[3] - _currentBBox[2]);
-         yplane[3] *= -1.0;
-         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE,yplane);
+         if(alpha <.5)
+         {
+            yplane[3] = _currentBBox[2] + alpha*(_currentBBox[3] - _currentBBox[2]);
+            yplane[3] *= -1.0;
+            _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE_MIN,yplane);
+         }else{
+            yplane[1] *= -1.0;
+            yplane[3] = _currentBBox[2] + alpha*(_currentBBox[3] - _currentBBox[2]);
+            _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE_MAX,yplane);
+      
+         }
       }
       _cleared = false;
    }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == Z_CONTOUR||
@@ -154,9 +169,17 @@ void cfdTextureBasedVizHandler::_updateVisualization()
          float alpha = (float)_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          alpha /= 100.0;
          //get the zplane positions
-         zplane[3] = _currentBBox[4] + alpha*(_currentBBox[5] - _currentBBox[4]);
-         zplane[3] *= -1.0;
-         _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE,zplane);
+         if(alpha < .5)
+         {
+            zplane[3] = _currentBBox[4] + alpha*(_currentBBox[5] - _currentBBox[4]);
+            zplane[3] *= -1.0;
+            _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE_MIN,zplane);
+         }else{
+            zplane[3] = _currentBBox[4] + alpha*(_currentBBox[5] - _currentBBox[4]);
+            zplane[2] *= -1.0;
+            _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE_MAX,zplane);
+         }
+         
          
       }
       _cleared = false;
@@ -214,16 +237,7 @@ void cfdTextureBasedVizHandler::_updateGraph()
       if(_parent){
          //need to remove the clip planes
          if(_activeVolumeVizNode){
-           //we can do this because osg checks to see if the plane exists!!!
-            _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::XPLANE);
-            _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::YPLANE);
-            _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ZPLANE);
-            _activeVolumeVizNode->RemoveClipPlane(cfdVolumeVisualization::ARBITRARY);
- 
-             //osgDB::writeNodeFile(*_activeVolumeVizNode->GetVolumeVisNode().get(),
-              //                 "./tbTest.osg");
-
-            //remove the volviz node from the tree. . .
+            _activeVolumeVizNode->ResetClipPlanes();
             ((osg::Group*)_parent->GetRawNode())->removeChild(_activeVolumeVizNode->GetVolumeVisNode().get());
          }
          _activeTM = 0;
@@ -372,7 +386,10 @@ void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
    }
    _activeVolumeVizNode =  _activeTDSet->GetVolumeVisNode();
    _activeTM = _activeTDSet->GetActiveTextureManager();
-   
+   if(_nav)
+   {
+      _activeVolumeVizNode->TranslateCenterBy((float*)_nav->GetWorldTranslation());
+   }
    //biv -- testing
    //if(_activeTM->GetDataType(0) != cfdTextureManager::VECTOR)
     //  return;

@@ -26,6 +26,7 @@ namespace osg
    class Billboard;
 }
 class cfdTextureMatrixCallback;
+class cfdVolumeCenterCallback;
 #include <osgUtil/CullVisitor>
 #include <osg/TexMat>
 #include <osg/Vec3>
@@ -43,7 +44,13 @@ public:
                  TRANS_3,TRANS_4,PROPERTY,VELOCITY,NOISE};
    enum VisMode{PLAY,STOP};
    enum Direction{FORWARD,BACKWARD};
-   enum ClipPlane{XPLANE=0,YPLANE,ZPLANE,ARBITRARY};
+   enum ClipPlane{XPLANE_MIN=0,
+                XPLANE_MAX,
+                YPLANE_MIN,
+                YPLANE_MAX,
+                ZPLANE_MIN,
+                ZPLANE_MAX,
+                ARBITRARY};
 
    void SetPlayDirection(Direction dir);
    void SetPlayMode(VisMode mode);
@@ -51,6 +58,7 @@ public:
    void SetVeboseFlag(bool flag);
    void SetShaderDirectory(char* shadDir);
 #ifdef _OSG
+   void TranslateCenterBy(float* translate);
    void SetStateSet(osg::StateSet* ss);
    void SetState(osg::State* state);
    void Set3DTextureData(osg::Texture3D* texture);
@@ -63,7 +71,7 @@ public:
    void AddClipPlane(ClipPlane direction,double* position);
    void RemoveClipPlane(ClipPlane direction);
    void UpdateClipPlanePosition(ClipPlane direction,double* newPosition);
-   
+   void ResetClipPlanes();   
 
    bool isCreated(){return _isCreated;}
    unsigned int GetCurrentTransientTexture();
@@ -123,6 +131,7 @@ protected:
    osg::ref_ptr<osg::Image> _image;
    osg::ref_ptr<osg::State> _state;
    cfdUpdateTextureCallback* _utCbk;
+   osg::ref_ptr<cfdVolumeCenterCallback> _vcCbk;
 #endif
 
 };

@@ -14,6 +14,7 @@
 #endif
 
 #include "cfdTextureMatrixCallback.h"
+#include "cfdVolumeCenterCallback.h"
 #include <osg/TexMat>
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
@@ -69,6 +70,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
 {
    _utCbk = rhs._utCbk;
+   _vcCbk = rhs._vcCbk;
    _volumeVizNode = rhs._volumeVizNode;
    _texGenParams = rhs._texGenParams;
    _bbox = rhs._bbox;
@@ -234,7 +236,7 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
    
    //recalculate the bbox that is going to be used for
    //the volume vis
-   minBBox[0] = _center[0] - radius;
+   /*minBBox[0] = _center[0] - radius;
    minBBox[1] = _center[1] - radius;
    minBBox[2] = _center[2] - radius;
 
@@ -244,6 +246,7 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
 
    _bbox->set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
                 osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
+*/
 }
 //////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
@@ -367,6 +370,39 @@ void cfdVolumeVisualization::AddClipPlane(ClipPlane direction,double* position)
    }else{
       std::cout<<"Error!!!"<<std::endl;
       std::cout<<"Invalid osg::ClipNode in cfdVolumeVisualization::AddClipPlane!!"<<std::endl;
+   }
+}
+//////////////////////////////////////////////
+void cfdVolumeVisualization::ResetClipPlanes()
+{
+   if(_clipNode.valid())
+   {
+      double position[4] = {0,0,0,0};
+      position[0] = 1.0;
+      position[3] = -_bbox->xMin();
+      UpdateClipPlanePosition(XPLANE_MIN,position);
+
+      position[0] = -1.0;
+      position[3] = _bbox->xMax();
+      UpdateClipPlanePosition(XPLANE_MAX,position);
+      
+      position[0] = 0.0;
+      position[1] = 1.0;
+      position[3] = -_bbox->yMin();
+      UpdateClipPlanePosition(YPLANE_MIN,position);
+      
+      position[1] = -1.0;
+      position[3] = _bbox->yMax();
+      UpdateClipPlanePosition(YPLANE_MAX,position);
+      
+      position[1] = 0.0;
+      position[2] = 1.0;
+      position[3] = -_bbox->zMin();
+      UpdateClipPlanePosition(ZPLANE_MIN,position);
+      
+      position[2] = -1.0;
+      position[3] = _bbox->zMax();
+      UpdateClipPlanePosition(ZPLANE_MAX,position);
    }
 }
 /////////////////////////////////////////////////////////////////
@@ -531,7 +567,7 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 ////////////////////////////////////////////////
 void cfdVolumeVisualization::_createTexGenNode()
 {
-   if ( _bbox ){
+   //if ( _bbox ){
       osg::Vec4 sPlane(1,0,0,0);
       osg::Vec4 tPlane(0,1,0,0);
       osg::Vec4 rPlane(0,0,1,0);
@@ -543,11 +579,19 @@ void cfdVolumeVisualization::_createTexGenNode()
       _texGenParams->getTexGen()->setPlane(osg::TexGen::S,sPlane); 
       _texGenParams->getTexGen()->setPlane(osg::TexGen::T,tPlane);
       _texGenParams->getTexGen()->setPlane(osg::TexGen::R,rPlane);
-   }
-   else
-   {
+   //}
+   //else
+   /*{
       if(_verbose)
          std::cout<<"Invalid bbox in cfdVolumeVisualization::_createTexGenNode!"<<std::endl;
+   }*/
+}
+////////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::TranslateCenterBy(float* translate)
+{
+   if(_vcCbk.valid())
+   {
+      _vcCbk->Translate(translate);
    }
 }
 ///////////////////////////////////////////
@@ -592,6 +636,11 @@ void cfdVolumeVisualization::_buildSlices()
 
     //position the slices in the scene
     _billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
+    if(!_vcCbk.valid())
+    {
+       _vcCbk = new cfdVolumeCenterCallback(_center);
+    }
+    _billboard->setUpdateCallback(_vcCbk.get());
 
 }
 ///////////////////////////////////////////////////////////
@@ -670,6 +719,7 @@ void cfdVolumeVisualization::_buildGraph()
       }
       if(_billboard.valid()){
          if(_clipNode.valid()){
+            _clipNode->createClipBox(*_bbox,XPLANE_MIN);
             _decoratorAttachNode->addChild(_clipNode.get());
             _clipNode->addChild(_billboard.get());
          }else{
@@ -688,6 +738,7 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
 {
    if(&rhs != this){
       _utCbk = rhs._utCbk;
+      _vcCbk = rhs._vcCbk;
       _volumeVizNode = rhs._volumeVizNode;
       _texGenParams = rhs._texGenParams;
 
