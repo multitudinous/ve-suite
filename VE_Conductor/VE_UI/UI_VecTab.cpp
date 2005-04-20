@@ -59,11 +59,11 @@ void UI_VectorTab::_buildPage()
 
    vectorRatio = new wxStaticText(this,-1, wxT("Vector Ratio"));
    wxStaticText* vectorRatioLeft = new wxStaticText(this,-1, wxT("Dense"));
-   wxStaticText* vectorRatioRight = new wxStaticText(this,-1, wxT("Scarce"));
+   wxStaticText* vectorRatioRight = new wxStaticText(this,-1, wxT("Sparse"));
 
    vectorScale = new wxStaticText(this,-1, wxT("Vector Scale"));
-   wxStaticText* vectorScaleLeft = new wxStaticText(this,-1, wxT("Decrease"));
-   wxStaticText* vectorScaleRight = new wxStaticText(this,-1, wxT("Increase"));
+   wxStaticText* vectorScaleLeft = new wxStaticText(this,-1, wxT("Decrease Size"));
+   wxStaticText* vectorScaleRight = new wxStaticText(this,-1, wxT("Increase Size"));
 
    vectorControls = new wxStaticBox(this,-1, wxT("Vector Controls"));
    contourControls = new wxStaticBox(this,-1, wxT("Contour Controls"));
@@ -200,8 +200,8 @@ void UI_VectorTab::_buildPage()
 
    // third row
    wxStaticText* lodText = new wxStaticText(this,-1, wxT("Contour LOD"));
-   wxStaticText* lodTextLeft = new wxStaticText(this,-1, wxT("Lower"));
-   wxStaticText* lodTextRight = new wxStaticText(this,-1, wxT("Higher"));
+   wxStaticText* lodTextLeft = new wxStaticText(this,-1, wxT("Lower Detail"));
+   wxStaticText* lodTextRight = new wxStaticText(this,-1, wxT("Higher Detail"));
    
    contourLODSlider = new wxSlider(this, CONTOUR_LOD_SLIDER,0,0,99,
                                 wxDefaultPosition,wxDefaultSize,/* slidesize,*/
