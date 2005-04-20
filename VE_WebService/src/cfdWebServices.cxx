@@ -11,21 +11,7 @@
 #include <vpr/System.h>
 
 #include <orbsvcs/CosNamingC.h>
-<<<<<<< .mine
-#include "cfdWebServices.h"
-#include "VE_i.h"
-#include "cfdDCS.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
-//#include "cfdVEAvailModules.h"
-//#include "cfdVEBaseClass.h"
-#include "cfdModelHandler.h"
-#include "cfdEnvironmentHandler.h"
-#include "cfdThread.h"
-#include "cfdPfSceneManagement.h"
-#include "package.h"
-#include "Network_Exec.h"
-=======
+
 #include "cfdExecutive.h"
 #include "VE_i.h"
 #include "cfdDCS.h"
@@ -39,12 +25,10 @@
 #include "cfdPfSceneManagement.h"
 #include "package.h"
 #include "Network_Exec.h"
->>>>>>> .r2193
 
-<<<<<<< .mine
+
+
 #define AINTWORKIN
-=======
->>>>>>> .r2193
 cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, PortableServer::POA* childPOA )
 {
   this->namingContext = inputNameContext;
@@ -70,11 +54,8 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
    this->masterNode = new cfdGroup();
    this->masterNode->SetName( "cfdWebServices_Node" );
    cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->masterNode );
-<<<<<<< .mine
 #ifndef AINTWORKIN
-=======
-#ifdef AINTWORKIN
->>>>>>> .r2193
+
    av_modules = new cfdVEAvail_Modules();
    network = new Network();
 #endif
@@ -150,11 +131,9 @@ void cfdWebServices::UpdateModules( void )
 
 void cfdWebServices::GetEverything( void )
 {
-<<<<<<< .mine
+
 #ifndef AINTWORKIN
-=======
-#ifdef AINTWORKIN
->>>>>>> .r2193
+
    //while ( runGetEverythingThread )
    {
       //vpr::System::msleep( 500 );  // half-second delay
