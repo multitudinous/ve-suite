@@ -30,7 +30,6 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdFileInfo.h"
-#include <iostream>
 #include <vpr/Util/Debug.h>
 
 fileInfo::fileInfo( )

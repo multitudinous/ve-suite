@@ -62,7 +62,6 @@ class cfdReadParam : public cfdGlobalBase
       char  quatCamFileName[ 100 ];
       double bmpPosition[ 3 ];
       int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
-      int   soundFile;
       float isoScale;
       float delta;
       char  textLine[ 256 ];
@@ -89,7 +88,6 @@ class cfdReadParam : public cfdGlobalBase
       bool changeGeometry;
 
       std::vector< fileInfo * > files;
-      std::vector< fileInfo * > soundFiles;
 
       void CreateNewDataSet();
       int GetNumberOfDataSets();

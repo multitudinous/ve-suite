@@ -38,7 +38,6 @@
 
 class cfdCommandArray;
 class cfdSound;
-class fileInfo;
 class cfdReadParam;
 
 class cfdSoundHandler : public cfdGlobalBase
@@ -63,7 +62,6 @@ class cfdSoundHandler : public cfdGlobalBase
       char* _param;
       cfdReadParam* _readParam;
       std::vector< cfdSound* > sounds;
-      std::vector< fileInfo* > soundFiles;
       //cfdCommandArray* commandArray;
 };
 #endif

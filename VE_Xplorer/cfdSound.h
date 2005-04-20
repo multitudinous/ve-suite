@@ -41,22 +41,38 @@ class cfdSound
    ~cfdSound();
 
    void initSound();
-   void initApi();
    void playSound();
    void stopSound();
    bool IsSounding();
 
    char  fileName[ 100 ];
    char  soundName[ 100 ];
+
+   // sound is either ambient or positional.  If the sound is ambient, it is
+   // attached to the listener, and its volume does not change when the
+   // listener moves. If the sound is positional, the volume changes when the
+   // listener moves
    int   ambient;
-   int   retriggerable;      
-   float volume;
+
+   // retriggerable specifies whether a currently playing sound restarts
+   // from the beginning when triggered.
+   int   retriggerable;  
+
+   // Number of times to play: -1 to loop, 1 (single shot) is default.
+   int   repeat;      
+
+   float volume;  // between 0.0 and 1.0 inclusive, 1 is loud
+
    float pitchbend;
+   // pitchbend alters the frequency of the sample.  1.0 is neutral.
+   // A value less than 1.0 is low; a value greater than 1.0 is high.
+
    float cutoff;
    float soundPositionX;
    float soundPositionY;
    float soundPositionZ;
    
-   snx::SoundHandle sound;
+   snx::SoundHandle soundHandle;
+   snx::SoundInfo si;
 };
 #endif

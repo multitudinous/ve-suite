@@ -54,7 +54,6 @@ cfdReadParam::cfdReadParam()
 //files.reserve(10);   //added
    this->numGeoms = 0;
    this->bmpFile     = 0;
-   this->soundFile   = 0;
    this->diameter    = 0.0;
    this->worldTrans[0] = this->worldTrans[1] = this->worldTrans[2] = 0.0f;
    this->worldRot[0] = this->worldRot[1] = this->worldRot[2] = 0.0f;

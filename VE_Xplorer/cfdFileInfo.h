@@ -49,16 +49,5 @@ class fileInfo
       int color;
       int trans;
       cfdDCS * dcs;
-
-      //sound-specific stuff
-      int ambient;
-      int retriggerable;      
-      float volume;
-      float pitchbend;
-      float cutoff;
-      float soundPositionX;
-      float soundPositionY;
-      float soundPositionZ;
-      char soundName[100];
 };
 #endif

@@ -31,17 +31,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdSound.h"
-#include <string>
-#include <iostream>
-#include <cstdlib>
-#include <cstdio>
 #include <snx/sonix.h>
 #include <vpr/Util/Debug.h>
 
 cfdSound::cfdSound()
 {
-   //snx::sonix::instance()->changeAPI( "Stub" );
-   //////snx::sonix::instance()->changeAPI( "OpenAL" );
+   this->repeat = 1; // not currently listed in parameter file
 }
 
 cfdSound::~cfdSound()
@@ -50,34 +45,46 @@ cfdSound::~cfdSound()
 
 void cfdSound::initSound()
 {
-   this->sound.init( this->soundName );
-   vprDEBUG(vprDBG_ALL,1) << "\tcfdSound: soundName = " << this->soundName
-                          << std::endl << vprDEBUG_FLUSH;
-
-   //snx::sonix::instance()->changeAPI( "Stub" );
-   snx::SoundInfo si;
-   si.filename = fileName;  
-   vprDEBUG(vprDBG_ALL,1) << "\tcfdSound: fileName = " << fileName
-                          << std::endl << vprDEBUG_FLUSH;
-   si.ambient = false;
+   // populate a SoundInfo struct...
+   si.alias = this->soundName;
    si.datasource = snx::SoundInfo::FILESYSTEM;
-   this->sound.configure( si );
-   //snx::sonix::instance()->changeAPI( "OpenAL" );
-}
+   si.filename = this->fileName;  
+   si.ambient = this->ambient;
+   si.retriggerable = this->retriggerable;
+   si.repeat = this->repeat;
+   si.pitchbend = this->pitchbend;
+   si.cutoff = this->cutoff;
+   si.volume = this->volume;
+   si.streaming = false;
+   si.triggerOnNextBind = false;
+   si.repeatCountdown = 0;
+   si.position[ 0 ] = this->soundPositionX;
+   si.position[ 1 ] = this->soundPositionY;
+   si.position[ 2 ] = this->soundPositionZ;
+
+   // create the sound object...
+   this->soundHandle.init( this->soundName );
+   this->soundHandle.configure( si );
+
+   vprDEBUG(vprDBG_ALL,0) << "\tcfdSound:  fileName: " << this->fileName
+                          << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,0) << "\tcfdSound:    volume: " << this->volume
+                          << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,1) << "\tcfdSound: soundName: " << this->soundName
+                          << std::endl << vprDEBUG_FLUSH;}
 
 void cfdSound::playSound()
 {
-   //snx::sonix::instance()->trigger(si);
-   this->sound.trigger(-1);
+   this->soundHandle.trigger( si.repeat );
 }
 
 void cfdSound::stopSound()
 {
-   this->sound.stop();
+   this->soundHandle.stop();
 }
 
 bool cfdSound::IsSounding()
 {
-   return this->sound.isPlaying();
+   return this->soundHandle.isPlaying();
 }
 
