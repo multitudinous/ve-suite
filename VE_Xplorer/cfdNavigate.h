@@ -120,6 +120,9 @@ class cfdNavigate
       void UpdateLoc( double* );
 
       void UpdateDir( );
+      
+      double* GetWorldTranslation();
+      float* GetWorldRotation();
 
    private:
       //! Wand object

@@ -806,6 +806,9 @@
 				RelativePath=".\cfdObjects.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdOSGOrientationConverter.cxx">
+			</File>
+			<File
 				RelativePath="..\VE_SceneGraph\cfdPfSceneManagement.cxx">
 			</File>
 			<File
@@ -1446,6 +1449,9 @@
 				RelativePath="cfdObjects.h">
 			</File>
 			<File
+				RelativePath=".\cfdOSGOrientationConverter.h">
+			</File>
+			<File
 				RelativePath="..\VE_SceneGraph\cfdPfSceneManagement.h">
 			</File>
 			<File
@@ -1833,6 +1839,9 @@
 						</FileConfiguration>
 					</File>
 					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeCenterCallback.cxx">
+					</File>
+					<File
 						RelativePath="..\VE_VolumeVis\cfdVolumeVisualization.cxx">
 						<FileConfiguration
 							Name="Debug|Win32">
@@ -1910,6 +1919,9 @@
 					</File>
 					<File
 						RelativePath="..\VE_VolumeVis\cfdTextureMatrixCallback.h">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeCenterCallback.h">
 					</File>
 					<File
 						RelativePath="..\VE_VolumeVis\cfdVolumeVisualization.h">

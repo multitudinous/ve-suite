@@ -412,3 +412,13 @@ void cfdNavigate::updateNavigationFromGUI()
    this->worldDCS->SetRotationArray( this->worldRot );   
    this->UpdateLoc( this->worldTrans );
 }
+//////////////////////////////////////////
+double* cfdNavigate::GetWorldTranslation()
+{
+   return worldTrans;
+}
+//////////////////////////////////////////
+float* cfdNavigate::GetWorldRotation()
+{
+   return worldRot;
+}
