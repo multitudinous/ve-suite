@@ -82,7 +82,7 @@ void cfdVolumeVisNodeHandler::SetSwitchNode(osg::Switch* vvn)
 ////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetTextureManager(cfdTextureManager* tm)
 {
-   if(_tm != tm);
+   if(_tm != tm)
       _tm = tm;
    /*if(!_tm)
       _tm = new cfdTextureManager(*tm);
