@@ -6,12 +6,9 @@
 #include <wx/wx.h>
 
 enum SOUNDS_TAB_IDS{
-   SOUND_RBOX,
    SOUND_CBOX,
    SOUND_UPDATE_BUTTON
 };
-
-
 
 class UI_SoundTab : public wxPanel{
 public:
@@ -20,9 +17,8 @@ protected:
    void _buildPage();
    
    wxNotebook* _parent;
-   wxCheckListBox* _soundCBox;
    //the controls
-   wxRadioBox* _soundRBox;
+   wxCheckListBox* _soundCBox;
    wxButton* _updateButton;
 
    //event handlers

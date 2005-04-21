@@ -5,7 +5,7 @@
 #include <cmath>
 
 BEGIN_EVENT_TABLE(UI_SoundTab, wxPanel)
-   //EVT_RADIOBOX(SOUND_RBOX,UI_SoundTab::_onSounds)
+   //EVT_CHECKLISTBOX(SOUND_CBOX,UI_SoundTab::_onSounds)
    EVT_BUTTON(SOUND_UPDATE_BUTTON,UI_SoundTab::_onUpdate)
 END_EVENT_TABLE()
 
@@ -16,7 +16,6 @@ UI_SoundTab::UI_SoundTab(wxNotebook* tControl)
 :wxPanel(tControl)
 {
    _parent = tControl;
-   _soundRBox = 0;
    _soundCBox = 0;
    _updateButton = 0;
 
@@ -27,14 +26,9 @@ UI_SoundTab::UI_SoundTab(wxNotebook* tControl)
 //////////////////////////////
 void UI_SoundTab::_buildPage()
 {
-   //the radio box
-   //wxString* defaultName;//[] ={wxT("default")};
-   /*_soundRBox = new wxRadioBox(this, SOUND_RBOX, wxT("Sound Files"),
-                                wxDefaultPosition, wxDefaultSize, 1,
-                                defaultName,1 , wxRA_SPECIFY_COLS);*/
-
-   //the radio box
+   //the check box list
    int numSounds = ((UI_Tabs *)_parent)->num_sounds;
+   int numCheckboxes = numSounds;
    wxString* defaultName;
    
    if ( numSounds > 0 )
@@ -48,22 +42,25 @@ void UI_SoundTab::_buildPage()
    }
    else
    {
-      numSounds = 1;
-      defaultName = new wxString[ numSounds ];
+      // create a dummy checkbox when there are no sounds available...
+      numCheckboxes = 1;
+      defaultName = new wxString[ 1 ];
       defaultName[ 0 ] = wxT("No Sound Files");
    }
 
    _soundCBox = new wxCheckListBox( this, SOUND_CBOX, wxDefaultPosition, 
-                                       wxDefaultSize, numSounds, defaultName, 
-                                       0, wxDefaultValidator, 
-                                       wxT("Sound Files") );
+                                    wxDefaultSize, numCheckboxes, defaultName, 
+                                    0, wxDefaultValidator,
+                                    wxT("Sound Files") );
+/*
    // Used to initialize all the checkboxes on
-   for(int j = 0; j < numSounds; j++)
+   for ( int j = 0; j < numSounds; j++ )
    {
       _soundCBox->Check( j );
    }
+*/
 
-   if ( ((UI_Tabs *)_parent)->num_sounds == 0 )
+   if ( numSounds == 0 )
    {
       _soundCBox->Enable( false );
    }
@@ -73,7 +70,6 @@ void UI_SoundTab::_buildPage()
 
    //the panel sizer
    wxBoxSizer* soundPanelGroup = new wxBoxSizer(wxVERTICAL);
-   //soundPanelGroup->Add(_soundRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    soundPanelGroup->Add(_soundCBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    soundPanelGroup->Add(_updateButton,0,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
@@ -81,24 +77,22 @@ void UI_SoundTab::_buildPage()
    SetAutoLayout(true);
    //assign the group to the panel
    SetSizer(soundPanelGroup);
-   
 }
+
 //////////////////
 //event handling//
 ///////////////////
 
-//////////////////////////////////////////////////
 void UI_SoundTab::_onSounds(wxCommandEvent& event)
 {
    event.GetId();
 }
 
-//////////////////////////////////////////////////
 void UI_SoundTab::_onUpdate(wxCommandEvent& event)
 {
    event.GetId();
    ((UI_Tabs *)_parent)->cIso_value = 0;
-   for(int i = 0; i < ((UI_Tabs *)_parent)->num_sounds; i++)
+   for ( int i = 0; i < ((UI_Tabs *)_parent)->num_sounds; i++ )
    {
       if ( _soundCBox->IsChecked( i ) )
          ((UI_Tabs *)_parent)->cIso_value += (int)pow( 2.0f, (float)i );
@@ -107,3 +101,4 @@ void UI_SoundTab::_onUpdate(wxCommandEvent& event)
    ((UI_Tabs *)_parent)->cId  = UPDATE_SOUNDS;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
+
