@@ -92,7 +92,7 @@ void UI_StreamlineTab::_buildPage()
    //the other three sliders
 
    //the labels for the sliders 
-   wxStaticText* pLabel = new wxStaticText(this,-1,wxT("Propagation Time"));
+   wxStaticText* pLabel = new wxStaticText(this,-1,wxT("Propagation (Total) Time"));
    wxStaticText* pLabelLeft = new wxStaticText(this,-1,wxT("Shorter"));
    wxStaticText* pLabelRight = new wxStaticText(this,-1,wxT("Longer"));
 
@@ -108,8 +108,8 @@ void UI_StreamlineTab::_buildPage()
    wxStaticText* sizeLabel       = new wxStaticText(this,-1,wxT("Size(%)"));
 
    wxStaticText* diameterLabel   = new wxStaticText(this,-1,wxT("Line Diameter"));
-   wxStaticText* diameterLabelLeft   = new wxStaticText(this,-1,wxT("Decrease"));
-   wxStaticText* diameterLabelRight   = new wxStaticText(this,-1,wxT("Increase"));
+   wxStaticText* diameterLabelLeft   = new wxStaticText(this,-1,wxT("Decrease Size"));
+   wxStaticText* diameterLabelRight   = new wxStaticText(this,-1,wxT("Increase Size"));
 
    //the two sliders for this group
    _propSlider = new wxSlider(this, PROP_SLIDER,100,1,100,
