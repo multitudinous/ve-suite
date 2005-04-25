@@ -47,6 +47,8 @@
 #include <vpr/Util/Debug.h>
 #include <fstream>
 
+//using namespace vtkutil;
+
 cfdModel::cfdModel( cfdDCS *worldDCS )
 {
    vprDEBUG(vprDBG_ALL,1) << "|\tNew cfdModel ! " 
@@ -64,6 +66,11 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
 #ifdef _OSG
    _activeTextureDataSet = 0;
 #endif
+
+   //Dynamic Loading
+   ActiveLoadingThread();
+
+   std::cout<<"[DBG]....After Active Loading Thread ***************************************"<<std::endl;
 }
 
 cfdModel::~cfdModel()
@@ -416,3 +423,263 @@ unsigned int cfdModel::GetNumberOfGeomDataSets( void )
    return mGeomDataSets.size();
 }
 
+/////////////////////////////////////////////////////
+// Dynamic Loading Data Start From Here
+void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex)
+{
+   this->CreateCfdDataSet();
+   
+
+   vprDEBUG(vprDBG_ALL,0) << " ************************************* "
+                          << std::endl << vprDEBUG_FLUSH;
+
+   vprDEBUG(vprDBG_ALL,0) << " vtk DCS parameters:"
+                          << std::endl << vprDEBUG_FLUSH;
+
+   float scale[3], trans[3], rotate[3];   // pfDCS stuff
+   //this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
+
+   //hard code here and will change it later
+   scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
+   trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
+   rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
+   // Pass in -1 to GetCfdDataSet to get the last dataset added
+   this->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
+   this->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
+   this->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
+   this->GetCfdDataSet( -1 )->LoadData(dataset, datasetindex);
+  
+  // this->MakingSurface( _model->GetCfdDataSet( -1 )->GetPrecomputedSurfaceDir() );
+  //
+   std::cout<<"[DBG]...Before add data into waitinglist"<<std::endl;
+  this->waitingdatalist.push_back(dataset);
+  std::cout<<"[DBG]...After add data into waitinglist"<<std::endl;
+   
+}
+
+void cfdModel::DynamicLoadingGeom(char* surfacefilename)
+{  
+   float scale[3], trans[3], rotate[3];   // pfDCS stuff
+   float stlColor[3];
+   int color;
+   int transFlag;
+
+   //hard code here and will change it later
+   scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
+   trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
+   rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
+   color =1;
+   stlColor[0]=1; stlColor[1]=0; stlColor[2]=0;
+   transFlag =1;
+   std::cout<<"[DBG]...the geom file is "<<surfacefilename<<std::endl;
+   this->CreateGeomDataSet(surfacefilename);
+   std::cout<<"[DBG]...after cfdFile constructor"<<std::endl;
+   this->GetGeomDataSet(-1)->getpfDCS()->SetScaleArray( scale );
+   this->GetGeomDataSet(-1)->getpfDCS()->SetTranslationArray( trans );
+   this->GetGeomDataSet(-1)->getpfDCS()->SetRotationArray(rotate);
+   this->GetGeomDataSet(-1)->SetFILEProperties(color, transFlag, stlColor);
+   this->GetGeomDataSet(-1)->setOpac(1.0f);
+
+}
+
+std::vector<vtkDataSet*> cfdModel::GetWaitingDataList()
+{
+   return this->waitingdatalist;
+}
+
+void cfdModel::GetDataFromUnit(void* unused)
+{
+
+ //std::vector<VTKSmartPtr<vtkUnstructuredGrid> > _gridList;
+   //char answer;
+   
+   vpr::Uint32 data_length =0;
+   vpr::Uint32 compressed_data_length(0);
+   unsigned int bytes_read = 0;
+   int i=0;
+   
+   while(1){
+   std::cout<<"[DBG]...Before ACCEPT New Data, *****************************************"<<std::endl;
+   vpr::SocketStream connection;
+   vpr::InetAddr addr;
+   addr.setAddress("ptah-8.vrac.iastate.edu", 50031);
+   vpr::SocketAcceptor server(addr);
+
+
+   server.accept(connection);
+   i++;
+   vpr::ReturnStatus status;
+
+   // Get the length of the uncompressed data.
+   mValueLock.acquire();
+   {
+      status = connection.recvn( (void*)(&data_length), sizeof(data_length), bytes_read);
+   }
+   mValueLock.release();
+   if(status != vpr::ReturnStatus::Succeed)
+   {
+     std::cerr << "[ERR] Unable to receive data length "
+               << __FILE__ << ":" << __LINE__ << std::endl;
+     //return 1;
+   }
+   // Get the length of the compressed data
+   mValueLock.acquire();
+   {
+      status = connection.recvn( (void*)(&compressed_data_length), 
+                                  sizeof(compressed_data_length), bytes_read);
+   }
+   mValueLock.release();
+   if(status != vpr::ReturnStatus::Succeed)
+   {
+     std::cerr << "[ERR] Unable to receive compressed data length "
+               << __FILE__ << ":" << __LINE__ << std::endl;
+     //return 1;
+   }
+   
+   ///Set the byte-order
+   data_length = vpr::System::Ntohl(data_length);
+   compressed_data_length = vpr::System::Ntohl(compressed_data_length);
+   vpr::Uint8* compressed_data = new vpr::Uint8[compressed_data_length];
+   mValueLock.acquire();
+   {
+      status = connection.recvn( (void*)compressed_data, 
+                                 compressed_data_length, 
+                                 bytes_read );
+   }
+   mValueLock.release();
+   
+   if(status != vpr::ReturnStatus::Succeed)
+   {
+      std::cout << "[ERR] Error receiving data; read " << bytes_read << " of "
+                << data_length << " bytes." << std::endl;
+      if (status == vpr::ReturnStatus::Fail)
+      {
+         std::cout << "[ERR] Read failed." << std::endl;
+      }
+      else if (status == vpr::ReturnStatus::WouldBlock)
+      {
+         std::cout << "[ERR] This read would block the caller." << std::endl;
+      }
+      else if (status == vpr::ReturnStatus::Timeout)
+      {
+         std::cout << "[ERR] This read timed out." << std::endl;
+      }
+      else if (status == vpr::ReturnStatus::InProgress)
+      {
+         std::cout << "[ERR] This read is still in progress." << std::endl;
+      }
+      else if (status == vpr::ReturnStatus::NotConnected)
+      {
+         std::cout << "[ERR] The device is not connected." << std::endl;
+      }
+      else
+      {
+         std::cout << "[ERR] Unknown Result." << std::endl;
+      }
+      //return 1;
+    }
+    std::cout << "[DBG] Read " << data_length << " of " 
+              << compressed_data_length << " bytes."
+              << std::endl;
+    // Uncompress the data
+    vtkZLibDataCompressor* compressor = vtkZLibDataCompressor::New();
+    vtkUnsignedCharArray* vtk_data = vtkUnsignedCharArray::New();
+    vtk_data = compressor->Uncompress(compressed_data, compressed_data_length, data_length);
+    /*VTKSmartPtr<vtkUnsignedCharArray> vtk_data = 
+                compressor->Uncompress( compressed_data, 
+                                        compressed_data_length,
+                                        data_length );*/
+    //VTKSmartPtr<vtkUnstructuredGridReader> reader;
+    vpr::Uint8* data = new vpr::Uint8[vtk_data->GetSize()];
+    data = vtk_data->WritePointer(0,data_length);
+    vtkUnstructuredGridReader* reader = vtkUnstructuredGridReader::New();
+    reader->ReadFromInputStringOn();
+    reader->SetBinaryInputString( reinterpret_cast<char*>(data), 
+                                    data_length );
+
+
+    //VTKSmartPtr<vtkUnstructuredGrid> ugrid(reader->GetOutput());
+    
+    vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
+    ugrid = reader->GetOutput();
+    mValueLock.acquire();
+    {
+      std::cout << "[DBG] Now drawing" << std::endl;
+    }
+    mValueLock.release();
+      
+    mValueLock.acquire();
+    {
+      std::cout<<"[DBG]...READY TO READ DATA FROM UNIT **********************************"<<std::endl;
+      this->DynamicLoadingData(ugrid,i);
+      std::cout<<"[DBG]...AFTER LOAD DATA ****************************************"<<std::endl;
+      this->currentsurfacefilename =(char*)(this->MakeSurfaceFile(ugrid, i));
+
+      std::cout<<"[DBG]...current surface file is "<<currentsurfacefilename<<std::endl;
+      //currentsurfacefilename ="NewlyLoadedDataSet_1.stl";
+      this->DynamicLoadingGeom(currentsurfacefilename);
+      std::cout<<"[DBG]...After load geom data************************************"<<std::endl;
+            //reader->Delete();
+      //ugrid->Delete();
+      connection.close();
+   
+      std::cout<<"[DBG]...After Server Close"<<std::endl;
+   }
+   mValueLock.release();
+
+  }
+
+}
+
+void cfdModel::ActiveLoadingThread()
+{
+   this->loadDataFunc = new vpr::ThreadMemberFunctor<cfdModel> (this, &cfdModel::GetDataFromUnit);
+   this->loadDataTh = new vpr::Thread(this->loadDataFunc);
+
+
+}
+
+const char* cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
+{
+   std :: ostringstream file_name;
+   std :: string currentStlFileName = "NewlyLoadedDataSet_000.stl";
+   file_name<<"NewlyLoadedDataSet_"<<datasetindex<<".stl";
+   currentStlFileName = file_name.str();
+
+   const char * newStlName;
+
+   newStlName = currentStlFileName.c_str();
+
+   vtkPolyData * surface = NULL;
+   std::cout<<"[DBG]... after readVtkThing"<<std::endl;
+    // Create a polydata surface file that completely envelopes the solution space
+   float deciVal=0.7;
+   surface = cfdGrid2Surface( ugrid , deciVal );
+   
+   vtkTriangleFilter *tFilter = vtkTriangleFilter::New();
+   vtkGeometryFilter *gFilter = NULL;
+
+   // convert dataset to vtkPolyData
+   tFilter->SetInput( (vtkPolyData*)surface );
+  
+   std::cout << "Writing \"" << newStlName << "\"... ";
+   std::cout.flush();
+   vtkSTLWriter *writer = vtkSTLWriter::New();
+   writer->SetInput( tFilter->GetOutput() );
+   writer->SetFileName( newStlName );
+   writer->SetFileTypeToBinary();
+   writer->Write();
+   writer->Delete();
+   std::cout << "... done\n" << std::endl;
+
+   tFilter->Delete();
+
+   if ( gFilter ) 
+      gFilter->Delete();
+
+//clean up
+   surface->Delete();
+   std::cout << "\ndone\n";
+   return newStlName;
+}
+//Dynamic Loading Data End Here
