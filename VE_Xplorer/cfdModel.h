@@ -50,6 +50,40 @@ it is better to treat these two dataset as two different models.
 #include <vector>
 #include <map>
 
+#include <vpr/vpr.h>
+#include <vpr/Thread/Thread.h>
+#include <vpr/Sync/Mutex.h>
+#include <vpr/Sync/Guard.h>
+#include <vpr/Util/Debug.h>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/SocketAcceptor.h>
+#include <vpr/System.h>
+#include <vpr/vprTypes.h>
+
+#include <vtkActor.h>
+#include <vtkUnstructuredGrid.h>
+#include <vtkUnstructuredGridReader.h>
+#include <vtkDataSetMapper.h>
+#include <vtkRenderer.h>
+#include <vtkRenderWindow.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkDataWriter.h>
+#include <vtkZLibDataCompressor.h>
+#include <vtkUnsignedCharArray.h>
+
+#include <vtkDataSet.h>
+#include <vtkPointData.h>
+#include <vtkContourFilter.h>
+#include <vtkPolyData.h>
+#include <vtkPolyDataNormals.h>
+#include <vtkGeometryFilter.h>
+#include <vtkFloatArray.h>
+#include <vtkTriangleFilter.h>
+#include <vtkSTLWriter.h>
+
+//#include "readWriteVtkThings.h"
+#include "cfdGrid2Surface.h"
+
 class cfdDataSet;
 class cfdDCS;
 class cfdNode;
@@ -134,6 +168,23 @@ public:
 
    cfdTempAnimation* GetAnimation( void );
    std::map<int,cfdDataSet*> transientDataSets;
+  
+   //Dynamically load data from unit
+public:   
+   void ActiveLoadingThread();
+   void GetDataFromUnit(void* unused);
+   const char* MakeSurfaceFile(vtkDataSet*,int);
+   void DynamicLoadingData(vtkUnstructuredGrid*, int);
+   void DynamicLoadingGeom(char*);
+   void AddVTKDataSet(vtkDataSet* );
+   std::vector<vtkDataSet* >GetWaitingDataList();
+ 
+private:
+   vpr::ThreadMemberFunctor<cfdModel> *loadDataFunc;
+   vpr::Thread *loadDataTh;
+   vpr::Mutex mValueLock;
+   std::vector<vtkDataSet* > waitingdatalist; 
+   char* currentsurfacefilename;
 
 private:
    cfdTempAnimation* animation;
