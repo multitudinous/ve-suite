@@ -460,6 +460,161 @@ void cfdDataSet::LoadData( const char* filename )
    this->LoadData();
 }
 
+void cfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
+{
+   std::cout<<"[DBG]...Inside LoadData of cfdDataSet"<<std::endl;
+   this->SetFileName_OnFly(datasetindex);
+   
+   vtkPointSet* pointset = NULL;
+   pointset = dataset;
+   this->meanCellBBLength =cfdAccessoryFunctions::ComputeMeanCellBBLength(pointset);
+
+   vtkFloatArray* array = vtkFloatArray::New();
+   array->SetName("meanCellBBLength");
+   array->SetNumberOfComponents(1);
+   array->SetNumberOfTuples(1);
+   array->SetTuple1(0,meanCellBBLength);
+   pointset->GetFieldData()->AddArray(array);
+   
+   //array->Delete();
+   //dumpVerticesNotUsedByCells(pointset);
+   writeVtkThing(pointset,this->fileName,1);
+   this->LoadData();
+}
+ /*  this->numPtDataArrays = this->dataSet->GetPointData()
+                                        ->GetNumberOfArrays();
+
+   std::cout<<"[DBG]...Inside LoadData ugrid Function"<<std::endl;
+   std::cout<<"[DBG]...numPtDataArrays = "<<this->numPtDataArrays<<std::endl;
+
+   vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = " << this->numPtDataArrays
+                          << std::endl << vprDEBUG_FLUSH;
+
+   int numCellArrays = this->dataSet->GetCellData()->GetNumberOfArrays();
+   vprDEBUG(vprDBG_ALL,1) << "\tnumCellArrays = " << numCellArrays
+                          << std::endl << vprDEBUG_FLUSH;
+
+   std::cout<<"[DBG]...numCellArrays = "<<numCellArrays<<std::endl;
+
+   if ( numCellArrays > 0 && this->numPtDataArrays == 0 )
+   {
+      std::cout <<"\nThe dataset has no point data -- "
+         << "will try to convert cell data to point data\n" << std::endl;
+
+      vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
+      converter->SetInput( this->dataSet );
+      converter->Update();
+
+      if ( this->dataSet->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
+      {
+         std::cout<<"[DBG]...This is vtkUnstructuredGrid"<<std::endl;
+         vtkDataSet * newdataset = vtkUnstructuredGrid::New();
+         newdataset->DeepCopy( converter->GetOutput() );
+         converter->Delete();
+
+         this->dataSet->Delete();
+         this->dataSet = newdataset;
+         this->numPtDataArrays = this->dataSet->GetPointData()
+                                              ->GetNumberOfArrays();
+
+         vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = "
+                                << this->numPtDataArrays
+                                << std::endl << vprDEBUG_FLUSH;
+      }
+      else
+      {
+         converter->Delete();
+         std::cout <<"\nAttempt failed: can not currently handle "
+                   << "this type of data\n" << std::endl;
+         exit(1);
+      }
+   }
+
+#ifdef USE_OMP
+   char label[100];
+   vtkUnstructuredGridReader * tableReader = vtkUnstructuredGridReader::New();
+   tableReader->SetFileName("./POST_DATA/octreeTable.vtk");
+   tableReader->Update();
+   vtkUnstructuredGrid * table = ( vtkUnstructuredGrid * ) tableReader->GetOutput();
+   if ( this->noOfData == 0 )
+   {
+      this->noOfData = table->GetNumberOfCells();
+   }
+
+   vprDEBUG(vprDBG_ALL,1) <<"noOfData:" << this->noOfData 
+                          << std::endl << vprDEBUG_FLUSH;
+   tableReader->Delete();
+
+# pragma omp parallel for private(label,i)
+   for ( int i=0; i<noOfData; i++ ) 
+   {
+      this->dataReader[i] = vtkUnstructuredGridReader::New();
+      //sprintf( label, "./POST_DATA/octant%d.vtk", i);
+      std::ostringstream dirStringStream;
+      dirStringStream << "./POST_DATA/octant" << i << ".vtk";
+      std::string dirString = dirStringStream.str();
+      label = dirString.c_str();
+
+      this->dataReader[i]->SetFileName( label );
+      this->dataReader[i]->Update();
+      this->data[i] = ( vtkUnstructuredGrid * ) this->dataReader[i]->GetOutput();
+   }
+#endif
+
+   // Compute the geometrical properties of the mesh
+   this->UpdatePropertiesForNewMesh();
+   
+   // count the number of scalars and store names and ranges...
+   this->StoreScalarInfo();
+
+   // count the number of vectors and store names ...
+   this->numVectors = CountNumberOfParameters( 3 );
+   if ( this->numVectors )
+   {
+      this->vectorName = GetParameterNames( 3, this->numVectors );
+   }
+
+   // if there are point data, set the first scalar and vector as active...
+   if ( this->numPtDataArrays )
+   {
+      // set the first scalar and vector as active
+      if ( this->numScalars )
+         this->SetActiveScalar( 0 );
+
+      if ( this->numVectors )
+      {
+         this->SetActiveVector( 0 );
+         this->vectorMagRange = cfdAccessoryFunctions::
+                           ComputeVectorMagnitudeRange( 
+                           this->GetDataSet()->GetPointData()->GetVectors() );
+      }
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL,0) << "\tWARNING: No Point Data"
+                             << std::endl << vprDEBUG_FLUSH;
+   }
+
+   if ( this->GetDataSet()->GetPointData()->GetScalars() ) 
+   {
+      vprDEBUG(vprDBG_ALL,1) << "cfdDataSet: active scalar is \"" 
+           <<  this->GetDataSet()->GetPointData()->GetScalars()->GetName() 
+           << "\"" << std::endl << vprDEBUG_FLUSH;
+   }
+
+   if ( this->GetDataSet()->GetPointData()->GetVectors() ) 
+   {
+      vprDEBUG(vprDBG_ALL,1) << "cfdDataSet: active vector is \""
+           <<  this->GetDataSet()->GetPointData()->GetVectors()->GetName() 
+           << "\"" << std::endl << vprDEBUG_FLUSH;
+   }
+
+   this->SetType();
+
+
+}*/
+
+
 void cfdDataSet::LoadData( )
 {
    if ( this->dataSet != NULL )
@@ -489,6 +644,9 @@ void cfdDataSet::LoadData( )
    int numCellArrays = this->dataSet->GetCellData()->GetNumberOfArrays();
    vprDEBUG(vprDBG_ALL,1) << "\tnumCellArrays = " << numCellArrays
                           << std::endl << vprDEBUG_FLUSH;
+   std::cout<<"[DBG]...Inside LoadData()"<<std::endl;
+   std::cout<<"[DBG]...numPtDataArrays = "<<this->numPtDataArrays<<std::endl;
+   std::cout<<"[DBG]...numCellArrays = "<<numCellArrays<<std::endl;
 
    if ( numCellArrays > 0 && this->numPtDataArrays == 0 )
    {
@@ -726,6 +884,7 @@ void cfdDataSet::UpdatePropertiesForNewMesh()
    // If not provided in the dataset field, compute :
    if ( this->meanCellBBLength == 0.0 )
    {
+      std::cout<<"[DBG]...meanCellBBLength = 0.0"<<std::endl;
       this->meanCellBBLength = cfdAccessoryFunctions::
                                ComputeMeanCellBBLength( this->GetDataSet() );
    }
@@ -1037,7 +1196,20 @@ void cfdDataSet::SetFileName( const char * newName )
    this->fileName = new char [strlen(newName)+1];  
    strcpy( this->fileName, newName );
 }
+void cfdDataSet::SetFileName_OnFly(int datasetindex)
+{
+   std :: ostringstream file_name;
+   std :: string currentVtkFileName = "NewlyLoadedDataSet_000.vtk";
+   file_name<<"NewlyLoadedDataSet_"<<datasetindex<<".vtk";
+   currentVtkFileName = file_name.str();
+   
+   const char * newName;
 
+   newName = currentVtkFileName.c_str();
+
+   this->SetFileName ( newName );
+
+}
 char * cfdDataSet::GetFileName()
 {
    return this->fileName;
