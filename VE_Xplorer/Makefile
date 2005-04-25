@@ -72,7 +72,8 @@ ifeq ($(TAO_BUILD), TRUE)
    EXTRA_PATH_FOR_SOURCES+= $(CONDUCTOR_BASE_DIR)/impl \
                            $(VE_SUITE_HOME)/VEOpen/skel \
                            $(VE_SUITE_HOME)/VE_Conductor/Framework \
-                           $(VE_SUITE_HOME)/VE_CE
+                           $(VE_SUITE_HOME)/VE_CE \
+									$(VE_SUITE_HOME)/VE_Builder/Translator
 
    #----------------------------------------------------------------------------
    # Include macros and targets
@@ -97,7 +98,8 @@ ifeq ($(TAO_BUILD), TRUE)
                   -I${CONDUCTOR_BASE_DIR}/impl \
                   -I$(VE_SUITE_HOME)/VEOpen/skel \
                   -I$(VE_SUITE_HOME)/VE_Conductor/Framework \
-                  -I$(VE_SUITE_HOME)/VE_CE
+                  -I$(VE_SUITE_HOME)/VE_CE \
+						-I$(VE_SUITE_HOME)/VE_Builder/Translator
    EXEC_TAG = _tao
 endif
 
@@ -190,7 +192,10 @@ SRCS=\
    cfdWriteTraverser.cxx \
    fileIO.cxx \
    readWriteVtkThings.cxx \
-   VjObs_i.cxx 
+   VjObs_i.cxx \
+	cfdGrid2Surface.cpp \
+	cleanVtk.cpp
+			
 
 ifeq ($(VE_PATENTED), TRUE)
 ifeq ($(SCENE_GRAPH), OSG)
@@ -317,6 +322,7 @@ srcdir= .
 NO_DEPEND= YES
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+include $(DZR_BASE_DIR)/ext/vpr/dzr.vpr.mk
 ifeq ($(SCENE_GRAPH), OSG)
    include $(VE_SUITE_HOME)/VE_Installer/dzr.osg.mk
 else
