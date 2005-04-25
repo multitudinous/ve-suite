@@ -48,6 +48,12 @@ class cfdSwitch;
 class cfdTempAnimation;
 class cfdVTKFileHandler;
 
+#include <vtkFloatArray.h>
+#include <vtkPointSet.h>
+#include "readWriteVtkThings.h"
+#include "cleanVtk.h"
+#include <iostream>
+#include <sstream>
 //! CFD data set loader and handler.
 /*!
    A class to load data set and pre-compute flow parameters 
@@ -64,6 +70,7 @@ class cfdDataSet
   // Initialize the number of data to load and parallel process.
   // By default, use the octree table.
   void LoadData( const char* fileName );
+  void LoadData(vtkUnstructuredGrid*,int);
   void LoadData();
   
   // Set/get the range of velocity based on the data set.
@@ -135,6 +142,7 @@ class cfdDataSet
   void ResetScalarBarRange( int min, int max );
 
   void SetFileName( const char * filename );
+  void SetFileName_OnFly(int);
   char * GetFileName();
 
   void SetPrecomputedDataSliceDir( const char * newDir );
