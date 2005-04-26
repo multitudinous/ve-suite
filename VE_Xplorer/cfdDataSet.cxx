@@ -47,10 +47,14 @@
 #include "cfdTempAnimation.h"
 #include "cfdVTKFileHandler.h"
 
+#include "readWriteVtkThings.h"
+#include "cleanVtk.h"
+
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
 #include <vtkDataSet.h>
 #include <vtkPolyData.h>
+#include <vtkFloatArray.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkUnstructuredGridReader.h>
 #include <vtkSystemIncludes.h>  // for VTK_POLY_DATA
@@ -61,6 +65,7 @@
 #include <vpr/Util/Debug.h>
 
 #include <iostream>
+#include <sstream>
 
 cfdDataSet::cfdDataSet( )
 {

@@ -48,12 +48,6 @@ class cfdSwitch;
 class cfdTempAnimation;
 class cfdVTKFileHandler;
 
-#include <vtkFloatArray.h>
-#include <vtkPointSet.h>
-#include "readWriteVtkThings.h"
-#include "cleanVtk.h"
-#include <iostream>
-#include <sstream>
 //! CFD data set loader and handler.
 /*!
    A class to load data set and pre-compute flow parameters 

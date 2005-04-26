@@ -37,6 +37,7 @@
 #include "cfdGroup.h"
 #include "cfdSwitch.h"
 #include "cfdFILE.h"
+#include "cfdGrid2Surface.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -45,9 +46,24 @@
 #endif
 
 #include <vpr/Util/Debug.h>
-#include <fstream>
+#include <vpr/IO/Socket/SocketStream.h>
+#include <vpr/IO/Socket/SocketAcceptor.h>
+#include <vpr/System.h>
+#include <vpr/vprTypes.h>
 
-//using namespace vtkutil;
+#include <vtkUnstructuredGrid.h>
+#include <vtkUnstructuredGridReader.h>
+#include <vtkDataWriter.h>
+#include <vtkZLibDataCompressor.h>
+#include <vtkUnsignedCharArray.h>
+#include <vtkDataSet.h>
+#include <vtkTriangleFilter.h>
+#include <vtkGeometryFilter.h>
+#include <vtkSTLWriter.h>
+#include <vtkPolyData.h>
+
+#include <fstream>
+#include <sstream>
 
 cfdModel::cfdModel( cfdDCS *worldDCS )
 {
@@ -69,8 +85,6 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
 
    //Dynamic Loading
    ActiveLoadingThread();
-
-   std::cout<<"[DBG]....After Active Loading Thread ***************************************"<<std::endl;
 }
 
 cfdModel::~cfdModel()
@@ -633,16 +647,15 @@ void cfdModel::GetDataFromUnit(void* unused)
 
 void cfdModel::ActiveLoadingThread()
 {
-   this->loadDataFunc = new vpr::ThreadMemberFunctor<cfdModel> (this, &cfdModel::GetDataFromUnit);
-   this->loadDataTh = new vpr::Thread(this->loadDataFunc);
-
-
+   vpr::ThreadMemberFunctor<cfdModel> *loadDataFunc;
+   loadDataFunc = new vpr::ThreadMemberFunctor<cfdModel> (this, &cfdModel::GetDataFromUnit);
+   this->loadDataTh = new vpr::Thread( loadDataFunc );
 }
 
 const char* cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
 {
-   std :: ostringstream file_name;
-   std :: string currentStlFileName = "NewlyLoadedDataSet_000.stl";
+   std::ostringstream file_name;
+   std::string currentStlFileName = "NewlyLoadedDataSet_000.stl";
    file_name<<"NewlyLoadedDataSet_"<<datasetindex<<".stl";
    currentStlFileName = file_name.str();
 
@@ -670,7 +683,7 @@ const char* cfdModel::MakeSurfaceFile(vtkDataSet* ugrid,int datasetindex)
    writer->SetFileTypeToBinary();
    writer->Write();
    writer->Delete();
-   std::cout << "... done\n" << std::endl;
+   std::cout << "... done" << std::endl;
 
    tFilter->Delete();
 

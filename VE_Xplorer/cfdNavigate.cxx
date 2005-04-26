@@ -36,7 +36,6 @@
 // --- VR Juggler Stuff --- //
 #include <gmtl/Xforms.h>
 #include <gmtl/Generate.h>
-//#include <Performer/pf/pfDCS.h>
 
 using namespace gmtl;
 using namespace gadget;
