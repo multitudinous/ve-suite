@@ -62,7 +62,7 @@ class Network : public wxScrolledWindow
  public:
   Network() {};
   Network(wxWindow* parent, int id);
-  Network::~Network();
+  ~Network();
   double m_xUserScale, m_yUserScale; //Zoom Factor
   int nPixX, nPixY; 
   int nUnitX, nUnitY; //Unit of the scrolled window
@@ -110,7 +110,7 @@ class Network : public wxScrolledWindow
   void SaveS(std::string &network_pack);            // save the network to a string
   void Load(wxString filename);
   void LoadS(const char* inputs); //load the network from a string
-  void Network::New();
+  void New();
  protected:
   
   //Draw functions
@@ -153,16 +153,14 @@ class Network : public wxScrolledWindow
   //Misc functions
   void CleanRect(wxRect box, wxDC& dc); // for wipeout a rectangular area
   wxPoint GetFreePos(wxRect bbox); // for finding a free start location for a new module
-  POLY Network::CalcLinkPoly(LINK l); // calculate the bounding polygon of a link
-  POLY Network::CalcTagPoly(TAG t); // calculate the bounding polygon of a tag
+  POLY CalcLinkPoly(LINK l); // calculate the bounding polygon of a link
+  POLY CalcTagPoly(TAG t); // calculate the bounding polygon of a tag
 
  protected:
   //Three main list of network objs
  
   vector<LINK*> links; //The list of links between the nodes of moduls.
   vector<TAG> tags; //The list of text tags  
-
- 
   
   int m_selMod; // selected module
   int m_selFrPort; // selected From port
@@ -183,7 +181,7 @@ class Network : public wxScrolledWindow
   int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
   wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
 
-  DECLARE_EVENT_TABLE();
+  DECLARE_EVENT_TABLE() // no semicolon needed
 };
 
 #endif
