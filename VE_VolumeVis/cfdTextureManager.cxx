@@ -15,6 +15,7 @@ cfdTextureManager::cfdTextureManager()
    _transientRange[1] = -1000000;
    _direction = 1;
    _mode = PLAY;
+   _useShaders = false;
    
 }
 ////////////////////////////////////////////////////////
@@ -26,11 +27,16 @@ cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
    if(_types.size()){
       _types.clear();
    }
+   if(_ranges.size())
+   {
+      _ranges.clear();
+   }
    int nFields = tm._dataFields.size();
    
    for(int i = 0; i < nFields; i++){
       _dataFields.push_back(tm._dataFields[i]);   
       _types.push_back(tm._types.at(i));
+      _ranges.push_back(tm._ranges.at(i));
    }
    _mode = tm._mode;
    _curField = tm._curField;
@@ -52,6 +58,7 @@ cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
    _range[0] = tm._range[0];
    _range[1] = tm._range[1];
    _direction = tm._direction;
+   _useShaders =  tm._useShaders;
 }
 /////////////////////////////////
 cfdTextureManager::~cfdTextureManager()
@@ -72,7 +79,17 @@ cfdTextureManager::~cfdTextureManager()
       delete [] _resolution;
       _resolution = 0;
    }
+   if(_ranges.size())
+   {
+      _ranges.clear();
+   }
 }
+//////////////////////////////////////////////////////
+void cfdTextureManager::SetUseShaders(bool useShaders)
+{
+   _useShaders = useShaders;
+}
+
 ///////////////////////////////////////////////////////////
 void cfdTextureManager::SetCurrentFrame(unsigned int frame)
 {
@@ -133,9 +150,14 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
 
       //data range(magnitude) for scalars
       //ignore this value for vectors
-      fin>>_range[0];
-      fin>>_range[1];
-      
+      ScalarRange newRange;
+      fin>>newRange.range[0];
+      fin>>newRange.range[1];
+     
+      _ranges.push_back(newRange);
+      _range[0] = newRange.range[0];
+      _range[1] = newRange.range[1];
+
       _transientRange[0] = (_range[0] < _transientRange[0])?_range[0]:_transientRange[0];
       _transientRange[1] = (_range[1] > _transientRange[1])?_range[1]:_transientRange[1];
       //bounding box
@@ -157,9 +179,10 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
       int i = 0; 
       int j = 0;
       int k = 0;
-      unsigned char* pixels = new unsigned char[nPixels*4];
+      unsigned char* pixels = 0;
       float invSRange = 1.0/(_range[1]-_range[0]);
       if(curType == VECTOR){
+         pixels = new unsigned char[nPixels*4];
          for(int p = 0; p < nPixels; p++){
             fin>>R;
             pixels[p*4   ] = (unsigned char)R;
@@ -175,26 +198,39 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
          //the scalar data
          
          float scalarValue = 0;
+         if(_useShaders){
+            pixels = new unsigned char[nPixels];
+         }else{
+            pixels = new unsigned char[nPixels*4];
+         }
          for(int p = 0; p < nPixels; p++){
             fin>>scalarValue;
             alpha = (scalarValue-_range[0])*invSRange;
-            //set the scalar pixel data
-            if(alpha <= .5){
-               R = 0;
-               G = (2.0*alpha)*255,      
-               B = (1.0-2.0*alpha)*255;
-               A = 255*alpha*.5;
+            if(_useShaders)
+            {
+               pixels[p]  = (unsigned char)(255.0*alpha);
+               //std::cout<<255.0*alpha<<std::endl;
+
             }else{
-               R = (2.0*alpha-1.0)*255;
-               G = (2.0 - 2.0*alpha)*255;       
-               B = 0.;
-               A = 255*alpha*.5;
+
+               //set the scalar pixel data
+               if(alpha <= .5){
+                  R = 0;
+                  G = (2.0*alpha)*255,      
+                  B = (1.0-2.0*alpha)*255;
+                  A = 255*alpha*.5;
+               }else{
+                  R = (2.0*alpha-1.0)*255;
+                  G = (2.0 - 2.0*alpha)*255;       
+                  B = 0.;
+                  A = 255*alpha*.5;
+               }
+               pixels[p*4   ]  = (unsigned char)R;
+               pixels[p*4 + 1] = (unsigned char)G;
+               pixels[p*4 + 2] = (unsigned char)B;
+               pixels[p*4 + 3] = (unsigned char)A;      
             }
-            pixels[p*4   ]  = (unsigned char)R;
-            pixels[p*4 + 1] = (unsigned char)G;
-            pixels[p*4 + 2] = (unsigned char)B;
-            pixels[p*4 + 3] = (unsigned char)A;      
-         }        
+         }
       }
       //add the field
       _dataFields.push_back(pixels);
@@ -276,11 +312,16 @@ cfdTextureManager& cfdTextureManager::operator=(const cfdTextureManager& tm)
       if(_types.size()){
          _types.clear();
       }
+      if(_ranges.size())
+      {
+         _ranges.clear();
+      }
       int nFields = tm._dataFields.size();
    
       for(int i = 0; i < nFields; i++){
          _dataFields.push_back(tm._dataFields.at(i));
          _types.push_back(tm._types.at(i));
+         _ranges.push_back(tm._ranges.at(i));
       }
       _curField = tm._curField;
 

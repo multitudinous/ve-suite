@@ -8,6 +8,10 @@
 //#include <gl/gl.h>
 #include <iostream>
 #include <vector>
+struct ScalarRange
+{
+   float range[2];
+};
 
 class cfdTextureManager{
 public:
@@ -29,6 +33,12 @@ public:
    //set the current frame
    void SetCurrentFrame(unsigned int whichFrame);
 
+   //set the flag for using shaders
+   void SetUseShaders(bool useShaders);
+
+   //get the flag
+   bool UseShaders(){return _useShaders;}
+
    float* getBoundingBox(){return _bbox;}
    int timeToUpdate(double curTime,double delay);
 
@@ -48,7 +58,7 @@ public:
    unsigned int GetCurrentFrame();
 
    //the data ranges
-   float* dataRange(){return _range;}
+   ScalarRange dataRange(int index){return _ranges.at(index);}
 
    float* transientRange(){return _transientRange;}
 
@@ -57,6 +67,7 @@ public:
    //equal operator
    cfdTextureManager& operator=(const cfdTextureManager& tm); 
 protected:
+   bool _useShaders;
    int _curField;
    int* _resolution;
    std::vector<DataType> _types;
@@ -64,6 +75,7 @@ protected:
    float _range[2];
    float _transientRange[2];
 
+   std::vector<ScalarRange> _ranges;
    std::vector<unsigned char*> _dataFields;
    double _prevTime;
    int _direction;

@@ -17,10 +17,12 @@ public:
       _textureHeight = height;
       _textureDepth= depth;
    }
+   void SetIsLuminance(bool isLum){_isLuminance = isLum;} 
    void subload(const osg::Texture3D& texture,osg::State& state) const;
    void load(const osg::Texture3D& texture,osg::State&) const;
    
 protected:
+   bool _isLuminance;
    mutable GLsizei _textureWidth, _textureHeight,_textureDepth;
 };
 #endif //OSG

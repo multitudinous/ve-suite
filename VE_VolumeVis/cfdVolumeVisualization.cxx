@@ -285,7 +285,11 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
       _texture->setTextureSize(_tm->fieldResolution()[0],
                      _tm->fieldResolution()[1],
                      _tm->fieldResolution()[2]);
+#ifdef CFD_USE_SHADERS
+       _texture->setInternalFormat(GL_ALPHA);
+#else
       _texture->setInternalFormat(GL_RGBA);
+#endif     
       _texture->setImage(_image.get());
       //_texture->setBorderColor(osg::Vec4(0,0,0,0));
       //_texture->setBorderWidth(2);
@@ -540,7 +544,11 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 
          if(!_utCbk){
             _utCbk =  new cfdUpdateTextureCallback();
-         
+#ifdef CFD_USE_SHADERS
+            _utCbk->SetIsLuminance(true);
+#else
+            _utCbk->SetIsLuminance(false);
+#endif
             _utCbk->SetTextureManager(_tm);
             _utCbk->SetDelayTime(0.1);
          

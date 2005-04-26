@@ -91,6 +91,14 @@ void cfdScalarVolumeVisHandler::_createTransferShader()
       }
    }
 }
+////////////////////////////////////////////////////////////////////////
+void cfdScalarVolumeVisHandler::SetTextureManager(cfdTextureManager* tm)
+{
+   cfdVolumeVisNodeHandler::SetTextureManager(tm);
+   if(_transferSM){
+      _transferSM->UpdateTextureManager(_tm);
+   }
+}
 /////////////////////////////////////////////////////
 void cfdScalarVolumeVisHandler::_applyTextureMatrix()
 {

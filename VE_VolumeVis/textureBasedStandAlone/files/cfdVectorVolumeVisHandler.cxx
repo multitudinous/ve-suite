@@ -139,6 +139,7 @@ void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
    } 
    if(!_velocityCbk){
       _velocityCbk =  new cfdUpdateTextureCallback();
+      _velocityCbk->SetIsLuminance(false);
       int* res = _tm->fieldResolution();
       _velocityCbk->setSubloadTextureSize(res[0],res[1],res[2]);
       _velocity->setSubloadCallback(_velocityCbk);
@@ -164,7 +165,9 @@ void cfdVectorVolumeVisHandler::_setUpDecorator()
       _propertyTextureGroup = new osg::Group();
       _propertyTextureGroup->setName("Property Texture");
       _visualBoundingBox->removeChild(_decoratorGroup.get());
+      _bboxSwitch->removeChild(_decoratorGroup.get());
       _visualBoundingBox->addChild(_propertyTextureGroup.get());
+      _bboxSwitch->addChild(_propertyTextureGroup.get());
       _propertyTextureGroup->addChild(_decoratorGroup.get());
    }
    int* res = _tm->fieldResolution();
@@ -211,10 +214,10 @@ void cfdVectorVolumeVisHandler::_setupTransferPropertyStateSet()
       ss->setTextureAttributeAndModes(tunit,
                                   _transferSM->GetPropertyTexture(),
                                   osg::StateAttribute::ON);
-      ss->setTextureMode(tunit,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+      /*ss->setTextureMode(tunit,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       ss->setTextureMode(tunit,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
       ss->setTextureMode(tunit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON);
-      ss->setTextureMode(tunit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);
+      ss->setTextureMode(tunit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON);*/
       ss->setTextureAttributeAndModes(tunit,
                                   new osg::TexEnv(osg::TexEnv::REPLACE),
 		                             osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
@@ -233,9 +236,12 @@ void cfdVectorVolumeVisHandler::_setupAdvectionPropertyStateSet()
                                   osg::StateAttribute::ON);
                                  
       ss->setTextureMode(tunit,GL_TEXTURE_3D,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-      ss->setTextureMode(tunit,GL_TEXTURE_GEN_S,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-      ss->setTextureMode(tunit,GL_TEXTURE_GEN_T,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
-      ss->setTextureMode(tunit,GL_TEXTURE_GEN_R,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      /*ss->setTextureMode(tunit,GL_TEXTURE_GEN_S,
+                       osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      ss->setTextureMode(tunit,GL_TEXTURE_GEN_T,
+                       osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+      ss->setTextureMode(tunit,GL_TEXTURE_GEN_R,
+                       osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);*/
       ss->setTextureAttributeAndModes(tunit,
                                   new osg::TexEnv(osg::TexEnv::REPLACE),
 		                             osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
@@ -245,10 +251,12 @@ void cfdVectorVolumeVisHandler::_setupAdvectionPropertyStateSet()
 /////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_applyTextureMatrix()
 {
-   unsigned int tUnit = _transferSM->GetAutoGenTextureUnit();
+   unsigned int tUnit = 0;/*_transferSM->GetAutoGenTextureUnit();*/
    osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
    tMat->setMatrix(osg::Matrix::identity());
-   _decoratorGroup->getStateSet()->setTextureAttributeAndModes(tUnit,tMat.get(),osg::StateAttribute::ON);
+   _decoratorGroup->getStateSet()->setTextureAttributeAndModes(tUnit,
+                                                        tMat.get(),
+                                                        osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
    float trans[3] = {.5,.5,.5};
    _decoratorGroup->setUpdateCallback(new cfdTextureMatrixCallback(tMat.get(),
                                                              _center,

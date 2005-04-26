@@ -12,8 +12,14 @@ public:
    virtual ~cfdOSGGammaShaderManager(){}
    virtual void Init();
    virtual void UpdateTextureManager(cfdTextureManager* tm);
+   void SetScalarRange(float* range);
+   void UpdateScalarMax(float maxScalar);
+   void UpdateScalarMin(float minScalar);
 
 protected:
+   void _updateTransferFunction();
+   float _scalarRange[2];
+   void _initTransferFunctions();
    void _initPropertyTexture();
 };
 #endif// _CFD_USE_SHADERS

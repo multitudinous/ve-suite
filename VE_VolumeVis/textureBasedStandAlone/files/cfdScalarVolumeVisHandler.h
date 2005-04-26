@@ -18,8 +18,10 @@ public:
    cfdScalarVolumeVisHandler(const cfdScalarVolumeVisHandler& vvnh);
    virtual ~cfdScalarVolumeVisHandler();
    virtual void Init();
- 
+   virtual void SetTextureManager(cfdTextureManager* tm);
+   cfdOSGGammaShaderManager* GetGammaShaderManager(){return _transferSM;}
    cfdScalarVolumeVisHandler& operator=(const cfdScalarVolumeVisHandler& vvnh);
+
 protected:
    virtual void _setUpDecorator();
    virtual void _applyTextureMatrix();

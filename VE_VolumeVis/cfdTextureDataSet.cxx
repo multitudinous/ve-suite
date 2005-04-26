@@ -155,6 +155,11 @@ cfdTextureManager* cfdTextureDataSet::GetActiveTextureManager()
 void cfdTextureDataSet::CreateTextureManager(char* textureDescriptionFile)
 {
    cfdTextureManager* tm = new cfdTextureManager();
+#ifdef CFD_USE_SHADERS
+   tm->SetUseShaders(true);
+#else
+   tm->SetUseShaders(false);
+#endif
    std::ifstream fin( textureDescriptionFile );   
    char name[256];
    

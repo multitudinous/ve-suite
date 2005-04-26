@@ -139,6 +139,7 @@ void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
    } 
    if(!_velocityCbk){
       _velocityCbk =  new cfdUpdateTextureCallback();
+      _velocityCbk->SetIsLuminance(false);
       int* res = _tm->fieldResolution();
       _velocityCbk->setSubloadTextureSize(res[0],res[1],res[2]);
       _velocity->setSubloadCallback(_velocityCbk);

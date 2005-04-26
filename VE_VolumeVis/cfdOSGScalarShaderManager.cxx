@@ -65,7 +65,9 @@ void cfdOSGScalarShaderManager::Init()
    }
    if(!_utCbk){
       _utCbk =  new cfdUpdateTextureCallback();
+      
    }
+   _utCbk->SetIsLuminance(true);
    _utCbk->SetTextureManager(_tm);
    _utCbk->SetDelayTime(.1);
    _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
@@ -73,8 +75,8 @@ void cfdOSGScalarShaderManager::Init()
    if(!_image.valid()){
       _image = new osg::Image();
       _image->allocateImage(res[0],res[1],res[2],
-                     GL_RGBA,GL_UNSIGNED_BYTE);
-      _image->setImage(res[0],res[1],res[2],GL_RGBA,GL_RGBA, 
+                     GL_ALPHA,GL_UNSIGNED_BYTE);
+      _image->setImage(res[0],res[1],res[2],GL_ALPHA,GL_ALPHA, 
                      GL_UNSIGNED_BYTE,
                      _tm->dataField(0),
                      osg::Image::USE_NEW_DELETE,1);
@@ -90,8 +92,7 @@ void cfdOSGScalarShaderManager::Init()
       _scalarProp->setWrap(osg::Texture3D::WRAP_R,osg::Texture3D::CLAMP);
       _scalarProp->setWrap(osg::Texture3D::WRAP_S,osg::Texture3D::CLAMP);
       _scalarProp->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
-      _scalarProp->setInternalFormat(GL_RGBA);
-     
+       _scalarProp->setInternalFormat(GL_ALPHA);
       _scalarProp->setImage(_image.get());
       _scalarProp->setSubloadCallback(_utCbk);
    }
@@ -111,7 +112,7 @@ void cfdOSGScalarShaderManager::Init()
          strcpy(directory,vesuitehome);
         strcat(directory,"/VE_VolumeVis/cg_shaders/");
       }
-      strcat(directory,"fragVol.cg");
+      strcat(directory,"scalarAdjuster.cg");
       _setupCGShaderProgram(_ss.get(),directory,"fp_volume");
    }
    _reinit = false;

@@ -14,6 +14,7 @@
 #endif
 
 #include "cfdTextureMatrixCallback.h"
+#include "cfdVolumeCenterCallback.h"
 #include <osg/TexMat>
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
@@ -69,6 +70,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
 {
    _utCbk = rhs._utCbk;
+   _vcCbk = rhs._vcCbk;
    _volumeVizNode = rhs._volumeVizNode;
    _texGenParams = rhs._texGenParams;
    _bbox = rhs._bbox;
@@ -234,7 +236,7 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
    
    //recalculate the bbox that is going to be used for
    //the volume vis
-   minBBox[0] = _center[0] - radius;
+   /*minBBox[0] = _center[0] - radius;
    minBBox[1] = _center[1] - radius;
    minBBox[2] = _center[2] - radius;
 
@@ -244,12 +246,13 @@ void cfdVolumeVisualization::SetBoundingBox(float* bbox)
 
    _bbox->set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
                 osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
+*/
 }
 //////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 {
-   //if(tm->GetDataType(0) == cfdTextureManager::VECTOR)
-      //return;
+   if(tm->GetDataType(0) == cfdTextureManager::VECTOR)
+      return;
 
    _tm = tm;
 
@@ -282,7 +285,11 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
       _texture->setTextureSize(_tm->fieldResolution()[0],
                      _tm->fieldResolution()[1],
                      _tm->fieldResolution()[2]);
+#ifdef CFD_USE_SHADERS
+       _texture->setInternalFormat(GL_ALPHA);
+#else
       _texture->setInternalFormat(GL_RGBA);
+#endif     
       _texture->setImage(_image.get());
       //_texture->setBorderColor(osg::Vec4(0,0,0,0));
       //_texture->setBorderWidth(2);
@@ -320,6 +327,13 @@ osg::ref_ptr<osg::Switch> cfdVolumeVisualization::GetVolumeVisNode()
       _buildGraph();
    }
    return _volumeVizNode;
+}
+/////////////////////////////////////////////
+void cfdVolumeVisualization::DisableShaders()
+{
+   if(_volumeVizNode.valid()){
+      _volumeVizNode->setSingleChildOn(0);
+   }
 }
 /////////////////////////////////////////////////////////////////////   
 osg::ref_ptr<osg::Texture3D> cfdVolumeVisualization::GetTextureData()
@@ -360,6 +374,39 @@ void cfdVolumeVisualization::AddClipPlane(ClipPlane direction,double* position)
    }else{
       std::cout<<"Error!!!"<<std::endl;
       std::cout<<"Invalid osg::ClipNode in cfdVolumeVisualization::AddClipPlane!!"<<std::endl;
+   }
+}
+//////////////////////////////////////////////
+void cfdVolumeVisualization::ResetClipPlanes()
+{
+   if(_clipNode.valid())
+   {
+      double position[4] = {0,0,0,0};
+      position[0] = 1.0;
+      position[3] = -_bbox->xMin();
+      UpdateClipPlanePosition(XPLANE_MIN,position);
+
+      position[0] = -1.0;
+      position[3] = _bbox->xMax();
+      UpdateClipPlanePosition(XPLANE_MAX,position);
+      
+      position[0] = 0.0;
+      position[1] = 1.0;
+      position[3] = -_bbox->yMin();
+      UpdateClipPlanePosition(YPLANE_MIN,position);
+      
+      position[1] = -1.0;
+      position[3] = _bbox->yMax();
+      UpdateClipPlanePosition(YPLANE_MAX,position);
+      
+      position[1] = 0.0;
+      position[2] = 1.0;
+      position[3] = -_bbox->zMin();
+      UpdateClipPlanePosition(ZPLANE_MIN,position);
+      
+      position[2] = -1.0;
+      position[3] = _bbox->zMax();
+      UpdateClipPlanePosition(ZPLANE_MAX,position);
    }
 }
 /////////////////////////////////////////////////////////////////
@@ -465,8 +512,7 @@ void cfdVolumeVisualization::_createStateSet()
    if(_noShaderGroup.valid()){
       if(!_stateSet.valid()){
          _stateSet = _noShaderGroup->getOrCreateStateSet();;
-         _stateSet->setMode(GL_LIGHTING,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
-         _stateSet->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
+         _stateSet->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
          _stateSet->setMode(GL_BLEND,osg::StateAttribute::ON);
          
          osg::ref_ptr<osg::TexMat> tMat = new osg::TexMat();
@@ -495,9 +541,14 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 {
    if(ss){
       if(_texture.valid()){
+
          if(!_utCbk){
             _utCbk =  new cfdUpdateTextureCallback();
-         
+#ifdef CFD_USE_SHADERS
+            _utCbk->SetIsLuminance(true);
+#else
+            _utCbk->SetIsLuminance(false);
+#endif
             _utCbk->SetTextureManager(_tm);
             _utCbk->SetDelayTime(0.1);
          
@@ -505,6 +556,7 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
             _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
             _texture->setSubloadCallback(_utCbk);
          }
+
          ss->setTextureAttributeAndModes(0,_texture.get(),
 			                        osg::StateAttribute::ON);
          ss->setTextureMode(0,GL_TEXTURE_GEN_S,osg::StateAttribute::ON);
@@ -523,22 +575,31 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 ////////////////////////////////////////////////
 void cfdVolumeVisualization::_createTexGenNode()
 {
-   if ( _bbox ){
+   //if ( _bbox ){
       osg::Vec4 sPlane(1,0,0,0);
       osg::Vec4 tPlane(0,1,0,0);
       osg::Vec4 rPlane(0,0,1,0);
             
       _texGenParams = new osg::TexGenNode();
+      _texGenParams->setName("VV TexGenNode");
       _texGenParams->setTextureUnit(0);
       _texGenParams->getTexGen()->setMode(osg::TexGen::EYE_LINEAR);
       _texGenParams->getTexGen()->setPlane(osg::TexGen::S,sPlane); 
       _texGenParams->getTexGen()->setPlane(osg::TexGen::T,tPlane);
       _texGenParams->getTexGen()->setPlane(osg::TexGen::R,rPlane);
-   }
-   else
-   {
+   //}
+   //else
+   /*{
       if(_verbose)
          std::cout<<"Invalid bbox in cfdVolumeVisualization::_createTexGenNode!"<<std::endl;
+   }*/
+}
+////////////////////////////////////////////////////////////////
+void cfdVolumeVisualization::TranslateCenterBy(float* translate)
+{
+   if(_vcCbk.valid())
+   {
+      _vcCbk->Translate(translate);
    }
 }
 ///////////////////////////////////////////
@@ -576,13 +637,18 @@ void cfdVolumeVisualization::_buildSlices()
     geom->setColorBinding(osg::Geometry::BIND_OVERALL);
 
     geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,ycoords->size()));
-    
+    geom->setUseDisplayList(false);
     _billboard = new osg::Billboard;
     _billboard->setMode(osg::Billboard::POINT_ROT_WORLD);
     _billboard->addDrawable(geom);
 
     //position the slices in the scene
     _billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
+    if(!_vcCbk.valid())
+    {
+       _vcCbk = new cfdVolumeCenterCallback(_center);
+    }
+    _billboard->setUpdateCallback(_vcCbk.get());
 
 }
 ///////////////////////////////////////////////////////////
@@ -608,13 +674,17 @@ void cfdVolumeVisualization::CreateNode()
 //////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()
 {
+#ifndef CFD_USE_SHADERS
    if(!_tm){
       std::cout<<"Texture Manager not set!!!"<<std::endl;
       return;
    }
+#endif
    _volumeVizNode = new osg::Switch();
    _volumeVizNode->setName("Volume Viz Node");
-   _volumeVizNode->setSingleChildOn(0);
+#ifdef CFD_USE_SHADERS
+   _volumeVizNode->setAllChildrenOff();
+#endif
    _volumeVizNode->setDataVariance(osg::Object::DYNAMIC);
 
    if(!_noShaderGroup.valid()){
@@ -647,7 +717,7 @@ void cfdVolumeVisualization::_buildGraph()
          osg::ref_ptr<osg::TexMat> tmat =
              dynamic_cast<osg::TexMat*>(_stateSet->getTextureAttribute(0,osg::StateAttribute::TEXMAT));
          _texGenParams->setUpdateCallback(new cfdTextureMatrixCallback(tmat.get(),
-                                                            _center,
+                                                           _center,
                                                             scale,trans));
       }
       if(!_decoratorAttachNode){
@@ -657,6 +727,7 @@ void cfdVolumeVisualization::_buildGraph()
       }
       if(_billboard.valid()){
          if(_clipNode.valid()){
+            _clipNode->createClipBox(*_bbox,XPLANE_MIN);
             _decoratorAttachNode->addChild(_clipNode.get());
             _clipNode->addChild(_billboard.get());
          }else{
@@ -675,6 +746,7 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
 {
    if(&rhs != this){
       _utCbk = rhs._utCbk;
+      _vcCbk = rhs._vcCbk;
       _volumeVizNode = rhs._volumeVizNode;
       _texGenParams = rhs._texGenParams;
 

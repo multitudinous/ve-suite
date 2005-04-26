@@ -85,6 +85,7 @@ public:
      depth = _subloadImageDepth;
   }
     
+  void SetIsLuminance(bool isLum){_isLuminance = isLum;}
    void SetTextureManager(cfdTextureManager* tm);
    void SetDelayTime(double delayTime);
 
@@ -98,6 +99,8 @@ protected:
    cfdTextureManager* _tm;
    double _delay;
    bool _isSlave;
+   bool _isLuminance;
+   bool _update;
    unsigned int _currentFrame;
    SubloadMode _subloadMode;
    mutable GLsizei _textureWidth, _textureHeight,_textureDepth;

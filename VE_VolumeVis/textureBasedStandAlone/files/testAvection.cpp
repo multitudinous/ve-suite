@@ -43,6 +43,7 @@
 #include "cfdScalarVolumeVisHandler.h"
 #include "cfdPBufferManager.h"
 #include "cfdInitializePbufferCallback.h"
+#include "cfdOSGGammaShaderManager.h"
 
 class cfdPostSwapCallback:public Producer::Camera::Callback
 {
@@ -54,9 +55,11 @@ public:
    virtual ~cfdPostSwapCallback(){};
    virtual void operator()(const Producer::Camera &)
    {
+      std::cout<<"Swapping"<<std::endl;
       if(_vvh){
          _vvh->PingPongTextures();
       }
+      std::cout<<"========swapped======="<<std::endl;
    }
 protected:
    cfdVectorVolumeVisHandler* _vvh;
@@ -70,7 +73,7 @@ int main( int argc, char **argv )
    osg::ArgumentParser arguments(&argc,argv);
     
    cfdTextureManager* tm = new cfdTextureManager();
-   if(arguments.read("-datFile")) 
+   if(arguments.read("-dataFile")) 
    {
       for(int pos=1;pos<arguments.argc() && !arguments.isOption(pos);++pos)
       {
@@ -83,6 +86,7 @@ int main( int argc, char **argv )
             std::getline( fin, tempName );
             for(int i = 0; i < numFiles; i++){
                fin>>name;
+               tm->SetUseShaders(true);
                tm->addFieldTextureFromFile(name);
             }
          }
@@ -127,16 +131,16 @@ int main( int argc, char **argv )
    
    osg::ref_ptr<osg::Group> rootNode = vvNode->GetVolumeVisNode().get();
  
-   cfdVectorVolumeVisHandler* vvvh = new cfdVectorVolumeVisHandler();
+   /*cfdVectorVolumeVisHandler* vvvh = new cfdVectorVolumeVisHandler();
    vvvh->SetBoundingBox(tm->getBoundingBox());
    vvvh->SetSwitchNode(vvNode->GetVolumeVisNode().get());
    vvvh->SetTextureScale(vvNode->GetTextureScale(),false);
    vvvh->SetCenter(vvNode->GetBBoxCenter());
 
    vvvh->SetAttachNode(vvNode->GetDecoratorAttachNode().get());
-   vvvh->SetTextureManager(tm);
+   vvvh->SetTextureManager(tm);*/
    
-   /*cfdScalarVolumeVisHandler* svvh = new cfdScalarVolumeVisHandler();
+   cfdScalarVolumeVisHandler* svvh = new cfdScalarVolumeVisHandler();
    svvh->SetBoundingBox(tm->getBoundingBox());
    
    svvh->SetSwitchNode(vvNode->GetVolumeVisNode().get());
@@ -145,7 +149,7 @@ int main( int argc, char **argv )
 
          
    svvh->SetAttachNode(vvNode->GetDecoratorAttachNode().get());
-   svvh->SetTextureManager(tm);*/
+   svvh->SetTextureManager(tm);
    float* currentBBox = tm->getBoundingBox();
    //create an x plane
    double xplane[4] = {1,0,0,0};
@@ -153,14 +157,14 @@ int main( int argc, char **argv )
    xplane[3] = currentBBox[0] + alpha*(currentBBox[1] - currentBBox[0]);
    //xplane[3] = currentBBox[4] + alpha*(currentBBox[5] - currentBBox[4]);
    xplane[3] *=-1.0;
-  //vvNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE,xplane);
+  vvNode->UpdateClipPlanePosition(cfdVolumeVisualization::XPLANE_MIN,xplane);
    //get the xplane positions
-   alpha = .49;
+   alpha = .5;
    xplane[0] = 0;
    xplane[1] = 1;
     xplane[3] = currentBBox[2] + alpha*(currentBBox[3] - currentBBox[2]);
    xplane[3] *=-1.0;
-   vvNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE,xplane);
+   //vvNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE,xplane);
    //get the xplane positions
    xplane[0] = 0;
    xplane[1] = 0;
@@ -185,24 +189,31 @@ int main( int argc, char **argv )
 
         // create the windows and run the threads.
         viewer.realize();
-        vvvh->SetPBufferManager(pbCallback->pbuffer());
-        vvvh->Init();
-        viewer.getCamera(0)->addPostSwapCallback(new cfdPostSwapCallback(vvvh));
+        svvh->Init();
+        svvh->GetGammaShaderManager()->UpdateScalarMax(1.0);
+        //vvvh->SetPBufferManager(pbCallback->pbuffer());
+        //vvvh->Init();
+        //viewer.getCamera(0)->addPostSwapCallback(new cfdPostSwapCallback(vvvh));
         while( !viewer.done() )
         {
            //aVVNode->setPBufferManager(pbCallback->pbuffer());
           
-           //svvh->Init();
-           //svvh->EnableDecorator();
-          vvvh->EnableDecorator();
+           svvh->Init();
+           svvh->EnableDecorator();
+           //std::cout<<"enable decorator"<<std::endl;
+          //vvvh->EnableDecorator();
             // wait for all cull and draw threads to complete.
+          //std::cout<<"sync"<<std::endl;
             viewer.sync();
             // update the scene by traversing it with the the update visitor which will
             // call all node update callbacks and animations.
+            //std::cout<<"update"<<std::endl;
             viewer.update();
 
             // fire off the cull and draw traversals of the scene.
+            //std::cout<<"frame begin"<<std::endl;
             viewer.frame();
+            //std::cout<<"frame end"<<std::endl;
         }
         
         // wait for all cull and draw threads to complete before exit.

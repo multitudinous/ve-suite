@@ -322,8 +322,22 @@ void cfdTextureBasedVizHandler::_updateShaderState()
             activeVisNodeHdlr->TurnOffBBox();
          }
       }
-   }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == VOLUME_SHADER){
+   }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == CHANGE_SCALAR_RANGE){
       if(_svvh){
+        cfdOSGGammaShaderManager* gShader = _svvh->GetGammaShaderManager();
+           if(gShader)
+           {
+              float range[2];
+              range[0] = (float)(_cmdArray->GetCommandValue( cfdCommandArray::CFD_MIN ))/100.0;
+              range[1] = (float)(_cmdArray->GetCommandValue( cfdCommandArray::CFD_MAX ))/100.0;
+              gShader->SetScalarRange(range);
+           }
+      }
+      _svvh->EnableDecorator();
+      activeVisNodeHdlr = _svvh;
+   }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == VOLUME_SHADER){
+      if(_svvh)     
+      {
          _svvh->EnableDecorator();
          activeVisNodeHdlr = _svvh;
       }
