@@ -524,7 +524,7 @@ void cfdReadParam::ContinueRead( std::ifstream &input, unsigned int id )
          break;
       case 11:
          // Sound loader
-         numLines = 10;
+         numLines = 11;
          break;
       case 12:
          // IMG Reader

@@ -40,13 +40,14 @@
 11                   // Object type 11: Sound File block, must have Sound API working, recommend OpenAL
    0                 // ambient, is played as background noise
    1                 // retriggerable, shuts off sound from being retriggered in program
-   1                 // volume, volume range is 0-1, 1 is loud, 0 is soft
-   1                 // pitchbend, changes the pitch 0-1
-   1                 // cutoff, range is 0-1 cutoff is a clipping sort of deal
+  -1                 // repeat: -1=loop, 1=singleShot, 2=doubleShot, etc.
+   1.0               // volume, volume range is 0-1, 1 is loud, 0 is soft
+   1.0               // pitchbend, changes the pitch 0-1
+   1.0               // cutoff, range is 0-1 cutoff is a clipping sort of deal
    0.0               // Sound Position X,  OpenGL Coordinates 0 is center
    0.0               // Sound Position Y,  OpenGL Coordinates 0 is center
    0.0               // Sound Position Z,  OpenGL Coordinates 0 is center
-   /sound.wav        // Sound file name  
-   mysound           // Sound Name Alias, give a unique name of alphanumeric characters   
+   ./sound.wav       // Sound file name  
+   mysound           // Sound Name Alias, a unique name of alphanumeric characters to appear on gui 
 14
    locations.dat     //QuatCam file: should be an existing file in the working directory 

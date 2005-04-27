@@ -36,7 +36,6 @@
 
 cfdSound::cfdSound()
 {
-   this->repeat = 1; // not currently listed in parameter file
 }
 
 cfdSound::~cfdSound()

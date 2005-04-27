@@ -88,10 +88,11 @@ int cfdSoundHandler::GetNumberOfSounds( void )
 
 char* cfdSoundHandler::GetSoundFilename( int i )
 {
-   // used to generate list of sounds on the gui
-   vprDEBUG(vprDBG_ALL,0) << "returning \"" << this->sounds[ i ]->fileName
+   // used to generate a list of sounds on the gui
+   vprDEBUG(vprDBG_ALL,0) << "\treturning \"" << this->sounds[ i ]->soundName
                           << "\"" << std::endl << vprDEBUG_FLUSH;
-   return this->sounds[ i ]->fileName;
+   //return this->sounds[ i ]->fileName;
+   return this->sounds[ i ]->soundName;
 }
 
 bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
@@ -178,9 +179,8 @@ void cfdSoundHandler::CreateObjects( void )
          input >> this->sounds[ i ]->retriggerable;
          input.getline( textLine, 256 );   //skip past remainder of line
 
-       /* not currently listed in parameter file
          input >> this->sounds[ i ]->repeat;
-         input.getline( textLine, 256 );   //skip past remainder of line*/
+         input.getline( textLine, 256 );   //skip past remainder of line
 
          input >> this->sounds[ i ]->volume;
          input.getline( textLine, 256 );   //skip past remainder of line
