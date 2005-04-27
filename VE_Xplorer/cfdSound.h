@@ -46,7 +46,7 @@ class cfdSound
    bool IsSounding();
 
    char  fileName[ 100 ];
-   char  soundName[ 100 ];
+   char  soundName[ 100 ];    // this is displayed on the gui
 
    // sound is either ambient or positional.  If the sound is ambient, it is
    // attached to the listener, and its volume does not change when the
