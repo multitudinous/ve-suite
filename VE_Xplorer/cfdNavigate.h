@@ -120,9 +120,6 @@ class cfdNavigate
       void UpdateLoc( double* );
 
       void UpdateDir( );
-      
-      double* GetWorldTranslation();
-      float* GetWorldRotation();
 
    private:
       //! Wand object
@@ -141,6 +138,7 @@ class cfdNavigate
       */
       //vjPosInterface wand;
       gadget::PositionInterface  wand;
+      gadget::PositionInterface  head;
  
       // VR Juggler's wand digital interface.
    public:
@@ -164,11 +162,13 @@ class cfdNavigate
       */
       //vjVec3 *vjVec;
       gmtl::Vec3f  vjVec;
+      gmtl::Vec3f  LastVec;
       //! VR Juggler
       /*!
       VR Juggler's matrix math function.
       */
       gmtl::Matrix44f vjMat;
+      gmtl::Matrix44f vjHeadMat;
       //vjMatrix *vjMat;
       //! Wand object
       /*!
@@ -206,8 +206,7 @@ class cfdNavigate
       */
       float dObj;
    
-      float translationStepSize;
-	  float rotationStepSize;
+      float navigationStepSize;
 };
 
 #endif
