@@ -44,8 +44,10 @@
 #include "cfdTempAnimation.h"
 
 #ifdef _OSG
+#ifdef VE_PATENTED
 #include "cfdTextureBasedVizHandler.h"
 #include "cfdVolumeVisualization.h"
+#endif
 #endif
 
 #include <vpr/System.h>
@@ -647,6 +649,7 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterTeacher_state    = _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
       this->mStates->clusterTime_since_start = time_since_start;
 #ifdef _OSG
+#ifdef VE_PATENTED      
       if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
       {
          this->mStates->clusterFrameNumber   = cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->GetCurrentTransientTexture();   
@@ -655,6 +658,7 @@ void VjObs_i::GetCfdStateVariables( void )
       {
          this->mStates->clusterFrameNumber = 0;
       }
+#endif
 #endif
    }
    //this->_unusedNewData    = false;
@@ -693,10 +697,12 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       }
       time_since_start = this->mStates->clusterTime_since_start;
 #ifdef _OSG
+#ifdef VE_PATENTED
       if ( cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode() )
       {
 	      cfdTextureBasedVizHandler::instance()->GetActiveVolumeVizNode()->SetCurrentTransientTexture( this->mStates->clusterFrameNumber);
       }
+#endif
 #endif
    }
    this->_unusedNewData    = false;
