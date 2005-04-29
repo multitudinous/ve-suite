@@ -348,6 +348,10 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
                         << std::endl << vprDEBUG_FLUSH;
                      //this->fmaterial->setAlpha( .2 );
                   }
+                  else
+                  {
+                       testMat->setColorMode( PFMTL_FRONT, PFMTL_CMODE_AMBIENT_AND_DIFFUSE );
+                  }
                }
                else
                {
