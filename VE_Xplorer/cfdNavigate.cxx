@@ -405,7 +405,33 @@ void cfdNavigate::updateNavigationFromGUI()
       {
          this->worldRot[ 0 ] += 1.0f;
       }
+      /*
+      gmtl::Matrix44f worldMat = this->worldDCS->GetMat();
+      gmtl::Matrix44f vjHeadMat = head->getData();
+      gmtl::Matrix44f vjWorldHeadMat = worldMat * vjHeadMat;
+   
+      gmtl::Quatf LastPosQuat;
+      gmtl::Quatf NextPosQuat;
+      gmtl::Quatf CurPosQuat;
+      
+      gmtl::set( LastPosQuat, vjWorldHeadMat );
+      gmtl::Vec3f y_axis( 0.0f, 1.0f, 0.0f );
+      
+      gmtl::Matrix44f yAxisMatrix = gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad( this->worldRot[ 0 ] ), y_axis ) );
+      vjWorldHeadMat = yAxisMatrix * vjWorldHeadMat;
 
+      gmtl::set( NextPosQuat, vjWorldHeadMat );
+
+      gmtl::slerp(CurPosQuat,1.0f,LastPosQuat,NextPosQuat);
+      Matrix44f temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
+      // We have to take the YRot value because the juggler axis 
+      // has y up where as we have z up these means we take the y up
+      // and make it z up
+      worldRot[0] = gmtl::Math::rad2Deg( makeYRot(temp) );
+      gmtl::Matrix44f newTrans;// = gmtl::makeVec( CurPosQuat );
+      newTrans = gmtl::make<gmtl::Matrix44f>( CurPosQuat );
+      gmtl::Vec3f trans = gmtl::makeTrans<gmtl::Vec3f>( newTrans );
+      */
       gmtl::Vec3f  worldVec, wandVec, tempVec, worldPosVec(this->worldTrans[0]- this->LastVec[0], 0,-this->worldTrans[1]-this->LastVec[2]);
       gmtl::Matrix44f rotMat;
       gmtl::EulerAngleXYZf myEuler( 0, -gmtl::Math::deg2Rad(oldAng),0), worldRotVec(0, gmtl::Math::deg2Rad(this->worldRot[0]),0);
