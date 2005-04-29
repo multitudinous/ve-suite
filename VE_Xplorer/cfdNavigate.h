@@ -121,6 +121,9 @@ class cfdNavigate
 
       void UpdateDir( );
 
+      double* GetWorldTranslation();
+      float* GetWorldRotation();
+
    private:
       //! Wand object
       /*!
@@ -207,6 +210,7 @@ class cfdNavigate
       float dObj;
    
       float navigationStepSize;
+      float rotationStepSize;
 };
 
 #endif
