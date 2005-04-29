@@ -43,6 +43,7 @@ using namespace gadget;
 cfdNavigate::cfdNavigate( )
 {
    wand.init("VJWand");
+   head.init("VJWand");
    this->digital[0].init("VJButton0");   // trigger (and top right button) TODO: I think this is unused ?
    this->digital[1].init("VJButton1");   // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
    this->digital[2].init("VJButton2");   // 12 o'clock -- forward navigation
@@ -89,6 +90,7 @@ void cfdNavigate::Initialize( cfdDCS* worldDCS )
    {
       this->cursorLoc[i] = this->loc[i] + this->dir[i]*this->cursorLen;
       this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
+      this->LastVec[i] = 0;
    }
 }
 
