@@ -97,9 +97,12 @@ class cfdExecutive : public cfdGlobalBase
       // Get intial module information from the executive
       void InitModules( void );
 
-      // Update function called from within preFrame
+      // Update function called from within latePreFrame
       void UpdateModules( void );
-   
+
+      // Update function called from within latePreFrame
+      void PreFrameUpdate( void );
+ 
       // Function called within preFrame to allow cfdExecutive
       // to have access to scalar information
       void UnbindORB( void );

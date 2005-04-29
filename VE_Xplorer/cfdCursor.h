@@ -100,17 +100,17 @@ class cfdCursor : public cfdGlobalBase
       void GetPlaneReso( int &size );
       int GetPlaneReso();
 
-      //add for box cursor
+      // for box cursor...
       void getExtent(double boxExtent[6]);
       vtkCubeSource *getBox();
       float boxExtent;
-      //add end
 
       void SetActiveDataSetDCS( cfdDCS* myDCS );
       void SetActiveDataSet( cfdDataSet* input );
 
       int GetCursorID( void );
       double* GetCursorLocation( void );
+      double* GetCursorLocalLocation( void );
    private:
 
       // Move the cursor methods

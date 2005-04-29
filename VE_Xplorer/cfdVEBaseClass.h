@@ -123,6 +123,9 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       void SetModuleResults( const char* );
 
       virtual void CreateCustomVizFeature( int );
+
+      virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
+
    private:
       // This needs to be vector of geometry nodes
       //cfdModuleGeometry*  geometryNode;

@@ -128,7 +128,7 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
       //Call the Executive CORBA call to register it to the Executive
       _exec->RegisterUI( ui_i->UIName_.c_str(), unit.in() );
       std::cout << "|\tConnected to the Executive " << std::endl;   
-	   //this->thread = new cfdThread();
+      //this->thread = new cfdThread();
       //thread->new_thread = new vpr::Thread( new vpr::ThreadMemberFunctor< cfdExecutive > ( this, &cfdExecutive::GetEverything ) );
    } 
    catch (CORBA::Exception &) 
@@ -154,9 +154,9 @@ void cfdExecutive::UnbindORB()
 {
    if ( ui_i )
    {
-	   CosNaming::Name UIname(1);
-	   UIname.length(1);
-	   UIname[0].id = CORBA::string_dup((ui_i->UIName_).c_str());
+      CosNaming::Name UIname(1);
+      UIname.length(1);
+      UIname[0].id = CORBA::string_dup((ui_i->UIName_).c_str());
       std::cout<< " Executive Destructor " << UIname[0].id << std::endl;
 
       try
@@ -498,6 +498,23 @@ void cfdExecutive::UpdateModules( void )
    }
 }
 
+void cfdExecutive::PreFrameUpdate( void )
+{
+   vprDEBUG(vprDBG_ALL,2) << " cfdExecutive::PreFrameUpdate"
+                          << std::endl << vprDEBUG_FLUSH;
+   std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+   for ( foundPlugin = _plugins.begin(); foundPlugin != _plugins.end(); foundPlugin++)
+   {
+      //if active model is the plugin's model...
+      if ( cfdModelHandler::instance()->GetActiveModel() == foundPlugin->second->GetCFDModel() )
+      {
+         vprDEBUG(vprDBG_ALL,2) << " active model is the plugin: calling PreFrameUpdate"
+                                << std::endl << vprDEBUG_FLUSH;
+         foundPlugin->second->PreFrameUpdate();
+      }
+   }
+}
+
 void cfdExecutive::SetCalculationsFlag( bool x )
 {
    //vprDEBUG(vprDBG_ALL, 0)
@@ -518,9 +535,7 @@ bool cfdExecutive::GetCalculationsFlag( void )
 
 bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 {
-// Add in cfdCommandArray stuff
 #ifdef _TAO
-      std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
       if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SCALAR )
       {
          this->SetCalculationsFlag( true );
@@ -528,7 +543,8 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
       }
       else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ACT_CUSTOM_VIZ )
       {
-         std::cout << " Custom Viz " << std::endl;
+         vprDEBUG(vprDBG_ALL,1) << " Custom Viz" << std::endl << vprDEBUG_FLUSH;
+         std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
          for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
          {  
             int dummyVar = 0;
@@ -543,5 +559,6 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdExecutive::UpdateCommand()
 {
-   std::cerr << "doing nothing in cfdExecutive::UpdateCommand()" << std::endl;
+   vprDEBUG(vprDBG_ALL,0) << "doing nothing in cfdExecutive::UpdateCommand()"
+                          << std::endl << vprDEBUG_FLUSH;
 }

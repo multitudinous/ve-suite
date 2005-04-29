@@ -342,15 +342,14 @@ void cfdCursor::UpdateArrowSource( void )
    this->cursorGeode->TranslateTocfdGeode( this->arrowActorS );
 }
 
-//add for box cursor
 void cfdCursor::UpdateCube( void )
 {
+   //added for box cursor
    vprDEBUG(vprDBG_ALL, 1) << " updating cube source "
                            << std::endl << vprDEBUG_FLUSH;
 
    this->cursorGeode->TranslateTocfdGeode( this->cubeActor );
 }
-//add end
 
 void cfdCursor::UpdateLineSource( int direction )
 {
@@ -569,9 +568,14 @@ double* cfdCursor::GetCursorLocation()
    return this->loc;
 }
 
+double* cfdCursor::GetCursorLocalLocation()
+{
+   this->GetLocalLocationVector();
+   return this->localLocation;
+}
+
 vtkPolyDataSource * cfdCursor::GetSourcePoints( void )
 {
-
    this->GetLocalLocationVector();
 
    switch( this->cursorId )

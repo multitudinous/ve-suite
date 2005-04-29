@@ -357,7 +357,7 @@ void cfdApp::preFrame( void )
 
 void cfdApp::latePreFrame( void )
 {
-   vprDEBUG(vprDBG_ALL,3) << "cfdApp::preFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,3) << "cfdApp::latePreFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _CLUSTER
    //call the parent method
    _vjobsWrapper->GetUpdateClusterStateVariables();
@@ -403,10 +403,11 @@ void cfdApp::latePreFrame( void )
 #ifdef _TAO
    this->executive->UpdateModules();
    this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );
+   this->executive->PreFrameUpdate();
 #endif // _TAO
 
    this->_vjobsWrapper->PreFrameUpdate();
-   vprDEBUG(vprDBG_ALL,3) << " cfdApp::End preFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdApp::intraFrame()
