@@ -84,7 +84,7 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
 #endif
 
    //Dynamic Loading
-   //ActiveLoadingThread();
+   ActiveLoadingThread();
 }
 
 cfdModel::~cfdModel()
@@ -516,7 +516,9 @@ void cfdModel::GetDataFromUnit(void* unused)
    std::cout<<"[DBG]...Before ACCEPT New Data, *****************************************"<<std::endl;
    vpr::SocketStream connection;
    vpr::InetAddr addr;
-   addr.setAddress("ptah-8.vrac.iastate.edu", 50031);
+   std::string localhostname;
+   localhostname = vpr::System::getHostname();
+   addr.setAddress(localhostname, 50031);
    vpr::SocketAcceptor server(addr);
 
 
