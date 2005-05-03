@@ -183,6 +183,7 @@ void cfdVEBaseClass::GetDataFromUnit( void )
 
    }*/
 }
+
 // Basically uses vtkActorToPF to create a geode and 
 // add it to the scene graph. Probably use cfdObject.
 void cfdVEBaseClass::MakeGeodeByUserRequest( int )
@@ -202,9 +203,8 @@ wxString cfdVEBaseClass::GetDesc( void )
    return this->_objectDescription;
 }
 
-// Set the pointer to the navigate class so that dynamic
+// Set the pointer to the cursor class so that dynamic
 // objects can do custom features with the wand input
-// and navigation input
 void cfdVEBaseClass::SetCursor( cfdCursor* input )
 {
    if ( input != NULL )
@@ -213,7 +213,21 @@ void cfdVEBaseClass::SetCursor( cfdCursor* input )
    }
    else
    {
-      std::cerr << " ERROR : cfdVEBaseClass::SetNavigationObject cursor input is NULL " << std::endl;
+      std::cerr << " ERROR : cfdVEBaseClass::SetCursor input is NULL " << std::endl;
+   }
+}
+
+// Set the pointer to the navigate class so that dynamic
+// objects can do custom features with the wand buttons
+void cfdVEBaseClass::SetNavigate( cfdNavigate* input )
+{
+   if ( input != NULL )
+   {
+      _navigate = input;
+   }
+   else
+   {
+      std::cerr << " ERROR : cfdVEBaseClass::SetNavigate input is NULL " << std::endl;
    }
 }
 
@@ -238,7 +252,7 @@ void cfdVEBaseClass::SetModuleResults( const char* network )
       result = exec->GetModuleResult(m_selMod);
    }
    catch (CORBA::Exception &) {
-		
+      
       cerr << "Maybe Computational Engine is down" << endl;
       return;
    }*/
@@ -259,6 +273,7 @@ void cfdVEBaseClass::CreateCustomVizFeature( int input )
    // Do nothing
    // Implement for each module
 }
+
 //This is the load function of the module, unpack the input string and fill up the UI according to this
 void cfdVEBaseClass::UnPack(Interface* intf)
 {
@@ -274,25 +289,25 @@ void cfdVEBaseClass::UnPack(Interface* intf)
    unsigned int i;
    long temp;
 
-  mod_pack = *intf;
-  vars = mod_pack.getInts();
+   mod_pack = *intf;
+   vars = mod_pack.getInts();
    for (i=0; i<vars.size(); i++)
    {
       iteri =_int.find(vars[i]);
       if (iteri!=_int.end())
-	      mod_pack.getVal(vars[i], *(iteri->second));
+         mod_pack.getVal(vars[i], *(iteri->second));
       else if (vars[i]=="XPOS")
-	   {
-	      mod_pack.getVal("XPOS", temp);
-	      //pos.x = temp;
+      {
+         mod_pack.getVal("XPOS", temp);
+         //pos.x = temp;
          pos_x = temp;
-	   }
+      }
       else if (vars[i]=="YPOS")
-	   {
-	      mod_pack.getVal("YPOS", temp);
-	      //pos.y = temp;
+      {
+         mod_pack.getVal("YPOS", temp);
+         //pos.y = temp;
          pos_y = temp;
-	   }
+      }
    }
 
    vars = mod_pack.getDoubles();
@@ -300,7 +315,7 @@ void cfdVEBaseClass::UnPack(Interface* intf)
    {
       iterd =_double.find(vars[i]);
       if (iterd!=_double.end())
-	      mod_pack.getVal(vars[i], *(iterd->second));
+         mod_pack.getVal(vars[i], *(iterd->second));
    }  
   
    vars = mod_pack.getStrings();
@@ -308,7 +323,7 @@ void cfdVEBaseClass::UnPack(Interface* intf)
    {
       iters =_string.find(vars[i]);
       if (iters!=_string.end())
-	      mod_pack.getVal(vars[i], *(iters->second));
+         mod_pack.getVal(vars[i], *(iters->second));
    }
 
    vars = mod_pack.getInts1D();
@@ -316,7 +331,7 @@ void cfdVEBaseClass::UnPack(Interface* intf)
    {
       itervi =_int1D.find(vars[i]);
       if (itervi!=_int1D.end())
-	      mod_pack.getVal(vars[i], *(itervi->second));
+         mod_pack.getVal(vars[i], *(itervi->second));
    }
 
    vars = mod_pack.getDoubles1D();
@@ -324,7 +339,7 @@ void cfdVEBaseClass::UnPack(Interface* intf)
    {
       itervd =_double1D.find(vars[i]);
       if (itervd!=_double1D.end())
-	      mod_pack.getVal(vars[i], *(itervd->second));
+         mod_pack.getVal(vars[i], *(itervd->second));
    }
 
    vars = mod_pack.getStrings1D();
@@ -416,12 +431,14 @@ void cfdVEBaseClass::CreateObjects( void )
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
-   for( int i = 0; i < numObjects; i++ )
+   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : "
+                          << numObjects << std::endl  << vprDEBUG_FLUSH;
+   for ( int i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : "
+                             << id << std::endl << vprDEBUG_FLUSH;
       input.getline( text, 256 );   //skip past remainder of line
       if ( id == 8 )
       {
@@ -505,9 +522,10 @@ void cfdVEBaseClass::CreateObjects( void )
             {
                input >> stlColor[ i ];
             }
-            vprDEBUG(vprDBG_ALL,0) << "\tcolor: " << stlColor[ 0 ] << " : " << stlColor[ 1 ] << " : "
-                                    << stlColor[ 2 ]
-                                    << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,0) << "\tcolor: " << stlColor[ 0 ] << " : "
+                                   << stlColor[ 1 ] << " : "
+                                   << stlColor[ 2 ]
+                                   << std::endl << vprDEBUG_FLUSH;
          }
          input.getline( textLine, 256 );   //skip past remainder of line
 
@@ -655,20 +673,22 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
    hList = FindFirstFile(directory, &fileData);
   
    //check to see if directory is valid
-   if(hList == INVALID_HANDLE_VALUE){ 
-	   std::cerr<<"No precomputed surface files found in: "<<precomputedSurfaceDir<<std::endl;
+   if ( hList == INVALID_HANDLE_VALUE )
+   { 
+      std::cerr << "No precomputed surface files found in: "
+                << precomputedSurfaceDir << std::endl;
       return ;
    }
    else
    {
       // Traverse through the directory structure
       finished = FALSE;
-      while (!finished)
+      while ( !finished )
       {
          //add the file name to our data list
-		 //assume all vtk files in this directory are part of the sequence
-		 //assume all vtk files in this directory are to be loaded
-         if(strstr(fileData.cFileName, ".vtk"))
+         //assume all vtk files in this directory are part of the sequence
+         //assume all vtk files in this directory are to be loaded
+         if ( strstr(fileData.cFileName, ".vtk") )
          {
             char* pathAndFileName = new char[strlen(precomputedSurfaceDir)+
                                           strlen(fileData.cFileName)+2];
@@ -676,40 +696,44 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
             strcat(pathAndFileName,"/");
             strcat(pathAndFileName,fileData.cFileName);
 
-            if ( fileIO::isFileReadable( pathAndFileName ) ) {
-            vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
-                                   << std::endl << vprDEBUG_FLUSH;
+            if ( fileIO::isFileReadable( pathAndFileName ) )
+            {
+               vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
+                                      << std::endl << vprDEBUG_FLUSH;
 
-            _model->CreateCfdDataSet();
-            unsigned int numDataSets = _model->GetNumberOfCfdDataSets();
-            // subtract 1 because this number was 1 base not 0 base
-            numDataSets -= 1;
-            _model->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
+               _model->CreateCfdDataSet();
+               unsigned int numDataSets = _model->GetNumberOfCfdDataSets();
+               // subtract 1 because this number was 1 base not 0 base
+               numDataSets -= 1;
+               _model->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
 
-            // set the dcs matrix the same as the last file
-            _model->GetCfdDataSet( -1 )->SetDCS( 
-                        _model->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
+               // set the dcs matrix the same as the last file
+               _model->GetCfdDataSet( -1 )->SetDCS( 
+                  _model->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
 
-            // precomputed data that descends from a flowdata.vtk should
-            // automatically have the same color mapping as the "parent" 
-            _model->GetCfdDataSet( -1 )->SetParent( 
-                        _model->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
-			}
-         else
-         {
+               // precomputed data that descends from a flowdata.vtk should
+               // automatically have the same color mapping as the "parent" 
+               _model->GetCfdDataSet( -1 )->SetParent( 
+                  _model->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
+            }
+            else
+            {
                std::cerr << "ERROR: unreadable file = " << pathAndFileName
                          << ".  You may need to correct your param file."
                          << std::endl;
                exit(1);
-			}
-		 }
-		 //check to see if this is the last file
-		 if(!FindNextFile(hList, &fileData)){
-            if(GetLastError() == ERROR_NO_MORE_FILES){
+            }
+         }
+
+         //check to see if this is the last file
+         if  (!FindNextFile(hList, &fileData))
+         {
+            if ( GetLastError() == ERROR_NO_MORE_FILES )
+            {
                finished = TRUE;
-			}
-		 }
-	  }
+            }
+         }
+      }
    }
    //close the handle
    FindClose(hList);
@@ -750,5 +774,4 @@ void cfdVEBaseClass::RegistVar(std::string vname, std::vector<std::string> *var)
 {
   _string1D[vname]=var;
 }
-//////////////////////////////////
 

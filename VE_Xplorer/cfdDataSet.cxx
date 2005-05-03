@@ -48,7 +48,7 @@
 #include "cfdVTKFileHandler.h"
 
 #include "readWriteVtkThings.h"
-#include "cleanVtk.h"
+//#include "cleanVtk.h"    // for dumpVerticesNotUsedByCells()
 
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>
@@ -1201,6 +1201,7 @@ void cfdDataSet::SetFileName( const char * newName )
    this->fileName = new char [strlen(newName)+1];  
    strcpy( this->fileName, newName );
 }
+
 void cfdDataSet::SetFileName_OnFly(int datasetindex)
 {
    std :: ostringstream file_name;
@@ -1213,8 +1214,8 @@ void cfdDataSet::SetFileName_OnFly(int datasetindex)
    newName = currentVtkFileName.c_str();
 
    this->SetFileName ( newName );
-
 }
+
 char * cfdDataSet::GetFileName()
 {
    return this->fileName;

@@ -41,6 +41,7 @@ class cfdGroup;
 class cfdModel;
 class cfdReadParam;
 class cfdCursor;
+class cfdNavigate;
 class cfdDCS;
 class cfdObjects;
 #include "interface.h"
@@ -120,6 +121,8 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       
       void SetCursor( cfdCursor* );
 
+      void SetNavigate( cfdNavigate* );
+
       void SetModuleResults( const char* );
 
       virtual void CreateCustomVizFeature( int );
@@ -172,6 +175,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       wxString _objectName;
       cfdDCS* _dcs;
       cfdCursor* _cursor;
+      cfdNavigate* _navigate;
 
       std::vector<wxString> v_desc;
       std::vector<wxString> v_value;
