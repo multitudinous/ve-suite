@@ -32,15 +32,15 @@ endif
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
 # Specify your scene graph: OSG = OpenSceneGraph, PF = OpenGL Performer
-setenv SCENE_GRAPH OSG 
-#setenv SCENE_GRAPH PF
+#setenv SCENE_GRAPH OSG 
+setenv SCENE_GRAPH PF
 
 # Specify corba build TAO_BUILD only for right now
 setenv TAO_BUILD TRUE
 
 # Specify cluster build CLUSTER_APP
-#setenv CLUSTER_APP FALSE
-#setenv VE_PATENTED FALSE
+#setenv CLUSTER_APP TRUE
+#setenv VE_PATENTED TRUE
 
 # TAO_BUILD can be set outside this script to override the default of TRUE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -82,25 +82,21 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/IRIX32
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/IRIX32
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/IRIX32-pthread
-   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/IRIX32-pthread
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0a4/IRIX32-pthread
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrj-deps/IRIX32
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/IRIX32
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VTK_BASE_DIR}/lib/vtk
-   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
+   #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OSG_HOME}/lib32:${OSG_HOME}/lib32/osgPlugins
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
       setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/TAO-1.4
-      setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Irix-vrac/ACE_wrappers
-      setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_HOME}/IRIX32/lib
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_HOME}/IRIX32/lib
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${TAO_ROOT}/TAO_IDL
-      setenv PATH ${ACE_ROOT}/bin:${ACE_ROOT}/IRIX32/bin:${TAO_ROOT}/IRIX32/bin:${PATH}
+      setenv PATH ${ACE_HOME}/bin:${ACE_HOME}/IRIX32/bin:${TAO_HOME}/IRIX32/bin:${PATH}
 
       setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/IRIX32
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${XERCESCROOT}/lib
@@ -142,7 +138,7 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
       setenv PATH ${OMNI_HOME}/bin:${PATH}
    endif
 
-else if ( ${CFDHOSTTYPE} == "SuSE_9.1" || ${CFDHOSTTYPE} == "SuSE_9.2" ) then
+else if ( ${CFDHOSTTYPE} =~ SuSE_9.* ) then
    setenv JDK_HOME /usr/lib/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-SuSE91

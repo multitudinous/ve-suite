@@ -82,9 +82,9 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
    _network = new Network();
 
    //time_t* timeVal;
-   long id = (long)time( NULL );
+   long timeID = (long)time( NULL );
    std::ostringstream dirStringStream;
-   dirStringStream << "VEClient" << id;
+   dirStringStream << "VEClient" << timeID;
    std::string UINAME = dirStringStream.str();
    bool is_orb_init = false;
 
