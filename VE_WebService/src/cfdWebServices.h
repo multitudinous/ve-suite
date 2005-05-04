@@ -105,6 +105,7 @@ class cfdWebServices
          
       struct stringHolder
       {
+         int ID;
          std::string intString;
          std::string doubleString;      
          std::string stringString;

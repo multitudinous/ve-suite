@@ -298,6 +298,7 @@ char* cfdWebServices::GetNetwork ( void )
 void cfdWebServices::insertItemIntoSQL(Interface &interface)
 {
    StringHolder object;
+   object.ID = interface._id;
    std::vector<std::string> names;              //vector to hold all the names we get
    std::string SQLString;                       //the string we'll pass to the database
    std::vector<std::string>::iterator stringIter;   //an iterator to go through the strings
@@ -414,7 +415,18 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
 //      intString += doublesIter->first + "|" + doublesIter->second + "||";    
 //      
 //   }
-   SQLString = "insert into where ID = '" + interface._id + "'
+   
+      SQLString = "insert into ppModules(ID, 
+         intString, doubleString, stringString, 
+         intArrayString, doubleArrayString, stringArrayString) 
+         values ('" 
+         + object.ID + "','" 
+         + object.intString + "', ' "
+         + object.doubleString + "', '" 
+         + object.stringString + "','"
+         + object.intArrayString + "', '" 
+         + object.doubleArrayString + "', '"
+         + object.stringArrayString + "')";
 }
 
 cfdWebServices::~cfdWebServices()

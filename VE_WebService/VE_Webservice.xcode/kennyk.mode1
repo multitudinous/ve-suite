@@ -201,46 +201,7 @@
 		</dict>
 	</array>
 	<key>OpenEditors</key>
-	<array>
-		<dict>
-			<key>Content</key>
-			<dict>
-				<key>PBXProjectModuleGUID</key>
-				<string>AD25AAF30827179100FEA785</string>
-				<key>PBXProjectModuleLabel</key>
-				<string>cfdWebServices.h</string>
-				<key>PBXSplitModuleInNavigatorKey</key>
-				<dict>
-					<key>Split0</key>
-					<dict>
-						<key>PBXProjectModuleGUID</key>
-						<string>AD25AAF40827179100FEA785</string>
-						<key>PBXProjectModuleLabel</key>
-						<string>cfdWebServices.h</string>
-						<key>bookmark</key>
-						<string>AD95207108283834000ED065</string>
-						<key>history</key>
-						<array>
-							<string>AD95205E08282C9A000ED065</string>
-						</array>
-					</dict>
-					<key>SplitCount</key>
-					<string>1</string>
-				</dict>
-				<key>StatusBarVisibility</key>
-				<true/>
-			</dict>
-			<key>Geometry</key>
-			<dict>
-				<key>Frame</key>
-				<string>{{0, 0}, {750, 460}}</string>
-				<key>PBXModuleWindowStatusBarHidden2</key>
-				<false/>
-				<key>RubberWindowFrame</key>
-				<string>-990 481 750 502 -1024 256 1024 768 </string>
-			</dict>
-		</dict>
-	</array>
+	<array/>
 	<key>Perspectives</key>
 	<array>
 		<dict>
@@ -348,7 +309,7 @@
 										<key>PBXProjectModuleLabel</key>
 										<string>cfdWebServices.cxx</string>
 										<key>bookmark</key>
-										<string>AD95207008283834000ED065</string>
+										<string>AD93FB2808294BE30011BC62</string>
 										<key>history</key>
 										<array>
 											<string>ADC162CA0803205900797D5F</string>
@@ -362,7 +323,7 @@
 											<string>AD25AA8E0826F54800FEA785</string>
 											<string>AD25AA9B0826FA3400FEA785</string>
 											<string>AD25AA9C0826FA3400FEA785</string>
-											<string>AD952067082834EC000ED065</string>
+											<string>AD93FAF9082947CD0011BC62</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -432,9 +393,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>AD952069082834EC000ED065</string>
+				<string>AD93FAFB082947CD0011BC62</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>AD95206A082834EC000ED065</string>
+				<string>AD93FAFC082947CD0011BC62</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -447,7 +408,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>136852119.24602109</real>
+	<real>136923070.39351049</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>
@@ -462,7 +423,6 @@
 	<integer>5</integer>
 	<key>WindowOrderList</key>
 	<array>
-		<string>AD25AAF30827179100FEA785</string>
 		<string>/Volumes/kennyk-2/users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/VE_Webservice.xcode</string>
 	</array>
 	<key>WindowString</key>
