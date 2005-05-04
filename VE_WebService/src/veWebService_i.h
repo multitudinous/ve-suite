@@ -42,14 +42,14 @@
 #if !defined (ACE_LACKS_PRAGMA_ONCE)
 #pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */
-
+class cfdWebServices;
 //Class Body_UI_i
 class  veWebService_i : public virtual POA_Body::UI
 {
    public:
       //Constructor 
       veWebService_i (Body::Executive_ptr exec, std::string name);
-  
+		void setWebServices(cfdWebServices* webServe);
       //Destructor 
       virtual ~veWebService_i (void);
   
@@ -61,6 +61,7 @@ class  veWebService_i : public virtual POA_Body::UI
       std::vector< std::string > networkStringBuffer;
       vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
       void SetNetworkString( char* );
+		cfdWebServices* webServices;
   
    public:
       bool GetCalcFlag( void );

@@ -55,6 +55,8 @@
 		};
 		08FB7794FE84155DC02AAC07 = {
 			children = (
+				ADE486570821BC34005A57A1,
+				ADE486410821B603005A57A1,
 				ADE6D0C6080ADB1F00D993A2,
 				AD585E2A07F4A4560030C9C2,
 			);
@@ -75,6 +77,8 @@
 //AD4
 		AD585E2A07F4A4560030C9C2 = {
 			children = (
+				ADB34CCB0825793900658AB8,
+				ADB34CCC0825793900658AB8,
 				ADE6D0D8080AE87300D993A2,
 				ADE6D0D9080AE87300D993A2,
 				AD585E3607F4CB640030C9C2,
@@ -98,6 +102,40 @@
 			tabWidth = 3;
 			usesTabs = 0;
 		};
+		ADB34CCB0825793900658AB8 = {
+			fileEncoding = 30;
+			indentWidth = 3;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.cpp.cpp;
+			path = veWebService_i.cpp;
+			refType = 4;
+			sourceTree = "<group>";
+			tabWidth = 3;
+		};
+		ADB34CCC0825793900658AB8 = {
+			fileEncoding = 30;
+			isa = PBXFileReference;
+			lastKnownFileType = sourcecode.c.h;
+			path = veWebService_i.h;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		ADE486410821B603005A57A1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text;
+			path = run;
+			refType = 4;
+			sourceTree = "<group>";
+		};
+		ADE486570821BC34005A57A1 = {
+			fileEncoding = 4;
+			isa = PBXFileReference;
+			lastKnownFileType = text.script.sh;
+			path = runOverhead.sh;
+			refType = 4;
+			sourceTree = "<group>";
+		};
 		ADE6D0C6080ADB1F00D993A2 = {
 			fileEncoding = 4;
 			isa = PBXFileReference;
@@ -108,19 +146,23 @@
 		};
 		ADE6D0D8080AE87300D993A2 = {
 			fileEncoding = 30;
+			indentWidth = 3;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = cfdWebServicesMain.cxx;
 			refType = 4;
 			sourceTree = "<group>";
+			tabWidth = 3;
 		};
 		ADE6D0D9080AE87300D993A2 = {
 			fileEncoding = 30;
+			indentWidth = 3;
 			isa = PBXFileReference;
 			lastKnownFileType = sourcecode.cpp.cpp;
 			path = cfdWebServices.cxx;
 			refType = 4;
 			sourceTree = "<group>";
+			tabWidth = 3;
 		};
 //AD0
 //AD1

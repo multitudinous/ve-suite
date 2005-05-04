@@ -33,6 +33,7 @@
 #include "veWebService_i.h"
 #include <iostream>
 #include <vpr/Sync/Guard.h>
+#include "cfdWebServices.h"
   
 // Implementation skeleton constructor
 veWebService_i::veWebService_i (Body::Executive_ptr exec, std::string name)
@@ -51,21 +52,31 @@ veWebService_i::~veWebService_i (void)
 // doesn't thread lock with executive CORBA calls
 std::string veWebService_i::GetNetworkString( void )
 {
+   printf("webservice_i:  getting network string:  guarding mutex\n");
    vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
+   printf("checking buffer\n");
    if ( !networkStringBuffer.empty() )
    {
+      printf("check 1\n");
       std::vector< std::string >::iterator iter;
+      printf("check 2\n");
       iter = networkStringBuffer.begin();
       std::string temp( (*iter) );
+      printf("check 3\n");
       networkStringBuffer.erase( iter );
       return temp;
    }
-   return 0;
+   else
+   {
+      printf("buffer is empty\n");
+   }
+   return "0";
 }
 
 // Complimentary function to the above function
 void veWebService_i::SetNetworkString( char* temp )
 {
+   printf("added %s to network string\n", temp);
    vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
    networkStringBuffer.push_back( std::string( temp ) );
 }
@@ -146,6 +157,13 @@ void veWebService_i::UpdateLinkContent (
     std::cout<<UIName_<<" :UpdateLinkContent called"<<std::endl;
   }
   
+void veWebService_i::setWebServices(cfdWebServices* webServe)
+{
+   webServices = webServe;
+
+}
+
+
 void veWebService_i::Raise (
     const char * notification
     ACE_ENV_ARG_DECL
@@ -172,10 +190,11 @@ void veWebService_i::Raise (
                char* network = 0;
                network = executive_->GetNetwork();
                this->SetNetworkString( network );
+               webServices->GetNetwork();
             } 
             catch (CORBA::Exception &) 
             {
-               std::cerr << "CFD DEBUG: cfdExecutive : no exec found! " << std::endl;
+               std::cerr << "CFD DEBUG: cfdWebServices : no exec found! " << std::endl;
             }
          }
          else

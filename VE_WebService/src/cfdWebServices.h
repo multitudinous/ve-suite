@@ -12,7 +12,7 @@ class cfdGauges;
 class cfdDashboard;
 class cfdExecutiveConfiguration;
 class cfdInteractiveGeometry;
-class Body_UI_i;
+class veWebService_i;
 class cfdCommandArray;
 class Network;
 class cfdVEAvailModules;
@@ -56,11 +56,11 @@ class cfdWebServices
       std::map<int, cfdVEBaseClass* > pluginMap;
 
       // Functions that operate on the Executive
-      void GetNetwork( void );
-      void GetOutput( std::string name);
-      void GetPort( std::string name);
+      char* GetNetwork( void );
+     // void GetOutput( std::string name);
+    //  void GetPort( std::string name);
       void GetEverything( void );
-      void HowToUse( std::string name);
+      //void HowToUse( std::string name);
 
       // Get intial module information from the executive
       void InitModules( void );
@@ -77,10 +77,10 @@ class cfdWebServices
       bool GetCalculationsFlag( void );
 
       // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray* );
+      //virtual bool CheckCommandId( cfdCommandArray* );
 
       // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
+      //virtual void UpdateCommand();
 
       //Loading the Available Modules
       cfdVEAvail_Modules* availableModules; 
@@ -96,13 +96,23 @@ class cfdWebServices
       cfdGauges* gauges;
       cfdDashboard* dashBoard;
       cfdInteractiveGeometry* geometry;
-      Body_UI_i* uii;
+      veWebService_i* uii;
       cfdGroup* masterNode;
 
       bool doneWithCalculations;
       bool updateNetworkString;
       bool runGetEverythingThread;
-      
+         
+      struct stringHolder
+      {
+         std::string intString;
+         std::string doubleString;      
+         std::string stringString;
+         std::string intArrayString;
+         std::string doubleArrayString;      
+         std::string stringArrayString;
+      }
+
 };
 
 #endif

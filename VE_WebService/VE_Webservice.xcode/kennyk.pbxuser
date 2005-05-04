@@ -53,7 +53,7 @@
 					PBXFileDataSource_Target_ColumnID,
 				);
 			};
-			PBXPerProjectTemplateStateSaveDate = 134941196;
+			PBXPerProjectTemplateStateSaveDate = 136852119;
 			PBXPrepackagedSmartGroups_v2 = (
 				{
 					PBXTransientLocationAtTop = bottom;
@@ -230,50 +230,201 @@
 					};
 				},
 			);
-			PBXWorkspaceStateSaveDate = 134941196;
+			PBXWorkspaceStateSaveDate = 136852119;
 		};
 		perUserProjectItems = {
-			AD585E3A07F4CC070030C9C2 = AD585E3A07F4CC070030C9C2;
+			AD1CC7D8081850F2008B5383 = AD1CC7D8081850F2008B5383;
+			AD1CC7DD08185100008B5383 = AD1CC7DD08185100008B5383;
+			AD1CC7DE08185100008B5383 = AD1CC7DE08185100008B5383;
+			AD1CC7E20818510B008B5383 = AD1CC7E20818510B008B5383;
+			AD1CC7EA08185130008B5383 = AD1CC7EA08185130008B5383;
+			AD1CC7EC08185130008B5383 = AD1CC7EC08185130008B5383;
+			AD25A9C70826A0AA00FEA785 = AD25A9C70826A0AA00FEA785;
+			AD25AA7C0826F3A600FEA785 = AD25AA7C0826F3A600FEA785;
+			AD25AA7D0826F3A600FEA785 = AD25AA7D0826F3A600FEA785;
+			AD25AA8E0826F54800FEA785 = AD25AA8E0826F54800FEA785;
+			AD25AA9B0826FA3400FEA785 = AD25AA9B0826FA3400FEA785;
+			AD25AA9C0826FA3400FEA785 = AD25AA9C0826FA3400FEA785;
+			AD25AA9E0826FA3400FEA785 = AD25AA9E0826FA3400FEA785;
+			AD28A786081EEB1F007826AC = AD28A786081EEB1F007826AC;
+			AD95205E08282C9A000ED065 = AD95205E08282C9A000ED065;
+			AD952067082834EC000ED065 = AD952067082834EC000ED065;
+			AD95207008283834000ED065 = AD95207008283834000ED065;
+			AD95207108283834000ED065 = AD95207108283834000ED065;
+			ADB34DE90825808E00658AB8 = ADB34DE90825808E00658AB8;
+			ADB3507B0825990D00658AB8 = ADB3507B0825990D00658AB8;
 			ADC162CA0803205900797D5F = ADC162CA0803205900797D5F;
-			ADE6D130080B0C6000D993A2 = ADE6D130080B0C6000D993A2;
-			ADE6D138080B29DD00D993A2 = ADE6D138080B29DD00D993A2;
-			ADE6D148080B29FC00D993A2 = ADE6D148080B29FC00D993A2;
-			ADE6D154080B2A4D00D993A2 = ADE6D154080B2A4D00D993A2;
-			ADE6D197080B2EBA00D993A2 = ADE6D197080B2EBA00D993A2;
-			ADE6D1A2080B2F1400D993A2 = ADE6D1A2080B2F1400D993A2;
-			ADE6D1DC080B31B100D993A2 = ADE6D1DC080B31B100D993A2;
-			ADE6D1EC080B321000D993A2 = ADE6D1EC080B321000D993A2;
-			ADE6D1F7080B333C00D993A2 = ADE6D1F7080B333C00D993A2;
-			ADE6D22C080B343D00D993A2 = ADE6D22C080B343D00D993A2;
-			ADE6D22E080B343D00D993A2 = ADE6D22E080B343D00D993A2;
-			ADE6D23D080B346E00D993A2 = ADE6D23D080B346E00D993A2;
-			ADE6D246080B348200D993A2 = ADE6D246080B348200D993A2;
-			ADE6D25B080B351000D993A2 = ADE6D25B080B351000D993A2;
-			ADE6D29C080B38CF00D993A2 = ADE6D29C080B38CF00D993A2;
-			ADE6D2A4080B390300D993A2 = ADE6D2A4080B390300D993A2;
-			ADE6D2A6080B390300D993A2 = ADE6D2A6080B390300D993A2;
-			ADE6D2B0080B39D300D993A2 = ADE6D2B0080B39D300D993A2;
-			ADE6D2BA080B3A1D00D993A2 = ADE6D2BA080B3A1D00D993A2;
-			ADE6D2F7080B427900D993A2 = ADE6D2F7080B427900D993A2;
-			ADE6D2F8080B427900D993A2 = ADE6D2F8080B427900D993A2;
-			ADE6D2F9080B427900D993A2 = ADE6D2F9080B427900D993A2;
-			ADE6D311080B43CD00D993A2 = ADE6D311080B43CD00D993A2;
-			ADE6D327080B446400D993A2 = ADE6D327080B446400D993A2;
-			ADE6D328080B446400D993A2 = ADE6D328080B446400D993A2;
-			ADE6D329080B446400D993A2 = ADE6D329080B446400D993A2;
-			ADE6D33A080B449000D993A2 = ADE6D33A080B449000D993A2;
-			ADE6D35D080B460000D993A2 = ADE6D35D080B460000D993A2;
-			ADE6D35E080B460000D993A2 = ADE6D35E080B460000D993A2;
-			ADE6D35F080B460000D993A2 = ADE6D35F080B460000D993A2;
-			ADE6D361080B460000D993A2 = ADE6D361080B460000D993A2;
-			ADE6D362080B460000D993A2 = ADE6D362080B460000D993A2;
-			ADE6D364080B460000D993A2 = ADE6D364080B460000D993A2;
-			ADE6D366080B460000D993A2 = ADE6D366080B460000D993A2;
-			ADE6D368080B460000D993A2 = ADE6D368080B460000D993A2;
+			ADE4865C0821BC44005A57A1 = ADE4865C0821BC44005A57A1;
+			ADE4865D0821BC44005A57A1 = ADE4865D0821BC44005A57A1;
+			ADE486620821BC4F005A57A1 = ADE486620821BC4F005A57A1;
 		};
 		sourceControlManager = AD585E2107F4A39E0030C9C2;
 		userBuildSettings = {
 		};
+	};
+	AD1CC7CF081850AF008B5383 = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = Execute_Thread.h;
+		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_CE/Execute_Thread.h;
+		refType = 0;
+		sourceTree = "<absolute>";
+	};
+	AD1CC7D7081850F2008B5383 = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.cpp.cpp;
+		name = cfdExecutive.cxx;
+		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_Xplorer/cfdExecutive.cxx;
+		refType = 0;
+		sourceTree = "<absolute>";
+	};
+	AD1CC7D8081850F2008B5383 = {
+		fRef = AD1CC7CF081850AF008B5383;
+		isa = PBXTextBookmark;
+		name = Body;
+		rLen = 4;
+		rLoc = 393;
+		rType = 0;
+		vrLen = 463;
+		vrLoc = 0;
+	};
+	AD1CC7DD08185100008B5383 = {
+		fRef = AD1CC7D7081850F2008B5383;
+		isa = PBXTextBookmark;
+		name = Body_UI;
+		rLen = 7;
+		rLoc = 3571;
+		rType = 0;
+		vrLen = 1752;
+		vrLoc = 2944;
+	};
+	AD1CC7DE08185100008B5383 = {
+		fRef = AD1CC7D7081850F2008B5383;
+		isa = PBXTextBookmark;
+		name = Body_UI;
+		rLen = 7;
+		rLoc = 3571;
+		rType = 0;
+		vrLen = 1752;
+		vrLoc = 2944;
+	};
+	AD1CC7E20818510B008B5383 = {
+		fRef = AD1CC7CF081850AF008B5383;
+		isa = PBXTextBookmark;
+		name = "Execute_Thread.h: 23";
+		rLen = 0;
+		rLoc = 347;
+		rType = 0;
+		vrLen = 463;
+		vrLoc = 0;
+	};
+	AD1CC7E40818510B008B5383 = {
+		isa = PBXFileReference;
+		lastKnownFileType = sourcecode.c.h;
+		name = UI_i.h;
+		path = /Users/kennyk/Graphics_Programming/VE_Suite/VE_Conductor/Framework/UI_i.h;
+		refType = 0;
+		sourceTree = "<absolute>";
+	};
+	AD1CC7EA08185130008B5383 = {
+		fRef = AD1CC7E40818510B008B5383;
+		isa = PBXTextBookmark;
+		name = Body_UI;
+		rLen = 7;
+		rLoc = 300;
+		rType = 0;
+		vrLen = 877;
+		vrLoc = 0;
+	};
+	AD1CC7EC08185130008B5383 = {
+		fRef = AD1CC7E40818510B008B5383;
+		isa = PBXTextBookmark;
+		name = Body_UI;
+		rLen = 7;
+		rLoc = 300;
+		rType = 0;
+		vrLen = 877;
+		vrLoc = 0;
+	};
+	AD25A9C70826A0AA00FEA785 = {
+		fRef = ADE6D0D9080AE87300D993A2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 241";
+		rLen = 0;
+		rLoc = 8500;
+		rType = 0;
+		vrLen = 1805;
+		vrLoc = 7428;
+	};
+	AD25AA7C0826F3A600FEA785 = {
+		fRef = ADB34CCC0825793900658AB8;
+		isa = PBXTextBookmark;
+		name = "veWebService_i.h: 41";
+		rLen = 0;
+		rLoc = 1646;
+		rType = 0;
+		vrLen = 1230;
+		vrLoc = 1618;
+	};
+	AD25AA7D0826F3A600FEA785 = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Makefile: 24";
+		rLen = 0;
+		rLoc = 405;
+		rType = 0;
+		vrLen = 813;
+		vrLoc = 0;
+	};
+	AD25AA8E0826F54800FEA785 = {
+		fRef = ADE486570821BC34005A57A1;
+		isa = PBXTextBookmark;
+		name = "runOverhead.sh: 4";
+		rLen = 0;
+		rLoc = 84;
+		rType = 0;
+		vrLen = 157;
+		vrLoc = 0;
+	};
+	AD25AA9B0826FA3400FEA785 = {
+		fRef = ADE6D0D8080AE87300D993A2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServicesMain.cxx: CORBA";
+		rLen = 0;
+		rLoc = 2668;
+		rType = 0;
+		vrLen = 2073;
+		vrLoc = 899;
+	};
+	AD25AA9C0826FA3400FEA785 = {
+		fRef = ADB34CCB0825793900658AB8;
+		isa = PBXTextBookmark;
+		name = "veWebService_i.cpp: 193";
+		rLen = 0;
+		rLoc = 5627;
+		rType = 0;
+		vrLen = 1587;
+		vrLoc = 4410;
+	};
+	AD25AA9E0826FA3400FEA785 = {
+		fRef = ADB34CCB0825793900658AB8;
+		isa = PBXTextBookmark;
+		name = "veWebService_i.cpp: 193";
+		rLen = 0;
+		rLoc = 5627;
+		rType = 0;
+		vrLen = 1543;
+		vrLoc = 4454;
+	};
+	AD28A786081EEB1F007826AC = {
+		fRef = ADE6D0C6080ADB1F00D993A2;
+		isa = PBXTextBookmark;
+		name = "Makefile: 16";
+		rLen = 0;
+		rLoc = 251;
+		rType = 0;
+		vrLen = 865;
+		vrLoc = 71;
 	};
 	AD585E2107F4A39E0030C9C2 = {
 		fallbackIsa = XCSourceControlManager;
@@ -299,20 +450,85 @@
 	};
 	AD585E3607F4CB640030C9C2 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {705, 1649}}";
-			sepNavSelRange = "{574, 63}";
-			sepNavVisRect = "{{0, 240}, {705, 428}}";
-			sepNavWindowFrame = "{{-830, 369}, {750, 502}}";
+			sepNavIntBoundsRect = "{{0, 0}, {705, 1799}}";
+			sepNavSelRange = "{3018, 0}";
+			sepNavVisRect = "{{0, 1305}, {705, 428}}";
+			sepNavWindowFrame = "{{-990, 481}, {750, 502}}";
 		};
 	};
-	AD585E3A07F4CC070030C9C2 = {
+	AD95205E08282C9A000ED065 = {
 		fRef = AD585E3607F4CB640030C9C2;
 		isa = PBXTextBookmark;
-		name = "cfdWebServices.h: 18";
+		name = "cfdWebServices.h: stringHolder";
 		rLen = 0;
-		rLoc = 51;
+		rLoc = 3019;
 		rType = 0;
-		vrLen = 348;
+		vrLen = 857;
+		vrLoc = 2425;
+	};
+	AD952067082834EC000ED065 = {
+		fRef = ADE6D0D9080AE87300D993A2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 417";
+		rLen = 0;
+		rLoc = 16293;
+		rType = 0;
+		vrLen = 1889;
+		vrLoc = 14573;
+	};
+	AD95207008283834000ED065 = {
+		fRef = ADE6D0D9080AE87300D993A2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.cxx: 418";
+		rLen = 0;
+		rLoc = 16354;
+		rType = 0;
+		vrLen = 1795;
+		vrLoc = 14658;
+	};
+	AD95207108283834000ED065 = {
+		fRef = AD585E3607F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.h: stringHolder";
+		rLen = 0;
+		rLoc = 3018;
+		rType = 0;
+		vrLen = 857;
+		vrLoc = 2425;
+	};
+	ADB34CCB0825793900658AB8 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 3119}}";
+			sepNavSelRange = "{5627, 0}";
+			sepNavVisRect = "{{0, 2339}, {1005, 768}}";
+		};
+	};
+	ADB34CCC0825793900658AB8 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 1799}}";
+			sepNavSelRange = "{1646, 0}";
+			sepNavVisRect = "{{0, 585}, {1005, 768}}";
+			sepNavWindowFrame = "{{15, 495}, {750, 502}}";
+		};
+	};
+	ADB34DE90825808E00658AB8 = {
+		fRef = AD585E3607F4CB640030C9C2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServices.h: 80";
+		rLen = 0;
+		rLoc = 2178;
+		rType = 0;
+		vrLen = 1541;
+		vrLoc = 156;
+	};
+	ADB3507B0825990D00658AB8 = {
+		fRef = ADE486410821B603005A57A1;
+		isa = PBXTextBookmark;
+		name = "run: 5";
+		rLen = 0;
+		rLoc = 162;
+		rType = 0;
+		vrLen = 253;
 		vrLoc = 0;
 	};
 	ADC162CA0803205900797D5F = {
@@ -333,449 +549,71 @@
 		refType = 0;
 		sourceTree = "<absolute>";
 	};
+	ADE486410821B603005A57A1 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 768}}";
+			sepNavSelRange = "{224, 0}";
+			sepNavVisRect = "{{0, 0}, {1005, 768}}";
+		};
+	};
+	ADE486570821BC34005A57A1 = {
+		uiCtxt = {
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 768}}";
+			sepNavSelRange = "{84, 0}";
+			sepNavVisRect = "{{0, 0}, {1005, 768}}";
+		};
+	};
+	ADE4865C0821BC44005A57A1 = {
+		fRef = ADE6D0D8080AE87300D993A2;
+		isa = PBXTextBookmark;
+		name = "cfdWebServicesMain.cxx: 89";
+		rLen = 0;
+		rLoc = 3629;
+		rType = 0;
+		vrLen = 2051;
+		vrLoc = 1971;
+	};
+	ADE4865D0821BC44005A57A1 = {
+		fRef = ADE486410821B603005A57A1;
+		isa = PBXTextBookmark;
+		name = "run: 7";
+		rLen = 0;
+		rLoc = 168;
+		rType = 0;
+		vrLen = 225;
+		vrLoc = 0;
+	};
+	ADE486620821BC4F005A57A1 = {
+		fRef = ADE486570821BC34005A57A1;
+		isa = PBXTextBookmark;
+		name = "runOverhead.sh: 1";
+		rLen = 0;
+		rLoc = 151;
+		rType = 0;
+		vrLen = 0;
+		vrLoc = 0;
+	};
 	ADE6D0C6080ADB1F00D993A2 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1005, 1109}}";
-			sepNavSelRange = "{1362, 0}";
-			sepNavVisRect = "{{0, 240}, {1005, 768}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 1319}}";
+			sepNavSelRange = "{405, 0}";
+			sepNavVisRect = "{{0, 0}, {1005, 768}}";
 		};
 	};
 	ADE6D0D8080AE87300D993A2 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1005, 1499}}";
-			sepNavSelRange = "{3727, 0}";
-			sepNavVisRect = "{{0, 0}, {1005, 768}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1005, 1589}}";
+			sepNavSelRange = "{2668, 0}";
+			sepNavVisRect = "{{0, 297}, {1005, 768}}";
 		};
 	};
 	ADE6D0D9080AE87300D993A2 = {
 		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1315, 5729}}";
-			sepNavSelRange = "{548, 0}";
-			sepNavVisRect = "{{0, 0}, {933, 689}}";
-			sepNavWindowFrame = "{{15, 234}, {978, 763}}";
+			sepNavIntBoundsRect = "{{0, 0}, {1315, 6434}}";
+			sepNavSelRange = "{16354, 0}";
+			sepNavVisRect = "{{0, 5666}, {1005, 768}}";
+			sepNavWindowFrame = "{{72, 109}, {978, 763}}";
 		};
-	};
-	ADE6D130080B0C6000D993A2 = {
-		fRef = ADE6D0C6080ADB1F00D993A2;
-		isa = PBXTextBookmark;
-		name = "Makefile: 40";
-		rLen = 0;
-		rLoc = 644;
-		rType = 0;
-		vrLen = 1358;
-		vrLoc = 206;
-	};
-	ADE6D138080B29DD00D993A2 = {
-		fRef = ADE6D0D8080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServicesMain.cxx: 95";
-		rLen = 0;
-		rLoc = 3744;
-		rType = 0;
-		vrLen = 1871;
-		vrLoc = 1899;
-	};
-	ADE6D143080B29FC00D993A2 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = cfdExecutive.h;
-		path = /Volumes/kennyk/users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/cfdExecutive.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {705, 2099}}";
-			sepNavSelRange = "{1543, 26}";
-			sepNavVisRect = "{{0, 217}, {705, 428}}";
-			sepNavWindowFrame = "{{-751, 516}, {750, 502}}";
-		};
-	};
-	ADE6D148080B29FC00D993A2 = {
-		fRef = ADE6D149080B29FC00D993A2;
-		isa = PBXTextBookmark;
-		rLen = 0;
-		rLoc = 2147483647;
-		rType = 0;
-	};
-	ADE6D149080B29FC00D993A2 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.cpp.cpp;
-		name = cfdVEXplorer.cxx;
-		path = /Volumes/kennyk/users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/cfdVEXplorer.cxx;
-		refType = 0;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {877, 1604}}";
-			sepNavSelRange = "{3017, 0}";
-			sepNavVisRect = "{{0, 910}, {877, 694}}";
-			sepNavWindowFrame = "{{-1008, 256}, {922, 768}}";
-		};
-	};
-	ADE6D14F080B29FC00D993A2 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.cpp.cpp;
-		name = cfdExecutive.cxx;
-		path = /Volumes/kennyk/users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/cfdExecutive.cxx;
-		refType = 0;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1217, 8219}}";
-			sepNavSelRange = "{1496, 340}";
-			sepNavVisRect = "{{0, 381}, {705, 428}}";
-			sepNavWindowFrame = "{{-1024, 427}, {750, 502}}";
-		};
-	};
-	ADE6D154080B2A4D00D993A2 = {
-		fRef = AD585E3607F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = "WebServices( CosNaming::NamingContext*, PortableServer::POA* );";
-		rLen = 63;
-		rLoc = 572;
-		rType = 0;
-		vrLen = 1463;
-		vrLoc = 109;
-	};
-	ADE6D197080B2EBA00D993A2 = {
-		fRef = ADE6D198080B2EBA00D993A2;
-		isa = PBXTextBookmark;
-		rLen = 0;
-		rLoc = 2147483647;
-		rType = 0;
-	};
-	ADE6D198080B2EBA00D993A2 = {
-		isa = PBXFileReference;
-		lastKnownFileType = sourcecode.c.h;
-		name = cfdVjObsWrapper.h;
-		path = /Volumes/kennyk/users/kennyk/Graphics_Programming/VE_Suite/VE_Xplorer/cfdVjObsWrapper.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-		uiCtxt = {
-			sepNavIntBoundsRect = "{{0, 0}, {1070, 1199}}";
-			sepNavSelRange = "{2186, 0}";
-			sepNavVisRect = "{{0, 767}, {801, 432}}";
-			sepNavWindowFrame = "{{-842, 514}, {846, 506}}";
-		};
-	};
-	ADE6D1A2080B2F1400D993A2 = {
-		fRef = AD585E3607F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		rLen = 0;
-		rLoc = 2147483645;
-		rType = 0;
-	};
-	ADE6D1DC080B31B100D993A2 = {
-		fRef = ADE6D0D8080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServicesMain.cxx: 80";
-		rLen = 0;
-		rLoc = 3294;
-		rType = 0;
-		vrLen = 1871;
-		vrLoc = 1899;
-	};
-	ADE6D1EC080B321000D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "PortableServer::POA* childPOA";
-		rLen = 29;
-		rLoc = 282;
-		rType = 0;
-		vrLen = 1576;
-		vrLoc = 413;
-	};
-	ADE6D1F7080B333C00D993A2 = {
-		fRef = ADE6D0D8080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServicesMain.cxx: 95";
-		rLen = 0;
-		rLoc = 3727;
-		rType = 0;
-		vrLen = 2045;
-		vrLoc = 0;
-	};
-	ADE6D22C080B343D00D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.cxx: 35";
-		rLen = 0;
-		rLoc = 1129;
-		rType = 0;
-		vrLen = 1391;
-		vrLoc = 0;
-	};
-	ADE6D22E080B343D00D993A2 = {
-		fRef = ADE6D143080B29FC00D993A2;
-		isa = PBXTextBookmark;
-		name = " CosNaming::NamingContext*, PortableServer::POA*";
-		rLen = 48;
-		rLoc = 2123;
-		rType = 0;
-		vrLen = 1053;
-		vrLoc = 2277;
-	};
-	ADE6D23D080B346E00D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = XMLPlatformUtils;
-		rLen = 16;
-		rLoc = 716;
-		rType = 0;
-		vrLen = 1221;
-		vrLoc = 0;
-	};
-	ADE6D246080B348200D993A2 = {
-		fRef = ADE6D14F080B29FC00D993A2;
-		isa = PBXTextBookmark;
-		name = XMLPlatformUtils;
-		rLen = 16;
-		rLoc = 2151;
-		rType = 0;
-		vrLen = 727;
-		vrLoc = 1838;
-	};
-	ADE6D25B080B351000D993A2 = {
-		fRef = AD585E3607F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.h: 6";
-		rLen = 0;
-		rLoc = 89;
-		rType = 0;
-		vrLen = 1311;
-		vrLoc = 0;
-	};
-	ADE6D29C080B38CF00D993A2 = {
-		fRef = ADE6D0C6080ADB1F00D993A2;
-		isa = PBXTextBookmark;
-		name = "Makefile: 54";
-		rLen = 0;
-		rLoc = 1189;
-		rType = 0;
-		vrLen = 1119;
-		vrLoc = 71;
-	};
-	ADE6D2A4080B390300D993A2 = {
-		fRef = AD585E3607F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.h: 20";
-		rLen = 0;
-		rLoc = 341;
-		rType = 0;
-		vrLen = 1311;
-		vrLoc = 0;
-	};
-	ADE6D2A6080B390300D993A2 = {
-		fRef = AD585E3607F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.h: 20";
-		rLen = 0;
-		rLoc = 341;
-		rType = 0;
-		vrLen = 1311;
-		vrLoc = 0;
-	};
-	ADE6D2B0080B39D300D993A2 = {
-		fRef = ADE6D0C6080ADB1F00D993A2;
-		isa = PBXTextBookmark;
-		name = "Makefile: 46";
-		rLen = 0;
-		rLoc = 756;
-		rType = 0;
-		vrLen = 1562;
-		vrLoc = 277;
-	};
-	ADE6D2BA080B3A1D00D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.cxx: 19";
-		rLen = 0;
-		rLoc = 320;
-		rType = 0;
-		vrLen = 1436;
-		vrLoc = 0;
-	};
-	ADE6D2F7080B427900D993A2 = {
-		fRef = ADE6D0D8080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServicesMain.cxx: 95";
-		rLen = 0;
-		rLoc = 3727;
-		rType = 0;
-		vrLen = 2045;
-		vrLoc = 0;
-	};
-	ADE6D2F8080B427900D993A2 = {
-		fRef = ADE6D0C6080ADB1F00D993A2;
-		isa = PBXTextBookmark;
-		name = "Makefile: 56";
-		rLen = 0;
-		rLoc = 1262;
-		rType = 0;
-		vrLen = 1500;
-		vrLoc = 277;
-	};
-	ADE6D2F9080B427900D993A2 = {
-		fRef = ADE6D0D8080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServicesMain.cxx: 95";
-		rLen = 0;
-		rLoc = 3727;
-		rType = 0;
-		vrLen = 2045;
-		vrLoc = 0;
-	};
-	ADE6D311080B43CD00D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.cxx: 20";
-		rLen = 0;
-		rLoc = 353;
-		rType = 0;
-		vrLen = 1438;
-		vrLoc = 0;
-	};
-	ADE6D327080B446400D993A2 = {
-		fRef = ADE6D0C6080ADB1F00D993A2;
-		isa = PBXTextBookmark;
-		name = "Makefile: 57";
-		rLen = 0;
-		rLoc = 1362;
-		rType = 0;
-		vrLen = 1567;
-		vrLoc = 277;
-	};
-	ADE6D328080B446400D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.cxx: 20";
-		rLen = 0;
-		rLoc = 353;
-		rType = 0;
-		vrLen = 1438;
-		vrLoc = 0;
-	};
-	ADE6D329080B446400D993A2 = {
-		fRef = ADE6D0C6080ADB1F00D993A2;
-		isa = PBXTextBookmark;
-		name = "Makefile: 57";
-		rLen = 0;
-		rLoc = 1362;
-		rType = 0;
-		vrLen = 1567;
-		vrLoc = 277;
-	};
-	ADE6D33A080B449000D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		rLen = 10;
-		rLoc = 4565;
-		rType = 0;
-	};
-	ADE6D35D080B460000D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.cxx: 19";
-		rLen = 0;
-		rLoc = 342;
-		rType = 0;
-		vrLen = 1400;
-		vrLoc = 0;
-	};
-	ADE6D35E080B460000D993A2 = {
-		fRef = AD585E3607F4CB640030C9C2;
-		isa = PBXTextBookmark;
-		name = "WebServices( CosNaming::NamingContext*, PortableServer::POA* );";
-		rLen = 63;
-		rLoc = 574;
-		rType = 0;
-		vrLen = 757;
-		vrLoc = 279;
-	};
-	ADE6D35F080B460000D993A2 = {
-		fRef = ADE6D360080B460000D993A2;
-		isa = PBXTextBookmark;
-		name = "#include \"cfdGlobalBase.h\"";
-		rLen = 26;
-		rLoc = 1543;
-		rType = 0;
-		vrLen = 1033;
-		vrLoc = 642;
-	};
-	ADE6D360080B460000D993A2 = {
-		isa = PBXFileReference;
-		name = cfdExecutive.h;
-		path = /Volumes/kennyk/users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/cfdExecutive.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	ADE6D361080B460000D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.cxx: 26";
-		rLen = 0;
-		rLoc = 548;
-		rType = 0;
-		vrLen = 1095;
-		vrLoc = 0;
-	};
-	ADE6D362080B460000D993A2 = {
-		fRef = ADE6D363080B460000D993A2;
-		isa = PBXTextBookmark;
-		name = "#include \"cfdExecutive.h\"\n#include \"VE_i.h\"\n#include \"cfdDCS.h\"\n#include \"cfdEnum.h\"\n#include \"cfdCommandArray.h\"\n#include \"cfdVEAvailModules.h\"\n#include \"cfdVEBaseClass.h\"\n#include \"cfdModelHandler.h\"\n#include \"cfdEnvironmentHandler.h\"\n#include \"cfdThread.h\"\n#include \"cfdPfSceneManagement.h\"\n#include \"package.h\"\n#include \"Network_Exec.h\"";
-		rLen = 340;
-		rLoc = 1496;
-		rType = 0;
-		vrLen = 790;
-		vrLoc = 1192;
-	};
-	ADE6D363080B460000D993A2 = {
-		isa = PBXFileReference;
-		name = cfdExecutive.cxx;
-		path = /Volumes/kennyk/users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/cfdExecutive.cxx;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	ADE6D364080B460000D993A2 = {
-		fRef = ADE6D365080B460000D993A2;
-		isa = PBXTextBookmark;
-		name = "(null): 74";
-		rLen = 0;
-		rLoc = 3017;
-		rType = 0;
-		vrLen = 1541;
-		vrLoc = 2452;
-	};
-	ADE6D365080B460000D993A2 = {
-		isa = PBXFileReference;
-		name = cfdVEXplorer.cxx;
-		path = /Volumes/kennyk/users/kennyk/Graphics_Programming/VE_Suite/VE_WebService/cfdVEXplorer.cxx;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	ADE6D366080B460000D993A2 = {
-		fRef = ADE6D367080B460000D993A2;
-		isa = PBXTextBookmark;
-		name = "(null): 59";
-		rLen = 0;
-		rLoc = 2186;
-		rType = 0;
-		vrLen = 1015;
-		vrLoc = 1844;
-	};
-	ADE6D367080B460000D993A2 = {
-		isa = PBXFileReference;
-		name = cfdVjObsWrapper.h;
-		path = /Volumes/kennyk/users/kennyk/Graphics_Programming/VE_Suite/VE_Xplorer/cfdVjObsWrapper.h;
-		refType = 0;
-		sourceTree = "<absolute>";
-	};
-	ADE6D368080B460000D993A2 = {
-		fRef = ADE6D0D9080AE87300D993A2;
-		isa = PBXTextBookmark;
-		name = "cfdWebServices.cxx: 53";
-		rLen = 0;
-		rLoc = 1417;
-		rType = 0;
-		vrLen = 1116;
-		vrLoc = 899;
 	};
 	D28A88AD04BDD90700651E21 = {
 		activeExec = 0;

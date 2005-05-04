@@ -13,16 +13,16 @@
 #include <orbsvcs/CosNamingC.h>
 
 #include "cfdExecutive.h"
-#include "VE_i.h"
+#include "veWebService_i.h"
 #include "cfdDCS.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 //#include "cfdVEAvailModules.h"
 //#include "cfdVEBaseClass.h"
-#include "cfdModelHandler.h"
-#include "cfdEnvironmentHandler.h"
-#include "cfdThread.h"
-#include "cfdPfSceneManagement.h"
+//#include "cfdModelHandler.h"
+//#include "cfdEnvironmentHandler.h"
+//#include "cfdThread.h"
+//#include "cfdPfSceneManagement.h"
 #include "package.h"
 #include "Network_Exec.h"
 
@@ -51,18 +51,17 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
 
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
-   this->masterNode = new cfdGroup();
-   this->masterNode->SetName( "cfdWebServices_Node" );
-   cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->masterNode );
+
 #ifndef AINTWORKIN
 
    av_modules = new cfdVEAvail_Modules();
-   network = new Network();
 #endif
+   network = new Network();
+
    //time_t* timeVal;
-   long id = (long)time( NULL );
+   long timeID = (long)time( NULL );
    std::ostringstream dirStringStream;
-   dirStringStream << "VEClient" << id;
+   dirStringStream << "VEClient" << timeID;
    std::string UINAME = dirStringStream.str();
    bool isOrbInit = false;
 
@@ -84,15 +83,15 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
       this->exec = Body::Executive::_narrow(exec_object.in());
 
       //Create the Servant
-     // uii = new Body_UI_ithis->(exec, UINAME);
+      uii = new veWebService_i( exec, UINAME);
+      uii->setWebServices(this);
       //Body_UI_i ui_i( UINAME);
-
       PortableServer::ObjectId_var id = 
          PortableServer::string_to_ObjectId( CORBA::string_dup( "cfdWebServices" ) ); 
-#ifndef AINTWORKIN
+//#ifndef AINTWORKIN
       //activate it with this child POA 
       childPOA->activate_object_with_id( id.in(), &(*uii) );
-#endif      
+//#endif      
       // obtain the object reference
       Body::UI_var unit =  
       Body::UI::_narrow( childPOA->id_to_reference( id.in() ) );
@@ -113,6 +112,7 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
    {      
       std::cerr << "|\tExecutive not present or VEClient registration error" << std::endl;
    }
+   printf("Well, we made it through the constructor\n");
 
 }
 
@@ -120,6 +120,7 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
 
 void cfdWebServices::UpdateModules( void )
 {
+      printf("we just got told to update\n");
    if ( !CORBA::is_nil( this->exec ) && uii->GetCalcFlag() )
    {
       // Get Network and parse it
@@ -215,22 +216,30 @@ void cfdWebServices::GetEverything( void )
 ///////////////////////////////////////////////////////////////////
 
 
-void cfdWebServices::GetNetwork ( void )
+char* cfdWebServices::GetNetwork ( void )
 {
+   vprDEBUG(vprDBG_ALL,2)  << "getting network..." << std::endl << vprDEBUG_FLUSH;
+
    // Get buffer value from Body_UI implementation
    std::string temp( uii->GetNetworkString() );
    const char* networkString = temp.c_str();
    vprDEBUG(vprDBG_ALL,2)  << "|\tNetwork String : " << networkString
                               << std::endl << vprDEBUG_FLUSH;
-
+   
 /////////////////////////////
 // This code taken from Executive_i.cpp
+
    Package p;
    p.SetSysId("temp.xml");
+   vprDEBUG(vprDBG_ALL,2)  << "loading package..." << std::endl << vprDEBUG_FLUSH;
+
    p.Load(networkString, strlen(networkString));
-  
+   vprDEBUG(vprDBG_ALL,2)  << "|\ clearing network : " << std::endl << vprDEBUG_FLUSH;
+
    network->clear();
+   vprDEBUG(vprDBG_ALL,2)  << "clearing IDMap..." << std::endl << vprDEBUG_FLUSH;
    IDMap.clear();
+   vprDEBUG(vprDBG_ALL,2)  << "getting layout chunk..." << std::endl << vprDEBUG_FLUSH;
 
    std::vector<Interface>::iterator thisInterface;
    // Find network layout chunk in network structure
@@ -238,12 +247,16 @@ void cfdWebServices::GetNetwork ( void )
    {
       if ( thisInterface->_id == -1 )  //find the interface with ID = -1
       {
+         vprDEBUG(vprDBG_ALL,2)  << "found layout chunk..." << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vprDBG_ALL,2)  << "Gonna parse now" << std::endl << vprDEBUG_FLUSH;
          break;
       }
    }
+
    //if we did find the layout interface and were able to parse it....
    if(thisInterface!=p.intfs.end() && network->parse(&(*thisInterface))) 
    {
+      vprDEBUG(vprDBG_ALL,2)  << "That parsing thing worked" << std::endl << vprDEBUG_FLUSH;
       //loop through the interfaces again
       for(thisInterface=p.intfs.begin(); thisInterface!=p.intfs.end(); thisInterface++)
       {
@@ -270,49 +283,65 @@ void cfdWebServices::GetNetwork ( void )
             //std::cout <<  network->module( network->moduleIdx(thisInterface->_id) )->get_id() << " : " << network->module( network->moduleIdx(thisInterface->_id) )->_name <<std::endl;
             this->interfaceMap[ thisInterfaceID ] = (*thisInterface);
          }
+         insertItemIntoSQL(*thisInterface);
       }
+      return "what's up?  it worked.  Does Ken actually need to send something back?";
    } 
    else     //this is probably bad
    {
       std::cerr << "Either no network present or error in GetNetwork in VE_Xplorer" << std::endl;
+      return "broken!";
    }
+   
 }
 
 void cfdWebServices::insertItemIntoSQL(Interface &interface)
 {
+   StringHolder object;
    std::vector<std::string> names;              //vector to hold all the names we get
    std::string SQLString;                       //the string we'll pass to the database
    std::vector<std::string>::iterator stringIter;   //an iterator to go through the strings
    
    names = interface.getInts();           //grab the names of the ints from this interface
+      std::string pipe("|");
+   std::string dPipe("||");
    SQLString = "";                        //clear the SQL string
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
    {
-      char numStr[16];
-      sprintf(numStr, "%l", interface.getInt(*stringIter));
-      SQLString += *stringIter + "|" + numStr + "||";  //tack the name and number into our string, seperated by pipes
-   
-   }
 
+      char numStr[16];
+      int thisInteger = interface.getInt(*stringIter);
+      sprintf(numStr, "%i", interface.getInt(*stringIter) );
+      printf("number:  %s\n", numStr);
+      std::string s(numStr);
+      SQLString += *stringIter + "|" + numStr + "||";  //tack the name and number into our string, seperated by pipes
+    
+     // printf("network string so far...:  %s\n", SQLString.c_str());
+
+   }
+   object.intString = SQLString;
    names = interface.getDoubles();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
+
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
    {
       char numStr[16];
-      sprintf(numStr, "%l", interface.getDouble(*stringIter));
+      sprintf(numStr, "%d", interface.getDouble(*stringIter));
+      std::string s(numStr);
       SQLString += *stringIter + "|" + numStr + "||";  //tack the name and number into our string, seperated by pipes
-   
+
    }
-   
+   object.doubleString = SQLString;      
    
    names = interface.getStrings();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
    {
       SQLString += *stringIter + "|" + interface.getString(*stringIter) + "||";  //tack the name and value into our string, seperated by pipes
-   
+      
    }
-
+   object.stringString = SQLString;   
+   
    names = interface.getInts1D();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
@@ -327,7 +356,8 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       SQLString += "||";
    
    }
-
+   object.intArrayString = SQLString;   
+   
    names = interface.getDoubles1D();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
@@ -346,6 +376,7 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       SQLString += "||";
    
    }
+   object.doubleArrayString = SQLString;   
    
    names = interface.getStrings1D();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
@@ -361,6 +392,7 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       SQLString += "||";
    
    }
+   object.stringArrayString = SQLString;   
    
 //the old way of doing it
 //   std::map<std::string, long> ints;      //grab a copy of the interface's int map
@@ -382,7 +414,7 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
 //      intString += doublesIter->first + "|" + doublesIter->second + "||";    
 //      
 //   }
-
+   SQLString = "insert into where ID = '" + interface._id + "'
 }
 
 cfdWebServices::~cfdWebServices()

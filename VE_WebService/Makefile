@@ -2,7 +2,7 @@
 CFDHOSTTYPE?=	$(DZR_HOSTTYPE)
 VE_SUITE_HOME?= ../
 
-APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/WebServices
+APP_NAME= WebServices
 
 IDL_HOME = $(VE_SUITE_HOME)/VEOpen
 
@@ -13,15 +13,17 @@ all:
 	$(MAKE) $(APP_NAME)
 
 SRCS=\
-   moduleC.cpp \
-   moduleS.cpp \
    cfdWebServicesMain.cxx \
    cfdWebServices.cxx \
    interface.cpp \
-   #cfdGroup.cxx \
-   #package.cpp \
-   Network.cpp \
-   
+   moduleC.cpp \
+   moduleS.cpp \
+   Network_Exec.cpp \
+   package.cpp \
+   string_ops.cpp \
+   veWebService_i.cpp \
+   VjObsS.cpp \
+   VjObsC.cpp
    
 
 # Specify the OS-dependent directory name for object files and depends
@@ -48,14 +50,20 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
-
+include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
+EXEC_TAG = _tao
+vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework \
+			$(VE_SUITE_HOME)/VE_Xplorer \
+			$(VE_SUITE_HOME)/VE_Conductor/VE_UI $(IDL_HOME)/skel \
+			$(VE_SUITE_HOME)/VE_SceneGraph \
+			$(VE_SUITE_HOME)/VE_CE			\
 
-vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework $(IDL_HOME)/skel $(VE_SUITE_HOME)/VE_SceneGraph
-
-EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel  
+EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel 
+EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/VE_UI 
 EXTRA_CXXFLAGS += -I$(VJ_BASE_DIR)/include -I$(VE_SUITE_HOME)/VE_CE -I$(VE_SUITE_HOME)/VE_Xplorer -I$(VE_SUITE_HOME)/VE_SceneGraph 
 EXTRA_CXXFLAGS += -I$(VJ_DEPS_DIR)/include 
 EXTRA_CXXFLAGS += -I$(WX_HOME)/include/
