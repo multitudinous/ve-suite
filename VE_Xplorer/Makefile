@@ -205,6 +205,7 @@ SRCS+= \
    cfdTextureMatrixCallback.cxx \
    cfdTextureManager.cxx \
    cfdUpdateTextureCallback.cpp \
+   cfdVolumeCenterCallback.cxx \
    cfdVolumeVisualization.cpp 
 endif
 endif
