@@ -74,8 +74,8 @@ class cfdExecutive : public cfdGlobalBase
       // _id_map : maps a module id to an interface object for a module's inputs.
       std::map<int, Interface>   _it_map;
   
-      // _pt_map : maps a module id to an interface object for a module'ss port data.
-      std::map<int, Interface>   _pt_map;
+      // _pt_map : maps a module id to an interface object for a module's port data.
+      //std::map<int, Interface>   _pt_map;
   
       // _ot_map : maps a module id to an interface object for a modules's outputs.
       //std::map<int, Interface>   _ot_map;

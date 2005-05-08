@@ -84,7 +84,7 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
 #endif
 
    //Dynamic Loading
-   ActiveLoadingThread();
+   //ActiveLoadingThread();
 }
 
 cfdModel::~cfdModel()

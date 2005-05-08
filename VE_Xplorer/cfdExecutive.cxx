@@ -401,6 +401,7 @@ void cfdExecutive::GetEverything( void )
                cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
                _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
                _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
+               //_plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
                _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
                vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
                                       << " ]-> " << iter->second 
