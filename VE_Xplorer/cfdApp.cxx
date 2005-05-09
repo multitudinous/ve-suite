@@ -539,7 +539,7 @@ void cfdApp::draw()
 
    // Set the up the viewport (since OSG clears it out)
    float vp_ox, vp_oy, vp_sx, vp_sy;   // The float vrj sizes of the view ports
-   unsigned int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
+   int w_ox, w_oy, w_width, w_height;  // Origin and size of the window
    gl_manager->currentUserData()->getViewport()->getOriginAndSize(vp_ox, vp_oy, vp_sx, vp_sy);
    gl_manager->currentUserData()->getGlWindow()->getOriginSize(w_ox, w_oy, w_width, w_height);
 
