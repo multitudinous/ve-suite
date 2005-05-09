@@ -198,5 +198,51 @@ module Body{
     long GetGlobalMod(out Types::ArrayLong ids) raises(Error::EUnknown);
 
   };
-		
+
+   interface VEExecutive
+   { // This is the Visualization Engine Executive
+
+      //This is to Register a UI to the Executive, make it aware that this UI is connected in
+      void RegisterUI(in string UIName, in Body::UI ui) raises(Error::EUnknown);
+
+      //This is to disconnect the UI to the Executive,
+      void UnRegisterUI(in string UIName) raises(Error::EUnknown);
+
+      //This is to disconnect the Unit to the Executive
+      void UnRegisterVE(in string UnitName) raises(Error::EUnknown);
+
+      //This is to Register a Unit to the Executive, flag=0 is normal module, flag=1 will be the global module
+      void RegisterVE(in string UnitName, in Body::VE unit, in long flag) raises(Error::EUnknown);
+      
+      //This is the set the network, called by the UI
+      void SetNetwork(in string network) raises(Error::EUnknown);
+    
+      //This is to get the network, called by the UI
+      string GetNetwork() raises(Error::EUnknown);
+
+      //This is to update the network, called by the Executive
+      void UpdateNetwork(in string network) raises(Error::EUnknown);
+   };
+
+   interface VEEngine
+   {	// this is the visualization Engine
+    
+      //This is for querying the status of the module
+      string GetStatusMessage() raises(Error::EUnknown);
+    
+      //This is to Set the Module up
+      void SetParams(in string param) raises(Error::EUnknown);
+    
+      //This is to Set the ID
+      void SetID(in long id) raises(Error::EUnknown);
+    
+      //This is to Get the ID
+      long GetID() raises(Error::EUnknown);
+    
+      //This is to Set the name
+      void SetName(in string name) raises(Error::EUnknown);
+    
+      //This is to Get the name
+      string GetName() raises(Error::EUnknown);
+   };
 };
