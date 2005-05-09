@@ -217,9 +217,8 @@ SRCS+= \
    cfd3DTextureCullCallback.cxx \
    cfdAdvectionSubGraph.cxx \
    cfdOSGAdvectionShaderManager.cxx \
-   cfdOSGGammaShaderManager.cxx \
+   cfdScalarShaderManager.cxx \
    cfdOSGPingPongTexture3d.cxx \
-   cfdOSGScalarShaderManager.cxx \
    cfdOSGShaderManager.cxx \
    cfdOSGTransferShaderManager.cxx \
    cfdPBufferManager.cxx \
