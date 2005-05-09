@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdModel.h"
 #include "cfdDataSet.h"
 #include "cfdTempAnimation.h"
 #include "cfdDCS.h"
@@ -38,6 +37,7 @@
 #include "cfdSwitch.h"
 #include "cfdFILE.h"
 #include "cfdGrid2Surface.h"
+
 
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -49,7 +49,7 @@
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>
-#include <vpr/vprTypes.h>
+//#include <vpr/vprTypes.h>
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkUnstructuredGridReader.h>
@@ -64,6 +64,8 @@
 
 #include <fstream>
 #include <sstream>
+
+#include "cfdModel.h"
 
 cfdModel::cfdModel( cfdDCS *worldDCS )
 {

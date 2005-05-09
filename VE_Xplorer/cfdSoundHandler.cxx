@@ -60,7 +60,7 @@ cfdSoundHandler::cfdSoundHandler( char* param )
                              << std::endl << vprDEBUG_FLUSH;
 
       // start the sonix system with desired audio library...
-      snx::sonix::instance()->changeAPI( "OpenAL" );
+      //snx::sonix::instance()->changeAPI( "OpenAL" );
    }
 }
 
