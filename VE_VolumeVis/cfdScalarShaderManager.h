@@ -1,15 +1,15 @@
-#ifndef CFD_OSG_GAMMA_SHADER_MANAGER_H
-#define CFD_OSG_GAMMA_SHADER_MANAGER_H
+#ifndef CFD_SCALAR_SHADER_MANAGER_H
+#define CFD_SCALAR_SHADER_MANAGER_H
 #ifdef VE_PATENTED
 #ifdef _OSG
 #ifdef CFD_USE_SHADERS
 #include "cfdOSGTransferShaderManager.h"
 class cfdTextureManager;
 
-class cfdOSGGammaShaderManager:public cfdOSGTransferShaderManager{
+class cfdScalarShaderManager:public cfdOSGTransferShaderManager{
 public:
-   cfdOSGGammaShaderManager(){_useTM = true;}
-   virtual ~cfdOSGGammaShaderManager(){}
+   cfdScalarShaderManager(){_useTM = true;}
+   virtual ~cfdScalarShaderManager(){}
    virtual void Init();
    virtual void UpdateTextureManager(cfdTextureManager* tm);
    void SetScalarRange(float* range);
@@ -25,4 +25,4 @@ protected:
 #endif// _CFD_USE_SHADERS
 #endif//_OSG
 #endif
-#endif// CFD_OSG_GAMMA_SHADER_MANAGER_H
+#endif// CFD_SCALAR_SHADER_MANAGER_H

@@ -30,7 +30,7 @@
 #include "cfdVectorVolumeVisHandler.h"
 #include "cfdScalarVolumeVisHandler.h"
 #include "cfdOSGAdvectionShaderManager.h"
-#include "cfdOSGGammaShaderManager.h"
+#include "cfdScalarShaderManager.h"
 #include "cfdOSGTransferShaderManager.h"
 #endif
 //////////////////////////////////////////////////////////
@@ -324,7 +324,7 @@ void cfdTextureBasedVizHandler::_updateShaderState()
       }
    }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == CHANGE_SCALAR_RANGE){
       if(_svvh){
-        cfdOSGGammaShaderManager* gShader = _svvh->GetGammaShaderManager();
+        cfdScalarShaderManager* gShader = _svvh->GetScalarShaderManager();
            if(gShader)
            {
               float range[2];
@@ -402,7 +402,7 @@ void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
    _activeTM = _activeTDSet->GetActiveTextureManager();
    if(_nav)
    {
-      _activeVolumeVizNode->TranslateCenterBy((float*)_nav->GetWorldTranslation());
+      //_activeVolumeVizNode->TranslateCenterBy((float*)_nav->GetWorldTranslation());
    }
    //biv -- testing
    //if(_activeTM->GetDataType(0) != cfdTextureManager::VECTOR)

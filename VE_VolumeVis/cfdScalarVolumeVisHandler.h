@@ -4,8 +4,7 @@
 #ifdef _OSG
 namespace osg { class Group; }
 #ifdef CFD_USE_SHADERS
-class cfdOSGScalarShaderManager;
-class cfdOSGGammaShaderManager;
+class cfdScalarShaderManager;
 
 class cfdTextureManager;
 
@@ -19,18 +18,14 @@ public:
    virtual ~cfdScalarVolumeVisHandler();
    virtual void Init();
    virtual void SetTextureManager(cfdTextureManager* tm);
-   cfdOSGGammaShaderManager* GetGammaShaderManager(){return _transferSM;}
+   cfdScalarShaderManager* GetScalarShaderManager(){return _transferSM;}
    cfdScalarVolumeVisHandler& operator=(const cfdScalarVolumeVisHandler& vvnh);
 
 protected:
    virtual void _setUpDecorator();
    virtual void _applyTextureMatrix();
    void _createTransferShader();
-
-   cfdOSGScalarShaderManager* _sSM;
-   cfdOSGGammaShaderManager* _transferSM;
-
-   
+   cfdScalarShaderManager* _transferSM;
 };
 #endif//CFD_USE_SHADERS
 #endif //_OSG

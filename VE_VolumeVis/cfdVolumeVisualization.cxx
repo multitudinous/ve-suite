@@ -70,7 +70,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
 cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs)
 {
    _utCbk = rhs._utCbk;
-   _vcCbk = rhs._vcCbk;
+   //_vcCbk = rhs._vcCbk;
    _volumeVizNode = rhs._volumeVizNode;
    _texGenParams = rhs._texGenParams;
    _bbox = rhs._bbox;
@@ -597,10 +597,10 @@ void cfdVolumeVisualization::_createTexGenNode()
 ////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::TranslateCenterBy(float* translate)
 {
-   if(_vcCbk.valid())
+   /*if(_vcCbk.valid())
    {
       _vcCbk->Translate(translate);
-   }
+   }*/
 }
 ///////////////////////////////////////////
 void cfdVolumeVisualization::_buildSlices()
@@ -644,11 +644,11 @@ void cfdVolumeVisualization::_buildSlices()
 
     //position the slices in the scene
     _billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
-    if(!_vcCbk.valid())
+    /*if(!_vcCbk.valid())
     {
        _vcCbk = new cfdVolumeCenterCallback(_center);
-    }
-    _billboard->setUpdateCallback(_vcCbk.get());
+    }*/
+    //_billboard->setUpdateCallback(_vcCbk.get());
 
 }
 ///////////////////////////////////////////////////////////
@@ -746,7 +746,7 @@ cfdVolumeVisualization::operator=(const cfdVolumeVisualization& rhs)
 {
    if(&rhs != this){
       _utCbk = rhs._utCbk;
-      _vcCbk = rhs._vcCbk;
+      //_vcCbk = rhs._vcCbk;
       _volumeVizNode = rhs._volumeVizNode;
       _texGenParams = rhs._texGenParams;
 

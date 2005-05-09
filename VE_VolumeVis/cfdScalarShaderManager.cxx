@@ -12,9 +12,9 @@
 #include "cfdTextureManager.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfdOSGTransferShaderManager.h"
-#include "cfdOSGGammaShaderManager.h"
+#include "cfdScalarShaderManager.h"
 ////////////////////////////////////////
-void cfdOSGGammaShaderManager::Init()
+void cfdScalarShaderManager::Init()
 {
    _initTransferFunctions();
    _initPropertyTexture();
@@ -75,7 +75,7 @@ void cfdOSGGammaShaderManager::Init()
    _reinit = false;
 }
 //////////////////////////////////////////////////////////
-void cfdOSGGammaShaderManager::_initTransferFunctions()
+void cfdScalarShaderManager::_initTransferFunctions()
 {
    if(_transferFunctions.empty()){
       //create transfer functions
@@ -83,7 +83,7 @@ void cfdOSGGammaShaderManager::_initTransferFunctions()
    }
 }
 ////////////////////////////////////////////////////////
-void cfdOSGGammaShaderManager::_updateTransferFunction()
+void cfdScalarShaderManager::_updateTransferFunction()
 {
    GLubyte* lutex =0;
    GLfloat R,G,B,A;
@@ -151,7 +151,7 @@ void cfdOSGGammaShaderManager::_updateTransferFunction()
    
 }
 ///////////////////////////////////////////////////////////
-void cfdOSGGammaShaderManager::SetScalarRange(float* range)
+void cfdScalarShaderManager::SetScalarRange(float* range)
 {
    //a percentage value is passed in 
    if(!_tm)
@@ -166,7 +166,7 @@ void cfdOSGGammaShaderManager::SetScalarRange(float* range)
    _updateTransferFunction();
 }
 ///////////////////////////////////////////////////////////////
-void cfdOSGGammaShaderManager::UpdateScalarMin(float minScalar)
+void cfdScalarShaderManager::UpdateScalarMin(float minScalar)
 {
    if(!_tm)
    {
@@ -177,7 +177,7 @@ void cfdOSGGammaShaderManager::UpdateScalarMin(float minScalar)
    _updateTransferFunction();
 }
 ///////////////////////////////////////////////////////////////
-void cfdOSGGammaShaderManager::UpdateScalarMax(float maxScalar)
+void cfdScalarShaderManager::UpdateScalarMax(float maxScalar)
 {
    if(!_tm)
    {
@@ -188,7 +188,7 @@ void cfdOSGGammaShaderManager::UpdateScalarMax(float maxScalar)
    _updateTransferFunction();
 }
 //////////////////////////////////////////////////////////////////////////
-void cfdOSGGammaShaderManager::UpdateTextureManager(cfdTextureManager* tm)
+void cfdScalarShaderManager::UpdateTextureManager(cfdTextureManager* tm)
 {
    if(_tm != tm){
       _tm = tm;
@@ -201,7 +201,7 @@ void cfdOSGGammaShaderManager::UpdateTextureManager(cfdTextureManager* tm)
    _reinit = false;
 }
 ///////////////////////////////////////////////////////
-void cfdOSGGammaShaderManager::_initPropertyTexture()
+void cfdScalarShaderManager::_initPropertyTexture()
 {
    if(!_utCbk){
       _utCbk =  new cfdUpdateTextureCallback();
