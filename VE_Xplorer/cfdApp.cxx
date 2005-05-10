@@ -98,9 +98,13 @@
 #include <corona.h>
 #endif   //_WEB_INTERFACE
 
-cfdApp::cfdApp( void )
+cfdApp::cfdApp( void ) 
+#ifdef _OSG
+: vrj::OsgApp( vrj::Kernel::instance() )
+#endif
 {
 #ifdef _OSG
+   _frameStamp = new osg::FrameStamp;
 #ifdef VE_PATENTED
    _tbvHandler = 0;
 #ifdef CFD_USE_SHADERS
@@ -113,7 +117,7 @@ cfdApp::cfdApp( void )
 
 void cfdApp::exit()
 {
-   delete filein_name;
+   delete [] filein_name;
    cfdPfSceneManagement::instance()->CleanUp();
    cfdModelHandler::instance()->CleanUp();
    cfdEnvironmentHandler::instance()->CleanUp();
@@ -233,7 +237,8 @@ cfdPBufferManager* cfdApp::GetPBuffer()
 #endif
 void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 {
-   newSceneViewer->setDefaults();
+   vrj::OsgApp::configSceneView(newSceneViewer);
+
    //newSceneViewer->setBackgroundColor( osg::Vec4(0.0f, 0.0f, 0.0f, 0.0f) );
    newSceneViewer->getLight()->setAmbient(osg::Vec4(0.4f,0.4f,0.4f,1.0f));
    newSceneViewer->getLight()->setDiffuse(osg::Vec4(1.0f,1.0f,1.0f,1.0f));
@@ -244,13 +249,11 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    osg::Vec4 lPos = osg::Vec4(100,-100,100,0); 
    newSceneViewer->getLight()->setPosition(lPos);
 
-   _sceneViewer = newSceneViewer;
-   _frameStamp = new osg::FrameStamp;
-   _start_tick = _timer.tick();
    _frameStamp->setReferenceTime(0.0);
    _frameStamp->setFrameNumber(0);
-   _sceneViewer->setFrameStamp(_frameStamp.get());
+   newSceneViewer->setFrameStamp(_frameStamp.get());
 }
+
 void cfdApp::bufferPreDraw()
 {
    glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -258,8 +261,23 @@ void cfdApp::bufferPreDraw()
 }
 #endif //_OSG
 
-inline void cfdApp::init( )
+void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 {
+   _vjobsWrapper = input;
+}
+
+void cfdApp::initScene( void )
+{
+   vprDEBUG(vprDBG_ALL,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
+
+# ifdef _OPENMP
+   std::cout << "\n\n\n";
+   std::cout << "|===================================================================|" << std::endl;
+   std::cout << "|          Compiled by an OpenMP-compliant implementation           |" << std::endl;
+   std::cout << "|===================================================================|" << std::endl;
+   std::cout << "|                                                                   |" << std::endl;
+# endif // _OPENMP
+
    //_corbaManager = new CorbaManager();
    vprDEBUG(vprDBG_ALL,0) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
    filein_name = new char [ 256 ];
@@ -280,9 +298,6 @@ inline void cfdApp::init( )
    std::cout << "| ***************************************************************** |" << std::endl;
    std::cout << "|  3. Initializing........................... Parameter File Reader |" << std::endl;
    _vjobsWrapper->InitCluster();
-#ifdef _OSG
-   initScene();
-#endif
 
 #ifdef _WEB_INTERFACE
    timeOfLastCapture = 0;
@@ -291,24 +306,6 @@ inline void cfdApp::init( )
    writingWebImageNow = false;
    captureNextFrameForWeb = false
 #endif   //_WEB_INTERFACE
-}
-
-void cfdApp::SetWrapper( cfdVjObsWrapper* input )
-{
-   _vjobsWrapper = input;
-}
-
-void cfdApp::initScene( )
-{
-   vprDEBUG(vprDBG_ALL,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
-
-# ifdef _OPENMP
-   std::cout << "\n\n\n";
-   std::cout << "|===================================================================|" << std::endl;
-   std::cout << "|          Compiled by an OpenMP-compliant implementation           |" << std::endl;
-   std::cout << "|===================================================================|" << std::endl;
-   std::cout << "|                                                                   |" << std::endl;
-# endif // _OPENMP
 
    // define the rootNode, worldDCS, and lighting
    cfdPfSceneManagement::instance()->Initialize( this->filein_name );
@@ -331,6 +328,7 @@ void cfdApp::initScene( )
 
    //create the volume viz handler
 #ifdef _OSG
+   _start_tick = _timer.tick();
 #ifdef VE_PATENTED
    _tbvHandler = cfdTextureBasedVizHandler::instance();
    _tbvHandler->SetParameterFile(filein_name);
@@ -446,17 +444,6 @@ void cfdApp::postFrame()
 #endif  //_WEB_INTERFACE
 #endif  //_OSG
 
-   // if transient data is being displayed, then update gui progress bar
-  /* if (  this->_modelHandler->GetActiveSequence() )
-   {
-      int currentFrame = this->_modelHandler->GetActiveSequence()->GetSequence()->GetFrameOfSequence();
-      //cout << " Current Frame :  " << currentFrame << endl;
-      if (this->lastFrame != currentFrame )
-      {
-         this->setTimesteps( currentFrame );
-         this->lastFrame = currentFrame;
-      }
-   }*/
 
 #ifdef _OSG
    this->_vjobsWrapper->GetSetAppTime( time_since_start );
@@ -475,11 +462,12 @@ void cfdApp::captureWebImage()
    int dummyOx=0;
    int dummyOy=0;
 
-   printf("Reading viewport size...\n");
+   std::cout << "Reading viewport size...!" << std::endl;
    //get the viewport height and width
    vrj::GlDrawManager::instance()->currentUserData()->getGlWindow()->
       getOriginSize(dummyOx, dummyOy, webImageWidth, webImageHeight);
-   printf("Copying frame buffer %ix%i.......\n", frameWidth, frameHeight);
+   std::cout << "Copying frame buffer "<< frameWidth 
+               << " " << frameHeight << "......." << std::endl;
    captureNextFrameForWeb=false;      //we're not going to capture next time around
    webImagePixelArray=new char[frameHeight*frameWidth*3];      //create an array to store the data
    glReadPixels(0, 0, webImageWidth, webImageHeight, GL_RGB, GL_UNSIGNED_BYTE, webImagePixelArray);   //copy from the framebuffer
@@ -499,11 +487,12 @@ void cfdApp::writeImageFileForWeb(void*)
          Image* frameCap=CreateImage(frameWidth, frameHeight, PF_R8G8B8, (void*)webImagePixelArray);
          frameCap=FlipImage(frameCap, CA_X);
          if(!SaveImage("../../public_html/PowerPlant/VE/dump.png", FF_PNG, frameCap))
-            printf("error saving image\n");
-         else printf("Image saved successfully.\n");
+            std::cout << "error saving image!" << std::endl;
+         else 
+            std::cout << "Image saved successfully.!" << std::endl;
          delete frameCap;
          delete [] webImagePixelArray;                              //delete our array
-         printf("All done!\n");
+         std::cout << "All done!" << std::endl;
          writingWebImageNow = false;
       }
    }
@@ -586,8 +575,8 @@ void cfdApp::draw()
 
    // need to mess with this matrix to change how the coordinate system is 
    // positioned
-   sv->setViewMatrixAsLookAt(  osg::Vec3( 0, -1, 0 ), osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 1 ) );
-   //sv->setViewMatrix(*osg_proj_xform_mat);
+   //sv->setViewMatrixAsLookAt(  osg::Vec3( 0, -1, 0 ), osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 1 ) );
+   sv->setViewMatrix(*osg_proj_xform_mat);
 #ifdef _WEB_INTERFACE
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
    if(userData->getViewport()->isSimulator())   //if this is a sim window context....

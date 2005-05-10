@@ -67,14 +67,12 @@ class cfdApp: public vrj::OsgApp
 #endif
 {
    public:
-      //cfdApp( vrj::Kernel* kern);
-      cfdApp( void );//vrj::Kernel* kern );
+      cfdApp( void );
       ~cfdApp( void ) { ; }
      
       // Initialize the scene graph
       virtual void initScene( void );
 
-      virtual void init( void );
       // Juggler calls before exiting
       virtual void exit( void );
 
@@ -95,6 +93,8 @@ class cfdApp: public vrj::OsgApp
 #elif _OSG
       osg::Group* getScene( void );
       void bufferPreDraw( void );
+      void draw();
+      virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
 #ifdef VE_PATENTED
 #ifdef CFD_USE_SHADERS
       void contextInit( void );
@@ -103,7 +103,6 @@ class cfdApp: public vrj::OsgApp
       void contextPostDraw();
 #endif
 #endif
-      virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
 #elif _OPENSG
 #endif
      
@@ -115,17 +114,17 @@ class cfdApp: public vrj::OsgApp
 
 
       // Function called after pfSync and before pfDraw
-      virtual void preFrame( );
+      virtual void preFrame( void );
 
       // Function called after pfSync and before pfDraw
       //Function called after preFrame() and application-specific data syncronization (in a cluster configuration) but before the start of a new frame.
-      virtual void latePreFrame( );
+      virtual void latePreFrame( void );
 
       // Function called after pfDraw
-      virtual void intraFrame( );
+      virtual void intraFrame( void );
 
       // Function called after intraFrame
-      virtual void postFrame();
+      virtual void postFrame( void );
 
       
 
@@ -140,9 +139,6 @@ class cfdApp: public vrj::OsgApp
       //void SetCORBAVariables( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, PortableServer::POA_ptr );
 
 #ifdef _OSG
-//#ifdef _WEB_INTERFACE
-		void draw();
-//#endif	//_WEB_INTERFACE
 #ifdef VE_PATENTED
       cfdTextureBasedVizHandler* _tbvHandler;
 #ifdef CFD_USE_SHADERS
@@ -150,7 +146,6 @@ class cfdApp: public vrj::OsgApp
       cfdPBufferManager* _pbuffer;
 #endif
 #endif
-      osg::ref_ptr<osgUtil::SceneView> _sceneViewer;
       osg::ref_ptr<osg::FrameStamp> _frameStamp;
       osg::Timer _timer;
       osg::Timer_t _start_tick;
@@ -166,21 +161,21 @@ class cfdApp: public vrj::OsgApp
       int   lastFrame;
    private:
       char * filein_name;
-	  double time_since_start;
-	  //web interface stuff for writing the image file
-	  //to be viewed over the web
+	   double time_since_start;
+	   //web interface stuff for writing the image file
+	   //to be viewed over the web
 #ifdef _WEB_INTERFACE
-	bool runWebImageSaveThread;
-	bool readyToWriteWebImage;
-	bool writingWebImageNow;
-	bool captureNextFrameForWeb;
-	int webImageWidth;
-	int webImageHeight;
-	vpr::Thread* writeWebImageFileThread;			//thread in which we write to the file
-	char* webImagePixelArray;
-	void writeWebImageFile(void*);
-	void captureWebImage();
-	double timeOfLastCapture;
+	   bool runWebImageSaveThread;
+	   bool readyToWriteWebImage;
+	   bool writingWebImageNow;
+	   bool captureNextFrameForWeb;
+	   int webImageWidth;
+	   int webImageHeight;
+	   vpr::Thread* writeWebImageFileThread;			//thread in which we write to the file
+	   char* webImagePixelArray;
+	   void writeWebImageFile(void*);
+	   void captureWebImage();
+	   double timeOfLastCapture;
 #endif 
 };
 
