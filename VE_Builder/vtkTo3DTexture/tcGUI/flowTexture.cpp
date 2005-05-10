@@ -185,6 +185,7 @@ void FlowTexture::writeFlowTexture(char* file,
    int pixelNum = 0;
    std::ofstream fout(file,std::ios::out);
    if(!fout.is_open()){
+      std::cout<<"Couldn't write to directory: "<<file<<std::endl;
       return;
    }
    if(_pointData.size()){

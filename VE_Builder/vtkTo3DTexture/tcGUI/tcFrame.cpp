@@ -262,9 +262,10 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
    if(!_translator){
       _translator = new VTKDataToTexture();
       ////biv--FIXME:need to fix this to be selectable from the GUI
-      _translator->setRectilinearGrid();
+      //_translator->setRectilinearGrid();
+      //_translator->setUnstructuredGrid();
+      _translator->setStructuredGrid();
    }
-   //vtkUnstructuredGridReader* usgrid = vtkUnstructuredGridReader::New();
    char oname[256];
    char fileName[256];
    _fileProgress->SetRange(_numFiles);
@@ -277,12 +278,13 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       strcpy(iname,_inputDir);
       //strcpy(fileName,"/picker.vtk");
       //sprintf(fileName,"/picker.vtk",i);
-      if ( i < 10 )
+      /*if ( i < 10 )
       sprintf(fileName,"/zhto_00%d.vtk",i);
       else
       sprintf(fileName,"/zhto_0%d.vtk",i);
-      
-      //sprintf(fileName,"/flowdata_%d.vtk",i);
+     */ 
+      sprintf(fileName,"/gasifier.vtk");
+      //sprintf(fileName,"/filteredFlowdata6.vtk");
       strcat(iname,fileName);
       _inputFiles.push_back(iname);
    }

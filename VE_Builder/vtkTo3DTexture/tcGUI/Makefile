@@ -1,5 +1,5 @@
 # Create the OS-dependent directory name
-APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/advectionTexturePreprocessor
+APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/vtkTo3DTexture
 
 all:
 	$(MAKE) NO_DEPEND=0 cxx

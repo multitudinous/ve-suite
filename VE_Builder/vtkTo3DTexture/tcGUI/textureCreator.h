@@ -3,6 +3,7 @@
 
 #include <vtkDataSet.h>
 #include <vtkUnstructuredGridReader.h>
+#include <vtkStructuredGridReader.h>
 #include <vtkRectilinearGridReader.h>
 #include <vtkCellLocator.h>
 #include "flowTexture.h"
@@ -66,6 +67,8 @@ public:
    void writeScalarTexture(int index);
 
    void setRectilinearGrid(){_isRGrid = true;}
+   void setStructuredGrid(){_isSGrid = true;}
+   void setUnstructuredGrid(){_isUGrid = true;}
 
    //reset the translators internal data
    void reset();
@@ -80,6 +83,8 @@ public:
    VTKDataToTexture& operator=(const VTKDataToTexture& rhs);
 protected:
    bool _isRGrid;
+   bool _isUGrid;
+   bool _isSGrid;
    std::vector<FlowTexture> _velocity;
    std::vector<FlowTexture> _curScalar;
    
@@ -129,6 +134,7 @@ protected:
    vtkCellLocator* _cLocator;
    vtkCellDataToPointData* _dataConvertCellToPoint;
    vtkUnstructuredGridReader* _usgrid;
+   vtkStructuredGridReader* _sgrid;
    vtkRectilinearGridReader* _rgrid;
 };
 #endif// _BIV_VTK_TO_TEXTURE_H_

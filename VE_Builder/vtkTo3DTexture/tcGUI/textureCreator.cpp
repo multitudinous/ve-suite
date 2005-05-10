@@ -5,9 +5,11 @@
 #include <vtkCellData.h>
 #include <vtkDataArray.h>
 #include <vtkDoubleArray.h>
+#include <vtkStructuredGridReader.h>
 #include <vtkUnstructuredGridReader.h>
 #include <vtkRectilinearGrid.h>
 #include <vtkUnstructuredGrid.h>
+#include <vtkStructuredGrid.h>
 #include <vtkCellDataToPointData.h>
 #include <iostream>
 
@@ -36,17 +38,24 @@ VTKDataToTexture::VTKDataToTexture()
  
    _dataConvertCellToPoint = 0;
    _usgrid = 0;
+   _sgrid = 0;
    _rgrid = 0;
 
   
    _isRGrid = false;
+   _isSGrid = false;
+   _isUGrid = false;
 }
 /////////////////////////////////////////////////////////////
 VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
 {
    _curPt = v._curPt;
    _isRGrid = v._isRGrid;
+   _isSGrid = v._isSGrid;
+   _isUGrid = v._isUGrid;
    _rgrid = v._rgrid;
+   _sgrid = v._sgrid;
+   _usgrid = v._usgrid;
    _resolution[0] = v._resolution[0];
    _resolution[1] = v._resolution[1];
    _resolution[2] = v._resolution[2];
@@ -122,6 +131,10 @@ VTKDataToTexture::~VTKDataToTexture()
    if(_usgrid){
       _usgrid->Delete();
    }
+   if(_rgrid)
+      _rgrid->Delete();
+   if(_sgrid)
+      _sgrid->Delete();
    if(_validPt.size()){
       _validPt.clear();
    }
@@ -199,11 +212,17 @@ void VTKDataToTexture::setOutputDirectory(char* outDir)
 ////////////////////////////////////////////////////////////
 void VTKDataToTexture::createDataSetFromFile(char* filename)
 {
-   if(!_isRGrid){
+   if(_isRGrid){
+      if(!_rgrid){
+         _rgrid = vtkRectilinearGridReader::New();
+      }
+      _rgrid->SetFileName(filename);
+      _rgrid->Update();
+      setDataset(_rgrid->GetOutput());
+   }else if(_isUGrid){
       if(!_usgrid){
          _usgrid = vtkUnstructuredGridReader::New();
       }
-      //update the grid w/ the new file name
       _usgrid->SetFileName(filename);
       _usgrid->Update();
       vtkDataSet* tmpDSet = _usgrid->GetOutput();
@@ -222,17 +241,17 @@ void VTKDataToTexture::createDataSetFromFile(char* filename)
          _dataConvertCellToPoint->PassCellDataOff();
          _dataConvertCellToPoint->Update();
          setDataset(_dataConvertCellToPoint->GetUnstructuredGridOutput());
+      //update the grid w/ the new file name
       }else{
          setDataset(tmpDSet);
       }
-     
-   }else{
-      if(!_rgrid){
-         _rgrid = vtkRectilinearGridReader::New();
+   }else if(_isSGrid){
+      if(!_sgrid){
+         _sgrid = vtkStructuredGridReader::New();
       }
-      _rgrid->SetFileName(filename);
-      _rgrid->Update();
-      setDataset(_rgrid->GetOutput());
+      _sgrid->SetFileName(filename);
+      _sgrid->Update();
+      setDataset(_sgrid->GetOutput());
    }
 }
 /////////////////////////////////////////
