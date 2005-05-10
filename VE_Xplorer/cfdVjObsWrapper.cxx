@@ -87,7 +87,7 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    this->child_poa->destroy(1,1);
    //this->poa->destroy (1, 1);
 #endif // _TAO
-   //this->_orbPtr->shutdown(0);
+   this->_orbPtr->shutdown(0);
    this->_orbPtr->destroy();
    vprDEBUG(vprDBG_ALL,1) 
       << " End VjObsWraper Destructor  " 

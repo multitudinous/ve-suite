@@ -119,6 +119,7 @@ cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
    this->useLastSource = false;
    this->texturesActive = false;
    this->transientActors = true;
+   this->vjTh[0] = 0;
    _param = 0;
 }
 
@@ -133,7 +134,8 @@ void cfdSteadyStateVizHandler::CleanUp( void )
 {
    this->runIntraParallelThread = false;
    vpr::System::msleep( 1000 );  // half-second delay
-   delete this->vjTh[0];
+   if ( this->vjTh[0] )
+      delete this->vjTh[0];
 
    if ( this->isosurface ) 
    {

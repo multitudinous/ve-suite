@@ -43,16 +43,16 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 {
    this->argc = argc;
    this->argv = argv;
-   cfdThread* _thread = new cfdThread();
+   _thread = new cfdThread();
    _vjObsWrapper = input;
    _thread->new_thread=new vpr::Thread(new vpr::ThreadMemberFunctor<cfdAppWrapper>(this, &cfdAppWrapper::init ) );
 }
 
 cfdAppWrapper::~cfdAppWrapper( void )
 {
-   vpr::System::msleep( 10000 );  // half-second delay
-   if ( _thread->new_thread )
-      delete _thread->new_thread;
+   vpr::System::msleep( 100 );  // half-second delay
+   if ( _thread )
+      delete _thread;
    delete this->_cfdApp;
    this->_cfdApp = NULL;
 }

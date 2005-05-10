@@ -103,8 +103,12 @@ cfdApp::cfdApp( void )
 : vrj::OsgApp( vrj::Kernel::instance() )
 #endif
 {
+   filein_name = 0;
+   this->executive = 0;
 #ifdef _OSG
    _frameStamp = new osg::FrameStamp;
+   _frameStamp->setReferenceTime(0.0);
+   _frameStamp->setFrameNumber(0);
 #ifdef VE_PATENTED
    _tbvHandler = 0;
 #ifdef CFD_USE_SHADERS
@@ -249,8 +253,6 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    osg::Vec4 lPos = osg::Vec4(100,-100,100,0); 
    newSceneViewer->getLight()->setPosition(lPos);
 
-   _frameStamp->setReferenceTime(0.0);
-   _frameStamp->setFrameNumber(0);
    newSceneViewer->setFrameStamp(_frameStamp.get());
 }
 
@@ -552,7 +554,7 @@ void cfdApp::draw()
    // Copy the matrix
    vrj::Projection* project = userData->getProjection();
    const float* vj_proj_view_mat = project->getViewMatrix().mData;
-   osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
+   osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
 
 /*
    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
@@ -575,8 +577,8 @@ void cfdApp::draw()
 
    // need to mess with this matrix to change how the coordinate system is 
    // positioned
-   //sv->setViewMatrixAsLookAt(  osg::Vec3( 0, -1, 0 ), osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 1 ) );
-   sv->setViewMatrix(*osg_proj_xform_mat);
+   sv->setViewMatrixAsLookAt(  osg::Vec3( 0, -1, 0 ), osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 1 ) );
+   //sv->setViewMatrix(*(osg_proj_xform_mat.get()));
 #ifdef _WEB_INTERFACE
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
    if(userData->getViewport()->isSimulator())   //if this is a sim window context....

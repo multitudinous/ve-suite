@@ -99,8 +99,10 @@ int main(int argc, char* argv[])
    cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
    orb->run();
+
    // VjObsWrapper is now deleted in cfdApp on exit
    // delete vjobsWrapper;
    delete appWrapper;
+
    return 0;
 }

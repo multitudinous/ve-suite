@@ -990,36 +990,38 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
             strcat(pathAndFileName,"/");
             strcat(pathAndFileName,fileData.cFileName);
 
-            if ( fileIO::isFileReadable( pathAndFileName ) ) {
-            vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
+            if ( fileIO::isFileReadable( pathAndFileName ) ) 
+            {
+               vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
                                    << std::endl << vprDEBUG_FLUSH;
 
-            _modelList.at( 0 )->CreateCfdDataSet();
-            unsigned int numDataSets = _modelList.at( 0 )->GetNumberOfCfdDataSets();
-            // subtract 1 because this number was 1 base not 0 base
-            numDataSets -= 1;
-            _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
+               _modelList.at( 0 )->CreateCfdDataSet();
+               unsigned int numDataSets = _modelList.at( 0 )->GetNumberOfCfdDataSets();
+               // subtract 1 because this number was 1 base not 0 base
+               numDataSets -= 1;
+               _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
 
-            // set the dcs matrix the same as the last file
-            _modelList.at( 0 )->GetCfdDataSet( -1 )->SetDCS( 
+               // set the dcs matrix the same as the last file
+               _modelList.at( 0 )->GetCfdDataSet( -1 )->SetDCS( 
                         _modelList.at( 0 )->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
 
-            // precomputed data that descends from a flowdata.vtk should
-            // automatically have the same color mapping as the "parent" 
-            _modelList.at( 0 )->GetCfdDataSet( -1 )->SetParent( 
+               // precomputed data that descends from a flowdata.vtk should
+               // automatically have the same color mapping as the "parent" 
+               _modelList.at( 0 )->GetCfdDataSet( -1 )->SetParent( 
                         _modelList.at( 0 )->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
-         }
-         else
-         {
+            }
+            else
+            {
                std::cerr << "ERROR: unreadable file = " << pathAndFileName
                          << ".  You may need to correct your param file."
                          << std::endl;
                exit( 1 );
+            }
+            delete [] pathAndFileName;
          }
-       }
-       //check to see if this is the last file
-       if(!FindNextFile(hList, &fileData))
-       {
+         //check to see if this is the last file
+         if(!FindNextFile(hList, &fileData))
+         {
             if(GetLastError() == ERROR_NO_MORE_FILES)
             {
                finished = TRUE;

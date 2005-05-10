@@ -137,6 +137,9 @@ cfdScalarBarActor::~cfdScalarBarActor()
 
    vprDEBUG(vprDBG_ALL,2) << "   finished deconstructing cfdScalarBarActor"
                           << std::endl << vprDEBUG_FLUSH;
+   
+   if ( _readParam )
+      delete _readParam;
 }
 
  void cfdScalarBarActor::SetPosition(float x[3])
