@@ -6,7 +6,7 @@
 
 #include "wx/wx.h"
 #include "wx/spinctrl.h"
-#include "tcFrame.h"
+#include <wx/progdlg.h>
 #include "textureCreator.h"
 
 enum TCFrameIDs{
@@ -19,6 +19,7 @@ enum TCFrameIDs{
    YRES_BOX,
    ZRES_BOX,
    NUM_FILES,
+   GRID_RBOX,
    QUIT_BUTTON
 };
 class TCFrame: public wxFrame{
@@ -31,18 +32,26 @@ public:
            long style = wxDEFAULT_FRAME_STYLE);
 
    virtual ~TCFrame();
+   enum GridType{STRUCTURED,UNSTRUCTURED,RECTILINEAR};
+   void UpdateStatus(const char* statusString);
+   void SetGridType(GridType type){_type = type;}
+   void UpdateProgressDialog(const char* msg);
 
 protected:
+   GridType _type;
    void _buildGUI();
    int _numFiles;
    int _resolution[3];
-   std::vector<char*> _inputFiles;
+   int _currentFile;
+   std::vector<const char*> _inputFiles;
    wxString _inputDir;
    wxString _outputDir;
 
    wxString _outputTextFile;
 
    wxDirDialog* _dirDialog;
+   
+   wxArrayString _gridFiles;
 
    wxButton* _browseInputDir;
    wxButton* _browseOutputDir;
@@ -50,15 +59,17 @@ protected:
    wxButton* _quitButton;
 
    wxGauge* _transProgress;
-   wxGauge* _fileProgress;
+   wxProgressDialog* _fileProgress;
 
    wxTextCtrl* _inputDirBox;
    wxTextCtrl* _outputDirBox;
    wxSpinCtrl* _numFilesBox;
 
-   wxSpinCtrl* _xResBox;
-   wxSpinCtrl* _yResBox;
-   wxSpinCtrl* _zResBox;
+   wxComboBox* _xResBox;
+   wxComboBox* _yResBox;
+   wxComboBox* _zResBox;
+
+   wxRadioBox* _gridTypeBox;
 
    VTKDataToTexture* _translator;
 
@@ -68,8 +79,9 @@ protected:
    void _onTranslateCallback(wxCommandEvent& event);
    void _onBrowseCallback(wxCommandEvent& event);
    void _chooseDirectory(int style, int browseID);
-   void _onResolutionCallback(wxSpinEvent& event);
+   void _onResolutionCallback(wxCommandEvent& event);
    void _onNumFilesCallback(wxSpinEvent& event);
+   void _onGridTypeCallback(wxCommandEvent& event);
 
    DECLARE_EVENT_TABLE()
 };

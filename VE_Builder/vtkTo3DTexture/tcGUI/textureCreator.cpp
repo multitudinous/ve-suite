@@ -1,4 +1,5 @@
 #include "textureCreator.h"
+#include "tcFrame.h"
 #include <vtkCellLocator.h>
 #include <vtkGenericCell.h>
 #include <vtkPointData.h>
@@ -40,9 +41,9 @@ VTKDataToTexture::VTKDataToTexture()
    _usgrid = 0;
    _sgrid = 0;
    _rgrid = 0;
-
+   _parent = 0;
   
-   _isRGrid = false;
+   _isRGrid = true;
    _isSGrid = false;
    _isUGrid = false;
 }
@@ -177,6 +178,27 @@ void VTKDataToTexture::reset()
    }
    
 }
+///////////////////////////////////////////
+void VTKDataToTexture::setRectilinearGrid()
+{
+   _isRGrid = true;
+   _isSGrid = false;
+   _isUGrid = false;
+}
+//////////////////////////////////////////
+void VTKDataToTexture::setStructuredGrid()
+{
+   _isSGrid = true;
+   _isRGrid = false;
+   _isUGrid = false;
+}
+////////////////////////////////////////////
+void VTKDataToTexture::setUnstructuredGrid()
+{
+   _isUGrid = true;
+   _isSGrid = false;
+   _isRGrid = false;
+}
 ///////////////////////////////////////////////////////////
 //set the file name                                      //
 //example:                                               //
@@ -185,7 +207,7 @@ void VTKDataToTexture::reset()
 //               "./textures/vectors_n.rgba"             // 
 //representing the positive and negative textures        //
 ///////////////////////////////////////////////////////////
-void VTKDataToTexture::setVelocityFileName(char* vFileName)
+void VTKDataToTexture::setVelocityFileName(const char* vFileName)
 {
    if(_vFileName){
       delete [] _vFileName;
@@ -194,10 +216,17 @@ void VTKDataToTexture::setVelocityFileName(char* vFileName)
    _vFileName = new char[strlen(vFileName)+1];
    strcpy(_vFileName,vFileName);
 }
-///////////////////////////////////////////////////////
-//set the output directory                           //
-///////////////////////////////////////////////////////
-void VTKDataToTexture::setOutputDirectory(char* outDir)
+/////////////////////////////////////////////////////////////////
+void VTKDataToTexture::_updateTranslationStatus(const char* msg)
+{
+   if(_parent){
+      _parent->UpdateProgressDialog(msg);
+   }
+}
+/////////////////////////////////////////////////////////////
+//set the output directory                                 //
+/////////////////////////////////////////////////////////////
+void VTKDataToTexture::setOutputDirectory(const char* outDir)
 {
    if(_outputDir){
       delete [] _outputDir;
@@ -207,11 +236,13 @@ void VTKDataToTexture::setOutputDirectory(char* outDir)
    strcpy(_outputDir,outDir);
 
 }
-////////////////////////////////////////////////////////////
-//create a dataset from a file                            //
-////////////////////////////////////////////////////////////
-void VTKDataToTexture::createDataSetFromFile(char* filename)
+//////////////////////////////////////////////////////////////////
+//create a dataset from a file                                  //
+//////////////////////////////////////////////////////////////////
+void VTKDataToTexture::createDataSetFromFile(const char* filename)
 {
+   wxString msg = wxString("Reading Dataset: ") + wxString(filename);
+   _updateTranslationStatus(msg.c_str());
    if(_isRGrid){
       if(!_rgrid){
          _rgrid = vtkRectilinearGridReader::New();
@@ -259,6 +290,8 @@ void VTKDataToTexture::createDataSetFromFile(char* filename)
 /////////////////////////////////////////
 void VTKDataToTexture::createTextures()
 {
+   wxString msg = wxString("Creating textures.");
+   _updateTranslationStatus(msg.c_str());
    //check for a dataset
    if(!_dataSet){
       if(_vFileName){
@@ -278,13 +311,17 @@ void VTKDataToTexture::createTextures()
       std::cout<<"WARNING: Resolution set to the min!:"<<std::endl;
       std::cout<<" : VTKDataToTexture::createTextures()"<<std::endl;
    }
+   msg = wxString("Building octree.");
+   _updateTranslationStatus(msg.c_str());
+
    //build the octree
    _cLocator = vtkCellLocator::New();
    _cLocator->SetDataSet(_dataSet);
-   
    _cLocator->SetCacheCellBounds(1);
+
    //build the octree
    _cLocator->BuildLocator();
+
    //get the info about the data in the data set
    _nPtDataArrays = _dataSet->GetPointData()->GetNumberOfArrays();
    _nScalars = countNumberOfParameters(1);
@@ -294,43 +331,57 @@ void VTKDataToTexture::createTextures()
 
    _cleanUpFileNames();
 
-   std::cout<<"Sampling valid domain. . ."<<std::endl;
+   msg = wxString("Sampling valid domain. . .");
+   _updateTranslationStatus(msg.c_str());
    _createValidityTexture();
 
-   std::cout<<"Processing scalars:"<<std::endl;;
+   msg = wxString("Processing scalars. . .");
+   _updateTranslationStatus(msg.c_str());
+
    for(int i = 0; i < _nScalars; i++){
       double bbox[6] = {0,0,0,0,0,0};
       //a bounding box
       _dataSet->GetBounds(bbox);
       
       FlowTexture texture;
-      std::cout<<"   Scalar: "<<_scalarNames[i]<<std::endl;
+      msg = wxString("Scalar: ") + wxString(_scalarNames[i]);
+      _updateTranslationStatus(msg.c_str());
+
       texture.setTextureDimension(_resolution[0],_resolution[1],_resolution[2]);
       texture.setBoundingBox(bbox);
       _curScalar.push_back(texture);
-      std::cout<<"      Resampling data for scalar."<<std::endl;
+
+      msg = wxString("Resampling scalar data.");
+      _updateTranslationStatus(msg.c_str());
       _resampleData(i,1);
-      std::cout<<"         Writing data to texture."<<std::endl;
+      //std::cout<<"         Writing data to texture."<<std::endl;
       writeScalarTexture(i);
-      std::cout<<"      Cleaning up."<<std::endl;
+      //std::cout<<"      Cleaning up."<<std::endl;
       _curScalar.clear();
    }
-   std::cout<<"Processing vectors:"<<std::endl;
-   
+   //std::cout<<"Processing vectors:"<<std::endl;
+    msg = wxString("Processing vectors. . .");
+   _updateTranslationStatus(msg.c_str());
+
    for(int i = 0; i < _nVectors; i++){ 
        double bbox[6] = {0,0,0,0,0,0};
       //a bounding box
       _dataSet->GetBounds(bbox);
       FlowTexture texture;
-      std::cout<<"   Vector: "<<_vectorNames[i]<<std::endl;
+      wxString msg = wxString("Vector: ") + wxString(_vectorNames[i]);
+      _updateTranslationStatus(msg.c_str());
+
       texture.setTextureDimension(_resolution[0],_resolution[1],_resolution[2]);
       texture.setBoundingBox(bbox);
       _velocity.push_back(texture);
-      std::cout<<"      Resampling data for vector."<<std::endl;
+      
+      msg = wxString("Resampling vector data.");
+      _updateTranslationStatus(msg.c_str());
       _resampleData(i,0);
-      std::cout<<"         Writing data to texture."<<std::endl;
+      
+      //std::cout<<"         Writing data to texture."<<std::endl;
       writeVelocityTexture(i);
-      std::cout<<"      Cleaning up."<<std::endl;
+      //std::cout<<"      Cleaning up."<<std::endl;
       _velocity.clear();
    }
    _cLocator->Delete();
@@ -424,8 +475,6 @@ void VTKDataToTexture::_createValidityTexture()
            }
         }
    }
-   
-   
    cell->Delete();
 }
 /////////////////////////////////////////////////////////////////////
@@ -435,8 +484,6 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    //a bounding box
    _dataSet->GetBounds(bbox);
    
-  
-
    //depending on the resolution we need to resample
    //the data
    float delta[3] = {0,0,0};
@@ -481,15 +528,6 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
 	             //the returned cell
                 cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
                 _interpolateDataInCell(cell,weights,dataValueIndex,isScalar); 
-                /*if(){
-                   //use the weights to interpolate a velocity
-		              //at our cell pt
-		             
-                }else{                     
-                   //point isn't in a cell
-	                //so set the texture data to 0
-                   _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar);
-                }*/
                 if(weights){
                    delete [] weights;
                    weights = 0;
@@ -554,7 +592,6 @@ char* VTKDataToTexture::_cleanUpFileNames()
             ptr[j] = '_';
          }
          tempName[index++] = ptr[j];
-         
       }
       tempName[index] = '\0';
       strcpy(_vectorNames[i],tempName);
@@ -623,7 +660,6 @@ void VTKDataToTexture::_interpolateDataInCell(vtkGenericCell* cell,
       _velocity.at(0).addPixelData(pixelData);
       vector->Delete();
    }
-  
 }
 /////////////////////////////////////////////////////////////////
 void VTKDataToTexture::_interpolatePixelData(FlowPointData& data,
@@ -677,8 +713,6 @@ void VTKDataToTexture::_interpolatePixelData(FlowPointData& data,
          array->GetTuple(j,&scalarData);
          scalar += scalarData*weights[j];
       }
-      //double distFactor = 0;
-      //distFactor = (_distance.at(_curPt)==_maxDistFromCenter)?0:_maxDistFromCenter/(_maxDistFromCenter-_distance.at(_curPt));
       data.setData(scalar,0,0,0);
    }
 }
@@ -830,6 +864,8 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    double velRange[2] = {0,0};
    velRange[0] = _vectorRanges.at(whichVector)[0];
    velRange[1] = _vectorRanges.at(whichVector)[1];
+   wxString msg = wxString("Writing file: ") + wxString(posName);
+   _updateTranslationStatus(msg.c_str());
    _velocity.at(0).writeFlowTexture(posName,velRange);
 
 }
@@ -866,6 +902,8 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    double scalarRange[2] = {0,0};
    scalarRange[0] = _scalarRanges.at(whichScalar)[0];
    scalarRange[1] = _scalarRanges.at(whichScalar)[1];
+   wxString msg = wxString("Writing file: ") + wxString(name);
+   _updateTranslationStatus(msg.c_str());
    _curScalar.at(0).writeFlowTexture(name,scalarRange);  
 }
 	

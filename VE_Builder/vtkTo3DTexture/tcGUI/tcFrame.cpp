@@ -1,17 +1,20 @@
 
 #include "tcFrame.h"
 #include "wx/string.h"
+#include <wx/dir.h>
+#include <wx/filename.h>
 #include <iostream>
 #include <cmath>
 BEGIN_EVENT_TABLE(TCFrame,wxFrame)
-   EVT_BUTTON(TRANSLATE_BUTTON,TCFrame::_onTranslateCallback)
-   EVT_BUTTON(INPUT_BROWSE,TCFrame::_onBrowseCallback)
-   EVT_BUTTON(OUTPUT_BROWSE,TCFrame::_onBrowseCallback)
-   EVT_BUTTON(QUIT_BUTTON,TCFrame::_onQuitCallback)
-   EVT_SPINCTRL(XRES_BOX,TCFrame::_onResolutionCallback)
-   EVT_SPINCTRL(YRES_BOX,TCFrame::_onResolutionCallback)
-   EVT_SPINCTRL(ZRES_BOX,TCFrame::_onResolutionCallback)
-   EVT_SPINCTRL(NUM_FILES,TCFrame::_onNumFilesCallback)
+   EVT_BUTTON(TRANSLATE_BUTTON,_onTranslateCallback)
+   EVT_BUTTON(INPUT_BROWSE,_onBrowseCallback)
+   EVT_BUTTON(OUTPUT_BROWSE,_onBrowseCallback)
+   EVT_BUTTON(QUIT_BUTTON,_onQuitCallback)
+   EVT_COMBOBOX(XRES_BOX,_onResolutionCallback)
+   EVT_COMBOBOX(YRES_BOX,_onResolutionCallback)
+   EVT_COMBOBOX(ZRES_BOX,_onResolutionCallback)
+   EVT_SPINCTRL(NUM_FILES,_onNumFilesCallback)
+   EVT_RADIOBOX(GRID_RBOX,_onGridTypeCallback)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Constructor                                     //
@@ -53,6 +56,10 @@ TCFrame::TCFrame(wxWindow* parent,
    _resolution[0] = 2;
    _resolution[1] = 2;
    _resolution[2] = 2;
+   _type = UNSTRUCTURED;
+   _translator = new VTKDataToTexture();
+   _translator->setParentGUI(this);
+   _currentFile = 0;
    _buildGUI();
 
 }
@@ -119,6 +126,12 @@ TCFrame::~TCFrame()
       delete _numFilesBox;
       _numFilesBox = 0;
    }
+   if(_gridTypeBox){
+      delete _gridTypeBox;
+      _gridTypeBox = 0;
+   }
+   _gridFiles.Clear();
+     
    if(!_inputFiles.empty()){
       for ( unsigned int i = 0; i < _inputFiles.size(); ++i )
          delete [] _inputFiles.at( i );
@@ -128,199 +141,190 @@ TCFrame::~TCFrame()
 /////////////////////////
 void TCFrame::_buildGUI()
 {
-   //create the panel for this
-   wxPanel* panel = new wxPanel(this);
-   wxBoxSizer* panelSizer = new wxBoxSizer(wxHORIZONTAL);
-   
    //sizers for our gui's main sections
    wxBoxSizer* frameSizer = new wxBoxSizer(wxHORIZONTAL);
 
-   wxBoxSizer* leftSizer = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* rightSizer = new wxBoxSizer(wxVERTICAL);
-   wxBoxSizer* progressSizer = new wxBoxSizer(wxHORIZONTAL);
    
-
-   //file progress
-   _fileProgress = new wxGauge(panel,
-                            wxID_ANY, 200, 
-                            wxDefaultPosition, 
-                            wxDefaultSize,
-                            wxGA_VERTICAL|wxNO_BORDER );
-   //translation progress
-   _transProgress = new wxGauge(panel,
-                            wxID_ANY, 200, 
-                            wxDefaultPosition, 
-                            wxDefaultSize,
-                            wxGA_VERTICAL|wxNO_BORDER );
-   //add the progress bars
-   progressSizer->Add(_fileProgress,1,wxALIGN_CENTER|wxEXPAND);
-   progressSizer->Add(_transProgress,1,wxALIGN_CENTER|wxEXPAND);
-
-   
-   //add the progress sizer
-   leftSizer->Add(progressSizer,1,wxALIGN_CENTER);
-   
-   //the update button
-   _goButton = new wxButton(panel,TRANSLATE_BUTTON,wxT("Translate"));
-   leftSizer->Add(_goButton,0,wxALIGN_CENTER);
-
-   _numFilesBox = new wxSpinCtrl(panel,NUM_FILES);
-   leftSizer->Add(_numFilesBox,0,wxALIGN_CENTER);
+   wxStaticBox* dimensionsGroup = new wxStaticBox(this, -1,"Texture Dimensions");
+   wxStaticBoxSizer* textureDimensionsSizer = new wxStaticBoxSizer(dimensionsGroup,
+                                                            wxHORIZONTAL);
 
    //the right section
-   wxBoxSizer* row0 = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* buttonRow = new wxBoxSizer(wxHORIZONTAL);
    wxBoxSizer* row1 = new wxBoxSizer(wxHORIZONTAL);
    wxBoxSizer* row2 = new wxBoxSizer(wxHORIZONTAL);
 
-   //the resolution input boxes
-   _xResBox = new wxSpinCtrl(panel, 
-                       XRES_BOX, 
-                       wxEmptyString, 
-                       wxDefaultPosition, 
-                       wxDefaultSize, 
-                       wxSP_ARROW_KEYS, 
-                       1, 9, 
-                       1, 
-                       wxT("X Res"));
-   
-   _yResBox = new wxSpinCtrl(panel, 
-                       YRES_BOX, 
-                       wxEmptyString, 
-                       wxDefaultPosition, 
-                       wxDefaultSize, 
-                       wxSP_ARROW_KEYS, 
-                       1, 9, 
-                       1, 
-                       wxT("Y Res"));
-   
-   _zResBox = new wxSpinCtrl(panel, 
-                       ZRES_BOX, 
-                       wxEmptyString, 
-                       wxDefaultPosition, 
-                       wxDefaultSize, 
-                       wxSP_ARROW_KEYS, 
-                       1, 9, 
-                       1, 
-                       wxT("Z Res"));
+   wxArrayString factorsOfTwo;
 
+   factorsOfTwo.Add("2");
+   factorsOfTwo.Add("4");
+   factorsOfTwo.Add("8");
+   factorsOfTwo.Add("16");
+   factorsOfTwo.Add("32");
+   factorsOfTwo.Add("64");
+   factorsOfTwo.Add("128");
+   factorsOfTwo.Add("256");
+   factorsOfTwo.Add("512");
+
+   wxString choices[] = {"Rectilinear","Structured","Unstructured"};
+   wxBoxSizer* rBoxSizer = new wxBoxSizer(wxHORIZONTAL);
+   _gridTypeBox = new wxRadioBox(this, 
+                              GRID_RBOX, 
+                              wxString("Grid Type"), 
+                              wxDefaultPosition, 
+                              wxDefaultSize, 
+                              3, choices);
+   rBoxSizer->Add(_gridTypeBox,1,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   //the resolution input boxes
+   _xResBox = new wxComboBox(this, XRES_BOX, "", 
+                                wxDefaultPosition,
+                                wxDefaultSize,
+                                factorsOfTwo,
+                                wxCB_READONLY,
+                                wxDefaultValidator,
+                                  "X");
+   _xResBox->SetSelection(0);
+   
+   _yResBox = new wxComboBox(this, YRES_BOX, "", 
+                                wxDefaultPosition,
+                                wxDefaultSize,
+                                factorsOfTwo,
+                                wxCB_READONLY,
+                                wxDefaultValidator,
+                                  "Y");
+   _yResBox->SetSelection(0);
+   
+   _zResBox = new wxComboBox(this, ZRES_BOX, "", 
+                                wxDefaultPosition,
+                                wxDefaultSize,
+                                factorsOfTwo,
+                                wxCB_READONLY,
+                                wxDefaultValidator,
+                                  "Z");
+   _zResBox->SetSelection(0);
    
    //resolution row
-   row0->Add(_xResBox,1,wxEXPAND);
-   row0->Add(_yResBox,1,wxEXPAND);
-   row0->Add(_zResBox,1,wxEXPAND);
+   textureDimensionsSizer->Add(_xResBox,1,wxALIGN_CENTER_HORIZONTAL);
+   textureDimensionsSizer->Add(_yResBox,1,wxALIGN_CENTER_HORIZONTAL);
+   textureDimensionsSizer->Add(_zResBox,1,wxALIGN_CENTER_HORIZONTAL);
 
    //add the input text box and browse button to the two row
-   //row 1
-   //wxStaticText inDirName(panel,-1,"Input Directory");  
-   _inputDirBox =  new wxTextCtrl(panel,INPUT_TEXT_BOX);
-   _browseInputDir = new wxButton(panel,INPUT_BROWSE,wxT("Input dir"));
+   //row 1 
+   _inputDirBox =  new wxTextCtrl(this,INPUT_TEXT_BOX);
+   _browseInputDir = new wxButton(this,INPUT_BROWSE,wxT("Input dir"));
 
-   
-   row1->Add(_inputDirBox,3,wxEXPAND);
-   row1->Add(_browseInputDir,1,wxEXPAND);
+   row1->Add(_inputDirBox,3,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);
+   row1->Add(_browseInputDir,1,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);
 
    //row 2
-   //wxStaticText outDirName(panel,-1,"Output Directory");
-   _outputDirBox =  new wxTextCtrl(panel,OUTPUT_TEXT_BOX);
-   _browseOutputDir = new wxButton(panel,OUTPUT_BROWSE,wxT("Output dir"));
+   _outputDirBox =  new wxTextCtrl(this,OUTPUT_TEXT_BOX);
+   _browseOutputDir = new wxButton(this,OUTPUT_BROWSE,wxT("Output dir"));
  
-   row2->Add(_outputDirBox,3,wxEXPAND);
-   row2->Add(_browseOutputDir,1,wxEXPAND);
+   row2->Add(_outputDirBox,3,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);
+   row2->Add(_browseOutputDir,1,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);
 
    //quit button
-   _quitButton = new wxButton(panel,QUIT_BUTTON,wxT("Quit"));
+   _quitButton = new wxButton(this,QUIT_BUTTON,wxT("Quit"));
+   _goButton = new wxButton(this,TRANSLATE_BUTTON,wxT("Translate"));
 
-   rightSizer->Add(row0,0,wxALIGN_CENTER);
-   rightSizer->Add(row1,0,wxALIGN_CENTER);
-   rightSizer->Add(row2,0,wxALIGN_CENTER);
-   rightSizer->Add(_quitButton,0,wxALIGN_CENTER);
+   buttonRow->Add(_goButton,0,wxALIGN_CENTER);
+   buttonRow->Add(_quitButton,0,wxALIGN_CENTER);
+
+   rightSizer->Add(textureDimensionsSizer,1,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   rightSizer->Add(rBoxSizer,1,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
+   rightSizer->Add(row1,1,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);
+   rightSizer->Add(row2,1,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL);
+   rightSizer->Add(buttonRow,0,wxALIGN_CENTER);
   
-   //add the sizers to the panel
-   panelSizer->Add(leftSizer,0,wxEXPAND);
-   panelSizer->Add(rightSizer,1,wxEXPAND|wxALIGN_CENTER);
-   
-   panel->SetSizer(panelSizer);
-   panelSizer->Layout();
-
-   panel->SetAutoLayout(true); 
-   panelSizer->Fit(panel);
-
-   frameSizer->Add(panel,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
+   frameSizer->Add(rightSizer,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
 
    frameSizer->Layout();
    SetSizer(frameSizer);
 
    SetAutoLayout(true); 
    frameSizer->Fit(this);
+   SetStatusBar(new wxStatusBar(this,-1)); 
+   GetStatusBar()->SetStatusText(wxString("..."));
+}
+///////////////////////////////////////////////////
+void TCFrame::UpdateProgressDialog(const char* msg)
+{
+   if(_fileProgress){
+      _fileProgress->Update(_currentFile,msg);
+   }
+}
+/////////////////////////////////////////////////////
+void TCFrame::UpdateStatus(const char* statusString)
+{
+   GetStatusBar()->SetStatusText(wxString(statusString));
 }
 /////////////////////////////////////////////////////////
 //event callbacks                                      //
 /////////////////////////////////////////////////////////
 /////////////////////////////////////////////////////////
+void TCFrame::_onGridTypeCallback(wxCommandEvent& event)
+{
+   UpdateStatus("Switching grid type. . .");
+   int type = _gridTypeBox->GetSelection();
+   switch (type){
+      case 0:
+         _type = RECTILINEAR;
+         _translator->setRectilinearGrid();
+         UpdateStatus("Grid type:RECTILINEAR");   
+         break;
+      case 1:
+         _type = STRUCTURED;
+         _translator->setStructuredGrid();
+         UpdateStatus("Grid type:STRUCTURED");
+         break;
+      case 2:
+         _type = UNSTRUCTURED;
+         _translator->setUnstructuredGrid();
+         UpdateStatus("Grid type:UNSTRUCTURED");
+      default:
+         break;
+   };
+}
+/////////////////////////////////////////////////////////
 void TCFrame::_onTranslateCallback(wxCommandEvent& event)
 {
-   if(!_translator){
-      _translator = new VTKDataToTexture();
-      ////biv--FIXME:need to fix this to be selectable from the GUI
-      //_translator->setRectilinearGrid();
-      //_translator->setUnstructuredGrid();
-      _translator->setStructuredGrid();
-   }
+   UpdateStatus("Translating to 3D texture files. . .");
    char oname[256];
    char fileName[256];
-   _fileProgress->SetRange(_numFiles);
-
-   //read in the file names,breaking out for parallel junk -- still need to fix this to 
-   //find files in the dir but w/ the new format may be
-   //much trickerier than before
-   for(unsigned int i = 0; i < _numFiles; i++){
-      char* iname = new char[1024];
-      strcpy(iname,_inputDir);
-      //strcpy(fileName,"/picker.vtk");
-      //sprintf(fileName,"/picker.vtk",i);
-      /*if ( i < 10 )
-      sprintf(fileName,"/zhto_00%d.vtk",i);
-      else
-      sprintf(fileName,"/zhto_0%d.vtk",i);
-     */ 
-      sprintf(fileName,"/gasifier.vtk");
-      //sprintf(fileName,"/filteredFlowdata6.vtk");
-      strcat(iname,fileName);
-      _inputFiles.push_back(iname);
-   }
-
+   wxString statusMsg = "";
+   _fileProgress = new wxProgressDialog(wxString("Translation Progress"),
+                  " ", 
+                  _numFiles,this,
+                  wxPD_AUTO_HIDE|wxPD_SMOOTH|wxPD_ELAPSED_TIME|wxPD_ESTIMATED_TIME);
    //process the files
    for(int i = 0; i < _numFiles; i++){
-      _fileProgress->SetValue(i);
+      _currentFile = i;
+      statusMsg = wxString("Translating ") + _gridFiles[i];
+      UpdateStatus(statusMsg);
+      _fileProgress->Update( i, statusMsg);
       _translator->reset();
       _translator->setOutputDirectory((char*)_outputDir.c_str());
-      //biv--FIXME:this filename should be selectable from the gui as well!!!
-      
-      /*strcpy(fileName,"/picker.vtk");
-      //sprintf(fileName,"/picker.vtk",i);
-      //sprintf(fileName,"/zhto0%dad.vtk",i);
-      //sprintf(fileName,"/flowdata_%d.vtk",i);
-      strcat(iname,fileName);*/
-
       sprintf(oname,"_%d",i);
-
-      _translator->createDataSetFromFile(_inputFiles.at(i));
+      _translator->createDataSetFromFile(_gridFiles[i].c_str());
       _translator->setOutputResolution(_resolution[0],
                                    _resolution[1],
                                    _resolution[2]);
       _translator->setVelocityFileName(oname);
-     
-
       _translator->createTextures();
    }
-   //biv--FIXME:this isn't working how it should be. . .
-   _fileProgress->SetValue(_numFiles);
+   statusMsg = wxString("Files written to: ") + _outputDir;
+   UpdateStatus(statusMsg);
+   if(_fileProgress){
+      delete _fileProgress;
+      _fileProgress = 0;
+   }
 }
 //////////////////////////////////////////////////////////
-void TCFrame::_onResolutionCallback(wxSpinEvent& event)
+void TCFrame::_onResolutionCallback(wxCommandEvent& event)
 {
    float factorOfTwo = 2;
-   int value = event.GetPosition();
+   int value = event.GetSelection()+1;
    int id = event.GetId();
    std::cout<<"The value: "<<value<<std::endl;
 
@@ -336,7 +340,6 @@ void TCFrame::_onResolutionCallback(wxSpinEvent& event)
       case ZRES_BOX:
          _resolution[2] = pow(2,value);
          std::cout<<"The Z resolution: "<<_resolution[1]<<std::endl;
-         
          break;
       default:
          break;
@@ -345,6 +348,7 @@ void TCFrame::_onResolutionCallback(wxSpinEvent& event)
 ////////////////////////////////////////////////////
 void TCFrame::_onQuitCallback(wxCommandEvent& event)
 {
+   Destroy();
    exit(0);
 }
 //////////////////////////////////////////////////////
@@ -366,12 +370,29 @@ void TCFrame::_chooseDirectory(int style, int browseID)
          _dirDialog->SetPath(_outputDir);
       }
    }
-
+   wxDir inputFileDirectory;
    //get the input from the user 
    if (_dirDialog->ShowModal() == wxID_OK){
       if(browseID == INPUT_BROWSE){
+         _gridFiles.Clear();
+         _numFiles = 0;
          _inputDir = wxT(_dirDialog->GetPath().c_str());
-         
+         inputFileDirectory.Open(wxString(_inputDir));
+         if(inputFileDirectory.IsOpened()){
+            wxString path;
+            wxFileName filename;
+            wxString fullPath;
+            bool cont = inputFileDirectory.GetFirst(&path);
+            while ( cont ){
+               fullPath = wxString(_inputDir) + wxString("/") +path;
+               filename.Assign(fullPath);
+               if(filename.HasExt()&& (filename.GetExt()==wxString("vtk"))){
+                  _gridFiles.Add(fullPath);
+               }
+               cont = inputFileDirectory.GetNext(&path);
+            }
+            _numFiles = _gridFiles.GetCount();
+         }
          //set the text in the text box
          _inputDirBox->SetValue(_inputDir);
       }else{

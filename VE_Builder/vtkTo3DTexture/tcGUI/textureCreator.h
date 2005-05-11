@@ -7,6 +7,7 @@
 #include <vtkRectilinearGridReader.h>
 #include <vtkCellLocator.h>
 #include "flowTexture.h"
+class TCFrame;
 class vtkCellDataToPointData;
 
 //////////////////////////////////////////////
@@ -47,16 +48,16 @@ public:
    //               "./vectors_n.rgba"     // 
    //representing the positive and negative textures//
    ///////////////////////////////////////////////////
-   void setVelocityFileName(char* vFileName);
+   void setVelocityFileName(const char* vFileName);
 
    //set the output directory
-   void setOutputDirectory(char* outDir);
+   void setOutputDirectory(const char* outDir);
 
    //set the dataset for this converter
    void setDataset(vtkDataSet* dSet){_dataSet = dSet;}
 
    //create a dataset from a file
-   void createDataSetFromFile(char* filename);
+   void createDataSetFromFile(const char* filename);
   
    //create the textures for this data set
    void createTextures();
@@ -66,12 +67,15 @@ public:
    void writeVelocityTexture(int index);
    void writeScalarTexture(int index);
 
-   void setRectilinearGrid(){_isRGrid = true;}
-   void setStructuredGrid(){_isSGrid = true;}
-   void setUnstructuredGrid(){_isUGrid = true;}
+   void setRectilinearGrid();
+   void setStructuredGrid();
+   void setUnstructuredGrid();
 
    //reset the translators internal data
    void reset();
+
+   void setParentGUI(TCFrame* parent){_parent = parent;}
+   
 
    //get the min and max of the velocity magnitude
    //float minVelocityMagnitude(){return _minMagVel;}
@@ -115,6 +119,8 @@ protected:
                                           int whichVector);
    void _extractTuplesForScalar(vtkIdList* ptIds,vtkDataArray* scalar,
                                           int whichScalar);
+   void _updateTranslationStatus(const char* msg);
+
    char* _cleanUpFileNames();
    
    char* _vFileName;
@@ -129,6 +135,8 @@ protected:
    std::vector<bool> _validPt;
    char** _scalarNames;
    char** _vectorNames;
+
+   TCFrame* _parent;
 
    vtkDataSet* _dataSet;
    vtkCellLocator* _cLocator;
