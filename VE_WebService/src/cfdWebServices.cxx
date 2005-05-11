@@ -6,7 +6,7 @@
 #include <iostream>
 #include <string>
 #include <sstream>
-
+#include <fstream>
 #include <vrj/Util/Debug.h>
 #include <vpr/System.h>
 
@@ -31,7 +31,7 @@
 #define AINTWORKIN
 cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, PortableServer::POA* childPOA )
 {
-  this->namingContext = inputNameContext;
+   network = new Network();
    try
    {
       XMLPlatformUtils::Initialize();
@@ -44,6 +44,9 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
       return;
    }
 
+#ifndef USE_TEST_FILE
+  this->namingContext = inputNameContext;
+   
 
    this->runGetEverythingThread = true;
    //this->updateNetworkString = false;
@@ -56,7 +59,7 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
 
    av_modules = new cfdVEAvail_Modules();
 #endif
-   network = new Network();
+
 
    //time_t* timeVal;
    long timeID = (long)time( NULL );
@@ -112,6 +115,9 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
    {      
       std::cerr << "|\tExecutive not present or VEClient registration error" << std::endl;
    }
+#else
+   GetNetwork();
+#endif
    printf("Well, we made it through the constructor\n");
 
 }
@@ -218,19 +224,46 @@ void cfdWebServices::GetEverything( void )
 
 char* cfdWebServices::GetNetwork ( void )
 {
+
+#ifndef USE_TEST_FILE
    vprDEBUG(vprDBG_ALL,2)  << "getting network..." << std::endl << vprDEBUG_FLUSH;
 
    // Get buffer value from Body_UI implementation
    std::string temp( uii->GetNetworkString() );
-   const char* networkString = temp.c_str();
+   const char* networkString = temp.c_str();        //***temporary testing purposes.  comment this back in!
    vprDEBUG(vprDBG_ALL,2)  << "|\tNetwork String : " << networkString
                               << std::endl << vprDEBUG_FLUSH;
-   
-/////////////////////////////
-// This code taken from Executive_i.cpp
+#else   
 
+   std::string testFile = "/home/users/kennyk/public_html/PowerPlant/data/larry_ruth.nt";
+   std::string testNetwork;
+   std::ifstream infile(testFile.c_str());						//try open the file
+   if (!infile)
+   {
+      printf("couldn't load the file\n");
+   }
+
+   std::string line;
+   int lineNum = 0;
+
+   while(infile.peek() != EOF)									//go through every line of the file
+   {
+      lineNum++;
+      std::getline(infile, line);
+      testNetwork += line;
+   }
+   infile.close();
+   const char* networkString = testNetwork.c_str();
+#endif
+   outputFile = fopen("output.dat", "w");
+   //first we insert a clear command and timestamp into the database so we can tell if things have been updated
+   fprintf(outputFile, "delete from ppModules;\n\n");
+   fprintf(outputFile, "insert into ppModules(ID,intString) values ('-13', '%i');\n\n", time(NULL));
+   /////////////////////////////
+// This code taken from Executive_i.cpp
    Package p;
    p.SetSysId("temp.xml");
+//   printf("string:  %s\n is %i long\n", networkString, strlen(networkString));
    vprDEBUG(vprDBG_ALL,2)  << "loading package..." << std::endl << vprDEBUG_FLUSH;
 
    p.Load(networkString, strlen(networkString));
@@ -262,18 +295,22 @@ char* cfdWebServices::GetNetwork ( void )
       {
       
          //try to set this interface's inputs
+         bool inputSet;
          if(network->setInput(thisInterface->_id, &(*thisInterface))) 
          {
+            inputSet = true;
             network->module(network->moduleIdx(thisInterface->_id))->_is_feedback  = thisInterface->getInt("FEEDBACK");
             network->module(network->moduleIdx(thisInterface->_id))->_need_execute = 1;
             network->module(network->moduleIdx(thisInterface->_id))->_return_state = 0;
          }  
          else
          {
+            inputSet = false;
             std::cerr << "|\tUnable to set id# " << thisInterface->_id << "'s inputs" << std::endl;
          }
          //if this is not the layout interface...
-         if ( thisInterface->_id != -1 ) 
+         //and we were able to set the inputs
+         if ( thisInterface->_id != -1 && inputSet ) 
          {
             int thisInterfaceID = 
                this->network->module( network->moduleIdx(thisInterface->_id) )->get_id();
@@ -285,6 +322,7 @@ char* cfdWebServices::GetNetwork ( void )
          }
          insertItemIntoSQL(*thisInterface);
       }
+         fclose(outputFile);
       return "what's up?  it worked.  Does Ken actually need to send something back?";
    } 
    else     //this is probably bad
@@ -293,6 +331,7 @@ char* cfdWebServices::GetNetwork ( void )
       return "broken!";
    }
    
+
 }
 
 void cfdWebServices::insertItemIntoSQL(Interface &interface)
@@ -313,7 +352,7 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       char numStr[16];
       int thisInteger = interface.getInt(*stringIter);
       sprintf(numStr, "%i", interface.getInt(*stringIter) );
-      printf("number:  %s\n", numStr);
+//      printf("number:  %s\n", numStr);
       std::string s(numStr);
       SQLString += *stringIter + "|" + numStr + "||";  //tack the name and number into our string, seperated by pipes
     
@@ -321,20 +360,24 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
 
    }
    object.intString = SQLString;
+   
+   
    names = interface.getDoubles();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
 
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
    {
       char numStr[16];
-      sprintf(numStr, "%d", interface.getDouble(*stringIter));
+      double val = interface.getDouble(*stringIter);
+      sprintf(numStr, "%f", val);
       std::string s(numStr);
       SQLString += *stringIter + "|" + numStr + "||";  //tack the name and number into our string, seperated by pipes
 
    }
    object.doubleString = SQLString;      
    
-   names = interface.getStrings();        //repeat with other data types
+  
+    names = interface.getStrings();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
    {
@@ -342,6 +385,7 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       
    }
    object.stringString = SQLString;   
+   
    
    names = interface.getInts1D();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
@@ -352,12 +396,18 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       std::vector<long>::iterator valIter;
       for(valIter = vals.begin(); valIter != vals.end(); valIter++)
       {
-         SQLString += "|" + *valIter;
+         char valString[32];
+         int val = *valIter;
+         sprintf(valString, "%i", val);
+         std::string valStringString(valString);
+         SQLString += "|" + valStringString;
+
       }
       SQLString += "||";
    
    }
    object.intArrayString = SQLString;   
+   
    
    names = interface.getDoubles1D();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
@@ -370,7 +420,7 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
       {
             char valString[32];
             double val = *valIter;
-            sprintf(valString, "%d", val);
+            sprintf(valString, "%f", val);
             std::string valStringString(valString);
             SQLString += "|" + valStringString;
       }
@@ -379,6 +429,7 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
    }
    object.doubleArrayString = SQLString;   
    
+  
    names = interface.getStrings1D();        //repeat with other data types
    SQLString = "";                        //clear the SQL string
    for(stringIter = names.begin(); stringIter != names.end(); stringIter++)   //iterate through the vector
@@ -415,25 +466,32 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
 //      intString += doublesIter->first + "|" + doublesIter->second + "||";    
 //      
 //   }
-   
-      SQLString = "insert into ppModules(ID, 
-         intString, doubleString, stringString, 
-         intArrayString, doubleArrayString, stringArrayString) 
-         values ('" 
-         + object.ID + "','" 
-         + object.intString + "', ' "
-         + object.doubleString + "', '" 
-         + object.stringString + "','"
-         + object.intArrayString + "', '" 
-         + object.doubleArrayString + "', '"
-         + object.stringArrayString + "')";
+   //lastly, grab the ID.
+   char IDChars[4];
+   sprintf(IDChars, "%i", object.ID );
+   std::string IDString(IDChars);
+   SQLString = "insert into ppModules(ID, 
+      intString, doubleString, stringString, 
+      intArrayString, doubleArrayString, stringArrayString) 
+      values ('" 
+      + IDString + "','" 
+      + object.intString + "', ' "
+      + object.doubleString + "', '" 
+      + object.stringString + "','"
+      + object.intArrayString + "', '" 
+      + object.doubleArrayString + "', '"
+      + object.stringArrayString + "')";
+   //printf("%s;\n", SQLString.c_str());
+   fprintf(outputFile, "%s;\n\n", SQLString.c_str());
 }
 
 cfdWebServices::~cfdWebServices()
 {
-   delete uii;
    delete network;
+#ifndef USE_TEST_FILE
    delete masterNode;
+   delete uii;
+#endif
 }
 
 

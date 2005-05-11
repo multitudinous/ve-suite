@@ -41,6 +41,9 @@
 #include "cfdWebServices.h"
 int main(int argc, char* argv[])
 {
+
+#ifndef USE_TEST_FILE
+
    printf("initing corba...\n");
 #ifdef _TAO
    CORBA::ORB_var orb = CORBA::ORB_init( argc, argv,"VE_Suite_ORB" );
@@ -101,5 +104,10 @@ int main(int argc, char* argv[])
    // mysql
    cfdWebServices webService( naming_context.in(), child_poa.in() );
    orb->run();
+#else //USE_TEST_FILE
+   printf("NOTICE:  WebService is using test file input.\n");
+   cfdWebServices webService( NULL, NULL );
+#endif   //USE_TEST_FILE
+   printf("done.  Exiting now\n");
    return 0;
 }

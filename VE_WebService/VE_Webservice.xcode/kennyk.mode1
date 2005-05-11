@@ -229,6 +229,8 @@
 			<key>Layout</key>
 			<array>
 				<dict>
+					<key>BecomeActive</key>
+					<true/>
 					<key>ContentConfiguration</key>
 					<dict>
 						<key>PBXBottomSmartGroupGIDs</key>
@@ -309,21 +311,22 @@
 										<key>PBXProjectModuleLabel</key>
 										<string>cfdWebServices.cxx</string>
 										<key>bookmark</key>
-										<string>AD93FB2808294BE30011BC62</string>
+										<string>ADF3A2C5082AD35D00C25C08</string>
 										<key>history</key>
 										<array>
 											<string>ADC162CA0803205900797D5F</string>
 											<string>AD1CC7DD08185100008B5383</string>
 											<string>AD1CC7E20818510B008B5383</string>
 											<string>AD1CC7EA08185130008B5383</string>
-											<string>ADB34DE90825808E00658AB8</string>
 											<string>ADB3507B0825990D00658AB8</string>
 											<string>AD25AA7C0826F3A600FEA785</string>
 											<string>AD25AA7D0826F3A600FEA785</string>
 											<string>AD25AA8E0826F54800FEA785</string>
-											<string>AD25AA9B0826FA3400FEA785</string>
-											<string>AD25AA9C0826FA3400FEA785</string>
-											<string>AD93FAF9082947CD0011BC62</string>
+											<string>AD93FC67082993D20011BC62</string>
+											<string>AD93FC91082996A30011BC62</string>
+											<string>ADF3A11D082AA46E00C25C08</string>
+											<string>ADF3A2B5082AD1BF00C25C08</string>
+											<string>ADF3A2C4082AD35D00C25C08</string>
 										</array>
 										<key>prevStack</key>
 										<array>
@@ -331,11 +334,14 @@
 											<string>AD1CC7DE08185100008B5383</string>
 											<string>AD1CC7EC08185130008B5383</string>
 											<string>AD28A786081EEB1F007826AC</string>
-											<string>ADE4865C0821BC44005A57A1</string>
 											<string>ADE4865D0821BC44005A57A1</string>
 											<string>ADE486620821BC4F005A57A1</string>
 											<string>AD25A9C70826A0AA00FEA785</string>
 											<string>AD25AA9E0826FA3400FEA785</string>
+											<string>AD93FC93082996A30011BC62</string>
+											<string>ADF3A120082AA46E00C25C08</string>
+											<string>ADF3A252082AC4AC00C25C08</string>
+											<string>ADF3A2B6082AD1BF00C25C08</string>
 										</array>
 									</dict>
 									<key>SplitCount</key>
@@ -393,9 +399,9 @@
 			</array>
 			<key>TableOfContents</key>
 			<array>
-				<string>AD93FAFB082947CD0011BC62</string>
+				<string>ADF3A2B1082AD16600C25C08</string>
 				<string>1CE0B1FE06471DED0097A5F4</string>
-				<string>AD93FAFC082947CD0011BC62</string>
+				<string>ADF3A2B2082AD16600C25C08</string>
 				<string>1CE0B20306471E060097A5F4</string>
 				<string>1CE0B20506471E060097A5F4</string>
 			</array>
@@ -408,7 +414,7 @@
 	<key>StatusbarIsVisible</key>
 	<true/>
 	<key>TimeStamp</key>
-	<real>136923070.39351049</real>
+	<real>137023718.33953413</real>
 	<key>ToolbarDisplayMode</key>
 	<integer>1</integer>
 	<key>ToolbarIsVisible</key>

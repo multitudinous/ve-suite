@@ -6,6 +6,8 @@
 #include <map>
 #include <string>
 
+#define USE_TEST_FILE
+
 class cfdDCS;
 class cfdGroup;
 class cfdGauges;
@@ -102,8 +104,8 @@ class cfdWebServices
       bool doneWithCalculations;
       bool updateNetworkString;
       bool runGetEverythingThread;
-         
-      struct stringHolder
+      FILE* outputFile;
+      struct StringHolder
       {
          int ID;
          std::string intString;
@@ -112,7 +114,7 @@ class cfdWebServices
          std::string intArrayString;
          std::string doubleArrayString;      
          std::string stringArrayString;
-      }
+      };
 
 };
 
