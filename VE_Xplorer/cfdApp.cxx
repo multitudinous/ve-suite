@@ -554,17 +554,15 @@ void cfdApp::draw()
    // Copy the matrix
    vrj::Projection* project = userData->getProjection();
    const float* vj_proj_view_mat = project->getViewMatrix().mData;
-   osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
+   //osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
+   osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
 
-/*
    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
    gmtl::Matrix44f _vjMatrix( project->getViewMatrix() );
-   //_vjMatrix.set( project->getViewMatrix() );
-   //gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
-   gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+   gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
    osg_proj_xform_mat->set( _vjMatrix.mData );
-*/
-   osg_proj_xform_mat->set( vj_proj_view_mat );
+
+   //osg_proj_xform_mat->set( vj_proj_view_mat );
 
    //Get the frustrum
    vrj::Frustum frustum = project->getFrustum();
@@ -577,8 +575,8 @@ void cfdApp::draw()
 
    // need to mess with this matrix to change how the coordinate system is 
    // positioned
-   sv->setViewMatrixAsLookAt(  osg::Vec3( 0, -1, 0 ), osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 1 ) );
-   //sv->setViewMatrix(*(osg_proj_xform_mat.get()));
+   //sv->setViewMatrixAsLookAt(  osg::Vec3( 0, -1, 0 ), osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 1 ) );
+   sv->setViewMatrix(*osg_proj_xform_mat );
 #ifdef _WEB_INTERFACE
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
    if(userData->getViewport()->isSimulator())   //if this is a sim window context....
