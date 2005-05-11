@@ -634,3 +634,9 @@ void REI_Plugin::GeometryDialog( void )
 
    geomDlg->Show();
 }
+
+// return pointer to geometry dialog
+Geometry* REI_Plugin::GetGeometryDialog( void )
+{
+   return geomDlg;
+}
