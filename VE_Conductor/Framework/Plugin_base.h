@@ -99,6 +99,7 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
       // this is not virtual because it should always be the
       // same for each module
       void GeometryDialog( void );
+      Geometry* GetGeometryDialog( void );
 
       virtual void UnPack(Interface* intf);
       //This is the load function of the module, unpack the input string and fill up the UI according to this

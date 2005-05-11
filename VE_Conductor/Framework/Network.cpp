@@ -2411,9 +2411,11 @@ void Network::Pack(vector<Interface> & UIs)
       //if module has geometry data
       // then grab geometry interface
       // call spcific modules geom pack
+      if ( modules[i].pl_mod->GetGeometryDialog() )
+         UIs.push_back( *(modules[i].pl_mod->GetGeometryDialog()->Pack()) );
    }
 
-   UIs.push_back(*(globalparam_dlg->Pack()));
+   UIs.push_back( *(globalparam_dlg->Pack()) );
 }
 
 void Network::UnPack(vector<Interface> & intfs)
@@ -2609,11 +2611,17 @@ void Network::UnPack(vector<Interface> & intfs)
    for ( i=0; i<(unsigned int)modsize; ++i )
    {
       _id = intfs[i+1]._id;
-      modules[_id].pl_mod->SetID(_id);
-      modules[_id].pl_mod->UnPack(&intfs[i+1]);
-      //if module has geometry data
-      // then grab geometry interface
-      // call spcific modules geom unpack
+      if ( intfs[i+1]._type == 1 ) // data i/o
+      {
+         modules[_id].pl_mod->SetID( _id );
+         modules[_id].pl_mod->UnPack( &intfs[i+1] );
+      }
+      else if ( intfs[i+1]._type == 2 ) // geometry
+      {
+         // then grab geometry interface
+         // call spcific modules geom unpack
+         modules[_id].pl_mod->GetGeometryDialog()->UnPack( &intfs[i+1] );
+      }
    }
     
    //unpack the Global Param Dialog

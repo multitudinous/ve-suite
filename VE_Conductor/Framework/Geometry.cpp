@@ -165,14 +165,122 @@ void Geometry::_buildPage()
    ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();*/
 }
-//////////////////
-//event handling//
-///////////////////
+
+void Geometry::UnPack( Interface* intf )
+{
+  std::vector<std::string> vars;
+  
+  std::map<std::string, long *>::iterator iteri;
+  std::map<std::string, double *>::iterator iterd;
+  std::map<std::string, std::string *>::iterator iters;
+  std::map<std::string, std::vector<long> *>::iterator itervi;
+  std::map<std::string, std::vector<double> *>::iterator itervd;
+  std::map<std::string, std::vector<std::string> *>::iterator itervs;
+  
+  unsigned int i;
+  long temp;
+/*
+  mod_pack = *intf;
+  vars = mod_pack.getInts();
+  for (i=0; i<vars.size(); i++)
+    {
+      iteri =_int.find(vars[i]);
+      if (iteri!=_int.end())
+	mod_pack.getVal(vars[i], *(iteri->second));
+      else if (vars[i]=="XPOS")
+	{
+	  mod_pack.getVal("XPOS", temp);
+	  //	  printf("xpos %ld\n", temp);
+	  pos.x = temp;
+	}
+      else if (vars[i]=="YPOS")
+	{
+	  //	  printf("ypos %ld\n", temp);
+	  mod_pack.getVal("YPOS", temp);
+	  pos.y = temp;
+	}
+    }
+
+  vars = mod_pack.getDoubles();
+  for (i=0; i<vars.size(); i++)
+    {
+      iterd =_double.find(vars[i]);
+      if (iterd!=_double.end())
+	mod_pack.getVal(vars[i], *(iterd->second));
+    }  
+  
+  vars = mod_pack.getStrings();
+  for (i=0; i<vars.size(); i++)
+    {
+      iters =_string.find(vars[i]);
+      if (iters!=_string.end())
+	mod_pack.getVal(vars[i], *(iters->second));
+    }
+
+  vars = mod_pack.getInts1D();
+  for (i=0; i<vars.size(); i++)
+    {
+      itervi =_int1D.find(vars[i]);
+      if (itervi!=_int1D.end())
+	mod_pack.getVal(vars[i], *(itervi->second));
+    }
+
+  vars = mod_pack.getDoubles1D();
+  for (i=0; i<vars.size(); i++)
+    {
+      itervd =_double1D.find(vars[i]);
+      if (itervd!=_double1D.end())
+	mod_pack.getVal(vars[i], *(itervd->second));
+    }
+
+  vars = mod_pack.getStrings1D();
+  for (i=0; i<vars.size(); i++)
+    {
+      itervs =_string1D.find(vars[i]);
+      if (itervs!=_string1D.end())
+	mod_pack.getVal(vars[i], *(itervs->second));
+    }*/
+}
+
+Interface* Geometry::Pack( void )
+{
+   mod_pack._type = 2; //Module
+   mod_pack._category = 1; // normal modules
+   mod_pack._id = id;
+
+   std::map<std::string, long *>::iterator iteri;
+   std::map<std::string, double *>::iterator iterd;
+   std::map<std::string, std::vector<long> *>::iterator itervi;
+   std::map<std::string, std::vector<double> *>::iterator itervd;
+   std::map<std::string, std::vector<std::string> *>::iterator itervs;
+
+
+   for(iteri=_int.begin(); iteri!=_int.end(); iteri++)
+      mod_pack.setVal(iteri->first, *(iteri->second));
+
+   for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
+      mod_pack.setVal(iterd->first, *(iterd->second));
+
+   for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
+      mod_pack.setVal(itervi->first, *(itervi->second));
+
+   for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
+      mod_pack.setVal(itervd->first, *(itervd->second));
+
+   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
+   {
+	   std::vector<std::string> * y;
+	   std::string x;
+	   x=itervs->first;
+	   y=itervs->second;
+      mod_pack.setVal(itervs->first, *(itervs->second));
+   }
+   return &mod_pack;
+}
 
 //////////////////
 //event handling//
-///////////////////
-
+//////////////////
 //////////////////////////////////////////////////
 void Geometry::_onGeometry( wxScrollEvent& event )
 {

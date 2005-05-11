@@ -5,7 +5,9 @@
 #endif
 #include <wx/wx.h>
 
-class Interface;
+#include "interface.h"
+#include <map>
+#include <vector>
 
 enum GEOMETRY_CONFIG_IDS
 {
@@ -30,7 +32,18 @@ class Geometry : public wxDialog
 
    protected:
       void _buildPage();
-   
+
+      // data holder 
+      Interface mod_pack;
+      int id;
+
+      // Geometry data
+      std::map<std::string, long *>                      _int;
+      std::map<std::string, double *>                    _double;
+      std::map<std::string, std::vector<long> * >        _int1D;
+      std::map<std::string, std::vector<double> * >      _double1D;
+      std::map<std::string, std::vector<std::string> * > _string1D;
+
       //the controls
       wxRadioBox* _geometryRBox;
       wxCheckListBox* _geometryCBox;
