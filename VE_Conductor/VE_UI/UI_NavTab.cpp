@@ -72,7 +72,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
 //************Done loading up the bitmaps
 
    //Assign the bitmaps to the respective buttons
-   _leftButton = new UI_NavButton(this, NAV_LEFT, wxImage(*_image1));
+   _leftButton = new UI_NavButton(this, NAV_LEFT, wxBitmap(*_image1));
    _rightButton = new UI_NavButton(this, NAV_RIGHT, wxBitmap(*_image2));
    _upButton = new UI_NavButton(this, NAV_UP, wxBitmap(*_image3));
    _downButton = new UI_NavButton(this, NAV_DOWN, wxBitmap(*_image4));
@@ -198,12 +198,12 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS);
    rotationStepSize = new wxSlider(this, ROT_STEP_SLIDER,50,1,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
    
    //the labels for the sliders 
    wxStaticText* transStepSizeLabel = new wxStaticText(this,-1,wxT("Translation Step Size"));

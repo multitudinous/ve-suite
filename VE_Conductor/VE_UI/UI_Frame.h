@@ -63,7 +63,7 @@ public:
 
 protected:
 	wxBoxSizer* _frameSizer;
-	wxNotebookSizer* _tabsSizer;
+	wxBoxSizer* _tabsSizer;
 	wxBoxSizer* _datasetSizer;
    wxBoxSizer* _modselSizer;
 

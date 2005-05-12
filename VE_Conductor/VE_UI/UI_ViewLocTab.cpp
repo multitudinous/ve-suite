@@ -174,7 +174,7 @@ void UI_ViewLocTab::_onLoad(wxCommandEvent& event)
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
-/*void UI_ViewLocTab::_onRemove(wxCommandEvent& event)
+/*void UI_ViewLocTab::_onDetach(wxCommandEvent& event)
 {
    if ( ((UI_Tabs *)_parent)->num_locations > 0 )
    {

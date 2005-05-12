@@ -39,7 +39,7 @@ protected:
    void _onLoad(wxCommandEvent& event);
    void _onWrite(wxCommandEvent& event);
    void _onRead(wxCommandEvent& event);
-   //void _onRemove(wxCommandEvent& event);
+   //void _onDetach(wxCommandEvent& event);
    void _onMove(wxCommandEvent& event);
 
    wxString* _defaultName;

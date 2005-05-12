@@ -860,7 +860,7 @@ void AppFrame::DisConVEServer(wxCommandEvent &event)
     cerr << "Name not found for CORBA Object  " << ex.why << endl;
     }*/
   wx_ve_splitter->Unsplit(m_frame);
-  sizerTab->Remove(m_frame);
+  sizerTab->Detach(m_frame);
   delete m_frame;
   m_frame = NULL;
   con_menu->Enable(v21ID_CONNECT_VE, true);

@@ -38,7 +38,7 @@ void UI_VertTab::_buildPage()
                                 wxDefaultPosition, slidesize,
                                 wxSL_VERTICAL|
                                 wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    //sizers for the slider and label
    wxBoxSizer* leftGroup = new wxBoxSizer(wxVERTICAL);

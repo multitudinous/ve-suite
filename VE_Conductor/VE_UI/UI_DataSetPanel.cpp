@@ -108,7 +108,7 @@ UI_DatasetScroll::UI_DatasetScroll(wxWindow* parent)
 
 void UI_DatasetScroll::changeActiveDatasetType(int index)
 {
-   _col->Remove(_3dRBox);
+   _col->Detach(_3dRBox);
    delete _3dRBox;
    
    if (index == 1)
@@ -190,8 +190,8 @@ UI_ScalarScroll::~UI_ScalarScroll()
 
 void UI_ScalarScroll::rebuildRBoxes(UI_DataSets* activeDataSet)
 {
-   _col->Remove(_scalarRBox);
-   _col->Remove(_vectorRBox);
+   _col->Detach(_scalarRBox);
+   _col->Detach(_vectorRBox);
 
    if ( _scalarRBox )
    {
@@ -324,9 +324,9 @@ BEGIN_EVENT_TABLE(UI_DatasetPanel, wxPanel)
    EVT_COMMAND_SCROLL(MAX_PER_SLIDER_PANEL, UI_DatasetPanel::_onMinMaxSlider)
 #endif
    EVT_COMMAND_SCROLL(MIN_SPIN_CNTL_BOX, UI_DatasetPanel::_onMinSpinCtrl)
-   EVT_TEXT_ENTER(MIN_SPIN_CNTL_BOX, UI_DatasetPanel::_onMinSpinCtrl)
+   //EVT_TEXT_ENTER(MIN_SPIN_CNTL_BOX, UI_DatasetPanel::_onMinSpinCtrl)
    EVT_COMMAND_SCROLL(MAX_SPIN_CNTL_BOX, UI_DatasetPanel::_onMaxSpinCtrl)
-   EVT_TEXT_ENTER(MAX_SPIN_CNTL_BOX, UI_DatasetPanel::_onMaxSpinCtrl)
+   //EVT_TEXT_ENTER(MAX_SPIN_CNTL_BOX, UI_DatasetPanel::_onMaxSpinCtrl)
    //EVT_TEXT(MIN_SPIN_CNTL_BOX, UI_DatasetPanel::_onMinMaxSpinCtrl)
    //EVT_TEXT(MAX_SPIN_CNTL_BOX, UI_DatasetPanel::_onMinMaxSpinCtrl)
 END_EVENT_TABLE()
@@ -403,9 +403,9 @@ void UI_DatasetPanel::_buildPanel()
 
    //create the two sliders
    _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,0,0,100,wxDefaultPosition, wxDefaultSize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+                                  wxSL_AUTOTICKS|wxSL_LABELS); 
    _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, wxDefaultSize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+                                  wxSL_AUTOTICKS|wxSL_LABELS); 
 
    if ( !_DataSets.empty() )
    {
@@ -624,25 +624,25 @@ void UI_DatasetPanel::_buildDataSets( void )
 void UI_DatasetPanel::_rebuildDataSets( int _activeMod )
 {
 ///////////////////////////////////////////////////////////////////////////////////////////
-   minGroup->Remove(minLabel);
-   minGroup->Remove(_minPercentSlider);
-   maxGroup->Remove(maxLabel);
-   maxGroup->Remove(_maxPercentSlider);
-   sRangeBoxSizer->Remove(_scalarRangeBox);
-   sRangeBoxSizer->Remove(minGroup); 
-   sRangeBoxSizer->Remove(maxGroup);
-   _col1->Remove(_RBoxScroll);
-   _col2->Remove(_ScalarScroll);
-   _colcombine1_2->Remove(_col1);
-   _colcombine1_2->Remove(_col2);
-   _mastercol1->Remove(_datasetCombo);
-   _mastercol1->Remove(_colcombine1_2);
-   //_col3->Remove(sRangeBoxSizer);
-   //_col4->Remove(_visUpdateButton);
-   dHeadingBoxSizer->Remove(_mastercol1);
-   dHeadingBoxSizer->Remove(sRangeBoxSizer);
-   //dHeadingBoxSizer->Remove(_col4);
-   datasetPanelGroup->Remove(dHeadingBoxSizer);
+   minGroup->Detach(minLabel);
+   minGroup->Detach(_minPercentSlider);
+   maxGroup->Detach(maxLabel);
+   maxGroup->Detach(_maxPercentSlider);
+   sRangeBoxSizer->Detach(_scalarRangeBox);
+   sRangeBoxSizer->Detach(minGroup); 
+   sRangeBoxSizer->Detach(maxGroup);
+   _col1->Detach(_RBoxScroll);
+   _col2->Detach(_ScalarScroll);
+   _colcombine1_2->Detach(_col1);
+   _colcombine1_2->Detach(_col2);
+   _mastercol1->Detach(_datasetCombo);
+   _mastercol1->Detach(_colcombine1_2);
+   //_col3->Detach(sRangeBoxSizer);
+   //_col4->Detach(_visUpdateButton);
+   dHeadingBoxSizer->Detach(_mastercol1);
+   dHeadingBoxSizer->Detach(sRangeBoxSizer);
+   //dHeadingBoxSizer->Detach(_col4);
+   datasetPanelGroup->Detach(dHeadingBoxSizer);
    delete _RBoxScroll;
    
    if ( _scalarNames )
@@ -717,7 +717,7 @@ void UI_DatasetPanel::_setScalarsnoDatasets()
 {
    wxString empty[1];
    empty[0] = wxT("No scalars");
-   _col2->Remove(_ScalarScroll);
+   _col2->Detach(_ScalarScroll);
 
    delete _ScalarScroll;
    _ScalarScroll = new UI_ScalarScroll(this);
@@ -861,19 +861,19 @@ void UI_DatasetPanel::_organizeRadioBoxInfo()
 
 void UI_DatasetPanel::_resetScalarAdjustment( int dataSetSelected, int scalarSetSelected )
 {
-   minGroup->Remove( _minPercentSlider );
+   minGroup->Detach( _minPercentSlider );
    delete _minPercentSlider;
    _minPercentSlider = 0;
 
-   minGroupwspin->Remove( _minSpinner );
+   minGroupwspin->Detach( _minSpinner );
    delete _minSpinner;
    _minSpinner = 0;
 
-   maxGroup->Remove( _maxPercentSlider );
+   maxGroup->Detach( _maxPercentSlider );
    delete _maxPercentSlider;
    _maxPercentSlider = 0;
   
-   maxGroupwspin->Remove( _maxSpinner );
+   maxGroupwspin->Detach( _maxSpinner );
    delete _maxSpinner;
    _maxSpinner = 0;
  
@@ -923,9 +923,9 @@ void UI_DatasetPanel::_resetScalarAdjustment( int dataSetSelected, int scalarSet
    {
       //create the two sliders
       _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,0,0,100,wxDefaultPosition, wxDefaultSize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS ); 
       _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, wxDefaultSize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS ); 
 
       //create the two spinners
       _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 

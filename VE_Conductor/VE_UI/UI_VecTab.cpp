@@ -78,16 +78,16 @@ void UI_VectorTab::_buildPage()
    //min threshold slider
    _vThresholdMinSlider = new wxSlider(this, MIN_THRESH_SLIDER,0,0,100,
                                        wxDefaultPosition, wxDefaultSize,
-                                       wxSL_HORIZONTAL|
+									   wxSL_HORIZONTAL|
                                        wxSL_AUTOTICKS|
-                                       wxSL_LABELS|wxSL_RIGHT );
+                                       wxSL_LABELS );
 
    //max threshold slider
    _vThresholdMaxSlider = new wxSlider(this, MAX_THRESH_SLIDER,100,0,100,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_AUTOTICKS|
-                                       wxSL_LABELS|wxSL_RIGHT );
+                                       wxSL_LABELS);
    
    //two sizers to group the sliders and their lables
    wxBoxSizer* minGroup = new wxBoxSizer( wxVERTICAL );
@@ -106,7 +106,7 @@ void UI_VectorTab::_buildPage()
                                 wxDefaultPosition,wxDefaultSize,/* slidesize,*/
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS);
 
    wxBoxSizer* ratioGroup = new wxBoxSizer( wxVERTICAL );
    wxBoxSizer* ratioGroupBottom = new wxBoxSizer( wxHORIZONTAL );
@@ -121,7 +121,7 @@ void UI_VectorTab::_buildPage()
    _vScaleSlider = new wxSlider(this, SCALE_SLIDER,0,-100,100,
                                 wxDefaultPosition, wxDefaultSize,
                                 wxSL_HORIZONTAL|wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    wxBoxSizer* scaleGroup = new wxBoxSizer( wxVERTICAL );
    wxBoxSizer* scaleGroupBottom = new wxBoxSizer( wxHORIZONTAL );
@@ -167,7 +167,7 @@ void UI_VectorTab::_buildPage()
                                 wxDefaultPosition,wxDefaultSize,/* slidesize,*/
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
    wxBoxSizer* contourOpacityGroup = new wxBoxSizer( wxVERTICAL );
    wxBoxSizer* contourOpacityLabelBottom = new wxBoxSizer( wxHORIZONTAL );
 
@@ -187,7 +187,7 @@ void UI_VectorTab::_buildPage()
                                 wxDefaultPosition,wxDefaultSize,/* slidesize,*/
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    wxBoxSizer* warpScaleGroup = new wxBoxSizer( wxVERTICAL );
    wxBoxSizer* warpScaleGroupBottom = new wxBoxSizer( wxHORIZONTAL );
@@ -207,7 +207,7 @@ void UI_VectorTab::_buildPage()
                                 wxDefaultPosition,wxDefaultSize,/* slidesize,*/
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
-                                wxSL_LABELS|wxSL_RIGHT );
+                                wxSL_LABELS );
 
    wxBoxSizer* lodGroup = new wxBoxSizer( wxVERTICAL );
    wxBoxSizer* lodLabelBottom = new wxBoxSizer( wxHORIZONTAL );

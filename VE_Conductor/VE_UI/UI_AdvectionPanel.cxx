@@ -195,7 +195,7 @@ void UI_AdvectionPanel::_buildPage()
                                  0,100,
                                  wxDefaultPosition, wxDefaultSize,
                                  wxSL_HORIZONTAL| wxSL_AUTOTICKS|
-                                 wxSL_LABELS|wxSL_RIGHT );
+                                 wxSL_LABELS );
    nSizer->Add(nLabel,0,wxALIGN_LEFT|wxEXPAND);
    nSizer->Add(_noiseDensityCtrl,1,wxALIGN_LEFT|wxEXPAND);
 
@@ -203,7 +203,7 @@ void UI_AdvectionPanel::_buildPage()
                                      20,0,100,
                                      wxDefaultPosition, wxDefaultSize,
                                      wxSL_HORIZONTAL| wxSL_AUTOTICKS|
-                                     wxSL_LABELS|wxSL_RIGHT );
+                                     wxSL_LABELS );
    iSizer->Add(iLabel,0,wxALIGN_LEFT|wxEXPAND);
    iSizer->Add(_injectionStrengthCtrl,1,wxALIGN_LEFT|wxEXPAND);
 
@@ -211,7 +211,7 @@ void UI_AdvectionPanel::_buildPage()
                                   80,0,100,
                                   wxDefaultPosition, wxDefaultSize,
                                   wxSL_HORIZONTAL| wxSL_AUTOTICKS|
-                                  wxSL_LABELS|wxSL_RIGHT );
+                                  wxSL_LABELS );
 
    dSizer->Add(dLabel,0,wxALIGN_LEFT|wxEXPAND);
    dSizer->Add(_decayStrengthCtrl,1,wxALIGN_LEFT|wxEXPAND);

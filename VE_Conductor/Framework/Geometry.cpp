@@ -105,14 +105,14 @@ void Geometry::_buildPage()
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_AUTOTICKS|
-                                       wxSL_LABELS|wxSL_RIGHT );
+                                       wxSL_LABELS );
 
    //lod slider
    geomLODSlider = new wxSlider(this, GEOMETRY_CONFIG_LOD_SLIDER,1000,0,1000,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_AUTOTICKS|
-                                       wxSL_LABELS|wxSL_RIGHT );
+                                       wxSL_LABELS );
 
    //two sizers to group the sliders and their lables
    wxBoxSizer* opacityGroup = new wxBoxSizer( wxVERTICAL );

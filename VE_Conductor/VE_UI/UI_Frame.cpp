@@ -98,8 +98,9 @@ void UI_Frame::buildCORBA( )
    try 
    {
       // First initialize the ORB, 
-      //orb = CORBA::ORB_init( wxGetApp().argc, wxGetApp().argv, ""); // the ORB name can be anything! 
-
+#ifndef _TAO
+      orb = CORBA::ORB_init( wxGetApp().argc, wxGetApp().argv, ""); // the ORB name can be anything! 
+#endif
       //Here is the code to set up the ROOT POA
       CORBA::Object_var poa_object =
          orb->resolve_initial_references ("RootPOA"); // get the root poa
@@ -173,8 +174,8 @@ void UI_Frame::buildFrame( )
    _frameSizer = new wxBoxSizer(wxHORIZONTAL);
 
    //the notebook sizer
-   _tabsSizer = new wxNotebookSizer(_tabs);
-
+   _tabsSizer = new wxBoxSizer(wxHORIZONTAL);
+   _tabsSizer->Add(_tabs,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    //the panel sizers for datasetPage and scalartab
    _datasetSizer = new wxBoxSizer(wxHORIZONTAL);
    //wxBoxSizer* _scalarSizer = new wxBoxSizer(wxHORIZONTAL);
@@ -222,10 +223,10 @@ void UI_Frame::buildFrame( )
 /////////////////////
 UI_Frame::~UI_Frame()
 {
-   _tabsSizer->Remove(_tabs);
-   _datasetSizer->Remove(_datasetPanel);
-   _frameSizer->Remove(_tabsSizer);
-   _frameSizer->Remove(_datasetSizer);
+   _tabsSizer->Detach(_tabs);
+   _datasetSizer->Detach(_datasetPanel);
+   _frameSizer->Detach(_tabsSizer);
+   _frameSizer->Detach(_datasetSizer);
 
    delete _tabs;
    delete _datasetPanel;
