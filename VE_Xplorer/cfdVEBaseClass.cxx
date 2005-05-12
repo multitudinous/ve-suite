@@ -755,31 +755,36 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
 /////////////////////////////////////////////////////////////////////////////
 void cfdVEBaseClass::RegistVar(std::string vname, long *var)
 {
-  _int[vname]=var;
+   _int[vname]=var;
 }
 
 void cfdVEBaseClass::RegistVar(std::string vname, double *var)
 {
-  _double[vname]=var;
+   _double[vname]=var;
 }
 
 void cfdVEBaseClass::RegistVar(std::string vname, std::string *var)
 {
-  _string[vname]=var;
+   _string[vname]=var;
 }
 
 void cfdVEBaseClass::RegistVar(std::string vname, std::vector<long> *var)
 {
-  _int1D[vname]=var;
+   _int1D[vname]=var;
 }
 
 void cfdVEBaseClass::RegistVar(std::string vname, std::vector<double> *var)
 {
-  _double1D[vname]=var;
+   _double1D[vname]=var;
 }
 
 void cfdVEBaseClass::RegistVar(std::string vname, std::vector<std::string> *var)
 {
-  _string1D[vname]=var;
+   _string1D[vname]=var;
+}
+
+cfdDCS* cfdVEBaseClass::GetWorldDCS()
+{
+   return this->worldDCS;
 }
 

@@ -154,6 +154,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       void RegistVar(std::string vname, std::vector<long> *var);
       void RegistVar(std::string vname, std::vector<double> *var);
       void RegistVar(std::string vname, std::vector<std::string> *var);
+      cfdDCS* GetWorldDCS();
 
       Interface mod_pack;
 
