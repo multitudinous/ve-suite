@@ -69,7 +69,6 @@ cfdVEBaseClass::cfdVEBaseClass( void )
    _network = NULL;
 }
 
-
 /*cfdVEBaseClass::cfdVEBaseClass( cfdDCS* veworldDCS )
 {
    this->groupNode = new cfdGroup();
@@ -213,7 +212,8 @@ void cfdVEBaseClass::SetCursor( cfdCursor* input )
    }
    else
    {
-      std::cerr << " ERROR : cfdVEBaseClass::SetCursor input is NULL " << std::endl;
+      std::cerr << " ERROR : cfdVEBaseClass::SetCursor input is NULL "
+                << std::endl;
    }
 }
 
@@ -227,8 +227,15 @@ void cfdVEBaseClass::SetNavigate( cfdNavigate* input )
    }
    else
    {
-      std::cerr << " ERROR : cfdVEBaseClass::SetNavigate input is NULL " << std::endl;
+      std::cerr << " ERROR : cfdVEBaseClass::SetNavigate input is NULL "
+                << std::endl;
    }
+}
+
+// Copy the interface so dynamic objects can do custom features with gui data
+void cfdVEBaseClass::SetInterface( Interface& intf )
+{
+   intf.copy( this->myInterface );
 }
 
 // Set the results for a particluar module so that we can use them for custom 
@@ -507,13 +514,13 @@ void cfdVEBaseClass::CreateObjects( void )
          input >> transFlag;
          input.getline( textLine, 256 );   //skip past remainder of line
          vprDEBUG(vprDBG_ALL,0) << " geometry transparency flag = "
-                                 << transFlag
-                                 << std::endl << vprDEBUG_FLUSH;
+                                << transFlag
+                                << std::endl << vprDEBUG_FLUSH;
 
          // read color flag
          input >> color;
          vprDEBUG(vprDBG_ALL,0) << " stl color flag = " << color
-                          << std::endl << vprDEBUG_FLUSH;
+                                << std::endl << vprDEBUG_FLUSH;
 
          // read color if color flag = 1
          if( color == 1)
@@ -530,10 +537,9 @@ void cfdVEBaseClass::CreateObjects( void )
          input.getline( textLine, 256 );   //skip past remainder of line
 
          vprDEBUG(vprDBG_ALL,0) << " geometry DCS parameters:" 
-                          << std::endl << vprDEBUG_FLUSH;
+                                << std::endl << vprDEBUG_FLUSH;
          float scale[3], trans[3], rotate[3];   // pfDCS stuff
          this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
-
 
          input >> fileName;
          input.getline( textLine, 256 );   //skip past remainder of line
@@ -541,19 +547,21 @@ void cfdVEBaseClass::CreateObjects( void )
          int test1 = fileIO::isFileReadable( fileName );
          if ( test1 == 1 )
          { 
-            vprDEBUG(vprDBG_ALL,0) << " geometry fileName = "
-                                    << fileName
-                                    << std::endl << vprDEBUG_FLUSH;
+            vprDEBUG(vprDBG_ALL,0) << " geometry fileName = " << fileName
+                                   << std::endl << vprDEBUG_FLUSH;
          }
          else
          {
-            std::cerr << "ERROR: unreadable geometry file = " 
-                        << fileName 
-                        << ".  You may need to correct your param file." << std::endl;
+            std::cerr << "ERROR: unreadable geometry file = " << fileName 
+                      << ".  You may need to correct your param file."
+                      << std::endl;
             exit(1);
          }
 
-         std::cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << std::endl;
+         vprDEBUG(vprDBG_ALL,0) << " scale = " << scale[0] << " : "
+                                << scale[1] << " : " << scale[2]
+                                << std::endl << vprDEBUG_FLUSH;
+
          _model->CreateGeomDataSet( fileName );
          _model->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
          _model->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );

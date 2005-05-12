@@ -52,7 +52,8 @@
 
 #include <orbsvcs/CosNamingC.h>
 
-cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, PortableServer::POA* child_poa )
+cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
+                            PortableServer::POA* child_poa )
 {
    this->naming_context = inputNameContext;
    try
@@ -133,7 +134,8 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext, Portable
    } 
    catch (CORBA::Exception &) 
    {      
-      std::cerr << "|\tExecutive not present or VEClient registration error" << std::endl;
+      std::cerr << "|\tExecutive not present or VEClient registration error"
+                << std::endl;
    }
    
    //_param = new cfdExecutiveConfiguration();
@@ -280,8 +282,8 @@ void cfdExecutive::GetNetwork ( void )
    // Get buffer value from Body_UI implementation
    std::string temp( ui_i->GetNetworkString() );
    const char* network = temp.c_str();
-   vprDEBUG(vprDBG_ALL,2)  << "|\tNetwork String : " << network 
-                              << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vprDBG_ALL,2) << "|\tNetwork String : " << network 
+                          << std::endl << vprDEBUG_FLUSH;
 
 /////////////////////////////
 // This code taken from Executive_i.cpp
@@ -399,13 +401,15 @@ void cfdExecutive::GetEverything( void )
                _plugins[ iter->first ]->InitializeNode( cfdPfSceneManagement::instance()->GetWorldDCS() );
                _plugins[ iter->first ]->AddSelfToSG();
                cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
+               // Give graphical plugins access to wand position, wand buttons, and gui variables
                _plugins[ iter->first ]->SetCursor( cfdEnvironmentHandler::instance()->GetCursor() );
                _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
-               //_plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
+               _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
                _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
                vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
                                       << " ]-> " << iter->second 
-                                      << " is being created." << std::endl << vprDEBUG_FLUSH;
+                                      << " is being created."
+                                      << std::endl << vprDEBUG_FLUSH;
             }
          }
          else
@@ -413,7 +417,8 @@ void cfdExecutive::GetEverything( void )
             // plugin already present...
             vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
                                     << " ]-> " << iter->second 
-                                    << " is already on the plugin map." << std::endl << vprDEBUG_FLUSH;
+                                    << " is already on the plugin map."
+                                    << std::endl << vprDEBUG_FLUSH;
          }
       }
 
@@ -437,16 +442,20 @@ void cfdExecutive::GetEverything( void )
             // plugin already present...
             vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
                                     << " ]-> " << iter->second 
-                                    << " is already on the plugin and id map." << std::endl << vprDEBUG_FLUSH;
+                                    << " is already on the plugin and id map."
+                                    << std::endl << vprDEBUG_FLUSH;
             ++foundPlugin;
          }
          // The above code is from : The C++ Standard Library by:Josuttis pg. 205
       }
-      vprDEBUG(vprDBG_ALL,0) << "|\tDone Getting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
+      vprDEBUG(vprDBG_ALL,0) << "|\tDone Getting Network From Executive"
+                             << std::endl << vprDEBUG_FLUSH;      
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been intialized or not time to update! " <<  std::endl << vprDEBUG_FLUSH;     
+      vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been " 
+                             << "intialized or not time to update!"
+                             << std::endl << vprDEBUG_FLUSH;     
    }
       //updateNetworkString = false;
    }
@@ -510,7 +519,8 @@ void cfdExecutive::PreFrameUpdate( void )
       //if active model is the plugin's model...
       if ( cfdModelHandler::instance()->GetActiveModel() == foundPlugin->second->GetCFDModel() )
       {
-         vprDEBUG(vprDBG_ALL,2) << " active model is the plugin: calling PreFrameUpdate"
+         vprDEBUG(vprDBG_ALL,2) << " active model is the plugin: " 
+                                << "calling PreFrameUpdate"
                                 << std::endl << vprDEBUG_FLUSH;
          foundPlugin->second->PreFrameUpdate();
       }

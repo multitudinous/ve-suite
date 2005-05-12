@@ -123,6 +123,8 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
 
       void SetNavigate( cfdNavigate* );
 
+      void SetInterface( Interface& );
+
       void SetModuleResults( const char* );
 
       virtual void CreateCustomVizFeature( int );
@@ -176,6 +178,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       cfdDCS* _dcs;
       cfdCursor* _cursor;
       cfdNavigate* _navigate;
+      Interface myInterface;
 
       std::vector<wxString> v_desc;
       std::vector<wxString> v_value;
