@@ -145,6 +145,7 @@ SRCS=\
    cfdCuttingPlane.cxx \
    cfdDCS.cxx \
    cfdDataSet.cxx \
+   cfdDigitalAnalogGauge.cxx \
    cfdEnvironmentHandler.cxx \
    cfdFILE.cxx \
    cfdFileInfo.cxx \

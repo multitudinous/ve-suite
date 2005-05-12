@@ -32,49 +32,81 @@
 #ifndef CFD_DIGITALANALOGGAUGE_H
 #define CFD_DIGITALANALOGGAUGE_H
 
-//#include <vector>
-//#include <string>
-
-class cfdGroup;
-class cfdNode;
-class cfdReadParam;
-#include "cfdDCS.h"
 #include <utility>
 #include <string>
-class cfd1DTextInput;
+#include <vector>
 
-class cfdDigitalAnalogGauge : public cfdDCS
+class cfdGroup;
+//class cfdNode;
+class cfdDCS;
+class cfdGeode;
+class vtkArrowSource;
+class vtkTransform;
+class vtkMatrix4x4;
+class vtkTransformPolyDataFilter;
+class vtkPolyDataMapper;
+class vtkActor;
+class vtkVectorText;
+
+class cfdDigitalAnalogGauge
 {
    public:
 
-      cfdDigitalAnalogGauge( cfdGroup* );
-      //cfdDigitalAnalogGauge( cfdDigitalAnalogGauge* );
-
+      cfdDigitalAnalogGauge( const char * input, cfdGroup* );
       ~cfdDigitalAnalogGauge( void );
 
-      void SetGaugeName( std::string );
-      void SetGeometryFilename( std::string );
-      void SetModuleName( std::string );
-      void SetDataValue( std::string );
-      void SetUnitsTag( std::string );
-      void SetDataTag( std::string );
-      void CreateGaugeName( void );
+      // Set/Get the position of the gauge in 3D space
+      void SetPosition( float x, float y, float z );
+      void SetPosition( float x[3] );
+      void GetPosition( float x[3] );
+      void GetPosition( float &x, float &y, float &z );
+      void SetRotation( double Xrot, double Yrot, double Zrot );
 
-      std::string GetModuleName( void );
-      std::string GetDataTag( void );
+      vtkActor * GetCircleActor();
+      vtkActor * GetStationaryArrowActor();
+      vtkActor * GetMovingArrowActor();
+      vtkActor * GetLabelActor();
+      vtkActor * GetDigitalActor();
 
-      void Update( void );
-      std::pair < cfd1DTextInput*, cfd1DTextInput* > _textOutput;
+      void Display();
+
+      void SetMovingArrowAngle( double angle );
+      void SetDigitalPrecision( int input );
+      void SetDigitalText( double value );
+
+      cfdDCS * GetGaugeNode();
+
    private:
    
-      cfdNode* node;
-      cfdGroup* _masterNode;
+      void DefineCircleActor();
+      void DefineStationaryArrowActor();
+      void DefineMovingArrowActor();
+      void DefineGaugeTextActor( const char * input );
+      void DefineDigitalActor();
 
-      std::string _filename;
-      std::string _gaugeName;
-      std::string _moduleName;
-      std::string _unitsName;
-      std::string _gaugeTagName;
+      //cfdNode * node;
+      cfdGroup* masterNode;
+      cfdDCS * gaugeDCS;
+
+      std::vector< cfdGeode* > geodes;
+
+      float itsX [ 3 ];
+      float zrot;
+      vtkArrowSource * movingArrow;
+      vtkTransform * arrowTransform;
+      vtkMatrix4x4 * arrowRefPosition;
+      vtkTransformPolyDataFilter * transformer2;
+      vtkPolyDataMapper * arrowMapper;
+      vtkActor * arrowActor;
+      double circleRadius;
+      vtkActor * circleActor;
+      vtkActor * stationaryArrowActor;
+      vtkActor * labelActor;
+      vtkActor * digitalActor;
+      vtkVectorText * digitalLabel;
+      char digitalText [ 100 ];
+      int digitalPrecision;
 };
 
 #endif
+
