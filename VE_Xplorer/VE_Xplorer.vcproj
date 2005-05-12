@@ -616,7 +616,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(CG_INC_PATH)&quot;;&quot;$(OSGHOME)\..\osgNV\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
+				AdditionalIncludeDirectories="./;../;&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\osgNV\include&quot;;&quot;$(PRODUCER_HOME)\include&quot;;&quot;$(OPENTHREADS_HOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(CG_INC_PATH)&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;"
 				PreprocessorDefinitions="_DEBUG;_OSG;VTK44;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32;CFD_USE_SHADERS;VE_PATENTED"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -1217,72 +1217,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\VjObsC.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_BUILD|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_PATENTED|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\VjObsS.cpp">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_BUILD|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_PATENTED|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath=".\vtkActorToOSG.cpp">
 				<FileConfiguration
 					Name="Debug|Win32"
@@ -1411,6 +1345,9 @@
 			</File>
 			<File
 				RelativePath=".\cfdGraphicsObject.h">
+			</File>
+			<File
+				RelativePath="..\VE_Builder\Translator\cfdGrid2Surface.h">
 			</File>
 			<File
 				RelativePath=".\cfdIHCCGauge.h">
@@ -2001,132 +1938,6 @@
 							</FileConfiguration>
 						</File>
 						<File
-							RelativePath="..\VE_VolumeVis\cfdOSGGammaShaderManager.cxx">
-							<FileConfiguration
-								Name="Debug|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="OMNI_BUILD|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="TAO_BUILD|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release_OMNI|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Debug_TAO|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="OMNI_OSG|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="OMNI_OSG_CG_DBG|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Debug_TAO_OSG|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="OMNI_OSG_CG_PATENTED|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-						</File>
-						<File
-							RelativePath="..\VE_VolumeVis\cfdOSGScalarShaderManager.cxx">
-							<FileConfiguration
-								Name="Debug|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="OMNI_BUILD|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="TAO_BUILD|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Release_OMNI|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Debug_TAO|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="OMNI_OSG|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="OMNI_OSG_CG_DBG|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="Debug_TAO_OSG|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-							<FileConfiguration
-								Name="OMNI_OSG_CG_PATENTED|Win32">
-								<Tool
-									Name="VCCLCompilerTool"
-									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-							</FileConfiguration>
-						</File>
-						<File
 							RelativePath="..\VE_VolumeVis\cfdOSGShaderManager.cxx">
 							<FileConfiguration
 								Name="Debug|Win32">
@@ -2252,6 +2063,9 @@
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
 						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdScalarShaderManager.cxx">
+						</File>
 					</Filter>
 					<Filter
 						Name="headers"
@@ -2260,16 +2074,13 @@
 							RelativePath="..\VE_VolumeVis\cfdOSGAdvectionShaderManager.h">
 						</File>
 						<File
-							RelativePath="..\VE_VolumeVis\cfdOSGGammaShaderManager.h">
-						</File>
-						<File
-							RelativePath="..\VE_VolumeVis\cfdOSGScalarShaderManager.h">
-						</File>
-						<File
 							RelativePath="..\VE_VolumeVis\cfdOSGShaderManager.h">
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdOSGTransferShaderManager.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdScalarShaderManager.h">
 						</File>
 					</Filter>
 				</Filter>
