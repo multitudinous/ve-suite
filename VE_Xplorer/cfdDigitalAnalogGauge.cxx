@@ -62,9 +62,8 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( const char * gaugeName,
    this->gaugeDCS->SetName("gauge");
 
    this->masterNode = groupNode;
-   // zero position is on center of floor, readable as you walk in
    this->SetPosition( 4.0f, 6.0f, 8.0f );
-   this->SetRotation( 0.0, 90.0, 0.0 );
+   this->SetOrientation( 0.0, 90.0, 0.0 );
    this->circleRadius = 0.75;
    this->digitalPrecision = 3;
    strcpy( this->digitalText, "--N/A--" );
@@ -112,7 +111,7 @@ void cfdDigitalAnalogGauge::GetPosition( float &x, float &y, float &z )
    z = this->itsX[ 2 ];
 }
 
-void cfdDigitalAnalogGauge::SetRotation( double Xrot, double Yrot, double Zrot )
+void cfdDigitalAnalogGauge::SetOrientation( double Xrot, double Yrot, double Zrot )
 {
    float rotationArray [ 3 ];
    rotationArray[ 0 ] = Xrot;
@@ -146,29 +145,29 @@ cfdDCS * cfdDigitalAnalogGauge::GetGaugeNode()
 
 void cfdDigitalAnalogGauge::Display()
 {
-   geodes.push_back( new cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( this->GetCircleActor() );
-   this->gaugeDCS->AddChild( geodes.back() );
+   this->circleGeode = new cfdGeode();
+   this->circleGeode->TranslateTocfdGeode( this->GetCircleActor() );
+   this->gaugeDCS->AddChild( this->circleGeode );
    //this->GetCircleActor()->Delete();
 
-   geodes.push_back( new cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( this->GetStationaryArrowActor() );
-   this->gaugeDCS->AddChild( geodes.back() );
+   this->stationaryArrowGeode = new cfdGeode();
+   this->stationaryArrowGeode->TranslateTocfdGeode( this->GetStationaryArrowActor() );
+   this->gaugeDCS->AddChild( this->stationaryArrowGeode );
    //this->GetStationaryArrowActor()->Delete();
 
-   geodes.push_back( new cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( this->GetLabelActor() );
-   this->gaugeDCS->AddChild( geodes.back() );
+   this->labelGeode = new cfdGeode();
+   this->labelGeode->TranslateTocfdGeode( this->GetLabelActor() );
+   this->gaugeDCS->AddChild( this->labelGeode );
    //this->GetLabelActor()->Delete();
 
-   geodes.push_back( new cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( this->GetMovingArrowActor() );
-   this->gaugeDCS->AddChild( geodes.back() );
+   this->movingArrowGeode = new cfdGeode();
+   this->movingArrowGeode->TranslateTocfdGeode( this->GetMovingArrowActor() );
+   this->gaugeDCS->AddChild( this->movingArrowGeode );
    //this->GetMovingArrowActor()->Delete();
 
-   geodes.push_back( new cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( this->GetDigitalActor() );
-   this->gaugeDCS->AddChild( geodes.back() );
+   this->digitalGeode = new cfdGeode();
+   this->digitalGeode->TranslateTocfdGeode( this->GetDigitalActor() );
+   this->gaugeDCS->AddChild( this->digitalGeode );
    //this->GetDigitalActor()->Delete();
 
    this->masterNode->AddChild( this->gaugeDCS );
@@ -314,10 +313,17 @@ vtkActor * cfdDigitalAnalogGauge::GetMovingArrowActor()
    return this->arrowActor;
 }
 
-void cfdDigitalAnalogGauge::SetMovingArrowAngle( double angle )
+void cfdDigitalAnalogGauge::UpdateMovingArrowAngle( double angle )
 {
    this->arrowTransform->SetMatrix( this->arrowRefPosition );  // reset to ref
    this->arrowTransform->RotateZ( angle );  // incremental adjustment
+
+   this->gaugeDCS->RemoveChild( this->movingArrowGeode );
+   delete this->movingArrowGeode;
+
+   this->movingArrowGeode = new cfdGeode();
+   this->movingArrowGeode->TranslateTocfdGeode( this->GetMovingArrowActor() );
+   this->gaugeDCS->AddChild( this->movingArrowGeode );
 }
 
 void cfdDigitalAnalogGauge::DefineGaugeTextActor( const char * gaugeName )
@@ -388,7 +394,7 @@ void cfdDigitalAnalogGauge::SetDigitalPrecision( int input )
    this->digitalPrecision = input;
 }
 
-void cfdDigitalAnalogGauge::SetDigitalText( double value )
+void cfdDigitalAnalogGauge::UpdateDigitalText( double value )
 {  
    if ( this->digitalPrecision == 3)
       sprintf( this->digitalText, "%10.3f", value );
@@ -396,7 +402,13 @@ void cfdDigitalAnalogGauge::SetDigitalText( double value )
       sprintf( this->digitalText, "%f", value );
 
    this->digitalLabel->SetText( this->digitalText );
-   //this->digitalLabel->Update();
+
+   this->gaugeDCS->RemoveChild( this->digitalGeode );
+   delete this->digitalGeode;
+   
+   this->digitalGeode = new cfdGeode();
+   this->digitalGeode->TranslateTocfdGeode( this->GetDigitalActor() );
+   this->gaugeDCS->AddChild( this->digitalGeode );
 }
 
 vtkActor * cfdDigitalAnalogGauge::GetDigitalActor()

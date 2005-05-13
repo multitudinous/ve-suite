@@ -34,10 +34,8 @@
 
 #include <utility>
 #include <string>
-#include <vector>
 
 class cfdGroup;
-//class cfdNode;
 class cfdDCS;
 class cfdGeode;
 class vtkArrowSource;
@@ -60,7 +58,7 @@ class cfdDigitalAnalogGauge
       void SetPosition( float x[3] );
       void GetPosition( float x[3] );
       void GetPosition( float &x, float &y, float &z );
-      void SetRotation( double Xrot, double Yrot, double Zrot );
+      void SetOrientation( double Xrot, double Yrot, double Zrot );
 
       vtkActor * GetCircleActor();
       vtkActor * GetStationaryArrowActor();
@@ -70,9 +68,9 @@ class cfdDigitalAnalogGauge
 
       void Display();
 
-      void SetMovingArrowAngle( double angle );
       void SetDigitalPrecision( int input );
-      void SetDigitalText( double value );
+      void UpdateMovingArrowAngle( double angle );
+      void UpdateDigitalText( double value );
 
       cfdDCS * GetGaugeNode();
 
@@ -84,11 +82,14 @@ class cfdDigitalAnalogGauge
       void DefineGaugeTextActor( const char * input );
       void DefineDigitalActor();
 
-      //cfdNode * node;
       cfdGroup* masterNode;
       cfdDCS * gaugeDCS;
 
-      std::vector< cfdGeode* > geodes;
+      cfdGeode* circleGeode;
+      cfdGeode* movingArrowGeode;
+      cfdGeode* stationaryArrowGeode;
+      cfdGeode* labelGeode;
+      cfdGeode* digitalGeode;
 
       float itsX [ 3 ];
       float zrot;
