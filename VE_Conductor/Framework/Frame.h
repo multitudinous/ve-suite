@@ -7,14 +7,8 @@
 #include <wx/wx.h>
 #include <wx/config.h> 
 #include <wx/splitter.h>
-#include "Avail_Modules.h"
-#include "Network.h"
-#include "UI_Tabs.h"
-#include "UI_Frame.h"
 #include "moduleC.h"
 #include <orbsvcs/CosNamingC.h>
-#include "UI_i.h"
-
 
 const wxString LOCATION = _T("Framesize");
 const wxString LOCATION_X = _T("LocationX");
@@ -51,6 +45,11 @@ enum {
 
 class OrbThread;
 class PEThread;
+class Avail_Modules;
+class UI_Tabs;
+class UI_Frame;
+class Network;
+class Body_UI_i;
 
 class AppFrame : public wxFrame
 {

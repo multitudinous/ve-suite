@@ -6,6 +6,11 @@
 #include "package.h"
 #include "OrbThread.h"
 #include "controlIds.h"
+#include "Avail_Modules.h"
+#include "UI_Tabs.h"
+#include "UI_Frame.h"
+#include "Network.h"
+#include "UI_i.h"
 
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_CLOSE(AppFrame::OnClose)
@@ -14,7 +19,8 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(wxID_SAVE, AppFrame::Save)
   EVT_MENU(wxID_SAVEAS, AppFrame::SaveAs)
   EVT_MENU(wxID_NEW, AppFrame::New)
-  EVT_MENU(wxID_EXIT, wxFrame::Close)
+   // this is probably a bug and needs to be fixed
+  //EVT_MENU(wxID_EXIT, wxFrame::Close)
   EVT_MENU(wxID_OPEN, AppFrame::Open)
   EVT_MENU(v21ID_LOAD, AppFrame::LoadFromServer)
   EVT_MENU(v21ID_SUBMIT, AppFrame::SubmitToServer)
