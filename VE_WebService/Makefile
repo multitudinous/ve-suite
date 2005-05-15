@@ -6,7 +6,7 @@ APP_NAME= WebServices
 
 IDL_HOME = $(VE_SUITE_HOME)/VEOpen
 
-srcdir= src/
+srcdir= ./src/
 
 all:
 	$(MAKE) NO_DEPEND=0 cxx
@@ -50,11 +50,12 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
+
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+#include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 EXEC_TAG = _tao
 vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework \
 			$(VE_SUITE_HOME)/VE_Xplorer \
@@ -65,10 +66,10 @@ vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework \
 EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel 
 EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/VE_UI 
 EXTRA_CXXFLAGS += -I$(VJ_BASE_DIR)/include -I$(VE_SUITE_HOME)/VE_CE -I$(VE_SUITE_HOME)/VE_Xplorer -I$(VE_SUITE_HOME)/VE_SceneGraph 
-EXTRA_CXXFLAGS += -I$(VJ_DEPS_DIR)/include 
-EXTRA_CXXFLAGS += -I$(WX_HOME)/include/
-EXTRA_CXXFLAGS += -I$(WX_HOME)/lib/wx/include/gtkd-2.4
-EXTRA_CXXFLAGS += -I$(VJ_DEPS_DIR)/include/boost/compatibility/cpp_c_headers
+#EXTRA_CXXFLAGS += -I$(VJ_DEPS_DIR)/include 
+#EXTRA_CXXFLAGS += -I$(WX_HOME)/include/
+#EXTRA_CXXFLAGS += -I$(WX_HOME)/lib/wx/include/gtkd-2.4
+#EXTRA_CXXFLAGS += -I$(VJ_DEPS_DIR)/include/boost/compatibility/cpp_c_headers
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
