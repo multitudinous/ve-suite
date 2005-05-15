@@ -96,6 +96,7 @@
 //web interface stuff
 #ifdef _WEB_INTERFACE
 #include <corona.h>
+#include <vpr/System.h>
 #endif   //_WEB_INTERFACE
 
 cfdApp::cfdApp( void ) 
@@ -150,7 +151,7 @@ void cfdApp::exit()
    
 #ifdef _WEB_INTERFACE
    runWebImageSaveThread=false;
-   vpr::System::msleep( 1000 );  // one-second delay
+   //vpr::System::msleep( 1000 );  // one-second delay
    delete writeWebImageFileThread;
    if(readyToWriteWebImage)   //if we've captured the pixels, but didn't write them out
       delete[] webImagePixelArray;   //delete the pixel array
@@ -306,7 +307,7 @@ void cfdApp::initScene( void )
    runWebImageSaveThread = true;
    readyToWriteWebImage = false;
    writingWebImageNow = false;
-   captureNextFrameForWeb = false
+   captureNextFrameForWeb = false;
 #endif   //_WEB_INTERFACE
 
    // define the rootNode, worldDCS, and lighting
@@ -468,17 +469,17 @@ void cfdApp::captureWebImage()
    //get the viewport height and width
    vrj::GlDrawManager::instance()->currentUserData()->getGlWindow()->
       getOriginSize(dummyOx, dummyOy, webImageWidth, webImageHeight);
-   std::cout << "Copying frame buffer "<< frameWidth 
-               << " " << frameHeight << "......." << std::endl;
+   std::cout << "Copying frame buffer "<< webImageWidth 
+               << " " << webImageHeight << "......." << std::endl;
    captureNextFrameForWeb=false;      //we're not going to capture next time around
-   webImagePixelArray=new char[frameHeight*frameWidth*3];      //create an array to store the data
+   webImagePixelArray=new char[webImageHeight*webImageWidth*3];      //create an array to store the data
    glReadPixels(0, 0, webImageWidth, webImageHeight, GL_RGB, GL_UNSIGNED_BYTE, webImagePixelArray);   //copy from the framebuffer
    readyToWriteWebImage=true;      
 }
 
 void cfdApp::writeImageFileForWeb(void*)
 {
-   while(runImageSaveThread)
+   while(runWebImageSaveThread)
    {
       vpr::System::msleep( 500 );  // half-second delay
       if(readyToWriteWebImage)
@@ -486,9 +487,9 @@ void cfdApp::writeImageFileForWeb(void*)
          readyToWriteWebImage=false;
          writingWebImageNow = true;
          //let's try saving the image with Corona
-         Image* frameCap=CreateImage(frameWidth, frameHeight, PF_R8G8B8, (void*)webImagePixelArray);
-         frameCap=FlipImage(frameCap, CA_X);
-         if(!SaveImage("../../public_html/PowerPlant/VE/dump.png", FF_PNG, frameCap))
+         corona::Image* frameCap=corona::CreateImage(webImageWidth, webImageHeight, corona::PF_R8G8B8, (void*)webImagePixelArray);
+         frameCap=corona::FlipImage(frameCap, corona::CA_X);
+         if(!corona::SaveImage("../../public_html/PowerPlant/VE/dump.png", corona::FF_PNG, frameCap))
             std::cout << "error saving image!" << std::endl;
          else 
             std::cout << "Image saved successfully.!" << std::endl;
@@ -553,7 +554,7 @@ void cfdApp::draw()
 
    // Copy the matrix
    vrj::Projection* project = userData->getProjection();
-   const float* vj_proj_view_mat = project->getViewMatrix().mData;
+   //const float* vj_proj_view_mat = project->getViewMatrix().mData;
    //osg::ref_ptr<osg::RefMatrix> osg_proj_xform_mat = new osg::RefMatrix;
    osg::RefMatrix* osg_proj_xform_mat = new osg::RefMatrix;
 

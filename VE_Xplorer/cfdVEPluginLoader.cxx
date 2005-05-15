@@ -49,7 +49,7 @@ cfdVEPluginLoader::cfdVEPluginLoader()
    //::wxInitAllImageHandlers();
    wxPluginLibrary::ms_classes = new wxDLImports(wxKEY_STRING);
    wxPluginManager::CreateManifest();
-   wxClassInfo::InitializeClasses();
+   //wxClassInfo::InitializeClasses();
 }
 
 cfdVEPluginLoader::~cfdVEPluginLoader()
@@ -63,14 +63,14 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
    delete wxPluginLibrary::ms_classes;
    wxPluginLibrary::ms_classes = NULL;
    wxPluginManager::ClearManifest();
-   wxClassInfo::CleanUpClasses();
+   wxClassInfo::CleanUp();
 }
     
 bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
 {
    wxString filename;
 
-   wxString ext = "*" + wxDllLoader::GetDllExt();
+   const wxString ext = wxString("*") + wxPluginLibrary::GetDllExt();
   
    wxLogDebug ("Loading plugins from [%s]", lib_dir.c_str());
   
@@ -92,7 +92,7 @@ bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
       while ( cont )
       {
          wxFileName  libname(lib_dir, filename);
-         const wxString libn=lib_dir+"/"+libname.GetName()+wxDllLoader::GetDllExt();
+         const wxString libn=lib_dir+"/"+libname.GetName()+wxPluginLibrary::GetDllExt();
          //libs.push_back( new wxDynamicLibrary( libn ) );
          libs.push_back( wxPluginManager::LoadLibrary (libn) );
 
@@ -140,9 +140,9 @@ void cfdVEPluginLoader::RegisterPlugins()
   
    while ( (node = wxClassInfo::sm_classTable->Next()) )
    {
-      wxClassInfo *classInfo = (wxClassInfo *)node->Data();
+      wxClassInfo *classInfo = (wxClassInfo *)node->GetData();
       if ( classInfo->IsKindOf(CLASSINFO(cfdVEBaseClass)) &&
-          (classInfo != (& (cfdVEBaseClass::sm_classcfdVEBaseClass))) )
+          (classInfo != (& (cfdVEBaseClass::ms_classInfo))) )
       {
          cfdVEBaseClass* object = (cfdVEBaseClass *) classInfo->CreateObject();
          plugins.push_back(object);
@@ -152,12 +152,13 @@ void cfdVEPluginLoader::RegisterPlugins()
    }
 }
 
-char* cfdVEPluginLoader::GetPluginName( int index )
+/*char* cfdVEPluginLoader::GetPluginName( int index )
 {
    char* _name;// = plugins.at(index)->GetName();
    _name = NULL;
+   index
    return _name;
-}
+}*/
 
 int cfdVEPluginLoader::GetNumberOfPlugins( void )
 {

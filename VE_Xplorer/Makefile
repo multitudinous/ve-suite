@@ -257,6 +257,11 @@ SRCS+= \
    VjObs.cpp 
 endif
 
+ifeq ($(WEB_BUILD), TRUE)
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.corona.mk
+   EXTRA_CXXFLAGS+= -D_WEB_INTERFACE
+endif
+
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_SceneGraph
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_SceneGraph
 
@@ -291,6 +296,13 @@ ifeq ($(CLUSTER_APP), TRUE)
 
    #DEPDIR is the place that the dependency files are stored.
    DEPDIR= $(CFDHOSTTYPE)_cluster$(EXEC_TAG)$(OSG)
+   ifeq ($(VE_PATENTED), TRUE)
+      #OBJDIR is the place that the object files are stored.
+      OBJDIR= $(CFDHOSTTYPE)_cluster$(EXEC_TAG)$(OSG)_patented
+
+      #DEPDIR is the place that the dependency files are stored.
+      DEPDIR= $(CFDHOSTTYPE)_cluster$(EXEC_TAG)$(OSG)_patented
+   endif
 else
    APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/project$(EXEC_TAG)$(OSG)
    # object files are being stored in a system-dependent directory so that builds
@@ -301,7 +313,15 @@ else
 
    #DEPDIR is the place that the dependency files are stored.
    DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)
+   ifeq ($(VE_PATENTED), TRUE)
+      #OBJDIR is the place that the object files are stored.
+      OBJDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)_patented
+
+      #DEPDIR is the place that the dependency files are stored.
+      DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)_patented
+   endif
 endif
+
 
 default: all
 

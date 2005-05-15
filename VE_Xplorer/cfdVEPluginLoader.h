@@ -34,7 +34,8 @@
 #ifndef CFD_PLUGINLOADER_H
 #define CFD_PLUGINLOADER_H
 #include <wx/wx.h>
-#include <wx/dynlib.h>
+//#include <wx/dynlib.h>
+#include <wx/dynload.h>
 
 #include <vector>
 
@@ -77,7 +78,7 @@ class cfdVEPluginLoader : public wxObject
       //Instantiate an instance of the plug_in. This instance is not used for any network composition but for information.
       void RegisterPlugin(wxClassInfo* info);
 
-      char* GetPluginName(int);
+      //char* GetPluginName(int);
 
       int GetNumberOfPlugins();
 

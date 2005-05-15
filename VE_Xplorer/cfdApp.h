@@ -56,6 +56,9 @@ namespace osg
    class FrameStamp;
 } 
 namespace osgUtil { class SceneView; }
+#ifdef _WEB_INTERFACE
+#include <vpr/Thread/Thread.h>
+#endif
 #ifdef VE_PATENTED
 #ifdef CFD_USE_SHADERS
 class cfdPBufferManager;
@@ -106,7 +109,9 @@ class cfdApp: public vrj::OsgApp
 #elif _OPENSG
 #endif
      
-
+#ifdef _WEB_INTERFACE
+      void writeImageFileForWeb(void*);
+#endif
       // Function called by the DEFAULT drawChan function 
       // before clearing the channel
       // and drawing the next frame (pfFrame( ))
