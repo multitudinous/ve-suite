@@ -174,7 +174,7 @@ void TCFrame::_buildGUI()
                               wxString("Grid Type"), 
                               wxDefaultPosition, 
                               wxDefaultSize, 
-                              3, choices);
+                              3, choices,wxRA_SPECIFY_COLS);
    rBoxSizer->Add(_gridTypeBox,1,wxALIGN_CENTER_VERTICAL|wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    //the resolution input boxes
    _xResBox = new wxComboBox(this, XRES_BOX, "", 
@@ -301,7 +301,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       _currentFile = i;
       statusMsg = wxString("Translating ") + _gridFiles[i];
       UpdateStatus(statusMsg);
-      _fileProgress->Update( i, statusMsg);
+      _fileProgress->Update(i, statusMsg);
       _translator->reset();
       _translator->setOutputDirectory((char*)_outputDir.c_str());
       sprintf(oname,"_%d",i);
@@ -324,7 +324,6 @@ void TCFrame::_onResolutionCallback(wxCommandEvent& event)
 {
    int value = event.GetSelection()+1;
    int id = event.GetId();
-   std::cout<<"The value: "<<value<<std::endl;
 
    switch (id){
       case XRES_BOX:

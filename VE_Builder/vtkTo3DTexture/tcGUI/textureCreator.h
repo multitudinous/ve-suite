@@ -74,8 +74,7 @@ public:
    //reset the translators internal data
    void reset();
 
-   void setParentGUI(TCFrame* parent){_parent = parent;}
-   
+   void setParentGUI(TCFrame* parent){_parent = parent;}   
 
    //get the min and max of the velocity magnitude
    //float minVelocityMagnitude(){return _minMagVel;}
@@ -89,6 +88,7 @@ protected:
    bool _isRGrid;
    bool _isUGrid;
    bool _isSGrid;
+   bool _initTranslation;
    std::vector<FlowTexture> _velocity;
    std::vector<FlowTexture> _curScalar;
    

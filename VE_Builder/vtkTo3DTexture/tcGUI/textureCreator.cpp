@@ -1,5 +1,6 @@
 #include "textureCreator.h"
 #include "tcFrame.h"
+#include <wx/file.h>
 #include <vtkCellLocator.h>
 #include <vtkGenericCell.h>
 #include <vtkPointData.h>
@@ -37,6 +38,7 @@ VTKDataToTexture::VTKDataToTexture()
    _vFileName = 0;
    _outputDir = 0;
  
+   _initTranslation = true;
    _dataConvertCellToPoint = 0;
    _usgrid = 0;
    _sgrid = 0;
@@ -96,6 +98,7 @@ VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
    for(unsigned int i = 0; i < nPts; i++){
       _distance.push_back(v._distance.at(i));
    }*/
+   _initTranslation = v._initTranslation;
 
 }
 /////////////////////////////////////
@@ -147,6 +150,7 @@ VTKDataToTexture::~VTKDataToTexture()
 //////////////////////////////
 void VTKDataToTexture::reset()
 {
+   _initTranslation = true;
    for( int i=0; i<_nScalars; i++ ){
       delete [] _scalarNames[i];
    }
@@ -853,6 +857,30 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    }
 #endif
    strcat(posName,_vectorNames[whichVector]);
+   wxString tdFileName(_outputDir);
+   tdFileName += "/";
+   tdFileName += wxString(_vectorNames[whichVector]);
+   tdFileName += ".txt";
+   wxFile textureDescriptionFile;
+   //need to write the number of files and the
+   //name of the internal search property
+   if(!textureDescriptionFile.Exists(tdFileName)){
+      wxString stringForNVectors;
+      stringForNVectors.Printf("%d",_parent->GetNumberOfTimeSteps());
+      textureDescriptionFile.Open(tdFileName,wxFile::write);
+      textureDescriptionFile.Write(stringForNVectors);
+      textureDescriptionFile.Write('\n');
+      textureDescriptionFile.Write(wxString(_vectorNames[whichVector]));
+      textureDescriptionFile.Write('\n');
+      _initTranslation = false;
+   }else if(_initTranslation){
+      std::cout<<"Initial translation!!"<<std::endl;
+      //overwrite the file
+      textureDescriptionFile.Open(tdFileName,wxFile::write);
+      _initTranslation = false;
+   }else{
+      textureDescriptionFile.Open(tdFileName,wxFile::write_append);
+   }
    
    if(_vFileName){
       strcat(posName,_vFileName);
@@ -861,6 +889,9 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    }
 
    strcat(posName,".rgb");
+   textureDescriptionFile.Write(wxString(posName));
+   textureDescriptionFile.Write('\n');
+   textureDescriptionFile.Close();
    double velRange[2] = {0,0};
    velRange[0] = _vectorRanges.at(whichVector)[0];
    velRange[1] = _vectorRanges.at(whichVector)[1];
@@ -891,14 +922,41 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    }
 #endif
    strcat(name,_scalarNames[whichScalar]);
-   
+
+   wxString tdFileName(_outputDir);
+   tdFileName += "/";
+   tdFileName += wxString(_scalarNames[whichScalar]);
+   tdFileName += ".txt";
+   wxFile textureDescriptionFile;
+   //need to write the number of files and the
+   //name of the internal search property
+   if(!textureDescriptionFile.Exists(tdFileName)){
+      wxString stringForScalars;
+      stringForScalars.Printf("%d",_parent->GetNumberOfTimeSteps());
+      textureDescriptionFile.Open(tdFileName,wxFile::write);
+      textureDescriptionFile.Write(stringForScalars);
+      textureDescriptionFile.Write('\n');
+      textureDescriptionFile.Write(wxString(_scalarNames[whichScalar]));
+      textureDescriptionFile.Write('\n');
+      _initTranslation = false;
+   }else if(_initTranslation){
+      std::cout<<"Initial translation!!"<<std::endl;
+      //overwrite the file
+      textureDescriptionFile.Open(tdFileName,wxFile::write);
+      _initTranslation = false;
+   }else{
+      textureDescriptionFile.Open(tdFileName,wxFile::write_append);
+   }
    if(_vFileName){
       strcat(name,_vFileName);
    }else{
       strcat(name,"scalar");
    }
-
    strcat(name,".rgb");
+   textureDescriptionFile.Write(wxString(name));
+   textureDescriptionFile.Write('\n');
+   textureDescriptionFile.Close();
+
    double scalarRange[2] = {0,0};
    scalarRange[0] = _scalarRanges.at(whichScalar)[0];
    scalarRange[1] = _scalarRanges.at(whichScalar)[1];

@@ -37,6 +37,8 @@ public:
    void SetGridType(GridType type){_type = type;}
    void UpdateProgressDialog(const char* msg);
 
+   unsigned int GetNumberOfTimeSteps(){return _numFiles;}
+
 protected:
    GridType _type;
    void _buildGUI();
