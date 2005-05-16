@@ -7,10 +7,12 @@
 #include <osgNVCg/CgGeometry>
 namespace osg
 {
-   class Texture3D;
+   class BoundingBox;
    class State;
+   class Texture3D;
 }
-class cfdPBufferQuad :public osg::Drawable{//public osgNVCg::CgGeometry{
+
+class cfdPBufferQuad : public osg::Drawable{
 public:
    cfdPBufferQuad();
    cfdPBufferQuad(const cfdPBufferQuad& pbQuad,
@@ -26,11 +28,17 @@ public:
    void SetTextureToUpdate(osg::Texture3D* texture);
 
    virtual void drawImplementation(osg::State& state)const;
+
+   //if advection doesn't work check this code!!!!!!!!
+   class BBoxCallback:public osg::Drawable::ComputeBoundingBoxCallback{
+      public:
+         virtual osg::BoundingBox computeBound(const cfdPBufferQuad&) const;
+   };
+   osg::BoundingBox computeBound() const;
 protected:
-   virtual bool computeBound() const;
+   
    void _drawAutoTexCoords()const;
    void _drawHardCodedTCoords(osg::State& state)const;
-
    virtual ~cfdPBufferQuad();
    bool _useAutoTexCoords;
    bool _bbSet;

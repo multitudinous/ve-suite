@@ -39,6 +39,7 @@ cfdPBufferQuad::cfdPBufferQuad()
    _w = 0;
    _h = 0;
    _d = 0;
+   setComputeBoundingBoxCallback(new BBoxCallback());
 }
 ///////////////////////////////////////////////////////////
 cfdPBufferQuad::cfdPBufferQuad(const cfdPBufferQuad& pbQuad,
@@ -143,39 +144,7 @@ void cfdPBufferQuad::SetTextureDimensions(unsigned int w,
    _w = w;
    _d = d;
 }
-/////////////////////////////////////////
-bool cfdPBufferQuad::computeBound() const
-{
-   _bbox.init();
-   if(!_bbSet)
-      return false;
 
-   float minBBox[3];
-   float maxBBox[3];
-   //this is because vtk gives mnx,mxx,mny,mxy,mnz,mxz
-   if(_useAutoTexCoords){
-      minBBox[0] = _bounds[0]; 
-      minBBox[1] = _bounds[2]; 
-      minBBox[2] = _bounds[4]; 
-      maxBBox[0] = _bounds[1]; 
-      maxBBox[1] = _bounds[3]; 
-      maxBBox[2] = _bounds[5]; 
-
-   }else{
-      minBBox[0] = -1; 
-      minBBox[1] = -1; 
-      minBBox[2] = -1; 
-      maxBBox[0] = 1; 
-      maxBBox[1] = 1; 
-      maxBBox[2] = 1;
-   }
-   _bbox.set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
-                osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
-   _bbox_computed = true;
-
-   return true;
-
-}
 /////////////////////////////////////////////////////////////
 void cfdPBufferQuad::SetUseAutoTexCoords(bool useAutoTCoords)
 {
@@ -340,6 +309,71 @@ void cfdPBufferQuad::drawImplementation(osg::State& state)const
       _drawHardCodedTCoords(state);
    }
    curSlice++;
+}
+/////////////////////////////////////////////////////
+osg::BoundingBox cfdPBufferQuad::computeBound() const
+{
+   osg::BoundingBox bbox;
+   bbox.init();
+   if(!_bbSet)
+      return bbox;
+
+   float minBBox[3];
+   float maxBBox[3];
+   //this is because vtk gives mnx,mxx,mny,mxy,mnz,mxz
+   if(_useAutoTexCoords){
+      minBBox[0] = _bounds[0]; 
+      minBBox[1] = _bounds[2]; 
+      minBBox[2] = _bounds[4]; 
+      maxBBox[0] = _bounds[1]; 
+      maxBBox[1] = _bounds[3]; 
+      maxBBox[2] = _bounds[5]; 
+
+   }else{
+      minBBox[0] = -1; 
+      minBBox[1] = -1; 
+      minBBox[2] = -1; 
+      maxBBox[0] = 1; 
+      maxBBox[1] = 1; 
+      maxBBox[2] = 1;
+   }
+   bbox.set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
+                osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
+
+   return bbox;
+}
+////////////////////////////////////////////////////////////////////////////////////////
+osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound(const cfdPBufferQuad& quad) const
+{
+   osg::BoundingBox bbox;
+   bbox.init();
+   if(!quad._bbSet)
+      return bbox;
+
+   float minBBox[3];
+   float maxBBox[3];
+   //this is because vtk gives mnx,mxx,mny,mxy,mnz,mxz
+   if(quad._useAutoTexCoords){
+      minBBox[0] = quad._bounds[0]; 
+      minBBox[1] = quad._bounds[2]; 
+      minBBox[2] = quad._bounds[4]; 
+      maxBBox[0] = quad._bounds[1]; 
+      maxBBox[1] = quad._bounds[3]; 
+      maxBBox[2] = quad._bounds[5]; 
+
+   }else{
+      minBBox[0] = -1; 
+      minBBox[1] = -1; 
+      minBBox[2] = -1; 
+      maxBBox[0] = 1; 
+      maxBBox[1] = 1; 
+      maxBBox[2] = 1;
+   }
+   bbox.set(osg::Vec3(minBBox[0],minBBox[1],minBBox[2]), 
+                osg::Vec3(maxBBox[0],maxBBox[1],maxBBox[2]));
+
+   return bbox;
+
 }
 #endif //CFD_USE_SHADERS
 #endif// _OSG
