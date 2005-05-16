@@ -33,7 +33,6 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-#vrj.appdefs.mk includes $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS

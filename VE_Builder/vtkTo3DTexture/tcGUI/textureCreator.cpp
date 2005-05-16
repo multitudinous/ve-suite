@@ -431,12 +431,12 @@ void VTKDataToTexture::_createValidityTexture()
 
    unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
    for(unsigned int l = 0; l < nPixels; l++){
-      if((i == 0 || i == _resolution[0] - 1)||
+      /*if((i == 0 || i == _resolution[0] - 1)||
         (j == 0 || j == _resolution[1] - 1)||
         (k == 0 || k == _resolution[2] - 1)){
         _validPt.push_back(false);
         i++;
-     }else{
+     }else{*/
          pt[2] = bbox[4] + k*delta[2];
          pt[1] = bbox[2] + j*delta[1];
          pt[0] = bbox[0] + (i++)*delta[0];
@@ -462,7 +462,7 @@ void VTKDataToTexture::_createValidityTexture()
          }
          //check if it is time to reset
         
-     }
+     //}
      if((unsigned int)i > (unsigned int)nX){
             i = 0;
             j ++;

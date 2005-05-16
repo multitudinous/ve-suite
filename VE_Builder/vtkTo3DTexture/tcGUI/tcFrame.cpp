@@ -6,15 +6,15 @@
 #include <iostream>
 #include <cmath>
 BEGIN_EVENT_TABLE(TCFrame,wxFrame)
-   EVT_BUTTON(TRANSLATE_BUTTON,_onTranslateCallback)
-   EVT_BUTTON(INPUT_BROWSE,_onBrowseCallback)
-   EVT_BUTTON(OUTPUT_BROWSE,_onBrowseCallback)
-   EVT_BUTTON(QUIT_BUTTON,_onQuitCallback)
-   EVT_COMBOBOX(XRES_BOX,_onResolutionCallback)
-   EVT_COMBOBOX(YRES_BOX,_onResolutionCallback)
-   EVT_COMBOBOX(ZRES_BOX,_onResolutionCallback)
-   EVT_SPINCTRL(NUM_FILES,_onNumFilesCallback)
-   EVT_RADIOBOX(GRID_RBOX,_onGridTypeCallback)
+   EVT_BUTTON(TRANSLATE_BUTTON,TCFrame::_onTranslateCallback)
+   EVT_BUTTON(INPUT_BROWSE,TCFrame::_onBrowseCallback)
+   EVT_BUTTON(OUTPUT_BROWSE,TCFrame::_onBrowseCallback)
+   EVT_BUTTON(QUIT_BUTTON,TCFrame::_onQuitCallback)
+   EVT_COMBOBOX(XRES_BOX,TCFrame::_onResolutionCallback)
+   EVT_COMBOBOX(YRES_BOX,TCFrame::_onResolutionCallback)
+   EVT_COMBOBOX(ZRES_BOX,TCFrame::_onResolutionCallback)
+   EVT_SPINCTRL(NUM_FILES,TCFrame::_onNumFilesCallback)
+   EVT_RADIOBOX(GRID_RBOX,TCFrame::_onGridTypeCallback)
 END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Constructor                                     //
@@ -291,7 +291,6 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
 {
    UpdateStatus("Translating to 3D texture files. . .");
    char oname[256];
-   char fileName[256];
    wxString statusMsg = "";
    _fileProgress = new wxProgressDialog(wxString("Translation Progress"),
                   " ", 
@@ -323,23 +322,19 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
 //////////////////////////////////////////////////////////
 void TCFrame::_onResolutionCallback(wxCommandEvent& event)
 {
-   float factorOfTwo = 2;
    int value = event.GetSelection()+1;
    int id = event.GetId();
    std::cout<<"The value: "<<value<<std::endl;
 
    switch (id){
       case XRES_BOX:
-         _resolution[0] = pow(2,value);
-         std::cout<<"The X resolution: "<<_resolution[0]<<std::endl;
+         _resolution[0] = (int)pow(2,value);
          break;
       case YRES_BOX:
-         _resolution[1] = pow(2,value);
-         std::cout<<"The Y resolution: "<<_resolution[1]<<std::endl;
+         _resolution[1] = (int)pow(2,value);
          break;
       case ZRES_BOX:
-         _resolution[2] = pow(2,value);
-         std::cout<<"The Z resolution: "<<_resolution[1]<<std::endl;
+         _resolution[2] = (int)pow(2,value);
          break;
       default:
          break;
