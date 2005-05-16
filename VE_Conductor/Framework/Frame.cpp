@@ -10,7 +10,6 @@
 #include "UI_Tabs.h"
 #include "UI_Frame.h"
 #include "Network.h"
-#include "UI_i.h"
 
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_CLOSE(AppFrame::OnClose)

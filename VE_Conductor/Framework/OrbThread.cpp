@@ -3,10 +3,11 @@
 //////////////////////////////////////////////////////////////////////
 #include "OrbThread.h"
 #include "Frame.h"
+#include "Network.h"
 //#include "ace/OS.h"
 //#include <ace/Task.h>
 //#include <ace/OS.h>
-#include "tao/BiDir_GIOP/BiDirGIOP.h"
+#include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <iostream>
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction

@@ -1,5 +1,6 @@
 #include "PluginLoader.h"
 #include <wx/image.h>
+#include <wx/dynload.h>
 
 IMPLEMENT_DYNAMIC_CLASS(PluginLoader, wxObject);
 
@@ -25,7 +26,7 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
 {
   wxString filename;
 
-  wxString ext = "*" + wxDllLoader::GetDllExt();
+  const wxString ext = wxString("*") + wxPluginLibrary::GetDllExt();
   
   wxLogDebug ("Loading plugins from [%s]\n", lib_dir.c_str());
   
@@ -74,10 +75,10 @@ void PluginLoader::RegisterPlugins()
   
   while ( node = wxClassInfo::sm_classTable->Next() )
     {
-      wxClassInfo *classInfo = (wxClassInfo *)node->Data();
+      wxClassInfo *classInfo = (wxClassInfo *)node->GetData();
       
       if ( classInfo->IsKindOf(CLASSINFO(REI_Plugin)) &&
-	   (classInfo != (& (REI_Plugin::sm_classREI_Plugin))) )
+	   (classInfo != (& (REI_Plugin::ms_classInfo))) )
 	{
 	  RegisterPlugin(classInfo);
 	}

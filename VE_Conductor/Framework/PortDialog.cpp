@@ -55,7 +55,7 @@ void PortDialog::Set3Cols(const std::vector<wxString>& col1, const std::vector<w
   std::vector<wxString> row;
 
   row.resize(3);
-  syngas->Clear();
+  syngas->ClearAll();
   for (i=0; i<len; i++)
     {
       row[0]=col1[i];

@@ -92,14 +92,14 @@ wxSpinCtrlDblTextCtrl::wxSpinCtrlDblTextCtrl( wxWindow *parent, wxWindowID id,
     m_parent = (wxSpinCtrlDbl*)parent;
 
     wxTextValidator valid(wxFILTER_INCLUDE_CHAR_LIST);
-    wxStringList list;
+    wxArrayString list;
 
     wxString valid_chars(wxT(" 0123456789+-.eE"));
     size_t len = valid_chars.Length();
     for (size_t i=0; i<len; i++)
         list.Add(wxString(valid_chars.GetChar(i)));
 
-    valid.SetIncludeList(list);
+    valid.SetIncludes(list);
     SetValidator(valid);
 }
 

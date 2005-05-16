@@ -8,7 +8,9 @@
 #include <wx/config.h> 
 #include <wx/splitter.h>
 #include "moduleC.h"
+#include "VjObsC.h"
 #include <orbsvcs/CosNamingC.h>
+#include "UI_i.h"
 
 const wxString LOCATION = _T("Framesize");
 const wxString LOCATION_X = _T("LocationX");
@@ -49,7 +51,6 @@ class Avail_Modules;
 class UI_Tabs;
 class UI_Frame;
 class Network;
-class Body_UI_i;
 
 class AppFrame : public wxFrame
 {

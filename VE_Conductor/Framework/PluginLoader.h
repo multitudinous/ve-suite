@@ -6,7 +6,6 @@
 
 #include <wx/wx.h>
 #include <wx/log.h>
-#include <wx/dynlib.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
 

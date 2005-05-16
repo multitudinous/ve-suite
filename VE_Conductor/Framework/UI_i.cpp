@@ -1,6 +1,7 @@
 #include "Frame.h"
 #include "UI_i.h"
 #include "package.h"
+#include "Network.h"
 
   
 // Implementation skeleton constructor
