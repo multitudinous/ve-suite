@@ -142,15 +142,15 @@ VTKDataToTexture::~VTKDataToTexture()
    if(_validPt.size()){
       _validPt.clear();
    }
-   /*if(_distance.size()){
-      _distance.clear();
-   }*/
-   
+}
+///////////////////////////////
+void VTKDataToTexture::reInit()
+{
+   _initTranslation = true;
 }
 //////////////////////////////
 void VTKDataToTexture::reset()
 {
-   _initTranslation = true;
    for( int i=0; i<_nScalars; i++ ){
       delete [] _scalarNames[i];
    }
@@ -895,7 +895,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    double velRange[2] = {0,0};
    velRange[0] = _vectorRanges.at(whichVector)[0];
    velRange[1] = _vectorRanges.at(whichVector)[1];
-   wxString msg = wxString("Writing file: ") + wxString(posName);
+   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(posName);
    _updateTranslationStatus(msg.c_str());
    _velocity.at(0).writeFlowTexture(posName,velRange);
 
@@ -960,7 +960,7 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    double scalarRange[2] = {0,0};
    scalarRange[0] = _scalarRanges.at(whichScalar)[0];
    scalarRange[1] = _scalarRanges.at(whichScalar)[1];
-   wxString msg = wxString("Writing file: ") + wxString(name);
+   wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(name);
    _updateTranslationStatus(msg.c_str());
    _curScalar.at(0).writeFlowTexture(name,scalarRange);  
 }

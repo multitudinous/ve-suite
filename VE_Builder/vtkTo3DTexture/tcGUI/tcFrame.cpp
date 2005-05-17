@@ -271,17 +271,17 @@ void TCFrame::_onGridTypeCallback(wxCommandEvent& event)
       case 0:
          _type = RECTILINEAR;
          _translator->setRectilinearGrid();
-         UpdateStatus("Grid type:RECTILINEAR");   
+         UpdateStatus("Grid type: RECTILINEAR");   
          break;
       case 1:
          _type = STRUCTURED;
          _translator->setStructuredGrid();
-         UpdateStatus("Grid type:STRUCTURED");
+         UpdateStatus("Grid type: STRUCTURED");
          break;
       case 2:
          _type = UNSTRUCTURED;
          _translator->setUnstructuredGrid();
-         UpdateStatus("Grid type:UNSTRUCTURED");
+         UpdateStatus("Grid type: UNSTRUCTURED");
       default:
          break;
    };
@@ -318,6 +318,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       delete _fileProgress;
       _fileProgress = 0;
    }
+   _translator->reInit();
 }
 //////////////////////////////////////////////////////////
 void TCFrame::_onResolutionCallback(wxCommandEvent& event)

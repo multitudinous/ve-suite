@@ -72,8 +72,10 @@ public:
    void setUnstructuredGrid();
 
    //reset the translators internal data
+   //used to cleanup between each file translation
    void reset();
-
+   //initialize the translator session for each file set
+   void reInit();
    void setParentGUI(TCFrame* parent){_parent = parent;}   
 
    //get the min and max of the velocity magnitude
