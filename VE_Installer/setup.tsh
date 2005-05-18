@@ -32,15 +32,18 @@ endif
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
 # Specify your scene graph: OSG = OpenSceneGraph, PF = OpenGL Performer
-#setenv SCENE_GRAPH OSG 
-setenv SCENE_GRAPH PF
+setenv SCENE_GRAPH OSG 
+#setenv SCENE_GRAPH PF
 
 # Specify corba build TAO_BUILD only for right now
 setenv TAO_BUILD TRUE
 
 # Specify cluster build CLUSTER_APP
 #setenv CLUSTER_APP TRUE
-setenv VE_PATENTED TRUE
+# This flag is for VERY new code
+#setenv VE_PATENTED TRUE
+# This flag is to allow the use of shaders
+#setenv CFD_USE_SHADERS FLASE
 
 # TAO_BUILD can be set outside this script to override the default of TRUE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -68,13 +71,14 @@ else if ( $CLUSTER_APP != "TRUE" && $CLUSTER_APP != "FALSE" ) then
    echo "   If you want otherwise, redefine CLUSTER_APP and resource the setup file"
 endif
 
-setenv OSG_THREAD_SAFE_REF_UNREF 1
-setenv PFNFYLEVEL 2
+setenv PFNFYLEVEL 0
+setenv PFSHAREDSIZE 534773700
 setenv VPR_DEBUG_NFY_LEVEL 0
 setenv VPR_DEBUG_ENABLE 1
 setenv NO_RTRC_PLUGIN TRUE
 setenv NO_PERF_PLUGIN TRUE
-setenv PFSHAREDSIZE 534773700
+setenv OSG_THREAD_SAFE_REF_UNREF 1
+setenv OSGNOTIFYLEVEL 0
 setenv OMNIORB_CONFIG ${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 setenv OMNINAMES_LOGDIR ${VE_SUITE_HOME}/VE_Installer
 
@@ -86,6 +90,7 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/IRIX32-pthread
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/IRIX32-pthread
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/IRIX32
+   setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VTK_BASE_DIR}/lib/vtk
    #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
@@ -113,6 +118,7 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-RH80
    setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3-deps
+   setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/Linux-RHEL_3/
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
@@ -142,7 +148,7 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    endif
 
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.* ) then
-   setenv JDK_HOME /usr/lib/java2
+   setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux-SuSE92
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/Linux-SuSE91
