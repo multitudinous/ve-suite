@@ -40,7 +40,7 @@ setenv TAO_BUILD TRUE
 
 # Specify cluster build CLUSTER_APP
 #setenv CLUSTER_APP TRUE
-#setenv VE_PATENTED TRUE
+setenv VE_PATENTED TRUE
 
 # TAO_BUILD can be set outside this script to override the default of TRUE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -68,6 +68,7 @@ else if ( $CLUSTER_APP != "TRUE" && $CLUSTER_APP != "FALSE" ) then
    echo "   If you want otherwise, redefine CLUSTER_APP and resource the setup file"
 endif
 
+setenv OSG_THREAD_SAFE_REF_UNREF 1
 setenv PFNFYLEVEL 2
 setenv VPR_DEBUG_NFY_LEVEL 0
 setenv VPR_DEBUG_ENABLE 1
@@ -112,9 +113,12 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/wxGTK-2.4.2/Linux-RH80
    setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3-deps
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/Linux-RHEL_3/
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/share/OpenSceneGraph/bin
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
