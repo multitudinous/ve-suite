@@ -2,7 +2,7 @@
 #ifdef _PERFORMER
 #elif _OSG
 #ifdef CFD_USE_SHADERS
-#include "cfdOSGPingPongTexture3D.h"
+#include "cfdOSGPingPongTexture3d.h"
 #include <osg/Image>
 #include <osg/State>
 #include <osg/Texture3D>

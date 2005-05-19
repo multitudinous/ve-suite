@@ -30,10 +30,10 @@ public:
    virtual void drawImplementation(osg::State& state)const;
 
    //if advection doesn't work check this code!!!!!!!!
-   class BBoxCallback:public osg::Drawable::ComputeBoundingBoxCallback{
+   /*class BBoxCallback:public osg::Drawable::ComputeBoundingBoxCallback{
       public:
          virtual osg::BoundingBox computeBound(const cfdPBufferQuad&) const;
-   };
+   };*/
    osg::BoundingBox computeBound() const;
 protected:
    

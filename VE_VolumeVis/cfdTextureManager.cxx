@@ -173,12 +173,8 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
    
       double R,G,B,A;
       float alpha = 0;
-      double distanceFactor = 0;
       
       int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
-      int i = 0; 
-      int j = 0;
-      int k = 0;
       unsigned char* pixels = 0;
       float invSRange = 1.0/(_range[1]-_range[0]);
       if(curType == VECTOR){

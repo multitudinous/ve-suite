@@ -24,18 +24,21 @@ cfdPBufferManager::cfdPBufferManager()
 {
 #ifdef WIN32
    _frameBufferDeviceContext = 0;
+   _frameBDGLContext = 0;
    _pBufferDeviceContext = 0;
    _pBufferGLContext = 0;
 #else
    _oldDisplay = 0;
    _oldDrawable = 0;
    _oldContext = 0;
-
    _pfAttribList.push_back(GLX_DRAWABLE_TYPE);
    _pfAttribList.push_back(GLX_PBUFFER_BIT);
    _pfAttribList.push_back(GLX_RENDER_TYPE);
    _pfAttribList.push_back(GLX_RGBA_BIT);
+   _pfAttribList.push_back(GLX_DEPTH_SIZE);
+   _pfAttribList.push_back(24);
    _pfAttribList.push_back(GLX_ALPHA_SIZE);
+   _pfAttribList.push_back(8);
    _pfAttribList.push_back(GLX_RED_SIZE);
    _pfAttribList.push_back(8);
    _pfAttribList.push_back(GLX_GREEN_SIZE);
@@ -44,7 +47,6 @@ cfdPBufferManager::cfdPBufferManager()
    _pfAttribList.push_back(8);
    _pfAttribList.push_back(None);
 #endif
-   _frameBDGLContext = 0;
    _hBuffer = 0;
    _isSupported = false;
    _isCreated = false;
@@ -248,26 +250,25 @@ bool cfdPBufferManager::initializePBuffer(int width, int height)
       _isCreated = false;
       return false;
    }
-   int screen = DefaultScreen(_oldDisplay);
-
    _oldContext = glXGetCurrentContext();
+   int screen = DefaultScreen(_oldDisplay);
 
    GLXFBConfig* glxConfig = 0;
    int configCount;   
 
-   glxConfig = glXGetFBConfigs(_oldDisplay, screen, &configCount);
+  /* glxConfig = glXGetFBConfigs(_oldDisplay, screen, &configCount);
    if(!glxConfig){
       std::cout << "pbuffer creation error:  glXGetFBConfigs() failed" << std::endl;
       _isCreated = false;
       return false;
-   }else{
+   }else{*/
       glxConfig = glXChooseFBConfig(_oldDisplay, screen, &_pfAttribList[0], &configCount);
       if(!glxConfig){
          std::cout<< "pbuffer creation error:  glXChooseFBConfig() failed" << std::endl;
          _isCreated = false;
          return false;
       }
-   }
+   //}
    XVisualInfo* visual = glXGetVisualFromFBConfig(_oldDisplay, glxConfig[0]);
    if(!visual){
       std::cout << "pbuffer creation error:  glXGetVisualFromFBConfig() failed" << std::endl;
@@ -326,12 +327,21 @@ bool cfdPBufferManager::isSupported()
 void cfdPBufferManager::activate()
 {
    if(_isCreated){
+      _oldContext = glXGetCurrentContext();
+      _oldDrawable = glXGetCurrentDrawable();
+                                                                                                                                                  
+      if (False == glXMakeCurrent(_oldDisplay, _hBuffer, _pBufferGLContext)) {
+         return;
+      } 
    }
 }
 ////////////////////////////////////
 void cfdPBufferManager::deactivate()
 {
    if(_isCreated){
+      if (False == glXMakeCurrent(_oldDisplay, _oldDrawable, _oldContext)){
+         return ;
+      } 
    }
 }
 #endif

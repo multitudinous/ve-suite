@@ -11,7 +11,7 @@ public:
    cfdSimpleTextureCallback();
    virtual ~cfdSimpleTextureCallback(){}
         
-   void setTextureSize(const int width, const int height, const depth)
+   void setTextureSize(const int width, const int height, const int depth)
    {
       _textureWidth = width;
       _textureHeight = height;

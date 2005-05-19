@@ -15,7 +15,7 @@
 #include "gl/glext.h"
 #else
 #include <GL/glx.h>
-#include <vector.h>
+#include <vector>
 #endif
 #include <iostream>
 
@@ -86,7 +86,7 @@ protected:
    GLXPbuffer  _oldDrawable;
    GLXContext  _oldContext;
 
-   vector<int> _pfAttribList;
+   std::vector<int> _pfAttribList;
 #endif
    bool _isSupported;
    bool _isCreated;

@@ -39,7 +39,7 @@ cfdPBufferQuad::cfdPBufferQuad()
    _w = 0;
    _h = 0;
    _d = 0;
-   setComputeBoundingBoxCallback(new BBoxCallback());
+//   setComputeBoundingBoxCallback(new BBoxCallback());
 }
 ///////////////////////////////////////////////////////////
 cfdPBufferQuad::cfdPBufferQuad(const cfdPBufferQuad& pbQuad,
@@ -343,7 +343,7 @@ osg::BoundingBox cfdPBufferQuad::computeBound() const
    return bbox;
 }
 ////////////////////////////////////////////////////////////////////////////////////////
-osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound(const cfdPBufferQuad& quad) const
+/*osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound(const cfdPBufferQuad& quad) const
 {
    osg::BoundingBox bbox;
    bbox.init();
@@ -374,7 +374,7 @@ osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound(const cfdPBufferQuad
 
    return bbox;
 
-}
+}*/
 #endif //CFD_USE_SHADERS
 #endif// _OSG
 #endif

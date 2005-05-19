@@ -249,7 +249,6 @@ void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
    delta[1] = 3.0/_fieldSize[1];
    delta[2] = 3.0/_fieldSize[2];
 
-   float dyeCoord[3] = {0,0,0};
    float dyeScale[3] = {1,1,1};
    float dyeTrans[3] = {.05,.41,.449};
    float noiseScale[3] = {.5,.5,.5};
@@ -441,9 +440,6 @@ void cfdOSGAdvectionShaderManager::_initPropertyTexture()
       _fieldSize[2]){ 
       int dataSize = (_fieldSize[0])*(_fieldSize[1])*(_fieldSize[2]);
       unsigned char* data = new unsigned char[dataSize*4];
-      unsigned int i=0;
-      unsigned int j=0;
-      unsigned int k = 0;
       for(int p = 0; p < dataSize; p++){
          data[p*4   ] = (unsigned char)0;
          data[p*4 + 1] = (unsigned char)0;
