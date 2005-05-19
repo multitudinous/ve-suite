@@ -10,10 +10,13 @@
     #include <windows.h>
 #endif
 ///////////////////////
-
+#ifdef WIN32
 #include "gl/wglext.h"
 #include "gl/glext.h"
-
+#else
+#include <GL/glx.h>
+#include <vector.h>
+#endif
 #include <iostream>
 
 
@@ -32,6 +35,7 @@ class cfdPBufferManager
    
       void setViewport(double w, double h);
 
+#ifdef WIN32
       BOOL activate(){
          return wglMakeCurrent(_pBufferDeviceContext, _pBufferGLContext);
       }
@@ -45,101 +49,50 @@ class cfdPBufferManager
 
       //get the gl rendering pbuffer contex
       HGLRC pBufferGLDC(){return _pBufferGLContext;}
-
+#else
+    void activate();
+    void deactivate();
+#endif
    //initialize a pixel buffer
    //this functionality will be
    //expanded so that you can specialize
    //the buffer to you needs but for now
    //it is set up w/ default params
-   int initializePBuffer(int width, int height);
+   bool initializePBuffer(int width, int height);
 
    int height(){return _h;}
    int width(){return _w;}
 
    //check if pbuffer extensions
    //are supported
-   int isSupported();
+   bool isSupported();
 
-   int isCreated(){return _isCreated;}
+   bool isCreated(){return _isCreated;}
 
-   //code from Steve Marshall of SPI for setting up
-   //proper view matricies for rendering textured pbuffer
-   //slices
-   enum ProjectionType { Orthographic, Perspective };
-   void setGeometricParams(float* center,float radius);
-   void initSlice(unsigned int slice);
-   void beginSlicing(unsigned int nSlices);
-   void endSlicing();
-   void applyViewMatrix(bool force = false);
-   void applyProjectionMatrix(bool force = false);
-
-   void setProjectionParams(float l, float r, float b,
-                                 float t, float n, float f);
-
-   void setProjectionType(ProjectionType type)
-   { 
-      if(_type != type){
-         _projectionMatrixDirty = true;
-      }
-       _type = type;
-   }
-
-   void setLookAt(const float* lookAt);
-   void setLookFrom(const float* lookFrom);
-   void setLookUp(const float* up);
-   void setCenterOfInterest(float coi);
-   ////////////////////////////////////
    
 protected:
-
+#ifdef WIN32
    HDC _frameBufferDeviceContext;
    HGLRC _frameBDGLContext;
+   HPBUFFERARB _hBuffer;
 
    HDC _pBufferDeviceContext;
    HGLRC _pBufferGLContext;
+#else
+   GLXContext  _pBufferGLContext;
+   GLXPbuffer  _hBuffer;
 
-   HPBUFFERARB _hBuffer;
+   Display*    _oldDisplay;
+   GLXPbuffer  _oldDrawable;
+   GLXContext  _oldContext;
 
-   int _isSupported;
-   int _isCreated;
+   vector<int> _pfAttribList;
+#endif
+   bool _isSupported;
+   bool _isCreated;
 
    int _h;
    int _w;
-   
-   //Marshall utilities
-   void _cross(const float* v0, const float* v1, float* out);
-   void _ensureViewMatrix(bool force);
-
-   //Marshall variables
-   float _viewMatrix[16];
-   float _projectionMatrix[16];
-   float _worldToOpacityMapsMatrix[16];
-
-   float _lookFrom[3];
-   float _lookAt[3];
-   float _up[3];
-   float _lastRight[3];
-
-   float _centerOfInterest;
-
-   float _left;
-   float _right;
-   float _bottom;
-   float _top;
-   float _near;
-   float _far;
-   bool _viewMatrixDirty;
-   bool _projectionMatrixDirty;
-   float* _slices;
-   int _numSlices;
-   ProjectionType _type;
-   float _geomCenter[3];
-   float _geomRadius;
-   float _offsetMin;
-   float _offsetMax;
-
-   float _paramCache[6];
-
 };
 #endif //CFD_USE_SHADER
 #endif

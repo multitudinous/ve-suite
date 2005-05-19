@@ -13,7 +13,6 @@ cfdCopyTo3DTextureStage::cfdCopyTo3DTextureStage()
    _texture = 0;
   
    _localState = new osg::State;
-   _localState->setReportGLErrors(true);
 
    _pbuffer = 0;
 
