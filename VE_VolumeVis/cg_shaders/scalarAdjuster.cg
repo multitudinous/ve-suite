@@ -12,11 +12,9 @@ f2app scalarAdjustment(float4 color : COLOR,
    //dependent texture look up in transfer function
    float scalar = tex3D(volumeData,texCoord).a;
    retColor.color = tex1D(transferFunction,scalar);
-   //retColor.color.xyz = texCoord;
-   //retColor.color.a = tex3D(volumeData,texCoord).a;
 
    //set the opacity to .2 for all fragments
-   retColor.color.a = scalar*color.a;
+   retColor.color.a *= color.a;
    return retColor;
 }
 
