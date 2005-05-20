@@ -277,7 +277,6 @@ cfdPBufferManager* cfdTextureBasedVizHandler::GetPBuffer()
 ////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateShaderState()
 {
-
    //first check which option is active
    if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ADVECTION_SHADER){
       if(_vvvh){
@@ -322,15 +321,28 @@ void cfdTextureBasedVizHandler::_updateShaderState()
             activeVisNodeHdlr->TurnOffBBox();
          }
       }
+   }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ISOSURFACE){
+      if(_svvh){
+         cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+         if(sShader)
+         {
+            float range = 0;
+            sShader->ActivateIsoSurface();
+            range = (float)(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ))/100.0;
+            sShader->SetIsoSurfaceValue(range);
+         }
+      }
    }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == CHANGE_SCALAR_RANGE){
       if(_svvh){
-        cfdScalarShaderManager* gShader = _svvh->GetScalarShaderManager();
-           if(gShader)
+        cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+           if(sShader)
            {
               float range[2];
+              //may need to re-think this
+              sShader->DeactivateIsoSurface();
               range[0] = (float)(_cmdArray->GetCommandValue( cfdCommandArray::CFD_MIN ))/100.0;
               range[1] = (float)(_cmdArray->GetCommandValue( cfdCommandArray::CFD_MAX ))/100.0;
-              gShader->SetScalarRange(range);
+              sShader->SetScalarRange(range);
            }
       }
       _svvh->EnableDecorator();
@@ -400,10 +412,10 @@ void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
    }
    _activeVolumeVizNode =  _activeTDSet->GetVolumeVisNode();
    _activeTM = _activeTDSet->GetActiveTextureManager();
-   if(_nav)
+   /*if(_nav)
    {
       //_activeVolumeVizNode->TranslateCenterBy((float*)_nav->GetWorldTranslation());
-   }
+   }*/
    //biv -- testing
    //if(_activeTM->GetDataType(0) != cfdTextureManager::VECTOR)
     //  return;

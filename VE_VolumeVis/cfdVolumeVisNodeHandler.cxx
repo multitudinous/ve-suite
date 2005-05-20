@@ -53,10 +53,7 @@ cfdVolumeVisNodeHandler::cfdVolumeVisNodeHandler(const
 ///////////////////////////////////////////////////
 cfdVolumeVisNodeHandler::~cfdVolumeVisNodeHandler()
 {
-   if(_tm){
-      delete _tm;
-      _tm = 0;
-   }
+   
 }
 ////////////////////////////////////////////////////
 void cfdVolumeVisNodeHandler::SetBoundingBox(float* bbox)

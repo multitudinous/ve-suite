@@ -8,17 +8,21 @@ class cfdTextureManager;
 
 class cfdScalarShaderManager:public cfdOSGTransferShaderManager{
 public:
-   cfdScalarShaderManager(){_useTM = true;}
+   cfdScalarShaderManager();
    virtual ~cfdScalarShaderManager(){}
    virtual void Init();
    virtual void UpdateTextureManager(cfdTextureManager* tm);
    void SetScalarRange(float* range);
    void UpdateScalarMax(float maxScalar);
    void UpdateScalarMin(float minScalar);
-
+   void ActivateIsoSurface();
+   void DeactivateIsoSurface();
+   void SetIsoSurfaceValue(float percentScalarRange);
 protected:
+   bool _isoSurface;
    void _updateTransferFunction();
    float _scalarRange[2];
+   float _percentScalarRange;
    void _initTransferFunctions();
    void _initPropertyTexture();
 };
