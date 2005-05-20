@@ -173,8 +173,8 @@ void cfdScalarShaderManager::_updateTransferFunction()
          {
             GLint isoRange [2];
             isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
-            isoRange[0] = isoVal - 13.0;
-            isoRange[1] = isoVal + 13.0;
+            isoRange[0] = isoVal - 15.0;
+            isoRange[1] = isoVal + 15.0;
             if(i >= isoRange[0] && i <= isoRange[1]){
                alpha = (i - newRange[0])*invSRange;
                if(alpha <= .5){
@@ -189,7 +189,10 @@ void cfdScalarShaderManager::_updateTransferFunction()
                   A = alpha*255.0*.5;
                }
             }else{
-               R=G=B=A=0;
+               R = 0;
+               G = 0;
+               B = 0;
+               A = 0;
             }
          }else{
             alpha = (i - newRange[0])*invSRange;
