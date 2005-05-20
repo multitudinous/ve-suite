@@ -18,6 +18,11 @@ BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_BUTTON      (CLEAR_BUTTON,             UI_VisualizationTab::_onClear)
   EVT_BUTTON      (CUSTOM_VIS_BUTTON,        UI_VisualizationTab::_onCustomVis)
   EVT_CHECKBOX (CFD_VIS_OPTION,UI_VisualizationTab::_onTextureBasedVisual)
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+  EVT_COMMAND_SCROLL(VIS_SLIDER,UI_VisualizationTab::_onSlider)
+#endif
+#endif
 END_EVENT_TABLE()
 
 /////////////////////////////////////////////////////////////
@@ -239,6 +244,11 @@ void UI_VisualizationTab::_buildPage()
 void UI_VisualizationTab::_onCategory(wxCommandEvent& event)
 {
    event.GetInt();
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
+   
+#endif
+#endif
   //wxMessageBox(_categoryRBox->GetStringSelection(), _T("Category RadioBox!"));
 }
 
@@ -352,15 +362,21 @@ void UI_VisualizationTab::_onUpdate(wxCommandEvent& event)
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
    std::cout << "Current Slider value: " << _slider->GetValue() << std::endl;
 }
+
 //////////////////////////////////////////////////////////
 void UI_VisualizationTab::_onSlider(wxCommandEvent& event)
 {
+#ifdef VE_PATENTED
+#ifdef CFD_USE_SHADERS
    event.GetInt();
-   // This function changes the min and max of the current active scalar
-   ((UI_Tabs *)_parent)->cId  = CHANGE_SCALAR_RANGE;
-   ((UI_Tabs *)_parent)->cMin = _slider->GetMin();
-   ((UI_Tabs *)_parent)->cMax = _slider->GetMax();
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   if ( _categoryRBox->GetSelection() == 3 ){
+      ((UI_Tabs *)_parent)->cId = ISOSURFACE;
+      ((UI_Tabs *)_parent)->cIso_value = _slider->GetValue();
+      ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   }
+#endif
+#endif
+
 }
 
 //////////////////////////////////////////////////////////
