@@ -116,12 +116,6 @@ ifdef XERCESCROOT
    EXTRA_LIBS+= -L${XERCESCROOT}/lib -lxerces-c
 endif
 
-# 64-bit linux needs these flags
-ifeq (${CFDUNAME},Linux)
-   EXTRA_CXXFLAGS+= -m32
-   EXTRA_LIBS+= -m32
-endif
-
 # IRIX needs these flags
 ifeq (${CFDUNAME},IRIX64)
    EXTRA_CXXFLAGS+= -D_IRIX
