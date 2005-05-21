@@ -13,9 +13,9 @@ bool REIApp::OnInit()
   
   catch(const XMLException &toCatch)
     {
-      XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+      std::cerr << "Error during Xerces-c Initialization.\n"
 				<< "  Exception message:"
-				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+				<< XMLString::transcode(toCatch.getMessage()) << std::endl;
       return 1;
     }
 

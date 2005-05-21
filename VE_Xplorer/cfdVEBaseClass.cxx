@@ -50,15 +50,19 @@
 
 #include <vrj/Util/Debug.h>
 
-#ifndef _WIN32 // not windows
-#include <sys/dir.h>
+//#include <wx/dc.h>
+//#include <wx/gdicmn.h>
+
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
+
+#ifndef WIN32
+//#include <sys/dir.h>
+//#include <dirent.h>
 #else // it is windows
 #include <windows.h>
 #include <direct.h>
 #endif
-
-#include <wx/dc.h>
-#include <wx/gdicmn.h>
 
 IMPLEMENT_DYNAMIC_CLASS( cfdVEBaseClass, wxObject )
 
@@ -598,8 +602,7 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
       exit(1);
    }
 
-   //open the directory (we already know that it is valid)
-
+/*   //open the directory (we already know that it is valid)
    DIR* dir = opendir( precomputedSurfaceDir );
    //change into this directory so that vtk can find the files
    chdir( precomputedSurfaceDir );
@@ -653,7 +656,96 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
    file = 0;
 
    //change back to the original directory
-   chdir( cwd );
+   chdir( cwd );*/
+   boost::filesystem::path dir_path( precomputedSurfaceDir );
+
+   if ( boost::filesystem::is_directory( dir_path ) )
+   {
+      std::cout << "\nIn directory: "
+              << dir_path.native_directory_string() << "\n\n";
+      boost::filesystem::directory_iterator end_iter;
+      for ( boost::filesystem::directory_iterator dir_itr( dir_path );
+            dir_itr != end_iter; ++dir_itr )
+      {
+         try
+         {
+            if ( boost::filesystem::is_directory( *dir_itr ) )
+            {
+               //++dir_count;
+               std::cout << dir_itr->leaf()<< " [directory]\n";
+            }
+            else
+            {
+               //++file_count;
+               std::cout << dir_itr->leaf() << "\n";
+               //if ( itr->leaf() == file_name ) // see below
+               if ( strstr( dir_itr->leaf().c_str(), ".vtk") )
+               {
+                  //path_found = *dir_itr;
+         char* pathAndFileName = new char[strlen(dir_path.leaf().c_str() )+
+                                          strlen(dir_itr->leaf().c_str())+2];
+         strcpy(pathAndFileName,dir_path.leaf().c_str());
+         strcat(pathAndFileName,"/");
+         strcat(pathAndFileName,dir_itr->leaf().c_str());
+
+            vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
+                                   << std::endl << vprDEBUG_FLUSH;
+
+            _model->CreateCfdDataSet();
+            unsigned int numDataSets = _model->GetNumberOfCfdDataSets();
+            // subtract 1 because this number was 1 base not 0 base
+            numDataSets -= 1;
+            _model->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
+
+            // set the dcs matrix the same as the last file
+            _model->GetCfdDataSet( -1 )->SetDCS( 
+                        _model->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
+
+            // precomputed data that descends from a flowdata.vtk should
+            // automatically have the same color mapping as the "parent" 
+            _model->GetCfdDataSet( -1 )->SetParent( 
+                        _model->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
+            _model->GetCfdDataSet( -1 )->LoadData();
+               }
+            }
+         }
+         catch ( const std::exception & ex )
+         {
+            //++err_count;
+            std::cout << dir_itr->leaf() << " " << ex.what() << std::endl;
+         }
+      }
+      //std::cout << "\n" << file_count << " files\n"
+      //            << dir_count << " directories\n"
+      //            << err_count << " errors\n";
+   }
+   else // must be a file
+   {
+      std::cout << "\nFound: " << dir_path.native_file_string() << "\n";    
+   }
+/*
+bool find_file( const path & dir_path,     // in this directory,
+                const std::string & file_name, // search for this name,
+                path & path_found )        // placing path here if found
+{
+  if ( !exists( dir_path ) ) return false;
+  directory_iterator end_itr; // default construction yields past-the-end
+  for ( directory_iterator itr( dir_path );
+        itr != end_itr;
+        ++itr )
+  {
+    if ( is_directory( *itr ) )
+    {
+      if ( find_file( *itr, file_name, path_found ) ) return true;
+    }
+    else if ( itr->leaf() == file_name ) // see below
+    {
+      path_found = *itr;
+      return true;
+    }
+  }
+  return false;
+}*/
 #else
    //biv--this code will need testing
    //BIGTIME!!!!!!!
