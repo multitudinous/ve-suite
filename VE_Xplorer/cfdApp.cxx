@@ -255,6 +255,7 @@ void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
    newSceneViewer->getLight()->setPosition(lPos);
 
    newSceneViewer->setFrameStamp(_frameStamp.get());
+   //newSceneViewer->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
 }
 
 void cfdApp::bufferPreDraw()
@@ -544,7 +545,7 @@ void cfdApp::draw()
    // Add the tree to the scene viewer and set properties
    sv->setSceneData(getScene());
    //sv->setCalcNearFar(false);
-   sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
+   //sv->setComputeNearFarMode(osgUtil::CullVisitor::DO_NOT_COMPUTE_NEAR_FAR);
    sv->setViewport(ll_x, ll_y, x_size, y_size);
 
    //Get the view matrix and the frustrum form the draw manager
