@@ -594,14 +594,14 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
       << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
 
    //store the current directory so we can change back to it
-   char *cwd;
-#ifndef WIN32
+//   char *cwd;
+/*#ifndef WIN32
    if ((cwd = getcwd(NULL, 100)) == NULL)
    {
       std::cerr << "Couldn't get the current working directory!" << std::endl;
       exit(1);
    }
-
+*/
 /*   //open the directory (we already know that it is valid)
    DIR* dir = opendir( precomputedSurfaceDir );
    //change into this directory so that vtk can find the files
@@ -746,7 +746,7 @@ bool find_file( const path & dir_path,     // in this directory,
   }
   return false;
 }*/
-#else
+/*#else
    //biv--this code will need testing
    //BIGTIME!!!!!!!
    char buffer[_MAX_PATH];
@@ -839,7 +839,7 @@ bool find_file( const path & dir_path,     // in this directory,
    FindClose(hList);
    //make sure we are in the correct directory
    chdir(cwd);
-#endif
+#endif*/
 }
    
 // Stuff taken from Plugin_base.h
