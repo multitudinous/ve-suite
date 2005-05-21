@@ -4,7 +4,7 @@ REM location of VTK
 set VTK_HOME=C:\VTK_Install
 
 REM location of wxWidgets
-set WX_WIDGETS_HOME=C:\devEnv\externalAPIs\wxWidgets_cvs\wxWidgets
+set WX_HOME=C:\devEnv\externalAPIs\wxWidgets-2.6.0
 
 set Path=%Path%;%WX_WIDGETS_HOME%\lib\vc_dll;%VTK_HOME%\bin;
 

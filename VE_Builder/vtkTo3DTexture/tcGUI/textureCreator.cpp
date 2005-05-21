@@ -435,12 +435,6 @@ void VTKDataToTexture::_createValidityTexture()
 
    unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
    for(unsigned int l = 0; l < nPixels; l++){
-      /*if((i == 0 || i == _resolution[0] - 1)||
-        (j == 0 || j == _resolution[1] - 1)||
-        (k == 0 || k == _resolution[2] - 1)){
-        _validPt.push_back(false);
-        i++;
-     }else{*/
          pt[2] = bbox[4] + k*delta[2];
          pt[1] = bbox[2] + j*delta[1];
          pt[0] = bbox[0] + (i++)*delta[0];
@@ -448,7 +442,7 @@ void VTKDataToTexture::_createValidityTexture()
          _cLocator->FindClosestPoint(pt,closestPt,
 		                          cell,cellId,subId, dist);
        
-         if(dist < deltaDist){
+         //if(dist < deltaDist){
             weights = new double[cell->GetNumberOfPoints()];
             //check to see if this point is in
 	         //the returned cell
@@ -461,9 +455,9 @@ void VTKDataToTexture::_createValidityTexture()
               delete [] weights;
               weights = 0;
            }
-         }else{
+         /*}else{
             _validPt.push_back(false);
-         }
+         }*/
          //check if it is time to reset
         
      //}
