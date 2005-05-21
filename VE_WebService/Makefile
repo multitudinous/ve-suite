@@ -23,7 +23,25 @@ SRCS=\
    string_ops.cpp \
    veWebService_i.cpp \
    VjObsS.cpp \
-   VjObsC.cpp
+   VjObsC.cpp	\
+	query.cpp	\
+	vallist.cpp	\
+	field_names.cpp	\
+	field_types.cpp	\
+	row.cpp			\
+	manip.cpp		\
+	sql_query.cpp	\
+	string_util.cpp	\
+	fields.cpp		\
+	type_info.cpp	\
+	myset.cpp		\
+	result.cpp		\
+	sql_string.cpp	\
+	coldata.cpp		\
+	datetime.cpp	\
+	connection.cpp	\
+   
+#the SQL cpp's really shouldn't be here...having trouble figuring out what library it's built into though.
    
 
 # Specify the OS-dependent directory name for object files and depends
@@ -55,21 +73,28 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
-#include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
+
 EXEC_TAG = _tao
 vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework \
 			$(VE_SUITE_HOME)/VE_Xplorer \
 			$(VE_SUITE_HOME)/VE_Conductor/VE_UI $(IDL_HOME)/skel \
 			$(VE_SUITE_HOME)/VE_SceneGraph \
 			$(VE_SUITE_HOME)/VE_CE			\
-
+			$(VE_SUITE_HOME)/../msqlpp/lib			\
+			
+#again, that last one shouldn't be there.  hopefully I can find the library for mysqlpp::connection and get rid of this
 EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel 
 EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/VE_UI 
+EXTRA_CXXFLAGS += -I/usr/include/mysql
+EXTRA_CXXFLAGS += -I/home/users/kennyk/Graphics_Programming/mysql++
+EXTRA_LIBS +=	-B static /usr/lib/mysql/libmysqlclient.a
+EXTRA_LIBS +=	-B static /usr/lib/mysql/libmysys.a
+EXTRA_LIBS +=	-B static /usr/lib/mysql/libmystrings.a
+EXTRA_LIBS +=	-B /home/users/kennyk/Graphics_Programming/msqlpp/lib/libmysqlpp.la
+
 EXTRA_CXXFLAGS += -I$(VJ_BASE_DIR)/include -I$(VE_SUITE_HOME)/VE_CE -I$(VE_SUITE_HOME)/VE_Xplorer -I$(VE_SUITE_HOME)/VE_SceneGraph 
-#EXTRA_CXXFLAGS += -I$(VJ_DEPS_DIR)/include 
-#EXTRA_CXXFLAGS += -I$(WX_HOME)/include/
-#EXTRA_CXXFLAGS += -I$(WX_HOME)/lib/wx/include/gtkd-2.4
-#EXTRA_CXXFLAGS += -I$(VJ_DEPS_DIR)/include/boost/compatibility/cpp_c_headers
+
+
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------

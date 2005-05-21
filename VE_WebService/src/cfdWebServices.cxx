@@ -10,6 +10,8 @@
 #include <vrj/Util/Debug.h>
 #include <vpr/System.h>
 
+
+
 #include <orbsvcs/CosNamingC.h>
 
 #include "cfdExecutive.h"
@@ -25,7 +27,10 @@
 //#include "cfdPfSceneManagement.h"
 #include "package.h"
 #include "Network_Exec.h"
-
+#include <mysql++.h>
+#include <sys/stat.h>
+#include <errno.h>
+#include <stdlib.h>
 
 
 #define AINTWORKIN
@@ -88,16 +93,13 @@ cfdWebServices::cfdWebServices( CosNaming::NamingContext* inputNameContext, Port
       //Create the Servant
       uii = new veWebService_i( exec, UINAME);
       uii->setWebServices(this);
-      //Body_UI_i ui_i( UINAME);
       PortableServer::ObjectId_var id = 
          PortableServer::string_to_ObjectId( CORBA::string_dup( "cfdWebServices" ) ); 
-//#ifndef AINTWORKIN
       //activate it with this child POA 
-      childPOA->activate_object_with_id( id.in(), &(*uii) );
-//#endif      
+      childPOA->activate_object_with_id( id.in(), &(*uii) );  
       // obtain the object reference
       Body::UI_var unit =  
-      Body::UI::_narrow( childPOA->id_to_reference( id.in() ) );
+         Body::UI::_narrow( childPOA->id_to_reference( id.in() ) );
 
       // Don't register it to the naming service anymore
       // the bind call will hang if you try to register
@@ -256,9 +258,9 @@ char* cfdWebServices::GetNetwork ( void )
    const char* networkString = testNetwork.c_str();
 #endif
    outputFile = fopen("output.dat", "w");
+   fullSQLString = "";        //reset the SQL string
    //first we insert a clear command and timestamp into the database so we can tell if things have been updated
-   fprintf(outputFile, "delete from ppModules;\n\n");
-   fprintf(outputFile, "insert into ppModules(ID,intString) values ('-13', '%i');\n\n", time(NULL));
+   fprintf(outputFile, "delete from VEConfigurations where ID = '0';\n\n");
    /////////////////////////////
 // This code taken from Executive_i.cpp
    Package p;
@@ -322,7 +324,11 @@ char* cfdWebServices::GetNetwork ( void )
          }
          insertItemIntoSQL(*thisInterface);
       }
-         fclose(outputFile);
+      
+      fprintf(outputFile, "insert into VEConfigurations(ID, name, timestamp, data) values ('0', 'Active_Configuration', '%i', '%s');\n\n", time(NULL), fullSQLString.c_str());
+      fclose(outputFile);
+      mysqlQuery("insert into VEConfigurations(ID,timestamp, data) values ('0', '0', '" + fullSQLString + "');");
+     // printf("SQL string = %s\n", fullSQLString.c_str());
       return "what's up?  it worked.  Does Ken actually need to send something back?";
    } 
    else     //this is probably bad
@@ -446,44 +452,34 @@ void cfdWebServices::insertItemIntoSQL(Interface &interface)
    }
    object.stringArrayString = SQLString;   
    
-//the old way of doing it
-//   std::map<std::string, long> ints;      //grab a copy of the interface's int map
-//   ints = interface.getIntMap();
-//   std::map<std::string, long>::iterator intsIter;  //and make an iter
-//   for(intsIter = ints.begin(); intsIter != ints.end(); intsIter++)  //iterate through the map
-//   {  
-//      intString += intsIter->first + "|" + intsIter->second + "||";         //and tack the name and number into our string, separated by pipes
-//      
-//   }
-//   
-//   //repeat with doubles
-//   std::string doubleString;                
-//   std::map<std::string, long> ints;     
-//   ints = interface.getIntMap();
-//   std::map<std::string, long>::iterator intsIter;  
-//   for(doublesIter = ints.begin(); doublesIter != ints.end(); doublesIter++) 
-//   {  
-//      intString += doublesIter->first + "|" + doublesIter->second + "||";    
-//      
-//   }
-   //lastly, grab the ID.
+
+   //grab the ID.
    char IDChars[4];
    sprintf(IDChars, "%i", object.ID );
    std::string IDString(IDChars);
-   SQLString = "insert into ppModules(ID, 
-      intString, doubleString, stringString, 
-      intArrayString, doubleArrayString, stringArrayString) 
-      values ('" 
-      + IDString + "','" 
-      + object.intString + "', ' "
-      + object.doubleString + "', '" 
-      + object.stringString + "','"
-      + object.intArrayString + "', '" 
-      + object.doubleArrayString + "', '"
-      + object.stringArrayString + "')";
-   //printf("%s;\n", SQLString.c_str());
-   fprintf(outputFile, "%s;\n\n", SQLString.c_str());
-}
+   //SQLString = "insert into ppModules(ID, 
+//      intString, doubleString, stringString, 
+//      intArrayString, doubleArrayString, stringArrayString) 
+//      values ('" 
+//      + IDString + "','" 
+//      + object.intString + "', ' "
+//      + object.doubleString + "', '" 
+//      + object.stringString + "','"
+//      + object.intArrayString + "', '" 
+//      + object.doubleArrayString + "', '"
+//      + object.stringArrayString + "')";
+//   //printf("%s;\n", SQLString.c_str());
+   std::string moduleString = "%%%%"
+      + IDString + "&&&" 
+      + object.intString + "&&&"
+      + object.doubleString + "&&&" 
+      + object.stringString + "&&&"
+      + object.intArrayString + "&&&" 
+      + object.doubleArrayString + "&&&"
+      + object.stringArrayString;
+   fullSQLString += moduleString;
+   
+} 
 
 cfdWebServices::~cfdWebServices()
 {
@@ -494,5 +490,37 @@ cfdWebServices::~cfdWebServices()
 #endif
 }
 
+void cfdWebServices::mysqlQuery(std::string qel)
+{
+   printf("I'm gonna stick \n\n%s\n\n into the database\n", qel.c_str());
+   mysqlpp::Connection con(mysqlpp::use_exceptions);
+	try 
+   {
+      
+      con.real_connect("test", "vracs001.vrac.iastate.edu", "kennyk", "ILovePHP", 3306,
+						 0, 60, NULL);
+		mysqlpp::Query query = con.query();
+      query.exec(qel.c_str());
+
+	}
+	catch (mysqlpp::BadQuery& er) 
+   {
+		// handle any connection or query errors that may come up
+		std::cerr << "Error: " << er.what() << " " << con.errnum() << std::endl;
+	}
+	catch (mysqlpp::BadConversion& er) 
+   {
+		// handle bad conversions
+		std::cerr << "Error: " << er.what() << "\"." << std::endl
+			<< "retrieved data size: " << er.retrieved
+			<< " actual data size: " << er.actual_size << std::endl;
+	}
+	catch (std::exception& er) 
+   {
+		std::cerr << "Error: " << er.what() << std::endl;
+	}
+
+
+}
 
 

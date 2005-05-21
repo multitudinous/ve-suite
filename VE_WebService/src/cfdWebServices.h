@@ -6,7 +6,7 @@
 #include <map>
 #include <string>
 
-#define USE_TEST_FILE
+//#define USE_TEST_FILE
 
 class cfdDCS;
 class cfdGroup;
@@ -91,6 +91,7 @@ class cfdWebServices
       Network* network;
    private:
       
+      void mysqlQuery(std::string qel);
       void insertItemIntoSQL(Interface &interface);   //insert the data for a
                                        //particular interface into MYSQL
       cfdExecutiveConfiguration* param;
@@ -105,6 +106,7 @@ class cfdWebServices
       bool updateNetworkString;
       bool runGetEverythingThread;
       FILE* outputFile;
+      std::string fullSQLString;          //this is the whole datastring used to insert data into the database
       struct StringHolder
       {
          int ID;
