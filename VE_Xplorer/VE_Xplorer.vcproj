@@ -416,7 +416,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;"
 				PreprocessorDefinitions="VE_PATENTED;_DEBUG;_OSG;VTK44;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -552,7 +552,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;./;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_CE&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;./;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_CE&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;"
 				PreprocessorDefinitions="_DEBUG;_OSG;VE_PATENTED;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_WINDOWS;WINVER=0x400;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -567,12 +567,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxmsw24d.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project_tao_osgd.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
@@ -617,7 +617,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories="./;../;&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\osgNV\include&quot;;&quot;$(PRODUCER_HOME)\include&quot;;&quot;$(OPENTHREADS_HOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(CG_INC_PATH)&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;"
-				PreprocessorDefinitions="_DEBUG;_OSG;VTK44;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32;CFD_USE_SHADERS;VE_PATENTED"
+				PreprocessorDefinitions="_DEBUG;_OSG;VTK44;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32;CFD_USE_SHADERS;VE_PATENTED;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -635,12 +635,144 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib omniORB405_rtd.lib omniDynamic405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib vtkexpat.lib vtkzlib.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib osgNVCgd.lib osgNVd.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
+				AdditionalDependencies="osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib osgNVCgd.lib osgNVd.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib omniORB405_rtd.lib omniDynamic405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib vtkexpat.lib vtkzlib.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;$(OSGHOME)\..\Producer\lib;$(OSGHOME)\..\Openthreads\lib\win32;&quot;$(OSGHOME)\..\osgNV\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(OSGHOME)\..\osgNV\lib&quot;"
+				IgnoreAllDefaultLibraries="FALSE"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\Debug/VE_Xplorer.pdb"
+				SubSystem="1"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Debug/VE_Xplorer.tlb"
+				HeaderFileName=""/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="OSG_CG_DBGP|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\osgNV\include&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(CG_INC_PATH)&quot;"
+				PreprocessorDefinitions="VE_PATENTED;_DEBUG;_OSG;VTK44;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32;CFD_USE_SHADERS"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="2"
+				PrecompiledHeaderFile=".\Debug/VE_Xplorer.pch"
+				AssemblerListingLocation=".\Debug/"
+				ObjectFile=".\Debug/"
+				ProgramDataBaseFileName=".\Debug/"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="4"
+				CompileAs="0"
+				DisableSpecificWarnings="4244;4251;4275;4290"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib osgNVCgd.lib omniORB405_rtd.lib omniDynamic405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib vtkexpat.lib vtkzlib.lib opengl32.lib glu32.lib"
+				ShowProgress="0"
+				OutputFile="$(VE_SUITE_HOME)\bin\win32\project.exe"
+				LinkIncremental="2"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\osgNV\lib&quot;;&quot;$(CG_LIB_PATH)&quot;"
+				IgnoreAllDefaultLibraries="FALSE"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile=".\Debug/VE_Xplorer.pdb"
+				SubSystem="1"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Debug/VE_Xplorer.tlb"
+				HeaderFileName=""/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="OSG_PS_DBG|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;./;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_CE&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(OSGHOME)\..\osgNV\include&quot;;&quot;$(CG_INC_PATH)&quot;"
+				PreprocessorDefinitions="_DEBUG;_OSG;VE_PATENTED;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_WINDOWS;WINVER=0x400;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY;CFD_USE_SHADERS"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="2"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="4"
+				CompileAs="0"
+				DisableSpecificWarnings="4244;4251;4275;4290;4291"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib osgNVCgd.lib osgNVd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
+				ShowProgress="0"
+				OutputFile="$(VE_SUITE_HOME)\bin\win32\project_topsd.exe"
+				LinkIncremental="2"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(CG_INC_PATH)&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
@@ -752,6 +884,12 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="OMNI_OSG_CG_PATENTED|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -888,6 +1026,12 @@
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVEBaseClass.cxx">
@@ -911,6 +1055,12 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="OMNI_OSG_CG_PATENTED|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -947,6 +1097,12 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="OMNI_OSG_CG_PATENTED|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -1005,6 +1161,12 @@
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\moduleS.cpp">
@@ -1034,6 +1196,12 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="OMNI_OSG_CG_PATENTED|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -1077,6 +1245,12 @@
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\Framework\package.cpp">
@@ -1100,6 +1274,12 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="OMNI_OSG_CG_PATENTED|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -1137,6 +1317,12 @@
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\VjObs.cpp">
@@ -1148,6 +1334,12 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="Debug_TAO_OSG|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_PS_DBG|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -1215,6 +1407,18 @@
 						Name="VCCLCompilerTool"
 						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_PS_DBG|Win32">
+					<Tool
+						Name="VCCLCompilerTool"
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\VjObsC.cpp">
@@ -1248,6 +1452,12 @@
 					<Tool
 						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\VjObsS.cpp">
@@ -1277,6 +1487,12 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="OMNI_OSG_CG_PATENTED|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -1319,6 +1535,18 @@
 				</FileConfiguration>
 				<FileConfiguration
 					Name="OMNI_OSG_CG_PATENTED|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_CG_DBGP|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
+				<FileConfiguration
+					Name="OSG_PS_DBG|Win32"
 					ExcludedFromBuild="TRUE">
 					<Tool
 						Name="VCCLCompilerTool"/>
@@ -1536,6 +1764,9 @@
 				RelativePath=".\cfdWriteTraverser.h">
 			</File>
 			<File
+				RelativePath="..\VE_Builder\Translator\cleanVtk.h">
+			</File>
+			<File
 				RelativePath="fileIO.h">
 			</File>
 			<File
@@ -1652,6 +1883,18 @@
 								Name="VCCLCompilerTool"
 								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_CG_DBGP|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_PS_DBG|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\VE_VolumeVis\cfdTextureDataSet.cxx">
@@ -1712,6 +1955,18 @@
 						</FileConfiguration>
 						<FileConfiguration
 							Name="OMNI_OSG_CG_PATENTED|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_CG_DBGP|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_PS_DBG|Win32">
 							<Tool
 								Name="VCCLCompilerTool"
 								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -1780,6 +2035,18 @@
 								Name="VCCLCompilerTool"
 								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_CG_DBGP|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_PS_DBG|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
 					</File>
 					<File
 						RelativePath="..\VE_VolumeVis\cfdTextureMatrixCallback.cxx">
@@ -1844,6 +2111,21 @@
 								Name="VCCLCompilerTool"
 								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_CG_DBGP|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_PS_DBG|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeBillboard.cxx">
 					</File>
 					<File
 						RelativePath="..\VE_VolumeVis\cfdVolumeCenterCallback.cxx">
@@ -1917,6 +2199,18 @@
 								Name="VCCLCompilerTool"
 								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_CG_DBGP|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
+						<FileConfiguration
+							Name="OSG_PS_DBG|Win32">
+							<Tool
+								Name="VCCLCompilerTool"
+								ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						</FileConfiguration>
 					</File>
 				</Filter>
 				<Filter
@@ -1933,6 +2227,9 @@
 					</File>
 					<File
 						RelativePath="..\VE_VolumeVis\cfdTextureMatrixCallback.h">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeBillboard.h">
 					</File>
 					<File
 						RelativePath="..\VE_VolumeVis\cfdVolumeCenterCallback.h">
@@ -2014,6 +2311,18 @@
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdOSGShaderManager.cxx">
@@ -2078,6 +2387,18 @@
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdOSGTransferShaderManager.cxx">
@@ -2138,6 +2459,18 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="OMNI_OSG_CG_PATENTED|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
 								<Tool
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -2239,6 +2572,18 @@
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdVectorVolumeVisHandler.cxx">
@@ -2303,6 +2648,18 @@
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdVolumeVisNodeHandler.cxx">
@@ -2363,6 +2720,18 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="OMNI_OSG_CG_PATENTED|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
 								<Tool
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -2452,6 +2821,18 @@
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdAdvectionSubGraph.cxx">
@@ -2512,6 +2893,18 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="OMNI_OSG_CG_PATENTED|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
 								<Tool
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -2580,6 +2973,18 @@
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdOSGPingPongTexture3d.cxx">
@@ -2640,6 +3045,18 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="OMNI_OSG_CG_PATENTED|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
 								<Tool
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -2708,6 +3125,18 @@
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdPBufferQuad.cxx">
@@ -2768,6 +3197,18 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="OMNI_OSG_CG_PATENTED|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
 								<Tool
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -2845,6 +3286,18 @@
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdUpdateableOSGTexture1d.cxx">
@@ -2905,6 +3358,18 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="OMNI_OSG_CG_PATENTED|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
 								<Tool
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -2973,6 +3438,18 @@
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
 						</File>
 						<File
 							RelativePath="..\VE_VolumeVis\cfdUpdateTextureCallback.cxx">
@@ -3033,6 +3510,18 @@
 							</FileConfiguration>
 							<FileConfiguration
 								Name="OMNI_OSG_CG_PATENTED|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_CG_DBGP|Win32">
+								<Tool
+									Name="VCCLCompilerTool"
+									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+							</FileConfiguration>
+							<FileConfiguration
+								Name="OSG_PS_DBG|Win32">
 								<Tool
 									Name="VCCLCompilerTool"
 									ObjectFile="$(IntDir)/$(InputName)1.obj"/>
@@ -3159,6 +3648,18 @@
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 					</FileConfiguration>
+					<FileConfiguration
+						Name="OSG_CG_DBGP|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="OSG_PS_DBG|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
 				</File>
 				<File
 					RelativePath="..\VE_SceneGraph\cfdSequence.cxx">
@@ -3218,6 +3719,18 @@
 					</FileConfiguration>
 					<FileConfiguration
 						Name="OMNI_OSG_CG_PATENTED|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="OSG_CG_DBGP|Win32">
+						<Tool
+							Name="VCCLCompilerTool"
+							ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+					</FileConfiguration>
+					<FileConfiguration
+						Name="OSG_PS_DBG|Win32">
 						<Tool
 							Name="VCCLCompilerTool"
 							ObjectFile="$(IntDir)/$(InputName)1.obj"/>

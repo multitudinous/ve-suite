@@ -105,7 +105,9 @@ cfdApp::cfdApp( void )
 #endif
 {
    filein_name = 0;
+#ifdef _TAO
    this->executive = 0;
+#endif
 #ifdef _OSG
    _frameStamp = new osg::FrameStamp;
    _frameStamp->setReferenceTime(0.0);

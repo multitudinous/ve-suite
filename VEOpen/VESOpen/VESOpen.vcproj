@@ -423,6 +423,118 @@ echo Done.
 			<Tool
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
+		<Configuration
+			Name="OSG_CG_DBGP|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				MinimalRebuild="TRUE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="5"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="4"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="IDL Compiler"
+				CommandLine="echo C++ stubs. . .
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(VE_SUITE_HOME)/VEOpen/skel $(VE_SUITE_HOME)/VEOpen/idl/module.idl
+$(OMNI_HOME)\bin\omniidl -bcxx -Wbh=.h,s=.cpp -I$(VJ_BASE_DIR)/include -C$(VE_SUITE_HOME)/VEOpen/skel $(VE_SUITE_HOME)/VEOpen/idl/VjObs.idl
+echo Done.
+"
+				AdditionalDependencies="module.idl;VjObs.idl"
+				Outputs="moduleC.h;moduleC.cpp;moduleS.cpp;moduleS.h;VjObsC.h;VjObsS.h;VjObsC.cpp;VjObsS.cpp"/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)/VESOpen.exe"
+				LinkIncremental="2"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/VESOpen.pdb"
+				SubSystem="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="OSG_PS_DBG|Win32"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
+			ConfigurationType="1"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				Optimization="0"
+				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
+				MinimalRebuild="TRUE"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="5"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="4"/>
+			<Tool
+				Name="VCCustomBuildTool"
+				Description="IDL Compiler"
+				CommandLine="echo C++ stubs. . .
+$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VEOpen/skel -GI $(VE_SUITE_HOME)/VEOpen/idl/module.idl
+$(ACE_ROOT)/bin/tao_idl.exe -o $(VE_SUITE_HOME)/VEOpen/skel -GI $(VE_SUITE_HOME)/VEOpen/idl/VjObs.idl
+echo Done.
+"
+				AdditionalDependencies="module.idl;VjObs.idl"
+				Outputs="moduleC.h;moduleC.cpp;moduleS.cpp;moduleS.h;VjObsC.h;VjObsS.h;VjObsC.cpp;VjObsS.cpp"/>
+			<Tool
+				Name="VCLinkerTool"
+				OutputFile="$(OutDir)/VESOpen.exe"
+				LinkIncremental="2"
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(OutDir)/VESOpen.pdb"
+				SubSystem="2"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
 	</Configurations>
 	<References>
 	</References>

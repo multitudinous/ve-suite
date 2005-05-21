@@ -244,11 +244,6 @@ void UI_VisualizationTab::_buildPage()
 void UI_VisualizationTab::_onCategory(wxCommandEvent& event)
 {
    event.GetInt();
-#ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
-   
-#endif
-#endif
   //wxMessageBox(_categoryRBox->GetStringSelection(), _T("Category RadioBox!"));
 }
 
@@ -364,7 +359,7 @@ void UI_VisualizationTab::_onUpdate(wxCommandEvent& event)
 }
 
 //////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onSlider(wxCommandEvent& event)
+void UI_VisualizationTab::_onSlider(wxScrollEvent& event)
 {
 #ifdef VE_PATENTED
 #ifdef CFD_USE_SHADERS

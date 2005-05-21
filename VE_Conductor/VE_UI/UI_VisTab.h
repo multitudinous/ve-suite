@@ -74,7 +74,7 @@ class UI_VisualizationTab : public wxPanel
       void _onScalarBar(wxCommandEvent& event);
       void _onRecord(wxCommandEvent& event);
    
-      void _onSlider(wxCommandEvent& event);
+      void _onSlider(wxScrollEvent& event);
       void _onClear(wxCommandEvent& event);
       void _onCustomVis(wxCommandEvent& event);
       void _onTextureBasedVisual(wxCommandEvent& event);
