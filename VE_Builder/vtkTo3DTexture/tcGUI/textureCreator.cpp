@@ -342,7 +342,6 @@ void VTKDataToTexture::createTextures()
    //build the octree
    _cLocator = vtkCellLocator::New();
    _cLocator->SetDataSet(_dataSet);
-   _cLocator->SetCacheCellBounds(1);
 
    //build the octree
    _cLocator->BuildLocator();
