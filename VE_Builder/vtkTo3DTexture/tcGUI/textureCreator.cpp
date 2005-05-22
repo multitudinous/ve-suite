@@ -540,8 +540,6 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
           for(int i= 0; i < _resolution[0]; i++){
              pt[0] = bbox[0] + i*delta[0];
              if(_validPt.at(index++)){
-               wxString msg = wxString("Adding inside data.");
-               _updateTranslationStatus(msg.c_str());
                 _cLocator->FindClosestPoint(pt,closestPt,
 		                               cell,cellId,subId, dist);
                 weights = new double[cell->GetNumberOfPoints()];
@@ -556,8 +554,6 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
              }else{
                //point isn't in a cell
 	            //so set the texture data to 0
-               wxString msg = wxString("Adding outside data.");
-               _updateTranslationStatus(msg.c_str());
                _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar); 
              }
              _curPt++;
