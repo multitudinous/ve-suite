@@ -8,12 +8,14 @@
 #include <vtkDataArray.h>
 #include <vtkDoubleArray.h>
 #include <vtkStructuredGridReader.h>
+#include <vtkDataReader.h>
 #include <vtkUnstructuredGridReader.h>
 #include <vtkRectilinearGrid.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkStructuredGrid.h>
 #include <vtkCellDataToPointData.h>
 #include <iostream>
+#include <cmath>
 
 #ifdef WIN32
 #include <direct.h>
@@ -247,6 +249,7 @@ void VTKDataToTexture::createDataSetFromFile(const char* filename)
 {
    wxString msg = wxString("Reading Dataset: ") + wxString(filename);
    _updateTranslationStatus(msg.c_str());
+   _confirmFileType(filename);
    if(_isRGrid){
       if(!_rgrid){
          _rgrid = vtkRectilinearGridReader::New();
@@ -287,6 +290,24 @@ void VTKDataToTexture::createDataSetFromFile(const char* filename)
       _sgrid->SetFileName(filename);
       _sgrid->Update();
       setDataset(_sgrid->GetOutput());
+   }
+}
+/////////////////////////////////////////////////////////////
+void VTKDataToTexture::_confirmFileType(const char* fileName)
+{
+   if(fileName){
+      vtkDataReader* genericReader = vtkDataReader::New();   
+      genericReader->SetFileName(fileName);
+      genericReader->Update();
+
+      if(genericReader->IsFileStructuredGrid()&&!_isSGrid){
+         setStructuredGrid();
+      }else if(genericReader->IsFileUnstructuredGrid()&&!_isUGrid){
+         setUnstructuredGrid();
+      }else if(genericReader->IsFileRectilinearGrid()&&!_isRGrid){
+         setRectilinearGrid();
+      }     
+      genericReader->Delete();
    }
 }
 /////////////////////////////////////////
@@ -401,13 +422,14 @@ void VTKDataToTexture::_createValidityTexture()
    //now create the black/white validity data
    float delta[3] = {0,0,0};
    //delta x
-   delta[0] = (bbox[1] - bbox[0])/(_resolution[0]-1);
+   delta[0] = fabs((bbox[1] - bbox[0])/(_resolution[0]-1));
    //delta y
-   delta[1] = (bbox[3] - bbox[2])/(_resolution[1]-1);
+   delta[1] = fabs((bbox[3] - bbox[2])/(_resolution[1]-1));
    //delta z
-   delta[2] = (bbox[5] - bbox[4])/(_resolution[2]-1);
+   delta[2] = fabs((bbox[5] - bbox[4])/(_resolution[2]-1));
+   std::cout<<"Delta: "<<delta[0]<<" "<<delta[1]<<" "<<delta[2]<<std::endl;
 
-   double deltaDist = sqrt(delta[0]*delta[0] + delta[1]*delta[1]+delta[2]*delta[2]);
+   //double deltaDist = sqrt(delta[0]*delta[0] + delta[1]*delta[1]+delta[2]*delta[2]);
    //the bottom corner of the bbox/texture
    double pt[3] ={0,0,0};
    pt[0] = bbox[0];
@@ -435,35 +457,35 @@ void VTKDataToTexture::_createValidityTexture()
 
    unsigned int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
    for(unsigned int l = 0; l < nPixels; l++){
-         pt[2] = bbox[4] + k*delta[2];
-         pt[1] = bbox[2] + j*delta[1];
-         pt[0] = bbox[0] + (i++)*delta[0];
+      pt[2] = bbox[4] + k*delta[2];
+      pt[1] = bbox[2] + j*delta[1];
+      pt[0] = bbox[0] + (i++)*delta[0];
          
-         _cLocator->FindClosestPoint(pt,closestPt,
-		                          cell,cellId,subId, dist);
+      _cLocator->FindClosestPoint(pt,closestPt,
+	                          cell,cellId,subId, dist);
+      std::cout<<"Closest Point: "<<closestPt[0]<<" "<<closestPt[1]<<" "<<closestPt[2]<<std::endl;
+      std::cout<<"Distance: "<<dist<<std::endl;
        
-         //if(dist < deltaDist){
-            weights = new double[cell->GetNumberOfPoints()];
-            //check to see if this point is in
-	         //the returned cell
-           if(cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights)){
-              _validPt.push_back(true);
-           }else{
-              _validPt.push_back(false);
-           }
-           if(weights){
-              delete [] weights;
-              weights = 0;
-           }
-         /*}else{
-            _validPt.push_back(false);
-         }*/
-         //check if it is time to reset
-        
-     //}
+      weights = new double[cell->GetNumberOfPoints()];
+      //check to see if this point is in
+      //the returned cell
+      int good = cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
+      if(good){
+         wxString msg = wxString("Valid pt .");
+         _updateTranslationStatus(msg.c_str());
+         _validPt.push_back(true);
+      }else{
+         wxString msg = wxString("Invalid pt .");
+         _updateTranslationStatus(msg.c_str());
+         _validPt.push_back(false);
+      }
+      if(weights){
+         delete [] weights;
+         weights = 0;
+     }
      if((unsigned int)i > (unsigned int)nX){
-            i = 0;
-            j ++;
+           i = 0;
+           j ++;
            if((unsigned int)j > (unsigned int)nY){
                j = 0;
                k ++;
@@ -486,11 +508,11 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
    //the data
    float delta[3] = {0,0,0};
    //delta x
-   delta[0] = (bbox[1] - bbox[0])/(_resolution[0]-1);
+   delta[0] = fabs((bbox[1] - bbox[0])/(_resolution[0]-1));
    //delta y
-   delta[1] = (bbox[3] - bbox[2])/(_resolution[1]-1);
+   delta[1] = fabs((bbox[3] - bbox[2])/(_resolution[1]-1));
    //delta z
-   delta[2] = (bbox[5] - bbox[4])/(_resolution[2]-1);
+   delta[2] = fabs((bbox[5] - bbox[4])/(_resolution[2]-1));
 
    //the bottom corner of the bbox/texture
    double pt[3] ={0,0,0};
@@ -519,6 +541,8 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
           for(int i= 0; i < _resolution[0]; i++){
              pt[0] = bbox[0] + i*delta[0];
              if(_validPt.at(index++)){
+               wxString msg = wxString("Adding inside data.");
+               _updateTranslationStatus(msg.c_str());
                 _cLocator->FindClosestPoint(pt,closestPt,
 		                               cell,cellId,subId, dist);
                 weights = new double[cell->GetNumberOfPoints()];
@@ -533,6 +557,8 @@ void VTKDataToTexture::_resampleData(int dataValueIndex,int isScalar)
              }else{
                //point isn't in a cell
 	            //so set the texture data to 0
+               wxString msg = wxString("Adding outside data.");
+               _updateTranslationStatus(msg.c_str());
                _addOutSideCellDomainDataToFlowTexture(dataValueIndex,isScalar); 
              }
              _curPt++;

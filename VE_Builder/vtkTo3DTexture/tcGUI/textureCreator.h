@@ -94,6 +94,10 @@ protected:
    std::vector<FlowTexture> _velocity;
    std::vector<FlowTexture> _curScalar;
    
+   //check to make sure that grid type specified by the
+   //user is the actual file type
+   void _confirmFileType(const char* fileName);
+
    //store the info if sampled pts are 
    //inside the computational domain
    void _createValidityTexture();
