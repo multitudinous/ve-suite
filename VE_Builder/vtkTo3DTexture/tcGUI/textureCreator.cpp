@@ -25,6 +25,7 @@
 ////////////////////////////////////
 VTKDataToTexture::VTKDataToTexture()
 {
+   _isBatch = false;
    _curPt = 0;
    _nPtDataArrays = 0;
    _resolution[0] = 2;
@@ -54,6 +55,7 @@ VTKDataToTexture::VTKDataToTexture()
 /////////////////////////////////////////////////////////////
 VTKDataToTexture::VTKDataToTexture(const VTKDataToTexture& v)
 {
+   _isBatch = v._isBatch;
    _curPt = v._curPt;
    _isRGrid = v._isRGrid;
    _isSGrid = v._isSGrid;
@@ -225,7 +227,7 @@ void VTKDataToTexture::setVelocityFileName(const char* vFileName)
 /////////////////////////////////////////////////////////////////
 void VTKDataToTexture::_updateTranslationStatus(const char* msg)
 {
-   if(_parent){
+   if(_parent && !_isBatch){
       _parent->UpdateProgressDialog(msg);
    }
 }

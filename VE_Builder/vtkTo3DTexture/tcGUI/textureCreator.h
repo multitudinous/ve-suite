@@ -77,6 +77,8 @@ public:
    //initialize the translator session for each file set
    void reInit();
    void setParentGUI(TCFrame* parent){_parent = parent;}   
+   void setBatchOn(){_isBatch = true;}
+   void setBatchOff(){_isBatch = false;}
 
    //get the min and max of the velocity magnitude
    //float minVelocityMagnitude(){return _minMagVel;}
@@ -87,6 +89,7 @@ public:
    //equal operator
    VTKDataToTexture& operator=(const VTKDataToTexture& rhs);
 protected:
+   bool _isBatch;
    bool _isRGrid;
    bool _isUGrid;
    bool _isSGrid;

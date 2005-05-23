@@ -34,11 +34,19 @@ public:
    virtual ~TCFrame();
    enum GridType{STRUCTURED,UNSTRUCTURED,RECTILINEAR};
    void UpdateStatus(const char* statusString);
-   void SetGridType(GridType type){_type = type;}
+   void SetGridType(GridType type);
    void UpdateProgressDialog(const char* msg);
 
    unsigned int GetNumberOfTimeSteps(){return _numFiles;}
 
+   ///////////////////////////////
+   //Batch translation interface//
+   ///////////////////////////////
+   void SetInputDirectory(const char* inDirectory);
+   void SetOutputDirectory(const char* outDirectory);
+   void SetTextureResolution(int x, int y, int z);
+   void BatchTranslation();
+   
 protected:
    GridType _type;
    void _buildGUI();

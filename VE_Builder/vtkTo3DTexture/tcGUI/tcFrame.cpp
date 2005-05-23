@@ -289,6 +289,7 @@ void TCFrame::_onGridTypeCallback(wxCommandEvent& event)
 /////////////////////////////////////////////////////////
 void TCFrame::_onTranslateCallback(wxCommandEvent& event)
 {
+   _translator->setBatchOff();
    UpdateStatus("Translating to 3D texture files. . .");
    char oname[256];
    wxString statusMsg = "";
@@ -402,4 +403,83 @@ void TCFrame::_onBrowseCallback(wxCommandEvent& event )
     _chooseDirectory(wxDD_DEFAULT_STYLE & ~wxDD_NEW_DIR_BUTTON,
                    event.GetId());
 }
-   
+////////////////////////////////////////////////////////
+//Batch translation interfaces                        //
+////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////
+void TCFrame::SetInputDirectory(const char* inDirectory)
+{
+   if(inDirectory){
+     _gridFiles.Clear();
+     _numFiles = 0;
+
+     wxDir inputFileDirectory;
+     inputFileDirectory.Open(wxString(inDirectory));
+
+     if(inputFileDirectory.IsOpened()){
+        _inputDir = wxT(inDirectory);
+        wxString path;
+        wxFileName filename;
+        wxString fullPath;
+        bool cont = inputFileDirectory.GetFirst(&path);
+        while ( cont ){
+           fullPath = wxString(_inputDir) + wxString("/") +path;
+           filename.Assign(fullPath);
+           if(filename.HasExt()&& (filename.GetExt()==wxString("vtk"))){
+              _gridFiles.Add(fullPath);
+           }
+           cont = inputFileDirectory.GetNext(&path);
+        }
+      }else{
+        std::cout<<"Couldn't open directory: "<<inDirectory<<std::endl;
+      }
+      _numFiles = _gridFiles.GetCount();
+   }
+}
+//////////////////////////////////////////////////////////
+void TCFrame::SetOutputDirectory(const char* outDirectory)
+{
+   _outputDir = wxString(outDirectory);
+}
+//////////////////////////////////////////////////////
+void TCFrame::SetTextureResolution(int x,int y, int z)
+{
+   _resolution[0] = x;
+   _resolution[1] = y;
+   _resolution[2] = z;
+}
+/////////////////////////////////////////////////
+void TCFrame::SetGridType(GridType type)
+{
+   switch (type){
+      case RECTILINEAR:
+         _translator->setRectilinearGrid();
+         break;
+      case STRUCTURED:
+         _translator->setStructuredGrid();
+         break;
+      case UNSTRUCTURED:
+         _translator->setUnstructuredGrid();
+      default:
+         break;
+   };
+   _type = type;
+}
+////////////////////////////////
+void TCFrame::BatchTranslation()
+{
+   _translator->setBatchOn();
+   //process the files
+   char oname[256];
+   for(int i = 0; i < _numFiles; i++){
+      _translator->reset();
+      _translator->setOutputDirectory((char*)_outputDir.c_str());
+      sprintf(oname,"_%d",i);
+      _translator->createDataSetFromFile(_gridFiles[i].c_str());
+      _translator->setOutputResolution(_resolution[0],
+                                   _resolution[1],
+                                   _resolution[2]);
+      _translator->setVelocityFileName(oname);
+      _translator->createTextures();
+   }
+}

@@ -11,8 +11,12 @@
 class TCApp: public wxApp{
 public: 
    bool OnInit();
+   void OnInitCmdLine(wxCmdLineParser& parser);
+   bool OnCmdLineParsed(wxCmdLineParser& parser);
 protected:
    TCFrame* _frame;
+   bool _isBatch;
+   bool _translateFromCmdLine();
 };
 DECLARE_APP(TCApp)
  
