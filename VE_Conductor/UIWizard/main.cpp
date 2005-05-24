@@ -23,7 +23,7 @@ int ignore_comments(char* current_line);
 int get_token(char* current_line, vector<string>& toks);
 bool match(const string& s1, const string& s2);
 void GenCode();
-
+void GenVcProj( const char* defname ); //generates the vcproj file for use in Windows
 int main(int argc, char* argv[]) //This is a Cheezy wizard. take a mod.def as input
 {
   if (argc<2)
@@ -32,7 +32,46 @@ int main(int argc, char* argv[]) //This is a Cheezy wizard. take a mod.def as in
     {
       parse_inp(argv[1]);
       GenCode();
+      GenVcProj( argv[1] );
     }
+}
+
+void GenVcProj( const char* defname )
+{
+   cout<<"Generating vcproj file...";
+   char buffer[BUFFER_MAX+1];
+   //read in an existing vcproj file i.e. TEMPLATE.vcproj
+   string vcprojName;   //name of the vcproj
+   //open TEMPLATE.vcproj   
+   string modDefName;   //string to hold the model definition names
+   ifstream inpVcproj( "../TEMPLATE.vcproj" );   
+   vcprojName = defname;   //initialize the name of the project to that given by the user
+   
+   unsigned int pos = vcprojName.find( ".def" );
+   vcprojName.erase( pos, 4 );
+   modDefName = vcprojName;
+   vcprojName = vcprojName + ".vcproj";
+   cout<<vcprojName<<endl;   
+   ofstream outVcproj ( vcprojName.c_str() );   
+   //read in each line
+   string bufferString;
+   int counter; counter = 0;
+   while ( !inpVcproj.eof() )
+   {
+      inpVcproj.getline(buffer, BUFFER_MAX, '\n');
+      bufferString += buffer;      
+      //within each line look for Template and replace with  modDefName
+      pos = bufferString.find( "Template" );
+      if ( pos !=string::npos )
+      {
+         counter++;
+         bufferString.replace( pos, 8, modDefName );
+      }
+      outVcproj<<bufferString<<endl;
+      
+      bufferString.clear();
+   }//finished reading end of files
+   //cout<<counter<<" occurances of Template found"<<endl;   
 }
 
 void parse_inp(const char * defname)
