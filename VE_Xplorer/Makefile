@@ -108,6 +108,9 @@ ifeq ($(VE_PATENTED), TRUE)
    EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_VolumeVis
    EXTRA_CXXFLAGS+= -D_OSG -DVE_PATENTED
    EXTRA_PATH_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_VolumeVis
+ifeq ($(CFD_USE_SHADERS),TRUE)
+   EXTRA_CXXFLAGS+= -DCFD_USE_SHADERS
+endif
 endif
 
 # for xercese includes
@@ -208,10 +211,11 @@ endif
 
 ifeq ($(VE_PATENTED), TRUE)
 ifeq ($(SCENE_GRAPH), OSG)
-ifeq ($(CFD_USE_SHADERS), TRUE )
+ifeq ($(CFD_USE_SHADERS), TRUE)
 SRCS+= \
    cfd3DTextureCullCallback.cxx \
    cfdAdvectionSubGraph.cxx \
+   cfdCopyTo3DTextureStage.cxx \
    cfdOSGAdvectionShaderManager.cxx \
    cfdScalarShaderManager.cxx \
    cfdOSGPingPongTexture3d.cxx \
@@ -225,7 +229,6 @@ SRCS+= \
    cfdUpdateableOSGTexture1d.cxx \
    cfdUpdateParameterCallback.cxx \
    cfdVectorVolumeVisHandler.cxx \
-   cfdVolumeVisNodeHandler.cxx \
    cfdVolumeVisNodeHandler.cxx 
 endif
 endif
