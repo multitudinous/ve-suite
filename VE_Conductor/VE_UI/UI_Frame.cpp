@@ -126,8 +126,8 @@ void UI_Frame::buildCORBA( )
    CosNaming::Name name;
    name.length(1);
    //Now get the reference of the VE server
-   name[0].id   = (const char*) "Master";
-   name[0].kind = (const char*)"VE_Xplorer";
+   name[0].id   = (const char*)"RockIsland";
+   name[0].kind = (const char*)"mccdo";
    try 
    {
       CORBA::Object_var ve_object;

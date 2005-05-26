@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="VESOpen"
+	Name="VEOpen"
 	ProjectGUID="{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}"
 	Keyword="Win32Proj">
 	<Platforms>

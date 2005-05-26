@@ -10,7 +10,7 @@
 #include "string_ops.h"
 #include "Geometry.h"
 
-IMPLEMENT_DYNAMIC_CLASS(REI_Plugin, wxObject)
+IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxObject )
 
 /////////////////////////////////////////////////////////////////////////////
 REI_Plugin::REI_Plugin()

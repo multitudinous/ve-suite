@@ -24,7 +24,7 @@ enum {
 
 class Avail_Modules : public wxTreeCtrl
 {
-  DECLARE_DYNAMIC_CLASS(Avail_Modules);
+  //DECLARE_DYNAMIC_CLASS(Avail_Modules);
 
  public:
   enum

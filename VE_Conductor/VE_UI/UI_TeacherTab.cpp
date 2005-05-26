@@ -5,7 +5,7 @@
 
 BEGIN_EVENT_TABLE(UI_TeacherTab, wxPanel)
    EVT_RADIOBOX(TEACHER_RBOX,UI_TeacherTab::_onTeacher)
-   EVT_BUTTON(TEACHER_CLEAR_BUTTON,UI_TeacherTab::_onClear)
+   //EVT_BUTTON(TEACHER_CLEAR_BUTTON,UI_TeacherTab::_onClear)
 END_EVENT_TABLE()
 
 ///////////////
@@ -56,12 +56,12 @@ void UI_TeacherTab::_buildPage()
    }
 
    // Clear button
-   _clearButton = new wxButton(this, TEACHER_CLEAR_BUTTON, wxT("Clear PFB Files"));
+   //_clearButton = new wxButton(this, TEACHER_CLEAR_BUTTON, wxT("Clear PFB Files"));
 
    //the panel sizer
    wxBoxSizer* teacherPanelGroup = new wxBoxSizer(wxHORIZONTAL);
    teacherPanelGroup->Add(_teacherRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
-   teacherPanelGroup->Add(_clearButton,0,wxALIGN_RIGHT);
+   //teacherPanelGroup->Add(_clearButton,0,wxALIGN_RIGHT);
 
    //set this flag and let wx handle alignment
    SetAutoLayout(true);
@@ -97,11 +97,11 @@ void UI_TeacherTab::_onTeacher(wxCommandEvent& event)
       std::cout << "There are no stored scenes loaded to send!" << std::endl;
    }
 }
-
+/*
 void UI_TeacherTab::_onClear(wxCommandEvent& event)
 {
    event.GetInt();
    ((UI_Tabs *)_parent)->cId = CLEAR_PFB_FILE;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
-
+*/

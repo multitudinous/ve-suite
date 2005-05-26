@@ -1,6 +1,6 @@
 #ifndef RESULT_PANEL_H
 #define RESULT_PANEL_H
-#include "wx/wx.h"
+#include <wx/wx.h>
 
 enum {
   MW_GROSS,
@@ -19,7 +19,7 @@ enum {
 
 class ResultPanel_Dialog : public wxDialog
 {
-  DECLARE_DYNAMIC_CLASS(ResultPanel_Dialog);
+  //DECLARE_DYNAMIC_CLASS(ResultPanel_Dialog);
  public:
   ResultPanel_Dialog() {};
   ResultPanel_Dialog(wxWindow* parent, int id);

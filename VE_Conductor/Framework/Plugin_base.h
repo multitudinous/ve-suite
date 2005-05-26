@@ -12,26 +12,20 @@
 #include "FinancialDialog.h"
 
 class Geometry;
-/*
- * If we're using wx in Dynamic Library format do we 
- * want FL to be in DLL form as well?
- */
 #if defined(WXUSINGDLL) && \
     (defined(WXMAKING_PLUGIN_DLL) || defined(WXUSING_PLUGIN_DLL))
 
-#if defined(WXMAKING_PLUGIN_DLL)
-    // When building the DLL WXPLUGINDECLSPEC exports classes
-#   define WXPLUGIN_DECLSPEC            WXEXPORT
-#elif defined(WXUSING_PLUGIN_DLL)
-    // When building the DLL WXPLUGINDECLSPEC imports classes
-#   define WXPLUGIN_DECLSPEC            WXIMPORT
-#endif // defined(WXBUILD_PLUGIN_DLL)
-
+#  if defined(WXMAKING_PLUGIN_DLL)
+      // When building the DLL WXPLUGINDECLSPEC exports classes
+#     define WXPLUGIN_DECLSPEC            WXEXPORT
+#  elif defined(WXUSING_PLUGIN_DLL)
+      // When building the DLL WXPLUGINDECLSPEC imports classes
+#     define WXPLUGIN_DECLSPEC            WXIMPORT
+#  endif // defined(WXBUILD_PLUGIN_DLL)
 #else
-// When building the static library nullify the effect of WXPLUGIN_DECLSPEC
-#define WXPLUGIN_DECLSPEC
+   // When building the static library nullify the effect of WXPLUGIN_DECLSPEC
+#  define WXPLUGIN_DECLSPEC
 #endif // WXUSINGDLL && (WXMAKING_PLUGIN_DLL || WXUSING_PLUGIN_DLL)
-
 
 #define ICON 20000
 
@@ -41,8 +35,6 @@ typedef std::vector<wxPoint> POLY;
 
 class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
 {
-   DECLARE_DYNAMIC_CLASS(REI_Plugin)
-
    public:
 
       REI_Plugin();
@@ -153,6 +145,8 @@ class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
       std::map<std::string, std::vector<long> * >        _int1D;
       std::map<std::string, std::vector<double> * >      _double1D;
       std::map<std::string, std::vector<std::string> * > _string1D;
+   
+   DECLARE_DYNAMIC_CLASS( REI_Plugin )
 };
 
 #endif

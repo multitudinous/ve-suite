@@ -12,7 +12,7 @@
 
 class UIDialog : public wxDialog
 {
-  DECLARE_DYNAMIC_CLASS(UIDialog)
+  //DECLARE_DYNAMIC_CLASS(UIDialog)
     
  public:
   UIDialog() {};

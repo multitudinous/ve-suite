@@ -16,7 +16,7 @@ BEGIN_EVENT_TABLE(Avail_Modules, wxTreeCtrl)
   EVT_TREE_ITEM_ACTIVATED(TREE_CTRL, Avail_Modules::Instantiate)
 END_EVENT_TABLE()
    
-IMPLEMENT_DYNAMIC_CLASS(Avail_Modules, wxTreeCtrl)
+//IMPLEMENT_DYNAMIC_CLASS(Avail_Modules, wxTreeCtrl)
 
 Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
   : wxTreeCtrl(parent, id, pos, size, style)

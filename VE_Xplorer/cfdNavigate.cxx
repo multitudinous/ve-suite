@@ -341,13 +341,51 @@ void cfdNavigate::updateNavigationFromGUI()
                this->IHdigital[6]->getData() == gadget::Digital::ON )        
    //CW rotation
    {
-      this->worldRot[ 0 ] -= rotationStepSize;
+      float oldAng = worldRot[ 0 ];
+         this->worldRot[ 0 ] -= 1.0f;
+      gmtl::Vec3f  worldVec, wandVec, tempVec, worldPosVec(this->worldTrans[0]- this->LastVec[0], 0,-this->worldTrans[1]-this->LastVec[2]);
+      gmtl::Matrix44f rotMat;
+      gmtl::EulerAngleXYZf myEuler( 0, -gmtl::Math::deg2Rad(oldAng),0), worldRotVec(0, gmtl::Math::deg2Rad(this->worldRot[0]),0);
+     
+      vjHeadMat = head->getData( );
+      gmtl::setTrans(wandVec, vjHeadMat);
+
+      rotMat = gmtl::makeRot<gmtl::Matrix44f>(myEuler);
+      gmtl::xform(worldVec, rotMat, worldPosVec);
+
+      rotMat = gmtl::makeRot<gmtl::Matrix44f>(worldRotVec);
+      gmtl::xform(worldVec, rotMat, worldVec);
+      gmtl::xform(tempVec, rotMat, wandVec);
+
+      LastVec= tempVec - wandVec;
+      
+      this->worldTrans[0] = worldVec[ 0 ] + LastVec[ 0 ];
+      this->worldTrans[1] = -(worldVec[ 2 ] + LastVec[ 2 ]);
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == YAW_CW) ||
                this->IHdigital[7]->getData() == gadget::Digital::ON )         
    //CCWrotation
    {
-      this->worldRot[ 0 ] += rotationStepSize;
+      float oldAng = worldRot[ 0 ];
+         this->worldRot[ 0 ] += 1.0f;
+      gmtl::Vec3f  worldVec, wandVec, tempVec, worldPosVec(this->worldTrans[0]- this->LastVec[0], 0,-this->worldTrans[1]-this->LastVec[2]);
+      gmtl::Matrix44f rotMat;
+      gmtl::EulerAngleXYZf myEuler( 0, -gmtl::Math::deg2Rad(oldAng),0), worldRotVec(0, gmtl::Math::deg2Rad(this->worldRot[0]),0);
+     
+      vjHeadMat = head->getData( );
+      gmtl::setTrans(wandVec, vjHeadMat);
+
+      rotMat = gmtl::makeRot<gmtl::Matrix44f>(myEuler);
+      gmtl::xform(worldVec, rotMat, worldPosVec);
+
+      rotMat = gmtl::makeRot<gmtl::Matrix44f>(worldRotVec);
+      gmtl::xform(worldVec, rotMat, worldVec);
+      gmtl::xform(tempVec, rotMat, wandVec);
+
+      LastVec= tempVec - wandVec;
+      
+      this->worldTrans[0] = worldVec[ 0 ] + LastVec[ 0 ];
+      this->worldTrans[1] = -(worldVec[ 2 ] + LastVec[ 2 ]);
    }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == PITCH_DOWN) )         
    {
@@ -367,8 +405,8 @@ void cfdNavigate::updateNavigationFromGUI()
    }
 
 
-   if ( this->buttonData[1] == gadget::Digital::TOGGLE_ON ||
-        this->buttonData[1] == gadget::Digital::ON )
+   if ( this->buttonData[1] == gadget::Digital::TOGGLE_ON ) //|| (this->cfdId == GUI_NAV && (this->cfdIso_value == YAW_CCW || this->cfdIso_value == YAW_CW)) ||
+        //this->buttonData[1] == gadget::Digital::ON )
    {
       this->currentWandDirection = this->GetDirection();
 
@@ -385,33 +423,26 @@ void cfdNavigate::updateNavigationFromGUI()
       {
          this->worldRot[ 0 ] += rotationStepSize;
       }
-            /*
-      gmtl::Matrix44f worldMat = this->worldDCS->GetMat();
+
+/*      gmtl::Matrix44f worldMat = this->worldDCS->GetMat();
       gmtl::Matrix44f vjHeadMat = head->getData();
-      gmtl::Matrix44f vjWorldHeadMat = worldMat * vjHeadMat;
-   
-      gmtl::Quatf LastPosQuat;
-      gmtl::Quatf NextPosQuat;
-      gmtl::Quatf CurPosQuat;
+      gmtl::Vec3f vjHeadVec = makeTrans< gmtl::Vec3f >( vjHeadMat );
+std::cout << vjHeadVec << std::endl;
+      gmtl::Vec3f vjWorldHeadVec = worldMat * vjHeadVec;
+std::cout << vjWorldHeadVec << std::endl;
       
-      gmtl::set( LastPosQuat, vjWorldHeadMat );
       gmtl::Vec3f y_axis( 0.0f, 1.0f, 0.0f );
       
-      gmtl::Matrix44f yAxisMatrix = gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad( this->worldRot[ 0 ] ), y_axis ) );
-      vjWorldHeadMat = yAxisMatrix * vjWorldHeadMat;
+      gmtl::Matrix44f yAxisMatrix = gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad( this->worldRot[ 0 ] - oldAng ), y_axis ) );
+      gmtl::Vec3f vjWorldRotHeadVec = yAxisMatrix * vjWorldHeadVec;
+std::cout << vjWorldRotHeadVec << std::endl;
 
-      gmtl::set( NextPosQuat, vjWorldHeadMat );
-
-      gmtl::slerp(CurPosQuat,1.0f,LastPosQuat,NextPosQuat);
-      Matrix44f temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
-      // We have to take the YRot value because the juggler axis 
-      // has y up where as we have z up these means we take the y up
-      // and make it z up
-      worldRot[0] = gmtl::Math::rad2Deg( makeYRot(temp) );
-      gmtl::Matrix44f newTrans;// = gmtl::makeVec( CurPosQuat );
-      newTrans = gmtl::make<gmtl::Matrix44f>( CurPosQuat );
-      gmtl::Vec3f trans = gmtl::makeTrans<gmtl::Vec3f>( newTrans );
-      */
+      gmtl::Vec3f newTrans = vjWorldHeadVec - vjWorldRotHeadVec;
+std::cout << newTrans << std::endl;
+      this->worldTrans[0] += newTrans[0];
+      this->worldTrans[1] += (-newTrans[2]); 
+*/
+      
       gmtl::Vec3f  worldVec, wandVec, tempVec, worldPosVec(this->worldTrans[0]- this->LastVec[0], 0,-this->worldTrans[1]-this->LastVec[2]);
       gmtl::Matrix44f rotMat;
       gmtl::EulerAngleXYZf myEuler( 0, -gmtl::Math::deg2Rad(oldAng),0), worldRotVec(0, gmtl::Math::deg2Rad(this->worldRot[0]),0);
@@ -427,10 +458,8 @@ void cfdNavigate::updateNavigationFromGUI()
       gmtl::xform(tempVec, rotMat, wandVec);
 
       LastVec= tempVec - wandVec;
-     
-      this->worldTrans[0] = worldVec[0] + LastVec[0];
-      this->worldTrans[1] = -(worldVec[2] + LastVec[2]); 
-
+      this->worldTrans[0] = worldVec[ 0 ] + LastVec[ 0 ];
+      this->worldTrans[1] = -(worldVec[ 2 ] + LastVec[ 2 ]);
    }
    else if ( this->buttonData[2] == gadget::Digital::TOGGLE_ON ||
              this->buttonData[2] == gadget::Digital::ON )

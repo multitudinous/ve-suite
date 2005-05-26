@@ -2,7 +2,7 @@
 #include <wx/image.h>
 #include <wx/dynload.h>
 
-IMPLEMENT_DYNAMIC_CLASS(PluginLoader, wxObject);
+//IMPLEMENT_DYNAMIC_CLASS(PluginLoader, wxObject);
 
 #include <wx/image.h>
 
@@ -44,7 +44,8 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
 	{
 	  wxFileName  libname(lib_dir, filename);
 	  wxString libn=lib_dir+"/"+libname.GetName();
-	  wxPluginLibrary *lib = wxPluginManager::LoadLibrary (libn);
+	    //wxMessageDialog("Loaded [ %s ]\n", libn.c_str());
+	  wxPluginLibrary *lib = wxPluginManager::LoadLibrary( libn );
 	  if (lib)
 	    wxLogDebug ("Loaded [ %s ]\n", filename.c_str());
 	  cont = dir.GetNext(&filename);
@@ -72,24 +73,31 @@ void PluginLoader::RegisterPlugins()
     
     This is a real rip off from the wxModule initialisation code
   */
-  
-  while ( node = wxClassInfo::sm_classTable->Next() )
+  node = wxClassInfo::sm_classTable->Next();
+  while ( node )
     {
       wxClassInfo *classInfo = (wxClassInfo *)node->GetData();
       
-      if ( classInfo->IsKindOf(CLASSINFO(REI_Plugin)) &&
-	   (classInfo != (& (REI_Plugin::ms_classInfo))) )
-	{
-	  RegisterPlugin(classInfo);
-	}
-    }
+      //if ( classInfo->IsKindOf(CLASSINFO(REI_Plugin)) &&
+	   //(classInfo != (& (REI_Plugin::ms_classInfo))) )
+	//{
+        wxLogDebug ("|\tRegister Class name : %s",classInfo->GetClassName());
+       wxLogDebug ("|\tRegister base classname : %s",classInfo->GetBaseClassName1());
+		if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "REI_Plugin" ) )
+	   {   RegisterPlugin(classInfo);
+        wxLogDebug ("|\tRegister plugins : %s",classInfo->GetClassName());
+       wxLogDebug ("|\tRegister plugins : %s",classInfo->GetBaseClassName1());
+      }
+	//}
+   node = wxClassInfo::sm_classTable->Next();
+   }
 }
 
 void PluginLoader::RegisterPlugin(wxClassInfo* info)
 {
    if (info)
    {
-       REI_Plugin *object = (REI_Plugin *) info->CreateObject();
+       REI_Plugin* object = (REI_Plugin*)(info->CreateObject());
        plugins.push_back(object);
        plugin_cls.push_back(info);
    }

@@ -12,7 +12,8 @@ BEGIN_EVENT_TABLE(UI_GeometryTab, wxPanel)
    //EVT_COMMAND_SCROLL_ENDSCROLL( GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry )
    EVT_CHECKLISTBOX( GEOMETRY_CBOX,UI_GeometryTab::_onUpdate )
    //EVT_RADIOBOX( GEOMETRY_CONFIG_RBOX, UI_GeometryTab::ChangeOpacity )
-   EVT_COMBOBOX( GEOMETRY_SELECT_COMBO, UI_GeometryTab::OpacityFileSelection )
+   //EVT_COMBOBOX( GEOMETRY_SELECT_COMBO, UI_GeometryTab::OpacityFileSelection )
+   EVT_LISTBOX( GEOMETRY_SELECT_COMBO, UI_GeometryTab::OpacityFileSelection )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////
@@ -63,9 +64,9 @@ void UI_GeometryTab::_buildPage()
       opacitytName[ 0 ] = wxT( "0" );
    }
 
-   geometryCombo = new wxComboBox(this, GEOMETRY_SELECT_COMBO, wxT("Set Active Geometry File"),
+   /*geometryCombo = new wxComboBox(this, GEOMETRY_SELECT_COMBO, wxT("Set Active Geometry File"),
                                     wxDefaultPosition, wxDefaultSize,
-                                    numGeoms,defaultName, wxCB_DROPDOWN);
+                                    numGeoms,defaultName, wxCB_DROPDOWN);*/
 
    wxStaticBox* geomFiles = new wxStaticBox(this,-1, wxT("Geometry Files"));
    wxStaticBoxSizer* geomFilesGroup = new wxStaticBoxSizer(geomFiles,wxVERTICAL);   
@@ -100,17 +101,12 @@ void UI_GeometryTab::_buildPage()
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_LABELS );
-   // I don't believe these are implemented for all platforms
-   //geomOpacitySlider->SetThumbLength( 50 );
 
    //lod slider
-   //geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,100,100,1000,
    geomLODSlider = new wxSlider(this, GEOMETRY_LOD_SLIDER,0,0,1000,
                                        wxDefaultPosition, wxDefaultSize,
                                        wxSL_HORIZONTAL|
                                        wxSL_LABELS );
-   // I don't believe these are implemented for all platforms
-   //geomLODSlider->SetThumbLength( 50 );
 
    //two sizers to group the sliders and their lables
    wxBoxSizer* opacityGroup = new wxBoxSizer( wxVERTICAL );
@@ -136,7 +132,7 @@ void UI_GeometryTab::_buildPage()
    //the panel sizer
    //geometryPanelGroup->Add(_geometryRBox,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);
    geomControlsGroup->Add(radioAndCheckBoxes,4,wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
-   geomControlsGroup->Add(geometryCombo,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
+   //geomControlsGroup->Add(geometryCombo,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL, 5);
    geomControlsGroup->Add(opacityGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5);
    geomControlsGroup->Add(lodGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5);
 
@@ -154,10 +150,9 @@ void UI_GeometryTab::_buildPage()
       _geometryCBox->Enable( false );
       geomLODSlider->Enable( false );
       geometryCombo->Enable( false );
+      geomOpacitySlider->Enable( false );
    }
 
-   geomOpacitySlider->Enable( false );
-   
    SetSize( GetSize() );
    // Send lod info back to ve-xplorer
    ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
@@ -179,12 +174,20 @@ void UI_GeometryTab::ChangeOpacity( wxScrollEvent& event )
 {
    event.GetInt();
    ((UI_Tabs *)_parent)->cPre_state = 0;
-   ((UI_Tabs *)_parent)->cSc = geometryCombo->GetSelection();
+   for ( unsigned int i = 0; i < opacityMemory.size(); ++i )
+   {
+      if ( _geometryCBox->IsSelected( i ) )
+      {
+         ((UI_Tabs *)_parent)->cSc = i;
+         break;
+      }
+   }
+
    ((UI_Tabs *)_parent)->cMin = geomOpacitySlider->GetValue();
    ((UI_Tabs *)_parent)->cId = UPDATE_GEOMETRY;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
    // Update Memory
-   opacityMemory.at( geometryCombo->GetSelection() ) = geomOpacitySlider->GetValue();
+   opacityMemory.at( ((UI_Tabs *)_parent)->cSc ) = geomOpacitySlider->GetValue();
 }
 
 ////////////////////////////////////////////////////
@@ -206,8 +209,14 @@ void UI_GeometryTab::_onUpdate( wxCommandEvent& event )
 void UI_GeometryTab::OpacityFileSelection( wxCommandEvent& event )
 {
    event.GetInt();
-   geomOpacitySlider->Enable( true );
    // Initiallize opacity slider to last value for a particular file
-   geomOpacitySlider->SetValue( opacityMemory.at( geometryCombo->GetSelection() ) );
+   for ( unsigned int i = 0; i < opacityMemory.size(); ++i )
+   {
+      if ( _geometryCBox->IsSelected( i ) )
+      {
+         geomOpacitySlider->SetValue( opacityMemory.at( i ) );
+         break;
+      }
+   }
 }
 

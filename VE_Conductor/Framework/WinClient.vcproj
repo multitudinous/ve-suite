@@ -85,8 +85,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)/VE_Conductor/Framework&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswdlld&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Utilities\gui&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_TAO"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)/VE_Conductor/Framework&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Utilities\gui&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXUSING_PLUGIN_DLL;_TAO"
 				IgnoreStandardIncludePath="FALSE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
@@ -107,11 +107,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw250d.lib xerces-c_2D.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib xerces-c_2D.lib"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\WinClientd.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Release&quot;"
+				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Release&quot;"
 				GenerateDebugInformation="TRUE"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\Debug/WinClient.pdb"
@@ -158,7 +158,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)/VE_Conductor/Framework&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include\&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Utilities\gui&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_TAO"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXMSW__;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;NOPCH;_TAO"
 				IgnoreStandardIncludePath="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -179,11 +179,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib xerces-c_2D.lib"
+				AdditionalDependencies="GUIPlugin.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib xerces-c_2D.lib"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\WinClientd.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll\&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/WinClient.pdb"
 				SubSystem="2"
@@ -735,9 +735,6 @@
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories="..\IDL"/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\Plugin_base.cpp">
 			</File>
 			<File
 				RelativePath="PluginLoader.cpp">
