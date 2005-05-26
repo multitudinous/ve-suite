@@ -45,31 +45,24 @@ class cfdNavigate;
 class cfdDCS;
 class cfdObjects;
 #include "interface.h"
-/*
- * If we're using wx in Dynamic Library format do we 
- * want FL to be in DLL form as well?
- */
+
 #if defined(WXUSINGDLL) && \
     (defined(WXMAKING_PLUGIN_DLL) || defined(WXUSING_PLUGIN_DLL))
 
-#if defined(WXMAKING_PLUGIN_DLL)
-    // When building the DLL WXPLUGINDECLSPEC exports classes`
-#   define WXPLUGIN_DECLSPEC            WXEXPORT
-#elif defined(WXUSING_PLUGIN_DLL)
-    // When building the DLL WXPLUGINDECLSPEC imports classes
-#   define WXPLUGIN_DECLSPEC            WXIMPORT
-#endif // defined(WXBUILD_PLUGIN_DLL)
-
+#  if defined(WXMAKING_PLUGIN_DLL)
+      // When building the DLL WXPLUGINDECLSPEC exports classes
+#     define WXPLUGIN_DECLSPEC            WXEXPORT
+#  elif defined(WXUSING_PLUGIN_DLL)
+      // When building the DLL WXPLUGINDECLSPEC imports classes
+#     define WXPLUGIN_DECLSPEC            WXIMPORT
+#  endif // defined(WXBUILD_PLUGIN_DLL)
 #else
-// When building the static library nullify the effect of WXPLUGIN_DECLSPEC
-#define WXPLUGIN_DECLSPEC
+   // When building the static library nullify the effect of WXPLUGIN_DECLSPEC
+#  define WXPLUGIN_DECLSPEC
 #endif // WXUSINGDLL && (WXMAKING_PLUGIN_DLL || WXUSING_PLUGIN_DLL)
-
 
 class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
 {
-   DECLARE_DYNAMIC_CLASS( cfdVEBaseClass )
-
    public:
       cfdVEBaseClass( void );
       //cfdVEBaseClass( cfdDCS* );
@@ -183,6 +176,8 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
 
       std::vector<wxString> v_desc;
       std::vector<wxString> v_value;
+
+   DECLARE_DYNAMIC_CLASS( cfdVEBaseClass )
 };
 
 #endif

@@ -141,9 +141,8 @@ void cfdVEPluginLoader::RegisterPlugins()
    while ( (node = wxClassInfo::sm_classTable->Next()) )
    {
       wxClassInfo *classInfo = (wxClassInfo *)node->GetData();
-      if ( classInfo->IsKindOf(CLASSINFO(cfdVEBaseClass)) &&
-          (classInfo != (& (cfdVEBaseClass::ms_classInfo))) )
-      {
+		if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "cfdVEBaseClass" ) )
+	   {   
          cfdVEBaseClass* object = (cfdVEBaseClass *) classInfo->CreateObject();
          plugins.push_back(object);
          plugin_cls.push_back(classInfo);

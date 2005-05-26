@@ -65,7 +65,6 @@
 #endif
 
 IMPLEMENT_DYNAMIC_CLASS( cfdVEBaseClass, wxObject )
-
 // Constructor
 cfdVEBaseClass::cfdVEBaseClass( void ) 
 {
