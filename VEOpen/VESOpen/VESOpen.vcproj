@@ -341,7 +341,7 @@ echo Done.
 			<Tool
 				Name="VCLinkerTool"
 				OutputFile="$(OutDir)/VESOpen.exe"
-				LinkIncremental="2"
+				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/VESOpen.pdb"
 				SubSystem="2"
