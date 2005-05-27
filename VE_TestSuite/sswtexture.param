@@ -47,7 +47,7 @@
    ./JUNK2           // precomputed surface directory
 15                   //volumetric texture data
   4                  //number of texture description files
-  ./first-scalar_0.txt      //the texture description file
-  ./200_to_1000_0.txt      //the texture description file
-  ./fourth_param_is_a_scalar_0.txt      //the texture description file
+  ./first-scalar.txt      //the texture description file
+  ./200_to_1000.txt      //the texture description file
+  ./fourth_param_is_a_scalar.txt      //the texture description file
   ./steve's_vector.txt      //the texture description file
