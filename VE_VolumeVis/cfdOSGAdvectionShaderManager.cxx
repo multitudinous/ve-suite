@@ -163,6 +163,7 @@ void cfdOSGAdvectionShaderManager::Init()
    if(_velocity.valid()){
      //set up the state for textures
       _ss = new osg::StateSet();
+      _ss->setMode(GL_ALPHA_TEST,osg::StateAttribute::ON);
       _ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setMode(GL_DEPTH_TEST,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       _ss->setMode(GL_SCISSOR_TEST,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
@@ -719,7 +720,6 @@ void cfdOSGAdvectionShaderManager::_initLookUpFunction()
    GLfloat dI = 1.0/255.0;
    GLint hI[256];
    GLint gI[256];
-   GLint ga[256];
    for(int i = 0; i < 256; i++){
       if(i < .9*255){
          gI[i] = 0;

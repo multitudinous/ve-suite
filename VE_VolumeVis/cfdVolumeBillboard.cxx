@@ -5,6 +5,7 @@ bool cfdVolumeBillboard::computeMatrix(osg::Matrix& modelview,
                                    const osg::Vec3& eye_local,
                                    const osg::Vec3& pos_local) const
 {
+   return osg::Billboard::computeMatrix(modelview,eye_local,pos_local);
    //osg::Billboard::computeMatrix(modelview,eye_local,pos_local);
    osg::Matrix matrix;
    osg::Vec3 ev(eye_local-pos_local);

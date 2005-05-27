@@ -75,7 +75,7 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
          RenderStage::draw(*_localState.get(),previous);
          _texture->copyTexSubImage3D(state,
                                   1,1,i,
-                                  1,1,_width-2,_height-2);
+                                  1,1,_width-1,_height-1);
 
          //need this to draw multiple slices
          _stageDrawnThisFrame = false;

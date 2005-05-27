@@ -1,8 +1,7 @@
 #ifndef CFD_TEXTURE_DATA_SET_H
 #define CFD_TEXTURE_DATA_SET_H
+#ifdef _OSG
 #ifdef VE_PATENTED
-#ifdef _OSG 
-
 class cfdVolumeVisualization;
 class cfdTextureManager;
 #include <vector>
@@ -32,19 +31,30 @@ public:
    cfdTextureDataSet();
    virtual ~cfdTextureDataSet();
 
-   void SetActiveScalar(char* name);
-   void SetActiveVector(char* name);
+   enum DataType {SCALAR,VECTOR};
+
+   void SetActiveScalar(const char* name);
+   void SetActiveVector(const char* name);
    void SetFileName(char* name);
-   void CreateTextureManager(char* textureDescriptionFile);
+   void CreateTextureManager(const char* textureDescriptionFile);
    void AddScalarTextureManager( cfdTextureManager*, const char* );
    void AddVectorTextureManager( cfdTextureManager*, const char* );
 
-   int FindVector(char* name);
-   int FindScalar(char* name);
+   int FindVector(const char* name);
+   int FindScalar(const char* name);
+
+   unsigned int NumberOfScalars();
+   unsigned int NumberOfVectors();
+
+   const char* ScalarName(unsigned int index);
+   const char* VectorName(unsigned int index);
+   
+   DataType ActiveDataType();
 
    cfdTextureManager* GetActiveTextureManager();
    cfdVolumeVisualization* GetVolumeVisNode();
 protected:
+   DataType _activeDataType;
    unsigned int _nScalars;
    unsigned int _nVectors;
    char* _fileName;
@@ -59,6 +69,6 @@ protected:
    TextureDataList _scalars;
    TextureDataList _vectors;
 };
-#endif // _OSG
+#endif
 #endif
 #endif// CFD_TEXTURE_DATA_SET_H

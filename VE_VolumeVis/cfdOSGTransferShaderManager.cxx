@@ -7,6 +7,7 @@
 #include <osg/TexEnv>
 #include <osg/TexMat>
 #include <osg/TexGen>
+#include <osg/AlphaFunc>
 
 #ifdef CFD_USE_SHADERS
 
@@ -97,6 +98,7 @@ void cfdOSGTransferShaderManager::Init()
       _ss = new osg::StateSet();
       _ss->setDataVariance(osg::Object::DYNAMIC);
       _ss->setMode(GL_BLEND,osg::StateAttribute::ON);
+      _ss->setAttributeAndModes(new osg::AlphaFunc(osg::AlphaFunc::GEQUAL,.1));
       _ss->setMode(GL_LIGHTING,osg::StateAttribute::OFF|osg::StateAttribute::OVERRIDE);
       osg::ref_ptr<osg::BlendFunc> bf = new osg::BlendFunc;
       bf->setFunction(osg::BlendFunc::SRC_ALPHA, 
