@@ -1,6 +1,6 @@
-#include "textureCreator.h"
-#include "tcFrame.h"
 #include <wx/file.h>
+
+
 #include <vtkCellLocator.h>
 #include <vtkGenericCell.h>
 #include <vtkPointData.h>
@@ -20,6 +20,8 @@
 #ifdef WIN32
 #include <direct.h>
 #endif
+#include "textureCreator.h"
+#include "tcFrame.h"
 ////////////////////////////////////
 //Constructor                     // 
 ////////////////////////////////////
@@ -300,8 +302,6 @@ void VTKDataToTexture::_confirmFileType(const char* fileName)
    if(fileName){
       vtkDataReader* genericReader = vtkDataReader::New();   
       genericReader->SetFileName(fileName);
-      genericReader->Update();
-
       if(genericReader->IsFileStructuredGrid()&&!_isSGrid){
          setStructuredGrid();
       }else if(genericReader->IsFileUnstructuredGrid()&&!_isUGrid){
@@ -464,20 +464,14 @@ void VTKDataToTexture::_createValidityTexture()
          
       _cLocator->FindClosestPoint(pt,closestPt,
 	                          cell,cellId,subId, dist);
-      std::cout<<"Closest Point: "<<closestPt[0]<<" "<<closestPt[1]<<" "<<closestPt[2]<<std::endl;
-      std::cout<<"Distance: "<<dist<<std::endl;
-       
+ 
       weights = new double[cell->GetNumberOfPoints()];
       //check to see if this point is in
       //the returned cell
       int good = cell->EvaluatePosition(pt,0,subId,pcoords,dist,weights);
       if(good){
-         wxString msg = wxString("Valid pt .");
-         _updateTranslationStatus(msg.c_str());
-         _validPt.push_back(true);
+       _validPt.push_back(true);
       }else{
-         wxString msg = wxString("Invalid pt .");
-         _updateTranslationStatus(msg.c_str());
          _validPt.push_back(false);
       }
       if(weights){

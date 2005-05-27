@@ -1,8 +1,8 @@
 #ifndef _TC_FRAME_H_
 #define _TC_FRAME_H_
-#ifdef WIN32
+/*#ifdef WIN32
 #include <winsock2.h>
-#endif
+#endif*/
 
 #include "wx/wx.h"
 #include "wx/spinctrl.h"
