@@ -123,7 +123,7 @@ protected:
    void _interpolatePixelData(FlowPointData& data,
                       vtkDataArray* array,
                       double* weights, 
-                      int npts);
+                      int npts,int whichValue);
    void _extractTuplesForVector(vtkIdList* ptIds,vtkDataArray* vector,
                                           int whichVector);
    void _extractTuplesForScalar(vtkIdList* ptIds,vtkDataArray* scalar,

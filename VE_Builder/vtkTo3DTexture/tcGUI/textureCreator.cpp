@@ -659,7 +659,7 @@ void VTKDataToTexture::_interpolateDataInCell(vtkGenericCell* cell,
 
       _extractTuplesForScalar(pointIds,scalar,whichValue);
       pixelData.setDataType(FlowPointData::SCALAR);
-      _interpolatePixelData(pixelData,scalar,weights,nCellPts);
+      _interpolatePixelData(pixelData,scalar,weights,nCellPts,whichValue);
       _curScalar.at(0).addPixelData(pixelData);
       
       scalar->Delete();
@@ -671,7 +671,7 @@ void VTKDataToTexture::_interpolateDataInCell(vtkGenericCell* cell,
 
       _extractTuplesForVector(pointIds,vector,whichValue);
       pixelData.setDataType(FlowPointData::VECTOR);
-      _interpolatePixelData(pixelData,vector,weights,nCellPts);
+      _interpolatePixelData(pixelData,vector,weights,nCellPts,whichValue);
       _velocity.at(0).addPixelData(pixelData);
       vector->Delete();
    }
@@ -680,7 +680,7 @@ void VTKDataToTexture::_interpolateDataInCell(vtkGenericCell* cell,
 void VTKDataToTexture::_interpolatePixelData(FlowPointData& data,
                                         vtkDataArray* array,
                                         double* weights, 
-                                        int npts)
+                                        int npts,int whichValue)
 {
    if(data.type()== FlowPointData::VECTOR){
       double vector[4];
@@ -727,6 +727,9 @@ void VTKDataToTexture::_interpolatePixelData(FlowPointData& data,
       for(int j = 0; j < npts; j++){
          array->GetTuple(j,&scalarData);
          scalar += scalarData*weights[j];
+      }
+      if(scalar == 0){
+         scalar = _scalarRanges.at(whichValue)[0];
       }
       data.setData(scalar,0,0,0);
    }
