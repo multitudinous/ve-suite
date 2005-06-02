@@ -51,6 +51,7 @@ class cfdDigitalAnalogGauge
    public:
 
       cfdDigitalAnalogGauge( const char * input, cfdGroup* );
+      cfdDigitalAnalogGauge( const cfdDigitalAnalogGauge& g );
       ~cfdDigitalAnalogGauge( void );
 
       // Set/Get the position of the gauge in 3D space
