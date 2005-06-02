@@ -429,8 +429,8 @@ void UI_Tabs::createTabPages()
    //Add the pages to the notebook
  
    //Visualization page
-   _visPage = new UI_VisualizationTab(this);
-   AddPage( _visPage, _T("Visualization"), true);
+   _visPage = new UI_VisualizationTab(this);  
+   AddPage( _visPage, _T("Visualization"), true); 
    
    //DataSets page
    //_datasetPage = new UI_DatasetTab(this);
@@ -441,7 +441,7 @@ void UI_Tabs::createTabPages()
    
    //Geometry page
    _geometryPage = new UI_GeometryTab(this);
-   AddPage( _geometryPage, _T("Geometry"), false );
+   AddPage( _geometryPage, _T("Geometry"), false );  
 
 
    //Scalars page

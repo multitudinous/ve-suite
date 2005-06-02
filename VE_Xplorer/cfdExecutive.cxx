@@ -511,7 +511,7 @@ void cfdExecutive::UpdateModules( void )
 
 void cfdExecutive::PreFrameUpdate( void )
 {
-   vprDEBUG(vprDBG_ALL,2) << " cfdExecutive::PreFrameUpdate"
+   vprDEBUG(vprDBG_ALL,3) << " cfdExecutive::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
    std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
    for ( foundPlugin = _plugins.begin(); foundPlugin != _plugins.end(); foundPlugin++)

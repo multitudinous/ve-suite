@@ -67,25 +67,22 @@ void UI_GeometryTab::_buildPage()
    /*geometryCombo = new wxComboBox(this, GEOMETRY_SELECT_COMBO, wxT("Set Active Geometry File"),
                                     wxDefaultPosition, wxDefaultSize,
                                     numGeoms,defaultName, wxCB_DROPDOWN);*/
-
    wxStaticBox* geomFiles = new wxStaticBox(this,-1, wxT("Geometry Files"));
    wxStaticBoxSizer* geomFilesGroup = new wxStaticBoxSizer(geomFiles,wxVERTICAL);   
    _geometryCBox = new wxCheckListBox( this, GEOMETRY_CBOX,  
                                     wxDefaultPosition, wxDefaultSize, 
                                     numGeoms, defaultName );
-   geomFilesGroup->Add(_geometryCBox,1,wxALIGN_LEFT|wxEXPAND);
-   
+   geomFilesGroup->Add(_geometryCBox,1,wxALIGN_LEFT|wxEXPAND); 
    wxBoxSizer* radioAndCheckBoxes = new wxBoxSizer( wxHORIZONTAL );
    radioAndCheckBoxes->Add(geomFilesGroup,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5);
    //radioAndCheckBoxes->Add(_geometryRBox,0,wxALIGN_RIGHT|wxEXPAND|wxALL, 5);
 
    // Used to initialize all the checkboxes on
-   
    for(int j = 0; j < numGeoms; j++)
    {
       _geometryCBox->Check( j );
    }
-
+ 
    // slider info
    //the labels for the sliders
    wxStaticText* opacityLabel = new wxStaticText(this, -1, wxT("Geometry Opacity"));
@@ -119,7 +116,7 @@ void UI_GeometryTab::_buildPage()
    opacityGroup->Add(geomOpacitySlider,1,wxALIGN_LEFT|wxEXPAND);
    opacityLabelBottom->Add(opacityLabelLeft,6,wxALIGN_LEFT);
    opacityLabelBottom->Add(opacityLabelRight,0,wxALIGN_RIGHT);
-   opacityGroup->Add(opacityLabelBottom,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5);
+   opacityGroup->Add(opacityLabelBottom,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL, 5);   
 
    lodGroup->Add(lodLabel,0,wxALIGN_LEFT);
    lodGroup->Add(geomLODSlider,1,wxALIGN_LEFT|wxEXPAND);
@@ -149,15 +146,18 @@ void UI_GeometryTab::_buildPage()
    {
       _geometryCBox->Enable( false );
       geomLODSlider->Enable( false );
-      geometryCombo->Enable( false );
+      //geometryCombo->Enable( false );
       geomOpacitySlider->Enable( false );
    }
 
    SetSize( GetSize() );
    // Send lod info back to ve-xplorer
-   ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
-   ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   if ( ((UI_Tabs *)_parent)->num_geo != 0 )
+   {
+      ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
+      ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
+      ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   }
 }
 
 ////////////////////////////////////////////////////

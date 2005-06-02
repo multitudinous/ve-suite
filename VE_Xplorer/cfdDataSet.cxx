@@ -659,8 +659,15 @@ void cfdDataSet::LoadData( )
          << "will try to convert cell data to point data\n" << std::endl;
 
       vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
+      //converter->DebugOn();
+      //double* testrange = this->dataSet->GetCellData()->GetArray( 0 )->GetRange();
+      //   vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = "
+      //                          << testrange[ 0 ] << " : " << testrange[ 1 ]
+       //                         << std::endl << vprDEBUG_FLUSH;
       converter->SetInput( this->dataSet );
+      converter->PassCellDataOff();
       converter->Update();
+      //converter->Print( std::cout );
 
       if ( this->dataSet->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
       {
@@ -672,10 +679,15 @@ void cfdDataSet::LoadData( )
          this->dataSet = newdataset;
          this->numPtDataArrays = this->dataSet->GetPointData()
                                               ->GetNumberOfArrays();
-
+//this->dataSet->DebugOn();
+//this->dataSet->Print(std::cout);
          vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = "
                                 << this->numPtDataArrays
                                 << std::endl << vprDEBUG_FLUSH;
+//double* testrange = this->dataSet->GetPointData()->GetArray( 0 )->GetRange();
+//         vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = "
+//                                << testrange[ 0 ] << " : " << testrange[ 1 ]
+//                                << std::endl << vprDEBUG_FLUSH;
       }
       else
       {
