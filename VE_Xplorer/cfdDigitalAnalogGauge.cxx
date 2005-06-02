@@ -58,9 +58,10 @@
 cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( const char * gaugeName,
                                               cfdGroup * groupNode )
 {
+   
    this->gaugeDCS = new cfdDCS();
    this->gaugeDCS->SetName("gauge");
-
+   vprDEBUG(vprDBG_ALL,1) << " gauges constructor. " << std::endl << vprDEBUG_FLUSH;
    this->masterNode = groupNode;
    this->SetPosition( 4.0f, 6.0f, 8.0f );
    this->SetOrientation( 0.0, 90.0, 0.0 );
@@ -72,6 +73,51 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( const char * gaugeName,
    DefineMovingArrowActor();
    DefineGaugeTextActor( gaugeName );
    DefineDigitalActor();
+   vprDEBUG(vprDBG_ALL,1) << " leaving gauges constructor. " << std::endl << vprDEBUG_FLUSH;
+}
+////////////////////////////////////////////////////////////////////////////
+cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
+{
+   vprDEBUG(vprDBG_ALL,2) << "Entering cfdDigitalAnalogGauge Copy Constructor" 
+                          << std::endl << vprDEBUG_FLUSH;
+   gaugeDCS = new cfdDCS(*g.gaugeDCS);   
+   masterNode = g.masterNode;
+   circleGeode = new cfdGeode(*g.circleGeode);
+   movingArrowGeode = new cfdGeode(*g.movingArrowGeode);
+   stationaryArrowGeode = new cfdGeode(*g.stationaryArrowGeode);
+   labelGeode = new cfdGeode(*g.labelGeode);
+   digitalGeode = new cfdGeode(*g.digitalGeode);
+   itsX[0] = g.itsX[0];
+   itsX[1] = g.itsX[1];
+   itsX[2] = g.itsX[2];
+
+   zrot = g.zrot;
+   movingArrow = vtkArrowSource::New();
+   movingArrow = g.movingArrow;
+   arrowTransform =vtkTransform::New();
+   arrowTransform = g.arrowTransform;
+   arrowRefPosition = vtkMatrix4x4::New();
+   arrowRefPosition = g.arrowRefPosition;
+   transformer2 = vtkTransformPolyDataFilter::New();
+   transformer2 = g.transformer2;
+   arrowMapper = vtkPolyDataMapper::New();
+   arrowMapper = g.arrowMapper;
+   arrowActor = vtkActor::New();
+   arrowActor = g.arrowActor;
+   stationaryArrowActor = vtkActor::New();
+   stationaryArrowActor = g.stationaryArrowActor;
+   labelActor = vtkActor::New();
+   labelActor = g.labelActor;
+   digitalActor = vtkActor::New();
+   digitalActor = g.digitalActor;
+   digitalLabel = vtkVectorText::New();
+   digitalLabel = g.digitalLabel;
+   strcpy(digitalText,g.digitalText);
+   digitalPrecision = g.digitalPrecision;
+   circleRadius = g.circleRadius;
+
+   vprDEBUG(vprDBG_ALL,2) << "Leaving cfdDigitalAnalogGauge Copy Constructor" 
+                          << std::endl << vprDEBUG_FLUSH;
 }
 
 cfdDigitalAnalogGauge::~cfdDigitalAnalogGauge( void )
@@ -332,7 +378,7 @@ void cfdDigitalAnalogGauge::DefineGaugeTextActor( const char * gaugeName )
    label->SetText( gaugeName );
 
    vtkTransform * labelTransform = vtkTransform::New();
-   double labelScale = 0.3;
+   double labelScale = 0.15;
    labelTransform->Scale( labelScale, labelScale, labelScale );
 
    vtkTransformPolyDataFilter * labelFilter = vtkTransformPolyDataFilter::New();
@@ -344,9 +390,10 @@ void cfdDigitalAnalogGauge::DefineGaugeTextActor( const char * gaugeName )
    textMapper->SetInput( labelFilter->GetOutput() );
    labelFilter->Delete();
    double * center = textMapper->GetCenter();
+   //std::cout << "center: " << center[ 0 ] << "\t" << center[ 1 ] << "\t" << center[ 2 ] << std::endl;
    labelTransform->Translate(
          -center[ 0 ] / labelScale,
-         -( this->circleRadius + 4.0 * center[ 1 ] ) / labelScale,
+         -( this->circleRadius + 4.0 *  ( labelScale / 2.0 ) ) / labelScale,
          0.0 );
    labelTransform->Delete();
 
@@ -366,7 +413,7 @@ void cfdDigitalAnalogGauge::DefineDigitalActor()
    this->digitalLabel->SetText( this->digitalText );
 
    vtkTransform * labelTransform = vtkTransform::New();
-   double labelScale = 0.3;
+   double labelScale = 0.25;
    labelTransform->Scale( labelScale, labelScale, labelScale );
 
    vtkTransformPolyDataFilter * labelFilter = vtkTransformPolyDataFilter::New();
