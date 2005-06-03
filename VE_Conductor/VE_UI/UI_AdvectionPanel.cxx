@@ -9,20 +9,20 @@
 
 BEGIN_EVENT_TABLE(UI_AdvectionPanel,wxPanel)
 #ifdef WIN32
-   EVT_COMMAND_SCROLL_ENDSCROLL(MATERIAL_DENSITY, _onSlider)
-   EVT_COMMAND_SCROLL_ENDSCROLL(MATERIAL_INJECTION, _onSlider)
-   EVT_COMMAND_SCROLL_ENDSCROLL(MATERIAL_DECAY, _onSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(MATERIAL_DENSITY, UI_AdvectionPanel::_onSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(MATERIAL_INJECTION, UI_AdvectionPanel::_onSlider)
+   EVT_COMMAND_SCROLL_ENDSCROLL(MATERIAL_DECAY, UI_AdvectionPanel::_onSlider)
 #else
-   EVT_COMMAND_SCROLL(MATERIAL_DENSITY, _onSlider)
-   EVT_COMMAND_SCROLL(MATERIAL_INJECTION, _onSlider)
-   EVT_COMMAND_SCROLL(MATERIAL_DECAY, _onSlider)
+   EVT_COMMAND_SCROLL(MATERIAL_DENSITY, UI_AdvectionPanel::_onSlider)
+   EVT_COMMAND_SCROLL(MATERIAL_INJECTION, UI_AdvectionPanel::_onSlider)
+   EVT_COMMAND_SCROLL(MATERIAL_DECAY, UI_AdvectionPanel::_onSlider)
 #endif
-   EVT_COMMAND_SCROLL(X_DYE_POS, _onSlider)
-   EVT_COMMAND_SCROLL(Y_DYE_POS, _onSlider)
-   EVT_COMMAND_SCROLL(Z_DYE_POS, _onSlider)
-   EVT_CHECKBOX(ENABLE_CHECK,_onEnableCheck)
-   EVT_CHECKBOX(BBOX_CHECK,_onShowBBoxCheck)
-   EVT_COMBOBOX(MATERIAL_COMBO,_onMaterialSwitch)
+   EVT_COMMAND_SCROLL(X_DYE_POS, UI_AdvectionPanel::_onSlider)
+   EVT_COMMAND_SCROLL(Y_DYE_POS, UI_AdvectionPanel::_onSlider)
+   EVT_COMMAND_SCROLL(Z_DYE_POS, UI_AdvectionPanel::_onSlider)
+   EVT_CHECKBOX(ENABLE_CHECK,UI_AdvectionPanel::_onEnableCheck)
+   EVT_CHECKBOX(BBOX_CHECK,UI_AdvectionPanel::_onShowBBoxCheck)
+   EVT_COMBOBOX(MATERIAL_COMBO,UI_AdvectionPanel::_onMaterialSwitch)
 END_EVENT_TABLE()
 
 //////////////////////////////////////////////////////////
