@@ -120,8 +120,6 @@ void VjObs_i::CreateDatasetInfo( void )
             {
                totalNumberOfScalars = temp->GetCfdDataSet( j )->GetNumberOfScalars();
                totalNumberOfVectors = temp->GetCfdDataSet( j )->GetNumberOfVectors();
-               (*_models)[ i ].dataVector[ j ].scalarnames = VjObs::scalar_p( totalNumberOfScalars );
-               (*_models)[ i ].dataVector[ j ].scalarnames.length( totalNumberOfScalars );
 
                (*_models)[ i ].dataVector[ j ].vectornames = VjObs::scalar_p( totalNumberOfVectors );
                (*_models)[ i ].dataVector[ j ].vectornames.length( totalNumberOfVectors );
@@ -146,22 +144,25 @@ void VjObs_i::CreateDatasetInfo( void )
                CORBA::Short num_scalars = temp->GetCfdDataSet( j )->GetNumberOfScalars();
                (*_models)[ i ].num_scalars_per_dataset[ j ] = num_scalars;
 
+               (*_models)[ i ].dataVector[ j ].scalarVector = VjObs::Scalars( num_scalars ); 
+               (*_models)[ i ].dataVector[ j ].scalarVector.length( num_scalars );
                for (CORBA::ULong k=0; k < (unsigned int)num_scalars; k++ )
                {
                   //Set scalar name
-                  (*_models)[ i ].dataVector[ j ].scalarnames[ k ] = CORBA::string_dup(
+                  (*_models)[ i ].dataVector[ j ].scalarVector[ k ].scalarnames = CORBA::string_dup(
                     temp->GetCfdDataSet( j )->GetScalarName( k ) );
-                  vprDEBUG(vprDBG_ALL,1) << "\tscl_name : " << (*_models)[ i ].dataVector[ j ].scalarnames[ k ]
-                                << std::endl << vprDEBUG_FLUSH;
                   // Then get scalar range for a particular scalar
                   temp->GetCfdDataSet( j )->SetActiveScalar( (int)k );
                   double* range = temp->GetCfdDataSet( j )->GetRange();
                   // Allocate
-                  (*_models)[ i ].dataVector[ j ].scalarrange = VjObs::obj_pd( 2 ); 
-                  (*_models)[ i ].dataVector[ j ].scalarrange.length( 2 );
+                  (*_models)[ i ].dataVector[ j ].scalarVector[ k ].scalarrange = VjObs::obj_pd( 2 ); 
+                  (*_models)[ i ].dataVector[ j ].scalarVector[ k ].scalarrange.length( 2 );
                   // Set
-                  (*_models)[ i ].dataVector[ j ].scalarrange[ 0 ] = range[ 0 ];
-                  (*_models)[ i ].dataVector[ j ].scalarrange[ 1 ] = range[ 1 ];
+                  (*_models)[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ] = range[ 0 ];
+                  (*_models)[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ] = range[ 1 ];
+                  vprDEBUG(vprDBG_ALL,1) << "\tscl_name : " << (*_models)[ i ].dataVector[ j ].scalarVector[ k ].scalarnames
+                                 << (*_models)[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 0 ] << " : "
+                                 << (*_models)[ i ].dataVector[ j ].scalarVector[ k ].scalarrange[ 1 ] << std::endl << vprDEBUG_FLUSH;
                }
 
                CORBA::Short num_vectors = temp->GetCfdDataSet( j )

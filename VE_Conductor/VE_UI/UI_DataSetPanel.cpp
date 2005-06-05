@@ -50,6 +50,7 @@ void UI_DataSets::_buildScalars(int _numScalars, wxString* scalarNames, std::vec
       _Scalars.back()->range[ 1 ] = input.at( i ).second;
       _Scalars.back()->lastMinSetting = _Scalars.back()->range[ 0 ]; 
       _Scalars.back()->lastMaxSetting = _Scalars.back()->range[ 1 ];
+      std::cout << "\t\t" << scalarNames[i] << " : " << _Scalars.back()->range[ 0 ] << " : " << _Scalars.back()->range[ 1 ] << std::endl;
    }
 }
 
@@ -593,11 +594,11 @@ void UI_DatasetPanel::_buildDataSets( void )
          for (k=0; k<numScalarsPerDataset[i]; k++)
          {
             CORBA::ULong nameNumber = k;
-            thisDataScalarNames[k] = dataVector[ i ].scalarnames[ nameNumber ];
+            thisDataScalarNames[k] = dataVector[ i ].scalarVector[ nameNumber ].scalarnames;
             ranges.push_back
                ( 
                   std::pair< double, double >
-                  ( (double)dataVector[ i ].scalarrange[ 0 ], (double)dataVector[ i ].scalarrange[ 1 ] ) 
+                  ( (double)dataVector[ i ].scalarVector[ nameNumber ].scalarrange[ 0 ], (double)dataVector[ i ].scalarVector[ nameNumber ].scalarrange[ 1 ] ) 
                );
          }
 

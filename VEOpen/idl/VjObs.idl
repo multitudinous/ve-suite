@@ -5,23 +5,26 @@ interface VjObs
    typedef sequence< string > scalar_p;
    typedef sequence< short > obj_p;
    typedef sequence< double > obj_pd;
-   //typedef sequence< obj_pd > double_array;
+
+   struct Scalar
+   {
+      string scalarnames;
+      obj_pd scalarrange;
+   };
+
+   typedef sequence< Scalar > Scalars;
 
    struct Dataset
    {
       string datasetname;
-      scalar_p scalarnames;
       scalar_p vectornames;
-      obj_pd scalarrange;
+      Scalars scalarVector;
    };
 
    typedef sequence< Dataset > Datasets;
 
    struct Model
    {
-      //scalar_p datasetnames;
-      //scalar_p scalarnames;
-      //scalar_p vectornames;
       scalar_p geometrynames;
       Datasets dataVector;
 
