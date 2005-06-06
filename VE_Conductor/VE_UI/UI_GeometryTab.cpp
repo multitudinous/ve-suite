@@ -179,15 +179,14 @@ void UI_GeometryTab::ChangeOpacity( wxScrollEvent& event )
       if ( _geometryCBox->IsSelected( i ) )
       {
          ((UI_Tabs *)_parent)->cSc = i;
+         ((UI_Tabs *)_parent)->cMin = geomOpacitySlider->GetValue();
+         ((UI_Tabs *)_parent)->cId = UPDATE_GEOMETRY;
+         ((UI_Tabs *)_parent)->sendDataArrayToServer();
+         // Update Memory
+         opacityMemory.at( ((UI_Tabs *)_parent)->cSc ) = geomOpacitySlider->GetValue();
          break;
       }
    }
-
-   ((UI_Tabs *)_parent)->cMin = geomOpacitySlider->GetValue();
-   ((UI_Tabs *)_parent)->cId = UPDATE_GEOMETRY;
-   ((UI_Tabs *)_parent)->sendDataArrayToServer();
-   // Update Memory
-   opacityMemory.at( ((UI_Tabs *)_parent)->cSc ) = geomOpacitySlider->GetValue();
 }
 
 ////////////////////////////////////////////////////
