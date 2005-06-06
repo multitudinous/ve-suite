@@ -54,11 +54,12 @@ class Network;
 
 class AppFrame : public wxFrame
 {
- public:
+   public:
   
-  AppFrame() {};
-  AppFrame(wxWindow* parent, wxWindowID id, const wxString& title);
-  void OnClose (wxCloseEvent &event);
+      AppFrame() {};
+      AppFrame(wxWindow* parent, wxWindowID id, const wxString& title);
+      void OnClose (wxCloseEvent &);
+      void FrameClose(wxCommandEvent&  );
 
   wxSplitterWindow * wx_log_splitter;
   wxSplitterWindow * wx_ve_splitter;

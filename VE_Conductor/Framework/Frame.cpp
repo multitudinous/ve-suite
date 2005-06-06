@@ -19,7 +19,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_MENU(wxID_SAVEAS, AppFrame::SaveAs)
   EVT_MENU(wxID_NEW, AppFrame::New)
    // this is probably a bug and needs to be fixed
-  //EVT_MENU(wxID_EXIT, wxFrame::Close)
+  EVT_MENU(wxID_EXIT, AppFrame::FrameClose)
   EVT_MENU(wxID_OPEN, AppFrame::Open)
   EVT_MENU(v21ID_LOAD, AppFrame::LoadFromServer)
   EVT_MENU(v21ID_SUBMIT, AppFrame::SubmitToServer)
@@ -167,7 +167,7 @@ void AppFrame::StoreFrameSize (wxRect rect, wxConfig* config)
   if (!config) delete cfg;
 }
 
-void AppFrame::OnClose(wxCloseEvent &event)
+void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 {
    if (is_orb_init)
    {
@@ -185,6 +185,11 @@ void AppFrame::OnClose(wxCloseEvent &event)
   
    StoreFrameSize(GetRect(), NULL);
    Destroy();
+}
+
+void AppFrame::FrameClose(wxCommandEvent& WXUNUSED(event) )
+{
+   Close(true);
 }
 
 void AppFrame::CreateMenu() 
