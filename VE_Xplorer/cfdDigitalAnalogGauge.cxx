@@ -167,8 +167,10 @@ void cfdDigitalAnalogGauge::SetOrientation( double Xrot, double Yrot, double Zro
    this->gaugeDCS->SetRotationArray( rotationArray );
 }
 
-void SetAnalogLimits( double low, double high )
+void cfdDigitalAnalogGauge::SetAnalogLimits( double low, double high )
 {
+   this->lowAnalogLimit = low;
+   this->highAnalogLimit = high;
 }
 
 /*
