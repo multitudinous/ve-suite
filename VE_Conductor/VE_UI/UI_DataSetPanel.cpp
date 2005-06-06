@@ -44,8 +44,8 @@ void UI_DataSets::_buildScalars(int _numScalars, wxString* scalarNames, std::vec
 
    for (int i=0; i<_numOfScalars; i++)
    {
-      thisScalar = new UI_Scalars(&scalarNames[i]);
-      _Scalars.push_back(thisScalar);
+      //thisScalar = new UI_Scalars(&scalarNames[i]);
+      _Scalars.push_back( new UI_Scalars(&scalarNames[i]) );
       _Scalars.back()->range[ 0 ] = input.at( i ).first;
       _Scalars.back()->range[ 1 ] = input.at( i ).second;
       _Scalars.back()->lastMinSetting = _Scalars.back()->range[ 0 ]; 
@@ -862,22 +862,34 @@ void UI_DatasetPanel::_organizeRadioBoxInfo()
 
 void UI_DatasetPanel::_resetScalarAdjustment( int dataSetSelected, int scalarSetSelected )
 {
+   if ( _minPercentSlider )
+   {
    minGroup->Detach( _minPercentSlider );
    delete _minPercentSlider;
    _minPercentSlider = 0;
+   }
 
+   if ( _minSpinner )
+   {
    minGroupwspin->Detach( _minSpinner );
    delete _minSpinner;
    _minSpinner = 0;
+   }
 
+   if ( _maxPercentSlider )
+   {
    maxGroup->Detach( _maxPercentSlider );
    delete _maxPercentSlider;
    _maxPercentSlider = 0;
-  
+   }
+
+   if ( _maxSpinner )
+   {
    maxGroupwspin->Detach( _maxSpinner );
    delete _maxSpinner;
    _maxSpinner = 0;
- 
+   }
+
    if ( !_DataSets.empty() )
    {
       double minScalar = _DataSets[ dataSetSelected ]->_Scalars[ scalarSetSelected ]->range[ 0 ];
@@ -905,9 +917,9 @@ void UI_DatasetPanel::_resetScalarAdjustment( int dataSetSelected, int scalarSet
 
       //create the two sliders
       _minPercentSlider = new wxSlider(this, MIN_PER_SLIDER_PANEL,(int)tempminslid,0,100,wxDefaultPosition, wxDefaultSize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+                                  wxSL_HORIZONTAL|wxSL_LABELS ); 
       _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,(int)tempmaxslid,0,100,wxDefaultPosition, wxDefaultSize,
-                                  wxSL_HORIZONTAL|wxSL_AUTOTICKS|wxSL_LABELS|wxSL_RIGHT ); 
+                                  wxSL_HORIZONTAL|wxSL_LABELS ); 
 
       //create the two spinners
       _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 

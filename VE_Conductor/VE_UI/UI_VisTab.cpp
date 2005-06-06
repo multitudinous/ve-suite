@@ -29,8 +29,16 @@ END_EVENT_TABLE()
 //Constructor                                              //
 /////////////////////////////////////////////////////////////
 UI_VisualizationTab::UI_VisualizationTab(wxNotebook* tControl)
-:wxPanel(tControl)
+:wxScrolledWindow(tControl, -1, wxDefaultPosition, wxDefaultSize,
+		    wxHSCROLL | wxVSCROLL | wxSUNKEN_BORDER )
+
 {
+   int nUnitX=20;
+   int nUnitY=10;
+   int nPixX = 5;
+   int nPixY = 10;
+   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+
    //initialize things
    _categoryRBox = 0;
    _contourRBox = 0;
@@ -171,25 +179,25 @@ void UI_VisualizationTab::_buildPage()
    wxBoxSizer* firstRow = new wxBoxSizer(wxHORIZONTAL);
 
    //catergory radio box
-   firstRow->Add(_categoryRBox, 3, wxALIGN_LEFT|wxEXPAND);
+   firstRow->Add( _categoryRBox, 3, wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
 
    //contour type radio box
-   firstRow->Add(_contourRBox, 1, wxALIGN_RIGHT|wxEXPAND);
+   firstRow->Add( _contourRBox, 1, wxALIGN_RIGHT|wxEXPAND|wxALL, 5 );
 
    //The second row of controls contains the direction and type boxes
    wxBoxSizer* secondRow = new wxBoxSizer(wxHORIZONTAL);
 
    //direction box
-   secondRow->Add(_directionRBox, 1, wxALIGN_LEFT|wxEXPAND);
+   secondRow->Add( _directionRBox, 1, wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
 
    //The static box group we created ("Type")
-   secondRow->Add(typebox_sizer, 4 ,wxALIGN_RIGHT|wxEXPAND);
+   secondRow->Add( typebox_sizer, 4 ,wxALIGN_RIGHT|wxEXPAND|wxALL, 5 );
 
    //The slider and the update button belong in the third row
    wxBoxSizer* thirdRow = new wxBoxSizer(wxHORIZONTAL);
 
    thirdRow->Add(_slider,5, wxALIGN_LEFT|wxALIGN_CENTER_VERTICAL);
-   thirdRow->Add(_sliderUpdate,0,wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
+   //thirdRow->Add(_sliderUpdate,0,wxALIGN_RIGHT|wxALIGN_CENTER_VERTICAL);
 
    //This is the fourth row of buttons
    wxBoxSizer* forthRow = new wxBoxSizer(wxHORIZONTAL);
@@ -219,9 +227,10 @@ void UI_VisualizationTab::_buildPage()
    //Here is a new 6th row added for a custom visualization button
    wxBoxSizer* sixthRow = new wxBoxSizer(wxHORIZONTAL);
 
-   _customVisButton = new wxButton(this, CUSTOM_VIS_BUTTON,
-                                   wxT("Activate Custom Visualization"));
-   sixthRow ->Add(_customVisButton, 1, wxALIGN_CENTER_HORIZONTAL);
+   //_customVisButton = new wxButton(this, CUSTOM_VIS_BUTTON,
+   //                                wxT("Activate Custom Visualization"));
+   //sixthRow ->Add(_customVisButton, 1, wxALIGN_CENTER_HORIZONTAL);
+   sixthRow ->Add(_sliderUpdate, 1, wxALIGN_CENTER_HORIZONTAL|wxALL,6);
 
    //Add the rows to the main grouping
    visPanelGroup->Add(firstRow,  3, wxALIGN_LEFT|wxEXPAND);
@@ -364,7 +373,9 @@ void UI_VisualizationTab::_onSlider(wxScrollEvent& event)
 #ifdef VE_PATENTED
 #ifdef CFD_USE_SHADERS
    event.GetInt();
-   if ( _categoryRBox->GetSelection() == 3 ){
+   if ( ( _categoryRBox->GetSelection() == 3 ) && 
+         ( _visOptionCheckBox->GetValue() == true ) )
+   {
       ((UI_Tabs *)_parent)->cId = ISOSURFACE;
       ((UI_Tabs *)_parent)->cIso_value = _slider->GetValue();
       ((UI_Tabs *)_parent)->sendDataArrayToServer();

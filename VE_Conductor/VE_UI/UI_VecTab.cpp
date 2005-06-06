@@ -27,8 +27,15 @@ END_EVENT_TABLE()
 //Constructor                              //
 /////////////////////////////////////////////
 UI_VectorTab::UI_VectorTab(wxNotebook* tControl)
-:wxPanel(tControl)
+:wxScrolledWindow(tControl, -1, wxDefaultPosition, wxDefaultSize,
+		    wxHSCROLL | wxVSCROLL | wxSUNKEN_BORDER )
 {
+   int nUnitX=20;
+   int nUnitY=10;
+   int nPixX = 5;
+   int nPixY = 10;
+   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+
    _vThresholdMinSlider = 0;
    _vThresholdMaxSlider = 0;
    _vRatioSlider = 0;
@@ -78,26 +85,22 @@ void UI_VectorTab::_buildPage()
    //min threshold slider
    _vThresholdMinSlider = new wxSlider(this, MIN_THRESH_SLIDER,0,0,100,
                                        wxDefaultPosition, wxDefaultSize,
-									   wxSL_HORIZONTAL|
-                                       wxSL_AUTOTICKS|
-                                       wxSL_LABELS );
+									            wxSL_HORIZONTAL| wxSL_LABELS );
 
    //max threshold slider
    _vThresholdMaxSlider = new wxSlider(this, MAX_THRESH_SLIDER,100,0,100,
                                        wxDefaultPosition, wxDefaultSize,
-                                       wxSL_HORIZONTAL|
-                                       wxSL_AUTOTICKS|
-                                       wxSL_LABELS);
+                                       wxSL_HORIZONTAL|wxSL_LABELS);
    
    //two sizers to group the sliders and their lables
    wxBoxSizer* minGroup = new wxBoxSizer( wxVERTICAL );
    wxBoxSizer* maxGroup = new wxBoxSizer( wxVERTICAL );
 
    minGroup->Add(minLabel,0,wxALIGN_LEFT|wxEXPAND);
-   minGroup->Add(_vThresholdMinSlider,1,wxALIGN_LEFT|wxEXPAND);
+   minGroup->Add(_vThresholdMinSlider,1,wxALIGN_RIGHT|wxEXPAND);
 
    maxGroup->Add(maxLabel,0,wxALIGN_LEFT|wxEXPAND);
-   maxGroup->Add(_vThresholdMaxSlider,1,wxALIGN_LEFT|wxEXPAND);
+   maxGroup->Add(_vThresholdMaxSlider,1,wxALIGN_RIGHT|wxEXPAND);
 
    //ratio slider
    //wxSize slide2size(1, 0);
@@ -111,11 +114,11 @@ void UI_VectorTab::_buildPage()
    wxBoxSizer* ratioGroup = new wxBoxSizer( wxVERTICAL );
    wxBoxSizer* ratioGroupBottom = new wxBoxSizer( wxHORIZONTAL );
 
-   ratioGroup->Add(vectorRatio,0,wxALIGN_LEFT|wxEXPAND );
-   ratioGroup->Add(_vRatioSlider,1,wxALIGN_LEFT|wxEXPAND );
-   ratioGroupBottom->Add(vectorRatioLeft,6,wxALIGN_LEFT|wxEXPAND);
-   ratioGroupBottom->Add(vectorRatioRight,0,wxALIGN_RIGHT|wxEXPAND);
-   ratioGroup->Add(ratioGroupBottom,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
+   ratioGroup->Add(vectorRatio,0,wxALIGN_LEFT );
+   ratioGroup->Add(_vRatioSlider,1,wxALIGN_RIGHT|wxEXPAND );
+   ratioGroupBottom->Add(vectorRatioLeft,6,wxALIGN_LEFT);
+   ratioGroupBottom->Add(vectorRatioRight,0,wxALIGN_RIGHT);
+   ratioGroup->Add(ratioGroupBottom,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND|wxALL,5 );
 
    //scale slider
    _vScaleSlider = new wxSlider(this, SCALE_SLIDER,0,-100,100,
@@ -144,13 +147,13 @@ void UI_VectorTab::_buildPage()
    //first column
 
    //second column
-   vectorControlsGroup->Add(vThreshGroup,6,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+   vectorControlsGroup->Add(vThreshGroup,6,wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
    //third column
-   vectorControlsGroup->Add(scaleGroup,3,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+   vectorControlsGroup->Add(scaleGroup,3,wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
 
    //fourth column
-   vectorControlsGroup->Add(ratioGroup,3,wxEXPAND|wxALIGN_LEFT|wxALL, 5 );
+   vectorControlsGroup->Add(ratioGroup,3,wxEXPAND|wxALIGN_CENTER_HORIZONTAL|wxALL, 5 );
    
    //fifth column
    vectorControlsGroup->Add(_scaleVecMagChk,0,wxALIGN_LEFT|wxALL, 5 );
@@ -225,8 +228,8 @@ void UI_VectorTab::_buildPage()
 
    //the main sizer
    wxBoxSizer* vecPanelGroup = new wxBoxSizer(wxVERTICAL);
-   vecPanelGroup->Add(vectorControlsGroup, 3, wxEXPAND|wxALL, 5 );
-   vecPanelGroup->Add(contourControlsGroup, 2,wxEXPAND|wxALL, 5 );
+   vecPanelGroup->Add(vectorControlsGroup, 3, wxEXPAND|wxHSCROLL|wxVSCROLL|wxALL, 5 );
+   vecPanelGroup->Add(contourControlsGroup, 2,wxEXPAND|wxHSCROLL|wxVSCROLL|wxALL, 5 );
    //vListGroup->Add(_updateButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
     //set this flag and let wx handle alignment

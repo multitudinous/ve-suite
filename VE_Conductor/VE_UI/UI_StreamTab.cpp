@@ -29,8 +29,15 @@ END_EVENT_TABLE()
 //Constructor                                         //
 ////////////////////////////////////////////////////////
 UI_StreamlineTab::UI_StreamlineTab(wxNotebook* tControl)
-:wxPanel(tControl)
+:wxScrolledWindow(tControl, -1, wxDefaultPosition, wxDefaultSize,
+		    wxHSCROLL | wxVSCROLL | wxSUNKEN_BORDER )
 {
+   int nUnitX=20;
+   int nUnitY=10;
+   int nPixX = 5;
+   int nPixY = 10;
+   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+
    _propSlider = 0;
    _iStepSlider = 0;
    _stepSlider = 0;

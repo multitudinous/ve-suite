@@ -21,7 +21,7 @@ enum VECTOR_TAB_IDS
    CONTOUR_LOD_SLIDER
 };
 
-class UI_VectorTab : public wxPanel
+class UI_VectorTab : public wxScrolledWindow
 {
    public:
       UI_VectorTab(wxNotebook* tControl);

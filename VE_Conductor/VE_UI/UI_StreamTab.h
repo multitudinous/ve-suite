@@ -22,7 +22,8 @@ enum STREAMLINE_TAB_IDS{
 };
 
 
-class UI_StreamlineTab : public wxPanel{
+class UI_StreamlineTab : public wxScrolledWindow
+{
 public:
    UI_StreamlineTab(wxNotebook* tControl);
 protected:

@@ -29,7 +29,7 @@ enum VIS_TAB_IDS
    CFD_VIS_OPTION
 };
 
-class UI_VisualizationTab : public wxPanel 
+class UI_VisualizationTab : public wxScrolledWindow
 {
    public:
 
