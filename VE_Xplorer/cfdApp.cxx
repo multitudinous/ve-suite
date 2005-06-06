@@ -405,7 +405,6 @@ void cfdApp::latePreFrame( void )
    }
 
 #ifdef _TAO
-   this->executive->UpdateModules();
    this->executive->CheckCommandId( _vjobsWrapper->GetCommandArray() );
    this->executive->PreFrameUpdate();
 #endif // _TAO

@@ -496,3 +496,4 @@ void cfdTextureBasedVizHandler::ViewTextureBasedVis(bool trueFalse)
 }
 #endif// VE_PATENTED
 #endif
+

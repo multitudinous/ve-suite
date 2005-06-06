@@ -60,13 +60,16 @@ class  Body_UI_i : public virtual POA_Body::UI
   
       std::string UIName_;
       std::string GetNetworkString( void );
+      std::string GetStatusString( void );
 
    protected:
       Body::Executive_var executive_;
       std::vector< std::string > networkStringBuffer;
+      std::vector< std::string > statusStringBuffer;
       vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
+      vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
       void SetNetworkString( char* );
-  
+
    public:
       bool GetCalcFlag( void );
 

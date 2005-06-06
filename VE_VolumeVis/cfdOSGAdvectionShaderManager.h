@@ -87,3 +87,4 @@ protected:
 #endif//_OSG
 #endif
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H
+

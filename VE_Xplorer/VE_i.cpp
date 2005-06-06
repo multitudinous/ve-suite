@@ -83,6 +83,20 @@ bool Body_UI_i::GetCalcFlag( void )
    }
 }
 
+std::string Body_UI_i::GetStatusString( void )
+{
+   vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
+   std::string temp;
+   if ( !statusStringBuffer.empty() )
+   {
+      std::vector< std::string >::iterator iter;
+      iter = statusStringBuffer.begin();
+      temp = (*iter);
+      statusStringBuffer.erase( iter );
+   }
+   return temp;
+}
+
 void Body_UI_i::UpdateNetwork (
     const char * network
     ACE_ENV_ARG_DECL
@@ -160,7 +174,13 @@ void Body_UI_i::Raise (
       {
          std::cout << "|\tNotification Message : " << notification << " : Raise called " << std::endl
                      << "|\tModule Being Called : " << UIName_ << " : Raise called"<<std::endl;
-         std::string temp(notification);
+         
+         vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
+         {
+            statusStringBuffer.push_back( std::string( notification ) );
+         }
+         
+         std::string temp( notification );
          if ( !temp.compare(0,26,"Network execution complete") ||
               !temp.compare(0,30,"Successfully Scheduled Network" ) ||
               !temp.compare(0,22,"Connected to Executive") ||

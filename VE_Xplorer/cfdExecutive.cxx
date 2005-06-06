@@ -500,29 +500,38 @@ void cfdExecutive::InitModules( void )
    //this->_geometry = new cfdInteractiveGeometry( this->_param->GetParameterFilename(), this->_masterNode );
 }
 
-void cfdExecutive::UpdateModules( void )
+void cfdExecutive::PreFrameUpdate( void )
 {
+   vprDEBUG(vprDBG_ALL,3) << " cfdExecutive::PreFrameUpdate"
+                          << std::endl << vprDEBUG_FLUSH;
+
    if ( !CORBA::is_nil( this->_exec ) && ui_i->GetCalcFlag() )
    {
       // Get Network and parse it
       this->GetEverything();
    }
-}
 
-void cfdExecutive::PreFrameUpdate( void )
-{
-   vprDEBUG(vprDBG_ALL,3) << " cfdExecutive::PreFrameUpdate"
-                          << std::endl << vprDEBUG_FLUSH;
-   std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-   for ( foundPlugin = _plugins.begin(); foundPlugin != _plugins.end(); foundPlugin++)
+   if ( !CORBA::is_nil( this->_exec ) )
    {
-      //if active model is the plugin's model...
-      if ( cfdModelHandler::instance()->GetActiveModel() == foundPlugin->second->GetCFDModel() )
+      if ( !(ui_i->GetStatusString()).compare(0,26,"Network execution complete") )
       {
-         vprDEBUG(vprDBG_ALL,2) << " active model is the plugin: " 
-                                << "calling PreFrameUpdate"
-                                << std::endl << vprDEBUG_FLUSH;
-         foundPlugin->second->PreFrameUpdate();
+         std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+         for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
+         {  
+            int dummyVar = 0;
+            _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
+            _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
+         }
+      }
+
+      std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+      for ( foundPlugin = _plugins.begin(); foundPlugin != _plugins.end(); ++foundPlugin )
+      {
+         //if active model is the plugin's model...
+         if ( cfdModelHandler::instance()->GetActiveModel() == foundPlugin->second->GetCFDModel() )
+         {
+            foundPlugin->second->PreFrameUpdate();
+         }
       }
    }
 }
@@ -553,7 +562,7 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
          this->SetCalculationsFlag( true );
          return true;
       }
-      else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ACT_CUSTOM_VIZ )
+/*      else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ACT_CUSTOM_VIZ )
       {
          vprDEBUG(vprDBG_ALL,1) << " Custom Viz" << std::endl << vprDEBUG_FLUSH;
          std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
@@ -564,7 +573,8 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
             _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
          }
          return true;
-      }               
+      }      
+*/         
 #endif // _TAO
    return false;
 }
