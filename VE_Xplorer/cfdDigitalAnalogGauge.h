@@ -61,22 +61,26 @@ class cfdDigitalAnalogGauge
       void GetPosition( float &x, float &y, float &z );
       void SetOrientation( double Xrot, double Yrot, double Zrot );
 
-      vtkActor * GetCircleActor();
-      vtkActor * GetStationaryArrowActor();
-      vtkActor * GetMovingArrowActor();
-      vtkActor * GetLabelActor();
-      vtkActor * GetDigitalActor();
+      void SetAnalogLimits( double low, double high );
 
       void Display();
 
       void SetDigitalPrecision( int input );
       void UpdateMovingArrowAngle( double angle );
+      void UpdateMovingArrowInRange( double value );
+      
       void UpdateDigitalText( double value );
 
       cfdDCS * GetGaugeNode();
 
    private:
    
+      vtkActor * GetCircleActor();
+      vtkActor * GetStationaryArrowActor();
+      vtkActor * GetMovingArrowActor();
+      vtkActor * GetLabelActor();
+      vtkActor * GetDigitalActor();
+
       void DefineCircleActor();
       void DefineStationaryArrowActor();
       void DefineMovingArrowActor();
@@ -93,7 +97,6 @@ class cfdDigitalAnalogGauge
       cfdGeode* digitalGeode;
 
       float itsX [ 3 ];
-      float zrot;
       vtkArrowSource * movingArrow;
       vtkTransform * arrowTransform;
       vtkMatrix4x4 * arrowRefPosition;
@@ -108,6 +111,7 @@ class cfdDigitalAnalogGauge
       vtkVectorText * digitalLabel;
       char digitalText [ 100 ];
       int digitalPrecision;
+      double lowAnalogLimit, highAnalogLimit;
 };
 
 #endif

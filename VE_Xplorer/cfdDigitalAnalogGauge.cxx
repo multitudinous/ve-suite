@@ -58,7 +58,6 @@
 cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( const char * gaugeName,
                                               cfdGroup * groupNode )
 {
-   
    this->gaugeDCS = new cfdDCS();
    this->gaugeDCS->SetName("gauge");
    vprDEBUG(vprDBG_ALL,1) << " gauges constructor. " << std::endl << vprDEBUG_FLUSH;
@@ -73,7 +72,10 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( const char * gaugeName,
    DefineMovingArrowActor();
    DefineGaugeTextActor( gaugeName );
    DefineDigitalActor();
+   this->lowAnalogLimit = -100.0;
+   this->highAnalogLimit = 100.0;
    vprDEBUG(vprDBG_ALL,1) << " leaving gauges constructor. " << std::endl << vprDEBUG_FLUSH;
+
 }
 ////////////////////////////////////////////////////////////////////////////
 cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
@@ -91,7 +93,6 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
    itsX[1] = g.itsX[1];
    itsX[2] = g.itsX[2];
 
-   zrot = g.zrot;
    movingArrow = vtkArrowSource::New();
    movingArrow = g.movingArrow;
    arrowTransform =vtkTransform::New();
@@ -164,6 +165,10 @@ void cfdDigitalAnalogGauge::SetOrientation( double Xrot, double Yrot, double Zro
    rotationArray[ 1 ] = Yrot;
    rotationArray[ 2 ] = Zrot;
    this->gaugeDCS->SetRotationArray( rotationArray );
+}
+
+void SetAnalogLimits( double low, double high )
+{
 }
 
 /*
@@ -372,6 +377,24 @@ void cfdDigitalAnalogGauge::UpdateMovingArrowAngle( double angle )
    this->gaugeDCS->AddChild( this->movingArrowGeode );
 }
 
+void cfdDigitalAnalogGauge::UpdateMovingArrowInRange( double value )
+{
+   double arrowLimitAngle = 120.0; // arrow can swing +/- this many degrees
+
+   // slope is rise over run...
+   double slope = -( 2.0 * arrowLimitAngle ) / ( this->highAnalogLimit - this->lowAnalogLimit );
+
+   double middleOfRange = ( this->highAnalogLimit - this->lowAnalogLimit ) / 2.0;
+   double normalizedValue = value - middleOfRange;
+   double angle = normalizedValue * slope;
+
+   // verify limits...
+   if      ( angle < -arrowLimitAngle ) angle = -arrowLimitAngle;
+   else if ( angle >  arrowLimitAngle ) angle =  arrowLimitAngle;
+
+   this->UpdateMovingArrowAngle( angle );
+}
+
 void cfdDigitalAnalogGauge::DefineGaugeTextActor( const char * gaugeName )
 {
    vtkVectorText * label = vtkVectorText::New();
@@ -413,7 +436,7 @@ void cfdDigitalAnalogGauge::DefineDigitalActor()
    this->digitalLabel->SetText( this->digitalText );
 
    vtkTransform * labelTransform = vtkTransform::New();
-   double labelScale = 0.25;
+   double labelScale = 0.20;
    labelTransform->Scale( labelScale, labelScale, labelScale );
 
    vtkTransformPolyDataFilter * labelFilter = vtkTransformPolyDataFilter::New();
@@ -443,7 +466,13 @@ void cfdDigitalAnalogGauge::SetDigitalPrecision( int input )
 
 void cfdDigitalAnalogGauge::UpdateDigitalText( double value )
 {  
-   if ( this->digitalPrecision == 3)
+   if      ( this->digitalPrecision == 0)
+      sprintf( this->digitalText, "%10.0f", value );
+   else if ( this->digitalPrecision == 1)
+      sprintf( this->digitalText, "%10.1f", value );
+   else if ( this->digitalPrecision == 2)
+      sprintf( this->digitalText, "%10.2f", value );
+   else if ( this->digitalPrecision == 3)
       sprintf( this->digitalText, "%10.3f", value );
    else
       sprintf( this->digitalText, "%f", value );
