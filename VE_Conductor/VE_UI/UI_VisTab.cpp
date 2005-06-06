@@ -37,7 +37,7 @@ UI_VisualizationTab::UI_VisualizationTab(wxNotebook* tControl)
    int nUnitY=10;
    int nPixX = 5;
    int nPixY = 10;
-   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+   SetScrollRate(nUnitX, nUnitY);
 
    //initialize things
    _categoryRBox = 0;

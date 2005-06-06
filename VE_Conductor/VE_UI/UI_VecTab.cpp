@@ -34,7 +34,7 @@ UI_VectorTab::UI_VectorTab(wxNotebook* tControl)
    int nUnitY=10;
    int nPixX = 5;
    int nPixY = 10;
-   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+   SetScrollRate(nUnitX, nUnitY);
 
    _vThresholdMinSlider = 0;
    _vThresholdMaxSlider = 0;
@@ -228,8 +228,8 @@ void UI_VectorTab::_buildPage()
 
    //the main sizer
    wxBoxSizer* vecPanelGroup = new wxBoxSizer(wxVERTICAL);
-   vecPanelGroup->Add(vectorControlsGroup, 3, wxEXPAND|wxHSCROLL|wxVSCROLL|wxALL, 5 );
-   vecPanelGroup->Add(contourControlsGroup, 2,wxEXPAND|wxHSCROLL|wxVSCROLL|wxALL, 5 );
+   vecPanelGroup->Add(vectorControlsGroup, 3, wxEXPAND|wxALL, 5 );
+   vecPanelGroup->Add(contourControlsGroup, 2,wxEXPAND|wxALL, 5 );
    //vListGroup->Add(_updateButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
     //set this flag and let wx handle alignment

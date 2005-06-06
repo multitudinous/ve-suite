@@ -36,7 +36,7 @@ UI_StreamlineTab::UI_StreamlineTab(wxNotebook* tControl)
    int nUnitY=10;
    int nPixX = 5;
    int nPixY = 10;
-   SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+   SetScrollRate(nUnitX, nUnitY);
 
    _propSlider = 0;
    _iStepSlider = 0;
