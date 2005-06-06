@@ -7,5 +7,8 @@ ifeq (${CFDUNAME},IRIX64)
             -lOpenThreads -losgFX -losgGL2
 else
    EXTRA_LIBS+= -L$(OSG_HOME)/lib -losg -losgDB -losgGA -losgUtil \
-            -lOpenThreads -losgFX -losgGL2
+            -lOpenThreads -losgFX 
+endif
+ifeq (${CFD_USE_SHADERS},TRUE)
+   EXTRA_LIBS+= -losgNV -losgNVCg -losgNVExt -lCg -lCgGL
 endif
