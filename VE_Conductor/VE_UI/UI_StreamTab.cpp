@@ -34,8 +34,8 @@ UI_StreamlineTab::UI_StreamlineTab(wxNotebook* tControl)
 {
    int nUnitX=20;
    int nUnitY=10;
-   int nPixX = 5;
-   int nPixY = 10;
+   //int nPixX = 5;
+   //int nPixY = 10;
    SetScrollRate(nUnitX, nUnitY);
 
    _propSlider = 0;
@@ -313,36 +313,32 @@ void UI_StreamlineTab::_buildPage()
 //////////////////////
 
 //////////////////////////////////////////////////////////////
-void UI_StreamlineTab::_oniStepSlider(wxScrollEvent& event)
+void UI_StreamlineTab::_oniStepSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_INT_STEP_LENGTH;
    ((UI_Tabs *)_parent)->cIso_value = _iStepSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 ///////////////////////////////////////////////////////////
-void  UI_StreamlineTab::_onPropSlider(wxScrollEvent& event)
+void  UI_StreamlineTab::_onPropSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_PROPAGATION_TIME;
    ((UI_Tabs *)_parent)->cIso_value = _propSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 //////////////////////////////////////////////////////////////
-void UI_StreamlineTab::_onStepSlider(wxScrollEvent& event)
+void UI_StreamlineTab::_onStepSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_STEP_LENGTH;
    ((UI_Tabs *)_parent)->cIso_value = _stepSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 //////////////////////////////////////////////////////////////
-void  UI_StreamlineTab::_onIntegrateDir(wxCommandEvent& event)
+void  UI_StreamlineTab::_onIntegrateDir(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    if ( _integrationDirRBox->GetSelection() == 0 )
    {
       ((UI_Tabs *)_parent)->cId = BACKWARD_INTEGRATION;
@@ -359,55 +355,48 @@ void  UI_StreamlineTab::_onIntegrateDir(wxCommandEvent& event)
 }
 
 //////////////////////////////////////////////////////////////
-void  UI_StreamlineTab::_onParticleTrack(wxCommandEvent& event)
+void  UI_StreamlineTab::_onParticleTrack(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = ANIMATED_STREAMLINES;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
 
 ////////////////////////////////////////////////////////////////
-void  UI_StreamlineTab::_onCompStreamline(wxCommandEvent& event)
+void  UI_StreamlineTab::_onCompStreamline(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = STREAMLINES;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
 
 ///////////////////////////////////////////////////////////
-void  UI_StreamlineTab::_onDiameterSlider(wxScrollEvent& event)
+void  UI_StreamlineTab::_onDiameterSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = STREAMLINE_DIAMETER;
    ((UI_Tabs *)_parent)->cIso_value = _diameterSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 ///////////////////////////////////////////////////////
-void  UI_StreamlineTab::_onCheck(wxCommandEvent& event)
+void  UI_StreamlineTab::_onCheck(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
 }
 
-void UI_StreamlineTab::OnArrowCheck( wxCommandEvent& event )
+void UI_StreamlineTab::OnArrowCheck( wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = STREAMLINE_ARROW;
    ((UI_Tabs *)_parent)->cIso_value = arrowPointsChk->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 ///////////////////////////////////////////////////////
-void  UI_StreamlineTab::_onnPointsSlider(wxScrollEvent& event)
+void  UI_StreamlineTab::_onnPointsSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ConstructCommandId();
 }
 
 ///////////////////////////////////////////////////////
-void  UI_StreamlineTab::_onDirection( wxCommandEvent& event )
+void  UI_StreamlineTab::_onDirection( wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
    ConstructCommandId();
 }
 

@@ -144,9 +144,8 @@ void UI_ViewLocTab::_buildPage()
 ///////////////////
 
 //////////////////////////////////////////////////
-void UI_ViewLocTab::_onViewLoc(wxCommandEvent& event)
+void UI_ViewLocTab::_onViewLoc(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    /*// Are there any stored locations loaded?
    if ( ((UI_Tabs *)_parent)->num_locations > 0 )
    {
@@ -166,9 +165,8 @@ void UI_ViewLocTab::_onViewLoc(wxCommandEvent& event)
    }*/
 }
 
-void UI_ViewLocTab::_onLoad(wxCommandEvent& event)
+void UI_ViewLocTab::_onLoad(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = LOAD_POINT;
    //((UI_Tabs *)_parent)->viewlocNewPointName = _viewpointName->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
@@ -194,25 +192,22 @@ void UI_ViewLocTab::_onLoad(wxCommandEvent& event)
    }
 }*/
 
-void UI_ViewLocTab::_onWrite(wxCommandEvent& event)
+void UI_ViewLocTab::_onWrite(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = WRITE_POINTS_TO_FILE;
    //((UI_Tabs *)_parent)->viewlocNewPointName = _viewpointName->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
-void UI_ViewLocTab::_onRead(wxCommandEvent& event)
+void UI_ViewLocTab::_onRead(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = READ_POINTS_FROM_FILE;
    //((UI_Tabs *)_parent)->viewlocNewPointName = _viewpointName->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
-void UI_ViewLocTab::_onMove(wxCommandEvent& event)
+void UI_ViewLocTab::_onMove(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    if ( ((UI_Tabs *)_parent)->num_viewlocs > 0 )
    {
       ((UI_Tabs *)_parent)->cIso_value = _locationsRBox->GetSelection();

@@ -35,8 +35,8 @@ UI_VisualizationTab::UI_VisualizationTab(wxNotebook* tControl)
 {
    int nUnitX=20;
    int nUnitY=10;
-   int nPixX = 5;
-   int nPixY = 10;
+   //int nPixX = 5;
+   //int nPixY = 10;
    SetScrollRate(nUnitX, nUnitY);
 
    //initialize things
@@ -250,16 +250,14 @@ void UI_VisualizationTab::_buildPage()
 ////////////////////////////
 //Event handling functions//
 ////////////////////////////
-void UI_VisualizationTab::_onCategory(wxCommandEvent& event)
+void UI_VisualizationTab::_onCategory(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
   //wxMessageBox(_categoryRBox->GetStringSelection(), _T("Category RadioBox!"));
 }
 
 /////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onContour(wxCommandEvent& event)
+void UI_VisualizationTab::_onContour(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = CHANGE_CONTOUR_FILL;
    if ( _contourRBox->GetSelection() == 0 ) // X Plane 
    {
@@ -282,9 +280,8 @@ void UI_VisualizationTab::_onContour(wxCommandEvent& event)
 }
 
 /////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onDirection(wxCommandEvent& event)
+void UI_VisualizationTab::_onDirection(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    //wxMessageBox(_directionRBox->GetStringSelection(), _T("RadioBox!"));
    std::cout << " Direction of Cutting plane is : "
                << _directionRBox->GetStringSelection() << std::endl;
@@ -312,9 +309,8 @@ void UI_VisualizationTab::_onDirection(wxCommandEvent& event)
 }
 
 /////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onPreComp(wxCommandEvent& event)
+void UI_VisualizationTab::_onPreComp(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    _nearestCBox->Enable(false);
 /*  if (_pcsButton->GetValue())
     wxMessageBox(_T("single plane selected!"), _T("RadioButton!"));
@@ -322,9 +318,8 @@ void UI_VisualizationTab::_onPreComp(wxCommandEvent& event)
     wxMessageBox(_T("single plane unselected!"), _T("RadioButton!"));*/
 }
 /////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onSingle(wxCommandEvent& event)
+void UI_VisualizationTab::_onSingle(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    _nearestCBox->Enable(true);
 /*  if (_spButton->GetValue())
     wxMessageBox(_T("single plane selected!"), _T("RadioButton!"));
@@ -332,9 +327,8 @@ void UI_VisualizationTab::_onSingle(wxCommandEvent& event)
     wxMessageBox(_T("single plane unselected!"), _T("RadioButton!"));*/
 }
 //////////////////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onTextureBasedVisual(wxCommandEvent& event)
+void UI_VisualizationTab::_onTextureBasedVisual(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    if(_visOptionCheckBox){
       ((UI_Tabs *)_parent)->cId = VIS_OPTION;
       if(_visOptionCheckBox->GetValue() == true){
@@ -349,18 +343,16 @@ void UI_VisualizationTab::_onTextureBasedVisual(wxCommandEvent& event)
    }
 }
 /////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onNearest(wxCommandEvent& event)
+void UI_VisualizationTab::_onNearest(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
 /*  if (_nearestCBox->GetValue())
     wxMessageBox(_T("nearest plane box checked!"), _T("CheckBox!"));
   else
     wxMessageBox(_T("nearest plane box unchecked!"), _T("CheckBox!"));*/
 }
 /////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onUpdate(wxCommandEvent& event)
+void UI_VisualizationTab::_onUpdate(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    this->createCommandId();
    this->createTransientCommandId();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
@@ -368,7 +360,7 @@ void UI_VisualizationTab::_onUpdate(wxCommandEvent& event)
 }
 
 //////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onSlider(wxScrollEvent& event)
+void UI_VisualizationTab::_onSlider(wxScrollEvent& WXUNUSED(event))
 {
 #ifdef VE_PATENTED
 #ifdef CFD_USE_SHADERS
@@ -386,9 +378,8 @@ void UI_VisualizationTab::_onSlider(wxScrollEvent& event)
 }
 
 //////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onScalarBar(wxCommandEvent& event)
+void UI_VisualizationTab::_onScalarBar(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = SCALAR_BAR_TOGGLE;
    ((UI_Tabs *)_parent)->cIso_value = _scalarBarCBox->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
@@ -401,9 +392,8 @@ void UI_VisualizationTab::_onScalarBar(wxCommandEvent& event)
 }
 
 //////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onRecord(wxCommandEvent& event)
+void UI_VisualizationTab::_onRecord(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = RECORD_SCENE;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
   
@@ -411,9 +401,8 @@ void UI_VisualizationTab::_onRecord(wxCommandEvent& event)
 }
 
 //////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onExit(wxCommandEvent& event)
+void UI_VisualizationTab::_onExit(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    //wxMessageBox(_T("Exit button clicked!"), _T("Button!"));
    //return 
    ((UI_Tabs *)_parent)->cId = EXIT;
@@ -423,9 +412,8 @@ void UI_VisualizationTab::_onExit(wxCommandEvent& event)
 }
 
 //////////////////////////////////////////////////////////
-void UI_VisualizationTab::_onClear(wxCommandEvent& event)
+void UI_VisualizationTab::_onClear(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = CLEAR_ALL;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
    //wxMessageBox(_T("Exit button clicked!"), _T("Button!"));
@@ -630,9 +618,8 @@ void UI_VisualizationTab::createCommandId( void )
    }
 }
 
-void UI_VisualizationTab::_onCustomVis(wxCommandEvent& event)
+void UI_VisualizationTab::_onCustomVis(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId = ACT_CUSTOM_VIZ;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }

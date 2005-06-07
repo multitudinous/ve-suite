@@ -309,9 +309,8 @@ void UI_AdvectionPanel::_setMaterialVisibility(bool onOff)
 //////////////////////////////////////////////////////////////
 //event callbacks                                           //
 //////////////////////////////////////////////////////////////
-void UI_AdvectionPanel::_onEnableCheck(wxCommandEvent& event)
+void UI_AdvectionPanel::_onEnableCheck(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    if(_enableCheck->GetValue())
    {
       _setGroupVisibility(true);
@@ -324,9 +323,8 @@ void UI_AdvectionPanel::_onEnableCheck(wxCommandEvent& event)
    }
 }
 ////////////////////////////////////////////////////////////////
-void UI_AdvectionPanel::_onMaterialSwitch(wxCommandEvent& event)
+void UI_AdvectionPanel::_onMaterialSwitch(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    if(_materialCBox->GetSelection() == 0)
    {
       _setDyeVisibility(true);
@@ -340,9 +338,8 @@ void UI_AdvectionPanel::_onMaterialSwitch(wxCommandEvent& event)
    }
 }
 ///////////////////////////////////////////////////////////////
-void UI_AdvectionPanel::_onShowBBoxCheck(wxCommandEvent& event)
+void UI_AdvectionPanel::_onShowBBoxCheck(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    if(_enableBBox)
    {
       ((UI_Tabs *)GetParent())->cId = SHOW_TEXTURE_BBOX;
@@ -351,9 +348,8 @@ void UI_AdvectionPanel::_onShowBBoxCheck(wxCommandEvent& event)
    }
 }
 ///////////////////////////////////////////////////////
-void UI_AdvectionPanel::_onSlider(wxScrollEvent& event)
+void UI_AdvectionPanel::_onSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    switch(event.GetId()){
       case X_DYE_POS:
       case Y_DYE_POS: 

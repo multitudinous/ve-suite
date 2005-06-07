@@ -114,15 +114,13 @@ void UI_VertTab::_buildPage()
 //////////////////////
 
 //////////////////////////////////////////////////////////////
-void UI_VertTab::_onParticleOption(wxCommandEvent& event)
+void UI_VertTab::_onParticleOption(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
 }
 
 ///////////////////////////////////////////////////////////
-void  UI_VertTab::_onDisplayParticle(wxCommandEvent& event)
+void  UI_VertTab::_onDisplayParticle(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_PARTICLE_VIEW_OPTION;
    ((UI_Tabs *)_parent)->cGeo_state = _particleOptionRBox->GetSelection();
    ((UI_Tabs *)_parent)->cIso_value = _spherePointSizeSlider->GetValue();
@@ -131,8 +129,7 @@ void  UI_VertTab::_onDisplayParticle(wxCommandEvent& event)
 }
 
 //////////////////////////////////////////////////////////////
-void UI_VertTab::_onSpherePointSizeSlider(wxScrollEvent& event)
+void UI_VertTab::_onSpherePointSizeSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
 }
 

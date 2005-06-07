@@ -985,9 +985,8 @@ void UI_DatasetPanel::_resetScalarAdjustment( int dataSetSelected, int scalarSet
    SetSize( temp );
 }
 
-void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
+void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    _RBoxScroll->changeActiveDatasetType(_datasetCombo->GetSelection());
 
    for (int i=0; i<_numSteadyStateDataSets; i++)
@@ -1076,9 +1075,8 @@ void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& event)
    }*/
 }
 
-void UI_DatasetPanel::_on3d(wxCommandEvent& event)
+void UI_DatasetPanel::_on3d(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 0)
          if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
@@ -1088,9 +1086,8 @@ void UI_DatasetPanel::_on3d(wxCommandEvent& event)
          }           
 }
 
-void UI_DatasetPanel::_onVertex(wxCommandEvent& event)
+void UI_DatasetPanel::_onVertex(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 1)
          if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
@@ -1100,9 +1097,8 @@ void UI_DatasetPanel::_onVertex(wxCommandEvent& event)
          }  
 }
 
-void UI_DatasetPanel::_onPolyData(wxCommandEvent& event)
+void UI_DatasetPanel::_onPolyData(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 2)
          if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
@@ -1112,9 +1108,8 @@ void UI_DatasetPanel::_onPolyData(wxCommandEvent& event)
          }
 }
 
-void UI_DatasetPanel::_onVectors( wxCommandEvent& event )
+void UI_DatasetPanel::_onVectors( wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_vectorRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
@@ -1122,9 +1117,8 @@ void UI_DatasetPanel::_onVectors( wxCommandEvent& event )
    ((UI_Frame *)GetParent())->_tabs->sendDataArrayToServer();
 }
 
-void UI_DatasetPanel::_onScalars(wxCommandEvent& event)
+void UI_DatasetPanel::_onScalars(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    _resetScalarAdjustment( _RBoxScroll->_3dRBox->GetSelection(), _ScalarScroll->_scalarRBox->GetSelection() );
 
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
@@ -1134,9 +1128,8 @@ void UI_DatasetPanel::_onScalars(wxCommandEvent& event)
    ((UI_Frame *)GetParent())->_tabs->sendDataArrayToServer();
 }
 
-void UI_DatasetPanel::_onUpdate(wxCommandEvent& event)
+void UI_DatasetPanel::_onUpdate(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
@@ -1144,9 +1137,8 @@ void UI_DatasetPanel::_onUpdate(wxCommandEvent& event)
    ((UI_Frame *)GetParent())->_tabs->sendDataArrayToServer();
 }
 
-void UI_DatasetPanel::_onMinMaxSlider(wxScrollEvent& event)
+void UI_DatasetPanel::_onMinMaxSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    double minScalar, maxScalar;
 
    GetMinMaxScalar( minScalar, maxScalar );
@@ -1169,9 +1161,8 @@ void UI_DatasetPanel::_onMinMaxSlider(wxScrollEvent& event)
    ConstructCommandId();
 }
 
-void UI_DatasetPanel::_onMinSpinCtrl(wxScrollEvent& event)
+void UI_DatasetPanel::_onMinSpinCtrl(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    double minScalar, maxScalar;
 
    GetMinMaxScalar( minScalar, maxScalar );
@@ -1196,9 +1187,8 @@ void UI_DatasetPanel::_onMinSpinCtrl(wxScrollEvent& event)
    ConstructCommandId();
 }
 
-void UI_DatasetPanel::_onMaxSpinCtrl(wxScrollEvent& event)
+void UI_DatasetPanel::_onMaxSpinCtrl(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    double minScalar, maxScalar;
 
    GetMinMaxScalar( minScalar, maxScalar );

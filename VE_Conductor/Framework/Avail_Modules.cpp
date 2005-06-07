@@ -82,7 +82,6 @@ void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
 
 void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
 {
-   event.GetInt();
   ReiTreeItemData* item_data;
 
   selection = GetSelection();
@@ -96,9 +95,8 @@ void Avail_Modules::OnItemRightClick(wxTreeEvent& event)
   ShowMenu(selection, event.GetPoint());
 }
 
-void Avail_Modules::Instantiate(wxTreeEvent& event) //Double click
+void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
 {
-   event.GetInt();
   ReiTreeItemData* item_data;
   wxClassInfo* info;
   REI_Plugin *object;
@@ -205,9 +203,8 @@ void Avail_Modules::CreateImageList(int size)
     AssignImageList(images);
 }
 
-void Avail_Modules::OnSelChanged(wxTreeEvent& event)
+void Avail_Modules::OnSelChanged(wxTreeEvent& WXUNUSED(event))
 {
-   event.GetInt();
 }
 
 bool Avail_Modules::LoadModules()
@@ -223,9 +220,8 @@ bool Avail_Modules::LoadModules()
   return true;
 }
 
-void Avail_Modules::ShowDesc(wxCommandEvent& event)
+void Avail_Modules::ShowDesc(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
   ReiTreeItemData* item_data;
   REI_Plugin* pl;
   wxString desc;
@@ -247,9 +243,8 @@ void Avail_Modules::ShowDesc(wxCommandEvent& event)
    
 }
 
-void Avail_Modules::ShowHelp(wxCommandEvent& event)
+void Avail_Modules::ShowHelp(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
   char browser[1024];
   REI_Plugin* pl;
   wxString help;

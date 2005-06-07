@@ -285,9 +285,8 @@ void AppFrame::CreateMenu()
   SetMenuBar(menubar);
 }
 
-void AppFrame::ZoomIn(wxCommandEvent &event)
+void AppFrame::ZoomIn(wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   //  printf("Scale = %g\n", network->m_xUserScale);
   int w, h, sx, sy;
   int xpos, ypos;
@@ -311,9 +310,8 @@ void AppFrame::ZoomIn(wxCommandEvent &event)
   network->ReDrawAll();
 }
 
-void AppFrame::ZoomOut(wxCommandEvent &event)
+void AppFrame::ZoomOut(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
   //  printf("Scale = %g\n", network->m_xUserScale);
   int w, h, sx, sy;
   int xpos, ypos;
@@ -336,18 +334,16 @@ void AppFrame::ZoomOut(wxCommandEvent &event)
   network->ReDrawAll();
 }
 
-void AppFrame::Save(wxCommandEvent &event)
+void AppFrame::Save(wxCommandEvent& event)
 {
-   event.GetInt();
   if (path==wxString("")) //First time call save will be the same as SaveAs
     SaveAs(event);
   else
     network->Save(path);
 }
 
-void AppFrame::SaveAs(wxCommandEvent &event)
+void AppFrame::SaveAs(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
   wxFileDialog dialog
     (
      this,
@@ -370,9 +366,8 @@ void AppFrame::SaveAs(wxCommandEvent &event)
     }
 }
 
-void AppFrame::Open(wxCommandEvent &event)
+void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
   wxFileDialog dialog
     (
      this,
@@ -394,9 +389,8 @@ void AppFrame::Open(wxCommandEvent &event)
     }
 }
 
-void AppFrame::LoadFromServer(wxCommandEvent &event)
+void AppFrame::LoadFromServer(wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   char *nw_str;
   try	{ 
     nw_str=network->exec->GetNetwork();
@@ -409,15 +403,13 @@ void AppFrame::LoadFromServer(wxCommandEvent &event)
   delete nw_str;
 }
 
-void AppFrame::New(wxCommandEvent &event)
+void AppFrame::New(wxCommandEvent &WXUNUSED(event))
 {
-   event.GetInt();
    network->New();
 }
 
-void AppFrame::SubmitToServer(wxCommandEvent &event)
+void AppFrame::SubmitToServer(wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   std::string nw_str;
   network->SaveS(nw_str);
   try {
@@ -427,9 +419,8 @@ void AppFrame::SubmitToServer(wxCommandEvent &event)
   }
 }
 
-void AppFrame::StartCalc(wxCommandEvent &event)
+void AppFrame::StartCalc(wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   try	{ 
     network->exec->StartCalc();
     
@@ -438,9 +429,8 @@ void AppFrame::StartCalc(wxCommandEvent &event)
   }
 }
 
-void AppFrame::StopCalc(wxCommandEvent &event)
+void AppFrame::StopCalc(wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   try	{ 
     network->exec->StopCalc();
     
@@ -449,9 +439,8 @@ void AppFrame::StopCalc(wxCommandEvent &event)
   }
 }
 
-void AppFrame::PauseCalc(wxCommandEvent &event)
+void AppFrame::PauseCalc(wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   try	{ 
     network->exec->PauseCalc();
     
@@ -460,9 +449,8 @@ void AppFrame::PauseCalc(wxCommandEvent &event)
   }
 }
 
-void AppFrame::ResumeCalc(wxCommandEvent &event)
+void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   try	{ 
     network->exec->Resume();
     
@@ -471,9 +459,8 @@ void AppFrame::ResumeCalc(wxCommandEvent &event)
   }
 }
 
-void AppFrame::ViewResult(wxCommandEvent &event)
+void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   char* result;
   char buf[80];
   map<int, MODULE>::iterator iter;
@@ -649,9 +636,8 @@ void AppFrame::ViewResult(wxCommandEvent &event)
   delete result_dlg;
 }
 
-void AppFrame::GlobalParam(wxCommandEvent &event)
+void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   if (network->globalparam_dlg!=NULL)
     network->globalparam_dlg->Show();
   else
@@ -662,9 +648,8 @@ void AppFrame::GlobalParam(wxCommandEvent &event)
   
 }
 
-void AppFrame::ConExeServer(wxCommandEvent &event)
+void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
   if (!is_orb_init)
     {
       if (init_orb_naming())
@@ -698,9 +683,8 @@ void AppFrame::ConExeServer(wxCommandEvent &event)
 
 }
   
-void AppFrame::ConVEServer(wxCommandEvent &event)
+void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
 {
-   event.GetInt();
    if (!is_orb_init)
    {
       if (init_orb_naming())
@@ -782,26 +766,22 @@ bool AppFrame::init_orb_naming()
 
 }
 
-void AppFrame::LoadBase(wxCommandEvent &event)
+void AppFrame::LoadBase(wxCommandEvent &WXUNUSED(event))
 {
-   event.GetInt();
   network->Load("IECMBase.nt");
 }
 
-void AppFrame::LoadSour(wxCommandEvent &event)
+void AppFrame::LoadSour(wxCommandEvent &WXUNUSED(event))
 {
-   event.GetInt();
   network->Load("IECMSour.nt");
 }
 
-void AppFrame::LoadREIBase(wxCommandEvent &event)
+void AppFrame::LoadREIBase(wxCommandEvent &WXUNUSED(event))
 {
-   event.GetInt();
   network->Load("REIBase.nt");
 }
-void AppFrame::LoadREISour(wxCommandEvent &event)
+void AppFrame::LoadREISour(wxCommandEvent &WXUNUSED(event))
 {
-   event.GetInt();
   network->Load("REISour.nt");
 }
 
@@ -813,15 +793,13 @@ void AppFrame::Log(const char* msg)
   //::wxPostEvent(this, u);
 }
 
-void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event)
+void AppFrame::OnUpdateUIPop(wxUpdateUIEvent& event )
 {
-   event.GetInt();
   logwindow->AppendText(event.GetText());
 }
 
-void AppFrame::DisConExeServer(wxCommandEvent &event)
+void AppFrame::DisConExeServer(wxCommandEvent &WXUNUSED(event))
 {
-   event.GetInt();
    try
    {
       network->exec->UnRegisterUI(p_ui_i->UIName_.c_str());
@@ -843,9 +821,8 @@ void AppFrame::DisConExeServer(wxCommandEvent &event)
    }
 }
 
-void AppFrame::DisConVEServer(wxCommandEvent &event)
+void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
 {
-   event.GetInt();
   //try {
   /*CosNaming::Name name(1);
     
@@ -885,9 +862,8 @@ void AppFrame::DisConVEServer(wxCommandEvent &event)
 
 }
 
-void AppFrame::ViewHelp(wxCommandEvent& event)
+void AppFrame::ViewHelp(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    char browser[1024];
    wxString help;
    wxString fgroot;

@@ -30,7 +30,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
 ////////////////////////////////////////////////////////////////////////////////
    //*******Loading up the bitmaps for navigation buttons
    char directory[1024];
-   char fileName[1024];
+   //char fileName[1024];
    char* vesuitehome = 0;
    _image1 = 0;
    _image2 = 0;
@@ -375,7 +375,7 @@ wxWindowID id, const wxBitmap& bitmap)
   _buttonPushed = 0; 
 }
 ///////////////////////////////////////////////////
-void UI_NavButton::onMouseUp(wxMouseEvent& mouse)
+void UI_NavButton::onMouseUp(wxMouseEvent& WXUNUSED(event))
 {
    _buttonPushed = 0;
    std::cout<<"Mouse released from button: "<<GetId()<<std::endl;
@@ -433,25 +433,22 @@ void UI_NavigationTab::updateParent(int pushed, int id)
    }
 }
 
-void UI_NavigationTab::OnTransStepSlider( wxScrollEvent& event)
+void UI_NavigationTab::OnTransStepSlider( wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_TRANSLATION_STEP_SIZE;
    ((UI_Tabs *)_parent)->cIso_value = navScroll->translationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
-void UI_NavigationTab::OnRotStepSlider( wxScrollEvent& event)
+void UI_NavigationTab::OnRotStepSlider( wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = CHANGE_ROTATION_STEP_SIZE;
    ((UI_Tabs *)_parent)->cIso_value = navScroll->rotationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
-void UI_NavigationTab::OnResetNavPosition( wxCommandEvent& event )
+void UI_NavigationTab::OnResetNavPosition( wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId  = RESET_NAVIGATION_POSITION;
    ((UI_Tabs *)_parent)->cIso_value = navScroll->translationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();

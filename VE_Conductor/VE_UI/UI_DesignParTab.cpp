@@ -104,17 +104,15 @@ void UI_DesignParTab::_buildPage()
 ///////////////////
 
 //////////////////////////////////////////////////
-void UI_DesignParTab::_onDesignPar(wxCommandEvent& event)
+void UI_DesignParTab::_onDesignPar(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
       //((UI_Tabs *)_parent)->cId = DESIGN_PARMS;
       //((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 //////////////////////////////////////////////////
-void UI_DesignParTab::_onUpdate(wxCommandEvent& event)
+void UI_DesignParTab::_onUpdate(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    /*((UI_Tabs *)_parent)->cIso_value = 0;
    for(int i = 0; i < ((UI_Tabs *)_parent)->numSounds; i++)
    {

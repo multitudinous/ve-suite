@@ -161,18 +161,16 @@ void UI_GeometryTab::_buildPage()
 }
 
 ////////////////////////////////////////////////////
-void UI_GeometryTab::_onGeometry( wxScrollEvent& event )
+void UI_GeometryTab::_onGeometry( wxScrollEvent& WXUNUSED(event) )
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cSc = geomLODSlider->GetValue();
    ((UI_Tabs *)_parent)->cId = CHANGE_LOD_SCALE;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 ////////////////////////////////////////////////////
-void UI_GeometryTab::ChangeOpacity( wxScrollEvent& event )
+void UI_GeometryTab::ChangeOpacity( wxScrollEvent& WXUNUSED(event) )
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cPre_state = 0;
    for ( unsigned int i = 0; i < opacityMemory.size(); ++i )
    {
@@ -190,9 +188,8 @@ void UI_GeometryTab::ChangeOpacity( wxScrollEvent& event )
 }
 
 ////////////////////////////////////////////////////
-void UI_GeometryTab::_onUpdate( wxCommandEvent& event )
+void UI_GeometryTab::_onUpdate( wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cGeo_state = 0;
    ((UI_Tabs *)_parent)->cPre_state = 1;
    for(int i = 0; i < ((UI_Tabs *)_parent)->num_geo; i++)
@@ -205,9 +202,8 @@ void UI_GeometryTab::_onUpdate( wxCommandEvent& event )
 }
 
 ////////////////////////////////////////////////////
-void UI_GeometryTab::OpacityFileSelection( wxCommandEvent& event )
+void UI_GeometryTab::OpacityFileSelection( wxCommandEvent& WXUNUSED(event) )
 {
-   event.GetInt();
    // Initiallize opacity slider to last value for a particular file
    for ( unsigned int i = 0; i < opacityMemory.size(); ++i )
    {

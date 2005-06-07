@@ -32,8 +32,8 @@ UI_VectorTab::UI_VectorTab(wxNotebook* tControl)
 {
    int nUnitX=20;
    int nUnitY=10;
-   int nPixX = 5;
-   int nPixY = 10;
+   //int nPixX = 5;
+   //int nPixY = 10;
    SetScrollRate(nUnitX, nUnitY);
 
    _vThresholdMinSlider = 0;
@@ -267,9 +267,8 @@ void UI_VectorTab::_buildPage()
 ///////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////
-void UI_VectorTab::_onUpdate(wxCommandEvent& event)
+void UI_VectorTab::_onUpdate(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    //((UI_Tabs *)_parent)->cId        = Y_VECTOR;
    //((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
@@ -284,18 +283,16 @@ void UI_VectorTab::_onvRatioSlider(wxScrollEvent& event)
 }
 
 ///////////////////////////////////////////////////
-void UI_VectorTab::_onvScaleSlider(wxScrollEvent& event)
+void UI_VectorTab::_onvScaleSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId        = CHANGE_VECTOR_SCALE;
    ((UI_Tabs *)_parent)->cIso_value = _vScaleSlider->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
 
 ///////////////////////////////////////////////////
-void UI_VectorTab::_onThresholdSlider(wxScrollEvent& event)
+void UI_VectorTab::_onThresholdSlider(wxScrollEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId        = CHANGE_VECTOR_THRESHOLD;
    ((UI_Tabs *)_parent)->cMin       = _vThresholdMinSlider->GetValue();
    ((UI_Tabs *)_parent)->cMax       = _vThresholdMaxSlider->GetValue();
@@ -303,18 +300,16 @@ void UI_VectorTab::_onThresholdSlider(wxScrollEvent& event)
 }
 
 //////////////////////////////////////////////////
-void UI_VectorTab::_onCheck(wxCommandEvent& event)
+void UI_VectorTab::_onCheck(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId        = SCALE_BY_VECTOR_MAGNITUDE;
    ((UI_Tabs *)_parent)->cIso_value = _scaleVecMagChk->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
 }
 
 //////////////////////////////////////////////////
-void UI_VectorTab::OnContourSliders( wxScrollEvent& event )
+void UI_VectorTab::OnContourSliders( wxScrollEvent& WXUNUSED(event) )
 {
-   event.GetInt();
    ((UI_Tabs *)_parent)->cId        = CHANGE_CONTOUR_SETTINGS;
    ((UI_Tabs *)_parent)->cIso_value = contourOpacitySlider->GetValue();
    ((UI_Tabs *)_parent)->cMin       = wrapContourScaleSlider->GetValue();

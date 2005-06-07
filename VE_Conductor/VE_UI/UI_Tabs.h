@@ -156,7 +156,8 @@ public:
    short cNumTeacherArrays;
    short cTeacher_state;
    //short cGetClientInfo;
-   
+   bool debugIO;
+
    // Must be the same size as specified in VjObs_i.h
    int numOfClientInfo;
    VjObs::obj_pd_var clientInfoArray;
