@@ -42,13 +42,16 @@
 #include <osg/Node>
 #elif _OPENSG
 #endif
+
 ///////////////////////////////////////////
 cfdGroup::cfdGroup( const cfdGroup& input )
 :cfdNode(input)
 {
    int numChildren = input.childNodes.size();
 
-   for(int i = 0; i < numChildren; i++){
+   this->childNodes = input.childNodes;
+   for(int i = 0; i < numChildren; i++)
+   {
       this->childNodes.push_back(input.childNodes[i]);
    }
 
@@ -56,6 +59,7 @@ cfdGroup::cfdGroup( const cfdGroup& input )
    this->_group = input._group;
 #elif _OSG
    _group = new osg::Group(*input._group);
+   //_group = input._group;
 #elif _OPENSG
 #endif
    SetCFDNodeType(CFD_GROUP);
@@ -68,11 +72,10 @@ cfdGroup& cfdGroup::operator=( const cfdGroup& input)
       //biv-- make sure to call the parent =
       cfdNode::operator =(input);
 
-      //biv-- why not just call clear here?
       for ( unsigned int i = 0; i < childNodes.size(); i++ )
       {
          delete childNodes.at( i );
-      }   
+      }
       childNodes.clear();
    
       this->childNodes = input.childNodes;
@@ -80,7 +83,6 @@ cfdGroup& cfdGroup::operator=( const cfdGroup& input)
       pfDelete( this->_group );
       this->_group = input._group;
 #elif _OSG
-      
       _group = input._group;
 #elif _OPENSG
 #endif
@@ -88,6 +90,19 @@ cfdGroup& cfdGroup::operator=( const cfdGroup& input)
    }
    return *this;
 }
+//////////////////////////
+/*bool cfdGroup::operator== ( cfdNode& node1 )
+{
+   if ( _dcs != dynamic_cast< cfdGroup& >( node1 )._group )
+   {
+      return false;
+   }
+   else
+   {
+      return true;
+   }
+   return true;
+}*/
 //////////////////////////
 cfdGroup::cfdGroup( void )
 :cfdNode()
@@ -103,11 +118,10 @@ cfdGroup::cfdGroup( void )
 ///////////////////////////
 cfdGroup::~cfdGroup( void )
 {
-   //biv--do we need to delete or can we just call clear
    for ( unsigned int i = 0; i < childNodes.size(); i++ )
    {
       delete childNodes.at( i );
-   }   
+   }
    childNodes.clear();
    
    // If neccesary
@@ -130,11 +144,16 @@ int cfdGroup::RemoveChild( cfdNode* child )
 #endif
    std::vector< cfdNode* >::iterator oldChild;
    oldChild = std::find( childNodes.begin(), childNodes.end(), child );
-   
    // Check to make sure he is on this node
    if ( oldChild != childNodes.end() )
    {
-      this->_group->removeChild( (*oldChild)->GetRawNode() );
+      int temp = this->_group->removeChild( child->GetRawNode() );
+      if ( !temp )
+      {
+         std::cerr << " ERROR: cfdGroup::RemoveChild couldn't remove child  " << std::endl;
+         exit( 1 );
+         return -1;
+      }
       childNodes.erase( oldChild );
       child->SetParent( NULL );
       return 1;  
@@ -191,7 +210,8 @@ int  cfdGroup::SearchChild( cfdNode* child )
    /* return _group->getChildIndex(child->GetRawNode());*/
 
    for ( unsigned int i = 0; i < childNodes.size(); ++i )
-      if ( childNodes[ i ] == child ){
+      if ( childNodes[ i ] == child )
+      {
          return (int)i;
       }
    // if not found

@@ -52,6 +52,7 @@ namespace osg
 #elif _OPENSG
 #endif
 
+#include <vpr/Util/GUID.h>
 /////////////////////////////////////////////
 //This class holds and manages the nodes on//
 //the graph.                               //
@@ -106,9 +107,9 @@ class cfdSceneNode
       //set internal cfd node type
       virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
 
+      vpr::GUID guid;
    protected:
       //our scene graph specific nodes
-      //int _nodeType;
       int _numParents;
       cfdNodeType _nt;
       cfdNode* _parent;

@@ -55,6 +55,7 @@ cfdSceneNode::cfdSceneNode( void )
    this->_geode = NULL;
    this->_sequence = NULL;
    this->_switch = 0;*/
+   guid = vpr::GUID::generateTag;
 }
 //////////////////////////////////////////
 cfdSceneNode::cfdSceneNode(cfdNodeType nt)
@@ -69,6 +70,7 @@ cfdSceneNode::cfdSceneNode(cfdNodeType nt)
    this->_geode = NULL;
    this->_sequence = NULL;
    this->_switch = 0;*/
+   guid = vpr::GUID::generateTag;
 }
 ///////////////////////////////////
 cfdSceneNode::~cfdSceneNode( void )
@@ -80,20 +82,20 @@ cfdSceneNode::~cfdSceneNode( void )
 ////////////////////////////////////////////////////////
 cfdSceneNode::cfdSceneNode( const cfdSceneNode& input )
 {
-   //this->_nodeType = input._nodeType;
    this->_numParents = input._numParents;
    this->_parent = input._parent;
    _nt = input._nt;
+   guid = input.guid;
 }
 //////////////////////////////////////////////////////////////////
 cfdSceneNode& cfdSceneNode::operator=( const cfdSceneNode& input )
 {
    if ( this != &input )
    {
-      //this->_nodeType = input._nodeType;
       this->_numParents = input._numParents;
       this->_parent = input._parent;
       _nt = input._nt;
+      guid = input.guid;
    }
    return *this;
 }

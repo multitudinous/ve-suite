@@ -96,7 +96,7 @@ cfdNode::cfdNode()
 }
 /////////////////////////////////////////
 cfdNode::cfdNode( const cfdNode& input )
-:cfdSceneNode(CFD_NODE)
+:cfdSceneNode(input)
 {
 #ifdef _PERFORMER
    this->_node = input._node;
@@ -105,6 +105,7 @@ cfdNode::cfdNode( const cfdNode& input )
 #elif _OPENSG
 #endif
 }
+
 ////////////////////////////////////////////////////
 cfdNode& cfdNode::operator=( const cfdNode& input )
 {
@@ -127,6 +128,21 @@ cfdNode& cfdNode::operator=( const cfdNode& input )
       color = input.color;
    }
    return *this;
+}
+
+////////////////////////////////////////////////////
+bool cfdNode::operator== ( const cfdNode& node1 ) const
+{
+std::cout << _nt << " : " << node1._nt << std::endl;
+std::cout << guid << " : " << node1.guid << std::endl;
+   if ( guid == node1.guid )
+   {
+      return true;
+   }
+   else
+   {
+      return false;
+   }
 }
 
 /////////////////////////
@@ -153,6 +169,7 @@ osg::Node* cfdNode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
+std::cout << " node raw node " << std::endl;
 #ifdef _PERFORMER
    return _node;
 #elif _OSG

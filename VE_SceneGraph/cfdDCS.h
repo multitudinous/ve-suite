@@ -56,7 +56,10 @@ class cfdDCS: public cfdGroup
       cfdDCS( float*, float*, float* );
       
       cfdDCS( const cfdDCS& );
-      cfdDCS& operator=( const cfdDCS& );
+      cfdDCS& operator= ( const cfdDCS& );
+
+      //equality operator
+      //bool operator== ( const cfdDCS& );
 
       cfdDCS( void );
       ~cfdDCS( void );

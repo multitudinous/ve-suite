@@ -91,6 +91,16 @@ cfdGeode& cfdGeode::operator=( const cfdGeode& input )
    }
    return *this;
 }
+////////////////////////////////////////////////////
+/*bool cfdGeode::operator== ( cfdNode& node1 )
+{
+   if ( _geode != dynamic_cast< cfdGeode& >( node1 )._geode )
+   {
+      return false;
+   }
+
+   return true;
+}*/
 ///////////////////////////
 cfdGeode::~cfdGeode( void )
 {

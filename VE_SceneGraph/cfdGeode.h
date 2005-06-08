@@ -53,6 +53,7 @@ class cfdGeode: public cfdNode
       ~cfdGeode( void );
       cfdGeode( const cfdGeode& );
       cfdGeode& operator=( const cfdGeode& );
+      //bool operator== ( cfdNode& );
 
       // This function will have to reimplmented for each scenegraph
       // Get Geode 

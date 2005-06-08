@@ -64,7 +64,6 @@ cfdDCS::cfdDCS( void )
    _dcs->setDataVariance(osg::Object::DYNAMIC);
    _udcb =new cfdUpdateDCSCallback();
    _dcs->setUpdateCallback(_udcb);
-   
 #elif _OPENSG
 #endif
    _scale[0] = 1;
@@ -123,7 +122,8 @@ cfdDCS::cfdDCS( const cfdDCS& input )
    _dcs = new pfDCS(*input._dcs);
 #elif _OSG 
    this->_dcs = new osg::MatrixTransform(*input._dcs);
-   _udcb = input._udcb;
+    //this->_dcs = input._dcs;
+  _udcb = input._udcb;
 #elif _OPENSG
 #endif
   
@@ -146,7 +146,7 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
       for ( unsigned int i = 0; i < childNodes.size(); i++ )
       {
          delete childNodes.at( i );
-      }   
+      }
       childNodes.clear();
    
       this->childNodes = input.childNodes;
@@ -164,7 +164,19 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
    }
    return *this;
 }
-
+/*
+bool cfdDCS::operator== ( const cfdDCS& node1 )
+{
+   if ( _dcs != node1._dcs )
+   {
+      return false;
+   }
+   else
+   {
+      return true;
+   }
+}
+*/
 ///////////////////////
 cfdDCS::~cfdDCS( void )
 {
@@ -172,7 +184,7 @@ cfdDCS::~cfdDCS( void )
    {
       if ( childNodes.at( i ) )
          delete childNodes.at( i );
-   }   
+   }
    childNodes.clear();
    // If neccesary
 #ifdef _PERFORMER
@@ -300,7 +312,8 @@ void cfdDCS::SetMat( Matrix44f& input )
    pfMatrix temp = vrj::GetPfMatrix( input );
    this->_dcs->setMat( temp );
 #elif _OSG
-   if(_dcs.valid()){
+   if(_dcs.valid())
+   {
       osg::Matrix inMat;
       inMat.set(input.getData());
       _dcs->setMatrix(inMat);
@@ -344,7 +357,7 @@ int cfdDCS::RemoveChild( cfdNode* child )
    // Check to make sure he is on this node
    if ( oldChild != childNodes.end() )
    {
-      this->_dcs->removeChild( (*oldChild)->GetRawNode() );
+      this->_dcs->removeChild( child->GetRawNode() );
       childNodes.erase( oldChild );
       child->SetParent( NULL );
       return 1;  
@@ -393,7 +406,6 @@ void cfdDCS::InsertChild( int position, cfdNode* child )
 
    childNodes.insert( newPosition, child );
    child->SetParent( this );
-
 }
 
 /////////////////////////////////////

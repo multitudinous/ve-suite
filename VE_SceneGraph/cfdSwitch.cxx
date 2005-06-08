@@ -5,6 +5,7 @@
 #ifdef _PERFORMER
 #include <Performer/pf/pfSwitch.h>
 #endif
+
 //////////////////////////////////
 //Constructors                  //
 //////////////////////////////////
@@ -111,7 +112,7 @@ int cfdSwitch::RemoveChild( cfdNode* child )
    // Check to make sure he is on this node
    if ( oldChild != childNodes.end() )
    {
-      this->_switch->removeChild( (*oldChild)->GetRawNode() );
+      this->_switch->removeChild( child->GetRawNode() );
       childNodes.erase( oldChild );
       child->SetParent( NULL );
       return 1;  
@@ -149,15 +150,18 @@ int cfdSwitch::AddChild( cfdNode* child )
    exit( 1 );
    return -1;
 #endif
-   //add the child to cfdscene
-   childNodes.push_back( child );
-
    //add node to real graph rep
-   this->_switch->addChild( child->GetRawNode() );
-   
-   //set the parent in the cfdApp side
-   child->SetParent( this );
-   return 1;
+   int good = this->_switch->addChild( child->GetRawNode() );
+   if ( good )
+   {
+      //add the child to cfdscene
+      childNodes.push_back( child );
+
+      //set the parent in the cfdApp side
+      child->SetParent( this );
+      return 1;
+   }
+   return -1;
 }
 ////////////////////////////////////////////////////////////
 int cfdSwitch::ReplaceChild( cfdNode* childToBeReplaced,
