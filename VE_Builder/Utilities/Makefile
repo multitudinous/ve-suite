@@ -9,7 +9,7 @@ all: makeVtkSurface meshViewer convertVTK2Binary \
       removeVtkPointData arrowCreator addNormals2Poly \
       moveFieldToPointData whatIsScalarRange \
       combineFluentParticleFile mergeVertices appendVTK \
-      createMiniFlowdata convertCellDataToPointData
+      createMiniFlowdata convertCellDataToPointData compareScalars
 
 # Create the OS-dependent directory for the executable. If the dir exists, 
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
@@ -19,7 +19,7 @@ makeVtkSurface meshViewer convertVTK2Binary \
       removeVtkPointData arrowCreator addNormals2Poly \
       moveFieldToPointData whatIsScalarRange \
       combineFluentParticleFile mergeVertices appendVTK \
-      createMiniFlowdata convertCellDataToPointData ::
+      createMiniFlowdata convertCellDataToPointData compareScalars::
 	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
 	cd ./mk/$@ && $(MAKE) all
 
@@ -44,7 +44,8 @@ clean:
 	-cd ./mk/mergeVertices && $(MAKE) clean
 	-cd ./mk/appendVTK && $(MAKE) clean
 	-cd ./mk/createMiniFlowdata && $(MAKE) clean
-	-cd ./mk/convertCellDataToPointData && $(MAKE) clean
+	-cd ./mk/convertCellDataToPointData && $(MAKE) clean 
+	-cd ./mk/compareScalars && $(MAKE) clean 
 
 cleandepend:	
 	-cd ./mk/makeVtkSurface && $(MAKE) cleandepend
@@ -65,3 +66,4 @@ cleandepend:
 	-cd ./mk/appendVTK && $(MAKE) cleandepend
 	-cd ./mk/createMiniFlowdata && $(MAKE) cleandepend
 	-cd ./mk/convertCellDataToPointData && $(MAKE) cleandepend
+	-cd ./mk/compareScalars && $(MAKE) cleandepend
