@@ -238,7 +238,7 @@ void cfdVEBaseClass::SetNavigate( cfdNavigate* input )
 // Copy the interface so dynamic objects can do custom features with gui data
 void cfdVEBaseClass::SetInterface( Interface& intf )
 {
-   intf.copy( this->myInterface );
+   this->myInterface.copy( intf );
 }
 
 // Set the results for a particluar module so that we can use them for custom 
