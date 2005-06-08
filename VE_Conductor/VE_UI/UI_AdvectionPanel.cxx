@@ -348,7 +348,7 @@ void UI_AdvectionPanel::_onShowBBoxCheck(wxCommandEvent& WXUNUSED(event))
    }
 }
 ///////////////////////////////////////////////////////
-void UI_AdvectionPanel::_onSlider(wxScrollEvent& WXUNUSED(event))
+void UI_AdvectionPanel::_onSlider(wxScrollEvent& event )
 {
    switch(event.GetId()){
       case X_DYE_POS:

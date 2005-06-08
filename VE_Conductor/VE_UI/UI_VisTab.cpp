@@ -364,7 +364,6 @@ void UI_VisualizationTab::_onSlider(wxScrollEvent& WXUNUSED(event))
 {
 #ifdef VE_PATENTED
 #ifdef CFD_USE_SHADERS
-   event.GetInt();
    if ( ( _categoryRBox->GetSelection() == 3 ) && 
          ( _visOptionCheckBox->GetValue() == true ) )
    {
