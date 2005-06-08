@@ -21,6 +21,7 @@ SRCS=\
    viewCells.cpp \
    fireReader.cpp \
    readWriteVtkThings.cxx \
+   cfdVTKFileHandler.cxx \
    cleanVtk.cpp \
    cfdGrid2Surface.cpp \
    particle.cpp \
