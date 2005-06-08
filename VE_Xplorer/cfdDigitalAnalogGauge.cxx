@@ -384,11 +384,14 @@ void cfdDigitalAnalogGauge::UpdateMovingArrowInRange( double value )
    double arrowLimitAngle = 120.0; // arrow can swing +/- this many degrees
 
    // slope is rise over run...
+   vprDEBUG(vprDBG_ALL,2) << " limits: " << this->lowAnalogLimit << " " << this->highAnalogLimit << std::endl << vprDEBUG_FLUSH;
    double slope = -( 2.0 * arrowLimitAngle ) / ( this->highAnalogLimit - this->lowAnalogLimit );
 
-   double middleOfRange = ( this->highAnalogLimit - this->lowAnalogLimit ) / 2.0;
+   double middleOfRange = ( this->highAnalogLimit + this->lowAnalogLimit ) / 2.0;
+   vprDEBUG(vprDBG_ALL,2) << "middleOfRange: " << middleOfRange << std::endl << vprDEBUG_FLUSH; 
    double normalizedValue = value - middleOfRange;
    double angle = normalizedValue * slope;
+   vprDEBUG(vprDBG_ALL,2) << "angle: " << angle << std::endl << vprDEBUG_FLUSH; 
 
    // verify limits...
    if      ( angle < -arrowLimitAngle ) angle = -arrowLimitAngle;
