@@ -38,6 +38,6 @@ void printWhatItIs( vtkDataSet * readerOutput );
 
 vtkDataSet * readVtkThing( char * vtkFilename, int printFlag = 0 );  //default is not to print information
 
-void writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag = 0 );// default is to print ascii file
+bool writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag = 0 );// default is to print ascii file
 
 #endif

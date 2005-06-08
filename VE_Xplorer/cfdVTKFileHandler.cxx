@@ -108,23 +108,31 @@ void cfdVTKFileHandler::SetOutputFileName(char* oFile)
 ////////////////////////////////////////////////////////////////////
 vtkDataSet* cfdVTKFileHandler::GetDataSetFromFile(char* vtkFileName)
 {
+   std::cout<<"Loading: "<<vtkFileName<<std::endl;
    if(!vtkFileName)
       return 0;
    SetInputFileName(vtkFileName);
+   std::cout<<"Creating xml tester..."<<std::endl;
    if(!_xmlTester){
       _xmlTester = vtkXMLFileReadTester::New();
    }
    _xmlTester->SetFileName(vtkFileName);
 
+   std::cout<<"Checking file type..."<<std::endl;
    if(_xmlTester->TestReadFile()){
+      std::cout<<"XML VTK file"<<std::endl;
+      std::cout<<"File type: "<<_xmlTester->GetFileDataType()<<std::endl;
       //process xml file
-      if(!strcmp(_xmlTester->GetFileDataType(),"vtkUnstructuredGrid")){
+      if(!strcmp(_xmlTester->GetFileDataType(),"UnstructuredGrid")){
+         std::cout<<"============Unstructured grid==========="<<std::endl;
          _getXMLUGrid();
-      }else if(!strcmp(_xmlTester->GetFileDataType(),"vtkStructuredGrid")){
+      }else if(!strcmp(_xmlTester->GetFileDataType(),"StructuredGrid")){
+         std::cout<<"============Structured grid==========="<<std::endl;
          _getXMLSGrid();
-      }else if(!strcmp(_xmlTester->GetFileDataType(),"vtkRectilinearGrid")){
+      }else if(!strcmp(_xmlTester->GetFileDataType(),"RectilinearGrid")){
+         std::cout<<"============Rectilinear grid==========="<<std::endl;
          _getXMLRGrid();
-      }else if(!strcmp(_xmlTester->GetFileDataType(),"vtkPolyData")){
+      }else if(!strcmp(_xmlTester->GetFileDataType(),"PolyData")){
          _getXMLPolyData();
       }
    }else{
@@ -160,10 +168,8 @@ void cfdVTKFileHandler::_readClassicVTKFile()
    {
 
       int dataObjectType = genericReader->GetOutput()->GetDataObjectType();
-      //std::cout << "dataObjectType = " << dataObjectType << std::endl;
       if ( dataObjectType == VTK_UNSTRUCTURED_GRID )
       {
-         //std::cout << "an unstructuredGrid... " << std::flush;
 
          _dataSet = vtkUnstructuredGrid::New();
          _dataSet->ShallowCopy( genericReader->GetUnstructuredGridOutput() );
@@ -171,8 +177,6 @@ void cfdVTKFileHandler::_readClassicVTKFile()
       }
       else if ( dataObjectType == VTK_STRUCTURED_GRID )
       {
-         std::cout<<"Structured Grid"<<std::endl;
-	       std::cout<<"Check to see if deep copy bug is fixed!!"<<std::endl;
          // Because of a vtk BUG involving structured grid deep copy,
          // the follow code is not working...
          /*_dataSet = vtkStructuredGrid::New();
@@ -183,7 +187,6 @@ void cfdVTKFileHandler::_readClassicVTKFile()
       }
       else if ( dataObjectType == VTK_RECTILINEAR_GRID )
       {
-         //std::cout << "a rectilinearGrid... " << std::flush;
 
          _dataSet = vtkRectilinearGrid::New();
          _dataSet->ShallowCopy( genericReader->GetRectilinearGridOutput() );
@@ -191,7 +194,6 @@ void cfdVTKFileHandler::_readClassicVTKFile()
       }
       else if ( dataObjectType == VTK_POLY_DATA )
       {
-         //std::cout << "a polyData... " << std::flush;
 
          _dataSet = vtkPolyData::New();
          _dataSet->ShallowCopy( genericReader->GetPolyDataOutput() );
@@ -211,6 +213,7 @@ void cfdVTKFileHandler::_getXMLUGrid()
    vtkXMLUnstructuredGridReader* ugReader
 	   = vtkXMLUnstructuredGridReader::New();   
    ugReader->SetFileName(_inFileName);
+   ugReader->Update();
    _dataSet = vtkUnstructuredGrid::New();
    _dataSet->ShallowCopy(ugReader->GetOutput());
    ugReader->Delete();
@@ -221,6 +224,7 @@ void cfdVTKFileHandler::_getXMLSGrid()
    vtkXMLStructuredGridReader* sgReader
 	   = vtkXMLStructuredGridReader::New();   
    sgReader->SetFileName(_inFileName);
+   sgReader->Update();
    _dataSet = vtkStructuredGrid::New();
    _dataSet->ShallowCopy(sgReader->GetOutput());
    sgReader->Delete();
@@ -231,6 +235,7 @@ void cfdVTKFileHandler::_getXMLRGrid()
    vtkXMLRectilinearGridReader* rgReader
 	   = vtkXMLRectilinearGridReader::New();   
    rgReader->SetFileName(_inFileName);
+   rgReader->Update();
    _dataSet = vtkRectilinearGrid::New();
    _dataSet->ShallowCopy(rgReader->GetOutput());
    rgReader->Delete();
