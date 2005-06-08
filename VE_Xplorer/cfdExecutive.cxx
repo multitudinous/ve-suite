@@ -406,6 +406,8 @@ void cfdExecutive::GetEverything( void )
                _plugins[ iter->first ]->SetNavigate( cfdEnvironmentHandler::instance()->GetNavigate() );
                _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
                _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
+               vprDEBUG(vprDBG_ALL,1) << "Module results: " << this->_exec->GetModuleResult( iter->first )
+                                      << std::endl << vprDEBUG_FLUSH;
                vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
                                       << " ]-> " << iter->second 
                                       << " is being created."
@@ -419,6 +421,8 @@ void cfdExecutive::GetEverything( void )
                                     << " ]-> " << iter->second 
                                     << " is already on the plugin map."
                                     << std::endl << vprDEBUG_FLUSH;
+            // Give graphical plugins access to gui variables
+            _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
          }
       }
 
