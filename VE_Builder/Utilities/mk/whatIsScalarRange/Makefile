@@ -10,6 +10,7 @@ srcdir=	../../
 SRCS=\
    fileIO.cxx \
    readWriteVtkThings.cxx \
+   cfdVTKFileHandler.cxx \
    cfdAccessoryFunctions.cxx \
    whatIsScalarRange.cpp 
 

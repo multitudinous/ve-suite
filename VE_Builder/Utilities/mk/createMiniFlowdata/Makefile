@@ -11,6 +11,7 @@ srcdir= ../../
 SRCS=\
    fileIO.cxx \
    readWriteVtkThings.cxx \
+   cfdVTKFileHandler.cxx \
    cfdAccessoryFunctions.cxx \
    createMiniFlowdata.cpp 
 

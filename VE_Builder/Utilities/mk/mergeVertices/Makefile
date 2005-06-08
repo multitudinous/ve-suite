@@ -11,6 +11,7 @@ srcdir= ../../
 SRCS=\
    mergeVertices.cpp \
    fileIO.cxx \
+   cfdVTKFileHandler.cxx \
    readWriteVtkThings.cxx
 
 # Specify the OS-dependent directory name for object files and depends

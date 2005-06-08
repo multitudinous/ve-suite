@@ -12,6 +12,7 @@ SRCS=\
    makeVtkSurface.cpp \
    fileIO.cxx \
    readWriteVtkThings.cxx \
+   cfdVTKFileHandler.cxx \
    setScalarAndVector.cpp \
    viewCells.cpp \
    cfdGrid2Surface.cpp

@@ -10,6 +10,7 @@ srcdir= ../../
 
 SRCS=\
    readWriteVtkThings.cxx \
+   cfdVTKFileHandler.cxx \
    compareScalars.cpp
 
 # Specify the OS-dependent directory name for object files and depends

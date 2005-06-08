@@ -10,6 +10,7 @@ srcdir= ../../
 
 SRCS=\
    fileIO.cxx \
+   cfdVTKFileHandler.cxx \
    readWriteVtkThings.cxx \
    addNormals2Poly.cpp
 

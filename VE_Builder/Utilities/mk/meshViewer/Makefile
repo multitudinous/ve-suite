@@ -14,6 +14,7 @@ SRCS=\
    cfdImage.cpp \
    setScalarAndVector.cpp \
    viewCells.cpp \
+   cfdVTKFileHandler.cxx \
    readWriteVtkThings.cpp \
    cfdGrid2Surface.cpp 
 

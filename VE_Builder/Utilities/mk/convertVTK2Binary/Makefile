@@ -11,6 +11,7 @@ srcdir= ../../
 SRCS= \
    fileIO.cxx \
    readWriteVtkThings.cxx \
+   cfdVTKFileHandler.cxx \
    convertVTK2Binary.cpp 
 
 # Specify the OS-dependent directory name for object files and depends
