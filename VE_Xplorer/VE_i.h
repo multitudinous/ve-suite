@@ -61,6 +61,7 @@ class  Body_UI_i : public virtual POA_Body::UI
       std::string UIName_;
       std::string GetNetworkString( void );
       std::string GetStatusString( void );
+      bool GetNetworkFlag( void );
 
    protected:
       Body::Executive_var executive_;

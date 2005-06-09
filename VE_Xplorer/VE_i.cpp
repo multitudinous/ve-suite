@@ -53,6 +53,7 @@ std::string Body_UI_i::GetNetworkString( void )
 {
    vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
    std::string temp;
+   temp.clear();
    if ( !networkStringBuffer.empty() )
    {
       std::vector< std::string >::iterator iter;
@@ -70,10 +71,24 @@ void Body_UI_i::SetNetworkString( char* temp )
    networkStringBuffer.push_back( std::string( temp ) );
 }
 
+bool Body_UI_i::GetNetworkFlag( void )
+{
+   vpr::Guard<vpr::Mutex> val_guard( stringBufferLock );
+   if ( networkStringBuffer.empty() )
+   {
+      return false;
+   }
+   else
+   {
+      return true;
+   }
+}
+
 std::string Body_UI_i::GetStatusString( void )
 {
    vpr::Guard<vpr::Mutex> val_guard( statusBufferLock );
    std::string temp;
+   temp.clear();
    if ( !statusStringBuffer.empty() )
    {
       std::vector< std::string >::iterator iter;

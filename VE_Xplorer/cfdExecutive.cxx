@@ -509,7 +509,7 @@ void cfdExecutive::PreFrameUpdate( void )
    vprDEBUG(vprDBG_ALL,3) << " cfdExecutive::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
 
-   if ( !CORBA::is_nil( this->_exec ) && !(ui_i->GetNetworkString().empty()) )
+   if ( !CORBA::is_nil( this->_exec ) && ui_i->GetNetworkFlag() )
    {
       // Get Network and parse it
       this->GetEverything();
@@ -517,7 +517,7 @@ void cfdExecutive::PreFrameUpdate( void )
 
    if ( !CORBA::is_nil( this->_exec ) )
    {
-      if ( !(ui_i->GetStatusString().empty()) )
+      //if ( !(ui_i->GetStatusString().empty()) )
       {
          if ( !(ui_i->GetStatusString()).compare(0,26,"Network execution complete") )
          {
