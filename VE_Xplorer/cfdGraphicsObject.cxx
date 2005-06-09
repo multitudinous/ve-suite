@@ -122,7 +122,8 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
                              << std::endl << vprDEBUG_FLUSH;
          // we can do this because classic group is always
          // child 0 see line 58 of cfdModel.cxx
-         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->geodes.back() );
+         cfdGroup* test = ((cfdGroup*)temp->GetChild( 0 ));
+         test->AddChild( this->geodes.back() );
          vprDEBUG(vprDBG_ALL,1) << "|\tFinished classic ss add to graph"
                              << std::endl << vprDEBUG_FLUSH;
       }

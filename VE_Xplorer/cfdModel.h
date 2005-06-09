@@ -63,6 +63,8 @@ class fileInfo;
 class cfdFILE;
 class cfdTempAnimation;
 class cfdGroup;
+class cfdClone;
+
 #ifdef _OSG
 class cfdTextureDataSet;
 #endif
@@ -108,6 +110,9 @@ public:
    void delVTKdataset();
    void addGeomdataset(const std::string &filename);
    void delGeomdataset(int);
+   bool GetMirrorDataFlag( void );
+   void SetMirrorDataFlag( bool );
+   void SetMirrorNode( cfdGroup* );
 
       
    cfdDataSet* GetCfdDataSet( int );
@@ -158,6 +163,7 @@ private:
    vpr::Mutex mValueLock;
    std::vector<vtkDataSet* > waitingdatalist; 
    char* currentsurfacefilename;
+   bool mirrorDataFlag;
 
 private:
    cfdTempAnimation* animation;
@@ -181,6 +187,8 @@ private:
    fileInfo* mGeomFileInfo;
    fileInfo* mVTKFileInfo;
    cfdDataSet* activeDataSet;
+   cfdClone* mirrorNode;
+   cfdGroup* mirrorGroupNode;
    
    //the information for following three variables should be transfered from cfdApp
    ModelTypeIndex mModelType;

@@ -37,7 +37,7 @@
 #include "cfdSwitch.h"
 #include "cfdFILE.h"
 #include "cfdGrid2Surface.h"
-
+#include "VE_SceneGraph/cfdClone.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED
@@ -77,10 +77,12 @@ cfdModel::cfdModel( cfdDCS *worldDCS )
    // Will fix this later so that each model has a dcs
    //mModelDCS = new cfdDCS();
    _worldDCS = worldDCS;
+   mirrorNode = 0;
+   mirrorGroupNode = 0;
 
    this->animation = 0;
    this->activeDataSet = 0;
-
+   mirrorDataFlag = false;
 #ifdef _OSG
    _activeTextureDataSet = 0;
 #endif
@@ -174,6 +176,34 @@ cfdTempAnimation* cfdModel::GetAnimation()
 void cfdModel::CreateCfdDataSet( void )
 {
    mVTKDataSets.push_back( new cfdDataSet() );
+}
+
+/////////////////////////////////////////////////////////////
+void cfdModel::SetMirrorNode( cfdGroup* dataNode )
+{
+   if ( !mirrorNode )
+   {
+      mirrorNode = new cfdClone();
+      mirrorNode->CloneNode( GetActiveDataSet()->GetDCS() ); 
+      float rot[ 3 ];
+      rot[ 0 ] = 180.0f;
+      rot[ 1 ] = 0.0f;
+      rot[ 2 ] = 0.0f;
+      mirrorNode->SetRotationArray( rot );
+      this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
+   }
+   else
+   {
+      this->_worldDCS->RemoveChild( mirrorNode->GetClonedGraph() );
+      delete mirrorNode;     
+      mirrorNode = new cfdClone( GetActiveDataSet()->GetDCS() );
+      float rot[ 3 ];
+      rot[ 0 ] = 180.0f;
+      rot[ 1 ] = 0.0f;
+      rot[ 2 ] = 0.0f;
+      mirrorNode->SetRotationArray( rot );
+      this->_worldDCS->AddChild( mirrorNode->GetClonedGraph() );
+   }
 }
 
 ///////////////////////////////////////
@@ -271,6 +301,19 @@ cfdDCS* cfdModel::GetCfdDCS( )
 {
    return this->_worldDCS;
 }
+
+///////////////////////////////
+bool cfdModel::GetMirrorDataFlag( void )
+{
+   return mirrorDataFlag;
+}
+
+///////////////////////////////
+void cfdModel::SetMirrorDataFlag( bool input )
+{
+   mirrorDataFlag = input;
+}
+
 ///////////////////////////////
 void cfdModel::updateCurModel()
 {

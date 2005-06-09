@@ -40,6 +40,7 @@ class cfdModel;
 class cfdCommandArray;
 class cfdReadParam;
 class cfdScalarBarActor;
+class cfdGroup;
 
 #ifdef _OSG
 #ifdef VE_PATENTED

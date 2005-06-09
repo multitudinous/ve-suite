@@ -52,6 +52,8 @@
 #include "cfdTempAnimation.h"
 #include "cfdSwitch.h"
 #include "cfdPfSceneManagement.h"
+#include "cfdGroup.h"
+
 #ifdef _OSG
 #ifdef VE_PATENTED
 #include "cfdTextureDataSet.h"
@@ -507,6 +509,16 @@ void cfdModelHandler::PreFrameUpdate( void )
             tbased = false;
          }
       }       
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== MIRROR_VIS_DATA )
+   {
+std::cout << " help 1 "<< std::endl;
+      if ( _activeModel )
+      {
+         bool tempFlag = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+std::cout << " help 1 "<< tempFlag << std::endl;
+			_activeModel->SetMirrorDataFlag( tempFlag );
+      }
    }
 
    // Can't be an else if because may have to update if dataset has changed beforehand

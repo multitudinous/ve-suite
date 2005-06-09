@@ -151,7 +151,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, cfdDCS* worldDCS )
       while ( ! finished )
       {
          //assume all pfb files in this directory should be loaded
-         if ( strstr(fileData.cFileName, ".pfb")||strstr(fileData.cFileName, ".osg") )
+         if ( strstr(fileData.cFileName, ".pfb")||strstr(fileData.cFileName, ".ive") )
          {
             //char * fileName = new char[strlen(fileData.cFileName)+1];
             //strcpy( fileName, fileData.cFileName );
@@ -282,7 +282,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 #ifdef _PERFORMER
                         << this->pfb_count << ".pfb";
 #elif _OSG
-         << this->pfb_count << ".osg";
+         << this->pfb_count << ".ive";
 #endif
       std::string dirString = dirStringStream.str();
       pfb_filename = dirString.c_str();

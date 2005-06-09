@@ -56,6 +56,7 @@
 #include "cfdPlanes.h"
 #include "cfdDCS.h"
 #include "cfdGroup.h"
+#include "cfdSwitch.h"
 /*#include "cfdSequence.h"
 #include "cfdTempAnimation.h"
 */
@@ -796,8 +797,17 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             this->dataList[ i ]->ClearGeodes();
             vprDEBUG(vprDBG_ALL,2) << "|\tDone Creating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
+
+            if ( cfdModelHandler::instance()->GetActiveModel()->GetMirrorDataFlag() )
+            {
+               // we mirror the dataset in two places
+               // once here for data viz and once in modelhandler for geom
+               cfdGroup* temp = (cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
+               cfdModelHandler::instance()->GetActiveModel()->SetMirrorNode( temp );
+            }
          }
          
+
          // if we have selected a viz feature and it is complete the remove the text
          if ( !computeActorsAndGeodes && !alreadyRemoved )
          {

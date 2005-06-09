@@ -63,6 +63,7 @@ cfdObjects::cfdObjects( void )
 }
 
 cfdObjects::cfdObjects( const cfdObjects& src)
+:cfdGlobalBase(src)
 {
    this->objectType = src.objectType;
    this->pointSource = src.pointSource;

@@ -132,6 +132,7 @@ enum cfdGeodeEnum
    WRITE_POINTS_TO_FILE,
    READ_POINTS_FROM_FILE,
    MOVE_TO_SELECTED_LOCATION,
+   MIRROR_VIS_DATA,
    EXIT,
    //biv--added these for the navigation page
    GUI_NAV,

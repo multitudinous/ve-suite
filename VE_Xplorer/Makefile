@@ -75,23 +75,6 @@ ifeq ($(TAO_BUILD), TRUE)
                            $(VE_SUITE_HOME)/VE_CE \
 									$(VE_SUITE_HOME)/VE_Builder/Translator
 
-   #----------------------------------------------------------------------------
-   # Include macros and targets
-   #----------------------------------------------------------------------------
-
-#   include ${ACE_ROOT}/include/makeinclude/wrapper_macros.GNU
-#   include ${ACE_ROOT}/include/makeinclude/macros.GNU
-#   include ${TAO_ROOT}/rules.tao.GNU
-#   include ${ACE_ROOT}/include/makeinclude/rules.common.GNU
-#   include ${ACE_ROOT}/include/makeinclude/rules.nonested.GNU
-#   include ${ACE_ROOT}/include/makeinclude/rules.local.GNU
-#   include ${TAO_ROOT}/taoconfig.mk
-
-#   ACE_LIBS = -L${ACE_ROOT}/ace -lACE -lTAO_CosNaming -lTAO_Svc_Utils \
-               -lTAO_IORTable -lTAO_PortableServer -L${TAO_ROOT}/tao -lTAO \
-               -lTAO_BiDirGIOP
-#${LDFLAGS}
-#   ACE_INCLUDES = -I${TAO_ROOT}/orbsvcs
    include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
 
    EXTRA_INCLUDES+= \

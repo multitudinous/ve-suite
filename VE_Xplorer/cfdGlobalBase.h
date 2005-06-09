@@ -37,8 +37,10 @@ class cfdCommandArray;
 class cfdGlobalBase
 {
  public:
-   cfdGlobalBase ();
+   cfdGlobalBase();
    virtual ~cfdGlobalBase ();
+   //copy constructor
+   cfdGlobalBase( const cfdGlobalBase& ){;}
 
    // this abstract base class declares some pure virtual int functions to be
    // specified in concrete implementations
