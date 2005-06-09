@@ -1,8 +1,12 @@
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdClone.h"
+#ifdef _OSG
 #include <osg/MatrixTransform>
 #include <osg/CopyOp>
 //#include "VE_SceneGraph/cfdMaterial.h"
+#elif _PERFORMER
+#elif _OPENSG
+#endif
 
 ////////////////////
 cfdClone::cfdClone()
