@@ -519,8 +519,24 @@ void cfdExecutive::PreFrameUpdate( void )
    {
       //if ( !(ui_i->GetStatusString().empty()) )
       {
-         if ( !(ui_i->GetStatusString()).compare(0,26,"Network execution complete") )
+         // store the statusString in order to perform multiple operations on it...
+         std::string statusString = ui_i->GetStatusString();
+         vprDEBUG(vprDBG_ALL,2) << " statusString = " << statusString 
+                                << std::endl << vprDEBUG_FLUSH;
+
+         // record position of some key phrases...
+         int pos1 = statusString.find("Network execution complete");
+         int pos2 = statusString.find("Execution is done");
+         //std::cout << " pos1 = " << pos1 << std::endl;
+         //std::cout << " pos2 = " << pos2 << std::endl;
+         //std::cout << " 1 " << statusString.compare(0,26,"Network execution complete") << std::endl;
+         //std::cout << " 2 " << statusString.compare(14,17,"Execution is done") << std::endl;
+
+         // If either of the positions are valid positions, 
+         // then make results available to the graphical plugins...
+         if ( pos1 != std::string::npos || pos2 != std::string::npos )
          {
+            //std::cout << "************match**************" << std::endl;
             std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
             for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
             {  
