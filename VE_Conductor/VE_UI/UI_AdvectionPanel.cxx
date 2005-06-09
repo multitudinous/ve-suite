@@ -1,5 +1,3 @@
-#ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
 #include "cfdEnum.h"
 #include "UI_Tabs.h"
 #include "UI_AdvectionPanel.h"
@@ -376,5 +374,3 @@ void UI_AdvectionPanel::_onSlider(wxScrollEvent& event )
    ((UI_Tabs*)GetParent())->cId = ADVECTION_SHADER;
    ((UI_Tabs*)GetParent())->sendDataArrayToServer();
 }
-#endif
-#endif

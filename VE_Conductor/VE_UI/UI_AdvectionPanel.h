@@ -1,7 +1,5 @@
 #ifndef UI_ADVECTION_PANEL_H
 #define UI_ADVECTION_PANEL_H
-#ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
 #ifdef WIN32
 #include <winsock2.h>
 #endif
@@ -56,6 +54,4 @@ protected:
 
    DECLARE_EVENT_TABLE()
 };
-#endif //CFD_USE_SHADERS
-#endif //VE_PATENTED
 #endif //UI_ADVECTION_PANEL_H

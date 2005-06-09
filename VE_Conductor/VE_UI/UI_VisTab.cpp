@@ -19,11 +19,7 @@ BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_BUTTON      (CUSTOM_VIS_BUTTON,        UI_VisualizationTab::_onCustomVis)
   EVT_CHECKBOX    (CFD_VIS_OPTION,           UI_VisualizationTab::_onTextureBasedVisual)
   EVT_CHECKBOX    (MIRROR_CHECK_BOX,         UI_VisualizationTab::_onMirrorVisualization)
-#ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
   EVT_COMMAND_SCROLL(VIS_SLIDER,UI_VisualizationTab::_onSlider)
-#endif
-#endif
 END_EVENT_TABLE()
 
 /////////////////////////////////////////////////////////////
@@ -375,8 +371,6 @@ void UI_VisualizationTab::_onUpdate(wxCommandEvent& WXUNUSED(event))
 //////////////////////////////////////////////////////////
 void UI_VisualizationTab::_onSlider(wxScrollEvent& WXUNUSED(event))
 {
-#ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
    if ( ( _categoryRBox->GetSelection() == 3 ) && 
          ( _visOptionCheckBox->GetValue() == true ) )
    {
@@ -384,9 +378,6 @@ void UI_VisualizationTab::_onSlider(wxScrollEvent& WXUNUSED(event))
       ((UI_Tabs *)_parent)->cIso_value = _slider->GetValue();
       ((UI_Tabs *)_parent)->sendDataArrayToServer();
    }
-#endif
-#endif
-
 }
 
 //////////////////////////////////////////////////////////
@@ -496,11 +487,7 @@ void UI_VisualizationTab::createCommandId( void )
       }
       ((UI_Tabs *)_parent)->cPre_state = _nearestCBox->GetValue();
       ((UI_Tabs *)_parent)->cIso_value = _slider->GetValue();
-#ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
       ((UI_Tabs *)_parent)->DisableAdvectionPage();
-#endif
-#endif
    } 
    else if ( _categoryRBox->GetSelection() == 1 ) // Warped Contour 
    {
@@ -595,12 +582,7 @@ void UI_VisualizationTab::createCommandId( void )
       }
       ((UI_Tabs *)_parent)->cPre_state = _nearestCBox->GetValue();
       ((UI_Tabs *)_parent)->cIso_value = _slider->GetValue();
-      
-#ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
       ((UI_Tabs *)_parent)->EnableAdvectionPage();
-#endif
-#endif
    } 
    else if ( _categoryRBox->GetSelection() == 3 ) // Iso-Surface Selection 
    {
