@@ -433,6 +433,15 @@ void UI_Tabs::createTabPages()
    //Visualization page
    _visPage = new UI_VisualizationTab(this);  
    AddPage( _visPage, _T("Visualization"), true); 
+
+   //Navigation page
+   _navPage = new UI_NavigationTab(this);
+   AddPage( _navPage, _T("Navigation"), false );
+
+      //Vectors page
+   _vectorPage = new UI_VectorTab(this);
+   AddPage( _vectorPage, _T("Vectors/Contours"), false );
+
    
    //DataSets page
    //_datasetPage = new UI_DatasetTab(this);
@@ -482,14 +491,6 @@ void UI_Tabs::createTabPages()
    //Teacher page
    _teacherPage = new UI_TeacherTab(this);
    AddPage( _teacherPage, _T("Teacher"), false );
-
-   //Vectors page
-   _vectorPage = new UI_VectorTab(this);
-   AddPage( _vectorPage, _T("Vectors/Contours"), false );
-
-   //Navigation page
-   _navPage = new UI_NavigationTab(this);
-   AddPage( _navPage, _T("Navigation"), false );
   
    //Navigation page
    // This tab needs to be moved to the UI_VisTab
