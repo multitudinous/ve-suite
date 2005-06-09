@@ -246,6 +246,7 @@ void cfdVTKFileHandler::_getXMLPolyData()
    vtkXMLPolyDataReader* pdReader
 	   = vtkXMLPolyDataReader::New();   
    pdReader->SetFileName(_inFileName);
+   pdReader->Update();
    _dataSet = vtkPolyData::New();
    _dataSet->ShallowCopy(pdReader->GetOutput());
    pdReader->Delete();
