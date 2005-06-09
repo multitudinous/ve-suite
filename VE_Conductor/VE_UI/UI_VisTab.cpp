@@ -17,7 +17,8 @@ BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_BUTTON      (EXIT_BUTTON,              UI_VisualizationTab::_onExit)
   EVT_BUTTON      (CLEAR_BUTTON,             UI_VisualizationTab::_onClear)
   EVT_BUTTON      (CUSTOM_VIS_BUTTON,        UI_VisualizationTab::_onCustomVis)
-  EVT_CHECKBOX (CFD_VIS_OPTION,UI_VisualizationTab::_onTextureBasedVisual)
+  EVT_CHECKBOX    (CFD_VIS_OPTION,           UI_VisualizationTab::_onTextureBasedVisual)
+  EVT_CHECKBOX    (MIRROR_CHECK_BOX,         UI_VisualizationTab::_onMirrorVisualization)
 #ifdef VE_PATENTED
 #ifdef CFD_USE_SHADERS
   EVT_COMMAND_SCROLL(VIS_SLIDER,UI_VisualizationTab::_onSlider)
@@ -213,6 +214,10 @@ void UI_VisualizationTab::_buildPage()
    _scalarBarCBox->SetValue(true);
    forthRow->Add(_scalarBarCBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
 
+   mirrorOptionCheckBox = new wxCheckBox(this, MIRROR_CHECK_BOX, wxT("Mirror Viz"));
+   mirrorOptionCheckBox->SetValue(false);
+   forthRow->Add(mirrorOptionCheckBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
+
    wxBoxSizer* fifthRow = new wxBoxSizer(wxHORIZONTAL);
 
    _recordButton = new wxButton(this, RECORD_BUTTON, wxT("Record Scene"));
@@ -253,6 +258,14 @@ void UI_VisualizationTab::_buildPage()
 void UI_VisualizationTab::_onCategory(wxCommandEvent& WXUNUSED(event))
 {
   //wxMessageBox(_categoryRBox->GetStringSelection(), _T("Category RadioBox!"));
+}
+
+void UI_VisualizationTab::_onMirrorVisualization(wxCommandEvent& WXUNUSED(event) )
+{
+   ((UI_Tabs *)_parent)->cId = MIRROR_VIS_DATA;
+   ((UI_Tabs *)_parent)->cSc = (int)mirrorOptionCheckBox->GetValue();
+std::cout << ((UI_Tabs *)_parent)->cSc << " : " << mirrorOptionCheckBox->GetValue() << std::endl;
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 
 /////////////////////////////////////////////////////////

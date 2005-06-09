@@ -26,7 +26,8 @@ enum VIS_TAB_IDS
    EXIT_BUTTON,
    CUSTOM_VIS_BUTTON,
    TRANSIENT_CHECK_BOX,
-   CFD_VIS_OPTION
+   CFD_VIS_OPTION,
+   MIRROR_CHECK_BOX
 };
 
 class UI_VisualizationTab : public wxScrolledWindow
@@ -34,7 +35,7 @@ class UI_VisualizationTab : public wxScrolledWindow
    public:
 
       UI_VisualizationTab(wxNotebook* tControl);
-      ~UI_VisualizationTab(){};
+      ~UI_VisualizationTab(){;}
 
       void _onExit(wxCommandEvent& event);
 
@@ -54,6 +55,7 @@ class UI_VisualizationTab : public wxScrolledWindow
       wxCheckBox* _scalarBarCBox;
       wxCheckBox* _transientCheckBox;
       wxCheckBox* _visOptionCheckBox;
+      wxCheckBox* mirrorOptionCheckBox;
       wxButton* _recordButton;
       wxButton* _clearButton;
       wxButton* _exitButton;
@@ -78,6 +80,7 @@ class UI_VisualizationTab : public wxScrolledWindow
       void _onClear(wxCommandEvent& event);
       void _onCustomVis(wxCommandEvent& event);
       void _onTextureBasedVisual(wxCommandEvent& event);
+      void _onMirrorVisualization(wxCommandEvent& event);
   
    DECLARE_EVENT_TABLE()
 };

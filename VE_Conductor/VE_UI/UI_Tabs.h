@@ -15,6 +15,7 @@
 
 
 #include <string>
+#include <vector>
 
 class UI_NavigationTab;
 class UI_StreamTab;
@@ -163,6 +164,7 @@ public:
    VjObs::obj_pd_var clientInfoArray;
    void sendDataArrayToServer( void );
 
+   std::vector< int* > geomFileSettings;
 
   // DECLARE_EVENT_TABLE();
 };

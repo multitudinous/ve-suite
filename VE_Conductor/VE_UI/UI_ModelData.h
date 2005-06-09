@@ -39,6 +39,7 @@
 #endif
 #include <wx/wx.h>
 
+#include <vector>
 
 class UI_ModelData
 {
@@ -60,10 +61,12 @@ class UI_ModelData
       VjObs::obj_p*     GetNumberOfScalarsPerDataSet( int );
       VjObs::obj_p*     GetNumberOfVectorsPerDataSet( int );
       VjObs::Datasets*  GetDataSets( int );
+      std::vector< int* > GetGeometryFileSettings( unsigned int );
       
    private:
       VjObs::Models_var _models;
       VjObs_var server_ref;
+      std::vector< std::vector<int> > geomControl;
 };
 
 #endif

@@ -70,6 +70,7 @@ void UI_Tabs::getData()
    std::cout << "geo number: " << num_geo << std::endl;
 
    geoNameArray = VjObs::scalar_p( *_modelData->GetGeomFilenames(_activeModIndex) );
+   geomFileSettings = _modelData->GetGeometryFileSettings( _activeModIndex );
 
    // Get Number of Sound Files
    if ( !CORBA::is_nil( server_ref ) )

@@ -80,7 +80,12 @@ void UI_GeometryTab::_buildPage()
    // Used to initialize all the checkboxes on
    for(int j = 0; j < numGeoms; j++)
    {
-      _geometryCBox->Check( j );
+      if ( ((UI_Tabs *)_parent)->num_geo == 0 )
+      {
+         _geometryCBox->Check( j, true );
+      }
+      else
+         _geometryCBox->Check( j, (bool)(*((UI_Tabs*)_parent)->geomFileSettings.at( j )) );
    }
  
    // slider info
@@ -195,7 +200,12 @@ void UI_GeometryTab::_onUpdate( wxCommandEvent& WXUNUSED(event) )
    for(int i = 0; i < ((UI_Tabs *)_parent)->num_geo; i++)
    {
       if ( _geometryCBox->IsChecked( i ) )
+      {
          ((UI_Tabs *)_parent)->cGeo_state += (int)pow( 2.0f, (float)i );
+         (*((UI_Tabs*)_parent)->geomFileSettings.at( i )) = 1;
+      }
+      else
+         (*((UI_Tabs*)_parent)->geomFileSettings.at( i )) = 0;
    }
    ((UI_Tabs *)_parent)->cId  = UPDATE_GEOMETRY;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();

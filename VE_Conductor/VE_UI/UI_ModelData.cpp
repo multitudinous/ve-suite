@@ -47,6 +47,18 @@ UI_ModelData::UI_ModelData( VjObs_ptr ref )
       cerr << " ERROR : App won't run " << endl;
       return;
    }
+
+   for ( unsigned int i = 0; i < _models->length(); ++i )
+   {
+      std::vector< int > temp;
+      geomControl.push_back( temp );
+      CORBA::ULong j = i;
+      CORBA::ULong k = _models[ j ].geometrynames.length();
+      for ( unsigned int l = 0; l < k; ++l )
+      {
+        geomControl.back().push_back( 1 );
+      }
+   }
 }
 
 UI_ModelData::~UI_ModelData( void )
@@ -127,3 +139,15 @@ VjObs::Datasets*  UI_ModelData::GetDataSets( int input )
    CORBA::ULong i = input;
    return &(_models[ i ].dataVector);
 }
+
+std::vector< int* > UI_ModelData::GetGeometryFileSettings( unsigned int input )
+{
+   std::vector< int* > temp;
+   for ( unsigned int i = 0; i < geomControl[ input ].size(); ++i )
+   {
+      //int test = (int)geomControl[ input ].at( i );
+      temp.push_back( &geomControl[ input ].at( i ) );
+   }
+   return temp; 
+}
+
