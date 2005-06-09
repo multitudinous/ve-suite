@@ -158,7 +158,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)/VE_Conductor/Framework&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include\&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Utilities\gui&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXMSW__;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;NOPCH;_TAO"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXMSW__;__WXDEBUG__;WXUSINGDLL;WXUSING_PLUGIN_DLL;VE_PATENTED;CFD_USE_SHADERS;NOPCH;_TAO"
 				IgnoreStandardIncludePath="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -900,6 +900,9 @@
 			</File>
 			<File
 				RelativePath=".\TextResultDialog.cpp">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_AdvectionPanel.cxx">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_DataSetPanel.cpp">

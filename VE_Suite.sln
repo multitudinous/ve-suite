@@ -17,11 +17,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Xplorer", "VE_Xplorer\VE
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VEOpen", "VEOpen\VESOpen\VESOpen.vcproj", "{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}"
 	ProjectSection(ProjectDependencies) = postProject
+		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F} = {BABE88BF-50EE-4E66-84BB-7B801E9FD01F}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "GUIPluginLib", "VE_Conductor\GUIPluginLib.vcproj", "{3BDA598D-7DFD-4926-82E9-68528528A715}"
 	ProjectSection(ProjectDependencies) = postProject
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F} = {BABE88BF-50EE-4E66-84BB-7B801E9FD01F}
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "VE_Conductor", "VE_Conductor\VE_Conductor.vcproj", "{ADE7D23A-90C7-4501-8FE1-7C1E4F73701D}"
