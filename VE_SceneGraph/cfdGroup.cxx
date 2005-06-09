@@ -48,18 +48,13 @@ cfdGroup::cfdGroup( const cfdGroup& input )
 :cfdNode(input)
 {
    int numChildren = input.childNodes.size();
-
-   this->childNodes = input.childNodes;
-   for(int i = 0; i < numChildren; i++)
-   {
-      this->childNodes.push_back(input.childNodes[i]);
-   }
+   if ( numChildren > 0 )
+      return;
 
 #ifdef _PERFORMER
    this->_group = input._group;
 #elif _OSG
    _group = new osg::Group(*input._group);
-   //_group = input._group;
 #elif _OPENSG
 #endif
    SetCFDNodeType(CFD_GROUP);

@@ -11,9 +11,9 @@ public:
    virtual ~cfdClone();
 
    void CloneNode(cfdNode* original);
-   void SetTranslation(float* translation);
-   void SetRotation(float* rotation);
-   void SetScale(float* scale);
+   void SetTranslationArray(float* translation);
+   void SetRotationArray(float* rotation);
+   void SetScaleArray(float* scale);
    /*void SetMaterial(cfdMaterial* mat);
      void SetDiffuse(float* color);    
      void SetAmbient(float* color);    

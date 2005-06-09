@@ -1,5 +1,5 @@
 #include "VE_SceneGraph/cfdSwitch.h"
-#include  <iostream>
+#include <iostream>
 #include <algorithm>
 #include <string>
 #ifdef _PERFORMER

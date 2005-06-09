@@ -61,7 +61,7 @@ class cfdNode: public cfdSceneNode
       cfdNode& operator= ( const cfdNode& );
 
       //equality operator
-      bool operator== ( const cfdNode& ) const;
+      //bool operator== ( const cfdNode& ) const;
 #ifdef _PERFORMER
       virtual pfNode* GetRawNode( void );
 #elif _OSG

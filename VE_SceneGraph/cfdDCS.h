@@ -94,7 +94,8 @@ class cfdDCS: public cfdGroup
    {
       public:
          cfdUpdateDCSCallback();
-         virtual ~cfdUpdateDCSCallback(){}
+         virtual ~cfdUpdateDCSCallback(){;}
+         cfdUpdateDCSCallback( const cfdUpdateDCSCallback& );
          void setRotationDegreeAngles(float h,float p,float r);
          void setTranslation(float* trans);
          void setScaleValues(float* scale);

@@ -16,8 +16,7 @@ cfdClone::cfdClone()
 /////////////////////////////////////
 cfdClone::cfdClone(cfdNode* original)
 {
-   _cloneTransform = new cfdDCS();
-   _originalNode = original->GetRawNode();
+   CloneNode( original );
 }
 /////////////////////
 cfdClone::~cfdClone()
@@ -34,8 +33,10 @@ void cfdClone::CloneNode(cfdNode* original)
       _cloneTransform = new cfdDCS();
    }
 #ifdef _OSG
+   _originalNode = original->GetRawNode();
    _instanceNode = dynamic_cast<osg::Node*>(_originalNode->clone(osg::CopyOp::SHALLOW_COPY));
-   if(_instanceNode.valid()){
+   if(_instanceNode.valid())
+   {
       unsigned int nChildren = _cloneTransform->GetNumChildren();
       if(nChildren){
          //should only be one child
@@ -48,21 +49,21 @@ void cfdClone::CloneNode(cfdNode* original)
 #endif
 }
 /////////////////////////////////////////////////
-void cfdClone::SetTranslation(float* translation)
+void cfdClone::SetTranslationArray(float* translation)
 {
    if(_cloneTransform){
       _cloneTransform->SetTranslationArray(translation);
    }
 }
 /////////////////////////////////////////////////
-void cfdClone::SetRotation(float* rotation)
+void cfdClone::SetRotationArray(float* rotation)
 {
    if(_cloneTransform){
       _cloneTransform->SetRotationArray(rotation);
    }
 }
 /////////////////////////////////////////////////
-void cfdClone::SetScale(float* scale)
+void cfdClone::SetScaleArray(float* scale)
 {
    if(_cloneTransform){
       _cloneTransform->SetScaleArray(scale);

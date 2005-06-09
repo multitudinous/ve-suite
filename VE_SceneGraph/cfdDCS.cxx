@@ -32,7 +32,7 @@
 #include "VE_SceneGraph/cfdDCS.h"
 
 #include <iostream>
-#include <cstdlib>
+//#include <cstdlib>
 
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
@@ -115,15 +115,13 @@ cfdDCS::cfdDCS( const cfdDCS& input )
       this->_scale[ i ] = input._scale[ i ];
    }
    
-   this->childNodes = input.childNodes;
    this->_vjMatrix = input._vjMatrix;
    
 #ifdef _PERFORMER
    _dcs = new pfDCS(*input._dcs);
 #elif _OSG 
    this->_dcs = new osg::MatrixTransform(*input._dcs);
-    //this->_dcs = input._dcs;
-  _udcb = input._udcb;
+  _udcb = new cfdUpdateDCSCallback( (*input._udcb) );
 #elif _OPENSG
 #endif
   
@@ -143,13 +141,13 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
          this->_scale[ i ] = input._scale[ i ];
       }
    
-      for ( unsigned int i = 0; i < childNodes.size(); i++ )
+      /*for ( unsigned int i = 0; i < childNodes.size(); i++ )
       {
          delete childNodes.at( i );
       }
       childNodes.clear();
    
-      this->childNodes = input.childNodes;
+      this->childNodes = input.childNodes;*/
       this->_vjMatrix = input._vjMatrix;
 #ifdef _PERFORMER
       pfDelete( this->_dcs );
@@ -517,6 +515,19 @@ cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback()
    _h = 0;
    _p = 0;
    _r = 0;
+}
+//////////////////////////////////////////////////////////////////
+cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback( const cfdUpdateDCSCallback& input )
+{
+   _scale[0] = input._scale[0];
+   _scale[1] = input._scale[1];
+   _scale[2] = input._scale[2];
+   _trans[0] = input._trans[0];
+   _trans[1] = input._trans[1];
+   _trans[2] = input._trans[2];
+   _h = input._h;
+   _p = input._p;
+   _r = input._r;
 }
 //////////////////////////////////////////////////////////////////
 void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,

@@ -131,10 +131,11 @@ cfdNode& cfdNode::operator=( const cfdNode& input )
 }
 
 ////////////////////////////////////////////////////
-bool cfdNode::operator== ( const cfdNode& node1 ) const
+// Code that can be used at a later date
+// there are issues to be reolved on wether == should be defined
+// as below 
+/*bool cfdNode::operator== ( const cfdNode& node1 ) const
 {
-std::cout << _nt << " : " << node1._nt << std::endl;
-std::cout << guid << " : " << node1.guid << std::endl;
    if ( guid == node1.guid )
    {
       return true;
@@ -143,7 +144,7 @@ std::cout << guid << " : " << node1.guid << std::endl;
    {
       return false;
    }
-}
+}*/
 
 /////////////////////////
 cfdNode::~cfdNode( void )
