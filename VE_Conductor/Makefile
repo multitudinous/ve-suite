@@ -57,6 +57,7 @@ SRCS=\
    UI_ViewLocTab.cpp \
    UI_ModSelPanel.cpp \
    UI_ModelData.cpp \
+   UI_AdvectionPanel.cpp \
    spinctld.cpp
 
 # Specify the OS-dependent directory name for object files and depends
