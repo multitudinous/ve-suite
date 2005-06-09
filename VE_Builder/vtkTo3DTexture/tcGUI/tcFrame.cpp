@@ -329,13 +329,13 @@ void TCFrame::_onResolutionCallback(wxCommandEvent& event)
 
    switch (id){
       case XRES_BOX:
-         _resolution[0] = (int)pow(2,value);
+         _resolution[0] = (int)std::pow(2.,value);
          break;
       case YRES_BOX:
-         _resolution[1] = (int)pow(2,value);
+         _resolution[1] = (int)std::pow(2.,value);
          break;
       case ZRES_BOX:
-         _resolution[2] = (int)pow(2,value);
+         _resolution[2] = (int)std::pow(2.,value);
          break;
       default:
          break;

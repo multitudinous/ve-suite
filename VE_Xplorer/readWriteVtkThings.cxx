@@ -84,7 +84,15 @@ void printBounds( double bounds[6] )
 vtkDataSet * readVtkThing( char * vtkFilename, int printFlag )
 {
    cfdVTKFileHandler fileReader;
-   return fileReader.GetDataSetFromFile(vtkFilename);
+   vtkDataSet* temp = fileReader.GetDataSetFromFile(vtkFilename);
+   if ( printFlag )
+   {
+      double bounds[6];
+      temp->GetBounds( bounds );
+      printBounds( bounds );
+      printWhatItIs( temp );
+   }
+   return temp;
 }
 
 bool writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag )

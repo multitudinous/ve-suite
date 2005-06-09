@@ -509,41 +509,33 @@ void cfdExecutive::PreFrameUpdate( void )
    vprDEBUG(vprDBG_ALL,3) << " cfdExecutive::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
 
-   if ( !CORBA::is_nil( this->_exec ) && ui_i->GetNetworkFlag() )
-   {
-      // Get Network and parse it
-      this->GetEverything();
-   }
-
    if ( !CORBA::is_nil( this->_exec ) )
    {
-      //if ( !(ui_i->GetStatusString().empty()) )
+      if ( ui_i->GetNetworkFlag() )
       {
-         // store the statusString in order to perform multiple operations on it...
-         std::string statusString = ui_i->GetStatusString();
-         vprDEBUG(vprDBG_ALL,2) << " statusString = " << statusString 
-                                << std::endl << vprDEBUG_FLUSH;
+         // Get Network and parse it
+         this->GetEverything();
+      }
 
-         // record position of some key phrases...
-         int pos1 = statusString.find("Network execution complete");
-         int pos2 = statusString.find("Execution is done");
-         //std::cout << " pos1 = " << pos1 << std::endl;
-         //std::cout << " pos2 = " << pos2 << std::endl;
-         //std::cout << " 1 " << statusString.compare(0,26,"Network execution complete") << std::endl;
-         //std::cout << " 2 " << statusString.compare(14,17,"Execution is done") << std::endl;
+      // store the statusString in order to perform multiple operations on it...
+      std::string statusString = ui_i->GetStatusString();
+      vprDEBUG(vprDBG_ALL,2) << " statusString = " << statusString 
+                             << std::endl << vprDEBUG_FLUSH;
 
-         // If either of the positions are valid positions, 
-         // then make results available to the graphical plugins...
-         if ( pos1 != std::string::npos || pos2 != std::string::npos )
-         {
-            //std::cout << "************match**************" << std::endl;
-            std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-            for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
-            {  
-               int dummyVar = 0;
-               _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
-               _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
-            }
+      // record position of some key phrases...
+      int pos1 = statusString.find("Network execution complete");
+      int pos2 = statusString.find("Execution is done");
+
+      // If either of the positions are valid positions, 
+      // then make results available to the graphical plugins...
+      if ( pos1 != std::string::npos || pos2 != std::string::npos )
+      {
+         std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+         for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
+         {  
+            int dummyVar = 0;
+            _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
+            _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
          }
       }
 
