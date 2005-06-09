@@ -519,7 +519,7 @@ void cfdExecutive::PreFrameUpdate( void )
 
       // store the statusString in order to perform multiple operations on it...
       std::string statusString = ui_i->GetStatusString();
-      vprDEBUG(vprDBG_ALL,2) << " statusString = " << statusString 
+      vprDEBUG(vprDBG_ALL,3) << "cfdExecutive::PreFrameUpdate statusString = " << statusString 
                              << std::endl << vprDEBUG_FLUSH;
 
       // record position of some key phrases...
