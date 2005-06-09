@@ -352,7 +352,7 @@
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\msw&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)&quot;"
 				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_WINDOWS;_STLP_USE_OWN_NAMESPACE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -564,6 +564,9 @@
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdAnimatedStreamlineCone.cxx">
+			</File>
+			<File
+				RelativePath="..\VE_SceneGraph\cfdClone.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\\VE_Xplorer\cfdCommandArray.cxx">
