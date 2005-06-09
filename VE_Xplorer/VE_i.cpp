@@ -52,15 +52,15 @@ Body_UI_i::~Body_UI_i (void)
 std::string Body_UI_i::GetNetworkString( void )
 {
    vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
+   std::string temp;
    if ( !networkStringBuffer.empty() )
    {
       std::vector< std::string >::iterator iter;
       iter = networkStringBuffer.begin();
-      std::string temp( (*iter) );
+      temp = (*iter);
       networkStringBuffer.erase( iter );
-      return temp;
    }
-   return 0;
+   return temp;
 }
 
 // Complimentary function to the above function
@@ -68,19 +68,6 @@ void Body_UI_i::SetNetworkString( char* temp )
 {
    vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
    networkStringBuffer.push_back( std::string( temp ) );
-}
-
-bool Body_UI_i::GetCalcFlag( void ) 
-{ 
-   vpr::Guard<vpr::Mutex> val_guard(stringBufferLock);
-   if ( !networkStringBuffer.empty() )
-   {
-      return true;
-   }
-   else
-   {
-      return false;
-   }
 }
 
 std::string Body_UI_i::GetStatusString( void )

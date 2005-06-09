@@ -70,9 +70,6 @@ class  Body_UI_i : public virtual POA_Body::UI
       vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
       void SetNetworkString( char* );
 
-   public:
-      bool GetCalcFlag( void );
-
 virtual void UpdateNetwork (
     const char * network
     ACE_ENV_ARG_DECL

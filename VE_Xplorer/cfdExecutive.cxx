@@ -509,7 +509,7 @@ void cfdExecutive::PreFrameUpdate( void )
    vprDEBUG(vprDBG_ALL,3) << " cfdExecutive::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
 
-   if ( !CORBA::is_nil( this->_exec ) && ui_i->GetCalcFlag() )
+   if ( !CORBA::is_nil( this->_exec ) && !(ui_i->GetNetworkString().empty()) )
    {
       // Get Network and parse it
       this->GetEverything();
@@ -517,14 +517,17 @@ void cfdExecutive::PreFrameUpdate( void )
 
    if ( !CORBA::is_nil( this->_exec ) )
    {
-      if ( !(ui_i->GetStatusString()).compare(0,26,"Network execution complete") )
+      if ( !(ui_i->GetStatusString().empty()) )
       {
-         std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
-         for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
-         {  
-            int dummyVar = 0;
-            _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
-            _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
+         if ( !(ui_i->GetStatusString()).compare(0,26,"Network execution complete") )
+         {
+            std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
+            for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
+            {  
+               int dummyVar = 0;
+               _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
+               _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
+            }
          }
       }
 
