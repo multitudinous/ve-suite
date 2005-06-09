@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdGeode.h"
+#include "VE_SceneGraph/cfdGeode.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGeode.h>

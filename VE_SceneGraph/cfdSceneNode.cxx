@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdSceneNode.h"
+#include "VE_SceneGraph/cfdSceneNode.h"
 #include <iostream>
 #include <vpr/Util/Debug.h>
 #ifdef _PERFORMER

@@ -140,6 +140,7 @@ SRCS=\
    cfdContours.cxx \
    cfdCursor.cxx \
    cfdCuttingPlane.cxx \
+   cfdClone.cxx \
    cfdDCS.cxx \
    cfdDataSet.cxx \
    cfdDigitalAnalogGauge.cxx \
@@ -259,7 +260,7 @@ ifeq ($(WEB_BUILD), TRUE)
    include $(VE_SUITE_HOME)/VE_Installer/dzr.corona.mk
    EXTRA_CXXFLAGS+= -D_WEB_INTERFACE
 endif
-
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_SceneGraph
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_SceneGraph
 

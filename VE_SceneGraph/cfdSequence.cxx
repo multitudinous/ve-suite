@@ -30,10 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdSequence.h"
+#include "VE_SceneGraph/cfdSequence.h"
 #include <iostream>
-#include "cfdNode.h"
-#include "cfdSwitch.h"
+#include "VE_SceneGraph/cfdNode.h"
+#include "VE_SceneGraph/cfdSwitch.h"
 #include <vpr/Util/Debug.h>
 
 #ifdef _PERFORMER

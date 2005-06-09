@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdDCS.h"
 
 #include <iostream>
 #include <cstdlib>

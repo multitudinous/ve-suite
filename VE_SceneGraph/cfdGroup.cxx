@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdGroup.h"
 #include <iostream>
 #include <algorithm>
 #include <string>

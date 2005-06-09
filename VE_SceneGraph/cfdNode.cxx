@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdNode.h"
-#include "cfdGroup.h"
-#include "cfdSwitch.h"
-#include "cfdGeode.h"
+#include "VE_SceneGraph/cfdNode.h"
+#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdSwitch.h"
+#include "VE_SceneGraph/cfdGeode.h"
 #include <iostream>
 #include <vpr/Util/Debug.h>
 //#include <cstdlib>
