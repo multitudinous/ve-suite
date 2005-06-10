@@ -27,49 +27,20 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
 
    wxGridSizer* topSizer = new wxGridSizer(11,4);
 
-////////////////////////////////////////////////////////////////////////////////
-   //*******Loading up the bitmaps for navigation buttons
-   char directory[1024];
-   //char fileName[1024];
-   char* vesuitehome = 0;
-   _image1 = 0;
-   _image2 = 0;
-   _image3 = 0;
-   _image4 = 0;
-   _image5 = 0;
-   _image6 = 0;
-   _image7 = 0;
-   _image8 = 0;
-   _image9 = 0;
-   _image10 = 0;
-   _image11 = 0;
-   _image12 = 0;
-   _imagecoord = 0;
-   vesuitehome = getenv("VE_SUITE_HOME");
-   if(vesuitehome){
-      strcpy(directory,vesuitehome);
-      strcat(directory,"/VE_Conductor/Framework/Nav_Bitmaps/");
-      _image1 = _createButtonImage(directory,"x_left.BMP");
-      _image2 = _createButtonImage(directory,"x_right.BMP");
-      _image3 = _createButtonImage(directory,"z_up.BMP");
-      _image4 = _createButtonImage(directory,"z_down.BMP");
-      _image5 = _createButtonImage(directory,"y_up.BMP");
-      _image6 = _createButtonImage(directory,"y_down.BMP");
-      _image7 = _createButtonImage(directory,"pitch_down.BMP");
-      _image8 = _createButtonImage(directory,"pitch_up.BMP");
-      _image9 = _createButtonImage(directory,"ccw_roll.BMP");
-      _image10 = _createButtonImage(directory,"cw_roll.BMP");
-      _image11 = _createButtonImage(directory,"yaw_ccw.BMP");
-      _image12 = _createButtonImage(directory,"yaw_cw.BMP");
-      _imagecoord = _createButtonImage(directory,"coordinates.BMP");
-   }
-   else
-   {
-      std::cerr << "Error: VE_SUITE_HOME is not defined, can't find Nav_Bitmaps"
-                << std::endl;
-   }
-
-//************Done loading up the bitmaps
+   //************Loading up the bitmaps
+   _image1 = new wxBitmap(x_left_xpm, wxBITMAP_TYPE_XPM);
+   _image2 = new wxBitmap(x_right_xpm, wxBITMAP_TYPE_XPM);
+   _image3 = new wxBitmap(z_up_xpm, wxBITMAP_TYPE_XPM);
+   _image4 = new wxBitmap(z_down_xpm, wxBITMAP_TYPE_XPM);
+   _image5 = new wxBitmap(y_up_xpm, wxBITMAP_TYPE_XPM);
+   _image6 = new wxBitmap(y_down_xpm, wxBITMAP_TYPE_XPM);
+   _image7 = new wxBitmap(pitch_down_xpm, wxBITMAP_TYPE_XPM);
+   _image8 = new wxBitmap(pitch_up_xpm, wxBITMAP_TYPE_XPM);
+   _image9 = new wxBitmap(ccw_roll_xpm, wxBITMAP_TYPE_XPM);
+   _image10 = new wxBitmap(cw_roll_xpm, wxBITMAP_TYPE_XPM);
+   _image11 = new wxBitmap(yaw_ccw_xpm, wxBITMAP_TYPE_XPM);
+   _image12 = new wxBitmap(yaw_cw_xpm, wxBITMAP_TYPE_XPM);
+   _imagecoord = new wxBitmap(coordinates_xpm, wxBITMAP_TYPE_XPM);
 
    //Assign the bitmaps to the respective buttons
    _leftButton = new UI_NavButton(this, NAV_LEFT, wxBitmap(*_image1));
@@ -189,7 +160,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    navCol->Add(topSizer,5,wxALIGN_CENTER_HORIZONTAL|wxALL);
 
    wxStaticBitmap* coordpic = new wxStaticBitmap(this, -1,wxBitmap(*_imagecoord),wxDefaultPosition,
-                                 wxSize(100,102),wxMINIMIZE_BOX|wxTHICK_FRAME); 
+                                 wxSize(110,112),wxMINIMIZE_BOX|wxTHICK_FRAME); 
    wxGridSizer* picSizer = new wxGridSizer(1,1);
    picSizer->Add(coordpic,1,wxALIGN_CENTER_HORIZONTAL);
 
@@ -233,24 +204,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
 
    SetSizer(buttonStaticBoxSizer);
 }
-/////////////////////////////////////////////////////////////////////
-wxBitmap* UI_NavigateScroll::_createButtonImage(char* directory,
-                                             char* fileName,
-                                             wxBitmapType type)
-{
-   char pathAndFileName[1024];
-   strcpy(pathAndFileName,directory);
-   strcat(pathAndFileName,fileName);
-   wxBitmap* image = new wxBitmap();
-   if(image->LoadFile(pathAndFileName,type))
-   {
-      return image;
-   }
-   delete image;
-   image = 0;
 
-   return 0;
-}
 ///////////////////////////////////////
 UI_NavigateScroll::~UI_NavigateScroll()
 {

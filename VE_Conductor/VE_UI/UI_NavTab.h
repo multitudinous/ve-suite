@@ -7,6 +7,19 @@
 
 #include <wx/wx.h>
 #include <wx/image.h>
+#include "Nav_Bitmaps/x_left.XPM"
+#include "Nav_Bitmaps/x_right.XPM"
+#include "Nav_Bitmaps/z_up.XPM"
+#include "Nav_Bitmaps/z_down.XPM"
+#include "Nav_Bitmaps/y_up.XPM"
+#include "Nav_Bitmaps/y_down.XPM"
+#include "Nav_Bitmaps/pitch_down.XPM"
+#include "Nav_Bitmaps/pitch_up.XPM"
+#include "Nav_Bitmaps/ccw_roll.XPM"
+#include "Nav_Bitmaps/cw_roll.XPM"
+#include "Nav_Bitmaps/yaw_ccw.XPM"
+#include "Nav_Bitmaps/yaw_cw.XPM"
+#include "Nav_Bitmaps/coordinates.XPM"
 
 enum NAV_TAB_IDS 
 {
@@ -76,9 +89,7 @@ protected:
    wxBitmap* _image11;
    wxBitmap* _image12;
    wxBitmap* _imagecoord;
-   wxBitmap* _createButtonImage(char* directory,
-                    char* fileName,
-                    wxBitmapType type = wxBITMAP_TYPE_BMP);
+
    DECLARE_EVENT_TABLE()
 };
 
