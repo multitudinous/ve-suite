@@ -352,7 +352,7 @@ void UI_NavigationTab::onMouse(wxMouseEvent& mouse)
 ////////////////////////////////////////////
 UI_NavButton::UI_NavButton(wxWindow* parent,
 wxWindowID id, const wxBitmap& bitmap)
-:wxBitmapButton(parent,id,bitmap,wxDefaultPosition,wxSize(35,40))
+:wxBitmapButton(parent,id,bitmap,wxDefaultPosition,wxSize(35,40),wxBU_EXACTFIT)
 {
   _buttonPushed = 0; 
 }
