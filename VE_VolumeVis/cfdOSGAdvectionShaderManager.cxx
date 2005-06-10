@@ -246,9 +246,9 @@ void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
 
    float period = 1.0;
    float delta[3];
-   delta[0] = 3.0/_fieldSize[0];
-   delta[1] = 3.0/_fieldSize[1];
-   delta[2] = 3.0/_fieldSize[2];
+   delta[0] = 1.0/_fieldSize[0];
+   delta[1] = 1.0/_fieldSize[1];
+   delta[2] = 1.0/_fieldSize[2];
 
    float dyeScale[3] = {1,1,1};
    float dyeTrans[3] = {.05,.41,.449};

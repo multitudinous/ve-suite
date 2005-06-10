@@ -10,7 +10,6 @@ namespace osg{
 #include <vector>
 class cfdTextureManager;
 class cfdUpdateTextureCallback;
-//#ifdef CFD_USE_SHADERS
 #include "cfdOSGShaderManager.h"
 #include "cfdUpdateableOSGTexture1d.h"
 
@@ -53,7 +52,6 @@ protected:
    cfdTextureManager* _tm;
    cfdUpdateTextureCallback* _utCbk;
 };
-//#endif// _CFD_USE_SHADERS
 #endif//_OSG
 #endif
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H

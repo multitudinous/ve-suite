@@ -15,6 +15,7 @@
 
 #include "cfdTextureMatrixCallback.h"
 #include "cfdVolumeCenterCallback.h"
+#include "cfdVolumeBillboard.h"
 #include <osg/TexMat>
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
@@ -54,7 +55,7 @@ cfdVolumeVisualization::cfdVolumeVisualization()
    _traverseDirection = FORWARD;
    _stateSet  = 0;
    _texture  = 0;
-   _nSlices = 100;
+   _nSlices = 200;
    _alpha = 0.5;
    _tUnit = 0;
    _verbose = 0;
@@ -285,14 +286,9 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
       _texture->setTextureSize(_tm->fieldResolution()[0],
                      _tm->fieldResolution()[1],
                      _tm->fieldResolution()[2]);
-//#ifdef CFD_USE_SHADERS
        _texture->setInternalFormat(GL_ALPHA);
-/*#else
-      _texture->setInternalFormat(GL_RGBA);
-#endif*/     
+      //_texture->setInternalFormat(GL_RGBA);
       _texture->setImage(_image.get());
-      //_texture->setBorderColor(osg::Vec4(0,0,0,0));
-      //_texture->setBorderWidth(2);
    }
    SetBoundingBox(_tm->getBoundingBox());
    if(_utCbk){
@@ -302,7 +298,7 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
 ///////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetNumberofSlices(int nSlices)
 {
-   _nSlices = nSlices*2;
+   _nSlices = nSlices*3;
 }
 ///////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetSliceAlpha(float alpha)
@@ -544,11 +540,8 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 
          if(!_utCbk){
             _utCbk =  new cfdUpdateTextureCallback();
-//#ifdef CFD_USE_SHADERS
             _utCbk->SetIsLuminance(true);
-/*#else
-            _utCbk->SetIsLuminance(false);
-#endif*/
+            //_utCbk->SetIsLuminance(false);
             _utCbk->SetTextureManager(_tm);
             _utCbk->SetDelayTime(0.1);
          
@@ -638,17 +631,13 @@ void cfdVolumeVisualization::_buildSlices()
 
     geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,ycoords->size()));
     geom->setUseDisplayList(false);
-    _billboard = new osg::Billboard;
+    //_billboard = new osg::Billboard;
+    _billboard = new cfdVolumeBillboard();
     _billboard->setMode(osg::Billboard::POINT_ROT_WORLD);
     _billboard->addDrawable(geom);
 
     //position the slices in the scene
     _billboard->setPosition(0,osg::Vec3(_center[0],_center[1],_center[2]));
-    /*if(!_vcCbk.valid())
-    {
-       _vcCbk = new cfdVolumeCenterCallback(_center);
-    }*/
-    //_billboard->setUpdateCallback(_vcCbk.get());
 
 }
 ///////////////////////////////////////////////////////////
@@ -674,17 +663,13 @@ void cfdVolumeVisualization::CreateNode()
 //////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()
 {
-#ifdef CFD_USE_SHADERS
    if(!_tm){
-      std::cout<<"Texture Manager not set!!!"<<std::endl;
-      return;
+      std::cout<<"Warning: Texture Manager not set!!!"<<std::endl;
+      std::cout<<"cfdVolumeVisualization::_buildGraph..."<<std::endl;
    }
-#endif
    _volumeVizNode = new osg::Switch();
    _volumeVizNode->setName("Volume Viz Node");
-//#ifdef CFD_USE_SHADERS
    _volumeVizNode->setAllChildrenOff();
-//#endif
    _volumeVizNode->setDataVariance(osg::Object::DYNAMIC);
 
    if(!_noShaderGroup.valid()){

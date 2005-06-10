@@ -9,8 +9,6 @@
 #include <osg/TexGen>
 #include <osg/AlphaFunc>
 
-//#ifdef CFD_USE_SHADERS
-
 #include "cfdTextureManager.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfdOSGTransferShaderManager.h"
@@ -407,6 +405,5 @@ cfdOSGTransferShaderManager& cfdOSGTransferShaderManager::operator=(const cfdOSG
    }
    return *this;
 }
-//#endif// _CFD_USE_SHADERS
 #endif//_OSG
 #endif

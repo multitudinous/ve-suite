@@ -1,5 +1,5 @@
 #ifdef VE_PATENTED
-#include "cfdSimpleTextureCallback.h"
+#include "VE_VolumeVis/cfdSimpleTextureCallback.h"
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG

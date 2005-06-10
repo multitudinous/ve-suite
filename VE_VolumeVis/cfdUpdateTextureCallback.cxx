@@ -35,9 +35,9 @@ _subloadImageDepth(0)
    _isLuminance = false;
    _update = true;
 }
-/////////////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::cfdUpdateTextureCallback(const cfdUpdateTextureCallback& cb)
-
+:osg::Texture3D::SubloadCallback(cb)
 {
    _tm = cb._tm;
    _delay = cb._delay;

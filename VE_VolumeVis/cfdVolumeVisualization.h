@@ -27,6 +27,7 @@ namespace osg
 }
 class cfdTextureMatrixCallback;
 class cfdVolumeCenterCallback;
+class cfdVolumeBillboard;
 #include <osgUtil/CullVisitor>
 #include <osg/TexMat>
 #include <osg/Vec3>
@@ -123,7 +124,7 @@ protected:
    osg::BoundingBox* _bbox;
    osg::ref_ptr<osg::ClipNode> _clipNode;
    osg::ref_ptr<osg::StateSet> _stateSet;
-   osg::ref_ptr<osg::Billboard> _billboard;
+   osg::ref_ptr<cfdVolumeBillboard> _billboard;
 
    osg::ref_ptr<osg::Group> _noShaderGroup;
    osg::ref_ptr<osg::Group> _decoratorAttachNode;

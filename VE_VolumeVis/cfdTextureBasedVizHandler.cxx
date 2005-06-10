@@ -1,35 +1,35 @@
-#include "cfdTextureBasedVizHandler.h"
+#include "VE_VolumeVis/cfdTextureBasedVizHandler.h"
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG 
-#include "cfdVolumeVisNodeHandler.h"
-#include "cfdTextureDataSet.h"
+#include "VE_VolumeVis/cfdVolumeVisNodeHandler.h"
+#include "VE_VolumeVis/cfdTextureDataSet.h"
+#include "VE_VolumeVis/cfdTextureManager.h"
+#include "VE_VolumeVis/cfdVolumeVisualization.h"
 #include <osg/State>
 #include <osgUtil/SceneView>
 #include <osgDB/WriteFile>
 #endif
-#include "cfdVolumeVisualization.h"
-#include "cfdWriteTraverser.h"
-#include "cfdCommandArray.h"
-#include "cfdReadParam.h"
-#include "cfdDCS.h"
-#include "cfdCursor.h"
-#include "cfdNavigate.h"
-#include "cfdTextureManager.h"
-#include "cfdGraphicsObject.h"
-#include "cfdEnum.h"
-#include "cfdSwitch.h"
+#include "VE_Xplorer/cfdWriteTraverser.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdReadParam.h"
+#include "VE_Xplorer/cfdCursor.h"
+#include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdGraphicsObject.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_SceneGraph/cfdSwitch.h"
+#include "VE_SceneGraph/cfdDCS.h"
 #include <fstream>
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-#include "cfdScalarVolumeVisHandler.h"
-#include "cfdScalarShaderManager.h"
-#include "cfdOSGTransferShaderManager.h"
+#include "VE_VolumeVis/cfdScalarVolumeVisHandler.h"
+#include "VE_VolumeVis/cfdScalarShaderManager.h"
+#include "VE_VolumeVis/cfdOSGTransferShaderManager.h"
 #ifdef CFD_USE_SHADERS
-#include "cfdVectorVolumeVisHandler.h"
-#include "cfdOSGAdvectionShaderManager.h"
+#include "VE_VolumeVis/cfdVectorVolumeVisHandler.h"
+#include "VE_VolumeVis/cfdOSGAdvectionShaderManager.h"
 #endif
 //////////////////////////////////////////////////////////
 //Constructors                                          //
@@ -121,10 +121,10 @@ void cfdTextureBasedVizHandler::_updateShaders()
 //////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateVisualization()
 {
-    //update analysis techniques
+   //update analysis techniques
    if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_CONTOUR||
       _cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == X_VECTOR){
-      if(_activeVolumeVizNode&&_currentBBox){
+      if(_activeVolumeVizNode && _currentBBox){
          //create an x plane
          double xplane[4] = {1,0,0,0};
          float alpha = (float)_cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
@@ -159,7 +159,6 @@ void cfdTextureBasedVizHandler::_updateVisualization()
             yplane[1] *= -1.0;
             yplane[3] = _currentBBox[2] + alpha*(_currentBBox[3] - _currentBBox[2]);
             _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::YPLANE_MAX,yplane);
-      
          }
       }
       _cleared = false;
@@ -181,8 +180,6 @@ void cfdTextureBasedVizHandler::_updateVisualization()
             zplane[2] *= -1.0;
             _activeVolumeVizNode->UpdateClipPlanePosition(cfdVolumeVisualization::ZPLANE_MAX,zplane);
          }
-         
-         
       }
       _cleared = false;
    /*}else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ARBITRARY){
