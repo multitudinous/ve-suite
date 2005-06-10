@@ -73,7 +73,7 @@ Network::~Network()
 ///////// Event Handlers ////////////////////
 /////////////////////////////////////////////
 
-void Network::OnPaint(wxPaintEvent &event)
+void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
 {
    while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
 

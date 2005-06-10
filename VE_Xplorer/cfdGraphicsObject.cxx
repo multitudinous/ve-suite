@@ -101,7 +101,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
       // is parent on graph
       if ( this->worldNode->SearchChild( parentNode ) < 0 )
       {
-         vprDEBUG(vprDBG_ALL,1) << " adding active switch node to worldDCS"
+         vprDEBUG(vprDBG_ALL,1) << "|\t\tadding active switch node to worldDCS"
                              << std::endl << vprDEBUG_FLUSH;
          this->worldNode->AddChild( parentNode );
       }
@@ -114,11 +114,11 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          // classic ss
          if ( parentNode->SearchChild( temp ) < 0 )
          {
-            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic ss "
+            vprDEBUG(vprDBG_ALL,1) << "|\t\tadding active dcs node to worldDCS for classic ss "
                              << std::endl << vprDEBUG_FLUSH;
             parentNode->AddChild( temp );
          }
-         vprDEBUG(vprDBG_ALL,1) << "|\t\t adding geode to active dataset dcs "
+         vprDEBUG(vprDBG_ALL,1) << "|\t\tadding geode to active dataset dcs "
                              << std::endl << vprDEBUG_FLUSH;
          // we can do this because classic group is always
          // child 0 see line 58 of cfdModel.cxx
@@ -403,14 +403,15 @@ void cfdGraphicsObject::RemovecfdGeodeFromDCS( void )
    if ( this->type == CLASSIC )
    {
       unsigned int num = this->geodes.size();
-
       for ( unsigned int i = 0; i < num; ++i )
       {
          // Need to find tha parent becuase with multiple models
          // Not all geodes are going to be on the same dcs
          cfdGroup* parent = (cfdGroup*)this->geodes.at( i )->GetParent(0);
          parent->RemoveChild( this->geodes.at( i ) );
+#ifdef _PERFORMER
          delete this->geodes.at( i );
+#endif
       }
       this->geodes.clear();
 

@@ -84,7 +84,6 @@ ifeq (${CFDHOSTTYPE},IRIX64)
    EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include/boost/compatibility/cpp_c_headers
 endif
 
-
 LINKALL_ON= -all
 LINKALL_OFF=
 
@@ -103,6 +102,7 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 EXTRA_INCLUDES+= -I$(VE_UI_HOME) \
                   -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer \
                   -I$(VE_SUITE_HOME)/VE_Builder/Utilities/gui 
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)/VE_Conductor/Framework
 
 # -----------------------------------------------------------------------------
 # Application build targets.

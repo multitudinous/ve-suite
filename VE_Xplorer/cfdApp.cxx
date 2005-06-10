@@ -227,7 +227,8 @@ void cfdApp::contextInit()
 ///////////////////////////
 void cfdApp::contextClose()
 {
-   if(!_pbuffer){
+   if(_pbuffer)
+   {
       delete _pbuffer;
       _pbuffer = 0;
    }
