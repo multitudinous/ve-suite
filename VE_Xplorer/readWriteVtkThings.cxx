@@ -98,6 +98,8 @@ vtkDataSet * readVtkThing( char * vtkFilename, int printFlag )
 bool writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag )
 {
    cfdVTKFileHandler fileWriter;
+   if(!binaryFlag) 
+      fileWriter.SetOutFileWriteMode(cfdVTKFileHandler::CFD_ASCII);
    return fileWriter.WriteDataSet(vtkThing,vtkFilename);
 }
 
