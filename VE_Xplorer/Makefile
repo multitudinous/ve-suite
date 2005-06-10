@@ -182,13 +182,20 @@ SRCS=\
 ifeq ($(VE_PATENTED), TRUE)
 ifeq ($(SCENE_GRAPH), OSG)
 SRCS+= \
+   cfdOSGShaderManager.cxx \
+   cfdOSGTransferShaderManager.cxx \
+   cfdScalarShaderManager.cxx \
+   cfdScalarVolumeVisHandler.cxx \
+   cfdSimpleTextureCallback.cxx \
    cfdTextureBasedVizHandler.cxx \
    cfdTextureDataSet.cxx \
    cfdTextureMatrixCallback.cxx \
    cfdTextureManager.cxx \
    cfdUpdateTextureCallback.cpp \
+   cfdUpdateableOSGTexture1d.cxx \
    cfdVolumeBillboard.cxx \
    cfdVolumeCenterCallback.cxx \
+   cfdVolumeVisNodeHandler.cxx \
    cfdVolumeVisualization.cpp 
 endif
 endif
@@ -201,19 +208,12 @@ SRCS+= \
    cfdAdvectionSubGraph.cxx \
    cfdCopyTo3DTextureStage.cxx \
    cfdOSGAdvectionShaderManager.cxx \
-   cfdScalarShaderManager.cxx \
    cfdOSGPingPongTexture3d.cxx \
-   cfdOSGShaderManager.cxx \
-   cfdOSGTransferShaderManager.cxx \
    cfdPBufferManager.cxx \
    cfdPBufferQuad.cxx \
-   cfdScalarVolumeVisHandler.cxx \
-   cfdSimpleTextureCallback.cxx \
    cfdUpdateableOSGNoiseTexture3d.cxx \
-   cfdUpdateableOSGTexture1d.cxx \
    cfdUpdateParameterCallback.cxx \
-   cfdVectorVolumeVisHandler.cxx \
-   cfdVolumeVisNodeHandler.cxx 
+   cfdVectorVolumeVisHandler.cxx 
 endif
 endif
 endif
