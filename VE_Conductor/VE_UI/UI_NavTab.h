@@ -7,19 +7,7 @@
 
 #include <wx/wx.h>
 #include <wx/image.h>
-#include "Nav_Bitmaps/x_left.XPM"
-#include "Nav_Bitmaps/x_right.XPM"
-#include "Nav_Bitmaps/z_up.XPM"
-#include "Nav_Bitmaps/z_down.XPM"
-#include "Nav_Bitmaps/y_up.XPM"
-#include "Nav_Bitmaps/y_down.XPM"
-#include "Nav_Bitmaps/pitch_down.XPM"
-#include "Nav_Bitmaps/pitch_up.XPM"
-#include "Nav_Bitmaps/ccw_roll.XPM"
-#include "Nav_Bitmaps/cw_roll.XPM"
-#include "Nav_Bitmaps/yaw_ccw.XPM"
-#include "Nav_Bitmaps/yaw_cw.XPM"
-#include "Nav_Bitmaps/coordinates.XPM"
+
 
 enum NAV_TAB_IDS 
 {
@@ -76,19 +64,33 @@ public:
    wxCheckBox* headRotationChk;
    wxButton*   resetNavPosition;
 protected:
-   wxBitmap* _image1;
-   wxBitmap* _image2;
-   wxBitmap* _image3;
-   wxBitmap* _image4;
-   wxBitmap* _image5;
-   wxBitmap* _image6;
-   wxBitmap* _image7;
-   wxBitmap* _image8;
-   wxBitmap* _image9;
-   wxBitmap* _image10;
-   wxBitmap* _image11;
-   wxBitmap* _image12;
-   wxBitmap* _imagecoord;
+   wxImage* _image1;
+   wxImage* _image2;
+   wxImage* _image3;
+   wxImage* _image4;
+   wxImage* _image5;
+   wxImage* _image6;
+   wxImage* _image7;
+   wxImage* _image8;
+   wxImage* _image9;
+   wxImage* _image10;
+   wxImage* _image11;
+   wxImage* _image12;
+   wxImage* _imagecoord;
+
+   wxBitmap* _bitmap1;
+   wxBitmap* _bitmap2;
+   wxBitmap* _bitmap3;
+   wxBitmap* _bitmap4;
+   wxBitmap* _bitmap5;
+   wxBitmap* _bitmap6;
+   wxBitmap* _bitmap7;
+   wxBitmap* _bitmap8;
+   wxBitmap* _bitmap9;
+   wxBitmap* _bitmap10;
+   wxBitmap* _bitmap11;
+   wxBitmap* _bitmap12;
+   wxBitmap* _bitmapcoord;
 
    DECLARE_EVENT_TABLE()
 };

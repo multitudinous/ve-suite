@@ -2,6 +2,19 @@
 #include "UI_Tabs.h"
 #include "cfdEnum.h"
 #include <iostream>
+#include "Nav_Bitmaps/x_left.xpm"
+#include "Nav_Bitmaps/x_right.xpm"
+#include "Nav_Bitmaps/z_up.xpm"
+#include "Nav_Bitmaps/z_down.xpm"
+#include "Nav_Bitmaps/y_up.xpm"
+#include "Nav_Bitmaps/y_down.xpm"
+#include "Nav_Bitmaps/pitch_down.xpm"
+#include "Nav_Bitmaps/pitch_up.xpm"
+#include "Nav_Bitmaps/ccw_roll.xpm"
+#include "Nav_Bitmaps/cw_roll.xpm"
+#include "Nav_Bitmaps/yaw_ccw.xpm"
+#include "Nav_Bitmaps/yaw_cw.xpm"
+#include "Nav_Bitmaps/coordinates.xpm"
 
 BEGIN_EVENT_TABLE(UI_NavigateScroll, wxScrolledWindow)
 END_EVENT_TABLE()
@@ -28,33 +41,48 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    wxGridSizer* topSizer = new wxGridSizer(11,4);
 
    //************Loading up the bitmaps
-   _image1 = new wxBitmap(x_left_xpm, wxBITMAP_TYPE_XPM);
-   _image2 = new wxBitmap(x_right_xpm, wxBITMAP_TYPE_XPM);
-   _image3 = new wxBitmap(z_up_xpm, wxBITMAP_TYPE_XPM);
-   _image4 = new wxBitmap(z_down_xpm, wxBITMAP_TYPE_XPM);
-   _image5 = new wxBitmap(y_up_xpm, wxBITMAP_TYPE_XPM);
-   _image6 = new wxBitmap(y_down_xpm, wxBITMAP_TYPE_XPM);
-   _image7 = new wxBitmap(pitch_down_xpm, wxBITMAP_TYPE_XPM);
-   _image8 = new wxBitmap(pitch_up_xpm, wxBITMAP_TYPE_XPM);
-   _image9 = new wxBitmap(ccw_roll_xpm, wxBITMAP_TYPE_XPM);
-   _image10 = new wxBitmap(cw_roll_xpm, wxBITMAP_TYPE_XPM);
-   _image11 = new wxBitmap(yaw_ccw_xpm, wxBITMAP_TYPE_XPM);
-   _image12 = new wxBitmap(yaw_cw_xpm, wxBITMAP_TYPE_XPM);
-   _imagecoord = new wxBitmap(coordinates_xpm, wxBITMAP_TYPE_XPM);
+   _image1 = new wxImage(x_left_xpm);
+   _image2 = new wxImage(x_right_xpm);
+   _image3 = new wxImage(z_up_xpm);
+   _image4 = new wxImage(z_down_xpm);
+   _image5 = new wxImage(y_up_xpm);
+   _image6 = new wxImage(y_down_xpm);
+   _image7 = new wxImage(pitch_down_xpm);
+   _image8 = new wxImage(pitch_up_xpm);
+   _image9 = new wxImage(ccw_roll_xpm);
+   _image10 = new wxImage(cw_roll_xpm);
+   _image11 = new wxImage(yaw_ccw_xpm);
+   _image12 = new wxImage(yaw_cw_xpm);
+   _imagecoord = new wxImage(coordinates_xpm);
+
+   _bitmap1 = new wxBitmap(_image1, -1);
+   _bitmap2 = new wxBitmap(_image2, -1);
+   _bitmap3 = new wxBitmap(_image3, -1);
+   _bitmap4 = new wxBitmap(_image4, -1);
+   _bitmap5 = new wxBitmap(_image5, -1);
+   _bitmap6 = new wxBitmap(_image6, -1);
+   _bitmap7 = new wxBitmap(_image7, -1);
+   _bitmap8 = new wxBitmap(_image8, -1);
+   _bitmap9 = new wxBitmap(_image9, -1);
+   _bitmap10 = new wxBitmap(_image10, -1);
+   _bitmap11 = new wxBitmap(_image11, -1);
+   _bitmap12 = new wxBitmap(_image12, -1);
+   _bitmapcoord = new wxBitmap(_imagecoord, -1);
+
 
    //Assign the bitmaps to the respective buttons
-   _leftButton = new UI_NavButton(this, NAV_LEFT, wxBitmap(*_image1));
-   _rightButton = new UI_NavButton(this, NAV_RIGHT, wxBitmap(*_image2));
-   _upButton = new UI_NavButton(this, NAV_UP, wxBitmap(*_image3));
-   _downButton = new UI_NavButton(this, NAV_DOWN, wxBitmap(*_image4));
-   _forwardButton = new UI_NavButton(this, NAV_FWD, wxBitmap(*_image5));
-   _backButton = new UI_NavButton(this, NAV_BKWD, wxBitmap(*_image6));
-   _pitchdownButton = new UI_NavButton(this, PITCH_DOWN, wxBitmap(*_image7));
-   _pitchupButton = new UI_NavButton(this, PITCH_UP, wxBitmap(*_image8));
-   _rollccwButton = new UI_NavButton(this, ROLL_CCW, wxBitmap(*_image9));
-   _rollcwButton = new UI_NavButton(this, ROLL_CW, wxBitmap(*_image10));
-   _yawccwButton = new UI_NavButton(this, YAW_CCW, wxBitmap(*_image11));
-   _yawcwButton = new UI_NavButton(this, YAW_CW, wxBitmap(*_image12));
+   _leftButton = new UI_NavButton(this, NAV_LEFT, wxBitmap(*_bitmap1));
+   _rightButton = new UI_NavButton(this, NAV_RIGHT, wxBitmap(*_bitmap2));
+   _upButton = new UI_NavButton(this, NAV_UP, wxBitmap(*_bitmap3));
+   _downButton = new UI_NavButton(this, NAV_DOWN, wxBitmap(*_bitmap4));
+   _forwardButton = new UI_NavButton(this, NAV_FWD, wxBitmap(*_bitmap5));
+   _backButton = new UI_NavButton(this, NAV_BKWD, wxBitmap(*_bitmap6));
+   _pitchdownButton = new UI_NavButton(this, PITCH_DOWN, wxBitmap(*_bitmap7));
+   _pitchupButton = new UI_NavButton(this, PITCH_UP, wxBitmap(*_bitmap8));
+   _rollccwButton = new UI_NavButton(this, ROLL_CCW, wxBitmap(*_bitmap9));
+   _rollcwButton = new UI_NavButton(this, ROLL_CW, wxBitmap(*_bitmap10));
+   _yawccwButton = new UI_NavButton(this, YAW_CCW, wxBitmap(*_bitmap11));
+   _yawcwButton = new UI_NavButton(this, YAW_CW, wxBitmap(*_bitmap12));
 
    //Place holders to use in filling up empty holes in the grid sizer
    wxStaticText* blank1 = new wxStaticText(this, -1, ""); //just a place holder
@@ -324,7 +352,7 @@ void UI_NavigationTab::onMouse(wxMouseEvent& mouse)
 ////////////////////////////////////////////
 UI_NavButton::UI_NavButton(wxWindow* parent,
 wxWindowID id, const wxBitmap& bitmap)
-:wxBitmapButton(parent,id,bitmap,wxDefaultPosition,wxSize(35,40),wxBU_EXACTFIT)
+:wxBitmapButton(parent,id,bitmap,wxDefaultPosition,wxSize(35,40))
 {
   _buttonPushed = 0; 
 }
