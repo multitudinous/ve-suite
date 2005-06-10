@@ -8,7 +8,6 @@
 #include <osg/TexMat>
 #include <osg/TexGen>
 
-#ifdef CFD_USE_SHADERS
 #include "cfdTextureManager.h"
 #include "cfdUpdateTextureCallback.h"
 #include "cfdOSGTransferShaderManager.h"
@@ -41,46 +40,80 @@ void cfdScalarShaderManager::Init()
       _ss->setAttributeAndModes(bf.get());
       _ss->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
       _ss->setTextureAttributeAndModes(0,_property.get(),
-                                   osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
+                                osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_S,
-                        osg::StateAttribute::ON);
+                     osg::StateAttribute::ON);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_T,
-                        osg::StateAttribute::ON);
+                     osg::StateAttribute::ON);
       _ss->setTextureMode(0,GL_TEXTURE_GEN_R,
-                        osg::StateAttribute::ON);
+                     osg::StateAttribute::ON);
       _ss->setTextureAttributeAndModes(0,
-                                   new osg::TexEnv(osg::TexEnv::REPLACE),
-		                              osg::StateAttribute::ON);
+                                new osg::TexEnv(osg::TexEnv::REPLACE),
+                             osg::StateAttribute::ON);
       int nTransferFunctions = _transferFunctions.size();
       for(int i =0; i < nTransferFunctions; i++){
          _ss->setTextureAttributeAndModes(i+1,_transferFunctions.at(i).get(),
-                                      osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
+                                   osg::StateAttribute::ON| osg::StateAttribute::OVERRIDE);
          _ss->setTextureMode(i+1,GL_TEXTURE_GEN_S,
-                           osg::StateAttribute::OFF);
+                        osg::StateAttribute::OFF);
          _ss->setTextureMode(i+1,GL_TEXTURE_GEN_T,
-                           osg::StateAttribute::OFF);
+                        osg::StateAttribute::OFF);
          _ss->setTextureMode(i+1,GL_TEXTURE_GEN_R,
-                           osg::StateAttribute::OFF);
+                        osg::StateAttribute::OFF);
       }
-      
       _tUnit = 0;
-      
-      //load the shader file 
-      char directory[1024];
-      if(_shaderDirectory){
-         strcpy(directory,_shaderDirectory);
+      if(!_useGLSL){
+         
+#ifdef CFD_USE_SHADERS
+         std::cout<<"Using cg!"<<std::endl;
+         _setupStateSetForCG();
       }else{
-         char* vesuitehome = getenv("VE_SUITE_HOME");
-         strcpy(directory,vesuitehome);
-        strcat(directory,"/VE_VolumeVis/cg_shaders/");
+#endif
+         _setupStateSetForGLSL();
       }
-      //strcat(directory,"gammaCorrection.cg");
-      //_setupCGShaderProgram(_ss.get(),directory,"gammaCorrection");
-      strcat(directory,"scalarAdjuster.cg");
-      _setupCGShaderProgram(_ss.get(),directory,"scalarAdjustment");
    }
    _reinit = false;
 }
+//////////////////////////////////////////////////
+void cfdScalarShaderManager::_setupStateSetForGLSL()
+{
+   std::cout<<"Using glsl..."<<std::endl;
+   _ss->addUniform(new osg::Uniform("volumeData",0));
+   _ss->addUniform(new osg::Uniform("transferFunction",1));
+   _tUnit = 0;
+   //load the shader file 
+   char directory[1024];
+   if(_shaderDirectory){
+      strcpy(directory,_shaderDirectory);
+   }else{
+      char* vesuitehome = getenv("VE_SUITE_HOME");
+      strcpy(directory,vesuitehome);
+      strcat(directory,"/VE_VolumeVis/glsl_shaders/");
+   }
+   strcat(directory,"scalarAdjuster.glsl");
+   osg::ref_ptr<osg::Shader> scalarShader = _createGLSLShaderFromFile(directory,
+                                                                     true); 
+   osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
+   glslProgram->addShader(scalarShader.get());
+   _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),std::string("scalarAdjuster"));
+}
+#ifdef CFD_USE_SHADERS
+/////////////////////////////////////////////////
+void cfdScalarShaderManager::_setupStateSetForCG()
+{
+   //load the shader file 
+   char directory[1024];
+   if(_shaderDirectory){
+      strcpy(directory,_shaderDirectory);
+   }else{
+      char* vesuitehome = getenv("VE_SUITE_HOME");
+      strcpy(directory,vesuitehome);
+      strcat(directory,"/VE_VolumeVis/cg_shaders/");
+  }
+  strcat(directory,"scalarAdjuster.cg");
+   _setupCGShaderProgram(_ss.get(),directory,"scalarAdjustment");
+}
+#endif
 /////////////////////////////////////////////////
 void cfdScalarShaderManager::ActivateIsoSurface()
 {
@@ -114,7 +147,7 @@ void cfdScalarShaderManager::_updateTransferFunction()
    GLfloat newRange[2];
    ScalarRange origRange ;
    GLfloat alpha = 0;
-   GLint isoVal = 0;
+   GLfloat isoVal = 0;
    float invSRange = 0;
    osg::ref_ptr<osg::Texture1D> tFunc = _transferFunctions.at(0);
    if(tFunc.valid())
@@ -166,15 +199,15 @@ void cfdScalarShaderManager::_updateTransferFunction()
             lutex[i*4    ] = 255;
             lutex[i*4 + 1] = 0;
             lutex[i*4 + 2] = 0;
-            lutex[i*4 + 3] = 255*.5;
+            lutex[i*4 + 3] = 127;
          }
       }else{
          if(_isoSurface)
          {
-            GLint isoRange [2];
+            GLfloat isoRange [2];
             isoVal = newRange[0] + _percentScalarRange*(newRange[1] - newRange[0]);
-            isoRange[0] = isoVal - 15.0;
-            isoRange[1] = isoVal + 15.0;
+            isoRange[0] = isoVal - 10.0;
+            isoRange[1] = isoVal + 10.0;
             if(i >= isoRange[0] && i <= isoRange[1]){
                alpha = (i - newRange[0])*invSRange;
                if(alpha <= .5){
@@ -306,6 +339,6 @@ void cfdScalarShaderManager::_initPropertyTexture()
       _property->setSubloadCallback(_utCbk);
    } 
 }
-#endif// _CFD_USE_SHADERS
+//#endif// _CFD_USE_SHADERS
 #endif//_OSG
 #endif

@@ -32,9 +32,9 @@ class cfdVolumeCenterCallback;
 #include <osg/Vec3>
 #include "cfdUpdateTextureCallback.h"
 #include "cfdTextureManager.h"
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
 #include "cfdUpdateableOSGTexture1d.h"
-#endif
+//#endif
 class cfdVolumeVisualization{
 public:
    cfdVolumeVisualization();

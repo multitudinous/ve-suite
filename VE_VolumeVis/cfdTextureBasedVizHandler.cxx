@@ -24,14 +24,12 @@
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-
-
-#ifdef CFD_USE_SHADERS
-#include "cfdVectorVolumeVisHandler.h"
 #include "cfdScalarVolumeVisHandler.h"
-#include "cfdOSGAdvectionShaderManager.h"
 #include "cfdScalarShaderManager.h"
 #include "cfdOSGTransferShaderManager.h"
+#ifdef CFD_USE_SHADERS
+#include "cfdVectorVolumeVisHandler.h"
+#include "cfdOSGAdvectionShaderManager.h"
 #endif
 //////////////////////////////////////////////////////////
 //Constructors                                          //
@@ -53,9 +51,10 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    activeVisNodeHdlr = 0;
    _textureBaseSelected = false;
    _activeTDSet = 0;
+   _svvh = 0;
 #ifdef CFD_USE_SHADERS
    _vvvh = 0;
-   _svvh = 0;
+
 #endif
 }
 ///////////////////////////////////////////////////////////
@@ -91,11 +90,12 @@ void cfdTextureBasedVizHandler::CleanUp( void )
       delete [] _currentBBox;
       _currentBBox = 0;
    }
-#ifdef CFD_USE_SHADERS
+
    if(_svvh){
       delete _svvh;
       _svvh = 0;
    }
+#ifdef CFD_USE_SHADERS 
    if(_vvvh){
       delete _svvh;
       _vvvh = 0;
@@ -105,16 +105,18 @@ void cfdTextureBasedVizHandler::CleanUp( void )
 /////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateShaders()
 {
-#ifdef CFD_USE_SHADERS
+
    if(_activeTM){
       if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR){
         _updateScalarVisHandler();
-      }else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
+      }
+#ifdef CFD_USE_SHADERS
+      else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
         _updateVectorVisHandler();
       }
+#endif
    }
    _updateShaderState();
-#endif
 }
 //////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateVisualization()
@@ -273,10 +275,11 @@ cfdPBufferManager* cfdTextureBasedVizHandler::GetPBuffer()
    }
    return 0;
 }
-#ifdef CFD_USE_SHADERS
+
 ////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateShaderState()
 {
+#ifdef CFD_USE_SHADERS
    //first check which option is active
    if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ADVECTION_SHADER){
       if(_vvvh){
@@ -321,7 +324,9 @@ void cfdTextureBasedVizHandler::_updateShaderState()
             activeVisNodeHdlr->TurnOffBBox();
          }
       }
-   }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ISOSURFACE){
+   }else
+#endif
+   if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ISOSURFACE){
       if(_svvh){
          cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
          if(sShader)
@@ -359,6 +364,7 @@ void cfdTextureBasedVizHandler::_updateShaderState()
       }
    }
 }
+#ifdef CFD_USE_SHADERS
 //////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::PingPongTextures()
 {
@@ -433,7 +439,7 @@ void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
      _currentBBox[5] = _activeTM->getBoundingBox()[5];
    }
 }
-#ifdef CFD_USE_SHADERS
+
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateScalarVisHandler()
 {
@@ -456,6 +462,7 @@ void cfdTextureBasedVizHandler::_updateScalarVisHandler()
       //activeVisNodeHdlr = dynamic_cast<cfdScalarVolumeVisHandler*>(_svvh);
    }
 }
+#ifdef CFD_USE_SHADERS
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateVectorVisHandler()
 {

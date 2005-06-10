@@ -24,9 +24,9 @@ class cfdVolumeVisualization;
 class cfdTextureDataSet;
 
 class cfdVolumeVisNodeHandler;
+class cfdScalarVolumeVisHandler;
 #ifdef CFD_USE_SHADERS
 class cfdVectorVolumeVisHandler;
-class cfdScalarVolumeVisHandler;
 #endif
 class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
 {
@@ -55,9 +55,9 @@ class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandle
       cfdVolumeVisualization* GetActiveVolumeVizNode( void );
   
    protected:
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
       void _updateShaderState();
-#endif
+//#endif
       void _updateGraph();
       void _updateVisualization();
       void _updateShaders();
@@ -78,9 +78,10 @@ class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandle
       cfdPBufferManager* _pbm;
       osgUtil::SceneView* _sceneView;
       cfdVolumeVisNodeHandler* activeVisNodeHdlr;
+      cfdScalarVolumeVisHandler* _svvh;
 #ifdef CFD_USE_SHADERS
       cfdVectorVolumeVisHandler* _vvvh;
-      cfdScalarVolumeVisHandler* _svvh;
+      
 #endif
       //cfdSwitch* _visOptionSwitch;
       float* _currentBBox;

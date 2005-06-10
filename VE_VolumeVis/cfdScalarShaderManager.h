@@ -2,7 +2,7 @@
 #define CFD_SCALAR_SHADER_MANAGER_H
 #ifdef VE_PATENTED
 #ifdef _OSG
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
 #include "cfdOSGTransferShaderManager.h"
 class cfdTextureManager;
 
@@ -19,6 +19,10 @@ public:
    void DeactivateIsoSurface();
    void SetIsoSurfaceValue(float percentScalarRange);
 protected:
+#ifdef CFD_USE_SHADERS
+   void _setupStateSetForCG();
+#endif
+   void _setupStateSetForGLSL();
    bool _isoSurface;
    void _updateTransferFunction();
    float _scalarRange[2];
@@ -26,7 +30,7 @@ protected:
    void _initTransferFunctions();
    void _initPropertyTexture();
 };
-#endif// _CFD_USE_SHADERS
+//#endif// _CFD_USE_SHADERS
 #endif//_OSG
 #endif
 #endif// CFD_SCALAR_SHADER_MANAGER_H

@@ -315,7 +315,7 @@ void cfdOSGAdvectionShaderManager::_setupCGShaderProgram(osg::StateSet* ss,
       fprog->addVectorParameter("period")->setCallback(_periodCallback);
       fprog->addVectorParameter("weightW")->setCallback(_weightWCallback);
       fprog->addVectorParameter("weightV")->setCallback(_weightVCallback);
-      _frag = fprog;
+      //_frag = fprog;
       //apply the shaders to state set
       ss->setAttributeAndModes(fprog,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
    }else{
@@ -325,7 +325,7 @@ void cfdOSGAdvectionShaderManager::_setupCGShaderProgram(osg::StateSet* ss,
       vprog->setEntryPoint(funcName);
       vprog->setUseOptimalOptions(true);
       
-      _vert = vprog;
+      //_vert = vprog;
       //apply the shaders to state set
       ss->setAttributeAndModes(vprog,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
    

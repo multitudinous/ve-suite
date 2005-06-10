@@ -10,7 +10,7 @@ namespace osg{
 #include <vector>
 class cfdTextureManager;
 class cfdUpdateTextureCallback;
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
 #include "cfdOSGShaderManager.h"
 #include "cfdUpdateableOSGTexture1d.h"
 
@@ -38,7 +38,12 @@ protected:
    void _createTransferFunction(bool gamma = false,
                              bool clearList = false);
    virtual void _initPropertyTexture();
+    void _setupStateSetForGLSL();
+#ifdef CFD_USE_SHADERS
+   void _setupStateSetForCG();
+#endif
    unsigned int _fieldSize[3];
+   
    osg::ref_ptr<osg::TexMat> _texMat;
    osg::ref_ptr<osg::Texture3D> _property;
    typedef osg::ref_ptr<osg::Texture1D> TransferFunction ;
@@ -48,7 +53,7 @@ protected:
    cfdTextureManager* _tm;
    cfdUpdateTextureCallback* _utCbk;
 };
-#endif// _CFD_USE_SHADERS
+//#endif// _CFD_USE_SHADERS
 #endif//_OSG
 #endif
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H

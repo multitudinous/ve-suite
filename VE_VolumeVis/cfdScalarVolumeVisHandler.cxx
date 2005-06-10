@@ -4,7 +4,7 @@
 #include "cfdTextureManager.h"
 #include "cfdScalarVolumeVisHandler.h"
 #include "cfdTextureMatrixCallback.h"
-#ifdef CFD_USE_SHADERS
+
 #include "cfdScalarShaderManager.h"
 
 
@@ -60,6 +60,9 @@ void cfdScalarVolumeVisHandler::_createTransferShader()
    if(!_transferSM && _tm){
       int* fieldSize = _tm->fieldResolution();
       _transferSM = new cfdScalarShaderManager();
+#ifndef CFD_USE_SHADERS
+      _transferSM->UseCG(true);
+#endif
       _transferSM->SetUseTextureManagerForProperty(true);
       _transferSM->SetFieldSize(fieldSize[0],fieldSize[1],fieldSize[2]);
       _transferSM->InitTextureManager(_tm);
@@ -105,6 +108,5 @@ cfdScalarVolumeVisHandler::operator=(const cfdScalarVolumeVisHandler& vvnh)
    }
    return *this;
 }
-#endif//CFD_USE_SHADERS
 #endif //_OSG
 #endif

@@ -285,11 +285,11 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
       _texture->setTextureSize(_tm->fieldResolution()[0],
                      _tm->fieldResolution()[1],
                      _tm->fieldResolution()[2]);
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
        _texture->setInternalFormat(GL_ALPHA);
-#else
+/*#else
       _texture->setInternalFormat(GL_RGBA);
-#endif     
+#endif*/     
       _texture->setImage(_image.get());
       //_texture->setBorderColor(osg::Vec4(0,0,0,0));
       //_texture->setBorderWidth(2);
@@ -544,11 +544,11 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
 
          if(!_utCbk){
             _utCbk =  new cfdUpdateTextureCallback();
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
             _utCbk->SetIsLuminance(true);
-#else
+/*#else
             _utCbk->SetIsLuminance(false);
-#endif
+#endif*/
             _utCbk->SetTextureManager(_tm);
             _utCbk->SetDelayTime(0.1);
          
@@ -674,7 +674,7 @@ void cfdVolumeVisualization::CreateNode()
 //////////////////////////////////////////
 void cfdVolumeVisualization::_buildGraph()
 {
-#ifndef CFD_USE_SHADERS
+#ifdef CFD_USE_SHADERS
    if(!_tm){
       std::cout<<"Texture Manager not set!!!"<<std::endl;
       return;
@@ -682,9 +682,9 @@ void cfdVolumeVisualization::_buildGraph()
 #endif
    _volumeVizNode = new osg::Switch();
    _volumeVizNode->setName("Volume Viz Node");
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
    _volumeVizNode->setAllChildrenOff();
-#endif
+//#endif
    _volumeVizNode->setDataVariance(osg::Object::DYNAMIC);
 
    if(!_noShaderGroup.valid()){

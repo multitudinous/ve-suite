@@ -3,9 +3,9 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/StateSet>
-#ifdef CFD_USE_SHADERS
-#include <osgNVCg/Program>
-
+namespace osg{
+   class Shader;
+}
 class cfdOSGShaderManager{
 public:
    cfdOSGShaderManager();
@@ -15,26 +15,39 @@ public:
    virtual void Init() = 0;
 
    void SetShaderDirectory(char* dir);
-   osg::StateSet* GetShaderStateSet();
    void SetBounds(float* bounds);
-   unsigned int GetAutoGenTextureUnit(){return _tUnit;}
-   osgNVCg::Program* GetVertexProgram();
-   osgNVCg::Program* GetFragmentProgram();
+   void UseCG(bool useCG = false);
 
-   virtual cfdOSGShaderManager& operator=(const cfdOSGShaderManager& sm);
+   osg::StateSet* GetShaderStateSet();
+   unsigned int GetAutoGenTextureUnit(){return _tUnit;}
+
 protected:
+   virtual cfdOSGShaderManager& operator=(const cfdOSGShaderManager& sm);
+#ifdef CFD_USE_SHADERS
+   ////////////////
+   //Cg interface//
+   ////////////////
    virtual void _setupCGShaderProgram(osg::StateSet* ss,
-		                             char* progName,
-			                          char* funcName);
-   osg::ref_ptr<osgNVCg::Program> _vert;
-   osg::ref_ptr<osgNVCg::Program> _frag;
+                                      char* progName,
+                                      char* funcName);
+#endif
+   //////////////////
+   //GLSL interface//
+   //////////////////
+   virtual void _setupGLSLShaderProgram(osg::StateSet* ss,
+                                        osg::Program* glslProgram,
+                                        const std::string pgName);
+   virtual osg::Shader* _createGLSLShaderFromFile(const std::string filename,
+                                                           bool isFrag);
+   osg::ref_ptr<osg::Shader> _vshader;
+   osg::ref_ptr<osg::Shader> _fshader;
+
    osg::ref_ptr<osg::StateSet> _ss;
    char* _shaderDirectory;
    unsigned int _tUnit;
    float* _bounds;
+   bool _useGLSL;
 };
-
-#endif //CFD_USE_SHADERS
 #endif //_OSG
 #endif
 #endif// CFD_OSG_SHADER_MANAGER_H

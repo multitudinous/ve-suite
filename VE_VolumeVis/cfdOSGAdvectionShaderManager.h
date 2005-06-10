@@ -8,9 +8,11 @@ namespace osg{
    class State;
 };
 #include <vector>
-#ifdef CFD_USE_SHADERS
 #include "cfdOSGShaderManager.h"
 #include "cfdUpdateableOSGNoiseTexture3d.h"
+#ifdef CFD_USE_SHADERS
+
+
 #include "cfdUpdateParameterCallback.h"
 class cfdUpdateMatrixParameterCallback;
 
