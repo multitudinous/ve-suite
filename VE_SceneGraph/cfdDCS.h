@@ -64,7 +64,9 @@ class cfdDCS: public cfdGroup
       cfdDCS( void );
       ~cfdDCS( void );
 
-      float* GetTranslationArray( void );
+      //float* GetTranslationArray( void );
+      float* GetVRJTranslationArray( void );
+      float* GetVETranslationArray( void );
       float* GetRotationArray( void );
       float* GetScaleArray( void );
 
@@ -120,6 +122,7 @@ class cfdDCS: public cfdGroup
 #endif
 
       float _translation[ 3 ];
+      float vrjTranslation[ 3 ];
       float _rotation[ 3 ];
       float _scale[ 3 ];
 

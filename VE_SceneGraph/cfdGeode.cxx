@@ -104,7 +104,7 @@ cfdGeode& cfdGeode::operator=( const cfdGeode& input )
 ///////////////////////////
 cfdGeode::~cfdGeode( void )
 {
-   vprDEBUG(vprDBG_ALL,1) << " 1 destructor for cfdGeode " 
+   vprDEBUG(vprDBG_ALL,1) << "|\tdestructor for cfdGeode " 
                            << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
    // Fix this

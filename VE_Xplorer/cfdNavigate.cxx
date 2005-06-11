@@ -94,7 +94,7 @@ void cfdNavigate::Initialize( cfdDCS* worldDCS )
    }
 }
 
-void cfdNavigate::GetDirection( float xyzV[3] )
+/*void cfdNavigate::GetDirection( float xyzV[3] )
 {
   this->GetDirection( xyzV[0], xyzV[1], xyzV[2] );
 }
@@ -107,7 +107,7 @@ void cfdNavigate::GetDirection( float &xV, float &yV, float &zV )
   yV = this->dir[1];
   zV = this->dir[2];
 }
-
+*/
 double * cfdNavigate::GetDirection( )
 {
   this->UpdateDir( );
@@ -115,7 +115,7 @@ double * cfdNavigate::GetDirection( )
   return this->dir;
 }
 
-void cfdNavigate::GetLocation( float xyzL[3] )
+/*void cfdNavigate::GetLocation( float xyzL[3] )
 {
   this->GetLocation( xyzL[0], xyzL[1], xyzL[2] );
 }
@@ -128,7 +128,7 @@ void cfdNavigate::GetLocation( float &xL, float &yL, float &zL )
   yL = this->loc[1];
   zL = this->loc[2];
 }
-
+*/
 double * cfdNavigate::GetLocation( )
 {
   this->UpdateLoc( );
@@ -159,7 +159,7 @@ float * cfdNavigate::GetCurObjLocation( )
  return this->objLoc;
 }
 
-void cfdNavigate::GetCursorLocation( float xyzC[3] )
+/*void cfdNavigate::GetCursorLocation( float xyzC[3] )
 {
   this->GetCursorLocation( xyzC[0], xyzC[1], xyzC[2] );
 }
@@ -171,7 +171,7 @@ void cfdNavigate::GetCursorLocation( float &xC, float &yC, float &zC )
   yC = this->cursorLoc[1];
   zC = this->cursorLoc[2];
 }
-
+*/
 double * cfdNavigate::GetCursorLocation( )
 {
   this->CursorTranslate( );

@@ -1328,7 +1328,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
 
       // Pass in -1 to GetCfdDataSet to get the last dataset added
       _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( baseTransientDCS->GetScaleArray() );
-      _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( baseTransientDCS->GetTranslationArray() );
+      _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( baseTransientDCS->GetVETranslationArray() );
       _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetRotationArray( baseTransientDCS->GetRotationArray() );
       _modelList.at( 0 )->GetCfdDataSet( -1 )->SetAsPartOfTransientSeries();
       

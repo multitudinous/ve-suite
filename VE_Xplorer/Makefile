@@ -326,6 +326,7 @@ NO_DEPEND= YES
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 include $(DZR_BASE_DIR)/ext/vpr/dzr.vpr.mk
+
 ifeq ($(SCENE_GRAPH), OSG)
    include $(VE_SUITE_HOME)/VE_Installer/dzr.osg.mk
 else

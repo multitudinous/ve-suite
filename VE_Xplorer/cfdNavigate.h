@@ -64,15 +64,15 @@ class cfdNavigate
       void Initialize( cfdDCS* );
       void SetDataValues( int, int );
       void updateNavigationFromGUI( void );
-      void GetDirection( float xyzV[3] );
-      void GetDirection( float &xV, float &yV, float &zV );
+      //void GetDirection( float xyzV[3] );
+      //void GetDirection( float &xV, float &yV, float &zV );
       //! Wand object
       /*!
       Get wand direction.
       */
       double * GetDirection( );
-      void GetLocation( float xyzL[3] );
-      void GetLocation( float &xL, float &yL, float &zL );
+      //void GetLocation( float xyzL[3] );
+      //void GetLocation( float &xL, float &yL, float &zL );
       //! Wand object
       /*!
       Get wand location.
@@ -91,8 +91,8 @@ class cfdNavigate
       Get cursor location with respect to the virtual space.
       */
       double * GetCursorLocation( );
-      void GetCursorLocation( float xyzC[3] );
-      void GetCursorLocation( float &xC, float &yC, float &zC );
+      //void GetCursorLocation( float xyzC[3] );
+      //void GetCursorLocation( float &xC, float &yC, float &zC );
       //! Virtual environment object(s)
       /*!
       Get location of objects with respect to virtual space.

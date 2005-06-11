@@ -36,6 +36,9 @@
 
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
+#include <gmtl/EulerAngle.h>
+#include <gmtl/AxisAngle.h>
+#include <gmtl/Output.h>
 
 #ifdef _PERFORMER
 #include <vrj/Draw/Pf/PfUtil.h>
@@ -72,9 +75,13 @@ cfdDCS::cfdDCS( void )
    _translation[0] = 0;
    _translation[1] = 0;
    _translation[2] = 0;
+   vrjTranslation[0] = 0;
+   vrjTranslation[1] = 0;
+   vrjTranslation[2] = 0;
    _rotation[0] = 0;
    _rotation[1] = 0;
    _rotation[2] = 0;
+
    float temp[ 3 ];
    for ( unsigned int i = 0; i < 3; i++ )
       temp[ i ] = 0.0f;
@@ -111,6 +118,7 @@ cfdDCS::cfdDCS( const cfdDCS& input )
    for ( int i = 0; i < 3; i++ )
    {
       this->_translation[ i ] = input._translation[ i ];
+      this->vrjTranslation[ i ] = input.vrjTranslation[ i ];
       this->_rotation[ i ] = input._rotation[ i ];
       this->_scale[ i ] = input._scale[ i ];
    }
@@ -137,6 +145,7 @@ cfdDCS& cfdDCS::operator=( const cfdDCS& input)
       for ( int i = 0; i < 3; i++ )
       {
          this->_translation[ i ] = input._translation[ i ];
+         this->vrjTranslation[ i ] = input.vrjTranslation[ i ];
          this->_rotation[ i ] = input._rotation[ i ];
          this->_scale[ i ] = input._scale[ i ];
       }
@@ -193,9 +202,23 @@ cfdDCS::~cfdDCS( void )
 #endif
 }
 //////////////////////////////////////////
-float* cfdDCS::GetTranslationArray( void )
+/*float* cfdDCS::GetTranslationArray( void )
 {
    return this->_translation;
+}*/
+//////////////////////////////////////////
+float* cfdDCS::GetVRJTranslationArray( void )
+{
+   vrjTranslation[ 0 ] = _translation[ 0 ];
+   vrjTranslation[ 1 ] = _translation[ 2 ];
+   vrjTranslation[ 2 ] = -_translation[ 1 ];
+
+   return vrjTranslation;
+}
+//////////////////////////////////////////
+float* cfdDCS::GetVETranslationArray( void )
+{
+   return _translation;
 }
 ///////////////////////////////////////
 float* cfdDCS::GetRotationArray( void )
@@ -329,14 +352,34 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
    // Need to set rotation to this matrix
 #ifdef _PERFORMER
    pfMatrix temp = vrj::GetPfMatrix( input );
+   // The following code is used to double check how juggler is doing
+   // some of its matrix manipulation
+   /*gmtl::EulerAngleZYXf temp1 = gmtl::make< gmtl::EulerAngleZYXf >( input );
+   std::cout << input << std::endl << temp1 << std::endl;
+   std::cout << temp[ 0 ][ 0 ] << temp[ 0 ][ 1 ] << temp[ 0 ][ 2 ] << temp[ 0 ][ 3 ] <<std::endl;
+   std::cout << temp[ 1 ][ 0 ] << temp[ 1 ][ 1 ] << temp[ 1 ][ 2 ] << temp[ 1 ][ 3 ] <<std::endl;
+   std::cout << temp[ 2 ][ 0 ] << temp[ 2 ][ 1 ] << temp[ 2 ][ 2 ] << temp[ 2 ][ 3 ] <<std::endl;
+   std::cout << temp[ 3 ][ 0 ] << temp[ 3 ][ 1 ] << temp[ 3 ][ 2 ] << temp[ 3 ][ 3 ] <<std::endl;*/
    pfCoord* coord = new pfCoord();
    temp.getOrthoCoord( coord );
    _dcs->setRot( coord->hpr[ 0 ], coord->hpr[ 1 ], coord->hpr[ 2 ] );
+   //std::cout << coord->hpr[ 0 ] << " :" << coord->hpr[ 1 ] << " : " <<  coord->hpr[ 2 ] <<std::endl;
    delete coord;
 #elif _OSG
-   osg::Matrix rot;
-   rot.set(input.getData());
-   _dcs->setMatrix(rot);
+   if ( _udcb )
+   {
+      // XYZ is used here because if an identity matrix is passed in 
+      // it appears that gmtl does not do the transform properly and 
+      // then sends back incorrect rotations for ZXY Euler Angles
+      gmtl::EulerAngleXYZf temp = gmtl::make< gmtl::EulerAngleXYZf >( input );
+      gmtl::Vec3f vec;
+      vec[ 0 ] = gmtl::Math::rad2Deg(temp[ 0 ]);
+      vec[ 1 ] = gmtl::Math::rad2Deg(temp[ 1 ]);
+      vec[ 2 ] = gmtl::Math::rad2Deg(temp[ 2 ]);
+      //std::cout << input << std::endl << temp  << std::endl;
+      //std::cout << vec << std::endl;
+      _udcb->setRotationDegreeAngles( vec[ 2 ], vec[ 0 ], vec[ 1 ] );
+   }
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;
    exit( 1 );
@@ -518,6 +561,7 @@ cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback()
 }
 //////////////////////////////////////////////////////////////////
 cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback( const cfdUpdateDCSCallback& input )
+:osg::Object( input ), osg::NodeCallback( input )
 {
    _scale[0] = input._scale[0];
    _scale[1] = input._scale[1];
@@ -572,9 +616,13 @@ void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor*
       osg::Matrixd rotateMat;
 
       //rph              
-      rotateMat.makeRotate(_r,roll,
+/*      rotateMat.makeRotate(_r,roll,
                          _p,pitch,
                          _h,yaw);
+*/
+      rotateMat.makeRotate(_h,yaw,
+                         _p,pitch,
+                         _r,roll);
 
       osg::Vec3f transMat( _trans[0], _trans[1], _trans[2] );
       scale.setTrans(transMat);
