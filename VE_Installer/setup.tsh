@@ -41,9 +41,9 @@ setenv TAO_BUILD TRUE
 # Specify cluster build CLUSTER_APP
 #setenv CLUSTER_APP TRUE
 # This flag is for VERY new code
-#setenv VE_PATENTED TRUE
+setenv VE_PATENTED TRUE
 # This flag is to allow the use of shaders
-#setenv CFD_USE_SHADERS TRUE
+setenv CFD_USE_SHADERS TRUE
 
 # TAO_BUILD can be set outside this script to override the default of TRUE
 # Make sure that TAO_BUILD is set to either TRUE or FALSE...
@@ -180,7 +180,7 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_i* ) then
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
    setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK4.4/Linux64-SuSE92
-   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux64-SuSE92
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.0/Linux64-SuSE92
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0b2/Linux64-SuSE92
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0b2-deps/Linux64-SuSE92
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux64-SuSE92
@@ -193,7 +193,7 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-5.4
-      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/TAO-1.4
+      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/TAO-1.4
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_HOME}/Linux64/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/Linux64/lib
       setenv PATH ${ACE_HOME}/bin:${ACE_HOME}/Linux64/bin:${TAO_HOME}/Linux64/bin:${PATH}
