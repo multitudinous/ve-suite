@@ -405,7 +405,7 @@ void cfdGraphicsObject::RemovecfdGeodeFromDCS( void )
       unsigned int num = this->geodes.size();
       for ( unsigned int i = 0; i < num; ++i )
       {
-         // Need to find tha parent becuase with multiple models
+         // Need to find tha parent because with multiple models
          // Not all geodes are going to be on the same dcs
          cfdGroup* parent = (cfdGroup*)this->geodes.at( i )->GetParent(0);
          parent->RemoveChild( this->geodes.at( i ) );
@@ -419,7 +419,9 @@ void cfdGraphicsObject::RemovecfdGeodeFromDCS( void )
       {
          cfdGroup* parent = (cfdGroup*)this->animation->GetSequence()->GetParent(0);
          parent->RemoveChild( this->animation->GetSequence() );
+#ifdef _PERFORMER
          delete animation;
+#endif
          animation = 0;
       }
    }
