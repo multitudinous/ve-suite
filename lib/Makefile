@@ -1,0 +1,247 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VE-Suite is (C) Copyright 1998-2004 by Iowa State University
+#
+# Original Development Team:
+#   - ISU's Thermal Systems Virtual Engineering Group,
+#     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+#   - Reaction Engineering International, www.reaction-eng.com
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile: Makefile,v $
+# Date modified: $Date: 2005-06-11 15:04:41 -0500 (Sat, 11 Jun 2005) $
+# Version:       $Rev: 2404 $
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+
+CFDUNAME = $(shell uname)
+ifeq ($(SCENE_GRAPH), OSG)
+   OSG = _osg
+else
+   OSG =
+endif
+
+ifeq ($(TAO_BUILD), TRUE)
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
+   EXEC_TAG = _tao
+endif
+
+# for osg and patented stuff
+ifeq ($(VE_PATENTED), TRUE)
+   EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_VolumeVis
+   EXTRA_CXXFLAGS+= -D_OSG -DVE_PATENTED
+   EXTRA_PATH_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_VolumeVis
+   PATENTED_TAG = .vep
+ifeq ($(CFD_USE_SHADERS),TRUE)
+   EXTRA_CXXFLAGS+= -DCFD_USE_SHADERS
+   SHADER_TAG = .glsl
+endif
+endif
+
+# IRIX needs these flags
+ifeq (${CFDUNAME},IRIX64)
+   EXTRA_CXXFLAGS+= -D_IRIX
+   EXTRA_LIBS+= -L/usr/freeware/lib32
+endif
+#__________________________________________________________
+# list the source files that are in current directory
+SRCS=\
+   cfd1DTextInput.cxx \
+   cfd3DTextureCullCallback.cxx \
+   cfdAccessoryFunctions.cxx \
+   cfdAdvectionSubGraph.cxx \
+   cfdAnimatedImage.cxx \
+   cfdAnimatedStreamlineCone.cxx \
+   cfdClone.cxx \
+   cfdCommandArray.cxx \
+   cfdCommandObjects.cxx \
+   cfdContour.cxx \
+   cfdContourBase.cxx \
+   cfdContours.cxx \
+   cfdCopyTo3DTextureStage.cxx \
+   cfdCursor.cxx \
+   cfdCuttingPlane.cxx \
+   cfdDataSet.cxx \
+   cfdDCS.cxx \
+   cfdDigitalAnalogGauge.cxx \
+   cfdFILE.cxx \
+   cfdFileInfo.cxx \
+   cfdGeode.cxx \
+   cfdGlobalBase.cxx \
+   cfdGraphicsObject.cxx \
+	cfdGrid2Surface.cpp \
+   cfdGroup.cxx \
+   cfdImage.cxx \
+   cfdIsosurface.cxx \
+   cfdModel.cxx \
+   cfdModelHandler.cxx \
+   cfdMomentum.cxx \
+   cfdMomentums.cxx \
+   cfdNavigate.cxx \
+   cfdNode.cxx \
+   cfdNodeTraverser.cxx \
+   cfdObjects.cxx \
+   cfdOSGAdvectionShaderManager.cxx \
+   cfdOSGPingPongTexture3d.cxx \
+   cfdPBufferManager.cxx \
+   cfdPfSceneManagement.cxx \
+   cfdPlanes.cxx \
+   cfdPolyData.cxx \
+   cfdPresetContour.cxx \
+   cfdPresetMomentum.cxx \
+   cfdPresetVector.cxx \
+   cfdReadParam.cxx \
+   cfdScalarBarActor.cxx \
+   cfdSceneNode.cxx \
+   cfdSequence.cxx \
+   cfdStreamers.cxx \
+   cfdSwitch.cxx \
+   cfdTempAnimation.cxx \
+   cfdTextOutput.cxx \
+   cfdTextureBasedVizHandler.cxx \
+   cfdTextureDataSet.cxx \
+   cfdTextureMatrixCallback.cxx \
+   cfdTextureManager.cxx \
+   cfdThread.cxx \
+   cfdUpdateTextureCallback.cpp \
+   cfdVEAvailModules.cxx \
+   cfdVEBaseClass.cxx \
+   cfdVolumeVisualization.cpp \
+   cfdVTKFileHandler.cxx \
+   fileIO.cxx \
+   interface.cpp \
+   package.cpp \
+   readWriteVtkThings.cxx \
+   string_ops.cpp 
+
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME) -I$(VE_SUITE_HOME)/VE_Xplorer
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Conductor/Framework
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Builder/Translator
+EXTRA_INCLUDES+= -I$(HOME)/usr/include
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_SceneGraph
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_VolumeVis
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Xplorer
+EXTRA_PATH_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_Conductor/Framework
+EXTRA_PATH_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_Builder/Translator
+
+#Scene Graph Specific flags
+#Can be: _PERFORMER, _OPENSG, _OSG
+ifeq ($(SCENE_GRAPH), OSG)
+   SRCS+= vtkActorToOSG.cpp
+else
+   SRCS+= vtkActorToPF.cxx
+endif
+
+#LIBS=   $(LIBS_BEGIN) $(SYS_LIBS) $(LIBS_END)
+#include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
+#include $(DZR_BASE_DIR)/mk/dzr.java-app.mk
+
+#include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
+#include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+
+# -----------------------------------------------------------------------------
+# following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
+
+APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/GraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)$(SHADER_TAG).so
+# object files are being stored in a system-dependent directory so that builds
+# for multiple platforms may be maintained simultaneously.
+
+#OBJDIR is the place that the object files are stored.
+OBJDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)$(SHADER_TAG)
+
+#DEPDIR is the place that the dependency files are stored.
+DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)$(SHADER_TAG)
+
+default: all
+
+# Create the OS-dependent directory for the executable. If the dir exists, 
+# 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
+all:
+	mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
+#	$(MAKE) cxx_idl
+#	$(MAKE) java_idl
+	$(MAKE) NO_DEPEND=0 cxx
+	$(MAKE) $(APP_NAME)
+#	$(MAKE) java
+#	$(MAKE) NetworkTestBean.jar
+#	-$(MAKE) install
+
+srcdir= .
+
+# turn off dependencies for idl stuff, make clean
+NO_DEPEND= YES
+
+include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
+include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+ifeq ($(SCENE_GRAPH), OSG)
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.osg.mk
+else
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.pf.mk
+endif
+
+# One of these must be uncommented.
+DEBUG_APP?= TRUE
+#OPTIM_APP?= TRUE
+
+LINKALL_ON= -all
+LINKALL_OFF=
+
+STATIC_ON= @APP_LINK_STATIC_ON@
+STATIC_OFF= @APP_LINK_STATIC_OFF@
+
+EXTRA_LIBS+= -shared 
+# IRIX needs these flags
+ifeq (${CFDUNAME},IRIX64)
+   EXTRA_CXXFLAGS+= 
+   EXTRA_LIBS+= 
+else
+   EXTRA_CXXFLAGS+= -fPIC
+   EXTRA_LIBS+= -fPIC -L$(HOME)/usr/lib
+endif
+
+CXX_GEN_DIR= .
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+#cxx_idl: $(IDL_CXX_FILES)
+
+#%.cpp %.h: %.idl
+#	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $<
+
+#java_idl: $(IDL_JAVA_FILES)
+
+#%.java: %.idl
+#	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_INCLUDES) $<
+
+cxx: $(OBJS)
+
+#java: $(CLASSES)
+
+${APP_NAME}: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+
+#install:
+#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+
+# in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
+CLEAN_FILES+= $(APP_NAME)
