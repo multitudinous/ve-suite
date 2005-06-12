@@ -33,7 +33,8 @@
 #ifndef _VRAC_CFD_SEQUENCE_H_
 #define _VRAC_CFD_SEQUENCE_H_
 
-enum cfdPlayMode{
+enum cfdPlayMode
+{
    CFDSEQ_STOP = 0,
    CFDSEQ_START,
    CFDSEQ_PAUSE,
@@ -42,12 +43,13 @@ enum cfdPlayMode{
    CFDSEQ_STEP       // not in pfSequence
 };
 
-enum cfdLoopMode{
+enum cfdLoopMode
+{
    CFDSEQ_CYCLE = 0,
    CFDSEQ_SWING
 };
 
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdGroup.h"
 class cfdNode;
 class cfdSwitch;
 

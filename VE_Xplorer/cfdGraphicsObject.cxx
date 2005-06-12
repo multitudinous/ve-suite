@@ -30,17 +30,17 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdGraphicsObject.h"
-#include "cfdGeode.h"
-#include "cfdGroup.h"
-#include "cfdDCS.h"
-#include "cfdSwitch.h"
+#include "VE_SceneGraph/cfdGeode.h"
+#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdSwitch.h"
 #include "cfdModel.h"
 #include "cfdDataSet.h"
-#include "cfdSequence.h"
-#include "cfdTempAnimation.h"
+#include "VE_SceneGraph/cfdSequence.h"
+#include "VE_SceneGraph/cfdTempAnimation.h"
 
-#include "cfdNode.h"
-#include "cfdSceneNode.h"
+#include "VE_SceneGraph/cfdNode.h"
+#include "VE_SceneGraph/cfdSceneNode.h"
 
 #include <vpr/Util/Debug.h>
 #ifdef _PERFORMER

@@ -33,7 +33,7 @@
 
 #include "cfdDataSet.h"
 #include "cfdEnum.h"    // needed for cursorType
-#include "cfdGeode.h"
+#include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>

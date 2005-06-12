@@ -80,7 +80,7 @@
 #endif
 
 #include <vpr/Util/Debug.h>
-#include "cfdSequence.h"
+#include "VE_SceneGraph/cfdSequence.h"
 //////////////////
 cfdNode::cfdNode()
 :cfdSceneNode(CFD_NODE)

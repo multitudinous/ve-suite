@@ -33,7 +33,7 @@
 #ifndef _CFD_NODE_TRAVERSER_H_
 #define _CFD_NODE_TRAVERSER_H_
 
-#include "cfdNode.h"
+#include "VE_SceneGraph/cfdNode.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>

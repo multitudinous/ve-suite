@@ -33,9 +33,9 @@
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 #include "cfdGlobalBase.h"
-#include "cfdGeode.h"
-#include "cfdDCS.h"
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdGeode.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdGroup.h"
 #include "cfdDataSet.h"
 #include "cfdReadParam.h"
 

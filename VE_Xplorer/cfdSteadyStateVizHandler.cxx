@@ -54,9 +54,9 @@
 #include "cfdCommandArray.h"
 #include "cfdObjects.h"
 #include "cfdPlanes.h"
-#include "cfdDCS.h"
-#include "cfdGroup.h"
-#include "cfdSwitch.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdSwitch.h"
 /*#include "cfdSequence.h"
 #include "cfdTempAnimation.h"
 */
@@ -67,7 +67,7 @@
 #include "cfdTextOutput.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdModelHandler.h"
-#include "cfdPfSceneManagement.h"
+#include "VE_SceneGraph/cfdPfSceneManagement.h"
 
 #include <vpr/Util/Debug.h>
 #include <vpr/vpr.h>

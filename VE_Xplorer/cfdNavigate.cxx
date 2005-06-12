@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdNavigate.h"
 #include "cfdEnum.h"
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdDCS.h"
 
 // --- VR Juggler Stuff --- //
 #include <gmtl/Xforms.h>
@@ -94,20 +94,6 @@ void cfdNavigate::Initialize( cfdDCS* worldDCS )
    }
 }
 
-/*void cfdNavigate::GetDirection( float xyzV[3] )
-{
-  this->GetDirection( xyzV[0], xyzV[1], xyzV[2] );
-}
-
-void cfdNavigate::GetDirection( float &xV, float &yV, float &zV )
-{
-  this->UpdateDir( );
-
-  xV = this->dir[0];
-  yV = this->dir[1];
-  zV = this->dir[2];
-}
-*/
 double * cfdNavigate::GetDirection( )
 {
   this->UpdateDir( );
@@ -115,20 +101,6 @@ double * cfdNavigate::GetDirection( )
   return this->dir;
 }
 
-/*void cfdNavigate::GetLocation( float xyzL[3] )
-{
-  this->GetLocation( xyzL[0], xyzL[1], xyzL[2] );
-}
-
-void cfdNavigate::GetLocation( float &xL, float &yL, float &zL )
-{
-  this->UpdateLoc( );
-
-  xL = this->loc[0];
-  yL = this->loc[1];
-  zL = this->loc[2];
-}
-*/
 double * cfdNavigate::GetLocation( )
 {
   this->UpdateLoc( );
@@ -159,19 +131,6 @@ float * cfdNavigate::GetCurObjLocation( )
  return this->objLoc;
 }
 
-/*void cfdNavigate::GetCursorLocation( float xyzC[3] )
-{
-  this->GetCursorLocation( xyzC[0], xyzC[1], xyzC[2] );
-}
-
-void cfdNavigate::GetCursorLocation( float &xC, float &yC, float &zC )
-{
-  this->CursorTranslate( );
-  xC = this->cursorLoc[0];
-  yC = this->cursorLoc[1];
-  zC = this->cursorLoc[2];
-}
-*/
 double * cfdNavigate::GetCursorLocation( )
 {
   this->CursorTranslate( );
@@ -239,12 +198,6 @@ void cfdNavigate::UpdateLoc( double* tempTrans )  //Added by Dave
    this->worldLoc[1] = tempTrans[1];
    this->worldLoc[2] = tempTrans[2];
 }
-
-/*
-cfdNavigate::TransformJugglerToPerformer()
-{
-}
-*/
 
 void cfdNavigate::FwdTranslate( )
 {

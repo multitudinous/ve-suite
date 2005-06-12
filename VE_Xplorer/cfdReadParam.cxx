@@ -34,7 +34,7 @@
 #include "cfdDataSet.h"
 #include "cfdFileInfo.h"
 #include "fileIO.h"
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdDCS.h"
 #include "cfdEnum.h"
 #include "cfdGlobalBase.h"
 #include "cfdCommandArray.h"

@@ -29,13 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdTempAnimation.h"
-#include "cfdSequence.h"
+#include "VE_SceneGraph/cfdTempAnimation.h"
+#include "VE_SceneGraph/cfdSequence.h"
 #include "cfdEnum.h"
-#include "cfdGroup.h"
-#include "cfdGeode.h"
-#include "cfdDCS.h"
-#include "cfdSceneNode.h"
+#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdGeode.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdSceneNode.h"
 
 #include <iostream>
 

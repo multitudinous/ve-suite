@@ -35,8 +35,8 @@
 #include "cfdNavigate.h"
 #include "cfdSoundHandler.h"
 #include "cfdCursor.h"
-#include "cfdDCS.h"
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdGroup.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 #include "cfdReadParam.h"
@@ -45,7 +45,7 @@
 #include "cfdQuatCamHandler.h"
 #include "cfdDataSet.h"
 #include "cfdModelHandler.h"
-#include "cfdPfSceneManagement.h"
+#include "VE_SceneGraph/cfdPfSceneManagement.h"
 
 #include <vrj/Util/Debug.h>
 

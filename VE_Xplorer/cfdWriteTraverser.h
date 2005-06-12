@@ -34,14 +34,14 @@
 #define _CFD_WRITE_TRAVERSER_H_
 
 #include <vector>
-#include "cfdNode.h"
+#include "VE_SceneGraph/cfdNode.h"
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
 #elif _OSG
 #include <osg/Node>
 #elif _OPENSG
 #endif
-#include "cfdNodeTraverser.h"
+#include "VE_SceneGraph/cfdNodeTraverser.h"
 ////////////////////////////////////////
 //This class writes out a performer   // 
 //binary file of the node passed in.  // 

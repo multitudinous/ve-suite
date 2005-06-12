@@ -32,7 +32,7 @@
 #ifndef CFD_NODE_H
 #define CFD_NODE_H
 
-#include "cfdSceneNode.h"
+#include "VE_SceneGraph/cfdSceneNode.h"
 
 #ifdef _PERFORMER
 class pfNode;

@@ -32,8 +32,8 @@
 #ifndef CFD_DCS_H
 #define CFD_DCS_H
 
-#include "cfdGroup.h"
-//#include "cfdNode.h"
+#include "VE_SceneGraph/cfdGroup.h"
+
 #include <gmtl/Matrix.h>
 #include <vector>
 class cfdNode;

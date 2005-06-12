@@ -39,13 +39,13 @@
 #endif   // _WIN32
 
 #include "cfdTeacher.h"
-#include "cfdGroup.h"
-#include "cfdDCS.h"
-#include "cfdNode.h"
+#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdNode.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 #include "cfdWriteTraverser.h"
-#include "cfdPfSceneManagement.h"
+#include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include <iostream>
 #include <string>
 #include <sstream>

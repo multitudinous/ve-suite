@@ -32,14 +32,14 @@
 
 #include "cfdVEBaseClass.h"
 //#include "cfdModuleGeometry.h"
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdGroup.h"
 #include "cfdModel.h"
 #include "cfdReadParam.h"
 #include "fileIO.h"
 #include "cfdFILE.h"
 #include "cfdDataSet.h"
 #include "cfdNavigate.h"
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdDCS.h"
 #include "cfdObjects.h"
 
 #include "package.h"

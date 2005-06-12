@@ -32,26 +32,26 @@
 
 #include "cfdDigitalAnalogGauge.h"
 #include "cfd1DTextInput.h"
-#include "cfdGroup.h"
-#include "cfdNode.h"
-#include "cfdDCS.h"
-#include "cfdGeode.h"
+#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdNode.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdGeode.h"
 
-#include "vtkArrowSource.h"
-#include "vtkPolyDataMapper.h"
-#include "vtkRenderWindow.h"
-#include "vtkActor.h"
-#include "vtkRenderer.h"
-#include "vtkTransform.h"
-#include "vtkTransformPolyDataFilter.h"
-#include "vtkRenderWindowInteractor.h"
-#include "vtkImageMapper.h"
-#include "vtkProperty.h"
-#include "vtkCellArray.h"
-#include "vtkPoints.h"
-#include "vtkPolyData.h"
-#include "vtkMath.h"
-#include "vtkVectorText.h"
+#include <vtkArrowSource.h>
+#include <vtkPolyDataMapper.h>
+#include <vtkRenderWindow.h>
+#include <vtkActor.h>
+#include <vtkRenderer.h>
+#include <vtkTransform.h>
+#include <vtkTransformPolyDataFilter.h>
+#include <vtkRenderWindowInteractor.h>
+#include <vtkImageMapper.h>
+#include <vtkProperty.h>
+#include <vtkCellArray.h>
+#include <vtkPoints.h>
+#include <vtkPolyData.h>
+#include <vtkMath.h>
+#include <vtkVectorText.h>
 
 #include <vpr/Util/Debug.h>
 

@@ -1,7 +1,7 @@
 #ifndef CFD_SWITCH_H
 #define CFD_SWITCH_H
 
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdGroup.h"
 
 #ifdef _PERFORMER
 class pfSwitch;
@@ -10,7 +10,8 @@ class pfSwitch;
 #elif OPENSG
 #endif
 
-class cfdSwitch: public cfdGroup{
+class cfdSwitch : public cfdGroup
+{
 public:
    cfdSwitch();
    cfdSwitch(const cfdSwitch& cSwitch);

@@ -33,7 +33,7 @@
 #include "cfdDataSet.h"
 #include "cfdPlanes.h"
 #include "cfdCuttingPlane.h"
-#include "cfdGeode.h"
+#include "VE_SceneGraph/cfdGeode.h"
 
 #include <vpr/Util/Debug.h>
 

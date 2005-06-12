@@ -30,11 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdDataSet.h"
-#include "cfdTempAnimation.h"
-#include "cfdDCS.h"
-#include "cfdNode.h"
-#include "cfdGroup.h"
-#include "cfdSwitch.h"
+#include "VE_SceneGraph/cfdTempAnimation.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdNode.h"
+#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdSwitch.h"
 #include "cfdFILE.h"
 #include "cfdGrid2Surface.h"
 #include "VE_SceneGraph/cfdClone.h"

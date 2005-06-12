@@ -1,6 +1,6 @@
 #ifndef CFD_CLONE_H
 #define CFD_CLONE_H
-#include "cfdNode.h"
+#include "VE_SceneGraph/cfdNode.h"
 class cfdDCS;
 //class cfdMaterial;
 

@@ -33,7 +33,7 @@
 #include "cfdQuatCamHandler.h"
 #include "cfdFileInfo.h"
 #include "fileIO.h"
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdDCS.h"
 #include "cfdQuatCam.h"
 #include "cfdNavigate.h"
 #include "cfdEnum.h"

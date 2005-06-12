@@ -38,8 +38,8 @@
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 
-#include "cfdDCS.h"
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdGroup.h"
 #include "cfdDataSet.h"
 #include "fileIO.h"
 #include "cfdModel.h"
@@ -49,10 +49,10 @@
 #include "cfdReadParam.h"
 #include "cfdFILE.h"
 #include "cfdScalarBarActor.h"
-#include "cfdTempAnimation.h"
-#include "cfdSwitch.h"
-#include "cfdPfSceneManagement.h"
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdTempAnimation.h"
+#include "VE_SceneGraph/cfdSwitch.h"
+#include "VE_SceneGraph/cfdPfSceneManagement.h"
+#include "VE_SceneGraph/cfdGroup.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED

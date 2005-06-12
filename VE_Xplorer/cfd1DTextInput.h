@@ -36,7 +36,7 @@
 
 class cfdGeode;
 class  vtkActor;
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdDCS.h"
 
 class cfd1DTextInput : public cfdDCS
 {

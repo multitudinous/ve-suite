@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdIsosurface.h"
 #include "cfdDataSet.h"
-#include "cfdGeode.h"
+#include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
 //#include <vtkUnstructuredGrid.h>

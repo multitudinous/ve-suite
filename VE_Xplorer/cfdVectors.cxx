@@ -33,7 +33,7 @@
 #include "cfdDataSet.h"
 #include "cfdPlanes.h"
 #include "cfdEnum.h"
-#include "cfdGeode.h"
+#include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPointData.h>

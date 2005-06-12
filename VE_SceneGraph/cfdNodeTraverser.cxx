@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdNodeTraverser.h"
+#include "VE_SceneGraph/cfdNodeTraverser.h"
 #include <iostream>
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdGroup.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>

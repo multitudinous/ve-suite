@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdExecutive.h"
 #include "VE_i.h"
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdDCS.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
 #include "cfdVEAvailModules.h"
@@ -39,7 +39,7 @@
 #include "cfdModelHandler.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdThread.h"
-#include "cfdPfSceneManagement.h"
+#include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include "package.h"
 #include "Network_Exec.h"
 

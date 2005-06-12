@@ -32,7 +32,7 @@
 #ifndef CFD_GROUP_H
 #define CFD_GROUP_H
 
-#include "cfdNode.h"
+#include "VE_SceneGraph/cfdNode.h"
 #include <vector>
 #ifdef _PERFORMER
 class pfGroup;

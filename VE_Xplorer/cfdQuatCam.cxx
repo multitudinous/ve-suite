@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdQuatCam.h"
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdDCS.h"
 #include "cfdNavigate.h"
 
 using namespace gmtl;

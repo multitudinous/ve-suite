@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdPfSceneManagement.h"
+#include "VE_SceneGraph/cfdPfSceneManagement.h"
 
 /// Performer libraries
 #ifdef _PERFORMER
@@ -41,8 +41,8 @@
 #include <osg/Group>
 #include <osg/Node>
 #endif
-#include "cfdNode.h"
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdNode.h"
+#include "VE_SceneGraph/cfdGroup.h"
 
 #ifndef WIN32
 #include <malloc.h>
@@ -56,8 +56,8 @@
 
 #include <iostream>
 
-#include "cfdDCS.h"
-#include "cfdGroup.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdGroup.h"
 
 cfdPfSceneManagement::cfdPfSceneManagement( void )
 {

@@ -31,7 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "cfdWriteTraverser.h"
-#include "cfdSequence.h"
+#include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdSequence.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
@@ -43,8 +44,6 @@
 #include <osg/Sequence>
 #endif
 
-#include "cfdGroup.h"
-#include "cfdSequence.h"
 #include <iostream>
 //////////////////////////////////////
 //Constructor                       //

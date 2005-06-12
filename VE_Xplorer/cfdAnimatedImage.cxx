@@ -34,8 +34,8 @@
 #include "cfdImage.h"
 #include "cfdEnum.h"
 #include "cfdCommandArray.h"
-#include "cfdTempAnimation.h"
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdTempAnimation.h"
+#include "VE_SceneGraph/cfdDCS.h"
 
 #include <vpr/Util/Debug.h>
 

@@ -37,7 +37,7 @@
 
 #include "cfdEnum.h"
 #include "cfdDataSet.h"
-#include "cfdGeode.h"
+#include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
