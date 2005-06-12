@@ -41,7 +41,7 @@
 #include "cfdModel.h"
 #include "cfdFILE.h"
 #include "cfdEnum.h"
-#include "cfdTempAnimation.h"
+#include "VE_SceneGraph/cfdTempAnimation.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED
