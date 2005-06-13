@@ -55,26 +55,31 @@
 
 #include <vpr/Util/Debug.h>
 
-cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( const char * gaugeName,
-                                              cfdGroup * groupNode )
+cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( cfdGroup * groupNode )
 {
+   vprDEBUG(vprDBG_ALL,2) << " gauges constructor"
+                          << std::endl << vprDEBUG_FLUSH;
    this->gaugeDCS = new cfdDCS();
    this->gaugeDCS->SetName("gauge");
-   vprDEBUG(vprDBG_ALL,1) << " gauges constructor. " << std::endl << vprDEBUG_FLUSH;
    this->masterNode = groupNode;
    this->SetPosition( 4.0f, 6.0f, 8.0f );
    this->SetOrientation( 0.0, 90.0, 0.0 );
    this->circleRadius = 0.75;
    this->digitalPrecision = 3;
+   strcpy( this->gaugeName, "generic gauge" );
    strcpy( this->digitalText, "--N/A--" );
-   DefineCircleActor();
-   DefineStationaryArrowActor();
-   DefineMovingArrowActor();
-   DefineGaugeTextActor( gaugeName );
-   DefineDigitalActor();
    this->lowAnalogLimit = -100.0;
    this->highAnalogLimit = 100.0;
-   vprDEBUG(vprDBG_ALL,1) << " leaving gauges constructor. " << std::endl << vprDEBUG_FLUSH;
+   this->backgroundActor = NULL;
+
+   for ( int i = 0; i < 3 ; i++ )
+   {
+      this->gaugeColor[ i ] = 1.0;  // white
+      this->backgroundColor[ i ] = -1.0;  // not present
+   }
+
+   vprDEBUG(vprDBG_ALL,2) << " leaving gauges constructor"
+                          << std::endl << vprDEBUG_FLUSH;
 
 }
 ////////////////////////////////////////////////////////////////////////////
@@ -89,13 +94,13 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
    stationaryArrowGeode = new cfdGeode(*g.stationaryArrowGeode);
    labelGeode = new cfdGeode(*g.labelGeode);
    digitalGeode = new cfdGeode(*g.digitalGeode);
-   itsX[0] = g.itsX[0];
-   itsX[1] = g.itsX[1];
-   itsX[2] = g.itsX[2];
+   itsX[ 0 ] = g.itsX[ 0 ];
+   itsX[ 1 ] = g.itsX[ 1 ];
+   itsX[ 2 ] = g.itsX[ 2 ];
 
    movingArrow = vtkArrowSource::New();
    movingArrow = g.movingArrow;
-   arrowTransform =vtkTransform::New();
+   arrowTransform = vtkTransform::New();
    arrowTransform = g.arrowTransform;
    arrowRefPosition = vtkMatrix4x4::New();
    arrowRefPosition = g.arrowRefPosition;
@@ -113,9 +118,18 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
    digitalActor = g.digitalActor;
    digitalLabel = vtkVectorText::New();
    digitalLabel = g.digitalLabel;
+   strcpy(gaugeName,g.gaugeName);
    strcpy(digitalText,g.digitalText);
    digitalPrecision = g.digitalPrecision;
    circleRadius = g.circleRadius;
+   this->lowAnalogLimit = g.lowAnalogLimit;
+   this->highAnalogLimit = g.highAnalogLimit;
+
+   for ( int i = 0; i < 3 ; i++ )
+   {
+      this->gaugeColor[ i ] = g.gaugeColor[ i ];
+      this->backgroundColor[ i ] = g.backgroundColor[ i ];
+   }
 
    vprDEBUG(vprDBG_ALL,2) << "Leaving cfdDigitalAnalogGauge Copy Constructor" 
                           << std::endl << vprDEBUG_FLUSH;
@@ -131,6 +145,11 @@ cfdDigitalAnalogGauge::~cfdDigitalAnalogGauge( void )
    this->arrowRefPosition->Delete();
    this->transformer2->Delete();
    this->digitalLabel->Delete();
+}
+
+void cfdDigitalAnalogGauge::SetGaugeName( const char input[] )
+{
+   strcpy( this->gaugeName, input );
 }
 
 void cfdDigitalAnalogGauge::SetPosition( float x[3] )
@@ -167,6 +186,18 @@ void cfdDigitalAnalogGauge::SetOrientation( double Xrot, double Yrot, double Zro
    this->gaugeDCS->SetRotationArray( rotationArray );
 }
 
+void cfdDigitalAnalogGauge::SetColor( double color[3] )
+{
+   for ( int i = 0; i < 3 ; i++ )
+      this->gaugeColor[ i ] = color[ i ];
+}
+
+void cfdDigitalAnalogGauge::SetBackgroundColor( double color[3] )
+{
+   for ( int i = 0; i < 3 ; i++ )
+      this->backgroundColor[ i ] = color[ i ];
+}
+
 void cfdDigitalAnalogGauge::SetAnalogLimits( double low, double high )
 {
    this->lowAnalogLimit = low;
@@ -198,30 +229,44 @@ cfdDCS * cfdDigitalAnalogGauge::GetGaugeNode()
 
 void cfdDigitalAnalogGauge::Display()
 {
+   DefineCircleActor();
    this->circleGeode = new cfdGeode();
    this->circleGeode->TranslateTocfdGeode( this->GetCircleActor() );
    this->gaugeDCS->AddChild( this->circleGeode );
    //this->GetCircleActor()->Delete();
 
+   DefineStationaryArrowActor();
    this->stationaryArrowGeode = new cfdGeode();
    this->stationaryArrowGeode->TranslateTocfdGeode( this->GetStationaryArrowActor() );
    this->gaugeDCS->AddChild( this->stationaryArrowGeode );
    //this->GetStationaryArrowActor()->Delete();
 
+   DefineGaugeTextActor();
    this->labelGeode = new cfdGeode();
    this->labelGeode->TranslateTocfdGeode( this->GetLabelActor() );
    this->gaugeDCS->AddChild( this->labelGeode );
    //this->GetLabelActor()->Delete();
 
+   DefineMovingArrowActor();
    this->movingArrowGeode = new cfdGeode();
    this->movingArrowGeode->TranslateTocfdGeode( this->GetMovingArrowActor() );
    this->gaugeDCS->AddChild( this->movingArrowGeode );
    //this->GetMovingArrowActor()->Delete();
 
+   DefineDigitalActor();
    this->digitalGeode = new cfdGeode();
    this->digitalGeode->TranslateTocfdGeode( this->GetDigitalActor() );
    this->gaugeDCS->AddChild( this->digitalGeode );
    //this->GetDigitalActor()->Delete();
+
+   if ( backgroundColor[ 0 ] != -1.0 )
+   {
+      DefineBackgroundActor();
+      this->backgroundGeode = new cfdGeode();
+      this->backgroundGeode->TranslateTocfdGeode( this->GetBackgroundActor() );
+      this->gaugeDCS->AddChild( this->backgroundGeode );
+      //this->GetBackgroundActor()->Delete();
+   }
 
    this->masterNode->AddChild( this->gaugeDCS );
 }
@@ -293,6 +338,7 @@ void cfdDigitalAnalogGauge::DefineCircleActor()
 
    this->circleActor = vtkActor::New();
    this->circleActor->GetProperty()->SetLineWidth( 5.0 );
+   this->circleActor->GetProperty()->SetColor( this->gaugeColor );
    this->circleActor->SetMapper( circleMapper );
    circleMapper->Delete();
 }
@@ -300,6 +346,73 @@ void cfdDigitalAnalogGauge::DefineCircleActor()
 vtkActor * cfdDigitalAnalogGauge::GetCircleActor()
 {
    return this->circleActor;
+}
+
+void cfdDigitalAnalogGauge::DefineBackgroundActor()
+{
+   int numPts = 4;
+
+   vtkPolyData *output = vtkPolyData::New();
+
+   vtkCellArray * newLine = vtkCellArray::New();
+   newLine->Allocate(newLine->EstimateSize(1,numPts));
+   newLine->InsertNextCell(numPts+1);
+   for ( int i = 0; i < numPts; i++ )
+   {
+      newLine->InsertCellPoint(i);
+   }
+   newLine->InsertCellPoint(0); //close the polyline
+   output->SetLines(newLine);
+   newLine->Delete();
+
+   // for a filled polygon...
+   vtkCellArray * newPoly = vtkCellArray::New();
+   newPoly->Allocate(newPoly->EstimateSize(1,numPts));
+   newPoly->InsertNextCell(numPts);
+   for ( int i = 0; i < numPts; i++ )
+   {
+      newPoly->InsertCellPoint(i);
+   }
+   output->SetPolys(newPoly);
+   newPoly->Delete();
+
+   // Now produce polygon points.
+   vtkPoints *newPoints = vtkPoints::New();
+   newPoints->Allocate(numPts);
+
+   double x [ 3 ];
+   x[ 0 ] = -0.85;
+   x[ 1 ] =  1.20;
+   x[ 2 ] = -0.02;   // put it just behind the gauge
+   newPoints->InsertNextPoint( x );
+   x[ 0 ] = -0.85;
+   x[ 1 ] = -1.40;
+   newPoints->InsertNextPoint( x );
+   x[ 0 ] =  0.85;
+   x[ 1 ] = -1.40;
+   newPoints->InsertNextPoint( x );
+   x[ 0 ] =  0.85;
+   x[ 1 ] =  1.20;
+   newPoints->InsertNextPoint( x );
+
+   output->SetPoints(newPoints);
+   newPoints->Delete();
+
+   vtkPolyDataMapper * backgroundMapper = vtkPolyDataMapper::New();
+   backgroundMapper->SetInput( output );
+   output->Delete();
+
+   this->backgroundActor = vtkActor::New();
+   this->backgroundActor->GetProperty()->SetLineWidth( 5.0 );
+   this->backgroundActor->GetProperty()->SetColor( this->backgroundColor );
+   this->backgroundActor->GetProperty()->SetOpacity( 0.7 );
+   this->backgroundActor->SetMapper( backgroundMapper );
+   backgroundMapper->Delete();
+}
+
+vtkActor * cfdDigitalAnalogGauge::GetBackgroundActor()
+{
+   return this->backgroundActor;
 }
 
 void cfdDigitalAnalogGauge::DefineStationaryArrowActor()
@@ -324,8 +437,8 @@ void cfdDigitalAnalogGauge::DefineStationaryArrowActor()
    transformer1->Delete();
 
    this->stationaryArrowActor = vtkActor::New();
+   this->stationaryArrowActor->GetProperty()->SetColor( 1.0, 0.0, 0.0 ); // red
    this->stationaryArrowActor->SetMapper( stationaryArrowMapper );
-   this->stationaryArrowActor->GetProperty()->SetColor( 1.0, 0.0, 0.0 );
    stationaryArrowMapper->Delete();
 }
 
@@ -358,6 +471,7 @@ void cfdDigitalAnalogGauge::DefineMovingArrowActor()
    this->arrowMapper->SetInput( transformer2->GetOutput() );
 
    this->arrowActor = vtkActor::New();
+   this->arrowActor->GetProperty()->SetColor( this->gaugeColor );
    this->arrowActor->SetMapper( this->arrowMapper );
 }
 
@@ -400,13 +514,16 @@ void cfdDigitalAnalogGauge::UpdateMovingArrowInRange( double value )
    this->UpdateMovingArrowAngle( angle );
 }
 
-void cfdDigitalAnalogGauge::DefineGaugeTextActor( const char * gaugeName )
+void cfdDigitalAnalogGauge::DefineGaugeTextActor()
 {
    vtkVectorText * label = vtkVectorText::New();
-   label->SetText( gaugeName );
+   label->SetText( this->gaugeName );
 
    vtkTransform * labelTransform = vtkTransform::New();
    double labelScale = 0.15;
+   // crude way to reduce size of text for big phrases...
+   if ( strlen(this->gaugeName) > 14 )
+      labelScale = 0.13;
    labelTransform->Scale( labelScale, labelScale, labelScale );
 
    vtkTransformPolyDataFilter * labelFilter = vtkTransformPolyDataFilter::New();
@@ -426,6 +543,7 @@ void cfdDigitalAnalogGauge::DefineGaugeTextActor( const char * gaugeName )
    labelTransform->Delete();
 
    this->labelActor = vtkActor::New();
+   this->labelActor->GetProperty()->SetColor( this->gaugeColor );
    this->labelActor->SetMapper( textMapper );
    textMapper->Delete();
 }
@@ -460,6 +578,7 @@ void cfdDigitalAnalogGauge::DefineDigitalActor()
    labelTransform->Delete();
 
    this->digitalActor = vtkActor::New();
+   this->digitalActor->GetProperty()->SetColor( this->gaugeColor );
    this->digitalActor->SetMapper( textMapper );
    textMapper->Delete();
 }

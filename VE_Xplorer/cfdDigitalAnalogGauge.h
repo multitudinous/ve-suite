@@ -50,7 +50,7 @@ class cfdDigitalAnalogGauge
 {
    public:
 
-      cfdDigitalAnalogGauge( const char * input, cfdGroup* );
+      cfdDigitalAnalogGauge( cfdGroup* );
       cfdDigitalAnalogGauge( const cfdDigitalAnalogGauge& g );
       ~cfdDigitalAnalogGauge( void );
 
@@ -61,7 +61,10 @@ class cfdDigitalAnalogGauge
       void GetPosition( float &x, float &y, float &z );
       void SetOrientation( double Xrot, double Yrot, double Zrot );
 
+      void SetGaugeName( const char input[] );
       void SetAnalogLimits( double low, double high );
+      void SetColor( double color[3] );
+      void SetBackgroundColor( double color[3] );
 
       void Display();
 
@@ -80,12 +83,14 @@ class cfdDigitalAnalogGauge
       vtkActor * GetMovingArrowActor();
       vtkActor * GetLabelActor();
       vtkActor * GetDigitalActor();
+      vtkActor * GetBackgroundActor();
 
       void DefineCircleActor();
       void DefineStationaryArrowActor();
       void DefineMovingArrowActor();
-      void DefineGaugeTextActor( const char * input );
+      void DefineGaugeTextActor();
       void DefineDigitalActor();
+      void DefineBackgroundActor();
 
       cfdGroup* masterNode;
       cfdDCS * gaugeDCS;
@@ -95,6 +100,7 @@ class cfdDigitalAnalogGauge
       cfdGeode* stationaryArrowGeode;
       cfdGeode* labelGeode;
       cfdGeode* digitalGeode;
+      cfdGeode* backgroundGeode;
 
       float itsX [ 3 ];
       vtkArrowSource * movingArrow;
@@ -108,10 +114,14 @@ class cfdDigitalAnalogGauge
       vtkActor * stationaryArrowActor;
       vtkActor * labelActor;
       vtkActor * digitalActor;
+      vtkActor * backgroundActor;
       vtkVectorText * digitalLabel;
+      char gaugeName [ 100 ];
       char digitalText [ 100 ];
       int digitalPrecision;
       double lowAnalogLimit, highAnalogLimit;
+      double gaugeColor [ 3 ];
+      double backgroundColor [ 3 ];
 };
 
 #endif
