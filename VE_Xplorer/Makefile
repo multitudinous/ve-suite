@@ -182,8 +182,15 @@ SRCS=\
 ifeq ($(VE_PATENTED), TRUE)
 ifeq ($(SCENE_GRAPH), OSG)
 SRCS+= \
+   cfd3DTextureCullCallback.cxx \
+   cfdAdvectionSubGraph.cxx \
+   cfdCopyTo3DTextureStage.cxx \
+   cfdOSGAdvectionShaderManager.cxx \
+   cfdOSGPingPongTexture3d.cxx \
    cfdOSGShaderManager.cxx \
    cfdOSGTransferShaderManager.cxx \
+   cfdPBufferManager.cxx \
+   cfdPBufferQuad.cxx \
    cfdScalarShaderManager.cxx \
    cfdScalarVolumeVisHandler.cxx \
    cfdSimpleTextureCallback.cxx \
@@ -193,6 +200,9 @@ SRCS+= \
    cfdTextureManager.cxx \
    cfdUpdateTextureCallback.cpp \
    cfdUpdateableOSGTexture1d.cxx \
+   cfdUpdateableOSGNoiseTexture3d.cxx \
+   cfdUpdateParameterCallback.cxx \
+   cfdVectorVolumeVisHandler.cxx 
    cfdVolumeBillboard.cxx \
    cfdVolumeCenterCallback.cxx \
    cfdVolumeVisNodeHandler.cxx \
@@ -200,23 +210,6 @@ SRCS+= \
 endif
 endif
 
-ifeq ($(VE_PATENTED), TRUE)
-ifeq ($(SCENE_GRAPH), OSG)
-ifeq ($(CFD_USE_SHADERS), TRUE)
-SRCS+= \
-   cfd3DTextureCullCallback.cxx \
-   cfdAdvectionSubGraph.cxx \
-   cfdCopyTo3DTextureStage.cxx \
-   cfdOSGAdvectionShaderManager.cxx \
-   cfdOSGPingPongTexture3d.cxx \
-   cfdPBufferManager.cxx \
-   cfdPBufferQuad.cxx \
-   cfdUpdateableOSGNoiseTexture3d.cxx \
-   cfdUpdateParameterCallback.cxx \
-   cfdVectorVolumeVisHandler.cxx 
-endif
-endif
-endif
 
 ifeq ($(TAO_BUILD), TRUE)
 SRCS+= \

@@ -27,10 +27,10 @@
 #include "VE_VolumeVis/cfdScalarVolumeVisHandler.h"
 #include "VE_VolumeVis/cfdScalarShaderManager.h"
 #include "VE_VolumeVis/cfdOSGTransferShaderManager.h"
-#ifdef CFD_USE_SHADERS
+
 #include "VE_VolumeVis/cfdVectorVolumeVisHandler.h"
 #include "VE_VolumeVis/cfdOSGAdvectionShaderManager.h"
-#endif
+
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////
@@ -52,10 +52,7 @@ cfdTextureBasedVizHandler::cfdTextureBasedVizHandler()
    _textureBaseSelected = false;
    _activeTDSet = 0;
    _svvh = 0;
-#ifdef CFD_USE_SHADERS
    _vvvh = 0;
-
-#endif
 }
 ///////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::CleanUp( void )
@@ -95,12 +92,10 @@ void cfdTextureBasedVizHandler::CleanUp( void )
       delete _svvh;
       _svvh = 0;
    }
-#ifdef CFD_USE_SHADERS 
    if(_vvvh){
       delete _svvh;
       _vvvh = 0;
    }
-#endif
 }
 /////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateShaders()
@@ -109,12 +104,10 @@ void cfdTextureBasedVizHandler::_updateShaders()
    if(_activeTM){
       if(_activeTM->GetDataType(0) == cfdTextureManager::SCALAR){
         _updateScalarVisHandler();
-      }
-#ifdef CFD_USE_SHADERS
-      else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
+      }else if(_activeTM->GetDataType(0) == cfdTextureManager::VECTOR){
         _updateVectorVisHandler();
       }
-#endif
+
    }
    _updateShaderState();
 }
@@ -276,7 +269,6 @@ cfdPBufferManager* cfdTextureBasedVizHandler::GetPBuffer()
 ////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateShaderState()
 {
-#ifdef CFD_USE_SHADERS
    //first check which option is active
    if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ADVECTION_SHADER){
       if(_vvvh){
@@ -321,9 +313,7 @@ void cfdTextureBasedVizHandler::_updateShaderState()
             activeVisNodeHdlr->TurnOffBBox();
          }
       }
-   }else
-#endif
-   if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ISOSURFACE){
+   }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ID) == ISOSURFACE){
       if(_svvh){
          cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
          if(sShader)
@@ -361,7 +351,7 @@ void cfdTextureBasedVizHandler::_updateShaderState()
       }
    }
 }
-#ifdef CFD_USE_SHADERS
+
 //////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::PingPongTextures()
 {
@@ -375,7 +365,6 @@ void cfdTextureBasedVizHandler::SetPBuffer(cfdPBufferManager* pbm)
    if(_pbm != pbm)
       _pbm = pbm;
 }
-#endif
 ////////////////////////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::SetCommandArray(cfdCommandArray* cmdArray)
 {
@@ -436,7 +425,6 @@ void cfdTextureBasedVizHandler::SetActiveTextureDataSet(cfdTextureDataSet* tds)
      _currentBBox[5] = _activeTM->getBoundingBox()[5];
    }
 }
-
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateScalarVisHandler()
 {
@@ -459,7 +447,6 @@ void cfdTextureBasedVizHandler::_updateScalarVisHandler()
       //activeVisNodeHdlr = dynamic_cast<cfdScalarVolumeVisHandler*>(_svvh);
    }
 }
-#ifdef CFD_USE_SHADERS
 /////////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateVectorVisHandler()
 {
@@ -482,7 +469,6 @@ void cfdTextureBasedVizHandler::_updateVectorVisHandler()
       //activeVisNodeHdlr = dynamic_cast<cfdVectorVolumeVisHandler*>(_vvvh);
    }
 }
-#endif
 /////////////////////////////////////////////////////////////////////////////////
 cfdVolumeVisualization* cfdTextureBasedVizHandler::GetActiveVolumeVizNode()
 {

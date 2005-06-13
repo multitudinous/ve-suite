@@ -431,10 +431,10 @@ void UI_DatasetPanel::_buildPanel()
 
       _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
                                    0,1,1, 0.25, -1, wxEmptyString);
-      _minPercentSlider->Enable( false );
-      _maxPercentSlider->Enable( false );
-      _minSpinner->Enable( false );
-      _maxSpinner->Enable( false );
+      _minPercentSlider->Enable( true );
+      _maxPercentSlider->Enable( true);
+      _minSpinner->Enable( true);
+      _maxSpinner->Enable( true );
    }
    //sizers to pull together the scalar adjustment controls
    scalgroupmin = new wxBoxSizer(wxHORIZONTAL);

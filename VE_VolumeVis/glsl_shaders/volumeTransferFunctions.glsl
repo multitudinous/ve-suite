@@ -21,7 +21,6 @@ void main(void)
    gl_FragColor = clamp(ink +dye,vec4(0,0,0,0),vec4(1,1,1,1));
    gl_FragColor.w *= .2;
    //gl_FragColor.w *= color.a;
-
 }
 
 

@@ -60,9 +60,7 @@ namespace osgUtil { class SceneView; }
 #include <vpr/Thread/Thread.h>
 #endif
 #ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
 class cfdPBufferManager;
-#endif
 class cfdTextureBasedVizHandler;
 #endif
 class cfdApp: public vrj::OsgApp
@@ -99,12 +97,10 @@ class cfdApp: public vrj::OsgApp
       void draw();
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
 #ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
       void contextInit( void );
       virtual void contextClose( void );
       cfdPBufferManager* GetPBuffer( void );
       void contextPostDraw();
-#endif
 #endif
 #elif _OPENSG
 #endif
@@ -146,10 +142,8 @@ class cfdApp: public vrj::OsgApp
 #ifdef _OSG
 #ifdef VE_PATENTED
       cfdTextureBasedVizHandler* _tbvHandler;
-#ifdef CFD_USE_SHADERS
       //biv --may convert this to a singleton later
       cfdPBufferManager* _pbuffer;
-#endif
 #endif
       osg::ref_ptr<osg::FrameStamp> _frameStamp;
       osg::Timer _timer;

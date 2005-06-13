@@ -2,25 +2,20 @@
 #define CFD_UPDATE_PARAMETER_CALLBACK_H
 #ifdef VE_PATENTED
 #ifdef _OSG
-#ifdef CFD_USE_SHADERS
-#include <osgNV/Version>
-#include <osgNV/VectorParameterValue>
-#include <osgNV/ParameterValueCallback>
-class cfdUpdateParameterCallback: public osgNV::ParameterValueCallback 
-{
+
+#include <osg/Uniform>
+class cfdUpdateParameterCallback: public osg::Uniform::Callback{
+
 public:
 	cfdUpdateParameterCallback(); 
   
 	cfdUpdateParameterCallback(const cfdUpdateParameterCallback &copy,
                            const osg::CopyOp &copyop = osg::CopyOp::SHALLOW_COPY);
 
-
-	META_Object(test, cfdUpdateParameterCallback);
-
-   enum cfdParameterType{VECTOR,MATRIX};
+   enum cfdParameterType{VECTOR,MATRIX,TIME};
    enum cfdParameterSize{ONE=0,TWO,THREE,FOUR};
-	void operator()(osgNV::ParameterValue *param, osg::State &state) const;
-	
+   virtual void operator () (osg::Uniform* uniVar, osg::NodeVisitor* nv);
+
    void setTypeAndSize(cfdParameterType type,
                      cfdParameterSize size)
    {
@@ -36,7 +31,7 @@ protected:
    cfdParameterSize _size;
 
 };
-#endif //CFD_USE_SHADERS
+
 #endif //_OSG
 #endif //CFD_UPDATE_PARAMETER_CALLBACK_H
 #endif

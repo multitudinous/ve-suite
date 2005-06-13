@@ -9,10 +9,10 @@
 #include <osgNVCg/Context>
 #include <osgNVCg/Program>
 #include <osgNVCg/CgGeometry>
-#include "cfdAdvectionSubGraph.h"
+
 
 #endif
-
+#include "cfdAdvectionSubGraph.h"
 #include "cfdTextureMatrixCallback.h"
 #include "cfdVolumeCenterCallback.h"
 #include "cfdVolumeBillboard.h"

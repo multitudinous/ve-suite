@@ -37,10 +37,7 @@ protected:
    void _createTransferFunction(bool gamma = false,
                              bool clearList = false);
    virtual void _initPropertyTexture();
-    void _setupStateSetForGLSL();
-#ifdef CFD_USE_SHADERS
-   void _setupStateSetForCG();
-#endif
+   void _setupStateSetForGLSL();
    unsigned int _fieldSize[3];
    
    osg::ref_ptr<osg::TexMat> _texMat;

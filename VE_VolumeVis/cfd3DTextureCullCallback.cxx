@@ -1,7 +1,5 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
-
-#ifdef CFD_USE_SHADERS
 #include "cfd3DTextureCullCallback.h"
 #include "cfdCopyTo3DTextureStage.h"
 #include "cfdPBufferManager.h"
@@ -164,7 +162,5 @@ void cfd3DTextureCullCallback::preRender(osg::Node& node,
    }
    _count++;
 }
-   
-#endif
 #endif
 #endif

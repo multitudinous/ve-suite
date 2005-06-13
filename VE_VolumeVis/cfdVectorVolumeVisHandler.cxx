@@ -6,7 +6,6 @@
 #include <osg/StateSet>
 #include <osg/Switch>
 #include <osg/Node>
-#ifdef CFD_USE_SHADERS
 #include "cfdAdvectionSubGraph.h"
 #include "cfdVectorVolumeVisHandler.h"
 
@@ -306,6 +305,6 @@ cfdVectorVolumeVisHandler::operator=(const cfdVectorVolumeVisHandler& vvnh)
    }
    return *this;
 }
-#endif //CFD_USE_SHADERS
+//#endif //CFD_USE_SHADERS
 #endif //_OSG
 #endif

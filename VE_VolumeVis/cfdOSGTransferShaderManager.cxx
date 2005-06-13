@@ -121,23 +121,11 @@ void cfdOSGTransferShaderManager::Init()
                            osg::StateAttribute::ON);
      
       }
-      if(_useTM){
-         _ss->setTextureAttributeAndModes(nTransferFunctions,_property.get(),
-                                   osg::StateAttribute::OVERRIDE|osg::StateAttribute::ON);
-      }
+      
       _ss->setDataVariance(osg::Object::DYNAMIC);
       _tUnit = nTransferFunctions;
-      if(!_useGLSL){
-         
-#ifdef CFD_USE_SHADERS
-         std::cout<<"Using cg! Transfer shader manager"<<std::endl;
-         _setupStateSetForCG();
-      }else{
-#endif
-      
-         _setupStateSetForGLSL();
-      }
-      
+      _setupStateSetForGLSL();
+
    }
    _reinit = false;
 }
@@ -149,10 +137,9 @@ void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("mat2Func",1));
    _ss->addUniform(new osg::Uniform("mat3Func",2));
    _ss->addUniform(new osg::Uniform("mat4Func",3));
-   if(_useTM){
-      _ss->addUniform(new osg::Uniform("densityTexture",4));
-   }
-   _tUnit = 0;
+   _ss->addUniform(new osg::Uniform("densityTexture",4));
+   
+   
    //load the shader file 
    char directory[1024];
    if(_shaderDirectory){
@@ -167,30 +154,8 @@ void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
    glslProgram->addShader(vTransfers.get());
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),
-                        std::string("volumeTransferFunctions"));
+                        std::string("volumeTransferFunctions"),true);
 }
-#ifdef CFD_USE_SHADERS
-///////////////////////////////////////////////////////
-void cfdOSGTransferShaderManager::_setupStateSetForCG()
-{
-   //load the shader file 
-   char directory[1024];
-   if(_shaderDirectory){
-      strcpy(directory,_shaderDirectory);
-   }else{
-      char* vesuitehome = getenv("VE_SUITE_HOME");
-      strcpy(directory,vesuitehome);
-      strcat(directory,"/VE_VolumeVis/cg_shaders/");
-   }
-   if(!_useTM){
-      strcat(directory,"volumeTransferFunctions.cg");
-      _setupCGShaderProgram(_ss.get(),directory,"densityTransfer");
-   }else{
-      strcat(directory,"gammaCorrection.cg");
-      _setupCGShaderProgram(_ss.get(),directory,"gammaCorrection");
-   }
-}
-#endif
 /////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGTransferShaderManager::GetPropertyTexture()
 {

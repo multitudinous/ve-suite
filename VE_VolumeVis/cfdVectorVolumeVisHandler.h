@@ -2,7 +2,7 @@
 #define CFD_VECTOR_VOLUME_VIS_HANDLER_H
 #ifdef VE_PATENTED
 #ifdef _OSG
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
 namespace osg{
    class Group;
    class Texture3D;
@@ -58,7 +58,7 @@ protected:
    osg::ref_ptr<osg::Texture3D> _velocity;
 
 };
-#endif //
+//#endif //
 #endif //_OSG
 #endif// CFD_SCALAR_VOLUME_VIS_HANDLER_H
 #endif

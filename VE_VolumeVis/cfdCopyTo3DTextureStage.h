@@ -2,7 +2,7 @@
 #define CFD_COPY_TO_3DTEXTURE_STAGE_H
 #ifdef VE_PATENTED
 #ifdef _OSG
-#ifdef CFD_USE_SHADERS
+
 #include <osg/Texture3D>
 #include <osg/State>
 #include <osg/StateSet>
@@ -56,7 +56,7 @@ protected:
    int _height;
    int _nSlices;
 };
-#endif
+
 #endif //OSG
 #endif
 #endif// CFD_COPY_TO_3DTEXTURE_STAGE_H

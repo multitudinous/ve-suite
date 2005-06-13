@@ -1,6 +1,5 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
-#ifdef CFD_USE_SHADERS
 #include <iostream>
 #include <osg/BoundingBox>
 #include <osg/Matrixd>
@@ -404,6 +403,5 @@ osg::BoundingBox cfdPBufferQuad::BBoxCallback::computeBound(const osg::Drawable&
    return bbox;
 
 }
-#endif //CFD_USE_SHADERS
 #endif// _OSG
 #endif

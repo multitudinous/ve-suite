@@ -1,7 +1,6 @@
 #ifdef VE_PATENTED
 #ifdef _PERFORMER
 #elif _OSG
-#ifdef CFD_USE_SHADERS
 #include "cfdOSGPingPongTexture3d.h"
 #include <osg/Image>
 #include <osg/State>
@@ -80,6 +79,5 @@ cfdOSGPingPongTexture3D::operator=(const cfdOSGPingPongTexture3D& pp)
    }
    return *this;
 }
-#endif //
 #endif //_OSG
 #endif

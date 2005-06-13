@@ -3,8 +3,7 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/Drawable>
-#ifdef CFD_USE_SHADERS
-#include <osgNVCg/CgGeometry>
+
 namespace osg
 {
    class BoundingBox;
@@ -61,7 +60,6 @@ protected:
    float _deltaZ;
    osg::ref_ptr<osg::Texture3D> _texture;
 };
-#endif 
 #endif// _OSG
 #endif
 #endif// CFD_PBUFFER_QUAD_H

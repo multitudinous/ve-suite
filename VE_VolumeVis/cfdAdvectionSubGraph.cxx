@@ -1,6 +1,5 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
-#ifdef CFD_USE_SHADERS
 #include <cmath>
 #include "cfdAdvectionSubGraph.h"
 #include "cfdOSGAdvectionShaderManager.h"
@@ -84,7 +83,5 @@ osg::ref_ptr<osg::Group> CreateAdvectionSubGraph(cfdTextureManager* tm,
    return group;
    
 }
-
-#endif// CFD_USE_SHADERS
 #endif// _OSG
 #endif

@@ -1,7 +1,6 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <cmath>
-#ifdef CFD_USE_SHADERS
 #include "cfdPBufferManager.h"
 #ifdef WIN32
 // WGL_ARB_pbuffer
@@ -344,7 +343,6 @@ void cfdPBufferManager::deactivate()
       } 
    }
 }
-#endif
 #endif
 #endif
 #endif

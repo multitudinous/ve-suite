@@ -3,12 +3,6 @@
 #include <osg/StateSet>
 #include <osg/Shader>
 
-#ifdef CFD_USE_SHADERS
-#include <osgNVCg/Context>
-#include <osgNVCg/Program>
-#include <osgNVCg/CgGeometry>
-#endif
-
 #include "cfdOSGShaderManager.h"
 //////////////////////////////////////////
 //Constructors                          //
@@ -44,24 +38,6 @@ void cfdOSGShaderManager::UseCG(bool useCG)
 {
    _useGLSL = (useCG)?false:true;
 }
-#ifdef CFD_USE_SHADERS
-////////////////////////////////////////////////////////////////////////
-void cfdOSGShaderManager::_setupCGShaderProgram(osg::StateSet *ss, 
-                                              char* fragProgramFileName,
-                                              char* fragFunctionName)
-{
-   if(_ss.valid()){
-      // create fragment program
-      osgNVCg::Program *fprog = new osgNVCg::Program(osgNVCg::Program::FP30);
-      fprog->setFileName(fragProgramFileName);
-      fprog->setEntryPoint(fragFunctionName);
-      fprog->setUseOptimalOptions(true);
-
-      //apply the shaders to state set
-      _ss->setAttributeAndModes(fprog,osg::StateAttribute::ON/*|osg::StateAttribute::OVERRIDE*/);
-   }
-}
-#endif
 //////////////////////////////////////////////////////////////////////////////////////
 osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromFile(const std::string filename,
                                                            bool isFrag)
@@ -80,12 +56,16 @@ osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromFile(const std::string fi
 /////////////////////////////////////////////////////////////////////////
 void cfdOSGShaderManager::_setupGLSLShaderProgram(osg::StateSet* ss,
                                              osg::Program* glslProgram,
-                                             const std::string pgName)
+                                             const std::string pgName,bool override)
 {
    if(ss){
       if(glslProgram){
          glslProgram->setName(pgName.c_str());
-         ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON);
+         if(override){
+            ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON|osg::StateAttribute::OVERRIDE);
+         }else{
+            ss->setAttributeAndModes(glslProgram,osg::StateAttribute::ON);
+         }
       }
    }
 }

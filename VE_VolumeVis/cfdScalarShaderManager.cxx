@@ -62,15 +62,7 @@ void cfdScalarShaderManager::Init()
                         osg::StateAttribute::OFF);
       }
       _tUnit = 0;
-      if(!_useGLSL){
-         
-#ifdef CFD_USE_SHADERS
-         std::cout<<"Using cg!"<<std::endl;
-         _setupStateSetForCG();
-      }else{
-#endif
-         _setupStateSetForGLSL();
-      }
+      _setupStateSetForGLSL();
    }
    _reinit = false;
 }
@@ -97,23 +89,6 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
    glslProgram->addShader(scalarShader.get());
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),std::string("scalarAdjuster"));
 }
-#ifdef CFD_USE_SHADERS
-/////////////////////////////////////////////////
-void cfdScalarShaderManager::_setupStateSetForCG()
-{
-   //load the shader file 
-   char directory[1024];
-   if(_shaderDirectory){
-      strcpy(directory,_shaderDirectory);
-   }else{
-      char* vesuitehome = getenv("VE_SUITE_HOME");
-      strcpy(directory,vesuitehome);
-      strcat(directory,"/VE_VolumeVis/cg_shaders/");
-  }
-  strcat(directory,"scalarAdjuster.cg");
-   _setupCGShaderProgram(_ss.get(),directory,"scalarAdjustment");
-}
-#endif
 /////////////////////////////////////////////////
 void cfdScalarShaderManager::ActivateIsoSurface()
 {
@@ -339,6 +314,5 @@ void cfdScalarShaderManager::_initPropertyTexture()
       _property->setSubloadCallback(_utCbk);
    } 
 }
-//#endif// _CFD_USE_SHADERS
 #endif//_OSG
 #endif

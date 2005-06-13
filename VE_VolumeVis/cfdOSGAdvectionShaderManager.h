@@ -10,9 +10,6 @@ namespace osg{
 #include <vector>
 #include "cfdOSGShaderManager.h"
 #include "cfdUpdateableOSGNoiseTexture3d.h"
-#ifdef CFD_USE_SHADERS
-
-
 #include "cfdUpdateParameterCallback.h"
 class cfdUpdateMatrixParameterCallback;
 
@@ -54,10 +51,7 @@ protected:
    void _initWeightFunctions();
    void _initLookUpFunction();
    void _initFragProgramCallbacks();
-
-   virtual void _setupCGShaderProgram(osg::StateSet* ss,
-		                             char* progName, 
-                                   char* funcName);
+   void _setupStateSetForGLSL();
    unsigned int _fieldSize[3];
 
    bool _isFrag;
@@ -85,7 +79,7 @@ protected:
    bool _reinit;
    osg::Vec3 _center;
 };
-#endif// _CFD_USE_SHADERS
+
 #endif//_OSG
 #endif
 #endif// CFD_OSG_SCALAR_SHADER_MANAGER_H

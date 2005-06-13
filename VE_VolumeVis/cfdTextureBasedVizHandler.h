@@ -25,9 +25,8 @@ class cfdTextureDataSet;
 
 class cfdVolumeVisNodeHandler;
 class cfdScalarVolumeVisHandler;
-#ifdef CFD_USE_SHADERS
 class cfdVectorVolumeVisHandler;
-#endif
+
 class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
 {
    public:
@@ -44,20 +43,16 @@ class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandle
   
       void ViewTextureBasedVis(bool trueFalse);
       //once we get pf side this may need to be ifdef'd
-      //void SetSceneView(osgUtil::SceneView* sv);
-#ifdef CFD_USE_SHADERS 
+      //void SetSceneView(osgUtil::SceneView* sv); 
       void SetPBuffer(cfdPBufferManager* pbm);
       void PingPongTextures();
-#endif
       cfdPBufferManager* GetPBuffer();
       //bool InitVolumeVizNodes( void );
       cfdVolumeVisualization* GetVolumeVizNode(int index);
       cfdVolumeVisualization* GetActiveVolumeVizNode( void );
   
    protected:
-//#ifdef CFD_USE_SHADERS
       void _updateShaderState();
-//#endif
       void _updateGraph();
       void _updateVisualization();
       void _updateShaders();
@@ -79,10 +74,8 @@ class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandle
       osgUtil::SceneView* _sceneView;
       cfdVolumeVisNodeHandler* activeVisNodeHdlr;
       cfdScalarVolumeVisHandler* _svvh;
-#ifdef CFD_USE_SHADERS
       cfdVectorVolumeVisHandler* _vvvh;
       
-#endif
       //cfdSwitch* _visOptionSwitch;
       float* _currentBBox;
       bool _cleared;

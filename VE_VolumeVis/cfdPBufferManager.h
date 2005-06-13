@@ -2,7 +2,7 @@
 #define _BIV_PBUFFER_MANAGER_H_
 #ifdef VE_PATENTED
 #ifdef _OSG
-#ifdef CFD_USE_SHADERS
+
 #include <osg/GL>
 
 #if defined(WIN32)
@@ -94,7 +94,7 @@ protected:
    int _h;
    int _w;
 };
-#endif //CFD_USE_SHADER
+
 #endif
 #endif
 #endif //_BIV_PBUFFER_MANAGER_H_

@@ -4,7 +4,7 @@ uniform sampler1D transferFunction;
 void main(void)
 {
    //dependent texture look up in transfer function
-   float scalar = texture3D(volumeData,gl_TexCoord[0]).a;
+   float scalar = texture3D(volumeData,gl_TexCoord[0].xyz).a;
    gl_FragColor = texture1D(transferFunction,scalar);
 
    //set the opacity to .2 for all fragments

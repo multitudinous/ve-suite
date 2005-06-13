@@ -23,22 +23,17 @@ public:
 
 protected:
    virtual cfdOSGShaderManager& operator=(const cfdOSGShaderManager& sm);
-#ifdef CFD_USE_SHADERS
-   ////////////////
-   //Cg interface//
-   ////////////////
-   virtual void _setupCGShaderProgram(osg::StateSet* ss,
-                                      char* progName,
-                                      char* funcName);
-#endif
+
    //////////////////
    //GLSL interface//
    //////////////////
    virtual void _setupGLSLShaderProgram(osg::StateSet* ss,
                                         osg::Program* glslProgram,
-                                        const std::string pgName);
+                                        const std::string pgName,bool override = false);
    virtual osg::Shader* _createGLSLShaderFromFile(const std::string filename,
                                                            bool isFrag);
+   virtual void _setupStateSetForGLSL()=0;
+
    osg::ref_ptr<osg::Shader> _vshader;
    osg::ref_ptr<osg::Shader> _fshader;
 

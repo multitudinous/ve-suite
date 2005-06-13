@@ -1,7 +1,6 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/FrameStamp>
-#ifdef CFD_USE_SHADERS
 #include <cassert>
 #include "cfdCopyTo3DTextureStage.h"
 
@@ -84,6 +83,5 @@ void cfdCopyTo3DTextureStage::draw(osg::State& state,
       _pbuffer->deactivate();
    }
 }
-#endif
 #endif
 #endif
