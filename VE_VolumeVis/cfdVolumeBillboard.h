@@ -9,7 +9,7 @@ public:
    cfdVolumeBillboard(){}
    virtual ~cfdVolumeBillboard(){}
    //override how the matrix is computed for the billboard
-   bool computeMatrix(osg::Matrix& modelview,
+   virtual bool computeMatrix(osg::Matrix& modelview,
                     const osg::Vec3& eye_local,
                     const osg::Vec3& pos_local) const;
 protected:

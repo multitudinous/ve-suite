@@ -30,12 +30,13 @@ cfdPBufferManager::cfdPBufferManager()
    _oldDisplay = 0;
    _oldDrawable = 0;
    _oldContext = 0;
+   _pfAttribList.push_back(GLX_USE_GL);
    _pfAttribList.push_back(GLX_DRAWABLE_TYPE);
    _pfAttribList.push_back(GLX_PBUFFER_BIT);
    _pfAttribList.push_back(GLX_RENDER_TYPE);
    _pfAttribList.push_back(GLX_RGBA_BIT);
    _pfAttribList.push_back(GLX_DEPTH_SIZE);
-   _pfAttribList.push_back(24);
+   _pfAttribList.push_back(16);
    _pfAttribList.push_back(GLX_ALPHA_SIZE);
    _pfAttribList.push_back(8);
    _pfAttribList.push_back(GLX_RED_SIZE);
@@ -255,19 +256,31 @@ bool cfdPBufferManager::initializePBuffer(int width, int height)
    GLXFBConfig* glxConfig = 0;
    int configCount;   
 
-  /* glxConfig = glXGetFBConfigs(_oldDisplay, screen, &configCount);
+   glxConfig = glXGetFBConfigs(_oldDisplay, screen, &configCount);
+   int attrib[] = {
+      GLX_RENDER_TYPE, GLX_RGBA_BIT,
+      GLX_DRAWABLE_TYPE, GLX_PBUFFER_BIT,
+      GLX_DOUBLEBUFFER, 0,
+      GLX_RED_SIZE, 8,
+      GLX_GREEN_SIZE, 8,
+      GLX_BLUE_SIZE, 8,
+      GLX_ALPHA_SIZE, 8,
+      GLX_STENCIL_SIZE, 0,
+      GLX_DEPTH_SIZE, 0,
+      0 };
    if(!glxConfig){
       std::cout << "pbuffer creation error:  glXGetFBConfigs() failed" << std::endl;
       _isCreated = false;
       return false;
-   }else{*/
-      glxConfig = glXChooseFBConfig(_oldDisplay, screen, &_pfAttribList[0], &configCount);
+   }else{
+      std::cout<<"configCount: "<<configCount<<std::endl;
+      glxConfig = glXChooseFBConfig(_oldDisplay, screen, attrib, &configCount);
       if(!glxConfig){
          std::cout<< "pbuffer creation error:  glXChooseFBConfig() failed" << std::endl;
          _isCreated = false;
          return false;
       }
-   //}
+   }
    XVisualInfo* visual = glXGetVisualFromFBConfig(_oldDisplay, glxConfig[0]);
    if(!visual){
       std::cout << "pbuffer creation error:  glXGetVisualFromFBConfig() failed" << std::endl;

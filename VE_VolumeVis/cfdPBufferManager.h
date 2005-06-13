@@ -19,8 +19,6 @@
 #endif
 #include <iostream>
 
-
-
 class cfdPBufferManager
 {
    public:

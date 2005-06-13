@@ -13,7 +13,6 @@ f2app scalarAdjustment(float4 color : COLOR,
    float scalar = tex3D(volumeData,texCoord).a;
    retColor.color = tex1D(transferFunction,scalar);
 
-   //set the opacity to .2 for all fragments
    retColor.color.a *= color.a;
    return retColor;
 }
