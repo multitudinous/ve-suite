@@ -202,7 +202,7 @@ SRCS+= \
    cfdUpdateableOSGTexture1d.cxx \
    cfdUpdateableOSGNoiseTexture3d.cxx \
    cfdUpdateParameterCallback.cxx \
-   cfdVectorVolumeVisHandler.cxx 
+   cfdVectorVolumeVisHandler.cxx \
    cfdVolumeBillboard.cxx \
    cfdVolumeCenterCallback.cxx \
    cfdVolumeVisNodeHandler.cxx \

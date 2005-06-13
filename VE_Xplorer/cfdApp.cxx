@@ -82,9 +82,9 @@
 #endif
 #ifdef _OSG
 #ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
 #include "cfdPBufferManager.h"
-#endif
+//#endif
 #endif
 #endif
 /// C/C++ libraries
@@ -114,9 +114,9 @@ cfdApp::cfdApp( void )
    _frameStamp->setFrameNumber(0);
 #ifdef VE_PATENTED
    _tbvHandler = 0;
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
    _pbuffer = 0;
-#endif
+//#endif
 #endif
    _frameNumber = 0;
 #endif
@@ -210,7 +210,7 @@ inline osg::Group* cfdApp::getScene()
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
 //////////////////////////
 void cfdApp::contextInit()
 {
@@ -241,7 +241,7 @@ cfdPBufferManager* cfdApp::GetPBuffer()
    }
    return 0;
 }
-#endif
+//#endif
 #endif
 void cfdApp::configSceneView(osgUtil::SceneView* newSceneViewer)
 {
@@ -422,13 +422,13 @@ void cfdApp::intraFrame()
 }
 #ifdef VE_PATENTED
 #ifdef _OSG
-#ifdef CFD_USE_SHADERS
+//#ifdef CFD_USE_SHADERS
 void cfdApp::contextPostDraw()
 {
    if(_tbvHandler)
      _tbvHandler->PingPongTextures();
 }
-#endif//CFD_USE_SHADERS
+//#endif//CFD_USE_SHADERS
 #endif//_OSG
 #endif//VE_PATENTED
 
