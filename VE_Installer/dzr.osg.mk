@@ -1,4 +1,4 @@
-EXTRA_CXXFLAGS+= -D_OSG -DUSE_DEPRECATED_API
+EXTRA_CXXFLAGS+= -D_OSG 
 include $(DZR_BASE_DIR)/ext/vrjuggler/dzr.vrjuggler.glapp.mk
 EXTRA_INCLUDES+= -I$(OSG_HOME)/include
 CFDPLATFORM = $(shell uname -i)
@@ -7,9 +7,6 @@ ifeq (${CFDPLATFORM},x86_64)
    EXTRA_LIBS+= -L$(OSG_HOME)/lib -L$(OSG_HOME)/lib64 -losg -losgDB -losgGA -losgUtil \
             -lOpenThreads -losgFX 
 
-   ifeq (${CFD_USE_SHADERS},TRUE)
-      EXTRA_LIBS+= -losgNV -losgNVCg -losgNVExt -lCg -lCgGL
-   endif
 else
    ifeq (${CFDUNAME},IRIX64)
       EXTRA_LIBS+= -L$(OSG_HOME)/lib32 -losg -losgDB -losgGA -losgUtil \
@@ -19,7 +16,4 @@ else
             -lOpenThreads -losgFX 
    endif
 
-   ifeq (${CFD_USE_SHADERS},TRUE)
-      EXTRA_LIBS+= -losgNV -losgNVCg -losgNVExt -lCg -lCgGL
-   endif
 endif
