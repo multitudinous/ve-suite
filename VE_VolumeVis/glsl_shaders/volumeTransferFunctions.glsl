@@ -19,7 +19,7 @@ void main(void)
    ink = clamp((ink - hole),vec4(0,0,0,0),vec4(1,1,1,1));
 
    gl_FragColor = clamp(ink +dye,vec4(0,0,0,0),vec4(1,1,1,1));
-   gl_FragColor.w *= color.a;
+   gl_FragColor.w *= gl_Color.a;
 }
 
 
