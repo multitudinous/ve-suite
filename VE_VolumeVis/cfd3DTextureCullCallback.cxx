@@ -12,6 +12,8 @@
 #include <osg/Geode>
 #include <osg/Geometry>
 #include <osgUtil/RenderStage>
+#include <osgUtil/UpdateVisitor>
+#include <osg/FrameStamp>
 //#include <osg/BoundingBox>
 
 
@@ -27,6 +29,7 @@ cfd3DTextureCullCallback::cfd3DTextureCullCallback(osg::Node* subgraph,
    _pbuffer = 0;
    _count = 0;
    _pingPonger = 0;
+   _uniformUpdater = 0;
 }
 /////////////////////////////////////////////////////
 cfd3DTextureCullCallback::~cfd3DTextureCullCallback()
@@ -35,6 +38,10 @@ cfd3DTextureCullCallback::~cfd3DTextureCullCallback()
    {
       delete _pingPonger;
       _pingPonger = 0;
+   }
+   if(_uniformUpdater){
+      delete _uniformUpdater;
+      _uniformUpdater = 0;
    }
 }
 ///////////////////////////////////////////////////////////////////////
@@ -52,6 +59,11 @@ void cfd3DTextureCullCallback::SetPingPongTextures(unsigned int tPingUint,
    _pingPonger->SetPingTexture(tPingUint,_previous.get());
    _pingPonger->SetPongTexture(tPongUint,_current.get());
    _textureToUpdate = _pingPonger->GetCurrentTexture();
+   if(!_uniformUpdater){
+      _uniformUpdater = new osgUtil::UpdateVisitor();
+      _fs = new osg::FrameStamp();
+      _uniformUpdater->setFrameStamp(_fs.get());;
+   }
 }
 //////////////////////////////////////////////////////////////////
 cfdOSGPingPongTexture3D* cfd3DTextureCullCallback::GetPingPonger()
@@ -69,6 +81,13 @@ void cfd3DTextureCullCallback::operator()(osg::Node* node,
    osgUtil::CullVisitor* cullVisitor = dynamic_cast<osgUtil::CullVisitor*>(nv); 
    if (cullVisitor && _subgraph.valid() && _pingPonger)
    {  
+      //update the uniform updater
+      _fs->setReferenceTime(nv->getFrameStamp()->getReferenceTime());
+      _fs->setFrameNumber(nv->getFrameStamp()->getFrameNumber());
+
+
+      //force update the uniforms on the subgraph
+      _subgraph->accept(*_uniformUpdater);
       //_pingPonger->PingPongTextures();
       _textureToUpdate = _pingPonger->GetCurrentTexture();
       preRender(*node,*cullVisitor);

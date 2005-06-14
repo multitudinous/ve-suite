@@ -56,8 +56,8 @@
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "cfdTextureDataSet.h"
-#include "cfdTextureManager.h"
+#include "VE_VolumeVis/cfdTextureDataSet.h"
+#include "VE_VolumeVis/cfdTextureManager.h"
 #endif
 #endif
 #include <fstream>

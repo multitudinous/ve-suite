@@ -16,7 +16,7 @@ void main(void)
 {
 
    //look up the velocity in the field
-   vec4 v = texture3D(velocity,gl_TexCoord[0]);
+   vec4 v = texture3D(velocity,gl_TexCoord[0].xyz);
 
    //get our original values back
    v.xyz = (((v.xyz)*2.0) - 1.0);

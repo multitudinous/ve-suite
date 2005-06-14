@@ -6,7 +6,7 @@ uniform sampler3D densityTexture;
 void main(void)
 {
    //get the density for each material
-   vec4 density = texture3D(densityTexture,gl_TexCoord[0]);
+   vec4 density = texture3D(densityTexture,gl_TexCoord[0].xyz);
    
    vec4 red = texture1D(mat4Func,density.x);
    vec4 dye = vec4(red.x,0,0,red.a);
@@ -19,8 +19,7 @@ void main(void)
    ink = clamp((ink - hole),vec4(0,0,0,0),vec4(1,1,1,1));
 
    gl_FragColor = clamp(ink +dye,vec4(0,0,0,0),vec4(1,1,1,1));
-   gl_FragColor.w *= .2;
-   //gl_FragColor.w *= color.a;
+   gl_FragColor.w *= color.a;
 }
 
 

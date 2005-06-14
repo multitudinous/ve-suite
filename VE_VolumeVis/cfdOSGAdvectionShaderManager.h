@@ -10,7 +10,7 @@ namespace osg{
 #include <vector>
 #include "cfdOSGShaderManager.h"
 #include "cfdUpdateableOSGNoiseTexture3d.h"
-#include "cfdUpdateParameterCallback.h"
+class cfdUpdateParameterCallback;
 class cfdUpdateMatrixParameterCallback;
 
 class cfdOSGAdvectionShaderManager: public cfdOSGShaderManager{

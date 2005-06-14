@@ -125,7 +125,6 @@ void cfdOSGTransferShaderManager::Init()
       _ss->setDataVariance(osg::Object::DYNAMIC);
       _tUnit = nTransferFunctions;
       _setupStateSetForGLSL();
-
    }
    _reinit = false;
 }
@@ -154,7 +153,7 @@ void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
    glslProgram->addShader(vTransfers.get());
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),
-                        std::string("volumeTransferFunctions"),true);
+                        std::string("volumeTransferFunctions"));
 }
 /////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGTransferShaderManager::GetPropertyTexture()

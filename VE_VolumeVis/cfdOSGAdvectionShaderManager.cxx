@@ -11,6 +11,7 @@
 #include "cfdOSGAdvectionShaderManager.h"
 #include "cfdUpdateableOSGTexture1d.h"
 #include "cfdSimpleTextureCallback.h"
+#include "cfdUpdateParameterCallback.h"
 //#include "cfdUpdateMatrixParameterCallback.h"
 #define PI  3.1416
 ////////////////////////////////////////////////////////////
@@ -200,50 +201,25 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
 {
    std::cout<<"Using glsl..."<<std::endl;
    
-  osg::Uniform* dyeTrans = new osg::Uniform("dyeTranslation",osg::Vec3f(0.0f,0.0f,0.0f));
-   dyeTrans->setUpdateCallback(_noiseScaleCallback);
+   osg::ref_ptr<osg::Uniform> dyeTrans = new osg::Uniform("dyeTranslation",osg::Vec3f(0.0f,0.0f,0.0f));
    
-   osg::Uniform* dyeScale = new osg::Uniform("dyeScale",osg::Vec3f(.5*_fieldSize[0]/4.0,
-                                                                        .5*_fieldSize[1]/4.0,
-                                                                        .5*_fieldSize[2]/4.0));
-   dyeScale->setUpdateCallback(_dyeScaleCallback);
-
-   osg::Uniform* tCoordMult = new osg::Uniform("texCoordMult",osg::Vec3f(0.0f,0.0f,0.0f));
-   tCoordMult->setUpdateCallback(_dyeTransCallback);
-
-   osg::Uniform* dT = new osg::Uniform("deltaT",osg::Vec3f(1.0/_fieldSize[0],
-                                                                 1.0/_fieldSize[1],
-                                                                 1.0/_fieldSize[2]));
-   dT->setUpdateCallback(_deltaCallback);
-
-   osg::Uniform* t = new osg::Uniform("time",0.0f);
-   t->setUpdateCallback(_timeCallback);
-
-   osg::Uniform* period = new osg::Uniform("period",1.0f);
-   period->setUpdateCallback(_periodCallback);
-
-   osg::Uniform* wW = new osg::Uniform("weightW",osg::Vec3f(.2,.2,.2));
-   wW->setUpdateCallback(_weightWCallback);
-
-   osg::Uniform* wV = new osg::Uniform("weightV",osg::Vec3f(.8,.8,.8));
-   wV->setUpdateCallback(_weightVCallback);
-
-   _ss->addUniform(dyeTrans);
-   _ss->addUniform(dyeScale);
-   _ss->addUniform(tCoordMult);
-   _ss->addUniform(dT);
-   _ss->addUniform(t);
-   _ss->addUniform(period);
-   _ss->addUniform(wW);
-   _ss->addUniform(wV);
-
-   _ss->addUniform(new osg::Uniform("noiseTexture",0));
-   _ss->addUniform(new osg::Uniform("velocity",1));
-   _ss->addUniform(new osg::Uniform("dye",2));
-   _ss->addUniform(new osg::Uniform("lookUpTexture",3));
-   _ss->addUniform(new osg::Uniform("property",4));
-
+   osg::ref_ptr<osg::Uniform> dyeScale = new osg::Uniform("dyeScale",osg::Vec3f(.5*_fieldSize[0]/4.0,
+                                                            .5*_fieldSize[1]/4.0,
+                                                            .5*_fieldSize[2]/4.0));
    
+   osg::ref_ptr<osg::Uniform> tCoordMult = new osg::Uniform("texCoordMult",osg::Vec3f(.5*_fieldSize[0]/32.0,
+                                                                  .5*_fieldSize[1]/32.0,
+                                                                  .5*_fieldSize[2]/32.0));
+   
+   osg::ref_ptr<osg::Uniform> dT = new osg::Uniform("deltaT",osg::Vec3f(1.0/_fieldSize[0],
+                                                     1.0/_fieldSize[1],
+                                                     1.0/_fieldSize[2]));
+   
+   osg::ref_ptr<osg::Uniform> t = new osg::Uniform("time",0.0f);
+   osg::ref_ptr<osg::Uniform> period = new osg::Uniform("period",1.0f);
+   osg::ref_ptr<osg::Uniform> wW = new osg::Uniform("weightW",osg::Vec3f(.2,.2,.2));
+   osg::ref_ptr<osg::Uniform> wV = new osg::Uniform("weightV",osg::Vec3f(.8,.8,.8));
+ 
    char directory[1024];
    if(_shaderDirectory){
       strcpy(directory,_shaderDirectory);
@@ -259,9 +235,32 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
 
    glslProgram->addShader(vTransfers.get());
-
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),
                         std::string("fragAdvect"),true);
+   _ss->addUniform(dyeTrans.get());
+   _ss->addUniform(dyeScale.get());
+   _ss->addUniform(tCoordMult.get());
+   _ss->addUniform(dT.get());
+   _ss->addUniform(t.get());
+   _ss->addUniform(period.get());
+   _ss->addUniform(wW.get());
+   _ss->addUniform(wV.get());
+
+   dyeTrans->setUpdateCallback(_dyeTransCallback);
+   dyeScale->setUpdateCallback(_dyeScaleCallback);
+   tCoordMult->setUpdateCallback(_noiseScaleCallback);
+   t->setUpdateCallback(_timeCallback);
+   dT->setUpdateCallback(_deltaCallback);
+   wV->setUpdateCallback(_weightVCallback);
+   wW->setUpdateCallback(_weightWCallback);
+   period->setUpdateCallback(_periodCallback);
+
+
+   _ss->addUniform(new osg::Uniform("noiseTexture",0));
+   _ss->addUniform(new osg::Uniform("velocity",1));
+   _ss->addUniform(new osg::Uniform("dye",2));
+   _ss->addUniform(new osg::Uniform("lookUpTexture",3));
+   _ss->addUniform(new osg::Uniform("property",4));
     
 }
 /////////////////////////////////////////////////////////////
@@ -317,10 +316,10 @@ void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
    _periodCallback->updateParameter(&period);
 
    _weightWCallback->setTypeAndSize(cfdUpdateParameterCallback::VECTOR,
-                                   cfdUpdateParameterCallback::FOUR);
+                                   cfdUpdateParameterCallback::THREE);
    
    _weightVCallback->setTypeAndSize(cfdUpdateParameterCallback::VECTOR,
-                                   cfdUpdateParameterCallback::FOUR);
+                                   cfdUpdateParameterCallback::THREE);
    _timeCallback->setTypeAndSize(cfdUpdateParameterCallback::TIME,
                               cfdUpdateParameterCallback::ONE);
 }

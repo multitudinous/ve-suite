@@ -8,10 +8,12 @@ namespace osg{
    class Texture3D;
    class NodeVisitor;
    class Viewport;
+   class FrameStamp;
    //class BoundingBox;
 }
 namespace osgUtil{
    class CullVisitor;
+   class UpdateVisitor;
 }
 class cfdPBufferManager;
 class cfdOSGPingPongTexture3D;
@@ -50,6 +52,8 @@ protected:
    osg::ref_ptr<osg::Node> _current;
    osg::ref_ptr<osg::Node> _previous;
    osg::ref_ptr<osg::StateSet> _localState;
+   osgUtil::UpdateVisitor* _uniformUpdater;
+   osg::ref_ptr<osg::FrameStamp> _fs;
 
    
 };

@@ -18,7 +18,7 @@ cfdUpdateParameterCallback::cfdUpdateParameterCallback()
    _size = ONE;
 }
 ////////////////////////////////////////////////////////////////////////////////////
-cfdUpdateParameterCallback
+/*cfdUpdateParameterCallback
 ::cfdUpdateParameterCallback(const cfdUpdateParameterCallback &copy,
                           const osg::CopyOp &copyop )
 :osg::Uniform::Callback(copy, copyop)
@@ -29,7 +29,7 @@ cfdUpdateParameterCallback
    _value[3] = 0;
    _type = copy._type;
    _size = copy._size;
-}
+}*/
 ///////////////////////////////////////////////////////////////////////////////////////
 void cfdUpdateParameterCallback::operator()(osg::Uniform* uniVar, osg::NodeVisitor* nv)
 {

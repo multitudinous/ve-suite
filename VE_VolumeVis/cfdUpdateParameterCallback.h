@@ -9,9 +9,9 @@ class cfdUpdateParameterCallback: public osg::Uniform::Callback{
 public:
 	cfdUpdateParameterCallback(); 
   
-	cfdUpdateParameterCallback(const cfdUpdateParameterCallback &copy,
+	/*cfdUpdateParameterCallback(const cfdUpdateParameterCallback &copy,
                            const osg::CopyOp &copyop = osg::CopyOp::SHALLOW_COPY);
-
+*/
    enum cfdParameterType{VECTOR,MATRIX,TIME};
    enum cfdParameterSize{ONE=0,TWO,THREE,FOUR};
    virtual void operator () (osg::Uniform* uniVar, osg::NodeVisitor* nv);

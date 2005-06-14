@@ -31,22 +31,22 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VjObs_i.h"
 
-#include "cfdTeacher.h"
-#include "cfdQuatCamHandler.h"
-#include "cfdDataSet.h"
-#include "cfdModelHandler.h"
-#include "cfdEnvironmentHandler.h"
-#include "cfdSteadyStateVizHandler.h"
-#include "cfdSoundHandler.h"
-#include "cfdModel.h"
-#include "cfdFILE.h"
-#include "cfdEnum.h"
+#include "VE_Xplorer/cfdTeacher.h"
+#include "VE_Xplorer/cfdQuatCamHandler.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/cfdSteadyStateVizHandler.h"
+#include "VE_Xplorer/cfdSoundHandler.h"
+#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/cfdFILE.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include "VE_SceneGraph/cfdTempAnimation.h"
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "cfdTextureBasedVizHandler.h"
-#include "cfdVolumeVisualization.h"
+#include "VE_VolumeVis/cfdTextureBasedVizHandler.h"
+#include "VE_VolumeVis/cfdVolumeVisualization.h"
 #endif
 #endif
 

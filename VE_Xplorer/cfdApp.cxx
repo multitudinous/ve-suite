@@ -37,31 +37,31 @@
 #include "cfdApp.h"
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "cfdTextureBasedVizHandler.h"
+#include "VE_VolumeVis/cfdTextureBasedVizHandler.h"
 #endif
 #endif
 
-#include "cfdEnum.h"
-#include "fileIO.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/fileIO.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
-#include "cfdEnvironmentHandler.h"
-#include "cfdSteadyStateVizHandler.h"
-#include "cfdModelHandler.h"
-#include "cfdModel.h"
+#include "VE_Xplorer/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/cfdSteadyStateVizHandler.h"
+#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/cfdModel.h"
 #include "VE_SceneGraph/cfdSwitch.h"
-#include "cfdDataSet.h"
+#include "VE_Xplorer/cfdDataSet.h"
 
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_SceneGraph/cfdNode.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdDCS.h"
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdObjects.h"
 #include "VE_SceneGraph/cfdTempAnimation.h"
-#include "cfdVjObsWrapper.h"
-#include "cfdDataSet.h"
+#include "VE_Xplorer/cfdVjObsWrapper.h"
+#include "VE_Xplorer/cfdDataSet.h"
 
 #ifdef _TAO
-#include "cfdExecutive.h"
+#include "VE_Xplorer/cfdExecutive.h"
 #endif //_TAO
 
 // Scene graph dependant headers
@@ -69,7 +69,7 @@
 #include <Performer/pf.h>
 #include <Performer/pf/pfGroup.h>
 #include <Performer/pfdb/pfpfb.h>
-#include "cfdNotify.h"
+#include "VE_Xplorer/cfdNotify.h"
 #elif _OSG
 #include <osg/Group>
 #include <osgDB/WriteFile>
@@ -83,7 +83,7 @@
 #ifdef _OSG
 #ifdef VE_PATENTED
 //#ifdef CFD_USE_SHADERS
-#include "cfdPBufferManager.h"
+#include "VE_VolumeVis/cfdPBufferManager.h"
 //#endif
 #endif
 #endif
