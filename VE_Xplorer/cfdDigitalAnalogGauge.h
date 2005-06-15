@@ -62,6 +62,7 @@ class cfdDigitalAnalogGauge
       void SetOrientation( double Xrot, double Yrot, double Zrot );
 
       void SetGaugeName( const char input[] );
+      void SetText2( const char input[] );
       void SetAnalogLimits( double low, double high );
       void SetColor( double color[3] );
       void SetBackgroundColor( double color[3] );
@@ -82,6 +83,7 @@ class cfdDigitalAnalogGauge
       vtkActor * GetStationaryArrowActor();
       vtkActor * GetMovingArrowActor();
       vtkActor * GetLabelActor();
+      vtkActor * GetText2Actor();
       vtkActor * GetDigitalActor();
       vtkActor * GetBackgroundActor();
 
@@ -89,6 +91,7 @@ class cfdDigitalAnalogGauge
       void DefineStationaryArrowActor();
       void DefineMovingArrowActor();
       void DefineGaugeTextActor();
+      void DefineText2Actor();
       void DefineDigitalActor();
       void DefineBackgroundActor();
 
@@ -99,6 +102,7 @@ class cfdDigitalAnalogGauge
       cfdGeode* movingArrowGeode;
       cfdGeode* stationaryArrowGeode;
       cfdGeode* labelGeode;
+      cfdGeode* text2Geode;
       cfdGeode* digitalGeode;
       cfdGeode* backgroundGeode;
 
@@ -113,15 +117,18 @@ class cfdDigitalAnalogGauge
       vtkActor * circleActor;
       vtkActor * stationaryArrowActor;
       vtkActor * labelActor;
+      vtkActor * text2Actor;
       vtkActor * digitalActor;
       vtkActor * backgroundActor;
       vtkVectorText * digitalLabel;
       char gaugeName [ 100 ];
+      char text2 [ 100 ];
       char digitalText [ 100 ];
       int digitalPrecision;
       double lowAnalogLimit, highAnalogLimit;
       double gaugeColor [ 3 ];
       double backgroundColor [ 3 ];
+      double textScale;
 };
 
 #endif
