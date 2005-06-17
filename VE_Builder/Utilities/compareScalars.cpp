@@ -44,12 +44,12 @@
 #include <vtkTransformFilter.h>
 #include <vtkCellLocator.h>
 #include <vtkFloatArray.h>
-/* the CFD grid is much more dnese than the PIV grid. 
+/* the CFD grid is much more dense than the PIV grid. 
 CFD dataset used in testing ------------> CFX_bin_ss_04.vtk  numPoints = 468782   numCells = 231025
 PIV dataset used in testing -------------> PIV_All_linear_combine.vtk   numPoints = 23528    numCells = 11524
 */
 int main( int argc, char *argv[] )
-{
+{   
    if ( argc < 2 )
    {
       std::cout<<"============================="<<std::endl;
@@ -94,7 +94,7 @@ int main( int argc, char *argv[] )
    
    vtkUnstructuredGrid* tempUGrid;
    tempUGrid = (vtkUnstructuredGrid*) (transFilter->GetOutput() );
-   writeVtkThing( tempUGrid, "transformed.vtk", 1 );
+   //writeVtkThing( tempUGrid, "transformed.vtk", 1 );
    //now grids are matched up approximately, do the differencing
    //all scalars that are equal to zero, differencing is not done
    vtkCellLocator* cLocator = vtkCellLocator::New();   
@@ -126,7 +126,7 @@ int main( int argc, char *argv[] )
       countPoints++;      
    }
    uGrid->GetPointData()->AddArray( scalarDiff );
-   writeVtkThing( uGrid, "grid.vtk", 0 );
+   writeVtkThing( uGrid, "scalarDifference.vtk", 0 );
    std::cout<<"Count Points :"<<countPoints<<std::endl;
    //clean up
    scalarDiff->Delete(); scalarDiff = NULL;
