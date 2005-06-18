@@ -87,10 +87,14 @@ cfdNode::cfdNode()
 {
    //biv--do we need to set type for scene node in here?
    //this->_group = new pfNode();
+   op = 1.0f;
+   stlColor[ 1 ] = stlColor[ 1 ] = stlColor[ 0 ] = -1;
+   color = 0;
+
 #ifdef _PERFORMER
    this->_node = 0;
 #elif _OSG
-   _node = 0;//new osg::Node();
+   //_node = 0;//new osg::Node();
 #elif _OPENSG
 #endif
 }
@@ -101,7 +105,10 @@ cfdNode::cfdNode( const cfdNode& input )
 #ifdef _PERFORMER
    this->_node = input._node;
 #elif _OSG
-   _node = input._node;
+   if ( _node.valid() )
+   {
+      _node = input._node;
+   }
 #elif _OPENSG
 #endif
 }

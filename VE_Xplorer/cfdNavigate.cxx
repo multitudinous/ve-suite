@@ -43,7 +43,7 @@ using namespace gadget;
 cfdNavigate::cfdNavigate( )
 {
    wand.init("VJWand");
-   head.init("VJWand");
+   head.init("VJHead");
    this->digital[0].init("VJButton0");   // trigger (and top right button) TODO: I think this is unused ?
    this->digital[1].init("VJButton1");   // top left button -- toggle cursor mode: laser, streamlines, box, & arrow
    this->digital[2].init("VJButton2");   // 12 o'clock -- forward navigation
@@ -300,7 +300,7 @@ void cfdNavigate::updateNavigationFromGUI()
       gmtl::Matrix44f rotMat;
       gmtl::EulerAngleXYZf myEuler( 0, -gmtl::Math::deg2Rad(oldAng),0), worldRotVec(0, gmtl::Math::deg2Rad(this->worldRot[0]),0);
      
-      vjHeadMat = head->getData( );
+      vjHeadMat = head->getData();
       gmtl::setTrans(wandVec, vjHeadMat);
 
       rotMat = gmtl::makeRot<gmtl::Matrix44f>(myEuler);
@@ -325,7 +325,7 @@ void cfdNavigate::updateNavigationFromGUI()
       gmtl::Matrix44f rotMat;
       gmtl::EulerAngleXYZf myEuler( 0, -gmtl::Math::deg2Rad(oldAng),0), worldRotVec(0, gmtl::Math::deg2Rad(this->worldRot[0]),0);
      
-      vjHeadMat = head->getData( );
+      vjHeadMat = head->getData();
       gmtl::setTrans(wandVec, vjHeadMat);
 
       rotMat = gmtl::makeRot<gmtl::Matrix44f>(myEuler);
@@ -400,7 +400,7 @@ std::cout << newTrans << std::endl;
       gmtl::Matrix44f rotMat;
       gmtl::EulerAngleXYZf myEuler( 0, -gmtl::Math::deg2Rad(oldAng),0), worldRotVec(0, gmtl::Math::deg2Rad(this->worldRot[0]),0);
      
-      vjHeadMat = head->getData( );
+      vjHeadMat = head->getData();
       gmtl::setTrans(wandVec, vjHeadMat);
 
       rotMat = gmtl::makeRot<gmtl::Matrix44f>(myEuler);
