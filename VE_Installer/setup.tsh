@@ -41,7 +41,7 @@ setenv TAO_BUILD TRUE
 # Specify cluster build CLUSTER_APP
 #setenv CLUSTER_APP TRUE
 # This flag is for VERY new code
-setenv VE_PATENTED TRUE
+#setenv VE_PATENTED TRUE
 # This flag is to allow the use of shaders
 #setenv CFD_USE_SHADERS FALSE
 
@@ -119,7 +119,8 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3-deps
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
-   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Developer/Opt/OSG/Linux-RHEL_3
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux-RHEL_3
+   #setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux-SuSE92/
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
@@ -153,7 +154,6 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_i* ) then
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux-SuSE92
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/Linux-SuSE91
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/Linux-SuSE91
-   #setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Developer/Opt/OSG/biv_Linux-SuSE92/
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux-SuSE92/
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
@@ -242,13 +242,15 @@ endif
 setenv TWEEK_BASE_DIR ${VJ_BASE_DIR}
 setenv DZR_BASE_DIR   ${VJ_BASE_DIR}/share/Doozer
 setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
-setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
+setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}
+setenv PATH ${PATH}:${VJ_DEPS_DIR}/bin
 setenv PATH ${WX_HOME}/bin:${CORONA_HOME}/bin:${PATH}
 #setenv PATH ${JDK_HOME}/bin:${PATH}
 if ( $?OSG_HOME ) then
    setenv PATH ${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
 endif
 
+setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
 #echo "              or 'gmake clean'

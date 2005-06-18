@@ -36,8 +36,6 @@
 # CLUSTER_APP now is defined as TRUE or FALSE from the setup script
 #_______________________________________________________________________________
 
-CONDUCTOR_BASE_DIR= ${VE_SUITE_HOME}/VE_Conductor
-
 CFDUNAME = $(shell uname)
 ifeq ($(SCENE_GRAPH), OSG)
    OSG = _osg
@@ -68,38 +66,32 @@ ifdef OMNI_HOME
    EXEC_TAG =
 endif
 
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/impl \
+                        $(VE_SUITE_HOME)/VEOpen/skel \
+                        $(VE_SUITE_HOME)/VE_Conductor/Framework \
+                        $(VE_SUITE_HOME)/VE_CE \
+								$(VE_SUITE_HOME)/VE_Builder/Translator
+
+EXTRA_INCLUDES+= \
+               -I$(VE_SUITE_HOME)/VE_Conductor/impl \
+               -I$(VE_SUITE_HOME)/VEOpen/skel \
+               -I$(VE_SUITE_HOME)/VE_Conductor/Framework \
+               -I$(VE_SUITE_HOME)/VE_CE \
+					-I$(VE_SUITE_HOME)/VE_Builder/Translator
+
 ifeq ($(TAO_BUILD), TRUE)
-   EXTRA_PATH_FOR_SOURCES+= $(CONDUCTOR_BASE_DIR)/impl \
-                           $(VE_SUITE_HOME)/VEOpen/skel \
-                           $(VE_SUITE_HOME)/VE_Conductor/Framework \
-                           $(VE_SUITE_HOME)/VE_CE \
-									$(VE_SUITE_HOME)/VE_Builder/Translator
-
    include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
-
-   EXTRA_INCLUDES+= \
-                  -I${CONDUCTOR_BASE_DIR}/impl \
-                  -I$(VE_SUITE_HOME)/VEOpen/skel \
-                  -I$(VE_SUITE_HOME)/VE_Conductor/Framework \
-                  -I$(VE_SUITE_HOME)/VE_CE \
-						-I$(VE_SUITE_HOME)/VE_Builder/Translator
    EXEC_TAG = _tao
 endif
 
 # for osg and patented stuff
 ifeq ($(VE_PATENTED), TRUE)
-   EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_VolumeVis
    EXTRA_CXXFLAGS+= -D_OSG -DVE_PATENTED
-   EXTRA_PATH_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_VolumeVis
-ifeq ($(CFD_USE_SHADERS),TRUE)
-   EXTRA_CXXFLAGS+= -DCFD_USE_SHADERS
-endif
 endif
 
 # for xercese includes
 ifdef XERCESCROOT
-   EXTRA_INCLUDES+= -I${XERCESCROOT}/include
-   EXTRA_LIBS+= -L${XERCESCROOT}/lib -lxerces-c
+   include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 endif
 
 # IRIX needs these flags
@@ -110,134 +102,56 @@ endif
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   cfd1DTextInput.cxx \
-   cfdAnimatedStreamlineCone.cxx \
-   cfdAnimatedImage.cxx \
    cfdApp.cxx \
    cfdAppWrapper.cxx \
-   cfdAccessoryFunctions.cxx \
-   cfdCommandObjects.cxx \
-   cfdCommandArray.cxx \
-   cfdContour.cxx \
-   cfdContourBase.cxx \
-   cfdContours.cxx \
-   cfdCursor.cxx \
-   cfdCuttingPlane.cxx \
-   cfdClone.cxx \
-   cfdDCS.cxx \
-   cfdDataSet.cxx \
-   cfdDigitalAnalogGauge.cxx \
    cfdEnvironmentHandler.cxx \
-   cfdFILE.cxx \
-   cfdFileInfo.cxx \
-   cfdGeode.cxx \
-   cfdGlobalBase.cxx \
-   cfdGraphicsObject.cxx \
-   cfdGroup.cxx \
-   cfdImage.cxx \
-   cfdIsosurface.cxx \
-   cfdModel.cxx \
-   cfdModelHandler.cxx \
-   cfdMomentum.cxx \
-   cfdMomentums.cxx \
-   cfdNavigate.cxx \
-   cfdNode.cxx \
-   cfdNodeTraverser.cxx \
-   cfdObjects.cxx \
-   cfdPlanes.cxx \
-   cfdPresetContour.cxx \
-   cfdPresetMomentum.cxx \
-   cfdPresetVector.cxx \
-   cfdQuatCamHandler.cxx \
-   cfdQuatCam.cxx \
-   cfdReadParam.cxx \
-   cfdScalarBarActor.cxx \
-   cfdSceneNode.cxx \
-   cfdSequence.cxx \
-   cfdSound.cxx \
-   cfdSoundHandler.cxx \
-   cfdSteadyStateVizHandler.cxx \
-   cfdStreamers.cxx \
-   cfdSwitch.cxx \
-   cfdPfSceneManagement.cxx \
-   cfdPolyData.cxx \
-   cfdTeacher.cxx \
-   cfdTempAnimation.cxx \
-   cfdTextOutput.cxx \
-   cfdThread.cxx \
-   cfdVTKFileHandler.cxx \
-   cfdVectorBase.cxx \
-   cfdVector.cxx \
-   cfdVectors.cxx \
-   cfdVjObsWrapper.cxx \
-   cfdVEXplorer.cxx \
-   cfdWriteTraverser.cxx \
-   fileIO.cxx \
-   readWriteVtkThings.cxx \
-   VjObs_i.cxx \
-	cfdGrid2Surface.cpp \
-	cleanVtk.cpp
-			
-
-ifeq ($(VE_PATENTED), TRUE)
-ifeq ($(SCENE_GRAPH), OSG)
-SRCS+= \
-   cfd3DTextureCullCallback.cxx \
-   cfdAdvectionSubGraph.cxx \
-   cfdCopyTo3DTextureStage.cxx \
-   cfdOSGAdvectionShaderManager.cxx \
-   cfdOSGPingPongTexture3d.cxx \
+   cfdExecutive.cxx \
+   cfdExecutiveConfiguration.cxx \
    cfdOSGShaderManager.cxx \
    cfdOSGTransferShaderManager.cxx \
-   cfdPBufferManager.cxx \
    cfdPBufferQuad.cxx \
+   cfdQuatCamHandler.cxx \
+   cfdQuatCam.cxx \
    cfdScalarShaderManager.cxx \
    cfdScalarVolumeVisHandler.cxx \
    cfdSimpleTextureCallback.cxx \
-   cfdTextureBasedVizHandler.cxx \
-   cfdTextureDataSet.cxx \
-   cfdTextureMatrixCallback.cxx \
-   cfdTextureManager.cxx \
-   cfdUpdateTextureCallback.cpp \
+   cfdSound.cxx \
+   cfdSoundHandler.cxx \
+   cfdSteadyStateVizHandler.cxx \
+   cfdTeacher.cxx \
    cfdUpdateableOSGTexture1d.cxx \
    cfdUpdateableOSGNoiseTexture3d.cxx \
    cfdUpdateParameterCallback.cxx \
+   cfdVectorBase.cxx \
+   cfdVector.cxx \
+   cfdVectors.cxx \
+   cfdVEPluginLoader.cxx \
+   cfdVjObsWrapper.cxx \
    cfdVectorVolumeVisHandler.cxx \
    cfdVolumeBillboard.cxx \
    cfdVolumeCenterCallback.cxx \
    cfdVolumeVisNodeHandler.cxx \
-   cfdVolumeVisualization.cpp 
-endif
-endif
-
-
-ifeq ($(TAO_BUILD), TRUE)
-SRCS+= \
-   cfdExecutive.cxx \
-   cfdExecutiveConfiguration.cxx \
-   cfdVEPluginLoader.cxx \
-   cfdVEAvailModules.cxx \
-   cfdVEBaseClass.cxx \
-   interface.cpp \
+   cfdVEXplorer.cxx \
+   cfdWriteTraverser.cxx \
+	cleanVtk.cpp \
    moduleC.cpp \
    moduleS.cpp \
    Network_Exec.cpp \
-   package.cpp \
-   string_ops.cpp \
    VE_i.cpp \
    VjObsS.cpp \
-   VjObsC.cpp
-else
-SRCS+= \
-   VjObs.cpp 
-endif
-
+   VjObsC.cpp \
+   VjObs_i.cxx
+			
 ifeq ($(WEB_BUILD), TRUE)
    include $(VE_SUITE_HOME)/VE_Installer/dzr.corona.mk
    EXTRA_CXXFLAGS+= -D_WEB_INTERFACE
 endif
+
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
+EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_VolumeVis
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_SceneGraph
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_VolumeVis
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
@@ -303,6 +217,7 @@ default: all
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 all:
 	mkdir -p $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)
+	$(MAKE) lib
 #	$(MAKE) cxx_idl
 #	$(MAKE) java_idl
 	$(MAKE) NO_DEPEND=0 cxx
@@ -335,9 +250,6 @@ endif
 DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE
 
-
-#EXTRA_CXXFLAGS+= $(WX_CXX) -DWXUSING_PLUGIN_DLL -DWXUSINGDLL=1
-#EXTRA_LIBS+= $(WX_LIB) -L$(VJ_DEPS_DIR)/lib
 #EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
 EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
@@ -364,6 +276,9 @@ CXX_GEN_DIR= .
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
+lib:
+	cd $(VE_SUITE_HOME)/lib && $(MAKE)
+
 #cxx_idl: $(IDL_CXX_FILES)
 
 #%.cpp %.h: %.idl

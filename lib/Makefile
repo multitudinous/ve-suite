@@ -48,10 +48,6 @@ ifeq ($(VE_PATENTED), TRUE)
    EXTRA_CXXFLAGS+= -D_OSG -DVE_PATENTED
    EXTRA_PATH_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_VolumeVis
    PATENTED_TAG = .vep
-ifeq ($(CFD_USE_SHADERS),TRUE)
-   EXTRA_CXXFLAGS+= -DCFD_USE_SHADERS
-   SHADER_TAG = .glsl
-endif
 endif
 
 # IRIX needs these flags
@@ -133,7 +129,6 @@ SRCS=\
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME) -I$(VE_SUITE_HOME)/VE_Xplorer
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Conductor/Framework
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Builder/Translator
-EXTRA_INCLUDES+= -I$(HOME)/usr/include
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_SceneGraph
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_VolumeVis
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Xplorer
@@ -158,15 +153,15 @@ endif
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/GraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)$(SHADER_TAG).so
+APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG).so
 # object files are being stored in a system-dependent directory so that builds
 # for multiple platforms may be maintained simultaneously.
 
 #OBJDIR is the place that the object files are stored.
-OBJDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)$(SHADER_TAG)
+OBJDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 
 #DEPDIR is the place that the dependency files are stored.
-DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)$(SHADER_TAG)
+DEPDIR= $(CFDHOSTTYPE)$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 
 default: all
 
@@ -207,14 +202,16 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-EXTRA_LIBS+= -shared 
+EXTRA_LDFLAGS+= -shared
+# To build dll for dynamic load of plugins
+EXTRA_CXXFLAGS+= -DWXMAKING_PLUGIN_DLL
 # IRIX needs these flags
 ifeq (${CFDUNAME},IRIX64)
    EXTRA_CXXFLAGS+= 
    EXTRA_LIBS+= 
 else
    EXTRA_CXXFLAGS+= -fPIC
-   EXTRA_LIBS+= -fPIC -L$(HOME)/usr/lib
+   EXTRA_LDFLAGS+= -fPIC
 endif
 
 CXX_GEN_DIR= .
