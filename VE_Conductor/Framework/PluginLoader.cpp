@@ -81,12 +81,10 @@ void PluginLoader::RegisterPlugins()
       //if ( classInfo->IsKindOf(CLASSINFO(REI_Plugin)) &&
 	   //(classInfo != (& (REI_Plugin::ms_classInfo))) )
 	//{
-        wxLogDebug ("|\tRegister Class name : %s",classInfo->GetClassName());
-       wxLogDebug ("|\tRegister base classname : %s",classInfo->GetBaseClassName1());
 		if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "REI_Plugin" ) )
 	   {   RegisterPlugin(classInfo);
-        wxLogDebug ("|\tRegister plugins : %s",classInfo->GetClassName());
-       wxLogDebug ("|\tRegister plugins : %s",classInfo->GetBaseClassName1());
+         wxLogDebug ("|\tRegister plugins : %s",classInfo->GetClassName());
+         wxLogDebug ("|\tRegister plugins : %s",classInfo->GetBaseClassName1());
       }
 	//}
    node = wxClassInfo::sm_classTable->Next();
