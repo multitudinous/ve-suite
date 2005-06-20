@@ -525,10 +525,13 @@ void cfdExecutive::PreFrameUpdate( void )
       // record position of some key phrases...
       int pos1 = statusString.find("Network execution complete");
       int pos2 = statusString.find("Execution is done");
+      int pos3 = statusString.find("Time Step Complete");
 
       // If either of the positions are valid positions, 
       // then make results available to the graphical plugins...
-      if ( pos1 != std::string::npos || pos2 != std::string::npos )
+      if ( pos1 != std::string::npos || 
+            pos2 != std::string::npos || 
+            pos3 != std::string::npos )
       {
          std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
          for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
