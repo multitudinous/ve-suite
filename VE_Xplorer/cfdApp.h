@@ -155,7 +155,6 @@ class cfdApp: public vrj::OsgApp
       cfdExecutive*     executive;
 #endif
 
-
       // Only used in preframe for transient stuff
       int   lastFrame;
    private:

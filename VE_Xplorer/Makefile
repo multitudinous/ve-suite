@@ -86,7 +86,8 @@ endif
 
 # for osg and patented stuff
 ifeq ($(VE_PATENTED), TRUE)
-   EXTRA_CXXFLAGS+= -D_OSG -DVE_PATENTED
+   EXTRA_CXXFLAGS+= -DVE_PATENTED
+   PATENTED_TAG=.vep
 endif
 
 # for xercese includes

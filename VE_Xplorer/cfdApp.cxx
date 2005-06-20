@@ -196,7 +196,7 @@ inline void cfdApp::preSync( )
 #ifdef _PERFORMER
 inline pfGroup* cfdApp::getScene()
 #elif _OSG
-inline osg::Group* cfdApp::getScene()
+osg::Group* cfdApp::getScene()
 #endif
 {
    //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
