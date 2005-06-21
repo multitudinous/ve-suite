@@ -523,9 +523,9 @@ void cfdExecutive::PreFrameUpdate( void )
                              << std::endl << vprDEBUG_FLUSH;
 
       // record position of some key phrases...
-      int pos1 = statusString.find("Network execution complete");
-      int pos2 = statusString.find("Execution is done");
-      int pos3 = statusString.find("Time Step Complete");
+      unsigned int pos1 = statusString.find("Network execution complete");
+      unsigned int pos2 = statusString.find("Execution is done");
+      unsigned int pos3 = statusString.find("Time Step Complete");
 
       // If either of the positions are valid positions, 
       // then make results available to the graphical plugins...

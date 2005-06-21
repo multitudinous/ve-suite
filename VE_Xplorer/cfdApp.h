@@ -50,6 +50,7 @@ class cfdApp : public vrj::PfApp
 #elif _OSG
 #include <osg/Timer>
 #include <vrj/Draw/OSG/OsgApp.h>
+#include <vpr/Sync/Mutex.h>
 namespace osg
 {   
    class Group;
@@ -158,6 +159,7 @@ class cfdApp: public vrj::OsgApp
       // Only used in preframe for transient stuff
       int   lastFrame;
    private:
+      vpr::Mutex mValueLock;  /**< A mutex to protect variables accesses */
       char * filein_name;
 	   double time_since_start;
 	   //web interface stuff for writing the image file

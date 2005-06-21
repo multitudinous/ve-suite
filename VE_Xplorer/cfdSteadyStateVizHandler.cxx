@@ -29,7 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdSteadyStateVizHandler.h"
 
 #include "cfdPolyData.h"      
 #include "cfdIsosurface.h"    
@@ -54,12 +53,6 @@
 #include "cfdCommandArray.h"
 #include "cfdObjects.h"
 #include "cfdPlanes.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdGroup.h"
-#include "VE_SceneGraph/cfdSwitch.h"
-/*#include "cfdSequence.h"
-#include "cfdTempAnimation.h"
-*/
 #include "cfdNavigate.h"
 #include "cfdCursor.h"
 #include "cfdGraphicsObject.h"
@@ -67,11 +60,17 @@
 #include "cfdTextOutput.h"
 #include "cfdEnvironmentHandler.h"
 #include "cfdModelHandler.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
 
 #include <vpr/Util/Debug.h>
 #include <vpr/vpr.h>
 #include <vpr/System.h>
+
+#include "VE_SceneGraph/cfdSwitch.h"
+#include "VE_SceneGraph/cfdPfSceneManagement.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdGroup.h"
+//This heare is WAY down here to fix compile errors on IRIX
+#include "cfdSteadyStateVizHandler.h"
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>

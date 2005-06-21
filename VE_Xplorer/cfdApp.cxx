@@ -227,6 +227,7 @@ void cfdApp::contextInit()
 ///////////////////////////
 void cfdApp::contextClose()
 {
+std::cout << " ********************************" << std::endl;
    if(_pbuffer)
    {
       delete _pbuffer;
@@ -594,9 +595,12 @@ void cfdApp::draw()
 #endif   //_WEB_INTERFACE
 
    //Draw the scene
-   sv->update();
-   sv->cull();
-   sv->draw();
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   {
+      sv->update();
+      sv->cull();
+      sv->draw();
+   }
 #ifdef _WEB_INTERFACE
    if(goCapture)
       captureWebImage();
