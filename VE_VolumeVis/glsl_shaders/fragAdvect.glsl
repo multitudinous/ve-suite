@@ -54,7 +54,7 @@ void main(void)
    gl_FragColor.y = weightW.y*prop.y + weightV.y*tInject*n.x;
 
    //material 2
-   localTime = fmod(time + n.w,period);
+   localTime = mod(time + n.w,period);
    tInject = texture1D(lookUpTexture,localTime).a;
    gl_FragColor.z = weightW.z*prop.z + weightV.z*tInject*n.z;
    gl_FragColor.a = v.w;
