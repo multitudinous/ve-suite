@@ -96,6 +96,7 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OSG_HOME}/lib32:${OSG_HOME}/lib32/osgPlugins
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
@@ -119,13 +120,13 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3
    setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3-deps
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
-   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux-RHEL_3
-   #setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux-SuSE92/
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/OSG/Linux-RHEL_3
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/share/OpenSceneGraph/bin
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
@@ -161,6 +162,7 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_i* ) then
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CORONA_HOME}/lib:${HOME}/usr/lib
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
@@ -191,6 +193,7 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib64:${OSG_HOME}/lib64/osgPlugins
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${CORONA_HOME}/lib:${HOME}/usr/lib
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE-5.4
@@ -217,6 +220,7 @@ else if ( ${CFDHOSTTYPE} == "SunOS" ) then
 
    setenv LD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${WX_HOME}/lib
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
       setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
@@ -250,7 +254,6 @@ if ( $?OSG_HOME ) then
    setenv PATH ${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
 endif
 
-setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
 #echo "              or 'gmake clean'
