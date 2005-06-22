@@ -100,7 +100,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, cfdDCS* worldDCS )
    while ( (file = readdir(dir)) != NULL ) 
    {
       //assume all pfb files in this directory should be loaded
-      if(strstr(file->d_name, ".pfb")) 
+      if(strstr(file->d_name, ".pfb")||strstr(file->d_name, ".ive")) 
       {
          //char * fileName = new char[strlen(file->d_name)+1];
          //strcpy( fileName, file->d_name );

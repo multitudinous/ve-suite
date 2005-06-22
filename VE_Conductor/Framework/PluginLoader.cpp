@@ -84,7 +84,7 @@ void PluginLoader::RegisterPlugins()
 		if ( wxString( classInfo->GetBaseClassName1() ) == wxString( "REI_Plugin" ) )
 	   {   RegisterPlugin(classInfo);
          wxLogDebug ("|\tRegister plugins : %s",classInfo->GetClassName());
-         wxLogDebug ("|\tRegister plugins : %s",classInfo->GetBaseClassName1());
+         //wxLogDebug ("|\tRegister plugins : %s",classInfo->GetBaseClassName1());
       }
 	//}
    node = wxClassInfo::sm_classTable->Next();
