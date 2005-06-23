@@ -48,8 +48,9 @@ namespace osg { class Fog; }
 // BIG PROBLEMS here
 //class pfNode;
 //class pfMaterial;
+#include "VE_Xplorer/cfdConfig.h"
 
-class cfdFILE 
+class WXPLUGIN_DECLSPEC cfdFILE 
 {
    public:
       cfdFILE( fileInfo*, cfdDCS* );

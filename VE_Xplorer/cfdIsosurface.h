@@ -50,7 +50,7 @@ class vtkPolyDataMapper;
   based on the value selected.  Update member function will
   update the value.
 */
-class cfdIsosurface : public cfdObjects
+class WXPLUGIN_DECLSPEC cfdIsosurface : public cfdObjects
 {
  public:
   //Initialize pipeline

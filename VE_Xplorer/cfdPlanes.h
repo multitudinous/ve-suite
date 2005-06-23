@@ -43,7 +43,9 @@ class cfdCuttingPlane;
   specific axis direction.  The files are located in a specified directory.
   The plane files were created by the preprocessor acting on a flowdata.vtk.
 */
-class cfdPlanes
+#include "VE_Xplorer/cfdConfig.h"
+
+class WXPLUGIN_DECLSPEC cfdPlanes
 {
  public:
   // Initialize the VTK objects and pipeline.
