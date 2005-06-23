@@ -34,13 +34,13 @@
 
 #include <wx/dlimpexp.h>
 
-#if defined(WXUSINGDLL) && \
-    (defined(WXMAKING_PLUGIN_DLL) || defined(WXUSING_PLUGIN_DLL))
+#if defined(VEUSINGDLL) && \
+    (defined(VEMAKING_PLUGIN_DLL) || defined(VEUSING_PLUGIN_DLL))
 
-#  if defined(WXMAKING_PLUGIN_DLL)
+#  if defined(VEMAKING_PLUGIN_DLL)
       // When building the DLL WXPLUGINDECLSPEC exports classes
 #     define VEPLUGIN_DECLSPEC            WXEXPORT
-#  elif defined(WXUSING_PLUGIN_DLL)
+#  elif defined(VEUSING_PLUGIN_DLL)
       // When building the DLL WXPLUGINDECLSPEC imports classes
 #     define VEPLUGIN_DECLSPEC            WXIMPORT
 #  endif // defined(WXBUILD_PLUGIN_DLL)
