@@ -43,7 +43,7 @@ class vtkDecimatePro;
 
 class cfdCommandArray;
 
-class cfdContourBase : public cfdObjects
+class WXPLUGIN_DECLSPEC cfdContourBase : public cfdObjects
 {
  public:
    cfdContourBase();

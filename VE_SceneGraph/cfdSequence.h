@@ -59,7 +59,7 @@ class pfType;
 class pfSwitch;
 class pfTraverser;
 #include <Performer/pf/pfGroup.h>
-class cfdSequence : public pfGroup, public cfdGroup
+class WXPLUGIN_DECLSPEC cfdSequence : public pfGroup, public cfdGroup
 
 #elif _OSG
 #include <osg/Group>
