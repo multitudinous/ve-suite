@@ -41,7 +41,7 @@
 #include <osg/Node>
 #endif
 
-class cfdNodeTraverser
+class WXPLUGIN_DECLSPEC cfdNodeTraverser
 {
 public:
    cfdNodeTraverser();
