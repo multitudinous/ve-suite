@@ -47,15 +47,16 @@ class cfdQuatCamHandler;
 
 class vtkPolyData;
 
-class cfdEnvironmentHandler : public vpr::Singleton< cfdEnvironmentHandler >
+class cfdEnvironmentHandler //: public vpr::Singleton< cfdEnvironmentHandler >
 {
    private:
       // Required so that vpr::Singleton can instantiate this class.
-      friend class vpr::Singleton< cfdEnvironmentHandler >;
+      //friend class vpr::Singleton< cfdEnvironmentHandler >;
       //cfdEnvironmentHandler(const cfdEnvironmentHandler& o) { ; }
       //cfdEnvironmentHandler& operator=(const cfdEnvironmentHandler& o) { ; }
       cfdEnvironmentHandler( void );
       ~cfdEnvironmentHandler( void ){ ; }// Never gets called, don't implement
+      vprSingletonHeader( cfdEnvironmentHandler );   
 
    public:
       void Initialize( char * );

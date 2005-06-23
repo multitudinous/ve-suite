@@ -52,16 +52,16 @@ class vtkPolyData;
 #include <vector>
 #include "VE_Xplorer/cfdConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdModelHandler : public vpr::Singleton< cfdModelHandler >
+class WXPLUGIN_DECLSPEC cfdModelHandler //: public vpr::Singleton< cfdModelHandler >
 {
    private:
       // Required so that vpr::Singleton can instantiate this class.
-      friend class vpr::Singleton< cfdModelHandler >;
+      //friend class vpr::Singleton< cfdModelHandler >;
       //cfdModelHandler(const cfdModelHandler& o) { ; }
       //cfdModelHandler& operator=(const cfdModelHandler& o) { ; }
       cfdModelHandler( void );
       ~cfdModelHandler( void ){ ; }// Never gets called, don't implement
-   
+      vprSingletonHeader( cfdModelHandler );   
    public:
       void Initialize( char* );
       void CleanUp( void );

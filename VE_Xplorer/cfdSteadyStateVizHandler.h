@@ -66,15 +66,16 @@ class cfdGraphicsObject;
 class cfdModel;
 class cfdTextOutput;
 
-class cfdSteadyStateVizHandler : public vpr::Singleton< cfdSteadyStateVizHandler >
+class cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
 {
    private:
       // Required so that vpr::Singleton can instantiate this class.
-      friend class vpr::Singleton< cfdSteadyStateVizHandler >;
+      //friend class vpr::Singleton< cfdSteadyStateVizHandler >;
       cfdSteadyStateVizHandler( void );
       //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
       //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
       ~cfdSteadyStateVizHandler( void ){ ; }// Never gets called, don't implement
+      vprSingletonHeader( cfdSteadyStateVizHandler );   
    
    public:
       void Initialize( char * );

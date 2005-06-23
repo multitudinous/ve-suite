@@ -28,7 +28,7 @@ class cfdScalarVolumeVisHandler;
 class cfdVectorVolumeVisHandler;
 #include "VE_Xplorer/cfdConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
+class WXPLUGIN_DECLSPEC cfdTextureBasedVizHandler //: public vpr::Singleton< cfdTextureBasedVizHandler >
 {
    public:
    
@@ -81,12 +81,13 @@ class WXPLUGIN_DECLSPEC cfdTextureBasedVizHandler: public vpr::Singleton< cfdTex
       float* _currentBBox;
       bool _cleared;
       bool _textureBaseSelected;
-private:
+   private:
       // Required so that vpr::Singleton can instantiate this class.
-      friend class vpr::Singleton< cfdTextureBasedVizHandler >;
+      //friend class vpr::Singleton< cfdTextureBasedVizHandler >;
       cfdTextureBasedVizHandler( void );
   
       ~cfdTextureBasedVizHandler( void ){ ; }// Never gets called, don't implement
+      vprSingletonHeader( cfdTextureBasedVizHandler );   
 };
 #endif //OSG
 #endif //
