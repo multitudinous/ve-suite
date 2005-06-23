@@ -485,19 +485,21 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;./;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(CONDUCTOR_BASE_DIR)\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(VE_SUITE_HOME)\VESOpen\skel&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;"
-				PreprocessorDefinitions="_DEBUG;_OSG;VE_PATENTED;VTK44;TABLET;WIN32;_CONSOLE;__WIN32__;_WIN32;_WINDOWS;_MT;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_TAO"
+				PreprocessorDefinitions="_DEBUG;_USRDLL;_OSG;VE_PATENTED;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_WINDOWS;_MT;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_TAO"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=".\Debug/VE_Xplorer.pch"
+				PrecompiledHeaderFile=""
 				AssemblerListingLocation=".\$(ConfigurationName)/"
 				ObjectFile=".\$(ConfigurationName)/"
 				ProgramDataBaseFileName=".\$(ConfigurationName)/"
-				WarningLevel="3"
+				WarningLevel="2"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="0"
-				CompileAs="0"
+				Detect64BitPortabilityProblems="TRUE"
+				DebugInformationFormat="1"
+				CompileAs="2"
 				DisableSpecificWarnings="4244;4251;4275;4290"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
@@ -505,15 +507,16 @@
 				Name="VCLinkerTool"
 				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib omniORB405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib wxbase26d.lib wxmsw26d_core.lib"
 				ShowProgress="0"
-				OutputFile="$(VE_SUITE_HOME)\lib\win32\GraphicalPlugin.dll"
-				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
+				OutputFile="$(VE_SUITE_HOME)/lib/win32/GraphicalPlugin.dll"
+				LinkIncremental="2"
+				SuppressStartupBanner="FALSE"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/VE_Xplorer.pdb"
+				ProgramDatabaseFile=".\Debug_TAO_OSG/GraphicalPlugin.pdb"
 				SubSystem="1"
+				ImportLibrary="$(VE_SUITE_HOME)/lib/win32/GraphicalPlugin.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -551,22 +554,13 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfd1DTextInput.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfd3DTextureCullCallback.cxx">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdAccessoryFunctions.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdAdvectionSubGraph.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdAnimatedImage.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdAnimatedStreamlineCone.cxx">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdClone.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\\VE_Xplorer\cfdCommandArray.cxx">
@@ -584,9 +578,6 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdContours.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdCopyTo3DTextureStage.cxx">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdCursor.cxx">
 			</File>
 			<File
@@ -596,16 +587,13 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdDataSet.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdDCS.cxx">
+				RelativePath="..\VE_Xplorer\cfdDigitalAnalogGauge.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdFILE.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdFileInfo.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdGeode.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdGeomDataSet.cxx">
@@ -618,9 +606,6 @@
 			</File>
 			<File
 				RelativePath="..\VE_Builder\Translator\cfdGrid2Surface.cpp">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdGroup.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdImage.cxx">
@@ -644,22 +629,10 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdNavigate.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdNode.cxx">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdNodeTraverser.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdObjects.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdOSGAdvectionShaderManager.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdOSGPingPongTexture3d.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdPBufferManager.cxx">
+				RelativePath="..\VE_Xplorer\cfdObjects.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdPfSceneManagement.cxx">
@@ -686,40 +659,13 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdScalarBarActor.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdSceneNode.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdSequence.cxx">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdStreamers.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdSwitch.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdTempAnimation.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdTextOutput.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdTextureBasedVizHandler.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdTextureDataSet.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdTextureManager.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdTextureMatrixCallback.cxx">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdThread.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdUpdateTextureCallback.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVEAvailModules.cxx">
@@ -732,9 +678,6 @@
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVEPluginLoader.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_VolumeVis\cfdVolumeVisualization.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVTKFileHandler.cxx">
@@ -777,12 +720,270 @@
 			Name="headers"
 			Filter=".h">
 			<File
+				RelativePath="..\VE_Xplorer\cfdConfig.h">
+			</File>
+			<File
+				RelativePath="..\VE_Xplorer\cfdDigitalAnalogGauge.h">
+			</File>
+			<File
+				RelativePath="..\VE_Xplorer\cfdReadParam.h">
+			</File>
+			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVEBaseClass.h">
 			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
+		</Filter>
+		<Filter
+			Name="Scene Graph Classes">
+			<Filter
+				Name="src">
+				<File
+					RelativePath="..\VE_SceneGraph\cfdClone.cxx">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdDCS.cxx">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdGeode.cxx">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdGroup.cxx">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdNode.cxx">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdSceneNode.cxx">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdSequence.cxx">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdSwitch.cxx">
+				</File>
+			</Filter>
+			<Filter
+				Name="headers">
+				<File
+					RelativePath="..\VE_SceneGraph\cfdClone.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdDCS.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdGeode.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdGroup.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdNode.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdSceneNode.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdSequence.h">
+				</File>
+				<File
+					RelativePath="..\VE_SceneGraph\cfdSwitch.h">
+				</File>
+			</Filter>
+		</Filter>
+		<Filter
+			Name="Volume Vis Classes">
+			<Filter
+				Name="Core Classes">
+				<Filter
+					Name="src">
+					<File
+						RelativePath="..\VE_VolumeVis\cfdTextureBasedVizHandler.cxx">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdTextureDataSet.cxx">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdTextureManager.cxx">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdTextureMatrixCallback.cxx">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeBillboard.cxx">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeCenterCallback.cxx">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeVisualization.cxx">
+					</File>
+				</Filter>
+				<Filter
+					Name="headers">
+					<File
+						RelativePath="..\VE_VolumeVis\cfdTextureBasedVizHandler.h">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdTextureDataSet.h">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdTextureManager.h">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdTextureMatrixCallback.h">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeBillboard.h">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeCenterCallback.h">
+					</File>
+					<File
+						RelativePath="..\VE_VolumeVis\cfdVolumeVisualization.h">
+					</File>
+				</Filter>
+			</Filter>
+			<Filter
+				Name="Shader Extensions">
+				<Filter
+					Name="Shader Managers">
+					<Filter
+						Name="src">
+						<File
+							RelativePath="..\VE_VolumeVis\cfdOSGAdvectionShaderManager.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdOSGShaderManager.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdOSGTransferShaderManager.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdScalarShaderManager.cxx">
+						</File>
+					</Filter>
+					<Filter
+						Name="headers">
+						<File
+							RelativePath="..\VE_VolumeVis\cfdOSGAdvectionShaderManager.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdOSGShaderManager.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdOSGTransferShaderManager.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdScalarShaderManager.h">
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="VolumeVis Handlers">
+					<Filter
+						Name="src">
+						<File
+							RelativePath="..\VE_VolumeVis\cfdScalarVolumeVisHandler.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdVectorVolumeVisHandler.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdVolumeVisNodeHandler.cxx">
+						</File>
+					</Filter>
+					<Filter
+						Name="headers">
+						<File
+							RelativePath="..\VE_VolumeVis\cfdScalarVolumeVisHandler.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdVectorVolumeVisHandler.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdVolumeVisNodeHandler.h">
+						</File>
+					</Filter>
+				</Filter>
+				<Filter
+					Name="Texture Advection Classes">
+					<Filter
+						Name="src">
+						<File
+							RelativePath="..\VE_VolumeVis\cfd3DTextureCullCallback.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdAdvectionSubGraph.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdCopyTo3DTextureStage.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdOSGPingPongTexture3d.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdPBufferManager.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdPBufferQuad.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdSimpleTextureCallback.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdUpdateableOSGNoiseTexture3d.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdUpdateableOSGTexture1d.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdUpdateParameterCallback.cxx">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdUpdateTextureCallback.cxx">
+						</File>
+					</Filter>
+					<Filter
+						Name="headers">
+						<File
+							RelativePath="..\VE_VolumeVis\cfd3DTextureCullCallback.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdAdvectionSubGraph.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdCopyTo3DTextureStage.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdOSGPingPongTexture3d.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdPBufferManager.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdPBufferQuad.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdSimpleTextureCallback.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdUpdateableOSGNoiseTexture3d.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdUpdateableOSGTexture1d.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdUpdateParameterCallback.h">
+						</File>
+						<File
+							RelativePath="..\VE_VolumeVis\cfdUpdateTextureCallback.h">
+						</File>
+					</Filter>
+				</Filter>
+			</Filter>
 		</Filter>
 	</Files>
 	<Globals>
