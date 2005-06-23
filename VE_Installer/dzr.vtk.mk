@@ -1,5 +1,5 @@
 ################### vtk-specific (vtk4 and higher) Makefile ###################
-
+include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
 EXTRA_INCLUDES+= -I${VTK_BASE_DIR}/include/vtk 
 EXTRA_INCLUDES+= -I${VE_SUITE_HOME}
 
