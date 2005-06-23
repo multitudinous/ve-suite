@@ -16,7 +16,9 @@
 
 //#define DELIM  char(0xA9)
 
-class Interface //: public packable
+#include "VE_Xplorer/cfdConfig.h"
+
+class WXPLUGIN_DECLSPEC Interface //: public packable
 {
 
 public:
