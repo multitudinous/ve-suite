@@ -54,7 +54,7 @@ class cfdCommandArray;
 class cfdGeode;
 #include "cfdGlobalBase.h"
 
-class cfdObjects : public cfdGlobalBase
+class WXPLUGIN_DECLSPEC cfdObjects : public cfdGlobalBase
 {
    public:
       cfdObjects( const cfdObjects& src );

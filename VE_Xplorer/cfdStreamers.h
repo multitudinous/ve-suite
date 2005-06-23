@@ -47,7 +47,8 @@ class cfdCommandArray;
   based on the active glyph. Update member function will update
   the position and direction.
 */
-class cfdStreamers : public cfdObjects
+
+class WXPLUGIN_DECLSPEC cfdStreamers : public cfdObjects
 {
    public:
       /* Initialize the VTK objects and pipeline.

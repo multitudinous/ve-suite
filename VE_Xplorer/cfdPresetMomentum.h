@@ -45,7 +45,8 @@ class cfdCuttingPlane;
   and direction selected. Update member function will update
   the plane position and direction.
 */
-class cfdPresetMomentum : public cfdContourBase
+
+class WXPLUGIN_DECLSPEC cfdPresetMomentum : public cfdContourBase
 {
  public:
   // Initialize the pipeline.

@@ -34,7 +34,9 @@
 #define CFD_COMMAND_ARRAY_H
 
 // cfdApp side variables declared in VjObs_i.h
-class cfdCommandArray
+#include "VE_Xplorer/cfdConfig.h"
+
+class WXPLUGIN_DECLSPEC cfdCommandArray
 {
    public:
       cfdCommandArray();

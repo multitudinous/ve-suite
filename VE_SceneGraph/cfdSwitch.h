@@ -10,7 +10,7 @@ class pfSwitch;
 #elif OPENSG
 #endif
 
-class VEPLUGIN_DECLSPEC cfdSwitch : public cfdGroup
+class WXPLUGIN_DECLSPEC cfdSwitch : public cfdGroup
 {
 public:
    cfdSwitch();

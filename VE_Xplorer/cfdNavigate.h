@@ -44,7 +44,9 @@ class cfdDCS;
   and virtual cursor location in virtual environment.
 */
 
-class cfdNavigate
+#include "VE_Xplorer/cfdConfig.h"
+
+class WXPLUGIN_DECLSPEC cfdNavigate
 {
    public:
       //! Constructor

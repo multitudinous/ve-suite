@@ -38,7 +38,7 @@ class vtkPolyDataMapper;
 class vtkWarpVector;
 class cfdCommandArray;
 
-class cfdPolyData : public cfdObjects
+class WXPLUGIN_DECLSPEC cfdPolyData : public cfdObjects
 {
    public:
 

@@ -41,8 +41,9 @@ class cfdDataSet;
 class vtkDataSet;
 class cfdCommandArray;
 class cfdDCS;
+#include "VE_Xplorer/cfdConfig.h"
 
-class cfdReadParam : public cfdGlobalBase
+class WXPLUGIN_DECLSPEC cfdReadParam : public cfdGlobalBase
 {
    public:
       cfdReadParam();

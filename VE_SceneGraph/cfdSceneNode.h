@@ -63,7 +63,7 @@ namespace osg
 //and then an appropriate wrapper class    //
 //should be created.                       //
 /////////////////////////////////////////////
-class VEPLUGIN_DECLSPEC cfdSceneNode
+class WXPLUGIN_DECLSPEC cfdSceneNode
 {
    public:
       enum cfdNodeType

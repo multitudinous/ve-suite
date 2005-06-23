@@ -4,7 +4,7 @@
 class cfdDCS;
 //class cfdMaterial;
 
-class VEPLUGIN_DECLSPEC cfdClone: public cfdNode
+class WXPLUGIN_DECLSPEC cfdClone: public cfdNode
 {
    public:
       cfdClone();

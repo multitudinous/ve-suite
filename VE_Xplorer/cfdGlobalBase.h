@@ -34,7 +34,9 @@
 
 class cfdCommandArray;
 
-class cfdGlobalBase
+#include "VE_Xplorer/cfdConfig.h"
+
+class WXPLUGIN_DECLSPEC cfdGlobalBase
 {
  public:
    cfdGlobalBase();

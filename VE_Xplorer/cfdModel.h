@@ -90,7 +90,9 @@ enum Operation2Model
    DeleteGeomdataset
 };
 
-class cfdModel
+#include "VE_Xplorer/cfdConfig.h"
+
+class WXPLUGIN_DECLSPEC cfdModel
 {
 public:
    cfdModel(cfdDCS *);

@@ -40,7 +40,7 @@ class vtkActor;
 #include <vector>
 #include "VE_Xplorer/cfdConfig.h"
 
-class VEPLUGIN_DECLSPEC cfdTempAnimation
+class WXPLUGIN_DECLSPEC cfdTempAnimation
 {
    public:
       cfdTempAnimation();

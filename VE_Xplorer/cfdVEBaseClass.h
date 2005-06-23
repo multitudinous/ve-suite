@@ -47,7 +47,7 @@ class cfdObjects;
 #include "interface.h"
 #include "VE_Xplorer/cfdConfig.h"
 
-class VEPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
+class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
 {
    public:
       cfdVEBaseClass( void );

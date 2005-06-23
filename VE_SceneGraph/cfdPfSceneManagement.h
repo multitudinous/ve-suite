@@ -41,8 +41,9 @@ class pfLightSource;
 #elif _OSG
 #endif
 #include <vpr/Util/Singleton.h>
+#include "VE_Xplorer/cfdConfig.h"
 
-class cfdPfSceneManagement : public vpr::Singleton< cfdPfSceneManagement >
+class WXPLUGIN_DECLSPEC cfdPfSceneManagement : public vpr::Singleton< cfdPfSceneManagement >
 {
    private:
       // Required so that vpr::Singleton can instantiate this class.

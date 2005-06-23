@@ -32,21 +32,21 @@
 #ifndef CFD_CONFIG_H
 #define CFD_CONFIG_H
 
-#include <wx/dlimpexp.h>
+#include <wx/defs.h>
 
-#if defined(VEUSINGDLL) && \
-    (defined(VEMAKING_PLUGIN_DLL) || defined(VEUSING_PLUGIN_DLL))
+#if defined(WXUSINGDLL) && \
+    (defined(WXMAKING_PLUGIN_DLL) || defined(WXUSING_PLUGIN_DLL))
 
-#  if defined(VEMAKING_PLUGIN_DLL)
+#  if defined(WXMAKING_PLUGIN_DLL)
       // When building the DLL WXPLUGINDECLSPEC exports classes
-#     define VEPLUGIN_DECLSPEC            WXEXPORT
-#  elif defined(VEUSING_PLUGIN_DLL)
+#     define WXPLUGIN_DECLSPEC            WXEXPORT
+#  elif defined(WXUSING_PLUGIN_DLL)
       // When building the DLL WXPLUGINDECLSPEC imports classes
-#     define VEPLUGIN_DECLSPEC            WXIMPORT
+#     define WXPLUGIN_DECLSPEC            WXIMPORT
 #  endif // defined(WXBUILD_PLUGIN_DLL)
 #else
    // When building the static library nullify the effect of WXPLUGIN_DECLSPEC
-#  define VEPLUGIN_DECLSPEC
+#  define WXPLUGIN_DECLSPEC
 #endif // WXUSINGDLL && (WXMAKING_PLUGIN_DLL || WXUSING_PLUGIN_DLL)
 
 #endif

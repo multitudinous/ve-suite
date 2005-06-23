@@ -43,7 +43,7 @@ class cfdReadParam;
 class cfdCommandArray;
 class cfdDCS;
 
-class cfdAnimatedImage : public cfdObjects
+class WXPLUGIN_DECLSPEC cfdAnimatedImage : public cfdObjects
 {
    public:
       cfdAnimatedImage( char *basename, int frames,

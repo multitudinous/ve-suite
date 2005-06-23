@@ -54,7 +54,9 @@ class cfdVTKFileHandler;
    or properties for virtual environment interactive 
    computation.
 */
-class cfdDataSet
+#include "VE_Xplorer/cfdConfig.h"
+
+class WXPLUGIN_DECLSPEC cfdDataSet
 {
  public:
   cfdDataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.

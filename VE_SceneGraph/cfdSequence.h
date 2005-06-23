@@ -64,7 +64,7 @@ class cfdSequence : public pfGroup, public cfdGroup
 #elif _OSG
 #include <osg/Group>
 namespace { class Switch; }
-class VEPLUGIN_DECLSPEC cfdSequence : public osg::Group, public cfdGroup
+class WXPLUGIN_DECLSPEC cfdSequence : public osg::Group, public cfdGroup
 #endif
 {
 public:

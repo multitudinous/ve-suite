@@ -50,7 +50,8 @@ class vtkWarpVector;
   and direction selected. Update member function will be update
   the position and direction as each "Update" being called.
 */
-class cfdMomentum : public cfdContourBase
+
+class WXPLUGIN_DECLSPEC cfdMomentum : public cfdContourBase
 {
  public:
   // Initialize the VTK objects and pipeline.

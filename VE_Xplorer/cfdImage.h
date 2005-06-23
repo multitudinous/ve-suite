@@ -42,7 +42,7 @@ class vtkTexture;
 class cfdCommandArray;
 class cfdReadParam;
 
-class cfdImage : public cfdObjects
+class WXPLUGIN_DECLSPEC cfdImage : public cfdObjects
 {
  public:
    cfdImage( char* );

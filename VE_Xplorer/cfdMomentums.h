@@ -40,7 +40,8 @@ class vtkWarpVector;
 /*!
   A class that generates warped contour plots on multiple planes of data.
 */
-class cfdMomentums : public cfdContourBase
+
+class WXPLUGIN_DECLSPEC cfdMomentums : public cfdContourBase
 {
  public:
   /* Initialize the multiple momentum profiles, based on the input

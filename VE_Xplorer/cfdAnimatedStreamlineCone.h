@@ -40,7 +40,7 @@ class vtkGlyph3D;
 class vtkSphereSource;
 class cfdCommandArray;
 
-class cfdAnimatedStreamlineCone : public cfdObjects
+class WXPLUGIN_DECLSPEC cfdAnimatedStreamlineCone : public cfdObjects
 {
    public:
       cfdAnimatedStreamlineCone( void );

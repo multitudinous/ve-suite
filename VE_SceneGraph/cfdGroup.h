@@ -41,7 +41,7 @@ namespace osg { class Group; }
 #elif _OPENSG
 #endif
 
-class VEPLUGIN_DECLSPEC cfdGroup: public cfdNode
+class WXPLUGIN_DECLSPEC cfdGroup: public cfdNode
 {
    public:
       cfdGroup();

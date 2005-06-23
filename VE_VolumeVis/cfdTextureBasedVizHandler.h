@@ -26,8 +26,9 @@ class cfdTextureDataSet;
 class cfdVolumeVisNodeHandler;
 class cfdScalarVolumeVisHandler;
 class cfdVectorVolumeVisHandler;
+#include "VE_Xplorer/cfdConfig.h"
 
-class cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
+class WXPLUGIN_DECLSPEC cfdTextureBasedVizHandler: public vpr::Singleton< cfdTextureBasedVizHandler >
 {
    public:
    

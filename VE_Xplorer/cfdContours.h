@@ -35,7 +35,8 @@
 #include "cfdContourBase.h"
 
 // A class that generates contour plots on multiple planes of data.
-class cfdContours : public cfdContourBase
+
+class WXPLUGIN_DECLSPEC cfdContours : public cfdContourBase
 {
  public:
   cfdContours( const int xyz );

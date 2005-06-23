@@ -47,7 +47,7 @@ class vtkActor;
 class vtkVectorText;
 #include "VE_Xplorer/cfdConfig.h"
 
-class VEPLUGIN_DECLSPEC cfdDigitalAnalogGauge
+class WXPLUGIN_DECLSPEC cfdDigitalAnalogGauge
 {
    public:
 

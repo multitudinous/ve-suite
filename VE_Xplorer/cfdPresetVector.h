@@ -44,7 +44,8 @@ class vtkCutter;
   and direction selected. Update member function will update
   the plane position and direction.
 */
-class cfdPresetVector : public cfdVectorBase
+
+class WXPLUGIN_DECLSPEC cfdPresetVector : public cfdVectorBase
 {
  public:
    // Initialize the VTK objects and pipeline.

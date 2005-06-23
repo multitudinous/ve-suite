@@ -50,8 +50,9 @@ class cfdTextureDataSet;
 class vtkPolyData;
 
 #include <vector>
+#include "VE_Xplorer/cfdConfig.h"
 
-class cfdModelHandler : public vpr::Singleton< cfdModelHandler >
+class WXPLUGIN_DECLSPEC cfdModelHandler : public vpr::Singleton< cfdModelHandler >
 {
    private:
       // Required so that vpr::Singleton can instantiate this class.

@@ -33,8 +33,9 @@
 #define FILEIO_H
 
 #include <iosfwd>
+#include "VE_Xplorer/cfdConfig.h"
 
-class fileIO
+class WXPLUGIN_DECLSPEC fileIO
 { 
    public:
       fileIO();

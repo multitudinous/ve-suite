@@ -18,8 +18,9 @@
 #include <vector>
 #endif
 #include <iostream>
+#include "VE_Xplorer/cfdConfig.h"
 
-class cfdPBufferManager
+class WXPLUGIN_DECLSPEC cfdPBufferManager
 {
    public:
       cfdPBufferManager();
