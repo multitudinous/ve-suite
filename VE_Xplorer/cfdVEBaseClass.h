@@ -45,23 +45,9 @@ class cfdNavigate;
 class cfdDCS;
 class cfdObjects;
 #include "interface.h"
+#include "VE_Xplorer/cfdConfig.h"
 
-#if defined(WXUSINGDLL) && \
-    (defined(WXMAKING_PLUGIN_DLL) || defined(WXUSING_PLUGIN_DLL))
-
-#  if defined(WXMAKING_PLUGIN_DLL)
-      // When building the DLL WXPLUGINDECLSPEC exports classes
-#     define WXPLUGIN_DECLSPEC            WXEXPORT
-#  elif defined(WXUSING_PLUGIN_DLL)
-      // When building the DLL WXPLUGINDECLSPEC imports classes
-#     define WXPLUGIN_DECLSPEC            WXIMPORT
-#  endif // defined(WXBUILD_PLUGIN_DLL)
-#else
-   // When building the static library nullify the effect of WXPLUGIN_DECLSPEC
-#  define WXPLUGIN_DECLSPEC
-#endif // WXUSINGDLL && (WXMAKING_PLUGIN_DLL || WXUSING_PLUGIN_DLL)
-
-class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
+class VEPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
 {
    public:
       cfdVEBaseClass( void );

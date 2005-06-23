@@ -45,8 +45,9 @@ class vtkTransformPolyDataFilter;
 class vtkPolyDataMapper;
 class vtkActor;
 class vtkVectorText;
+#include "VE_Xplorer/cfdConfig.h"
 
-class cfdDigitalAnalogGauge
+class VEPLUGIN_DECLSPEC cfdDigitalAnalogGauge
 {
    public:
 
