@@ -50,7 +50,7 @@ namespace osg
 #elif _OPENSG
 #endif
 
-class cfdDCS: public cfdGroup
+class VEPLUGIN_DECLSPEC cfdDCS: public cfdGroup
 {
    public:
       cfdDCS( float*, float*, float* );

@@ -38,8 +38,9 @@ class cfdGeode;
 class vtkActor;
 
 #include <vector>
+#include "VE_Xplorer/cfdConfig.h"
 
-class cfdTempAnimation
+class VEPLUGIN_DECLSPEC cfdTempAnimation
 {
    public:
       cfdTempAnimation();

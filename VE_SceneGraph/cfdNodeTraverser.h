@@ -41,7 +41,8 @@
 #include <osg/Node>
 #endif
 
-class cfdNodeTraverser{
+class cfdNodeTraverser
+{
 public:
    cfdNodeTraverser();
    cfdNodeTraverser(const cfdNodeTraverser& cfdNT);

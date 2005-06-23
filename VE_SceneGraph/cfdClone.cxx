@@ -10,6 +10,7 @@
 
 ////////////////////
 cfdClone::cfdClone()
+:cfdNode()
 {
    _cloneTransform = 0;
    _originalNode = 0;
@@ -19,6 +20,7 @@ cfdClone::cfdClone()
 }
 /////////////////////////////////////
 cfdClone::cfdClone(cfdNode* original)
+:cfdNode()
 {
    CloneNode( original );
 }

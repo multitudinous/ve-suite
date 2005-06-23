@@ -53,6 +53,8 @@ namespace osg
 #endif
 
 #include <vpr/Util/GUID.h>
+#include "VE_Xplorer/cfdConfig.h"
+
 /////////////////////////////////////////////
 //This class holds and manages the nodes on//
 //the graph.                               //
@@ -61,7 +63,7 @@ namespace osg
 //and then an appropriate wrapper class    //
 //should be created.                       //
 /////////////////////////////////////////////
-class cfdSceneNode
+class VEPLUGIN_DECLSPEC cfdSceneNode
 {
    public:
       enum cfdNodeType

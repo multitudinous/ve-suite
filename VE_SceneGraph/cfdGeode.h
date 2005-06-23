@@ -46,7 +46,7 @@ class vtkActor;
 /*!
   Update a modified Performer geometry node.
 */
-class cfdGeode: public cfdNode
+class VEPLUGIN_DECLSPEC cfdGeode: public cfdNode
 {
    public:
       cfdGeode( void );

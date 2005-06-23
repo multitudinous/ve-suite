@@ -47,7 +47,7 @@ namespace osg
 #elif _OPENSG
 #endif
 
-class cfdNode: public cfdSceneNode
+class VEPLUGIN_DECLSPEC cfdNode: public cfdSceneNode
 {
    public:   
       cfdNode( void );
