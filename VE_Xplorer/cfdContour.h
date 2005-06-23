@@ -49,7 +49,7 @@ class vtkAppendPolyData;
   selected. Update member function will be update
   the position and direction as each "Update" being called.
 */
-class cfdContour : public cfdContourBase
+class WXPLUGIN_DECLSPEC cfdContour : public cfdContourBase
 {
  public:
   // Initialize the VTK objects and pipeline.
