@@ -73,6 +73,8 @@
 #include <sys/dir.h>
 #endif // WIN32
 
+vprSingletonImp( cfdModelHandler );
+
 cfdModelHandler::cfdModelHandler( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdModelHandler constructor"

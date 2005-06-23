@@ -59,6 +59,8 @@
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
 
+vprSingletonImp( cfdPfSceneManagement );
+
 cfdPfSceneManagement::cfdPfSceneManagement( void )
 {
    this->_param = 0;

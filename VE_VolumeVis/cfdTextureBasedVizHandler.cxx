@@ -31,6 +31,8 @@
 #include "VE_VolumeVis/cfdVectorVolumeVisHandler.h"
 #include "VE_VolumeVis/cfdOSGAdvectionShaderManager.h"
 
+vprSingletonImp( cfdTextureBasedVizHandler );
+
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////

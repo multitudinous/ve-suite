@@ -76,6 +76,8 @@
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
 
+vprSingletonImp( cfdSteadyStateVizHandler );
+
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 {
    this->surface = 0;

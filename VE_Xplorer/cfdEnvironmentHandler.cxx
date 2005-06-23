@@ -52,6 +52,8 @@
 #include <fstream>
 #include <cstdlib>
 
+vprSingletonImp( cfdEnvironmentHandler );
+
 cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {
    nav            = 0;
