@@ -57,7 +57,7 @@ class cfdGroup;
    A class to build virtual cursors. Type of virtual
    cursor built are single point, arrow, and multiple points.
 */
-class cfdCursor : public cfdGlobalBase
+class WXPLUGIN_DECLSPEC cfdCursor : public cfdGlobalBase
 {
    public:
       cfdCursor( vtkPolyData* , cfdDCS* , cfdGroup* );

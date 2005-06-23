@@ -39,7 +39,9 @@ class cfdGroup;
 class cfdTempAnimation;
 class cfdModel;
 
-class cfdGraphicsObject
+#include "VE_Xplorer/cfdConfig.h"
+
+class WXPLUGIN_DECLSPEC cfdGraphicsObject
 {
    public:
       // constructor
