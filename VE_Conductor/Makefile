@@ -103,6 +103,7 @@ EXTRA_INCLUDES+= -I$(VE_UI_HOME) \
                   -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer \
                   -I$(VE_SUITE_HOME)/VE_Builder/Utilities/gui 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)/VE_Conductor/Framework
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
 # -----------------------------------------------------------------------------
 # Application build targets.
