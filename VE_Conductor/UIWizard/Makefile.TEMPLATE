@@ -3,8 +3,6 @@ CFDHOSTTYPE?=	$(DZR_HOSTTYPE)
 PLUGIN = TEMPLATE
 APP_NAME= ../GUIPlugins/$(CFDHOSTTYPE)/lib$(PLUGIN).so
 
-VE_CONDUCTOR_HOME = $(VE_SUITE_HOME)/VE_Conductor
-
 all:
 	mkdir -p ../GUIPlugins/$(CFDHOSTTYPE)
 	$(MAKE) NO_DEPEND=0 cxx
@@ -28,7 +26,12 @@ OPTIM_APP?= TRUE
 
 EXTRA_CFLAGS+=
 
-EXTRA_CXXFLAGS+= -I$(VE_CONDUCTOR_HOME)/Framework 
+EXTRA_CXXFLAGS+=
+
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)/VE_Conductor/Framework 
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
+
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/Framework 
 
 EXTRA_DEFS+=
 
@@ -44,8 +47,6 @@ include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
-
-vpath %.cpp $(VE_CONDUCTOR_HOME)/Framework
 
 # -----------------------------------------------------------------------------
 # Application build targets.

@@ -24,9 +24,6 @@ class TEMPLATE : public REI_Plugin
 
   virtual int GetNumPoly();
   
-  virtual void GetPoly(POLY &polygon); 
-  //Return the outline polygon
-
   virtual UIDialog* UI(wxWindow* parent);
   //This returns the UI dialog of the module
 

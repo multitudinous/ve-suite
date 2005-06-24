@@ -2,7 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="Template"
+	Name="Equipment_GUI2"
+	ProjectGUID="{0D29C965-1C45-4EB3-8421-302A1D2F4548}"
 	SccProjectName=""
 	SccLocalPath="">
 	<Platforms>
@@ -12,8 +13,8 @@
 	<Configurations>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory=".\Release"
-			IntermediateDirectory=".\Release"
+			OutputDirectory=".\ReleaseTemplateGUIPluginDLL"
+			IntermediateDirectory=".\ReleaseTemplateGUIPluginDLL"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -22,26 +23,26 @@
 				Name="VCCLCompilerTool"
 				Optimization="2"
 				InlineFunctionExpansion="1"
-				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;Template_EXPORTS"
+				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;COMPRESSOR_EXPORTS"
 				StringPooling="TRUE"
 				RuntimeLibrary="0"
 				EnableFunctionLevelLinking="TRUE"
 				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Release/Template.pch"
-				AssemblerListingLocation=".\Release/"
-				ObjectFile=".\Release/"
-				ProgramDataBaseFileName=".\Release/"
+				PrecompiledHeaderFile=".\$(OutDir)/Template.pch"
+				AssemblerListingLocation=".\$(OutDir)/"
+				ObjectFile=".\$(OutDir)/"
+				ProgramDataBaseFileName=".\$(OutDir)/"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile=".\Release/Template.dll"
+				OutputFile="..\GUIPlugins\win32\Template.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				ProgramDatabaseFile=".\Release/Template.pdb"
-				ImportLibrary=".\Release/Template.lib"
+				ProgramDatabaseFile=".\$(OutDir)/Template.pdb"
+				ImportLibrary=".\$(OutDir)/Template.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -49,7 +50,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Release/Template.tlb"
+				TypeLibraryName=".\$(OutDir)/Template.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -74,23 +75,23 @@
 		</Configuration>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory=".\Debug"
-			IntermediateDirectory=".\Debug"
+			OutputDirectory=".\DebugTemplateGUIPluginDLL"
+			IntermediateDirectory=".\DebugTemplateGUIPluginDLL"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE">
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(WX_ROOT)\include,$(XERCESCROOT)\include,$(VE_SUITE_HOME)\VE_Conductor\Framework,$(VE_SUITE_HOME)\VE_Xplorer"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;..\;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXUSING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="2"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/Template.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
+				UsePrecompiledHeader="0"
+				PrecompiledHeaderFile=""
+				AssemblerListingLocation="$(OutDir)"
+				ObjectFile="$(OutDir)"
+				ProgramDataBaseFileName="$(OutDir)"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="4"
@@ -99,14 +100,14 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2D.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxmsw24d.lib"
-				OutputFile="..\Template.dll"
+				AdditionalDependencies="GUIPlugin.lib xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib"
+				OutputFile="..\GUIPlugins\win32\Template_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="$(WX_ROOT)\lib,$(XERCESCROOT)\lib"
+				AdditionalLibraryDirectories="$(VE_SUITE_HOME)\lib\win32;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile=".\Debug/Template.pdb"
-				ImportLibrary=".\Debug/Template.lib"
+				ProgramDatabaseFile="$(OutDir)/Template.pdb"
+				ImportLibrary="$(OutDir)/Template.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"
@@ -114,7 +115,7 @@
 				MkTypLibCompatible="TRUE"
 				SuppressStartupBanner="TRUE"
 				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/Template.tlb"
+				TypeLibraryName="$(OutDir)/Template.tlb"
 				HeaderFileName=""/>
 			<Tool
 				Name="VCPostBuildEventTool"/>
@@ -145,196 +146,15 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\FinancialDialog.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
+				RelativePath=".\Template.cpp">
+			</File>
+			<File
+				RelativePath=".\Template_UI_Dialog.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\Geometry.cpp">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\interface.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\package.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\Plugin_base.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Template.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="Template_UI.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\string_ops.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\TexTable.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\TextResultDialog.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\UIDialog.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_MBCS;_USRDLL;Template_EXPORTS;$(NoInherit)"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;WINVER=0x400;_MT;wxUSE_GUI=1;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXMAKING_PLUGIN_DLL;_USRDLL;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE;$(NoInherit)"
-						BasicRuntimeChecks="3"/>
+						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
 				</FileConfiguration>
 			</File>
 		</Filter>
@@ -342,37 +162,10 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\FinancialDialog.h">
+				RelativePath=".\Template.h">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\interface.h">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\packable.h">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\package.h">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\Plugin_base.h">
-			</File>
-			<File
-				RelativePath="Template.h">
-			</File>
-			<File
-				RelativePath="Template_UI.h">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\string_ops.h">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\TexTable.h">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\TextResultDialog.h">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\UIDialog.h">
+				RelativePath=".\Template_UI_Dialog.h">
 			</File>
 		</Filter>
 		<Filter
@@ -383,3 +176,4 @@
 	<Globals>
 	</Globals>
 </VisualStudioProject>
+

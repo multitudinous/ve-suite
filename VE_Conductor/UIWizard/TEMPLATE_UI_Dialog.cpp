@@ -1,7 +1,5 @@
 #include "TEMPLATE_UI_Dialog.h"
 
-IMPLEMENT_DYNAMIC_CLASS(TEMPLATE_UI_Dialog, UIDialog);
-
 //Here is the constructor with passed in pointers
 TEMPLATE_UI_Dialog
 ::TEMPLATE_UI_Dialog
