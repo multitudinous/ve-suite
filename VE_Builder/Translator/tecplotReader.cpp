@@ -6,6 +6,8 @@
 #include "vtkUnstructuredGridWriter.h"
 #include "vtkCellType.h"
 #include "vtkFloatArray.h"
+#include "readWriteVtkThings.h"
+#include "converter.h"
 tecplotReader::tecplotReader( )
 {
    uGrid = NULL;

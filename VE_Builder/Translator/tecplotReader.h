@@ -15,8 +15,7 @@ class vtkCellType;
 class vtkCellType;
 class vtkFloatArray;
 
-#include "readWriteVtkThings.h"
-#include "converter.h"
+
 class tecplotReader
 {
    private:
