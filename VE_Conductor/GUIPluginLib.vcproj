@@ -188,12 +188,6 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
-			<File
-				RelativePath=".\Exterior.h">
-			</File>
-			<File
-				RelativePath=".\Exterior_UI.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

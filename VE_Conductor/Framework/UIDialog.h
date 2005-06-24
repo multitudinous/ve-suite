@@ -10,7 +10,9 @@
 #pragma warning(disable : 4503)
 #endif
 
-class UIDialog : public wxDialog
+#include "VE_Xplorer/cfdConfig.h"
+
+class WXPLUGIN_DECLSPEC UIDialog : public wxDialog
 {
   //DECLARE_DYNAMIC_CLASS(UIDialog)
     

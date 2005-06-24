@@ -85,8 +85,8 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)/VE_Conductor/Framework&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Utilities\gui&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;WXUSING_PLUGIN_DLL;_TAO"
+				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VE_SUITE_HOME)/VE_Conductor/Framework&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Utilities\gui&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_TAO"
 				IgnoreStandardIncludePath="FALSE"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
@@ -107,11 +107,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib xerces-c_2D.lib"
+				AdditionalDependencies="GUIPlugin.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib xerces-c_2D.lib"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\WinClientd.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Release&quot;"
+				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Release&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
 				AssemblyDebug="1"
 				ProgramDatabaseFile=".\Debug/WinClient.pdb"
@@ -465,9 +465,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\FinancialDialog.cpp">
-			</File>
-			<File
 				RelativePath="Frame.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -518,9 +515,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\Geometry.cpp">
-			</File>
-			<File
 				RelativePath="GlobalParamDialog.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -565,59 +559,6 @@
 						Name="VCCLCompilerTool"
 						Optimization="0"
 						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\interface.cpp">
-			</File>
-			<File
-				RelativePath="ListTable.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_PATENTED|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OSG_PS_DBG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
 						PreprocessorDefinitions=""
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
@@ -707,9 +648,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath=".\package.cpp">
-			</File>
-			<File
 				RelativePath=".\paraThread.cpp">
 				<FileConfiguration
 					Name="Debug|Win32">
@@ -787,106 +725,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="PortDialog.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_PATENTED|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OSG_PS_DBG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="ResultPanel.cpp">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="2"
-						PreprocessorDefinitions=""/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_PATENTED|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OSG_PS_DBG|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-			</File>
-			<File
 				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.cpp">
 			</File>
 			<File
@@ -894,12 +732,6 @@
 			</File>
 			<File
 				RelativePath=".\StringParse.cpp">
-			</File>
-			<File
-				RelativePath=".\TexTable.cpp">
-			</File>
-			<File
-				RelativePath=".\TextResultDialog.cpp">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_AdvectionPanel.cxx">
@@ -1377,9 +1209,6 @@
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath=".\UIDialog.cpp">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\VjObsC.cpp">

@@ -18,7 +18,7 @@ enum GEOMETRY_CONFIG_IDS
    GEOMETRY_CONFIG_LOD_SLIDER
 };
 
-class Geometry : public wxDialog
+class WXPLUGIN_DECLSPEC Geometry : public wxDialog
 {
    public:
       Geometry( wxWindow *parent, wxWindowID id );

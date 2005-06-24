@@ -5,8 +5,9 @@
 #include <vector>
 
 
+#include "VE_Xplorer/cfdConfig.h"
 
-class TexTable : public wxTextCtrl
+class WXPLUGIN_DECLSPEC TexTable : public wxTextCtrl
 {
  public:
 

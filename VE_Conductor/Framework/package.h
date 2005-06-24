@@ -13,7 +13,7 @@
 #include <iostream>
 
 XERCES_CPP_NAMESPACE_USE
-class Package
+class WXPLUGIN_DECLSPEC Package
 {
  public:
 
