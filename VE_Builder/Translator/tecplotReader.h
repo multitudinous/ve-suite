@@ -6,13 +6,16 @@
 #include <string>
 #include <vector>
 //VTK includes
-#include "vtkPoints.h"
-#include "vtkUnstructuredGrid.h"
-#include "vtkStructuredGrid.h"
-#include "vtkUnstructuredGridWriter.h"
+class vtkPoints;
+class vtkUnstructuredGrid;
+class vtkStructuredGrid;
+class vtkUnstructuredGridWriter;
+
+class vtkCellType;
+class vtkCellType;
+class vtkFloatArray;
+
 #include "readWriteVtkThings.h"
-#include "vtkCellType.h"
-#include "vtkFloatArray.h"
 #include "converter.h"
 class tecplotReader
 {
