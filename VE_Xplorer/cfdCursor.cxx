@@ -29,14 +29,14 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdCursor.h"
-#include "cfdEnum.h"
+#include "VE_Xplorer/cfdCursor.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGeode.h"
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_SceneGraph/cfdGroup.h"
-#include "cfdDataSet.h"
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdObjects.h"
 #ifdef _PERFORMER
 #include <Performer/pfdu.h>
 #include <Performer/pf/pfNode.h>
@@ -667,7 +667,6 @@ void cfdCursor::SetTranslation( void )
    loc_f[ 1 ] = this->loc[ 1 ];
    loc_f[ 2 ] = this->loc[ 2 ];
 
-   this->cursorDCS->SetTranslationArray( loc_f );
    //cout << loc_f[ 0 ] << " : " << loc_f[ 1 ] << " : " << loc_f[ 2 ] << " : " << endl;
    // get pfMatrix of worldDCS
    Matrix44f worldMat;
@@ -691,7 +690,9 @@ void cfdCursor::SetTranslation( void )
       //      << endl <<  totalMat << endl << vprDEBUG_FLUSH;
    }
 
-   this->cursorDCS->SetRotationMatrix( totalMat );
+   //this->cursorDCS->SetRotationMatrix( totalMat );
+   this->cursorDCS->SetMat( totalMat );
+   this->cursorDCS->SetTranslationArray( loc_f );
 }
 
 void cfdCursor::GetLocalLocationVector( void )
@@ -732,7 +733,7 @@ void cfdCursor::GetLocalLocationVector( void )
 
    // invert the worldDCS matrix...
    Matrix44f worldMatInv;
-   gmtl::invert( worldMatInv, worldMat );
+   gmtl::invertFull( worldMatInv, worldMat );
 
    // compute local_vec = [world matrix]^(-1) * global_vec
    Vec4f localVector;
@@ -744,7 +745,7 @@ void cfdCursor::GetLocalLocationVector( void )
 
    // invert activeDataSetDCS
    Matrix44f activeDataSetMatInv;
-   gmtl::invert( activeDataSetMatInv, activeDataSetMat );
+   gmtl::invertFull( activeDataSetMatInv, activeDataSetMat );
 
    // compute new_local_vec = [activeDataSet Matrix]^(-1) * local_vec
    Vec4f pfLocXX;
