@@ -144,7 +144,7 @@ void cfdObjects::SetSourcePoints( vtkPolyDataSource* pointSource )
 // Fix this
 bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
 {
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_PARTICLE_VIEW_OPTION )
+   /*if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_PARTICLE_VIEW_OPTION )
    {
       cfdObjects::SetParticleOption( 
                                commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
@@ -164,7 +164,7 @@ bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
       cfdObjects::SetParticleScale( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
       return true;
-   }
+   }*/
    return false;
 }
 
@@ -190,20 +190,11 @@ void cfdObjects::SetActiveDataSet( cfdDataSet * dataset )
 /////////////////// STATIC member functions follow ///////////////////
 
 
-float cfdObjects::vectorScale = 0.0;
+/*float cfdObjects::vectorScale = 0.0;
 int   cfdObjects::particleOption = 0;
 float cfdObjects::particleScale = 0.0;
 
-// used by vectors and intended to be used for warped contours
-void cfdObjects::SetVectorScale( float x )
-{
-   vectorScale = x;
-}
 
-float cfdObjects::GetVectorScale()
-{
-   return vectorScale;
-}
 
 // used by cfdPolydata for setting the type and size of particles
 void cfdObjects::SetParticleOption( int option )
@@ -225,4 +216,4 @@ float cfdObjects::GetParticleScale()
 {
    return particleScale;
 }
-
+*/

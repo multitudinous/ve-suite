@@ -29,11 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdPolyData.h"
-#include "cfdDataSet.h"
+#include "VE_Xplorer/cfdPolyData.h"
+#include "VE_Xplorer/cfdDataSet.h"
 #include "VE_SceneGraph/cfdGeode.h"
-#include "cfdCommandArray.h"
-#include "cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdEnum.h"
 
 #include <vtkTubeFilter.h>
 #include <vtkCellTypes.h>
@@ -62,6 +62,8 @@ cfdPolyData::cfdPolyData( float op_val )
    warpSurface = false;
    warpedContourScale = 1.0f;
 
+   _particleOption = 0;
+   _particleScale = 1;
    //this->map->ScalarVisibilityOff();
 /*
    this->actor->GetProperty()->SetColor( 1.0f, 1.0f, 1.0f );
@@ -282,9 +284,45 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
       this->deci->SetTargetReduction( realLOD );*/
       return true;
    }
+   else if( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_PARTICLE_VIEW_OPTION )
+   {
+      SetParticleOption(commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
+
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
+         << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
+         << std::endl << vprDEBUG_FLUSH;
+
+      vprDEBUG(vprDBG_ALL,0) << " CHANGE_SPHERE_SIZE, value = " 
+         << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
+         << std::endl << vprDEBUG_FLUSH;
+
+      SetParticleScale( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+
+      return true;
+   }
    return flag;
 }
-
+//////////////////////////////////////////////////////////
+void cfdPolyData::SetParticleOption( unsigned int option )
+{
+   _particleOption = option;
+}
+//////////////////////////////////////////////
+unsigned int cfdPolyData::GetParticleOption()
+{
+   return _particleOption;
+}
+//////////////////////////////////////////////
+void cfdPolyData::SetParticleScale( float x )
+{
+   _particleScale = x;
+}
+/////////////////////////////////////
+float cfdPolyData::GetParticleScale()
+{
+   return _particleScale;
+}
+/////////////////////////////////
 void cfdPolyData::UpdateCommand()
 {
    cfdObjects::UpdateCommand();

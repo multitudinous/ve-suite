@@ -107,23 +107,17 @@ class WXPLUGIN_DECLSPEC cfdObjects : public cfdGlobalBase
       cfdDataSet * GetActiveDataSet( void );
 
       //void ClearTransientVector( void );
-      static void SetVectorScale( float );
-      static float GetVectorScale();
+      //static void SetVectorScale( float );
+      //static float GetVectorScale();
 
-      static void SetParticleOption( int );
-      static int GetParticleOption();
-
-      static void SetParticleScale( float );
-      static float GetParticleScale();
-
+      
    protected:
 
       cfdDataSet* activeDataSet;
 
       // used by vectors and intended for warped contours
-      static float vectorScale;
-      static int particleOption;   // point cloud or variably sized spheres
-      static float particleScale;
+      //static float vectorScale;
+     
 
       std::vector< cfdGeode* > geodes;
       vtkPolyDataSource *pointSource;

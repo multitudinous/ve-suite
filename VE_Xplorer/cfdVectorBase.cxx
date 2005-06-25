@@ -65,6 +65,13 @@ cfdVectorBase::cfdVectorBase()
    this->mapper = vtkPolyDataMapper::New();
    this->mapper->SetInput( this->filter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
+   _vectorScale = 1.0;
+   _vectorThreshHoldMinPercentage = 0;
+   _vectorThreshHoldMaxPercentage = 100;
+   _vectorThreshHoldValues[ 0 ] = 0.0;
+   _vectorThreshHoldValues[ 1 ] = 100.0;
+   _scaleByVector = 0;
+   _vectorRatioFactor = 1;
 }
 
 
@@ -99,7 +106,7 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
          << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetThreshHoldPercentages( commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ),
+      SetThreshHoldPercentages( commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ),
                                                commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
       UpdateThreshHoldValues();
 
@@ -111,7 +118,7 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
          << ", value = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetVectorRatioFactor( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      SetVectorRatioFactor( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
       return true;
    }
@@ -121,7 +128,7 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
          << ", value = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdObjects::SetVectorScale( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      SetVectorScale( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
       return true;
    }
@@ -155,47 +162,57 @@ void cfdVectorBase::UpdateCommand()
    cfdObjects::UpdateCommand();
    std::cerr << "doing nothing in cfdVectorBase::UpdateCommand()" << std::endl;
 }
-
+//////////////////////////////////////////////
+void cfdVectorBase::SetVectorScale( float x )
+{
+   _vectorScale = x;
+}
+/////////////////////////////////////
+float cfdVectorBase::GetVectorScale()
+{
+   return _vectorScale;
+}
+///////////////////////////////////////////
 void cfdVectorBase::SetGlyphWithThreshold()
 {
    vprDEBUG(vprDBG_ALL, 1) << "vectorThreshHoldValues : " 
-      << vectorThreshHoldValues[ 0 ] << " : " 
-      << vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
+      << _vectorThreshHoldValues[ 0 ] << " : " 
+      << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
 
    double currentScalarRange[ 2 ];
    this->GetActiveDataSet()->GetRange( currentScalarRange );
 
-   if ( vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] && 
-        vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
+   if ( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] && 
+        _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
    {
       vprDEBUG(vprDBG_ALL, 1) <<"cfdVectorBase: ThresholdBetween"
          << std::endl << vprDEBUG_FLUSH;
       vtkThresholdPoints * tfilter = vtkThresholdPoints::New();
       tfilter->SetInput( this->ptmask->GetOutput() );
-      tfilter->ThresholdBetween( vectorThreshHoldValues[ 0 ],
-                                 vectorThreshHoldValues[ 1 ] );
+      tfilter->ThresholdBetween( _vectorThreshHoldValues[ 0 ],
+                                 _vectorThreshHoldValues[ 1 ] );
       tfilter->Update();
       this->glyph->SetInput( tfilter->GetOutput());
       tfilter->Delete(); 
    }
-   else if ( vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
+   else if ( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
    {
       vprDEBUG(vprDBG_ALL, 1) <<"cfdVectorBase: ThresholdByUpper"
          << std::endl << vprDEBUG_FLUSH;
       vtkThresholdPoints * tfilter = vtkThresholdPoints::New();
       tfilter->SetInput( this->ptmask->GetOutput() );
-      tfilter->ThresholdByUpper( vectorThreshHoldValues[ 0 ] );
+      tfilter->ThresholdByUpper( _vectorThreshHoldValues[ 0 ] );
       tfilter->Update();
       this->glyph->SetInput( tfilter->GetOutput());
       tfilter->Delete(); 
    }
-   else if ( vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
+   else if ( _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
    {
       vprDEBUG(vprDBG_ALL, 1) <<"cfdVectorBase: ThresholdByLower"
          << std::endl << vprDEBUG_FLUSH;
       vtkThresholdPoints * tfilter = vtkThresholdPoints::New();
       tfilter->SetInput( this->ptmask->GetOutput() );
-      tfilter->ThresholdByLower( vectorThreshHoldValues[ 1 ] );
+      tfilter->ThresholdByLower( _vectorThreshHoldValues[ 1 ] );
       tfilter->Update();
       this->glyph->SetInput( tfilter->GetOutput());
       tfilter->Delete(); 
@@ -214,7 +231,7 @@ void cfdVectorBase::SetGlyphAttributes()
    this->glyph->SetVectorModeToUseVector();
    //this->glyph->DebugOn();
 
-   if ( scaleByVector == 0 )
+   if ( _scaleByVector == 0 )
    {  
       this->glyph->SetScaleFactor( GetVectorScaleFactor() );
       this->glyph->SetScaleModeToDataScalingOff();
@@ -312,72 +329,52 @@ std::cout << " UpdateThreshHoldValues " <<  std::endl;
          << currentScalarRange[ 0 ] << " : " <<  currentScalarRange[ 1 ] 
          << std::endl << vprDEBUG_FLUSH;
 
-      vectorThreshHoldValues[ 0 ] = currentScalarRange[0] +
-                    (double)vectorThreshHoldMinPercentage / 100.0
+      _vectorThreshHoldValues[ 0 ] = currentScalarRange[0] +
+                    (double)_vectorThreshHoldMinPercentage / 100.0
                     * ( currentScalarRange[1] - currentScalarRange[0] );
 
-      vectorThreshHoldValues[ 1 ] = currentScalarRange[0] +
-                    (double)vectorThreshHoldMaxPercentage / 100.0
+      _vectorThreshHoldValues[ 1 ] = currentScalarRange[0] +
+                    (double)_vectorThreshHoldMaxPercentage / 100.0
                     * ( currentScalarRange[1] - currentScalarRange[0] );
 
       vprDEBUG(vprDBG_ALL, 1) << " Threshold Values = "
-         << vectorThreshHoldValues[ 0 ] << " : "
-         << vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
+         << _vectorThreshHoldValues[ 0 ] << " : "
+         << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
    }
 }
-
-
-/////////////////// STATIC member functions follow ///////////////////
-
-// initial definition of the static variable
-int cfdVectorBase::vectorThreshHoldMinPercentage = 0;
-int cfdVectorBase::vectorThreshHoldMaxPercentage = 100;
-
-void cfdVectorBase::SetThreshHoldPercentages( int min, int max )
+void cfdVectorBase::SetThreshHoldPercentages( int minThread, int maxThread )
 {
-   vectorThreshHoldMinPercentage = min;
-   vectorThreshHoldMaxPercentage = max;
+   _vectorThreshHoldMinPercentage = minThread;
+   _vectorThreshHoldMaxPercentage = maxThread;
 }
-
-double cfdVectorBase::vectorThreshHoldValues[ 2 ] = { 0.0, 100.0 };
-
 void cfdVectorBase::SetThreshHoldValues( double* input )
 {
-   vectorThreshHoldValues[ 0 ] = input[ 0 ];
-   vectorThreshHoldValues[ 1 ] = input[ 1 ];
+   _vectorThreshHoldValues[ 0 ] = input[ 0 ];
+   _vectorThreshHoldValues[ 1 ] = input[ 1 ];
 
    vprDEBUG(vprDBG_ALL, 1) << " Threshold Values = "
-      << vectorThreshHoldValues[ 0 ] << " : "
-      << vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
+      << _vectorThreshHoldValues[ 0 ] << " : "
+      << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
 }
-
 double* cfdVectorBase::GetThreshHoldValues( void )
 {
-   return ( vectorThreshHoldValues );
+   return ( _vectorThreshHoldValues );
 }
-
-
-int cfdVectorBase::vectorRatioFactor = 1;
-
 void cfdVectorBase::SetVectorRatioFactor( int x )
 {
-   vectorRatioFactor = x;
+   _vectorRatioFactor = x;
 }
 
 int cfdVectorBase::GetVectorRatioFactor()
 {
-   return vectorRatioFactor;
+   return _vectorRatioFactor;
 }
-
-int cfdVectorBase::scaleByVector = 0;
-
 void cfdVectorBase::SetScaleByVectorFlag( int input )
 {
-   scaleByVector = input;
+   _scaleByVector = input;
 }
-
 int cfdVectorBase::GetScaleByVectorFlag( void )
 {
-   return scaleByVector;
+   return _scaleByVector;
 }
 

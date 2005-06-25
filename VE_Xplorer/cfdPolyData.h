@@ -53,6 +53,13 @@ class WXPLUGIN_DECLSPEC cfdPolyData : public cfdObjects
 
       // in future, multi-threaded apps will make a copy of VjObs_i commandArray
       virtual void UpdateCommand();
+
+      void SetParticleOption( unsigned int );
+      unsigned int GetParticleOption();
+
+      void SetParticleScale( float );
+      float GetParticleScale();
+
    private:
 
       float GetSphereScaleFactor();
@@ -62,6 +69,9 @@ class WXPLUGIN_DECLSPEC cfdPolyData : public cfdObjects
 	  //cfdCommandArray* commandArray;
       bool warpSurface;
       double warpedContourScale;
+
+      unsigned int  _particleOption;   // point cloud or variably sized spheres
+      float _particleScale;
 };
 
 #endif

@@ -58,18 +58,21 @@ class cfdVectorBase : public cfdObjects
    // update the actor
    virtual void Update() = 0;
 
-   static void SetThreshHoldPercentages( int min, int max );
+   void SetThreshHoldPercentages( int minThresh, int maxThresh );
 
-   static void SetThreshHoldValues( double * );
-   static double* GetThreshHoldValues( void );
+   void SetThreshHoldValues( double * );
+   double* GetThreshHoldValues( void );
 
    void UpdateThreshHoldValues();
 
-   static void SetVectorRatioFactor( int );
-   static int GetVectorRatioFactor();
+   void SetVectorRatioFactor( int );
+   int GetVectorRatioFactor();
 
-   static void SetScaleByVectorFlag( int );
-   static int GetScaleByVectorFlag( void );
+   void SetScaleByVectorFlag( int );
+   int GetScaleByVectorFlag( void );
+   
+   void SetVectorScale( float );
+   float GetVectorScale();
 
  protected:
    vtkGlyph3D*       glyph;
@@ -81,13 +84,12 @@ class cfdVectorBase : public cfdObjects
    void SetGlyphAttributes();
    float GetVectorScaleFactor();
 
-   //int GetVectorRatioFactor();
-
-   static int vectorThreshHoldMinPercentage;
-   static int vectorThreshHoldMaxPercentage;
-   static double vectorThreshHoldValues[ 2 ];
-   static int vectorRatioFactor;
-   static int scaleByVector;
+   int _vectorThreshHoldMinPercentage;
+   int _vectorThreshHoldMaxPercentage;
+   double _vectorThreshHoldValues[ 2 ];
+   int _vectorRatioFactor;
+   int _scaleByVector;
+   float _vectorScale;
 };
 
 #endif
