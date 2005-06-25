@@ -148,7 +148,7 @@ void cfdAnimatedStreamlineCone::Update( void )
       pointsArray[ i ] = vtkPoints::New();
    }
 
-   int forwardPoints;
+   int forwardPoints = 0;
    for ( cellId = 0; cellId < numberOfStreamLines; cellId += increment )
    {
       // For forward integrated points
@@ -168,11 +168,6 @@ void cfdAnimatedStreamlineCone::Update( void )
                << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
             pointsArray[ i ]->InsertNextPoint( x );        
          }
-      }
-
-      if ( streamDir == cfdAnimatedStreamlineCone::BACKWARD )
-      {
-         forwardPoints = 0;
       }
 
       // For backward integrated points
