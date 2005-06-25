@@ -121,6 +121,7 @@ class WXPLUGIN_DECLSPEC cfdDCS: public cfdGroup
 #elif _OSG
       osg::ref_ptr<osg::MatrixTransform> _dcs;
       cfdUpdateDCSCallback* _udcb;
+      osg::Quat dcsQuat;
 #elif _OPENSG
 #endif
 
