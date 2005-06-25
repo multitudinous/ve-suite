@@ -68,6 +68,14 @@ class WXPLUGIN_DECLSPEC cfdAnimatedStreamlineCone : public cfdObjects
       vtkSphereSource *sphere;
 
       float particleDiameter;
+      enum STREAM_DIRECTION
+      {
+         FORWARD,
+         BACKWARD,
+         BOTH
+      };
+   
+      STREAM_DIRECTION streamDir;
       //int nPts, nStr, iPts;
       //float ptData[3], direction[3], center[3];   
 };

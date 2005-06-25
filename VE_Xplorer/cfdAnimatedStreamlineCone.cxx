@@ -59,6 +59,7 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 
    //this->_sequence = new cfdTempAnimation();
    this->particleDiameter = 1.0f;
+   streamDir = cfdAnimatedStreamlineCone::FORWARD;
 }
 
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
@@ -110,14 +111,29 @@ void cfdAnimatedStreamlineCone::Update( void )
    int maxNpts = 0;
    int minNpts = 1000000;
 
-   for ( cellId = 0; cellId < numberOfStreamLines; cellId += 2 )
+   int increment;
+   if ( ( streamDir == cfdAnimatedStreamlineCone::FORWARD ) ||
+        ( streamDir == cfdAnimatedStreamlineCone::BACKWARD ) )
+   {
+      increment = 1;
+   }
+   else
+   {
+      increment = 2;
+   }
+
+   for ( cellId = 0; cellId < numberOfStreamLines; cellId += increment )
    {
       points = this->polyData->GetCell( cellId )->GetPoints();
       npts = points->GetNumberOfPoints();
-      points = this->polyData->GetCell( cellId + 1 )->GetPoints();
-      npts += points->GetNumberOfPoints();
+      if ( streamDir == cfdAnimatedStreamlineCone::BOTH ) 
+      {
+         points = this->polyData->GetCell( cellId + 1 )->GetPoints();
+         npts += points->GetNumberOfPoints();
+      }
+      
       vprDEBUG(vprDBG_ALL, 1) << " Number of points in cell " << cellId 
-         << " = " << npts << std::endl << vprDEBUG_FLUSH;
+                              << " = " << npts << std::endl << vprDEBUG_FLUSH;
       if ( maxNpts < npts )
          maxNpts = npts;
       
@@ -133,35 +149,48 @@ void cfdAnimatedStreamlineCone::Update( void )
    }
 
    int forwardPoints;
-   for ( cellId = 0; cellId < numberOfStreamLines; cellId += 2 )
+   for ( cellId = 0; cellId < numberOfStreamLines; cellId += increment )
    {
       // For forward integrated points
-      points = this->polyData->GetCell( cellId )->GetPoints();
-      forwardPoints = points->GetNumberOfPoints();
-      vprDEBUG(vprDBG_ALL, 1) 
-         << "Number of Forward points = " << forwardPoints
-         << std::endl << vprDEBUG_FLUSH;      
-      for ( i = 0; i < forwardPoints; i++ )
+      if ( ( streamDir == cfdAnimatedStreamlineCone::FORWARD ) ||
+           ( streamDir == cfdAnimatedStreamlineCone::BOTH ) )
       {
-         x = points->GetPoint( i );
-         vprDEBUG(vprDBG_ALL, 3) 
-            << "x[ " << i << " ] = " << x[ 0 ] << " : " 
-            << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
-         pointsArray[ i ]->InsertNextPoint( x );        
+         points = this->polyData->GetCell( cellId )->GetPoints();
+         forwardPoints = points->GetNumberOfPoints();
+         vprDEBUG(vprDBG_ALL, 1) 
+            << "Number of Forward points = " << forwardPoints
+            << std::endl << vprDEBUG_FLUSH;      
+         for ( i = 0; i < forwardPoints; i++ )
+         {
+            x = points->GetPoint( i );
+            vprDEBUG(vprDBG_ALL, 3) 
+               << "x[ " << i << " ] = " << x[ 0 ] << " : " 
+               << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
+            pointsArray[ i ]->InsertNextPoint( x );        
+         }
       }
-      
-      // For backward integrated points
-      points = this->polyData->GetCell( cellId + 1 )->GetPoints();
-      npts = points->GetNumberOfPoints();
-      vprDEBUG(vprDBG_ALL, 1) << "Number of Backward points = " << npts
-         << std::endl << vprDEBUG_FLUSH;
-      for ( i = npts - 1; i >= 0; i-- )
+
+      if ( streamDir == cfdAnimatedStreamlineCone::BACKWARD )
       {
-         x = points->GetPoint( i );
-         vprDEBUG(vprDBG_ALL, 3)
-            << " x[ " << i << " ] = " << x[ 0 ] << " : " 
-            << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
-         pointsArray[ ( npts - 1 ) - i + forwardPoints]->InsertNextPoint( x );
+         forwardPoints = 0;
+      }
+
+      // For backward integrated points
+      if ( ( streamDir == cfdAnimatedStreamlineCone::BACKWARD ) ||
+           ( streamDir == cfdAnimatedStreamlineCone::BOTH ) )
+      {
+         points = this->polyData->GetCell( cellId + ( increment - 1 ) )->GetPoints();
+         npts = points->GetNumberOfPoints();
+         vprDEBUG(vprDBG_ALL, 1) << "Number of Backward points = " << npts
+            << std::endl << vprDEBUG_FLUSH;
+         for ( i = npts - 1; i >= 0; i-- )
+         {
+            x = points->GetPoint( i );
+            vprDEBUG(vprDBG_ALL, 3)
+               << " x[ " << i << " ] = " << x[ 0 ] << " : " 
+               << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
+            pointsArray[ ( npts - 1 ) - i + forwardPoints]->InsertNextPoint( x );
+         }
       }
    }
 
@@ -255,6 +284,30 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
 
          vprDEBUG(vprDBG_ALL,1) << "\tNew Particle Diameter : " 
                              << this->particleDiameter << std::endl << vprDEBUG_FLUSH;
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == BACKWARD_INTEGRATION )
+   {
+      vprDEBUG(vprDBG_ALL,2) << " BACKWARD_INTEGRATION" 
+                             << std::endl << vprDEBUG_FLUSH;
+
+      streamDir = cfdAnimatedStreamlineCone::BACKWARD;
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == FORWARD_INTEGRATION )
+   {
+      vprDEBUG(vprDBG_ALL,2) << " FORWARD_INTEGRATION"
+                             << std::endl << vprDEBUG_FLUSH;
+
+      streamDir = cfdAnimatedStreamlineCone::FORWARD;
+      return true;
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TWO_DIRECTION_INTEGRATION )
+   {
+      vprDEBUG(vprDBG_ALL,2) << " 2_DIRECTION_INTEGRATION" 
+                             << std::endl << vprDEBUG_FLUSH;
+
+      streamDir = cfdAnimatedStreamlineCone::BOTH;
       return true;
    }
 

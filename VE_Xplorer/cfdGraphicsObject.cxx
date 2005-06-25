@@ -142,6 +142,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
                              << std::endl << vprDEBUG_FLUSH;
             parentNode->AddChild( temp );
          }
+         //this->animation->SetDuration();
          ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->animation->GetSequence() );
       }
       else if ( (this->geodes.size() > 1) && 
@@ -217,7 +218,7 @@ void cfdGraphicsObject::AddGeodesToSequence( void )
    for(int i = 0; i < nGroups; i++)
    {
       tempGroup = (cfdGroup*)this->animation->GetSequence()->GetChild(i);
-      nDCSs = tempGroup->GetNumChildren();
+      nDCSs = tempGrouSetDurationp->GetNumChildren();
       std::cout<<"number of dcs: "<< nDCSs<<std::endl;
       for(int j = 0; j < nDCSs; j++)
       {
