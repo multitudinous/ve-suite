@@ -47,6 +47,7 @@ namespace osg
    class NodeVisitor;
 }
 #include  <osg/NodeCallback>
+#include  <osg/Quat>
 #elif _OPENSG
 #endif
 
@@ -101,6 +102,7 @@ class WXPLUGIN_DECLSPEC cfdDCS: public cfdGroup
          void setRotationDegreeAngles(float h,float p,float r);
          void setTranslation(float* trans);
          void setScaleValues(float* scale);
+         void setQuat( osg::Quat& );
          virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
       protected:
          float _scale[3];
@@ -108,6 +110,7 @@ class WXPLUGIN_DECLSPEC cfdDCS: public cfdGroup
          float _h;
          float _p;
          float _r;
+         osg::Quat quat;
    };
 #elif _OPENSG
 #endif

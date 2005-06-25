@@ -368,17 +368,10 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
 #elif _OSG
    if ( _udcb )
    {
-      // XYZ is used here because if an identity matrix is passed in 
-      // it appears that gmtl does not do the transform properly and 
-      // then sends back incorrect rotations for ZXY Euler Angles
-      gmtl::EulerAngleXYZf temp = gmtl::make< gmtl::EulerAngleXYZf >( input );
-      gmtl::Vec3f vec;
-      vec[ 0 ] = gmtl::Math::rad2Deg(temp[ 0 ]);
-      vec[ 1 ] = gmtl::Math::rad2Deg(temp[ 1 ]);
-      vec[ 2 ] = gmtl::Math::rad2Deg(temp[ 2 ]);
-      //std::cout << input << std::endl << temp  << std::endl;
-      //std::cout << vec << std::endl;
-      _udcb->setRotationDegreeAngles( vec[ 2 ], vec[ 0 ], vec[ 1 ] );
+      gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
+      //std::cout << tempQuat << std::endl;
+      osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
+      _udcb->setQuat( quat );
    }
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;
@@ -572,6 +565,7 @@ cfdDCS::cfdUpdateDCSCallback::cfdUpdateDCSCallback( const cfdUpdateDCSCallback& 
    _h = input._h;
    _p = input._p;
    _r = input._r;
+   quat = input.quat;
 }
 //////////////////////////////////////////////////////////////////
 void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,
@@ -581,6 +575,25 @@ void cfdDCS::cfdUpdateDCSCallback::setRotationDegreeAngles(float h,
    _h = osg::DegreesToRadians(h);
    _p = osg::DegreesToRadians(p);
    _r = osg::DegreesToRadians(r);
+
+   //quat make quat from rotations
+   osg::Vec3f pitch(1,0,0);
+   osg::Vec3f roll(0,1,0);
+   osg::Vec3f yaw(0,0,1);
+   
+   osg::Matrixd rotateMat;
+
+   //rph              
+   rotateMat.makeRotate(_r,roll,
+                         _p,pitch,
+                         _h,yaw);
+
+   rotateMat.get( quat );
+}
+//////////////////////////////////////////////////////////////////
+void cfdDCS::cfdUpdateDCSCallback::setQuat( osg::Quat& input )
+{
+   quat = input;
 }
 ///////////////////////////////////////////////////////////////
 void cfdDCS::cfdUpdateDCSCallback::setTranslation(float* trans)
@@ -615,14 +628,7 @@ void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor*
       osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
       osg::Matrixd rotateMat;
 
-      //rph              
-/*      rotateMat.makeRotate(_r,roll,
-                         _p,pitch,
-                         _h,yaw);
-*/
-      rotateMat.makeRotate(_h,yaw,
-                         _p,pitch,
-                         _r,roll);
+      rotateMat.makeRotate( quat );
 
       osg::Vec3f transMat( _trans[0], _trans[1], _trans[2] );
       scale.setTrans(transMat);
