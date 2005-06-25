@@ -527,6 +527,7 @@ void cfdApp::draw()
    //glMatrixMode(GL_TEXTURE);
    //glPushMatrix();
 
+   // This will need to be changed when vrj2.0 is released as well
    osgUtil::SceneView* sv(NULL);
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT( sv != NULL);
@@ -595,12 +596,14 @@ void cfdApp::draw()
 #endif   //_WEB_INTERFACE
 
    //Draw the scene
+   // THis gaurd needs removed when ever vrj2.0 is released
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    {
       sv->update();
       sv->cull();
       sv->draw();
    }
+
 #ifdef _WEB_INTERFACE
    if(goCapture)
       captureWebImage();
