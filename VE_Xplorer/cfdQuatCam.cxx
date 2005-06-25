@@ -95,10 +95,14 @@ void cfdQuatCam::UpdateRotation( cfdNavigate* nav )
 {
    Matrix44f temp;
    temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
+#ifdef _PERFORMER
    // We have to take the YRot value because the juggler axis 
    // has y up where as we have z up these means we take the y up
    // and make it z up
    rotvec[0] = gmtl::Math::rad2Deg( makeYRot(temp) );
+#elif _OSG
+   rotvec[0] = gmtl::Math::rad2Deg( makeZRot(temp) );
+#endif
    nav->worldRot[0] = rotvec[0];
    //nav->worldRot[1] = rotvec[1];
    //nav->worldRot[2] = rotvec[2];

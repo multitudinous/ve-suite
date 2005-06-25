@@ -333,13 +333,30 @@ void cfdDCS::SetMat( Matrix44f& input )
    pfMatrix temp = vrj::GetPfMatrix( input );
    this->_dcs->setMat( temp );
 #elif _OSG
-   if(_dcs.valid())
+   if ( _dcs.valid() )
    {
       osg::Matrix inMat;
       inMat.set(input.getData());
-      _dcs->setMatrix(inMat);
-   }else{
-      
+      // this call does not work
+      // because it gets overridden in the callback
+      //_dcs->setMatrix(inMat);
+
+      // grab the rotations
+      osg::Quat quat;
+      inMat.get( quat );
+      _udcb->setQuat( quat );
+
+      // grab the translations
+      osg::Vec3d tempVec = inMat.getTrans();
+      float tempTrans[ 3 ];
+      tempTrans[ 0 ] = tempVec[ 0 ];
+      tempTrans[ 1 ] = tempVec[ 1 ];
+      tempTrans[ 2 ] = tempVec[ 2 ];
+      _udcb->setTranslation( tempTrans );
+   }
+   else
+   {
+      ;// do nothing      
    }
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetMat is NOT implemented " << std::endl;
