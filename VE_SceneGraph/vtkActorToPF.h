@@ -41,7 +41,7 @@
 #include <windows.h>
 #endif
 #include <fcntl.h>
-#include "VE_SceneGraph\cfdConfig.h"
+#include "VE_SceneGraph/cfdConfig.h"
 namespace VE_SceneGraph{
    // vtkActorToPF - translates vtkActor to pfGeode. If geode is NULL, new one
    //   will be created. Optional verbose parameter prints debugging and

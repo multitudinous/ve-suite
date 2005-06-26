@@ -46,7 +46,7 @@ namespace osg
 #include <osg/ref_ptr>
 #elif _OPENSG
 #endif
-#include "VE_SceneGraph\cfdConfig.h"
+#include "VE_SceneGraph/cfdConfig.h"
 
 namespace VE_SceneGraph{
 

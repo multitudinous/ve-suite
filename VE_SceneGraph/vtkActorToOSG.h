@@ -11,7 +11,7 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkCellArray.h>
-#include "VE_SceneGraph\cfdConfig.h"
+#include "VE_SceneGraph/cfdConfig.h"
 namespace VE_SceneGraph{
    // vtkActorToOSG - translates vtkActor to osg::Geode. If geode is NULL, new one
    //   will be created. Optional verbose parameter prints debugging and
