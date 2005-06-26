@@ -311,21 +311,24 @@ void Body_Executive_i::SetModuleMessage (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
+   _mutex.acquire();
   
-  cout << "SetModuleMessage " << msg << endl;
+   cout << "SetModuleMessage " << msg << endl;
 
-  std::map<std::string, Body::UI_var>::iterator iter;
-  for(iter=uis_.begin(); iter!=uis_.end(); iter++) {
-    cout << msg << " :TO: " << iter->first << endl;
-	try {
-		iter->second->Raise(msg);
-	}catch (CORBA::Exception &) {
-		
-		cout <<iter->first<<" is obsolete.\n";
-		uis_.erase(iter);
-	}
-  }
+   std::map<std::string, Body::UI_var>::iterator iter;
+   for(iter=uis_.begin(); iter!=uis_.end(); iter++) 
+   {
+      cout << msg << " :TO: " << iter->first << endl;
+	   try 
+      {
+		   iter->second->Raise(msg);
+	   }
+      catch (CORBA::Exception &) 
+      {
+		   cout <<iter->first<<" is obsolete.\n";
+		   uis_.erase(iter);
+	   }
+   }
 
   // THIS EXPECTS AN INTERFACE - NOT A STRING
 
@@ -395,46 +398,52 @@ char * Body_Executive_i::GetModuleResult (
     , Error::EUnknown
   ))
 {
-  _mutex.acquire();
+   _mutex.acquire();
   
-  Interface intf;
+   Interface intf;
   
-  if(module_id == -1) {
-    // Calculate efficiency
-    double tot_power = 0.0;
-    double tot_thermo = 0.0;
+   if ( module_id == -1 ) 
+   {
+      // Calculate efficiency
+      double tot_power = 0.0;
+      double tot_thermo = 0.0;
 
-    std::map<long, double>::iterator iter;
-    for(iter=_module_powers.begin(); iter!=_module_powers.end(); iter++)
-      tot_power += iter->second;
-    for(iter=_thermal_input.begin(); iter!=_thermal_input.end(); iter++)
-      tot_thermo += iter->second;
-    intf.setString("Power (MW)", to_string(tot_power));
-    if(tot_thermo != 0.0) {
-      intf.setString("Thermal Input (MW)", to_string(tot_thermo));
-      intf.setString("Efficiency (%)", to_string(tot_power / tot_thermo * 100));
-    }
-  } else if(!_network->getOutput(module_id, intf)) {
+      std::map<long, double>::iterator iter;
+      for(iter=_module_powers.begin(); iter!=_module_powers.end(); iter++)
+         tot_power += iter->second;
+      
+      for(iter=_thermal_input.begin(); iter!=_thermal_input.end(); iter++)
+         tot_thermo += iter->second;
+      
+      intf.setString("Power (MW)", to_string(tot_power));
+      
+      if(tot_thermo != 0.0) 
+      {
+         intf.setString("Thermal Input (MW)", to_string(tot_thermo));
+         intf.setString("Efficiency (%)", to_string(tot_power / tot_thermo * 100));
+      }
+   }
+   else if ( !_network->getOutput(module_id, intf) ) 
+   {
 	  
-    cerr << "Unable to get mod id# " << module_id 
-	 << "'s ouput data\n";
-  }
+      cerr << "Unable to get mod id# " << module_id 
+	         << "'s ouput data\n";
+   }
   
-  bool        rv;
-  std::string str;
+   bool        rv;
+   std::string str;
   
-  Package p;
-  p.SetSysId("temp.xml");
-  p.intfs.push_back(intf);
+   Package p;
+   p.SetSysId("temp.xml");
+   p.intfs.push_back(intf);
   
-  str = p.Save(rv);
-  
+   str = p.Save(rv);
+   _mutex.release();
 
-  _mutex.release();
+   if ( rv ) 
+      return CORBA::string_dup(str.c_str());
 
-  if(rv) return CORBA::string_dup(str.c_str());
-
-  return CORBA::string_dup("");//str.c_str());//"yang";//0;
+   return CORBA::string_dup("");//str.c_str());//"yang";//0;
 }
 
 void Body_Executive_i::SetNetwork (
