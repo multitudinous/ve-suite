@@ -56,7 +56,7 @@ include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
 
 vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework $(IDL_HOME)/skel 
 
-EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel 
+EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
