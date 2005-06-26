@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "vE_Xplorer/cfdVectors.h"
+#include "VE_Xplorer/cfdVectors.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdPlanes.h"
 #include "VE_Xplorer/cfdEnum.h"
