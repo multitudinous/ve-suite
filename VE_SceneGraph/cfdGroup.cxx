@@ -42,7 +42,7 @@
 #include <osg/Node>
 #elif _OPENSG
 #endif
-
+using namespace VE_SceneGraph;
 ///////////////////////////////////////////
 cfdGroup::cfdGroup( const cfdGroup& input )
 :cfdNode(input)
@@ -174,7 +174,7 @@ int cfdGroup::AddChild( cfdNode* child )
       //add the child to cfdscene
       childNodes.push_back( child );
       //set the parent in the cfdApp side
-      child->SetParent( this );
+      child->SetParent(this);
       return 1;
    }
    

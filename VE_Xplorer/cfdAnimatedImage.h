@@ -32,7 +32,7 @@
 #ifndef CFD_ANIMATED_IMAGE_H
 #define CFD_ANIMATED_IMAGE_H
 
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdObjects.h"
 
 class vtkPolyDataMapper;
 class vtkPolyData;
@@ -41,7 +41,10 @@ class vtkSphereSource;
 class cfdImage;
 class cfdReadParam;
 class cfdCommandArray;
-class cfdDCS;
+
+namespace VE_SceneGraph{
+   class cfdDCS;
+}
 
 class WXPLUGIN_DECLSPEC cfdAnimatedImage : public cfdObjects
 {
@@ -68,7 +71,7 @@ class WXPLUGIN_DECLSPEC cfdAnimatedImage : public cfdObjects
       std::vector< cfdImage* > _images;
 
    private:
-      cfdDCS* _dcs;
+      VE_SceneGraph::cfdDCS* _dcs;
       char basename[256];
       int frames;
       int ex_x, ex_y;

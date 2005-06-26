@@ -33,14 +33,14 @@
 #include "cfdVEBaseClass.h"
 //#include "cfdModuleGeometry.h"
 #include "VE_SceneGraph/cfdGroup.h"
-#include "cfdModel.h"
-#include "cfdReadParam.h"
-#include "fileIO.h"
-#include "cfdFILE.h"
-#include "cfdDataSet.h"
-#include "cfdNavigate.h"
+#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/cfdReadParam.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/cfdFILE.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdNavigate.h"
 #include "VE_SceneGraph/cfdDCS.h"
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdObjects.h"
 
 #include "package.h"
 
@@ -91,10 +91,10 @@ cfdVEBaseClass::~cfdVEBaseClass( void )
    //delete this->dataRepresentation;
 }
 
-void cfdVEBaseClass::InitializeNode( cfdDCS* veworldDCS )
+void cfdVEBaseClass::InitializeNode( VE_SceneGraph::cfdDCS* veworldDCS )
 {
    //this->groupNode = new cfdGroup();
-   this->_dcs = new cfdDCS(); 
+   this->_dcs = new VE_SceneGraph::cfdDCS(); 
    this->_dcs->SetName("cfdVEBaseClass");
    //this->dataRepresentation = new cfdObjects();
    //this->geometryNode = new cfdModuleGeometry( groupNode );
@@ -874,7 +874,7 @@ void cfdVEBaseClass::RegistVar(std::string vname, std::vector<std::string> *var)
    _string1D[vname]=var;
 }
 
-cfdDCS* cfdVEBaseClass::GetWorldDCS()
+VE_SceneGraph::cfdDCS* cfdVEBaseClass::GetWorldDCS()
 {
    return this->worldDCS;
 }

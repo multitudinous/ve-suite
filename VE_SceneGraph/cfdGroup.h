@@ -32,7 +32,6 @@
 #ifndef CFD_GROUP_H
 #define CFD_GROUP_H
 
-#include "VE_SceneGraph/cfdNode.h"
 #include <vector>
 #ifdef _PERFORMER
 class pfGroup;
@@ -40,53 +39,52 @@ class pfGroup;
 namespace osg { class Group; }
 #elif _OPENSG
 #endif
+#include "VE_SceneGraph/cfdNode.h"
 
-class WXPLUGIN_DECLSPEC cfdGroup: public cfdNode
-{
-   public:
-      cfdGroup();
-      cfdGroup( const cfdGroup& );
+namespace VE_SceneGraph{
+   class VE_SCENEGRAPH_EXPORTS cfdGroup: public cfdNode
+   {
+      public:
+         cfdGroup();
+         cfdGroup( const cfdGroup& );
 
-      //cfdGroup(float*, float*, float*);
-      virtual ~cfdGroup( void );
+         virtual ~cfdGroup( void );
 
-      //equal operator
-      cfdGroup& operator= ( const cfdGroup& );
+         //equal operator
+         cfdGroup& operator= ( const cfdGroup& );
 
-      //equality operator
-      //bool operator== ( cfdNode& );
+         //the wrappers for child/scene graph
+         //manipulation
+         virtual int RemoveChild( cfdNode* );
+         virtual int AddChild( cfdNode* );
 
-      //the wrappers for child/scene graph
-      //manipulation
-      virtual int RemoveChild( cfdNode* );
-      virtual int AddChild( cfdNode* );
+         virtual void InsertChild( int, cfdNode* );
+         virtual int  SearchChild( cfdNode* );
 
-      virtual void InsertChild( int, cfdNode* );
-      virtual int  SearchChild( cfdNode* );
+         virtual cfdNode* GetChild( int );
+         virtual int  GetNumChildren( void );
 
-      virtual cfdNode* GetChild( int );
-      virtual int  GetNumChildren( void );
+         virtual void SetName( char* );
+         virtual int ReplaceChild( cfdNode*, cfdNode* );
 
-      virtual void SetName( char* );
-      virtual int ReplaceChild( cfdNode*, cfdNode* );
-
-      virtual cfdNode* Clone( int );
+         virtual cfdNode* Clone( int );
 
 #ifdef _PERFORMER
-      virtual pfNode* GetRawNode( void );
+         virtual pfNode* GetRawNode( void );
 #elif _OSG
-      virtual osg::Node* GetRawNode( void );
+         virtual osg::Node* GetRawNode( void );
 #elif _OPENSG
 #endif
 
-      virtual const char* GetName( void );
-   protected:
+         virtual const char* GetName( void );
+      protected:
 #ifdef _PERFORMER
-      pfGroup* _group;
+         pfGroup* _group;
 #elif _OSG
-      osg::ref_ptr<osg::Group> _group;
+         osg::ref_ptr<osg::Group> _group;
 #elif _OPENSG
 #endif
-      std::vector< cfdNode* > childNodes;
-};
+         std::vector< cfdNode* > childNodes;
+   };
+}
 #endif

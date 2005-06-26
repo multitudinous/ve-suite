@@ -3,12 +3,14 @@
 #ifdef VE_PATENTED
 #include <vpr/Util/Singleton.h>
 
-class cfdDCS;
-class cfdGroup;
+namespace VE_SceneGraph{
+   class cfdDCS;
+   class cfdGroup;
+   class cfdSwitch;
+}
 class cfdCursor;
 class cfdNavigate;
 class cfdCommandArray;
-class cfdSwitch;
 class cfdGraphicsObject;
 
 
@@ -36,8 +38,8 @@ class WXPLUGIN_DECLSPEC cfdTextureBasedVizHandler //: public vpr::Singleton< cfd
       void CleanUp( void );
       void SetParameterFile(char* paramFile);
       void SetCommandArray(cfdCommandArray* cmdArray);
-      void SetWorldDCS(cfdDCS* dcs);
-      void SetParentNode(cfdGroup* parent);
+      void SetWorldDCS(VE_SceneGraph::cfdDCS* dcs);
+      void SetParentNode(VE_SceneGraph::cfdGroup* parent);
       void SetNavigate(cfdNavigate* navigate);
       void SetCursor(cfdCursor* cursor);
       void SetActiveTextureDataSet(cfdTextureDataSet* tdset);
@@ -62,7 +64,7 @@ class WXPLUGIN_DECLSPEC cfdTextureBasedVizHandler //: public vpr::Singleton< cfd
 
       char* _paramFile;
       cfdCommandArray* _cmdArray;
-      cfdDCS* _worldDCS;
+      VE_SceneGraph::cfdDCS* _worldDCS;
       cfdNavigate* _nav;
       cfdCursor* _cursor;
       cfdTextureDataSet* _activeTDSet;
@@ -70,7 +72,7 @@ class WXPLUGIN_DECLSPEC cfdTextureBasedVizHandler //: public vpr::Singleton< cfd
 
       //std::vector<cfdVolumeVisualization*> _volumeVisNodes;
       cfdVolumeVisualization* _activeVolumeVizNode;
-      cfdGroup* _parent;
+      VE_SceneGraph::cfdGroup* _parent;
       cfdPBufferManager* _pbm;
       osgUtil::SceneView* _sceneView;
       cfdVolumeVisNodeHandler* activeVisNodeHdlr;

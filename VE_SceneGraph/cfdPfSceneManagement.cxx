@@ -58,8 +58,8 @@
 
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
-
-vprSingletonImp( cfdPfSceneManagement );
+using namespace VE_SceneGraph;
+vprSingletonImp( VE_SceneGraph::cfdPfSceneManagement );
 
 cfdPfSceneManagement::cfdPfSceneManagement( void )
 {

@@ -42,7 +42,9 @@
 #include <gmtl/Coord.h>
 #include <gmtl/Generate.h>
 
-class cfdDCS;
+namespace VE_SceneGraph{
+   class cfdDCS;
+}
 class cfdNavigate;
 
 class cfdQuatCam
@@ -57,9 +59,9 @@ public:
    //Destructor
    ~cfdQuatCam();
 
-   void SetCamPos(double*, cfdDCS*);
+   void SetCamPos(double*, VE_SceneGraph::cfdDCS*);
 
-   void MoveCam(double*, float, cfdDCS*);
+   void MoveCam(double*, float, VE_SceneGraph::cfdDCS*);
 
    void RotSlerp(float);
 

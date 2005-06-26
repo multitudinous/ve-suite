@@ -36,18 +36,18 @@
    computation.
 */
 
-#include "cfdDataSet.h"
-#include "cfdPlanes.h"
-#include "cfdAccessoryFunctions.h"
-#include "fileIO.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdPlanes.h"
+#include "VE_Xplorer/cfdAccessoryFunctions.h"
+#include "VE_Xplorer/fileIO.h"
 #include "readWriteVtkThings.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdSwitch.h"
 #include "VE_SceneGraph/cfdTempAnimation.h"
-#include "cfdVTKFileHandler.h"
+#include "VE_Xplorer/cfdVTKFileHandler.h"
 
-#include "readWriteVtkThings.h"
+
 //#include "cleanVtk.h"    // for dumpVerticesNotUsedByCells()
 
 #include <vtkLookupTable.h>
@@ -97,11 +97,11 @@ cfdDataSet::cfdDataSet( )
    // use its own range to determine color mapping.
    this->parent = this;
    this->dcs = NULL;
-   this->switchNode = new cfdSwitch();
-   this->classic = new cfdGroup();
+   this->switchNode = new VE_SceneGraph::cfdSwitch();
+   this->classic = new VE_SceneGraph::cfdGroup();
    this->classic->SetName( "classic" );
    this->switchNode->AddChild( this->classic );
-   this->textureBased = new cfdGroup();
+   this->textureBased = new VE_SceneGraph::cfdGroup();
    this->textureBased->SetName( "textureBased" );
    this->switchNode->AddChild( this->textureBased );
    this->switchNode->SetVal(0);
@@ -1442,28 +1442,28 @@ void cfdDataSet::SetDisplayedScalarRange( int index, double * range )
    //this->definedRange[ 1 ] = range[ 1 ];
 }
 
-cfdSwitch* cfdDataSet::GetSwitchNode()
+VE_SceneGraph::cfdSwitch* cfdDataSet::GetSwitchNode()
 {
    if ( !switchNode )
    {
-      switchNode = new cfdSwitch();
+      switchNode = new VE_SceneGraph::cfdSwitch();
    }
    return switchNode;
 }
 
 // get/set this dataset's DCS
-cfdDCS* cfdDataSet::GetDCS()
+VE_SceneGraph::cfdDCS* cfdDataSet::GetDCS()
 {
    if ( dcs == NULL )
    {
-      dcs = new cfdDCS();
+      dcs = new VE_SceneGraph::cfdDCS();
       return this->dcs;
    }
    else
       return this->dcs;
 }
 
-void cfdDataSet::SetDCS( cfdDCS* myDCS )
+void cfdDataSet::SetDCS( VE_SceneGraph::cfdDCS* myDCS )
 {
    if ( dcs == NULL )
       this->dcs = myDCS;
@@ -1471,12 +1471,12 @@ void cfdDataSet::SetDCS( cfdDCS* myDCS )
       std::cerr << " ERROR: DCS is already set for this dataset " << std::endl;
 }
 
-cfdTempAnimation* cfdDataSet::GetAnimation( void )
+VE_SceneGraph::cfdTempAnimation* cfdDataSet::GetAnimation( void )
 {
    return this->animation;
 }
 
-void cfdDataSet::SetAnimation( cfdTempAnimation* input )
+void cfdDataSet::SetAnimation( VE_SceneGraph::cfdTempAnimation* input )
 {
    this->animation = input;
 }

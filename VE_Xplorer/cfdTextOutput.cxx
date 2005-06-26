@@ -68,11 +68,11 @@ cfdTextOutput::~cfdTextOutput()
 #endif
 } 
 
-cfdDCS *cfdTextOutput::add_text(char * text_input)
+VE_SceneGraph::cfdDCS *cfdTextOutput::add_text(char * text_input)
 {
    if ( dcs )
    {
-      cfdGroup* temp = (cfdGroup*)dcs->GetParent( 0 );
+      VE_SceneGraph::cfdGroup* temp = (VE_SceneGraph::cfdGroup*)dcs->GetParent( 0 );
       if ( temp )
       {
          temp->RemoveChild( dcs );
@@ -80,7 +80,7 @@ cfdDCS *cfdTextOutput::add_text(char * text_input)
       delete dcs;
       dcs = 0;
    }
-   dcs = new cfdDCS();
+   dcs = new VE_SceneGraph::cfdDCS();
    dcs->SetName("Text_DCS");
 #ifdef _PERFORMER
    if ( str )

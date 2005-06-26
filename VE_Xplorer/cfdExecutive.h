@@ -32,14 +32,16 @@
 #ifndef CFD_EXECUTIVE_H
 #define CFD_EXECUTIVE_H
 
-#include "cfdGlobalBase.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
 #include "interface.h"
 
 #include <map>
 #include <string>
 
-class cfdDCS;
-class cfdGroup;
+namespace VE_SceneGraph{
+   class cfdDCS; 
+   class cfdGroup;
+}
 class cfdGauges;
 class cfdDashboard;
 class cfdExecutiveConfiguration;
@@ -130,7 +132,7 @@ class cfdExecutive : public cfdGlobalBase
       cfdDashboard* _dashBoard;
       cfdInteractiveGeometry* _geometry;
       Body_UI_i* ui_i;
-      cfdGroup* _masterNode;
+      VE_SceneGraph::cfdGroup* _masterNode;
 
       bool _doneWithCalculations;
       bool updateNetworkString;

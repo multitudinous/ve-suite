@@ -46,34 +46,36 @@ class vtkActor;
 /*!
   Update a modified Performer geometry node.
 */
-class WXPLUGIN_DECLSPEC cfdGeode: public cfdNode
-{
-   public:
-      cfdGeode( void );
-      ~cfdGeode( void );
-      cfdGeode( const cfdGeode& );
-      cfdGeode& operator=( const cfdGeode& );
-      //bool operator== ( cfdNode& );
-
-      // This function will have to reimplmented for each scenegraph
-      // Get Geode 
-      
+namespace VE_SceneGraph{
+   class VE_SCENEGRAPH_EXPORTS cfdGeode: public cfdNode
+   {
+      public:
+         cfdGeode( void );
+         ~cfdGeode( void );
+         cfdGeode( const cfdGeode& );
+         cfdGeode& operator=( const cfdGeode& );
+   
 #ifdef _PERFORMER
-   pfNode* GetRawNode( void );
+         cfdGeode(const pfGeode& geode);
+         cfdGeode& operator=(const pfGeode& geode);
+         pfNode* GetRawNode( void );
 #elif _OSG
-   osg::Node* GetRawNode( void );
+         cfdGeode(const osg::Geode& geode);
+         cfdGeode& operator=(const osg::Geode& geode);
+         osg::Node* GetRawNode( void );
 #elif _OPENSG
 #endif
-      void TurnOnDebugOutput(int onOff = 0){_vtkDebugLevel = onOff;}
-      // This function implements the respective translate vtkActorToGeode
-      void TranslateTocfdGeode( vtkActor* );
+         void TurnOnDebugOutput(int onOff = 0){_vtkDebugLevel = onOff;}
+         // This function implements the respective translate vtkActorToGeode
+         void TranslateTocfdGeode( vtkActor* );
    protected:
-      int _vtkDebugLevel;
+         int _vtkDebugLevel;
 #ifdef _PERFORMER
-   pfGeode* _geode;
+         pfGeode* _geode;
 #elif _OSG
-      osg::ref_ptr<osg::Geode> _geode;
+         osg::ref_ptr<osg::Geode> _geode;
 #elif _OPENSG
 #endif
-};
+    };
+}
 #endif

@@ -34,13 +34,16 @@
 
 #include <vpr/Util/Singleton.h>
 
-class cfdDCS;
+namespace VE_SceneGraph{
+   class cfdDCS;
+   class cfdGroup;
+}
 class cfdDataSet;
 class cfdModel;
 class cfdCommandArray;
 class cfdReadParam;
 class cfdScalarBarActor;
-class cfdGroup;
+
 
 #ifdef _OSG
 #ifdef VE_PATENTED

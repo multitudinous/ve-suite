@@ -29,24 +29,23 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdEnvironmentHandler.h"
+#include "VE_Xplorer/cfdEnvironmentHandler.h"
 
-#include "fileIO.h"
-#include "cfdNavigate.h"
-#include "cfdSoundHandler.h"
-#include "cfdCursor.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdSoundHandler.h"
+#include "VE_Xplorer/cfdCursor.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdReadParam.h"
+#include "VE_Xplorer/cfdTeacher.h"
+#include "VE_Xplorer/cfdSoundHandler.h"
+#include "VE_Xplorer/cfdQuatCamHandler.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
-#include "cfdReadParam.h"
-#include "cfdTeacher.h"
-#include "cfdSoundHandler.h"
-#include "cfdQuatCamHandler.h"
-#include "cfdDataSet.h"
-#include "cfdModelHandler.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
-
 #include <vrj/Util/Debug.h>
 
 #include <fstream>
@@ -159,9 +158,10 @@ void cfdEnvironmentHandler::InitScene( void )
 {
    std::cout << "| ***************************************************************** |" << std::endl;
    // Needs to be set by the gui fix later
-   this->nav->Initialize( cfdPfSceneManagement::instance()->GetWorldDCS() );
+   this->nav->Initialize( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
    //this->nav->SetWorldLocation( this->nav->worldTrans );
-   cfdPfSceneManagement::instance()->GetWorldDCS()->SetScaleArray( this->worldScale );
+
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetScaleArray( this->worldScale );
 
    for ( int i = 0; i < 3; i++)
    {
@@ -173,9 +173,9 @@ void cfdEnvironmentHandler::InitScene( void )
    tempArray[ 0 ] = -this->nav->worldTrans[ 0 ];
    tempArray[ 1 ] = -this->nav->worldTrans[ 1 ];
    tempArray[ 2 ] = -this->nav->worldTrans[ 2 ];
-   cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray( tempArray );
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetTranslationArray( tempArray );
 
-   cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationArray( this->nav->worldRot );
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationArray( this->nav->worldRot );
 
    // Maybe need to fix this later
    //this->cursorId = NONE;
@@ -184,14 +184,17 @@ void cfdEnvironmentHandler::InitScene( void )
    // Initiate cursors.
    //
    std::cout << "|  8. Initializing................................. Virtual cursors |" << std::endl;
-   this->cursor = new cfdCursor( this->arrow, cfdPfSceneManagement::instance()->GetWorldDCS(), cfdPfSceneManagement::instance()->GetRootNode() );
+   this->cursor = new cfdCursor( this->arrow, 
+                             VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(), 
+                             VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode() );
    this->cursor->Initialize( this->nav->GetCursorLocation(),this->nav->GetDirection() );
 
    //
    // Initiate quatcam
    //
    std::cout << "|  9. Initializing..................................... cfdQuatCams |" << std::endl;
-   this->_camHandler = new cfdQuatCamHandler( cfdPfSceneManagement::instance()->GetWorldDCS(), this->nav, _param );
+   this->_camHandler = new cfdQuatCamHandler( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS(),
+                                          this->nav, _param );
 
    //
    // Initiate quatcam
@@ -204,7 +207,7 @@ void cfdEnvironmentHandler::InitScene( void )
    //
    std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
    this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
-                                    cfdPfSceneManagement::instance()->GetWorldDCS() );
+                                 VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
 }
 
 void cfdEnvironmentHandler::PreFrameUpdate( void )

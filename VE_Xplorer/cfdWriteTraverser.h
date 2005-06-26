@@ -50,8 +50,7 @@
 //nodes for correct viewing.          //
 ////////////////////////////////////////
 
-class cfdWriteTraverser
-:public cfdNodeTraverser{
+class cfdWriteTraverser:public VE_SceneGraph::cfdNodeTraverser{
 public:
    cfdWriteTraverser();
    cfdWriteTraverser(const cfdWriteTraverser& cfdWT);
@@ -81,13 +80,13 @@ protected:
 
    //friend void _swapSequenceNodes(cfdNodeTraverser* cfdWT,pfNode* node);
    //friend void _turnOnSequence(cfdNodeTraverser* cfdWT,pfNode* node);
-   friend void _swapSequenceNodes(cfdNodeTraverser* cfdWT,cfdNode* node);
-   friend void _turnOnSequence(cfdNodeTraverser* cfdWT,cfdNode* node);
+   friend void _swapSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdWT,VE_SceneGraph::cfdNode* node);
+   friend void _turnOnSequence(VE_SceneGraph::cfdNodeTraverser* cfdWT,VE_SceneGraph::cfdNode* node);
    
    char* _fName;
    int _sequenceIndex;
    int _toPfb;
-   std::vector<cfdNode*> _sequenceList;
+   std::vector<VE_SceneGraph::cfdNode*> _sequenceList;
 };
  
 #endif //_CFD_WRITE_TRAVERSER_H_

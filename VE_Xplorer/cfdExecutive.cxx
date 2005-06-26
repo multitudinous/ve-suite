@@ -29,17 +29,18 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdExecutive.h"
-#include "VE_i.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
-#include "cfdVEAvailModules.h"
-#include "cfdVEBaseClass.h"
-#include "cfdModelHandler.h"
-#include "cfdEnvironmentHandler.h"
-#include "cfdThread.h"
+#include "VE_Xplorer/cfdExecutive.h"
+#include "VE_Xplorer/VE_i.h"
+
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdVEAvailModules.h"
+#include "VE_Xplorer/cfdVEBaseClass.h"
+#include "VE_Xplorer/cfdModelHandler.h"
+#include "VE_Xplorer/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/cfdThread.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
+#include "VE_SceneGraph/cfdDCS.h"
 #include "package.h"
 #include "Network_Exec.h"
 
@@ -75,9 +76,9 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
 
    //this->naming_context = CosNaming::NamingContext::_duplicate( 
    //   corbaManager->_vjObs->GetCosNaming()->naming_context );
-   this->_masterNode = new cfdGroup();
+   this->_masterNode = new VE_SceneGraph::cfdGroup();
    this->_masterNode->SetName( "cfdExecutive_Node" );
-   cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->_masterNode );
+   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->AddChild( this->_masterNode );
 
    av_modules = new cfdVEAvail_Modules();
    _network = new Network();
@@ -398,7 +399,7 @@ void cfdExecutive::GetEverything( void )
             {
                _plugins[ iter->first ] = (cfdVEBaseClass*)(av_modules->GetLoader()->CreateObject( (char*)iter->second.c_str() ) );
                // When we create the _plugin map here we will do the following
-               _plugins[ iter->first ]->InitializeNode( cfdPfSceneManagement::instance()->GetWorldDCS() );
+               _plugins[ iter->first ]->InitializeNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
                _plugins[ iter->first ]->AddSelfToSG();
                cfdModelHandler::instance()->AddModel( _plugins[ iter->first ]->GetCFDModel() );
                // Give graphical plugins access to wand position, wand buttons, and gui variables

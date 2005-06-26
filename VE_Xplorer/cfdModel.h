@@ -55,15 +55,19 @@ it is better to treat these two dataset as two different models.
 
 //#include "readWriteVtkThings.h"
 
+namespace VE_SceneGraph{
+   class cfdDCS;
+   class cfdNode;
+   class cfdSwitch;
+   class cfdGroup;
+   class cfdClone;
+   class cfdTempAnimation;
+
+}
 class cfdDataSet;
-class cfdDCS;
-class cfdNode;
-class cfdSwitch;
+
 class fileInfo;
 class cfdFILE;
-class cfdTempAnimation;
-class cfdGroup;
-class cfdClone;
 
 #ifdef _OSG
 class cfdTextureDataSet;
@@ -95,10 +99,10 @@ enum Operation2Model
 class WXPLUGIN_DECLSPEC cfdModel
 {
 public:
-   cfdModel(cfdDCS *);
+   cfdModel(VE_SceneGraph::cfdDCS *);
    ~cfdModel();
       
-   void setModelNode( cfdNode * );
+   void setModelNode( VE_SceneGraph::cfdNode * );
    void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
             
    void setTrans3( float x, float y, float z );
@@ -114,7 +118,7 @@ public:
    void delGeomdataset(int);
    bool GetMirrorDataFlag( void );
    void SetMirrorDataFlag( bool );
-   void SetMirrorNode( cfdGroup* );
+   void SetMirrorNode( VE_SceneGraph::cfdGroup* );
 
       
    cfdDataSet* GetCfdDataSet( int );
@@ -130,8 +134,8 @@ public:
    char* GetGeomFileName( int );
    void CreateGeomDataSet( char* );
 
-   cfdNode* GetCfdNode( void );
-   cfdDCS* GetCfdDCS( void );
+   VE_SceneGraph::cfdNode* GetCfdNode( void );
+   VE_SceneGraph::cfdDCS* GetCfdDCS( void );
 
    //////////////////////////
    //texture based interface
@@ -147,7 +151,7 @@ public:
    ///////////////////////////////////////////////////
       
 
-   cfdTempAnimation* GetAnimation( void );
+   VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
    std::map<int,cfdDataSet*> transientDataSets;
   
    //Dynamically load data from unit
@@ -168,10 +172,10 @@ private:
    bool mirrorDataFlag;
 
 private:
-   cfdTempAnimation* animation;
-   cfdSwitch* switchNode;
-   cfdGroup* classic;
-   cfdGroup* textureBased;
+   VE_SceneGraph::cfdTempAnimation* animation;
+   VE_SceneGraph::cfdSwitch* switchNode;
+   VE_SceneGraph::cfdGroup* classic;
+   VE_SceneGraph::cfdGroup* textureBased;
    typedef std::vector< cfdFILE* > GeometoryDataSetList;
    GeometoryDataSetList mGeomDataSets;
    typedef std::vector< cfdDataSet* > VTKDataSetList;
@@ -183,14 +187,14 @@ private:
    cfdTextureDataSet* _activeTextureDataSet;
 #endif
 
-   cfdDCS* mModelDCS;
-   cfdDCS* _worldDCS;
-   cfdNode* mModelNode;
+   VE_SceneGraph::cfdDCS* mModelDCS;
+   VE_SceneGraph::cfdDCS* _worldDCS;
+   VE_SceneGraph::cfdNode* mModelNode;
    fileInfo* mGeomFileInfo;
    fileInfo* mVTKFileInfo;
    cfdDataSet* activeDataSet;
-   cfdClone* mirrorNode;
-   cfdGroup* mirrorGroupNode;
+   VE_SceneGraph::cfdClone* mirrorNode;
+   VE_SceneGraph::cfdGroup* mirrorGroupNode;
    
    //the information for following three variables should be transfered from cfdApp
    ModelTypeIndex mModelType;

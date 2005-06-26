@@ -373,13 +373,13 @@ void cfdTextureBasedVizHandler::SetCommandArray(cfdCommandArray* cmdArray)
    _cmdArray = cmdArray;
 }
 //////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetWorldDCS(cfdDCS* dcs)
+void cfdTextureBasedVizHandler::SetWorldDCS(VE_SceneGraph::cfdDCS* dcs)
 {
    if(_worldDCS != dcs)
       _worldDCS = dcs;
 }
 ///////////////////////////////////////////////////////////////
-void cfdTextureBasedVizHandler::SetParentNode(cfdGroup* parent)
+void cfdTextureBasedVizHandler::SetParentNode(VE_SceneGraph::cfdGroup* parent)
 {
    if(_parent != parent)
       _parent = parent;

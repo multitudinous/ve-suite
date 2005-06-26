@@ -55,11 +55,11 @@
 
 #include <vpr/Util/Debug.h>
 
-cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( cfdGroup * groupNode )
+cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( VE_SceneGraph::cfdGroup * groupNode )
 {
    vprDEBUG(vprDBG_ALL,2) << " gauges constructor"
                           << std::endl << vprDEBUG_FLUSH;
-   this->gaugeDCS = new cfdDCS();
+   this->gaugeDCS = new VE_SceneGraph::cfdDCS();
    this->gaugeDCS->SetName("gauge");
    this->masterNode = groupNode;
    this->SetPosition( 4.0f, 6.0f, 8.0f );
@@ -88,14 +88,14 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
 {
    vprDEBUG(vprDBG_ALL,2) << "Entering cfdDigitalAnalogGauge Copy Constructor" 
                           << std::endl << vprDEBUG_FLUSH;
-   gaugeDCS = new cfdDCS(*g.gaugeDCS);   
+   gaugeDCS = new VE_SceneGraph::cfdDCS(*g.gaugeDCS);   
    masterNode = g.masterNode;
-   circleGeode = new cfdGeode(*g.circleGeode);
-   movingArrowGeode = new cfdGeode(*g.movingArrowGeode);
-   stationaryArrowGeode = new cfdGeode(*g.stationaryArrowGeode);
-   labelGeode = new cfdGeode(*g.labelGeode);
-   text2Geode = new cfdGeode(*g.text2Geode);
-   digitalGeode = new cfdGeode(*g.digitalGeode);
+   circleGeode = new VE_SceneGraph::cfdGeode(*g.circleGeode);
+   movingArrowGeode = new VE_SceneGraph::cfdGeode(*g.movingArrowGeode);
+   stationaryArrowGeode = new VE_SceneGraph::cfdGeode(*g.stationaryArrowGeode);
+   labelGeode = new VE_SceneGraph::cfdGeode(*g.labelGeode);
+   text2Geode = new VE_SceneGraph::cfdGeode(*g.text2Geode);
+   digitalGeode = new VE_SceneGraph::cfdGeode(*g.digitalGeode);
    itsX[ 0 ] = g.itsX[ 0 ];
    itsX[ 1 ] = g.itsX[ 1 ];
    itsX[ 2 ] = g.itsX[ 2 ];
@@ -232,7 +232,7 @@ void cfdDigitalAnalogGauge::SetGeometryFilename( std::string filename )
 }
 */
 
-cfdDCS * cfdDigitalAnalogGauge::GetGaugeNode()
+VE_SceneGraph::cfdDCS * cfdDigitalAnalogGauge::GetGaugeNode()
 {
    return this->gaugeDCS;
 }
@@ -240,37 +240,37 @@ cfdDCS * cfdDigitalAnalogGauge::GetGaugeNode()
 void cfdDigitalAnalogGauge::Display()
 {
    DefineCircleActor();
-   this->circleGeode = new cfdGeode();
+   this->circleGeode = new VE_SceneGraph::cfdGeode();
    this->circleGeode->TranslateTocfdGeode( this->GetCircleActor() );
    this->gaugeDCS->AddChild( this->circleGeode );
    //this->GetCircleActor()->Delete();
 
    DefineStationaryArrowActor();
-   this->stationaryArrowGeode = new cfdGeode();
+   this->stationaryArrowGeode = new VE_SceneGraph::cfdGeode();
    this->stationaryArrowGeode->TranslateTocfdGeode( this->GetStationaryArrowActor() );
    this->gaugeDCS->AddChild( this->stationaryArrowGeode );
    //this->GetStationaryArrowActor()->Delete();
 
    DefineGaugeTextActor();
-   this->labelGeode = new cfdGeode();
+   this->labelGeode = new VE_SceneGraph::cfdGeode();
    this->labelGeode->TranslateTocfdGeode( this->GetLabelActor() );
    this->gaugeDCS->AddChild( this->labelGeode );
    //this->GetLabelActor()->Delete();
 
    DefineText2Actor();
-   this->text2Geode = new cfdGeode();
+   this->text2Geode = new VE_SceneGraph::cfdGeode();
    this->text2Geode->TranslateTocfdGeode( this->GetText2Actor() );
    this->gaugeDCS->AddChild( this->text2Geode );
    //this->GetText2Actor()->Delete();
 
    DefineMovingArrowActor();
-   this->movingArrowGeode = new cfdGeode();
+   this->movingArrowGeode = new VE_SceneGraph::cfdGeode();
    this->movingArrowGeode->TranslateTocfdGeode( this->GetMovingArrowActor() );
    this->gaugeDCS->AddChild( this->movingArrowGeode );
    //this->GetMovingArrowActor()->Delete();
 
    DefineDigitalActor();
-   this->digitalGeode = new cfdGeode();
+   this->digitalGeode = new VE_SceneGraph::cfdGeode();
    this->digitalGeode->TranslateTocfdGeode( this->GetDigitalActor() );
    this->gaugeDCS->AddChild( this->digitalGeode );
    //this->GetDigitalActor()->Delete();
@@ -278,7 +278,7 @@ void cfdDigitalAnalogGauge::Display()
    if ( backgroundColor[ 0 ] != -1.0 )
    {
       DefineBackgroundActor();
-      this->backgroundGeode = new cfdGeode();
+      this->backgroundGeode = new VE_SceneGraph::cfdGeode();
       this->backgroundGeode->TranslateTocfdGeode( this->GetBackgroundActor() );
       this->gaugeDCS->AddChild( this->backgroundGeode );
       //this->GetBackgroundActor()->Delete();
@@ -505,7 +505,7 @@ void cfdDigitalAnalogGauge::UpdateMovingArrowAngle( double angle )
    this->gaugeDCS->RemoveChild( this->movingArrowGeode );
    delete this->movingArrowGeode;
 
-   this->movingArrowGeode = new cfdGeode();
+   this->movingArrowGeode = new VE_SceneGraph::cfdGeode();
    this->movingArrowGeode->TranslateTocfdGeode( this->GetMovingArrowActor() );
    this->gaugeDCS->AddChild( this->movingArrowGeode );
 }
@@ -661,7 +661,7 @@ void cfdDigitalAnalogGauge::UpdateDigitalText( double value )
    this->gaugeDCS->RemoveChild( this->digitalGeode );
    delete this->digitalGeode;
    
-   this->digitalGeode = new cfdGeode();
+   this->digitalGeode = new VE_SceneGraph::cfdGeode();
    this->digitalGeode->TranslateTocfdGeode( this->GetDigitalActor() );
    this->gaugeDCS->AddChild( this->digitalGeode );
 }

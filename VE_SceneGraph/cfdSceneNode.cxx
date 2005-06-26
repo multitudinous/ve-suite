@@ -42,6 +42,7 @@
 #include <osg/Switch>
 #elif _OPENSG
 #endif
+using namespace VE_SceneGraph;
 //////////////////////////////////
 cfdSceneNode::cfdSceneNode( void )
 {
@@ -115,7 +116,7 @@ cfdNode* cfdSceneNode::GetParent( int parent )
 
    return _parent;
 }
-///////////////////////////////////////////////
+/////////////////////////////////////////////////////
 void cfdSceneNode::SetParent( cfdNode* parent )
 {
    if ( parent == NULL )

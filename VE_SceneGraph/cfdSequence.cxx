@@ -29,24 +29,24 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-#include "VE_SceneGraph/cfdSequence.h"
 #include <iostream>
+#include "VE_SceneGraph/cfdSequence.h"
 #include "VE_SceneGraph/cfdNode.h"
 #include "VE_SceneGraph/cfdSwitch.h"
 #include <vpr/Util/Debug.h>
+
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
 //Performer static member for performer compliance
 //it allows performer to determine the class type
-pfType* cfdSequence::_classType = NULL;
+
 
 #include <Performer/pf/pfSwitch.h>
 #include <Performer/pf/pfTraverser.h>
-
+pfType* VE_SceneGraph::cfdSequence::_classType = NULL;
 //initialize our class w/ performer at run time
-void cfdSequence::init(void)
+void VE_SceneGraph::cfdSequence::init(void)
 {
    if(_classType == 0)
    {
@@ -63,6 +63,7 @@ void cfdSequence::init(void)
 #include <osg/FrameStamp>
 #endif
 
+using namespace VE_SceneGraph;
 ////////////////////////////////////////
 //our class implementation
 //////////////////////////
@@ -198,6 +199,11 @@ void cfdSequence::setPlayMode(int pMode)
 {
    _pMode = pMode;
 }
+///////////////////////////
+int cfdSequence::getStep()
+{
+   return _step;
+}
 ////////////////////////////////
 void cfdSequence::stepSequence()
 {
@@ -242,48 +248,48 @@ cfdNode* cfdSequence::GetChild(int index)
 /////////////////////////////////////////////////////////////////
 //the pre node traverser callback to decide which frame to show//
 /////////////////////////////////////////////////////////////////
-int switchFrame(pfTraverser* trav, void* userData)
+int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
 {
    //cout<<"Traversing cfdSequence node."<<endl;
    vprDEBUG(vprDBG_ALL,3) << "====cfdSequence::switchFrame()===="
                           << std::endl << vprDEBUG_FLUSH;
-   
+
    //the sequence node w/ all the desired state info
    cfdSequence* sequence = (cfdSequence*)userData;
    
    //the number of frames
-   int nChildren = sequence->_lSwitch->GetNumChildren();
+   int nChildren = sequence->GetSwitch()->GetNumChildren();
    //cout<<"Number of frames: "<<nChildren<<endl;
    vprDEBUG(vprDBG_ALL,3) << "Number of frames:"<<nChildren
                           << std::endl << vprDEBUG_FLUSH;
    
 
    //the sequence interval params
-   int begin = sequence->_begin;
+   int begin = sequence->getBegin();
    //cout<<"Beginning :"<<begin<<endl;
    vprDEBUG(vprDBG_ALL,3) << "Beginning frame: "<<begin
                           << std::endl << vprDEBUG_FLUSH;
    
-   int end = sequence->_end;
+   int end = sequence->getEnd();
    vprDEBUG(vprDBG_ALL,3) << "Ending frame: "<<end
                           << std::endl << vprDEBUG_FLUSH;
    
    //cout<<"End :"<<end<<endl;
 
    //the loop mode
-   int lMode = sequence->_lMode;
+   int lMode = sequence->getLoopMode();
    //cout<<"Loop Mode: "<<lMode<<endl;
     vprDEBUG(vprDBG_ALL,3) << "Loop Mode: "<<lMode
                           << std::endl << vprDEBUG_FLUSH;
  
    //the play mode(stop,start,pause,resume,playing)
-   int pMode = sequence->_pMode;
+   int pMode = sequence->getPlayMode();
    //cout<<"Play Mode: "<<pMode<<endl;  
     vprDEBUG(vprDBG_ALL,3) << "Play mode: "<<pMode
                           << std::endl << vprDEBUG_FLUSH;
 
    //length of sequence (secs)
-   double duration = sequence->_duration;
+   double duration = sequence->getDuration();
 
    //the frame rate the app is running at
    double appFrameRate = pfGetFrameRate();
@@ -293,7 +299,7 @@ int switchFrame(pfTraverser* trav, void* userData)
    double frameRateRatio = 0;
    
    //make sure we have a valid interval 
-   if(sequence->_dir ==1){
+   if(sequence->getDirection() ==1){
       if(end >  nChildren - 1){
          end = nChildren -1;
       }
@@ -301,7 +307,7 @@ int switchFrame(pfTraverser* trav, void* userData)
       if(begin < 0){
         begin = 0;
       }
-   }else if(sequence->_dir == -1){
+   }else if(sequence->getDirection() == -1){
       if(begin >  nChildren - 1){
          begin = nChildren -1;
       }
@@ -331,15 +337,17 @@ int switchFrame(pfTraverser* trav, void* userData)
 
       //since we're running slower than the
       //application, we don't need to update yet
-      if(sequence->_appFrame < frameRateRatio)
+      if(sequence->getAppFrameRate() < frameRateRatio)
       {
          vprDEBUG(vprDBG_ALL,3) << "Not time to switch frame yet due to slow frame rate: "<<appFrameRate
-                          << " : " << sequence->_appFrame << std::endl << vprDEBUG_FLUSH;
+                          << " : " << sequence->getAppFrameRate() << std::endl << vprDEBUG_FLUSH;
          //continue in the current state 
          //update the frames the app has processed
-         sequence->_appFrame++;
+         int curFrameRate = sequence->getAppFrameRate();
+         curFrameRate++;
+         sequence->setAppFrameRate(curFrameRate);
          //cout<<"App frames: "<<sequence->_appFrame<<endl;
-         vprDEBUG(vprDBG_ALL,3) << "App frame total: "<<sequence->_appFrame
+         vprDEBUG(vprDBG_ALL,3) << "App frame total: "<<sequence->getAppFrameRate()
                           << std::endl << vprDEBUG_FLUSH;
          return PFTRAV_CONT;
       }
@@ -378,8 +386,8 @@ int switchFrame(pfTraverser* trav, void* userData)
       //cout<<"Starting sequence."<<endl;
        vprDEBUG(vprDBG_ALL,3) << "Starting sequence. "<<end
                           << std::endl << vprDEBUG_FLUSH;
-      sequence->_currentFrame = begin;
-      sequence->_lSwitch->SetVal(sequence->_currentFrame);
+      sequence->setCurrentFrame(begin);
+      sequence->GetSwitch()->SetVal(sequence->getCurrentFrame());
 
       //notify we are that we have started
       sequence->setPlayMode( CFDSEQ_PLAYING );
@@ -387,33 +395,35 @@ int switchFrame(pfTraverser* trav, void* userData)
    }
 
    //depending on cycle type, decide the frame to display
-   if(sequence->_lSwitch){
+   if(sequence->GetSwitch()){
       //get the next frame to display
-      sequence->_currentFrame = sequence->getNextFrame();
+      sequence->setCurrentFrame(sequence->getNextFrame());  
       
       //set the displayed frame on the switch
-      sequence->_lSwitch->SetVal(sequence->_currentFrame);
+      sequence->GetSwitch()->SetVal(sequence->getCurrentFrame());
 
       //handle swing loop mode by changing directions
       //when we get to the beginning or end of the sequence
       if(lMode == CFDSEQ_SWING){
          //(swing) so go back and forth through frames 
-         if(sequence->_currentFrame == end|| 
-            sequence->_currentFrame == begin){
+         if(sequence->getCurrentFrame() == end|| 
+            sequence->getCurrentFrame() == begin){
 	         //switch the direction of the sequence
-            sequence->_dir *= -1;
+            int curDirection = sequence->getDirection(); 
+            curDirection *= -1;
+            sequence->setDirection(curDirection);
          }
       }
       //reset the appFrame counter for synchronization
-      sequence->_appFrame = 0;
+      sequence->setAppFrameRate(0);
 
       //if we are stepping, pause the sequence
-      if(sequence->_step == CFDSEQ_STEP){
-         sequence->_pMode = CFDSEQ_PAUSE;
-         sequence->_step = 0;
+      if(sequence->getStep() == CFDSEQ_STEP){
+         sequence->setPlayMode(CFDSEQ_PAUSE);
+         sequence->setStep(0) ;
       }
    }
-    vprDEBUG(vprDBG_ALL,3) << "Set current frame to frame number: "<<sequence->_currentFrame
+    vprDEBUG(vprDBG_ALL,3) << "Set current frame to frame number: "<<sequence->getCurrentFrame()
                           << std::endl << vprDEBUG_FLUSH;
    return PFTRAV_CONT;
 } 

@@ -254,7 +254,7 @@ void cfdModelHandler::InitScene( void )
 
    std::cout << "|  57. Initializing................................. Create Scalar Bar |" << std::endl;
    // Create Scalar bar
-   _scalarBar = new cfdScalarBarActor( _param, (cfdGroup*)cfdPfSceneManagement::instance()->GetWorldDCS()->GetParent( 0 ) );
+   _scalarBar = new cfdScalarBarActor( _param, (VE_SceneGraph::cfdGroup*)VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->GetParent( 0 ) );
    // Assumes active dataset isn't null
    _scalarBar->SetActiveDataSet( activeDataset );
    _scalarBar->RefreshScalarBar();
@@ -390,7 +390,7 @@ void cfdModelHandler::PreFrameUpdate( void )
          vprDEBUG(vprDBG_ALL,0) << " Change Geometry in Scene Graph."
                           << std::endl << vprDEBUG_FLUSH;
 
-         cfdDCS* parent = NULL;
+         VE_SceneGraph::cfdDCS* parent = NULL;
          for( unsigned int i = 0; i < _activeModel->GetNumberOfGeomDataSets(); i++ )
          {
             int temp = 0;
@@ -405,7 +405,7 @@ void cfdModelHandler::PreFrameUpdate( void )
             }
             else
             {
-               parent = cfdPfSceneManagement::instance()->GetWorldDCS();
+               parent = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
             }
 
             vprDEBUG(vprDBG_ALL,2)
@@ -619,7 +619,7 @@ void cfdModelHandler::CreateObjects( void )
       if ( id == 8 )
       {
          if ( _modelList.empty() )
-            _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
+            _modelList.push_back( new cfdModel( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
          // Assume only one model for now
          // Flexibilty to have multiply models
          _modelList.at( 0 )->CreateCfdDataSet();
@@ -673,7 +673,7 @@ void cfdModelHandler::CreateObjects( void )
       else if ( id == 9 ) // if it is an geom file
       {
          if ( _modelList.empty() )
-            _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
+            _modelList.push_back( new cfdModel( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
 
          char fileName[100];
          float stlColor[3];
@@ -738,7 +738,7 @@ void cfdModelHandler::CreateObjects( void )
       else if ( id == 10 )
       {
          if ( _modelList.empty() )
-            _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
+            _modelList.push_back( new cfdModel( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
 
          float stlColor[3];
          int color;
@@ -747,7 +747,7 @@ void cfdModelHandler::CreateObjects( void )
          float duration = 0.0f;
          input >> duration;
          input.getline( textLine, 256 );   //skip past remainder of line
-         cfdTempAnimation* animation = _modelList.at( 0 )->GetAnimation();
+         VE_SceneGraph::cfdTempAnimation* animation = _modelList.at( 0 )->GetAnimation();
          animation->SetDuration( duration );
 
          // For the data we need to loop over all the datasets and set the appropriate data dir
@@ -849,7 +849,7 @@ void cfdModelHandler::CreateObjects( void )
 
          if ( _modelList.empty() )
          {
-            _modelList.push_back( new cfdModel( cfdPfSceneManagement::instance()->GetWorldDCS() ) );
+            _modelList.push_back( new cfdModel( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() ) );
          }
    
          //read the number of files that describe the texture
@@ -1312,8 +1312,8 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
       exit( 1 );
    }
 
-   cfdDCS* baseTransientDCS = _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS();
-   cfdTempAnimation* animation = _modelList.at( 0 )->GetAnimation();
+   VE_SceneGraph::cfdDCS* baseTransientDCS = _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS();
+   VE_SceneGraph::cfdTempAnimation* animation = _modelList.at( 0 )->GetAnimation();
    animation->SetNumberOfFrames( numFiles );
    animation->SetGroups();
    _modelList.at( 0 )->GetCfdDataSet( -1 )->SetAnimation( animation );

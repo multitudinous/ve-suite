@@ -141,18 +141,20 @@ void cfdWriteTraverser::setOutputFileName(char* outFile)
 //////////////////////////////////////////////////////////
 //turn on the sequence nodes for proper read back       //
 //////////////////////////////////////////////////////////
-void _turnOnSequence(cfdNodeTraverser* cfdNT,cfdNode* node)
+void _turnOnSequence(VE_SceneGraph::cfdNodeTraverser* cfdNT,
+                   VE_SceneGraph::cfdNode* node)
 {
-if(node->GetCFDNodeType() == cfdSceneNode::CFD_SEQUENCE){
+if(node->GetCFDNodeType() == VE_SceneGraph::cfdSceneNode::CFD_SEQUENCE){
       //make sure to start the "derned" sequence--otherwise
       //it won't be running in perfly!!!UGGGHHHH!!!!!
-      ((cfdSequence*)node)->setPlayMode(CFDSEQ_START);
+      ((VE_SceneGraph::cfdSequence*)node)->setPlayMode(CFDSEQ_START);
    } 
 }
 //////////////////////////////////////////////////////
 //swap the sequence nodes                           //
 //////////////////////////////////////////////////////
-void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
+void _swapSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
+                     VE_SceneGraph::cfdNode* node)
 {
    //need to implement using getRawNode calls!!
 
@@ -160,17 +162,17 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
    cfdWriteTraverser* cfdWT = (cfdWriteTraverser*)cfdNT;
 
    //replace cfdSequence nodes
-   if(node->GetCFDNodeType() == cfdSceneNode::CFD_SEQUENCE){
+   if(node->GetCFDNodeType() == VE_SceneGraph::cfdSceneNode::CFD_SEQUENCE){
       //std::cout<<"\t_swapSequenceNodes: cfdSequence"<<std::endl;
 
-      int nChildren = ((cfdSequence*)node)->getNumChildren();
+      int nChildren = ((VE_SceneGraph::cfdSequence*)node)->getNumChildren();
       
       //add this node to our list of cfdSequences
       cfdWT->_sequenceList.push_back(node);
 
       //get the parent node
 
-      cfdGroup* parent = dynamic_cast<cfdGroup*>(node->GetParent(0));
+      VE_SceneGraph::cfdGroup* parent = dynamic_cast<VE_SceneGraph::cfdGroup*>(node->GetParent(0));
       
       //create a pfSequence
 #ifdef _PERFORMER
@@ -182,24 +184,24 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
 
       //copy the children of the cfdSequence
       for(int i = 0; i < nChildren; i++){
-         sequence->addChild(((cfdSequence*)node)->GetChild(i)->GetRawNode());
+         sequence->addChild(((VE_SceneGraph::cfdSequence*)node)->GetChild(i)->GetRawNode());
       }
 
       sequence->setDuration(1.0,-1);      // regular speed, continue forever
 
-      double numSeconds = ((cfdSequence*)node)->getTime();
+      double numSeconds = ((VE_SceneGraph::cfdSequence*)node)->getTime();
       sequence->setTime(-1,numSeconds);   // display all children for numSeconds
 
 #ifdef _PERFORMER
-      sequence->setInterval(((cfdSequence*)node)->getLoopMode(),
-                            ((cfdSequence*)node)->getBegin(),
-                            ((cfdSequence*)node)->getEnd());
+      sequence->setInterval(((VE_SceneGraph::cfdSequence*)node)->getLoopMode(),
+                            ((VE_SceneGraph::cfdSequence*)node)->getBegin(),
+                            ((VE_SceneGraph::cfdSequence*)node)->getEnd());
 #elif _OSG
       
-      sequence->setInterval(((((cfdSequence*)node)->getLoopMode()==0)?
+      sequence->setInterval(((((VE_SceneGraph::cfdSequence*)node)->getLoopMode()==0)?
                              osg::Sequence::SWING:osg::Sequence::LOOP),
-                            ((cfdSequence*)node)->getBegin(),
-                            ((cfdSequence*)node)->getEnd());
+                            ((VE_SceneGraph::cfdSequence*)node)->getBegin(),
+                            ((VE_SceneGraph::cfdSequence*)node)->getEnd());
 #elif _OPENSG
 #endif
 //      std::cout<<"\tnChildren = " << nChildren << std::endl;
@@ -237,7 +239,7 @@ void _swapSequenceNodes(cfdNodeTraverser* cfdNT,cfdNode* node)
       //std::cout<<"\t_swapSequenceNodes: pfSequence"<<std::endl;
       //return tree to original state
       //get the parent node
-      cfdGroup* parent = (cfdGroup*)node->GetParent(0);
+      VE_SceneGraph::cfdGroup* parent = (VE_SceneGraph::cfdGroup*)node->GetParent(0);
 
       //replace the node in the graph
       parent->ReplaceChild(node,

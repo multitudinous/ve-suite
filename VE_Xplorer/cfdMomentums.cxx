@@ -90,7 +90,7 @@ void cfdMomentums::Update( void )
       vtkActor* temp = vtkActor::New();
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
-      geodes.push_back( new cfdGeode() );
+      geodes.push_back( new VE_SceneGraph::cfdGeode() );
       geodes.back()->TranslateTocfdGeode( temp );
       temp->Delete();
       this->updateFlag = true;

@@ -54,7 +54,7 @@
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
 
-cfdTeacher::cfdTeacher( std::string specifiedDir, cfdDCS* worldDCS )
+cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDCS )
 {
    this->directory = specifiedDir;
 
@@ -70,7 +70,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, cfdDCS* worldDCS )
    this->_worldDCS = 0;
    pfb_count = 0;
    _cfdWT = NULL;
-   this->DCS = new cfdDCS();
+   this->DCS = new VE_SceneGraph::cfdDCS();
    _worldDCS = worldDCS;
    _worldDCS->AddChild( this->DCS );
 
@@ -179,11 +179,11 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, cfdDCS* worldDCS )
                           << std::endl << vprDEBUG_FLUSH;
 
    
-   this->node = new cfdNode * [ this->numFiles ];
+   this->node = new VE_SceneGraph::cfdNode * [ this->numFiles ];
    
    for (int i=0; i<this->numFiles; i++)
    {
-      this->node[ i ] = new cfdNode();
+      this->node[ i ] = new VE_SceneGraph::cfdNode();
 	   this->node[ i ]->LoadFile( (char*)this->pfbFileNames[ i ].c_str() );
    }
    //change back to the original directory
@@ -204,12 +204,12 @@ cfdTeacher::~cfdTeacher( )
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-cfdNode * cfdTeacher::getpfNode( int i )
+VE_SceneGraph::cfdNode * cfdTeacher::getpfNode( int i )
 {
    return this->node[i];
 }
 
-cfdDCS * cfdTeacher::GetcfdDCS()
+VE_SceneGraph::cfdDCS * cfdTeacher::GetcfdDCS()
 {
    return this->DCS;
 }
@@ -308,7 +308,8 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
          this->_worldDCS->SetMat( m );
  
       }else{
-         writePFBFile(cfdPfSceneManagement::instance()->GetRootNode(),(char*)pfb_filename);
+         writePFBFile(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(),
+                    (char*)pfb_filename);
       }
       // store the active geometry and viz objects as a pfb
       // (but not the sun, menu, laser, or text)
@@ -331,7 +332,7 @@ void cfdTeacher::UpdateCommand()
 }
 // Need to fix later
 
-void cfdTeacher::writePFBFile( cfdNode* graph,char* fileName)
+void cfdTeacher::writePFBFile( VE_SceneGraph::cfdNode* graph,char* fileName)
 {
    //make sure we have a writer
    if(!_cfdWT){

@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfd1DTextInput.h"
+#include "VE_Xplorer/cfd1DTextInput.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkActor.h>
@@ -42,8 +42,8 @@
 
 cfd1DTextInput::cfd1DTextInput( void ):cfdDCS()
 {
-   this->geode = new cfdGeode();
-   ((cfdDCS*)this)->AddChild( this->geode );
+   this->geode = new VE_SceneGraph::cfdGeode();
+   ((VE_SceneGraph::cfdDCS*)this)->AddChild( this->geode );
 
    // Do we need to initialize this->text here?
    // If this->text is required, it should probably be a constructor argument
@@ -55,9 +55,9 @@ cfd1DTextInput::~cfd1DTextInput( void )
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-cfdDCS* cfd1DTextInput::getpfDCS( void )
+VE_SceneGraph::cfdDCS* cfd1DTextInput::getpfDCS( void )
 {
-   return (cfdDCS*)this;
+   return (VE_SceneGraph::cfdDCS*)this;
 }
 
 void cfd1DTextInput::SetFilename( std::string text )

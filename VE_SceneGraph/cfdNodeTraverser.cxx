@@ -39,6 +39,7 @@
 #elif _OSG
 #include <osg/Group>
 #endif
+using namespace VE_SceneGraph;
 ////////////////////////////////////
 //Constructors                    //
 ////////////////////////////////////

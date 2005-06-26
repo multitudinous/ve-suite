@@ -372,7 +372,7 @@
 				OutputFile="$(VE_SUITE_HOME)\lib\win32\GraphicalPlugin.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
@@ -505,12 +505,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib omniORB405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib wxbase26d.lib wxmsw26d_core.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib omniORB405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib xerces-c_2D.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib wxbase26d.lib wxmsw26d_core.lib VE_SceneGraph_osgd.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)/lib/win32/GraphicalPlugin.dll"
 				LinkIncremental="2"
 				SuppressStartupBanner="FALSE"
-				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;"
+				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				IgnoreAllDefaultLibraries="FALSE"
 				IgnoreDefaultLibraryNames=""
 				GenerateDebugInformation="TRUE"
@@ -629,13 +629,7 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdNavigate.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdNodeTraverser.cxx">
-			</File>
-			<File
 				RelativePath="..\VE_Xplorer\cfdObjects.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdPfSceneManagement.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdPlanes.cxx">
@@ -662,22 +656,13 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdStreamers.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_SceneGraph\cfdTempAnimation.cxx">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdThread.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVEAvailModules.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVEBaseClass.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVectorBase.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVEPluginLoader.cxx">
+				RelativePath="..\VE_Xplorer\cfdVectorBase.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVTKFileHandler.cxx">
@@ -697,24 +682,6 @@
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\string_ops.cpp">
 			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\vtkActorToOSG.cpp">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\vtkActorToPF.cxx">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-			</File>
 		</Filter>
 		<Filter
 			Name="headers"
@@ -731,67 +698,9 @@
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVEBaseClass.h">
 			</File>
-		</Filter>
-		<Filter
-			Name="Resource Files"
-			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
-		</Filter>
-		<Filter
-			Name="Scene Graph Classes">
-			<Filter
-				Name="src">
-				<File
-					RelativePath="..\VE_SceneGraph\cfdClone.cxx">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdDCS.cxx">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdGeode.cxx">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdGroup.cxx">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdNode.cxx">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdSceneNode.cxx">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdSequence.cxx">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdSwitch.cxx">
-				</File>
-			</Filter>
-			<Filter
-				Name="headers">
-				<File
-					RelativePath="..\VE_SceneGraph\cfdClone.h">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdDCS.h">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdGeode.h">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdGroup.h">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdNode.h">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdSceneNode.h">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdSequence.h">
-				</File>
-				<File
-					RelativePath="..\VE_SceneGraph\cfdSwitch.h">
-				</File>
-			</Filter>
+			<File
+				RelativePath="..\VE_Xplorer\cfdVectorBase.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Volume Vis Classes">
@@ -983,6 +892,10 @@
 						</File>
 					</Filter>
 				</Filter>
+			</Filter>
+			<Filter
+				Name="Resource Files"
+				Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe">
 			</Filter>
 		</Filter>
 	</Files>

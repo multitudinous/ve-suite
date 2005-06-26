@@ -24,7 +24,7 @@
 //#     Urbana, IL 61801
 //#     baker@ncsa.uiuc.edu
 //=========================================================================
-
+#ifdef _PERFORMER
 // vtkActorToPF.h will define VTK4 if VTK44 is defined
 #include "vtkActorToPF.h"
 
@@ -47,8 +47,8 @@ typedef float vtkReal;
 #include <Performer/pr/pfTexture.h>
 #include <iostream>
 using namespace std;
-
-pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode, int verbose) {
+using namespace VE_SceneGraph;
+pfGeode* VE_SceneGraph::vtkActorToPF(vtkActor *actor, pfGeode *geode, int verbose) {
   // performance instrumentation
   float beforeTime = 0.0f;
   if (verbose) {
@@ -101,7 +101,7 @@ pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode, int verbose) {
 }
 
 
-void vtkActorToGeoSets(vtkActor *actor, pfGeoSet *gsets[], int verbose) {
+void VE_SceneGraph::vtkActorToGeoSets(vtkActor *actor, pfGeoSet *gsets[], int verbose) {
 
   // this could possibly be any type of DataSet, vtkActorToPF assumes polyData
   if (strcmp(actor->GetMapper()->GetInput()->GetClassName(), "vtkPolyData")) {
@@ -165,7 +165,7 @@ void vtkActorToGeoSets(vtkActor *actor, pfGeoSet *gsets[], int verbose) {
 }
 
 
-pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
+pfGeoSet* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *primArray,
                       int primType, int verbose) {
 
   // get polyData from vtkActor
@@ -432,7 +432,7 @@ pfGeoSet *processPrimitive(vtkActor *actor, vtkCellArray *primArray,
 // texturing - note: since we always create new geosets, we need to
 //   retranslate texture as well. Maybe there is a better way (have
 //   separate function from vtkActorToPF for texture.
-void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int verbose) {
+void VE_SceneGraph::updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int verbose) {
 
   // no texture!
   if (!actor->GetTexture())
@@ -518,3 +518,4 @@ void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int verb
   gstate->setAttr(PFSTATE_TEXENV, texEnv);
 }
 
+#endif

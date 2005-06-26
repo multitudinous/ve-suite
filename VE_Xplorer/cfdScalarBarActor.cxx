@@ -29,15 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdScalarBarActor.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
-#include "cfdGlobalBase.h"
+#include "VE_Xplorer/cfdScalarBarActor.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
 #include "VE_SceneGraph/cfdGeode.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
-#include "cfdDataSet.h"
-#include "cfdReadParam.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdReadParam.h"
 
 #include <vtkFloatArray.h>
 #include <vtkLookupTable.h>
@@ -57,7 +57,7 @@
 #include <sstream>
 #include <string>
 
-cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
+cfdScalarBarActor::cfdScalarBarActor( char* param, VE_SceneGraph::cfdGroup* rootNode )
 {
    vprDEBUG(vprDBG_ALL,2) << "constructing cfdScalarBarActor" 
                           << std::endl << vprDEBUG_FLUSH;
@@ -88,7 +88,7 @@ cfdScalarBarActor::cfdScalarBarActor( char* param, cfdGroup* rootNode )
 
    this->titleScalar = vtkVectorText::New();
 
-   this->scalarBar = new cfdDCS();
+   this->scalarBar = new VE_SceneGraph::cfdDCS();
 
    this->CreateObjects();
 }
@@ -368,7 +368,7 @@ void cfdScalarBarActor::Execute()
    for ( i=0; i<this->numTextLabels; i++ )
    {
       labelScalar[i] = vtkVectorText::New();
-      this->pfLabelActor[i] = new cfdGeode();
+      this->pfLabelActor[i] = new VE_SceneGraph::cfdGeode();
    }
    
    // creating the numerical labels on the scalar bar legend
@@ -443,11 +443,11 @@ void cfdScalarBarActor::Execute()
    }
    delete [] labelText;*/
 
-   this->pfaPolyActor = new cfdGeode();
+   this->pfaPolyActor = new VE_SceneGraph::cfdGeode();
    this->pfaPolyActor->TranslateTocfdGeode(aPolyActor);
    this->scalarBar->AddChild(this->pfaPolyActor); 
 
-   this->pftitleActor = new cfdGeode();
+   this->pftitleActor = new VE_SceneGraph::cfdGeode();
    this->pftitleActor->TranslateTocfdGeode( titleActor );
    this->scalarBar->AddChild(this->pftitleActor); 
 
@@ -468,7 +468,7 @@ void cfdScalarBarActor::Execute()
    labelScalar = NULL;
 }
 
-cfdDCS* cfdScalarBarActor::GetcfdDCS(void )
+VE_SceneGraph::cfdDCS* cfdScalarBarActor::GetcfdDCS(void )
 {
    return this->scalarBar;
 }
@@ -534,7 +534,7 @@ void cfdScalarBarActor::RefreshScalarBar()
 
    // Fix this. Don't think we need a DCS here. 
    // Could speed up the code a little bit.
-   this->scalarBar = new cfdDCS();
+   this->scalarBar = new VE_SceneGraph::cfdDCS();
 
    // if the param file specified scalarBar settings, apply them here...
    if ( this->scalarBarH != 0.0 )

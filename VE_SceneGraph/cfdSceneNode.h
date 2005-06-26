@@ -32,8 +32,7 @@
 #ifndef CFD_SCENENODE_H
 #define CFD_SCENENODE_H
 
-class cfdNode;
-class cfdSequence;
+
 #ifdef _PERFORMER
 class pfNode;
 class pfGeode;
@@ -53,8 +52,11 @@ namespace osg
 #endif
 
 #include <vpr/Util/GUID.h>
-#include "VE_Xplorer/cfdConfig.h"
-
+#include "VE_SceneGraph/cfdConfig.h"
+namespace VE_SceneGraph{
+   class cfdNode;
+   class cfdSequence;
+}
 /////////////////////////////////////////////
 //This class holds and manages the nodes on//
 //the graph.                               //
@@ -63,57 +65,54 @@ namespace osg
 //and then an appropriate wrapper class    //
 //should be created.                       //
 /////////////////////////////////////////////
-class WXPLUGIN_DECLSPEC cfdSceneNode
-{
-   public:
-      enum cfdNodeType
-      {
-         CFD_NODE,
-         CFD_GROUP,
-         CFD_DCS,
-         CFD_GEODE,
-         CFD_SEQUENCE,
-         CFD_SWITCH,
-         CFD_OTHER
-      };
+namespace VE_SceneGraph{
+   class VE_SCENEGRAPH_EXPORTS cfdSceneNode
+   {
+      public:
+         enum cfdNodeType
+         {
+            CFD_NODE,
+            CFD_GROUP,
+            CFD_DCS,
+            CFD_GEODE,
+            CFD_SEQUENCE,
+            CFD_SWITCH,
+            CFD_OTHER
+         };
 
-      cfdSceneNode();
-      cfdSceneNode(cfdNodeType nt);
-      cfdSceneNode( const cfdSceneNode& );
+         cfdSceneNode();
+         cfdSceneNode(cfdNodeType nt);
+         cfdSceneNode( const cfdSceneNode& );
 
-      virtual ~cfdSceneNode( void );
-      cfdSceneNode& operator=( const cfdSceneNode& );
+         virtual ~cfdSceneNode( void );
+         cfdSceneNode& operator=( const cfdSceneNode& );
 
-      //get the internal cfd node type
-      virtual cfdNodeType GetCFDNodeType(){return _nt;}
+         //get the internal cfd node type
+         virtual cfdNodeType GetCFDNodeType(){return _nt;}
 
-      //retrieve the underlying node depending on
-      //scene graph
+         //retrieve the underlying node depending on
+         //scene graph
 #ifdef _PERFORMER
-      virtual pfNode* GetRawNode( void )=0;
+         virtual pfNode* GetRawNode( void )=0;
 #elif _OSG
-      virtual osg::Node* GetRawNode(void)=0;
+         virtual osg::Node* GetRawNode(void)=0;
 #elif _OPENSG
 #endif
-      //??
-      //int GetNodeType( void );
+         //the parent node    
+         cfdNode* GetParent( int );
 
-      //the parent node    
-      cfdNode* GetParent( int );
+         //set the parent
+         void SetParent( cfdNode* );
+         
+         //set internal cfd node type
+         virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
 
-      //set the parent
-      void SetParent( cfdNode* );
-      //??
-      //void SetNodeType(int);
-
-      //set internal cfd node type
-      virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
-
-      vpr::GUID guid;
-   protected:
-      //our scene graph specific nodes
-      int _numParents;
-      cfdNodeType _nt;
-      cfdNode* _parent;
-};
+         vpr::GUID guid;
+      protected:
+         //our scene graph specific nodes
+         int _numParents;
+         cfdNodeType _nt;
+         cfdNode* _parent;
+   };
+}
 #endif

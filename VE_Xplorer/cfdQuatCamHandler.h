@@ -42,7 +42,9 @@
 #include <gmtl/Coord.h>
 #include <gmtl/Generate.h>
 
-class cfdDCS;
+namespace VE_SceneGraph{
+   class cfdDCS;
+}
 class cfdQuatCam;
 class cfdNavigate;
 class cfdCommandArray;
@@ -76,7 +78,7 @@ class cfdQuatCamHandler : public cfdGlobalBase
    public:
 
       //Constructors
-      cfdQuatCamHandler( cfdDCS*, cfdNavigate*, char* );
+      cfdQuatCamHandler( VE_SceneGraph::cfdDCS*, cfdNavigate*, char* );
       
       //Destructor
       ~cfdQuatCamHandler();
@@ -89,13 +91,13 @@ class cfdQuatCamHandler : public cfdGlobalBase
 
       void CreateObjects( void );
    
-      void LoadData(double*, cfdDCS*);
+      void LoadData(double*, VE_SceneGraph::cfdDCS*);
 
       void WriteToFile(char*);
 
       void LoadFromFile(char*);
 
-      void Relocate(cfdDCS* worldDCS, cfdNavigate* nav); 
+      void Relocate(VE_SceneGraph::cfdDCS* worldDCS, cfdNavigate* nav); 
 
       int getNumLocs();
 
@@ -108,7 +110,7 @@ class cfdQuatCamHandler : public cfdGlobalBase
 
       cfdQuatCam* thisQuatCam;
       cfdPoints*  nextPoint;
-      cfdDCS*     _worldDCS;
+      VE_SceneGraph::cfdDCS* _worldDCS;
       cfdNavigate* _nav;
       cfdReadParam* _readParam;
       char*       _param;

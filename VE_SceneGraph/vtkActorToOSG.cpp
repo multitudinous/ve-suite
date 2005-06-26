@@ -9,7 +9,7 @@
 //#include <strstream.h>
 // workaround end
 
-#include <vtkActorToOSG.h>
+#include "VE_SceneGraph/vtkActorToOSG.h"
 #ifdef VTK44
 #define VTK4
 typedef double vtkReal;
@@ -27,8 +27,9 @@ typedef float vtkReal;
 
 #include <osg/Vec3>
 #include <iostream>
+using namespace VE_SceneGraph;
 
-osg::Geode* vtkActorToOSG(vtkActor *actor, osg::Geode *geode, int verbose) {
+osg::Geode* VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::Geode *geode, int verbose) {
 
 	// make actor current
 	actor->GetMapper()->Update();
@@ -51,10 +52,10 @@ osg::Geode* vtkActorToOSG(vtkActor *actor, osg::Geode *geode, int verbose) {
 	osg::Geometry* points, *lines, *polys, *strips;
 
 	// create new Geometry for the Geode
-	points = processPrimitive(actor, polyData->GetVerts(), osg::PrimitiveSet::POINTS, verbose);
-	lines = processPrimitive(actor, polyData->GetLines(), osg::PrimitiveSet::LINE_STRIP, verbose);
-	polys = processPrimitive(actor, polyData->GetPolys(), osg::PrimitiveSet::POLYGON, verbose);
-	strips = processPrimitive(actor, polyData->GetStrips(), osg::PrimitiveSet::TRIANGLE_STRIP, verbose);
+   points = VE_SceneGraph::processPrimitive(actor, polyData->GetVerts(), osg::PrimitiveSet::POINTS, verbose);
+	lines = VE_SceneGraph::processPrimitive(actor, polyData->GetLines(), osg::PrimitiveSet::LINE_STRIP, verbose);
+	polys = VE_SceneGraph::processPrimitive(actor, polyData->GetPolys(), osg::PrimitiveSet::POLYGON, verbose);
+	strips = VE_SceneGraph::processPrimitive(actor, polyData->GetStrips(), osg::PrimitiveSet::TRIANGLE_STRIP, verbose);
 
 	// remove old gsets and delete them
    while( geode->getNumDrawables() ) geode->removeDrawable((unsigned int)0);//removeDrawable(0);
@@ -67,7 +68,7 @@ osg::Geode* vtkActorToOSG(vtkActor *actor, osg::Geode *geode, int verbose) {
 	return geode;
 }
 
-osg::Geometry *processPrimitive(vtkActor *actor, vtkCellArray *primArray, int primType, int verbose) {
+osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *primArray, int primType, int verbose) {
 
 	// get polyData from vtkActor
 	vtkPolyData *polyData = (vtkPolyData *) actor->GetMapper()->GetInput();

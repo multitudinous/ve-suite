@@ -57,15 +57,17 @@ class cfdContour;
 class cfdGlobalBase;
 class cfdObjects;
 class cfdCommandArray;
-class cfdDCS;
 class vtkPolyData;
 class cfdNavigate;
 class cfdCursor;
-class cfdTempAnimation;
 class cfdGraphicsObject;
 class cfdModel;
 class cfdTextOutput;
 
+namespace VE_SceneGraph{
+   class cfdTempAnimation;
+   class cfdDCS;
+}
 class cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
 {
    private:
@@ -87,7 +89,7 @@ class cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandl
 
       // Helper functions
       void SetCommandArray( cfdCommandArray* );
-      cfdTempAnimation* GetActiveAnimation( void );
+      VE_SceneGraph::cfdTempAnimation* GetActiveAnimation( void );
       bool TransientGeodesIsBusy();
 
    private:
@@ -122,9 +124,9 @@ class cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandl
       cfdTextOutput*       textOutput;
       // Common objects for all functions
       cfdCommandArray*  commandArray;
-      cfdDCS*     _activeDataSetDCS;
+      VE_SceneGraph::cfdDCS*     _activeDataSetDCS;
       cfdObjects* _activeObject;
-      cfdTempAnimation* _activeTempAnimation;
+      VE_SceneGraph::cfdTempAnimation* _activeTempAnimation;
 
       // Classes and variables for multithreading.
       vpr::Thread* vjTh[1];

@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdStreamers.h"
-#include "cfdDataSet.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdStreamers.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
@@ -236,7 +236,7 @@ aa Assign Normals NORMALS POINT_DATA
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new cfdGeode() );
+   geodes.push_back( new VE_SceneGraph::cfdGeode() );
    geodes.back()->TranslateTocfdGeode( temp );
    temp->Delete();
    this->updateFlag = true;

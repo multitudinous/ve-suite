@@ -32,8 +32,11 @@
 #ifndef CFD_CURSOR_H
 #define CFD_CURSOR_H
 
-class cfdDCS;
-class cfdGeode;
+namespace VE_SceneGraph{
+   class cfdDCS;
+   class cfdGeode;
+   class cfdGroup;
+}
 
 class vtkGlyph3D;
 class vtkCubeSource;
@@ -48,9 +51,9 @@ class vtkLineSource;
 class vtkPolyDataSource;
 class cfdCommandArray;
 class cfdDataSet;
-class cfdGroup;
 
-#include "cfdGlobalBase.h"
+
+#include "VE_Xplorer/cfdGlobalBase.h"
 
 //! Virtual cursors
 /*!
@@ -60,7 +63,7 @@ class cfdGroup;
 class WXPLUGIN_DECLSPEC cfdCursor : public cfdGlobalBase
 {
    public:
-      cfdCursor( vtkPolyData* , cfdDCS* , cfdGroup* );
+      cfdCursor( vtkPolyData* , VE_SceneGraph::cfdDCS* , VE_SceneGraph::cfdGroup* );
       ~cfdCursor();
 
       // compare VjObs_i commandArray with its child's value
@@ -88,7 +91,7 @@ class WXPLUGIN_DECLSPEC cfdCursor : public cfdGlobalBase
       vtkPolyDataSource * GetSourcePoints( void );
 
       // Return the dynamic coordinate system with pfGeode objects.
-      cfdDCS * GetcfdDCS();
+      VE_SceneGraph::cfdDCS * GetcfdDCS();
 
       // Set/Get plane size.
       void SetPlaneSize( float size );
@@ -105,7 +108,7 @@ class WXPLUGIN_DECLSPEC cfdCursor : public cfdGlobalBase
       vtkCubeSource *getBox();
       float boxExtent;
 
-      void SetActiveDataSetDCS( cfdDCS* myDCS );
+      void SetActiveDataSetDCS( VE_SceneGraph::cfdDCS* myDCS );
       void SetActiveDataSet( cfdDataSet* input );
 
       int GetCursorID( void );
@@ -173,11 +176,11 @@ class WXPLUGIN_DECLSPEC cfdCursor : public cfdGlobalBase
       double pos_c[3];
  
       // Performer dynamic coordinate systems with pre-loaded translated VTK objects.
-      cfdDCS *cursorDCS;
-      cfdDCS *worldDCS;
+      VE_SceneGraph::cfdDCS *cursorDCS;
+      VE_SceneGraph::cfdDCS *worldDCS;
 
       // A Performer geometry node.
-      cfdGeode *cursorGeode;
+      VE_SceneGraph::cfdGeode *cursorGeode;
 
       // Plane size;
       float pSize;
@@ -204,9 +207,9 @@ class WXPLUGIN_DECLSPEC cfdCursor : public cfdGlobalBase
       
       void GetLocalLocationVector( void );
 
-      cfdDCS * activeDataSetDCS;
+      VE_SceneGraph::cfdDCS * activeDataSetDCS;
 
-      cfdGroup* _rootNode;
+      VE_SceneGraph::cfdGroup* _rootNode;
       cfdDataSet* _activeDataSet;
       int cursorId;
 };

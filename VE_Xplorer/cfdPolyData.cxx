@@ -249,7 +249,7 @@ void cfdPolyData::Update()
 
    temp->SetMapper( this->map );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new cfdGeode() );
+   geodes.push_back( new VE_SceneGraph::cfdGeode() );
    geodes.back()->TranslateTocfdGeode( temp );
    temp->Delete();
    this->updateFlag = true;

@@ -33,10 +33,11 @@
 #define CFD_GRAPHICSOBJECT_H
 
 #include <vector>
-
-class cfdGeode;
-class cfdGroup;
-class cfdTempAnimation;
+namespace VE_SceneGraph{
+   class cfdGeode;
+   class cfdGroup;
+   class cfdTempAnimation;
+}
 class cfdModel;
 
 #include "VE_Xplorer/cfdConfig.h"
@@ -60,10 +61,10 @@ class WXPLUGIN_DECLSPEC cfdGraphicsObject
       enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};
 
       // Set parent node to add "graphics node" to
-      void SetParentNode( cfdGroup* );
+      void SetParentNode( VE_SceneGraph::cfdGroup* );
 
       // node the parent node will be added to
-      void SetWorldNode( cfdGroup* );
+      void SetWorldNode( VE_SceneGraph::cfdGroup* );
    
       // set model pointer to be able to grab
       // transient info and the switch node
@@ -76,23 +77,23 @@ class WXPLUGIN_DECLSPEC cfdGraphicsObject
       void SetTypeOfViz( VizType );
 
       // set geodes for classic and trans viz objects
-      void SetGeodes( std::vector< cfdGeode* > );
+      void SetGeodes( std::vector< VE_SceneGraph::cfdGeode* > );
 
       // Return parent node for a this object
-      cfdGroup* GetParentNode( void );
+      VE_SceneGraph::cfdGroup* GetParentNode( void );
 
       // clear geodes vector and geode from memory and the graph
       void RemovecfdGeodeFromDCS( void );
 
    protected:
-      std::vector< cfdGeode* > geodes;
-      cfdGroup* parentNode;
-      cfdGroup* worldNode;
+      std::vector< VE_SceneGraph::cfdGeode* > geodes;
+      VE_SceneGraph::cfdGroup* parentNode;
+      VE_SceneGraph::cfdGroup* worldNode;
       VizType type;
 
       // used for animated particles and other ss 
       // animated features
-      cfdTempAnimation* animation;
+      VE_SceneGraph::cfdTempAnimation* animation;
       cfdModel* model;
 };
 

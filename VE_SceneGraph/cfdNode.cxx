@@ -81,6 +81,9 @@
 
 #include <vpr/Util/Debug.h>
 #include "VE_SceneGraph/cfdSequence.h"
+
+namespace VE_SceneGraph{
+
 //////////////////
 cfdNode::cfdNode()
 :cfdSceneNode(CFD_NODE)
@@ -249,7 +252,9 @@ void cfdNode::SetNodeProperties(int color,
 #ifdef _PERFORMER
 void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
 {
+#ifdef _DEBUG
    assert( node_1 != NULL && "bad pointer passed in" );
+#endif
    //assert( mat != NULL && "bad pointer passed in" );
 	int i ;
 	int num ;
@@ -271,8 +276,9 @@ void cfdNode::pfTravNodeMaterial( pfNode* node_1 )
       for (i=0; i < num; i++)
       {
          geoset = ((pfGeode*)node_1)->getGSet(i) ;
+#ifdef _DEBUG
          assert( geoset != NULL && "geoset is null" );
-
+#endif
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getGState() ;
 
@@ -481,7 +487,9 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
 
 void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
 {
+#ifdef _DEBUG
    assert( node_1 != NULL && "bad pointer passed in" );
+#endif
    //assert( mat != NULL && "bad pointer passed in" );
 	int i ;
 	int num ;
@@ -497,8 +505,9 @@ void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
       for (i=0; i < num; i++)
       {
          geoset = ((pfGeode*)node_1)->getGSet(i) ;
+#ifdef _DEBUG
          assert( geoset != NULL && "geoset is null" );
-
+#endif
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getGState() ;
 
@@ -562,8 +571,9 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
       //std::cout << "HERE IT IS " << num << std::endl;
       for (i=0; i < num; i++){
          geoset = geode->getDrawable(i) ;
+#ifdef _DEBUG
          assert( geoset.get() != NULL && "geoset is null" );
-
+#endif
          // Apply the material to the geostate and disable texturing
          geostate = geoset->getOrCreateStateSet();
          material = dynamic_cast<osg::Material*>(geostate->getAttribute(osg::StateAttribute::MATERIAL));
@@ -648,5 +658,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
  {
  }
 #elif _OPENSG
+
 #endif
+}
 

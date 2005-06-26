@@ -47,8 +47,8 @@ class pfLightModel;
 #include <osg/MatrixTransform>
 #include <osg/Material>
 #endif
-#include "cfdNode.h"
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdNode.h"
+#include "VE_SceneGraph/cfdDCS.h"
 
 //! CFD shell model loader
 /*!
@@ -63,7 +63,7 @@ have been supported by VTK.
 class cfdGeomDataSet 
 {
  public:
-   cfdGeomDataSet(fileInfo *geomfile, cfdDCS *);
+   cfdGeomDataSet(fileInfo *geomfile, VE_SceneGraph::cfdDCS *);
 
   cfdGeomDataSet( float, float [ 3 ], char * );
   ~cfdGeomDataSet( );
@@ -97,10 +97,10 @@ class cfdGeomDataSet
 
   */
   //these need to renamed!!
-   cfdDCS* getpfDCS();
-   cfdNode* getpfNode();
-   cfdNode* node;
-   cfdDCS* DCS;
+   VE_SceneGraph::cfdDCS* getpfDCS();
+   VE_SceneGraph::cfdNode* getpfNode();
+   VE_SceneGraph::cfdNode* node;
+   VE_SceneGraph::cfdDCS* DCS;
 
 #ifdef _PERFORMER
   pfLightModel *matLight;

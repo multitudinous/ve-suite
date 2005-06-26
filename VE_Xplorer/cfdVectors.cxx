@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdVectors.h"
-#include "cfdDataSet.h"
-#include "cfdPlanes.h"
-#include "cfdEnum.h"
+#include "vE_Xplorer/cfdVectors.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdPlanes.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
@@ -156,7 +156,7 @@ void cfdVectors::Update( void )
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new cfdGeode() );
+   geodes.push_back( new VE_SceneGraph::cfdGeode() );
    geodes.back()->TranslateTocfdGeode( temp );
    temp->Delete();
    this->updateFlag = true;

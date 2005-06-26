@@ -43,7 +43,7 @@
 #include <osg/Fog>
 #endif
 
-cfdFILE::cfdFILE( fileInfo *geomFile, cfdDCS *worldDCS  )
+cfdFILE::cfdFILE( fileInfo *geomFile, VE_SceneGraph::cfdDCS *worldDCS  )
 {
    // Need to fix this and move some code to cfdNode
    // Leave some code here no more cfdFileInfo
@@ -78,13 +78,13 @@ cfdFILE::cfdFILE( fileInfo *geomFile, cfdDCS *worldDCS  )
    }*/
 }
 
-cfdFILE::cfdFILE( char* geomFile, cfdDCS* worldDCS  )
+cfdFILE::cfdFILE( char* geomFile, VE_SceneGraph::cfdDCS* worldDCS  )
 {
    // Need to fix this and move some code to cfdNode
    // Leave some code here no more cfdFileInfo
 
-   this->DCS = new cfdDCS();
-   this->node = new cfdNode();  
+   this->DCS = new VE_SceneGraph::cfdDCS();
+   this->node = new VE_SceneGraph::cfdNode();  
    this->node->LoadFile( geomFile );
    strcpy( fileName, geomFile );
    this->DCS->AddChild( this->node );
@@ -174,12 +174,12 @@ void cfdFILE::Initialize( float op_val )
    setOpac( op_val );
 }
 
-cfdNode* cfdFILE::GetcfdNode( void )
+VE_SceneGraph::cfdNode* cfdFILE::GetcfdNode( void )
 {
    return this->node;
 }
 
-cfdDCS* cfdFILE::getpfDCS()
+VE_SceneGraph::cfdDCS* cfdFILE::getpfDCS()
 {
    return this->DCS;
 }
@@ -264,7 +264,7 @@ std::string cfdFILE::GetModuleName( void )
 void cfdFILE::SetGeometryFilename( std::string filename )
 {
    this->_filename = filename;
-   this->_node = new cfdNode();
+   this->_node = new VE_SceneGraph::cfdNode();
    this->_node->LoadFile( (char*)this->_filename.c_str() );
    //this->_node->flatten( 0 );
    // Need to fix this

@@ -30,16 +30,16 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdQuatCamHandler.h"
-#include "cfdFileInfo.h"
-#include "fileIO.h"
-#include "VE_SceneGraph/cfdDCS.h"
-#include "cfdQuatCam.h"
-#include "cfdNavigate.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
-#include "cfdReadParam.h"
+#include "VE_Xplorer/cfdQuatCamHandler.h"
+#include "VE_Xplorer/cfdFileInfo.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/cfdQuatCam.h"
+#include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdReadParam.h"
 
+#include "VE_SceneGraph/cfdDCS.h"
 #include <cstdio>
 #include <iostream>
 #include <cstdlib>
@@ -56,7 +56,8 @@ cfdPoints::cfdPoints(double* worldPos, Matrix44f& mat)
 }
 
 
-cfdQuatCamHandler::cfdQuatCamHandler( cfdDCS* worldDCS, cfdNavigate* nav, char* param )
+cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS, 
+                                     cfdNavigate* nav, char* param )
 {
    thisQuatCam = NULL;
    nextPoint = NULL;
@@ -93,7 +94,7 @@ cfdQuatCamHandler::cfdQuatCamHandler( cfdDCS* worldDCS, cfdNavigate* nav, char* 
 cfdQuatCamHandler::~cfdQuatCamHandler( void )
 {
 }
-void cfdQuatCamHandler::LoadData(double* worldPos, cfdDCS* worldDCS)
+void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::cfdDCS* worldDCS)
 {
    Matrix44f vjm;
    vjm = worldDCS->GetMat();
@@ -179,7 +180,7 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
           
 }
 
-void cfdQuatCamHandler::Relocate( cfdDCS* worldDCS,  cfdNavigate* nav )
+void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate* nav )
 {
    Matrix44f vjm;
    //run = cfdId;

@@ -7,7 +7,7 @@
 #elif _PERFORMER
 #elif _OPENSG
 #endif
-
+using namespace VE_SceneGraph;
 ////////////////////
 cfdClone::cfdClone()
 :cfdNode()

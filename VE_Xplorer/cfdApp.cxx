@@ -125,7 +125,7 @@ cfdApp::cfdApp( void )
 void cfdApp::exit()
 {
    delete [] filein_name;
-   cfdPfSceneManagement::instance()->CleanUp();
+   VE_SceneGraph::cfdPfSceneManagement::instance()->CleanUp();
    cfdModelHandler::instance()->CleanUp();
    cfdEnvironmentHandler::instance()->CleanUp();
    cfdSteadyStateVizHandler::instance()->CleanUp();
@@ -202,9 +202,9 @@ osg::Group* cfdApp::getScene()
    //osgDB::writeNodeFile(*this->_sceneManager->GetRootNode()->GetRawNode(),
    //   "C:/test.osg");
 #ifdef _PERFORMER
-   return (pfGroup*)(cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode());
+   return (pfGroup*)(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode());
 #elif _OSG
-   return (osg::Group*)cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode();
+   return (osg::Group*)VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode()->GetRawNode();
 #endif
 }
 
@@ -316,8 +316,8 @@ void cfdApp::initScene( void )
 #endif   //_WEB_INTERFACE
 
    // define the rootNode, worldDCS, and lighting
-   cfdPfSceneManagement::instance()->Initialize( this->filein_name );
-   cfdPfSceneManagement::instance()->InitScene();
+   VE_SceneGraph::cfdPfSceneManagement::instance()->Initialize( this->filein_name );
+   VE_SceneGraph::cfdPfSceneManagement::instance()->InitScene();
 
    // modelHandler stores the arrow and holds all data and geometry
    cfdModelHandler::instance()->Initialize( this->filein_name );
@@ -389,7 +389,7 @@ void cfdApp::latePreFrame( void )
 #ifdef VE_PATENTED
    if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
    {
-      _tbvHandler->SetParentNode((cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
+      _tbvHandler->SetParentNode((VE_SceneGraph::cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
       _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
       _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
       _tbvHandler->PreFrameUpdate();

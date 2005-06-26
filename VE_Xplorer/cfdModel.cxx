@@ -67,7 +67,7 @@
 
 #include "cfdModel.h"
 
-cfdModel::cfdModel( cfdDCS *worldDCS )
+cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
 {
    vprDEBUG(vprDBG_ALL,1) << "|\tNew cfdModel ! " 
                           << std::endl << vprDEBUG_FLUSH;
@@ -163,11 +163,11 @@ cfdModel::~cfdModel()
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-cfdTempAnimation* cfdModel::GetAnimation()
+VE_SceneGraph::cfdTempAnimation* cfdModel::GetAnimation()
 {
    if ( !animation )
    {
-      animation = new cfdTempAnimation();
+      animation = new VE_SceneGraph::cfdTempAnimation();
    }
    return animation;
 }
@@ -179,11 +179,11 @@ void cfdModel::CreateCfdDataSet( void )
 }
 
 /////////////////////////////////////////////////////////////
-void cfdModel::SetMirrorNode( cfdGroup* dataNode )
+void cfdModel::SetMirrorNode( VE_SceneGraph::cfdGroup* dataNode )
 {
    if ( !mirrorNode )
    {
-      mirrorNode = new cfdClone();
+      mirrorNode = new VE_SceneGraph::cfdClone();
       mirrorNode->CloneNode( GetActiveDataSet()->GetDCS() ); 
       float rot[ 3 ];
       rot[ 0 ] = 180.0f;
@@ -196,7 +196,7 @@ void cfdModel::SetMirrorNode( cfdGroup* dataNode )
    {
       this->_worldDCS->RemoveChild( mirrorNode->GetClonedGraph() );
       delete mirrorNode;     
-      mirrorNode = new cfdClone( GetActiveDataSet()->GetDCS() );
+      mirrorNode = new VE_SceneGraph::cfdClone( GetActiveDataSet()->GetDCS() );
       float rot[ 3 ];
       rot[ 0 ] = 180.0f;
       rot[ 1 ] = 0.0f;
@@ -238,7 +238,7 @@ void cfdModel::CreateGeomDataSet( char* filename )
    mGeomDataSets.push_back( new cfdFILE( filename, _worldDCS ) );
 }
 
-void cfdModel::setModelNode( cfdNode *temp )
+void cfdModel::setModelNode( VE_SceneGraph::cfdNode *temp )
 {
    std::cout<<" !!!!! cfdModel::setModelNode is doing nothing"<<std::endl;    
 }
@@ -292,12 +292,12 @@ void cfdModel::setRotMat(double *rotate)
    std::cout<<" !!!!! cfdModel::setRotMat is doing nothing"<<std::endl;    
 }
 ////////////////////////////////
-cfdNode* cfdModel::GetCfdNode( )
+VE_SceneGraph::cfdNode* cfdModel::GetCfdNode( )
 {
    return this->mModelNode;
 }
 //////////////////////////////
-cfdDCS* cfdModel::GetCfdDCS( )
+VE_SceneGraph::cfdDCS* cfdModel::GetCfdDCS( )
 {
    return this->_worldDCS;
 }

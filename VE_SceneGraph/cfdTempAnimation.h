@@ -32,73 +32,77 @@
 #ifndef CFDTEMPANIMATION_H
 #define CFDTEMPANIMATION_H
 
-class cfdSequence;
-class cfdGroup;
-class cfdGeode;
+namespace VE_SceneGraph{
+   class cfdSequence;
+   class cfdGroup;
+   class cfdGeode;
+}
 class vtkActor;
 
 #include <vector>
-#include "VE_Xplorer/cfdConfig.h"
+#include "VE_SceneGraph/cfdConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdTempAnimation
-{
-   public:
-      cfdTempAnimation();
+namespace VE_SceneGraph{
+   class VE_SCENEGRAPH_EXPORTS cfdTempAnimation
+   {
+      public:
+         cfdTempAnimation();
 
-      ~cfdTempAnimation();
+         ~cfdTempAnimation();
    
-      //set the duration (in seconds) of the sequence
-      void SetDuration( double time = 1.0 );
+         //set the duration (in seconds) of the sequence
+         void SetDuration( double time = 1.0 );
 
-      // add pfGroups to the sequence node 
-      void SetGroups( void );
+         // add pfGroups to the sequence node 
+         void SetGroups( void );
       
-      //get a pointer to the animation
-      cfdSequence* GetSequence( void );
+         //get a pointer to the animation
+         cfdSequence* GetSequence( void );
       
-      void SetSequence( cfdSequence* );
+         void SetSequence( cfdSequence* );
 
-      cfdGroup* GetGroup( int i );
+         cfdGroup* GetGroup( int i );
 
-      int GetNumberOfFrames( void ){ return numFrames;}
+         int GetNumberOfFrames( void ){ return numFrames;}
 
-      void SetNumberOfFrames( int );
+         void SetNumberOfFrames( int );
 
-      void StopSequence( void );
+         void StopSequence( void );
 
-      void StartSequence( void );
+         void StartSequence( void );
 
-      void ResumeSequence( void );
+         void ResumeSequence( void );
 
-      void PauseSequence( void );
+         void PauseSequence( void );
 
-      void ReverseSequence( void );
+         void ReverseSequence( void );
 
-      void ForwardSequence( void );
+         void ForwardSequence( void );
 
-      int GetFrameOfSequence( void );
+         int GetFrameOfSequence( void );
 
-      void AddToSequence( int );
+         void AddToSequence( int );
 
-      void AddGeodesToSequence( std::vector< cfdGeode* > );
+         void AddGeodesToSequence( std::vector< cfdGeode* > );
 
-      void ClearSequence( void );
+         void ClearSequence( void );
 
-      // Helper function to support animations on clusters
-      void SetCurrentFrame( int );
+         // Helper function to support animations on clusters
+         void SetCurrentFrame( int );
 
-      void CreateGeodeVector( vtkActor* );
+         void CreateGeodeVector( vtkActor* );
 
-   private:
-      int numFrames;
-      double _duration;
+      private:
+         int numFrames;
+         double _duration;
 
-      cfdSequence* _sequence;
-      std::vector< cfdGeode* > _geodes;
+         cfdSequence* _sequence;
+         std::vector< cfdGeode* > _geodes;
 
-      cfdGroup** groups;
+         cfdGroup** groups;
 
-      cfdTempAnimation(const cfdTempAnimation& src);
-      cfdTempAnimation& operator=(const cfdTempAnimation& src);
-};
+         cfdTempAnimation(const cfdTempAnimation& src);
+         cfdTempAnimation& operator=(const cfdTempAnimation& src);
+   };
+}
 #endif // cfdTempAnimation_H

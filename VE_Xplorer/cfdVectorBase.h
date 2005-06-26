@@ -39,8 +39,8 @@ class vtkGeometryFilter;
 class vtkPolyDataMapper;
 class vtkMaskPoints;
 class cfdCommandArray;
-
-class cfdVectorBase : public cfdObjects
+#include "VE_Xplorer/cfdConfig.h"
+class WXPLUGIN_DECLSPEC cfdVectorBase : public cfdObjects
 {
  public:
    cfdVectorBase();

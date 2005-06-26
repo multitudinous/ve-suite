@@ -40,42 +40,43 @@
 #elif _OSG
 #include <osg/Node>
 #endif
-
-class WXPLUGIN_DECLSPEC cfdNodeTraverser
-{
-public:
-   cfdNodeTraverser();
-   cfdNodeTraverser(const cfdNodeTraverser& cfdNT);
-   virtual ~cfdNodeTraverser();
+namespace VE_SceneGraph{
+   class VE_SCENEGRAPH_EXPORTS cfdNodeTraverser
+   {
+      public:
+         cfdNodeTraverser();
+         cfdNodeTraverser(const cfdNodeTraverser& cfdNT);
+         virtual ~cfdNodeTraverser();
    
-   //the pre and post node callbacks
-   typedef void (*preNodeTraverseCallback)(cfdNodeTraverser*,cfdNode*);
-   typedef void (*postNodeTraverseCallback)(cfdNodeTraverser*,cfdNode*);
+      //the pre and post node callbacks
+      typedef void (*preNodeTraverseCallback)(cfdNodeTraverser*,cfdNode*);
+      typedef void (*postNodeTraverseCallback)(cfdNodeTraverser*,cfdNode*);
 
-   //set the pre node traverse callback
-   virtual void setPreNodeTraverseCallback(preNodeTraverseCallback func)
-   {
-      _preFunc = func;
-   }
-   //set the post node traverse callback
-   virtual void setPostNodeTraverseCallback(postNodeTraverseCallback func)
-   {
-      _postFunc = func;
-   }
-   //set the node to traverse
-   void setNode(cfdNode* root);
+      //set the pre node traverse callback
+      virtual void setPreNodeTraverseCallback(preNodeTraverseCallback func)
+      {
+         _preFunc = func;
+      }
+      //set the post node traverse callback
+      virtual void setPostNodeTraverseCallback(postNodeTraverseCallback func)
+      {
+         _postFunc = func;
+      }
+      //set the node to traverse
+      void setNode(cfdNode* root);
 
-   //begin traversing the node
-   void traverse();
+      //begin traversing the node
+      void traverse();
 
-   //equal operator
-   cfdNodeTraverser& operator=(const cfdNodeTraverser& cfdNT);
-protected:
-   //recurse the nodes
-   virtual void _traverseNode(cfdNode* currentNode);
+      //equal operator
+      cfdNodeTraverser& operator=(const cfdNodeTraverser& cfdNT);
+   protected:
+      //recurse the nodes
+      virtual void _traverseNode(cfdNode* currentNode);
 
-   cfdNode* _root;
-   preNodeTraverseCallback _preFunc;
-   postNodeTraverseCallback _postFunc;
-};
+      cfdNode* _root;
+      preNodeTraverseCallback _preFunc;
+      postNodeTraverseCallback _postFunc;
+   };
+}
 #endif// _CFD_NODE_TRAVERSER_H_

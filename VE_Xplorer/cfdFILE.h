@@ -36,8 +36,10 @@
 #include <string>
 
 class fileInfo;
-class cfdDCS;
-class cfdNode;
+namespace VE_SceneGraph{
+   class cfdDCS;
+   class cfdNode;
+}
 #ifdef _PERFORMER
 class pfFog;
 #elif _OSG
@@ -53,8 +55,8 @@ namespace osg { class Fog; }
 class WXPLUGIN_DECLSPEC cfdFILE 
 {
    public:
-      cfdFILE( fileInfo*, cfdDCS* );
-      cfdFILE( char*, cfdDCS* );
+      cfdFILE( fileInfo*, VE_SceneGraph::cfdDCS* );
+      cfdFILE( char*, VE_SceneGraph::cfdDCS* );
       cfdFILE( float, float [ 3 ], char * );
 
       ~cfdFILE();
@@ -63,8 +65,8 @@ class WXPLUGIN_DECLSPEC cfdFILE
 
       //void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
 
-      cfdDCS* getpfDCS( void );
-      cfdNode* GetcfdNode( void );
+      VE_SceneGraph::cfdDCS* getpfDCS( void );
+      VE_SceneGraph::cfdNode* GetcfdNode( void );
 
       void SetFILEProperties( int, int, float* );
       int GetTransparentFlag( void );
@@ -77,8 +79,8 @@ class WXPLUGIN_DECLSPEC cfdFILE
       //pfMaterial *fmaterial;
       //pfMaterial *bmaterial;
       //std::vector< pfMaterial *> matList;
-      cfdNode* node;
-      cfdDCS*  DCS;
+      VE_SceneGraph::cfdNode* node;
+      VE_SceneGraph::cfdDCS*  DCS;
       //pfMaterial *mat1, *mat0;
       int mat_count;
       int color;
@@ -95,7 +97,7 @@ class WXPLUGIN_DECLSPEC cfdFILE
       void SetColorFlag( int );
       int GetColorFlag( void );
       std::string GetModuleName( void );
-      void SetColorOfGeometry( cfdNode* );
+      void SetColorOfGeometry( VE_SceneGraph::cfdNode* );
       void Update( void );
       void SetOpacity( float );
 
@@ -111,7 +113,7 @@ class WXPLUGIN_DECLSPEC cfdFILE
       bool _transparencyFlag;
       float _opacityLevel;
       int _colorFlag;
-      cfdNode* _node;
+      VE_SceneGraph::cfdNode* _node;
       //cfdGroup* _masterNode;
       std::string _filename;
       std::string _moduleName;

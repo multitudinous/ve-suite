@@ -37,12 +37,15 @@
 #include <map>
 
 //class cfdModuleGeometry;
-class cfdGroup;
+namespace VE_SceneGraph{
+   class cfdGroup;
+   class cfdDCS;
+}
 class cfdModel;
 class cfdReadParam;
 class cfdCursor;
 class cfdNavigate;
-class cfdDCS;
+
 class cfdObjects;
 #include "interface.h"
 #include "VE_Xplorer/cfdConfig.h"
@@ -54,7 +57,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       //cfdVEBaseClass( cfdDCS* );
       virtual ~cfdVEBaseClass( void );
 
-      virtual void InitializeNode( cfdDCS* );
+      virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
       // Methods to do scene graph manipulations
       // New methods may have to be added later
       virtual void AddSelfToSG( void );
@@ -113,9 +116,9 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
    private:
       // This needs to be vector of geometry nodes
       //cfdModuleGeometry*  geometryNode;
-      cfdGroup* groupNode;
+      VE_SceneGraph::cfdGroup* groupNode;
 
-      cfdDCS*   worldDCS;
+      VE_SceneGraph::cfdDCS*   worldDCS;
 
       wxString _objectDescription;
 
@@ -133,7 +136,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
       void RegistVar(std::string vname, std::vector<long> *var);
       void RegistVar(std::string vname, std::vector<double> *var);
       void RegistVar(std::string vname, std::vector<std::string> *var);
-      cfdDCS* GetWorldDCS();
+      VE_SceneGraph::cfdDCS* GetWorldDCS();
 
       Interface mod_pack;
 
@@ -155,7 +158,7 @@ class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase c
 
       int _modID;
       wxString _objectName;
-      cfdDCS* _dcs;
+      VE_SceneGraph::cfdDCS* _dcs;
       cfdCursor* _cursor;
       cfdNavigate* _navigate;
       Interface myInterface;

@@ -34,8 +34,8 @@
 #include "cfdFileInfo.h"  
 
 #include <assert.h>
-#include "cfdGeode.h"
-#include "cfdDCS.h"
+#include "VE_SceneGraph/cfdGeode.h"
+#include "VE_SceneGraph/cfdDCS.h"
 
 //shouldn't have to declare these
 //should instead use the cfdNode types!!!
@@ -62,7 +62,7 @@
 #include <vpr/Util/Debug.h>
 
 //cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, pfDCS *modelDCS  )
-cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, cfdDCS *modelDCS  )
+cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, VE_SceneGraph::cfdDCS *modelDCS  )
 {
 #ifdef _PERFORMER
   mat0 = new pfMaterial();
@@ -71,7 +71,7 @@ cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, cfdDCS *modelDCS  )
    mat0 = new osg::Material();
    mat1 = new osg::Material();
 #endif
-  DCS  = new cfdDCS();
+  DCS  = new VE_SceneGraph::cfdDCS();
 
   vprDEBUG(vprDBG_ALL,1) << " File:1 " << geomFile->fileName
                          << std::endl << vprDEBUG_FLUSH;
@@ -200,12 +200,12 @@ void cfdGeomDataSet::setRotMat(double *rotate)
 {
 }
 ////////////////////////////////////
-cfdNode *cfdGeomDataSet::getpfNode( )
+VE_SceneGraph::cfdNode *cfdGeomDataSet::getpfNode( )
 {
    return this->node;
 }
 //////////////////////////////////
-cfdDCS *cfdGeomDataSet::getpfDCS( )
+VE_SceneGraph::cfdDCS *cfdGeomDataSet::getpfDCS( )
 {
    return this->DCS;
 }

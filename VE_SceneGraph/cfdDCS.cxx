@@ -55,6 +55,7 @@
 #endif
 
 using namespace gmtl;
+using namespace VE_SceneGraph;
 //////////////////////
 cfdDCS::cfdDCS( void )
 :cfdGroup()
@@ -270,18 +271,6 @@ void cfdDCS::SetRotationArray( float* rot )
    if ( _udcb )
    {
       _udcb->setRotationDegreeAngles(_rotation[0],_rotation[1],_rotation[2]);
-      osg::Vec3f pitch(1,0,0);
-      osg::Vec3f roll(0,1,0);
-      osg::Vec3f yaw(0,0,1);
-   
-      osg::Matrixd rotateMat;
-
-      //rph              
-      rotateMat.makeRotate(_rotation[0],roll,
-                         _rotation[1],pitch,
-                         _rotation[2],yaw);
-
-      rotateMat.get( dcsQuat );
    }
 #elif _OPENSG
 #endif
@@ -319,31 +308,15 @@ Matrix44f cfdDCS::GetMat( void )
    this->_dcs->getMat( temp );
    _vjMatrix = vrj::GetVjMatrix( temp );
 #elif _OSG
+   osg::Matrixf osgMat= _dcs->getMatrix();
+   if(osgMat.valid()){
+   gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
+   _vjMatrix.set( osgMat.ptr() );
+   //gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+   //gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
+   //_vjMatrix.set(osgMat.ptr());
 
-   // Must do this because _dcs->getMat doesn't work
-   // because the matrix is overriden in the callback
-   // there is probably a more elegant solution than 
-   // what is below
-   osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
-   osg::Matrixd rotateMat;
-
-   rotateMat.makeRotate( dcsQuat );
-
-   osg::Vec3f transMat( _translation[0], _translation[1], _translation[2] );
-   scale.setTrans(transMat);
-
-   osg::Matrixf osgMat= rotateMat*scale;
-
-   if ( osgMat.valid() )
-   {
-      //gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-      _vjMatrix.set( osgMat.ptr() );
-      //gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
-      //gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
-      //_vjMatrix.set(osgMat.ptr());
-   }
-   else
-   {
+   }else{
       std::cout<<"Invalid matrix!!"<<std::endl;
       std::cout<<"cfdDCS::GetMat()"<<std::endl;
    }
@@ -361,37 +334,13 @@ void cfdDCS::SetMat( Matrix44f& input )
    pfMatrix temp = vrj::GetPfMatrix( input );
    this->_dcs->setMat( temp );
 #elif _OSG
-   if ( _dcs.valid() )
+   if(_dcs.valid())
    {
       osg::Matrix inMat;
       inMat.set(input.getData());
-      // this call does not work
-      // because it gets overridden in the callback
-      //_dcs->setMatrix(inMat);
-
-      // grab the rotations
-      osg::Quat quat;
-      inMat.get( quat );
-      _udcb->setQuat( quat );
-
-      // grab the translations
-      osg::Vec3d tempVec = inMat.getTrans();
-      float temp[ 3 ];
-      temp[ 0 ] = tempVec[ 0 ];
-      temp[ 1 ] = tempVec[ 1 ];
-      temp[ 2 ] = tempVec[ 2 ];
-      _udcb->setTranslation( temp );
-
-      // Grab Scale info
-      tempVec = inMat.getScale();
-      temp[ 0 ] = tempVec[ 0 ];
-      temp[ 1 ] = tempVec[ 1 ];
-      temp[ 2 ] = tempVec[ 2 ];
-      _udcb->setScaleValues( temp );
-   }
-   else
-   {
-      ;// do nothing      
+      _dcs->setMatrix(inMat);
+   }else{
+      
    }
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetMat is NOT implemented " << std::endl;
@@ -422,11 +371,8 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
    {
       gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
       //std::cout << tempQuat << std::endl;
-      dcsQuat[ 0 ] = tempQuat[ 0 ];
-      dcsQuat[ 1 ] = tempQuat[ 1 ];
-      dcsQuat[ 2 ] = tempQuat[ 2 ];
-      dcsQuat[ 3 ] = tempQuat[ 3 ];
-      _udcb->setQuat( dcsQuat );
+      osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
+      _udcb->setQuat( quat );
    }
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;
@@ -574,7 +520,7 @@ int cfdDCS::ReplaceChild( cfdNode* childToBeReplaced,
    {
       std::cout << " Error : Child not found " << std::endl;
       return -1;
-   }   
+   }
 }
 // Reimplement for other graphs
 #ifdef _PERFORMER

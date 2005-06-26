@@ -72,7 +72,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
    }
 
    //this->_sequence = new cfdTempAnimation();
-   this->_dcs = new cfdDCS();
+   this->_dcs = new VE_SceneGraph::cfdDCS();
 }
 
 cfdAnimatedImage::cfdAnimatedImage( char* param )
@@ -106,7 +106,7 @@ cfdAnimatedImage::cfdAnimatedImage( char* param )
       _images.push_back(im);
    }
 
-   this->_dcs = new cfdDCS();
+   this->_dcs = new VE_SceneGraph::cfdDCS();
    this->_dcs->SetTranslationArray( imageTrans );
    this->_dcs->SetRotationArray( imageRot );
    this->_dcs->SetScaleArray( imageScale );

@@ -30,36 +30,36 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdPolyData.h"      
-#include "cfdIsosurface.h"    
-#include "cfdPresetContour.h" 
-#include "cfdContours.h"      
-#include "cfdMomentum.h"      
-#include "cfdPresetMomentum.h"
-#include "cfdMomentums.h"     
-#include "cfdVector.h"        
-#include "cfdPresetVector.h"  
-#include "cfdVectors.h"       
-#include "cfdStreamers.h"     
-#include "cfdPolyData.h"      
-#include "cfdImage.h"         
-#include "cfdAnimatedImage.h" 
-#include "cfdAnimatedStreamlineCone.h"
-#include "cfdContour.h"
+#include "VE_Xplorer/cfdPolyData.h"      
+#include "VE_Xplorer/cfdIsosurface.h"    
+#include "VE_Xplorer/cfdPresetContour.h" 
+#include "VE_Xplorer/cfdContours.h"      
+#include "VE_Xplorer/cfdMomentum.h"      
+#include "VE_Xplorer/cfdPresetMomentum.h"
+#include "VE_Xplorer/cfdMomentums.h"     
+#include "VE_Xplorer/cfdVector.h"        
+#include "VE_Xplorer/cfdPresetVector.h"  
+#include "VE_Xplorer/cfdVectors.h"       
+#include "VE_Xplorer/cfdStreamers.h"     
+#include "VE_Xplorer/cfdPolyData.h"      
+#include "VE_Xplorer/cfdImage.h"         
+#include "VE_Xplorer/cfdAnimatedImage.h" 
+#include "VE_Xplorer/cfdAnimatedStreamlineCone.h"
+#include "VE_Xplorer/cfdContour.h"
 
-#include "cfdDataSet.h"
-#include "cfdEnum.h"
-#include "cfdGlobalBase.h"
-#include "cfdCommandArray.h"
-#include "cfdObjects.h"
-#include "cfdPlanes.h"
-#include "cfdNavigate.h"
-#include "cfdCursor.h"
-#include "cfdGraphicsObject.h"
-#include "cfdModel.h"
-#include "cfdTextOutput.h"
-#include "cfdEnvironmentHandler.h"
-#include "cfdModelHandler.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/cfdPlanes.h"
+#include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdCursor.h"
+#include "VE_Xplorer/cfdGraphicsObject.h"
+#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/cfdTextOutput.h"
+#include "VE_Xplorer/cfdEnvironmentHandler.h"
+#include "VE_Xplorer/cfdModelHandler.h"
 
 #include <vpr/Util/Debug.h>
 #include <vpr/vpr.h>
@@ -360,7 +360,7 @@ void cfdSteadyStateVizHandler::SetCommandArray( cfdCommandArray* input )
    commandArray = input;
 }
 
-cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
+VE_SceneGraph::cfdTempAnimation* cfdSteadyStateVizHandler::GetActiveAnimation( void )
 {
    return this->_activeTempAnimation;
 }
@@ -768,7 +768,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             temp->SetTypeOfViz( cfdGraphicsObject::CLASSIC );
             temp->SetParentNode( this->dataList[ i ]->GetActiveDataSet()->GetDCS() );
             temp->SetActiveModel( cfdModelHandler::instance()->GetActiveModel() );
-            temp->SetWorldNode( cfdPfSceneManagement::instance()->GetWorldDCS() );
+            temp->SetWorldNode( VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
             temp->SetGeodes( this->dataList[ i ]->GetGeodes() );
             temp->AddGraphicsObjectToSceneGraph();
             
@@ -803,7 +803,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             {
                // we mirror the dataset in two places
                // once here for data viz and once in modelhandler for geom
-               cfdGroup* temp = (cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
+               VE_SceneGraph::cfdGroup* temp = (VE_SceneGraph::cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild( 0 );
                cfdModelHandler::instance()->GetActiveModel()->SetMirrorNode( temp );
             }
          }
@@ -841,7 +841,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             
             if ( this->_activeObject->GetObjectType() == IMAGE_EX )
             {
-               this->_activeDataSetDCS = cfdPfSceneManagement::instance()->GetWorldDCS();
+               this->_activeDataSetDCS = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
             }
             else
             {

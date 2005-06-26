@@ -34,11 +34,14 @@
 
 class cfdDataSet;
 class cfdReadParam;
-class cfdGeode;
-class cfdDCS;
-class cfdSequence;
-class cfdNode;
-class cfdTempAnimation;
+namespace VE_SceneGraph{
+   class cfdGeode;
+   class cfdDCS;
+   class cfdSequence;
+   class cfdNode;
+   class cfdTempAnimation;
+   class cfdGeode;
+}
 
 // VTK Classes
 class vtkPolyData;
@@ -51,7 +54,7 @@ class vtkMaskPoints;
 #include <vpr/Sync/Mutex.h>
 
 class cfdCommandArray;
-class cfdGeode;
+
 #include "cfdGlobalBase.h"
 
 class WXPLUGIN_DECLSPEC cfdObjects : public cfdGlobalBase
@@ -72,7 +75,7 @@ class WXPLUGIN_DECLSPEC cfdObjects : public cfdGlobalBase
       // update the actor
       virtual void Update() = 0;
 
-      std::vector< cfdGeode* > GetGeodes( void );
+      std::vector< VE_SceneGraph::cfdGeode* > GetGeodes( void );
       void ClearGeodes( void );
 
       void SetObjectType( int );
@@ -119,7 +122,7 @@ class WXPLUGIN_DECLSPEC cfdObjects : public cfdGlobalBase
       //static float vectorScale;
      
 
-      std::vector< cfdGeode* > geodes;
+      std::vector< VE_SceneGraph::cfdGeode* > geodes;
       vtkPolyDataSource *pointSource;
 
       bool updateFlag;

@@ -82,13 +82,13 @@ cfdGraphicsObject& cfdGraphicsObject::operator=( const cfdGraphicsObject& input 
 }
 
 // Set parent node to add "graphics node" to
-void cfdGraphicsObject::SetParentNode( cfdGroup* input )
+void cfdGraphicsObject::SetParentNode( VE_SceneGraph::cfdGroup* input )
 {
    this->parentNode = input;
 }
 
 // node the parent node will be added to
-void cfdGraphicsObject::SetWorldNode( cfdGroup* input )
+void cfdGraphicsObject::SetWorldNode( VE_SceneGraph::cfdGroup* input )
 {
    this->worldNode = input;
 }
@@ -108,7 +108,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
 
       // is it transient, classic, or animated class
       // add animation or dcs
-      cfdSwitch* temp = this->model->GetActiveDataSet()->GetSwitchNode();
+      VE_SceneGraph::cfdSwitch* temp = this->model->GetActiveDataSet()->GetSwitchNode();
       if ( this->geodes.size() == 1 )
       {
          // classic ss
@@ -122,7 +122,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
                              << std::endl << vprDEBUG_FLUSH;
          // we can do this because classic group is always
          // child 0 see line 58 of cfdModel.cxx
-         cfdGroup* test = ((cfdGroup*)temp->GetChild( 0 ));
+         VE_SceneGraph::cfdGroup* test = ((VE_SceneGraph::cfdGroup*)temp->GetChild( 0 ));
          test->AddChild( this->geodes.back() );
          vprDEBUG(vprDBG_ALL,1) << "|\tFinished classic ss add to graph"
                              << std::endl << vprDEBUG_FLUSH;
@@ -134,7 +134,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
       {
          // classic ss animated images, planes, tracked particles
          // even if model contains transient data
-         this->animation = new cfdTempAnimation();
+         this->animation = new VE_SceneGraph::cfdTempAnimation();
          this->animation->AddGeodesToSequence( this->geodes );
          if ( parentNode->SearchChild( temp ) < 0 )
          {
@@ -143,7 +143,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
             parentNode->AddChild( temp );
          }
          //this->animation->SetDuration();
-         ((cfdGroup*)temp->GetChild( 0 ))->AddChild( this->animation->GetSequence() );
+         ((VE_SceneGraph::cfdGroup*)temp->GetChild( 0 ))->AddChild( this->animation->GetSequence() );
       }
       else if ( (this->geodes.size() > 1) && 
                   model->GetActiveDataSet()->IsPartOfTransientSeries()
@@ -157,14 +157,14 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          }
 
          // classic transient data
-         cfdTempAnimation* transAnimation = this->model->GetAnimation();
+         VE_SceneGraph::cfdTempAnimation* transAnimation = this->model->GetAnimation();
          // the following functions should be called upon creation in cfdModel
          transAnimation->AddGeodesToSequence( this->geodes );
-         if ( ((cfdGroup*)(temp->GetChild( 0 )))->SearchChild( transAnimation->GetSequence() ) < 0 )
+         if ( ((VE_SceneGraph::cfdGroup*)(temp->GetChild( 0 )))->SearchChild( transAnimation->GetSequence() ) < 0 )
          {
             vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic trans"
                              << std::endl << vprDEBUG_FLUSH;
-            ((cfdGroup*)temp->GetChild( 0 ))->AddChild( transAnimation->GetSequence() );
+            ((VE_SceneGraph::cfdGroup*)temp->GetChild( 0 ))->AddChild( transAnimation->GetSequence() );
          }
       }
    }
@@ -181,16 +181,16 @@ void cfdGraphicsObject::SetTypeOfViz( VizType x )
 }
 
 // set actor for classic and trans viz objects
-void cfdGraphicsObject::SetGeodes( std::vector< cfdGeode* > input )
+void cfdGraphicsObject::SetGeodes( std::vector< VE_SceneGraph::cfdGeode* > input )
 {
    for ( unsigned int i = 0; i < input.size(); ++i )
    {
-      this->geodes.push_back( new cfdGeode( *input.at( i ) ) );
+      this->geodes.push_back( new VE_SceneGraph::cfdGeode( *input.at( i ) ) );
    }
 }
 
 // Return parent node for a this object
-cfdGroup* cfdGraphicsObject::GetParentNode( void )
+VE_SceneGraph::cfdGroup* cfdGraphicsObject::GetParentNode( void )
 {
    return this->parentNode;
 }
@@ -408,7 +408,7 @@ void cfdGraphicsObject::RemovecfdGeodeFromDCS( void )
       {
          // Need to find tha parent because with multiple models
          // Not all geodes are going to be on the same dcs
-         cfdGroup* parent = (cfdGroup*)this->geodes.at( i )->GetParent(0);
+         VE_SceneGraph::cfdGroup* parent = (VE_SceneGraph::cfdGroup*)this->geodes.at( i )->GetParent(0);
          parent->RemoveChild( this->geodes.at( i ) );
 #ifdef _PERFORMER
          delete this->geodes.at( i );
@@ -418,7 +418,7 @@ void cfdGraphicsObject::RemovecfdGeodeFromDCS( void )
 
       if ( animation )
       {
-         cfdGroup* parent = (cfdGroup*)this->animation->GetSequence()->GetParent(0);
+         VE_SceneGraph::cfdGroup* parent = (VE_SceneGraph::cfdGroup*)this->animation->GetSequence()->GetParent(0);
          parent->RemoveChild( this->animation->GetSequence() );
 #ifdef _PERFORMER
          delete animation;

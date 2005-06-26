@@ -367,7 +367,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib GraphicalPlugin.lib vtkRendering.lib libpf.lib libpfv.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib GraphicalPlugin.lib vtkRendering.lib libpf.lib libpfv.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib VE_SceneGraph_pfd.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project_taod.exe"
 				LinkIncremental="2"
@@ -567,7 +567,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="GraphicalPlugin.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
+				AdditionalDependencies="GraphicalPlugin.lib VE_SceneGraph_osgd.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
 				ShowProgress="0"
 				OutputFile="$(VE_SUITE_HOME)\bin\win32\project_tao_osgd.exe"
 				LinkIncremental="1"
@@ -885,78 +885,15 @@
 			</File>
 			<File
 				RelativePath=".\cfdVEAvailModules.cxx">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_PATENTED|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OSG_CG_DBGP|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVector.cxx">
-			</File>
-			<File
-				RelativePath=".\cfdVectorBase.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdVectors.cxx">
 			</File>
 			<File
 				RelativePath=".\cfdVEPluginLoader.cxx">
-				<FileConfiguration
-					Name="Debug|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_DBG|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OMNI_OSG_CG_PATENTED|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="OSG_CG_DBGP|Win32"
-					ExcludedFromBuild="TRUE">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVEXplorer.cxx">
@@ -1338,148 +1275,19 @@
 			Name="headers"
 			Filter=".h">
 			<File
-				RelativePath="cfd1DTextInput.h">
-			</File>
-			<File
-				RelativePath="VE_Xplorer\cfdAccessoryFunctions.h">
-			</File>
-			<File
-				RelativePath="cfdAnimatedImage.h">
-			</File>
-			<File
-				RelativePath="cfdAnimatedStreamlineCone.h">
-			</File>
-			<File
-				RelativePath="cfdApp.h">
+				RelativePath=".\cfdApp.h">
 			</File>
 			<File
 				RelativePath=".\cfdAppWrapper.h">
 			</File>
 			<File
-				RelativePath=".\cfdCommandArray.h">
-			</File>
-			<File
-				RelativePath=".\cfdCommandObjects.h">
-			</File>
-			<File
-				RelativePath="cfdContour.h">
-			</File>
-			<File
-				RelativePath="cfdContourBase.h">
-			</File>
-			<File
-				RelativePath="cfdContours.h">
-			</File>
-			<File
-				RelativePath=".\cfdCosNaming.h">
-			</File>
-			<File
-				RelativePath="cfdCursor.h">
-			</File>
-			<File
-				RelativePath="cfdCuttingPlane.h">
-			</File>
-			<File
-				RelativePath="cfdDashboard.h">
-			</File>
-			<File
-				RelativePath="cfdDataSet.h">
-			</File>
-			<File
-				RelativePath="cfdDigitalAnalogGauge.h">
-			</File>
-			<File
-				RelativePath="cfdEnum.h">
+				RelativePath=".\cfdConfig.h">
 			</File>
 			<File
 				RelativePath=".\cfdEnvironmentHandler.h">
 			</File>
 			<File
-				RelativePath="cfdExecutive.h">
-			</File>
-			<File
-				RelativePath="cfdExecutiveConfiguration.h">
-			</File>
-			<File
-				RelativePath="cfdFILE.h">
-			</File>
-			<File
-				RelativePath="cfdFileInfo.h">
-			</File>
-			<File
-				RelativePath="cfdFrame.h">
-			</File>
-			<File
-				RelativePath="cfdGauges.h">
-			</File>
-			<File
-				RelativePath="cfdGeomDataSet.h">
-			</File>
-			<File
-				RelativePath=".\cfdGlobalBase.h">
-			</File>
-			<File
-				RelativePath=".\cfdGraphicsObject.h">
-			</File>
-			<File
-				RelativePath="..\VE_Builder\Translator\cfdGrid2Surface.h">
-			</File>
-			<File
-				RelativePath=".\cfdIHCCGauge.h">
-			</File>
-			<File
-				RelativePath=".\cfdIHCCModel.h">
-			</File>
-			<File
-				RelativePath="cfdImage.h">
-			</File>
-			<File
-				RelativePath="cfdInteractiveGeometry.h">
-			</File>
-			<File
-				RelativePath="cfdIsosurface.h">
-			</File>
-			<File
-				RelativePath="cfdModel.h">
-			</File>
-			<File
-				RelativePath=".\cfdModelHandler.h">
-			</File>
-			<File
-				RelativePath="cfdModuleGeometry.h">
-			</File>
-			<File
-				RelativePath="cfdMomentum.h">
-			</File>
-			<File
-				RelativePath="cfdMomentums.h">
-			</File>
-			<File
-				RelativePath="cfdNavigate.h">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdNodeTraverser.h">
-			</File>
-			<File
-				RelativePath="cfdObjects.h">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdPfSceneManagement.h">
-			</File>
-			<File
-				RelativePath="cfdPlanes.h">
-			</File>
-			<File
-				RelativePath="cfdPolyData.h">
-			</File>
-			<File
-				RelativePath="cfdPresetContour.h">
-			</File>
-			<File
-				RelativePath="cfdPresetMomentum.h">
-			</File>
-			<File
-				RelativePath="cfdPresetVector.h">
+				RelativePath=".\cfdExecutive.h">
 			</File>
 			<File
 				RelativePath=".\cfdQuatCam.h">
@@ -1488,13 +1296,7 @@
 				RelativePath=".\cfdQuatCamHandler.h">
 			</File>
 			<File
-				RelativePath="cfdReadParam.h">
-			</File>
-			<File
-				RelativePath="cfdScalarBarActor.h">
-			</File>
-			<File
-				RelativePath="cfdSound.h">
+				RelativePath=".\cfdSound.h">
 			</File>
 			<File
 				RelativePath=".\cfdSoundHandler.h">
@@ -1503,16 +1305,7 @@
 				RelativePath=".\cfdSteadyStateVizHandler.h">
 			</File>
 			<File
-				RelativePath="cfdStreamers.h">
-			</File>
-			<File
-				RelativePath="cfdSwappableGeometry.h">
-			</File>
-			<File
-				RelativePath="cfdTeacher.h">
-			</File>
-			<File
-				RelativePath="..\VE_SceneGraph\cfdTempAnimation.h">
+				RelativePath=".\cfdTeacher.h">
 			</File>
 			<File
 				RelativePath=".\cfdTextOutput.h">
@@ -1521,46 +1314,13 @@
 				RelativePath=".\cfdThread.h">
 			</File>
 			<File
-				RelativePath=".\cfdTransientVizHandler.h">
-			</File>
-			<File
-				RelativePath=".\cfdVEBaseClass.h">
-			</File>
-			<File
-				RelativePath="cfdVector.h">
-			</File>
-			<File
-				RelativePath="cfdVectorBase.h">
-			</File>
-			<File
-				RelativePath="cfdVectors.h">
+				RelativePath=".\cfdVector.h">
 			</File>
 			<File
 				RelativePath=".\cfdVjObsWrapper.h">
 			</File>
 			<File
-				RelativePath=".\cfdVTKFileHandler.h">
-			</File>
-			<File
 				RelativePath=".\cfdWriteTraverser.h">
-			</File>
-			<File
-				RelativePath="..\VE_Builder\Translator\cleanVtk.h">
-			</File>
-			<File
-				RelativePath="fileIO.h">
-			</File>
-			<File
-				RelativePath="get_time.h">
-			</File>
-			<File
-				RelativePath="MutexInterface.h">
-			</File>
-			<File
-				RelativePath="Plot3Dviewer.h">
-			</File>
-			<File
-				RelativePath="readWriteVtkThings.h">
 			</File>
 			<File
 				RelativePath="VE_i.h">
@@ -1570,12 +1330,6 @@
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\VjObsS.h">
-			</File>
-			<File
-				RelativePath=".\vtkActorToOSG.h">
-			</File>
-			<File
-				RelativePath="vtkActorToPF.h">
 			</File>
 			<Filter
 				Name="OMNI_headers"

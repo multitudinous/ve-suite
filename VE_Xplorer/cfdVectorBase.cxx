@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdVectorBase.h"
-#include "cfdDataSet.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdVectorBase.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 
 #include <cmath>
 

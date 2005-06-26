@@ -32,49 +32,51 @@
 #ifndef CFD_PFSCENEMANAGEMENT_H
 #define CFD_PFSCENEMANAGEMENT_H
 
-class cfdDCS;
-class cfdGroup;
+namespace VE_SceneGraph{
+   class cfdDCS;
+   class cfdGroup;
+}
 
 #ifdef _PERFORMER
 class pfLightModel;
 class pfLightSource;
 #elif _OSG
 #endif
+
 #include <vpr/Util/Singleton.h>
-#include "VE_Xplorer/cfdConfig.h"
+#include "VE_SceneGraph/cfdConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdPfSceneManagement //: public vpr::Singleton< cfdPfSceneManagement >
-{
-   private:
-      // Required so that vpr::Singleton can instantiate this class.
-      //friend class vpr::Singleton< cfdPfSceneManagement >;
-      //cfdPfSceneManagement(const cfdPfSceneManagement& o) { ; }
-      //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
-      cfdPfSceneManagement( void );
-      ~cfdPfSceneManagement(){ ; } // Never gets called, don't implement
-      vprSingletonHeader( cfdPfSceneManagement );   
+namespace VE_SceneGraph{
+
+   class VE_SCENEGRAPH_EXPORTS cfdPfSceneManagement //: public vpr::Singleton< cfdPfSceneManagement >
+   {
+      public:
+         void Initialize( char * );
+         void CleanUp( void );
+         void InitScene( void );
       
-   public:
-      void Initialize( char * );
-      void CleanUp( void );
-      void InitScene( void );
+         cfdGroup* GetRootNode( void );
+         cfdDCS*   GetWorldDCS( void );
+
+      private:
+         // Required so that vpr::Singleton can instantiate this class.
+         //friend class vpr::Singleton< cfdPfSceneManagement >;
+         //cfdPfSceneManagement(const cfdPfSceneManagement& o) { ; }
+         //cfdPfSceneManagement& operator=(const cfdPfSceneManagement& o) { ; }
+         cfdPfSceneManagement( void );
+         ~cfdPfSceneManagement(){ ; } // Never gets called, don't implement
+         vprSingletonHeader( cfdPfSceneManagement );   
       
-      cfdGroup* GetRootNode( void );
-      cfdDCS*   GetWorldDCS( void );
-
-   private:
-      //std::string    param;
-      char*          _param;
-      cfdGroup*      rootNode;  
-      cfdDCS*        worldDCS;
-
-      // Performer objects
-      //pfGeoState*    gstate;
+         //std::string    param;
+         char* _param;
+         cfdGroup* rootNode;  
+         cfdDCS* worldDCS;
 #ifdef _PERFORMER
-      pfLightModel*  sunModel;
-      pfLightSource* sun;
-      pfLightSource* lit;
+         pfLightModel*  sunModel;
+         pfLightSource* sun;
+         pfLightSource* lit;
 #endif
-};
+   };
+}
 
 #endif

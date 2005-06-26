@@ -41,16 +41,17 @@
 #include <windows.h>
 #endif
 #include <fcntl.h>
+#include "VE_SceneGraph\cfdConfig.h"
+namespace VE_SceneGraph{
+   // vtkActorToPF - translates vtkActor to pfGeode. If geode is NULL, new one
+   //   will be created. Optional verbose parameter prints debugging and
+   //   performance information.
+   VE_SCENEGRAPH_EXPORTS pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode = NULL, int verbose=0);
 
-// vtkActorToPF - translates vtkActor to pfGeode. If geode is NULL, new one
-//   will be created. Optional verbose parameter prints debugging and
-//   performance information.
-pfGeode* vtkActorToPF(vtkActor *actor, pfGeode *geode = NULL, int verbose=0);
-
-// helper functions
-void vtkActorToGeoSets(vtkActor *actor, pfGeoSet *gsets[], int verbose);
-pfGeoSet *processPrimitive(vtkActor *a, vtkCellArray *prims, int pType, int v);
-void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int v);
-
+   // helper functions
+   VE_SCENEGRAPH_EXPORTS void vtkActorToGeoSets(vtkActor *actor, pfGeoSet *gsets[], int verbose);
+   VE_SCENEGRAPH_EXPORTS pfGeoSet *processPrimitive(vtkActor *a, vtkCellArray *prims, int pType, int v);
+   VE_SCENEGRAPH_EXPORTS void updateTexture(vtkActor *actor, pfGeoSet *gset, pfGeoState *gstate, int v);
+}
 #endif //_PERFORMER
 #endif //VTK_ACTOR_TO_PF_H

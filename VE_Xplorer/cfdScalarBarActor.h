@@ -35,9 +35,11 @@
 #include "cfdGlobalBase.h"
 //#include <string>
 
-class cfdDCS;
-class cfdGeode;
-class cfdGroup;
+namespace VE_SceneGraph{
+   class cfdDCS;
+   class cfdGeode;
+   class cfdGroup;
+}
 class vtkLookupTable;
 class vtkVectorText;
 class cfdCommandArray;
@@ -52,7 +54,7 @@ class cfdReadParam;
 class cfdScalarBarActor : public cfdGlobalBase
 {
 public:
-   cfdScalarBarActor( char*, cfdGroup* );
+   cfdScalarBarActor( char*, VE_SceneGraph::cfdGroup* );
    ~cfdScalarBarActor();
 
    // compare VjObs_i commandArray with its child's value
@@ -109,7 +111,7 @@ public:
   void Execute();
 
   // 
-  cfdDCS * GetcfdDCS( void);
+  VE_SceneGraph::cfdDCS * GetcfdDCS( void);
 
    private:
       float itsX[3];
@@ -122,13 +124,13 @@ public:
       double range[2];
       float dScalar;
       float titleTextScale;
-      cfdGeode* pfaPolyActor;
-      cfdGeode* pftitleActor;
-      cfdGeode* pfLabelActor[5];
+      VE_SceneGraph::cfdGeode* pfaPolyActor;
+      VE_SceneGraph::cfdGeode* pftitleActor;
+      VE_SceneGraph::cfdGeode* pfLabelActor[5];
       int numTextLabels;   // number of numerical labels on the scalar bar legend
 
-      cfdDCS*  scalarBar;
-      cfdGroup* _rootNode;
+      VE_SceneGraph::cfdDCS*  scalarBar;
+      VE_SceneGraph::cfdGroup* _rootNode;
       char* _param;
       cfdDataSet* _activeDataSet;
       float scalarBarPos[ 3 ];

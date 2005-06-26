@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdAnimatedStreamlineCone.h"
-#include "cfdDataSet.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdAnimatedStreamlineCone.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkPolyData.h>
@@ -224,7 +224,7 @@ void cfdAnimatedStreamlineCone::Update( void )
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
       temp->GetProperty()->SetColor( 1.0f, 0.5f, 0.15f );   
-      geodes.push_back( new cfdGeode() );
+      geodes.push_back( new VE_SceneGraph::cfdGeode() );
       geodes.back()->TranslateTocfdGeode( temp );
       temp->Delete();
      

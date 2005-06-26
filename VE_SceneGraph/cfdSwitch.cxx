@@ -1,4 +1,5 @@
 #include "VE_SceneGraph/cfdSwitch.h"
+#include "VE_SceneGraph/cfdNode.h"
 #include <iostream>
 #include <algorithm>
 #include <string>
@@ -6,6 +7,7 @@
 #include <Performer/pf/pfSwitch.h>
 #endif
 
+using namespace VE_SceneGraph;
 //////////////////////////////////
 //Constructors                  //
 //////////////////////////////////

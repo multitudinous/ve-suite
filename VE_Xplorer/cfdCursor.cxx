@@ -70,7 +70,8 @@
 
 using namespace gmtl; //added by Gengxun
 
-cfdCursor::cfdCursor( vtkPolyData * arrow, cfdDCS *worldDCS, cfdGroup* rootNode )
+cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::cfdDCS *worldDCS, 
+                   VE_SceneGraph::cfdGroup* rootNode )
 {
    cursorId = NONE;
    this->arrow = arrow;
@@ -127,8 +128,8 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, cfdDCS *worldDCS, cfdGroup* rootNode 
    this->arrowActorS    = vtkActor::New();
    this->arrowGlyphS    = vtkGlyph3D::New();
 
-   this->cursorGeode = new cfdGeode();
-   this->cursorDCS = new cfdDCS();
+   this->cursorGeode = new VE_SceneGraph::cfdGeode();
+   this->cursorDCS = new VE_SceneGraph::cfdDCS();
    cursorDCS->SetName( "cfdCursor" );
    float tempArray[ 3 ];
    tempArray[ 0 ] = xscale;
@@ -500,7 +501,7 @@ void cfdCursor::Update( double x[3], double v[3], double wx[3] )
 }
 
 
-cfdDCS* cfdCursor::GetcfdDCS()
+VE_SceneGraph::cfdDCS* cfdCursor::GetcfdDCS()
 {
    return this->cursorDCS;
 }
@@ -768,7 +769,7 @@ void cfdCursor::GetLocalLocationVector( void )
                           << std::endl << vprDEBUG_FLUSH;
 }
 
-void cfdCursor::SetActiveDataSetDCS( cfdDCS* myDCS )
+void cfdCursor::SetActiveDataSetDCS( VE_SceneGraph::cfdDCS* myDCS )
 {
    this->activeDataSetDCS = myDCS;
 }

@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdNavigate.h"
-#include "cfdEnum.h"
+#include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include "VE_SceneGraph/cfdDCS.h"
 
 // --- VR Juggler Stuff --- //
@@ -72,7 +72,7 @@ cfdNavigate::~cfdNavigate( )
 {
 }
 
-void cfdNavigate::Initialize( cfdDCS* worldDCS )
+void cfdNavigate::Initialize( VE_SceneGraph::cfdDCS* worldDCS )
 {
    this->worldDCS = worldDCS;
    this->cursorLen = 2.0f;

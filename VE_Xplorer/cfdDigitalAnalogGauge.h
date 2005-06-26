@@ -35,9 +35,11 @@
 #include <utility>
 #include <string>
 
-class cfdGroup;
-class cfdDCS;
-class cfdGeode;
+namespace VE_SceneGraph{
+   class cfdGroup;
+   class cfdDCS;
+   class cfdGeode;
+}
 class vtkArrowSource;
 class vtkTransform;
 class vtkMatrix4x4;
@@ -51,7 +53,7 @@ class WXPLUGIN_DECLSPEC cfdDigitalAnalogGauge
 {
    public:
 
-      cfdDigitalAnalogGauge( cfdGroup* );
+      cfdDigitalAnalogGauge( VE_SceneGraph::cfdGroup* );
       cfdDigitalAnalogGauge( const cfdDigitalAnalogGauge& g );
       ~cfdDigitalAnalogGauge( void );
 
@@ -76,7 +78,7 @@ class WXPLUGIN_DECLSPEC cfdDigitalAnalogGauge
       
       void UpdateDigitalText( double value );
 
-      cfdDCS * GetGaugeNode();
+      VE_SceneGraph::cfdDCS * GetGaugeNode();
 
    private:
    
@@ -96,16 +98,16 @@ class WXPLUGIN_DECLSPEC cfdDigitalAnalogGauge
       void DefineDigitalActor();
       void DefineBackgroundActor();
 
-      cfdGroup* masterNode;
-      cfdDCS * gaugeDCS;
+      VE_SceneGraph::cfdGroup* masterNode;
+      VE_SceneGraph::cfdDCS * gaugeDCS;
 
-      cfdGeode* circleGeode;
-      cfdGeode* movingArrowGeode;
-      cfdGeode* stationaryArrowGeode;
-      cfdGeode* labelGeode;
-      cfdGeode* text2Geode;
-      cfdGeode* digitalGeode;
-      cfdGeode* backgroundGeode;
+      VE_SceneGraph::cfdGeode* circleGeode;
+      VE_SceneGraph::cfdGeode* movingArrowGeode;
+      VE_SceneGraph::cfdGeode* stationaryArrowGeode;
+      VE_SceneGraph::cfdGeode* labelGeode;
+      VE_SceneGraph::cfdGeode* text2Geode;
+      VE_SceneGraph::cfdGeode* digitalGeode;
+      VE_SceneGraph::cfdGeode* backgroundGeode;
 
       float itsX [ 3 ];
       vtkArrowSource * movingArrow;

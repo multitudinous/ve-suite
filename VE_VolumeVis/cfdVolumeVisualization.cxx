@@ -5,17 +5,11 @@
 #elif _OPENSG
 #elif _OSG
 #include <iostream>
-#ifdef CFD_USE_SHADERS
-#include <osgNVCg/Context>
-#include <osgNVCg/Program>
-#include <osgNVCg/CgGeometry>
 
-
-#endif
-#include "cfdAdvectionSubGraph.h"
-#include "cfdTextureMatrixCallback.h"
-#include "cfdVolumeCenterCallback.h"
-#include "cfdVolumeBillboard.h"
+#include "VE_VolumeVis/cfdAdvectionSubGraph.h"
+#include "VE_VolumeVis/cfdTextureMatrixCallback.h"
+#include "VE_VolumeVis/cfdVolumeCenterCallback.h"
+//#include "VE_VolumeVis/cfdVolumeBillboard.h"
 #include <osg/TexMat>
 #include <osg/BlendFunc>
 #include <osg/ClipPlane>
@@ -631,8 +625,8 @@ void cfdVolumeVisualization::_buildSlices()
 
     geom->addPrimitiveSet(new osg::DrawArrays(osg::PrimitiveSet::QUADS,0,ycoords->size()));
     geom->setUseDisplayList(false);
-    //_billboard = new osg::Billboard;
-    _billboard = new cfdVolumeBillboard();
+    _billboard = new osg::Billboard;
+    //_billboard = new cfdVolumeBillboard();
     _billboard->setMode(osg::Billboard::POINT_ROT_WORLD);
     _billboard->addDrawable(geom);
 

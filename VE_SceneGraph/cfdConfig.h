@@ -23,56 +23,34 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdTeacher.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: cfdVEBaseClass.h,v $
+ * Date modified: $Date: 2005-05-25 23:32:59 -0500 (Wed, 25 May 2005) $
+ * Version:       $Rev: 2321 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef CFD_TEACHER_H
-#define CFD_TEACHER_H
+#ifndef VE_SCENEGRAPH_CONFIG_
+#define VE_SCENEGRAPH_CONFIG_ 1
 
-#include <vector>
-#include <string>
-class cfdWriteTraverser;
-class cfdCommandArray;
-namespace VE_SceneGraph{
-   class cfdDCS;
-   class cfdGroup;
-   class cfdNode;
-}
+#if defined(_MSC_VER)
+    #pragma warning( disable : 4244 )
+    #pragma warning( disable : 4251 )
+    #pragma warning( disable : 4267 )
+    #pragma warning( disable : 4275 )
+    #pragma warning( disable : 4290 )
+    #pragma warning( disable : 4786 )
+    #pragma warning( disable : 4305 )
+    #pragma warning( disable : 4996 )
+#endif
 
-#include "VE_Xplorer/cfdGlobalBase.h"
+#if defined(_MSC_VER) || defined(__CYGWIN__) || defined(__MINGW32__) || defined( __BCPLUSPLUS__) || defined( __MWERKS__)
+	#  ifdef VE_SCENEGRAPH_LIBRARY
+	#    define VE_SCENEGRAPH_EXPORTS   __declspec(dllexport)
+	#  else
+	#    define VE_SCENEGRAPH_EXPORTS   __declspec(dllimport)
+	#  endif /* VE_SCENEGRAPH_LIBRARY */
+#else
+	#  define VE_SCENEGRAPH_EXPORTS
+#endif
 
-//A reader that reads performer binary files
-class cfdTeacher : public cfdGlobalBase
-{
-   public:
-      cfdTeacher( std::string, VE_SceneGraph::cfdDCS* );
-
-      ~cfdTeacher( );
-
-      // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
-
-      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
-      void writePFBFile( VE_SceneGraph::cfdNode* graph,char* fileName);
-
-      VE_SceneGraph::cfdDCS* GetcfdDCS( );
-      VE_SceneGraph::cfdNode* getpfNode( int );
-      int getNumberOfFiles();
-      char * getFileName( int i );
-
-   private:
-      VE_SceneGraph::cfdDCS* DCS;
-      VE_SceneGraph::cfdDCS* _worldDCS;
-      VE_SceneGraph::cfdNode** node;  // array of nodes
-      int numFiles;
-	   std::vector<std::string> pfbFileNames;
-      std::string directory;
-      int pfb_count;
-      cfdWriteTraverser* _cfdWT;
-};
-
-#endif   // CFD_TEACHER_H
+#endif

@@ -34,12 +34,12 @@
 #ifdef _PERFORMER
 #include <Performer/pf/pfGeode.h>
 #include <Performer/pf/pfNode.h>
-#include "vtkActorToPF.h"
+#include "VE_SceneGraph/vtkActorToPF.h"
 #elif _OSG
 #include <osg/Geode>
 #include <osg/Node>
 #include <osg/CopyOp>
-#include "vtkActorToOSG.h"
+#include "VE_SceneGraph/vtkActorToOSG.h"
 #elif _OPENSG
 #endif
 
@@ -47,7 +47,7 @@
 
 #include <iostream>
 #include <vpr/Util/Debug.h>
-
+using namespace VE_SceneGraph;
 cfdGeode::cfdGeode( void )
 :cfdNode()
 {
@@ -60,6 +60,42 @@ cfdGeode::cfdGeode( void )
    _vtkDebugLevel = 0;
    SetCFDNodeType(CFD_GEODE);
 }
+#ifdef _OSG
+////////////////////////////////////////////
+cfdGeode::cfdGeode(const osg::Geode& oGeode)
+{
+   _geode = new osg::Geode(oGeode,osg::CopyOp::DEEP_COPY_ALL);
+   _vtkDebugLevel = 0;
+   SetCFDNodeType(CFD_GEODE);
+}
+///////////////////////////////////////////////////////
+cfdGeode& cfdGeode::operator=(const osg::Geode& oGeode)
+{
+   if(_geode != &oGeode){
+      if(_geode.valid()){
+         _geode = dynamic_cast<osg::Geode*>(oGeode.clone(osg::CopyOp::DEEP_COPY_ALL));
+      }
+   }
+   return *this;
+}
+#elif _PERFORMER
+///////////////////////////////////
+cfdGeode::cfdGeode(const pfGeode& oGeode)
+{
+   _geode = new pfGeode(oGeode);
+   _vtkDebugLevel = 0;
+   SetCFDNodeType(CFD_GEODE);
+}
+////////////////////////////////////////////////////
+cfdGeode& cfdGeode::operator=(const pfGeode& oGeode)
+{
+   if(_geode != &oGeode){
+      //_geode = dynamic_cast<pfGeode*>(oGeode.clone(0));
+   }
+   return *this;
+}
+#elif _OPENSG
+#endif
 ////////////////////////////////////////////
 cfdGeode::cfdGeode( const cfdGeode& input )
 :cfdNode(input)
@@ -122,9 +158,9 @@ cfdGeode::~cfdGeode( void )
 void cfdGeode::TranslateTocfdGeode( vtkActor* actor )
 {
 #ifdef _PERFORMER
-   vtkActorToPF( actor, this->_geode, _vtkDebugLevel );
+   VE_SceneGraph::vtkActorToPF( actor, this->_geode, _vtkDebugLevel );
 #elif _OSG
-   vtkActorToOSG(actor,_geode.get(),_vtkDebugLevel);
+   VE_SceneGraph::vtkActorToOSG(actor,_geode.get(),_vtkDebugLevel);
 #elif _OPENSG
 #endif
 }

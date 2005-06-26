@@ -50,8 +50,10 @@ enum cfdLoopMode
 };
 
 #include "VE_SceneGraph/cfdGroup.h"
-class cfdNode;
-class cfdSwitch;
+namespace VE_SceneGraph{
+   class cfdNode;
+   class cfdSwitch;
+}
 
 #ifdef _PERFORMER
 class pfNode;
@@ -59,126 +61,142 @@ class pfType;
 class pfSwitch;
 class pfTraverser;
 #include <Performer/pf/pfGroup.h>
-class WXPLUGIN_DECLSPEC cfdSequence : public pfGroup, public cfdGroup
-
 #elif _OSG
 #include <osg/Group>
 namespace { class Switch; }
-class WXPLUGIN_DECLSPEC cfdSequence : public osg::Group, public cfdGroup
 #endif
-{
-public:
-   cfdSequence();
-   ~cfdSequence();
 
-   cfdSequence(const cfdSequence& cfdSeq);
+namespace VE_SceneGraph{
+#ifdef _PERFORMER
+   class VE_SCENEGRAPH_EXPORTS cfdSequence : public pfGroup, public cfdGroup
+#elif _OSG
+   class VE_SCENEGRAPH_EXPORTS cfdSequence : public osg::Group, public cfdGroup
+#endif
+   {
+      public:
+         cfdSequence();
+         ~cfdSequence();
+
+         cfdSequence(const cfdSequence& cfdSeq);
 
 #ifdef _PERFORMER
-   //to make this a performer class
-   static void init(void);
+         //to make this a performer class
+         static void init(void);
 
-   static pfType* getClassType( void ){ return _classType; }
+         static pfType* getClassType( void ){ return _classType; }
 #elif _OSG
 #endif   
-   cfdSequence& operator=(const cfdSequence& rhs);
-   // set/get the duration (in seconds) of any particular frame
-   void setTime( double time );
-   double getTime(){ return _deltaT; }
+         cfdSequence& operator=(const cfdSequence& rhs);
+         // set/get the duration (in seconds) of any particular frame
+         void setTime( double time );
+         double getTime(){ return _deltaT; }
   
-   // set/get the duration (in seconds) of the entire sequence
-   void setDuration( double duration );
-   double getDuration(){ return _duration; }
+         // set/get the duration (in seconds) of the entire sequence
+         void setDuration( double duration );
+         double getDuration(){ return _duration; }
 
-   // set/get the interval
-   void setInterval( int loopmode, int begin, int end );
-   int getBegin(){ return _begin; }
-   int getEnd(){ return _end; }
+         // set/get the interval
+         void setInterval( int loopmode, int begin, int end );
+         int getBegin(){ return _begin; }
+         int getEnd(){ return _end; }
 
-   // set/get the loop mode of the sequence
-   void setLoopMode( int lMode );
-   int getLoopMode(){ return _lMode; }
+         // set/get the loop mode of the sequence
+         void setLoopMode( int lMode );
+         int getLoopMode(){ return _lMode; }
 
-   // set/get the stop/start/pause/resume 
-   void setPlayMode( int pMode );
-   int getPlayMode(){ return _pMode; }
+         // set/get the stop/start/pause/resume 
+         void setPlayMode( int pMode );
+         int getPlayMode(){ return _pMode; }
 
-   // set/get the current frame
-   void setCurrentFrame( int frameIndex );
-   int getCurrentFrame(){ return _currentFrame; }
+         // set/get the current frame
+         void setCurrentFrame( int frameIndex );
+         int getCurrentFrame(){ return _currentFrame; }
 
-   // step the sequence one frame in a particular direction
-   void stepSequence();
+         // step the sequence one frame in a particular direction
+         void stepSequence();
 
-   //get the direction of the sequence
-   int getDirection(){ return _dir; }
+         //get the direction of the sequence
+         int getDirection(){ return _dir; }
 
-   //change the direction of the frame viewing
-   //if it is currently foward(low->high index)
-   //change to reverse(high->low index) and vice versa
-   void changeSequenceDirection();
+         //change the direction of the frame viewing
+         //if it is currently foward(low->high index)
+         //change to reverse(high->low index) and vice versa
+         void changeSequenceDirection();
 
-   //get the next frame index
-   int getNextFrame();
+         //set the direction explicitly
+         //1 == positive direction
+         //-1 == negative direction
+         void setDirection(int posNeg){_dir = posNeg;}
 
-   //get number of children
-   virtual int GetNumChildren();
+         //get the next frame index
+         int getNextFrame();
 
-   //add a child node
-   virtual int AddChild( cfdNode* child );
+         //get number of children
+         virtual int GetNumChildren();
 
-   //get the index of a child
-   virtual int SearchChild( cfdNode* child );
+         //add a child node
+         virtual int AddChild( cfdNode* child );
 
-   //get the specified child node  
-   virtual cfdNode* GetChild( int index );
+         //get the index of a child
+         virtual int SearchChild( cfdNode* child );
 
-   //remove child 
-   virtual int RemoveChild( cfdNode* child );
+         //get the specified child node  
+         virtual cfdNode* GetChild( int index );
+
+         //remove child 
+         virtual int RemoveChild( cfdNode* child );
+
+         double getAppFrameRate(){return _appFrame;}
+         void setAppFrameRate(double afr){_appFrame = afr;}
+
+         void setStep(int stepMode){_step = stepMode;}
+         int getStep();
 #ifdef _PERFORMER
-    //the node pre-traverser callback
-   friend int switchFrame(pfTraverser* trav, void* userData);
+         //the node pre-traverser callback
+         friend int switchFrame(pfTraverser* trav, void* userData);
 #elif _OSG
-   //callbacks are defined as classes in OSG!!!
-   class cfdSequenceCallback : public osg::NodeCallback{
-      public:
-         cfdSequenceCallback(cfdSequence* seq);
-         virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
+         //callbacks are defined as classes in OSG!!!
+         class cfdSequenceCallback : public osg::NodeCallback{
+            public:
+              cfdSequenceCallback(cfdSequence* seq);
+               virtual void operator()(osg::Node* node, osg::NodeVisitor* nv);
         
-      protected:
-         virtual ~cfdSequenceCallback(){}
-         cfdSequence* _sequence;
-         double _prevTime;
-         int _prevFrame;
-   
-   };
+           protected:
+               virtual ~cfdSequenceCallback(){}
+               cfdSequence* _sequence;
+               double _prevTime;
+               int _prevFrame;
+         };
 
 #endif
 #ifdef _PERFORMER
-   pfNode* GetRawNode( void );
+        pfNode* GetRawNode( void );
+        cfdSwitch* GetSwitch(){return _lSwitch;}
 #elif _OSG
-   osg::Node* GetRawNode( void );
+         osg::Node* GetRawNode( void );
 #elif _OPENSG
 #endif
 protected:
-   cfdSwitch* _lSwitch;
-   int _appFrame;
-   int _lMode;
-   int _pMode;
-   int _step;
-   int _changedDirection;
+         cfdSwitch* _lSwitch;
+         int _appFrame;
+         int _lMode;
+         int _pMode;
+         int _step;
+         int _changedDirection;
 
-   double _deltaT;
-   double _duration;
+         double _deltaT;
+         double _duration;
 
-   int _begin;
-   int _end;
+         int _begin;
+         int _end;
    
-   int _currentFrame;
-   int _dir;   //forward(1)/backward(-1)
+         int _currentFrame;
+         int _dir;   //forward(1)/backward(-1)
 #ifdef _PERFORMER
-   static pfType* _classType;
+         static pfType* _classType;
 #elif _OSG
 #endif
-};
+   };
+}
 
 #endif //_VRAC_CFD_SEQUENCE_H_

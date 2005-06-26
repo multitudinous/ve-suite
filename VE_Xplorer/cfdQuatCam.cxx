@@ -30,10 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdQuatCam.h"
+#include "VE_Xplorer/cfdQuatCam.h"
+#include "VE_Xplorer/cfdNavigate.h"
 #include "VE_SceneGraph/cfdDCS.h"
-#include "cfdNavigate.h"
-
 using namespace gmtl;
 
 cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans, float* rotPts)
@@ -55,7 +54,7 @@ cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans, float* rotPts)
 }*/
 
 
-void cfdQuatCam::SetCamPos(double* worldTrans, cfdDCS* worldDCS)
+void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::cfdDCS* worldDCS)
 {
    for (int i=0; i<3; i++)
       vjVecLastTrans[i] = worldTrans[i];
@@ -66,7 +65,7 @@ void cfdQuatCam::SetCamPos(double* worldTrans, cfdDCS* worldDCS)
 }
 
 
-void cfdQuatCam::MoveCam(double* worldTrans, float t, cfdDCS* dummy)
+void cfdQuatCam::MoveCam(double* worldTrans, float t, VE_SceneGraph::cfdDCS* dummy)
 {
    TransLerp(t);
    RotSlerp(t);

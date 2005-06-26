@@ -37,7 +37,9 @@
 #include <gadget/Type/PositionInterface.h>
 #include <gadget/Type/DigitalInterface.h>
 
-class cfdDCS;
+namespace VE_SceneGraph{
+   class cfdDCS;
+}
 //! Navigation tracker
 /*!
   A class to track the wand location, object translation,
@@ -63,7 +65,7 @@ class WXPLUGIN_DECLSPEC cfdNavigate
       /*!
       Initialization of navigation objects: VR Juggler, wand, cursor, data set
       */
-      void Initialize( cfdDCS* );
+      void Initialize( VE_SceneGraph::cfdDCS* );
       void SetDataValues( int, int );
       void updateNavigationFromGUI( void );
       //! Wand object
@@ -146,7 +148,7 @@ class WXPLUGIN_DECLSPEC cfdNavigate
       int cfdIso_value;
       double worldTrans[ 3 ];
       float worldRot[ 3 ];
-      cfdDCS* worldDCS;
+      VE_SceneGraph::cfdDCS* worldDCS;
    
    private:
       //! VR Juggler

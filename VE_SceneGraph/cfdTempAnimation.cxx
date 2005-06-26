@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_SceneGraph/cfdTempAnimation.h"
 #include "VE_SceneGraph/cfdSequence.h"
-#include "cfdEnum.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdGeode.h"
 #include "VE_SceneGraph/cfdDCS.h"
@@ -42,7 +42,7 @@
 #include <vpr/Util/Debug.h>
 
 #include <vtkActor.h>
-
+using namespace VE_SceneGraph;
 cfdTempAnimation::cfdTempAnimation()
 {
    this->_sequence = new cfdSequence();

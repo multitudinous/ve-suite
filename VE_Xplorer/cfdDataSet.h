@@ -42,10 +42,12 @@ class vtkUnstructuredGrid;
 class vtkUnstructuredGridReader;
 class vtkDataSet;
 class cfdPlanes;
-class cfdDCS;
-class cfdGroup;
-class cfdSwitch;
-class cfdTempAnimation;
+namespace VE_SceneGraph{
+   class cfdDCS;
+   class cfdGroup;
+   class cfdSwitch;
+   class cfdTempAnimation;
+}
 class cfdVTKFileHandler;
 
 //! CFD data set loader and handler.
@@ -189,13 +191,13 @@ class WXPLUGIN_DECLSPEC cfdDataSet
   double * GetVectorMagRange();
 
       // get/set this dataset's DCS
-      cfdDCS * GetDCS();
-      void SetDCS( cfdDCS * );
+      VE_SceneGraph::cfdDCS * GetDCS();
+      void SetDCS( VE_SceneGraph::cfdDCS * );
 
-      cfdSwitch* GetSwitchNode( void );
+      VE_SceneGraph::cfdSwitch* GetSwitchNode( void );
 
-      cfdTempAnimation* GetAnimation( void );
-      void SetAnimation( cfdTempAnimation* );
+      VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
+      void SetAnimation( VE_SceneGraph::cfdTempAnimation* );
 
       int IsPartOfTransientSeries();
       void SetAsPartOfTransientSeries();
@@ -253,11 +255,11 @@ class WXPLUGIN_DECLSPEC cfdDataSet
       char** scalarName;
       char** vectorName;
 
-      cfdDCS* dcs;
-      cfdTempAnimation* animation;
-      cfdSwitch* switchNode;
-      cfdGroup* classic;
-      cfdGroup* textureBased; 
+      VE_SceneGraph::cfdDCS* dcs;
+      VE_SceneGraph::cfdTempAnimation* animation;
+      VE_SceneGraph::cfdSwitch* switchNode;
+      VE_SceneGraph::cfdGroup* classic;
+      VE_SceneGraph::cfdGroup* textureBased; 
 
       cfdVTKFileHandler* _vtkFHndlr;
       int partOfTransientSeries;
