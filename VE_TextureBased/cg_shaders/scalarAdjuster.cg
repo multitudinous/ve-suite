@@ -1,0 +1,21 @@
+struct f2app{
+   float4 color : COLOR;
+};
+
+//simple shader to look up texture value in a 3d texture
+f2app scalarAdjustment(float4 color : COLOR,
+                 float3 texCoord:TEXCOORD0,
+                 uniform sampler3D volumeData:TEXUNIT0, 
+                 uniform sampler1D transferFunction:TEXUNIT1 )
+{
+   f2app retColor;
+   //dependent texture look up in transfer function
+   float scalar = tex3D(volumeData,texCoord).a;
+   retColor.color = tex1D(transferFunction,scalar);
+
+   retColor.color.a *= .2;
+   //retColor.color.a *= color.a;
+   return retColor;
+}
+
+
