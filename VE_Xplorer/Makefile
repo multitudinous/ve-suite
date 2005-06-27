@@ -108,8 +108,8 @@ SRCS=\
    cfdEnvironmentHandler.cxx \
    cfdExecutive.cxx \
    cfdExecutiveConfiguration.cxx \
-   cfdOSGShaderManager.cxx \
    cfdOSGTransferShaderManager.cxx \
+   cfdOSGShaderManager.cxx \
    cfdPBufferQuad.cxx \
    cfdQuatCamHandler.cxx \
    cfdQuatCam.cxx \
@@ -149,9 +149,8 @@ ifeq ($(WEB_BUILD), TRUE)
 endif
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
-EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_VolumeVis
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_SceneGraph
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_VolumeVis
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 
 include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk

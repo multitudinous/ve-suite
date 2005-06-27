@@ -33,7 +33,7 @@
 #include "VE_TextureBased/cfdOSGAdvectionShaderManager.h"
 
 vprSingletonImp( cfdTextureBasedVizHandler );
-
+using namespace VE_TextureBased;
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////

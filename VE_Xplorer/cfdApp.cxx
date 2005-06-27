@@ -99,6 +99,7 @@
 #include <vpr/System.h>
 #endif   //_WEB_INTERFACE
 
+using namespace VE_TextureBased;
 cfdApp::cfdApp( void ) 
 #ifdef _OSG
 : vrj::OsgApp( vrj::Kernel::instance() )
