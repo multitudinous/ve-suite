@@ -50,13 +50,14 @@ class cfdScalarBarActor;
 namespace VE_TextureBased{
    class cfdTextureDataSet;
 }
+using namespace VE_TextureBased;
 #endif
 #endif
 class vtkPolyData;
 
 #include <vector>
 #include "VE_Xplorer/cfdConfig.h"
-using namespace VE_TextureBased;
+
 class WXPLUGIN_DECLSPEC cfdModelHandler //: public vpr::Singleton< cfdModelHandler >
 {
    private:

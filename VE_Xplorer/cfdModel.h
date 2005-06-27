@@ -73,6 +73,7 @@ class cfdFILE;
 namespace VE_TextureBased{
    class cfdTextureDataSet;
 }
+using namespace VE_TextureBased;
 #endif
 
 class vtkDataSet;
@@ -97,7 +98,7 @@ enum Operation2Model
 };
 
 #include "VE_Xplorer/cfdConfig.h"
-using namespace VE_TextureBased;
+
 class WXPLUGIN_DECLSPEC cfdModel
 {
 public:
