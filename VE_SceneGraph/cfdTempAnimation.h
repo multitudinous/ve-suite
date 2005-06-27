@@ -40,7 +40,7 @@ namespace VE_SceneGraph{
 class vtkActor;
 
 #include <vector>
-#include "VE_SceneGraph/cfdConfig.h"
+#include "VE_Installer/VEConfig.h"
 
 namespace VE_SceneGraph{
    class VE_SCENEGRAPH_EXPORTS cfdTempAnimation

@@ -52,7 +52,7 @@ namespace osg
 #endif
 
 #include <vpr/Util/GUID.h>
-#include "VE_SceneGraph/cfdConfig.h"
+#include "VE_Installer/VEConfig.h"
 namespace VE_SceneGraph{
    class cfdNode;
    class cfdSequence;

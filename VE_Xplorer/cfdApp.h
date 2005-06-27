@@ -61,8 +61,11 @@ namespace osgUtil { class SceneView; }
 #include <vpr/Thread/Thread.h>
 #endif
 #ifdef VE_PATENTED
-class cfdPBufferManager;
+namespace VE_TextureBased{
+   class cfdPBufferManager;
+}
 class cfdTextureBasedVizHandler;
+using namespace VE_TextureBased;
 #endif
 class cfdApp: public vrj::OsgApp
 #elif _OPENSG

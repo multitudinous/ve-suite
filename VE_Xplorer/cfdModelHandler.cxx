@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdModelHandler.h"
+#include "VE_Xplorer/cfdModelHandler.h"
 
 #include <vrj/Util/Debug.h>
 
@@ -56,8 +56,8 @@
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "VE_VolumeVis/cfdTextureDataSet.h"
-#include "VE_VolumeVis/cfdTextureManager.h"
+#include "VE_TextureBased/cfdTextureDataSet.h"
+#include "VE_TextureBased/cfdTextureManager.h"
 #endif
 #endif
 #include <fstream>

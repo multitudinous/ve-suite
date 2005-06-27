@@ -37,7 +37,7 @@
 #include "cfdApp.h"
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "VE_VolumeVis/cfdTextureBasedVizHandler.h"
+#include "VE_TextureBased/cfdTextureBasedVizHandler.h"
 #endif
 #endif
 
@@ -83,7 +83,7 @@
 #ifdef _OSG
 #ifdef VE_PATENTED
 //#ifdef CFD_USE_SHADERS
-#include "VE_VolumeVis/cfdPBufferManager.h"
+#include "VE_TextureBased/cfdPBufferManager.h"
 //#endif
 #endif
 #endif

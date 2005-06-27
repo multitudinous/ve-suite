@@ -45,8 +45,8 @@
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-#include "VE_VolumeVis/cfdTextureBasedVizHandler.h"
-#include "VE_VolumeVis/cfdVolumeVisualization.h"
+#include "VE_TextureBased/cfdTextureBasedVizHandler.h"
+#include "VE_TextureBased/cfdVolumeVisualization.h"
 #endif
 #endif
 

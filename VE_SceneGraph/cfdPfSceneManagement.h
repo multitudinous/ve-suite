@@ -44,7 +44,7 @@ class pfLightSource;
 #endif
 
 #include <vpr/Util/Singleton.h>
-#include "VE_SceneGraph/cfdConfig.h"
+#include "VE_Installer/VEConfig.h"
 
 namespace VE_SceneGraph{
 
