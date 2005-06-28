@@ -84,6 +84,7 @@
 #ifdef VE_PATENTED
 //#ifdef CFD_USE_SHADERS
 #include "VE_TextureBased/cfdPBufferManager.h"
+using namespace VE_TextureBased;
 //#endif
 #endif
 #endif
@@ -99,7 +100,7 @@
 #include <vpr/System.h>
 #endif   //_WEB_INTERFACE
 
-using namespace VE_TextureBased;
+
 cfdApp::cfdApp( void ) 
 #ifdef _OSG
 : vrj::OsgApp( vrj::Kernel::instance() )
