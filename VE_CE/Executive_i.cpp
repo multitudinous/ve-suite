@@ -310,9 +310,7 @@ void Body_Executive_i::SetModuleMessage (
     CORBA::SystemException
     , Error::EUnknown
   ))
-{
-   _mutex.acquire();
-  
+{  
    cout << "SetModuleMessage " << msg << endl;
 
    std::map<std::string, Body::UI_var>::iterator iter;
@@ -325,8 +323,10 @@ void Body_Executive_i::SetModuleMessage (
 	   }
       catch (CORBA::Exception &) 
       {
-		   cout <<iter->first<<" is obsolete.\n";
-		   uis_.erase(iter);
+         _mutex.acquire();
+		   cout << iter->first <<" is obsolete.\n";
+		   uis_.erase( iter );
+         _mutex.release();
 	   }
    }
 
@@ -349,7 +349,6 @@ void Body_Executive_i::SetModuleMessage (
   //    cerr << "Unable to set mdo id# " << module_id
   //	   << "'s Message data\n";
 */
-  _mutex.release();
 }
   
 void Body_Executive_i::SetModuleResult (
