@@ -53,7 +53,7 @@ namespace VE_TextureBased{
          bool _reinit;
          bool _useTM;
          cfdTextureManager* _tm;
-         cfdUpdateTextureCallback* _utCbk;
+         osg::ref_ptr<cfdUpdateTextureCallback> _utCbk;
    };
 }
 #endif//_OSG

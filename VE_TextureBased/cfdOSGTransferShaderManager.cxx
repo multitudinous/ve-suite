@@ -26,7 +26,7 @@ cfdOSGTransferShaderManager::cfdOSGTransferShaderManager()
    _fieldSize[1] = 0;
    _fieldSize[2] = 0;
    _tm = 0;
-   _utCbk = 0;
+   //_utCbk = 0;
 }
 //////////////////////////////////////////////////////////////
 cfdOSGTransferShaderManager::cfdOSGTransferShaderManager(const
@@ -53,10 +53,10 @@ cfdOSGTransferShaderManager::~cfdOSGTransferShaderManager()
    if(_transferFunctions.size()){
       _transferFunctions.clear();
    }
-   if(_utCbk){
+   /*if(_utCbk){
       delete _utCbk;
       _utCbk = 0;
-   }
+   }*/
 }
 ////////////////////////////////////////////////////////////////////////
 void cfdOSGTransferShaderManager::InitTextureManager(cfdTextureManager* tm)
@@ -68,7 +68,7 @@ void cfdOSGTransferShaderManager::InitTextureManager(cfdTextureManager* tm)
 void cfdOSGTransferShaderManager::UpdateTextureManager(cfdTextureManager* tm)
 {
    _tm = tm;
-   if(_utCbk){
+   if(_utCbk.valid()){
       _utCbk->SetTextureManager(_tm);
    }
    _reinit = false;

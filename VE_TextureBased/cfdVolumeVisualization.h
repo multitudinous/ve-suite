@@ -83,7 +83,7 @@ namespace VE_TextureBased{
 
       bool isCreated(){return _isCreated;}
       unsigned int GetCurrentTransientTexture();
-      cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk;}
+      cfdUpdateTextureCallback* GetUpdateCallback(){return _utCbk.get();}
       osg::Vec3f GetBBoxCenter(){return _center;}
       float* GetTextureScale(){return _scale;}
       osg::ref_ptr<osg::StateSet> GetStateSet();
@@ -134,7 +134,7 @@ namespace VE_TextureBased{
       osg::ref_ptr<osg::Texture3D> _texture;
       osg::ref_ptr<osg::Image> _image;
       osg::ref_ptr<osg::State> _state;
-      cfdUpdateTextureCallback* _utCbk;
+      osg::ref_ptr<cfdUpdateTextureCallback> _utCbk;
       osg::ref_ptr<cfdVolumeCenterCallback> _vcCbk;
 #endif
    };

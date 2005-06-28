@@ -45,8 +45,8 @@ namespace VE_TextureBased{
          cfdOSGAdvectionShaderManager* _aSM;
          cfdOSGTransferShaderManager* _transferSM;
    
-         cfd3DTextureCullCallback* _cullCallback;
-         cfdUpdateTextureCallback* _velocityCbk;
+         osg::ref_ptr<cfd3DTextureCullCallback> _cullCallback;
+         osg::ref_ptr<cfdUpdateTextureCallback> _velocityCbk;
          cfdPBufferManager* _pbuffer;
          cfdOSGPingPongTexture3D* _texturePingPong;
 

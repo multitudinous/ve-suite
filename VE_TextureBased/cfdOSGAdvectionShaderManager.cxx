@@ -33,7 +33,7 @@ cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager()
    _periodCallback = 0;
    _dyeScaleCallback =0 ;
    _dyeTransCallback = 0;
-   _noiseCbk = 0;
+   //_noiseCbk = 0;
    
    _weightWCallback = 0;
    _weightVCallback = 0;
@@ -101,7 +101,7 @@ cfdOSGAdvectionShaderManager::cfdOSGAdvectionShaderManager(const
 /////////////////////////////////////////////////////////////
 cfdOSGAdvectionShaderManager::~cfdOSGAdvectionShaderManager()
 {
-   if(_noiseCbk){
+   /*if(_noiseCbk){
       delete _noiseCbk;
       _noiseCbk = 0;
    }
@@ -141,7 +141,7 @@ cfdOSGAdvectionShaderManager::~cfdOSGAdvectionShaderManager()
        delete _weightWCallback;
        _weightWCallback = 0;
     }
-   /*if(_dyeMatCallback){
+   if(_dyeMatCallback){
       delete _dyeMatCallback;
       _dyeMatCallback = 0;
    }*/
@@ -247,14 +247,14 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(wW.get());
    _ss->addUniform(wV.get());
 
-   dyeTrans->setUpdateCallback(_dyeTransCallback);
-   dyeScale->setUpdateCallback(_dyeScaleCallback);
-   tCoordMult->setUpdateCallback(_noiseScaleCallback);
-   t->setUpdateCallback(_timeCallback);
-   dT->setUpdateCallback(_deltaCallback);
-   wV->setUpdateCallback(_weightVCallback);
-   wW->setUpdateCallback(_weightWCallback);
-   period->setUpdateCallback(_periodCallback);
+   dyeTrans->setUpdateCallback(_dyeTransCallback.get());
+   dyeScale->setUpdateCallback(_dyeScaleCallback.get());
+   tCoordMult->setUpdateCallback(_noiseScaleCallback.get());
+   t->setUpdateCallback(_timeCallback.get());
+   dT->setUpdateCallback(_deltaCallback.get());
+   wV->setUpdateCallback(_weightVCallback.get());
+   wW->setUpdateCallback(_weightWCallback.get());
+   period->setUpdateCallback(_periodCallback.get());
 
 
    _ss->addUniform(new osg::Uniform("noiseTexture",0));
@@ -267,7 +267,7 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
 /////////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initFragProgramCallbacks()
 {
-   if(_noiseScaleCallback)
+   if(_noiseScaleCallback.valid())
       return;
    _noiseScaleCallback = new cfdUpdateParameterCallback();
    _deltaCallback = new cfdUpdateParameterCallback();
@@ -379,7 +379,7 @@ void cfdOSGAdvectionShaderManager::UpdateTime(GLfloat time)
 void cfdOSGAdvectionShaderManager::UpdateNoiseFunction(float param,
                                         NoiseParam whichFunction)
 {
-   if(_noiseCbk){
+   if(_noiseCbk.valid()){
       switch (whichFunction){
           case TAO_H:
              _noiseCbk->UpdateTaoH(param);
@@ -541,7 +541,7 @@ void cfdOSGAdvectionShaderManager::_initDyeTexture()
 //////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initNoiseTexture()
 {
-   if(_noiseCbk)
+   if(_noiseCbk.valid())
       return;
    GLuint hI[256];
    GLuint ga[256];
@@ -634,7 +634,7 @@ void cfdOSGAdvectionShaderManager::_initNoiseTexture()
    _noiseTexture->setTextureSize(32,32,32);
   
    _noiseCbk = new cfdUpdateableOSGNoiseTexture3d();
-   _noiseTexture->setSubloadCallback(_noiseCbk);
+   _noiseTexture->setSubloadCallback(_noiseCbk.get());
 }
 /////////////////////////////////////////////////////////
 void cfdOSGAdvectionShaderManager::_initWeightFunctions()
@@ -777,17 +777,17 @@ cfdOSGAdvectionShaderManager& cfdOSGAdvectionShaderManager::operator=(const
       _lookUpFunction = sm._lookUpFunction;
       _reinit = sm._reinit;
       _dye = sm._dye;
-      if(_noiseCbk){
+      /*if(_noiseCbk){
          delete _noiseCbk;
 	       _noiseCbk = 0;
-      }
-      _noiseCbk = new cfdUpdateableOSGNoiseTexture3d(*sm._noiseCbk);
+      }*/
+      _noiseCbk = sm._noiseCbk;
       
       _fieldSize[0] = sm._fieldSize[0];
       _fieldSize[1] = sm._fieldSize[1];
       _fieldSize[2] = sm._fieldSize[2];
 
-      if(_noiseScaleCallback){
+      /*if(_noiseScaleCallback){
          delete _noiseScaleCallback;
          _noiseScaleCallback = 0;
       }
@@ -810,13 +810,13 @@ cfdOSGAdvectionShaderManager& cfdOSGAdvectionShaderManager::operator=(const
       if(_dyeScaleCallback){
          delete _dyeScaleCallback;
          _dyeScaleCallback = 0;
-      }
-      _noiseScaleCallback = new cfdUpdateParameterCallback(*sm._noiseScaleCallback);
-      _deltaCallback = new cfdUpdateParameterCallback(*sm._deltaCallback);
-      _timeCallback = new cfdUpdateParameterCallback(*sm._timeCallback);
-      _periodCallback = new cfdUpdateParameterCallback(*sm._periodCallback);
-      _dyeScaleCallback = new cfdUpdateParameterCallback(*sm._dyeScaleCallback);
-      _dyeTransCallback = new cfdUpdateParameterCallback(*sm._dyeTransCallback);
+      }*/
+      _noiseScaleCallback = sm._noiseScaleCallback;
+      _deltaCallback = sm._deltaCallback;
+      _timeCallback = sm._timeCallback;
+      _periodCallback = sm._periodCallback;
+      _dyeScaleCallback = sm._dyeScaleCallback;
+      _dyeTransCallback = sm._dyeTransCallback;
       
       _weightV[0] = sm._weightV[0];
       _weightV[1] = sm._weightV[1];

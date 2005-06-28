@@ -269,7 +269,7 @@ void cfdScalarShaderManager::UpdateTextureManager(cfdTextureManager* tm)
 {
    if(_tm != tm){
       _tm = tm;
-      if(_utCbk){
+      if(_utCbk.valid()){
          _utCbk->SetIsLuminance(true);
          _utCbk->SetTextureManager(_tm);
          SetScalarRange(_tm->dataRange(_tm->GetCurrentFrame()).range);
@@ -312,7 +312,7 @@ void cfdScalarShaderManager::_initPropertyTexture()
       _property->setWrap(osg::Texture3D::WRAP_T,osg::Texture3D::CLAMP);
       _property->setInternalFormat(GL_ALPHA);
       _property->setImage(propertyField.get());
-      _property->setSubloadCallback(_utCbk);
+      _property->setSubloadCallback(_utCbk.get());
    } 
 }
 #endif//_OSG

@@ -95,10 +95,10 @@ cfdVolumeVisualization::cfdVolumeVisualization(const cfdVolumeVisualization& rhs
 cfdVolumeVisualization::~cfdVolumeVisualization()
 {
    //not sure if I should call release here or not
-   if(_utCbk){
+   /*if(_utCbk){
       delete _utCbk;
       _utCbk = 0;
-   }
+   }*/
 
    if ( _shaderDirectory )
    {
@@ -130,7 +130,7 @@ void cfdVolumeVisualization::SetShaderDirectory(char* shadDir)
 /////////////////////////////////////////////////////////////////
 unsigned int cfdVolumeVisualization::GetCurrentTransientTexture()
 {
-   if(_utCbk){
+   if(_utCbk.valid()){
       return _utCbk->GetCurrentFrame();
    }
    return 0;
@@ -138,7 +138,7 @@ unsigned int cfdVolumeVisualization::GetCurrentTransientTexture()
 ////////////////////////////////////////////////////////////////////////
 void cfdVolumeVisualization::SetCurrentTransientTexture(unsigned int ct)
 {
-   if(_utCbk){
+   if(_utCbk.valid()){
      _utCbk->SetCurrentFrame(ct);
    }
 }
@@ -287,7 +287,7 @@ void cfdVolumeVisualization::SetTextureManager(cfdTextureManager* tm)
       _texture->setImage(_image.get());
    }
    SetBoundingBox(_tm->getBoundingBox());
-   if(_utCbk){
+   if(_utCbk.valid()){
       _utCbk->SetTextureManager(_tm);
    }
 }
@@ -534,7 +534,7 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
    if(ss){
       if(_texture.valid()){
 
-         if(!_utCbk){
+         if(!_utCbk.valid()){
             _utCbk =  new cfdUpdateTextureCallback();
             _utCbk->SetIsLuminance(true);
             //_utCbk->SetIsLuminance(false);
@@ -543,7 +543,7 @@ void cfdVolumeVisualization::_attachTextureToStateSet(osg::StateSet* ss)
          
             int* res = _tm->fieldResolution();
             _utCbk->setSubloadTextureSize(res[0],res[1],res[2]);
-            _texture->setSubloadCallback(_utCbk);
+            _texture->setSubloadCallback(_utCbk.get());
          }
 
          ss->setTextureAttributeAndModes(0,_texture.get(),

@@ -26,9 +26,9 @@ cfdVectorVolumeVisHandler::cfdVectorVolumeVisHandler()
 :cfdVolumeVisNodeHandler()
 {
    _aSM = 0;
-   _velocityCbk = 0;
+   //_velocityCbk = 0;
    _pbuffer = 0;
-   _cullCallback = 0;
+   //_cullCallback = 0;
    _texturePingPong = 0;
    _transferSM = 0;
    _autoTexGen = false;
@@ -66,14 +66,14 @@ cfdVectorVolumeVisHandler::~cfdVectorVolumeVisHandler()
       delete _transferSM;
       _transferSM = 0;
    }
-   if(_velocityCbk){
+   /*if(_velocityCbk){
       delete _velocityCbk;
       _velocityCbk = 0;
-   }
-   if(_cullCallback){
+   }*/
+   /*if(_cullCallback){
       delete _cullCallback;
       _cullCallback = 0;
-   }
+   }*/
    if(_texturePingPong){
       delete _texturePingPong;
       _texturePingPong = 0;
@@ -141,7 +141,7 @@ void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
       _velocityCbk->SetIsLuminance(false);
       int* res = _tm->fieldResolution();
       _velocityCbk->setSubloadTextureSize(res[0],res[1],res[2]);
-      _velocity->setSubloadCallback(_velocityCbk);
+      _velocity->setSubloadCallback(_velocityCbk.get());
    }
    _velocityCbk->SetTextureManager(_tm);
    _velocityCbk->SetDelayTime(0.1);
@@ -193,12 +193,12 @@ void cfdVectorVolumeVisHandler::_setUpDecorator()
       shaderGroup->setStateSet(_aSM->GetShaderStateSet());
       _advectionSlice->addChild(shaderGroup.get());
    }
-   if(!_cullCallback && _pbuffer ){
+   if(!_cullCallback.valid() && _pbuffer ){
       _cullCallback = new cfd3DTextureCullCallback(_advectionSlice.get(),
                                               _tm->fieldResolution()[0],
                                               _tm->fieldResolution()[1]);
       _cullCallback->SetPBuffer(_pbuffer);
-      _propertyTextureGroup->setCullCallback(_cullCallback);
+      _propertyTextureGroup->setCullCallback(_cullCallback.get());
    }
    _setupAdvectionPropertyStateSet();
    _setupTransferPropertyStateSet();
@@ -271,7 +271,7 @@ void cfdVectorVolumeVisHandler::SetPBufferManager(cfdPBufferManager* pbm)
 ////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createTexturePingPong()
 {
-   if(_cullCallback)
+   if(_cullCallback.valid())
    {
       unsigned int current = _transferSM->GetAutoGenTextureUnit();
       unsigned int previous = _aSM->GetAutoGenTextureUnit();
@@ -282,7 +282,7 @@ void cfdVectorVolumeVisHandler::_createTexturePingPong()
 //////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::PingPongTextures()
 {
-   if(_cullCallback){
+   if(_cullCallback.valid()){
       _cullCallback->GetPingPonger()->PingPongTextures();
    }
 }

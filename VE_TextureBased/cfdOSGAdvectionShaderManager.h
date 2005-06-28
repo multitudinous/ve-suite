@@ -61,17 +61,17 @@ namespace VE_TextureBased{
 
          bool _isFrag;
    
-         cfdUpdateParameterCallback* _noiseScaleCallback;
-         cfdUpdateParameterCallback* _deltaCallback;
-         cfdUpdateParameterCallback* _timeCallback;
-         cfdUpdateParameterCallback* _periodCallback;
-         cfdUpdateParameterCallback* _dyeScaleCallback;
-         cfdUpdateParameterCallback* _dyeTransCallback;
-         cfdUpdateParameterCallback* _minBoundsCallback;
-         cfdUpdateParameterCallback* _maxBoundsCallback;
-         cfdUpdateParameterCallback* _dyeCoordCallback;
-         cfdUpdateParameterCallback* _weightWCallback;
-         cfdUpdateParameterCallback* _weightVCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _noiseScaleCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _deltaCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _timeCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _periodCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _dyeScaleCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _dyeTransCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _minBoundsCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _maxBoundsCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _dyeCoordCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _weightWCallback;
+         osg::ref_ptr<cfdUpdateParameterCallback> _weightVCallback;
 
          osg::ref_ptr<osg::Texture3D> _velocity;
          osg::ref_ptr<osg::Texture3D> _propertyToAdvect;
@@ -80,7 +80,7 @@ namespace VE_TextureBased{
          osg::ref_ptr<osg::Texture3D> _dye;
          osg::ref_ptr<osg::Texture3D> _noiseTexture;
          osg::ref_ptr<osg::Texture1D> _lookUpFunction;
-         cfdUpdateableOSGNoiseTexture3d* _noiseCbk;
+         osg::ref_ptr<cfdUpdateableOSGNoiseTexture3d> _noiseCbk;
          bool _reinit;
          osg::Vec3 _center;
    };
