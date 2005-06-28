@@ -129,7 +129,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkPatented.lib vtkRendering.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkPatented.lib vtkRendering.lib"
 				OutputFile="$(OutDir)/VE_SceneGraph_osgd.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
@@ -143,7 +143,8 @@
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="copy .\osg_dbg\VE_SceneGraph_osgd.dll %VE_SUITE_HOME%\bin\win32
-copy .\osg_dbg\VE_SceneGraph_osgd.lib %VE_SUITE_HOME%\lib\win32 "/>
+copy .\osg_dbg\VE_SceneGraph_osgd.lib %VE_SUITE_HOME%\lib\win32
+"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -183,7 +184,7 @@ copy .\osg_dbg\VE_SceneGraph_osgd.lib %VE_SUITE_HOME%\lib\win32 "/>
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libpf.lib  libpfdu-util.lib vpr_d.lib vrj_d.lib vrj_pf_d.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkPatented.lib vtkRendering.lib"
+				AdditionalDependencies="libpf.lib libpfdu-util.lib vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkPatented.lib vtkRendering.lib"
 				OutputFile="$(OutDir)/VE_SceneGraph_pfd.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
@@ -197,7 +198,8 @@ copy .\osg_dbg\VE_SceneGraph_osgd.lib %VE_SUITE_HOME%\lib\win32 "/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="copy .\pf_dbg\VE_SceneGraph_pfd.dll %VE_SUITE_HOME%\bin\win32
-copy .\pf_dbg\VE_SceneGraph_pfd.lib %VE_SUITE_HOME%\lib\win32 "/>
+copy .\pf_dbg\VE_SceneGraph_pfd.lib %VE_SUITE_HOME%\lib\win32
+"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -235,11 +237,11 @@ copy .\pf_dbg\VE_SceneGraph_pfd.lib %VE_SUITE_HOME%\lib\win32 "/>
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib vpr.lib vrj.lib vrj_ogl.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkPatented.lib vtkRendering.lib"
+				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib vpr.lib vrj.lib vrj_ogl.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkPatented.lib vtkRendering.lib"
 				OutputFile="$(OutDir)/VE_SceneGraph_osg.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -250,7 +252,8 @@ copy .\pf_dbg\VE_SceneGraph_pfd.lib %VE_SUITE_HOME%\lib\win32 "/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="copy .\osg_opt\VE_SceneGraph_osg.dll %VE_SUITE_HOME%\bin\win32
-copy .\osg_opt\VE_SceneGraph_osg.lib %VE_SUITE_HOME%\lib\win32 "/>
+copy .\osg_opt\VE_SceneGraph_osg.lib %VE_SUITE_HOME%\lib\win32
+"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
@@ -287,11 +290,11 @@ copy .\osg_opt\VE_SceneGraph_osg.lib %VE_SUITE_HOME%\lib\win32 "/>
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="libpf.lib  libpfdu-util.lib vpr.lib vrj.lib vrj_pf.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkPatented.lib vtkRendering.lib"
+				AdditionalDependencies="libpf.lib libpfdu-util.lib vpr.lib vrj.lib vrj_pf.lib libnspr4.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkPatented.lib vtkRendering.lib"
 				OutputFile="$(OutDir)/VE_SceneGraph_pf.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
-				GenerateDebugInformation="TRUE"
+				GenerateDebugInformation="FALSE"
 				SubSystem="2"
 				OptimizeReferences="2"
 				EnableCOMDATFolding="2"
@@ -302,7 +305,8 @@ copy .\osg_opt\VE_SceneGraph_osg.lib %VE_SUITE_HOME%\lib\win32 "/>
 			<Tool
 				Name="VCPostBuildEventTool"
 				CommandLine="copy .\pf_opt\VE_SceneGraph_pf.dll %VE_SUITE_HOME%\bin\win32
-copy .\pf_opt\VE_SceneGraph_pf.lib %VE_SUITE_HOME%\lib\win32 "/>
+copy .\pf_opt\VE_SceneGraph_pf.lib %VE_SUITE_HOME%\lib\win32
+"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
