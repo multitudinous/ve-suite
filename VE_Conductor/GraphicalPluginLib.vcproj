@@ -656,9 +656,6 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdStreamers.cxx">
 			</File>
 			<File
-				RelativePath="..\VE_TextureBased\cfdTextureBasedVizHandler.cxx">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdThread.cxx">
 			</File>
 			<File
