@@ -173,7 +173,7 @@
 				DebugInformationFormat="4"
 				CompileAs="0"
 				DisableSpecificWarnings="4541"
-				ForcedIncludeFiles="$(XERCESCROOT)\include\xercesc\dom\DOM.hpp;$(XERCESCROOT)\include\xercesc\dom\DOMDocument.hpp"
+				ForcedIncludeFiles="$(XERCESCROOT)\src\xercesc\dom\DOM.hpp;$(XERCESCROOT)\src\xercesc\dom\DOMDocument.hpp"
 				ShowIncludes="FALSE"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
