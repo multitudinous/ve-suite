@@ -271,6 +271,18 @@ void cfdDCS::SetRotationArray( float* rot )
    if ( _udcb )
    {
       _udcb->setRotationDegreeAngles(_rotation[0],_rotation[1],_rotation[2]);
+      osg::Vec3f pitch(1,0,0);
+      osg::Vec3f roll(0,1,0);
+      osg::Vec3f yaw(0,0,1);
+   
+      osg::Matrixd rotateMat;
+
+      //rph              
+      rotateMat.makeRotate(_rotation[2],roll,
+                         _rotation[1],pitch,
+                         _rotation[0],yaw);
+
+      rotateMat.get( dcsQuat );
    }
 #elif _OPENSG
 #endif
@@ -316,7 +328,51 @@ Matrix44f cfdDCS::GetMat( void )
    //gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
    //_vjMatrix.set(osgMat.ptr());
 
-   }else{
+   // Must do this because _dcs->getMat doesn't work
+   // because the matrix is overriden in the callback
+   // there is probably a more elegant solution than 
+   // what is below
+   osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
+   osg::Matrixd rotateMat;
+
+/*   _h = osg::DegreesToRadians(h);
+   _p = osg::DegreesToRadians(p);
+   _r = osg::DegreesToRadians(r);
+
+   //quat make quat from rotations
+   osg::Vec3f pitch(1,0,0);
+   osg::Vec3f roll(0,1,0);
+   osg::Vec3f yaw(0,0,1);
+   
+   osg::Matrixd rotateMat;
+
+   //rph              
+   rotateMat.makeRotate(_r,roll,
+                         _p,pitch,
+                         osg::DegreesToRadians(h),yaw);
+
+   rotateMat.get( quat );*/
+   rotateMat.makeRotate( dcsQuat );
+
+   osg::Vec3f transMat( _translation[0], _translation[1], _translation[2] );
+   scale.setTrans(transMat);
+
+   osg::Matrixf osgMat= rotateMat*scale;
+   //osg::Matrixf osgMat= scale;
+
+   if ( osgMat.valid() )
+   {
+      //gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
+      _vjMatrix.set( osgMat.ptr() );
+std::cout << _vjMatrix << std::endl;
+      std::cout << gmtl::Math::rad2Deg( gmtl::makeYRot(_vjMatrix) ) << std::endl;
+      std::cout << gmtl::Math::rad2Deg( gmtl::makeZRot(_vjMatrix) ) << std::endl;
+      //gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
+      //gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
+      //_vjMatrix.set(osgMat.ptr());
+   }
+   else
+   {
       std::cout<<"Invalid matrix!!"<<std::endl;
       std::cout<<"cfdDCS::GetMat()"<<std::endl;
    }

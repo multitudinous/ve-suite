@@ -50,7 +50,8 @@ namespace osg
 #include  <osg/Quat>
 #elif _OPENSG
 #endif
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class VE_SCENEGRAPH_EXPORTS cfdDCS: public cfdGroup
    {
       public:
@@ -117,7 +118,7 @@ namespace VE_SceneGraph{
 #elif _OSG
          osg::ref_ptr<osg::MatrixTransform> _dcs;
          cfdUpdateDCSCallback* _udcb;
-      osg::Quat dcsQuat;
+         osg::Quat dcsQuat;
 #elif _OPENSG
 #endif
 
