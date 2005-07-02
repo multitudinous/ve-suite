@@ -665,19 +665,10 @@
 				RelativePath="..\VE_Xplorer\cfdVectorBase.cxx">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\cfdVTKFileHandler.cxx">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\fileIO.cxx">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\interface.cpp">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\package.cpp">
-			</File>
-			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Xplorer\readWriteVtkThings.cxx">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\string_ops.cpp">

@@ -50,17 +50,29 @@
 	#    define VE_SCENEGRAPH_EXPORTS   __declspec(dllimport)
 	#  endif /* VE_SCENEGRAPH_LIBRARY */
 
+	#  ifdef VE_UTIL_LIBRARY
+	#    define VE_UTIL_EXPORTS   __declspec(dllexport)
+	#  else
+	#    define VE_UTIL_EXPORTS   __declspec(dllimport)
+	#  endif /* VE_UTIL_LIBRARY */
+
 	#  ifdef VE_XPLORER_LIBRARY
 	#    define VE_XPLORER_EXPORTS   __declspec(dllexport)
 	#  else
 	#    define VE_XPLORER_EXPORTS   __declspec(dllimport)
 	#  endif /* VE_XPLORER_LIBRARY */
 
-	#  ifdef VE_PLUGINS_LIBRARY
-	#    define VE_PLUGINS_EXPORTS   __declspec(dllexport)
+	#  ifdef VE_GUIPLUGINS_LIBRARY
+	#    define VE_GUIPLUGINS_EXPORTS   __declspec(dllexport)
 	#  else
-	#    define VE_PLUGINS_EXPORTS   __declspec(dllimport)
-	#  endif /* VE_PLUGINS_LIBRARY */
+	#    define VE_GUIPLUGINS_EXPORTS   __declspec(dllimport)
+	#  endif /* VE_GUIPLUGINS_LIBRARY */
+
+	#  ifdef VE_GRAPHICALPLUGINS_LIBRARY
+	#    define VE_GRAPHICALPLUGINS_EXPORTS   __declspec(dllexport)
+	#  else
+	#    define VE_GRAPHICALPLUGINS_EXPORTS   __declspec(dllimport)
+	#  endif /* VE_GRAPHICALPLUGINS_LIBRARY */
 
 	#  ifdef VE_TEXTURE_BASED_LIBRARY
 	#    define VE_TEXTURE_BASED_EXPORTS   __declspec(dllexport)
@@ -69,9 +81,11 @@
 	#  endif /* VE_TEXTURE_BASED_LIBRARY */
 #else
 	#  define VE_SCENEGRAPH_EXPORTS
+   #  define VE_UTIL_EXPORTS
 	#  define VE_XPLORER_EXPORTS
 	#  define VE_CONDUCTOR_EXPORTS
-	#  define VE_PLUGINS_EXPORTS
+	#  define VE_GUIPLUGINS_EXPORTS
+   #  define VE_GRAPHICALPLUGINS_EXPORTS
 	#  define VE_TEXTURE_BASED_EXPORTS
 #endif
 

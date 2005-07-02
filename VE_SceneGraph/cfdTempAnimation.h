@@ -32,7 +32,8 @@
 #ifndef CFDTEMPANIMATION_H
 #define CFDTEMPANIMATION_H
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdSequence;
    class cfdGroup;
    class cfdGeode;
@@ -40,9 +41,10 @@ namespace VE_SceneGraph{
 class vtkActor;
 
 #include <vector>
-#include "VE_Installer/VEConfig.h"
+#include "VE_Installer/includeVEConfig.h"
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class VE_SCENEGRAPH_EXPORTS cfdTempAnimation
    {
       public:

@@ -52,8 +52,9 @@ namespace osg
 #endif
 
 #include <vpr/Util/GUID.h>
-#include "VE_Installer/VEConfig.h"
-namespace VE_SceneGraph{
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_SceneGraph
+{
    class cfdNode;
    class cfdSequence;
 }
@@ -65,7 +66,8 @@ namespace VE_SceneGraph{
 //and then an appropriate wrapper class    //
 //should be created.                       //
 /////////////////////////////////////////////
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class VE_SCENEGRAPH_EXPORTS cfdSceneNode
    {
       public:

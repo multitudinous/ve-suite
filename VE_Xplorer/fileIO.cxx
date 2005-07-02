@@ -47,6 +47,7 @@ namespace fs = boost::filesystem;
 #include <sys/dir.h>
 #endif            // WIN32
 */
+using namespace VE_Util;
 
 fileIO::fileIO( )
 {

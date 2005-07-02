@@ -41,8 +41,9 @@
 #include <windows.h>
 #endif
 #include <fcntl.h>
-#include "VE_Installer/VEConfig.h"
-namespace VE_SceneGraph{
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_SceneGraph
+{
    // vtkActorToPF - translates vtkActor to pfGeode. If geode is NULL, new one
    //   will be created. Optional verbose parameter prints debugging and
    //   performance information.

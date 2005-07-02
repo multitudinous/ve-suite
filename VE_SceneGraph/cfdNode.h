@@ -46,10 +46,9 @@ namespace osg
 #include <osg/ref_ptr>
 #elif _OPENSG
 #endif
-#include "VE_Installer/VEConfig.h"
 
-namespace VE_SceneGraph{
-
+namespace VE_SceneGraph
+{
    class VE_SCENEGRAPH_EXPORTS cfdNode: public cfdSceneNode
    {
       public:   

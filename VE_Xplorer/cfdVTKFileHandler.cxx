@@ -18,6 +18,8 @@
 #include <vtkPolyDataWriter.h>
 #include <iostream>
 
+using namespace VE_Util;
+
 //////////////////////////////////////
 //Constructors                      //
 //////////////////////////////////////

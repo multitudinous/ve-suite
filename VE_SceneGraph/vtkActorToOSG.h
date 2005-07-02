@@ -11,8 +11,9 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkCellArray.h>
-#include "VE_Installer/VEConfig.h"
-namespace VE_SceneGraph{
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_SceneGraph
+{
    // vtkActorToOSG - translates vtkActor to osg::Geode. If geode is NULL, new one
    //   will be created. Optional verbose parameter prints debugging and
    //   performance information.

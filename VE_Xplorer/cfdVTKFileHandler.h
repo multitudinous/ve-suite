@@ -3,40 +3,45 @@
 class vtkXMLFileReadTester;
 class vtkDataSet;
 
-class cfdVTKFileHandler
+#include "VE_installer/include/VEConfig.h"
+
+namespace VE_Util
 {
-   public:
-      cfdVTKFileHandler();
-      cfdVTKFileHandler(const cfdVTKFileHandler& fh);
-      virtual ~cfdVTKFileHandler();
+   class VE_UTIL_EXPORTS cfdVTKFileHandler
+   {
+      public:
+         cfdVTKFileHandler();
+         cfdVTKFileHandler(const cfdVTKFileHandler& fh);
+         virtual ~cfdVTKFileHandler();
 
-      enum OutFileType{CFD_XML,VTK_CLASSIC};
-      enum OutFileMode{CFD_ASCII=0,CFD_BINARY};
+         enum OutFileType{CFD_XML,VTK_CLASSIC};
+         enum OutFileMode{CFD_ASCII=0,CFD_BINARY};
 
-      void SetInputFileName(char* inFile);
-      void SetOutputFileName(char* oFile);
-      void SetVTKOutFileType(OutFileType type);
-      void SetOutFileWriteMode(OutFileMode mode);
+         void SetInputFileName(char* inFile);
+         void SetOutputFileName(char* oFile);
+         void SetVTKOutFileType(OutFileType type);
+         void SetOutFileWriteMode(OutFileMode mode);
 
-      vtkDataSet* GetDataSetFromFile(char* vtkFileName);
-      bool WriteDataSet(vtkDataSet* dataSet,char* outFileName);
+         vtkDataSet* GetDataSetFromFile(char* vtkFileName);
+         bool WriteDataSet(vtkDataSet* dataSet,char* outFileName);
 
-      cfdVTKFileHandler& operator=(const cfdVTKFileHandler& fh);
-   protected:
-      void _getXMLUGrid();
-      void _getXMLSGrid();
-      void _getXMLRGrid();
-      void  _getXMLPolyData();
-      void _readClassicVTKFile();
-      void _writeClassicVTKFile( vtkDataSet * vtkThing, 
+         cfdVTKFileHandler& operator=(const cfdVTKFileHandler& fh);
+      protected:
+         void _getXMLUGrid();
+         void _getXMLSGrid();
+         void _getXMLRGrid();
+         void  _getXMLPolyData();
+         void _readClassicVTKFile();
+         void _writeClassicVTKFile( vtkDataSet * vtkThing, 
                             char * vtkFilename, int binaryFlag = 0 );
 
-      OutFileType _outFileType;
-      OutFileMode _outFileMode;
+         OutFileType _outFileType;
+         OutFileMode _outFileMode;
 
-      char* _inFileName;
-      char* _outFileName;
-      vtkXMLFileReadTester* _xmlTester;   
-      vtkDataSet* _dataSet;
-};
+         char* _inFileName;
+         char* _outFileName;
+         vtkXMLFileReadTester* _xmlTester;   
+         vtkDataSet* _dataSet;
+   };
+}
 #endif// CFD_VTK_FILE_HANDLER_H

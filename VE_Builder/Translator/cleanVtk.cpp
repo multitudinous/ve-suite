@@ -29,6 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#include "VE_Builder/Translator/cleanVtk.h"
+
 #include <iostream>
 #include <fstream>
 
@@ -40,6 +42,8 @@
 #include <vtkCellArray.h>
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
+
+using namespace VE_Util;
 
 void dumpVerticesNotUsedByCells( vtkPointSet * grid )
 {

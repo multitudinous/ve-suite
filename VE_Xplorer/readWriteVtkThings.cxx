@@ -32,7 +32,7 @@
 #include <iostream>
 #include <stdlib.h>
 
-#include "readWriteVtkThings.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 
 #include <vtkDataSet.h>
 #include <vtkDataSetReader.h>
@@ -46,7 +46,9 @@
 #include <vtkUnstructuredGrid.h>
 #include <vtkUnstructuredGridWriter.h>
 #include <vtkXMLUnstructuredGridReader.h>
-#include "cfdVTKFileHandler.h"
+#include "VE_Xplorer/cfdVTKFileHandler.h"
+
+using namespace VE_Util;
 
 void printWhatItIs( vtkDataSet * dataSet )
 {
@@ -90,7 +92,7 @@ vtkDataSet * readVtkThing( char * vtkFilename, int printFlag )
       double bounds[6];
       temp->GetBounds( bounds );
       printBounds( bounds );
-      printWhatItIs( temp );
+      //VE_Util::printWhatItIs( temp );
    }
    return temp;
 }

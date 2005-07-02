@@ -31,11 +31,14 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CLEAN_VTK_H
 #define CLEAN_VTK_H
+#include "VE_installer/include/VEConfig.h"
 
 class vtkPointSet;
 
-// function declarations
-void dumpVerticesNotUsedByCells( vtkPointSet * );
-void dumpVerticesNotUsedByCells( vtkPointSet *, char * vtkFileName );
-
+namespace VE_Util
+{
+   // function declarations
+   VE_UTIL_EXPORTS void dumpVerticesNotUsedByCells( vtkPointSet * );
+   VE_UTIL_EXPORTS void dumpVerticesNotUsedByCells( vtkPointSet *, char * vtkFileName );
+}
 #endif

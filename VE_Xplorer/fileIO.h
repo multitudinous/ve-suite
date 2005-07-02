@@ -33,41 +33,44 @@
 #define FILEIO_H
 
 #include <iosfwd>
-#include "VE_Xplorer/cfdConfig.h"
+#include "VE_installer/include/VEConfig.h"
 
-class WXPLUGIN_DECLSPEC fileIO
-{ 
-   public:
-      fileIO();
-      ~fileIO();
-      static int isFileReadable( const char * const filename );
-      static int isFileWritable( char *filename );
-      static int DirectoryExists( char * dirName );
-      static int isDirWritable( char *dirname );
-      static char * getWritableDir( );
-      static char * getFilenameFromDefault( char* fileContents,
+namespace VE_Util
+{
+   class VE_UTIL_EXPORTS fileIO
+   { 
+      public:
+         fileIO();
+         ~fileIO();
+         static int isFileReadable( const char * const filename );
+         static int isFileWritable( char *filename );
+         static int DirectoryExists( char * dirName );
+         static int isDirWritable( char *dirname );
+         static char * getWritableDir( );
+         static char * getFilenameFromDefault( char* fileContents,
                                             char* defaultName );
-      static char * getReadableFileFromDefault( 
+         static char * getReadableFileFromDefault( 
                                          char* stringDescribingfileContents, 
                                          const char* const defaultName );
-      static char * getWritableFile( char* defaultName );
-      static int readNByteBlockFromFile( void *ptr, const unsigned int nByte,
+         static char * getWritableFile( char* defaultName );
+         static int readNByteBlockFromFile( void *ptr, const unsigned int nByte,
                                          const unsigned int num, FILE *stream, 
                                          const bool endian_flip = 1 );
-      static void processCommandLineArgs( int argc, char *argv[], char verb[],
+         static void processCommandLineArgs( int argc, char *argv[], char verb[],
                char * & inFileName, char * & outFileName );
-      static char * getExtension( char * filename );
-      static void readToFileEnd( FILE *inputFile );
-      static void StripTrailingSpaces( char line [] );
-      static char * StripLeadingSpaces( char line [] );
-      static int extractIntegerBeforeExtension( char filename [] );
-      static void IdentifyTagAssignValue(char *TagName, char *TagValue);
-      static void getTagAndValue(char *textline, char *TagName, char *TagValue);
+         static char * getExtension( char * filename );
+         static void readToFileEnd( FILE *inputFile );
+         static void StripTrailingSpaces( char line [] );
+         static char * StripLeadingSpaces( char line [] );
+         static int extractIntegerBeforeExtension( char filename [] );
+         static void IdentifyTagAssignValue(char *TagName, char *TagValue);
+         static void getTagAndValue(char *textline, char *TagName, char *TagValue);
  
-      static int getIntegerBetween( const int min, const int max );
+         static int getIntegerBetween( const int min, const int max );
 
-      static char * GetFile( char [], char [] );
-      static int ExtractIntegerFromString( char filename [] );
-      static int ExtractIntegerBeforeExtension( char filename [] );
-};
+         static char * GetFile( char [], char [] );
+         static int ExtractIntegerFromString( char filename [] );
+         static int ExtractIntegerBeforeExtension( char filename [] );
+   };
+}
 #endif

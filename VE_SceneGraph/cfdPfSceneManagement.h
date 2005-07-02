@@ -32,7 +32,8 @@
 #ifndef CFD_PFSCENEMANAGEMENT_H
 #define CFD_PFSCENEMANAGEMENT_H
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdDCS;
    class cfdGroup;
 }
@@ -44,10 +45,10 @@ class pfLightSource;
 #endif
 
 #include <vpr/Util/Singleton.h>
-#include "VE_Installer/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-namespace VE_SceneGraph{
-
+namespace VE_SceneGraph
+{
    class VE_SCENEGRAPH_EXPORTS cfdPfSceneManagement //: public vpr::Singleton< cfdPfSceneManagement >
    {
       public:
