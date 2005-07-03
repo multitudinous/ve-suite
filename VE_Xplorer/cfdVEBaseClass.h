@@ -52,11 +52,11 @@ namespace VE_Xplorer
    class cfdObjects;
 }
 #include "VE_Conductor/Framework/interface.h"
-#include "VE_Installer/include/VEConfig.h"
+//#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Xplorer
 {
-   class VE_GRAPHICALPLUGIN_EXPORTS cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
+   class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
    {
       public:
          cfdVEBaseClass( void );

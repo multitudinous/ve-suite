@@ -2,15 +2,15 @@
 #pragma warning(disable : 4786)
 #endif
 
-#include "string_ops.h"
+#include "VE_Conductor/Framework/string_ops.h"
 #include <stdio.h>
 
-bool string_to_int (const string &str, int &result)
+bool string_to_int (const std::string &str, int &result)
 {
   return sscanf(str.c_str(), "%d", &result) == 1;
 }
 
-bool string_to_double (const string &str, double &result)
+bool string_to_double (const std::string &str, double &result)
 {
   return sscanf(str.c_str(), "%lf", &result) == 1;
 }

@@ -59,10 +59,12 @@
 #include <windows.h>
 #include <direct.h>
 #endif
+IMPLEMENT_DYNAMIC_CLASS( VE_Xplorer::cfdVEBaseClass, wxObject )
+
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
+using namespace VE_Util;
 
-IMPLEMENT_DYNAMIC_CLASS( cfdVEBaseClass, wxObject )
 // Constructor
 cfdVEBaseClass::cfdVEBaseClass( void ) 
 {

@@ -483,9 +483,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\Framework\interface.cpp">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\moduleC.cpp">
 			</File>
 			<File
@@ -542,9 +539,6 @@
 				</FileConfiguration>
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\Framework\package.cpp">
-			</File>
-			<File
 				RelativePath="Scheduler.cpp">
 				<FileConfiguration
 					Name="Release|Win32">
@@ -593,9 +587,6 @@
 						BasicRuntimeChecks="3"
 						BrowseInformation="1"/>
 				</FileConfiguration>
-			</File>
-			<File
-				RelativePath="..\VE_Conductor\Framework\string_ops.cpp">
 			</File>
 		</Filter>
 		<Filter

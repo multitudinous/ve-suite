@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="WinClient"
+	Name="VE_Conductor"
 	ProjectGUID="{E18B55CA-745E-4EBC-9056-85CA897EE690}"
 	RootNamespace="WinClient"
 	SccProjectName=""
@@ -726,9 +726,6 @@
 			</File>
 			<File
 				RelativePath="..\..\VE_Builder\Utilities\gui\spinctld.cpp">
-			</File>
-			<File
-				RelativePath=".\string_ops.cpp">
 			</File>
 			<File
 				RelativePath=".\StringParse.cpp">
