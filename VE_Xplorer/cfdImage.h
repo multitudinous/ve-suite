@@ -32,54 +32,58 @@
 #ifndef CFD_IMAGE_H
 #define CFD_IMAGE_H
 
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdObjects.h"
 
 class vtkBMPReader;
 class vtkImageReader;
 class vtkPlaneSource;
 class vtkPolyDataMapper;
 class vtkTexture;
-class cfdCommandArray;
-class cfdReadParam;
-
-class WXPLUGIN_DECLSPEC cfdImage : public cfdObjects
+namespace VE_Xplorer
 {
- public:
-   cfdImage( char* );
+   class cfdCommandArray;
+   class cfdReadParam;
+}
 
-   cfdImage( char * filename, int ex_x, int ex_y, int dim,
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdImage : public cfdObjects
+   {
+      public:
+         cfdImage( char* );
+
+         cfdImage( char * filename, int ex_x, int ex_y, int dim,
              double *origin, double *spacing );
 
-   ~cfdImage( );
+         ~cfdImage( );
 
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray* commandArray );
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
 
-   // update the actor
-   virtual void Update( void );
+         // update the actor
+         virtual void Update( void );
 
-   vtkActor* GetActor( void );
+         vtkActor* GetActor( void );
 
-   void CreateObjects( void );
+         void CreateObjects( void );
 
-   private:
+      private:
+         int type;         // Direction: 0=X-plane, 1=Y-plane, and 2=Z-plane.
+         char typeLabel;   // 'X', 'Y', or 'Z'
 
-      int type;         // Direction: 0=X-plane, 1=Y-plane, and 2=Z-plane.
-      char typeLabel;   // 'X', 'Y', or 'Z'
-
-      vtkBMPReader *bmpReader;
-      vtkImageReader *imgReader;
-      vtkPlaneSource *plane;
-      vtkPolyDataMapper *mapper;
-      vtkTexture *texture;
-      char  bmpFileName[ 100 ];
-      double bmpPosition[ 3 ];
-      int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
-      char* _param;
-      cfdReadParam* _readParam;
-};
-
+         vtkBMPReader *bmpReader;
+         vtkImageReader *imgReader;
+         vtkPlaneSource *plane;
+         vtkPolyDataMapper *mapper;
+         vtkTexture *texture;
+         char  bmpFileName[ 100 ];
+         double bmpPosition[ 3 ];
+         int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
+         char* _param;
+         VE_Xplorer::cfdReadParam* _readParam;
+   };
+}
 #endif

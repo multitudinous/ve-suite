@@ -3,10 +3,12 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include "VE_TextureBased/cfdOSGTransferShaderManager.h"
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdTextureManager;
 }
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdScalarShaderManager
       :public cfdOSGTransferShaderManager{
       public:

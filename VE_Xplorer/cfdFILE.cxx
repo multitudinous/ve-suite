@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdFILE.h"
+#include "VE_Xplorer/cfdFILE.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdNode.h"
 
@@ -42,6 +42,9 @@
 #elif _OSG
 #include <osg/Fog>
 #endif
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdFILE::cfdFILE( fileInfo *geomFile, VE_SceneGraph::cfdDCS *worldDCS  )
 {

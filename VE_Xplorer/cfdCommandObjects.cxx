@@ -30,8 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdCommandObjects.h"
+#include "VE_Xplorer/cfdCommandObjects.h"
 #include <iostream>
+
+using namespace VE_Xplorer;
 
 cfdCommandObjects::cfdCommandObjects () : cfdGlobalBase ()
 { 

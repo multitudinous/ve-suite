@@ -51,7 +51,11 @@
 #include <fstream>
 #include <cstdlib>
 
-vprSingletonImp( cfdEnvironmentHandler );
+vprSingletonImp( VE_Xplorer::cfdEnvironmentHandler );
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+using namespace VE_Util;
 
 cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 {

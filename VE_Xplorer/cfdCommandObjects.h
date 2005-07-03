@@ -32,25 +32,31 @@
 #ifndef CFD_COMMAND_OBJECTS_H
 #define CFD_COMMAND_OBJECTS_H
 
-#include "cfdGlobalBase.h"
-class cfdCommandArray;
-
-class cfdCommandObjects : public cfdGlobalBase
+#include "VE_Xplorer/cfdGlobalBase.h"
+namespace VE_Xplorer
 {
- public:
-   cfdCommandObjects ();
-   ~cfdCommandObjects ();
+   class cfdCommandArray;
+}
 
-   // pure virtual int functions to be specified in concrete implementations
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdCommandObjects : public cfdGlobalBase
+   {
+      public:
+         cfdCommandObjects ();
+         ~cfdCommandObjects ();
 
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ) = 0;
+         // pure virtual int functions to be specified in concrete implementations
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand() = 0;
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ) = 0;
 
- protected:
- private:
-};
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand() = 0;
+
+      protected:
+      private:
+   };
+}
 #endif
 

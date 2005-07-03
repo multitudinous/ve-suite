@@ -32,7 +32,7 @@
 #ifndef CFD_MOMENTUMS_H
 #define CFD_MOMENTUMS_H
 
-#include "cfdContourBase.h"
+#include "VE_Xplorer/cfdContourBase.h"
 
 class vtkWarpVector;
 
@@ -41,22 +41,26 @@ class vtkWarpVector;
   A class that generates warped contour plots on multiple planes of data.
 */
 
-class WXPLUGIN_DECLSPEC cfdMomentums : public cfdContourBase
+namespace VE_Xplorer
 {
- public:
-  /* Initialize the multiple momentum profiles, based on the input
-    from the vtkPolyData generated from cfdPlanes.  */
-  cfdMomentums( const int xyz );
+   class VE_XPLORER_EXPORTS cfdMomentums : public cfdContourBase
+   {
+      public:
+         /* 
+         Initialize the multiple momentum profiles, based on the input
+         from the vtkPolyData generated from cfdPlanes.  
+         */
+         cfdMomentums( const int xyz );
 
-  ~cfdMomentums( void );
+         ~cfdMomentums( void );
 
-  // Output an updated pfGeoSet.
-  virtual void Update( void );
+         // Output an updated pfGeoSet.
+         virtual void Update( void );
 
- private:
-  int xyz;
+      private:
+         int xyz;
   
-  vtkWarpVector * warper;
-};
-
+         vtkWarpVector * warper;
+   };
+}
 #endif

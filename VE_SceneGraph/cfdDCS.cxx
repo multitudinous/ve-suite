@@ -32,7 +32,6 @@
 #include "VE_SceneGraph/cfdDCS.h"
 
 #include <iostream>
-//#include <cstdlib>
 
 #include <gmtl/Generate.h>
 #include <gmtl/Coord.h>
@@ -321,7 +320,8 @@ Matrix44f cfdDCS::GetMat( void )
    _vjMatrix = vrj::GetVjMatrix( temp );
 #elif _OSG
    osg::Matrixf osgMat= _dcs->getMatrix();
-   if(osgMat.valid()){
+   if(osgMat.valid())
+   {
    gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
    _vjMatrix.set( osgMat.ptr() );
    //gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
@@ -360,8 +360,6 @@ Matrix44f cfdDCS::GetMat( void )
    osg::Matrixf osgMat= rotateMat*scale;
    //osg::Matrixf osgMat= scale;
 
-   if ( osgMat.valid() )
-   {
       //gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
       _vjMatrix.set( osgMat.ptr() );
 std::cout << _vjMatrix << std::endl;

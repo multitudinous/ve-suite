@@ -49,28 +49,29 @@ class vtkAppendPolyData;
   selected. Update member function will be update
   the position and direction as each "Update" being called.
 */
-class WXPLUGIN_DECLSPEC cfdContour : public cfdContourBase
+namespace VE_Xplorer
 {
- public:
-  // Initialize the VTK objects and pipeline.
-  cfdContour( );
-  ~cfdContour( );
+   class VE_XPLORER_EXPORTS cfdContour : public cfdContourBase
+   {
+      public:
+         // Initialize the VTK objects and pipeline.
+         cfdContour( );
+         ~cfdContour( );
 
-  // Update the position, x, and normal direction to cut.
-  virtual void Update( void );
+         // Update the position, x, and normal direction to cut.
+         virtual void Update( void );
 
- private:
+      private:
 
-#ifdef USE_OMP
-  vtkPlane *plane[MAX_CONTOUR];
-  vtkCutter *cutter[MAX_CONTOUR];
-  vtkAppendPolyData *append;
-  float nData;
-#else
-  vtkPlane *plane;
-  vtkCutter *cutter;
-#endif
-
-};
-
+      #ifdef USE_OMP
+         vtkPlane *plane[MAX_CONTOUR];
+         vtkCutter *cutter[MAX_CONTOUR];
+         vtkAppendPolyData *append;
+         float nData;
+      #else
+         vtkPlane *plane;
+         vtkCutter *cutter;
+      #endif
+   };
+}
 #endif

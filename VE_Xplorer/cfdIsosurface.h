@@ -37,7 +37,7 @@
 #include <vtkAppendPolyData.h>
 #endif
 
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdObjects.h"
 
 class vtkContourFilter;
 class vtkPolyDataNormals;
@@ -50,39 +50,41 @@ class vtkPolyDataMapper;
   based on the value selected.  Update member function will
   update the value.
 */
-class WXPLUGIN_DECLSPEC cfdIsosurface : public cfdObjects
+namespace VE_Xplorer
 {
- public:
-  //Initialize pipeline
-  //(and set the number of isosurface increments for blue menu)
-  cfdIsosurface( int step = 10 );
+   class VE_XPLORER_EXPORTS cfdIsosurface : public cfdObjects
+   {
+      public:
+         //Initialize pipeline
+         //(and set the number of isosurface increments for blue menu)
+         cfdIsosurface( int step = 10 );
 
-  ~cfdIsosurface( );
+         ~cfdIsosurface( );
 
-  virtual void Update( void );
+         virtual void Update( void );
 
-  // Get the current isosurface value.
-  double GetValue();
+         // Get the current isosurface value.
+         double GetValue();
 
- private:
-  double convertPercentage( const int percentage );
+      private:
+         double convertPercentage( const int percentage );
 
-  int totalId;          // Total number of steps through the isosurface range.
+         int totalId;          // Total number of steps through the isosurface range.
 
-  double value;          // Current value of isosurface.
+         double value;          // Current value of isosurface.
 
-#ifdef USE_OMP
-  float nData;          // Total number of data to be parallel processed
-  vtkContourFilter *contour[MAX_ISOSURFACE];
-  vtkPolyDataNormals *normals[MAX_ISOSURFACE];
-  vtkAppendPolyData *append;
-#else
-  vtkContourFilter *contour;
-  vtkPolyDataNormals *normals;
-#endif
+      #ifdef USE_OMP
+         float nData;          // Total number of data to be parallel processed
+         vtkContourFilter *contour[MAX_ISOSURFACE];
+         vtkPolyDataNormals *normals[MAX_ISOSURFACE];
+         vtkAppendPolyData *append;
+      #else
+         vtkContourFilter *contour;
+         vtkPolyDataNormals *normals;
+      #endif
 
-  vtkGeometryFilter *filter;
-  vtkPolyDataMapper *mapper;
-};
-
+         vtkGeometryFilter *filter;
+         vtkPolyDataMapper *mapper;
+   };
+}
 #endif

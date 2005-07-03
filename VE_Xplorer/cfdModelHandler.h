@@ -34,83 +34,89 @@
 
 #include <vpr/Util/Singleton.h>
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdDCS;
    class cfdGroup;
 }
-class cfdDataSet;
-class cfdModel;
-class cfdCommandArray;
-class cfdReadParam;
-class cfdScalarBarActor;
 
+namespace VE_Xplorer
+{
+   class cfdDataSet;
+   class cfdModel;
+   class cfdCommandArray;
+   class cfdReadParam;
+   class cfdScalarBarActor;
+}
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdTextureDataSet;
 }
-using namespace VE_TextureBased;
 #endif
 #endif
 class vtkPolyData;
 
 #include <vector>
-#include "VE_Xplorer/cfdConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdModelHandler //: public vpr::Singleton< cfdModelHandler >
+namespace VE_Xplorer
 {
-   private:
-      // Required so that vpr::Singleton can instantiate this class.
-      //friend class vpr::Singleton< cfdModelHandler >;
-      //cfdModelHandler(const cfdModelHandler& o) { ; }
-      //cfdModelHandler& operator=(const cfdModelHandler& o) { ; }
-      cfdModelHandler( void );
-      ~cfdModelHandler( void ){ ; }// Never gets called, don't implement
-      vprSingletonHeader( cfdModelHandler );   
-   public:
-      void Initialize( char* );
-      void CleanUp( void );
-      void InitScene( void );
-      void PreFrameUpdate( void );
-      cfdDataSet* GetActiveDataSet( void );
+   class VE_XPLORER_EXPORTS cfdModelHandler //: public vpr::Singleton< cfdModelHandler >
+   {
+      private:
+         // Required so that vpr::Singleton can instantiate this class.
+         //friend class vpr::Singleton< cfdModelHandler >;
+         //cfdModelHandler(const cfdModelHandler& o) { ; }
+         //cfdModelHandler& operator=(const cfdModelHandler& o) { ; }
+         cfdModelHandler( void );
+         ~cfdModelHandler( void ){ ; }// Never gets called, don't implement
+         vprSingletonHeader( cfdModelHandler );   
+      public:
+         void Initialize( char* );
+         void CleanUp( void );
+         void InitScene( void );
+         void PreFrameUpdate( void );
+         cfdDataSet* GetActiveDataSet( void );
 
-      void SetCommandArray( cfdCommandArray* );
-      void CreateObjects( void );      
-      void LoadSurfaceFiles( char* );
-      vtkPolyData* GetArrow( void );
-      cfdModel* GetModel( int );
-      void AddModel( cfdModel* );
-      void RemoveModel( cfdModel* );
-      cfdModel* GetActiveModel( void );
-      int GetNumberOfModels( void );
-      void ReadNNumberOfDataSets(  char*, char* );
+         void SetCommandArray( cfdCommandArray* );
+         void CreateObjects( void );      
+         void LoadSurfaceFiles( char* );
+         vtkPolyData* GetArrow( void );
+         cfdModel* GetModel( int );
+         void AddModel( cfdModel* );
+         void RemoveModel( cfdModel* );
+         cfdModel* GetActiveModel( void );
+         int GetNumberOfModels( void );
+         void ReadNNumberOfDataSets(  char*, char* );
 
-      //texture manager access
-#ifdef _OSG
-#ifdef VE_PATENTED
-      cfdTextureDataSet* GetActiveTextureDataSet( void );
-#endif
-#endif
-      bool GetVisOption();
-   private:
-      char* _param;
-      cfdDataSet* activeDataset;
-      cfdCommandArray* commandArray;
-      cfdReadParam* _readParam;
-      cfdScalarBarActor* _scalarBar;
-      cfdModel* _activeModel;
+         //texture manager access
+   #ifdef _OSG
+   #ifdef VE_PATENTED
+         VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet( void );
+   #endif
+   #endif
+         bool GetVisOption();
+      private:
+         char* _param;
+         cfdDataSet* activeDataset;
+         cfdCommandArray* commandArray;
+         cfdReadParam* _readParam;
+         cfdScalarBarActor* _scalarBar;
+         cfdModel* _activeModel;
 
-#ifdef _OSG
-#ifdef VE_PATENTED
-      cfdTextureDataSet* _activeTDSet;
-#endif
-#endif
-      bool tbased;
-      vtkPolyData* arrow;
-      std::vector< cfdModel* > _modelList;
-      // Used to store data for multi-dataset functions
-      char oldDatasetName[256];
-};
-
+   #ifdef _OSG
+   #ifdef VE_PATENTED
+         VE_TextureBased::cfdTextureDataSet* _activeTDSet;
+   #endif
+   #endif
+         bool tbased;
+         vtkPolyData* arrow;
+         std::vector< cfdModel* > _modelList;
+         // Used to store data for multi-dataset functions
+         char oldDatasetName[256];
+   };
+}
 #endif

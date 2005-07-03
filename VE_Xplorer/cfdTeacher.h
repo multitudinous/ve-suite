@@ -34,9 +34,14 @@
 
 #include <vector>
 #include <string>
-class cfdWriteTraverser;
-class cfdCommandArray;
-namespace VE_SceneGraph{
+namespace VE_Xplorer
+{
+   class cfdWriteTraverser;
+   class cfdCommandArray;
+}
+
+namespace VE_SceneGraph
+{
    class cfdDCS;
    class cfdGroup;
    class cfdNode;
@@ -45,34 +50,36 @@ namespace VE_SceneGraph{
 #include "VE_Xplorer/cfdGlobalBase.h"
 
 //A reader that reads performer binary files
-class cfdTeacher : public cfdGlobalBase
+namespace VE_Xplorer
 {
-   public:
-      cfdTeacher( std::string, VE_SceneGraph::cfdDCS* );
+   class VE_XPLORER_EXPORTS cfdTeacher : public cfdGlobalBase
+   {
+      public:
+         cfdTeacher( std::string, VE_SceneGraph::cfdDCS* );
 
-      ~cfdTeacher( );
+         ~cfdTeacher( );
 
-      // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
-      void writePFBFile( VE_SceneGraph::cfdNode* graph,char* fileName);
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
+         void writePFBFile( VE_SceneGraph::cfdNode* graph,char* fileName);
 
-      VE_SceneGraph::cfdDCS* GetcfdDCS( );
-      VE_SceneGraph::cfdNode* getpfNode( int );
-      int getNumberOfFiles();
-      char * getFileName( int i );
+         VE_SceneGraph::cfdDCS* GetcfdDCS( );
+         VE_SceneGraph::cfdNode* getpfNode( int );
+         int getNumberOfFiles();
+         char * getFileName( int i );
 
-   private:
-      VE_SceneGraph::cfdDCS* DCS;
-      VE_SceneGraph::cfdDCS* _worldDCS;
-      VE_SceneGraph::cfdNode** node;  // array of nodes
-      int numFiles;
-	   std::vector<std::string> pfbFileNames;
-      std::string directory;
-      int pfb_count;
-      cfdWriteTraverser* _cfdWT;
-};
-
+      private:
+         VE_SceneGraph::cfdDCS* DCS;
+         VE_SceneGraph::cfdDCS* _worldDCS;
+         VE_SceneGraph::cfdNode** node;  // array of nodes
+         int numFiles;
+	      std::vector<std::string> pfbFileNames;
+         std::string directory;
+         int pfb_count;
+         cfdWriteTraverser* _cfdWT;
+   };
+}
 #endif   // CFD_TEACHER_H

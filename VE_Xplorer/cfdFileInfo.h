@@ -33,21 +33,27 @@
 #define CFD_FILEINFO_H
 
 //#include <Performer/pf/pfDCS.h>
-class cfdDCS;
-
-class fileInfo
+namespace VE_SceneGraph
 {
-   public:
-      fileInfo();
-      ~fileInfo();
+   class cfdDCS;
+}
 
-   //private:
-      char fileName[100];
+namespace VE_Xplorer
+{
+   class fileInfo
+   {
+      public:
+         fileInfo();
+         ~fileInfo();
 
-      //geometry-specific stuff
-      float stlColor[3];
-      int color;
-      int trans;
-      cfdDCS * dcs;
-};
+      //private:
+         char fileName[100];
+
+         //geometry-specific stuff
+         float stlColor[3];
+         int color;
+         int trans;
+         VE_SceneGraph::cfdDCS * dcs;
+   };
+}
 #endif

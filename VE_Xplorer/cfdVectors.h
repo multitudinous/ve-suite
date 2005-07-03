@@ -32,22 +32,23 @@
 #ifndef CFD_VECTORS_H
 #define CFD_VECTORS_H
 
-#include "cfdVectorBase.h"
+#include "VE_Xplorer/cfdVectorBase.h"
 
 // A class that generates multiple planes of vector plots.
-class cfdVectors : public cfdVectorBase
+namespace VE_Xplorer
 {
- public:
-  // Initialize the multiple vector plots for a particular plane direction
-  cfdVectors( const int xyz );
+   class VE_XPLORER_EXPORTS cfdVectors : public cfdVectorBase
+   {
+      public:
+         // Initialize the multiple vector plots for a particular plane direction
+         cfdVectors( const int xyz );
 
-  ~cfdVectors();
+         ~cfdVectors();
 
-  virtual void Update( void );
+         virtual void Update( void );
 
- private:
-  int xyz;
-
-};
-
+      private:
+         int xyz;
+   };
+}
 #endif

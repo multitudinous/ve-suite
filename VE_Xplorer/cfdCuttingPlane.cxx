@@ -29,10 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdCuttingPlane.h"
-#include "cfdDataSet.h"
+#include "VE_Xplorer/cfdCuttingPlane.h"
+#include "VE_Xplorer/cfdDataSet.h"
 #include <vtkPlane.h>
 #include <vpr/Util/Debug.h>
+
+using namespace VE_Xplorer;
 
 cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
                                   const int numSteps )

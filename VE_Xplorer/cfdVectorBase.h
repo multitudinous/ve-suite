@@ -32,64 +32,70 @@
 #ifndef CFD_VECTOR_BASE_H
 #define CFD_VECTOR_BASE_H
 
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdObjects.h"
 
 class vtkGlyph3D;
 class vtkGeometryFilter;
 class vtkPolyDataMapper;
 class vtkMaskPoints;
-class cfdCommandArray;
-#include "VE_Xplorer/cfdConfig.h"
-class WXPLUGIN_DECLSPEC cfdVectorBase : public cfdObjects
+
+namespace VE_Xplorer
 {
- public:
-   cfdVectorBase();
+   class cfdCommandArray;
+}
 
-   virtual ~cfdVectorBase();
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdVectorBase : public cfdObjects
+   {
+      public:
+         cfdVectorBase();
 
-   // pure virtual int functions to be specified in concrete implementations
+         virtual ~cfdVectorBase();
 
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray* commandArray );
+         // pure virtual int functions to be specified in concrete implementations
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
-   // update the actor
-   virtual void Update() = 0;
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
 
-   void SetThreshHoldPercentages( int minThresh, int maxThresh );
+         // update the actor
+         virtual void Update() = 0;
 
-   void SetThreshHoldValues( double * );
-   double* GetThreshHoldValues( void );
+         void SetThreshHoldPercentages( int minThresh, int maxThresh );
 
-   void UpdateThreshHoldValues();
+         void SetThreshHoldValues( double * );
+         double* GetThreshHoldValues( void );
 
-   void SetVectorRatioFactor( int );
-   int GetVectorRatioFactor();
+         void UpdateThreshHoldValues();
 
-   void SetScaleByVectorFlag( int );
-   int GetScaleByVectorFlag( void );
+         void SetVectorRatioFactor( int );
+         int GetVectorRatioFactor();
+
+         void SetScaleByVectorFlag( int );
+         int GetScaleByVectorFlag( void );
    
-   void SetVectorScale( float );
-   float GetVectorScale();
+         void SetVectorScale( float );
+         float GetVectorScale();
 
- protected:
-   vtkGlyph3D*       glyph;
-   vtkGeometryFilter* filter;
-   vtkPolyDataMapper* mapper;
-   vtkMaskPoints*    ptmask;
+      protected:
+         vtkGlyph3D*       glyph;
+         vtkGeometryFilter* filter;
+         vtkPolyDataMapper* mapper;
+         vtkMaskPoints*    ptmask;
 
-   void SetGlyphWithThreshold();
-   void SetGlyphAttributes();
-   float GetVectorScaleFactor();
+         void SetGlyphWithThreshold();
+         void SetGlyphAttributes();
+         float GetVectorScaleFactor();
 
-   int _vectorThreshHoldMinPercentage;
-   int _vectorThreshHoldMaxPercentage;
-   double _vectorThreshHoldValues[ 2 ];
-   int _vectorRatioFactor;
-   int _scaleByVector;
-   float _vectorScale;
-};
-
+         int _vectorThreshHoldMinPercentage;
+         int _vectorThreshHoldMaxPercentage;
+         double _vectorThreshHoldValues[ 2 ];
+         int _vectorRatioFactor;
+         int _scaleByVector;
+         float _vectorScale;
+   };
+}
 #endif

@@ -30,23 +30,23 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdReadParam.h"
-#include "cfdDataSet.h"
-#include "cfdFileInfo.h"
-#include "fileIO.h"
+#include "VE_Xplorer/cfdReadParam.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdFileInfo.h"
+#include "VE_Xplorer/fileIO.h"
 #include "VE_SceneGraph/cfdDCS.h"
-#include "cfdEnum.h"
-#include "cfdGlobalBase.h"
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 
-//#include <cstdio>
 #include <iostream>
 #include <fstream>
-//#include <cstdlib>
 #include <cmath>
-//#include <istream>
 
 #include <vpr/Util/Debug.h>
+using namespace VE_Util;
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdReadParam::cfdReadParam()
 {

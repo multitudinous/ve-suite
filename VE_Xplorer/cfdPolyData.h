@@ -32,46 +32,50 @@
 #ifndef CFD_POLYDATA_H
 #define CFD_POLYDATA_H
 
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdObjects.h"
 
 class vtkPolyDataMapper;
 class vtkWarpVector;
-class cfdCommandArray;
-
-class WXPLUGIN_DECLSPEC cfdPolyData : public cfdObjects
+namespace VE_Xplorer
 {
-   public:
+   class cfdCommandArray;
+}
 
-      cfdPolyData( float op_val = 1.0 );
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdPolyData : public cfdObjects
+   {
+      public:
 
-      ~cfdPolyData();
+         cfdPolyData( float op_val = 1.0 );
 
-      virtual void Update( void );
+         ~cfdPolyData();
 
-      // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+         virtual void Update( void );
 
-      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-      void SetParticleOption( unsigned int );
-      unsigned int GetParticleOption();
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
 
-      void SetParticleScale( float );
-      float GetParticleScale();
+         void SetParticleOption( unsigned int );
+         unsigned int GetParticleOption();
 
-   private:
+         void SetParticleScale( float );
+         float GetParticleScale();
 
-      float GetSphereScaleFactor();
+      private:
+         float GetSphereScaleFactor();
 
-      vtkPolyDataMapper *map;
-      vtkWarpVector* warper;
-	  //cfdCommandArray* commandArray;
-      bool warpSurface;
-      double warpedContourScale;
+         vtkPolyDataMapper *map;
+         vtkWarpVector* warper;
+	      //cfdCommandArray* commandArray;
+         bool warpSurface;
+         double warpedContourScale;
 
-      unsigned int  _particleOption;   // point cloud or variably sized spheres
-      float _particleScale;
-};
-
+         unsigned int  _particleOption;   // point cloud or variably sized spheres
+         float _particleScale;
+   };
+}
 #endif

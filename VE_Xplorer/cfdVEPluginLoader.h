@@ -39,58 +39,41 @@
 
 #include <vector>
 
-class cfdVEBaseClass;
-/*
- * If we're using wx in Dynamic Library format do we 
- * want FL to be in DLL form as well?
- */
-#if defined(WXUSINGDLL) && \
-    (defined(WXMAKING_PLUGIN_DLL) || defined(WXUSING_PLUGIN_DLL))
-
-#if defined(WXMAKING_PLUGIN_DLL)
-    // When building the DLL WXPLUGINDECLSPEC exports classes
-#   define WXPLUGIN_DECLSPEC            WXEXPORT
-#elif defined(WXUSING_PLUGIN_DLL)
-    // When building the DLL WXPLUGINDECLSPEC imports classes
-#   define WXPLUGIN_DECLSPEC            WXIMPORT
-#endif // defined(WXBUILD_PLUGIN_DLL)
-
-#else
-// When building the static library nullify the effect of WXPLUGIN_DECLSPEC
-#define WXPLUGIN_DECLSPEC
-#endif // WXUSINGDLL && (WXMAKING_PLUGIN_DLL || WXUSING_PLUGIN_DLL)
-
-
-class cfdVEPluginLoader : public wxObject
+namespace VE_Xplorer
 {
-  //DECLARE_DYNAMIC_CLASS(cfdVEPluginLoader)
+   class cfdVEBaseClass;
+}
 
-   public:
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdVEPluginLoader : public wxObject
+   {
+      public:
 
-      cfdVEPluginLoader();
-      ~cfdVEPluginLoader();
+         cfdVEPluginLoader();
+         ~cfdVEPluginLoader();
 
-      bool LoadPlugins(wxString dir);
-      //Load all the dlls in the given dir
+         bool LoadPlugins(wxString dir);
+         //Load all the dlls in the given dir
 
-      void RegisterPlugins();
+         void RegisterPlugins();
 
-      //Instantiate an instance of the plug_in. This instance is not used for any network composition but for information.
-      void RegisterPlugin(wxClassInfo* info);
+         //Instantiate an instance of the plug_in. This instance is not used for any network composition but for information.
+         void RegisterPlugin(wxClassInfo* info);
 
-      //char* GetPluginName(int);
+         //char* GetPluginName(int);
 
-      int GetNumberOfPlugins();
+         int GetNumberOfPlugins();
 
-      cfdVEBaseClass* CreateObject( char* ); 
+         cfdVEBaseClass* CreateObject( char* ); 
 
-   //private:
-      std::vector<cfdVEBaseClass*> plugins;
-      //Keep the list of the first intance of each plugin
-      std::vector<const wxClassInfo*> plugin_cls; 
-      //The classinfo obj of the each plugin, will be use to generate more instances
+      //private:
+         std::vector<cfdVEBaseClass*> plugins;
+         //Keep the list of the first intance of each plugin
+         std::vector<const wxClassInfo*> plugin_cls; 
+         //The classinfo obj of the each plugin, will be use to generate more instances
 
-      std::vector<wxPluginLibrary *> libs;
-};
-
+         std::vector<wxPluginLibrary *> libs;
+   };
+}
 #endif

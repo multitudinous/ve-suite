@@ -57,6 +57,9 @@
 #include <sstream>
 #include <string>
 
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+
 cfdScalarBarActor::cfdScalarBarActor( char* param, VE_SceneGraph::cfdGroup* rootNode )
 {
    vprDEBUG(vprDBG_ALL,2) << "constructing cfdScalarBarActor" 

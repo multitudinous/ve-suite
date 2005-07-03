@@ -30,9 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <string>
-#include "cfdPlanes.h"
-#include "cfdCuttingPlane.h"
-#include "fileIO.h"
+#include "VE_Xplorer/cfdPlanes.h"
+#include "VE_Xplorer/cfdCuttingPlane.h"
+#include "VE_Xplorer/fileIO.h"
 
 #include <vtkCellArray.h>
 #include <vtkFloatArray.h>
@@ -47,6 +47,9 @@
 #include <vpr/Util/Debug.h>
 
 #include <sstream>
+
+using namespace VE_Xplorer;
+using namespace VE_Util;
 
 cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                       const double bounds[ 6 ] )

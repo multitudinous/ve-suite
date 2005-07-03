@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdVEPluginLoader.h"
-#include "cfdVEBaseClass.h"
+#include "VE_Xplorer/cfdVEPluginLoader.h"
+#include "VE_Xplorer/cfdVEBaseClass.h"
 #include <iostream>
 
 #include <wx/image.h>
@@ -41,6 +41,8 @@
 #include <wx/dynlib.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
+
+using namespace VE_Xplorer;
 
 cfdVEPluginLoader::cfdVEPluginLoader()
 {

@@ -4,8 +4,9 @@
 #ifdef _OSG
 
 #include <osg/Uniform>
-#include "VE_Installer/VEConfig.h"
-namespace VE_TextureBased{
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdUpdateParameterCallback
       : public osg::Uniform::Callback{
 

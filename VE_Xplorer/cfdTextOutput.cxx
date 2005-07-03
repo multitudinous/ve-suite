@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdTextOutput.h"
+#include "VE_Xplorer/cfdTextOutput.h"
 
 #include "VE_SceneGraph/cfdGeode.h"
 #include "VE_SceneGraph/cfdDCS.h"
@@ -45,6 +45,9 @@
 #elif _OSG
 #elif _OPENSG
 #endif
+
+using namespace VE_SceneGraph;
+using namespace VE_Xplorer;
 
 cfdTextOutput::cfdTextOutput()
 :dcs(0)

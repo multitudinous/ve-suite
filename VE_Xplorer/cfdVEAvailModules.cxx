@@ -3,35 +3,6 @@
 
 #include <fstream>
 #include <sstream>
-//#include "StringParse.h"
-
-/*BEGIN_EVENT_TABLE(Avail_Modules, wxTreeCtrl)
-  EVT_TREE_ITEM_RIGHT_CLICK(TREE_CTRL, Avail_Modules::OnItemRightClick)
-  EVT_TREE_SEL_CHANGED(TREE_CTRL, Avail_Modules::OnSelChanged)
-  EVT_MENU(Module_Desc, Avail_Modules::ShowDesc)
-  EVT_MENU(Module_Help, Avail_Modules::ShowHelp)
-  EVT_TREE_ITEM_ACTIVATED(TREE_CTRL, Avail_Modules::Instantiate)
-END_EVENT_TABLE()*/
-//using namespace std;
-   
-//IMPLEMENT_DYNAMIC_CLASS(Avail_Modules, wxTreeCtrl)
-//IMPLEMENT_DYNAMIC_CLASS(cfdVEAvail_Modules, wxObject)
-
-/*Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
-  : wxTreeCtrl(parent, id, pos, size, style)
-{
-  
-  int image1 = TreeCtrlIcon_Folder;
-  int image2 = TreeCtrlIcon_FolderSelected;
-  //CreateImageList();
-  rootId = AddRoot(wxT("Available Modules"),
-				image1, image2,
-				NULL);
-  SetItemImage(rootId, TreeCtrlIcon_FolderOpened, wxTreeItemIcon_Expanded);
-  SetItemFont(rootId, *wxITALIC_FONT);
-  pl_loader = new PluginLoader();
-  LoadModules();
-}*/
 
 cfdVEAvail_Modules::cfdVEAvail_Modules( void )
 {

@@ -3,12 +3,14 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/StateSet>
-namespace osg{
+namespace osg
+{
    class Shader;
 }
-#include "VE_Installer/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdOSGShaderManager{
    public:
       cfdOSGShaderManager();

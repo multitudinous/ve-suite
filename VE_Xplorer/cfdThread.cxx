@@ -30,6 +30,9 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "cfdThread.h"
+
+using namespace VE_Xplorer;
+
 cfdThread::cfdThread( void )
 {
    //corba_run = NULL;

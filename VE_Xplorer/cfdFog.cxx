@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 
-#include "cfdFog.h"
+#include "VE_Xplorer/cfdFog.h"
 #include <iostream>
 #include <Performer/pr/pfFog.h>
 

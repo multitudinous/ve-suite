@@ -4,15 +4,17 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 
-namespace osg{
+namespace osg
+{
    class TexMat;
    class Node;
 }
 #include <osg/NodeCallback>
 #include <osg/Vec3f>
-#include "VE_Installer/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdTextureMatrixCallback : public osg::NodeCallback
    {
       public:

@@ -30,8 +30,8 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdDigitalAnalogGauge.h"
-#include "cfd1DTextInput.h"
+#include "VE_Xplorer/cfdDigitalAnalogGauge.h"
+#include "VE_Xplorer/cfd1DTextInput.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdNode.h"
 #include "VE_SceneGraph/cfdDCS.h"
@@ -54,6 +54,9 @@
 #include <vtkVectorText.h>
 
 #include <vpr/Util/Debug.h>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( VE_SceneGraph::cfdGroup * groupNode )
 {

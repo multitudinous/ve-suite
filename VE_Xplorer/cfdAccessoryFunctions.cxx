@@ -37,6 +37,8 @@
 //#include <vrj/Util/Debug.h>
 #include <iostream>
 
+using namespace VE_Util;
+
 cfdAccessoryFunctions::cfdAccessoryFunctions( )
 {
 }

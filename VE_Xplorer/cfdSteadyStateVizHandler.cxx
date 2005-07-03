@@ -70,13 +70,16 @@
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
 //This heare is WAY down here to fix compile errors on IRIX
-#include "cfdSteadyStateVizHandler.h"
+#include "VE_Xplorer/cfdSteadyStateVizHandler.h"
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
 
-vprSingletonImp( cfdSteadyStateVizHandler );
+vprSingletonImp( VE_Xplorer::cfdSteadyStateVizHandler );
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdSteadyStateVizHandler::cfdSteadyStateVizHandler( void )
 {

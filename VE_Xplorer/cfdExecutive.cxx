@@ -41,8 +41,8 @@
 #include "VE_Xplorer/cfdThread.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include "VE_SceneGraph/cfdDCS.h"
-#include "package.h"
-#include "Network_Exec.h"
+#include "VE_Conductor/Framework/package.h"
+#include "VE_CE/Network_Exec.h"
 
 #include <iostream>
 #include <string>
@@ -52,6 +52,9 @@
 #include <vpr/System.h>
 
 #include <orbsvcs/CosNamingC.h>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
                             PortableServer::POA* child_poa )

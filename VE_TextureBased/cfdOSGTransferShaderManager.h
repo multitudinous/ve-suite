@@ -6,9 +6,10 @@ namespace osg{
    class Texture3D;
    class Texture1D;
    class TexMat;
-};
+}
 #include <vector>
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdTextureManager;
    class cfdUpdateTextureCallback;
 }
@@ -17,7 +18,8 @@ namespace VE_TextureBased{
 #include "VE_TextureBased/cfdUpdateableOSGTexture1d.h"
 
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdOSGTransferShaderManager
       : public cfdOSGShaderManager{
       public:

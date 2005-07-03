@@ -52,6 +52,9 @@
 #include <vtkStreamTracer.h>
 #include <vpr/Util/Debug.h>
 
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+
 cfdStreamers::cfdStreamers( void )
 {
    this->stream = vtkStreamLine::New();

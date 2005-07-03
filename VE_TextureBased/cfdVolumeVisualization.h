@@ -29,7 +29,8 @@ namespace osg
 #include <osg/TexMat>
 #include <osg/Vec3>
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdTextureMatrixCallback;
    class cfdVolumeCenterCallback;
    class cfdVolumeBillboard;
@@ -40,9 +41,10 @@ namespace VE_TextureBased{
 #include "VE_TextureBased/cfdUpdateTextureCallback.h"
 #include "VE_TextureBased/cfdUpdateableOSGTexture1d.h"
 
-#include "VE_Installer/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisualization{
    public:
       cfdVolumeVisualization();

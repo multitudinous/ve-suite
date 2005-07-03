@@ -29,15 +29,15 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdObjects.h"
-#include "cfdReadParam.h"
-#include "cfdDataSet.h"
+#include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/cfdReadParam.h"
+#include "VE_Xplorer/cfdDataSet.h"
 #include "VE_SceneGraph/cfdGeode.h"
 #include "VE_SceneGraph/cfdDCS.h"
-#include "cfdEnum.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include "VE_SceneGraph/cfdTempAnimation.h"
 #include "VE_SceneGraph/cfdSequence.h"
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 
 // Juggler Includes
 #include <vpr/Util/Debug.h>
@@ -47,6 +47,9 @@
 #include <vtkPolyData.h>
 #include <vtkPolyDataSource.h>
 #include <vtkActor.h>
+
+using namespace VE_SceneGraph;
+using namespace VE_Xplorer;
 
 cfdObjects::cfdObjects( void )
 {

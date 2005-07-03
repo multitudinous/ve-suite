@@ -40,15 +40,15 @@
 
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
-#include "cfdDataSet.h"
-#include "fileIO.h"
-#include "cfdModel.h"
-#include "cfdVectorBase.h"
-#include "cfdCommandArray.h"
-#include "cfdEnum.h"
-#include "cfdReadParam.h"
-#include "cfdFILE.h"
-#include "cfdScalarBarActor.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/cfdVectorBase.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdReadParam.h"
+#include "VE_Xplorer/cfdFILE.h"
+#include "VE_Xplorer/cfdScalarBarActor.h"
 #include "VE_SceneGraph/cfdTempAnimation.h"
 #include "VE_SceneGraph/cfdSwitch.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
@@ -73,7 +73,11 @@
 #include <sys/dir.h>
 #endif // WIN32
 
-vprSingletonImp( cfdModelHandler );
+vprSingletonImp( VE_Xplorer::cfdModelHandler );
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+using namespace VE_Util;
+using namespace VE_TextureBased;
 
 cfdModelHandler::cfdModelHandler( void )
 {

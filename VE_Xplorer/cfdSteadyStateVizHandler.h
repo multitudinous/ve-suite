@@ -38,128 +38,138 @@
 #include <vpr/Thread/Thread.h>
 #include <vpr/Util/Singleton.h>
 
-class cfdPolyData;      
-class cfdIsosurface;    
-class cfdPresetContour; 
-class cfdContours;      
-class cfdMomentum;      
-class cfdPresetMomentum;
-class cfdMomentums;     
-class cfdVector;        
-class cfdPresetVector;  
-class cfdVectors;       
-class cfdStreamers;     
-class cfdPolyData;      
-class cfdImage;         
-class cfdAnimatedImage; 
-class cfdAnimatedStreamlineCone;
-class cfdContour;
-class cfdGlobalBase;
-class cfdObjects;
-class cfdCommandArray;
+#include "VE_Installer/include/VEConfig.h"
 class vtkPolyData;
-class cfdNavigate;
-class cfdCursor;
-class cfdGraphicsObject;
-class cfdModel;
-class cfdTextOutput;
 
-namespace VE_SceneGraph{
+namespace VE_Xplorer
+{
+   class cfdPolyData;      
+   class cfdIsosurface;    
+   class cfdPresetContour; 
+   class cfdContours;      
+   class cfdMomentum;      
+   class cfdPresetMomentum;
+   class cfdMomentums;     
+   class cfdVector;        
+   class cfdPresetVector;  
+   class cfdVectors;       
+   class cfdStreamers;     
+   class cfdPolyData;      
+   class cfdImage;         
+   class cfdAnimatedImage; 
+   class cfdAnimatedStreamlineCone;
+   class cfdContour;
+   class cfdGlobalBase;
+   class cfdObjects;
+   class cfdCommandArray;
+   class cfdNavigate;
+   class cfdCursor;
+   class cfdGraphicsObject;
+   class cfdModel;
+   class cfdTextOutput;
+}
+
+namespace VE_SceneGraph
+{
    class cfdTempAnimation;
    class cfdDCS;
 }
-class cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
+
+namespace VE_Xplorer
 {
-   private:
-      // Required so that vpr::Singleton can instantiate this class.
-      //friend class vpr::Singleton< cfdSteadyStateVizHandler >;
-      cfdSteadyStateVizHandler( void );
-      //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
-      //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
-      ~cfdSteadyStateVizHandler( void ){ ; }// Never gets called, don't implement
-      vprSingletonHeader( cfdSteadyStateVizHandler );   
+   class VE_XPLORER_EXPORTS cfdSteadyStateVizHandler //: public vpr::Singleton< cfdSteadyStateVizHandler >
+   {
+      private:
+         // Required so that vpr::Singleton can instantiate this class.
+         //friend class vpr::Singleton< cfdSteadyStateVizHandler >;
+         cfdSteadyStateVizHandler( void );
+         //cfdSteadyStateVizHandler(const cfdSteadyStateVizHandler& o) { ; }
+         //cfdSteadyStateVizHandler& operator=(const cfdSteadyStateVizHandler& o) { ; }
+         ~cfdSteadyStateVizHandler( void ){ ; }// Never gets called, don't implement
+         vprSingletonHeader( cfdSteadyStateVizHandler );   
    
-   public:
-      void Initialize( char * );
-      void CleanUp( void );
-      void InitScene( void );
-      void PreFrameUpdate( void );
-      void CreateActorThread( void * );
-      void streamers( void );
+      public:
+         void Initialize( char * );
+         void CleanUp( void );
+         void InitScene( void );
+         void PreFrameUpdate( void );
+         void CreateActorThread( void * );
+         void streamers( void );
 
-      // Helper functions
-      void SetCommandArray( cfdCommandArray* );
-      VE_SceneGraph::cfdTempAnimation* GetActiveAnimation( void );
-      bool TransientGeodesIsBusy();
+         // Helper functions
+         void SetCommandArray( cfdCommandArray* );
+         VE_SceneGraph::cfdTempAnimation* GetActiveAnimation( void );
+         bool TransientGeodesIsBusy();
 
-   private:
-      cfdPolyData*         surface;
-      cfdIsosurface*       isosurface;
-      cfdContour*          contour;
-      cfdPresetContour*    x_contour;
-      cfdPresetContour*    y_contour;
-      cfdPresetContour*    z_contour;
-      cfdContours*         x_contours;
-      cfdContours*         y_contours;
-      cfdContours*         z_contours;
-      cfdMomentum*         momentum;
-      cfdPresetMomentum*   x_momentum;
-      cfdPresetMomentum*   y_momentum;
-      cfdPresetMomentum*   z_momentum;
-      cfdMomentums*        x_momentums;
-      cfdMomentums*        y_momentums;
-      cfdMomentums*        z_momentums;
-      cfdVector*           vector;
-      cfdPresetVector*     x_vector;
-      cfdPresetVector*     y_vector;
-      cfdPresetVector*     z_vector;
-      cfdVectors*          x_vectors;
-      cfdVectors*          y_vectors;
-      cfdVectors*          z_vectors;
-      cfdStreamers*        streamlines;
-      cfdPolyData*         particles;
-      cfdImage*            image;
-      cfdAnimatedImage*    animImg;
-      cfdAnimatedStreamlineCone* animStreamer;
-      cfdTextOutput*       textOutput;
-      // Common objects for all functions
-      cfdCommandArray*  commandArray;
-      VE_SceneGraph::cfdDCS*     _activeDataSetDCS;
-      cfdObjects* _activeObject;
-      VE_SceneGraph::cfdTempAnimation* _activeTempAnimation;
+      private:
+         cfdPolyData*         surface;
+         cfdIsosurface*       isosurface;
+         cfdContour*          contour;
+         cfdPresetContour*    x_contour;
+         cfdPresetContour*    y_contour;
+         cfdPresetContour*    z_contour;
+         cfdContours*         x_contours;
+         cfdContours*         y_contours;
+         cfdContours*         z_contours;
+         cfdMomentum*         momentum;
+         cfdPresetMomentum*   x_momentum;
+         cfdPresetMomentum*   y_momentum;
+         cfdPresetMomentum*   z_momentum;
+         cfdMomentums*        x_momentums;
+         cfdMomentums*        y_momentums;
+         cfdMomentums*        z_momentums;
+         cfdVector*           vector;
+         cfdPresetVector*     x_vector;
+         cfdPresetVector*     y_vector;
+         cfdPresetVector*     z_vector;
+         cfdVectors*          x_vectors;
+         cfdVectors*          y_vectors;
+         cfdVectors*          z_vectors;
+         cfdStreamers*        streamlines;
+         cfdPolyData*         particles;
+         cfdImage*            image;
+         cfdAnimatedImage*    animImg;
+         cfdAnimatedStreamlineCone* animStreamer;
+         cfdTextOutput*       textOutput;
+         // Common objects for all functions
+         cfdCommandArray*  commandArray;
+         VE_SceneGraph::cfdDCS*     _activeDataSetDCS;
+         cfdObjects* _activeObject;
+         VE_SceneGraph::cfdTempAnimation* _activeTempAnimation;
 
-      // Classes and variables for multithreading.
-      vpr::Thread* vjTh[1];
+         // Classes and variables for multithreading.
+         vpr::Thread* vjTh[1];
    
-      // Vectors that will eventually be stored as maps
-      // these hold all the objectsa for easy access and management
-      std::vector< cfdObjects* > dataList;
-      std::vector< cfdGlobalBase* > commandList;
+         // Vectors that will eventually be stored as maps
+         // these hold all the objectsa for easy access and management
+         std::vector< cfdObjects* > dataList;
+         std::vector< cfdGlobalBase* > commandList;
 
-      char* _param;
-      bool actorsAreReady;
-      bool computeActorsAndGeodes;
-      bool changeGeometry;
-      bool texturesActive;
-      vtkPolyData*   lastSource;
-      cfdNavigate*   nav;
-      cfdCursor*     cursor;
-      // Stores data from cfdCursor
-      // Variable will eventually be used to define bounding box
-      // for data interagation
-      double cur_box[6];
+         char* _param;
+         bool actorsAreReady;
+         bool computeActorsAndGeodes;
+         bool changeGeometry;
+         bool texturesActive;
+         vtkPolyData*   lastSource;
+         cfdNavigate*   nav;
+         cfdCursor*     cursor;
+         // Stores data from cfdCursor
+         // Variable will eventually be used to define bounding box
+         // for data interagation
+         double cur_box[6];
 
-      // Need to get rid of this bool fix 
-      //bool inter_activeObject;
-      //bool chgMod;
-      //bool runStreamersThread;
-      bool runIntraParallelThread;
-      bool useLastSource;
-      bool transientBusy;
-      bool transientActors;
+         // Need to get rid of this bool fix 
+         //bool inter_activeObject;
+         //bool chgMod;
+         //bool runStreamersThread;
+         bool runIntraParallelThread;
+         bool useLastSource;
+         bool transientBusy;
+         bool transientActors;
 
-      // multi map to hold graphics objects
-      // the key is the viz type and the value is cfdGraphicsObject
-      std::multimap< int, cfdGraphicsObject* > graphicsObjects;
-};
+         // multi map to hold graphics objects
+         // the key is the viz type and the value is cfdGraphicsObject
+         std::multimap< int, cfdGraphicsObject* > graphicsObjects;
+   };
+}
 #endif

@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdPresetVector.h"
-#include "cfdDataSet.h"
-#include "cfdPlanes.h"
-#include "cfdCuttingPlane.h"
+#include "VE_Xplorer/cfdPresetVector.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdPlanes.h"
+#include "VE_Xplorer/cfdCuttingPlane.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vpr/Util/Debug.h>
@@ -48,6 +48,9 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 // this class requires that the dataset has a vector field.
 cfdPresetVector::cfdPresetVector( const int xyz, const int numSteps )

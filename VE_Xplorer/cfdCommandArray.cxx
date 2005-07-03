@@ -30,8 +30,10 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 #include <iostream>
+
+using namespace VE_Xplorer;
 
 cfdCommandArray::cfdCommandArray( const cfdCommandArray& input )
 {

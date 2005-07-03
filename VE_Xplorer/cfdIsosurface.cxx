@@ -29,8 +29,8 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdIsosurface.h"
-#include "cfdDataSet.h"
+#include "VE_Xplorer/cfdIsosurface.h"
+#include "VE_Xplorer/cfdDataSet.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
@@ -44,6 +44,8 @@
 #include <vtkProperty.h>
 
 #include <vpr/Util/Debug.h>
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdIsosurface::cfdIsosurface( int numsteps )
 {

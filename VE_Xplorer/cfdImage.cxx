@@ -29,12 +29,12 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdImage.h"
-#include "cfdObjects.h"
-#include "cfdDataSet.h"
-#include "cfdCommandArray.h"
-#include "fileIO.h"
-#include "cfdReadParam.h"
+#include "VE_Xplorer/cfdImage.h"
+#include "VE_Xplorer/cfdObjects.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/cfdReadParam.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkPlaneSource.h>
@@ -48,6 +48,10 @@
 #include <vpr/Util/Debug.h>
 
 #include <fstream>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+using namespace VE_Util;
 
 cfdImage::cfdImage( char* param )
 {

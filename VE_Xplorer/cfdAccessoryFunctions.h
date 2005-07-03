@@ -34,18 +34,21 @@
 
 class vtkDataArray;
 class vtkDataSet;
+#include "VE_Installer/include/VEConfig.h"
 
-class cfdAccessoryFunctions
-{ 
-   public:
-      cfdAccessoryFunctions();
-      ~cfdAccessoryFunctions();
-      static double * ComputeVectorMagnitudeRange( vtkDataArray * dataArray );
-      static double ComputeMeanCellBBLength( vtkDataSet * dataSet );
+namespace VE_Util
+{
+   class VE_UTIL_EXPORTS cfdAccessoryFunctions
+   { 
+      public:
+         cfdAccessoryFunctions();
+         ~cfdAccessoryFunctions();
+         static double * ComputeVectorMagnitudeRange( vtkDataArray * dataArray );
+         static double ComputeMeanCellBBLength( vtkDataSet * dataSet );
 
 
-   private:
-      static double ComputeVectorMagnitude( double vectorComponents [ 3 ] );
-
-};
+      private:
+         static double ComputeVectorMagnitude( double vectorComponents [ 3 ] );
+   };
+}
 #endif

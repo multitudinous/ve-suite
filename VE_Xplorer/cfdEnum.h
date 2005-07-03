@@ -35,7 +35,8 @@
 /*!
   Type of cursors.
 */
-enum cursorTYPE {
+enum cursorTYPE 
+{
     XPLANE,
     YPLANE,
     ZPLANE,

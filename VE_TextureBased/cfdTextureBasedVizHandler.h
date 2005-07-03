@@ -2,16 +2,22 @@
 #define CFD_TEXTURE_BASED_MODEL_HANDLER_H
 #ifdef VE_PATENTED
 #include <vpr/Util/Singleton.h>
+#include "VE_Installer/include/VEConfig.h"
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdDCS;
    class cfdGroup;
    class cfdSwitch;
 }
-class cfdCursor;
-class cfdNavigate;
-class cfdCommandArray;
-class cfdGraphicsObject;
+
+namespace VE_Xplorer
+{
+   class cfdCursor;
+   class cfdNavigate;
+   class cfdCommandArray;
+   class cfdGraphicsObject;
+}
 
 #include <vector>
 #ifdef _PERFORMER
@@ -19,7 +25,8 @@ class cfdGraphicsObject;
 #elif _OSG 
 namespace osgUtil { class SceneView; }
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdTextureManager;
    class cfdPBufferManager;
    class cfdVolumeVisualization;
@@ -28,19 +35,20 @@ namespace VE_TextureBased{
    class cfdScalarVolumeVisHandler;
    class cfdVectorVolumeVisHandler;
 }
-#include "VE_Xplorer/cfdConfig.h"
-using namespace VE_TextureBased;
-   class WXPLUGIN_DECLSPEC cfdTextureBasedVizHandler //: public vpr::Singleton< cfdTextureBasedVizHandler >
+
+namespace VE_TextureBased
+{
+   class VE_XPLORER_EXPORTS cfdTextureBasedVizHandler //: public vpr::Singleton< cfdTextureBasedVizHandler >
    {
       public:
          void PreFrameUpdate( void );
          void CleanUp( void );
          void SetParameterFile(char* paramFile);
-         void SetCommandArray(cfdCommandArray* cmdArray);
-         void SetWorldDCS(VE_SceneGraph::cfdDCS* dcs);
-         void SetParentNode(VE_SceneGraph::cfdGroup* parent);
-         void SetNavigate(cfdNavigate* navigate);
-         void SetCursor(cfdCursor* cursor);
+         void SetCommandArray( VE_Xplorer::cfdCommandArray* cmdArray);
+         void SetWorldDCS( VE_SceneGraph::cfdDCS* dcs);
+         void SetParentNode( VE_SceneGraph::cfdGroup* parent);
+         void SetNavigate( VE_Xplorer::cfdNavigate* navigate);
+         void SetCursor( VE_Xplorer::cfdCursor* cursor);
          void SetActiveTextureDataSet(cfdTextureDataSet* tdset);
   
          void ViewTextureBasedVis(bool trueFalse);
@@ -62,10 +70,10 @@ using namespace VE_TextureBased;
          void _updateVectorVisHandler();
 
          char* _paramFile;
-         cfdCommandArray* _cmdArray;
+         VE_Xplorer::cfdCommandArray* _cmdArray;
          VE_SceneGraph::cfdDCS* _worldDCS;
-         cfdNavigate* _nav;
-         cfdCursor* _cursor;
+         VE_Xplorer::cfdNavigate* _nav;
+         VE_Xplorer::cfdCursor* _cursor;
          cfdTextureDataSet* _activeTDSet;
          cfdTextureManager* _activeTM;
 
@@ -90,7 +98,7 @@ using namespace VE_TextureBased;
          ~cfdTextureBasedVizHandler( void ){ ; }// Never gets called, don't implement
          vprSingletonHeader( cfdTextureBasedVizHandler );   
    };
-
+}
 #endif //OSG
 #endif //
 #endif// CFD_TEXTURE_BASED_VIZ_HANDLER_H

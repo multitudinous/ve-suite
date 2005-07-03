@@ -37,27 +37,30 @@
 #elif _OSG
 #elif _OPENSG
 #endif
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdGeode;
    class cfdDCS;
 }
 
-class cfdTextOutput
+namespace VE_Xplorer
 {
-   public:
-      cfdTextOutput();   //constructor
-      ~cfdTextOutput();  //destructor
-      VE_SceneGraph::cfdDCS *add_text(char *text_input);
+   class cfdTextOutput
+   {
+      public:
+         cfdTextOutput();   //constructor
+         ~cfdTextOutput();  //destructor
+         VE_SceneGraph::cfdDCS *add_text(char *text_input);
     
-   private:
-      VE_SceneGraph::cfdDCS*   dcs;
-#ifdef _PERFORMER
-      //pfFont *fnt;
-      pfText *text;
-      pfString *str;
-#elif _OSG
-#elif _OPENSG
-#endif
-};
-
+      private:
+         VE_SceneGraph::cfdDCS*   dcs;
+   #ifdef _PERFORMER
+         //pfFont *fnt;
+         pfText *text;
+         pfString *str;
+   #elif _OSG
+   #elif _OPENSG
+   #endif
+   };
+}
 #endif // TEXT_PROMPT_H

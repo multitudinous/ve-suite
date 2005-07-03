@@ -32,7 +32,7 @@
 #include "VE_Xplorer/cfdVector.h"
 #ifdef USE_OMP
 #include <vtkAppendFilter.h>
-#include "omp.h"
+#include <omp.h>
 #endif
 
 #include "VE_Xplorer/cfdEnum.h"
@@ -43,7 +43,6 @@
 #include <vtkPlane.h>
 #include <vtkPointData.h>
 #include <vtkPolyData.h>
-//#include <vtkUnstructuredGrid.h>
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
 #include <vtkGeometryFilter.h>
@@ -52,7 +51,11 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+
 #include <vpr/Util/Debug.h>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdVector::cfdVector()
 {

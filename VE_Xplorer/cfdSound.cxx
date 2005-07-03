@@ -30,9 +30,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdSound.h"
+#include "VE_Xplorer/cfdSound.h"
 #include <snx/sonix.h>
 #include <vpr/Util/Debug.h>
+
+using namespace VE_Xplorer;
 
 cfdSound::cfdSound()
 {

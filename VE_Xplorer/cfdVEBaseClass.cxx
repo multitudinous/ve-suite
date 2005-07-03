@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/cfdVEBaseClass.h"
-//#include "cfdModuleGeometry.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdReadParam.h"
@@ -42,16 +41,13 @@
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/cfdObjects.h"
 
-#include "package.h"
+#include "VE_Conductor/Framework/package.h"
 
 #include <fstream>
 #include <string>
 #include <sstream>
 
 #include <vrj/Util/Debug.h>
-
-//#include <wx/dc.h>
-//#include <wx/gdicmn.h>
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
@@ -63,6 +59,8 @@
 #include <windows.h>
 #include <direct.h>
 #endif
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 IMPLEMENT_DYNAMIC_CLASS( cfdVEBaseClass, wxObject )
 // Constructor

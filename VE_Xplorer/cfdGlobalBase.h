@@ -32,34 +32,38 @@
 #ifndef CFD_GLOBAL_BASE_H
 #define CFD_GLOBAL_BASE_H
 
-class cfdCommandArray;
-
-#include "VE_Xplorer/cfdConfig.h"
-
-class WXPLUGIN_DECLSPEC cfdGlobalBase
+namespace VE_Xplorer
 {
- public:
-   cfdGlobalBase();
-   virtual ~cfdGlobalBase ();
-   //copy constructor
-   cfdGlobalBase( const cfdGlobalBase& ){;}
+   class cfdCommandArray;
+}
 
-   // this abstract base class declares some pure virtual int functions to be
-   // specified in concrete implementations
+#include "VE_Installer/include/VEConfig.h"
 
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray ) = 0;
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdGlobalBase
+   {
+      public:
+         cfdGlobalBase();
+         virtual ~cfdGlobalBase ();
+         //copy constructor
+         cfdGlobalBase( const cfdGlobalBase& ){;}
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand() = 0;
+         // this abstract base class declares some pure virtual int functions to be
+         // specified in concrete implementations
 
- protected:
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray ) = 0;
 
-   // cfdApp side variables declared in VjObs_i.h
-   cfdCommandArray * _cfdCommandArray;
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand() = 0;
 
- private:
-};
+      protected:
 
+         // cfdApp side variables declared in VjObs_i.h
+         VE_Xplorer::cfdCommandArray * _cfdCommandArray;
+
+      private:
+   };
+}
 #endif
-

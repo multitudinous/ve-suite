@@ -142,7 +142,7 @@
 				Name="VCMIDLTool"/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy .\osg_dbg\VE_SceneGraph_osgd.dll %VE_SUITE_HOME%\bin\win32
+				CommandLine="copy .\osg_dbg\VE_SceneGraph_osgd.dll %VE_SUITE_HOME%\lib\win32
 copy .\osg_dbg\VE_SceneGraph_osgd.lib %VE_SUITE_HOME%\lib\win32
 "/>
 			<Tool

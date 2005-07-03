@@ -34,48 +34,50 @@
 
 class vtkPlane;
 
-class cfdCuttingPlane
+namespace VE_Xplorer
 {
-  public:
-    cfdCuttingPlane( const double bounds[6], const int xyz, 
+   class cfdCuttingPlane
+   {
+      public:
+         cfdCuttingPlane( const double bounds[6], const int xyz, 
                      const int numSteps = 10 );
 
-    ~cfdCuttingPlane( );
+         ~cfdCuttingPlane( );
     
-    void SetBounds( const double bounds[6] );
+         void SetBounds( const double bounds[6] );
 
-    vtkPlane * GetPlane( );
+         vtkPlane * GetPlane( );
 
-    void Advance( int requestedValue );
+         void Advance( int requestedValue );
 
-    void GetOrigin( double Origin[ 3 ] );
+         void GetOrigin( double Origin[ 3 ] );
 
-  private:
-    double origin[3];    // Position of cut.
+      private:
+         double origin[3];    // Position of cut.
 
-    void ComputeOrigin( int requestedValue );
+         void ComputeOrigin( int requestedValue );
     
-    int isPastEnd();
+         int isPastEnd();
 
-    int isAtEnd();
+         int isAtEnd();
 
-    int isAtStart();
+         int isAtStart();
 
-    void ResetOriginToLow();
+         void ResetOriginToLow();
 
-    void ResetOriginToHigh();
+         void ResetOriginToHigh();
 
-    void IncrementOrigin();
+         void IncrementOrigin();
 
-    vtkPlane * plane;
+         vtkPlane * plane;
 
-    double normal[3];    // Normal direction to cut.
+         double normal[3];    // Normal direction to cut.
 
-    float bd[6];        // Boundary of the whole data sets.
+         float bd[6];        // Boundary of the whole data sets.
 
-    float dx;           // used only by blue menu
+         float dx;           // used only by blue menu
 
-    int type;           // plane direction: 0=X, 1=Y, 2=Z
-};
-
+         int type;           // plane direction: 0=X, 1=Y, 2=Z
+   };
+}
 #endif

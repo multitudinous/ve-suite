@@ -32,11 +32,13 @@
 #ifndef CFD_PRESET_CONTOUR_H
 #define CFD_PRESET_CONTOUR_H
 
-#include "cfdContourBase.h"
+#include "VE_Xplorer/cfdContourBase.h"
 
 class vtkCutter;
-class cfdCuttingPlane;
-
+namespace VE_Xplorer
+{
+   class cfdCuttingPlane;
+}
 //! VTK contour plane renderer.
 /*!
   A class that takes input data set(s) and generates a 
@@ -44,24 +46,25 @@ class cfdCuttingPlane;
   selected. Update member function will update
   the plane position and direction.
 */
-
-class WXPLUGIN_DECLSPEC cfdPresetContour : public cfdContourBase
+namespace VE_Xplorer
 {
- public:
-  // Initialize the pipeline.
-  // (and set the number of cutting plane increments for blue menu)
-  cfdPresetContour( const int xyz, const int numSteps = 10 );
+   class VE_XPLORER_EXPORTS cfdPresetContour : public cfdContourBase
+   {
+      public:
+         // Initialize the pipeline.
+         // (and set the number of cutting plane increments for blue menu)
+         cfdPresetContour( const int xyz, const int numSteps = 10 );
 
-  ~cfdPresetContour();
+         ~cfdPresetContour();
 
-  virtual void Update( void );
+         virtual void Update( void );
 
- private:
-   int xyz;
-   int numSteps;
-   vtkCutter       * cutter;
+      private:
+         int xyz;
+         int numSteps;
+         vtkCutter       * cutter;
 
-   cfdCuttingPlane * cuttingPlane;
-};
-
+         cfdCuttingPlane * cuttingPlane;
+   };
+}
 #endif

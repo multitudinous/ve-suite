@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "fileIO.h"
+#include "VE_Xplorer/fileIO.h"
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
 #include <string>
@@ -38,15 +38,6 @@
 
 namespace fs = boost::filesystem;
 
-/*
-#ifdef WIN32     // windows
-#include <direct.h>
-#else             // not windows
-#include <sys/types.h>
-#include <sys/stat.h>
-#include <sys/dir.h>
-#endif            // WIN32
-*/
 using namespace VE_Util;
 
 fileIO::fileIO( )

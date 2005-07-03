@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
-#include <stdlib.h>
+#include <cstdlib>
 
 #include "VE_Xplorer/readWriteVtkThings.h"
 
@@ -50,7 +50,7 @@
 
 using namespace VE_Util;
 
-void printWhatItIs( vtkDataSet * dataSet )
+void VE_Util::printWhatItIs( vtkDataSet * dataSet )
 {
    if ( dataSet == NULL )
    {
@@ -72,7 +72,7 @@ void printWhatItIs( vtkDataSet * dataSet )
    //std::cout << "GetDataObjectType() = " << dataSet->GetDataObjectType() << std::endl;
 }
 
-void printBounds( double bounds[6] )
+void VE_Util::printBounds( double bounds[6] )
 {
    std::cout << "Geometry bounding box information..." << std::endl;
    std::cout << "\tx-min = \t" << bounds[0]
@@ -83,7 +83,7 @@ void printBounds( double bounds[6] )
              << "\tz-max = \t" << bounds[5] << std::endl;
 }
 
-vtkDataSet * readVtkThing( char * vtkFilename, int printFlag )
+vtkDataSet * VE_Util::readVtkThing( char * vtkFilename, int printFlag )
 {
    cfdVTKFileHandler fileReader;
    vtkDataSet* temp = fileReader.GetDataSetFromFile(vtkFilename);
@@ -92,12 +92,12 @@ vtkDataSet * readVtkThing( char * vtkFilename, int printFlag )
       double bounds[6];
       temp->GetBounds( bounds );
       printBounds( bounds );
-      //VE_Util::printWhatItIs( temp );
+      VE_Util::printWhatItIs( temp );
    }
    return temp;
 }
 
-bool writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag )
+bool VE_Util::writeVtkThing( vtkDataSet * vtkThing, char * vtkFilename, int binaryFlag )
 {
    cfdVTKFileHandler fileWriter;
    if(!binaryFlag) 

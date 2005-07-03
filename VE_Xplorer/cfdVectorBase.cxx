@@ -47,6 +47,8 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 
+using namespace VE_Xplorer;
+
 // this class requires that the dataset has a vector field.
 cfdVectorBase::cfdVectorBase()
 {

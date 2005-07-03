@@ -4,12 +4,14 @@
 #ifdef _PERFORMER
 #elif _OPENSG
 #elif _OSG
-namespace osg{
+namespace osg
+{
    class State;
-};
+}
 #include <osg/Texture3D>
-#include "VE_Installer/VEConfig.h"
-namespace VE_TextureBased{
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdUpdateableOSGNoiseTexture3d 
          : public  osg::Texture3D::SubloadCallback{
       public:

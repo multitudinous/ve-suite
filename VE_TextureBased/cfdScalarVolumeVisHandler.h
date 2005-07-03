@@ -4,13 +4,15 @@
 #ifdef _OSG
 namespace osg { class Group; }
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdScalarShaderManager;
    class cfdTextureManager;
 }
 #include "VE_TextureBased/cfdVolumeVisNodeHandler.h" 
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdScalarVolumeVisHandler 
       : public cfdVolumeVisNodeHandler{
       public:

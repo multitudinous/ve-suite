@@ -60,72 +60,61 @@ that has been translated into pfGeode and add into the
 pfDCS. This class is good for other types of data that
 have been supported by VTK.
 */
-class cfdGeomDataSet 
+namespace VE_Xplorer
 {
- public:
-   cfdGeomDataSet(fileInfo *geomfile, VE_SceneGraph::cfdDCS *);
+   class cfdGeomDataSet 
+   {
+      public:
+         cfdGeomDataSet(fileInfo *geomfile, VE_SceneGraph::cfdDCS *);
 
-  cfdGeomDataSet( float, float [ 3 ], char * );
-  ~cfdGeomDataSet( );
+         cfdGeomDataSet( float, float [ 3 ], char * );
+         ~cfdGeomDataSet( );
 
-  /*!
-    Initialize the data sets to be loaded. And render using
-    VTK functions and translate into pfGeode object and 
-    loaded into pfDCS.
-  */
-  void Initialize(float);
-  void setTrans3( float x, float y, float z );
-  void setTrans( float trans[3] );
-  void setScl( float x,float y, float z );
-  void setRot(float,float,float);
-  void setRotMat(double *);
-#ifdef _PERFORMER
-  void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
-#elif _OSG
-  //void TravNodeMaterial(cfdNode*,osg::Material*,int);
-#endif
-  /*!
-    Get the pfDCS.
-  */
-  /*
-  pfDCS * getpfDCS( );
-  pfNode * getpfNode( );
-  pfNode *node;//[3];
-  pfDCS *DCS;//[3];
-  
-  
+         /*!
+         Initialize the data sets to be loaded. And render using
+         VTK functions and translate into pfGeode object and 
+         loaded into pfDCS.
+         */
+         void Initialize(float);
+         void setTrans3( float x, float y, float z );
+         void setTrans( float trans[3] );
+         void setScl( float x,float y, float z );
+         void setRot(float,float,float);
+         void setRotMat(double *);
+      #ifdef _PERFORMER
+         void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
+      #elif _OSG
+         //void TravNodeMaterial(cfdNode*,osg::Material*,int);
+      #endif
+         //these need to renamed!!
+         VE_SceneGraph::cfdDCS* getpfDCS();
+         VE_SceneGraph::cfdNode* getpfNode();
+         VE_SceneGraph::cfdNode* node;
+         VE_SceneGraph::cfdDCS* DCS;
 
-  */
-  //these need to renamed!!
-   VE_SceneGraph::cfdDCS* getpfDCS();
-   VE_SceneGraph::cfdNode* getpfNode();
-   VE_SceneGraph::cfdNode* node;
-   VE_SceneGraph::cfdDCS* DCS;
+      #ifdef _PERFORMER
+         pfLightModel *matLight;
+         pfMaterial *mat1, *mat0;
+         pfMaterial *fmaterial;
+         pfMaterial *bmaterial;
+      #elif _OSG
+         osg::Material* mat1, *mat0;
+         osg::Material* fmaterial;
+         osg::Material* bmaterial;
+      #endif
 
-#ifdef _PERFORMER
-  pfLightModel *matLight;
-  pfMaterial *mat1, *mat0;
-  pfMaterial *fmaterial;
-  pfMaterial *bmaterial;
-#elif _OSG
-   osg::Material* mat1, *mat0;
-   osg::Material* fmaterial;
-   osg::Material* bmaterial;
-#endif
-
-  //typedef std::vector< pfMaterial *> matlist;
-  //matlist matList;
-  void setOpac(float op_val);
-  float getOpacity();
-  int mat_count;
-  int color;
-  int transparent;
-  float *stlColor;
- private:
-  float trans[3];
-  float scale[3];
-  float op;
-  
-  };
-
+         //typedef std::vector< pfMaterial *> matlist;
+         //matlist matList;
+         void setOpac(float op_val);
+         float getOpacity();
+         int mat_count;
+         int color;
+         int transparent;
+         float *stlColor;
+      private:
+         float trans[3];
+         float scale[3];
+         float op;
+   };
+}
 #endif

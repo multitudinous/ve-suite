@@ -41,235 +41,245 @@ class vtkPolyData;
 class vtkUnstructuredGrid;
 class vtkUnstructuredGridReader;
 class vtkDataSet;
-class cfdPlanes;
-namespace VE_SceneGraph{
+namespace VE_Xplorer
+{
+   class cfdPlanes;
+}
+
+namespace VE_SceneGraph
+{
    class cfdDCS;
    class cfdGroup;
    class cfdSwitch;
    class cfdTempAnimation;
 }
-class cfdVTKFileHandler;
 
+namespace VE_Util
+{
+   class cfdVTKFileHandler;
+}
 //! CFD data set loader and handler.
 /*!
    A class to load data set and pre-compute flow parameters 
    or properties for virtual environment interactive 
    computation.
 */
-#include "VE_Xplorer/cfdConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdDataSet
+namespace VE_Xplorer
 {
- public:
-  cfdDataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
+   class VE_XPLORER_EXPORTS cfdDataSet
+   {
+      public:
+         cfdDataSet();    // Construct vtkUnstructuredGrid and vtkLookupTable objects.
   
-  ~cfdDataSet();   // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
+         ~cfdDataSet();   // Destruct vtkUnstructuredGrid and vtkLookupTable objects.
 
-  // Initialize the number of data to load and parallel process.
-  // By default, use the octree table.
-  void LoadData( const char* fileName );
-  void LoadData(vtkUnstructuredGrid*,int);
-  void LoadData();
+         // Initialize the number of data to load and parallel process.
+         // By default, use the octree table.
+         void LoadData( const char* fileName );
+         void LoadData(vtkUnstructuredGrid*,int);
+         void LoadData();
   
-  // Set/get the range of velocity based on the data set.
-  void SetRange( double dataRange[2] );
-  void SetRange( double dataMin, double dataMax );
-  void GetRange( double dataRange[2] );
-  void GetRange( double &dataMin, double &dataMax );
-  double * GetRange();
+         // Set/get the range of velocity based on the data set.
+         void SetRange( double dataRange[2] );
+         void SetRange( double dataMin, double dataMax );
+         void GetRange( double dataRange[2] );
+         void GetRange( double &dataMin, double &dataMax );
+         double * GetRange();
 
-  void GetRange(int* range);
+         void GetRange(int* range);
   
-  // Set/get the min/max velocity, used defined.
-  void SetUserRange( double userRange[2] );
-  void SetUserRange( double userMin, double userMax );
-  void GetUserRange( double userRange[2] );
-  void GetUserRange( double &userMin, double &userMax );
-  double * GetUserRange();
+         // Set/get the min/max velocity, used defined.
+         void SetUserRange( double userRange[2] );
+         void SetUserRange( double userMin, double userMax );
+         void GetUserRange( double userRange[2] );
+         void GetUserRange( double &userMin, double &userMax );
+         double * GetUserRange();
 
-  // Set/get the length of the diagonal of the bounding box for data set.
-  void SetLength( float len );
-  void GetLength( float &len );
-  float GetLength();
+         // Set/get the length of the diagonal of the bounding box for data set.
+         void SetLength( float len );
+         void GetLength( float &len );
+         float GetLength();
 
-  // Get the length of the diagonal of the bounding box of the average cell
-  void GetMeanCellLength( float &len );
-  float GetMeanCellLength();
+         // Get the length of the diagonal of the bounding box of the average cell
+         void GetMeanCellLength( float &len );
+         float GetMeanCellLength();
 
-  // Set/get the step length for streamline integration.
-  void SetStepLength( float sLen );
-  void GetStepLength( float &sLen );
-  float GetStepLength();
+         // Set/get the step length for streamline integration.
+         void SetStepLength( float sLen );
+         void GetStepLength( float &sLen );
+         float GetStepLength();
 
-  // Set/get the maximum streamline integration time.
-  void SetMaxTime( float mT );
-  void GetMaxTime( float &mT );
-  float GetMaxTime();
+         // Set/get the maximum streamline integration time.
+         void SetMaxTime( float mT );
+         void GetMaxTime( float &mT );
+         float GetMaxTime();
 
-  // Set/get time step for streamline integration
-  void SetTimeStep( float tStep );
-  void GetTimeStep( float &tStep );
-  float GetTimeStep();
+         // Set/get time step for streamline integration
+         void SetTimeStep( float tStep );
+         void GetTimeStep( float &tStep );
+         float GetTimeStep();
 
-  // Get the vtk look up table.
-  vtkLookupTable * GetLookupTable();
+         // Get the vtk look up table.
+         vtkLookupTable * GetLookupTable();
 
-  // Get the single piece original data.
-  vtkUnstructuredGrid * GetUnsData();
-  vtkPolyData * GetPolyData();
-  vtkDataSet * GetDataSet();
+         // Get the single piece original data.
+         vtkUnstructuredGrid * GetUnsData();
+         vtkPolyData * GetPolyData();
+         vtkDataSet * GetDataSet();
 
-  void SetType();       // compute dataset type by looking at the file
-  void SetType( int );  // manually set the dataset type
-  int GetType();        // get the dataset type
+         void SetType();       // compute dataset type by looking at the file
+         void SetType( int );  // manually set the dataset type
+         int GetType();        // get the dataset type
 
-  // SetActiveScalar and compute the actual scalar range and the pretty range for display purposes
-  // 0 <= activeScalar < numScalars
-  void SetActiveScalar( int );
-  int GetActiveScalar();
+         // SetActiveScalar and compute the actual scalar range and the pretty range for display purposes
+         // 0 <= activeScalar < numScalars
+         void SetActiveScalar( int );
+         int GetActiveScalar();
 
-  void SetActiveVector( int );
-  int GetActiveVector();
+         void SetActiveVector( int );
+         int GetActiveVector();
 
-  // Update the geometrical properties of the mesh
-  void UpdatePropertiesForNewMesh();
+         // Update the geometrical properties of the mesh
+         void UpdatePropertiesForNewMesh();
 
-  static void AutoComputeUserRange( const double rawRange[2],
+         static void AutoComputeUserRange( const double rawRange[2],
                                     double prettyRange[2] );
 
-  void ResetScalarBarRange( int min, int max );
+         void ResetScalarBarRange( int min, int max );
 
-  void SetFileName( const char * filename );
-  void SetFileName_OnFly(int);
-  char * GetFileName();
+         void SetFileName( const char * filename );
+         void SetFileName_OnFly(int);
+         char * GetFileName();
 
-  void SetPrecomputedDataSliceDir( const char * newDir );
-  char * GetPrecomputedDataSliceDir();
+         void SetPrecomputedDataSliceDir( const char * newDir );
+         char * GetPrecomputedDataSliceDir();
 
-  void SetPrecomputedSurfaceDir( const char * newDir );
-  char * GetPrecomputedSurfaceDir();
+         void SetPrecomputedSurfaceDir( const char * newDir );
+         char * GetPrecomputedSurfaceDir();
 
-  cfdPlanes * GetPrecomputedXSlices();
-  cfdPlanes * GetPrecomputedYSlices();
-  cfdPlanes * GetPrecomputedZSlices();
-  cfdPlanes * GetPrecomputedSlices( int xyz );
+         cfdPlanes * GetPrecomputedXSlices();
+         cfdPlanes * GetPrecomputedYSlices();
+         cfdPlanes * GetPrecomputedZSlices();
+         cfdPlanes * GetPrecomputedSlices( int xyz );
 
-  void StoreScalarInfo();
+         void StoreScalarInfo();
 
-#ifdef USE_OMP
-  vtkUnstructuredGrid * GetData(int i);
-  int GetNoOfDataForProcs();       // Set/get number of data for parallel process.
-#endif
+         #ifdef USE_OMP
+            vtkUnstructuredGrid * GetData(int i);
+            int GetNoOfDataForProcs();       // Set/get number of data for parallel process.
+         #endif
 
-  void SetArrow( vtkPolyData * );
-  vtkPolyData * GetArrow();
+         void SetArrow( vtkPolyData * );
+         vtkPolyData * GetArrow();
 
-  void SetNewlyActivated();
-  void SetNotNewlyActivated();
-  int IsNewlyActivated();
+         void SetNewlyActivated();
+         void SetNotNewlyActivated();
+         int IsNewlyActivated();
 
-  int GetNumberOfScalars();
-  char * GetScalarName( int );
+         int GetNumberOfScalars();
+         char * GetScalarName( int );
 
-  int GetNumberOfVectors();
-  char * GetVectorName( int );
+         int GetNumberOfVectors();
+         char * GetVectorName( int );
 
-  cfdDataSet * GetParent();
-  void SetParent( cfdDataSet * );
+         cfdDataSet * GetParent();
+         void SetParent( cfdDataSet * );
 
-  void SetActualScalarRange( int, double * );
-  void GetActualScalarRange( int, double * );
-  double * GetActualScalarRange( int );
+         void SetActualScalarRange( int, double * );
+         void GetActualScalarRange( int, double * );
+         double * GetActualScalarRange( int );
 
-  // returns displayed range of active scalar
-  double * GetDisplayedScalarRange();
+         // returns displayed range of active scalar
+         double * GetDisplayedScalarRange();
 
-  // get/set displayed range of any scalar
-  double * GetDisplayedScalarRange( int );
-  void SetDisplayedScalarRange( int , double * );
+         // get/set displayed range of any scalar
+         double * GetDisplayedScalarRange( int );
+         void SetDisplayedScalarRange( int , double * );
 
-  double * GetVectorMagRange();
+         double * GetVectorMagRange();
 
-      // get/set this dataset's DCS
-      VE_SceneGraph::cfdDCS * GetDCS();
-      void SetDCS( VE_SceneGraph::cfdDCS * );
+         // get/set this dataset's DCS
+         VE_SceneGraph::cfdDCS * GetDCS();
+         void SetDCS( VE_SceneGraph::cfdDCS * );
 
-      VE_SceneGraph::cfdSwitch* GetSwitchNode( void );
+         VE_SceneGraph::cfdSwitch* GetSwitchNode( void );
 
-      VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
-      void SetAnimation( VE_SceneGraph::cfdTempAnimation* );
+         VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
+         void SetAnimation( VE_SceneGraph::cfdTempAnimation* );
 
-      int IsPartOfTransientSeries();
-      void SetAsPartOfTransientSeries();
+         int IsPartOfTransientSeries();
+         void SetAsPartOfTransientSeries();
 
-      void Print();
+         void Print();
 
-   private:
-      double** actualScalarRange;
-      double** displayedScalarRange;
+      private:
+         double** actualScalarRange;
+         double** displayedScalarRange;
 
-      cfdDataSet* parent;
+         cfdDataSet* parent;
 
-      int isNewlyActivated;
+         int isNewlyActivated;
 
-      int CountNumberOfParameters( const int numComponents );
-      char** GetParameterNames( const int numComponents, const int numParameters );
+         int CountNumberOfParameters( const int numComponents );
+         char** GetParameterNames( const int numComponents, const int numParameters );
 
-      double* range;          // Range of scalar.
+         double* range;          // Range of scalar.
    
-      double* definedRange;   // 'prettied' range of scalar that is automatically computed or user-defined.
+         double* definedRange;   // 'prettied' range of scalar that is automatically computed or user-defined.
 
-      double* vectorMagRange; // assumes just one vector
+         double* vectorMagRange; // assumes just one vector
 
-      float bbDiagonal;        // length of the diagonal of the bounding box.
+         float bbDiagonal;        // length of the diagonal of the bounding box.
 
-      double meanCellBBLength; // length of diagonal of average cell bounding box. 
+         double meanCellBBLength; // length of diagonal of average cell bounding box. 
   
-      float stepLength;        // Step length for streamline integration.
+         float stepLength;        // Step length for streamline integration.
 
-      float maxTime;           // Maximum time of integration for streamline.
+         float maxTime;           // Maximum time of integration for streamline.
 
-      float timeStep;          // Time step for streamline integration.
+         float timeStep;          // Time step for streamline integration.
 
-      vtkLookupTable* lut;    // Lookup table.
+         vtkLookupTable* lut;    // Lookup table.
 
-      vtkDataSet* dataSet;    // Original piece of vtk data.
-      int datasetType;         // used by gui to place in appropriate column
+         vtkDataSet* dataSet;    // Original piece of vtk data.
+         int datasetType;         // used by gui to place in appropriate column
 
-      int activeScalar;
-      int activeVector;
+         int activeScalar;
+         int activeVector;
 
-      char* fileName;
-      char* precomputedDataSliceDir;
-      char* precomputedSurfaceDir;
+         char* fileName;
+         char* precomputedDataSliceDir;
+         char* precomputedSurfaceDir;
 
-      cfdPlanes* x_planes;
-      cfdPlanes* y_planes;
-      cfdPlanes* z_planes;
+         cfdPlanes* x_planes;
+         cfdPlanes* y_planes;
+         cfdPlanes* z_planes;
 
-      vtkPolyData* arrow;
+         vtkPolyData* arrow;
 
-      int numPtDataArrays;
-      int numScalars;
-      int numVectors;
-      char** scalarName;
-      char** vectorName;
+         int numPtDataArrays;
+         int numScalars;
+         int numVectors;
+         char** scalarName;
+         char** vectorName;
 
-      VE_SceneGraph::cfdDCS* dcs;
-      VE_SceneGraph::cfdTempAnimation* animation;
-      VE_SceneGraph::cfdSwitch* switchNode;
-      VE_SceneGraph::cfdGroup* classic;
-      VE_SceneGraph::cfdGroup* textureBased; 
+         VE_SceneGraph::cfdDCS* dcs;
+         VE_SceneGraph::cfdTempAnimation* animation;
+         VE_SceneGraph::cfdSwitch* switchNode;
+         VE_SceneGraph::cfdGroup* classic;
+         VE_SceneGraph::cfdGroup* textureBased; 
 
-      cfdVTKFileHandler* _vtkFHndlr;
-      int partOfTransientSeries;
-      int intRange[2];
+         VE_Util::cfdVTKFileHandler* _vtkFHndlr;
+         int partOfTransientSeries;
+         int intRange[2];
 
-#ifdef USE_OMP 
-      unsigned int noOfData;   // Total no. of octants.
-      vtkUnstructuredGridReader *dataReader[MAX_DATA];
-      vtkUnstructuredGrid *data[MAX_DATA];
-#endif
-};
-
+      #ifdef USE_OMP 
+         unsigned int noOfData;   // Total no. of octants.
+         vtkUnstructuredGridReader *dataReader[MAX_DATA];
+         vtkUnstructuredGrid *data[MAX_DATA];
+      #endif
+   };
+}
 #endif

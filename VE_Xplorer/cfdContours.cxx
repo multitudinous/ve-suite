@@ -29,11 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdContours.h"
+#include "VE_Xplorer/cfdContours.h"
 
-#include "cfdDataSet.h"
-#include "cfdPlanes.h"
-#include "cfdEnum.h"    // needed for cursorType
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdPlanes.h"
+#include "VE_Xplorer/cfdEnum.h"    // needed for cursorType
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
@@ -43,6 +43,9 @@
 #include <vtkProperty.h>
 
 #include <vpr/Util/Debug.h>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdContours::cfdContours( const int xyz )
 {

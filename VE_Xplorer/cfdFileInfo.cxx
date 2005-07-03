@@ -29,8 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdFileInfo.h"
+#include "VE_Xplorer/cfdFileInfo.h"
 #include <vpr/Util/Debug.h>
+
+using namespace VE_Xplorer;
 
 fileInfo::fileInfo( )
 {

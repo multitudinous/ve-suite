@@ -37,136 +37,142 @@
 #include <map>
 
 //class cfdModuleGeometry;
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdGroup;
    class cfdDCS;
 }
-class cfdModel;
-class cfdReadParam;
-class cfdCursor;
-class cfdNavigate;
 
-class cfdObjects;
-#include "interface.h"
-#include "VE_Xplorer/cfdConfig.h"
-
-class WXPLUGIN_DECLSPEC cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
+namespace VE_Xplorer
 {
-   public:
-      cfdVEBaseClass( void );
-      //cfdVEBaseClass( cfdDCS* );
-      virtual ~cfdVEBaseClass( void );
+   class cfdModel;
+   class cfdReadParam;
+   class cfdCursor;
+   class cfdNavigate;
+   class cfdObjects;
+}
+#include "VE_Conductor/Framework/interface.h"
+#include "VE_Installer/include/VEConfig.h"
 
-      virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
-      // Methods to do scene graph manipulations
-      // New methods may have to be added later
-      virtual void AddSelfToSG( void );
-      virtual void RemoveSelfFromSG( void );
+namespace VE_Xplorer
+{
+   class VE_GRAPHICALPLUGIN_EXPORTS cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
+   {
+      public:
+         cfdVEBaseClass( void );
+         //cfdVEBaseClass( cfdDCS* );
+         virtual ~cfdVEBaseClass( void );
 
-      // Change state information for geometric representation
-      void MakeTransparent( void );
-      void SetColor( double* );
+         virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
+         // Methods to do scene graph manipulations
+         // New methods may have to be added later
+         virtual void AddSelfToSG( void );
+         virtual void RemoveSelfFromSG( void );
+
+         // Change state information for geometric representation
+         void MakeTransparent( void );
+         void SetColor( double* );
       
-      // transform object based 
-      void SetTransforms( float*, float*, float* );
+         // transform object based 
+         void SetTransforms( float*, float*, float* );
 
-      // Implement Gengxun's work by using socket
-      // stuff from vtk. This will be used in parallel
-      // with implementation of a unit connected to the 
-      // computational engine.
-      virtual void GetDataFromUnit( void );
-      // Basically uses vtkActorToPF to create a geode and 
-      // add it to the scene graph. Probably use cfdObject.
-      virtual void MakeGeodeByUserRequest( int );
+         // Implement Gengxun's work by using socket
+         // stuff from vtk. This will be used in parallel
+         // with implementation of a unit connected to the 
+         // computational engine.
+         virtual void GetDataFromUnit( void );
+         // Basically uses vtkActorToPF to create a geode and 
+         // add it to the scene graph. Probably use cfdObject.
+         virtual void MakeGeodeByUserRequest( int );
 
-      wxString GetName();
-      //This returns the name of the module
+         wxString GetName();
+         //This returns the name of the module
 
-      wxString GetDesc();
-      //This returns the description of the module, This should be a short description
+         wxString GetDesc();
+         //This returns the description of the module, This should be a short description
 
-      virtual void UnPack(Interface* intf);
-      //This is the load function of the module, unpack the input string and fill up the UI according to this
-      virtual Interface* Pack();
+         virtual void UnPack(Interface* intf);
+         //This is the load function of the module, unpack the input string and fill up the UI according to this
+         virtual Interface* Pack();
 
-      //This is to unpack the result from the 
-      void UnPackResult(Interface * intf);
-      //This is the save function of the module. 
+         //This is to unpack the result from the 
+         void UnPackResult(Interface * intf);
+         //This is the save function of the module. 
 
-      void SetID(int id);
+         void SetID(int id);
    
-      cfdModel* GetCFDModel( void );
+         cfdModel* GetCFDModel( void );
    
-      void LoadSurfaceFiles( char* );
+         void LoadSurfaceFiles( char* );
 
-      bool OnSceneGraph( void ){return _onSceneGraph;}
+         bool OnSceneGraph( void ){return _onSceneGraph;}
       
-      void SetCursor( cfdCursor* );
+         void SetCursor( cfdCursor* );
 
-      void SetNavigate( cfdNavigate* );
+         void SetNavigate( cfdNavigate* );
 
-      void SetInterface( Interface& );
+         void SetInterface( Interface& );
 
-      void SetModuleResults( const char* );
+         void SetModuleResults( const char* );
 
-      virtual void CreateCustomVizFeature( int );
+         virtual void CreateCustomVizFeature( int );
 
-      virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
+         virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
 
-   private:
-      // This needs to be vector of geometry nodes
-      //cfdModuleGeometry*  geometryNode;
-      VE_SceneGraph::cfdGroup* groupNode;
+      private:
+         // This needs to be vector of geometry nodes
+         //cfdModuleGeometry*  geometryNode;
+         VE_SceneGraph::cfdGroup* groupNode;
 
-      VE_SceneGraph::cfdDCS*   worldDCS;
+         VE_SceneGraph::cfdDCS*   worldDCS;
 
-      wxString _objectDescription;
+         wxString _objectDescription;
 
-      char* _network;
+         char* _network;
 
-   protected:
-      void CreateObjects( void );
-      long pos_x;
-      long pos_y;
-      // Stuff taken from Plugin_base.h
-      // All of Yang's work (REI)
-      void RegistVar(std::string vname, long *var);
-      void RegistVar(std::string vname, double *var);
-      void RegistVar(std::string vname, std::string *var);
-      void RegistVar(std::string vname, std::vector<long> *var);
-      void RegistVar(std::string vname, std::vector<double> *var);
-      void RegistVar(std::string vname, std::vector<std::string> *var);
-      VE_SceneGraph::cfdDCS* GetWorldDCS();
+      protected:
+         void CreateObjects( void );
+         long pos_x;
+         long pos_y;
+         // Stuff taken from Plugin_base.h
+         // All of Yang's work (REI)
+         void RegistVar(std::string vname, long *var);
+         void RegistVar(std::string vname, double *var);
+         void RegistVar(std::string vname, std::string *var);
+         void RegistVar(std::string vname, std::vector<long> *var);
+         void RegistVar(std::string vname, std::vector<double> *var);
+         void RegistVar(std::string vname, std::vector<std::string> *var);
+         VE_SceneGraph::cfdDCS* GetWorldDCS();
 
-      Interface mod_pack;
+         Interface mod_pack;
 
-      std::map<std::string, long *>                      _int;
-      std::map<std::string, double *>                    _double;
-      std::map<std::string, std::string *>               _string;
-      std::map<std::string, std::vector<long> * >        _int1D;
-      std::map<std::string, std::vector<double> * >      _double1D;
-      std::map<std::string, std::vector<std::string> * > _string1D;
+         std::map<std::string, long *>                      _int;
+         std::map<std::string, double *>                    _double;
+         std::map<std::string, std::string *>               _string;
+         std::map<std::string, std::vector<long> * >        _int1D;
+         std::map<std::string, std::vector<double> * >      _double1D;
+         std::map<std::string, std::vector<std::string> * > _string1D;
 
-      cfdObjects* dataRepresentation;
+         cfdObjects* dataRepresentation;
 
-      cfdModel* _model;
-      cfdReadParam* _readParam;
+         cfdModel* _model;
+         cfdReadParam* _readParam;
 
-      char* _param;
+         char* _param;
 
-      bool _onSceneGraph;
+         bool _onSceneGraph;
 
-      int _modID;
-      wxString _objectName;
-      VE_SceneGraph::cfdDCS* _dcs;
-      cfdCursor* _cursor;
-      cfdNavigate* _navigate;
-      Interface myInterface;
+         int _modID;
+         wxString _objectName;
+         VE_SceneGraph::cfdDCS* _dcs;
+         cfdCursor* _cursor;
+         cfdNavigate* _navigate;
+         Interface myInterface;
 
-      std::vector<wxString> v_desc;
-      std::vector<wxString> v_value;
+         std::vector<wxString> v_desc;
+         std::vector<wxString> v_value;
 
-   DECLARE_DYNAMIC_CLASS( cfdVEBaseClass )
-};
-
+      DECLARE_DYNAMIC_CLASS( cfdVEBaseClass )
+   };
+}
 #endif

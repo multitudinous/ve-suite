@@ -3,7 +3,8 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 //#ifdef CFD_USE_SHADERS
-namespace osg{
+namespace osg
+{
    class Node;
    class Texture3D;
    class NodeVisitor;
@@ -11,7 +12,8 @@ namespace osg{
    class FrameStamp;
    //class BoundingBox;
 }
-namespace osgUtil{
+namespace osgUtil
+{
    class CullVisitor;
    class UpdateVisitor;
 }
@@ -20,12 +22,14 @@ namespace osgUtil{
 #include <osg/NodeCallback>
 #include <osg/BoundingBox>
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdPBufferManager;
    class cfdOSGPingPongTexture3D;
 }
-#include "VE_Installer/VEConfig.h"
-namespace VE_TextureBased{
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfd3DTextureCullCallback 
       : public osg::NodeCallback
    {

@@ -32,9 +32,15 @@
 #ifndef CFD_OBJECTS_H
 #define CFD_OBJECTS_H
 
-class cfdDataSet;
-class cfdReadParam;
-namespace VE_SceneGraph{
+namespace VE_Xplorer
+{
+   class cfdDataSet;
+   class cfdReadParam;
+   class cfdCommandArray;
+}
+
+namespace VE_SceneGraph
+{
    class cfdGeode;
    class cfdDCS;
    class cfdSequence;
@@ -53,90 +59,85 @@ class vtkMaskPoints;
 #include <vector>
 #include <vpr/Sync/Mutex.h>
 
-class cfdCommandArray;
-
-#include "cfdGlobalBase.h"
-
-class WXPLUGIN_DECLSPEC cfdObjects : public cfdGlobalBase
+#include "VE_Xplorer/cfdGlobalBase.h"
+namespace VE_Xplorer
 {
-   public:
-      cfdObjects( const cfdObjects& src );
-      cfdObjects( void );
-      virtual ~cfdObjects( void );
+   class VE_XPLORER_EXPORTS cfdObjects : public cfdGlobalBase
+   {
+      public:
+         cfdObjects( const cfdObjects& src );
+         cfdObjects( void );
+         virtual ~cfdObjects( void );
 
-      // pure virtual functions to be specified in concrete implementations
+         // pure virtual functions to be specified in concrete implementations
 
-      // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray* commandArray );
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
-      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
 
-      // update the actor
-      virtual void Update() = 0;
+         // update the actor
+         virtual void Update() = 0;
 
-      std::vector< VE_SceneGraph::cfdGeode* > GetGeodes( void );
-      void ClearGeodes( void );
+         std::vector< VE_SceneGraph::cfdGeode* > GetGeodes( void );
+         void ClearGeodes( void );
 
-      void SetObjectType( int );
-      int GetObjectType( void ) { return this->objectType; }
-      void SetOrigin( float [3] );
-      double * GetOrigin();
-      void GetOrigin( double [3] );
-      void SetNormal( double [3] );
-      void SetBoxSize( double [6] );
-      void SetRequestedValue( int x ) { this->requestedValue = x; }
-      void SetCursorType( int x ) { this->cursorType = x; }
-      void SetPreCalcFlag( int x ) { this->usePreCalcData = x; }
-      void SetUpdateFlag( bool x ) { this->updateFlag = x; }
-      bool GetUpdateFlag( void ) { return ( this->updateFlag ); }
-      void DeletecfdGeode( void );
+         void SetObjectType( int );
+         int GetObjectType( void ) { return this->objectType; }
+         void SetOrigin( float [3] );
+         double * GetOrigin();
+         void GetOrigin( double [3] );
+         void SetNormal( double [3] );
+         void SetBoxSize( double [6] );
+         void SetRequestedValue( int x ) { this->requestedValue = x; }
+         void SetCursorType( int x ) { this->cursorType = x; }
+         void SetPreCalcFlag( int x ) { this->usePreCalcData = x; }
+         void SetUpdateFlag( bool x ) { this->updateFlag = x; }
+         bool GetUpdateFlag( void ) { return ( this->updateFlag ); }
+         void DeletecfdGeode( void );
 
-      //void SetSequence( cfdTempAnimation* );
-      //cfdTempAnimation* GetSequence( void );
+         //void SetSequence( cfdTempAnimation* );
+         //cfdTempAnimation* GetSequence( void );
       
-      void SetSourcePoints( vtkPolyDataSource * );
+         void SetSourcePoints( vtkPolyDataSource * );
 
-      void AddGeodesToSequence(void);
+         void AddGeodesToSequence(void);
 
-      void SetGeodeFlag( bool x );
-      bool GetGeodeFlag( void );
+         void SetGeodeFlag( bool x );
+         bool GetGeodeFlag( void );
 
-      bool GetTransientGeodeFlag(void);
-      void SetTransientGeodeFlag(bool x);
-     
+         bool GetTransientGeodeFlag(void);
+         void SetTransientGeodeFlag(bool x);
 
-      void SetActiveDataSet( cfdDataSet * dataset );
-      cfdDataSet * GetActiveDataSet( void );
+         void SetActiveDataSet( cfdDataSet * dataset );
+         cfdDataSet * GetActiveDataSet( void );
 
-      //void ClearTransientVector( void );
-      //static void SetVectorScale( float );
-      //static float GetVectorScale();
-
+         //void ClearTransientVector( void );
+         //static void SetVectorScale( float );
+         //static float GetVectorScale();
       
-   protected:
+      protected:
+         cfdDataSet* activeDataSet;
 
-      cfdDataSet* activeDataSet;
+         // used by vectors and intended for warped contours
+         //static float vectorScale;
 
-      // used by vectors and intended for warped contours
-      //static float vectorScale;
-     
+         std::vector< VE_SceneGraph::cfdGeode* > geodes;
+         vtkPolyDataSource *pointSource;
 
-      std::vector< VE_SceneGraph::cfdGeode* > geodes;
-      vtkPolyDataSource *pointSource;
-
-      bool updateFlag;
-      int vtkToPFDebug;
-      int objectType;
-      int requestedValue;
-      int cursorType;
-      int usePreCalcData;
-      double origin[ 3 ];
-      double center[ 3 ];
-      double normal[ 3 ];
-      double box_size[ 6 ];
-      float scale;
-   private:
-};
-
+         bool updateFlag;
+         int vtkToPFDebug;
+         int objectType;
+         int requestedValue;
+         int cursorType;
+         int usePreCalcData;
+         double origin[ 3 ];
+         double center[ 3 ];
+         double normal[ 3 ];
+         double box_size[ 6 ];
+         float scale;
+      private:
+   };
+}
 #endif

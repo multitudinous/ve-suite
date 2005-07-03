@@ -35,7 +35,8 @@
 #include <utility>
 #include <string>
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdGroup;
    class cfdDCS;
    class cfdGeode;
@@ -47,92 +48,93 @@ class vtkTransformPolyDataFilter;
 class vtkPolyDataMapper;
 class vtkActor;
 class vtkVectorText;
-#include "VE_Xplorer/cfdConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdDigitalAnalogGauge
+namespace VE_Xplorer
 {
-   public:
+   class VE_XPLORER_EXPORTS cfdDigitalAnalogGauge
+   {
+      public:
+         cfdDigitalAnalogGauge( VE_SceneGraph::cfdGroup* );
+         cfdDigitalAnalogGauge( const cfdDigitalAnalogGauge& g );
+         ~cfdDigitalAnalogGauge( void );
 
-      cfdDigitalAnalogGauge( VE_SceneGraph::cfdGroup* );
-      cfdDigitalAnalogGauge( const cfdDigitalAnalogGauge& g );
-      ~cfdDigitalAnalogGauge( void );
+         // Set/Get the position of the gauge in 3D space
+         void SetPosition( float x, float y, float z );
+         void SetPosition( float x[3] );
+         void GetPosition( float x[3] );
+         void GetPosition( float &x, float &y, float &z );
+         void SetOrientation( double Xrot, double Yrot, double Zrot );
 
-      // Set/Get the position of the gauge in 3D space
-      void SetPosition( float x, float y, float z );
-      void SetPosition( float x[3] );
-      void GetPosition( float x[3] );
-      void GetPosition( float &x, float &y, float &z );
-      void SetOrientation( double Xrot, double Yrot, double Zrot );
+         void SetGaugeName( const char input[] );
+         void SetText2( const char input[] );
+         void SetAnalogLimits( double low, double high );
+         void SetColor( double color[3] );
+         void SetBackgroundColor( double color[3] );
 
-      void SetGaugeName( const char input[] );
-      void SetText2( const char input[] );
-      void SetAnalogLimits( double low, double high );
-      void SetColor( double color[3] );
-      void SetBackgroundColor( double color[3] );
+         void Display();
 
-      void Display();
-
-      void SetDigitalPrecision( int input );
-      void UpdateMovingArrowAngle( double angle );
-      void UpdateMovingArrowInRange( double value );
+         void SetDigitalPrecision( int input );
+         void UpdateMovingArrowAngle( double angle );
+         void UpdateMovingArrowInRange( double value );
       
-      void UpdateDigitalText( double value );
+         void UpdateDigitalText( double value );
 
-      VE_SceneGraph::cfdDCS * GetGaugeNode();
+         VE_SceneGraph::cfdDCS * GetGaugeNode();
 
-   private:
+      private:
    
-      vtkActor * GetCircleActor();
-      vtkActor * GetStationaryArrowActor();
-      vtkActor * GetMovingArrowActor();
-      vtkActor * GetLabelActor();
-      vtkActor * GetText2Actor();
-      vtkActor * GetDigitalActor();
-      vtkActor * GetBackgroundActor();
+         vtkActor * GetCircleActor();
+         vtkActor * GetStationaryArrowActor();
+         vtkActor * GetMovingArrowActor();
+         vtkActor * GetLabelActor();
+         vtkActor * GetText2Actor();
+         vtkActor * GetDigitalActor();
+         vtkActor * GetBackgroundActor();
 
-      void DefineCircleActor();
-      void DefineStationaryArrowActor();
-      void DefineMovingArrowActor();
-      void DefineGaugeTextActor();
-      void DefineText2Actor();
-      void DefineDigitalActor();
-      void DefineBackgroundActor();
+         void DefineCircleActor();
+         void DefineStationaryArrowActor();
+         void DefineMovingArrowActor();
+         void DefineGaugeTextActor();
+         void DefineText2Actor();
+         void DefineDigitalActor();
+         void DefineBackgroundActor();
 
-      VE_SceneGraph::cfdGroup* masterNode;
-      VE_SceneGraph::cfdDCS * gaugeDCS;
+         VE_SceneGraph::cfdGroup* masterNode;
+         VE_SceneGraph::cfdDCS * gaugeDCS;
 
-      VE_SceneGraph::cfdGeode* circleGeode;
-      VE_SceneGraph::cfdGeode* movingArrowGeode;
-      VE_SceneGraph::cfdGeode* stationaryArrowGeode;
-      VE_SceneGraph::cfdGeode* labelGeode;
-      VE_SceneGraph::cfdGeode* text2Geode;
-      VE_SceneGraph::cfdGeode* digitalGeode;
-      VE_SceneGraph::cfdGeode* backgroundGeode;
+         VE_SceneGraph::cfdGeode* circleGeode;
+         VE_SceneGraph::cfdGeode* movingArrowGeode;
+         VE_SceneGraph::cfdGeode* stationaryArrowGeode;
+         VE_SceneGraph::cfdGeode* labelGeode;
+         VE_SceneGraph::cfdGeode* text2Geode;
+         VE_SceneGraph::cfdGeode* digitalGeode;
+         VE_SceneGraph::cfdGeode* backgroundGeode;
 
-      float itsX [ 3 ];
-      vtkArrowSource * movingArrow;
-      vtkTransform * arrowTransform;
-      vtkMatrix4x4 * arrowRefPosition;
-      vtkTransformPolyDataFilter * transformer2;
-      vtkPolyDataMapper * arrowMapper;
-      vtkActor * arrowActor;
-      double circleRadius;
-      vtkActor * circleActor;
-      vtkActor * stationaryArrowActor;
-      vtkActor * labelActor;
-      vtkActor * text2Actor;
-      vtkActor * digitalActor;
-      vtkActor * backgroundActor;
-      vtkVectorText * digitalLabel;
-      char gaugeName [ 100 ];
-      char text2 [ 100 ];
-      char digitalText [ 100 ];
-      int digitalPrecision;
-      double lowAnalogLimit, highAnalogLimit;
-      double gaugeColor [ 3 ];
-      double backgroundColor [ 3 ];
-      double textScale;
-};
-
+         float itsX [ 3 ];
+         vtkArrowSource * movingArrow;
+         vtkTransform * arrowTransform;
+         vtkMatrix4x4 * arrowRefPosition;
+         vtkTransformPolyDataFilter * transformer2;
+         vtkPolyDataMapper * arrowMapper;
+         vtkActor * arrowActor;
+         double circleRadius;
+         vtkActor * circleActor;
+         vtkActor * stationaryArrowActor;
+         vtkActor * labelActor;
+         vtkActor * text2Actor;
+         vtkActor * digitalActor;
+         vtkActor * backgroundActor;
+         vtkVectorText * digitalLabel;
+         char gaugeName [ 100 ];
+         char text2 [ 100 ];
+         char digitalText [ 100 ];
+         int digitalPrecision;
+         double lowAnalogLimit, highAnalogLimit;
+         double gaugeColor [ 3 ];
+         double backgroundColor [ 3 ];
+         double textScale;
+   };
+}
 #endif
 

@@ -62,6 +62,12 @@
 	#    define VE_XPLORER_EXPORTS   __declspec(dllimport)
 	#  endif /* VE_XPLORER_LIBRARY */
 
+	#  ifdef VE_CONDUCTOR_LIBRARY
+	#    define VE_CONDUCTOR_EXPORTS   __declspec(dllexport)
+	#  else
+	#    define VE_CONDUCTOR_EXPORTS   __declspec(dllimport)
+	#  endif /* VE_CONDUCTOR_LIBRARY */
+
 	#  ifdef VE_GUIPLUGINS_LIBRARY
 	#    define VE_GUIPLUGINS_EXPORTS   __declspec(dllexport)
 	#  else

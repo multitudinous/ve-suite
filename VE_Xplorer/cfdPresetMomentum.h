@@ -32,11 +32,14 @@
 #ifndef CFD_PRESET_MOMENTUM_H
 #define CFD_PRESET_MOMENTUM_H
 
-#include "cfdContourBase.h"
+#include "VE_Xplorer/cfdContourBase.h"
 
 class vtkCutter;
 class vtkWarpVector;
-class cfdCuttingPlane;
+namespace VE_Xplorer
+{
+   class cfdCuttingPlane;
+}
 
 //! VTK momentum plane renderer.
 /*!
@@ -46,28 +49,32 @@ class cfdCuttingPlane;
   the plane position and direction.
 */
 
-class WXPLUGIN_DECLSPEC cfdPresetMomentum : public cfdContourBase
+namespace VE_Xplorer
 {
- public:
-  // Initialize the pipeline.
-  // (and set the number of cutting plane increments for blue menu)
-  cfdPresetMomentum( const int xyz, int numSteps = 10 );
+   class VE_XPLORER_EXPORTS cfdPresetMomentum : public cfdContourBase
+   {
+      public:
+         // Initialize the pipeline.
+         // (and set the number of cutting plane increments for blue menu)
+         cfdPresetMomentum( const int xyz, int numSteps = 10 );
 
-  ~cfdPresetMomentum( void );
+         ~cfdPresetMomentum( void );
 
-  /* Update the position, x, and normal direction to cut.
-    Output a updated pfGeoSet.  */
-  virtual void Update( void );
+         /* 
+         Update the position, x, and normal direction to cut.
+         Output a updated pfGeoSet.  
+         */
+         virtual void Update( void );
 
- private:
-   int xyz;
-   int numSteps;
+      private:
+         int xyz;
+         int numSteps;
 
-   vtkCutter       * cutter;
+         vtkCutter       * cutter;
 
-   vtkWarpVector   * warper;
+         vtkWarpVector   * warper;
 
-   cfdCuttingPlane * cuttingPlane;
-};
-
+         cfdCuttingPlane * cuttingPlane;
+   };
+}
 #endif

@@ -33,60 +33,71 @@
 #define CFD_ENVIRONMENTHANDLER_H
 
 #include <vpr/Util/Singleton.h>
+#include "VE_Installer/include/VEConfig.h"
 
-class cfdNavigate;
-class cfdCursor;
-class cfdDCS;
-class cfdGroup;
-class cfdCommandArray;
-class cfdReadParam;
-class cfdSoundHandler;
-class cfdTeacher;
-class cfdSoundHandler;
-class cfdQuatCamHandler;
+namespace VE_Xplorer
+{
+   class cfdNavigate;
+   class cfdCursor;
+   class cfdCommandArray;
+   class cfdReadParam;
+   class cfdSoundHandler;
+   class cfdTeacher;
+   class cfdSoundHandler;
+   class cfdQuatCamHandler;
+}
+
+namespace VE_SceneGraph
+{
+   class cfdDCS;
+   class cfdGroup;
+}
 
 class vtkPolyData;
 
-class cfdEnvironmentHandler //: public vpr::Singleton< cfdEnvironmentHandler >
+namespace VE_Xplorer
 {
-   private:
-      // Required so that vpr::Singleton can instantiate this class.
-      //friend class vpr::Singleton< cfdEnvironmentHandler >;
-      //cfdEnvironmentHandler(const cfdEnvironmentHandler& o) { ; }
-      //cfdEnvironmentHandler& operator=(const cfdEnvironmentHandler& o) { ; }
-      cfdEnvironmentHandler( void );
-      ~cfdEnvironmentHandler( void ){ ; }// Never gets called, don't implement
-      vprSingletonHeader( cfdEnvironmentHandler );   
+   class cfdEnvironmentHandler //: public vpr::Singleton< cfdEnvironmentHandler >
+   {
+      private:
+         // Required so that vpr::Singleton can instantiate this class.
+         //friend class vpr::Singleton< cfdEnvironmentHandler >;
+         //cfdEnvironmentHandler(const cfdEnvironmentHandler& o) { ; }
+         //cfdEnvironmentHandler& operator=(const cfdEnvironmentHandler& o) { ; }
+         cfdEnvironmentHandler( void );
+         ~cfdEnvironmentHandler( void ){ ; }// Never gets called, don't implement
+         vprSingletonHeader( cfdEnvironmentHandler );   
 
-   public:
-      void Initialize( char * );
-      void CleanUp( void );
-      void InitScene( void );
-      void PreFrameUpdate( void );
-      void SetCommandArray( cfdCommandArray* );
-      void CreateObjects( void );
+      public:
+         void Initialize( char * );
+         void CleanUp( void );
+         void InitScene( void );
+         void PreFrameUpdate( void );
+         void SetCommandArray( cfdCommandArray* );
+         void CreateObjects( void );
 
-      cfdNavigate* GetNavigate( void );
-      cfdCursor* GetCursor( void );
-      cfdSoundHandler* GetSoundHandler( void );
-      cfdTeacher* GetTeacher( void );
-      cfdQuatCamHandler* GetQuatCamHandler( void );
+         cfdNavigate* GetNavigate( void );
+         cfdCursor* GetCursor( void );
+         cfdSoundHandler* GetSoundHandler( void );
+         cfdTeacher* GetTeacher( void );
+         cfdQuatCamHandler* GetQuatCamHandler( void );
 
-   private:
-      cfdNavigate* nav;
-      cfdTeacher* _teacher;
-      cfdSoundHandler* _soundHandler;
-      cfdQuatCamHandler* _camHandler;
-      cfdCursor* cursor;
-      char* _param;
-      cfdCommandArray* _commandArray;
-      cfdReadParam* _readParam;
-      // cur_box will eventually be used to define bounding box
-      // for data interagation
-      double cur_box[6];
-      vtkPolyData * arrow;
-      float worldScale[ 3 ];
-      float worldTrans[ 3 ];
-      float worldRot[ 3 ];
-};
+      private:
+         cfdNavigate* nav;
+         cfdTeacher* _teacher;
+         cfdSoundHandler* _soundHandler;
+         cfdQuatCamHandler* _camHandler;
+         cfdCursor* cursor;
+         char* _param;
+         cfdCommandArray* _commandArray;
+         cfdReadParam* _readParam;
+         // cur_box will eventually be used to define bounding box
+         // for data interagation
+         double cur_box[6];
+         vtkPolyData * arrow;
+         float worldScale[ 3 ];
+         float worldTrans[ 3 ];
+         float worldRot[ 3 ];
+   };
+}
 #endif

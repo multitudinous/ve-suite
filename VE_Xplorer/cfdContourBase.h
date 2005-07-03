@@ -32,7 +32,7 @@
 #ifndef CFD_CONTOUR_BASE_H
 #define CFD_CONTOUR_BASE_H
 
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdObjects.h"
 
 class vtkPolyData;
 class vtkPolyDataMapper;
@@ -41,38 +41,43 @@ class vtkContourFilter;
 class vtkBandedPolyDataContourFilter;
 class vtkDecimatePro;
 
-class cfdCommandArray;
-
-class WXPLUGIN_DECLSPEC cfdContourBase : public cfdObjects
+namespace VE_Xplorer
 {
- public:
-   cfdContourBase();
+   class cfdCommandArray;
+}
 
-   virtual ~cfdContourBase();
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdContourBase : public cfdObjects
+   {
+      public:
+         cfdContourBase();
 
-   // update the actor
-   virtual void Update( void ) = 0;
+         virtual ~cfdContourBase();
 
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+         // update the actor
+         virtual void Update( void ) = 0;
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-   void SetMapperInput( vtkPolyData * );
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
 
-   void SetFillType( const int );
+         void SetMapperInput( vtkPolyData * );
 
- protected:
-   vtkPolyDataMapper*   mapper;
-   vtkGeometryFilter*   filter;
-   vtkContourFilter*    cfilter;
-   vtkBandedPolyDataContourFilter * bfilter;
-   vtkDecimatePro* deci;
-   int fillType;
-   double warpedContourScale;
-   double contourOpacity;
-   int contourLOD; 
-};
+         void SetFillType( const int );
 
+      protected:
+         vtkPolyDataMapper*   mapper;
+         vtkGeometryFilter*   filter;
+         vtkContourFilter*    cfilter;
+         vtkBandedPolyDataContourFilter * bfilter;
+         vtkDecimatePro* deci;
+         int fillType;
+         double warpedContourScale;
+         double contourOpacity;
+         int contourLOD; 
+   };
+}
 #endif

@@ -30,10 +30,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdAppWrapper.h"
-#include "cfdVjObsWrapper.h"
+#include "VE_Xplorer/cfdAppWrapper.h"
+#include "VE_Xplorer/cfdVjObsWrapper.h"
 #ifdef _TAO
-#include "Executive_i.h"
+#include "VE_CE/Executive_i.h"
 #include <orbsvcs/CosNamingC.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #else

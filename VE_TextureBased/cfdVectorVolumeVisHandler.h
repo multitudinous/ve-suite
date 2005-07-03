@@ -2,12 +2,14 @@
 #define CFD_VECTOR_VOLUME_VIS_HANDLER_H
 #ifdef VE_PATENTED
 #ifdef _OSG
-namespace osg{
+namespace osg
+{
    class Group;
    class Texture3D;
 }
 #include "VE_TextureBased/cfdVolumeVisNodeHandler.h"
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdOSGAdvectionShaderManager;
    class cfdOSGTransferShaderManager;
    class cfdTextureManager;
@@ -17,7 +19,8 @@ namespace VE_TextureBased{
    class cfdOSGPingPongTexture3D;
 }
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdVectorVolumeVisHandler : public cfdVolumeVisNodeHandler{
       public:
          cfdVectorVolumeVisHandler();

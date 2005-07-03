@@ -40,7 +40,7 @@
 #include "VE_Xplorer/cfdPlanes.h"
 #include "VE_Xplorer/cfdAccessoryFunctions.h"
 #include "VE_Xplorer/fileIO.h"
-#include "readWriteVtkThings.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdSwitch.h"
@@ -66,6 +66,10 @@
 
 #include <iostream>
 #include <sstream>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+using namespace VE_Util;
 
 cfdDataSet::cfdDataSet( )
 {
@@ -483,6 +487,8 @@ void cfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
    
    //array->Delete();
    //dumpVerticesNotUsedByCells(pointset);
+   
+   // This MUST BE FIXED mccdo
    writeVtkThing(pointset,this->fileName,1);
    this->LoadData();
 }

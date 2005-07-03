@@ -55,25 +55,28 @@ it is better to treat these two dataset as two different models.
 
 //#include "readWriteVtkThings.h"
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdDCS;
    class cfdNode;
    class cfdSwitch;
    class cfdGroup;
    class cfdClone;
    class cfdTempAnimation;
-
 }
-class cfdDataSet;
 
-class fileInfo;
-class cfdFILE;
+namespace VE_Xplorer
+{
+   class cfdDataSet;
+   class fileInfo;
+   class cfdFILE;
+}
 
 #ifdef _OSG
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdTextureDataSet;
 }
-using namespace VE_TextureBased;
 #endif
 
 class vtkDataSet;
@@ -97,115 +100,116 @@ enum Operation2Model
    DeleteGeomdataset
 };
 
-#include "VE_Xplorer/cfdConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdModel
+namespace VE_Xplorer
 {
-public:
-   cfdModel(VE_SceneGraph::cfdDCS *);
-   ~cfdModel();
+   class VE_XPLORER_EXPORTS cfdModel
+   {
+      public:
+         cfdModel(VE_SceneGraph::cfdDCS *);
+         ~cfdModel();
       
-   void setModelNode( VE_SceneGraph::cfdNode * );
-   void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
+         void setModelNode( VE_SceneGraph::cfdNode * );
+         void setModelType( ModelTypeIndex );//four type models right now (experiment, simulation, design, and geometry)
             
-   void setTrans3( float x, float y, float z );
-   void setTrans( float trans[3] );
-   void setScale( float x,float y, float z );
-   void setRot(float,float,float);
-   void setRotMat(double *);
+         void setTrans3( float x, float y, float z );
+         void setTrans( float trans[3] );
+         void setScale( float x,float y, float z );
+         void setRot(float,float,float);
+         void setRotMat(double *);
 
-   void updateCurModel();//handling the add or delete the vtkdateset or geomdataset
-   void addVTKdataset(const std::string&);
-   void delVTKdataset();
-   void addGeomdataset(const std::string &filename);
-   void delGeomdataset(int);
-   bool GetMirrorDataFlag( void );
-   void SetMirrorDataFlag( bool );
-   void SetMirrorNode( VE_SceneGraph::cfdGroup* );
+         void updateCurModel();//handling the add or delete the vtkdateset or geomdataset
+         void addVTKdataset(const std::string&);
+         void delVTKdataset();
+         void addGeomdataset(const std::string &filename);
+         void delGeomdataset(int);
+         bool GetMirrorDataFlag( void );
+         void SetMirrorDataFlag( bool );
+         void SetMirrorNode( VE_SceneGraph::cfdGroup* );
 
       
-   cfdDataSet* GetCfdDataSet( int );
-   unsigned int GetNumberOfCfdDataSets( void );
-   char* GetCfdDataSetFileName( int );
-   void CreateCfdDataSet( void );
-   int GetKeyForCfdDataSet( cfdDataSet* );
-   cfdDataSet* GetActiveDataSet( void );
-   void SetActiveDataSet( cfdDataSet* );
+         VE_Xplorer::cfdDataSet* GetCfdDataSet( int );
+         unsigned int GetNumberOfCfdDataSets( void );
+         char* GetCfdDataSetFileName( int );
+         void CreateCfdDataSet( void );
+         int GetKeyForCfdDataSet( cfdDataSet* );
+         VE_Xplorer::cfdDataSet* GetActiveDataSet( void );
+         void SetActiveDataSet( VE_Xplorer::cfdDataSet* );
 
-   cfdFILE* GetGeomDataSet( int );
-   unsigned int GetNumberOfGeomDataSets( void );
-   char* GetGeomFileName( int );
-   void CreateGeomDataSet( char* );
+         VE_Xplorer::cfdFILE* GetGeomDataSet( int );
+         unsigned int GetNumberOfGeomDataSets( void );
+         char* GetGeomFileName( int );
+         void CreateGeomDataSet( char* );
 
-   VE_SceneGraph::cfdNode* GetCfdNode( void );
-   VE_SceneGraph::cfdDCS* GetCfdDCS( void );
+         VE_SceneGraph::cfdNode* GetCfdNode( void );
+         VE_SceneGraph::cfdDCS* GetCfdDCS( void );
 
-   //////////////////////////
-   //texture based interface
-#ifdef _OSG
-   void SetActiveTextureDataSet(cfdTextureDataSet* tDS);
-   void CreateTextureDataSet();
-   void AddDataSetToTextureDataSet(unsigned int index,
+         //////////////////////////
+         //texture based interface
+   #ifdef _OSG
+         void SetActiveTextureDataSet( VE_TextureBased::cfdTextureDataSet* tDS);
+         void CreateTextureDataSet();
+         void AddDataSetToTextureDataSet(unsigned int index,
                                char* textureDescriptionFile);
-   unsigned int GetNumberOfTextureDataSets();
-   cfdTextureDataSet* GetTextureDataSet(unsigned int index);
-   cfdTextureDataSet* GetActiveTextureDataSet();
-#endif
-   ///////////////////////////////////////////////////
-      
+         unsigned int GetNumberOfTextureDataSets();
+         VE_TextureBased::cfdTextureDataSet* GetTextureDataSet(unsigned int index);
+         VE_TextureBased::cfdTextureDataSet* GetActiveTextureDataSet();
+   #endif
+         ///////////////////////////////////////////////////
 
-   VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
-   std::map<int,cfdDataSet*> transientDataSets;
+         VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
+         std::map<int,VE_Xplorer::cfdDataSet*> transientDataSets;
   
-   //Dynamically load data from unit
-public:   
-   void ActiveLoadingThread();
-   void GetDataFromUnit(void* unused);
-   const char* MakeSurfaceFile(vtkDataSet*,int);
-   void DynamicLoadingData(vtkUnstructuredGrid*, int);
-   void DynamicLoadingGeom(char*);
-   void AddVTKDataSet(vtkDataSet* );
-   std::vector<vtkDataSet* >GetWaitingDataList();
+         //Dynamically load data from unit
+      public:   
+         void ActiveLoadingThread();
+         void GetDataFromUnit(void* unused);
+         const char* MakeSurfaceFile(vtkDataSet*,int);
+         void DynamicLoadingData(vtkUnstructuredGrid*, int);
+         void DynamicLoadingGeom(char*);
+         void AddVTKDataSet(vtkDataSet* );
+         std::vector<vtkDataSet* >GetWaitingDataList();
  
-private:
-   vpr::Thread *loadDataTh;
-   vpr::Mutex mValueLock;
-   std::vector<vtkDataSet* > waitingdatalist; 
-   char* currentsurfacefilename;
-   bool mirrorDataFlag;
+      private:
+         vpr::Thread *loadDataTh;
+         vpr::Mutex mValueLock;
+         std::vector<vtkDataSet* > waitingdatalist; 
+         char* currentsurfacefilename;
+         bool mirrorDataFlag;
 
-private:
-   VE_SceneGraph::cfdTempAnimation* animation;
-   VE_SceneGraph::cfdSwitch* switchNode;
-   VE_SceneGraph::cfdGroup* classic;
-   VE_SceneGraph::cfdGroup* textureBased;
-   typedef std::vector< cfdFILE* > GeometoryDataSetList;
-   GeometoryDataSetList mGeomDataSets;
-   typedef std::vector< cfdDataSet* > VTKDataSetList;
-   VTKDataSetList mVTKDataSets;
+      private:
+         VE_SceneGraph::cfdTempAnimation* animation;
+         VE_SceneGraph::cfdSwitch* switchNode;
+         VE_SceneGraph::cfdGroup* classic;
+         VE_SceneGraph::cfdGroup* textureBased;
+         typedef std::vector< VE_Xplorer::cfdFILE* > GeometoryDataSetList;
+         GeometoryDataSetList mGeomDataSets;
+         typedef std::vector< VE_Xplorer::cfdDataSet* > VTKDataSetList;
+         VTKDataSetList mVTKDataSets;
 
-#ifdef _OSG
-   typedef std::vector<cfdTextureDataSet*> TextureDataSetList;
-   TextureDataSetList mTextureDataSets;
-   cfdTextureDataSet* _activeTextureDataSet;
-#endif
+      #ifdef _OSG
+         typedef std::vector<VE_TextureBased::cfdTextureDataSet*> TextureDataSetList;
+         TextureDataSetList mTextureDataSets;
+         VE_TextureBased::cfdTextureDataSet* _activeTextureDataSet;
+      #endif
 
-   VE_SceneGraph::cfdDCS* mModelDCS;
-   VE_SceneGraph::cfdDCS* _worldDCS;
-   VE_SceneGraph::cfdNode* mModelNode;
-   fileInfo* mGeomFileInfo;
-   fileInfo* mVTKFileInfo;
-   cfdDataSet* activeDataSet;
-   VE_SceneGraph::cfdClone* mirrorNode;
-   VE_SceneGraph::cfdGroup* mirrorGroupNode;
+         VE_SceneGraph::cfdDCS* mModelDCS;
+         VE_SceneGraph::cfdDCS* _worldDCS;
+         VE_SceneGraph::cfdNode* mModelNode;
+         fileInfo* mGeomFileInfo;
+         fileInfo* mVTKFileInfo;
+         cfdDataSet* activeDataSet;
+         VE_SceneGraph::cfdClone* mirrorNode;
+         VE_SceneGraph::cfdGroup* mirrorGroupNode;
    
-   //the information for following three variables should be transfered from cfdApp
-   ModelTypeIndex mModelType;
-   Operation2Model mActiveOperation2Model;
+         //the information for following three variables should be transfered from cfdApp
+         ModelTypeIndex mModelType;
+         Operation2Model mActiveOperation2Model;
    
-   bool mUpdateModelFlag;
-   bool mMoveOldGeomDataSets;
-   bool mMoveOldVTKDataSets;   
-};
-
+         bool mUpdateModelFlag;
+         bool mMoveOldGeomDataSets;
+         bool mMoveOldVTKDataSets;   
+   };
+}
 #endif

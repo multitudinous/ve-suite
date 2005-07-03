@@ -30,9 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdGlobalBase.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
 
 #include <iostream>
+
+using namespace VE_Xplorer;
 
 cfdGlobalBase::cfdGlobalBase()
 { 

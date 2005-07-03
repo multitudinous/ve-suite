@@ -39,6 +39,8 @@
 #include <vpr/System.h>
 #include <iostream>
 
+using namespace VE_Xplorer;
+
 cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 {
    this->argc = argc;

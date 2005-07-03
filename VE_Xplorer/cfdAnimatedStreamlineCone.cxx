@@ -46,6 +46,9 @@
 
 #include <vpr/Util/Debug.h>
 
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+
 cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdAnimatedStreamlineCone constructor"

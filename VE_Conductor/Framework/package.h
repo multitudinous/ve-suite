@@ -13,7 +13,7 @@
 #include <iostream>
 
 XERCES_CPP_NAMESPACE_USE
-class WXPLUGIN_DECLSPEC Package
+class VE_CONDUCTOR_EXPORTS Package
 {
  public:
 

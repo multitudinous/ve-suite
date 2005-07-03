@@ -29,10 +29,10 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdContourBase.h"
-#include "cfdDataSet.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdContourBase.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 
 #include <vpr/Util/Debug.h>
 
@@ -45,6 +45,9 @@
 #include <vtkProperty.h>
 #include <vtkLookupTable.h>
 #include <vtkDecimatePro.h>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 // this class requires that the dataset has a scalar field.
 cfdContourBase::cfdContourBase()

@@ -41,7 +41,7 @@ namespace VE_SceneGraph
 class vtkActor;
 
 #include <vector>
-#include "VE_Installer/includeVEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_SceneGraph
 {

@@ -29,13 +29,13 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdGraphicsObject.h"
+#include "VE_Xplorer/cfdGraphicsObject.h"
 #include "VE_SceneGraph/cfdGeode.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdSwitch.h"
-#include "cfdModel.h"
-#include "cfdDataSet.h"
+#include "VE_Xplorer/cfdModel.h"
+#include "VE_Xplorer/cfdDataSet.h"
 #include "VE_SceneGraph/cfdSequence.h"
 #include "VE_SceneGraph/cfdTempAnimation.h"
 
@@ -49,6 +49,9 @@
 
 #include <osgDB/WriteFile>
 #endif
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+
 // constructor
 cfdGraphicsObject::cfdGraphicsObject( void )
 {

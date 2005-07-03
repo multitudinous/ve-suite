@@ -34,7 +34,7 @@
 // A class to execute an CFD application in the virtual environment.
 // It is derived by using the VTK and VRJuggler classes.
 
-#include "cfdApp.h"
+#include "VE_Xplorer/cfdApp.h"
 #ifdef _OSG
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureBasedVizHandler.h"

@@ -2,7 +2,8 @@
 #define CFD_TEXTURE_DATA_SET_H
 #ifdef _OSG
 #ifdef VE_PATENTED
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdVolumeVisualization;
    class cfdTextureManager;
 }
@@ -10,8 +11,9 @@ namespace VE_TextureBased{
 #include <map>
 #include <iostream>
 #include <string>
-#include "VE_Installer/VEConfig.h"
-namespace VE_TextureBased{
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS TextureDataInfo{
       public:
          TextureDataInfo();

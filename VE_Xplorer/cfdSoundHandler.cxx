@@ -31,17 +31,19 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdSoundHandler.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
-#include "cfdReadParam.h"
-#include "fileIO.h"
-#include "cfdSound.h"
+#include "VE_Xplorer/cfdSoundHandler.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdReadParam.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/cfdSound.h"
 
 #include <iostream>
 #include <fstream>
 
 #include <vrj/Util/Debug.h>
+using namespace VE_Xplorer;
+using namespace VE_Util;
 
 cfdSoundHandler::cfdSoundHandler( char* param )
 {

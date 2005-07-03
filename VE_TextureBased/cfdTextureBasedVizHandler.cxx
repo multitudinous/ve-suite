@@ -32,8 +32,9 @@
 #include "VE_TextureBased/cfdVectorVolumeVisHandler.h"
 #include "VE_TextureBased/cfdOSGAdvectionShaderManager.h"
 
-vprSingletonImp( cfdTextureBasedVizHandler );
+vprSingletonImp( VE_TextureBased::cfdTextureBasedVizHandler );
 using namespace VE_TextureBased;
+using namespace VE_Xplorer;
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////

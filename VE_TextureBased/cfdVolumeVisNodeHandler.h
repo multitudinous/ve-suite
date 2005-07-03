@@ -10,13 +10,16 @@ namespace osg
    class Switch;
    class TexGenNode;
 }
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdTextureManager;
 }
-#include "VE_Installer/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-namespace VE_TextureBased{
-   class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisNodeHandler{
+namespace VE_TextureBased
+{
+   class VE_TEXTURE_BASED_EXPORTS cfdVolumeVisNodeHandler
+   {
       public:
          cfdVolumeVisNodeHandler();
          cfdVolumeVisNodeHandler(const cfdVolumeVisNodeHandler& vvnh);

@@ -5,17 +5,20 @@
 #elif _OPENSG
 #elif _OSG
 #include <osg/Texture3D>
-namespace osg{
+namespace osg
+{
    class Node;
    class NodeVisitor;
    class State;
 }
-#include "VE_Installer/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdTextureManager;
 }
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdUpdateTextureCallback 
                               : public  osg::Texture3D::SubloadCallback{
       public:

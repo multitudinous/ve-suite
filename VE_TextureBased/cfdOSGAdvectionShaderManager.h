@@ -6,17 +6,19 @@ namespace osg{
    class Texture3D;
    class Texture1D;
    class State;
-};
+}
 #include <vector>
 #include "VE_TextureBased/cfdOSGShaderManager.h"
 #include "VE_TextureBased/cfdUpdateableOSGNoiseTexture3d.h"
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class cfdUpdateParameterCallback;
    class cfdUpdateMatrixParameterCallback;
 }
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdOSGAdvectionShaderManager
       : public cfdOSGShaderManager{
       public:

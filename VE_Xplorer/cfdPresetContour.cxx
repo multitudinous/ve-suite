@@ -29,11 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdPresetContour.h"
+#include "VE_Xplorer/cfdPresetContour.h"
 
-#include "cfdCuttingPlane.h"
-#include "cfdDataSet.h"
-#include "cfdPlanes.h"
+#include "VE_Xplorer/cfdCuttingPlane.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdPlanes.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
@@ -47,6 +47,9 @@
 #include <vtkProperty.h>
 
 #include <vpr/Util/Debug.h>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
 {

@@ -35,18 +35,19 @@
 #include "cfdContourBase.h"
 
 // A class that generates contour plots on multiple planes of data.
-
-class WXPLUGIN_DECLSPEC cfdContours : public cfdContourBase
+namespace VE_Xplorer
 {
- public:
-  cfdContours( const int xyz );
+   class VE_XPLORER_EXPORTS cfdContours : public cfdContourBase
+   {
+      public:
+         cfdContours( const int xyz );
 
-  ~cfdContours();
+         ~cfdContours();
 
-  virtual void Update( void );
+         virtual void Update( void );
 
- private:
-  int xyz;
-};
-
+      private:
+         int xyz;
+   };
+}
 #endif

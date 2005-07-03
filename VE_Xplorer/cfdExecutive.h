@@ -33,27 +33,32 @@
 #define CFD_EXECUTIVE_H
 
 #include "VE_Xplorer/cfdGlobalBase.h"
-#include "interface.h"
+#include "VE_Conductor/Framework/interface.h"
 
 #include <map>
 #include <string>
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdDCS; 
    class cfdGroup;
 }
-class cfdGauges;
-class cfdDashboard;
-class cfdExecutiveConfiguration;
-class cfdInteractiveGeometry;
-class Body_UI_i;
-class cfdCommandArray;
-class Network;
-class cfdVEAvailModules;
-class cfdVEBaseClass;
-class cfdVEAvail_Modules;
-class cfdVjObsWrapper;
-class cfdThread;
+
+namespace VE_Xplorer
+{
+   class cfdGauges;
+   class cfdDashboard;
+   class cfdExecutiveConfiguration;
+   class cfdInteractiveGeometry;
+   class Body_UI_i;
+   class cfdCommandArray;
+   class Network;
+   class cfdVEAvailModules;
+   class cfdVEBaseClass;
+   class cfdVEAvail_Modules;
+   class cfdVjObsWrapper;
+   class cfdThread;
+}
 
 namespace Body { class Executive; }
 namespace CosNaming { class NamingContext; }

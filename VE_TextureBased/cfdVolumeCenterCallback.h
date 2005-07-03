@@ -4,26 +4,28 @@
 #ifdef VE_PATENTED
 #ifdef _OSG
 
-namespace osg{
+namespace osg
+{
    class TexMat;
    class Node;
 }
 #include <osg/NodeCallback>
 #include <osg/Vec3f>
 
-#include "VE_Installer/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-namespace VE_TextureBased{
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdVolumeCenterCallback : public osg::NodeCallback
    {
-   public:
-      cfdVolumeCenterCallback(osg::Vec3f center);
-      virtual ~cfdVolumeCenterCallback(){}
-      void Translate(float* translation); 
-      virtual void operator()(osg::Node* node,osg::NodeVisitor* nv);
-protected:
-      osg::Vec3f _center;
-      osg::Vec3f _translate;
+      public:
+         cfdVolumeCenterCallback(osg::Vec3f center);
+         virtual ~cfdVolumeCenterCallback(){}
+         void Translate(float* translation); 
+         virtual void operator()(osg::Node* node,osg::NodeVisitor* nv);
+      protected:
+         osg::Vec3f _center;
+         osg::Vec3f _translate;
    };
 }
 #endif //_OSG

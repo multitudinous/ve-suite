@@ -38,52 +38,59 @@ class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkGlyph3D;
 class vtkSphereSource;
-class cfdImage;
-class cfdReadParam;
-class cfdCommandArray;
 
-namespace VE_SceneGraph{
+namespace VE_Xplorer
+{
+   class cfdImage;
+   class cfdReadParam;
+   class cfdCommandArray;
+}
+
+namespace VE_SceneGraph
+{
    class cfdDCS;
 }
 
-class WXPLUGIN_DECLSPEC cfdAnimatedImage : public cfdObjects
+namespace VE_Xplorer
 {
-   public:
-      cfdAnimatedImage( char *basename, int frames,
+   class VE_XPLORER_EXPORTS cfdAnimatedImage : public cfdObjects
+   {
+      public:
+         cfdAnimatedImage( char *basename, int frames,
                     int ex_x, int ex_y, int dim, 
                     double *origin, double *spacing );
 
-      cfdAnimatedImage( char* );
+         cfdAnimatedImage( char* );
   
-      ~cfdAnimatedImage();
+         ~cfdAnimatedImage();
   
-      // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray* commandArray );
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray* commandArray );
 
-      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
 
-      // update the actor
-      virtual void Update( void );
+         // update the actor
+         virtual void Update( void );
   
-      void CreateObjects( void );
+         void CreateObjects( void );
 
-      std::vector< cfdImage* > _images;
+         std::vector< cfdImage* > _images;
 
-   private:
-      VE_SceneGraph::cfdDCS* _dcs;
-      char basename[256];
-      int frames;
-      int ex_x, ex_y;
-      int dim;
-      double origin[3];
-      double spacing[3];
-      float imageScale[ 3 ];
-      float imageTrans[ 3 ];
-      float imageRot[ 3 ];
-      char* _param;
-      cfdReadParam* _readParam;
-      //int _which_frame;
-};
-
+      private:
+         VE_SceneGraph::cfdDCS* _dcs;
+         char basename[256];
+         int frames;
+         int ex_x, ex_y;
+         int dim;
+         double origin[3];
+         double spacing[3];
+         float imageScale[ 3 ];
+         float imageTrans[ 3 ];
+         float imageRot[ 3 ];
+         char* _param;
+         cfdReadParam* _readParam;
+         //int _which_frame;
+   };
+}
 #endif

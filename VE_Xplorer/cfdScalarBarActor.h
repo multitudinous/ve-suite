@@ -32,113 +32,120 @@
 #ifndef CFD_SCALAR_BAR_ACTOR_H
 #define CFD_SCALAR_BAR_ACTOR_H
 
-#include "cfdGlobalBase.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
 //#include <string>
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdDCS;
    class cfdGeode;
    class cfdGroup;
 }
 class vtkLookupTable;
 class vtkVectorText;
-class cfdCommandArray;
-class cfdDataSet;
-class cfdReadParam;
+
+namespace VE_Xplorer
+{
+   class cfdCommandArray;
+   class cfdDataSet;
+   class cfdReadParam;
+}
 
 //! VTK scalar bar render
 /*!
   A rebuilt class from vtkScalarBarActor(2-D) for use in the
   3-D space.
 */
-class cfdScalarBarActor : public cfdGlobalBase
+namespace VE_Xplorer
 {
-public:
-   cfdScalarBarActor( char*, VE_SceneGraph::cfdGroup* );
-   ~cfdScalarBarActor();
+   class VE_XPLORER_EXPORTS cfdScalarBarActor : public cfdGlobalBase
+   {
+      public:
+         cfdScalarBarActor( char*, VE_SceneGraph::cfdGroup* );
+         ~cfdScalarBarActor();
 
-   // compare VjObs_i commandArray with its child's value
-   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-   virtual void UpdateCommand();
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
   
-   // Create the scalar bar
-   void RefreshScalarBar( void );
-   // Set the active dataset for scalar bar computations
-   void SetActiveDataSet( cfdDataSet* );
-   // Read parameter file
-   void CreateObjects( void );
+         // Create the scalar bar
+         void RefreshScalarBar( void );
+         // Set the active dataset for scalar bar computations
+         void SetActiveDataSet( cfdDataSet* );
+         // Read parameter file
+         void CreateObjects( void );
 
-   // Set/Get the position of the scalar bar in 3D space
-   void SetPosition(float x, float y, float z);
-   void SetPosition(float x[3]);
-   void GetPosition(float x[3]);
-   void GetPosition(float &x, float &y, float &z);
+         // Set/Get the position of the scalar bar in 3D space
+         void SetPosition(float x, float y, float z);
+         void SetPosition(float x[3]);
+         void GetPosition(float x[3]);
+         void GetPosition(float &x, float &y, float &z);
 
-   void SetZRotation( float );
+         void SetZRotation( float );
 
-   // Set/Get the width of the scalar bar
-   void SetWidth(float w);
-   float GetWidth() const;
+         // Set/Get the width of the scalar bar
+         void SetWidth(float w);
+         float GetWidth() const;
 
-   // Set/Get the height of the scalar bar
-   void SetHeight(float h);
-   float GetHeight() const;
+         // Set/Get the height of the scalar bar
+         void SetHeight(float h);
+         float GetHeight() const;
   
-   // Set/Get the number of colors for the scalar bar
-   void SetMaximumNumberOfColors(int nC);
-   int GetMaximumNumberOfColors() const;
+         // Set/Get the number of colors for the scalar bar
+         void SetMaximumNumberOfColors(int nC);
+         int GetMaximumNumberOfColors() const;
 
-   // Set/Get the range of the scalar bar
-   void SetRange(double r0, double r1);
-   void SetRange(double r[2]);
-   void GetRange(double r[2]);
-   void GetRange(double &r0, double &r1);
+         // Set/Get the range of the scalar bar
+         void SetRange(double r0, double r1);
+         void SetRange(double r[2]);
+         void GetRange(double r[2]);
+         void GetRange(double &r0, double &r1);
 
-  // Set/Get the lookup table of the scalar bar
-  void SetLookupTable( vtkLookupTable * );
-  vtkLookupTable * GetLookupTable();
+         // Set/Get the lookup table of the scalar bar
+         void SetLookupTable( vtkLookupTable * );
+         vtkLookupTable * GetLookupTable();
 
-  // Set/Get the scale of the title text
-  void SetTitleTextScale(float scale);
-  float GetTitleTextScale() const;
+         // Set/Get the scale of the title text
+         void SetTitleTextScale(float scale);
+         float GetTitleTextScale() const;
 
-  // Set/Get the text for the scalar bar
-  void SetVtkVectorText(char text[]);
+         // Set/Get the text for the scalar bar
+         void SetVtkVectorText(char text[]);
 
-  // Create the scalar bar and convert it into pfGeode
-  void Execute();
+         // Create the scalar bar and convert it into pfGeode
+         void Execute();
 
-  // 
-  VE_SceneGraph::cfdDCS * GetcfdDCS( void);
+         // 
+         VE_SceneGraph::cfdDCS * GetcfdDCS( void);
 
-   private:
-      float itsX[3];
-      float zrot;
-      float width, height;
-      int numColors;
-      vtkLookupTable* lut;
-      vtkVectorText* titleScalar;
-      int numPts;
-      double range[2];
-      float dScalar;
-      float titleTextScale;
-      VE_SceneGraph::cfdGeode* pfaPolyActor;
-      VE_SceneGraph::cfdGeode* pftitleActor;
-      VE_SceneGraph::cfdGeode* pfLabelActor[5];
-      int numTextLabels;   // number of numerical labels on the scalar bar legend
+      private:
+         float itsX[3];
+         float zrot;
+         float width, height;
+         int numColors;
+         vtkLookupTable* lut;
+         vtkVectorText* titleScalar;
+         int numPts;
+         double range[2];
+         float dScalar;
+         float titleTextScale;
+         VE_SceneGraph::cfdGeode* pfaPolyActor;
+         VE_SceneGraph::cfdGeode* pftitleActor;
+         VE_SceneGraph::cfdGeode* pfLabelActor[5];
+         int numTextLabels;   // number of numerical labels on the scalar bar legend
 
-      VE_SceneGraph::cfdDCS*  scalarBar;
-      VE_SceneGraph::cfdGroup* _rootNode;
-      char* _param;
-      cfdDataSet* _activeDataSet;
-      float scalarBarPos[ 3 ];
-      float scalarBarZRot;
-      float scalarBarH;
-      float scalarBarW;
-      cfdReadParam* _readParam;
-      double realOpacity;
-};
-
+         VE_SceneGraph::cfdDCS*  scalarBar;
+         VE_SceneGraph::cfdGroup* _rootNode;
+         char* _param;
+         cfdDataSet* _activeDataSet;
+         float scalarBarPos[ 3 ];
+         float scalarBarZRot;
+         float scalarBarH;
+         float scalarBarW;
+         cfdReadParam* _readParam;
+         double realOpacity;
+   };
+}
 #endif

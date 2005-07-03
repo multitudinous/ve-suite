@@ -32,52 +32,57 @@
 #ifndef CFD_ANIMATED_STREAMLINE_CONE_H
 #define CFD_ANIMATED_STREAMLINE_CONE_H
 
-#include "cfdObjects.h"
+#include "VE_Xplorer/cfdObjects.h"
 
 class vtkPolyDataMapper;
 class vtkPolyData;
 class vtkGlyph3D;
 class vtkSphereSource;
-class cfdCommandArray;
-
-class WXPLUGIN_DECLSPEC cfdAnimatedStreamlineCone : public cfdObjects
+namespace VE_Xplorer
 {
-   public:
-      cfdAnimatedStreamlineCone( void );
-      ~cfdAnimatedStreamlineCone();
+   class cfdCommandArray;
+}
 
-      //void Initialize();
-      //void SetDirection( float [3]);
-      //void SetCenter( float [3]);
-      //void CleanUpSequence( void );
-      void SetPolyDataSource( vtkPolyData * );
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdAnimatedStreamlineCone : public cfdObjects
+   {
+      public:
+         cfdAnimatedStreamlineCone( void );
+         ~cfdAnimatedStreamlineCone();
+
+         //void Initialize();
+         //void SetDirection( float [3]);
+         //void SetCenter( float [3]);
+         //void CleanUpSequence( void );
+         void SetPolyDataSource( vtkPolyData * );
       
-      // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
 
-      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
 
-      virtual void Update( void );
+         virtual void Update( void );
 
-   private:
-      vtkPolyDataMapper *mapper;
-      vtkPolyData *polyData;
-      vtkPolyData *polydata;
-      vtkGlyph3D *glyph;
-      vtkSphereSource *sphere;
+      private:
+         vtkPolyDataMapper *mapper;
+         vtkPolyData *polyData;
+         vtkPolyData *polydata;
+         vtkGlyph3D *glyph;
+         vtkSphereSource *sphere;
 
-      float particleDiameter;
-      enum STREAM_DIRECTION
-      {
-         FORWARD,
-         BACKWARD,
-         BOTH
-      };
+         float particleDiameter;
+         enum STREAM_DIRECTION
+         {
+            FORWARD,
+            BACKWARD,
+            BOTH
+         };
    
-      STREAM_DIRECTION streamDir;
-      //int nPts, nStr, iPts;
-      //float ptData[3], direction[3], center[3];   
-};
-
+         STREAM_DIRECTION streamDir;
+         //int nPts, nStr, iPts;
+         //float ptData[3], direction[3], center[3];   
+   };
+}
 #endif

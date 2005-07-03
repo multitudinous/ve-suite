@@ -32,9 +32,12 @@
 #ifndef CFD_PRESET_VECTOR_H
 #define CFD_PRESET_VECTOR_H
 
-#include "cfdVectorBase.h"
+#include "VE_Xplorer/cfdVectorBase.h"
 
-class cfdCuttingPlane;
+namespace VE_Xplorer
+{
+   class cfdCuttingPlane;
+}
 class vtkCutter;
 
 //! VTK vector plane renderer.
@@ -45,25 +48,26 @@ class vtkCutter;
   the plane position and direction.
 */
 
-class WXPLUGIN_DECLSPEC cfdPresetVector : public cfdVectorBase
+namespace VE_Xplorer
 {
- public:
-   // Initialize the VTK objects and pipeline.
-   // (and set the number of isosurface increments for blue menu)
-   cfdPresetVector( const int xyz, const int numSteps = 10 );
+   class VE_XPLORER_EXPORTS cfdPresetVector : public cfdVectorBase
+   {
+      public:
+         // Initialize the VTK objects and pipeline.
+         // (and set the number of isosurface increments for blue menu)
+         cfdPresetVector( const int xyz, const int numSteps = 10 );
 
-   ~cfdPresetVector();
+         ~cfdPresetVector();
 
-   virtual void Update( void );
+         virtual void Update( void );
 
- private:
-   int xyz;
-   int numSteps;
+      private:
+         int xyz;
+         int numSteps;
 
-   vtkCutter *cutter;
+         vtkCutter *cutter;
 
-   cfdCuttingPlane * cuttingPlane;
-
-};
-
+         cfdCuttingPlane * cuttingPlane;
+   };
+}
 #endif

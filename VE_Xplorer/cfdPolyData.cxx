@@ -51,6 +51,9 @@
 
 #include <vpr/Util/Debug.h>
 
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+
 cfdPolyData::cfdPolyData( float op_val )
 {
    vprDEBUG(vprDBG_ALL,2) << "cfdPolyData constructor"

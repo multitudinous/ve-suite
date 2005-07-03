@@ -34,125 +34,103 @@
 
 #include <vector>
 #include <string>
-#include "cfdGlobalBase.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
 
-class fileInfo;
-class cfdDataSet;
 class vtkDataSet;
-class cfdCommandArray;
-class cfdDCS;
-#include "VE_Xplorer/cfdConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdReadParam : public cfdGlobalBase
+namespace VE_Xplorer
 {
-   public:
-      cfdReadParam();
-      ~cfdReadParam();
+   class fileInfo;
+   class cfdDataSet;
+   class cfdCommandArray;
+}
 
-      // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+namespace VE_SceneGraph
+{
+   class cfdDCS;
+}
 
-      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
-      // Continues to read parameter file based on the current object type
-      void ContinueRead( std::ifstream &, unsigned int );
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdReadParam : public cfdGlobalBase
+   {
+      public:
+         cfdReadParam();
+         ~cfdReadParam();
 
-      int   numGeoms;
-      int   bmpFile;
-      char  bmpFileName[ 100 ];
-      char  quatCamFileName[ 100 ];
-      double bmpPosition[ 3 ];
-      int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
-      float isoScale;
-      float delta;
-      char  textLine[ 256 ];
-      int   *guiVal;
-      float diameter;
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray * _cfdCommandArray );
 
-      float scalarBarPos[ 3 ];
-      float scalarBarZRot;
-      float scalarBarH;
-      float scalarBarW;
+         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+         virtual void UpdateCommand();
+         // Continues to read parameter file based on the current object type
+         void ContinueRead( std::ifstream &, unsigned int );
 
-      //BY YANG for ANIMATED IMG
-      char basename[256];
-      int frames;
-      int ex_x, ex_y;
-      int dim;
-      double origin[3];
-      double spacing[3];
+         int   numGeoms;
+         int   bmpFile;
+         char  bmpFileName[ 100 ];
+         char  quatCamFileName[ 100 ];
+         double bmpPosition[ 3 ];
+         int bmpOrientation;  // 0=X-plane, 1=Y-plane, and 2=Z-plane.
+         float isoScale;
+         float delta;
+         char  textLine[ 256 ];
+         int   *guiVal;
+         float diameter;
+
+         float scalarBarPos[ 3 ];
+         float scalarBarZRot;
+         float scalarBarH;
+         float scalarBarW;
+
+         //BY YANG for ANIMATED IMG
+         char basename[256];
+         int frames;
+         int ex_x, ex_y;
+         int dim;
+         double origin[3];
+         double spacing[3];
       
-      //END of YANG
+         //END of YANG
 
-      // IHCC Model - should be deleted at a later date
-      bool ihccModel;
-      bool changeGeometry;
-
-      std::vector< fileInfo * > files;
-
-      void CreateNewDataSet();
-      int GetNumberOfDataSets();
-      cfdDataSet * GetDataSet( int i );
-      cfdDataSet * GetDataSetWithName( const char * );
-
-      //std::vector< cfdTransientInfo * > transientInfo;
-      //std::vector< cfd1DTextInput * > textInput;
+         // IHCC Model - should be deleted at a later date
+         bool ihccModel;
+         bool changeGeometry;
    
-      //!
-      /*!
-       Initialize the number of data to load and parallel process.
-       By default, using the octree table.
-      */
+         std::vector< VE_Xplorer::fileInfo * > files;
 
-      //void data_read( char * );
-     
-      //void param_read( std::ifstream & );
-     
-      //void Vtk( std::ifstream & );
-     
-      //void Stl( std::ifstream & );
-     
-      //void set1DText( std::ifstream & );
-     
-      //void soundData( std::ifstream & );
+         void CreateNewDataSet();
+         int GetNumberOfDataSets();
+         VE_Xplorer::cfdDataSet * GetDataSet( int i );
+         VE_Xplorer::cfdDataSet * GetDataSetWithName( const char * );
 
-      //void vrxprConfigFiles( std::ifstream & );
+         int  convertDecimalToBinary( long );
+         void convertBinaryToDecimal( int );
+         void convertBinaryToArray( int, int );
 
-      //get the transient data params
-      //void getTransientInfo( std::ifstream& infile );
+         char * readDirName( std::ifstream &inFile, char * description );
+         int readID( std::ifstream &inFile );
 
-      int  convertDecimalToBinary( long );
-      void convertBinaryToDecimal( int );
-      void convertBinaryToArray( int, int );
-      //void BMPLoader( std::ifstream &inFile );
-      //void readWorldDCS( std::ifstream &inFile );
-      //void readScalarBar( std::ifstream &inFile );
-      //void IMGReader( std::ifstream &inFile );
-      //void quatCamFile( std::ifstream &inFile );
+         float worldScale[ 3 ];
+         float worldTrans[ 3 ];
+         float worldRot[ 3 ];
 
-      char * readDirName( std::ifstream &inFile, char * description );
-      int readID( std::ifstream &inFile );
+         float imageScale[ 3 ];
+         float imageTrans[ 3 ];
+         float imageRot[ 3 ];
 
-      float worldScale[ 3 ];
-      float worldTrans[ 3 ];
-      float worldRot[ 3 ];
+         VE_SceneGraph::cfdDCS* dashBoardDCS;
+         std::string dashboardFilename;
 
-      float imageScale[ 3 ];
-      float imageTrans[ 3 ];
-      float imageRot[ 3 ];
-
-      cfdDCS* dashBoardDCS;
-      std::string dashboardFilename;
-
-      static void read_pf_DCS_parameters( std::ifstream &inFile,
+         static void read_pf_DCS_parameters( std::ifstream &inFile,
                      float*, float*, float* );
 
-      static void SkipModuleBlock( std::ifstream &inFile, int );
+         static void SkipModuleBlock( std::ifstream &inFile, int );
 
-   private:
-      std::vector< cfdDataSet * > dataSets;
-      std::vector< int > testBin;
-      //void LoadSurfaceFiles( char * dir );
-};
-
+      private:
+         std::vector< VE_Xplorer::cfdDataSet * > dataSets;
+         std::vector< int > testBin;
+         //void LoadSurfaceFiles( char * dir );
+   };
+}
 #endif

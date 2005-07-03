@@ -33,68 +33,75 @@
 #define CFD_GRAPHICSOBJECT_H
 
 #include <vector>
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdGeode;
    class cfdGroup;
    class cfdTempAnimation;
 }
-class cfdModel;
 
-#include "VE_Xplorer/cfdConfig.h"
-
-class WXPLUGIN_DECLSPEC cfdGraphicsObject
+namespace VE_Xplorer
 {
-   public:
-      // constructor
-      cfdGraphicsObject( void );
+   class cfdModel;
+}
+
+#include "VE_Installer/include/VEConfig.h"
+
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdGraphicsObject
+   {
+      public:
+         // constructor
+         cfdGraphicsObject( void );
    
-      // destructor
-      ~cfdGraphicsObject( void );
+         // destructor
+         ~cfdGraphicsObject( void );
    
-      // copy constructor
-      cfdGraphicsObject( const cfdGraphicsObject& );
+         // copy constructor
+         cfdGraphicsObject( const cfdGraphicsObject& );
 
-      // equal operator
-      cfdGraphicsObject& operator=( const cfdGraphicsObject& );
+         // equal operator
+         cfdGraphicsObject& operator=( const cfdGraphicsObject& );
    
-      // types of viz objects possible to add to scene
-      enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};
+         // types of viz objects possible to add to scene
+         enum VizType{TRANSIENT,TEXTURE,CLASSIC,OTHER};
 
-      // Set parent node to add "graphics node" to
-      void SetParentNode( VE_SceneGraph::cfdGroup* );
+         // Set parent node to add "graphics node" to
+         void SetParentNode( VE_SceneGraph::cfdGroup* );
 
-      // node the parent node will be added to
-      void SetWorldNode( VE_SceneGraph::cfdGroup* );
+         // node the parent node will be added to
+         void SetWorldNode( VE_SceneGraph::cfdGroup* );
    
-      // set model pointer to be able to grab
-      // transient info and the switch node
-      void SetActiveModel( cfdModel* );
+         // set model pointer to be able to grab
+         // transient info and the switch node
+         void SetActiveModel( cfdModel* );
    
-      // add "child node" to scene graph
-      void AddGraphicsObjectToSceneGraph( void );
+         // add "child node" to scene graph
+         void AddGraphicsObjectToSceneGraph( void );
 
-      // set type of viz: trans, classic, texture
-      void SetTypeOfViz( VizType );
+         // set type of viz: trans, classic, texture
+         void SetTypeOfViz( VizType );
 
-      // set geodes for classic and trans viz objects
-      void SetGeodes( std::vector< VE_SceneGraph::cfdGeode* > );
+         // set geodes for classic and trans viz objects
+         void SetGeodes( std::vector< VE_SceneGraph::cfdGeode* > );
 
-      // Return parent node for a this object
-      VE_SceneGraph::cfdGroup* GetParentNode( void );
+         // Return parent node for a this object
+         VE_SceneGraph::cfdGroup* GetParentNode( void );
 
-      // clear geodes vector and geode from memory and the graph
-      void RemovecfdGeodeFromDCS( void );
+         // clear geodes vector and geode from memory and the graph
+         void RemovecfdGeodeFromDCS( void );
 
-   protected:
-      std::vector< VE_SceneGraph::cfdGeode* > geodes;
-      VE_SceneGraph::cfdGroup* parentNode;
-      VE_SceneGraph::cfdGroup* worldNode;
-      VizType type;
+      protected:
+         std::vector< VE_SceneGraph::cfdGeode* > geodes;
+         VE_SceneGraph::cfdGroup* parentNode;
+         VE_SceneGraph::cfdGroup* worldNode;
+         VizType type;
 
-      // used for animated particles and other ss 
-      // animated features
-      VE_SceneGraph::cfdTempAnimation* animation;
-      cfdModel* model;
-};
-
+         // used for animated particles and other ss 
+         // animated features
+         VE_SceneGraph::cfdTempAnimation* animation;
+         VE_Xplorer::cfdModel* model;
+   };
+}
 #endif

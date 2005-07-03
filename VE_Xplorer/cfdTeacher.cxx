@@ -38,13 +38,13 @@
 #include <direct.h>
 #endif   // _WIN32
 
-#include "cfdTeacher.h"
+#include "VE_Xplorer/cfdTeacher.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdNode.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
-#include "cfdWriteTraverser.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
+#include "VE_Xplorer/cfdWriteTraverser.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include <iostream>
 #include <string>
@@ -53,6 +53,8 @@
 #include <vpr/Util/Debug.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDCS )
 {

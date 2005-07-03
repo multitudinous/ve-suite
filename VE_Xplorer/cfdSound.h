@@ -34,45 +34,48 @@
 
 #include <snx/SoundHandle.h>
 
-class cfdSound
-{ 
-  public:
-   cfdSound();
-   ~cfdSound();
+namespace VE_Xplorer
+{
+   class cfdSound
+   { 
+      public:
+         cfdSound();
+         ~cfdSound();
 
-   void initSound();
-   void playSound();
-   void stopSound();
-   bool IsSounding();
+         void initSound();
+         void playSound();
+         void stopSound();
+         bool IsSounding();
 
-   char  fileName[ 100 ];
-   char  soundName[ 100 ];    // this is displayed on the gui
+         char  fileName[ 100 ];
+         char  soundName[ 100 ];    // this is displayed on the gui
 
-   // sound is either ambient or positional.  If the sound is ambient, it is
-   // attached to the listener, and its volume does not change when the
-   // listener moves. If the sound is positional, the volume changes when the
-   // listener moves
-   int   ambient;
+         // sound is either ambient or positional.  If the sound is ambient, it is
+         // attached to the listener, and its volume does not change when the
+         // listener moves. If the sound is positional, the volume changes when the
+         // listener moves
+         int   ambient;
 
-   // retriggerable specifies whether a currently playing sound restarts
-   // from the beginning when triggered.
-   int   retriggerable;  
+         // retriggerable specifies whether a currently playing sound restarts
+         // from the beginning when triggered.
+         int   retriggerable;  
 
-   // Number of times to play: -1 to loop, 1 (single shot) is default.
-   int   repeat;      
+         // Number of times to play: -1 to loop, 1 (single shot) is default.
+         int   repeat;      
 
-   float volume;  // between 0.0 and 1.0 inclusive, 1 is loud
+         float volume;  // between 0.0 and 1.0 inclusive, 1 is loud
 
-   float pitchbend;
-   // pitchbend alters the frequency of the sample.  1.0 is neutral.
-   // A value less than 1.0 is low; a value greater than 1.0 is high.
+         float pitchbend;
+         // pitchbend alters the frequency of the sample.  1.0 is neutral.
+         // A value less than 1.0 is low; a value greater than 1.0 is high.
 
-   float cutoff;
-   float soundPositionX;
-   float soundPositionY;
-   float soundPositionZ;
+         float cutoff;
+         float soundPositionX;
+         float soundPositionY;
+         float soundPositionZ;
    
-   snx::SoundHandle soundHandle;
-   snx::SoundInfo si;
-};
+         snx::SoundHandle soundHandle;
+         snx::SoundInfo si;
+   };
+}
 #endif

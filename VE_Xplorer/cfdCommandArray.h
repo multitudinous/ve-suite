@@ -34,45 +34,47 @@
 #define CFD_COMMAND_ARRAY_H
 
 // cfdApp side variables declared in VjObs_i.h
-#include "VE_Xplorer/cfdConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-class WXPLUGIN_DECLSPEC cfdCommandArray
+namespace VE_Xplorer
 {
-   public:
-      cfdCommandArray();
-      ~cfdCommandArray(){}
-      cfdCommandArray( const cfdCommandArray& );
-      cfdCommandArray& operator=( const cfdCommandArray& );
+   class VE_XPLORER_EXPORTS cfdCommandArray
+   {
+      public:
+         cfdCommandArray();
+         ~cfdCommandArray(){}
+         cfdCommandArray( const cfdCommandArray& );
+         cfdCommandArray& operator=( const cfdCommandArray& );
 
-      int GetCommandValue( int );
-      void SetCommandValue( int, double );
+         int GetCommandValue( int );
+         void SetCommandValue( int, double );
 
-      enum commandArrayValue 
-      { 
-         CFD_ISO_VALUE,
-         CFD_SC,
-         CFD_MIN,
-         CFD_MAX,
-         CFD_ID,
-         CFD_GEO_STATE,
-         CFD_POSTDATA_STATE,
-         CFD_PRE_STATE,
-         CFD_TIMESTEPS,
-         CFD_TEACHER_STATE 
-      };
+         enum commandArrayValue 
+         { 
+            CFD_ISO_VALUE,
+            CFD_SC,
+            CFD_MIN,
+            CFD_MAX,
+            CFD_ID,
+            CFD_GEO_STATE,
+            CFD_POSTDATA_STATE,
+            CFD_PRE_STATE,
+            CFD_TIMESTEPS,
+            CFD_TEACHER_STATE 
+         };
 
-   private:
-      int   cfdIso_value;
-      int   cfdSc;
-      int   cfdMin;
-      int   cfdMax;
-      long  cfdId;
-      long  cfdGeo_state;
-      short cfdPostdata_state;
-      bool  cfdPre_state;
-      short cfdTimesteps;
-      short cfdTeacher_state; 
-};
-
+      private:
+         int   cfdIso_value;
+         int   cfdSc;
+         int   cfdMin;
+         int   cfdMax;
+         long  cfdId;
+         long  cfdGeo_state;
+         short cfdPostdata_state;
+         bool  cfdPre_state;
+         short cfdTimesteps;
+         short cfdTeacher_state; 
+   };
+}
 #endif
 

@@ -33,6 +33,8 @@
 #ifndef _CFD_QUAT_CAM_H_
 #define _CFD_QUAT_CAM_H_
 
+#include "VE_Installer/include/VEConfig.h"
+
 #include <gmtl/Math.h>
 #include <gmtl/Vec.h>
 #include <gmtl/Point.h>
@@ -42,53 +44,56 @@
 #include <gmtl/Coord.h>
 #include <gmtl/Generate.h>
 
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdDCS;
 }
-class cfdNavigate;
 
-class cfdQuatCam
+namespace VE_Xplorer
 {
-public:
+   class cfdNavigate;
+}
 
-   //Constructors
-   cfdQuatCam(gmtl::Matrix44f&, double*, float*);
-   cfdQuatCam(float, float, float, float, float*);
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdQuatCam
+   {
+      public:
+         //Constructors
+         cfdQuatCam(gmtl::Matrix44f&, double*, float*);
+         cfdQuatCam(float, float, float, float, float*);
    
-   
-   //Destructor
-   ~cfdQuatCam();
+         //Destructor
+         ~cfdQuatCam();
 
-   void SetCamPos(double*, VE_SceneGraph::cfdDCS*);
+         void SetCamPos(double*, VE_SceneGraph::cfdDCS*);
 
-   void MoveCam(double*, float, VE_SceneGraph::cfdDCS*);
+         void MoveCam(double*, float, VE_SceneGraph::cfdDCS*);
 
-   void RotSlerp(float);
+         void RotSlerp(float);
 
-   void TransLerp(float);
+         void TransLerp(float);
 
-   void UpdateTrans(cfdNavigate*);
+         void UpdateTrans(cfdNavigate*);
 
-   void UpdateRotation(cfdNavigate*);
+         void UpdateRotation(cfdNavigate*);
 
-   gmtl::Vec3f  vjVecCurrTrans;
+         gmtl::Vec3f  vjVecCurrTrans;
 
-   //gmtl::Matrix44f m2;
+         //gmtl::Matrix44f m2;
 
-   float rotPoints[4];
+         float rotPoints[4];
 
-   float angle;
+         float angle;
 
-private:
-   gmtl::Quatf LastPosQuat;
-   gmtl::Quatf NextPosQuat;
-   gmtl::Quatf CurPosQuat;
-   gmtl::Vec3f vjVecNextTrans;
-   gmtl::Vec3f vjVecLastTrans;
+      private:
+         gmtl::Quatf LastPosQuat;
+         gmtl::Quatf NextPosQuat;
+         gmtl::Quatf CurPosQuat;
+         gmtl::Vec3f vjVecNextTrans;
+         gmtl::Vec3f vjVecLastTrans;
 
-   float rotvec[3];
-
-};
+         float rotvec[3];
+   };
+}
 #endif
-
- 

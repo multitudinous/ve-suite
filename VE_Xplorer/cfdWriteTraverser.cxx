@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "cfdWriteTraverser.h"
+#include "VE_Xplorer/cfdWriteTraverser.h"
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdSequence.h"
 
@@ -45,6 +45,9 @@
 #endif
 
 #include <iostream>
+
+using namespace VE_Xplorer;
+
 //////////////////////////////////////
 //Constructor                       //
 //////////////////////////////////////
@@ -110,9 +113,12 @@ cfdWriteTraverser& cfdWriteTraverser::operator=(const cfdWriteTraverser& rhs)
 /////////////////////////////////////////////////////
 void cfdWriteTraverser::setCallback(int swapActivate)
 {
-   if(swapActivate){
+   if(swapActivate)
+   {
       _preFunc = _swapSequenceNodes;
-   }else{
+   }
+   else
+   {
       _preFunc = _turnOnSequence;
    }
 }
@@ -141,7 +147,7 @@ void cfdWriteTraverser::setOutputFileName(char* outFile)
 //////////////////////////////////////////////////////////
 //turn on the sequence nodes for proper read back       //
 //////////////////////////////////////////////////////////
-void _turnOnSequence(VE_SceneGraph::cfdNodeTraverser* cfdNT,
+void VE_Xplorer::_turnOnSequence(VE_SceneGraph::cfdNodeTraverser* cfdNT,
                    VE_SceneGraph::cfdNode* node)
 {
 if(node->GetCFDNodeType() == VE_SceneGraph::cfdSceneNode::CFD_SEQUENCE){
@@ -153,13 +159,13 @@ if(node->GetCFDNodeType() == VE_SceneGraph::cfdSceneNode::CFD_SEQUENCE){
 //////////////////////////////////////////////////////
 //swap the sequence nodes                           //
 //////////////////////////////////////////////////////
-void _swapSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
+void VE_Xplorer::_swapSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
                      VE_SceneGraph::cfdNode* node)
 {
    //need to implement using getRawNode calls!!
 
    //Need to fix
-   cfdWriteTraverser* cfdWT = (cfdWriteTraverser*)cfdNT;
+   VE_Xplorer::cfdWriteTraverser* cfdWT = (VE_Xplorer::cfdWriteTraverser*)cfdNT;
 
    //replace cfdSequence nodes
    if(node->GetCFDNodeType() == VE_SceneGraph::cfdSceneNode::CFD_SEQUENCE){

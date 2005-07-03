@@ -33,7 +33,10 @@
 #define CFD_VJOBSWRAPPER_H
 
 class VjObs_i;
-class cfdCommandArray;
+namespace VE_Xplorer
+{
+   class cfdCommandArray;
+}
 #ifdef _TAO
 namespace CosNaming{ class NamingContext; }
 namespace CORBA{ class ORB; }

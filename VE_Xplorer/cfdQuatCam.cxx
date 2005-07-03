@@ -34,6 +34,8 @@
 #include "VE_Xplorer/cfdNavigate.h"
 #include "VE_SceneGraph/cfdDCS.h"
 using namespace gmtl;
+using namespace VE_SceneGraph;
+using namespace VE_Xplorer;
 
 cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans, float* rotPts)
 {

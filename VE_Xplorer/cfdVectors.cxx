@@ -50,6 +50,8 @@
 
 #include <vpr/Util/Debug.h>
 
+using namespace VE_Xplorer;
+
 cfdVectors::cfdVectors( const int xyz )
 {
    this->xyz = xyz;

@@ -38,7 +38,7 @@
 #endif
 //#include "Network.h"
 //#include "cfdExecutive.h"
-#include "moduleS.h"
+#include "VEOpen/skel/moduleS.h"
 //#include "moduleC.h"
 #include <string>
 #include <vector>
@@ -48,77 +48,78 @@
 #pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
-//Class Body_UI_i
-class  Body_UI_i : public virtual POA_Body::UI
+namespace VE_Xplorer
 {
-   public:
-      //Constructor 
-      Body_UI_i (Body::Executive_ptr exec, std::string name);
+   //Class Body_UI_i
+   class  Body_UI_i : public virtual POA_Body::UI
+   {
+      public:
+         //Constructor 
+         Body_UI_i (Body::Executive_ptr exec, std::string name);
   
-      //Destructor 
-      virtual ~Body_UI_i (void);
+         //Destructor 
+         virtual ~Body_UI_i (void);
   
-      std::string UIName_;
-      std::string GetNetworkString( void );
-      std::string GetStatusString( void );
-      bool GetNetworkFlag( void );
+         std::string UIName_;
+         std::string GetNetworkString( void );
+         std::string GetStatusString( void );
+         bool GetNetworkFlag( void );
 
-   protected:
-      Body::Executive_var executive_;
-      std::vector< std::string > networkStringBuffer;
-      std::vector< std::string > statusStringBuffer;
-      vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
-      vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
-      void SetNetworkString( char* );
+      protected:
+         Body::Executive_var executive_;
+         std::vector< std::string > networkStringBuffer;
+         std::vector< std::string > statusStringBuffer;
+         vpr::Mutex stringBufferLock;  /**< A mutex to protect variables accesses */
+         vpr::Mutex statusBufferLock;  /**< A mutex to protect variables accesses */
+         void SetNetworkString( char* );
 
-virtual void UpdateNetwork (
-    const char * network
-    ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+   virtual void UpdateNetwork (
+      const char * network
+      ACE_ENV_ARG_DECL
+   )
+   ACE_THROW_SPEC ((
+      CORBA::SystemException
+      , Error::EUnknown
+   ));
 
-virtual void UpdateModuleUI (
+   virtual void UpdateModuleUI (
     CORBA::Long module_id,
     const char * msg
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
+   )
+   ACE_THROW_SPEC ((
     CORBA::SystemException
     , Error::EUnknown
-  ));
+   ));
 
-virtual void UpdateModuleResult (
-    CORBA::Long module_id,
-    const char * msg
-    ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
-    CORBA::SystemException
-    , Error::EUnknown
-  ));
+   virtual void UpdateModuleResult (
+      CORBA::Long module_id,
+      const char * msg
+      ACE_ENV_ARG_DECL
+   )
+   ACE_THROW_SPEC ((
+      CORBA::SystemException
+      , Error::EUnknown
+   ));
 
-virtual void UpdateLinkContent (
+   virtual void UpdateLinkContent (
     CORBA::Long id,
     const char * msg
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
+   )
+   ACE_THROW_SPEC ((
     CORBA::SystemException
     , Error::EUnknown
-  ));
+   ));
 
-virtual void Raise (
+   virtual void Raise (
     const char * notification
     ACE_ENV_ARG_DECL
-  )
-  ACE_THROW_SPEC ((
+   )
+   ACE_THROW_SPEC ((
     CORBA::SystemException
     , Error::EUnknown
-  ));
-};
-
-
+   ));
+   };
+}
 #endif

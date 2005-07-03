@@ -37,7 +37,7 @@
 #define MAX_MOMENTUM 20
 #endif
 
-#include "cfdContourBase.h"
+#include "VE_Xplorer/cfdContourBase.h"
 
 class vtkPlane;
 class vtkCutter;
@@ -50,30 +50,33 @@ class vtkWarpVector;
   and direction selected. Update member function will be update
   the position and direction as each "Update" being called.
 */
-
-class WXPLUGIN_DECLSPEC cfdMomentum : public cfdContourBase
+namespace VE_Xplorer
 {
- public:
-  // Initialize the VTK objects and pipeline.
-  cfdMomentum( void );
+   class VE_XPLORER_EXPORTS cfdMomentum : public cfdContourBase
+   {
+      public:
+         // Initialize the VTK objects and pipeline.
+         cfdMomentum( void );
 
-  ~cfdMomentum( void );
+         ~cfdMomentum( void );
 
-   /* Update the position, x, and normal direction to cut.
-    Output a updated pfGeoSet.  */
-   virtual void Update( void );
+         /* 
+         Update the position, x, and normal direction to cut.
+         Output a updated pfGeoSet.  
+         */
+         virtual void Update( void );
 
- private:  
-#ifdef USE_OMP
-  vtkPlane *plane[MAX_MOMENTUM];
-  vtkCutter *cutter[MAX_MOMENTUM];
-  vtkAppendPolyData *append;
-  float nData;
-#else
-  vtkPlane *plane;
-  vtkCutter *cutter;
-#endif
-  vtkWarpVector *warper;
-};
-
+      private:  
+      #ifdef USE_OMP
+         vtkPlane *plane[MAX_MOMENTUM];
+         vtkCutter *cutter[MAX_MOMENTUM];
+         vtkAppendPolyData *append;
+         float nData;
+      #else
+         vtkPlane *plane;
+         vtkCutter *cutter;
+      #endif
+         vtkWarpVector *warper;
+   };
+}
 #endif

@@ -51,32 +51,33 @@ class vtkMaskPoints;
   and direction selected. Update member function will update
   the position and direction as each "Update" being called.
 */
-class cfdVector : public cfdVectorBase
+namespace VE_Xplorer
 {
- public:
-  // Initialize the VTK objects and pipeline.
-  cfdVector( );
+   class VE_XPLORER_EXPORTS cfdVector : public cfdVectorBase
+   {
+      public:
+         // Initialize the VTK objects and pipeline.
+         cfdVector( );
 
-  ~cfdVector( );
+         ~cfdVector( );
   
-  /* Update the position, x, and normal direction to cut.
-    Output a updated pfGeoSet.  */
-  virtual void Update( void );
+         /* Update the position, x, and normal direction to cut.
+         Output a updated pfGeoSet.  */
+         virtual void Update( void );
 
- private:
+      private:
 
-#ifdef USE_OMP
-  vtkPlane *plane[MAX_VECTOR];
-  vtkCutter *cutter[MAX_VECTOR];
-  vtkGlyph3D *glyph[MAX_VECTOR];
-  vtkMaskPoints   *ptmask[MAX_VECTOR];
-  vtkAppendFilter *append;
-  float nData;
-#else
-  vtkPlane           *plane;
-  vtkCutter          *cutter;
-#endif
-
-};
-
+      #ifdef USE_OMP
+         vtkPlane *plane[MAX_VECTOR];
+         vtkCutter *cutter[MAX_VECTOR];
+         vtkGlyph3D *glyph[MAX_VECTOR];
+         vtkMaskPoints   *ptmask[MAX_VECTOR];
+         vtkAppendFilter *append;
+         float nData;
+      #else
+         vtkPlane           *plane;
+         vtkCutter          *cutter;
+      #endif
+   };
+}
 #endif

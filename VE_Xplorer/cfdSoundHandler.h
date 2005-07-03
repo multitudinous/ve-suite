@@ -34,34 +34,41 @@
 #define CFD_SOUNDHANDLER
 
 #include <vector>
-#include "cfdGlobalBase.h"
+#include "VE_Xplorer/cfdGlobalBase.h"
 
-class cfdCommandArray;
-class cfdSound;
-class cfdReadParam;
-
-class cfdSoundHandler : public cfdGlobalBase
+namespace VE_Xplorer
 {
-   public:
-      cfdSoundHandler( char* );
-      ~cfdSoundHandler();
+   class cfdCommandArray;
+   class cfdSound;
+   class cfdReadParam;
+}
 
-      // Used to read parameter file and configure objects
-      void CreateObjects( void );
+namespace VE_Xplorer
+{
+   class VE_XPLORER_EXPORTS cfdSoundHandler : public cfdGlobalBase
+   {
+      public:
+         cfdSoundHandler( char* );
+         ~cfdSoundHandler();
 
-      // compare VjObs_i commandArray with its child's value
-      virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+         // Used to read parameter file and configure objects
+         void CreateObjects( void );
 
-      // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-      virtual void UpdateCommand();
+         // compare VjObs_i commandArray with its child's value
+         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-      int GetNumberOfSounds( void );
-      char* GetSoundFilename( int );
+         // in future, multi-threaded apps will make a copy of 
+         // VjObs_i commandArray
+         virtual void UpdateCommand();
 
-   private:
-      char* _param;
-      cfdReadParam* _readParam;
-      std::vector< cfdSound* > sounds;
-      //cfdCommandArray* commandArray;
-};
+         int GetNumberOfSounds( void );
+         char* GetSoundFilename( int );
+
+      private:
+         char* _param;
+         cfdReadParam* _readParam;
+         std::vector< cfdSound* > sounds;
+         //cfdCommandArray* commandArray;
+   };
+}
 #endif

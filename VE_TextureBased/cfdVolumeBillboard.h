@@ -5,10 +5,12 @@
 #include <osg/Vec3>
 #include <osg/Billboard>
 
-#include "VE_Installer/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-namespace VE_TextureBased{
-   class VE_TEXTURE_BASED_EXPORTS cfdVolumeBillboard: public osg::Billboard{
+namespace VE_TextureBased
+{
+   class VE_TEXTURE_BASED_EXPORTS cfdVolumeBillboard: public osg::Billboard
+   {
       public:
          cfdVolumeBillboard(){}
          virtual ~cfdVolumeBillboard(){}

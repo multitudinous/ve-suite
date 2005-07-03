@@ -40,6 +40,9 @@
 
 #include <vpr/Util/Debug.h>
 
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
+
 cfd1DTextInput::cfd1DTextInput( void ):cfdDCS()
 {
    this->geode = new VE_SceneGraph::cfdGeode();

@@ -8,8 +8,9 @@ namespace osg
 {
    class Texture3D;
 }
-#include "VE_Installer/VEConfig.h"
-namespace VE_TextureBased{
+#include "VE_Installer/include/VEConfig.h"
+namespace VE_TextureBased
+{
    class VE_TEXTURE_BASED_EXPORTS cfdOSGPingPongTexture3D{
       public:
          cfdOSGPingPongTexture3D();

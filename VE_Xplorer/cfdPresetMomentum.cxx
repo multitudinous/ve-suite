@@ -29,18 +29,17 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdPresetMomentum.h"
+#include "VE_Xplorer/cfdPresetMomentum.h"
 
-#include "cfdCuttingPlane.h"
-#include "cfdDataSet.h"
-#include "cfdEnum.h"
-#include "cfdPlanes.h"
+#include "VE_Xplorer/cfdCuttingPlane.h"
+#include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdPlanes.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
 #include <vtkPolyData.h>
-//#include <vtkUnstructuredGrid.h>
 #include <vtkDataSet.h>
 #include <vtkCutter.h>
 #include <vtkWarpVector.h>
@@ -51,6 +50,8 @@
 #include <vtkProperty.h>
 
 #include <vpr/Util/Debug.h>
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 // this class requires that the dataset has a vector field.
 cfdPresetMomentum::cfdPresetMomentum( const int xyz,

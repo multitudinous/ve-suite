@@ -29,11 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdAnimatedImage.h"
-#include "cfdReadParam.h"
-#include "cfdImage.h"
-#include "cfdEnum.h"
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdAnimatedImage.h"
+#include "VE_Xplorer/cfdReadParam.h"
+#include "VE_Xplorer/cfdImage.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_SceneGraph/cfdTempAnimation.h"
 #include "VE_SceneGraph/cfdDCS.h"
 
@@ -42,6 +42,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 // Fix need to add the new style read param to this class
 // tak code out of cfdReadPAram to this function

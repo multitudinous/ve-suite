@@ -29,11 +29,11 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "cfdGeomDataSet.h"
+#include "VE_Xplorer/cfdGeomDataSet.h"
 
-#include "cfdFileInfo.h"  
+#include "VE_Xplorer/cfdFileInfo.h"  
 
-#include <assert.h>
+#include <cassert>
 #include "VE_SceneGraph/cfdGeode.h"
 #include "VE_SceneGraph/cfdDCS.h"
 
@@ -60,6 +60,9 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vpr/Util/Debug.h>
+
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 //cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, pfDCS *modelDCS  )
 cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, VE_SceneGraph::cfdDCS *modelDCS  )

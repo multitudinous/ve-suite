@@ -38,16 +38,19 @@
 #include <vpr/Thread/Thread.h>
 //#include "cfdAppWrapper.h"
 //#include "cfdExecutive.h"
-class cfdThread
+namespace VE_Xplorer
 {
-   public:
-      cfdThread( void );
-      ~cfdThread( void );
+   class cfdThread
+   {
+      public:
+         cfdThread( void );
+         ~cfdThread( void );
 
-//   private:
-      //vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;
-      //vpr::ThreadMemberFunctor<cfdExecutive>* executive_run;
-      vpr::Thread* new_thread;
+      //   private:
+         //vpr::ThreadMemberFunctor<cfdAppWrapper>* corba_run;
+         //vpr::ThreadMemberFunctor<cfdExecutive>* executive_run;
+         vpr::Thread* new_thread;
       
-};
+   };
+}
 #endif

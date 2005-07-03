@@ -33,36 +33,39 @@
 #define CFD_1DTEXTINPUT_H
 
 #include <string>
-namespace VE_SceneGraph{
+namespace VE_SceneGraph
+{
    class cfdGeode;
 }
 class  vtkActor;
 #include "VE_SceneGraph/cfdDCS.h"
 
-class cfd1DTextInput : public VE_SceneGraph::cfdDCS
+namespace VE_Xplorer
 {
-   public:
+   class cfd1DTextInput : public VE_SceneGraph::cfdDCS
+   {
+      public:
 
-      cfd1DTextInput( void );
+         cfd1DTextInput( void );
 
-      ~cfd1DTextInput( void );
+         ~cfd1DTextInput( void );
 
-      VE_SceneGraph::cfdDCS* getpfDCS( void );
+         VE_SceneGraph::cfdDCS* getpfDCS( void );
 
-      void SetTransforms( float [ 3 ], float [ 3 ], float [ 3 ] );
+         void SetTransforms( float [ 3 ], float [ 3 ], float [ 3 ] );
 
-      void SetFilename( std::string );
+         void SetFilename( std::string );
 
-      void Update( void );
+         void Update( void );
    
-      void UpdateTextColor( double , double , double );
+         void UpdateTextColor( double , double , double );
 
-   private:
+      private:
    
-      std::string text;
-      vtkActor*   actor;
-      //cfdDCS*      DCS;
-      VE_SceneGraph::cfdGeode* geode;  
-};
-
+         std::string text;
+         vtkActor*   actor;
+         //cfdDCS*      DCS;
+         VE_SceneGraph::cfdGeode* geode;  
+   };
+}
 #endif
