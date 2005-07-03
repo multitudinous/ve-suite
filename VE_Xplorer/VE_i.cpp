@@ -30,10 +30,12 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_i.h"
+#include "VE_Xplorer/VE_i.h"
 #include <iostream>
 #include <vpr/Sync/Guard.h>
-  
+
+using namespace VE_Xplorer;
+
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
   : executive_(Body::Executive::_duplicate(exec))

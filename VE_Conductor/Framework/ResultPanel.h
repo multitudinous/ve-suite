@@ -2,7 +2,8 @@
 #define RESULT_PANEL_H
 #include <wx/wx.h>
 
-enum {
+enum 
+{
   MW_GROSS,
   MW_NET,
   NET_EFF,

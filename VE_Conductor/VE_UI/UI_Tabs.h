@@ -4,8 +4,8 @@
 #include <winsock2.h>
 #endif
 
-#include "wx/wx.h"
-#include "wx/notebook.h"
+#include <wx/wx.h>
+#include <wx/notebook.h>
 
 #ifdef _TAO
 #include "VjObsC.h"

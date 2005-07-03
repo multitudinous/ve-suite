@@ -6,7 +6,6 @@
 
 #include <wx/wx.h>
 
-//#include "controlIds.h"
 //Visualizaton tab control ids
 enum VIS_TAB_IDS
 {

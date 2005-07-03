@@ -5,27 +5,13 @@
 #endif
 
 #include <wx/wx.h>
-#include "interface.h"
-#include "UIDialog.h"
-#include "TextResultDialog.h"
+#include "VE_Conductor/Framework/interface.h"
+#include "VE_Conductor/Framework/UIDialog.h"
+#include "VE_Conductor/Framework/TextResultDialog.h"
 // EPRI TAG
-#include "FinancialDialog.h"
+#include "VE_Conductor/Framework/FinancialDialog.h"
 
 class Geometry;
-#if defined(WXUSINGDLL) && \
-    (defined(WXMAKING_PLUGIN_DLL) || defined(WXUSING_PLUGIN_DLL))
-
-#  if defined(WXMAKING_PLUGIN_DLL)
-      // When building the DLL WXPLUGINDECLSPEC exports classes
-#     define WXPLUGIN_DECLSPEC            WXEXPORT
-#  elif defined(WXUSING_PLUGIN_DLL)
-      // When building the DLL WXPLUGINDECLSPEC imports classes
-#     define WXPLUGIN_DECLSPEC            WXIMPORT
-#  endif // defined(WXBUILD_PLUGIN_DLL)
-#else
-   // When building the static library nullify the effect of WXPLUGIN_DECLSPEC
-#  define WXPLUGIN_DECLSPEC
-#endif // WXUSINGDLL && (WXMAKING_PLUGIN_DLL || WXUSING_PLUGIN_DLL)
 
 #define ICON 20000
 
@@ -33,7 +19,7 @@ class Geometry;
 
 typedef std::vector<wxPoint> POLY;
 
-class WXPLUGIN_DECLSPEC REI_Plugin : public wxObject
+class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
 {
    public:
 

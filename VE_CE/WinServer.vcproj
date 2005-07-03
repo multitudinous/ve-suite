@@ -144,7 +144,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;"
+				AdditionalIncludeDirectories="&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\src&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
@@ -163,11 +163,11 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2d.lib odbc32.lib odbccp32.lib TAO_BiDirGIOPd.lib"
+				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib xerces-c_2d.lib odbc32.lib odbccp32.lib TAO_BiDirGIOPd.lib VEConductorLib_d.lib"
 				OutputFile="$(VE_SUITE_HOME)/bin/win32/WinServerd.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;"
+				AdditionalLibraryDirectories="&quot;$(ACE_ROOT)\ace&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;;&quot;$(XERCESCROOT)\lib&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile=".\Debug/WinServer.pdb"
 				SubSystem="1"
@@ -599,9 +599,6 @@
 				RelativePath="Executive_i.h">
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\Framework\interface.h">
-			</File>
-			<File
 				RelativePath="$(VE_SUITE_HOME)\VEOpen\skel\moduleC.h">
 			</File>
 			<File
@@ -611,13 +608,7 @@
 				RelativePath="Network_Exec.h">
 			</File>
 			<File
-				RelativePath="..\VE_Conductor\Framework\package.h">
-			</File>
-			<File
 				RelativePath="Scheduler.h">
-			</File>
-			<File
-				RelativePath="..\VE_Conductor\Framework\string_ops.h">
 			</File>
 		</Filter>
 		<Filter

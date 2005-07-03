@@ -1,6 +1,6 @@
-#include "UI_ViewLocTab.h"
-#include "UI_Tabs.h"
-#include "cfdEnum.h"
+#include "VE_Conductor/VE_UI/UI_ViewLocTab.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_ViewLocTab, wxPanel)

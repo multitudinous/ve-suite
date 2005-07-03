@@ -1,6 +1,6 @@
-#include "UI_TeacherTab.h"
-#include "UI_Tabs.h"
-#include "cfdEnum.h"
+#include "VE_Conductor/VE_UI/UI_TeacherTab.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_TeacherTab, wxPanel)

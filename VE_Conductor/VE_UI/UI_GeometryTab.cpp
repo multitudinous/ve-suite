@@ -1,6 +1,6 @@
-#include "UI_GeometryTab.h"
-#include "UI_Tabs.h"
-#include "cfdEnum.h"
+#include "VE_Conductor/VE_UI/UI_GeometryTab.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include <iostream>
 #include <string>
 #include <cmath>

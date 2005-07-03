@@ -33,13 +33,13 @@
 #define _VJOBS_I_H_
 
 #ifdef _TAO
-#include "VjObsS.h"
+#include "VEOpen/skel/VjObsS.h"
 #else
-#include "VjObs.h"
+#include "VEOpen/skel/VjObs.h"
 #endif
 
 #include <vpr/Sync/Mutex.h>
-#include "cfdCommandArray.h"
+#include "VE_Xplorer/cfdCommandArray.h"
 
 #ifdef _CLUSTER
 #include <cluster/ClusterManager.h>
@@ -47,17 +47,18 @@
 #include <cluster/ClusterNode.h>
 #include <plugins/ApplicationDataManager/UserData.h>
 #include <vpr/IO/SerializableObject.h>
-#include "cfdStateInfo.h"
+#include "VE_Conductor/impl/cfdStateInfo.h"
 #endif
 
-class cfdModelHandler;
-
-#ifdef _OSG
-//class cfdTextureBasedVizHandler;
-#endif
+namespace VE_Xplorer
+{
+   class cfdModelHandler;
+}
 
 #include <vector>
 
+namespace VE_Xplorer
+{
 class VjObs_i : public virtual POA_VjObs, //public virtual CorbaManager,
                 public PortableServer::RefCountServantBase
 {
@@ -322,5 +323,5 @@ protected:
    cluster::UserData< vpr::SerializableObjectMixin< ClusterVariables::StateVariables > >  mStates;
 #endif
 };
-
+}
 #endif

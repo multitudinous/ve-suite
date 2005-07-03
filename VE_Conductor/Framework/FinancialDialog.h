@@ -2,9 +2,10 @@
 #define FINANCIALDIALOG_H
 
 #include <wx/wx.h>
-#include "interface.h"
+#include "VE_Conductor/Framework/interface.h"
 
-enum {
+enum 
+{
   RADIO_FDA,
   RADIO_FDB,
   CC00,

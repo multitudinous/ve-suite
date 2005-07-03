@@ -30,16 +30,13 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "UI_Frame.h"
+#include "VE_Conductor/VE_UI/UI_Frame.h"
 #include <iostream>
-#include "UI_Tabs.h"
-//#include "UI_DataSetTab.h"
-//#include "UI_ScalarTab.h"
-#include "UI_DataSetPanel.h"
-#include "UI_ModSelPanel.h"
-#include "UI_ModelData.h"
-#include "controlIds.h"
-#include "UI_App.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_DataSetPanel.h"
+#include "VE_Conductor/VE_UI/UI_ModSelPanel.h"
+#include "VE_Conductor/VE_UI/UI_ModelData.h"
+#include "VE_Conductor/VE_UI/UI_App.h"
 
 #ifdef _TAO
 #include "VjObsS.h"
@@ -47,7 +44,7 @@
 #else
 #include "VjObs.h"
 #endif
-#include "cfdEnum.h"
+#include "VE_Xplorer/cfdEnum.h"
 
 ////////////////////////////////////////////////////
 //Constructor                                     //

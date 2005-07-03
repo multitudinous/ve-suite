@@ -5,7 +5,7 @@
 #endif
 #include <wx/wx.h>
 
-#include "interface.h"
+#include "VE_Conductor/Framework/interface.h"
 #include <map>
 #include <vector>
 
@@ -18,7 +18,7 @@ enum GEOMETRY_CONFIG_IDS
    GEOMETRY_CONFIG_LOD_SLIDER
 };
 
-class WXPLUGIN_DECLSPEC Geometry : public wxDialog
+class VE_GUIPLUGINS_EXPORTS Geometry : public wxDialog
 {
    public:
       Geometry( wxWindow *parent, wxWindowID id );

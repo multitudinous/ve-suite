@@ -1,7 +1,6 @@
-#include "Geometry.h"
-//#include "UI_Tabs.h"
-#include "cfdEnum.h"
-#include "interface.h"
+#include "VE_Conductor/Framework/Geometry.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Conductor/Framework/interface.h"
 
 #include <iostream>
 #include <string>

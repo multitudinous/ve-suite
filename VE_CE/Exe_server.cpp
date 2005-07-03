@@ -1,30 +1,30 @@
 #include "moduleC.h"
-#include <orbsvcs/CosNamingC.h>
-//#include "ace/streams.h"
 #include "Executive_i.h"
+
 #include <iostream>
-#include "tao/BiDir_GIOP/BiDirGIOP.h"
+
+#include <tao/BiDir_GIOP/BiDirGIOP.h>
+#include <orbsvcs/CosNamingC.h>
 
 //This Exe_server act as the servant of the Executive
 //This Exe_server is also the Unit's client and the UI's client.
 
 int main (int argc, char* argv[])
 { 
-  try
-    {
+   try
+   {
       XMLPlatformUtils::Initialize();
-    }
-  
-  catch(const XMLException &toCatch)
-    {
+   }
+   catch(const XMLException &toCatch)
+   {
       XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
 				<< "  Exception message:"
 				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
       return 1;
-    }
+   }
 
-  try
-    {
+   try
+   {
       
     // First initialize the ORB, 
     CORBA::ORB_var orb = CORBA::ORB_init (argc, argv, "Yang");

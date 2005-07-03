@@ -3,7 +3,7 @@
 
 #include <wx/wx.h>
 #include <vector>
-#include "ListTable.h"
+#include "VE_Conductor/Framework/ListTable.h"
 
 class PortDialog : public wxDialog
 {

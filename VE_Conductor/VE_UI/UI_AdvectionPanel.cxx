@@ -1,8 +1,10 @@
-#include "cfdEnum.h"
-#include "UI_Tabs.h"
-#include "UI_AdvectionPanel.h"
-#include "wx/string.h"
-#include "wx/notebook.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_AdvectionPanel.h"
+
+#include <wx/string.h>
+#include <wx/notebook.h>
+
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_AdvectionPanel,wxPanel)

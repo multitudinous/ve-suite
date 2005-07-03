@@ -1,4 +1,4 @@
-#include "TexTable.h"
+#include "VE_Conductor/Framework/TexTable.h"
 #include <iostream>
 
 TexTable::TexTable(wxWindow* parent,wxWindowID id, const wxPoint& pos, const wxSize& size)

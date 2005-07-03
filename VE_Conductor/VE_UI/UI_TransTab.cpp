@@ -1,6 +1,6 @@
-#include "UI_TransTab.h"
-#include "UI_Tabs.h"//remember to add trans tab callbacks to UI_Tabs.h
-#include "cfdEnum.h"
+#include "VE_Conductor/VE_UI/UI_TransTab.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"//remember to add trans tab callbacks to UI_Tabs.h
+#include "VE_Xplorer/cfdEnum.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_TransTab, wxPanel)

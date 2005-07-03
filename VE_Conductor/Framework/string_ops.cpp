@@ -3,7 +3,7 @@
 #endif
 
 #include "VE_Conductor/Framework/string_ops.h"
-#include <stdio.h>
+#include <cstdio>
 
 bool string_to_int (const std::string &str, int &result)
 {

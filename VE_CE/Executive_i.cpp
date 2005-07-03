@@ -1,5 +1,5 @@
-#include "string_ops.h"
-#include "Executive_i.h"
+#include "VE_Conductor/Framework/string_ops.h"
+#include "VE_CE/Executive_i.h"
  
 #include <iostream>
 

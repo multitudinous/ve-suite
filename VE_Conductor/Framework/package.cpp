@@ -1,19 +1,17 @@
-#include "package.h"
+#include "VE_Conductor/Framework/package.h"
 #include <xercesc/sax/HandlerBase.hpp>
 
 Package::Package() 
 {
-  packname="Package";
-  system_id="pack.xml";
+   packname="Package";
+   system_id="pack.xml";
   
-  intfs.clear();
- 
-
+   intfs.clear();
 }
 
 Package::~Package()
 {
-  intfs.clear();
+   intfs.clear();
 }
 
 bool Package::Load()

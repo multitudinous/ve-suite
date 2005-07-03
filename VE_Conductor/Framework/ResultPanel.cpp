@@ -1,5 +1,5 @@
-#include "ResultPanel.h"
-#include "wx/combobox.h"
+#include "VE_Conductor/Framework/ResultPanel.h"
+#include <wx/combobox.h>
 
 //IMPLEMENT_DYNAMIC_CLASS(ResultPanel_Dialog, wxDialog);
 

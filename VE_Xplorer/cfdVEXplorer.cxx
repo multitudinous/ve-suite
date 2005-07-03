@@ -41,6 +41,8 @@
 #endif
 #include <iostream>
 
+using namespace VE_Xplorer;
+
 int main(int argc, char* argv[])
 {
 #ifdef _TAO

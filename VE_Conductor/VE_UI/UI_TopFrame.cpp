@@ -1,6 +1,5 @@
-#include "UI_TopFrame.h"
-#include "UI_Frame.h"
-#include "controlIds.h"
+#include "VE_Conductor/VE_UI/UI_TopFrame.h"
+#include "VE_Conductor/VE_UI/UI_Frame.h"
 
 ////////////////////////////////////////////////////
 UI_TopFrame::UI_TopFrame(const wxString& title,
@@ -9,7 +8,7 @@ UI_TopFrame::UI_TopFrame(const wxString& title,
              long style)
 : wxFrame((wxWindow *) NULL, -1, title, pos, size, style)
 {
-     _uiFrame = new UI_Frame(this,ID_UI_TABS);
+     _uiFrame = new UI_Frame(this,wxID_HIGHEST);
 
      wxBoxSizer* _topframeSizer = new wxBoxSizer(wxHORIZONTAL);
      _topframeSizer->Add(_uiFrame,1,wxEXPAND|wxALIGN_CENTER_HORIZONTAL);

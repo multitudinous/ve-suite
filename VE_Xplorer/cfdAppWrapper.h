@@ -32,22 +32,28 @@
 #ifndef CFD_APPWRAPPER_H
 #define CFD_APPWRAPPER_H
 
-class cfdThread;
-class cfdApp;
-class cfdVjObsWrapper;
-
-class cfdAppWrapper
+namespace VE_Xplorer
 {
-   public:
-      cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* );
-      ~cfdAppWrapper( void );
-      void init( void *);
+   class cfdThread;
+   class cfdApp;
+   class cfdVjObsWrapper;
+}
 
-   private:
-      cfdApp* _cfdApp;
-      cfdThread* _thread;
-      cfdVjObsWrapper* _vjObsWrapper;
-      int argc;
-      char** argv;
-}; 
+namespace VE_Xplorer
+{
+   class cfdAppWrapper
+   {
+      public:
+         cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* );
+         ~cfdAppWrapper( void );
+         void init( void *);
+
+      private:
+         cfdApp* _cfdApp;
+         cfdThread* _thread;
+         cfdVjObsWrapper* _vjObsWrapper;
+         int argc;
+         char** argv;
+   }; 
+}
 #endif

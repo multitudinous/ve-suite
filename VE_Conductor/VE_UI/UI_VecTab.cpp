@@ -1,6 +1,6 @@
-#include "UI_VecTab.h"
-#include "UI_Tabs.h"
-#include "cfdEnum.h"
+#include "VE_Conductor/VE_UI/UI_VecTab.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Xplorer/cfdEnum.h"
 
 BEGIN_EVENT_TABLE(UI_VectorTab, wxPanel)
    EVT_BUTTON(VECTOR_UPDATE_BUTTON,       UI_VectorTab::_onUpdate)

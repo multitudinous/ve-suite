@@ -1,5 +1,5 @@
-#include "FinancialDialog.h"
-#include "interface.h"
+#include "VE_Conductor/Framework/FinancialDialog.h"
+#include "VE_Conductor/Framework/interface.h"
 
 BEGIN_EVENT_TABLE(FinancialDialog, wxDialog)
   EVT_RADIOBUTTON(RADIO_FDA, FinancialDialog::OnChange)

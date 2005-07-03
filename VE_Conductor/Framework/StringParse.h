@@ -4,9 +4,7 @@
 #include <wx/wx.h>
 #include <vector>
 
-using namespace std;
 //This is the string parsing utilities
-
-int get_tokens(char* s, vector<wxString> &toks, const char* delim);
+int get_tokens(char* s, std::vector< wxString > &toks, const char* delim);
 
 #endif

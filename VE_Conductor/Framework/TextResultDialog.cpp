@@ -1,4 +1,4 @@
-#include "TextResultDialog.h"
+#include "VE_Conductor/Framework/TextResultDialog.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(TextResultDialog, wxDialog)

@@ -1,6 +1,6 @@
-#include "UI_VertTab.h"
-#include "UI_Tabs.h"
-#include "cfdEnum.h"
+#include "VE_Conductor/VE_UI/UI_VertTab.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Xplorer/cfdEnum.h"
 
 BEGIN_EVENT_TABLE(UI_VertTab, wxPanel)
    EVT_RADIOBOX      (PARTICLE_OPTIONS_RBOX,    UI_VertTab::_onParticleOption)

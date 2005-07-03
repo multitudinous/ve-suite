@@ -1,11 +1,11 @@
 #ifndef TEXTRESULTDIALOG_H
 #define TEXTRESULTDIALOG_H
 
-#include "UIDialog.h"
+#include "VE_Conductor/Framework/UIDialog.h"
 #include <vector>
-#include "TexTable.h"
+#include "VE_Conductor/Framework/TexTable.h"
 
-class WXPLUGIN_DECLSPEC TextResultDialog : public UIDialog
+class VE_GUIPLUGINS_EXPORTS TextResultDialog : public UIDialog
 {
  public:
   TextResultDialog(wxWindow*parent, const wxString& title=wxT("Result Dialog"), wxSize tabsize= wxSize(477, 300));

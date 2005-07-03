@@ -64,6 +64,8 @@ namespace Body { class Executive; }
 namespace CosNaming { class NamingContext; }
 namespace PortableServer { class POA; }
 
+namespace VE_Xplorer
+{
 class cfdExecutive : public cfdGlobalBase
 {
    public:
@@ -145,5 +147,5 @@ class cfdExecutive : public cfdGlobalBase
       // Classes and variables for multithreading.
       //cfdThread* thread;
 };
-
+}
 #endif

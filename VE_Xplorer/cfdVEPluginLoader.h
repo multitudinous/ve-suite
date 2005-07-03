@@ -46,7 +46,7 @@ namespace VE_Xplorer
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdVEPluginLoader : public wxObject
+   class cfdVEPluginLoader : public wxObject
    {
       public:
 

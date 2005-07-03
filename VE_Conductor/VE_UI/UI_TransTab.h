@@ -3,7 +3,7 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include "wx/wx.h"
+#include <wx/wx.h>
 
 //Transient tab control ids
 enum TRANS_TAB_IDS

@@ -1,10 +1,10 @@
-#include "UI_DataSetPanel.h"
-#include "UI_Tabs.h"
-#include "cfdEnum.h"
+#include "VE_Conductor/VE_UI/UI_DataSetPanel.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Xplorer/cfdEnum.h"
 #include <iostream>
-#include "UI_Frame.h"
-#include "UI_ModelData.h"
-#include "spinctld.h"
+#include "VE_Conductor/VE_UI/UI_Frame.h"
+#include "VE_Conductor/VE_UI/UI_ModelData.h"
+#include "VE_Builder/Utilities/gui/spinctld.h"
 
 UI_Scalars::UI_Scalars(wxString* scalarName)
 {

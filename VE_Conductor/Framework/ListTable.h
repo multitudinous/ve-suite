@@ -9,8 +9,8 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include "wx/wx.h"
-#include "wx/listctrl.h"
+#include <wx/wx.h>
+#include <wx/listctrl.h>
 #include <vector>
 
 class ListTable : public wxListCtrl  

@@ -6,7 +6,8 @@
 
 #include <wx/wx.h>
 
-enum TEACHER_TAB_IDS{
+enum TEACHER_TAB_IDS
+{
    TEACHER_RBOX,
    TEACHER_CLEAR_BUTTON
 };

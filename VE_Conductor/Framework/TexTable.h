@@ -1,13 +1,12 @@
 #ifndef TEXT_TABLE_H
 #define TEXT_TABLE_H
-#include "wx/wx.h"
-#include "wx/fontenum.h"
+#include <wx/wx.h>
+#include <wx/fontenum.h>
 #include <vector>
 
+#include "VE_Installer/include/VEConfig.h"
 
-#include "VE_Xplorer/cfdConfig.h"
-
-class WXPLUGIN_DECLSPEC TexTable : public wxTextCtrl
+class VE_GUIPLUGINS_EXPORTS TexTable : public wxTextCtrl
 {
  public:
 

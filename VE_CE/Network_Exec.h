@@ -1,8 +1,7 @@
-
 #ifndef NETWORK_EXEC_H
 #define NETWORK_EXEC_H
 
-#include "interface.h"
+#include "VE_Conductor/Framework/interface.h"
 #include <vector>
 #include "moduleS.h"
 

@@ -1,6 +1,6 @@
-#include "UI_ModSelPanel.h"
-#include "UI_Frame.h"
-#include "UI_ModelData.h"
+#include "VE_Conductor/VE_UI/UI_ModSelPanel.h"
+#include "VE_Conductor/VE_UI/UI_Frame.h"
+#include "VE_Conductor/VE_UI/UI_ModelData.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_ModSelScroll, wxScrolledWindow)

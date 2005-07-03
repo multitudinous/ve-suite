@@ -1,8 +1,10 @@
-#include "cfdVEAvailModules.h"
+#include "VE_Xplorer/cfdVEAvailModules.h"
 #include <iostream>
 
 #include <fstream>
 #include <sstream>
+
+using namespace VE_Xplorer;
 
 cfdVEAvail_Modules::cfdVEAvail_Modules( void )
 {

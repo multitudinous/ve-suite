@@ -1,15 +1,14 @@
-#include "Frame.h"
-#include "wx/imaglist.h"
-#include "wx/artprov.h"
-#include "ResultPanel.h"
-#include "App.h"
-#include "package.h"
-#include "OrbThread.h"
-#include "controlIds.h"
-#include "Avail_Modules.h"
-#include "UI_Tabs.h"
-#include "UI_Frame.h"
-#include "Network.h"
+#include "VE_Conductor/Framework/Frame.h"
+#include <wx/imaglist.h>
+#include <wx/artprov.h>
+#include "VE_Conductor/Framework/ResultPanel.h"
+#include "VE_Conductor/Framework/App.h"
+#include "VE_Conductor/Framework/package.h"
+#include "VE_Conductor/Framework/OrbThread.h"
+#include "VE_Conductor/Framework/Avail_Modules.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_Frame.h"
+#include "VE_Conductor/Framework/Network.h"
 
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_CLOSE(AppFrame::OnClose)
@@ -94,7 +93,7 @@ void AppFrame::CreateVETab()
   m_imageList->Add(wxArtProvider::GetIcon(wxART_ERROR, wxART_OTHER, imageSize));
   
    //m_tabs = new UI_Tabs(vjobs.in(), wx_ve_splitter, ID_UI_TABS);
-   m_frame = new UI_Frame(vjobs.in(), wx_ve_splitter, ID_UI_TABS);
+   m_frame = new UI_Frame(vjobs.in(), wx_ve_splitter, wxID_HIGHEST);
    // Create the notebook's panels
    //m_tabs->AssignImageList(m_imageList);
    //m_frame->_tabs->AssignImageList(m_imageList);

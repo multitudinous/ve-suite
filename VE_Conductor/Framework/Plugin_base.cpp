@@ -5,10 +5,10 @@
 #pragma warning(disable : 4251)
 #endif
 
-#include "Plugin_base.h"
+#include "VE_Conductor/Framework/Plugin_base.h"
 #include <iostream>
-#include "string_ops.h"
-#include "Geometry.h"
+#include "VE_Conductor/Framework/string_ops.h"
+#include "VE_Conductor/Framework/Geometry.h"
 
 IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxObject )
 
@@ -292,12 +292,12 @@ Interface* REI_Plugin::Pack()
 {
   //string result;
   
-  map<string, long *>::iterator iteri;
-  map<string, double *>::iterator iterd;
-  map<string, string *>::iterator iters;
-  map<string, vector<long> *>::iterator itervi;
-  map<string, vector<double> *>::iterator itervd;
-  map<string, vector<string> *>::iterator itervs;
+  std::map<std::string, long *>::iterator iteri;
+  std::map<std::string, double *>::iterator iterd;
+  std::map<std::string, std::string *>::iterator iters;
+  std::map<std::string, std::vector<long> *>::iterator itervi;
+  std::map<std::string, std::vector<double> *>::iterator itervd;
+  std::map<std::string, std::vector<std::string> *>::iterator itervs;
 
 
   //printf("mod id : %d\n", mod_pack._id);
@@ -321,8 +321,8 @@ Interface* REI_Plugin::Pack()
 
   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
   {
-	vector<string> * y;
-	string x;
+	std::vector<std::string> * y;
+	std::string x;
 	x=itervs->first;
 	y=itervs->second;
     mod_pack.setVal(itervs->first, *(itervs->second));
@@ -359,14 +359,14 @@ Interface* REI_Plugin::Pack()
 /////////////////////////////////////////////////////////////////////////////
 void REI_Plugin::UnPack(Interface * intf)
 {
-  vector<string> vars;
+  std::vector<std::string> vars;
   
-  map<string, long *>::iterator iteri;
-  map<string, double *>::iterator iterd;
-  map<string, string *>::iterator iters;
-  map<string, vector<long> *>::iterator itervi;
-  map<string, vector<double> *>::iterator itervd;
-  map<string, vector<string> *>::iterator itervs;
+  std::map<std::string, long *>::iterator iteri;
+  std::map<std::string, double *>::iterator iterd;
+  std::map<std::string, std::string *>::iterator iters;
+  std::map<std::string, std::vector<long> *>::iterator itervi;
+  std::map<std::string, std::vector<double> *>::iterator itervd;
+  std::map<std::string, std::vector<std::string> *>::iterator itervs;
   
   unsigned int i;
   long temp;
@@ -466,7 +466,7 @@ void REI_Plugin::UnPackResult(Interface* intf)
    //here is the Default implementation when using the 
    //summary table to pack things up in the module end
   
-   std::vector<string> descs;
+   std::vector<std::string> descs;
    descs = intf->getStrings();
    v_desc.clear();
    v_value.clear();
@@ -478,32 +478,32 @@ void REI_Plugin::UnPackResult(Interface* intf)
 }
 
 /////////////////////////////////////////////////////////////////////////////
-void REI_Plugin::RegistVar(string vname, long *var)
+void REI_Plugin::RegistVar(std::string vname, long *var)
 {
   _int[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, double *var)
+void REI_Plugin::RegistVar(std::string vname, double *var)
 {
   _double[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, string *var)
+void REI_Plugin::RegistVar(std::string vname, std::string *var)
 {
   _string[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, vector<long> *var)
+void REI_Plugin::RegistVar(std::string vname, std::vector<long> *var)
 {
   _int1D[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, vector<double> *var)
+void REI_Plugin::RegistVar(std::string vname, std::vector<double> *var)
 {
   _double1D[vname]=var;
 }
 
-void REI_Plugin::RegistVar(string vname, vector<string> *var)
+void REI_Plugin::RegistVar(std::string vname, std::vector<std::string> *var)
 {
   _string1D[vname]=var;
 }

@@ -1,7 +1,7 @@
 #ifndef PACKAGE_H
 #define PACKAGE_H
 
-#include "interface.h"
+#include "VE_Conductor/Framework/interface.h"
 #include <vector>
 #include <xercesc/util/PlatformUtils.hpp>
 #include <xercesc/parsers/XercesDOMParser.hpp>
@@ -40,8 +40,8 @@ class VE_CONDUCTOR_EXPORTS Package
   std::string system_id; //The file name of the xml file or a fake filename used for parsing the memory buffer input source
 
 #ifdef WIN32
-   void FillIntfs( xercesc_2_5::DOMDocument *doc );
-   xercesc_2_5::DOMDocument* BuildFromIntfs();
+   void FillIntfs( xercesc_2_6::DOMDocument *doc );
+   xercesc_2_6::DOMDocument* BuildFromIntfs();
 #else
    void FillIntfs( DOMDocument *doc );
    DOMDocument* BuildFromIntfs();

@@ -1,6 +1,4 @@
-#include "UIDialog.h"
-
-//IMPLEMENT_DYNAMIC_CLASS(UIDialog, wxDialog)
+#include "VE_Conductor/Framework/UIDialog.h"
 
 UIDialog::UIDialog(wxWindow* parent, int id, wxString title)
   :wxDialog(parent, id, title)

@@ -10,20 +10,18 @@
 #pragma warning(disable : 4503)
 #endif
 
-#include "VE_Xplorer/cfdConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
-class WXPLUGIN_DECLSPEC UIDialog : public wxDialog
+class VE_GUIPLUGINS_EXPORTS UIDialog : public wxDialog
 {
-  //DECLARE_DYNAMIC_CLASS(UIDialog)
-    
- public:
-  UIDialog() {};
-  UIDialog(wxWindow* parent, int id, wxString title="UI");
-  virtual void Lock(bool l); 
-  //This function locks/unlocks every input entry
+   public:
+      UIDialog() {;}
+      UIDialog(wxWindow* parent, int id, wxString title="UI");
+      virtual void Lock(bool l); 
+      //This function locks/unlocks every input entry
 
- protected:
-  bool lock;
+   protected:
+      bool lock;
 };
 
 #endif

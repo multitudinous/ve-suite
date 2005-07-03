@@ -1,7 +1,7 @@
-#include "UI_VisTab.h"
-#include "UI_Tabs.h"
-#include "cfdEnum.h"
-#include "UI_Frame.h"
+#include "VE_Conductor/VE_UI/UI_VisTab.h"
+#include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Xplorer/cfdEnum.h"
+#include "VE_Conductor/VE_UI/UI_Frame.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)

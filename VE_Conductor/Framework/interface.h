@@ -1,9 +1,6 @@
 #ifndef TABLE_H
 #define TABLE_H
 
-
-//#include "packable.h"
-
 #ifdef _WIN32
 #pragma warning(disable : 4786)
 #pragma warning(disable : 4101)
@@ -13,8 +10,6 @@
 #include <string>
 #include <vector>
 #include <map>
-
-//#define DELIM  char(0xA9)
 
 #include "VE_Installer/include/VEConfig.h"
 

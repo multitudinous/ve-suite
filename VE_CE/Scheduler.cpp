@@ -1,6 +1,6 @@
 #include "Network_Exec.h"
 #include "Scheduler.h"
-#include "string_ops.h"
+#include "VE_Conductor/Framework/string_ops.h"
 
 #include <iostream>
 #include <queue>

@@ -7,7 +7,7 @@
 #include "Scheduler.h"
 
 #include "moduleS.h"
-#include "package.h"
+#include "VE_Conductor/Framework/package.h"
 #include <string>
 #include <vector>
 #include <map>

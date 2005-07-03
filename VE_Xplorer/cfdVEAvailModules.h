@@ -13,7 +13,7 @@
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdVEAvail_Modules : public wxObject
+   class cfdVEAvail_Modules : public wxObject
    {
       public:
          cfdVEAvail_Modules( void );

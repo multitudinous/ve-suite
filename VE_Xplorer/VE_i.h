@@ -36,10 +36,7 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-//#include "Network.h"
-//#include "cfdExecutive.h"
 #include "VEOpen/skel/moduleS.h"
-//#include "moduleC.h"
 #include <string>
 #include <vector>
 #include <vpr/Sync/Mutex.h>

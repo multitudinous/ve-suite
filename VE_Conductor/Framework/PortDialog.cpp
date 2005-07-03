@@ -1,4 +1,4 @@
-#include "PortDialog.h"
+#include "VE_Conductor/Framework/PortDialog.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(PortDialog, wxDialog)
