@@ -67,7 +67,7 @@ SRCS=\
    cfdSceneNode.cxx \
    cfdSequence.cxx \
    cfdSwitch.cxx \
-   cfdTempanimation.cxx \
+   cfdTempAnimation.cxx \
    vtkActorToOSG.cpp \
    vtkActorToPF.cxx
 

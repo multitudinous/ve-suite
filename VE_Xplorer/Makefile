@@ -30,7 +30,7 @@
 #
 # *************** <auto-copyright.pl END do not edit this line> ***************
 
-DIRS= ${VE_SUITE_HOME}/VE_Xplorer
+DIRS= ${VE_SUITE_HOME}/VE_Xplorer 
 
 # -----------------------------------------------------------------------------
 # Build targets.
@@ -41,6 +41,7 @@ all: $(DIRS)
 
 ${VE_SUITE_HOME}/VE_Xplorer::
 	cd $@ && $(MAKE) -f Makefile.utillib
+	cd ${VE_SUITE_HOME}/VE_SceneGraph && $(MAKE) -f Makefile.scenegraphlib
 	cd $@ && $(MAKE) -f Makefile.xplorerlib
 	cd $@ && $(MAKE) -f Makefile.graphicalpluginlib
 	cd $@ && $(MAKE) -f Makefile.xplorer
@@ -50,6 +51,7 @@ ${VE_SUITE_HOME}/VE_Xplorer::
 # -----------------------------------------------------------------------------
 clean:
 	cd $@ && $(MAKE) -f Makefile.utillib clean
+	cd ${VE_SUITE_HOME}/VE_SceneGraph && $(MAKE) -f Makefile.scenegraphlib clean
 	cd $@ && $(MAKE) -f Makefile.xplorerlib clean
 	cd $@ && $(MAKE) -f Makefile.graphicalpluginlib clean
 	cd $@ && $(MAKE) -f Makefile.xplorer clean

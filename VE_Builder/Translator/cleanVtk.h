@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef CLEAN_VTK_H
 #define CLEAN_VTK_H
-#include "VE_installer/include/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
 class vtkPointSet;
 

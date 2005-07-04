@@ -129,6 +129,7 @@ EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVEUtilLib
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVEXplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVESceneGraphLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
