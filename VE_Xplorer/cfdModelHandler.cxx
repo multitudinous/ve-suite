@@ -58,6 +58,7 @@
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureDataSet.h"
 #include "VE_TextureBased/cfdTextureManager.h"
+using namespace VE_TextureBased;
 #endif
 #endif
 #include <fstream>
@@ -77,7 +78,6 @@ vprSingletonImp( VE_Xplorer::cfdModelHandler );
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;
-using namespace VE_TextureBased;
 
 cfdModelHandler::cfdModelHandler( void )
 {

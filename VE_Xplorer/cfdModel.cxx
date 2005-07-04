@@ -42,6 +42,7 @@
 #ifdef _OSG
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureDataSet.h"
+using namespace VE_TextureBased;
 #endif
 #endif
 
@@ -69,7 +70,6 @@
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 using namespace VE_Util;
-using namespace VE_TextureBased;
 
 cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
 {

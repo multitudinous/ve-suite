@@ -162,8 +162,8 @@
 		</Configuration>
 		<Configuration
 			Name="pf_dbg|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			IntermediateDirectory="./VE_TextureBasedLib/$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -173,7 +173,7 @@
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS;VE_TEXTURE_BASED_LIBRARY;_PERFORMER;VTK44;VE_PATENTED"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="1"
+				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -187,17 +187,14 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/VE_TextureBased.pdb"
+				ProgramDatabaseFile="$(IntDir)/VE_TextureBased.pdb"
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/VE_TextureBased_pfd.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="copy .\pf_dbg\VE_TextureBased_pfd.dll %VE_SUITE_HOME%\bin\win32
-copy .\pf_dbg\VE_TextureBased_pfd.lib %VE_SUITE_HOME%\lib\win32
-"/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool
