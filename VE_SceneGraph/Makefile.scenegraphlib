@@ -108,8 +108,8 @@ all:
 	mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
 #	$(MAKE) cxx_idl
 #	$(MAKE) java_idl
-	$(MAKE) -f Makefile.xplorerlib NO_DEPEND=0 cxx
-	$(MAKE) -f Makefile.xplorerlib $(APP_NAME)
+	$(MAKE) -f Makefile.scenegraphlib NO_DEPEND=0 cxx
+	$(MAKE) -f Makefile.scenegraphlib $(APP_NAME)
 #	$(MAKE) java
 #	$(MAKE) NetworkTestBean.jar
 #	-$(MAKE) install
