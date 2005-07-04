@@ -1,12 +1,12 @@
 
 #include "Network.h"
 #include "PortDialog.h"
-#include <math.h>
+#include <cmath>
 #include "package.h"
 #include "paraThread.h"
 #include "Geometry.h"
 
-IMPLEMENT_DYNAMIC_CLASS(Network, wxScrolledWindow);
+//IMPLEMENT_DYNAMIC_CLASS(Network, wxScrolledWindow);
 BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
   EVT_PAINT(Network::OnPaint)
   EVT_MOTION(Network::OnMouseMove)
@@ -59,7 +59,7 @@ Network::Network(wxWindow* parent, int id)
 
 Network::~Network()
 {
-   map<int, MODULE>::iterator iter;
+   std::map<int, MODULE>::iterator iter;
    for ( unsigned int i=0; i< links.size(); i++)
       delete links[i];
 
@@ -89,11 +89,11 @@ void Network::OnPaint(wxPaintEvent& WXUNUSED( event ) )
 }
 
 /////////////////////////////////////////////////////////////
-void Network::OnMLeftDown(wxMouseEvent &event)
+void Network::OnMLeftDown(wxMouseEvent& event)
 {
   wxRect bbox;
   wxPoint pos, temp;
-  map<int, MODULE>::iterator iter;
+  std::map<int, MODULE>::iterator iter;
   POLY ports;
   int num;
  	
@@ -193,7 +193,7 @@ void Network::OnMLeftDown(wxMouseEvent &event)
 }
 
 ////////////////////////////////////////////////////////////////////
-void Network::OnMouseMove(wxMouseEvent &event)
+void Network::OnMouseMove(wxMouseEvent& event)
 {
   long x, y;
   
@@ -270,7 +270,7 @@ void Network::OnMouseMove(wxMouseEvent &event)
 }
 
 /////////////////////////////////////////////////////////////////////
-void Network::OnMLeftUp(wxMouseEvent &event)
+void Network::OnMLeftUp(wxMouseEvent& event)
 {
   long x, y;
   wxPoint evtpos;
@@ -321,7 +321,7 @@ void Network::OnMLeftUp(wxMouseEvent &event)
 }
 
 ////////////////////////////////////////////////////////////////
-void Network::OnDClick(wxMouseEvent &event)
+void Network::OnDClick(wxMouseEvent& event)
 {
   wxPoint evtpos;
   UIDialog * hello;
@@ -343,7 +343,7 @@ void Network::OnDClick(wxMouseEvent &event)
 }
 
 ///////////////////////////////////////////////////////////////
-void Network::OnMRightDown(wxMouseEvent &event)
+void Network::OnMRightDown(wxMouseEvent& event)
 {
   wxClientDC dc(this);
   PrepareDC(dc);
@@ -425,9 +425,8 @@ void Network::OnMRightDown(wxMouseEvent &event)
 
 //////// Menu event handlers ////////////////////////
 
-void Network::OnAddTag(wxCommandEvent &event)
+void Network::OnAddTag(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    wxTextEntryDialog dialog(this,_T("Tag Editor"), _T("Please enter the text for the tag : "),_T("this is a tag"), wxOK);
 
    if (dialog.ShowModal() == wxID_OK)
@@ -435,9 +434,8 @@ void Network::OnAddTag(wxCommandEvent &event)
 }
 
 /////////////////////////////////////////////////////
-void Network::OnAddLinkCon(wxCommandEvent &event)
+void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    POLY linkline, temp, Near;
    wxRect bbox;
    std::vector<wxPoint> ports;  
@@ -503,9 +501,8 @@ void Network::OnAddLinkCon(wxCommandEvent &event)
 }
 
 /////////////////////////////////////////////////////
-void Network::OnEditTag(wxCommandEvent &event)
+void Network::OnEditTag(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
   wxClientDC dc(this);
   PrepareDC(dc);
   
@@ -532,10 +529,9 @@ void Network::OnEditTag(wxCommandEvent &event)
 }
 
 /////////////////////////////////////////////////////
-void Network::OnDelTag(wxCommandEvent &event)
+void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
-  vector<TAG>::iterator iter;
+  std::vector<TAG>::iterator iter;
   int answer , i;
 
   answer=wxMessageBox("Do you really want to delete this tag?", "Confirmation", wxYES_NO);
@@ -555,13 +551,12 @@ void Network::OnDelTag(wxCommandEvent &event)
 }
 
 /////////////////////////////////////////////////////
-void Network::OnDelLink(wxCommandEvent &event)
+void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
-  vector<LINK*>::iterator iter;
-  vector<LINK*>::iterator iter2;
+  std::vector<LINK*>::iterator iter;
+  std::vector<LINK*>::iterator iter2;
   int answer, i;
-  map<int, MODULE>::iterator miter;
+  std::map<int, MODULE>::iterator miter;
 
   answer=wxMessageBox("Do you really want to delete this link?", "Confirmation", wxYES_NO);
   if (answer!=wxYES)
@@ -592,10 +587,9 @@ void Network::OnDelLink(wxCommandEvent &event)
 }
 
 /////////////////////////////////////////////////////
-void Network::OnDelLinkCon(wxCommandEvent &event)
+void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
-  vector<wxPoint>::iterator iter;
+  std::vector<wxPoint>::iterator iter;
   int answer, i;
 
   answer=wxMessageBox("Do you really want to delete this link connector?", "Confirmation", wxYES_NO);
@@ -620,12 +614,11 @@ void Network::OnDelLinkCon(wxCommandEvent &event)
 }
 
 /////////////////////////////////////////////////////
-void Network::OnDelMod(wxCommandEvent &event)
+void Network::OnDelMod(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
-   map<int, MODULE>::iterator iter;
-   vector<LINK *>::iterator iter2;
-   vector<LINK *>::iterator iter3;
+   std::map<int, MODULE>::iterator iter;
+   std::vector<LINK *>::iterator iter2;
+   std::vector<LINK *>::iterator iter3;
    int answer, k;
    LINK* del_link;
 
@@ -682,7 +675,7 @@ void Network::OnDelMod(wxCommandEvent &event)
 
 int Network::SelectMod(int x, int y)
 {
-   map<int, MODULE>::iterator iter;
+   std::map<int, MODULE>::iterator iter;
 
    for (iter=modules.begin(); iter!=modules.end(); iter++)
    {
@@ -1110,7 +1103,7 @@ void Network::TryLink(int x, int y, int mod, int pt, wxDC& dc, bool flag)
   wxRect bbox;
   static int dest_mod=-1;
   int i, t, num;
-  map<int, MODULE>::iterator iter;
+  std::map<int, MODULE>::iterator iter;
 
   t=-1;
 
@@ -1183,7 +1176,7 @@ void Network::DropLink(int x, int y, int mod, int pt, wxDC &dc, bool flag)
   LINK * ln;
   int i, num;
   bool found;
-  map<int, MODULE>::iterator iter;
+  std::map<int, MODULE>::iterator iter;
 
   dest_mod = dest_port = -1;
 
@@ -1669,7 +1662,7 @@ void Network::AddTag(int x, int y, wxString text)
 }
 
 //////////////////////////////////////////////////////////////
-void Network::AddtoNetwork(REI_Plugin *cur_module, string cls_name)
+void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
 {
   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
   MODULE mod;
@@ -1694,7 +1687,7 @@ void Network::AddtoNetwork(REI_Plugin *cur_module, string cls_name)
   mod.cls_name = cls_name;
 
   int id;
-  map<int, MODULE>::iterator mit;
+  std::map<int, MODULE>::iterator mit;
   while (1)
     {
       id = wxNewId();
@@ -1751,7 +1744,7 @@ void Network::ReDraw(wxDC &dc)
 {
   int i;
 
-  map<int, MODULE>::iterator iter;
+  std::map<int, MODULE>::iterator iter;
   
   dc.SetPen(*wxBLACK_PEN);
   dc.SetBrush(*wxWHITE_BRUSH);
@@ -2295,25 +2288,25 @@ void Network::TransPoly(POLY oldpoly, int x, int y, POLY &newpoly)
 //////////////////////////////////////////////
 //////// Save and Load Functions /////////////
 //////////////////////////////////////////////
-void Network::Pack(vector<Interface> & UIs)
+void Network::Pack(std::vector<Interface> & UIs)
 {
   // first record the network global variablables
   Interface ntpk; //the network topology and connection pack
-  string network_pack;
+  std::string network_pack;
   char vname[256];
   //module information to be saved
-  string modCls;
+  std::string modCls;
   
   //link information to be saved
   long lnFrMod, lnToMod, lnFrPort, lnToPort;
-  vector<long> lnConX, lnConY;
+  std::vector<long> lnConX, lnConY;
 
   //tag information to be saved
-  string tagText;
+  std::string tagText;
   long tagCon0X, tagCon0Y, tagCon1X, tagCon1Y, tagBoxX, tagBoxY;
 
   int i,j;
-  map<int, MODULE>::iterator iter;
+  std::map<int, MODULE>::iterator iter;
 
   ntpk._type=0;
   ntpk._category=0;
@@ -2418,22 +2411,22 @@ void Network::Pack(vector<Interface> & UIs)
    UIs.push_back( *(globalparam_dlg->Pack()) );
 }
 
-void Network::UnPack(vector<Interface> & intfs)
+void Network::UnPack(std::vector<Interface> & intfs)
 {
    int _id;
    Interface ntpk;
-   vector<string> vars;
+   std::vector<std::string> vars;
    long temp;
    double tempd;
-   string temps;
-   vector<long> templ1d;
+   std::string temps;
+   std::vector<long> templ1d;
    int pos, ii, j, num, polynum;
    unsigned int i;
    wxClassInfo * cls;
    wxRect bbox;
    LINK * ln;
    POLY tmpPoly;
-   map<int, MODULE>::iterator iter;
+   std::map<int, MODULE>::iterator iter;
    //Read it from the file
    int modsize = 0;
    MODULE temp_mod;
@@ -2482,52 +2475,52 @@ void Network::UnPack(vector<Interface> & intfs)
 	   }
       else if (vars[i]=="Tag_size")
 	      tags.resize(temp);
-      else if ((pos=vars[i].find("ln_FrMod_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("ln_FrMod_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+9, 4).c_str());
 	      links[num]->Fr_mod=temp;
 	   }
-      else if ((pos=vars[i].find("ln_ToMod_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("ln_ToMod_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+9, 4).c_str());
 	      links[num]->To_mod=temp;
 	   }
-      else if ((pos=vars[i].find("ln_FrPort_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("ln_FrPort_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+10, 4).c_str());
 	      links[num]->Fr_port=temp;
 	   }
-      else if ((pos=vars[i].find("ln_ToPort_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("ln_ToPort_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+10, 4).c_str());
 	      links[num]->To_port=temp;
 	   }
-      else if ((pos=vars[i].find("tag_Con0X_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("tag_Con0X_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+10, 4).c_str());
 	      tags[num].cons[0].x = temp;
 	   }
-      else if ((pos=vars[i].find("tag_Con0Y_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("tag_Con0Y_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+10, 4).c_str());
 	      tags[num].cons[0].y = temp;
 	   }
-      else if ((pos=vars[i].find("tag_Con1X_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("tag_Con1X_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+10, 4).c_str());
 	      tags[num].cons[1].x = temp;
 	   }
-      else if ((pos=vars[i].find("tag_Con1Y_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("tag_Con1Y_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+10, 4).c_str());
 	      tags[num].cons[1].y = temp;
 	   }
-      else if ((pos=vars[i].find("tag_BoxX_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("tag_BoxX_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+9, 4).c_str());
 	      tags[num].box.x = temp;
 	   }
-      else if ((pos=vars[i].find("tag_BoxY_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("tag_BoxY_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+9, 4).c_str());
 	      tags[num].box.y = temp;
@@ -2548,7 +2541,7 @@ void Network::UnPack(vector<Interface> & intfs)
    for (i=0; i<vars.size(); i++)
    {
       ntpk.getVal(vars[i], temps);
-      if ((pos=vars[i].find("modCls_"))!=(int)string::npos)
+      if ((pos=vars[i].find("modCls_"))!=(int)std::string::npos)
 	   {
 	      num =atoi(vars[i].substr(pos+7, 4).c_str());
 	      cls = wxClassInfo::FindClass(temps.c_str());
@@ -2578,7 +2571,7 @@ void Network::UnPack(vector<Interface> & intfs)
 	      modules[num].cls_name = temps;
 	   }
    
-      if ((pos=vars[i].find("tag_Txt_"))!=(int)string::npos)
+      if ((pos=vars[i].find("tag_Txt_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+8, 4).c_str());
 	      tags[num].text = wxString(temps.c_str());
@@ -2589,7 +2582,7 @@ void Network::UnPack(vector<Interface> & intfs)
    for (i=0; i<vars.size(); i++)
    {
       ntpk.getVal(vars[i],templ1d);
-      if ((pos=vars[i].find("ln_ConX_"))!=(int)string::npos)
+      if ((pos=vars[i].find("ln_ConX_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+8, 4).c_str());
 
@@ -2599,7 +2592,7 @@ void Network::UnPack(vector<Interface> & intfs)
 	      for (j=0; j<(int)templ1d.size(); j++)
 	         links[num]->cons[j].x = templ1d[j];
 	   }
-      else if ((pos=vars[i].find("ln_ConY_"))!=(int)string::npos)
+      else if ((pos=vars[i].find("ln_ConY_"))!=(int)std::string::npos)
 	   {
 	      num = atoi(vars[i].substr(pos+8, 4).c_str());
 	      for (j=0; j<(int)templ1d.size(); j++)
@@ -2670,7 +2663,7 @@ void Network::UnPack(vector<Interface> & intfs)
 void Network::Save(wxString filename)
 {
   //Actually write it to file
-  vector<Interface> UIs;
+  std::vector<Interface> UIs;
 
   Package p;
   Pack(p.intfs);
@@ -2699,7 +2692,7 @@ void Network::SaveS(std::string &network_pack)
 void Network::New()
 {
   int i;
-  map<int, MODULE>::iterator iter;
+  std::map<int, MODULE>::iterator iter;
 
   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
   
@@ -2736,7 +2729,7 @@ void Network::LoadS(const char* inputs)
 {
   Package p;
   p.SetSysId("temp.xml");
-  if (string(inputs)!="")
+  if (std::string(inputs)!="")
   {
 	p.Load(inputs, strlen(inputs));
 	UnPack(p.intfs);
@@ -2744,25 +2737,25 @@ void Network::LoadS(const char* inputs)
 }
 
 //////////////////////////////////////////////////////
-void  Network::OnShowLinkContent(wxCommandEvent &event)
+void  Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
-  int mod, port;
-  char *linkresult;
-  UIDialog * port_dlg;
-  mod = links[m_selLink]->Fr_mod; //The to Mod are actually the from module for the data flow
-  port = links[m_selLink]->Fr_port;
-  try {
-    linkresult = exec->GetExportData(mod, port);
-  }
-  catch (CORBA::Exception &) {
-		
-    cerr << "Maybe Engine is down" << endl;
-    return;
-  }
+   int mod, port;
+   char *linkresult;
+   UIDialog * port_dlg;
+   mod = links[m_selLink]->Fr_mod; //The to Mod are actually the from module for the data flow
+   port = links[m_selLink]->Fr_port;
+   try 
+   {
+      linkresult = exec->GetExportData(mod, port);
+   }
+   catch (CORBA::Exception &) 
+   {
+      std::cerr << "Maybe Engine is down" << std::endl;
+      return;
+   }
   
-  if (string(linkresult)!=string(""))
-    {
+   if (std::string(linkresult)!=std::string(""))
+   {
       Package p;
       p.SetSysId("linkresult.xml");
 
@@ -2777,30 +2770,31 @@ void  Network::OnShowLinkContent(wxCommandEvent &event)
 }
 
 //////////////////////////////////////////////////////
-void  Network::OnShowResult(wxCommandEvent &event)
+void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
-  char* result;
+   char* result;
   
-  if (m_selMod<0)
-    return;
-
-  if (CORBA::is_nil(exec))
-    {
-      cerr<<"Not Connected yet!\n";
+   if (m_selMod<0)
       return;
-    }
-  try {
-    result = exec->GetModuleResult(m_selMod);
-  }
-  catch (CORBA::Exception &) {
-		
-    cerr << "Maybe Computational Engine is down" << endl;
-    return;
-  }
 
-  if (string(result)!="")
-    {
+   if (CORBA::is_nil(exec))
+   {
+      std::cerr<<"Not Connected yet!" << std::endl;
+      return;
+   }
+  
+   try 
+   {
+      result = exec->GetModuleResult(m_selMod);
+   }
+   catch (CORBA::Exception &) 
+   {
+		std::cerr << "Maybe Computational Engine is down" << std::endl;
+      return;
+   }
+
+   if (std::string(result)!="")
+   {
       Package p;
       p.SetSysId("linkresult.xml");
       p.Load(result, strlen(result));
@@ -2808,25 +2802,24 @@ void  Network::OnShowResult(wxCommandEvent &event)
       modules[m_selMod].pl_mod->UnPackResult(&p.intfs[0]);
       UIDialog * hello;
       hello = modules[m_selMod].pl_mod->Result(NULL);
+      
       if (hello!=NULL)
-	hello->Show();
-    }
+	      hello->Show();
+   }
 }
 
 // EPRI TAG
 //////////////////////////////////////////////////////
-void  Network::OnShowFinancial(wxCommandEvent &event)
+void  Network::OnShowFinancial(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    if (m_selMod<0) 
       return;
    modules[m_selMod].pl_mod->FinancialData();
 }
 
 //////////////////////////////////////////////////////
-void Network::OnShowDesc(wxCommandEvent &event)
+void Network::OnShowDesc(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    wxString desc;
    wxString title;
  
@@ -2840,9 +2833,8 @@ void Network::OnShowDesc(wxCommandEvent &event)
    wxMessageDialog(this, desc, title).ShowModal();
 }
 
-void Network::OnParaView(wxCommandEvent &event)
+void Network::OnParaView(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    //wxArrayString output;
    // ::wxExecute("paraview", wxEXEC_ASYNC|wxEXEC_MAKE_GROUP_LEADER);
    //::wxShell("paraview");
@@ -2856,9 +2848,8 @@ void Network::OnParaView(wxCommandEvent &event)
 
 }
 
-void Network::OnGeometry(wxCommandEvent &event)
+void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 {
-   event.GetInt();
    if (m_selMod<0) 
       return;
    modules[m_selMod].pl_mod->GeometryDialog();

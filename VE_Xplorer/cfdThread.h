@@ -36,11 +36,12 @@
 #define CFD_THREAD_H
 
 #include <vpr/Thread/Thread.h>
-//#include "cfdAppWrapper.h"
-//#include "cfdExecutive.h"
+
+#include "VE_Installer/include/VEConfig.h"
+
 namespace VE_Xplorer
 {
-   class cfdThread
+   class VE_XPLORER_EXPORTS cfdThread
    {
       public:
          cfdThread( void );

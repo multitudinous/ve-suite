@@ -108,8 +108,8 @@
 		</Configuration>
 		<Configuration
 			Name="osg_dbg|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			IntermediateDirectory="./VE_TextureBasedLib/$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -135,17 +135,14 @@
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/VE_TextureBased.pdb"
+				ProgramDatabaseFile="$(IntDir)/VE_TextureBased.pdb"
 				SubSystem="2"
 				ImportLibrary="$(OutDir)/VE_TextureBased_osgd.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
 			<Tool
-				Name="VCPostBuildEventTool"
-				CommandLine="copy .\osg_dbg\VE_TextureBased_osgd.dll %VE_SUITE_HOME%\lib\win32
-copy .\osg_dbg\VE_TextureBased_osgd.lib %VE_SUITE_HOME%\lib\win32
-"/>
+				Name="VCPostBuildEventTool"/>
 			<Tool
 				Name="VCPreBuildEventTool"/>
 			<Tool

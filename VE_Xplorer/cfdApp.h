@@ -32,11 +32,14 @@
 #ifndef CFD_APP_H
 #define CFD_APP_H
 
-#ifdef _TAO
-class cfdExecutive;
-#endif
+namespace VE_Xplorer
+{
+   #ifdef _TAO
+      class cfdExecutive;
+   #endif
 
-class cfdVjObsWrapper;
+   class cfdVjObsWrapper;
+}
 
 // Scene graph dependent forward declarations
 // The sleep time for sampling of threads.
@@ -46,6 +49,8 @@ const float SAMPLE_TIME = 1.0f;
 class pfGroup;
 #include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
 // Declare my application class
+namespace VE_Xplorer
+{
 class cfdApp : public vrj::PfApp
 #elif _OSG
 #include <osg/Timer>
@@ -64,11 +69,15 @@ namespace osgUtil { class SceneView; }
 namespace VE_TextureBased
 {
    class cfdPBufferManager;
+   class cfdTextureBasedVizHandler;
 }
-class cfdTextureBasedVizHandler;
 #endif
+namespace VE_Xplorer
+{
 class cfdApp: public vrj::OsgApp
 #elif _OPENSG
+namespace VE_Xplorer
+{
 #endif
 {
    public:
@@ -103,7 +112,7 @@ class cfdApp: public vrj::OsgApp
 #ifdef VE_PATENTED
       void contextInit( void );
       virtual void contextClose( void );
-      cfdPBufferManager* GetPBuffer( void );
+      VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
       void contextPostDraw();
 #endif
 #elif _OPENSG
@@ -145,9 +154,9 @@ class cfdApp: public vrj::OsgApp
 
 #ifdef _OSG
 #ifdef VE_PATENTED
-      cfdTextureBasedVizHandler* _tbvHandler;
+      VE_TextureBased::cfdTextureBasedVizHandler* _tbvHandler;
       //biv --may convert this to a singleton later
-      cfdPBufferManager* _pbuffer;
+      VE_TextureBased::cfdPBufferManager* _pbuffer;
 #endif
       osg::ref_ptr<osg::FrameStamp> _frameStamp;
       osg::Timer _timer;
@@ -181,5 +190,5 @@ class cfdApp: public vrj::OsgApp
 	   double timeOfLastCapture;
 #endif 
 };
-
+}
 #endif

@@ -101,6 +101,9 @@ using namespace VE_TextureBased;
 #endif   //_WEB_INTERFACE
 
 
+using namespace VE_Xplorer;
+using namespace VE_Util;
+
 cfdApp::cfdApp( void ) 
 #ifdef _OSG
 : vrj::OsgApp( vrj::Kernel::instance() )

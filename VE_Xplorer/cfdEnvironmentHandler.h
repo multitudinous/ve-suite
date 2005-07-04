@@ -57,7 +57,7 @@ class vtkPolyData;
 
 namespace VE_Xplorer
 {
-   class cfdEnvironmentHandler //: public vpr::Singleton< cfdEnvironmentHandler >
+   class VE_XPLORER_EXPORTS cfdEnvironmentHandler //: public vpr::Singleton< cfdEnvironmentHandler >
    {
       private:
          // Required so that vpr::Singleton can instantiate this class.

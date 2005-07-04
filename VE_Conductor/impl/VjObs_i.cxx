@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "VjObs_i.h"
+#include "VE_Conductor/impl/VjObs_i.h"
 
 #include "VE_Xplorer/cfdTeacher.h"
 #include "VE_Xplorer/cfdQuatCamHandler.h"
@@ -55,6 +55,8 @@
 
 #include <iostream>
 #include <map>
+
+using namespace VE_Xplorer;
 
 void VjObs_i::InitCluster( void )
 {

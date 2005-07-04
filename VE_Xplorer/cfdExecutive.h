@@ -48,17 +48,17 @@ namespace VE_Xplorer
 {
    class cfdGauges;
    class cfdDashboard;
-   class cfdExecutiveConfiguration;
    class cfdInteractiveGeometry;
    class Body_UI_i;
    class cfdCommandArray;
-   class Network;
    class cfdVEAvailModules;
    class cfdVEBaseClass;
    class cfdVEAvail_Modules;
    class cfdVjObsWrapper;
    class cfdThread;
 }
+
+class Network;
 
 namespace Body { class Executive; }
 namespace CosNaming { class NamingContext; }
@@ -133,7 +133,6 @@ class cfdExecutive : public cfdGlobalBase
       Network* _network;
    private:
       
-      cfdExecutiveConfiguration* _param;
       std::string _activeScalarName;
       cfdGauges* _gauges;
       cfdDashboard* _dashBoard;

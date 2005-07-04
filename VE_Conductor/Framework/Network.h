@@ -13,7 +13,7 @@
 
 class Geometry;
 
-using namespace std;
+//using namespace std;
 
 enum 
 {
@@ -32,24 +32,27 @@ enum
    GEOMETRY
 };
 
-typedef struct {
+typedef struct 
+{
   unsigned long Fr_mod;
   unsigned long To_mod;
   int Fr_port;
   int To_port;
 
-  vector<wxPoint> cons; //connectors
+  std::vector<wxPoint> cons; //connectors
   POLY poly; //Poly is the current poly on the canvas
 } LINK;
  
-typedef struct {
+typedef struct 
+{
   REI_Plugin * pl_mod;
   POLY poly; //Poly is the current poly on the canvas
-  vector<LINK*> links; //links connected with me
-  string cls_name;
+  std::vector<LINK*> links; //links connected with me
+  std::string cls_name;
 } MODULE;
 
-typedef struct {
+typedef struct 
+{
   wxPoint cons[2]; //2 connectors for tag, end and middle
   wxString text;
   wxRect box;
@@ -58,7 +61,7 @@ typedef struct {
 
 class Network : public wxScrolledWindow
 {
-  DECLARE_DYNAMIC_CLASS(Network)
+  //DECLARE_DYNAMIC_CLASS(Network)
  public:
   Network() {};
   Network(wxWindow* parent, int id);
@@ -72,7 +75,7 @@ class Network : public wxScrolledWindow
 
   GlobalParamDialog * globalparam_dlg;
 
-  map<int, MODULE> modules; //The list of modules;
+  std::map<int, MODULE> modules; //The list of modules;
   
   bool paraview;
 
@@ -102,7 +105,7 @@ class Network : public wxScrolledWindow
   void OnShowFinancial(wxCommandEvent &event);
 
   //Add to network fuctions
-  void AddtoNetwork(REI_Plugin *new_mod, string cls_name);
+  void AddtoNetwork(REI_Plugin *new_mod, std::string cls_name);
   void AddTag(int x, int y, wxString text);
   
   //Save and Load the network
@@ -159,8 +162,8 @@ class Network : public wxScrolledWindow
  protected:
   //Three main list of network objs
  
-  vector<LINK*> links; //The list of links between the nodes of moduls.
-  vector<TAG> tags; //The list of text tags  
+  std::vector<LINK*> links; //The list of links between the nodes of moduls.
+  std::vector<TAG> tags; //The list of text tags  
   
   int m_selMod; // selected module
   int m_selFrPort; // selected From port
@@ -173,11 +176,11 @@ class Network : public wxScrolledWindow
   wxPoint relative_pt; // the relative point of the polygon, used by the move module function
   wxPoint tag_rpt; // the relative point of the tag
   
-  void Pack(vector<Interface> & UIs);
-  void UnPack(vector<Interface> & UIs);
+  void Pack(std::vector<Interface> & UIs);
+  void UnPack(std::vector<Interface> & UIs);
  private:
   bool moving;
-  vector<wxRect> sbboxes; //start up bounding box; used by GetFreePos to calc start module location
+  std::vector<wxRect> sbboxes; //start up bounding box; used by GetFreePos to calc start module location
   int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
   wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers
 
