@@ -69,6 +69,7 @@
 #include <gmtl/Output.h>
 
 using namespace gmtl; //added by Gengxun
+using namespace VE_Xplorer;
 
 cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::cfdDCS *worldDCS, 
                    VE_SceneGraph::cfdGroup* rootNode )

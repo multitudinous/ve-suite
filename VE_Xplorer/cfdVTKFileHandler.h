@@ -3,7 +3,7 @@
 class vtkXMLFileReadTester;
 class vtkDataSet;
 
-#include "VE_installer/include/VEConfig.h"
+#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Util
 {

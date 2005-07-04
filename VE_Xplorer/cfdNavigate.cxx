@@ -39,6 +39,8 @@
 
 using namespace gmtl;
 using namespace gadget;
+using namespace VE_Xplorer;
+using namespace VE_SceneGraph;
 
 cfdNavigate::cfdNavigate( )
 {
