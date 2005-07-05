@@ -8,6 +8,7 @@ VE_UI_HOME = ${VE_SUITE_HOME}/VE_Conductor/VE_UI
 IDL_HOME = ${VE_SUITE_HOME}/VEOpen
 
 all:
+	$(MAKE) -f Makefile.conductorlib
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
 #	-$(MAKE) install
@@ -21,19 +22,16 @@ SRCS=\
    FinancialDialog.cpp \
    Geometry.cpp \
    GlobalParamDialog.cpp \
-   interface.cpp \
    ListTable.cpp \
    moduleC.cpp \
    moduleS.cpp \
    Network.cpp \
    OrbThread.cpp \
-   package.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
    PortDialog.cpp \
    Plugin_base.cpp \
    ResultPanel.cpp \
-   string_ops.cpp \
    StringParse.cpp \
    TexTable.cpp \
    TextResultDialog.cpp \
@@ -78,6 +76,7 @@ EXTRA_CXXFLAGS+= -D_TAO
 EXTRA_DEFS+=
 
 EXTRA_LIBS+= -lm -lpthread -Wl,-E #-ldl -lrt -lc 
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVEConductorLib
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
@@ -95,9 +94,9 @@ EXTRA_PATH_FOR_SOURCES+= $(VE_UI_HOME) $(IDL_HOME)/skel \
                         $(VE_SUITE_HOME)/VE_Builder/Utilities/gui
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
-include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
-include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
-include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
 EXTRA_INCLUDES+= -I$(VE_UI_HOME) \
                   -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer \

@@ -40,18 +40,20 @@ default: all
 all: $(DIRS)
 
 ${VE_SUITE_HOME}/VE_Xplorer::
-	cd $@ && $(MAKE) -f Makefile.utillib
+	$(MAKE) -f Makefile.utillib
 	cd ${VE_SUITE_HOME}/VE_SceneGraph && $(MAKE) -f Makefile.scenegraphlib
-	cd $@ && $(MAKE) -f Makefile.xplorerlib
-	cd $@ && $(MAKE) -f Makefile.graphicalpluginlib
-	cd $@ && $(MAKE) -f Makefile.xplorer
+	cd ${VE_SUITE_HOME}/VE_TextureBased && $(MAKE) -f Makefile.texturebasedlib
+	$(MAKE) -f Makefile.xplorerlib
+	$(MAKE) -f Makefile.graphicalpluginlib
+	$(MAKE) -f Makefile.xplorer
 
 # -----------------------------------------------------------------------------
 # Clean-up.
 # -----------------------------------------------------------------------------
 clean:
-	cd $@ && $(MAKE) -f Makefile.utillib clean
+	$(MAKE) -f Makefile.utillib clean
 	cd ${VE_SUITE_HOME}/VE_SceneGraph && $(MAKE) -f Makefile.scenegraphlib clean
-	cd $@ && $(MAKE) -f Makefile.xplorerlib clean
-	cd $@ && $(MAKE) -f Makefile.graphicalpluginlib clean
-	cd $@ && $(MAKE) -f Makefile.xplorer clean
+	cd ${VE_SUITE_HOME}/VE_TextureBased && $(MAKE) -f Makefile.texturebasedlib clean
+	$(MAKE) -f Makefile.xplorerlib clean
+	$(MAKE) -f Makefile.graphicalpluginlib clean
+	$(MAKE) -f Makefile.xplorer clean
