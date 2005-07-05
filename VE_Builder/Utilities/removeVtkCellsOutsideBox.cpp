@@ -46,6 +46,7 @@
 #include <vtkIdList.h>
 #include <vtkGenericCell.h>
 #include <vtkPointData.h>
+using namespace VE_Util;
 
 int debug = 0;
 

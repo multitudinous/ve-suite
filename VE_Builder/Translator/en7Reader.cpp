@@ -60,6 +60,7 @@
 #include "readWriteVtkThings.h"
 #include "cleanVtk.h"
 #include "cfdGrid2Surface.h"
+using namespace VE_Util;
 
 void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
 {

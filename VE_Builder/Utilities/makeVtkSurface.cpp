@@ -47,6 +47,7 @@
 #include <vtkTriangleFilter.h>
 #include <vtkSTLWriter.h>
 
+using namespace VE_Util;
 
 void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
 {

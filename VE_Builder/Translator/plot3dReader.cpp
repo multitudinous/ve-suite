@@ -54,6 +54,8 @@
 #include "cfdGrid2Surface.h"
 #include "readWriteVtkThings.h"
 
+using namespace VE_Util;
+
 plot3dReader::plot3dReader( void ) 
 {
    writer      = vtkStructuredGridWriter::New();

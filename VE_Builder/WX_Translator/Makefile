@@ -54,7 +54,7 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
-include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 
 EXTRA_LIBS+= -lm ${WX_LIB}
 

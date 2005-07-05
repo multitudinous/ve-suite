@@ -40,6 +40,7 @@
 #include <vtkDataSet.h>
 #include <vtkPointSet.h>
 
+using namespace VE_Util;
 
 int main( int argc, char *argv[] )
 {    

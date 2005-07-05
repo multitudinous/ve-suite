@@ -42,6 +42,7 @@
 #include "fileIO.h"        // for "StripTrailingSpaces"
 #include "gridConversion.h"
 #include "readWriteVtkThings.h"
+using namespace VE_Util;
 
 vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
                                   int retainEveryNthFrame, vtkTransform * transform, int debug )

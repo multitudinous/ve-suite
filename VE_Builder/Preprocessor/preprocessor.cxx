@@ -47,6 +47,7 @@
 #ifdef _MPI
 #include "mpi.h"
 #endif   
+using namespace VE_Util;
 
 int main( int argc, char *argv[] )
 {

@@ -59,6 +59,7 @@
 #include "cfdGrid2Surface.h"
 
 #include "readWriteVtkThings.h"  //debugging
+using namespace VE_Util;
 
 void viewWhatsInFile( char * vtkFilename, const float shrinkFactor );
 vtkActor * getActorFromDataSet( vtkDataSet * dataset );

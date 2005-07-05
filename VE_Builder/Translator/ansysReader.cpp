@@ -57,6 +57,7 @@
 #define PRINT(x) \
    std::cout << std::setw(PRINT_WIDTH-3) << #x << " = " << x << std::endl;
 #endif
+using namespace VE_Util;
 
 ansysReader::ansysReader( char * input )
 {

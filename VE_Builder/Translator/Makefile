@@ -2,6 +2,7 @@
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/translateToVtk
 
 all:
+	cd $(VE_SUITE_HOME)/VE_Xplorer && $(MAKE) -f Makefile.utillib
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
 #	-$(MAKE) install
@@ -20,9 +21,6 @@ SRCS=\
    gridConversion.cpp \
    viewCells.cpp \
    fireReader.cpp \
-   readWriteVtkThings.cxx \
-   cfdVTKFileHandler.cxx \
-   cleanVtk.cpp \
    cfdGrid2Surface.cpp \
    particle.cpp \
    fluentParticles.cpp \
@@ -31,7 +29,6 @@ SRCS=\
    jdMAPReader.cpp \
    enSightGoldReader.cpp \
    ansysReader.cpp \
-   cfdAccessoryFunctions.cpp \
    tecplotReader.cpp \
    vtkCleanUnstructuredGrid.cxx
 #   vtkEnSightFortranBinaryReader.cxx
@@ -64,12 +61,13 @@ STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 EXTRA_LIBS+= -lm -L$(VJ_DEPS_DIR)/lib
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVEUtilLib
 
 #vrj.appdefs.mk includes $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
-include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 
 vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer
 vpath %.h    $(VE_SUITE_HOME)/VE_Xplorer

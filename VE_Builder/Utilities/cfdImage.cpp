@@ -43,6 +43,7 @@
 
 #include "fileIO.h"
 
+using namespace VE_Util;
 
 cfdImage::cfdImage( char * filename, int xyz )
 {

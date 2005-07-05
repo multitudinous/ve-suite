@@ -53,7 +53,7 @@ EXTRA_LIBS+= -lm -L$(VJ_DEPS_DIR)/lib
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
-include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 
 vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer
 vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Utilities

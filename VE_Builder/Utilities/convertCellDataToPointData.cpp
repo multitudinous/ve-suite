@@ -39,6 +39,7 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkPointData.h>
 #include <vtkCellData.h>
+using namespace VE_Util;
 
 int main( int argc, char *argv[] )
 {    

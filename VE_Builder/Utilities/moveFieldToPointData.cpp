@@ -38,6 +38,7 @@
 #include "vtkFloatArray.h"
 #include "vtkDataSet.h"
 #include "vtkPointData.h"
+using namespace VE_Util;
 
 
 int main( int argc, char *argv[] )

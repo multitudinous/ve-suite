@@ -47,7 +47,7 @@ EXTRA_LIBS+= -L${HDF4_HOME}/lib -L${HDF5_HOME}/lib -lm -ldf -lmfhdf -lhdf5
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
-include $(VE_SUITE_HOME)/VE_Installer/dzr.vtk.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 
 # -----------------------------------------------------------------------------
 # Application build targets.

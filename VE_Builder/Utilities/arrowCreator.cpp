@@ -38,6 +38,7 @@
 //#include "vtkPolyData.h"
 //#include "vtkPolyDataReader.h"
 #include <vtkPolyDataWriter.h>
+using namespace VE_Util;
 
 int main( int argc, char *argv[] )
 {    

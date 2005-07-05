@@ -41,6 +41,7 @@
 #include <vtkTransform.h>
 #include <vtkTransformFilter.h>
 #include <vtkSetGet.h> // defines data object types
+using namespace VE_Util;
 
 int main( int argc, char *argv[] )
 {    

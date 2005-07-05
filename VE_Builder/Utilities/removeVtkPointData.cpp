@@ -37,6 +37,7 @@
 #include <vtkDataSet.h>
 #include <vtkFloatArray.h>
 #include <vtkPointData.h>
+using namespace VE_Util;
 
 void removeVtkPointData( vtkDataSet * dataSet )
 {

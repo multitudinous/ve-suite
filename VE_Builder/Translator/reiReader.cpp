@@ -39,6 +39,7 @@
 #include "fileIO.h"
 #include "converter.h"      // for "letUsersAddParamsToField"
 #include "gridConversion.h"
+using namespace VE_Util;
 
 vtkStructuredGrid * reiReader( char * reiFileName, int debug )
 {

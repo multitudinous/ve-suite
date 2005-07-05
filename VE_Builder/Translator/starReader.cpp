@@ -42,6 +42,8 @@
 #include "converter.h"     // for "letUsersAddParamsToField"
 #include "fileIO.h"        // for "getTagAndValue"
 
+using namespace VE_Util;
+
 starReader::starReader( char * paramFile )
 {
    strcpy( this->paramFileName, paramFile );

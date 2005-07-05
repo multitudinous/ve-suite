@@ -52,6 +52,8 @@
 #include "enSightGoldReader.h"
 #include "ansysReader.h"
 #include "tecplotReader.h"
+using namespace VE_Util;
+
 // function declarations
 extern vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug );
 extern vtkStructuredGrid * reiReader( char * reiFileName, int debug );
@@ -758,7 +760,7 @@ int main( int argc, char *argv[] )
       if ( cfdType != 5 ) // NOT sure if it will work on cell centered data
       {
          // Clean up...
-         dumpVerticesNotUsedByCells( transformedPointset );
+         VE_Util::dumpVerticesNotUsedByCells( transformedPointset );
       }
 
       // Now write to vtk format...

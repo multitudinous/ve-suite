@@ -45,7 +45,7 @@
 
 using namespace VE_Util;
 
-void dumpVerticesNotUsedByCells( vtkPointSet * grid )
+void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid )
 {
    if ( grid == NULL )
    {
@@ -353,7 +353,7 @@ void dumpVerticesNotUsedByCells( vtkPointSet * grid )
    delete [] isNeededPoint;
 }
 
-void dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName )
+void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName )
 {
    if ( grid == NULL )
    {
