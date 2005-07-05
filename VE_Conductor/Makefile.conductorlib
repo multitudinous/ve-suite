@@ -1,0 +1,153 @@
+# ************** <auto-copyright.pl BEGIN do not edit this line> **************
+#
+# VE-Suite is (C) Copyright 1998-2004 by Iowa State University
+#
+# Original Development Team:
+#   - ISU's Thermal Systems Virtual Engineering Group,
+#     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+#   - Reaction Engineering International, www.reaction-eng.com
+#
+# This library is free software; you can redistribute it and/or
+# modify it under the terms of the GNU Library General Public
+# License as published by the Free Software Foundation; either
+# version 2 of the License, or (at your option) any later version.
+#
+# This library is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# Library General Public License for more details.
+#
+# You should have received a copy of the GNU Library General Public
+# License along with this library; if not, write to the
+# Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# Boston, MA 02111-1307, USA.
+#
+# -----------------------------------------------------------------
+# File:          $RCSfile: Makefile,v $
+# Date modified: $Date: 2005-06-27 02:00:28 -0500 (Mon, 27 Jun 2005) $
+# Version:       $Rev: 2519 $
+# -----------------------------------------------------------------
+#
+# *************** <auto-copyright.pl END do not edit this line> ***************
+#
+#
+#_______________________________CUSTOM OPTIONS__________________________________
+#
+# CLUSTER_APP now is defined as TRUE or FALSE from the setup script
+#_______________________________________________________________________________
+
+CFDUNAME = $(shell uname)
+
+EXTRA_PATH_FOR_SOURCES+= \
+                        $(VE_SUITE_HOME)/VEOpen/skel \
+                        $(VE_SUITE_HOME)/VE_Conductor/Framework
+
+EXTRA_INCLUDES+= \
+               -I$(VE_SUITE_HOME)/VEOpen/skel \
+               -I$(VE_SUITE_HOME)/VE_Conductor/Framework 
+
+ifeq ($(TAO_BUILD), TRUE)
+   include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
+   EXEC_TAG = _tao
+endif
+
+# for xercese includes
+ifdef XERCESCROOT
+   include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
+endif
+
+# IRIX needs these flags
+ifeq (${CFDUNAME},IRIX64)
+   EXTRA_CXXFLAGS+= -D_IRIX
+   EXTRA_LIBS+= -L/usr/freeware/lib32
+endif
+#__________________________________________________________
+# list the source files that are in current directory
+SRCS=\
+   interface.cpp \
+   package.cpp \
+	string_ops.cpp 
+			
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
+
+# -----------------------------------------------------------------------------
+# following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
+
+APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVEConductorLib.so
+#OBJDIR is the place that the object files are stored.
+OBJDIR= $(CFDHOSTTYPE)_VEConductorLib
+
+#DEPDIR is the place that the dependency files are stored.
+DEPDIR= $(CFDHOSTTYPE)_VEConductorLib
+
+default: all
+
+# Create the OS-dependent directory for the executable. If the dir exists, 
+# 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
+all:
+	mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
+#	$(MAKE) lib
+#	$(MAKE) cxx_idl
+#	$(MAKE) java_idl
+	$(MAKE) -f Makefile.conductorlib NO_DEPEND=0 cxx
+	$(MAKE) -f Makefile.conductorlib $(APP_NAME)
+#	$(MAKE) java
+#	$(MAKE) NetworkTestBean.jar
+#	-$(MAKE) install
+
+srcdir= .
+
+# turn off dependencies for idl stuff, make clean
+NO_DEPEND= YES
+
+include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
+
+# One of these must be uncommented.
+DEBUG_APP?= TRUE
+#OPTIM_APP?= TRUE
+
+#EXTRA_DEBUG_FLAGS+= -g -D_DEBUG -gslim 
+EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
+
+EXTRA_LIBS+= -shared
+
+LINKALL_ON= -all
+LINKALL_OFF=
+
+STATIC_ON= @APP_LINK_STATIC_ON@
+STATIC_OFF= @APP_LINK_STATIC_OFF@
+
+CXX_GEN_DIR= .
+
+# -----------------------------------------------------------------------------
+# Application build targets.
+# -----------------------------------------------------------------------------
+lib:
+	cd $(VE_SUITE_HOME)/lib && $(MAKE)
+
+#cxx_idl: $(IDL_CXX_FILES)
+
+#%.cpp %.h: %.idl
+#	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $<
+
+#java_idl: $(IDL_JAVA_FILES)
+
+#%.java: %.idl
+#	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_INCLUDES) $<
+
+cxx: $(OBJS)
+
+#java: $(CLASSES)
+
+${APP_NAME}: $(OBJS)
+	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
+#$(TWEEK_LIBS) 
+#NetworkTestBean.jar: $(JAVA_CLASSES)
+#	$(JAR) cvf $@ $(ALL_CLASSES)
+
+#install:
+#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
+#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
+
+# in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
+CLEAN_FILES+= $(APP_NAME) $(OBJDIR)/* 

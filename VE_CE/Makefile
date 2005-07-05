@@ -9,6 +9,7 @@ IDL_HOME = $(VE_SUITE_HOME)/VEOpen
 srcdir= .
 
 all:
+	cd $(VE_SUITE_HOME)/VE_Conductor && $(MAKE) -f Makefile.conductorlib
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
 
@@ -17,11 +18,8 @@ SRCS=\
    moduleS.cpp \
    Exe_server.cpp \
    Executive_i.cpp \
-	interface.cpp \
-   package.cpp \
    Network_Exec.cpp \
    Scheduler.cpp \
-   string_ops.cpp \
 	Execute_Thread.cpp
 
 # Specify the OS-dependent directory name for object files and depends
@@ -50,14 +48,17 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
-include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
-include $(VE_SUITE_HOME)/VE_Installer/dzr.ace_tao.mk
-include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
-vpath %.cpp $(VE_SUITE_HOME)/VE_Conductor/Framework $(IDL_HOME)/skel 
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/Framework $(IDL_HOME)/skel 
 
-EXTRA_CXXFLAGS += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel 
+EXTRA_INCLUDES += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel 
 EXTRA_INCLUDES += -I$(VE_SUITE_HOME)
+
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVEConductorLib
+
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
