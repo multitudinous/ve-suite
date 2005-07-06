@@ -57,13 +57,15 @@ public:
    // compare VjObs_i commandArray with its child's value
    virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
+
    // in future, multi-threaded apps will make a copy of 
    // VjObs_i commandArray
    virtual void UpdateCommand();
 
    int GetNumberOfSounds( void );
    char* GetSoundFilename( int );
-   std::vector< cfdSound* >* GetSounds( void );
+   cfdReadParam* GetReadParam();
+   std::vector< cfdSound* > GetSounds( void );
 private:
    char* _param;
    cfdReadParam* _readParam;

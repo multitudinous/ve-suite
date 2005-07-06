@@ -33,10 +33,10 @@
 #define CFDSOUND_H
 
 #include <snx/SoundHandle.h>
-
+#include "VE_Installer/include/VEConfig.h"
 namespace VE_Xplorer
 {
-   class cfdSound
+   class VE_XPLORER_EXPORTS cfdSound
    { 
       public:
          cfdSound();

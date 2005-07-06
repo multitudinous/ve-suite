@@ -96,10 +96,15 @@ char* cfdSoundHandler::GetSoundFilename( int i )
    //return this->sounds[ i ]->fileName;
    return this->sounds[ i ]->soundName;
 }
-
-std::vector< cfdSound* >* cfdSoundHandler::GetSounds( void )
+/////////////////////////////////////////////
+cfdReadParam* cfdSoundHandler::GetReadParam()
 {
-   return &sounds;
+   return _readParam;
+}
+///////////////////////////////////////////////////////////
+std::vector< cfdSound* > cfdSoundHandler::GetSounds( void )
+{
+   return sounds;
 }
 bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
