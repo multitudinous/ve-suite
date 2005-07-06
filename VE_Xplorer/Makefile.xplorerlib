@@ -34,7 +34,7 @@ CFDUNAME = $(shell uname)
 ifeq ($(SCENE_GRAPH), OSG)
    OSG = _osg
 else
-   OSG =
+   OSG = _pf
 endif
 
 ifeq ($(TAO_BUILD), TRUE)
@@ -44,8 +44,7 @@ endif
 
 # for osg and patented stuff
 ifeq ($(VE_PATENTED), TRUE)
-   EXTRA_INCLUDES+= -I${VE_SUITE_HOME}
-   EXTRA_CXXFLAGS+= -D_OSG -DVE_PATENTED
+   EXTRA_CXXFLAGS+= -DVE_PATENTED
    PATENTED_TAG = .vep
 endif
 
@@ -106,26 +105,12 @@ SRCS=\
    cfdVectors.cxx \
    cfdWriteTraverser.cxx
 
-EXTRA_INCLUDES+= -I$(VE_SUITE_HOME) -I$(VE_SUITE_HOME)/VE_Xplorer
-EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Conductor/Framework
-EXTRA_INCLUDES+= -I${VE_SUITE_HOME}/VE_Builder/Translator
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_SceneGraph
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Xplorer
-EXTRA_PATH_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_Conductor/Framework
-EXTRA_PATH_FOR_SOURCES+= ${VE_SUITE_HOME}/VE_Builder/Translator
-
-#LIBS=   $(LIBS_BEGIN) $(SYS_LIBS) $(LIBS_END)
-#include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
-#include $(DZR_BASE_DIR)/mk/dzr.java-app.mk
-
-#include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
-#include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
+EXTRA_INCLUDES+= -I$(VE_SUITE_HOME) 
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
 
-APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVEXplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG).so
+APP_NAME= $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)/libVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG).so
 # object files are being stored in a system-dependent directory so that builds
 # for multiple platforms may be maintained simultaneously.
 
@@ -141,13 +126,8 @@ default: all
 # 'mkdir -p' silently ignores, so no test needed. Works with multiple arguments.
 all:
 	mkdir -p $(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE)
-#	$(MAKE) cxx_idl
-#	$(MAKE) java_idl
 	$(MAKE) -f Makefile.xplorerlib NO_DEPEND=0 cxx
 	$(MAKE) -f Makefile.xplorerlib $(APP_NAME)
-#	$(MAKE) java
-#	$(MAKE) NetworkTestBean.jar
-#	-$(MAKE) install
 
 srcdir= .
 
@@ -176,7 +156,6 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 EXTRA_LDFLAGS+= -shared
 # To build dll for dynamic load of plugins
-EXTRA_CXXFLAGS+= -DWXMAKING_PLUGIN_DLL
 # IRIX needs these flags
 ifeq (${CFDUNAME},IRIX64)
    EXTRA_CXXFLAGS+= 
@@ -191,26 +170,10 @@ CXX_GEN_DIR= .
 # -----------------------------------------------------------------------------
 # Application build targets.
 # -----------------------------------------------------------------------------
-#cxx_idl: $(IDL_CXX_FILES)
-
-#%.cpp %.h: %.idl
-#	$(CXX_IDL) $(CXX_IDL_OPTS) $(CXX_IDL_INCLUDES) $<
-
-#java_idl: $(IDL_JAVA_FILES)
-
-#%.java: %.idl
-#	$(JAVA_IDL) $(JAVA_IDL_OPTS) $(JAVA_IDL_INCLUDES) $<
-
 cxx: $(OBJS)
-
-#java: $(CLASSES)
 
 ${APP_NAME}: $(OBJS)
 	$(LINK) $(LINK_OUT)$@ $(OBJS) $(EXTRA_LIBS) $(LIBS)
-
-#install:
-#	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
-#	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
 
 # in addition to the created *.o files and any core files, the following files will be removed during "gmake clean"
 CLEAN_FILES+= $(APP_NAME) $(OBJDIR)/* 
