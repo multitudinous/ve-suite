@@ -130,14 +130,14 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opengl32.lib"
-				OutputFile="$(OutDir)/VE_TextureBased_osgd.dll"
+				AdditionalDependencies="osg.lib osgDB.lib osgUtil.lib Producer.lib OpenThreadsWin32.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opengl32.lib"
+				OutputFile="$(OutDir)/VE_TextureBased_osg_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/VE_TextureBased.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/VE_TextureBased_osgd.lib"
+				ImportLibrary="$(OutDir)/VE_TextureBased_osg_d.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -183,13 +183,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="libpf.lib libpfdu-util.lib vpr_d.lib vrj_d.lib vrj_pf_d.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opengl32.lib"
-				OutputFile="$(OutDir)/VE_TextureBased_pfd.dll"
+				OutputFile="$(OutDir)/VE_TextureBased_pf_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/VE_TextureBased.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/VE_TextureBased_pfd.lib"
+				ImportLibrary="$(OutDir)/VE_TextureBased_pf_d.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
