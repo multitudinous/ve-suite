@@ -4,8 +4,6 @@ VE_SUITE_HOME?= ../
 
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/Exe_server
 
-IDL_HOME = $(VE_SUITE_HOME)/VEOpen
-
 srcdir= .
 
 all:
@@ -46,18 +44,19 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/Framework 
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VEOpen/skel 
+
+EXTRA_INCLUDES += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(VE_SUITE_HOME)/VEOpen/skel 
+EXTRA_INCLUDES += -I$(VE_SUITE_HOME)
+
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
+
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
-
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/Framework $(IDL_HOME)/skel 
-
-EXTRA_INCLUDES += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(IDL_HOME)/skel 
-EXTRA_INCLUDES += -I$(VE_SUITE_HOME)
-
-EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVEConductorLib
 
 # -----------------------------------------------------------------------------
 # Application build targets.
@@ -74,4 +73,4 @@ ${APP_NAME}: $(OBJS)
 #	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
 #	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
 
-CLEAN_FILES+= $(APP_NAME)
+CLEAN_FILES+= $(APP_NAME) $(OBJDIR)/*
