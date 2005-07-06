@@ -46,15 +46,13 @@ endif
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/impl \
                         $(VE_SUITE_HOME)/VEOpen/skel \
                         $(VE_SUITE_HOME)/VE_Conductor/Framework \
-                        $(VE_SUITE_HOME)/VE_CE \
-								$(VE_SUITE_HOME)/VE_Builder/Translator
+                        $(VE_SUITE_HOME)/VE_CE
 
 EXTRA_INCLUDES+= \
                -I$(VE_SUITE_HOME)/VE_Conductor/impl \
                -I$(VE_SUITE_HOME)/VEOpen/skel \
                -I$(VE_SUITE_HOME)/VE_Conductor/Framework \
-               -I$(VE_SUITE_HOME)/VE_CE \
-					-I$(VE_SUITE_HOME)/VE_Builder/Translator
+               -I$(VE_SUITE_HOME)/VE_CE
 
 ifeq ($(TAO_BUILD), TRUE)
    include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
@@ -64,7 +62,7 @@ endif
 # for osg and patented stuff
 ifeq ($(VE_PATENTED), TRUE)
    EXTRA_CXXFLAGS+= -DVE_PATENTED
-   PATENTED_TAG=.vep
+   PATENTED_TAG=_vep
 endif
 
 # for xercese includes
@@ -101,8 +99,6 @@ ifeq ($(WEB_BUILD), TRUE)
 endif
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_SceneGraph
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_UtilLib
 EXTRA_LIBS+= -lVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
@@ -112,13 +108,6 @@ EXTRA_LIBS+= -lVE_ConductorLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
-
-#LIBS=   $(LIBS_BEGIN) $(SYS_LIBS) $(LIBS_END)
-#include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
-#include $(DZR_BASE_DIR)/mk/dzr.java-app.mk
-
-#include $(DZR_BASE_DIR)/ext/tweek/dzr.tweek.mk
-#include $(TWEEK_BASE_DIR)/share/tweek/tweek.appdefs.mk
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk

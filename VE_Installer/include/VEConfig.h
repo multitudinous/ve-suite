@@ -85,6 +85,12 @@
 	#  else
 	#    define VE_TEXTURE_BASED_EXPORTS   __declspec(dllimport)
 	#  endif /* VE_TEXTURE_BASED_LIBRARY */
+
+	#  ifdef VE_USER_PLUGIN_LIBRARY
+	#    define VE_USER_PLUGIN_EXPORTS   __declspec(dllexport)
+	#  else
+	#    define VE_USER_PLUGIN_EXPORTS   __declspec(dllimport)
+	#  endif /* VE_USER_PLUGIN_LIBRARY */
 #else
 	#  define VE_SCENEGRAPH_EXPORTS
    #  define VE_UTIL_EXPORTS
@@ -93,6 +99,7 @@
 	#  define VE_GUIPLUGINS_EXPORTS
    #  define VE_GRAPHICALPLUGINS_EXPORTS
 	#  define VE_TEXTURE_BASED_EXPORTS
+	#  define VE_USER_PLUGIN_EXPORTS
 #endif
 
 #endif
