@@ -102,8 +102,8 @@ EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lGraphicalPlugin$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_UtilLib
 EXTRA_LIBS+= -lVE_XplorerLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
-EXTRA_LIBS+= -lVE_SceneGraphLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
-EXTRA_LIBS+= -lVE_TextureBasedLib$(EXEC_TAG)$(OSG)$(PATENTED_TAG)
+EXTRA_LIBS+= -lVE_SceneGraphLib$(OSG)$(PATENTED_TAG)
+EXTRA_LIBS+= -lVE_TextureBasedLib$(OSG)$(PATENTED_TAG)
 EXTRA_LIBS+= -lVE_ConductorLib
 
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
