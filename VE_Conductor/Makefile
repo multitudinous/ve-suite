@@ -9,6 +9,7 @@ IDL_HOME = ${VE_SUITE_HOME}/VEOpen
 
 all:
 	$(MAKE) -f Makefile.conductorlib
+	$(MAKE) -f Makefile.guipluginlib
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
 #	-$(MAKE) install
@@ -19,23 +20,14 @@ SRCS=\
    App.cpp \
    Avail_Modules.cpp \
    Frame.cpp \
-   FinancialDialog.cpp \
-   Geometry.cpp \
    GlobalParamDialog.cpp \
-   ListTable.cpp \
    moduleC.cpp \
    moduleS.cpp \
    Network.cpp \
    OrbThread.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
-   PortDialog.cpp \
    Plugin_base.cpp \
-   ResultPanel.cpp \
-   StringParse.cpp \
-   TexTable.cpp \
-   TextResultDialog.cpp \
-   UIDialog.cpp \
    VjObsC.cpp \
    VjObsS.cpp \
    UI_i.cpp \
@@ -77,6 +69,7 @@ EXTRA_DEFS+=
 
 EXTRA_LIBS+= -lm -lpthread -Wl,-E #-ldl -lrt -lc 
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVEConductorLib
+EXTRA_LIBS+= -lGUIPluginLib
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
@@ -99,7 +92,7 @@ include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
 EXTRA_INCLUDES+= -I$(VE_UI_HOME) \
-                  -I$(IDL_HOME)/skel -I$(VE_SUITE_HOME)/VE_Xplorer \
+                  -I$(IDL_HOME)/skel \
                   -I$(VE_SUITE_HOME)/VE_Builder/Utilities/gui 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)/VE_Conductor/Framework
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
