@@ -44,7 +44,6 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/Framework 
 EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VEOpen/skel 
 
 EXTRA_INCLUDES += -I$(VE_SUITE_HOME)/VE_Conductor/Framework -I$(VE_SUITE_HOME)/VEOpen/skel 
@@ -54,7 +53,7 @@ EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
-include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
+#include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.ace_tao.mk
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 

@@ -106,6 +106,8 @@ SRCS=\
    cfdWriteTraverser.cxx
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME) 
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Builder/Translator
+EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_TextureBased
 
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk
