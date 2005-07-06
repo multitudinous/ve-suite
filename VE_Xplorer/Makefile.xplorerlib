@@ -71,7 +71,6 @@ SRCS=\
    cfdEnvironmentHandler.cxx \
    cfdFILE.cxx \
    cfdFileInfo.cxx \
-   cfdGeode.cxx \
    cfdGlobalBase.cxx \
    cfdGraphicsObject.cxx \
 	cfdGrid2Surface.cpp \
