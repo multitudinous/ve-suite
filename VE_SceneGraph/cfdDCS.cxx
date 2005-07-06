@@ -362,9 +362,9 @@ Matrix44f cfdDCS::GetMat( void )
 
       //gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
       _vjMatrix.set( osgMat.ptr() );
-std::cout << _vjMatrix << std::endl;
-      std::cout << gmtl::Math::rad2Deg( gmtl::makeYRot(_vjMatrix) ) << std::endl;
-      std::cout << gmtl::Math::rad2Deg( gmtl::makeZRot(_vjMatrix) ) << std::endl;
+//std::cout << _vjMatrix << std::endl;
+//      std::cout << gmtl::Math::rad2Deg( gmtl::makeYRot(_vjMatrix) ) << std::endl;
+//      std::cout << gmtl::Math::rad2Deg( gmtl::makeZRot(_vjMatrix) ) << std::endl;
       //gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
       //gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
       //_vjMatrix.set(osgMat.ptr());

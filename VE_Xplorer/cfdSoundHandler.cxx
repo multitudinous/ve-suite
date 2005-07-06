@@ -97,6 +97,10 @@ char* cfdSoundHandler::GetSoundFilename( int i )
    return this->sounds[ i ]->soundName;
 }
 
+std::vector< cfdSound* >* cfdSoundHandler::GetSounds( void )
+{
+   return &sounds;
+}
 bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_SOUNDS )

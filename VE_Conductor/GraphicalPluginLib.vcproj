@@ -292,6 +292,9 @@
 		<Filter
 			Name="headers"
 			Filter=".h">
+			<File
+				RelativePath="..\VE_Xplorer\cfdVEBaseClass.h">
+			</File>
 		</Filter>
 	</Files>
 	<Globals>

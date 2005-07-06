@@ -50,9 +50,10 @@ namespace VE_Xplorer
    class cfdCursor;
    class cfdNavigate;
    class cfdObjects;
+   class cfdSoundHandler;
 }
+
 #include "VE_Conductor/Framework/interface.h"
-//#include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Xplorer
 {
@@ -111,6 +112,8 @@ namespace VE_Xplorer
 
          void SetNavigate( cfdNavigate* );
 
+		 void SetSoundHandler( cfdSoundHandler* );
+
          void SetInterface( Interface& );
 
          void SetModuleResults( const char* );
@@ -167,6 +170,7 @@ namespace VE_Xplorer
          VE_SceneGraph::cfdDCS* _dcs;
          cfdCursor* _cursor;
          cfdNavigate* _navigate;
+		 cfdSoundHandler* soundHandler;
          Interface myInterface;
 
          std::vector<wxString> v_desc;

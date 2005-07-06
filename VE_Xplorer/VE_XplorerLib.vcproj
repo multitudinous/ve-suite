@@ -428,6 +428,9 @@
 		<Filter
 			Name="headers"
 			Filter=".h">
+			<File
+				RelativePath=".\cfdSoundHandler.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

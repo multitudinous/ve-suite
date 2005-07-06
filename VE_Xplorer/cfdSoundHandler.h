@@ -63,7 +63,7 @@ namespace VE_Xplorer
 
          int GetNumberOfSounds( void );
          char* GetSoundFilename( int );
-
+         std::vector< cfdSound* >* GetSounds( void );
       private:
          char* _param;
          cfdReadParam* _readParam;

@@ -38,6 +38,7 @@
 #include "VE_Xplorer/cfdFILE.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdNavigate.h"
+#include "VE_Xplorer/cfdSoundHandler.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/cfdObjects.h"
 
@@ -227,6 +228,19 @@ void cfdVEBaseClass::SetNavigate( cfdNavigate* input )
    if ( input != NULL )
    {
       _navigate = input;
+   }
+   else
+   {
+      std::cerr << " ERROR : cfdVEBaseClass::SetNavigate input is NULL "
+                << std::endl;
+   }
+}
+
+void cfdVEBaseClass::SetSoundHandler( cfdSoundHandler* input )
+{
+   if ( input )
+   {
+      soundHandler = input;
    }
    else
    {
