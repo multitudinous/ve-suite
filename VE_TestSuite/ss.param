@@ -23,7 +23,7 @@
    1 1 1             // Scale values for geometry file
    0 0 0             // Translation values for geometry file
    0 0 0             // Rotation values (Z-X-Y format)
-   ./Surface0.76.stl // Geometry file name
+   ./Surface0.75.stl // Geometry file name
 8                    // Object type 8: data set
    1 1 1             // Scale values
    -4 0 0            // Translation values
