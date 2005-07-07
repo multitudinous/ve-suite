@@ -64,7 +64,6 @@ public:
 
    int GetNumberOfSounds( void );
    char* GetSoundFilename( int );
-   cfdReadParam* GetReadParam();
    std::vector< cfdSound* > GetSounds( void );
 private:
    char* _param;
