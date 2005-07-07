@@ -36,7 +36,9 @@
 #include <string>
 #include <vector>
 // Needed on irix
+#ifndef WIN32
 #include <unistd.h>
+#endif
 using std::string;
 
 #include <vtkUnstructuredGrid.h>
@@ -216,9 +218,10 @@ vtkUnstructuredGrid * fireReader( char * geomFile, char * dataFile, int debug )
                      cellVertex[1] << " \t " << cellVertex[2] << " \t " << cellVertex[3] << " \t " << 
                      cellVertex[4] << " \t " << cellVertex[5] <<std::endl;
       }
-      
+#ifndef WIN32
       if ( debug ) 
          sleep( 1 );
+#endif
    }
    
    delete [] cellType;

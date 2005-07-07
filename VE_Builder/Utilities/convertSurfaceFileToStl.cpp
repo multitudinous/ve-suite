@@ -36,8 +36,8 @@
 #include <vtkTriangleFilter.h>
 #include <vtkSTLWriter.h>
 
-#include "fileIO.h"
-#include "readWriteVtkThings.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 using namespace VE_Util;
 
 int main( int argc, char *argv[] )

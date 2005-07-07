@@ -52,14 +52,16 @@
 #include <vtkScalarsToColors.h>
 #include <vtkLookupTable.h>
 
-#include "cfdImage.h"  //BMP support
-#include "fileIO.h"
-#include "viewCells.h"
-#include "setScalarAndVector.h"
-#include "cfdGrid2Surface.h"
+#include "VE_Xplorer/cfdImage.h"  //BMP support
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Builder/Translator/viewCells.h"
+#include "VE_Builder/Utilities/setScalarAndVector.h"
+#include "VE_Builder/Translator/cfdGrid2Surface.h"
 
-#include "readWriteVtkThings.h"  //debugging
+#include "VE_Xplorer/readWriteVtkThings.h"  //debugging
+
 using namespace VE_Util;
+using namespace VE_Xplorer;
 
 void viewWhatsInFile( char * vtkFilename, const float shrinkFactor );
 vtkActor * getActorFromDataSet( vtkDataSet * dataset );
@@ -376,9 +378,13 @@ vtkActor * getActorFromFile( char * vtkFilename )
 
    if ( !strcmp(extension,"bmp") || !strcmp(extension,"BMP") )
    {
+      /*
       delete [] extension;
-      cfdImage *image = new cfdImage( vtkFilename, 0 );
+      cfdImage* image = new cfdImage( vtkFilename, 0 );
       return image->GetActor();
+      */
+      std::cout<<"Bmp's not supported by cfdImage!!!"<<std::endl;
+
    }
    else if ( !strcmp(extension,"stl") || !strcmp(extension,"STL") )
    {

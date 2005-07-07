@@ -56,10 +56,10 @@
 #include <vtkTriangleFilter.h>
 #include <vtkUnstructuredGrid.h>
 
-#include "fileIO.h"
-#include "readWriteVtkThings.h"
-#include "cleanVtk.h"
-#include "cfdGrid2Surface.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Builder/Translator/cleanVtk.h"
+#include "VE_Builder/Translator/cfdGrid2Surface.h"
 using namespace VE_Util;
 
 void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )

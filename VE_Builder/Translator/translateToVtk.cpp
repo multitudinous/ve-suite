@@ -38,20 +38,20 @@
 #include <vtkTransform.h>
 #include <vtkTransformFilter.h>
 
-#include "fileIO.h"
-#include "viewCells.h"
-#include "cleanVtk.h"
-#include "readWriteVtkThings.h"
-#include "cfdAccessoryFunctions.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Builder/Translator/viewCells.h"
+#include "VE_Builder/Translator/cleanVtk.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Xplorer/cfdAccessoryFunctions.h"
 
-#include "fluentParticles.h"
-#include "reiParticles.h"
-#include "plot3dReader.h"
-#include "starReader.h"
-#include "jdMAPReader.h"
-#include "enSightGoldReader.h"
-#include "ansysReader.h"
-#include "tecplotReader.h"
+#include "VE_Builder/Translator/fluentParticles.h"
+#include "VE_Builder/Translator/reiParticles.h"
+#include "VE_Builder/Translator/plot3dReader.h"
+#include "VE_Builder/Translator/starReader.h"
+#include "VE_Builder/Translator/jdMAPReader.h"
+#include "VE_Builder/Translator/enSightGoldReader.h"
+#include "VE_Builder/Translator/ansysReader.h"
+#include "VE_Builder/Translator/tecplotReader.h"
 using namespace VE_Util;
 
 // function declarations

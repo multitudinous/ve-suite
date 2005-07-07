@@ -45,14 +45,14 @@
 #include <vtkStructuredGridGeometryFilter.h>
 #include <vtkAppendPolyData.h>
 
-#include "plot3dReader.h"
+#include "VE_Builder/Translator/plot3dReader.h"
 //#include <fstream>
 #include <string>
 #include <sstream>
 #include <iostream>
-#include "fileIO.h"
-#include "cfdGrid2Surface.h"
-#include "readWriteVtkThings.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Builder/Translator/cfdGrid2Surface.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 
 using namespace VE_Util;
 

@@ -32,8 +32,8 @@
 
 #include <iostream>
 
-#include "fileIO.h"
-#include "readWriteVtkThings.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 
 #include <vtkDataSet.h>
 #include <vtkCellDataToPointData.h>

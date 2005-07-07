@@ -4,14 +4,14 @@
   Module:    $RCSfile: vtkEnSightFortranBinaryReader.cxx,v $
   Language:  C++
   Date:      $Date$
-  Version:   $Revision: 1.6 $
+  Version:   $Revision$
 
 
 Copyright (c) 1993-2003 Steve Kirstukas ISU
 All rights reserved.
 
 =========================================================================*/
-#include "vtkEnSightFortranBinaryReader.h"
+#include "VE_Builder/Translator/vtkEnSightFortranBinaryReader.h"
 
 #include <vtkByteSwap.h>
 #include <vtkCellData.h>
@@ -28,7 +28,7 @@ All rights reserved.
 
 #include <ctype.h>
 
-#include "fileIO.h"  //sjk
+#include "VE_Xplorer/fileIO.h"  //sjk
 
 #ifdef _MSC_VER
 #pragma warning (push, 3)
@@ -39,8 +39,8 @@ All rights reserved.
 #ifdef _MSC_VER
 #pragma warning(pop)
 #endif
-
-vtkCxxRevisionMacro(vtkEnSightFortranBinaryReader, "$Revision: 1.6 $");
+using namespace VE_Util;
+vtkCxxRevisionMacro(vtkEnSightFortranBinaryReader, "$Revision$");
 vtkStandardNewMacro(vtkEnSightFortranBinaryReader);
 
 //----------------------------------------------------------------------------
@@ -226,7 +226,7 @@ int vtkEnSightFortranBinaryReader::ReadGeometryFile(char* fileName, int timeStep
       // "GMTEC Fluid Cells
       lineRead = this->ReadLine(line);
       vtkDebugMacro( "\"" << line << "\"");
-      fileIO::StripTrailingSpaces( line );
+      VE_Util::fileIO::StripTrailingSpaces( line );
       cout << "vtkPartId " << partId << ": " << line << endl;
 
       if (strncmp(line, "block", 5) == 0)

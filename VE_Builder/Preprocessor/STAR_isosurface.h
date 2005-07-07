@@ -40,7 +40,7 @@
 #include <vtkPolyDataNormals.h>
 #include <vtkPolyDataWriter.h>
 
-#include "setScalarAndVector.h"
+#include "VE_Builder/Utilities/setScalarAndVector.h"
 
 class isosurfaceVtkOutput
 {

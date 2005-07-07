@@ -2,8 +2,8 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="Preprocessor"
-	ProjectGUID="{62B3D30E-0B3D-4348-933D-97E8792ABFDE}"
+	Name="compareScalars"
+	ProjectGUID="{9A72CAD3-89E5-489F-A796-64B8FEBF6883}"
 	Keyword="Win32Proj">
 	<Platforms>
 		<Platform
@@ -20,10 +20,10 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VTK_HOME)\include\vtk&quot;"
-				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE;VTK44"
+				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
+				RuntimeLibrary="5"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -32,12 +32,12 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib VE_UtilLib_tao_osg_d.lib"
-				OutputFile="$(OutDir)/Preprocessor.exe"
+				AdditionalDependencies="VE_UtilLib_tao_osg_d.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib vtkHybrid.lib"
+				OutputFile="$(OutDir)/compareScalars.exe"
 				LinkIncremental="2"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
+				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;"
 				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/Preprocessor.pdb"
+				ProgramDatabaseFile="$(OutDir)/compareScalars.pdb"
 				SubSystem="1"
 				TargetMachine="1"/>
 			<Tool
@@ -70,7 +70,6 @@
 			CharacterSet="2">
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="$(VE_SUITE_HOME)\VE_Builder\fileIOlib"
 				PreprocessorDefinitions="WIN32;NDEBUG;_CONSOLE"
 				RuntimeLibrary="4"
 				UsePrecompiledHeader="0"
@@ -81,10 +80,8 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib readWriteVtkThings.lib"
-				OutputFile="$(OutDir)/Preprocessor.exe"
+				OutputFile="$(OutDir)/compareScalars.exe"
 				LinkIncremental="1"
-				AdditionalLibraryDirectories="$(VTK_HOME)\lib\vtk"
 				GenerateDebugInformation="TRUE"
 				SubSystem="1"
 				OptimizeReferences="2"
@@ -120,37 +117,13 @@
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
 			<File
-				RelativePath=".\multiPlaneVtkOutput.cxx">
-			</File>
-			<File
-				RelativePath=".\preprocessor.cxx">
-			</File>
-			<File
-				RelativePath="..\Utilities\setScalarAndVector.cpp">
+				RelativePath="..\..\compareScalars.cpp">
 			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;inc;xsd"
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}">
-			<File
-				RelativePath=".\multiPlaneVtkOutput.h">
-			</File>
-			<File
-				RelativePath=".\STAR_isosurface.h">
-			</File>
-			<File
-				RelativePath=".\STAR_node.h">
-			</File>
-			<File
-				RelativePath=".\STAR_octant.h">
-			</File>
-			<File
-				RelativePath=".\STAR_octree.h">
-			</File>
-			<File
-				RelativePath=".\STAR_surface.h">
-			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

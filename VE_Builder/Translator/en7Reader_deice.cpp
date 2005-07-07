@@ -56,10 +56,10 @@
 #include <vtkTriangleFilter.h>
 #include <vtkUnstructuredGrid.h>
 
-#include "fileIO.h"
-#include "readWriteVtkThings.h"
-#include "cleanVtk.h"
-#include "cfdGrid2Surface.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Builder/Translator/cleanVtk.h"
+#include "VE_Builder/Translator/cfdGrid2Surface.h"
 
 void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
 {
@@ -71,21 +71,21 @@ void writeVtkGeomToStl( vtkDataSet * dataset, char filename [] )
       tFilter->SetInput( (vtkPolyData*)dataset );
    else 
    {
-      cout << "Using vtkGeometryFilter to convert to polydata" << endl;
+     std::cout << "Using vtkGeometryFilter to convert to polydata" <<std::endl;
       gFilter = vtkGeometryFilter::New();
       gFilter->SetInput( dataset );
       tFilter->SetInput( gFilter->GetOutput() );
    }
 
-   cout << "Writing \"" << filename << "\"... ";
-   cout.flush();
+  std::cout << "Writing \"" << filename << "\"... ";
+  std::cout.flush();
    vtkSTLWriter *writer = vtkSTLWriter::New();
       writer->SetInput( tFilter->GetOutput() );
       writer->SetFileName( filename );
       writer->SetFileTypeToBinary();
       writer->Write();
       writer->Delete();
-   cout << "... done\n" << endl;
+  std::cout << "... done\n" <<std::endl;
 
    tFilter->Delete();
    if ( gFilter ) gFilter->Delete();
@@ -96,14 +96,14 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
 {
    vtkUnstructuredGrid * uGrid = NULL;
 
-   cout << "caseFileName = \"" << caseFileName << "\"" << endl;
+  std::cout << "caseFileName = \"" << caseFileName << "\"" <<std::endl;
 
-   char * extension = fileIO::getExtension( caseFileName );
-   //cout << "extension = \"" << extension << "\"" << endl;
+   char * extension = VE_Util::fileIO::getExtension( caseFileName );
+   //cout << "extension = \"" << extension << "\"" <<std::endl;
    if ( strcmp(extension,"case") && strcmp(extension,"CASE") && 
         strcmp(extension,"cas") && strcmp(extension,"encas") )
    {
-      cout << "\nERROR: filename extension must be \"case\" or \"CASE\" or \"cas\" or \"encas\"\n" << endl;
+     std::cout << "\nERROR: filename extension must be \"case\" or \"CASE\" or \"cas\" or \"encas\"\n" <<std::endl;
       delete [] extension;
       return uGrid;
    }
@@ -119,7 +119,7 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
       reader->Update();
 
    int numOutputs = reader->GetNumberOfOutputs();
-   cout << "numOutputs = " << numOutputs << endl;
+  std::cout << "numOutputs = " << numOutputs <<std::endl;
    if ( numOutputs == 0 )
    {
       reader->Delete();
@@ -130,22 +130,22 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
    vtkTransformFilter *transFilter = vtkTransformFilter::New();
        transFilter->SetTransform( transform );
 
-   cout << "reader->GetOutput() = " << reader->GetOutput() << endl;
+  std::cout << "reader->GetOutput() = " << reader->GetOutput() <<std::endl;
    if ( reader->GetOutput() ) 
-      cout << "reader->GetOutput()->GetNumberOfPoints() = " 
-           << reader->GetOutput()->GetNumberOfPoints() << endl;
+     std::cout << "reader->GetOutput()->GetNumberOfPoints() = " 
+           << reader->GetOutput()->GetNumberOfPoints() <<std::endl;
 
-   cout << "reader->GetNumberOfScalarsPerNode() = " << reader->GetNumberOfScalarsPerNode() << endl;
+  std::cout << "reader->GetNumberOfScalarsPerNode() = " << reader->GetNumberOfScalarsPerNode() <<std::endl;
 
    //VTK_SCALAR_PER_NODE was defined in vtk4.0, changed to SCALAR_PER_NODE in VTK4.3
    for ( i=0; i<reader->GetNumberOfScalarsPerNode(); i++ )
-      cout << "Description " << i << " = \'" 
-           << reader->GetDescription( i, vtkEnSightReader::SCALAR_PER_NODE ) << "\'" << endl;
+     std::cout << "Description " << i << " = \'" 
+           << reader->GetDescription( i, vtkEnSightReader::SCALAR_PER_NODE ) << "\'" <<std::endl;
 
    float minTime = reader->GetMinimumTimeValue();
    float maxTime = reader->GetMaximumTimeValue();
-   cout << "minTime = " << minTime << endl;
-   cout << "maxTime = " << maxTime << endl;
+  std::cout << "minTime = " << minTime <<std::endl;
+  std::cout << "maxTime = " << maxTime <<std::endl;
 
    // See if we are dealing with transient data
    // depending on the setTimeValue, the data (scalar and vector) will be different
@@ -167,9 +167,9 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
       {
          //timeSet->Print(cout);
          //timeSet->GetItem(0)->Print(cout);
-         //cout << "timeStep = " << timeStep << endl;
+         //cout << "timeStep = " << timeStep <<std::endl;
          timeSet->GetItem(0)->GetTuple( timeStep*sampleFrequency, currentTime );
-         cout << "\ncurrentTime = " << currentTime[0] << endl;
+        std::cout << "\ncurrentTime = " << currentTime[0] <<std::endl;
          reader->SetTimeValue( currentTime[0] );
          reader->Update();
 
@@ -177,7 +177,7 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
          //ice-cells was part 1 in Deice_ensight_ice-cells.geo referenced by Deice_transient_shortGeo.encas
          uGrid->DeepCopy( reader->GetOutput( 0 ) );
          //uGrid->DeepCopy( reader->GetOutput( 16 ) );   // 16 refers to part 17: ice cells
-         dumpVerticesNotUsedByCells( uGrid );
+         VE_Util::dumpVerticesNotUsedByCells( uGrid );
 
          vtkPolyData * surface = cfdGrid2Surface( uGrid, 0 );
          surface->GetPointData()->GetScalars()->SetLookupTable( lut );
@@ -186,9 +186,9 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
          transFilter->Update();
 
          sprintf (currentFilename, "%s%03i%s", "deice_", timeStep, ".vtk");
-         cout << "currentFilename = \"" << currentFilename << "\"" << endl;
+        std::cout << "currentFilename = \"" << currentFilename << "\"" <<std::endl;
 
-         writeVtkThing( transFilter->GetOutput(), currentFilename, 1 ); //0=ascii
+         VE_Util::writeVtkThing( transFilter->GetOutput(), currentFilename, 1 ); //0=ascii
          surface->Delete();
          uGrid->Delete();
          uGrid = NULL;
@@ -208,15 +208,15 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
    {
       uGrid = vtkUnstructuredGrid::New();
          uGrid->DeepCopy( reader->GetOutput( 0 ) );   // 0 refers to part 1: fluid-main
-      dumpVerticesNotUsedByCells( uGrid );
+         VE_Util::dumpVerticesNotUsedByCells( uGrid );
 
-      cout << "\tuGrid->GetPointData()->GetNumberOfArrays() = " 
-           << uGrid->GetPointData()->GetNumberOfArrays() << endl;
+     std::cout << "\tuGrid->GetPointData()->GetNumberOfArrays() = " 
+           << uGrid->GetPointData()->GetNumberOfArrays() <<std::endl;
       for ( int i=0; i<uGrid->GetPointData()->GetNumberOfArrays(); i++ )
-         cout << "\tuGrid->GetPointData()->GetArray(i)->GetName() = "
-              << uGrid->GetPointData()->GetArray(i)->GetName() << endl;
-      cout << "\tuGrid->GetPointData()->GetArray(x-velocity)->GetNumberOfTuples() = "
-           << uGrid->GetPointData()->GetArray("x-velocity")->GetNumberOfTuples() << endl;
+        std::cout << "\tuGrid->GetPointData()->GetArray(i)->GetName() = "
+              << uGrid->GetPointData()->GetArray(i)->GetName() <<std::endl;
+     std::cout << "\tuGrid->GetPointData()->GetArray(x-velocity)->GetNumberOfTuples() = "
+           << uGrid->GetPointData()->GetArray("x-velocity")->GetNumberOfTuples() <<std::endl;
 
       vtkFloatArray* vel_mag = vtkFloatArray::New();
       vel_mag->SetNumberOfTuples( uGrid->GetPointData()->GetArray("x-velocity")->GetNumberOfTuples() );
@@ -245,8 +245,8 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
       uGrid->Update();
 
       transFilter->SetInput( uGrid );
-         transFilter->Update();
-      writeVtkThing( transFilter->GetOutput(), "flowdata.vtk", 1 );   //0=ascii
+      transFilter->Update();
+      VE_Util::writeVtkThing( transFilter->GetOutput(), "flowdata.vtk", 1 );   //0=ascii
       uGrid->Delete();
       uGrid = NULL;
 
@@ -277,7 +277,7 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
       vtkUnstructuredGrid * junk = vtkUnstructuredGrid::New();
       junk->DeepCopy( appendUGrids->GetOutput() );
       junk->Update();
-      dumpVerticesNotUsedByCells( junk );
+      VE_Util::dumpVerticesNotUsedByCells( junk );
       junk->Update();
 
 //writeVtkThing( junk, "junk.vtk", 0 );   //0=ascii
@@ -289,11 +289,11 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
       delete [] trans_append; trans_append= NULL;
       delete [] append; append = NULL;
 
-cout << "a" << endl;
+std::cout << "a" <<std::endl;
       transFilter->Delete();
-cout << "b" << endl;
+std::cout << "b" <<std::endl;
       //reader->Delete();  //can't do this: i don't know why
-cout << "c" << endl;
+std::cout << "c" <<std::endl;
       return uGrid;
    }
 
@@ -316,14 +316,14 @@ cout << "c" << endl;
    {
       blockMapper[i] = NULL;
       blockActor[i] = NULL;
-      //cout << "reader->GetOutput(" << i << ") = " << reader->GetOutput( i ) << endl;
+      //cout << "reader->GetOutput(" << i << ") = " << reader->GetOutput( i ) <<std::endl;
       if ( reader->GetOutput(i) == NULL ) continue;
 
       blockMapper[i] = vtkDataSetMapper::New();
       blockMapper[i]->SetInput( reader->GetOutput( i ) );
       blockMapper[i]->SetLookupTable( lut );
       reader->GetOutput( i )->GetScalarRange( range );
-      cout << "part " << i << " range:\t" << range[0] << "\t" << range[1] << endl;
+     std::cout << "part " << i << " range:\t" << range[0] << "\t" << range[1] <<std::endl;
       if ( globalRange[0] > range[0] ) globalRange[0] = range[0];
       if ( globalRange[1] < range[1] ) globalRange[1] = range[1];
 
@@ -331,7 +331,7 @@ cout << "c" << endl;
       blockActor[i]->SetMapper( blockMapper[i] );
       ren1->AddActor( blockActor[i] );
    }
-   cout << "globalRange: \t" << globalRange[0] << "\t" << globalRange[1] << endl;
+  std::cout << "globalRange: \t" << globalRange[0] << "\t" << globalRange[1] <<std::endl;
 
    lut->SetHueRange( 0.667, 0.0 );
    lut->SetTableRange( globalRange );
@@ -341,7 +341,7 @@ cout << "c" << endl;
       blockMapper[i]->SetScalarRange( globalRange );
    }
   
-   cout << "\nWith cursor on graphics window, type \'e\' to exit\n" << endl;
+  std::cout << "\nWith cursor on graphics window, type \'e\' to exit\n" <<std::endl;
 
    // interact with data
    renWin->SetSize( 800, 800 );
@@ -352,9 +352,9 @@ cout << "c" << endl;
    lut->Delete();
    for ( i=0; i<numOutputs; i++ )
    {
-      //cout << "blockMapper[" << i << "] = " << blockMapper[i] << endl;
+      //cout << "blockMapper[" << i << "] = " << blockMapper[i] <<std::endl;
       if ( blockMapper[i] ) blockMapper[i]->Delete();
-      //cout << "blockActor[" << i << "] = " << blockActor[i] << endl;
+      //cout << "blockActor[" << i << "] = " << blockActor[i] <<std::endl;
       if ( blockActor[i] ) blockActor[i]->Delete();
    }
    ren1->Delete();

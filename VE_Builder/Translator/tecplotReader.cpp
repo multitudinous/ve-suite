@@ -1,13 +1,13 @@
 //works right now for the INEL Tecplot data
-#include "tecplotReader.h"
+#include "VE_Builder/Translator/tecplotReader.h"
 #include "vtkPoints.h"
 #include "vtkUnstructuredGrid.h"
 #include "vtkStructuredGrid.h"
 #include "vtkUnstructuredGridWriter.h"
 #include "vtkCellType.h"
 #include "vtkFloatArray.h"
-#include "readWriteVtkThings.h"
-#include "converter.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Builder/Translator/converter.h"
 tecplotReader::tecplotReader( )
 {
    uGrid = NULL;

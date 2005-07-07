@@ -29,7 +29,7 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#include "multiPlaneVtkOutput.h"
+#include "VE_Builder/Preprocessor/multiPlaneVtkOutput.h"
 #include <iostream>
 #include <fstream>
 
@@ -43,7 +43,7 @@
 #include <vtkPolyDataWriter.h>
 #include <vtkPointData.h>
 #include <vtkAppendPolyData.h>   // used with transient data to concatenate many planes into one polydata object
-//#include "readWriteVtkThings.h"
+//#include "VE_Xplorer/readWriteVtkThings.h"
 
 multiPlaneVtkOutput::multiPlaneVtkOutput( char * dirname )
 {

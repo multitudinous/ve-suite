@@ -39,9 +39,9 @@
 #include <vtkTransform.h>
 #include <vtkTransformFilter.h>
 
-#include "fileIO.h"        // for "StripTrailingSpaces"
-#include "gridConversion.h"
-#include "readWriteVtkThings.h"
+#include "VE_Xplorer/fileIO.h"        // for "StripTrailingSpaces"
+#include "VE_Builder/Translator/gridConversion.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 using namespace VE_Util;
 
 vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,

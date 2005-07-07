@@ -31,9 +31,9 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 
-#include "fileIO.h"
-#include "readWriteVtkThings.h"
-#include "cleanVtk.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Builder/Translator/cleanVtk.h"
 
 #include <vtkGeometryFilter.h>
 #include <vtkAppendFilter.h>

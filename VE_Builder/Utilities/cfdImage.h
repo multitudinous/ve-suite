@@ -39,7 +39,7 @@ class vtkTexture;
 class vtkActor;
 class pfGeoSet;
 
-class cfdImage
+class VE_XPLORER_EXPORTS cfdImage
 {
  public:
    /* Initialize the VTK objects and pipeline.

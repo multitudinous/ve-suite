@@ -31,11 +31,11 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 
-#include "fileIO.h"
-#include "readWriteVtkThings.h"
-#include "viewCells.h"
-#include "cfdGrid2Surface.h"
-#include "setScalarAndVector.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
+#include "VE_Builder/Translator/viewCells.h"
+#include "VE_Builder/Translator/cfdGrid2Surface.h"
+#include "VE_Builder/Utilities/setScalarAndVector.h"
 
 #include <vtkDataSet.h>
 #include <vtkPointData.h>

@@ -31,8 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 
-#include "fileIO.h"
-#include "readWriteVtkThings.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 
 #include "vtkFieldData.h"
 #include "vtkFloatArray.h"

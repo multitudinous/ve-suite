@@ -52,7 +52,7 @@ vtkUnstructuredGrid * avsReader( char * fluentAVSFileName, int debug )
    std::fstream fvert;
    fvert.open( fluentAVSFileName, std::ios::in );
 
-   if ( fvert == NULL )
+   if ( !fvert.is_open() )
    {
       std::cout <<"\n\nERROR - Cannot open the designated file\n"<< std::endl;
       return uGrid;

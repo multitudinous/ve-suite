@@ -30,14 +30,15 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "ansysReader.h"
+#include "VE_Builder/Translator/ansysReader.h"
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#ifndef WIN32
 #include <netinet/in.h>
-
-#include "fileIO.h"
-#include "vtkCleanUnstructuredGrid.h"
+#endif
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Builder/Translator/vtkCleanUnstructuredGrid.h"
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkGenericCell.h>

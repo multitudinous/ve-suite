@@ -36,9 +36,9 @@
 #include <vtkFloatArray.h>  // this code requires VTK4
 #include <vtkPointData.h>
 
-#include "fileIO.h"
-#include "converter.h"      // for "letUsersAddParamsToField"
-#include "gridConversion.h"
+#include "VE_Xplorer/fileIO.h"
+#include "VE_Builder/Translator/converter.h"      // for "letUsersAddParamsToField"
+#include "VE_Builder/Translator/gridConversion.h"
 using namespace VE_Util;
 
 vtkStructuredGrid * reiReader( char * reiFileName, int debug )

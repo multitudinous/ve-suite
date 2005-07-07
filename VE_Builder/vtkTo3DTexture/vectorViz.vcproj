@@ -2,7 +2,7 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="7.10"
-	Name="vectorViz"
+	Name="vtkTo3DTexture"
 	ProjectGUID="{81095DD0-7BC8-40F3-BE34-7A61378B4873}"
 	Keyword="Win32Proj">
 	<Platforms>
@@ -19,7 +19,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Documents and Settings\G-Biv\Desktop\development\flowTexture&quot;;&quot;$(VTK_HOME)\include\vtk&quot;"
+				AdditionalIncludeDirectories="&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="TRUE"
 				BasicRuntimeChecks="3"
