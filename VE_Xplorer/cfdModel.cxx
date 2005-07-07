@@ -488,7 +488,7 @@ unsigned int cfdModel::GetNumberOfGeomDataSets( void )
 
 /////////////////////////////////////////////////////
 // Dynamic Loading Data Start From Here
-void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex)
+void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex, float* scale, float* trans, float* rotate)
 {
    this->CreateCfdDataSet();
    
@@ -499,13 +499,13 @@ void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex
    vprDEBUG(vprDBG_ALL,0) << " vtk DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
 
-   float scale[3], trans[3], rotate[3];   // pfDCS stuff
+   //float scale[3], trans[3], rotate[3];   // pfDCS stuff
    //this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
 
    //hard code here and will change it later
-   scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
-   trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
-   rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
+   //scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
+   //trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
+   //rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
    // Pass in -1 to GetCfdDataSet to get the last dataset added
    this->GetCfdDataSet( -1 )->GetDCS()->SetScaleArray( scale );
    this->GetCfdDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
@@ -520,20 +520,21 @@ void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex
    
 }
 
-void cfdModel::DynamicLoadingGeom(char* surfacefilename)
+void cfdModel::DynamicLoadingGeom(char* surfacefilename, float* scale, 
+               float* trans, float* rotate, float* stlColor, int color, int transFlag)
 {  
-   float scale[3], trans[3], rotate[3];   // pfDCS stuff
-   float stlColor[3];
-   int color;
-   int transFlag;
+   //float scale[3], trans[3], rotate[3];   // pfDCS stuff
+   //float stlColor[3];
+   //int color;
+   //int transFlag;
 
    //hard code here and will change it later
-   scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
-   trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
-   rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
-   color =1;
-   stlColor[0]=1; stlColor[1]=0; stlColor[2]=0;
-   transFlag =1;
+   //scale[0]=2.0;scale[1]=2.0;scale[2]=2.0;
+   //trans[0]=0.0; trans[1]=1.0; trans[2]=0.0;
+   //rotate[0]=0.0; rotate[1]=0.0; rotate[2]=0.0;
+   //color =1;
+   //stlColor[0]=1; stlColor[1]=0; stlColor[2]=0;
+   //transFlag =1;
    std::cout<<"[DBG]...the geom file is "<<surfacefilename<<std::endl;
    this->CreateGeomDataSet(surfacefilename);
    std::cout<<"[DBG]...after cfdFile constructor"<<std::endl;
@@ -569,7 +570,6 @@ void cfdModel::GetDataFromUnit(void* unused)
    localhostname = vpr::System::getHostname();
    addr.setAddress(localhostname, 50031);
    vpr::SocketAcceptor server(addr);
-
 
    server.accept(connection);
    i++;
@@ -676,13 +676,20 @@ void cfdModel::GetDataFromUnit(void* unused)
     mValueLock.acquire();
     {
       std::cout<<"[DBG]...READY TO READ DATA FROM UNIT **********************************"<<std::endl;
-      this->DynamicLoadingData(ugrid,i);
+      float scale[3],trans[3],rotate[3];
+      scale[0] = scale[1] = scale[2] = 1.0f;
+      trans[0] = trans[1] = trans[2] = 0.0f;
+      rotate[0] = rotate[1] = rotate[2] = 0.0f;
+      //since the user doesn't have access to the scale a and translate edata in this thread
+      // this data for this cfddataset can be set after rloading that dataset 
+      // in the activate custom viz function when necessary 
+      this->DynamicLoadingData(ugrid,i,scale,trans,rotate);
       std::cout<<"[DBG]...AFTER LOAD DATA ****************************************"<<std::endl;
       this->currentsurfacefilename =(char*)(this->MakeSurfaceFile(ugrid, i));
 
       std::cout<<"[DBG]...current surface file is "<<currentsurfacefilename<<std::endl;
       //currentsurfacefilename ="NewlyLoadedDataSet_1.stl";
-      this->DynamicLoadingGeom(currentsurfacefilename);
+      //this->DynamicLoadingGeom(currentsurfacefilename);
       std::cout<<"[DBG]...After load geom data************************************"<<std::endl;
             //reader->Delete();
       //ugrid->Delete();

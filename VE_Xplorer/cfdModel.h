@@ -161,15 +161,15 @@ namespace VE_Xplorer
          VE_SceneGraph::cfdTempAnimation* GetAnimation( void );
          std::map<int,VE_Xplorer::cfdDataSet*> transientDataSets;
   
-         //Dynamically load data from unit
-      public:   
-         void ActiveLoadingThread();
-         void GetDataFromUnit(void* unused);
-         const char* MakeSurfaceFile(vtkDataSet*,int);
-         void DynamicLoadingData(vtkUnstructuredGrid*, int);
-         void DynamicLoadingGeom(char*);
-         void AddVTKDataSet(vtkDataSet* );
-         std::vector<vtkDataSet* >GetWaitingDataList();
+   //Dynamically load data from unit
+public:   
+   void ActiveLoadingThread();
+   void GetDataFromUnit(void* unused);
+   const char* MakeSurfaceFile(vtkDataSet*,int);
+   void DynamicLoadingData(vtkUnstructuredGrid*, int, float*, float*, float*);
+   void DynamicLoadingGeom(char*, float*, float*, float*, float*, int, int);
+   void AddVTKDataSet(vtkDataSet* );
+   std::vector<vtkDataSet* >GetWaitingDataList();
  
       private:
          vpr::Thread *loadDataTh;
