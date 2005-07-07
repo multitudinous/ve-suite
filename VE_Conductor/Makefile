@@ -27,7 +27,6 @@ SRCS=\
    OrbThread.cpp \
    paraThread.cpp \
    PluginLoader.cpp \
-   Plugin_base.cpp \
    VjObsC.cpp \
    VjObsS.cpp \
    UI_i.cpp \
@@ -68,8 +67,8 @@ EXTRA_CXXFLAGS+= -D_TAO
 
 EXTRA_DEFS+=
 
-EXTRA_LIBS+= -lm -lpthread -Wl,-E #-ldl -lrt -lc 
-EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVEConductorLib
+EXTRA_LDFLAGS+= -lm -lpthread -Wl,-E #-ldl -lrt -lc 
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
 EXTRA_LIBS+= -lGUIPluginLib
 
 ifeq (${CFDHOSTTYPE},IRIX64)
