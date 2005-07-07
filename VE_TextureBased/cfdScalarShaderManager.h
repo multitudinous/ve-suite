@@ -22,6 +22,7 @@ namespace VE_TextureBased
          void ActivateIsoSurface();
          void DeactivateIsoSurface();
          void SetIsoSurfaceValue(float percentScalarRange);
+         void SetCurrentTransientTexture(unsigned int whichTimeStep, bool makeSlave = false);
       protected:
          void _setupStateSetForGLSL();
          bool _isoSurface;

@@ -23,7 +23,7 @@ namespace VE_TextureBased
          virtual ~cfdTextureManager();
 
          enum DataType{SCALAR,VECTOR};
-         enum PlayMode{PLAY,STOP};
+         enum PlayMode{PLAY,STOP,STEP};
 
          //add a vector field from a file
          void addFieldTextureFromFile(char* textureFile);
@@ -60,6 +60,7 @@ namespace VE_TextureBased
          //the current frame
          unsigned int GetCurrentFrame();
 
+         PlayMode getPlayMode(){return _mode;}
          //the data ranges
          ScalarRange dataRange(int index){return _ranges.at(index);}
 

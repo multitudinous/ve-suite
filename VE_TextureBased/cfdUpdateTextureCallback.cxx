@@ -78,12 +78,13 @@ unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
    }
    return 0;
 }
-////////////////////////////////////////////////////////////////////////
-void cfdUpdateTextureCallback::SetCurrentFrame(unsigned int cFrame)
+///////////////////////////////////////////////////////////////////////////////////
+void cfdUpdateTextureCallback::SetCurrentFrame(unsigned int cFrame, bool makeSlave)
 {
    if(_tm){
       _currentFrame = cFrame;
-      _isSlave = true;
+      if(makeSlave)
+         _isSlave = true;
    }
 }
 ////////////////////////////////////////////////////////////////////////////////////
@@ -115,15 +116,14 @@ void cfdUpdateTextureCallback::load(const osg::Texture3D& texture,osg::State& st
 void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State& state) const
 {
    if(state.getFrameStamp()){
-     double currTime = state.getFrameStamp()->getReferenceTime();
-     if(_tm){  
-
-        if(!_isSlave){
-           //master node in the cluster
-           if(_tm->timeToUpdate(currTime,_delay)||_update){
-              if(_isLuminance)
-              {
-                 texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
+      double currTime = state.getFrameStamp()->getReferenceTime();
+      if(_tm){
+         if(!_isSlave && _tm->getPlayMode() == cfdTextureManager::PLAY){
+            //master node in the cluster
+            if(_tm->timeToUpdate(currTime,_delay)||_update){
+               if(_isLuminance)
+               {
+                  texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
                              0,0,0, 
                              _textureWidth,
@@ -133,8 +133,8 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              GL_UNSIGNED_BYTE,
                              (unsigned char*)_tm->getNextField());
               
-              }else{
-                 texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
+               }else{
+                  texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
                              0,0,0, 
                              _textureWidth,
@@ -143,12 +143,12 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              GL_RGBA, 
                              GL_UNSIGNED_BYTE,
                              (unsigned char*)_tm->getNextField());
-              }
-           }
-        }else{
-           if(_isLuminance)
-           {
-              texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
+               }
+            }
+         }else{
+            if(_isLuminance)
+            {
+               texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
                              0,0,0, 
                              _textureWidth,
@@ -157,8 +157,8 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              GL_ALPHA, 
                              GL_UNSIGNED_BYTE,
                              (unsigned char*)_tm->dataField(_currentFrame));
-           }else{
-              texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
+            }else{
+               texture.getExtensions(state.getContextID(),false)->glTexSubImage3D(GL_TEXTURE_3D,
                              0,
                              0,0,0, 
                              _textureWidth,
@@ -167,10 +167,10 @@ void cfdUpdateTextureCallback::subload(const osg::Texture3D& texture,osg::State&
                              GL_RGBA, 
                              GL_UNSIGNED_BYTE,
                              (unsigned char*)_tm->dataField(_currentFrame));
-           }
-        }
-     }
-   }   
+            }
+         }
+      }   
+   }
 }
 #endif
 #endif

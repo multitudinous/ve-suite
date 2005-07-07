@@ -188,18 +188,52 @@ void cfdTextureBasedVizHandler::_updateVisualization()
          _activeVolumeVizNode->AddClipPlane(cfdVolumeVisualization::ARBITRARY,arbPlane);
       }*/
    }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_STOP){
-      if(_activeVolumeVizNode){
-         _activeVolumeVizNode->SetPlayMode(cfdVolumeVisualization::STOP);
+      if(_activeTM){
+         _activeTM->setPlayMode(cfdTextureManager::STOP);
+      }
+      _cleared = false;
+   }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_PLAY){
+      if(_activeTM){
+         _activeTM->setDirection(1);
+         _activeTM->setPlayMode(cfdTextureManager::PLAY);
+      }
+      _cleared = false;
+   }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_SET_FRAME){
+      if(_activeTM){
+         _activeTM->setPlayMode(cfdTextureManager::STOP);
+         _activeTM->SetCurrentFrame((unsigned int)_cmdArray->GetCommandValue(cfdCommandArray::CFD_ISO_VALUE));
       }
       _cleared = false;
    }else if(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_FORWARD){
-      if(_activeVolumeVizNode){
-         _activeVolumeVizNode->SetPlayDirection(cfdVolumeVisualization::FORWARD);
+      if(_activeTM){
+         _activeTM->setDirection(1);
+         _activeTM->setPlayMode(cfdTextureManager::STOP);
+         int curFrame = _activeTM->getNextFrame();
+         if(_svvh){
+            cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+            if(sShader)
+            {
+               sShader->SetCurrentTransientTexture(curFrame,false);
+            }
+         }
+         
       }
       _cleared = false;
    }else if(_cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_BACKWARD){
-      if(_activeVolumeVizNode){
-         _activeVolumeVizNode->SetPlayDirection(cfdVolumeVisualization::BACKWARD);
+      if(_activeVolumeVizNode&&_activeTM){
+         _activeTM->setDirection(-1);
+         _activeTM->setPlayMode(cfdTextureManager::STOP);
+         int curFrame = _activeTM->getNextFrame();
+         if(_svvh){
+            cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+            if(sShader)
+            {
+               sShader->SetCurrentTransientTexture(curFrame,false);
+            }
+         }
+         if(_vvvh){
+            _vvvh->SetCurrentTransientTexture(curFrame,false);
+         }
       }
       _cleared = false;
    }else if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TEXTURE_BASED_SHADERS){
@@ -269,7 +303,6 @@ cfdPBufferManager* cfdTextureBasedVizHandler::GetPBuffer()
    }
    return 0;
 }
-
 ////////////////////////////////////////////////////
 void cfdTextureBasedVizHandler::_updateShaderState()
 {

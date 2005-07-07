@@ -31,6 +31,9 @@ namespace VE_TextureBased
 
          void SetPBufferManager(cfdPBufferManager* pbm);
          void PingPongTextures();
+         void SetCurrentTransientTexture(unsigned int whichTimeStep,
+                                      bool makeSlave = false);
+
          cfdOSGAdvectionShaderManager* GetAdvectionShaderManager(){return _aSM;}
          cfdVectorVolumeVisHandler& operator=(const cfdVectorVolumeVisHandler& vvnh);
       protected:

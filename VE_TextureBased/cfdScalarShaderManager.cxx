@@ -264,6 +264,14 @@ void cfdScalarShaderManager::UpdateScalarMax(float maxScalar)
    _scalarRange[1] = originalRange.range[1]*maxScalar;
    _updateTransferFunction();
 }
+///////////////////////////////////////////////////////////////////////////////////
+void cfdScalarShaderManager::SetCurrentTransientTexture(unsigned int whichTimeStep,
+                                                  bool makeSlave )
+{
+   if(_utCbk.valid()){
+     _utCbk->SetCurrentFrame(whichTimeStep,makeSlave);
+   }
+}
 //////////////////////////////////////////////////////////////////////////
 void cfdScalarShaderManager::UpdateTextureManager(cfdTextureManager* tm)
 {

@@ -106,6 +106,14 @@ void cfdVectorVolumeVisHandler::_initPropertyTexture()
 {
    
 }
+///////////////////////////////////////////////////////////////////////////////////
+void cfdVectorVolumeVisHandler::SetCurrentTransientTexture(unsigned int whichTimeStep,
+                                                  bool makeSlave )
+{
+   if(_velocityCbk.valid()){
+     _velocityCbk->SetCurrentFrame(whichTimeStep,makeSlave);
+   }
+}
 ///////////////////////////////////////////////////////////////
 void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
 {
