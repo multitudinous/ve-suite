@@ -44,6 +44,7 @@
 #include <vtkTexture.h>
 #include <vtkImageReader.h>
 #include <vtkProperty.h>
+#include <vtkActor.h>
 
 #include <vpr/Util/Debug.h>
 
