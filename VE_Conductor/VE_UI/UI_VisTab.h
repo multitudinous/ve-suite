@@ -5,7 +5,7 @@
 #endif
 
 #include <wx/wx.h>
-
+class UI_TransientDialog;
 //Visualizaton tab control ids
 enum VIS_TAB_IDS
 {
@@ -26,7 +26,8 @@ enum VIS_TAB_IDS
    CUSTOM_VIS_BUTTON,
    TRANSIENT_CHECK_BOX,
    CFD_VIS_OPTION,
-   MIRROR_CHECK_BOX
+   MIRROR_CHECK_BOX,
+   TRANSIENT_DIALOG
 };
 
 class UI_VisualizationTab : public wxScrolledWindow
@@ -60,6 +61,7 @@ class UI_VisualizationTab : public wxScrolledWindow
       wxButton* _exitButton;
       wxButton* _customVisButton;
 
+      UI_TransientDialog* _transientControls;
       //create this page
       void _buildPage( void );
       void createCommandId( void );
@@ -80,6 +82,7 @@ class UI_VisualizationTab : public wxScrolledWindow
       void _onCustomVis(wxCommandEvent& event);
       void _onTextureBasedVisual(wxCommandEvent& event);
       void _onMirrorVisualization(wxCommandEvent& event);
+      void _onTransientChecked(wxCommandEvent& event);
   
    DECLARE_EVENT_TABLE()
 };

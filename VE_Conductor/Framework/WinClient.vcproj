@@ -675,6 +675,9 @@
 				</FileConfiguration>
 			</File>
 			<File
+				RelativePath="..\Ve_ui\UI_TransientDialog.cxx">
+			</File>
+			<File
 				RelativePath="..\Ve_ui\UI_TransTab.cpp">
 			</File>
 			<File
@@ -833,6 +836,9 @@
 			</File>
 			<File
 				RelativePath="..\VE_UI\UI_TeacherTab.h">
+			</File>
+			<File
+				RelativePath="..\Ve_ui\UI_TransientDialog.h">
 			</File>
 			<File
 				RelativePath="..\Ve_ui\UI_TransTab.h">

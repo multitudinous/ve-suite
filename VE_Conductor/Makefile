@@ -42,6 +42,7 @@ SRCS=\
    UI_TeacherTab.cpp \
    UI_NavTab.cpp  \
    UI_TransTab.cpp \
+   UI_TransientDialog.cxx \
    UI_VertTab.cpp \
    UI_DesignParTab.cpp \
    UI_ViewLocTab.cpp \

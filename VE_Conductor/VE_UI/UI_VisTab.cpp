@@ -2,6 +2,8 @@
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
+#include "VE_Conductor/VE_UI/UI_ModelData.h"
+#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
 #include <iostream>
 
 BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
@@ -19,6 +21,7 @@ BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_BUTTON      (CUSTOM_VIS_BUTTON,        UI_VisualizationTab::_onCustomVis)
   EVT_CHECKBOX    (CFD_VIS_OPTION,           UI_VisualizationTab::_onTextureBasedVisual)
   EVT_CHECKBOX    (MIRROR_CHECK_BOX,         UI_VisualizationTab::_onMirrorVisualization)
+  EVT_CHECKBOX    (TRANSIENT_CHECK_BOX,       UI_VisualizationTab::_onTransientChecked)
   EVT_COMMAND_SCROLL(VIS_SLIDER,UI_VisualizationTab::_onSlider)
 END_EVENT_TABLE()
 
@@ -52,7 +55,7 @@ UI_VisualizationTab::UI_VisualizationTab(wxNotebook* tControl)
    _exitButton = 0;
    _transientCheckBox = NULL;
    _visOptionCheckBox = 0;
-
+   _transientControls = 0;
    _parent = tControl;
 
    //build the page
@@ -349,6 +352,23 @@ void UI_VisualizationTab::_onTextureBasedVisual(wxCommandEvent& WXUNUSED(event))
          
       }
       ((UI_Tabs *)_parent)->sendDataArrayToServer();
+   }
+}
+//////////////////////////////////////////////////////////////////////
+void UI_VisualizationTab::_onTransientChecked(wxCommandEvent& WXUNUSED(event))
+{
+   if(_transientControls){
+      delete _transientControls;
+      _transientControls = 0;
+   }
+   if(_transientCheckBox->GetValue() == true){
+      //unsigned int nTimesteps = ((UI_Tabs*)GetParent())->_modelData->GetNubmerofDataSets(0);
+      _transientControls = new UI_TransientDialog(19,this,TRANSIENT_DIALOG);
+      _transientControls->SetTabControl(((UI_Tabs*)_parent));
+      _transientControls->Show();
+   }else{
+      delete _transientControls;
+      _transientControls = 0;
    }
 }
 /////////////////////////////////////////////////////////
