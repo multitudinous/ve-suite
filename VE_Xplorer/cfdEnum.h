@@ -173,6 +173,9 @@ enum cfdGeodeEnum
    VOLUME_SHADER,
    DYE_TRANSLATION,
    NOISE_SCALE,
-   WEIGHT
+   WEIGHT,
+   TRANSIENT_PLAY,
+   TRANSIENT_SET_FRAME
+
 };
 #endif
