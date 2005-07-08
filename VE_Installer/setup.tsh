@@ -32,8 +32,8 @@ endif
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
 # Specify your scene graph: OSG = OpenSceneGraph, PF = OpenGL Performer
-setenv SCENE_GRAPH OSG 
-#setenv SCENE_GRAPH PF
+#setenv SCENE_GRAPH OSG 
+setenv SCENE_GRAPH PF
 
 # Specify corba build TAO_BUILD only for right now
 setenv TAO_BUILD TRUE
@@ -150,11 +150,11 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    endif
 
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_i* ) then
-   setenv JDK_HOME /usr
+   setenv JDK_HOME /usr/java/j2sdk1.4.2_03
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux-SuSE92
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/Linux-SuSE91
-   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/Linux-SuSE91
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0/Linux-SuSE92
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0-deps/Linux-SuSE92
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux-SuSE92/
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
