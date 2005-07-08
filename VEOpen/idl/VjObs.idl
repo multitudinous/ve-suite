@@ -52,7 +52,7 @@ interface VjObs
    
    void SetClientInfoFlag( in short value );   
    void SetClientInfoData( in obj_pd o);   
-   obj_p GetClientInfoData();   
+   obj_pd GetClientInfoData();   
 
    // Used For Sound Files
    short GetNumberOfSounds();

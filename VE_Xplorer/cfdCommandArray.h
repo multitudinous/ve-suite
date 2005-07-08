@@ -46,7 +46,7 @@ namespace VE_Xplorer
          cfdCommandArray( const cfdCommandArray& );
          cfdCommandArray& operator=( const cfdCommandArray& );
 
-         int GetCommandValue( int );
+         double GetCommandValue( int );
          void SetCommandValue( int, double );
 
          enum commandArrayValue 
@@ -64,16 +64,18 @@ namespace VE_Xplorer
          };
 
       private:
-         int   cfdIso_value;
-         int   cfdSc;
-         int   cfdMin;
-         int   cfdMax;
-         long  cfdId;
-         long  cfdGeo_state;
-         short cfdPostdata_state;
-         bool  cfdPre_state;
-         short cfdTimesteps;
-         short cfdTeacher_state; 
+
+         double   cfdIso_value;
+         double   cfdSc;
+         double   cfdMin;
+         double   cfdMax;
+         double   cfdId;
+         double   cfdGeo_state;
+         double   cfdPostdata_state;
+         double   cfdPre_state;
+         double   cfdTimesteps; 
+         double   cfdTeacher_state; 
+
    };
 }
 #endif

@@ -81,7 +81,7 @@ cfdCommandArray& cfdCommandArray::operator=( const cfdCommandArray& input )
    return *this;
 }
 
-int cfdCommandArray::GetCommandValue( int i )
+double cfdCommandArray::GetCommandValue( int i )
 {
    if      ( i == CFD_ISO_VALUE )
       return cfdCommandArray::cfdIso_value;
@@ -92,17 +92,17 @@ int cfdCommandArray::GetCommandValue( int i )
    else if ( i == CFD_MAX )
       return cfdCommandArray::cfdMax;
    else if ( i == CFD_ID )
-      return (int)cfdCommandArray::cfdId;
+      return cfdCommandArray::cfdId;
    else if ( i == CFD_GEO_STATE )
-      return (int)cfdCommandArray::cfdGeo_state;
+      return cfdCommandArray::cfdGeo_state;
    else if ( i == CFD_POSTDATA_STATE )
-      return (int)cfdCommandArray::cfdPostdata_state;
+      return cfdCommandArray::cfdPostdata_state;
    else if ( i == CFD_PRE_STATE )
-      return (int)cfdCommandArray::cfdPre_state;
+      return cfdCommandArray::cfdPre_state;
    else if ( i == CFD_TIMESTEPS )
-      return (int)cfdCommandArray::cfdTimesteps;
+      return cfdCommandArray::cfdTimesteps;
    else if ( i == CFD_TEACHER_STATE )
-      return (int)cfdCommandArray::cfdTeacher_state;
+      return cfdCommandArray::cfdTeacher_state;
    else
    {
       std::cerr << "invalid argument(" << i << ") in "
@@ -143,7 +143,7 @@ void cfdCommandArray::SetCommandValue( int i, double value)
    }
    else if ( i == CFD_PRE_STATE )
    {
-      cfdPre_state = (bool)value;
+      cfdPre_state = value;
    }
    else if ( i == CFD_TIMESTEPS )
    {

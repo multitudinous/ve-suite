@@ -148,7 +148,7 @@ public:
 
    void SetClientInfoFlag( short ) throw (CORBA::SystemException);
    void SetClientInfoData( const VjObs::obj_pd &value ) throw (CORBA::SystemException);
-   VjObs::obj_p* GetClientInfoData() throw (CORBA::SystemException);
+   VjObs::obj_pd* GetClientInfoData() throw (CORBA::SystemException);
 #else   
    VjObs::Models* GetModels();
    //VjObs::scalar_p* get_geo_name();
@@ -174,7 +174,7 @@ public:
 
    void SetClientInfoFlag( CORBA::Short );
    void SetClientInfoData( const VjObs::obj_pd &value );
-   VjObs::obj_p* GetClientInfoData();
+   VjObs::obj_pd* GetClientInfoData();
 #endif   
 
    void GetCfdStateVariables( void );

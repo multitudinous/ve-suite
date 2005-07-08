@@ -765,15 +765,15 @@ void VjObs_i::SetClientInfoFlag( CORBA::Short value )
 }
 
 #ifdef _TAO
-VjObs::obj_p* VjObs_i::GetClientInfoData()
+VjObs::obj_pd* VjObs_i::GetClientInfoData()
   ACE_THROW_SPEC ((
     CORBA::SystemException
   ))
 #else
-VjObs::obj_p* VjObs_i::GetClientInfoData()
+VjObs::obj_pd* VjObs_i::GetClientInfoData()
 #endif
 {
-   return clientInfoObserverDataArray._retn();
+   //return clientInfoObserverDataArray._retn();    //check this
 }
 
 #ifdef _TAO
