@@ -285,9 +285,6 @@ void cfdDCS::SetRotationArray( float* rot )
    }
 #elif _OPENSG
 #endif
-   //std::cout << this->_rotation[ 0 ]<< " : " <<   
-//                           this->_rotation[ 1 ] << " : " <<
-//                           this->_rotation[ 2 ]  << std::endl;
 }
 //////////////////////////////////////////
 void cfdDCS::SetScaleArray( float* scale )
@@ -302,14 +299,12 @@ void cfdDCS::SetScaleArray( float* scale )
                            this->_scale[ 1 ],
                            this->_scale[ 2 ] );
 #elif _OSG
-   if(_udcb){
+   if(_udcb)
+   {
       _udcb->setScaleValues(_scale);
    }
 #elif _OPENSG
 #endif
-   //std::cout << this->_scale[ 0 ]<< " : " <<   
-//                           this->_scale[ 1 ] << " : " <<
-//                           this->_scale[ 2 ]  << std::endl;
 }
 ////////////////////////////////
 Matrix44f cfdDCS::GetMat( void )
@@ -320,54 +315,9 @@ Matrix44f cfdDCS::GetMat( void )
    _vjMatrix = vrj::GetVjMatrix( temp );
 #elif _OSG
    osg::Matrixf osgMat= _dcs->getMatrix();
-   if(osgMat.valid())
+   if( osgMat.valid() )
    {
-   //gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-   //_vjMatrix.set( osgMat.ptr() );
-   //gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
-   //gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
-   //_vjMatrix.set(osgMat.ptr());
-
-   // Must do this because _dcs->getMat doesn't work
-   // because the matrix is overriden in the callback
-   // there is probably a more elegant solution than 
-   // what is below
-   osg::Matrixd scale = osg::Matrixd::scale(_scale[0],_scale[1],_scale[2]);
-   osg::Matrixd rotateMat;
-
-/*   _h = osg::DegreesToRadians(h);
-   _p = osg::DegreesToRadians(p);
-   _r = osg::DegreesToRadians(r);
-
-   //quat make quat from rotations
-   osg::Vec3f pitch(1,0,0);
-   osg::Vec3f roll(0,1,0);
-   osg::Vec3f yaw(0,0,1);
-   
-   osg::Matrixd rotateMat;
-
-   //rph              
-   rotateMat.makeRotate(_r,roll,
-                         _p,pitch,
-                         osg::DegreesToRadians(h),yaw);
-
-   rotateMat.get( quat );*/
-   rotateMat.makeRotate( dcsQuat );
-
-   osg::Vec3f transMat( _translation[0], _translation[1], _translation[2] );
-   scale.setTrans(transMat);
-
-   osg::Matrixf osgMatTest= rotateMat*scale;
-   //osg::Matrixf osgMat= scale;
-
-      //gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-      _vjMatrix.set( osgMatTest.ptr() );
-//std::cout << _vjMatrix << std::endl;
-//      std::cout << gmtl::Math::rad2Deg( gmtl::makeYRot(_vjMatrix) ) << std::endl;
-//      std::cout << gmtl::Math::rad2Deg( gmtl::makeZRot(_vjMatrix) ) << std::endl;
-      //gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
-      //gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
-      //_vjMatrix.set(osgMat.ptr());
+      _vjMatrix.set( osgMat.ptr() );
    }
    else
    {
@@ -428,6 +378,12 @@ std::cout << " trans " << trans[ 1 ] << " : " << trans[ 2 ] << std::endl;
 //////////////////////////////////////////////////
 void cfdDCS::SetRotationMatrix( Matrix44f& input )
 {
+// There is currently a bug here.
+// We need to set the roation array so that 
+// if someone requests the rotation array
+// they will actually get back the current rotation
+// and not and old rotation value
+
    // Need to set rotation to this matrix
 #ifdef _PERFORMER
    pfMatrix temp = vrj::GetPfMatrix( input );
@@ -447,17 +403,14 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
 #elif _OSG
    if ( _udcb )
    {
-     /* gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
+      gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
+/*std::cout << " input " << std::endl
+            << input << std::endl
+            << " quat " << std::endl
+            << tempQuat << std::endl;*/
       osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
       dcsQuat = quat;
-      _udcb->setQuat( quat );*/
-   gmtl::EulerAngleZXYf temp1 = gmtl::make< gmtl::EulerAngleZXYf >( input );
-float temp[ 3 ];
-temp[ 0 ] = temp1[ 2 ];
-temp[ 1 ] = temp1[ 0 ];
-temp[ 2 ] = temp1[ 1 ];
-
-      SetRotationArray( temp1.getData() );
+      _udcb->setQuat( quat );
    }
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;
@@ -705,6 +658,7 @@ void cfdDCS::cfdUpdateDCSCallback::setScaleValues(float* scale)
 void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor* nv)
 {
    osg::ref_ptr<osg::MatrixTransform> dcs = dynamic_cast<osg::MatrixTransform*>(node);
+
    if ( dcs.valid() )
    {
       osg::Vec3f pitch(1,0,0);
