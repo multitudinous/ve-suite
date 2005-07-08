@@ -10,6 +10,7 @@ BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
    EVT_BUTTON(FORWARD_STEP_BUTTON, UI_TransientDialog::_onForwardStep)
    EVT_BUTTON(BACKWARD_STEP_BUTTON, UI_TransientDialog::_onBackwardStep)
    EVT_SPINCTRL(CURRENT_FRAME, UI_TransientDialog::_onSelectFrame)
+   EVT_SPINCTRL(DURATION_CNTL_BOX, UI_TransientDialog::_onSetDuration)
 END_EVENT_TABLE()
 ///////////////////////////////////////////////////////
 //Constructor                                        //
@@ -154,6 +155,15 @@ void UI_TransientDialog::_onStop(wxCommandEvent& event)
       _tab->cId = TRANSIENT_STOP;
       _tab->sendDataArrayToServer();
    }
+}
+/////////////////////////////////////////////////////////////////////
+void UI_TransientDialog::_onSetDuration(wxSpinEvent& WXUNUSED(event))
+{
+   if(!_tab)
+      return;
+   _tab->cId = TRANSIENT_DURATION;
+   _tab->cIso_value = _duration->GetValue();
+   _tab->sendDataArrayToServer();
 }
 /////////////////////////////////////////////////////////////////////
 void UI_TransientDialog::_onSelectFrame(wxSpinEvent& WXUNUSED(event))

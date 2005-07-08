@@ -59,6 +59,7 @@ protected:
    void _onPlay(wxCommandEvent& event);
    void _onStop(wxCommandEvent& event);
    void _onSelectFrame(wxSpinEvent& event);
+   void _onSetDuration(wxSpinEvent& event);
   DECLARE_EVENT_TABLE()
 };
 #endif //_VE_UI_TRANSIENT_DIALOG_H_

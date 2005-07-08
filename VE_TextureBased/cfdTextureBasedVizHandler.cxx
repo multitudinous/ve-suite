@@ -198,6 +198,17 @@ void cfdTextureBasedVizHandler::_updateVisualization()
          _activeTM->setPlayMode(cfdTextureManager::PLAY);
       }
       _cleared = false;
+   }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION){
+      if(_svvh){
+         double duration = (double) _cmdArray->GetCommandValue(cfdCommandArray::CFD_ISO_VALUE);
+         unsigned int nTimesteps = _activeTM->numberOfFields();
+         double delay = duration/((double)nTimesteps); 
+         cfdScalarShaderManager* sShader = _svvh->GetScalarShaderManager();
+         if(sShader)
+         {
+            sShader->SetDelayTime(delay);
+         }
+      }
    }else if( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_SET_FRAME){
       if(_activeTM){
          _activeTM->setPlayMode(cfdTextureManager::STOP);
