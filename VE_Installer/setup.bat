@@ -1,8 +1,8 @@
 REM Edit this file to reflect your local environment for VE_Suite
 
 set VE_SUITE_HOME=C:\TSVEG\VE_Suite
-set VJ_BASE_DIR=C:\vrjuggler-2.0-beta2.win32-vc71
-set VJ_DEPS_DIR=C:\vrjuggler-2.0-beta2.win32-vc71-deps
+set VJ_BASE_DIR=C:\vrjuggler-2.0.0-win32-vc71
+set VJ_DEPS_DIR=C:\vrjuggler-2.0.0-win32-vc71-deps
 set VTK_HOME=C:\VTK_4.4_WinXP
 set OMNI_HOME=C:\vrjuggler-2.0-beta2.win32-vc71-deps
 set WX_HOME=C:\wxWidgets-2.6.0
