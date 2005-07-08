@@ -384,6 +384,12 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
 // they will actually get back the current rotation
 // and not and old rotation value
 
+// IMPORTANT NOTE: When using the this function for OSG 
+// be sure to remove the scale out of the 44 matix because
+// it appears there is a bug with gmtl that doesn't allow 
+// the proper creation of the quat. See cfdCursor for an
+// example.
+
    // Need to set rotation to this matrix
 #ifdef _PERFORMER
    pfMatrix temp = vrj::GetPfMatrix( input );
@@ -404,10 +410,12 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
    if ( _udcb )
    {
       gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
-/*std::cout << " input " << std::endl
-            << input << std::endl
-            << " quat " << std::endl
-            << tempQuat << std::endl;*/
+      /*
+      std::cout << " input " << std::endl
+                  << input << std::endl
+                  << " quat " << std::endl
+                  << tempQuat << std::endl;
+      */
       osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
       dcsQuat = quat;
       _udcb->setQuat( quat );
