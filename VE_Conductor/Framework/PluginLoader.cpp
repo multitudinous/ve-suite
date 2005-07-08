@@ -35,7 +35,8 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
   
   if ( !dir.IsOpened() )
     {
-      // deal with the error here - wxDir would already log an error message explaining the exact reason of the failure
+      // deal with the error here - wxDir would already log an error 
+      // message explaining the exact reason of the failure
       return FALSE;
     }
   

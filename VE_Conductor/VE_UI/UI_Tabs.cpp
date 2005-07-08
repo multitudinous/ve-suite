@@ -559,9 +559,21 @@ void UI_Tabs::sendDataArrayToServer( void )
 
    if ( !CORBA::is_nil( server_ref ) )
    {
-      std::cout << " Setting client data " << std::endl;
-      server_ref->SetClientInfoData( clientInfoArray );
-      std::cout << " Done Setting client data " << std::endl;
+      try
+      {
+         if ( debugIO )
+            std::cout << " Setting client data " << std::endl;
+         
+         server_ref->SetClientInfoData( clientInfoArray );
+         
+         if ( debugIO )
+            std::cout << " Done Setting client data " << std::endl;
+      }
+      catch ( ... )
+      {
+         wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                        "Communication Failure", wxOK | wxICON_INFORMATION );
+      }
    }
    else
    {
