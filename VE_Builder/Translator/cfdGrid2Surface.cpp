@@ -41,7 +41,9 @@
 #include <vtkDecimatePro.h>
 #include <vtkSmoothPolyDataFilter.h>
 
-vtkPolyData * cfdGrid2Surface( vtkDataSet *dataSet, float deciVal )
+using namespace VE_Util;
+
+vtkPolyData * VE_Util::cfdGrid2Surface( vtkDataSet *dataSet, float deciVal )
 {
    //convert vtkDataSet to polydata
    vtkGeometryFilter *cFilter = vtkGeometryFilter::New();

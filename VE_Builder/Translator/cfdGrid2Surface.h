@@ -35,7 +35,9 @@
 class vtkDataSet;
 class vtkPolyData;
 
+namespace VE_Util
+{
 // function declarations
-vtkPolyData * cfdGrid2Surface( vtkDataSet *dataSet, float deciVal );
-
+VE_UTIL_EXPORTS vtkPolyData * cfdGrid2Surface( vtkDataSet *dataSet, float deciVal );
+}
 #endif
