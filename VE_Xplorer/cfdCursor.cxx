@@ -61,12 +61,21 @@
 #define CURSOR_DIST 2.0f
 #define BOX_LENGTH 2.0f
 
+#include <gmtl/gmtl.h>
 #include <vpr/Util/Debug.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Vec.h>
 #include <gmtl/VecOps.h>
 #include <gmtl/Output.h>
+#include <gmtl/EulerAngle.h>
+#include <gmtl/AxisAngle.h>
+#include <gmtl/Generate.h>
+#include <gmtl/Coord.h>
+#include <gmtl/EulerAngle.h>
+#include <gmtl/AxisAngle.h>
+#include <gmtl/Output.h>
+#include <gmtl/AxisAngleOps.h>
 
 using namespace gmtl; //added by Gengxun
 using namespace VE_Xplorer;
@@ -669,21 +678,96 @@ void cfdCursor::SetTranslation( void )
    loc_f[ 1 ] = this->loc[ 1 ];
    loc_f[ 2 ] = this->loc[ 2 ];
 
+
+/*static float tempLoc = 0;
+static Matrix44f tempLocMat; 
+if ( (tempLoc == 0) || (tempLoc == 1000))
+{
+   tempLoc = 1;
+}
+else
+{
+   tempLoc += 1;
+   return;
+}*/
    //cout << loc_f[ 0 ] << " : " << loc_f[ 1 ] << " : " << loc_f[ 2 ] << " : " << endl;
    // get pfMatrix of worldDCS
    Matrix44f worldMat;
    worldMat = this->worldDCS->GetMat();
+//std::cout << " world " << worldMat << std::endl;
 
    Matrix44f totalMat;
    if ( this->activeDataSetDCS )
    {
-      // get pfMatrix of activeDataSetDCS
-      Matrix44f activeDataSetMat;
-      activeDataSetMat = this->activeDataSetDCS->GetMat();
+      Matrix44f cursorDCSMat = this->cursorDCS->GetMat();
+      float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
+      float* worldDCSScale = this->worldDCS->GetScaleArray();
 
-      totalMat = activeDataSetMat * worldMat;
+      float combineScale[ 3 ];
+      combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
+      combineScale[ 1 ] = dataDCSScale[ 1 ] * worldDCSScale[ 1 ];
+      combineScale[ 2 ] = dataDCSScale[ 2 ] * worldDCSScale[ 2 ];
+      //this->cursorDCS->SetScaleArray( combineScale );
+/*
+//std::cout << " cursor " << cursorDCSMat << std::endl;
+   Matrix44f worldMatInv;
+   gmtl::invertFull( worldMatInv, worldMat );
+
+   // compute local_vec = [world matrix]^(-1) * global_vec
+   Matrix44f localMatrix;
+   localMatrix = worldMatInv * cursorDCSMat;
+
+   // get juggler Matrix of activeDataSetDCS
+   // get pfMatrix of activeDataSetDCS
+   Matrix44f activeDataSetMat;
+   activeDataSetMat = this->activeDataSetDCS->GetMat();
+//std::cout << "data set " << activeDataSetMat << std::endl;
+
+   // invert activeDataSetDCS
+   Matrix44f activeDataSetMatInv;
+   gmtl::invertFull( activeDataSetMatInv, activeDataSetMat );
+
+   // compute new_local_vec = [activeDataSet Matrix]^(-1) * local_vec
+   Matrix44f newLocalMatrix;
+   newLocalMatrix = activeDataSetMatInv * localMatrix;
+//std::cout << newLocalMatrix << std::endl;
+      //totalMat = activeDataSetMat * worldMat;
+   //this->cursorDCS->SetMat( _vjMatrix );
       vprDEBUG(vprDBG_ALL,3)  << " cfdCursor::SetTranslation : activeDataSetMat " << activeDataSetDCS << " * pfWorldMat : " 
                               << std::endl <<  totalMat << " : " << activeDataSetMat << " * " << worldMat << std::endl << vprDEBUG_FLUSH;
+*/
+/*osg::Matrix worldMatOSG;
+worldMatOSG.set( worldMat.getData() );
+
+osg::Matrix worldMatInvertOSG;
+worldMatInvertOSG = osg::Matrix::inverse( worldMatOSG );
+
+      Matrix44f cursorDCSMat1 = this->cursorDCS->GetMat();
+osg::Matrix cursorDCSMatOSG;
+cursorDCSMatOSG.set( cursorDCSMat1.getData() );
+   // compute local_vec = [world matrix]^(-1) * global_vec
+   osg::Matrix  localMatrix;
+   localMatrix = worldMatInvertOSG * cursorDCSMatOSG;
+
+   // get juggler Matrix of activeDataSetDCS
+   // get pfMatrix of activeDataSetDCS
+   Matrix44f activeDataSetMat1;
+   activeDataSetMat1 = this->activeDataSetDCS->GetMat();
+
+osg::Matrix dataDCSMatOSG;
+dataDCSMatOSG.set( activeDataSetMat1.getData() );
+
+   // invert activeDataSetDCS
+osg::Matrix invertdataDCSMatOSG;
+invertdataDCSMatOSG = osg::Matrix::inverse( dataDCSMatOSG );
+
+   // compute new_local_vec = [activeDataSet Matrix]^(-1) * local_vec
+   osg::Matrix newLocalMatrix;
+   newLocalMatrix = invertdataDCSMatOSG * localMatrix;
+//std::cout << newLocalMatrix << std::endl;
+Matrix44f _vjMatrix;
+   _vjMatrix.set( (float*)newLocalMatrix.ptr() );
+   this->cursorDCS->SetMat( _vjMatrix );*/
    }
    else
    {
@@ -691,9 +775,16 @@ void cfdCursor::SetTranslation( void )
       //vprDEBUG(vprDBG_ALL,1) << " cfdCursor::SetTranslation : pfWorldMat : " 
       //      << endl <<  totalMat << endl << vprDEBUG_FLUSH;
    }
+   Quatf tempQuat;
+   tempQuat = gmtl::make< Quatf >( worldMat );
+//std::cout << worldMat << std::endl;
 
-   //this->cursorDCS->SetRotationMatrix( totalMat );
-   this->cursorDCS->SetMat( totalMat );
+//Vec4f scaleMat = gmtl::makeScale< Vec4f >( worldMat ); 
+      //std::cout << gmtl::Math::rad2Deg( gmtl::makeYRot(worldMat) ) << std::endl;
+      //std::cout << gmtl::Math::rad2Deg( gmtl::makeZRot(worldMat) ) << std::endl;
+   //Matrix44f tempMat = gmtl::makeRot< gmtl::Matrix44f >( worldMat );
+   this->cursorDCS->SetRotationMatrix( worldMat );
+   //this->cursorDCS->SetMat( worldMat );
    this->cursorDCS->SetTranslationArray( loc_f );
 }
 
@@ -736,7 +827,10 @@ void cfdCursor::GetLocalLocationVector( void )
    // invert the worldDCS matrix...
    Matrix44f worldMatInv;
    gmtl::invertFull( worldMatInv, worldMat );
-
+/*   Quatf tempWQuat;
+   tempWQuat = gmtl::makeRot< gmtl::Quatf >( worldMat );
+std::cout << tempWQuat << std::endl;
+*/
    // compute local_vec = [world matrix]^(-1) * global_vec
    Vec4f localVector;
    localVector = worldMatInv * jugglerVec;
@@ -752,7 +846,26 @@ void cfdCursor::GetLocalLocationVector( void )
    // compute new_local_vec = [activeDataSet Matrix]^(-1) * local_vec
    Vec4f pfLocXX;
    pfLocXX = activeDataSetMatInv * localVector;
-
+   
+   //AxisAnglef tempQuat;
+   //tempQuat = gmtl::makeRot< AxisAnglef >( activeDataSetMat );
+//std::cout << tempQuat << std::endl << activeDataSetMat << std::endl;
+//   tempQuat = gmtl::makeRot< gmtl::Quatf >( activeDataSetMatInv );
+//std::cout << tempQuat << std::endl << activeDataSetMatInv << std::endl;
+      std::cout << gmtl::Math::rad2Deg( gmtl::makeYRot(activeDataSetMat) ) << std::endl;
+      std::cout << gmtl::Math::rad2Deg( gmtl::makeZRot(activeDataSetMat) ) << std::endl;
+/*osg::Matrix worldMatOSG;
+worldMatOSG.set( activeDataSetMat.getData() );
+osg::Quat quatosg;
+worldMatOSG.get( quatosg );
+std::cout << quatosg[ 0 ] << std::endl;
+std::cout << quatosg[ 1 ] << std::endl;
+std::cout << quatosg[ 2 ] << std::endl;
+std::cout << quatosg[ 3 ] << std::endl;*/
+/*
+   Quatf tempCQuat;
+   tempCQuat = tempWQuat * tempQuat;
+std::cout << tempCQuat << std::endl;*/
    // Set class member location
 #ifdef _PERFORMER
    this->localLocation[ 0 ] =  (double)pfLocXX[ 0 ];

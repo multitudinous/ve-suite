@@ -29,7 +29,7 @@ typedef float vtkReal;
 #include <iostream>
 using namespace VE_SceneGraph;
 
-osg::Geode* VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::Geode *geode, int verbose) {
+osg::ref_ptr< osg::Geode > VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::ref_ptr< osg::Geode > geode, int verbose) {
 
 	// make actor current
 	actor->GetMapper()->Update();
@@ -42,14 +42,14 @@ osg::Geode* VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::Geode *geode, int
 	}
 
 	// if geode doesn't exist, then create a new one
-	if (geode == NULL)
+	if ( !geode.valid() )
 		geode = new osg::Geode();
 
 	// get poly data
 	vtkPolyData *polyData = (vtkPolyData *) actor->GetMapper()->GetInput();
 
 	// get primitive arrays
-	osg::Geometry* points, *lines, *polys, *strips;
+	osg::ref_ptr< osg::Geometry > points, lines, polys, strips;
 
 	// create new Geometry for the Geode
    points = VE_SceneGraph::processPrimitive(actor, polyData->GetVerts(), osg::PrimitiveSet::POINTS, verbose);
@@ -60,15 +60,15 @@ osg::Geode* VE_SceneGraph::vtkActorToOSG(vtkActor *actor, osg::Geode *geode, int
 	// remove old gsets and delete them
    while( geode->getNumDrawables() ) geode->removeDrawable((unsigned int)0);//removeDrawable(0);
 
-	if( points ) geode->addDrawable( points );
-	if( lines ) geode->addDrawable( lines );
-	if( polys ) geode->addDrawable( polys );
-	if( strips ) geode->addDrawable( strips );
+	if( points.valid() ) geode->addDrawable( points.get() );
+	if( lines.valid() ) geode->addDrawable( lines.get() );
+	if( polys.valid() ) geode->addDrawable( polys.get() );
+	if( strips.valid() ) geode->addDrawable( strips.get() );
 
 	return geode;
 }
 
-osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *primArray, int primType, int verbose) {
+osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *primArray, int primType, int verbose) {
 
 	// get polyData from vtkActor
 	vtkPolyData *polyData = (vtkPolyData *) actor->GetMapper()->GetInput();
@@ -78,7 +78,7 @@ osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *pr
 		return NULL;
 
 	//Initialize the Geometry
-	osg::Geometry* geom = new osg::Geometry;
+	osg::ref_ptr< osg::Geometry > geom = new osg::Geometry;
 
 	// get number of indices in the vtk prim array. Each vtkCell has the length
 	// (not counted), followed by the indices.
@@ -86,7 +86,7 @@ osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *pr
 	int numIndices = primArraySize - numPrimitives;
 
 	// allocate as many verts as there are indices in vtk prim array
-	osg::Vec3Array* vertices = new osg::Vec3Array;
+	osg::ref_ptr< osg::Vec3Array > vertices = new osg::Vec3Array;
 
 	// check to see if there are normals
 	int normalPerVertex = 0;
@@ -107,7 +107,7 @@ osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *pr
 			normalPerCell = 1;
 	}
 
-	osg::Vec3Array* norms = new osg::Vec3Array;
+	osg::ref_ptr< osg::Vec3Array > norms = new osg::Vec3Array;
 
 	// check to see if there is color information
 	int colorPerVertex = 0;
@@ -128,7 +128,7 @@ osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *pr
 			colorPerVertex = 1;
 	}
 
-	osg::Vec4Array* colors = new osg::Vec4Array;
+	osg::ref_ptr< osg::Vec4Array > colors = new osg::Vec4Array;
 
 	// check to see if there are texture coordinates
 #ifdef VTK4
@@ -136,7 +136,7 @@ osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *pr
 #else
    vtkTCoords* texCoords = polyData->GetPointData()->GetTCoords();
 #endif
-   osg::Vec2Array* tcoords = new osg::Vec2Array;
+   osg::ref_ptr< osg::Vec2Array > tcoords = new osg::Vec2Array;
 
 	// copy data from vtk prim array to osg Geometry
 	int prim = 0, vert = 0;
@@ -191,9 +191,9 @@ osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *pr
 	}
 
 	// add attribute arrays to gset
-	geom->setVertexArray(vertices);
-    geom->setColorArray(colors);
-    if(normals) geom->setNormalArray(norms);
+	geom->setVertexArray(vertices.get());
+    geom->setColorArray(colors.get());
+    if(normals) geom->setNormalArray(norms.get());
 
 	if (normalPerVertex)
         geom->setNormalBinding(osg::Geometry::BIND_PER_VERTEX);
@@ -215,11 +215,11 @@ osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *pr
 	}
   
 	if (texCoords != NULL)
-		geom->setTexCoordArray(0,tcoords);
+		geom->setTexCoordArray(0,tcoords.get());
 
 
 	// create a geostate for this geoset
-	osg::StateSet* stateset = new osg::StateSet;
+	osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
 
 	// if not opaque
 	if (actor->GetProperty()->GetOpacity() < 1.0)
@@ -248,7 +248,7 @@ osg::Geometry* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *pr
 	if (primType == osg::PrimitiveSet::LINE_STRIP)
 	    stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
 
-    geom->setStateSet(stateset);
+    geom->setStateSet(stateset.get());
 	return geom;
 }
 

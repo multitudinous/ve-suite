@@ -322,8 +322,8 @@ Matrix44f cfdDCS::GetMat( void )
    osg::Matrixf osgMat= _dcs->getMatrix();
    if(osgMat.valid())
    {
-   gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-   _vjMatrix.set( osgMat.ptr() );
+   //gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
+   //_vjMatrix.set( osgMat.ptr() );
    //gmtl::postMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(-90.0f), x_axis ) ));
    //gmtl::preMult(_vjMatrix, gmtl::makeRot<gmtl::Matrix44f>( gmtl::AxisAnglef( gmtl::Math::deg2Rad(90.0f), x_axis ) ));
    //_vjMatrix.set(osgMat.ptr());
@@ -357,11 +357,11 @@ Matrix44f cfdDCS::GetMat( void )
    osg::Vec3f transMat( _translation[0], _translation[1], _translation[2] );
    scale.setTrans(transMat);
 
-   osg::Matrixf osgMat= rotateMat*scale;
+   osg::Matrixf osgMatTest= rotateMat*scale;
    //osg::Matrixf osgMat= scale;
 
       //gmtl::Vec3f x_axis( 1.0f, 0.0f, 0.0f );
-      _vjMatrix.set( osgMat.ptr() );
+      _vjMatrix.set( osgMatTest.ptr() );
 //std::cout << _vjMatrix << std::endl;
 //      std::cout << gmtl::Math::rad2Deg( gmtl::makeYRot(_vjMatrix) ) << std::endl;
 //      std::cout << gmtl::Math::rad2Deg( gmtl::makeZRot(_vjMatrix) ) << std::endl;
@@ -390,11 +390,35 @@ void cfdDCS::SetMat( Matrix44f& input )
 #elif _OSG
    if(_dcs.valid())
    {
-      osg::Matrix inMat;
-      inMat.set(input.getData());
-      _dcs->setMatrix(inMat);
-   }else{
+      if ( _udcb )
+      {
+         osg::Matrix inMat;
+         inMat.set( input.getData() );
+         
+         // set rotation values
+         gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
+         osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
+         dcsQuat = quat;
+         _udcb->setQuat( quat );
       
+         // Set scale values
+         //float temp[ 3 ];
+         osg::Vec3d scale = inMat.getScale();
+std::cout << " scale " << scale[ 0 ] << std::endl;
+std::cout << " scale " << scale[ 1 ] << std::endl;
+std::cout << " scale " << scale[ 2 ] << std::endl;
+         //SetScaleArray( (float*)scale.ptr() );
+
+         // Set translation array
+         osg::Vec3d trans = inMat.getTrans();
+         SetTranslationArray( (float*)trans.ptr() );
+std::cout << " trans " << trans[ 0 ] << " : " << trans[ 1 ] << std::endl;
+std::cout << " trans " << trans[ 1 ] << " : " << trans[ 2 ] << std::endl;
+      }
+   }
+   else
+   {
+      ;   
    }
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetMat is NOT implemented " << std::endl;
@@ -423,10 +447,17 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
 #elif _OSG
    if ( _udcb )
    {
-      gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
-      //std::cout << tempQuat << std::endl;
+     /* gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
       osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
-      _udcb->setQuat( quat );
+      dcsQuat = quat;
+      _udcb->setQuat( quat );*/
+   gmtl::EulerAngleZXYf temp1 = gmtl::make< gmtl::EulerAngleZXYf >( input );
+float temp[ 3 ];
+temp[ 0 ] = temp1[ 2 ];
+temp[ 1 ] = temp1[ 0 ];
+temp[ 2 ] = temp1[ 1 ];
+
+      SetRotationArray( temp1.getData() );
    }
 #elif _OPENSG
    std::cerr << " ERROR: cfdDCS::SetRotationMatrix is NOT implemented " << std::endl;
@@ -691,5 +722,5 @@ void cfdDCS::cfdUpdateDCSCallback::operator()(osg::Node* node, osg::NodeVisitor*
       dcs->setMatrix(rotateMat*scale);
       traverse(node,nv);
    }
- }
+}
 #endif

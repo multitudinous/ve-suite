@@ -232,7 +232,6 @@ void cfdApp::contextInit()
 ///////////////////////////
 void cfdApp::contextClose()
 {
-std::cout << " ********************************" << std::endl;
    if(_pbuffer)
    {
       delete _pbuffer;
@@ -516,7 +515,10 @@ void cfdApp::draw()
 {
    glClear(GL_DEPTH_BUFFER_BIT);
 
-   glPushAttrib(GL_ALL_ATTRIB_BITS);
+   // Users have reported problems with OpenGL reporting stack underflow
+   // problems when the texture attribute bit is pushed here, so we push all
+   // attributes *except* GL_TEXTURE_BIT.
+   glPushAttrib(GL_ALL_ATTRIB_BITS & ~GL_TEXTURE_BIT);
    glPushAttrib(GL_TRANSFORM_BIT);
    glPushAttrib(GL_VIEWPORT_BIT);
 
@@ -529,13 +531,13 @@ void cfdApp::draw()
    // The code below is commented out because it causes 
    // problems with the cg shader code
    // for more details please contact Gerrick
-   //glMatrixMode(GL_TEXTURE);
-   //glPushMatrix();
+   glMatrixMode(GL_TEXTURE);
+   glPushMatrix();
 
-   // This will need to be changed when vrj2.0 is released as well
-   osgUtil::SceneView* sv(NULL);
+   osg::ref_ptr<osgUtil::SceneView> sv;
    sv = (*sceneViewer);    // Get context specific scene viewer
-   vprASSERT( sv != NULL);
+   vprASSERT(sv.get() != NULL);
+
    vrj::GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
    gl_manager = vrj::GlDrawManager::instance();
 
@@ -584,9 +586,7 @@ void cfdApp::draw()
                                     frustum[vrj::Frustum::VJ_NEAR],
                                     frustum[vrj::Frustum::VJ_FAR]);
 
-   // need to mess with this matrix to change how the coordinate system is 
-   // positioned
-   //sv->setViewMatrixAsLookAt(  osg::Vec3( 0, -1, 0 ), osg::Vec3( 0, 0, 0 ), osg::Vec3( 0, 0, 1 ) );
+   // Copy the view matrix
    sv->setViewMatrix(*osg_proj_xform_mat );
 #ifdef _WEB_INTERFACE
    bool goCapture = false;         //gocapture becomes true if we're going to capture this frame
@@ -600,21 +600,16 @@ void cfdApp::draw()
    }
 #endif   //_WEB_INTERFACE
 
-   //Draw the scene
-   // THis gaurd needs removed when ever vrj2.0 is released
-   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
-   {
-      sv->update();
-      sv->cull();
-      sv->draw();
-   }
+   sv.get()->update();
+   sv.get()->cull();
+   sv.get()->draw();
 
 #ifdef _WEB_INTERFACE
    if(goCapture)
       captureWebImage();
 #endif   //_WEB_INTERFACE
-   //glMatrixMode(GL_TEXTURE);
-   //glPopMatrix();
+   glMatrixMode(GL_TEXTURE);
+   glPopMatrix();
 
    glMatrixMode(GL_PROJECTION);
    glPopMatrix();

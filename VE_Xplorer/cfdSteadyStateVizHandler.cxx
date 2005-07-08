@@ -999,7 +999,7 @@ void cfdSteadyStateVizHandler::streamers( void )
       this->_activeObject->SetBoxSize( this->cur_box );
    }
 
-   if ( ! this->useLastSource )
+   if ( !this->useLastSource )
    {
       vprDEBUG(vprDBG_ALL,1) <<"creating fresh streamlines"
                              << std::endl << vprDEBUG_FLUSH;
