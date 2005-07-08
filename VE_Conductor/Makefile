@@ -71,13 +71,14 @@ endif
 
 EXTRA_DEFS+=
 
-EXTRA_LDFLAGS+= -lm -lpthread -Wl,-E #-ldl -lrt -lc 
+EXTRA_LDFLAGS+= -Wl,-E #-ldl -lrt -lc 
 EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
-EXTRA_LIBS+= -lGUIPluginLib
+EXTRA_LIBS+= -lGUIPluginLib -lm -lpthread 
 
 ifeq (${CFDHOSTTYPE},IRIX64)
    # For ANSI std headers
    EXTRA_INCLUDES+= -I$(VJ_DEPS_DIR)/include/boost/compatibility/cpp_c_headers
+   EXTRA_LIBS+= -L/usr/freeware/lib32 -lm -lpthread 
 endif
 
 LINKALL_ON= -all
