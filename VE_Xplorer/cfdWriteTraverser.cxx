@@ -52,7 +52,7 @@ using namespace VE_Xplorer;
 //Constructor                       //
 //////////////////////////////////////
 cfdWriteTraverser::cfdWriteTraverser()
-:cfdNodeTraverser()
+:VE_SceneGraph::cfdNodeTraverser()
 {
    _fName = 0;
    _sequenceIndex = 0;
@@ -61,7 +61,7 @@ cfdWriteTraverser::cfdWriteTraverser()
 }
 ////////////////////////////////////////////////////////////////////
 cfdWriteTraverser::cfdWriteTraverser(const cfdWriteTraverser& cfdWT)
-:cfdNodeTraverser(cfdWT)
+:VE_SceneGraph::cfdNodeTraverser(cfdWT)
 {
    _fName = 0;
    _sequenceIndex = 0;
@@ -74,7 +74,7 @@ cfdWriteTraverser::cfdWriteTraverser(const cfdWriteTraverser& cfdWT)
 }
 ///////////////////////////////////////////////////
 cfdWriteTraverser::cfdWriteTraverser(char* outFile)
-:cfdNodeTraverser()
+:VE_SceneGraph::cfdNodeTraverser()
 {
    _fName = 0;
    _sequenceIndex = 0;
