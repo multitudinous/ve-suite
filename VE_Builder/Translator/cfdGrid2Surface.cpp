@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 
+#include "VE_Builder/Translator/cfdGrid2Surface.h"
 #include <vtkDataSet.h>
 #include <vtkPointData.h>
 #include <vtkContourFilter.h>
