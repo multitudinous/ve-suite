@@ -219,9 +219,6 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    // Update Navigation variables
    
    vprDEBUG(vprDBG_ALL,3) << "\t 1. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
-   this->nav->SetDataValues( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
-                        _commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
-   this->nav->updateNavigationFromGUI();
 
    if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RESET_NAVIGATION_POSITION )         
    {
@@ -231,6 +228,10 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 	      this->nav->worldRot[ i ] = worldRot[ i ];
 	   }
    }
+
+   this->nav->SetDataValues( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
+                        _commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+   this->nav->updateNavigationFromGUI();
 	
    // Need to get these values from the appropriate classes
    // the cursor will be active (based on the cursor id)

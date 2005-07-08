@@ -297,7 +297,7 @@ void cfdNavigate::updateNavigationFromGUI()
    //CW rotation
    {
       float oldAng = worldRot[ 0 ];
-         this->worldRot[ 0 ] -= rotationStepSize;
+      this->worldRot[ 0 ] -= rotationStepSize;
       gmtl::Vec3f  worldVec, wandVec, tempVec, worldPosVec(this->worldTrans[0]- this->LastVec[0], 0,-this->worldTrans[1]-this->LastVec[2]);
       gmtl::Matrix44f rotMat;
       gmtl::EulerAngleXYZf myEuler( 0, -gmtl::Math::deg2Rad(oldAng),0), worldRotVec(0, gmtl::Math::deg2Rad(this->worldRot[0]),0);
