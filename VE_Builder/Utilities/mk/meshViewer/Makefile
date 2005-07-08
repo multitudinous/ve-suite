@@ -1,6 +1,21 @@
 # Create the OS-dependent directory name
 APP_NAME= $(VE_SUITE_HOME)/bin/$(CFDHOSTTYPE)/meshViewer
 
+ifeq ($(SCENE_GRAPH), OSG)
+   OSG = _osg
+else
+   OSG = _pf
+endif
+
+ifeq ($(TAO_BUILD), TRUE)
+   EXEC_TAG = _tao
+endif
+
+# for osg and patented stuff
+ifeq ($(VE_PATENTED), TRUE)
+   PATENTED_TAG = _vep
+endif
+
 all:
 	$(MAKE) NO_DEPEND=0 cxx
 	$(MAKE) $(APP_NAME)
@@ -10,13 +25,8 @@ srcdir= ../../
 
 SRCS=\
    meshViewer.cpp \
-   fileIO.cxx \
-   cfdImage.cpp \
    setScalarAndVector.cpp \
-   viewCells.cpp \
-   cfdVTKFileHandler.cxx \
-   readWriteVtkThings.cpp \
-   cfdGrid2Surface.cpp 
+   viewCells.cpp 
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR=../../$(CFDHOSTTYPE)
@@ -46,16 +56,16 @@ LINKALL_OFF=
 STATIC_ON= @APP_LINK_STATIC_ON@
 STATIC_OFF= @APP_LINK_STATIC_OFF@
 
-EXTRA_LIBS+=
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) 
+EXTRA_LIBS+= -lVE_UtilLib
+
+EXTRA_PATH_FOR_SOURCES+=$(VE_SUITE_HOME)/VE_Builder/Translator
 
 include $(VJ_BASE_DIR)/share/vrjuggler/vrj.appdefs.mk
 
 #add vtk stuff to EXTRA_INCLUDES and EXTRA_LIBS
 include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
 
-vpath %.cxx $(VE_SUITE_HOME)/VE_Xplorer $(VE_SUITE_HOME)/VE_Builder/Translator
-vpath %.cpp $(VE_SUITE_HOME)/VE_Builder/Translator
-#vpath %.h   $(VE_SUITE_HOME)/VE_Xplorer $(VE_SUITE_HOME)/VE_Builder/Translator
 
 # -----------------------------------------------------------------------------
 # Application build targets.

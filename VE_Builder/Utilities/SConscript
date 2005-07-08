@@ -51,7 +51,6 @@ mergeVertices = Split("""
 
 meshViewer = Split("""
    meshViewer.cpp
-   cfdImage.cpp
 """)
 
 moveFieldToPointData = Split("""
