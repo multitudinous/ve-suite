@@ -29,6 +29,7 @@ SRCS=\
    PluginLoader.cpp \
    VjObsC.cpp \
    VjObsS.cpp \
+   UI_AdvectionPanel.cxx \
    UI_i.cpp \
    UI_Frame.cpp \
    UI_Tabs.cpp \
@@ -47,8 +48,7 @@ SRCS=\
    UI_ViewLocTab.cpp \
    UI_ModSelPanel.cpp \
    UI_ModelData.cpp \
-   UI_AdvectionPanel.cpp \
-   spinctld.cpp
+   spinctld.cpp 
 
 # Specify the OS-dependent directory name for object files and depends
 OBJDIR= $(CFDHOSTTYPE)
@@ -64,6 +64,10 @@ EXTRA_CFLAGS+=
 
 #EXTRA_CXXFLAGS+= -DAPP_NO_THREADS -DXML_USE_NO_THREADS -D_TAO -w
 EXTRA_CXXFLAGS+= -D_TAO 
+
+ifeq ($(VE_PATENTED), TRUE)
+   EXTRA_CXXFLAGS+= -DVE_PATENTED
+endif
 
 EXTRA_DEFS+=
 

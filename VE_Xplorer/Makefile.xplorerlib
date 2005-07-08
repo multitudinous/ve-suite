@@ -73,7 +73,6 @@ SRCS=\
    cfdFileInfo.cxx \
    cfdGlobalBase.cxx \
    cfdGraphicsObject.cxx \
-	cfdGrid2Surface.cpp \
    cfdImage.cxx \
    cfdIsosurface.cxx \
    cfdModel.cxx \

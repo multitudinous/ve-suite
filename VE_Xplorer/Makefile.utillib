@@ -48,8 +48,9 @@ endif
 # list the source files that are in current directory
 SRCS=\
    cfdAccessoryFunctions.cxx \
+   cfdGrid2Surface.cxx \
    cfdVTKFileHandler.cxx \
-	cleanVtk.cpp \
+   cleanVtk.cpp \
    fileIO.cxx \
    readWriteVtkThings.cxx
 			
