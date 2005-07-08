@@ -283,6 +283,9 @@
 				RelativePath=".\cfdAccessoryFunctions.cxx">
 			</File>
 			<File
+				RelativePath="..\VE_Builder\Translator\cfdGrid2Surface.cpp">
+			</File>
+			<File
 				RelativePath=".\cfdVTKFileHandler.cxx">
 			</File>
 			<File
