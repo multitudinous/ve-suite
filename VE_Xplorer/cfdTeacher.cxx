@@ -77,6 +77,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
    pfb_count = 0;
    _cfdWT = NULL;
    this->DCS = new VE_SceneGraph::cfdDCS();
+   this->DCS->SetName( "Teacher Node" );
    _worldDCS = worldDCS;
    _worldDCS->AddChild( this->DCS );
 

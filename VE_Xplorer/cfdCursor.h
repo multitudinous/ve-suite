@@ -185,6 +185,7 @@ namespace VE_Xplorer
  
          // Performer dynamic coordinate systems with pre-loaded translated VTK objects.
          VE_SceneGraph::cfdDCS *cursorDCS;
+         VE_SceneGraph::cfdDCS *cursorScaleDCS;
          VE_SceneGraph::cfdDCS *worldDCS;
 
          // A Performer geometry node.

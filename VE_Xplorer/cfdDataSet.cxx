@@ -102,6 +102,7 @@ cfdDataSet::cfdDataSet( )
    this->parent = this;
    this->dcs = NULL;
    this->switchNode = new VE_SceneGraph::cfdSwitch();
+   this->switchNode->SetName( "switch_for_data_viz" );
    this->classic = new VE_SceneGraph::cfdGroup();
    this->classic->SetName( "classic" );
    this->switchNode->AddChild( this->classic );

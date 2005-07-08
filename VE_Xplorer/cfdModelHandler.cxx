@@ -221,6 +221,8 @@ void cfdModelHandler::InitScene( void )
                 << std::endl;
          _modelList.at( j )->GetCfdDataSet( i )->LoadData();
          _modelList.at( j )->GetCfdDataSet( i )->SetArrow( this->arrow );
+         VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->
+               AddChild( _modelList.at( j )->GetCfdDataSet( i )->GetDCS() );
       }
 
    // set default active dataset to be the meshed volume
@@ -646,6 +648,9 @@ void cfdModelHandler::CreateObjects( void )
          char vtk_filein[ 256 ];
          input >> vtk_filein;
          input.getline( textLine, 256 );   //skip past remainder of line
+            
+         // Set the name of the dcs so that we can track it later on
+         _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()->SetName( vtk_filein );
 
          if ( fileIO::isFileReadable( vtk_filein ) ) 
          {
@@ -736,6 +741,7 @@ void cfdModelHandler::CreateObjects( void )
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetRotationArray( rotate );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetName( fileName );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );
       }
