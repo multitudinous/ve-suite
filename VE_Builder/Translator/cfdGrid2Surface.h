@@ -35,6 +35,8 @@
 class vtkDataSet;
 class vtkPolyData;
 
+#include "VE_Installer/include/VEConfig.h"
+
 namespace VE_Util
 {
 // function declarations
