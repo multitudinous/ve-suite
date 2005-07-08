@@ -699,13 +699,20 @@ void cfdCursor::SetTranslation( void )
       combineScale[ 2 ] = dataDCSScale[ 2 ] * worldDCSScale[ 2 ];
       ((cfdDCS*)this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
       Matrix44f dataSetMatrix = this->activeDataSetDCS->GetMat();
-      totalMat = worldMat * dataSetMatrix;
+ 
+      // The following is a hack because gmtl doesn't seem to create
+      // quats properly if there is scale on a 44 Matrix so
+      // we must manually remove the scale before creating the quat
+      Matrix44f totalMatScale = worldMat * dataSetMatrix;
+      Matrix44f dataSetScaleMatrix;
+      float inversScaleFactor = 1.0f/combineScale[ 0 ];
+      gmtl::setScale(dataSetScaleMatrix, inversScaleFactor );
+      
+      totalMat = dataSetScaleMatrix * totalMatScale;
    }
    else
    {
       totalMat = worldMat;
-      //vprDEBUG(vprDBG_ALL,1) << " cfdCursor::SetTranslation : pfWorldMat : " 
-      //      << endl <<  totalMat << endl << vprDEBUG_FLUSH;
    }
 
    this->cursorDCS->SetRotationMatrix( totalMat );
