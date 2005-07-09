@@ -33,7 +33,7 @@ _subloadImageDepth(0)
    _isSlave = false;
    _currentFrame = 0;
    _isLuminance = false;
-   _update = true;
+   _update = false;
 }
 /////////////////////////////////////////////////////////////////////////////////////
 cfdUpdateTextureCallback::cfdUpdateTextureCallback(const cfdUpdateTextureCallback& cb)
@@ -69,6 +69,7 @@ void cfdUpdateTextureCallback::SetTextureManager(cfdTextureManager* tm)
 void cfdUpdateTextureCallback::SetDelayTime(double delayTime)
 {
    _delay = delayTime;
+   _update = false;
 }
 ////////////////////////////////////////////////////////
 unsigned int cfdUpdateTextureCallback::GetCurrentFrame()
