@@ -310,10 +310,9 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
                              << std::endl << vprDEBUG_FLUSH;
 
       // store the world DCS matrix..
-      gmtl::Matrix44f m;
       if ( _worldDCS )
       {
-         m = this->_worldDCS->GetMat();
+         gmtl::Matrix44f m = this->_worldDCS->GetMat();
 
          //temporarily reset the world DCS matrix to the identity
          gmtl::Matrix44f I;
@@ -321,10 +320,13 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
          // Make an identity matrix
          gmtl::identity( I );
          this->_worldDCS->SetMat( I );
+         float scaleUnity[ 3 ];
+         scaleUnity[ 0 ] = scaleUnity[ 1 ] = scaleUnity[ 2 ] = 1.0f;
+         this->_worldDCS->SetScaleArray( scaleUnity );
       
          writePFBFile(this->_worldDCS,(char*)pfb_filename);
 
-         // The following is hack until osg or juggler 
+         // The following is a hack until osg or juggler 
          // allow us to pull scale info out of a 4x4 matrix
          float* scaleArray = this->_worldDCS->GetScaleArray();
          float tempScale = 1.0f / scaleArray[ 0 ];
