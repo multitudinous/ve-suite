@@ -177,6 +177,5 @@ enum cfdGeodeEnum
    TRANSIENT_PLAY,
    TRANSIENT_DURATION,
    TRANSIENT_SET_FRAME
-
 };
 #endif

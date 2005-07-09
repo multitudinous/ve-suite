@@ -69,6 +69,7 @@
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdTempAnimation.h"
 //This heare is WAY down here to fix compile errors on IRIX
 #include "VE_Xplorer/cfdSteadyStateVizHandler.h"
 
@@ -861,9 +862,9 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                this->_activeObject->SetNormal( this->nav->GetDirection() );
                this->_activeObject->SetOrigin( this->nav->GetObjLocation() );
 
-               this->_activeObject->SetRequestedValue( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+               this->_activeObject->SetRequestedValue( (int)this->commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
                this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
-               this->_activeObject->SetPreCalcFlag( this->commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) );
+               this->_activeObject->SetPreCalcFlag( (int)this->commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) );
                this->computeActorsAndGeodes = true;
                this->actorsAreReady = true;
             }
@@ -886,7 +887,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION )
    {
-      int visOpt = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      int visOpt = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
 
       if ( visOpt == TEXTURE_BASED_VISUALIZATION )
       {
@@ -895,6 +896,18 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       else if ( visOpt == CLASSIC_VISUALIZATION )
       {
          texturesActive = false;
+      }
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TRANSIENT_DURATION )
+   {
+      std::multimap< int, cfdGraphicsObject* >::iterator pos;
+      for (pos=graphicsObjects.begin(); pos!=graphicsObjects.end(); ++pos )
+      {
+         if ( pos->second->GetAnimation() )
+         {
+            pos->second->GetAnimation()->SetDuration( 
+                  commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+         }
       }
    }
 }

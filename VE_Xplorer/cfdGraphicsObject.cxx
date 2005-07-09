@@ -80,6 +80,7 @@ cfdGraphicsObject& cfdGraphicsObject::operator=( const cfdGraphicsObject& input 
    // do nothing yet
    if ( this != &input )
    {
+      ;
    }
    return *this;
 }
@@ -94,6 +95,11 @@ void cfdGraphicsObject::SetParentNode( VE_SceneGraph::cfdGroup* input )
 void cfdGraphicsObject::SetWorldNode( VE_SceneGraph::cfdGroup* input )
 {
    this->worldNode = input;
+}
+
+VE_SceneGraph::cfdTempAnimation* cfdGraphicsObject::GetAnimation( void )
+{
+   return animation;
 }
 
 // add "child node" to scene graph

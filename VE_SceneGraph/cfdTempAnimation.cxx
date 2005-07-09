@@ -94,6 +94,8 @@ void cfdTempAnimation::SetGroups( void )
 void cfdTempAnimation::SetDuration( double time )
 {
    this->_duration = time;
+   if ( this->_sequence->getPlayMode() == CFDSEQ_PLAYING )
+      this->_sequence->setDuration( this->_duration );
 }
 
 cfdGroup* cfdTempAnimation::GetGroup( int i )

@@ -53,47 +53,48 @@ namespace VE_Xplorer
 */
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdStreamers : public cfdObjects
-   {
-      public:
-         /* Initialize the VTK objects and pipeline.
-         Glyph(s) are from cfdPlanes's multiple points plane cursor.  */
-         cfdStreamers( void );
-  
-         ~cfdStreamers();
-   
-         // compare VjObs_i commandArray with its child's value
-         virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
+class VE_XPLORER_EXPORTS cfdStreamers : public cfdObjects
+{
+public:
+   /* Initialize the VTK objects and pipeline.
+   Glyph(s) are from cfdPlanes's multiple points plane cursor.  */
+   cfdStreamers( void );
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-         virtual void UpdateCommand();
+   ~cfdStreamers();
 
-         virtual void Update( void );
-  
-         vtkPolyData* GetStreamersOutput( void );
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray* _cfdCommandArray );
 
-         void SetIntegrationDirection( int );
-      
-         void SetPropagationTime( int );
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
 
-         void SetIntegrationStepLength( int );
+   virtual void Update( void );
 
-         void SetStepLength( int );
+   vtkPolyData* GetStreamersOutput( void );
 
-      private:
-         //void UpdateTracker( float x[3], float v[3] ); // Update the position of the cursors.
+   void SetIntegrationDirection( int );
 
-         vtkStreamLine*    stream;
-         vtkTubeFilter*    tubeFilter;
-         vtkPolyDataMapper* mapper;
-         vtkRungeKutta45*   integ;
+   void SetPropagationTime( int );
 
-         float propagationTime;
-         float integrationStepLength;
-         float stepLength;
-         int   integrationDirection;
-         float lineDiameter;
-         int   streamArrows;
-   };
+   void SetIntegrationStepLength( int );
+
+   void SetStepLength( int );
+
+private:
+   //void UpdateTracker( float x[3], float v[3] ); // Update the position of the cursors.
+
+   vtkStreamLine*    stream;
+   vtkTubeFilter*    tubeFilter;
+   vtkPolyDataMapper* mapper;
+   vtkRungeKutta45*   integ;
+
+   float propagationTime;
+   float integrationStepLength;
+   float stepLength;
+   int   integrationDirection;
+   float lineDiameter;
+   int   streamArrows;
+   float arrowDiameter;
+};
 }
 #endif

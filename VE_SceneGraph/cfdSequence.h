@@ -178,7 +178,7 @@ namespace VE_SceneGraph{
 #endif
 protected:
          cfdSwitch* _lSwitch;
-         int _appFrame;
+         double _appFrame;
          int _lMode;
          int _pMode;
          int _step;

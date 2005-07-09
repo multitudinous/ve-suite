@@ -66,161 +66,163 @@ namespace VE_Xplorer
 */
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdCursor : public cfdGlobalBase
-   {
-      public:
-         cfdCursor( vtkPolyData* , VE_SceneGraph::cfdDCS* , VE_SceneGraph::cfdGroup* );
-         ~cfdCursor();
+class VE_XPLORER_EXPORTS cfdCursor : public cfdGlobalBase
+{
+public:
+   cfdCursor( vtkPolyData* , VE_SceneGraph::cfdDCS* , VE_SceneGraph::cfdGroup* );
+   ~cfdCursor();
 
-         // compare VjObs_i commandArray with its child's value
-         virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray*  );
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( VE_Xplorer::cfdCommandArray*  );
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-         virtual void UpdateCommand();
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
 
-         void Initialize( double x[3], double v[3] );
+   void Initialize( double x[3], double v[3] );
 
-         /*!
-         Update the cursor's type(t), position(x), and
-         direction(v).
-         Type 0, multiple sphere cursor(x plane oriented).
-         Type 1, multiple sphere cursor(y plane oriented).
-         Type 2, multiple sphere cursor(z plane oriented).
-         Type 3, single sphere cursor.
-         Type 4, single arrow cursor.
-         */
-         /* 
-         Update the position and direction of the virtual cursor
-         based on the output from cfdNavigate::GetCursorLocation(location) 
-         and cfdNavigate::GetDirection(direction).  
-         */
-         void Update( double x[3], double v[3], double wx[3] );
+   /*!
+   Update the cursor's type(t), position(x), and
+   direction(v).
+   Type 0, multiple sphere cursor(x plane oriented).
+   Type 1, multiple sphere cursor(y plane oriented).
+   Type 2, multiple sphere cursor(z plane oriented).
+   Type 3, single sphere cursor.
+   Type 4, single arrow cursor.
+   */
+   /* 
+   Update the position and direction of the virtual cursor
+   based on the output from cfdNavigate::GetCursorLocation(location) 
+   and cfdNavigate::GetDirection(direction).  
+   */
+   void Update( double x[3], double v[3], double wx[3] );
 
-         vtkPolyDataSource * GetSourcePoints( void );
+   vtkPolyDataSource * GetSourcePoints( void );
 
-         // Return the dynamic coordinate system with pfGeode objects.
-         VE_SceneGraph::cfdDCS * GetcfdDCS();
+   // Return the dynamic coordinate system with pfGeode objects.
+   VE_SceneGraph::cfdDCS * GetcfdDCS();
 
-         // Set/Get plane size.
-         void SetPlaneSize( float size );
-         void GetPlaneSize( float &size );
-         float GetPlaneSize();
+   // Set/Get plane size.
+   void SetPlaneSize( float size );
+   void GetPlaneSize( float &size );
+   float GetPlaneSize();
 
-         // Set/Get plane resolution: the number of x-y subdivisions in the plane
-         void SetPlaneReso( int size );
-         void GetPlaneReso( int &size );
-         int GetPlaneReso();
+   // Set/Get plane resolution: the number of x-y subdivisions in the plane
+   void SetPlaneReso( int size );
+   void GetPlaneReso( int &size );
+   int GetPlaneReso();
 
-         // for box cursor...
-         void getExtent(double boxExtent[6]);
-         vtkCubeSource *getBox();
-         float boxExtent;
+   // for box cursor...
+   void getExtent(double boxExtent[6]);
+   vtkCubeSource *getBox();
+   float boxExtent;
 
-         void SetActiveDataSetDCS( VE_SceneGraph::cfdDCS* myDCS );
-         void SetActiveDataSet( cfdDataSet* input );
+   void SetActiveDataSetDCS( VE_SceneGraph::cfdDCS* myDCS );
+   void SetActiveDataSet( cfdDataSet* input );
 
-         int GetCursorID( void );
-         double* GetCursorLocation( void );
-         double* GetCursorLocalLocation( void );
-      private:
+   int GetCursorID( void );
+   double* GetCursorLocation( void );
+   double* GetCursorLocalLocation( void );
+private:
 
-         // Move the cursor methods
-         void SetTranslation( void );
-         void SetRotation( float [3] );
+   // Move the cursor methods
+   void SetTranslation( void );
+   void SetRotation( float [3] );
 
-         void BuildSphere();           // Build sphere cursor.
-         void BuildPlaneSource();      // Build nxn plane cursor
-         // Update the current position of sphere cursor.
-         void UpdateSphere();
-      
-         vtkSphereSource *sphereSrc;
-         vtkPolyDataNormals *sphereNorm;
-         vtkPolyDataMapper *sphereMapper;
-         vtkActor *sphereActor;
+   void BuildSphere();           // Build sphere cursor.
+   void BuildPlaneSource();      // Build nxn plane cursor
+   // Update the current position of sphere cursor.
+   void UpdateSphere();
 
-         //Arrow Source Stuff
-         // Build arrow cursor and use as source for glyph.
-         void BuildArrowSource( void );
-         void UpdateArrowSource( void );
+   vtkSphereSource *sphereSrc;
+   vtkPolyDataNormals *sphereNorm;
+   vtkPolyDataMapper *sphereMapper;
+   vtkActor *sphereActor;
 
-         vtkPolyData * arrow;
+   //Arrow Source Stuff
+   // Build arrow cursor and use as source for glyph.
+   void BuildArrowSource( void );
+   void UpdateArrowSource( void );
 
-         vtkPlaneSource * arrowPlaneS;
-         vtkPolyDataMapper * arrowMapperS;
-         vtkActor * arrowActorS;
-         vtkGlyph3D * arrowGlyphS;
-         //cfdDataSet * dataSet;
+   vtkPolyData * arrow;
 
-         // Line Source Stuff
-         void UpdateLineSource( int );
-         void BuildLineSource( void );
+   vtkPlaneSource * arrowPlaneS;
+   vtkPolyDataMapper * arrowMapperS;
+   vtkActor * arrowActorS;
+   vtkGlyph3D * arrowGlyphS;
+   //cfdDataSet * dataSet;
 
-         vtkLineSource * lineSrc;
-         vtkActor * lineActor;
-         vtkPolyDataMapper *lineMapper;
-         vtkGlyph3D * lineGlyph;
-         vtkSphereSource * lineSphere;
+   // Line Source Stuff
+   void UpdateLineSource( int );
+   void BuildLineSource( void );
 
-         //add for box cursor
-         void UpdateCube();
-         void BuildCube();
-      
-         vtkCubeSource *cubeSrc;
-         vtkPolyDataMapper *cubeMapper;
-         vtkActor *cubeActor;
+   vtkLineSource * lineSrc;
+   vtkActor * lineActor;
+   vtkPolyDataMapper *lineMapper;
+   vtkGlyph3D * lineGlyph;
+   vtkSphereSource * lineSphere;
 
-         // Plane Source Stuff
-         // Build the x,y,z plane orientations cursors.
-         void UpdatePlaneSource( int );
+   //add for box cursor
+   void UpdateCube();
+   void BuildCube();
 
-         vtkPlaneSource * planeSrc;
-         vtkActor * planeActorS;
-         vtkPolyDataMapper *planeMapperS;
-         vtkGlyph3D * sphereGlyph;
-         vtkSphereSource * planeSphereS;
+   vtkCubeSource *cubeSrc;
+   vtkPolyDataMapper *cubeMapper;
+   vtkActor *cubeActor;
 
-         // I use 'pos' to indicate the current coordinate of the cursor
-         double pos[3];
-         double pos_c[3];
- 
-         // Performer dynamic coordinate systems with pre-loaded translated VTK objects.
-         VE_SceneGraph::cfdDCS *cursorDCS;
-         VE_SceneGraph::cfdDCS *cursorScaleDCS;
-         VE_SceneGraph::cfdDCS *worldDCS;
+   // Plane Source Stuff
+   // Build the x,y,z plane orientations cursors.
+   void UpdatePlaneSource( int );
 
-         // A Performer geometry node.
-         VE_SceneGraph::cfdGeode *cursorGeode;
+   vtkPlaneSource * planeSrc;
+   vtkActor * planeActorS;
+   vtkPolyDataMapper *planeMapperS;
+   vtkGlyph3D * sphereGlyph;
+   vtkSphereSource * planeSphereS;
 
-         // Plane size;
-         float pSize;
-         float last_pSize;
+   // I use 'pos' to indicate the current coordinate of the cursor
+   double pos[3];
+   double pos_c[3];
 
-         // Plane resolution;
-         int pReso;
-         int last_pReso;
+   // Performer dynamic coordinate systems with pre-loaded translated VTK objects.
+   VE_SceneGraph::cfdDCS *cursorDCS;
+   VE_SceneGraph::cfdDCS *cursorScaleDCS;
+   VE_SceneGraph::cfdDCS *worldDCS;
 
-         // Current position of cursor in virtual environment.
-         double loc[3];
+   // A Performer geometry node.
+   VE_SceneGraph::cfdGeode *cursorGeode;
 
-         // Current direction of cursor in virtual environment.
-         double dir[3];
+   // Plane size;
+   float pSize;
+   float last_pSize;
 
-         // Current location of cursor relatice to worldDCS (Note: this is not to global 0,0,0).
-         double localLocation[3];
+   // Plane resolution;
+   int pReso;
+   int last_pReso;
 
-         // last plane direction
-         int last_direction;
+   // Current position of cursor in virtual environment.
+   double loc[3];
 
-         // last plane direction
-         int last_cursor_type;
-      
-         void GetLocalLocationVector( void );
+   // Current direction of cursor in virtual environment.
+   double dir[3];
 
-         VE_SceneGraph::cfdDCS * activeDataSetDCS;
+   // Current location of cursor relatice to worldDCS (Note: this is not to global 0,0,0).
+   double localLocation[3];
 
-         VE_SceneGraph::cfdGroup* _rootNode;
-         VE_Xplorer::cfdDataSet* _activeDataSet;
-         int cursorId;
-   };
+   // last plane direction
+   int last_direction;
+
+   // last plane direction
+   int last_cursor_type;
+
+   void GetLocalLocationVector( void );
+
+   VE_SceneGraph::cfdDCS * activeDataSetDCS;
+
+   VE_SceneGraph::cfdGroup* _rootNode;
+   VE_Xplorer::cfdDataSet* _activeDataSet;
+   int cursorId;
+   float sphereRadius;
+   float last_sphereRadius;
+};
 }
 #endif

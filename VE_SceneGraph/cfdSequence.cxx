@@ -608,7 +608,7 @@ void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node,
          }
       }
       //reset the appFrame counter for synchronization
-      _sequence->_appFrame = 0;
+      _sequence->_appFrame = 0.0f;
 
       //if we are stepping, pause the _sequence
       if(_sequence->_step == CFDSEQ_STEP){

@@ -5,7 +5,8 @@
 #endif
 #include <wx/wx.h>
 
-enum STREAMLINE_TAB_IDS{
+enum STREAMLINE_TAB_IDS
+{
    CURSOR_SELECT_RBOX,
    DIR_RBOX,
    INTEGRATE_DIR_RBOX,
@@ -18,9 +19,12 @@ enum STREAMLINE_TAB_IDS{
    INT_STEP_SLIDER,
    STEP_SLIDER,
    DIAMETER_SLIDER,
-   ARROW_POINTS_CHK
+   ARROW_POINTS_CHK,
+   PARTICLE_DIALOG,
+   SPHERE_SCALE_SLIDER
 };
 
+class UI_TransientDialog;
 
 class UI_StreamlineTab : public wxScrolledWindow
 {
@@ -37,6 +41,7 @@ protected:
    wxSlider* _nPtsSlider;
    wxSlider* _sizePerSlider;
    wxSlider* _diameterSlider;
+   wxSlider* sphereScaleSlider;
    wxRadioBox* _cursorRBox;
    wxRadioBox* _directionRBox;
    wxRadioBox* _integrationDirRBox;
@@ -45,19 +50,22 @@ protected:
    wxCheckBox* _lastSeedPtChk;
    wxCheckBox* arrowPointsChk;
 
+   UI_TransientDialog* particleControls;
+
    //event handling callbacks
-   void _onCursorSelect(wxCommandEvent& event);
-   void _onDirection(wxCommandEvent& event);
-   void _onIntegrateDir(wxCommandEvent& event);
-   void _onParticleTrack(wxCommandEvent& event);
-   void _onCompStreamline(wxCommandEvent& event);
-   void _onCheck(wxCommandEvent& event);
-   void OnArrowCheck( wxCommandEvent& event );
-   void _oniStepSlider(wxScrollEvent& event);
-   void _onPropSlider(wxScrollEvent& event);
-   void _onStepSlider(wxScrollEvent& event);
-   void _onnPointsSlider(wxScrollEvent& event);
-   void _onDiameterSlider(wxScrollEvent& event);
+   void _onCursorSelect(wxCommandEvent& );
+   void _onDirection(wxCommandEvent& );
+   void _onIntegrateDir(wxCommandEvent& );
+   void _onParticleTrack(wxCommandEvent& );
+   void _onCompStreamline(wxCommandEvent& );
+   void _onCheck(wxCommandEvent& );
+   void OnArrowCheck( wxCommandEvent& );
+   void _oniStepSlider(wxScrollEvent& );
+   void _onPropSlider(wxScrollEvent& );
+   void _onStepSlider(wxScrollEvent& );
+   void _onnPointsSlider(wxScrollEvent& );
+   void _onDiameterSlider(wxScrollEvent& );
+   void onScaleSlider( wxScrollEvent& );
 
    void ConstructCommandId( void );
 

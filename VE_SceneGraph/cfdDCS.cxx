@@ -354,16 +354,11 @@ void cfdDCS::SetMat( Matrix44f& input )
          // Set scale values
          //float temp[ 3 ];
          osg::Vec3d scale = inMat.getScale();
-std::cout << " scale " << scale[ 0 ] << std::endl;
-std::cout << " scale " << scale[ 1 ] << std::endl;
-std::cout << " scale " << scale[ 2 ] << std::endl;
          //SetScaleArray( (float*)scale.ptr() );
 
          // Set translation array
          osg::Vec3d trans = inMat.getTrans();
          SetTranslationArray( (float*)trans.ptr() );
-std::cout << " trans " << trans[ 0 ] << " : " << trans[ 1 ] << std::endl;
-std::cout << " trans " << trans[ 1 ] << " : " << trans[ 2 ] << std::endl;
       }
    }
    else

@@ -1,17 +1,20 @@
 #include "VE_Conductor/VE_UI/UI_StreamTab.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
+#include "VE_Conductor/VE_UI/UI_TransientDialog.h"
+
 #include "VE_Xplorer/cfdEnum.h"
 
 BEGIN_EVENT_TABLE(UI_StreamlineTab, wxPanel)
-   EVT_RADIOBOX      (CURSOR_SELECT_RBOX,    UI_StreamlineTab::_onDirection)
-   EVT_RADIOBOX      (DIR_RBOX,              UI_StreamlineTab::_onDirection)
-   EVT_RADIOBOX      (INTEGRATE_DIR_RBOX,    UI_StreamlineTab::_onIntegrateDir)
-   EVT_BUTTON        (COMP_STREAMLINE_BUTTON,UI_StreamlineTab::_onCompStreamline)
-   EVT_BUTTON        (PARTICLE_TRACK_BUTTON, UI_StreamlineTab::_onParticleTrack)
-   EVT_CHECKBOX      (SEED_POINTS_CHK,       UI_StreamlineTab::_onCheck)
-   EVT_CHECKBOX      (ARROW_POINTS_CHK,       UI_StreamlineTab::OnArrowCheck )
-   EVT_COMMAND_SCROLL(NUM_PTS_SLIDER,        UI_StreamlineTab::_onnPointsSlider)
-   EVT_COMMAND_SCROLL(SIZE_SLIDER,           UI_StreamlineTab::_onnPointsSlider)
+   EVT_RADIOBOX      ( CURSOR_SELECT_RBOX,    UI_StreamlineTab::_onDirection)
+   EVT_RADIOBOX      ( DIR_RBOX,              UI_StreamlineTab::_onDirection)
+   EVT_RADIOBOX      ( INTEGRATE_DIR_RBOX,    UI_StreamlineTab::_onIntegrateDir)
+   EVT_BUTTON        ( COMP_STREAMLINE_BUTTON,UI_StreamlineTab::_onCompStreamline)
+   EVT_BUTTON        ( PARTICLE_TRACK_BUTTON, UI_StreamlineTab::_onParticleTrack)
+   EVT_CHECKBOX      ( SEED_POINTS_CHK,       UI_StreamlineTab::_onCheck)
+   EVT_CHECKBOX      ( ARROW_POINTS_CHK,      UI_StreamlineTab::OnArrowCheck )
+   EVT_COMMAND_SCROLL( NUM_PTS_SLIDER,        UI_StreamlineTab::_onnPointsSlider)
+   EVT_COMMAND_SCROLL( SIZE_SLIDER,           UI_StreamlineTab::_onnPointsSlider)
+   EVT_COMMAND_SCROLL( SPHERE_SCALE_SLIDER,   UI_StreamlineTab::onScaleSlider)
 #ifdef WIN32
    EVT_COMMAND_SCROLL_ENDSCROLL(PROP_SLIDER,           UI_StreamlineTab::_onPropSlider)
    EVT_COMMAND_SCROLL_ENDSCROLL(INT_STEP_SLIDER,       UI_StreamlineTab::_oniStepSlider)
@@ -50,8 +53,10 @@ UI_StreamlineTab::UI_StreamlineTab(wxNotebook* tControl)
    _parTrackingButton = 0;
    _lastSeedPtChk = 0;
    _diameterSlider = NULL;
+   sphereScaleSlider = 0;
 
    _parent = tControl;
+   particleControls = 0;
 
    _buildPage();
 }
@@ -113,6 +118,7 @@ void UI_StreamlineTab::_buildPage()
 
    wxStaticText* npLabel         = new wxStaticText(this,-1,wxT("Number of Points"));
    wxStaticText* sizeLabel       = new wxStaticText(this,-1,wxT("Size(%)"));
+   wxStaticText* scaleLabel       = new wxStaticText(this,-1,wxT("Sphere/Arrow/Particle Scale"));
 
    wxStaticText* diameterLabel   = new wxStaticText(this,-1,wxT("Line Diameter"));
    wxStaticText* diameterLabelLeft   = new wxStaticText(this,-1,wxT("Decrease Size"));
@@ -149,6 +155,11 @@ void UI_StreamlineTab::_buildPage()
                                 wxSL_HORIZONTAL|
                                 wxSL_LABELS );
 
+   sphereScaleSlider = new wxSlider(this, SPHERE_SCALE_SLIDER, 50, 1, 100,
+                                wxDefaultPosition, wxDefaultSize,
+                                wxSL_HORIZONTAL|
+                                wxSL_LABELS );
+
    //group the sliders and the labels together
    wxBoxSizer* propGroup      = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* propGroupBottom      = new wxBoxSizer(wxHORIZONTAL);
@@ -164,6 +175,8 @@ void UI_StreamlineTab::_buildPage()
 
    wxBoxSizer* diameterGroup  = new wxBoxSizer(wxVERTICAL);
    wxBoxSizer* diameterGroupBottom  = new wxBoxSizer(wxHORIZONTAL);
+
+   wxBoxSizer* scaleGroup  = new wxBoxSizer(wxVERTICAL);
 
    //the prop slider
    propGroup->Add(pLabel,0,wxALIGN_LEFT);
@@ -194,14 +207,16 @@ void UI_StreamlineTab::_buildPage()
    sizePointsGroup->Add(sizeLabel,0,wxALIGN_LEFT);
    sizePointsGroup->Add(_sizePerSlider,1,wxALIGN_RIGHT|wxEXPAND);
 
+   // The plane size slider
+   scaleGroup->Add(scaleLabel,0,wxALIGN_LEFT);
+   scaleGroup->Add(sphereScaleSlider,1,wxALIGN_RIGHT|wxEXPAND);
+
    // The streamline diameter slider
    diameterGroup->Add(diameterLabel,0,wxALIGN_LEFT);
    diameterGroup->Add(_diameterSlider,1,wxALIGN_RIGHT|wxEXPAND );
    diameterGroupBottom->Add(diameterLabelLeft,6,wxALIGN_LEFT|wxEXPAND);
    diameterGroupBottom->Add(diameterLabelRight,0,wxALIGN_RIGHT|wxEXPAND);
    diameterGroup->Add(diameterGroupBottom,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5 );
-
-
 
    //the buttons and check box for the bottom of the UI
    _compStreamButton = new wxButton(this, COMP_STREAMLINE_BUTTON,
@@ -255,6 +270,7 @@ void UI_StreamlineTab::_buildPage()
    streamControllerBoxSizer->Add(stepGroup,        1, wxEXPAND|wxALIGN_RIGHT );
    streamControllerBoxSizer->Add(sizePointsGroup,  1, wxEXPAND|wxALIGN_RIGHT );
    streamControllerBoxSizer->Add(numPointsGroup,   1, wxEXPAND|wxALIGN_RIGHT );
+   streamControllerBoxSizer->Add(scaleGroup,       1, wxEXPAND|wxALIGN_RIGHT );
    streamControllerBoxSizer->Add(diameterGroup,    1, wxEXPAND|wxALIGN_RIGHT );
 
    // Add to the static box sizer
@@ -359,6 +375,16 @@ void  UI_StreamlineTab::_onParticleTrack(wxCommandEvent& WXUNUSED(event))
 {
    ((UI_Tabs *)_parent)->cId = ANIMATED_STREAMLINES;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();   
+
+   if ( particleControls )
+   {
+      delete particleControls;
+      particleControls = 0;
+   }
+
+   particleControls = new UI_TransientDialog(19, this,PARTICLE_DIALOG );
+   particleControls->SetTabControl( ((UI_Tabs*)_parent) );
+   particleControls->Show();
 }
 
 ////////////////////////////////////////////////////////////////
@@ -381,6 +407,7 @@ void  UI_StreamlineTab::_onCheck(wxCommandEvent& WXUNUSED(event))
 {
 }
 
+//////////////////////////////////////////////////////////////////////
 void UI_StreamlineTab::OnArrowCheck( wxCommandEvent& WXUNUSED(event) )
 {
    ((UI_Tabs *)_parent)->cId = STREAMLINE_ARROW;
@@ -401,11 +428,18 @@ void  UI_StreamlineTab::_onDirection( wxCommandEvent& WXUNUSED(event) )
 }
 
 ///////////////////////////////////////////////////////
+void  UI_StreamlineTab::onScaleSlider( wxScrollEvent& WXUNUSED(event) )
+{
+   ConstructCommandId();
+}
+
+///////////////////////////////////////////////////////
 void  UI_StreamlineTab::ConstructCommandId( void )
 {
    ((UI_Tabs *)_parent)->cId  = CHANGE_STREAMLINE_CURSOR;
    ((UI_Tabs *)_parent)->cMin = _nPtsSlider->GetValue();
    ((UI_Tabs *)_parent)->cMax = _sizePerSlider->GetValue();
+   ((UI_Tabs *)_parent)->cSc  = sphereScaleSlider->GetValue();
 
    if ( _cursorRBox->GetSelection() == 0 )
    {

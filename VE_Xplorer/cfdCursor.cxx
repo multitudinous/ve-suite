@@ -160,6 +160,8 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::cfdDCS *worldDCS,
 
    this->last_direction = XPLANE;
    this->last_cursor_type = XPLANE;
+
+   sphereRadius = 0.05f;
 }
 
 cfdCursor::~cfdCursor()
@@ -252,7 +254,7 @@ void cfdCursor::BuildPlaneSource()
    this->planeSrc->SetPoint2( 0.0f, -this->pSize, this->pSize );
    this->planeSrc->SetResolution( this->pReso, this->pReso );
 
-   this->planeSphereS->SetRadius( 0.05f );
+   this->planeSphereS->SetRadius( sphereRadius );
    this->planeSphereS->Update();
 
    this->sphereGlyph->SetSource( this->planeSphereS->GetOutput() );
@@ -315,7 +317,7 @@ void cfdCursor::BuildLineSource( void )
    this->lineSrc->SetPoint2( +this->pSize, 0.0f, 0.0f );
    this->lineSrc->SetResolution( this->pReso );
 
-   this->lineSphere->SetRadius( 0.05f );
+   this->lineSphere->SetRadius( sphereRadius );
    this->lineSphere->Update();
 
    this->lineGlyph->SetSource( this->lineSphere->GetOutput() );
@@ -394,6 +396,9 @@ void cfdCursor::UpdateLineSource( int direction )
 
    this->lineSrc->Update();
 
+   this->lineSphere->SetRadius( sphereRadius );
+   this->lineSphere->Update();
+
    this->cursorGeode->TranslateTocfdGeode( this->lineActor );
 }
 
@@ -433,6 +438,10 @@ void cfdCursor::UpdatePlaneSource( int i )
 
    vprDEBUG(vprDBG_ALL, 1) << " updating plane source " << last_direction
                            << std::endl << vprDEBUG_FLUSH;
+
+   this->planeSphereS->SetRadius( sphereRadius );
+   this->planeSphereS->Update();
+
    this->planeSrc->Update();
    this->cursorGeode->TranslateTocfdGeode( this->planeActorS );
 }
@@ -461,9 +470,11 @@ void cfdCursor::Update( double x[3], double v[3], double wx[3] )
    vprDEBUG(vprDBG_ALL, 3) << this->last_pSize << " : " << this->pSize
                            << std::endl << vprDEBUG_FLUSH;
 
-   if ( this->last_cursor_type != this->cursorId ||
-         this->last_pReso != this->pReso ||
-         this->last_pSize != this->pSize )
+   if (  ( this->last_cursor_type != this->cursorId ) ||
+         ( this->last_pReso != this->pReso ) ||
+         ( this->last_pSize != this->pSize ) ||
+         ( sphereRadius != last_sphereRadius ) 
+      )
    {
       switch( this->cursorId )
       {
@@ -509,6 +520,7 @@ void cfdCursor::Update( double x[3], double v[3], double wx[3] )
       this->last_cursor_type = this->cursorId;
       this->last_pReso = this->pReso;
       this->last_pSize = this->pSize;
+      last_sphereRadius = sphereRadius;
    }
 
    this->SetTranslation();
@@ -878,6 +890,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          //std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() 
          //            << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << std::endl;
          this->SetPlaneSize( commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
+         sphereRadius = commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) * 0.05f / 50.0f;
       }
    }
 

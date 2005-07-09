@@ -308,6 +308,17 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
       streamDir = cfdAnimatedStreamlineCone::BOTH;
       return true;
    }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
+   {
+      // diameter is obtained from gui, -100 < vectorScale < 100
+      // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
+      // convert range to -2.5 < x < 2.5, and compute the exponent...
+      float range = 2.5f;
+      int diameter = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+      particleDiameter = 8.0f * exp( diameter / ( 100.0 / range ) ) * 
+                       this->GetActiveDataSet()->GetLength()*0.001f;
+      return true;
+   }
 
    return flag;
 }
