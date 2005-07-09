@@ -100,7 +100,7 @@ cfdWriteTraverser& cfdWriteTraverser::operator=(const cfdWriteTraverser& rhs)
    //make sure it's not the same object
    if(this != &rhs){
       //call the parent operator
-      this->cfdNodeTraverser::operator =(rhs);
+      this->VE_SceneGraph::cfdNodeTraverser::operator =(rhs);
       
       //copy our new name
       _fName = new char[strlen(rhs._fName)+1];
