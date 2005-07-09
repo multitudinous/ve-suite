@@ -29,7 +29,7 @@ public:
 		               wxWindowID id = -1, 
                     const wxString& title = "Transient Controls", 
                     const wxPoint& pos = wxDefaultPosition,
-                    const wxSize& size = wxSize(150,200),
+                    const wxSize& size = wxSize(200,100),
                     long style = wxDEFAULT_DIALOG_STYLE, 
                     const wxString& name = "Transient Controls");
    ~UI_TransientDialog(){};

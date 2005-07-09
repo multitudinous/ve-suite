@@ -4,6 +4,7 @@
 #include "VE_Builder/Utilities/gui/spinctld.h"
 #include <iostream>
 
+
 BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
    EVT_BUTTON(PLAY_BUTTON, UI_TransientDialog::_onPlay)
    EVT_BUTTON(STOP_BUTTON, UI_TransientDialog::_onStop)
@@ -91,10 +92,10 @@ void UI_TransientDialog::_buildDialog()
                                 wxString("Duration (s)"));
    wxStaticBoxSizer* dSizer = new wxStaticBoxSizer(duration,wxHORIZONTAL);
 
-   tStepSizer->Add(_currentFrame,1,wxALIGN_CENTER|wxEXPAND);
-   dSizer->Add(_duration,1,wxALIGN_CENTER|wxEXPAND);
-   spinSizer->Add(tStepSizer,1,wxALIGN_CENTER|wxEXPAND);
-   spinSizer->Add(dSizer,1,wxALIGN_CENTER|wxEXPAND);
+   tStepSizer->Add(_currentFrame,1,wxALIGN_CENTER);
+   dSizer->Add(_duration,1,wxALIGN_CENTER);
+   spinSizer->Add(tStepSizer,1,wxALIGN_CENTER);
+   spinSizer->Add(dSizer,1,wxALIGN_CENTER);
 
    controlSizer->Add(_prevButton,1,wxALIGN_CENTER|wxEXPAND);
    controlSizer->Add(_stopButton,1,wxALIGN_CENTER|wxEXPAND);

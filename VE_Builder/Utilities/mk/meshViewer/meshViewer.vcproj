@@ -32,7 +32,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="VE_UtilLib_tao_osg_d.lib VE_XplorerLib_tao_osg_d.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib vtkHybrid.lib vrj_d.lib vpr_d.lib"
+				AdditionalDependencies="VE_UtilLib_tao_osg_d.lib  vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib vtkHybrid.lib vrj_d.lib vpr_d.lib"
 				OutputFile="$(OutDir)/meshViewer.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;"
@@ -116,9 +116,6 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}">
-			<File
-				RelativePath="..\..\..\Translator\cfdGrid2Surface.cpp">
-			</File>
 			<File
 				RelativePath="..\..\meshViewer.cpp">
 			</File>
