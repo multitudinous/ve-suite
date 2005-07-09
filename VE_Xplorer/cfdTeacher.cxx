@@ -53,6 +53,7 @@
 #include <vpr/Util/Debug.h>
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
+#include <gmtl/gmtl.h>
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
@@ -253,13 +254,13 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
                                 << std::endl << vprDEBUG_FLUSH;
             
          this->GetcfdDCS()->AddChild( 
-            this->getpfNode( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) ) );
+            this->getpfNode( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) ) );
       }
       else
       {
          vprDEBUG(vprDBG_ALL,2) << "LOAD_PFB_FILE: replaceChild" 
                                 << std::endl << vprDEBUG_FLUSH;
-         int child = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         int child = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          this->GetcfdDCS()->ReplaceChild( this->GetcfdDCS()->GetChild( 0 ), this->getpfNode( child ) );
       }
       return true;
@@ -310,7 +311,8 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 
       // store the world DCS matrix..
       gmtl::Matrix44f m;
-      if(_worldDCS){
+      if ( _worldDCS )
+      {
          m = this->_worldDCS->GetMat();
 
          //temporarily reset the world DCS matrix to the identity
@@ -322,10 +324,20 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       
          writePFBFile(this->_worldDCS,(char*)pfb_filename);
 
+         // The following is hack until osg or juggler 
+         // allow us to pull scale info out of a 4x4 matrix
+         float* scaleArray = this->_worldDCS->GetScaleArray();
+         float tempScale = 1.0f / scaleArray[ 0 ];
+         gmtl::Matrix44f scaleMat;
+         gmtl::setScale( scaleMat, tempScale );
+         gmtl::Matrix44f mTemp = scaleMat * m;
          // restore the world DCS matrix...
-         this->_worldDCS->SetMat( m );
- 
-      }else{
+         //this->_worldDCS->SetMat( m );
+         this->_worldDCS->SetMat( mTemp );
+         this->_worldDCS->SetScaleArray( scaleArray ); 
+      }
+      else
+      {
          writePFBFile(VE_SceneGraph::cfdPfSceneManagement::instance()->GetRootNode(),
                     (char*)pfb_filename);
       }
