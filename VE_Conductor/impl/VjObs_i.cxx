@@ -773,7 +773,7 @@ VjObs::obj_pd* VjObs_i::GetClientInfoData()
 VjObs::obj_pd* VjObs_i::GetClientInfoData()
 #endif
 {
-   //return clientInfoObserverDataArray._retn();    //check this
+   return clientInfoObserverDataArray._retn();    //check this
 }
 
 #ifdef _TAO

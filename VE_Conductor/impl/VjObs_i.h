@@ -103,7 +103,7 @@ public:
       // seem to work. There are 9 entries becuase that
       // how many variables are synchronized during an
       // update call in VjObs_i
-	   clientInfoObserverDataArray = new VjObs::obj_p(50);
+	   clientInfoObserverDataArray = new VjObs::obj_pd(50);
 	   clientInfoObserverDataArray->length(50);
 	   clientInfoObserverDataArray->length( this->numOfClientInfo );
 	   clientInfoObserverDataArray->length(50);
@@ -195,14 +195,7 @@ protected:
    VjObs::scalar_p_var teacher_name;
    VjObs::Models* _models;
 
-   //int totalNumberOfScalars;
-   //int totalNumberOfVectors;
-
-   //VjObs::scalar_p_var dataset_names;
-   //VjObs::obj_p_var dataset_types;
-   //VjObs::obj_p_var num_scalars_per_dataset;
-   //VjObs::obj_p_var num_vectors_per_dataset;
-   VjObs::obj_p_var clientInfoObserverDataArray;
+   VjObs::obj_pd_var clientInfoObserverDataArray;
    int numOfClientInfo;
    bool _unusedNewData;
    float time_since_start;
