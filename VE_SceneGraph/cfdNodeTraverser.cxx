@@ -33,6 +33,9 @@
 #include "VE_SceneGraph/cfdNodeTraverser.h"
 #include <iostream>
 #include "VE_SceneGraph/cfdGroup.h"
+#include "VE_SceneGraph/cfdSwitch.h"
+#include "VE_SceneGraph/cfdDCS.h"
+#include "VE_SceneGraph/cfdNode.h"
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
@@ -70,7 +73,7 @@ cfdNodeTraverser::~cfdNodeTraverser()
 ////////////////////////////////////////////
 //set the node to traverse                //
 ////////////////////////////////////////////
-void cfdNodeTraverser::setNode(cfdNode* root)
+void cfdNodeTraverser::setNode(VE_SceneGraph::cfdNode* root)
 {
    _root = root;
 }
@@ -101,7 +104,7 @@ void cfdNodeTraverser::traverse()
 /////////////////////////////////////////////////////
 //depth first recursion of a node/scene graph      //
 /////////////////////////////////////////////////////
-void cfdNodeTraverser::_traverseNode(cfdNode* cNode)
+void cfdNodeTraverser::_traverseNode(VE_SceneGraph::cfdNode* cNode)
 {
    int nChildren = 0;
    
@@ -112,23 +115,42 @@ void cfdNodeTraverser::_traverseNode(cfdNode* cNode)
 #elif _OSG
 
 #endif
-   if(cNode->GetCFDNodeType() != cfdNode::CFD_GROUP){
+   if(cNode->GetCFDNodeType() != VE_SceneGraph::cfdNode::CFD_GROUP &&
+	   cNode->GetCFDNodeType() != VE_SceneGraph::cfdNode::CFD_SWITCH&&
+	   cNode->GetCFDNodeType() != VE_SceneGraph::cfdNode::CFD_DCS){
       return;
    }
    //grab the children of this group
    //pfGroup* curGroup = (pfGroup*)node;
-   cfdGroup* curGroup = (cfdGroup*)cNode;
-   nChildren = curGroup->GetNumChildren();
+	
 
    //the pre-callback
    if(_preFunc){
       _preFunc(this,cNode);
    }
-
-   //recurse the children of this node
-   for(int i = 0; i < nChildren; i++){
-      _traverseNode(curGroup->GetChild(i));
+   if(cNode->GetCFDNodeType() == VE_SceneGraph::cfdNode::CFD_GROUP){
+      VE_SceneGraph::cfdGroup* curGroup = (VE_SceneGraph::cfdGroup*)cNode;
+      nChildren = curGroup->GetNumChildren();
+      //recurse the children of this node
+      for(int i = 0; i < nChildren; i++){
+        _traverseNode(curGroup->GetChild(i));
+      }
+	}else if(cNode->GetCFDNodeType() == cfdNode::CFD_SWITCH){
+      VE_SceneGraph::cfdSwitch* curGroup = (VE_SceneGraph::cfdSwitch*)cNode;
+      nChildren = curGroup->GetNumChildren();
+      //recurse the children of this node
+      for(int i = 0; i < nChildren; i++){
+        _traverseNode(curGroup->GetChild(i));
+      }
+   }else if(cNode->GetCFDNodeType() == cfdNode::CFD_DCS){
+      VE_SceneGraph::cfdDCS* curGroup = (VE_SceneGraph::cfdDCS*)cNode;
+      nChildren = curGroup->GetNumChildren();
+      //recurse the children of this node
+      for(int i = 0; i < nChildren; i++){
+        _traverseNode(curGroup->GetChild(i));
+      }
    }
+   
 
    //the post-callback
    if(_postFunc){

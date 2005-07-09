@@ -501,7 +501,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== VIS_OPTION )
    {
-      if ( _activeModel )
+      if ( _activeModel &&  _activeModel->GetActiveDataSet())
       {
          //cfd visualization options
          int visOpt = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );

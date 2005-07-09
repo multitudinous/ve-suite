@@ -274,7 +274,6 @@ void cfdWriteTraverser::activateSequenceNodes()
 #elif _OSG
       //this may not work
       osgDB::writeNodeFile(*_root->GetRawNode(),_fName);
-
 #endif
    }
 }
