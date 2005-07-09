@@ -123,9 +123,6 @@
 				RelativePath=".\avsReader.cpp">
 			</File>
 			<File
-				RelativePath=".\cfdGrid2Surface.cpp">
-			</File>
-			<File
 				RelativePath=".\converter.cpp">
 			</File>
 			<File
