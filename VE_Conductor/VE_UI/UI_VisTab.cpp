@@ -383,7 +383,9 @@ void UI_VisualizationTab::_onNearest(wxCommandEvent& WXUNUSED(event))
 void UI_VisualizationTab::_onUpdate(wxCommandEvent& WXUNUSED(event))
 {
    this->createCommandId();
-   this->createTransientCommandId();
+   if(_visOptionCheckBox->GetValue() == false){
+      this->createTransientCommandId();
+   }
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
    std::cout << "Current Slider value: " << _slider->GetValue() << std::endl;
 }
