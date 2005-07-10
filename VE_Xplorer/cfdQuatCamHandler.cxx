@@ -193,10 +193,10 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate*
 
    if ( t < 1.0f )
    {
-      t += 0.10f;
+      t += 0.05f;
       QuatCams[cam_id]->MoveCam( nav->worldTrans, t, worldDCS );
       QuatCams[cam_id]->UpdateTrans( nav );
-      QuatCams[cam_id]->UpdateRotation( nav );
+      QuatCams[cam_id]->UpdateRotation( nav, worldDCS );
 
       //vjm = worldDCS->GetMat();
 

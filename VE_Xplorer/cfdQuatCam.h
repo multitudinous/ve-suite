@@ -76,7 +76,7 @@ namespace VE_Xplorer
 
          void UpdateTrans(cfdNavigate*);
 
-         void UpdateRotation(cfdNavigate*);
+         void UpdateRotation(cfdNavigate*, VE_SceneGraph::cfdDCS* );
 
          gmtl::Vec3f  vjVecCurrTrans;
 

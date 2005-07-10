@@ -33,6 +33,19 @@
 #include "VE_Xplorer/cfdQuatCam.h"
 #include "VE_Xplorer/cfdNavigate.h"
 #include "VE_SceneGraph/cfdDCS.h"
+#ifdef _PERFORMER
+#include <vrj/Draw/Pf/PfUtil.h>
+#include <Performer/pf.h>
+#include <Performer/pf/pfDCS.h>
+#include <Performer/pf/pfNode.h>
+#include <Performer/pr/pfLinMath.h>
+#elif _OSG
+#include <osg/MatrixTransform>
+#include <osg/Matrix>
+#include <osg/Vec3f>
+#include <osg/NodeVisitor>
+#elif _OPENSG
+#endif
 using namespace gmtl;
 using namespace VE_SceneGraph;
 using namespace VE_Xplorer;
@@ -62,7 +75,7 @@ void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::cfdDCS* worldDCS)
       vjVecLastTrans[i] = worldTrans[i];
    
    Matrix44f vjm;  
-   vjm = worldDCS->GetMat();
+   vjm = worldDCS->GetMat();   
    set(LastPosQuat,vjm);
 }
 
@@ -75,7 +88,7 @@ void cfdQuatCam::MoveCam(double* worldTrans, float t, VE_SceneGraph::cfdDCS* dum
 
 void cfdQuatCam::RotSlerp(float t)
 {  
-   gmtl::slerp(CurPosQuat,t,LastPosQuat,NextPosQuat);
+   gmtl::slerp(CurPosQuat,t,LastPosQuat,NextPosQuat);;
 }
 
 
@@ -92,21 +105,29 @@ void cfdQuatCam::UpdateTrans(cfdNavigate* nav)
    nav->worldTrans[2] = (double)vjVecCurrTrans[2];
 }
 
-void cfdQuatCam::UpdateRotation( cfdNavigate* nav )
+void cfdQuatCam::UpdateRotation( cfdNavigate* nav, VE_SceneGraph::cfdDCS* worldDCS)
 {
    Matrix44f temp;
    temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
+   worldDCS->SetRotationMatrix( temp );
+   
 #ifdef _PERFORMER
-   // We have to take the YRot value because the juggler axis 
-   // has y up where as we have z up these means we take the y up
-   // and make it z up
-   rotvec[0] = gmtl::Math::rad2Deg( makeYRot(temp) );
-#elif _OSG
-   rotvec[0] = gmtl::Math::rad2Deg( makeZRot(temp) );
-#endif
+   pfCoord* coord = new pfCoord();
+   rotvec[0] = coord->hpr[ 0 ];
+   rotvec[1] = coord->hpr[ 1 ];
+   rotvec[2] = coord->hpr[ 2 ];
    nav->worldRot[0] = rotvec[0];
-   //nav->worldRot[1] = rotvec[1];
-   //nav->worldRot[2] = rotvec[2];
+   nav->worldRot[1] = rotvec[1];
+   nav->worldRot[2] = rotvec[2];
+#elif _OSG
+   std::cerr << " ERROR: cfdQuatCam is NOT implemented for OSG " << std::endl;
+
+   //rotvec[0] = gmtl::Math::rad2Deg( makeZRot(temp) );
+   //rotvec[1] = gmtl::Math::rad2Deg( makeXRot(temp) );
+   //rotvec[2] = gmtl::Math::rad2Deg( makeYRot(temp) );
+#endif
+
+
 }   
 
 
