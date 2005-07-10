@@ -609,7 +609,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          osg::ref_ptr<osg::ShadeModel> shade = new osg::ShadeModel;
          shade->setMode(osg::ShadeModel::SMOOTH);
          bf->setFunction(osg::BlendFunc::SRC_ALPHA, osg::BlendFunc::ONE_MINUS_SRC_ALPHA);
-		    osg::ref_ptr<osg::Depth> depth = new osg::Depth;	 
+		    //osg::ref_ptr<osg::Depth> depth = new osg::Depth;	 
          //put in the appropriate bin
          if ( op == 1 ) {
              //depth->setWriteMask(true);
@@ -622,7 +622,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          }
          geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
          geostate->setAttributeAndModes(shade.get(),osg::StateAttribute::ON);
-         geostate->setAttributeAndModes(depth.get(),osg::StateAttribute::ON);
+         //geostate->setAttributeAndModes(depth.get(),osg::StateAttribute::ON);
          geostate->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
          osg::Vec4Array* curNormals = 0;
          curNormals  = dynamic_cast<osg::Vec4Array*>(geoset->asGeometry()->getNormalArray());
