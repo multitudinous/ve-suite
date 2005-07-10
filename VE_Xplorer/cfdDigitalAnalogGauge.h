@@ -24,8 +24,6 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdDigitalAnalogGauge.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -35,8 +33,7 @@
 #include <utility>
 #include <string>
 
-namespace VE_SceneGraph
-{
+namespace VE_SceneGraph{
    class cfdGroup;
    class cfdDCS;
    class cfdGeode;
@@ -73,10 +70,11 @@ namespace VE_Xplorer
          void SetBackgroundColor( double color[3] );
 
          void Display();
+	     void Display(int );
 
          void SetDigitalPrecision( int input );
          void UpdateMovingArrowAngle( double angle );
-         void UpdateMovingArrowInRange( double value );
+		 void UpdateMovingArrowInRange( double value );
       
          void UpdateDigitalText( double value );
 
@@ -84,21 +82,25 @@ namespace VE_Xplorer
 
       private:
    
-         vtkActor * GetCircleActor();
-         vtkActor * GetStationaryArrowActor();
-         vtkActor * GetMovingArrowActor();
-         vtkActor * GetLabelActor();
-         vtkActor * GetText2Actor();
-         vtkActor * GetDigitalActor();
-         vtkActor * GetBackgroundActor();
+      vtkActor * GetCircleActor();
+      vtkActor * GetStationaryArrowActor();
+	  vtkActor * GetMinMarkersActor(); //angran
+	  vtkActor * GetMaxMarkersActor(); //angan
+      vtkActor * GetMovingArrowActor();
+      vtkActor * GetLabelActor();
+      //vtkActor * GetText2Actor();
+      vtkActor * GetDigitalActor();
+      vtkActor * GetBackgroundActor();
 
-         void DefineCircleActor();
-         void DefineStationaryArrowActor();
-         void DefineMovingArrowActor();
-         void DefineGaugeTextActor();
-         void DefineText2Actor();
-         void DefineDigitalActor();
-         void DefineBackgroundActor();
+      void DefineCircleActor();
+      void DefineStationaryArrowActor();
+      void DefineMovingArrowActor();
+      void DefineGaugeTextActor();
+      //void DefineText2Actor();
+      void DefineDigitalActor();
+      void DefineBackgroundActor();
+	  void DefineMinMarkersActor();//angran
+	  void DefineMaxMarkersActor();//angran
 
          VE_SceneGraph::cfdGroup* masterNode;
          VE_SceneGraph::cfdDCS * gaugeDCS;
@@ -110,31 +112,36 @@ namespace VE_Xplorer
          VE_SceneGraph::cfdGeode* text2Geode;
          VE_SceneGraph::cfdGeode* digitalGeode;
          VE_SceneGraph::cfdGeode* backgroundGeode;
+	  VE_SceneGraph::cfdGeode* minMarkersGeode; //angran
+	  VE_SceneGraph::cfdGeode* maxMarkersGeode; //angran
 
-         float itsX [ 3 ];
-         vtkArrowSource * movingArrow;
-         vtkTransform * arrowTransform;
-         vtkMatrix4x4 * arrowRefPosition;
-         vtkTransformPolyDataFilter * transformer2;
-         vtkPolyDataMapper * arrowMapper;
-         vtkActor * arrowActor;
-         double circleRadius;
-         vtkActor * circleActor;
-         vtkActor * stationaryArrowActor;
-         vtkActor * labelActor;
-         vtkActor * text2Actor;
-         vtkActor * digitalActor;
-         vtkActor * backgroundActor;
-         vtkVectorText * digitalLabel;
-         char gaugeName [ 100 ];
-         char text2 [ 100 ];
-         char digitalText [ 100 ];
-         int digitalPrecision;
-         double lowAnalogLimit, highAnalogLimit;
-         double gaugeColor [ 3 ];
-         double backgroundColor [ 3 ];
-         double textScale;
-   };
+
+      float itsX [ 3 ];
+      vtkArrowSource * movingArrow;
+      vtkTransform * arrowTransform;
+      vtkMatrix4x4 * arrowRefPosition;
+      vtkTransformPolyDataFilter * transformer2;
+      vtkPolyDataMapper * arrowMapper;
+      vtkActor * arrowActor;
+      double circleRadius;
+      vtkActor * circleActor;
+      vtkActor * stationaryArrowActor;
+      vtkActor * labelActor;
+      vtkActor * text2Actor;
+      vtkActor * digitalActor;
+      vtkActor * backgroundActor;
+      vtkVectorText * digitalLabel;
+      char gaugeName [ 100 ];
+      char text2 [ 100 ];
+      char digitalText [ 100 ];
+      int digitalPrecision;
+      double lowAnalogLimit, highAnalogLimit;
+      double gaugeColor [ 3 ];
+      double backgroundColor [ 3 ];
+      double textScale;
+	  vtkActor * minMarkersActor;
+	  vtkActor * maxMarkersActor;
+};
 }
 #endif
 
