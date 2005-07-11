@@ -35,6 +35,7 @@ cfdSwitch::cfdSwitch(const cfdSwitch& rhs)
    _switch = new osg::Switch(*rhs._switch);
 #elif _OPENSG
 #endif
+   childNodes = rhs.childNodes;
    SetCFDNodeType(CFD_SWITCH);
 }
 ///////////////////////
@@ -82,7 +83,7 @@ cfdSwitch& cfdSwitch::operator=(const cfdSwitch& rhs)
       _switch = rhs._switch;
 #elif _OPENSG
 #endif
-     
+     childNodes = rhs.childNodes;
    }
    return *this;
 }
