@@ -44,6 +44,7 @@
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
+#include <ostream>
 #include <string>
 
 using namespace gmtl;
@@ -80,18 +81,6 @@ cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS,
    _readParam = new cfdReadParam();
    CreateObjects();
 
-   activeFlyThroughArray[ 0 ].push_back( 0 );
-   activeFlyThroughArray[ 0 ].push_back( 1 );
-   activeFlyThroughArray[ 0 ].push_back( 2 );
-   activeFlyThroughArray[ 0 ].push_back( 3 );
-   activeFlyThroughArray[ 0 ].push_back( 4 );
-   activeFlyThroughArray[ 0 ].push_back( 5 );
-   activeFlyThroughArray[ 1 ].push_back( 6 );
-   activeFlyThroughArray[ 1 ].push_back( 7 );
-   activeFlyThroughArray[ 2 ].push_back( 2 );
-   activeFlyThroughArray[ 2 ].push_back( 4 );
-   activeFlyThroughArray[ 3 ].push_back( 4 );
-   activeFlyThroughArray[ 3 ].push_back( 0 );
 }
 
 cfdQuatCamHandler::~cfdQuatCamHandler( void )
@@ -108,36 +97,59 @@ void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::cfdDCS* worldD
 
 void cfdQuatCamHandler::WriteToFile(char* fileName)
 {
+   std::ofstream inFile( fileName, std::ios::out );
 
-   //float* matpts = new float [16];
-
-   FILE* ptsFile = fopen(fileName, "w");
-
-   fprintf(ptsFile, "%d", cfdPointsVec.size());
-   fprintf(ptsFile, "\n");
-
-   Matrix44f temp;
-   for (unsigned int i=0; i<cfdPointsVec.size(); i++)
-   {
-      temp = cfdPointsVec[i]->matrix();
-      for ( unsigned int j=0; j<4; j++)
+   if ( fileIO::isFileReadable( fileName ) )
+   {   
+      if ( cfdPointsVec.size() > 0 )
       {
-         for ( unsigned int k=0; k<4; k++)
-            fprintf(ptsFile, "%f  ", temp[ j ][ k ]); 
-      }
+         inFile << "*Quaternion_Cameras" << std::endl;
+         inFile << cfdPointsVec.size() << std::endl;
+      
+         Matrix44f temp;
+         for (unsigned int i=0; i<cfdPointsVec.size(); i++)
+         {
+            temp = cfdPointsVec[i]->matrix();
+            for ( unsigned int j=0; j<4; j++)
+            {
+               for ( unsigned int k=0; k<4; k++)
+               {
+                  inFile << temp[ j ][ k ] << " ";
+               }            
+            }
 
-      fprintf(ptsFile, "\n");
+            inFile << std::endl;
 
-      for (int k=0; k<3; k++)
-      {
-         fprintf(ptsFile, "%f  ", cfdPointsVec[i]->ptrans()[k]);
+            for (int k=0; k<3; k++)
+            {
+               inFile << cfdPointsVec[i]->ptrans()[k] << " ";
+            }
+ 
+            inFile << std::endl;
+         }
+
+         if ( flyThroughList.size() > 0 )
+         {
+            inFile << "#Stored_FlyThroughs" << std::endl;
+            inFile << flyThroughList.size() << std::endl;
+            for (unsigned int n=0; n<flyThroughList.size(); n++)
+            {
+               inFile << numPointsInFlyThrough[n] << std::endl;
+               for ( unsigned int l=0; l<numPointsInFlyThrough[n]; l++)
+               {
+                  inFile << flyThroughList.at(n)[l] << " ";
+               }
+               inFile << std::endl;   
+            }
+         }
       }
-      fprintf(ptsFile, "\n");   
+      inFile.close();
    }
-   fclose(ptsFile);
+   else 
+      printf( "Could Not Open QuatCam File\n" );
 }
 
-void cfdQuatCamHandler::LoadFromFile(char* fileName)
+void cfdQuatCamHandler::LoadFromFile( char* fileName)
 { 
    char textLine [ 256 ];
    double transpts[3];
@@ -150,33 +162,59 @@ void cfdQuatCamHandler::LoadFromFile(char* fileName)
    { 
       printf("QuatCam File Was Opened Successfully\n");
 
-      inFile >> numQuatCams;
-      inFile.getline( textLine, 256 );   //skip past remainder of line      
-      std::cout<<numQuatCams<<std::endl;
-
-      for(int i=0; i<numQuatCams; i++)
+      while ( !inFile.eof() )
       {
-         for (int j=0; j<4; j++)
+         if ( (char)inFile.peek() == '*' )
          {
-            for ( unsigned int k=0; k<4; k++)
-               inFile >> temp[ j ][ k ];
-         }
-         inFile.getline( textLine, 256 );   //skip past remainder of line            
+            inFile.getline( textLine, 256 );   //skip past remainder of line
+            inFile >> numQuatCams;
+            inFile.getline( textLine, 256 );   //skip past remainder of line      
+            std::cout<<numQuatCams<<std::endl;
 
-         for (int k=0; k<3; k++)
+            for ( int i=0; i<numQuatCams; i++ )
+            {
+               for ( int j=0; j<4; j++ )
+               {
+                  for ( unsigned int k=0; k<4; k++ )
+                     inFile >> temp[ j ][ k ];
+               }
+               inFile.getline( textLine, 256 );   //skip past remainder of line            
+
+               for ( int k=0; k<3; k++ )
+               {
+                  inFile >> transpts[k];
+               }
+               inFile.getline( textLine, 256 );   //skip past remainder of line      
+
+               recordrot[0] = temp[0][0];
+               recordrot[1] = temp[0][1];
+               recordrot[2] = temp[1][0];
+               recordrot[3] = temp[1][1];
+
+               QuatCams.push_back(new cfdQuatCam(temp, transpts, recordrot));
+            } 
+         }
+         else if ( (char)inFile.peek() == '#' )
          {
-            inFile >> transpts[k];
+            inFile.getline( textLine, 256 );   //skip past remainder of line
+            inFile >> numFlyThroughs;
+            inFile.getline( textLine, 256 );   //skip past remainder of line      
+            std::cout<<numFlyThroughs<<std::endl;
+            numPointsInFlyThrough = new int[numFlyThroughs];
+            for ( int i=0; i<numFlyThroughs; i++ )
+            {
+               inFile >> numPointsInFlyThrough[i];
+               int tempPts[numPointsInFlyThrough[i]];
+               for ( int j=0; j<numPointsInFlyThrough[i]; j++)
+               {
+                  inFile >> tempPts[j];
+               }
+               flyThroughList.push_back(tempPts);
+               delete [] tempPts;
+            }
          }
-         inFile.getline( textLine, 256 );   //skip past remainder of line      
-
-         recordrot[0] = temp[0][0];
-         recordrot[1] = temp[0][1];
-         recordrot[2] = temp[1][0];
-         recordrot[3] = temp[1][1];
-         
-         //thisQuatCam = new cfdQuatCam(temp, transpts, recordrot);
-         QuatCams.push_back(new cfdQuatCam(temp, transpts, recordrot));
-      } 
+      }
+      inFile.close();
    }
    else 
       printf( "Could Not Open QuatCam File\n" ); 
@@ -256,10 +294,11 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    return flag;
 }
 
+
 // If a quat is active this will move the cam to the next location
 void cfdQuatCamHandler::PreFrameUpdate( void )
 {
-   static int pointCounter = 0;
+   /*static int pointCounter = 0;
        if ( _nav->flyThrough[ 0 ]->getData() == gadget::Digital::ON )
       {
          activeFlyThrough = 0;
@@ -293,12 +332,12 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
          pointCounter = ( pointCounter == ((int)activeFlyThroughArray[ activeFlyThrough ].size()-1) ) ? 0 : ++pointCounter; 
          cam_id = activeFlyThroughArray[ activeFlyThrough ].at( pointCounter );
 	     activecam = true;
-      }
+      }*/
  
-   if ( activecam )
+   /*if ( activecam )
    {
       this->Relocate( _worldDCS, _nav);    
-   }
+   }*/
 }
 
 void cfdQuatCamHandler::UpdateCommand()
@@ -317,7 +356,25 @@ void cfdQuatCamHandler::CreateObjects( void )
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   quatCamFileName = "./STORED_VIEWPTS/stored_viewpts_flythroughs.dat";
+   std::cout<< " QuatCam file = " << quatCamFileName << std::endl;
+
+   if (fileIO::isFileReadable( quatCamFileName ) ) 
+   {
+      vprDEBUG(vprDBG_ALL,0) << " QuatCam file = " << quatCamFileName 
+                       << std::endl << vprDEBUG_FLUSH;
+
+      LoadFromFile( quatCamFileName );
+   }
+   else
+   {
+      std::cerr << "ERROR: unreadable QuatCam file = " << quatCamFileName 
+               << ". You may need to create a STORED_VIEWPTS directory."
+               << std::endl;
+      exit(1);
+   }   
+
+   /*vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
    for( int i = 0; i < numObjects; i++ )
    {
       int id;
@@ -350,7 +407,7 @@ void cfdQuatCamHandler::CreateObjects( void )
          // Skip past block
          _readParam->ContinueRead( input, id );
       }
-   }
+   }*/
 }
 
 int cfdQuatCamHandler::getNumLocs()

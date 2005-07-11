@@ -111,6 +111,8 @@ namespace VE_Xplorer
          void PreFrameUpdate();
    
          int numQuatCams;
+         int numFlyThroughs;
+         int* numPointsInFlyThrough;
 
       private:
          cfdQuatCam* thisQuatCam;
@@ -120,7 +122,7 @@ namespace VE_Xplorer
          cfdReadParam* _readParam;
          char*       _param;
          float t;
-         char quatCamFileName[ 100 ];
+         char* quatCamFileName;
          std::vector<cfdPoints*> cfdPointsVec;
          std::vector<cfdQuatCam*> QuatCams;
          int run;
@@ -129,7 +131,8 @@ namespace VE_Xplorer
          float angle;
          bool activecam;
          int activeFlyThrough;
-         std::vector<int> activeFlyThroughArray[ 4 ];
+         //std::vector<int> activeFlyThroughArray[ 4 ];
+         std::vector<int*> flyThroughList;
    };
 }
 #endif
