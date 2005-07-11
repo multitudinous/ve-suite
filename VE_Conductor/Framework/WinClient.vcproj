@@ -75,80 +75,7 @@
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="$(VE_SUITE_HOME)/bin/win32"
-			IntermediateDirectory="./VE_Conductor/$(ConfigurationName)"
-			ConfigurationType="1"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			ManagedExtensions="FALSE">
-			<Tool
-				Name="VCCLCompilerTool"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VE_SUITE_HOME)/VE_Conductor/Framework&quot;;./;&quot;$(VE_SUITE_HOME)/VE_Conductor/VE_UI/&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Utilities\gui&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(XERCESCROOT)\src&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_TAO"
-				IgnoreStandardIncludePath="FALSE"
-				BasicRuntimeChecks="0"
-				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="0"
-				PrecompiledHeaderFile=""
-				AssemblerListingLocation=""
-				ObjectFile="$(IntDir)/"
-				ProgramDataBaseFileName="$(IntDir)/"
-				BrowseInformation="1"
-				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="2"
-				CompileAs="0"
-				DisableSpecificWarnings="4541"
-				ForcedIncludeFiles=""
-				ShowIncludes="FALSE"/>
-			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib xerces-c_2D.lib"
-				OutputFile="$(OutDir)\WinClientd.exe"
-				LinkIncremental="1"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(XERCESCROOT)\Build\Win32\VC7\Debug&quot;"
-				GenerateDebugInformation="TRUE"
-				AssemblyDebug="1"
-				ProgramDatabaseFile="$(IntDir)/WinClient.pdb"
-				SubSystem="2"
-				TurnOffAssemblyGeneration="FALSE"
-				TargetMachine="1"/>
-			<Tool
-				Name="VCMIDLTool"
-				PreprocessorDefinitions="_DEBUG"
-				MkTypLibCompatible="TRUE"
-				SuppressStartupBanner="TRUE"
-				TargetEnvironment="1"
-				TypeLibraryName=".\Debug/WinClient.tlb"
-				HeaderFileName=""/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-		</Configuration>
-		<Configuration
-			Name="Debug_TAO_OSG|Win32"
+			Name="dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/bin/win32"
 			IntermediateDirectory="./VE_Conductor/$(ConfigurationName)"
 			ConfigurationType="1"
@@ -170,7 +97,7 @@
 				ProgramDataBaseFileName="$(IntDir)"
 				BrowseInformation="1"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="2"
+				DebugInformationFormat="3"
 				CompileAs="0"
 				DisableSpecificWarnings="4541"
 				ForcedIncludeFiles="$(XERCESCROOT)\src\xercesc\dom\DOM.hpp;$(XERCESCROOT)\src\xercesc\dom\DOMDocument.hpp"
@@ -234,17 +161,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -264,17 +181,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -294,17 +201,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -324,17 +221,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -360,17 +247,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -383,13 +260,7 @@
 			<File
 				RelativePath=".\OrbThread.cpp">
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="..\IDL"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories="..\IDL"/>
@@ -398,13 +269,7 @@
 			<File
 				RelativePath=".\paraThread.cpp">
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						AdditionalIncludeDirectories="..\IDL"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						AdditionalIncludeDirectories="..\IDL"/>
@@ -420,17 +285,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -468,17 +323,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -498,17 +343,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -534,17 +369,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories=""
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -564,17 +389,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -594,17 +409,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -624,17 +429,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -654,17 +449,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -690,17 +475,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"
@@ -726,17 +501,7 @@
 						PreprocessorDefinitions=""/>
 				</FileConfiguration>
 				<FileConfiguration
-					Name="Debug|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						Optimization="0"
-						AdditionalIncludeDirectories="..\IDL"
-						PreprocessorDefinitions=""
-						BasicRuntimeChecks="3"
-						BrowseInformation="1"/>
-				</FileConfiguration>
-				<FileConfiguration
-					Name="Debug_TAO_OSG|Win32">
+					Name="dbg|Win32">
 					<Tool
 						Name="VCCLCompilerTool"
 						Optimization="0"

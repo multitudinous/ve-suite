@@ -221,11 +221,14 @@ void cfdApp::contextInit()
 {
    vrj::OsgApp::contextInit();
 
-   if (!_pbuffer){
+   if ( !_pbuffer )
+   {
       _pbuffer = new cfdPBufferManager();
       _pbuffer->isSupported();
    } 
-   if(_tbvHandler){
+
+   if ( _tbvHandler )
+   {
       _tbvHandler->SetPBuffer(_pbuffer);
    }
 }
@@ -241,7 +244,8 @@ void cfdApp::contextClose()
 ////////////////////////////////////////
 cfdPBufferManager* cfdApp::GetPBuffer()
 {
-   if(_pbuffer){
+   if ( _pbuffer )
+   {
       return _pbuffer;
    }
    return 0;
@@ -600,9 +604,9 @@ void cfdApp::draw()
    }
 #endif   //_WEB_INTERFACE
 
-   sv.get()->update();
-   sv.get()->cull();
-   sv.get()->draw();
+   sv->update();
+   sv->cull();
+   sv->draw();
 
 #ifdef _WEB_INTERFACE
    if(goCapture)

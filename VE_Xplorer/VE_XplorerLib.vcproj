@@ -13,75 +13,6 @@
 	</Platforms>
 	<Configurations>
 		<Configuration
-			Name="Debug|Win32"
-			OutputDirectory="$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
-			ConfigurationType="1"
-			UseOfMFC="0"
-			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
-			<Tool
-				Name="VCCLCompilerTool"
-				AdditionalOptions="/Zm800"
-				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\mswd&quot;;&quot;$(IDL_HOME)/skel&quot;;&quot;$(CONDUCTOR_BASE_DIR)\impl&quot;"
-				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;TABLET;WIN32;_CONSOLE;__WIN32__;__x86__;__NT__;__OSVERSION__=4;_WIN32"
-				BasicRuntimeChecks="3"
-				RuntimeLibrary="3"
-				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
-				PrecompiledHeaderFile=".\Debug/VE_Xplorer.pch"
-				AssemblerListingLocation=".\Debug/"
-				ObjectFile=".\Debug/"
-				ProgramDataBaseFileName=".\Debug/"
-				WarningLevel="3"
-				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="4"
-				CompileAs="0"
-				DisableSpecificWarnings="4244;4251;4275;4290"/>
-			<Tool
-				Name="VCCustomBuildTool"/>
-			<Tool
-				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib tweek_d.lib sonix_d.lib gadget_d.lib omniORB405_rtd.lib omniDynamic405_rtd.lib omnithread30_rtd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib vtkexpat.lib vtkzlib.lib libpf.lib libpfv.lib libpfui.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib"
-				ShowProgress="0"
-				OutputFile="$(VE_SUITE_HOME)\lib\win32\VEXplorerLib_tao_pf_d.dll"
-				LinkIncremental="2"
-				SuppressStartupBanner="TRUE"
-				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(PFROOT)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
-				IgnoreAllDefaultLibraries="FALSE"
-				IgnoreDefaultLibraryNames=""
-				GenerateDebugInformation="TRUE"
-				ProgramDatabaseFile="$(OutDir)/VE_XplorerLib_tao_pf_d.pdb"
-				SubSystem="1"
-				ImportLibrary="$(VE_SUITE_HOME)\lib\win32\VEXplorerLib_tao_pf_d.lib"
-				TargetMachine="1"/>
-			<Tool
-				Name="VCMIDLTool"
-				TypeLibraryName="$(ConfigurationName)/VE_Xplorer.tlb"
-				HeaderFileName=""/>
-			<Tool
-				Name="VCPostBuildEventTool"/>
-			<Tool
-				Name="VCPreBuildEventTool"/>
-			<Tool
-				Name="VCPreLinkEventTool"/>
-			<Tool
-				Name="VCResourceCompilerTool"
-				PreprocessorDefinitions="_DEBUG"
-				Culture="1033"/>
-			<Tool
-				Name="VCWebServiceProxyGeneratorTool"/>
-			<Tool
-				Name="VCXMLDataGeneratorTool"/>
-			<Tool
-				Name="VCWebDeploymentTool"/>
-			<Tool
-				Name="VCManagedWrapperGeneratorTool"/>
-			<Tool
-				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
-		</Configuration>
-		<Configuration
 			Name="Release|Win32"
 			OutputDirectory=".\Release"
 			IntermediateDirectory=".\Release"
@@ -144,7 +75,7 @@
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
-			Name="Debug_TAO|Win32"
+			Name="tao_pf_dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_XplorerLib/$(ConfigurationName)"
 			ConfigurationType="2"
@@ -163,7 +94,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="2"
+				DebugInformationFormat="3"
 				CompileAs="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4291"/>
 			<Tool
@@ -209,9 +140,74 @@
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
-			Name="Debug_TAO_OSG|Win32"
+			Name="tao_osg_dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="./VE_XplorerLib/$(ConfigurationName)"
+			ConfigurationType="2"
+			UseOfMFC="0"
+			ATLMinimizesCRunTimeLibraryUsage="FALSE"
+			CharacterSet="2">
+			<Tool
+				Name="VCCLCompilerTool"
+				AdditionalOptions="/Zm800"
+				Optimization="0"
+				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_CE&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VE_VolumeVis&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				PreprocessorDefinitions="_DEBUG;_OSG;WXUSINGDLL;VE_XPLORER_LIBRARY;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
+				BasicRuntimeChecks="3"
+				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
+				UsePrecompiledHeader="0"
+				WarningLevel="3"
+				SuppressStartupBanner="TRUE"
+				DebugInformationFormat="3"
+				CompileAs="0"
+				DisableSpecificWarnings="4244;4251;4275;4290;4291"/>
+			<Tool
+				Name="VCCustomBuildTool"/>
+			<Tool
+				Name="VCLinkerTool"
+				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_ogl_d.lib osgd.lib osgUtild.lib osgDBd.lib OpenThreadsWin32d.lib Producerd.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
+				ShowProgress="0"
+				OutputFile="$(OutDir)\VE_XplorerLib_tao_osg_d.dll"
+				LinkIncremental="1"
+				SuppressStartupBanner="TRUE"
+				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(OSGHOME)\lib&quot;;&quot;$(VTK_HOME)\bin\debug&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;;&quot;$(TAO_ROOT)\tao&quot;;&quot;$(TAO_ROOT)\orbsvcs\orbsvcs&quot;;&quot;$(TAO_ROOT)\tao\BiDir_GIOP&quot;;&quot;$(TAO_ROOT)\tao\PortableServer&quot;;&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(ACE_ROOT)\bin&quot;;&quot;$(ACE_ROOT)\ace&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(XERCESCROOT)\\Build\Win32\VC7\Debug&quot;"
+				IgnoreAllDefaultLibraries="FALSE"
+				IgnoreDefaultLibraryNames=""
+				GenerateDebugInformation="TRUE"
+				ProgramDatabaseFile="$(IntDir)/VEXplorerLib_tao_osg_d.pdb"
+				SubSystem="1"
+				ImportLibrary="$(OutDir)\VE_XplorerLib_tao_osg_d.lib"
+				TargetMachine="1"/>
+			<Tool
+				Name="VCMIDLTool"
+				TypeLibraryName=".\Debug/VE_Xplorer.tlb"
+				HeaderFileName=""/>
+			<Tool
+				Name="VCPostBuildEventTool"/>
+			<Tool
+				Name="VCPreBuildEventTool"/>
+			<Tool
+				Name="VCPreLinkEventTool"/>
+			<Tool
+				Name="VCResourceCompilerTool"
+				PreprocessorDefinitions="_DEBUG"
+				Culture="1033"/>
+			<Tool
+				Name="VCWebServiceProxyGeneratorTool"/>
+			<Tool
+				Name="VCXMLDataGeneratorTool"/>
+			<Tool
+				Name="VCWebDeploymentTool"/>
+			<Tool
+				Name="VCManagedWrapperGeneratorTool"/>
+			<Tool
+				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
+		</Configuration>
+		<Configuration
+			Name="tao_osg_vep_dbg|Win32"
+			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="2"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
@@ -228,7 +224,7 @@
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="2"
+				DebugInformationFormat="3"
 				CompileAs="0"
 				DisableSpecificWarnings="4244;4251;4275;4290;4291"/>
 			<Tool

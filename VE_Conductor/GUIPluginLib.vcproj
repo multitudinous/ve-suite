@@ -74,7 +74,7 @@
 				Name="VCAuxiliaryManagedWrapperGeneratorTool"/>
 		</Configuration>
 		<Configuration
-			Name="Debug|Win32"
+			Name="dbg|Win32"
 			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory=".\GUIPluginLib\$(ConfigurationName)"
 			ConfigurationType="2"
@@ -94,7 +94,7 @@
 				ProgramDataBaseFileName="$(IntDir)"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
-				DebugInformationFormat="2"
+				DebugInformationFormat="3"
 				CompileAs="0"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
