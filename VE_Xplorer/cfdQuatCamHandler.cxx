@@ -357,7 +357,7 @@ void cfdQuatCamHandler::CreateObjects( void )
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-   quatCamFileName = "./STORED_VIEWPTS/stored_viewpts_flythroughs.dat";
+   /*quatCamFileName = "./STORED_VIEWPTS/stored_viewpts_flythroughs.dat";
    std::cout<< " QuatCam file = " << quatCamFileName << std::endl;
 
    if (fileIO::isFileReadable( quatCamFileName ) ) 
@@ -373,7 +373,7 @@ void cfdQuatCamHandler::CreateObjects( void )
                << ". You may need to create a STORED_VIEWPTS directory."
                << std::endl;
       exit(1);
-   }   
+   }*/   
 
    /*vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
    for( int i = 0; i < numObjects; i++ )
