@@ -32,6 +32,9 @@
 #ifndef CFDTEMPANIMATION_H
 #define CFDTEMPANIMATION_H
 
+#ifdef _OSG
+#include <osg/ref_ptr>
+#endif
 namespace VE_SceneGraph
 {
    class cfdSequence;
@@ -98,7 +101,11 @@ namespace VE_SceneGraph
          int numFrames;
          double _duration;
 
+#ifdef _OSG
+         osg::ref_ptr<cfdSequence> _sequence;
+#elif _PERFORMER
          cfdSequence* _sequence;
+#endif
          std::vector< cfdGeode* > _geodes;
 
          cfdGroup** groups;

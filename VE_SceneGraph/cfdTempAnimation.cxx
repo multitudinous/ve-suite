@@ -53,7 +53,9 @@ cfdTempAnimation::cfdTempAnimation()
 cfdTempAnimation::~cfdTempAnimation()
 {
    // This Delete also takes care of this->groups
+#ifdef _PERFORMER
    delete this->_sequence;
+#endif
    // TODO: Need to add delete of the nodes on the sequence
 }
 
@@ -113,7 +115,11 @@ cfdGroup* cfdTempAnimation::GetGroup( int i )
 
 cfdSequence* cfdTempAnimation::GetSequence( void )
 {
+#ifdef _OSG
+   return this->_sequence.get();
+#elif _PERFORMER
    return this->_sequence;
+#endif
 }
 
 void cfdTempAnimation::SetNumberOfFrames( int i )
@@ -251,8 +257,13 @@ void cfdTempAnimation::AddToSequence( int objectType )
    // This is necessary because cfdNodes can't have multiple parents
    if ( this->_sequence->GetParent( 0 ) != NULL )
    {
+#ifdef _OSG
+      ((cfdDCS*)this->_sequence->GetParent( 0 ))->RemoveChild( 
+                                       (cfdNode*)this->_sequence.get() );
+#elif _PERFORMER
       ((cfdDCS*)this->_sequence->GetParent( 0 ))->RemoveChild( 
                                        (cfdNode*)this->_sequence );
+#endif
    }
 
    vprDEBUG(vprDBG_ALL, 2) << " done with add to sequence"
