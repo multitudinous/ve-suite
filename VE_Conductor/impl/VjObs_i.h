@@ -246,8 +246,8 @@ protected:
    void setIsoValue(CORBA::Long value);
    CORBA::Long getIsoValue( void );
 
-   void setSc(CORBA::Long value);
-   CORBA::Long getSc( void );
+   double setSc(CORBA::Long value);
+   CORBA::Long getSc( double );
 
    void setMin(CORBA::Long value);
    CORBA::Long getMin( void );

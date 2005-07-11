@@ -142,7 +142,7 @@ bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
                              << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
                              << std::endl << vprDEBUG_FLUSH;
 
-      this->SetFillType( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      this->SetFillType( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
@@ -151,12 +151,12 @@ bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
       // warped contour settings
       double v[2];
       this->GetActiveDataSet()->GetUserRange( v );
-      int scale = commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
+      int scale = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
       this->warpedContourScale = (scale/50.0) * 0.2 
                     * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
 
       // contour lod control
-      int lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
+      int lod = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
       double realLOD = (double)lod/100.0;
       this->deci->SetTargetReduction( realLOD );
       return true;

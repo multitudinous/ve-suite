@@ -326,7 +326,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
       
-      this->SetPropagationTime( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      this->SetPropagationTime( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_INT_STEP_LENGTH )
@@ -335,7 +335,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
          << std::endl << vprDEBUG_FLUSH;
       
-      this->SetIntegrationStepLength( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      this->SetIntegrationStepLength( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEP_LENGTH )
@@ -343,7 +343,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_STEP_LENGTH\t" << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
                              << std::endl << vprDEBUG_FLUSH;
          
-      this->SetStepLength( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      this->SetStepLength( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_ARROW )
@@ -364,7 +364,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
       // convert range to -2.5 < x < 2.5, and compute the exponent...
       float range = 2.5f;
-      int diameter = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       this->lineDiameter = exp( diameter / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetLength()*0.001f;
 
@@ -379,7 +379,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
       // convert range to -2.5 < x < 2.5, and compute the exponent...
       float range = 2.5f;
-      int diameter = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+      int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
       arrowDiameter = 4.0f * exp( diameter / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetLength()*0.001f;
       return true;

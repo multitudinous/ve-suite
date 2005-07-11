@@ -314,7 +314,7 @@ CORBA::Long VjObs_i::getSc()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
+   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
 }
 
 #ifdef _TAO
@@ -345,7 +345,7 @@ CORBA::Long VjObs_i::getMin()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
+   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
 }
 
 #ifdef _TAO
@@ -376,7 +376,7 @@ CORBA::Long VjObs_i::getMax()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
+   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
 }
 
 #ifdef _TAO
@@ -407,7 +407,7 @@ CORBA::Long VjObs_i::getId()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
+   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
 }
 
 #ifdef _TAO
@@ -438,7 +438,7 @@ CORBA::Long VjObs_i::getGeoState()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
+   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
 }
 
 #ifdef _TAO
@@ -470,7 +470,7 @@ CORBA::Short VjObs_i::getPostdataState()
    //vprDEBUG(vprDBG_ALL, 0)
 
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
+   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
 }
 
 #ifdef _TAO
@@ -501,7 +501,7 @@ CORBA::Short VjObs_i::getPreState()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
+   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
 }
 
 #ifdef _TAO
@@ -532,7 +532,7 @@ CORBA::Short VjObs_i::getTimesteps()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 2)
    //   << "Returning '" << mTimesteps << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
+   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_TIMESTEPS );
 }
 
 #ifdef _TAO
@@ -594,7 +594,7 @@ CORBA::Short VjObs_i::getTeacherState()
    vpr::Guard<vpr::Mutex> val_guard(mValueLock);
    //vprDEBUG(vprDBG_ALL, 0)
    //   << "Returning '" << mValue << "' to caller\n" << vprDEBUG_FLUSH;
-   return _bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
+   return (CORBA::Long)_bufferArray->GetCommandValue( cfdCommandArray::CFD_TEACHER_STATE );
 }
 
 // These functions are called from the java side
@@ -866,9 +866,9 @@ void VjObs_i::PreFrameUpdate( void )
 
 void VjObs_i::CreateCommandQueue( void )
 {
-   int newId = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
-   int newPreState = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
-   int newIsoValue = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+   double newId = _bufferArray->GetCommandValue( cfdCommandArray::CFD_SC );
+   double newPreState = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );
+   double newIsoValue = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
    
    int activeVector = cfdModelHandler::instance()->GetActiveDataSet()->GetActiveVector();
    int activeScalar = cfdModelHandler::instance()->GetActiveDataSet()->GetActiveScalar();

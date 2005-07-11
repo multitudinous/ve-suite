@@ -463,7 +463,7 @@ bool cfdReadParam::CheckCommandId( cfdCommandArray* commandArray )
       vprDEBUG(vprDBG_ALL,1)
          << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) << std::endl << vprDEBUG_FLUSH;
 
-      long int test = this->convertDecimalToBinary( commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
+      long int test = this->convertDecimalToBinary( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
       vprDEBUG(vprDBG_ALL,1)
          << " test : " << test << std::endl << vprDEBUG_FLUSH;
 

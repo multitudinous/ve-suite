@@ -277,7 +277,7 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
       // warped contour settings
       //double v[2];
 	  // this->GetActiveDataSet()->GetParent()->GetUserRange( v );
-      int scale = commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
+      int scale = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN );
       this->warpedContourScale = (scale/50.0) * 0.1 
                     * this->GetActiveDataSet()->GetParent()->GetLength();///(float)(v[1]-v[0]);
 
@@ -289,7 +289,7 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_PARTICLE_VIEW_OPTION )
    {
-      SetParticleOption(commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
+      SetParticleOption((int)commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
 
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
          << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )

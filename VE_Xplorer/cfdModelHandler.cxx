@@ -284,7 +284,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
             == CHANGE_STEADYSTATE_DATASET )
    {
-      unsigned int i = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      unsigned int i = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       vprDEBUG(vprDBG_ALL,1) 
          << "CHANGE_STEADYSTATE_DATASET " << i 
          //<< ", scalarIndex = " << this->cfdSc
@@ -356,7 +356,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
                == CHANGE_VECTOR )
    { 
-      int vectorIndex = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+      int vectorIndex = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
       vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
                              << std::endl << vprDEBUG_FLUSH;
 
@@ -438,7 +438,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       else
       {
          // Change the opacity of a specific piece of geometry
-         int geomFile = this->commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+         int geomFile = (int)this->commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
          float opacity = (float)this->commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )*.01f;
          this->_activeModel->GetGeomDataSet( geomFile )->setOpac( opacity );
       }
@@ -488,13 +488,13 @@ void cfdModelHandler::PreFrameUpdate( void )
       vprDEBUG(vprDBG_ALL,1) << " cfdModelHandler :: Change Active Model " 
             << commandArray->GetCommandValue( cfdCommandArray::CFD_SC )
             << std::endl << vprDEBUG_FLUSH;
-      _activeModel = _modelList.at( commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
+      _activeModel = _modelList.at( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
                == CHANGE_CONTOUR_SETTINGS )
    {  
       // opacity settings
-      int opacity = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      int opacity = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       double realOpacity = (double)opacity/100.0f;
       if ( this->activeDataset != NULL )
          this->activeDataset->GetLookupTable()->SetAlphaRange(realOpacity, realOpacity);
@@ -504,7 +504,7 @@ void cfdModelHandler::PreFrameUpdate( void )
       if ( _activeModel &&  _activeModel->GetActiveDataSet())
       {
          //cfd visualization options
-         int visOpt = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+         int visOpt = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
 
          if ( visOpt == TEXTURE_BASED_VISUALIZATION )
          {
@@ -535,7 +535,7 @@ std::cout << " help 1 "<< tempFlag << std::endl;
         updateScalarRange
         )
    { 
-      int scalarIndex = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+      int scalarIndex = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
       vprDEBUG(vprDBG_ALL,1) << "CHANGE_SCALAR || CHANGE_SCALAR_RANGE"
          << ", scalarIndex = " << scalarIndex
          << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
@@ -558,11 +558,11 @@ std::cout << " help 1 "<< tempFlag << std::endl;
       activeDataset->GetParent()->SetActiveScalar( scalarIndex );
 
       activeDataset->ResetScalarBarRange( 
-                           commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
-                           commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
+                           (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
+                           (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
       activeDataset->GetParent()->ResetScalarBarRange( 
-                           commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
-                           commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
+                           (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ), 
+                           (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
    }
 #ifdef _OSG 
 #ifdef VE_PATENTED

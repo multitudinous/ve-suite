@@ -285,7 +285,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
    {
       activecam = true;
-      cam_id = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       this->Relocate( _worldDCS, _nav);
       return true;
       // Need to fix this

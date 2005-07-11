@@ -229,8 +229,8 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 	   }
    }
 
-   this->nav->SetDataValues( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
-                        _commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+   this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
+                        (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
    this->nav->updateNavigationFromGUI();
 	
    // Need to get these values from the appropriate classes

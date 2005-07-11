@@ -276,7 +276,7 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
       // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
       // convert range to -2.5 < x < 2.5, and compute the exponent...
       float range = 2.5f;
-      int diameter = commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       this->particleDiameter = 8.0f * (exp( diameter / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetLength()*0.001f);
 
@@ -314,7 +314,7 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
       // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
       // convert range to -2.5 < x < 2.5, and compute the exponent...
       float range = 2.5f;
-      int diameter = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
+      int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
       particleDiameter = 8.0f * exp( diameter / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetLength()*0.001f;
       return true;

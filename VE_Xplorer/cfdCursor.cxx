@@ -701,7 +701,7 @@ void cfdCursor::SetTranslation( void )
    Matrix44f totalMat;
    if ( this->activeDataSetDCS )
    {
-      Matrix44f cursorDCSMat = this->cursorDCS->GetMat();
+      // apparently unused ...Matrix44f cursorDCSMat = this->cursorDCS->GetMat();
       float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
       float* worldDCSScale = this->worldDCS->GetScaleArray();
 
@@ -884,7 +884,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
       //if ( this->cursorId != NONE && this->cursorId != SPHERE && this->cursorId != CUBE )
       if ( this->cursorId != NONE && this->cursorId != SPHERE )
       {
-         this->SetPlaneReso( commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) ); 
+         this->SetPlaneReso( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) ); 
 
          // convert size percentage (0-100) request to plane size
          //std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() 

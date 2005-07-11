@@ -108,8 +108,8 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
          << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
          << std::endl << vprDEBUG_FLUSH;
 
-      SetThreshHoldPercentages( commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ),
-                                               commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
+      SetThreshHoldPercentages( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ),
+                                               (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) );
       UpdateThreshHoldValues();
 
       return true;
@@ -120,7 +120,7 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
          << ", value = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      SetVectorRatioFactor( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      SetVectorRatioFactor( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
       return true;
    }
@@ -140,7 +140,7 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
          << "SCALE_BY_VECTOR_MAGNITUDE = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetScaleByVectorFlag( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      cfdVectorBase::SetScaleByVectorFlag( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
       return true;
    }
