@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="osg_vep_dbg|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			IntermediateDirectory="./VE_TextureBasedLib/$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -35,13 +35,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="osgd.lib osgDBd.lib osgUtild.lib Producerd.lib OpenThreadsWin32d.lib vpr_d.lib vrj_d.lib vrj_ogl_d.lib vtkCommon.lib vtkFiltering.lib vtkHybrid.lib vtkImaging.lib vtkIO.lib vtkParallel.lib vtkRendering.lib opengl32.lib"
-				OutputFile="$(OutDir)/VE_TextureBased_osg_d.dll"
+				OutputFile="$(OutDir)/VE_TextureBased_osg_vep_d.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(OSGHOME)\lib&quot;;&quot;$(OSGHOME)\..\Producer\lib&quot;;&quot;$(OSGHOME)\..\OpenThreads\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VJ_BASE_DIR)\lib&quot;;&quot;$(VJ_DEPS_DIR)\lib&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(IntDir)/VE_TextureBased.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/VE_TextureBased_osg_d.lib"
+				ImportLibrary="$(OutDir)/VE_TextureBased_osg__vep_d.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>

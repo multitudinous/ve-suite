@@ -422,7 +422,7 @@ cfdDataSet* cfdModel::GetCfdDataSet( int dataset )
 }
 #ifdef _OSG
 /////////////////////////////////////////////////////////////////////
-cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int index)
+VE_TextureBased::cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int index)
 {
    if(mTextureDataSets.empty())
    {
@@ -432,12 +432,12 @@ cfdTextureDataSet* cfdModel::GetTextureDataSet(unsigned int index)
    }
 }
 ///////////////////////////////////////////////////////////////
-void cfdModel::SetActiveTextureDataSet(cfdTextureDataSet* tDS)
+void cfdModel::SetActiveTextureDataSet(VE_TextureBased::cfdTextureDataSet* tDS)
 {
    _activeTextureDataSet = tDS;
 }
 //////////////////////////////////////////////////////
-cfdTextureDataSet* cfdModel::GetActiveTextureDataSet()
+VE_TextureBased::cfdTextureDataSet* cfdModel::GetActiveTextureDataSet()
 {
    return _activeTextureDataSet;
 }
