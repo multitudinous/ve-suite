@@ -203,8 +203,9 @@ void cfdQuatCamHandler::LoadFromFile( char* fileName)
             numPointsInFlyThrough = new int[numFlyThroughs];
             for ( int i=0; i<numFlyThroughs; i++ )
             {
+					int* tempPts;
                inFile >> numPointsInFlyThrough[i];
-               int tempPts[numPointsInFlyThrough[i]];
+               tempPts = new int[numPointsInFlyThrough[i]];
                for ( int j=0; j<numPointsInFlyThrough[i]; j++)
                {
                   inFile >> tempPts[j];
