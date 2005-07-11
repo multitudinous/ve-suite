@@ -169,7 +169,6 @@ Global
 	EndGlobalSection
 	GlobalSection(ProjectConfiguration) = postSolution
 		{E96F21F0-C5EF-43F0-9643-154D3BB96118}.Builder_Tools.ActiveCfg = dbg|Win32
-		{E96F21F0-C5EF-43F0-9643-154D3BB96118}.Builder_Tools.Build.0 = dbg|Win32
 		{E96F21F0-C5EF-43F0-9643-154D3BB96118}.Release.ActiveCfg = Release|Win32
 		{E96F21F0-C5EF-43F0-9643-154D3BB96118}.Release.Build.0 = Release|Win32
 		{E96F21F0-C5EF-43F0-9643-154D3BB96118}.tao_osg_dbg.ActiveCfg = dbg|Win32
@@ -179,7 +178,6 @@ Global
 		{E96F21F0-C5EF-43F0-9643-154D3BB96118}.tao_pf_dbg.ActiveCfg = dbg|Win32
 		{E96F21F0-C5EF-43F0-9643-154D3BB96118}.tao_pf_dbg.Build.0 = dbg|Win32
 		{E18B55CA-745E-4EBC-9056-85CA897EE690}.Builder_Tools.ActiveCfg = dbg|Win32
-		{E18B55CA-745E-4EBC-9056-85CA897EE690}.Builder_Tools.Build.0 = dbg|Win32
 		{E18B55CA-745E-4EBC-9056-85CA897EE690}.Release.ActiveCfg = Release|Win32
 		{E18B55CA-745E-4EBC-9056-85CA897EE690}.Release.Build.0 = Release|Win32
 		{E18B55CA-745E-4EBC-9056-85CA897EE690}.tao_osg_dbg.ActiveCfg = dbg|Win32
@@ -189,7 +187,6 @@ Global
 		{E18B55CA-745E-4EBC-9056-85CA897EE690}.tao_pf_dbg.ActiveCfg = dbg|Win32
 		{E18B55CA-745E-4EBC-9056-85CA897EE690}.tao_pf_dbg.Build.0 = dbg|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.Builder_Tools.ActiveCfg = tao_osg_dbg|Win32
-		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.Builder_Tools.Build.0 = tao_osg_dbg|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.Release.ActiveCfg = Release|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.Release.Build.0 = Release|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_osg_dbg.ActiveCfg = tao_osg_dbg|Win32
@@ -199,7 +196,6 @@ Global
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_pf_dbg.ActiveCfg = tao_pf_dbg|Win32
 		{6EB56A33-7EB4-43B4-A5EB-F11FB470B77F}.tao_pf_dbg.Build.0 = tao_pf_dbg|Win32
 		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}.Builder_Tools.ActiveCfg = tao_dbg|Win32
-		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}.Builder_Tools.Build.0 = tao_dbg|Win32
 		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}.Release.ActiveCfg = Release|Win32
 		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}.Release.Build.0 = Release|Win32
 		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}.tao_osg_dbg.ActiveCfg = tao_dbg|Win32
@@ -209,7 +205,6 @@ Global
 		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}.tao_pf_dbg.ActiveCfg = tao_dbg|Win32
 		{BCEA6B36-558C-4D70-8C43-D69E5EB68AF7}.tao_pf_dbg.Build.0 = tao_dbg|Win32
 		{3BDA598D-7DFD-4926-82E9-68528528A715}.Builder_Tools.ActiveCfg = dbg|Win32
-		{3BDA598D-7DFD-4926-82E9-68528528A715}.Builder_Tools.Build.0 = dbg|Win32
 		{3BDA598D-7DFD-4926-82E9-68528528A715}.Release.ActiveCfg = Release|Win32
 		{3BDA598D-7DFD-4926-82E9-68528528A715}.Release.Build.0 = Release|Win32
 		{3BDA598D-7DFD-4926-82E9-68528528A715}.tao_osg_dbg.ActiveCfg = dbg|Win32
@@ -219,7 +214,6 @@ Global
 		{3BDA598D-7DFD-4926-82E9-68528528A715}.tao_pf_dbg.ActiveCfg = dbg|Win32
 		{3BDA598D-7DFD-4926-82E9-68528528A715}.tao_pf_dbg.Build.0 = dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Builder_Tools.ActiveCfg = tao_osg_dbg|Win32
-		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Builder_Tools.Build.0 = tao_osg_dbg|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release.ActiveCfg = Release|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.Release.Build.0 = Release|Win32
 		{BABE88BF-50EE-4E66-84BB-7B801E9FD01F}.tao_osg_dbg.ActiveCfg = tao_osg_dbg|Win32
@@ -255,7 +249,6 @@ Global
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}.tao_pf_dbg.ActiveCfg = dbg|Win32
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}.tao_pf_dbg.Build.0 = dbg|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.Builder_Tools.ActiveCfg = tao_osg_dbg|Win32
-		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.Builder_Tools.Build.0 = tao_osg_dbg|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.Release.ActiveCfg = Release|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_dbg.ActiveCfg = tao_osg_dbg|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_osg_dbg.Build.0 = tao_osg_dbg|Win32
@@ -264,7 +257,6 @@ Global
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_pf_dbg.ActiveCfg = tao_pf_dbg|Win32
 		{6EB56A33-7EB4-47B4-A5EB-F11FB470B77F}.tao_pf_dbg.Build.0 = tao_pf_dbg|Win32
 		{3BDA598D-7DFD-4926-82E9-68528528A716}.Builder_Tools.ActiveCfg = dbg|Win32
-		{3BDA598D-7DFD-4926-82E9-68528528A716}.Builder_Tools.Build.0 = dbg|Win32
 		{3BDA598D-7DFD-4926-82E9-68528528A716}.Release.ActiveCfg = Release|Win32
 		{3BDA598D-7DFD-4926-82E9-68528528A716}.tao_osg_dbg.ActiveCfg = dbg|Win32
 		{3BDA598D-7DFD-4926-82E9-68528528A716}.tao_osg_dbg.Build.0 = dbg|Win32
