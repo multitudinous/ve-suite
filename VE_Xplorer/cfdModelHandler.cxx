@@ -221,8 +221,8 @@ void cfdModelHandler::InitScene( void )
                 << std::endl;
          _modelList.at( j )->GetCfdDataSet( i )->LoadData();
          _modelList.at( j )->GetCfdDataSet( i )->SetArrow( this->arrow );
-         VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->
-               AddChild( _modelList.at( j )->GetCfdDataSet( i )->GetDCS() );
+         /*VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->
+               AddChild( _modelList.at( j )->GetCfdDataSet( i )->GetDCS() );*/
       }
 
    // set default active dataset to be the meshed volume
