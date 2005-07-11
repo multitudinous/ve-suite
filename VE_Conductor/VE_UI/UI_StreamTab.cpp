@@ -383,6 +383,7 @@ void  UI_StreamlineTab::_onParticleTrack(wxCommandEvent& WXUNUSED(event))
    }
 
    particleControls = new UI_TransientDialog(19, this,PARTICLE_DIALOG );
+   particleControls->SetTitle(wxString("Particle Controls"));
    particleControls->SetTabControl( ((UI_Tabs*)_parent) );
    particleControls->Show();
 }
