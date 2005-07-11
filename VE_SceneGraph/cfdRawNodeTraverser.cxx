@@ -23,14 +23,14 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdNodeTraverser.cxx,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * File:          $RCSfile: cfdRawNodeTraverser.cxx,v $
+ * Date modified: $Date: 2005-07-09 16:05:15 -0500 (Sat, 09 Jul 2005) $
+ * Version:       $Rev: 2638 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#include "VE_SceneGraph/cfdNodeTraverser.h"
+#include "VE_SceneGraph/cfdRawNodeTraverser.h"
 #include <iostream>
 #include "VE_SceneGraph/cfdGroup.h"
 #include "VE_SceneGraph/cfdSwitch.h"
@@ -39,6 +39,9 @@
 
 #ifdef _PERFORMER
 #include <Performer/pf/pfGroup.h>
+#include <Performer/pf/pfSequence.h>
+#include <Performer/pf/pfDCS.h>
+#include <Performer/pf/pfSwitch.h>
 #elif _OSG
 #include <osg/Group>
 #endif
@@ -46,7 +49,7 @@ using namespace VE_SceneGraph;
 ////////////////////////////////////
 //Constructors                    //
 ////////////////////////////////////
-cfdNodeTraverser::cfdNodeTraverser()
+cfdRawNodeTraverser::cfdRawNodeTraverser()
 { 
    _root = 0;
    _preFunc = 0;
@@ -54,7 +57,7 @@ cfdNodeTraverser::cfdNodeTraverser()
    _ts = CONT;
 }
 /////////////////////////////////////////////////////////////////
-cfdNodeTraverser::cfdNodeTraverser(const cfdNodeTraverser& cfdNT)
+cfdRawNodeTraverser::cfdRawNodeTraverser(const cfdRawNodeTraverser& cfdNT)
 {
    _root = 0;
    _preFunc = 0;
@@ -67,22 +70,37 @@ cfdNodeTraverser::cfdNodeTraverser(const cfdNodeTraverser& cfdNT)
 /////////////////////////////////////
 //Destructor                       //
 /////////////////////////////////////
-cfdNodeTraverser::~cfdNodeTraverser()
+cfdRawNodeTraverser::~cfdRawNodeTraverser()
 {
    
 }
 ////////////////////////////////////////////
 //set the node to traverse                //
 ////////////////////////////////////////////
-void cfdNodeTraverser::setNode(VE_SceneGraph::cfdNode* root)
+#ifdef _OSG
+void cfdRawNodeTraverser::setNode(osg::Node* root,
+                               bool deepClone)
+#elif _PERFORMER
+void cfdRawNodeTraverser::setNode(pfNode* root,
+                               bool deepClone)
+#endif
 {
-   _root = root;
+   if(deepClone){
+#ifdef _OSG
+      _root = dynamic_cast<osg::Node*>(root->clone(osg::CopyOp::DEEP_COPY_ALL));
+#elif _PERFORMER
+      _root = root;
+#endif
+   }else{
+      _root = root;
+   }
 }
-/////////////////////////////////
-//traverse the node            //
-/////////////////////////////////
-void cfdNodeTraverser::traverse()
+////////////////////////////////////
+//traverse the node               //
+////////////////////////////////////
+void cfdRawNodeTraverser::traverse()
 {
+#ifdef _PERFORMER
    if(_root){
       //the pre-callback
       if(_preFunc){
@@ -102,8 +120,29 @@ void cfdNodeTraverser::traverse()
       if(_postFunc){
          _postFunc(this,_root);
       }
+#elif _OSG
+   if(_root.get()){
+      //the pre-callback
+      if(_preFunc){
+         _preFunc(this,_root.get());
+         if(_ts == SKIP ||
+            _ts == STOP)
+         {
+            _ts = CONT;
+            return;
+         }
+      }
+
+      //recurse the root node
+      _traverseNode(_root.get());
+
+      //the post-callback
+      if(_postFunc){
+         _postFunc(this,_root.get());
+      }
+#endif
    }else{
-      std::cout<<"Error: cfdNodeTraverser::traverse()!"<<std::endl;
+      std::cout<<"Error: cfdRawNodeTraverser::traverse()!"<<std::endl;
       std::cout<<"Root node not set!"<<std::endl;
       return; 
    }
@@ -111,7 +150,11 @@ void cfdNodeTraverser::traverse()
 ///////////////////////////////////////////////////////////////////
 //depth first recursion of a node/scene graph                    //
 ///////////////////////////////////////////////////////////////////
-void cfdNodeTraverser::_traverseNode(VE_SceneGraph::cfdNode* cNode)
+#ifdef _OSG
+void cfdRawNodeTraverser::_traverseNode(osg::Node* cNode)
+#elif _PERFORMER
+void cfdRawNodeTraverser::_traverseNode(pfNode* cNode)
+#endif
 {
    int nChildren = 0;
    //the pre-callback
@@ -125,30 +168,24 @@ void cfdNodeTraverser::_traverseNode(VE_SceneGraph::cfdNode* cNode)
          return;
       }
    }
-   //these are the only cfdNode types (so far) 
-   //that have children so we must traverse the childnodes!!!!
-   if(cNode->GetCFDNodeType() == VE_SceneGraph::cfdNode::CFD_SEQUENCE){
-      std::cout<<"The sequence"<<std::endl;
-   }else if(cNode->GetCFDNodeType() == VE_SceneGraph::cfdNode::CFD_GROUP){
-      VE_SceneGraph::cfdGroup* curGroup = dynamic_cast<VE_SceneGraph::cfdGroup*>(cNode);
-      nChildren = curGroup->GetNumChildren();
+#ifdef _OSG
+   if(!strcmp(cNode->className(),"Group")||
+      !strcmp(cNode->className(),"MatrixTransform")||
+      !strcmp(cNode->className(),"Sequence")||
+      !strcmp(cNode->className(),"Switch")){
+      osg::ref_ptr<osg::Group> curGroup = dynamic_cast<osg::Group*>(cNode);
+#elif _PERFORMER
+   if(cNode->isOfType(pfSequence::getClassType())||
+      cNode->isOfType(pfGroup::getClassType())||
+      cNode->isOfType(pfSwitch::getClassType())||
+      cNode->isOfType(pfDCS::getClassType())){
+      pfGroup* curGroup = (pfGroup*)cNode;
+#endif
+      nChildren = curGroup->getNumChildren();
+
       //recurse the children of this node
       for(int i = 0; i < nChildren; i++){
-        _traverseNode(curGroup->GetChild(i));
-      }
-	}else if(cNode->GetCFDNodeType() == cfdNode::CFD_SWITCH){
-      VE_SceneGraph::cfdSwitch* curGroup = dynamic_cast<VE_SceneGraph::cfdSwitch*>(cNode);
-      nChildren = curGroup->GetNumChildren();
-      //recurse the children of this node
-      for(int i = 0; i < nChildren; i++){
-        _traverseNode(curGroup->GetChild(i));
-      }
-   }else if(cNode->GetCFDNodeType() == cfdNode::CFD_DCS){
-      VE_SceneGraph::cfdDCS* curGroup = dynamic_cast<VE_SceneGraph::cfdDCS*>(cNode);
-      nChildren = curGroup->GetNumChildren();
-      //recurse the children of this node
-      for(int i = 0; i < nChildren; i++){
-        _traverseNode(curGroup->GetChild(i));
+        _traverseNode(curGroup->getChild(i));
       }
    }
    
@@ -160,8 +197,8 @@ void cfdNodeTraverser::_traverseNode(VE_SceneGraph::cfdNode* cNode)
 //////////////////////////////////////////////////////////
 //the equal operator                                    //
 //////////////////////////////////////////////////////////
-cfdNodeTraverser&
-cfdNodeTraverser::operator=(const cfdNodeTraverser& cfdNT)
+cfdRawNodeTraverser&
+cfdRawNodeTraverser::operator=(const cfdRawNodeTraverser& cfdNT)
 {
    if(this!= &cfdNT){
       _root = cfdNT._root;

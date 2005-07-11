@@ -24,14 +24,14 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdWriteTraverser.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * Date modified: $Date: 2005-07-02 22:32:16 -0500 (Sat, 02 Jul 2005) $
+ * Version:       $Rev: 2544 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _CFD_WRITE_TRAVERSER_H_
-#define _CFD_WRITE_TRAVERSER_H_
+#ifndef _CFD_RAW_NODE_WRITE_TRAVERSER_H_
+#define _CFD_RAW_NODE_WRITE_TRAVERSER_H_
 
 #include <vector>
 #include "VE_SceneGraph/cfdNode.h"
@@ -43,7 +43,7 @@
 #include <osg/Node>
 #elif _OPENSG
 #endif
-#include "VE_SceneGraph/cfdNodeTraverser.h"
+#include "VE_SceneGraph/cfdRawNodeTraverser.h"
 
 ////////////////////////////////////////
 //This class writes out a performer   // 
@@ -54,49 +54,44 @@
 ////////////////////////////////////////
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdWriteTraverser : public VE_SceneGraph::cfdNodeTraverser
+   class VE_XPLORER_EXPORTS cfdRawNodeWriteTraverser
+	   : public VE_SceneGraph::cfdRawNodeTraverser
    {
       public:
-         cfdWriteTraverser();
-         cfdWriteTraverser(const cfdWriteTraverser& cfdWT);
-         cfdWriteTraverser(char* outFile);
-         ~cfdWriteTraverser();
+         cfdRawNodeWriteTraverser();
+         cfdRawNodeWriteTraverser(const cfdRawNodeWriteTraverser& cfdWT);
+         cfdRawNodeWriteTraverser(char* outFile);
+         ~cfdRawNodeWriteTraverser();
 
          //set the output file name
          void setOutputFileName(char* outFile);
 
          //write out the pfbFile
-         void writePfbFile();
+         void writeFile();
 
          //set the callback
          //whichCallback == 0 : activate sequence nodes
          //whichCallback == 1: swap sequence nodes
          void setCallback(int whichCallback);
 
-         
-
          //set the pre node traverse callback
          virtual void setPreNodeTraverseCallback(preNodeTraverseCallback func);
    
-         //equal operator
-         cfdWriteTraverser& operator=(const cfdWriteTraverser& rhs);
-      protected:
+         //set the node to traverse
+         void setNode(VE_SceneGraph::cfdNode* root);
 
-         friend void _swapSequenceNodes(VE_SceneGraph::cfdNodeTraverser* ,VE_SceneGraph::cfdNode* );
-         friend void _turnOnSequence(VE_SceneGraph::cfdNodeTraverser* ,VE_SceneGraph::cfdNode* );
-         friend void _activateSequenceNodes(VE_SceneGraph::cfdNodeTraverser* cfdNT,
-                                        VE_SceneGraph::cfdNode* node);
+         //equal operator
+         cfdRawNodeWriteTraverser& operator=(const cfdRawNodeWriteTraverser& rhs);
+      protected:
+#ifdef _OSG
+         friend void _swapSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* , osg::Node* );
+#elif _PERFORMER
+         friend void _swapSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* , pfNode* );
+#endif
          char* _fName;
          int _toPfb;
 
       public:      
-         int _sequenceIndex;
-         //std::vector<VE_SceneGraph::cfdNode*> _sequenceList;
-#ifdef _OSG
-         std::vector<osg::Sequence*> _sequenceList;
-#elif _PERFORMER
-         std::vector<pfSequence*> _sequenceList;
-#endif
    };
 } 
-#endif //_CFD_WRITE_TRAVERSER_H_
+#endif //_CFD_RAW_NODE_WRITE_TRAVERSER_H_

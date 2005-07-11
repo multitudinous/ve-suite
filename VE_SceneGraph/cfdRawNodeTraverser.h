@@ -24,14 +24,14 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdNodeTraverser.h,v $
- * Date modified: $Date$
- * Version:       $Rev$
+ * Date modified: $Date: 2005-06-26 02:53:42 -0500 (Sun, 26 Jun 2005) $
+ * Version:       $Rev: 2499 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
-#ifndef _CFD_NODE_TRAVERSER_H_
-#define _CFD_NODE_TRAVERSER_H_
+#ifndef _CFD_RAW_NODE_TRAVERSER_H_
+#define _CFD_RAW_NODE_TRAVERSER_H_
 
 #include "VE_SceneGraph/cfdNode.h"
 
@@ -41,17 +41,22 @@
 #include <osg/Node>
 #endif
 namespace VE_SceneGraph{
-   class VE_SCENEGRAPH_EXPORTS cfdNodeTraverser
+   class VE_SCENEGRAPH_EXPORTS cfdRawNodeTraverser
    {
       public:
-         cfdNodeTraverser();
-         cfdNodeTraverser(const cfdNodeTraverser& cfdNT);
-         virtual ~cfdNodeTraverser();
+         cfdRawNodeTraverser();
+         cfdRawNodeTraverser(const cfdRawNodeTraverser& cfdNT);
+         virtual ~cfdRawNodeTraverser();
          enum TraversalStatus{CONT,SKIP,STOP};
    
       //the pre and post node callbacks
-      typedef void (*preNodeTraverseCallback)(cfdNodeTraverser*,cfdNode*);
-      typedef void (*postNodeTraverseCallback)(cfdNodeTraverser*,cfdNode*);
+#ifdef _PERFORMER
+      typedef void (*preNodeTraverseCallback)(cfdRawNodeTraverser*,pfNode*);
+      typedef void (*postNodeTraverseCallback)(cfdRawNodeTraverser*,pfNode*);
+#elif _OSG
+      typedef void (*preNodeTraverseCallback)(cfdRawNodeTraverser*,osg::Node*);
+      typedef void (*postNodeTraverseCallback)(cfdRawNodeTraverser*,osg::Node*);
+#endif
 
       //set the pre node traverse callback
       virtual void setPreNodeTraverseCallback(preNodeTraverseCallback func)
@@ -63,8 +68,13 @@ namespace VE_SceneGraph{
       {
          _postFunc = func;
       }
+      
       //set the node to traverse
-      void setNode(cfdNode* root);
+#ifdef _PERFORMER
+      void setNode(pfNode* root,bool deepClone=false);
+#elif _OSG      
+      void setNode(osg::Node* root,bool deepClone=false);
+#endif
 
       void setTraversalStatus(TraversalStatus ts){_ts = ts;}
       TraversalStatus traversalStatus(){return _ts;}
@@ -73,15 +83,20 @@ namespace VE_SceneGraph{
       void traverse();
 
       //equal operator
-      cfdNodeTraverser& operator=(const cfdNodeTraverser& cfdNT);
+      cfdRawNodeTraverser& operator=(const cfdRawNodeTraverser& cfdNT);
    protected:
       //recurse the nodes
-      virtual void _traverseNode(cfdNode* currentNode);
 
       TraversalStatus _ts;
-      cfdNode* _root;
+#ifdef _PERFORMER
+     virtual void _traverseNode(pfNode* currentNode);
+     pfNode* _root;
+#elif _OSG
+     virtual void _traverseNode(osg::Node* currentNode);
+     osg::ref_ptr<osg::Node> _root;
+#endif
       preNodeTraverseCallback _preFunc;
       postNodeTraverseCallback _postFunc;
    };
 }
-#endif// _CFD_NODE_TRAVERSER_H_
+#endif// _CFD_RAW_NODE_TRAVERSER_H_

@@ -177,6 +177,7 @@
 				MinimalRebuild="FALSE"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -280,6 +281,7 @@ copy .\osg_opt\VE_SceneGraph_osg.lib %VE_SUITE_HOME%\lib\win32
 				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_PERFORMER;VTK44;VE_SCENEGRAPH_LIBRARY"
 				RuntimeLibrary="0"
+				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="TRUE"
@@ -352,6 +354,9 @@ copy .\pf_opt\VE_SceneGraph_pf.lib %VE_SUITE_HOME%\lib\win32
 				RelativePath=".\cfdPfSceneManagement.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdRawNodeTraverser.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdSceneNode.cxx">
 			</File>
 			<File
@@ -397,6 +402,9 @@ copy .\pf_opt\VE_SceneGraph_pf.lib %VE_SUITE_HOME%\lib\win32
 			</File>
 			<File
 				RelativePath=".\cfdPfSceneManagement.h">
+			</File>
+			<File
+				RelativePath=".\cfdRawNodeTraverser.h">
 			</File>
 			<File
 				RelativePath=".\cfdSceneNode.h">

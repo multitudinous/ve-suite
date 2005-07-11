@@ -75,18 +75,26 @@ namespace VE_SceneGraph{
    {
       public:
          cfdSequence();
-         ~cfdSequence();
-
-         cfdSequence(const cfdSequence& cfdSeq);
-
+         virtual ~cfdSequence();
 #ifdef _PERFORMER
+         cfdSequence(const cfdSequence& cfdSeq);
          //to make this a performer class
          static void init(void);
 
          static pfType* getClassType( void ){ return _classType; }
-#elif _OSG
-#endif   
          cfdSequence& operator=(const cfdSequence& rhs);
+         //virtual int copy(const cfdSequence* copy);
+         //void copy(cfdSequence* copy,const cfdSequence* orig);
+
+         
+         
+         //virtual cfdSequence* cfdSequence::clone(int);
+         
+#elif _OSG
+         cfdSequence(const cfdSequence& pbQuad,
+                        const osg::CopyOp& copyop=osg::CopyOp::SHALLOW_COPY);
+         META_Object(VE_SceneGraph,cfdSequence);
+#endif   
          // set/get the duration (in seconds) of any particular frame
          void setTime( double time );
          double getTime(){ return _deltaT; }
@@ -154,6 +162,8 @@ namespace VE_SceneGraph{
 #ifdef _PERFORMER
          //the node pre-traverser callback
          friend int switchFrame(pfTraverser* trav, void* userData);
+         friend void copySequence(pfObject* copy,
+                        const pfObject* orig);
 #elif _OSG
          //callbacks are defined as classes in OSG!!!
          class cfdSequenceCallback : public osg::NodeCallback{

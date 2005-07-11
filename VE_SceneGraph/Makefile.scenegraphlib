@@ -58,6 +58,7 @@ SRCS=\
    cfdNode.cxx \
    cfdNodeTraverser.cxx \
    cfdPfSceneManagement.cxx \
+   cfdRawNodeTraverser.cxx \
    cfdSceneNode.cxx \
    cfdSequence.cxx \
    cfdSwitch.cxx \

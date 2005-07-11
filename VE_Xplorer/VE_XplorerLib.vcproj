@@ -376,6 +376,9 @@
 				RelativePath=".\cfdQuatCamHandler.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdRawNodeWriteTraverser.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdReadParam.cxx">
 			</File>
 			<File

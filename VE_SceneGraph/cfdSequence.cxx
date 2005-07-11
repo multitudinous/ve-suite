@@ -37,6 +37,7 @@
 
 
 #ifdef _PERFORMER
+#include <Performer/pf.h>
 #include <Performer/pf/pfNode.h>
 //Performer static member for performer compliance
 //it allows performer to determine the class type
@@ -92,28 +93,25 @@ cfdGroup()
 #ifdef _PERFORMER
    setTravFuncs(PFTRAV_APP,switchFrame,0);
    setTravData(PFTRAV_APP,this);
+   setCopyFunc(copySequence);
    //performer stuff
    init();
    setType(_classType);
-   if ( _group != NULL )
+   setName("cfdsequence");
+   /*if ( _group != NULL )
    {
       pfDelete( _group );
       _group = NULL;
-   }
+   }*/
 #elif _OSG
    setUpdateCallback(new cfdSequence::cfdSequenceCallback(this));
 #endif
    SetCFDNodeType(CFD_SEQUENCE);
-   //_sequence = this;
-   //_group = dynamic_cast<cfdSequence*>(_sequence);
 }
+#ifdef _PERFORMER
 ///////////////////////////////////////////////////
 cfdSequence::cfdSequence(const cfdSequence& cfdSeq)
-#ifdef _PERFORMER
 :pfGroup(cfdSeq),
-#elif _OSG
-:osg::Group(cfdSeq),
-#endif
 cfdGroup(cfdSeq)
 {
    _lSwitch = new cfdSwitch(*cfdSeq._lSwitch);
@@ -127,25 +125,27 @@ cfdGroup(cfdSeq)
    _pMode = cfdSeq._pMode;
    _appFrame = cfdSeq._appFrame;
    _step = cfdSeq._step;
-#ifdef _PERFORMER
+//#ifdef _PERFORMER
    setTravFuncs(PFTRAV_APP,switchFrame,0);
    setTravData(PFTRAV_APP,this);
    //performer stuff
    init();
    setType(_classType);
    //_group = dynamic_cast<cfdSequence*>(_sequence);
-#elif _OSG
-#endif
+//#elif _OSG
+//#endif
+   setCopyFunc(copySequence);
    SetCFDNodeType(CFD_SEQUENCE);
    //_sequence = this;
 }
-   
+#endif
 ///////////////////////////
 //Destructor             //
 ///////////////////////////
 cfdSequence::~cfdSequence()
 {
 }
+#ifdef _PERFORMER
 ///////////////////////////////////////////////////////////
 cfdSequence& cfdSequence::operator=(const cfdSequence& rhs)
 {
@@ -176,6 +176,7 @@ cfdSequence& cfdSequence::operator=(const cfdSequence& rhs)
       //_sequence = rhs._sequence;
       setTravFuncs(PFTRAV_APP,switchFrame,0);
       setTravData(PFTRAV_APP,this);
+      setCopyFunc(copySequence);
 //      _group = dynamic_cast<cfdSequence*>(_sequence);
 #elif _OSG
 #endif
@@ -183,6 +184,33 @@ cfdSequence& cfdSequence::operator=(const cfdSequence& rhs)
    }
    return *this;
 }
+///////////////////////////////////////////////////////////////////
+void VE_SceneGraph::copySequence(pfObject* copy,
+                       const pfObject* orig)
+{
+   std::cout<<"VE_SceneGraph::copySequence called!!"<<std::endl;
+}
+#elif _OSG
+///////////////////////////////////////////////////////////
+cfdSequence::cfdSequence(const cfdSequence& cfdSeq,
+                  const osg::CopyOp& copyop)
+:osg::Group(cfdSeq,copyop) 
+{
+   _lSwitch = new cfdSwitch(*cfdSeq._lSwitch);
+   _deltaT = cfdSeq._deltaT;
+   _duration = cfdSeq._duration;
+   _begin = cfdSeq._begin;
+   _end = cfdSeq._end;
+   _dir = cfdSeq._dir;
+   _currentFrame = cfdSeq._currentFrame;
+   _lMode = cfdSeq._lMode;
+   _pMode = cfdSeq._pMode;
+   _appFrame = cfdSeq._appFrame;
+   _step = cfdSeq._step;
+
+   SetCFDNodeType(CFD_SEQUENCE);   
+}
+#endif
 ////////////////////////////////////////////////
 void cfdSequence::setDuration( double duration )
 {

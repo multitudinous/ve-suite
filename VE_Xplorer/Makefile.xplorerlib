@@ -101,6 +101,7 @@ SRCS=\
    cfdVectorBase.cxx \
    cfdVector.cxx \
    cfdVectors.cxx \
+   cfdRawNodeWriteTraverser.cxx \
    cfdWriteTraverser.cxx
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME) 

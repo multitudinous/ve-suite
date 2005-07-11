@@ -45,6 +45,7 @@
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 #include "VE_Xplorer/cfdWriteTraverser.h"
+#include "VE_Xplorer/cfdRawNodeWriteTraverser.h"
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include <iostream>
 #include <string>
@@ -366,6 +367,19 @@ void cfdTeacher::UpdateCommand()
 
 void cfdTeacher::writePFBFile( VE_SceneGraph::cfdNode* graph,char* fileName)
 {
+   
+   VE_Xplorer::cfdRawNodeWriteTraverser cfdWT(fileName);
+
+   //set the graph
+   cfdWT.setNode(graph);
+
+   //set the "swapping" callback
+   cfdWT.setCallback(1);
+
+   //write out the file
+   cfdWT.writeFile();
+
+   /*
    //make sure we have a writer
    if(!_cfdWT){
       _cfdWT = new cfdWriteTraverser(fileName);
@@ -379,7 +393,7 @@ void cfdTeacher::writePFBFile( VE_SceneGraph::cfdNode* graph,char* fileName)
    _cfdWT->setCallback(1);
 
    //write out the file
-   //_cfdWT->activateSequenceNodes();
    _cfdWT->writePfbFile();
+   */
 }
 
