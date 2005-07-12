@@ -85,13 +85,13 @@ void cfdRawNodeTraverser::setNode(pfNode* root,
                                bool deepClone)
 #endif
 {
-   if(deepClone){
 #ifdef _OSG
+   if(deepClone)
+   {
       _root = dynamic_cast<osg::Node*>(root->clone(osg::CopyOp::DEEP_COPY_ALL));
-#elif _PERFORMER
-      _root = root;
+   }else
 #endif
-   }else{
+   {
       _root = root;
    }
 }
