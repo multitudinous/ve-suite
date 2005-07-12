@@ -282,18 +282,18 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RECORD_SCENE )
    {
-	  //check if the path to STORED_FILES exists
-	  boost::filesystem::path dir_path( this->directory );
-	  try
-	  {
-	     boost::filesystem::is_directory( dir_path );
-	  }
-	  catch ( const std::exception& ex )
-	  {
-		 std::cout << ex.what() << std::endl;
-		 boost::filesystem::create_directory(dir_path);
-		 std::cout << "...so we made it for you..." << std::endl;
-	  }
+	   //check if the path to STORED_FILES exists
+	   boost::filesystem::path dir_path( this->directory );
+	   try
+	   {
+	      boost::filesystem::is_directory( dir_path );
+	   }
+	   catch ( const std::exception& ex )
+	   {
+		   std::cout << ex.what() << std::endl;
+		   boost::filesystem::create_directory(dir_path);
+		   std::cout << "...so we made it for you..." << std::endl;
+	   }
 
       // Generate a .pfb filename...
       const char* pfb_filename;
@@ -321,23 +321,21 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
          // Make an identity matrix
          gmtl::identity( I );
          this->_worldDCS->SetMat( I );
-         float scaleUnity[ 3 ];
-         scaleUnity[ 0 ] = scaleUnity[ 1 ] = scaleUnity[ 2 ] = 1.0f;
-         this->_worldDCS->SetScaleArray( scaleUnity );
+         //float scaleUnity[ 3 ];
+         //scaleUnity[ 0 ] = scaleUnity[ 1 ] = scaleUnity[ 2 ] = 1.0f;
+         //this->_worldDCS->SetScaleArray( scaleUnity );
       
          writePFBFile(this->_worldDCS,(char*)pfb_filename);
 
-         // The following is a hack until osg or juggler 
-         // allow us to pull scale info out of a 4x4 matrix
-         float* scaleArray = this->_worldDCS->GetScaleArray();
+         /*float* scaleArray = this->_worldDCS->GetScaleArray();
          float tempScale = 1.0f / scaleArray[ 0 ];
          gmtl::Matrix44f scaleMat;
          gmtl::setScale( scaleMat, tempScale );
-         gmtl::Matrix44f mTemp = scaleMat * m;
+         gmtl::Matrix44f mTemp = scaleMat * m;*/
          // restore the world DCS matrix...
          //this->_worldDCS->SetMat( m );
-         this->_worldDCS->SetMat( mTemp );
-         this->_worldDCS->SetScaleArray( scaleArray ); 
+         this->_worldDCS->SetMat( m );
+         //this->_worldDCS->SetScaleArray( scaleArray ); 
       }
       else
       {

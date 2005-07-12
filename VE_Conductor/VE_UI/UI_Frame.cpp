@@ -237,7 +237,15 @@ void UI_Frame::OnChangeModel( void )
    _tabs->cSc = activeModIndex;         // using zero-based scalar counting
    std::cout << " Act Mod Index : "<<activeModIndex<< std::endl;
    _tabs->cId  = CHANGE_ACTIVE_MODEL;
-   _tabs->sendDataArrayToServer();
+   try
+   {
+      _tabs->sendDataArrayToServer();
+   }
+   catch ( ... )
+   {
+      wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                     "Communication Failure", wxOK | wxICON_INFORMATION );
+   }
  
    //Refresh();
    // Hack because Refresh and SetSize(GetSize() ) don't work on win32 platform

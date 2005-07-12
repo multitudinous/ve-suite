@@ -51,156 +51,157 @@ namespace VE_SceneGraph
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdNavigate
-   {
-      public:
-         //! Constructor
-         /*!
-         Constructs VR Juggler objects.
-         */
-         cfdNavigate( );
-         //! Destructor
-         ~cfdNavigate( );
-         //! Wand object
-         /*!
-         Initialization of navigation objects: VR Juggler, wand, cursor, data set
-         */
-         void Initialize( VE_SceneGraph::cfdDCS* );
-         void SetDataValues( int, int );
-         void updateNavigationFromGUI( void );
-         //! Wand object
-         /*!
-         Get wand direction.
-         */
-         double * GetDirection( );
-         //! Wand object
-         /*!
-         Get wand location.
-         */
-         double * GetLocation( );
-         void GetObjLocation( float xyzO[3] );
-         void GetObjLocation( float &xO, float &yO, float &zO );
-         //! Data set object(s)
-         /*!
-         Get actual cursor location with respect to the data set.
-         */
-         float * GetObjLocation( );
-         float * GetCurObjLocation( );  //added
-         //!  Cursor object(s)
-         /*!
-         Get cursor location with respect to the virtual space.
-         */
-         double * GetCursorLocation( );
-         //! Virtual environment object(s)
-         /*!
-         Get location of objects with respect to virtual space.
-         */
-         double * GetWorldLocation( );
-         void GetWorldLocation( double xyzW[3] );
-         void GetWorldLocation( double &xW, double &yW, double &zW );
-         void SetWorldLocation( double xyzW[ 3 ] );
-         //! Wand object
-         /*!
-         Forward translation.
-         */
-         void FwdTranslate( );
-         //! Wand object
-         /*!
-         Aft translation.
-         */
-         void AftTranslate( );
-         //! Cursor object
-         /*!
-         Cursor tracker.
-         */
-         void CursorTranslate( );
-   
-         void UpdateLoc( double* );
+class VE_XPLORER_EXPORTS cfdNavigate
+{
+public:
+   //! Constructor
+   /*!
+   Constructs VR Juggler objects.
+   */
+   cfdNavigate( );
+   //! Destructor
+   ~cfdNavigate( );
+   //! Wand object
+   /*!
+   Initialization of navigation objects: VR Juggler, wand, cursor, data set
+   */
+   void Initialize( VE_SceneGraph::cfdDCS* );
+   void SetDataValues( int, int );
+   void updateNavigationFromGUI( void );
+   //! Wand object
+   /*!
+   Get wand direction.
+   */
+   double * GetDirection( );
+   //! Wand object
+   /*!
+   Get wand location.
+   */
+   double * GetLocation( );
+   void GetObjLocation( float xyzO[3] );
+   void GetObjLocation( float &xO, float &yO, float &zO );
+   //! Data set object(s)
+   /*!
+   Get actual cursor location with respect to the data set.
+   */
+   float * GetObjLocation( );
+   float * GetCurObjLocation( );  //added
+   //!  Cursor object(s)
+   /*!
+   Get cursor location with respect to the virtual space.
+   */
+   double * GetCursorLocation( );
+   //! Virtual environment object(s)
+   /*!
+   Get location of objects with respect to virtual space.
+   */
+   double * GetWorldLocation( );
+   void GetWorldLocation( double xyzW[3] );
+   void GetWorldLocation( double &xW, double &yW, double &zW );
+   void SetWorldLocation( double xyzW[ 3 ] );
+   //! Wand object
+   /*!
+   Forward translation.
+   */
+   void FwdTranslate( );
+   //! Wand object
+   /*!
+   Aft translation.
+   */
+   void AftTranslate( );
+   //! Cursor object
+   /*!
+   Cursor tracker.
+   */
+   void CursorTranslate( );
 
-         void UpdateDir( );
+   void UpdateLoc( double* );
 
-         double* GetWorldTranslation();
-         float* GetWorldRotation();
+   void UpdateDir( );
 
-      private:
-         /*!
-         Update wand location.
-         */
-         void UpdateLoc( );
-         //! VR Juggler
-         /*!
-         VR Juggler's wand positional interface.
-         */
-         //vjPosInterface wand;
-         gadget::PositionInterface  wand;
-         gadget::PositionInterface  head;
- 
-         // VR Juggler's wand digital interface.
-      public:
-         gadget::DigitalInterface digital[6];
-         gadget::DigitalInterface IHdigital[10];
-         gadget::DigitalInterface flyThrough[4];
-         int buttonData[ 6 ];
-         // x, y, and z translation of objects in world coordinates.
-         // Variables only used in preFrame
-         double * currentWandDirection;
-         int cfdId;
-         int cfdIso_value;
-         double worldTrans[ 3 ];
-         float worldRot[ 3 ];
-         VE_SceneGraph::cfdDCS* worldDCS;
-   
-      private:
-         //! VR Juggler
-         /*!
-         VR Juggler's vector math function.
-         */
-         gmtl::Vec3f  vjVec;
-         gmtl::Vec3f  LastVec;
-         //! VR Juggler
-         /*!
-         VR Juggler's matrix math function.
-         */
-         gmtl::Matrix44f vjMat;
-         gmtl::Matrix44f vjHeadMat;
-         //! Wand object
-         /*!
-         Location of the wand with respect to the virtual space.
-         */
-         double loc[3];
-         //! Wand object
-         /*!
-         Direction of the wand.
-         */
-         double dir[3];
-         //! Virtual environment object(s)
-         /*!
-         Location of the objects with respect to the virtual space.
-         */
-         double worldLoc[3];
-         //! Cursor object(s)
-         /*!
-         Location of the cursor with respect to the virtual space.
-         */
-         double cursorLoc[3];
-         //! Data set object(s)
-         /*!
-         Location with respect to data set (the actual location to interact with data).
-         */
-         float objLoc[3];
-         //! Cursor object(s)
-         /*!
-         Cursor length.
-         */
-         float cursorLen;
-         //! Wand object
-         /*!
-         Displacement of the objects in virtual space.
-         */
-         float dObj;
-   
-         float translationStepSize;
-         float rotationStepSize;
-   };
+   double* GetWorldTranslation();
+   float* GetWorldRotation();
+
+private:
+   /*!
+   Update wand location.
+   */
+   void UpdateLoc( );
+   //! VR Juggler
+   /*!
+   VR Juggler's wand positional interface.
+   */
+   //vjPosInterface wand;
+   gadget::PositionInterface  wand;
+   gadget::PositionInterface  head;
+
+   // VR Juggler's wand digital interface.
+public:
+   gadget::DigitalInterface digital[6];
+   gadget::DigitalInterface IHdigital[10];
+   gadget::DigitalInterface flyThrough[4];
+   int buttonData[ 6 ];
+   // x, y, and z translation of objects in world coordinates.
+   // Variables only used in preFrame
+   double * currentWandDirection;
+   int cfdId;
+   int cfdIso_value;
+   VE_SceneGraph::cfdDCS* worldDCS;
+
+   double worldTrans[ 3 ];
+   float worldRot[ 3 ];
+
+private:
+   //! VR Juggler
+   /*!
+   VR Juggler's vector math function.
+   */
+   gmtl::Vec3f  vjVec;
+   gmtl::Vec3f  LastVec;
+   //! VR Juggler
+   /*!
+   VR Juggler's matrix math function.
+   */
+   gmtl::Matrix44f vjMat;
+   gmtl::Matrix44f vjHeadMat;
+   //! Wand object
+   /*!
+   Location of the wand with respect to the virtual space.
+   */
+   double loc[3];
+   //! Wand object
+   /*!
+   Direction of the wand.
+   */
+   double dir[3];
+   //! Virtual environment object(s)
+   /*!
+   Location of the objects with respect to the virtual space.
+   */
+   double worldLoc[3];
+   //! Cursor object(s)
+   /*!
+   Location of the cursor with respect to the virtual space.
+   */
+   double cursorLoc[3];
+   //! Data set object(s)
+   /*!
+   Location with respect to data set (the actual location to interact with data).
+   */
+   float objLoc[3];
+   //! Cursor object(s)
+   /*!
+   Cursor length.
+   */
+   float cursorLen;
+   //! Wand object
+   /*!
+   Displacement of the objects in virtual space.
+   */
+   float dObj;
+
+   float translationStepSize;
+   float rotationStepSize;
+};
 }
 #endif

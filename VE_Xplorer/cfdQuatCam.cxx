@@ -110,26 +110,4 @@ void cfdQuatCam::UpdateRotation( cfdNavigate* nav, VE_SceneGraph::cfdDCS* worldD
    Matrix44f temp;
    temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
    worldDCS->SetRotationMatrix( temp );
-   
-#ifdef _PERFORMER
-   pfCoord* coord = new pfCoord();
-   rotvec[0] = coord->hpr[ 0 ];
-   rotvec[1] = coord->hpr[ 1 ];
-   rotvec[2] = coord->hpr[ 2 ];
-   nav->worldRot[0] = rotvec[0];
-   nav->worldRot[1] = rotvec[1];
-   nav->worldRot[2] = rotvec[2];
-#elif _OSG
-   std::cerr << " ERROR: cfdQuatCam is NOT implemented for OSG " << std::endl;
-
-   //rotvec[0] = gmtl::Math::rad2Deg( makeZRot(temp) );
-   //rotvec[1] = gmtl::Math::rad2Deg( makeXRot(temp) );
-   //rotvec[2] = gmtl::Math::rad2Deg( makeYRot(temp) );
-#endif
-
-
 }   
-
-
-
-

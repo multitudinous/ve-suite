@@ -203,34 +203,34 @@ void cfdNavigate::UpdateLoc( double* tempTrans )  //Added by Dave
 
 void cfdNavigate::FwdTranslate( )
 {
-  this->UpdateDir( );
+   this->UpdateDir( );
 
-  for ( int i=0; i<3; i++ )
-  {
-  // Update the translation movement for the objects
-  // How much object should move
-    this->worldLoc[i] += this->dir[i]*this->dObj;
+   for ( int i=0; i<3; i++ )
+   {
+      // Update the translation movement for the objects
+      // How much object should move
+      this->worldLoc[i] += this->dir[i]*this->dObj;
 
-  // How much the cursor movement are needed to trace back
-  // to the object after each movement of the object
-    this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
-  }
+      // How much the cursor movement are needed to trace back
+      // to the object after each movement of the object
+      this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
+   }
 }
 
 void cfdNavigate::AftTranslate( )
 {
-  this->UpdateDir( );
+   this->UpdateDir( );
 
-  for ( int i=0; i<3; i++ )
-  {
-  // Update the translation movement for the objects
-  // How much object should move
-    this->worldLoc[i] -= this->dir[i]*this->dObj;
+   for ( int i=0; i<3; i++ )
+   {
+      // Update the translation movement for the objects
+      // How much object should move
+      this->worldLoc[i] -= this->dir[i]*this->dObj;
 
-  // How much the cursor movement are needed to trace back
-  // to the object after each movement of the object
-    this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
-  }
+      // How much the cursor movement are needed to trace back
+      // to the object after each movement of the object
+      this->objLoc[i] = this->cursorLoc[i] + this->worldLoc[i];
+   }
 }
 
 void cfdNavigate::CursorTranslate( )
@@ -255,7 +255,12 @@ void cfdNavigate::updateNavigationFromGUI()
 {
    this->buttonData[ 1 ] = this->digital[ 1 ]->getData();
    this->buttonData[ 2 ] = this->digital[ 2 ]->getData();
-   
+
+   float* tempWorldRot = this->worldDCS->GetRotationArray();
+   this->worldRot[ 0 ] = tempWorldRot[ 0 ];
+   this->worldRot[ 1 ] = tempWorldRot[ 1 ];
+   this->worldRot[ 2 ] = tempWorldRot[ 2 ];
+
    if ( (this->cfdId == GUI_NAV && this->cfdIso_value == NAV_FWD) ||
          this->IHdigital[0]->getData() == gadget::Digital::ON ) 
    //forward translate
@@ -298,13 +303,14 @@ void cfdNavigate::updateNavigationFromGUI()
    {
       float oldAng = worldRot[ 0 ];
       this->worldRot[ 0 ] -= rotationStepSize;
+      
       gmtl::Vec3f  worldVec, wandVec, tempVec, worldPosVec(this->worldTrans[0]- this->LastVec[0], 0,-this->worldTrans[1]-this->LastVec[2]);
       gmtl::Matrix44f rotMat;
       gmtl::EulerAngleXYZf myEuler( 0, -gmtl::Math::deg2Rad(oldAng),0), worldRotVec(0, gmtl::Math::deg2Rad(this->worldRot[0]),0);
      
       vjHeadMat = head->getData();
       gmtl::setTrans(wandVec, vjHeadMat);
-
+      
       rotMat = gmtl::makeRot<gmtl::Matrix44f>(myEuler);
       gmtl::xform(worldVec, rotMat, worldPosVec);
 
@@ -316,7 +322,28 @@ void cfdNavigate::updateNavigationFromGUI()
       
       this->worldTrans[0] = worldVec[ 0 ] + LastVec[ 0 ];
       this->worldTrans[1] = -(worldVec[ 2 ] + LastVec[ 2 ]);
-   }
+/*
+      gmtl::Quatf tempQuat, finalQuat;// = gmtl::make< gmtl::Quatf >( head->getData() );
+      //gmtl::Quatf worldQuat = gmtl::make< gmtl::Quatf >( worldDCS->GetMat() );
+      gmtl::Vec3f worldPosVec( this->worldTrans[0], -this->worldTrans[1], 0 );
+      gmtl::Vec3f worldVec;
+      gmtl::Matrix44f delta_rot, tempMat;
+      gmtl::EulerAngleXYZf myEuler( 0, 0, -gmtl::Math::deg2Rad( this->worldRot[ 0 ] ) );
+      gmtl::Matrix44f rot_mat = gmtl::makeRot<gmtl::Matrix44f>( myEuler );
+      gmtl::Quatf worldQuat = gmtl::make< gmtl::Quatf >( rot_mat );
+      gmtl::slerp( finalQuat, 1.0f, tempQuat, worldQuat );
+      //gmtl::Matrix44f rotMat = gmtl::makeRot< gmtl::Matrix44f >( myEuler );
+      gmtl::xform( worldVec, rot_mat, worldPosVec );
+      gmtl::set( delta_rot, finalQuat );
+      // this works
+      gmtl::EulerAngleXYZf euler( 0.0f, 0.0f, -gmtl::Math::deg2Rad( this->worldRot[ 0 ] ) );//-gmtl::makeZRot(delta_rot) );// Only allow Yaw (rot y)
+      delta_rot = gmtl::makeRot<gmtl::Matrix44f>( euler );      
+      gmtl::postMult( tempMat, delta_rot );
+      //worldDCS->SetMat( tempMat );
+      std::cout << gmtl::Math::rad2Deg( gmtl::makeZRot(delta_rot) ) << std::endl;
+      this->worldTrans[0] = worldVec[ 0 ];// + LastVec[ 0 ];
+      this->worldTrans[1] = -(worldVec[ 1 ]);// + LastVec[ 2 ]);      
+*/   }
    else if ( (this->cfdId == GUI_NAV && this->cfdIso_value == YAW_CW) ||
                this->IHdigital[7]->getData() == gadget::Digital::ON )         
    //CCWrotation

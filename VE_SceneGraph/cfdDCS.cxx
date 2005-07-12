@@ -245,7 +245,8 @@ void cfdDCS::SetTranslationArray( float* trans )
                        this->_translation[ 2 ] );
 #elif _OSG           
    //update the specified transform
-   if(_udcb){
+   if ( _udcb )
+   {
       _udcb->setTranslation(_translation);
    }
    
@@ -337,26 +338,61 @@ void cfdDCS::SetMat( Matrix44f& input )
 #ifdef _PERFORMER
    pfMatrix temp = vrj::GetPfMatrix( input );
    this->_dcs->setMat( temp );
+   
+   // Set rotation
+   pfCoord* coord = new pfCoord();
+
+   temp.getOrthoCoord( coord );
+   _rotation[ 0 ] = coord->hpr[ 0 ];
+   _rotation[ 1 ] = coord->hpr[ 1 ];
+   _rotation[ 2 ] = coord->hpr[ 2 ];
+
+   _translation[ 0 ] = coord->xyz[ 0 ];
+   _translation[ 1 ] = coord->xyz[ 1 ];
+   _translation[ 2 ] = coord->xyz[ 2 ];
+
+   // Warning we don't set scale here for pf
+   // Add functionality to get scale from pfmatrix
+   // by taking the length of each of the column vectors
 #elif _OSG
    if(_dcs.valid())
    {
       if ( _udcb )
       {
-         osg::Matrix inMat;
-         inMat.set( input.getData() );
-         
+         /*
+         std::cout << input << std::endl;
+         std::cout << input[ 0 ][ 0 ] << " " << input[ 0 ][ 1 ] << " " << input[ 0 ][ 2 ] << " " << input[ 0 ][ 3 ] << std::endl;
+         std::cout << input[ 1 ][ 0 ] << " " << input[ 1 ][ 1 ] << " " << input[ 1 ][ 2 ] << " " << input[ 1 ][ 3 ] << std::endl;
+         std::cout << input[ 2 ][ 0 ] << " " << input[ 2 ][ 1 ] << " " << input[ 2 ][ 2 ] << " " << input[ 2 ][ 3 ] << std::endl;
+         std::cout << input[ 3 ][ 0 ] << " " << input[ 3 ][ 1 ] << " " << input[ 3 ][ 2 ] << " " << input[ 3 ][ 3 ] << std::endl;
+         */
+         gmtl::Vec3f scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
+         gmtl::Vec3f scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
+         gmtl::Vec3f scaleZVec( input[ 0 ][ 2 ], input[ 1 ][ 2 ], input[ 2 ][ 2 ] );
+         float tempScale = 1.0f/gmtl::length( scaleXVec );
+         gmtl::Matrix44f tempScaleMat;
+         gmtl::setScale( tempScaleMat, tempScale );
+         gmtl::Matrix44f unScaleInput = tempScaleMat * input;
+
+         // Set scale values
+         _scale[ 0 ] = gmtl::length( scaleXVec );
+         _scale[ 1 ] = gmtl::length( scaleYVec );
+         _scale[ 2 ] = gmtl::length( scaleZVec );
+
          // set rotation values
-         gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
+         gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
+         gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
+         _rotation[ 0 ] = tempZXY[ 0 ];
+         _rotation[ 1 ] = tempZXY[ 1 ];
+         _rotation[ 2 ] = tempZXY[ 2 ];
+
          osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
          dcsQuat = quat;
          _udcb->setQuat( quat );
       
-         // Set scale values
-         //float temp[ 3 ];
-         osg::Vec3d scale = inMat.getScale();
-         //SetScaleArray( (float*)scale.ptr() );
-
          // Set translation array
+         osg::Matrix inMat;
+         inMat.set( input.getData() );
          osg::Vec3d trans = inMat.getTrans();
          SetTranslationArray( (float*)trans.ptr() );
       }
@@ -379,12 +415,6 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
 // they will actually get back the current rotation
 // and not and old rotation value
 
-// IMPORTANT NOTE: When using the this function for OSG 
-// be sure to remove the scale out of the 44 matix because
-// it appears there is a bug with gmtl that doesn't allow 
-// the proper creation of the quat. See cfdCursor for an
-// example.
-
    // Need to set rotation to this matrix
 #ifdef _PERFORMER
    pfMatrix temp = vrj::GetPfMatrix( input );
@@ -396,21 +426,39 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
    std::cout << temp[ 1 ][ 0 ] << temp[ 1 ][ 1 ] << temp[ 1 ][ 2 ] << temp[ 1 ][ 3 ] <<std::endl;
    std::cout << temp[ 2 ][ 0 ] << temp[ 2 ][ 1 ] << temp[ 2 ][ 2 ] << temp[ 2 ][ 3 ] <<std::endl;
    std::cout << temp[ 3 ][ 0 ] << temp[ 3 ][ 1 ] << temp[ 3 ][ 2 ] << temp[ 3 ][ 3 ] <<std::endl;*/
+   pfMatrix ident;
+   ident.makeIdent();
+   pfVec3 x;
+   temp.getCol( 0, x );
+   float scale = x.length();
+   scale = 1.0f/ scale;
+   ident.makeScale( scale, scale, scale );
+   pfMatrix unScale = ident * temp;
    pfCoord* coord = new pfCoord();
-   temp.getOrthoCoord( coord );
+   unScale.getOrthoCoord( coord );
    _dcs->setRot( coord->hpr[ 0 ], coord->hpr[ 1 ], coord->hpr[ 2 ] );
+   _rotation[ 0 ] = coord->hpr[ 0 ];
+   _rotation[ 1 ] = coord->hpr[ 1 ];
+   _rotation[ 2 ] = coord->hpr[ 2 ];
+   
    //std::cout << coord->hpr[ 0 ] << " :" << coord->hpr[ 1 ] << " : " <<  coord->hpr[ 2 ] <<std::endl;
    delete coord;
 #elif _OSG
    if ( _udcb )
    {
-      gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( input );
-      /*
-      std::cout << " input " << std::endl
-                  << input << std::endl
-                  << " quat " << std::endl
-                  << tempQuat << std::endl;
-      */
+      // Remove the scale from the rotation
+      gmtl::Vec3f scaleVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
+      float tempScale = 1.0f/gmtl::length( scaleVec );
+      gmtl::Matrix44f tempScaleMat;
+      gmtl::setScale( tempScaleMat, tempScale );
+      gmtl::Matrix44f unScaleInput = tempScaleMat * input;
+
+      // Create the quat for rotataion
+      gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
+      gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
+      _rotation[ 0 ] = tempZXY[ 0 ];
+      _rotation[ 1 ] = tempZXY[ 1 ];
+      _rotation[ 2 ] = tempZXY[ 2 ];
       osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
       dcsQuat = quat;
       _udcb->setQuat( quat );

@@ -225,8 +225,8 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
       for ( unsigned int i = 0; i < 3; i++ )
 	   {
          this->nav->worldTrans[ i ] = worldTrans[ i ];
-	      this->nav->worldRot[ i ] = worldRot[ i ];
 	   }
+	   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationArray( worldRot );
    }
 
    this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
