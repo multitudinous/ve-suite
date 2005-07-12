@@ -535,8 +535,8 @@ void cfdApp::draw()
    // The code below is commented out because it causes 
    // problems with the cg shader code
    // for more details please contact Gerrick
-   glMatrixMode(GL_TEXTURE);
-   glPushMatrix();
+   //glMatrixMode(GL_TEXTURE);
+   //glPushMatrix();
 
    osg::ref_ptr<osgUtil::SceneView> sv;
    sv = (*sceneViewer);    // Get context specific scene viewer
@@ -612,8 +612,8 @@ void cfdApp::draw()
    if(goCapture)
       captureWebImage();
 #endif   //_WEB_INTERFACE
-   glMatrixMode(GL_TEXTURE);
-   glPopMatrix();
+   //glMatrixMode(GL_TEXTURE);
+   //glPopMatrix();
 
    glMatrixMode(GL_PROJECTION);
    glPopMatrix();
