@@ -57,6 +57,10 @@ cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser()
    _fName = 0;
    _toPfb = 0;
    _preFunc = _swapSequenceNodes;
+#ifdef _PERFORMER
+   _sequenceIndex = 0;
+#endif
+
 }
 ////////////////////////////////////////////////////////////////////
 cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser(const cfdRawNodeWriteTraverser& cfdWT)
@@ -69,6 +73,15 @@ cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser(const cfdRawNodeWriteTraverse
    
    _fName = new char[strlen(cfdWT._fName)+1];
    strcpy(_fName,cfdWT._fName);
+#ifdef _PERFORMER
+   unsigned int nSequences = cfdWT._sequenceList.size();
+   for(unsigned int i = 0; i < nSequences; i++){
+      _sequenceList.push_back(cfdWT._sequenceList.at(i));
+   }
+   
+   _sequenceIndex = cfdWT._sequenceIndex;
+
+#endif
 }
 ///////////////////////////////////////////////////
 cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser(char* outFile)
@@ -77,6 +90,9 @@ cfdRawNodeWriteTraverser::cfdRawNodeWriteTraverser(char* outFile)
    _fName = 0;
    _toPfb = 0;
    setOutputFileName(outFile);
+#ifdef _PERFORMER
+   _sequenceIndex = 0;
+#endif
 }
 ///////////////////////////////////////
 //Destructor                         //
@@ -87,6 +103,11 @@ cfdRawNodeWriteTraverser::~cfdRawNodeWriteTraverser()
       delete [] _fName;
       _fName = 0;
    }
+#ifdef _PERFORMER
+   if(_sequenceList.size()){
+      _sequenceList.clear();
+   }
+#endif
 }
 ////////////////////////////////////////////////////////////////////////////
 cfdRawNodeWriteTraverser& cfdRawNodeWriteTraverser::operator=(const cfdRawNodeWriteTraverser& rhs)
@@ -99,6 +120,19 @@ cfdRawNodeWriteTraverser& cfdRawNodeWriteTraverser::operator=(const cfdRawNodeWr
       //copy our new name
       _fName = new char[strlen(rhs._fName)+1];
       strcpy(_fName,rhs._fName);
+#ifdef _PERFORMER
+      if(_sequenceList.size())
+      {
+         _sequenceList.clear();
+      }
+
+      unsigned int nSequences = rhs._sequenceList.size();
+      for(unsigned int i = 0; i < nSequences; i++)
+      {
+         _sequenceList.push_back(rhs._sequenceList.at(i));
+      }
+      _sequenceIndex = rhs._sequenceIndex;
+#endif
    }
    return *this;
 }
@@ -111,6 +145,12 @@ void cfdRawNodeWriteTraverser::setCallback(int swapActivate)
    {
       _preFunc = _swapSequenceNodes;
    }
+#ifdef _PERFORMER
+   else
+   {
+      _preFunc = _activateSequenceNodes;   
+   }
+#endif
 }
 ///////////////////////////////////////////////////
 //the prenode callback  is already set           //
@@ -214,6 +254,8 @@ void VE_Xplorer::_swapSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* cfdNT,
       //replace the node in the graph
 #ifdef _PERFORMER
       if(parent->replaceChild((VE_SceneGraph::cfdSequence*)node,sequence)){
+         //add this node to our list of cfdSequences
+         cfdWT->_sequenceList.push_back((VE_SceneGraph::cfdSequence*)node);
 #elif _OSG
       if(parent->replaceChild((VE_SceneGraph::cfdSequence*)node,sequence.get())){
 #elif _OPENSG
@@ -228,6 +270,30 @@ void VE_Xplorer::_swapSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* cfdNT,
    return;
 
 }
+#ifdef _PERFORMER
+/////////////////////////////////////////////////////////////////////////////////////
+//put the cfdSequence back on the tree                                             //
+/////////////////////////////////////////////////////////////////////////////////////
+void VE_Xplorer::_activateSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* cfdNT,
+                                    pfNode* node)
+{
+   VE_Xplorer::cfdRawNodeWriteTraverser* cfdWT = (VE_Xplorer::cfdRawNodeWriteTraverser*)cfdNT;
+
+   if(node->isOfType(pfSequence::getClassType())){
+      std::cout<<"Found a raw sequence!!!"<<std::endl;
+      //get the parent node
+      pfGroup* parent = dynamic_cast<pfGroup*>(node->getParent(0));
+      
+      //replace the node in the graph
+      parent->replaceChild(node,cfdWT->_sequenceList[cfdWT->_sequenceIndex++]);
+
+      cfdWT->setTraversalStatus(VE_SceneGraph::cfdRawNodeTraverser::SKIP);
+      return;
+   }
+   cfdWT->setTraversalStatus(VE_SceneGraph::cfdRawNodeTraverser::CONT);
+   return;
+}
+#endif
 //////////////////////////////////////
 //write out the pfbFile             //
 //////////////////////////////////////
@@ -240,15 +306,16 @@ void cfdRawNodeWriteTraverser::writeFile()
       _traverseNode(_root);
       //store file as pfb file
       pfdStoreFile(_root,_fName);
+      //replace raw Sequence nodes
+      setCallback(0);
+      _traverseNode(_root);
+      _sequenceIndex = 0;
 #elif _OSG
    if(_fName && _root.get()){
       _traverseNode(_root.get());
       //this may not work
       osgDB::writeNodeFile(*_root.get(),_fName);
 #endif
-      //replace raw Sequence nodes
-      //setCallback(0);
-      //_traverseNode(_root);
-      //_sequenceIndex = 0;
+      
    }
 }

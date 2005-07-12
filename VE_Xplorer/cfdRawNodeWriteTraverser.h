@@ -87,11 +87,17 @@ namespace VE_Xplorer
          friend void _swapSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* , osg::Node* );
 #elif _PERFORMER
          friend void _swapSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* , pfNode* );
+         friend void _activateSequenceNodes(VE_SceneGraph::cfdRawNodeTraverser* cfdNT,
+                                    pfNode* node);
 #endif
          char* _fName;
          int _toPfb;
 
       public:      
+#ifdef _PERFORMER
+         unsigned int _sequenceIndex;
+         std::vector<VE_SceneGraph::cfdSequence*> _sequenceList;
+#endif
    };
 } 
 #endif //_CFD_RAW_NODE_WRITE_TRAVERSER_H_
