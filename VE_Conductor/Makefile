@@ -117,4 +117,4 @@ ${APP_NAME}: $(OBJS)
 #	cp NetworkTestBean.jar $(TWEEK_BASE_DIR)/bin/beans
 #	cp $(srcdir)/NetworkTestBean.xml $(TWEEK_BASE_DIR)/bin/beans
 
-CLEAN_FILES+= $(APP_NAME)
+CLEAN_FILES+= $(APP_NAME) && $(MAKE) -f Makefile.conductorlib clean && $(MAKE) -f Makefile.guipluginlib clean

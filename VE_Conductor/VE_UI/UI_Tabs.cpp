@@ -61,6 +61,8 @@ void UI_Tabs::getData()
    _streamlinePage = 0;
    _navPage = 0;
    //cout<<"Act Mod Index3: "<<_activeModIndex<<endl;
+   try
+   {
    num_geo = _modelData->GetNumberOfGeomFiles(_activeModIndex);
    std::cout << "geo number: " << num_geo << std::endl;
 
@@ -107,6 +109,12 @@ void UI_Tabs::getData()
       num_viewlocs = server_ref->getIsoValue();
    }
    std::cout << "number of viewing locations: "<< num_viewlocs << std::endl;
+   }
+   catch ( ... )
+   {
+      wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
+                     "Communication Failure", wxOK | wxICON_INFORMATION );
+   }
   /* server_ref = VjObs::_duplicate(ref);
 
    cGeo_state = 0;
