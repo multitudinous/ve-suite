@@ -72,10 +72,12 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( VE_SceneGraph::cfdGroup * groupNod
    this->circleRadius = 0.75;
    this->digitalPrecision = 3;
    strcpy( this->gaugeName, "generic gauge" );
+   strcpy( this->text2, "--N/A--" );
    strcpy( this->digitalText, "--N/A--" );
    this->lowAnalogLimit = -100.0;
    this->highAnalogLimit = 100.0;
    this->backgroundActor = NULL;
+   this->textScale = 0.20;
 
    for ( int i = 0; i < 3 ; i++ )
    {
@@ -94,12 +96,12 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
                           << std::endl << vprDEBUG_FLUSH;
    gaugeDCS = new VE_SceneGraph::cfdDCS(*g.gaugeDCS);   
    masterNode = g.masterNode;
-   circleGeode = new cfdGeode(*g.circleGeode);
-   movingArrowGeode = new cfdGeode(*g.movingArrowGeode);
-   stationaryArrowGeode = new cfdGeode(*g.stationaryArrowGeode);
-   labelGeode = new cfdGeode(*g.labelGeode);
-   digitalGeode = new cfdGeode(*g.digitalGeode);
-
+   circleGeode = new VE_SceneGraph::cfdGeode(*g.circleGeode);
+   movingArrowGeode = new VE_SceneGraph::cfdGeode(*g.movingArrowGeode);
+   stationaryArrowGeode = new VE_SceneGraph::cfdGeode(*g.stationaryArrowGeode);
+   labelGeode = new VE_SceneGraph::cfdGeode(*g.labelGeode);
+   text2Geode = new VE_SceneGraph::cfdGeode(*g.text2Geode);
+   digitalGeode = new VE_SceneGraph::cfdGeode(*g.digitalGeode);
    itsX[ 0 ] = g.itsX[ 0 ];
    itsX[ 1 ] = g.itsX[ 1 ];
    itsX[ 2 ] = g.itsX[ 2 ];
@@ -120,6 +122,8 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
    stationaryArrowActor = g.stationaryArrowActor;
    labelActor = vtkActor::New();
    labelActor = g.labelActor;
+   text2Actor = vtkActor::New();
+   text2Actor = g.text2Actor;
    digitalActor = vtkActor::New();
    digitalActor = g.digitalActor;
    digitalLabel = vtkVectorText::New();
@@ -130,6 +134,7 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
    circleRadius = g.circleRadius;
    this->lowAnalogLimit = g.lowAnalogLimit;
    this->highAnalogLimit = g.highAnalogLimit;
+   this->textScale = g.textScale;
 
    for ( int i = 0; i < 3 ; i++ )
    {
@@ -156,6 +161,11 @@ cfdDigitalAnalogGauge::~cfdDigitalAnalogGauge( void )
 void cfdDigitalAnalogGauge::SetGaugeName( const char input[] )
 {
    strcpy( this->gaugeName, input );
+}
+
+void cfdDigitalAnalogGauge::SetText2( const char input[] )
+{
+   strcpy( this->text2, input );
 }
 
 void cfdDigitalAnalogGauge::SetPosition( float x[3] )
@@ -253,7 +263,7 @@ void cfdDigitalAnalogGauge::Display()
    this->gaugeDCS->AddChild( this->labelGeode );
    //this->GetLabelActor()->Delete();
 
-   /*DefineText2Actor();
+   DefineText2Actor();
    this->text2Geode = new VE_SceneGraph::cfdGeode();
    this->text2Geode->TranslateTocfdGeode( this->GetText2Actor() );
    this->gaugeDCS->AddChild( this->text2Geode );
@@ -434,8 +444,9 @@ void cfdDigitalAnalogGauge::DefineStationaryArrowActor()
    stationaryArrow->SetShaftResolution( 2 ); // 2D rectangle
 
    vtkTransform *transform1 = vtkTransform::New();
-   transform1->Translate( 0, 1.2, 0 );
-   transform1->Scale( 1, 0.4, 1 );
+   double arrowLength = 0.25;
+   transform1->Translate( 0, this->circleRadius+arrowLength+0.05, 0 );
+   transform1->Scale( 1, arrowLength, 1 );
    transform1->RotateZ( -90 );
 
    vtkTransformPolyDataFilter *transformer1 = vtkTransformPolyDataFilter::New();
@@ -543,10 +554,10 @@ void cfdDigitalAnalogGauge::DefineGaugeTextActor()
    label->SetText( this->gaugeName );
 
    vtkTransform * labelTransform = vtkTransform::New();
-   double labelScale = 0.15;
+   double labelScale = 0.75 * this->textScale;
    // crude way to reduce size of text for big phrases...
    if ( strlen(this->gaugeName) > 14 )
-      labelScale = 0.13;
+      labelScale = 0.65 * this->textScale;
    labelTransform->Scale( labelScale, labelScale, labelScale );
 
    vtkTransformPolyDataFilter * labelFilter = vtkTransformPolyDataFilter::New();
@@ -561,7 +572,7 @@ void cfdDigitalAnalogGauge::DefineGaugeTextActor()
    //std::cout << "center: " << center[ 0 ] << "\t" << center[ 1 ] << "\t" << center[ 2 ] << std::endl;
    labelTransform->Translate(
          -center[ 0 ] / labelScale,
-         -( this->circleRadius + 4.0 *  ( labelScale / 2.0 ) ) / labelScale,
+         -( this->circleRadius + this->textScale ) / labelScale,
          0.0 );
    labelTransform->Delete();
 
@@ -576,13 +587,51 @@ vtkActor * cfdDigitalAnalogGauge::GetLabelActor()
    return this->labelActor;
 }
 
+void cfdDigitalAnalogGauge::DefineText2Actor()
+{
+   vtkVectorText * label = vtkVectorText::New();
+   label->SetText( this->text2 );
+
+   vtkTransform * labelTransform = vtkTransform::New();
+   double labelScale = 0.75 * this->textScale;
+   // crude way to reduce size of text for big phrases...
+   if ( strlen(this->text2) > 14 )
+      labelScale = 0.65 * this->textScale;
+   labelTransform->Scale( labelScale, labelScale, labelScale );
+
+   vtkTransformPolyDataFilter * labelFilter = vtkTransformPolyDataFilter::New();
+   labelFilter->SetTransform( labelTransform );
+   labelFilter->SetInput( label->GetOutput() );
+   label->Delete();
+
+   vtkPolyDataMapper * textMapper = vtkPolyDataMapper::New();
+   textMapper->SetInput( labelFilter->GetOutput() );
+   labelFilter->Delete();
+   double * center = textMapper->GetCenter();
+   //std::cout << "center: " << center[ 0 ] << "\t" << center[ 1 ] << "\t" << center[ 2 ] << std::endl;
+   labelTransform->Translate(
+         -center[ 0 ] / labelScale,
+         -( this->circleRadius + 2.0 * this->textScale ) / labelScale,
+         0.0 );
+   labelTransform->Delete();
+
+   this->text2Actor = vtkActor::New();
+   this->text2Actor->GetProperty()->SetColor( this->gaugeColor );
+   this->text2Actor->SetMapper( textMapper );
+   textMapper->Delete();
+}
+
+vtkActor * cfdDigitalAnalogGauge::GetText2Actor()
+{
+   return this->text2Actor;
+}
 void cfdDigitalAnalogGauge::DefineDigitalActor()
 {
    this->digitalLabel = vtkVectorText::New();
    this->digitalLabel->SetText( this->digitalText );
 
    vtkTransform * labelTransform = vtkTransform::New();
-   double labelScale = 0.20;
+   double labelScale = this->textScale;
    labelTransform->Scale( labelScale, labelScale, labelScale );
 
    vtkTransformPolyDataFilter * labelFilter = vtkTransformPolyDataFilter::New();
@@ -596,7 +645,7 @@ void cfdDigitalAnalogGauge::DefineDigitalActor()
    //std::cout << "center: " << center[ 0 ] << "\t" << center[ 1 ] << "\t" << center[ 2 ] << std::endl;
    labelTransform->Translate(
          -center[ 0 ] / labelScale,
-         -( this->circleRadius + 6.5 * center[ 1 ] ) / labelScale,
+         -( this->circleRadius + 4.0 * this->textScale ) / labelScale,
          0.0 );
    labelTransform->Delete();
 

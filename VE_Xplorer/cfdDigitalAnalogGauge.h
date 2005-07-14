@@ -88,7 +88,7 @@ namespace VE_Xplorer
 	  vtkActor * GetMaxMarkersActor(); //angan
       vtkActor * GetMovingArrowActor();
       vtkActor * GetLabelActor();
-      //vtkActor * GetText2Actor();
+      vtkActor * GetText2Actor();
       vtkActor * GetDigitalActor();
       vtkActor * GetBackgroundActor();
 
@@ -96,7 +96,7 @@ namespace VE_Xplorer
       void DefineStationaryArrowActor();
       void DefineMovingArrowActor();
       void DefineGaugeTextActor();
-      //void DefineText2Actor();
+      void DefineText2Actor();
       void DefineDigitalActor();
       void DefineBackgroundActor();
 	  void DefineMinMarkersActor();//angran
