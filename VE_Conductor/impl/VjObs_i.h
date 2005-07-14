@@ -201,8 +201,7 @@ protected:
    float time_since_start;
    long frameNumber;
 #ifdef _TAO   
-   //void setNumGeoArrays(const short value) throw (CORBA::SystemException);
-   //short getNumGeoArrays( void ) throw (CORBA::SystemException);
+   VjObs::obj_pd* getDouble1D( const char* input ) throw (CORBA::SystemException);
 
    virtual void setIsoValue( CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getIsoValue( void ) throw (CORBA::SystemException);

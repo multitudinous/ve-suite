@@ -229,6 +229,21 @@ void VjObs_i::CreateTeacherInfo( void )
 }
 
 #ifdef _TAO
+VjObs::obj_pd* VjObs_i::getDouble1D( const char* input )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::obj_pd* VjObs_i::getDouble1D(  const char* input )
+#endif
+{
+   //CreateTeacherInfo();
+   VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
+   //return teacher_name_._retn();
+   return NULL;
+}
+
+#ifdef _TAO
 VjObs::scalar_p* VjObs_i::get_teacher_name()
   ACE_THROW_SPEC ((
     CORBA::SystemException

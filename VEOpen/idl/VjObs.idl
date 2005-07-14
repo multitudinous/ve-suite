@@ -59,7 +59,8 @@ interface VjObs
    scalar_p GetSoundNameArray();
 
    // New Stuff
-
+   // used as a generic way to pull data across
+   obj_pd getDouble1D( in string input );
    //void setNumGeoArrays(in short value);
    //short getNumGeoArrays();
 
