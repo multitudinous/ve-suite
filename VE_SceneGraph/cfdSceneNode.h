@@ -51,7 +51,7 @@ namespace osg
 #elif _OPENSG
 #endif
 
-#include <vpr/Util/GUID.h>
+//#include <vpr/Util/GUID.h>
 #include "VE_Installer/include/VEConfig.h"
 namespace VE_SceneGraph
 {
@@ -109,7 +109,7 @@ namespace VE_SceneGraph
          //set internal cfd node type
          virtual void SetCFDNodeType(cfdNodeType nt){_nt = nt;}
 
-         vpr::GUID guid;
+         //vpr::GUID guid;
       protected:
          //our scene graph specific nodes
          int _numParents;

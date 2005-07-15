@@ -75,8 +75,9 @@ namespace VE_Xplorer
 {
 #ifdef _PERFORMER
 class cfdApp : public vrj::PfApp
-#elif _OPENSG
+#elif _OSG
 class cfdApp: public vrj::OsgApp
+#elif _OPENSG
 #endif
 {
    public:
