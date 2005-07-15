@@ -203,6 +203,8 @@ protected:
 #ifdef _TAO   
    VjObs::obj_pd* getDouble1D( const char* input ) throw (CORBA::SystemException);
 
+   VjObs::double2DArray* getDouble2D( const char* input ) throw (CORBA::SystemException);
+
    virtual void setIsoValue( CORBA::Long value) throw (CORBA::SystemException);
    CORBA::Long getIsoValue( void ) throw (CORBA::SystemException);
 
@@ -295,19 +297,6 @@ protected:
    //short mTeacher_state;
    short mGetClientInfo;
    double mShort_data_array[ 9 ];
-
-   // cfdApp side variables
-   // Now in cfdCommandArray
-   /*int   cfdIso_value;
-   int   cfdSc;
-   int   cfdMin;
-   int   cfdMax;
-   long  cfdId;
-   long  cfdGeo_state;
-   short cfdPostdata_state;
-   bool  cfdPre_state;
-   short cfdTimesteps;
-   short cfdTeacher_state; */
 
    cfdCommandArray* _bufferArray;
 #ifdef _CLUSTER

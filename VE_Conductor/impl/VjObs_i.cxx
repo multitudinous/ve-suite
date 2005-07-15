@@ -228,6 +228,20 @@ void VjObs_i::CreateTeacherInfo( void )
    }
 }
 
+/////////////////////////////////////////////////////////////
+/*void VjObs_i::CreateFlythroughInfo( void )
+{
+   if ( ! cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getFlyThroughs().empty() )
+   {
+      mNumFlyThroughs = cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getFlyThroughs().size();
+      for (CORBA::ULong i = 0; i < mNumFlyThroughs; i++)
+      {
+         this->flyThroughList.push_back(cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getFlyThroughs().at(i));
+      }
+   }   
+}*/
+
+
 #ifdef _TAO
 VjObs::obj_pd* VjObs_i::getDouble1D( const char* input )
   ACE_THROW_SPEC ((
@@ -237,10 +251,44 @@ VjObs::obj_pd* VjObs_i::getDouble1D( const char* input )
 VjObs::obj_pd* VjObs_i::getDouble1D(  const char* input )
 #endif
 {
-   //CreateTeacherInfo();
-   VjObs::scalar_p_var teacher_name_=new VjObs::scalar_p(teacher_name);
-   //return teacher_name_._retn();
-   return NULL;
+   std::cout << "|\tInput not defined : VjObs_i::getDouble1D " << input << std::endl;
+   return NULL;   
+}
+
+#ifdef _TAO
+VjObs::double2DArray* VjObs_i::getDouble2D( const char* input )
+  ACE_THROW_SPEC ((
+    CORBA::SystemException
+  ))
+#else
+VjObs::double2DArray* VjObs_i::getDouble2D(  const char* input )
+#endif
+{
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   VjObs::double2DArray_var arrayData;
+   if ( strcmp(input,"getFlythroughData") == 0 )
+   {
+      std::vector< std::vector< int > > flyThroughList;
+      flyThroughList = cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getFlyThroughs();
+
+      arrayData = new VjObs::double2DArray( flyThroughList.size() );
+      arrayData->length( flyThroughList.size() );
+
+      for ( CORBA::ULong i=0; i<flyThroughList.size(); i++)
+      {
+         arrayData[ i ].length( flyThroughList.at(i).size() );
+ 
+         for ( CORBA::ULong j=0; j<flyThroughList.at(i).size(); j++ )
+         {
+            arrayData[i][j] = flyThroughList.at(i).at(j);
+         }
+      }
+   }
+   else 
+   {
+      std::cout << "|\tInput not defined : VjObs_i::getDouble2D " << input << std::endl;
+   }
+   return arrayData._retn();   
 }
 
 #ifdef _TAO

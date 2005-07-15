@@ -5,6 +5,7 @@
 #endif
 
 #include <wx/wx.h>
+#include <vector>
 
 enum VIEWLOC_TAB_IDS{
    VIEWLOC_RBOX,
@@ -51,6 +52,9 @@ public:
 
    wxTextCtrl* _newvwptNameCtrl;
    wxTextCtrl* _newflythroughNameCtrl;
+
+   wxStaticBox* _newVPNameCtrlBox;
+   wxStaticBox* _newFlyNameCtrlBox;
 protected:
 
    DECLARE_EVENT_TABLE()
@@ -65,7 +69,11 @@ public:
    ~UI_ViewLocTab( void );
 
    int numStoredLocations;
-   wxString* _defaultName;
+   int numStoredFlythroughs;
+   std::vector< std::vector <int> > flyThroughList;
+   wxString* _locationName;
+   wxString* _flythroughName;
+
 
 protected:
    void _buildPage();

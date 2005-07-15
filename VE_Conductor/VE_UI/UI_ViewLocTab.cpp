@@ -18,12 +18,13 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
    int nPixY = 10;
    SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
 
-   
+   wxString tempString[1];
+   tempString[0] = wxT("Select a flythrough to see it's points");
 
 //*******Setting up the widgets for making and naming a new view point 
    wxStaticBox* _allVPCtrlBox = new wxStaticBox(this, -1, "View Point Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
-	wxStaticBox* _newVPNameCtrlBox = new wxStaticBox(this, -1, "Name the new View Point", wxDefaultPosition,wxDefaultSize,wxCAPTION);
+	_newVPNameCtrlBox = new wxStaticBox(this, -1, "Name the new View Point", wxDefaultPosition,wxDefaultSize,wxCAPTION);
 
    _addnewviewptButton = new wxButton(this, VIEWLOC_LOAD_BUTTON, wxT("Add New View Pt"));
    
@@ -47,13 +48,13 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
 
    _removevwptSel = new wxComboBox(this, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Pt to delete"),wxDefaultPosition, 
                                  wxDefaultSize,((UI_ViewLocTab *)parent)->numStoredLocations, 
-                                 ((UI_ViewLocTab *)parent)->_defaultName, wxCB_DROPDOWN);
+                                 ((UI_ViewLocTab *)parent)->_locationName, wxCB_DROPDOWN);
 
    wxStaticText* _movetovwptLabel = new wxStaticText(this, -1, wxT("Move to a View Point "));
 
    _movetovwptSel = new wxComboBox(this, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                  wxDefaultSize,((UI_ViewLocTab *)parent)->numStoredLocations, 
-                                 ((UI_ViewLocTab *)parent)->_defaultName, wxCB_DROPDOWN);
+                                 ((UI_ViewLocTab *)parent)->_locationName, wxCB_DROPDOWN);
 
    wxStaticText* blank1 = new wxStaticText(this, -1, ""); //just a place holder
    wxStaticText* blank2 = new wxStaticText(this, -1, ""); //just a place holder
@@ -81,7 +82,7 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
    wxStaticBox* _allFlyCtrlBox = new wxStaticBox(this, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
    //Start with the controls for setting up a new flythrough and naming it
-	wxStaticBox* _newFlyNameCtrlBox = new wxStaticBox(this, -1, "Name the new Flythrough", wxDefaultPosition,wxDefaultSize,wxCAPTION);
+	_newFlyNameCtrlBox = new wxStaticBox(this, -1, "Name the new Flythrough", wxDefaultPosition,wxDefaultSize,wxCAPTION);
 
    _addnewflythroughButton = new wxButton(this, VIEWLOC_NEWFLY_BUTTON, wxT("Add New Flythrough"));
    
@@ -110,29 +111,29 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
    wxStaticText* _activeflyLabel = new wxStaticText(this, -1, wxT("Active Flythrough Selection"));
 
    _activeflySel = new wxComboBox(this, VIEWLOC_ACTIVEFLYSEL_COMBOBOX, wxT("Select Active Flythrough"),wxDefaultPosition, 
-                                  wxDefaultSize, ((UI_ViewLocTab *)parent)->numStoredLocations, 
-                                  ((UI_ViewLocTab *)parent)->_defaultName, wxCB_DROPDOWN);
+                                  wxDefaultSize, ((UI_ViewLocTab *)parent)->numStoredFlythroughs, 
+                                  ((UI_ViewLocTab *)parent)->_flythroughName, wxCB_DROPDOWN);
 
    wxStaticText* _addvptoflyLabel = new wxStaticText(this, -1, wxT("Add Viewpts at the end of Flythrough"));
 
    _addvptoflySel = new wxComboBox(this, VIEWLOC_ADDVPTOFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                    wxDefaultSize, ((UI_ViewLocTab *)parent)->numStoredLocations, 
-                                   ((UI_ViewLocTab *)parent)->_defaultName, wxCB_DROPDOWN);
+                                   ((UI_ViewLocTab *)parent)->_locationName, wxCB_DROPDOWN);
 
    wxStaticText* _insertvpinflyLabel = new wxStaticText(this, -1, wxT("Insert Viewpts within Flythrough"));
 
    _insertvpinflySel = new wxComboBox(this, VIEWLOC_INSERTVPINFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                       wxDefaultSize, ((UI_ViewLocTab *)parent)->numStoredLocations, 
-                                      ((UI_ViewLocTab *)parent)->_defaultName, wxCB_DROPDOWN);
+                                      ((UI_ViewLocTab *)parent)->_locationName, wxCB_DROPDOWN);
 
    wxStaticText* _removevpfromflyLabel = new wxStaticText(this, -1, wxT("Remove Viewpts from Flythrough"));
 
    _removevpfromflySel = new wxComboBox(this, VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
                                         wxDefaultSize, ((UI_ViewLocTab *)parent)->numStoredLocations, 
-                                        ((UI_ViewLocTab *)parent)->_defaultName, wxCB_DROPDOWN);
+                                        ((UI_ViewLocTab *)parent)->_locationName, wxCB_DROPDOWN);
 
    _flybuilderListBox = new wxListBox(this, VIEWLOC_FLYBUILDER_LISTBOX, wxDefaultPosition, wxDefaultSize,
-                                      ((UI_ViewLocTab *)parent)->numStoredLocations, ((UI_ViewLocTab *)parent)->_defaultName, 
+                                      1, tempString, 
                                        wxLB_HSCROLL|wxLB_NEEDED_SB, wxDefaultValidator, wxT("Active Flythrough Order"));    
 
    wxStaticText* blank3 = new wxStaticText(this, -1, ""); //just a place holder
@@ -195,8 +196,6 @@ UI_ViewLocTabScroll::~UI_ViewLocTabScroll()
 }
 
 
-
-
 BEGIN_EVENT_TABLE(UI_ViewLocTab, wxPanel)
    EVT_RADIOBOX(VIEWLOC_RBOX,UI_ViewLocTab::_onViewLoc)
    EVT_BUTTON(VIEWLOC_LOAD_BUTTON,UI_ViewLocTab::_onLoad)
@@ -233,7 +232,7 @@ UI_ViewLocTab::UI_ViewLocTab(wxNotebook* tControl)
 
 UI_ViewLocTab::~UI_ViewLocTab( void )
 {
-   delete [] _defaultName;
+   delete [] _locationName;
 }
 //////////////////////////////
 //build the sound tab       //
@@ -242,7 +241,18 @@ void UI_ViewLocTab::_buildPage()
 {
    //the radio box
    numStoredLocations = ((UI_Tabs *)_parent)->num_viewlocs;
-   
+
+   for (CORBA::ULong j=0; j<((UI_Tabs *)_parent)->flyThroughArray->length(); j++ )
+   {
+      std::vector<int> tempPts;
+      for (CORBA::ULong k=0; k<((UI_Tabs *)_parent)->flyThroughArray[j].length(); k++ )
+      {
+         tempPts.push_back( ((UI_Tabs *)_parent)->flyThroughArray[j][k] );
+      }    
+      flyThroughList.push_back(tempPts);
+      tempPts.clear();
+   }
+
    if(numStoredLocations < 0)
    {
       numStoredLocations = 0;
@@ -250,27 +260,46 @@ void UI_ViewLocTab::_buildPage()
 
    std::cout<<"# locs"<<numStoredLocations<<std::endl;
    char viewpt_name[30];
-   //std::ostringstream vwptStream;
-   //std::string vwptString;
-   if(numStoredLocations)
-   {
-      _defaultName = new wxString[ numStoredLocations ];
-   }
-   else{
-      _defaultName = new wxString[1];
-      _defaultName[0] = wxT("Default");
-   }
-   for( int i=0; i<numStoredLocations; i++)
-   {
-      //std::ostringstream vwptStream;
-      //std::string vwptString;
-      //vwptStream << "View Location " << i;
-      //vwptString = vwptStream.str();
-      sprintf(viewpt_name,"View Location %i",i);
-      _defaultName[i] = viewpt_name;
-      //_defaultName[i] = vwptString;
+   char flythrough_name[30];
 
+   if( numStoredLocations > 0 )
+   {
+      _locationName = new wxString[ numStoredLocations ];
+      for( int i=0; i<numStoredLocations; i++)
+      {
+         sprintf(viewpt_name,"View Location %i",i);
+         _locationName[i] = viewpt_name;
+      }
    }
+   else
+   {
+      numStoredLocations = 1;
+      _locationName = new wxString[1];
+      _locationName[0] = wxT("No Stored Locations");
+   }
+
+
+
+std::cout<<"TestSizeviewloctab: "<<flyThroughList.size()<<std::endl;
+   if( !flyThroughList.empty() )
+   {
+      numStoredFlythroughs = flyThroughList.size();
+      _flythroughName = new wxString[ numStoredFlythroughs ];
+
+      for( int i=0; i<numStoredFlythroughs; i++)
+      {
+         sprintf(flythrough_name,"Flythrough %i",i);
+         _flythroughName[i] = flythrough_name;
+      }
+   }
+   else
+   {
+      numStoredFlythroughs = 1;
+      _flythroughName = new wxString[1];
+      _flythroughName[0] = wxT("No Flythroughs Built");
+   }
+
+
 
    wxBoxSizer* mainSizer = new wxBoxSizer(wxHORIZONTAL);
 
@@ -282,90 +311,16 @@ void UI_ViewLocTab::_buildPage()
 
    SetSizer( mainSizer );
 
+   _viewLocScroll->_newVPNameCtrlBox->Enable( false );
+   _viewLocScroll->_newvwptNameCtrl->Enable( false );
+   _viewLocScroll->_newvwptNameOKButton->Enable( false );
+   _viewLocScroll->_newvwptNameCancelButton->Enable( false );
 
-   /*if ( numStoredLocations > 0 )
-   {
-      defaultName = new wxString[ numStoredLocations ];
-      for(CORBA::ULong i = 0; i < (unsigned int)numStoredLocations; i++)
-      {
-         defaultName[ i ] = ((UI_Tabs*)_parent)->viewlocNameArray[ i ];
-         std::cout << "View Point  Name " << i << " : " << defaultName[ i ] << std::endl;
-      }
-   }
-   else
-   {
-      numStoredLocations = 1;
-      defaultName = new wxString[ numStoredLocations ];
-      defaultName[ 0 ] = wxT("No Stored View Points");
-   }
-   if(numStoredLocations)
-   {
-      _locationsRBox = new wxRadioBox(this, VIEWLOC_RBOX, wxT("Stored View Points"),
-                                wxDefaultPosition, wxDefaultSize, numStoredLocations,
-                                _defaultName,1 , wxRA_SPECIFY_COLS);
-   }
-   else
-   {
-      _locationsRBox = new wxRadioBox(this, VIEWLOC_RBOX, wxT("Stored View Points"),
-                                wxDefaultPosition, wxDefaultSize, 1,
-                                _defaultName,1 , wxRA_SPECIFY_COLS);
-   }buttonGroup
-   if ( ((UI_Tabs *)_parent)->num_viewlocs == 0 )
-   {
-      _locationsRBox->Enable( false );
-   }
+   _viewLocScroll->_newFlyNameCtrlBox->Enable( false );
+   _viewLocScroll->_newflythroughNameCtrl->Enable( false );
+   _viewLocScroll->_newflythroughNameOKButton->Enable( false );
+   _viewLocScroll->_newflythroughNameCancelButton->Enable( false );
 
-   // Add View Point Button
-   _addnewviewptButton = new wxButton(this, VIEWLOC_LOAD_BUTTON, wxT("Add View Point"));
-   //_viewpointName = new wxTextCtrl(this, -1, wxT("Enter New View Point Name Here"),wxDefaultPosition, wxDefaultSize, wxTE_PROCESS_ENTER);
-
-   // Remove View Point Button
-   //_removeButton = new wxButton(this, VIEWLOC_REMOVE_BUTTON, wxT("Remove View Point"));
-
-   _writeButton = new wxButton(this, VIEWLOC_WRITE_BUTTON, wxT("Write View Point to File"));
-   _readButton = new wxButton(this, VIEWLOC_READ_BUTTON, wxT("Read View Points From File"));
-
-   // Move To Selected View Point Button
-   _moveButton = new wxButton(this, VIEWLOC_MOVE_BUTTON, wxT("Move To Selected View Point"));
-
-   //the radio panel and move button sizer
-   wxBoxSizer* listGroup = new wxBoxSizer(wxVERTICAL);
-   listGroup->Add(_locationsRBox,5,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   listGroup->Add(_moveButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND); 
-
-   // the text entrie for location name
-
-
-   wxGridSizer* buttonSizer = new wxGridSizer(1,4);
-
-   wxStaticText* blank1 = new wxStaticText(this, -1, ""); //just a place holder
-   wxStaticText* blank2 = new wxStaticText(this, -1, ""); //just a place holder
-   wxStaticText* blank3 = new wxStaticText(this, -1, ""); //just a place holder
-
-   buttonSizer->Add(blank1,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   //buttonSizer->Add(_viewpointName,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   buttonSizer->Add(_addnewviewptButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   buttonSizer->Add(blank2,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   buttonSizer->Add(_writeButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   buttonSizer->Add(blank3,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   //buttonSizer->Add(_removeButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   buttonSizer->Add(_readButton,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-
-   //the action button sizer
-   wxBoxSizer* buttonGroup = new wxBoxSizer(wxVERTICAL);
-   buttonGroup->Add(buttonSizer,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-
-   //the main group
-   wxBoxSizer* viewlocPanelGroup = new wxBoxSizer(wxHORIZONTAL);
-
-   //add the rows to the main panel
-   viewlocPanelGroup->Add(listGroup,2,wxALIGN_CENTER_HORIZONTAL|wxEXPAND); 
-   viewlocPanelGroup->Add(buttonGroup,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND); 
-
-   //set this flag and let wx handle alignment
-   SetAutoLayout(true);
-   //assign the group to the panel
-   SetSizer(viewlocPanelGroup);*/
 }
 //////////////////
 //event handling//

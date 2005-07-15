@@ -118,6 +118,7 @@ public:
    VjObs::scalar_p_var   teacher_attrib;
    VjObs::scalar_p_var   viewlocNameArray;
    VjObs::Models_var   _models;
+   VjObs::double2DArray_var  flyThroughArray;
    //VjObs::scalar_p_var   viewlocNewPointName;
    std::string viewlocNewPointName;
    std::string   dest;

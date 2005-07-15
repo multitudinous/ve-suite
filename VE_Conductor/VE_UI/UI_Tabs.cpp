@@ -109,7 +109,15 @@ void UI_Tabs::getData()
       num_viewlocs = server_ref->getIsoValue();
    }
    std::cout << "number of viewing locations: "<< num_viewlocs << std::endl;
+   
+
+   if ( !CORBA::is_nil( server_ref ) )
+   {
+      flyThroughArray = server_ref->getDouble2D( "getFlythroughData" );
    }
+   std::cout << "number of flythroughs: "<< flyThroughArray->length() << std::endl;
+   }
+
    catch ( ... )
    {
       wxMessageBox( "Send data to VE-Xplorer failed. Probably need to disconnect and reconnect.", 
