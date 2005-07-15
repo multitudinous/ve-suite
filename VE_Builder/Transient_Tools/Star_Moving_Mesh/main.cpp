@@ -36,6 +36,8 @@
 int main ( int argc, char* argv[] ) {
    Transient *transient = new Transient();
    transient->writeScript();
+   transient->writeStarParam();
+   transient->writeTranslatorScript();
    delete transient;
    std::cout << "Done!"<< std::endl;
    return 1;

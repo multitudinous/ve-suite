@@ -38,11 +38,13 @@ class Transient
       Transient( void );
       ~Transient( void );
       Transient( Transient * );
-      
+           
       int num_time_steps;
       int post_frequency;
       int begin_step;
-      
+            
       void writeScript( void );
+      void writeStarParam( void );
+      void writeTranslatorScript( void );
 };
 #endif 
