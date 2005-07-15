@@ -113,15 +113,16 @@ void Body_Executive_i::SetExportData (
   p.SetSysId("temp.xml");
   p.Load(data, strlen(data));
   
-  // Should only be one item. But, maybe later...
-  std::vector<Interface>::iterator iter;
-  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-    if(!_network->setPortData(module_id, port_id, &(*iter)))
-	{
-		msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
-		ClientMessage(msg.c_str());
-	}
-  _mutex.release();
+   // Should only be one item. But, maybe later...
+   std::vector<Interface>::iterator iter;
+   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+      if(!_network->setPortData(module_id, port_id, &(*iter)))
+	   {
+		   msg = "Unable to set mod id# " + to_string(module_id) + ", port id# " + to_string(port_id)+ "'s port data\n";
+		   ClientMessage(msg.c_str());
+	   }
+  
+   _mutex.release();
 }
   
 char * Body_Executive_i::GetExportData (
@@ -476,17 +477,22 @@ void Body_Executive_i::SetNetwork (
    {
       _network_intf = *iter;
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-         if(iter->_category==1 &&_network->setInput(iter->_id, &(*iter))) 
+      {
+         //if ( iter->_type == 1 ) // this block is for inputs not geom
          {
-	         _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-	         _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-	         _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-	         _network->module(_network->moduleIdx(iter->_id))->_type = iter->_type;
-	         _network->module(_network->moduleIdx(iter->_id))->_category = iter->_category;
+            if(iter->_category==1 &&_network->setInput(iter->_id, &(*iter))) 
+            {
+	            _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+	            _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+	            _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+	            _network->module(_network->moduleIdx(iter->_id))->_type = iter->_type;
+	            _network->module(_network->moduleIdx(iter->_id))->_category = iter->_category;
+            }
+            else
+	            cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
          }
-         else
-	         cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
-      
+      }
+
       _mutex.release();
       if(!_scheduler->schedule(0))
       {
@@ -553,18 +559,23 @@ void Body_Executive_i::SetModuleUI (
   p.SetSysId("temp.xml");
   p.Load(ui, strlen(ui));
   
-  // Should only be one item. But, maybe later...
-  std::vector<Interface>::iterator iter;
-  for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
-    if(_network->setInput(module_id, &(*iter))) {
-      _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-      _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-    }
-    else
-      cerr << "Unable to set mod id# " << module_id 
-	   << "'s Input data\n";
-  
-  _mutex.release();
+   // Should only be one item. But, maybe later...
+   std::vector<Interface>::iterator iter;
+   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+   {
+      //if ( iter->_type == 1 ) // this block is for inputs not geom
+      {
+         if(_network->setInput(module_id, &(*iter))) 
+         {
+            _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+            _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+         }
+         else
+            cerr << "Unable to set mod id# " << module_id 
+	               << "'s Input data\n";
+      }
+   }
+   _mutex.release();
 }
   
 void Body_Executive_i::SetWatchList (
@@ -650,39 +661,39 @@ void Body_Executive_i::StartCalc (
       str2 = p2.Save(rv2);
     
       if(rv2) 
-	{
-	  //cout << _network->module(rt)->_name << "\n" << str2 << endl;
+	   {
+	      //cout << _network->module(rt)->_name << "\n" << str2 << endl;
 	  
-	  try 
-	    {
-	      cerr << "Initial Execute\n";
-	      if ( !_mod_units.empty() )
-		{
-		  if(_mod_units.find(_network->module(rt)->_name)!=_mod_units.end())
-		    {
-		      _mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
-		      _mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
-		      execute(_network->module(rt)->_name);
-		    }
-		  else
-		    {
-		      cerr << "Initial Execute, cannot contact Module " << _network->module(rt)->_name << endl;
-		    }
-		}
-	      else
-		{
-		  cerr << " No Module Units connected to the VE-CE, skipping execution " << endl;
-		}
-	    }
-	  catch(CORBA::Exception &) 
-	    {
-	      cerr << "Initial Execute, cannot contact Module " << module_id << endl;
-	    }
-	}
+	      try 
+	      {
+	         cerr << "Initial Execute\n";
+	         if ( !_mod_units.empty() )
+		      {
+		         if(_mod_units.find(_network->module(rt)->_name)!=_mod_units.end())
+		         {
+		            _mod_units[_network->module(rt)->_name]->SetParams(str2.c_str());
+		            _mod_units[_network->module(rt)->_name]->SetID((long)_network->module(rt)->_inputs._id);
+		            execute(_network->module(rt)->_name);
+		         }
+		         else
+		         {
+		            cerr << "Initial Execute, cannot contact Module " << _network->module(rt)->_name << endl;
+		         }
+		      }
+	         else
+		      {
+		         cerr << " No Module Units connected to the VE-CE, skipping execution " << endl;
+		      }
+	      }
+	      catch(CORBA::Exception &) 
+	      {
+	         cerr << "Initial Execute, cannot contact Module " << module_id << endl;
+	      }
+	   }
       else 
-	{
-	  cerr << "Initial Execute, error packing " << module_id << "'s Inputs\n";
-	}
+	   {
+	      cerr << "Initial Execute, error packing " << module_id << "'s Inputs\n";
+	   }
    }
    
    _mutex.release();
