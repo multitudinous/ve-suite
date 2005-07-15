@@ -34,8 +34,10 @@
 #ifndef CFD_PLUGINLOADER_H
 #define CFD_PLUGINLOADER_H
 
-#include <wx/dynload.h>
-#include <wx/wx.h>
+//#include <wx/dynload.h>
+//#include <wx/wx.h>
+
+#include <vpr/DynLoad/LibraryFinder.h>
 
 #include <vector>
 
@@ -53,7 +55,11 @@ public:
    cfdVEPluginLoader();
    ~cfdVEPluginLoader();
 
-   bool LoadPlugins(wxString dir);
+   //bool LoadPlugins(wxString dir);
+   void LoadPlugins( void );
+   void ScanAndLoad( void );
+   cfdVEBaseClass* CreateNewPlugin( unsigned int );
+
    //Load all the dlls in the given dir
 
    void RegisterPlugins();
@@ -69,10 +75,11 @@ public:
 //private:
    std::vector<cfdVEBaseClass*> plugins;
    //Keep the list of the first intance of each plugin
-   std::vector<const wxClassInfo*> plugin_cls; 
-   //The classinfo obj of the each plugin, will be use to generate more instances
+   //std::vector<const wxClassInfo*> plugin_cls; 
 
-   std::vector<wxPluginLibrary *> libs;
+   vpr::LibraryFinder::LibraryList libs;
+   //The classinfo obj of the each plugin, will be use to generate more instances
+   //std::vector<wxPluginLibrary *> libs;
 };
 }
 #endif

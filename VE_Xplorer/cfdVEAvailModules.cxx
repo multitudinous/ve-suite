@@ -4,8 +4,6 @@
 #include <fstream>
 #include <sstream>
 
-#include <wx/string.h>
-
 using namespace VE_Xplorer;
 
 cfdVEAvail_Modules::cfdVEAvail_Modules( void )
@@ -21,7 +19,7 @@ cfdVEAvail_Modules::~cfdVEAvail_Modules( void )
 
 bool cfdVEAvail_Modules::LoadModules()
 {
-   char* path = "Plugins/";
+/*   char* path = "Plugins/";
    char* modelPath =  getenv("CFDHOSTTYPE");
    char* file = new char[100];
    
@@ -29,9 +27,10 @@ bool cfdVEAvail_Modules::LoadModules()
    strcat( file, modelPath );
 
    wxString wxPath = file;
-   pl_loader->LoadPlugins( wxPath );
+   pl_loader->LoadPlugins( wxPath );*/
+   pl_loader->ScanAndLoad();
   
-   delete [] file;
+   //delete [] file;
 
    return true;
 }
@@ -40,3 +39,4 @@ cfdVEPluginLoader* cfdVEAvail_Modules::GetLoader( void )
 {
    return pl_loader;
 }
+

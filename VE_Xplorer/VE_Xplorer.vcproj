@@ -277,9 +277,19 @@
 			Filter=".cpp">
 			<File
 				RelativePath=".\cfdApp.cxx">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdAppWrapper.cxx">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdExecutive.cxx">
@@ -307,15 +317,35 @@
 			</File>
 			<File
 				RelativePath=".\cfdVEXplorer.cxx">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVjObsWrapper.cxx">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\moduleC.cpp">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\moduleS.cpp">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\Ve_ce\Network_Exec.cpp">
@@ -335,12 +365,27 @@
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\impl\VjObs_i.cxx">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\VjObsC.cpp">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\VjObsS.cpp">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter

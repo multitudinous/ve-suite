@@ -53,14 +53,7 @@
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
-#ifndef WIN32
-//#include <sys/dir.h>
-//#include <dirent.h>
-#else // it is windows
-#include <windows.h>
-#include <direct.h>
-#endif
-IMPLEMENT_DYNAMIC_CLASS( VE_Xplorer::cfdVEBaseClass, wxObject )
+//IMPLEMENT_DYNAMIC_CLASS( VE_Xplorer::cfdVEBaseClass, wxObject )
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -195,13 +188,13 @@ void cfdVEBaseClass::MakeGeodeByUserRequest( int )
 }
 
 //This returns the name of the module
-wxString cfdVEBaseClass::GetName( void )
+std::string cfdVEBaseClass::GetName( void )
 {
    return this->_objectName;
 }
 
 //This returns the description of the module, This should be a short description
-wxString cfdVEBaseClass::GetDesc( void )
+std::string cfdVEBaseClass::GetDesc( void )
 {
    return this->_objectDescription;
 }

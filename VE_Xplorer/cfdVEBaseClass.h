@@ -32,7 +32,6 @@
 #ifndef CFD_VE_BASECLASS_H
 #define CFD_VE_BASECLASS_H
 
-#include <wx/wx.h>
 #include <string>
 #include <map>
 
@@ -57,126 +56,135 @@ namespace VE_Xplorer
 
 namespace VE_Xplorer
 {
-   class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass: public wxObject // Inherit from wxBase class to enable string instantiation
-   {
-      public:
-         cfdVEBaseClass( void );
-         //cfdVEBaseClass( cfdDCS* );
-         virtual ~cfdVEBaseClass( void );
+class VE_GRAPHICALPLUGINS_EXPORTS cfdVEBaseClass // Inherit from wxBase class to enable string instantiation
+{
+public:
+   cfdVEBaseClass( void );
+   //cfdVEBaseClass( cfdDCS* );
+   virtual ~cfdVEBaseClass( void );
 
-         virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
-         // Methods to do scene graph manipulations
-         // New methods may have to be added later
-         virtual void AddSelfToSG( void );
-         virtual void RemoveSelfFromSG( void );
+   virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
+   // Methods to do scene graph manipulations
+   // New methods may have to be added later
+   virtual void AddSelfToSG( void );
+   virtual void RemoveSelfFromSG( void );
 
-         // Change state information for geometric representation
-         void MakeTransparent( void );
-         void SetColor( double* );
-      
-         // transform object based 
-         void SetTransforms( float*, float*, float* );
+   // Change state information for geometric representation
+   void MakeTransparent( void );
+   void SetColor( double* );
 
-         // Implement Gengxun's work by using socket
-         // stuff from vtk. This will be used in parallel
-         // with implementation of a unit connected to the 
-         // computational engine.
-         virtual void GetDataFromUnit( void );
-         // Basically uses vtkActorToPF to create a geode and 
-         // add it to the scene graph. Probably use cfdObject.
-         virtual void MakeGeodeByUserRequest( int );
+   // transform object based 
+   void SetTransforms( float*, float*, float* );
 
-         wxString GetName();
-         //This returns the name of the module
+   // Implement Gengxun's work by using socket
+   // stuff from vtk. This will be used in parallel
+   // with implementation of a unit connected to the 
+   // computational engine.
+   virtual void GetDataFromUnit( void );
+   // Basically uses vtkActorToPF to create a geode and 
+   // add it to the scene graph. Probably use cfdObject.
+   virtual void MakeGeodeByUserRequest( int );
 
-         wxString GetDesc();
-         //This returns the description of the module, This should be a short description
+   std::string GetName();
+   //This returns the name of the module
 
-         virtual void UnPack(Interface* intf);
-         //This is the load function of the module, unpack the input string and fill up the UI according to this
-         virtual Interface* Pack();
+   std::string GetDesc();
+   //This returns the description of the module, This should be a short description
 
-         //This is to unpack the result from the 
-         void UnPackResult(Interface * intf);
-         //This is the save function of the module. 
+   virtual void UnPack(Interface* intf);
+   //This is the load function of the module, unpack the input string and fill up the UI according to this
+   virtual Interface* Pack();
 
-         void SetID(int id);
-   
-         cfdModel* GetCFDModel( void );
-   
-         void LoadSurfaceFiles( char* );
+   //This is to unpack the result from the 
+   void UnPackResult(Interface * intf);
+   //This is the save function of the module. 
 
-         bool OnSceneGraph( void ){return _onSceneGraph;}
-      
-         void SetCursor( cfdCursor* );
+   void SetID(int id);
 
-         void SetNavigate( cfdNavigate* );
+   cfdModel* GetCFDModel( void );
 
-		 void SetSoundHandler( cfdSoundHandler* );
+   void LoadSurfaceFiles( char* );
 
-         void SetInterface( Interface& );
+   bool OnSceneGraph( void ){return _onSceneGraph;}
 
-         void SetModuleResults( const char* );
+   void SetCursor( cfdCursor* );
 
-         virtual void CreateCustomVizFeature( int );
+   void SetNavigate( cfdNavigate* );
 
-         virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
+   void SetSoundHandler( cfdSoundHandler* );
 
-      private:
-         // This needs to be vector of geometry nodes
-         //cfdModuleGeometry*  geometryNode;
-         VE_SceneGraph::cfdGroup* groupNode;
+   void SetInterface( Interface& );
 
-         VE_SceneGraph::cfdDCS*   worldDCS;
+   void SetModuleResults( const char* );
 
-         wxString _objectDescription;
+   virtual void CreateCustomVizFeature( int );
 
-         char* _network;
+   virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
 
-      protected:
-         void CreateObjects( void );
-         long pos_x;
-         long pos_y;
-         // Stuff taken from Plugin_base.h
-         // All of Yang's work (REI)
-         void RegistVar(std::string vname, long *var);
-         void RegistVar(std::string vname, double *var);
-         void RegistVar(std::string vname, std::string *var);
-         void RegistVar(std::string vname, std::vector<long> *var);
-         void RegistVar(std::string vname, std::vector<double> *var);
-         void RegistVar(std::string vname, std::vector<std::string> *var);
-         VE_SceneGraph::cfdDCS* GetWorldDCS();
+private:
+   // This needs to be vector of geometry nodes
+   //cfdModuleGeometry*  geometryNode;
+   VE_SceneGraph::cfdGroup* groupNode;
 
-         Interface mod_pack;
+   VE_SceneGraph::cfdDCS*   worldDCS;
 
-         std::map<std::string, long *>                      _int;
-         std::map<std::string, double *>                    _double;
-         std::map<std::string, std::string *>               _string;
-         std::map<std::string, std::vector<long> * >        _int1D;
-         std::map<std::string, std::vector<double> * >      _double1D;
-         std::map<std::string, std::vector<std::string> * > _string1D;
+   std::string _objectDescription;
 
-         cfdObjects* dataRepresentation;
+   char* _network;
 
-         cfdModel* _model;
-         cfdReadParam* _readParam;
+protected:
+   void CreateObjects( void );
+   long pos_x;
+   long pos_y;
+   // Stuff taken from Plugin_base.h
+   // All of Yang's work (REI)
+   void RegistVar(std::string vname, long *var);
+   void RegistVar(std::string vname, double *var);
+   void RegistVar(std::string vname, std::string *var);
+   void RegistVar(std::string vname, std::vector<long> *var);
+   void RegistVar(std::string vname, std::vector<double> *var);
+   void RegistVar(std::string vname, std::vector<std::string> *var);
+   VE_SceneGraph::cfdDCS* GetWorldDCS();
 
-         char* _param;
+   Interface mod_pack;
 
-         bool _onSceneGraph;
+   std::map<std::string, long *>                      _int;
+   std::map<std::string, double *>                    _double;
+   std::map<std::string, std::string *>               _string;
+   std::map<std::string, std::vector<long> * >        _int1D;
+   std::map<std::string, std::vector<double> * >      _double1D;
+   std::map<std::string, std::vector<std::string> * > _string1D;
 
-         int _modID;
-         wxString _objectName;
-         VE_SceneGraph::cfdDCS* _dcs;
-         cfdCursor* _cursor;
-         cfdNavigate* _navigate;
-		 cfdSoundHandler* soundHandler;
-         Interface myInterface;
+   cfdObjects* dataRepresentation;
 
-         std::vector<wxString> v_desc;
-         std::vector<wxString> v_value;
+   cfdModel* _model;
+   cfdReadParam* _readParam;
 
-      DECLARE_DYNAMIC_CLASS( cfdVEBaseClass )
-   };
+   char* _param;
+
+   bool _onSceneGraph;
+
+   int _modID;
+   std::string _objectName;
+   VE_SceneGraph::cfdDCS* _dcs;
+   cfdCursor* _cursor;
+   cfdNavigate* _navigate;
+   cfdSoundHandler* soundHandler;
+   Interface myInterface;
+
+   std::vector< std::string > v_desc;
+   std::vector< std::string > v_value;
+};
 }
+/*
+extern "C"
+{
+
+EXPORT void* entryFunc()
+{
+   return new TestClass();
+}
+
+}
+*/
 #endif
