@@ -5,6 +5,7 @@ interface VjObs
    typedef sequence< string > scalar_p;
    typedef sequence< short > obj_p;
    typedef sequence< double > obj_pd;
+   typedef sequence< obj_pd > double2DArray;
 
    struct Scalar
    {
@@ -61,6 +62,7 @@ interface VjObs
    // New Stuff
    // used as a generic way to pull data across
    obj_pd getDouble1D( in string input );
+   double2DArray getDouble2D( in string input );
    //void setNumGeoArrays(in short value);
    //short getNumGeoArrays();
 
