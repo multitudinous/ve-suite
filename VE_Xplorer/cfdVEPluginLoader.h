@@ -46,7 +46,7 @@ namespace VE_Xplorer
 
 namespace VE_Xplorer
 {
-class cfdVEPluginLoader : public wxApp
+class cfdVEPluginLoader
 {
 public:
 
@@ -62,8 +62,6 @@ public:
    //void RegisterPlugin(wxClassInfo* info);
 
    //char* GetPluginName(int);
-   bool OnInit();
-
    int GetNumberOfPlugins();
 
    cfdVEBaseClass* CreateObject( char* ); 
@@ -76,7 +74,5 @@ public:
 
    std::vector<wxPluginLibrary *> libs;
 };
-DECLARE_APP(cfdVEPluginLoader)
-
 }
 #endif

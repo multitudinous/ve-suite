@@ -38,7 +38,6 @@
 #include <wx/filename.h>
 
 using namespace VE_Xplorer;
-IMPLEMENT_APP(cfdVEPluginLoader);
 
 cfdVEPluginLoader::cfdVEPluginLoader()
 {
@@ -70,7 +69,7 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
    wxClassInfo::CleanUp();
    wxModule::CleanUpModules();
    //this->OnExit();
-   this->CleanUp();
+   //this->CleanUp();
 }
     
 bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
@@ -193,15 +192,4 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
    }
 
    return (cfdVEBaseClass*)((wxClassInfo*)plugin_cls.at( selectPlugin ))->CreateObject();
-}
-
-
-bool cfdVEPluginLoader::OnInit()
-{
-
-  SetAppName("VE-Conductor");
-   
-   SetTopWindow(NULL);
-   return true;
-
 }

@@ -50,6 +50,8 @@
 #include <vtkGlyph3D.h>
 #include <vtkAppendPolyData.h>
 #include <vtkStreamTracer.h>
+#include <vtkStripper.h>
+#include <vtkTriangleFilter.h>
 #include <vpr/Util/Debug.h>
 
 using namespace VE_Xplorer;
@@ -61,7 +63,6 @@ cfdStreamers::cfdStreamers( void )
    this->integ = vtkRungeKutta45::New();
 
    this->tubeFilter = vtkTubeFilter::New();
-
    this->mapper = vtkPolyDataMapper::New();
 
    this->integrationDirection = 0;
@@ -109,6 +110,9 @@ aa SetInput [streamer GetOutput]
 aa Assign Normals NORMALS POINT_DATA
 */
    this->tubeFilter->SetRadius( this->lineDiameter );
+   this->tubeFilter->SetNumberOfSides( 3 );
+   this->tubeFilter->SidesShareVerticesOn();
+   
 
    if ( propagationTime == -1 )
    {
@@ -128,10 +132,6 @@ aa Assign Normals NORMALS POINT_DATA
    //The Block below is a test by Yang
    this->stream->SetInput( (vtkDataSet*)this->GetActiveDataSet()->GetDataSet() );
 
-   
-   //this->stream->SetSource( this->ptsglyph->GetOutput() );
-   //this->stream->SetStartPosition( 0.0,0.0, 2.0 );
-   
    //overall length of streamline
    this->stream->SetMaximumPropagationTime( this->propagationTime );
    //this->stream->SetMaximumPropagationTime( 5000 );  
@@ -145,7 +145,6 @@ aa Assign Normals NORMALS POINT_DATA
    //this->stream->SetIntegrationStepLength( 0.1 );    
    //this->stream->SetStepLength( 0.001 );
    this->stream->SetStepLength( this->stepLength );
-   //this->stream->SetStepLength( this->GetActiveMeshedVolume()->GetMeanCellLength() ); 
 
    // Stream Points Section
    vtkStreamPoints* streamPoints = 0;
@@ -186,11 +185,7 @@ aa Assign Normals NORMALS POINT_DATA
 
    this->stream->SetSource( (vtkDataSet*)this->pointSource );
    this->stream->SetIntegrator( this->integ );
-   
-   //this->stream->Update();
-
-   //this->stream->DebugOn();
-   //   this->stream->Print( cout );
+   stream->GetOutput()->ReleaseDataFlagOn();
    
    // Good Test code to see if you are actually getting streamlines
    /*vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
@@ -198,14 +193,14 @@ aa Assign Normals NORMALS POINT_DATA
    writer->SetFileName( "teststreamers.vtk" );
    writer->Write();*/
 
-   //this->tubeFilter->DebugOn();
    this->tubeFilter->SetInput( this->stream->GetOutput() );
-   //   this->tubeFilter->Print( cout );
-   this->tubeFilter->Update();
-   //this->tubeFilter->DebugOn();
+   tubeFilter->GetOutput()->ReleaseDataFlagOn();
 
    //this->filter = vtkGeometryFilter::New();
    //this->filter->SetInput( this->tubeFilter->GetOutput() );
+
+   vtkTriangleFilter *tris = vtkTriangleFilter::New();
+   vtkStripper *strip = vtkStripper::New();
 
    if ( streamArrows )
    {
@@ -217,32 +212,58 @@ aa Assign Normals NORMALS POINT_DATA
       cones->SetSource( cone->GetOutput() );
       cones->SetScaleFactor( arrowDiameter );
       cones->SetScaleModeToScaleByVector();
+      cones->GetOutput()->ReleaseDataFlagOn();
 
       append = vtkAppendPolyData::New();
       append->AddInput( this->tubeFilter->GetOutput() );
       append->AddInput( cones->GetOutput() );
-      this->mapper->SetInput( append->GetOutput() );
+      append->GetOutput()->ReleaseDataFlagOn();
+      
+      tris->SetInput(append->GetOutput());
+      tris->GetOutput()->ReleaseDataFlagOn();  
+      strip->SetInput(tris->GetOutput());
+      strip->GetOutput()->ReleaseDataFlagOn();
+      this->mapper->SetInput( strip->GetOutput() );
    }
    else
    {
-      this->mapper->SetInput( this->tubeFilter->GetOutput() );
+      tris->SetInput(tubeFilter->GetOutput());
+      tris->GetOutput()->ReleaseDataFlagOn();  
+      strip->SetInput(tris->GetOutput());
+      strip->GetOutput()->ReleaseDataFlagOn();
+      this->mapper->SetInput( strip->GetOutput() );
    }
+   
    this->mapper->SetColorModeToMapScalars();
    this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
    this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
    this->mapper->ImmediateModeRenderingOn();
-   //this->mapper->DebugOn();
-   //this->tubeFilter->Print( cout );
-   //this->mapper->Update();
-   //this->mapper->Print( cout );
  
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   geodes.push_back( new VE_SceneGraph::cfdGeode() );
-   geodes.back()->TranslateTocfdGeode( temp );
+   
+   //test to see if there is enough memory, if not, filters are deleted
+   try
+   {
+      VE_SceneGraph::cfdGeode* tempGeode = new VE_SceneGraph::cfdGeode();
+      tempGeode->TranslateTocfdGeode( temp );
+      geodes.push_back( tempGeode ); 
+      this->updateFlag = true;
+   }
+   catch( std::bad_alloc )
+   {
+      tubeFilter->Delete();
+      tubeFilter = vtkTubeFilter::New();
+      mapper->Delete();
+      mapper = vtkPolyDataMapper::New();
+      vprDEBUG(vprDBG_ALL,0) << "|\tMemory allocation failure : cfdStreamers " 
+                              << std::endl << vprDEBUG_FLUSH;
+   }
+    
+   strip->Delete();
+   tris->Delete();
    temp->Delete();
-   this->updateFlag = true;
 
    if ( streamArrows )
    {
@@ -252,6 +273,7 @@ aa Assign Normals NORMALS POINT_DATA
       cone->Delete();
       cones->Delete();
    }
+
    vprDEBUG(vprDBG_ALL,0) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -373,7 +395,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       arrowDiameter = lineDiameter * 4.0f;
       return true;
    }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
+/*   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
    {
       // diameter is obtained from gui, -100 < vectorScale < 100
       // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
@@ -383,7 +405,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       arrowDiameter = 4.0f * exp( diameter / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetLength()*0.001f;
       return true;
-   }
+   }*/
    
    return flag;
 }

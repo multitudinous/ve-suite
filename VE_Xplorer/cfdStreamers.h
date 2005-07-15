@@ -83,10 +83,10 @@ public:
 private:
    //void UpdateTracker( float x[3], float v[3] ); // Update the position of the cursors.
 
-   vtkStreamLine*    stream;
-   vtkTubeFilter*    tubeFilter;
+   vtkStreamLine*     stream;
+   vtkTubeFilter*     tubeFilter;
    vtkPolyDataMapper* mapper;
-   vtkRungeKutta45*   integ;
+   vtkRungeKutta45*   integ;  
 
    float propagationTime;
    float integrationStepLength;

@@ -4,7 +4,7 @@
 #include <fstream>
 #include <sstream>
 
-#include <wx/String.h>
+#include <wx/string.h>
 
 using namespace VE_Xplorer;
 

@@ -45,6 +45,8 @@
 #include <vtkProperty.h>
 #include <vtkLookupTable.h>
 #include <vtkDecimatePro.h>
+#include <vtkTriangleFilter.h>
+#include <vtkStripper.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -59,6 +61,8 @@ cfdContourBase::cfdContourBase()
    this->filter = vtkGeometryFilter::New();
    this->cfilter = vtkContourFilter::New();              // for contourlines
    this->bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
+   this->tfilter = vtkTriangleFilter::New();
+   this->stripper = vtkStripper::New();
 
    this->mapper = vtkPolyDataMapper::New();
    this->mapper->SetInput( this->filter->GetOutput() );
@@ -82,6 +86,12 @@ cfdContourBase::~cfdContourBase()
    
    this->bfilter->Delete();
    this->bfilter = NULL;
+
+   this->tfilter->Delete();
+   this->tfilter = NULL;
+
+   this->stripper->Delete();
+   this->stripper = NULL;
    
    this->mapper->Delete();
    this->mapper = NULL;
@@ -92,40 +102,49 @@ cfdContourBase::~cfdContourBase()
 
 void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
 {
-   // decimate points is uised for lod control of contours
+   // decimate points is used for lod control of contours
    this->deci->SetInput( polydata );
    this->deci->PreserveTopologyOn();
-   
+   deci->GetOutput()->ReleaseDataFlagOn();
+
+   this->tfilter->SetInput( deci->GetOutput() );
+   tfilter->GetOutput()->ReleaseDataFlagOn();
+
+   this->stripper->SetInput( this->tfilter->GetOutput() );
+   stripper->GetOutput()->ReleaseDataFlagOn(); 
+
    if ( this->fillType == 0 )
    {
-
-/*      // convert any type of data to polygonal type
-      this->filter->SetInput( polydata );
-      this->filter->Update();
-      this->mapper->SetInput( this->filter->GetOutput() );
-*/
-      this->mapper->SetInput( this->deci->GetOutput() );
+      this->mapper->SetInput( this->stripper->GetOutput() );
+      mapper->ImmediateModeRenderingOn(); 
    }
+
    else if ( this->fillType == 1 )  // banded contours
    {
-      this->bfilter->SetInput( this->deci->GetOutput() );
+      this->bfilter->SetInput( this->stripper->GetOutput() );
+      bfilter->GetOutput()->ReleaseDataFlagOn();
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
       this->bfilter->GenerateValues( 10, range[0], range[1] );
       this->bfilter->SetScalarModeToValue();
       this->bfilter->GenerateContourEdgesOn();
-      this->bfilter->Update();
+      bfilter->GetOutput()->ReleaseDataFlagOn();
+
       this->mapper->SetInput( this->bfilter->GetOutput() );
+      mapper->ImmediateModeRenderingOn();
    }
    else if ( this->fillType == 2 )  // contourlines
    {
-      this->cfilter->SetInput( this->deci->GetOutput() );
+      this->stripper->SetInput( this->tfilter->GetOutput() );
+      stripper->GetOutput()->ReleaseDataFlagOn();
+      this->cfilter->SetInput( this->stripper->GetOutput() );
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
       this->cfilter->GenerateValues( 10, range[0], range[1] );
       this->cfilter->UseScalarTreeOn();
-      this->cfilter->Update();
+      cfilter->GetOutput()->ReleaseDataFlagOn();
       this->mapper->SetInput( this->cfilter->GetOutput() );
+      mapper->ImmediateModeRenderingOn();    
    }
 }
 

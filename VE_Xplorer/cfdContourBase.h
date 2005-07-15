@@ -40,6 +40,9 @@ class vtkGeometryFilter;
 class vtkContourFilter;
 class vtkBandedPolyDataContourFilter;
 class vtkDecimatePro;
+class vtkTriangleFilter;
+class vtkStripper;
+
 
 namespace VE_Xplorer
 {
@@ -48,36 +51,39 @@ namespace VE_Xplorer
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdContourBase : public cfdObjects
-   {
-      public:
-         cfdContourBase();
+class VE_XPLORER_EXPORTS cfdContourBase : public cfdObjects
+{
+public:
+   cfdContourBase();
 
-         virtual ~cfdContourBase();
+   virtual ~cfdContourBase();
 
-         // update the actor
-         virtual void Update( void ) = 0;
+   // update the actor
+   virtual void Update( void ) = 0;
 
-         // compare VjObs_i commandArray with its child's value
-         virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
+   // compare VjObs_i commandArray with its child's value
+   virtual bool CheckCommandId( cfdCommandArray * _cfdCommandArray );
 
-         // in future, multi-threaded apps will make a copy of VjObs_i commandArray
-         virtual void UpdateCommand();
+   // in future, multi-threaded apps will make a copy of VjObs_i commandArray
+   virtual void UpdateCommand();
 
-         void SetMapperInput( vtkPolyData * );
+   void SetMapperInput( vtkPolyData * );
 
-         void SetFillType( const int );
+   void SetFillType( const int );
 
-      protected:
-         vtkPolyDataMapper*   mapper;
-         vtkGeometryFilter*   filter;
-         vtkContourFilter*    cfilter;
-         vtkBandedPolyDataContourFilter * bfilter;
-         vtkDecimatePro* deci;
-         int fillType;
-         double warpedContourScale;
-         double contourOpacity;
-         int contourLOD; 
-   };
+protected:
+   vtkPolyDataMapper*   mapper;
+   vtkGeometryFilter*   filter;
+   vtkContourFilter*    cfilter;
+   vtkBandedPolyDataContourFilter * bfilter;
+   vtkDecimatePro* deci;
+   vtkTriangleFilter*   tfilter;
+   vtkStripper*         stripper;
+
+   int fillType;
+   double warpedContourScale;
+   double contourOpacity;
+   int contourLOD; 
+};
 }
 #endif
