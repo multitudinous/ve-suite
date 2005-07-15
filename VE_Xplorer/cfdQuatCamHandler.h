@@ -107,6 +107,8 @@ namespace VE_Xplorer
 
          int getNumLocs();
 
+         std::vector< std::vector <int> > getFlyThroughs();
+
          // If a quat is active this will move the cam to the next location
          void PreFrameUpdate();
    
@@ -123,6 +125,7 @@ namespace VE_Xplorer
          char*       _param;
          float t;
          char* quatCamFileName;
+         std::string quatCamDirName;
          std::vector<cfdPoints*> cfdPointsVec;
          std::vector<cfdQuatCam*> QuatCams;
          int run;
@@ -132,7 +135,8 @@ namespace VE_Xplorer
          bool activecam;
          int activeFlyThrough;
          //std::vector<int> activeFlyThroughArray[ 4 ];
-         std::vector<int*> flyThroughList;
+         
+         std::vector< std::vector <int> > flyThroughList;
    };
 }
 #endif

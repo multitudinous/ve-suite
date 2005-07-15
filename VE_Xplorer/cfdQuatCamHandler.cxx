@@ -47,6 +47,9 @@
 #include <ostream>
 #include <string>
 
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
+
 using namespace gmtl;
 using namespace VE_Xplorer;
 using namespace VE_Util;
@@ -63,6 +66,7 @@ cfdPoints::cfdPoints(double* worldPos, Matrix44f& mat)
 cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS, 
                                      cfdNavigate* nav, char* param )
 {
+   flyThroughList.clear();
    thisQuatCam = NULL;
    nextPoint = NULL;
    _worldDCS = NULL;
@@ -137,7 +141,7 @@ void cfdQuatCamHandler::WriteToFile(char* fileName)
                inFile << numPointsInFlyThrough[n] << std::endl;
                for ( unsigned int l=0; l<numPointsInFlyThrough[n]; l++)
                {
-                  inFile << flyThroughList.at(n)[l] << " ";
+                  inFile << flyThroughList.at(n).at(l) << " ";
                }
                inFile << std::endl;   
             }
@@ -162,14 +166,15 @@ void cfdQuatCamHandler::LoadFromFile( char* fileName)
    { 
       printf("QuatCam File Was Opened Successfully\n");
 
-      while ( !inFile.eof() )
+      //while ( !inFile.eof() )
+      for (int i=0; i<2; i++)
       {
          if ( (char)inFile.peek() == '*' )
          {
             inFile.getline( textLine, 256 );   //skip past remainder of line
             inFile >> numQuatCams;
             inFile.getline( textLine, 256 );   //skip past remainder of line      
-            std::cout<<numQuatCams<<std::endl;
+            std::cout << "Number of QuatCams: " << numQuatCams << std::endl;
 
             for ( int i=0; i<numQuatCams; i++ )
             {
@@ -199,24 +204,30 @@ void cfdQuatCamHandler::LoadFromFile( char* fileName)
             inFile.getline( textLine, 256 );   //skip past remainder of line
             inFile >> numFlyThroughs;
             inFile.getline( textLine, 256 );   //skip past remainder of line      
-            std::cout<<numFlyThroughs<<std::endl;
+            std::cout<<"Number of FlyThroughs: " << numFlyThroughs<<std::endl;
             numPointsInFlyThrough = new int[numFlyThroughs];
+            std::vector<int> tempPts;
+            int dummy;
             for ( int i=0; i<numFlyThroughs; i++ )
             {
-					int* tempPts;
                inFile >> numPointsInFlyThrough[i];
-               tempPts = new int[numPointsInFlyThrough[i]];
+            std::cout<<"Number of points in FlyThrough " << i << " :" << numPointsInFlyThrough[i]<<std::endl;
+
                for ( int j=0; j<numPointsInFlyThrough[i]; j++)
                {
-                  inFile >> tempPts[j];
+                  inFile >> dummy;
+                  tempPts.push_back(dummy);
                }
                flyThroughList.push_back(tempPts);
-               delete [] tempPts;
+               tempPts.clear();
+               std::cout<<"At the end" <<std::endl;
             }
          }
       }
       inFile.close();
+      std::cout<<"After Closed" <<std::endl;
    }
+   
    else 
       printf( "Could Not Open QuatCam File\n" ); 
           
@@ -352,28 +363,23 @@ void cfdQuatCamHandler::CreateObjects( void )
    char text[ 256 ];
    char textLine[ 256 ];
 
-   std::ifstream input;
-   input.open( this->_param );
-   input >> numObjects; 
-   input.getline( text, 256 );   //skip past remainder of line
+   quatCamDirName = "./STORED_VIEWPTS";
 
-   /*quatCamFileName = "./STORED_VIEWPTS/stored_viewpts_flythroughs.dat";
-   std::cout<< " QuatCam file = " << quatCamFileName << std::endl;
-
-   if (fileIO::isFileReadable( quatCamFileName ) ) 
+   boost::filesystem::path dir_path( quatCamDirName );
+   try
    {
-      vprDEBUG(vprDBG_ALL,0) << " QuatCam file = " << quatCamFileName 
-                       << std::endl << vprDEBUG_FLUSH;
-
-      LoadFromFile( quatCamFileName );
+      ( boost::filesystem::is_directory( dir_path ) );
    }
-   else
-   {
-      std::cerr << "ERROR: unreadable QuatCam file = " << quatCamFileName 
-               << ". You may need to create a STORED_VIEWPTS directory."
-               << std::endl;
-      exit(1);
-   }*/   
+   catch ( const std::exception& ex )
+	{
+	   std::cout << ex.what() << std::endl;
+      boost::filesystem::create_directory(dir_path);
+	   std::cout << "...so we made it for you..." << std::endl;
+	}
+
+   quatCamFileName = "./STORED_VIEWPTS/stored_viewpts_flythroughs.dat";
+
+   this->LoadFromFile( this->quatCamFileName );
 
    /*vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
    for( int i = 0; i < numObjects; i++ )
@@ -416,4 +422,13 @@ int cfdQuatCamHandler::getNumLocs()
    return this->numQuatCams;
 }
 
-
+std::vector< std::vector <int> > cfdQuatCamHandler::getFlyThroughs()
+{
+   /*if ( flyThroughList.empty() )
+   {
+      std::vector<int> temp;
+      temp.push_back( 0 );
+      flyThroughList.push_back( temp );
+   }*/
+   return this->flyThroughList;
+}
