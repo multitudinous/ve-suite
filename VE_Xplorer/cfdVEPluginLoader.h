@@ -33,9 +33,9 @@
 
 #ifndef CFD_PLUGINLOADER_H
 #define CFD_PLUGINLOADER_H
-#include <wx/wx.h>
-//#include <wx/dynlib.h>
+
 #include <wx/dynload.h>
+#include <wx/wx.h>
 
 #include <vector>
 
@@ -46,34 +46,37 @@ namespace VE_Xplorer
 
 namespace VE_Xplorer
 {
-   class cfdVEPluginLoader : public wxObject
-   {
-      public:
+class cfdVEPluginLoader : public wxApp
+{
+public:
 
-         cfdVEPluginLoader();
-         ~cfdVEPluginLoader();
+   cfdVEPluginLoader();
+   ~cfdVEPluginLoader();
 
-         bool LoadPlugins(wxString dir);
-         //Load all the dlls in the given dir
+   bool LoadPlugins(wxString dir);
+   //Load all the dlls in the given dir
 
-         void RegisterPlugins();
+   void RegisterPlugins();
 
-         //Instantiate an instance of the plug_in. This instance is not used for any network composition but for information.
-         void RegisterPlugin(wxClassInfo* info);
+   //Instantiate an instance of the plug_in. This instance is not used for any network composition but for information.
+   //void RegisterPlugin(wxClassInfo* info);
 
-         //char* GetPluginName(int);
+   //char* GetPluginName(int);
+   bool OnInit();
 
-         int GetNumberOfPlugins();
+   int GetNumberOfPlugins();
 
-         cfdVEBaseClass* CreateObject( char* ); 
+   cfdVEBaseClass* CreateObject( char* ); 
 
-      //private:
-         std::vector<cfdVEBaseClass*> plugins;
-         //Keep the list of the first intance of each plugin
-         std::vector<const wxClassInfo*> plugin_cls; 
-         //The classinfo obj of the each plugin, will be use to generate more instances
+//private:
+   std::vector<cfdVEBaseClass*> plugins;
+   //Keep the list of the first intance of each plugin
+   std::vector<const wxClassInfo*> plugin_cls; 
+   //The classinfo obj of the each plugin, will be use to generate more instances
 
-         std::vector<wxPluginLibrary *> libs;
-   };
+   std::vector<wxPluginLibrary *> libs;
+};
+DECLARE_APP(cfdVEPluginLoader)
+
 }
 #endif

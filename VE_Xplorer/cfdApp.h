@@ -46,43 +46,42 @@ namespace VE_Xplorer
 const float SAMPLE_TIME = 1.0f;
 
 #ifdef _PERFORMER
-class pfGroup;
-#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
+	class pfGroup;
+	#include <vrj/Draw/Pf/PfApp.h>    /* the performer application base type */
 // Declare my application class
-namespace VE_Xplorer
-{
-class cfdApp : public vrj::PfApp
 #elif _OSG
-#include <osg/Timer>
-#include <vrj/Draw/OSG/OsgApp.h>
-#include <vpr/Sync/Mutex.h>
-namespace osg
-{   
-   class Group;
-   class FrameStamp;
-} 
-namespace osgUtil { class SceneView; }
-#ifdef _WEB_INTERFACE
-#include <vpr/Thread/Thread.h>
-#endif
-#ifdef VE_PATENTED
-namespace VE_TextureBased
-{
-   class cfdPBufferManager;
-   class cfdTextureBasedVizHandler;
-}
-#endif
+	#include <osg/Timer>
+	#include <vrj/Draw/OSG/OsgApp.h>
+	#include <vpr/Sync/Mutex.h>
+	namespace osg
+	{   
+		class Group;
+		class FrameStamp;
+	} 
+	namespace osgUtil { class SceneView; }
+	#ifdef _WEB_INTERFACE
+		#include <vpr/Thread/Thread.h>
+	#endif
+	#ifdef VE_PATENTED
+	namespace VE_TextureBased
+	{
+		class cfdPBufferManager;
+		class cfdTextureBasedVizHandler;
+	}
+	#endif
+#endif 
+
 namespace VE_Xplorer
 {
-class cfdApp: public vrj::OsgApp
+#ifdef _PERFORMER
+class cfdApp : public vrj::PfApp
 #elif _OPENSG
-namespace VE_Xplorer
-{
+class cfdApp: public vrj::OsgApp
 #endif
 {
    public:
       cfdApp( void );
-      ~cfdApp( void ) { ; }
+      virtual ~cfdApp( void ) { ; }
      
       // Initialize the scene graph
       virtual void initScene( void );
@@ -101,19 +100,19 @@ namespace VE_Xplorer
 
       // Return the current scene graph
       virtual pfGroup* getScene( void );
-      
+
       // Function called before pfSync
       virtual void preSync( void );
 #elif _OSG
-      osg::Group* getScene( void );
-      void bufferPreDraw( void );
-      void draw();
+      virtual osg::Group* getScene( void );
+      virtual void bufferPreDraw( void );
+      virtual void draw();
       virtual void configSceneView(osgUtil::SceneView* newSceneViewer);
 #ifdef VE_PATENTED
-      void contextInit( void );
+      virtual void contextInit( void );
       virtual void contextClose( void );
       VE_TextureBased::cfdPBufferManager* GetPBuffer( void );
-      void contextPostDraw();
+      virtual void contextPostDraw();
 #endif
 #elif _OPENSG
 #endif

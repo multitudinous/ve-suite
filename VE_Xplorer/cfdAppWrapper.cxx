@@ -36,7 +36,7 @@
 #include "VE_Xplorer/cfdVjObsWrapper.h"
 
 #include <vrj/Kernel/Kernel.h>
-#include <vpr/System.h>
+
 #include <iostream>
 
 using namespace VE_Xplorer;
@@ -52,11 +52,11 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
 
 cfdAppWrapper::~cfdAppWrapper( void )
 {
-   vpr::System::msleep( 100 );  // half-second delay
    if ( _thread )
+   {
+	  // _thread->new_thread->kill();
       delete _thread;
-   delete this->_cfdApp;
-   this->_cfdApp = NULL;
+   }
 }
 
 void cfdAppWrapper::init( void * )
@@ -75,5 +75,9 @@ void cfdAppWrapper::init( void * )
    
    kernel->waitForKernelStop();              // Block until kernel stops
 
-   kernel->stop();              // stop kernel
+   delete this->_cfdApp;
+   this->_cfdApp = NULL;
+
+   delete this->_vjObsWrapper;
+	this->_vjObsWrapper = NULL;
 }

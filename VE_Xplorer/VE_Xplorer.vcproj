@@ -81,27 +81,29 @@
 			ConfigurationType="1"
 			UseOfMFC="0"
 			ATLMinimizesCRunTimeLibraryUsage="FALSE"
-			CharacterSet="2">
+			CharacterSet="0">
 			<Tool
 				Name="VCCLCompilerTool"
 				AdditionalOptions="/Zm800"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;./;../;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(NSPR_ROOT)\include&quot;;&quot;$(OMNI_HOME)\include&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\impl&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(VE_SUITE_HOME)\VE_CE&quot;;&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(VE_SUITE_HOME)\VE_Builder\Translator&quot;;&quot;$(VE_SUITE_HOME)\VE_SceneGraph&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
-				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;WXDEBUG=1;WXUSINGDLL;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
+				AdditionalIncludeDirectories="&quot;$(PFROOT)\include&quot;;&quot;$(PFROOT)\include\Performer&quot;;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
+				PreprocessorDefinitions="_DEBUG;_PERFORMER;VTK44;WIN32;_CONSOLE;_WIN32;_TAO;__WXDEBUG__;WXUSINGDLL;_WINDOWS;VTK_STREAMS_FWD_ONLY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="FALSE"
 				RuntimeTypeInfo="TRUE"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				SuppressStartupBanner="TRUE"
 				DebugInformationFormat="3"
-				CompileAs="0"
+				CompileAs="2"
 				DisableSpecificWarnings="4244;4251;4275;4290;4291"/>
 			<Tool
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vpr_d.lib vrj_d.lib vrj_pf_d.lib libnspr4.lib jccl_d.lib sonix_d.lib gadget_d.lib msvcstubd.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib libpf.lib libpfv.lib libpfdu-util.lib libplc4.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib"
+				AdditionalOptions="/MACHINE:I386"
+				AdditionalDependencies="vrj_d.lib vrj_pf_d.lib sonix_d.lib gadget_d.lib jccl_d.lib vpr_d.lib libnspr4.lib libplc4.lib libpf.lib libpfdu-util.lib libpfui.lib comctl32.lib ws2_32.lib opengl32.lib glu32.lib vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib aced.lib TAOd.lib TAO_CosNamingd.lib TAO_PortableServerd.lib TAO_BiDirGIOPd.lib xerces-c_2D.lib wxbase26d.lib wxmsw26d_core.lib $(NOINHERIT)"
 				ShowProgress="0"
 				OutputFile="$(OutDir)\project_taod.exe"
 				LinkIncremental="1"
@@ -281,12 +283,27 @@
 			</File>
 			<File
 				RelativePath=".\cfdExecutive.cxx">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVEAvailModules.cxx">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVEPluginLoader.cxx">
+				<FileConfiguration
+					Name="tao_pf_dbg|Win32">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVEXplorer.cxx">
@@ -302,36 +319,22 @@
 			</File>
 			<File
 				RelativePath="..\Ve_ce\Network_Exec.cpp">
-			</File>
-			<File
-				RelativePath=".\VE_i.cpp">
-			</File>
-			<File
-				RelativePath="..\VE_Conductor\impl\VjObs_i.cxx">
-				<FileConfiguration
-					Name="Release|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
 				<FileConfiguration
 					Name="tao_pf_dbg|Win32">
 					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
+			</File>
+			<File
+				RelativePath=".\VE_i.cpp">
 				<FileConfiguration
-					Name="tao_osg_dbg|Win32">
+					Name="tao_pf_dbg|Win32">
 					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
+						Name="VCCLCompilerTool"/>
 				</FileConfiguration>
-				<FileConfiguration
-					Name="tao_osg_vep_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"
-						ObjectFile="$(IntDir)/$(InputName)1.obj"/>
-				</FileConfiguration>
+			</File>
+			<File
+				RelativePath="..\VE_Conductor\impl\VjObs_i.cxx">
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\VjObsC.cpp">
@@ -344,7 +347,37 @@
 			Name="headers"
 			Filter=".h">
 			<File
+				RelativePath=".\cfdApp.h">
+			</File>
+			<File
+				RelativePath=".\cfdAppWrapper.h">
+			</File>
+			<File
+				RelativePath=".\cfdExecutive.h">
+			</File>
+			<File
+				RelativePath=".\cfdVEAvailModules.h">
+			</File>
+			<File
+				RelativePath=".\cfdVEPluginLoader.h">
+			</File>
+			<File
+				RelativePath=".\cfdVjObsWrapper.h">
+			</File>
+			<File
+				RelativePath="..\VEOpen\skel\moduleC.h">
+			</File>
+			<File
+				RelativePath="..\VEOpen\skel\moduleS.h">
+			</File>
+			<File
 				RelativePath="..\VE_Conductor\impl\VjObs_i.h">
+			</File>
+			<File
+				RelativePath="..\VEOpen\skel\VjObsC.h">
+			</File>
+			<File
+				RelativePath="..\VEOpen\skel\VjObsS.h">
 			</File>
 		</Filter>
 		<Filter

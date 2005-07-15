@@ -139,9 +139,12 @@ void cfdSteadyStateVizHandler::Initialize( char* param )
 void cfdSteadyStateVizHandler::CleanUp( void )
 {
    this->runIntraParallelThread = false;
-   vpr::System::msleep( 1000 );  // half-second delay
+
    if ( this->vjTh[0] )
+   {
+      this->vjTh[0]->join();
       delete this->vjTh[0];
+   }
 
    if ( this->isosurface ) 
    {

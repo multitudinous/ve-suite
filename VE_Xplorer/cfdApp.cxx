@@ -119,9 +119,7 @@ cfdApp::cfdApp( void )
    _frameStamp->setFrameNumber(0);
 #ifdef VE_PATENTED
    _tbvHandler = 0;
-//#ifdef CFD_USE_SHADERS
    _pbuffer = 0;
-//#endif
 #endif
    _frameNumber = 0;
 #endif
@@ -148,13 +146,6 @@ void cfdApp::exit()
       delete this->executive;
    }
 #endif // _TAO
-
-   if ( this->_vjobsWrapper != NULL )
-   {
-      vprDEBUG(vprDBG_ALL,2)  
-        << "deleting this->_vjobsWrapper" << std::endl << vprDEBUG_FLUSH;
-      delete this->_vjobsWrapper;
-   }
    
 #ifdef _WEB_INTERFACE
    runWebImageSaveThread=false;
@@ -322,7 +313,6 @@ void cfdApp::initScene( void )
    writingWebImageNow = false;
    captureNextFrameForWeb = false;
 #endif   //_WEB_INTERFACE
-
    // define the rootNode, worldDCS, and lighting
    VE_SceneGraph::cfdPfSceneManagement::instance()->Initialize( this->filein_name );
    VE_SceneGraph::cfdPfSceneManagement::instance()->InitScene();
@@ -367,6 +357,7 @@ void cfdApp::initScene( void )
 
 void cfdApp::preFrame( void )
 {
+   ;
 }
 
 void cfdApp::latePreFrame( void )
@@ -431,13 +422,11 @@ void cfdApp::intraFrame()
 }
 #ifdef VE_PATENTED
 #ifdef _OSG
-//#ifdef CFD_USE_SHADERS
 void cfdApp::contextPostDraw()
 {
    if(_tbvHandler)
      _tbvHandler->PingPongTextures();
 }
-//#endif//CFD_USE_SHADERS
 #endif//_OSG
 #endif//VE_PATENTED
 

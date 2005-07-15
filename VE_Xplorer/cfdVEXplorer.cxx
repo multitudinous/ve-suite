@@ -33,14 +33,15 @@
 #include "VE_Xplorer/cfdAppWrapper.h"
 #include "VE_Xplorer/cfdVjObsWrapper.h"
 #ifdef _TAO
-#include "VE_CE/Executive_i.h"
-#include <orbsvcs/CosNamingC.h>
-#include <tao/BiDir_GIOP/BiDirGIOP.h>
+   #include "VE_CE/Executive_i.h"
+   #include <orbsvcs/CosNamingC.h>
+   #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #else
-#include <omniORB4/CORBA.h>
+   #include <omniORB4/CORBA.h>
 #endif
 #include <iostream>
 
+#include "VE_Xplorer/cfdThread.h"
 using namespace VE_Xplorer;
 
 int main(int argc, char* argv[])
@@ -52,8 +53,6 @@ int main(int argc, char* argv[])
    #else
       CORBA::ORB_var orb = CORBA::ORB_init( argc, argv,"omniORB4" ); 
    #endif // _TAO
-      if ( CORBA::is_nil( orb.in() ) )
-         exit(0);
   
       //Here is the part to contact the naming service and get the reference for the executive
       CORBA::Object_var naming_context_object =
@@ -103,9 +102,13 @@ int main(int argc, char* argv[])
       cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
       orb->run();
+   #ifdef _TAO
+      if ( !CORBA::is_nil( child_poa ) )
+         child_poa->destroy(1,1);
+   #endif // _TAO
+      orb->destroy();
 
-      // VjObsWrapper is now deleted in cfdApp on exit
-      // delete vjobsWrapper;
+      appWrapper->_thread->new_thread->join();
       delete appWrapper;
    }
    catch ( CORBA::SystemException& ) 

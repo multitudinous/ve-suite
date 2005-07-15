@@ -73,8 +73,8 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
       vprDEBUG(vprDBG_ALL,0) 
          << "naming_context->unbind for CORBA Object  " 
          << std::endl << vprDEBUG_FLUSH;
-       
-      naming_context->unbind( name );
+      if ( !CORBA::is_nil( naming_context ) )
+         naming_context->unbind( name );
    }
    catch( CosNaming::NamingContext::InvalidName& )
    {
@@ -84,12 +84,10 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    {
       std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }
-#ifdef _TAO
-   this->child_poa->destroy(1,1);
-   //this->poa->destroy (1, 1);
-#endif // _TAO
-   this->_orbPtr->shutdown(0);
-   this->_orbPtr->destroy();
+   
+   if ( !CORBA::is_nil( _orbPtr ) )
+      this->_orbPtr->shutdown(1);
+
    vprDEBUG(vprDBG_ALL,1) 
       << " End VjObsWraper Destructor  " 
       << std::endl << vprDEBUG_FLUSH;

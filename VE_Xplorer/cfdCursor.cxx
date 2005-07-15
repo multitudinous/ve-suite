@@ -709,9 +709,9 @@ void cfdCursor::SetTranslation( void )
       combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
       combineScale[ 1 ] = dataDCSScale[ 1 ] * worldDCSScale[ 1 ];
       combineScale[ 2 ] = dataDCSScale[ 2 ] * worldDCSScale[ 2 ];
-      ((cfdDCS*)this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
+      //((cfdDCS*)this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
       Matrix44f dataSetMatrix = this->activeDataSetDCS->GetMat();
- 
+
       // The following is a hack because gmtl doesn't seem to create
       // quats properly if there is scale on a 44 Matrix so
       // we must manually remove the scale before creating the quat
@@ -892,7 +892,12 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          // convert size percentage (0-100) request to plane size
          //std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() 
          //            << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << std::endl;
-         this->SetPlaneSize( commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
+		 float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
+         float* worldDCSScale = this->worldDCS->GetScaleArray();
+         float combineScale[ 3 ];
+         combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
+
+         this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
          sphereRadius = commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) * 0.05f / 50.0f;
       }
    }

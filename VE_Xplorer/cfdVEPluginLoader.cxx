@@ -34,24 +34,21 @@
 #include "VE_Xplorer/cfdVEBaseClass.h"
 #include <iostream>
 
-#include <wx/image.h>
-#include <wx/dynload.h>
-#include <wx/object.h>
-#include <wx/log.h>
-#include <wx/dynlib.h>
 #include <wx/dir.h>
 #include <wx/filename.h>
 
 using namespace VE_Xplorer;
+IMPLEMENT_APP(cfdVEPluginLoader);
 
 cfdVEPluginLoader::cfdVEPluginLoader()
 {
    plugins.clear();
    plugin_cls.clear();
    //::wxInitAllImageHandlers();
-   wxPluginLibrary::ms_classes = new wxDLImports(wxKEY_STRING);
+   wxPluginLibrary::ms_classes = new wxDLImports;
    wxPluginManager::CreateManifest();
    //wxClassInfo::InitializeClasses();
+   //SetTopWindow( NULL );
 }
 
 cfdVEPluginLoader::~cfdVEPluginLoader()
@@ -60,12 +57,20 @@ cfdVEPluginLoader::~cfdVEPluginLoader()
    {
       delete (plugins[i]);
    }
+   for (unsigned int i=0; i<libs.size(); i++)
+   {
+   delete libs.at(i);
+   }
    plugins.clear();
    plugin_cls.clear();
+   libs.clear();
    delete wxPluginLibrary::ms_classes;
    wxPluginLibrary::ms_classes = NULL;
    wxPluginManager::ClearManifest();
    wxClassInfo::CleanUp();
+   wxModule::CleanUpModules();
+   //this->OnExit();
+   this->CleanUp();
 }
     
 bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
@@ -188,4 +193,15 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateObject( char* _objname )
    }
 
    return (cfdVEBaseClass*)((wxClassInfo*)plugin_cls.at( selectPlugin ))->CreateObject();
+}
+
+
+bool cfdVEPluginLoader::OnInit()
+{
+
+  SetAppName("VE-Conductor");
+   
+   SetTopWindow(NULL);
+   return true;
+
 }

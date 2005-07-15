@@ -41,19 +41,19 @@ namespace VE_Xplorer
 
 namespace VE_Xplorer
 {
-   class cfdAppWrapper
-   {
-      public:
-         cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* );
-         ~cfdAppWrapper( void );
-         void init( void *);
+class cfdAppWrapper
+{
+public:
+   cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* );
+   ~cfdAppWrapper( void );
+   void init( void *);
+   cfdThread* _thread;
+private:
+   cfdApp* _cfdApp;
 
-      private:
-         cfdApp* _cfdApp;
-         cfdThread* _thread;
-         cfdVjObsWrapper* _vjObsWrapper;
-         int argc;
-         char** argv;
-   }; 
+   cfdVjObsWrapper* _vjObsWrapper;
+   int argc;
+   char** argv;
+}; 
 }
 #endif
