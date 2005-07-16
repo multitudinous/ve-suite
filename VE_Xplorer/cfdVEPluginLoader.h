@@ -34,9 +34,6 @@
 #ifndef CFD_PLUGINLOADER_H
 #define CFD_PLUGINLOADER_H
 
-//#include <wx/dynload.h>
-//#include <wx/wx.h>
-
 #include <vpr/DynLoad/LibraryFinder.h>
 
 #include <vector>

@@ -297,6 +297,8 @@ void cfdExecutive::GetNetwork ( void )
   
    _network->clear();
    _id_map.clear();
+   _it_map.clear();
+   _geom_map.clear();
 
    std::vector<Interface>::iterator iter;
    // Find network layout chunk in network structure
@@ -312,23 +314,30 @@ void cfdExecutive::GetNetwork ( void )
    {
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
       {
-         if(_network->setInput(iter->_id, &(*iter))) 
-         {
-            _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
-            _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
-            _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-         }  
-         else
-         {
-            std::cerr << "|\tUnable to set id# " << iter->_id << "'s inputs" << std::endl;
-         }
+         if ( iter->_type == 1 )
+            if(_network->setInput(iter->_id, &(*iter))) 
+            {
+               _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
+               _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
+               _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
+               //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
+               _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
+            }  
+            else
+            {
+               std::cerr << "|\tUnable to set id# " << iter->_id << "'s inputs" << std::endl;
+            }
 
          if ( iter->_id != -1 ) 
          {
-            //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
-            _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
-            //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
-            _it_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
+            if ( iter->_type == 1 ) // then input data
+            {
+               _it_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
+            }
+            else if ( iter->_type == 2 ) // then geom data
+            {
+               _geom_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = (*iter);
+            }
          }
       }
    } 
@@ -430,6 +439,18 @@ void cfdExecutive::GetEverything( void )
             _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
          }
       }
+      
+      // Process geom interfaces
+      /*for ( iter=_id_map.begin(); iter!=_id_map.end(); iter++ )
+      {
+         foundPlugin = _plugins.find( iter->first );
+         if ( (foundPlugin == _plugins.end()) || _plugins.empty() )
+         {
+            // Need to set geom interfaces here
+            Interface tempInterface = _geom_map[ iter->first ];
+            _plugins[ iter->first ]->SetGeometryInterface( tempInterface );
+         }
+      }*/
 
       // Remove any plugins that aren't present in the current network
       for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); )

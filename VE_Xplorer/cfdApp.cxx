@@ -402,7 +402,8 @@ void cfdApp::latePreFrame( void )
 #ifdef _TAO
       this->executive->UnbindORB();
 #endif // _TAO
-      vrj::Kernel::instance()->setApplication( NULL ); // Stopping kernel 
+      //vrj::Kernel::instance()->setApplication( NULL ); // Stopping kernel 
+      vrj::Kernel::instance()->stop(); // Stopping kernel 
    }
 
 #ifdef _TAO

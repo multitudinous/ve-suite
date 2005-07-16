@@ -228,7 +228,6 @@ void cfdVEPluginLoader::LoadPlugins( void )
 {
    for ( unsigned int i = 0; i < libs.size(); ++i )
    {
-      void* (*creator)();
       cfdVEBaseClass* test_obj(NULL);
 
       test_obj = CreateNewPlugin( i );
@@ -244,7 +243,7 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
    cfdVEBaseClass* test_obj( NULL );
 
    // No, *this* is the weirdest cast I have ever written.
-   //creator = (void*(*)()) libs[ input ].findSymbol( std::string("CreateVEPlugin") );
+   creator = (void*(*)()) libs[ input ]->findSymbol( std::string("CreateVEPlugin") );
    if ( NULL != creator )
       std::cout << " created plugin " << std::endl;
 
