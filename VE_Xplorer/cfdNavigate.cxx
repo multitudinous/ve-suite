@@ -322,6 +322,25 @@ void cfdNavigate::updateNavigationFromGUI()
       
       this->worldTrans[0] = worldVec[ 0 ] + LastVec[ 0 ];
       this->worldTrans[1] = -(worldVec[ 2 ] + LastVec[ 2 ]);
+
+/*   // get juggler Matrix of worldDCS
+   Matrix44f worldMat;
+   worldMat = this->worldDCS->GetMat();
+
+   // compute gloabl_vec = [world matrix] * local_juggler_vec
+   //Vec4f globalVector;
+   gmtl::Point3f jugglerHeadPoint;
+   gmtl::Point3f globalHeadPoint;
+   jugglerHeadPoint = gmtl::makeTrans< gmtl::Point3f >( vjHeadMat );
+   globalHeadPoint = worldMat * jugglerHeadPoint;
+
+std::cout << " juggler head " << std::endl << jugglerHeadPoint << std::endl << globalHeadPoint << std::endl;
+   // roate new global point
+
+   // create translation from new rotated point
+
+   // set world translation accordingly
+*/
 /*
       gmtl::Quatf tempQuat, finalQuat;// = gmtl::make< gmtl::Quatf >( head->getData() );
       //gmtl::Quatf worldQuat = gmtl::make< gmtl::Quatf >( worldDCS->GetMat() );
