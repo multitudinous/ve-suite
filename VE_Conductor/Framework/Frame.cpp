@@ -388,74 +388,89 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
     }
 }
 
-void AppFrame::LoadFromServer(wxCommandEvent& WXUNUSED(event) )
+void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
-  char *nw_str;
-  try	{ 
-    nw_str=network->exec->GetNetwork();
-    
-  }	catch (CORBA::Exception &) {
-    std::cout << "no exec found!" << std::endl;
-  }
-  
-  network->LoadS(nw_str);
-  delete nw_str;
+   char *nw_str;
+   try
+   {
+      nw_str=network->exec->GetNetwork();
+   }
+   catch ( CORBA::Exception& )
+   {
+      Log("no exec found!\n");
+   }
+
+   network->LoadS(nw_str);
+   delete nw_str;
 }
 
-void AppFrame::New(wxCommandEvent &WXUNUSED(event))
+void AppFrame::New( wxCommandEvent& WXUNUSED(event) )
 {
    network->New();
 }
 
-void AppFrame::SubmitToServer(wxCommandEvent& WXUNUSED(event) )
+void AppFrame::SubmitToServer( wxCommandEvent& WXUNUSED(event) )
 {
-  std::string nw_str;
-  network->SaveS(nw_str);
-  try {
-    network->exec->SetNetwork(nw_str.c_str());
-  }catch (CORBA::Exception &) {
-    std::cout << "no exec found!" << std::endl;
-  }
+   std::string nw_str;
+   network->SaveS(nw_str);
+   try 
+   {
+      network->exec->SetNetwork(nw_str.c_str());
+      run_menu->Enable(v21ID_START_CALC, true);
+   }
+   catch ( CORBA::Exception& ) 
+   {
+      Log("no exec found!\n");
+   }
 }
 
-void AppFrame::StartCalc(wxCommandEvent& WXUNUSED(event) )
+void AppFrame::StartCalc( wxCommandEvent& WXUNUSED(event) )
 {
-  try	{ 
-    network->exec->StartCalc();
-    
-  }	catch (CORBA::Exception &) {
-    std::cout << "no exec found!" << std::endl;
-  }
+   try	
+   { 
+      network->exec->StartCalc();
+      run_menu->Enable(v21ID_START_CALC, false);
+   }
+   catch ( CORBA::Exception& ) 
+   {
+      Log("no exec found!\n");
+   }
 }
 
 void AppFrame::StopCalc(wxCommandEvent& WXUNUSED(event) )
 {
-  try	{ 
-    network->exec->StopCalc();
-    
-  }	catch (CORBA::Exception &) {
-    std::cout << "no exec found!" << std::endl;
-  }
+   try
+   {
+      network->exec->StopCalc();
+   }
+   catch ( CORBA::Exception& )
+   {
+      Log("no exec found!\n");
+   }
 }
 
 void AppFrame::PauseCalc(wxCommandEvent& WXUNUSED(event) )
 {
-  try	{ 
-    network->exec->PauseCalc();
-    
-  }	catch (CORBA::Exception &) {
-    std::cout << "no exec found!" << std::endl;
-  }
+   try
+   {
+      network->exec->PauseCalc();
+   }
+   catch ( CORBA::Exception& )
+   {
+      Log("no exec found!\n");
+   }
 }
 
 void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 {
-  try	{ 
-    network->exec->Resume();
-    
-  }	catch (CORBA::Exception &) {
-    std::cout << "no exec found!" << std::endl;
-  }
+   try
+   { 
+      network->exec->Resume();
+   }
+   catch ( CORBA::Exception& )
+   {
+      Log("no exec found!\n");
+   }
 }
 
 void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
