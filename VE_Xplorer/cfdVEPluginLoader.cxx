@@ -45,6 +45,9 @@ static const std::string DSO_SUFFIX(".dylib");
 static const std::string DSO_SUFFIX(".so");
 #endif
 
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
+
 using namespace VE_Xplorer;
 
 cfdVEPluginLoader::cfdVEPluginLoader()
@@ -211,6 +214,17 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    std::string modelPath;
    vpr::ReturnStatus status = vpr::System::getenv( std::string("CFDHOSTTYPE"), modelPath );
    std::string libDir = path + modelPath;
+
+   boost::filesystem::path dir_path( libDir );
+   try
+   {
+      boost::filesystem::is_directory( dir_path );
+   }
+   catch ( const std::exception& ex )
+   {
+      std::cout << ex.what() << std::endl;
+      return;
+   }
 
    vpr::LibraryFinder finder(libDir, DSO_SUFFIX);
 

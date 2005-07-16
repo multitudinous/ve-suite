@@ -709,7 +709,7 @@ void cfdCursor::SetTranslation( void )
       combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
       combineScale[ 1 ] = dataDCSScale[ 1 ] * worldDCSScale[ 1 ];
       combineScale[ 2 ] = dataDCSScale[ 2 ] * worldDCSScale[ 2 ];
-      //((cfdDCS*)this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
+      ((cfdDCS*)this->cursorDCS->GetChild( 0 ))->SetScaleArray( combineScale );
       Matrix44f dataSetMatrix = this->activeDataSetDCS->GetMat();
 
       // The following is a hack because gmtl doesn't seem to create

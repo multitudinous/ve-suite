@@ -664,41 +664,46 @@ void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
 {
-  if (!is_orb_init)
-    {
-      if (init_orb_naming())
-	is_orb_init = true;
-      else
-	return;
-    }
-  
-  try{
-    
-    //_mutex.acquire();	  
-    if (pelog==NULL)
-      {
-	pelog = new PEThread(this);
-	pelog->activate();
-      }
-    OrbThread* ot = new OrbThread(this);
-    ot->activate();
-    //ot->Run();
-    //register it to the server
-    //_mutex.acquire();
-    
-    //_mutex.release();
-    //Enalbe Menu items
-    
-    
-  } catch (CORBA::Exception &) {
-    
-    Log("Can't find executive or UI registration error\n");
-  }
+   if ( pelog==NULL )
+   {
+	   pelog = new PEThread(this);
+	   pelog->activate();
+   }
 
+   if (!is_orb_init)
+   {
+      if (init_orb_naming())
+	      is_orb_init = true;
+      else
+	      return;
+   }
+  
+   try
+   { 
+      //_mutex.acquire();	  
+      OrbThread* ot = new OrbThread(this);
+      ot->activate();
+      //ot->Run();
+      //register it to the server
+      //_mutex.acquire();
+    
+      //_mutex.release();
+      //Enalbe Menu items
+   } 
+   catch ( CORBA::Exception& ) 
+   {
+      Log("Can't find executive or UI registration error\n");
+   }
 }
   
 void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
 {
+   if (pelog==NULL)
+   {
+	   pelog = new PEThread(this);
+	   pelog->activate();
+   }
+
    if (!is_orb_init)
    {
       if (init_orb_naming())
@@ -709,12 +714,6 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
   
    try 
    {
-    /*
-      if (pelog==NULL)
-      {
-      pelog = new PEThread(this);
-      pelog->activate();
-      }*/
     
     CosNaming::Name name(1);
     name.length(1);
@@ -726,13 +725,16 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
     CosNaming::NamingContext_var naming_context1 = CosNaming::NamingContext::_narrow (naming_context_object.in ());
     CORBA::Object_var ve_object = naming_context1->resolve(name);
     vjobs = VjObs::_narrow(ve_object.in());
+std::cout << " here 1 " << std::endl;
     if (CORBA::is_nil(vjobs.in()))
       std::cerr<<"VjObs is Nill"<<std::endl;
     
+std::cout << " here 2 " << std::endl;
     //Create the VE Tab
     con_menu->Enable(v21ID_CONNECT_VE, false);
     con_menu->Enable(v21ID_DISCONNECT_VE, true);
     //Log("Found VE server\n");
+std::cout << " here 3 " << std::endl;
    } 
    catch (CORBA::Exception &) 
    {
@@ -748,38 +750,36 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
 
 bool AppFrame::init_orb_naming()
 {
-  //	char *argv[]={""};
-  //	int argc = 0;
-  cout << " orb init " << endl;
-  
-  try {
-    // First initialize the ORB, 
-    orb =
-      CORBA::ORB_init (wxGetApp().argc, wxGetApp().argv,
+   try 
+   {
+      // First initialize the ORB, 
+      orb = CORBA::ORB_init (wxGetApp().argc, wxGetApp().argv,
                        ""); // the ORB name, it can be anything! 
     
-    //Here is the part to contact the naming service and get the reference for the executive
-    CORBA::Object_var naming_context_object =
-      orb->resolve_initial_references ("NameService");
-    naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
-    /*if (naming_context==CORBA)
+      //Here is the part to contact the naming service and get the reference for the executive
+      CORBA::Object_var naming_context_object =
+         orb->resolve_initial_references ("NameService");
+      naming_context = CosNaming::NamingContext::_narrow (naming_context_object.in ());
+      /*if (naming_context==CORBA)
       {
-      poa->destroy (1, 1);
+         poa->destroy (1, 1);
 		    // Finally destroy the ORB
 		    orb->destroy();
 		    cerr << "Naming service not found!" << endl;
 		    return false;
 		    }
-    */  
-    return true;
-  }  catch (CORBA::Exception &) {
-    //		poa->destroy (1, 1);
-    // Finally destroy the ORB
-    orb->destroy();
-    Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
-    return false;
-  }
-
+      */
+      Log("Initialized ORB and connection to the Naming Service\n");
+      return true;
+   }
+   catch ( CORBA::Exception& ) 
+   {  
+      //		poa->destroy (1, 1);
+      // Finally destroy the ORB
+      orb->destroy();
+      Log("CORBA exception raised! Can't init ORB or can't connect to the Naming Service\n");
+      return false;
+   }
 }
 
 void AppFrame::LoadBase(wxCommandEvent &WXUNUSED(event))
