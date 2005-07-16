@@ -220,8 +220,10 @@ void cfdVEPluginLoader::ScanAndLoad( void )
    for ( unsigned int i = 0; i < libs.size(); ++i )
    {
       status = libs.at( i )->load();
-      std::cout << " Number of libs : " << status.success() << std::endl;
+      std::cout << " Loaded lib successfully : " << status.success() << std::endl;
    }
+   
+   LoadPlugins();
 }
 
 void cfdVEPluginLoader::LoadPlugins( void )
@@ -249,7 +251,7 @@ cfdVEBaseClass* cfdVEPluginLoader::CreateNewPlugin( unsigned int input )
 
    void* object = (*creator)();
    if ( NULL != object )
-      std::cout <<  " created Object creation failed" << std::endl;
+      std::cout <<  " created Object creation " << std::endl;
 
    // Is there a way to test that this cast was successful?
    test_obj = static_cast<cfdVEBaseClass*>(object);
