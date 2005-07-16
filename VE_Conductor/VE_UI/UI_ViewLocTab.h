@@ -31,6 +31,8 @@ public:
    UI_ViewLocTabScroll(wxWindow* parent);
    ~UI_ViewLocTabScroll();
 
+   wxWindow* parent;
+
    wxButton* _addnewviewptButton;
    wxButton* _newvwptNameOKButton;
    wxButton* _newvwptNameCancelButton;
@@ -53,9 +55,30 @@ public:
    wxTextCtrl* _newvwptNameCtrl;
    wxTextCtrl* _newflythroughNameCtrl;
 
+   wxStaticText* blank1;
+   wxStaticText* blank2;
+   wxStaticText* blank3; 
+   wxStaticText* blank4; 
+   wxStaticText* blank5; 
+   wxStaticText* blank6; 
+   wxStaticText* _removevwptLabel;
+   wxStaticText* _movetovwptLabel;
+   wxStaticText* _activeflyLabel;
+   wxStaticText* _removevpfromflyLabel;
+   wxStaticText* _addvptoflyLabel;
+   wxStaticText* _insertvpinflyLabel;
+
    wxStaticBox* _newVPNameCtrlBox;
    wxStaticBox* _newFlyNameCtrlBox;
+
+   wxBoxSizer* _newVPControlsSizer;
+   wxBoxSizer* _flyModCtrlsSizer;
+   wxStaticBoxSizer* _newVPNameCtrlGroup;
+
+   void _rebuildPage();
+
 protected:
+
 
    DECLARE_EVENT_TABLE()
 };
@@ -70,13 +93,17 @@ public:
 
    int numStoredLocations;
    int numStoredFlythroughs;
+   int _vwptsInActiveFly;
    std::vector< std::vector <int> > flyThroughList;
    wxString* _locationName;
    wxString* _flythroughName;
+   wxString* _activeFlyNames;
 
 
 protected:
    void _buildPage();
+   void _rebuildNameArrays();
+   void _setUpActiveFlyThroughNames( int );
    
    UI_ViewLocTabScroll* _viewLocScroll;
    wxNotebook* _parent;
