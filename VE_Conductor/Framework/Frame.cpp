@@ -714,38 +714,32 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
   
    try 
    {
+      CosNaming::Name name(1);
+      name.length(1);
+      //Now get the reference of the VE server
+      name[0].id   = CORBA::string_dup ("Master");
+      name[0].kind = CORBA::string_dup ("VE_Xplorer");
+      CORBA::Object_var naming_context_object =
+      orb->resolve_initial_references ("NameService");
+      CosNaming::NamingContext_var naming_context1 = CosNaming::NamingContext::_narrow (naming_context_object.in ());
+      CORBA::Object_var ve_object = naming_context1->resolve(name);
+      vjobs = VjObs::_narrow(ve_object.in());
+
+      if (CORBA::is_nil(vjobs.in()))
+         std::cerr<<"VjObs is Nill"<<std::endl;
     
-    CosNaming::Name name(1);
-    name.length(1);
-    //Now get the reference of the VE server
-    name[0].id   = CORBA::string_dup ("Master");
-    name[0].kind = CORBA::string_dup ("VE_Xplorer");
-    CORBA::Object_var naming_context_object =
-    orb->resolve_initial_references ("NameService");
-    CosNaming::NamingContext_var naming_context1 = CosNaming::NamingContext::_narrow (naming_context_object.in ());
-    CORBA::Object_var ve_object = naming_context1->resolve(name);
-    vjobs = VjObs::_narrow(ve_object.in());
-std::cout << " here 1 " << std::endl;
-    if (CORBA::is_nil(vjobs.in()))
-      std::cerr<<"VjObs is Nill"<<std::endl;
-    
-std::cout << " here 2 " << std::endl;
-    //Create the VE Tab
-    con_menu->Enable(v21ID_CONNECT_VE, false);
-    con_menu->Enable(v21ID_DISCONNECT_VE, true);
-    //Log("Found VE server\n");
-std::cout << " here 3 " << std::endl;
+      //Create the VE Tab
+      con_menu->Enable(v21ID_CONNECT_VE, false);
+      con_menu->Enable(v21ID_DISCONNECT_VE, true);
    } 
    catch (CORBA::Exception &) 
    {
-    
-    Log("Can't find VE server\n");
-    return;
-  }
+      Log("Can't find VE server\n");
+      return;
+   }
   
-  CreateVETab();
-  Log("Connected to VE server.\n");
-
+   CreateVETab();
+   Log("Connected to VE server.\n");
 }
 
 bool AppFrame::init_orb_naming()

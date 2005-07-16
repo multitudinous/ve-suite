@@ -52,6 +52,8 @@
 #include <vtkStreamTracer.h>
 #include <vtkStripper.h>
 #include <vtkTriangleFilter.h>
+#include <vtkPolyDataNormals.h>
+
 #include <vpr/Util/Debug.h>
 
 using namespace VE_Xplorer;
@@ -151,6 +153,7 @@ aa Assign Normals NORMALS POINT_DATA
    vtkConeSource* cone = 0;
    vtkGlyph3D* cones = 0;
    vtkAppendPolyData* append = 0;
+   vtkPolyDataNormals* normals = 0;
 
    if ( streamArrows )
    {
@@ -161,6 +164,7 @@ aa Assign Normals NORMALS POINT_DATA
       streamPoints->SetMaximumPropagationTime( this->propagationTime );
       streamPoints->SetIntegrationStepLength( this->integrationStepLength );    
       streamPoints->SetIntegrator( this->integ );
+      streamPoints->SpeedScalarsOff();
    }
 
    if ( this->integrationDirection == 0 )
@@ -211,19 +215,32 @@ aa Assign Normals NORMALS POINT_DATA
       cones->SetInput( streamPoints->GetOutput() );
       cones->SetSource( cone->GetOutput() );
       cones->SetScaleFactor( arrowDiameter );
-      cones->SetScaleModeToScaleByVector();
+      //cones->SetScaleModeToScaleByVector();
+      cones->SetScaleModeToDataScalingOff();
+      cones->SetVectorModeToUseVector();
       cones->GetOutput()->ReleaseDataFlagOn();
 
       append = vtkAppendPolyData::New();
       append->AddInput( this->tubeFilter->GetOutput() );
       append->AddInput( cones->GetOutput() );
       append->GetOutput()->ReleaseDataFlagOn();
-      
-      tris->SetInput(append->GetOutput());
+
+      tris->SetInput( append->GetOutput() );
       tris->GetOutput()->ReleaseDataFlagOn();  
-      strip->SetInput(tris->GetOutput());
+      strip->SetInput( tris->GetOutput() );
       strip->GetOutput()->ReleaseDataFlagOn();
-      this->mapper->SetInput( strip->GetOutput() );
+
+      normals = vtkPolyDataNormals::New();
+      normals->SetInput( strip->GetOutput() );
+      normals->SplittingOff();
+      normals->ConsistencyOn();
+      normals->AutoOrientNormalsOn();
+      normals->ComputePointNormalsOn();
+      normals->ComputeCellNormalsOff();
+      normals->NonManifoldTraversalOff();
+      normals->GetOutput()->ReleaseDataFlagOn();
+
+      this->mapper->SetInput( normals->GetOutput() );
    }
    else
    {
@@ -231,6 +248,7 @@ aa Assign Normals NORMALS POINT_DATA
       tris->GetOutput()->ReleaseDataFlagOn();  
       strip->SetInput(tris->GetOutput());
       strip->GetOutput()->ReleaseDataFlagOn();
+
       this->mapper->SetInput( strip->GetOutput() );
    }
    
@@ -272,6 +290,7 @@ aa Assign Normals NORMALS POINT_DATA
       append->Delete();
       cone->Delete();
       cones->Delete();
+      normals->Delete();
    }
 
    vprDEBUG(vprDBG_ALL,0) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
@@ -395,7 +414,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       arrowDiameter = lineDiameter * 4.0f;
       return true;
    }
-/*   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
    {
       // diameter is obtained from gui, -100 < vectorScale < 100
       // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
@@ -405,7 +424,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       arrowDiameter = 4.0f * exp( diameter / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetLength()*0.001f;
       return true;
-   }*/
+   }
    
    return flag;
 }
