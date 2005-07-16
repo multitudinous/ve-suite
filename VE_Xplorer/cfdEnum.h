@@ -129,10 +129,12 @@ enum cfdGeodeEnum
    UPDATE_SOUNDS,//141
    CHANGE_PARTICLE_VIEW_OPTION,
    //CHANGE_SPHERE_SIZE, //Not used, functionality taken care of with CHANGE_PARTICLE_VIEW_OPTION 
-   LOAD_POINT,
+   //QuatCam-Flythrough operations
+   LOAD_NEW_VIEWPT,
+   MOVE_TO_SELECTED_LOCATION,
+   REMOVE_SELECTED_VIEWPT,
    WRITE_POINTS_TO_FILE,
    READ_POINTS_FROM_FILE,
-   MOVE_TO_SELECTED_LOCATION,
    MIRROR_VIS_DATA,
    EXIT,
    //biv--added these for the navigation page

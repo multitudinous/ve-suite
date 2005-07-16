@@ -64,7 +64,7 @@ namespace VE_Xplorer
          cfdQuatCam(float, float, float, float, float*);
    
          //Destructor
-         ~cfdQuatCam();
+         ~cfdQuatCam(){;}
 
          void SetCamPos(double*, VE_SceneGraph::cfdDCS*);
 
@@ -77,6 +77,10 @@ namespace VE_Xplorer
          void UpdateTrans(cfdNavigate*);
 
          void UpdateRotation(cfdNavigate*, VE_SceneGraph::cfdDCS* );
+
+         gmtl::Matrix44f GetMatrix( void ){return nextMatrix;}
+
+         gmtl::Vec3f GetTrans( void ){return vjVecNextTrans;}
 
          gmtl::Vec3f  vjVecCurrTrans;
 
@@ -92,6 +96,7 @@ namespace VE_Xplorer
          gmtl::Quatf CurPosQuat;
          gmtl::Vec3f vjVecNextTrans;
          gmtl::Vec3f vjVecLastTrans;
+         gmtl::Matrix44f nextMatrix;
 
          float rotvec[3];
    };

@@ -52,7 +52,7 @@ using namespace VE_Xplorer;
 
 cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans, float* rotPts)
 {
-   
+   nextMatrix = m;
    set(NextPosQuat,m);
    for (int i=0; i<3; i++)
       vjVecNextTrans[i] = worldTrans[i];

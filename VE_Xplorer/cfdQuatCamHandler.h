@@ -105,6 +105,8 @@ namespace VE_Xplorer
 
          void Relocate(VE_SceneGraph::cfdDCS* worldDCS, cfdNavigate* nav); 
 
+         void RemoveViewPt( void );
+
          int getNumLocs();
 
          std::vector< std::vector <int> > getFlyThroughs();

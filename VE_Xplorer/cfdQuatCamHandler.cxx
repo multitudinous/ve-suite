@@ -93,9 +93,19 @@ cfdQuatCamHandler::~cfdQuatCamHandler( void )
 void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::cfdDCS* worldDCS)
 {
    Matrix44f vjm;
+   float recordrot[4];
+
    vjm = worldDCS->GetMat();
-   nextPoint = new cfdPoints(worldPos, vjm);
-   cfdPointsVec.push_back(nextPoint);
+   
+   recordrot[0] = vjm[0][0];
+   recordrot[1] = vjm[0][1];
+   recordrot[2] = vjm[1][0];
+   recordrot[3] = vjm[1][1];
+
+   QuatCams.push_back(new cfdQuatCam(vjm, worldPos, recordrot));
+
+   //nextPoint = new cfdPoints(worldPos, vjm);
+   //cfdPointsVec.push_back(nextPoint);
 }
 
 
@@ -104,16 +114,20 @@ void cfdQuatCamHandler::WriteToFile(char* fileName)
    std::ofstream inFile( fileName, std::ios::out );
 
    if ( fileIO::isFileReadable( fileName ) )
-   {   
-      if ( cfdPointsVec.size() > 0 )
+   {  
+      printf("QuatCam File Was Opened Successfully for writing\n"); 
+      if ( QuatCams.size() > 0 )
       {
          inFile << "*Quaternion_Cameras" << std::endl;
-         inFile << cfdPointsVec.size() << std::endl;
+         //inFile << cfdPointsVec.size() << std::endl;
+         inFile << QuatCams.size() << std::endl;
+      
+         std::cout<< QuatCams.size() << " view points are being written" << std::endl;
       
          Matrix44f temp;
-         for (unsigned int i=0; i<cfdPointsVec.size(); i++)
+         for (unsigned int i=0; i<QuatCams.size(); i++)
          {
-            temp = cfdPointsVec[i]->matrix();
+            temp = QuatCams[i]->GetMatrix();
             for ( unsigned int j=0; j<4; j++)
             {
                for ( unsigned int k=0; k<4; k++)
@@ -124,9 +138,11 @@ void cfdQuatCamHandler::WriteToFile(char* fileName)
 
             inFile << std::endl;
 
+            gmtl::Vec3f temptrans;
             for (int k=0; k<3; k++)
             {
-               inFile << cfdPointsVec[i]->ptrans()[k] << " ";
+               temptrans = QuatCams[i]->GetTrans();
+               inFile << temptrans[k] << " ";
             }
  
             inFile << std::endl;
@@ -159,6 +175,16 @@ void cfdQuatCamHandler::LoadFromFile( char* fileName)
    double transpts[3];
    float recordrot[4];
    Matrix44f temp;
+
+   if ( !QuatCams.empty() )
+   {
+      QuatCams.clear();
+   }
+
+   if ( !flyThroughList.empty() )
+   {
+      flyThroughList.clear();
+   }
    
    std::ifstream inFile( fileName, std::ios::in ); 
 
@@ -274,22 +300,20 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate*
    }      
 }
 
+void cfdQuatCamHandler::RemoveViewPt( void )
+{
+   delete QuatCams.at( cam_id );
+   QuatCams.erase( QuatCams.begin() + cam_id );
+}
+
 bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
    bool flag = false;
    
-   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_POINT )
+   if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_NEW_VIEWPT )
    {
       this->LoadData( this->_nav->worldTrans, _worldDCS );
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == WRITE_POINTS_TO_FILE )
-   {
-      this->WriteToFile( this->quatCamFileName ); 
-      return true;
-   }
-   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == READ_POINTS_FROM_FILE )
-   {
+      this->WriteToFile( this->quatCamFileName );
       this->LoadFromFile( this->quatCamFileName );
       return true;
    }
@@ -297,10 +321,16 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    {
       activecam = true;
       cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      this->Relocate( _worldDCS, _nav);
+      //this->Relocate( _worldDCS, _nav);
       return true;
-      // Need to fix this
-      //this->setId( this->run );
+   }
+   else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == REMOVE_SELECTED_VIEWPT )
+   {
+      cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
+      this->RemoveViewPt();
+      this->WriteToFile( this->quatCamFileName );
+      this->LoadFromFile( this->quatCamFileName );
+      return true;
    }
 
    return flag;
@@ -346,10 +376,10 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
 	     activecam = true;
       }*/
  
-   /*if ( activecam )
+   if ( activecam )
    {
       this->Relocate( _worldDCS, _nav);    
-   }*/
+   }
 }
 
 void cfdQuatCamHandler::UpdateCommand()
