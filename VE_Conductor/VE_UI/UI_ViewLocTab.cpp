@@ -456,8 +456,7 @@ void UI_ViewLocTab::_rebuildNameArrays( void )
       {
          std::ostringstream vwptstream;
          vwptstream << "View Location " << i ;
-			std::string vwptstring = vwptstream.str();
-         _locationName[i] = vwptstring.c_str();
+         _locationName[i] = vwptstream.str().c_str();
       }
    }
    else
@@ -476,8 +475,7 @@ void UI_ViewLocTab::_rebuildNameArrays( void )
       {
          std::ostringstream flynamestream;
          flynamestream << "Flythrough " << i ;
-			std::string flynamestring = flynamestream.str();
-         _flythroughName[i] = flynamestring.c_str();
+         _flythroughName[i] = flynamestream.str().c_str();
       }
    }
    else
@@ -502,8 +500,7 @@ void UI_ViewLocTab::_setUpActiveFlyThroughNames( int index )
    {
       std::ostringstream activeflynamestream;
       activeflynamestream << "View Location " << flyThroughList.at( index ).at( i ) ;
-		std::string activeflynamestring = activeflynamestream.str();
-      _activeFlyNames[i] = activeflynamestring.c_str();
+      _activeFlyNames[i] = activeflynamestream.str().c_str();
    }
   
 }
