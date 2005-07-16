@@ -40,7 +40,15 @@ UI_ModelData::UI_ModelData( VjObs_ptr ref )
    
    if ( !CORBA::is_nil( server_ref.in() ) )
    {
-      _models = server_ref->GetModels();
+      try
+      {
+         _models = server_ref->GetModels();
+      } 
+      catch ( CORBA::Exception& ) 
+      {
+         std::cout << " could not connect to ve " << std::endl;
+         return;
+      }
    }
    else
    {

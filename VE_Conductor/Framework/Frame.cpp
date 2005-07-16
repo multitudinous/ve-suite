@@ -733,7 +733,9 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
     con_menu->Enable(v21ID_CONNECT_VE, false);
     con_menu->Enable(v21ID_DISCONNECT_VE, true);
     //Log("Found VE server\n");
-  } catch (CORBA::Exception &) {
+   } 
+   catch (CORBA::Exception &) 
+   {
     
     Log("Can't find VE server\n");
     return;
