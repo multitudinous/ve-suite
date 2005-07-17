@@ -116,7 +116,7 @@ void UI_StreamlineTab::_buildPage()
    wxStaticText* sLabelLeft = new wxStaticText(this,-1,wxT("Finer"));
    wxStaticText* sLabelRight = new wxStaticText(this,-1,wxT("Coarser"));
 
-   wxStaticText* npLabel         = new wxStaticText(this,-1,wxT("Number of Points"));
+   wxStaticText* npLabel         = new wxStaticText(this,-1,wxT("Number of Points (Per Direction if Plane)"));
    wxStaticText* sizeLabel       = new wxStaticText(this,-1,wxT("Size(%)"));
    wxStaticText* scaleLabel       = new wxStaticText(this,-1,wxT("Sphere/Arrow/Particle Scale"));
 
@@ -438,7 +438,7 @@ void  UI_StreamlineTab::onScaleSlider( wxScrollEvent& WXUNUSED(event) )
 void  UI_StreamlineTab::ConstructCommandId( void )
 {
    ((UI_Tabs *)_parent)->cId  = CHANGE_STREAMLINE_CURSOR;
-   ((UI_Tabs *)_parent)->cMin = _nPtsSlider->GetValue();
+   ((UI_Tabs *)_parent)->cMin = _nPtsSlider->GetValue()-1;           
    ((UI_Tabs *)_parent)->cMax = _sizePerSlider->GetValue();
    ((UI_Tabs *)_parent)->cSc  = sphereScaleSlider->GetValue();
 
