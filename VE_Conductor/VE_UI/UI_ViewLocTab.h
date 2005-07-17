@@ -8,7 +8,6 @@
 #include <vector>
 
 enum VIEWLOC_TAB_IDS{
-   VIEWLOC_RBOX,
    VIEWLOC_LOAD_BUTTON,
    VIEWLOC_ACCEPTNEWVPNAME_BUTTON,
    VIEWLOC_CANCELNEWVPNAME_BUTTON,
@@ -23,7 +22,9 @@ enum VIEWLOC_TAB_IDS{
    VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX,
    VIEWLOC_RUNFLY_BUTTON,
    VIEWLOC_STOPFLY_BUTTON,
-   VIEWLOC_FLYBUILDER_LISTBOX
+   VIEWLOC_FLYBUILDER_LISTBOX,
+   VIEWLOC_DELETEFLYSEL_COMBOBOX,
+   VIEWLOC_SPEED_CONTROL_SLIDER
 };
 
 class UI_ViewLocTabScroll: public wxScrolledWindow{
@@ -49,6 +50,7 @@ public:
    wxComboBox* _addvptoflySel;
    wxComboBox* _insertvpinflySel;
    wxComboBox* _removevpfromflySel;
+   wxComboBox* _deleteflySel;
 
    wxListBox* _flybuilderListBox;
 
@@ -61,12 +63,18 @@ public:
    wxStaticText* blank4; 
    wxStaticText* blank5; 
    wxStaticText* blank6; 
+   wxStaticText* blank7;
    wxStaticText* _removevwptLabel;
    wxStaticText* _movetovwptLabel;
    wxStaticText* _activeflyLabel;
    wxStaticText* _removevpfromflyLabel;
    wxStaticText* _addvptoflyLabel;
    wxStaticText* _insertvpinflyLabel;
+   wxStaticText* _deleteflyLabel;
+   wxStaticText* _speedctrlLabel;
+
+
+   wxSlider* _speedCtrlSlider;
 
    wxStaticBox* _newVPNameCtrlBox;
    wxStaticBox* _newFlyNameCtrlBox;
@@ -83,9 +91,6 @@ protected:
    DECLARE_EVENT_TABLE()
 };
 
-
-
-
 class UI_ViewLocTab : public wxPanel{
 public:
    UI_ViewLocTab(wxNotebook* tControl);
@@ -101,24 +106,18 @@ public:
 
 
 protected:
-   void _buildPage();
-   void _rebuildNameArrays();
+   void _buildPage( void );
+   void _updateWithcfdQuatCamHandler( void );
+
+   void _rebuildNameArrays( void );
    void _setUpActiveFlyThroughNames( int );
+
+   int numView_LocsGlobal;
    
    UI_ViewLocTabScroll* _viewLocScroll;
    wxNotebook* _parent;
 
    //the controls
-   //wxRadioBox* _locationsRBox;
-   
-   //wxButton* _removeButton;
-   //wxButton* _writeButton;
-   //wxButton* _readButton;
-   //wxButton* _moveButton;
-   //wxButton* _applynameButton;
-   //wxTextCtrl* _viewpointName;
-   //event handlers
-   void _onViewLoc(wxCommandEvent& event);
    void _onLoad(wxCommandEvent& event);
    void _onAcceptNewVPName(wxCommandEvent& event);
    void _onCancelNewVPName(wxCommandEvent& event);
@@ -134,13 +133,8 @@ protected:
    void _onStartActiveFly(wxCommandEvent& event);
    void _onStopFly(wxCommandEvent& event);
    void _onFlyBuilderListBox(wxCommandEvent& event);
-
-
-   //void _onWrite(wxCommandEvent& event);
-
-   //void _onRead(wxCommandEvent& event);
-   //void _onDetach(wxCommandEvent& event);
-   //void _onMove(wxCommandEvent& event);
+   void _onDeleteFlySel(wxCommandEvent& event);
+   void _onSpeedChange(wxScrollEvent& event);
 
    DECLARE_EVENT_TABLE()
 };

@@ -251,8 +251,24 @@ VjObs::obj_pd* VjObs_i::getDouble1D( const char* input )
 VjObs::obj_pd* VjObs_i::getDouble1D(  const char* input )
 #endif
 {
-   std::cout << "|\tInput not defined : VjObs_i::getDouble1D " << input << std::endl;
-   return NULL;   
+   vpr::Guard<vpr::Mutex> val_guard(mValueLock);
+   VjObs::obj_pd_var array1dData;
+   if ( strcmp(input,"getCompletionTest") == 0 )
+   {
+      std::vector< int > completionTest;
+      completionTest = cfdEnvironmentHandler::instance()->GetQuatCamHandler()->getCompletionTest();
+      array1dData = new VjObs::obj_pd( completionTest.size() );
+      array1dData->length( completionTest.size() );
+      for ( CORBA::ULong i=0; i<completionTest.size(); i++)
+      {
+         array1dData[i] = completionTest.at(i);
+      }
+   }
+   else
+   {
+      std::cout << "|\tInput not defined : VjObs_i::getDouble1D " << input << std::endl;
+   }
+   return array1dData._retn();
 }
 
 #ifdef _TAO
