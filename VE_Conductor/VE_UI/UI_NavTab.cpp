@@ -218,6 +218,7 @@ UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)
    wxBoxSizer* miscGroup = new wxBoxSizer(wxHORIZONTAL);
    headRotationChk = new wxCheckBox( this, HEAD_ROTATE_CHK,
                                     wxT("Rotate About Users Head"));
+   headRotationChk->SetValue( true );
    miscGroup->Add( headRotationChk,1,wxALL|wxALIGN_LEFT, 5);
 
    resetNavPosition = new wxButton(this, RESET_NAV_POSITION,
@@ -297,6 +298,7 @@ BEGIN_EVENT_TABLE(UI_NavigationTab, wxPanel)
    EVT_COMMAND_SCROLL( TRANS_STEP_SLIDER, UI_NavigationTab::OnTransStepSlider)
    EVT_COMMAND_SCROLL( ROT_STEP_SLIDER, UI_NavigationTab::OnRotStepSlider)
    EVT_BUTTON        ( RESET_NAV_POSITION, UI_NavigationTab::OnResetNavPosition)
+   EVT_CHECKBOX      ( HEAD_ROTATE_CHK,      UI_NavigationTab::OnHeadCheck )
   //EVT_LEFT_UP(UI_NavigationTab::onMouse)
 END_EVENT_TABLE()
 
@@ -329,6 +331,9 @@ UI_NavigationTab::UI_NavigationTab(wxNotebook* tControl)
    ((UI_Tabs *)_parent)->cIso_value = navScroll->rotationStepSize->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 
+   ((UI_Tabs *)_parent)->cId  = ROTATE_ABOUT_HEAD;
+   ((UI_Tabs *)_parent)->cIso_value = navScroll->headRotationChk->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
 ///////////////////////////////////////////////////
 void UI_NavigationTab::onMouse(wxMouseEvent& mouse)
@@ -433,5 +438,12 @@ void UI_NavigationTab::OnResetNavPosition( wxCommandEvent& WXUNUSED(event) )
 {
    ((UI_Tabs *)_parent)->cId  = RESET_NAVIGATION_POSITION;
    ((UI_Tabs *)_parent)->cIso_value = navScroll->translationStepSize->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+}
+
+void UI_NavigationTab::OnHeadCheck( wxCommandEvent& WXUNUSED(event) )
+{
+   ((UI_Tabs *)_parent)->cId  = ROTATE_ABOUT_HEAD;
+   ((UI_Tabs *)_parent)->cIso_value = navScroll->headRotationChk->GetValue();
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
 }

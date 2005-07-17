@@ -228,6 +228,10 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 	   }
 	   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationArray( worldRot );
    }
+   else if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ROTATE_ABOUT_HEAD )         
+   {
+      this->nav->SetHeadRotationFlag( _commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+   }
 
    this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 
                         (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );

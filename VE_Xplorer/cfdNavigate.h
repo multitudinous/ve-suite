@@ -122,6 +122,7 @@ public:
    double* GetWorldTranslation();
    float* GetWorldRotation();
 
+   void SetHeadRotationFlag( int );
 private:
    /*!
    Update wand location.
@@ -202,6 +203,8 @@ private:
 
    float translationStepSize;
    float rotationStepSize;
+
+   int rotationFlag;
 };
 }
 #endif

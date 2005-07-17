@@ -118,6 +118,7 @@ class UI_NavigationTab : public wxPanel {
    void OnTransStepSlider( wxScrollEvent& event);
    void OnRotStepSlider( wxScrollEvent& event);
    void OnResetNavPosition( wxCommandEvent& event );
+   void OnHeadCheck( wxCommandEvent& );
 
    UI_NavigateScroll* navScroll;
 
