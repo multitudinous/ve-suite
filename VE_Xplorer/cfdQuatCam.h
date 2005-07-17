@@ -60,31 +60,30 @@ namespace VE_Xplorer
    {
       public:
          //Constructors
-         cfdQuatCam(gmtl::Matrix44f&, double*, float*);
-         cfdQuatCam(float, float, float, float, float*);
+         cfdQuatCam( gmtl::Matrix44f&, double* );
    
          //Destructor
          ~cfdQuatCam(){;}
 
-         void SetCamPos(double*, VE_SceneGraph::cfdDCS*);
+         void SetCamPos( double*, VE_SceneGraph::cfdDCS* );
 
-         void MoveCam(double*, float, VE_SceneGraph::cfdDCS*);
+         void MoveCam( float );
 
-         void RotSlerp(float);
+         void RotSlerp( float );
 
-         void TransLerp(float);
+         void TransLerp( float );
 
-         void UpdateTrans(cfdNavigate*);
+         void UpdateTrans( cfdNavigate* );
 
-         void UpdateRotation(cfdNavigate*, VE_SceneGraph::cfdDCS* );
+         void UpdateRotation( VE_SceneGraph::cfdDCS* );
 
-         gmtl::Matrix44f GetMatrix( void ){return nextMatrix;}
+         gmtl::Matrix44f GetMatrix( void );
 
-         gmtl::Vec3f GetTrans( void ){return vjVecNextTrans;}
+         gmtl::Vec3f GetTrans( void );
+
+         gmtl::Vec3f GetLastTrans( void );
 
          gmtl::Vec3f  vjVecCurrTrans;
-
-         //gmtl::Matrix44f m2;
 
          float rotPoints[4];
 

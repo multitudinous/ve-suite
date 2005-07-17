@@ -50,24 +50,13 @@ using namespace gmtl;
 using namespace VE_SceneGraph;
 using namespace VE_Xplorer;
 
-cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans, float* rotPts)
+cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans)
 {
    nextMatrix = m;
    set(NextPosQuat,m);
    for (int i=0; i<3; i++)
       vjVecNextTrans[i] = worldTrans[i];
-   for (int j=0; j<4; j++)
-      rotPoints[j] = rotPts[j];
 }
-
-//Currently not used, needs to be fixed using gmtl functionality
-/*cfdQuatCam::cfdQuatCam(float angle, float x, float y, float z, float* worldTrans)
-{
-   NextPosQuat.makeRot(angle, x, y, z);
-   for (int i=0; i<3; i++)
-      vjVecNextTrans[i] = worldTrans[i];
-}*/
-
 
 void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::cfdDCS* worldDCS)
 {
@@ -80,7 +69,7 @@ void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::cfdDCS* worldDCS)
 }
 
 
-void cfdQuatCam::MoveCam(double* worldTrans, float t, VE_SceneGraph::cfdDCS* dummy)
+void cfdQuatCam::MoveCam( float t )
 {
    TransLerp(t);
    RotSlerp(t);
@@ -105,9 +94,25 @@ void cfdQuatCam::UpdateTrans(cfdNavigate* nav)
    nav->worldTrans[2] = (double)vjVecCurrTrans[2];
 }
 
-void cfdQuatCam::UpdateRotation( cfdNavigate* nav, VE_SceneGraph::cfdDCS* worldDCS)
+void cfdQuatCam::UpdateRotation( VE_SceneGraph::cfdDCS* worldDCS)
 {
    Matrix44f temp;
    temp = makeRot<gmtl::Matrix44f>( CurPosQuat );
    worldDCS->SetRotationMatrix( temp );
-}   
+}  
+
+gmtl::Matrix44f cfdQuatCam::GetMatrix( void )
+{
+   return nextMatrix;
+} 
+
+gmtl::Vec3f cfdQuatCam::GetTrans( void )
+{
+   return vjVecNextTrans;
+}
+
+gmtl::Vec3f cfdQuatCam::GetLastTrans( void )
+{
+   return vjVecLastTrans;
+}
+

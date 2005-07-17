@@ -42,6 +42,8 @@
 #include <gmtl/Coord.h>
 #include <gmtl/Generate.h>
 
+#include <vpr/Util/Timer.h>
+
 namespace VE_SceneGraph
 {
    class cfdDCS;
@@ -58,25 +60,6 @@ namespace VE_Xplorer
 #include <vector>
 
 #include "VE_Xplorer/cfdGlobalBase.h"
-
-namespace VE_Xplorer
-{
-   class cfdPoints
-   {
-      public:
-         //Constructor
-         cfdPoints(double*, gmtl::Matrix44f&);
-
-         //Destructor
-         ~cfdPoints();
-         gmtl::Matrix44f& matrix(){return m;}
-         gmtl::Vec3f& ptrans(){return trans;}
-      private:
-         gmtl::Matrix44f      m;
-         gmtl::Vec3f    trans; 
-
-   };
-}
 
 namespace VE_Xplorer
 {
@@ -107,20 +90,35 @@ namespace VE_Xplorer
 
          void RemoveViewPt( void );
 
+         void RemoveFlythroughPt( unsigned int, unsigned int );
+
+         void AddViewPtToFlyThrough( unsigned int, unsigned int );
+
+         void InsertViewPtInFlyThrough( unsigned int, unsigned int, unsigned int );
+
+         void DeleteEntireFlythrough( unsigned int );
+
+         void AddNewFlythrough( void );
+
+         void TurnOffMovement( void );
+
+         double getLinearDistance( gmtl::Vec3f, gmtl::Vec3f );
+
          int getNumLocs();
 
          std::vector< std::vector <int> > getFlyThroughs();
 
+         std::vector < int > getCompletionTest();
+
          // If a quat is active this will move the cam to the next location
          void PreFrameUpdate();
    
-         int numQuatCams;
-         int numFlyThroughs;
-         int* numPointsInFlyThrough;
+         unsigned int numQuatCams;
+         unsigned int numFlyThroughs;
+         unsigned int* numPointsInFlyThrough;
 
       private:
          cfdQuatCam* thisQuatCam;
-         cfdPoints*  nextPoint;
          VE_SceneGraph::cfdDCS* _worldDCS;
          cfdNavigate* _nav;
          cfdReadParam* _readParam;
@@ -128,17 +126,23 @@ namespace VE_Xplorer
          float t;
          char* quatCamFileName;
          std::string quatCamDirName;
-         std::vector<cfdPoints*> cfdPointsVec;
          std::vector<cfdQuatCam*> QuatCams;
          int run;
          int cam_id;
          float rotvec[3];
          float angle;
          bool activecam;
+         bool _runFlyThrough;
          int activeFlyThrough;
-         //std::vector<int> activeFlyThroughArray[ 4 ];
+         unsigned int pointCounter;
+         bool writeReadComplete;
+         float movementIntervalCalc;
+         double movementSpeed;
+         
+         vpr::Timer* frameTimer;
          
          std::vector< std::vector <int> > flyThroughList;
+         std::vector < int > completionTest;
    };
 }
 #endif
