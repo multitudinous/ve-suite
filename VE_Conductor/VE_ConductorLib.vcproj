@@ -146,6 +146,15 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
+				RelativePath=".\Framework\Geometry.cpp">
+			</File>
+			<File
+				RelativePath=".\Framework\GeometryDataBuffer.cpp">
+			</File>
+			<File
+				RelativePath=".\Framework\GeometryDataManager.cpp">
+			</File>
+			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\interface.cpp">
 			</File>
 			<File
@@ -170,6 +179,15 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
+			<File
+				RelativePath=".\Framework\Geometry.h">
+			</File>
+			<File
+				RelativePath=".\Framework\GeometryDataBuffer.h">
+			</File>
+			<File
+				RelativePath=".\Framework\GeometryDataManager.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

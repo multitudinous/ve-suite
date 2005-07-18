@@ -4,8 +4,8 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include "wx/wx.h"
-#include "wx/dialog.h"
+#include <wx/wx.h>
+#include <wx/dialog.h>
 #include "VE_Conductor/Framework/GeometryDataManager.h"
 
 enum GEOMETRY_CONFIG_IDS

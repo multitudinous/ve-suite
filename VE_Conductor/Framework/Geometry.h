@@ -4,9 +4,9 @@
 #include "VE_Conductor/Framework/interface.h"
 #include <map>
 #include <vector>
-#include "GeometryDataManager.h"
+#include "VE_Conductor/Framework/GeometryDataManager.h"
 
-class Geometry 
+class VE_CONDUCTOR_EXPORTS Geometry 
 {
    public:
       Geometry(std::string);

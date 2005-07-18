@@ -1,4 +1,5 @@
-#include "GeometryDataManager.h"
+#include "VE_Conductor/Framework/GeometryDataManager.h"
+
 GeometryDataManager* GeometryDataManager::myinstance =0;
 
 GeometryDataManager& GeometryDataManager::getInstance()

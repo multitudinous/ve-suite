@@ -1,10 +1,11 @@
 #ifndef GEOMETRY_DATABUFFER_H
 #define GEOMETRY_DATABUFFER_H
+#include "VE_Installer/include/VEConfig.h"
 
 #include <fstream>
 #include <vector>
 #include <map>
-class GeometryInfoPackage
+class VE_CONDUCTOR_EXPORTS GeometryInfoPackage
 {
    public:
       GeometryInfoPackage();
@@ -63,7 +64,7 @@ class GeometryInfoPackage
 
 
 //this class is used to contain the current geom info from gui 
-class GeometryDataBuffer
+class VE_CONDUCTOR_EXPORTS GeometryDataBuffer
 {
    public:
       GeometryDataBuffer();

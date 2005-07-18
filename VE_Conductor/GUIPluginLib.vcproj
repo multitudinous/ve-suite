@@ -149,7 +149,7 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\FinancialDialog.cpp">
 			</File>
 			<File
-				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\Geometry.cpp">
+				RelativePath=".\Framework\GeometryDialog.cpp">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\ListTable.cpp">
@@ -179,6 +179,9 @@
 		<Filter
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
+			<File
+				RelativePath=".\Framework\GeometryDialog.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"

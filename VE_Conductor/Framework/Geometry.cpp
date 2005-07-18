@@ -74,7 +74,7 @@ void Geometry::SetCurModuleGeomInfoPackage()
 
    std::vector<GeometryInfoPackage> locallist = localmap.find(cur_modulename)->second;
    
-   for(int i=0; i<locallist.size(); i++)
+   for(unsigned int i=0; i<locallist.size(); i++)
    {
       _geominfopackagemap.insert(std::make_pair(locallist[i].GetGeomName(), locallist[i]));
 

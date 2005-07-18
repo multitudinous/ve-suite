@@ -3,7 +3,7 @@
 
 #include "VE_Conductor/Framework/GeometryDataBuffer.h"
 
-class GeometryDataManager
+class VE_CONDUCTOR_EXPORTS GeometryDataManager
 {
   public:
       static GeometryDataManager& getInstance();
