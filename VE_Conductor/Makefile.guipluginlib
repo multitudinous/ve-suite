@@ -106,6 +106,13 @@ EXTRA_OPTIM_FLAGS+= -O2 -OPT:Olimit=0 -D_OPT
 
 EXTRA_LIBS+= -shared
 
+ifeq (${CFDHOSTTYPE},IRIX64)
+   # For ANSI std headers
+else
+   EXTRA_LDFLAGS+= -fPIC
+   EXTRA_CXXFLAGS+= -fPIC
+endif
+
 LINKALL_ON= -all
 LINKALL_OFF=
 
