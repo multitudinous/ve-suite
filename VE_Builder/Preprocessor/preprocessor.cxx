@@ -82,7 +82,7 @@ int main( int argc, char *argv[] )
       {
          postFname = new char [ strlen(argv[ arg ])+1 ];
          strcpy( postFname, argv[ arg ] );
-         arg++;
+         ++arg;
          
          if ( ! fileIO::isFileReadable( postFname ) )
          {
@@ -110,14 +110,18 @@ int main( int argc, char *argv[] )
             std::cerr << "\nERROR: Can't write to \"" << postDataDir
                       << "\" directory" << std::endl;
             delete [] postDataDir;
-            postDataDir = fileIO::getWritableDir();
+            const char* tmp = fileIO::getWritableDir();
+            postDataDir = new char [strlen(tmp)+1];
+            strcpy( postDataDir, tmp );
          }
       }
       else
       {
          std::cout << "\nA directory is needed to hold precomputed data"
                    << std::endl;
-         postDataDir = fileIO::getWritableDir();
+         const char* tmp = fileIO::getWritableDir();
+         postDataDir = new char [strlen(tmp)+1];
+         strcpy( postDataDir, tmp );
       }
 
       if ( argc > arg )
