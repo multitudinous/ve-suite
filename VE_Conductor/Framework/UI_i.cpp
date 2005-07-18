@@ -6,7 +6,8 @@
   
 // Implementation skeleton constructor
 Body_UI_i::Body_UI_i (Body::Executive_ptr exec, std::string name)
-  : executive_(Body::Executive::_duplicate(exec))
+  : UIName_(name), executive_(Body::Executive::_duplicate(exec)), 
+    frame_(0), ui_network_(0)
   {
     UIName_=name;
   }

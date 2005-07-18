@@ -19,7 +19,7 @@ END_EVENT_TABLE()
 //IMPLEMENT_DYNAMIC_CLASS(Avail_Modules, wxTreeCtrl)
 
 Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style)
-  : wxTreeCtrl(parent, id, pos, size, style)
+  : wxTreeCtrl(parent, id, pos, size, style), network(0)
 {
   
   int image1 = TreeCtrlIcon_Folder;
@@ -32,6 +32,11 @@ Avail_Modules::Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoin
   SetItemFont(rootId, *wxITALIC_FONT);
   pl_loader = new PluginLoader();
   LoadModules();
+}
+
+Avail_Modules::~Avail_Modules()
+{
+   delete pl_loader;
 }
 
 void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
