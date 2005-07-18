@@ -18,7 +18,7 @@ REI_Plugin::REI_Plugin()
    dlg         = 0; 
    result_dlg  = 0;
    port_dlg    = 0;
-   geomDlg     = 0;
+   geom_dlg     = 0;
    // EPRI TAG
    financial_dlg = 0;
 
@@ -63,10 +63,10 @@ REI_Plugin::~REI_Plugin()
       port_dlg = 0;
    }
 
-   if ( geomDlg )
+   if ( geom_dlg!=NULL )
    {
-      delete geomDlg;
-      geomDlg = 0;
+      delete geom_dlg;
+      geom_dlg = 0;
    }
 
    // EPRI TAG
@@ -81,6 +81,7 @@ REI_Plugin::~REI_Plugin()
 void REI_Plugin::SetID(int id)
 {
   mod_pack._id = id;
+  GeometryDataManager::getInstance().GetGeometryDataBuffer()->SetCurrentModuleID(id);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -625,18 +626,41 @@ void REI_Plugin::FinancialData ()
 }
 
 // Gui to input geometry data
-void REI_Plugin::GeometryDialog( void )
+void REI_Plugin::GeometryData()
 {
-   if ( !geomDlg )
-   {
-      geomDlg = new Geometry( NULL, wxNewId() );
-   }
+   
+   GeometryDataManager::getInstance().GetGeometryDataBuffer()->SetCurrentModuleName(this->GetName().c_str());
 
-   geomDlg->Show();
+   geom_dlg = new GeometryDialog(NULL);
+
+   geom_dlg->Show();
 }
 
 // return pointer to geometry dialog
-Geometry* REI_Plugin::GetGeometryDialog( void )
+GeometryDialog* REI_Plugin::GetGeometryDialog( void )
 {
-   return geomDlg;
+   return geom_dlg;
 }
+
+bool REI_Plugin::HasGeomInfoPackage()
+{
+   std::string _modulename;
+   _modulename = this->GetName().c_str();
+
+   std::map<std::string, std::vector <GeometryInfoPackage> > localmap;
+
+   localmap = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetWholeGeomInfoMap();
+
+   std::map<std::string, std::vector <GeometryInfoPackage> >::iterator itr =localmap.find(_modulename);
+   if(itr!=localmap.end())
+   {
+      return true;
+   }
+   else
+   {
+      return false;
+   }
+   
+}
+
+

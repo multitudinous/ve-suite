@@ -39,6 +39,7 @@ void Interface::copy (const Interface& p)
   _Int1D    = p._Int1D;
   _Double1D = p._Double1D;
   _String1D = p._String1D;
+  _GeomInfoPackage = p._GeomInfoPackage;
 }
 
 void Interface::clear ()
@@ -49,6 +50,7 @@ void Interface::clear ()
   _Int1D.clear();
   _Double1D.clear();
   _String1D.clear();
+  _GeomInfoPackage.clear();
 }
 
 long Interface::getInt (std::string var, bool *f)
@@ -102,6 +104,16 @@ std::vector<std::string> Interface::getString1D (std::string var, bool *f)
   return ret;
 }
 
+GeometryInfoPackage Interface::getGeomInfoPackage (std::string var, bool *f)
+{
+  if(f) *f = true;
+  if(_GeomInfoPackage.find(var)!=_GeomInfoPackage.end()) return _GeomInfoPackage[var];
+  if(f) *f = false;
+  
+  GeometryInfoPackage ret;
+  return ret;
+}
+
 std::vector<std::string> Interface::getInts ()
 {
   std::vector<std::string> ret;
@@ -151,6 +163,14 @@ std::vector<std::string> Interface::getStrings1D ()
   return ret;
 }
 
+std::vector<std::string> Interface::getGeomInfoPackages()
+{
+   std::vector<std::string> ret;
+   for(std::map<std::string, GeometryInfoPackage >::iterator iter = this->_GeomInfoPackage.begin(); iter!=this->_GeomInfoPackage.end(); iter++)
+      ret.push_back(iter->first);
+
+   return ret;
+}
 /*
 bool Interface::pack (std::string &packed)
 {

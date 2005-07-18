@@ -447,6 +447,8 @@ void cfdExecutive::GetEverything( void )
          if ( (foundPlugin == _plugins.end()) || _plugins.empty() )
          {
             // Need to set geom interfaces here
+            // do I have geometry info then
+            // do this....
             Interface tempInterface = _geom_map[ iter->first ];
             _plugins[ iter->first ]->SetGeometryInterface( tempInterface );
          }

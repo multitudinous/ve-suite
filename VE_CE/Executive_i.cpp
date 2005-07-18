@@ -475,12 +475,12 @@ void Body_Executive_i::SetNetwork (
 
    if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
    {
-      _network_intf = *iter;
+      _network_intf = *iter; //_network_intf is the first block of the network xml.
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
       {
          //if ( iter->_type == 1 ) // this block is for inputs not geom
          {
-            if(iter->_category==1 &&_network->setInput(iter->_id, &(*iter))) 
+            if(iter->_category==1 && iter->_type == 1 &&_network->setInput(iter->_id, &(*iter))) 
             {
 	            _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
 	            _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
@@ -488,8 +488,14 @@ void Body_Executive_i::SetNetwork (
 	            _network->module(_network->moduleIdx(iter->_id))->_type = iter->_type;
 	            _network->module(_network->moduleIdx(iter->_id))->_category = iter->_category;
             }
+            else if(iter->_category==1 && iter->_type == 2 &&_network->setGeomInput(iter->_id, &(*iter)))
+            {
+               std::cout<<"The current moduel has geom info "<<std::endl;
+            }
             else
-	            cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
+            {
+               std::cerr << "Unable to set id# " << iter->_id << "'s inputs\n";
+            }
          }
       }
 
@@ -530,9 +536,15 @@ char * Body_Executive_i::GetNetwork (
   Package p;
   p.SetSysId("temp.xml");
   p.intfs.push_back(_network_intf);
-  
-  for(i=0; i<_network->nmodules(); i++) {
-    p.intfs.push_back(_network->module(i)->_inputs);
+ 
+  for(i=0; i<_network->nmodules(); i++)
+  {
+     p.intfs.push_back(_network->module(i)->_inputs);
+
+     if(_network->module(i)->hasGeomInfo())
+     {
+         p.intfs.push_back(_network->module(i)->_geominputs);
+     }
   }
   
   str = p.Save(rv);
@@ -658,6 +670,10 @@ void Body_Executive_i::StartCalc (
       p2.SetSysId("temp.xml");
       //p2.intfs.push_back(_network->module(_network->moduleIdx(module_id))->_inputs);
       p2.intfs.push_back(_network->module(rt)->_inputs);
+      if(_network->module(rt)->hasGeomInfo())
+      {
+         p2.intfs.push_back(_network->module(rt)->_geominputs);
+      }
       str2 = p2.Save(rv2);
     
       if(rv2) 

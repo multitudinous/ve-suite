@@ -122,6 +122,7 @@ int Network::nmodules ()
   return _module_ptrs.size();
 }
 
+
 int Network::module (Module* mod)
 {
   int i, fi = -1;
@@ -175,6 +176,22 @@ int Network::setInput (int m, Interface* intf)
   return 1;
 }
 
+int Network::getGeomInput(int m, Interface& intf)
+{
+   int fi = moduleIdx(m);
+   if(fi<0) return 0;
+   intf.copy(_module_ptrs[fi]->_geominputs);
+   return 1;
+}
+
+int Network::setGeomInput(int m, Interface* intf)
+{
+   int fi = moduleIdx(m);
+   if(fi<0) return 0;
+   _module_ptrs[fi]->_geominputs.copy(*intf);
+   return 1;
+
+}
 
 int Network::getOutput (int m, Interface &intf)
 {
@@ -258,6 +275,7 @@ Module::~Module ()
 {
   unsigned int i;
   for(i=0; i<_iports.size(); i++) delete _iports[i];
+
 }
 
 void Module::copy (const Module &m)
@@ -397,6 +415,11 @@ int Module::setPortProfile (int p, const Types::Profile* prof)
   return 1;
 }
 
+bool Module::hasGeomInfo()
+{
+   return (_geominputs._type==2 && _geominputs._category==1);
+      
+}
 ////////////////////////////////////////////////////////////////////////////////
 
 Connection::Connection (int id)

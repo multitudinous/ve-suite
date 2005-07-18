@@ -2320,7 +2320,7 @@ void Network::Pack(std::vector<Interface> & UIs)
  
   // second, save the the 3 lists of the modules, links and tags
   ntpk.setVal("Module_size", long(modules.size()));
-
+  
   for (iter=modules.begin(); iter!=modules.end(); iter++)
     {
       i=iter->first;
@@ -2404,8 +2404,16 @@ void Network::Pack(std::vector<Interface> & UIs)
       //if module has geometry data
       // then grab geometry interface
       // call spcific modules geom pack
-      if ( modules[i].pl_mod->GetGeometryDialog() )
-         UIs.push_back( *(modules[i].pl_mod->GetGeometryDialog()->Pack()) );
+      if ( modules[i].pl_mod->HasGeomInfoPackage() )
+      {
+         //modules[i].pl_mod->GetGeometryInfoPackage()->SetID(i);
+         //UIs.push_back( *(modules[i].pl_mod->GetGeometryInfoPackage()->Pack()) );
+         Geometry* geometry = new Geometry(modules[i].pl_mod->GetName().c_str());
+
+         UIs.push_back( *(geometry->Pack()));
+
+         delete geometry;
+      }
    }
 
    UIs.push_back( *(globalparam_dlg->Pack()) );
@@ -2600,23 +2608,50 @@ void Network::UnPack(std::vector<Interface> & intfs)
 	   }
    }
 
+   int index;
    // unpack the modules' UIs
-   for ( i=0; i<(unsigned int)modsize; ++i )
+   for(i =0; i<intfssize-2; ++i)
    {
+      
+      _id = intfs[i+1]._id;
+      if(intfs[i+1]._type == 1)
+      {
+         modules[_id].pl_mod->SetID(_id);
+         modules[_id].pl_mod->UnPack(&intfs[i+1]);
+      }
+      else if(intfs[i+1]._type ==2)
+      {
+         //modules[_id].pl_mod->GetGeometryInfo()->UnPack(&intfs[i+1]);
+         Geometry* geometry = new Geometry(modules[_id].pl_mod->GetName().c_str());
+
+         geometry->UnPack(&intfs[i+1]);
+
+         delete geometry;
+      }
+
+   }
+
+
+
+  /* for ( i=0; i<(unsigned int)modsize; ++i )
+   {
+     
       _id = intfs[i+1]._id;
       if ( intfs[i+1]._type == 1 ) // data i/o
       {
          modules[_id].pl_mod->SetID( _id );
          modules[_id].pl_mod->UnPack( &intfs[i+1] );
       }
-      else if ( intfs[i+1]._type == 2 ) // geometry
+      else if ( intfs[i+2]._type == 2 ) // geometry
       {
          // then grab geometry interface
          // call spcific modules geom unpack
+         //
          modules[_id].pl_mod->GetGeometryDialog()->UnPack( &intfs[i+1] );
       }
-   }
-    
+   }*/
+   
+     
    //unpack the Global Param Dialog
    //globalparam_dlg->UnPack(&intfs[intfs.size()-1]);
 
@@ -2720,8 +2755,11 @@ void Network::Load(wxString filename)
   Package p;
   p.SetSysId(filename.c_str());
   p.Load();
+
+  intfssize= p.GetIntfsNum();
+
   UnPack(p.intfs);
- 
+
 }
 
 //////////////////////////////////////////////////////
@@ -2732,8 +2770,10 @@ void Network::LoadS(const char* inputs)
   if (std::string(inputs)!="")
   {
 	p.Load(inputs, strlen(inputs));
+   intfssize = p.GetIntfsNum();
 	UnPack(p.intfs);
   }
+  std::cout<<"[DBG]...after Load(char*)"<<std::endl;
 }
 
 //////////////////////////////////////////////////////
@@ -2852,5 +2892,8 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 {
    if (m_selMod<0) 
       return;
-   modules[m_selMod].pl_mod->GeometryDialog();
+   //modules[m_selMod].pl_mod->GeometryDialog();
+   std::string m_selmod_name = modules[m_selMod].pl_mod->GetName().c_str();
+   modules[m_selMod].pl_mod->GeometryData();
+   //modules[m_selMod].pl_mod->GeometryInfoPackage();
 }

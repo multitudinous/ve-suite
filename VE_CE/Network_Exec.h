@@ -135,6 +135,8 @@ public:
   int getPortProfile (int, Types::Profile_out&);
   int setPortProfile (int, const Types::Profile*);
 
+  bool hasGeomInfo();
+
   int get_id ();
 
   std::string _name;
@@ -147,6 +149,7 @@ public:
   int _category;
 
   Interface _inputs;
+  Interface _geominputs;
   Interface _outputs;
   Interface _messages;
 
@@ -159,6 +162,8 @@ private:
 
   int _id;
 };
+
+
 
 ////////////////////////////////////////////////////////////////////////////////
 
@@ -183,6 +188,9 @@ public:
 
   int getInput (int, Interface&);
   int setInput (int, Interface*);
+
+  int getGeomInput(int, Interface&);
+  int setGeomInput(int, Interface*);
 
   int getOutput (int, Interface&);
   int setOutput (int, Interface*);

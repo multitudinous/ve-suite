@@ -10,8 +10,10 @@
 #include "VE_Conductor/Framework/TextResultDialog.h"
 // EPRI TAG
 #include "VE_Conductor/Framework/FinancialDialog.h"
+#include "VE_Conductor/Framework/GeometryDataManager.h"
+#include "VE_Conductor/Framework/GeometryDialog.h"
 
-class Geometry;
+
 
 #define ICON 20000
 
@@ -76,9 +78,13 @@ class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
       // This launches the geometry gui for respective module
       // this is not virtual because it should always be the
       // same for each module
-      void GeometryDialog( void );
-      Geometry* GetGeometryDialog( void );
+      /*void GeometryDialog( void );
+      Geometry* GetGeometryDialog( void );*/
 
+
+      void GeometryData();
+      GeometryDialog* GetGeometryDialog();
+      
       virtual void UnPack(Interface* intf);
       //This is the load function of the module, unpack the input string and fill up the UI according to this
       virtual Interface* Pack();
@@ -98,9 +104,15 @@ class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
       virtual void Lock(bool lock);
       virtual void SetID(int id);
       virtual bool Has3Ddata();
+      
+
+      bool HasGeomInfoPackage();
+      //void GeometryInfoPackage();
+      //Geometry* GetGeometryInfoPackage();
 
       // EPRI TAG
       FinancialDialog* financial_dlg;
+            
 
    protected:
 
@@ -114,7 +126,8 @@ class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
       UIDialog* dlg;
       TextResultDialog* result_dlg;
       TextResultDialog* port_dlg;
-      Geometry* geomDlg;
+      GeometryDialog* geom_dlg;
+      //Geometry  _geometrypermodule;
 
       Interface mod_pack;
       wxPoint pos; //The Position to draw Icon;

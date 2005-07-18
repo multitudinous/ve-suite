@@ -12,6 +12,7 @@
 #include <map>
 
 #include "VE_Installer/include/VEConfig.h"
+#include "VE_Conductor/Framework/GeometryDataManager.h"
 
 class VE_CONDUCTOR_EXPORTS Interface //: public packable
 {
@@ -35,7 +36,8 @@ public:
   std::vector<long>        getInt1D    (std::string var, bool *f=NULL);
   std::vector<double>      getDouble1D (std::string var, bool *f=NULL);
   std::vector<std::string> getString1D (std::string var, bool *f=NULL);
- 
+  GeometryInfoPackage      getGeomInfoPackage (std::string var, bool *f=NULL);
+  
   bool getVal (std::string var, long &val)
     { bool b; val = getInt(var, &b); return b; }
   bool getVal (std::string var, double &val)
@@ -49,26 +51,45 @@ public:
   bool getVal (std::string var, std::vector<std::string> &val)
     { bool b; val = getString1D(var, &b); return b; }
 
+  bool getVal (std::string var, GeometryInfoPackage &val)
+    {bool b; val = getGeomInfoPackage (var, &b); return b;}
+  
   void setInt      (std::string var, long val)                     { _Int[var] = val; }
   void setDouble   (std::string var, double val)                   { _Double[var] = val; }
   void setString   (std::string var, std::string val)              { _String[var] = val; }
   void setInt1D    (std::string var, std::vector<long> val)        { _Int1D[var] = val; }
   void setDouble1D (std::string var, std::vector<double> val)      { _Double1D[var] = val; }
   void setString1D (std::string var, std::vector<std::string> val) { _String1D[var] = val; }
-
+  void setGeomInfoPackage (std::string var, GeometryInfoPackage val) 
+  {
+    
+	  _GeomInfoPackage.insert(std::make_pair(var, val)); 
+     /*for (int i=0; i<val.size();i++)
+     {
+        
+        _GeomInfoPackage1D[i]->setModelType(val[i]->getModelType());
+        _GeomInfoPackage1D[i]->setGeomFileName(val[i]->getGeomFileName());
+        _GeomInfoPackage1D[i]->setTransparencyToggle(val[i]->getTransparencyToggle());
+        _GeomInfoPackage1D[i]->setColorFlag(val[i]->getColorFlag());
+                    
+     }*/
+  }
+  
   void setVal (std::string var, long val)                     { setInt(var, val); }
   void setVal (std::string var, double val)                   { setDouble(var, val); }
   void setVal (std::string var, std::string val)              { setString(var, val); }
   void setVal (std::string var, std::vector<long> val)        { setInt1D(var, val); }
   void setVal (std::string var, std::vector<double> val)      { setDouble1D(var, val); }
   void setVal (std::string var, std::vector<std::string> val) { setString1D(var, val); }
-
+  void setVal (std::string var, GeometryInfoPackage val)             {setGeomInfoPackage (var, val);}
+  
   std::vector<std::string> getInts      ();
   std::vector<std::string> getDoubles   ();
   std::vector<std::string> getStrings   ();
   std::vector<std::string> getInts1D    ();
   std::vector<std::string> getDoubles1D ();
   std::vector<std::string> getStrings1D ();
+  std::vector<std::string> getGeomInfoPackages ();
 
   int _type;
   int _category;
@@ -87,6 +108,7 @@ protected:
   std::map<std::string, std::vector<long> >        _Int1D;
   std::map<std::string, std::vector<double> >      _Double1D;
   std::map<std::string, std::vector<std::string> > _String1D;
+  std::map<std::string, GeometryInfoPackage>       _GeomInfoPackage;
 
 };
 

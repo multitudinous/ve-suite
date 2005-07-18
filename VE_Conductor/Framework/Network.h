@@ -10,8 +10,8 @@
 #include "PluginLoader.h"
 #include "moduleC.h"
 #include "GlobalParamDialog.h"
+#include "Geometry.h"
 
-class Geometry;
 
 //using namespace std;
 
@@ -180,6 +180,8 @@ class Network : public wxScrolledWindow
   void UnPack(std::vector<Interface> & UIs);
  private:
   bool moving;
+  int intfssize;
+
   std::vector<wxRect> sbboxes; //start up bounding box; used by GetFreePos to calc start module location
   int xold, yold; //The old location of the mouse position, used by the TryLink to wipe the old tried link route
   wxPoint action_point; //The mouse position when the right button clicked, used by menu event handlers

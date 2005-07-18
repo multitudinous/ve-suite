@@ -11,6 +11,7 @@
 #include <xercesc/framework/MemBufInputSource.hpp>
 #include <xercesc/framework/LocalFileFormatTarget.hpp>
 #include <iostream>
+#include <string>
 
 XERCES_CPP_NAMESPACE_USE
 class VE_CONDUCTOR_EXPORTS Package
@@ -21,6 +22,9 @@ class VE_CONDUCTOR_EXPORTS Package
   ~Package();
   void SetPackName(const char* name) { packname = std::string(name); };
   const char* GetPackName() { return packname.c_str(); };
+
+  void SetIntfsNum(int );
+  int GetIntfsNum();
 
   void SetSysId(const char * fname) { system_id = std::string(fname); };
   const char* GetSysId() { return system_id.c_str(); };
@@ -36,6 +40,7 @@ class VE_CONDUCTOR_EXPORTS Package
   std::vector<Interface> intfs; //The vector of the interfaces packed in this package.
  protected:
 
+  int intfsnum;
   std::string packname; //The package name, goes to the name attrib of the element package
   std::string system_id; //The file name of the xml file or a fake filename used for parsing the memory buffer input source
 
