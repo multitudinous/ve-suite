@@ -662,7 +662,8 @@ void UI_ViewLocTab::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
    {
       for(int i=0;i<numStoredLocations;i++)
 	   {
-		   if( _viewLocScroll->_removevwptSel->GetStringSelection() == _locationName[i])
+		   //if( _viewLocScroll->_removevwptSel->GetStringSelection() == _locationName[i])
+         if( _viewLocScroll->_removevwptSel->GetValue() == _locationName[i])
          {
             ((UI_Tabs *)_parent)->cIso_value = i;
             ((UI_Tabs *)_parent)->cId = REMOVE_SELECTED_VIEWPT;
@@ -679,7 +680,7 @@ void UI_ViewLocTab::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
    {
       for(int i=0;i<numStoredLocations;i++)
 	   {
-		   if( _viewLocScroll->_movetovwptSel->GetStringSelection() == _locationName[i])
+		   if( _viewLocScroll->_movetovwptSel->GetValue() == _locationName[i])
          {
             ((UI_Tabs *)_parent)->cIso_value = i;
             ((UI_Tabs *)_parent)->cId = MOVE_TO_SELECTED_LOCATION;
@@ -716,7 +717,7 @@ void UI_ViewLocTab::_onActiveFlySel(wxCommandEvent& WXUNUSED(event))
       int tempindex;
       for( int i=0; i<flyThroughList.size(); i++ )
 	   {
-		   if( _viewLocScroll->_activeflySel->GetStringSelection() == _flythroughName[ i ])
+		   if( _viewLocScroll->_activeflySel->GetValue() == _flythroughName[ i ])
          {
             _setUpActiveFlyThroughNames( i );
             tempindex = i;
@@ -739,17 +740,17 @@ void UI_ViewLocTab::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
             {
                for ( unsigned int j=0; j<numStoredLocations; j++ )
                {
-                  if( _viewLocScroll->_addvptoflySel->GetStringSelection() == _locationName[j])
+                  if( _viewLocScroll->_addvptoflySel->GetValue() == _locationName[j])
                   {
                      ((UI_Tabs *)_parent)->cIso_value = i;
                      ((UI_Tabs *)_parent)->cSc = j;
                      ((UI_Tabs *)_parent)->cId = ADD_NEW_POINT_TO_FLYTHROUGH;
                      ((UI_Tabs *)_parent)->sendDataArrayToServer();
+                     _updateWithcfdQuatCamHandler();
                   }
                }
             }
 	      }
-         _updateWithcfdQuatCamHandler();
       }
    }
    
@@ -771,20 +772,20 @@ void UI_ViewLocTab::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
                   {
                      for ( unsigned int k=0; k<numStoredLocations; k++ )
                      {
-                        if( _viewLocScroll->_insertvpinflySel->GetStringSelection() == _locationName[k])
+                        if( _viewLocScroll->_insertvpinflySel->GetValue() == _locationName[k])
                         {
                            ((UI_Tabs *)_parent)->cIso_value = i;
                            ((UI_Tabs *)_parent)->cSc = j;
                            ((UI_Tabs *)_parent)->cMin = k;
                            ((UI_Tabs *)_parent)->cId = INSERT_NEW_POINT_IN_FLYTHROUGH;
                            ((UI_Tabs *)_parent)->sendDataArrayToServer();
+                           _updateWithcfdQuatCamHandler();
                         }
                      }
                   }
                }
             }
 	      }
-         _updateWithcfdQuatCamHandler();
       }
    }
 }
@@ -801,17 +802,17 @@ void UI_ViewLocTab::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
             {
                for ( unsigned int j=0; j<flyThroughList.at( i ).size(); j++ )
                {
-                  if( _viewLocScroll->_removevpfromflySel->GetStringSelection() == _activeFlyNames[j])
+                  if( _viewLocScroll->_removevpfromflySel->GetValue() == _activeFlyNames[j])
                   {
                      ((UI_Tabs *)_parent)->cIso_value = i;
                      ((UI_Tabs *)_parent)->cSc = j;
                      ((UI_Tabs *)_parent)->cId = REMOVE_POINT_FROM_FLYTHROUGH;
                      ((UI_Tabs *)_parent)->sendDataArrayToServer();
+                     _updateWithcfdQuatCamHandler();
                   }
                }
             }
 	      }
-         _updateWithcfdQuatCamHandler();
       }
    }
 
@@ -823,14 +824,14 @@ void UI_ViewLocTab::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
    {
       for( unsigned int i=0; i<flyThroughList.size(); i++ )
 	   {
-		   if( _viewLocScroll->_deleteflySel->GetStringSelection() == _flythroughName[i])
+		   if( _viewLocScroll->_deleteflySel->GetValue() == _flythroughName[i])
          {
             ((UI_Tabs *)_parent)->cIso_value = i;
             ((UI_Tabs *)_parent)->cId = DELETE_ENTIRE_FLYTHROUGH;
             ((UI_Tabs *)_parent)->sendDataArrayToServer();
+            _updateWithcfdQuatCamHandler();
          }
 	   }
-      _updateWithcfdQuatCamHandler();
    }
 
 }
