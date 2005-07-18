@@ -61,6 +61,9 @@ cfdContourBase::cfdContourBase()
    this->filter = vtkGeometryFilter::New();
    this->cfilter = vtkContourFilter::New();              // for contourlines
    this->bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
+   // turn clipping on to avoid unnecessary value generations with 
+   // vtkBandedPolyDataContourFilter::GenerateValues().
+   this->bfilter->SetClipping(1);   
    this->tfilter = vtkTriangleFilter::New();
    this->stripper = vtkStripper::New();
 

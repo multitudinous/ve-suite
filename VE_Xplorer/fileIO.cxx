@@ -30,8 +30,11 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/fileIO.h"
+#include <boost/filesystem/fstream.hpp>
 #include <boost/filesystem/operations.hpp>
 #include <boost/filesystem/path.hpp>
+//#include <vpr/IO/FileHandle.h>
+#include <vpr/Util/ReturnStatus.h>
 #include <string>
 #include <iostream>
 #include <fstream>
@@ -52,25 +55,26 @@ int fileIO::isFileReadable( const char * const filename )
 {
    std::ifstream fileIn( filename, std::ios::in ); 
    if ( ! fileIn )
-      return 0;   // failure
-
+   {
+      return 0;
+   }
    fileIn.close();
-   return 1;      // success
+   return 1;
 }
 
 int fileIO::isFileWritable( char *filename )
 {
-/*
-   // THIS CODE WILL MESS UP A FILE IF ALREADY OPEN
-   // NEED A BETTER WAY
-
-   //"a" means append -- don't erase existing file
-   FILE *fileID = fopen( filename, "a" );
-   if ( !fileID ) return 0;    // failure
-   fclose( fileID );
-   remove( filename );
-*/
-   return 1;                   // success
+   // This will not compile due to a bug in vapor.  Uncomment this when the
+   // bug is resolved.
+   /*
+   vpr::FileHandle fh( std::string(filename) );
+   fh.setBlocking(false);
+   fh.setOpenWriteOnly();
+   vpr::ReturnStatus status = fh.open();
+   fh.close();
+   return status.success();
+   */
+   return 1;
 }
 
 int fileIO::DirectoryExists( char * dirName )
@@ -82,87 +86,40 @@ int fileIO::DirectoryExists( char * dirName )
                 << pathName.native_file_string() << std::endl;
       return 0;
    }
-/*
-#ifdef WIN32
-   // Get the current working directory
-   char cwd [ _MAX_PATH ];
-   if( _getcwd( cwd, _MAX_PATH ) == NULL )
-   {
-      std::cerr << "_getcwd error: will exit" << std::endl;
-      exit( 1 );
-   }
-
-   // Try to go to the specified directory: return 0 if not possible
-   if ( _chdir( dirName ) == -1 )
-   {
-      return 0;
-   }
-
-   // Return to the original directory
-   if ( _chdir( cwd ) == -1 )
-   {
-      std::cerr << "Can't return to the original directory: will exit" << std::endl;
-      exit( 1 );
-   }
-#else
-   // Try to open the directory: return 0 if not possible
-   DIR * dir = opendir( dirName );
-   if ( dir == NULL ) 
-   {
-      closedir( dir );
-      return 0;
-   }
-   closedir( dir );
-#endif // WIN32
-*/
    return 1;
 }
 
-int fileIO::isDirWritable( char *dirname )
+int fileIO::isDirWritable( const std::string& dirname )
 {
-   char file [] = {"/testing.txt"};
-   char * filename = new char [ strlen(dirname)+strlen(file)+1 ];
-   strcpy( filename, dirname );
-   strcat( filename, file );
-   //std::cout << "test file is \"" << filename << "\"" << std::endl;
+   fs::path file_name( dirname, fs::native );
+   file_name = fs::complete(file_name, "testing.txt");
 
-   //"a" means append -- don't erase existing file
-
-   FILE *fileID = fopen( filename, "a+" );
-   if ( !fileID )
+   fs::ofstream test_file(file_name, std::ios_base::out | std::ios_base::app);
+   bool result(false);
+   if (test_file)
    {
-      delete [] filename;
-      return 0;               // failure
+      result = true;
    }
-   fclose( fileID );
-   remove( filename );
-   delete [] filename;
-   return 1;                  // success
+   test_file.close();
+   return static_cast<int>(result);
 }
 
-char * fileIO::getWritableDir( )
+const char * fileIO::getWritableDir( )
 {
-   char * dirName;
+   std::string dir_name;
    do
    {
       std::cout << "Input an existing writable directory: ";
       std::cout.flush();
-      char tempName [1024];
-      std::cin >> tempName;
-      std::cin.ignore();
-      dirName = new char[ strlen(tempName) + 1 ];
-      strcpy( dirName, tempName );
-
-      if ( isDirWritable( dirName ) )
-         break;
-      else
+      std::getline(std::cin, dir_name);
+      if ( isDirWritable(dir_name) )
       {
-         std::cerr << "\nERROR: Can't write to \"" << dirName
-                   << "\" directory" << std::endl;
-         delete [] dirName;
+         break;
       }
+      std::cerr << "\nERROR: Can't write to \"" << dir_name
+                << "\" directory" << std::endl;
    } while( 1 );
-   return dirName;
+   return dir_name.c_str();
 }
 
 char * fileIO::getFilenameFromDefault( char* fileContents, char* defaultName )

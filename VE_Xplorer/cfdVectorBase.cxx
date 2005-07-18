@@ -233,14 +233,13 @@ void cfdVectorBase::SetGlyphAttributes()
    this->glyph->SetVectorModeToUseVector();
    //this->glyph->DebugOn();
 
+   this->glyph->SetScaleFactor( GetVectorScaleFactor() );
    if ( _scaleByVector == 0 )
    {  
-      this->glyph->SetScaleFactor( GetVectorScaleFactor() );
       this->glyph->SetScaleModeToDataScalingOff();
    }
    else
    {
-      this->glyph->SetScaleFactor( GetVectorScaleFactor() );
       this->glyph->SetScaleModeToScaleByVector();
       this->glyph->SetColorModeToColorByScalar();
       this->glyph->ClampingOn();

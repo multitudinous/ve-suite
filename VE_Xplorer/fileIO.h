@@ -33,6 +33,7 @@
 #define FILEIO_H
 
 #include <iosfwd>
+#include <string>
 #include "VE_Installer/include/VEConfig.h"
 
 namespace VE_Util
@@ -45,8 +46,8 @@ namespace VE_Util
          static int isFileReadable( const char * const filename );
          static int isFileWritable( char *filename );
          static int DirectoryExists( char * dirName );
-         static int isDirWritable( char *dirname );
-         static char * getWritableDir( );
+         static int isDirWritable( const std::string& dirname );
+         static const char * getWritableDir( );
          static char * getFilenameFromDefault( char* fileContents,
                                             char* defaultName );
          static char * getReadableFileFromDefault( 
