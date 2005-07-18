@@ -42,7 +42,7 @@ BEGIN_EVENT_TABLE (AppFrame, wxFrame)
 END_EVENT_TABLE()
 
 AppFrame::AppFrame(wxWindow * parent, wxWindowID id, const wxString& title)
-  :wxFrame(parent, id, title)
+  :wxFrame(parent, id, title), m_frameNr(0)
 {
   wx_log_splitter = new wxSplitterWindow(this, -1);
   wx_log_splitter->SetMinimumPaneSize( 40 );
