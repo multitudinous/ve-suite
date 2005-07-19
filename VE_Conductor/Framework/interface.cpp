@@ -20,7 +20,7 @@ Interface::Interface (const Interface &p)
 
 Interface::~Interface ()
 {
-
+  clear();
 }
 
 void Interface::copy (const Interface& p)

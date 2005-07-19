@@ -235,9 +235,13 @@ void Package::FillIntfs(DOMDocument *doc)
 {
   DOMElement *root_elem = doc->getDocumentElement(); //This is the root element;
 
-  packname=XMLString::transcode(root_elem->getAttribute(XMLString::transcode("name")));
-
-  DOMNodeList* list_intfs = root_elem->getElementsByTagName(XMLString::transcode("interface")); //Here, all interface element are extracted to this list
+  // Keep track of memory we own.
+  XMLCh* tmp_attr( XMLString::transcode("name") );
+  packname=XMLString::transcode(root_elem->getAttribute(tmp_attr));
+  delete[] tmp_attr;
+  tmp_attr = XMLString::transcode("interface");
+  DOMNodeList* list_intfs = root_elem->getElementsByTagName(tmp_attr); //Here, all interface element are extracted to this list
+  delete[] tmp_attr;
  
   int len = list_intfs->getLength();
   SetIntfsNum(len);
@@ -266,17 +270,38 @@ void Package::FillIntfs(DOMDocument *doc)
       cur_intf=(DOMElement *)list_intfs->item(i);
       intfs[i].clear();
 
-      intfs[i]._type = atoi(XMLString::transcode(cur_intf->getAttribute(XMLString::transcode("type"))));
-      intfs[i]._category = atoi(XMLString::transcode(cur_intf->getAttribute(XMLString::transcode("category"))));
-      intfs[i]._id = atoi(XMLString::transcode(cur_intf->getAttribute(XMLString::transcode("id"))));
+      // XMLString::transcode() returns a pointer that the caller assumes 
+      // ownership of, so we have to keep track of that pointer to properly
+      // deallocate the memory after it is used.
+      char* tmp(0);
+      XMLCh* tmp_attr(0);
+      tmp_attr = XMLString::transcode("type");
+      tmp = XMLString::transcode(cur_intf->getAttribute(tmp_attr));
+      intfs[i]._type = atoi(tmp);
+      delete[] tmp;
+      delete[] tmp_attr;
+      tmp_attr = XMLString::transcode("category");
+      tmp = XMLString::transcode(cur_intf->getAttribute(tmp_attr));
+      intfs[i]._category = atoi(tmp);
+      delete[] tmp;
+      delete[] tmp_attr;
+      tmp_attr = XMLString::transcode("id");
+      tmp = XMLString::transcode(cur_intf->getAttribute(tmp_attr));
+      intfs[i]._id = atoi(tmp);
+      delete[] tmp;
+      delete[] tmp_attr;
+      tmp = 0;
+      tmp_attr = 0;
       
       if(intfs[i]._type==2 && intfs[i]._category==1) //this is geominfo interface
       {
 
           //Get the GeomInfoPackages values;
          std::cout<<std::endl;
-         
-         cur_list=cur_intf->getElementsByTagName(XMLString::transcode("GeomInfo")); //in case one model has several geominfopackage
+         tmp_attr = XMLString::transcode("GeomInfo"); 
+         cur_list=cur_intf->getElementsByTagName(tmp_attr); //in case one model has several geominfopackage
+         delete[] tmp_attr;
+         tmp_attr = 0;
          len2=cur_list->getLength();
 
                   
@@ -287,54 +312,79 @@ void Package::FillIntfs(DOMDocument *doc)
          for (j=0; j<len2; j++)
 	      {
 	         tmp_elem = (DOMElement *)cur_list->item(j);
-	         elem_name = XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("name")));
+            tmp_attr = XMLString::transcode("name");
+	         elem_name = XMLString::transcode(tmp_elem->getAttribute(tmp_attr));
             geomvals.SetGeomName(elem_name);
-            
+            delete[] tmp_attr;
             /*geomnodelist = tmp_elem->getChildNodes();
             int geomnodenum = geomnodelist->getLength();
             std::cout<<"[DBG]...the number of subelements :"<<geomnodenum<<std::endl;*/
-
-            geomnodelist = tmp_elem->getElementsByTagName(XMLString::transcode("GeometryFileName"));
+            tmp_attr = XMLString::transcode("GeometryFileName");
+            geomnodelist = tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
-            std::string geomfilename =std::string(XMLString::transcode(cur_geomelem->getAttribute(XMLString::transcode("val"))));
+            tmp_attr = XMLString::transcode("val");
+            std::string geomfilename =std::string(XMLString::transcode(cur_geomelem->getAttribute(tmp_attr)));
+            delete[] tmp_attr;
             geomvals.SetGeomFileName(geomfilename); 
-            
-            geomnodelist = tmp_elem->getElementsByTagName(XMLString::transcode("TransparencyToggle"));
+            tmp_attr = XMLString::transcode("TransparencyToggle"); 
+            geomnodelist = tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
-            bool transparencytoggle =  atoi(XMLString::transcode(cur_geomelem->getAttribute(XMLString::transcode("val"))));
+            tmp_attr = XMLString::transcode("val");
+            tmp = XMLString::transcode(cur_geomelem->getAttribute(tmp_attr));
+            bool transparencytoggle = atoi(tmp);
+            delete[] tmp_attr;
+            delete[] tmp;
             geomvals.SetTransparencyToggle(transparencytoggle); 
 
-            geomnodelist = tmp_elem->getElementsByTagName(XMLString::transcode("ScaleArray"));
+            tmp_attr = XMLString::transcode("ScaleArray");
+            geomnodelist = tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
-            sub_list=cur_geomelem->getElementsByTagName(XMLString::transcode("val"));
-
+            tmp_attr = XMLString::transcode("val");
+            sub_list=cur_geomelem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             double scales[3];
             for(int index=0; index<3; index++)
             {
                domt = (DOMText*) sub_list->item(index)->getFirstChild();
-               scales[index]=(double) atof(XMLString::transcode(domt->getData()));
+               tmp = XMLString::transcode(domt->getData());
+               scales[index]=(double) atof(tmp);
+               delete[] tmp;
             }
             geomvals.SetScales(scales[0], scales[1], scales[2]);
 
-            geomnodelist = tmp_elem->getElementsByTagName(XMLString::transcode("TranslationArray"));
+            tmp_attr = XMLString::transcode("TranslationArray");
+            geomnodelist = tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
-            sub_list=cur_geomelem->getElementsByTagName(XMLString::transcode("val"));
+            tmp_attr = XMLString::transcode("val");
+            sub_list=cur_geomelem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             double trans[3];
             for(int index=0; index<3; index++)
             {
                domt = (DOMText*) sub_list->item(index)->getFirstChild();
-               trans[index]=(double) atof(XMLString::transcode(domt->getData()));
+               tmp = XMLString::transcode(domt->getData());
+               trans[index]=(double) atof(tmp);
+               delete[] tmp;
             }
             geomvals.SetTrans(trans[0], trans[1], trans[2]);
-
-            geomnodelist = tmp_elem->getElementsByTagName(XMLString::transcode("RotationArray"));
+            tmp_attr = XMLString::transcode("RotationArray");
+            geomnodelist = tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
-            sub_list=cur_geomelem->getElementsByTagName(XMLString::transcode("val"));
+            tmp_attr = XMLString::transcode("val");
+            sub_list=cur_geomelem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             double rots[3];
             for(int index=0; index<3; index++)
             {
                domt = (DOMText*) sub_list->item(index)->getFirstChild();
-               rots[index]=(double) atof(XMLString::transcode(domt->getData()));
+               tmp = XMLString::transcode(domt->getData());
+               rots[index]=(double) atof(tmp);
+               delete[] tmp;
             }
             geomvals.SetRots(rots[0], rots[1], rots[2]);
 
