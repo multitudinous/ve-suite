@@ -47,6 +47,7 @@
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureBasedVizHandler.h"
 #include "VE_TextureBased/cfdVolumeVisualization.h"
+using namespace VE_TextureBased;
 #endif
 #endif
 
@@ -57,7 +58,6 @@
 #include <map>
 
 using namespace VE_Xplorer;
-using namespace VE_TextureBased;
 using namespace VE_SceneGraph;
 
 void VjObs_i::InitCluster( void )
