@@ -75,7 +75,7 @@ using namespace VE_TextureBased;
 #include <sys/dir.h>
 #endif 
 
-#ifndef WIN32
+#ifdef WIN32
 #include <direct.h>
 #endif 
 
