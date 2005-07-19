@@ -75,6 +75,10 @@ using namespace VE_TextureBased;
 #include <sys/dir.h>
 #endif 
 
+#ifndef WIN32
+#include <direct.h>
+#endif 
+
 vprSingletonImp( VE_Xplorer::cfdModelHandler );
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
