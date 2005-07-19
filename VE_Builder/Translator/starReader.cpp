@@ -1070,23 +1070,31 @@ void starReader::ReadParameterFile( void )
    {
       this->scaleIndex = 1;
    }
-
-   if ( this->scaleIndex == 1 && !scaleFactorSpecified )
+   else if ( this->scaleIndex == 1 && !scaleFactorSpecified )
    {
-      std::cerr << "\n!!! Custom scale factor requested but not provided!\n"
-                << "Exiting.\n"
+      std::cout << "\n!!! Custom scale factor requested but not provided!\n"
+                << "Using the default values.\n"
                 << std::endl;
-      exit(1);
+
+      this->scaleIndex =0;
+      this->scaleFactor =1.0;
+      //exit(1);
    }
 
    // check for indeterminate case -- not custom, but scale factor specified
-   if ( this->scaleIndex != 1 && scaleFactorSpecified )
+   else if ( (this->scaleIndex != 1 || this->scaleIndex !=0) && scaleFactorSpecified )
    {
-      std::cerr << "\n!!! Indeterminate case -- "
+      std::cout << "\n!!! Indeterminate case -- "
                 << "not custom, but scale factor specified!\n"
-                << "Exiting.\n"
+                << "Using the default values.\n"
                 << std::endl;
-      exit(1);
+      //exit(1);
+      this->scaleIndex =0;
+      this->scaleFactor =1.0;
+   }
+   else
+   {
+      //this is do nothing
    }
 }
 
