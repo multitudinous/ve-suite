@@ -237,8 +237,10 @@ void Package::FillIntfs(DOMDocument *doc)
 
   // Keep track of memory we own.
   XMLCh* tmp_attr( XMLString::transcode("name") );
-  packname=XMLString::transcode(root_elem->getAttribute(tmp_attr));
+  char* tmp( XMLString::transcode(root_elem->getAttribute(tmp_attr)) );
+  packname = tmp;
   delete[] tmp_attr;
+  delete[] tmp;
   tmp_attr = XMLString::transcode("interface");
   DOMNodeList* list_intfs = root_elem->getElementsByTagName(tmp_attr); //Here, all interface element are extracted to this list
   delete[] tmp_attr;
@@ -388,25 +390,41 @@ void Package::FillIntfs(DOMDocument *doc)
             }
             geomvals.SetRots(rots[0], rots[1], rots[2]);
 
-            geomnodelist = tmp_elem->getElementsByTagName(XMLString::transcode("RGBArray"));
+            tmp_attr = XMLString::transcode("RGBArray");
+            geomnodelist = tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
-            sub_list=cur_geomelem->getElementsByTagName(XMLString::transcode("val"));
+            tmp_attr = XMLString::transcode("val");
+            sub_list = cur_geomelem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             double colors[3];
             for(int index=0; index<3; index++)
             {
                domt = (DOMText*) sub_list->item(index)->getFirstChild();
-               colors[index]=(double) atof(XMLString::transcode(domt->getData()));
+               tmp = XMLString::transcode(domt->getData());
+               colors[index]=(double) atof(tmp);
+               delete[] tmp;
             }
             geomvals.SetColors(colors[0], colors[1], colors[2]);
 
-            geomnodelist = tmp_elem->getElementsByTagName(XMLString::transcode("ColorFlag"));
+            tmp_attr = XMLString::transcode("ColorFlag");
+            geomnodelist = tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
-            bool colorflag =  atoi(XMLString::transcode(cur_geomelem->getAttribute(XMLString::transcode("val"))));
+            tmp_attr = XMLString::transcode("val");
+            tmp = XMLString::transcode(cur_geomelem->getAttribute(tmp_attr));
+            bool colorflag =  atoi(tmp);
+            delete[] tmp_attr;
+            delete[] tmp;
             geomvals.SetColorFlag(colorflag); 
             
-            geomnodelist = tmp_elem->getElementsByTagName(XMLString::transcode("LOD"));
+            tmp_attr = XMLString::transcode("LOD");
+            geomnodelist = tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
-            double lod =(double) atof(XMLString::transcode(cur_geomelem->getAttribute(XMLString::transcode("val"))));
+            tmp_attr = XMLString::transcode("val");
+            tmp = XMLString::transcode(cur_geomelem->getAttribute(tmp_attr));
+            double lod =(double) atof(tmp);
             geomvals.SetLOD(lod); 
 
             /*for(int geomnode=0; geomnode<geomnodenum;geomnode++)
@@ -515,79 +533,126 @@ void Package::FillIntfs(DOMDocument *doc)
       else
       {
          //Get the Double values
-         cur_list=cur_intf->getElementsByTagName(XMLString::transcode("double"));
+         tmp_attr = XMLString::transcode("double");
+         cur_list=cur_intf->getElementsByTagName(tmp_attr);
+         delete[] tmp_attr;
          len2=cur_list->getLength();
 
          for (j=0; j<len2; j++)
 	      {
 	         tmp_elem = (DOMElement *) cur_list->item(j);
-	      elem_name = XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("name")));
-	      dval = atof(XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("val"))));
-	      intfs[i].setDouble(elem_name, dval);
-       	
+            tmp_attr = XMLString::transcode("name");
+            tmp = XMLString::transcode(tmp_elem->getAttribute(tmp_attr));
+            elem_name = tmp;
+            delete[] tmp_attr;
+            delete[] tmp;
+            tmp_attr = XMLString::transcode("val");
+            tmp = XMLString::transcode(tmp_elem->getAttribute(tmp_attr));
+            dval = atof(tmp);
+            delete[] tmp_attr;
+            delete[] tmp;
+            intfs[i].setDouble(elem_name, dval);
          }
       
          //Get the Integer values;
-         cur_list=cur_intf->getElementsByTagName(XMLString::transcode("integer"));
+         tmp_attr = XMLString::transcode("integer");
+         cur_list=cur_intf->getElementsByTagName(tmp_attr);
+         delete[] tmp_attr;
          len2=cur_list->getLength();
 
          for (j=0; j<len2; j++)
 	      {
 	         tmp_elem = (DOMElement *) cur_list->item(j);
-	         elem_name = XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("name")));
-	         lval = atoi(XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("val"))));
+            tmp_attr = XMLString::transcode("name");
+            tmp = XMLString::transcode(tmp_attr);
+	         elem_name = tmp;
+            delete[] tmp_attr;
+            delete[] tmp;
+            tmp_attr = XMLString::transcode("val");
+            tmp = XMLString::transcode(tmp_elem->getAttribute(tmp_attr));
+	         lval = atoi(tmp);
+            delete[] tmp_attr;
+            delete[] tmp;
 	         intfs[i].setInt(elem_name, lval);
-       	
          }
 
          //Get the String values;
-         cur_list=cur_intf->getElementsByTagName(XMLString::transcode("string"));
+         tmp_attr = XMLString::transcode("string");
+         cur_list=cur_intf->getElementsByTagName(tmp_attr);
+         delete[] tmp_attr;
          len2=cur_list->getLength();
 
          for (j=0; j<len2; j++)
 	      {  
 	         tmp_elem = (DOMElement *)cur_list->item(j);
-	         elem_name = XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("name")));
-	         sval = std::string(XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("val"))));
+            tmp_attr = XMLString::transcode("name");
+            tmp = XMLString::transcode(tmp_elem->getAttribute(tmp_attr));
+	         elem_name = tmp;
+            delete[] tmp_attr;
+            delete[] tmp;
+            tmp_attr = XMLString::transcode("val");
+            tmp = XMLString::transcode(tmp_elem->getAttribute(tmp_attr));
+	         sval = std::string(tmp);
+            delete[] tmp_attr;
+            delete[] tmp;
 	         intfs[i].setString(elem_name, sval);
-       	
          }
        
          //Get the double array values;
-         cur_list=cur_intf->getElementsByTagName(XMLString::transcode("doubleArray"));
+         tmp_attr = XMLString::transcode("doubleArray");
+         cur_list=cur_intf->getElementsByTagName(tmp_attr);
+         delete[] tmp_attr;
          len2=cur_list->getLength();
 
          for (j=0; j<len2; j++)
 	      {
 	         tmp_elem = (DOMElement *)cur_list->item(j);
-	         elem_name = XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("name")));
-	         sub_list=tmp_elem->getElementsByTagName(XMLString::transcode("val"));
+            tmp_attr = XMLString::transcode("name");
+            tmp = XMLString::transcode(tmp_elem->getAttribute(tmp_attr));
+	         elem_name = tmp;
+            delete[] tmp_attr;
+            delete[] tmp;
+            tmp_attr = XMLString::transcode("val");
+	         sub_list=tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
 	         len3=sub_list->getLength();
 	         dvals.clear();
 	         for(k=0; k<len3; k++)
 	         {
 	            domt = (DOMText*) sub_list->item(k)->getFirstChild();
-	            dvals.push_back(atof(XMLString::transcode(domt->getData())));
+               tmp = XMLString::transcode(domt->getData());
+	            dvals.push_back(atof(tmp));
+               delete[] tmp;
 	         }
 	         intfs[i].setDouble1D(elem_name, dvals);
        	
          }
        
          //Get the integer array values;
-         cur_list=cur_intf->getElementsByTagName(XMLString::transcode("integerArray"));
+         tmp_attr = XMLString::transcode("integarArray");
+         cur_list=cur_intf->getElementsByTagName(tmp_attr);
+         delete[] tmp_attr;
          len2=cur_list->getLength();
 
          for (j=0; j<len2; j++)
 	      {
 	         tmp_elem = (DOMElement *)cur_list->item(j);
-	         elem_name = XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("name")));
-	         sub_list=tmp_elem->getElementsByTagName(XMLString::transcode("val"));
+            tmp_attr = XMLString::transcode("name");
+            tmp = XMLString::transcode(tmp_elem->getAttribute(tmp_attr));
+	         elem_name = tmp;
+            delete[] tmp_attr;
+            delete[] tmp;
+            tmp_attr = XMLString::transcode("val");
+	         sub_list=tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
 	         len3=sub_list->getLength();
 	         lvals.clear();
 	         for(k=0; k<len3; k++)
 	         {
 	            domt = (DOMText*) sub_list->item(k)->getFirstChild();
-	            lvals.push_back(atoi(XMLString::transcode(domt->getData())));
+               tmp = XMLString::transcode(domt->getData());
+	            lvals.push_back(atoi(tmp));
+               delete[] tmp;
 	         }
 	   /*
 	   for(k=0; k<len3; k++)
@@ -602,20 +667,30 @@ void Package::FillIntfs(DOMDocument *doc)
          }
 
          //Get the string array values;
-         cur_list=cur_intf->getElementsByTagName(XMLString::transcode("stringArray"));
+         tmp_attr = XMLString::transcode("stringArray");
+         cur_list=cur_intf->getElementsByTagName(tmp_attr);
+         delete[] tmp_attr;
          len2=cur_list->getLength();
 
          for (j=0; j<len2; j++)
 	      {
 	         tmp_elem = (DOMElement *) cur_list->item(j);
-	         elem_name = XMLString::transcode(tmp_elem->getAttribute(XMLString::transcode("name")));
-	         sub_list=tmp_elem->getElementsByTagName(XMLString::transcode("val"));
+            tmp_attr = XMLString::transcode("name");
+            tmp = XMLString::transcode(tmp_elem->getAttribute(tmp_attr));
+	         elem_name = tmp;
+            delete[] tmp_attr;
+            delete[] tmp;
+            tmp_attr = XMLString::transcode("val");
+	         sub_list=tmp_elem->getElementsByTagName(tmp_attr);
+            delete[] tmp_attr;
 	         len3=sub_list->getLength();
 	         svals.clear();
 	         for(k=0; k<len3; k++)
 	         {
 	            domt = (DOMText*) sub_list->item(k)->getFirstChild();
-	            svals.push_back(XMLString::transcode(domt->getData()));
+               tmp = XMLString::transcode(domt->getData());
+	            svals.push_back(tmp);
+               delete[] tmp;
 	         }
 	  /*
 	  for(k=0; k<len3; k++)
