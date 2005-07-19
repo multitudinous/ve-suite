@@ -431,9 +431,9 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RUN_ACTIVE_FLYTHROUGH )
    {
-      //this->frameTimer->startTiming();
       this->activeFlyThrough = (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       this->_runFlyThrough = true;
+      this->activecam = true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STOP_ACTIVE_FLYTHROUGH )
    {
