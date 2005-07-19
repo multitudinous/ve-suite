@@ -276,8 +276,10 @@ void UI_ViewLocTabScroll::_buildPage( void )
    temp.SetHeight( temp.GetHeight()+flag );
    temp.SetWidth( temp.GetWidth()+flag );
    SetSize( temp );
-std::cout<<"TEST8"<<std::endl;
-   _activeflySel->SetValue( _flythroughNamesLocal[ 0 ] );
+
+   _rebuildPage();
+	_resetSelections();
+   _activeflySel->SetSelection( 0 );
 
 }
 
@@ -570,7 +572,7 @@ void UI_ViewLocTab::_updateWithcfdQuatCamHandler( void )
    }
  
    _viewLocScroll->_rebuildPage();
-   //_viewLocScroll->_activeflySel->SetValue( _flythroughName[ tempindex ] );
+   _viewLocScroll->_activeflySel->SetValue( _flythroughName[ tempindex ] );
 
 }
 //////////////////
@@ -639,9 +641,10 @@ void UI_ViewLocTab::_onBuildNewFlyButton(wxCommandEvent& WXUNUSED(event))
       ((UI_Tabs *)_parent)->cId = ADD_NEW_FLYTHROUGH;
       ((UI_Tabs *)_parent)->sendDataArrayToServer();
       _updateWithcfdQuatCamHandler();
+      _setUpActiveFlyThroughNames( flyThroughList.size() - 1 );
+      _viewLocScroll->_rebuildPage();
       _viewLocScroll->_resetSelections();
       _viewLocScroll->_activeflySel->SetSelection( flyThroughList.size() - 1 );
-      _setUpActiveFlyThroughNames( flyThroughList.size() - 1 );
    }
 }
 
@@ -670,6 +673,7 @@ void UI_ViewLocTab::_onActiveFlySel(wxCommandEvent& WXUNUSED(event))
 	   }
       _viewLocScroll->_rebuildPage();
       _viewLocScroll->_activeflySel->SetValue( _flythroughName[ tempindex ] );
+      _viewLocScroll->_resetSelections();
    }
 }
 
@@ -793,7 +797,7 @@ void UI_ViewLocTab::_onStartActiveFly(wxCommandEvent& WXUNUSED(event))
       {
          for( unsigned int i=0; i<flyThroughList.size(); i++ )
 	      {
-		      if( _viewLocScroll->_activeflySel->GetValue() == _flythroughName[i])
+		      if( ( _viewLocScroll->_activeflySel->GetValue() == _flythroughName[i] ) && ( flyThroughList.at( i ).size() > 1 ) )
             {
                ((UI_Tabs *)_parent)->cIso_value = i;
                ((UI_Tabs *)_parent)->cId = RUN_ACTIVE_FLYTHROUGH;
