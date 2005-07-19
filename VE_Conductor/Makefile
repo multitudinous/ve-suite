@@ -20,7 +20,6 @@ SRCS=\
    App.cpp \
    Avail_Modules.cpp \
    Frame.cpp \
-   GlobalParamDialog.cpp \
    moduleC.cpp \
    moduleS.cpp \
    Network.cpp \

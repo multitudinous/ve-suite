@@ -62,8 +62,9 @@ SRCS=\
    interface.cpp \
    package.cpp \
 	string_ops.cpp \
-	GeometryDataManager.cpp \
-	GeometryDataBuffer.cpp
+   Geometry.cpp \
+	GeometryDataBuffer.cpp \
+	GeometryDataManager.cpp
 			
 # -----------------------------------------------------------------------------
 # following is adapted from tweek/test/NetworkTestBean/Makefile and tweek.appdefs.mk

@@ -60,12 +60,10 @@ endif
 # list the source files that are in current directory
 SRCS=\
    FinancialDialog.cpp \
-   Geometry.cpp \
-	GeometryDialog.cpp \
-	GeometryDataBuffer.cpp \
-	GeometryDataManager.cpp \
 	ListTable.cpp \
    Plugin_base.cpp \
+   GlobalParamDialog.cpp \
+   GeometryDialog.cpp \
    PortDialog.cpp \
    ResultPanel.cpp \
    StringParse.cpp \
