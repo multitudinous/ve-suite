@@ -65,14 +65,15 @@ using namespace VE_TextureBased;
 #include <string>
 #include <sstream>
 
-#ifdef WIN32   // windows
-#include <direct.h>
-#else          // not windows
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
+
+#ifndef WIN32
 // Needed for irix
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/dir.h>
-#endif // WIN32
+#endif 
 
 vprSingletonImp( VE_Xplorer::cfdModelHandler );
 using namespace VE_Xplorer;
@@ -906,157 +907,64 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
    vprDEBUG(vprDBG_ALL,1) << "Loading surface files from " 
       << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
 
-   //store the current directory so we can change back to it
-   char *cwd;
-#ifndef WIN32
-   if ((cwd = getcwd(NULL, 100)) == NULL)
-   {
-      std::cerr << "Couldn't get the current working directory!" << std::endl;
-      exit( 1 );
-   }
 
-   //open the directory (we already know that it is valid)
+   boost::filesystem::path dir_path( precomputedSurfaceDir );
 
-   DIR* dir = opendir( precomputedSurfaceDir );
-   //change into this directory so that vtk can find the files
-   chdir( precomputedSurfaceDir );
-   
-   //get the name of each file
-   direct* file = 0;
-   while( (file = readdir(dir)) != NULL )
+   if ( boost::filesystem::is_directory( dir_path ) )
    {
-      //assume all vtk files in this directory are to be loaded
-      if(strstr(file->d_name, ".vtk"))
+      std::cout << "\nIn directory: "
+              << dir_path.native_directory_string() << "\n\n";
+      boost::filesystem::directory_iterator end_iter;
+      for ( boost::filesystem::directory_iterator dir_itr( dir_path );
+            dir_itr != end_iter; ++dir_itr )    
       {
-         char* pathAndFileName = new char[strlen(precomputedSurfaceDir)+
-                                          strlen(file->d_name)+2];
-         strcpy(pathAndFileName,precomputedSurfaceDir);
-         strcat(pathAndFileName,"/");
-         strcat(pathAndFileName,file->d_name);
-
-         if ( fileIO::isFileReadable( file->d_name ) ) 
+         try
          {
-            vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
-                                   << std::endl << vprDEBUG_FLUSH;
-
-            _modelList.at( 0 )->CreateCfdDataSet();
-            unsigned int numDataSets = _modelList.at( 0 )->GetNumberOfCfdDataSets();
-            // subtract 1 because this number was 1 base not 0 base
-            numDataSets -= 1;
-            _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
-
-            // set the dcs matrix the same as the last file
-            _modelList.at( 0 )->GetCfdDataSet( -1 )->SetDCS( 
-                        _modelList.at( 0 )->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
-
-            // precomputed data that descends from a flowdata.vtk should
-            // automatically have the same color mapping as the "parent" 
-            _modelList.at( 0 )->GetCfdDataSet( -1 )->SetParent( 
-                        _modelList.at( 0 )->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
-         }
-         else
-         {
-            std::cerr << "ERROR: unreadable file = " << pathAndFileName
-                      << ".  You may need to correct your param file."
-                      << std::endl;
-            exit( 1 );
-         }
-      }
-   };
-   closedir( dir );  // close the directory
-   dir = 0;
-   file = 0;
-
-   chdir( cwd );     // return to original directory
-#else
-   char buffer[_MAX_PATH];
-   HANDLE hList;
-   TCHAR* directory;//[MAX_PATH+1];
-   WIN32_FIND_DATA fileData;
-
-   //get the current working directory
-   if ((cwd = _getcwd(buffer, _MAX_PATH)) == NULL)
-   {
-      std::cerr << "Couldn't get the current working directory!" << std::endl;
-      return ;
-   }
-
-   // Get the proper directory path for transient files
-   //sprintf(directory, "%s\\*", precomputedSurfaceDir);
-   std::ostringstream dirStringStream;
-   dirStringStream << precomputedSurfaceDir << "\\*";
-   std::string dirString = dirStringStream.str();
-   directory = (char*)dirString.c_str();
-
-   //get the first file
-   hList = FindFirstFile(directory, &fileData);
-  
-   //check to see if directory is valid
-   if ( hList == INVALID_HANDLE_VALUE )
-   { 
-      std::cerr << "No precomputed surface files found in: "
-                << precomputedSurfaceDir << std::endl;
-      return ;
-   }
-   else
-   {
-      // Traverse through the directory structure
-      bool finished = FALSE;
-      while ( !finished )
-      {
-         //add the file name to our data list
-         //assume all vtk files in this directory are part of the sequence
-         //assume all vtk files in this directory are to be loaded
-         if(strstr(fileData.cFileName, ".vtk"))
-         {
-            char* pathAndFileName = new char[strlen(precomputedSurfaceDir)+
-                                          strlen(fileData.cFileName)+2];
-            strcpy(pathAndFileName,precomputedSurfaceDir);
-            strcat(pathAndFileName,"/");
-            strcat(pathAndFileName,fileData.cFileName);
-
-            if ( fileIO::isFileReadable( pathAndFileName ) ) 
+            if ( boost::filesystem::is_directory( *dir_itr ) )
             {
-               vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
-                                   << std::endl << vprDEBUG_FLUSH;
-
-               _modelList.at( 0 )->CreateCfdDataSet();
-               unsigned int numDataSets = _modelList.at( 0 )->GetNumberOfCfdDataSets();
-               // subtract 1 because this number was 1 base not 0 base
-               numDataSets -= 1;
-               _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
-
-               // set the dcs matrix the same as the last file
-               _modelList.at( 0 )->GetCfdDataSet( -1 )->SetDCS( 
-                        _modelList.at( 0 )->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
-
-               // precomputed data that descends from a flowdata.vtk should
-               // automatically have the same color mapping as the "parent" 
-               _modelList.at( 0 )->GetCfdDataSet( -1 )->SetParent( 
-                        _modelList.at( 0 )->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
+               std::cout << dir_itr->leaf()<< " [directory]\n";
             }
             else
             {
-               std::cerr << "ERROR: unreadable file = " << pathAndFileName
-                         << ".  You may need to correct your param file."
-                         << std::endl;
-               exit( 1 );
+               std::cout << dir_itr->leaf() << "\n";
+               if ( strstr( dir_itr->leaf().c_str(), ".vtk") )
+               {
+                  char* pathAndFileName = new char[strlen(dir_path.leaf().c_str() )+
+                                          strlen(dir_itr->leaf().c_str())+2];
+                  strcpy(pathAndFileName,dir_path.leaf().c_str());
+                  strcat(pathAndFileName,"/");
+                  strcat(pathAndFileName,dir_itr->leaf().c_str());
+
+                  vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
+                                         << std::endl << vprDEBUG_FLUSH;
+
+                  _modelList.at( 0 )->CreateCfdDataSet();
+                  unsigned int numDataSets = _modelList.at( 0 )->GetNumberOfCfdDataSets();
+                  // subtract 1 because this number was 1 base not 0 base
+                  numDataSets -= 1;
+                  _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( pathAndFileName );
+
+                  // set the dcs matrix the same as the last file
+                  _modelList.at( 0 )->GetCfdDataSet( -1 )->SetDCS( 
+                                    _modelList.at( 0 )->GetCfdDataSet( (int)(numDataSets-1) )->GetDCS() ); 
+
+                  // precomputed data that descends from a flowdata.vtk should
+                  // automatically have the same color mapping as the "parent" 
+                  _modelList.at( 0 )->GetCfdDataSet( -1 )->SetParent( 
+                                    _modelList.at( 0 )->GetCfdDataSet( (int)(numDataSets-1) )->GetParent() );
+               }
             }
-            delete [] pathAndFileName;
          }
-         //check to see if this is the last file
-         if(!FindNextFile(hList, &fileData))
+         catch ( const std::exception & ex )
          {
-            if(GetLastError() == ERROR_NO_MORE_FILES)
-            {
-               finished = TRUE;
-            }
+            std::cout << dir_itr->leaf() << " " << ex.what() << std::endl;
          }
       }
    }
-   FindClose( hList );  // close the handle
-   chdir( cwd );        // return to original directory
-#endif
+   else // must be a file
+   {
+      std::cout << "\nFound: " << dir_path.native_file_string() << "\n";    
+   }
 }
 ////////////////////////////////////
 bool cfdModelHandler::GetVisOption()
