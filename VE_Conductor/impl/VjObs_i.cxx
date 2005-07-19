@@ -57,6 +57,8 @@
 #include <map>
 
 using namespace VE_Xplorer;
+using namespace VE_TextureBased;
+using namespace VE_SceneGraph;
 
 void VjObs_i::InitCluster( void )
 {
