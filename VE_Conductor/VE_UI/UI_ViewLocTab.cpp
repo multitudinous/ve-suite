@@ -531,7 +531,7 @@ void UI_ViewLocTab::_updateWithcfdQuatCamHandler( void )
       {
          tempTest = ((UI_Tabs *)_parent)->server_ref->getDouble1D( "getCompletionTest" );
          tempTestlocal = (int)tempTest[ 0 ];       
-         wxUsleep( 50 );
+         wxMilliSleep( 50 );
       }
       numStoredLocations = ((UI_Tabs *)_parent)->server_ref->getIsoValue();
    }
@@ -583,6 +583,7 @@ void UI_ViewLocTab::_onLoad(wxCommandEvent& WXUNUSED(event))
    ((UI_Tabs *)_parent)->cId = LOAD_NEW_VIEWPT;
    ((UI_Tabs *)_parent)->sendDataArrayToServer();
    _updateWithcfdQuatCamHandler();
+   _viewLocScroll->_resetSelections();
 }
 
 void UI_ViewLocTab::_onAcceptNewVPName(wxCommandEvent& WXUNUSED(event))
@@ -610,6 +611,7 @@ void UI_ViewLocTab::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
             _updateWithcfdQuatCamHandler();
          }
 	   } 
+      _viewLocScroll->_resetSelections();
    }
 }
 
@@ -626,6 +628,7 @@ void UI_ViewLocTab::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
             ((UI_Tabs *)_parent)->sendDataArrayToServer();
          }
 	   }
+      _viewLocScroll->_resetSelections();
    }
 }
 
@@ -636,6 +639,9 @@ void UI_ViewLocTab::_onBuildNewFlyButton(wxCommandEvent& WXUNUSED(event))
       ((UI_Tabs *)_parent)->cId = ADD_NEW_FLYTHROUGH;
       ((UI_Tabs *)_parent)->sendDataArrayToServer();
       _updateWithcfdQuatCamHandler();
+      _viewLocScroll->_resetSelections();
+      _viewLocScroll->_activeflySel->SetSelection( flyThroughList.size() - 1 );
+      _setUpActiveFlyThroughNames( flyThroughList.size() - 1 );
    }
 }
 
@@ -774,6 +780,7 @@ void UI_ViewLocTab::_onDeleteFlySel(wxCommandEvent& WXUNUSED(event))
             _updateWithcfdQuatCamHandler();
          }
 	   }
+      _viewLocScroll->_resetSelections();
    }
 
 }
