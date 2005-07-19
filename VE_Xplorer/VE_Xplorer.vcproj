@@ -217,7 +217,7 @@
 				AdditionalOptions="/Zm800"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(OSGHOME)\include&quot;;&quot;$(VTK_HOME)\include\vtk&quot;;&quot;$(VJ_DEPS_DIR)\include&quot;;&quot;$(VJ_BASE_DIR)\include&quot;;&quot;$(VE_SUITE_HOME)\VEOpen\skel&quot;;&quot;$(TAO_ROOT)&quot;;&quot;$(ACE_ROOT)&quot;;&quot;$(TAO_ROOT)\orbsvcs&quot;;&quot;$(XERCESCROOT)\include&quot;;&quot;$(OSGHOME)\..\Producer\include&quot;;&quot;$(OSGHOME)\..\OpenThreads\include&quot;;&quot;$(VE_SUITE_HOME)&quot;;&quot;$(XERCESCROOT)\src&quot;"
-				PreprocessorDefinitions="_DEBUG;_OSG;VE_PATENTED;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;_WINDOWS;_MT;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
+				PreprocessorDefinitions="_DEBUG;_OSG;VE_PATENTED;VTK44;TABLET;WIN32;_CONSOLE;_WIN32;_TAO;_STLP_USE_OWN_NAMESPACE;VTK_STREAMS_FWD_ONLY"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
@@ -277,115 +277,45 @@
 			Filter=".cpp">
 			<File
 				RelativePath=".\cfdApp.cxx">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdAppWrapper.cxx">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdExecutive.cxx">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVEAvailModules.cxx">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVEPluginLoader.cxx">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVEXplorer.cxx">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\cfdVjObsWrapper.cxx">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\moduleC.cpp">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\moduleS.cpp">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\Ve_ce\Network_Exec.cpp">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\VE_i.cpp">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VE_Conductor\impl\VjObs_i.cxx">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\VjObsC.cpp">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 			<File
 				RelativePath="..\VEOpen\skel\VjObsS.cpp">
-				<FileConfiguration
-					Name="tao_pf_dbg|Win32">
-					<Tool
-						Name="VCCLCompilerTool"/>
-				</FileConfiguration>
 			</File>
 		</Filter>
 		<Filter

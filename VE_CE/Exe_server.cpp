@@ -67,7 +67,7 @@ int main (int argc, char* argv[])
 	PortableServer::ObjectId_var id =
         PortableServer::string_to_ObjectId ("Executive");
 
-    child_poa->activate_object_with_id (id.in (), &exec_i);
+    child_poa->activate_object_with_id (id.in(), &exec_i);
 
     //Activate it to obtain the object reference
     Body::Executive_var exec =  Body::Executive::_narrow(child_poa->id_to_reference (id.in () ));
