@@ -50,12 +50,29 @@ using namespace gmtl;
 using namespace VE_SceneGraph;
 using namespace VE_Xplorer;
 
-cfdQuatCam::cfdQuatCam(Matrix44f& m, double* worldTrans)
+cfdQuatCam::cfdQuatCam(gmtl::Matrix44f& m, double* worldTrans)
 {
    nextMatrix = m;
-   set(NextPosQuat,m);
+   gmtl::Vec3f scaleXVec( nextMatrix[ 0 ][ 0 ], nextMatrix[ 1 ][ 0 ], nextMatrix[ 2 ][ 0 ] );
+   gmtl::Vec3f scaleYVec( nextMatrix[ 0 ][ 1 ], nextMatrix[ 1 ][ 1 ], nextMatrix[ 2 ][ 1 ] );
+   gmtl::Vec3f scaleZVec( nextMatrix[ 0 ][ 2 ], nextMatrix[ 1 ][ 2 ], nextMatrix[ 2 ][ 2 ] );
+   float tempScale = 1.0f/gmtl::length( scaleXVec );
+   gmtl::Matrix44f tempScaleMat;
+   gmtl::setScale( tempScaleMat, tempScale );
+   gmtl::Matrix44f unScaleInput = tempScaleMat * nextMatrix;   
+   set(NextPosQuat,unScaleInput);
    for (int i=0; i<3; i++)
       vjVecNextTrans[i] = worldTrans[i];
+/*
+         gmtl::Vec3f scaleXVec( input[ 0 ][ 0 ], input[ 1 ][ 0 ], input[ 2 ][ 0 ] );
+         gmtl::Vec3f scaleYVec( input[ 0 ][ 1 ], input[ 1 ][ 1 ], input[ 2 ][ 1 ] );
+         gmtl::Vec3f scaleZVec( input[ 0 ][ 2 ], input[ 1 ][ 2 ], input[ 2 ][ 2 ] );
+         float tempScale = 1.0f/gmtl::length( scaleXVec );
+         gmtl::Matrix44f tempScaleMat;
+         gmtl::setScale( tempScaleMat, tempScale );
+         gmtl::Matrix44f unScaleInput = tempScaleMat * input;
+*/
+
 }
 
 void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::cfdDCS* worldDCS)
@@ -63,9 +80,17 @@ void cfdQuatCam::SetCamPos(double* worldTrans, VE_SceneGraph::cfdDCS* worldDCS)
    for (int i=0; i<3; i++)
       vjVecLastTrans[i] = worldTrans[i];
    
-   Matrix44f vjm;  
-   vjm = worldDCS->GetMat();   
-   set(LastPosQuat,vjm);
+   gmtl::Matrix44f vjm;  
+   vjm = worldDCS->GetMat();
+   gmtl::Vec3f scaleXVec( vjm[ 0 ][ 0 ], vjm[ 1 ][ 0 ], vjm[ 2 ][ 0 ] );
+   gmtl::Vec3f scaleYVec( vjm[ 0 ][ 1 ], vjm[ 1 ][ 1 ], vjm[ 2 ][ 1 ] );
+   gmtl::Vec3f scaleZVec( vjm[ 0 ][ 2 ], vjm[ 1 ][ 2 ], vjm[ 2 ][ 2 ] );
+   float tempScale = 1.0f/gmtl::length( scaleXVec );
+   gmtl::Matrix44f tempScaleMat;
+   gmtl::setScale( tempScaleMat, tempScale );
+   gmtl::Matrix44f unScaleInput = tempScaleMat * vjm;   
+
+   set(LastPosQuat,unScaleInput);
 }
 
 

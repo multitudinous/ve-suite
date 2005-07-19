@@ -88,7 +88,7 @@ cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS,
    pointCounter = 0;
    movementIntervalCalc = 0.01;
    frameTimer = new vpr::Timer();
-   this->frameTimer->startTiming();
+   //this->frameTimer->startTiming();
    movementSpeed = 10.0f;
    
    CreateObjects();
@@ -266,27 +266,29 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate*
    Matrix44f vjm;
 
    if ( t == 0.0f )
-      QuatCams[cam_id]->SetCamPos( nav->worldTrans, worldDCS );
+      QuatCams.at( cam_id )->SetCamPos( nav->worldTrans, worldDCS );
 
    if ( ( t < 1.0f ) && ( t < ( 1.0f - movementIntervalCalc ) ) )
    {
       t += movementIntervalCalc;
-      QuatCams[cam_id]->MoveCam( t );
-      QuatCams[cam_id]->UpdateTrans( nav );
-      QuatCams[cam_id]->UpdateRotation( worldDCS );
+      QuatCams.at( cam_id )->MoveCam( t );
+      QuatCams.at( cam_id )->UpdateTrans( nav );
+      QuatCams.at( cam_id )->UpdateRotation( worldDCS );
    }
    else if ( ( t < 1.0f ) && ( t >= ( 1.0f - movementIntervalCalc ) ) )
    {
-      t += ( 1.0f - t );
-      QuatCams[cam_id]->MoveCam( t );
-      QuatCams[cam_id]->UpdateTrans( nav );
-      QuatCams[cam_id]->UpdateRotation( worldDCS );
+      //t += ( 1.0f - t );
+      t = 1.0f;
+      QuatCams.at( cam_id )->MoveCam( t );
+      QuatCams.at( cam_id )->UpdateTrans( nav );
+      QuatCams.at( cam_id )->UpdateRotation( worldDCS );
    }
    else
    {
       t = 0.0f;
       activecam = false;
-   }      
+   } 
+   //std::cout<<"MovementCalc: "<< movementIntervalCalc <<std::endl;    
 }
 
 void cfdQuatCamHandler::RemoveViewPt( void )
@@ -338,7 +340,7 @@ void cfdQuatCamHandler::TurnOffMovement( void )
    _runFlyThrough = false;
    activecam = false;
    pointCounter = 0;
-   t = 0;
+   t = 0.0f;
 }
 
 void cfdQuatCamHandler::AddNewFlythrough( void )
@@ -363,6 +365,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
    {
+      //this->frameTimer->startTiming();
       this->activecam = true;
       this->cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       return true;
@@ -428,7 +431,7 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RUN_ACTIVE_FLYTHROUGH )
    {
-      this->frameTimer->startTiming();
+      //this->frameTimer->startTiming();
       this->activeFlyThrough = (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       this->_runFlyThrough = true;
    }
@@ -458,7 +461,7 @@ void cfdQuatCamHandler::PreFrameUpdate( void )
       if ( (!activecam) )
       {      
          activecam = true;
-         if ( pointCounter < (int)flyThroughList.at( activeFlyThrough ).size()-1 )
+         if ( pointCounter < (unsigned int)flyThroughList.at( activeFlyThrough ).size()-1 )
          {
             pointCounter += 1;
          }
