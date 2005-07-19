@@ -711,18 +711,36 @@ DOMDocument * Package::BuildFromIntfs()
 {
   DOMDocument *doc;
   XMLCh tempStr[100];
+  XMLCh* transcodeResult(0);
   
   XMLString::transcode("LS", tempStr, 99);
   DOMImplementation* impl = DOMImplementationRegistry::getDOMImplementation(tempStr);
  
-  doc =  impl->createDocument(0, XMLString::transcode("package"), 0);
-  doc->setVersion(XMLString::transcode("1.0"));
-  doc->setEncoding(XMLString::transcode("ISO-8859-1"));
+  transcodeResult = XMLString::transcode("package");
+  doc =  impl->createDocument(0, transcodeResult, 0);
+  delete[] transcodeResult;
+  transcodeResult = XMLString::transcode("1.0");
+  doc->setVersion(transcodeResult);
+  delete[] transcodeResult;
+  transcodeResult = XMLString::transcode("ISO-8859-1");
+  doc->setEncoding(transcodeResult);
+  delete[] transcodeResult;
   DOMElement *root_elem = doc->getDocumentElement(); //This is the root element
-			      
-  root_elem->setAttribute(XMLString::transcode("name"), XMLString::transcode(packname.c_str()));
-  root_elem->setAttribute(XMLString::transcode("xmlns:xsi"), XMLString::transcode("http://www.w3.org/2001/XMLSchema-instance"));
-  root_elem->setAttribute(XMLString::transcode("xsi:noNamespaceSchemaLocation"), XMLString::transcode("interface.xsd"));
+  transcodeResult = XMLString::transcode("name");
+  XMLCh* tmp_str( XMLString::transcode(packname.c_str()) );
+  root_elem->setAttribute(transcodeResult, tmp_str);
+  delete[] transcodeResult;
+  delete[] tmp_str;
+  transcodeResult = XMLString::transcode("xmlns:xsi");
+  tmp_str = XMLString::transcode("http://www.w3.org/2001/XMLSchema-instance");
+  root_elem->setAttribute(transcodeResult, tmp_str);
+  delete[] transcodeResult;
+  delete[] tmp_str;
+  transcodeResult = XMLString::transcode("xsi:noNamespaceSchemaLocation");
+  tmp_str = XMLString::transcode("interface.xsd");
+  root_elem->setAttribute(transcodeResult, tmp_str);
+  delete[] transcodeResult;
+  delete[] tmp_str;
   
   //Now start to create the interfaces
 
@@ -741,204 +759,287 @@ DOMDocument * Package::BuildFromIntfs()
   GeometryInfoPackage geomvals;
 
   for (i=0; i<intfs.size(); i++)
-    {
-      cur_intf=doc->createElement(XMLString::transcode("interface"));
-      sprintf(tmp, "%d", intfs[i]._category);
-      cur_intf->setAttribute(XMLString::transcode("category"), XMLString::transcode(tmp));
-      sprintf(tmp, "%d", intfs[i]._type);
-      cur_intf->setAttribute(XMLString::transcode("type"), XMLString::transcode(tmp));
-      sprintf(tmp, "%d", intfs[i]._id);
-      cur_intf->setAttribute(XMLString::transcode("id"), XMLString::transcode(tmp));
-      root_elem->appendChild(cur_intf);
+  {
+     XMLCh* tcName( XMLString::transcode("name") );
+     XMLCh* tcVal( XMLString::transcode("val") );
+     transcodeResult = XMLString::transcode("interface");
+     cur_intf=doc->createElement(transcodeResult);
+     delete[] transcodeResult;
+     sprintf(tmp, "%d", intfs[i]._category);
+     transcodeResult = XMLString::transcode("category");
+     XMLCh* tc_tmp = XMLString::transcode(tmp);
+     cur_intf->setAttribute(transcodeResult, tc_tmp);
+     delete[] transcodeResult;
+     delete[] tc_tmp;
+     sprintf(tmp, "%d", intfs[i]._type);
+     transcodeResult = XMLString::transcode("type");
+     tc_tmp = XMLString::transcode(tmp);
+     cur_intf->setAttribute(transcodeResult, tc_tmp);
+     delete[] transcodeResult;
+     delete[] tc_tmp;
+     sprintf(tmp, "%d", intfs[i]._id);
+     transcodeResult = XMLString::transcode("id");
+     tc_tmp = XMLString::transcode(tmp);
+     cur_intf->setAttribute(transcodeResult, tc_tmp);
+     root_elem->appendChild(cur_intf);
+     delete[] transcodeResult;
+     delete[] tc_tmp;
 
-      //Create nodes for the double
-      var_names=intfs[i].getDoubles();
-      for (j=0; j<var_names.size(); j++)
-	{
-	  cur_elem=doc->createElement(XMLString::transcode("double"));
-	  cur_elem->setAttribute(XMLString::transcode("name"), XMLString::transcode(var_names[j].c_str()));
-	  dval = intfs[i].getDouble(var_names[j]);
-	  sprintf(tmp,"%.10g", dval);
-	  cur_elem->setAttribute(XMLString::transcode("val"), XMLString::transcode(tmp));
-	  cur_intf->appendChild(cur_elem);
-	}
+     //Create nodes for the double
+     var_names=intfs[i].getDoubles();
+     for (j=0; j<var_names.size(); j++)
+     {
+         transcodeResult = XMLString::transcode("double");
+         cur_elem=doc->createElement(transcodeResult);
+         delete[] transcodeResult;
+         transcodeResult = XMLString::transcode(var_names[j].c_str());
+         cur_elem->setAttribute(tcName, transcodeResult);
+         delete[] transcodeResult;
+         dval = intfs[i].getDouble(var_names[j]);
+         sprintf(tmp,"%.10g", dval);
+         tc_tmp = XMLString::transcode(tmp);
+         cur_elem->setAttribute(tcVal, tc_tmp);
+         delete[] tc_tmp;
+         cur_intf->appendChild(cur_elem);
+     }
     
      //Create nodes for the string
-      var_names=intfs[i].getStrings();
-      for (j=0; j<var_names.size(); j++)
-	{
-	  cur_elem=doc->createElement(XMLString::transcode("string"));
-	  cur_elem->setAttribute(XMLString::transcode("name"), XMLString::transcode(var_names[j].c_str()));
-	  sval = intfs[i].getString(var_names[j]);
-	  sprintf(tmp,"%s", sval.c_str());
-	  cur_elem->setAttribute(XMLString::transcode("val"), XMLString::transcode(tmp));
-	  cur_intf->appendChild(cur_elem);
-	} 
+     var_names=intfs[i].getStrings();
+     for (j=0; j<var_names.size(); j++)
+     {
+         transcodeResult = XMLString::transcode("string");
+         cur_elem=doc->createElement(transcodeResult);
+         delete[] transcodeResult;
+         transcodeResult = XMLString::transcode(var_names[j].c_str());
+         cur_elem->setAttribute(tcName, transcodeResult);
+         delete[] transcodeResult;
+         sval = intfs[i].getString(var_names[j]);
+         sprintf(tmp,"%s", sval.c_str());
+         tc_tmp = XMLString::transcode(tmp);
+         cur_elem->setAttribute(tcVal, tc_tmp);
+         delete[] tc_tmp;
+         cur_intf->appendChild(cur_elem);
+     } 
       
-      //Create nodes for the integer
-      var_names=intfs[i].getInts();
-      for (j=0; j<var_names.size(); j++)
-	{
-	  cur_elem=doc->createElement(XMLString::transcode("integer"));
-	  cur_elem->setAttribute(XMLString::transcode("name"), XMLString::transcode(var_names[j].c_str()));
-	  lval = intfs[i].getInt(var_names[j]);
-	  sprintf(tmp,"%d", lval);
-	  cur_elem->setAttribute(XMLString::transcode("val"), XMLString::transcode(tmp));
-	  cur_intf->appendChild(cur_elem);
-	} 
+     //Create nodes for the integer
+     var_names=intfs[i].getInts();
+     for (j=0; j<var_names.size(); j++)
+     {
+         transcodeResult = XMLString::transcode("integer");
+         cur_elem=doc->createElement(transcodeResult);
+         delete[] transcodeResult;
+         transcodeResult = XMLString::transcode(var_names[j].c_str());
+         cur_elem->setAttribute(tcName, transcodeResult);
+         delete[] transcodeResult;
+         lval = intfs[i].getInt(var_names[j]);
+         sprintf(tmp,"%d", lval);
+         tc_tmp = XMLString::transcode(tmp);
+         cur_elem->setAttribute(tcVal, tc_tmp);
+         delete[] tc_tmp;
+         cur_intf->appendChild(cur_elem);
+     } 
 
-      //Create nodes for the doubleArrays
-      var_names=intfs[i].getDoubles1D();
-      for (j=0; j<var_names.size(); j++)
-	{
-	  cur_elem=doc->createElement(XMLString::transcode("doubleArray"));
-	  cur_elem->setAttribute(XMLString::transcode("name"), XMLString::transcode(var_names[j].c_str()));
-	  dvals = intfs[i].getDouble1D(var_names[j]);
-	  for (k=0; k<dvals.size(); k++)
-	    {
-	      sprintf(tmp,"%.10g", dvals[k]);
-	      tmp_elem=doc->createElement(XMLString::transcode("val"));
-	      tmp_elem->appendChild(doc->createTextNode(XMLString::transcode(tmp)));
-	      cur_elem->appendChild(tmp_elem);
-	    }
-	  cur_intf->appendChild(cur_elem);
-	}
+     //Create nodes for the doubleArrays
+     var_names=intfs[i].getDoubles1D();
+     for (j=0; j<var_names.size(); j++)
+     {
+         transcodeResult = XMLString::transcode("doubleArray");
+         cur_elem=doc->createElement(transcodeResult);
+         delete[] transcodeResult;
+         transcodeResult = XMLString::transcode(var_names[j].c_str());
+         cur_elem->setAttribute(tcName, transcodeResult);
+         delete[] transcodeResult;
+         dvals = intfs[i].getDouble1D(var_names[j]);
+	      for (k=0; k<dvals.size(); k++)
+         {
+            sprintf(tmp,"%.10g", dvals[k]);
+            tmp_elem=doc->createElement(tcVal);
+            tc_tmp = XMLString::transcode(tmp);
+            tmp_elem->appendChild(doc->createTextNode(tc_tmp));
+            delete[] tc_tmp;
+            cur_elem->appendChild(tmp_elem);
+	      }
+	      cur_intf->appendChild(cur_elem);
+     }
 	  
-      //Create nodes for the string Arrays
-      var_names=intfs[i].getStrings1D();
-      for (j=0; j<var_names.size(); j++)
-	{
-	  cur_elem=doc->createElement(XMLString::transcode("stringArray"));
-	  cur_elem->setAttribute(XMLString::transcode("name"), XMLString::transcode(var_names[j].c_str()));
-	  svals = intfs[i].getString1D(var_names[j]);
-	  for (k=0; k<svals.size(); k++)
-	    {
-	      sprintf(tmp,"%s", svals[k].c_str());
-	      tmp_elem=doc->createElement(XMLString::transcode("val"));
-	      tmp_elem->appendChild(doc->createTextNode(XMLString::transcode(tmp)));
-	      cur_elem->appendChild(tmp_elem);
-	    }
-	  cur_intf->appendChild(cur_elem);
-	}
+     //Create nodes for the string Arrays
+     var_names=intfs[i].getStrings1D();
+     for (j=0; j<var_names.size(); j++)
+     {
+         transcodeResult = XMLString::transcode("stringArray");
+	      cur_elem=doc->createElement(transcodeResult);
+         delete[] transcodeResult;
+         transcodeResult = XMLString::transcode(var_names[j].c_str());
+	      cur_elem->setAttribute(tcName, transcodeResult);
+         delete[] transcodeResult;
+         svals = intfs[i].getString1D(var_names[j]);
+         for (k=0; k<svals.size(); k++)
+         {
+            sprintf(tmp,"%s", svals[k].c_str());
+            tmp_elem=doc->createElement(tcVal);
+            tc_tmp = XMLString::transcode(tmp);
+            tmp_elem->appendChild(doc->createTextNode(tc_tmp));
+            delete[] tc_tmp;
+            cur_elem->appendChild(tmp_elem);
+         }
+         cur_intf->appendChild(cur_elem);
+     }
 
-      //Create nodes for the integer Arrays
-      var_names=intfs[i].getInts1D();
-      for (j=0; j<var_names.size(); j++)
-	{
-	  cur_elem=doc->createElement(XMLString::transcode("integerArray"));
-	  cur_elem->setAttribute(XMLString::transcode("name"), XMLString::transcode(var_names[j].c_str()));
-	  lvals = intfs[i].getInt1D(var_names[j]);
-	  for (k=0; k<lvals.size(); k++)
-	    {
-	      sprintf(tmp,"%d", lvals[k]);
-	      tmp_elem=doc->createElement(XMLString::transcode("val"));
-	      tmp_elem->appendChild(doc->createTextNode(XMLString::transcode(tmp)));
-	      cur_elem->appendChild(tmp_elem);
-	    }
-	  cur_intf->appendChild(cur_elem);
-	}
+     //Create nodes for the integer Arrays
+     var_names=intfs[i].getInts1D();
+     for (j=0; j<var_names.size(); j++)
+     {
+         transcodeResult = XMLString::transcode("integerArray");
+         cur_elem=doc->createElement(transcodeResult);
+         delete[] transcodeResult;
+         transcodeResult = XMLString::transcode(var_names[j].c_str());
+         cur_elem->setAttribute(tcName, transcodeResult);
+         delete[] transcodeResult;
+         lvals = intfs[i].getInt1D(var_names[j]);
+     for (k=0; k<lvals.size(); k++)
+     {
+         sprintf(tmp,"%d", lvals[k]);
+	      tmp_elem=doc->createElement(tcVal);
+         tc_tmp = XMLString::transcode(tmp);
+	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
+         delete[] tc_tmp;
+         cur_elem->appendChild(tmp_elem);
+     }
+      cur_intf->appendChild(cur_elem);
+   }
 
-     //Create nodes for the GeometryInfoPackage
-      var_names=intfs[i].getGeomInfoPackages();
+   //Create nodes for the GeometryInfoPackage
+   var_names=intfs[i].getGeomInfoPackages();
 
-      for (j=0; j<var_names.size(); j++)
-	{
+   for (j=0; j<var_names.size(); j++)
+   {
+      transcodeResult = XMLString::transcode("GeomInfo");
+      cur_elem=doc->createElement(transcodeResult);
+      delete[] transcodeResult;
+      transcodeResult = XMLString::transcode(var_names[j].c_str());
+      cur_elem->setAttribute(tcName, transcodeResult);
+      delete[] transcodeResult;
 
-     
-	  cur_elem=doc->createElement(XMLString::transcode("GeomInfo"));
-
-	  cur_elem->setAttribute(XMLString::transcode("name"), XMLString::transcode(var_names[j].c_str()));
-
-     geomvals = intfs[i].getGeomInfoPackage(var_names[j]);
+      geomvals = intfs[i].getGeomInfoPackage(var_names[j]);
       
-     DOMElement* modeltype_elem =doc->createElement(XMLString::transcode("ModelType"));
-     DOMElement* geomfilename_elem=doc->createElement(XMLString::transcode("GeometryFileName"));
-     DOMElement* transparencytoggle_elem=doc->createElement(XMLString::transcode("TransparencyToggle"));
-     DOMElement* scales_elem=doc->createElement(XMLString::transcode("ScaleArray"));
-     DOMElement* trans_elem=doc->createElement(XMLString::transcode("TranslationArray"));
-     DOMElement* rots_elem=doc->createElement(XMLString::transcode("RotationArray"));
-     DOMElement* colorflag_elem=doc->createElement(XMLString::transcode("ColorFlag"));
-     DOMElement* colors_elem=doc->createElement(XMLString::transcode("RGBArray"));
-     DOMElement* LOD_elem=doc->createElement(XMLString::transcode("LOD"));
-
+      transcodeResult = XMLString::transcode("ModelType");
+      DOMElement* modeltype_elem =doc->createElement(transcodeResult);
+      delete[] transcodeResult;
+      transcodeResult = XMLString::transcode("GeometryFileName");
+      DOMElement* geomfilename_elem=doc->createElement(transcodeResult);
+      delete[] transcodeResult;
+      transcodeResult = XMLString::transcode("TransparencyToggle");
+      DOMElement* transparencytoggle_elem=doc->createElement(transcodeResult);
+      delete[] transcodeResult;
+      transcodeResult = XMLString::transcode("ScaleArray");
+      DOMElement* scales_elem=doc->createElement(transcodeResult);
+      delete[] transcodeResult;
+      transcodeResult = XMLString::transcode("TranslationArray");
+      DOMElement* trans_elem=doc->createElement(transcodeResult);
+      transcodeResult = XMLString::transcode("RotationArray");
+      DOMElement* rots_elem=doc->createElement(transcodeResult);
+      delete[] transcodeResult;
+      transcodeResult = XMLString::transcode("ColorFlag");
+      DOMElement* colorflag_elem=doc->createElement(transcodeResult);
+      delete[] transcodeResult;
+      transcodeResult = XMLString::transcode("RGBArray");
+      DOMElement* colors_elem=doc->createElement(transcodeResult);
+      delete[] transcodeResult;
+      transcodeResult = XMLString::transcode("LOD");
+      DOMElement* LOD_elem=doc->createElement(transcodeResult);
+      delete[] transcodeResult;
+      sprintf(tmp,"%d", geomvals.GetModelType());
+      tc_tmp = XMLString::transcode(tmp);
+      modeltype_elem->setAttribute(tcVal, tc_tmp);
+      delete[] tc_tmp;
+      sprintf(tmp,"%s", geomvals.GetGeomFileName().c_str());
+      tc_tmp = XMLString::transcode(tmp);
+      geomfilename_elem->setAttribute(tcVal, tc_tmp);
+      delete[] tc_tmp;
+      sprintf(tmp,"%d", geomvals.GetTransparencyToggle());
+      tc_tmp = XMLString::transcode(tmp);
+      transparencytoggle_elem->setAttribute(tcVal, tc_tmp);
+      delete[] tc_tmp;
      
-     sprintf(tmp,"%d", geomvals.GetModelType());
-	  modeltype_elem->setAttribute(XMLString::transcode("val"), XMLString::transcode(tmp));
-	  
-     
-     sprintf(tmp,"%s", geomvals.GetGeomFileName().c_str());
-     geomfilename_elem->setAttribute(XMLString::transcode("val"),XMLString::transcode(tmp));
-     
-     
-     sprintf(tmp,"%d", geomvals.GetTransparencyToggle());
-     transparencytoggle_elem->setAttribute(XMLString::transcode("val"),XMLString::transcode(tmp));
-     
-     double* temp;
-     temp = geomvals.GetScales();
+      double* temp;
+      temp = geomvals.GetScales();
      
       for (k=0; k<3; k++)
-	    {
+      {
 	      sprintf(tmp,"%0.10g", temp[k]);
-	      tmp_elem=doc->createElement(XMLString::transcode("val"));
-	      tmp_elem->appendChild(doc->createTextNode(XMLString::transcode(tmp)));
+	      tmp_elem=doc->createElement(tcVal);
+         tc_tmp = XMLString::transcode(tmp);
+	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
+         delete[] tc_tmp;
 	      scales_elem->appendChild(tmp_elem);
    
-	    }
+	   }
 
       temp = geomvals.GetTrans();
-       for (k=0; k<3; k++)
-	    {
-	      sprintf(tmp,"%0.10g", temp[k]);
-	      tmp_elem=doc->createElement(XMLString::transcode("val"));
-	      tmp_elem->appendChild(doc->createTextNode(XMLString::transcode(tmp)));
-	      trans_elem->appendChild(tmp_elem);
-	    }
-
-       temp = geomvals.GetRots();
-       for (k=0; k<3; k++)
-	    {
-	      sprintf(tmp,"%0.10g", temp[k]);
-	      tmp_elem=doc->createElement(XMLString::transcode("val"));
-	      tmp_elem->appendChild(doc->createTextNode(XMLString::transcode(tmp)));
-	      rots_elem->appendChild(tmp_elem);
-	    }
-
-       temp = geomvals.GetColors();
       for (k=0; k<3; k++)
-	    {
+	   {
 	      sprintf(tmp,"%0.10g", temp[k]);
-	      tmp_elem=doc->createElement(XMLString::transcode("val"));
-	      tmp_elem->appendChild(doc->createTextNode(XMLString::transcode(tmp)));
+	      tmp_elem=doc->createElement(tcVal);
+         tc_tmp = XMLString::transcode(tmp);
+	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
+         delete[] tc_tmp;
+	      trans_elem->appendChild(tmp_elem);
+	   }
+
+      temp = geomvals.GetRots();
+      for (k=0; k<3; k++)
+	   {
+	      sprintf(tmp,"%0.10g", temp[k]);
+	      tmp_elem=doc->createElement(tcVal);
+         tc_tmp = XMLString::transcode(tmp);
+	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
+         delete[] tc_tmp;
+	      rots_elem->appendChild(tmp_elem);
+	   }
+
+      temp = geomvals.GetColors();
+      for (k=0; k<3; k++)
+	   {
+	      sprintf(tmp,"%0.10g", temp[k]);
+	      tmp_elem=doc->createElement(tcVal);
+         tc_tmp = XMLString::transcode(tmp);
+	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
+         delete[] tc_tmp;
 	      colors_elem->appendChild(tmp_elem);
-	    }
+	   }
 
       
-     sprintf(tmp,"%d", geomvals.GetColorFlag());
-     colorflag_elem->setAttribute(XMLString::transcode("val"),XMLString::transcode(tmp));
+      sprintf(tmp,"%d", geomvals.GetColorFlag());
+      tc_tmp = XMLString::transcode(tmp);
+      colorflag_elem->setAttribute(tcVal, tc_tmp);
+      delete[] tc_tmp;
      
-     sprintf(tmp, "%0.10g", geomvals.GetLOD());
-     LOD_elem->setAttribute(XMLString::transcode("val"), XMLString::transcode(tmp));
+      sprintf(tmp, "%0.10g", geomvals.GetLOD());
+      tc_tmp = XMLString::transcode(tmp);
+      LOD_elem->setAttribute(tcVal, tc_tmp);
+      delete[] tc_tmp;
 
-     cur_elem->appendChild(modeltype_elem);
-     cur_elem->appendChild(geomfilename_elem);
-     cur_elem->appendChild(transparencytoggle_elem);
-     cur_elem->appendChild(scales_elem);
-     cur_elem->appendChild(trans_elem);
-     cur_elem->appendChild(rots_elem);
-     cur_elem->appendChild(colorflag_elem);
-     cur_elem->appendChild(colors_elem);
-     cur_elem->appendChild(LOD_elem);
+      cur_elem->appendChild(modeltype_elem);
+      cur_elem->appendChild(geomfilename_elem);
+      cur_elem->appendChild(transparencytoggle_elem);
+      cur_elem->appendChild(scales_elem);
+      cur_elem->appendChild(trans_elem);
+      cur_elem->appendChild(rots_elem);
+      cur_elem->appendChild(colorflag_elem);
+      cur_elem->appendChild(colors_elem);
+      cur_elem->appendChild(LOD_elem);
 
      
-     cur_intf->appendChild(cur_elem);
+      cur_intf->appendChild(cur_elem);
 
 	 
    }
+   delete[] tcName;
+   delete[] tcVal;
  
 
     
-    }
-  
-  return doc;
+ }
+return doc;
 
 }
