@@ -78,12 +78,37 @@ public:
 
    wxStaticBox* _newVPNameCtrlBox;
    wxStaticBox* _newFlyNameCtrlBox;
+   wxStaticBox* _allFlyCtrlBox;
+   wxStaticBox* _speedCtrlBox;
+   wxStaticBox* _allVPCtrlBox;
 
    wxBoxSizer* _newVPControlsSizer;
    wxBoxSizer* _flyModCtrlsSizer;
+   wxBoxSizer* viewlocPanelGroup;
+   wxBoxSizer* _allFlythroughCtrls;
+   wxBoxSizer* _runStopFlyButtonsSizer;
+   wxBoxSizer* _newFlySizer;
+   wxBoxSizer* _newFlyNameButtonsSizer;
+   wxBoxSizer* _allLeftSide;
+   wxBoxSizer* _newVPNameButtonsSizer;
+   wxStaticBoxSizer* _allVPCtrlsGroup;
+   wxStaticBoxSizer* _speedCtrlGroup;
+   wxStaticBoxSizer* _newFlyNameCtrlGroup;
    wxStaticBoxSizer* _newVPNameCtrlGroup;
+   wxStaticBoxSizer* _allFlyCtrlsGroup;
 
-   void _rebuildPage();
+
+	wxString* _locNamesLocal;
+	wxString* _activeFlyNamesLocal;
+	wxString* _flythroughNamesLocal;
+
+   void _buildPage( void );
+   void _rebuildPage( void );
+   void _resetSelections( void );
+
+   int _numViewLocLocal;
+   int _vwptsInActiveFlyLocal;
+   int _numStoredFlythroughsLocal;
 
 protected:
 
@@ -96,9 +121,9 @@ public:
    UI_ViewLocTab(wxNotebook* tControl);
    ~UI_ViewLocTab( void );
 
-   int numStoredLocations;
-   int numStoredFlythroughs;
-   int _vwptsInActiveFly;
+   unsigned int numStoredLocations;
+   unsigned int numStoredFlythroughs;
+   unsigned int _vwptsInActiveFly;
    std::vector< std::vector <int> > flyThroughList;
    wxString* _locationName;
    wxString* _flythroughName;

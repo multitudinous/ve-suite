@@ -15,14 +15,54 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
 {
    parent = parent;
 
+	_locNamesLocal = 0;
+	_activeFlyNamesLocal = 0;
+	_flythroughNamesLocal = 0;
+
    int nUnitX=20;
    int nUnitY=10;
    int nPixX = 5;
    int nPixY = 10;
    SetScrollbars( nPixX, nPixY, nUnitX, nUnitY );
+   
+   _buildPage();
+
+}
+
+
+void UI_ViewLocTabScroll::_buildPage( void )
+{		
+	_numViewLocLocal = ((UI_ViewLocTab *)GetParent())->numStoredLocations;
+	_vwptsInActiveFlyLocal = ((UI_ViewLocTab *)GetParent())->_vwptsInActiveFly;
+	_numStoredFlythroughsLocal = ((UI_ViewLocTab *)GetParent())->numStoredFlythroughs;
+	
+	if ( _locNamesLocal )
+	{
+		delete [] _locNamesLocal;
+	}
+
+	_locNamesLocal = new wxString[ _numViewLocLocal ];
+
+	if ( _activeFlyNamesLocal )
+	{
+		delete [] _activeFlyNamesLocal;
+	}
+
+	_activeFlyNamesLocal = new wxString[ _vwptsInActiveFlyLocal ];
+
+	if ( _flythroughNamesLocal )
+	{
+		delete [] _flythroughNamesLocal;
+	}
+
+	_flythroughNamesLocal = new wxString[ _numStoredFlythroughsLocal ];
+
+	_locNamesLocal = ((UI_ViewLocTab *)GetParent())->_locationName;
+	_activeFlyNamesLocal = ((UI_ViewLocTab *)GetParent())->_activeFlyNames;
+	_flythroughNamesLocal = ((UI_ViewLocTab *)GetParent())->_flythroughName;
 
 //*******Setting up the widgets for making and naming a new view point 
-   wxStaticBox* _allVPCtrlBox = new wxStaticBox(this, -1, "View Point Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   _allVPCtrlBox = new wxStaticBox(this, -1, "View Point Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
 	_newVPNameCtrlBox = new wxStaticBox(this, -1, "Name the new View Point", wxDefaultPosition,wxDefaultSize,wxCAPTION);
 
@@ -34,7 +74,7 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
 
    _newvwptNameCancelButton = new wxButton(this, VIEWLOC_CANCELNEWVPNAME_BUTTON, wxT("Cancel"));
 
-   wxBoxSizer* _newVPNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
+   _newVPNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
    _newVPNameButtonsSizer->Add(_newvwptNameOKButton,1,wxALIGN_LEFT);
    _newVPNameButtonsSizer->Add(_newvwptNameCancelButton,1,wxALIGN_RIGHT);
 
@@ -46,15 +86,15 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
 //********Finishing off the view points controls
    _removevwptLabel = new wxStaticText(this, -1, wxT("Delete View Points "));
 
-   _removevwptSel = new wxComboBox(this, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Pt to delete"),wxDefaultPosition, 
-                                 wxDefaultSize,((UI_ViewLocTab *)GetParent())->numStoredLocations, 
-                                 ((UI_ViewLocTab *)GetParent())->_locationName, wxCB_READONLY);
+   _removevwptSel = new wxComboBox(this, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
+                                 wxDefaultSize,_numViewLocLocal, 
+                                 _locNamesLocal, wxCB_READONLY);
 
    _movetovwptLabel = new wxStaticText(this, -1, wxT("Move to a View Point "));
 
    _movetovwptSel = new wxComboBox(this, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                 wxDefaultSize,((UI_ViewLocTab *)GetParent())->numStoredLocations, 
-                                 ((UI_ViewLocTab *)GetParent())->_locationName, wxCB_READONLY);
+                                 wxDefaultSize,_numViewLocLocal, 
+                                 _locNamesLocal, wxCB_READONLY);
 
    blank1 = new wxStaticText(this, -1, ""); //just a place holder
    blank2 = new wxStaticText(this, -1, ""); //just a place holder
@@ -70,11 +110,11 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
    _newVPControlsSizer->Add(_movetovwptLabel,1,wxALIGN_LEFT|wxEXPAND);
    _newVPControlsSizer->Add(_movetovwptSel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
-   wxStaticBoxSizer* _allVPCtrlsGroup = new wxStaticBoxSizer(_allVPCtrlBox, wxVERTICAL);
+   _allVPCtrlsGroup = new wxStaticBoxSizer(_allVPCtrlBox, wxVERTICAL);
    _allVPCtrlsGroup->Add(_newVPControlsSizer,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
 //*******Throw in the Speed Control Slider
-   wxStaticBox* _speedCtrlBox = new wxStaticBox(this, -1, "Movement Speed Control", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   _speedCtrlBox = new wxStaticBox(this, -1, "Movement Speed Control", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
    _speedctrlLabel = new wxStaticText(this, -1, wxT("Approximate Linear Speed in feet/second"));
 
@@ -83,11 +123,11 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
                                        wxSL_HORIZONTAL|
                                        wxSL_LABELS );
 
-   wxStaticBoxSizer* _speedCtrlGroup = new wxStaticBoxSizer(_speedCtrlBox, wxVERTICAL);
+   _speedCtrlGroup = new wxStaticBoxSizer(_speedCtrlBox, wxVERTICAL);
    _speedCtrlGroup->Add(_speedctrlLabel,1,wxALIGN_CENTER_HORIZONTAL);
    _speedCtrlGroup->Add(_speedCtrlSlider,2,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
-   wxBoxSizer* _allLeftSide = new wxBoxSizer(wxVERTICAL);
+   _allLeftSide = new wxBoxSizer(wxVERTICAL);
    _allLeftSide->Add(_allVPCtrlsGroup,3,wxALIGN_CENTER_HORIZONTAL); 
    _allLeftSide->Add(_speedCtrlGroup,1,wxALIGN_CENTER_HORIZONTAL);
 
@@ -97,7 +137,7 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
 
 
 //*******Building the Flythrough Controls
-   wxStaticBox* _allFlyCtrlBox = new wxStaticBox(this, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
+   _allFlyCtrlBox = new wxStaticBox(this, -1, "Flythrough Controls", wxDefaultPosition,wxDefaultSize,wxCAPTION); 
 
    //Start with the controls for setting up a new flythrough and naming it
 	_newFlyNameCtrlBox = new wxStaticBox(this, -1, "Name the new Flythrough", wxDefaultPosition,wxDefaultSize,wxCAPTION);
@@ -110,15 +150,15 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
 
    _newflythroughNameCancelButton = new wxButton(this, VIEWLOC_CANCELNEWFLYNAME_BUTTON, wxT("Cancel"));
 
-   wxBoxSizer* _newFlyNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
+   _newFlyNameButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
    _newFlyNameButtonsSizer->Add(_newflythroughNameOKButton,1,wxALIGN_LEFT);
    _newFlyNameButtonsSizer->Add(_newflythroughNameCancelButton,1,wxALIGN_RIGHT);
 
-   wxStaticBoxSizer* _newFlyNameCtrlGroup = new wxStaticBoxSizer(_newFlyNameCtrlBox, wxVERTICAL);
+   _newFlyNameCtrlGroup = new wxStaticBoxSizer(_newFlyNameCtrlBox, wxVERTICAL);
    _newFlyNameCtrlGroup->Add(_newflythroughNameCtrl,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    _newFlyNameCtrlGroup->Add(_newFlyNameButtonsSizer,0,wxALIGN_CENTER_HORIZONTAL);
 
-   wxBoxSizer* _newFlySizer = new wxBoxSizer(wxVERTICAL);
+   _newFlySizer = new wxBoxSizer(wxVERTICAL);
    _newFlySizer->Add(_addnewflythroughButton,1,wxALIGN_CENTER_HORIZONTAL);
    _newFlySizer->Add(_newFlyNameCtrlGroup,2,wxALIGN_CENTER_HORIZONTAL);
 
@@ -129,36 +169,36 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
    _activeflyLabel = new wxStaticText(this, -1, wxT("Active Flythrough Selection"));
 
    _activeflySel = new wxComboBox(this, VIEWLOC_ACTIVEFLYSEL_COMBOBOX, wxT("Select Active Flythrough"),wxDefaultPosition, 
-                                  wxDefaultSize, ((UI_ViewLocTab *)GetParent())->numStoredFlythroughs, 
-                                  ((UI_ViewLocTab *)GetParent())->_flythroughName, wxCB_READONLY);
+                                  wxDefaultSize, _numStoredFlythroughsLocal, 
+                                  _flythroughNamesLocal, wxCB_READONLY);
 
    _addvptoflyLabel = new wxStaticText(this, -1, wxT("Add Viewpts at the end of Flythrough"));
 
    _addvptoflySel = new wxComboBox(this, VIEWLOC_ADDVPTOFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                   wxDefaultSize, ((UI_ViewLocTab *)GetParent())->numStoredLocations, 
-                                   ((UI_ViewLocTab *)GetParent())->_locationName, wxCB_READONLY);
+                                   wxDefaultSize, _numViewLocLocal, 
+                                   _locNamesLocal, wxCB_READONLY);
 
    _insertvpinflyLabel = new wxStaticText(this, -1, wxT("Insert Viewpts within Flythrough"));
 
    _insertvpinflySel = new wxComboBox(this, VIEWLOC_INSERTVPINFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                      wxDefaultSize, ((UI_ViewLocTab *)GetParent())->numStoredLocations, 
-                                      ((UI_ViewLocTab *)GetParent())->_locationName, wxCB_READONLY);
+                                      wxDefaultSize, _numViewLocLocal, 
+                                      _locNamesLocal, wxCB_READONLY);
 
    _removevpfromflyLabel = new wxStaticText(this, -1, wxT("Remove Viewpts from Flythrough"));
 
    _removevpfromflySel = new wxComboBox(this, VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                        wxDefaultSize, ((UI_ViewLocTab *)parent)->_vwptsInActiveFly, 
-                                        ((UI_ViewLocTab *)GetParent())->_activeFlyNames, wxCB_READONLY);
+                                        wxDefaultSize, _vwptsInActiveFlyLocal,
+                                        _activeFlyNamesLocal, wxCB_READONLY);
 
    _deleteflyLabel = new wxStaticText(this, -1, wxT("Delete Entire Flythrough"));
 
    _deleteflySel = new wxComboBox(this, VIEWLOC_DELETEFLYSEL_COMBOBOX, wxT("Select a Flythrough"),wxDefaultPosition, 
-                                        wxDefaultSize, ((UI_ViewLocTab *)GetParent())->numStoredFlythroughs, 
-                                        ((UI_ViewLocTab *)GetParent())->_flythroughName, wxCB_READONLY);
+                                        wxDefaultSize, _numStoredFlythroughsLocal, 
+                                        _flythroughNamesLocal, wxCB_READONLY);
 
 
    _flybuilderListBox = new wxListBox(this, VIEWLOC_FLYBUILDER_LISTBOX, wxDefaultPosition, wxDefaultSize,
-                                      ((UI_ViewLocTab *)GetParent())->_vwptsInActiveFly, ((UI_ViewLocTab *)GetParent())->_activeFlyNames, 
+                                      _vwptsInActiveFlyLocal, _activeFlyNamesLocal,  
                                        wxLB_HSCROLL|wxLB_NEEDED_SB, wxDefaultValidator, wxT("Active Flythrough Order"));    
 
    blank3 = new wxStaticText(this, -1, ""); //just a place holder
@@ -190,22 +230,22 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
 
    _stopactiveflyButton = new wxButton(this, VIEWLOC_STOPFLY_BUTTON, wxT("Stop Flythrough"));
 
-   wxBoxSizer* _runStopFlyButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
+   _runStopFlyButtonsSizer = new wxBoxSizer(wxHORIZONTAL);
    _runStopFlyButtonsSizer->Add(_runactiveflyButton,1,wxALIGN_LEFT);
    _runStopFlyButtonsSizer->Add(_stopactiveflyButton,1,wxALIGN_RIGHT);
 
-   wxBoxSizer* _allFlythroughCtrls = new wxBoxSizer(wxVERTICAL);
+   _allFlythroughCtrls = new wxBoxSizer(wxVERTICAL);
    _allFlythroughCtrls->Add(_newFlySizer,1,wxALIGN_CENTER_HORIZONTAL);
    _allFlythroughCtrls->Add(_flyModCtrlsSizer,4,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
    _allFlythroughCtrls->Add(_runStopFlyButtonsSizer,1,wxALIGN_CENTER_HORIZONTAL);
 
-   wxStaticBoxSizer* _allFlyCtrlsGroup = new wxStaticBoxSizer(_allFlyCtrlBox, wxVERTICAL);
+   _allFlyCtrlsGroup = new wxStaticBoxSizer(_allFlyCtrlBox, wxVERTICAL);
    _allFlyCtrlsGroup->Add(_allFlythroughCtrls,0,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
 
 
 //********Now Put the entire page together
    //the main group
-   wxBoxSizer* viewlocPanelGroup = new wxBoxSizer(wxHORIZONTAL);
+   viewlocPanelGroup = new wxBoxSizer(wxHORIZONTAL);
 
    //add the rows to the main panel
    viewlocPanelGroup->Add(_allLeftSide,1,wxALIGN_CENTER_HORIZONTAL); 
@@ -215,158 +255,6 @@ UI_ViewLocTabScroll::UI_ViewLocTabScroll(wxWindow* parent)
 
    //assign the group to the panel
    SetSizer(viewlocPanelGroup);
-
-   _activeflySel->SetValue( ((UI_ViewLocTab *)GetParent())->_flythroughName[ 0 ] );
-
-}
-
-///////////////////////////////////////
-UI_ViewLocTabScroll::~UI_ViewLocTabScroll()
-{
-
-}
-
-void UI_ViewLocTabScroll::_rebuildPage( void )
-{
-   _newVPControlsSizer->Detach(_removevwptSel);
-   _newVPControlsSizer->Detach(_movetovwptSel);
-
-   if ( _removevwptSel )
-   {
-      delete _removevwptSel;
-      _removevwptSel = 0;
-   }
-   
-   if ( _movetovwptSel )
-   {
-      delete _movetovwptSel;
-      _movetovwptSel = 0;
-   }
-
-   _removevwptSel = new wxComboBox(this, VIEWLOC_REMOVEVP_COMBOBOX, wxT("Select a View Pt to delete"),wxDefaultPosition, 
-                                 wxDefaultSize,((UI_ViewLocTab *)GetParent())->numStoredLocations, 
-                                 ((UI_ViewLocTab *)GetParent())->_locationName, wxCB_READONLY);
-
-   _movetovwptSel = new wxComboBox(this, VIEWLOC_MOVETOVP_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                 wxDefaultSize,((UI_ViewLocTab *)GetParent())->numStoredLocations, 
-                                 ((UI_ViewLocTab *)GetParent())->_locationName, wxCB_READONLY);
-
-   _newVPControlsSizer->Detach(_addnewviewptButton);
-   _newVPControlsSizer->Detach(_newVPNameCtrlGroup);
-   _newVPControlsSizer->Detach(blank1);
-   _newVPControlsSizer->Detach(_removevwptLabel);
-   _newVPControlsSizer->Detach(blank2);
-   _newVPControlsSizer->Detach(_movetovwptLabel);
-
-   _newVPControlsSizer->Add(_addnewviewptButton,1,wxALIGN_CENTER_HORIZONTAL);
-   _newVPControlsSizer->Add(_newVPNameCtrlGroup,3,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _newVPControlsSizer->Add(blank1,2,wxALIGN_CENTER_HORIZONTAL);
-   _newVPControlsSizer->Add(_removevwptLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _newVPControlsSizer->Add(_removevwptSel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _newVPControlsSizer->Add(blank2,2,wxALIGN_CENTER_HORIZONTAL);
-   _newVPControlsSizer->Add(_movetovwptLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _newVPControlsSizer->Add(_movetovwptSel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-
-//*****************************Now rebuild flythrough controls
-   _flyModCtrlsSizer->Detach(_activeflySel);
-   _flyModCtrlsSizer->Detach(_addvptoflySel);
-   _flyModCtrlsSizer->Detach(_insertvpinflySel);
-   _flyModCtrlsSizer->Detach(_removevpfromflySel);
-   _flyModCtrlsSizer->Detach(_deleteflySel);
-   _flyModCtrlsSizer->Detach(_flybuilderListBox);
-
-   if ( _activeflySel )
-   {
-      delete _activeflySel;
-      _activeflySel = 0;
-   }
-   
-   if ( _addvptoflySel )
-   {
-      delete _addvptoflySel;
-      _addvptoflySel = 0;
-   }
-
-   if ( _insertvpinflySel )
-   {
-      delete _insertvpinflySel;
-      _insertvpinflySel = 0;
-   }
-   
-   if ( _removevpfromflySel )
-   {
-      delete _removevpfromflySel;
-      _removevpfromflySel = 0;
-   }
-
-   if ( _deleteflySel )
-   {
-      delete _deleteflySel;
-      _deleteflySel = 0;
-   }
-   
-   if ( _flybuilderListBox )
-   {
-      delete _flybuilderListBox;
-      _flybuilderListBox = 0;
-   }
-  
-   _activeflySel = new wxComboBox(this, VIEWLOC_ACTIVEFLYSEL_COMBOBOX, wxT("Select Active Flythrough"),wxDefaultPosition, 
-                                  wxDefaultSize, ((UI_ViewLocTab *)GetParent())->numStoredFlythroughs, 
-                                  ((UI_ViewLocTab *)GetParent())->_flythroughName, wxCB_READONLY);
-
-
-   _addvptoflySel = new wxComboBox(this, VIEWLOC_ADDVPTOFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                   wxDefaultSize, ((UI_ViewLocTab *)GetParent())->numStoredLocations, 
-                                   ((UI_ViewLocTab *)GetParent())->_locationName, wxCB_READONLY);
-
-
-   _insertvpinflySel = new wxComboBox(this, VIEWLOC_INSERTVPINFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                      wxDefaultSize, ((UI_ViewLocTab *)GetParent())->numStoredLocations, 
-                                      ((UI_ViewLocTab *)GetParent())->_locationName, wxCB_READONLY);
-
-
-   _removevpfromflySel = new wxComboBox(this, VIEWLOC_REMOVEVPFROMFLYSEL_COMBOBOX, wxT("Select a View Point"),wxDefaultPosition, 
-                                        wxDefaultSize, ((UI_ViewLocTab *)GetParent())->_vwptsInActiveFly, 
-                                        ((UI_ViewLocTab *)GetParent())->_activeFlyNames, wxCB_READONLY);
-
-   _deleteflySel = new wxComboBox(this, VIEWLOC_DELETEFLYSEL_COMBOBOX, wxT("Select a Flythrough"),wxDefaultPosition, 
-                                        wxDefaultSize, ((UI_ViewLocTab *)GetParent())->numStoredFlythroughs, 
-                                        ((UI_ViewLocTab *)GetParent())->_flythroughName, wxCB_READONLY);
-
-   _flybuilderListBox = new wxListBox(this, VIEWLOC_FLYBUILDER_LISTBOX, wxDefaultPosition, wxDefaultSize,
-                                      ((UI_ViewLocTab *)GetParent())->_vwptsInActiveFly, ((UI_ViewLocTab *)GetParent())->_activeFlyNames, 
-                                       wxLB_HSCROLL|wxLB_NEEDED_SB, wxDefaultValidator, wxT("Active Flythrough Order"));    
-
-   _flyModCtrlsSizer->Detach(_activeflyLabel);
-   _flyModCtrlsSizer->Detach(blank3);
-   _flyModCtrlsSizer->Detach(_addvptoflyLabel);
-   _flyModCtrlsSizer->Detach(blank4);
-   _flyModCtrlsSizer->Detach(_insertvpinflyLabel);
-   _flyModCtrlsSizer->Detach(blank5);
-   _flyModCtrlsSizer->Detach(_removevpfromflyLabel);
-   _flyModCtrlsSizer->Detach(blank6);
-   _flyModCtrlsSizer->Detach(_deleteflyLabel);
-   _flyModCtrlsSizer->Detach(blank7);
-
-
-   _flyModCtrlsSizer->Add(_activeflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_activeflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(_flybuilderListBox,7,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank3,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_addvptoflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_addvptoflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank4,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_insertvpinflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_insertvpinflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank5,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_removevpfromflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_removevpfromflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank6,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_deleteflyLabel,1,wxALIGN_LEFT|wxEXPAND);
-   _flyModCtrlsSizer->Add(_deleteflySel,1,wxALIGN_CENTER_HORIZONTAL|wxEXPAND);
-   _flyModCtrlsSizer->Add(blank7,1,wxALIGN_LEFT|wxEXPAND);
-
 
    Refresh(); 
    //Complete Hack needed to get the page to refresh properly
@@ -388,8 +276,69 @@ void UI_ViewLocTabScroll::_rebuildPage( void )
    temp.SetHeight( temp.GetHeight()+flag );
    temp.SetWidth( temp.GetWidth()+flag );
    SetSize( temp );
+std::cout<<"TEST8"<<std::endl;
+   _activeflySel->SetValue( _flythroughNamesLocal[ 0 ] );
+
 }
 
+///////////////////////////////////////
+UI_ViewLocTabScroll::~UI_ViewLocTabScroll()
+{
+
+}
+
+
+void UI_ViewLocTabScroll::_rebuildPage( void )
+{ 
+   _removevwptSel->Clear();
+   _movetovwptSel->Clear();
+   _addvptoflySel->Clear();
+   _insertvpinflySel->Clear();
+   _activeflySel->Clear();
+   _deleteflySel->Clear();
+   _removevpfromflySel->Clear();
+   _flybuilderListBox->Clear();
+
+   _removevwptSel->Insert( wxT("Select a View Point"), 0 );
+   _movetovwptSel->Insert( wxT("Select a View Point"), 0 );
+   _addvptoflySel->Insert( wxT("Select a View Point"), 0 );
+   _insertvpinflySel->Insert( wxT("Select a View Point"), 0 );
+   _deleteflySel->Insert( wxT("Select a Flythrough"), 0 );   
+   _removevpfromflySel->Insert( ("Select a View Point"), 0 ); 
+
+   for ( unsigned int i=0; i<((UI_ViewLocTab *)GetParent())->numStoredLocations; i++ )
+   {  
+      _removevwptSel->Insert( ((UI_ViewLocTab *)GetParent())->_locationName[ i ], ( i + 1 ) );
+      _movetovwptSel->Insert( ((UI_ViewLocTab *)GetParent())->_locationName[ i ], ( i + 1 ) );
+      _addvptoflySel->Insert( ((UI_ViewLocTab *)GetParent())->_locationName[ i ], ( i + 1 ) );
+      _insertvpinflySel->Insert( ((UI_ViewLocTab *)GetParent())->_locationName[ i ], ( i + 1 ) );
+   }
+
+   for ( unsigned int i=0; i<((UI_ViewLocTab *)GetParent())->numStoredFlythroughs; i++ )
+   {
+      _activeflySel->Insert( ((UI_ViewLocTab *)GetParent())->_flythroughName[ i ], ( i ) );
+      _deleteflySel->Insert( ((UI_ViewLocTab *)GetParent())->_flythroughName[ i ], ( i + 1 ) );
+   }
+
+   for ( unsigned int i=0; i<((UI_ViewLocTab *)GetParent())->_vwptsInActiveFly; i++ )
+   {
+      _removevpfromflySel->Insert( ((UI_ViewLocTab *)GetParent())->_activeFlyNames[ i ], ( i + 1 ) );
+      _flybuilderListBox->Insert( ((UI_ViewLocTab *)GetParent())->_activeFlyNames[ i ], ( i ) );
+   }
+
+
+}
+
+void UI_ViewLocTabScroll::_resetSelections( void )
+{
+   _removevwptSel->SetSelection( 0 );
+   _movetovwptSel->SetSelection( 0 );
+   _addvptoflySel->SetSelection( 0 );
+   _insertvpinflySel->SetSelection( 0 );
+   _deleteflySel->SetSelection( 0 );   
+   _removevpfromflySel->SetSelection( 0 ); 
+
+}
 
 BEGIN_EVENT_TABLE(UI_ViewLocTab, wxPanel)
    EVT_BUTTON(VIEWLOC_LOAD_BUTTON,UI_ViewLocTab::_onLoad)
@@ -447,15 +396,10 @@ void UI_ViewLocTab::_buildPage()
       std::vector<int> tempPts;
       for (CORBA::ULong k=0; k<((UI_Tabs *)_parent)->flyThroughArray[j].length(); k++ )
       {
-         tempPts.push_back( ((UI_Tabs *)_parent)->flyThroughArray[j][k] );
+         tempPts.push_back( (int)((UI_Tabs *)_parent)->flyThroughArray[j][k] );
       }    
       flyThroughList.push_back(tempPts);
       tempPts.clear();
-   }
-
-   if(numStoredLocations < 0)
-   {
-      numStoredLocations = 0;
    }
 
    numView_LocsGlobal = numStoredLocations;
@@ -507,7 +451,7 @@ void UI_ViewLocTab::_rebuildNameArrays( void )
    {
       _locationName = new wxString[ numStoredLocations ];
 
-      for( int i=0; i<numStoredLocations; i++)
+      for( unsigned int i=0; i<numStoredLocations; i++)
       {
          std::ostringstream vwptstream;
          vwptstream << "View Location " << i ;
@@ -526,7 +470,7 @@ void UI_ViewLocTab::_rebuildNameArrays( void )
       numStoredFlythroughs = flyThroughList.size();
       _flythroughName = new wxString[ numStoredFlythroughs ];
 
-      for( int i=0; i<numStoredFlythroughs; i++)
+      for( unsigned int i=0; i<numStoredFlythroughs; i++)
       {
          std::ostringstream flynamestream;
          flynamestream << "Flythrough " << i ;
@@ -555,7 +499,7 @@ void UI_ViewLocTab::_setUpActiveFlyThroughNames( int index )
    _vwptsInActiveFly = flyThroughList.at( index ).size();
    _activeFlyNames = new wxString[ _vwptsInActiveFly ];
 
-   for ( int i=0; i<_vwptsInActiveFly; i++ )
+   for ( unsigned int i=0; i<_vwptsInActiveFly; i++ )
    {
       std::ostringstream activeflynamestream;
       activeflynamestream << "View Location " << flyThroughList.at( index ).at( i ) ;
@@ -566,8 +510,8 @@ void UI_ViewLocTab::_setUpActiveFlyThroughNames( int index )
 
 void UI_ViewLocTab::_updateWithcfdQuatCamHandler( void )
 {
-   int tempindex;
-   for(int i=0;i<flyThroughList.size();i++)
+   unsigned int tempindex = 0;
+   for( unsigned int i=0;i<flyThroughList.size();i++ )
    {
 	   if( _viewLocScroll->_activeflySel->GetValue() == _flythroughName[i])
       {
@@ -582,12 +526,12 @@ void UI_ViewLocTab::_updateWithcfdQuatCamHandler( void )
    {
       VjObs::obj_pd_var tempTest;
       int tempTestlocal = 0;
-
+      
       while ( tempTestlocal == 0 )
       {
          tempTest = ((UI_Tabs *)_parent)->server_ref->getDouble1D( "getCompletionTest" );
-         tempTestlocal = tempTest[0];
-         wxSleep( 0.5 );
+         tempTestlocal = (int)tempTest[ 0 ];       
+         wxUsleep( 50 );
       }
       numStoredLocations = ((UI_Tabs *)_parent)->server_ref->getIsoValue();
    }
@@ -602,15 +546,10 @@ void UI_ViewLocTab::_updateWithcfdQuatCamHandler( void )
       std::vector<int> tempPts;
       for (CORBA::ULong k=0; k<flyThroughArray[j].length(); k++ )
       {
-         tempPts.push_back( flyThroughArray[j][k] );
+         tempPts.push_back( (int)flyThroughArray[j][k] );
       }    
       flyThroughList.push_back(tempPts);
       tempPts.clear();
-   }
-
-   if(numStoredLocations < 0)
-   {
-      numStoredLocations = 0;
    }
 
    numView_LocsGlobal = numStoredLocations;
@@ -631,7 +570,7 @@ void UI_ViewLocTab::_updateWithcfdQuatCamHandler( void )
    }
  
    _viewLocScroll->_rebuildPage();
-   _viewLocScroll->_activeflySel->SetValue( _flythroughName[ tempindex ] );
+   //_viewLocScroll->_activeflySel->SetValue( _flythroughName[ tempindex ] );
 
 }
 //////////////////
@@ -660,7 +599,7 @@ void UI_ViewLocTab::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
 {
    if ( numView_LocsGlobal > 0 )
    {
-      for(int i=0;i<numStoredLocations;i++)
+      for( unsigned int i=0;i<numStoredLocations;i++ )
 	   {
 		   //if( _viewLocScroll->_removevwptSel->GetStringSelection() == _locationName[i])
          if( _viewLocScroll->_removevwptSel->GetValue() == _locationName[i])
@@ -668,9 +607,9 @@ void UI_ViewLocTab::_onRemoveVP(wxCommandEvent& WXUNUSED(event))
             ((UI_Tabs *)_parent)->cIso_value = i;
             ((UI_Tabs *)_parent)->cId = REMOVE_SELECTED_VIEWPT;
             ((UI_Tabs *)_parent)->sendDataArrayToServer();
+            _updateWithcfdQuatCamHandler();
          }
 	   } 
-      _updateWithcfdQuatCamHandler();
    }
 }
 
@@ -678,7 +617,7 @@ void UI_ViewLocTab::_onMoveToVP(wxCommandEvent& WXUNUSED(event))
 {
    if ( numView_LocsGlobal > 0 )
    {
-      for(int i=0;i<numStoredLocations;i++)
+      for( unsigned int i=0;i<numStoredLocations;i++ )
 	   {
 		   if( _viewLocScroll->_movetovwptSel->GetValue() == _locationName[i])
          {
@@ -714,8 +653,8 @@ void UI_ViewLocTab::_onActiveFlySel(wxCommandEvent& WXUNUSED(event))
 {
    if ( _flythroughName[ 0 ] != wxT("No Flythroughs Built") )
    {
-      int tempindex;
-      for( int i=0; i<flyThroughList.size(); i++ )
+      int tempindex = 0;
+      for( unsigned int i=0; i<flyThroughList.size(); i++ )
 	   {
 		   if( _viewLocScroll->_activeflySel->GetValue() == _flythroughName[ i ])
          {
@@ -752,6 +691,7 @@ void UI_ViewLocTab::_onAddVPtoFlySel(wxCommandEvent& WXUNUSED(event))
             }
 	      }
       }
+      _viewLocScroll->_resetSelections();
    }
    
 }
@@ -787,6 +727,7 @@ void UI_ViewLocTab::_onInsertVPinFlySel(wxCommandEvent& WXUNUSED(event))
             }
 	      }
       }
+      _viewLocScroll->_resetSelections();
    }
 }
 
@@ -814,6 +755,7 @@ void UI_ViewLocTab::_onRemoveVPfromFlySel(wxCommandEvent& WXUNUSED(event))
             }
 	      }
       }
+      _viewLocScroll->_resetSelections();
    }
 
 }
