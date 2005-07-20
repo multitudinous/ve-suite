@@ -22,8 +22,16 @@ int is_inp_keyw(string oword);
 int ignore_comments(char* current_line);
 int get_token(char* current_line, vector<string>& toks);
 bool match(const string& s1, const string& s2);
-void GenCode();
-void GenVcProj( const char* defname ); //generates the vcproj file for use in Windows
+//generate UI Plugin code
+void GenCode_UI_Plugin();
+void GenVcProj_UI_Plugin( const char* defname ); //generates the vcproj file for use in Windows
+//generate Graphical Plugin Code
+void GenCode_Graphical_Plugin();
+void GenVcProj_Graphical_Plugin( const char* defname );
+//generate Unit code
+void GenCode_Unit();
+void GenVcProj_Unit( const char* defname );
+
 int main(int argc, char* argv[]) //This is a Cheezy wizard. take a mod.def as input
 {
   if (argc<2)
@@ -31,27 +39,223 @@ int main(int argc, char* argv[]) //This is a Cheezy wizard. take a mod.def as in
   else
     {
       parse_inp(argv[1]);
-      GenCode();
-      GenVcProj( argv[1] );
+      GenCode_UI_Plugin();
+      GenVcProj_UI_Plugin( argv[1] );
+      GenCode_Unit();
+      //generate vcproj for Unit at this spot
+      //GenCode_Graphical_Plugin();
     }
 }
+/////////////////////////////////////////////////////
+//                UI PLUGIN CODE GENERATION        //
+/////////////////////////////////////////////////////
 
-void GenVcProj( const char* defname )
+
+void GenCode_Unit()
+{
+   string unitName;
+   char buffer[BUFFER_MAX+1];
+   unsigned int pos;	//returns position of search string
+   int counter;
+
+   cout<<"Generating Unit Makefile ...";
+   ofstream outUnitFile;
+   string bufferString;
+   unitName = MOD_name + "Unit";
+   //cout<<"UNIT NAME :"<<unitName<<endl;
+   mkdir( unitName.c_str(), S_IRWXU|S_IRWXG );
+   chdir( unitName.c_str() );
+   outUnitFile.open( "Makefile" );
+   //generate Makefile for Unit
+   ifstream inUnitFile;
+   inUnitFile.open( "../../Makefile.Unit.Template" );
+   while ( !inUnitFile.eof() )
+   {   
+      //store each line in the buffer       
+      inUnitFile.getline( buffer, BUFFER_MAX, '\n' );
+      bufferString += buffer;
+      //now find the position of the word "Template"
+      pos = bufferString.find( "Template" );
+      if ( pos != string::npos )
+      {
+	 counter++;
+	 bufferString.replace( pos, 8, unitName );
+      }
+      outUnitFile<<bufferString<<endl;
+      bufferString.clear();
+   }
+   outUnitFile.close();
+   inUnitFile.close();
+   cout<<" Done"<<endl;
+   //now generate Unit code
+   inUnitFile.clear();
+   inUnitFile.open( "../../TEMPLATE_i.h" );
+   outUnitFile.open( (unitName+"_i.h").c_str() );  //open the _i.h files
+   cout<<"Generating "<<unitName+"_i.h";
+   while ( !inUnitFile.eof() )
+   {   
+      //store each line in the buffer       
+      inUnitFile.getline( buffer, BUFFER_MAX, '\n' );
+      bufferString += buffer;
+      //now find the position of the word "Template"
+      pos = bufferString.find( "Template" );
+      if ( pos != string::npos )
+      {
+	 counter++;
+	 bufferString.replace( pos, 8, unitName );
+      }
+      outUnitFile<<bufferString<<endl;
+      bufferString.clear();
+   }
+   cout<<"... Done"<<endl;
+   inUnitFile.close();
+   outUnitFile.close();
+   inUnitFile.clear();
+   inUnitFile.open( "../../TEMPLATE_i.cpp" );
+   outUnitFile.open( (unitName+"_i.cpp").c_str() );  //open the _i.h files
+   cout<<"Generating "<<unitName+"_i.cpp";
+   while ( !inUnitFile.eof() )
+   {   
+      //store each line in the buffer       
+      inUnitFile.getline( buffer, BUFFER_MAX, '\n' );
+      bufferString += buffer;
+      //now find the position of the word "Template"
+      pos = bufferString.find( "Template" );
+      if ( pos != string::npos )
+      {
+	 counter++;
+	 bufferString.replace( pos, 8, unitName );
+      }
+      outUnitFile<<bufferString<<endl;
+      bufferString.clear();
+   }
+   cout<<"... Done"<<endl;
+   inUnitFile.close();
+   outUnitFile.close();
+   inUnitFile.clear();
+   inUnitFile.open( "../../TEMPLATE_client.cpp" );
+   outUnitFile.open( (unitName+"_client.cpp").c_str() );  //open the _i.h files
+   cout<<"Generating "<<unitName+"_client.cpp";
+   while ( !inUnitFile.eof() )
+   {   
+      //store each line in the buffer       
+      inUnitFile.getline( buffer, BUFFER_MAX, '\n' );
+      bufferString += buffer;
+      //now find the position of the word "Template"
+      pos = bufferString.find( "Template" );
+      if ( pos != string::npos )
+      {
+	 counter++;
+	 bufferString.replace( pos, 8, unitName );
+      }
+      outUnitFile<<bufferString<<endl;
+      bufferString.clear();
+   }
+   cout<<"... Done"<<endl;
+   inUnitFile.close();
+   outUnitFile.close();
+
+   chdir( "../" );
+}
+
+void GenCode_Graphical_Plugin()
+{
+   cout<<"Generating Graphical Plugin Makefile...";
+   string graphicalPluginName;
+   
+   char buffer[BUFFER_MAX+1];
+   unsigned int pos;	//returns position of search string
+   int counter;
+   ofstream outGraphicalPlugin;
+   string bufferString;
+   graphicalPluginName = MOD_name + "GraphicalPlugin";
+   //cout<<"UNIT NAME :"<<graphicalPluginName<<endl;
+   mkdir( graphicalPluginName.c_str(), S_IRWXU|S_IRWXG );
+   chdir( graphicalPluginName.c_str() );
+   outGraphicalPlugin.open( "Makefile" );
+   //generate Makefile for Graphical plugin
+   ifstream graphicalPluginFiles;
+   graphicalPluginFiles.open( "../../Makefile.GraphicalPlugin.TEMPLATE" );
+   while ( !graphicalPluginFiles.eof() )
+   {   
+      //store each line in the buffer       
+      graphicalPluginFiles.getline( buffer, BUFFER_MAX, '\n' );       
+      bufferString += buffer;
+      //now find the position of the word "Template"
+      pos = bufferString.find( "Template" );
+      if ( pos !=string::npos )
+      {
+	 counter++;
+	 bufferString.replace( pos, 8, graphicalPluginName );
+      }
+      outGraphicalPlugin<<bufferString<<endl;
+      bufferString.clear();
+   }   
+   outGraphicalPlugin.close();
+   graphicalPluginFiles.close();
+   graphicalPluginFiles.clear();
+   graphicalPluginFiles.open( "../../VETEMPLATE.h" );
+   outGraphicalPlugin.open( (graphicalPluginName+".h").c_str() );
+   while ( !graphicalPluginFiles.eof() )
+   {   
+      //store each line in the buffer       
+      graphicalPluginFiles.getline( buffer, BUFFER_MAX, '\n' );       
+      bufferString += buffer;
+      //now find the position of the word "Template"
+      pos = bufferString.find( "Template" );
+      if ( pos !=string::npos )
+      {
+	 counter++;
+	 bufferString.replace( pos, 8, graphicalPluginName );
+      }
+      outGraphicalPlugin<<bufferString<<endl;
+      bufferString.clear();
+   }   
+   outGraphicalPlugin.close();
+   graphicalPluginFiles.close();
+   graphicalPluginFiles.clear();
+   graphicalPluginFiles.open( "../../VETEMPLATE.cpp" );
+   outGraphicalPlugin.open( (graphicalPluginName+".cpp").c_str() );
+   while ( !graphicalPluginFiles.eof() )
+   {   
+      //store each line in the buffer       
+      graphicalPluginFiles.getline( buffer, BUFFER_MAX, '\n' );       
+      bufferString += buffer;
+      //now find the position of the word "Template"
+      pos = bufferString.find( "Template" );
+      if ( pos !=string::npos )
+      {
+	 counter++;
+	 bufferString.replace( pos, 8, graphicalPluginName );
+      }
+      outGraphicalPlugin<<bufferString<<endl;
+      bufferString.clear();
+   }   
+   outGraphicalPlugin.close();
+   graphicalPluginFiles.close();
+   graphicalPluginFiles.clear();
+
+   cout<<" Done"<<endl;
+   chdir( "../" );
+}
+void GenVcProj_UI_Plugin( const char* defname )
 {
    cout<<"Generating vcproj file...";
    char buffer[BUFFER_MAX+1];
    //read in an existing vcproj file i.e. TEMPLATE.vcproj
    string vcprojName;   //name of the vcproj
+   string unitName;	//name of files in Unit
+   
    //open TEMPLATE.vcproj   
    string modDefName;   //string to hold the model definition names
-   ifstream inpVcproj( "../TEMPLATE.vcproj" );   
+   ifstream inpVcproj( "../../TEMPLATE.vcproj" );   
    vcprojName = defname;   //initialize the name of the project to that given by the user
    
    unsigned int pos = vcprojName.find( ".def" );
    vcprojName.erase( pos, 4 );
    modDefName = vcprojName;
    vcprojName = vcprojName + ".vcproj";
-   cout<<vcprojName<<endl;   
+   cout<<vcprojName<<endl;
    ofstream outVcproj ( vcprojName.c_str() );   
    //read in each line
    string bufferString;
@@ -71,165 +275,22 @@ void GenVcProj( const char* defname )
       
       bufferString.clear();
    }//finished reading end of files
-   //cout<<counter<<" occurances of Template found"<<endl;   
+   //cout<<counter<<" occurances of Template found"<<endl;
+   //go back one directory up
+   
+   chdir("../");
 }
 
-void parse_inp(const char * defname)
-{  
-  ifstream inp(defname);
-  int line_number=0;
-  bool end_of_file = false;
-  char buffer[BUFFER_MAX+1];
-  vector<string> toks;
-  
-  
-  Double_name.clear();
-  String_name.clear();
-  Int_name.clear();
-  Double1D_name.clear();
-  String1D_name.clear();
-  Int1D_name.clear();
-
-   do 
-    {
-      end_of_file = (inp.getline(buffer, BUFFER_MAX, '\n')).eof();
-      line_number++;
-      ignore_comments(buffer);
-
-      if (get_token(buffer, toks)>0)
-	switch(is_inp_keyw(toks[0]))
-	{
-	case 1:
-	  MOD_name = toks[1];
-	  break;
-	case 2:
-	  Double_name.push_back(toks[1]);
-	  printf("Read in Double var: %s \n", toks[1].c_str());
-	  break;
-	case 3:
-	  String_name.push_back(toks[1]);
-	  printf("Read in String var: %s \n", toks[1].c_str());
-	  break;
-	case 4:
-	  Int_name.push_back(toks[1]);
-	  printf("Read in Int var: %s \n", toks[1].c_str());
-	  break;
-	case 5:
-	  Double1D_name.push_back(toks[1]);
-	  printf("Read in Double1D var: %s \n", toks[1].c_str());
-	  break;
-	case 6:
-	  String1D_name.push_back(toks[1]);
-	  printf("Read in String1D var: %s \n", toks[1].c_str());
-	  break;
-	case 7:
-	  Int1D_name.push_back(toks[1]);
-	  printf("Read in Int1D var: %s \n", toks[1].c_str());
-	  break;
-	case 8:
-	  inp.close();
-	  return;
-	default:
-	  inp.close();
-	  return;
-	} 
-      else
-	;
-    } while(!end_of_file);
-	  
-}
-
-int is_inp_keyw(string oword)
-{ 
-  char temp[256];
-  int i;
-  string word;
-  
-  //strcpy(temp,oword.c_str());
-  //  for (i=0; i<strlen(temp); i++)
-  //  temp[i]=(char)toupper(temp[i]);
-  //temp[i]='\0';
-  word = oword;//string(temp);
-  
-  if (match(word, "MOD_NAME"))
-    return 1; //gas temperature
-  else if (match(word, "Double"))
-    return 2; //gas pressure
-  else if (match(word, "String"))
-    return 3; //reaction time
-  else if (match(word, "Int"))
-    return 4; //output time slice
-  else if (match(word, "Double1D"))
-    return 5; //reactants
-  else if (match(word, "String1D"))
-    return 6; //symbol for ending
-  else if (match(word, "Int1D"))
-    return 7;
-  else if (match(word, "END"))
-    return 8;
-  else
-    {
-      printf("%s is not a Key word\n");
-      return 0; //not a key word
-    }
-}
-
-//Ignore Comments get delete anything started with !
-int ignore_comments(char* current_line)
-{
-  int i=0;
-  while ((current_line[i]!='\0')&&(current_line[i]!='\n'))
-    if (current_line[i]!='#')
-      i++;
-    else
-      current_line[i] = '\0';
-  return i;
-}
-
-int get_token(char* current_line, vector<string>& toks)
-{
-  char* token;
-  int i=0;
-  token = strtok(current_line, "/ ,\t\n");
-  
-  toks.clear();
-  while( token )
-    {
-      i++;
-      toks.push_back(string(token));
-      token = strtok(NULL, "/ ,\t\n");
-    }
-  
-  return i;
-}
-
-//check is string s1 match string s2
-//if the s2 is s1's prefix, it return true
-//match is case insensitive
-bool match(const string& s1, const string& s2)
-{
-    size_t n = s2.size();
-    if (s1.size() != n) 
-      {
-	//printf("%s,  %s Not same size\n", s1.c_str(), s2.c_str());
-	return false;
-      }
-    for (size_t i = 0; i < n; i++) 
-	if (s2[i] != '*' && s1[i] != s2[i]) 
-	  {
-	    //printf("%d: %c vs %c\n", i, s1[i], s2[i]);
-	    return false;
-	  }
-    return true;
-}
 
 //==========================================
-void GenCode()
+void GenCode_UI_Plugin()
 {
   string mod_h;
   string mod_cpp;
   string mod_ui_h;
   string mod_ui_cpp;
+  //strings for directory names
+  string UI_Plugin;//to store the directory name for the UI Plugin
   char buffer[BUFFER_MAX+1];
   char buffer2[BUFFER_MAX+1];
   char out_buf[BUFFER_MAX+1];
@@ -238,11 +299,15 @@ void GenCode()
   mod_cpp = MOD_name+".cpp";
   mod_ui_h = MOD_name+"_UI_Dialog.h";
   mod_ui_cpp = MOD_name+"_UI_Dialog.cpp";
+  UI_Plugin = MOD_name + "UIPlugin";
 
   printf("Make new directory %s\n", MOD_name.c_str());
 
+  
   mkdir(MOD_name.c_str(), S_IRWXU|S_IRWXG);
   chdir(MOD_name.c_str());
+  mkdir(UI_Plugin.c_str(), S_IRWXU|S_IRWXG);
+  chdir(UI_Plugin.c_str());
   //no more file copies
   //system("cp ../Makefile.incl ./");
   //system("cp ../interface.h ./");
@@ -250,11 +315,11 @@ void GenCode()
   //system("cp ../string_ops.h ./");
   //system("cp ../Plugin_base.h ./");
   //system("cp ../UIDialog.h ./");
-  ifstream fh_inp("../TEMPLATE.h");
-  ifstream fcpp_inp("../TEMPLATE.cpp");
-  ifstream fuih_inp("../TEMPLATE_UI_Dialog.h");
-  ifstream fuicpp_inp("../TEMPLATE_UI_Dialog.cpp");
-  ifstream fmake_inp("../Makefile.TEMPLATE");
+  ifstream fh_inp("../../TEMPLATE.h");
+  ifstream fcpp_inp("../../TEMPLATE.cpp");
+  ifstream fuih_inp("../../TEMPLATE_UI_Dialog.h");
+  ifstream fuicpp_inp("../../TEMPLATE_UI_Dialog.cpp");
+  ifstream fmake_inp("../../Makefile.TEMPLATE");
   FILE *f_h = fopen(mod_h.c_str(), "w");
   FILE *f_cpp = fopen(mod_cpp.c_str(), "w");
   FILE *f_ui_h = fopen(mod_ui_h.c_str(), "w");
@@ -527,4 +592,154 @@ void GenCode()
 
   printf("Done. cd %s and typ make to make lib%s.so\n", MOD_name.c_str(), MOD_name.c_str());
 
+}
+
+
+void parse_inp(const char * defname)
+{  
+  ifstream inp(defname);
+  int line_number=0;
+  bool end_of_file = false;
+  char buffer[BUFFER_MAX+1];
+  vector<string> toks;
+  
+  
+  Double_name.clear();
+  String_name.clear();
+  Int_name.clear();
+  Double1D_name.clear();
+  String1D_name.clear();
+  Int1D_name.clear();
+
+   do 
+    {
+      end_of_file = (inp.getline(buffer, BUFFER_MAX, '\n')).eof();
+      line_number++;
+      ignore_comments(buffer);
+
+      if (get_token(buffer, toks)>0)
+	switch(is_inp_keyw(toks[0]))
+	{
+	case 1:
+	  MOD_name = toks[1];
+	  break;
+	case 2:
+	  Double_name.push_back(toks[1]);
+	  printf("Read in Double var: %s \n", toks[1].c_str());
+	  break;
+	case 3:
+	  String_name.push_back(toks[1]);
+	  printf("Read in String var: %s \n", toks[1].c_str());
+	  break;
+	case 4:
+	  Int_name.push_back(toks[1]);
+	  printf("Read in Int var: %s \n", toks[1].c_str());
+	  break;
+	case 5:
+	  Double1D_name.push_back(toks[1]);
+	  printf("Read in Double1D var: %s \n", toks[1].c_str());
+	  break;
+	case 6:
+	  String1D_name.push_back(toks[1]);
+	  printf("Read in String1D var: %s \n", toks[1].c_str());
+	  break;
+	case 7:
+	  Int1D_name.push_back(toks[1]);
+	  printf("Read in Int1D var: %s \n", toks[1].c_str());
+	  break;
+	case 8:
+	  inp.close();
+	  return;
+	default:
+	  inp.close();
+	  return;
+	} 
+      else
+	;
+    } while(!end_of_file);
+	  
+}
+
+int is_inp_keyw(string oword)
+{ 
+  char temp[256];
+  int i;
+  string word;
+  
+  //strcpy(temp,oword.c_str());
+  //  for (i=0; i<strlen(temp); i++)
+  //  temp[i]=(char)toupper(temp[i]);
+  //temp[i]='\0';
+  word = oword;//string(temp);
+  
+  if (match(word, "MOD_NAME"))
+    return 1; //gas temperature
+  else if (match(word, "Double"))
+    return 2; //gas pressure
+  else if (match(word, "String"))
+    return 3; //reaction time
+  else if (match(word, "Int"))
+    return 4; //output time slice
+  else if (match(word, "Double1D"))
+    return 5; //reactants
+  else if (match(word, "String1D"))
+    return 6; //symbol for ending
+  else if (match(word, "Int1D"))
+    return 7;
+  else if (match(word, "END"))
+    return 8;
+  else
+    {
+      printf("%s is not a Key word\n");
+      return 0; //not a key word
+    }
+}
+
+//Ignore Comments get delete anything started with !
+int ignore_comments(char* current_line)
+{
+  int i=0;
+  while ((current_line[i]!='\0')&&(current_line[i]!='\n'))
+    if (current_line[i]!='#')
+      i++;
+    else
+      current_line[i] = '\0';
+  return i;
+}
+
+int get_token(char* current_line, vector<string>& toks)
+{
+  char* token;
+  int i=0;
+  token = strtok(current_line, "/ ,\t\n");
+  
+  toks.clear();
+  while( token )
+    {
+      i++;
+      toks.push_back(string(token));
+      token = strtok(NULL, "/ ,\t\n");
+    }
+  
+  return i;
+}
+
+//check is string s1 match string s2
+//if the s2 is s1's prefix, it return true
+//match is case insensitive
+bool match(const string& s1, const string& s2)
+{
+    size_t n = s2.size();
+    if (s1.size() != n) 
+      {
+	//printf("%s,  %s Not same size\n", s1.c_str(), s2.c_str());
+	return false;
+      }
+    for (size_t i = 0; i < n; i++) 
+	if (s2[i] != '*' && s1[i] != s2[i]) 
+	  {
+	    //printf("%d: %c vs %c\n", i, s1[i], s2[i]);
+	    return false;
+	  }
+    return true;
 }

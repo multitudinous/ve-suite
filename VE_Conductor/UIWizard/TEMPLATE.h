@@ -1,8 +1,14 @@
 #ifndef TEMPLATE_H
 #define TEMPLATE_H
 
-#include "Plugin_base.h"
+#include "VE_Conductor/Framework/Plugin_base.h"
 #include <wx/image.h>
+
+#ifdef WIN32
+   #pragma warning(disable : 4786)
+   #pragma warning(disable : 4101)
+   #pragma warning(disable : 4503)
+#endif
 
 class TEMPLATE : public REI_Plugin
 {

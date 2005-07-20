@@ -26,16 +26,27 @@ OPTIM_APP?= TRUE
 
 EXTRA_CFLAGS+=
 
-EXTRA_CXXFLAGS+=
+EXTRA_CXXFLAGS+= 
 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)/VE_Conductor/Framework 
 EXTRA_INCLUDES+= -I$(VE_SUITE_HOME)
 
-EXTRA_PATH_FOR_SOURCES+= $(VE_SUITE_HOME)/VE_Conductor/Framework 
-
 EXTRA_DEFS+=
 
-EXTRA_LIBS+= -shared
+EXTRA_LIBS+= -L$(VE_SUITE_HOME)/lib/$(CFDHOSTTYPE) -lVE_ConductorLib
+EXTRA_LIBS+= -lGUIPluginLib
+
+EXTRA_LDFLAGS+= -shared 
+
+# IRIX needs these flags
+CFDUNAME = $(shell uname)
+ifeq (${CFDUNAME},IRIX64)
+   EXTRA_CXXFLAGS+= 
+   EXTRA_LIBS+= 
+else
+   EXTRA_CXXFLAGS+= -fPIC
+   EXTRA_LIBS+= -fPIC
+endif
 
 LINKALL_ON= -all
 LINKALL_OFF=
@@ -45,8 +56,8 @@ STATIC_OFF= @APP_LINK_STATIC_OFF@
 
 include $(DZR_BASE_DIR)/mk/dzr.basicapp.mk
 
-include $(VE_SUITE_HOME)/VE_Installer/dzr.wx.mk
-include $(VE_SUITE_HOME)/VE_Installer/dzr.xerces.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.wx.mk
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.xerces.mk
 
 # -----------------------------------------------------------------------------
 # Application build targets.
