@@ -18,7 +18,6 @@ bool Package::Load()
 {
   char * message;
 
-  std::cout<<"[DBG]...inside Package Load()"<<std::endl;
   //  cout<<system_id<<endl;
   XercesDOMParser* parser = new XercesDOMParser;
   ErrorHandler* errHandler ;
@@ -80,7 +79,6 @@ bool Package::Load()
 
 bool Package::Load(const char *mem, int len)
 {
-  std::cout<<"[DBG]...inside Pakcage Load function"<<std::endl;
   MemBufInputSource inpsrc((const XMLByte*)mem, len, system_id.c_str());
   
   char * message;
@@ -238,7 +236,6 @@ void Package::FillIntfs(DOMDocument *doc)
 {
   DOMElement *root_elem = doc->getDocumentElement(); //This is the root element;
 
-  std::cout<<"[DBG]...inside FillIntfs "<<std::endl;
   // Keep track of memory we own.
   XMLCh* tmp_attr( XMLString::transcode("name") );
   char* tmp( XMLString::transcode(root_elem->getAttribute(tmp_attr)) );
