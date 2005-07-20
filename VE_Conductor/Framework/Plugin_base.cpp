@@ -626,11 +626,15 @@ void REI_Plugin::FinancialData ()
 }
 
 // Gui to input geometry data
+
+void REI_Plugin::SetIDtoGeometryDataBuffer()
+{
+   GeometryDataManager::getInstance().GetGeometryDataBuffer()->SetCurrentModuleID(this->GetID());
+
+}
 void REI_Plugin::GeometryData()
 {
    
-   GeometryDataManager::getInstance().GetGeometryDataBuffer()->SetCurrentModuleName(this->GetName().c_str());
-
    geom_dlg = new GeometryDialog(NULL);
 
    geom_dlg->Show();
@@ -644,14 +648,12 @@ GeometryDialog* REI_Plugin::GetGeometryDialog( void )
 
 bool REI_Plugin::HasGeomInfoPackage()
 {
-   std::string _modulename;
-   _modulename = this->GetName().c_str();
-
-   std::map<std::string, std::vector <GeometryInfoPackage> > localmap;
+   int local_id = this->GetID();
+   std::map<int, std::vector <GeometryInfoPackage> > localmap;
 
    localmap = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetWholeGeomInfoMap();
 
-   std::map<std::string, std::vector <GeometryInfoPackage> >::iterator itr =localmap.find(_modulename);
+   std::map<int, std::vector <GeometryInfoPackage> >::iterator itr =localmap.find(local_id);
    if(itr!=localmap.end())
    {
       return true;

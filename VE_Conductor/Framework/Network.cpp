@@ -2408,7 +2408,7 @@ void Network::Pack(std::vector<Interface> & UIs)
       {
          //modules[i].pl_mod->GetGeometryInfoPackage()->SetID(i);
          //UIs.push_back( *(modules[i].pl_mod->GetGeometryInfoPackage()->Pack()) );
-         Geometry* geometry = new Geometry(modules[i].pl_mod->GetName().c_str());
+         Geometry* geometry = new Geometry(modules[i].pl_mod->GetID());
 
          UIs.push_back( *(geometry->Pack()));
 
@@ -2622,7 +2622,7 @@ void Network::UnPack(std::vector<Interface> & intfs)
       else if(intfs[i+1]._type ==2)
       {
          //modules[_id].pl_mod->GetGeometryInfo()->UnPack(&intfs[i+1]);
-         Geometry* geometry = new Geometry(modules[_id].pl_mod->GetName().c_str());
+         Geometry* geometry = new Geometry(modules[_id].pl_mod->GetID());
 
          geometry->UnPack(&intfs[i+1]);
 
@@ -2773,7 +2773,6 @@ void Network::LoadS(const char* inputs)
    intfssize = p.GetIntfsNum();
 	UnPack(p.intfs);
   }
-  std::cout<<"[DBG]...after Load(char*)"<<std::endl;
 }
 
 //////////////////////////////////////////////////////
@@ -2894,6 +2893,7 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
       return;
    //modules[m_selMod].pl_mod->GeometryDialog();
    std::string m_selmod_name = modules[m_selMod].pl_mod->GetName().c_str();
+   modules[m_selMod].pl_mod->SetIDtoGeometryDataBuffer();
    modules[m_selMod].pl_mod->GeometryData();
    //modules[m_selMod].pl_mod->GeometryInfoPackage();
 }

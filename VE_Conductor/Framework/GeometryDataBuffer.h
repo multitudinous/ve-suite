@@ -90,23 +90,23 @@ class VE_CONDUCTOR_EXPORTS GeometryDataBuffer
    void SetCurrentColorflag(bool flag);
    void SetCurrentLOD(double lod);
   
-   void InitializeNewGeomInfo(int);
-   void AddGeomInfo();
-   void DeleteGeomInfo(int);
+   GeometryInfoPackage GetDefaultNewGeomInfoPackage(int);
+   void AddGeomInfoToCurrentList(GeometryInfoPackage);
+   void DeleteGeomInfosFromCurrentList(std::vector<int>);
    void SetCurrentGeomInfoList(std::vector<GeometryInfoPackage>);
    std::vector <GeometryInfoPackage> GetCurrentGeomInfoList();
    std::vector <GeometryInfoPackage> GetCurrentModuleGeomInfoListFromMap();
-
-
-   void UpdateCurrentGeomInfoListToMap();
-
-   std::map <std::string, std::vector<GeometryInfoPackage> > GetWholeGeomInfoMap();
+      
+   void GeometryDataBuffer::UpdateCurrentGeomInfoListToMap();
+   void GeometryDataBuffer::UpdateGeomInfoToCurrentList(GeometryInfoPackage, int);  
+   std::map <int, std::vector<GeometryInfoPackage> > GetWholeGeomInfoMap();
 
    private:
 
    std::vector <GeometryInfoPackage> _geominfopackagelist;
 
-   std::map<std::string, std::vector<GeometryInfoPackage> > _geominfopackageVSmodule;
+   std::map<int, std::vector<GeometryInfoPackage> > _geominfopackageVSmodule; 
+
    int activedgeominfo;
    std::string cur_modulename;
    int cur_moduleid;

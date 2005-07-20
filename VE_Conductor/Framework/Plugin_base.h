@@ -105,6 +105,7 @@ class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
       virtual void SetID(int id);
       virtual bool Has3Ddata();
       
+      void SetIDtoGeometryDataBuffer();
 
       bool HasGeomInfoPackage();
       //void GeometryInfoPackage();

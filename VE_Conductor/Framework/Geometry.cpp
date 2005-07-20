@@ -7,9 +7,9 @@
 #include <cmath>
 
 
-Geometry::Geometry(std::string modulename)
+Geometry::Geometry(int id)
 {
-     this->cur_modulename = modulename;
+     this->cur_moduleid = id;
 }
 
 void Geometry::SetID(int id)
@@ -32,7 +32,6 @@ void Geometry::UnPack( Interface* intf )
 
    mod_pack = *intf;
    vars = mod_pack.getGeomInfoPackages();
-   
    bool rv =true;
    for(i=0;i<vars.size();i++)
    {
@@ -68,11 +67,11 @@ Interface* Geometry::Pack( void )
 
 void Geometry::SetCurModuleGeomInfoPackage()
 {
-   std::map<std::string, std::vector<GeometryInfoPackage> > localmap =GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetWholeGeomInfoMap();
+   std::map<int, std::vector<GeometryInfoPackage> > localmap =GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetWholeGeomInfoMap();
    
    _geominfopackagemap.clear();
 
-   std::vector<GeometryInfoPackage> locallist = localmap.find(cur_modulename)->second;
+   std::vector<GeometryInfoPackage> locallist = localmap.find(cur_moduleid)->second;
    
    for(unsigned int i=0; i<locallist.size(); i++)
    {
@@ -80,7 +79,7 @@ void Geometry::SetCurModuleGeomInfoPackage()
 
    }
 
-   this->cur_moduleid = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentModuleID();
+   //this->cur_moduleid = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentModuleID();
 
    
 }

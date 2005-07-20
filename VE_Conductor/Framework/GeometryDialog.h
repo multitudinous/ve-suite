@@ -14,7 +14,11 @@ enum GEOMETRY_CONFIG_IDS
    GEOMETRY_CONFIG_CBOX,
    GEOMETRY_CONFIG_UPDATE_BUTTON,
    GEOMETRY_CONFIG_OPACITY_SLIDER,
-   GEOMETRY_CONFIG_LOD_SLIDER
+   GEOMETRY_CONFIG_LOD_SLIDER,
+   GEOMETRY_ADDNEWPAGE,
+   GEOMETRY_SAVENEWPAGE,
+   GEOMETRY_DELETEPAGES,
+   GEOMETRY_LISTBOX
 };
 
 class GeometryDialog : public wxDialog
@@ -36,12 +40,18 @@ class GeometryDialog : public wxDialog
       virtual bool TransferDataToWindow();
 
    protected:
-     // void _buildPage();
+      void _buildPage();
+      void _onUpdateUIInfoPage(std::vector<GeometryInfoPackage>,int);
+      GeometryInfoPackage GetGeomInfoPackageFromInfoPage();
+
 
      //the controls
       wxRadioBox* _geometryRBox;
       wxCheckListBox* _geometryCBox;
       wxButton* _updateButton;
+      wxButton* add_button;
+      wxButton* save_button;
+      wxButton* delete_button;
       wxWindow* _parent;
       wxSlider* geomOpacitySlider;
       wxSlider* geomLODSlider;
@@ -50,6 +60,15 @@ class GeometryDialog : public wxDialog
       void ChangeOpacity( wxScrollEvent& event );
       void _onGeometry( wxScrollEvent& event );
       void _onUpdate(wxCommandEvent& event);
+
+      void _onButtonAddNewGeomInfoPackage(wxCommandEvent& event);
+      void _onButtonSaveGeomInfoPackage(wxCommandEvent& event);
+      void _onUIUpdateButtonSaveGeomInfoPackage(wxUpdateUIEvent& event);
+      void _onButtonDeleteSelGeomInfoPackage(wxCommandEvent& event);
+      void _onUIUpdateButtonDeleteSelGeomInfoPackage(wxUpdateUIEvent& event);
+           
+      void _onListBox(wxCommandEvent& event);
+      void _onDClickListBox(wxCommandEvent& event);
 
        protected:
    //UI widgets variables
@@ -62,6 +81,8 @@ class GeometryDialog : public wxDialog
       wxTextCtrl* t_rot0, *t_rot1, *t_rot2;
       wxTextCtrl* t_color0, *t_color1, *t_color2;
       wxTextCtrl* t_LOD;
+
+      wxListBox * lbox_geompackagenames;
 
       DECLARE_EVENT_TABLE()
 

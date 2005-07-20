@@ -9,7 +9,7 @@
 class VE_CONDUCTOR_EXPORTS Geometry 
 {
    public:
-      Geometry(std::string);
+      Geometry(int);
       ~Geometry(){}
       
       // This is the load function of the module, unpack the input 

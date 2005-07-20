@@ -5,7 +5,9 @@
 
 GeometryInfoPackage::GeometryInfoPackage()
 {
-   this->modeltype = 9;
+   this->modeltype=9;
+   this->geomname ="default";
+   this->geomfilename="undefined";
    this->transparencytoggle =1;
    this->scales[0]=1.0; 
    this->scales[1]=1.0; 
@@ -168,7 +170,7 @@ GeometryDataBuffer::~GeometryDataBuffer()
    
 }
 
-void GeometryDataBuffer::InitializeNewGeomInfo(int index)
+GeometryInfoPackage GeometryDataBuffer::GetDefaultNewGeomInfoPackage(int index)
 {
    //give the new geominfopackage a default name
    const char base[] = "geom";
@@ -179,7 +181,8 @@ void GeometryDataBuffer::InitializeNewGeomInfo(int index)
 
    
    temppackage.SetGeomName(geominfoname);
-   temppackage.SetGeomFileName("test.stl");
+   temppackage.SetGeomFileName("");
+   temppackage.SetModelType(9);
    temppackage.SetTransparencyToggle(true);
    temppackage.SetScales(1.0, 1.0, 1.0);
    temppackage.SetTrans(0.0,0.0,0.0);
@@ -188,8 +191,9 @@ void GeometryDataBuffer::InitializeNewGeomInfo(int index)
    temppackage.SetColors(1.0, 0.0, 0.0);
    temppackage.SetLOD(0.5);
    
-   this->_geominfopackagelist.push_back(temppackage);
+   //this->_geominfopackagelist.push_back(temppackage);
 
+   return temppackage;
 }
 
 
@@ -280,26 +284,37 @@ void GeometryDataBuffer::SetCurrentLOD(double lod)
 }
 
 
-void GeometryDataBuffer::AddGeomInfo()
+void GeometryDataBuffer::AddGeomInfoToCurrentList(GeometryInfoPackage newgeominfopackage)
 {
-   GeometryInfoPackage newgeominfopackage;
    _geominfopackagelist.push_back(newgeominfopackage);
 
 }
  
-void GeometryDataBuffer::DeleteGeomInfo(int index)
+void GeometryDataBuffer::DeleteGeomInfosFromCurrentList(std::vector<int> items)
 {
-	std::vector<GeometryInfoPackage>::iterator itr;
-	int i=0;
-	for(itr = _geominfopackagelist.begin();itr!= _geominfopackagelist.end();itr++)
+
+   for(int i=0; i<items.size();i++)
+   {
+     _geominfopackagelist.erase(_geominfopackagelist.begin()+items[i]);      
+   }
+
+   if(_geominfopackagelist.size()==0)
+   {
+      std::cout<<"[DBG]... the curmodul's geominfo is clear"<<std::endl;
+   }
+
+   
+  /*	for(itr = _geominfopackagelist.begin();itr!= _geominfopackagelist.end();itr++)
 	{
-		if(i==index)
+		
+      
+      if(i==index)
 		{
 			_geominfopackagelist.erase(itr);
 			break;
 		}
 		i++;
-	}
+	}*/
    /*if(index>=0 && index<_geominfopackagelist.size())
    {
       _geominfopackagelist.erase();
@@ -317,22 +332,37 @@ std::vector<GeometryInfoPackage> GeometryDataBuffer::GetCurrentGeomInfoList()
    return _geominfopackagelist;
 }
 
+void GeometryDataBuffer::UpdateGeomInfoToCurrentList(GeometryInfoPackage curpackage, int item)
+{
+   _geominfopackagelist[item]=curpackage;
+   
+}
 void GeometryDataBuffer::UpdateCurrentGeomInfoListToMap()
 {
-   std::map<std::string, std::vector<GeometryInfoPackage> >::iterator itr =_geominfopackageVSmodule.find(cur_modulename);
+   std::map<int, std::vector<GeometryInfoPackage> >::iterator itr =_geominfopackageVSmodule.find(cur_moduleid);
   
    
-   if(itr!=_geominfopackageVSmodule.end())
+   if(itr!=_geominfopackageVSmodule.end()&& _geominfopackagelist.size()>0)
+   {
+      _geominfopackageVSmodule.erase(itr);
+      _geominfopackageVSmodule.insert(std::make_pair(cur_moduleid, _geominfopackagelist));
+   }
+   else if(itr!=_geominfopackageVSmodule.end()&&_geominfopackagelist.size()==0)
    {
       _geominfopackageVSmodule.erase(itr);
    }
-   _geominfopackageVSmodule.insert(std::make_pair(cur_modulename, _geominfopackagelist));
-   
+   else
+   {
+      _geominfopackageVSmodule.insert(std::make_pair(cur_moduleid, _geominfopackagelist));
+
+   }
+     
 }
 
 std::vector<GeometryInfoPackage> GeometryDataBuffer::GetCurrentModuleGeomInfoListFromMap()
 {
-   std::map<std::string, std::vector<GeometryInfoPackage> >::iterator itr=_geominfopackageVSmodule.find(cur_modulename);
+
+   std::map<int, std::vector<GeometryInfoPackage> >::iterator itr=_geominfopackageVSmodule.find(cur_moduleid);
 
    if(itr!=_geominfopackageVSmodule.end())
    {
@@ -342,15 +372,17 @@ std::vector<GeometryInfoPackage> GeometryDataBuffer::GetCurrentModuleGeomInfoLis
    else
    {  
       //return a new package
+      std::cout<<"[DBG]...can't find the geominfo match the cur module, so create a new one (default setting)"<<std::endl;
       const char base[] = "geom";
       char geominfoname [80];
       sprintf(geominfoname, "%s%d", base, 0);
 
       GeometryInfoPackage temppackage;
 
+      std::vector<GeometryInfoPackage> templist;
       temppackage.SetModelType(9); 
       temppackage.SetGeomName(geominfoname);
-      temppackage.SetGeomFileName("test.stl");
+      temppackage.SetGeomFileName("");
       temppackage.SetTransparencyToggle(true);
       temppackage.SetScales(1.0, 1.0, 1.0);
       temppackage.SetTrans(0.0,0.0,0.0);
@@ -358,15 +390,16 @@ std::vector<GeometryInfoPackage> GeometryDataBuffer::GetCurrentModuleGeomInfoLis
       temppackage.SetColorFlag(true);
       temppackage.SetColors(1.0, 0.0, 0.0);
       temppackage.SetLOD(0.5);
+      
+      _geominfopackagelist.clear();
+      templist.push_back(temppackage);
 
-      _geominfopackagelist.push_back(temppackage);
-
-      return _geominfopackagelist;
+      return templist;
 
    }
 
 }
-std::map<std::string, std::vector<GeometryInfoPackage> > GeometryDataBuffer::GetWholeGeomInfoMap()
+std::map<int, std::vector<GeometryInfoPackage> > GeometryDataBuffer::GetWholeGeomInfoMap()
 {
    return _geominfopackageVSmodule;
 }

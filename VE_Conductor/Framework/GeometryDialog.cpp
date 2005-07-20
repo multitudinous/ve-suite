@@ -2,11 +2,13 @@
    
    
 BEGIN_EVENT_TABLE(GeometryDialog, wxDialog)
-   EVT_COMMAND_SCROLL(GEOMETRY_CONFIG_OPACITY_SLIDER, GeometryDialog::ChangeOpacity)
-   EVT_COMMAND_SCROLL(GEOMETRY_CONFIG_LOD_SLIDER, GeometryDialog::_onGeometry)
-   EVT_CHECKLISTBOX(GEOMETRY_CONFIG_CBOX,GeometryDialog::_onUpdate)
-   //EVT_RADIOBOX(GEOMETRY_CONFIG_RBOX,Geometry::ChangeOpacity)
-   EVT_BUTTON(GEOMETRY_CONFIG_UPDATE_BUTTON,GeometryDialog::_onUpdate)
+   EVT_BUTTON(GEOMETRY_ADDNEWPAGE,GeometryDialog::_onButtonAddNewGeomInfoPackage)
+   EVT_BUTTON(GEOMETRY_SAVENEWPAGE,GeometryDialog::_onButtonSaveGeomInfoPackage)
+   EVT_UPDATE_UI(GEOMETRY_SAVENEWPAGE,GeometryDialog::_onUIUpdateButtonSaveGeomInfoPackage)
+   EVT_BUTTON(GEOMETRY_DELETEPAGES,GeometryDialog::_onButtonDeleteSelGeomInfoPackage)
+   EVT_UPDATE_UI(GEOMETRY_DELETEPAGES,GeometryDialog::_onUIUpdateButtonDeleteSelGeomInfoPackage)
+   EVT_LISTBOX(GEOMETRY_LISTBOX, GeometryDialog::_onListBox)
+   EVT_LISTBOX_DCLICK(GEOMETRY_LISTBOX, GeometryDialog::_onDClickListBox)
 END_EVENT_TABLE()
 
 
@@ -26,168 +28,444 @@ GeometryDialog::GeometryDialog( wxWindow *parent,
    geomOpacitySlider = 0;
    geomLODSlider = 0;
    _parent = parent;
-   
 
-   
-  //GeometryDataManager::getInstance().GetGeometryDataBuffer()->InitializeNewGeomInfo(0);
+   _buildPage();
 
-  wxBoxSizer* toptop= new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer* left_margin = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer* top_sizer = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer* right_margin = new wxBoxSizer(wxHORIZONTAL);
   
-  left_margin->Add(5, 10);
-  right_margin->Add(5, 10);
-  toptop->Add(left_margin, 0, wxALIGN_LEFT);
-  toptop->Add(top_sizer, 0,  wxALIGN_CENTER_HORIZONTAL);
-  toptop->Add(right_margin, 0, wxALIGN_RIGHT);
-
-  wxBoxSizer* data_row = new wxBoxSizer(wxVERTICAL);
-  wxBoxSizer* ok_row = new wxBoxSizer(wxHORIZONTAL);
-
-  top_sizer->Add(10, 10, 0); //the top margin
-  top_sizer->Add(data_row, 0); 
-  top_sizer->Add(10, 5, 0);
-  top_sizer->Add(ok_row, 0, wxALIGN_CENTER_HORIZONTAL);
-  top_sizer->Add(10, 10, 0); //the bottom margin
-  
-  wxBoxSizer *data_zero_row = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *data_first_row = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *data_second_row = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *data_third_row = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *data_fourth_row = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *data_fifth_row = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *data_sixth_row = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *data_seventh_row = new wxBoxSizer(wxHORIZONTAL);
-  wxBoxSizer *data_eighth_row = new wxBoxSizer(wxHORIZONTAL);
-
-  data_row->Add(10, 5, 0);
-  data_row->Add(data_zero_row, 0);
-  data_row->Add(10, 3, 0);
-  data_row->Add(data_first_row, 0);
-  data_row->Add(10, 3, 0);
-  data_row->Add(data_second_row, 0);
-  data_row->Add(10, 3, 0);
-  data_row->Add(data_third_row, 0);
-  data_row->Add(10, 3, 0);
-  data_row->Add(data_fourth_row,0);
-  data_row->Add(10, 3, 0);
-  data_row->Add(data_fifth_row,0);
-  data_row->Add(10, 3, 0);
-  data_row->Add(data_sixth_row,0);
-  data_row->Add(10, 3, 0);
-  data_row->Add(data_seventh_row,0);
-  data_row->Add(10, 3, 0);
-  data_row->Add(data_eighth_row,0);
-  
-
-  ok_row->Add(new wxButton(this, wxID_OK, "OK"), 0, wxALIGN_CENTER_HORIZONTAL);
-  ok_row->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALIGN_CENTER_HORIZONTAL);
-  
-  wxStaticText* label0 = new wxStaticText(this, -1, "Geom File Name: ", wxDefaultPosition, wxSize(200, 17));
-  t_geomfilename = new wxTextCtrl(this, -1, wxT("9"), wxDefaultPosition, wxSize(80, 20));
-  data_zero_row->Add(label0);
-  data_zero_row->Add(t_geomfilename);
-  
-  wxStaticText * label1 = new wxStaticText(this, -1, " Geom Name : ", wxDefaultPosition, wxSize(200, 17));
-  t_geomname = new wxTextCtrl(this, -1, wxT("0"), wxDefaultPosition, wxSize(80, 20));
-  data_first_row->Add(label1);
-  data_first_row->Add(t_geomname);
-
-  wxStaticText * label2 = new wxStaticText(this, -1, " Transparency Toggle : ", wxDefaultPosition, wxSize(200, 17));
-  t_transparencytoggle = new wxTextCtrl(this, -1, wxT("0"), wxDefaultPosition, wxSize(80, 20));
-  data_second_row->Add(label2);
-  data_second_row->Add(t_transparencytoggle);
-
-  wxStaticText * label3 = new wxStaticText(this, -1, " Color Flag : ", wxDefaultPosition, wxSize(200, 17));
-  t_colorflag = new wxTextCtrl(this, -1, wxT("1"), wxDefaultPosition, wxSize(80, 20));
-  data_third_row->Add(label3);
-  data_third_row->Add(t_colorflag);
-
-  wxStaticText *label4 = new wxStaticText(this, -1, "Scale Array: ", wxDefaultPosition, wxSize(200, 17));
-  t_scale0 = new wxTextCtrl(this, -1, wxT("1.0"), wxDefaultPosition, wxSize(80,20));
-  t_scale1 = new wxTextCtrl(this, -1, wxT("1.0"), wxDefaultPosition, wxSize(80,20));
-  t_scale2 = new wxTextCtrl(this, -1, wxT("1.0"), wxDefaultPosition, wxSize(80,20));
-  data_fourth_row->Add(label4);
-  data_fourth_row->Add(t_scale0);
-  data_fourth_row->Add(t_scale1);
-  data_fourth_row->Add(t_scale2);
-  
-wxStaticText *label5 = new wxStaticText(this, -1, "Translation Array: ", wxDefaultPosition, wxSize(200, 17));
-  t_tran0 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
-  t_tran1 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
-  t_tran2 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
-  data_fifth_row->Add(label5);
-  data_fifth_row->Add(t_tran0);
-  data_fifth_row->Add(t_tran1);
-  data_fifth_row->Add(t_tran2);
-
-
-wxStaticText *label6 = new wxStaticText(this, -1, "Rotation Array: ", wxDefaultPosition, wxSize(200, 17));
-  t_rot0 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
-  t_rot1 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
-  t_rot2 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
-  data_sixth_row->Add(label6);
-  data_sixth_row->Add(t_rot0);
-  data_sixth_row->Add(t_rot1);
-  data_sixth_row->Add(t_rot2);
-
- wxStaticText *label7 = new wxStaticText(this, -1, "RGB Array: ", wxDefaultPosition, wxSize(200, 17));
-  t_color0 = new wxTextCtrl(this, -1, wxT("1.0"), wxDefaultPosition, wxSize(80,20));
-  t_color1 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
-  t_color2 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
-  data_seventh_row->Add(label7);
-  data_seventh_row->Add(t_color0);
-  data_seventh_row->Add(t_color1);
-  data_seventh_row->Add(t_color2);
-
-   wxStaticText * label8 = new wxStaticText(this, -1, " LOD : ", wxDefaultPosition, wxSize(200, 17));
-  t_LOD = new wxTextCtrl(this, -1, wxT("0.5"), wxDefaultPosition, wxSize(80, 20));
-  data_eighth_row->Add(label8);
-  data_eighth_row->Add(t_LOD);
-
-  SetSizer(toptop);
-  SetAutoLayout(TRUE);
-  toptop->Fit(this);  
-
-
    //_buildPage();
 }
 
-void GeometryDialog::_onGeometry( wxScrollEvent& WXUNUSED(event) )
+void GeometryDialog::_buildPage()
 {
+   
+   //Sketch Design
+   wxSizer *whole_sizer = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* left_margin = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* middle_sizer = new wxBoxSizer(wxVERTICAL);
+   wxBoxSizer* right_margin = new wxBoxSizer(wxHORIZONTAL);
+   
+   wxBoxSizer* topmiddle_sizer = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer* bottommiddle_sizer = new wxBoxSizer(wxHORIZONTAL);
+
+   left_margin->Add(5, 10);
+   right_margin->Add(5, 10);
+   whole_sizer->Add(left_margin, 0, wxALIGN_LEFT);
+   whole_sizer->Add(middle_sizer, 0,  wxALIGN_CENTER_HORIZONTAL);
+   whole_sizer->Add(right_margin, 0, wxALIGN_RIGHT);
+
+   wxStaticBox *box =  new wxStaticBox(this, -1, _T("Add Panel"));
+   wxSizer *topmiddleleft_sizer = new wxStaticBoxSizer(box,wxVERTICAL);
+   
+   box = new wxStaticBox(this, -1, _T("Geom Info"));
+   wxSizer *topmiddleright_sizer = new wxStaticBoxSizer(box,wxVERTICAL);
+  
+   topmiddle_sizer->Add(topmiddleleft_sizer,0);
+   topmiddle_sizer->Add(topmiddleright_sizer,0);
+
+   middle_sizer->Add(10,10,0); //the top margin
+   middle_sizer->Add(topmiddle_sizer,0);
+   middle_sizer->Add(10,5,0);
+   middle_sizer->Add(bottommiddle_sizer,0, wxALIGN_CENTER_HORIZONTAL);
+   middle_sizer->Add(10,10,0); //the bottom margin
+    
+   //Top left design
+   lbox_geompackagenames = new wxListBox(this, GEOMETRY_LISTBOX,
+                           wxDefaultPosition, wxDefaultSize,
+                           0,NULL,
+                           wxLB_HSCROLL);
+
+   wxBoxSizer* add_delete_row = new wxBoxSizer(wxHORIZONTAL);
+   
+   topmiddleleft_sizer->Add(lbox_geompackagenames, 0, wxGROW | wxALL, 5);
+   topmiddleleft_sizer->Add(10,65,0);
+   topmiddleleft_sizer->Add(add_delete_row,0,wxGROW | wxALL, 5);
+   topmiddleleft_sizer->SetMinSize(150,0); 
+      
+      
+   add_button = new wxButton(this, GEOMETRY_ADDNEWPAGE, _T("Add"));
+   save_button = new wxButton(this, GEOMETRY_SAVENEWPAGE, _T("Save"));
+   delete_button = new wxButton (this, GEOMETRY_DELETEPAGES, _T("Delete"));
+
+   add_delete_row->Add(add_button, 0, wxALIGN_CENTER_HORIZONTAL);
+   add_delete_row->Add(10,3,0);
+   add_delete_row->Add(save_button, 0, wxALIGN_CENTER_HORIZONTAL);
+   add_delete_row->Add(10,3,0);
+   add_delete_row->Add(delete_button, 0, wxALIGN_CENTER_HORIZONTAL);
+
+   //Top right design
+   wxBoxSizer *data_zero_row = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer *data_first_row = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer *data_second_row = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer *data_third_row = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer *data_fourth_row = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer *data_fifth_row = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer *data_sixth_row = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer *data_seventh_row = new wxBoxSizer(wxHORIZONTAL);
+   wxBoxSizer *data_eighth_row = new wxBoxSizer(wxHORIZONTAL);
+
+   topmiddleright_sizer->Add(10, 5, 0);
+   topmiddleright_sizer->Add(data_zero_row, 0);
+   topmiddleright_sizer->Add(10, 3, 0);
+   topmiddleright_sizer->Add(data_first_row, 0);
+   topmiddleright_sizer->Add(10, 3, 0);
+   topmiddleright_sizer->Add(data_second_row, 0);
+   topmiddleright_sizer->Add(10, 3, 0);
+   topmiddleright_sizer->Add(data_third_row, 0);
+   topmiddleright_sizer->Add(10, 3, 0);
+   topmiddleright_sizer->Add(data_fourth_row,0);
+   topmiddleright_sizer->Add(10, 3, 0);
+   topmiddleright_sizer->Add(data_fifth_row,0);
+   topmiddleright_sizer->Add(10, 3, 0);
+   topmiddleright_sizer->Add(data_sixth_row,0);
+   topmiddleright_sizer->Add(10, 3, 0);
+   topmiddleright_sizer->Add(data_seventh_row,0);
+   topmiddleright_sizer->Add(10, 3, 0);
+   topmiddleright_sizer->Add(data_eighth_row,0);
+  
+
+   bottommiddle_sizer->Add(new wxButton(this, wxID_OK, "OK"), 0, wxALIGN_CENTER_HORIZONTAL);
+   bottommiddle_sizer->Add(200,15,0);
+   bottommiddle_sizer->Add(new wxButton(this, wxID_CANCEL, "Cancel"), 0, wxALIGN_CENTER_HORIZONTAL);
+  
+   wxStaticText * label0 = new wxStaticText(this, -1, " Geom Name : ", wxDefaultPosition, wxSize(200, 17));
+   t_geomname = new wxTextCtrl(this, -1, wxT("0"), wxDefaultPosition, wxSize(80, 20));
+   data_zero_row->Add(label0);
+   data_zero_row->Add(t_geomname);
+  
+   wxStaticText* label1 = new wxStaticText(this, -1, "Geom File Name: ", wxDefaultPosition, wxSize(200, 17));
+   t_geomfilename = new wxTextCtrl(this, -1, wxT("9"), wxDefaultPosition, wxSize(80, 20));
+   data_first_row->Add(label1);
+   data_first_row->Add(t_geomfilename);
+  
+
+   wxStaticText * label2 = new wxStaticText(this, -1, " Transparency Toggle : ", wxDefaultPosition, wxSize(200, 17));
+   t_transparencytoggle = new wxTextCtrl(this, -1, wxT("0"), wxDefaultPosition, wxSize(80, 20));
+   data_second_row->Add(label2);
+   data_second_row->Add(t_transparencytoggle);
+
+   wxStaticText * label3 = new wxStaticText(this, -1, " Color Flag : ", wxDefaultPosition, wxSize(200, 17));
+   t_colorflag = new wxTextCtrl(this, -1, wxT("1"), wxDefaultPosition, wxSize(80, 20));
+   data_third_row->Add(label3);
+   data_third_row->Add(t_colorflag);
+
+   wxStaticText *label4 = new wxStaticText(this, -1, "Scale Array: ", wxDefaultPosition, wxSize(200, 17));
+   t_scale0 = new wxTextCtrl(this, -1, wxT("1.0"), wxDefaultPosition, wxSize(80,20));
+   t_scale1 = new wxTextCtrl(this, -1, wxT("1.0"), wxDefaultPosition, wxSize(80,20));
+   t_scale2 = new wxTextCtrl(this, -1, wxT("1.0"), wxDefaultPosition, wxSize(80,20));
+   data_fourth_row->Add(label4);
+   data_fourth_row->Add(t_scale0);
+   data_fourth_row->Add(t_scale1);
+   data_fourth_row->Add(t_scale2);
+  
+   wxStaticText *label5 = new wxStaticText(this, -1, "Translation Array: ", wxDefaultPosition, wxSize(200, 17));
+   t_tran0 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
+   t_tran1 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
+   t_tran2 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
+   data_fifth_row->Add(label5);
+   data_fifth_row->Add(t_tran0);
+   data_fifth_row->Add(t_tran1);
+   data_fifth_row->Add(t_tran2);
+
+
+   wxStaticText *label6 = new wxStaticText(this, -1, "Rotation Array: ", wxDefaultPosition, wxSize(200, 17));
+   t_rot0 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
+   t_rot1 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
+   t_rot2 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
+   data_sixth_row->Add(label6);
+   data_sixth_row->Add(t_rot0);
+   data_sixth_row->Add(t_rot1);
+   data_sixth_row->Add(t_rot2);
+
+   wxStaticText *label7 = new wxStaticText(this, -1, "RGB Array: ", wxDefaultPosition, wxSize(200, 17));
+   t_color0 = new wxTextCtrl(this, -1, wxT("1.0"), wxDefaultPosition, wxSize(80,20));
+   t_color1 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
+   t_color2 = new wxTextCtrl(this, -1, wxT("0.0"), wxDefaultPosition, wxSize(80,20));
+   data_seventh_row->Add(label7);
+   data_seventh_row->Add(t_color0);
+   data_seventh_row->Add(t_color1);
+   data_seventh_row->Add(t_color2);
+
+   wxStaticText * label8 = new wxStaticText(this, -1, " LOD : ", wxDefaultPosition, wxSize(200, 17));
+   t_LOD = new wxTextCtrl(this, -1, wxT("0.5"), wxDefaultPosition, wxSize(80, 20));
+   data_eighth_row->Add(label8);
+   data_eighth_row->Add(t_LOD);
+
+   SetSizer(whole_sizer);
+   SetAutoLayout(TRUE);
+   whole_sizer->Fit(this);  
+
 
 }
 
-//////////////////////////////////////////////////
-void GeometryDialog::ChangeOpacity( wxScrollEvent& WXUNUSED(event) )
+void GeometryDialog::_onButtonAddNewGeomInfoPackage(wxCommandEvent& event)
 {
+   std::vector<GeometryInfoPackage> templist;
+   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+  
+   GeometryInfoPackage newGeometryInfoPackage;
+   newGeometryInfoPackage =  GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetDefaultNewGeomInfoPackage(templist.size());
+
+   templist.push_back(newGeometryInfoPackage); 
+
+   //wxString s = newGeometryInfoPackage.GetGeomName().c_str();
+   //lbox_geompackagenames->Append(s);
+   _onUpdateUIInfoPage(templist,templist.size()-1);
+   wxArrayString items;
+   std::string tempname;
+   
+   for(int i=0; i<templist.size();i++)
+   {
+         tempname = templist[i].GetGeomName();
+         items.Add(tempname.c_str());
+   }
+   lbox_geompackagenames->Set(items);
+ 
+}
+
+void GeometryDialog::_onButtonSaveGeomInfoPackage(wxCommandEvent& event)
+{
+   GeometryInfoPackage temppackage;
+   temppackage =  GetGeomInfoPackageFromInfoPage();
+   
+   wxArrayInt selections;
+   int n = lbox_geompackagenames->GetSelections(selections);
+   int item = selections[0];//right now can only selecte one item at a time
+
+   std::vector<GeometryInfoPackage> templist;
+   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+
+   if(templist.size()<lbox_geompackagenames->GetCount())//this is a new package, add to the list
+   {
+      GeometryDataManager::getInstance().GetGeometryDataBuffer()->AddGeomInfoToCurrentList(temppackage);
+
+   }
+   else //this is an old, just update the list
+   {
+      GeometryDataManager::getInstance().GetGeometryDataBuffer()->UpdateGeomInfoToCurrentList(temppackage,item);
+   }
+ 
+   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+
+   _onUpdateUIInfoPage(templist,item);
+   
+   wxArrayString items;
+   std::string tempname;
+   
+   for(int i=0; i<templist.size();i++)
+   {
+      tempname = templist[i].GetGeomName();
+      items.Add(tempname.c_str());
+   }
+   lbox_geompackagenames->Set(items);
 
 }
 
-//////////////////////////////////////////////////
-void GeometryDialog::_onUpdate(wxCommandEvent& WXUNUSED(event) )
+void GeometryDialog::_onUIUpdateButtonSaveGeomInfoPackage(wxUpdateUIEvent& event)
 {
+   wxArrayInt selections;
+   event.Enable(lbox_geompackagenames->GetSelections(selections) != 0);
+
+}
+
+void GeometryDialog::_onButtonDeleteSelGeomInfoPackage(wxCommandEvent& event)
+{
+   wxArrayInt selections;
+   std::vector<int> itemindexs;
+   
+   int n = lbox_geompackagenames->GetSelections(selections);
+   while (n>0)
+   {
+      lbox_geompackagenames->Delete(selections[--n]);
+      itemindexs.push_back(selections[n]);
+   }
+   GeometryDataManager::getInstance().GetGeometryDataBuffer()->DeleteGeomInfosFromCurrentList(itemindexs);
+    
+   std::vector<GeometryInfoPackage> templist;
+   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+   _onUpdateUIInfoPage(templist,0);
+   
+   wxArrayString items;
+   std::string tempname;
+   
+   for(int i=0; i<templist.size();i++)
+   {
+      tempname = templist[i].GetGeomName();
+      items.Add(tempname.c_str());
+   }
+   lbox_geompackagenames->Set(items);
 
 }
 
 
+void GeometryDialog::_onUIUpdateButtonDeleteSelGeomInfoPackage(wxUpdateUIEvent& event)
+{
+    wxArrayInt selections;
+    event.Enable(lbox_geompackagenames->GetSelections(selections) != 0);
+}
+
+void GeometryDialog::_onListBox(wxCommandEvent& event)
+{
+   int item = event.GetInt();
+   std::vector<GeometryInfoPackage> templist;
+   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+   _onUpdateUIInfoPage(templist,item);
+
+}
+
+void GeometryDialog::_onDClickListBox(wxCommandEvent& event)
+
+{ 
+   
+  
+}
 
 bool GeometryDialog::TransferDataFromWindow()
 {
+   GeometryDataManager::getInstance().GetGeometryDataBuffer()->UpdateCurrentGeomInfoListToMap();
+   return true;
+}
 
-   std::vector<GeometryInfoPackage> templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentModuleGeomInfoListFromMap();
+bool GeometryDialog::TransferDataToWindow()
+{
+   //if this is an old dialog, get the data from databuffer
+  std::vector<GeometryInfoPackage> templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentModuleGeomInfoListFromMap();
 
+  if(templist.size()>0)
+  {
+      _onUpdateUIInfoPage(templist, 0); //by default, the geominfo page shows the first package.
+      wxArrayString items;
+      std::string tempname;
+      for(int i=0; i<templist.size();i++)
+      {
+         tempname = templist[i].GetGeomName();
+         items.Add(tempname.c_str());
+      }
+   
+      lbox_geompackagenames->Set(items);
 
+  }
+      
+   return true;
+
+}
+
+void GeometryDialog::_onUpdateUIInfoPage(std::vector<GeometryInfoPackage> templist, int index)
+{
+
+   //TODO
+   //By default when the GeometryDialog is actived, the GeomInfo is pointed to the first geompackage the module has.
+   if(templist.size()>0 && index <templist.size())
+   {
+      wxString temp_string;
+      temp_string<<templist[index].GetGeomName().c_str();
+      t_geomname->SetValue(temp_string);
+
+      temp_string.Clear();
+      temp_string<<templist[index].GetGeomFileName().c_str();
+      t_geomfilename->SetValue(temp_string);
+   
+      temp_string.Clear();
+      temp_string<<templist[index].GetTransparencyToggle();
+      t_transparencytoggle->SetValue(temp_string);
+
+      temp_string.Clear();
+      temp_string<<templist[index].GetColorFlag();
+      t_colorflag->SetValue(temp_string);
+
+      temp_string.Clear();
+      temp_string<<templist[index].GetScales()[0];
+      t_scale0->SetValue(temp_string);
+   
+      temp_string.Clear();
+      temp_string<<templist[index].GetScales()[1];
+      t_scale1->SetValue(temp_string);
+ 
+      temp_string.Clear();
+      temp_string<<templist[index].GetScales()[2];
+      t_scale2->SetValue(temp_string);
+
+      temp_string.Clear();
+      temp_string<<templist[index].GetTrans()[0];
+      t_tran0->SetValue(temp_string);
+   
+      temp_string.Clear();
+      temp_string<<templist[index].GetTrans()[1];
+      t_tran1->SetValue(temp_string);
+ 
+      temp_string.Clear();
+      temp_string<<templist[index].GetTrans()[2];
+      t_tran2->SetValue(temp_string);
+
+      temp_string.Clear();
+      temp_string<<templist[index].GetRots()[0];
+      t_rot0->SetValue(temp_string);
+   
+      temp_string.Clear();
+      temp_string<<templist[index].GetRots()[1];
+      t_rot1->SetValue(temp_string);
+ 
+      temp_string.Clear();
+      temp_string<<templist[index].GetRots()[2];
+      t_rot2->SetValue(temp_string);
+
+      temp_string.Clear();
+      temp_string<<templist[index].GetColors()[0];
+      t_color0->SetValue(temp_string);
+   
+      temp_string.Clear();
+      temp_string<<templist[index].GetColors()[1];
+      t_color1->SetValue(temp_string);
+ 
+      temp_string.Clear();
+      temp_string<<templist[index].GetColors()[2];
+      t_color2->SetValue(temp_string);
+
+      temp_string.Clear();
+      temp_string<<templist[index].GetLOD();
+      t_LOD->SetValue(temp_string);
+
+     
+   }
+   else //there is no geominfo in the list
+   {
+      t_geomname->SetValue("");
+      t_geomfilename->SetValue("");
+      t_transparencytoggle->SetValue("");
+      t_colorflag->SetValue("");
+      t_scale0->SetValue("");
+      t_scale1->SetValue("");
+      t_scale2->SetValue("");
+      t_tran0->SetValue("");
+      t_tran1->SetValue("");
+      t_tran2->SetValue("");
+      t_rot0->SetValue("");
+      t_rot1->SetValue("");
+      t_rot2->SetValue("");
+      t_color0->SetValue("");
+      t_color1->SetValue("");
+      t_color2->SetValue("");
+      t_LOD->SetValue("");
+   }
+
+}
+
+GeometryInfoPackage GeometryDialog::GetGeomInfoPackageFromInfoPage()
+{
+   GeometryInfoPackage temppackage;
+   
+   
    wxString txt;
+   txt = t_geomname->GetValue();
+   temppackage.SetGeomName(txt.c_str());
+   
    txt = t_geomfilename->GetValue();
-   templist[0].SetGeomFileName(txt.c_str());
+   temppackage.SetGeomFileName(txt.c_str());
 
    txt = t_transparencytoggle->GetValue();
-   templist[0].SetTransparencyToggle((bool)atoi(txt.c_str()));
+   temppackage.SetTransparencyToggle((bool)atoi(txt.c_str()));
 
    txt = t_colorflag->GetValue();
-   templist[0].SetColorFlag((bool)atoi(txt.c_str()));
+   temppackage.SetColorFlag((bool)atoi(txt.c_str()));
 
    double x, y,z;
    txt = t_scale0->GetValue();
@@ -196,7 +474,7 @@ bool GeometryDialog::TransferDataFromWindow()
    y = (double) atof(txt.c_str());
    txt = t_scale2->GetValue();
    z= (double) atof(txt.c_str());
-   templist[0].SetScales(x,y,z);
+   temppackage.SetScales(x,y,z);
 
 
    txt = t_tran0->GetValue();
@@ -205,7 +483,7 @@ bool GeometryDialog::TransferDataFromWindow()
    y = (double) atof(txt.c_str());
    txt = t_tran2->GetValue();
    z= (double) atof(txt.c_str());
-   templist[0].SetTrans(x,y,z);
+   temppackage.SetTrans(x,y,z);
 
 
    txt = t_rot0->GetValue();
@@ -214,7 +492,7 @@ bool GeometryDialog::TransferDataFromWindow()
    y = (double) atof(txt.c_str());
    txt = t_rot2->GetValue();
    z= (double) atof(txt.c_str());
-   templist[0].SetRots(x,y,z);
+   temppackage.SetRots(x,y,z);
 
 
    txt = t_color0->GetValue();
@@ -223,101 +501,12 @@ bool GeometryDialog::TransferDataFromWindow()
    y = (double) atof(txt.c_str());
    txt = t_color2->GetValue();
    z= (double) atof(txt.c_str());
-   templist[0].SetColors(x,y,z);
-
-
+   temppackage.SetColors(x,y,z);
   
    txt = t_LOD->GetValue();
-   templist[0].SetLOD((double) atof(txt.c_str()));
+   temppackage.SetLOD((double) atof(txt.c_str()));
 
-
-   GeometryDataManager::getInstance().GetGeometryDataBuffer()->SetCurrentGeomInfoList(templist);
-   
-   GeometryDataManager::getInstance().GetGeometryDataBuffer()->UpdateCurrentGeomInfoListToMap();
-
-   return true;
-}
-
-bool GeometryDialog::TransferDataToWindow()
-{
-   //if this is an old dialog, get the data from databuffer
-  
-   std::vector<GeometryInfoPackage> templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentModuleGeomInfoListFromMap();
-
-   
-   //TODO
-   //Right now every module only has one geomeinfopackage, templist.size()=0
-   
-   wxString temp_string;
-   temp_string<<templist[0].GetGeomName().c_str();
-   t_geomname->SetValue(temp_string);
-
-   temp_string.Clear();
-   temp_string<<templist[0].GetGeomFileName().c_str();
-   t_geomfilename->SetValue(temp_string);
-   
-   temp_string.Clear();
-   temp_string<<templist[0].GetTransparencyToggle();
-   t_transparencytoggle->SetValue(temp_string);
-
-   temp_string.Clear();
-   temp_string<<templist[0].GetColorFlag();
-   t_colorflag->SetValue(temp_string);
-
-   temp_string.Clear();
-   temp_string<<templist[0].GetScales()[0];
-   t_scale0->SetValue(temp_string);
-   
-   temp_string.Clear();
-   temp_string<<templist[0].GetScales()[1];
-   t_scale1->SetValue(temp_string);
- 
-   temp_string.Clear();
-   temp_string<<templist[0].GetScales()[2];
-   t_scale2->SetValue(temp_string);
-
-   temp_string.Clear();
-   temp_string<<templist[0].GetTrans()[0];
-   t_tran0->SetValue(temp_string);
-   
-   temp_string.Clear();
-   temp_string<<templist[0].GetTrans()[1];
-   t_tran1->SetValue(temp_string);
- 
-   temp_string.Clear();
-   temp_string<<templist[0].GetTrans()[2];
-   t_tran2->SetValue(temp_string);
-
-   temp_string.Clear();
-   temp_string<<templist[0].GetRots()[0];
-   t_rot0->SetValue(temp_string);
-   
-   temp_string.Clear();
-   temp_string<<templist[0].GetRots()[1];
-   t_rot1->SetValue(temp_string);
- 
-   temp_string.Clear();
-   temp_string<<templist[0].GetRots()[2];
-   t_rot2->SetValue(temp_string);
-
-   temp_string.Clear();
-   temp_string<<templist[0].GetColors()[0];
-   t_color0->SetValue(temp_string);
-   
-   temp_string.Clear();
-   temp_string<<templist[0].GetColors()[1];
-   t_color1->SetValue(temp_string);
- 
-   temp_string.Clear();
-   temp_string<<templist[0].GetColors()[2];
-   t_color2->SetValue(temp_string);
-
-   temp_string.Clear();
-   temp_string<<templist[0].GetLOD();
-   t_LOD->SetValue(temp_string);
-
-   
-   return true;
+   return temppackage;
 
 }
 
