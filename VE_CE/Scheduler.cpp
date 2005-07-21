@@ -416,11 +416,11 @@ void Scheduler::print_schedule ()
   cerr << "\n===========\n";
   for(k=1; k<=nmodules; k++) {
     Module *m = _net->module(k-1);
-    cerr << k << " = " << m->get_id() << endl;
+    std::cerr << k << " = " << m->get_id() << std::endl;
   }
   
-  cerr << "\n"; _schedule_nodes.print_mods(); cerr << "\n";
-  cerr << "===========\n";
+  std::cerr << "\n"; _schedule_nodes.print_mods(); std::cerr << "\n";
+  std::cerr << "===========\n";
 }
 
 ////////////////////////////////////////////////////////////////////////////////

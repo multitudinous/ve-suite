@@ -76,14 +76,14 @@ int main (int argc, char* argv[])
     name.length(1);
     name[0].id = CORBA::string_dup ("Executive");
    
-	cerr<<"Before Resigter to Naming Service"<<endl;
+	std::cerr<<"Before Resigter to Naming Service"<<std::endl;
     //Bind the object
     try {
       naming_context->bind(name, exec.in());
     } catch (CosNaming::NamingContext::AlreadyBound& ex){
       naming_context->rebind(name, exec.in());
     }
-	cerr<<"after bind to Naming Service"<<endl;
+	std::cerr<<"after bind to Naming Service"<<std::endl;
     orb->run();
 
     // Destroy the POA, waiting until the destruction terminates
@@ -91,7 +91,7 @@ int main (int argc, char* argv[])
     // Finally destroy the ORB
     orb->destroy();
     }catch (CORBA::Exception &) {
-    cerr << "CORBA exception raised!" << endl;
+		std::cerr << "CORBA exception raised!" << std::endl;
   }
   return 0;
 }
