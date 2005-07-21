@@ -188,6 +188,9 @@
 			<File
 				RelativePath=".\Framework\GeometryDataManager.h">
 			</File>
+			<File
+				RelativePath=".\Framework\interface.h">
+			</File>
 		</Filter>
 		<Filter
 			Name="Resource Files"
