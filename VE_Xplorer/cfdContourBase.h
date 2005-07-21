@@ -77,8 +77,8 @@ protected:
    vtkContourFilter*    cfilter;
    vtkBandedPolyDataContourFilter * bfilter;
    vtkDecimatePro* deci;
-   vtkTriangleFilter*   tfilter;
-   vtkStripper*         stripper;
+   vtkTriangleFilter*   tris;
+   vtkStripper*         strip;
 
    int fillType;
    double warpedContourScale;
