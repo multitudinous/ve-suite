@@ -382,9 +382,9 @@ void cfdDCS::SetMat( Matrix44f& input )
          // set rotation values
          gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
          gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
-         _rotation[ 0 ] = tempZXY[ 0 ];
-         _rotation[ 1 ] = tempZXY[ 1 ];
-         _rotation[ 2 ] = tempZXY[ 2 ];
+         _rotation[ 0 ] = gmtl::rad2deg( tempZXY[ 0 ] );
+         _rotation[ 1 ] = gmtl::rad2deg( tempZXY[ 1 ] );
+         _rotation[ 2 ] = gmtl::rad2deg( tempZXY[ 2 ] );
 
          osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
          dcsQuat = quat;
@@ -456,9 +456,9 @@ void cfdDCS::SetRotationMatrix( Matrix44f& input )
       // Create the quat for rotataion
       gmtl::Quatf tempQuat = gmtl::make< gmtl::Quatf >( unScaleInput );
       gmtl::EulerAngleZXYf tempZXY = gmtl::makeRot< gmtl::EulerAngleZXYf >( unScaleInput );
-      _rotation[ 0 ] = tempZXY[ 0 ];
-      _rotation[ 1 ] = tempZXY[ 1 ];
-      _rotation[ 2 ] = tempZXY[ 2 ];
+      _rotation[ 0 ] = gmtl::rad2deg( tempZXY[ 0 ] );
+      _rotation[ 1 ] = gmtl::rad2deg( tempZXY[ 1 ] );
+      _rotation[ 2 ] = gmtl::rad2deg( tempZXY[ 2 ] );
       osg::Quat quat( tempQuat[ 0 ], tempQuat[ 1 ], tempQuat[ 2 ], tempQuat[ 3 ] );
       dcsQuat = quat;
       _udcb->setQuat( quat );
