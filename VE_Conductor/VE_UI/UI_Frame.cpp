@@ -220,7 +220,8 @@ void UI_Frame::buildFrame( )
 /////////////////////
 UI_Frame::~UI_Frame()
 {
-   _tabsSizer->Detach(_tabs);
+   //_tabsSizer->Detach(_tabs);
+   _tabs->DeleteAllPages();
    _datasetSizer->Detach(_datasetPanel);
    _frameSizer->Detach(_tabsSizer);
    _frameSizer->Detach(_datasetSizer);
