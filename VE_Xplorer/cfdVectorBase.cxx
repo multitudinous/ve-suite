@@ -46,6 +46,8 @@
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
+#include <vtkTriangleFilter.h>
+#include <vtkStripper.h>
 
 using namespace VE_Xplorer;
 
@@ -63,10 +65,16 @@ cfdVectorBase::cfdVectorBase()
 
    this->filter = vtkGeometryFilter::New();
    this->filter->SetInput( this->glyph->GetOutput() );
+   filter->GetOutput()->ReleaseDataFlagOn();
+
+   this->tris = vtkTriangleFilter::New();
+   this->strip = vtkStripper::New();
 
    this->mapper = vtkPolyDataMapper::New();
    this->mapper->SetInput( this->filter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
+   mapper->ImmediateModeRenderingOn();   
+
    _vectorScale = 1.0;
    _vectorThreshHoldMinPercentage = 0;
    _vectorThreshHoldMaxPercentage = 100;
@@ -90,6 +98,12 @@ cfdVectorBase::~cfdVectorBase()
    
    this->filter->Delete();
    this->filter = NULL;
+
+   this->tris->Delete();
+   this->tris = NULL;
+
+   this->strip = NULL;
+   this->strip->Delete();
    
    this->mapper->Delete();
    this->mapper = NULL;
@@ -193,6 +207,58 @@ void cfdVectorBase::SetGlyphWithThreshold()
       tfilter->SetInput( this->ptmask->GetOutput() );
       tfilter->ThresholdBetween( _vectorThreshHoldValues[ 0 ],
                                  _vectorThreshHoldValues[ 1 ] );
+      //tfilter->Update();
+      this->glyph->SetInput( tfilter->GetOutput());
+      tfilter->Delete(); 
+   }
+   else if ( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] )
+   {
+      vprDEBUG(vprDBG_ALL, 1) <<"cfdVectorBase: ThresholdByUpper"
+         << std::endl << vprDEBUG_FLUSH;
+      vtkThresholdPoints * tfilter = vtkThresholdPoints::New();
+      tfilter->SetInput( this->ptmask->GetOutput() );
+      tfilter->ThresholdByUpper( _vectorThreshHoldValues[ 0 ] );
+      //tfilter->Update();
+      this->glyph->SetInput( tfilter->GetOutput());
+      tfilter->Delete(); 
+   }
+   else if ( _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
+   {
+      vprDEBUG(vprDBG_ALL, 1) <<"cfdVectorBase: ThresholdByLower"
+         << std::endl << vprDEBUG_FLUSH;
+      vtkThresholdPoints * tfilter = vtkThresholdPoints::New();
+      tfilter->SetInput( this->ptmask->GetOutput() );
+      tfilter->ThresholdByLower( _vectorThreshHoldValues[ 1 ] );
+      //tfilter->Update();
+      this->glyph->SetInput( tfilter->GetOutput());
+      tfilter->Delete(); 
+   }
+   else
+   {
+      vprDEBUG(vprDBG_ALL, 1) <<"cfdVectorBase: NO Threshold"
+         << std::endl << vprDEBUG_FLUSH;
+      this->glyph->SetInput( this->ptmask->GetOutput() );
+   }
+}
+///////////////////////////////////////////
+/*void cfdVectorBase::SetGlyphWithThreshold()
+{
+   vprDEBUG(vprDBG_ALL, 1) << "vectorThreshHoldValues : " 
+      << _vectorThreshHoldValues[ 0 ] << " : " 
+      << _vectorThreshHoldValues[ 1 ] << std::endl << vprDEBUG_FLUSH;
+
+   double currentScalarRange[ 2 ];
+   this->GetActiveDataSet()->GetRange( currentScalarRange );
+
+   if ( _vectorThreshHoldValues[ 0 ] > currentScalarRange[ 0 ] && 
+        _vectorThreshHoldValues[ 1 ] < currentScalarRange[ 1 ] )
+   {
+      vprDEBUG(vprDBG_ALL, 1) <<"cfdVectorBase: ThresholdBetween"
+         << std::endl << vprDEBUG_FLUSH;
+      vtkThresholdPoints * tfilter = vtkThresholdPoints::New();
+      tfilter->SetInput( this->ptmask->GetOutput() );
+      tfilter->ThresholdBetween( _vectorThreshHoldValues[ 0 ],
+                                 _vectorThreshHoldValues[ 1 ] );
       tfilter->Update();
       this->glyph->SetInput( tfilter->GetOutput());
       tfilter->Delete(); 
@@ -225,7 +291,7 @@ void cfdVectorBase::SetGlyphWithThreshold()
          << std::endl << vprDEBUG_FLUSH;
       this->glyph->SetInput( this->ptmask->GetOutput() );
    }
-}
+}*/
 
 void cfdVectorBase::SetGlyphAttributes()
 {

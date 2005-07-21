@@ -38,6 +38,8 @@ class vtkGlyph3D;
 class vtkGeometryFilter;
 class vtkPolyDataMapper;
 class vtkMaskPoints;
+class vtkTriangleFilter;
+class vtkStripper;
 
 namespace VE_Xplorer
 {
@@ -81,10 +83,12 @@ namespace VE_Xplorer
          float GetVectorScale();
 
       protected:
-         vtkGlyph3D*       glyph;
-         vtkGeometryFilter* filter;
-         vtkPolyDataMapper* mapper;
-         vtkMaskPoints*    ptmask;
+         vtkGlyph3D*          glyph;
+         vtkGeometryFilter*   filter;
+         vtkPolyDataMapper*   mapper;
+         vtkMaskPoints*       ptmask;
+         vtkTriangleFilter*   tris;
+         vtkStripper*         strip;
 
          void SetGlyphWithThreshold();
          void SetGlyphAttributes();

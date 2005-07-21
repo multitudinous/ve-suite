@@ -64,12 +64,13 @@ cfdContourBase::cfdContourBase()
    // turn clipping on to avoid unnecessary value generations with 
    // vtkBandedPolyDataContourFilter::GenerateValues().
    this->bfilter->SetClipping(1);   
-   this->tfilter = vtkTriangleFilter::New();
-   this->stripper = vtkStripper::New();
+   this->tris = vtkTriangleFilter::New();
+   this->strip = vtkStripper::New();
 
    this->mapper = vtkPolyDataMapper::New();
    this->mapper->SetInput( this->filter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
+   mapper->ImmediateModeRenderingOn();
 
    this->warpedContourScale = 0.0f;
    this->contourOpacity = 0.0f;
@@ -90,11 +91,11 @@ cfdContourBase::~cfdContourBase()
    this->bfilter->Delete();
    this->bfilter = NULL;
 
-   this->tfilter->Delete();
-   this->tfilter = NULL;
+   this->tris->Delete();
+   this->tris = NULL;
 
-   this->stripper->Delete();
-   this->stripper = NULL;
+   this->strip->Delete();
+   this->strip = NULL;
    
    this->mapper->Delete();
    this->mapper = NULL;
@@ -110,21 +111,21 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
    this->deci->PreserveTopologyOn();
    deci->GetOutput()->ReleaseDataFlagOn();
 
-   this->tfilter->SetInput( deci->GetOutput() );
-   tfilter->GetOutput()->ReleaseDataFlagOn();
+   this->tris->SetInput( deci->GetOutput() );
+   tris->GetOutput()->ReleaseDataFlagOn();
 
-   this->stripper->SetInput( this->tfilter->GetOutput() );
-   stripper->GetOutput()->ReleaseDataFlagOn(); 
+   this->strip->SetInput( this->tris->GetOutput() );
+   strip->GetOutput()->ReleaseDataFlagOn(); 
 
    if ( this->fillType == 0 )
    {
-      this->mapper->SetInput( this->stripper->GetOutput() );
+      this->mapper->SetInput( this->strip->GetOutput() );
       mapper->ImmediateModeRenderingOn(); 
    }
 
    else if ( this->fillType == 1 )  // banded contours
    {
-      this->bfilter->SetInput( this->stripper->GetOutput() );
+      this->bfilter->SetInput( this->strip->GetOutput() );
       bfilter->GetOutput()->ReleaseDataFlagOn();
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
@@ -138,9 +139,9 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
    }
    else if ( this->fillType == 2 )  // contourlines
    {
-      this->stripper->SetInput( this->tfilter->GetOutput() );
-      stripper->GetOutput()->ReleaseDataFlagOn();
-      this->cfilter->SetInput( this->stripper->GetOutput() );
+      this->strip->SetInput( this->tris->GetOutput() );
+      strip->GetOutput()->ReleaseDataFlagOn();
+      this->cfilter->SetInput( this->strip->GetOutput() );
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
       this->cfilter->GenerateValues( 10, range[0], range[1] );
