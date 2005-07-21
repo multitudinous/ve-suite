@@ -43,7 +43,7 @@ int main(int argc, char* argv[]) //This is a Cheezy wizard. take a mod.def as in
       GenVcProj_UI_Plugin( argv[1] );
       GenCode_Unit();
       //generate vcproj for Unit at this spot
-      //GenCode_Graphical_Plugin();
+      GenCode_Graphical_Plugin();
     }
 }
 /////////////////////////////////////////////////////
@@ -222,19 +222,22 @@ void GenCode_Graphical_Plugin()
       graphicalPluginFiles.getline( buffer, BUFFER_MAX, '\n' );       
       bufferString += buffer;
       //now find the position of the word "Template"
+      for ( int ct=0;ct<2;ct++ )
+      {
       pos = bufferString.find( "Template" );
       if ( pos !=string::npos )
       {
 	 counter++;
 	 bufferString.replace( pos, 8, graphicalPluginName );
       }
+      pos = 0;
+      }
       outGraphicalPlugin<<bufferString<<endl;
       bufferString.clear();
-   }   
+   }
    outGraphicalPlugin.close();
    graphicalPluginFiles.close();
    graphicalPluginFiles.clear();
-
    cout<<" Done"<<endl;
    chdir( "../" );
 }
