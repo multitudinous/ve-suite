@@ -232,11 +232,13 @@ bool GlobalParamDialog::TransferDataToWindow()
 
 }
 
-GlobalParamDialog::~GlobalParamDialog() {};
-
-void GlobalParamDialog::OnChange(wxCommandEvent &event)
+GlobalParamDialog::~GlobalParamDialog()
 {
-   event.GetInt();
+   ;
+}
+
+void GlobalParamDialog::OnChange(wxCommandEvent& WXUNUSED(event) )
+{
   if (specify_a->GetValue())
     {
       fixed_charge->Enable(true);

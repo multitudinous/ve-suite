@@ -107,7 +107,8 @@ std::vector<std::string> Interface::getString1D (std::string var, bool *f)
 GeometryInfoPackage Interface::getGeomInfoPackage (std::string var, bool *f)
 {
   if(f) *f = true;
-  if(_GeomInfoPackage.find(var)!=_GeomInfoPackage.end()) return _GeomInfoPackage[var];
+  if(_GeomInfoPackage.find(var)!=_GeomInfoPackage.end()) 
+     return _GeomInfoPackage[var];
   if(f) *f = false;
   
   GeometryInfoPackage ret;
