@@ -108,14 +108,34 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
 #ifdef _CLUSTER
    //int argc;
    //char** argv;
-   char buffer[1025];
-   int ntoks, i;
+   //char buffer[1025];
+   //int ntoks, i;
    std::vector<std::string> toks;
    std::string hostfile;
-   FILE * fhost;
+   //FILE * fhost;
    bool found=false;
-   std::string masterhost="ids7";
+   std::string masterhost;//="hawk";
 
+   for ( unsigned int i = 1; i < argc; ++i )
+   {
+      if ( ( std::string("-VEXMaster") == std::string( argv[ i ] ) ) &&
+            ( (i+1) < argc )
+         )
+      {
+         masterhost = std::string( argv[ i+1 ] );
+         std::cout << "----------------CLUSTER INFO-------------------" << std::endl;
+         std::cout << "NOTE : Be sure to specify this GUID = " << std::endl
+                   << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
+                   << "       in the application data config file." << std::endl;
+         break;
+      }
+   }
+
+   if ( masterhost.empty() )
+   {
+      std::cerr << " ERROR : If -VEXMaster is specified a computer name must follow the flag" << std::endl;
+      exit( 1 );
+   }
 /*   if (argc>1)
    {
       strcpy(buffer, argv[1]);
@@ -148,11 +168,9 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
       }
       fclose(fhost);
    }*/
-#endif // _CLUSTER
   
 //   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
 //   cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
-#ifdef _CLUSTER
    char raw_hostname[256];
    std::string hostname;
    
