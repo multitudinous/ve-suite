@@ -115,12 +115,16 @@ public:
 
    void SetInterface( Interface& );
 
+   virtual void SetGeomInterface ( Interface& );
+   Interface GetGeomInterface();
+
    void SetModuleResults( const char* );
 
    void SetObjectName( std::string );
    virtual void CreateCustomVizFeature( int );
 
    virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph
+   bool HasGeomInterface();
 
 private:
    // This needs to be vector of geometry nodes
@@ -148,7 +152,7 @@ protected:
    VE_SceneGraph::cfdDCS* GetWorldDCS();
 
    Interface mod_pack;
-
+   
    std::map<std::string, long *>                      _int;
    std::map<std::string, double *>                    _double;
    std::map<std::string, std::string *>               _string;
@@ -171,8 +175,11 @@ protected:
    cfdCursor* _cursor;
    cfdNavigate* _navigate;
    cfdSoundHandler* soundHandler;
+   
    Interface myInterface;
-
+   Interface myGeomInterface;
+   
+      
    std::vector< std::string > v_desc;
    std::vector< std::string > v_value;
 };
