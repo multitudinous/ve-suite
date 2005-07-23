@@ -193,6 +193,10 @@ std::string cfdVEBaseClass::GetName( void )
    return this->_objectName;
 }
 
+void cfdVEBaseClass::SetObjectName( std::string input )
+{
+   _objectName = input;
+}
 //This returns the description of the module, This should be a short description
 std::string cfdVEBaseClass::GetDesc( void )
 {
@@ -573,9 +577,9 @@ void cfdVEBaseClass::CreateObjects( void )
                                 << std::endl << vprDEBUG_FLUSH;
 
          _model->CreateGeomDataSet( fileName );
-         _model->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
-         _model->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
-         _model->GetGeomDataSet( -1 )->getpfDCS()->SetRotationArray( rotate );
+         _model->GetGeomDataSet( -1 )->GetDCS()->SetScaleArray( scale );
+         _model->GetGeomDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
+         _model->GetGeomDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
          _model->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
          _model->GetGeomDataSet( -1 )->setOpac( 1 );
       }

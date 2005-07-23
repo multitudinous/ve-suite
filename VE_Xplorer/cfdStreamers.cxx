@@ -196,15 +196,15 @@ aa Assign Normals NORMALS POINT_DATA
    writer->SetInput( ( vtkPolyData * ) stream->GetOutput() );
    writer->SetFileName( "teststreamers.vtk" );
    writer->Write();*/
-
+/*
    this->tubeFilter->SetInput( this->stream->GetOutput() );
    tubeFilter->GetOutput()->ReleaseDataFlagOn();
 
    //this->filter = vtkGeometryFilter::New();
    //this->filter->SetInput( this->tubeFilter->GetOutput() );
-
-   vtkTriangleFilter *tris = vtkTriangleFilter::New();
-   vtkStripper *strip = vtkStripper::New();
+*/
+   //vtkTriangleFilter *tris = vtkTriangleFilter::New();
+   //vtkStripper *strip = vtkStripper::New();
 
    if ( streamArrows )
    {
@@ -221,17 +221,17 @@ aa Assign Normals NORMALS POINT_DATA
       cones->GetOutput()->ReleaseDataFlagOn();
 
       append = vtkAppendPolyData::New();
-      append->AddInput( this->tubeFilter->GetOutput() );
+      append->AddInput( stream->GetOutput() );
       append->AddInput( cones->GetOutput() );
       append->GetOutput()->ReleaseDataFlagOn();
 
-      tris->SetInput( append->GetOutput() );
+      /*tris->SetInput( append->GetOutput() );
       tris->GetOutput()->ReleaseDataFlagOn();  
       strip->SetInput( tris->GetOutput() );
-      strip->GetOutput()->ReleaseDataFlagOn();
+      strip->GetOutput()->ReleaseDataFlagOn();*/
 
       normals = vtkPolyDataNormals::New();
-      normals->SetInput( strip->GetOutput() );
+      normals->SetInput( append->GetOutput() );
       normals->SplittingOff();
       normals->ConsistencyOn();
       normals->AutoOrientNormalsOn();
@@ -244,12 +244,12 @@ aa Assign Normals NORMALS POINT_DATA
    }
    else
    {
-      tris->SetInput(tubeFilter->GetOutput());
+      /*tris->SetInput( stream->GetOutput() );
       tris->GetOutput()->ReleaseDataFlagOn();  
       strip->SetInput(tris->GetOutput());
-      strip->GetOutput()->ReleaseDataFlagOn();
+      strip->GetOutput()->ReleaseDataFlagOn();*/
 
-      this->mapper->SetInput( strip->GetOutput() );
+      this->mapper->SetInput( stream->GetOutput() );
    }
    
    this->mapper->SetColorModeToMapScalars();
@@ -260,7 +260,8 @@ aa Assign Normals NORMALS POINT_DATA
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   
+   temp->GetProperty()->SetLineWidth(2.0f);
+   temp->GetProperty()->SetRepresentationToWireframe();
    //test to see if there is enough memory, if not, filters are deleted
    try
    {
@@ -279,8 +280,8 @@ aa Assign Normals NORMALS POINT_DATA
                               << std::endl << vprDEBUG_FLUSH;
    }
     
-   strip->Delete();
-   tris->Delete();
+   //strip->Delete();
+   //tris->Delete();
    temp->Delete();
 
    if ( streamArrows )

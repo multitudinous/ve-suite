@@ -177,12 +177,12 @@ void cfdFILE::Initialize( float op_val )
    setOpac( op_val );
 }
 
-VE_SceneGraph::cfdNode* cfdFILE::GetcfdNode( void )
+VE_SceneGraph::cfdNode* cfdFILE::GetNode( void )
 {
    return this->node;
 }
 
-VE_SceneGraph::cfdDCS* cfdFILE::getpfDCS()
+VE_SceneGraph::cfdDCS* cfdFILE::GetDCS()
 {
    return this->DCS;
 }

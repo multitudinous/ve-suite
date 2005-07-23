@@ -400,7 +400,10 @@ pfGeoSet* VE_SceneGraph::processPrimitive(vtkActor *actor, vtkCellArray *primArr
 
   // wireframe
   if (actor->GetProperty()->GetRepresentation() == VTK_WIREFRAME) 
+  {
+    gset->setLineWidth(actor->GetProperty()->GetLineWidth());
     gstate->setMode(PFSTATE_ENWIREFRAME, PF_ON);
+  }
 
   // points - NOTE: you can modify properties of points through lpState
   if (actor->GetProperty()->GetRepresentation() == VTK_POINTS) {

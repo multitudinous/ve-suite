@@ -59,70 +59,70 @@ namespace osg { class Fog; }
 
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdFILE 
-   {
-      public:
-         cfdFILE( fileInfo*, VE_SceneGraph::cfdDCS* );
-         cfdFILE( char*, VE_SceneGraph::cfdDCS* );
-         cfdFILE( float, float [ 3 ], char * );
+class VE_XPLORER_EXPORTS cfdFILE 
+{
+public:
+   cfdFILE( fileInfo*, VE_SceneGraph::cfdDCS* );
+   cfdFILE( char*, VE_SceneGraph::cfdDCS* );
+   cfdFILE( float, float [ 3 ], char * );
 
-         ~cfdFILE();
+   ~cfdFILE();
 
-         void Initialize(float);
+   void Initialize(float);
 
-         //void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
+   //void pfTravNodeMaterial(pfNode*, pfMaterial*, int );
 
-         VE_SceneGraph::cfdDCS* getpfDCS( void );
-         VE_SceneGraph::cfdNode* GetcfdNode( void );
+   VE_SceneGraph::cfdDCS* GetDCS( void );
+   VE_SceneGraph::cfdNode* GetNode( void );
 
-         void SetFILEProperties( int, int, float* );
-         int GetTransparentFlag( void );
-         void setOpac(float op_val);
-         float getOpacity();
-         void setFog(double dist);
+   void SetFILEProperties( int, int, float* );
+   int GetTransparentFlag( void );
+   void setOpac(float op_val);
+   float getOpacity();
+   void setFog(double dist);
 
-         char* GetFilename( void );
-         //pfLightModel *matLight;
-         //pfMaterial *fmaterial;
-         //pfMaterial *bmaterial;
-         //std::vector< pfMaterial *> matList;
-         VE_SceneGraph::cfdNode* node;
-         VE_SceneGraph::cfdDCS*  DCS;
-         //pfMaterial *mat1, *mat0;
-         int mat_count;
-         int color;
-         int transparent;
-         float stlColor [ 3 ];
-         //char* fileName;
-         char fileName[512];
-//////
-         void SetRGBAColorArray( double* );
-         void GetColorArray( void );
-         void SetGeometryFilename( std::string );
-         void SetModuleName( std::string );
-         void SetTransparencyFlag( bool );
-         void SetColorFlag( int );
-         int GetColorFlag( void );
-         std::string GetModuleName( void );
-         void SetColorOfGeometry( VE_SceneGraph::cfdNode* );
-         void Update( void );
-         void SetOpacity( float );
-//////
-      private:
-         float op;
-      #ifdef _PERFORMER
-         pfFog* fog;
-      #elif _OSG
-          osg::Fog* fog;
-      #endif
-         double _rgba[ 4 ];
-         bool _transparencyFlag;
-         float _opacityLevel;
-         int _colorFlag;
-         VE_SceneGraph::cfdNode* _node;
-         //cfdGroup* _masterNode;
-         std::string _filename;
-         std::string _moduleName;
-   };
+   char* GetFilename( void );
+   //pfLightModel *matLight;
+   //pfMaterial *fmaterial;
+   //pfMaterial *bmaterial;
+   //std::vector< pfMaterial *> matList;
+   VE_SceneGraph::cfdNode* node;
+   VE_SceneGraph::cfdDCS*  DCS;
+   //pfMaterial *mat1, *mat0;
+   int mat_count;
+   int color;
+   int transparent;
+   float stlColor [ 3 ];
+   //char* fileName;
+   char fileName[512];
+
+   void SetRGBAColorArray( double* );
+   void GetColorArray( void );
+   void SetGeometryFilename( std::string );
+   void SetModuleName( std::string );
+   void SetTransparencyFlag( bool );
+   void SetColorFlag( int );
+   int GetColorFlag( void );
+   std::string GetModuleName( void );
+   void SetColorOfGeometry( VE_SceneGraph::cfdNode* );
+   void Update( void );
+   void SetOpacity( float );
+
+private:
+   float op;
+#ifdef _PERFORMER
+   pfFog* fog;
+#elif _OSG
+    osg::Fog* fog;
+#endif
+   double _rgba[ 4 ];
+   bool _transparencyFlag;
+   float _opacityLevel;
+   int _colorFlag;
+   VE_SceneGraph::cfdNode* _node;
+   //cfdGroup* _masterNode;
+   std::string _filename;
+   std::string _moduleName;
+};
 }
 #endif

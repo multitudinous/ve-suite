@@ -425,6 +425,9 @@
 			Name="headers"
 			Filter=".h">
 			<File
+				RelativePath=".\cfdEnum.h">
+			</File>
+			<File
 				RelativePath=".\cfdSoundHandler.h">
 			</File>
 		</Filter>

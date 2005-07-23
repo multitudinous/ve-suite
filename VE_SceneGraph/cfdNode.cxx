@@ -180,7 +180,8 @@ osg::Node* cfdNode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-std::cout << " node raw node " << std::endl;
+   vprDEBUG(vprDBG_ALL,2) << "|\t\tcfdNode::GetRawNode" 
+                              << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
    return _node;
 #elif _OSG

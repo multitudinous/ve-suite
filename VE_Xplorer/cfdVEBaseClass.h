@@ -117,6 +117,7 @@ public:
 
    void SetModuleResults( const char* );
 
+   void SetObjectName( std::string );
    virtual void CreateCustomVizFeature( int );
 
    virtual void PreFrameUpdate( void ){;}  // allows graphical plugins access to scenegraph

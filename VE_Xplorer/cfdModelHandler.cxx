@@ -423,19 +423,19 @@ void cfdModelHandler::PreFrameUpdate( void )
             vprDEBUG(vprDBG_ALL,2)
                << "guiVal[ " << i << " ] = " << this->_readParam->guiVal[ i ] << std::endl
                << " : Active Model index : " << _activeModel << std::endl 
-               << " : SearchChild Result : " << parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) << std::endl 
+               << " : SearchChild Result : " << parent->SearchChild( _activeModel->GetGeomDataSet( i )->GetDCS() ) << std::endl 
                << " : Filename[ " << i << " ] : " << _activeModel->GetGeomDataSet( i )->GetFilename() << std::endl
                << vprDEBUG_FLUSH;
 
             if ( ( this->_readParam->guiVal[ i ] == 1 ) && 
-               ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) == -1 ) )
+               ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->GetDCS() ) == -1 ) )
             {
-               temp = parent->AddChild( _activeModel->GetGeomDataSet( i )->getpfDCS() );
+               temp = parent->AddChild( _activeModel->GetGeomDataSet( i )->GetDCS() );
             }
             else if ( ( this->_readParam->guiVal[ i ] == 0 ) &&
-                     ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->getpfDCS() ) != -1 ) )
+                     ( parent->SearchChild( _activeModel->GetGeomDataSet( i )->GetDCS() ) != -1 ) )
             {
-               temp = parent->RemoveChild( _activeModel->GetGeomDataSet( i )->getpfDCS() );
+               temp = parent->RemoveChild( _activeModel->GetGeomDataSet( i )->GetDCS() );
             }
             vprDEBUG(vprDBG_ALL,1) << "|   Add Child Output ( -1 is BAD ) :  " << temp 
                            << std::endl << vprDEBUG_FLUSH;
@@ -526,11 +526,9 @@ void cfdModelHandler::PreFrameUpdate( void )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID )== MIRROR_VIS_DATA )
    {
-std::cout << " help 1 "<< std::endl;
       if ( _activeModel )
       {
-         bool tempFlag = commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-std::cout << " help 1 "<< tempFlag << std::endl;
+         bool tempFlag = static_cast< bool >( commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
 			_activeModel->SetMirrorDataFlag( tempFlag );
       }
    }
@@ -744,10 +742,10 @@ void cfdModelHandler::CreateObjects( void )
 
          //std::cout << scale[0] << " : " << scale[1] << " : " << scale[2] << " : " << std::endl;
          _modelList.at( 0 )->CreateGeomDataSet( fileName );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetScaleArray( scale );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetTranslationArray( trans );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetRotationArray( rotate );
-         _modelList.at( 0 )->GetGeomDataSet( -1 )->getpfDCS()->SetName( fileName );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->GetDCS()->SetScaleArray( scale );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->GetDCS()->SetTranslationArray( trans );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->GetDCS()->SetRotationArray( rotate );
+         _modelList.at( 0 )->GetGeomDataSet( -1 )->GetDCS()->SetName( fileName );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->SetFILEProperties( color, transFlag, stlColor );
          _modelList.at( 0 )->GetGeomDataSet( -1 )->setOpac( 1.0f );
       }

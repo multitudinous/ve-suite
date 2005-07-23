@@ -538,9 +538,9 @@ void cfdModel::DynamicLoadingGeom(char* surfacefilename, float* scale,
    std::cout<<"[DBG]...the geom file is "<<surfacefilename<<std::endl;
    this->CreateGeomDataSet(surfacefilename);
    std::cout<<"[DBG]...after cfdFile constructor"<<std::endl;
-   this->GetGeomDataSet(-1)->getpfDCS()->SetScaleArray( scale );
-   this->GetGeomDataSet(-1)->getpfDCS()->SetTranslationArray( trans );
-   this->GetGeomDataSet(-1)->getpfDCS()->SetRotationArray(rotate);
+   this->GetGeomDataSet(-1)->GetDCS()->SetScaleArray( scale );
+   this->GetGeomDataSet(-1)->GetDCS()->SetTranslationArray( trans );
+   this->GetGeomDataSet(-1)->GetDCS()->SetRotationArray(rotate);
    this->GetGeomDataSet(-1)->SetFILEProperties(color, transFlag, stlColor);
    this->GetGeomDataSet(-1)->setOpac(1.0f);
 
