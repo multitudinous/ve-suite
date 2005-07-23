@@ -252,6 +252,21 @@ void cfdVEBaseClass::SetInterface( Interface& intf )
    this->myInterface.copy( intf );
 }
 
+void cfdVEBaseClass::SetGeomInterface (Interface& intf)
+{
+   this->myGeomInterface.copy (intf);
+
+}
+Interface cfdVEBaseClass::GetGeomInterface()
+{
+   return this->myGeomInterface;
+}
+
+bool cfdVEBaseClass::HasGeomInterface()
+{
+   return (myGeomInterface._type==2 && myGeomInterface._category==1);
+      
+}
 // Set the results for a particluar module so that we can use them for custom 
 // viz features
 void cfdVEBaseClass::SetModuleResults( const char* network )
