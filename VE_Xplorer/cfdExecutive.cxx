@@ -314,18 +314,23 @@ void cfdExecutive::GetNetwork ( void )
    {
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
       {
-         if ( iter->_type == 1 )
-            if(_network->setInput(iter->_id, &(*iter))) 
+         
+            if( iter->_category ==1 && iter->_type ==1 && _network->setInput(iter->_id, &(*iter))) 
             {
                _network->module(_network->moduleIdx(iter->_id))->_is_feedback  = iter->getInt("FEEDBACK");
                _network->module(_network->moduleIdx(iter->_id))->_need_execute = 1;
                _network->module(_network->moduleIdx(iter->_id))->_return_state = 0;
-               //std::cout <<  _network->module( _network->moduleIdx(iter->_id) )->get_id() << " : " << _network->module( _network->moduleIdx(iter->_id) )->_name <<std::endl;
                _id_map[ _network->module( _network->moduleIdx(iter->_id) )->get_id() ] = _network->module( _network->moduleIdx(iter->_id) )->_name;
             }  
+            else if (iter->_category ==1 && iter->_type ==2 && _network->setGeomInput(iter->_id, &(*iter)))
+            {
+               std::cout<<"The current network string has geom info "<<std::endl;
+               
+            }
             else
             {
                std::cerr << "|\tUnable to set id# " << iter->_id << "'s inputs" << std::endl;
+
             }
 
          if ( iter->_id != -1 ) 
@@ -454,6 +459,7 @@ void cfdExecutive::GetEverything( void )
          }
       }*/
 
+              
       // Remove any plugins that aren't present in the current network
       for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); )
       {  
@@ -481,7 +487,28 @@ void cfdExecutive::GetEverything( void )
          // The above code is from : The C++ Standard Library by:Josuttis pg. 205
       }
       vprDEBUG(vprDBG_ALL,0) << "|\tDone Getting Network From Executive"
-                             << std::endl << vprDEBUG_FLUSH;      
+                             << std::endl << vprDEBUG_FLUSH;    
+
+      /*
+       * Now the _plugins map has been set up completely, time to add geominfo
+       */
+      
+     
+      std::map<int, Interface>::iterator itr;
+      if(!_geom_map.empty()) //if we have the geom map then add into the plugin class
+      {
+                  
+         for(itr = _geom_map.begin();itr!=_geom_map.end();itr++)
+         {
+            if(_plugins.find(itr->first) != _plugins.end())
+            {
+               _plugins[itr->first]->SetGeomInterface(itr->second);
+
+            }
+                  
+         }
+      }
+
    }
    else
    {
@@ -567,6 +594,14 @@ void cfdExecutive::PreFrameUpdate( void )
             int dummyVar = 0;
             _plugins[ foundPlugin->first ]->SetModuleResults( this->_exec->GetModuleResult( foundPlugin->first ) );
             _plugins[ foundPlugin->first ]->CreateCustomVizFeature( dummyVar );
+            
+            //if the new network string has the geominfo
+            /*if((foundPlugin->second)->HasGeomInterface())
+            {  
+                  (foundPlugin->second)->UnPack(*((foundPlugin->second)->GetGeomInterface()));
+                  std::cout<<"[DBG]...UnPack the geom interface, now the plugin has the geominfo vector"<<std::endl;
+            }*/
+            
          }
       }
 
