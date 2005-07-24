@@ -1,3 +1,34 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2005 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date: date $
+ * Version:       $Rev: 999999 $
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifdef VE_PATENTED
 #ifdef _OSG
 #include <osg/Texture3D>
@@ -596,10 +627,10 @@ void cfdOSGAdvectionShaderManager::_initNoiseTexture()
       noiseTex[index*4  +2] = (unsigned char)(ga[(phase[i][j][k] + t) % 255])*
                                            (hI[(phase[k][j][i] + t) % 255]);
       noiseTex[index*4  +3] = (unsigned char)phase[k][j][i];*/
-     noiseTex[index*4    ] = (unsigned char)((hI[(phase[i][j][k]) % 255]));
+     noiseTex[index*4    ] = (unsigned char)255;//((hI[(phase[i][j][k]) % 255]));
                                            
       noiseTex[index*4 + 1] = (unsigned char)(phase[i][j][k]);
-      noiseTex[index*4  +2] = (unsigned char)(hI[(phase[k][j][i]) % 255]);
+      noiseTex[index*4  +2] = (unsigned char)255;//(hI[(phase[k][j][i]) % 255]);
       noiseTex[index*4  +3] = (unsigned char)(ga[(phase[k][j][i]+t) % 255]);
       index++;
          }
@@ -609,9 +640,9 @@ void cfdOSGAdvectionShaderManager::_initNoiseTexture()
    _noiseTexture = new osg::Texture3D();
    _noiseTexture->setDataVariance(osg::Object::DYNAMIC);
    _noiseTexture->setFilter(osg::Texture3D::MIN_FILTER,
-                                   osg::Texture3D::LINEAR);
+                                   osg::Texture3D::NEAREST);
    _noiseTexture->setFilter(osg::Texture3D::MAG_FILTER,
-                                   osg::Texture3D::LINEAR);
+                                   osg::Texture3D::NEAREST);
    _noiseTexture->setWrap(osg::Texture3D::WRAP_S,
                           osg::Texture3D::REPEAT);
    _noiseTexture->setWrap(osg::Texture3D::WRAP_T,
