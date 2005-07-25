@@ -59,8 +59,6 @@ using namespace std;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
-IMPLEMENT_DYNAMIC_CLASS( VETemplate, cfdVEBaseClass )
-
 // Constructor
 VETemplate::VETemplate( void ) : cfdVEBaseClass()
 {

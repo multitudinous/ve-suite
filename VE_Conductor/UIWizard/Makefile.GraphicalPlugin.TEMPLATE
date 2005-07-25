@@ -63,7 +63,7 @@ endif
 #__________________________________________________________
 # list the source files that are in current directory
 SRCS=\
-   VETemplate.cxx
+   $(PLUGIN).cxx
 
 APP_NAME= ../Plugins/$(CFDHOSTTYPE)/lib$(PLUGIN)$(EXEC_TAG)$(OSG)$(PATENTED_TAG).so
 # object files are being stored in a system-dependent directory so that builds

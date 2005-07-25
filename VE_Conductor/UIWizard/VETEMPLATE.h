@@ -32,23 +32,17 @@
 #ifndef VE_Template_H
 #define VE_Template_H
 
-#include <wx/wx.h>
-#include <wx/dc.h>
-#include <wx/gdicmn.h>
-
 #include "VE_Xplorer/cfdVEBaseClass.h"
 
 namespace VE_SceneGraph
 {
-   class cfdModuleGeometry;
    class cfdGroup;
    class cfdGeode;
 }
 
+
 class VE_USER_PLUGIN_EXPORTS VETemplate: public VE_Xplorer::cfdVEBaseClass 
 {
-DECLARE_DYNAMIC_CLASS( VETemplate )
-
 public:
    VETemplate( void );
    ~VETemplate( void );
@@ -56,6 +50,16 @@ public:
    virtual void InitializeNode( VE_SceneGraph::cfdDCS* );
 private:
 };
+extern "C"
+{
+
+VE_USER_PLUGIN_EXPORTS void* CreateVEPlugin()
+{
+   return new VETemplate();
+}
+
+}
+
 
 #endif
    
