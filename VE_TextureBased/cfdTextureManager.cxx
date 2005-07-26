@@ -32,6 +32,9 @@
 #ifdef VE_PATENTED
 #include "VE_TextureBased/cfdTextureManager.h"
 #include <fstream>
+#include <vtkZLibDataCompressor.h>
+#include <sstream>
+
 using namespace VE_TextureBased;
 ////////////////////////////////
 //Constructor                 //
@@ -165,7 +168,46 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
 {
    double tempMag[6] = {0,0,0,0,0,0};
    std::ifstream fin(textureFile);
-   if(fin.is_open()){
+
+
+   //std::ifstream fileIn(textureFile, std::ios::in);
+   if ( fin.is_open() )
+   {
+/*      unsigned long l,m, rlen, grid_data_length2;
+      fileIn >> rlen >> grid_data_length2;
+      l = fileIn.tellg();
+      fileIn.seekg (0, std::ios::end);
+      m = fileIn.tellg();
+      //fileIn.close();
+
+      //fileIn.open(textureFile, std::ios::in);
+      //fileIn >> rlen >> grid_data_length2;
+
+      char* tempCharBuf = new char[ (m-l) ];
+      // get pointer to associated buffer object
+      std::filebuf *pbuf;
+      pbuf=fileIn.rdbuf();
+      pbuf->pubseekpos(l+1,ios::in);
+
+      // get file data  
+      pbuf->sgetn(tempCharBuf,rlen);
+
+      fileIn.close();
+   
+      // uncompress the data
+      const unsigned char* compressed_data_Array = reinterpret_cast< const unsigned char* >( tempCharBuf );
+      unsigned char* ucbuffer = new unsigned char[ grid_data_length2 ];
+      vtkZLibDataCompressor* compressor = vtkZLibDataCompressor::New();
+      rlen = compressor->Uncompress(compressed_data_Array, rlen, ucbuffer, grid_data_length2);
+
+      delete [] tempCharBuf;
+
+      // Create buffer for the code below to opperate one
+      std::string buffer( reinterpret_cast< const char* >( ucbuffer ) );
+      delete [] ucbuffer;
+
+      std::istringstream fin( buffer );
+*/
       char type[16];
       DataType curType;
       //read the file type

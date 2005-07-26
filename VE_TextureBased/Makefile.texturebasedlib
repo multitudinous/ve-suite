@@ -114,6 +114,8 @@ else
    include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.pf.mk
 endif
 
+include $(VE_SUITE_HOME)/VE_Installer/mk/dzr.vtk.mk
+
 # One of these must be uncommented.
 DEBUG_APP?= TRUE
 #OPTIM_APP?= TRUE

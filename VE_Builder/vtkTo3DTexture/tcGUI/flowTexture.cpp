@@ -2,7 +2,6 @@
 #include <iostream>
 #include <fstream>
 #include <vtkZLibDataCompressor.h>
-#include <vtkUnsignedCharArray.h>
 
 //////////////////////////////
 //FlowPointData class       //
@@ -232,7 +231,7 @@ void FlowTexture::CreatFlowTextureBuffer(char* file,
                                float* velMinMax)
 {
    int pixelNum = 0;
-   std::ofstream fout(file,std::ios::out);
+   std::ofstream fout(file,std::ios::out|std::ios::binary);
    if(!fout.is_open()){
       std::cout<<"Couldn't write to directory: "<<file<<std::endl;
       return;
@@ -284,18 +283,24 @@ void FlowTexture::CreatFlowTextureBuffer(char* file,
       }
    }
    // do data compressor
-
    // Compress the data
    vtkZLibDataCompressor* compressor = vtkZLibDataCompressor::New();
-   vtkUnsignedCharArray* compressed_data = vtkUnsignedCharArray::New();
+   unsigned char* compressed_data;
    const unsigned char* uncompressed_data;
-   uncompressed_data = reinterpret_cast< const unsigned char* >( dataBuffer.str().c_str() );
-   unsigned long grid_data_length = sizeof( uncompressed_data );
-   compressed_data = compressor->Compress( uncompressed_data, grid_data_length );
-   // send char* to file opened earlier
-   fout << compressed_data->GetPointer( 0 );
-   // close file
+   std::string tempBuf( dataBuffer.str() );
+   uncompressed_data = reinterpret_cast< const unsigned char* >( tempBuf.c_str() );
+   unsigned long grid_data_length2 = strlen(tempBuf.c_str());
+   //unsigned long grid_data_length3 = tempBuf.size();
+
+   unsigned long nlen = compressor->GetMaximumCompressionSpace(grid_data_length2);
+   compressed_data = new unsigned char[ nlen ];
+   unsigned long rlen = compressor->Compress(uncompressed_data, grid_data_length2, compressed_data, nlen);
+
+   fout << rlen << " " << grid_data_length2 << std::endl;
+   fout.write( reinterpret_cast< const char* >( compressed_data ), rlen);
    fout.close();
+
+   delete [] compressed_data;
 }
 
 ////////////////////////////////////

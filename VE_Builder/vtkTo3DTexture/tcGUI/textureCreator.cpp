@@ -912,7 +912,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(posName);
    _updateTranslationStatus(msg.c_str());
    _velocity.at(0).writeFlowTexture(posName,velRange);
-
+   //_velocity.at(0).CreatFlowTextureBuffer(posName,velRange);
 }
 ///////////////////////////////////////////
 void VTKDataToTexture::writeScalarTexture(int whichScalar)
@@ -977,5 +977,6 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
    wxString msg = wxString("Writing file: ") + wxString('\n') + wxString(name);
    _updateTranslationStatus(msg.c_str());
    _curScalar.at(0).writeFlowTexture(name,scalarRange);  
+   //_curScalar.at(0).CreatFlowTextureBuffer(name,scalarRange);  
 }
 	
