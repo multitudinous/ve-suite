@@ -9,6 +9,8 @@
 //#include <ace/OS.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #include <iostream>
+#include <sstream>
+
 //////////////////////////////////////////////////////////////////////
 // Construction/Destruction
 //////////////////////////////////////////////////////////////////////
@@ -28,9 +30,13 @@ OrbThread::~OrbThread()
 int OrbThread::svc (void)
 {
    long id = time(NULL);
-   char uiname[256];
-   sprintf(uiname, "UIClient%ld", id);
-   std::string UINAME = uiname;
+   //char* uiname;
+   //sprintf(uiname, "UIClient%ld", id);
+   std::ostringstream dirStringStream;
+   dirStringStream << "UIClient" << id;
+   std::string UINAME = dirStringStream.str();
+   //uiname = (char*)dirString.c_str();
+   //std::string UINAME = uiname;
    CosNaming::Name name(1);
    name.length(1);
    name[0].id = CORBA::string_dup ("Executive");

@@ -9,6 +9,8 @@
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/Framework/Network.h"
+#include <sstream>
+#include <iomanip>
 
 BEGIN_EVENT_TABLE (AppFrame, wxFrame)
   EVT_CLOSE(AppFrame::OnClose)
@@ -508,8 +510,11 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	  v_desc.clear();
 	  v_value.clear();
 	  v_desc.push_back(iter->second.pl_mod->GetName());
-	  sprintf(buf,"   %d", iter->first);
-	  v_value.push_back(buf);
+	  //sprintf(buf,"   %d", iter->first);
+     std::ostringstream dirStringStream;
+     dirStringStream << "   " << iter->first;
+     std::string dirString = dirStringStream.str();
+	  v_value.push_back(dirString.c_str());
 	  for (i=0; i<descs.size(); i++) {
 	    v_desc.push_back(descs[i].c_str());
 	    v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
@@ -534,8 +539,8 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	v_desc.clear();
 	v_value.clear();
 	v_desc.push_back("Plant Results");
-	sprintf(buf,"   ");
-	v_value.push_back(buf);
+	///sprintf(buf,"   ");
+	v_value.push_back("   ");
 	for (i=0; i<descs.size(); i++) {
 	  v_desc.push_back(descs[i].c_str());
 	  v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
@@ -550,7 +555,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
       
     }
     catch (CORBA::Exception &) {
-      cerr << "Maybe Computational Engine is down \n";
+       std::cerr << "Maybe Computational Engine is down " << std::endl;
       return;
     }
   }
@@ -589,8 +594,12 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	total_cccost += cccost;
 
 	v_desc.push_back(wxString(iter->second.pl_mod->GetName()));
-	sprintf(buf,"%.2f", cccost);
-	v_value.push_back(buf);
+	//sprintf(buf,"%.2f", cccost);
+   std::ostringstream dirStringStream;
+   dirStringStream << std::setprecision(2) << cccost;
+   std::string dirString = dirStringStream.str();
+
+	v_value.push_back(dirString.c_str());
 
 	double TMC = TPC * iter->second.pl_mod->financial_dlg->_om00_d / 100;
 	
@@ -602,8 +611,9 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	total_omcost += omcost;
 	
 	v_desc2.push_back(wxString(iter->second.pl_mod->GetName()));
-	sprintf(buf,"%.2f", omcost);
-	v_value2.push_back(buf);
+	//sprintf(buf,"%.2f", omcost);
+   dirStringStream << std::setprecision(2) << omcost;
+	v_value2.push_back(dirString.c_str());
 	  
       }
     }
@@ -621,8 +631,11 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
     result_dlg->syngas->AddSeperator('+');
     
     v_desc.push_back("Total");
-    sprintf(buf,"%.2f", total_cccost);
-    v_value.push_back(buf);
+    //sprintf(buf,"%.2f", total_cccost);
+    std::ostringstream dirStringStream;
+    dirStringStream << std::setprecision(2) << total_cccost;
+    std::string dirString = dirStringStream.str();
+    v_value.push_back(dirString.c_str());
     
     result_dlg->Set2Cols(v_desc, v_value);
 
@@ -638,8 +651,9 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
     result_dlg->syngas->AddSeperator('+');
     
     v_desc2.push_back("Total");
-    sprintf(buf,"%.2f", total_omcost);
-    v_value2.push_back(buf);
+    //sprintf(buf,"%.2f", total_omcost);
+    dirStringStream << std::setprecision(2) << total_omcost;
+    v_value2.push_back(dirString.c_str());
     
     result_dlg->Set2Cols(v_desc2, v_value2);
 
@@ -759,7 +773,7 @@ bool AppFrame::init_orb_naming()
          poa->destroy (1, 1);
 		    // Finally destroy the ORB
 		    orb->destroy();
-		    cerr << "Naming service not found!" << endl;
+		    std::cerr << "Naming service not found!" << std::endl;
 		    return false;
 		    }
       */
@@ -844,17 +858,17 @@ void AppFrame::DisConVEServer(wxCommandEvent &WXUNUSED(event))
     {
     //vprDEBUG(vprDBG_ALL,0) 
     //<< "naming_context->unbind for CORBA Object  " 
-    //<< endl << vprDEBUG_FLUSH;
+    //<< std::endl << vprDEBUG_FLUSH;
     naming_context->unbind( name );
     //naming_context->destroy();
     }
     catch( CosNaming::NamingContext::InvalidName& )
     {
-    cerr << "Invalid name for CORBA Object  " << endl;
+    std::cerr << "Invalid name for CORBA Object  " << std::endl;
     }
     catch(CosNaming::NamingContext::NotFound& ex)
     {
-    cerr << "Name not found for CORBA Object  " << ex.why << endl;
+    std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
     }*/
   wx_ve_splitter->Unsplit(m_frame);
   sizerTab->Detach(m_frame);

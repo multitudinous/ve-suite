@@ -5,6 +5,9 @@
 #include "package.h"
 #include "paraThread.h"
 #include "Geometry.h"
+#include <sstream>
+#include <iomanip>
+#include <iostream>
 
 //IMPLEMENT_DYNAMIC_CLASS(Network, wxScrolledWindow);
 BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
@@ -2293,7 +2296,7 @@ void Network::Pack(std::vector<Interface> & UIs)
   // first record the network global variablables
   Interface ntpk; //the network topology and connection pack
   std::string network_pack;
-  char vname[256];
+  //char* vname;
   //module information to be saved
   std::string modCls;
   
@@ -2331,8 +2334,12 @@ void Network::Pack(std::vector<Interface> & UIs)
       //The order of modules needs to be preserved for the link list and the module UI
       //the UI information of module is packed in different interface packs
 
-      sprintf(vname, "modCls_%.4d", i);
-      ntpk.setVal(vname, modCls); // this is string
+      //sprintf(vname, "modCls_%.4d", i);			//modified by scorns 7/14/05
+	  std::ostringstream dirStringStream;
+	  dirStringStream << "modCls_" << std::setprecision(4) << i;
+	  //std::string dirString = dirStringStream.str();
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), modCls); // this is string
     }
 
   ntpk.setVal("Link_size", long(links.size()));
@@ -2342,14 +2349,27 @@ void Network::Pack(std::vector<Interface> & UIs)
       lnToMod = links[i]->To_mod;
       lnFrPort = links[i]->Fr_port;
       lnToPort = links[i]->To_port;
-      sprintf(vname, "ln_FrMod_%.4d", i);
-      ntpk.setVal(vname, lnFrMod);
-      sprintf(vname, "ln_ToMod_%.4d", i);
-      ntpk.setVal(vname, lnToMod);
-      sprintf(vname, "ln_FrPort_%.4d", i);
-      ntpk.setVal(vname, lnFrPort);
-      sprintf(vname, "ln_ToPort_%.4d", i);
-      ntpk.setVal(vname, lnToPort);
+      //sprintf(vname, "ln_FrMod_%.4d", i);			//modified by scorns 7/14/05
+	  std::ostringstream dirStringStream;
+	  dirStringStream << "ln_FrMod_" << std::setprecision(4) << i;
+	  //std::string dirString = dirStringStream.str();
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), lnFrMod);
+      //sprintf(vname, "ln_ToMod_%.4d", i);			//modified by scorns 7/14/05
+	  //std::ostringstream dirStringStream;
+	  dirStringStream << "ln_ToMod_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), lnToMod);
+      //sprintf(vname, "ln_FrPort_%.4d", i);			//modified by scorns 7/14/05
+	  //std::ostringstream dirStringStream;
+	  dirStringStream << "ln_FrPort_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), lnFrPort);
+      //sprintf(vname, "ln_ToPort_%.4d", i);			//modified by scorns 7/14/05
+	  //std::ostringstream dirStringStream;
+	  dirStringStream << "ln_ToPort_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), lnToPort);
       
       lnConX.clear();
       lnConY.clear();
@@ -2361,10 +2381,17 @@ void Network::Pack(std::vector<Interface> & UIs)
 	  lnConX.push_back(links[i]->cons[j].x);
 	  lnConY.push_back(links[i]->cons[j].y);
 	}
-      sprintf(vname, "ln_ConX_%.4d", i);
-      ntpk.setVal(vname, lnConX);
-      sprintf(vname, "ln_ConY_%.4d", i);
-      ntpk.setVal(vname, lnConY);
+      //sprintf(vname, "ln_ConX_%.4d", i);			//modified by scorns 7/14/05
+	  //std::ostringstream dirStringStream;
+	  dirStringStream << "ln_ConX_" << std::setprecision(4) << i;
+	  //std::string dirString = dirStringStream.str();
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), lnConX);
+      //sprintf(vname, "ln_ConY_%.4d", i);			//modified by scorns 7/14/05
+	  //std::ostringstream dirStringStream;
+	  dirStringStream << "ln_ConY_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), lnConY);
     }
 
   ntpk.setVal("Tag_size", long(tags.size()));
@@ -2377,20 +2404,40 @@ void Network::Pack(std::vector<Interface> & UIs)
       tagCon1Y = tags[i].cons[1].y;
       tagBoxX = tags[i].box.x;
       tagBoxY = tags[i].box.y;
-      sprintf(vname, "tag_Txt_%.4d", i);
-      ntpk.setVal(vname, tagText);
-      sprintf(vname, "tag_Con0X_%.4d", i);
-      ntpk.setVal(vname, tagCon0X);
-      sprintf(vname, "tag_Con0Y_%.4d", i);
-      ntpk.setVal(vname, tagCon0Y);
-      sprintf(vname, "tag_Con1X_%.4d", i);
-      ntpk.setVal(vname, tagCon1X);
-      sprintf(vname, "tag_Con1Y_%.4d", i);
-      ntpk.setVal(vname, tagCon1Y);
-      sprintf(vname, "tag_BoxX_%.4d", i);
-      ntpk.setVal(vname, tagBoxX);
-      sprintf(vname, "tag_BoxY_%.4d", i);
-      ntpk.setVal(vname, tagBoxY);
+      //sprintf(vname, "tag_Txt_%.4d", i);			//modified by scorns 7/14/05
+	  std::ostringstream dirStringStream;
+	  dirStringStream << "tag_Txt_" << std::setprecision(4) << i;
+	  //std::string dirString = dirStringStream.str();
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), tagText);
+      //sprintf(vname, "tag_Con0X_%.4d", i);			//modified by scorns 7/14/05
+	  //std::ostringstream dirStringStream;
+	  dirStringStream << "tag_Con0X_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), tagCon0X);
+      //sprintf(vname, "tag_Con0Y_%.4d", i);			//modified by scorns 7/14/05
+	  //std::ostringstream dirStringStream;
+	  dirStringStream << "tag_Con0Y_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), tagCon0Y);
+      //sprintf(vname, "tag_Con1X_%.4d", i);			//modified by scorns 7/14/05
+	  //std::ostringstream dirStringStream;
+	  dirStringStream << "tag_Con1X_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), tagCon1X);
+      //sprintf(vname, "tag_Con1Y_%.4d", i);			//modified by scorns 7/14/05
+	  //std::ostringstream dirStringStream;
+	  dirStringStream << "tag_Con1Y_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), tagCon1Y);
+      //sprintf(vname, "tag_BoxX_%.4d", i);			//modified by scorns 7/14/05
+	  dirStringStream << "tag_BoxX_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), tagBoxX);
+      //sprintf(vname, "tag_BoxY_%.4d", i);			//modified by scorns 7/14/05
+	  dirStringStream << "tag_BoxY_" << std::setprecision(4) << i;
+	  //vname = (char*)dirString.c_str();
+      ntpk.setVal(dirStringStream.str(), tagBoxY);
    }
 
    UIs.clear();
@@ -2802,7 +2849,7 @@ void  Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
       p.Load(linkresult, strlen(linkresult));
       port_dlg = modules[mod].pl_mod->PortData(NULL,  &(p.intfs[0]));
       
-      //cout<<linkresult<<endl;
+      //std::cout<<linkresult<<std::endl;
       if (port_dlg!=NULL)
 	port_dlg->Show();
     }

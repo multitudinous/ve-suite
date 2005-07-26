@@ -3,7 +3,8 @@
 #endif
 
 #include "VE_Conductor/Framework/string_ops.h"
-#include <cstdio>
+//#include <cstdio>
+#include <sstream>
 
 bool string_to_int (const std::string &str, int &result)
 {
@@ -17,22 +18,34 @@ bool string_to_double (const std::string &str, double &result)
 
 std::string to_string (int val)
 {
-  char s[50];
-  sprintf(s, "%d", val);
-  return std::string(s);
+  //char* s;
+  //sprintf(s, "%d", val);
+  std::ostringstream dirStringStream;
+  dirStringStream << val;
+  return dirStringStream.str();
+  //std::string dirString = dirStringStream.str();
+  //s = (char*)dirString.c_str();
+  //return std::string(s);
 }
 
 std::string to_string (unsigned int val)
 {
-  char s[50];
-  sprintf(s, "%u", val);
+  char* s;
+  //sprintf(s, "%u", val);
+  std::ostringstream dirStringStream;
+  dirStringStream << val;
+  std::string dirString = dirStringStream.str();
+  s = (char*)dirString.c_str();
   return std::string(s);
 }
 
 std::string to_string (double val)
 {
-  char s[50];
-  sprintf(s, "%g", val);
+  char* s;
+  std::ostringstream dirStringStream;
+  dirStringStream << val;
+  std::string dirString = dirStringStream.str();
+  s = (char*)dirString.c_str();
   return std::string(s);
 }
 

@@ -1,6 +1,7 @@
 #include "VE_Conductor/Framework/GeometryDataBuffer.h"
 #include <iostream> 
 #include <string>
+#include <sstream>
 
 
 GeometryInfoPackage::GeometryInfoPackage()
@@ -174,13 +175,16 @@ GeometryInfoPackage GeometryDataBuffer::GetDefaultNewGeomInfoPackage(int index)
 {
    //give the new geominfopackage a default name
    const char base[] = "geom";
-   char geominfoname [80];
-   sprintf(geominfoname, "%s%d", base, index);
+   //char geominfoname [80];
+   //sprintf(geominfoname, "%s%d", base, index);
+   std::ostringstream dirStringStream;
+   dirStringStream << base << index;
+   //std::string dirString = dirStringStream.str();
+   //geominfoname = (char*)dirString.c_str();
 
    GeometryInfoPackage temppackage;
 
-   
-   temppackage.SetGeomName(geominfoname);
+   temppackage.SetGeomName(dirStringStream.str());
    temppackage.SetGeomFileName("");
    temppackage.SetModelType(9);
    temppackage.SetTransparencyToggle(true);
@@ -374,14 +378,16 @@ std::vector<GeometryInfoPackage> GeometryDataBuffer::GetCurrentModuleGeomInfoLis
       //return a new package
       std::cout<<"[DBG]...can't find the geominfo match the cur module, so create a new one (default setting)"<<std::endl;
       const char base[] = "geom";
-      char geominfoname [80];
-      sprintf(geominfoname, "%s%d", base, 0);
+      //char geominfoname [80];
+      //sprintf(geominfoname, "%s%d", base, 0);
+      std::ostringstream dirStringStream;
+      dirStringStream << base << 0;
 
       GeometryInfoPackage temppackage;
 
       std::vector<GeometryInfoPackage> templist;
       temppackage.SetModelType(9); 
-      temppackage.SetGeomName(geominfoname);
+      temppackage.SetGeomName(dirStringStream.str());
       temppackage.SetGeomFileName("");
       temppackage.SetTransparencyToggle(true);
       temppackage.SetScales(1.0, 1.0, 1.0);

@@ -119,12 +119,16 @@ void Avail_Modules::Instantiate(wxTreeEvent& WXUNUSED(event)) //Double click
     {
       object = (REI_Plugin *) info->CreateObject();
       network->AddtoNetwork(object, info->GetClassName());
-      //      cout<<"a moduel size : "<<network->modules.size()<<endl;
+      //      std::cout<<"a moduel size : "<<network->modules.size()<<std::endl;
       //(network->modules).push_back(object);
       //wxString title, desc;
       
-      //char s[50];
-      //sprintf(s, "%ul", object);
+      //char* s;
+      //sprintf(s, "%ul", object);				//modified by scorns 7/14/05
+	  //std::ostringstream  dirStringStream;
+	  //dirStringStream << object;
+	  //std::string dirString = dirStringStream.str();
+	  //s = (char*)dirString.c_str();
       //title << wxT("Description for ") << GetItemText(selection);
       //title<<s;
       // desc = object->GetDesc();

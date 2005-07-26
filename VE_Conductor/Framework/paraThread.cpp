@@ -14,7 +14,7 @@ bool paraThread::Do()
 {
   if (nw->paraview == true)
     return false;
-  //cout<<"starting paraview"<<endl;
+  //std::cout<<"starting paraview"<<std::endl;
   nw->paraview = true;
   //system("paraview");
   //::wxShell("paraview");

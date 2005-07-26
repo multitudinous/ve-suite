@@ -301,7 +301,7 @@ Interface* REI_Plugin::Pack()
   std::map<std::string, std::vector<std::string> *>::iterator itervs;
 
 
-  //printf("mod id : %d\n", mod_pack._id);
+  //std::cout << "mod id : " << mod_pack._id << std::endl;
   mod_pack.setVal("XPOS",long (pos.x));
   mod_pack.setVal("YPOS",long (pos.y));
   
@@ -382,12 +382,12 @@ void REI_Plugin::UnPack(Interface * intf)
       else if (vars[i]=="XPOS")
 	{
 	  mod_pack.getVal("XPOS", temp);
-	  //	  printf("xpos %ld\n", temp);
+	  //	  std::cout << "xpos " << temp << std::endl;
 	  pos.x = temp;
 	}
       else if (vars[i]=="YPOS")
 	{
-	  //	  printf("ypos %ld\n", temp);
+	  //	  std::cout << "ypos " << temp << std::endl;
 	  mod_pack.getVal("YPOS", temp);
 	  pos.y = temp;
 	}
