@@ -52,7 +52,7 @@ void removeVtkPointData( vtkDataSet * dataSet )
          int len = strlen( dataSet->GetPointData()->GetArray(i)->GetName() );
          names[i] = new char [len+1];
          strcpy( names[i], dataSet->GetPointData()->GetArray(i)->GetName() );
-         //cout << "names[i] = " <<  names[i] << endl;
+         //std::cout << "names[i] = " <<  names[i] << std::endl;
       }
 
       for (int i=0; i < numPDArrays; i++)

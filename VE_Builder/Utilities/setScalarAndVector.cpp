@@ -39,7 +39,7 @@ void activateScalar( vtkDataSet * dataSet )
 {
    // if there are data arrays, count the number of arrays
    int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
-   //cout << "numPDArrays = " << numPDArrays << endl;
+   //std::cout << "numPDArrays = " << numPDArrays << std::endl;
    if ( numPDArrays )
    {
       //count number of scalars...
@@ -99,7 +99,7 @@ void activateVector( vtkDataSet * dataSet )
 {
    // if there are data arrays, count the number of arrays
    int numPDArrays = dataSet->GetPointData()->GetNumberOfArrays();
-   //cout << "numPDArrays = " << numPDArrays << endl;
+   //std::cout << "numPDArrays = " << numPDArrays << std::endl;
    if ( numPDArrays )
    {
       //count number of vectors...

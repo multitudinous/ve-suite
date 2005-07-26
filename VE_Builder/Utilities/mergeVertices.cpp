@@ -51,7 +51,7 @@ int main( int argc, char *argv[] )
 
    vtkDataSet * dataset = readVtkThing( inFileName, 1 ); // "1" means print info to screen
 
-   //cout << "\nprinting dataset..." << endl;
+   //std::cout << "\nprinting dataset..." << std::endl;
    //dataset->Print( cout );
 
    if ( dataset->IsA("vtkUnstructuredGrid") )

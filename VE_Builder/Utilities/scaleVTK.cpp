@@ -65,7 +65,7 @@ int main( int argc, char *argv[] )
    }
  
 /*
-   cout << "\nprinting dataset..." << endl;
+   std::cout << "\nprinting dataset..." << std::endl;
    dataset->Print( cout );
 */
 
@@ -127,7 +127,7 @@ int main( int argc, char *argv[] )
       transform = vtkTransform::New();
       transform->Scale( geomScale[0], geomScale[1], geomScale[2] );
 
-      //cout << "\nprinting pointset..." << endl;
+      //std::cout << "\nprinting pointset..." << std::endl;
       //pointset->Print( cout );
 
       transFilter = vtkTransformFilter::New();
@@ -135,13 +135,13 @@ int main( int argc, char *argv[] )
       transFilter->SetInput( (vtkPointSet*)dataset );
       transFilter->SetTransform( transform );
 
-      //cout << "\nprinting transFilter->GetOutput()..." << endl;
+      //std::cout << "\nprinting transFilter->GetOutput()..." << std::endl;
       //transFilter->GetOutput()->Update();
       //transFilter->GetOutput()->Print( cout );
 
       if ( dataset->GetDataObjectType() == VTK_UNSTRUCTURED_GRID )
       {
-         //cout << "\nprinting transFilter->GetUnstructuredGridOutput()..." << endl;
+         //std::cout << "\nprinting transFilter->GetUnstructuredGridOutput()..." << std::endl;
          //transFilter->GetUnstructuredGridOutput()->Update();
          //transFilter->GetUnstructuredGridOutput()->Print( cout );
          writeVtkThing( transFilter->GetUnstructuredGridOutput(), outFileName, 1 ); // one is for binary
@@ -152,7 +152,7 @@ int main( int argc, char *argv[] )
       }
       else if ( dataset->GetDataObjectType() == VTK_POLY_DATA )
       {
-         //cout << "\nprinting transFilter->GetPolyDataOutput()..." << endl;
+         //std::cout << "\nprinting transFilter->GetPolyDataOutput()..." << std::endl;
          //transFilter->GetPolyDataOutput()->Print( cout );
          writeVtkThing( transFilter->GetPolyDataOutput(), outFileName, 1 ); // one is for binary
       }
