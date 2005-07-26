@@ -30,6 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
+#include <sstream>
 
 #include <vtkUnstructuredGrid.h>
 #include <vtkRectilinearGrid.h>
@@ -545,9 +546,13 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       transFilter->Update();
 
       // write a vtk file
-      char vtkFileName[100];
-      sprintf(vtkFileName, "ugrid_%s_%d.vtk", ext, writtenTimeStep);
-      writeVtkThing( transFilter->GetOutput(), vtkFileName, 0 );   //0=ascii
+      //char* vtkFileName;
+      //sprintf(vtkFileName, "ugrid_%s_%d.vtk", ext, writtenTimeStep);
+	  std::ostringstream dirStringStream;
+	  dirStringStream << "ugrid_" << ext << "_" << writtenTimeStep << ".vtk";
+	  std::string dirString = dirStringStream.str();
+	  //vtkFileName = (char*)dirString.c_str();
+      writeVtkThing( transFilter->GetOutput(), (char*)dirString.c_str(), 0 );   //0=ascii
       uGrid->Delete();
 
 //      for ( i=0; i<numArrays; i++)

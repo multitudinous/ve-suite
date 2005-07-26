@@ -4,6 +4,7 @@
 #include <wx/dir.h>
 #include <wx/filename.h>
 #include <iostream>
+#include <sstream>
 #include <cmath>
 BEGIN_EVENT_TABLE(TCFrame,wxFrame)
    EVT_BUTTON(TRANSLATE_BUTTON,TCFrame::_onTranslateCallback)
@@ -291,7 +292,7 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
 {
    _translator->setBatchOff();
    UpdateStatus("Translating to 3D texture files. . .");
-   char oname[256];
+   //char* oname;
    wxString statusMsg = "";
    _fileProgress = new wxProgressDialog(wxString("Translation Progress"),
                   " ", 
@@ -305,12 +306,16 @@ void TCFrame::_onTranslateCallback(wxCommandEvent& event)
       _fileProgress->Update(i, statusMsg);
       _translator->reset();
       _translator->setOutputDirectory((char*)_outputDir.c_str());
-      sprintf(oname,"_%d",i);
+      //sprintf(oname,"_%d",i);
+	  std::ostringstream dirStringStream;
+	  dirStringStream << "_" << i;
+	  std::string dirString = dirStringStream.str();
+	  //oname = (char*)dirString.c_str();
       _translator->createDataSetFromFile(_gridFiles[i].c_str());
       _translator->setOutputResolution(_resolution[0],
                                    _resolution[1],
                                    _resolution[2]);
-      _translator->setVelocityFileName(oname);
+      _translator->setVelocityFileName((char*)dirString.c_str());
       _translator->createTextures();
    }
    statusMsg = wxString("Files written to: ") + _outputDir;
@@ -470,16 +475,20 @@ void TCFrame::BatchTranslation()
 {
    _translator->setBatchOn();
    //process the files
-   char oname[256];
+   //char* oname;
    for(int i = 0; i < _numFiles; i++){
       _translator->reset();
       _translator->setOutputDirectory((char*)_outputDir.c_str());
-      sprintf(oname,"_%d",i);
+      //sprintf(oname,"_%d",i);
+	  std::ostringstream dirStringStream;
+	  dirStringStream << "_" << i;
+	  std::string dirString = dirStringStream.str();
+	  //oname = (char*)dirString.c_str();
       _translator->createDataSetFromFile(_gridFiles[i].c_str());
       _translator->setOutputResolution(_resolution[0],
                                    _resolution[1],
                                    _resolution[2]);
-      _translator->setVelocityFileName(oname);
+      _translator->setVelocityFileName((char*)dirString.c_str());
       _translator->createTextures();
    }
 }

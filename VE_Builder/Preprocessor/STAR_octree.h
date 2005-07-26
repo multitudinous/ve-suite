@@ -55,6 +55,7 @@
 #include <vtkTriangleFilter.h>
 #include <vtkUnstructuredGrid.h>
 #include <vtkUnstructuredGridWriter.h>
+#include <sstream>
 
 const int maxLevel = 10;
 const int deg = 8;
@@ -191,7 +192,7 @@ void Octree::InitOctreeDecomposition( vtkUnstructuredGrid *grid, int cells )
 
   Decompose( );
 
-  //cout << "Decomposition ended.... " << endl;
+  //std::cout << "Decomposition ended.... " << std::endl;
 }
 
 void Octree::ExtractUnsGridBound( )
@@ -298,7 +299,7 @@ void Octree::Decompose( )
 	       pOctant->SetBound( bound );
 	       pOctant->SetNumberOfCells( cellsNo );
 
-	       printf( "Id %d\t Cell no. %d\n", i, cellsNo );
+		   std::cout << "Id " << i << "\t Cell no. " << cellsNo << endl;
 
 	       // Increment to the next sibling
 	       siblingID ++;
@@ -450,7 +451,7 @@ void Octree::WriteOctantsData( )
 {
   double bd[6];
   double dCell[3];
-  char writer_title[100];
+  //char* writer_title;
   
   dCell[0] = fabs( cellBound[1] - cellBound[0] );
   dCell[1] = fabs( cellBound[3] - cellBound[2] );
@@ -471,10 +472,14 @@ void Octree::WriteOctantsData( )
      extractGrid->SetExtent( bd );
      extractGrid->Update( );
 
-  sprintf( writer_title, "./POST_DATA/octant%d.vtk", octantGrid->GetNumberOfCells( ) );
+  //sprintf( writer_title, "./POST_DATA/octant%d.vtk", octantGrid->GetNumberOfCells( ) );
+	 std::ostringstream dirStringStream;
+	  dirStringStream << "./POST_DATA/octant" << octantGrid->GetNumberOfCells( ) << ".vtk";
+	  std::string dirString = dirStringStream.str();
+	  //writer_title = (char*)dirString.c_str();
   vtkUnstructuredGridWriter *writer = vtkUnstructuredGridWriter::New();
      writer->SetInput( extractGrid->GetOutput( ) );
-     writer->SetFileName( writer_title );
+     writer->SetFileName( (char*)dirString.c_str() );
      writer->SetFileTypeToBinary( );
      writer->Write( );
      writer->Delete( );

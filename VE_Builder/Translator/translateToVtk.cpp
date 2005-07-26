@@ -31,6 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 #include <cstdlib>
+#include <sstream>
 
 #include <vtkPointSet.h>
 #include <vtkStructuredGrid.h>
@@ -486,10 +487,14 @@ char * preprocess( int argc, char *argv[],
    if ( argc > arg )
    {
       number = fileIO::extractIntegerBeforeExtension( infilename );
-      char outFile [100];
-      sprintf( outFile, "flowdata_%i.vtk", number );
-      vtkFileName = new char [ strlen(outFile) + 1 ];
-      strcpy( vtkFileName, outFile );
+      char* outFile;
+      //sprintf( outFile, "flowdata_%i.vtk", number );
+	  std::ostringstream dirStringStream;
+	  dirStringStream << "flowdata_" << number << ".vtk";
+	  std::string dirString = dirStringStream.str();
+	  outFile = (char*)dirString.c_str();
+      vtkFileName = new char [ strlen(dirString) + 1 ];
+      strcpy( vtkFileName, dirString );
       arg++;
    }
    else

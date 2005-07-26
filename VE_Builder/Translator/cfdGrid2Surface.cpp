@@ -75,12 +75,12 @@ vtkPolyData * VE_Util::cfdGrid2Surface( vtkDataSet *dataSet, float deciVal )
    // So delete the field at this point...
    smoother->GetOutput()->Update();
    int numberOfArrays = smoother->GetOutput()->GetFieldData()->GetNumberOfArrays();
-   //cout << "GetNumberOfArrays = " << numberOfArrays << endl;
+   //std::cout << "GetNumberOfArrays = " << numberOfArrays << std::endl;
 
    // remove the first array numberOfArrays times...
    for(int i= 0; i < numberOfArrays; i++)
    {
-      //cout << i << "  " << smoother->GetOutput()->GetFieldData()->GetArrayName(0) << endl;
+      //std::cout << i << "  " << smoother->GetOutput()->GetFieldData()->GetArrayName(0) << std::endl;
       smoother->GetOutput()->GetFieldData()->RemoveArray( 
                     smoother->GetOutput()->GetFieldData()->GetArrayName(0) );
    }
@@ -96,8 +96,8 @@ vtkPolyData * VE_Util::cfdGrid2Surface( vtkDataSet *dataSet, float deciVal )
       uGrid->ShallowCopy( cNormal->GetOutput() );
 /*
    int numCells = uGrid->GetNumberOfCells();
-   cout << "\tThe number of cells in the input grid is " << numCells << endl;
-   cout << "\tactive scalar name is " << uGrid->GetPointData()->GetScalars()->GetName(); 
+   std::cout << "\tThe number of cells in the input grid is " << numCells << std::endl;
+   std::cout << "\tactive scalar name is " << uGrid->GetPointData()->GetScalars()->GetName(); 
 */
 
    cFilter->Delete();

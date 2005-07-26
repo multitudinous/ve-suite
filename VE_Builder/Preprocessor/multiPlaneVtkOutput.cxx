@@ -421,12 +421,16 @@ vtkPolyData * multiPlaneVtkOutput::MakePolyData( int xyz, float pos )
 
 void multiPlaneVtkOutput::WritePolyData( vtkPolyData * polyData, int xyz, int i )
 {
-   char  contFname[50];
+   //char  contFname[50];
    //if ( i > 999 )
+   std::ostringstream dirStringStream;
    {
-      if      (xyz == 0 ) sprintf( contFname, "%s/X_Cont%i.vtk", postDataDir, i );
-      else if (xyz == 1 ) sprintf( contFname, "%s/Y_Cont%i.vtk", postDataDir, i );
-      else if (xyz == 2 ) sprintf( contFname, "%s/Z_Cont%i.vtk", postDataDir, i );
+      if      (xyz == 0 ) dirStringStream << postDataDir << "/X_Cont" << i << ".vtk";
+         //sprintf( contFname, "%s/X_Cont%i.vtk", postDataDir, i );
+      else if (xyz == 1 ) dirStringStream << postDataDir << "/Y_Cont" << i << ".vtk";
+      //sprintf( contFname, "%s/Y_Cont%i.vtk", postDataDir, i );
+      else if (xyz == 2 ) dirStringStream << postDataDir << "/Z_Cont" << i << ".vtk";
+      //sprintf( contFname, "%s/Z_Cont%i.vtk", postDataDir, i );
    }
 /*
 // had to use above non-padded name scheme for compatibility with cfdPlanes.cxx
@@ -437,11 +441,12 @@ void multiPlaneVtkOutput::WritePolyData( vtkPolyData * polyData, int xyz, int i 
       else if (xyz == 2 ) sprintf( contFname, "%s/Z_Cont%03i.vtk", postDataDir, i );
    }
 */
+   std::string dirString = dirStringStream.str();
 
-   //std::cout << "contFname = " << contFname << std::endl;
+   //std::cout << "contFname = " << contFname << std::endl;
 
    vtkPolyDataWriter *polyDataWriter = vtkPolyDataWriter::New();
-   polyDataWriter->SetFileName( contFname );
+   polyDataWriter->SetFileName( dirString.c_str );
    polyDataWriter->SetInput( polyData );
 #ifndef SJK_TEST
    polyDataWriter->SetFileTypeToBinary();
@@ -453,12 +458,15 @@ void multiPlaneVtkOutput::WritePolyData( vtkPolyData * polyData, int xyz, int i 
 
 void multiPlaneVtkOutput::WriteMultiPolyData( vtkPolyData * polyData, int xyz, int i )
 {
-   char  contFname[50];
+   //char  contFname[50];
    //if ( i > 999 )
    {
-      if      (xyz == 0 ) sprintf( contFname, "%s/X_MultiCont_%i.vtk", postDataDir, i );
-      else if (xyz == 1 ) sprintf( contFname, "%s/Y_MultiCont_%i.vtk", postDataDir, i );
-      else if (xyz == 2 ) sprintf( contFname, "%s/Z_MultiCont_%i.vtk", postDataDir, i );
+      if      (xyz == 0 ) dirStringStream << postDataDir << "/X_MultiCont_" << i << ".vtk";
+         //sprintf( contFname, "%s/X_Cont%i.vtk", postDataDir, i );
+      else if (xyz == 1 ) dirStringStream << postDataDir << "/Y_MultiCont_" << i << ".vtk";
+      //sprintf( contFname, "%s/Y_Cont%i.vtk", postDataDir, i );
+      else if (xyz == 2 ) dirStringStream << postDataDir << "/Z_MultiCont_" << i << ".vtk";
+      //sprintf( contFname, "%s/Z_Cont%i.vtk", postDataDir, i );
    }
 /*
 // had to use above non-padded name scheme for compatibility with cfdPlanes.cxx
@@ -470,10 +478,10 @@ void multiPlaneVtkOutput::WriteMultiPolyData( vtkPolyData * polyData, int xyz, i
    }
 */
 
-   //std::cout << "contFname = " << contFname << std::endl;
+   //std::cout << "contFname = " << contFname << std::endl;
 
    vtkPolyDataWriter *polyDataWriter = vtkPolyDataWriter::New();
-   polyDataWriter->SetFileName( contFname );
+   polyDataWriter->SetFileName( dirString.c_str );
    polyDataWriter->SetInput( polyData );
 #ifndef SJK_TEST
    polyDataWriter->SetFileTypeToBinary();

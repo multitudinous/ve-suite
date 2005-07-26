@@ -33,6 +33,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include <vtkPoints.h>
 #include <vtkUnstructuredGrid.h>
@@ -440,7 +441,7 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName
    rpt << "ASCII" << std::endl;
    rpt << "DATASET UNSTRUCTURED_GRID" << std::endl;
 
-   char str[1024];
+   //char *str;
 
    // if the data set has FIELD data, then output that...
    int numFieldArrays = grid->GetFieldData()->GetNumberOfArrays();
@@ -462,8 +463,12 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName
             for ( int k=0; k < numComponents; k++ )
             {
                double value = dataArray->GetComponent( j, k );
-               sprintf ( str, "%g ", value );
-               rpt << str; 
+               //sprintf ( str, "%g ", value );
+			   std::ostringstream dirStringStream;
+			   dirStringStream << value << " ";
+	           //std::string dirString = dirStringStream.str();
+               //str = (char*)dirString.c_str();
+               rpt << dirStringStream.str(); 
                counter++;
                if ( counter % 9 == 0 )
                   rpt << "\n";
@@ -485,8 +490,12 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName
 
       for (int k=0; k<3; k++)
       {
-         sprintf ( str, "%g ", vertex[k] );
-         rpt << str; 
+         //sprintf ( str, "%g ", vertex[k] );
+		 std::ostringstream dirStringStream;
+		 dirStringStream << vertex[k] << " ";
+	     //std::string dirString = dirStringStream.str();
+         //str = (char*)dirString.c_str();
+         rpt << dirStringStream.str(); 
          counter++;
          if ( counter%9 == 0 )
             rpt << "\n";

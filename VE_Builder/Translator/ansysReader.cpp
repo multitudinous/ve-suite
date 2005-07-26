@@ -34,6 +34,7 @@
 #include <iostream>
 #include <iomanip>
 #include <cmath>
+#include <sstream>
 #ifndef WIN32
 #include <netinet/in.h>
 #endif
@@ -2327,14 +2328,20 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
    }
 
    // Because the ansys vertices are one-based, increase the arrays by one
-   char arrayName[ 256 ];
-   sprintf( arrayName, "displacement %i %s", this->currentDataSetSolution, this->displacementUnits );
-   parameterData[ 0 ]->SetName( arrayName );
+   //char* arrayName;
+   //sprintf( arrayName, "displacement %i %s", this->currentDataSetSolution, this->displacementUnits );
+   std::ostringstream dirStringStream;
+   dirStringStream << "displacement " << this->currentDataSetSolution << " " << this->displacementUnits;
+   std::string dirString = dirStringStream.str();
+   //arrayName = (char*)dirString.c_str();
+   parameterData[ 0 ]->SetName( (char*)dirString.c_str() );
    parameterData[ 0 ]->SetNumberOfComponents( 3 );
    parameterData[ 0 ]->SetNumberOfTuples( this->ndnod + 1 );   // note: +1
 
-   sprintf( arrayName, "displacement mag %i %s", this->currentDataSetSolution, this->displacementUnits );
-   parameterData[ 1 ]->SetName( arrayName );
+   //sprintf( arrayName, "displacement mag %i %s", this->currentDataSetSolution, this->displacementUnits );
+   dirStringStream << "displacement mag " << this->currentDataSetSolution << " " << this->displacementUnits;
+   //arrayName = (char*)dirString.c_str();
+   parameterData[ 1 ]->SetName( (char*)dirString.c_str() );
    parameterData[ 1 ]->SetNumberOfComponents( 1 );
    parameterData[ 1 ]->SetNumberOfTuples( this->ndnod + 1 );   // note: +1
 
@@ -2498,19 +2505,33 @@ void ansysReader::AttachStressToGrid()
       parameterData[ i ]->SetNumberOfTuples( this->numExpandedNodes + 1 );   // note: +1
    }
 
-   char arrayName[ 256 ];
-   sprintf( arrayName, "fg max prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
-   parameterData[ 0 ]->SetName( arrayName );
-   sprintf( arrayName, "fg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
-   parameterData[ 1 ]->SetName( arrayName );
-   sprintf( arrayName, "fg von Mises stress %i %s", this->currentDataSetSolution, this->stressUnits );
-   parameterData[ 2 ]->SetName( arrayName );
-   sprintf( arrayName, "pg max prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
-   parameterData[ 3 ]->SetName( arrayName );
-   sprintf( arrayName, "pg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
-   parameterData[ 4 ]->SetName( arrayName );
-   sprintf( arrayName, "pg von Mises stress %i %s", this->currentDataSetSolution, this->stressUnits );
-   parameterData[ 5 ]->SetName( arrayName );
+   //char* arrayName;
+   std::ostringstream dirStringStream;  
+   //sprintf( arrayName, "fg max prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   dirStringStream << "fg max prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
+   std::string dirString = dirStringStream.str();
+   //arrayName = (char*)dirString.c_str();
+   parameterData[ 0 ]->SetName( (char*)dirString.c_str() );
+   //sprintf( arrayName, "fg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   dirStringStream << "fg min prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
+   //arrayName = (char*)dirString.c_str();
+   parameterData[ 1 ]->SetName( (char*)dirString.c_str() );
+   //sprintf( arrayName, "fg von Mises stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   dirStringStream << "fg von Mises stress " << this->currentDataSetSolution << " " << this->stressUnits;
+   //arrayName = (char*)dirString.c_str();
+   parameterData[ 2 ]->SetName( (char*)dirString.c_str() );
+   //sprintf( arrayName, "pg max prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   dirStringStream << "pg max prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
+   //arrayName = (char*)dirString.c_str();
+   parameterData[ 3 ]->SetName( (char*)dirString.c_str() );
+   //sprintf( arrayName, "pg min prin stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   dirStringStream << "pg min prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
+   //arrayName = (char*)dirString.c_str();
+   parameterData[ 4 ]->SetName( (char*)dirString.c_str() );
+   //sprintf( arrayName, "pg von Mises stress %i %s", this->currentDataSetSolution, this->stressUnits );
+   dirStringStream << "pg von Mises stress " << this->currentDataSetSolution << " " << this->stressUnits;
+   //arrayName = (char*)dirString.c_str();
+   parameterData[ 5 ]->SetName( (char*)dirString.c_str() );
 
    // first do full graphics calculations...
 #ifdef PRINT_HEADERS

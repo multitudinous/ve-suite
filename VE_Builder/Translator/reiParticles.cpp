@@ -89,8 +89,8 @@ void reiParticles::readPPLOT1( void ) {
       inPPLOT1file >>  particles[i]->pathIndex;
 /*
    for ( i = 0; i < particles.size(); i++ )  
-      cout << particles[i]->timeSteps << "  " << particles[i]->pathIndex << endl;
-      cout << nsl << "  " << nps << endl;
+      std::cout << particles[i]->timeSteps << "  " << particles[i]->pathIndex << std::endl;
+      std::cout << nsl << "  " << nps << std::endl;
 */
 }
 
@@ -128,7 +128,7 @@ void reiParticles::readPPLOT3( void ) {
               py == particles[i]->locations[counter]->y && 
               pz == particles[i]->locations[counter]->z ) {
             particles[i]->locations.pop_back();
-            //cout << px << " " << py << " " << pz << endl;
+            //std::cout << px << " " << py << " " << pz << std::endl;
          } else {
             px = particles[i]->locations[counter]->x;
             py = particles[i]->locations[counter]->y;
@@ -284,8 +284,9 @@ void reiParticles::writeParticlePolyData( void ){
    transFilter->SetTransform( transform );
    transFilter->Update();
 
-   char  contFname[50];
-   sprintf( contFname, "vtkPolyData.vtk");
+   char*  contFname;
+   //sprintf( contFname, "vtkPolyData.vtk");
+   strcpy(contFname, "vtkPolyData.vtk");
 
    writer->SetInput( transFilter->GetOutput() );
 //   writer->SetInput( polydata );
@@ -303,5 +304,5 @@ void reiParticles::writeParticlePolyData( void ){
 }
 
 void reiParticles::readParticleParamFile( void ){
-   //cout << "in" <<endl;
+   //std::cout << "in" <<std::endl;
 }

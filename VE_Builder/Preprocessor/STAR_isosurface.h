@@ -39,6 +39,8 @@
 #include <vtkSmoothPolyDataFilter.h>
 #include <vtkPolyDataNormals.h>
 #include <vtkPolyDataWriter.h>
+#include <sstream>
+#include <iomanip>
 
 #include "VE_Builder/Utilities/setScalarAndVector.h"
 
@@ -62,17 +64,17 @@ void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
    int len = strlen( unsGrid->GetPointData()->GetScalars()->GetName() );
    char * scalarName = new char [len+1];
    strcpy( scalarName, unsGrid->GetPointData()->GetScalars()->GetName() );
-   //cout << "scalarName = " << scalarName << endl;
+   //std::cout << "scalarName = " << scalarName << std::endl;
 
    int numPDArrays = unsGrid->GetPointData()->GetNumberOfArrays();
-   //cout << "numPDArrays = " << numPDArrays << endl;
+   //std::cout << "numPDArrays = " << numPDArrays << std::endl;
 
    int k = 0;
    for (int i=0; i < numPDArrays; i++)
    {
       if ( strcmp( unsGrid->GetPointData()->GetArray(k)->GetName(), scalarName ) )
       {
-         //cout << "removing array " << unsGrid->GetPointData()->GetArray(k)->GetName() << endl;
+         //std::cout << "removing array " << unsGrid->GetPointData()->GetArray(k)->GetName() << std::endl;
          unsGrid->GetPointData()->RemoveArray( 
                             unsGrid->GetPointData()->GetArray(k)->GetName() );
       }
@@ -90,12 +92,12 @@ void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
       rangeEnd = (float)isoRange[1];
    }
 
-   //cout << "Min value of isosurface = " << rangeStart << endl;
-   //cout << "Max value of isosurface = " << rangeEnd << endl;
+   //std::cout << "Min value of isosurface = " << rangeStart << std::endl;
+   //std::cout << "Max value of isosurface = " << rangeEnd << std::endl;
   
    float dRange = ( rangeEnd - rangeStart ) / (float) numContours;
 
-   char  isoFname[100];
+   //char*  isoFname;
    float value = rangeStart + dRange;
 
    for ( int i=0; i<numContours; i++ )
@@ -119,11 +121,15 @@ void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
       vtkPolyDataNormals *normals = vtkPolyDataNormals::New();
          normals->SetInput( smoother->GetOutput() );
 
-      sprintf( isoFname, "%s/iso_%03i.vtk", postDataDir, i );
+      //sprintf( isoFname, "%s/iso_%03i.vtk", postDataDir, i );			//modified 7/18/05 by scorns
+		std::ostringstream dirStringStream;
+		dirStringStream << postDataDir << "/iso_" << std::setw(3) << ".vtk";
+		std::string dirString = dirStringStream.str();
+		//isoFname = (char*)dirString.c_str();
 
       vtkPolyDataWriter *isoWriter = vtkPolyDataWriter::New();
          isoWriter->SetInput( normals->GetOutput() );
-         isoWriter->SetFileName( isoFname );
+         isoWriter->SetFileName( (char*)dirString.c_str() );
          isoWriter->SetFileTypeToBinary();
          isoWriter->Write();
 

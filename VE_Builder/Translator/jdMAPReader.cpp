@@ -242,7 +242,7 @@ std::cout << "here 2 " << std::endl;
    zRot=0;
    /*std::cout << xRot   << " : " << yRot   << " : " << zRot   << " : "
         << xTrans << " : " << yTrans << " : " << zTrans << " : "
-        << xScale << " : " << coordinateFilter << endl;*/
+        << xScale << " : " << coordinateFilter << std::endl;*/
    transform->Scale( xScale, yScale, zScale );
    transform->RotateX( xRot );
    transform->RotateY( yRot );

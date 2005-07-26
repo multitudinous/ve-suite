@@ -31,6 +31,8 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include <iostream>
 #include <cmath>
+#include <sstream>
+#include <iomanip>
 
 #include <vtkActor.h>
 #include <vtkAppendFilter.h>
@@ -154,7 +156,7 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
    {
       vtkDataArrayCollection * timeSet = reader->GetTimeSets();
       int timeStep = 0;
-      char currentFilename [100];
+      //char* currentFilename;
       double currentTime[1];
       double nextTime[1];
 
@@ -186,8 +188,12 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
          transFilter->SetInput( surface );
          transFilter->Update();
 
-         sprintf (currentFilename, "%s%03i%s", "deice_", timeStep, ".vtk");
-         std::cout << "currentFilename = \"" << currentFilename << "\"" << std::endl;
+         //sprintf (currentFilename, "%s%03i%s", "deice_", timeStep, ".vtk");
+		 std::ostringstream dirStringStream;
+		 dirStringStream << "deice_" << std::setw(3) << timeStep << ".vtk";
+		 std::string dirString = dirStringStream.str();
+		 //currentFilename = (char*)dirString.c_str();
+         std::cout << "currentFilename = \"" << (char*)dirString.c_str() << "\"" << std::endl;
 
          writeVtkThing( transFilter->GetOutput(), currentFilename, 1 ); //0=ascii
          surface->Delete();
