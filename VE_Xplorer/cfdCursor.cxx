@@ -340,7 +340,7 @@ void cfdCursor::UpdateSphere( void )
 
 void cfdCursor::UpdateArrowSource( void )
 {
-   //cout << " updating arrow source " << endl;
+   //std::cout << " updating arrow source " << std::endl;
    //if ( this->last_pSize != this->pSize )
    {
       this->arrowPlaneS->SetOrigin( 0.0f, -this->pSize, -this->pSize);

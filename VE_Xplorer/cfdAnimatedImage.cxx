@@ -42,6 +42,7 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -55,7 +56,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
    _readParam = new cfdReadParam();
    //CreateObjects();
   unsigned int i;
-  char* filename;//[250];
+  //char* filename;//[250];
   frames = frames;
   //  _which_frame = 0;
 
@@ -65,11 +66,11 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
    {
       //sprintf(filename, "%s%02d.lic", basename, i);
       std::ostringstream dirStringStream;
-      dirStringStream << basename << i << ".lic";
+	  dirStringStream << basename << std::setw(2) << std::setfill('0') << i << ".lic";
       std::string dirString = dirStringStream.str();
-      filename = (char*)dirString.c_str();
+      //filename = (char*)dirString.c_str();
 
-      cfdImage* im = new cfdImage(filename, ex_x, ex_y, dim, origin, spacing);
+      cfdImage* im = new cfdImage((char*)dirString.c_str(), ex_x, ex_y, dim, origin, spacing);
 
       _images.push_back(im);
    }
@@ -81,7 +82,7 @@ cfdAnimatedImage::cfdAnimatedImage( char *basename, int frames,
 cfdAnimatedImage::cfdAnimatedImage( char* param )
 {
    unsigned int i;
-   char* filename;//[250];
+   //char* filename;//[250];
    //frames = param->frames;
    //  _which_frame = 0;
    frames = 0;
@@ -100,11 +101,11 @@ cfdAnimatedImage::cfdAnimatedImage( char* param )
    {
       //sprintf(filename, "%s%02d.lic", basename, i);
       std::ostringstream dirStringStream;
-      dirStringStream << basename << i << ".lic";
+	  dirStringStream << basename << std::setw(2) << std::setfill('0') << i << ".lic";
       std::string dirString = dirStringStream.str();
-      filename = (char*)dirString.c_str();
+      //filename = (char*)dirString.c_str();
 
-      cfdImage* im = new cfdImage(filename, ex_x,ex_y, dim, origin, spacing);
+      cfdImage* im = new cfdImage((char*)dirString.c_str(), ex_x,ex_y, dim, origin, spacing);
 
       _images.push_back(im);
    }

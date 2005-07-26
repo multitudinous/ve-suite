@@ -53,6 +53,8 @@
 #include <vtkPolyData.h>
 #include <vtkMath.h>
 #include <vtkVectorText.h>
+#include <sstream>
+#include <iomanip>
 
 #include <vpr/Util/Debug.h>
 using namespace VE_SceneGraph;
@@ -584,18 +586,25 @@ void cfdDigitalAnalogGauge::SetDigitalPrecision( int input )
 
 void cfdDigitalAnalogGauge::UpdateDigitalText( double value )
 {  
+   std::ostringstream dirStringStream;
    if      ( this->digitalPrecision == 0)
-      sprintf( this->digitalText, "%10.0f", value );
+      //sprintf( this->digitalText, "%10.0f", value );
+      dirStringStream << std::setw(2) << std::setfill('0') << value;
    else if ( this->digitalPrecision == 1)
-      sprintf( this->digitalText, "%10.1f", value );
+      //sprintf( this->digitalText, "%10.1f", value );
+      dirStringStream << std::setw(2) << std::setfill('0') << std::setprecision(1) << value;
    else if ( this->digitalPrecision == 2)
-      sprintf( this->digitalText, "%10.2f", value );
+      //sprintf( this->digitalText, "%10.2f", value );
+      dirStringStream << std::setw(2) << std::setfill('0') << std::setprecision(2) << value;
    else if ( this->digitalPrecision == 3)
-      sprintf( this->digitalText, "%10.3f", value );
+      //sprintf( this->digitalText, "%10.3f", value );
+      dirStringStream << std::setw(2) << std::setfill('0') << std::setprecision(3) << value;
    else
-      sprintf( this->digitalText, "%f", value );
+      //sprintf( this->digitalText, "%f", value );
+      dirStringStream << value;
+   std::string dirString = dirStringStream.str();
 
-   this->digitalLabel->SetText( this->digitalText );
+   this->digitalLabel->SetText( dirString.c_str() );
 
    this->gaugeDCS->RemoveChild( this->digitalGeode );
    delete this->digitalGeode;

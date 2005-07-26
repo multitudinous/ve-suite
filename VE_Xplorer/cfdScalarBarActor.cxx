@@ -393,7 +393,7 @@ void cfdScalarBarActor::Execute()
    {
       std::ostringstream dirStringStream;
       /*if      ( range[1]-range[0] < 0.0016 )  
-         sprintf( labelText[i], "%8.3e", this->range[0] + (float)i*labelIncrement );
+         sprintf( labelText[i], "%8.3f", this->range[0] + (float)i*labelIncrement );
       else if ( range[1]-range[0] < 0.016 )  
          sprintf( labelText[i], "%8.4f", this->range[0] + (float)i*labelIncrement );
       else if ( range[1]-range[0] < 0.16 ) 
@@ -484,14 +484,14 @@ bool cfdScalarBarActor::CheckCommandId( cfdCommandArray* commandArray )
    if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SCALAR_BAR_TOGGLE ) &&
         ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == 1 ) )
    {
-      //cout << "trying to add a scalar bar" << endl;
+      //std::cout << "trying to add a scalar bar" << std::endl;
       RefreshScalarBar();
       flag = true;
    }
    else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == SCALAR_BAR_TOGGLE ) &&
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == 0 ) )
    {
-      //cout << "trying to remove a scalar bar" << endl;
+      //std::cout << "trying to remove a scalar bar" << std::endl;
       if ( this->scalarBar )
       {
          this->_rootNode->RemoveChild( this->scalarBar );

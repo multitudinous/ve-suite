@@ -80,7 +80,7 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                            << std::endl << vprDEBUG_FLUSH;
 
    int i;
-   char* planeFileName;
+   //char* planeFileName;
 
    // count the total number of cut planes
    for ( i=0; 1; i++ )
@@ -90,8 +90,8 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
       std::ostringstream dirStringStream;
       dirStringStream << directory << "/" << this->typeLabel << "_Cont" << i << ".vtk";
       std::string dirString = dirStringStream.str();
-      planeFileName = (char*)dirString.c_str();
-       if ( ! fileIO::isFileReadable( planeFileName ) )
+      //planeFileName = (char*)dirString.c_str();
+       if ( ! fileIO::isFileReadable( (char*)dirString.c_str() ) )
        {
            this->numPlanes = i;
            vprDEBUG(vprDBG_ALL,0) << "\t\tFound " << this->numPlanes 
@@ -116,10 +116,10 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
       std::ostringstream dirStringStream;
       dirStringStream << directory << "/" << this->typeLabel << "_Cont" << i << ".vtk";
       std::string dirString = dirStringStream.str();
-      planeFileName = (char*)dirString.c_str();
+      //planeFileName = (char*)dirString.c_str();
 
       planeReader = vtkPolyDataReader::New();
-      planeReader->SetFileName( planeFileName );
+      planeReader->SetFileName( (char*)dirString.c_str() );
       planeReader->Update();
 
       // look at POINTS to see what coordinate that the plane goes through

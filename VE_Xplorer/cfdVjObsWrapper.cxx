@@ -170,7 +170,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
    }*/
   
 //   CORBA::String_var sior2(orb->object_to_string( poa.in() ) );
-//   cout << "|  IOR of the server side 2 : " << endl << sior2 << endl;
+//   std::cout << "|  IOR of the server side 2 : " << std::endl << sior2 << std::endl;
    char raw_hostname[256];
    std::string hostname;
    
@@ -186,7 +186,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
 
       VjObs_var vjobs = this->_vjObs->_this();
       //CORBA::String_var sior(orb->object_to_string(vjobs.in()));
-      //cout << "|  IOR of the server(cfdApp) side : " << endl << sior << endl;
+      //std::cout << "|  IOR of the server(cfdApp) side : " << std::endl << sior << std::endl;
       CosNaming::Name name;
       name.length(1);
 

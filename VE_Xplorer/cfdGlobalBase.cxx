@@ -38,7 +38,7 @@ using namespace VE_Xplorer;
 
 cfdGlobalBase::cfdGlobalBase()
 { 
-   //cout << "cfdGlobalBase constructor" << endl;
+   //std::cout << "cfdGlobalBase constructor" << std::endl;
 }
 
 cfdGlobalBase::~cfdGlobalBase ()

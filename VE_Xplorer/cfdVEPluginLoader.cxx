@@ -122,7 +122,7 @@ bool cfdVEPluginLoader::LoadPlugins(wxString lib_dir)
          {
             wxLogDebug ("Could Not Load [ %s ]", filename.c_str());
             //wxClassInfo* test = CLASSINFO(lib->GetLibHandle() )
-            //cout << test->m_className << endl;
+            //std::cout << test->m_className << std::endl;
          }
          cont = dir.GetNext(&filename);
          //delete lib;

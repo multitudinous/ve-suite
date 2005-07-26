@@ -289,7 +289,7 @@ void cfdVEBaseClass::SetModuleResults( const char* network )
    }
    catch (CORBA::Exception &) {
       
-      cerr << "Maybe Computational Engine is down" << endl;
+      std::cerr << "Maybe Computational Engine is down" << std::endl;
       return;
    }*/
 
