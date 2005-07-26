@@ -2576,6 +2576,7 @@ void Network::UnPack(std::vector<Interface> & intfs)
 
 	      modules[num]=temp_mod;
 	      modules[num].pl_mod = (REI_Plugin *) cls->CreateObject();
+         modulet[num].pl_mod->SetID(num);
 	      modules[num].cls_name = temps;
 	   }
    
@@ -2616,7 +2617,7 @@ void Network::UnPack(std::vector<Interface> & intfs)
       _id = intfs[i+1]._id;
       if(intfs[i+1]._type == 1)
       {
-         modules[_id].pl_mod->SetID(_id);
+         //modules[_id].pl_mod->SetID(_id);
          modules[_id].pl_mod->UnPack(&intfs[i+1]);
       }
       else if(intfs[i+1]._type ==2)
