@@ -46,8 +46,7 @@
 #include "VE_TextureBased/cfdSimpleTextureCallback.h"
 #include "VE_TextureBased/cfdUpdateParameterCallback.h"
 
-#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
-#include <boost/filesystem/path.hpp>
+
 using namespace VE_TextureBased;
 //#include "cfdUpdateMatrixParameterCallback.h"
 #define PI  3.1416

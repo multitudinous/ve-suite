@@ -38,10 +38,6 @@
 #include <osg/TexEnv>
 #include <osg/TexMat>
 #include <osg/TexGen>
-#include <strstream>
-#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
-#include <boost/filesystem/path.hpp>
-
 #include "VE_TextureBased/cfdTextureManager.h"
 #include "VE_TextureBased/cfdUpdateTextureCallback.h"
 #include "VE_TextureBased/cfdOSGTransferShaderManager.h"
