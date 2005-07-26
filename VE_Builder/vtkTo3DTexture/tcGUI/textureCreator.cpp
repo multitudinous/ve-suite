@@ -22,6 +22,7 @@
 #endif
 #include "textureCreator.h"
 #include "tcFrame.h"
+#include "VE_Xplorer/readWriteVtkThings.h"
 ////////////////////////////////////
 //Constructor                     // 
 ////////////////////////////////////
@@ -255,20 +256,21 @@ void VTKDataToTexture::createDataSetFromFile(const char* filename)
    _updateTranslationStatus(msg.c_str());
    _confirmFileType(filename);
    if(_isRGrid){
-      if(!_rgrid){
+      /*if(!_rgrid){
          _rgrid = vtkRectilinearGridReader::New();
       }
       _rgrid->SetFileName(filename);
-      _rgrid->Update();
-      setDataset(_rgrid->GetOutput());
+      _rgrid->Update();*/
+      setDataset(VE_Util::readVtkThing((char*)filename));
    }else if(_isUGrid){
-      if(!_usgrid){
+      /*if(!_usgrid){
          _usgrid = vtkUnstructuredGridReader::New();
       }
       _usgrid->SetFileName(filename);
       _usgrid->Update();
-      vtkDataSet* tmpDSet = _usgrid->GetOutput();
-
+      
+      vtkDataSet* tmpDSet = _usgrid->GetOutput();*/
+      vtkDataSet* tmpDSet = VE_Util::readVtkThing((char*)filename);
       
       //get the info about the data in the data set
       _nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
@@ -288,12 +290,13 @@ void VTKDataToTexture::createDataSetFromFile(const char* filename)
          setDataset(tmpDSet);
       }
    }else if(_isSGrid){
-      if(!_sgrid){
+      /*if(!_sgrid){
          _sgrid = vtkStructuredGridReader::New();
       }
       _sgrid->SetFileName(filename);
       _sgrid->Update();
-      setDataset(_sgrid->GetOutput());
+      setDataset(_sgrid->GetOutput());*/
+      setDataset(VE_Util::readVtkThing((char*)filename));
    }
 }
 /////////////////////////////////////////////////////////////

@@ -387,8 +387,11 @@ void TCFrame::_chooseDirectory(int style, int browseID)
             while ( cont ){
                fullPath = wxString(_inputDir) + wxString("/") +path;
                filename.Assign(fullPath);
-               if(filename.HasExt()&& (filename.GetExt()==wxString("vtk"))){
-                  _gridFiles.Add(fullPath);
+               if(filename.HasExt()){
+                  if(filename.GetExt()==wxString("vtk")||
+                    filename.GetExt()==wxString("vtu")){
+                     _gridFiles.Add(fullPath);
+                  }
                }
                cont = inputFileDirectory.GetNext(&path);
             }
@@ -430,8 +433,11 @@ void TCFrame::SetInputDirectory(const char* inDirectory)
         while ( cont ){
            fullPath = wxString(_inputDir) + wxString("/") +path;
            filename.Assign(fullPath);
-           if(filename.HasExt()&& (filename.GetExt()==wxString("vtk"))){
-              _gridFiles.Add(fullPath);
+           if(filename.HasExt()){
+              if(filename.GetExt()==wxString("vtk")||
+                 filename.GetExt()==wxString("vtu")){
+                 _gridFiles.Add(fullPath);
+              }
            }
            cont = inputFileDirectory.GetNext(&path);
         }

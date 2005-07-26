@@ -174,11 +174,11 @@ FlowPointData& FlowTexture::pixelData(int col,
    return _pointData.at(depth*(_dims[1]*_dims[0])
                    + _dims[0]*row + col);
 }
-//////////////////////////////////////////////
-//write out the flow texture data to        //
-//an ascii file it is an rgba file          //
-//w/ float data                           //
-//////////////////////////////////////////////
+////////////////////////////////////////////////////
+//write out the flow texture data to              //
+//an ascii file it is an rgba file                //
+//w/ float data                                   //
+////////////////////////////////////////////////////
 void FlowTexture::writeFlowTexture(char* file,
                                double* dataRange,
                                float* velMinMax)
@@ -225,7 +225,7 @@ void FlowTexture::writeFlowTexture(char* file,
       }
    }
 }
-
+////////////////////////////////////////////////////
 void FlowTexture::CreatFlowTextureBuffer(char* file,
                                double* dataRange,
                                float* velMinMax)
