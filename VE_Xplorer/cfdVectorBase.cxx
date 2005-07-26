@@ -101,9 +101,10 @@ cfdVectorBase::~cfdVectorBase()
 
    this->tris->Delete();
    this->tris = NULL;
-
-   this->strip = NULL;
+   
    this->strip->Delete();
+   this->strip = NULL;
+   
    
    this->mapper->Delete();
    this->mapper = NULL;
