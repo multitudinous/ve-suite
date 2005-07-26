@@ -1,6 +1,8 @@
 #include "flowTexture.h"
 #include <iostream>
 #include <fstream>
+#include <vtkZLibDataCompressor.h>
+#include <vtkUnsignedCharArray.h>
 
 //////////////////////////////
 //FlowPointData class       //
@@ -223,6 +225,77 @@ void FlowTexture::writeFlowTexture(char* file,
          }
       }
    }
+}
+
+void FlowTexture::CreatFlowTextureBuffer(char* file,
+                               double* dataRange,
+                               float* velMinMax)
+{
+   int pixelNum = 0;
+   std::ofstream fout(file,std::ios::out);
+   if(!fout.is_open()){
+      std::cout<<"Couldn't write to directory: "<<file<<std::endl;
+      return;
+   }
+   std::ostringstream dataBuffer;
+   if(_pointData.size())
+   {
+      //scalar or vector data
+      if(_pointData.at(0).type() == FlowPointData::SCALAR)
+      {
+         dataBuffer<<"s"<<std::endl;
+      }
+      else
+      {
+         dataBuffer<<"v"<<std::endl;
+      }
+      
+      if(!_dims[2])
+         _dims[2] = 1;
+
+      //range of the data values
+      if(!dataRange)
+         dataBuffer<<"0 0"<<std::endl;
+      else 
+         dataBuffer<<dataRange[0]<<" "<<dataRange[1]<<std::endl;
+      
+      //bounding box
+      dataBuffer<<_bbox[0]<<" "<<_bbox[1]<<" ";
+      dataBuffer<<_bbox[2]<<" "<<_bbox[3]<<" ";
+      dataBuffer<<_bbox[4]<<" "<<_bbox[5]<<std::endl;
+
+      //texture dimensions
+      dataBuffer<<_dims[0]<<" "<<_dims[1]<<" "<<_dims[2]<<std::endl;
+
+      //loop through and quantize the data
+      for(int k = 0; k < _dims[2]; k++)
+      {
+         for(int j = 0; j < _dims[1]; j++)
+         {
+            for(int i = 0; i < _dims[0]; i++)
+            {
+               pixelNum = k*(_dims[0]*_dims[1])
+		          + _dims[0]*j + i;
+               dataBuffer<<_pointData[pixelNum];
+               
+            }
+            dataBuffer<<std::endl;
+         }
+      }
+   }
+   // do data compressor
+
+   // Compress the data
+   vtkZLibDataCompressor* compressor = vtkZLibDataCompressor::New();
+   vtkUnsignedCharArray* compressed_data = vtkUnsignedCharArray::New();
+   const unsigned char* uncompressed_data;
+   uncompressed_data = reinterpret_cast< const unsigned char* >( dataBuffer.str().c_str() );
+   unsigned long grid_data_length = sizeof( uncompressed_data );
+   compressed_data = compressor->Compress( uncompressed_data, grid_data_length );
+   // send char* to file opened earlier
+   fout << compressed_data->GetPointer( 0 );
+   // close file
+   fout.close();
 }
 
 ////////////////////////////////////

@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <ostream>
+#include <sstream>
 
 //////////////////////////////////
 //this class represents data for//
@@ -67,6 +68,27 @@ public:
       }
       return os;
    }
+
+   inline friend std::ostringstream& operator<<(std::ostringstream& os,
+                                      const FlowPointData& fpd)
+   {
+      if(fpd._dType == FlowPointData::VECTOR){
+         os<<fpd._data[0]<<" "<<fpd._data[1]<<" "<<fpd._data[2]<<" "<<fpd._data[3]<<" ";
+      }else if(fpd._dType == FlowPointData::SCALAR){
+         os<<fpd._data[0]<<" ";
+      }
+      return os;
+   }
+   inline friend std::ostringstream& operator<<(std::ostringstream& os,
+                                      const FlowPointData* fpd)
+   {
+      if(fpd->_dType == FlowPointData::VECTOR){
+         os<<fpd->_data[0]<<" "<<fpd->_data[1]<<" "<<fpd->_data[2]<<" "<<fpd->_data[3]<<" ";
+      }else if(fpd->_dType == FlowPointData::SCALAR){
+         os<<fpd->_data[0]<<" ";
+      }
+      return os;
+   }
 protected:
    int _valid;
    DataType _dType;
@@ -102,6 +124,13 @@ public:
    //an ascii file
    //it is an rgba file w/ float data
    void writeFlowTexture(char* file,
+                       double* velRange = 0,
+                       float* minMaxVel = 0);
+
+   //write out the flow texture data to
+   //an binary file
+   //it is an rgb file w/ float data
+   void CreatFlowTextureBuffer(char* file,
                        double* velRange = 0,
                        float* minMaxVel = 0);
 
