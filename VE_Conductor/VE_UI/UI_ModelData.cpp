@@ -52,7 +52,7 @@ UI_ModelData::UI_ModelData( VjObs_ptr ref )
    }
    else
    {
-      cerr << " ERROR : App won't run " << endl;
+      std::cerr << " ERROR : App won't run " << std::endl;
       return;
    }
 

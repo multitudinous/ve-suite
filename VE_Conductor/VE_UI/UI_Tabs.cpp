@@ -60,7 +60,7 @@ void UI_Tabs::getData()
    _vectorPage = 0;
    _streamlinePage = 0;
    _navPage = 0;
-   //cout<<"Act Mod Index3: "<<_activeModIndex<<endl;
+   //std::cout<<"Act Mod Index3: "<<_activeModIndex<<std::endl;
    try
    {
    num_geo = _modelData->GetNumberOfGeomFiles(_activeModIndex);
@@ -332,7 +332,7 @@ void UI_Tabs::_initDatasetPage(UI_DatasetTab* _datasetPage)
 {
    //set the number of data sets
    if(!_datasetPage){
-      cout<<"Data set page not created yet!!!"<<endl;
+      std::cout<<"Data set page not created yet!!!"<<std::endl;
       return;
    }
    //initialize the number of datasets

@@ -119,7 +119,7 @@ void UI_DesignParTab::_onUpdate(wxCommandEvent& WXUNUSED(event))
       if ( _soundCBox->IsChecked( i ) )
          ((UI_Tabs *)_parent)->cIso_value += (int)pow( 2.0f, (float)i );
    }
-   cout << ((UI_Tabs *)_parent)->cIso_value <<endl;*/
+   std::cout << ((UI_Tabs *)_parent)->cIso_value <<std::endl;*/
    //((UI_Tabs *)_parent)->cId  = UPDATE_DESIGNPARMS;
    //((UI_Tabs *)_parent)->sendDataArrayToServer();
 }
