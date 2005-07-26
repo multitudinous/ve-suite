@@ -85,7 +85,7 @@ namespace VE_Xplorer
       vtkActor * GetCircleActor();
       vtkActor * GetStationaryArrowActor();
 	  vtkActor * GetMinMarkersActor(); //angran
-	  vtkActor * GetMaxMarkersActor(); //angan
+	  vtkActor * GetMaxMarkersActor(); //angran
       vtkActor * GetMovingArrowActor();
       vtkActor * GetLabelActor();
       vtkActor * GetText2Actor();
@@ -102,19 +102,18 @@ namespace VE_Xplorer
 	  void DefineMinMarkersActor();//angran
 	  void DefineMaxMarkersActor();//angran
 
-         VE_SceneGraph::cfdGroup* masterNode;
-         VE_SceneGraph::cfdDCS * gaugeDCS;
+		VE_SceneGraph::cfdGroup* masterNode;
+		VE_SceneGraph::cfdDCS * gaugeDCS;
 
-         VE_SceneGraph::cfdGeode* circleGeode;
-         VE_SceneGraph::cfdGeode* movingArrowGeode;
-         VE_SceneGraph::cfdGeode* stationaryArrowGeode;
-         VE_SceneGraph::cfdGeode* labelGeode;
-         VE_SceneGraph::cfdGeode* text2Geode;
-         VE_SceneGraph::cfdGeode* digitalGeode;
-         VE_SceneGraph::cfdGeode* backgroundGeode;
-	  VE_SceneGraph::cfdGeode* minMarkersGeode; //angran
-	  VE_SceneGraph::cfdGeode* maxMarkersGeode; //angran
-
+		VE_SceneGraph::cfdGeode* circleGeode;
+		VE_SceneGraph::cfdGeode* movingArrowGeode;
+		VE_SceneGraph::cfdGeode* stationaryArrowGeode;
+		VE_SceneGraph::cfdGeode* labelGeode;
+		VE_SceneGraph::cfdGeode* text2Geode;
+		VE_SceneGraph::cfdGeode* digitalGeode;
+		VE_SceneGraph::cfdGeode* backgroundGeode;
+		VE_SceneGraph::cfdGeode* minMarkersGeode; //angran
+		VE_SceneGraph::cfdGeode* maxMarkersGeode; //angran
 
       float itsX [ 3 ];
       vtkArrowSource * movingArrow;
