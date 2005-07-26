@@ -60,6 +60,7 @@ namespace VE_TextureBased
    protected:
       virtual cfdOSGShaderManager& operator=(const cfdOSGShaderManager& sm);
 
+      virtual char* _createShaderPathForFile(char* shaderFile);
       //////////////////
       //GLSL interface//
       //////////////////

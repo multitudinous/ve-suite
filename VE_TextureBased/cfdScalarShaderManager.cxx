@@ -38,6 +38,9 @@
 #include <osg/TexEnv>
 #include <osg/TexMat>
 #include <osg/TexGen>
+#include <strstream>
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
 
 #include "VE_TextureBased/cfdTextureManager.h"
 #include "VE_TextureBased/cfdUpdateTextureCallback.h"
@@ -105,17 +108,12 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("volumeData",0));
    _ss->addUniform(new osg::Uniform("transferFunction",1));
    _tUnit = 0;
-   //load the shader file 
-   char directory[1024];
-   if(_shaderDirectory){
-      strcpy(directory,_shaderDirectory);
-   }else{
-      char* vesuitehome = getenv("VE_SUITE_HOME");
-      strcpy(directory,vesuitehome);
-      strcat(directory,"/VE_TextureBased/glsl_shaders/");
+   char* fullPath = _createShaderPathForFile("scalarAdjuster.glsl");
+   if(!fullPath)
+   {
+      return;
    }
-   strcat(directory,"scalarAdjuster.glsl");
-   osg::ref_ptr<osg::Shader> scalarShader = _createGLSLShaderFromFile(directory,
+   osg::ref_ptr<osg::Shader> scalarShader = _createGLSLShaderFromFile(fullPath,
                                                                      true); 
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
    glslProgram->addShader(scalarShader.get());

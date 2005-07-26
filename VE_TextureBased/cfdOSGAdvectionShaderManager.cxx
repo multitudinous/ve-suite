@@ -37,12 +37,17 @@
 #include <osg/BlendFunc>
 #include <vector>
 #include <iostream>
+#include <string>
+#include <strstream>
 
 #include <osg/Array>
 #include "VE_TextureBased/cfdOSGAdvectionShaderManager.h"
 #include "VE_TextureBased/cfdUpdateableOSGTexture1d.h"
 #include "VE_TextureBased/cfdSimpleTextureCallback.h"
 #include "VE_TextureBased/cfdUpdateParameterCallback.h"
+
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
 using namespace VE_TextureBased;
 //#include "cfdUpdateMatrixParameterCallback.h"
 #define PI  3.1416
@@ -252,17 +257,12 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
    osg::ref_ptr<osg::Uniform> wW = new osg::Uniform("weightW",osg::Vec3f(.2,.2,.2));
    osg::ref_ptr<osg::Uniform> wV = new osg::Uniform("weightV",osg::Vec3f(.8,.8,.8));
  
-   char directory[1024];
-   if(_shaderDirectory){
-      strcpy(directory,_shaderDirectory);
-   }else{
-      char* vesuitehome = getenv("VE_SUITE_HOME");
-      strcpy(directory,vesuitehome);
-      strcat(directory,"/VE_TextureBased/glsl_shaders/");
+   char* fullPath = _createShaderPathForFile("fragAdvect.glsl");
+   if(!fullPath)
+   {
+      return;
    }
-   strcat(directory,"fragAdvect.glsl");
-
-   osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(directory,true);
+   osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(fullPath,true);
 
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
 

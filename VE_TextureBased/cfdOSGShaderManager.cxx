@@ -33,6 +33,12 @@
 #ifdef _OSG
 #include <osg/StateSet>
 #include <osg/Shader>
+#include <iostream>
+#include <strstream>
+#include <sstream>
+#include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
+#include <boost/filesystem/path.hpp>
+
 
 #include "VE_TextureBased/cfdOSGShaderManager.h"
 using namespace VE_TextureBased;
@@ -134,6 +140,65 @@ void cfdOSGShaderManager::SetShaderDirectory(char* shadDir)
    strcpy(_shaderDirectory,shadDir);
 }
 
+////////////////////////////////////////////////////////////////////
+char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
+{
+   char tempDirectory[1024];
+   std::strstream directory;
+   if(_shaderDirectory){
+      //strcpy(tempDirectory,_shaderDirectory);
+      directory<<_shaderDirectory;
+   }else{
+      //check vesuite home
+      char* vesh = getenv("VE_SUITE_HOME");
+      
+      std::ostringstream vesuitehome;
+      vesuitehome<<getenv("VE_SUITE_HOME");;
+      boost::filesystem::path ves_pth(vesuitehome.str());
+	   try
+	   {
+	      boost::filesystem::is_directory( ves_pth );
+	   }
+	   catch ( const std::exception& ex )
+	   {
+         std::cout << ex.what() << std::endl;
+         std::cout<<"Couldn't locate VE_SUITE_HOME!!"<<std::endl;
+         return 0;
+	   }
+
+      std::string glShadersDir("\\glsl_shaders\\");
+      strcpy(tempDirectory,vesuitehome.str().c_str());
+      strcat(tempDirectory,"\\VE_TextureBased\\glsl_shaders\\");
+
+      //check if the path to TextureBased directory exists
+      boost::filesystem::path devDir( tempDirectory );
+	   try
+	   {
+         //development version
+         boost::filesystem::is_directory( devDir );
+         directory<<devDir.string();
+	   }
+	   catch ( const std::exception& ex )
+	   {
+         //must be running the install version
+         std::cout << ex.what() << std::endl;
+         boost::filesystem::path instDir( std::string(vesuitehome.str()+glShadersDir));
+         try
+         {
+            boost::filesystem::is_directory( instDir );
+            directory<<instDir.string();
+         }
+         catch( const std::exception& ex )
+         {
+            std::cout << ex.what() << std::endl;
+            std::cout<<"Couldn't locate the glsl shader directory!!"<<std::endl;
+            return 0;
+         }
+	   }
+   }
+   directory<<shaderFile<<'\0';
+   return directory.str();
+}
 //////////////////////////////////////////////////////////
 //equal operator                                        //
 //////////////////////////////////////////////////////////

@@ -39,7 +39,6 @@
 #include <osg/TexMat>
 #include <osg/TexGen>
 #include <osg/AlphaFunc>
-
 #include "VE_TextureBased/cfdTextureManager.h"
 #include "VE_TextureBased/cfdUpdateTextureCallback.h"
 #include "VE_TextureBased/cfdOSGTransferShaderManager.h"
@@ -170,18 +169,12 @@ void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("mat4Func",3));
    _ss->addUniform(new osg::Uniform("densityTexture",4));
    
-   
-   //load the shader file 
-   char directory[1024];
-   if(_shaderDirectory){
-      strcpy(directory,_shaderDirectory);
-   }else{
-      char* vesuitehome = getenv("VE_SUITE_HOME");
-      strcpy(directory,vesuitehome);
-      strcat(directory,"/VE_TextureBased/glsl_shaders/");
+   char* fullPath = _createShaderPathForFile("volumeTransferFunctions.glsl");
+   if(!fullPath)
+   {
+      return;
    }
-   strcat(directory,"volumeTransferFunctions.glsl");
-   osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(directory,true); 
+   osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(fullPath,true); 
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
    glslProgram->addShader(vTransfers.get());
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),
