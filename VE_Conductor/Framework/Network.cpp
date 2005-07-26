@@ -2623,7 +2623,7 @@ void Network::UnPack(std::vector<Interface> & intfs)
 
 	      modules[num]=temp_mod;
 	      modules[num].pl_mod = (REI_Plugin *) cls->CreateObject();
-         modulet[num].pl_mod->SetID(num);
+         modules[num].pl_mod->SetID(num);
 	      modules[num].cls_name = temps;
 	   }
    
