@@ -32,7 +32,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib VE_UtilLib_tao_osg_d.lib"
+				AdditionalDependencies="vtkHybrid.lib vtkCommon.lib vtkFiltering.lib vtkGraphics.lib vtkImaging.lib vtkIO.lib vtkRendering.lib VE_UtilLib_d.lib"
 				OutputFile="$(OutDir)/Preprocessor.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"

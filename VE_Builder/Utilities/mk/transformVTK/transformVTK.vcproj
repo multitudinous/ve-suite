@@ -32,7 +32,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="VE_UtilLib_tao_osg_d.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib vtkHybrid.lib"
+				AdditionalDependencies="VE_UtilLib_d.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib vtkHybrid.lib"
 				OutputFile="$(OutDir)/transformVTK.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;"
