@@ -116,7 +116,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
    bool found=false;
    std::string masterhost;//="hawk";
 
-   for ( unsigned int i = 1; i < argc; ++i )
+   /*for ( unsigned int i = 1; i < argc; ++i )
    {
       if ( ( std::string("-VEXMaster") == std::string( argv[ i ] ) ) &&
             ( (i+1) < argc )
@@ -129,13 +129,27 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
                    << "       in the application data config file." << std::endl;
          break;
       }
+   }*/
+   
+   if ( getenv( "VEXMASTER" ) != NULL )
+   {
+   	masterhost = getenv( "VEXMASTER" );
+	std::cout << "----------------CLUSTER INFO-------------------" << std::endl;
+        std::cout << "NOTE : Be sure to specify this GUID = " << std::endl
+                  << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
+                  << "       in the application data config file." << std::endl;
+        //break;
    }
-
-   if ( masterhost.empty() )
+   else
+   {
+      std::cerr << " ERROR : The VEXMASTER environment variable must be set to run cluster" << std::endl;
+      exit( 1 );   
+   }
+   /*if ( masterhost.empty() )
    {
       std::cerr << " ERROR : If -VEXMaster is specified a computer name must follow the flag" << std::endl;
       exit( 1 );
-   }
+   }*/
 /*   if (argc>1)
    {
       strcpy(buffer, argv[1]);
