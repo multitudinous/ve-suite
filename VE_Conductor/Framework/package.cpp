@@ -756,42 +756,44 @@ DOMDocument * Package::BuildFromIntfs()
   std::vector<std::string> svals;
   GeometryInfoPackage geomvals;
 
-  for (i=0; i<intfs.size(); i++)
-  {
-     XMLCh* tcName( XMLString::transcode("name") );
-     XMLCh* tcVal( XMLString::transcode("val") );
-     transcodeResult = XMLString::transcode("interface");
-     cur_intf=doc->createElement(transcodeResult);
-     delete[] transcodeResult;
-     //sprintf(tmp, "%d", intfs[i]._category);
-     std::ostringstream dirStringStream;
-     dirStringStream << intfs[i]._category;
-     std::string dirString = dirStringStream.str();
-     transcodeResult = XMLString::transcode("category");
-     XMLCh* tc_tmp = XMLString::transcode((char*)dirString.c_str());
-     cur_intf->setAttribute(transcodeResult, tc_tmp);
-     delete[] transcodeResult;
-     delete[] tc_tmp;
-     //sprintf(tmp, "%d", intfs[i]._type);
-     dirStringStream << intfs[i]._type;
-     transcodeResult = XMLString::transcode("type");
-     tc_tmp = XMLString::transcode((char*)dirString.c_str());
-     cur_intf->setAttribute(transcodeResult, tc_tmp);
-     delete[] transcodeResult;
-     delete[] tc_tmp;
-     //sprintf(tmp, "%d", intfs[i]._id);
-     dirStringStream << intfs[i]._id;
-     transcodeResult = XMLString::transcode("id");
-     tc_tmp = XMLString::transcode((char*)dirString.c_str());
-     cur_intf->setAttribute(transcodeResult, tc_tmp);
-     root_elem->appendChild(cur_intf);
-     delete[] transcodeResult;
-     delete[] tc_tmp;
+   for (i=0; i<intfs.size(); i++)
+   {
+      XMLCh* tcName( XMLString::transcode("name") );
+      XMLCh* tcVal( XMLString::transcode("val") );
+      transcodeResult = XMLString::transcode("interface");
+      cur_intf=doc->createElement(transcodeResult);
+      delete[] transcodeResult;
 
-     //Create nodes for the double
-     var_names=intfs[i].getDoubles();
-     for (j=0; j<var_names.size(); j++)
-     {
+      std::ostringstream dirStringStream;
+      dirStringStream << intfs[i]._category;
+      transcodeResult = XMLString::transcode("category");
+      XMLCh* tc_tmp = XMLString::transcode( dirStringStream.str().c_str());
+      cur_intf->setAttribute(transcodeResult, tc_tmp);
+      delete[] transcodeResult;
+      delete[] tc_tmp;
+      dirStringStream.clear();
+
+      dirStringStream << intfs[i]._type;
+      transcodeResult = XMLString::transcode("type");
+      tc_tmp = XMLString::transcode( dirStringStream.str().c_str());
+      cur_intf->setAttribute(transcodeResult, tc_tmp);
+      delete[] transcodeResult;
+      delete[] tc_tmp;
+      dirStringStream.clear();
+
+      dirStringStream << intfs[i]._id;
+      transcodeResult = XMLString::transcode("id");
+      tc_tmp = XMLString::transcode( dirStringStream.str().c_str());
+      cur_intf->setAttribute(transcodeResult, tc_tmp);
+      root_elem->appendChild(cur_intf);
+      delete[] transcodeResult;
+      delete[] tc_tmp;
+      dirStringStream.clear();
+
+      //Create nodes for the double
+      var_names=intfs[i].getDoubles();
+      for (j=0; j<var_names.size(); j++)
+      {
          transcodeResult = XMLString::transcode("double");
          cur_elem=doc->createElement(transcodeResult);
          delete[] transcodeResult;
@@ -799,15 +801,14 @@ DOMDocument * Package::BuildFromIntfs()
          cur_elem->setAttribute(tcName, transcodeResult);
          delete[] transcodeResult;
          dval = intfs[i].getDouble(var_names[j]);
-         //sprintf(tmp,"%.10g", dval);
-         std::ostringstream dirStringStream;
+
          dirStringStream << std::setprecision(10) << dval;
-         std::string dirString = dirStringStream.str();
-         tc_tmp = XMLString::transcode(dirString.c_str());
+         tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
          cur_elem->setAttribute(tcVal, tc_tmp);
          delete[] tc_tmp;
+         dirStringStream.clear();
          cur_intf->appendChild(cur_elem);
-     }
+      }
     
      //Create nodes for the string
      var_names=intfs[i].getStrings();
@@ -820,7 +821,7 @@ DOMDocument * Package::BuildFromIntfs()
          cur_elem->setAttribute(tcName, transcodeResult);
          delete[] transcodeResult;
          sval = intfs[i].getString(var_names[j]);
-         //sprintf(tmp,"%s", sval.c_str());
+
          tc_tmp = XMLString::transcode(sval.c_str());
          cur_elem->setAttribute(tcVal, tc_tmp);
          delete[] tc_tmp;
@@ -838,12 +839,11 @@ DOMDocument * Package::BuildFromIntfs()
          cur_elem->setAttribute(tcName, transcodeResult);
          delete[] transcodeResult;
          lval = intfs[i].getInt(var_names[j]);
-         //sprintf(tmp,"%d", lval);
-         std::ostringstream dirStringStream;
+
          dirStringStream << lval;
-         std::string dirString = dirStringStream.str();
-         tc_tmp = XMLString::transcode(dirString.c_str());
+         tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
          cur_elem->setAttribute(tcVal, tc_tmp);
+         dirStringStream.clear();
          delete[] tc_tmp;
          cur_intf->appendChild(cur_elem);
      } 
@@ -861,14 +861,12 @@ DOMDocument * Package::BuildFromIntfs()
          dvals = intfs[i].getDouble1D(var_names[j]);
 	      for (k=0; k<dvals.size(); k++)
          {
-            //sprintf(tmp,"%.10g", dvals[k]);
-            std::ostringstream dirStringStream;
             dirStringStream << std::setprecision(10) << dvals[k];
-            std::string dirString = dirStringStream.str();
             tmp_elem=doc->createElement(tcVal);
-            tc_tmp = XMLString::transcode(dirString.c_str());
+            tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
             tmp_elem->appendChild(doc->createTextNode(tc_tmp));
             delete[] tc_tmp;
+            dirStringStream.clear();
             cur_elem->appendChild(tmp_elem);
 	      }
 	      cur_intf->appendChild(cur_elem);
@@ -908,20 +906,18 @@ DOMDocument * Package::BuildFromIntfs()
          cur_elem->setAttribute(tcName, transcodeResult);
          delete[] transcodeResult;
          lvals = intfs[i].getInt1D(var_names[j]);
-     for (k=0; k<lvals.size(); k++)
-     {
-         //sprintf(tmp,"%d", lvals[k]);
-         std::ostringstream dirStringStream;
-         dirStringStream << lvals[k];
-         std::string dirString = dirStringStream.str();
-	      tmp_elem=doc->createElement(tcVal);
-         tc_tmp = XMLString::transcode(dirString.c_str());
-	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
-         delete[] tc_tmp;
-         cur_elem->appendChild(tmp_elem);
-     }
-      cur_intf->appendChild(cur_elem);
-   }
+         for (k=0; k<lvals.size(); k++)
+         {
+            dirStringStream << lvals[k];
+	         tmp_elem=doc->createElement(tcVal);
+            tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
+	         tmp_elem->appendChild(doc->createTextNode(tc_tmp));
+            delete[] tc_tmp;
+            dirStringStream.clear();
+            cur_elem->appendChild(tmp_elem);
+         }
+         cur_intf->appendChild(cur_elem);
+      }
 
    //Create nodes for the GeometryInfoPackage
    var_names=intfs[i].getGeomInfoPackages();
@@ -963,36 +959,34 @@ DOMDocument * Package::BuildFromIntfs()
       transcodeResult = XMLString::transcode("LOD");
       DOMElement* LOD_elem=doc->createElement(transcodeResult);
       delete[] transcodeResult;
-      //sprintf(tmp,"%d", geomvals.GetModelType());
-      std::ostringstream dirStringStream;
+
       dirStringStream << geomvals.GetModelType();
-      std::string dirString = dirStringStream.str();
-      tc_tmp = XMLString::transcode(dirString.c_str());
+      tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
       modeltype_elem->setAttribute(tcVal, tc_tmp);
       delete[] tc_tmp;
-      //sprintf(tmp,"%s", geomvals.GetGeomFileName().c_str());
+      dirStringStream.clear();
+
       tc_tmp = XMLString::transcode(geomvals.GetGeomFileName().c_str());
       geomfilename_elem->setAttribute(tcVal, tc_tmp);
       delete[] tc_tmp;
-      //sprintf(tmp,"%d", geomvals.GetTransparencyToggle());
+
       dirStringStream << geomvals.GetTransparencyToggle();
-      tc_tmp = XMLString::transcode(dirString.c_str());
+      tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
       transparencytoggle_elem->setAttribute(tcVal, tc_tmp);
       delete[] tc_tmp;
+      dirStringStream.clear();
      
       double* temp;
       temp = geomvals.GetScales();
      
       for (k=0; k<3; k++)
       {
-	      //sprintf(tmp,"%0.10g", temp[k]);
-         std::ostringstream dirStringStream;
          dirStringStream << std::setprecision(10) << temp[k];
-         std::string dirString = dirStringStream.str();
 	      tmp_elem=doc->createElement(tcVal);
-         tc_tmp = XMLString::transcode(dirString.c_str());
+         tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
 	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
          delete[] tc_tmp;
+         dirStringStream.clear();
 	      scales_elem->appendChild(tmp_elem);
    
 	   }
@@ -1000,57 +994,50 @@ DOMDocument * Package::BuildFromIntfs()
       temp = geomvals.GetTrans();
       for (k=0; k<3; k++)
 	   {
-	      //sprintf(tmp,"%0.10g", temp[k]);
-         std::ostringstream dirStringStream;
          dirStringStream << std::setprecision(10) << temp[k];
-         std::string dirString = dirStringStream.str();
 	      tmp_elem=doc->createElement(tcVal);
-         tc_tmp = XMLString::transcode(dirString.c_str());
+         tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
 	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
          delete[] tc_tmp;
+         dirStringStream.clear();
 	      trans_elem->appendChild(tmp_elem);
 	   }
 
       temp = geomvals.GetRots();
       for (k=0; k<3; k++)
 	   {
-	      //sprintf(tmp,"%0.10g", temp[k]);
-         std::ostringstream dirStringStream;
          dirStringStream << std::setprecision(10) << temp[k];
-         std::string dirString = dirStringStream.str();
 	      tmp_elem=doc->createElement(tcVal);
-         tc_tmp = XMLString::transcode(dirString.c_str());
+         tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
 	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
          delete[] tc_tmp;
+         dirStringStream.clear();
 	      rots_elem->appendChild(tmp_elem);
 	   }
 
       temp = geomvals.GetColors();
       for (k=0; k<3; k++)
 	   {
-	      //sprintf(tmp,"%0.10g", temp[k]);
-         std::ostringstream dirStringStream;
          dirStringStream << std::setprecision(10) << temp[k];
-         std::string dirString = dirStringStream.str();
 	      tmp_elem=doc->createElement(tcVal);
-         tc_tmp = XMLString::transcode(dirString.c_str());
+         tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
 	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
          delete[] tc_tmp;
+         dirStringStream.clear();
 	      colors_elem->appendChild(tmp_elem);
 	   }
 
-      
-      //sprintf(tmp,"%d", geomvals.GetColorFlag());
       dirStringStream << geomvals.GetColorFlag();
-      tc_tmp = XMLString::transcode(dirString.c_str());
+      tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
       colorflag_elem->setAttribute(tcVal, tc_tmp);
       delete[] tc_tmp;
+      dirStringStream.clear();
      
-      //sprintf(tmp, "%0.10g", geomvals.GetLOD());
       dirStringStream << std::setprecision(10) << geomvals.GetLOD();
-      tc_tmp = XMLString::transcode(dirString.c_str());
+      tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
       LOD_elem->setAttribute(tcVal, tc_tmp);
       delete[] tc_tmp;
+      dirStringStream.clear();
 
       cur_elem->appendChild(modeltype_elem);
       cur_elem->appendChild(geomfilename_elem);

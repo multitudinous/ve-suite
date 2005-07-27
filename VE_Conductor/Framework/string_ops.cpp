@@ -3,50 +3,54 @@
 #endif
 
 #include "VE_Conductor/Framework/string_ops.h"
-//#include <cstdio>
+
 #include <sstream>
 
 bool string_to_int (const std::string &str, int &result)
 {
-  return sscanf(str.c_str(), "%d", &result) == 1;
+   if ( str.size() > 0 )
+   {
+      std::istringstream inputStream( str );
+      inputStream >> result;
+   }
+   else
+      return false;
+
+   return true;
 }
 
 bool string_to_double (const std::string &str, double &result)
 {
-  return sscanf(str.c_str(), "%lf", &result) == 1;
+   if ( str.size() > 0 )
+   {
+      std::istringstream inputStream( str );
+      inputStream >> result;
+   }
+   else
+      return false;
+
+   return true;
 }
 
 std::string to_string (int val)
 {
-  //char* s;
-  //sprintf(s, "%d", val);
   std::ostringstream dirStringStream;
   dirStringStream << val;
-  return dirStringStream.str();
-  //std::string dirString = dirStringStream.str();
-  //s = (char*)dirString.c_str();
-  //return std::string(s);
+  return std::string( dirStringStream.str() );
 }
 
 std::string to_string (unsigned int val)
 {
-  char* s;
-  //sprintf(s, "%u", val);
   std::ostringstream dirStringStream;
   dirStringStream << val;
-  std::string dirString = dirStringStream.str();
-  s = (char*)dirString.c_str();
-  return std::string(s);
+  return std::string( dirStringStream.str() );
 }
 
 std::string to_string (double val)
 {
-  char* s;
   std::ostringstream dirStringStream;
   dirStringStream << val;
-  std::string dirString = dirStringStream.str();
-  s = (char*)dirString.c_str();
-  return std::string(s);
+  return std::string( dirStringStream.str() );
 }
 
 std::vector<std::string> split_string (const std::string& str, char sep)
