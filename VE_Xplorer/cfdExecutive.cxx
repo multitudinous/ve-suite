@@ -59,6 +59,7 @@ using namespace VE_SceneGraph;
 cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
                             PortableServer::POA* child_poa )
 {
+
    this->naming_context = inputNameContext;
    try
    {
@@ -181,6 +182,7 @@ void cfdExecutive::UnbindORB()
       {
          std::cout << " cfdExecutive : Cannot Proceed! " << std::endl;
       }
+      std::cout<<"TEST7"<<std::endl;
    }
 }
 
@@ -378,7 +380,7 @@ void cfdExecutive::GetPort (std::string name)
    {
       std::cerr << "no exec found!" << std::endl;
    }
-  
+ 
    Interface intf;
   
    //intf.unpack_ids(&pt_str[0]);
@@ -400,7 +402,7 @@ void cfdExecutive::GetEverything( void )
    {
       vprDEBUG(vprDBG_ALL,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
       GetNetwork();
-  
+ 
       std::map< int, std::string >::iterator iter;
       std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
       // Add any plugins that are present in the current network
@@ -458,7 +460,6 @@ void cfdExecutive::GetEverything( void )
             _plugins[ iter->first ]->SetGeometryInterface( tempInterface );
          }
       }*/
-
               
       // Remove any plugins that aren't present in the current network
       for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); )
@@ -493,7 +494,7 @@ void cfdExecutive::GetEverything( void )
        * Now the _plugins map has been set up completely, time to add geominfo
        */
       
-     
+    
       std::map<int, Interface>::iterator itr;
       if(!_geom_map.empty()) //if we have the geom map then add into the plugin class
       {
@@ -579,13 +580,26 @@ void cfdExecutive::PreFrameUpdate( void )
 
       // record position of some key phrases...
       unsigned int pos1 = statusString.find("Network execution complete");
-      unsigned int pos2 = statusString.find("Execution is done");
+      
+      //*******************************************************************//
+      //For multiple model apps this implementation has to be changed      //
+      //We need to be able to grab the id of of the currently completed    //
+      //model and then in the loop below rather than iterating across      //
+      //all plugins set the result and activate custom viz for the         //
+      //current model id                                                   //
+      //*******************************************************************//
+      //unsigned int pos2 = statusString.find("Execution is done");
+      
       unsigned int pos3 = statusString.find("Time Step Complete");
 
       // If either of the positions are valid positions, 
       // then make results available to the graphical plugins...
-      if ( pos1 != std::string::npos || 
+
+      /*if ( pos1 != std::string::npos || 
             pos2 != std::string::npos || 
+            pos3 != std::string::npos )*/
+	    
+      if ( pos1 != std::string::npos || 
             pos3 != std::string::npos )
       {
          std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
@@ -604,7 +618,6 @@ void cfdExecutive::PreFrameUpdate( void )
             
          }
       }
-
       std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
       for ( foundPlugin = _plugins.begin(); foundPlugin != _plugins.end(); ++foundPlugin )
       {
