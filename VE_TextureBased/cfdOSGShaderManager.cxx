@@ -150,11 +150,11 @@ char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
       directory<<_shaderDirectory;
    }else{
       //check vesuite home
-      char* vesh = getenv("VE_SUITE_HOME");
-      
-      std::ostringstream vesuitehome;
-      vesuitehome<<getenv("VE_SUITE_HOME");;
-      boost::filesystem::path ves_pth(vesuitehome.str());
+      char* vesh = new char[strlen(getenv("VE_SUITE_HOME"))+1];
+      strcpy(vesh,getenv("VE_SUITE_HOME"));
+      std::string vesuitehome(vesh);
+
+      boost::filesystem::path ves_pth(vesuitehome,boost::filesystem::native);
 	   try
 	   {
 	      boost::filesystem::is_directory( ves_pth );
@@ -167,11 +167,11 @@ char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
 	   }
 
       std::string glShadersDir("\\glsl_shaders\\");
-      strcpy(tempDirectory,vesuitehome.str().c_str());
+      strcpy(tempDirectory,vesuitehome.c_str());
       strcat(tempDirectory,"\\VE_TextureBased\\glsl_shaders\\");
 
       //check if the path to TextureBased directory exists
-      boost::filesystem::path devDir( tempDirectory );
+      boost::filesystem::path devDir( tempDirectory,boost::filesystem::native );
 	   try
 	   {
          //development version
@@ -182,7 +182,7 @@ char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
 	   {
          //must be running the install version
          std::cout << ex.what() << std::endl;
-         boost::filesystem::path instDir( std::string(vesuitehome.str()+glShadersDir));
+         boost::filesystem::path instDir( std::string(vesuitehome+glShadersDir));
          try
          {
             boost::filesystem::is_directory( instDir );
@@ -196,7 +196,7 @@ char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
          }
 	   }
    }
-   directory<<shaderFile<<'\0';
+   directory<<"\\"<<shaderFile<<'\0';
    return directory.str();
 }
 //////////////////////////////////////////////////////////
