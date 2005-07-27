@@ -61,7 +61,7 @@ void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
    activateScalar( unsGrid );
 
    // remove other point data from the isosurface...
-   int len = strlen( unsGrid->GetPointData()->GetScalars()->GetName() );
+   unsigned long len = strlen( unsGrid->GetPointData()->GetScalars()->GetName() );
    char * scalarName = new char [len+1];
    strcpy( scalarName, unsGrid->GetPointData()->GetScalars()->GetName() );
    //std::cout << "scalarName = " << scalarName << std::endl;
