@@ -299,7 +299,7 @@ void Octree::Decompose( )
 	       pOctant->SetBound( bound );
 	       pOctant->SetNumberOfCells( cellsNo );
 
-		   std::cout << "Id " << i << "\t Cell no. " << cellsNo << endl;
+		   std::cout << "Id " << i << "\t Cell no. " << cellsNo << std::endl;
 
 	       // Increment to the next sibling
 	       siblingID ++;
