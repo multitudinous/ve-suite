@@ -284,13 +284,8 @@ void reiParticles::writeParticlePolyData( void ){
    transFilter->SetTransform( transform );
    transFilter->Update();
 
-   char*  contFname;
-   //sprintf( contFname, "vtkPolyData.vtk");
-   strcpy(contFname, "vtkPolyData.vtk");
-
    writer->SetInput( transFilter->GetOutput() );
-//   writer->SetInput( polydata );
-   writer->SetFileName( contFname );
+   writer->SetFileName( "vtkPolyData.vtk" );
    writer->SetFileTypeToBinary();
    writer->Write();
 

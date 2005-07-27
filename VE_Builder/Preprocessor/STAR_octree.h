@@ -472,14 +472,12 @@ void Octree::WriteOctantsData( )
      extractGrid->SetExtent( bd );
      extractGrid->Update( );
 
-  //sprintf( writer_title, "./POST_DATA/octant%d.vtk", octantGrid->GetNumberOfCells( ) );
-	 std::ostringstream dirStringStream;
-	  dirStringStream << "./POST_DATA/octant" << octantGrid->GetNumberOfCells( ) << ".vtk";
-	  std::string dirString = dirStringStream.str();
-	  //writer_title = (char*)dirString.c_str();
+   std::ostringstream dirStringStream;
+   dirStringStream << "./POST_DATA/octant" << octantGrid->GetNumberOfCells( ) << ".vtk";
+
   vtkUnstructuredGridWriter *writer = vtkUnstructuredGridWriter::New();
      writer->SetInput( extractGrid->GetOutput( ) );
-     writer->SetFileName( (char*)dirString.c_str() );
+     writer->SetFileName( dirStringStream.str().c_str() );
      writer->SetFileTypeToBinary( );
      writer->Write( );
      writer->Delete( );

@@ -463,11 +463,8 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName
             for ( int k=0; k < numComponents; k++ )
             {
                double value = dataArray->GetComponent( j, k );
-               //sprintf ( str, "%g ", value );
-			   std::ostringstream dirStringStream;
-			   dirStringStream << value << " ";
-	           //std::string dirString = dirStringStream.str();
-               //str = (char*)dirString.c_str();
+               std::ostringstream dirStringStream;
+               dirStringStream << value << " ";
                rpt << dirStringStream.str(); 
                counter++;
                if ( counter % 9 == 0 )
@@ -490,11 +487,8 @@ void VE_Util::dumpVerticesNotUsedByCells( vtkPointSet * grid, char * vtkFileName
 
       for (int k=0; k<3; k++)
       {
-         //sprintf ( str, "%g ", vertex[k] );
-		 std::ostringstream dirStringStream;
-		 dirStringStream << vertex[k] << " ";
-	     //std::string dirString = dirStringStream.str();
-         //str = (char*)dirString.c_str();
+         std::ostringstream dirStringStream;
+         dirStringStream << vertex[k] << " ";
          rpt << dirStringStream.str(); 
          counter++;
          if ( counter%9 == 0 )

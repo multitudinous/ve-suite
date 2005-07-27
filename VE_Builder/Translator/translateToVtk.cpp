@@ -487,14 +487,10 @@ char * preprocess( int argc, char *argv[],
    if ( argc > arg )
    {
       number = fileIO::extractIntegerBeforeExtension( infilename );
-      char* outFile;
-      //sprintf( outFile, "flowdata_%i.vtk", number );
-	  std::ostringstream dirStringStream;
-	  dirStringStream << "flowdata_" << number << ".vtk";
-	  std::string dirString = dirStringStream.str();
-	  outFile = (char*)dirString.c_str();
-      vtkFileName = new char [ strlen(dirString) + 1 ];
-      strcpy( vtkFileName, dirString );
+      std::ostringstream dirStringStream;
+      dirStringStream << "flowdata_" << number << ".vtk";
+      vtkFileName = new char [ strlen( dirStringStream.str().c_str() ) + 1 ];
+      strcpy( vtkFileName, dirStringStream.str().c_str() );
       arg++;
    }
    else

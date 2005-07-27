@@ -32,6 +32,7 @@
 #include "VE_Builder/Preprocessor/multiPlaneVtkOutput.h"
 #include <iostream>
 #include <fstream>
+#include <sstream>
 
 #include <vtkDataSet.h>
 #include <vtkPlane.h>
@@ -441,12 +442,9 @@ void multiPlaneVtkOutput::WritePolyData( vtkPolyData * polyData, int xyz, int i 
       else if (xyz == 2 ) sprintf( contFname, "%s/Z_Cont%03i.vtk", postDataDir, i );
    }
 */
-   std::string dirString = dirStringStream.str();
-
-   //std::cout << "contFname = " << contFname << std::endl;
 
    vtkPolyDataWriter *polyDataWriter = vtkPolyDataWriter::New();
-   polyDataWriter->SetFileName( dirString.c_str );
+   polyDataWriter->SetFileName( dirStringStream.str().c_str() );
    polyDataWriter->SetInput( polyData );
 #ifndef SJK_TEST
    polyDataWriter->SetFileTypeToBinary();
@@ -460,6 +458,7 @@ void multiPlaneVtkOutput::WriteMultiPolyData( vtkPolyData * polyData, int xyz, i
 {
    //char  contFname[50];
    //if ( i > 999 )
+   std::ostringstream dirStringStream;
    {
       if      (xyz == 0 ) dirStringStream << postDataDir << "/X_MultiCont_" << i << ".vtk";
          //sprintf( contFname, "%s/X_Cont%i.vtk", postDataDir, i );
@@ -478,10 +477,8 @@ void multiPlaneVtkOutput::WriteMultiPolyData( vtkPolyData * polyData, int xyz, i
    }
 */
 
-   //std::cout << "contFname = " << contFname << std::endl;
-
    vtkPolyDataWriter *polyDataWriter = vtkPolyDataWriter::New();
-   polyDataWriter->SetFileName( dirString.c_str );
+   polyDataWriter->SetFileName( dirStringStream.str().c_str() );
    polyDataWriter->SetInput( polyData );
 #ifndef SJK_TEST
    polyDataWriter->SetFileTypeToBinary();

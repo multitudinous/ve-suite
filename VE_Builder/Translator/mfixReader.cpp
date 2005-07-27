@@ -546,13 +546,9 @@ vtkUnstructuredGrid * mfixReader( char * mfixFileName, int nx, int ny, int nz,
       transFilter->Update();
 
       // write a vtk file
-      //char* vtkFileName;
-      //sprintf(vtkFileName, "ugrid_%s_%d.vtk", ext, writtenTimeStep);
-	  std::ostringstream dirStringStream;
-	  dirStringStream << "ugrid_" << ext << "_" << writtenTimeStep << ".vtk";
-	  std::string dirString = dirStringStream.str();
-	  //vtkFileName = (char*)dirString.c_str();
-      writeVtkThing( transFilter->GetOutput(), (char*)dirString.c_str(), 0 );   //0=ascii
+      std::ostringstream dirStringStream;
+      dirStringStream << "ugrid_" << ext << "_" << writtenTimeStep << ".vtk";
+      writeVtkThing( transFilter->GetOutput(), (char*)dirStringStream.str().c_str(), 0 );   //0=ascii
       uGrid->Delete();
 
 //      for ( i=0; i<numArrays; i++)

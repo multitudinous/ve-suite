@@ -121,15 +121,12 @@ void isosurfaceVtkOutput::writeIsosurface( vtkDataSet *unsGrid,
       vtkPolyDataNormals *normals = vtkPolyDataNormals::New();
          normals->SetInput( smoother->GetOutput() );
 
-      //sprintf( isoFname, "%s/iso_%03i.vtk", postDataDir, i );			//modified 7/18/05 by scorns
 		std::ostringstream dirStringStream;
 		dirStringStream << postDataDir << "/iso_" << std::setw(3) << ".vtk";
-		std::string dirString = dirStringStream.str();
-		//isoFname = (char*)dirString.c_str();
 
       vtkPolyDataWriter *isoWriter = vtkPolyDataWriter::New();
          isoWriter->SetInput( normals->GetOutput() );
-         isoWriter->SetFileName( (char*)dirString.c_str() );
+         isoWriter->SetFileName( dirStringStream.str().c_str() );
          isoWriter->SetFileTypeToBinary();
          isoWriter->Write();
 

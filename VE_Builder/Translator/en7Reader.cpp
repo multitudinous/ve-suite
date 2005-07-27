@@ -188,14 +188,11 @@ vtkUnstructuredGrid * en7Reader( char * caseFileName, vtkTransform * transform, 
          transFilter->SetInput( surface );
          transFilter->Update();
 
-         //sprintf (currentFilename, "%s%03i%s", "deice_", timeStep, ".vtk");
-		 std::ostringstream dirStringStream;
-		 dirStringStream << "deice_" << std::setw(3) << timeStep << ".vtk";
-		 std::string dirString = dirStringStream.str();
-		 //currentFilename = (char*)dirString.c_str();
-         std::cout << "currentFilename = \"" << (char*)dirString.c_str() << "\"" << std::endl;
+         std::ostringstream dirStringStream;
+         dirStringStream << "deice_" << std::setw(3) << timeStep << ".vtk";
+         std::cout << "currentFilename = \"" << dirStringStream.str() << "\"" << std::endl;
 
-         writeVtkThing( transFilter->GetOutput(), currentFilename, 1 ); //0=ascii
+         writeVtkThing( transFilter->GetOutput(), (char*)dirStringStream.str().c_str(), 1 ); //0=ascii
          surface->Delete();
          uGrid->Delete();
          uGrid = NULL;
