@@ -2324,8 +2324,8 @@ void Network::Pack(std::vector<Interface> & UIs)
   // second, save the the 3 lists of the modules, links and tags
   ntpk.setVal("Module_size", long(modules.size()));
   
-  for (iter=modules.begin(); iter!=modules.end(); iter++)
-    {
+   for (iter=modules.begin(); iter!=modules.end(); iter++)
+   {
       i=iter->first;
       //These are the essential information about a module
       modCls = modules[i].cls_name;
@@ -2334,42 +2334,35 @@ void Network::Pack(std::vector<Interface> & UIs)
       //The order of modules needs to be preserved for the link list and the module UI
       //the UI information of module is packed in different interface packs
 
-      //sprintf(vname, "modCls_%.4d", i);			//modified by scorns 7/14/05
-	  std::ostringstream dirStringStream;
-	  dirStringStream << "modCls_" << std::setprecision(4) << i;
-	  //std::string dirString = dirStringStream.str();
-	  //vname = (char*)dirString.c_str();
+	   std::ostringstream dirStringStream;
+	   dirStringStream << "modCls_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), modCls); // this is string
-    }
+   }
 
-  ntpk.setVal("Link_size", long(links.size()));
-  for (i=0; i<(int)links.size(); i++)
-    {
+   ntpk.setVal("Link_size", long(links.size()));
+   for (i=0; i<(int)links.size(); i++)
+   {
       lnFrMod = links[i]->Fr_mod;
       lnToMod = links[i]->To_mod;
       lnFrPort = links[i]->Fr_port;
       lnToPort = links[i]->To_port;
-      //sprintf(vname, "ln_FrMod_%.4d", i);			//modified by scorns 7/14/05
-	  std::ostringstream dirStringStream;
-	  dirStringStream << "ln_FrMod_" << std::setprecision(4) << i;
-	  //std::string dirString = dirStringStream.str();
-	  //vname = (char*)dirString.c_str();
+
+      std::ostringstream dirStringStream;
+      dirStringStream << "ln_FrMod_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnFrMod);
-      //sprintf(vname, "ln_ToMod_%.4d", i);			//modified by scorns 7/14/05
-	  //std::ostringstream dirStringStream;
-	  dirStringStream << "ln_ToMod_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
+      dirStringStream.clear();
+
+	   dirStringStream << "ln_ToMod_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnToMod);
-      //sprintf(vname, "ln_FrPort_%.4d", i);			//modified by scorns 7/14/05
-	  //std::ostringstream dirStringStream;
-	  dirStringStream << "ln_FrPort_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
+      dirStringStream.clear();
+
+	   dirStringStream << "ln_FrPort_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnFrPort);
-      //sprintf(vname, "ln_ToPort_%.4d", i);			//modified by scorns 7/14/05
-	  //std::ostringstream dirStringStream;
-	  dirStringStream << "ln_ToPort_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
+      dirStringStream.clear();
+
+	   dirStringStream << "ln_ToPort_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnToPort);
+      dirStringStream.clear();
       
       lnConX.clear();
       lnConY.clear();
@@ -2377,26 +2370,23 @@ void Network::Pack(std::vector<Interface> & UIs)
       //link cons are (x,y) wxpoint
       //here I store x in one vector and y in the other
       for (j=0; j<(int)(links[i]->cons.size()); j++)
-	{
-	  lnConX.push_back(links[i]->cons[j].x);
-	  lnConY.push_back(links[i]->cons[j].y);
-	}
-      //sprintf(vname, "ln_ConX_%.4d", i);			//modified by scorns 7/14/05
-	  //std::ostringstream dirStringStream;
-	  dirStringStream << "ln_ConX_" << std::setprecision(4) << i;
-	  //std::string dirString = dirStringStream.str();
-	  //vname = (char*)dirString.c_str();
-      ntpk.setVal(dirStringStream.str(), lnConX);
-      //sprintf(vname, "ln_ConY_%.4d", i);			//modified by scorns 7/14/05
-	  //std::ostringstream dirStringStream;
-	  dirStringStream << "ln_ConY_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
-      ntpk.setVal(dirStringStream.str(), lnConY);
-    }
+	   {
+	      lnConX.push_back(links[i]->cons[j].x);
+	      lnConY.push_back(links[i]->cons[j].y);
+	   }
 
-  ntpk.setVal("Tag_size", long(tags.size()));
-  for (i=0; i<(int)tags.size(); i++)
-    {
+	   dirStringStream << "ln_ConX_" << std::setprecision(4) << i;
+      ntpk.setVal(dirStringStream.str(), lnConX);
+      dirStringStream.clear();
+
+	   dirStringStream << "ln_ConY_" << std::setprecision(4) << i;
+      ntpk.setVal(dirStringStream.str(), lnConY);
+      dirStringStream.clear();
+   }
+
+   ntpk.setVal("Tag_size", long(tags.size()));
+   for (i=0; i<(int)tags.size(); i++)
+   {
       tagText = tags[i].text;
       tagCon0X = tags[i].cons[0].x;
       tagCon0Y = tags[i].cons[0].y;
@@ -2404,40 +2394,35 @@ void Network::Pack(std::vector<Interface> & UIs)
       tagCon1Y = tags[i].cons[1].y;
       tagBoxX = tags[i].box.x;
       tagBoxY = tags[i].box.y;
-      //sprintf(vname, "tag_Txt_%.4d", i);			//modified by scorns 7/14/05
-	  std::ostringstream dirStringStream;
-	  dirStringStream << "tag_Txt_" << std::setprecision(4) << i;
-	  //std::string dirString = dirStringStream.str();
-	  //vname = (char*)dirString.c_str();
+	  
+      std::ostringstream dirStringStream;
+      dirStringStream << "tag_Txt_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagText);
-      //sprintf(vname, "tag_Con0X_%.4d", i);			//modified by scorns 7/14/05
-	  //std::ostringstream dirStringStream;
-	  dirStringStream << "tag_Con0X_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
+      dirStringStream.clear();
+
+      dirStringStream << "tag_Con0X_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagCon0X);
-      //sprintf(vname, "tag_Con0Y_%.4d", i);			//modified by scorns 7/14/05
-	  //std::ostringstream dirStringStream;
-	  dirStringStream << "tag_Con0Y_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
+      dirStringStream.clear();
+
+      dirStringStream << "tag_Con0Y_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagCon0Y);
-      //sprintf(vname, "tag_Con1X_%.4d", i);			//modified by scorns 7/14/05
-	  //std::ostringstream dirStringStream;
-	  dirStringStream << "tag_Con1X_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
+      dirStringStream.clear();
+
+      dirStringStream << "tag_Con1X_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagCon1X);
-      //sprintf(vname, "tag_Con1Y_%.4d", i);			//modified by scorns 7/14/05
-	  //std::ostringstream dirStringStream;
-	  dirStringStream << "tag_Con1Y_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
+      dirStringStream.clear();
+
+      dirStringStream << "tag_Con1Y_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagCon1Y);
-      //sprintf(vname, "tag_BoxX_%.4d", i);			//modified by scorns 7/14/05
-	  dirStringStream << "tag_BoxX_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
+      dirStringStream.clear();
+
+      dirStringStream << "tag_BoxX_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagBoxX);
-      //sprintf(vname, "tag_BoxY_%.4d", i);			//modified by scorns 7/14/05
-	  dirStringStream << "tag_BoxY_" << std::setprecision(4) << i;
-	  //vname = (char*)dirString.c_str();
+      dirStringStream.clear();
+
+      dirStringStream << "tag_BoxY_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagBoxY);
+      dirStringStream.clear();
    }
 
    UIs.clear();
