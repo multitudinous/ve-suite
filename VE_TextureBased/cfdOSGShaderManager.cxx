@@ -34,7 +34,6 @@
 #include <osg/StateSet>
 #include <osg/Shader>
 #include <iostream>
-#include <strstream>
 #include <sstream>
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
@@ -144,7 +143,8 @@ void cfdOSGShaderManager::SetShaderDirectory(char* shadDir)
 char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
 {
    char tempDirectory[1024];
-   std::strstream directory;
+   char* charDirectory = new char[1024];
+   std::ostringstream directory;
    if(_shaderDirectory){
       //strcpy(tempDirectory,_shaderDirectory);
       directory<<_shaderDirectory;
@@ -166,9 +166,9 @@ char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
          return 0;
 	   }
 
-      std::string glShadersDir("\\glsl_shaders\\");
+      std::string glShadersDir("/glsl_shaders/");
       strcpy(tempDirectory,vesuitehome.c_str());
-      strcat(tempDirectory,"\\VE_TextureBased\\glsl_shaders\\");
+      strcat(tempDirectory,"/VE_TextureBased/glsl_shaders/");
 
       //check if the path to TextureBased directory exists
       boost::filesystem::path devDir( tempDirectory,boost::filesystem::native );
@@ -196,8 +196,9 @@ char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
          }
 	   }
    }
-   directory<<"\\"<<shaderFile<<'\0';
-   return directory.str();
+   directory<<"/"<<shaderFile<<'\0';
+   strcpy( charDirectory, directory.str().c_str() );
+   return charDirectory;
 }
 //////////////////////////////////////////////////////////
 //equal operator                                        //
