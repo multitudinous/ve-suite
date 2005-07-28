@@ -26,12 +26,15 @@ export TAO_BUILD=TRUE
 export CLUSTER_APP=TRUE
 export SCENE_GRAPH=OSG
 export VE_PATENTED=TRUE
+export VEXMASTER=ids7
 
 export PFNFYLEVEL=2
 export VPR_DEBUG_NFY_LEVEL=1
 export VPR_DEBUG_ENABLE=1
 export NO_RTRC_PLUGIN=TRUE
 export NO_PERF_PLUGIN=TRUE
+export OSG_THREAD_SAFE_REF_UNREF=1
+export OSGNOTIFYLEVEL=DEBUG_INFO
 export PFSHAREDSIZE=534773700
 export OMNIORB_CONFIG=${VE_SUITE_HOME}/VE_Installer/omniORB4.cfg
 export OMNINAMES_LOGDIR=${VE_SUITE_HOME}/VE_Installer
@@ -93,21 +96,21 @@ case "$CFDHOSTTYPE" in
 ;;
    SuSE*) 
    #echo "CFDHOSTTYPE contains SuSE"
-   export VTK_BASE_DIR=/usr/local/vtk
+   export JDK_HOME=/usr/lib/j2sdk1.4.2_03
+   export VTK_BASE_DIR=/usr/local/vtk-4.4
 
-   export VJ_BASE_DIR=/usr/local/juggler
-   export VJ_DEPS_DIR=/usr/local/juggler-deps
+   export VJ_BASE_DIR=/nfs/scratch/VE_Suite_Libs/vrjuggler-2.0.0
+   export VJ_DEPS_DIR=/nfs/scratch/VE_Suite_Libs/vrjuggler-2.0.0-deps
 
    export LD_LIBRARY_PATH=${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
-   export WX_HOME=/nfs/scratch/wxGTK
+   export WX_HOME=/nfs/scratch/Juggler_Deps/wxGTK-2.6.1/install-suse92
    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${WX_HOME}/lib
-   export OSG_HOME=/usr
-   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
+   export OSG_HOME=/nfs/scratch/VE_Suite_Libs/OSG-0.9.9
+   export LD_LIBRARY_PATH=${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins:${LD_LIBRARY_PATH}
+   export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 
    export ACE_HOME=/nfs/scratch/ACE_TAO/ACE-5.4
    export TAO_HOME=/nfs/scratch/ACE_TAO/TAO-1.4
-   export ACE_ROOT=/usr/local/ACE_wrappers
-   export TAO_ROOT=${ACE_ROOT}/TAO
    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
    export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
    export PATH=${ACE_HOME}/Linux/bin:${TAO_HOME}/Linux/bin:${PATH}
@@ -125,11 +128,12 @@ esac
 export TWEEK_BASE_DIR=${VJ_BASE_DIR}
 export DZR_BASE_DIR=${VJ_BASE_DIR}/share/Doozer
 export SNX_BASE_DIR=${VJ_BASE_DIR}
-export PATH=${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin
+export PATH=${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}:${VJ_DEPS_DIR}/bin:${PATH}
 export PATH=${WX_HOME}/bin:${PATH}
 if [ $?OSG_HOME ]; then
    export PATH=${OSG_HOME}/OpenSceneGraph/bin:${PATH}
 fi
+
 #echo ""
 #echo "Now you may type 'gmake' to build the application"
 #echo "              or 'gmake clean'

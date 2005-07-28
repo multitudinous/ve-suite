@@ -107,13 +107,16 @@ cfdTextureManager::~cfdTextureManager()
       }
       _dataFields.clear();
    }
+
    if(_types.size()){
       _types.clear();
    }
+
    if(_resolution){
       delete [] _resolution;
       _resolution = 0;
    }
+
    if(_ranges.size())
    {
       _ranges.clear();
@@ -171,6 +174,7 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
 
 
    //std::ifstream fileIn(textureFile, std::ios::in);
+   //if ( fileIn.is_open() )
    if ( fin.is_open() )
    {
 /*      unsigned long l,m, rlen, grid_data_length2;
@@ -183,7 +187,7 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
       //fileIn.open(textureFile, std::ios::in);
       //fileIn >> rlen >> grid_data_length2;
 
-      char* tempCharBuf = new char[ (m-l) ];
+      char* tempCharBuf = new char[ (m-(l+1)) ];
       // get pointer to associated buffer object
       std::filebuf *pbuf;
       pbuf=fileIn.rdbuf();
@@ -207,6 +211,9 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
       delete [] ucbuffer;
 
       std::istringstream fin( buffer );
+
+      compressor->Delete();
+      compressor = 0;
 */
       char type[16];
       DataType curType;
@@ -237,13 +244,18 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
       //bounding box
       fin>>_bbox[0]>>_bbox[1]>>_bbox[2]>>_bbox[3]>>_bbox[4]>>_bbox[5];
       
-      if(!_resolution){
+      if ( !_resolution )
+      {
          _resolution = new int[3];
       }
+
       //the dimensions  
       fin>>_resolution[0]>>_resolution[1]>>_resolution[2];
-      if(!_resolution[2]) _resolution[2] = 1; 
 
+      if ( !_resolution[2] ) 
+      {
+         _resolution[2] = 1; 
+      }
    
       double R,G,B,A;
       float alpha = 0;
@@ -251,10 +263,11 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
       int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
       unsigned char* pixels = 0;
       float invSRange = 1.0/(_range[1]-_range[0]);
-      if(curType == VECTOR){
+      if(curType == VECTOR)
+      {
          pixels = new unsigned char[nPixels*4];
          for(int p = 0; p < nPixels; p++){
-            fin>>R;
+            fin >> R;// >> G >> B >> A;
             pixels[p*4   ] = (unsigned char)R;
             fin>>G;
             pixels[p*4 + 1] = (unsigned char)G;
@@ -264,25 +277,31 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
             alpha = (A -_range[0])*invSRange;
             pixels[p*4 + 3] = (unsigned char)(alpha*255);
          }
-      }else if(curType == SCALAR){
-         //the scalar data
-         
+      }
+      else if(curType == SCALAR)
+      {
+         //the scalar data         
          float scalarValue = 0;
-         if(_useShaders){
+         if (_useShaders)
+         {
             pixels = new unsigned char[nPixels];
-         }else{
+         }
+         else
+         {
             pixels = new unsigned char[nPixels*4];
          }
-         for(int p = 0; p < nPixels; p++){
+
+         for(int p = 0; p < nPixels; p++)
+         {
             fin>>scalarValue;
             alpha = (scalarValue-_range[0])*invSRange;
             if(_useShaders)
             {
                pixels[p]  = (unsigned char)(255.0*alpha);
                //std::cout<<255.0*alpha<<std::endl;
-
-            }else{
-
+            }
+            else
+            {
                //set the scalar pixel data
                if(alpha <= .5){
                   R = 0;
@@ -304,7 +323,9 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
       }
       //add the field
       _dataFields.push_back(pixels);
-   }else{
+   }
+   else
+   {
       std::cout<<"Invalid file: "<<textureFile<<std::endl;
       std::cout<<"cfdTextureManager couldn't load new vector field!!"<<std::endl;
       return;

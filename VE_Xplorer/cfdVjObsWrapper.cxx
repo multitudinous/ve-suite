@@ -133,11 +133,11 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
    
    if ( getenv( "VEXMASTER" ) != NULL )
    {
-   	masterhost = getenv( "VEXMASTER" );
-	std::cout << "----------------CLUSTER INFO-------------------" << std::endl;
-        std::cout << "NOTE : Be sure to specify this GUID = " << std::endl
-                  << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
-                  << "       in the application data config file." << std::endl;
+      masterhost = getenv( "VEXMASTER" );
+      std::cout << "----------------CLUSTER INFO-------------------" << std::endl;
+      std::cout << "NOTE : Be sure to specify this GUID = " << std::endl
+                << "       15c09c99-ed6d-4994-bbac-83587d4400d1 " << std::endl
+                << "       in the application data config file." << std::endl;
         //break;
    }
    else
