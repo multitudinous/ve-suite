@@ -195,7 +195,8 @@ void GenCode_Graphical_Plugin()
    graphicalPluginFiles.close();
    graphicalPluginFiles.clear();
    graphicalPluginFiles.open( "../../VETEMPLATE.h" );
-   outGraphicalPlugin.open( (graphicalPluginName+".h").c_str() );
+   string ve = "VE";
+   outGraphicalPlugin.open( (ve + graphicalPluginName+".h").c_str() );
    while ( !graphicalPluginFiles.eof() )
    {   
       //store each line in the buffer       
@@ -215,7 +216,7 @@ void GenCode_Graphical_Plugin()
    graphicalPluginFiles.close();
    graphicalPluginFiles.clear();
    graphicalPluginFiles.open( "../../VETEMPLATE.cpp" );
-   outGraphicalPlugin.open( (graphicalPluginName+".cpp").c_str() );
+   outGraphicalPlugin.open( (ve + graphicalPluginName+".cpp").c_str() );
    while ( !graphicalPluginFiles.eof() )
    {   
       //store each line in the buffer       
