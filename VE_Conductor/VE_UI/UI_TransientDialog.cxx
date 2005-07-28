@@ -3,6 +3,10 @@
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
 #include <iostream>
+#include "VE_Conductor/Framework/transientIcons/play.xpm"
+#include "VE_Conductor/Framework/transientIcons/next.xpm"
+#include "VE_Conductor/Framework/transientIcons/prev.xpm"
+#include "VE_Conductor/Framework/transientIcons/stop.xpm"
 
 
 BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
@@ -29,12 +33,11 @@ UI_TransientDialog::UI_TransientDialog(int numTimeSteps,
    _tab = 0;
    //_nTimeSteps = numTimeSteps;
    _nTimeSteps = 19;
-   wxString conductorIconDir = wxString(getenv("VE_SUITE_HOME")) +
-	                   wxString("/VE_Conductor/Framework/transientIcons");
-   _playImage = new wxImage(conductorIconDir + wxString("/play.xpm"));
-   _forwardImage = new wxImage(conductorIconDir + wxString("/next.xpm"));
-   _backwardImage = new wxImage(conductorIconDir + wxString("/prev.xpm"));
-   _stopImage = new wxImage(conductorIconDir + wxString("/stop.xpm"));
+
+   _playImage = new wxImage(play_xpm);
+   _forwardImage = new wxImage(next_xpm);
+   _backwardImage = new wxImage(prev_xpm);
+   _stopImage = new wxImage(stop_xpm);
    
    _playButton = new wxBitmapButton(this, PLAY_BUTTON,
 		                           wxBitmap(_playImage),
