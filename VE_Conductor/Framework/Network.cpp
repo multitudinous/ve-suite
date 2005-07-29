@@ -2350,18 +2350,22 @@ void Network::Pack(std::vector<Interface> & UIs)
       std::ostringstream dirStringStream;
       dirStringStream << "ln_FrMod_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnFrMod);
+      dirStringStream.str("");
       dirStringStream.clear();
 
 	   dirStringStream << "ln_ToMod_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnToMod);
+      dirStringStream.str("");
       dirStringStream.clear();
 
 	   dirStringStream << "ln_FrPort_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnFrPort);
+      dirStringStream.str("");
       dirStringStream.clear();
 
 	   dirStringStream << "ln_ToPort_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnToPort);
+      dirStringStream.str("");
       dirStringStream.clear();
       
       lnConX.clear();
@@ -2377,10 +2381,12 @@ void Network::Pack(std::vector<Interface> & UIs)
 
 	   dirStringStream << "ln_ConX_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnConX);
+      dirStringStream.str("");
       dirStringStream.clear();
 
 	   dirStringStream << "ln_ConY_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), lnConY);
+      dirStringStream.str("");
       dirStringStream.clear();
    }
 
@@ -2398,30 +2404,37 @@ void Network::Pack(std::vector<Interface> & UIs)
       std::ostringstream dirStringStream;
       dirStringStream << "tag_Txt_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagText);
+      dirStringStream.str("");
       dirStringStream.clear();
 
       dirStringStream << "tag_Con0X_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagCon0X);
+      dirStringStream.str("");
       dirStringStream.clear();
 
       dirStringStream << "tag_Con0Y_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagCon0Y);
+      dirStringStream.str("");
       dirStringStream.clear();
 
       dirStringStream << "tag_Con1X_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagCon1X);
+      dirStringStream.str("");
       dirStringStream.clear();
 
       dirStringStream << "tag_Con1Y_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagCon1Y);
+      dirStringStream.str("");
       dirStringStream.clear();
 
       dirStringStream << "tag_BoxX_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagBoxX);
+      dirStringStream.str("");
       dirStringStream.clear();
 
       dirStringStream << "tag_BoxY_" << std::setprecision(4) << i;
       ntpk.setVal(dirStringStream.str(), tagBoxY);
+      dirStringStream.str("");
       dirStringStream.clear();
    }
 

@@ -771,6 +771,7 @@ DOMDocument * Package::BuildFromIntfs()
       cur_intf->setAttribute(transcodeResult, tc_tmp);
       delete[] transcodeResult;
       delete[] tc_tmp;
+      dirStringStream.str("");
       dirStringStream.clear();
 
       dirStringStream << intfs[i]._type;
@@ -779,6 +780,7 @@ DOMDocument * Package::BuildFromIntfs()
       cur_intf->setAttribute(transcodeResult, tc_tmp);
       delete[] transcodeResult;
       delete[] tc_tmp;
+      dirStringStream.str("");
       dirStringStream.clear();
 
       dirStringStream << intfs[i]._id;
@@ -788,6 +790,7 @@ DOMDocument * Package::BuildFromIntfs()
       root_elem->appendChild(cur_intf);
       delete[] transcodeResult;
       delete[] tc_tmp;
+      dirStringStream.str("");
       dirStringStream.clear();
 
       //Create nodes for the double
@@ -807,6 +810,7 @@ DOMDocument * Package::BuildFromIntfs()
          cur_elem->setAttribute(tcVal, tc_tmp);
          delete[] tc_tmp;
          dirStringStream.clear();
+         dirStringStream.str("");
          cur_intf->appendChild(cur_elem);
       }
     
@@ -844,6 +848,7 @@ DOMDocument * Package::BuildFromIntfs()
          tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
          cur_elem->setAttribute(tcVal, tc_tmp);
          dirStringStream.clear();
+         dirStringStream.str("");
          delete[] tc_tmp;
          cur_intf->appendChild(cur_elem);
      } 
@@ -867,6 +872,7 @@ DOMDocument * Package::BuildFromIntfs()
             tmp_elem->appendChild(doc->createTextNode(tc_tmp));
             delete[] tc_tmp;
             dirStringStream.clear();
+            dirStringStream.str("");
             cur_elem->appendChild(tmp_elem);
 	      }
 	      cur_intf->appendChild(cur_elem);
@@ -914,6 +920,7 @@ DOMDocument * Package::BuildFromIntfs()
 	         tmp_elem->appendChild(doc->createTextNode(tc_tmp));
             delete[] tc_tmp;
             dirStringStream.clear();
+            dirStringStream.str("");
             cur_elem->appendChild(tmp_elem);
          }
          cur_intf->appendChild(cur_elem);
@@ -964,6 +971,7 @@ DOMDocument * Package::BuildFromIntfs()
       tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
       modeltype_elem->setAttribute(tcVal, tc_tmp);
       delete[] tc_tmp;
+      dirStringStream.str("");
       dirStringStream.clear();
 
       tc_tmp = XMLString::transcode(geomvals.GetGeomFileName().c_str());
@@ -974,6 +982,7 @@ DOMDocument * Package::BuildFromIntfs()
       tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
       transparencytoggle_elem->setAttribute(tcVal, tc_tmp);
       delete[] tc_tmp;
+      dirStringStream.str("");
       dirStringStream.clear();
      
       double* temp;
@@ -986,6 +995,7 @@ DOMDocument * Package::BuildFromIntfs()
          tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
 	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
          delete[] tc_tmp;
+         dirStringStream.str("");
          dirStringStream.clear();
 	      scales_elem->appendChild(tmp_elem);
    
@@ -999,6 +1009,7 @@ DOMDocument * Package::BuildFromIntfs()
          tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
 	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
          delete[] tc_tmp;
+         dirStringStream.str("");
          dirStringStream.clear();
 	      trans_elem->appendChild(tmp_elem);
 	   }
@@ -1011,6 +1022,7 @@ DOMDocument * Package::BuildFromIntfs()
          tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
 	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
          delete[] tc_tmp;
+         dirStringStream.str("");
          dirStringStream.clear();
 	      rots_elem->appendChild(tmp_elem);
 	   }
@@ -1023,6 +1035,7 @@ DOMDocument * Package::BuildFromIntfs()
          tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
 	      tmp_elem->appendChild(doc->createTextNode(tc_tmp));
          delete[] tc_tmp;
+         dirStringStream.str("");
          dirStringStream.clear();
 	      colors_elem->appendChild(tmp_elem);
 	   }
@@ -1031,12 +1044,14 @@ DOMDocument * Package::BuildFromIntfs()
       tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
       colorflag_elem->setAttribute(tcVal, tc_tmp);
       delete[] tc_tmp;
+      dirStringStream.str("");
       dirStringStream.clear();
      
       dirStringStream << std::setprecision(10) << geomvals.GetLOD();
       tc_tmp = XMLString::transcode(dirStringStream.str().c_str());
       LOD_elem->setAttribute(tcVal, tc_tmp);
       delete[] tc_tmp;
+      dirStringStream.str("");
       dirStringStream.clear();
 
       cur_elem->appendChild(modeltype_elem);
