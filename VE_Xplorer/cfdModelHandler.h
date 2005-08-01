@@ -99,6 +99,8 @@ namespace VE_Xplorer
    #endif
    #endif
          bool GetVisOption();
+      protected:
+         vtkPolyData* _GetArrowPolyData();
       private:
          char* _param;
          cfdDataSet* activeDataset;

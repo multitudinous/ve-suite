@@ -35,6 +35,7 @@
 #include <vrj/Util/Debug.h>
 
 #include <vtkPolyDataReader.h>
+#include <vtkPolyDataNormals.h>
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 
@@ -196,27 +197,157 @@ int cfdModelHandler::GetNumberOfModels( void )
 {
    return (int)_modelList.size(); 
 }
+///////////////////////////////////////////////////
+vtkPolyData* cfdModelHandler::_GetArrowPolyData(  )
+{    
+   //this couldn't be more hardcoded!!!!--biv
+   //ripped from cfdArrow in the Utilities/arrowCreator directory
+   float shaftAngleIncrement = (3.14159265/3.0);
+   float tipAngleIncrement = (3.14159265/3.0);
+   int tipResolution = 6;
+   int shaftResolution = 6;
+   float shaftRadius = 0.03;
+   float tipRadius = 0.10;
+   float tipLength = 0.35;
+   int numCells = 12;
+
+   float vertex[3];
+   int vertexList [4];     // make large enough for rectangles
+   vtkPolyData * arrow = vtkPolyData::New();
+
+   int memSize = numCells;
+   arrow->Allocate( numCells, memSize );
+
+
+   // Work on the arrow head
+   int i;
+   vtkPoints * points = vtkPoints::New();
+   for (i=0; i<tipResolution; i++)
+   {
+      float angle = tipAngleIncrement*float(i);
+
+      //generate and store points for each triangle of the arrow head
+      vertex[0] = -tipLength;
+      vertex[1] = tipRadius*sin( angle );
+      vertex[2] = tipRadius*cos( angle );
+      vertexList[0] = points->InsertNextPoint( vertex );
+
+      vertex[0] = -tipLength;
+      vertex[1] = tipRadius*sin( angle + tipAngleIncrement );
+      vertex[2] = tipRadius*cos( angle + tipAngleIncrement );
+      vertexList[1] = points->InsertNextPoint( vertex );
+
+      vertex[0] = 0.0;
+      vertex[1] = 0.0;
+      vertex[2] = 0.0;
+      vertexList[2] = points->InsertNextPoint( vertex );
+
+      arrow->InsertNextCell( VTK_POLYGON, 3, vertexList );
+
+      if ( tipResolution==2 )     // generate crossed polygon and exit...
+      {
+         vertex[0] = -tipLength;
+         vertex[1] = tipRadius;
+         vertex[2] = 0.0;
+         vertexList[0] = points->InsertNextPoint( vertex );
+
+         vertex[0] = -tipLength;
+         vertex[1] = -tipRadius;
+         vertex[2] = 0.0;
+         vertexList[1] = points->InsertNextPoint( vertex );
+
+         vertex[0] = 0.0;
+         vertex[1] = 0.0;
+         vertex[2] = 0.0;
+         vertexList[2] = points->InsertNextPoint( vertex );
+
+         arrow->InsertNextCell( VTK_POLYGON, 3, vertexList );
+         break;
+      }
+   }
+
+   // Work on the shaft
+   for (i=0; i<shaftResolution; i++)
+   {
+      float angle = shaftAngleIncrement*float(i);
+
+      // generate and store points for each rectangle of the shaft
+      vertex[0] = -1.0;
+      vertex[1] = shaftRadius*sin( angle );
+      vertex[2] = shaftRadius*cos( angle );
+      vertexList[0] = points->InsertNextPoint( vertex );
+
+      vertex[0] = -tipLength;
+      vertex[1] = shaftRadius*sin( angle );
+      vertex[2] = shaftRadius*cos( angle );
+      vertexList[1] = points->InsertNextPoint( vertex );
+
+      vertex[0] = -tipLength;
+      vertex[1] = shaftRadius*sin( angle + shaftAngleIncrement );
+      vertex[2] = shaftRadius*cos( angle + shaftAngleIncrement );
+      vertexList[2] = points->InsertNextPoint( vertex );
+
+      vertex[0] = -1.0;
+      vertex[1] = shaftRadius*sin( angle + shaftAngleIncrement );
+      vertex[2] = shaftRadius*cos( angle + shaftAngleIncrement );
+      vertexList[3] = points->InsertNextPoint( vertex );
+
+      arrow->InsertNextCell( VTK_POLYGON, 4, vertexList );
+
+      if ( shaftResolution==2 )   // generate crossed polygon and exit...
+      {
+         vertex[0] = -1.0;
+         vertex[1] = shaftRadius;
+         vertex[2] = 0.0;
+         vertexList[0] = points->InsertNextPoint( vertex );
+
+         vertex[0] = -tipLength;
+         vertex[1] = shaftRadius;
+         vertex[2] = 0.0;
+         vertexList[1] = points->InsertNextPoint( vertex );
+
+         vertex[0] = -tipLength;
+         vertex[1] = -shaftRadius;
+         vertex[2] = 0.0;
+         vertexList[2] = points->InsertNextPoint( vertex );
+
+         vertex[0] = -1.0;
+         vertex[1] = -shaftRadius;
+         vertex[2] = 0.0;
+         vertexList[3] = points->InsertNextPoint( vertex );
+
+         arrow->InsertNextCell( VTK_POLYGON, 4, vertexList );
+         break;
+      }
+   }
+
+   arrow->SetPoints( points );
+   points->Delete();
+
+   //the normals
+   vtkPolyDataNormals * arrowPolysWithNormals = vtkPolyDataNormals::New();
+   arrowPolysWithNormals->SetInput( arrow );
+   arrow->Delete();
+   //Specify the angle that defines a sharp edge. If the difference in angle across neighboring
+   //polygons is greater than this value, the shared edge is considered "sharp".    
+   arrowPolysWithNormals->SetFeatureAngle( 60 );
+   return arrowPolysWithNormals->GetOutput();
+
+   return arrow;
+}
 ///////////////////////////////////////
 void cfdModelHandler::InitScene( void )
 {
-   // Locate and load the arrow file...
-   char * arrowFile = fileIO::GetFile( "arrow", "/VE_Xplorer/data/arrow.vtk" );
-   if ( arrowFile == NULL )
+
+   this->arrow = _GetArrowPolyData();
+
+   if(!arrow)
    {
-      std::cerr << "ERROR: The vtkPolyData arrow file could not be found\n"
-                << "       Please create one and put it in the data dir"
-                << std::endl;
-      exit( 1 );
+      std::cerr<<"Error: cfdModelHandler::InitScene()"<<std::endl;
+      std::cerr<<"Couldn't create arrow polydata!!"<<std::endl;
+      exit(1);
    }
-
-   vtkPolyDataReader * arrowReader = vtkPolyDataReader::New();
-   arrowReader->SetFileName( arrowFile );
-   arrowReader->Update();
-
-   this->arrow = vtkPolyData::New();
-   this->arrow->ShallowCopy( arrowReader->GetOutput() );
-   arrowReader->Delete();
-   delete [] arrowFile;
+   //this->arrow->ShallowCopy( tempArrow->GetPolyData());
 
    for ( unsigned int j = 0; j < _modelList.size(); j++ )
       for ( unsigned int i = 0; i < _modelList.at( j )->GetNumberOfCfdDataSets(); i++)
