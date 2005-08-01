@@ -150,52 +150,68 @@ char* cfdOSGShaderManager::_createShaderPathForFile(char* shaderFile)
       directory<<_shaderDirectory;
    }else{
       //check vesuite home
-      char* vesh = new char[strlen(getenv("VE_SUITE_HOME"))+1];
-      strcpy(vesh,getenv("VE_SUITE_HOME"));
-      std::string vesuitehome(vesh);
+      char* envCheck = getenv("VE_SUITE_HOME");
+      if(envCheck){
+         char* vesh = new char[strlen(getenv("VE_SUITE_HOME"))+1];
+         strcpy(vesh,getenv("VE_SUITE_HOME"));
+         std::string vesuitehome(vesh);
 
-      boost::filesystem::path ves_pth(vesuitehome,boost::filesystem::native);
-	   try
-	   {
-	      boost::filesystem::is_directory( ves_pth );
-	   }
-	   catch ( const std::exception& ex )
-	   {
-         std::cout << ex.what() << std::endl;
-         std::cout<<"Couldn't locate VE_SUITE_HOME!!"<<std::endl;
-         return 0;
-	   }
-
-      std::string glShadersDir("/glsl_shaders/");
-      strcpy(tempDirectory,vesuitehome.c_str());
-      strcat(tempDirectory,"/VE_TextureBased/glsl_shaders/");
-
-      //check if the path to TextureBased directory exists
-      boost::filesystem::path devDir( tempDirectory,boost::filesystem::native );
-	   try
-	   {
-         //development version
-         boost::filesystem::is_directory( devDir );
-         directory<<devDir.string();
-	   }
-	   catch ( const std::exception& ex )
-	   {
-         //must be running the install version
-         std::cout << ex.what() << std::endl;
-         boost::filesystem::path instDir( std::string(vesuitehome+glShadersDir));
-         try
-         {
-            boost::filesystem::is_directory( instDir );
-            directory<<instDir.string();
-         }
-         catch( const std::exception& ex )
-         {
+         boost::filesystem::path ves_pth(vesuitehome,boost::filesystem::native);
+	      try
+	      {
+	         boost::filesystem::is_directory( ves_pth );
+	      }
+	      catch ( const std::exception& ex )
+	      {
             std::cout << ex.what() << std::endl;
-            std::cout<<"Couldn't locate the glsl shader directory!!"<<std::endl;
+            std::cout<<"Couldn't locate VE_SUITE_HOME!!"<<std::endl;
+            return 0;
+	      }
+
+         std::string glShadersDir("/glsl_shaders/");
+         strcpy(tempDirectory,vesuitehome.c_str());
+         strcat(tempDirectory,"/VE_TextureBased/glsl_shaders/");
+         //check if the path to TextureBased directory exists
+         boost::filesystem::path devDir( tempDirectory,boost::filesystem::native );
+	      try
+	      {
+            //development version
+            boost::filesystem::is_directory( devDir );
+            directory<<devDir.string();
+         }
+	      catch ( const std::exception& ex )
+         {
+             std::cout << ex.what() << std::endl;
+             std::cout<<"Couldn't locate the glsl shader directory in VE_SUITE_HOME!!"<<std::endl;
+             return 0;
+         }
+      }else{
+         std::cout<<"Loading from install!"<<std::endl;
+         char* envCheck = getenv("VE_INSTALL_DIR");
+         if(envCheck){
+            std::cout<<"VE_INSTALL_DIR: " <<envCheck<<std::endl;
+            std::string glShadersDir("/glsl_shaders/");
+            std::string vesuiteInstall(envCheck);
+            boost::filesystem::path instDir( std::string(vesuiteInstall+glShadersDir),boost::filesystem::native);
+            try
+            {
+               boost::filesystem::is_directory( instDir );
+               directory<<instDir.string();
+            }
+            catch( const std::exception& ex )
+            {
+               std::cout << ex.what() << std::endl;
+               std::cout<<"Couldn't locate the glsl shader directory!!"<<std::endl;
+               return 0;
+            }
+         }else{
+            std::cout<<"Error!!"<<std::endl;
+            std::cout<<"VE_INSTALL_DIR not defined!!"<<std::endl;
             return 0;
          }
-	   }
+      }
    }
+   std::cout<<"Loading shaders from: "<<directory<<std::endl;
    directory<<"/"<<shaderFile<<'\0';
    strcpy( charDirectory, directory.str().c_str() );
    return charDirectory;
