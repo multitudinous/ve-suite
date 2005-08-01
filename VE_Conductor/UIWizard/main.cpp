@@ -44,12 +44,12 @@ int main(int argc, char* argv[]) //This is a Cheezy wizard. take a mod.def as in
       GenCode_Unit();
       //generate vcproj for Unit at this spot
       GenCode_Graphical_Plugin();
+	  GenVcProj_Graphical_Plugin( argv[1] );
     }
 }
 /////////////////////////////////////////////////////
 //                UI PLUGIN CODE GENERATION        //
 /////////////////////////////////////////////////////
-
 
 void GenCode_Unit()
 {
@@ -240,8 +240,43 @@ void GenCode_Graphical_Plugin()
    graphicalPluginFiles.close();
    graphicalPluginFiles.clear();
    cout<<" Done"<<endl;
-   chdir( "../" );
 }
+void GenVcProj_Graphical_Plugin( const char* defname )
+{
+	cout<<"generating vcproj file for Graphical Plugin...";
+	char buffer[BUFFER_MAX+1];
+	string vcprojName;
+	string gPluginName;
+	string modDefName;
+	ifstream inpVcproj( "../../TEMPLATEGraphicalPlugin.vcproj" );
+	vcprojName = defname;   //initialize the name of the project to that given by the user
+	unsigned int pos = vcprojName.find( ".def" );
+	vcprojName.erase( pos, 4 );
+	modDefName = vcprojName;
+	gPluginName = modDefName + "GraphicalPlugin";
+	vcprojName = vcprojName + "GraphicalPlugin.vcproj";
+	ofstream outVcproj ( vcprojName.c_str() );
+	string bufferString;
+	int counter;
+	while ( !inpVcproj.eof() )
+    {
+      inpVcproj.getline(buffer, BUFFER_MAX, '\n');
+      bufferString += buffer;      
+      //within each line look for Template and replace with  modDefName
+	  pos = bufferString.find( "TEMPLATE" );
+      if ( pos !=string::npos )
+      {
+         counter++;
+         bufferString.replace( pos, 8, gPluginName );
+      }
+      outVcproj<<bufferString<<endl;
+      
+      bufferString.clear();
+    }//finished reading end of files
+	cout<<" Done"<<endl;
+	chdir( "../" );
+}
+
 void GenVcProj_UI_Plugin( const char* defname )
 {
    cout<<"Generating vcproj file...";
