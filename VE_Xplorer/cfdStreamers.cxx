@@ -199,10 +199,10 @@ aa Assign Normals NORMALS POINT_DATA
 /*
    this->tubeFilter->SetInput( this->stream->GetOutput() );
    tubeFilter->GetOutput()->ReleaseDataFlagOn();
-
+*/
    //this->filter = vtkGeometryFilter::New();
    //this->filter->SetInput( this->tubeFilter->GetOutput() );
-*/
+
    //vtkTriangleFilter *tris = vtkTriangleFilter::New();
    //vtkStripper *strip = vtkStripper::New();
 
@@ -221,6 +221,7 @@ aa Assign Normals NORMALS POINT_DATA
       cones->GetOutput()->ReleaseDataFlagOn();
 
       append = vtkAppendPolyData::New();
+      //append->AddInput( tubeFilter->GetOutput() );
       append->AddInput( stream->GetOutput() );
       append->AddInput( cones->GetOutput() );
       append->GetOutput()->ReleaseDataFlagOn();
@@ -249,9 +250,11 @@ aa Assign Normals NORMALS POINT_DATA
       strip->SetInput(tris->GetOutput());
       strip->GetOutput()->ReleaseDataFlagOn();*/
 
+      //this->mapper->SetInput( tubeFilter->GetOutput() );
       this->mapper->SetInput( stream->GetOutput() );
    }
-   
+
+
    this->mapper->SetColorModeToMapScalars();
    this->mapper->SetScalarRange( this->GetActiveDataSet()->GetUserRange() );
    this->mapper->SetLookupTable( this->GetActiveDataSet()->GetLookupTable() );
@@ -272,6 +275,8 @@ aa Assign Normals NORMALS POINT_DATA
    }
    catch( std::bad_alloc )
    {
+      stream->Delete();
+      stream = vtkStreamLine::New();
       tubeFilter->Delete();
       tubeFilter = vtkTubeFilter::New();
       mapper->Delete();
@@ -282,7 +287,7 @@ aa Assign Normals NORMALS POINT_DATA
     
    //strip->Delete();
    //tris->Delete();
-   temp->Delete();
+   
 
    if ( streamArrows )
    {
