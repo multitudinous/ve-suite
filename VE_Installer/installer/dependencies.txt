@@ -1,0 +1,25 @@
+This is a list of the pre-compiled binaries for VE-Suite that
+are included in the install.
+All dependencies, as well as VE-Suite are compiled w/ Visual Studio 7.1(2003).
+
+wxWidgets -- Open Source GUI API.
+Visualization ToolKit (VTK) -- Open Source data handling/visualization API.
+xerces-C++ -- C++ xml parser.
+ACE/TAO -- CORBA implementation.
+OpenSceneGraph .9.9.0 -- SceneGraph handling.
+
+===============================================================================
+NOTES:
+- If ACE/TAO is selected, be sure to edit the NameService.bat file
+ (located in your VE_INSTALL_DIR\bin)
+  to call the Name_Service.exe located in VE_DEPS_DIR\bin
+
+- vrJuggler, OpenSceneGraph and Performer have pre-compiled binaries 
+  and installers available at their repspective websites.
+
+www.vrJuggler.org
+www.openscenegraph.org
+http://www.sgi.com/products/software/performer/
+
+
+ 
