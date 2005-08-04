@@ -110,6 +110,18 @@ void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::cfdDCS* worldD
 
 void cfdQuatCamHandler::WriteToFile(char* fileName)
 {
+   boost::filesystem::path dir_path( quatCamDirName );
+   try
+   {
+      ( boost::filesystem::is_directory( dir_path ) );
+   }
+   catch ( const std::exception& ex )
+	{
+	   std::cout << ex.what() << std::endl;
+      boost::filesystem::create_directory(dir_path);
+	   std::cout << "...so we made it for you..." << std::endl;
+	}
+
    std::ofstream inFile( fileName, std::ios::out );
 
    if ( fileIO::isFileReadable( fileName ) )
@@ -168,7 +180,18 @@ void cfdQuatCamHandler::WriteToFile(char* fileName)
 }
 
 void cfdQuatCamHandler::LoadFromFile( char* fileName)
-{ 
+{
+   boost::filesystem::path dir_path( quatCamDirName );
+   try
+   {
+      ( boost::filesystem::is_directory( dir_path ) );
+   }
+   catch ( const std::exception& ex )
+	{
+	   std::cout << ex.what() << std::endl;    
+	   return;
+	} 
+
    char textLine [ 256 ];
    double transpts[3];
    Matrix44f temp;
@@ -285,8 +308,8 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate*
    }
    else
    {
-      t = 0.0f;
       activecam = false;
+      t = 0.0f;
    } 
    //std::cout<<"MovementCalc: "<< movementIntervalCalc <<std::endl;    
 }
@@ -511,18 +534,6 @@ void cfdQuatCamHandler::UpdateCommand()
 void cfdQuatCamHandler::CreateObjects( void )
 {
    quatCamDirName = "./STORED_VIEWPTS";
-
-   boost::filesystem::path dir_path( quatCamDirName );
-   try
-   {
-      ( boost::filesystem::is_directory( dir_path ) );
-   }
-   catch ( const std::exception& ex )
-	{
-	   std::cout << ex.what() << std::endl;
-      boost::filesystem::create_directory(dir_path);
-	   std::cout << "...so we made it for you..." << std::endl;
-	}
 
    quatCamFileName = "./STORED_VIEWPTS/stored_viewpts_flythroughs.dat";
 
