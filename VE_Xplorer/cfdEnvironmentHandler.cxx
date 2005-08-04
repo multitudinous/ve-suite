@@ -48,6 +48,10 @@
 #include "VE_SceneGraph/cfdGroup.h"
 #include <vrj/Util/Debug.h>
 
+#ifdef _OSG
+#include "VE_Xplorer/cfdObjectHandler.h"
+#endif
+
 #include <fstream>
 #include <cstdlib>
 
@@ -77,6 +81,11 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
    }
 
    this->nav = 0;
+#ifdef VE_PATENTED
+#ifdef _OSG
+   this->objectHandler = 0;
+#endif // _OSG
+#endif // VE_PATENTED
    _readParam = 0;
    _param = 0;
 }
@@ -90,6 +99,13 @@ void cfdEnvironmentHandler::Initialize( char* param )
    _readParam = new cfdReadParam();
    this->arrow = cfdModelHandler::instance()->GetArrow();
    CreateObjects();
+
+#ifdef VE_PATENTED
+#ifdef _OSG
+   this->objectHandler = new cfdObjectHandler();
+#endif _OSG
+#endif // VE_PATENTED
+
 }
 
 void cfdEnvironmentHandler::CleanUp( void )
@@ -212,6 +228,12 @@ void cfdEnvironmentHandler::InitScene( void )
    std::cout << "| 11. Initializing...................................... pfBinaries |" << std::endl;
    this->_teacher = new cfdTeacher( std::string("STORED_FILES"), 
                                  VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS() );
+
+#ifdef VE_PATENTED
+#ifdef _OSG
+   this->objectHandler->Initialize(this->nav);
+#endif //_OSG
+#endif //VE_PATENTED
 }
 
 void cfdEnvironmentHandler::PreFrameUpdate( void )
@@ -219,6 +241,12 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
    // Update Navigation variables
    
    vprDEBUG(vprDBG_ALL,3) << "\t 1. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
+
+#ifdef VE_PATENTED
+#ifdef _OSG
+   this->objectHandler->UpdateObjectHandler();
+#endif //_OSG
+#endif //VE_PATENTED
 
    if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RESET_NAVIGATION_POSITION )         
    {

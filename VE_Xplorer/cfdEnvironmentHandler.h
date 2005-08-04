@@ -45,6 +45,11 @@ namespace VE_Xplorer
    class cfdTeacher;
    class cfdSoundHandler;
    class cfdQuatCamHandler;
+#ifdef VE_PATENTED
+#ifdef _OSG
+   class cfdObjectHandler;
+#endif // _OSG
+#endif // VE_PATENTED
 }
 
 namespace VE_SceneGraph
@@ -87,6 +92,11 @@ namespace VE_Xplorer
          cfdTeacher* _teacher;
          cfdSoundHandler* _soundHandler;
          cfdQuatCamHandler* _camHandler;
+#ifdef VE_PATENTED
+#ifdef _OSG  
+	 cfdObjectHandler* objectHandler;
+#endif //_OSG
+#endif // VE_PATENTED
          cfdCursor* cursor;
          char* _param;
          cfdCommandArray* _commandArray;
