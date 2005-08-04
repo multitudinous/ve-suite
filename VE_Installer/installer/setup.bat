@@ -1,5 +1,9 @@
 REM Edit this file to reflect your local environment for VE_Suite
 
+REM vrJuggler  
+set VJ_BASE_DIR=C:\vrjuggler-2.0.0-win32-vc71
+set VJ_DEPS_DIR=C:\vrjuggler-2.0.0-win32-vc71-deps
+
 REM where VE-Suite installed
 set VE_INSTALL_DIR=C:\VE_Suite.0.9.0
 
@@ -8,13 +12,6 @@ set VE_WORKING_DIR=%VE_INSTALL_DIR%\exampleDatasets
 
 REM the directory containing user defined plugins
 set VE_USER_PLUGIN_DIR=.\
-
-
-
-REM vrJuggler  
-set VJ_BASE_DIR=C:\vrjuggler-2.0.0-win32-vc71
-set VJ_DEPS_DIR=C:\vrjuggler-2.0.0-win32-vc71-deps
-
 
 REM VE-Suite pre-complied dependencies
 set VE_DEPS_DIR=C:\VE_Suite.0.9.0_Dependencies\
@@ -44,12 +41,12 @@ set CFDHOSTTYPE=WIN32
 REM set PHSHAREDSIZE=534773700
 
 REM juggler debug output level
-set VPR_DEBUG_ENABLE=1
-set VPR_DEBUG_NFY_LEVEL=1
+REM set VPR_DEBUG_ENABLE=1
+REM set VPR_DEBUG_NFY_LEVEL=1
 set NO_PERF_PLUGIN=TRUE
 set NO_RTRC_PLUGIN=TRUE
 set PFNFYLEVEL=0
-set OSGNOTIFYLEVEL=DEBUG_INFO
+REM set OSGNOTIFYLEVEL=DEBUG_INFO
 
 REM Juggler dependencies
 set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions
