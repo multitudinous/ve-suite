@@ -352,6 +352,9 @@
 				RelativePath=".\cfdNavigate.cxx">
 			</File>
 			<File
+				RelativePath=".\cfdObjectHandler.cxx">
+			</File>
+			<File
 				RelativePath=".\cfdObjects.cxx">
 			</File>
 			<File
