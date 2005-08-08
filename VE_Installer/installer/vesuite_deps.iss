@@ -5,7 +5,7 @@
 #define MyAppVerName "VE_Suite.0.9.0_Dependencies"
 #define MyAppPublisher "Complex Systems Virtual Engineering Group"
 #define MyAppURL "www.vrac.iastate.edu/~kmbryden/vesuite"
-
+#define VEHOME "C:\devEnv\VE_Suite"
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}
@@ -19,7 +19,7 @@ AllowNoIcons=yes
 OutputBaseFilename=vesuite_deps_setup
 Compression=lzma
 SolidCompression=true
-OutputDir=C:\devEnv\VE_Suite\VE_Installer\installer
+OutputDir={#VEHOME}\VE_Installer\installer
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
