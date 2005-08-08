@@ -445,6 +445,8 @@ void cfdExecutive::GetEverything( void )
             // Give graphical plugins access to gui variables
             _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
          }
+
+         _plugins[ iter->first ]->PreFrameUpdate();
       }
       
       // Process geom interfaces
