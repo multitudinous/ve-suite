@@ -25,7 +25,7 @@ OutputDir={#VEHOME}\VE_Installer\installer
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: ..\VTK4-Install\bin\vtkzlib.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk; Languages: 
+Source: C:\devEnv\VTK4-Install\bin\vtkzlib.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk; Languages: 
 Source: C:\devEnv\VTK4-Install\bin\vtkCommon.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
 Source: C:\devEnv\VTK4-Install\bin\vtkDICOMParser.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
 Source: C:\devEnv\VTK4-Install\bin\vtkexpat.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: vtk
@@ -109,55 +109,55 @@ Source: C:\devEnv\ACE\ACE_wrappers\bin\TAO_Valuetyped.dll; DestDir: {app}\bin; C
 Source: C:\devEnv\xerces-c-src_2_6_0\Build\Win32\VC7\Debug\xerces-c_2_6D.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
 Source: C:\devEnv\xerces-c-src_2_6_0\Build\Win32\VC7\Debug\xerces-depdom_2_6D.dll; DestDir: {app}\bin; Components: xercesc; Flags: ignoreversion
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: ..\ACE\ACE_wrappers\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
-Source: VE_Installer\installer\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\Producerd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\gdal12.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\OpenThreadsWin32d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_3dc.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_3ds.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_ac.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_bmp.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_dds.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_dw.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_flt.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_freetype.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_gdal.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_geo.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_gif.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_hdr.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_ive.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_jpeg.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_logo.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_lwo.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_lws.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_md2.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_net.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_obj.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_osg.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_osga.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_osgtgz.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_pic.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_png.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_pnm.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_rgb.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_rot.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_scale.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_stl.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_tga.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_tgz.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_tiff.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_tracker.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_trans.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_txp.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_x.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_zip.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgDBd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgIntrospection.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgUtild.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgwrapper_osg.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: ..\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_pfbd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\\ACE\ACE_wrappers\TAO\orbsvcs\Naming_Service\Naming_Service.exe; DestDir: {app}\bin; Components: acetao
+Source: {#VEHOME}\VE_Installer\installer\dependencies.txt; DestDir: {app}; Flags: isreadme; DestName: README.txt
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\Producerd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\gdal12.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\OpenThreadsWin32d.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_3dc.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_3ds.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_ac.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_bmp.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_dds.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_dw.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_flt.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_freetype.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_gdal.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_geo.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_gif.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_hdr.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_ive.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_jpeg.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_logo.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_lwo.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_lws.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_md2.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_net.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_obj.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_osg.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_osga.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_osgtgz.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_pic.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_png.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_pnm.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_rgb.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_rot.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_scale.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_stl.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_tga.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_tgz.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_tiff.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_tracker.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_trans.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_txp.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_x.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_zip.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgDBd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgIntrospection.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgUtild.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgwrapper_osg.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: C:\devEnv\OSG_.0.9.9\OpenSceneGraph\bin\osgdb_pfbd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 
 
 [Icons]
