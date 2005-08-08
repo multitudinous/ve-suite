@@ -1,3 +1,36 @@
+/*************** <auto-copyright.pl BEGIN do not edit this line> **************
+ *
+ * VE-Suite is (C) Copyright 1998-2005 by Iowa State University
+ *
+ * Original Development Team:
+ *   - ISU's Thermal Systems Virtual Engineering Group,
+ *     Headed by Kenneth Mark Bryden, Ph.D., www.vrac.iastate.edu/~kmbryden
+ *   - Reaction Engineering International, www.reaction-eng.com
+ *
+ * This library is free software; you can redistribute it and/or
+ * modify it under the terms of the GNU Library General Public
+ * License as published by the Free Software Foundation; either
+ * version 2 of the License, or (at your option) any later version.
+ *
+ * This library is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+ * Library General Public License for more details.
+ *
+ * You should have received a copy of the GNU Library General Public
+ * License along with this library; if not, write to the
+ * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+ * Boston, MA 02111-1307, USA.
+ *
+ * -----------------------------------------------------------------
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date: date $
+ * Version:       $Rev: 999999 $
+ * -----------------------------------------------------------------
+ *
+ *************** <auto-copyright.pl END do not edit this line> ***************/
+
+
 #include "VE_Conductor/VE_UI/UI_DataSetPanel.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Xplorer/cfdEnum.h"
@@ -407,8 +440,8 @@ void UI_DatasetPanel::_buildPanel()
                                   wxSL_AUTOTICKS|wxSL_LABELS); 
    _maxPercentSlider = new wxSlider(this, MAX_PER_SLIDER_PANEL,100,0,100,wxDefaultPosition, wxDefaultSize,
                                   wxSL_AUTOTICKS|wxSL_LABELS); 
-
-/*   if ( !_DataSets.empty() )
+//commented out before
+   if ( !_DataSets.empty() )
    {
       //create the two spinners
       _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
@@ -423,7 +456,7 @@ void UI_DatasetPanel::_buildPanel()
                                    _DataSets[ 0 ]->_Scalars[ 0 ]->range[ 1 ], 
                                    0.25, -1, wxEmptyString);
    }
-   else*/
+else //commented from here to first comment
    {
       //create the two spinners
       _minSpinner = new wxSpinCtrlDbl( *this, MIN_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
@@ -431,10 +464,10 @@ void UI_DatasetPanel::_buildPanel()
 
       _maxSpinner = new wxSpinCtrlDbl( *this, MAX_SPIN_CNTL_BOX, wxEmptyString, wxDefaultPosition, wxDefaultSize, 0, 
                                    0,1,1, 0.25, -1, wxEmptyString);
-      _minPercentSlider->Enable( true );
-      _maxPercentSlider->Enable( true);
-      _minSpinner->Enable( true);
-      _maxSpinner->Enable( true );
+      _minPercentSlider->Enable( false );  //set to false
+      _maxPercentSlider->Enable( false);  //set to false
+      _minSpinner->Enable( false);  //set to false
+      _maxSpinner->Enable( false );  //set to false
    }
    //sizers to pull together the scalar adjustment controls
    scalgroupmin = new wxBoxSizer(wxHORIZONTAL);
