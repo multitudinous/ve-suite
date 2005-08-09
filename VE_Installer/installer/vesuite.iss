@@ -11,6 +11,7 @@
 #define VEXplorerOSG "bin/run.osg.bat"
 #define VEXplorerOSGVEP "bin/run.osg.vep.bat"
 #define VEHOME "C:\devEnv\VE_Suite"
+#define VEVERSION "0.9.0"
 
 
 
@@ -25,7 +26,7 @@ DefaultDirName=C:\{#MyAppName}
 DefaultGroupName={#MyAppName}
 AllowNoIcons=true
 OutputDir={#VEHOME}\VE_Installer\installer
-OutputBaseFilename=vesuite_setup
+OutputBaseFilename=vesuite_{#VEVERSION}
 Compression=lzma
 SolidCompression=true
 ChangesEnvironment=true
@@ -35,7 +36,7 @@ UninstallFilesDir={app}\bin
 UninstallRestartComputer=true
 WizardImageFile=C:\Program Files\Inno Setup 5\WizModernImage.bmp
 WizardImageStretch=true
-WizardSmallImageFile=C:\Documents and Settings\biv\Desktop\vesuiteheader_1.bmp
+WizardSmallImageFile=C:\Program Files\Inno Setup 5\WizModernSmallImage.bmp
 
 [Types]
 Name: full; Description: Full installation
