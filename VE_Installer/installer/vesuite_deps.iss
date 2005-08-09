@@ -6,6 +6,7 @@
 #define MyAppPublisher "Complex Systems Virtual Engineering Group"
 #define MyAppURL "www.vrac.iastate.edu/~kmbryden/vesuite"
 #define VEHOME "C:\devEnv\VE_Suite"
+#define VEVERSION ".0.9.0"
 [Setup]
 AppName={#MyAppName}
 AppVerName={#MyAppVerName}

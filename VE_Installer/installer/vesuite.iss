@@ -33,6 +33,9 @@ ShowLanguageDialog=yes
 AlwaysRestart=false
 UninstallFilesDir={app}\bin
 UninstallRestartComputer=true
+WizardImageFile=C:\Program Files\Inno Setup 5\WizModernImage.bmp
+WizardImageStretch=true
+WizardSmallImageFile=C:\Documents and Settings\biv\Desktop\vesuiteheader_1.bmp
 
 [Types]
 Name: full; Description: Full installation
