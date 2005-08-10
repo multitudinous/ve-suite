@@ -303,8 +303,9 @@ void cfdExecutive::GetNetwork ( void )
    _geom_map.clear();
 
    std::vector<Interface>::iterator iter;
+   std::vector<Interface> interfaceVector = p.GetInterfaceVector();
    // Find network layout chunk in network structure
-   for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+   for(iter=interfaceVector.begin(); iter!=interfaceVector.end(); iter++)
    {
       if ( iter->_id == -1 ) 
       {
@@ -314,7 +315,7 @@ void cfdExecutive::GetNetwork ( void )
 
    if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
    {
-      for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
+      for(iter=interfaceVector.begin(); iter!=interfaceVector.end(); iter++)
       {
          
             if( iter->_category ==1 && iter->_type ==1 && _network->setInput(iter->_id, &(*iter))) 

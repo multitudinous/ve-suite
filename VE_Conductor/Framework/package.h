@@ -69,7 +69,8 @@ protected:
    void FillIntfs( DOMDocument *doc );
    DOMDocument* BuildFromIntfs();
 #endif // WIN32
-private:
+public:
+//private:
    std::vector<Interface> intfs; //The vector of the interfaces packed in this package.
 };
 
