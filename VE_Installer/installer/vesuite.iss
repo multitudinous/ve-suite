@@ -11,7 +11,7 @@
 #define VEXplorerPF "bin/run.pf.bat"
 #define VEXplorerOSG "bin/run.osg.bat"
 #define VEXplorerOSGVEP "bin/run.osg.vep.bat"
-
+#define VEXplorerOSGVEPC "bin/run.osg.vep.cluster.bat"
 
 [Setup]
 AppName={#MyAppName}
@@ -32,9 +32,10 @@ ShowLanguageDialog=yes
 AlwaysRestart=false
 UninstallFilesDir={app}\bin
 UninstallRestartComputer=false
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\puzzlePieceVESBIGcopy.bmp
+WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\bannerFull.bmp
 WizardImageStretch=true
-WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\puzzlePieceVES.bmp
+WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\icons.bmp
+WindowVisible=true
 
 [Types]
 Name: full; Description: Full installation
@@ -49,17 +50,18 @@ Name: vexplorer\pf; Description: Performer Graphics; Types: full
 Name: vexplorer\osg; Description: OSG Graphics; Types: full
 Name: vexplorer\osgvep; Description: OSG VE-Patented Graphics; Types: full
 ;Name: vexplorer\osgcluster; Description: OSG Cluster Graphics; Types: full
-;Name: vexplorer\osgvepcluster; Description: OSG VE-Patented Cluster Graphics; Types: full
+Name: vexplorer\osgvepcluster; Description: OSG VE-Patented Cluster Graphics; Types: full
 Name: veconductor; Description: VE-Conductor (GUI); Types: full
 Name: examples; Description: Example datasets; Types: full
 [Registry]
 
 [Tasks]
-Name: desktopNSIcon; Description: Name Server; GroupDescription: {cm:CreateDesktopIcon}; Flags: unchecked; Components: nameserver
-Name: desktopVECIcon; Description: VE-Conductor (GUI); GroupDescription: {cm:CreateDesktopIcon}; Flags: unchecked; Components: veconductor
-Name: desktopVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: {cm:CreateDesktopIcon}; Flags: unchecked; Components: vexplorer\osg
-Name: desktopVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: {cm:CreateDesktopIcon}; Flags: unchecked; Components: vexplorer\osgvep
-Name: desktopVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: {cm:CreateDesktopIcon}; Flags: unchecked; Components: vexplorer\pf
+Name: desktopNSIcon; Description: Name Server; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: nameserver
+Name: desktopVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create Desktop Icon; Flags: unchecked; Components: veconductor
+Name: desktopVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osg
+Name: desktopVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osgvep
+Name: desktopVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
+Name: desktopVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\pf
 
 ;Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked
 
@@ -79,6 +81,7 @@ Source: {#VEHOME}\VE_Installer\installer\VE-Conductor.bat; DestDir: {app}\bin; F
 Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly; Attribs: readonly
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion
+Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.cluster.bat; DestDir: {app}\bin; Components: vexplorer\osgvepcluster; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly; Attribs: readonly
 Source: {#VEHOME}\VE_TestSuite\simpleScalars\*; DestDir: {app}\exampleDatasets\simpleScalars\; Flags: recursesubdirs; Components: examples
@@ -96,7 +99,8 @@ Source: {#VEHOME}\VE_TestSuite\vtkPolyData.vtk; DestDir: {app}\exampleDatasets; 
 Source: {#VEHOME}\VE_TestSuite\SURFACE1\*; DestDir: {app}\exampleDatasets\SURFACE1\; Components: examples; Flags: recursesubdirs
 Source: {#VEHOME}\VE_TestSuite\POST_DATA1\*; DestDir: {app}\exampleDatasets\POST_DATA1; Components: examples; Flags: recursesubdirs
 Source: {#VEHOME}\VE_TestSuite\POST_DATA2\*; DestDir: {app}\\exampleDatasets\POST_DATA2; Components: examples; Flags: recursesubdirs
-Source: {#VEHOME}\VE_Installer\installer\installerImages\puzzlePieceVES.bmp; DestDir: {app}\images; DestName: vesSmallIcon.bmp
+Source: {#VEHOME}\VE_Installer\installer\installerImages\icons.bmp; DestDir: {app}\images; DestName: vesSmallIcon.bmp
+Source: {#VEHOME}\bin\win32\project_tao_osg_vep_cluster_d.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: vexplorer\osgvepcluster
 [Icons]
 Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
@@ -106,10 +110,13 @@ Name: {group}\VE-Conductor; Filename: {app}\{#VEConductor}; WorkingDir: {app}; C
 Name: {group}\VE-Xplorer-OSG; Filename: {app}\{#VEXplorerOSG}; WorkingDir: {app}; Components: vexplorer\osg; IconFilename: {app}\images\vesSmallIcon.bmp
 
 Name: {group}\VE-Xplorer-OSG_VEP; Filename: {app}\{#VEXplorerOSGVEP}; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp
+Name: {group}\VE-Xplorer-OSG_VEPC; Filename: {app}\{#VEXplorerOSGVEPC}; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
 
 Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {userdesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {userdesktop}\VE-Conductor; Filename: {app}\bin\VE-Conductor.bat; WorkingDir: {app}; Components: veconductor; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {userdesktop}\VE-Xplorer-OSG; Filename: {app}\bin\run.osg.bat; WorkingDir: {app}; Components: vexplorer\osg; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {userdesktop}\VE-Xplorer-OSG_VEP; Filename: {app}\bin\run.osg.vep.bat; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp
+Name: {userdesktop}\VE-Xplorer-OSG_VEPC; Filename: {app}\bin\run.osg.vep.cluster.bat; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
+
 Name: {userdesktop}\VE-Xplorer-PF; Filename: {app}\bin\run.pf.bat; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp

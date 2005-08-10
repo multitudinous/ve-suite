@@ -17,13 +17,14 @@ AppSupportURL={#MyAppURL}
 AppUpdatesURL={#MyAppURL}
 DefaultDirName=C:\{#MyAppName}
 DefaultGroupName={#MyAppName}
-AllowNoIcons=yes
+AllowNoIcons=true
 OutputBaseFilename=vesuite_deps{#VEVERSION}
 Compression=lzma
 SolidCompression=true
 OutputDir={#VEHOME}\VE_Installer\installer
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\puzzlePieceVESBIGcopy.bmp
-WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\puzzlePieceVES.bmp
+WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\bannerFull.bmp
+WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\icons.bmp
+WindowVisible=true
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
