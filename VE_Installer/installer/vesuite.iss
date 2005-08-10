@@ -79,7 +79,7 @@ Source: {#VEHOME}\VE_Installer\installer\VE-Conductor.bat; DestDir: {app}\bin; F
 Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly; Attribs: readonly
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}; Components: vexplorer
+Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}
 Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly; Attribs: readonly
 Source: {#VEHOME}\VE_TestSuite\simpleScalars\*; DestDir: {app}\exampleDatasets\simpleScalars\; Flags: recursesubdirs; Components: examples
 Source: {#VEHOME}\VE_TestSuite\2scl.vtk; DestDir: {app}\exampleDatasets\; Components: examples
