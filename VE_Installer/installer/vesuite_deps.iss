@@ -50,6 +50,7 @@ Source: {#VTKHOME}\bin\vtktiff.dll; DestDir: {app}\bin; Flags: ignoreversion; Co
 Source: {#WXHOME}\lib\vc_dll\wxbase26d_vc_custom.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: wxwidgets
 Source: {#WXHOME}\lib\vc_dll\wxmsw26d_core_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
 Source: {#WXHOME}\lib\vc_dll\wxmsw26d_gl_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
+Source: {#WXHOME}\lib\vc_dll\wxmsw26d_adv_vc_custom.dll; DestDir: {app}\bin; Components: wxwidgets; Flags: ignoreversion
 Source: {#ACETAOHOME}\bin\TAOd.dll; DestDir: {app}\bin; Flags: ignoreversion; Components: acetao
 Source: {#ACETAOHOME}\bin\gperf.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion
 Source: {#ACETAOHOME}\bin\tao_idl.exe; DestDir: {app}\bin; Components: acetao; Flags: ignoreversion

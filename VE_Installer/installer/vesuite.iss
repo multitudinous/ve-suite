@@ -101,6 +101,7 @@ Source: {#VEHOME}\VE_TestSuite\POST_DATA1\*; DestDir: {app}\exampleDatasets\POST
 Source: {#VEHOME}\VE_TestSuite\POST_DATA2\*; DestDir: {app}\\exampleDatasets\POST_DATA2; Components: examples; Flags: recursesubdirs
 Source: {#VEHOME}\VE_Installer\installer\installerImages\icons.bmp; DestDir: {app}\images; DestName: vesSmallIcon.bmp
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_cluster_d.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: vexplorer\osgvepcluster
+Source: {#VEHOME}\bin\win32\WinClientd.exe.manifest; DestDir: {app}\bin
 [Icons]
 Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
