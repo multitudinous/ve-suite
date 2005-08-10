@@ -445,7 +445,7 @@ void Network::OnAddLinkCon(wxCommandEvent& WXUNUSED(event))
    int n;
    int num;
   
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
+   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
    DrawLink(links[m_selLink], false);
 
   n = links[m_selLink]->cons.size()+2;
@@ -540,7 +540,7 @@ void Network::OnDelTag(wxCommandEvent& WXUNUSED(event))
   answer=wxMessageBox("Do you really want to delete this tag?", "Confirmation", wxYES_NO);
   if (answer!=wxYES)
     return;
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
+  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
   for (iter=tags.begin(), i=0; iter!=tags.end(); iter++, i++)
     if (i==m_selTag)
       {
@@ -564,7 +564,7 @@ void Network::OnDelLink(wxCommandEvent& WXUNUSED(event))
   answer=wxMessageBox("Do you really want to delete this link?", "Confirmation", wxYES_NO);
   if (answer!=wxYES)
     return;
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
+  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
    for (miter=modules.begin(); miter!=modules.end(); miter++)
    {
       i=miter->first;
@@ -599,7 +599,7 @@ void Network::OnDelLinkCon(wxCommandEvent& WXUNUSED(event))
   if (answer!=wxYES)
     return;
 
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
+  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
   DrawLinkCon(*links[m_selLink], false);
 
   for (iter=links[m_selLink]->cons.begin(), i=0; iter!=links[m_selLink]->cons.end(); iter++, i++)
@@ -1635,7 +1635,7 @@ void Network::DropTag(int x, int y, int t, wxDC &dc)
 
 void Network::AddTag(int x, int y, wxString text)
 {
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
+  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
   TAG t;
   int w, h;
   wxClientDC dc(this);
@@ -1667,7 +1667,7 @@ void Network::AddTag(int x, int y, wxString text)
 //////////////////////////////////////////////////////////////
 void Network::AddtoNetwork(REI_Plugin *cur_module, std::string cls_name)
 {
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
+  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
   MODULE mod;
   POLY tmpPoly;
   int num;
@@ -2335,7 +2335,7 @@ void Network::Pack(std::vector<Interface> & UIs)
       //the UI information of module is packed in different interface packs
 
 	   std::ostringstream dirStringStream;
-	   dirStringStream << "modCls_" << std::setprecision(4) << i;
+	   dirStringStream << "modCls_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), modCls); // this is string
    }
 
@@ -2348,22 +2348,22 @@ void Network::Pack(std::vector<Interface> & UIs)
       lnToPort = links[i]->To_port;
 
       std::ostringstream dirStringStream;
-      dirStringStream << "ln_FrMod_" << std::setprecision(4) << i;
+      dirStringStream << "ln_FrMod_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), lnFrMod);
       dirStringStream.str("");
       dirStringStream.clear();
 
-	   dirStringStream << "ln_ToMod_" << std::setprecision(4) << i;
+	   dirStringStream << "ln_ToMod_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), lnToMod);
       dirStringStream.str("");
       dirStringStream.clear();
 
-	   dirStringStream << "ln_FrPort_" << std::setprecision(4) << i;
+	   dirStringStream << "ln_FrPort_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), lnFrPort);
       dirStringStream.str("");
       dirStringStream.clear();
 
-	   dirStringStream << "ln_ToPort_" << std::setprecision(4) << i;
+	   dirStringStream << "ln_ToPort_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), lnToPort);
       dirStringStream.str("");
       dirStringStream.clear();
@@ -2379,12 +2379,12 @@ void Network::Pack(std::vector<Interface> & UIs)
 	      lnConY.push_back(links[i]->cons[j].y);
 	   }
 
-	   dirStringStream << "ln_ConX_" << std::setprecision(4) << i;
+	   dirStringStream << "ln_ConX_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), lnConX);
       dirStringStream.str("");
       dirStringStream.clear();
 
-	   dirStringStream << "ln_ConY_" << std::setprecision(4) << i;
+	   dirStringStream << "ln_ConY_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), lnConY);
       dirStringStream.str("");
       dirStringStream.clear();
@@ -2402,37 +2402,37 @@ void Network::Pack(std::vector<Interface> & UIs)
       tagBoxY = tags[i].box.y;
 	  
       std::ostringstream dirStringStream;
-      dirStringStream << "tag_Txt_" << std::setprecision(4) << i;
+      dirStringStream << "tag_Txt_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), tagText);
       dirStringStream.str("");
       dirStringStream.clear();
 
-      dirStringStream << "tag_Con0X_" << std::setprecision(4) << i;
+      dirStringStream << "tag_Con0X_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), tagCon0X);
       dirStringStream.str("");
       dirStringStream.clear();
 
-      dirStringStream << "tag_Con0Y_" << std::setprecision(4) << i;
+      dirStringStream << "tag_Con0Y_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), tagCon0Y);
       dirStringStream.str("");
       dirStringStream.clear();
 
-      dirStringStream << "tag_Con1X_" << std::setprecision(4) << i;
+      dirStringStream << "tag_Con1X_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), tagCon1X);
       dirStringStream.str("");
       dirStringStream.clear();
 
-      dirStringStream << "tag_Con1Y_" << std::setprecision(4) << i;
+      dirStringStream << "tag_Con1Y_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), tagCon1Y);
       dirStringStream.str("");
       dirStringStream.clear();
 
-      dirStringStream << "tag_BoxX_" << std::setprecision(4) << i;
+      dirStringStream << "tag_BoxX_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), tagBoxX);
       dirStringStream.str("");
       dirStringStream.clear();
 
-      dirStringStream << "tag_BoxY_" << std::setprecision(4) << i;
+      dirStringStream << "tag_BoxY_" << std::setprecision(4) << std::setfill( '0' ) << i;
       ntpk.setVal(dirStringStream.str(), tagBoxY);
       dirStringStream.str("");
       dirStringStream.clear();
@@ -2466,11 +2466,11 @@ void Network::Pack(std::vector<Interface> & UIs)
 
 void Network::UnPack(std::vector<Interface> & intfs)
 {
-   int _id;
+   int _id = 0;
    Interface ntpk;
    std::vector<std::string> vars;
-   long temp;
-   double tempd;
+   long temp = 0;
+   double tempd = 0;
    std::string temps;
    std::vector<long> templ1d;
    int pos, ii, j, num, polynum;
@@ -2484,7 +2484,7 @@ void Network::UnPack(std::vector<Interface> & intfs)
    int modsize = 0;
    MODULE temp_mod;
 
-   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
+   while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR){;}
 
    for (i=0; i< links.size(); i++)
    {
@@ -2747,7 +2747,7 @@ void Network::Save(wxString filename)
   std::vector<Interface> UIs;
 
   Package p;
-  Pack(p.intfs);
+  Pack(p.GetInterfaceVector());
 
   p.SetPackName("Network");
   p.SetSysId(filename.c_str());
@@ -2760,7 +2760,7 @@ void Network::SaveS(std::string &network_pack)
 {
   //Actually write it to file
   Package p;
-  Pack(p.intfs);
+  Pack(p.GetInterfaceVector());
 
   p.SetPackName("Network");
   p.SetSysId("test.xml");
@@ -2775,7 +2775,7 @@ void Network::New()
   int i;
   std::map<int, MODULE>::iterator iter;
 
-  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);;
+  while (s_mutexProtect.Lock()!=wxMUTEX_NO_ERROR);
   
   for (i=0; i< (int)links.size(); i++)
     delete links[i];
@@ -2798,13 +2798,18 @@ void Network::New()
 ////////////////////////////////////////////////////////
 void Network::Load(wxString filename)
 {
+	wxString tempWx( filename );
   Package p;
-  p.SetSysId(filename.c_str());
+  //wxString tempWx = filename;
+
+  std::string tempString( filename );
+  p.SetSysId( tempString.c_str());
   p.Load();
 
   intfssize= p.GetIntfsNum();
 
-  UnPack(p.intfs);
+  UnPack(p.GetInterfaceVector());
+ //delete p;
 
 }
 
@@ -2817,7 +2822,7 @@ void Network::LoadS(const char* inputs)
   {
 	p.Load(inputs, strlen(inputs));
    intfssize = p.GetIntfsNum();
-	UnPack(p.intfs);
+	UnPack(p.GetInterfaceVector());
   }
 }
 
@@ -2845,7 +2850,7 @@ void  Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
       p.SetSysId("linkresult.xml");
 
       p.Load(linkresult, strlen(linkresult));
-      port_dlg = modules[mod].pl_mod->PortData(NULL,  &(p.intfs[0]));
+      port_dlg = modules[mod].pl_mod->PortData(NULL,  &(p.GetInterfaceVector()[0]));
       
       //std::cout<<linkresult<<std::endl;
       if (port_dlg!=NULL)
@@ -2884,7 +2889,7 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
       p.SetSysId("linkresult.xml");
       p.Load(result, strlen(result));
 
-      modules[m_selMod].pl_mod->UnPackResult(&p.intfs[0]);
+      modules[m_selMod].pl_mod->UnPackResult(&p.GetInterfaceVector()[0]);
       UIDialog * hello;
       hello = modules[m_selMod].pl_mod->Result(NULL);
       

@@ -63,7 +63,7 @@ class Network : public wxScrolledWindow
 {
   //DECLARE_DYNAMIC_CLASS(Network)
  public:
-  Network() {};
+  Network(){;}
   Network(wxWindow* parent, int id);
   ~Network();
   double m_xUserScale, m_yUserScale; //Zoom Factor

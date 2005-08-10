@@ -4,13 +4,8 @@
 #include <string>
 #include "string_ops.h"
 
-#ifdef _WIN32
-#pragma warning(disable : 4786)
-#pragma warning(disable : 4101)
-#pragma warning(disable : 4503)
-#endif
-
-class packable {
+class packable 
+{
 
 public:
 

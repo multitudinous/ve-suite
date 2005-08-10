@@ -1,6 +1,7 @@
 #include "VE_Conductor/Framework/Geometry.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Conductor/Framework/interface.h"
+#include "VE_Conductor/Framework/GeometryDataManager.h"
 
 #include <iostream>
 #include <string>
@@ -10,13 +11,39 @@
 Geometry::Geometry(int id)
 {
      this->cur_moduleid = id;
+   mod_pack = new Interface();
 }
 
 void Geometry::SetID(int id)
 {
-   mod_pack._id =id;
+   mod_pack->_id =id;
 }
 
+Geometry::~Geometry()
+{
+   delete mod_pack;
+}
+
+Geometry::Geometry( const Geometry& input )
+{
+   this->_geominfopackagemap = _geominfopackagemap;
+   this->mod_pack = new Interface( (*input.mod_pack) );
+}
+
+Geometry& Geometry::operator= ( const Geometry& input )
+{
+   if ( this != &input )
+   {
+      this->_geominfopackagemap = _geominfopackagemap;
+
+      delete this->mod_pack;
+      this->mod_pack = new Interface( (*input.mod_pack) );
+
+      this->cur_moduleid = input.cur_moduleid;
+      this->cur_modulename = input.cur_modulename; 
+   }
+   return *this;
+}
 
 void Geometry::UnPack( Interface* intf )
 {
@@ -28,14 +55,13 @@ void Geometry::UnPack( Interface* intf )
    GeometryInfoPackage temppackage;
    
    unsigned int i;
-   long temp;
+   //long temp;
 
-   mod_pack = *intf;
-   vars = mod_pack.getGeomInfoPackages();
+   vars = intf->getGeomInfoPackages();
    bool rv =true;
    for(i=0;i<vars.size();i++)
    {
-      temppackage = mod_pack.getGeomInfoPackage(vars[i], &rv);
+      temppackage = intf->getGeomInfoPackage(vars[i], &rv);
       templist.push_back(temppackage);
       
    }
@@ -50,19 +76,19 @@ Interface* Geometry::Pack( void )
      
    SetCurModuleGeomInfoPackage();
 
-   mod_pack._type = 2; //Module
-   mod_pack._category = 1; // normal modules
-   mod_pack._id = cur_moduleid;
+   mod_pack->_type = 2; //Module
+   mod_pack->_category = 1; // normal modules
+   mod_pack->_id = cur_moduleid;
 
    std::map<std::string, GeometryInfoPackage>::iterator iter;
    
    for(iter=_geominfopackagemap.begin();iter!=_geominfopackagemap.end();iter++)
    {
-      mod_pack.setGeomInfoPackage(iter->first, iter->second);
+      mod_pack->setGeomInfoPackage(iter->first, iter->second);
 
    }
 
-   return &mod_pack;
+   return mod_pack;
 }
 
 void Geometry::SetCurModuleGeomInfoPackage()

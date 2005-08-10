@@ -6,9 +6,9 @@
 #include "VE_Installer/include/VEConfig.h"
 
 #ifdef _WIN32
-#pragma warning(disable : 4786)
-#pragma warning(disable : 4101)
-#pragma warning(disable : 4503)
+//#pragma warning(disable : 4786)
+//#pragma warning(disable : 4101)
+//#pragma warning(disable : 4503)
 #endif
 
 VE_CONDUCTOR_EXPORTS bool string_to_int    (const std::string &str, int &result);

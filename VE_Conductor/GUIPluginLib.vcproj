@@ -84,7 +84,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(VE_SUITE_HOME)\VE_Conductor\Framework&quot;;&quot;$(WX_HOME)\include&quot;;&quot;$(WX_HOME)\lib\vc_dll\mswd&quot;;&quot;$(XERCESCROOT)\src&quot;;..\;&quot;$(VE_SUITE_HOME)\VE_Xplorer&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;VE_GUIPLUGINS_LIBRARY;_USRDLL;DLL_EXPORTS;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;VE_GUIPLUGINS_LIBRARY;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -149,6 +149,12 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\FinancialDialog.cpp">
 			</File>
 			<File
+				RelativePath=".\Framework\Geometry.cpp">
+			</File>
+			<File
+				RelativePath=".\Framework\GeometryDataManager.cpp">
+			</File>
+			<File
 				RelativePath=".\Framework\GeometryDialog.cpp">
 			</File>
 			<File
@@ -180,7 +186,22 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
+				RelativePath=".\Framework\Geometry.h">
+			</File>
+			<File
+				RelativePath=".\Framework\GeometryDataManager.h">
+			</File>
+			<File
 				RelativePath=".\Framework\GeometryDialog.h">
+			</File>
+			<File
+				RelativePath=".\Framework\Plugin_base.h">
+			</File>
+			<File
+				RelativePath=".\Framework\TexTable.h">
+			</File>
+			<File
+				RelativePath=".\Framework\UIDialog.h">
 			</File>
 		</Filter>
 		<Filter

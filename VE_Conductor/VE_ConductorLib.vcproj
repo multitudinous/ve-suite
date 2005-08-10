@@ -84,7 +84,7 @@
 				Name="VCCLCompilerTool"
 				Optimization="0"
 				AdditionalIncludeDirectories="&quot;$(XERCESCROOT)\src&quot;;&quot;$(VE_SUITE_HOME)&quot;"
-				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;VE_CONDUCTOR_LIBRARY;_USRDLL;DLL_EXPORTS;WINDLL_EXPORTS;_REENTRANT;_STLP_USE_OWN_NAMESPACE"
+				PreprocessorDefinitions="_DEBUG;WIN32;_WINDOWS;__WXDEBUG__;WXUSINGDLL;VE_CONDUCTOR_LIBRARY;_USRDLL"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
@@ -146,13 +146,7 @@
 			Name="Source Files"
 			Filter="cpp;c;cxx;rc;def;r;odl;idl;hpj;bat;f90;for;f;fpp">
 			<File
-				RelativePath=".\Framework\Geometry.cpp">
-			</File>
-			<File
 				RelativePath=".\Framework\GeometryDataBuffer.cpp">
-			</File>
-			<File
-				RelativePath=".\Framework\GeometryDataManager.cpp">
 			</File>
 			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\interface.cpp">
@@ -180,13 +174,7 @@
 			Name="Header Files"
 			Filter="h;hpp;hxx;hm;inl;fi;fd">
 			<File
-				RelativePath=".\Framework\Geometry.h">
-			</File>
-			<File
 				RelativePath=".\Framework\GeometryDataBuffer.h">
-			</File>
-			<File
-				RelativePath=".\Framework\GeometryDataManager.h">
 			</File>
 			<File
 				RelativePath=".\Framework\interface.h">

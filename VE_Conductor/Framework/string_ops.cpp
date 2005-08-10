@@ -1,5 +1,5 @@
 #ifdef WIN32
-#pragma warning(disable : 4786)
+//#pragma warning(disable : 4786)
 #endif
 
 #include "VE_Conductor/Framework/string_ops.h"

@@ -213,7 +213,7 @@ void GeometryDialog::_onButtonAddNewGeomInfoPackage(wxCommandEvent& event)
    wxArrayString items;
    std::string tempname;
    
-   for(int i=0; i<templist.size();i++)
+   for( unsigned int i=0; i<templist.size();i++)
    {
          tempname = templist[i].GetGeomName();
          items.Add(tempname.c_str());
@@ -234,7 +234,7 @@ void GeometryDialog::_onButtonSaveGeomInfoPackage(wxCommandEvent& event)
    std::vector<GeometryInfoPackage> templist;
    templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
 
-   if(templist.size()<lbox_geompackagenames->GetCount())//this is a new package, add to the list
+   if( static_cast< int >( templist.size() ) < lbox_geompackagenames->GetCount())//this is a new package, add to the list
    {
       GeometryDataManager::getInstance().GetGeometryDataBuffer()->AddGeomInfoToCurrentList(temppackage);
 
@@ -251,7 +251,7 @@ void GeometryDialog::_onButtonSaveGeomInfoPackage(wxCommandEvent& event)
    wxArrayString items;
    std::string tempname;
    
-   for(int i=0; i<templist.size();i++)
+   for( unsigned int i=0; i<templist.size();i++)
    {
       tempname = templist[i].GetGeomName();
       items.Add(tempname.c_str());
@@ -287,7 +287,7 @@ void GeometryDialog::_onButtonDeleteSelGeomInfoPackage(wxCommandEvent& event)
    wxArrayString items;
    std::string tempname;
    
-   for(int i=0; i<templist.size();i++)
+   for ( unsigned int i=0; i<templist.size();i++)
    {
       tempname = templist[i].GetGeomName();
       items.Add(tempname.c_str());
@@ -335,7 +335,7 @@ bool GeometryDialog::TransferDataToWindow()
       _onUpdateUIInfoPage(templist, 0); //by default, the geominfo page shows the first package.
       wxArrayString items;
       std::string tempname;
-      for(int i=0; i<templist.size();i++)
+      for ( unsigned int i=0; i<templist.size();i++)
       {
          tempname = templist[i].GetGeomName();
          items.Add(tempname.c_str());
@@ -354,7 +354,8 @@ void GeometryDialog::_onUpdateUIInfoPage(std::vector<GeometryInfoPackage> templi
 
    //TODO
    //By default when the GeometryDialog is actived, the GeomInfo is pointed to the first geompackage the module has.
-   if(templist.size()>0 && index <templist.size())
+   int tempSize = static_cast< int >( templist.size() );
+   if( (tempSize > 0) && (index < tempSize) )
    {
       wxString temp_string;
       temp_string<<templist[index].GetGeomName().c_str();

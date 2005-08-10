@@ -48,27 +48,31 @@ class VE_CONDUCTOR_EXPORTS GeometryInfoPackage
          
 };
 
-//A simple class to contain the geom info
-/*typedef struct
-{
-   int modeltype;
-   std::string geomname;
-   std::string geomfilename;
-   bool transparencytoggle; 
-   double scales[3];
-   double trans[3];
-   double rots[3];
-   bool colorflag;
-   double colors[3];
-}GEOMETRYINFO;*/
-
-
 //this class is used to contain the current geom info from gui 
 class VE_CONDUCTOR_EXPORTS GeometryDataBuffer
 {
-   public:
-      GeometryDataBuffer();
-      ~GeometryDataBuffer();
+public:
+   GeometryDataBuffer();
+   ~GeometryDataBuffer();
+
+   GeometryDataBuffer( const GeometryDataBuffer& input )
+   {
+      ;
+   }
+
+   GeometryDataBuffer& operator= ( const GeometryDataBuffer& input )
+   {
+      if ( this != &input )
+      {
+         this->_geominfopackageVSmodule = input._geominfopackageVSmodule;
+         this->_geominfopackagelist = input._geominfopackagelist;
+
+         this->activedgeominfo = input.activedgeominfo;
+         this->cur_modulename = input.cur_modulename; 
+         this->cur_moduleid = input.cur_moduleid;
+      }
+      return *this;
+   }
 
    void SetCurrentGeomIndex(int);
    int GetCurrentGeomIndex();
@@ -103,13 +107,14 @@ class VE_CONDUCTOR_EXPORTS GeometryDataBuffer
 
    private:
 
-   std::vector <GeometryInfoPackage> _geominfopackagelist;
-
    std::map<int, std::vector<GeometryInfoPackage> > _geominfopackageVSmodule; 
-
+	std::vector <GeometryInfoPackage> _geominfopackagelist;
+ 
    int activedgeominfo;
    std::string cur_modulename;
    int cur_moduleid;
    
 };
+
+
 #endif

@@ -14,7 +14,6 @@
 #include "VE_Conductor/Framework/GeometryDialog.h"
 
 
-
 #define ICON 20000
 
 #define edge_size 10
@@ -132,20 +131,21 @@ class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
 
       Interface mod_pack;
       wxPoint pos; //The Position to draw Icon;
-      std::vector<wxString> v_desc;
-      std::vector<wxString> v_value;
 
       //That's the for default implementation of the DrawIcon. Not part of the general interface
       wxPoint* poly; //The outline polygon points list;
       int n_pts; //Number of points
 
-      std::map<std::string, long *>                      _int;
-      std::map<std::string, double *>                    _double;
-      std::map<std::string, std::string *>               _string;
-      std::map<std::string, std::vector<long> * >        _int1D;
-      std::map<std::string, std::vector<double> * >      _double1D;
-      std::map<std::string, std::vector<std::string> * > _string1D;
-   
+   std::vector<wxString> v_desc;
+   std::vector<wxString> v_value;
+
+   std::map<std::string, long *>                      _int;
+   std::map<std::string, double *>                    _double;
+   std::map<std::string, std::string *>               _string;
+   std::map<std::string, std::vector<long> * >        _int1D;
+   std::map<std::string, std::vector<double> * >      _double1D;
+   std::map<std::string, std::vector<std::string> * > _string1D;
+
    DECLARE_DYNAMIC_CLASS( REI_Plugin )
 };
 

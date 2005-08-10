@@ -479,12 +479,12 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
   char* result;
   char buf[80];
-  map<int, MODULE>::iterator iter;
+  std::map<int, MODULE>::iterator iter;
   unsigned int i;
   std::vector<wxString> titles;
   TextResultDialog * result_dlg;
   std::vector<wxString> v_desc, v_value;
-  std::vector<string> descs;
+  std::vector<std::string> descs;
   
   titles.push_back("Description");
   titles.push_back("Value");
@@ -500,13 +500,13 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
       for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) {
 	result = network->exec->GetModuleResult(iter->first);
 	
-	if (string(result)!="") {
+	if (std::string(result)!="") {
 	  Package p;
 	  p.SetSysId("linkresult.xml");
 	  p.Load(result, strlen(result));
 	  
 	  
-	  descs = p.intfs[0].getStrings();
+	  descs = p.GetInterfaceVector()[0].getStrings();
 	  v_desc.clear();
 	  v_value.clear();
 	  v_desc.push_back(iter->second.pl_mod->GetName());
@@ -517,7 +517,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	  v_value.push_back(dirString.c_str());
 	  for (i=0; i<descs.size(); i++) {
 	    v_desc.push_back(descs[i].c_str());
-	    v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
+	    v_value.push_back((p.GetInterfaceVector()[0].getString(descs[i])).c_str());
 	  }
 	  
 	  result_dlg->syngas->AddSeperator(' ');
@@ -530,12 +530,12 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
     
       result = network->exec->GetModuleResult(-1); //Global result
       
-      if (string(result)!="") {
+      if (std::string(result)!="") {
 	Package p;
 	p.SetSysId("linkresult.xml");
 	p.Load(result, strlen(result));
 	
-	descs = p.intfs[0].getStrings();
+	descs = p.GetInterfaceVector()[0].getStrings();
 	v_desc.clear();
 	v_value.clear();
 	v_desc.push_back("Plant Results");
@@ -543,7 +543,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 	v_value.push_back("   ");
 	for (i=0; i<descs.size(); i++) {
 	  v_desc.push_back(descs[i].c_str());
-	  v_value.push_back((p.intfs[0].getString(descs[i])).c_str());
+	  v_value.push_back((p.GetInterfaceVector()[0].getString(descs[i])).c_str());
 	}
 	
 	result_dlg->syngas->AddSeperator(' ');

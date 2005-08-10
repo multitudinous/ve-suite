@@ -41,7 +41,7 @@ Avail_Modules::~Avail_Modules()
 
 void Avail_Modules::AddModule(REI_Plugin* plugin, wxClassInfo* clsi)
 {
-  vector<wxString> lnames;
+  std::vector<wxString> lnames;
   wxTreeItemIdValue cookie;
   wxString plname = plugin->GetName();
   wxTreeItemId id, lastid;
@@ -157,7 +157,7 @@ void Avail_Modules::ShowMenu(wxTreeItemId id, const wxPoint& pt)
     PopupMenu(&menu, pt);
 }
 
-void Avail_Modules::getLeveledName(wxString name, vector<wxString> & lnames)
+void Avail_Modules::getLeveledName(wxString name, std::vector<wxString> & lnames)
 {
   char * s;
   int len;

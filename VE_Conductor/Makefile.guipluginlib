@@ -63,7 +63,9 @@ SRCS=\
 	ListTable.cpp \
    Plugin_base.cpp \
    GlobalParamDialog.cpp \
+   Geometry.cpp \
    GeometryDialog.cpp \
+	GeometryDataManager.cpp \
    PortDialog.cpp \
    ResultPanel.cpp \
    StringParse.cpp \

@@ -2,18 +2,31 @@
 #include <xercesc/sax/HandlerBase.hpp>
 #include <sstream>
 #include <iomanip>
+#include <iostream>
 
 Package::Package() 
 {
    packname="Package";
    system_id="pack.xml";
-  
-   intfs.clear();
+   //intfs.clear();
 }
 
 Package::~Package()
 {
+   //intfs.clear();
+	/*for ( unsigned int i = 0; i < intfs.size(); ++i )
+      delete intfs.at( i );*/
+
    intfs.clear();
+}
+
+std::vector<Interface> Package::GetInterfaceVector( void )
+{
+	/*std::vector< Interface > retn;
+	for ( unsigned int i = 0; i < intfs.size(); ++i )
+      retn.push_back( *intfs.at( i ) );
+   return retn;*/
+   return intfs;
 }
 
 bool Package::Load()
@@ -272,6 +285,7 @@ void Package::FillIntfs(DOMDocument *doc)
     {
        
       cur_intf=(DOMElement *)list_intfs->item(i);
+     
       intfs[i].clear();
 
       // XMLString::transcode() returns a pointer that the caller assumes 
@@ -336,7 +350,7 @@ void Package::FillIntfs(DOMDocument *doc)
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
             tmp_attr = XMLString::transcode("val");
             tmp = XMLString::transcode(cur_geomelem->getAttribute(tmp_attr));
-            bool transparencytoggle = atoi(tmp);
+            bool transparencytoggle = static_cast< bool >( atoi(tmp) );
             delete[] tmp_attr;
             delete[] tmp;
             geomvals.SetTransparencyToggle(transparencytoggle); 
@@ -414,7 +428,7 @@ void Package::FillIntfs(DOMDocument *doc)
             cur_geomelem =(DOMElement*)geomnodelist->item(0);
             tmp_attr = XMLString::transcode("val");
             tmp = XMLString::transcode(cur_geomelem->getAttribute(tmp_attr));
-            bool colorflag =  atoi(tmp);
+            bool colorflag = static_cast< bool >( atoi(tmp) );
             delete[] tmp_attr;
             delete[] tmp;
             geomvals.SetColorFlag(colorflag); 

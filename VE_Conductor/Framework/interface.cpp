@@ -1,16 +1,12 @@
-#ifdef _WIN32
-#pragma warning(disable : 4786)
-#endif
-
 #include <iostream>
 
 #include "interface.h"
 
 Interface::Interface ()
 {
-  _type = 1 ;
-  _category = 1; 
-  _id = 1;
+   _type = 1 ;
+   _category = 1; 
+   _id = 1;
 }
 
 Interface::Interface (const Interface &p)
@@ -20,7 +16,7 @@ Interface::Interface (const Interface &p)
 
 Interface::~Interface ()
 {
-  clear();
+   clear();
 }
 
 void Interface::copy (const Interface& p)
@@ -95,13 +91,22 @@ std::vector<double> Interface::getDouble1D (std::string var, bool *f)
   return ret;
 }
 
-std::vector<std::string> Interface::getString1D (std::string var, bool *f)
+std::vector< std::string > Interface::getString1D (std::string var, bool* f)
 {
-  if(f) *f = true;
-  if(_String1D.find(var)!=_String1D.end()) return _String1D[var];
-  if(f) *f = false;
-  std::vector<std::string> ret;
-  return ret;
+   std::vector<std::string> ret;
+   if ( f ) 
+      *f = true;
+
+   if ( _String1D.find(var) != _String1D.end() ) 
+   {
+      ret = _String1D[var];
+      return ret;
+   }
+
+   if ( f ) 
+      *f = false;
+
+   return ret;
 }
 
 GeometryInfoPackage Interface::getGeomInfoPackage (std::string var, bool *f)
@@ -172,6 +177,128 @@ std::vector<std::string> Interface::getGeomInfoPackages()
 
    return ret;
 }
+
+void Interface::setGeomInfoPackage( std::string var, GeometryInfoPackage val ) 
+{
+   _GeomInfoPackage.insert(std::make_pair(var, val)); 
+}
+
+bool Interface::getVal (std::string var, long& val)
+{ 
+   bool b; 
+   val = getInt(var, &b); 
+   return b; 
+}
+
+bool Interface::getVal (std::string var, double& val)
+{ 
+   bool b; 
+   val = getDouble(var, &b); 
+   return b; 
+}
+
+bool Interface::getVal (std::string var, std::string& val)
+{ 
+   bool b; 
+   val = getString(var, &b); 
+   return b; 
+}
+
+bool Interface::getVal (std::string var, std::vector<long>& val)
+{ 
+   bool b; 
+   val = getInt1D(var, &b); 
+   return b; 
+}
+
+bool Interface::getVal (std::string var, std::vector<double>& val)
+{ 
+   bool b; 
+   val = getDouble1D(var, &b); 
+   return b; 
+}
+
+bool Interface::getVal (std::string var, std::vector<std::string>& val)
+{ 
+   bool b; 
+   (val) = getString1D(var, &b); 
+   return b; 
+}
+
+bool Interface::getVal (std::string var, GeometryInfoPackage& val)
+{
+   bool b; 
+   val = getGeomInfoPackage (var, &b); 
+   return b;
+}
+
+void Interface::setInt      (std::string var, long val)                     
+{ 
+   _Int[var] = val; 
+}
+
+void Interface::setDouble   (std::string var, double val)                   
+{ 
+   _Double[var] = val; 
+}
+
+void Interface::setString   (std::string var, std::string val)              
+{ 
+   _String[var] = val; 
+}
+
+void Interface::setInt1D    (std::string var, std::vector<long> val)        
+{ 
+   _Int1D[var] = val; 
+}
+
+void Interface::setDouble1D (std::string var, std::vector<double> val)      
+{ 
+   _Double1D[var] = val; 
+}
+
+void Interface::setString1D (std::string var, std::vector<std::string> val) 
+{ 
+   _String1D[var] = val; 
+}
+
+void Interface::setVal (std::string var, long val)                     
+{ 
+   setInt(var, val); 
+}
+
+void Interface::setVal (std::string var, double val)                   
+{ 
+   setDouble(var, val); 
+}
+
+void Interface::setVal (std::string var, std::string val)              
+{ 
+   setString(var, val); 
+}
+
+void Interface::setVal (std::string var, std::vector<long> val)        
+{ 
+   setInt1D(var, val); 
+}
+
+void Interface::setVal (std::string var, std::vector<double> val)      
+{ 
+   setDouble1D(var, val); 
+}
+
+void Interface::setVal (std::string var, std::vector<std::string> val) 
+{ 
+   setString1D(var, val); 
+}
+
+void Interface::setVal (std::string var, GeometryInfoPackage val)             
+{
+   setGeomInfoPackage (var, val);
+}
+
+
+
 /*
 bool Interface::pack (std::string &packed)
 {

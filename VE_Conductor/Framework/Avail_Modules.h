@@ -12,8 +12,6 @@
 #include "PluginLoader.h"
 #include "Network.h"
 
-using namespace std;
-
 enum {
   
   Module_Desc,
@@ -53,7 +51,7 @@ class Avail_Modules : public wxTreeCtrl
 
  protected:
   
-  void getLeveledName(wxString name, vector<wxString> & lnames);
+  void getLeveledName(wxString name, std::vector<wxString> & lnames);
 
 
   int m_imageSize;

@@ -1,8 +1,8 @@
 #ifdef WIN32
-#pragma warning(disable : 4786)
-#pragma warning(disable : 4101)
-#pragma warning(disable : 4503)
-#pragma warning(disable : 4251)
+//#pragma warning(disable : 4786)
+//#pragma warning(disable : 4101)
+//#pragma warning(disable : 4503)
+//#pragma warning(disable : 4251)
 #endif
 
 #include "VE_Conductor/Framework/Plugin_base.h"
@@ -428,9 +428,21 @@ void REI_Plugin::UnPack(Interface * intf)
   vars = mod_pack.getStrings1D();
   for (i=0; i<vars.size(); i++)
     {
+		if ( i == 2 )
+			std::cout << " " << std::endl;
       itervs =_string1D.find(vars[i]);
       if (itervs!=_string1D.end())
-	mod_pack.getVal(vars[i], *(itervs->second));
+	  {
+		  std::cout<< (*itervs->second).size()<< std::endl;
+		  unsigned int testInt = (*itervs->second).size();
+		  unsigned int idint = this->GetID();
+		  std::string tempstring = vars[i];
+		  std::vector<std::string> tempvector = (*itervs->second);
+		  //(*itervs->second).clear();
+	mod_pack.getVal(vars[i], tempvector );
+    unsigned int tempInt = tempvector.size();
+	(*itervs->second) = tempvector;
+	  }
     }
 
   // EPRI TAG

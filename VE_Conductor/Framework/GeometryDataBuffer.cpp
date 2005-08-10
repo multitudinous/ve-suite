@@ -9,7 +9,7 @@ GeometryInfoPackage::GeometryInfoPackage()
    this->modeltype=9;
    this->geomname ="default";
    this->geomfilename="undefined";
-   this->transparencytoggle =1;
+   this->transparencytoggle =true;
    this->scales[0]=1.0; 
    this->scales[1]=1.0; 
    this->scales[2]=1.0;
@@ -19,7 +19,7 @@ GeometryInfoPackage::GeometryInfoPackage()
    this->rots[0]=0.0;
    this->rots[1]=0.0;
    this->rots[2]=0.0;
-   this->colorflag =1;
+   this->colorflag =true;
    this->colors[0]=1.0; 
    this->colors[1]=0.0; 
    this->colors[2]=0.0;
@@ -227,7 +227,7 @@ void GeometryDataBuffer::SetCurrentGeomIndex(int index)
 
 void GeometryDataBuffer::ClearGeomInfoList()
 {
-   this->_geominfopackagelist.clear();
+   _geominfopackagelist.clear();
 }
 
 int GeometryDataBuffer::GetCurrentGeomIndex()
@@ -297,9 +297,9 @@ void GeometryDataBuffer::AddGeomInfoToCurrentList(GeometryInfoPackage newgeominf
 void GeometryDataBuffer::DeleteGeomInfosFromCurrentList(std::vector<int> items)
 {
 
-   for(int i=0; i<items.size();i++)
+   for(unsigned int i=0; i<items.size();i++)
    {
-     _geominfopackagelist.erase(_geominfopackagelist.begin()+items[i]);      
+    _geominfopackagelist.erase(_geominfopackagelist.begin()+items[i]);      
    }
 
    if(_geominfopackagelist.size()==0)
@@ -328,7 +328,7 @@ void GeometryDataBuffer::DeleteGeomInfosFromCurrentList(std::vector<int> items)
 void GeometryDataBuffer::SetCurrentGeomInfoList(std::vector<GeometryInfoPackage> curlist)
 {
    _geominfopackagelist.clear();
-   this->_geominfopackagelist = curlist;
+   _geominfopackagelist = curlist;
 }
 
 std::vector<GeometryInfoPackage> GeometryDataBuffer::GetCurrentGeomInfoList()
