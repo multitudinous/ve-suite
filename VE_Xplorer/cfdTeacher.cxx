@@ -33,10 +33,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/dir.h>
-#else
-#include <windows.h>
-#include <direct.h>
-#endif   // _WIN32
+#endif
 
 #include "VE_Xplorer/cfdTeacher.h"
 #include "VE_SceneGraph/cfdGroup.h"
@@ -83,119 +80,67 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
    _worldDCS = worldDCS;
    _worldDCS->AddChild( this->DCS );
 
-   char *cwd;
-
-#ifndef WIN32
-   //try to open the directory
-   DIR* dir = opendir( this->directory.c_str() );
-   if (dir == NULL) 
-   {
-      vprDEBUG(vprDBG_ALL,0) <<"Cannot open directory \"" << this->directory 
-                             << "\"" << std::endl << vprDEBUG_FLUSH;
-      return;
-   }
-
-   if ((cwd = getcwd(NULL, 100)) == NULL)
-   {
-      std::cerr << "Couldn't get the current working directory!" << std::endl;
-      exit(1);
-   }
-
-   //change into this directory so that we can find the files
-   chdir( this->directory.c_str() );
-
-   //get the name of each file
-   direct* file = 0;
-   while ( (file = readdir(dir)) != NULL ) 
-   {
-      //assume all pfb files in this directory should be loaded
-      if(strstr(file->d_name, ".pfb")||strstr(file->d_name, ".ive")) 
-      {
-         //char * fileName = new char[strlen(file->d_name)+1];
-         //strcpy( fileName, file->d_name );
-         this->pfbFileNames.push_back( std::string(file->d_name) );
-         //delete [] fileName;
-         vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << this->pfbFileNames.back()
-                                << std::endl << vprDEBUG_FLUSH;
-      }
-   }
-   closedir( dir );  //close the directory
-   dir = 0;
-   file = 0;
-
-#else
-   //windows compatibility
-   //biv--this code will need some checking
-   //BIGTIME!!!!!!!
-   BOOL finished;
-   HANDLE hList;
-   TCHAR* tdirectory;//[MAX_PATH+1];
-   WIN32_FIND_DATA fileData;
-   char buffer[MAX_PATH];
-   cwd = _getcwd(buffer,MAX_PATH);
-
-   // Get the proper directory path
-   //sprintf(directory, "%s\\*", this->directory);
-   std::ostringstream dirStringStream;
-   dirStringStream <<"./"<<this->directory << "\\*";
-   std::string dirString = dirStringStream.str();
-   tdirectory = (char*)dirString.c_str();
-
-   // Get the first file
-   hList = FindFirstFile(tdirectory, &fileData);
-
    boost::filesystem::path dir_path( this->directory.c_str() );
+
    try
    {
       if ( boost::filesystem::is_directory( dir_path ) )
       {
-         finished = FALSE;
-         while ( ! finished )
+         boost::filesystem::directory_iterator end_iter;
+         for ( boost::filesystem::directory_iterator dir_itr( dir_path );
+               dir_itr != end_iter; ++dir_itr )
          {
-            //assume all pfb files in this directory should be loaded
-            if ( strstr(fileData.cFileName, ".pfb")||strstr(fileData.cFileName, ".ive") )
+            try
             {
-               //char * fileName = new char[strlen(fileData.cFileName)+1];
-               //strcpy( fileName, fileData.cFileName );
-               std::ostringstream filenameStream;
-               filenameStream <<"./STORED_FILES/"<<fileData.cFileName;
-               //std::string fileString = filenameStream.str();
-			   this->pfbFileNames.push_back( filenameStream.str() );
-               //delete [] fileName;
-               vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << this->pfbFileNames.back()
-                                   << std::endl << vprDEBUG_FLUSH;
-            }
-         
-			if ( !FindNextFile(hList, &fileData) )
-            {
-               if ( GetLastError() == ERROR_NO_MORE_FILES )
+               if ( boost::filesystem::is_directory( *dir_itr ) )
                {
-                  finished = TRUE;
+                  std::cout << dir_itr->leaf()<< " [directory]\n";
+               }
+               else
+               {
+                  if ( strstr( dir_itr->leaf().c_str(), ".pfb") || strstr( dir_itr->leaf().c_str(), ".ive") )
+                  {
+                     char* pathAndFileName = new char[strlen(dir_path.leaf().c_str() )+
+                                                      strlen(dir_itr->leaf().c_str())+2];
+                     strcpy(pathAndFileName,dir_path.leaf().c_str()); 
+                     strcat(pathAndFileName,"/");
+                     strcat(pathAndFileName,dir_itr->leaf().c_str());
+
+                     std::ostringstream filenameStream;
+                     filenameStream << "./" << pathAndFileName;
+                     this->pfbFileNames.push_back( filenameStream.str() );
+
+                     vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << this->pfbFileNames.back()
+                                            << std::endl << vprDEBUG_FLUSH;
+                  }
                }
             }
+            catch ( const std::exception& ex )
+            {
+	            std::cout << ex.what() << std::endl;
+            }
          }
-	  }
+      }
    }
    catch ( const std::exception& ex )
-   {
+	{
 	   std::cout << ex.what() << std::endl;
-   }
-#endif
+	   vprDEBUG(vprDBG_ALL,1) << "The STORED_FILES directory will be made when a new scene is stored :" 
+                             <<  std::endl << vprDEBUG_FLUSH;
+	}
+
    // how many performer binaries found ?
    this->numFiles = this->pfbFileNames.size();
    vprDEBUG(vprDBG_ALL,1) << "Number of performer binaries: " << numFiles
                           << std::endl << vprDEBUG_FLUSH;
 
-   
    this->node = new VE_SceneGraph::cfdNode * [ this->numFiles ];
-   
+  
    for (int i=0; i<this->numFiles; i++)
    {
       this->node[ i ] = new VE_SceneGraph::cfdNode();
 	   this->node[ i ]->LoadFile( (char*)this->pfbFileNames[ i ].c_str() );
    }
-   //change back to the original directory
-   chdir( cwd );
 }
 
 cfdTeacher::~cfdTeacher( )
