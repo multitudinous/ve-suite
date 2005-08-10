@@ -2744,10 +2744,10 @@ void Network::UnPack(std::vector<Interface> & intfs)
 void Network::Save(wxString filename)
 {
   //Actually write it to file
-  std::vector<Interface> UIs;
+  //std::vector<Interface> UIs;
 
   Package p;
-  Pack(p.GetInterfaceVector());
+  Pack(p.intfs);
 
   p.SetPackName("Network");
   p.SetSysId(filename.c_str());
@@ -2760,7 +2760,7 @@ void Network::SaveS(std::string &network_pack)
 {
   //Actually write it to file
   Package p;
-  Pack(p.GetInterfaceVector());
+  Pack(p.intfs);
 
   p.SetPackName("Network");
   p.SetSysId("test.xml");
@@ -2808,7 +2808,7 @@ void Network::Load(wxString filename)
 
   intfssize= p.GetIntfsNum();
 
-  UnPack(p.GetInterfaceVector());
+  UnPack(p.intfs);
  //delete p;
 
 }
@@ -2822,7 +2822,7 @@ void Network::LoadS(const char* inputs)
   {
 	p.Load(inputs, strlen(inputs));
    intfssize = p.GetIntfsNum();
-	UnPack(p.GetInterfaceVector());
+	UnPack(p.intfs);
   }
 }
 
@@ -2850,7 +2850,7 @@ void  Network::OnShowLinkContent(wxCommandEvent& WXUNUSED(event))
       p.SetSysId("linkresult.xml");
 
       p.Load(linkresult, strlen(linkresult));
-      port_dlg = modules[mod].pl_mod->PortData(NULL,  &(p.GetInterfaceVector()[0]));
+      port_dlg = modules[mod].pl_mod->PortData(NULL,  &(p.intfs[0]));
       
       //std::cout<<linkresult<<std::endl;
       if (port_dlg!=NULL)
