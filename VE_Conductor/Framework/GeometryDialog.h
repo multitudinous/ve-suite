@@ -7,6 +7,9 @@
 #include <wx/wx.h>
 #include <wx/dialog.h>
 #include "VE_Conductor/Framework/GeometryDataManager.h"
+#include "VE_Conductor/Framework/GeometryDataBuffer.h"
+
+#include <vector>
 
 enum GEOMETRY_CONFIG_IDS
 {

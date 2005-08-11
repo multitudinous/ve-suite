@@ -1,25 +1,20 @@
 #ifndef GEOMETRY_DATAMANAGER_H
 #define GEOMETRY_DATAMANAGER_H
 
-#include "VE_Conductor/Framework/GeometryDataBuffer.h"
+class GeometryDataBuffer;
 
-class VE_GUIPLUGINS_EXPORTS GeometryDataManager
+class GeometryDataManager
 {
   public:
       static GeometryDataManager& getInstance();
       GeometryDataBuffer* GetGeometryDataBuffer();
 
    private:
-      GeometryDataManager():_GeometryDataBuffer(0){}
-      ~GeometryDataManager()
-      {
-         delete _GeometryDataBuffer;
-         _GeometryDataBuffer =0;
-      }
+      GeometryDataManager():_GeometryDataBuffer(0){;}
+      ~GeometryDataManager();
 
    private:
       GeometryDataBuffer* _GeometryDataBuffer;
-      static GeometryDataManager* myinstance;
-
+      static GeometryDataManager* myinstance;	
 };
 #endif

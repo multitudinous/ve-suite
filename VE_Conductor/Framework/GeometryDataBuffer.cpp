@@ -164,11 +164,12 @@ double GeometryInfoPackage::GetLOD()
 
 GeometryDataBuffer::GeometryDataBuffer()
 {
+   ;
 }
 
 GeometryDataBuffer::~GeometryDataBuffer()
 {
-   
+   ;
 }
 
 GeometryInfoPackage GeometryDataBuffer::GetDefaultNewGeomInfoPackage(int index)
