@@ -13,7 +13,8 @@
 #include <wx/image.h>
 #include <wx/bitmap.h>
 #include <wx/splash.h>
-#include "VE_Installer/installer/installerImages/bannerFull.xpm"
+#include "VE_Installer/installer/installerImages/ve_ce_banner.xpm"
+#include "VE_Installer/installer/installerImages/ve_xplorer_banner.xpm"
 #include <sstream>
 #include <iomanip>
 
@@ -683,6 +684,13 @@ void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
 {
+   wxImage splashImage(ve_ce_banner_xpm);
+   wxBitmap bitmap(splashImage);
+   wxSplashScreen* splash = new wxSplashScreen(bitmap,
+          wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
+          5000, NULL, -1, wxDefaultPosition, wxDefaultSize,
+          wxSIMPLE_BORDER|wxSTAY_ON_TOP);
+   wxSafeYield();
    if ( pelog==NULL )
    {
 	   pelog = new PEThread(this);
@@ -717,7 +725,7 @@ void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
   
 void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
 {
-   wxImage splashImage(bannerFull_xpm);
+   wxImage splashImage(ve_xplorer_banner_xpm);
    wxBitmap bitmap(splashImage);
    wxSplashScreen* splash = new wxSplashScreen(bitmap,
           wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
