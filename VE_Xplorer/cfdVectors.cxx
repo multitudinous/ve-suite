@@ -131,11 +131,11 @@ void cfdVectors::Update( void )
       // Not VTK Functions
       this->SetGlyphWithThreshold();
       this->SetGlyphAttributes();
-      //this->glyph->Update();
+      //this->glyph->Update();  
       //this->glyph->Print( cout );
 
       this->filter->ExtentClippingOff();
-      //this->filter->Update();
+      this->filter->Update();
       
       // Good Test code to see if you are actually getting streamlines
 /*      
@@ -148,7 +148,7 @@ void cfdVectors::Update( void )
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
-      //this->mapper->Update();
+      //this->mapper->Update();  //sgent
    }
    else
    {

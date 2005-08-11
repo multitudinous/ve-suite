@@ -159,14 +159,14 @@ bool cfdVectorBase::CheckCommandId( cfdCommandArray* commandArray )
          << "SCALE_BY_VECTOR_MAGNITUDE = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
-      cfdVectorBase::SetScaleByVectorFlag( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      SetScaleByVectorFlag( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEADYSTATE_DATASET )
    { 
-      cfdVectorBase::SetThreshHoldPercentages( 0, 100 );
-      cfdVectorBase::SetVectorRatioFactor( 1 );
+      SetThreshHoldPercentages( 0, 100 );
+      SetVectorRatioFactor( 1 );
       //this->UpdateThreshHoldValues();
    }
 

@@ -626,6 +626,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
             this->x_vectors = new cfdVectors( 0 );
             this->x_vectors->SetObjectType( X_VECTORS );
             this->dataList.push_back( this->x_vectors );
+            this->commandList.push_back( this->x_vectors );
          }
 
          //
@@ -638,6 +639,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
             this->y_vectors = new cfdVectors( 1 );
             this->y_vectors->SetObjectType( Y_VECTORS );
             this->dataList.push_back( this->y_vectors );
+            this->commandList.push_back( this->y_vectors );
          }
          
          //
@@ -650,6 +652,7 @@ void cfdSteadyStateVizHandler::InitScene( void )
             this->z_vectors = new cfdVectors( 2 );
             this->z_vectors->SetObjectType( Z_VECTORS );
             this->dataList.push_back( this->z_vectors );
+            this->commandList.push_back( this->z_vectors );
          }
 
          //
