@@ -418,7 +418,9 @@ void TCFrame::_onBrowseCallback(wxCommandEvent& event )
 void TCFrame::SetInputDirectory(const char* inDirectory)
 {
    if(inDirectory){
-     _gridFiles.Clear();
+      if(!_gridFiles.IsEmpty()){
+         _gridFiles.Clear();
+      }
      _numFiles = 0;
 
      wxDir inputFileDirectory;
