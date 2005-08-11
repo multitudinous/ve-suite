@@ -49,6 +49,7 @@ struct StateVariables
    int currentFrame; // the index of the current frame
    float clusterTime_since_start;
    long clusterFrameNumber;
+   float clusterQuatCamIncrement;
 };
 }
 
@@ -70,6 +71,7 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    writer->writeUint16( currentFrame );
    writer->writeFloat( clusterTime_since_start );
    writer->writeUint32( clusterFrameNumber );
+   writer->writeFloat( clusterQuatCamIncrement );
    return vpr::ReturnStatus::Succeed;
 }
 
@@ -89,6 +91,7 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
    currentFrame            = reader->readUint16(); 
    clusterTime_since_start = reader->readFloat();
    clusterFrameNumber      = reader->readUint32();
+   clusterQuatCamIncrement = reader->readFloat();
    return vpr::ReturnStatus::Succeed;
 }
 }

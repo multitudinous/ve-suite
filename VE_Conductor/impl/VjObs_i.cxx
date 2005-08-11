@@ -733,6 +733,14 @@ void VjObs_i::GetCfdStateVariables( void )
       }
 #endif
 #endif
+      if ( cfdEnvironmentHandler::instance()->GetQuatCamHandler()->IsActive() )
+      {
+         this->mStates->clusterQuatCamIncrement = cfdEnvironmentHandler::instance()->GetQuatCamHandler()->GetQuatCamIncrementor();
+      }
+      else
+      {
+         this->mStates->clusterQuatCamIncrement = 0;
+      }
    }
    //this->_unusedNewData    = false;
 #else
@@ -777,6 +785,10 @@ void VjObs_i::GetUpdateClusterStateVariables( void )
       }
 #endif
 #endif
+      if ( cfdEnvironmentHandler::instance()->GetQuatCamHandler()->IsActive() )
+      {
+         cfdEnvironmentHandler::instance()->GetQuatCamHandler()->SetQuatCamIncrementor( this->mStates->clusterQuatCamIncrement );
+      }
    }
    this->_unusedNewData    = false;
 #endif

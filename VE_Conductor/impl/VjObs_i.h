@@ -199,6 +199,7 @@ protected:
    int numOfClientInfo;
    bool _unusedNewData;
    float time_since_start;
+   float quatCamIncrement;
    long frameNumber;
 #ifdef _TAO   
    VjObs::obj_pd* getDouble1D( const char* input ) throw (CORBA::SystemException);
