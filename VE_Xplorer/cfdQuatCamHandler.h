@@ -104,6 +104,10 @@ namespace VE_Xplorer
 
          double getLinearDistance( gmtl::Vec3f, gmtl::Vec3f );
 
+         void FindMasterNode( void );
+
+         int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks);
+
          int getNumLocs();
 
          std::vector< std::vector <int> > getFlyThroughs();
@@ -112,6 +116,12 @@ namespace VE_Xplorer
 
          // If a quat is active this will move the cam to the next location
          void PreFrameUpdate();
+
+         void SetQuatCamIncrementor( float );
+
+         float GetQuatCamIncrementor( void );
+
+         bool IsActive( void );
    
          unsigned int numQuatCams;
          unsigned int numFlyThroughs;
@@ -138,6 +148,10 @@ namespace VE_Xplorer
          bool writeReadComplete;
          float movementIntervalCalc;
          double movementSpeed;
+         bool onMasterNode;
+         int lastCommandId;
+         int currentFrame;
+         int writeFrame;
          
          vpr::Timer* frameTimer;
          

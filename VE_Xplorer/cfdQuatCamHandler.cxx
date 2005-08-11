@@ -90,6 +90,16 @@ cfdQuatCamHandler::cfdQuatCamHandler( VE_SceneGraph::cfdDCS* worldDCS,
    frameTimer = new vpr::Timer();
    //this->frameTimer->startTiming();
    movementSpeed = 10.0f;
+   lastCommandId = 0;
+   currentFrame = 0;
+   writeFrame = 0;
+
+#ifdef _CLUSTER
+   FindMasterNode();
+   onMasterNode = false;
+#else
+   onMasterNode = true;
+#endif
    
    CreateObjects();
    
@@ -110,77 +120,92 @@ void cfdQuatCamHandler::LoadData(double* worldPos, VE_SceneGraph::cfdDCS* worldD
 
 void cfdQuatCamHandler::WriteToFile(char* fileName)
 {
-   boost::filesystem::path dir_path( quatCamDirName );
-   try
+   if ( onMasterNode )
    {
-      ( boost::filesystem::is_directory( dir_path ) );
-   }
-   catch ( const std::exception& ex )
-	{
-	   std::cout << ex.what() << std::endl;
-      boost::filesystem::create_directory(dir_path);
-	   std::cout << "...so we made it for you..." << std::endl;
-	}
-
-   std::ofstream inFile( fileName, std::ios::out );
-
-   if ( fileIO::isFileReadable( fileName ) )
-   {  
-      //std::cout<<"QuatCam File Was Opened Successfully for writing"<<std::endl; 
-      if ( QuatCams.size() > 0 )
+      boost::filesystem::path dir_path( quatCamDirName );
+      try
       {
-         inFile << "*Quaternion_Cameras" << std::endl;
-         inFile << QuatCams.size() << std::endl;
-      
-         //std::cout<< QuatCams.size() << " view points are being written" << std::endl;
-      
-         Matrix44f temp;
-         for (unsigned int i=0; i<QuatCams.size(); i++)
-         {
-            temp = QuatCams[i]->GetMatrix();
-            for ( unsigned int j=0; j<4; j++)
-            {
-               for ( unsigned int k=0; k<4; k++)
-               {
-                  inFile << temp[ j ][ k ] << " ";
-               }            
-            }
-
-            inFile << std::endl;
-
-            gmtl::Vec3f temptrans;
-            for (int k=0; k<3; k++)
-            {
-               temptrans = QuatCams[i]->GetTrans();
-               inFile << temptrans[k] << " ";
-            }
- 
-            inFile << std::endl;
-         }
-
-         if ( flyThroughList.size() > 0 )
-         {
-            inFile << "#Stored_FlyThroughs" << std::endl;
-            inFile << flyThroughList.size() << std::endl;
-            for (unsigned int n=0; n<flyThroughList.size(); n++)
-            {
-               inFile << flyThroughList.at( n ).size() << std::endl;
-               for ( unsigned int l=0; l<flyThroughList.at( n ).size(); l++)
-               {
-                  inFile << flyThroughList.at(n).at(l) << " ";
-               }
-               inFile << std::endl;   
-            }
-         }
+         ( boost::filesystem::is_directory( dir_path ) );
       }
-      inFile.close();
+      catch ( const std::exception& ex )
+	   {
+	      std::cout << ex.what() << std::endl;
+         boost::filesystem::create_directory(dir_path);
+	      std::cout << "...so we made it for you..." << std::endl;
+	   }
+
+      std::ofstream inFile( fileName, std::ios::out );
+
+      if ( fileIO::isFileReadable( fileName ) )
+      {  
+         //std::cout<<"QuatCam File Was Opened Successfully for writing"<<std::endl; 
+         if ( QuatCams.size() > 0 )
+         {
+            inFile << "*Quaternion_Cameras" << std::endl;
+            inFile << QuatCams.size() << std::endl;
+
+            //std::cout<< QuatCams.size() << " view points are being written" << std::endl;
+
+            Matrix44f temp;
+            for (unsigned int i=0; i<QuatCams.size(); i++)
+            {
+               temp = QuatCams[i]->GetMatrix();
+               for ( unsigned int j=0; j<4; j++)
+               {
+                  for ( unsigned int k=0; k<4; k++)
+                  {
+                     inFile << temp[ j ][ k ] << " ";
+                  }            
+               }
+
+               inFile << std::endl;
+
+               gmtl::Vec3f temptrans;
+               for (int k=0; k<3; k++)
+               {
+                  temptrans = QuatCams[i]->GetTrans();
+                  inFile << temptrans[k] << " ";
+               }
+
+               inFile << std::endl;
+            }
+
+            if ( flyThroughList.size() > 0 )
+            {
+               inFile << "#Stored_FlyThroughs" << std::endl;
+               inFile << flyThroughList.size() << std::endl;
+               for (unsigned int n=0; n<flyThroughList.size(); n++)
+               {
+                  inFile << flyThroughList.at( n ).size() << std::endl;
+                  for ( unsigned int l=0; l<flyThroughList.at( n ).size(); l++)
+                  {
+                     inFile << flyThroughList.at(n).at(l) << " ";
+                  }
+                  inFile << std::endl;   
+               }
+            }
+         }
+         inFile.close();
+      }
+      else 
+         std::cout<<"Could Not Open QuatCam File"<<std::endl;
    }
-   else 
-      std::cout<<"Could Not Open QuatCam File"<<std::endl;
+   else
+   {
+      
+   }
 }
 
 void cfdQuatCamHandler::LoadFromFile( char* fileName)
 {
+   // this is for cluster mode so that the master has a chance to write
+   // the quat cam file and then one frame later all the slaves will
+   // read that file
+   if ( !onMasterNode && ( writeFrame == currentFrame ) )
+   {
+      return;
+   }
+
    boost::filesystem::path dir_path( quatCamDirName );
    try
    {
@@ -280,7 +305,7 @@ void cfdQuatCamHandler::LoadFromFile( char* fileName)
       std::ofstream newFile( fileName, std::ios::out ); 
       newFile.open( fileName, std::ios::out );
       newFile.close();
-   } 
+   }
        
 }
 
@@ -291,18 +316,18 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate*
    if ( t == 0.0f )
       QuatCams.at( cam_id )->SetCamPos( nav->worldTrans, worldDCS );
 
-   if ( ( t < 1.0f ) && ( t < ( 1.0f - movementIntervalCalc ) ) )
+#ifdef _CLUSTER
+   // t is set by vjobs in cluster mode
+   // so we just use it and don't increment it
+   float temp = t;
+#else
+   float temp = this->GetQuatCamIncrementor();
+#endif
+
+
+   if ( ( t < 1.0f ) )
    {
-      t += movementIntervalCalc;
-      QuatCams.at( cam_id )->MoveCam( t );
-      QuatCams.at( cam_id )->UpdateTrans( nav );
-      QuatCams.at( cam_id )->UpdateRotation( worldDCS );
-   }
-   else if ( ( t < 1.0f ) && ( t >= ( 1.0f - movementIntervalCalc ) ) )
-   {
-      //t += ( 1.0f - t );
-      t = 1.0f;
-      QuatCams.at( cam_id )->MoveCam( t );
+      QuatCams.at( cam_id )->MoveCam( temp );
       QuatCams.at( cam_id )->UpdateTrans( nav );
       QuatCams.at( cam_id )->UpdateRotation( worldDCS );
    }
@@ -311,7 +336,53 @@ void cfdQuatCamHandler::Relocate( VE_SceneGraph::cfdDCS* worldDCS,  cfdNavigate*
       activecam = false;
       t = 0.0f;
    } 
-   //std::cout<<"MovementCalc: "<< movementIntervalCalc <<std::endl;    
+
+/*
+#ifdef _CLUSTER
+   // t is set by vjobs in cluster mode
+   // so we just use it and don't increment it
+   float temp = t;
+#else
+   float temp = this->GetQuatCamIncrementor();
+#endif
+
+   if ( setcam )
+   {
+      QuatCams.at( cam_id )->SetCamPos( nav->worldTrans, worldDCS );
+      std::cout<<"IN SETCAM!!!!!!!!!!!!!!!!!!!"<<std::endl;
+      setcam = false;
+         std::cout<<"setcam IS NOW FALSE"<<std::endl; 
+   }
+
+   QuatCams.at( cam_id )->MoveCam( t );
+   QuatCams.at( cam_id )->UpdateTrans( nav );
+   QuatCams.at( cam_id )->UpdateRotation( worldDCS );*/
+
+   /*if ( temp == 1.0f )
+   {
+      activecam = false;
+   }*/
+
+   /*if ( ( temp < 1.0f ) && ( temp < ( 1.0f - movementIntervalCalc ) ) )
+   {
+      //t += movementIntervalCalc;
+      QuatCams.at( cam_id )->MoveCam( temp );
+      QuatCams.at( cam_id )->UpdateTrans( nav );
+      QuatCams.at( cam_id )->UpdateRotation( worldDCS );
+   }
+   else if ( ( temp < 1.0f ) && ( temp >= ( 1.0f - movementIntervalCalc ) ) )
+   {
+      //t += ( 1.0f - t );
+      //temp = 1.0f;
+      QuatCams.at( cam_id )->MoveCam( temp );
+      QuatCams.at( cam_id )->UpdateTrans( nav );
+      QuatCams.at( cam_id )->UpdateRotation( worldDCS );
+   }
+   else
+   {
+      activecam = false;
+      //t = 0.0f;
+   }  */   
 }
 
 void cfdQuatCamHandler::RemoveViewPt( void )
@@ -376,14 +447,37 @@ void cfdQuatCamHandler::AddNewFlythrough( void )
 bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 {
    bool flag = false;
+   /*if ( lastCommandId == LOAD_NEW_VIEWPT || 
+         lastCommandId == REMOVE_SELECTED_VIEWPT ||
+         lastCommandId == ADD_NEW_POINT_TO_FLYTHROUGH ||
+         lastCommandId == INSERT_NEW_POINT_IN_FLYTHROUGH ||
+         lastCommandId == REMOVE_POINT_FROM_FLYTHROUGH ||
+         lastCommandId == DELETE_ENTIRE_FLYTHROUGH ||
+         lastCommandId == ADD_NEW_FLYTHROUGH && writeFrame == ( currentFrame - 1 )
+      )
+   {
+      std::cout<<"writeFrame"<<writeFrame<<std::endl;
+      std::cout<<"currentFrame"<<currentFrame<<std::endl;
+      this->LoadFromFile( this->quatCamFileName );
+   }*/
+
+
+#ifdef _CLUSTER
+   if ( writeFrame == currentFrame - 1 )
+   {
+      this->LoadFromFile( this->quatCamFileName );
+   }
+#endif
 
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_NEW_VIEWPT )
    {
+      writeFrame = currentFrame;
       this->TurnOffMovement();
       this->LoadData( this->_nav->worldTrans, _worldDCS );
       this->WriteToFile( this->quatCamFileName );
       this->LoadFromFile( this->quatCamFileName );
       this->writeReadComplete = true;
+      this->lastCommandId = LOAD_NEW_VIEWPT;
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == MOVE_TO_SELECTED_LOCATION )
@@ -395,26 +489,31 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == REMOVE_SELECTED_VIEWPT )
    {
+      writeFrame = currentFrame;
       this->TurnOffMovement();
       this->cam_id = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
       this->RemoveViewPt();
       this->WriteToFile( this->quatCamFileName );
       this->LoadFromFile( this->quatCamFileName );
       this->writeReadComplete = true;
+      this->lastCommandId = REMOVE_SELECTED_VIEWPT;
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ADD_NEW_POINT_TO_FLYTHROUGH )
    {
+      writeFrame = currentFrame;
       this->TurnOffMovement();
       this->AddViewPtToFlyThrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
                                    (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
       this->WriteToFile( this->quatCamFileName );
       this->LoadFromFile( this->quatCamFileName );
       this->writeReadComplete = true;
+      this->lastCommandId = ADD_NEW_POINT_TO_FLYTHROUGH;
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == INSERT_NEW_POINT_IN_FLYTHROUGH )
    {
+      writeFrame = currentFrame;
       this->TurnOffMovement();
       this->InsertViewPtInFlyThrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
                                       (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ),
@@ -422,34 +521,41 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
       this->WriteToFile( this->quatCamFileName );
       this->LoadFromFile( this->quatCamFileName );
       this->writeReadComplete = true;
+      this->lastCommandId = INSERT_NEW_POINT_IN_FLYTHROUGH;
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == REMOVE_POINT_FROM_FLYTHROUGH )
    {
+      writeFrame = currentFrame;
       this->TurnOffMovement();
       this->RemoveFlythroughPt( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ), 
                                 (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
       this->WriteToFile( this->quatCamFileName );
       this->LoadFromFile( this->quatCamFileName );
       this->writeReadComplete = true;
+      this->lastCommandId = REMOVE_POINT_FROM_FLYTHROUGH;
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == DELETE_ENTIRE_FLYTHROUGH )
    {
+      writeFrame = currentFrame;
       this->TurnOffMovement();
       this->DeleteEntireFlythrough( (unsigned int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
       this->WriteToFile( this->quatCamFileName );
       this->LoadFromFile( this->quatCamFileName );
       this->writeReadComplete = true;
+      this->lastCommandId = DELETE_ENTIRE_FLYTHROUGH;
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ADD_NEW_FLYTHROUGH )
    {
+      writeFrame = currentFrame;
       this->TurnOffMovement();
       this->AddNewFlythrough();
       this->WriteToFile( this->quatCamFileName );
       this->LoadFromFile( this->quatCamFileName );
       this->writeReadComplete = true;
+      this->lastCommandId = ADD_NEW_FLYTHROUGH;
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == RUN_ACTIVE_FLYTHROUGH )
@@ -478,6 +584,8 @@ bool cfdQuatCamHandler::CheckCommandId( cfdCommandArray* commandArray )
 // If a quat is active this will move the cam to the next location
 void cfdQuatCamHandler::PreFrameUpdate( void )
 {
+   currentFrame += 1;
+
    frameTimer->stopTiming();
    if ( _runFlyThrough )
    {
@@ -582,3 +690,80 @@ std::vector < int > cfdQuatCamHandler::getCompletionTest()
    }
    return this->completionTest;
 }
+
+void cfdQuatCamHandler::FindMasterNode( void )
+{
+   std::vector<std::string> toks;
+   std::string hostfile;
+   std::string masterhost;
+   
+   if ( getenv( "VEXMASTER" ) != NULL )
+   {
+      masterhost = getenv( "VEXMASTER" );
+   }
+   else
+   {
+      std::cerr << " ERROR : The VEXMASTER environment variable must be set to run cluster" << std::endl;
+      exit( 1 );   
+   }
+   char raw_hostname[256];
+   std::string hostname;
+   
+   gethostname(raw_hostname, 255); //get the host name 
+   hostname=raw_hostname;
+   std::cout<<"Host name is "<<hostname<<std::endl;   
+   getStringTokens(raw_hostname,".", toks);
+   //now toks[0] will be the short host name: the one without the domain name
+   
+   if (hostname==masterhost||toks[0]==masterhost)
+   {
+      std::cout<<"This is the master!"<<std::endl;
+      onMasterNode = true;
+   }
+}
+
+int cfdQuatCamHandler::getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks)
+{
+   char* token;
+   int i=0;
+   token = strtok(buffer, delim);
+
+   toks.clear();
+   while( token )
+   {
+      i++;
+      toks.push_back(std::string(token));
+      token = strtok(NULL, delim);
+   }
+
+   return i;
+}
+
+void cfdQuatCamHandler::SetQuatCamIncrementor( float increment )
+{
+   t = increment;
+}
+
+float cfdQuatCamHandler::GetQuatCamIncrementor( void )
+{
+   ////////////////////////////////////////////////////////////////////////
+   //When in cluster mode this function is only called by the Master Node//
+   ////////////////////////////////////////////////////////////////////////
+
+   if ( ( t < 1.0f ) && ( t < ( 1.0f - movementIntervalCalc ) ) )
+   {
+      t += movementIntervalCalc;
+   }
+   else if ( ( t < 1.0f ) && ( t >= ( 1.0f - movementIntervalCalc ) ) )
+   {
+      t = 1.0f;
+   }
+
+   return t;   
+}
+
+bool cfdQuatCamHandler::IsActive( void )
+{
+   return activecam;
+}
+
