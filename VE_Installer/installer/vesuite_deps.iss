@@ -22,7 +22,7 @@ OutputBaseFilename=vesuite_deps{#VEVERSION}
 Compression=lzma
 SolidCompression=true
 OutputDir={#VEHOME}\VE_Installer\installer
-WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve-xplorer_banner.bmp
+WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_suite_banner.bmp
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\icons.bmp
 WindowVisible=true
 
