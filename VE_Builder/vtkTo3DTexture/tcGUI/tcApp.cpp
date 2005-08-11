@@ -105,6 +105,8 @@ bool TCApp::OnCmdLineParsed(wxCmdLineParser& parser)
       }
       if(!parser.Found(wxString("o"),&outputDir)){
          _frame->SetOutputDirectory(inputDir.c_str());
+      }else{
+         _frame->SetOutputDirectory(outputDir.c_str());
       }
       _frame->SetTextureResolution(resolution[0],resolution[1],resolution[2]);
       
