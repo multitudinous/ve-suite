@@ -37,18 +37,18 @@
 // A class that generates multiple planes of vector plots.
 namespace VE_Xplorer
 {
-   class VE_XPLORER_EXPORTS cfdVectors : public cfdVectorBase
-   {
-      public:
-         // Initialize the multiple vector plots for a particular plane direction
-         cfdVectors( const int xyz );
+class VE_XPLORER_EXPORTS cfdVectors : public cfdVectorBase
+{
+public:
+   // Initialize the multiple vector plots for a particular plane direction
+   cfdVectors( const int xyz );
 
-         ~cfdVectors();
+   ~cfdVectors();
 
-         virtual void Update( void );
+   virtual void Update( void );
 
-      private:
-         int xyz;
-   };
+private:
+   int xyz;
+};
 }
 #endif

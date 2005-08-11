@@ -35,7 +35,9 @@
 #include <vrj/Util/Debug.h>
 
 #include <vtkPolyDataReader.h>
+#include <vtkPolyDataWriter.h>
 #include <vtkPolyDataNormals.h>
+#include <vtkPolyData.h>
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 
@@ -130,7 +132,10 @@ void cfdModelHandler::CleanUp( void )
       delete _scalarBar;
 
    if ( this->arrow ) 
+   {
       this->arrow->Delete();
+      arrow = 0;
+   }
 }
 
 ///////////////////////
@@ -204,15 +209,15 @@ vtkPolyData* cfdModelHandler::_GetArrowPolyData(  )
    //ripped from cfdArrow in the Utilities/arrowCreator directory
    float shaftAngleIncrement = (3.14159265/3.0);
    float tipAngleIncrement = (3.14159265/3.0);
-   int tipResolution = 6;
-   int shaftResolution = 6;
+   int tipResolution = 3;
+   int shaftResolution = 3;
    float shaftRadius = 0.03;
    float tipRadius = 0.10;
    float tipLength = 0.35;
-   int numCells = 12;
+   int numCells = 6;
 
    float vertex[3];
-   int vertexList [4];     // make large enough for rectangles
+   int vertexList[4];     // make large enough for rectangles
    vtkPolyData * arrow = vtkPolyData::New();
 
    int memSize = numCells;
@@ -322,18 +327,23 @@ vtkPolyData* cfdModelHandler::_GetArrowPolyData(  )
    }
 
    arrow->SetPoints( points );
-   points->Delete();
 
    //the normals
    vtkPolyDataNormals * arrowPolysWithNormals = vtkPolyDataNormals::New();
    arrowPolysWithNormals->SetInput( arrow );
-   arrow->Delete();
    //Specify the angle that defines a sharp edge. If the difference in angle across neighboring
    //polygons is greater than this value, the shared edge is considered "sharp".    
    arrowPolysWithNormals->SetFeatureAngle( 60 );
-   return arrowPolysWithNormals->GetOutput();
+   arrowPolysWithNormals->Update();
+   
+   vtkPolyData* arrowPolys = vtkPolyData::New();
+   arrowPolys->DeepCopy( arrowPolysWithNormals->GetOutput() );
 
-   return arrow;
+   arrowPolysWithNormals->Delete();
+   points->Delete();
+   arrow->Delete();
+
+   return arrowPolys;
 }
 ///////////////////////////////////////
 void cfdModelHandler::InitScene( void )

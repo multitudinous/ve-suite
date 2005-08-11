@@ -40,6 +40,7 @@ class vtkPolyDataMapper;
 class vtkMaskPoints;
 class vtkTriangleFilter;
 class vtkStripper;
+class vtkThresholdPoints;
 
 namespace VE_Xplorer
 {
@@ -89,7 +90,7 @@ namespace VE_Xplorer
          vtkMaskPoints*       ptmask;
          vtkTriangleFilter*   tris;
          vtkStripper*         strip;
-
+         vtkThresholdPoints*  tfilter;
          void SetGlyphWithThreshold();
          void SetGlyphAttributes();
          float GetVectorScaleFactor();

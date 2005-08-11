@@ -55,7 +55,6 @@ using namespace VE_Xplorer;
 cfdVectors::cfdVectors( const int xyz )
 {
    this->xyz = xyz;
-
 }
 
 cfdVectors::~cfdVectors()
@@ -132,14 +131,15 @@ void cfdVectors::Update( void )
       // Not VTK Functions
       this->SetGlyphWithThreshold();
       this->SetGlyphAttributes();
-      this->glyph->Update();
+      //this->glyph->Update();
       //this->glyph->Print( cout );
 
       this->filter->ExtentClippingOff();
-      this->filter->Update();
+      //this->filter->Update();
       
       // Good Test code to see if you are actually getting streamlines
-/*      vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
+/*      
+      vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
       writer->SetInput( ( vtkPolyData * ) filter->GetOutput() );      
       writer->SetFileName( "teststreamers.vtk" );
       writer->Write();
@@ -148,13 +148,13 @@ void cfdVectors::Update( void )
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
-      this->mapper->Update();
-
+      //this->mapper->Update();
    }
    else
    {
       this->updateFlag = false;
    }
+
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
