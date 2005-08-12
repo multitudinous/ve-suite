@@ -33,7 +33,7 @@ AlwaysRestart=false
 UninstallFilesDir={app}\bin
 UninstallRestartComputer=false
 WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_suite_banner.bmp
-WizardImageStretch=true
+WizardImageStretch=false
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\icons.bmp
 WindowVisible=true
 
