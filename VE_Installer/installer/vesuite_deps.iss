@@ -25,6 +25,7 @@ OutputDir={#VEHOME}\VE_Installer\installer
 WizardImageFile={#VEHOME}\VE_Installer\installer\installerImages\ve_suite_banner.bmp
 WizardSmallImageFile={#VEHOME}\VE_Installer\installer\installerImages\icons.bmp
 WindowVisible=true
+WizardImageStretch=false
 
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
