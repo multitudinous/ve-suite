@@ -49,7 +49,9 @@
 #include <fstream>
 #include <ostream>
 #include <string>
-
+#ifdef WIN32
+#include <winsock2.h>
+#endif
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
