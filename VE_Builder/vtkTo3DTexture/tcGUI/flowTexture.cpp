@@ -299,7 +299,8 @@ void FlowTexture::CreatFlowTextureBuffer(char* file,
    fout << rlen << " " << grid_data_length2 << std::endl;
    fout.write( reinterpret_cast< const char* >( compressed_data ), rlen);
    fout.close();
-
+   compressor->Delete();
+   compressor = 0;
    delete [] compressed_data;
 }
 
