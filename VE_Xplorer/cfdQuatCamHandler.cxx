@@ -41,17 +41,15 @@
 
 #include "VE_SceneGraph/cfdDCS.h"
 
-
-
 #include <cmath>
 #include <iostream>
 #include <cstdlib>
 #include <fstream>
 #include <ostream>
 #include <string>
-#ifdef WIN32
-#include <winsock2.h>
-#endif
+
+#include <vpr/System.h>
+
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>
 
@@ -698,26 +696,22 @@ void cfdQuatCamHandler::FindMasterNode( void )
    std::vector<std::string> toks;
    std::string hostfile;
    std::string masterhost;
-   
-   if ( getenv( "VEXMASTER" ) != NULL )
-   {
-      masterhost = getenv( "VEXMASTER" );
-   }
-   else
+   vpr::System::getenv("VEXMASTER",masterhost);
+   if ( masterhost.empty() )
    {
       std::cerr << " ERROR : The VEXMASTER environment variable must be set to run cluster" << std::endl;
       exit( 1 );   
    }
-   char raw_hostname[256];
+   //char raw_hostname[256];
    std::string hostname;
    
-   gethostname(raw_hostname, 255); //get the host name 
-   hostname=raw_hostname;
+   hostname = vpr::System::getHostname(); //get the host name 
+   //hostname=raw_hostname;
    std::cout<<"Host name is "<<hostname<<std::endl;   
-   getStringTokens(raw_hostname,".", toks);
+   //getStringTokens(raw_hostname,".", toks);
    //now toks[0] will be the short host name: the one without the domain name
    
-   if (hostname==masterhost||toks[0]==masterhost)
+   if (hostname==masterhost)//||toks[0]==masterhost)
    {
       std::cout<<"This is the master!"<<std::endl;
       onMasterNode = true;
