@@ -1,5 +1,0 @@
-MOD_NAME HeatExchange0D #This is the module name
-
-Double desired_temp
-
-END

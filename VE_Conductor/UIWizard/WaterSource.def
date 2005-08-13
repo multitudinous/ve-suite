@@ -1,9 +1,0 @@
-MOD_NAME WaterSource #This is the module name
-
-Int   case_type
-Double temp
-Double pres
-Double enth
-Double flow
-
-END

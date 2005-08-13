@@ -1,7 +1,0 @@
-MOD_NAME GasSeparator #This is the module name
-
-String specie
-Double purity
-Double remain
-
-END

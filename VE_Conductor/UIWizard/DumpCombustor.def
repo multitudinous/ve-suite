@@ -1,8 +1,0 @@
-MOD_NAME DumpCombustor #This is the module name
-Int case_type
-Double conversion
-Double volume
-Double fracQloss
-Double press_drop
-
-END

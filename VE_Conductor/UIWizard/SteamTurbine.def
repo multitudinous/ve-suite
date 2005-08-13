@@ -1,6 +1,0 @@
-MOD_NAME SteamTurbine #This is the module name
-
-Double ad_eff
-Double pressure_drop
-
-END
