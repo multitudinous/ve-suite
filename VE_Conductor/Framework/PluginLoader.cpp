@@ -33,10 +33,18 @@ bool PluginLoader::LoadPlugins(wxString lib_dir)
    wxLogDebug ("Loading plugins from [%s]\n", lib_dir.c_str());
 
    /* Create a directory object we can scan for plugins */
+   if ( !wxDir::Exists(lib_dir) )
+   {
+      // deal with the error here - wxDir would already log an error 
+      // message explaining the exact reason of the failure
+      return FALSE;
+   }
    wxDir dir(lib_dir);// + "\\" + "plugins");
-
+   
    if ( !dir.IsOpened() )
    {
+      wxString msg(wxString("Directory ") + dir.GetName()+ wxString(" is present but cannot be opened."));
+      wxMessageBox( msg,"Plugin Loader Failure", wxOK | wxICON_INFORMATION );
       // deal with the error here - wxDir would already log an error 
       // message explaining the exact reason of the failure
       return FALSE;

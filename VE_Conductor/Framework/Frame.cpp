@@ -691,8 +691,8 @@ void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
    wxImage splashImage(ve_ce_banner_xpm);
    wxBitmap bitmap(splashImage);
    wxSplashScreen* splash = new wxSplashScreen(bitmap,
-          wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
-          5000, NULL, -1, wxDefaultPosition, wxDefaultSize,
+           wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
+          4000, this, -1, wxDefaultPosition, wxDefaultSize,
           wxSIMPLE_BORDER|wxSTAY_ON_TOP);
    wxSafeYield();
    if ( pelog==NULL )
@@ -732,8 +732,8 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
    wxImage splashImage(ve_xplorer_banner_xpm);
    wxBitmap bitmap(splashImage);
    wxSplashScreen* splash = new wxSplashScreen(bitmap,
-          wxSPLASH_CENTRE_ON_SCREEN|wxSPLASH_TIMEOUT,
-          5000, NULL, -1, wxDefaultPosition, wxDefaultSize,
+           wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
+          4000, this, -1, wxDefaultPosition, wxDefaultSize,
           wxSIMPLE_BORDER|wxSTAY_ON_TOP);
    wxSafeYield();
    if (pelog==NULL)
