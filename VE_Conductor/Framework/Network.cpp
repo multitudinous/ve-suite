@@ -1,15 +1,16 @@
+#include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/PortDialog.h"
+#include "VE_Conductor/Framework/package.h"
+#include "VE_Conductor/Framework/paraThread.h"
+#include "VE_Conductor/Framework/Geometry.h"
+#include "VE_Conductor/Framework/UIDialog.h"
+#include "VE_Conductor/Framework/GlobalParamDialog.h"
 
-#include "Network.h"
-#include "PortDialog.h"
-#include <cmath>
-#include "package.h"
-#include "paraThread.h"
-#include "Geometry.h"
 #include <sstream>
 #include <iomanip>
 #include <iostream>
+#include <cmath>
 
-//IMPLEMENT_DYNAMIC_CLASS(Network, wxScrolledWindow);
 BEGIN_EVENT_TABLE(Network, wxScrolledWindow)
   EVT_PAINT(Network::OnPaint)
   EVT_MOTION(Network::OnMouseMove)
@@ -2453,7 +2454,8 @@ void Network::Pack(std::vector<Interface> & UIs)
       {
          //modules[i].pl_mod->GetGeometryInfoPackage()->SetID(i);
          //UIs.push_back( *(modules[i].pl_mod->GetGeometryInfoPackage()->Pack()) );
-         Geometry* geometry = new Geometry(modules[i].pl_mod->GetID());
+         Geometry* geometry = new Geometry( modules[ i ].pl_mod->GetID() );
+         geometry->SetGeometryDataBuffer( modules[ i ].pl_mod->GetGeometryDataBuffer() );
 
          UIs.push_back( *(geometry->Pack()));
 
@@ -2665,10 +2667,11 @@ void Network::UnPack(std::vector<Interface> & intfs)
          //modules[_id].pl_mod->SetID(_id);
          modules[_id].pl_mod->UnPack(&intfs[i+1]);
       }
-      else if(intfs[i+1]._type ==2)
+      else if( intfs[i+1]._type == 2 )
       {
          //modules[_id].pl_mod->GetGeometryInfo()->UnPack(&intfs[i+1]);
-         Geometry* geometry = new Geometry(modules[_id].pl_mod->GetID());
+         Geometry* geometry = new Geometry( modules[_id].pl_mod->GetID() );
+         geometry->SetGeometryDataBuffer( modules[_id].pl_mod->GetGeometryDataBuffer() );
 
          geometry->UnPack(&intfs[i+1]);
 
@@ -2942,9 +2945,8 @@ void Network::OnGeometry(wxCommandEvent& WXUNUSED(event))
 {
    if (m_selMod<0) 
       return;
-   //modules[m_selMod].pl_mod->GeometryDialog();
+
    std::string m_selmod_name = modules[m_selMod].pl_mod->GetName().c_str();
    modules[m_selMod].pl_mod->SetIDtoGeometryDataBuffer();
    modules[m_selMod].pl_mod->GeometryData();
-   //modules[m_selMod].pl_mod->GeometryInfoPackage();
 }

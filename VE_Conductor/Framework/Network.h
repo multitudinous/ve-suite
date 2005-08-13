@@ -7,13 +7,10 @@
 #include <vector>
 #include <map>
 #include <iostream>
-#include "PluginLoader.h"
 #include "moduleC.h"
-#include "GlobalParamDialog.h"
-#include "Geometry.h"
 
-
-//using namespace std;
+#include "VE_Conductor/Framework/Plugin_base.h"
+class GlobalParamDialog;
 
 enum 
 {

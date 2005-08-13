@@ -6,7 +6,7 @@
 #endif
 #include <wx/wx.h>
 #include <wx/dialog.h>
-#include "VE_Conductor/Framework/GeometryDataManager.h"
+
 #include "VE_Conductor/Framework/GeometryDataBuffer.h"
 
 #include <vector>
@@ -37,10 +37,12 @@ class GeometryDialog : public wxDialog
                         long  style = wxDEFAULT_DIALOG_STYLE
                      );  
       
-      ~GeometryDialog(){}
+      ~GeometryDialog(){;}
 
       virtual bool TransferDataFromWindow();
       virtual bool TransferDataToWindow();
+
+      void SetGeometryDataBuffer( GeometryDataBuffer* );
 
    protected:
       void _buildPage();
@@ -86,9 +88,9 @@ class GeometryDialog : public wxDialog
       wxTextCtrl* t_LOD;
 
       wxListBox * lbox_geompackagenames;
-
+   
+      GeometryDataBuffer* geometryDataBuffer;
       DECLARE_EVENT_TABLE()
-
 };
 
 #endif

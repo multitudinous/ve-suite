@@ -200,10 +200,10 @@ void GeometryDialog::_buildPage()
 void GeometryDialog::_onButtonAddNewGeomInfoPackage(wxCommandEvent& event)
 {
    std::vector<GeometryInfoPackage> templist;
-   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+   templist = geometryDataBuffer->GetCurrentGeomInfoList();
   
    GeometryInfoPackage newGeometryInfoPackage;
-   newGeometryInfoPackage =  GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetDefaultNewGeomInfoPackage(templist.size());
+   newGeometryInfoPackage =  geometryDataBuffer->GetDefaultNewGeomInfoPackage(templist.size());
 
    templist.push_back(newGeometryInfoPackage); 
 
@@ -232,19 +232,19 @@ void GeometryDialog::_onButtonSaveGeomInfoPackage(wxCommandEvent& event)
    int item = selections[0];//right now can only selecte one item at a time
 
    std::vector<GeometryInfoPackage> templist;
-   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+   templist = geometryDataBuffer->GetCurrentGeomInfoList();
 
    if( static_cast< int >( templist.size() ) < lbox_geompackagenames->GetCount())//this is a new package, add to the list
    {
-      GeometryDataManager::getInstance().GetGeometryDataBuffer()->AddGeomInfoToCurrentList(temppackage);
+      geometryDataBuffer->AddGeomInfoToCurrentList(temppackage);
 
    }
    else //this is an old, just update the list
    {
-      GeometryDataManager::getInstance().GetGeometryDataBuffer()->UpdateGeomInfoToCurrentList(temppackage,item);
+      geometryDataBuffer->UpdateGeomInfoToCurrentList(temppackage,item);
    }
  
-   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+   templist = geometryDataBuffer->GetCurrentGeomInfoList();
 
    _onUpdateUIInfoPage(templist,item);
    
@@ -278,10 +278,10 @@ void GeometryDialog::_onButtonDeleteSelGeomInfoPackage(wxCommandEvent& event)
       lbox_geompackagenames->Delete(selections[--n]);
       itemindexs.push_back(selections[n]);
    }
-   GeometryDataManager::getInstance().GetGeometryDataBuffer()->DeleteGeomInfosFromCurrentList(itemindexs);
+   geometryDataBuffer->DeleteGeomInfosFromCurrentList(itemindexs);
     
    std::vector<GeometryInfoPackage> templist;
-   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+   templist = geometryDataBuffer->GetCurrentGeomInfoList();
    _onUpdateUIInfoPage(templist,0);
    
    wxArrayString items;
@@ -307,28 +307,29 @@ void GeometryDialog::_onListBox(wxCommandEvent& event)
 {
    int item = event.GetInt();
    std::vector<GeometryInfoPackage> templist;
-   templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentGeomInfoList();
+   templist = geometryDataBuffer->GetCurrentGeomInfoList();
    _onUpdateUIInfoPage(templist,item);
-
 }
 
 void GeometryDialog::_onDClickListBox(wxCommandEvent& event)
-
-{ 
-   
-  
+{
 }
 
 bool GeometryDialog::TransferDataFromWindow()
 {
-   GeometryDataManager::getInstance().GetGeometryDataBuffer()->UpdateCurrentGeomInfoListToMap();
+   geometryDataBuffer->UpdateCurrentGeomInfoListToMap();
    return true;
+}
+
+void GeometryDialog::SetGeometryDataBuffer( GeometryDataBuffer* input )
+{
+   geometryDataBuffer = input;
 }
 
 bool GeometryDialog::TransferDataToWindow()
 {
    //if this is an old dialog, get the data from databuffer
-  std::vector<GeometryInfoPackage> templist = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentModuleGeomInfoListFromMap();
+  std::vector<GeometryInfoPackage> templist = geometryDataBuffer->GetCurrentModuleGeomInfoListFromMap();
 
   if(templist.size()>0)
   {

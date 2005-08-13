@@ -24,6 +24,7 @@ public:
    void SetID(int);
    
    void SetCurModuleGeomInfoPackage();
+   void SetGeometryDataBuffer( GeometryDataBuffer* );
    
 protected:
    // data holder 
@@ -34,7 +35,8 @@ protected:
 
 private:
    Interface* mod_pack;
-   std::map<std::string, GeometryInfoPackage> _geominfopackagemap;
+   std::map< std::string, GeometryInfoPackage > _geominfopackagemap;
+   GeometryDataBuffer* geometryDataBuffer;
 };
 #endif //GEOMETRY_H
 

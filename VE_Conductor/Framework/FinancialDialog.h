@@ -2,7 +2,6 @@
 #define FINANCIALDIALOG_H
 
 #include <wx/wx.h>
-#include "VE_Conductor/Framework/interface.h"
 
 enum 
 {

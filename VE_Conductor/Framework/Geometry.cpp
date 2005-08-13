@@ -1,16 +1,14 @@
 #include "VE_Conductor/Framework/Geometry.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Conductor/Framework/interface.h"
-#include "VE_Conductor/Framework/GeometryDataManager.h"
 
 #include <iostream>
 #include <string>
 #include <cmath>
 
-
-Geometry::Geometry(int id)
+Geometry::Geometry( int id )
 {
-     this->cur_moduleid = id;
+   this->cur_moduleid = id;
    mod_pack = new Interface();
 }
 
@@ -63,12 +61,10 @@ void Geometry::UnPack( Interface* intf )
    {
       temppackage = intf->getGeomInfoPackage(vars[i], &rv);
       templist.push_back(temppackage);
-      
    }
 
-   GeometryDataManager::getInstance().GetGeometryDataBuffer()->SetCurrentGeomInfoList(templist);
-   GeometryDataManager::getInstance().GetGeometryDataBuffer()->UpdateCurrentGeomInfoListToMap();
-   
+   geometryDataBuffer->SetCurrentGeomInfoList(templist);
+   geometryDataBuffer->UpdateCurrentGeomInfoListToMap();
 }
 
 Interface* Geometry::Pack( void )
@@ -93,7 +89,8 @@ Interface* Geometry::Pack( void )
 
 void Geometry::SetCurModuleGeomInfoPackage()
 {
-   std::map<int, std::vector<GeometryInfoPackage> > localmap =GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetWholeGeomInfoMap();
+   std::map<int, std::vector<GeometryInfoPackage> > localmap;
+   localmap = geometryDataBuffer->GetWholeGeomInfoMap();
    
    _geominfopackagemap.clear();
 
@@ -104,10 +101,9 @@ void Geometry::SetCurModuleGeomInfoPackage()
       _geominfopackagemap.insert(std::make_pair(locallist[i].GetGeomName(), locallist[i]));
 
    }
-
-   //this->cur_moduleid = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetCurrentModuleID();
-
-   
 }
 
-
+void Geometry::SetGeometryDataBuffer( GeometryDataBuffer* input )
+{
+   geometryDataBuffer = input;
+}

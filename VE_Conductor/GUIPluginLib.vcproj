@@ -153,6 +153,12 @@
 			</File>
 			<File
 				RelativePath=".\Framework\GeometryDataManager.cpp">
+				<FileConfiguration
+					Name="dbg|Win32"
+					ExcludedFromBuild="TRUE">
+					<Tool
+						Name="VCCLCompilerTool"/>
+				</FileConfiguration>
 			</File>
 			<File
 				RelativePath=".\Framework\GeometryDialog.cpp">

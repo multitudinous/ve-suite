@@ -3,7 +3,7 @@
 
 #include "VE_Conductor/Framework/UIDialog.h"
 #include <vector>
-#include "VE_Conductor/Framework/TexTable.h"
+class TexTable;
 
 class VE_GUIPLUGINS_EXPORTS TextResultDialog : public UIDialog
 {
