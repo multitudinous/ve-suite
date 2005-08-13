@@ -27,7 +27,7 @@ OutputDir={#VEHOME}\VE_Installer\installer
 OutputBaseFilename=vesuite{#VEVERSION}
 Compression=lzma
 SolidCompression=true
-ChangesEnvironment=true
+ChangesEnvironment=false
 ShowLanguageDialog=yes
 AlwaysRestart=false
 UninstallFilesDir={app}\bin
@@ -74,16 +74,16 @@ Source: {#VEHOME}\bin\win32\project_tao_osg_vep_d.exe; DestDir: {app}\bin; Compo
 Source: {#VEHOME}\lib\win32\*_d.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\WinServerd.exe; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\WinClientd.exe; DestDir: {app}\bin; Components: veconductor; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\run.pf.bat; DestDir: {app}\bin; Components: vexplorer\pf; Flags: ignoreversion
+Source: {#VEHOME}\VE_Installer\installer\run.pf.bat; DestDir: {app}\bin; Components: vexplorer\pf; Flags: ignoreversion confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\run.osg.bat; DestDir: {app}\bin; Components: vexplorer\osg; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\NameService.bat; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VE-Conductor.bat; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly; Attribs: readonly
+Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly overwritereadonly; Attribs: readonly hidden
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
-Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.cluster.bat; DestDir: {app}\bin; Components: vexplorer\osgvepcluster; Flags: ignoreversion
-Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}
-Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly; Attribs: readonly
+Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion confirmoverwrite
+Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.cluster.bat; DestDir: {app}\bin; Components: vexplorer\osgvepcluster; Flags: ignoreversion confirmoverwrite
+Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}; Flags: confirmoverwrite
+Source: {#VEHOME}\VE_Installer\installer\README.txt; DestDir: {app}; Flags: isreadme uninsremovereadonly overwritereadonly
 Source: {#VEHOME}\VE_TestSuite\simpleScalars\*; DestDir: {app}\exampleDatasets\simpleScalars\; Flags: recursesubdirs; Components: examples
 Source: {#VEHOME}\VE_TestSuite\2scl.vtk; DestDir: {app}\exampleDatasets\; Components: examples
 Source: {#VEHOME}\VE_TestSuite\3scl2vec.vtk; DestDir: {app}\exampleDatasets\; Components: examples

@@ -16,6 +16,9 @@ set VE_USER_PLUGIN_DIR=.\
 REM VE-Suite pre-complied dependencies
 set VE_DEPS_DIR=C:\VE_Suite.0.9.0_Dependencies\
 
+REM used for cluster apps
+REM set VEXMASTER=localhost
+
 REM these can be used to point to user built dependencies
 REM set OSGHOME=C:\OpenSceneGraph
 REM set VTK_HOME=C:\VTK_Install
@@ -42,7 +45,7 @@ REM set PHSHAREDSIZE=534773700
 
 REM juggler debug output level
 set VPR_DEBUG_ENABLE=0
-REM set VPR_DEBUG_NFY_LEVEL=1
+set VPR_DEBUG_NFY_LEVEL=1
 set NO_PERF_PLUGIN=TRUE
 set NO_RTRC_PLUGIN=TRUE
 set PFNFYLEVEL=0
