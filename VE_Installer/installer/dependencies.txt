@@ -1,7 +1,9 @@
 This is a list of the pre-compiled binaries for VE-Suite that
 are included in the install.
-All dependencies, as well as VE-Suite are compiled w/ Visual Studio 7.1(2003).
 
+*******************************IMPORTANT*************************************
+All dependencies, as well as VE-Suite are compiled w/ Visual Studio 7.1(2003).
+*****************************************************************************
 wxWidgets -- Open Source GUI API.
 Visualization ToolKit (VTK) -- Open Source data handling/visualization API.
 xerces-C++ -- C++ xml parser.
