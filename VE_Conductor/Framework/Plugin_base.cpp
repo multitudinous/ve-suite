@@ -435,25 +435,19 @@ void REI_Plugin::UnPack(Interface * intf)
 	mod_pack.getVal(vars[i], *(itervd->second));
     }
 
-  vars = mod_pack.getStrings1D();
-  for (i=0; i<vars.size(); i++)
-    {
-		if ( i == 2 )
-			std::cout << " " << std::endl;
+   vars = mod_pack.getStrings1D();
+   for (i=0; i<vars.size(); i++)
+   {
       itervs =_string1D.find(vars[i]);
       if (itervs!=_string1D.end())
-	  {
-		  std::cout<< (*itervs->second).size()<< std::endl;
-		  unsigned int testInt = (*itervs->second).size();
-		  unsigned int idint = this->GetID();
-		  std::string tempstring = vars[i];
-		  std::vector<std::string> tempvector = (*itervs->second);
-		  //(*itervs->second).clear();
-	mod_pack.getVal(vars[i], tempvector );
-    unsigned int tempInt = tempvector.size();
-	(*itervs->second) = tempvector;
-	  }
-    }
+      {
+         unsigned int testInt = (*itervs->second).size();
+         unsigned int idint = this->GetID();
+         std::vector<std::string> tempvector = (*itervs->second);
+         mod_pack.getVal(vars[i], tempvector );
+         (*itervs->second) = tempvector;
+      }
+   }
 
   // EPRI TAG
   long uf = 0;
@@ -660,16 +654,15 @@ void REI_Plugin::SetIDtoGeometryDataBuffer()
 void REI_Plugin::GeometryData()
 {
    geom_dlg = new GeometryDialog(NULL);
+   
+   if ( geometryDataBuffer == 0 )
+      geometryDataBuffer = new GeometryDataBuffer();
+
+   geom_dlg->SetGeometryDataBuffer( geometryDataBuffer );
 
    geom_dlg->Show();
 }
-/*
-// return pointer to geometry dialog
-GeometryDialog* REI_Plugin::GetGeometryDialog( void )
-{
-   return geom_dlg;
-}
-*/
+
 GeometryDataBuffer* REI_Plugin::GetGeometryDataBuffer( void )
 {
    if ( geometryDataBuffer == 0 )

@@ -5,9 +5,6 @@
 #endif
 
 #include <wx/wx.h>
-#include <wx/log.h>
-#include <wx/dir.h>
-#include <wx/filename.h>
 
 #include <vector>
 

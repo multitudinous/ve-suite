@@ -23,8 +23,6 @@ enum
 
 class Avail_Modules : public wxTreeCtrl
 {
-  //DECLARE_DYNAMIC_CLASS(Avail_Modules);
-
  public:
   enum
     {
@@ -35,7 +33,7 @@ class Avail_Modules : public wxTreeCtrl
       TreeCtrlIcon_FolderOpened
     };
 
-  Avail_Modules() {};
+  Avail_Modules() {;}
   Avail_Modules(wxWindow *parent, const wxWindowID id, const wxPoint& pos, const wxSize& size,long style);
 
   ~Avail_Modules();
