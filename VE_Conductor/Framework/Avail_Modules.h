@@ -5,15 +5,16 @@
 #endif
 #include <wx/wx.h>
 #include <vector>
-#include "wx/image.h"
-#include "wx/imaglist.h"
-#include "wx/treectrl.h"
+#include <wx/image.h>
+#include <wx/imaglist.h>
+#include <wx/treectrl.h>
 
-#include "PluginLoader.h"
-#include "Network.h"
+class Network;
+class REI_Plugin;
+class PluginLoader;
 
-enum {
-  
+enum 
+{
   Module_Desc,
   Module_Help,
   Module_Add,

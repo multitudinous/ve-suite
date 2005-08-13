@@ -6,17 +6,15 @@
 
 #include <wx/wx.h>
 #include "VE_Conductor/Framework/interface.h"
-#include "VE_Conductor/Framework/UIDialog.h"
-#include "VE_Conductor/Framework/TextResultDialog.h"
-// EPRI TAG
-#include "VE_Conductor/Framework/FinancialDialog.h"
-#include "VE_Conductor/Framework/GeometryDataManager.h"
-#include "VE_Conductor/Framework/GeometryDialog.h"
-
-
 #define ICON 20000
 
 #define edge_size 10
+class UIDialog;
+class TextResultDialog;
+class TextResultDialog;
+class GeometryDialog;
+class FinancialDialog;
+class GeometryDataBuffer;
 
 typedef std::vector<wxPoint> POLY;
 
@@ -82,7 +80,7 @@ class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
 
 
       void GeometryData();
-      GeometryDialog* GetGeometryDialog();
+      GeometryDataBuffer* GetGeometryDataBuffer( void );
       
       virtual void UnPack(Interface* intf);
       //This is the load function of the module, unpack the input string and fill up the UI according to this
@@ -127,6 +125,7 @@ class VE_GUIPLUGINS_EXPORTS REI_Plugin : public wxObject
       TextResultDialog* result_dlg;
       TextResultDialog* port_dlg;
       GeometryDialog* geom_dlg;
+      GeometryDataBuffer* geometryDataBuffer;
       //Geometry  _geometrypermodule;
 
       Interface mod_pack;

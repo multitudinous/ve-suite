@@ -184,15 +184,14 @@ protected:
    std::vector< std::string > v_value;
 };
 }
-/*
-extern "C"
-{
 
-EXPORT void* entryFunc()
-{
-   return new TestClass();
-}
+#define VE_GRAPHICALPLUGIN_CLASS(name)  \
+   extern "C" \
+   { \
+      VE_USER_PLUGIN_EXPORTS void* CreateVEPlugin() \
+      { \
+         return new name(); \
+      } \
+   }
 
-}
-*/
 #endif

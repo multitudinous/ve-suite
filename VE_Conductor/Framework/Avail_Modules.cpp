@@ -1,5 +1,8 @@
 #include "Avail_Modules.h"
 #include "StringParse.h"
+#include "VE_Conductor/Framework/PluginLoader.h"
+#include "VE_Conductor/Framework/Network.h"
+#include "VE_Conductor/Framework/Plugin_base.h"
 
 #include "icon1.xpm"
 #include "icon2.xpm"

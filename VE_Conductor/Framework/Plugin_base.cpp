@@ -1,14 +1,14 @@
-#ifdef WIN32
-//#pragma warning(disable : 4786)
-//#pragma warning(disable : 4101)
-//#pragma warning(disable : 4503)
-//#pragma warning(disable : 4251)
-#endif
-
 #include "VE_Conductor/Framework/Plugin_base.h"
 #include <iostream>
 #include "VE_Conductor/Framework/string_ops.h"
 #include "VE_Conductor/Framework/Geometry.h"
+#include "VE_Conductor/Framework/UIDialog.h"
+#include "VE_Conductor/Framework/TextResultDialog.h"
+// EPRI TAG
+#include "VE_Conductor/Framework/FinancialDialog.h"
+#include "VE_Conductor/Framework/GeometryDialog.h"
+#include "VE_Conductor/Framework/TexTable.h"
+#include "VE_Conductor/Framework/GeometryDataBuffer.h"
 
 IMPLEMENT_DYNAMIC_CLASS( REI_Plugin, wxObject )
 
@@ -19,6 +19,7 @@ REI_Plugin::REI_Plugin()
    result_dlg  = 0;
    port_dlg    = 0;
    geom_dlg     = 0;
+   geometryDataBuffer = 0;
    // EPRI TAG
    financial_dlg = 0;
 
@@ -69,6 +70,12 @@ REI_Plugin::~REI_Plugin()
       geom_dlg = 0;
    }
 
+   if ( geometryDataBuffer!=NULL )
+   {
+      delete geometryDataBuffer;
+      geometryDataBuffer = 0;
+   }
+
    // EPRI TAG
    if (financial_dlg!=NULL) 
    {
@@ -81,7 +88,10 @@ REI_Plugin::~REI_Plugin()
 void REI_Plugin::SetID(int id)
 {
   mod_pack._id = id;
-  GeometryDataManager::getInstance().GetGeometryDataBuffer()->SetCurrentModuleID(id);
+
+  if ( geometryDataBuffer == 0 )
+      geometryDataBuffer = new GeometryDataBuffer();
+  geometryDataBuffer->SetCurrentModuleID(id);
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -641,21 +651,31 @@ void REI_Plugin::FinancialData ()
 
 void REI_Plugin::SetIDtoGeometryDataBuffer()
 {
-   GeometryDataManager::getInstance().GetGeometryDataBuffer()->SetCurrentModuleID(this->GetID());
+  if ( geometryDataBuffer == 0 )
+      geometryDataBuffer = new GeometryDataBuffer();
 
+   geometryDataBuffer->SetCurrentModuleID(this->GetID());
 }
+
 void REI_Plugin::GeometryData()
 {
-   
    geom_dlg = new GeometryDialog(NULL);
 
    geom_dlg->Show();
 }
-
+/*
 // return pointer to geometry dialog
 GeometryDialog* REI_Plugin::GetGeometryDialog( void )
 {
    return geom_dlg;
+}
+*/
+GeometryDataBuffer* REI_Plugin::GetGeometryDataBuffer( void )
+{
+   if ( geometryDataBuffer == 0 )
+      geometryDataBuffer = new GeometryDataBuffer();
+
+   return geometryDataBuffer;
 }
 
 bool REI_Plugin::HasGeomInfoPackage()
@@ -663,9 +683,13 @@ bool REI_Plugin::HasGeomInfoPackage()
    int local_id = this->GetID();
    std::map<int, std::vector <GeometryInfoPackage> > localmap;
 
-   localmap = GeometryDataManager::getInstance().GetGeometryDataBuffer()->GetWholeGeomInfoMap();
+   if ( geometryDataBuffer == 0 )
+      geometryDataBuffer = new GeometryDataBuffer();
 
-   std::map<int, std::vector <GeometryInfoPackage> >::iterator itr =localmap.find(local_id);
+   localmap = geometryDataBuffer->GetWholeGeomInfoMap();
+
+   std::map<int, std::vector <GeometryInfoPackage> >::iterator itr;
+   itr =localmap.find(local_id);
    if(itr!=localmap.end())
    {
       return true;

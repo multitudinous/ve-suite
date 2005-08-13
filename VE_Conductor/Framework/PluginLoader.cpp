@@ -1,8 +1,7 @@
 #include "PluginLoader.h"
+#include "Plugin_base.h"
 #include <wx/image.h>
 #include <wx/dynload.h>
-
-//IMPLEMENT_DYNAMIC_CLASS(PluginLoader, wxObject);
 
 #include <wx/image.h>
 
