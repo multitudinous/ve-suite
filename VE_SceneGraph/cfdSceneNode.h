@@ -49,6 +49,8 @@ namespace osg
    class Switch;
 };
 #elif _OPENSG
+#else
+#error "Define either _PERFORMER, _OSG, or _OPENSG"
 #endif
 
 //#include <vpr/Util/GUID.h>
