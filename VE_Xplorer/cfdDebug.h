@@ -29,6 +29,9 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
+#ifndef CFD_DEBUG_H
+#define CFD_DEBUG_H
+
 #include <vpr/Util/Debug.h>
 #include <vpr/Util/GUID.h>
 
@@ -38,3 +41,4 @@ vesDBG(vpr::GUID("a4419133-2e5d-45bb-8a78-cd575a1b3ba5"), "VES_DBG",
 
 // this could then be used by: 
 // vprDEBUG(vesDBG, vprDBG_WARNING_LVL) << "My Warning Message" << vprDEBUG_FLUSH;
+#endif

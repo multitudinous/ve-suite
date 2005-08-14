@@ -428,6 +428,9 @@
 			Name="headers"
 			Filter=".h">
 			<File
+				RelativePath=".\cfdDebug.h">
+			</File>
+			<File
 				RelativePath=".\cfdEnum.h">
 			</File>
 			<File
