@@ -19,8 +19,15 @@ NOTES:
 - vrJuggler, OpenSceneGraph and Performer have pre-compiled binaries 
   and installers available at their repspective websites.
 
+- vrjuggler download site
+http://sourceforge.net/project/showfiles.php?group_id=8041
 www.vrJuggler.org
+
+- open scene graph download site
 www.openscenegraph.org
+
+- performer download site
+http://www.sgi.com/products/software/performer/downloads.html
 http://www.sgi.com/products/software/performer/
 
 
