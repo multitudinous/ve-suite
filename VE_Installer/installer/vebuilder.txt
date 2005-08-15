@@ -1,0 +1,38 @@
+===============================================
+          VE-Builder Tools .0.9.0
+===============================================
+VE-Builder Tools is a set of programs that help w/ manipulating data
+for analysis in VE-Suite. 
+
+Currently, the following tools are available:
+addNormals2Poly
+appendVTK
+arrowCreator
+combineFluentParticleFile
+compareScalars
+convertCellDataToPointData
+convertSurfaceFileToStl
+convertVTK2Ascii
+convertVTK2Binary
+createMiniFlowdata
+makeVtkSurface
+mergeVertices
+meshViewer
+moveFieldToPointData
+removeVtkCellsOutsideBox
+removeVtkPointData
+scaleVTK
+tcGUI
+transformVTK
+Preprocessor
+Transient_Tools
+Translator
+
+To run a tool, launch the VE-Builder Shell icon, which will open a
+cmd shell with the proper environment set to run the applications.
+Then simply type the name of the tool you wish to run and follow the prompts
+on the screen.
+
+****NOTE****
+Some of the tools require the installation of VTK and
+wxWidgets which can be installed w/ the VE-Suite dependency installer.
