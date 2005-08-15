@@ -25,7 +25,7 @@
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				RuntimeTypeInfo="TRUE"
-				UsePrecompiledHeader="2"
+				UsePrecompiledHeader="0"
 				WarningLevel="1"
 				Detect64BitPortabilityProblems="FALSE"
 				DebugInformationFormat="4"/>
@@ -34,7 +34,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="wxbase26d.lib wxmsw26d_core.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib VE_UtilLib_d.lib"
-				OutputFile="$(OutDir)/tcGUI.exe"
+				OutputFile="$(OutDir)/vtkTo3DTextured.exe"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(WX_HOME)\lib\vc_dll&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;;&quot;$(VE_SUITE_HOME)\lib\win32&quot;"
 				GenerateDebugInformation="TRUE"
@@ -81,7 +81,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				OutputFile="$(OutDir)/tcGUI.exe"
+				OutputFile="$(OutDir)/vtkTo3DTexture.exe"
 				LinkIncremental="1"
 				GenerateDebugInformation="TRUE"
 				SubSystem="2"
