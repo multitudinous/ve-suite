@@ -27,14 +27,14 @@ WizardImageStretch=false
 UninstallFilesDir={app}\bin
 OutputDir={#VEHOME}\VE_Installer\installer
 [Types]
-Name: optional; Description: VE-Util Library
+;Name: optional; Description: VE-Util Library
 [Components]
-Name: veutil; Description: VE-Util Library (Optional); Types: optional
+;Name: veutil; Description: VE-Util Library (Optional); Types: optional
 [Languages]
 Name: eng; MessagesFile: compiler:Default.isl
 
 [Files]
-Source: {#VEHOME}\lib\win32\VE_UtilLib_d.dll; DestDir: {app}\bin; Components: optional; Flags: ignoreversion
+Source: {#VEHOME}\lib\win32\VE_UtilLib_d.dll; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\makeVtkSurface.exe; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\createMiniFlowdata.exe; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\convertVTK2Binary.exe; DestDir: {app}\bin; Flags: ignoreversion
@@ -57,7 +57,7 @@ Source: {#VEHOME}\bin\win32\transformVTK.exe; DestDir: {app}\bin; Flags: ignorev
 Source: {#VEHOME}\bin\win32\combineFluentParticleFile.exe; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\whatIsScalarRange.exe; DestDir: {app}\bin; Flags: ignoreversion
 Source: {#VEHOME}\bin\win32\meshViewer.exe; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#VEHOME}\bin\win32\tcGUI.exe; DestDir: {app}\bin; Flags: ignoreversion
+Source: {#VEHOME}\bin\win32\vtkTo3DTextured.exe; DestDir: {app}\bin; Flags: ignoreversion; DestName: vtkTo3DTexture.exe
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#VEHOME}\VE_Installer\installer\setup.bat; DestDir: {app}
 Source: {#VEHOME}\VE_Installer\installer\buildershell.bat; DestDir: {app}\bin; Flags: ignoreversion
@@ -66,8 +66,7 @@ Source: {#VEHOME}\VE_Installer\installer\vebuilder.txt; DestDir: {app}; Attribs:
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
-
 Name: {group}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {userdesktop}\VE-Builder_Shell; Filename: {app}\{#BuilderShell}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
 [Tasks]
-Name: BuilderShell; Description: Builder Tools Shell; GroupDescription: Create Desktop Icon; Flags: unchecked
+Name: BuilderShell; Description: VE-Builder Tools Shell; GroupDescription: Create Desktop Icon; Flags: unchecked
