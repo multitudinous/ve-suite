@@ -1,5 +1,5 @@
+@ECHO OFF
 REM Edit this file to reflect your local environment for VE_Suite
-
 REM vrJuggler  
 set VJ_BASE_DIR=C:\vrjuggler-2.0.0-win32-vc71
 set VJ_DEPS_DIR=C:\vrjuggler-2.0.0-win32-vc71-deps
@@ -65,3 +65,4 @@ set Path=%Path%;%ACE_ROOT%\bin;%XERCESCROOT%\Build\Win32\VC7\Debug
 set Path=%Path%;%OSGHOME%\bin
 set Path=%Path%;%VE_INSTALL_DIR%\bin
 set Path=%Path%;%VE_DEPS_DIR%\bin
+set Path=%Path%;%CD%\bin

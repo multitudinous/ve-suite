@@ -1,3 +1,4 @@
+@ECHO OFF
 REM Double click this file to run winClient
 
 REM Specify the environment variables

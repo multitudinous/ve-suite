@@ -1,3 +1,4 @@
+@ECHO OFF
 REM Double click this file to start the app in the test directory
 
 call .\setup.bat
