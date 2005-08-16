@@ -165,17 +165,23 @@ Source: {#OSGHOME}\bin\osgUtild.dll; DestDir: {app}\bin; Components: osg; Flags:
 Source: {#OSGHOME}\bin\osgwrapper_osgd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#OSGHOME}\bin\osgdb_pfbd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#OSGHOME}\bin\osgSimd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#OSGHOME}\bin\osgTextd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#JUGGLERINSTHOME}\*; DestDir: {app}\vrJuggler2.0.0; Flags: ignoreversion recursesubdirs; Components: juggler
 
 
 [Icons]
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
 
 [Components]
-Name: vtk; Description: Visualiztion ToolKit; Types: full
-Name: acetao; Description: ACE/TAO; Types: full
-Name: wxwidgets; Description: wxWidgets 2.6.1; Types: full
-Name: xercesc; Description: Xerces-C++; Types: full
-Name: osg; Description: OpenSceneGraph; Types: full
+Name: vtk; Description: Visualiztion ToolKit; Types: custom vexosg vexpf full
+Name: acetao; Description: ACE/TAO; Types: vecns vexosg vexpf full custom
+Name: wxwidgets; Description: wxWidgets 2.6.1; Types: custom vecns full
+Name: xercesc; Description: Xerces-C++; Types: custom vecns vexosg vexpf full
+Name: osg; Description: OpenSceneGraph; Types: custom vexosg full
+Name: juggler; Description: vrJuggler; Types: custom vexosg vexpf full
 [Types]
 Name: full; Description: All pre-compiled dependencies
+Name: vexpf; Description: VE-Xplorer-PF (Performer based)
+Name: vexosg; Description: VE-Xplorer-OSG (OpenSceneGraph based)
+Name: vecns; Description: VE-Conductor(GUI) and Name Server
 Name: custom; Description: Custom; Flags: iscustom

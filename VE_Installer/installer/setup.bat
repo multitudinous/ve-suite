@@ -1,8 +1,5 @@
 @ECHO OFF
 REM Edit this file to reflect your local environment for VE_Suite
-REM vrJuggler  
-set VJ_BASE_DIR=C:\vrjuggler-2.0.0-win32-vc71
-set VJ_DEPS_DIR=C:\vrjuggler-2.0.0-win32-vc71-deps
 
 REM where VE-Suite installed
 set VE_INSTALL_DIR=C:\VE_Suite.0.9.0
@@ -14,7 +11,13 @@ REM the directory containing user defined plugins
 set VE_USER_PLUGIN_DIR=.\
 
 REM VE-Suite pre-complied dependencies
-set VE_DEPS_DIR=C:\VE_Suite.0.9.0_Dependencies\
+set VE_DEPS_DIR=C:\VE_Suite.0.9.0_Dependencies
+
+REM vrJuggler  
+REM These are setup for using VE-Suite dependency install's location
+REM change only if you are using your own build
+set VJ_BASE_DIR=%VE_DEPS_DIR%\vrjuggler2.0.0
+set VJ_DEPS_DIR=%VE_DEPS_DIR%\vrjuggler2.0.0
 
 REM used for cluster apps
 REM set VEXMASTER=localhost
@@ -52,9 +55,13 @@ set PFNFYLEVEL=0
 REM set OSGNOTIFYLEVEL=DEBUG_INFO
 
 REM Juggler dependencies
-set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions
-set VJ_CFG_PATH=%VJ_BASE_DIR%\share\vrjuggler\data\definitions
+REM These are currently set relative to VE-Suite's install
+REM if the user downloads there own juggler, these paths will have to be modified
+set JCCL_BASE_DIR=%VJ_BASE_DIR%
+set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\definitions
+set VJ_CFG_PATH=%VJ_BASE_DIR%\definitions
 set NSPR_ROOT=%VJ_DEPS_DIR%
+set SNX_BASE_DIR=%VJ_BASE_DIR%
 
 REM Python build environment variables
 set PYTHONPATH=%VJ_DEPS_DIR%\lib\python

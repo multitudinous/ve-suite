@@ -63,6 +63,13 @@ Name: desktopVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Crea
 Name: desktopVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
 Name: desktopVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create Desktop Icon; Flags: unchecked; Components: vexplorer\pf
 
+Name: startMenuNSIcon; Description: Name Server; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: nameserver
+Name: startMenuVECIcon; Description: VE-Conductor (GUI); GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: veconductor
+Name: startMenuVXOIcon; Description: VE-Xplorer-OSG; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osg
+Name: startMenuVXOVEPIcon; Description: VE-Xplorer-OSG_VEP; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvep
+Name: startMenuVXOVEPCIcon; Description: VE-Xplorer-OSG_VEPC; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\osgvepcluster
+Name: startMenuVXPFIcon; Description: VE-Xplorer-PF; GroupDescription: Create StartMenu Icon; Flags: unchecked; Components: vexplorer\pf
+
 ;Name: quicklaunchicon; Description: {cm:CreateQuickLaunchIcon}; GroupDescription: {cm:AdditionalIcons}; Flags: unchecked
 
 [Files]
@@ -103,21 +110,17 @@ Source: {#VEHOME}\VE_Installer\installer\installerImages\icons.bmp; DestDir: {ap
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_cluster_d.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: vexplorer\osgvepcluster
 Source: {#VEHOME}\bin\win32\WinClientd.exe.manifest; DestDir: {app}\bin
 [Icons]
-Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
+Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: startMenuNSIcon
+Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}; Tasks: " startMenuVXPFIcon startMenuVXOVEPCIcon startMenuVXOVEPIcon startMenuVXOIcon startMenuVECIcon startMenuNSIcon"; Flags: createonlyiffileexists
+Name: {group}\VE-Conductor; Filename: {app}\{#VEConductor}; WorkingDir: {app}; Components: veconductor; IconFilename: {app}\images\vesSmallIcon.bmp; Flags: runminimized; Tasks: startMenuVECIcon
+Name: {group}\VE-Xplorer-OSG; Filename: {app}\{#VEXplorerOSG}; WorkingDir: {app}; Components: vexplorer\osg; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: startMenuVXOIcon
+Name: {group}\VE-Xplorer-OSG_VEP; Filename: {app}\{#VEXplorerOSGVEP}; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: startMenuVXOVEPIcon
+Name: {group}\VE-Xplorer-OSG_VEPC; Filename: {app}\{#VEXplorerOSGVEPC}; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: startMenuVXOVEPCIcon
+Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: " startMenuVXPFIcon"
 
-Name: {group}\VE-Conductor; Filename: {app}\{#VEConductor}; WorkingDir: {app}; Components: veconductor; IconFilename: {app}\images\vesSmallIcon.bmp; Flags: runminimized
-
-Name: {group}\VE-Xplorer-OSG; Filename: {app}\{#VEXplorerOSG}; WorkingDir: {app}; Components: vexplorer\osg; IconFilename: {app}\images\vesSmallIcon.bmp
-
-Name: {group}\VE-Xplorer-OSG_VEP; Filename: {app}\{#VEXplorerOSGVEP}; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {group}\VE-Xplorer-OSG_VEPC; Filename: {app}\{#VEXplorerOSGVEPC}; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
-
-Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {userdesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {userdesktop}\VE-Conductor; Filename: {app}\bin\VE-Conductor.bat; WorkingDir: {app}; Components: veconductor; IconFilename: {app}\images\vesSmallIcon.bmp; Flags: runminimized
-Name: {userdesktop}\VE-Xplorer-OSG; Filename: {app}\bin\run.osg.bat; WorkingDir: {app}; Components: vexplorer\osg; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {userdesktop}\VE-Xplorer-OSG_VEP; Filename: {app}\bin\run.osg.vep.bat; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp
-Name: {userdesktop}\VE-Xplorer-OSG_VEPC; Filename: {app}\bin\run.osg.vep.cluster.bat; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
-
-Name: {userdesktop}\VE-Xplorer-PF; Filename: {app}\bin\run.pf.bat; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
+Name: {userdesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopNSIcon
+Name: {userdesktop}\VE-Conductor; Filename: {app}\bin\VE-Conductor.bat; WorkingDir: {app}; Components: veconductor; IconFilename: {app}\images\vesSmallIcon.bmp; Flags: runminimized; Tasks: desktopVECIcon
+Name: {userdesktop}\VE-Xplorer-OSG; Filename: {app}\bin\run.osg.bat; WorkingDir: {app}; Components: vexplorer\osg; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOIcon
+Name: {userdesktop}\VE-Xplorer-OSG_VEP; Filename: {app}\bin\run.osg.vep.bat; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPIcon
+Name: {userdesktop}\VE-Xplorer-OSG_VEPC; Filename: {app}\bin\run.osg.vep.cluster.bat; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPCIcon
+Name: {userdesktop}\VE-Xplorer-PF; Filename: {app}\bin\run.pf.bat; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXPFIcon
