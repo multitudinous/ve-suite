@@ -18,35 +18,35 @@ set MY_VJCONFIGS=/home/vr/vjconfig/2.0beta2
 switch ($1)
 
   case -c6:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    project_tao_pf \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.jconf 
     /usr/share/Performer/bin/rmsem
   breaksw
   
   case -c4open:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    project_tao_pf \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.open.jconf
     /usr/share/Performer/bin/rmsem
   breaksw
   
   case -c4closed:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    project_tao_pf \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.jconf
     /usr/share/Performer/bin/rmsem
   breaksw
 
   case -cluster:  
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_cluster_tao \
+    project_cluster_tao_pf \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     /home/users/mccdo/babycave/vecr.jconf
     /usr/share/Performer/bin/rmsem      
   breaksw
 
   case -sim:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    project_tao_pf \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.jconf \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
@@ -54,14 +54,14 @@ switch ($1)
   breaksw
   
   case -c6mono:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    project_tao_pf \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c6/C6.lego.6con.1pack.mono.jconf
     /usr/share/Performer/bin/rmsem
   breaksw
   
   case -c4mono:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao \
+    project_tao_pf \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/c4/C4.mammoth-rfwand.closed.mono.jconf
     /usr/share/Performer/bin/rmsem
@@ -71,12 +71,12 @@ switch ($1)
     killall Naming_Service 
     killall Exe_server 
     echo Starting TAO Naming Service on $TAO_MACHINE, port $TAO_PORT
-    ${TAO_ROOT}/orbsvcs/Naming_Service/Naming_Service \
+    Naming_Service \
     -ORBEndPoint iiop://${TAO_MACHINE}:${TAO_PORT} &
     sleep 5
     echo TAO Naming Service Started
     echo Starting VE-CE...
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/Exe_server \
+    Exe_server \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &
   breaksw
   
@@ -86,28 +86,28 @@ switch ($1)
   breaksw
 
   case -menu:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/WinClient \
+    WinClient \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
   breaksw
 
   case -surface:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/makeVtkSurface
+    makeVtkSurface
   breaksw
 
   case -preproc:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/preprocessor
+    preprocessor
   breaksw
 
   case -surf2stl:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/convertSurfaceFileToStl
+    convertSurfaceFileToStl
   breaksw
 
   case -transVTK:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/transformVTK
+    transformVTK
   breaksw
 
   case -cfd2VTK:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/translateToVtk
+    translateToVtk
   breaksw
 
   case -make:
@@ -122,15 +122,15 @@ switch ($1)
   breaksw
   
   case -merge:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/mergeVertices
+    mergeVertices
   breaksw
 
   case -meshView:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/meshViewer
+    meshViewer
   breaksw
 
   case -scalRange:
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/whatIsScalarRange
+    whatIsScalarRange
   breaksw
 
   case -doc:
