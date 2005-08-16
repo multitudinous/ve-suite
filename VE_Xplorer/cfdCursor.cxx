@@ -881,13 +881,17 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          // convert size percentage (0-100) request to plane size
          //std::cout << commandArray->GetCommandValue(cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() 
          //            << " : " <<  commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) << std::endl;
-		 float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
-         float* worldDCSScale = this->worldDCS->GetScaleArray();
-         float combineScale[ 3 ];
-         combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
 
-         this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
-         sphereRadius = commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) * 0.05f / 50.0f;
+		if ( this->activeDataSetDCS )
+		{
+			float* dataDCSScale = this->activeDataSetDCS->GetScaleArray();
+			float* worldDCSScale = this->worldDCS->GetScaleArray();
+			float combineScale[ 3 ];
+			combineScale[ 0 ] = dataDCSScale[ 0 ] * worldDCSScale[ 0 ];
+
+			this->SetPlaneSize( combineScale[ 0 ] * commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) * 0.5 * 0.01 * _activeDataSet->GetLength() );
+			sphereRadius = commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) * 0.05f / 50.0f;
+		}
       }
    }
 
