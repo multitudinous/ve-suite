@@ -4,11 +4,11 @@ are included in the install.
 *******************************IMPORTANT*************************************
 All dependencies, as well as VE-Suite are compiled w/ Visual Studio 7.1(2003).
 *****************************************************************************
-wxWidgets -- Open Source GUI API.
-Visualization ToolKit (VTK) -- Open Source data handling/visualization API.
-xerces-C++ -- C++ xml parser.
-ACE/TAO -- CORBA implementation.
-OpenSceneGraph .9.9.0 -- SceneGraph handling.
+wxWidgets 2.6.1 -- Open Source GUI API.
+Visualization ToolKit (VTK) 4.4 -- Open Source data handling/visualization API.
+xerces-C++ 2.6.0 -- C++ xml parser.
+ACE/TAO 5.4/1.4 -- CORBA implementation.
+OpenSceneGraph 0.9.9 -- SceneGraph handling.
 vrJuggler 2.0.0 -- graphics device handling
 ===============================================================================
 NOTES:
@@ -19,7 +19,7 @@ NOTES:
 - Performer has pre-compiled binaries 
   and installers available at the website below.
 
-- performer download site
+- performer download site -- 3.2.2
 http://www.sgi.com/products/software/performer/downloads.html
 http://www.sgi.com/products/software/performer/
 
