@@ -5,15 +5,15 @@
 #setenv VE_SUITE_HOME /home/users/sgent/VE_Suite
 
 # Set the TAO nameServer properties used by the run scripts
-setenv TAO_MACHINE lego.vrac.iastate.edu
-#setenv TAO_MACHINE localhost
+#setenv TAO_MACHINE lego.vrac.iastate.edu
+setenv TAO_MACHINE localhost
 setenv TAO_PORT 1237
 
 setenv TAO_BUILD TRUE
 setenv CLUSTER_APP FALSE
-source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
+#source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
 
-set MY_VJCONFIGS=/home/vr/vjconfig/2.0beta2
+#set MY_VJCONFIGS=/home/vr/vjconfig/2.0beta2
 
 switch ($1)
 
@@ -167,9 +167,9 @@ switch ($1)
   echo "        "-c6 = c6 cave display
   echo "    "-c4open = c4 open cave display
   echo "  "-c4closed = c4 closed cave display
-  echo "       "-sim = sim mode desktop display
-  echo "       "-simosg = sim mode desktop display
-  echo "       "-simosgvep = sim mode desktop display
+  echo "       "-sim = sim mode desktop display Performer graphics
+  echo "       "-simosg = sim mode desktop display OpenSceneGraph graphics
+  echo "       "-simosgvep = sim mode desktop display OpenSceneGraph Patented graphics
   echo "    "-c6mono = c6 in mono
   echo "    "-c4mono = c4 closed in mono
   echo When the viewer has started, start the menu in another shell
