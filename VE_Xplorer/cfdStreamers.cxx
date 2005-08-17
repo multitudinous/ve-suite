@@ -263,7 +263,7 @@ aa Assign Normals NORMALS POINT_DATA
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );
    temp->GetProperty()->SetSpecularPower( 20.0f );
-   temp->GetProperty()->SetLineWidth(2.0f);
+   temp->GetProperty()->SetLineWidth(lineDiameter);
    temp->GetProperty()->SetRepresentationToWireframe();
    //test to see if there is enough memory, if not, filters are deleted
    try
@@ -304,7 +304,10 @@ aa Assign Normals NORMALS POINT_DATA
 
 vtkPolyData * cfdStreamers::GetStreamersOutput( void )
 {
-   return ( stream->GetOutput() );
+   // may need to gaurd this somehow
+std::cout << "made it to 1 " << std::endl;
+      return ( stream->GetOutput() );
+std::cout << "made it to 2 " << std::endl;
 }
 
 void cfdStreamers::SetIntegrationDirection( int value )
@@ -403,7 +406,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_DIAMETER )
    {
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_STEP_LENGTH\t" 
+      vprDEBUG(vprDBG_ALL,0) << " STREAMLINE_DIAMETER\t" 
                               << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
                               << std::endl << vprDEBUG_FLUSH;
          
@@ -412,8 +415,12 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       // convert range to -2.5 < x < 2.5, and compute the exponent...
       float range = 2.5f;
       int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      this->lineDiameter = exp( diameter / ( 100.0 / range ) ) * 
-                       this->GetActiveDataSet()->GetLength()*0.001f;
+      /*this->lineDiameter = exp( diameter / ( 100.0 / range ) ) * 
+                       this->GetActiveDataSet()->GetLength()*0.001f;*/
+
+      // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
+      // note that multiplying by 0.005 is the same as dividing by 200, or the range
+      this->lineDiameter = (diameter + 110) * 0.005 *  20;
 
       vprDEBUG(vprDBG_ALL,1) << "       New Streamline Diameter : " 
                              << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
