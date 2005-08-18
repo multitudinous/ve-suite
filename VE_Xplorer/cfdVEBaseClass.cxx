@@ -31,7 +31,10 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 
 #include "VE_Xplorer/cfdVEBaseClass.h"
+
+#include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
+
 #include "VE_Xplorer/cfdModel.h"
 #include "VE_Xplorer/cfdReadParam.h"
 #include "VE_Xplorer/fileIO.h"
@@ -39,7 +42,6 @@
 #include "VE_Xplorer/cfdDataSet.h"
 #include "VE_Xplorer/cfdNavigate.h"
 #include "VE_Xplorer/cfdSoundHandler.h"
-#include "VE_SceneGraph/cfdDCS.h"
 #include "VE_Xplorer/cfdObjects.h"
 
 #include "VE_Conductor/Framework/package.h"

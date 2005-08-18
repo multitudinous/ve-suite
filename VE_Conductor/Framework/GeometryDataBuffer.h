@@ -101,8 +101,8 @@ public:
    std::vector <GeometryInfoPackage> GetCurrentGeomInfoList();
    std::vector <GeometryInfoPackage> GetCurrentModuleGeomInfoListFromMap();
       
-   void GeometryDataBuffer::UpdateCurrentGeomInfoListToMap();
-   void GeometryDataBuffer::UpdateGeomInfoToCurrentList(GeometryInfoPackage, int);  
+   void UpdateCurrentGeomInfoListToMap();
+   void UpdateGeomInfoToCurrentList(GeometryInfoPackage, int);  
    std::map <int, std::vector<GeometryInfoPackage> > GetWholeGeomInfoMap();
 
    private:
