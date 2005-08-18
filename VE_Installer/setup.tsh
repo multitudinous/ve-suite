@@ -87,8 +87,13 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/IRIX32
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/IRIX32
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/IRIX32-pthread
-   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/IRIX32-pthread
+   if ( ${SCENE_GRAPH} == "PF" ) then
+      setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/IRIX32-pthread
+      setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/IRIX32-pthread
+   else
+      setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0/IRIX32-pthread
+      setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0-deps/IRIX32-pthread
+   endif
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/IRIX32
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
    setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VJ_DEPS_DIR}/lib32
@@ -117,8 +122,10 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux-RHEL_3
-   setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3
-   setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3-deps
+   #setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3
+   #setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3-deps
+   setenv VJ_BASE_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0/Linux-RHEL_3/
+   setenv VJ_DEPS_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0-deps/Linux-RHEL_3/
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/OSG/Linux-RHEL_3
 
@@ -134,8 +141,6 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
 
-      setenv ACE_ROOT /home/users/mccdo/ACE_TAO/Suse-9-vrac/ACE_wrappers
-      setenv TAO_ROOT ${ACE_ROOT}/TAO
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
       setenv PATH ${ACE_HOME}/bin:${ACE_HOME}/Linux/bin:${TAO_HOME}/Linux/bin:${PATH}
@@ -248,7 +253,7 @@ setenv DZR_BASE_DIR   ${VJ_BASE_DIR}/share/Doozer
 setenv SNX_BASE_DIR   ${VJ_BASE_DIR}
 setenv PATH ${PATH}:${VJ_BASE_DIR}/bin:${VE_SUITE_HOME}/bin:${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}
 setenv PATH ${PATH}:${VJ_DEPS_DIR}/bin
-setenv PATH ${WX_HOME}/bin:${CORONA_HOME}/bin:${PATH}
+setenv PATH ${WX_HOME}/bin:${PATH}
 #setenv PATH ${JDK_HOME}/bin:${PATH}
 if ( $?OSG_HOME ) then
    setenv PATH ${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
