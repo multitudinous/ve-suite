@@ -31,7 +31,6 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdExecutive.h"
 #include "VE_SceneGraph/cfdDCS.h"
-#include "VE_SceneGraph/cfdPfSceneManagement.h"
 
 #include "VE_Xplorer/VE_i.h"
 
@@ -45,6 +44,7 @@
 #include "VE_Conductor/Framework/package.h"
 #include "VE_CE/Network_Exec.h"
 
+#include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include <iostream>
 #include <string>
 #include <sstream>
