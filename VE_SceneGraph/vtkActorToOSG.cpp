@@ -26,6 +26,7 @@ typedef float vtkReal;
 #endif
 
 #include <osg/Vec3>
+#include <osg/LineWidth>
 #include <iostream>
 using namespace VE_SceneGraph;
 
@@ -229,11 +230,15 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, v
 		stateset->setMode(GL_BLEND,osg::StateAttribute::ON);
 		stateset->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
 	}
-/*
-	// wireframe - how do I set this ?
-	if (actor->GetProperty()->GetRepresentation() == VTK_WIREFRAME) 
-		stateset->setMode(GL_WIREFRAME, osg::StateAttribute::ON);
-*/
+
+	// wireframe
+	if ( actor->GetProperty()->GetRepresentation() == VTK_WIREFRAME ) 
+        {
+           osg::ref_ptr<osg::LineWidth> lineWidth = new osg::LineWidth;
+           lineWidth->setWidth( actor->GetProperty()->GetLineWidth() );
+           stateset->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
+        } 
+
 	// backface culling
 	if (!actor->GetProperty()->GetBackfaceCulling())
 		stateset->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
