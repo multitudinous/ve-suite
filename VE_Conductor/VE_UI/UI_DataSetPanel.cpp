@@ -29,8 +29,6 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
-
 #include "VE_Conductor/VE_UI/UI_DataSetPanel.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Xplorer/cfdEnum.h"

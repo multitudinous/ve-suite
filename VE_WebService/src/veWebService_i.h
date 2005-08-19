@@ -23,13 +23,12 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: VE_i.h,v $
- * Date modified: $Date: 2005-02-26 11:25:10 -0600 (Sat, 26 Feb 2005) $
- * Version:       $Rev: 1998 $
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date: date $
+ * Version:       $Rev: 999999 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #ifndef VEWESERVICE_I_H_
 #define VEWESERVICE_I_H_
 

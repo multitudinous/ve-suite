@@ -23,13 +23,12 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdVEXplorer.cxx,v $
- * Date modified: $Date: 2005-02-12 20:23:39 -0600 (Sat, 12 Feb 2005) $
- * Version:       $Rev: 1897 $
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date: date $
+ * Version:       $Rev: 999999 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
- 
 #ifdef _TAO
 #include <Executive_i.h>
 #include <orbsvcs/CosNamingC.h>

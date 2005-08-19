@@ -23,13 +23,12 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: VE_i.cpp,v $
- * Date modified: $Date: 2005-03-08 14:52:56 -0600 (Tue, 08 Mar 2005) $
- * Version:       $Rev: 2033 $
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date: date $
+ * Version:       $Rev: 999999 $
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-
 #include "veWebService_i.h"
 #include <iostream>
 #include <vpr/Sync/Guard.h>
