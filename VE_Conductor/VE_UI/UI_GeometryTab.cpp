@@ -41,10 +41,8 @@ BEGIN_EVENT_TABLE(UI_GeometryTab, wxPanel)
    //EVT_COMMAND_SCROLL_ENDSCROLL( GEOMETRY_OPACITY_SLIDER, UI_GeometryTab::ChangeOpacity )
    EVT_COMMAND_SCROLL( GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry )
    //EVT_COMMAND_SCROLL_ENDSCROLL( GEOMETRY_LOD_SLIDER, UI_GeometryTab::_onGeometry )
-   EVT_CHECKLISTBOX( GEOMETRY_CBOX,UI_GeometryTab::_onUpdate )
-   //EVT_RADIOBOX( GEOMETRY_CONFIG_RBOX, UI_GeometryTab::ChangeOpacity )
-   //EVT_COMBOBOX( GEOMETRY_SELECT_COMBO, UI_GeometryTab::OpacityFileSelection )
-   EVT_LISTBOX( GEOMETRY_SELECT_COMBO, UI_GeometryTab::OpacityFileSelection )
+   EVT_CHECKLISTBOX( GEOMETRY_CBOX, UI_GeometryTab::_onUpdate )
+   EVT_LISTBOX( GEOMETRY_CBOX, UI_GeometryTab::OpacityFileSelection )
 END_EVENT_TABLE()
 
 ////////////////////////////////////////////////////
@@ -72,17 +70,14 @@ void UI_GeometryTab::_buildPage()
    //the radio box
    int numGeoms = ((UI_Tabs *)_parent)->num_geo;
    wxString* defaultName = 0;
-   wxString* opacitytName = 0;
 
    if ( numGeoms > 0 )
    {  
       defaultName = new wxString[ numGeoms ];
-      opacitytName = new wxString[ numGeoms ];
       for(CORBA::ULong i = 0; i < (unsigned int)numGeoms; i++)
       {  
          defaultName[ i ] = ((UI_Tabs*)_parent)->geoNameArray[ i ];
          std::cout << "Geometry Name " << i << " : " << defaultName[ i ] << std::endl;
-         opacitytName[ i ] = wxString::Format("%s %i", "File", (int)(i+1) );
          opacityMemory.push_back( 100 );
       }
    }
@@ -91,13 +86,8 @@ void UI_GeometryTab::_buildPage()
       numGeoms = 1;
       defaultName = new wxString[ numGeoms ];
       defaultName[ 0 ] = wxT("No Geometry Files");
-      opacitytName = new wxString[ numGeoms ];
-      opacitytName[ 0 ] = wxT( "0" );
    }
 
-   /*geometryCombo = new wxComboBox(this, GEOMETRY_SELECT_COMBO, wxT("Set Active Geometry File"),
-                                    wxDefaultPosition, wxDefaultSize,
-                                    numGeoms,defaultName, wxCB_DROPDOWN);*/
    wxStaticBox* geomFiles = new wxStaticBox(this,-1, wxT("Geometry Files"));
    wxStaticBoxSizer* geomFilesGroup = new wxStaticBoxSizer(geomFiles,wxVERTICAL);   
    _geometryCBox = new wxCheckListBox( this, GEOMETRY_CBOX,  
@@ -106,7 +96,6 @@ void UI_GeometryTab::_buildPage()
    geomFilesGroup->Add(_geometryCBox,1,wxALIGN_LEFT|wxEXPAND); 
    wxBoxSizer* radioAndCheckBoxes = new wxBoxSizer( wxHORIZONTAL );
    radioAndCheckBoxes->Add(geomFilesGroup,1,wxALIGN_LEFT|wxEXPAND|wxALL, 5);
-   //radioAndCheckBoxes->Add(_geometryRBox,0,wxALIGN_RIGHT|wxEXPAND|wxALL, 5);
 
    // Used to initialize all the checkboxes on
    for(int j = 0; j < numGeoms; j++)

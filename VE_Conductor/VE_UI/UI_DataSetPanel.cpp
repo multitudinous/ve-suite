@@ -1018,6 +1018,9 @@ void UI_DatasetPanel::_resetScalarAdjustment( int dataSetSelected, int scalarSet
 
 void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& WXUNUSED(event))
 {
+   if ( _DataSets.empty() )
+      return;
+
    _RBoxScroll->changeActiveDatasetType(_datasetCombo->GetSelection());
 
    for (int i=0; i<_numSteadyStateDataSets; i++)
@@ -1108,6 +1111,9 @@ void UI_DatasetPanel::_onActiveSelection(wxCommandEvent& WXUNUSED(event))
 
 void UI_DatasetPanel::_on3d(wxCommandEvent& WXUNUSED(event))
 {
+   if ( _DataSets.empty() )
+      return;
+
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 0)
          if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
@@ -1119,6 +1125,9 @@ void UI_DatasetPanel::_on3d(wxCommandEvent& WXUNUSED(event))
 
 void UI_DatasetPanel::_onVertex(wxCommandEvent& WXUNUSED(event))
 {
+   if ( _DataSets.empty() )
+      return;
+
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 1)
          if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
@@ -1130,6 +1139,9 @@ void UI_DatasetPanel::_onVertex(wxCommandEvent& WXUNUSED(event))
 
 void UI_DatasetPanel::_onPolyData(wxCommandEvent& WXUNUSED(event))
 {
+   if ( _DataSets.empty() )
+      return;
+
    for (int i=0; i<_numSteadyStateDataSets; i++)
       if (_DataSets[i]->_dataSetType == 2)
          if (_RBoxScroll->_3dRBox->GetString(_RBoxScroll->_3dRBox->GetSelection()) == _DataSets[i]->_dataSetName)
@@ -1141,6 +1153,9 @@ void UI_DatasetPanel::_onPolyData(wxCommandEvent& WXUNUSED(event))
 
 void UI_DatasetPanel::_onVectors( wxCommandEvent& WXUNUSED(event) )
 {
+   if ( _DataSets.empty() )
+      return;
+
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_vectorRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
@@ -1150,6 +1165,9 @@ void UI_DatasetPanel::_onVectors( wxCommandEvent& WXUNUSED(event) )
 
 void UI_DatasetPanel::_onScalars(wxCommandEvent& WXUNUSED(event))
 {
+   if ( _DataSets.empty() )
+      return;
+
    _resetScalarAdjustment( _RBoxScroll->_3dRBox->GetSelection(), _ScalarScroll->_scalarRBox->GetSelection() );
 
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
@@ -1161,6 +1179,9 @@ void UI_DatasetPanel::_onScalars(wxCommandEvent& WXUNUSED(event))
 
 void UI_DatasetPanel::_onUpdate(wxCommandEvent& WXUNUSED(event))
 {
+   if ( _DataSets.empty() )
+      return;
+
    ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();

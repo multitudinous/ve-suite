@@ -117,7 +117,7 @@ void UI_TransientDialog::SetTabControl(UI_Tabs* tab)
    _tab = tab;
 }
 ///////////////////////////////////////////////////////
-void UI_TransientDialog::_onPlay(wxCommandEvent& event)
+void UI_TransientDialog::_onPlay(wxCommandEvent& event )
 {
    if(!_tab)
       return;
@@ -128,7 +128,7 @@ void UI_TransientDialog::_onPlay(wxCommandEvent& event)
    }
 }
 ///////////////////////////////////////////////////////////////
-void UI_TransientDialog::_onForwardStep(wxCommandEvent& event)
+void UI_TransientDialog::_onForwardStep(wxCommandEvent& event )
 {
    if(!_tab)
       return;
@@ -139,7 +139,7 @@ void UI_TransientDialog::_onForwardStep(wxCommandEvent& event)
    }
 }
 ///////////////////////////////////////////////////////////////
-void UI_TransientDialog::_onBackwardStep(wxCommandEvent& event)
+void UI_TransientDialog::_onBackwardStep(wxCommandEvent& event )
 {
    if(!_tab)
       return;
@@ -150,7 +150,7 @@ void UI_TransientDialog::_onBackwardStep(wxCommandEvent& event)
    }
 }
 ////////////////////////////////////////////////////////
-void UI_TransientDialog::_onStop(wxCommandEvent& event)
+void UI_TransientDialog::_onStop(wxCommandEvent& event )
 {
    if(!_tab)
       return;
@@ -166,7 +166,7 @@ void UI_TransientDialog::_onSetDuration(wxSpinEvent& WXUNUSED(event))
    if(!_tab)
       return;
    _tab->cId = TRANSIENT_DURATION;
-   _tab->cIso_value = _duration->GetValue();
+   _tab->cIso_value = static_cast< int >( _duration->GetValue() );
    _tab->sendDataArrayToServer();
 }
 /////////////////////////////////////////////////////////////////////
