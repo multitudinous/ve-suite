@@ -38,7 +38,7 @@
 #include <vector>
 #include <iostream>
 #include <string>
-#include <strstream>
+//#include <sstream>
 
 #include <osg/Array>
 #include "VE_TextureBased/cfdOSGAdvectionShaderManager.h"
