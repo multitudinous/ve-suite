@@ -75,6 +75,7 @@ setenv PFNFYLEVEL 0
 setenv PFSHAREDSIZE 534773700
 setenv VPR_DEBUG_NFY_LEVEL 1
 setenv VPR_DEBUG_ENABLE 1
+#setenv VPR_DEBUG_FILE ${VE_SUITE_HOME}/VE_Xplorer/VPRDebugOutput.txt
 setenv NO_RTRC_PLUGIN TRUE
 setenv NO_PERF_PLUGIN TRUE
 setenv OSG_THREAD_SAFE_REF_UNREF 1
@@ -122,8 +123,6 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux-RHEL_3
-   #setenv VJ_BASE_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3
-   #setenv VJ_DEPS_DIR /home/vr/Juggler/2.0/vrjuggler-2.0-beta2.linux-rhe3-deps
    setenv VJ_BASE_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0/Linux-RHEL_3/
    setenv VJ_DEPS_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0-deps/Linux-RHEL_3/
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
@@ -141,8 +140,6 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
 
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_ROOT}/ace:${ACE_ROOT}/lib
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_ROOT}/TAO_IDL
       setenv PATH ${ACE_HOME}/bin:${ACE_HOME}/Linux/bin:${TAO_HOME}/Linux/bin:${PATH}
 
       setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-RH80
