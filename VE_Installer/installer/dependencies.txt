@@ -19,7 +19,7 @@ NOTES:
 - Performer has pre-compiled binaries 
   and installers available at the website below.
 
-- performer download site -- 3.2.2
+- performer download site -- 3.2
 http://www.sgi.com/products/software/performer/downloads.html
 http://www.sgi.com/products/software/performer/
 
