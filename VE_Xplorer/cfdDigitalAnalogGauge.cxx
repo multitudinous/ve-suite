@@ -57,8 +57,8 @@
 #include <iomanip>
 
 #include <vpr/Util/Debug.h>
-using namespace VE_SceneGraph;
 
+using namespace VE_SceneGraph;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
@@ -587,24 +587,19 @@ void cfdDigitalAnalogGauge::SetDigitalPrecision( int input )
 void cfdDigitalAnalogGauge::UpdateDigitalText( double value )
 {  
    std::ostringstream dirStringStream;
+   dirStringStream << std::setw(10) << std::setiosflags( std::ios_base::fixed );
    if      ( this->digitalPrecision == 0)
-      //sprintf( this->digitalText, "%10.0f", value );
-      dirStringStream << std::setw(2) << std::setfill('0') << value;
+      dirStringStream << std::setprecision(0) << value;
    else if ( this->digitalPrecision == 1)
-      //sprintf( this->digitalText, "%10.1f", value );
-      dirStringStream << std::setw(2) << std::setfill('0') << std::setprecision(1) << value;
+      dirStringStream << std::setprecision(1) << value;
    else if ( this->digitalPrecision == 2)
-      //sprintf( this->digitalText, "%10.2f", value );
-      dirStringStream << std::setw(2) << std::setfill('0') << std::setprecision(2) << value;
+      dirStringStream << std::setprecision(2) << value;
    else if ( this->digitalPrecision == 3)
-      //sprintf( this->digitalText, "%10.3f", value );
-      dirStringStream << std::setw(2) << std::setfill('0') << std::setprecision(3) << value;
+      dirStringStream << std::setprecision(3) << value;
    else
-      //sprintf( this->digitalText, "%f", value );
       dirStringStream << value;
-   std::string dirString = dirStringStream.str();
 
-   this->digitalLabel->SetText( dirString.c_str() );
+   this->digitalLabel->SetText( dirStringStream.str().c_str() );
 
    this->gaugeDCS->RemoveChild( this->digitalGeode );
    delete this->digitalGeode;
