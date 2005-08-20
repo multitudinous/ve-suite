@@ -240,6 +240,29 @@ else if ( ${CFDHOSTTYPE} == "SunOS" ) then
       setenv PATH ${OMNI_HOME}/bin:${PATH}
    endif
 
+else if ( ${CFDHOSTTYPE} == "Darwin" ) then
+   setenv JDK_HOME /usr/java
+   setenv VTK_BASE_DIR /home/users/mccdo/VTK/VTK-4.4.2/install-powermac
+   setenv WX_HOME /home/users/mccdo/wxWindows/wxMac-2.6.1/install-mac
+   setenv VJ_BASE_DIR /usr/local
+   setenv VJ_DEPS_DIR /usr/local/vrjuggler-deps
+   setenv OSG_HOME /home/users/mccdo/OSG/install-powermac
+   #setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
+
+   setenv DYLD_LIBRARY_PATH ${VJ_BASE_DIR}/lib:${VTK_BASE_DIR}/lib/vtk:${VJ_DEPS_DIR}/lib
+   setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${WX_HOME}/lib
+   setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
+   setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${OSG_HOME}/lib:${OSG_HOME}/lib/osgPlugins
+
+   if ( ${TAO_BUILD} == "TRUE" ) then
+      setenv ACE_HOME /home/users/mccdo/ACE_TAO/Mac_Build/install-powermac
+      setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${ACE_HOME}/lib
+      setenv PATH ${ACE_HOME}/bin:${PATH}
+
+      setenv XERCESCROOT /sw
+      setenv DYLD_LIBRARY_PATH ${DYLD_LIBRARY_PATH}:${XERCESCROOT}/lib
+   endif
+
 else
    echo "ERROR: Unsupported operating system"
    echo "       OMNI_HOME, etc. are undefined"
