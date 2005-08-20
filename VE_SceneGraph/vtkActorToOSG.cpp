@@ -141,7 +141,7 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, v
 
 	// copy data from vtk prim array to osg Geometry
 	int prim = 0, vert = 0;
-	int i, npts, totpts = 0, *pts;
+	int i, npts, totpts = 0, *pts, transparentFlag = 0;;
 	// go through cells (primitives)
 	for (primArray->InitTraversal(); primArray->GetNextCell(npts, pts); prim++)
 	{ 
@@ -156,12 +156,16 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, v
 #endif
          colors->push_back(osg::Vec4(aColor[0]/255.0f, aColor[1]/255.0f,
 										aColor[2]/255.0f, aColor[3]/255.0f));
+         if ( aColor[3]/255.0f < 1 )
+            transparentFlag = 1; 
 		}
+
 		if (normalPerCell)
 		{
 			vtkReal* aNormal = normals->GetTuple(prim);
          norms->push_back(osg::Vec3(aNormal[0], aNormal[1], aNormal[2]));
 		}
+
 		// go through points in cell (verts)
 		for (i=0; i < npts; i++)
 		{
@@ -181,6 +185,8 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, v
 #endif
             colors->push_back(osg::Vec4(aColor[0]/255.0f, aColor[1]/255.0f,
 											aColor[2]/255.0f, aColor[3]/255.0f));
+            if ( aColor[3]/255.0f < 1 )
+               transparentFlag = 1; 
 			}
 			if (texCoords != NULL)
 			{
@@ -223,21 +229,21 @@ osg::ref_ptr< osg::Geometry > VE_SceneGraph::processPrimitive(vtkActor *actor, v
 	osg::ref_ptr< osg::StateSet > stateset = new osg::StateSet;
 
 	// if not opaque
-	if (actor->GetProperty()->GetOpacity() < 1.0)
+	if (actor->GetProperty()->GetOpacity() < 1.0 || transparentFlag )
 	{
 		stateset->setRenderingHint(osg::StateSet::TRANSPARENT_BIN); // draw last
-	    stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
+	   // stateset->setMode(GL_LIGHTING,osg::StateAttribute::OFF);
 		stateset->setMode(GL_BLEND,osg::StateAttribute::ON);
 		stateset->setMode(GL_CULL_FACE,osg::StateAttribute::OFF);
 	}
 
 	// wireframe
 	if ( actor->GetProperty()->GetRepresentation() == VTK_WIREFRAME ) 
-        {
-           osg::ref_ptr<osg::LineWidth> lineWidth = new osg::LineWidth;
-           lineWidth->setWidth( actor->GetProperty()->GetLineWidth() );
-           stateset->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
-        } 
+   {
+      osg::ref_ptr<osg::LineWidth> lineWidth = new osg::LineWidth;
+      lineWidth->setWidth( actor->GetProperty()->GetLineWidth() );
+      stateset->setAttributeAndModes( lineWidth.get(), osg::StateAttribute::ON );
+   } 
 
 	// backface culling
 	if (!actor->GetProperty()->GetBackfaceCulling())

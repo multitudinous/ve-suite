@@ -140,13 +140,13 @@ cfdGeode& cfdGeode::operator=( const cfdGeode& input )
 ///////////////////////////
 cfdGeode::~cfdGeode( void )
 {
-   vprDEBUG(vprDBG_ALL,1) << "|\tdestructor for cfdGeode " 
+   vprDEBUG(vprDBG_ALL,2) << "|\tdestructor for cfdGeode " 
                            << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
    // Fix this
    //if ( _geode != NULL )
    pfDelete( _geode );
-   vprDEBUG(vprDBG_ALL,1) << " 2 destructor for cfdGeode " 
+   vprDEBUG(vprDBG_ALL,2) << "|\tAfter pfDelete : destructor for cfdGeode " 
                            << std::endl << vprDEBUG_FLUSH;
 #elif _OSG
 #elif _OPENSG

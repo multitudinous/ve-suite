@@ -152,9 +152,6 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
 cfdExecutive::~cfdExecutive( void )
 {
    this->runGetEverythingThread = false;
-   //vpr::System::msleep( 500 );  // half-second delay
-   /*if ( thread )
-      delete thread;*/
    delete av_modules;
 }
 
@@ -165,7 +162,8 @@ void cfdExecutive::UnbindORB()
       CosNaming::Name UIname(1);
       UIname.length(1);
       UIname[0].id = CORBA::string_dup((ui_i->UIName_).c_str());
-      std::cout<< " Executive Destructor " << UIname[0].id << std::endl;
+      vprDEBUG(vprDBG_ALL,2) << "|\tExecutive Destructor " 
+                              << UIname[0].id << std::endl << vprDEBUG_FLUSH;
 
       try
       {
@@ -173,17 +171,19 @@ void cfdExecutive::UnbindORB()
       }
       catch ( CosNaming::NamingContext::InvalidName& ex )
       {
-         std::cout << " cfdExecutive : Invalid Name! " << std::endl;
+         vprDEBUG(vprDBG_ALL,1) << "|\tcfdExecutive : Invalid Name! " 
+                                 << std::endl << vprDEBUG_FLUSH;
       }
       catch ( CosNaming::NamingContext::NotFound& ex )
       {
-         std::cout << " cfdExecutive : Not Found! " << std::endl;
+         vprDEBUG(vprDBG_ALL,1) << "|\tcfdExecutive : Not Found! " 
+                                 << std::endl << vprDEBUG_FLUSH;
       }
       catch ( CosNaming::NamingContext::CannotProceed& ex )
       {
-         std::cout << " cfdExecutive : Cannot Proceed! " << std::endl;
+         vprDEBUG(vprDBG_ALL,1) << "|\tcfdExecutive : Cannot Proceed! " 
+                                 << std::endl << vprDEBUG_FLUSH;
       }
-      std::cout<<"TEST7"<<std::endl;
    }
 }
 

@@ -127,6 +127,7 @@ void cfdTextureBasedVizHandler::CleanUp( void )
       delete _svvh;
       _svvh = 0;
    }
+
    if(_vvvh){
       delete _svvh;
       _vvvh = 0;
@@ -278,10 +279,13 @@ void cfdTextureBasedVizHandler::_updateVisualization()
          }
       }
       _cleared = false;
-   }else if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TEXTURE_BASED_SHADERS){
-      if(_activeVolumeVizNode){
-         int useShaders = _cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      }
+   }
+   else if ( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TEXTURE_BASED_SHADERS)
+   {
+      /*if ( _activeVolumeVizNode )
+      {
+         int useShaders = static_cast< int >( _cmdArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      }*/
    }
 }
 //////////////////////////////////////////////
@@ -372,12 +376,12 @@ void cfdTextureBasedVizHandler::_updateShaderState()
             aShader->UpdateNoiseScale(noiseScale);
          }else if(_cmdArray->GetCommandValue(cfdCommandArray::CFD_ISO_VALUE) == WEIGHT){
             float weights[2] = {.8,.2};
-            weights[0] = (float)_cmdArray->GetCommandValue(cfdCommandArray::CFD_SC);
+            weights[0] = static_cast< float >( _cmdArray->GetCommandValue(cfdCommandArray::CFD_SC) );
             weights[0] /= 100.0;
-            weights[1] = (float)_cmdArray->GetCommandValue(cfdCommandArray::CFD_MIN);
+            weights[1] = static_cast< float >( _cmdArray->GetCommandValue(cfdCommandArray::CFD_MIN) );
             weights[1] /= 100.0;
-            float whichMat = (float)_cmdArray->GetCommandValue(cfdCommandArray::CFD_MAX);
-            aShader->UpdateWeight(weights,whichMat);
+            float whichMat = static_cast< float >( _cmdArray->GetCommandValue(cfdCommandArray::CFD_MAX) );
+            aShader->UpdateWeight(weights, static_cast< int >( whichMat ) );
          }
          _vvvh->EnableDecorator();
          activeVisNodeHdlr = _vvvh;
@@ -554,8 +558,10 @@ cfdVolumeVisualization* cfdTextureBasedVizHandler::GetActiveVolumeVizNode()
    return _activeVolumeVizNode;
 }
 /////////////////////////////////////////////////////////////////////////////////////////
-cfdVolumeVisualization* cfdTextureBasedVizHandler::GetVolumeVizNode(int whichModel)
+// Can this function be removed????
+cfdVolumeVisualization* cfdTextureBasedVizHandler::GetVolumeVizNode( int whichModel )
 {
+   std::cout << whichModel << std::endl;
    return 0;
 }
 ///////////////////////////////////////////////////////////////////

@@ -97,7 +97,10 @@ cfdGroup()
    //performer stuff
    init();
    setType(_classType);
-   setName("cfdsequence");
+   // This needs to be a unique name per cfdsequence
+   // this could be accomplished by encoding the time into
+   // the name
+   //setName("cfdSequence");
    /*if ( _group != NULL )
    {
       pfDelete( _group );

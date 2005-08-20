@@ -57,6 +57,7 @@ cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
                            << std::endl << vprDEBUG_FLUSH;
    this->xyz = xyz;
    this->numSteps = numSteps;
+   cuttingPlane = 0;
    // set the cut function
    this->cutter = vtkCutter::New();
 }
@@ -95,10 +96,16 @@ void cfdPresetContour::Update( void )
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
-      this->mapper->Update();
+      //this->mapper->Update();
    }
    else
    {
+      if ( cuttingPlane )
+      {
+         delete this->cuttingPlane;
+         this->cuttingPlane = NULL;
+      }
+
       this->cuttingPlane = new cfdCuttingPlane( 
             this->GetActiveDataSet()->GetDataSet()->GetBounds(),
             this->xyz, numSteps );
@@ -112,16 +119,13 @@ void cfdPresetContour::Update( void )
       this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
       this->cutter->Update();
 
-      delete this->cuttingPlane;
-      this->cuttingPlane = NULL;
-
       this->SetMapperInput( this->cutter->GetOutput() );
 
       this->mapper->SetScalarRange( this->GetActiveDataSet()
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
-      this->mapper->Update();
+      //this->mapper->Update();
    }
    
    vtkActor* temp = vtkActor::New();
@@ -131,4 +135,10 @@ void cfdPresetContour::Update( void )
    geodes.back()->TranslateTocfdGeode( temp );
    temp->Delete();
    this->updateFlag = true;
+
+   if ( cuttingPlane )
+   {
+      delete this->cuttingPlane;
+      this->cuttingPlane = NULL;
+   }
 }

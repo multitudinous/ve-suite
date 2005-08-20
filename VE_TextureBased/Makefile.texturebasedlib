@@ -63,7 +63,6 @@ SRCS=\
    cfdScalarShaderManager.cxx \
    cfdScalarVolumeVisHandler.cxx \
    cfdSimpleTextureCallback.cxx \
-   cfdTextureBasedVizHandler.cxx \
    cfdTextureDataSet.cxx \
    cfdTextureManager.cxx \
    cfdTextureMatrixCallback.cxx \

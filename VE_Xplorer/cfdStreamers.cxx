@@ -72,6 +72,7 @@ cfdStreamers::cfdStreamers( void )
    this->integrationStepLength = -1;
    this->stepLength = -1;
    this->lineDiameter = 0.0f;
+   arrowDiameter = 1;
    streamArrows = 0;
 }
 
@@ -189,7 +190,7 @@ aa Assign Normals NORMALS POINT_DATA
 
    this->stream->SetSource( (vtkDataSet*)this->pointSource );
    this->stream->SetIntegrator( this->integ );
-   stream->GetOutput()->ReleaseDataFlagOn();
+   //stream->GetOutput()->ReleaseDataFlagOn();
    
    // Good Test code to see if you are actually getting streamlines
    /*vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
@@ -285,9 +286,7 @@ aa Assign Normals NORMALS POINT_DATA
                               << std::endl << vprDEBUG_FLUSH;
    }
     
-   //strip->Delete();
-   //tris->Delete();
-   
+   temp->Delete();
 
    if ( streamArrows )
    {
@@ -415,8 +414,8 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       // convert range to -2.5 < x < 2.5, and compute the exponent...
       float range = 2.5f;
       int diameter = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      /*this->lineDiameter = exp( diameter / ( 100.0 / range ) ) * 
-                       this->GetActiveDataSet()->GetLength()*0.001f;*/
+      float localLineDiameter = exp( diameter / ( 100.0 / range ) ) * 
+                       this->GetActiveDataSet()->GetLength()*0.001f;
 
       // this is to normalize -100 to 100 on the GUI  to  1-21 for diameters
       // note that multiplying by 0.005 is the same as dividing by 200, or the range
@@ -424,7 +423,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
 
       vprDEBUG(vprDBG_ALL,1) << "       New Streamline Diameter : " 
                              << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
-      arrowDiameter = lineDiameter * 4.0f;
+      arrowDiameter = localLineDiameter * 4.0f;
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )

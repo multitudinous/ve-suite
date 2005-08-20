@@ -52,7 +52,7 @@ namespace VE_TextureBased
       public:
          cfdTextureManager();
          cfdTextureManager(const cfdTextureManager& tm);
-         virtual ~cfdTextureManager();
+         ~cfdTextureManager();
 
          enum DataType{SCALAR,VECTOR};
          enum PlayMode{PLAY,STOP,STEP};

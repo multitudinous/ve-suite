@@ -122,7 +122,7 @@ void cfdVEBaseClass::MakeTransparent( void )
 
 void cfdVEBaseClass::SetColor( double* color )
 {
-/*   this->geometryNode->SetRGBAColorArray( color );
+   /*   this->geometryNode->SetRGBAColorArray( color );
    this->geometryNode->Update();*/
 }
       

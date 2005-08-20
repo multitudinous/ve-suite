@@ -55,6 +55,7 @@
 
 #include <fstream>
 #include <sstream>
+#include <iomanip>
 #include <string>
 
 using namespace VE_Xplorer;
@@ -392,6 +393,7 @@ void cfdScalarBarActor::Execute()
    for ( i=0; i<this->numTextLabels; i++ )
    {
       std::ostringstream dirStringStream;
+      dirStringStream << std::setw( 8 ) << std::setiosflags( std::ios_base::fixed );
       /*if      ( range[1]-range[0] < 0.0016 )  
          sprintf( labelText[i], "%8.3f", this->range[0] + (float)i*labelIncrement );
       else if ( range[1]-range[0] < 0.016 )  
@@ -405,17 +407,17 @@ void cfdScalarBarActor::Execute()
       else                       
          sprintf( labelText[i], "%8.0f", this->range[0] + (float)i*labelIncrement );*/
       if      ( range[1]-range[0] < 0.0016 )  
-         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+         dirStringStream << std::setprecision( 3 ) << this->range[0] + (float)i*labelIncrement;
       else if ( range[1]-range[0] < 0.016 )  
-         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+         dirStringStream << std::setprecision( 4 ) << this->range[0] + (float)i*labelIncrement;
       else if ( range[1]-range[0] < 0.16 ) 
-         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+         dirStringStream << std::setprecision( 3 ) << this->range[0] + (float)i*labelIncrement;
       else if ( range[1]-range[0] < 1.6 ) 
-         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+         dirStringStream << std::setprecision( 2 ) << this->range[0] + (float)i*labelIncrement;
       else if ( range[1]-range[0] < 16 ) 
-         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+         dirStringStream << std::setprecision( 2 ) << this->range[0] + (float)i*labelIncrement;
       else                       
-         dirStringStream <<  this->range[0] + (float)i*labelIncrement;
+         dirStringStream << std::setprecision( 0 ) << this->range[0] + (float)i*labelIncrement;
 
       std::string dirString = dirStringStream.str();
       labelText[i] = (char*)dirString.c_str();

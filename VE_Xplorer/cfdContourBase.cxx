@@ -63,7 +63,7 @@ cfdContourBase::cfdContourBase()
    this->bfilter = vtkBandedPolyDataContourFilter::New();// for banded contours
    // turn clipping on to avoid unnecessary value generations with 
    // vtkBandedPolyDataContourFilter::GenerateValues().
-   this->bfilter->SetClipping(1);   
+   this->bfilter->ClippingOn();   
    this->tris = vtkTriangleFilter::New();
    this->strip = vtkStripper::New();
 
@@ -122,11 +122,11 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       this->mapper->SetInput( this->strip->GetOutput() );
       mapper->ImmediateModeRenderingOn(); 
    }
-
    else if ( this->fillType == 1 )  // banded contours
    {
-      this->bfilter->SetInput( this->strip->GetOutput() );
-      bfilter->GetOutput()->ReleaseDataFlagOn();
+      // putting the decimation routines as inputs to the bfilter
+      // cause the bfilter to crash while being updated
+      this->bfilter->SetInput( polydata );
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
       this->bfilter->GenerateValues( 10, range[0], range[1] );
@@ -134,19 +134,18 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       this->bfilter->GenerateContourEdgesOn();
       bfilter->GetOutput()->ReleaseDataFlagOn();
 
-      this->mapper->SetInput( this->bfilter->GetOutput() );
+      this->mapper->SetInput( bfilter->GetOutput() );
       mapper->ImmediateModeRenderingOn();
    }
    else if ( this->fillType == 2 )  // contourlines
    {
-      this->strip->SetInput( this->tris->GetOutput() );
-      strip->GetOutput()->ReleaseDataFlagOn();
       this->cfilter->SetInput( this->strip->GetOutput() );
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
       this->cfilter->GenerateValues( 10, range[0], range[1] );
       this->cfilter->UseScalarTreeOn();
       cfilter->GetOutput()->ReleaseDataFlagOn();
+
       this->mapper->SetInput( this->cfilter->GetOutput() );
       mapper->ImmediateModeRenderingOn();    
    }

@@ -119,43 +119,43 @@ void cfdObjectHandler::SelectObject()
 }
 
 void cfdObjectHandler::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
-{
- 
+{ 
    osgUtil::Hit objectHit;
    this->selectedGeometry = NULL;
 
    if ( listOfHits.empty())
    {
       vprDEBUG(vprDBG_ALL,1) << "No object selected" << std::endl 
-			     << vprDEBUG_FLUSH;
+                              << vprDEBUG_FLUSH;
    }
    else
    {
       for (unsigned int i = 0; i <  listOfHits.size(); i ++)
       {
-	 objectHit = listOfHits[ i ];
-	 if (objectHit._geode->getName() != this->laserName)
-	 {
-	    break;
-	 }
-	 
+         objectHit = listOfHits[ i ];
+         if (objectHit._geode->getName() != this->laserName)
+         {
+            break;
+         }
       }
+   
       if (objectHit._geode.valid())
       {
-	 if (!objectHit._geode->getName().empty())
-	 {
-	    if ( objectHit._geode->getName() != this->laserName
-		 && objectHit._geode->getName() != "Root Node") 
-	    {
-	       this->selectedGeometry = objectHit._geode;
-	       std::cout << objectHit._geode->getName() << std::endl;
-	    }
-	 }
-	 else
-	 {
-	    this->selectedGeometry = objectHit._geode;
-	    std::cout << objectHit._geode->getParents().front()->getName() << std::endl;
-	 }
+         if (!objectHit._geode->getName().empty())
+         {
+            if ( objectHit._geode->getName() != this->laserName
+                  && objectHit._geode->getName() != "Root Node") 
+            {
+               this->selectedGeometry = objectHit._geode;
+               std::cout << objectHit._geode->getName() << std::endl;
+            }
+         }
+         else
+         {
+            this->selectedGeometry = objectHit._geode;
+            std::cout << objectHit._geode->getParents().front()->getName() 
+                        << std::endl;
+         }
       } 
    }
 }

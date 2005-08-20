@@ -219,7 +219,7 @@ void cfdAnimatedStreamlineCone::Update( void )
 
       vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop2" << std::endl << vprDEBUG_FLUSH;
       this->mapper->SetInput( this->glyph->GetOutput() );
-      this->mapper->Update();
+      //this->mapper->Update();
 
 
       vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop3" << std::endl << vprDEBUG_FLUSH;

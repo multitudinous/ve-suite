@@ -114,7 +114,7 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
    std::string hostfile;
    //FILE * fhost;
    bool found=false;
-   std::string masterhost;//="hawk";
+   std::string masterhost;
 
    /*for ( unsigned int i = 1; i < argc; ++i )
    {
