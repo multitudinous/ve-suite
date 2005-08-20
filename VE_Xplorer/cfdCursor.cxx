@@ -255,6 +255,8 @@ void cfdCursor::BuildPlaneSource()
    this->planeSrc->SetResolution( this->pReso, this->pReso );
 
    this->planeSphereS->SetRadius( sphereRadius );
+   this->planeSphereS->SetThetaResolution( 4 );
+   this->planeSphereS->SetPhiResolution( 4 );
    this->planeSphereS->Update();
 
    this->sphereGlyph->SetSource( this->planeSphereS->GetOutput() );
@@ -318,6 +320,8 @@ void cfdCursor::BuildLineSource( void )
    this->lineSrc->SetResolution( this->pReso );
 
    this->lineSphere->SetRadius( sphereRadius );
+   this->lineSphere->SetThetaResolution( 4 );
+   this->lineSphere->SetPhiResolution( 4 );
    this->lineSphere->Update();
 
    this->lineGlyph->SetSource( this->lineSphere->GetOutput() );

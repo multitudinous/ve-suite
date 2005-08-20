@@ -103,7 +103,7 @@ void cfdEnvironmentHandler::Initialize( char* param )
 #ifdef VE_PATENTED
 #ifdef _OSG
    this->objectHandler = new cfdObjectHandler();
-#endif _OSG
+#endif // _OSG
 #endif // VE_PATENTED
 
 }
