@@ -305,6 +305,12 @@ void cfdSteadyStateVizHandler::CleanUp( void )
       vprDEBUG(vprDBG_ALL,2) 
         << "deleting this->streamlines" << std::endl << vprDEBUG_FLUSH;
       delete this->streamlines;
+
+      // Delete the polydata array used for seed points
+      if ( this->lastSource != NULL )
+      {
+         this->lastSource->Delete();
+      }
    }
 
    if ( this->particles ) 
