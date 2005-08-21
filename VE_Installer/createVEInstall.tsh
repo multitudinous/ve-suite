@@ -111,4 +111,15 @@ mv ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_INSTALLER_DIR}
 
 echo "Removing temp install dir: " ${VE_TEMP_INST_DIR}
 rm -rf ${VE_TEMP_INST_DIR}
+
+echo "Now copy all the deps to a new dir to create deps tar ball"
+
+cp -Rd ${VJ_BASE_DIR}
+cp -Rd ${VJ_DEPS_DIR}
+cp -Rd ${WX_HOME}
+cp -Rd ${XERCESCROOT}
+cp -Rd ${VTK_HOME}
+cp -Rd ${ACE_HOME}
+cp -Rd ${TAO_HOME}
+
 echo "Finished."
