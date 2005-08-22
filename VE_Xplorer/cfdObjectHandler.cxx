@@ -66,6 +66,7 @@ cfdObjectHandler::cfdObjectHandler( )
    selectedGeometry = 0;
    this->rootNode = 0;    
    this->worldNode = 0;
+   _active = false; 
 }
 
 cfdObjectHandler::~cfdObjectHandler( )
@@ -95,7 +96,16 @@ void SetDataValues( int ValueToSet, int Value)
 {
    ValueToSet = Value;
 }
-
+////////////////////////////////////////////////
+void cfdObjectHandler::ActivateGeometryPicking()
+{
+   _active = true;
+}
+/////////////////////////////////////////////////
+void cfdObjectHandler::DeactivateGeometryPicking()
+{
+   _active = false;
+}
 void cfdObjectHandler::SelectObject()
 {
    osg::Vec3f startPoint, endPoint;
@@ -172,6 +182,11 @@ void cfdObjectHandler::DrawLine(osg::Vec3f start, osg::Vec3f end)
    if (beamGeode != NULL)
    {
       this->rootNode->asGroup()->removeChild(beamGeode);
+      //biv -- this disable the drawing of the line
+      if(!_active)
+      {
+         return;
+      }
       //beamGeode->removeDrawable(beamGeometry);
    }
 

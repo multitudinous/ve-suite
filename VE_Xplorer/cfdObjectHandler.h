@@ -90,6 +90,8 @@ class VE_XPLORER_EXPORTS cfdObjectHandler
       void DrawLine(osg::Vec3f, osg::Vec3f);
       void ChangeColor(osg::Vec3f);
       void ProcessHit(osgUtil::IntersectVisitor::HitList);
+      void ActivateGeometryPicking();
+      void DeactivateGeometryPicking();
       cfdNavigate * navigator;
    
    private:
@@ -109,6 +111,7 @@ class VE_XPLORER_EXPORTS cfdObjectHandler
       osg::Node* worldNode;
       void SetupStartEndPoint(osg::Vec3f *, osg::Vec3f *);
       void SetWandPosition();
+      bool _active;
 };
 
 }

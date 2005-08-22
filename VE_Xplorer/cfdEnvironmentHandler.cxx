@@ -84,10 +84,12 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 #ifdef VE_PATENTED
 #ifdef _OSG
    this->objectHandler = 0;
+   _activeGeomPicking = false;
 #endif // _OSG
 #endif // VE_PATENTED
    _readParam = 0;
    _param = 0;
+
 }
 
 void cfdEnvironmentHandler::Initialize( char* param )
@@ -152,7 +154,7 @@ void cfdEnvironmentHandler::CleanUp( void )
       delete this->_teacher;
    }
 }
-/////////////////////////////////////////
+/////////////////////////////////////////////////////////////////////
 void cfdEnvironmentHandler::SetCommandArray( cfdCommandArray* input )
 {
    _commandArray = input;
@@ -256,6 +258,21 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 	   }
 	   VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS()->SetRotationArray( worldRot );
    }
+#ifdef _OSG
+#ifdef VE_PATENTED
+   else if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == GEOMETRY_PICKING ) 
+   {
+      if(_commandArray->GetCommandValue( cfdCommandArray::CFD_SC))
+      {
+         this->objectHandler->ActivateGeometryPicking();
+      }
+      else
+      {
+         this->objectHandler->DeactivateGeometryPicking();
+      }
+   }
+#endif
+#endif
    else if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ROTATE_ABOUT_HEAD )         
    {
       this->nav->SetHeadRotationFlag( _commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );

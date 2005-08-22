@@ -87,16 +87,24 @@ namespace VE_Xplorer
          cfdTeacher* GetTeacher( void );
          cfdQuatCamHandler* GetQuatCamHandler( void );
 
+#ifdef _OSG 
+#ifdef VE_PATENTED 
+         void ActivateGeometryPicking();
+         void DeactivateGeometryPicking();
+#endif // VE_PATENTED
+#endif //_OSG 
       private:
          cfdNavigate* nav;
          cfdTeacher* _teacher;
          cfdSoundHandler* _soundHandler;
          cfdQuatCamHandler* _camHandler;
-#ifdef VE_PATENTED
-#ifdef _OSG  
-	 cfdObjectHandler* objectHandler;
-#endif //_OSG
+
+#ifdef _OSG 
+#ifdef VE_PATENTED 
+	      cfdObjectHandler* objectHandler;
+         bool _activeGeomPicking;
 #endif // VE_PATENTED
+#endif //_OSG
          cfdCursor* cursor;
          char* _param;
          cfdCommandArray* _commandArray;
