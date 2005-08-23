@@ -218,7 +218,7 @@ cfdSequence::cfdSequence(const cfdSequence& cfdSeq,
 void cfdSequence::setDuration( double duration )
 {
    _duration = duration;
-   _deltaT = duration / this->getNumChildren();
+   _deltaT = duration / this->GetNumChildren();
 }
 //////////////////////////////////////////
 void cfdSequence::setLoopMode( int lMode )
@@ -513,14 +513,10 @@ void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node,
    double appFrameRate = 0;
    if(nv->getFrameStamp()){
      currTime = nv->getFrameStamp()->getReferenceTime();
-     if((currTime - _prevTime) >= 1.0){
-        frameNumber = nv->getTraversalNumber();
-        appFrameRate = (double)(frameNumber-_prevFrame)/(currTime-_prevTime);
-        _prevTime = currTime;
-        _prevFrame = frameNumber;
-        
-        
-     }
+     frameNumber = nv->getTraversalNumber();
+     appFrameRate = (double)(frameNumber-_prevFrame)/(currTime-_prevTime);
+     _prevTime = currTime;
+     _prevFrame = frameNumber;
    }else{
       std::cout<<"If u see this, we need to set the framestamp on the callback"<<std::endl;
       std::cout<<"at init time in the constructor. . ."<<std::endl;
@@ -729,7 +725,7 @@ int cfdSequence::AddChild(cfdNode* child)
       _lSwitch = new cfdSwitch();
       _lSwitch->SetVal(cfdSwitch::OFF);
 
-      this->addChild(_lSwitch->GetRawNode());
+      addChild(_lSwitch->GetRawNode());
    }
    _lSwitch->AddChild(child);
 
@@ -755,7 +751,7 @@ int cfdSequence::getNextFrame()
 void cfdSequence::setTime( double time )
 {
    _deltaT = time;
-   _duration = time * this->getNumChildren();
+   _duration = time * this->GetNumChildren();
 }
 ///////////////////////////////
 // Reimplement for other graphs
