@@ -58,7 +58,8 @@ enum VIS_TAB_IDS
    TRANSIENT_CHECK_BOX,
    CFD_VIS_OPTION,
    MIRROR_CHECK_BOX,
-   TRANSIENT_DIALOG
+   TRANSIENT_DIALOG,
+   GEOM_PICK_CBOX
 };
 
 class UI_VisualizationTab : public wxScrolledWindow
@@ -87,6 +88,7 @@ class UI_VisualizationTab : public wxScrolledWindow
       wxCheckBox* _transientCheckBox;
       wxCheckBox* _visOptionCheckBox;
       wxCheckBox* mirrorOptionCheckBox;
+      wxCheckBox* _geomPickingCBox;
       wxButton* _recordButton;
       wxButton* _clearButton;
       wxButton* _exitButton;
@@ -114,6 +116,7 @@ class UI_VisualizationTab : public wxScrolledWindow
       void _onTextureBasedVisual(wxCommandEvent& event);
       void _onMirrorVisualization(wxCommandEvent& event);
       void _onTransientChecked(wxCommandEvent& event);
+      void _onGeometryPickingChecked(wxCommandEvent& event);
   
    DECLARE_EVENT_TABLE()
 };

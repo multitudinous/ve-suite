@@ -52,7 +52,8 @@ BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_BUTTON      (CUSTOM_VIS_BUTTON,        UI_VisualizationTab::_onCustomVis)
   EVT_CHECKBOX    (CFD_VIS_OPTION,           UI_VisualizationTab::_onTextureBasedVisual)
   EVT_CHECKBOX    (MIRROR_CHECK_BOX,         UI_VisualizationTab::_onMirrorVisualization)
-  EVT_CHECKBOX    (TRANSIENT_CHECK_BOX,       UI_VisualizationTab::_onTransientChecked)
+  EVT_CHECKBOX    (TRANSIENT_CHECK_BOX,      UI_VisualizationTab::_onTransientChecked)
+  EVT_CHECKBOX    (GEOM_PICK_CBOX,           UI_VisualizationTab::_onGeometryPickingChecked)
   EVT_COMMAND_SCROLL(VIS_SLIDER,UI_VisualizationTab::_onSlider)
 END_EVENT_TABLE()
 
@@ -248,6 +249,9 @@ void UI_VisualizationTab::_buildPage()
    mirrorOptionCheckBox->SetValue(false);
    forthRow->Add(mirrorOptionCheckBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
 
+   _geomPickingCBox = new wxCheckBox(this, GEOM_PICK_CBOX, wxT("Geometry Picking"));
+   _geomPickingCBox->SetValue(false);
+   forthRow->Add(_geomPickingCBox, 1, wxALL|wxALIGN_CENTER_HORIZONTAL,5);
    wxBoxSizer* fifthRow = new wxBoxSizer(wxHORIZONTAL);
 
    _recordButton = new wxButton(this, RECORD_BUTTON, wxT("Record Scene"));
@@ -289,7 +293,14 @@ void UI_VisualizationTab::_onCategory(wxCommandEvent& WXUNUSED(event))
 {
   //wxMessageBox(_categoryRBox->GetStringSelection(), _T("Category RadioBox!"));
 }
-
+//////////////////////////////////////////////////////////////////////////
+void UI_VisualizationTab::_onGeometryPickingChecked(wxCommandEvent& event)
+{
+   ((UI_Tabs *)_parent)->cId = GEOMETRY_PICKING;
+   ((UI_Tabs *)_parent)->cSc = (int)_geomPickingCBox->GetValue();
+   ((UI_Tabs *)_parent)->sendDataArrayToServer();
+}
+//////////////////////////////////////////////////////////////////////////////////
 void UI_VisualizationTab::_onMirrorVisualization(wxCommandEvent& WXUNUSED(event) )
 {
    ((UI_Tabs *)_parent)->cId = MIRROR_VIS_DATA;
