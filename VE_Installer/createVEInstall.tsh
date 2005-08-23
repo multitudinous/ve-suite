@@ -51,6 +51,8 @@ echo "to: " ${VE_PLAT_INSTALL_DIR}
 #need to check somehow to see if the directory already exists
 mkdir -p ${VE_PLAT_INSTALL_DIR}/bin
 mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets
+#mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/simpleScalars/vectors
+#mkdir -p ${VE_PLAT_INSTALL_DIR}/exampleDatasets/simpleScalars/scalars
 mkdir -p ${VE_PLAT_INSTALL_DIR}/glsl_shaders
 #mkdir -p ${VE_PLAT_INSTALL_DIR}/images
 
@@ -85,14 +87,18 @@ cp ${VE_SUITE_HOME}/VE_TestSuite/eightCorners.stl ./exampleDatasets/.
 cp ${VE_SUITE_HOME}/VE_TestSuite/Surface0.75.stl ./exampleDatasets/.
 
 echo "   Sample texture data..."
-cp -rf ${VE_SUITE_HOME}/VE_TestSuite/simpleScalars/ ./exampleDatasets/.
+cp -Rf ${VE_SUITE_HOME}/VE_TestSuite/simpleScalars ./exampleDatasets
+#remove the subversion directory
+rm -rf ./exampleDatasets/simpleScalars/.svn
+rm -rf ./exampleDatasets/simpleScalars/scalars/.svn
+rm -rf ./exampleDatasets/simpleScalars/vectors/.svn
 cp ${VE_SUITE_HOME}/VE_TestSuite/*.txt ./exampleDatasets/.
 
 echo "   Sample parameter file..."
 cp -rf ${VE_SUITE_HOME}/VE_TestSuite/sswtexture.param ./exampleDatasets/sample.param
 
 echo "Copying glsl shaders..."
-cp -rf ${VE_SUITE_HOME}/VE_TextureBased/glsl_shaders/*.glsl ./glsl_shaders/.
+cp -f ${VE_SUITE_HOME}/VE_TextureBased/glsl_shaders/*.glsl ./glsl_shaders/.
 
 echo "Creating tar.gz file..."
 #write the tar file in the install directory
@@ -111,15 +117,5 @@ mv ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_INSTALLER_DIR}
 
 echo "Removing temp install dir: " ${VE_TEMP_INST_DIR}
 rm -rf ${VE_TEMP_INST_DIR}
-
-echo "Now copy all the deps to a new dir to create deps tar ball"
-
-cp -Rd ${VJ_BASE_DIR}
-cp -Rd ${VJ_DEPS_DIR}
-cp -Rd ${WX_HOME}
-cp -Rd ${XERCESCROOT}
-cp -Rd ${VTK_HOME}
-cp -Rd ${ACE_HOME}
-cp -Rd ${TAO_HOME}
 
 echo "Finished."
