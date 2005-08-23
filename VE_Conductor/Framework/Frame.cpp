@@ -723,7 +723,7 @@ void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
    wxBitmap bitmap(splashImage);
    wxSplashScreen* splash = new wxSplashScreen(bitmap,
            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-          4000, this, -1, wxDefaultPosition, wxDefaultSize,
+          2500, this, -1, wxDefaultPosition, wxDefaultSize,
           wxSIMPLE_BORDER|wxSTAY_ON_TOP);
    wxSafeYield();
    if ( pelog==NULL )
@@ -764,7 +764,7 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
    wxBitmap bitmap(splashImage);
    wxSplashScreen* splash = new wxSplashScreen(bitmap,
            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
-          4000, this, -1, wxDefaultPosition, wxDefaultSize,
+          2500, this, -1, wxDefaultPosition, wxDefaultSize,
           wxSIMPLE_BORDER|wxSTAY_ON_TOP);
    wxSafeYield();
    if (pelog==NULL)
