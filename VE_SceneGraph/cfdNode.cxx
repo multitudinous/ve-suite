@@ -619,6 +619,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
          }else{
              //depth->setWriteMask(false);
              geostate->setRenderingHint(osg::StateSet::TRANSPARENT_BIN);
+             geostate->setRenderBinDetails(99,std::string("DepthSortedBin"));
              geostate->setMode(GL_BLEND,osg::StateAttribute::ON);
          }
          geostate->setAttributeAndModes(bf.get(),osg::StateAttribute::ON);
