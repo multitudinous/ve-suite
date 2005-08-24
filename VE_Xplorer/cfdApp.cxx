@@ -532,6 +532,10 @@ void cfdApp::draw()
    sv = (*sceneViewer);    // Get context specific scene viewer
    vprASSERT(sv.get() != NULL);
 
+   if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_LOD_SCALE )
+   {
+      sv->setLODScale( (float)_vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_SC ));
+   }
    vrj::GlDrawManager*    gl_manager;    /**< The openGL manager that we are rendering for. */
    gl_manager = vrj::GlDrawManager::instance();
 
