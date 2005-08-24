@@ -59,6 +59,7 @@
 #include "VE_SceneGraph/cfdTempAnimation.h"
 #include "VE_Xplorer/cfdVjObsWrapper.h"
 #include "VE_Xplorer/cfdDataSet.h"
+#include "VE_Xplorer/cfdDebug.h"
 
 #ifdef _TAO
 #include "VE_Xplorer/cfdExecutive.h"
@@ -141,7 +142,7 @@ void cfdApp::exit()
 #ifdef _TAO
    if ( this->executive ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG( vesDBG, 2 )  
         << "deleting this->executive" << std::endl << vprDEBUG_FLUSH;
       delete this->executive;
    }
@@ -160,14 +161,14 @@ void cfdApp::exit()
 inline void cfdApp::apiInit( )
 {
    vrj::PfApp::apiInit();
-   vprDEBUG(vprDBG_ALL,1) << "cfdApp::apiInit" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG( vesDBG, 1 ) << "cfdApp::apiInit" << std::endl << vprDEBUG_FLUSH;
    pfNotifyHandler( notifyHandler );
 }
 
 inline void cfdApp::preForkInit( )
 {
    vrj::PfApp::preForkInit();
-   vprDEBUG(vprDBG_ALL,1) << "cfdApp::preForkInit"
+   vprDEBUG(vesDBG,1) << "cfdApp::preForkInit"
                           << std::endl << vprDEBUG_FLUSH;
    //pfdInitConverter( "air_system.flt" );
 }
@@ -185,7 +186,7 @@ void cfdApp::appChanFunc( pfChannel* chan )
 
 inline void cfdApp::preSync( )
 {
-  vprDEBUG(vprDBG_ALL,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
+  vprDEBUG(vesDBG,1) << "cfdApp::preSync" << std::endl << vprDEBUG_FLUSH;
 }
 #endif
 
@@ -275,7 +276,7 @@ void cfdApp::SetWrapper( cfdVjObsWrapper* input )
 
 void cfdApp::initScene( void )
 {
-   vprDEBUG(vprDBG_ALL,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,0) << "cfdApp::initScene" << std::endl << vprDEBUG_FLUSH;
 
 # ifdef _OPENMP
    std::cout << "\n\n\n";
@@ -286,7 +287,7 @@ void cfdApp::initScene( void )
 # endif // _OPENMP
 
    //_corbaManager = new CorbaManager();
-   vprDEBUG(vprDBG_ALL,0) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,0) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
    filein_name = new char [ 256 ];
    do
    {
@@ -362,7 +363,7 @@ void cfdApp::preFrame( void )
 
 void cfdApp::latePreFrame( void )
 {
-   vprDEBUG(vprDBG_ALL,3) << "cfdApp::latePreFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << "cfdApp::latePreFrame" << std::endl << vprDEBUG_FLUSH;
 #ifdef _CLUSTER
    //call the parent method
    _vjobsWrapper->GetUpdateClusterStateVariables();
@@ -412,12 +413,12 @@ void cfdApp::latePreFrame( void )
 #endif // _TAO
 
    this->_vjobsWrapper->PreFrameUpdate();
-   vprDEBUG(vprDBG_ALL,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << " cfdApp::End latePreFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdApp::intraFrame()
 {
-   vprDEBUG(vprDBG_ALL,3) << " intraFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << " intraFrame" << std::endl << vprDEBUG_FLUSH;
    // Do nothing here
    // Usually slows things down
 }
@@ -433,7 +434,7 @@ void cfdApp::contextPostDraw()
 
 void cfdApp::postFrame()
 {
-   vprDEBUG(vprDBG_ALL,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << " postFrame" << std::endl << vprDEBUG_FLUSH;
 
 #ifdef _OSG
    time_since_start = _timer.delta_s(_start_tick,_timer.tick());
@@ -455,7 +456,7 @@ void cfdApp::postFrame()
    //this->_vjobsWrapper->GetSetFrameNumber( _frameNumber++ );
 #endif   //_OSG
    this->_vjobsWrapper->GetCfdStateVariables();
-   vprDEBUG(vprDBG_ALL,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << " End postFrame" << std::endl << vprDEBUG_FLUSH;
 }
 
 //web interface thread for writing the file

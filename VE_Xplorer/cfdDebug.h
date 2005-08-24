@@ -36,7 +36,7 @@
 #include <vpr/Util/GUID.h>
 
 const vpr::DebugCategory
-vesDBG(vpr::GUID("a4419133-2e5d-45bb-8a78-cd575a1b3ba5"), "VES_DBG",
+vesDBG(vpr::GUID("a4419133-2e5d-45bb-8a78-td575a1b3ba5"), "VES_DBG",
                  "VE_Suite DBG:");
 
 // this could then be used by: 
