@@ -43,6 +43,21 @@
 #include "VE_TextureBased/cfdOSGTransferShaderManager.h"
 #include "VE_TextureBased/cfdScalarShaderManager.h"
 using namespace VE_TextureBased;
+//the shader inline source
+static const char* scalarFragSource = {
+   //a volume rendering shader which applies a 1D transfer function
+   "uniform sampler3D volumeData;\n"
+   "uniform sampler1D transferFunction;\n"
+   "void main(void)\n"
+   "{\n"
+      "//dependent texture look up in transfer function\n"
+      "float scalar = texture3D(volumeData,gl_TexCoord[0].xyz).a;\n"
+      "gl_FragColor = texture1D(transferFunction,scalar);\n"
+
+      "//set the opacity to .2 for all fragments\n"
+      "gl_FragColor.a *= gl_Color.a;\n"
+   "}\n"
+};
 ////////////////////////////////////////////////
 cfdScalarShaderManager::cfdScalarShaderManager()
 {
@@ -104,21 +119,22 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("volumeData",0));
    _ss->addUniform(new osg::Uniform("transferFunction",1));
    _tUnit = 0;
-   char* fullPath = _createShaderPathForFile("scalarAdjuster.glsl");
+   /*char* fullPath = _createShaderPathForFile("scalarAdjuster.glsl");
    if(!fullPath)
    {
       return;
-   }
-   osg::ref_ptr<osg::Shader> scalarShader = _createGLSLShaderFromFile(fullPath,
-                                                                     true); 
+   }*/
+   //osg::ref_ptr<osg::Shader> scalarShader = _createGLSLShaderFromFile(fullPath,
+   //                                                                  true);
+   osg::ref_ptr<osg::Shader> scalarShader = _createGLSLShaderFromInline(scalarFragSource,true);
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
    glslProgram->addShader(scalarShader.get());
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),std::string("scalarAdjuster"));
-   if(fullPath)
+   /*if(fullPath)
    {
       delete [] fullPath;
       fullPath = 0;
-   }
+   }*/
 }
 /////////////////////////////////////////////////
 void cfdScalarShaderManager::ActivateIsoSurface()

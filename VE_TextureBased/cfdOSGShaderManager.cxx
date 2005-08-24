@@ -75,6 +75,21 @@ void cfdOSGShaderManager::UseCG(bool useCG)
 {
    _useGLSL = (useCG)?false:true;
 }
+////////////////////////////////////////////////////////////////////////////////////////////
+osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromInline(const std::string inlineSource,
+                                                           bool isFrag)
+{
+   if(isFrag){
+      _fshader = new osg::Shader(osg::Shader::FRAGMENT,inlineSource);
+      //_fshader->loadShaderSourceFromFile(filename.c_str());
+      return _fshader.get();
+   }else{
+      _vshader = new osg::Shader(osg::Shader::VERTEX,inlineSource);
+      //_vshader->loadShaderSourceFromFile(filename.c_str());
+      return _vshader.get();
+   }
+   return 0;
+}
 //////////////////////////////////////////////////////////////////////////////////////
 osg::Shader* cfdOSGShaderManager::_createGLSLShaderFromFile(const std::string filename,
                                                            bool isFrag)

@@ -69,6 +69,9 @@ namespace VE_TextureBased
                                         const std::string pgName,bool override = false);
       virtual osg::Shader* _createGLSLShaderFromFile(const std::string filename,
                                                            bool isFrag);
+      virtual osg::Shader*  _createGLSLShaderFromInline(const std::string inlineSource,
+                                                           bool isFrag);
+     
       virtual void _setupStateSetForGLSL()=0;
 
       osg::ref_ptr<osg::Shader> _vshader;

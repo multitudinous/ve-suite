@@ -85,7 +85,7 @@ Source: {#VEHOME}\VE_Installer\installer\run.pf.bat; DestDir: {app}\bin; Compone
 Source: {#VEHOME}\VE_Installer\installer\run.osg.bat; DestDir: {app}\bin; Components: vexplorer\osg; Flags: confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\NameService.bat; DestDir: {app}\bin; Components: nameserver; Flags: ignoreversion
 Source: {#VEHOME}\VE_Installer\installer\VE-Conductor.bat; DestDir: {app}\bin; Flags: ignoreversion
-Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly overwritereadonly; Attribs: readonly hidden
+;Source: {#VEHOME}\VE_TextureBased\glsl_shaders\*.glsl; DestDir: {app}\glsl_shaders\; Components: vexplorer\osgvep; Flags: ignoreversion uninsremovereadonly overwritereadonly; Attribs: readonly hidden
 ; NOTE: Don't use "Flags: ignoreversion" on any shared system files
 Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.bat; DestDir: {app}\bin; Components: vexplorer\osgvep; Flags: ignoreversion confirmoverwrite
 Source: {#VEHOME}\VE_Installer\installer\run.osg.vep.cluster.bat; DestDir: {app}\bin; Components: vexplorer\osgvepcluster; Flags: ignoreversion confirmoverwrite

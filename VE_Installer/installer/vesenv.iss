@@ -7,3 +7,4 @@
 #define OSGHOME "C:\devEnv\externalAPIs\OSG_cvs\OpenSceneGraph"
 #define WXHOME "C:\devEnv\externalAPIs\wxWidgets-2.6.0"
 #define XERCESHOME "C:\devEnv\externalAPIs\xerces-c-src_2_6_0"
+#define JUGGLERINSTHOME "C:\devEnv\VRAC\juggler_install"

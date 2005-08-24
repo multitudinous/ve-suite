@@ -50,6 +50,71 @@
 using namespace VE_TextureBased;
 //#include "cfdUpdateMatrixParameterCallback.h"
 #define PI  3.1416
+
+//the shader inline source
+static const char* advectionFragSource = {
+   "uniform sampler3D noiseTexture;\n"
+   "uniform sampler3D velocity;\n"
+   "uniform sampler3D dye;\n"
+   "uniform sampler1D lookUpTexture;\n"
+   "uniform sampler3D property;\n"
+   "uniform vec3 dyeTranslation;\n"
+   "uniform vec3 dyeScale;\n"
+   "uniform vec3 texCoordMult;\n"
+   "uniform vec3 deltaT;\n"
+   "uniform float time;\n"
+   "uniform float period;\n"
+   "uniform vec3 weightW;\n"
+   "uniform vec3 weightV;\n"
+
+   "void main(void)\n"
+   "{\n"
+
+      "//look up the velocity in the field\n"
+      "vec4 v = texture3D(velocity,gl_TexCoord[0].xyz);\n"
+
+      "//get our original values back\n"
+      "v.xyz = (((v.xyz)*2.0) - 1.0);\n"
+
+      "//velocity mask to darken slow moving flow\n"
+      "float vMask = 1.0 - v.w;\n"
+
+      "//Euler integration\n"
+      "//the old position\n"
+      "vec3 oldTexCoord = gl_TexCoord[0].xyz + deltaT*v.xyz;\n"
+   
+      "//fetch the density using the old coord\n"
+      "//density is our property that we are \n"
+      "//advecting\n"
+      "vec4 prop = texture3D(property,oldTexCoord);\n"
+ 
+      "//now for our materials\n"
+   
+      "//lookup the noise amplitude/phase\n"
+      "vec4 n = texture3D(noiseTexture,gl_TexCoord[0].xyz*texCoordMult);\n"
+
+      "//dye coordinate\n"
+      "vec3 relFragCoord = (gl_TexCoord[0].xyz-dyeTranslation)*dyeScale; \n"
+      "float dyeAmp = texture3D(dye,relFragCoord).a;\n"
+
+      "//now do the alpha blending for each material\n"
+
+      "//material 1\n"
+      "//get the local time\n"
+      "gl_FragColor.x = weightW.x*prop.x + dyeAmp;\n"
+
+      "//material 1\n"
+      "float localTime = mod(time + n.y,period);\n"
+      "float tInject = texture1D(lookUpTexture,localTime).a;\n"
+      "gl_FragColor.y = weightW.y*prop.y + weightV.y*tInject*n.x;\n"
+
+      "//material 2\n"
+      "localTime = mod(time + n.w,period);\n"
+      "tInject = texture1D(lookUpTexture,localTime).a;\n"
+      "gl_FragColor.z = weightW.z*prop.z + weightV.z*tInject*n.z;\n"
+      "gl_FragColor.a = v.w;\n"
+   "}\n"
+};
 ////////////////////////////////////////////////////////////
 //Constructors                                            //
 ////////////////////////////////////////////////////////////
@@ -256,12 +321,14 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
    osg::ref_ptr<osg::Uniform> wW = new osg::Uniform("weightW",osg::Vec3f(.2,.2,.2));
    osg::ref_ptr<osg::Uniform> wV = new osg::Uniform("weightV",osg::Vec3f(.8,.8,.8));
  
-   char* fullPath = _createShaderPathForFile("fragAdvect.glsl");
+   /*char* fullPath = _createShaderPathForFile("fragAdvect.glsl");
    if(!fullPath)
    {
       return;
-   }
-   osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(fullPath,true);
+   }*/
+   //osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(fullPath,true);
+   osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromInline(advectionFragSource,true);
+   
 
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
 
@@ -292,11 +359,11 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("dye",2));
    _ss->addUniform(new osg::Uniform("lookUpTexture",3));
    _ss->addUniform(new osg::Uniform("property",4));
-   if(fullPath)
+   /*if(fullPath)
    {
       delete [] fullPath;
       fullPath = 0;
-   }
+   }*/
     
 }
 /////////////////////////////////////////////////////////////

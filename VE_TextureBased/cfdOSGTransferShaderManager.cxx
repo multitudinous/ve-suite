@@ -44,6 +44,31 @@
 #include "VE_TextureBased/cfdOSGTransferShaderManager.h"
 #include "VE_TextureBased/cfdSimpleTextureCallback.h"
 using namespace VE_TextureBased;
+//the shader inline source
+static const char* volumeTransferFragSource = {
+   
+   "uniform sampler1D mat1Func;\n" 
+   "uniform sampler1D mat2Func;\n"
+   "uniform sampler1D mat3Func;\n"
+   "uniform sampler1D mat4Func;\n"
+   "uniform sampler3D densityTexture;\n"
+   "void main(void)\n"
+   "{\n"
+      "//get the density for each material\n"
+      "vec4 density = texture3D(densityTexture,gl_TexCoord[0].xyz);\n"
+   
+      "vec4 red = texture1D(mat4Func,density.x);\n"
+      "vec4 dye = vec4(red.x,0,0,red.a);\n"
+
+      "vec4 ink = texture1D(mat1Func,density.y);\n"
+   
+      "vec4 hole = texture1D(mat2Func,density.z);\n"
+      "ink = clamp((ink - hole),vec4(0,0,0,0),vec4(1,1,1,1));\n"
+
+      "gl_FragColor = clamp(ink +dye,vec4(0,0,0,0),vec4(1,1,1,1));\n"
+      "gl_FragColor.w *= gl_Color.a;\n"
+   "}\n"
+};
 //////////////////////////////////////////////////////////
 //Constructors                                          //
 //////////////////////////////////////////////////////////
@@ -169,21 +194,22 @@ void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("mat4Func",3));
    _ss->addUniform(new osg::Uniform("densityTexture",4));
    
-   char* fullPath = _createShaderPathForFile("volumeTransferFunctions.glsl");
+   /*char* fullPath = _createShaderPathForFile("volumeTransferFunctions.glsl");
    if(!fullPath)
    {
       return;
-   }
-   osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(fullPath,true); 
+   }*/
+   //osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromFile(fullPath,true); 
+   osg::ref_ptr<osg::Shader> vTransfers = _createGLSLShaderFromInline(volumeTransferFragSource,true);
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
    glslProgram->addShader(vTransfers.get());
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),
                         std::string("volumeTransferFunctions"));
-   if(fullPath)
+   /*if(fullPath)
    {
       delete [] fullPath;
       fullPath = 0;
-   }
+   }*/
 }
 /////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGTransferShaderManager::GetPropertyTexture()
