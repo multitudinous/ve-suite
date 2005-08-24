@@ -75,6 +75,7 @@
 #include <osg/BlendFunc>
 #include <osg/Array>
 #include <osg/Depth>
+#include <osg/LOD>
 #include <osg/ShadeModel>
 #elif _OPENSG
 #endif
@@ -643,6 +644,14 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
                                 << std::endl << vprDEBUG_FLUSH;
       for (i = 0; i < num; i++){
          this->TravNodeMaterial(((osg::Group*)node)->getChild(i)) ;
+           
+      }
+   }else if(!strcmp(node->className(),"LOD")){
+      num = ((osg::LOD*)node)->getNumChildren();
+      vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+                                << std::endl << vprDEBUG_FLUSH;
+      for (i = 0; i < num; i++){
+         this->TravNodeMaterial(((osg::LOD*)node)->getChild(i)) ;
            
       }
    }else if(!strcmp(node->className(),"MatrixTransform")){
