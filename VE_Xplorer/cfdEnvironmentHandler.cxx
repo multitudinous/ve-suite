@@ -275,7 +275,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 #endif
    else if ( _commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ROTATE_ABOUT_HEAD )         
    {
-      this->nav->SetHeadRotationFlag( _commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
+      this->nav->SetHeadRotationFlag( static_cast< int >( _commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) ) );
    }
 
    this->nav->SetDataValues( (int)_commandArray->GetCommandValue( cfdCommandArray::CFD_ID ), 

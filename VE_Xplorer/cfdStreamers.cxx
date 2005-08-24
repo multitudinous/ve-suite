@@ -86,6 +86,12 @@ cfdStreamers::~cfdStreamers()
 
 void cfdStreamers::Update( void )
 {
+   if ( pointSource == NULL )
+   {
+      vprDEBUG(vprDBG_ALL,0) << "|\tcfdStreamers::Update, No Cursor Type Selected" << std::endl << vprDEBUG_FLUSH;
+      return;
+   }
+
    vprDEBUG(vprDBG_ALL,0) << "|   cfdStreamers::Update, origin = "
       << this->origin[0] << " : " << this->origin[1] << " : " 
       << this->origin[2] << std::endl 
@@ -188,7 +194,7 @@ aa Assign Normals NORMALS POINT_DATA
    }
    this->stream->SetNumberOfThreads( 1 );
 
-   this->stream->SetSource( (vtkDataSet*)this->pointSource );
+   this->stream->SetSource( dynamic_cast< vtkDataSet* >( this->pointSource ) );
    this->stream->SetIntegrator( this->integ );
    //stream->GetOutput()->ReleaseDataFlagOn();
    
@@ -304,9 +310,7 @@ aa Assign Normals NORMALS POINT_DATA
 vtkPolyData * cfdStreamers::GetStreamersOutput( void )
 {
    // may need to gaurd this somehow
-std::cout << "made it to 1 " << std::endl;
-      return ( stream->GetOutput() );
-std::cout << "made it to 2 " << std::endl;
+   return ( stream->GetOutput() );
 }
 
 void cfdStreamers::SetIntegrationDirection( int value )
