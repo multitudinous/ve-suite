@@ -54,7 +54,7 @@ TextureDataInfo::TextureDataInfo(const TextureDataInfo& tdi)
 ///////////////////////////////////
 TextureDataInfo::~TextureDataInfo()
 {
-   _name.erase();
+   _name.clear();
    if(_tm){
       delete _tm;
       _tm = 0;
@@ -263,7 +263,7 @@ void cfdTextureDataSet::AddScalarTextureManager(cfdTextureManager* tm,
 }
 /////////////////////////////////////////////////////////////////////
 void cfdTextureDataSet::AddVectorTextureManager(cfdTextureManager* tm,
-                                                const char* vectorName)
+                                           const char* vectorName)
 {
    TextureDataInfo* td = new TextureDataInfo();
    td->SetName(std::string(vectorName));

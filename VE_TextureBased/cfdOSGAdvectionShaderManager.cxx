@@ -292,6 +292,11 @@ void cfdOSGAdvectionShaderManager::_setupStateSetForGLSL()
    _ss->addUniform(new osg::Uniform("dye",2));
    _ss->addUniform(new osg::Uniform("lookUpTexture",3));
    _ss->addUniform(new osg::Uniform("property",4));
+   if(fullPath)
+   {
+      delete [] fullPath;
+      fullPath = 0;
+   }
     
 }
 /////////////////////////////////////////////////////////////

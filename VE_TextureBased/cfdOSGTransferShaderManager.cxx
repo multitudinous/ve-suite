@@ -179,6 +179,11 @@ void cfdOSGTransferShaderManager::_setupStateSetForGLSL()
    glslProgram->addShader(vTransfers.get());
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),
                         std::string("volumeTransferFunctions"));
+   if(fullPath)
+   {
+      delete [] fullPath;
+      fullPath = 0;
+   }
 }
 /////////////////////////////////////////////////////////////////
 osg::Texture3D* cfdOSGTransferShaderManager::GetPropertyTexture()
@@ -291,17 +296,17 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
       _fieldSize[2])
    { 
       unsigned int dataSize = _fieldSize[0]*_fieldSize[1]*_fieldSize[2];
-      unsigned char* data = new unsigned char[dataSize*4];
+      //unsigned char* data = new unsigned char[dataSize*4];
       unsigned int i=0;
       unsigned int j=0;
       unsigned int k = 0;
       
-      for(unsigned int p = 0; p < dataSize; p++){
+      /*for(unsigned int p = 0; p < dataSize; p++){
          data[p*4   ] = (unsigned char)0;
          data[p*4 + 1] = (unsigned char)0;
          data[p*4 + 2] = (unsigned char)0;
          data[p*4 + 3] = (unsigned char)0;      
-      }
+      }*/
       osg::ref_ptr<osg::Image> propertyField = new osg::Image();
 
       propertyField->allocateImage(_fieldSize[0],
@@ -313,7 +318,7 @@ void cfdOSGTransferShaderManager::_initPropertyTexture()
 		                      GL_RGBA,
 		                      GL_RGBA,
 			                   GL_UNSIGNED_BYTE,
-                           data,
+                           0,
                            osg::Image::USE_NEW_DELETE,1);
       propertyField->setDataVariance(osg::Object::DYNAMIC);
       _property = new osg::Texture3D();

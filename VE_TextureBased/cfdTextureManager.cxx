@@ -53,7 +53,7 @@ cfdTextureManager::cfdTextureManager()
    _useShaders = false;
    
 }
-////////////////////////////////////////////////////////
+/////////////////////////////////////////////////////////////////
 cfdTextureManager::cfdTextureManager(const cfdTextureManager& tm)
 {
    if(_dataFields.size()){
@@ -103,7 +103,10 @@ cfdTextureManager::~cfdTextureManager()
       for(unsigned int i = 0; i < nFields; i++)
       {
          if(_dataFields.at(i))
+         {
             delete [] _dataFields.at(i);
+            _dataFields.at(i) = 0;
+         }
       }
       _dataFields.clear();
    }
@@ -391,9 +394,9 @@ void cfdTextureManager::setDirection(int forwardBackward)
 {
    _direction = forwardBackward;
 }
-///////////////////////////////////////////////////////////////////
-//equal operator                                                 //
-///////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////
+//equal operator                                                          //
+////////////////////////////////////////////////////////////////////////////
 cfdTextureManager& cfdTextureManager::operator=(const cfdTextureManager& tm)
 {
    if(this != &tm){

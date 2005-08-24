@@ -114,6 +114,11 @@ void cfdScalarShaderManager::_setupStateSetForGLSL()
    osg::ref_ptr<osg::Program> glslProgram = new osg::Program();
    glslProgram->addShader(scalarShader.get());
    _setupGLSLShaderProgram(_ss.get(),glslProgram.get(),std::string("scalarAdjuster"));
+   if(fullPath)
+   {
+      delete [] fullPath;
+      fullPath = 0;
+   }
 }
 /////////////////////////////////////////////////
 void cfdScalarShaderManager::ActivateIsoSurface()
@@ -340,7 +345,7 @@ void cfdScalarShaderManager::_initPropertyTexture()
 	                        GL_ALPHA,
 	                        GL_UNSIGNED_BYTE,
                            _tm->dataField(0),
-                           osg::Image::USE_NEW_DELETE,1);
+                           osg::Image::NO_DELETE,1);
 
       propertyField->setDataVariance(osg::Object::DYNAMIC);
       _property = new osg::Texture3D();

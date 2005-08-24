@@ -161,7 +161,7 @@ void cfdVectorVolumeVisHandler::_createVelocityFromTextureManager()
                       _tm->fieldResolution()[2],GL_RGBA,GL_RGBA, 
                        GL_UNSIGNED_BYTE,
                        _tm->dataField(0),
-                       osg::Image::USE_NEW_DELETE,1);
+                       osg::Image::NO_DELETE,1);
      image->setDataVariance(osg::Object::DYNAMIC);
 
      _velocity->setFilter(osg::Texture3D::MIN_FILTER,osg::Texture3D::LINEAR);
