@@ -4,7 +4,7 @@ Versions of some of the pre-compiled dependencies are available via
 an installer on our website. The others are obtainable from the respective 
 sites.
 
-See www.vrac.iastate.edu/~kmbryden/vesuite
+See www.vesuite.org
 for information on obtaining VE-Suites dependendcies.
 =========================================================================
 VE-Suite_0.9.0
@@ -42,33 +42,11 @@ To view the sample dataset, type sample.param in VE-Xplorer cmd window when
 prompted.
 ========================================================================
 NOTES:
-- Be sure to set VJ_BASE_DIR and VJ_DEPS_DIR accordingly!!!! This dependency is NOT included in the VE-Suite dependency installer and the location MUST be set
-by the end user!!!
 
-- The Name Server install is dependent on the users environment. If the 
-user has built a version of ACE/TAO locally, the following must be done
-to run correctly:
-1) edit the environment variables TAO_ROOT and ACE_ROOT in the
-   setup.bat file located in
-   %VE_INSTALL_DIR% to point to the locally built ACE_wrappers and
-   TAO directories.
-   This usually looks like the following:
-
-  set ACE_ROOT=C:\ACE_wrappers
-  set TAO_ROOT=%ACE_ROOT%\TAO
-
-2) edit the NameServer.bat file located in VE_INSTALL_DIR\bin to
-   call the NameService in %TAO_ROOT%.
-
-If the user has installed ACE/TAO from the VE_Suite.0.9.0_Dependencies
-installer you only need to:
-1) set VE_DEPS_DIR to the directory where the dependencies are installed.
-2) edit the NameService.bat file to use the %VE_DEPS_DIR%\bin\NameService.exe
-   call instead.
 ========================================================================
 Visit: 
 
-www.vrac.iastate.edu/~kmbryden/vesuite
+www.vesuite.org
 
 for more detailed information on setting environment variables and
 getting started using VE-Suite.
