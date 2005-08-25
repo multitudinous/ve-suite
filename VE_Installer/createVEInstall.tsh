@@ -107,7 +107,7 @@ pwd
 
 # on irix /usr/freeware/bin
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
-   /usr/freeware/bin/tar -zcvf ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_PLAT_INSTALL_DIR}
+   /usr/freeware/bin/tar -zcvf ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ./${CFDHOSTTYPE}
 else
    tar -zcvf ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_PLAT_INSTALL_DIR}
 endif
@@ -116,6 +116,8 @@ echo "Moving the tar.gz file to: "${VE_INSTALLER_DIR}
 mv ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_INSTALLER_DIR}
 
 echo "Removing temp install dir: " ${VE_TEMP_INST_DIR}
+cd ${VE_INSTALLER_DIR}
+pwd
 rm -rf ${VE_TEMP_INST_DIR}
 
 echo "Finished."
