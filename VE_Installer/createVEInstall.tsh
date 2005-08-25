@@ -97,8 +97,15 @@ cp ${VE_SUITE_HOME}/VE_TestSuite/*.txt ./exampleDatasets/.
 echo "   Sample parameter file..."
 cp -rf ${VE_SUITE_HOME}/VE_TestSuite/sswtexture.param ./exampleDatasets/sample.param
 
-echo "Copying glsl shaders..."
-cp -f ${VE_SUITE_HOME}/VE_TextureBased/glsl_shaders/*.glsl ./glsl_shaders/.
+#echo "Copying glsl shaders..."
+#cp -f ${VE_SUITE_HOME}/VE_TextureBased/glsl_shaders/*.glsl ./glsl_shaders/.
+
+echo "Copying setup file..."
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
+
+echo "Copying VES script..."
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VES.run ./bin/VES.run
+
 
 echo "Creating tar.gz file..."
 #write the tar file in the install directory

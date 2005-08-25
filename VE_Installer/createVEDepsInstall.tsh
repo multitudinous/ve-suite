@@ -1,0 +1,117 @@
+#/bin/csh
+#copies the appropriate libs/dlls from ve-suite for installs 
+#in the future cmd line args will specify VE-Suite home 
+
+setenv VE_VERSION .0.9.0
+#set vesuitedir $1
+#if(vesuitedir)
+#   setenv VE_SUITE_HOME $1
+#else
+#this is the release directory
+setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_0.9.0/VE_Suite
+source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
+
+#copy the appropriate dll's to the install directory
+
+setenv VE_TEMP_DEPS_INST_DIR ${VE_SUITE_HOME}/VE_Installer/unixLinuxDepsInstalls
+setenv VE_DEPS_PLAT_INSTALL_DIR ${VE_SUITE_HOME}/VE_Installer/unixLinuxDepsInstalls/${CFDHOSTTYPE}
+setenv VE_INSTALLER_DIR ${VE_SUITE_HOME}/VE_Installer
+
+echo "Copying dependency libs/dlls..." 
+echo "To: " ${VE_TEMP_DEPS_INST_DIR}
+
+#vrJuggler is 2.b.2 on IRIX
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
+   mkdir -p ${VE_DEPS_PLAT_INSTALL_DIR}/vrJuggler-2.b2
+else
+   mkdir -p ${VE_DEPS_PLAT_INSTALL_DIR}/vrJuggler-2.0.0
+endif
+
+#need to check somehow to see if the directory already exists
+mkdir -p ${VE_DEPS_PLAT_INSTALL_DIR}/bin
+
+echo "Removing old dlls and exes files..."
+rm -rf ${VE_DEPS_PLAT_INSTALL_DIR}/bin/*
+
+echo "Removing old vrJuggler files..."
+rm -rf ${VE_DEPS_PLAT_INSTALL_DIR}/vrJuggler*/*
+
+#go into the directory
+cd ${VE_DEPS_PLAT_INSTALL_DIR}
+
+#copy the libs into the install dir
+#echo "Now copy all the deps to a new dir to create deps tar ball"
+#vrJuggler is 2.b.2 on IRIX
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
+   echo "Copying Juggler from:" ${VJ_BASE_DIR}
+   cp -Rd ${VJ_BASE_DIR}/lib ./vrJuggler-2.b2
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.b2
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.b2
+   echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
+   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggeler-2.b2
+   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggeler-2.b2
+else
+   echo "Copying Juggler from:" ${VJ_BASE_DIR}
+   cp -Rd ${VJ_BASE_DIR}/lib ./vrJuggler-2.0.0
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.b2
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.b2
+   echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
+   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggeler-2.0.0
+   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggeler-2.0.0
+endif
+echo "Copying wxWidgets from:" ${WX_HOME}
+cp -Rd ${WX_HOME}/lib ./bin
+
+echo "Copying xerces-c from:" ${XERCESCROOT}
+cp -Rd ${XERCESCROOT}/lib ./bin
+
+echo "Copying VTK from:" ${VTK_BASE_DIR}
+cp -Rd ${VTK_BASE_DIR}/lib/vtk/*.so ./bin
+
+echo "Copying ACE from:" ${ACE_HOME}
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
+cp -Rd ${ACE_HOME}/IRIX32/lib ./bin
+else 
+cp -Rd ${ACE_HOME}/Linux/lib ./bin
+endif
+
+echo "Copying TAO from:" ${TAO_HOME}
+
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
+cp -Rd ${TAO_HOME}/IRIX32/lib ./bin
+cp -Rd ${TAO_HOME}/IRIX32/bin/NameService ./bin
+cp -Rd ${TAO_HOME}/IRIX32/bin/Naming_Service ./bin
+cp -Rd ${ACE_HOME}/IRIX32/lib ./bin
+else 
+cp -Rd ${TAO_HOME}/Linux/lib ./bin
+cp -Rd ${TAO_HOME}/Linux/bin/NameService ./bin
+cp -Rd ${TAO_HOME}/Linux/bin/Naming_Service ./bin
+cp -Rd ${ACE_HOME}/Linux/lib ./bin
+endif
+
+
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
+cp ${OSG_HOME}/lib32/*.so ./bin
+cp ${OSG_HOME}/lib32/osgPlugins/*.so ./bin
+else 
+cp ${OSG_HOME}/lib/*.so ./bin
+cp ${OSG_HOME}/lib/osgPlugins/*.so ./bin
+endif
+echo "Creating tar.gz file..."
+#write the tar file in the install directory
+cd ${VE_TEMP_DEPS_INST_DIR}
+pwd
+
+# on irix /usr/freeware/bin
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
+   /usr/freeware/bin/tar -zcvf ./vesuite_deps${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ./${CFDHOSTTYPE}
+else
+   tar -zcvf ./vesuite_deps${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ./${CFDHOSTTYPE}
+endif
+
+echo "Moving the tar.gz file to: "${VE_INSTALLER_DIR}
+mv ./vesuite_deps${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_INSTALLER_DIR}
+
+echo "Removing temp install dir: " ${VE_TEMP_DEPS_INST_DIR}
+rm -rf ${VE_TEMP_DEPS_INST_DIR}
+echo "Finished."
