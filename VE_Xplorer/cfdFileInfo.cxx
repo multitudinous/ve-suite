@@ -30,7 +30,7 @@
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdFileInfo.h"
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 
@@ -40,7 +40,7 @@ fileInfo::fileInfo( )
 
 fileInfo::~fileInfo( )
 {
-   vprDEBUG(vprDBG_ALL, 2) << "Deleting fileInfo"
+   vprDEBUG(vesDBG, 2) << "Deleting fileInfo"
                            << std::endl << vprDEBUG_FLUSH;
 }
 

@@ -32,14 +32,14 @@
 #include "VE_Xplorer/cfdCuttingPlane.h"
 #include "VE_Xplorer/cfdDataSet.h"
 #include <vtkPlane.h>
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 
 cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
                                   const int numSteps )
 {
-   vprDEBUG(vprDBG_ALL,2) << "in cfdCuttingPlane constructor"
+   vprDEBUG(vesDBG,2) << "in cfdCuttingPlane constructor"
                           << std::endl << vprDEBUG_FLUSH;
 
    // set the boundary of current data set.
@@ -47,7 +47,7 @@ cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
 
    this->type = xyz;
 
-   vprDEBUG(vprDBG_ALL,1) << "this->type = " << this->type 
+   vprDEBUG(vesDBG,1) << "this->type = " << this->type 
                           << std::endl << vprDEBUG_FLUSH;
 
    // specify the normal to sweep, the step-size, and the origin...
@@ -90,7 +90,7 @@ cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
       exit (1);
    }
 
-   vprDEBUG(vprDBG_ALL, 1) << "this->origin = " << this->origin[0] << " : "
+   vprDEBUG(vesDBG, 1) << "this->origin = " << this->origin[0] << " : "
                            << this->origin[1] << " : " << this->origin[2]
                            << std::endl << vprDEBUG_FLUSH; 
    this->plane = vtkPlane::New( );
@@ -103,7 +103,7 @@ cfdCuttingPlane::cfdCuttingPlane( const double bounds[6], const int xyz,
 
 cfdCuttingPlane::~cfdCuttingPlane( )
 {
-   vprDEBUG(vprDBG_ALL,2) << "in cfdCuttingPlane destructor" 
+   vprDEBUG(vesDBG,2) << "in cfdCuttingPlane destructor" 
                           << std::endl << vprDEBUG_FLUSH;
 // Fix this mccdo
    this->plane->Delete();
@@ -147,7 +147,7 @@ void cfdCuttingPlane::Advance( int requestedValue )
    if      ( this->isPastEnd() ) this->ResetOriginToLow();
    else if ( this->isAtEnd()   ) this->ResetOriginToHigh();
 
-   vprDEBUG(vprDBG_ALL, 1) << "this->origin[" << this->type << "] = " 
+   vprDEBUG(vesDBG, 1) << "this->origin[" << this->type << "] = " 
       << this->origin[this->type] << std::endl << vprDEBUG_FLUSH;
 
    this->plane->SetOrigin( this->origin );

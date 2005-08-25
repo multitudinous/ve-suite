@@ -39,7 +39,7 @@
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 #include <iostream>
 
 using namespace CosNaming;
@@ -70,7 +70,7 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    
    try
    {
-      vprDEBUG(vprDBG_ALL,0) 
+      vprDEBUG(vesDBG,0) 
          << "naming_context->unbind for CORBA Object  " 
          << std::endl << vprDEBUG_FLUSH;
       if ( !CORBA::is_nil( naming_context ) )
@@ -88,7 +88,7 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    if ( !CORBA::is_nil( _orbPtr ) )
       this->_orbPtr->shutdown(1);
 
-   vprDEBUG(vprDBG_ALL,1) 
+   vprDEBUG(vesDBG,1) 
       << " End VjObsWraper Destructor  " 
       << std::endl << vprDEBUG_FLUSH;
 }

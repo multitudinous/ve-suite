@@ -34,7 +34,7 @@
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_Xplorer/cfdCommandArray.h"
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <vtkPolyData.h>
 #include <vtkContourFilter.h>                // contour lines
@@ -54,7 +54,7 @@ using namespace VE_SceneGraph;
 // this class requires that the dataset has a scalar field.
 cfdContourBase::cfdContourBase()
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdContourBase constructor"
+   vprDEBUG(vesDBG,2) << "cfdContourBase constructor"
                           << std::endl << vprDEBUG_FLUSH;
    this->deci = vtkDecimatePro::New();
    
@@ -79,7 +79,7 @@ cfdContourBase::cfdContourBase()
 
 cfdContourBase::~cfdContourBase()
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdContourBase destructor"
+   vprDEBUG(vesDBG,2) << "cfdContourBase destructor"
                           << std::endl  << vprDEBUG_FLUSH;
 
    this->filter->Delete();
@@ -160,7 +160,7 @@ bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
    
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_CONTOUR_FILL )
    {
-      vprDEBUG(vprDBG_ALL,0) << "CHANGE_CONTOUR_FILL to type " 
+      vprDEBUG(vesDBG,0) << "CHANGE_CONTOUR_FILL to type " 
                              << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
                              << std::endl << vprDEBUG_FLUSH;
 
@@ -198,7 +198,7 @@ void cfdContourBase::SetFillType( const int type )
       fillType = type;
    else
    {
-      vprDEBUG(vprDBG_ALL, 0)
+      vprDEBUG(vesDBG, 0)
          << "cfdContourBase: requested fillType (" << type
          << ") is not available, using 0 instead"
          << std::endl << vprDEBUG_FLUSH;

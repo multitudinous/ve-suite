@@ -45,14 +45,14 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 cfdMomentum::cfdMomentum( )
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdMomentum constructor"
+   vprDEBUG(vesDBG,2) << "cfdMomentum constructor"
                           << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP  
    float b[6];
@@ -105,7 +105,7 @@ cfdMomentum::cfdMomentum( )
 
 cfdMomentum::~cfdMomentum()
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdMomentum destructor"
+   vprDEBUG(vesDBG,2) << "cfdMomentum destructor"
                           << std::endl << vprDEBUG_FLUSH;
 
 #ifdef USE_OMP
@@ -174,7 +174,7 @@ void cfdMomentum::Update( void )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,0) << "cfdMomentum requires cursorType == ARROW"
+      vprDEBUG(vesDBG,0) << "cfdMomentum requires cursorType == ARROW"
                              << std::endl << vprDEBUG_FLUSH;
       this->updateFlag = false;
    }

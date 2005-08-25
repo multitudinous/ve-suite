@@ -32,7 +32,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_Xplorer/cfdSound.h"
 #include <snx/sonix.h>
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 
@@ -67,11 +67,11 @@ void cfdSound::initSound()
    this->soundHandle.init( this->soundName );
    this->soundHandle.configure( si );
 
-   vprDEBUG(vprDBG_ALL,0) << "\tcfdSound:  fileName: " << this->fileName
+   vprDEBUG(vesDBG,0) << "\tcfdSound:  fileName: " << this->fileName
                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,0) << "\tcfdSound:    volume: " << this->volume
+   vprDEBUG(vesDBG,0) << "\tcfdSound:    volume: " << this->volume
                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,1) << "\tcfdSound: soundName: " << this->soundName
+   vprDEBUG(vesDBG,1) << "\tcfdSound: soundName: " << this->soundName
                           << std::endl << vprDEBUG_FLUSH;}
 
 void cfdSound::playSound()

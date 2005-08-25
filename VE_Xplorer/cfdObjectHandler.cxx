@@ -135,7 +135,7 @@ void cfdObjectHandler::ProcessHit(osgUtil::IntersectVisitor::HitList listOfHits)
 
    if ( listOfHits.empty())
    {
-      vprDEBUG(vprDBG_ALL,1) << "No object selected" << std::endl 
+      vprDEBUG(vesDBG,1) << "No object selected" << std::endl 
                               << vprDEBUG_FLUSH;
    }
    else
@@ -359,7 +359,7 @@ void cfdObjectHandler::SetWandPosition()
    {
       this->LastWandPosition[ i ] = wandPosition[ i ];
    }
-   vprDEBUG(vprDBG_ALL,1) << "reseting wand Position" << std::endl;
+   vprDEBUG(vesDBG,1) << "reseting wand Position" << std::endl;
 }
 
 void cfdObjectHandler::TranslateObject()

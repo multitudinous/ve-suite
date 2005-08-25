@@ -162,7 +162,7 @@ void cfdExecutive::UnbindORB()
       CosNaming::Name UIname(1);
       UIname.length(1);
       UIname[0].id = CORBA::string_dup((ui_i->UIName_).c_str());
-      vprDEBUG(vprDBG_ALL,2) << "|\tExecutive Destructor " 
+      vprDEBUG(vesDBG,2) << "|\tExecutive Destructor " 
                               << UIname[0].id << std::endl << vprDEBUG_FLUSH;
 
       try
@@ -171,17 +171,17 @@ void cfdExecutive::UnbindORB()
       }
       catch ( CosNaming::NamingContext::InvalidName& ex )
       {
-         vprDEBUG(vprDBG_ALL,1) << "|\tcfdExecutive : Invalid Name! " 
+         vprDEBUG(vesDBG,1) << "|\tcfdExecutive : Invalid Name! " 
                                  << std::endl << vprDEBUG_FLUSH;
       }
       catch ( CosNaming::NamingContext::NotFound& ex )
       {
-         vprDEBUG(vprDBG_ALL,1) << "|\tcfdExecutive : Not Found! " 
+         vprDEBUG(vesDBG,1) << "|\tcfdExecutive : Not Found! " 
                                  << std::endl << vprDEBUG_FLUSH;
       }
       catch ( CosNaming::NamingContext::CannotProceed& ex )
       {
-         vprDEBUG(vprDBG_ALL,1) << "|\tcfdExecutive : Cannot Proceed! " 
+         vprDEBUG(vesDBG,1) << "|\tcfdExecutive : Cannot Proceed! " 
                                  << std::endl << vprDEBUG_FLUSH;
       }
    }
@@ -289,7 +289,7 @@ void cfdExecutive::GetNetwork ( void )
    // Get buffer value from Body_UI implementation
    std::string temp( ui_i->GetNetworkString() );
    const char* network = temp.c_str();
-   vprDEBUG(vprDBG_ALL,2) << "|\tNetwork String : " << network 
+   vprDEBUG(vesDBG,2) << "|\tNetwork String : " << network 
                           << std::endl << vprDEBUG_FLUSH;
 
 /////////////////////////////
@@ -402,7 +402,7 @@ void cfdExecutive::GetEverything( void )
       //vpr::System::msleep( 500 );  // half-second delay
    if ( !CORBA::is_nil( this->_exec) )//&& updateNetworkString )
    {
-      vprDEBUG(vprDBG_ALL,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
+      vprDEBUG(vesDBG,0) << "|\tGetting Network From Executive" << std::endl << vprDEBUG_FLUSH;      
       GetNetwork();
  
       std::map< int, std::string >::iterator iter;
@@ -429,9 +429,9 @@ void cfdExecutive::GetEverything( void )
                _plugins[ iter->first ]->SetSoundHandler( cfdEnvironmentHandler::instance()->GetSoundHandler() );
                _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
                _plugins[ iter->first ]->SetModuleResults( this->_exec->GetModuleResult( iter->first ) );
-               vprDEBUG(vprDBG_ALL,1) << "Module results: " << this->_exec->GetModuleResult( iter->first )
+               vprDEBUG(vesDBG,1) << "Module results: " << this->_exec->GetModuleResult( iter->first )
                                       << std::endl << vprDEBUG_FLUSH;
-               vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
+               vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                                       << " ]-> " << iter->second 
                                       << " is being created."
                                       << std::endl << vprDEBUG_FLUSH;
@@ -440,7 +440,7 @@ void cfdExecutive::GetEverything( void )
          else
          {
             // plugin already present...
-            vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
+            vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                                     << " ]-> " << iter->second 
                                     << " is already on the plugin map."
                                     << std::endl << vprDEBUG_FLUSH;
@@ -483,7 +483,7 @@ void cfdExecutive::GetEverything( void )
          else
          {
             // plugin already present...
-            vprDEBUG(vprDBG_ALL,1) << "|\t\tPlugin [ " << iter->first 
+            vprDEBUG(vesDBG,1) << "|\t\tPlugin [ " << iter->first 
                                     << " ]-> " << iter->second 
                                     << " is already on the plugin and id map."
                                     << std::endl << vprDEBUG_FLUSH;
@@ -491,7 +491,7 @@ void cfdExecutive::GetEverything( void )
          }
          // The above code is from : The C++ Standard Library by:Josuttis pg. 205
       }
-      vprDEBUG(vprDBG_ALL,0) << "|\tDone Getting Network From Executive"
+      vprDEBUG(vesDBG,0) << "|\tDone Getting Network From Executive"
                              << std::endl << vprDEBUG_FLUSH;    
 
       /*
@@ -517,7 +517,7 @@ void cfdExecutive::GetEverything( void )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,3) << "ERROR : The Executive has not been " 
+      vprDEBUG(vesDBG,3) << "ERROR : The Executive has not been " 
                              << "intialized or not time to update!"
                              << std::endl << vprDEBUG_FLUSH;     
    }
@@ -566,7 +566,7 @@ void cfdExecutive::InitModules( void )
 
 void cfdExecutive::PreFrameUpdate( void )
 {
-   vprDEBUG(vprDBG_ALL,3) << " cfdExecutive::PreFrameUpdate"
+   vprDEBUG(vesDBG,3) << " cfdExecutive::PreFrameUpdate"
                           << std::endl << vprDEBUG_FLUSH;
 
    if ( !CORBA::is_nil( this->_exec ) )
@@ -579,7 +579,7 @@ void cfdExecutive::PreFrameUpdate( void )
 
       // store the statusString in order to perform multiple operations on it...
       std::string statusString = ui_i->GetStatusString();
-      vprDEBUG(vprDBG_ALL,3) << "cfdExecutive::PreFrameUpdate statusString = " << statusString 
+      vprDEBUG(vesDBG,3) << "cfdExecutive::PreFrameUpdate statusString = " << statusString 
                              << std::endl << vprDEBUG_FLUSH;
 
       // record position of some key phrases...
@@ -636,7 +636,7 @@ void cfdExecutive::PreFrameUpdate( void )
 
 void cfdExecutive::SetCalculationsFlag( bool x )
 {
-   //vprDEBUG(vprDBG_ALL, 0)
+   //vprDEBUG(vesDBG, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
@@ -645,7 +645,7 @@ void cfdExecutive::SetCalculationsFlag( bool x )
 
 bool cfdExecutive::GetCalculationsFlag( void )
 {
-   //vprDEBUG(vprDBG_ALL, 0)
+   //vprDEBUG(vesDBG, 0)
    //   << "Setting mValue to '" << value << "'\n" << vprDEBUG_FLUSH;
 
    //vpr::Guard<vpr::Mutex> val_guard(mValueLock);
@@ -662,7 +662,7 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
       }
 /*      else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == ACT_CUSTOM_VIZ )
       {
-         vprDEBUG(vprDBG_ALL,1) << " Custom Viz" << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vesDBG,1) << " Custom Viz" << std::endl << vprDEBUG_FLUSH;
          std::map< int, cfdVEBaseClass* >::iterator foundPlugin;
          for ( foundPlugin=_plugins.begin(); foundPlugin!=_plugins.end(); foundPlugin++)
          {  
@@ -679,6 +679,6 @@ bool cfdExecutive::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdExecutive::UpdateCommand()
 {
-   vprDEBUG(vprDBG_ALL,0) << "doing nothing in cfdExecutive::UpdateCommand()"
+   vprDEBUG(vesDBG,0) << "doing nothing in cfdExecutive::UpdateCommand()"
                           << std::endl << vprDEBUG_FLUSH;
 }

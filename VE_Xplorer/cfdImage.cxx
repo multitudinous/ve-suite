@@ -46,7 +46,7 @@
 #include <vtkProperty.h>
 #include <vtkActor.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <fstream>
 
@@ -72,11 +72,11 @@ cfdImage::cfdImage( char* param )
       return;
 
    char * extension = fileIO::getExtension( bmpFileName );
-   vprDEBUG(vprDBG_ALL, 1) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG, 1) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
 
    if ( !strcmp(extension,"bmp") || !strcmp(extension,"BMP") )
    {
-      vprDEBUG(vprDBG_ALL, 1) << "found bmp\n" << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG, 1) << "found bmp\n" << vprDEBUG_FLUSH;
       // Kevin Kenney: The images represent 13.2-in x 13.8-in. plane of the
       // flow field. The lower left coordinates must be computed from
       // information supplied with the image/data. Image in y-z plane with
@@ -138,7 +138,7 @@ cfdImage::cfdImage( char* param )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, 0) << "ERROR: invalid extension on file \""
+      vprDEBUG(vesDBG, 0) << "ERROR: invalid extension on file \""
          << bmpFileName << "\"\n" << vprDEBUG_FLUSH;
    }
 }
@@ -154,7 +154,7 @@ cfdImage::cfdImage ( char * filename, int resx, int resy, int dim, double *origi
    this->texture = NULL;
 
    char * extension = fileIO::getExtension( filename );
-   vprDEBUG(vprDBG_ALL, 1) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG, 1) << "extension = \"" << extension << "\"\n" << vprDEBUG_FLUSH;
 
    if ( !strcmp(extension,"lic") || !strcmp(extension,"LIC") )
    {
@@ -232,7 +232,7 @@ cfdImage::cfdImage ( char * filename, int resx, int resy, int dim, double *origi
 
 cfdImage::~cfdImage()
 {
-   vprDEBUG(vprDBG_ALL, 1) << "CFDIMAGE DESTRUCTOR\n" << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG, 1) << "CFDIMAGE DESTRUCTOR\n" << vprDEBUG_FLUSH;
    if (this->bmpReader != NULL ) this->bmpReader->Delete();
    if (this->imgReader != NULL ) this->imgReader->Delete();
    if (this->plane != NULL )     this->plane->Delete();
@@ -265,12 +265,12 @@ void cfdImage::CreateObjects( void )
    input >> numObjects; 
    input.getline( textLine, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
    for( int i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
       input.getline( textLine, 256 );   //skip past remainder of line
       if ( id == 5 )
       {
@@ -279,7 +279,7 @@ void cfdImage::CreateObjects( void )
 
          if (fileIO::isFileReadable( this->bmpFileName ) ) 
          {
-            vprDEBUG(vprDBG_ALL,0) << " BMP file = " << this->bmpFileName
+            vprDEBUG(vesDBG,0) << " BMP file = " << this->bmpFileName
                              << std::endl << vprDEBUG_FLUSH;
          }
          else
@@ -292,13 +292,13 @@ void cfdImage::CreateObjects( void )
          input >> this->bmpPosition[ 0 ] >> this->bmpPosition[ 1 ]
                >> this->bmpPosition[ 2 ];
          input.getline( textLine, 256 );   //skip past remainder of line
-         vprDEBUG(vprDBG_ALL,0) << " BMP Position = " << this->bmpPosition[ 0 ]
+         vprDEBUG(vesDBG,0) << " BMP Position = " << this->bmpPosition[ 0 ]
             << "\t" << this->bmpPosition[ 1 ] << "\t" <<  this->bmpPosition[ 2 ]
             << std::endl << vprDEBUG_FLUSH;
 
          input >> this->bmpOrientation;
          input.getline( textLine, 256 );   //skip past remainder of line
-         vprDEBUG(vprDBG_ALL,0) << " BMP Orientation = " << this->bmpOrientation
+         vprDEBUG(vesDBG,0) << " BMP Orientation = " << this->bmpOrientation
             << std::endl << vprDEBUG_FLUSH;
       }
       else

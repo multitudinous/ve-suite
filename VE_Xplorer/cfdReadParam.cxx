@@ -43,7 +43,7 @@
 #include <fstream>
 #include <cmath>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 using namespace VE_Util;
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -72,15 +72,15 @@ cfdReadParam::~cfdReadParam()
    int temp = (int)this->files.size();
    if ( temp > 0 )
    {
-      vprDEBUG(vprDBG_ALL,2) << " Deleting files"
+      vprDEBUG(vesDBG,2) << " Deleting files"
                              << std::endl << vprDEBUG_FLUSH;
       for (int i=0; i < temp; i++)
       {
-         vprDEBUG(vprDBG_ALL,2) << "\tcfdReadParam:Deleting file " << i 
+         vprDEBUG(vesDBG,2) << "\tcfdReadParam:Deleting file " << i 
                                 << std::endl << vprDEBUG_FLUSH;
          delete this->files[ i ];
       }
-      vprDEBUG(vprDBG_ALL,2) << "\tcfdReadParam:clearing files"
+      vprDEBUG(vesDBG,2) << "\tcfdReadParam:clearing files"
                              << std::endl << vprDEBUG_FLUSH;
       files.clear();
    }
@@ -90,11 +90,11 @@ cfdReadParam::~cfdReadParam()
    {
       for (int i=0; i < temp; i++)
       {
-         vprDEBUG(vprDBG_ALL,2) << "\tcfdReadParam:Deleting dataSet " << i 
+         vprDEBUG(vesDBG,2) << "\tcfdReadParam:Deleting dataSet " << i 
                                 << std::endl << vprDEBUG_FLUSH;
          delete this->dataSets[ i ];
       }
-      vprDEBUG(vprDBG_ALL,2) << "\tcfdReadParam:clearing dataSets"
+      vprDEBUG(vesDBG,2) << "\tcfdReadParam:clearing dataSets"
                              << std::endl << vprDEBUG_FLUSH;
       this->dataSets.clear();
    }
@@ -105,12 +105,12 @@ cfdReadParam::~cfdReadParam()
    {
       for (int i=0; i< temp; i++)
       {
-         vprDEBUG(vprDBG_ALL,2) << "\tDeleting transientInfo " << i 
+         vprDEBUG(vesDBG,2) << "\tDeleting transientInfo " << i 
                                  << std::endl << vprDEBUG_FLUSH;
                              
          delete this->transientInfo[ i ];
       }
-      vprDEBUG(vprDBG_ALL,2) << "\tcfdReadParam:clearing transientInfo"
+      vprDEBUG(vesDBG,2) << "\tcfdReadParam:clearing transientInfo"
                              << std::endl << vprDEBUG_FLUSH;
       this->transientInfo.clear();
    }
@@ -162,12 +162,12 @@ char * cfdReadParam::readDirName( std::ifstream &inFile, char * description )
 
    if ( fileIO::DirectoryExists( dirName ) ) 
    {
-      vprDEBUG(vprDBG_ALL,0) << " " << description << " = \""
+      vprDEBUG(vesDBG,0) << " " << description << " = \""
                 << dirName << "\"" << std::endl << vprDEBUG_FLUSH;
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,0) << " " << description << " \""
+      vprDEBUG(vesDBG,0) << " " << description << " \""
                              << dirName << "\" does not exist"
                              << std::endl << vprDEBUG_FLUSH;
       delete [] dirName;
@@ -284,7 +284,7 @@ void cfdReadParam::param_read( std::ifstream &inFile )
    int ii = transientInfo.size();
    this->transientInfo.push_back( new cfdTransientInfo() );
 
-   vprDEBUG(vprDBG_ALL,0) << " transient DCS parameters:"
+   vprDEBUG(vesDBG,0) << " transient DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
 
    float scale[3], trans[3], rotate[3];   // pfDCS stuff
@@ -302,7 +302,7 @@ void cfdReadParam::param_read( std::ifstream &inFile )
    {
       transientDataDir[ i ] = readDirName( inFile, "transientDataDir" );
       int id = readID( inFile );
-      vprDEBUG(vprDBG_ALL,0) << "\tbutton id = " << id
+      vprDEBUG(vesDBG,0) << "\tbutton id = " << id
                              << std::endl << vprDEBUG_FLUSH;
       if ( transientDataDir[ i ] )
       {
@@ -314,7 +314,7 @@ void cfdReadParam::param_read( std::ifstream &inFile )
       }
       else
       {
-         vprDEBUG(vprDBG_ALL,0) << " did not find transient data directory "
+         vprDEBUG(vesDBG,0) << " did not find transient data directory "
                                 << i << std::endl << vprDEBUG_FLUSH;
       }
    }
@@ -322,7 +322,7 @@ void cfdReadParam::param_read( std::ifstream &inFile )
    char * geometryDir = readDirName( inFile, "geometryDir" );
    this->transientInfo[ ii ]->SetGeometryDir( geometryDir );
 
-   vprDEBUG(vprDBG_ALL,0) << " transient geometry DCS parameters:"
+   vprDEBUG(vesDBG,0) << " transient geometry DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
 
    this->read_pf_DCS_parameters( inFile, scale, trans, rotate);
@@ -335,13 +335,13 @@ void cfdReadParam::param_read( std::ifstream &inFile )
 
    // read geometry transparency flag
    inFile >> this->transientInfo[ ii ]->trans;
-   vprDEBUG(vprDBG_ALL,0) << " trans flag = " 
+   vprDEBUG(vesDBG,0) << " trans flag = " 
                           << this->transientInfo[ ii ]->trans
                           << std::endl << vprDEBUG_FLUSH;
 
    // read geometry color flag and color if flag = 1
    inFile >> this->transientInfo[ ii ]->color;
-   vprDEBUG(vprDBG_ALL,0) << " color flag = " 
+   vprDEBUG(vesDBG,0) << " color flag = " 
                           << this->transientInfo[ ii ]->color
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -354,7 +354,7 @@ void cfdReadParam::param_read( std::ifstream &inFile )
       {
          inFile >> this->transientInfo[ ii ]->stlColor[ i ];
       }
-      vprDEBUG(vprDBG_ALL,0) << "   stlColor: " 
+      vprDEBUG(vesDBG,0) << "   stlColor: " 
                        << this->transientInfo[ ii ]->stlColor[ 0 ] << " : "
                        << this->transientInfo[ ii ]->stlColor[ 1 ] << " : "
                        << this->transientInfo[ ii ]->stlColor[ 2 ]
@@ -366,13 +366,13 @@ void cfdReadParam::param_read( std::ifstream &inFile )
    inFile >> dur;
    inFile.getline( textLine, 256 );   //skip past remainder of line
    this->transientInfo[ ii ]->SetDuration( dur );
-   vprDEBUG(vprDBG_ALL,0) << " duration = " << dur
+   vprDEBUG(vesDBG,0) << " duration = " << dur
                           << std::endl << vprDEBUG_FLUSH;
 }
 */
 int cfdReadParam::convertDecimalToBinary( long number) 
 {
-   vprDEBUG(vprDBG_ALL,1) << " Number = " << number
+   vprDEBUG(vesDBG,1) << " Number = " << number
                           << std::endl << vprDEBUG_FLUSH;
    testBin.clear();
    long int n = number;
@@ -406,7 +406,7 @@ void cfdReadParam::convertBinaryToArray( int gui, int size )
    for ( int i = 0; i < size; i++ ) 
    {      
       guiVal[ i] = testBin[ i ];
-      vprDEBUG(vprDBG_ALL,2) << "Binary number : " << guiVal[ i] << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,2) << "Binary number : " << guiVal[ i] << std::endl << vprDEBUG_FLUSH;
    }
 }
 
@@ -422,7 +422,7 @@ void cfdReadParam::read_pf_DCS_parameters( std::ifstream &inFile,
    }
    inFile.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,0) << "\tScale factors:      "
+   vprDEBUG(vesDBG,0) << "\tScale factors:      "
       << "\t" << scale[0] << "\t" << scale[1] << "\t" << scale[2]
       << std::endl << vprDEBUG_FLUSH;
 
@@ -432,7 +432,7 @@ void cfdReadParam::read_pf_DCS_parameters( std::ifstream &inFile,
    }
    inFile.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,0) << "\tTranslation factors:"
+   vprDEBUG(vesDBG,0) << "\tTranslation factors:"
       << "\t" << trans[0] << "\t" << trans[1] << "\t" << trans[2]
       << std::endl << vprDEBUG_FLUSH;
 
@@ -442,7 +442,7 @@ void cfdReadParam::read_pf_DCS_parameters( std::ifstream &inFile,
    }
    inFile.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,0) << "\tRotation factors:   "
+   vprDEBUG(vesDBG,0) << "\tRotation factors:   "
       << "\t" << rot[0] << "\t" << rot[1] << "\t" << rot[2]
       << std::endl << vprDEBUG_FLUSH;
 }  
@@ -460,11 +460,11 @@ bool cfdReadParam::CheckCommandId( cfdCommandArray* commandArray )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == UPDATE_GEOMETRY )
    {
-      vprDEBUG(vprDBG_ALL,1)
+      vprDEBUG(vesDBG,1)
          << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) << std::endl << vprDEBUG_FLUSH;
 
       long int test = this->convertDecimalToBinary( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
-      vprDEBUG(vprDBG_ALL,1)
+      vprDEBUG(vesDBG,1)
          << " test : " << test << std::endl << vprDEBUG_FLUSH;
 
       this->convertBinaryToArray( test, this->numGeoms );

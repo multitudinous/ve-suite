@@ -59,7 +59,7 @@
 #include <vtkSTLReader.h>
 #include <vtkActor.h>
 #include <vtkPolyDataMapper.h>
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -76,7 +76,7 @@ cfdGeomDataSet::cfdGeomDataSet( fileInfo *geomFile, VE_SceneGraph::cfdDCS *model
 #endif
   DCS  = new VE_SceneGraph::cfdDCS();
 
-  vprDEBUG(vprDBG_ALL,1) << " File:1 " << geomFile->fileName
+  vprDEBUG(vesDBG,1) << " File:1 " << geomFile->fileName
                          << std::endl << vprDEBUG_FLUSH;
 
   //node = pfdLoadFile( geomFile->fileName );  // pfNode
@@ -115,7 +115,7 @@ cfdGeomDataSet::cfdGeomDataSet( float opVal, float stlColor[3], char *filename  
       color = 1;
    }
 
-   vprDEBUG(vprDBG_ALL,1) << color << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << color << std::endl << vprDEBUG_FLUSH;
     
    if( color )
    {
@@ -124,7 +124,7 @@ cfdGeomDataSet::cfdGeomDataSet( float opVal, float stlColor[3], char *filename  
       {
          this->stlColor[i] = stlColor[i];
       }
-      vprDEBUG(vprDBG_ALL,1) << "this->stlColor = " << this->stlColor[0] 
+      vprDEBUG(vesDBG,1) << "this->stlColor = " << this->stlColor[0] 
          << " : " << this->stlColor[1] << " : " << this->stlColor[2]
          << std::endl << vprDEBUG_FLUSH;
    }
@@ -160,7 +160,7 @@ void cfdGeomDataSet::Initialize(float op_val )
 void cfdGeomDataSet::setTrans( float t[3] )
 {
    this->setTrans3( t[0], t[1], t[2] );
-   vprDEBUG(vprDBG_ALL,1) << "Trans x: " << t[0] << " y: "
+   vprDEBUG(vesDBG,1) << "Trans x: " << t[0] << " y: "
       << t[1] << " z: " << t[2] << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -172,7 +172,7 @@ void cfdGeomDataSet::setTrans3( float x, float y, float z )
    trans[1] = y;
    trans[2] = z;
    this->DCS->SetTranslationArray(trans);//SetTrans( x, y, z );
-   vprDEBUG(vprDBG_ALL,1) << "Trans x: " << x << " y: " 
+   vprDEBUG(vesDBG,1) << "Trans x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////////////////////
@@ -184,7 +184,7 @@ void cfdGeomDataSet::setScl( float x, float y, float z )
    scale[2] = z;
    
    this->DCS->SetScaleArray(scale);//>SetScale( x, y, z );
-   vprDEBUG(vprDBG_ALL,1) << "Scale x: " << x << " y: " 
+   vprDEBUG(vesDBG,1) << "Scale x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
 //////////////////////////////////////////////////////
@@ -195,7 +195,7 @@ void cfdGeomDataSet::setRot(float h, float p, float r)
    rot[1] = p;
    rot[2] = r;
    this->DCS->SetRotationArray(rot);//>SetRot(h,p,r);
-   vprDEBUG(vprDBG_ALL,1) << "Rot h: " << h << " p: " 
+   vprDEBUG(vesDBG,1) << "Rot h: " << h << " p: " 
       << p << " r: " << r << std::endl << vprDEBUG_FLUSH;
 }
 //////////////////////////////////////////////

@@ -56,7 +56,7 @@
 #include <sstream>
 #include <iomanip>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_SceneGraph;
 using namespace VE_Xplorer;
@@ -64,7 +64,7 @@ using namespace VE_SceneGraph;
 
 cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( VE_SceneGraph::cfdGroup * groupNode )
 {
-   vprDEBUG(vprDBG_ALL,2) << " gauges constructor"
+   vprDEBUG(vesDBG,2) << " gauges constructor"
                           << std::endl << vprDEBUG_FLUSH;
    this->gaugeDCS = new VE_SceneGraph::cfdDCS();
    this->gaugeDCS->SetName("gauge");
@@ -85,14 +85,14 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge( VE_SceneGraph::cfdGroup * groupNod
       this->backgroundColor[ i ] = -1.0;  // not present
    }
 
-   vprDEBUG(vprDBG_ALL,2) << " leaving gauges constructor"
+   vprDEBUG(vesDBG,2) << " leaving gauges constructor"
                           << std::endl << vprDEBUG_FLUSH;
 
 }
 ////////////////////////////////////////////////////////////////////////////
 cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
 {
-   vprDEBUG(vprDBG_ALL,2) << "Entering cfdDigitalAnalogGauge Copy Constructor" 
+   vprDEBUG(vesDBG,2) << "Entering cfdDigitalAnalogGauge Copy Constructor" 
                           << std::endl << vprDEBUG_FLUSH;
    gaugeDCS = new VE_SceneGraph::cfdDCS(*g.gaugeDCS);   
    masterNode = g.masterNode;
@@ -139,13 +139,13 @@ cfdDigitalAnalogGauge::cfdDigitalAnalogGauge(const cfdDigitalAnalogGauge& g)
       this->backgroundColor[ i ] = g.backgroundColor[ i ];
    }
 
-   vprDEBUG(vprDBG_ALL,2) << "Leaving cfdDigitalAnalogGauge Copy Constructor" 
+   vprDEBUG(vesDBG,2) << "Leaving cfdDigitalAnalogGauge Copy Constructor" 
                           << std::endl << vprDEBUG_FLUSH;
 }
 
 cfdDigitalAnalogGauge::~cfdDigitalAnalogGauge( void )
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdDigitalAnalogGauge Destructor" 
+   vprDEBUG(vesDBG,2) << "cfdDigitalAnalogGauge Destructor" 
                           << std::endl << vprDEBUG_FLUSH;
    this->movingArrow->Delete();
    this->arrowMapper->Delete();
@@ -494,14 +494,15 @@ void cfdDigitalAnalogGauge::UpdateMovingArrowInRange( double value )
    double arrowLimitAngle = 120.0; // arrow can swing +/- this many degrees
 
    // slope is rise over run...
-   vprDEBUG(vprDBG_ALL,2) << " limits: " << this->lowAnalogLimit << " " << this->highAnalogLimit << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,2) << " limits: " << this->lowAnalogLimit << " " << this->highAnalogLimit << std::endl << vprDEBUG_FLUSH;
    double slope = -( 2.0 * arrowLimitAngle ) / ( this->highAnalogLimit - this->lowAnalogLimit );
 
    double middleOfRange = ( this->highAnalogLimit + this->lowAnalogLimit ) / 2.0;
-   vprDEBUG(vprDBG_ALL,2) << "middleOfRange: " << middleOfRange << std::endl << vprDEBUG_FLUSH; 
+   vprDEBUG(vesDBG,2) << "middleOfRange: " << middleOfRange << std::endl << vprDEBUG_FLUSH; 
    double normalizedValue = value - middleOfRange;
    double angle = normalizedValue * slope;
-   vprDEBUG(vprDBG_ALL,2) << "angle: " << angle << std::endl << vprDEBUG_FLUSH; 
+   vprDEBUG(vesDBG
+,2) << "angle: " << angle << std::endl << vprDEBUG_FLUSH; 
 
    // verify limits...
    if      ( angle < -arrowLimitAngle ) angle = -arrowLimitAngle;

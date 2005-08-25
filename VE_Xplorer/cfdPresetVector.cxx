@@ -35,7 +35,7 @@
 #include "VE_Xplorer/cfdCuttingPlane.h"
 #include "VE_SceneGraph/cfdGeode.h"
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <vtkLookupTable.h>
 #include <vtkPlane.h>
@@ -70,10 +70,10 @@ cfdPresetVector::~cfdPresetVector()
 
 void cfdPresetVector::Update( void )
 {
-   vprDEBUG(vprDBG_ALL,1) << "cfdPresetVector::ActiveDataSet = " 
+   vprDEBUG(vesDBG,1) << "cfdPresetVector::ActiveDataSet = " 
                           << this->GetActiveDataSet() 
                           << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,1) << this->cursorType 
+   vprDEBUG(vesDBG,1) << this->cursorType 
                           << " : " << usePreCalcData 
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -85,7 +85,7 @@ void cfdPresetVector::Update( void )
 
       if ( preCalcData == NULL )
       {
-         vprDEBUG(vprDBG_ALL, 0) 
+         vprDEBUG(vesDBG, 0) 
             << "cfdPresetVector: no precalculated data available"
             << std::endl << vprDEBUG_FLUSH;
          this->updateFlag = false;
@@ -107,7 +107,7 @@ void cfdPresetVector::Update( void )
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                           ->GetLookupTable() );
       this->mapper->Update();
-      vprDEBUG(vprDBG_ALL, 1)
+      vprDEBUG(vesDBG, 1)
          << "Yes Precalc : " << this->cursorType << " : " << usePreCalcData 
          << std::endl << vprDEBUG_FLUSH;
    }
@@ -147,7 +147,7 @@ void cfdPresetVector::Update( void )
                                         ->GetLookupTable() );
       this->mapper->Update();
 
-      vprDEBUG(vprDBG_ALL, 1) 
+      vprDEBUG(vesDBG, 1) 
          << "No Precalc : " << this->cursorType << " : " << usePreCalcData
          << " : " << GetVectorRatioFactor() << std::endl << vprDEBUG_FLUSH;
    }

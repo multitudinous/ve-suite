@@ -44,7 +44,7 @@
 #include <vtkCutter.h>
 #include <vtkPolyDataReader.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <sstream>
 
@@ -54,7 +54,7 @@ using namespace VE_Util;
 cfdPlanes::cfdPlanes( const int xyz, const char directory[],
                       const double bounds[ 6 ] )
 {
-   vprDEBUG(vprDBG_ALL,2) << " cfdPlanes constructor" 
+   vprDEBUG(vesDBG,2) << " cfdPlanes constructor" 
                           << std::endl << vprDEBUG_FLUSH;
    this->numPlanes = 0;
    this->append = NULL;
@@ -73,10 +73,10 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
        std::cerr << "ERROR: in cfdPlanes, xyz must be 0, 1, or 2" << std::endl;
        exit( 1 );
    }
-   vprDEBUG(vprDBG_ALL,1) << "this->typeLabel = " << this->typeLabel 
+   vprDEBUG(vesDBG,1) << "this->typeLabel = " << this->typeLabel 
                            << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,1) << "directory: \"" << directory << "\"" 
+   vprDEBUG(vesDBG,1) << "directory: \"" << directory << "\"" 
                            << std::endl << vprDEBUG_FLUSH;
 
    int i;
@@ -94,7 +94,7 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
        if ( ! fileIO::isFileReadable( (char*)dirString.c_str() ) )
        {
            this->numPlanes = i;
-           vprDEBUG(vprDBG_ALL,0) << "\t\tFound " << this->numPlanes 
+           vprDEBUG(vesDBG,0) << "\t\tFound " << this->numPlanes 
                 << " " << this->typeLabel << "-planes"
                 << std::endl << vprDEBUG_FLUSH; 
            break;
@@ -126,7 +126,7 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
       double vertex [ 3 ];
       planeReader->GetOutput()->GetPoints()->GetPoint(0, vertex);
       this->sliceLocation[ i ] = (float)vertex[this->type];
-      vprDEBUG(vprDBG_ALL,1) << "\t\tplane[" << i 
+      vprDEBUG(vesDBG,1) << "\t\tplane[" << i 
          << "] goes through coordinate " 
          << this->sliceLocation[ i ] << std::endl << vprDEBUG_FLUSH;
 
@@ -158,7 +158,7 @@ cfdPlanes::cfdPlanes( const int xyz, const char directory[],
 
 cfdPlanes::~cfdPlanes()
 {
-   vprDEBUG(vprDBG_ALL,2) << " cfdPlanes destructor" 
+   vprDEBUG(vesDBG,2) << " cfdPlanes destructor" 
                           << std::endl << vprDEBUG_FLUSH;
 
    if ( this->numPlanes > 0 )
@@ -224,7 +224,7 @@ vtkPolyData * cfdPlanes::GetClosestPlane( const int sliderBarPos )
    this->cuttingPlane->GetOrigin( origin );
    double coordinate = origin[ this->type ];
 
-   vprDEBUG(vprDBG_ALL,1) 
+   vprDEBUG(vesDBG,1) 
       << "activating precomputed plane corresponding to requested coordinate: " 
       << coordinate << " : Slider Bar Position : " << sliderBarPos << std::endl << vprDEBUG_FLUSH;
 
@@ -235,7 +235,7 @@ vtkPolyData * cfdPlanes::GetClosestPlane( const int sliderBarPos )
    {
       float sqDist = ( coordinate - this->sliceLocation[ i ] ) *
                      ( coordinate - this->sliceLocation[ i ] );
-      vprDEBUG(vprDBG_ALL,1)
+      vprDEBUG(vesDBG,1)
          << "plane " << i << ": sliceLocation = " << this->sliceLocation[ i ]
          << ", sqDist = " << sqDist << std::endl << vprDEBUG_FLUSH;
 
@@ -261,7 +261,7 @@ void cfdPlanes::ConcatenateSelectedPlanes( void )
 
    for ( int i = 0; i < this->numPlanes; i++ )
    {
-      vprDEBUG(vprDBG_ALL,1) 
+      vprDEBUG(vesDBG,1) 
          << "isPlaneSelected[" << i << "] = " << isPlaneSelected[ i ]
          << std::endl << vprDEBUG_FLUSH;
 

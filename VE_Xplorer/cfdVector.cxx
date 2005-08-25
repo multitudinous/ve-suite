@@ -52,7 +52,7 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -168,17 +168,17 @@ void cfdVector::Update( void )
          this->glyph[i]->Update();
       }
 #else
-      vprDEBUG(vprDBG_ALL, 1) << "Vector Cutting Plane Update"
+      vprDEBUG(vesDBG, 1) << "Vector Cutting Plane Update"
                               << std::endl << vprDEBUG_FLUSH;
       this->plane->SetOrigin( this->origin );
-      vprDEBUG(vprDBG_ALL, 1) << "origin: " << this->origin[0] << " : " 
+      vprDEBUG(vesDBG, 1) << "origin: " << this->origin[0] << " : " 
                               << this->origin[1] << " : " << this->origin[2] 
                               << std::endl << vprDEBUG_FLUSH;
       this->plane->SetNormal( this->normal );
       this->cutter->SetInput( this->GetActiveDataSet()->GetDataSet() );
       int numPointsInPlanes = 0;
       numPointsInPlanes = this->cutter->GetOutput()->GetPointData()->GetNumberOfTuples();
-      vprDEBUG(vprDBG_ALL, 3) << "|   Number of points in cutting plane : " << numPointsInPlanes
+      vprDEBUG(vesDBG, 3) << "|   Number of points in cutting plane : " << numPointsInPlanes
                               << std::endl << vprDEBUG_FLUSH;
 
       // get every nth point from the dataSet data
@@ -204,7 +204,7 @@ void cfdVector::Update( void )
    }
    else if ( this->cursorType == CUBE )
    {
-      vprDEBUG(vprDBG_ALL, 0) << "cfdVector not implemented for cube cursor"
+      vprDEBUG(vesDBG, 0) << "cfdVector not implemented for cube cursor"
                               << std::endl << vprDEBUG_FLUSH;
    }
    

@@ -38,7 +38,7 @@
 #include <vtkVectorText.h>
 #include <vtkProperty.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -54,7 +54,7 @@ cfd1DTextInput::cfd1DTextInput( void ):cfdDCS()
 
 cfd1DTextInput::~cfd1DTextInput( void )
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfd1DTextInput Destructor: doing nothing" 
+   vprDEBUG(vesDBG,2) << "cfd1DTextInput Destructor: doing nothing" 
                           << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -66,7 +66,7 @@ VE_SceneGraph::cfdDCS* cfd1DTextInput::getpfDCS( void )
 void cfd1DTextInput::SetFilename( std::string text )
 {
    this->text = text;
-   vprDEBUG(vprDBG_ALL,1) << "\tcfd1DTextInput : " << this->text
+   vprDEBUG(vesDBG,1) << "\tcfd1DTextInput : " << this->text
                           << std::endl << vprDEBUG_FLUSH;
 }
 

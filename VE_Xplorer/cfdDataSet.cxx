@@ -62,7 +62,7 @@
 #include <vtkCellDataToPointData.h>
 #include <vtkCellData.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <iostream>
 #include <sstream>
@@ -173,7 +173,7 @@ cfdDataSet::~cfdDataSet()
    {
       delete this->x_planes;
       this->x_planes = NULL;
-      vprDEBUG(vprDBG_ALL,1) << "deleting this->x_planes" 
+      vprDEBUG(vesDBG,1) << "deleting this->x_planes" 
                              << std::endl << vprDEBUG_FLUSH;
    }
 
@@ -181,7 +181,7 @@ cfdDataSet::~cfdDataSet()
    {
       delete this->y_planes;
       this->y_planes = NULL;
-      vprDEBUG(vprDBG_ALL,1) << "deleting this->y_planes" 
+      vprDEBUG(vesDBG,1) << "deleting this->y_planes" 
                              << std::endl << vprDEBUG_FLUSH;
    }
    
@@ -189,7 +189,7 @@ cfdDataSet::~cfdDataSet()
    {
       delete this->z_planes;
       this->z_planes = NULL;
-      vprDEBUG(vprDBG_ALL,1) << "deleting this->z_planes" 
+      vprDEBUG(vesDBG,1) << "deleting this->z_planes" 
                               << std::endl << vprDEBUG_FLUSH;
    }
   
@@ -213,7 +213,7 @@ cfdDataSet::~cfdDataSet()
 
    if ( this->fileName != NULL )
    {
-      vprDEBUG(vprDBG_ALL,2) << "deleting filename " << this->fileName
+      vprDEBUG(vesDBG,2) << "deleting filename " << this->fileName
                              << std::endl << vprDEBUG_FLUSH;
       delete [] this->fileName;
       this->fileName = NULL;
@@ -221,7 +221,7 @@ cfdDataSet::~cfdDataSet()
  
    if ( _vtkFHndlr )
    {
-      vprDEBUG(vprDBG_ALL,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,2) << "deleting _vtkFHndlr " << std::endl << vprDEBUG_FLUSH;
       delete _vtkFHndlr;
       _vtkFHndlr = 0;
    }
@@ -256,13 +256,13 @@ double * cfdDataSet::GetRange()
 
 void cfdDataSet::SetUserRange( double userRange[2] )
 {
-   vprDEBUG(vprDBG_ALL,1) << "cfdDataSet::SetUserRange OLD userRange = " 
+   vprDEBUG(vesDBG,1) << "cfdDataSet::SetUserRange OLD userRange = " 
       << userRange[0] << " : " << userRange[1]
       << std::endl << vprDEBUG_FLUSH;
 
    this->SetUserRange( userRange[0], userRange[1] );
    
-   vprDEBUG(vprDBG_ALL,1) << "cfdDataSet::SetUserRange NEW userRange = " 
+   vprDEBUG(vesDBG,1) << "cfdDataSet::SetUserRange NEW userRange = " 
       << userRange[0] << " : " << userRange[1]
       << std::endl << vprDEBUG_FLUSH;
 }
@@ -374,7 +374,7 @@ vtkUnstructuredGrid * cfdDataSet::GetUnsData()
 
    if ( ! this->dataSet->IsA("vtkUnstructuredGrid") ) 
    {
-      vprDEBUG(vprDBG_ALL,0) 
+      vprDEBUG(vesDBG,0) 
          << "cfdDataSet::GetUnsData - dataset is not an unsGrid !!"
          << std::endl << vprDEBUG_FLUSH;
 
@@ -393,7 +393,7 @@ vtkPolyData * cfdDataSet::GetPolyData()
 
    if ( ! this->dataSet->IsA("vtkPolyData") ) 
    {
-      vprDEBUG(vprDBG_ALL,0) 
+      vprDEBUG(vesDBG,0) 
          << "cfdDataSet::GetPolyData - dataset is not a vtkPolyData !!"
          << std::endl << vprDEBUG_FLUSH;
 
@@ -414,7 +414,7 @@ void cfdDataSet::SetType()
    if ( this->datasetType == -1 )
    {
       int dataObjectType = this->dataSet->GetDataObjectType();
-      vprDEBUG(vprDBG_ALL,1) << "\tdataObjectType: " << dataObjectType
+      vprDEBUG(vesDBG,1) << "\tdataObjectType: " << dataObjectType
                              << std::endl << vprDEBUG_FLUSH;
                                 
       this->datasetType = 0;
@@ -437,7 +437,7 @@ void cfdDataSet::SetType()
          types->Delete();
       }
    }
-   vprDEBUG(vprDBG_ALL,1) << "\tdatasetType: " << this->datasetType
+   vprDEBUG(vesDBG,1) << "\tdatasetType: " << this->datasetType
                           << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -499,11 +499,11 @@ void cfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
    std::cout<<"[DBG]...Inside LoadData ugrid Function"<<std::endl;
    std::cout<<"[DBG]...numPtDataArrays = "<<this->numPtDataArrays<<std::endl;
 
-   vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = " << this->numPtDataArrays
+   vprDEBUG(vesDBG,1) << "\tnumPtDataArrays = " << this->numPtDataArrays
                           << std::endl << vprDEBUG_FLUSH;
 
    int numCellArrays = this->dataSet->GetCellData()->GetNumberOfArrays();
-   vprDEBUG(vprDBG_ALL,1) << "\tnumCellArrays = " << numCellArrays
+   vprDEBUG(vesDBG,1) << "\tnumCellArrays = " << numCellArrays
                           << std::endl << vprDEBUG_FLUSH;
 
    std::cout<<"[DBG]...numCellArrays = "<<numCellArrays<<std::endl;
@@ -529,7 +529,7 @@ void cfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
          this->numPtDataArrays = this->dataSet->GetPointData()
                                               ->GetNumberOfArrays();
 
-         vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = "
+         vprDEBUG(vesDBG,1) << "\tnumPtDataArrays = "
                                 << this->numPtDataArrays
                                 << std::endl << vprDEBUG_FLUSH;
       }
@@ -553,7 +553,7 @@ void cfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
       this->noOfData = table->GetNumberOfCells();
    }
 
-   vprDEBUG(vprDBG_ALL,1) <<"noOfData:" << this->noOfData 
+   vprDEBUG(vesDBG,1) <<"noOfData:" << this->noOfData 
                           << std::endl << vprDEBUG_FLUSH;
    tableReader->Delete();
 
@@ -603,20 +603,20 @@ void cfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,0) << "\tWARNING: No Point Data"
+      vprDEBUG(vesDBG,0) << "\tWARNING: No Point Data"
                              << std::endl << vprDEBUG_FLUSH;
    }
 
    if ( this->GetDataSet()->GetPointData()->GetScalars() ) 
    {
-      vprDEBUG(vprDBG_ALL,1) << "cfdDataSet: active scalar is \"" 
+      vprDEBUG(vesDBG,1) << "cfdDataSet: active scalar is \"" 
            <<  this->GetDataSet()->GetPointData()->GetScalars()->GetName() 
            << "\"" << std::endl << vprDEBUG_FLUSH;
    }
 
    if ( this->GetDataSet()->GetPointData()->GetVectors() ) 
    {
-      vprDEBUG(vprDBG_ALL,1) << "cfdDataSet: active vector is \""
+      vprDEBUG(vesDBG,1) << "cfdDataSet: active vector is \""
            <<  this->GetDataSet()->GetPointData()->GetVectors()->GetName() 
            << "\"" << std::endl << vprDEBUG_FLUSH;
    }
@@ -631,14 +631,14 @@ void cfdDataSet::LoadData( )
 {
    if ( this->dataSet != NULL )
    {
-      vprDEBUG(vprDBG_ALL,1) <<" Already have loaded the data for " 
+      vprDEBUG(vesDBG,1) <<" Already have loaded the data for " 
                              << this->fileName
                              << std::endl << vprDEBUG_FLUSH;
       return;
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,1) <<" LoadData: filename = " << this->fileName
+      vprDEBUG(vesDBG,1) <<" LoadData: filename = " << this->fileName
                              << std::endl << vprDEBUG_FLUSH;
    }
 
@@ -650,11 +650,11 @@ void cfdDataSet::LoadData( )
    this->dataSet = _vtkFHndlr->GetDataSetFromFile(fileName);
    this->numPtDataArrays = this->dataSet->GetPointData()
                                         ->GetNumberOfArrays();
-   vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = " << this->numPtDataArrays
+   vprDEBUG(vesDBG,1) << "\tnumPtDataArrays = " << this->numPtDataArrays
                           << std::endl << vprDEBUG_FLUSH;
 
    int numCellArrays = this->dataSet->GetCellData()->GetNumberOfArrays();
-   vprDEBUG(vprDBG_ALL,1) << "\tnumCellArrays = " << numCellArrays
+   vprDEBUG(vesDBG,1) << "\tnumCellArrays = " << numCellArrays
                           << std::endl << vprDEBUG_FLUSH;
    std::cout<<"[DBG]...Inside LoadData()"<<std::endl;
    std::cout<<"[DBG]...numPtDataArrays = "<<this->numPtDataArrays<<std::endl;
@@ -668,7 +668,7 @@ void cfdDataSet::LoadData( )
       vtkCellDataToPointData * converter = vtkCellDataToPointData::New();
       //converter->DebugOn();
       //double* testrange = this->dataSet->GetCellData()->GetArray( 0 )->GetRange();
-      //   vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = "
+      //   vprDEBUG(vesDBG,1) << "\tnumPtDataArrays = "
       //                          << testrange[ 0 ] << " : " << testrange[ 1 ]
        //                         << std::endl << vprDEBUG_FLUSH;
       converter->SetInput( this->dataSet );
@@ -688,11 +688,11 @@ void cfdDataSet::LoadData( )
                                               ->GetNumberOfArrays();
 //this->dataSet->DebugOn();
 //this->dataSet->Print(std::cout);
-         vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = "
+         vprDEBUG(vesDBG,1) << "\tnumPtDataArrays = "
                                 << this->numPtDataArrays
                                 << std::endl << vprDEBUG_FLUSH;
 //double* testrange = this->dataSet->GetPointData()->GetArray( 0 )->GetRange();
-//         vprDEBUG(vprDBG_ALL,1) << "\tnumPtDataArrays = "
+//         vprDEBUG(vesDBG,1) << "\tnumPtDataArrays = "
 //                                << testrange[ 0 ] << " : " << testrange[ 1 ]
 //                                << std::endl << vprDEBUG_FLUSH;
       }
@@ -716,7 +716,7 @@ void cfdDataSet::LoadData( )
       this->noOfData = table->GetNumberOfCells();
    }
 
-   vprDEBUG(vprDBG_ALL,1) <<"noOfData:" << this->noOfData 
+   vprDEBUG(vesDBG,1) <<"noOfData:" << this->noOfData 
                           << std::endl << vprDEBUG_FLUSH;
    tableReader->Delete();
 
@@ -744,7 +744,7 @@ void cfdDataSet::LoadData( )
       double bounds[ 6 ];
       this->GetDataSet()->GetBounds( bounds );
 
-      vprDEBUG(vprDBG_ALL,0) << "\tLoading precomputed planes from " 
+      vprDEBUG(vesDBG,0) << "\tLoading precomputed planes from " 
            << this->GetPrecomputedDataSliceDir() << std::endl << vprDEBUG_FLUSH;
       this->x_planes = new cfdPlanes( 0, this->GetPrecomputedDataSliceDir(), bounds );
       this->y_planes = new cfdPlanes( 1, this->GetPrecomputedDataSliceDir(), bounds );
@@ -778,20 +778,20 @@ void cfdDataSet::LoadData( )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,0) << "\tWARNING: No Point Data"
+      vprDEBUG(vesDBG,0) << "\tWARNING: No Point Data"
                              << std::endl << vprDEBUG_FLUSH;
    }
 
    if ( this->GetDataSet()->GetPointData()->GetScalars() ) 
    {
-      vprDEBUG(vprDBG_ALL,1) << "cfdDataSet: active scalar is \"" 
+      vprDEBUG(vesDBG,1) << "cfdDataSet: active scalar is \"" 
            <<  this->GetDataSet()->GetPointData()->GetScalars()->GetName() 
            << "\"" << std::endl << vprDEBUG_FLUSH;
    }
 
    if ( this->GetDataSet()->GetPointData()->GetVectors() ) 
    {
-      vprDEBUG(vprDBG_ALL,1) << "cfdDataSet: active vector is \""
+      vprDEBUG(vesDBG,1) << "cfdDataSet: active vector is \""
            <<  this->GetDataSet()->GetPointData()->GetVectors()->GetName() 
            << "\"" << std::endl << vprDEBUG_FLUSH;
    }
@@ -816,7 +816,7 @@ int cfdDataSet::CountNumberOfParameters( const int numComponents )
       // also, ignore arrays of normals...
       if ( numComponents == 3 && ( ! strcmp( array->GetName(), "normals" ) ) )
       {
-         vprDEBUG(vprDBG_ALL,1) 
+         vprDEBUG(vesDBG,1) 
             << "cfdDataSet: not counting the parameter called \"normals\"" 
             << std::endl << vprDEBUG_FLUSH;
          continue; 
@@ -857,13 +857,13 @@ char ** cfdDataSet::GetParameterNames( const int numComponents,
 
 void cfdDataSet::UpdatePropertiesForNewMesh()
 {
-   vprDEBUG(vprDBG_ALL,1) << "\tthis->GetDataSet = " << this->GetDataSet()
+   vprDEBUG(vesDBG,1) << "\tthis->GetDataSet = " << this->GetDataSet()
                            << std::endl << vprDEBUG_FLUSH;
    // Get the length of the diagonal of the bounding box. 
    // THIS METHOD IS THREAD SAFE IF FIRST CALLED FROM A SINGLE THREAD
    // AND THE DATASET IS NOT MODIFIED
    this->bbDiagonal = this->GetDataSet()->GetLength();
-   vprDEBUG(vprDBG_ALL,1) << "\tthis->bbDiagonal = " << this->bbDiagonal
+   vprDEBUG(vesDBG,1) << "\tthis->bbDiagonal = " << this->bbDiagonal
                           << std::endl << vprDEBUG_FLUSH;
 
    // Read or compute the length of the diagonal of the bounding box
@@ -874,26 +874,26 @@ void cfdDataSet::UpdatePropertiesForNewMesh()
    // Read the dataset fields and see if any match with member variable names
    vtkFieldData * field = this->GetDataSet()->GetFieldData();
    int numFieldArrays = field->GetNumberOfArrays();
-   vprDEBUG(vprDBG_ALL,1) << " numFieldArrays = " << numFieldArrays
+   vprDEBUG(vesDBG,1) << " numFieldArrays = " << numFieldArrays
                           << std::endl << vprDEBUG_FLUSH;
    for ( int i = 0; i < numFieldArrays; i++ )
    {
       // print some debug information
-      vprDEBUG(vprDBG_ALL,0) << " Reading field \""
+      vprDEBUG(vesDBG,0) << " Reading field \""
            << field->GetArray( i )->GetName()
            << "\"" << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,1) << "\tNumComponents = "
+      vprDEBUG(vesDBG,1) << "\tNumComponents = "
            << field->GetArray( i )->GetNumberOfComponents()
            << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,1) << "\tNumTuples= "
+      vprDEBUG(vesDBG,1) << "\tNumTuples= "
            << field->GetArray( i )->GetNumberOfTuples()
            << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,1) << "\tfirst value = "
+      vprDEBUG(vesDBG,1) << "\tfirst value = "
            << field->GetArray( i )->GetComponent( 0, 0 )
            << std::endl << vprDEBUG_FLUSH;
       if ( field->GetArray( i )->GetNumberOfTuples() > 1 )
       {
-         vprDEBUG(vprDBG_ALL,1) << "\tsecond value = "
+         vprDEBUG(vesDBG,1) << "\tsecond value = "
               << field->GetArray( i )->GetComponent( 0, 1 )
               << std::endl << vprDEBUG_FLUSH;
       }
@@ -912,7 +912,7 @@ void cfdDataSet::UpdatePropertiesForNewMesh()
       this->meanCellBBLength = cfdAccessoryFunctions::
                                ComputeMeanCellBBLength( this->GetDataSet() );
    }
-   vprDEBUG(vprDBG_ALL,0) << "\tmeanCellBBLength = " << this->meanCellBBLength
+   vprDEBUG(vesDBG,0) << "\tmeanCellBBLength = " << this->meanCellBBLength
                           << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -935,7 +935,7 @@ void cfdDataSet::SetActiveScalar( int scalar )
    {
       this->activeScalar = scalar;
 
-      vprDEBUG(vprDBG_ALL,1) 
+      vprDEBUG(vesDBG,1) 
          << "cfdDataSet::SetActiveScalar: requested activeScalar = "
          << this->activeScalar << ", scalarName = " 
          << this->scalarName[ this->activeScalar ]
@@ -945,7 +945,7 @@ void cfdDataSet::SetActiveScalar( int scalar )
    this->GetDataSet()->GetPointData()->SetActiveScalars( 
                                      this->scalarName[ this->activeScalar ] );
 
-   vprDEBUG(vprDBG_ALL,1) << "\tSetActiveScalar: Active scalar is \""
+   vprDEBUG(vesDBG,1) << "\tSetActiveScalar: Active scalar is \""
         << this->GetDataSet()->GetPointData()->GetScalars()->GetName()
         << "\"" << std::endl << vprDEBUG_FLUSH;
 
@@ -956,7 +956,7 @@ void cfdDataSet::SetActiveScalar( int scalar )
       {
          numPlanes = this->GetPrecomputedSlices( i )->GetNumberOfPlanes();
       }
-      vprDEBUG(vprDBG_ALL,1) << "\tnumPlanes = " << numPlanes
+      vprDEBUG(vesDBG,1) << "\tnumPlanes = " << numPlanes
            << std::endl << vprDEBUG_FLUSH;
 
       if ( numPlanes > 0 )
@@ -977,24 +977,24 @@ void cfdDataSet::SetActiveScalar( int scalar )
    double * temp = this->GetActualScalarRange( this->activeScalar );
    this->range [ 0 ] = temp[ 0 ];
    this->range [ 1 ] = temp[ 1 ];
-   vprDEBUG(vprDBG_ALL,1) << "range[0] = " << this->range[0]
+   vprDEBUG(vesDBG,1) << "range[0] = " << this->range[0]
                           << ", range[1] = " << this->range[1]
                           << std::endl << vprDEBUG_FLUSH;
 
    temp = this->GetDisplayedScalarRange( this->activeScalar );
    this->definedRange[ 0 ] = temp[ 0 ];
    this->definedRange[ 1 ] = temp[ 1 ];
-   vprDEBUG(vprDBG_ALL,1) << "definedRange[0] = " << this->definedRange[0]
+   vprDEBUG(vesDBG,1) << "definedRange[0] = " << this->definedRange[0]
                           << ", definedRange[1] = " << this->definedRange[1]
                           << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,1) << "actualScalarRange[0][0] = " 
+   vprDEBUG(vesDBG,1) << "actualScalarRange[0][0] = " 
                           << this->actualScalarRange[0][0]
                           << ", actualScalarRange[0][1] = " 
                           << this->actualScalarRange[0][1]
                           << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,1) << "displayedScalarRange[0][0] = " 
+   vprDEBUG(vesDBG,1) << "displayedScalarRange[0][0] = " 
                           << this->displayedScalarRange[0][0]
                           << ", displayedScalarRange[0][1] = "
                           << this->displayedScalarRange[0][1]
@@ -1002,18 +1002,18 @@ void cfdDataSet::SetActiveScalar( int scalar )
 
    // Step length for streamline integration
    this->stepLength = this->bbDiagonal/5.0f ;
-   vprDEBUG(vprDBG_ALL,1) << "\tSetActiveScalar: stepLength = " 
+   vprDEBUG(vesDBG,1) << "\tSetActiveScalar: stepLength = " 
       << this->stepLength << std::endl << vprDEBUG_FLUSH;
 
    // Maximum integration time for streamline integration
    this->maxTime = 5.0f * this->bbDiagonal / 
                               ( ( this->range[1] - this->range[0] ) * 0.5f );
-   vprDEBUG(vprDBG_ALL,1) << "\tSetActiveScalar: maxTime = " 
+   vprDEBUG(vesDBG,1) << "\tSetActiveScalar: maxTime = " 
       << this->maxTime << std::endl << vprDEBUG_FLUSH;
 
    // Time step for streamline integration
    this->timeStep = this->bbDiagonal / this->definedRange[1];
-   vprDEBUG(vprDBG_ALL,1) << "\tSetActiveScalar: timeStep = " 
+   vprDEBUG(vesDBG,1) << "\tSetActiveScalar: timeStep = " 
       << this->timeStep << std::endl << vprDEBUG_FLUSH;
 
    // set up the vtkLookupTable
@@ -1053,7 +1053,7 @@ void cfdDataSet::SetActiveVector( int vector )
    {
       this->activeVector = vector;
 
-      vprDEBUG(vprDBG_ALL,1) 
+      vprDEBUG(vesDBG,1) 
          << "cfdDataSet::SetActiveVector: requested activeVector = "
          << this->activeVector << ", vectorName= " 
          << this->vectorName[ this->activeVector ]
@@ -1070,7 +1070,7 @@ void cfdDataSet::SetActiveVector( int vector )
       {
          numPlanes = this->GetPrecomputedSlices( i )->GetNumberOfPlanes();
       }
-      vprDEBUG(vprDBG_ALL,1) << "\tnumPlanes = " << numPlanes
+      vprDEBUG(vesDBG,1) << "\tnumPlanes = " << numPlanes
                              << std::endl << vprDEBUG_FLUSH;
 
       if ( numPlanes > 0 )
@@ -1098,7 +1098,7 @@ void cfdDataSet::AutoComputeUserRange( const double rawRange[2],
                                        double prettyRange[2] )
 {
    double highMinusLow = rawRange[1] - rawRange[0];
-   vprDEBUG(vprDBG_ALL,1) << " highMinusLow = " << highMinusLow
+   vprDEBUG(vesDBG,1) << " highMinusLow = " << highMinusLow
       << std::endl << vprDEBUG_FLUSH;
 
    // if all scalar data is the same, then lower bound = upper bound. 
@@ -1113,7 +1113,7 @@ void cfdDataSet::AutoComputeUserRange( const double rawRange[2],
       prettyRange[ 0 ] = rawRange[ 0 ];
       prettyRange[ 1 ] = rawRange[ 1 ];
    }
-   vprDEBUG(vprDBG_ALL,1) << " prettyRange: "
+   vprDEBUG(vesDBG,1) << " prettyRange: "
       << prettyRange[ 0 ] << " : " << prettyRange[ 1 ]
       << std::endl << vprDEBUG_FLUSH;
 
@@ -1126,7 +1126,7 @@ void cfdDataSet::AutoComputeUserRange( const double rawRange[2],
    // be almost 20%, causing the end color ranges to be useless.
 
    int intHighMinusLow = (int)highMinusLow;
-   vprDEBUG(vprDBG_ALL,1) << "intHighMinusLow = " << intHighMinusLow
+   vprDEBUG(vesDBG,1) << "intHighMinusLow = " << intHighMinusLow
       << std::endl << vprDEBUG_FLUSH;
 
    //compute power factors to get rawRange spread into ball park of 100..
@@ -1144,8 +1144,8 @@ void cfdDataSet::AutoComputeUserRange( const double rawRange[2],
          intHighMinusLow  = (int)( highMinusLow / pow(10.0,order) );
       }
    } while (1);
-   vprDEBUG(vprDBG_ALL,1) << "order = " << order << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL,1) << "intHighMinusLow = " << intHighMinusLow
+   vprDEBUG(vesDBG,1) << "order = " << order << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << "intHighMinusLow = " << intHighMinusLow
       << std::endl << vprDEBUG_FLUSH;
 
    // round up the normalized rawRange spread so that it is divisible by 4
@@ -1158,7 +1158,7 @@ void cfdDataSet::AutoComputeUserRange( const double rawRange[2],
    } while (1);
 
    // use the computed power factors to round down to a nice number
-   vprDEBUG(vprDBG_ALL,1) << "floor = "
+   vprDEBUG(vesDBG,1) << "floor = "
       << floor(rawRange[0] / pow(10.0,order)) * pow(10.0,order)
       << std::endl << vprDEBUG_FLUSH;
    prettyRange[0] = floor(rawRange[0] / pow(10.0,order)) * pow(10.0,order);
@@ -1181,7 +1181,7 @@ void cfdDataSet::ResetScalarBarRange( int min, int max )
    this->intRange[0] = min;
    this->intRange[1] = max;
 // converts percentile parameters into decimal values for a particular scalar
-   vprDEBUG(vprDBG_ALL,1) << "cfdDataSet::ResetScalarBarRange "
+   vprDEBUG(vesDBG,1) << "cfdDataSet::ResetScalarBarRange "
                           << "min = " << min << ", max = " << max
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -1199,7 +1199,7 @@ void cfdDataSet::ResetScalarBarRange( int min, int max )
 
    double newPrettyRange[2];
    this->AutoComputeUserRange( newRawRange, newPrettyRange );
-   vprDEBUG(vprDBG_ALL,1) << "newPrettyRange[0] = " << newPrettyRange[0]
+   vprDEBUG(vesDBG,1) << "newPrettyRange[0] = " << newPrettyRange[0]
                           << ", newPrettyRange[1] = " << newPrettyRange[1]
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -1399,26 +1399,26 @@ void cfdDataSet::GetActualScalarRange( int index, double * range )
 
 void cfdDataSet::SetActualScalarRange( int index, double * range )
 {
-   vprDEBUG(vprDBG_ALL,2) 
+   vprDEBUG(vesDBG,2) 
       << "cfdDataSet::SetActualScalarRange, for file " << this->fileName 
       << ", index: " << index
       << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,2) 
+   vprDEBUG(vesDBG,2) 
       << "cfdDataSet::SetActualScalarRange OLD actualScalarRange[" 
       << index << "] = " 
       << this->actualScalarRange[ index ][ 0 ] << " : " 
       << this->actualScalarRange[ index ][ 1 ]
       << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,2) << "cfdDataSet::SetActualScalarRange request range: "
+   vprDEBUG(vesDBG,2) << "cfdDataSet::SetActualScalarRange request range: "
       << range[0] << " : " << range[1]
       << std::endl << vprDEBUG_FLUSH;
 
    this->actualScalarRange[ index ][ 0 ] = range[ 0 ];
    this->actualScalarRange[ index ][ 1 ] = range[ 1 ];
 
-   vprDEBUG(vprDBG_ALL,1) 
+   vprDEBUG(vesDBG,1) 
       << "cfdDataSet::SetActualScalarRange NEW actualScalarRange[" 
       << index << "] = " 
       << this->actualScalarRange[ index ][ 0 ] << " : " 
@@ -1429,7 +1429,7 @@ void cfdDataSet::SetActualScalarRange( int index, double * range )
 // returns displayed range of active scalar
 double * cfdDataSet::GetDisplayedScalarRange()
 {
-   vprDEBUG(vprDBG_ALL,1) << "cfdDataSet::GetDisplayedScalarRange"
+   vprDEBUG(vesDBG,1) << "cfdDataSet::GetDisplayedScalarRange"
       << " activeScalar = " << this->activeScalar
       << std::endl << vprDEBUG_FLUSH;
    return this->displayedScalarRange[ this->activeScalar ];
@@ -1502,7 +1502,7 @@ void cfdDataSet::StoreScalarInfo()
 {
    // called once to initialize the scalar names and ranges of a data set
    this->numScalars = CountNumberOfParameters( 1 );
-   vprDEBUG(vprDBG_ALL,1) << "\tStoreScalarInfo: numScalars = " 
+   vprDEBUG(vesDBG,1) << "\tStoreScalarInfo: numScalars = " 
                           << this->numScalars
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -1530,7 +1530,7 @@ void cfdDataSet::StoreScalarInfo()
          this->GetDataSet()->GetPointData()->GetArray( i )
              ->GetRange( this->actualScalarRange[ ii ] );
 
-         vprDEBUG(vprDBG_ALL,1) << "\tarray(" << i << "), scalarName[" 
+         vprDEBUG(vesDBG,1) << "\tarray(" << i << "), scalarName[" 
             << ii << "] = \"" << this->scalarName[ ii ] 
             << "\", actualScalarRange = "
             << this->actualScalarRange[ ii ][ 0 ] << " : "
@@ -1541,7 +1541,9 @@ void cfdDataSet::StoreScalarInfo()
                               this->GetParent()->GetActualScalarRange( ii ),
                               this->displayedScalarRange[ ii ] );
 
-         vprDEBUG(vprDBG_ALL,1) << "\tarray(" << i << "), scalarName[" 
+         vprDEBUG(vesDBG
+
+,1) << "\tarray(" << i << "), scalarName[" 
             << ii << "] = \"" << this->scalarName[ ii ] 
             << "\", displayedScalarRange = "
             << this->displayedScalarRange[ ii ][ 0 ] << " : "

@@ -42,7 +42,7 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -58,13 +58,13 @@ cfdContours::~cfdContours()
 
 void cfdContours::Update( void )
 {
-   vprDEBUG(vprDBG_ALL,1) << "cfdContours::Update" 
+   vprDEBUG(vesDBG,1) << "cfdContours::Update" 
                           << std::endl << vprDEBUG_FLUSH;
 
    if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
         == NULL )
    {
-      vprDEBUG(vprDBG_ALL, 0) 
+      vprDEBUG(vesDBG, 0) 
          << "cfdContours: planesData == NULL so returning" 
          << std::endl << vprDEBUG_FLUSH;
       return;
@@ -92,7 +92,7 @@ void cfdContours::Update( void )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, 0) 
+      vprDEBUG(vesDBG, 0) 
          << "cfdContours: !(mapper && cursorType == NONE)"
          << std::endl << vprDEBUG_FLUSH;
 

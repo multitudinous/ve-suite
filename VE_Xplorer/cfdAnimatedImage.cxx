@@ -37,7 +37,7 @@
 #include "VE_SceneGraph/cfdTempAnimation.h"
 #include "VE_SceneGraph/cfdDCS.h"
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <iostream>
 #include <fstream>
@@ -170,12 +170,12 @@ void cfdAnimatedImage::CreateObjects( void )
    input >> numObjects; 
    input.getline( textLine, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
    for( int i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
       input.getline( textLine, 256 );   //skip past remainder of line
       if ( id == 12 )
       {

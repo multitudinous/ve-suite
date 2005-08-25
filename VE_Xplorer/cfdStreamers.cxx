@@ -54,7 +54,7 @@
 #include <vtkTriangleFilter.h>
 #include <vtkPolyDataNormals.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -88,11 +88,11 @@ void cfdStreamers::Update( void )
 {
    if ( pointSource == NULL )
    {
-      vprDEBUG(vprDBG_ALL,0) << "|\tcfdStreamers::Update, No Cursor Type Selected" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,0) << "|\tcfdStreamers::Update, No Cursor Type Selected" << std::endl << vprDEBUG_FLUSH;
       return;
    }
 
-   vprDEBUG(vprDBG_ALL,0) << "|   cfdStreamers::Update, origin = "
+   vprDEBUG(vesDBG,0) << "|   cfdStreamers::Update, origin = "
       << this->origin[0] << " : " << this->origin[1] << " : " 
       << this->origin[2] << std::endl 
       << " Prop Time : " << this->propagationTime 
@@ -288,7 +288,7 @@ aa Assign Normals NORMALS POINT_DATA
       tubeFilter = vtkTubeFilter::New();
       mapper->Delete();
       mapper = vtkPolyDataMapper::New();
-      vprDEBUG(vprDBG_ALL,0) << "|\tMemory allocation failure : cfdStreamers " 
+      vprDEBUG(vesDBG,0) << "|\tMemory allocation failure : cfdStreamers " 
                               << std::endl << vprDEBUG_FLUSH;
    }
     
@@ -304,7 +304,7 @@ aa Assign Normals NORMALS POINT_DATA
       normals->Delete();
    }
 
-   vprDEBUG(vprDBG_ALL,0) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,0) << "|\tcfdStreamers::Update End" << std::endl << vprDEBUG_FLUSH;
 }
 
 vtkPolyData * cfdStreamers::GetStreamersOutput( void )
@@ -351,7 +351,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == BACKWARD_INTEGRATION )
    {
-      vprDEBUG(vprDBG_ALL,0) << " BACKWARD_INTEGRATION" 
+      vprDEBUG(vesDBG,0) << " BACKWARD_INTEGRATION" 
                              << std::endl << vprDEBUG_FLUSH;
 
       this->SetIntegrationDirection( 2 );
@@ -359,7 +359,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == FORWARD_INTEGRATION )
    {
-      vprDEBUG(vprDBG_ALL,0) << " FORWARD_INTEGRATION"
+      vprDEBUG(vesDBG,0) << " FORWARD_INTEGRATION"
                              << std::endl << vprDEBUG_FLUSH;
 
       this->SetIntegrationDirection( 1 );
@@ -367,7 +367,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TWO_DIRECTION_INTEGRATION )
    {
-      vprDEBUG(vprDBG_ALL,0) << " 2_DIRECTION_INTEGRATION" 
+      vprDEBUG(vesDBG,0) << " 2_DIRECTION_INTEGRATION" 
                              << std::endl << vprDEBUG_FLUSH;
 
       this->SetIntegrationDirection( 0 );
@@ -375,7 +375,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_PROPAGATION_TIME )
    {
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_PROPAGATION_TIME\t" 
+      vprDEBUG(vesDBG,0) << " CHANGE_PROPAGATION_TIME\t" 
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
       
@@ -384,7 +384,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_INT_STEP_LENGTH )
    {
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_INT_STEP_LENGTH\t"
+      vprDEBUG(vesDBG,0) << " CHANGE_INT_STEP_LENGTH\t"
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
          << std::endl << vprDEBUG_FLUSH;
       
@@ -393,7 +393,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STEP_LENGTH )
    {
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_STEP_LENGTH\t" << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
+      vprDEBUG(vesDBG,0) << " CHANGE_STEP_LENGTH\t" << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
                              << std::endl << vprDEBUG_FLUSH;
          
       this->SetStepLength( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
@@ -401,7 +401,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_ARROW )
    {
-      vprDEBUG(vprDBG_ALL,0) << " STREAMLINE_ARROW\t" << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
+      vprDEBUG(vesDBG,0) << " STREAMLINE_ARROW\t" << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
                              << std::endl << vprDEBUG_FLUSH;
          
       streamArrows = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
@@ -409,7 +409,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_DIAMETER )
    {
-      vprDEBUG(vprDBG_ALL,0) << " STREAMLINE_DIAMETER\t" 
+      vprDEBUG(vesDBG,0) << " STREAMLINE_DIAMETER\t" 
                               << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
                               << std::endl << vprDEBUG_FLUSH;
          
@@ -425,7 +425,7 @@ bool cfdStreamers::CheckCommandId( cfdCommandArray* commandArray )
       // note that multiplying by 0.005 is the same as dividing by 200, or the range
       this->lineDiameter = (diameter + 110) * 0.005 *  20;
 
-      vprDEBUG(vprDBG_ALL,1) << "       New Streamline Diameter : " 
+      vprDEBUG(vesDBG,1) << "       New Streamline Diameter : " 
                              << this->lineDiameter << std::endl << vprDEBUG_FLUSH;
       arrowDiameter = localLineDiameter * 4.0f;
       return true;

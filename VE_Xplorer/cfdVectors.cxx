@@ -48,7 +48,7 @@
 #include <vtkProperty.h>
 #include <vtkPolyDataWriter.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 
@@ -66,7 +66,7 @@ void cfdVectors::Update( void )
    if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz )
                                      ->GetPlanesData() == NULL )
    {
-      vprDEBUG(vprDBG_ALL, 0) 
+      vprDEBUG(vesDBG, 0) 
          << "cfdVectors, planesData == NULL so returning\n" << vprDEBUG_FLUSH;
       return;
    }
@@ -75,7 +75,7 @@ void cfdVectors::Update( void )
    { 
       double bd[6];
       this->GetActiveDataSet()->GetDataSet()->GetBounds( bd );
-      vprDEBUG(vprDBG_ALL, 0) <<"d1:"<<bd[0]<<"d2:"<<bd[1]<<"d3:"<<bd[2]
+      vprDEBUG(vesDBG, 0) <<"d1:"<<bd[0]<<"d2:"<<bd[1]<<"d3:"<<bd[2]
           <<"d4:"<<bd[3]<<"d5:"<<bd[4]<<"d6:"<<bd[5]
           << std::endl << vprDEBUG_FLUSH;
 
@@ -90,7 +90,7 @@ void cfdVectors::Update( void )
            && this->box_size[2] != this->box_size[3] 
            && this->box_size[4] != this->box_size[5] )
          {
-            vprDEBUG(vprDBG_ALL, 0)
+            vprDEBUG(vesDBG, 0)
                 <<"c1:"<<this->box_size[0]<<"c2:"<<this->box_size[1]
                 <<"c3:"<<this->box_size[2]<<"c4:"<<this->box_size[3]
                 <<"c5:"<<this->box_size[4]<<"c6:"<<this->box_size[5]
@@ -114,7 +114,7 @@ void cfdVectors::Update( void )
       }
       else
       { 
-         vprDEBUG(vprDBG_ALL, 0) <<"cfdVectors Error: cursor not in cube\n"
+         vprDEBUG(vesDBG, 0) <<"cfdVectors Error: cursor not in cube\n"
             << vprDEBUG_FLUSH;
          this->updateFlag = false;
       }

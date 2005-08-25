@@ -42,7 +42,7 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -68,7 +68,7 @@ void cfdMomentums::Update( void )
 {
    if ( this->GetActiveDataSet()->GetPrecomputedSlices( this->xyz ) == NULL )
    {
-      vprDEBUG(vprDBG_ALL, 0) 
+      vprDEBUG(vesDBG, 0) 
          << "cfdMomentums: planesData == NULL so returning"
          << std::endl << vprDEBUG_FLUSH;
 
@@ -100,7 +100,7 @@ void cfdMomentums::Update( void )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, 0) 
+      vprDEBUG(vesDBG, 0) 
          << "cfdMomentums::Update: !(mapper && cursorType == NONE)"
          << std::endl << vprDEBUG_FLUSH;
 

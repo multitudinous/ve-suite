@@ -62,7 +62,7 @@
 #define BOX_LENGTH 2.0f
 
 #include <gmtl/gmtl.h>
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 #include <gmtl/Matrix.h>
 #include <gmtl/Xforms.h>
 #include <gmtl/Vec.h>
@@ -109,7 +109,7 @@ cfdCursor::cfdCursor( vtkPolyData * arrow, VE_SceneGraph::cfdDCS *worldDCS,
    float zscale = length( r );
 
    
-   vprDEBUG(vprDBG_ALL,1) << "cfdCursor: scale = "
+   vprDEBUG(vesDBG,1) << "cfdCursor: scale = "
                           << xscale << " : " << yscale << " : "  << zscale
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -366,7 +366,7 @@ void cfdCursor::UpdateArrowSource( void )
 void cfdCursor::UpdateCube( void )
 {
    //added for box cursor
-   vprDEBUG(vprDBG_ALL, 1) << " updating cube source "
+   vprDEBUG(vesDBG, 1) << " updating cube source "
                            << std::endl << vprDEBUG_FLUSH;
 
    this->cursorGeode->TranslateTocfdGeode( this->cubeActor );
@@ -374,7 +374,7 @@ void cfdCursor::UpdateCube( void )
 
 void cfdCursor::UpdateLineSource( int direction )
 {
-   vprDEBUG(vprDBG_ALL, 1) << " updating line source "
+   vprDEBUG(vesDBG, 1) << " updating line source "
                            << std::endl << vprDEBUG_FLUSH;
 
    if      ( direction == XLINE )
@@ -408,7 +408,7 @@ void cfdCursor::UpdateLineSource( int direction )
 
 void cfdCursor::UpdatePlaneSource( int i )
 {
-   vprDEBUG(vprDBG_ALL, 1) << " updating plane source " << i
+   vprDEBUG(vesDBG, 1) << " updating plane source " << i
                            << std::endl << vprDEBUG_FLUSH;
 
    //if ( this->last_pSize != this->pSize )
@@ -440,7 +440,7 @@ void cfdCursor::UpdatePlaneSource( int i )
       this->last_direction = i;
    }
 
-   vprDEBUG(vprDBG_ALL, 1) << " updating plane source " << last_direction
+   vprDEBUG(vesDBG, 1) << " updating plane source " << last_direction
                            << std::endl << vprDEBUG_FLUSH;
 
    this->planeSphereS->SetRadius( sphereRadius );
@@ -461,17 +461,17 @@ void cfdCursor::Update( double x[3], double v[3], double wx[3] )
       this->pos[i] = this->loc[i] + CURSOR_DIST*this->dir[i];
       this->pos_c[i] = this->pos[i] + wx[i]; //compensate for world translation
    }
-   vprDEBUG(vprDBG_ALL, 3) <<"wx:"<<wx[0]<<","<<wx[1]<<","<<wx[2]
+   vprDEBUG(vesDBG, 3) <<"wx:"<<wx[0]<<","<<wx[1]<<","<<wx[2]
                            << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 3) <<"pos:"<<pos[0]<<","<<pos[1]<<","<<pos[2]
+   vprDEBUG(vesDBG, 3) <<"pos:"<<pos[0]<<","<<pos[1]<<","<<pos[2]
                            << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 3) <<"pos_c:"<<pos_c[0]<<","<<pos_c[1]<<","<<pos_c[2]
+   vprDEBUG(vesDBG, 3) <<"pos_c:"<<pos_c[0]<<","<<pos_c[1]<<","<<pos_c[2]
                            << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 3) << this->last_cursor_type << " : " << this->cursorId
+   vprDEBUG(vesDBG, 3) << this->last_cursor_type << " : " << this->cursorId
                            << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 3) << this->last_pReso << " : " << this->pReso
+   vprDEBUG(vesDBG, 3) << this->last_pReso << " : " << this->pReso
                            << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 3) << this->last_pSize << " : " << this->pSize
+   vprDEBUG(vesDBG, 3) << this->last_pSize << " : " << this->pSize
                            << std::endl << vprDEBUG_FLUSH;
 
    if (  ( this->last_cursor_type != this->cursorId ) ||
@@ -556,7 +556,7 @@ vtkCubeSource * cfdCursor::getBox()
 
 void cfdCursor::SetPlaneSize( float size )
 {
-   vprDEBUG(vprDBG_ALL, 1) << "Setting plane size : " << size
+   vprDEBUG(vesDBG, 1) << "Setting plane size : " << size
                            << std::endl << vprDEBUG_FLUSH;
 
    this->last_pSize = this->pSize;
@@ -741,7 +741,7 @@ void cfdCursor::GetLocalLocationVector( void )
       return;
    }
 
-   vprDEBUG(vprDBG_ALL,1) << "global position rel to performer: "
+   vprDEBUG(vesDBG,1) << "global position rel to performer: "
                           << this->loc[ 0 ] << " : "
                           << this->loc[ 1 ] << " : "
                           << this->loc[ 2 ] << std::endl << vprDEBUG_FLUSH;
@@ -793,7 +793,7 @@ void cfdCursor::GetLocalLocationVector( void )
    this->localLocation[ 2 ] =  (double)pfLocXX[ 2 ];
    this->localLocation[ 1 ] =  (double)pfLocXX[ 1 ];
 #endif
-   vprDEBUG(vprDBG_ALL,1) << " NOTE : local position rel to Juggler: "
+   vprDEBUG(vesDBG,1) << " NOTE : local position rel to Juggler: "
                           << this->localLocation[ 0 ] << " : "
                           << this->localLocation[ 1 ] << " : "
                           << this->localLocation[ 2 ]
@@ -817,14 +817,14 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_STREAMLINE_CURSOR )
    {
-      vprDEBUG(vprDBG_ALL,1) << "this->id = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
+      vprDEBUG(vesDBG,1) << "this->id = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) 
                 << ", this->min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN ) 
                 << ", this->max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
                 << std::endl << vprDEBUG_FLUSH;
 
       if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) == NO_CURSOR )
       {
-         vprDEBUG(vprDBG_ALL,1) 
+         vprDEBUG(vesDBG,1) 
            << "removing cursor with cursor->GetpfDCS() = "
            << this->GetcfdDCS() << std::endl << vprDEBUG_FLUSH;
 
@@ -850,7 +850,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
             this->cursorId = ZLINE;
          else
          {
-            vprDEBUG(vprDBG_ALL,0) 
+            vprDEBUG(vesDBG,0) 
               << "ERROR: Unknown cursorId -- Setting cursor to XPLANE"
               << std::endl << vprDEBUG_FLUSH;
 
@@ -861,7 +861,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          // look in old in cfdApp.cxx
          // this->chgMod = true;
 
-         vprDEBUG(vprDBG_ALL,1) 
+         vprDEBUG(vesDBG,1) 
            << "adding cursor with cursor->GetpfDCS() = "
            << this->GetcfdDCS() << " : " << this->cursorId << std::endl << vprDEBUG_FLUSH;
 
@@ -870,7 +870,7 @@ bool cfdCursor::CheckCommandId( cfdCommandArray* commandArray )
          {
             this->_rootNode->AddChild( this->GetcfdDCS() );
 
-            vprDEBUG(vprDBG_ALL,2) 
+            vprDEBUG(vesDBG,2) 
                << "added cursor with cursor->GetpfDCS() = "
                << this->GetcfdDCS() << std::endl 
                << this->cursorDCS->GetMat() << vprDEBUG_FLUSH;

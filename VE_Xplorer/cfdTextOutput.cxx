@@ -34,7 +34,7 @@
 #include "VE_SceneGraph/cfdGeode.h"
 #include "VE_SceneGraph/cfdDCS.h"
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <string>
 #include <iostream>

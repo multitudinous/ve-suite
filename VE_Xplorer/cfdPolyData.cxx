@@ -49,14 +49,14 @@
 #include <vtkSphereSource.h>
 #include <vtkPointData.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 cfdPolyData::cfdPolyData( float op_val )
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdPolyData constructor"
+   vprDEBUG(vesDBG,2) << "cfdPolyData constructor"
                           << std::endl << vprDEBUG_FLUSH;
 
    this->map = vtkPolyDataMapper::New();
@@ -80,7 +80,7 @@ cfdPolyData::cfdPolyData( float op_val )
 
 cfdPolyData::~cfdPolyData()
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdPolyData destructor"
+   vprDEBUG(vesDBG,2) << "cfdPolyData destructor"
                           << std::endl << vprDEBUG_FLUSH;
 
    this->map->Delete();
@@ -91,7 +91,7 @@ void cfdPolyData::Update()
 {
    if ( this->GetActiveDataSet() == NULL )
    {
-      vprDEBUG(vprDBG_ALL, 0) 
+      vprDEBUG(vesDBG, 0) 
          << "cfdPolyData has no data so setting updateFlag to false" 
          << std::endl << vprDEBUG_FLUSH;
       this->updateFlag = false;
@@ -106,7 +106,7 @@ void cfdPolyData::Update()
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, 1) 
+      vprDEBUG(vesDBG, 1) 
          << "cfdPolyData: this->GetActiveDataSet() = " 
          << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
    }
@@ -119,7 +119,7 @@ void cfdPolyData::Update()
    if ( pd->GetCellType( 0 ) == VTK_POLY_LINE &&
         types->GetNumberOfTypes() == 1 )
    {
-      vprDEBUG(vprDBG_ALL,1) << " IS A STREAMLINE"
+      vprDEBUG(vesDBG,1) << " IS A STREAMLINE"
                              << std::endl << vprDEBUG_FLUSH;
       vtkTubeFilter * polyTubes = vtkTubeFilter::New();
       polyTubes->SetNumberOfSides( 3 );
@@ -134,7 +134,7 @@ void cfdPolyData::Update()
              types->GetNumberOfTypes() == 1 &&
              GetParticleOption() == 1 )
    {
-      vprDEBUG(vprDBG_ALL,1) << " IS VERTEX-BASED: variably sized spheres"
+      vprDEBUG(vesDBG,1) << " IS VERTEX-BASED: variably sized spheres"
                              << std::endl << vprDEBUG_FLUSH;
 
       vtkSphereSource * sphereSrc   = vtkSphereSource::New();
@@ -147,7 +147,7 @@ void cfdPolyData::Update()
       sphereGlyph->SetSource( sphereSrc->GetOutput() );
       sphereGlyph->Update();
 
-      vprDEBUG(vprDBG_ALL,1) << " Using scalar data from "
+      vprDEBUG(vesDBG,1) << " Using scalar data from "
          << pd->GetPointData()->GetScalars()->GetName()
          << std::endl << vprDEBUG_FLUSH;
       sphereGlyph->SelectInputScalars( pd->GetPointData()->GetScalars()->GetName() );
@@ -162,11 +162,11 @@ void cfdPolyData::Update()
       if ( len == 0.0 ) 
          len = 1.0;
       
-      vprDEBUG(vprDBG_ALL,2) << " diagonalLength = " << len
+      vprDEBUG(vesDBG,2) << " diagonalLength = " << len
                              << std::endl << vprDEBUG_FLUSH;
 
       int numPts = this->GetActiveDataSet()->GetDataSet()->GetNumberOfPoints();
-      vprDEBUG(vprDBG_ALL,2) << " numPts = " << numPts
+      vprDEBUG(vesDBG,2) << " numPts = " << numPts
                              << std::endl << vprDEBUG_FLUSH;
       float scaleFactor = 0.0;
       if ( numPts != 0 )
@@ -180,7 +180,7 @@ void cfdPolyData::Update()
       this->GetActiveDataSet()->GetParent()->GetUserRange( range );
       // move bottom of range back 10% so that low valued spheres do not completely disappear
       range[0] = range[0] - ( range[1] - range[0] ) * 0.1;
-      vprDEBUG(vprDBG_ALL,1) << " clamping range: "
+      vprDEBUG(vesDBG,1) << " clamping range: "
          << range[0] << " : " << range[1]
          << std::endl << vprDEBUG_FLUSH;
       sphereGlyph->SetRange( range );
@@ -195,7 +195,7 @@ void cfdPolyData::Update()
              types->GetNumberOfTypes() == 1 &&
              GetParticleOption() == 0 )
    {
-      vprDEBUG(vprDBG_ALL,1) << " IS VERTEX-BASED: point cloud"
+      vprDEBUG(vesDBG,1) << " IS VERTEX-BASED: point cloud"
                              << std::endl << vprDEBUG_FLUSH;
       this->map->SetColorModeToMapScalars();
       this->map->SetInput( pd );
@@ -204,7 +204,7 @@ void cfdPolyData::Update()
    }
    else
    {
-      vprDEBUG(vprDBG_ALL,1) << " IS POLYDATA SURFACE"
+      vprDEBUG(vesDBG,1) << " IS POLYDATA SURFACE"
                              << std::endl << vprDEBUG_FLUSH;
       if ( warpSurface )
       {
@@ -225,7 +225,7 @@ void cfdPolyData::Update()
 
    if ( pd->GetPointData()->GetScalars()->GetLookupTable() != NULL )
    {
-      vprDEBUG(vprDBG_ALL,1) << " A lookup table (" 
+      vprDEBUG(vesDBG,1) << " A lookup table (" 
          << pd->GetPointData()->GetScalars()->GetLookupTable()
          << ")is being read from the vtk file" 
          << std::endl << vprDEBUG_FLUSH;
@@ -237,7 +237,7 @@ void cfdPolyData::Update()
    else
    {
       double * range = this->GetActiveDataSet()->GetParent()->GetUserRange();
-      vprDEBUG(vprDBG_ALL,1) << "setting mapper using parent " 
+      vprDEBUG(vesDBG,1) << "setting mapper using parent " 
          << this->GetActiveDataSet()->GetParent()
          << ", range = " << range[0] << " : " << range[1]
          << std::endl << vprDEBUG_FLUSH;
@@ -291,11 +291,11 @@ bool cfdPolyData::CheckCommandId( cfdCommandArray* commandArray )
    {
       SetParticleOption((int)commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
 
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
+      vprDEBUG(vesDBG,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
          << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
          << std::endl << vprDEBUG_FLUSH;
 
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_SPHERE_SIZE, value = " 
+      vprDEBUG(vesDBG,0) << " CHANGE_SPHERE_SIZE, value = " 
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
@@ -337,7 +337,7 @@ float cfdPolyData::GetSphereScaleFactor()
    // this->GetParticleScale() is obtained from gui, -100 < sphereScale < 100
    // we use a function y = exp(x), that has y(0) = 1 and y'(0) = 1
    // convert range to -4 < x < 4, and compute the exponent...
-   vprDEBUG(vprDBG_ALL,1) << " sphereScale = " << this->GetParticleScale()
+   vprDEBUG(vesDBG,1) << " sphereScale = " << this->GetParticleScale()
                           << std::endl << vprDEBUG_FLUSH;
 
    float scaleFactor = 0.0;
@@ -347,7 +347,7 @@ float cfdPolyData::GetSphereScaleFactor()
       scaleFactor = exp( this->GetParticleScale() / 25.0 );
    }
 
-   vprDEBUG(vprDBG_ALL,1) << " scaleFactor = " << scaleFactor 
+   vprDEBUG(vesDBG,1) << " scaleFactor = " << scaleFactor 
                           << std::endl << vprDEBUG_FLUSH;
 
    return scaleFactor;

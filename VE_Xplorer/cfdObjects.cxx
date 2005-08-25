@@ -40,7 +40,7 @@
 #include "VE_Xplorer/cfdCommandArray.h"
 
 // Juggler Includes
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 #include <vpr/Sync/Guard.h>
 
 // VTK Includes
@@ -53,7 +53,7 @@ using namespace VE_Xplorer;
 
 cfdObjects::cfdObjects( void )
 {
-   vprDEBUG(vprDBG_ALL, 1) << " New cfdObjects ! " 
+   vprDEBUG(vesDBG, 1) << " New cfdObjects ! " 
                            << std::endl << vprDEBUG_FLUSH;
    //this->_geode = NULL;
    //this->_sequence = NULL;
@@ -152,7 +152,7 @@ bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
       cfdObjects::SetParticleOption( 
                                commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
 
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
+      vprDEBUG(vesDBG,0) << " CHANGE_PARTICLE_VIEW_OPTION, value = " 
          << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
          << std::endl << vprDEBUG_FLUSH;
 
@@ -160,7 +160,7 @@ bool cfdObjects::CheckCommandId( cfdCommandArray* commandArray )
    //}
    //else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_SPHERE_SIZE )
    //{
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_SPHERE_SIZE, value = " 
+      vprDEBUG(vesDBG,0) << " CHANGE_SPHERE_SIZE, value = " 
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << std::endl << vprDEBUG_FLUSH;
 
@@ -183,7 +183,7 @@ cfdDataSet* cfdObjects::GetActiveDataSet()
 
 void cfdObjects::SetActiveDataSet( cfdDataSet * dataset )
 {
-   vprDEBUG(vprDBG_ALL, 1) 
+   vprDEBUG(vesDBG, 1) 
       << "cfdObjects::SetActiveDataSet: " << dataset
       << std::endl << vprDEBUG_FLUSH;
 

@@ -44,14 +44,14 @@
 #include <vtkProperty.h>
 #include <vtkGenericCell.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdAnimatedStreamlineCone constructor"
+   vprDEBUG(vesDBG,2) << "cfdAnimatedStreamlineCone constructor"
                           << std::endl << vprDEBUG_FLUSH;
 
    this->mapper   = vtkPolyDataMapper::New();
@@ -67,7 +67,7 @@ cfdAnimatedStreamlineCone::cfdAnimatedStreamlineCone( void )
 
 cfdAnimatedStreamlineCone::~cfdAnimatedStreamlineCone()
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdAnimatedStreamlineCone destructor"
+   vprDEBUG(vesDBG,2) << "cfdAnimatedStreamlineCone destructor"
                           << std::endl << vprDEBUG_FLUSH;
 
    this->mapper->Delete();
@@ -95,10 +95,10 @@ void cfdAnimatedStreamlineCone::Update( void )
    double *x;
    int numberOfStreamLines;
 
-   vprDEBUG(vprDBG_ALL, 1) 
+   vprDEBUG(vesDBG, 1) 
       << "Number of Cells : " << this->polyData->GetNumberOfCells()
       << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 1) 
+   vprDEBUG(vesDBG, 1) 
       << "Number of Lines : " << this->polyData->GetNumberOfLines()
       << std::endl << vprDEBUG_FLUSH;
 
@@ -135,7 +135,7 @@ void cfdAnimatedStreamlineCone::Update( void )
          npts += points->GetNumberOfPoints();
       }
       
-      vprDEBUG(vprDBG_ALL, 1) << " Number of points in cell " << cellId 
+      vprDEBUG(vesDBG, 1) << " Number of points in cell " << cellId 
                               << " = " << npts << std::endl << vprDEBUG_FLUSH;
       if ( maxNpts < npts )
          maxNpts = npts;
@@ -160,13 +160,13 @@ void cfdAnimatedStreamlineCone::Update( void )
       {
          points = this->polyData->GetCell( cellId )->GetPoints();
          forwardPoints = points->GetNumberOfPoints();
-         vprDEBUG(vprDBG_ALL, 1) 
+         vprDEBUG(vesDBG, 1) 
             << "Number of Forward points = " << forwardPoints
             << std::endl << vprDEBUG_FLUSH;      
          for ( i = 0; i < forwardPoints; i++ )
          {
             x = points->GetPoint( i );
-            vprDEBUG(vprDBG_ALL, 3) 
+            vprDEBUG(vesDBG, 3) 
                << "x[ " << i << " ] = " << x[ 0 ] << " : " 
                << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
             pointsArray[ i ]->InsertNextPoint( x );        
@@ -179,12 +179,12 @@ void cfdAnimatedStreamlineCone::Update( void )
       {
          points = this->polyData->GetCell( cellId + ( increment - 1 ) )->GetPoints();
          npts = points->GetNumberOfPoints();
-         vprDEBUG(vprDBG_ALL, 1) << "Number of Backward points = " << npts
+         vprDEBUG(vesDBG, 1) << "Number of Backward points = " << npts
             << std::endl << vprDEBUG_FLUSH;
          for ( i = npts - 1; i >= 0; i-- )
          {
             x = points->GetPoint( i );
-            vprDEBUG(vprDBG_ALL, 3)
+            vprDEBUG(vesDBG, 3)
                << " x[ " << i << " ] = " << x[ 0 ] << " : " 
                << x[ 1 ] << " : " << x[ 2 ] << std::endl << vprDEBUG_FLUSH;
             pointsArray[ ( npts - 1 ) - i + forwardPoints]->InsertNextPoint( x );
@@ -197,8 +197,8 @@ void cfdAnimatedStreamlineCone::Update( void )
    this->sphere->SetPhiResolution( 3 );
    this->sphere->Update();
 
-   vprDEBUG(vprDBG_ALL, 1) << "maxNpts = " << maxNpts << std::endl << vprDEBUG_FLUSH;
-   vprDEBUG(vprDBG_ALL, 1) << "minNpts = " << minNpts << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG, 1) << "maxNpts = " << maxNpts << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG, 1) << "minNpts = " << minNpts << std::endl << vprDEBUG_FLUSH;
    int w = maxNpts;
    double decimalRatio = (double)w / 150.0;
    int ratio = (int)ceil( decimalRatio );
@@ -206,23 +206,23 @@ void cfdAnimatedStreamlineCone::Update( void )
    for ( i = 0; i < w; i+=ratio )
    {
       //Make ploydata from the points
-      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop " << i << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG, 2) << "\t cfdAnimatedStreamlineCone:: begin loop " << i << std::endl << vprDEBUG_FLUSH;
       this->polydata->SetPoints( pointsArray[ i ] );
       //polydata->Update();
       //polydata->Print( cout );
 
       //Map spheres to the polydata
-      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop1" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG, 2) << "\t cfdAnimatedStreamlineCone:: begin loop1" << std::endl << vprDEBUG_FLUSH;
       this->glyph->SetSource( this->sphere->GetOutput() );
       this->glyph->SetInput( this->polydata );
       //glyph->Update();      
 
-      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop2" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG, 2) << "\t cfdAnimatedStreamlineCone:: begin loop2" << std::endl << vprDEBUG_FLUSH;
       this->mapper->SetInput( this->glyph->GetOutput() );
       //this->mapper->Update();
 
 
-      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop3" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG, 2) << "\t cfdAnimatedStreamlineCone:: begin loop3" << std::endl << vprDEBUG_FLUSH;
       vtkActor* temp = vtkActor::New();
       temp->SetMapper( this->mapper );
       temp->GetProperty()->SetSpecularPower( 20.0f );
@@ -232,13 +232,13 @@ void cfdAnimatedStreamlineCone::Update( void )
       temp->Delete();
      
       //Make geodes from each polydata
-      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: begin loop4" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG, 2) << "\t cfdAnimatedStreamlineCone:: begin loop4" << std::endl << vprDEBUG_FLUSH;
       //this->_sequence->CreateGeodeVector( this->actor );
 
       // Reset polydata to its intial state and release all memory
       //polydata->Reset();
       this->polydata->Initialize();
-      vprDEBUG(vprDBG_ALL, 2) << "\t cfdAnimatedStreamlineCone:: end loop" << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG, 2) << "\t cfdAnimatedStreamlineCone:: end loop" << std::endl << vprDEBUG_FLUSH;
    }
    
    /*vtkPolyDataWriter *writer = vtkPolyDataWriter::New();
@@ -247,17 +247,17 @@ void cfdAnimatedStreamlineCone::Update( void )
    writer->SetFileTypeToASCII();
    writer->Write();
    writer->Delete();*/
-   vprDEBUG(vprDBG_ALL, 1) << "Deleting Point Array" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG, 1) << "Deleting Point Array" << std::endl << vprDEBUG_FLUSH;
    for ( i = 0; i < maxNpts;  i++ )
    {
       pointsArray[ i ]->Delete();
    }
    
    delete [] pointsArray;
-   vprDEBUG(vprDBG_ALL, 1) << "Deleting Point Array" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG, 1) << "Deleting Point Array" << std::endl << vprDEBUG_FLUSH;
 
    this->updateFlag = true;
-   vprDEBUG(vprDBG_ALL, 1) << "|   Exiting cfdStreamers Update " << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG, 1) << "|   Exiting cfdStreamers Update " << std::endl << vprDEBUG_FLUSH;
 }
 
 bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
@@ -268,7 +268,7 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
 
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == STREAMLINE_DIAMETER )
    {
-      vprDEBUG(vprDBG_ALL,0) << " STREAMLINE_DIAMETER\t" 
+      vprDEBUG(vesDBG,0) << " STREAMLINE_DIAMETER\t" 
                               << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) 
                               << std::endl << vprDEBUG_FLUSH;
          
@@ -280,13 +280,13 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
       this->particleDiameter = 8.0f * (exp( diameter / ( 100.0 / range ) ) * 
                        this->GetActiveDataSet()->GetLength()*0.001f);
 
-         vprDEBUG(vprDBG_ALL,1) << "\tNew Particle Diameter : " 
+         vprDEBUG(vesDBG,1) << "\tNew Particle Diameter : " 
                              << this->particleDiameter << std::endl << vprDEBUG_FLUSH;
       return true;
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == BACKWARD_INTEGRATION )
    {
-      vprDEBUG(vprDBG_ALL,2) << " BACKWARD_INTEGRATION" 
+      vprDEBUG(vesDBG,2) << " BACKWARD_INTEGRATION" 
                              << std::endl << vprDEBUG_FLUSH;
 
       streamDir = cfdAnimatedStreamlineCone::BACKWARD;
@@ -294,7 +294,7 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == FORWARD_INTEGRATION )
    {
-      vprDEBUG(vprDBG_ALL,2) << " FORWARD_INTEGRATION"
+      vprDEBUG(vesDBG,2) << " FORWARD_INTEGRATION"
                              << std::endl << vprDEBUG_FLUSH;
 
       streamDir = cfdAnimatedStreamlineCone::FORWARD;
@@ -302,7 +302,7 @@ bool cfdAnimatedStreamlineCone::CheckCommandId( cfdCommandArray* commandArray )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == TWO_DIRECTION_INTEGRATION )
    {
-      vprDEBUG(vprDBG_ALL,2) << " 2_DIRECTION_INTEGRATION" 
+      vprDEBUG(vesDBG,2) << " 2_DIRECTION_INTEGRATION" 
                              << std::endl << vprDEBUG_FLUSH;
 
       streamDir = cfdAnimatedStreamlineCone::BOTH;

@@ -61,7 +61,7 @@
 #include "VE_Xplorer/cfdEnvironmentHandler.h"
 #include "VE_Xplorer/cfdModelHandler.h"
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 #include <vpr/vpr.h>
 #include <vpr/System.h>
 
@@ -148,161 +148,161 @@ void cfdSteadyStateVizHandler::CleanUp( void )
 
    if ( this->isosurface ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->isosurface" << std::endl << vprDEBUG_FLUSH;
       delete this->isosurface;
    }
 
    if ( this->contour ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->contour" << std::endl << vprDEBUG_FLUSH;
       delete this->contour;
    }
 
    if ( this->momentum ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->momentum" << std::endl << vprDEBUG_FLUSH;
       delete this->momentum;
    }
 
    if ( this->vector ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->vector" << std::endl << vprDEBUG_FLUSH;
       delete this->vector;
    }
 
    if ( this->x_contour ) 
    {
-      vprDEBUG(vprDBG_ALL,2)   
+      vprDEBUG(vesDBG,2)   
         << "deleting this->x_contour" << std::endl << vprDEBUG_FLUSH;
       delete this->x_contour;
    }
 
    if ( this->y_contour ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->y_contour" << std::endl << vprDEBUG_FLUSH;
       delete this->y_contour;
    }
 
    if ( this->z_contour ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->z_contour" << std::endl << vprDEBUG_FLUSH;
       delete this->z_contour;
    }
 
    if ( this->x_momentum ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->x_momentum" << std::endl << vprDEBUG_FLUSH;
       delete this->x_momentum;
    }
 
    if ( this->y_momentum ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->y_momentum" << std::endl << vprDEBUG_FLUSH;
       delete this->y_momentum;
    }
 
    if ( this->z_momentum ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->z_momentum" << std::endl << vprDEBUG_FLUSH;
       delete this->z_momentum;
    }
 
    if ( this->x_vector ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->x_vector" << std::endl << vprDEBUG_FLUSH;
       delete this->x_vector;
    }
 
    if ( this->y_vector ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->y_vector" << std::endl << vprDEBUG_FLUSH;
       delete this->y_vector;
    }
 
    if ( this->z_vector ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->z_vector" << std::endl << vprDEBUG_FLUSH;
       delete this->z_vector;
    }
 
    if ( this->x_contours ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->x_contours" << std::endl << vprDEBUG_FLUSH;
       delete this->x_contours;
    }
 
    if ( this->y_contours ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->y_contours" << std::endl << vprDEBUG_FLUSH;
       delete this->y_contours;
    }
 
    if ( this->z_contours ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->z_contours" << std::endl << vprDEBUG_FLUSH;
       delete this->z_contours;
    }
 
    if ( this->x_momentums ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->x_momentums" << std::endl << vprDEBUG_FLUSH;
       delete this->x_momentums;
    }
 
    if ( this->y_momentums ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->y_momentums" << std::endl << vprDEBUG_FLUSH;
       delete this->y_momentums;
    }
 
    if ( this->z_momentums ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->z_momentums" << std::endl << vprDEBUG_FLUSH;
       delete this->z_momentums;
    }
 
    if ( this->x_vectors ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->x_vectors" << std::endl << vprDEBUG_FLUSH;
       delete this->x_vectors;
    }
 
    if ( this->y_vectors ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
          << "deleting this->y_vectors" << std::endl << vprDEBUG_FLUSH;
       delete this->y_vectors;
    }
 
    if ( this->z_vectors ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
          << "deleting this->z_vectors" << std::endl << vprDEBUG_FLUSH; 
       delete this->z_vectors;
    }
    
    if ( this->streamlines ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->streamlines" << std::endl << vprDEBUG_FLUSH;
       delete this->streamlines;
 
@@ -315,42 +315,42 @@ void cfdSteadyStateVizHandler::CleanUp( void )
 
    if ( this->particles ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->particles" << std::endl << vprDEBUG_FLUSH;
       delete this->particles;
    }
 
    if ( this->surface ) 
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
         << "deleting this->surface" << std::endl << vprDEBUG_FLUSH;
       delete this->surface;
    }
 
    if ( this->image ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->image" << std::endl << vprDEBUG_FLUSH;
       delete this->image;
    }
 
    if ( this->animImg ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->animImg" << std::endl << vprDEBUG_FLUSH;
       delete this->animImg;
    }
 
    if ( this->animStreamer ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->animStreamer" << std::endl << vprDEBUG_FLUSH;
       delete this->animStreamer;
    }
 
    if ( this->textOutput ) 
    {
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "deleting this->textOutput" << std::endl << vprDEBUG_FLUSH;
       delete this->textOutput;
    }
@@ -739,7 +739,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) != -1 )
    {
-      vprDEBUG(vprDBG_ALL,2) 
+      vprDEBUG(vesDBG,2) 
          << "preFrame: id = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
          << ", iso = " << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << ", scalarIndex = " << commandArray->GetCommandValue( cfdCommandArray::CFD_SC )
@@ -757,7 +757,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
       // Check to see if any of the objectss need updated before we 
       // create actors
       bool commandApplies = this->commandList[ i ]->CheckCommandId( this->commandArray );
-      vprDEBUG(vprDBG_ALL,4) << "|\tCommand Applies : " << commandApplies
+      vprDEBUG(vesDBG,4) << "|\tCommand Applies : " << commandApplies
                                    << std::endl << vprDEBUG_FLUSH;
    }
 
@@ -769,7 +769,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    // check any virtual objects need to be updated
    if ( this->actorsAreReady && this->transientActors )
    {
-      vprDEBUG(vprDBG_ALL,3) << "|\tUpdating Objects"
+      vprDEBUG(vesDBG,3) << "|\tUpdating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
       bool alreadyRemoved = false;
       for ( unsigned int i = 0; i < this->dataList.size(); i++ )
@@ -777,7 +777,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
          if ( this->dataList.at( i )->GetUpdateFlag() )//|| 
                //this->dataList.at( i )->GetTransientGeodeFlag() )
          {
-            vprDEBUG(vprDBG_ALL,2) << "|\tCreating Objects"
+            vprDEBUG(vesDBG,2) << "|\tCreating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
             // if object needs updated then already have a graphics object
             cfdGraphicsObject* temp = new cfdGraphicsObject();
@@ -812,7 +812,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             this->dataList[ i ]->SetUpdateFlag( false );
             this->actorsAreReady = false;
             this->dataList[ i ]->ClearGeodes();
-            vprDEBUG(vprDBG_ALL,2) << "|\tDone Creating Objects"
+            vprDEBUG(vesDBG,2) << "|\tDone Creating Objects"
                                    << std::endl << vprDEBUG_FLUSH;
 
             if ( cfdModelHandler::instance()->GetActiveModel()->GetMirrorDataFlag() )
@@ -842,13 +842,13 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
                ( !this->computeActorsAndGeodes ) &&
                ( !this->texturesActive ) )
    {
-      vprDEBUG(vprDBG_ALL,1) << " selected ID number = " << this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
+      vprDEBUG(vesDBG,1) << " selected ID number = " << this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID )
                              << std::endl << vprDEBUG_FLUSH;
       for ( int i = 0; i < (int)this->dataList.size(); i ++ )
       {          
          if ( this->commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == dataList[ i ]->GetObjectType() )
          {
-            vprDEBUG(vprDBG_ALL,1) << " setting viz object " << i 
+            vprDEBUG(vesDBG,1) << " setting viz object " << i 
                                    << " to _activeObject"
                                    << std::endl << vprDEBUG_FLUSH;
 
@@ -867,7 +867,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
             //if ( this->computeActorsAndGeodes == false )
             {
                // add active dataset DCS to scene graph if not already there...
-               vprDEBUG(vprDBG_ALL,1) << " setting DCS to activeDCS = "
+               vprDEBUG(vesDBG,1) << " setting DCS to activeDCS = "
                                    << this->_activeDataSetDCS
                                    << std::endl << vprDEBUG_FLUSH;
                this->_activeObject->SetActiveDataSet( cfdModelHandler::instance()->GetActiveDataSet() );
@@ -887,7 +887,7 @@ void cfdSteadyStateVizHandler::PreFrameUpdate( void )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL )
    { 
-      vprDEBUG(vprDBG_ALL,2) << "|\tClear All Graphics Objects From Scene Graph"
+      vprDEBUG(vesDBG,2) << "|\tClear All Graphics Objects From Scene Graph"
                              << std::endl << vprDEBUG_FLUSH;
       std::multimap< int, cfdGraphicsObject* >::iterator pos;
       for ( pos = graphicsObjects.begin(); pos != graphicsObjects.end(); )
@@ -953,11 +953,11 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
             cfdAnimatedImage* animImgTest = 
                dynamic_cast<cfdAnimatedImage *>( this->_activeObject );
 
-            vprDEBUG(vprDBG_ALL,0) << " Updating cfdObject..." 
+            vprDEBUG(vesDBG,0) << " Updating cfdObject..." 
                << std::endl << vprDEBUG_FLUSH;
 
             // May replace later , fix a later date
-            //vprDEBUG(vprDBG_ALL,2) << " Memory used before update ( bytes ) : "
+            //vprDEBUG(vesDBG,2) << " Memory used before update ( bytes ) : "
             //  << pfMemory::getArenaBytesUsed() << std::endl << vprDEBUG_FLUSH;
 
             //tt = GetTimeClock();
@@ -969,7 +969,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
                   animImgTest == NULL )
             {
                // For everything except for the interactive and transient stuff
-               vprDEBUG(vprDBG_ALL,1)
+               vprDEBUG(vesDBG,1)
                  << "non-interactive object." << std::endl << vprDEBUG_FLUSH; 
 
                this->_activeObject->Update();      
@@ -977,7 +977,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
             }
             else if ( streamersTest != NULL )
             {
-               vprDEBUG(vprDBG_ALL,1) << "interactive object." 
+               vprDEBUG(vesDBG,1) << "interactive object." 
                                        << std::endl << vprDEBUG_FLUSH;
                // if we are not already computing streamlines
                this->streamers();  
@@ -995,15 +995,15 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
             }
 
             // May fix later, not a crucial part
-            //vprDEBUG(vprDBG_ALL,1) << " Time: " << GetTimeClock()-tt
+            //vprDEBUG(vesDBG,1) << " Time: " << GetTimeClock()-tt
             //                       << std::endl << vprDEBUG_FLUSH;
-            //vprDEBUG(vprDBG_ALL,2) <<" Memory used after update ( bytes ) : "
+            //vprDEBUG(vesDBG,2) <<" Memory used after update ( bytes ) : "
             //                       << pfMemory::getArenaBytesUsed() 
             //                       << std::endl << vprDEBUG_FLUSH;
 
             this->_activeObject = NULL;
             this->computeActorsAndGeodes = false;   
-            vprDEBUG(vprDBG_ALL,0) << "|\tDone updating cfdObject" 
+            vprDEBUG(vesDBG,0) << "|\tDone updating cfdObject" 
                << std::endl << std::endl << vprDEBUG_FLUSH; 
             
          }
@@ -1013,7 +1013,7 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
 
 void cfdSteadyStateVizHandler::streamers( void )
 {
-   vprDEBUG(vprDBG_ALL,1) << "In streamers" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << "In streamers" << std::endl << vprDEBUG_FLUSH;
    
    this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
    this->_activeObject->SetNormal( this->nav->GetDirection() );
@@ -1026,7 +1026,7 @@ void cfdSteadyStateVizHandler::streamers( void )
 
    if ( !this->useLastSource )
    {
-      vprDEBUG(vprDBG_ALL,1) <<"creating fresh streamlines"
+      vprDEBUG(vesDBG,1) <<"creating fresh streamlines"
                              << std::endl << vprDEBUG_FLUSH;
       if ( this->lastSource != NULL )
       {
@@ -1042,7 +1042,7 @@ void cfdSteadyStateVizHandler::streamers( void )
    }
    else 
    {
-      vprDEBUG(vprDBG_ALL,1) << "using transformed last source"
+      vprDEBUG(vesDBG,1) << "using transformed last source"
                              << std::endl << vprDEBUG_FLUSH;
 
       this->_activeObject->SetSourcePoints( 

@@ -442,7 +442,7 @@ void cfdNavigate::updateNavigationFromGUI()
    {
       this->currentWandDirection = this->GetDirection();
 
-      vprDEBUG(vprDBG_ALL,1) << this->currentWandDirection[0] << " : "
+      vprDEBUG(vesDBG,1) << this->currentWandDirection[0] << " : "
                              << this->currentWandDirection[1] << " : "
                              << this->currentWandDirection[2]
                              << std::endl << vprDEBUG_FLUSH;
@@ -545,7 +545,7 @@ void cfdNavigate::updateNavigationFromGUI()
    for ( unsigned int i = 0; i < 3; i++ )
       tempArray[ i ] = -this->worldTrans[ i ];
 
-   vprDEBUG(vprDBG_ALL,3) << " Navigate" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << " Navigate" << std::endl << vprDEBUG_FLUSH;
    this->worldDCS->SetTranslationArray( tempArray );
    this->worldDCS->SetRotationArray( this->worldRot );   
    this->UpdateLoc( this->worldTrans );

@@ -46,7 +46,7 @@ using namespace VE_TextureBased;
 #endif
 #endif
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 #include <vpr/IO/Socket/SocketStream.h>
 #include <vpr/IO/Socket/SocketAcceptor.h>
 #include <vpr/System.h>
@@ -73,7 +73,7 @@ using namespace VE_Util;
 
 cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
 {
-   vprDEBUG(vprDBG_ALL,1) << "|\tNew cfdModel ! " 
+   vprDEBUG(vesDBG,1) << "|\tNew cfdModel ! " 
                           << std::endl << vprDEBUG_FLUSH;
    this->mModelNode = 0;
    //this->actor = NULL;
@@ -97,7 +97,7 @@ cfdModel::cfdModel( VE_SceneGraph::cfdDCS *worldDCS )
 
 cfdModel::~cfdModel()
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdModel destructor"
+   vprDEBUG(vesDBG,2) << "cfdModel destructor"
                           << std::endl << vprDEBUG_FLUSH;
 /*
    for ( GeometryDataSetList::iterator itr = mGeomDataSets.begin();
@@ -111,7 +111,7 @@ cfdModel::~cfdModel()
    for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
                                   itr != mVTKDataSets.end(); itr++ )
    {
-      vprDEBUG(vprDBG_ALL,2) << "deleting a cfdModel"
+      vprDEBUG(vesDBG,2) << "deleting a cfdModel"
                              << std::endl << vprDEBUG_FLUSH;
       delete *itr;
    }
@@ -152,7 +152,7 @@ cfdModel::~cfdModel()
    for ( VTKDataSetList::iterator itr = mVTKDataSets.begin();
                                   itr != mVTKDataSets.end(); )
    {
-      vprDEBUG(vprDBG_ALL,2) << "erasing a cfdModel"
+      vprDEBUG(vesDBG,2) << "erasing a cfdModel"
                              << std::endl << vprDEBUG_FLUSH;
       mVTKDataSets.erase( itr++ );
    }
@@ -163,7 +163,7 @@ cfdModel::~cfdModel()
    this->classic = new cfdGroup();
    this->textureBased = new cfdGroup();
 */
-   vprDEBUG(vprDBG_ALL,2) << "cfdModel destructor finished"
+   vprDEBUG(vesDBG,2) << "cfdModel destructor finished"
                           << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -256,7 +256,7 @@ void cfdModel::setTrans( float t[3] )
 {
    this->mModelDCS->SetTranslationArray( t );
    this->setTrans3( t[0], t[1], t[2] );
-   vprDEBUG(vprDBG_ALL,1) << "Trans x: " << t[0] << " y: "
+   vprDEBUG(vesDBG,1) << "Trans x: " << t[0] << " y: "
       << t[1] << " z: " << t[2] << std::endl << vprDEBUG_FLUSH;
 }
 //////////////////////////////////////////////////////
@@ -264,7 +264,7 @@ void cfdModel::setTrans3( float x, float y, float z )
 {
    std::cout<<" !!!!! cfdModel::setTrans3 is doing nothing"<<std::endl;    
    //this->mModelDCS->SetTrans( x, y, z );
-   vprDEBUG(vprDBG_ALL,1) << "Trans x: " << x << " y: " 
+   vprDEBUG(vesDBG,1) << "Trans x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
 //////////////////////////////////////////////////////
@@ -276,7 +276,7 @@ void cfdModel::setScale( float x, float y, float z )
    temp [ 2 ] = z;
 
    this->mModelDCS->SetScaleArray( temp );
-   vprDEBUG(vprDBG_ALL,1) << "Scale x: " << x << " y: " 
+   vprDEBUG(vesDBG,1) << "Scale x: " << x << " y: " 
       << y << " z: " << z << std::endl << vprDEBUG_FLUSH;
 }
 /////////////////////////////////////////////////
@@ -287,7 +287,7 @@ void cfdModel::setRot(float h, float p, float r)
    temp [ 1 ] = p;
    temp [ 2 ] = r;
    this->mModelDCS->SetRotationArray(temp);
-   vprDEBUG(vprDBG_ALL,1) << "Rot h: " << h << " p: " 
+   vprDEBUG(vesDBG,1) << "Rot h: " << h << " p: " 
       << p << " r: " << r << std::endl << vprDEBUG_FLUSH;
 }
 ////////////////////////////////////////
@@ -321,7 +321,7 @@ void cfdModel::SetMirrorDataFlag( bool input )
 ///////////////////////////////
 void cfdModel::updateCurModel()
 {
-   vprDEBUG(vprDBG_ALL, 1) << "cfdModel::UpdateCurModel..."
+   vprDEBUG(vesDBG, 1) << "cfdModel::UpdateCurModel..."
                            << std::endl << vprDEBUG_FLUSH;
    // Need to fix this 
    std::string tempstring;
@@ -493,10 +493,10 @@ void cfdModel::DynamicLoadingData(vtkUnstructuredGrid* dataset, int datasetindex
    this->CreateCfdDataSet();
    
 
-   vprDEBUG(vprDBG_ALL,0) << " ************************************* "
+   vprDEBUG(vesDBG,0) << " ************************************* "
                           << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,0) << " vtk DCS parameters:"
+   vprDEBUG(vesDBG,0) << " vtk DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
 
    //float scale[3], trans[3], rotate[3];   // pfDCS stuff

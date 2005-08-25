@@ -79,7 +79,7 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
    int numTuples = dataArray->GetNumberOfTuples();
 
 /*
-   vprDEBUG(vprDBG_ALL,1) << "\tnum vector tuples = " << numTuples 
+   vprDEBUG(vesDBG,1) << "\tnum vector tuples = " << numTuples 
                           << std::endl << vprDEBUG_FLUSH;
 */
 
@@ -91,7 +91,7 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
    magnitudeRange[ 0 ] = magnitudeRange[ 1 ] 
                        = ComputeVectorMagnitude( vectorComponents );
 /*
-   vprDEBUG(vprDBG_ALL,2) << " tuple 0, mag = " << magnitudeRange[ 0 ]
+   vprDEBUG(vesDBG,2) << " tuple 0, mag = " << magnitudeRange[ 0 ]
                           << std::endl << vprDEBUG_FLUSH;
 */
 
@@ -102,7 +102,7 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
 
       double magnitude = ComputeVectorMagnitude( vectorComponents );
 /*
-      vprDEBUG(vprDBG_ALL,3) << " tuple " << i << ", mag = " << magnitude
+      vprDEBUG(vesDBG,3) << " tuple " << i << ", mag = " << magnitude
                              << std::endl << vprDEBUG_FLUSH;
 */
       if ( magnitudeRange[ 0 ] > magnitude )
@@ -116,7 +116,7 @@ double * cfdAccessoryFunctions::ComputeVectorMagnitudeRange( vtkDataArray * data
    // only to a zero-magnitude vector...
    magnitudeRange[ 0 ] = 0.0;
 /*
-   vprDEBUG(vprDBG_ALL,1) << "\tmagnitudeRange = "
+   vprDEBUG(vesDBG,1) << "\tmagnitudeRange = "
       << magnitudeRange[ 0 ] << " : " << magnitudeRange[ 1 ]
       << std::endl << vprDEBUG_FLUSH;
 */

@@ -48,7 +48,7 @@
 #include <string>
 #include <sstream>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 #include <gmtl/MatrixOps.h>
 #include <gmtl/Matrix.h>
 #include <gmtl/gmtl.h>
@@ -63,7 +63,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
 {
    this->directory = specifiedDir;
 
-   vprDEBUG(vprDBG_ALL,1) << "PFB directory : \"" << this->directory << "\""
+   vprDEBUG(vesDBG,1) << "PFB directory : \"" << this->directory << "\""
                           << std::endl << vprDEBUG_FLUSH;
 
    // initialize in case the directory is not there...
@@ -110,7 +110,7 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
                      filenameStream << "./" << pathAndFileName;
                      this->pfbFileNames.push_back( filenameStream.str() );
 
-                     vprDEBUG(vprDBG_ALL,0) << "Found performer binary : " << this->pfbFileNames.back()
+                     vprDEBUG(vesDBG,0) << "Found performer binary : " << this->pfbFileNames.back()
                                             << std::endl << vprDEBUG_FLUSH;
                   }
                }
@@ -125,13 +125,13 @@ cfdTeacher::cfdTeacher( std::string specifiedDir, VE_SceneGraph::cfdDCS* worldDC
    catch ( const std::exception& ex )
 	{
 	   std::cout << ex.what() << std::endl;
-	   vprDEBUG(vprDBG_ALL,1) << "The STORED_FILES directory will be made when a new scene is stored :" 
+	   vprDEBUG(vesDBG,1) << "The STORED_FILES directory will be made when a new scene is stored :" 
                              <<  std::endl << vprDEBUG_FLUSH;
 	}
 
    // how many performer binaries found ?
    this->numFiles = this->pfbFileNames.size();
-   vprDEBUG(vprDBG_ALL,1) << "Number of performer binaries: " << numFiles
+   vprDEBUG(vesDBG,1) << "Number of performer binaries: " << numFiles
                           << std::endl << vprDEBUG_FLUSH;
 
    this->node = new VE_SceneGraph::cfdNode * [ this->numFiles ];
@@ -153,7 +153,7 @@ cfdTeacher::~cfdTeacher( )
    }
    delete this->DCS;
 
-   vprDEBUG(vprDBG_ALL,1) << "exiting cfdTeacher destructor"
+   vprDEBUG(vesDBG,1) << "exiting cfdTeacher destructor"
                           << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -188,7 +188,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 {
    if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == LOAD_PFB_FILE )
    {
-      vprDEBUG(vprDBG_ALL,1) << "LOAD_PFB_FILE: numChildren = " 
+      vprDEBUG(vesDBG,1) << "LOAD_PFB_FILE: numChildren = " 
          << this->GetcfdDCS()->GetNumChildren()
          << ", cfdTeacher_state = "
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
@@ -196,7 +196,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
 
       if ( this->GetcfdDCS()->GetNumChildren() == 0 )
       {
-         vprDEBUG(vprDBG_ALL,2) << "LOAD_PFB_FILE: addChild" 
+         vprDEBUG(vesDBG,2) << "LOAD_PFB_FILE: addChild" 
                                 << std::endl << vprDEBUG_FLUSH;
             
          this->GetcfdDCS()->AddChild( 
@@ -204,7 +204,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       }
       else
       {
-         vprDEBUG(vprDBG_ALL,2) << "LOAD_PFB_FILE: replaceChild" 
+         vprDEBUG(vesDBG,2) << "LOAD_PFB_FILE: replaceChild" 
                                 << std::endl << vprDEBUG_FLUSH;
          int child = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
          this->GetcfdDCS()->ReplaceChild( this->GetcfdDCS()->GetChild( 0 ), this->getpfNode( child ) );
@@ -214,7 +214,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
    else if ( ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_PFB_FILE ) ||
              ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CLEAR_ALL ) )
    {      
-      vprDEBUG(vprDBG_ALL,2) << " cfdTeacher::CheckCommandId : CLEAR_ALL or CLEAR_PFB_FILE "
+      vprDEBUG(vesDBG,2) << " cfdTeacher::CheckCommandId : CLEAR_ALL or CLEAR_PFB_FILE "
                              << std::endl  << vprDEBUG_FLUSH;
       if ( this->DCS != NULL )
       {
@@ -252,7 +252,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       std::string dirString = dirStringStream.str();
       pfb_filename = dirString.c_str();
 
-      vprDEBUG(vprDBG_ALL,0) << "scene stored as " << pfb_filename
+      vprDEBUG(vesDBG,0) << "scene stored as " << pfb_filename
                              << std::endl << vprDEBUG_FLUSH;
 
       // store the world DCS matrix..
@@ -291,7 +291,7 @@ bool cfdTeacher::CheckCommandId( cfdCommandArray* commandArray )
       // (but not the sun, menu, laser, or text)
       int store_int = 0;
 
-      vprDEBUG(vprDBG_ALL,1) << "|   Stored Scene Output " << store_int
+      vprDEBUG(vesDBG,1) << "|   Stored Scene Output " << store_int
                              << std::endl << vprDEBUG_FLUSH;
       
       // increment the counter and reset the id to -1...

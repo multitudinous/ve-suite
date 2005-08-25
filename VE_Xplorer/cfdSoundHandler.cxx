@@ -57,7 +57,7 @@ cfdSoundHandler::cfdSoundHandler( char* param )
    {
       std::cout << "| 10b Initializing........................................... Sound |" << std::endl;
 
-      vprDEBUG(vprDBG_ALL,1) << " cfdSoundHandler: this->sounds.size() = "
+      vprDEBUG(vesDBG,1) << " cfdSoundHandler: this->sounds.size() = "
                              << this->sounds.size()
                              << std::endl << vprDEBUG_FLUSH;
 
@@ -72,7 +72,7 @@ cfdSoundHandler::~cfdSoundHandler( void )
 
    if ( this->sounds.size() > 0 )
    {
-      vprDEBUG(vprDBG_ALL,2) << "deleting sounds"
+      vprDEBUG(vesDBG,2) << "deleting sounds"
                              << std::endl << vprDEBUG_FLUSH;
 
       for ( unsigned int i = 0; i < this->sounds.size(); i++ )
@@ -91,7 +91,7 @@ int cfdSoundHandler::GetNumberOfSounds( void )
 char* cfdSoundHandler::GetSoundFilename( int i )
 {
    // used to generate a list of sounds on the gui
-   vprDEBUG(vprDBG_ALL,0) << "\treturning \"" << this->sounds[ i ]->soundName
+   vprDEBUG(vesDBG,0) << "\treturning \"" << this->sounds[ i ]->soundName
                           << "\"" << std::endl << vprDEBUG_FLUSH;
    //return this->sounds[ i ]->fileName;
    return this->sounds[ i ]->soundName;
@@ -108,7 +108,7 @@ bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
       this->_readParam->convertDecimalToBinary( (long)
             commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE ) );
 
-      vprDEBUG(vprDBG_ALL,1) << " raw decimal = "
+      vprDEBUG(vesDBG,1) << " raw decimal = "
          << commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE )
          << ", this->sounds.size() = " << this->sounds.size()
          << std::endl << vprDEBUG_FLUSH;
@@ -118,18 +118,18 @@ bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
       for ( unsigned int i = 0; i < this->sounds.size(); i++ )
       {
          // need to fix the gui value thing
-         vprDEBUG(vprDBG_ALL,1) << " this->_readParam->guiVal[ " << i << " ] = "
+         vprDEBUG(vesDBG,1) << " this->_readParam->guiVal[ " << i << " ] = "
             << this->_readParam->guiVal[ i ] << std::endl << vprDEBUG_FLUSH;
 
          if ( this->sounds[ i ]->IsSounding() && this->_readParam->guiVal[ i ] == 0 ) 
          {
-            vprDEBUG(vprDBG_ALL,0) << " stopping sound " << i
+            vprDEBUG(vesDBG,0) << " stopping sound " << i
                << std::endl << vprDEBUG_FLUSH;
             this->sounds[ i ]->stopSound();
          }              
          else if ( this->_readParam->guiVal[ i ] == 1 ) //allows sound restart
          {
-            vprDEBUG(vprDBG_ALL,0) << " playing sound " << i
+            vprDEBUG(vesDBG,0) << " playing sound " << i
                << std::endl << vprDEBUG_FLUSH;
             this->sounds[ i ]->playSound();
          } 
@@ -142,7 +142,7 @@ bool cfdSoundHandler::CheckCommandId( cfdCommandArray* commandArray )
 
 void cfdSoundHandler::UpdateCommand()
 {
-   vprDEBUG(vprDBG_ALL,0) << " Doing nothing in cfdSoundHandler::UpdateCommand()"
+   vprDEBUG(vesDBG,0) << " Doing nothing in cfdSoundHandler::UpdateCommand()"
                           << std::endl  << vprDEBUG_FLUSH;
 }
 
@@ -158,14 +158,14 @@ void cfdSoundHandler::CreateObjects( void )
    char textLine[ 256 ];
    input.getline( textLine, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Objects in Interactive Geometry : "
+   vprDEBUG(vesDBG,1) << " Number of Objects in Interactive Geometry : "
                           << numObjects << std::endl  << vprDEBUG_FLUSH;
 
    for ( int i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : "
+      vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : "
                              << id << std::endl << vprDEBUG_FLUSH;
       input.getline( textLine, 256 );   //skip past remainder of line
 
@@ -173,7 +173,7 @@ void cfdSoundHandler::CreateObjects( void )
       {
          this->sounds.push_back(new cfdSound());
          
-         vprDEBUG(vprDBG_ALL,1) << "this->sounds.size() = "
+         vprDEBUG(vesDBG,1) << "this->sounds.size() = "
             << this->sounds.size() << std::endl << vprDEBUG_FLUSH;
 
          int i = this->sounds.size() - 1;
@@ -214,7 +214,7 @@ void cfdSoundHandler::CreateObjects( void )
 
          if ( fileIO::isFileReadable( this->sounds[ i ]->fileName ) ) 
          {
-            vprDEBUG(vprDBG_ALL,0) << "\tsound fileName = " 
+            vprDEBUG(vesDBG,0) << "\tsound fileName = " 
                                    << this->sounds[ i ]->fileName
                                    << std::endl << vprDEBUG_FLUSH;
          }

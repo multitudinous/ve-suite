@@ -89,7 +89,7 @@ using namespace VE_Util;
 
 cfdModelHandler::cfdModelHandler( void )
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdModelHandler constructor"
+   vprDEBUG(vesDBG,2) << "cfdModelHandler constructor"
                           << std::endl << vprDEBUG_FLUSH;
    _param = 0;
    
@@ -116,7 +116,7 @@ void cfdModelHandler::Initialize( char* param )
 
 void cfdModelHandler::CleanUp( void )
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdModelHandler destructor"
+   vprDEBUG(vesDBG,2) << "cfdModelHandler destructor"
                           << std::endl << vprDEBUG_FLUSH;
 
    for( std::vector< cfdModel* >::iterator itr = _modelList.begin();
@@ -399,7 +399,7 @@ void cfdModelHandler::InitScene( void )
       activeDataset->SetActiveScalar( 0 );
    
       strcpy( oldDatasetName, activeDataset->GetFileName() );
-      vprDEBUG(vprDBG_ALL,1) << "cfdModelHandler: Setting active dataset to " 
+      vprDEBUG(vesDBG,1) << "cfdModelHandler: Setting active dataset to " 
                << activeDataset->GetFileName() << " , " 
                << oldDatasetName << std::endl << vprDEBUG_FLUSH;
    }
@@ -431,7 +431,7 @@ void cfdModelHandler::PreFrameUpdate( void )
             == CHANGE_STEADYSTATE_DATASET )
    {
       unsigned int i = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_ISO_VALUE );
-      vprDEBUG(vprDBG_ALL,1) 
+      vprDEBUG(vesDBG,1) 
          << "CHANGE_STEADYSTATE_DATASET " << i 
          //<< ", scalarIndex = " << this->cfdSc
          //<< ", min = " << this->cfdMin 
@@ -453,13 +453,13 @@ void cfdModelHandler::PreFrameUpdate( void )
 #endif
       if ( ( i < _activeModel->GetNumberOfCfdDataSets() ) )
       {
-         vprDEBUG(vprDBG_ALL,0) << "\tcfdModelHandler::PreFrameUpdate dataset = "
+         vprDEBUG(vesDBG,0) << "\tcfdModelHandler::PreFrameUpdate dataset = "
                   << _activeModel->GetCfdDataSet( i )->GetFileName()
                   << ", dcs = " << _activeModel->GetCfdDataSet( i )->GetDCS()
                   << std::endl << vprDEBUG_FLUSH;
 
          int cfdType = _activeModel->GetCfdDataSet( i )->GetType();
-         vprDEBUG(vprDBG_ALL,1) << "\tcfdModelHandler::PreFrameUpdate cfdType: " << cfdType
+         vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate cfdType: " << cfdType
                              << std::endl << vprDEBUG_FLUSH;
 
          // set the dataset as the appropriate dastaset type
@@ -467,11 +467,11 @@ void cfdModelHandler::PreFrameUpdate( void )
          activeDataset = _activeModel->GetCfdDataSet( i );         
          _activeModel->SetActiveDataSet( activeDataset );         
       
-         vprDEBUG(vprDBG_ALL,1) << "\tcfdModelHandler::PreFrameUpdate last active dataset name = " 
+         vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate last active dataset name = " 
                              << oldDatasetName
                              << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL,1) << "\tcfdModelHandler::PreFrameUpdate Activating steady state file " 
+         vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate Activating steady state file " 
                 << activeDataset->GetFileName()
                 << std::endl << vprDEBUG_FLUSH;
 
@@ -479,7 +479,7 @@ void cfdModelHandler::PreFrameUpdate( void )
          // (or change scalar since that is routed through here too)
          if ( strcmp( oldDatasetName, activeDataset->GetFileName() ) )
          {
-            vprDEBUG(vprDBG_ALL,1) << "\tcfdModelHandler::PreFrameUpdate  setting dataset as newly activated" 
+            vprDEBUG(vesDBG,1) << "\tcfdModelHandler::PreFrameUpdate  setting dataset as newly activated" 
                                 << std::endl << vprDEBUG_FLUSH;
             activeDataset->SetNewlyActivated();
             strcpy( oldDatasetName, activeDataset->GetFileName() );
@@ -503,7 +503,7 @@ void cfdModelHandler::PreFrameUpdate( void )
                == CHANGE_VECTOR )
    { 
       int vectorIndex = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-      vprDEBUG(vprDBG_ALL,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
+      vprDEBUG(vesDBG,0) << " CHANGE_VECTOR, vectorIndex = " << vectorIndex
                              << std::endl << vprDEBUG_FLUSH;
 
       activeDataset->SetActiveVector( vectorIndex );
@@ -525,21 +525,21 @@ void cfdModelHandler::PreFrameUpdate( void )
    {
       if ( commandArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE ) )
       {
-         vprDEBUG(vprDBG_ALL,1) << " CommandArray Geostate Value = " 
+         vprDEBUG(vesDBG,1) << " CommandArray Geostate Value = " 
             << commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE )
             << std::endl << vprDEBUG_FLUSH;
 
          long int test = this->_readParam->convertDecimalToBinary( (long)
                         commandArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE ) );
 
-         vprDEBUG(vprDBG_ALL,1) << " Return from conversion : " << test
+         vprDEBUG(vesDBG,1) << " Return from conversion : " << test
             << " : Active Model Ptr = " << _activeModel
             << std::endl << vprDEBUG_FLUSH;
 
          this->_readParam->convertBinaryToArray( test, _activeModel->GetNumberOfGeomDataSets() );
 
          // Update Scene Graph with selected or deselected geometry
-         vprDEBUG(vprDBG_ALL,0) << " Change Geometry in Scene Graph."
+         vprDEBUG(vesDBG,0) << " Change Geometry in Scene Graph."
                           << std::endl << vprDEBUG_FLUSH;
 
          VE_SceneGraph::cfdDCS* parent = NULL;
@@ -560,7 +560,7 @@ void cfdModelHandler::PreFrameUpdate( void )
                parent = VE_SceneGraph::cfdPfSceneManagement::instance()->GetWorldDCS();
             }
 
-            vprDEBUG(vprDBG_ALL,2)
+            vprDEBUG(vesDBG,2)
                << "guiVal[ " << i << " ] = " << this->_readParam->guiVal[ i ] << std::endl
                << " : Active Model index : " << _activeModel << std::endl 
                << " : SearchChild Result : " << parent->SearchChild( _activeModel->GetGeomDataSet( i )->GetDCS() ) << std::endl 
@@ -577,7 +577,7 @@ void cfdModelHandler::PreFrameUpdate( void )
             {
                temp = parent->RemoveChild( _activeModel->GetGeomDataSet( i )->GetDCS() );
             }
-            vprDEBUG(vprDBG_ALL,1) << "|   Add Child Output ( -1 is BAD ) :  " << temp 
+            vprDEBUG(vesDBG,1) << "|   Add Child Output ( -1 is BAD ) :  " << temp 
                            << std::endl << vprDEBUG_FLUSH;
          }
       }
@@ -601,7 +601,7 @@ void cfdModelHandler::PreFrameUpdate( void )
          {
             if ( _activeModel->GetGeomDataSet( i )->GetTransparentFlag() == 1 )
             {
-               vprDEBUG(vprDBG_ALL,2) << "Changing Transparency for geom : "
+               vprDEBUG(vesDBG,2) << "Changing Transparency for geom : "
                                    << i << std::endl << vprDEBUG_FLUSH;
                _activeModel->GetGeomDataSet( i )->setOpac( 0.2 );
             }
@@ -631,7 +631,7 @@ void cfdModelHandler::PreFrameUpdate( void )
    }
    else if ( commandArray->GetCommandValue( cfdCommandArray::CFD_ID ) == CHANGE_ACTIVE_MODEL )
    {
-      vprDEBUG(vprDBG_ALL,1) << " cfdModelHandler :: Change Active Model " 
+      vprDEBUG(vesDBG,1) << " cfdModelHandler :: Change Active Model " 
             << commandArray->GetCommandValue( cfdCommandArray::CFD_SC )
             << std::endl << vprDEBUG_FLUSH;
       _activeModel = _modelList.at( (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC ) );
@@ -680,7 +680,7 @@ void cfdModelHandler::PreFrameUpdate( void )
         )
    { 
       int scalarIndex = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_SC );
-      vprDEBUG(vprDBG_ALL,1) << "CHANGE_SCALAR || CHANGE_SCALAR_RANGE"
+      vprDEBUG(vesDBG,1) << "CHANGE_SCALAR || CHANGE_SCALAR_RANGE"
          << ", scalarIndex = " << scalarIndex
          << ", min = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MIN )
          << ", max = " << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX )
@@ -759,12 +759,12 @@ void cfdModelHandler::CreateObjects( void )
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " cfdModelHandler::Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << " cfdModelHandler::Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
    for( int i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
       input.getline( text, 256 );   //skip past remainder of line
       if ( id == 8 )
       {
@@ -774,10 +774,10 @@ void cfdModelHandler::CreateObjects( void )
          // Flexibilty to have multiply models
          _modelList.at( 0 )->CreateCfdDataSet();
 
-         vprDEBUG(vprDBG_ALL,0) << " ************************************* "
+         vprDEBUG(vesDBG,0) << " ************************************* "
                           << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL,0) << " vtk DCS parameters:"
+         vprDEBUG(vesDBG,0) << " vtk DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
 
          float scale[3], trans[3], rotate[3];   // pfDCS stuff
@@ -798,7 +798,7 @@ void cfdModelHandler::CreateObjects( void )
 
          if ( fileIO::isFileReadable( vtk_filein ) ) 
          {
-            vprDEBUG(vprDBG_ALL,0) << " vtk file = " << vtk_filein 
+            vprDEBUG(vesDBG,0) << " vtk file = " << vtk_filein 
                              << ", dcs = "  << _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()
                              << std::endl << vprDEBUG_FLUSH;
             _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( vtk_filein );
@@ -835,13 +835,13 @@ void cfdModelHandler::CreateObjects( void )
 
          input >> transFlag;
          input.getline( textLine, 256 );   //skip past remainder of line
-         vprDEBUG(vprDBG_ALL,0) << " geometry transparency flag = "
+         vprDEBUG(vesDBG,0) << " geometry transparency flag = "
                                  << transFlag
                                  << std::endl << vprDEBUG_FLUSH;
 
          // read color flag
          input >> color;
-         vprDEBUG(vprDBG_ALL,0) << " stl color flag = " << color
+         vprDEBUG(vesDBG,0) << " stl color flag = " << color
                           << std::endl << vprDEBUG_FLUSH;
 
          // read color if color flag = 1
@@ -851,13 +851,13 @@ void cfdModelHandler::CreateObjects( void )
             {
                input >> stlColor[ i ];
             }
-            vprDEBUG(vprDBG_ALL,0) << "\tcolor: " << stlColor[ 0 ] << " : " << stlColor[ 1 ] << " : "
+            vprDEBUG(vesDBG,0) << "\tcolor: " << stlColor[ 0 ] << " : " << stlColor[ 1 ] << " : "
                                     << stlColor[ 2 ]
                                     << std::endl << vprDEBUG_FLUSH;
          }
          input.getline( textLine, 256 );   //skip past remainder of line
 
-         vprDEBUG(vprDBG_ALL,0) << " geometry DCS parameters:" 
+         vprDEBUG(vesDBG,0) << " geometry DCS parameters:" 
                           << std::endl << vprDEBUG_FLUSH;
          float scale[3], trans[3], rotate[3];   // pfDCS stuff
          this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
@@ -868,7 +868,7 @@ void cfdModelHandler::CreateObjects( void )
          int test1 = fileIO::isFileReadable( fileName );
          if ( test1 == 1 )
          { 
-            vprDEBUG(vprDBG_ALL,0) << " geometry fileName = "
+            vprDEBUG(vesDBG,0) << " geometry fileName = "
                                     << fileName
                                     << std::endl << vprDEBUG_FLUSH;
          }
@@ -907,10 +907,10 @@ void cfdModelHandler::CreateObjects( void )
          // For the data we need to loop over all the datasets and set the appropriate data dir
          _modelList.at( 0 )->CreateCfdDataSet();
 
-         vprDEBUG(vprDBG_ALL,0) << " ************************************* "
+         vprDEBUG(vesDBG,0) << " ************************************* "
                           << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL,0) << " vtk DCS parameters:"
+         vprDEBUG(vesDBG,0) << " vtk DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
 
          float scale[3], trans[3], rotate[3];   // pfDCS stuff
@@ -946,7 +946,7 @@ void cfdModelHandler::CreateObjects( void )
          /*int test1 = fileIO::isFileReadable( geomDirName );
          if ( test1 == 1 )
          { 
-            vprDEBUG(vprDBG_ALL,0) << " geometry fileName = "
+            vprDEBUG(vesDBG,0) << " geometry fileName = "
                                     << geomDirName
                                     << std::endl << vprDEBUG_FLUSH;
          }
@@ -958,18 +958,18 @@ void cfdModelHandler::CreateObjects( void )
             exit( 1 );
          }*/
 
-         vprDEBUG(vprDBG_ALL,0) << " geometry DCS parameters:" 
+         vprDEBUG(vesDBG,0) << " geometry DCS parameters:" 
                           << std::endl << vprDEBUG_FLUSH;
          this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
 
          input >> transFlag;
-         vprDEBUG(vprDBG_ALL,0) << " geometry transparency flag = "
+         vprDEBUG(vesDBG,0) << " geometry transparency flag = "
                                  << transFlag
                                  << std::endl << vprDEBUG_FLUSH;
 
          // read color flag
          input >> color;
-         vprDEBUG(vprDBG_ALL,0) << " stl color flag = " << color
+         vprDEBUG(vesDBG,0) << " stl color flag = " << color
                           << std::endl << vprDEBUG_FLUSH;
 
          // read color if color flag = 1
@@ -979,7 +979,7 @@ void cfdModelHandler::CreateObjects( void )
             {
                input >> stlColor[ i ];
             }
-            vprDEBUG(vprDBG_ALL,0) << "\tcolor: " << stlColor[ 0 ] << " : " << stlColor[ 1 ] << " : "
+            vprDEBUG(vesDBG,0) << "\tcolor: " << stlColor[ 0 ] << " : " << stlColor[ 1 ] << " : "
                                     << stlColor[ 2 ]
                                     << std::endl << vprDEBUG_FLUSH;
          }
@@ -999,7 +999,7 @@ void cfdModelHandler::CreateObjects( void )
       {
 #ifdef _OSG
 #ifdef VE_PATENTED
-         vprDEBUG(vprDBG_ALL,0) << "Creating texture dataset." << std::endl << vprDEBUG_FLUSH;
+         vprDEBUG(vesDBG,0) << "Creating texture dataset." << std::endl << vprDEBUG_FLUSH;
 
          if ( _modelList.empty() )
          {
@@ -1041,12 +1041,12 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
 {
    if ( precomputedSurfaceDir == NULL )
    {
-      vprDEBUG(vprDBG_ALL,1) << "precomputedSurfaceDir == NULL" 
+      vprDEBUG(vesDBG,1) << "precomputedSurfaceDir == NULL" 
                              << std::endl << vprDEBUG_FLUSH;
       return;
    }
 
-   vprDEBUG(vprDBG_ALL,1) << "Loading surface files from " 
+   vprDEBUG(vesDBG,1) << "Loading surface files from " 
       << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
 
 
@@ -1077,7 +1077,7 @@ void cfdModelHandler::LoadSurfaceFiles( char * precomputedSurfaceDir )
                   strcat(pathAndFileName,"/");
                   strcat(pathAndFileName,dir_itr->leaf().c_str());
 
-                  vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
+                  vprDEBUG(vesDBG,0) << "\tsurface file = " << pathAndFileName
                                          << std::endl << vprDEBUG_FLUSH;
 
                   _modelList.at( 0 )->CreateCfdDataSet();
@@ -1154,7 +1154,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
          strcat(pathAndFileName, file->d_name);
  
          frameFileNames.push_back( pathAndFileName );
-         vprDEBUG(vprDBG_ALL, 1) << " pathAndFileName : " 
+         vprDEBUG(vesDBG, 1) << " pathAndFileName : " 
             << pathAndFileName << std::endl << vprDEBUG_FLUSH;
          //increment the number of frames found
          numFiles++;
@@ -1174,7 +1174,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
          strcpy( pathAndFileName, file->d_name);
  
          frameDirNames.push_back( pathAndFileName );
-         vprDEBUG(vprDBG_ALL, 1) << " pathAndFileName : " 
+         vprDEBUG(vesDBG, 1) << " pathAndFileName : " 
             << pathAndFileName << std::endl << vprDEBUG_FLUSH;
          //increment the number of frames found
          numDir++;
@@ -1226,7 +1226,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
 
             frameFileNames.push_back( pathAndFileName );
             
-            vprDEBUG(vprDBG_ALL,1) << " pathAndFileName : " << pathAndFileName
+            vprDEBUG(vesDBG,1) << " pathAndFileName : " << pathAndFileName
                                    << std::endl << vprDEBUG_FLUSH;
             //increment the number of frames found
             numFiles++;
@@ -1277,7 +1277,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
 
             frameDirNames.push_back( pathAndFileName );
             
-            vprDEBUG(vprDBG_ALL,1) << " pathAndFileName : " << pathAndFileName
+            vprDEBUG(vesDBG,1) << " pathAndFileName : " << pathAndFileName
                                    << std::endl << vprDEBUG_FLUSH;
             //increment the number of frames found
             numDir++;
@@ -1301,11 +1301,11 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
 
 #endif
 
-   vprDEBUG(vprDBG_ALL,0) << " Number of files in directory \"" 
+   vprDEBUG(vesDBG,0) << " Number of files in directory \"" 
       << directory << "\" = " << numFiles
       << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL,0) << " Number of precomputes directorys \"" 
+   vprDEBUG(vesDBG,0) << " Number of precomputes directorys \"" 
       << preComputedDir << "\" = " << numDir
       << std::endl << vprDEBUG_FLUSH;
    // The directory must contain only transient files of a particular type
@@ -1327,7 +1327,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    {
       int number = fileIO::extractIntegerBeforeExtension( frameFileNames[ j ] );
       order[ number ] = j;
-      vprDEBUG(vprDBG_ALL,2) << "\t" << j << "\t" << number << "\t" 
+      vprDEBUG(vesDBG,2) << "\t" << j << "\t" << number << "\t" 
          << frameFileNames[ j ] << std::endl << vprDEBUG_FLUSH;
    }
 
@@ -1338,14 +1338,14 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    {
       int number = fileIO::ExtractIntegerFromString( frameDirNames[ j ] );
       dirOrder[ number ] = j;
-      vprDEBUG(vprDBG_ALL,2) << "\t" << j << "\t" << number << "\t" 
+      vprDEBUG(vesDBG,2) << "\t" << j << "\t" << number << "\t" 
          << frameDirNames[ j ] << std::endl << vprDEBUG_FLUSH;
    }
 
    // Set initial data file name 
    if (fileIO::isFileReadable( frameFileNames[ order[ 0 ] ] ) ) 
    {
-      vprDEBUG(vprDBG_ALL,0) << " vtk file = " << frameFileNames[ order[ 0 ]  ]
+      vprDEBUG(vesDBG,0) << " vtk file = " << frameFileNames[ order[ 0 ]  ]
                        << ", dcs = "  << _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()
                        << std::endl << vprDEBUG_FLUSH;
       _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( frameFileNames[ order[ 0 ]  ] );
@@ -1361,7 +1361,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    // Set initial precomputed data dir file name 
    if ( fileIO::isDirWritable( frameDirNames[ dirOrder[ 0 ] ] ) )
    {
-      vprDEBUG(vprDBG_ALL,0) << " vtk data dir = " << frameDirNames[ dirOrder[ 0 ] ]
+      vprDEBUG(vesDBG,0) << " vtk data dir = " << frameDirNames[ dirOrder[ 0 ] ]
                       << std::endl << vprDEBUG_FLUSH;
       _modelList.at( 0 )->GetCfdDataSet( -1 )->SetPrecomputedDataSliceDir( frameDirNames[ dirOrder[ 0 ] ] );
    }
@@ -1384,7 +1384,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
    animation->GetGroup( 0 )->AddChild( _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS() );
    for ( int j = 1; j < numFiles; j++ )
    {
-      vprDEBUG(vprDBG_ALL,0) << " For \"" << frameFileNames[ order[ j ]  ]
+      vprDEBUG(vesDBG,0) << " For \"" << frameFileNames[ order[ j ]  ]
                              << "\"..." << std::endl << vprDEBUG_FLUSH;
 
       _modelList.at( 0 )->CreateCfdDataSet();
@@ -1403,7 +1403,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
 
       if (fileIO::isFileReadable( frameFileNames[ order[ j ]  ] ) ) 
       {
-         vprDEBUG(vprDBG_ALL,0) << " vtk file = " << frameFileNames[ order[ j ]  ] 
+         vprDEBUG(vesDBG,0) << " vtk file = " << frameFileNames[ order[ j ]  ] 
                           << ", dcs = "  << _modelList.at( 0 )->GetCfdDataSet( -1 )->GetDCS()
                           << std::endl << vprDEBUG_FLUSH;
          _modelList.at( 0 )->GetCfdDataSet( -1 )->SetFileName( frameFileNames[ order[ j ]  ] );
@@ -1419,7 +1419,7 @@ void cfdModelHandler::ReadNNumberOfDataSets(  char* directory, char* preComputed
       // Set initial precomputed data dir file name 
       if ( fileIO::isDirWritable( frameDirNames[ dirOrder[ j ] ] ) )
       {
-         vprDEBUG(vprDBG_ALL,0) << " vtk data dir = " << frameDirNames[ dirOrder[ j ] ]
+         vprDEBUG(vesDBG,0) << " vtk data dir = " << frameDirNames[ dirOrder[ j ] ]
                       << std::endl << vprDEBUG_FLUSH;
          _modelList.at( 0 )->GetCfdDataSet( -1 )->SetPrecomputedDataSliceDir( frameDirNames[ dirOrder[ j ] ] );
       }

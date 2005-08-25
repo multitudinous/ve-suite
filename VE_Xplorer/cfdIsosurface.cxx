@@ -43,7 +43,7 @@
 #include <vtkPolyDataMapper.h>
 #include <vtkProperty.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
@@ -107,16 +107,16 @@ cfdIsosurface::~cfdIsosurface()
 
 void cfdIsosurface::Update()
 {
-   vprDEBUG(vprDBG_ALL, 1) <<"\ncfdIsosurface::Update: FileName: "
+   vprDEBUG(vesDBG, 1) <<"\ncfdIsosurface::Update: FileName: "
       << this->GetActiveDataSet()->GetFileName() << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL, 1) << "this->requestedValue: "<< this->requestedValue
+   vprDEBUG(vesDBG, 1) << "this->requestedValue: "<< this->requestedValue
                            << std::endl << vprDEBUG_FLUSH;
 
    // convert the requested value percentage (0-100) to a scalar value
    this->value = convertPercentage( this->requestedValue );
 
-   vprDEBUG(vprDBG_ALL, 1) << "this->value: "<< this->value
+   vprDEBUG(vesDBG, 1) << "this->value: "<< this->value
                            << std::endl << vprDEBUG_FLUSH;
 
 #ifdef USE_OMP
@@ -131,11 +131,11 @@ void cfdIsosurface::Update()
    }
    this->append->Update( );
 #else
-   vprDEBUG(vprDBG_ALL, 1) 
+   vprDEBUG(vesDBG, 1) 
       << "cfdIsosurface: this->GetActiveMeshedVolume() = " 
       << this->GetActiveDataSet() << std::endl << vprDEBUG_FLUSH;
 
-   vprDEBUG(vprDBG_ALL, 1) 
+   vprDEBUG(vesDBG, 1) 
       << "cfdIsosurface: this->GetActiveMeshedVolume()->GetDataSet()=" 
       << this->GetActiveDataSet()->GetDataSet()
       << std::endl << vprDEBUG_FLUSH;
@@ -168,7 +168,7 @@ double cfdIsosurface::convertPercentage( const int percentage )
    double minmax[2];
    this->GetActiveDataSet()->GetUserRange( minmax );
 
-   vprDEBUG(vprDBG_ALL, 1) << "minmax = " << minmax[0] << "\t" << minmax[1]
+   vprDEBUG(vesDBG, 1) << "minmax = " << minmax[0] << "\t" << minmax[1]
                            << std::endl << vprDEBUG_FLUSH;
 
    double minmaxDiff = minmax[1] - minmax[0];

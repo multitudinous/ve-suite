@@ -148,7 +148,7 @@ void cfdVEBaseClass::GetDataFromUnit( void )
    std::cout << "[DBG] VE_Xplorer is connected to the port 33000 "<< std::endl;
    
 
-   vprDEBUG(vprDBG_ALL,1)
+   vprDEBUG(vesDBG,1)
          <<" UPDATE_INTERACTIVE_DESIGN " << this->Interactive_state;
    
    vtkUnstructuredGrid* ugrid = vtkUnstructuredGrid::New();
@@ -469,13 +469,13 @@ void cfdVEBaseClass::CreateObjects( void )
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : "
+   vprDEBUG(vesDBG,1) << " Number of Obejcts in Interactive Geometry : "
                           << numObjects << std::endl  << vprDEBUG_FLUSH;
    for ( int i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : "
+      vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : "
                              << id << std::endl << vprDEBUG_FLUSH;
       input.getline( text, 256 );   //skip past remainder of line
       if ( id == 8 )
@@ -484,10 +484,10 @@ void cfdVEBaseClass::CreateObjects( void )
          // Flexibilty to have multiply models
          _model->CreateCfdDataSet();
 
-         vprDEBUG(vprDBG_ALL,0) << " ************************************* "
+         vprDEBUG(vesDBG,0) << " ************************************* "
                           << std::endl << vprDEBUG_FLUSH;
 
-         vprDEBUG(vprDBG_ALL,0) << " vtk DCS parameters:"
+         vprDEBUG(vesDBG,0) << " vtk DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
 
          float scale[3], trans[3], rotate[3];   // pfDCS stuff
@@ -505,7 +505,7 @@ void cfdVEBaseClass::CreateObjects( void )
 
          if (fileIO::isFileReadable( vtk_filein ) ) 
          {
-            vprDEBUG(vprDBG_ALL,0) << " vtk file = " << vtk_filein 
+            vprDEBUG(vesDBG,0) << " vtk file = " << vtk_filein 
                              << ", dcs = "  << _model->GetCfdDataSet( -1 )->GetDCS()
                              << std::endl << vprDEBUG_FLUSH;
             _model->GetCfdDataSet( -1 )->SetFileName( vtk_filein );
@@ -544,13 +544,13 @@ void cfdVEBaseClass::CreateObjects( void )
 
          input >> transFlag;
          input.getline( textLine, 256 );   //skip past remainder of line
-         vprDEBUG(vprDBG_ALL,0) << " geometry transparency flag = "
+         vprDEBUG(vesDBG,0) << " geometry transparency flag = "
                                 << transFlag
                                 << std::endl << vprDEBUG_FLUSH;
 
          // read color flag
          input >> color;
-         vprDEBUG(vprDBG_ALL,0) << " stl color flag = " << color
+         vprDEBUG(vesDBG,0) << " stl color flag = " << color
                                 << std::endl << vprDEBUG_FLUSH;
 
          // read color if color flag = 1
@@ -560,14 +560,14 @@ void cfdVEBaseClass::CreateObjects( void )
             {
                input >> stlColor[ i ];
             }
-            vprDEBUG(vprDBG_ALL,0) << "\tcolor: " << stlColor[ 0 ] << " : "
+            vprDEBUG(vesDBG,0) << "\tcolor: " << stlColor[ 0 ] << " : "
                                    << stlColor[ 1 ] << " : "
                                    << stlColor[ 2 ]
                                    << std::endl << vprDEBUG_FLUSH;
          }
          input.getline( textLine, 256 );   //skip past remainder of line
 
-         vprDEBUG(vprDBG_ALL,0) << " geometry DCS parameters:" 
+         vprDEBUG(vesDBG,0) << " geometry DCS parameters:" 
                                 << std::endl << vprDEBUG_FLUSH;
          float scale[3], trans[3], rotate[3];   // pfDCS stuff
          this->_readParam->read_pf_DCS_parameters( input, scale, trans, rotate);
@@ -578,7 +578,7 @@ void cfdVEBaseClass::CreateObjects( void )
          int test1 = fileIO::isFileReadable( fileName );
          if ( test1 == 1 )
          { 
-            vprDEBUG(vprDBG_ALL,0) << " geometry fileName = " << fileName
+            vprDEBUG(vesDBG,0) << " geometry fileName = " << fileName
                                    << std::endl << vprDEBUG_FLUSH;
          }
          else
@@ -589,7 +589,7 @@ void cfdVEBaseClass::CreateObjects( void )
             exit(1);
          }
 
-         vprDEBUG(vprDBG_ALL,0) << " scale = " << scale[0] << " : "
+         vprDEBUG(vesDBG,0) << " scale = " << scale[0] << " : "
                                 << scale[1] << " : " << scale[2]
                                 << std::endl << vprDEBUG_FLUSH;
 
@@ -612,12 +612,12 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
 {
    if ( precomputedSurfaceDir == NULL )
    {
-      vprDEBUG(vprDBG_ALL,1) << "precomputedSurfaceDir == NULL" 
+      vprDEBUG(vesDBG,1) << "precomputedSurfaceDir == NULL" 
                              << std::endl << vprDEBUG_FLUSH;
       return;
    }
 
-   vprDEBUG(vprDBG_ALL,1) << "Loading surface files from " 
+   vprDEBUG(vesDBG,1) << "Loading surface files from " 
       << precomputedSurfaceDir << std::endl << vprDEBUG_FLUSH;
 
    //store the current directory so we can change back to it
@@ -649,7 +649,7 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
 
          if ( fileIO::isFileReadable( file->d_name ) ) 
          {
-            vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
+            vprDEBUG(vesDBG,0) << "\tsurface file = " << pathAndFileName
                                    << std::endl << vprDEBUG_FLUSH;
 
             _model->CreateCfdDataSet();
@@ -715,7 +715,7 @@ void cfdVEBaseClass::LoadSurfaceFiles( char * precomputedSurfaceDir )
          strcat(pathAndFileName,"/");
          strcat(pathAndFileName,dir_itr->leaf().c_str());
 
-            vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
+            vprDEBUG(vesDBG,0) << "\tsurface file = " << pathAndFileName
                                    << std::endl << vprDEBUG_FLUSH;
 
             _model->CreateCfdDataSet();
@@ -825,7 +825,7 @@ bool find_file( const path & dir_path,     // in this directory,
 
             if ( fileIO::isFileReadable( pathAndFileName ) )
             {
-               vprDEBUG(vprDBG_ALL,0) << "\tsurface file = " << pathAndFileName
+               vprDEBUG(vesDBG,0) << "\tsurface file = " << pathAndFileName
                                       << std::endl << vprDEBUG_FLUSH;
 
                _model->CreateCfdDataSet();

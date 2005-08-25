@@ -95,7 +95,7 @@ cfdEnvironmentHandler::cfdEnvironmentHandler( void )
 void cfdEnvironmentHandler::Initialize( char* param )
 {
    _param = param;
-   vprDEBUG(vprDBG_ALL,1) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << "cfdApp::init" << std::endl << vprDEBUG_FLUSH;
    std::cout << "|  7. Initializing.............................. Navigation systems |" << std::endl;
    this->nav = new cfdNavigate();
    _readParam = new cfdReadParam();
@@ -114,42 +114,42 @@ void cfdEnvironmentHandler::CleanUp( void )
 {
    if ( this->nav )
    {  
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "|       deleting this->nav" << std::endl << vprDEBUG_FLUSH;
       delete nav;
    }
    
    if ( this->_readParam )
    {  
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "|       deleting this->_readParam" << std::endl << vprDEBUG_FLUSH;
       delete this->_readParam;
    }
 
    if ( this->cursor )
    {  
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "|       deleting this->cursor" << std::endl << vprDEBUG_FLUSH;
       delete this->cursor;
    }
 
    if ( this->_camHandler )
    {  
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "|       deleting this->_camHandler" << std::endl << vprDEBUG_FLUSH;
       delete this->_camHandler;
    }
 
    if ( this->_soundHandler )
    {  
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "|       deleting this->_soundHandler" << std::endl << vprDEBUG_FLUSH;
       delete this->_soundHandler;
    }
 
    if ( this->_teacher )
    {  
-      vprDEBUG(vprDBG_ALL,2)  
+      vprDEBUG(vesDBG,2)  
         << "|       deleting this->_teacher" << std::endl << vprDEBUG_FLUSH;
       delete this->_teacher;
    }
@@ -242,7 +242,7 @@ void cfdEnvironmentHandler::PreFrameUpdate( void )
 {
    // Update Navigation variables
    
-   vprDEBUG(vprDBG_ALL,3) << "\t 1. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,3) << "\t 1. cfdEnvironmentHandler::PreFrameUpdate " << std::endl  << vprDEBUG_FLUSH;
 
 #ifdef VE_PATENTED
 #ifdef _OSG
@@ -310,23 +310,24 @@ void cfdEnvironmentHandler::CreateObjects( void )
    input >> numObjects; 
    input.getline( text, 256 );   //skip past remainder of line
 
-   vprDEBUG(vprDBG_ALL,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << " Number of Obejcts in Interactive Geometry : " << numObjects << std::endl  << vprDEBUG_FLUSH;
    for( int i = 0; i < numObjects; i++ )
    {
       int id;
       input >> id;
-      vprDEBUG(vprDBG_ALL,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
+      vprDEBUG(vesDBG,1) << "Id of object in Interactive Geometry : " << id << std::endl << vprDEBUG_FLUSH;
       input.getline( text, 256 );   //skip past remainder of line
       if ( id == 0 )
       {
-         vprDEBUG(vprDBG_ALL,0) << "|\tWorld DCS parameters : "
+         vprDEBUG(vesDBG,0) << "|\tWorld DCS parameters : "
                           << std::endl << vprDEBUG_FLUSH;
          _readParam->read_pf_DCS_parameters( input, 
                         this->worldScale, this->worldTrans, this->worldRot );
       }
       /*else if ( id == 11 )
       {
-         vprDEBUG(vprDBG_ALL,0) << " World DCS parameters:"
+         vprDEBUG(vesDBG
+,0) << " World DCS parameters:"
                           << std::endl << vprDEBUG_FLUSH;
          _readParam->read_pf_DCS_parameters( input, 
                         this->worldScale, this->worldTrans, this->worldRot );

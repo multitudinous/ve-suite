@@ -42,7 +42,7 @@
 #include "VE_SceneGraph/cfdNode.h"
 #include "VE_SceneGraph/cfdSceneNode.h"
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 #ifdef _PERFORMER
 #include <Performer/pfdb/pfpfb.h>
 #elif _OSG
@@ -110,7 +110,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
       // is parent on graph
       if ( this->worldNode->SearchChild( parentNode ) < 0 )
       {
-         vprDEBUG(vprDBG_ALL,1) << "|\t\tadding active switch node to worldDCS"
+         vprDEBUG(vesDBG,1) << "|\t\tadding active switch node to worldDCS"
                              << std::endl << vprDEBUG_FLUSH;
          this->worldNode->AddChild( parentNode );
       }
@@ -123,17 +123,17 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          // classic ss
          if ( parentNode->SearchChild( temp ) < 0 )
          {
-            vprDEBUG(vprDBG_ALL,1) << "|\t\tadding active dcs node to worldDCS for classic ss "
+            vprDEBUG(vesDBG,1) << "|\t\tadding active dcs node to worldDCS for classic ss "
                              << std::endl << vprDEBUG_FLUSH;
             parentNode->AddChild( temp );
          }
-         vprDEBUG(vprDBG_ALL,1) << "|\t\tadding geode to active dataset dcs "
+         vprDEBUG(vesDBG,1) << "|\t\tadding geode to active dataset dcs "
                              << std::endl << vprDEBUG_FLUSH;
          // we can do this because classic group is always
          // child 0 see line 58 of cfdModel.cxx
          VE_SceneGraph::cfdGroup* test = ((VE_SceneGraph::cfdGroup*)temp->GetChild( 0 ));
          test->AddChild( this->geodes.back() );
-         vprDEBUG(vprDBG_ALL,1) << "|\tFinished classic ss add to graph"
+         vprDEBUG(vesDBG,1) << "|\tFinished classic ss add to graph"
                              << std::endl << vprDEBUG_FLUSH;
       }
       else if ( this->geodes.size() > 1 && 
@@ -147,7 +147,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          this->animation->AddGeodesToSequence( this->geodes );
          if ( parentNode->SearchChild( temp ) < 0 )
          {
-            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic ss animation"
+            vprDEBUG(vesDBG,1) << " adding active dcs node to worldDCS for classic ss animation"
                              << std::endl << vprDEBUG_FLUSH;
             parentNode->AddChild( temp );
          }
@@ -160,7 +160,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
       {
          if ( this->worldNode->SearchChild( temp ) < 0 )
          {
-            vprDEBUG(vprDBG_ALL,1) << " adding active switch node to worldDCS"
+            vprDEBUG(vesDBG,1) << " adding active switch node to worldDCS"
                              << std::endl << vprDEBUG_FLUSH;
             this->worldNode->AddChild( temp );
          }
@@ -171,7 +171,7 @@ void cfdGraphicsObject::AddGraphicsObjectToSceneGraph( void )
          transAnimation->AddGeodesToSequence( this->geodes );
          if ( ((VE_SceneGraph::cfdGroup*)(temp->GetChild( 0 )))->SearchChild( transAnimation->GetSequence() ) < 0 )
          {
-            vprDEBUG(vprDBG_ALL,1) << " adding active dcs node to worldDCS for classic trans"
+            vprDEBUG(vesDBG,1) << " adding active dcs node to worldDCS for classic trans"
                              << std::endl << vprDEBUG_FLUSH;
             ((VE_SceneGraph::cfdGroup*)temp->GetChild( 0 ))->AddChild( transAnimation->GetSequence() );
          }
@@ -271,7 +271,7 @@ void cfdGraphicsObject::AddGeodesToSequence( void )
 // newly created geode to the scene graph. 
 void cfdGraphicsObject::UpdatecfdGeode( void )
 {
-   vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::UpdateGeode..."
+   vprDEBUG(vesDBG, 1) << "cfdObjects::UpdateGeode..."
                            << std::endl << vprDEBUG_FLUSH;
    
    if ( this->updateFlag )
@@ -281,7 +281,7 @@ void cfdGraphicsObject::UpdatecfdGeode( void )
          this->transientGeodes.push_back(new cfdGeode());
    if ( this->usePreCalcData && this->PDactor != NULL )
    {
-      vprDEBUG(vprDBG_ALL, 2) 
+      vprDEBUG(vesDBG, 2) 
          << "cfdObjects::UpdateGeode... create geode from PDactor"
          << std::endl << vprDEBUG_FLUSH;
 
@@ -290,7 +290,7 @@ void cfdGraphicsObject::UpdatecfdGeode( void )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, 2) 
+      vprDEBUG(vesDBG, 2) 
          << "cfdObjects::UpdateGeode... create geode from actor"
          << std::endl << vprDEBUG_FLUSH;
 
@@ -301,7 +301,7 @@ void cfdGraphicsObject::UpdatecfdGeode( void )
          if ( this->transientGeodes.size()%_sequence->GetNumberOfFrames() == 0 )
             this->addTransientGeode = true;
       }else{
-         vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::Allocate Geode..."
+         vprDEBUG(vesDBG, 1) << "cfdObjects::Allocate Geode..."
                            << updateFlag<< std::endl << vprDEBUG_FLUSH;
    
          this->_geode = new cfdGeode();
@@ -310,7 +310,7 @@ void cfdGraphicsObject::UpdatecfdGeode( void )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, 0) 
+      vprDEBUG(vesDBG, 0) 
          << "cfdObjects::UpdateGeode... updateFlag == false for ObjectType = "
          << this->objectType << std::endl << vprDEBUG_FLUSH;
    }
@@ -319,18 +319,18 @@ void cfdGraphicsObject::UpdatecfdGeode( void )
 // This function simply adds the created geode from function UpdateGeode
 void cfdGraphicsObject::AddcfdGeodeToDCS( void )
 {
-   vprDEBUG(vprDBG_ALL, 1) << "cfdObjects::AddGeodeToDCS"
+   vprDEBUG(vesDBG, 1) << "cfdObjects::AddGeodeToDCS"
       << std::endl << vprDEBUG_FLUSH;
   
-   vprDEBUG(vprDBG_ALL, 2) << "cfdObjects::UpdateGeode... updateFlag == true "
+   vprDEBUG(vesDBG, 2) << "cfdObjects::UpdateGeode... updateFlag == true "
                            << this->_geodes.size() << std::endl << vprDEBUG_FLUSH;
    this->_geodes.push_back( this->_geode );
-   vprDEBUG(vprDBG_ALL, 2) << "cfdObjects::UpdateGeode... pushback new geode"
+   vprDEBUG(vesDBG, 2) << "cfdObjects::UpdateGeode... pushback new geode"
                            << std::endl << vprDEBUG_FLUSH;
 
    if ( this->usePreCalcData && this->PDactor != NULL )
    {
-      vprDEBUG(vprDBG_ALL, 2) 
+      vprDEBUG(vesDBG, 2) 
          << "cfdObjects::UpdateGeode... create geode from PDactor"
          << std::endl << vprDEBUG_FLUSH;
 
@@ -339,7 +339,7 @@ void cfdGraphicsObject::AddcfdGeodeToDCS( void )
    }
    else
    {
-      vprDEBUG(vprDBG_ALL, 2) 
+      vprDEBUG(vesDBG, 2) 
          << "cfdObjects::UpdateGeode... create geode from actor"
          << std::endl << vprDEBUG_FLUSH;
 
@@ -347,7 +347,7 @@ void cfdGraphicsObject::AddcfdGeodeToDCS( void )
       ((cfdGeode*)this->_geodes.back())->TranslateTocfdGeode( this->actor );
    }
 
-   vprDEBUG(vprDBG_ALL, 2) 
+   vprDEBUG(vesDBG, 2) 
       << "cfdObjects::UpdateGeode... set active geode pointer "
       << this->GetActiveDataSet()->IsNewlyActivated() << " : " << this->_geodes.size() << std::endl << vprDEBUG_FLUSH;
    //this->geode = (pfGeode *)this->geodes.back();
@@ -360,9 +360,9 @@ void cfdGraphicsObject::AddcfdGeodeToDCS( void )
       this->GetActiveDataSet()->SetNotNewlyActivated();
       // geodes.size is not zero based therefore the -1 is needed
       int num = this->_geodes.size() - 1;
-      vprDEBUG(vprDBG_ALL,1) << " adding child num = " << num
+      vprDEBUG(vesDBG,1) << " adding child num = " << num
                              << std::endl << vprDEBUG_FLUSH;
-      vprDEBUG(vprDBG_ALL,1) << "this->geodes[ 0 ] = " << this->_geodes[ 0 ]
+      vprDEBUG(vesDBG,1) << "this->geodes[ 0 ] = " << this->_geodes[ 0 ]
          << std::endl << "this->geodes[ num ] = " << this->_geodes[ num ]
          << std::endl << vprDEBUG_FLUSH;
       this->_dcs->AddChild( ((cfdGeode*)this->_geodes[ num ]) );
@@ -381,28 +381,28 @@ void cfdGraphicsObject::AddcfdGeodeToDCS( void )
       // geodes.size is not zero based therefore the first -1 is needed
       // the second -1 is to get the second to last geode on the list
       int num = (this->_geodes.size() - 1) - 1;
-      vprDEBUG(vprDBG_ALL,1) << " 1. removing child num = " << num << " : " << this->_geodes[ num ] << " : " << _geodes.size()
+      vprDEBUG(vesDBG,1) << " 1. removing child num = " << num << " : " << this->_geodes[ num ] << " : " << _geodes.size()
                              << std::endl << vprDEBUG_FLUSH;
       cfdGroup* parent = (cfdGroup*)this->_geodes[ num ]->GetParent(0);
-      vprDEBUG(vprDBG_ALL,2) << " 1. removing child parent = " << parent 
+      vprDEBUG(vesDBG,2) << " 1. removing child parent = " << parent 
                              << std::endl << vprDEBUG_FLUSH;
       parent->RemoveChild( this->_geodes[ num ] );
-      vprDEBUG(vprDBG_ALL,2) << " 1. removing child succesful" 
+      vprDEBUG(vesDBG,2) << " 1. removing child succesful" 
                              << std::endl << vprDEBUG_FLUSH;
       delete this->_geodes[ num ];
-      vprDEBUG(vprDBG_ALL,2) << " 1. delete child sucessful" 
+      vprDEBUG(vesDBG,2) << " 1. delete child sucessful" 
                              << std::endl << vprDEBUG_FLUSH;
 
       this->_geodes.erase( this->_geodes.end() - 2 );
-      vprDEBUG(vprDBG_ALL,2) << " 1. erase child succesful" 
+      vprDEBUG(vesDBG,2) << " 1. erase child succesful" 
                              << std::endl << vprDEBUG_FLUSH;
       this->_dcs->AddChild( ((cfdGeode*)this->_geodes[ num ]) );
-      vprDEBUG(vprDBG_ALL,1) << " 1. add child succesful " 
+      vprDEBUG(vesDBG,1) << " 1. add child succesful " 
                              << std::endl << vprDEBUG_FLUSH;
    }
    else //if ( this->geodes.size() == 1 )
    { 
-      vprDEBUG(vprDBG_ALL,1) << " adding child geode = " << this->_geodes.at( 0 )
+      vprDEBUG(vesDBG,1) << " adding child geode = " << this->_geodes.at( 0 )
                              << std::endl << vprDEBUG_FLUSH;
       this->_dcs->AddChild( ((cfdGeode*)this->_geodes.at( 0 )) );     
    }

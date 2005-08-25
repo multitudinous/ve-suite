@@ -49,7 +49,7 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
@@ -57,7 +57,7 @@ using namespace VE_SceneGraph;
 cfdPresetMomentum::cfdPresetMomentum( const int xyz,
                                       int numSteps )
 {  
-   vprDEBUG(vprDBG_ALL, 1) << "cfdPresetMomentum::cfdPresetMomentum"
+   vprDEBUG(vesDBG, 1) << "cfdPresetMomentum::cfdPresetMomentum"
                            << std::endl << vprDEBUG_FLUSH;
 
    this->xyz = xyz;
@@ -83,7 +83,7 @@ cfdPresetMomentum::~cfdPresetMomentum()
 
 void cfdPresetMomentum::Update( void )
 {
-   vprDEBUG(vprDBG_ALL, 1) << "cfdPresetMomentum::Update, usePreCalcData = "
+   vprDEBUG(vesDBG, 1) << "cfdPresetMomentum::Update, usePreCalcData = "
       << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
    
    if ( this->usePreCalcData )
@@ -94,7 +94,7 @@ void cfdPresetMomentum::Update( void )
 
       if ( preCalcData == NULL )
       {
-         vprDEBUG(vprDBG_ALL, 0) << "cfdPresetMomentum: no precalculated data"
+         vprDEBUG(vesDBG, 0) << "cfdPresetMomentum: no precalculated data"
                                  << std::endl << vprDEBUG_FLUSH;
          this->updateFlag = false;
          return;
@@ -111,7 +111,7 @@ void cfdPresetMomentum::Update( void )
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
       this->mapper->Update();
-      vprDEBUG(vprDBG_ALL, 1)
+      vprDEBUG(vesDBG, 1)
          << "Yes Precalc : " << this->cursorType << " : " << usePreCalcData 
          << std::endl << vprDEBUG_FLUSH;
    }

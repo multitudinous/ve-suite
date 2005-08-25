@@ -47,14 +47,14 @@
 #include <vtkAppendPolyData.h>
 #endif
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 cfdContour::cfdContour()
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdContour constructor"
+   vprDEBUG(vesDBG,2) << "cfdContour constructor"
                           << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP 
    float b[6];
@@ -101,7 +101,7 @@ cfdContour::cfdContour()
 
 cfdContour::~cfdContour()
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdContour destructor"
+   vprDEBUG(vesDBG,2) << "cfdContour destructor"
                           << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP
    for ( int i=0; i<this->nData; i++ )
@@ -142,7 +142,7 @@ void cfdContour::Update( void )
    }
    else if ( this->cursorType == ARROW )
    {
-      vprDEBUG(vprDBG_ALL, 0) << "contour cutting plane origin: "
+      vprDEBUG(vesDBG, 0) << "contour cutting plane origin: "
          << origin[0] << " : " << origin[1] << " : " << origin[2]
          << std::endl << vprDEBUG_FLUSH;
 #ifdef USE_OMP

@@ -36,7 +36,7 @@
 
 #include <cassert>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 #ifdef _PERFORMER
 #include <Performer/pr/pfFog.h>
 #elif _OSG
@@ -51,7 +51,7 @@ cfdFILE::cfdFILE( fileInfo *geomFile, VE_SceneGraph::cfdDCS *worldDCS  )
    // Need to fix this and move some code to cfdNode
    // Leave some code here no more cfdFileInfo
 /*// this constructor is used by cfdApp
-   vprDEBUG(vprDBG_ALL,1) << " cfdFILE:geomFile->fileName = " 
+   vprDEBUG(vesDBG,1) << " cfdFILE:geomFile->fileName = " 
                           << geomFile->fileName
                           << std::endl << vprDEBUG_FLUSH;
 
@@ -102,7 +102,7 @@ cfdFILE::cfdFILE( char* geomFile, VE_SceneGraph::cfdDCS* worldDCS  )
 cfdFILE::cfdFILE( float opVal, float stlColor[3], char *filename  )
 {
 // this constructor is used by cfdFrame
-   vprDEBUG(vprDBG_ALL,1) 
+   vprDEBUG(vesDBG,1) 
       << " cfdFILE: geometry file : " << filename 
       << ", opVal = " << opVal
       << ", stlColor = " << stlColor[0] 
@@ -123,7 +123,7 @@ cfdFILE::cfdFILE( float opVal, float stlColor[3], char *filename  )
    {
       this->color = 1;
    }
-   vprDEBUG(vprDBG_ALL,1) << " cfdFILE: color flag = " << this->color 
+   vprDEBUG(vesDBG,1) << " cfdFILE: color flag = " << this->color 
                           << std::endl << vprDEBUG_FLUSH;
 
    if ( this->color )
@@ -143,7 +143,7 @@ cfdFILE::cfdFILE( float opVal, float stlColor[3], char *filename  )
 
 cfdFILE::~cfdFILE()
 {
-   vprDEBUG(vprDBG_ALL,2) << "cfdFILE Destructor" 
+   vprDEBUG(vesDBG,2) << "cfdFILE Destructor" 
                           << std::endl << vprDEBUG_FLUSH;
 
    delete this->DCS;
@@ -226,12 +226,12 @@ void cfdFILE::SetRGBAColorArray( double* color)
    {
       this->_rgba[ i ] = color[ i ];
    }
-   vprDEBUG(vprDBG_ALL,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdFILE::GetColorArray( void )
 {
-   vprDEBUG(vprDBG_ALL,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,2) << " Color ModuleGeometry: " << this->_rgba[ 0 ]  << " : " <<  this->_rgba[ 1 ]  <<  " : " << this->_rgba[ 2 ]  << std::endl << vprDEBUG_FLUSH;
 }
 
 void cfdFILE::SetTransparencyFlag( bool x )

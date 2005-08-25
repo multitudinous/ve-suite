@@ -46,14 +46,14 @@
 #include <vtkActor.h>
 #include <vtkProperty.h>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
 
 cfdPresetContour::cfdPresetContour( const int xyz, const int numSteps )
 {
-   vprDEBUG(vprDBG_ALL, 1) << "cfdPresetContour::cfdPresetMomentum"
+   vprDEBUG(vesDBG, 1) << "cfdPresetContour::cfdPresetMomentum"
                            << std::endl << vprDEBUG_FLUSH;
    this->xyz = xyz;
    this->numSteps = numSteps;
@@ -73,7 +73,7 @@ cfdPresetContour::~cfdPresetContour()
 
 void cfdPresetContour::Update( void )
 {
-   vprDEBUG(vprDBG_ALL,1) << "cfdPresetContour::Update, usePreCalcData = "
+   vprDEBUG(vesDBG,1) << "cfdPresetContour::Update, usePreCalcData = "
       << this->usePreCalcData << std::endl << vprDEBUG_FLUSH;
 
    if ( this->usePreCalcData )
@@ -84,7 +84,7 @@ void cfdPresetContour::Update( void )
 
       if ( preCalcData == NULL )
       {
-         vprDEBUG(vprDBG_ALL, 0) << "cfdPresetContour: no precalculated data"
+         vprDEBUG(vesDBG, 0) << "cfdPresetContour: no precalculated data"
                                  << std::endl << vprDEBUG_FLUSH;
 
          this->updateFlag = false;
