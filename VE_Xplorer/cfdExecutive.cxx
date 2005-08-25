@@ -49,7 +49,7 @@
 #include <string>
 #include <sstream>
 
-#include <vrj/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 #include <vpr/System.h>
 
 #include <orbsvcs/CosNamingC.h>

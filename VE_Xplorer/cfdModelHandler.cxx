@@ -32,7 +32,7 @@
 
 #include "VE_Xplorer/cfdModelHandler.h"
 
-#include <vrj/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <vtkPolyDataReader.h>
 #include <vtkPolyDataWriter.h>

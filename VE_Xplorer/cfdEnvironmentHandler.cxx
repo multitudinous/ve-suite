@@ -46,7 +46,7 @@
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include "VE_SceneGraph/cfdDCS.h"
 #include "VE_SceneGraph/cfdGroup.h"
-#include <vrj/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #ifdef _OSG
 #include "VE_Xplorer/cfdObjectHandler.h"

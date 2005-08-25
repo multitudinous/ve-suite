@@ -36,7 +36,7 @@
 #include <vpr/Util/Singleton.h>
 #include "VE_SceneGraph/cfdPfSceneManagement.h"
 #include "VE_SceneGraph/cfdDCS.h"
-
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <osg/Group>
 #include <osg/Geometry>

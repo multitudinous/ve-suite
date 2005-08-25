@@ -50,7 +50,7 @@
 #include <string>
 #include <sstream>
 
-#include <vrj/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <boost/filesystem/operations.hpp> // includes boost/filesystem/path.hpp
 #include <boost/filesystem/path.hpp>

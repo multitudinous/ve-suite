@@ -41,7 +41,7 @@
 #include <iostream>
 #include <fstream>
 
-#include <vrj/Util/Debug.h>
+#include "VE_Xplorer/cfdDebug.h"
 using namespace VE_Xplorer;
 using namespace VE_Util;
 

@@ -32,6 +32,7 @@
 #include "VE_Xplorer/cfdNavigate.h"
 #include "VE_Xplorer/cfdEnum.h"
 #include "VE_SceneGraph/cfdDCS.h"
+#include "VE_Xplorer/cfdDebug.h"
 
 // --- VR Juggler Stuff --- //
 #include <gmtl/Xforms.h>
