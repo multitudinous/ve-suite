@@ -1,0 +1,101 @@
+#!/bin/csh -f
+# sets up environment to build and/or run VE-Xplorer
+
+#Change this to where VE-Suite installed
+setenv VE_INSTALL_DIR ./VE_Suite.0.9.0
+
+#Change this VE-Suite pre-complied dependencies are installed
+setenv VE_DEPS_DIR ./VE_Suite.0.9.0_Dependencies
+
+# vrJuggler  
+# These are setup for using VE-Suite dependency install's location
+# change only if you are using your own build
+setenv VJ_BASE_DIR ${VE_DEPS_DIR}/vrjuggler2.0.0
+setenv VJ_DEPS_DIR ${VE_DEPS_DIR}/\vrjuggler2.0.0
+
+#used for cluster apps
+#setenv VEXMASTER localhost
+
+#these can be used to point to user built dependencies
+#setenv OSGHOME ./OpenSceneGraph
+#setenv VTK_HOME ./VTK_Install
+#setenv WX_HOME ./wxWidgets-2.6.0
+#setenv ACE_ROOT ./ACE_wrappers
+#setenv XERCESCROOT ./xerces-c-src_2_6_0
+#setenv WX_ROOT ./wxWidgets-2.6.0
+#setenv TAO_ROOT ./ACE_wrappers/TAO
+
+setenv TAO_MACHINE localhost
+setenv TAO_PORT 1237
+
+REM NOTE: On Windows the juggler location must point to a Windows
+REM (local or on network) machine, otherwise user may run into runtime
+REM problems when loading config files across the network
+
+REM Everything below is relative to the above environment so user
+REM shouldn't have to modify UNLESS "local" builds (debug for example)
+REM are desired. In this case modify the appropriate variables accordingly.
+
+if ( -e /etc/redhat-release ) then
+   set firstWord=`cat /etc/redhat-release | awk -F" " '{print $1}'`
+   #echo "firstWord is" ${firstWord}
+   if ( ${firstWord} == "Red" ) then
+      set thirdWord=`cat /etc/redhat-release | awk -F" " '{print $3}'`
+      if ( ${thirdWord} == "Enterprise" ) then
+         # extract some words from file to create something like RHEL_3
+         setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print "RHEL_" $7}'`
+      else
+         # extract some words from file to create something like RedHat_8.0 or RedHat_9
+         setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 $2 "_" $5}'`
+      endif
+   else if ( ${firstWord} == "Fedora" ) then
+      # extract some words from file to create something like Fedora_1
+      setenv CFDHOSTTYPE `cat /etc/redhat-release | awk -F" " '{print $1 "_" $4}'`
+   endif
+else if ( -e /etc/SuSE-release ) then
+   # extract some words from file to create something like SuSE_9.2_x86-64
+   setenv CFDHOSTTYPE `head -1 /etc/SuSE-release | awk -F" " '{print $1 "_" $3 "_" $4}'`
+else
+   #echo "uname is" `uname`
+   setenv CFDHOSTTYPE `uname`
+endif
+
+#if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
+setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
+
+setenv PHSHAREDSIZE=534773700
+
+#juggler debug output level
+setenv VPR_DEBUG_ENABLE 0
+setenv VPR_DEBUG_NFY_LEVEL 1
+setenv NO_PERF_PLUGIN TRUE
+setenv NO_RTRC_PLUGIN TRUE
+setenv PFNFYLEVEL 0
+#setenv OSGNOTIFYLEVEL DEBUG_INFO
+
+#Juggler dependencies
+# These are currently set relative to VE-Suite's install
+#if the user downloads there own juggler, these paths will have to be modified
+setenv JCCL_BASE_DIR ${VJ_BASE_DIR}
+setenv JCCL_DEFINITION_PATH ${VJ_BASE_DIR}\definitions
+setenv VJ_CFG_PATH ${VJ_BASE_DIR}\definitions
+setenv NSPR_ROOT ${VJ_DEPS_DIR}
+setenv SNX_BASE_DIR ${VJ_BASE_DIR}
+
+#Python build environment variables
+#setenv PYTHONPATH ${VJ_DEPS_DIR}\lib\python
+
+if ( ${CFDHOSTTYPE} == "IRIX64" ) then
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_DEPS_DIR}/bin
+else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTTYPE} =~ RHEL_* ) then
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_DEPS_DIR}/bin
+else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
+   setenv LD_LIBRARY_PATH ${LD_LIBRARYN_PATH}:${VE_DEPS_DIR}/bin
+else if ( ${CFDHOSTTYPE} == "SunOS" ) then
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_DEPS_DIR}/bin
+else
+   echo "ERROR: Unsupported operating system"
+   echo "       OMNI_HOME, etc. are undefined"
+endif
+setenv PATH ${PATH}:${VE_INSTALL_DIR}/bin:${VE_DEPS_DIR}/bin
+
