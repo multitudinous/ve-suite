@@ -106,6 +106,8 @@ cp -f ${VE_SUITE_HOME}/VE_Installer/installer/setupUL.tsh ./setup.tsh
 echo "Copying VES script..."
 cp -f ${VE_SUITE_HOME}/VE_Installer/installer/VES.run ./bin/VES.run
 
+echo "Copying README script..."
+cp -f ${VE_SUITE_HOME}/VE_Installer/installer/README.unix.txt ./README.txt
 
 echo "Creating tar.gz file..."
 #write the tar file in the install directory
