@@ -114,11 +114,15 @@ echo "Creating tar.gz file..."
 cd ${VE_TEMP_INST_DIR}
 pwd
 
+mkdir ./VE_Suite${VE_VERSION}
+setenv VE_INSTALL_TAR_DIR ./VE_Suite${VE_VERSION}
+mv ./${CFDHOSTTYPE} ${VE_INSTALL_TAR_DIR}
+
 # on irix /usr/freeware/bin
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
-   /usr/freeware/bin/tar -zcvf ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ./${CFDHOSTTYPE}
+   /usr/freeware/bin/tar -zcvf ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_INSTALL_TAR_DIR}
 else
-   tar -zcvf ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_PLAT_INSTALL_DIR}
+   tar -zcvf ./vesuite_${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_INSTALL_TAR_DIR}
 endif
 
 echo "Moving the tar.gz file to: "${VE_INSTALLER_DIR}

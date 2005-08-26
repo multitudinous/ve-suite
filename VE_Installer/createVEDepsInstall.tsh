@@ -48,48 +48,48 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.b2
    cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.b2
    echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
-   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggeler-2.b2
-   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggeler-2.b2
+   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggler-2.b2
+   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggler-2.b2
 else
    echo "Copying Juggler from:" ${VJ_BASE_DIR}
    cp -Rd ${VJ_BASE_DIR}/lib ./vrJuggler-2.0.0
-   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.b2
-   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.b2
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles ./vrJuggler-2.0.0
+   cp -Rd ${VJ_BASE_DIR}/share/vrjuggler/data/definitions ./vrJuggler-2.0.0
    echo "Copying Juggler dependencies from:" ${VJ_DEPS_DIR}
-   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggeler-2.0.0
-   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggeler-2.0.0
+   cp -Rd ${VJ_DEPS_DIR}/lib ./vrJuggler-2.0.0
+   cp -Rd ${VJ_DEPS_DIR}/bin ./vrJuggler-2.0.0
 endif
 echo "Copying wxWidgets from:" ${WX_HOME}
-cp -Rd ${WX_HOME}/lib ./bin
+cp -Rd ${WX_HOME}/lib/* ./bin
 
 echo "Copying xerces-c from:" ${XERCESCROOT}
-cp -Rd ${XERCESCROOT}/lib ./bin
+cp -Rd ${XERCESCROOT}/lib/* ./bin
 
 echo "Copying VTK from:" ${VTK_BASE_DIR}
 cp -Rd ${VTK_BASE_DIR}/lib/vtk/*.so ./bin
 
 echo "Copying ACE from:" ${ACE_HOME}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
-cp -Rd ${ACE_HOME}/IRIX32/lib ./bin
+cp -Rd ${ACE_HOME}/IRIX32/lib/* ./bin
 else 
-cp -Rd ${ACE_HOME}/Linux/lib ./bin
+cp -Rd ${ACE_HOME}/Linux/lib/* ./bin
 endif
 
 echo "Copying TAO from:" ${TAO_HOME}
 
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
-cp -Rd ${TAO_HOME}/IRIX32/lib ./bin
+cp -Rd ${TAO_HOME}/IRIX32/lib/* ./bin
 cp -Rd ${TAO_HOME}/IRIX32/bin/NameService ./bin
 cp -Rd ${TAO_HOME}/IRIX32/bin/Naming_Service ./bin
-cp -Rd ${ACE_HOME}/IRIX32/lib ./bin
+cp -Rd ${ACE_HOME}/IRIX32/lib/* ./bin
 else 
-cp -Rd ${TAO_HOME}/Linux/lib ./bin
+cp -Rd ${TAO_HOME}/Linux/lib/* ./bin
 cp -Rd ${TAO_HOME}/Linux/bin/NameService ./bin
 cp -Rd ${TAO_HOME}/Linux/bin/Naming_Service ./bin
-cp -Rd ${ACE_HOME}/Linux/lib ./bin
+cp -Rd ${ACE_HOME}/Linux/lib/* ./bin
 endif
 
-
+echo "Copying OSG from: " ${OSG_HOME}
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
 cp ${OSG_HOME}/lib32/*.so ./bin
 cp ${OSG_HOME}/lib32/osgPlugins/*.so ./bin
@@ -102,11 +102,15 @@ echo "Creating tar.gz file..."
 cd ${VE_TEMP_DEPS_INST_DIR}
 pwd
 
+mkdir ./VE_Suite_deps${VE_VERSION}
+setenv VE_INSTALL_TAR_DIR ./VE_Suite_deps${VE_VERSION}
+mv ./${CFDHOSTTYPE} ${VE_INSTALL_TAR_DIR}
+
 # on irix /usr/freeware/bin
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
-   /usr/freeware/bin/tar -zcvf ./vesuite_deps${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ./${CFDHOSTTYPE}
+   /usr/freeware/bin/tar -zcvf ./vesuite_deps${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_INSTALL_TAR_DIR}
 else
-   tar -zcvf ./vesuite_deps${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ./${CFDHOSTTYPE}
+   tar -zcvf ./vesuite_deps${VE_VERSION}_${CFDHOSTTYPE}.tar.gz ${VE_INSTALL_TAR_DIR}
 endif
 
 echo "Moving the tar.gz file to: "${VE_INSTALLER_DIR}

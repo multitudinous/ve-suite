@@ -1,17 +1,16 @@
-#!/bin/csh -f
+#!/bin/csh 
 # sets up environment to build and/or run VE-Xplorer
-
 #Change this to where VE-Suite installed
-setenv VE_INSTALL_DIR ./VE_Suite.0.9.0
+setenv VE_INSTALL_DIR ./VE_Suite.0.9.0/RHEL_3
 
 #Change this VE-Suite pre-complied dependencies are installed
-setenv VE_DEPS_DIR ./VE_Suite.0.9.0_Dependencies
+setenv VE_DEPS_DIR ./VE_Suite_deps.0.9.0/RHEL_3
 
 # vrJuggler  
 # These are setup for using VE-Suite dependency install's location
 # change only if you are using your own build
-setenv VJ_BASE_DIR ${VE_DEPS_DIR}/vrjuggler2.0.0
-setenv VJ_DEPS_DIR ${VE_DEPS_DIR}/\vrjuggler2.0.0
+setenv VJ_BASE_DIR ${VE_DEPS_DIR}/vrJuggler-2.0.0
+setenv VJ_DEPS_DIR ${VE_DEPS_DIR}/vrJuggler-2.0.0
 
 #used for cluster apps
 #setenv VEXMASTER localhost
@@ -28,13 +27,12 @@ setenv VJ_DEPS_DIR ${VE_DEPS_DIR}/\vrjuggler2.0.0
 setenv TAO_MACHINE localhost
 setenv TAO_PORT 1237
 
-REM NOTE: On Windows the juggler location must point to a Windows
-REM (local or on network) machine, otherwise user may run into runtime
-REM problems when loading config files across the network
-
-REM Everything below is relative to the above environment so user
-REM shouldn't have to modify UNLESS "local" builds (debug for example)
-REM are desired. In this case modify the appropriate variables accordingly.
+# NOTE: On Windows the juggler location must point to a Windows
+# (local or on network) machine, otherwise user may run into runtime
+# problems when loading config files across the network echo "here"
+# Everything below is relative to the above environment so user
+# shouldn't have to modify UNLESS "local" builds (debug for example)
+# are desired. In this case modify the appropriate variables accordingly.
 
 if ( -e /etc/redhat-release ) then
    set firstWord=`cat /etc/redhat-release | awk -F" " '{print $1}'`
@@ -63,7 +61,8 @@ endif
 #if creation of CFDHOSTTYPE caused parenthesis to be inserted, then remove...
 setenv CFDHOSTTYPE `echo \"$CFDHOSTTYPE\" | sed -e 's/(//g' | sed -e 's/)//g' | sed -e 's/"//g'`
 
-setenv PHSHAREDSIZE=534773700
+
+setenv PHSHAREDSIZE 534773700
 
 #juggler debug output level
 setenv VPR_DEBUG_ENABLE 0
@@ -77,25 +76,25 @@ setenv PFNFYLEVEL 0
 # These are currently set relative to VE-Suite's install
 #if the user downloads there own juggler, these paths will have to be modified
 setenv JCCL_BASE_DIR ${VJ_BASE_DIR}
-setenv JCCL_DEFINITION_PATH ${VJ_BASE_DIR}\definitions
-setenv VJ_CFG_PATH ${VJ_BASE_DIR}\definitions
+setenv JCCL_DEFINITION_PATH ${VJ_BASE_DIR}/definitions
+setenv VJ_CFG_PATH ${VJ_BASE_DIR}/definitions
 setenv NSPR_ROOT ${VJ_DEPS_DIR}
 setenv SNX_BASE_DIR ${VJ_BASE_DIR}
 
 #Python build environment variables
-#setenv PYTHONPATH ${VJ_DEPS_DIR}\lib\python
+#setenv PYTHONPATH ${VJ_DEPS_DIR}/lib/python
 
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
-   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_DEPS_DIR}/bin
+   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTTYPE} =~ RHEL_* ) then
-   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_DEPS_DIR}/bin
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
-   setenv LD_LIBRARY_PATH ${LD_LIBRARYN_PATH}:${VE_DEPS_DIR}/bin
+   setenv LD_LIBRARY_PATH ${LD_LIBRARYN_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
 else if ( ${CFDHOSTTYPE} == "SunOS" ) then
-   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_DEPS_DIR}/bin
+   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
 else
    echo "ERROR: Unsupported operating system"
    echo "       OMNI_HOME, etc. are undefined"
 endif
-setenv PATH ${PATH}:${VE_INSTALL_DIR}/bin:${VE_DEPS_DIR}/bin
+setenv PATH ${PATH}:${VE_INSTALL_DIR}/bin:${VE_DEPS_DIR}/bin:${VJ_BASE_DIR}/bin
 
