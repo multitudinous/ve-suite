@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_SceneGraph/cfdSceneNode.h"
 #include <iostream>
-#include <vpr/Util/Debug.h>
+#include "VE_Installer/include/cfdDebug.h"
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
 #elif _OSG
@@ -152,7 +152,7 @@ void cfdSceneNode::clearGeodesFromNode( pfNode * node )
 
    if ( name != NULL )
    {
-      vprDEBUG(vprDBG_ALL,1) << " node name = \"" << name << "\""
+      vprDEBUG(vesDBG,1) << " node name = \"" << name << "\""
                              << std::endl << vprDEBUG_FLUSH;
    }
 
@@ -163,7 +163,7 @@ void cfdSceneNode::clearGeodesFromNode( pfNode * node )
          ) 
       )
    {
-      vprDEBUG(vprDBG_ALL,1) << "\twon't touch this node"
+      vprDEBUG(vesDBG,1) << "\twon't touch this node"
                              << std::endl << vprDEBUG_FLUSH;
       return;
    }
@@ -171,7 +171,7 @@ void cfdSceneNode::clearGeodesFromNode( pfNode * node )
    if ( node->isOfType( pfGroup::getClassType() ) )
    {
       int numChildren = ((pfGroup*)node)->getNumChildren();
-      vprDEBUG(vprDBG_ALL,1) << " group node has numChildren = " << numChildren
+      vprDEBUG(vesDBG,1) << " group node has numChildren = " << numChildren
                              << std::endl << vprDEBUG_FLUSH;
 
       // Iterate backwards for performance
@@ -184,13 +184,13 @@ void cfdSceneNode::clearGeodesFromNode( pfNode * node )
    }
    else if ( node->isOfType( pfGeode::getClassType() ) )
    {
-      vprDEBUG(vprDBG_ALL,1) << "\tremoving this node"
+      vprDEBUG(vesDBG,1) << "\tremoving this node"
                              << std::endl << vprDEBUG_FLUSH;
 
       int numParents = node->getNumParents();
       if ( numParents != 1 )
       {
-         vprDEBUG(vprDBG_ALL,1) << "\t!!!!!!!!numParents = " << numParents
+         vprDEBUG(vesDBG,1) << "\t!!!!!!!!numParents = " << numParents
                                 << std::endl << vprDEBUG_FLUSH;
       }
 

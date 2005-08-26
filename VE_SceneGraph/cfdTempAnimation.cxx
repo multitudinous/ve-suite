@@ -39,7 +39,7 @@
 
 #include <iostream>
 
-#include <vpr/Util/Debug.h>
+#include "VE_Installer/include/cfdDebug.h"
 
 #include <vtkActor.h>
 using namespace VE_SceneGraph;
@@ -81,7 +81,7 @@ void cfdTempAnimation::SetGroups( void )
       exit ( 1 );
    }
 
-   vprDEBUG(vprDBG_ALL,1) << " Making groups" << std::endl << vprDEBUG_FLUSH;
+   vprDEBUG(vesDBG,1) << " Making groups" << std::endl << vprDEBUG_FLUSH;
    this->groups = new cfdGroup*[ this->numFrames ];
    for ( int i = 0; i < this->numFrames; i++)
    {
@@ -141,7 +141,7 @@ void cfdTempAnimation::AddGeodesToSequence( std::vector< cfdGeode* > geodes )
 {
    this->StopSequence();
    
-   vprDEBUG(vprDBG_ALL, 2) << "|\t\tNumber Of Frames = " << numFrames 
+   vprDEBUG(vesDBG, 2) << "|\t\tNumber Of Frames = " << numFrames 
                << " Number Of Geodes = " << geodes.size() 
                << std::endl << vprDEBUG_FLUSH;
    if ( !groups )
@@ -155,7 +155,7 @@ void cfdTempAnimation::AddGeodesToSequence( std::vector< cfdGeode* > geodes )
 
       this->_sequence->setInterval( CFDSEQ_CYCLE, 0 , numPts - 1 );
       this->_sequence->setDuration( 0.1 * numPts );
-      vprDEBUG(vprDBG_ALL, 2) << "|\t\tFor animated Streamlines: End Loop" 
+      vprDEBUG(vesDBG, 2) << "|\t\tFor animated Streamlines: End Loop" 
                            << std::endl << vprDEBUG_FLUSH;
    }
    else 
@@ -166,12 +166,12 @@ void cfdTempAnimation::AddGeodesToSequence( std::vector< cfdGeode* > geodes )
          // get the DCS that is beneth the group 
          // child 0 should be the dataset dcs while child 1 should be geom
          // the DCS should be added at intialization
-         vprDEBUG(vprDBG_ALL, 2) << "|\t\tIn TempAnimation Adding Geode = " << i 
+         vprDEBUG(vesDBG, 2) << "|\t\tIn TempAnimation Adding Geode = " << i 
                            << std::endl << vprDEBUG_FLUSH;
          ((cfdDCS*)tempGroup->GetChild( 0 ))->AddChild( geodes.at( i ) );
       }
    }
-   vprDEBUG(vprDBG_ALL, 2) << "|\t\tFinished Creating Frames"
+   vprDEBUG(vesDBG, 2) << "|\t\tFinished Creating Frames"
                << std::endl << vprDEBUG_FLUSH;
    this->StartSequence();
 }
@@ -180,7 +180,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
 {
    int i;
    int num = this->_sequence->GetNumChildren();
-   vprDEBUG(vprDBG_ALL, 2) << " Number of children in sequence: " << num
+   vprDEBUG(vesDBG, 2) << " Number of children in sequence: " << num
                            << std::endl << vprDEBUG_FLUSH;
    
    cfdGeode* temp = NULL;
@@ -188,7 +188,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
    
    if ( objectType == ANIMATED_STREAMLINES )
    {
-      vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: Enter Loop" 
+      vprDEBUG(vesDBG, 2) << " For animated Streamlines: Enter Loop" 
                               << std::endl << vprDEBUG_FLUSH;
       this->StopSequence();
       // For animated streamlines
@@ -199,7 +199,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
          _geodes.erase( _geodes.begin() );
          delete temp;
       }
-      vprDEBUG(vprDBG_ALL, 2) << "For animated Streamlines: End creating Geodes"
+      vprDEBUG(vesDBG, 2) << "For animated Streamlines: End creating Geodes"
                               << std::endl << vprDEBUG_FLUSH;
 
       int numPts = this->_geodes.size();
@@ -207,18 +207,18 @@ void cfdTempAnimation::AddToSequence( int objectType )
       {
          this->_sequence->AddChild( this->_geodes[ i ] );
       }      
-      vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: Create Sequence : " << numPts
+      vprDEBUG(vesDBG, 2) << " For animated Streamlines: Create Sequence : " << numPts
                               << std::endl << vprDEBUG_FLUSH;
 
       this->_sequence->setInterval( CFDSEQ_CYCLE, 0 , numPts - 1 );
       this->_sequence->setDuration( 0.1 * numPts );
       this->StartSequence();
-      vprDEBUG(vprDBG_ALL, 2) << " For animated Streamlines: End Loop" 
+      vprDEBUG(vesDBG, 2) << " For animated Streamlines: End Loop" 
                               << std::endl << vprDEBUG_FLUSH;
    }
    else if ( objectType == ANIMATED_IMAGES )
    {
-      vprDEBUG(vprDBG_ALL, 2) << " For animated Images: Enter Loop" 
+      vprDEBUG(vesDBG, 2) << " For animated Images: Enter Loop" 
                               << std::endl << vprDEBUG_FLUSH;
       this->StopSequence();
       // For animated streamlines
@@ -230,7 +230,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
          _geodes.erase( _geodes.begin() );
          delete temp;
       }
-      vprDEBUG(vprDBG_ALL, 2) << " For animated Images: End creating Geodes"
+      vprDEBUG(vesDBG, 2) << " For animated Images: End creating Geodes"
                               << std::endl << vprDEBUG_FLUSH;
 
       int numPts = this->_geodes.size();
@@ -238,14 +238,14 @@ void cfdTempAnimation::AddToSequence( int objectType )
       {
          this->_sequence->AddChild( this->_geodes[ i ] );
       }      
-      vprDEBUG(vprDBG_ALL, 2) << " For animated Images: Create Sequence" 
+      vprDEBUG(vesDBG, 2) << " For animated Images: Create Sequence" 
                               << std::endl << vprDEBUG_FLUSH;
 
       this->_sequence->setInterval( CFDSEQ_CYCLE, 0 , numPts - 1 );
       this->_sequence->setDuration( 0.1 * numPts );
 
       this->StartSequence();
-      vprDEBUG(vprDBG_ALL, 2) << " For animated Images: End Loop" 
+      vprDEBUG(vesDBG, 2) << " For animated Images: End Loop" 
                               << std::endl << vprDEBUG_FLUSH;
    }
    else
@@ -266,7 +266,7 @@ void cfdTempAnimation::AddToSequence( int objectType )
 #endif
    }
 
-   vprDEBUG(vprDBG_ALL, 2) << " done with add to sequence"
+   vprDEBUG(vesDBG, 2) << " done with add to sequence"
                            << std::endl << vprDEBUG_FLUSH;
 }
 
@@ -328,15 +328,15 @@ void cfdTempAnimation::ClearSequence( void )
 {
    // This function is called for one particular type of transientFlowManager
    // It removes and deletes geodes and changes the cfdObjects geodes list
-   vprDEBUG(vprDBG_ALL,1) << " ***********************ClearSequence"
+   vprDEBUG(vesDBG,1) << " ***********************ClearSequence"
                           << std::endl << vprDEBUG_FLUSH;
 
    int numSequenceChildren = this->_sequence->GetNumChildren();
-   vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::numSequenceChildren: " << numSequenceChildren
+   vprDEBUG(vesDBG,1) << "cfdTempAnimation::numSequenceChildren: " << numSequenceChildren
                           << std::endl << vprDEBUG_FLUSH;
 
    int numGeodes = this->_geodes.size();
-   vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::numGeodes: " << numGeodes
+   vprDEBUG(vesDBG,1) << "cfdTempAnimation::numGeodes: " << numGeodes
                           << std::endl << vprDEBUG_FLUSH; 
 
    if ( numSequenceChildren > 0 && numGeodes > 0 )
@@ -352,24 +352,24 @@ void cfdTempAnimation::ClearSequence( void )
             // One particular node (at most) in each group pertains to the DCS
             int numChildrenPerGroup = ((cfdGroup *)this->_sequence->GetChild( i ))->GetNumChildren();
 
-            vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::looking at child " << i << ", a group with "
+            vprDEBUG(vesDBG,1) << "cfdTempAnimation::looking at child " << i << ", a group with "
                                    << numChildrenPerGroup << " children"
                                    << std::endl << vprDEBUG_FLUSH; 
 
-            vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::removing nodes from the sequence!!" 
+            vprDEBUG(vesDBG,1) << "cfdTempAnimation::removing nodes from the sequence!!" 
                                     << std::endl << vprDEBUG_FLUSH;
-            vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::AddGeodesToSequence" 
+            vprDEBUG(vesDBG,1) << "cfdTempAnimation::AddGeodesToSequence" 
                                     << std::endl << vprDEBUG_FLUSH;
             cfdGroup* tempGroup = (cfdGroup*)this->_sequence->GetChild(i);
             int nDCSs = tempGroup->GetNumChildren();
-            vprDEBUG(vprDBG_ALL,1) <<"cfdTempAnimation::number of dcs: "<< nDCSs<<std::endl<< vprDEBUG_FLUSH;
+            vprDEBUG(vesDBG,1) <<"cfdTempAnimation::number of dcs: "<< nDCSs<<std::endl<< vprDEBUG_FLUSH;
             for(int j = 0; j < nDCSs; j++)
             {
                cfdDCS* tempDCS = (cfdDCS*)tempGroup->GetChild(j);
                int nGeodes = tempDCS->GetNumChildren();
                for(int k = 0; k < nGeodes; k++)
                {
-                  vprDEBUG(vprDBG_ALL,1) << "cfdTempAnimation::removing geode : " 
+                  vprDEBUG(vesDBG,1) << "cfdTempAnimation::removing geode : " 
                                           << k << std::endl << vprDEBUG_FLUSH;
                   cfdGeode* tempGeode = (cfdGeode*)tempDCS->GetChild(0);
                   tempDCS->RemoveChild(tempGeode);
@@ -387,12 +387,12 @@ void cfdTempAnimation::ClearSequence( void )
    
                if ( geodeIndex >= 0 )                                           
                {
-                  vprDEBUG(vprDBG_ALL,1) << " child " << i 
+                  vprDEBUG(vesDBG,1) << " child " << i 
                                          << " is a geode that will be removed"
                                          << std::endl << vprDEBUG_FLUSH; 
                   cfdGeode* geode = (cfdGeode *)this->_sequence->GetChild( geodeIndex );
                   int error = this->_sequence->RemoveChild( geode );
-                  vprDEBUG(vprDBG_ALL,1) << " Removal of child " << i 
+                  vprDEBUG(vesDBG,1) << " Removal of child " << i 
                                          << " was : " << error
                                          << std::endl << vprDEBUG_FLUSH; 
                   delete geode;
@@ -402,7 +402,7 @@ void cfdTempAnimation::ClearSequence( void )
                }
                else
                {
-                  vprDEBUG(vprDBG_ALL,1) << " child " << i 
+                  vprDEBUG(vesDBG,1) << " child " << i 
                                          << " is a geode that will NOT be removed"
                                          << std::endl << vprDEBUG_FLUSH; 
                }

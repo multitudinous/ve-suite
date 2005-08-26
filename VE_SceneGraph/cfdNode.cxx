@@ -34,7 +34,7 @@
 #include "VE_SceneGraph/cfdSwitch.h"
 #include "VE_SceneGraph/cfdGeode.h"
 #include <iostream>
-#include <vpr/Util/Debug.h>
+#include "VE_Installer/include/cfdDebug.h"
 //#include <cstdlib>
 
 #ifdef _PERFORMER
@@ -80,7 +80,7 @@
 #elif _OPENSG
 #endif
 
-#include <vpr/Util/Debug.h>
+#include "VE_Installer/include/cfdDebug.h"
 #include "VE_SceneGraph/cfdSequence.h"
 
 namespace VE_SceneGraph{
@@ -164,7 +164,7 @@ cfdNode::~cfdNode( void )
 #ifdef _PERFORMER
    if ( this->_node != NULL )
    {
-      vprDEBUG(vprDBG_ALL,3) << "destructor for cfdNode " 
+      vprDEBUG(vesDBG,3) << "destructor for cfdNode " 
                               << std::endl << vprDEBUG_FLUSH;
       pfDelete( this->_node );
    }
@@ -181,7 +181,7 @@ osg::Node* cfdNode::GetRawNode(void)
 #elif _OPENSG
 #endif
 {
-   vprDEBUG(vprDBG_ALL,2) << "|\t\tcfdNode::GetRawNode" 
+   vprDEBUG(vesDBG,2) << "|\t\tcfdNode::GetRawNode" 
                               << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
    return _node;
@@ -350,13 +350,13 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
 
             testMat = (pfMaterial*)geostate->getAttr( PFSTATE_FRONTMTL );
             bmaterial = (pfMaterial*)geostate->getAttr( PFSTATE_BACKMTL );
-            vprDEBUG(vprDBG_ALL,3) << "setting alpha to " << op 
+            vprDEBUG(vesDBG,3) << "setting alpha to " << op 
                                    << std::endl << vprDEBUG_FLUSH;
             if ( testMat != NULL )
             {
-               vprDEBUG(vprDBG_ALL,3) << "Setting Front Material : " << op 
+               vprDEBUG(vesDBG,3) << "Setting Front Material : " << op 
                                       << std::endl << vprDEBUG_FLUSH;
-               vprDEBUG(vprDBG_ALL,3) << " Color Flag : " << color
+               vprDEBUG(vesDBG,3) << " Color Flag : " << color
                                       << std::endl << vprDEBUG_FLUSH;
 
                testMat->setAlpha( op );
@@ -375,7 +375,7 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
                      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
                      //geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
-                     vprDEBUG(vprDBG_ALL,3) 
+                     vprDEBUG(vesDBG,3) 
                         << " Front Color : " << stlColor[0]<< " : " 
                         <<  stlColor[1]<< " : " << stlColor[2]
                         << std::endl << vprDEBUG_FLUSH;
@@ -395,7 +395,7 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
                   {
                      testMat->setColor( PFMTL_DIFFUSE , 1.0f, 1.0f, 1.0f );
                      testMat->setColor( PFMTL_AMBIENT , 1.0f, 1.0f, 1.0f );
-                     vprDEBUG(vprDBG_ALL,3)
+                     vprDEBUG(vesDBG,3)
                         << "Front Color Transparent : " << stlColor[0] << " : " 
                         <<  stlColor[1] << " : " << stlColor[2]
                         << std::endl << vprDEBUG_FLUSH;
@@ -410,7 +410,7 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
                if ( op == 1 ) 
                {
                   //Turn colors on
-                  vprDEBUG(vprDBG_ALL, 3) << "Set color Mode "
+                  vprDEBUG(vesDBG, 3) << "Set color Mode "
                                          << std::endl << vprDEBUG_FLUSH;
                   if( color == 1)
                   {
@@ -425,7 +425,7 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
                      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      //std::cout << " Alpha value : " << testMat->getAlpha() << std::endl;
                      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
-                     vprDEBUG(vprDBG_ALL,3) 
+                     vprDEBUG(vesDBG,3) 
                         << "Back Color : " << stlColor[0] << " : " 
                         << stlColor[1]<< " : " << stlColor[2]
                         << std::endl << vprDEBUG_FLUSH;
@@ -444,7 +444,7 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
                   {
                      bmaterial->setColor( PFMTL_DIFFUSE , 1.0f, 1.0f, 1.0f );
                      bmaterial->setColor( PFMTL_AMBIENT , 1.0f, 1.0f, 1.0f );
-                     vprDEBUG(vprDBG_ALL,3)
+                     vprDEBUG(vesDBG,3)
                         << " Back Color : " << stlColor[0]<< " : " 
                         << stlColor[1] << " : " << stlColor[2]
                         << std::endl << vprDEBUG_FLUSH;
@@ -461,7 +461,7 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
          }
          else
          {
-            vprDEBUG(vprDBG_ALL,0) 
+            vprDEBUG(vesDBG,0) 
                << "ERROR: Tried to set transparency, but this pfGeoSet"
                << " has no pfGeoState." << std::endl << vprDEBUG_FLUSH;
          }
@@ -473,7 +473,7 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
 	   	// Run this traverser on each of its children (recursive)
 	   	num = ((pfGroup*)node_1)->getNumChildren();
 
-	   	vprDEBUG(vprDBG_ALL,2) << num << " GROUP TYPE "
+	   	vprDEBUG(vesDBG,2) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
 
          for (i=0; i < num; i++)
@@ -524,7 +524,7 @@ void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
          }
          else
          {
-            vprDEBUG(vprDBG_ALL,0) 
+            vprDEBUG(vesDBG,0) 
                << "ERROR: Tried to set transparency, but this pfGeoSet"
                << " has no pfGeoState." << std::endl << vprDEBUG_FLUSH;
          }
@@ -535,7 +535,7 @@ void cfdNode::pfTravNodeFog( pfNode* node_1, pfFog* fog )
 		// Run this traverser on each of its children (recursive)
 		num = ((pfGroup*)node_1)->getNumChildren();
 
-		vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+		vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
                              << std::endl << vprDEBUG_FLUSH;
 
       for (i=0; i < num; i++)
@@ -640,7 +640,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
 
    }else  if(node->isSameKindAs(tempGroup.get())){
       num = ((osg::Group*)node)->getNumChildren();
-      vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+      vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
       for (i = 0; i < num; i++){
          this->TravNodeMaterial(((osg::Group*)node)->getChild(i)) ;
@@ -648,7 +648,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
       }
    }else if(!strcmp(node->className(),"LOD")){
       num = ((osg::LOD*)node)->getNumChildren();
-      vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+      vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
       for (i = 0; i < num; i++){
          this->TravNodeMaterial(((osg::LOD*)node)->getChild(i)) ;
@@ -656,7 +656,7 @@ void cfdNode::TravNodeMaterial(osg::Node* node)
       }
    }else if(!strcmp(node->className(),"MatrixTransform")){
        num = ((osg::MatrixTransform*)node)->getNumChildren();
-      vprDEBUG(vprDBG_ALL,1) << num << " GROUP TYPE "
+      vprDEBUG(vesDBG,1) << num << " GROUP TYPE "
                                 << std::endl << vprDEBUG_FLUSH;
       for (i = 0; i < num; i++){
          this->TravNodeMaterial(((osg::MatrixTransform*)node)->getChild(i)) ;

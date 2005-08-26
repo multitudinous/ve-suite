@@ -33,7 +33,7 @@
 #include "VE_SceneGraph/cfdSequence.h"
 #include "VE_SceneGraph/cfdNode.h"
 #include "VE_SceneGraph/cfdSwitch.h"
-#include <vpr/Util/Debug.h>
+#include "VE_Installer/include/cfdDebug.h"
 
 
 #ifdef _PERFORMER
@@ -282,7 +282,7 @@ cfdNode* cfdSequence::GetChild(int index)
 int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
 {
    //cout<<"Traversing cfdSequence node."<<endl;
-   vprDEBUG(vprDBG_ALL,3) << "====cfdSequence::switchFrame()===="
+   vprDEBUG(vesDBG,3) << "====cfdSequence::switchFrame()===="
                           << std::endl << vprDEBUG_FLUSH;
 
    //the sequence node w/ all the desired state info
@@ -291,18 +291,18 @@ int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
    //the number of frames
    int nChildren = sequence->GetSwitch()->GetNumChildren();
    //cout<<"Number of frames: "<<nChildren<<endl;
-   vprDEBUG(vprDBG_ALL,3) << "Number of frames:"<<nChildren
+   vprDEBUG(vesDBG,3) << "Number of frames:"<<nChildren
                           << std::endl << vprDEBUG_FLUSH;
    
 
    //the sequence interval params
    int begin = sequence->getBegin();
    //cout<<"Beginning :"<<begin<<endl;
-   vprDEBUG(vprDBG_ALL,3) << "Beginning frame: "<<begin
+   vprDEBUG(vesDBG,3) << "Beginning frame: "<<begin
                           << std::endl << vprDEBUG_FLUSH;
    
    int end = sequence->getEnd();
-   vprDEBUG(vprDBG_ALL,3) << "Ending frame: "<<end
+   vprDEBUG(vesDBG,3) << "Ending frame: "<<end
                           << std::endl << vprDEBUG_FLUSH;
    
    //cout<<"End :"<<end<<endl;
@@ -310,13 +310,13 @@ int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
    //the loop mode
    int lMode = sequence->getLoopMode();
    //cout<<"Loop Mode: "<<lMode<<endl;
-    vprDEBUG(vprDBG_ALL,3) << "Loop Mode: "<<lMode
+    vprDEBUG(vesDBG,3) << "Loop Mode: "<<lMode
                           << std::endl << vprDEBUG_FLUSH;
  
    //the play mode(stop,start,pause,resume,playing)
    int pMode = sequence->getPlayMode();
    //cout<<"Play Mode: "<<pMode<<endl;  
-    vprDEBUG(vprDBG_ALL,3) << "Play mode: "<<pMode
+    vprDEBUG(vesDBG,3) << "Play mode: "<<pMode
                           << std::endl << vprDEBUG_FLUSH;
 
    //length of sequence (secs)
@@ -353,7 +353,7 @@ int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
    //the desired rate of the sequence (fps)
    double seqRate = fabs((double)(begin - end))/duration;
    //cout<<"Sequence rate: "<<seqRate<<endl;
-   vprDEBUG(vprDBG_ALL,3) << "Sequence rate: "<<seqRate
+   vprDEBUG(vesDBG,3) << "Sequence rate: "<<seqRate
                           << std::endl << vprDEBUG_FLUSH;
    //if we haven't passed enough frames in 
    //the app we don't need to update yet
@@ -361,7 +361,7 @@ int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
    //the app is processing faster than sequence
    if(appFrameRate >= seqRate && pMode != CFDSEQ_START){
       //cout<<"Frame Rate: "<<appFrameRate<<endl;
-      vprDEBUG(vprDBG_ALL,3) << "Performer Frame rate: "<<appFrameRate
+      vprDEBUG(vesDBG,3) << "Performer Frame rate: "<<appFrameRate
                           << std::endl << vprDEBUG_FLUSH;
       //calculate frame rate ratio
       frameRateRatio = appFrameRate/seqRate;
@@ -370,7 +370,7 @@ int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
       //application, we don't need to update yet
       if(sequence->getAppFrameRate() < frameRateRatio)
       {
-         vprDEBUG(vprDBG_ALL,3) << "Not time to switch frame yet due to slow frame rate: "<<appFrameRate
+         vprDEBUG(vesDBG,3) << "Not time to switch frame yet due to slow frame rate: "<<appFrameRate
                           << " : " << sequence->getAppFrameRate() << std::endl << vprDEBUG_FLUSH;
          //continue in the current state 
          //update the frames the app has processed
@@ -378,14 +378,14 @@ int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
          curFrameRate++;
          sequence->setAppFrameRate(curFrameRate);
          //cout<<"App frames: "<<sequence->_appFrame<<endl;
-         vprDEBUG(vprDBG_ALL,3) << "App frame total: "<<sequence->getAppFrameRate()
+         vprDEBUG(vesDBG,3) << "App frame total: "<<sequence->getAppFrameRate()
                           << std::endl << vprDEBUG_FLUSH;
          return PFTRAV_CONT;
       }
    }
    else if(appFrameRate < seqRate)
    {
-      vprDEBUG(vprDBG_ALL,3) << "Slow Performer Frame rate: "<<appFrameRate
+      vprDEBUG(vesDBG,3) << "Slow Performer Frame rate: "<<appFrameRate
                           << std::endl << vprDEBUG_FLUSH;
       //cout<<"Frame rate is slow."<<endl;
       //app is running slower than the sequence
@@ -402,7 +402,7 @@ int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
    if ( pMode == CFDSEQ_STOP || pMode == CFDSEQ_PAUSE ){
       //don't change the scene graph
       //cout<<"Stopped or paused!"<<endl;
-       vprDEBUG(vprDBG_ALL,3) << "Stopped or paused the sequence "<<end
+       vprDEBUG(vesDBG,3) << "Stopped or paused the sequence "<<end
                           << std::endl << vprDEBUG_FLUSH;
       return PFTRAV_CONT;
    }
@@ -415,7 +415,7 @@ int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
    //in the sequence to the beginning
    if ( pMode == CFDSEQ_START ){
       //cout<<"Starting sequence."<<endl;
-       vprDEBUG(vprDBG_ALL,3) << "Starting sequence. "<<end
+       vprDEBUG(vesDBG,3) << "Starting sequence. "<<end
                           << std::endl << vprDEBUG_FLUSH;
       sequence->setCurrentFrame(begin);
       sequence->GetSwitch()->SetVal(sequence->getCurrentFrame());
@@ -454,7 +454,7 @@ int VE_SceneGraph::switchFrame(pfTraverser* trav, void* userData)
          sequence->setStep(0) ;
       }
    }
-    vprDEBUG(vprDBG_ALL,3) << "Set current frame to frame number: "<<sequence->getCurrentFrame()
+    vprDEBUG(vesDBG,3) << "Set current frame to frame number: "<<sequence->getCurrentFrame()
                           << std::endl << vprDEBUG_FLUSH;
    return PFTRAV_CONT;
 } 
@@ -471,20 +471,20 @@ void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node,
                                              osg::NodeVisitor* nv)
 {
    
-   vprDEBUG(vprDBG_ALL,3) << "cfdSequence::switchFrame"
+   vprDEBUG(vesDBG,3) << "cfdSequence::switchFrame"
                           << std::endl << vprDEBUG_FLUSH;
    //the number of frames
    int nChildren = _sequence->_lSwitch->GetNumChildren();
-   vprDEBUG(vprDBG_ALL,3) << "Number of frames:"<<nChildren
+   vprDEBUG(vesDBG,3) << "Number of frames:"<<nChildren
                           << std::endl << vprDEBUG_FLUSH;
  //the sequence interval params
    int begin = _sequence->_begin;
    //cout<<"Beginning :"<<begin<<endl;
-   vprDEBUG(vprDBG_ALL,3) << "Beginning frame: "<<begin
+   vprDEBUG(vesDBG,3) << "Beginning frame: "<<begin
                           << std::endl << vprDEBUG_FLUSH;
    
    int end = _sequence->_end;
-   vprDEBUG(vprDBG_ALL,3) << "Ending frame: "<<end
+   vprDEBUG(vesDBG,3) << "Ending frame: "<<end
                           << std::endl << vprDEBUG_FLUSH;
    
    //cout<<"End :"<<end<<endl;
@@ -492,19 +492,19 @@ void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node,
    //the loop mode
    int lMode = _sequence->_lMode;
    //cout<<"Loop Mode: "<<lMode<<endl;
-    vprDEBUG(vprDBG_ALL,3) << "Loop Mode: "<<lMode
+    vprDEBUG(vesDBG,3) << "Loop Mode: "<<lMode
                           << std::endl << vprDEBUG_FLUSH;
  
    //the play mode(stop,start,pause,resume,playing)
    int pMode = _sequence->_pMode;
    //cout<<"Play Mode: "<<pMode<<endl;  
-    vprDEBUG(vprDBG_ALL,3) << "Play mode: "<<pMode
+    vprDEBUG(vesDBG,3) << "Play mode: "<<pMode
                           << std::endl << vprDEBUG_FLUSH;
 
 
    //length of _sequence (secs)
    double duration = _sequence->_duration;
-   vprDEBUG(vprDBG_ALL,3) << "Duration: "<<duration
+   vprDEBUG(vesDBG,3) << "Duration: "<<duration
                           << std::endl << vprDEBUG_FLUSH;
 
    //the frame rate the app is running at
@@ -589,7 +589,7 @@ void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node,
    if ( pMode == CFDSEQ_STOP || pMode == CFDSEQ_PAUSE ){
       //don't change the scene graph
       //cout<<"Stopped or paused!"<<endl;
-      vprDEBUG(vprDBG_ALL,3) << "Stopped or paused the sequence "<<end
+      vprDEBUG(vesDBG,3) << "Stopped or paused the sequence "<<end
                           << std::endl << vprDEBUG_FLUSH;
       //traverse the swtich
       traverse(node,nv);
@@ -604,7 +604,7 @@ void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node,
    //in the _sequence to the beginning
    if ( pMode == CFDSEQ_START ){
       //cout<<"Starting _sequence."<<endl;
-      vprDEBUG(vprDBG_ALL,3) << "Starting the sequence "<<end
+      vprDEBUG(vesDBG,3) << "Starting the sequence "<<end
                           << std::endl << vprDEBUG_FLUSH;
       _sequence->_currentFrame = begin;
       _sequence->_lSwitch->SetVal(_sequence->_currentFrame);
@@ -643,7 +643,7 @@ void cfdSequence::cfdSequenceCallback::operator()(osg::Node* node,
          _sequence->_step = 0;
       }
    }
-   vprDEBUG(vprDBG_ALL,3) << "Set current frame to frame number: "<<_sequence->_currentFrame
+   vprDEBUG(vesDBG,3) << "Set current frame to frame number: "<<_sequence->_currentFrame
                           << std::endl << vprDEBUG_FLUSH;
 
    //traverse the node

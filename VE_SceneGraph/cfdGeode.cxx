@@ -46,7 +46,7 @@
 #include <vtkActor.h>
 
 #include <iostream>
-#include <vpr/Util/Debug.h>
+#include "VE_Installer/include/cfdDebug.h"
 using namespace VE_SceneGraph;
 cfdGeode::cfdGeode( void )
 :cfdNode()
@@ -140,13 +140,13 @@ cfdGeode& cfdGeode::operator=( const cfdGeode& input )
 ///////////////////////////
 cfdGeode::~cfdGeode( void )
 {
-   vprDEBUG(vprDBG_ALL,2) << "|\tdestructor for cfdGeode " 
+   vprDEBUG(vesDBG,2) << "|\tdestructor for cfdGeode " 
                            << std::endl << vprDEBUG_FLUSH;
 #ifdef _PERFORMER
    // Fix this
    //if ( _geode != NULL )
    pfDelete( _geode );
-   vprDEBUG(vprDBG_ALL,2) << "|\tAfter pfDelete : destructor for cfdGeode " 
+   vprDEBUG(vesDBG,2) << "|\tAfter pfDelete : destructor for cfdGeode " 
                            << std::endl << vprDEBUG_FLUSH;
 #elif _OSG
 #elif _OPENSG
