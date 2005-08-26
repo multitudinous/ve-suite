@@ -29,36 +29,31 @@
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
-#ifndef TEXT_TABLE_H
-#define TEXT_TABLE_H
-#include <wx/wx.h>
-#include <wx/fontenum.h>
-#include <vector>
-#include <wx/grid.h>
-
+#ifndef SUMMARYRESULTDIALOG_H
+#define SUMMARYRESULTDIALOG_H
+#include "VE_Conductor/Framework/UIDialog.h"
+#include "VE_Conductor/Framework/TexTable.h"
 #include "VE_Installer/include/VEConfig.h"
 
-class VE_GUIPLUGINS_EXPORTS TexTable : public wxGrid
+#include <vector>
+
+class VE_GUIPLUGINS_EXPORTS SummaryResultDialog : public UIDialog
 {
 public:
-   TexTable(wxWindow* parent, wxWindowID id = -1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
-   ~TexTable(){;}
-   void Clear( void ){ ClearGrid(); }
-   void SetColWidth( int Col_id, int width );
-   void SetNumofCols( int num );
-   void SetColTitles( const std::vector<wxString>& titles );
-   void SetColAlignments( const std::vector<int>& alignments );
+   SummaryResultDialog(wxWindow*parent, const wxString& title=wxT("Result Dialog"), wxSize tabsize= wxSize(477, 300));
+   ~SummaryResultDialog();
 
-   void AddRow( const std::vector<wxString>& vals );
-   void AddSeperator( char pad='=' );
-   void DoChangeFont( const wxFont &font );
-   bool ChooseFixedFont( int size );
-   wxString padding( wxString str, int col_id );
+   void TabTitle( const wxString& title );
+   void NewTab( const wxString& title = wxT("Results") );
+   void Set2Cols( const std::vector<wxString>& col1, const std::vector<wxString>& col2);
+   TexTable* syngas;
 
 private:
-   int num_cols;
-   std::vector< int > m_align;
-   std::vector< int > cols_width;
-};
+   wxNotebook* tabs;
+   wxButton* ok;
+   wxSize tsize;
+   int first_tab;
 
+   DECLARE_EVENT_TABLE()
+};
 #endif

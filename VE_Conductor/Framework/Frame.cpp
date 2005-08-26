@@ -41,6 +41,7 @@
 #include "VE_Conductor/Framework/TextResultDialog.h"
 #include "VE_Conductor/Framework/TexTable.h"
 #include "VE_Conductor/Framework/GlobalParamDialog.h"
+#include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/Framework/Network.h"
@@ -518,191 +519,220 @@ void AppFrame::ResumeCalc(wxCommandEvent& WXUNUSED(event) )
 
 void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
 {
-  char* result;
-  char buf[80];
-  std::map<int, MODULE>::iterator iter;
-  unsigned int i;
-  std::vector<wxString> titles;
-  TextResultDialog * result_dlg;
-  std::vector<wxString> v_desc, v_value;
-  std::vector<std::string> descs;
-  
-  titles.push_back("Description");
-  titles.push_back("Value");
-  
-  result_dlg = new TextResultDialog(NULL);
-  result_dlg->syngas->Clear();
-  result_dlg->syngas->AddRow(titles);
-  
-  if (!CORBA::is_nil(network->exec)) {
+   char* result;
+   //char buf[80];
+   std::map<int, MODULE>::iterator iter;
+   unsigned int i;
+   std::vector<wxString> titles;
+   //TextResultDialog * result_dlg;
+   SummaryResultDialog * result_dlg;
+   std::vector<wxString> v_desc, v_value;
+   std::vector<std::string> descs;
+   std::vector<int> alignments;
+
+   titles.push_back("Description");
+   alignments.push_back (wxALIGN_LEFT);
+   titles.push_back("Value");
+   alignments.push_back (wxALIGN_RIGHT);
+
+   /*
+   result_dlg = new TextResultDialog(NULL);
+   result_dlg->syngas->Clear();
+   result_dlg->syngas->AddRow(titles);
+   */
+   result_dlg = new SummaryResultDialog(NULL, wxT("Result Summary"), wxSize(560, 400));
+   result_dlg->syngas->Clear();
+   result_dlg->syngas->SetNumofCols( 2 );
+   result_dlg->syngas->SetColTitles( titles );
+   result_dlg->syngas->SetColAlignments( alignments );
+
+   if (!CORBA::is_nil(network->exec)) 
+   {
+      try 
+      {
+         for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) 
+         {
+	         result = network->exec->GetModuleResult(iter->first);
+	
+	         if ( std::string(result) != "" ) 
+            {
+               Package p;
+               p.SetSysId("linkresult.xml");
+               p.Load(result, strlen(result));
+
+               descs = p.GetInterfaceVector()[0].getStrings();
+               v_desc.clear();
+               v_value.clear();
+               /*
+               v_desc.push_back(iter->second.pl_mod->GetName());
+               std::ostringstream dirStringStream;
+               dirStringStream << "   " << iter->first;
+               std::string dirString = dirStringStream.str();
+               v_value.push_back(dirString.c_str());
+               */
+               wxString str;
+               str = iter->second.pl_mod->GetName();
+               str << " (" << iter->first << ")";
+               result_dlg->NewTab( str );
+
+               for (i=0; i<descs.size(); i++) 
+               {
+	               std::string desc = descs[i];
+	               std::string value = p.GetInterfaceVector()[0].getString(descs[i]);
+
+                  if (desc.substr(0,3) == "***") 
+                  {
+                     desc = desc.substr(9,desc.size()-9);
+                  }
+
+                  v_desc.push_back( desc.c_str() );
+                  v_value.push_back( value.c_str() );
+               }
+
+               /*result_dlg->syngas->AddSeperator(' ');
+               result_dlg->syngas->AddSeperator('+');
+               result_dlg->syngas->AddSeperator(' ');*/
+               result_dlg->Set2Cols(v_desc, v_value);
+	         }
+         }
     
-    try { 
-  
-      for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) {
-	result = network->exec->GetModuleResult(iter->first);
-	
-	if (std::string(result)!="") {
-	  Package p;
-	  p.SetSysId("linkresult.xml");
-	  p.Load(result, strlen(result));
-	  
-	  
-	  descs = p.GetInterfaceVector()[0].getStrings();
-	  v_desc.clear();
-	  v_value.clear();
-	  v_desc.push_back(iter->second.pl_mod->GetName());
-	  //sprintf(buf,"   %d", iter->first);
-     std::ostringstream dirStringStream;
-     dirStringStream << "   " << iter->first;
-     std::string dirString = dirStringStream.str();
-	  v_value.push_back(dirString.c_str());
-	  for (i=0; i<descs.size(); i++) {
-	    v_desc.push_back(descs[i].c_str());
-	    v_value.push_back((p.GetInterfaceVector()[0].getString(descs[i])).c_str());
-	  }
-	  
-	  result_dlg->syngas->AddSeperator(' ');
-	  result_dlg->syngas->AddSeperator('+');
-	  result_dlg->syngas->AddSeperator(' ');
-	  result_dlg->Set2Cols(v_desc, v_value);
-	  
-	}
-      }
-    
-      result = network->exec->GetModuleResult(-1); //Global result
+         result = network->exec->GetModuleResult(-1); //Global result
       
-      if (std::string(result)!="") {
-	Package p;
-	p.SetSysId("linkresult.xml");
-	p.Load(result, strlen(result));
-	
-	descs = p.GetInterfaceVector()[0].getStrings();
-	v_desc.clear();
-	v_value.clear();
-	v_desc.push_back("Plant Results");
-	///sprintf(buf,"   ");
-	v_value.push_back("   ");
-	for (i=0; i<descs.size(); i++) {
-	  v_desc.push_back(descs[i].c_str());
-	  v_value.push_back((p.GetInterfaceVector()[0].getString(descs[i])).c_str());
-	}
-	
-	result_dlg->syngas->AddSeperator(' ');
-	result_dlg->syngas->AddSeperator('+');
-	result_dlg->syngas->AddSeperator(' ');
-	result_dlg->Set2Cols(v_desc, v_value);
-	
+         if (std::string(result)!="") 
+         {
+            Package p;
+            p.SetSysId("linkresult.xml");
+            p.Load(result, strlen(result));
+
+            descs = p.GetInterfaceVector()[0].getStrings();
+            v_desc.clear();
+            v_value.clear();
+            //v_desc.push_back("Plant Results");
+            //v_value.push_back("   ");
+	         result_dlg->NewTab( wxT("Plant Results") );
+
+	         for (i=0; i<descs.size(); i++) 
+            {
+	            v_desc.push_back(descs[i].c_str());
+	            v_value.push_back((p.GetInterfaceVector()[0].getString(descs[i])).c_str());
+	         }
+	         /*result_dlg->syngas->AddSeperator(' ');
+	         result_dlg->syngas->AddSeperator('+');
+	         result_dlg->syngas->AddSeperator(' ');*/
+	         result_dlg->Set2Cols(v_desc, v_value);
+         }
       }
-      
-    }
-    catch (CORBA::Exception &) {
-       std::cerr << "Maybe Computational Engine is down " << std::endl;
-      return;
-    }
-  }
-  else {
-    titles.clear();
-    titles.push_back("No Plant Results");
-    titles.push_back(" ");
+      catch (CORBA::Exception &) 
+      {
+         std::cerr << "Maybe Computational Engine is down " << std::endl;
+         return;
+      }
+   }
+   else 
+   {
+      titles.clear();
+      titles.push_back("No Plant Results");
+      titles.push_back(" ");
   
-    result_dlg->syngas->AddSeperator('+');
-    result_dlg->syngas->AddRow(titles);
-  }
+      result_dlg->syngas->AddSeperator('+');
+      result_dlg->syngas->AddRow(titles);
+   }
        
-  // EPRI TAG
-  std::vector<wxString> v_desc2, v_value2;
-  double total_cccost = 0;
-  double total_omcost = 0;
-  v_desc.clear();
-  v_value.clear();
-  for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) {
-    if(iter->second.pl_mod->financial_dlg != NULL) {
-      if(iter->second.pl_mod->financial_dlg->_use_data) {
+   // EPRI TAG
+   std::vector<wxString> v_desc2, v_value2;
+   double total_cccost = 0;
+   double total_omcost = 0;
+   v_desc.clear();
+   v_value.clear();
+   for (iter=network->modules.begin(); iter!=network->modules.end(); iter++) 
+   {
+      if(iter->second.pl_mod->financial_dlg != NULL) 
+      {
+         if(iter->second.pl_mod->financial_dlg->_use_data) 
+         {
+	         double TPC = iter->second.pl_mod->financial_dlg->_cc00_d *
+	                        (1 +
+	                     iter->second.pl_mod->financial_dlg->_cc01_d / 100 +
+	                     iter->second.pl_mod->financial_dlg->_cc02_d / 100 +
+	                     iter->second.pl_mod->financial_dlg->_cc03_d / 100 +
+	                     iter->second.pl_mod->financial_dlg->_cc04_d / 100 +
+	                     iter->second.pl_mod->financial_dlg->_cc05_d / 100);
+
+	         double TPI = TPC + iter->second.pl_mod->financial_dlg->_cc06_d;
+
+	         double cccost = TPI + iter->second.pl_mod->financial_dlg->_cc07_d +
+	                           iter->second.pl_mod->financial_dlg->_cc08_d;
+
+	         total_cccost += cccost;
+
+	         v_desc.push_back(wxString(iter->second.pl_mod->GetName()));
+	         //sprintf(buf,"%.2f", cccost);
+            std::ostringstream dirStringStream;
+            dirStringStream << std::setprecision(2) << cccost;
+            std::string dirString = dirStringStream.str();
+
+	         v_value.push_back(dirString.c_str());
+
+	         double TMC = TPC * iter->second.pl_mod->financial_dlg->_om00_d / 100;
 	
-	double TPC = iter->second.pl_mod->financial_dlg->_cc00_d *
-	  (1 +
-	   iter->second.pl_mod->financial_dlg->_cc01_d / 100 +
-	   iter->second.pl_mod->financial_dlg->_cc02_d / 100 +
-	   iter->second.pl_mod->financial_dlg->_cc03_d / 100 +
-	   iter->second.pl_mod->financial_dlg->_cc04_d / 100 +
-	   iter->second.pl_mod->financial_dlg->_cc05_d / 100);
+	         double omcost = TMC + 
+	                        iter->second.pl_mod->financial_dlg->_om01_d +
+	                        iter->second.pl_mod->financial_dlg->_om02_d +
+	                        iter->second.pl_mod->financial_dlg->_om02_d * iter->second.pl_mod->financial_dlg->_om03_d / 100;
 
-	double TPI = TPC + iter->second.pl_mod->financial_dlg->_cc06_d;
-
-	double cccost = TPI + iter->second.pl_mod->financial_dlg->_cc07_d +
-	  iter->second.pl_mod->financial_dlg->_cc08_d;
-
-	total_cccost += cccost;
-
-	v_desc.push_back(wxString(iter->second.pl_mod->GetName()));
-	//sprintf(buf,"%.2f", cccost);
-   std::ostringstream dirStringStream;
-   dirStringStream << std::setprecision(2) << cccost;
-   std::string dirString = dirStringStream.str();
-
-	v_value.push_back(dirString.c_str());
-
-	double TMC = TPC * iter->second.pl_mod->financial_dlg->_om00_d / 100;
+	         total_omcost += omcost;
 	
-	double omcost = TMC + 
-	  iter->second.pl_mod->financial_dlg->_om01_d +
-	  iter->second.pl_mod->financial_dlg->_om02_d +
-	  iter->second.pl_mod->financial_dlg->_om02_d * iter->second.pl_mod->financial_dlg->_om03_d / 100;
-
-	total_omcost += omcost;
-	
-	v_desc2.push_back(wxString(iter->second.pl_mod->GetName()));
-	//sprintf(buf,"%.2f", omcost);
-   dirStringStream << std::setprecision(2) << omcost;
-	v_value2.push_back(dirString.c_str());
-	  
+	         v_desc2.push_back(wxString(iter->second.pl_mod->GetName()));
+	         //sprintf(buf,"%.2f", omcost);
+            dirStringStream << std::setprecision(2) << omcost;
+	         v_value2.push_back(dirString.c_str());
+         }
       }
-    }
-  }
+   }
 
-  if(v_desc.size()>0) {
-    result_dlg->syngas->AddSeperator(' ');
-    result_dlg->syngas->AddSeperator(' ');
-    
-    titles.clear();
-    titles.push_back("Plant Component");
-    titles.push_back("Capital Required (M$)");
-    
-    result_dlg->syngas->AddRow(titles);
-    result_dlg->syngas->AddSeperator('+');
-    
-    v_desc.push_back("Total");
-    //sprintf(buf,"%.2f", total_cccost);
-    std::ostringstream dirStringStream;
-    dirStringStream << std::setprecision(2) << total_cccost;
-    std::string dirString = dirStringStream.str();
-    v_value.push_back(dirString.c_str());
-    
-    result_dlg->Set2Cols(v_desc, v_value);
+   if ( v_desc.size() > 0 ) 
+   {
+      result_dlg->syngas->AddSeperator(' ');
+      result_dlg->syngas->AddSeperator(' ');
 
-    //
+      titles.clear();
+      titles.push_back("Plant Component");
+      titles.push_back("Capital Required (M$)");
 
-    result_dlg->syngas->AddSeperator(' ');
-    
-    titles.clear();
-    titles.push_back("Plant Component");
-    titles.push_back("Revenue Required (M$)");
-    
-    result_dlg->syngas->AddRow(titles);
-    result_dlg->syngas->AddSeperator('+');
-    
-    v_desc2.push_back("Total");
-    //sprintf(buf,"%.2f", total_omcost);
-    dirStringStream << std::setprecision(2) << total_omcost;
-    v_value2.push_back(dirString.c_str());
-    
-    result_dlg->Set2Cols(v_desc2, v_value2);
+      result_dlg->syngas->AddRow(titles);
+      result_dlg->syngas->AddSeperator('+');
 
-  }
+      v_desc.push_back("Total");
+      //sprintf(buf,"%.2f", total_cccost);
+      std::ostringstream dirStringStream;
+      dirStringStream << std::setprecision(2) << total_cccost;
+      std::string dirString = dirStringStream.str();
+      v_value.push_back(dirString.c_str());
 
-  result_dlg->ShowModal();
+      result_dlg->Set2Cols(v_desc, v_value);
 
-  delete result_dlg;
+      //
+
+      result_dlg->syngas->AddSeperator(' ');
+
+      titles.clear();
+      titles.push_back("Plant Component");
+      titles.push_back("Revenue Required (M$)");
+
+      result_dlg->syngas->AddRow(titles);
+      result_dlg->syngas->AddSeperator('+');
+
+      v_desc2.push_back("Total");
+      //sprintf(buf,"%.2f", total_omcost);
+      dirStringStream << std::setprecision(2) << total_omcost;
+      v_value2.push_back(dirString.c_str());
+
+      result_dlg->Set2Cols(v_desc2, v_value2);
+   }
+
+   result_dlg->ShowModal();
+
+   delete result_dlg;
 }
 
 void AppFrame::GlobalParam(wxCommandEvent& WXUNUSED(event) )

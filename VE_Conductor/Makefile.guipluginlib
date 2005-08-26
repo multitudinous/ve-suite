@@ -69,6 +69,7 @@ SRCS=\
    PortDialog.cpp \
    ResultPanel.cpp \
    StringParse.cpp \
+   SummaryResultDialog.cpp \
    TexTable.cpp \
    TextResultDialog.cpp \
    UIDialog.cpp

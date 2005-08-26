@@ -33,9 +33,20 @@
 #include <iostream>
 
 TexTable::TexTable(wxWindow* parent,wxWindowID id, const wxPoint& pos, const wxSize& size)
-  : wxTextCtrl(parent, id, "x", pos, size, wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL|wxTE_DONTWRAP)
+  : wxGrid(parent, id, pos, size)
+//wxTextCtrl(parent, id, "x", pos, size, wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL|wxTE_DONTWRAP)
 {
-  SetNumofCols(2);
+  CreateGrid (0,2);
+  SetColLabelValue (0, "Title");
+  SetColLabelValue (1, "Value");
+  SetRowMinimalAcceptableHeight (9);
+  SetColMinimalAcceptableWidth (27);
+  SetColMinimalWidth (0, 27);
+  SetColMinimalWidth (1, 27);
+  AutoSizeColumns (FALSE);
+  AutoSizeRows (FALSE);
+  EnableEditing (FALSE);
+  //SetNumofCols(2);
 #ifndef WIN32
   ChooseFixedFont(12);
 #else
@@ -45,20 +56,62 @@ TexTable::TexTable(wxWindow* parent,wxWindowID id, const wxPoint& pos, const wxS
 
 void TexTable::SetNumofCols(int num)
 {
+   DeleteRows( 0, GetNumberRows() );
+   DeleteCols( 0, GetNumberCols() );
+
+   if ( num > 0 ) 
+      AppendCols( num );
+
+   SetRowMinimalAcceptableHeight( 9 );
+   SetColMinimalAcceptableWidth( 27 );
+
+   for ( int i=0; i < GetNumberCols(); i++ )
+   {
+      SetColMinimalWidth( i, 27 );
+   }
+/*
   int i;
   num_cols = num;
   cols_width.resize(num);
   
   for (i=0; i<num; i++)
-    cols_width[i]=30; //default width
+    cols_width[i]=30; //default width*/
+}
+
+void TexTable::SetColTitles(const std::vector<wxString>& titles)
+{
+   for ( unsigned int i=0; 
+         (i < titles.size() ) && ( i < GetNumberCols() ); ++i)
+   {
+      SetColLabelValue( i, titles[i] );
+   }
+}
+
+void TexTable::SetColAlignments(const std::vector<int>& alignments)
+{
+   m_align = alignments;
+   for ( unsigned int i=0; 
+         (i < alignments.size() ) && ( i < GetNumberCols() ); ++i )
+   {
+      for ( unsigned int j = 0; j < GetNumberRows(); ++j)
+      {
+         SetCellAlignment( j, i, alignments[i], wxALIGN_CENTER);
+      }
+   }
 }
 
 void TexTable::SetColWidth(int Col_id, int width)
 {
-  if (Col_id<0 || Col_id>num_cols-1)
+  /*if (Col_id<0 || Col_id>num_cols-1)
     return;
-  cols_width[Col_id] = width;
-
+  cols_width[Col_id] = width;*/
+   if ( ( width < 0 ) || 
+         ( Col_id < 0 ) || 
+         ( Col_id >= GetNumberCols() ) ) 
+   {
+      return;
+   }
+   SetColMinimalWidth( Col_id, width );
 }
 
 wxString TexTable::padding(wxString str, int col_id)
@@ -81,38 +134,39 @@ wxString TexTable::padding(wxString str, int col_id)
 
 bool TexTable::ChooseFixedFont(int size)
 {
-  wxFontEnumerator fontEnumerator;
-  wxArrayString * faces;
+   wxFontEnumerator fontEnumerator;
+   wxArrayString * faces;
 #ifndef WIN32
-  fontEnumerator.EnumerateFacenames(wxFONTENCODING_KOI8, TRUE);
+   fontEnumerator.EnumerateFacenames(wxFONTENCODING_KOI8, TRUE);
 #else
-  fontEnumerator.EnumerateFacenames(wxFONTENCODING_CP1250, TRUE);
+   fontEnumerator.EnumerateFacenames(wxFONTENCODING_CP1250, TRUE);
 #endif
-  wxString facename;
-  // choose the first
-  faces = fontEnumerator.GetFacenames();
-  
-  facename = faces->Item(0);
-  //  std::cout<<facename<<" : A Font"<<std::endl;
-  if ( !facename.IsEmpty() )
-    {
+   wxString facename;
+   // choose the first
+   faces = fontEnumerator.GetFacenames();
+
+   facename = faces->Item(0);
+   //  std::cout<<facename<<" : A Font"<<std::endl;
+   if ( !facename.IsEmpty() )
+   {
       wxFont font(size, wxTELETYPE, wxNORMAL, wxNORMAL, FALSE, facename);
       //  std::cout<<"A valid font"<<std::endl;
       DoChangeFont(font);
       return TRUE;
-    }
-  
-  return FALSE;
+   }
+
+   return FALSE;
 }
 
 void TexTable::DoChangeFont(const wxFont &font)
 {
-  SetFont(font);
+   SetDefaultCellFont(font);
+   //SetFont(font);
 }
 
 void TexTable::AddRow(const std::vector<wxString>& vals)
 {
-  int i;
+/*  int i;
    
   SetBackgroundColour(*wxWHITE);
   for (i=0; i<num_cols; i++)
@@ -122,12 +176,24 @@ void TexTable::AddRow(const std::vector<wxString>& vals)
       else
 	AppendText(padding(" ", i));
     }
-  AppendText("\n");
+  AppendText("\n");*/
+
+   AppendRows (1);
+   for ( int i=0; i<GetNumberCols(); ++i )
+   {
+      SetCellValue( GetNumberRows()-1, i, (i<(int)vals.size()) ? vals[i] : "");
+      if ( i >= (int)m_align.size() ) 
+         continue;
+      SetCellAlignment(GetNumberRows()-1, i, m_align[i], wxALIGN_CENTER);
+   }
+   SetRowMinimalHeight(GetNumberRows()-1, 9);
+   AutoSizeColumns(FALSE);
+   AutoSizeRows(FALSE);
 }
 
 void TexTable::AddSeperator(char pad)
 {
-  int i;
+/*  int i;
   wxString str;
   SetBackgroundColour(*wxWHITE);
   for (i=0; i<num_cols; i++)
@@ -135,5 +201,15 @@ void TexTable::AddSeperator(char pad)
       str="";
       AppendText(str.Pad(cols_width[i], pad));
     }
-  AppendText("\n");
+  AppendText("\n");*/
+ 
+   std::vector<wxString> vals;
+
+   for ( int i=0; i < GetNumberCols(); ++i )
+   {
+      wxString s = "";
+      s.Pad( 10, pad );
+      vals.push_back( s );
+   }
+   AddRow( vals );
 }
