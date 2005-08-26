@@ -56,8 +56,11 @@ TexTable::TexTable(wxWindow* parent,wxWindowID id, const wxPoint& pos, const wxS
 
 void TexTable::SetNumofCols(int num)
 {
-   DeleteRows( 0, GetNumberRows() );
-   DeleteCols( 0, GetNumberCols() );
+   if ( GetNumberRows() )
+      DeleteRows( 0, GetNumberRows() );
+   
+   if ( GetNumberCols() )
+      DeleteCols( 0, GetNumberCols() );
 
    if ( num > 0 ) 
       AppendCols( num );
