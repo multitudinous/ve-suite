@@ -363,10 +363,10 @@ Interface* REI_Plugin::Pack()
 
   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
   {
-	std::vector<std::string> * y;
+	/*std::vector<std::string> * y;
 	std::string x;
 	x=itervs->first;
-	y=itervs->second;
+	y=itervs->second;*/
     mod_pack.setVal(itervs->first, *(itervs->second));
   }
 

@@ -184,7 +184,17 @@ void TexTable::AddRow(const std::vector<wxString>& vals)
    AppendRows (1);
    for ( int i=0; i<GetNumberCols(); ++i )
    {
-      SetCellValue( GetNumberRows()-1, i, (i<(int)vals.size()) ? vals[i] : "");
+      wxString temp;
+      if ( i< (int)vals.size() )
+      {
+         temp = vals.at( i );
+      }
+      else
+      {
+         temp = "";
+      }
+
+      SetCellValue( GetNumberRows()-1, i, temp);
       if ( i >= (int)m_align.size() ) 
          continue;
       SetCellAlignment(GetNumberRows()-1, i, m_align[i], wxALIGN_CENTER);
