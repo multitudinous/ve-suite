@@ -46,7 +46,7 @@
 #include <vtkActor.h>
 
 #include <iostream>
-#include "VE_Installer/include/cfdDebug.h"
+#include "VE_Xplorer/cfdDebug.h"
 using namespace VE_SceneGraph;
 cfdGeode::cfdGeode( void )
 :cfdNode()

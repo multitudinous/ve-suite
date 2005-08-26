@@ -33,7 +33,7 @@
 #include "VE_SceneGraph/cfdSequence.h"
 #include "VE_SceneGraph/cfdNode.h"
 #include "VE_SceneGraph/cfdSwitch.h"
-#include "VE_Installer/include/cfdDebug.h"
+#include "VE_Xplorer/cfdDebug.h"
 
 
 #ifdef _PERFORMER

@@ -39,7 +39,7 @@
 
 #include <iostream>
 
-#include "VE_Installer/include/cfdDebug.h"
+#include "VE_Xplorer/cfdDebug.h"
 
 #include <vtkActor.h>
 using namespace VE_SceneGraph;

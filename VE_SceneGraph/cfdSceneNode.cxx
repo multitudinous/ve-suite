@@ -31,7 +31,7 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #include "VE_SceneGraph/cfdSceneNode.h"
 #include <iostream>
-#include "VE_Installer/include/cfdDebug.h"
+#include "VE_Xplorer/cfdDebug.h"
 #ifdef _PERFORMER
 #include <Performer/pf/pfNode.h>
 #elif _OSG

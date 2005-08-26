@@ -34,7 +34,7 @@
 #include "VE_SceneGraph/cfdSwitch.h"
 #include "VE_SceneGraph/cfdGeode.h"
 #include <iostream>
-#include "VE_Installer/include/cfdDebug.h"
+#include "VE_Xplorer/cfdDebug.h"
 //#include <cstdlib>
 
 #ifdef _PERFORMER
@@ -80,7 +80,7 @@
 #elif _OPENSG
 #endif
 
-#include "VE_Installer/include/cfdDebug.h"
+#include "VE_Xplorer/cfdDebug.h"
 #include "VE_SceneGraph/cfdSequence.h"
 
 namespace VE_SceneGraph{
