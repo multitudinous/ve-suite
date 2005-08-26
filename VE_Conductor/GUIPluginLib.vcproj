@@ -100,7 +100,7 @@
 				Name="VCCustomBuildTool"/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib"
+				AdditionalDependencies="xerces-c_2d.lib odbc32.lib odbccp32.lib comctl32.lib rpcrt4.lib wsock32.lib wxbase26d.lib wxmsw26d_core.lib wxmsw26d_adv.lib"
 				OutputFile="$(OutDir)\GUIPlugin_d.dll"
 				LinkIncremental="1"
 				SuppressStartupBanner="TRUE"
@@ -179,6 +179,9 @@
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\StringParse.cpp">
 			</File>
 			<File
+				RelativePath=".\Framework\SummaryResultDialog.cpp">
+			</File>
+			<File
 				RelativePath="$(VE_SUITE_HOME)\VE_Conductor\Framework\TexTable.cpp">
 			</File>
 			<File
@@ -202,6 +205,9 @@
 			</File>
 			<File
 				RelativePath=".\Framework\Plugin_base.h">
+			</File>
+			<File
+				RelativePath=".\Framework\SummaryResultDialog.h">
 			</File>
 			<File
 				RelativePath=".\Framework\TexTable.h">
