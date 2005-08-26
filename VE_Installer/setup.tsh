@@ -76,6 +76,9 @@ setenv PFSHAREDSIZE 534773700
 setenv VPR_DEBUG_NFY_LEVEL 1
 setenv VPR_DEBUG_ENABLE 1
 #setenv VPR_DEBUG_FILE ${VE_SUITE_HOME}/VE_Xplorer/VPRDebugOutput.txt
+#setenv VPR_DEBUG_ALLOW_CATEGORIES "DBG_ALL DBG_ERROR VES_DBG"
+#setenv VPR_DEBUG_DISALLOW_CATEGORIES "VES_DBG DBG_KERNEL"
+setenv VPR_DEBUG_DISALLOW_CATEGORIES
 setenv NO_RTRC_PLUGIN TRUE
 setenv NO_PERF_PLUGIN TRUE
 setenv OSG_THREAD_SAFE_REF_UNREF 1
@@ -88,6 +91,7 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/IRIX32
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/IRIX32
+
    if ( ${SCENE_GRAPH} == "PF" ) then
       setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/IRIX32-pthread
       setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/IRIX32-pthread
@@ -95,9 +99,10 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
       setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0/IRIX32-pthread
       setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0-deps/IRIX32-pthread
    endif
-   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/OSG/IRIX32
+
+   setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/IRIX32
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
-   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VJ_DEPS_DIR}/lib32
+   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32/mips3/debug:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VTK_BASE_DIR}/lib/vtk
    #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
@@ -114,17 +119,15 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
       setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/IRIX32
       setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${XERCESCROOT}/lib
    else
-      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/IRIX32
-      setenv PYTHONPATH ${OMNI_HOME}/lib32/python2.3/site-packages
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${OMNI_HOME}/lib32
+      setenv PYTHONPATH ${VJ_DEPS_DIR}/lib32/python2.3/site-packages
    endif
       
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTTYPE} =~ RHEL_* ) then
    setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux-RHEL_3
-   setenv VJ_BASE_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0/Linux-RHEL_3/
-   setenv VJ_DEPS_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0-deps/Linux-RHEL_3/
+   setenv VJ_BASE_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0/Linux-RHEL_3
+   setenv VJ_DEPS_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0-deps/Linux-RHEL_3
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/OSG/Linux-RHEL_3
 
@@ -145,10 +148,7 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
       setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-RH80
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
    else
-      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.5/Linux_rh8
-      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib
-      setenv PATH ${OMNI_HOME}/bin:${PATH}
+      setenv PYTHONPATH ${VJ_DEPS_DIR}/lib/python2.2/site-packages
    endif
 
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_i* ) then
@@ -176,10 +176,7 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_i* ) then
       setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-SuSE91
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
    else
-      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.5/Linux-SuSE91
-      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib
-      setenv PATH ${OMNI_HOME}/bin:${PATH}
+      setenv PYTHONPATH ${VJ_DEPS_DIR}/lib/python2.2/site-packages
    endif
 
 else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
@@ -204,13 +201,10 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/Linux64/lib
       setenv PATH ${ACE_HOME}/bin:${ACE_HOME}/Linux64/bin:${TAO_HOME}/Linux64/bin:${PATH}
 
-      setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/Release/Opt/xerces/Linux64-SuSE92
+      setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/Release/Opt/xercesc/Linux64-SuSE92
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
    else
-      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.5/Linux-SuSE91
-      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib
-      setenv PATH ${OMNI_HOME}/bin:${PATH}
+      setenv PYTHONPATH ${VJ_DEPS_DIR}/lib/python2.2/site-packages
    endif
 
 else if ( ${CFDHOSTTYPE} == "SunOS" ) then
@@ -234,10 +228,7 @@ else if ( ${CFDHOSTTYPE} == "SunOS" ) then
       setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Solaris
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
    else
-      setenv OMNI_HOME /home/vr/Applications/TSVEG/Libraries/omniORB-4.0.3/Solaris
-      setenv PYTHONPATH ${OMNI_HOME}/lib/python2.2/site-packages
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${OMNI_HOME}/lib
-      setenv PATH ${OMNI_HOME}/bin:${PATH}
+      setenv PYTHONPATH ${VJ_DEPS_DIR}/lib/python2.2/site-packages
    endif
 
 else if ( ${CFDHOSTTYPE} == "Darwin" ) then
