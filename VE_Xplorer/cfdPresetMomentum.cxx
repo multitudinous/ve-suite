@@ -88,7 +88,7 @@ void cfdPresetMomentum::Update( void )
    
    if ( this->usePreCalcData )
    {
-      vtkPolyData * preCalcData = this->GetActiveDataSet()
+      vtkPolyData* preCalcData = this->GetActiveDataSet()
                                       ->GetPrecomputedSlices( xyz )
                                       ->GetClosestPlane( this->requestedValue );
 
@@ -102,7 +102,7 @@ void cfdPresetMomentum::Update( void )
 
       this->warper->SetInput( preCalcData );
       this->warper->SetScaleFactor( this->warpedContourScale );
-      this->warper->Update();
+      //this->warper->Update();
 
       this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
 
@@ -110,7 +110,7 @@ void cfdPresetMomentum::Update( void )
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
-      this->mapper->Update();
+      //this->mapper->Update();
       vprDEBUG(vesDBG, 1)
          << "Yes Precalc : " << this->cursorType << " : " << usePreCalcData 
          << std::endl << vprDEBUG_FLUSH;
@@ -135,7 +135,7 @@ void cfdPresetMomentum::Update( void )
 
       this->warper->SetInput( this->cutter->GetOutput() );
       this->warper->SetScaleFactor( this->warpedContourScale );
-      this->warper->Update();//can this go???
+      //this->warper->Update();//can this go???
      
       this->SetMapperInput( (vtkPolyData*)this->warper->GetOutput() );
 
@@ -143,7 +143,7 @@ void cfdPresetMomentum::Update( void )
                                         ->GetUserRange() );
       this->mapper->SetLookupTable( this->GetActiveDataSet()
                                         ->GetLookupTable() );
-      this->mapper->Update();
+      //this->mapper->Update();
    }
    vtkActor* temp = vtkActor::New();
    temp->SetMapper( this->mapper );

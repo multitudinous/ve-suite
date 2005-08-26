@@ -106,20 +106,21 @@ cfdContourBase::~cfdContourBase()
 
 void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
 {
-   // decimate points is used for lod control of contours
-   this->deci->SetInput( polydata );
-   this->deci->PreserveTopologyOn();
-   deci->GetOutput()->ReleaseDataFlagOn();
-
-   this->tris->SetInput( deci->GetOutput() );
+   this->tris->SetInput( polydata );
    tris->GetOutput()->ReleaseDataFlagOn();
 
    this->strip->SetInput( this->tris->GetOutput() );
    strip->GetOutput()->ReleaseDataFlagOn(); 
 
+   // decimate points is used for lod control of contours
+   this->deci->SetInput( deci->GetOutput() );
+   this->deci->PreserveTopologyOn();
+   this->deci->BoundaryVertexDeletionOff();
+   deci->GetOutput()->ReleaseDataFlagOn();
+
    if ( this->fillType == 0 )
    {
-      this->mapper->SetInput( this->strip->GetOutput() );
+      this->mapper->SetInput( this->deci->GetOutput() );
       mapper->ImmediateModeRenderingOn(); 
    }
    else if ( this->fillType == 1 )  // banded contours
@@ -139,7 +140,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
    }
    else if ( this->fillType == 2 )  // contourlines
    {
-      this->cfilter->SetInput( this->strip->GetOutput() );
+      this->cfilter->SetInput( this->deci->GetOutput() );
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
       this->cfilter->GenerateValues( 10, range[0], range[1] );
@@ -153,7 +154,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
 
 bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
 {
-   // This is here because Dr. K. has code in 
+   // This is here because there is code in 
    // cfdObjects that doesn't belong there
    // Fix this
    bool flag = cfdObjects::CheckCommandId( commandArray );
@@ -178,8 +179,8 @@ bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
                     * this->GetActiveDataSet()->GetLength()/(float)(v[1]-v[0]);
 
       // contour lod control
-      int lod = (int)commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
-      double realLOD = (double)lod/100.0;
+      double lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
+      double realLOD = lod/100.0f;
       this->deci->SetTargetReduction( realLOD );
       return true;
    }
