@@ -166,6 +166,7 @@ Source: {#OSGHOME}\bin\osgwrapper_osgd.dll; DestDir: {app}\bin; Components: osg;
 Source: {#OSGHOME}\bin\osgdb_pfbd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#OSGHOME}\bin\osgSimd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#OSGHOME}\bin\osgTextd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
+Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#JUGGLERINSTHOME}\*; DestDir: {app}\vrJuggler2.0.0; Flags: ignoreversion recursesubdirs; Components: juggler
 
 
