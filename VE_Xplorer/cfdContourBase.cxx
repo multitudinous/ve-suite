@@ -109,18 +109,18 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
    this->tris->SetInput( polydata );
    tris->GetOutput()->ReleaseDataFlagOn();
 
-   this->strip->SetInput( this->tris->GetOutput() );
-   strip->GetOutput()->ReleaseDataFlagOn(); 
-
    // decimate points is used for lod control of contours
-   this->deci->SetInput( deci->GetOutput() );
+   this->deci->SetInput( tris->GetOutput() );
    this->deci->PreserveTopologyOn();
    this->deci->BoundaryVertexDeletionOff();
    deci->GetOutput()->ReleaseDataFlagOn();
 
+   this->strip->SetInput( this->deci->GetOutput() );
+   strip->GetOutput()->ReleaseDataFlagOn(); 
+
    if ( this->fillType == 0 )
    {
-      this->mapper->SetInput( this->deci->GetOutput() );
+      this->mapper->SetInput( this->strip->GetOutput() );
       mapper->ImmediateModeRenderingOn(); 
    }
    else if ( this->fillType == 1 )  // banded contours
@@ -140,7 +140,7 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
    }
    else if ( this->fillType == 2 )  // contourlines
    {
-      this->cfilter->SetInput( this->deci->GetOutput() );
+      this->cfilter->SetInput( this->strip->GetOutput() );
       double range[2];
       this->GetActiveDataSet()->GetUserRange( range );
       this->cfilter->GenerateValues( 10, range[0], range[1] );
@@ -181,6 +181,9 @@ bool cfdContourBase::CheckCommandId( cfdCommandArray* commandArray )
       // contour lod control
       double lod = commandArray->GetCommandValue( cfdCommandArray::CFD_MAX );
       double realLOD = lod/100.0f;
+      vprDEBUG(vesDBG,0) << "CHANGE_CONTOUR_SETTINGS LOD Settings" 
+                             << commandArray->GetCommandValue( cfdCommandArray::CFD_MAX ) << " : " << lod << " : " << realLOD
+                             << std::endl << vprDEBUG_FLUSH;
       this->deci->SetTargetReduction( realLOD );
       return true;
    }

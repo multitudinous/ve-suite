@@ -237,7 +237,7 @@ void UI_VectorTab::_buildPage()
    wxStaticText* lodTextLeft = new wxStaticText(this,-1, wxT("Higher Detail"));
    wxStaticText* lodTextRight = new wxStaticText(this,-1, wxT("Lower Detail"));
    
-   contourLODSlider = new wxSlider(this, CONTOUR_LOD_SLIDER,0,0,99,
+   contourLODSlider = new wxSlider(this, CONTOUR_LOD_SLIDER,1,1,99,
                                 wxDefaultPosition,wxDefaultSize,/* slidesize,*/
                                 wxSL_HORIZONTAL|
                                 wxSL_AUTOTICKS|
