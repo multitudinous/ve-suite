@@ -106,16 +106,12 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr o
    naming_context = input;
    _orbPtr = orbPtr;
 #ifdef _CLUSTER
-   //int argc;
-   //char** argv;
-   //char buffer[1025];
-   //int ntoks, i;
    std::vector<std::string> toks;
    std::string hostfile;
-   //FILE * fhost;
-   bool found=false;
    std::string masterhost;
 
+   boost::ignore_unused_variable_warning( argc );
+   boost::ignore_unused_variable_warning( argv );
    /*for ( unsigned int i = 1; i < argc; ++i )
    {
       if ( ( std::string("-VEXMaster") == std::string( argv[ i ] ) ) &&

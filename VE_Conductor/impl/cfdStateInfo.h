@@ -35,21 +35,21 @@ namespace ClusterVariables
 {
 struct StateVariables
 {
-   int   clusterIso_value;
-   int   clusterSc;
-   int   clusterMin;
-   int   clusterMax;
-   long  clusterId;
-   long  clusterGeo_state;
-   short clusterPostdata_state;
-   bool  clusterPre_state;
-   short clusterTimesteps;
-   short clusterTeacher_state; 
-   short clusterClientInfoFlag; 
-   int currentFrame; // the index of the current frame
-   float clusterTime_since_start;
-   long clusterFrameNumber;
-   float clusterQuatCamIncrement;
+   double   clusterIso_value;
+   double   clusterSc;
+   double   clusterMin;
+   double   clusterMax;
+   double   clusterId;
+   double   clusterGeo_state;
+   double   clusterPostdata_state;
+   bool     clusterPre_state;
+   double   clusterTimesteps;
+   double   clusterTeacher_state; 
+   short    clusterClientInfoFlag; 
+   int      currentFrame; // the index of the current frame
+   float    clusterTime_since_start;
+   long     clusterFrameNumber;
+   float    clusterQuatCamIncrement;
 };
 }
 
@@ -58,16 +58,16 @@ namespace vpr
 template<>
 inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::writeObject(vpr::ObjectWriter* writer)
 { 
-   writer->writeFloat( (float)clusterIso_value );  
-   writer->writeUint16( clusterSc );  
-   writer->writeUint16( clusterMin );  
-   writer->writeUint16( clusterMax );  
-   writer->writeFloat( (float)clusterId ); //Uint32
-   writer->writeUint32( clusterGeo_state );
-   writer->writeUint8( clusterPostdata_state );
+   writer->writeDouble( clusterIso_value );  
+   writer->writeDouble( clusterSc );  
+   writer->writeDouble( clusterMin );  
+   writer->writeDouble( clusterMax );  
+   writer->writeDouble( clusterId ); 
+   writer->writeDouble( clusterGeo_state );
+   writer->writeDouble( clusterPostdata_state );
    writer->writeBool( clusterPre_state );
-   writer->writeUint8( clusterTimesteps );
-   writer->writeUint8( clusterTeacher_state ); 
+   writer->writeDouble( clusterTimesteps );
+   writer->writeDouble( clusterTeacher_state ); 
    writer->writeUint16( currentFrame );
    writer->writeFloat( clusterTime_since_start );
    writer->writeUint32( clusterFrameNumber );
@@ -78,16 +78,16 @@ inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVa
 template<>
 inline vpr::ReturnStatus vpr::SerializableObjectMixin< ClusterVariables::StateVariables >::readObject(vpr::ObjectReader* reader)
 {
-   clusterIso_value        = (int)reader->readFloat();  
-   clusterSc               = reader->readUint16();  
-   clusterMin              = reader->readUint16();  
-   clusterMax              = reader->readUint16();  
-   clusterId               = (int)reader->readFloat();
-   clusterGeo_state        = reader->readUint32();
-   clusterPostdata_state   = reader->readUint8();
+   clusterIso_value        = reader->readDouble();  
+   clusterSc               = reader->readDouble();  
+   clusterMin              = reader->readDouble();  
+   clusterMax              = reader->readDouble();  
+   clusterId               = reader->readDouble();
+   clusterGeo_state        = reader->readDouble();
+   clusterPostdata_state   = reader->readDouble();
    clusterPre_state        = reader->readBool();
-   clusterTimesteps        = reader->readUint8();
-   clusterTeacher_state    = reader->readUint8(); 
+   clusterTimesteps        = reader->readDouble();
+   clusterTeacher_state    = reader->readDouble(); 
    currentFrame            = reader->readUint16(); 
    clusterTime_since_start = reader->readFloat();
    clusterFrameNumber      = reader->readUint32();

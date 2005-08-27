@@ -480,22 +480,21 @@ void UI_Tabs::createTabPages()
    _navPage = new UI_NavigationTab(this);
    AddPage( _navPage, _T("Navigation"), false );
 
-      //Vectors page
+   //Viewing Locations page
+   _viewlocPage = new UI_ViewLocTab(this);
+   AddPage( _viewlocPage, _T("View Points"), false );
+
+   //Vectors page
    _vectorPage = new UI_VectorTab(this);
    AddPage( _vectorPage, _T("Vectors/Contours"), false );
 
-   
-   //DataSets page
-   //_datasetPage = new UI_DatasetTab(this);
-   //AddPage( _datasetPage, _T("DataSets"), false );
-
-   //set up the dataset tab
-   //_initDatasetPage();
-   
    //Geometry page
    _geometryPage = new UI_GeometryTab(this);
    AddPage( _geometryPage, _T("Geometry"), false );  
 
+   //Streamlines page
+   _streamlinePage = new UI_StreamlineTab(this);
+   AddPage( _streamlinePage, _T("Streamlines"), false );
 
    //Scalars page
    /*if(numScalarsInActiveDataset){
@@ -522,13 +521,8 @@ void UI_Tabs::createTabPages()
    }
    //AddPage( _scalarPage, _T("Scalars"), false );*/
 
-   //Sounds page
-   _soundPage = new UI_SoundTab(this);
-   AddPage( _soundPage, _T("Sounds"), false );
-
-   //Streamlines page
-   _streamlinePage = new UI_StreamlineTab(this);
-   AddPage( _streamlinePage, _T("Streamlines"), false );
+   _advectionPage = new UI_AdvectionPanel(this);
+   AddPage(_advectionPage,_T("Texture-Based Tools"));
 
    //Teacher page
    _teacherPage = new UI_TeacherTab(this);
@@ -539,16 +533,14 @@ void UI_Tabs::createTabPages()
    //_transPage = new UI_TransTab(this);
    //AddPage( _transPage, _T("Transient"), false );
 
+   //Sounds page
+   _soundPage = new UI_SoundTab(this);
+   AddPage( _soundPage, _T("Sounds"), false );
+
    //Navigation page
-   _vertPage = new UI_VertTab(this);
-   AddPage( _vertPage, _T("Vertex"), false );
-
-   //Viewing Locations page
-   _viewlocPage = new UI_ViewLocTab(this);
-   AddPage( _viewlocPage, _T("View Points"), false );
-
-   _advectionPage = new UI_AdvectionPanel(this);
-   AddPage(_advectionPage,_T("Texture-Based Tools"));
+   // Don't know if this works
+   //_vertPage = new UI_VertTab(this);
+   //AddPage( _vertPage, _T("Vertex"), false );
 
    //SetSelection(0);
 }

@@ -714,7 +714,6 @@ void VjObs_i::GetCfdStateVariables( void )
       this->mStates->clusterMin              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MIN );
       this->mStates->clusterMax              = _bufferArray->GetCommandValue( cfdCommandArray::CFD_MAX );
       this->mStates->clusterId               = _bufferArray->GetCommandValue( cfdCommandArray::CFD_ID );
-      //std::cout << this->mStates->clusterId << std::endl;
       this->mStates->clusterGeo_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_GEO_STATE );
       this->mStates->clusterPostdata_state   = _bufferArray->GetCommandValue( cfdCommandArray::CFD_POSTDATA_STATE );
       this->mStates->clusterPre_state        = _bufferArray->GetCommandValue( cfdCommandArray::CFD_PRE_STATE );

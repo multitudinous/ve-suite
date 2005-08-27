@@ -1170,11 +1170,17 @@ void UI_DatasetPanel::_onScalars(wxCommandEvent& WXUNUSED(event))
 
    _resetScalarAdjustment( _RBoxScroll->_3dRBox->GetSelection(), _ScalarScroll->_scalarRBox->GetSelection() );
 
-   ((UI_Frame *)GetParent())->_tabs->cSc = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
+   ((UI_Frame *)GetParent())->_tabs->cId  = CHANGE_SCALAR;
+   ((UI_Frame *)GetParent())->_tabs->cSc  = _ScalarScroll->_scalarRBox->GetSelection();         // using zero-based scalar counting
    ((UI_Frame *)GetParent())->_tabs->cMin = _minPercentSlider->GetValue();
    ((UI_Frame *)GetParent())->_tabs->cMax = _maxPercentSlider->GetValue();
-   ((UI_Frame *)GetParent())->_tabs->cId  = CHANGE_SCALAR;
    ((UI_Frame *)GetParent())->_tabs->sendDataArrayToServer();
+
+   // this is a hack until we get the gui reworked
+   ((UI_Frame *)GetParent())->_tabs->cId        = CHANGE_VECTOR_THRESHOLD;
+   ((UI_Frame *)GetParent())->_tabs->cMin       = 0;
+   ((UI_Frame *)GetParent())->_tabs->cMax       = 100;
+   ((UI_Frame *)GetParent())->_tabs->sendDataArrayToServer();   
 }
 
 void UI_DatasetPanel::_onUpdate(wxCommandEvent& WXUNUSED(event))
