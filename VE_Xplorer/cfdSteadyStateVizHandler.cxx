@@ -1014,6 +1014,11 @@ void cfdSteadyStateVizHandler::CreateActorThread( void * )
 void cfdSteadyStateVizHandler::streamers( void )
 {
    vprDEBUG(vesDBG,1) << "In streamers" << std::endl << vprDEBUG_FLUSH;
+   if ( this->cursor->GetCursorID() == NONE )
+   {
+      this->_activeObject = NULL;
+      return;
+   }
    
    this->_activeObject->SetCursorType( this->cursor->GetCursorID() );
    this->_activeObject->SetNormal( this->nav->GetDirection() );

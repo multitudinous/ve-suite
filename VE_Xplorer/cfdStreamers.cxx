@@ -74,6 +74,7 @@ cfdStreamers::cfdStreamers( void )
    this->lineDiameter = 0.0f;
    arrowDiameter = 1;
    streamArrows = 0;
+   pointSource = 0;
 }
 
 cfdStreamers::~cfdStreamers()

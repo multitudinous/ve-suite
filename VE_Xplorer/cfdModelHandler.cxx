@@ -206,8 +206,8 @@ int cfdModelHandler::GetNumberOfModels( void )
 vtkPolyData* cfdModelHandler::_GetArrowPolyData(  )
 {    
    //ripped from cfdArrow in the Utilities/arrowCreator directory
-   float shaftAngleIncrement = (3.14159265/3.0);
-   float tipAngleIncrement = (3.14159265/3.0);
+   float shaftAngleIncrement = (3.14159265/1.5);
+   float tipAngleIncrement = (3.14159265/1.5);
    int tipResolution = 3;
    int shaftResolution = 3;
    float shaftRadius = 0.03;
