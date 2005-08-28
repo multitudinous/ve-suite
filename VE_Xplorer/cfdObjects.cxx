@@ -45,7 +45,6 @@
 
 // VTK Includes
 #include <vtkPolyData.h>
-#include <vtkPolyDataSource.h>
 #include <vtkActor.h>
 
 using namespace VE_SceneGraph;
@@ -137,7 +136,7 @@ void cfdObjects::SetBoxSize( double b[ 6 ]  )
    this->center[2] = (this->box_size[4] + this->box_size[5])/2;
 }
 
-void cfdObjects::SetSourcePoints( vtkPolyDataSource* pointSource )
+void cfdObjects::SetSourcePoints( vtkPolyData* pointSource )
 {
    this->pointSource = pointSource;
 }

@@ -96,7 +96,7 @@ public:
    */
    void Update( double x[3], double v[3], double wx[3] );
 
-   vtkPolyDataSource * GetSourcePoints( void );
+   vtkPolyData* GetSourcePoints( void );
 
    // Return the dynamic coordinate system with pfGeode objects.
    VE_SceneGraph::cfdDCS * GetcfdDCS();

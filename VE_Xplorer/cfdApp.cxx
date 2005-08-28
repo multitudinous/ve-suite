@@ -400,10 +400,6 @@ void cfdApp::latePreFrame( void )
    if ( _vjobsWrapper->GetCommandArray()->GetCommandValue( cfdCommandArray::CFD_ID ) == EXIT )
    {
       // exit cfdApp was selected
-#ifdef _TAO
-      this->executive->UnbindORB();
-#endif // _TAO
-      //vrj::Kernel::instance()->setApplication( NULL ); // Stopping kernel 
       vrj::Kernel::instance()->stop(); // Stopping kernel 
    }
 

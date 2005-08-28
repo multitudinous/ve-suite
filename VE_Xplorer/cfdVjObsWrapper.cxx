@@ -65,8 +65,8 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    CosNaming::Name name(1);
 
    name.length(1);
-   name[0].id   = (const char*) "Master";
-   name[0].kind = (const char*) "VE_Xplorer";
+   name[0].id   = CORBA::string_dup("Master");
+   name[0].kind = CORBA::string_dup("VE_Xplorer");
    
    try
    {
@@ -84,9 +84,11 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
    {
       std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }
-   
+
    if ( !CORBA::is_nil( _orbPtr ) )
-      this->_orbPtr->shutdown(1);
+   {
+      this->_orbPtr->shutdown();
+   }
 
    vprDEBUG(vesDBG,1) 
       << " End VjObsWraper Destructor  " 

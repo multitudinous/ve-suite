@@ -38,6 +38,7 @@
 #include <vtkLookupTable.h>
 #include <vtkPolyData.h>
 #include <vtkDataSet.h>
+#include <vtkPointSet.h>
 #include <vtkRungeKutta45.h>
 #include <vtkStreamLine.h>
 #include <vtkTubeFilter.h>
@@ -167,7 +168,7 @@ aa Assign Normals NORMALS POINT_DATA
    {
       streamPoints = vtkStreamPoints::New();
       streamPoints->SetInput( (vtkDataSet*)this->GetActiveDataSet()->GetDataSet() );
-      streamPoints->SetSource( (vtkDataSet*)this->pointSource );
+      streamPoints->SetSource( this->pointSource );
       streamPoints->SetTimeIncrement( this->stepLength * 500 );
       streamPoints->SetMaximumPropagationTime( this->propagationTime );
       streamPoints->SetIntegrationStepLength( this->integrationStepLength );    
@@ -195,7 +196,7 @@ aa Assign Normals NORMALS POINT_DATA
    }
    this->stream->SetNumberOfThreads( 1 );
 
-   this->stream->SetSource( dynamic_cast< vtkDataSet* >( this->pointSource ) );
+   this->stream->SetSource( this->pointSource );
    this->stream->SetIntegrator( this->integ );
    //stream->GetOutput()->ReleaseDataFlagOn();
    

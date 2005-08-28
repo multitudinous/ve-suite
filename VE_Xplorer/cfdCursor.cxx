@@ -605,7 +605,7 @@ double* cfdCursor::GetCursorLocalLocation()
    return this->localLocation;
 }
 
-vtkPolyDataSource * cfdCursor::GetSourcePoints( void )
+vtkPolyData* cfdCursor::GetSourcePoints( void )
 {
    this->GetLocalLocationVector();
 
@@ -614,37 +614,37 @@ vtkPolyDataSource * cfdCursor::GetSourcePoints( void )
       case XPLANE:
          this->planeSrc->SetCenter( this->localLocation );
          this->planeSrc->Update();
-         return (vtkPolyDataSource *)this->planeSrc->GetOutput();
+         return this->planeSrc->GetOutput();
          break;
 
       case YPLANE:
          this->planeSrc->SetCenter( this->localLocation );
          this->planeSrc->Update();
-         return (vtkPolyDataSource *)this->planeSrc->GetOutput();
+         return this->planeSrc->GetOutput();
          break;
 
       case ZPLANE:
          this->planeSrc->SetCenter( this->localLocation );
          this->planeSrc->Update();
-         return (vtkPolyDataSource *)this->planeSrc->GetOutput();
+         return this->planeSrc->GetOutput();
          break;
 
       case SPHERE:
          this->sphereSrc->SetCenter( this->localLocation );
          this->sphereSrc->Update();
-         return (vtkPolyDataSource *)this->sphereSrc->GetOutput();
+         return this->sphereSrc->GetOutput();
          break;
 
       case ARROW:
          this->arrowPlaneS->SetCenter( this->localLocation );
          this->arrowPlaneS->Update();
-         return (vtkPolyDataSource *)this->arrowPlaneS->GetOutput();
+         return this->arrowPlaneS->GetOutput();
          break;
 
       case CUBE:
          this->cubeSrc->SetCenter( this->localLocation );
          this->cubeSrc->Update();
-         return (vtkPolyDataSource *)this->cubeSrc->GetOutput();
+         return this->cubeSrc->GetOutput();
          break;
 
       case XLINE:
@@ -655,7 +655,7 @@ vtkPolyDataSource * cfdCursor::GetSourcePoints( void )
                                    this->localLocation[1],
                                    this->localLocation[2] );
          this->lineSrc->Update();
-         return (vtkPolyDataSource *)this->lineSrc->GetOutput();
+         return this->lineSrc->GetOutput();
          break;
 
       case YLINE:
@@ -666,7 +666,7 @@ vtkPolyDataSource * cfdCursor::GetSourcePoints( void )
                                    this->localLocation[1]+this->pSize,
                                    this->localLocation[2] );
          this->lineSrc->Update();
-         return (vtkPolyDataSource *)this->lineSrc->GetOutput();
+         return this->lineSrc->GetOutput();
          break;
 
       case ZLINE:
@@ -677,7 +677,7 @@ vtkPolyDataSource * cfdCursor::GetSourcePoints( void )
                                    this->localLocation[1],
                                    this->localLocation[2]+this->pSize );
          this->lineSrc->Update();
-         return (vtkPolyDataSource *)this->lineSrc->GetOutput();
+         return this->lineSrc->GetOutput();
          break;
 
       default:

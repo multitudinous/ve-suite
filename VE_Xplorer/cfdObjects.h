@@ -52,7 +52,6 @@ namespace VE_SceneGraph
 // VTK Classes
 class vtkPolyData;
 class vtkActor;
-class vtkPolyDataSource;
 class vtkGlyph3D;
 class vtkMaskPoints;
 
@@ -100,7 +99,7 @@ namespace VE_Xplorer
          //void SetSequence( cfdTempAnimation* );
          //cfdTempAnimation* GetSequence( void );
       
-         void SetSourcePoints( vtkPolyDataSource * );
+         void SetSourcePoints( vtkPolyData * );
 
          void AddGeodesToSequence(void);
 
@@ -124,7 +123,7 @@ namespace VE_Xplorer
          //static float vectorScale;
 
          std::vector< VE_SceneGraph::cfdGeode* > geodes;
-         vtkPolyDataSource *pointSource;
+         vtkPolyData* pointSource;
 
          bool updateFlag;
          int vtkToPFDebug;

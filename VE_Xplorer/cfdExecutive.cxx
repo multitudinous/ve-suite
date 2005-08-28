@@ -60,7 +60,6 @@ using namespace VE_SceneGraph;
 cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
                             PortableServer::POA* child_poa )
 {
-
    this->naming_context = inputNameContext;
    try
    {
@@ -143,16 +142,25 @@ cfdExecutive::cfdExecutive( CosNaming::NamingContext* inputNameContext,
       std::cerr << "|\tExecutive not present or VEClient registration error"
                 << std::endl;
    }
-   
-   //_param = new cfdExecutiveConfiguration();
-
-   //InitModules();
 }
 
 cfdExecutive::~cfdExecutive( void )
 {
    this->runGetEverythingThread = false;
    delete av_modules;
+
+   UnbindORB();
+
+   try
+   {
+      _exec->UnRegisterUI( ui_i->UIName_.c_str() );
+      delete ui_i;
+      ui_i = 0;
+   }
+   catch( CORBA::Exception& )
+   {
+      std::cerr << "|\tDisconnect from VE_CE failed!" << std::endl;
+   }
 }
 
 void cfdExecutive::UnbindORB()

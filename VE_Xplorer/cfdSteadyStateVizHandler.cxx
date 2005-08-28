@@ -1039,19 +1039,16 @@ void cfdSteadyStateVizHandler::streamers( void )
       }
 
       this->lastSource = vtkPolyData::New();
-      this->lastSource->DeepCopy( 
-         (vtkPolyData*)this->cursor->GetSourcePoints() );
+      this->lastSource->DeepCopy( this->cursor->GetSourcePoints() );
 
-      this->_activeObject->SetSourcePoints( 
-                                  (vtkPolyDataSource*)this->lastSource );
+      this->_activeObject->SetSourcePoints( this->lastSource );
    }
    else 
    {
       vprDEBUG(vesDBG,1) << "using transformed last source"
                              << std::endl << vprDEBUG_FLUSH;
 
-      this->_activeObject->SetSourcePoints( 
-                                  (vtkPolyDataSource*)this->lastSource );
+      this->_activeObject->SetSourcePoints( this->lastSource );
    }
 
    this->_activeObject->Update();
