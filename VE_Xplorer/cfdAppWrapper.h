@@ -46,11 +46,12 @@ class cfdAppWrapper
 public:
    cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* );
    ~cfdAppWrapper( void );
+   bool JugglerIsRunning( void );
    void init( void *);
    cfdThread* _thread;
 private:
    cfdApp* _cfdApp;
-
+   bool jugglerIsRunning;
    cfdVjObsWrapper* _vjObsWrapper;
    int argc;
    char** argv;

@@ -48,6 +48,7 @@ cfdAppWrapper::cfdAppWrapper( int argc,  char* argv[], cfdVjObsWrapper* input )
    _thread = new cfdThread();
    _vjObsWrapper = input;
    _thread->new_thread=new vpr::Thread(new vpr::ThreadMemberFunctor<cfdAppWrapper>(this, &cfdAppWrapper::init ) );
+   jugglerIsRunning = true;
 }
 
 cfdAppWrapper::~cfdAppWrapper( void )
@@ -57,6 +58,11 @@ cfdAppWrapper::~cfdAppWrapper( void )
 	  // _thread->new_thread->kill();
       delete _thread;
    }
+}
+
+bool cfdAppWrapper::JugglerIsRunning( void )
+{
+   return jugglerIsRunning;
 }
 
 void cfdAppWrapper::init( void * )
@@ -80,4 +86,5 @@ void cfdAppWrapper::init( void * )
 
    delete this->_vjObsWrapper;
 	this->_vjObsWrapper = NULL;
+   jugglerIsRunning = false;
 }

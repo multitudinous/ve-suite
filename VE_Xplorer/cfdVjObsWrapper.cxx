@@ -85,10 +85,10 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
       std::cerr << "Name not found for CORBA Object  " << ex.why << std::endl;
    }
 
-   if ( !CORBA::is_nil( _orbPtr ) )
-   {
-      this->_orbPtr->shutdown();
-   }
+   //if ( !CORBA::is_nil( _orbPtr ) )
+   //{
+   //   this->_orbPtr->shutdown();
+   //}
 
    vprDEBUG(vesDBG,1) 
       << " End VjObsWraper Destructor  " 

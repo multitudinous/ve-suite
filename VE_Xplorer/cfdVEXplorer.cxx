@@ -102,6 +102,13 @@ int main(int argc, char* argv[])
       cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
       orb->run();
+      // while ( appWrapper->JugglerIsRunning() )
+      // {
+      //    if ( orb->work_pending() )
+      //    {
+      //       orb->perform_work();
+      //    }
+      // }
    #ifdef _TAO
       if ( !CORBA::is_nil( child_poa ) )
          child_poa->destroy(1,1);
