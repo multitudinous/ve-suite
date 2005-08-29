@@ -2333,12 +2333,14 @@ void ansysReader::ReadNodalSolutions( int32 ptrDataSetSolution )
    parameterData[ 0 ]->SetName( (char*)dirStringStream.str().c_str() );
    parameterData[ 0 ]->SetNumberOfComponents( 3 );
    parameterData[ 0 ]->SetNumberOfTuples( this->ndnod + 1 );   // note: +1
+   dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "displacement mag " << this->currentDataSetSolution << " " << this->displacementUnits;
    parameterData[ 1 ]->SetName( (char*)dirStringStream.str().c_str() );
    parameterData[ 1 ]->SetNumberOfComponents( 1 );
    parameterData[ 1 ]->SetNumberOfTuples( this->ndnod + 1 );   // note: +1
+   dirStringStream.str("");
 
    // Read the solutions and populate the floatArrays.
    // Because the ansys vertices are one-based, up the loop by one
@@ -2503,26 +2505,32 @@ void ansysReader::AttachStressToGrid()
    std::ostringstream dirStringStream;  
    dirStringStream << "fg max prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
    parameterData[ 0 ]->SetName( (char*)dirStringStream.str().c_str() );
+   dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "fg min prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
    parameterData[ 1 ]->SetName( (char*)dirStringStream.str().c_str() );
+   dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "fg von Mises stress " << this->currentDataSetSolution << " " << this->stressUnits;
    parameterData[ 2 ]->SetName( (char*)dirStringStream.str().c_str() );
+   dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "pg max prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
    parameterData[ 3 ]->SetName( (char*)dirStringStream.str().c_str() );
+   dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "pg min prin stress " << this->currentDataSetSolution << " " << this->stressUnits;
    parameterData[ 4 ]->SetName( (char*)dirStringStream.str().c_str() );
+   dirStringStream.str("");
    dirStringStream.clear();
 
    dirStringStream << "pg von Mises stress " << this->currentDataSetSolution << " " << this->stressUnits;
    parameterData[ 5 ]->SetName( (char*)dirStringStream.str().c_str() );
+   dirStringStream.str("");
    dirStringStream.clear();
 
    // first do full graphics calculations...
