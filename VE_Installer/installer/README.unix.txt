@@ -42,7 +42,7 @@ This will enable you to run VE-Suite and it's utilities from any directory.
 Included in the install is a shell script to help launch the various utilities and
 components of VE-Suite. After the environment is set, type:
 
->VES.run
+>VES
 
 at the prompt to see the various options and uses for this script.
 

@@ -1,10 +1,10 @@
 #!/bin/csh 
 # sets up environment to build and/or run VE-Xplorer
 #Change this to where VE-Suite installed
-setenv VE_INSTALL_DIR ./VE_Suite.0.9.0/RHEL_3
+setenv VE_INSTALL_DIR <install_location>/VE_Suite.0.9.0/RHEL_3
 
 #Change this VE-Suite pre-complied dependencies are installed
-setenv VE_DEPS_DIR ./VE_Suite_deps.0.9.0/RHEL_3
+setenv VE_DEPS_DIR <install_location>/VE_Suite_deps.0.9.0/RHEL_3
 
 # vrJuggler  
 # These are setup for using VE-Suite dependency install's location
@@ -83,18 +83,22 @@ setenv SNX_BASE_DIR ${VJ_BASE_DIR}
 
 #Python build environment variables
 #setenv PYTHONPATH ${VJ_DEPS_DIR}/lib/python
+if ( $?OSG_HOME ) then
+   setenv PATH ${OSG_HOME}/share/OpenSceneGraph/bin:${PATH}
+endif
 
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
-   setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
-else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTTYPE} =~ RHEL_* ) then
-   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
-else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
-   setenv LD_LIBRARY_PATH ${LD_LIBRARYN_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
-else if ( ${CFDHOSTTYPE} == "SunOS" ) then
-   setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
-else
-   echo "ERROR: Unsupported operating system"
-   echo "       OMNI_HOME, etc. are undefined"
-endif
+   if ( $?LD_LIBRARYN32_PATH ) then
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
+   else
+      setenv LD_LIBRARYN32_PATH ${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
+   endif
+else 
+   if ( $?LD_LIBRARY_PATH ) then
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
+   else
+      setenv LD_LIBRARY_PATH ${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
+   endif
+
 setenv PATH ${PATH}:${VE_INSTALL_DIR}/bin:${VE_DEPS_DIR}/bin:${VJ_BASE_DIR}/bin
 
