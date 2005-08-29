@@ -83,8 +83,8 @@ void cfdAppWrapper::init( void * )
 
    delete this->_cfdApp;
    this->_cfdApp = NULL;
+   jugglerIsRunning = false;
 
    delete this->_vjObsWrapper;
 	this->_vjObsWrapper = NULL;
-   jugglerIsRunning = false;
 }

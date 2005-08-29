@@ -32,6 +32,7 @@
 #include "VE_Xplorer/cfdVjObsWrapper.h"
 #ifdef _TAO
 #include <orbsvcs/CosNamingC.h>
+#include <tao/ORB.h>
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
 #endif // _TAO
 #include "VE_Conductor/impl/VjObs_i.h"     //added for corba stuff
@@ -41,6 +42,7 @@
 
 #include "VE_Xplorer/cfdDebug.h"
 #include <iostream>
+#include <boost/concept_check.hpp>
 
 using namespace CosNaming;
 using namespace VE_Xplorer;
@@ -87,6 +89,7 @@ cfdVjObsWrapper::~cfdVjObsWrapper( void )
 
    //if ( !CORBA::is_nil( _orbPtr ) )
    //{
+   //   std::cout << this->_orbPtr->id() << std::endl;
    //   this->_orbPtr->shutdown();
    //}
 
@@ -101,19 +104,19 @@ void cfdVjObsWrapper::init( CosNaming::NamingContext* input, CORBA::ORB* orbPtr,
 void cfdVjObsWrapper::init( CosNaming::NamingContext_ptr input, CORBA::ORB_ptr orbPtr, int argc, char* argv[]  )
 #endif // _TAO
 {
+   boost::ignore_unused_variable_warning( argc );
+   boost::ignore_unused_variable_warning( argv );
 #ifdef _TAO
    this->child_poa = child_poa;
    this->poa = poa;
 #endif // _TAO
    naming_context = input;
-   _orbPtr = orbPtr;
+   //_orbPtr = orbPtr;
 #ifdef _CLUSTER
    std::vector<std::string> toks;
    std::string hostfile;
    std::string masterhost;
 
-   boost::ignore_unused_variable_warning( argc );
-   boost::ignore_unused_variable_warning( argv );
    /*for ( unsigned int i = 1; i < argc; ++i )
    {
       if ( ( std::string("-VEXMaster") == std::string( argv[ i ] ) ) &&

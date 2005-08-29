@@ -149,7 +149,7 @@ cfdExecutive::~cfdExecutive( void )
    this->runGetEverythingThread = false;
    delete av_modules;
 
-   UnbindORB();
+   //UnbindORB();
 
    try
    {

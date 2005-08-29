@@ -95,25 +95,20 @@ int main(int argc, char* argv[])
 
       cfdVjObsWrapper* vjobsWrapper = new cfdVjObsWrapper();
    #ifdef _TAO
-      vjobsWrapper->init( naming_context.in(), orb.in(), child_poa.in(), NULL, argc, argv );
+      vjobsWrapper->init( naming_context.in(), NULL, child_poa.in(), NULL, argc, argv );
    #else
       vjobsWrapper->init( naming_context.in(), orb.in(), argc, argv );
    #endif // _TAO
       cfdAppWrapper* appWrapper = new cfdAppWrapper( argc, argv, vjobsWrapper );
 
-      orb->run();
-      // while ( appWrapper->JugglerIsRunning() )
-      // {
-      //    if ( orb->work_pending() )
-      //    {
-      //       orb->perform_work();
-      //    }
-      // }
-   #ifdef _TAO
-      if ( !CORBA::is_nil( child_poa ) )
-         child_poa->destroy(1,1);
-   #endif // _TAO
-      orb->destroy();
+      //orb->run();
+      while ( appWrapper->JugglerIsRunning() )
+      {
+         if ( orb->work_pending() )
+         {
+            orb->perform_work();
+         }
+      }
 
       appWrapper->_thread->new_thread->join();
       delete appWrapper;

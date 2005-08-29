@@ -112,7 +112,7 @@ public:
       time_since_start = 0.0f;
       frameNumber = 0;
    }
-   virtual ~VjObs_i(){}
+   virtual ~VjObs_i(){;}
    
    void CreateGeometryInfo( void );
    void CreateDatasetInfo( void );

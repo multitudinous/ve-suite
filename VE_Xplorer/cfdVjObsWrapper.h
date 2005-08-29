@@ -49,37 +49,38 @@ namespace PortableServer{ class POA; }
 
 namespace VE_Xplorer
 {
-   class cfdVjObsWrapper
-   {
-      public:
-         cfdVjObsWrapper( void );
-         ~cfdVjObsWrapper( void );
-      #ifdef _TAO
-         void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, PortableServer::POA*, int, char** );
-      #else
-         void init( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, int, char** );
-      #endif
-         cfdCommandArray* GetCommandArray( void );
-         double GetShortArray( int );
-         void GetCfdStateVariables( void );
-         void PreFrameUpdate( void );
-   
-         int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
-         //cfdCosNaming* GetCosNaming( void );
-         void InitCluster( void );
-         void GetUpdateClusterStateVariables( void );
-         float GetSetAppTime( float );
-         long GetSetFrameNumber( long );
-      #ifdef _TAO
-         CosNaming::NamingContext* naming_context;
-         CORBA::ORB* _orbPtr;
-         PortableServer::POA* child_poa;
-         PortableServer::POA* poa;
-      #else
-         CosNaming::NamingContext_ptr naming_context;
-         CORBA::ORB_ptr _orbPtr;
-      #endif
-         VjObs_i* _vjObs;
-   };
+class cfdVjObsWrapper
+{
+public:
+   cfdVjObsWrapper( void );
+   ~cfdVjObsWrapper( void );
+#ifdef _TAO
+   void init( CosNaming::NamingContext*, CORBA::ORB*, PortableServer::POA*, PortableServer::POA*, int, char** );
+#else
+   void init( CosNaming::NamingContext_ptr, CORBA::ORB_ptr, int, char** );
+#endif
+   cfdCommandArray* GetCommandArray( void );
+   double GetShortArray( int );
+   void GetCfdStateVariables( void );
+   void PreFrameUpdate( void );
+
+   int getStringTokens(char* buffer, char* delim, std::vector<std::string> &toks); // YANG, a string parsing utility, it is a not thread safe call.
+   //cfdCosNaming* GetCosNaming( void );
+   void InitCluster( void );
+   void GetUpdateClusterStateVariables( void );
+   float GetSetAppTime( float );
+   long GetSetFrameNumber( long );
+#ifdef _TAO
+   CosNaming::NamingContext* naming_context;
+   PortableServer::POA* child_poa;
+   PortableServer::POA* poa;
+#else
+   CosNaming::NamingContext_ptr naming_context;
+   CORBA::ORB_ptr _orbPtr;
+#endif
+   VjObs_i* _vjObs;
+private:
+   CORBA::ORB* _orbPtr;
+};
 }
 #endif
