@@ -46,7 +46,9 @@
 #include "VE_Conductor/VE_UI/UI_AdvectionPanel.h"
 
 #include <iostream>
-
+BEGIN_EVENT_TABLE(UI_Tabs, wxNotebook)
+EVT_NOTEBOOK_PAGE_CHANGED(wxID_ANY, UI_Tabs::_onTabChange)
+END_EVENT_TABLE()
 ////////////////////////////////////////////////////
 //Constructor                                     //
 ////////////////////////////////////////////////////
@@ -618,4 +620,21 @@ void UI_Tabs::sendDataArrayToServer( void )
    {
       std::cout << "VE_Conductor : Just testing..." << std::endl;
    }
+}
+//////////////////////////////////////////////////
+void UI_Tabs::_onTabChange(wxNotebookEvent& event)
+{
+   std::cout << "VE_Conductor : Just testing..." << std::endl;
+   if(!_streamlinePage)
+      return;
+   if(event.GetSelection() != 5 )
+   {
+      this->cId  = CHANGE_STREAMLINE_CURSOR;
+      this->cMin = 1;           
+      this->cMax = 1;
+      this->cSc  = 1;
+      this->cIso_value = NO_CURSOR;
+      sendDataArrayToServer();
+   }
+   event.Skip();
 }

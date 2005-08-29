@@ -185,7 +185,9 @@ public:
    void sendDataArrayToServer( void );
 
    std::vector< int* > geomFileSettings;
-
-  // DECLARE_EVENT_TABLE();
+protected:
+   //event handlers
+   void _onTabChange(wxNotebookEvent& event);  
+   DECLARE_EVENT_TABLE();
 };
 #endif //_VE_UI_TABS_H_

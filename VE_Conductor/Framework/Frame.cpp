@@ -755,7 +755,7 @@ void AppFrame::ConExeServer( wxCommandEvent& WXUNUSED(event) )
            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
           2500, this, -1, wxDefaultPosition, wxDefaultSize,
           wxSIMPLE_BORDER|wxSTAY_ON_TOP);
-   wxSafeYield();
+   //wxSafeYield();
    if ( pelog==NULL )
    {
 	   pelog = new PEThread(this);
@@ -796,7 +796,7 @@ void AppFrame::ConVEServer(wxCommandEvent &WXUNUSED(event))
            wxSPLASH_CENTRE_ON_PARENT|wxSPLASH_TIMEOUT,
           2500, this, -1, wxDefaultPosition, wxDefaultSize,
           wxSIMPLE_BORDER|wxSTAY_ON_TOP);
-   wxSafeYield();
+   //wxSafeYield();
    if (pelog==NULL)
    {
 	   pelog = new PEThread(this);
