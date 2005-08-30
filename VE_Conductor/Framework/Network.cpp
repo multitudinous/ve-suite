@@ -2693,51 +2693,30 @@ void Network::UnPack(std::vector<Interface> & intfs)
 	   }
    }
 
-   int index;
    // unpack the modules' UIs
-   for(i =0; i<intfssize-1; ++i)
+   // start from 1 because the link interface is the first one
+   for(i = 1; i<intfssize; ++i)
    {
       
-      _id = intfs[i+1]._id;
-      if(intfs[i+1]._type == 1)
+      _id = intfs[i]._id;
+      std::map<int, MODULE >::iterator itr=modules.find(_id);
+
+      if( (intfs[i]._type == 1) && (itr!=modules.end()) )
       {
-         //modules[_id].pl_mod->SetID(_id);
-         modules[_id].pl_mod->UnPack(&intfs[i+1]);
+         modules[_id].pl_mod->UnPack(&intfs[i]);
       }
-      else if( intfs[i+1]._type == 2 )
+      else if( intfs[i]._type == 2 )
       {
-         //modules[_id].pl_mod->GetGeometryInfo()->UnPack(&intfs[i+1]);
          Geometry* geometry = new Geometry( modules[_id].pl_mod->GetID() );
          geometry->SetGeometryDataBuffer( modules[_id].pl_mod->GetGeometryDataBuffer() );
 
-         geometry->UnPack(&intfs[i+1]);
+         geometry->UnPack(&intfs[i]);
 
          delete geometry;
       }
 
    }
 
-
-
-  /* for ( i=0; i<(unsigned int)modsize; ++i )
-   {
-     
-      _id = intfs[i+1]._id;
-      if ( intfs[i+1]._type == 1 ) // data i/o
-      {
-         modules[_id].pl_mod->SetID( _id );
-         modules[_id].pl_mod->UnPack( &intfs[i+1] );
-      }
-      else if ( intfs[i+2]._type == 2 ) // geometry
-      {
-         // then grab geometry interface
-         // call spcific modules geom unpack
-         //
-         modules[_id].pl_mod->GetGeometryDialog()->UnPack( &intfs[i+1] );
-      }
-   }*/
-   
-     
    //unpack the Global Param Dialog
    // This is commented out because the computational engine
    // strips the global data out so there is no reason to try
@@ -2910,7 +2889,7 @@ void  Network::OnShowResult(wxCommandEvent& WXUNUSED(event))
    if (m_selMod<0)
       return;
 
-   if (CORBA::is_nil(exec))
+   if ( CORBA::is_nil( exec.in() ) )
    {
       std::cerr<<"Not Connected yet!" << std::endl;
       return;

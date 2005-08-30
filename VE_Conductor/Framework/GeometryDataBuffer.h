@@ -95,7 +95,7 @@ public:
    {
       if ( this != &input )
       {
-         this->_geominfopackageVSmodule = input._geominfopackageVSmodule;
+         //this->_geominfopackageVSmodule = input._geominfopackageVSmodule;
          this->_geominfopackagelist = input._geominfopackagelist;
 
          this->activedgeominfo = input.activedgeominfo;
@@ -130,15 +130,11 @@ public:
    void DeleteGeomInfosFromCurrentList(std::vector<int>);
    void SetCurrentGeomInfoList(std::vector<GeometryInfoPackage>);
    std::vector <GeometryInfoPackage> GetCurrentGeomInfoList();
-   std::vector <GeometryInfoPackage> GetCurrentModuleGeomInfoListFromMap();
       
-   void UpdateCurrentGeomInfoListToMap();
    void UpdateGeomInfoToCurrentList(GeometryInfoPackage, int);  
-   std::map <int, std::vector<GeometryInfoPackage> > GetWholeGeomInfoMap();
 
    private:
 
-   std::map<int, std::vector<GeometryInfoPackage> > _geominfopackageVSmodule; 
 	std::vector <GeometryInfoPackage> _geominfopackagelist;
  
    int activedgeominfo;

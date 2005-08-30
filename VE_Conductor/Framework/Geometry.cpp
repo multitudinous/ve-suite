@@ -84,7 +84,6 @@ void Geometry::UnPack( Interface* intf )
    GeometryInfoPackage temppackage;
    
    unsigned int i;
-   //long temp;
 
    vars = intf->getGeomInfoPackages();
    bool rv =true;
@@ -95,7 +94,6 @@ void Geometry::UnPack( Interface* intf )
    }
 
    geometryDataBuffer->SetCurrentGeomInfoList(templist);
-   geometryDataBuffer->UpdateCurrentGeomInfoListToMap();
 }
 
 Interface* Geometry::Pack( void )
@@ -120,13 +118,9 @@ Interface* Geometry::Pack( void )
 
 void Geometry::SetCurModuleGeomInfoPackage()
 {
-   std::map<int, std::vector<GeometryInfoPackage> > localmap;
-   localmap = geometryDataBuffer->GetWholeGeomInfoMap();
-   
+  
    _geominfopackagemap.clear();
-
-   std::vector<GeometryInfoPackage> locallist = localmap.find(cur_moduleid)->second;
-   
+   std::vector<GeometryInfoPackage> locallist = geometryDataBuffer->GetCurrentGeomInfoList();
    for(unsigned int i=0; i<locallist.size(); i++)
    {
       _geominfopackagemap.insert(std::make_pair(locallist[i].GetGeomName(), locallist[i]));

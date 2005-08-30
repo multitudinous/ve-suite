@@ -363,10 +363,10 @@ Interface* REI_Plugin::Pack()
 
   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
   {
-	/*std::vector<std::string> * y;
+	std::vector<std::string> * y;
 	std::string x;
 	x=itervs->first;
-	y=itervs->second;*/
+	y=itervs->second;
     mod_pack.setVal(itervs->first, *(itervs->second));
   }
 
@@ -710,11 +710,11 @@ bool REI_Plugin::HasGeomInfoPackage()
    if ( geometryDataBuffer == 0 )
       geometryDataBuffer = new GeometryDataBuffer();
 
-   localmap = geometryDataBuffer->GetWholeGeomInfoMap();
+   std::vector<GeometryInfoPackage> locallist;
 
-   std::map<int, std::vector <GeometryInfoPackage> >::iterator itr;
-   itr =localmap.find(local_id);
-   if(itr!=localmap.end())
+   locallist = geometryDataBuffer->GetCurrentGeomInfoList();
+
+   if(locallist.size()>0)
    {
       return true;
    }
