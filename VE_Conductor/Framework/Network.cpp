@@ -2494,7 +2494,13 @@ void Network::Pack(std::vector<Interface> & UIs)
       }
    }
 
-   UIs.push_back( *(globalparam_dlg->Pack()) );
+   // Pack up global data
+   // This is commented out because the computational
+   // engine does not have the capability to handle
+   // global data yet. This functionality should
+   // be addressed shortly to handle this type of data
+   // in the framework.
+   //UIs.push_back( *(globalparam_dlg->Pack()) );
 }
 
 void Network::UnPack(std::vector<Interface> & intfs)
@@ -2689,7 +2695,7 @@ void Network::UnPack(std::vector<Interface> & intfs)
 
    int index;
    // unpack the modules' UIs
-   for(i =0; i<intfssize-2; ++i)
+   for(i =0; i<intfssize-1; ++i)
    {
       
       _id = intfs[i+1]._id;
@@ -2733,6 +2739,9 @@ void Network::UnPack(std::vector<Interface> & intfs)
    
      
    //unpack the Global Param Dialog
+   // This is commented out because the computational engine
+   // strips the global data out so there is no reason to try
+   // to unpack it.
    //globalparam_dlg->UnPack(&intfs[intfs.size()-1]);
 
    //Now all the data are read from the file. 
