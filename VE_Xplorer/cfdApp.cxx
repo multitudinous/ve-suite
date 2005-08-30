@@ -387,12 +387,15 @@ void cfdApp::latePreFrame( void )
    ///////////////////////
 #ifdef _OSG
 #ifdef VE_PATENTED
-   if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
+   if ( cfdModelHandler::instance()->GetActiveModel() )
    {
-      _tbvHandler->SetParentNode((VE_SceneGraph::cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
-      _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
-      _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
-      _tbvHandler->PreFrameUpdate();
+      if ( cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet() )
+      {
+         _tbvHandler->SetParentNode((VE_SceneGraph::cfdGroup*)cfdModelHandler::instance()->GetActiveModel()->GetActiveDataSet()->GetSwitchNode()->GetChild(1) );
+         _tbvHandler->SetActiveTextureDataSet(cfdModelHandler::instance()->GetActiveTextureDataSet());
+         _tbvHandler->ViewTextureBasedVis(cfdModelHandler::instance()->GetVisOption());
+         _tbvHandler->PreFrameUpdate();
+      }
    }
 #endif
 #endif

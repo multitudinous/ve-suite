@@ -281,7 +281,7 @@ void cfdExecutive::init_orb_naming()
    delete nw_str;
 }
 */
-void cfdExecutive::GetNetwork ( void )
+void cfdExecutive::GetNetwork( void )
 {
 /*  
    char* network = 0;
