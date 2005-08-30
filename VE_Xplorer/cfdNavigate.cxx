@@ -438,8 +438,8 @@ void cfdNavigate::updateNavigationFromGUI()
    }
 
 
-   if ( this->buttonData[1] == gadget::Digital::TOGGLE_ON ) //|| (this->cfdId == GUI_NAV && (this->cfdIso_value == YAW_CCW || this->cfdIso_value == YAW_CW)) ||
-        //this->buttonData[1] == gadget::Digital::ON )
+   if ( ( this->buttonData[1] == gadget::Digital::TOGGLE_ON ) || 
+        ( this->buttonData[1] == gadget::Digital::ON ) )
    {
       this->currentWandDirection = this->GetDirection();
 
