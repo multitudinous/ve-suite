@@ -503,7 +503,11 @@ void Body_Executive_i::SetNetwork (
       if(iter->_id==-1) 
          break;
 
-   if(iter!=p.intfs.end() && _network->parse(&(*iter))) 
+   // This if statement does not take into account global
+   // data. In this statement the global data that that 
+   // is sent gets stripped out because there is no 
+   // mechanism to handle it yet.
+   if ( iter!=p.intfs.end() && _network->parse(&(*iter)) ) 
    {
       _network_intf = *iter; //_network_intf is the first block of the network xml.
       for(iter=p.intfs.begin(); iter!=p.intfs.end(); iter++)
@@ -520,7 +524,7 @@ void Body_Executive_i::SetNetwork (
             }
             else if(iter->_category==1 && iter->_type == 2 &&_network->setGeomInput(iter->_id, &(*iter)))
             {
-               std::cout<<"The current moduel has geom info "<<std::endl;
+               std::cout<<"The current module has geom info "<<std::endl;
             }
             else
             {
