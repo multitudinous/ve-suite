@@ -348,7 +348,6 @@ void GeometryDialog::_onDClickListBox(wxCommandEvent& event)
 
 bool GeometryDialog::TransferDataFromWindow()
 {
-   //geometryDataBuffer->UpdateCurrentGeomInfoListToMap();
    return true;
 }
 
@@ -360,10 +359,8 @@ void GeometryDialog::SetGeometryDataBuffer( GeometryDataBuffer* input )
 bool GeometryDialog::TransferDataToWindow()
 {
    //if this is an old dialog, get the data from databuffer
-  //std::vector<GeometryInfoPackage> templist = geometryDataBuffer->GetCurrentModuleGeomInfoListFromMap();
 
    std::vector<GeometryInfoPackage> templist = geometryDataBuffer->GetCurrentGeomInfoList();
-   std::cout<<"[DBG]...inside GeometryDialog TransferDataToWindow, templist.size() ="<<templist.size()<<std::endl;
   if(templist.size()>0)
   {
       _onUpdateUIInfoPage(templist, 0); //by default, the geominfo page shows the first package.
