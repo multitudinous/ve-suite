@@ -346,29 +346,25 @@ Interface* REI_Plugin::Pack()
   mod_pack.setVal("XPOS",long (pos.x));
   mod_pack.setVal("YPOS",long (pos.y));
   
-  for(iteri=_int.begin(); iteri!=_int.end(); iteri++)
-    mod_pack.setVal(iteri->first, *(iteri->second));
+   for(iteri=_int.begin(); iteri!=_int.end(); iteri++)
+      mod_pack.setVal(iteri->first, *(iteri->second));
 
-  for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
-    mod_pack.setVal(iterd->first, *(iterd->second));
+   for(iterd=_double.begin(); iterd!=_double.end(); iterd++)
+      mod_pack.setVal(iterd->first, *(iterd->second));
 
-  for(iters=_string.begin(); iters!=_string.end(); iters++)
-    mod_pack.setVal(iters->first, *(iters->second));
+   for(iters=_string.begin(); iters!=_string.end(); iters++)
+      mod_pack.setVal(iters->first, *(iters->second));
 
-  for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
-    mod_pack.setVal(itervi->first, *(itervi->second));
+   for(itervi=_int1D.begin(); itervi!=_int1D.end(); itervi++)
+      mod_pack.setVal(itervi->first, *(itervi->second));
 
-  for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
-    mod_pack.setVal(itervd->first, *(itervd->second));
+   for(itervd=_double1D.begin(); itervd!=_double1D.end(); itervd++)
+      mod_pack.setVal(itervd->first, *(itervd->second));
 
-  for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
-  {
-	std::vector<std::string> * y;
-	std::string x;
-	x=itervs->first;
-	y=itervs->second;
-    mod_pack.setVal(itervs->first, *(itervs->second));
-  }
+   for(itervs=_string1D.begin(); itervs!=_string1D.end(); itervs++)
+   {
+      mod_pack.setVal(itervs->first, *(itervs->second));
+   }
 
   // EPRI TAG
   if(financial_dlg != NULL) {
