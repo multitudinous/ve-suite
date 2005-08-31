@@ -11,7 +11,7 @@ REM the directory containing user defined plugins
 set VE_USER_PLUGIN_DIR=.\
 
 REM VE-Suite pre-complied dependencies
-set VE_DEPS_DIR=C:\VE_Suite.0.9.0_Dependencies
+set VE_DEPS_DIR="C:\VE_Suite.0.9.0_Dependencies"
 
 REM vrJuggler  
 REM These are setup for using VE-Suite dependency install's location
