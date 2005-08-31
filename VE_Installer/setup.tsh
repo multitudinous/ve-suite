@@ -91,18 +91,12 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/IRIX32
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/IRIX32
-
-   if ( ${SCENE_GRAPH} == "PF" ) then
-      setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2/IRIX32-pthread
-      setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/vrjuggler-2.0b2-deps/IRIX32-pthread
-   else
-      setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0/IRIX32-pthread
-      setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0-deps/IRIX32-pthread
-   endif
-
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0/IRIX32-pthread
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0-deps/IRIX32-pthread
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/IRIX32
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
-   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32/mips3/debug:${VJ_DEPS_DIR}/lib32
+
+   setenv LD_LIBRARYN32_PATH ${VJ_BASE_DIR}/lib32:${VJ_DEPS_DIR}/lib32
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VTK_BASE_DIR}/lib/vtk
    #setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:/home/users/jhynek/Pigs/Oinks/OpenAL/openal/linux/bin/lib
    setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${WX_HOME}/lib
