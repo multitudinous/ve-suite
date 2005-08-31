@@ -7,8 +7,6 @@ export VE_SUITE_HOME=/nfs/scratch/VE_Suite
 export TAO_MACHINE=ids7.scilan
 export TAO_PORT=55
 
-export TAO_BUILD=TRUE
-export CLUSTER_APP=TRUE
 source ${VE_SUITE_HOME}/VE_Installer/setup.NETL.sh
 
 export MY_VJCONFIGS=/nfs/scratch/FutureGenPowerPlant/jugglerConfigs/Dougs
@@ -16,13 +14,13 @@ export MY_VJCONFIGS=/nfs/scratch/FutureGenPowerPlant/jugglerConfigs/Dougs
 case $1 in
   
   -sim)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_tao_osg \
+    project_tao_osg \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/simstandalone.jconf
   ;;
 
   -wall)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/project_cluster_tao_osg \
+    project_cluster_tao_osg \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${MY_VJCONFIGS}/ids.jconf
   ;;
@@ -37,7 +35,7 @@ case $1 in
     sleep 5
     echo TAO Naming Service Started
     echo Starting VE-CE...
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/Exe_server \#-ORBEndPoint iiop://ids7.scilan:57/hostname_in_ior=lars.netl.doe.gov \
+    Exe_server \#-ORBEndPoint iiop://ids7.scilan:57/hostname_in_ior=lars.netl.doe.gov \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService &#-ORBDebug -ORBDebugLevel 10 &
   ;;
   
@@ -47,28 +45,28 @@ case $1 in
   ;;
 
   -menu)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/WinClient \
+    WinClient \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService
   ;;
 
   -surface)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/makeVtkSurface
+    makeVtkSurface
   ;;
 
   -preproc)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/preprocessor
+    preprocessor
   ;;
 
   -surf2stl)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/convertSurfaceFileToStl
+    convertSurfaceFileToStl
   ;;
 
   -transVTK)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/transformVTK
+    transformVTK
   ;;
 
   -cfd2VTK)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/translateToVtk
+    translateToVtk
   ;;
 
   -make)
@@ -83,21 +81,25 @@ case $1 in
   ;;
   
   -merge)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/mergeVertices
+    mergeVertices
   ;;
 
   -meshView)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/meshViewer
+    meshViewer
   ;;
 
   -scalRange)
-    ${VE_SUITE_HOME}/bin/${CFDHOSTTYPE}/whatIsScalarRange
+    whatIsScalarRange
   ;;
 
   -doc)
     mozilla file:///${VE_SUITE_HOME}/docs/starcd/initial.htm &
   ;;
  
+  -texture)
+    vtkTo3DTexture
+  ;;
+
   -h)
   
   echo ""
@@ -124,6 +126,7 @@ case $1 in
   echo " "-scalRange = view scalar range of any vtk file
   echo "       "-doc = view documentation for setting up a CFD post process case
   echo "  "-shutdown = shutdown VE-CE and TAO NameService
+  echo "   "-texture = tool to create 3D textures
   echo ""
   ;;
 

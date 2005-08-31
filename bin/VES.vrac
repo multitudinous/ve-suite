@@ -6,14 +6,12 @@
 
 # Set the TAO nameServer properties used by the run scripts
 #setenv TAO_MACHINE lego.vrac.iastate.edu
-setenv TAO_MACHINE localhost
-setenv TAO_PORT 1237
+setenv TAO_MACHINE abbott.vrac.iastate.edu
+setenv TAO_PORT 1236
 
-setenv TAO_BUILD TRUE
-setenv CLUSTER_APP FALSE
 #source ${VE_SUITE_HOME}/VE_Installer/setup.tsh
 
-#set MY_VJCONFIGS=/home/vr/vjconfig/2.0beta2
+set MY_VJCONFIGS=/home/vr/vjconfig/2.0beta2
 
 switch ($1)
 
@@ -39,7 +37,7 @@ switch ($1)
   breaksw
 
   case -cluster:  
-    project_cluster_tao_pf \
+    project_tao_osg_cluster \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     /home/users/mccdo/babycave/vecr.jconf
     /usr/share/Performer/bin/rmsem      
@@ -48,8 +46,7 @@ switch ($1)
   case -sim:
     project_tao_pf \
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
-    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.jconf \
-    ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
+    st.jconf
     /usr/share/Performer/bin/rmsem
   breaksw
   
@@ -58,7 +55,6 @@ switch ($1)
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.jconf \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
-    /usr/share/Performer/bin/rmsem
   breaksw
 
   case -simosgvep:
@@ -66,7 +62,6 @@ switch ($1)
     -ORBInitRef NameService=corbaloc:iiop:${TAO_MACHINE}:${TAO_PORT}/NameService \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.base.jconf \
     ${VJ_BASE_DIR}/share/vrjuggler/data/configFiles/sim.wand.mixin.jconf
-    /usr/share/Performer/bin/rmsem
   breaksw
 
   case -c6mono:
@@ -97,8 +92,8 @@ switch ($1)
   breaksw
   
   case -shutdown:
-    killall -q Naming_Service 
-    killall -q Exe_server 
+    killall Naming_Service 
+    killall Exe_server 
   breaksw
 
   case -menu:
@@ -153,6 +148,10 @@ switch ($1)
     mozilla file:///${VE_SUITE_HOME}/docs/starcd/initial.htm &
   breaksw
  
+  case -texture:
+    vtkTo3DTexture
+  breaksw
+
   case -h:
   default:
   echo ""
@@ -168,8 +167,8 @@ switch ($1)
   echo "    "-c4open = c4 open cave display
   echo "  "-c4closed = c4 closed cave display
   echo "       "-sim = sim mode desktop display Performer graphics
-  echo "       "-simosg = sim mode desktop display OpenSceneGraph graphics
-  echo "       "-simosgvep = sim mode desktop display OpenSceneGraph Patented graphics
+  echo "    "-simosg = sim mode desktop display OpenSceneGraph graphics
+  echo " "-simosgvep = sim mode desktop display OpenSceneGraph Patented graphics
   echo "    "-c6mono = c6 in mono
   echo "    "-c4mono = c4 closed in mono
   echo When the viewer has started, start the menu in another shell
@@ -185,6 +184,7 @@ switch ($1)
   echo " "-scalRange = view scalar range of any vtk file
   echo "       "-doc = view documentation for setting up a CFD post process case
   echo "  "-shutdown = shutdown VE-CE and TAO NameService
+  echo "   "-texture = tool to create 3D textures
   echo ""
   
 endsw
