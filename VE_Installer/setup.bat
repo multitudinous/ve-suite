@@ -1,18 +1,17 @@
 REM Edit this file to reflect your local environment for VE_Suite
 
-set VE_SUITE_HOME=C:\devEnv\VE_Suite
-set VJ_BASE_DIR=C:\devEnv\vrjuggler-2.0.0-win32-vc71
-set VJ_DEPS_DIR=C:\devEnv\vrjuggler-2.0.0-win32-vc71-deps
-set VTK_HOME=C:\devEnv\VTK4-Install
-set WX_HOME=C:\devEnv\wxWidgets-2.6.1
+set VE_SUITE_HOME=C:\TSVEG\VE_Suite
+set VJ_BASE_DIR=C:\vrjuggler-2.0.0-win32-vc71
+set VJ_DEPS_DIR=C:\vrjuggler-2.0.0-win32-vc71-deps
+set VTK_HOME=C:\VTK_4.4_WinXP
+set WX_HOME=C:\wxWidgets-2.6.1
 set JAVA_HOME=C:\j2sdk1.4.2_06
-set ACE_ROOT=C:\devEnv\ACE\ACE_wrappers
+set ACE_ROOT=C:\ACE_wrappers
 set TAO_ROOT=%ACE_ROOT%\TAO
-set XERCESCROOT=C:\devEnv\xerces-c-src_2_6_0
-set WX_ROOT=C:\devEnv\wxWidgets-2.6.1
-set OSGHOME=C:\devEnv\OSG_.0.9.9\OpenSceneGraph
-REM set TAO_MACHINE=localhost
-set TAO_MACHINE=costello.vrac.iastate.edu
+set XERCESCROOT=C:\xerces-c-src_2_6_0
+set WX_ROOT=C:\wxWidgets-2.6.1
+set OSGHOME=C:\OSG_OP_OT-0.9.9\OpenSceneGraph
+set TAO_MACHINE=localhost
 set TAO_PORT=1239
 set SNX_BASE_DIR=%VJ_BASE_DIR%
 
