@@ -16,8 +16,8 @@ set VE_DEPS_DIR=C:\VE_Suite.0.9.0_Dependencies
 REM vrJuggler  
 REM These are setup for using VE-Suite dependency install's location
 REM change only if you are using your own build
-set VJ_BASE_DIR=%VE_DEPS_DIR%\vrjuggler2.0.0
-set VJ_DEPS_DIR=%VE_DEPS_DIR%\vrjuggler2.0.0
+set VJ_BASE_DIR="%VE_DEPS_DIR%\vrjuggler2.0.0"
+set VJ_DEPS_DIR="%VE_DEPS_DIR%\vrjuggler2.0.0"
 
 REM used for cluster apps
 REM set VEXMASTER=localhost
@@ -57,19 +57,19 @@ REM set OSGNOTIFYLEVEL=DEBUG_INFO
 REM Juggler dependencies
 REM These are currently set relative to VE-Suite's install
 REM if the user downloads there own juggler, these paths will have to be modified
-set JCCL_BASE_DIR=%VJ_BASE_DIR%
-set JCCL_DEFINITION_PATH=%VJ_BASE_DIR%\definitions
-set VJ_CFG_PATH=%VJ_BASE_DIR%\definitions
-set NSPR_ROOT=%VJ_DEPS_DIR%
-set SNX_BASE_DIR=%VJ_BASE_DIR%
+set JCCL_BASE_DIR="%VJ_BASE_DIR%"
+set JCCL_DEFINITION_PATH="%VJ_BASE_DIR%\definitions"
+set VJ_CFG_PATH="%VJ_BASE_DIR%\definitions"
+set NSPR_ROOT="%VJ_DEPS_DIR%"
+set SNX_BASE_DIR="%VJ_BASE_DIR%"
 
 REM Python build environment variables
 set PYTHONPATH=%VJ_DEPS_DIR%\lib\python
 
-set Path=%Path%;%VJ_DEPS_DIR%\bin;%VJ_DEPS_DIR%\lib;%VJ_BASE_DIR%\lib
-set Path=%Path%;%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll
-set Path=%Path%;%ACE_ROOT%\bin;%XERCESCROOT%\Build\Win32\VC7\Debug
-set Path=%Path%;%OSGHOME%\bin
-set Path=%Path%;%VE_INSTALL_DIR%\bin
-set Path=%Path%;%VE_DEPS_DIR%\bin
+set Path=%Path%;"%VJ_DEPS_DIR%\bin";"%VJ_DEPS_DIR%\lib";"%VJ_BASE_DIR%\lib"
+REM set Path=%Path%;%VTK_HOME%\bin;%WX_HOME%\lib\vc_dll
+REM set Path=%Path%;%ACE_ROOT%\bin;%XERCESCROOT%\Build\Win32\VC7\Debug
+REM set Path=%Path%;%OSGHOME%\bin
+set Path=%Path%;"%VE_INSTALL_DIR%\bin"
+set Path=%Path%;"%VE_DEPS_DIR%\bin"
 set Path=%Path%;%CD%\bin
