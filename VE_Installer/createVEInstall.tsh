@@ -8,7 +8,9 @@ setenv VE_VERSION .0.9.0
 #   setenv VE_SUITE_HOME $1
 #else
 #this is the release directory
+if ( $?VE_SUITE_HOME ) then
    setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_0.9.0/VE_Suite
+endif
 
 #determine the platform
 if ( -e /etc/redhat-release ) then
