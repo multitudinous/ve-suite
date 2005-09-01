@@ -42,6 +42,12 @@ To view the sample dataset, type sample.param in VE-Xplorer cmd window when
 prompted.
 ========================================================================
 NOTES:
+- Currently the dependencies MUST be installed in a location that 
+DOES NOT contain spaces. For example, a valid location is:
+c:/myDownloads/VE_Suite.0.9.0_Dependencies
+
+An INVALID location is:
+C:/My Downloads/VE_Suite.0.9.0_Dependencies
 
 ========================================================================
 Visit: 

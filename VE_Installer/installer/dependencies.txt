@@ -12,6 +12,13 @@ OpenSceneGraph 0.9.9 -- SceneGraph handling.
 vrJuggler 2.0.0 -- graphics device handling
 ===============================================================================
 NOTES:
+- Currently the dependencies MUST be installed in a location that
+DOES NOT contain spaces. For example, a valid location is:
+c:/myDownloads/VE_Suite.0.9.0_Dependencies
+
+An INVALID location is:
+C:/My Downloads/VE_Suite.0.9.0_Dependencies
+
 - If ACE/TAO is selected, be sure to edit the NameService.bat file
  (located in your VE_INSTALL_DIR\bin)
   to call the Name_Service.exe located in VE_DEPS_DIR\bin
