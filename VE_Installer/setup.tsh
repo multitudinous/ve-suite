@@ -91,8 +91,8 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    setenv JDK_HOME /usr/java2
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/IRIX32
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/IRIX32
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0/IRIX32-pthread
-   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0-deps/IRIX32-pthread
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-irix-n32-posix
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-irix-n32-posix-deps
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/IRIX32
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
@@ -120,8 +120,8 @@ else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTT
    setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-RH80
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux-RHEL_3
-   setenv VJ_BASE_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0/Linux-RHEL_3
-   setenv VJ_DEPS_DIR /home/users/sgent/Install_Practice/Linux_RHE3/vrjuggler-2.0.0-deps/Linux-RHEL_3
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux-RHEL_3
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux-RHEL_3
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/OSG/Linux-RHEL_3
 
@@ -149,8 +149,8 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_i* ) then
    setenv JDK_HOME /usr/java/j2sdk1.4.2_03
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/VTK4.4/Linux-SuSE91
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.0/Linux-SuSE92
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0/Linux-SuSE92
-   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0-deps/Linux-SuSE92
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-suse93-i686
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-suse93-i686-deps
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux-SuSE92/
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
@@ -177,8 +177,8 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_*64 ) then
    setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/VTK4.4/Linux64-SuSE92
    setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.0/Linux64-SuSE92
-   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0/Linux-SuSE92_64
-   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.0-deps/Linux-SuSE92_64
+   setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/Linux-SuSE93_64
+   setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/Linux-SuSE93_64
    setenv OSG_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/OSG/Linux64-SuSE92
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
 
