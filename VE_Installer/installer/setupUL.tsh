@@ -9,8 +9,8 @@ setenv VE_DEPS_DIR <install_location>/VE_Suite_deps.0.9.0/RHEL_3
 # vrJuggler  
 # These are setup for using VE-Suite dependency install's location
 # change only if you are using your own build
-setenv VJ_BASE_DIR ${VE_DEPS_DIR}/vrJuggler-2.0.0
-setenv VJ_DEPS_DIR ${VE_DEPS_DIR}/vrJuggler-2.0.0
+setenv VJ_BASE_DIR ${VE_DEPS_DIR}/vrJuggler-2.0.1
+setenv VJ_DEPS_DIR ${VE_DEPS_DIR}/vrJuggler-2.0.1
 
 #used for cluster apps
 #setenv VEXMASTER localhost
