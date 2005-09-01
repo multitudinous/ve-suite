@@ -1,4 +1,4 @@
-@ECHO ON
+@ECHO OFF
 REM Edit this file to reflect your local environment for VE_Suite
 
 REM where VE-Suite installed
@@ -11,13 +11,13 @@ REM the directory containing user defined plugins
 set VE_USER_PLUGIN_DIR=.\
 
 REM VE-Suite pre-complied dependencies
-set VE_DEPS_DIR="C:\VE_Suite.0.9.0_Dependencies"
+set VE_DEPS_DIR=C:\VE_Suite.0.9.0_Dependencies
 
 REM vrJuggler  
 REM These are setup for using VE-Suite dependency install's location
 REM change only if you are using your own build
-set VJ_BASE_DIR=%VE_DEPS_DIR%\vrjuggler2.0.0
-set VJ_DEPS_DIR=%VE_DEPS_DIR%\vrjuggler2.0.0
+set VJ_BASE_DIR=%VE_DEPS_DIR%\vrjuggler2.0.1
+set VJ_DEPS_DIR=%VE_DEPS_DIR%\vrjuggler2.0.1
 
 REM used for cluster apps
 REM set VEXMASTER=localhost

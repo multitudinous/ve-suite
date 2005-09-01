@@ -5,13 +5,14 @@
 #define MyAppName "VE_Suite.0.9.0"
 #define MyAppVerName "VE_Suite.0.9.0"
 #define MyAppPublisher "Complex Systems Virtural Engineering Group"
-#define MyAppURL "www.vrac.iastate.edu/~kmbryden/vesuite"
+#define MyAppURL "www.vesuite.org"
 #define NameService "bin/NameService.bat"
 #define VEConductor "bin/VE-Conductor.bat"
 #define VEXplorerPF "bin/run.pf.bat"
 #define VEXplorerOSG "bin/run.osg.bat"
 #define VEXplorerOSGVEP "bin/run.osg.vep.bat"
 #define VEXplorerOSGVEPC "bin/run.osg.vep.cluster.bat"
+#define VESetupScript "setup.bat"
 
 [Setup]
 AppName={#MyAppName}
@@ -109,6 +110,7 @@ Source: {#VEHOME}\VE_TestSuite\POST_DATA2\*; DestDir: {app}\\exampleDatasets\POS
 Source: {#VEHOME}\VE_Installer\installer\installerImages\icons.bmp; DestDir: {app}\images; DestName: vesSmallIcon.bmp
 Source: {#VEHOME}\bin\win32\project_tao_osg_vep_cluster_d.exe; DestDir: {app}\bin; Flags: ignoreversion; Components: vexplorer\osgvepcluster
 Source: {#VEHOME}\bin\win32\WinClientd.exe.manifest; DestDir: {app}\bin
+;Source: {#VEHOME}\examples\Model\*; DestDir: {app}\examplePlugins; Flags: overwritereadonly recursesubdirs uninsremovereadonly
 [Icons]
 Name: {group}\NameService; Filename: {app}\{#NameService}; WorkingDir: {app}; Components: nameserver; Flags: runminimized; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\{cm:UninstallProgram,{#MyAppName}}; Filename: {uninstallexe}
@@ -117,6 +119,7 @@ Name: {group}\VE-Xplorer-OSG; Filename: {app}\{#VEXplorerOSG}; WorkingDir: {app}
 Name: {group}\VE-Xplorer-OSG_VEP; Filename: {app}\{#VEXplorerOSGVEP}; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Xplorer-OSG_VEPC; Filename: {app}\{#VEXplorerOSGVEPC}; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp
 Name: {group}\VE-Xplorer-PF; Filename: {app}\{#VEXplorerPF}; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp
+Name: {group}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app}; IconFilename: {app}\images\vesSmallIcon.bmp
 
 Name: {userdesktop}\NameService; Filename: {app}\bin\NameService.bat; WorkingDir: {app}; Flags: runminimized; Components: nameserver; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopNSIcon
 Name: {userdesktop}\VE-Conductor; Filename: {app}\bin\VE-Conductor.bat; WorkingDir: {app}; Components: veconductor; IconFilename: {app}\images\vesSmallIcon.bmp; Flags: runminimized; Tasks: desktopVECIcon
@@ -124,3 +127,4 @@ Name: {userdesktop}\VE-Xplorer-OSG; Filename: {app}\bin\run.osg.bat; WorkingDir:
 Name: {userdesktop}\VE-Xplorer-OSG_VEP; Filename: {app}\bin\run.osg.vep.bat; WorkingDir: {app}; Components: vexplorer\osgvep; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPIcon
 Name: {userdesktop}\VE-Xplorer-OSG_VEPC; Filename: {app}\bin\run.osg.vep.cluster.bat; WorkingDir: {app}; Components: vexplorer\osgvepcluster; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXOVEPCIcon
 Name: {userdesktop}\VE-Xplorer-PF; Filename: {app}\bin\run.pf.bat; WorkingDir: {app}; Components: vexplorer\pf; IconFilename: {app}\images\vesSmallIcon.bmp; Tasks: desktopVXPFIcon
+;Name: {userdesktop}\VE-Setup; Filename: {app}\{#VESetupScript}; WorkingDir: {app};IconFilename: {app}\images\vesSmallIcon.bmp

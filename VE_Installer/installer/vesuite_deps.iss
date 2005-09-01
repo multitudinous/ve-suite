@@ -5,7 +5,7 @@
 #define MyAppName "VE_Suite.0.9.0_Dependencies"
 #define MyAppVerName "VE_Suite.0.9.0_Dependencies"
 #define MyAppPublisher "Complex Systems Virtual Engineering Group"
-#define MyAppURL "www.vrac.iastate.edu/~kmbryden/vesuite"
+#define MyAppURL "www.vesuite.org"
 
 
 [Setup]
@@ -167,7 +167,7 @@ Source: {#OSGHOME}\bin\osgdb_pfbd.dll; DestDir: {app}\bin; Components: osg; Flag
 Source: {#OSGHOME}\bin\osgSimd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#OSGHOME}\bin\osgTextd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
 Source: {#OSGHOME}\bin\osgFXd.dll; DestDir: {app}\bin; Components: osg; Flags: ignoreversion
-Source: {#JUGGLERINSTHOME}\*; DestDir: {app}\vrJuggler2.0.0; Flags: ignoreversion recursesubdirs; Components: juggler
+Source: {#JUGGLERINSTHOME}\*; DestDir: {app}\vrJuggler2.0.1; Flags: ignoreversion recursesubdirs; Components: juggler
 
 
 [Icons]

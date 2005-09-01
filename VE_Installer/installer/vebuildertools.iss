@@ -4,7 +4,7 @@
 #define MyAppName "VE-Builder Tools .0.9.0"
 #define MyAppVerName "VE-Builder Tools .0.9.0"
 #define MyAppPublisher "Complex Systems and Virtual Engineering Group"
-#define MyAppURL "www.vrac.iastate.edu/~kmbryden/vesuite"
+#define MyAppURL "www.vesuite.org"
 #define BuilderShell "bin/buildershell.bat"
 #include <vesenv.iss>
 [Setup]
