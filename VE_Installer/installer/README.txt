@@ -21,9 +21,11 @@ A sample dataset is also optionally installed.
 After running the installer, you must edit your setup file 
 ./setup.bat
 
-to reflect your environment. The variables defined in the
-setup.bat file to tell VE-Suite where its dependencies are located,as well
-as setting up the working directory.  
+to reflect your environment. A shortcut (VE-Setup) to the setup.bat file 
+is provided on the Start Menu.
+
+The variables defined in the setup.bat file to tell VE-Suite where 
+its dependencies are located,as well as setting up the working directory.  
 
 For all installs set:
 VE_INSTALL_DIR ==> the location of the install (example: C:\VE_Suite.9.0)
@@ -42,12 +44,16 @@ To view the sample dataset, type sample.param in VE-Xplorer cmd window when
 prompted.
 ========================================================================
 NOTES:
-- Currently the dependencies MUST be installed in a location that 
-DOES NOT contain spaces. For example, a valid location is:
-c:/myDownloads/VE_Suite.0.9.0_Dependencies
+- If your install paths contains spaces you MUST use the "DOS 8 character
+ equivalents".
 
-An INVALID location is:
-C:/My Downloads/VE_Suite.0.9.0_Dependencies
+For example, if you installed in:
+
+C:\Program Files\VE_Suite.0.9.0
+
+You MUST set VE_INSTALL_DIR in the setup.bat file in the following manner:
+
+set VE_INSTALL_DIR=C:\PROGRA~1\VE_Suite.0.9.0
 
 ========================================================================
 Visit: 

@@ -1,8 +1,13 @@
 @ECHO OFF
 REM Edit this file to reflect your local environment for VE_Suite
 
-REM where VE-Suite installed
-set VE_INSTALL_DIR="C:\VE_Suite.0.9.0"
+REM Where VE-Suite installed...
+REM If your install paths contains spaces you MUST use the "DOS 8 character equivalents"
+REM For example, if you installed in C:\Program Files\VE_Suite.0.9.0
+REM you must set VE_INSTALL_DIR in the following manner:
+REM set VE_INSTALL_DIR=C:\PROGRA~1\VE_Suite.0.9.0
+
+set VE_INSTALL_DIR=C:\VE_Suite.0.9.0
 
 REM the directory containing datasets
 set VE_WORKING_DIR=%VE_INSTALL_DIR%\exampleDatasets
