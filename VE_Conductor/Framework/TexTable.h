@@ -43,7 +43,7 @@ class VE_GUIPLUGINS_EXPORTS TexTable : public wxGrid
 public:
    TexTable(wxWindow* parent, wxWindowID id = -1, const wxPoint& pos = wxDefaultPosition, const wxSize& size = wxDefaultSize);
    ~TexTable(){;}
-   void Clear( void ){ ClearGrid(); }
+   void Clear( void ){ ClearGrid(); SetNumofCols(2); }
    void SetColWidth( int Col_id, int width );
    void SetNumofCols( int num );
    void SetColTitles( const std::vector<wxString>& titles );
