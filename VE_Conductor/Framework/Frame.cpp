@@ -220,7 +220,7 @@ void AppFrame::OnClose(wxCloseEvent& WXUNUSED(event) )
 	   //{
 	   // UIname[0].id = CORBA::string_dup ((p_ui_i->UIName_).c_str());
 	   //naming_context->unbind(UIname);
-	   if ( !CORBA::is_nil(poa) )
+	   if ( !CORBA::is_nil( poa.in() ) )
 	      poa->destroy (1, 1);
 	   //}
       orb->destroy();
@@ -434,14 +434,14 @@ void AppFrame::Open(wxCommandEvent& WXUNUSED(event))
 
 void AppFrame::LoadFromServer( wxCommandEvent& WXUNUSED(event) )
 {
-   char *nw_str;
+   char* nw_str = 0;
    try
    {
       nw_str=network->exec->GetNetwork();
    }
    catch ( CORBA::Exception& )
    {
-      Log("no exec found!\n");
+      Log("No VE_CE found!\n");
    }
 
    network->LoadS(nw_str);
@@ -546,7 +546,7 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
    result_dlg->syngas->SetColTitles( titles );
    result_dlg->syngas->SetColAlignments( alignments );
 
-   if (!CORBA::is_nil(network->exec)) 
+   if (!CORBA::is_nil( network->exec.in() )) 
    {
       try 
       {
@@ -561,6 +561,12 @@ void AppFrame::ViewResult(wxCommandEvent& WXUNUSED(event) )
                p.Load(result, strlen(result));
 
                descs = p.GetInterfaceVector()[0].getStrings();
+               
+               // This may not be needed.
+               // this should be taken care of with previous statement
+               if ( descs.size() < 1 ) 
+                  continue;
+               
                v_desc.clear();
                v_value.clear();
                /*

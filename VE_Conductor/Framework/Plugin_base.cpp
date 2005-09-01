@@ -277,19 +277,22 @@ UIDialog* REI_Plugin::UI(wxWindow* parent)
 /////////////////////////////////////////////////////////////////////////////
 UIDialog* REI_Plugin::Result(wxWindow* parent)
 {
-  std::vector<wxString> titles;
-  titles.push_back("Description");
-  titles.push_back("Value");
+   std::vector<wxString> titles;
+   //std::vector<std::string> descs;
+   std::vector<int> alignments;
 
-  if (result_dlg==NULL)
-    result_dlg = new TextResultDialog(parent);
-  result_dlg->syngas->Clear();
-  result_dlg->syngas->AddRow(titles);
-  result_dlg->syngas->AddSeperator(' ');
-  result_dlg->syngas->AddSeperator('+');
-  result_dlg->syngas->AddSeperator(' ');
-  result_dlg->Set2Cols(v_desc, v_value);
-  return result_dlg;
+   titles.push_back( "Description" );
+   alignments.push_back( wxALIGN_LEFT );
+   titles.push_back("Value");
+   alignments.push_back( wxALIGN_RIGHT );
+
+   if (result_dlg==NULL)
+      result_dlg = new TextResultDialog(parent, wxT("Result Summary"), wxSize(560,400));
+   result_dlg->syngas->Clear();
+   result_dlg->syngas->SetColTitles( titles );
+   result_dlg->syngas->SetColAlignments( alignments );
+   result_dlg->Set2Cols( v_desc, v_value );
+   return result_dlg;
 }
 
 /////////////////////////////////////////////////////////////////////////////
@@ -468,8 +471,8 @@ void REI_Plugin::UnPack(Interface * intf)
       itervs =_string1D.find(vars[i]);
       if (itervs!=_string1D.end())
       {
-         unsigned int testInt = (*itervs->second).size();
-         unsigned int idint = this->GetID();
+         //unsigned int testInt = (*itervs->second).size();
+         //unsigned int idint = this->GetID();
          std::vector<std::string> tempvector = (*itervs->second);
          mod_pack.getVal(vars[i], tempvector );
          (*itervs->second) = tempvector;
@@ -516,8 +519,13 @@ void REI_Plugin::UnPackResult(Interface* intf)
    v_value.clear();
    for ( unsigned int i=0; i<descs.size(); ++i )
    {
-      v_desc.push_back( descs[i].c_str() );
-      v_value.push_back( (intf->getString(descs[i])).c_str() );
+      std::string desc = descs[i];
+      std::string value = intf->getString(descs[i]);
+      if (desc.substr(0,3) == "***") 
+         desc = desc.substr( 9, desc.size()-9 );
+     
+      v_desc.push_back (desc.c_str());
+      v_value.push_back (value.c_str());
    }
 }
 
@@ -700,7 +708,7 @@ GeometryDataBuffer* REI_Plugin::GetGeometryDataBuffer( void )
 
 bool REI_Plugin::HasGeomInfoPackage()
 {
-   int local_id = this->GetID();
+   //int local_id = this->GetID();
    std::map<int, std::vector <GeometryInfoPackage> > localmap;
 
    if ( geometryDataBuffer == 0 )
