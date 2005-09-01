@@ -92,15 +92,17 @@ int fileIO::DirectoryExists( char * dirName )
 int fileIO::isDirWritable( const std::string& dirname )
 {
    fs::path file_name( dirname, fs::native );
-   file_name = fs::complete(file_name, "testing.txt");
+   file_name = fs::complete("testing.txt", file_name );
+   //std::cout << file_name.string() << std::endl;
 
    fs::ofstream test_file(file_name, std::ios_base::out | std::ios_base::app);
+   test_file.close();
    bool result(false);
-   if (test_file)
+   if ( fs::exists( file_name ) )
    {
+      fs::remove( file_name );
       result = true;
    }
-   test_file.close();
    return static_cast<int>(result);
 }
 
