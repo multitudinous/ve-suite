@@ -89,9 +89,9 @@ endif
 
 if ( ${CFDHOSTTYPE} == "IRIX64" ) then
    if ( $?LD_LIBRARYN32_PATH ) then
-      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
+      setenv LD_LIBRARYN32_PATH ${LD_LIBRARYN32_PATH}:${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib32
    else
-      setenv LD_LIBRARYN32_PATH ${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib
+      setenv LD_LIBRARYN32_PATH ${VE_DEPS_DIR}/bin:${VE_INSTALL_DIR}/bin:${VJ_BASE_DIR}/lib32
    endif
 else 
    if ( $?LD_LIBRARY_PATH ) then

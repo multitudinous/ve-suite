@@ -1,4 +1,4 @@
-#/bin/csh
+#/bin/csh -f
 #copies the appropriate libs/dlls from ve-suite for installs 
 #in the future cmd line args will specify VE-Suite home 
 
@@ -9,6 +9,8 @@ setenv VE_VERSION .0.9.0
 #else
 #this is the release directory
 if ( $?VE_SUITE_HOME ) then
+   echo $VE_SUITE_HOME
+else 
    setenv VE_SUITE_HOME /home/vr/Applications/TSVEG/VE_Suite_0.9.0/VE_Suite
 endif
 
