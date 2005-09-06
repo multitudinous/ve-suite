@@ -547,7 +547,7 @@ int fileIO::getIntegerBetween( const int min, const int max )
             // convert array of chars to integer
             value = atoi(string);
          }
-         delete [] shortString;
+         //delete [] shortString;
       }
       //std::cout << "value = " << value << std::endl;
    } while ( index == 0 || (value < min || value > max ) );
