@@ -18,8 +18,8 @@ EXTRA_LIBS+=  -L${TAO_HOME}/Linux64/lib -L${ACE_HOME}/Linux64/lib
 EXTRA_INCLUDES+= -I${TAO_HOME}/Linux64/include -I${ACE_HOME}/Linux64/include 
 else
 EXTRA_CXXFLAGS+= -W -Wall -Wpointer-arith -pipe -O3 -g -D_TAO -D_REENTRANT -DACE_HAS_AIO_CALLS -D_GNU_SOURCE -DACE_HAS_EXCEPTIONS -D__ACE_INLINE__
-EXTRA_LIBS+=  -L${TAO_HOME}/Linux/lib -L${ACE_HOME}/Linux/lib 
-EXTRA_INCLUDES+= -I${TAO_HOME}/Linux/include -I${ACE_HOME}/Linux/include 
+EXTRA_LIBS+=  -L${TAO_HOME}/lib
+EXTRA_INCLUDES+= -I${TAO_HOME}/include
 endif
 endif
 
