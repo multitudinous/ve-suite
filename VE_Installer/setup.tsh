@@ -119,7 +119,7 @@ if ( ${CFDHOSTTYPE} == "IRIX64" ) then
 else if ( ${CFDHOSTTYPE} =~ RedHat_* || ${CFDHOSTTYPE} =~ Fedora_* || ${CFDHOSTTYPE} =~ RHEL_* ) then
    setenv JDK_HOME /usr
    setenv VTK_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Debug/VTK/Linux-RHEL_4
-   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Debug/wxGTK-2.6.1/Linux-RHEL_4
+   setenv WX_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/wxGTK-2.6.1/Linux-RHEL_4
    setenv VJ_BASE_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1/vrjuggler-2.0.1-linux-rhel4-i686
    setenv VJ_DEPS_DIR /home/vr/Applications/TSVEG/Libraries/Release/Opt/vrjuggler-2.0.1-deps/vrjuggler-2.0.1-linux-rhel4-i686-deps
    setenv CORONA_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/corona-1.0.2/Linux-SuSE92
@@ -159,11 +159,9 @@ else if ( ${CFDHOSTTYPE} =~ SuSE_9.*_i* ) then
    setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${VE_SUITE_HOME}/lib/${CFDHOSTTYPE}
 
    if ( ${TAO_BUILD} == "TRUE" ) then
-      setenv ACE_HOME /home/vr/Applications/TSVEG/Libraries/ACE-5.4
-      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/TAO-1.4
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${ACE_HOME}/Linux/lib
-      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/Linux/lib
-      setenv PATH ${ACE_HOME}/bin:${ACE_HOME}/Linux/bin:${TAO_HOME}/Linux/bin:${PATH}
+      setenv TAO_HOME /home/vr/Applications/TSVEG/Libraries/Release/Opt/ACE_TAO/Linux-SuSE93
+      setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${TAO_HOME}/lib
+      setenv PATH ${TAO_HOME}/bin:${PATH}
 
       setenv XERCESCROOT /home/vr/Applications/TSVEG/Libraries/xerces-2.5/Linux-SuSE91
       setenv LD_LIBRARY_PATH ${LD_LIBRARY_PATH}:${XERCESCROOT}/lib
