@@ -4,8 +4,6 @@
 #include <vector>
 #include <string>
 
-using namespace std;
-
 class TEMPLATE_UI_Dialog : public UIDialog
 {
    public:

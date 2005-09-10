@@ -421,15 +421,15 @@ void GenCode_UI_Plugin()
 	for (i=0; i<Double_name.size(); i++)
 	  fprintf(f_h, "  double %s;\n", Double_name[i].c_str());
 	for (i=0; i<String_name.size(); i++)
-	  fprintf(f_h, "  string %s;\n", String_name[i].c_str());
+	  fprintf(f_h, "  std::string %s;\n", String_name[i].c_str());
 	for (i=0; i<Int_name.size(); i++)
 	  fprintf(f_h, "  long %s;\n", Int_name[i].c_str());
 	for (i=0; i<Double1D_name.size(); i++)
-	  fprintf(f_h, "  vector<double> %s;\n", Double1D_name[i].c_str());
+	  fprintf(f_h, "  std::vector< double > %s;\n", Double1D_name[i].c_str());
 	for (i=0; i<String1D_name.size(); i++)
-	  fprintf(f_h, "  vector<string> %s;\n", String1D_name[i].c_str());
+	  fprintf(f_h, "  std::vector< std::string > %s;\n", String1D_name[i].c_str());
 	for (i=0; i<Int1D_name.size(); i++)
-	  fprintf(f_h, "  vector<long> %s;\n", Int1D_name[i].c_str());
+	  fprintf(f_h, "  std::vector< long > %s;\n", Int1D_name[i].c_str());
 	
       }
       else
@@ -534,15 +534,15 @@ void GenCode_UI_Plugin()
 	for (i=0; i<Double_name.size(); i++)
 	  fprintf(f_ui_h, "  double* p_%s;\n", Double_name[i].c_str());
 	for (i=0; i<String_name.size(); i++)
-	  fprintf(f_ui_h, "  string* p_%s;\n", String_name[i].c_str());
+	  fprintf(f_ui_h, "  std::string* p_%s;\n", String_name[i].c_str());
 	for (i=0; i<Int_name.size(); i++)
 	  fprintf(f_ui_h, "  long* p_%s;\n", Int_name[i].c_str());
 	for (i=0; i<Double1D_name.size(); i++)
-	  fprintf(f_ui_h, "  vector<double>* p_%s;\n", Double1D_name[i].c_str());
+	  fprintf(f_ui_h, "  std::vector< double >* p_%s;\n", Double1D_name[i].c_str());
 	for (i=0; i<String1D_name.size(); i++)
-	  fprintf(f_ui_h, "  vector<string>* p_%s;\n", String1D_name[i].c_str());
+	  fprintf(f_ui_h, "  std::vector< std::string >* p_%s;\n", String1D_name[i].c_str());
 	for (i=0; i<Int1D_name.size(); i++)
-	  fprintf(f_ui_h, "  vector<long>* p_%s;\n", Int1D_name[i].c_str());
+	  fprintf(f_ui_h, "  std::vector< long >* p_%s;\n", Int1D_name[i].c_str());
 	
       }
       else
@@ -553,15 +553,15 @@ void GenCode_UI_Plugin()
 	  for (i=0; i<Double_name.size(); i++)
 	    fprintf(f_ui_h, "          double* %s,\n", Double_name[i].c_str());
 	  for (i=0; i<String_name.size(); i++)
-	    fprintf(f_ui_h, "          string* %s,\n", String_name[i].c_str());
+	    fprintf(f_ui_h, "          std::string* %s,\n", String_name[i].c_str());
 	  for (i=0; i<Int_name.size(); i++)
 	    fprintf(f_ui_h, "          long* %s,\n", Int_name[i].c_str());
 	  for (i=0; i<Double1D_name.size(); i++)
-	    fprintf(f_ui_h, "          vector<double>* %s,\n", Double1D_name[i].c_str());
+	    fprintf(f_ui_h, "          std::vector< double >* %s,\n", Double1D_name[i].c_str());
 	  for (i=0; i<String1D_name.size(); i++)
-	    fprintf(f_ui_h, "          vector<string>* %s,\n", String1D_name[i].c_str());
+	    fprintf(f_ui_h, "          std::vector< std::string >* %s,\n", String1D_name[i].c_str());
 	  for (i=0; i<Int1D_name.size(); i++)
-	    fprintf(f_ui_h, "          vector<long>* %s,\n", Int1D_name[i].c_str());
+	    fprintf(f_ui_h, "          std::vector< long >* %s,\n", Int1D_name[i].c_str());
 	  fseek(f_ui_h, -2, SEEK_CUR); //wind back the last , and \n
 	  fprintf(f_ui_h, ");\n"); 
 	  already_one_public=true;
@@ -597,15 +597,15 @@ void GenCode_UI_Plugin()
 	for (i=0; i<Double_name.size(); i++)
 	  fprintf(f_ui_cpp, "  double* %s,\n", Double_name[i].c_str());
 	for (i=0; i<String_name.size(); i++)
-	  fprintf(f_ui_cpp, "  string* %s,\n", String_name[i].c_str());
+	  fprintf(f_ui_cpp, "  std::string* %s,\n", String_name[i].c_str());
 	for (i=0; i<Int_name.size(); i++)
 	  fprintf(f_ui_cpp, "  long* %s,\n", Int_name[i].c_str());
 	for (i=0; i<Double1D_name.size(); i++)
-	    fprintf(f_ui_cpp, "  vector<double>* %s,\n", Double1D_name[i].c_str());
+	    fprintf(f_ui_cpp, "  std::vector< double >* %s,\n", Double1D_name[i].c_str());
 	for (i=0; i<String1D_name.size(); i++)
-	  fprintf(f_ui_cpp, "  vector<string>* %s,\n", String1D_name[i].c_str());
+	  fprintf(f_ui_cpp, "  std::vector< std::string >* %s,\n", String1D_name[i].c_str());
 	for (i=0; i<Int1D_name.size(); i++)
-	  fprintf(f_ui_cpp, "  vector<long>* %s,\n", Int1D_name[i].c_str());
+	  fprintf(f_ui_cpp, "  std::vector< long >* %s,\n", Int1D_name[i].c_str());
 	fseek(f_ui_cpp, -2, SEEK_CUR); //wind back the last , and \n
 	fprintf(f_ui_cpp, ")\n");
 	
