@@ -2,6 +2,7 @@
 #include <orbsvcs/CosNamingC.h>
 #include "Template_i.h"
 #include <tao/BiDir_GIOP/BiDirGIOP.h>
+#include <iostream>
 
 //This Unit_client act as the executive's client 
 //This Unit is also the Unit servant for the executive' Unit client
@@ -14,9 +15,9 @@ int main (int argc, char* argv[])
    }
    catch(const XMLException &toCatch)
    {
-      XERCES_STD_QUALIFIER cerr << "Error during Xerces-c Initialization.\n"
+      std::cerr << "Error during Xerces-c Initialization.\n"
 				<< "  Exception message:"
-				<< XMLString::transcode(toCatch.getMessage()) << XERCES_STD_QUALIFIER endl;
+				<< XMLString::transcode(toCatch.getMessage()) << std::endl;
       return 1;
    }
   
@@ -100,7 +101,7 @@ int main (int argc, char* argv[])
    }
    catch (CORBA::Exception &) 
    {
-      cerr << "CORBA exception raised!" << endl;
+      std::cerr << "CORBA exception raised!" << std::endl;
     
    }
    return 0;

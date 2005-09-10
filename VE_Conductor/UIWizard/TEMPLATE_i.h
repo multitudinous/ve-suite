@@ -7,8 +7,6 @@
 #pragma once
 #endif /* ACE_LACKS_PRAGMA_ONCE */
 
-using namespace std;
-
 //Class Body_Unit_i
 class  Body_Unit_i : public virtual POA_Body::Unit
 {

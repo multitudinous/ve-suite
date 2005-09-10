@@ -1,4 +1,6 @@
 #include "Template_i.h"
+#include <iostream>
+using namespace std;
 
 // Implementation skeleton constructor
 Body_Unit_i::Body_Unit_i (Body::Executive_ptr exec, std::string name)
