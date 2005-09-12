@@ -378,6 +378,10 @@ void TCFrame::_chooseDirectory(int style, int browseID)
          _gridFiles.Clear();
          _numFiles = 0;
          _inputDir = wxT(_dirDialog->GetPath().c_str());
+         
+         //make the output dir == to the current input directory
+         _outputDir = wxT(_inputDir.c_str());
+
          inputFileDirectory.Open(wxString(_inputDir));
          if(inputFileDirectory.IsOpened()){
             wxString path;
