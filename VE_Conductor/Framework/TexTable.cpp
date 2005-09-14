@@ -32,6 +32,8 @@
 #include "VE_Conductor/Framework/TexTable.h"
 #include <iostream>
 
+#include <wx/window.h>
+
 TexTable::TexTable(wxWindow* parent,wxWindowID id, const wxPoint& pos, const wxSize& size)
   : wxGrid(parent, id, pos, size)
 //wxTextCtrl(parent, id, "x", pos, size, wxTE_MULTILINE|wxTE_READONLY|wxHSCROLL|wxTE_DONTWRAP)

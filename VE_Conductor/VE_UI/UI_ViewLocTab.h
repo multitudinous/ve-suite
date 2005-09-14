@@ -35,8 +35,22 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
+#include <wx/scrolwin.h>
+#include <wx/panel.h>
 #include <vector>
+
+class wxButton;
+class wxComboBox;
+class wxListBox;
+class wxTextCtrl;
+class wxSlider;
+class wxString;
+class wxNotebook;
+class wxStaticText;
+class wxStaticBox;
+class wxSizer;
+class wxBoxSizer;
+class wxStaticBoxSizer;
 
 enum VIEWLOC_TAB_IDS{
    VIEWLOC_LOAD_BUTTON,

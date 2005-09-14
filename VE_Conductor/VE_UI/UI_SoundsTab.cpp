@@ -35,6 +35,10 @@
 #include <iostream>
 #include <cmath>
 
+#include <wx/button.h>
+#include <wx/checklst.h>
+#include <wx/sizer.h>
+
 BEGIN_EVENT_TABLE(UI_SoundTab, wxPanel)
    //EVT_CHECKLISTBOX(SOUND_CBOX,UI_SoundTab::_onSounds)
    EVT_BUTTON(SOUND_UPDATE_BUTTON,UI_SoundTab::_onUpdate)

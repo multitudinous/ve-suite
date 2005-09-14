@@ -32,7 +32,13 @@
 #ifndef PORTDIALOG_H
 #define PORTDIALOG_H
 
-#include <wx/wx.h>
+#include <wx/dialog.h>
+
+class wxTextCtrl;
+class wxButton;
+class wxBoxSizer;
+class wxStaticText;
+
 #include <vector>
 #include "VE_Conductor/Framework/ListTable.h"
 

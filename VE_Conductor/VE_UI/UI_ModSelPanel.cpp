@@ -34,6 +34,11 @@
 #include "VE_Conductor/VE_UI/UI_ModelData.h"
 #include <iostream>
 
+#include <wx/radiobox.h>
+#include <wx/string.h>
+
+
+
 BEGIN_EVENT_TABLE(UI_ModSelScroll, wxScrolledWindow)
 END_EVENT_TABLE()
 //////////////////////////////////////////////////

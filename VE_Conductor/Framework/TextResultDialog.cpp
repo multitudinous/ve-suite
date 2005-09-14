@@ -34,6 +34,10 @@
 
 #include <iostream>
 
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/sizer.h>
+
 BEGIN_EVENT_TABLE(TextResultDialog, wxDialog)
   EVT_BUTTON(wxID_OK, TextResultDialog::OnOK)
 END_EVENT_TABLE()

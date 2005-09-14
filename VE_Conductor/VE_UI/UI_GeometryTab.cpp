@@ -36,6 +36,15 @@
 #include <string>
 #include <cmath>
 
+#include <wx/radiobox.h>
+#include <wx/checklst.h>
+#include <wx/button.h>
+#include <wx/slider.h>
+#include <wx/combobox.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+
 BEGIN_EVENT_TABLE(UI_GeometryTab, wxPanel)
    EVT_COMMAND_SCROLL(GEOMETRY_OPACITY_SLIDER, UI_GeometryTab::ChangeOpacity)
    //EVT_COMMAND_SCROLL_ENDSCROLL( GEOMETRY_OPACITY_SLIDER, UI_GeometryTab::ChangeOpacity )

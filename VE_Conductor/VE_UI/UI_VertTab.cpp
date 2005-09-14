@@ -33,6 +33,14 @@
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Xplorer/cfdEnum.h"
 
+#include <wx/radiobox.h>
+#include <wx/button.h>
+#include <wx/slider.h>
+#include <wx/notebook.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/sizer.h>
+
 BEGIN_EVENT_TABLE(UI_VertTab, wxPanel)
    EVT_RADIOBOX      (PARTICLE_OPTIONS_RBOX,    UI_VertTab::_onParticleOption)
    EVT_BUTTON        (DISPLAY_PARTICLE_BUTTON,  UI_VertTab::_onDisplayParticle)

@@ -2,8 +2,12 @@
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_AdvectionPanel.h"
 
-#include <wx/string.h>
-#include <wx/notebook.h>
+#include <wx/checkbox.h>
+#include <wx/statbox.h>
+#include <wx/combobox.h>
+#include <wx/slider.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
 
 #include <iostream>
 

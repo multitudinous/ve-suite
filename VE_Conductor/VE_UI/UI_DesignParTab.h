@@ -34,8 +34,14 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
 
+#include <wx/panel.h>
+#include <wx/notebook.h>
+
+class wxTextCtrl;
+class wxButton;
+class wxSizer;
+class wxStaticText;
 
 enum DESGINPAR_TAB_IDS{
    DESIGNPAR_UPDATE_BUTTON

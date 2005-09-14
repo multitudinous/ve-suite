@@ -36,10 +36,18 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
+
 #include <wx/spinctrl.h>
 #include <wx/image.h>
 #include <wx/bmpbuttn.h>
+#include <wx/bmpbuttn.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/dialog.h>
+
+class wxSizer;
+class wxWindow;
+
 class UI_Tabs;
 class wxSpinCtrlDbl;
 //Transient control ids

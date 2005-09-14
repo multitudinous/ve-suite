@@ -34,7 +34,12 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
+
+#include <wx/panel.h>
+class wxCheckBox;
+class wxStaticBox;
+class wxSlider;
+class wxComboBox;
 
 enum ADVECTION_IDS
 {
@@ -52,7 +57,9 @@ enum ADVECTION_IDS
    ENABLE_CHECK,
    BBOX_CHECK
 };
-class UI_AdvectionPanel: public wxPanel{
+
+class UI_AdvectionPanel: public wxPanel
+{
 public:
    UI_AdvectionPanel(wxNotebook* tControl);
    ~UI_AdvectionPanel();

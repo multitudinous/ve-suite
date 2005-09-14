@@ -35,8 +35,10 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
 #include <wx/notebook.h>
+
+class wxWindow;
+class wxString;
 
 #ifdef _TAO
 #include "VjObsC.h"

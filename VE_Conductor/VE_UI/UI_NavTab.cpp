@@ -47,6 +47,12 @@
 #include "VE_Conductor/Framework/Nav_Bitmaps/yaw_cw.xpm"
 #include "VE_Conductor/Framework/Nav_Bitmaps/coordinates.xpm"
 
+#include <wx/checkbox.h>
+#include <wx/slider.h>
+#include <wx/button.h>
+#include <wx/window.h>
+#include <wx/sizer.h>
+
 BEGIN_EVENT_TABLE(UI_NavigateScroll, wxScrolledWindow)
 END_EVENT_TABLE()
 UI_NavigateScroll::UI_NavigateScroll(wxWindow* parent)

@@ -32,6 +32,15 @@
 #include "GlobalParamDialog.h"
 #include "interface.h"
 
+#include <wx/textctrl.h>
+#include <wx/combobox.h>
+#include <wx/radiobut.h>
+#include <wx/button.h>
+#include <wx/statbox.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/sizer.h>
+
 BEGIN_EVENT_TABLE(GlobalParamDialog, wxDialog)
   EVT_RADIOBUTTON(RADIO_A, GlobalParamDialog::OnChange)
   EVT_RADIOBUTTON(RADIO_B, GlobalParamDialog::OnChange)

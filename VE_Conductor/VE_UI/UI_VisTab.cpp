@@ -37,6 +37,20 @@
 #include "VE_Conductor/VE_UI/UI_TransientDialog.h"
 #include <iostream>
 
+#include <wx/radiobut.h>
+#include <wx/radiobox.h>
+#include <wx/checkbox.h>
+#include <wx/button.h>
+#include <wx/combobox.h>
+#include <wx/listbox.h>
+#include <wx/textctrl.h>
+#include <wx/slider.h>
+#include <wx/string.h>
+#include <wx/notebook.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/sizer.h>
+
 BEGIN_EVENT_TABLE(UI_VisualizationTab, wxPanel)
   EVT_RADIOBOX    (CATEGORY_RAD_BOX,         UI_VisualizationTab::_onCategory)
   EVT_RADIOBOX    (CONTOUR_RAD_BOX,          UI_VisualizationTab::_onContour)

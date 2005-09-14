@@ -31,7 +31,12 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef RESULT_PANEL_H
 #define RESULT_PANEL_H
-#include <wx/wx.h>
+#include <wx/dialog.h>
+
+class wxTextCtrl;
+class wxStaticText;
+class wxBoxSizer;
+class wxButton;
 
 enum 
 {

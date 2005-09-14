@@ -32,6 +32,11 @@
 #include "VE_Conductor/Framework/PortDialog.h"
 #include <iostream>
 
+#include <wx/button.h>
+#include <wx/textctrl.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+
 BEGIN_EVENT_TABLE(PortDialog, wxDialog)
   EVT_BUTTON(wxID_OK, PortDialog::OnOK)
 END_EVENT_TABLE()

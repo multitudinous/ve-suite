@@ -8,6 +8,9 @@
 #include "VE_Conductor/Framework/transientIcons/prev.xpm"
 #include "VE_Conductor/Framework/transientIcons/stop.xpm"
 
+#include <wx/sizer.h>
+#include <wx/window.h>
+
 
 BEGIN_EVENT_TABLE(UI_TransientDialog, wxDialog)
    EVT_BUTTON(PLAY_BUTTON, UI_TransientDialog::_onPlay)

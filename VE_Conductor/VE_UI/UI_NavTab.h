@@ -36,9 +36,19 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
 #include <wx/image.h>
+#include <wx/notebook.h>
+#include <wx/bmpbuttn.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/statbmp.h>
+#include <wx/scrolwin.h>
 
+class wxCheckBox;
+class wxSlider;
+class wxButton;
+class wxWindow;
+class wxSizer;
 
 enum NAV_TAB_IDS 
 {

@@ -34,7 +34,17 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
+
+#include <wx/notebook.h>
+#include <wx/scrolwin.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+
+class wxSlider;
+class wxRadioBox;
+class wxCheckBox;
+class wxButton;
+class wxSizer;
 
 enum STREAMLINE_TAB_IDS
 {

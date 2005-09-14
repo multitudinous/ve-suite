@@ -34,6 +34,8 @@
 
 #include "VE_Conductor/Framework/UIDialog.h"
 #include <vector>
+
+class wxButton;
 class TexTable;
 
 class VE_GUIPLUGINS_EXPORTS TextResultDialog : public UIDialog

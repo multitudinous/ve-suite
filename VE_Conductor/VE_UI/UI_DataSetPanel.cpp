@@ -37,6 +37,15 @@
 #include "VE_Conductor/VE_UI/UI_ModelData.h"
 #include "VE_Builder/Utilities/gui/spinctld.h"
 
+#include <wx/string.h>
+#include <wx/radiobox.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/slider.h>
+#include <wx/combobox.h>
+
+
 UI_Scalars::UI_Scalars(wxString* scalarName)
 {
    range[ 0 ] = 0.0f;

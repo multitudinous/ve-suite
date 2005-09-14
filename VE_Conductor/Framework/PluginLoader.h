@@ -35,9 +35,11 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
-
 #include <vector>
+#include <wx/string.h>
+#include <wx/msgdlg.h>
+
+class wxClassInfo;
 
 class REI_Plugin;
 

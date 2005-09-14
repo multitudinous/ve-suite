@@ -34,7 +34,16 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
+
+#include <wx/panel.h>
+
+class wxGauge;
+class wxNotebook;
+class wxRadioBox;
+class wxButton;
+class wxStaticText;
+class wxStaticBox;
+class wxSizer;
 
 //Transient tab control ids
 enum TRANS_TAB_IDS

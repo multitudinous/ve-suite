@@ -34,6 +34,12 @@
 #include "VE_Xplorer/cfdEnum.h"
 #include <iostream>
 
+#include <wx/notebook.h>
+#include <wx/button.h>
+#include <wx/radiobut.h>
+#include <wx/sizer.h>
+#include <wx/radiobox.h>
+
 BEGIN_EVENT_TABLE(UI_TeacherTab, wxPanel)
    EVT_RADIOBOX(TEACHER_RBOX,UI_TeacherTab::_onTeacher)
    //EVT_BUTTON(TEACHER_CLEAR_BUTTON,UI_TeacherTab::_onClear)

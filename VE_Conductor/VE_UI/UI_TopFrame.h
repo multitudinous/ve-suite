@@ -35,7 +35,6 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
 class UI_Frame;
 
 class UI_TopFrame: public wxFrame{

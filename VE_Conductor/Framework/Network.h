@@ -34,7 +34,12 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
+
+#include <wx/event.h>
+#include <wx/scrolwin.h>
+#include <wx/textdlg.h>
+#include <wx/menu.h>
+
 #include <vector>
 #include <map>
 #include <iostream>

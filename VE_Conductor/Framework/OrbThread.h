@@ -43,13 +43,15 @@
 //#ifdef WIN32
 //#include <winsock2.h>
 //#endif
-//#include <wx/wx.h>
 //#include <wx/thread.h>
 #include <ace/Task.h>
 #include "moduleS.h"
 #include <string>
+#include <wx/menu.h>
 
 class AppFrame;
+
+
 
 class OrbThread : public ACE_Task_Base //wxThread  
 {

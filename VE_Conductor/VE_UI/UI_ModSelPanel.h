@@ -35,10 +35,11 @@
 #include <winsock2.h>
 #endif
 
+#include <wx/panel.h>
+#include <wx/scrolwin.h>
 
-
-#include <wx/wx.h>
-
+class wxString;
+class wxRadioBox;
 class UI_Frame;
 class UI_ModelData;
 

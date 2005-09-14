@@ -34,7 +34,17 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
+
+#include <wx/panel.h>
+#include <wx/notebook.h>
+
+class wxRadioBox;
+class wxCheckListBox;
+class wxButton;
+class wxSlider;
+class wxComboBox;
+class wxSizer;
+
 #include <vector>
 
 enum GEOMETRY_TAB_IDS

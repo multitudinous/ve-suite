@@ -35,7 +35,7 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
+#include <wx/app.h>
 
 class AppFrame;
 

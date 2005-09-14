@@ -32,6 +32,12 @@
 #include "VE_Conductor/Framework/SummaryResultDialog.h"
 #include <iostream>
 
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/sizer.h>
+#include <wx/button.h>
+
+
 BEGIN_EVENT_TABLE(SummaryResultDialog, wxDialog)
   EVT_BUTTON(wxID_OK, SummaryResultDialog::OnOK)
 END_EVENT_TABLE()

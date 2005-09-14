@@ -35,6 +35,11 @@
 #include <iostream>
 #include <cmath>
 
+#include <wx/textctrl.h>
+#include <wx/button.h>
+#include <wx/sizer.h>
+#include <wx/stattext.h>
+
 BEGIN_EVENT_TABLE(UI_DesignParTab, wxPanel)
    EVT_BUTTON(DESIGNPAR_UPDATE_BUTTON,UI_DesignParTab::_onUpdate)
 END_EVENT_TABLE()

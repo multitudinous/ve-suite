@@ -31,10 +31,13 @@
  *************** <auto-copyright.pl END do not edit this line> ***************/
 #ifndef TEXT_TABLE_H
 #define TEXT_TABLE_H
-#include <wx/wx.h>
-#include <wx/fontenum.h>
+
+
 #include <vector>
 #include <wx/grid.h>
+#include <wx/fontenum.h>
+
+class wxWindow;
 
 #include "VE_Installer/include/VEConfig.h"
 

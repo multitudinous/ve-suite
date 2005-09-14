@@ -35,7 +35,13 @@
 #include <winsock2.h>
 #endif
 
-#include "wx/wx.h"
+#include <wx/panel.h>
+#include <wx/msgdlg.h>
+#include <wx/sizer.h>
+
+class wxString;
+class wxBoxSizer;
+
 class wxNotebookEvent;
 class UI_DatasetPanel;
 class UI_Tabs;

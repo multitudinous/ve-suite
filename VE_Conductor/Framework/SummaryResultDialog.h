@@ -35,6 +35,11 @@
 #include "VE_Conductor/Framework/TexTable.h"
 #include "VE_Installer/include/VEConfig.h"
 
+class wxButton;
+class wxNotebook;
+class wxBoxSizer;
+class wxStaticText;
+
 #include <vector>
 
 class VE_GUIPLUGINS_EXPORTS SummaryResultDialog : public UIDialog

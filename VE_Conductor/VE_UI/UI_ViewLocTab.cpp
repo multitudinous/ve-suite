@@ -37,6 +37,17 @@
 #include <sstream>
 #include <wx/utils.h>
 
+#include <wx/button.h>
+#include <wx/combobox.h>
+#include <wx/listbox.h>
+#include <wx/textctrl.h>
+#include <wx/slider.h>
+#include <wx/string.h>
+#include <wx/notebook.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/sizer.h>
+
 
 BEGIN_EVENT_TABLE(UI_ViewLocTabScroll, wxScrolledWindow)
 END_EVENT_TABLE()

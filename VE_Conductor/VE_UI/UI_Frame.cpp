@@ -38,6 +38,9 @@
 #include "VE_Conductor/VE_UI/UI_ModelData.h"
 #include "VE_Conductor/VE_UI/UI_App.h"
 
+#include <wx/string.h>
+#include <wx/msgdlg.h>
+
 #ifdef _TAO
 #include "VjObsS.h"
 #include <orbsvcs/CosNamingC.h>

@@ -35,7 +35,11 @@
  #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
+#include <wx/frame.h>
+#include <wx/icon.h>
+#include <wx/textctrl.h>
+#include <wx/image.h>
+#include <wx/sizer.h>
 #include <wx/config.h> 
 #include <wx/splitter.h>
 #include "moduleC.h"

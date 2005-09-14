@@ -32,7 +32,7 @@
 #ifndef STRINGPARSE_H
 #define STRINGPARSE_H
 
-#include <wx/wx.h>
+#include <wx/string.h>
 #include <vector>
 
 //This is the string parsing utilities

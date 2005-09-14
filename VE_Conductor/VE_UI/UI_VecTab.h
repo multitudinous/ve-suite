@@ -36,7 +36,15 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
+#include <wx/scrolwin.h>
+
+class wxSlider;
+class wxNotebook;
+class wxCheckBox;
+class wxButton;
+class wxStaticText;
+class wxStaticBox;
+class wxSizer;
 
 //Vector tab control ids
 enum VECTOR_TAB_IDS

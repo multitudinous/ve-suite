@@ -45,6 +45,9 @@
 #include "VE_Conductor/VE_UI/UI_DesignParTab.h"
 #include "VE_Conductor/VE_UI/UI_AdvectionPanel.h"
 
+#include <wx/window.h>
+#include <wx/string.h>
+
 #include <iostream>
 BEGIN_EVENT_TABLE(UI_Tabs, wxNotebook)
 EVT_NOTEBOOK_PAGE_CHANGED(wxID_ANY, UI_Tabs::_onTabChange)

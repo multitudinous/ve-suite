@@ -34,7 +34,12 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
+#include <wx/panel.h>
+
+class wxNotebook;
+class wxButton;
+class wxCheckListBox;
+class wxSizer;
 
 enum SOUNDS_TAB_IDS{
    SOUND_CBOX,

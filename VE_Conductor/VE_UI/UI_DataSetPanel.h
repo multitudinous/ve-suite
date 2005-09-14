@@ -35,7 +35,18 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
+#include <wx/scrolwin.h>
+
+class wxString;
+class wxRadioBox;
+class wxBoxSizer;
+class wxStaticBoxSizer;
+class wxSizer;
+class wxSlider;
+class wxComboBox;
+class wxStaticText;
+class wxStaticBox;
+class wxButton;
 
 #include <vector>
 #ifdef _TAO

@@ -35,7 +35,13 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
+#include <wx/panel.h>
+
+class wxNotebook;
+class wxButton;
+class wxRadioButton;
+class wxSizer;
+class wxRadioBox;
 
 enum TEACHER_TAB_IDS
 {

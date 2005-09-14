@@ -35,8 +35,18 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
 #include <wx/dialog.h>
+#include <wx/statbox.h>
+
+class wxWindow;
+class wxRadioBox;
+class wxCheckListBox;
+class wxButton;
+class wxSlider;
+class wxTextCtrl;
+class wxListBox;
+class wxSizer;
+class wxStaticText;
 
 #include "VE_Conductor/Framework/GeometryDataBuffer.h"
 

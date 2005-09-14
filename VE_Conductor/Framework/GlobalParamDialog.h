@@ -32,7 +32,19 @@
 #ifndef GLOBALPARAMDIALOG_H
 #define GLOBALPARAMDIALOG_H
 
-#include <wx/wx.h>
+#include <wx/dialog.h>
+#include <wx/string.h>
+#include <wx/msgdlg.h>
+
+
+class wxTextCtrl;
+class wxComboBox;
+class wxRadioButton;
+class wxButton;
+class wxStaticText;
+class wxBoxSizer;
+class wxStaticBoxSizer;
+
 #include "interface.h"
 
 enum {

@@ -35,9 +35,16 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
 #include "VE_Conductor/Framework/interface.h"
 #define ICON 20000
+
+#include <wx/object.h>
+#include <wx/icon.h>
+
+class wxPoint;
+class wxDC;
+class wxRect;
+class wxWindow;
 
 #define edge_size 10
 class UIDialog;

@@ -37,7 +37,8 @@
 #else
 #include "VjObs.h"
 #endif
-#include <wx/wx.h>
+
+class wxString;
 
 #include <vector>
 

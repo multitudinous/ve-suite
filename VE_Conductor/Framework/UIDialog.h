@@ -32,8 +32,11 @@
 #ifndef UIDIALOG_H
 #define UIDIALOG_H
 
-#include <wx/wx.h>
+#include <wx/dialog.h>
 #include <wx/notebook.h>
+#include <wx/string.h>
+
+class wxWindow;
 
 #include "VE_Installer/include/VEConfig.h"
 

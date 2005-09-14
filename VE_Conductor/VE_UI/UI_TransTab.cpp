@@ -34,6 +34,14 @@
 #include "VE_Xplorer/cfdEnum.h"
 #include <iostream>
 
+#include <wx/gauge.h>
+#include <wx/notebook.h>
+#include <wx/radiobox.h>
+#include <wx/button.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/sizer.h>
+
 BEGIN_EVENT_TABLE(UI_TransTab, wxPanel)
   EVT_RADIOBOX    (TRANS_CATEGORY_RAD_BOX,   UI_TransTab::_onCategory)
   EVT_RADIOBOX    (TRANS_DIRECTION_RAD_BOX,  UI_TransTab::_onDirection)   

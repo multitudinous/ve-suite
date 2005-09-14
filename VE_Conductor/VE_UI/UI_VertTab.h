@@ -34,7 +34,16 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
-#include <wx/wx.h>
+
+#include <wx/panel.h>
+
+class wxRadioBox;
+class wxButton;
+class wxSlider;
+class wxNotebook;
+class wxStaticText;
+class wxStaticBox;
+class wxSizer;
 
 enum VERTEXDATA_TAB_IDS{
    PARTICLE_OPTIONS_RBOX,   

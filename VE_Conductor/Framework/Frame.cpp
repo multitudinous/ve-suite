@@ -45,7 +45,7 @@
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Conductor/VE_UI/UI_Frame.h"
 #include "VE_Conductor/Framework/Network.h"
-#include <wx/wx.h>
+
 #include <wx/image.h>
 #include <wx/bitmap.h>
 #include <wx/splash.h>

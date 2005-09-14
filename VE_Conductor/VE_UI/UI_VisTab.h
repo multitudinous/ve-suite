@@ -35,7 +35,24 @@
 #include <winsock2.h>
 #endif
 
-#include <wx/wx.h>
+#include <wx/scrolwin.h>
+#include <wx/msgdlg.h>
+#include <wx/panel.h>
+
+class wxRadioButton;
+class wxCheckBox;
+class wxRadioBox;
+class wxButton;
+class wxComboBox;
+class wxListBox;
+class wxTextCtrl;
+class wxSlider;
+class wxString;
+class wxNotebook;
+class wxStaticText;
+class wxStaticBox;
+class wxSizer;
+
 class UI_TransientDialog;
 //Visualizaton tab control ids
 enum VIS_TAB_IDS

@@ -35,6 +35,12 @@
 
 #include "VE_Xplorer/cfdEnum.h"
 
+#include <wx/slider.h>
+#include <wx/radiobox.h>
+#include <wx/checkbox.h>
+#include <wx/button.h>
+#include <wx/sizer.h>
+
 BEGIN_EVENT_TABLE(UI_StreamlineTab, wxPanel)
    EVT_RADIOBOX      ( CURSOR_SELECT_RBOX,    UI_StreamlineTab::_onDirection)
    EVT_RADIOBOX      ( DIR_RBOX,              UI_StreamlineTab::_onDirection)

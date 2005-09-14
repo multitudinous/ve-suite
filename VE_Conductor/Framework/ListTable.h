@@ -40,8 +40,9 @@
 #pragma once
 #endif // _MSC_VER > 1000
 
-#include <wx/wx.h>
 #include <wx/listctrl.h>
+class wxWindow;
+
 #include <vector>
 
 class ListTable : public wxListCtrl  

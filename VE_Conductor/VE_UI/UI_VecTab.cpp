@@ -33,6 +33,14 @@
 #include "VE_Conductor/VE_UI/UI_Tabs.h"
 #include "VE_Xplorer/cfdEnum.h"
 
+#include <wx/slider.h>
+#include <wx/notebook.h>
+#include <wx/checkbox.h>
+#include <wx/button.h>
+#include <wx/stattext.h>
+#include <wx/statbox.h>
+#include <wx/sizer.h>
+
 BEGIN_EVENT_TABLE(UI_VectorTab, wxPanel)
    EVT_BUTTON(VECTOR_UPDATE_BUTTON,       UI_VectorTab::_onUpdate)
    EVT_CHECKBOX(SCALE_VEC_MAG_CHK,        UI_VectorTab::_onCheck)

@@ -32,6 +32,8 @@
 #include "VE_Conductor/VE_UI/UI_ModelData.h"
 #include <iostream>
 
+#include <wx/string.h>
+
 using namespace std;
 
 UI_ModelData::UI_ModelData( VjObs_ptr ref )
