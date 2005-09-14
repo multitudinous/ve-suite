@@ -443,6 +443,7 @@ void cfdExecutive::GetEverything( void )
                                       << " ]-> " << iter->second 
                                       << " is being created."
                                       << std::endl << vprDEBUG_FLUSH;
+               _plugins[ iter->first ]->PreFrameUpdate();
             }
          }
          else
@@ -454,9 +455,8 @@ void cfdExecutive::GetEverything( void )
                                     << std::endl << vprDEBUG_FLUSH;
             // Give graphical plugins access to gui variables
             _plugins[ iter->first ]->SetInterface( _it_map[ iter->first ] );
+            _plugins[ iter->first ]->PreFrameUpdate();
          }
-
-         _plugins[ iter->first ]->PreFrameUpdate();
       }
       
       // Process geom interfaces

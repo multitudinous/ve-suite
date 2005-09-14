@@ -627,7 +627,7 @@ void cfdDataSet::LoadData(vtkUnstructuredGrid* dataset, int datasetindex)
 }*/
 
 
-void cfdDataSet::LoadData( )
+void cfdDataSet::LoadData()
 {
    if ( this->dataSet != NULL )
    {
@@ -656,7 +656,7 @@ void cfdDataSet::LoadData( )
    int numCellArrays = this->dataSet->GetCellData()->GetNumberOfArrays();
    vprDEBUG(vesDBG,1) << "\tnumCellArrays = " << numCellArrays
                           << std::endl << vprDEBUG_FLUSH;
-   std::cout<<"[DBG]...Inside LoadData()"<<std::endl;
+   //std::cout<<"[DBG]...Inside LoadData()"<<std::endl;
    std::cout<<"[DBG]...numPtDataArrays = "<<this->numPtDataArrays<<std::endl;
    std::cout<<"[DBG]...numCellArrays = "<<numCellArrays<<std::endl;
 
