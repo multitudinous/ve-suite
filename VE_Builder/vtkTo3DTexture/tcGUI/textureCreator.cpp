@@ -254,49 +254,24 @@ void VTKDataToTexture::createDataSetFromFile(const char* filename)
 {
    wxString msg = wxString("Reading Dataset: ") + wxString(filename);
    _updateTranslationStatus(msg.c_str());
-   _confirmFileType(filename);
-   if(_isRGrid){
-      /*if(!_rgrid){
-         _rgrid = vtkRectilinearGridReader::New();
-      }
-      _rgrid->SetFileName(filename);
-      _rgrid->Update();*/
-      setDataset(VE_Util::readVtkThing((char*)filename));
-   }else if(_isUGrid){
-      /*if(!_usgrid){
-         _usgrid = vtkUnstructuredGridReader::New();
-      }
-      _usgrid->SetFileName(filename);
-      _usgrid->Update();
-      
-      vtkDataSet* tmpDSet = _usgrid->GetOutput();*/
-      vtkDataSet* tmpDSet = VE_Util::readVtkThing((char*)filename);
-      
-      //get the info about the data in the data set
-      _nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
-      if(!_nPtDataArrays){
-         std::cout<<"Warning!!!"<<std::endl;
-         std::cout<<"No point data found!"<<std::endl;
-         std::cout<<"Attempting to convert cell data to point data."<<std::endl;
-         if(!_dataConvertCellToPoint)
-            _dataConvertCellToPoint = vtkCellDataToPointData::New();
+   //_confirmFileType(filename);
+   vtkDataSet* tmpDSet = VE_Util::readVtkThing((char*)filename);
 
-         _dataConvertCellToPoint->SetInput( tmpDSet);
-         _dataConvertCellToPoint->PassCellDataOff();
-         _dataConvertCellToPoint->Update();
-         setDataset(_dataConvertCellToPoint->GetUnstructuredGridOutput());
-      //update the grid w/ the new file name
-      }else{
-         setDataset(tmpDSet);
-      }
-   }else if(_isSGrid){
-      /*if(!_sgrid){
-         _sgrid = vtkStructuredGridReader::New();
-      }
-      _sgrid->SetFileName(filename);
-      _sgrid->Update();
-      setDataset(_sgrid->GetOutput());*/
-      setDataset(VE_Util::readVtkThing((char*)filename));
+   //get the info about the data in the data set
+   _nPtDataArrays = tmpDSet->GetPointData()->GetNumberOfArrays();
+   if(!_nPtDataArrays){
+      std::cout<<"Warning!!!"<<std::endl;
+      std::cout<<"No point data found!"<<std::endl;
+      std::cout<<"Attempting to convert cell data to point data."<<std::endl;
+
+      if(!_dataConvertCellToPoint)
+         _dataConvertCellToPoint = vtkCellDataToPointData::New();
+      _dataConvertCellToPoint->SetInput( tmpDSet);
+      _dataConvertCellToPoint->PassCellDataOff();
+      _dataConvertCellToPoint->Update();
+      setDataset(_dataConvertCellToPoint->GetOutput());
+   }else{
+     setDataset(tmpDSet);
    }
 }
 /////////////////////////////////////////////////////////////
