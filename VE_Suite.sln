@@ -181,6 +181,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "whatIsScalarRange", "VE_Bui
 		{6EB56A33-7EB4-43B4-A5ED-F11FB470B77F} = {6EB56A33-7EB4-43B4-A5ED-F11FB470B77F}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "cfdTranslatorToVTK", "VE_Builder\Translator\cfdTranslatorToVTK\cfdTranslatorToVTK.vcproj", "{C3E4EC67-9496-4391-A1B2-8179B3954E9D}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfiguration) = preSolution
 		Builder_Tools = Builder_Tools
@@ -561,6 +565,16 @@ Global
 		{6CAF594F-6792-4977-8FE2-A98FE8793631}.tao_osg_vep_cluster_dbg.ActiveCfg = Debug|Win32
 		{6CAF594F-6792-4977-8FE2-A98FE8793631}.tao_osg_vep_dbg.ActiveCfg = Debug|Win32
 		{6CAF594F-6792-4977-8FE2-A98FE8793631}.tao_pf_dbg.ActiveCfg = Debug|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.Builder_Tools.ActiveCfg = Debug|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.Builder_Tools.Build.0 = Debug|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.Debug.ActiveCfg = Debug|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.Debug.Build.0 = Debug|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.Release.ActiveCfg = Release|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.Release.Build.0 = Release|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.tao_osg_dbg.ActiveCfg = Release|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.tao_osg_vep_cluster_dbg.ActiveCfg = Release|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.tao_osg_vep_dbg.ActiveCfg = Release|Win32
+		{C3E4EC67-9496-4391-A1B2-8179B3954E9D}.tao_pf_dbg.ActiveCfg = Release|Win32
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 	EndGlobalSection
