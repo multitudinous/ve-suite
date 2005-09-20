@@ -91,6 +91,12 @@
 	#  else
 	#    define VE_USER_PLUGIN_EXPORTS   __declspec(dllimport)
 	#  endif /* VE_USER_PLUGIN_LIBRARY */
+        
+   #  ifdef VE_BUILDER_LIBRARY
+	#    define VE_BUILDER_EXPORTS   __declspec(dllexport)
+	#  else
+	#    define VE_BUILDER_EXPORTS   __declspec(dllimport)
+	#  endif /* VE_BUILDER_LIBRARY */
 #else
 	#  define VE_SCENEGRAPH_EXPORTS
    #  define VE_UTIL_EXPORTS
