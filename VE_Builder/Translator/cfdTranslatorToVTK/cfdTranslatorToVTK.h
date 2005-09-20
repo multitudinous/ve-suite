@@ -25,12 +25,12 @@ public:
    ////////////////////////////////////////////////////////
    //Any preprocessing can be easily setup to happen here//
    ////////////////////////////////////////////////////////
-   class PreTranslateCallback{
+   class VE_BUILDER_EXPORTS PreTranslateCallback{
    public:
       PreTranslateCallback(){};
       virtual ~PreTranslateCallback(){};
       virtual void Preprocess(int argc, char** argv,
-		              cfdTranslatorToVTK* toVTK);
+                            cfdTranslatorToVTK* toVTK);
    protected:
       bool _extractOptionFromCmdLine(int argc,char** argv,
                                   std::string optionFlag,
@@ -39,7 +39,7 @@ public:
    /////////////////////////////////////////////////////////
    //translate callback must be defined or nothing happens//
    /////////////////////////////////////////////////////////
-   class TranslateCallback{
+   class VE_BUILDER_EXPORTS TranslateCallback{
    public:
       TranslateCallback(){};
       virtual ~TranslateCallback(){};
@@ -48,17 +48,17 @@ public:
       //appropriately by the translate callback.      //
       //////////////////////////////////////////////////
       virtual void Translate(vtkDataSet*& outputDataset,
-		             cfdTranslatorToVTK* toVTK) = 0;
+		             VE_Builder::cfdTranslatorToVTK* toVTK) = 0;
    protected:
    };
    ///////////////////////////////////////////////////////////
    //Any post-processing can be easily setup to happen here //
    ///////////////////////////////////////////////////////////
-   class PostTranslateCallback{
+   class VE_BUILDER_EXPORTS PostTranslateCallback{
    public:
-      PostTranslateCallback();
-      virtual ~PostTranslateCallback();
-      virtual void PostProcess(cfdTranslatorToVTK* toVTK) = 0;
+      PostTranslateCallback(){};
+      virtual ~PostTranslateCallback(){};
+      virtual void PostProcess(VE_Builder::cfdTranslatorToVTK* toVTK) = 0;
    protected:
    };
 

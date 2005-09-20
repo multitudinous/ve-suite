@@ -12,8 +12,8 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="Debug"
-			IntermediateDirectory="Debug"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
+			IntermediateDirectory="./cfdTranslatorToVTK/$(ConfigurationName)"
 			ConfigurationType="2"
 			CharacterSet="2">
 			<Tool
@@ -34,13 +34,13 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="VE_UtilLib_d.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib"
-				OutputFile="$(VE_SUITE_HOME)/lib/win32/cfdTranslatorToVTK.dll"
+				OutputFile="$(OutDir)/cfdTranslatorToVTK_d.dll"
 				LinkIncremental="2"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;"
 				GenerateDebugInformation="TRUE"
 				ProgramDatabaseFile="$(OutDir)/cfdTranslatorToVTK.pdb"
 				SubSystem="2"
-				ImportLibrary="$(OutDir)/cfdTranslatorToVTK.lib"
+				ImportLibrary="$(OutDir)/cfdTranslatorToVTK_d.lib"
 				TargetMachine="1"/>
 			<Tool
 				Name="VCMIDLTool"/>
@@ -65,7 +65,7 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="Release"
+			OutputDirectory="$(VE_SUITE_HOME)/lib/win32"
 			IntermediateDirectory="Release"
 			ConfigurationType="2"
 			CharacterSet="2">
@@ -84,7 +84,7 @@
 			<Tool
 				Name="VCLinkerTool"
 				AdditionalDependencies="VE_UtilLib.lib vtkCommon.lib vtkRendering.lib vtkGraphics.lib vtkIO.lib vtkFiltering.lib"
-				OutputFile="$(VE_SUITE_HOME)/lib/win32/cfdTranslatorToVTK.dll"
+				OutputFile="$(OutDir)/cfdTranslatorToVTK.dll"
 				LinkIncremental="1"
 				AdditionalLibraryDirectories="&quot;$(VE_SUITE_HOME)\lib\win32&quot;;&quot;$(VTK_HOME)\lib\vtk&quot;"
 				GenerateDebugInformation="TRUE"

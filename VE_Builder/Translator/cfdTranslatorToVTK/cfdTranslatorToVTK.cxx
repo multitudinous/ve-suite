@@ -28,7 +28,7 @@ cfdTranslatorToVTK::~cfdTranslatorToVTK()
    {
       _outputDataset->Delete();
    }
-   
+  
    _outfileNames.clear();
    _infileNames.clear();
 }
@@ -135,7 +135,8 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
          tempName<<_outputDir<<"/flowdata_"<<fileNum<<".vtk"<<"\0";
          _outfileNames.push_back(tempName.str());
       }
-      VE_Util::writeVtkThing( _outputDataset, (char*)_outfileNames.at(fileNum).c_str(),0);
+      VE_Util::writeVtkThing(_outputDataset, 
+                          (char*)_outfileNames.at(fileNum).c_str(),0);
       return true;
    }else{
       std::cout<<"Invalid output vtk dataset!!!"<<std::endl;
@@ -147,8 +148,8 @@ bool cfdTranslatorToVTK::_writeToVTK(unsigned int fileNum)
 //This is the default behavior to look for the input and output directory from the//
 //command line.                                                                   //
 ////////////////////////////////////////////////////////////////////////////////////
-void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc, char** argv,
-		                                              cfdTranslatorToVTK* toVTK)
+void cfdTranslatorToVTK::PreTranslateCallback::Preprocess(int argc,char** argv,
+                                                    cfdTranslatorToVTK* toVTK)
 {
    if(toVTK)
    {
