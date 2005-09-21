@@ -849,10 +849,16 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    }
 #endif
    strcat(posName,_vectorNames[whichVector]);
+   
+   wxString relativePath("./vectors/");
+   relativePath += wxString(_vectorNames[whichVector]);
+   relativePath += ".rgb";
+
    wxString tdFileName(_outputDir);
    tdFileName += "/";
    tdFileName += wxString(_vectorNames[whichVector]);
    tdFileName += ".txt";
+
    wxFile textureDescriptionFile;
    //need to write the number of files and the
    //name of the internal search property
@@ -881,7 +887,8 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    }
 
    strcat(posName,".rgb");
-   textureDescriptionFile.Write(wxString(posName));
+   //textureDescriptionFile.Write(wxString(posName));
+   textureDescriptionFile.Write(relativePath);
    textureDescriptionFile.Write('\n');
    textureDescriptionFile.Close();
    double velRange[2] = {0,0};
@@ -915,6 +922,10 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
 #endif
    strcat(name,_scalarNames[whichScalar]);
 
+   wxString relativePath("./scalars/");
+   relativePath += wxString(_scalarNames[whichScalar]);
+   relativePath += ".rgb";
+
    wxString tdFileName(_outputDir);
    tdFileName += "/";
    tdFileName += wxString(_scalarNames[whichScalar]);
@@ -945,7 +956,8 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
       strcat(name,"scalar");
    }
    strcat(name,".rgb");
-   textureDescriptionFile.Write(wxString(name));
+   //textureDescriptionFile.Write(wxString(name));
+   textureDescriptionFile.Write(relativePath);
    textureDescriptionFile.Write('\n');
    textureDescriptionFile.Close();
 
