@@ -852,6 +852,7 @@ void VTKDataToTexture::writeVelocityTexture(int whichVector)
    
    wxString relativePath("./vectors/");
    relativePath += wxString(_vectorNames[whichVector]);
+   relativePath += _vFileName;
    relativePath += ".rgb";
 
    wxString tdFileName(_outputDir);
@@ -924,6 +925,7 @@ void VTKDataToTexture::writeScalarTexture(int whichScalar)
 
    wxString relativePath("./scalars/");
    relativePath += wxString(_scalarNames[whichScalar]);
+   relativePath += _vFileName;
    relativePath += ".rgb";
 
    wxString tdFileName(_outputDir);
