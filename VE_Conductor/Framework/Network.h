@@ -23,9 +23,15 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
+<<<<<<< .mine
+ * File:          $RCSfile: filename,v $
+ * Date modified: $Date$
+ * Version:       $Rev$
+=======
  * File:          $RCSfile: Network.h,v $
  * Date modified: $Date$
  * Version:       $Rev$
+>>>>>>> .r3083
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
@@ -34,6 +40,8 @@
 #ifdef WIN32
 #include <winsock2.h>
 #endif
+
+//#include <wx/wx.h>
 
 #include <wx/event.h>
 #include <wx/scrolwin.h>
