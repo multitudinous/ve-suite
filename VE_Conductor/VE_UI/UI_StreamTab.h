@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: filename,v $
+ * File:          $RCSfile: UI_StreamTab.h,v $
  * Date modified: $Date$
  * Version:       $Rev$
  * -----------------------------------------------------------------
