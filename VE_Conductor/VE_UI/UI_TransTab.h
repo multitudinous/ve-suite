@@ -23,15 +23,9 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
-<<<<<<< .mine
- * File:          $RCSfile: filename,v $
- * Date modified: $Date$
- * Version:       $Rev$
-=======
  * File:          $RCSfile: UI_TransTab.h,v $
  * Date modified: $Date$
  * Version:       $Rev$
->>>>>>> .r3083
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
