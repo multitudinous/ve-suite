@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdNodeTraverser.h,v $
- * Date modified: $Date: 2005-06-26 02:53:42 -0500 (Sun, 26 Jun 2005) $
- * Version:       $Rev: 2499 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

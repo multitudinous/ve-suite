@@ -25,8 +25,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: filename,v $
- * Date modified: $Date: date $
- * Version:       $Rev: 999999 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/

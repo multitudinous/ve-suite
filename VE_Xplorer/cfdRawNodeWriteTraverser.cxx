@@ -24,8 +24,8 @@
  *
  * -----------------------------------------------------------------
  * File:          $RCSfile: cfdRawNodeWriteTraverser.cxx,v $
- * Date modified: $Date: 2005-07-09 16:05:15 -0500 (Sat, 09 Jul 2005) $
- * Version:       $Rev: 2638 $
+ * Date modified: $Date$
+ * Version:       $Rev$
  * -----------------------------------------------------------------
  *
  *************** <auto-copyright.pl END do not edit this line> ***************/
