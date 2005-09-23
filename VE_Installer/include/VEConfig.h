@@ -23,7 +23,7 @@
  * Boston, MA 02111-1307, USA.
  *
  * -----------------------------------------------------------------
- * File:          $RCSfile: cfdVEBaseClass.h,v $
+ * File:          $RCSfile: VEConfig.h,v $
  * Date modified: $Date: 2005-05-25 23:32:59 -0500 (Wed, 25 May 2005) $
  * Version:       $Rev: 2321 $
  * -----------------------------------------------------------------
@@ -106,6 +106,7 @@
    #  define VE_GRAPHICALPLUGINS_EXPORTS
 	#  define VE_TEXTURE_BASED_EXPORTS
 	#  define VE_USER_PLUGIN_EXPORTS
+   #  define VE_BUILDER_EXPORTS
 #endif
 
 #endif
