@@ -1,0 +1,29 @@
+# Materials for PrISUm.obj.
+# Created by Blender.
+# These files must be in the same directory for the materials to be read correctly.
+
+newmtl mat64_col0_0_299213 
+       Ka 0.0 0.0 0.0 
+       Kd 1.0 1.0 1.0 
+       Ks 0.0 0.0 0.0  
+       illum 1
+newmtl mat64_col25_1_000000 
+       Ka 0.0 0.0 0.0 
+       Kd 0.87059 0.31765 0.12549 
+       Ks 0.0 0.0 0.0 
+       illum 1
+newmtl mat64_col29_1_000000 
+       Ka 0.0 0.0 0.0 
+       Kd 0.80784 0.68628 0.08627 
+       Ks 0.0 0.0 0.0 
+       illum 1
+newmtl mat64_col393_0_913386 
+       Ka 0.0 0.0 0.0 
+       Kd 0.91339 0.30446 0.15044 
+       Ks 0.0 0.0 0.0 
+       illum 1
+newmtl mat64_col902_0_913386 
+       Ka 0.0 0.0 0.0 
+       Kd 0.0 0.46207 0.77011 
+       Ks 0.0 0.0 0.0 
+       illum 1

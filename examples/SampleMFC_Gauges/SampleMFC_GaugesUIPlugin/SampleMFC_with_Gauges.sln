@@ -1,0 +1,21 @@
+Microsoft Visual Studio Solution File, Format Version 8.00
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "SampleMFC_with_Gauges_GUI", "SampleMFC_with_Gauges.vcproj", "{0D29C965-1C45-4EB3-8421-302A1D2F4548}"
+	ProjectSection(ProjectDependencies) = postProject
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfiguration) = preSolution
+		Debug = Debug
+		Release = Release
+	EndGlobalSection
+	GlobalSection(ProjectConfiguration) = postSolution
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Debug.ActiveCfg = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Debug.Build.0 = Debug|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Release.ActiveCfg = Release|Win32
+		{0D29C965-1C45-4EB3-8421-302A1D2F4548}.Release.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+	EndGlobalSection
+	GlobalSection(ExtensibilityAddIns) = postSolution
+	EndGlobalSection
+EndGlobal
