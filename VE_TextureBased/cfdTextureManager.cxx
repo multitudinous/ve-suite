@@ -266,6 +266,9 @@ void cfdTextureManager::addFieldTextureFromFile(char* textureFile)
       int nPixels = _resolution[0]*_resolution[1]*_resolution[2];
       unsigned char* pixels = 0;
       float invSRange = 1.0/(_range[1]-_range[0]);
+
+      //   for(int p = 0; p < nPixels; p++)
+      //         double scalar = grid->GetPointData()->GetScalars( "scalar_name" )->GetTuple1( num );
       if(curType == VECTOR)
       {
          pixels = new unsigned char[nPixels*4];
