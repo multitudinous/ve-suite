@@ -42,7 +42,7 @@ class vtkBandedPolyDataContourFilter;
 class vtkDecimatePro;
 class vtkTriangleFilter;
 class vtkStripper;
-
+class vtkPolyDataNormals;
 
 namespace VE_Xplorer
 {
@@ -75,10 +75,11 @@ protected:
    vtkPolyDataMapper*   mapper;
    vtkGeometryFilter*   filter;
    vtkContourFilter*    cfilter;
-   vtkBandedPolyDataContourFilter * bfilter;
-   vtkDecimatePro* deci;
+   vtkBandedPolyDataContourFilter* bfilter;
+   vtkDecimatePro*      deci;
    vtkTriangleFilter*   tris;
    vtkStripper*         strip;
+   vtkPolyDataNormals*  normals;
 
    int fillType;
    double warpedContourScale;

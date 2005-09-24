@@ -219,7 +219,7 @@ void cfdApp::contextInit()
       _pbuffer->isSupported();
    } 
 
-   if ( _tbvHandler )
+   //if ( _tbvHandler )
    {
       _tbvHandler->SetPBuffer(_pbuffer);
    }
@@ -425,7 +425,7 @@ void cfdApp::intraFrame()
 #ifdef _OSG
 void cfdApp::contextPostDraw()
 {
-   if(_tbvHandler)
+   //if(_tbvHandler)
      _tbvHandler->PingPongTextures();
 }
 #endif//_OSG

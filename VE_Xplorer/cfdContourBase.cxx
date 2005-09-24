@@ -47,6 +47,7 @@
 #include <vtkDecimatePro.h>
 #include <vtkTriangleFilter.h>
 #include <vtkStripper.h>
+#include <vtkPolyDataNormals.h>
 
 using namespace VE_Xplorer;
 using namespace VE_SceneGraph;
@@ -71,6 +72,7 @@ cfdContourBase::cfdContourBase()
    this->mapper->SetInput( this->filter->GetOutput() );
    this->mapper->SetColorModeToMapScalars();
    mapper->ImmediateModeRenderingOn();
+   normals = vtkPolyDataNormals::New();
 
    this->warpedContourScale = 0.0f;
    this->contourOpacity = 0.0f;
@@ -102,6 +104,9 @@ cfdContourBase::~cfdContourBase()
 
    this->deci->Delete();
    this->deci = NULL;
+
+   normals->Delete();
+   normals = NULL;
 }
 
 void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
@@ -120,7 +125,12 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
 
    if ( this->fillType == 0 )
    {
-      this->mapper->SetInput( this->strip->GetOutput() );
+      normals->SetInput( this->strip->GetOutput() );
+      normals->SetFeatureAngle( 130.0f );
+      normals->GetOutput()->ReleaseDataFlagOn(); 
+      normals->ComputePointNormalsOn();
+      normals->ComputeCellNormalsOn();
+      this->mapper->SetInput( normals->GetOutput() );
       mapper->ImmediateModeRenderingOn(); 
    }
    else if ( this->fillType == 1 )  // banded contours
@@ -134,8 +144,12 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       this->bfilter->SetScalarModeToValue();
       this->bfilter->GenerateContourEdgesOn();
       bfilter->GetOutput()->ReleaseDataFlagOn();
-
-      this->mapper->SetInput( bfilter->GetOutput() );
+      normals->SetInput( bfilter->GetOutput() );
+      normals->SetFeatureAngle( 130.0f );
+      normals->GetOutput()->ReleaseDataFlagOn(); 
+      normals->ComputePointNormalsOn();
+      normals->ComputeCellNormalsOn();
+      this->mapper->SetInput( normals->GetOutput() );
       mapper->ImmediateModeRenderingOn();
    }
    else if ( this->fillType == 2 )  // contourlines
@@ -146,8 +160,12 @@ void cfdContourBase::SetMapperInput( vtkPolyData* polydata )
       this->cfilter->GenerateValues( 10, range[0], range[1] );
       this->cfilter->UseScalarTreeOn();
       cfilter->GetOutput()->ReleaseDataFlagOn();
-
-      this->mapper->SetInput( this->cfilter->GetOutput() );
+      normals->SetInput( cfilter->GetOutput() );
+      normals->SetFeatureAngle( 130.0f );
+      normals->GetOutput()->ReleaseDataFlagOn(); 
+      normals->ComputePointNormalsOn();
+      normals->ComputeCellNormalsOn();
+      this->mapper->SetInput( this->normals->GetOutput() );
       mapper->ImmediateModeRenderingOn();    
    }
 }
