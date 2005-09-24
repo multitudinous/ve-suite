@@ -300,49 +300,47 @@ else if ( attr == PFGS_PER_VERTEX )
 void *alist=0; 
 ushort *ilist=0; 
 
-if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_PER_PRIM ))
-{
-   geoset->getAttrLists( PFGS_COLOR4, &alist, &ilist );
-   pfVec4 *colors;
-   colors = (pfVec4 *) alist;
-   int min, max; 
-   int vertcount; 
-   //int numVerts = geoset->getAttrRange( PFGS_COORD3, NULL, &max );
-   //pfVec4* new_colors = new pfVec4[ numVerts ];
-   //std::cout << " New set : " << max << std::endl;
-   vertcount = geoset->getAttrRange( PFGS_COLOR4, &min, &max ); 
-   //std::cout << " New set : " << numVerts << " : " << vertcount << " : " << min << " : " << max << " : " << ilist << std::endl;
-   //float temp[ 4 ];
-   
-
-   for ( int k = 0; k < vertcount; ++k )
+   if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_PER_PRIM ))
    {
-      colors[ min ][ 3 ] = op;
-      //std::cout << colors[ k ][ 0 ] << " : " << colors[ k ][ 1 ] << " : " <<
-      //         colors[ k ][ 2 ] << " : " << colors[ k ][ 3 ] << std::endl;
+      geoset->getAttrLists( PFGS_COLOR4, &alist, &ilist );
+      pfVec4 *colors;
+      colors = (pfVec4 *) alist;
+      int min, max; 
+      int vertcount; 
+      //int numVerts = geoset->getAttrRange( PFGS_COORD3, NULL, &max );
+      //pfVec4* new_colors = new pfVec4[ numVerts ];
+      //std::cout << " New set : " << max << std::endl;
+      vertcount = geoset->getAttrRange( PFGS_COLOR4, &min, &max ); 
+      //std::cout << " New set : " << numVerts << " : " << vertcount << " : " << min << " : " << max << " : " << ilist << std::endl;
+      //float temp[ 4 ];
+
+
+      for ( int k = 0; k < vertcount; ++k )
+      {
+         colors[ min ][ 3 ] = op;
+         //std::cout << colors[ k ][ 0 ] << " : " << colors[ k ][ 1 ] << " : " <<
+         //         colors[ k ][ 2 ] << " : " << colors[ k ][ 3 ] << std::endl;
+      }
+
+      if ( op != 1.0 )
+      {
+         geoset->setDrawBin(PFSORT_TRANSP_BIN);  // draw last
+         geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA );//| PFTR_NO_OCCLUDE);
+      }
+      else
+      {
+         geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw first
+         geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
+      }
+
+      geoset->setAttr( PFGS_COLOR4, PFGS_OVERALL, colors, ilist );
    }
-   
-   if ( op != 1.0 )
-   {
-      geoset->setDrawBin(PFSORT_TRANSP_BIN);  // draw last
-      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_BLEND_ALPHA );//| PFTR_NO_OCCLUDE);
-   }
-   else
-   {
-      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw first
-      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
-   }
-
-   geoset->setAttr( PFGS_COLOR4, PFGS_OVERALL, colors, ilist );
-}
-
-
-
-
+///////////////////////////////////////////
+///////////////////////////////////////////
 ///////////////////////////////////////////
 
          if (geostate != NULL)
-            {
+         {
             geostate->setMode( PFSTATE_ANTIALIAS, PFAA_ON );
             geostate->setMode( PFSTATE_ENLIGHTING, PF_ON );
             geostate->setMode( PFSTATE_CULLFACE, PFCF_OFF );
@@ -360,25 +358,23 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
                                       << std::endl << vprDEBUG_FLUSH;
 
                testMat->setAlpha( op );
-               if ( op == 1 ) {
+               if ( op == 1 ) 
+               {
                   //Turn colors on
-                   if( color == 1 ){
+                  if( color == 1 )
+                  {
                      testMat->setColor( PFMTL_DIFFUSE ,
-				        stlColor[0],
-				       	stlColor[1],
-				       	stlColor[2]);
+                           stlColor[0], stlColor[1], stlColor[2]);
                      testMat->setColor( PFMTL_AMBIENT ,
-				        stlColor[0],
-				       	stlColor[1],
-				       	stlColor[2]);
+                           stlColor[0],	stlColor[1], stlColor[2]);
                      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
                      //geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      geostate->setMode(PFSTATE_CULLFACE, PFCF_OFF);
                      vprDEBUG(vesDBG,3) 
-                        << " Front Color : " << stlColor[0]<< " : " 
-                        <<  stlColor[1]<< " : " << stlColor[2]
-                        << std::endl << vprDEBUG_FLUSH;
+                           << " Front Color : " << stlColor[0]<< " : " 
+                           <<  stlColor[1]<< " : " << stlColor[2]
+                           << std::endl << vprDEBUG_FLUSH;
                      //this->fmaterial->setAlpha( .2 );
                   }
                   else
@@ -414,14 +410,10 @@ if ( ( attr == PFGS_PER_VERTEX ) || ( attr == PFGS_OVERALL ) || ( attr == PFGS_P
                                          << std::endl << vprDEBUG_FLUSH;
                   if( color == 1)
                   {
-                     bmaterial->setColor( PFMTL_DIFFUSE ,
-				          stlColor[0],
-					  stlColor[1],
-					  stlColor[2]);
-                     bmaterial->setColor( PFMTL_AMBIENT ,
-				          stlColor[0],
-					  stlColor[1],
-					  stlColor[2]);
+                     bmaterial->setColor( PFMTL_DIFFUSE,
+				          stlColor[0], stlColor[1], stlColor[2]);
+                     bmaterial->setColor( PFMTL_AMBIENT,
+				          stlColor[0], stlColor[1], stlColor[2]);
                      geoset->setDrawBin(PFSORT_OPAQUE_BIN);  // draw last
                      //std::cout << " Alpha value : " << testMat->getAlpha() << std::endl;
                      geostate->setMode(PFSTATE_TRANSPARENCY, PFTR_OFF);
